@@ -1,35 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733707F
-	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 10:45:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA10C433C8;
-	Sun,  3 Sep 2023 10:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693737948;
-	bh=FtW4elepbA3dl8TVrQJUZMvhrxmha+pYiCSF4zMey1s=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=EFATlrKLyAsiiuAuOzeNMPH1zcZQvILtwKIJGszRr0hM7i6glk0zBfBRnIKTCLM2n
-	 /P0XK78fBmvRUdN5A5QorA+8xxjV2TYPwqM6sbiEG4PCfa7IHyaOlQYyipjrO2++TX
-	 o8efnD+pj/W84tgKcnQ/gkwfrirzSVH/8RGRpG+9Q02H8s6y9BY3zyATWKTv788mpG
-	 6Eooeo3xQF5MYKFsgl7gYQqOxA68ra+XYJ3Hlhu2lsQDxnxrmhE/8j2xqts+jn0IWp
-	 jPyfXAsVsXB3SteVmoRKTHgP0nOUPZGf2r41haFmn6zru7DA9Q5aaAzxJ6l7f50ZPe
-	 JuZrCNDBR+nKA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6DB44CE0C90; Sun,  3 Sep 2023 03:45:48 -0700 (PDT)
-Date: Sun, 3 Sep 2023 03:45:48 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Ziwei Dai <ziwei.dai@unisoc.com>, Hugh Dickins <hughd@google.com>,
-	Marcus Seyfarth <m.seyfarth@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux RCU <rcu@vger.kernel.org>,
-	Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: Fwd: [6.5.1] Slow boot and opening files (RIP: kvfree_rcu_bulk)
-Message-ID: <bbbb0bdf-553e-4fde-90d6-446e920b357e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <0e6fc43f-3078-911a-e63d-290c3e6d7b91@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40FF3C1E
+	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 20:43:44 +0000 (UTC)
+Received: from letrec.thunk.org (pool-173-48-116-73.bstnma.fios.verizon.net [173.48.116.73])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 383Ke1oC004437
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 3 Sep 2023 16:40:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1693773603; bh=Ppr8KeJeHsorQrVaGp9vsaGRferjzXALJp6n2MSlTSY=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=NuQxVZ9mclBiwaN7p4ANjPYWQNpqTpGtI8FNJ5u85Jv/3mpwTxcAb29K7n+Kna8C/
+	 4vI4MvqtUa4MgoeAF/xkGyWINR5UD3Ncjpfw0mEAkiW9LkFX4ctP3xS5cKfMvAGgJS
+	 90iGpbU7cHuoe7141EeQnEy74+fZXryjMe78sGlOw67jTfqKOMJ058BxwaGwk2ICWH
+	 J1lYxuwjpuEreXNGUSPY2daWoB/qGVkGejcIuhrGggVC65+o1dCkrLaKFcoHAKRDYB
+	 GKCGc3vNkwfFbY05T/dTtO7tMEYZdLLrfvULFg4b9pavzqH0HTCLRS9A0/mZKdCl93
+	 SGw/ApcX/Ch9A==
+Received: by letrec.thunk.org (Postfix, from userid 15806)
+	id 9BEC28C026E; Sun,  3 Sep 2023 16:40:01 -0400 (EDT)
+Date: Sun, 3 Sep 2023 16:40:01 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Zorro Lang <zlang@kernel.org>
+Cc: linux-ext4@vger.kernel.org, fstests@vger.kernel.org,
+        regressions@lists.linux.dev
+Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
+ test fails
+Message-ID: <ZPTvIb6hwIjY7T2M@mit.edu>
+References: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,122 +37,101 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0e6fc43f-3078-911a-e63d-290c3e6d7b91@gmail.com>
+In-Reply-To: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
 
-On Sun, Sep 03, 2023 at 08:34:44AM +0700, Bagas Sanjaya wrote:
-> Hi,
+On Sun, Sep 03, 2023 at 08:00:01PM +0800, Zorro Lang wrote:
+> Hi ext4 folks,
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+> Recently I found lots of fstests cases which belong to "recoveryloop" (e.g.
+> g/388 [1], g/455 [2], g/475 [3] and g/482 [4]) or does fs shutdown/resize test
+> (e.g. ext4/059 [5], g/530 [6]) failed ext4 with 1k blocksize, the kernel is
+> linux v6.6-rc0+ (HEAD=b84acc11b1c9).
 > 
-> > I've just made the transition from 6.4.14 to 6.5.1 and my Haswell-EP X99 machine took way longer to boot (55 seconds instead of 16 seconds). The following trace was seen in dmesg which was also not present on 6.4.14 (and might be the cause for the long boot time); this is on bare metal.
-> > 
-> > [  +0,000021] CPU: 13 PID: 338 Comm: kworker/13:1 Not tainted 6.5.1-3.1-cachyos-lto #1 c414458bd5e5db6e6f9addca639c3a78811b24e7
+> I tested with MKFS_OPTIONS="-b 1024", no specific MOUNT_OPTIONS. I hit these
+> failure several times, and I didn't hit them on my last regression test on
+> v6.5-rc7+. So I think this might be a regression problem. And I didn't hit
+> this failures on xfs. If this's a known issue will be fixed soon, feel free
+> to tell me.
 
-This looks like part of the splat was omitted.
+TL;DR: there definitely seenms to be something going on with g/455 and
+g/482 with the ext4/1k blocksize case in Linus's latest upstream tree,
+although it wasn't there in the ext4 branch which I sent to Linus to
+pull.
 
-> > [  +0,000003] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
-> > [  +0,000002] Workqueue: events kfree_rcu_work
-> > [  +0,000004] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000004] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 72 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 05 df ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
-> > [  +0,000002] RSP: 0018:ffff8fe4611cbd90 EFLAGS: 00010206
-> > [  +0,000002] RAX: 0000000000000048 RBX: ffff8fe8e04f7000 RCX: fffffffffffffffc
-> > [  +0,000002] RDX: 0000000000000000 RSI: ffff8fe8e04f7000 RDI: ffff8fe9df95cac8
-> > [  +0,000001] RBP: ffff8fe4611cbe40 R08: 8080808080808080 R09: fefefefefefefeff
-> > [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
-> > [  +0,000001] R13: ffff8fe4611cbde0 R14: ffff8fe9df95cac8 R15: ffff8fe4611cbdd0
-> > [  +0,000001] FS:  0000000000000000(0000) GS:ffff8fe9df940000(0000) knlGS:0000000000000000
-> > [  +0,000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  +0,000002] CR2: 00007f8287bff008 CR3: 00000005e8f73001 CR4: 00000000001706e0
-> > [  +0,000001] Call Trace:
-> > [  +0,000003]  <TASK>
-> > [  +0,000001]  ? __warn+0x9e/0x160
-> > [  +0,000004]  ? kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000004]  ? report_bug+0x112/0x180
-> > [  +0,000003]  ? handle_bug+0x3d/0x80
-> > [  +0,000003]  ? exc_invalid_op+0x16/0x40
-> > [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
-> > [  +0,000005]  ? kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000003]  kfree_rcu_work+0xcd/0x200
-> > [  +0,000005]  process_one_work+0x21a/0x620
-> > [  +0,000004]  ? wake_up_process+0x1d3/0x1720
-> > [  +0,000004]  worker_thread+0x12b/0x4c0
-> > [  +0,000003]  ? compat_get_bitmap+0xa0/0xa0
-> > [  +0,000003]  kthread+0xf1/0x160
-> > [  +0,000004]  ? getreg32+0x1e0/0x1e0
-> > [  +0,000003]  ret_from_fork+0x30/0x40
-> > [  +0,000005]  ? getreg32+0x1e0/0x1e0
-> > [  +0,000003]  ret_from_fork_asm+0x11/0x20
-> > [  +0,000005]  </TASK>
-> > [  +0,000001] ---[ end trace 0000000000000000 ]---
-> 
-> Later, the reporter came up with another trace:
-> 
-> > I just saw a patch from Hugh Dickins on the LKML (https://www.spinics.net/lists/kernel/msg4919906.html) and indeed, with my self-compiled 6.5.1 Kernel, the trace is now downgraded to a warning (see below). However, the slow boot still remains and also my games won't load up due to missing a rendering device. But that might be a different issue.
-> > 
-> > 
-> > [  +0,000227] ------------[ cut here ]------------
-> > [  +0,000002] WARNING: CPU: 21 PID: 345 at kernel/rcu/tree.c:2952 kvfree_rcu_bulk+0x13b/0x160
 
-In -stable v6.5.1, this line is the following:
+Unfortunately, generic/475 is a known failure, especially in the 1k
+block size case.  The rate seems to change a bit over time.  For
+example from 6.2:
 
-	rcu_lock_acquire(&rcu_callback_map);
+ext4/1k: 522 tests, 2 failures, 45 skipped, 6153 seconds
+  Flaky: generic/051: 40% (2/5)   generic/475: 60% (3/5)
 
-None of the patches in the github URL listed in the full version of that
-bugzilla comment affect this file, but some of them could potentially
-produce a slowdown.
+and from 6.1.0-rc4:
 
-Nevertheless adding Uladzislau on CC for his thoughts.
+ext4/1k: 522 tests, 2 failures, 45 skipped, 5660 seconds
+  Flaky: generic/051: 60% (3/5)   generic/475: 40% (2/5)
 
-In the meantime, I echo Artem S. Tashkinov's suggestion of bisection.
+In 6.5-rc3, it looks like the rate has gotten worse:
 
-							Thanx, Paul
+ext4/1k: 30 tests, 29 failures, 2402 seconds
+  Flaky: generic/475: 97% (29/30)
 
-> > [  +0,000011] Modules linked in: pkcs8_key_parser crypto_user fuse loop zram bpf_preload ip_tables x_tables ext4 crc32c_generic mbcache crc16 jbd2 usbhid amdgpu mfd_core drm_buddy drm_suballoc_helper crc32c_i>
-> > [  +0,000027] CPU: 21 PID: 345 Comm: kworker/21:1 Not tainted 6.5.1-3.1-cachyos-lto #1 de6495663682da00bbe0d80bdc163dd768b25681
-> > [  +0,000004] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
-> > [  +0,000002] Workqueue: events kfree_rcu_work
-> > [  +0,000006] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000006] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 52 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 e5 de ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
-> > [  +0,000003] RSP: 0018:ffff8df57a5ffd90 EFLAGS: 00010206
-> > [  +0,000003] RAX: 0000000000000020 RBX: ffff8df44cb40000 RCX: fffffffffffffffc
-> > [  +0,000003] RDX: 0000000000000000 RSI: ffff8df44cb40000 RDI: ffff8df91fb5cac8
-> > [  +0,000002] RBP: ffff8df57a5ffe40 R08: 8080808080808080 R09: fefefefefefefeff
-> > [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
-> > [  +0,000002] R13: ffff8df57a5ffde0 R14: ffff8df91fb5cac8 R15: ffff8df57a5ffdd0
-> > [  +0,000002] FS:  0000000000000000(0000) GS:ffff8df91fb40000(0000) knlGS:0000000000000000
-> > [  +0,000003] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  +0,000002] CR2: 000055fe51d3f700 CR3: 000000065de7d002 CR4: 00000000001706e0
-> > [  +0,000002] Call Trace:
-> > [  +0,000003]  <TASK>
-> > [  +0,000002]  ? __warn+0x9e/0x160
-> > [  +0,000006]  ? kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000005]  ? report_bug+0x112/0x180
-> > [  +0,000005]  ? handle_bug+0x3d/0x80
-> > [  +0,000005]  ? exc_invalid_op+0x16/0x40
-> > [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
-> > [  +0,000007]  ? kvfree_rcu_bulk+0x13b/0x160
-> > [  +0,000006]  kfree_rcu_work+0xcd/0x200
-> > [  +0,000006]  process_one_work+0x21a/0x620
-> > [  +0,000006]  ? wake_up_process+0x1d3/0x1720
-> > [  +0,000005]  worker_thread+0x12b/0x4c0
-> > [  +0,000005]  ? compat_get_bitmap+0xa0/0xa0
-> > [  +0,000004]  kthread+0xf1/0x160
-> > [  +0,000006]  ? getreg32+0x1e0/0x1e0
-> > [  +0,000004]  ret_from_fork+0x30/0x40
-> > [  +0,000007]  ? getreg32+0x1e0/0x1e0
-> > [  +0,000003]  ret_from_fork_asm+0x11/0x20
-> > [  +0,000009]  </TASK>
-> > [  +0,000001] ---[ end trace 0000000000000000 ]---
-> 
-> See Bugzilla for the full thread.
-> 
-> Anyway, I'm adding this regression to be tracked by regzbot:
-> 
-> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217864
-> 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217864
-> 
-> -- 
-> An old man doll... just what I always wanted! - Clara
+Alas, finding a root cause for generic/475 has been challenging.  I
+suspect that it happens when we crash while doing a large truncate on
+a highly fragmented file system, such as that the truncate has to span
+multiple truncates, with the inode on the orphan list so the kernel
+can complete the truncate if we trash mid-truncate when we clean up
+the orphan list.  However, that's just a theory, and I don't yet have
+hard evidence.
+
+
+The generic/388 test is very different.  It uses the shutdown ioctl,
+and that's something that ext4 has never completely handled correctly.
+Doing it right would require adding some locks in hot paths, so it's
+one which I've suppressed for all of my ext4 tests[1].
+
+[1] https://github.com/tytso/xfstests-bld/blob/master/test-appliance/files/root/fs/ext4/exclude
+
+
+The generic/455 and generic/482 tests work by using dm-log-writes, and
+that was *not* failing on the branch (v6.5.0-rc3-60-g768d612f7982) for
+which I sent a pull request to Linus:
+
+ext4/1k: 10 tests, 63 seconds
+  generic/455  Pass     4s
+  generic/482  Pass     8s
+  generic/455  Pass     5s
+  generic/482  Pass     8s
+  generic/455  Pass     5s
+  generic/482  Pass     7s
+  generic/455  Pass     5s
+  generic/482  Pass     8s
+  generic/455  Pass     5s
+  generic/482  Pass     8s
+Totals: 10 tests, 0 skipped, 0 failures, 0 errors, 63s
+
+... but I can confirm that it's failing on Linus's upstream (I tested
+commit 708283abf896):
+
+ext4/1k: 2 tests, 2 failures, 31 seconds
+  generic/455  Failed   4s
+  generic/455  Failed   2s
+  generic/455  Pass     5s
+  generic/455  Failed   3s
+  generic/455  Failed   2s
+  generic/482  Failed   2s
+  generic/482  Failed   3s
+  generic/482  Failed   1s
+  generic/482  Failed   3s
+  generic/482  Failed   4s
+Totals: 10 tests, 0 skipped, 9 failures, 0 errors, 29s
+
+						- Ted
+
+
+P.S.  After doing some digging, it appears generic/455 does have some
+failures on 6.4 (20%) and 6.5-rc3 (5%) on the ext4/1k blocksize test
+config.  But *something* is definitely causing a much greater failure
+rate in Linus's upstream.  The good news is that should make it
+relatively easy to bisect.  I'll look into it.  Thanks for flagging
+this.
