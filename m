@@ -1,160 +1,175 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5B4623
-	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 01:34:58 +0000 (UTC)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-571194584e2so208071eaf.3
-        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 18:34:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF3C7F
+	for <regressions@lists.linux.dev>; Sun,  3 Sep 2023 03:29:56 +0000 (UTC)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5921a962adfso3564447b3.1
+        for <regressions@lists.linux.dev>; Sat, 02 Sep 2023 20:29:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693704897; x=1694309697; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vpf5yFQzTKbtGPhibmbGyhNV72VtnMYQrDv0oFg7g8c=;
-        b=XskyRgSF2Q8l9bpGPpoYPvRVgQRaSRfqSdfNZyEh014dSfpzOsFW9L8wWxBNpysrpq
-         tfR1EU5aA4ETU8NVFYLXKjSF/u3TEi7J4PUkVjr37Y34/X7RMIzc70x2aXm5wCq/4NmI
-         FDHFsg4yLTxfBh8trjihRAzUrIS/YI+i232xj1CEBRlR9eZEfCE9mPw4mN3NAkY8BhHy
-         67Edj2A8gRzuZsM1a5qkbbeb2ccjuVmcPl4KCjTBj9vvm6e9XshAq5rFlocwxP9j+9gP
-         +10jU3X237z6iBgJB/nlEFw8GO5zUR2Ev7LIKS6+hzeOKpFkKPD8Vq0a2CiSpNzH8dmo
-         FTCw==
+        d=google.com; s=20221208; t=1693711796; x=1694316596; darn=lists.linux.dev;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O1SlPD/HlZl3/ApL2bHNmig99TpQMcnUsVn2m8D0Vgg=;
+        b=VGPv76zgJ+T32etxHkGD4nnstg8TvKxehUTbMLGfbFq78WMFqWOzGGQiMDPlYNYlzV
+         TzXj3OZvUAmcEZPParVlDlKLEa9dk6XR7ptjzaFfRzgKA+LZhl3aqbfKXqiZVMN8UCuI
+         nxXOcrqQCSfW+Hn7RvjuXKZDUcGWnNzUO9fotQ/Yl120DX7z+R1oiZ6e+m9OScoR20Q5
+         a5PyRwTg3zr6kVsVcGMFf08nu+6WKNN3IHCdpppCvD/6Lg+CEZGzaV9tS+cpORAGqHgQ
+         xbQOZXt15UD8AffsrMqp2KzZXx3bYeCpHo0Dy5vW2MCqYfQ06/D+4G5SSbX57bClBefJ
+         S8xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693704897; x=1694309697;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vpf5yFQzTKbtGPhibmbGyhNV72VtnMYQrDv0oFg7g8c=;
-        b=RVQnWt5+hwB/fdIDuWV9PQaBOTqbU47bLb0wfygphIYCJJVxkI2JQL0v1oqKodI8SM
-         Hkf/KK1NEcKuQUYZjbT70RQ+/BgIxAMh6fuAFVwKJaM8YsednHmcqmpNyrPPMgER7ItL
-         I/UgLatqPBEnYQfSxsENXe9KmZ282kJaUrV2YxFbSW9gPj8y1HO4qO+Hdv1zRICdMPB2
-         cfCYsKvEeHGYO6vcblB2cR26f3Ssr49L4wghtt3mKUEqkz7hr6xpl67DSQESGwQ1Gz1o
-         o1OFhm0nm1homDslmF0JpWVVT4gco8y90+nkVqFUyPTX1AXfehXoGDgbHGe38rB9W5w2
-         x4PQ==
-X-Gm-Message-State: AOJu0YygrNv6D3I8aMmoZGisJtrMosVPkvyxwp4+ZILtKMEVC+96Dv1y
-	fBTRSE3W3UaJzIGyVW8Vpf4=
-X-Google-Smtp-Source: AGHT+IHzoOaQmG3vl2K1g15/1pexbfNCZIRZfA8822XtO9t3wr2uQenHmvz9Q0d8NMNXhVXiVmYltg==
-X-Received: by 2002:a05:6808:bc3:b0:3a7:3100:f8b9 with SMTP id o3-20020a0568080bc300b003a73100f8b9mr9340225oik.31.1693704897230;
-        Sat, 02 Sep 2023 18:34:57 -0700 (PDT)
-Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id c13-20020a170902d48d00b001bee782a1desm5149376plg.181.2023.09.02.18.34.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Sep 2023 18:34:56 -0700 (PDT)
-Message-ID: <0e6fc43f-3078-911a-e63d-290c3e6d7b91@gmail.com>
-Date: Sun, 3 Sep 2023 08:34:44 +0700
+        d=1e100.net; s=20221208; t=1693711796; x=1694316596;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O1SlPD/HlZl3/ApL2bHNmig99TpQMcnUsVn2m8D0Vgg=;
+        b=Mmr9zjUUpDwJTFdQJ3E8pvrizPA7rc+PSmFXpX9RsuimG0hlqJD8zbsautmQVFmlSZ
+         E1DQetK9IxatRbBtdb7LMsCioA47ygkxDgd2K9DdrGO5eRrE3I0JBntGcAijoezsuWJZ
+         IWInNEBoiVWjWDkUH/j0SeMWpE8YTosMdl5q9EVg7uL7g9Cufkv41+FSmArSNUWDoy0p
+         9Z6SCUgJJ6Asix/sZn7qCvEhDKg5I6w3YcEqGciHxub2D9r9cWm7sytJMgC72gbSuTzB
+         bUGwHmU2yKoCcTfy5GNvyOr/jJLKQMfeHBe8rQ+YM8XaV6kluZxOvSTbL3UXzpQOwBR+
+         As4w==
+X-Gm-Message-State: AOJu0YzFNfWuFOpxdvl7WvD7y6mtSyPleccftMabJl0TJqKnwVtW2wit
+	c73Gk9R1yTpMdBty3VOq8CcX6w==
+X-Google-Smtp-Source: AGHT+IGndHoq+5l4aEFGeXil4nuAmF24mwgZ/R2voWQcfpcvYa+TQsPZaW1RHIgPYVQ6+7sXrw2xOw==
+X-Received: by 2002:a0d:d90e:0:b0:579:e8de:3580 with SMTP id b14-20020a0dd90e000000b00579e8de3580mr7343592ywe.9.1693711795653;
+        Sat, 02 Sep 2023 20:29:55 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id p189-20020a815bc6000000b0054bfc94a10dsm1954015ywb.47.2023.09.02.20.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Sep 2023 20:29:55 -0700 (PDT)
+Date: Sat, 2 Sep 2023 20:29:46 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.attlocal.net
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+cc: "Paul E. McKenney" <paulmck@kernel.org>, Ziwei Dai <ziwei.dai@unisoc.com>, 
+    Hugh Dickins <hughd@google.com>, Marcus Seyfarth <m.seyfarth@gmail.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Regressions <regressions@lists.linux.dev>, 
+    Linux RCU <rcu@vger.kernel.org>
+Subject: Re: Fwd: [6.5.1] Slow boot and opening files (RIP:
+ kvfree_rcu_bulk)
+In-Reply-To: <0e6fc43f-3078-911a-e63d-290c3e6d7b91@gmail.com>
+Message-ID: <c9893a21-5873-7f26-7bed-79f5cd441e82@google.com>
+References: <0e6fc43f-3078-911a-e63d-290c3e6d7b91@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Content-Language: en-US
-To: "Paul E. McKenney" <paulmck@kernel.org>, Ziwei Dai
- <ziwei.dai@unisoc.com>, Hugh Dickins <hughd@google.com>,
- Marcus Seyfarth <m.seyfarth@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RCU <rcu@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: [6.5.1] Slow boot and opening files (RIP: kvfree_rcu_bulk)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Sun, 3 Sep 2023, Bagas Sanjaya wrote:
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> I've just made the transition from 6.4.14 to 6.5.1 and my Haswell-EP X99 machine took way longer to boot (55 seconds instead of 16 seconds). The following trace was seen in dmesg which was also not present on 6.4.14 (and might be the cause for the long boot time); this is on bare metal.
+> Hi,
 > 
-> [  +0,000021] CPU: 13 PID: 338 Comm: kworker/13:1 Not tainted 6.5.1-3.1-cachyos-lto #1 c414458bd5e5db6e6f9addca639c3a78811b24e7
-> [  +0,000003] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
-> [  +0,000002] Workqueue: events kfree_rcu_work
-> [  +0,000004] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000004] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 72 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 05 df ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
-> [  +0,000002] RSP: 0018:ffff8fe4611cbd90 EFLAGS: 00010206
-> [  +0,000002] RAX: 0000000000000048 RBX: ffff8fe8e04f7000 RCX: fffffffffffffffc
-> [  +0,000002] RDX: 0000000000000000 RSI: ffff8fe8e04f7000 RDI: ffff8fe9df95cac8
-> [  +0,000001] RBP: ffff8fe4611cbe40 R08: 8080808080808080 R09: fefefefefefefeff
-> [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
-> [  +0,000001] R13: ffff8fe4611cbde0 R14: ffff8fe9df95cac8 R15: ffff8fe4611cbdd0
-> [  +0,000001] FS:  0000000000000000(0000) GS:ffff8fe9df940000(0000) knlGS:0000000000000000
-> [  +0,000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  +0,000002] CR2: 00007f8287bff008 CR3: 00000005e8f73001 CR4: 00000000001706e0
-> [  +0,000001] Call Trace:
-> [  +0,000003]  <TASK>
-> [  +0,000001]  ? __warn+0x9e/0x160
-> [  +0,000004]  ? kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000004]  ? report_bug+0x112/0x180
-> [  +0,000003]  ? handle_bug+0x3d/0x80
-> [  +0,000003]  ? exc_invalid_op+0x16/0x40
-> [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
-> [  +0,000005]  ? kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000003]  kfree_rcu_work+0xcd/0x200
-> [  +0,000005]  process_one_work+0x21a/0x620
-> [  +0,000004]  ? wake_up_process+0x1d3/0x1720
-> [  +0,000004]  worker_thread+0x12b/0x4c0
-> [  +0,000003]  ? compat_get_bitmap+0xa0/0xa0
-> [  +0,000003]  kthread+0xf1/0x160
-> [  +0,000004]  ? getreg32+0x1e0/0x1e0
-> [  +0,000003]  ret_from_fork+0x30/0x40
-> [  +0,000005]  ? getreg32+0x1e0/0x1e0
-> [  +0,000003]  ret_from_fork_asm+0x11/0x20
-> [  +0,000005]  </TASK>
-> [  +0,000001] ---[ end trace 0000000000000000 ]---
-
-Later, the reporter came up with another trace:
-
-> I just saw a patch from Hugh Dickins on the LKML (https://www.spinics.net/lists/kernel/msg4919906.html) and indeed, with my self-compiled 6.5.1 Kernel, the trace is now downgraded to a warning (see below). However, the slow boot still remains and also my games won't load up due to missing a rendering device. But that might be a different issue.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
+> > I've just made the transition from 6.4.14 to 6.5.1 and my Haswell-EP X99 machine took way longer to boot (55 seconds instead of 16 seconds). The following trace was seen in dmesg which was also not present on 6.4.14 (and might be the cause for the long boot time); this is on bare metal.
+> > 
+> > [  +0,000021] CPU: 13 PID: 338 Comm: kworker/13:1 Not tainted 6.5.1-3.1-cachyos-lto #1 c414458bd5e5db6e6f9addca639c3a78811b24e7
+> > [  +0,000003] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
+> > [  +0,000002] Workqueue: events kfree_rcu_work
+> > [  +0,000004] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000004] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 72 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 05 df ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
+> > [  +0,000002] RSP: 0018:ffff8fe4611cbd90 EFLAGS: 00010206
+> > [  +0,000002] RAX: 0000000000000048 RBX: ffff8fe8e04f7000 RCX: fffffffffffffffc
+> > [  +0,000002] RDX: 0000000000000000 RSI: ffff8fe8e04f7000 RDI: ffff8fe9df95cac8
+> > [  +0,000001] RBP: ffff8fe4611cbe40 R08: 8080808080808080 R09: fefefefefefefeff
+> > [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
+> > [  +0,000001] R13: ffff8fe4611cbde0 R14: ffff8fe9df95cac8 R15: ffff8fe4611cbdd0
+> > [  +0,000001] FS:  0000000000000000(0000) GS:ffff8fe9df940000(0000) knlGS:0000000000000000
+> > [  +0,000002] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  +0,000002] CR2: 00007f8287bff008 CR3: 00000005e8f73001 CR4: 00000000001706e0
+> > [  +0,000001] Call Trace:
+> > [  +0,000003]  <TASK>
+> > [  +0,000001]  ? __warn+0x9e/0x160
+> > [  +0,000004]  ? kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000004]  ? report_bug+0x112/0x180
+> > [  +0,000003]  ? handle_bug+0x3d/0x80
+> > [  +0,000003]  ? exc_invalid_op+0x16/0x40
+> > [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
+> > [  +0,000005]  ? kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000003]  kfree_rcu_work+0xcd/0x200
+> > [  +0,000005]  process_one_work+0x21a/0x620
+> > [  +0,000004]  ? wake_up_process+0x1d3/0x1720
+> > [  +0,000004]  worker_thread+0x12b/0x4c0
+> > [  +0,000003]  ? compat_get_bitmap+0xa0/0xa0
+> > [  +0,000003]  kthread+0xf1/0x160
+> > [  +0,000004]  ? getreg32+0x1e0/0x1e0
+> > [  +0,000003]  ret_from_fork+0x30/0x40
+> > [  +0,000005]  ? getreg32+0x1e0/0x1e0
+> > [  +0,000003]  ret_from_fork_asm+0x11/0x20
+> > [  +0,000005]  </TASK>
+> > [  +0,000001] ---[ end trace 0000000000000000 ]---
 > 
-> [  +0,000227] ------------[ cut here ]------------
-> [  +0,000002] WARNING: CPU: 21 PID: 345 at kernel/rcu/tree.c:2952 kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000011] Modules linked in: pkcs8_key_parser crypto_user fuse loop zram bpf_preload ip_tables x_tables ext4 crc32c_generic mbcache crc16 jbd2 usbhid amdgpu mfd_core drm_buddy drm_suballoc_helper crc32c_i>
-> [  +0,000027] CPU: 21 PID: 345 Comm: kworker/21:1 Not tainted 6.5.1-3.1-cachyos-lto #1 de6495663682da00bbe0d80bdc163dd768b25681
-> [  +0,000004] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
-> [  +0,000002] Workqueue: events kfree_rcu_work
-> [  +0,000006] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000006] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 52 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 e5 de ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
-> [  +0,000003] RSP: 0018:ffff8df57a5ffd90 EFLAGS: 00010206
-> [  +0,000003] RAX: 0000000000000020 RBX: ffff8df44cb40000 RCX: fffffffffffffffc
-> [  +0,000003] RDX: 0000000000000000 RSI: ffff8df44cb40000 RDI: ffff8df91fb5cac8
-> [  +0,000002] RBP: ffff8df57a5ffe40 R08: 8080808080808080 R09: fefefefefefefeff
-> [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
-> [  +0,000002] R13: ffff8df57a5ffde0 R14: ffff8df91fb5cac8 R15: ffff8df57a5ffdd0
-> [  +0,000002] FS:  0000000000000000(0000) GS:ffff8df91fb40000(0000) knlGS:0000000000000000
-> [  +0,000003] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  +0,000002] CR2: 000055fe51d3f700 CR3: 000000065de7d002 CR4: 00000000001706e0
-> [  +0,000002] Call Trace:
-> [  +0,000003]  <TASK>
-> [  +0,000002]  ? __warn+0x9e/0x160
-> [  +0,000006]  ? kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000005]  ? report_bug+0x112/0x180
-> [  +0,000005]  ? handle_bug+0x3d/0x80
-> [  +0,000005]  ? exc_invalid_op+0x16/0x40
-> [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
-> [  +0,000007]  ? kvfree_rcu_bulk+0x13b/0x160
-> [  +0,000006]  kfree_rcu_work+0xcd/0x200
-> [  +0,000006]  process_one_work+0x21a/0x620
-> [  +0,000006]  ? wake_up_process+0x1d3/0x1720
-> [  +0,000005]  worker_thread+0x12b/0x4c0
-> [  +0,000005]  ? compat_get_bitmap+0xa0/0xa0
-> [  +0,000004]  kthread+0xf1/0x160
-> [  +0,000006]  ? getreg32+0x1e0/0x1e0
-> [  +0,000004]  ret_from_fork+0x30/0x40
-> [  +0,000007]  ? getreg32+0x1e0/0x1e0
-> [  +0,000003]  ret_from_fork_asm+0x11/0x20
-> [  +0,000009]  </TASK>
-> [  +0,000001] ---[ end trace 0000000000000000 ]---
+> Later, the reporter came up with another trace:
+> 
+> > I just saw a patch from Hugh Dickins on the LKML (https://www.spinics.net/lists/kernel/msg4919906.html) and indeed, with my self-compiled 6.5.1 Kernel, the trace is now downgraded to a warning (see below). However, the slow boot still remains and also my games won't load up due to missing a rendering device. But that might be a different issue.
+> > 
+> > 
+> > [  +0,000227] ------------[ cut here ]------------
+> > [  +0,000002] WARNING: CPU: 21 PID: 345 at kernel/rcu/tree.c:2952 kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000011] Modules linked in: pkcs8_key_parser crypto_user fuse loop zram bpf_preload ip_tables x_tables ext4 crc32c_generic mbcache crc16 jbd2 usbhid amdgpu mfd_core drm_buddy drm_suballoc_helper crc32c_i>
+> > [  +0,000027] CPU: 21 PID: 345 Comm: kworker/21:1 Not tainted 6.5.1-3.1-cachyos-lto #1 de6495663682da00bbe0d80bdc163dd768b25681
+> > [  +0,000004] Hardware name: LENOVO GAMING TF/X99-TF Gaming, BIOS CX99DE26 10/10/2020
+> > [  +0,000002] Workqueue: events kfree_rcu_work
+> > [  +0,000006] RIP: 0010:kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000006] Code: 80 04 00 00 80 bf 89 04 00 00 00 75 24 85 c0 75 20 31 f6 ba 02 00 00 00 e8 52 50 bd ff 5b 41 5c 41 5e 41 5f 5d e9 e5 de ba ff <0f> 0b e9 54 ff ff ff a9 ff ff ff 7f 74 e5 80 bf 88 04 00 00 >
+> > [  +0,000003] RSP: 0018:ffff8df57a5ffd90 EFLAGS: 00010206
+> > [  +0,000003] RAX: 0000000000000020 RBX: ffff8df44cb40000 RCX: fffffffffffffffc
+> > [  +0,000003] RDX: 0000000000000000 RSI: ffff8df44cb40000 RDI: ffff8df91fb5cac8
+> > [  +0,000002] RBP: ffff8df57a5ffe40 R08: 8080808080808080 R09: fefefefefefefeff
+> > [  +0,000002] R10: 000073746e657665 R11: 8080000000000000 R12: 0000000000000000
+> > [  +0,000002] R13: ffff8df57a5ffde0 R14: ffff8df91fb5cac8 R15: ffff8df57a5ffdd0
+> > [  +0,000002] FS:  0000000000000000(0000) GS:ffff8df91fb40000(0000) knlGS:0000000000000000
+> > [  +0,000003] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  +0,000002] CR2: 000055fe51d3f700 CR3: 000000065de7d002 CR4: 00000000001706e0
+> > [  +0,000002] Call Trace:
+> > [  +0,000003]  <TASK>
+> > [  +0,000002]  ? __warn+0x9e/0x160
+> > [  +0,000006]  ? kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000005]  ? report_bug+0x112/0x180
+> > [  +0,000005]  ? handle_bug+0x3d/0x80
+> > [  +0,000005]  ? exc_invalid_op+0x16/0x40
+> > [  +0,000003]  ? asm_exc_invalid_op+0x16/0x20
+> > [  +0,000007]  ? kvfree_rcu_bulk+0x13b/0x160
+> > [  +0,000006]  kfree_rcu_work+0xcd/0x200
+> > [  +0,000006]  process_one_work+0x21a/0x620
+> > [  +0,000006]  ? wake_up_process+0x1d3/0x1720
+> > [  +0,000005]  worker_thread+0x12b/0x4c0
+> > [  +0,000005]  ? compat_get_bitmap+0xa0/0xa0
+> > [  +0,000004]  kthread+0xf1/0x160
+> > [  +0,000006]  ? getreg32+0x1e0/0x1e0
+> > [  +0,000004]  ret_from_fork+0x30/0x40
+> > [  +0,000007]  ? getreg32+0x1e0/0x1e0
+> > [  +0,000003]  ret_from_fork_asm+0x11/0x20
+> > [  +0,000009]  </TASK>
+> > [  +0,000001] ---[ end trace 0000000000000000 ]---
+> 
+> See Bugzilla for the full thread.
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217864
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217864
 
-See Bugzilla for the full thread.
+Sorry, please delete me from this thread: I'm no expert on system
+slowdowns or cachyos or kvfree_rcu_bulk(), and have to stick to those
+things which I might be able to help with.
 
-Anyway, I'm adding this regression to be tracked by regzbot:
+IIRC sometimes slowdowns like that come from an area of uncached memory
+getting to be used by mistake; and presumably two bisections of 6.4->6.5
+on that machine would help identify where the slowdown and the warning
+come in - but I shall not be participating.
 
-#regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217864
+The 6.6 patch of mine which Marcus applied is not wrong on 6.5, but not
+helpful there either; and not relevant to whatever is going on here.
 
-Thanks.
+He shows it as "changing" a warning with the first few lines left out
+to a warning with the first few lines included i.e. no change,
+so no need for me to get involved.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217864
-
--- 
-An old man doll... just what I always wanted! - Clara
+Hugh
