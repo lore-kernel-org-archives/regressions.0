@@ -1,116 +1,65 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0281FBD
-	for <regressions@lists.linux.dev>; Mon,  4 Sep 2023 21:49:58 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7DE6121832;
-	Mon,  4 Sep 2023 21:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1693864195; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=let9OI09Eiu+hkhhUy8NMZc1px2Q4rKRQFVewL2DAXo=;
-	b=BIoaDJLgksvTGmp6bSPV07JHl9Ys5LTLCyjw76ZyeXSk7FcEqx5IdHdsTSyV/QfsVbeb9i
-	UqGLFZBEJQDkEP+PSUvsdkKf1g9BGFweGrQuWaUK3sa4ye9rM45iTjjlFVMBgOdC9n/Os1
-	6LxOJ5dGNtxMCWg+Kks583eK/Ff2Fh4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1693864195;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=let9OI09Eiu+hkhhUy8NMZc1px2Q4rKRQFVewL2DAXo=;
-	b=3rNvN5gQeF+eQaJdLHOoouqfZ5R9zzF6RCO0zkNQ5w0GQ+vs6dJSdTG+6ivjXeEx5H8n4X
-	sUxN5AbVH1bKZRAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 552EB13425;
-	Mon,  4 Sep 2023 21:49:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id WOcSEwNR9mSWeQAAMHmgww
-	(envelope-from <tiwai@suse.de>); Mon, 04 Sep 2023 21:49:55 +0000
-Date: Mon, 04 Sep 2023 23:49:54 +0200
-Message-ID: <87msy1ip6l.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Ash Holland <ash@sorrel.sh>
-Cc: alsa-devel@alsa-project.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] rust midir MIDI library causes kernel oops
-In-Reply-To: <8a555319-9f31-4ea2-878f-adc338bc40d4@sorrel.sh>
-References: <8a555319-9f31-4ea2-878f-adc338bc40d4@sorrel.sh>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53421FBD
+	for <regressions@lists.linux.dev>; Mon,  4 Sep 2023 22:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CHRE1cLyKsjkZQAS4TIibSgoP17StuO7UkBUcla/njw=; b=D+uZMBdxDKG6znncSiuAJau2Ud
+	5vF177GratsH7T+uHAqXC9sifFPs/tiD1SAUBEuwDv08ZBFomGnN8a2mDH+Plz4SFXgJWuvV0JzXm
+	9zB836m84oe2oDjDceB56wub/hgBEU1M2NcfZVgEq22/nebAITuo54KuAHlHWOegx/mjZC3yLEHQ2
+	qJDSUWB+UWkVGQXW14qrYpE0hoUt059LQ65HwGcEiB7qDzOmRezBZO5LvEwTzhVxDujCJGXBWkdSV
+	cN8qI1yqqxNLHoueFq4oSVI0ZLTr/wkY4fB6IlFjpcgz4PbGteLH38M5TYwifobzYn4DVhcNyvK+g
+	k51THaEw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qdHz6-002zz8-Cl; Mon, 04 Sep 2023 22:23:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F0484300642; Tue,  5 Sep 2023 00:23:51 +0200 (CEST)
+Date: Tue, 5 Sep 2023 00:23:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Hao Jia <jiahao.os@bytedance.com>
+Cc: Benjamin Segall <bsegall@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Igor Raits <igor.raits@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Stable <stable@vger.kernel.org>
+Subject: Re: [External] Re: Fwd: WARNING: CPU: 13 PID: 3837105 at
+ kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
+Message-ID: <20230904222351.GC2568@noisy.programming.kicks-ass.net>
+References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+ <xm26cyz4ibnb.fsf@google.com>
+ <55e2861e-9722-08f8-2c49-966035ff4218@bytedance.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55e2861e-9722-08f8-2c49-966035ff4218@bytedance.com>
 
-On Mon, 04 Sep 2023 20:10:45 +0200,
-Ash Holland wrote:
-> 
-> Hello,
-> 
-> I upgraded to Linux 6.5 and found that my MIDI-input application no longer
-> works, and causes an oops when I launch it.
-> 
-> The application can be found at https://github.com/sersorrel/lp; `cargo run` is
-> enough to cause the oops, though it has many undocumented dependencies, sorry
-> (including a Novation Launchpad Mini Mk3). Once the oops occurs, it seems like
-> it can still send MIDI to the Launchpad (i.e. display things on it), but input
-> from the Launchpad doesn't work. I use NixOS with minimally-altered kernel
-> configuration (blacklisted r8152 module and `amdgpu.reset_method=4` parameter),
-> and was happily using kernel 6.4.9 or so before upgrading to 6.5.
-> 
-> I bisected this to:
-> 
-> commit f80e6d60d677be1d4dbbcdbf97379b8fbcf97ff0
-> Author: Takashi Iwai <tiwai@suse.de>
-> Date:   2023-05-23 09:53:38 +0200
-> 
->     ALSA: seq: Clear padded bytes at expanding events
-> 
->     There can be a small memory hole that may not be cleared at expanding
->     an event with the variable length type.  Make sure to clear it.
-> 
->     Reviewed-by: Jaroslav Kysela <perex@perex.cz>
->     Link: https://lore.kernel.org/r/20230523075358.9672-18-tiwai@suse.de
->     Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> 
-> #regzbot introduced: f80e6d60d677be1d4dbbcdbf97379b8fbcf97ff0
-> 
-> I guess the problematic part is the `memset(buf + len, 0, newlen - len)`, which
-> tries to memset a buffer that can be allocated in userspace.
+On Thu, Aug 31, 2023 at 04:48:29PM +0800, Hao Jia wrote:
 
-Yes, that was a bad change.  Could you try the fix below?
+> If I understand correctly, rq->clock_update_flags may be set to
+> RQCF_ACT_SKIP after __schedule() holds the rq lock, and sometimes the rq
+> lock may be released briefly in __schedule(), such as newidle_balance(). At
+> this time Other CPUs hold this rq lock, and then calling
+> rq_clock_start_loop_update() may trigger this warning.
+> 
+> This warning check might be wrong. We need to add assert_clock_updated() to
+> check that the rq clock has been updated before calling
+> rq_clock_start_loop_update().
+> 
+> Maybe some things can be like this?
 
+Urgh, aside from it being white space mangled, I think this is entirely
+going in the wrong direction.
 
-thanks,
-
-Takashi
-
--- 8< --
---- a/sound/core/seq/seq_memory.c
-+++ b/sound/core/seq/seq_memory.c
-@@ -187,8 +187,12 @@ int snd_seq_expand_var_event(const struct snd_seq_event *event, int count, char
- 	err = expand_var_event(event, 0, len, buf, in_kernel);
- 	if (err < 0)
- 		return err;
--	if (len != newlen)
--		memset(buf + len, 0, newlen - len);
-+	if (len != newlen) {
-+		if (in_kernel)
-+			memset(buf + len, 0, newlen - len);
-+		else
-+			clear_user((__force void __user *)buf + len, newlen - len);
-+	}
- 	return newlen;
- }
- EXPORT_SYMBOL(snd_seq_expand_var_event);
+Leaking ACT_SKIP is dodgy as heck.. it's entirely too late to think
+clearly though, I'll have to try again tomorrow.
