@@ -1,157 +1,140 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B84CA65
-	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 20:11:29 +0000 (UTC)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-501bd6f7d11so1939196e87.1
-        for <regressions@lists.linux.dev>; Tue, 05 Sep 2023 13:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693944688; x=1694549488; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=w2c0X/15jRHBgEVSCCaDEJe6vWwc+ez2XuJO2zWQ3kY=;
-        b=UwhpaNFvVNdJP4vaJWyg8iQ/Fu/fbzrPEGQPJsb71atc+SNsEk5meKX7PDXo/fWRG4
-         sB8VAL+Z5A0/vpmhI4UoOMp1bbNE/n0rIE0cUuTZEMKRTRTXRzqn+yxPUshQbvH8qwPA
-         7UGsb9vbJcrw5M+Ohau7q56tlEfFi8ISAalDZ+QmvG7me5/gjCRd48MOjnhkdtOVKUjF
-         SzL+H/YzOz7BfxVq2tmeo6vUPRiY9eRG94d4TIu8s0a9jTQsgv+nJrK2tPUq+5u6BLwv
-         LyV56X23Qhl4h/8N/urY4FNYcJjNx0zOaBQmGBLjKBrzqkHRRtUTvTpHOv6OHO9uC1iV
-         gmnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693944688; x=1694549488;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w2c0X/15jRHBgEVSCCaDEJe6vWwc+ez2XuJO2zWQ3kY=;
-        b=bYystTF+Oz/sTlyVaTX5mq0NGp/YzkXEqGsZTLkvQPndGYuMTcOMPv84EXhhuhpJqo
-         6psjOTfxGZFIcls6WgkV2sACloaC5UzzAlf45WkA4dfdfxnV5Ee4LEofucGx2iV7cf4a
-         QW7Bmhk+ZZgi5wXRasP2if35Mi4O8FmUJfgLVOCHoz+o+wmwq1h8ukLsPzcw0G37BsiB
-         drbMGtiPpnOoxwp3VovCBLqV2ICOY9nPYHvrf5o54f/4jwXuuD8WuD990KnKEhqkqC+Y
-         YAnC89w1cbFEkUV1e/1cT3fX0BRqUbku5kHwMZ/vCQe1l4H8LLTmVbZT18BxarsRb4iY
-         w2Ug==
-X-Gm-Message-State: AOJu0YzE50KKKTeHJSMU8X5VDnEUvivUV/FtZRwL0Wug1uYZWILR8USR
-	GtbzwATkGpK3SU+a+YGHwJs=
-X-Google-Smtp-Source: AGHT+IHFowLDY6tJlLBXTNIpcha+Msm1E/UAmVgsnSTFGVA9BG8YgXxGRbHrBqfPB59mY2lJT0YERg==
-X-Received: by 2002:a05:6512:313b:b0:500:8f65:c624 with SMTP id p27-20020a056512313b00b005008f65c624mr557196lfd.53.1693944687570;
-        Tue, 05 Sep 2023 13:11:27 -0700 (PDT)
-Received: from [192.168.10.127] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
-        by smtp.gmail.com with ESMTPSA id j11-20020a17090686cb00b0098e422d6758sm7964172ejy.219.2023.09.05.13.11.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Sep 2023 13:11:26 -0700 (PDT)
-Message-ID: <fdd2ff37-8944-4186-844f-9698e8b2f31c@gmail.com>
-Date: Tue, 5 Sep 2023 22:11:25 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3986FC0F
+	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 22:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GeP4MIuZrBFvrMvcXRvi2QnFxUlFhMKNwjLk6UGDJZ8=; b=kWZNxsuzHVS8No9JHSY0DoVH0c
+	kfFSUvNxy9UWj5dWPo0ifDJg42hkAP0pxpJdfgm4WwjQokZWYb3r4DT8KLLqHTJg8BlnejG0DZ5vH
+	fSvbHjx+PKkPX+rLYQhILwxPMPUT8HFi2Ue4ul3D8hTFcHdoOsUuIxdURXhEs4VsSVlo3RorKHH70
+	jHVRT2bv48jv5BagNKEzq+rbl+nib9isuh8b9Ywcgj+O5Wcd5ZgLiECFD+UGJkt7M7fi8WOmQOlZA
+	YZxjnC6smy8l//2I+rnMDAmr7zzJ6j6HI2pZ2X7EU+/642QbZI+aqZUmpJccj28Bb2gj/hOJ7zIcX
+	PtVMND6Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qdeGE-00DwXa-LY; Tue, 05 Sep 2023 22:11:02 +0000
+Date: Tue, 5 Sep 2023 23:11:02 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Zorro Lang <zlang@kernel.org>, linux-ext4@vger.kernel.org,
+	fstests@vger.kernel.org, regressions@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
+ test fails
+Message-ID: <ZPendrb8gSbAC6fM@casper.infradead.org>
+References: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
+ <ZPTvIb6hwIjY7T2M@mit.edu>
+ <20230904060819.GB701295@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergio Callegari <sergio.callegari@gmail.com>
-Subject: Re: Regression with AX88179A: can't manually set MAC address anymore
-To: netdev@vger.kernel.org
-Cc: Linux Kernel Mailing list <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
- <ZPcfsd_QcJwQq0dK@debian.me>
-Content-Language: en-US, it-IT
-In-Reply-To: <ZPcfsd_QcJwQq0dK@debian.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230904060819.GB701295@mit.edu>
 
-On 05/09/2023 14:31, Bagas Sanjaya wrote:
-> On Tue, Sep 05, 2023 at 01:02:22PM +0200, Sergio Callegari wrote:
->> Hi, reporting here as the issue I am seeing is cross distro and relevant to
->> recent kernels. Hope this is appropriate.
->>
->> I have a USB hub with AX88179A ethernet. I was able to use it regularly,
->> until something changed in recent kernels to have this interface supported
->> by the cdc_ncm driver. After this change it is not possible anymore to work
->> with a manually set MAC address.
-> Exactly on what version range?
+On Mon, Sep 04, 2023 at 02:08:19AM -0400, Theodore Ts'o wrote:
+> #regzbot introduced: 8147c4c4546f9f05ef03bb839b741473b28bb560 ^
+> 
+> OK, I've isolated the regression of generic/455 failing with ext4/1k
+> to this commit, which came in via the mm tree.  Nothing seems
+> *obviously* wrong, but I'm not sure if there are any differences in
+> the semantics of the new folio functions such as kmap_local_folio,
+> offset_in_folio, set_folio_bh() which might be making a difference.
 
-Hard to say without extensive testing since distros move from kernel to 
-kernel with big version jumps. The adapter was surely usable in ubuntu 
-22.04 with kernel 5.15, breaking this Summer as kernel 6.2 arrived as an 
-HWE kernel.
+Thanks for the cc,  Let's see what we can do ...
 
->> More details:
->>
->> - before the kernel changes, the interface was supported by a dedicated
->> kernel driver. The driver had glitches but was more or less working. The
->> main issue was that after some usage the driver stopped working. Could fix
->> these glitches with the driver at
->> https://github.com/nothingstopsme/AX88179_178A_Linux_Driver
-> Did you mean that you use out-of-tree module?
+virt_to_folio() - For an order-0 page, there is no difference.
+offset_in_folio() - Ditto
+bh->b_page vs bh->b_folio - Ditto
+virt_to_folio() - Ditto
+folio_set_bh() - Ditto
 
-I mean that with kernel 5.15 I could use the in-tree module with some 
-glitches (interface occasionally stopping on teleconferencing) as well 
-as the indicated out of tree module with no glitches.
+kmap_local_folio() vs kmap_atomic - Here, we have a difference.
+memcpy_from_folio() - Same difference as above.
 
-With current kernels (certainly from 6.2 on) manually setting a MAC 
-address breaks the interface. Furthermore, even if it compiles and loads 
-fine, it is impossible to use the out of tree module because it does not 
-create the eth device anymore (the eth device now appears with the 
-cdc_ncn module). Being this an out of tree module, this is not very 
-important, though.
+I suppose it must be this, and yet I cannot understand how it would
+make a difference.  Perhaps you can help me?
 
->> - after the kernel changes, loading the ax88179_178a.ko does not create a
->> network device anymore. The interface can be used with the cdc_ncm driver,
->> however it is not possible anymore to use a manually set MAC address.
->>
->> When you manually set a MAC this appears to be accepted (e.g. ip link
->> reports it correctly), but the card does not receive data anymore. For
->> instance, trying to connect to a DHCP server, you see that the server
->> receives the request, makes an offer, but the offer is never received by the
->> network card.
->>
-> How is the reproducer?
+static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+{
+        if (IS_ENABLED(CONFIG_PREEMPT_RT))
+                migrate_disable();
+        else
+                preempt_disable();
 
-1. Turn down the interface with the `ip` command.
+        pagefault_disable();
+        return __kmap_local_page_prot(page, prot);
+}
 
-2. Use the `ip` command to set an hardware address (xx:xx:xx:xx:xx:xx) 
-different from the original one (yy:yy:yy:yy:yy:yy) from the adapter.
+vs
 
-3. Try to get an IP address from a DHCP server configured to respond to 
-xx:xx:xx:xx:xx:xx
+static inline void *kmap_local_folio(struct folio *folio, size_t offset)
+{
+        struct page *page = folio_page(folio, offset / PAGE_SIZE);
+        return __kmap_local_page_prot(page, kmap_prot) + offset % PAGE_SIZE;
+}
 
-4. Observe that the system is unable to get an IP address from DHCP 
-(keeps asking)
+I don't believe that returning the address with the offset included
+is the problem here.  It must be disabling preemption / migration.
+There's no chace this funcation accesses userspace (... is there?) so
+it can't be the pagefault_disable().
 
-5. Look at the DHCP server logs and observe that the DHCP server 
-receives the request from mac xx:xx:xx:xx:xx:xx and makes an offer, but 
-this is never accepted (possibly never received).
+We can try splitting this up into tiny commits and figuring out which
+of them is the problem.  I'll be back at work tomorrow and can look
+more deeply then.
 
-Skipping 2. and setting the DHCP server to respond to yy:yy:yy:yy:yy:yy, 
-everything works as expected. So it is the manual setting of an hardware 
-address that triggers the issue. The DHCP server is OK: steps 1-5 work 
-fine with other NICs and used to work fine with the AX88179A USB NIC 
-with kernel 5.15.
+> Using kvm-xfstests[1] I bisected this via the command:
+> 
+> % install-kconfig ; kbuild ; kvm-xfstests -c ext4/1k -C 10 generic/455
+> 
+> [1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
+> 
+> 
+> And the bisection pointed me at this commit:
+> 
+>     commit 8147c4c4546f9f05ef03bb839b741473b28bb560 (refs/bisect/bad)
+>     Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+>     AuthorDate: Thu Jul 13 04:55:11 2023 +0100
+>     Commit: Andrew Morton <akpm@linux-foundation.org>
+>     CommitDate: Fri Aug 18 10:12:30 2023 -0700
+> 
+>         jbd2: use a folio in jbd2_journal_write_metadata_buffer()
+>     
+> During the bisection, I treated a commit with 3+ failures as "bad",
+> and 0-2 commits as "good".  Running generic/455 50 times to get a
+> sense of the failure, with the first bad commit (8147c4c4546f), I got:
+> 
+>     ext4/1k: 50 tests, 21 failures, 223 seconds
+>       Flaky: generic/455: 42% (21/50)
+>     Totals: 50 tests, 0 skipped, 21 failures, 0 errors, 223s
+> 
+> While with the immediately preceding commit (07811230c3cd), I got:
+> 
+>     ext4/1k: 50 tests, 4 failures, 235 seconds
+>       Flaky: generic/455:  8% (4/50)
+>     Totals: 50 tests, 0 skipped, 4 failures, 0 errors, 235s
+> 
+> 
+> 
+> Comparing these two commits (8147c4c4546f vs 07811230c3cd) using the
+> ext4 with a 4k block size, I get:
+> 
+>     ext4/4k: 50 tests, 2 failures, 365 seconds
+>       Flaky: generic/455:  4% (2/50)
+>     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 365s
+> 
+> vs
+> 
+>     ext4/4k: 50 tests, 2 failures, 349 seconds
+>       Flaky: generic/455:  4% (2/50)
+>     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 349s
+> 
+> So issue seems to be specifically with a sub-page size block size,
+> since ext4/4k doesn't show any issues, while ext4/1k does.
 
-Would like to triage better, but it is not easy for me since I do not 
-own the USB Hubs containing the AX88179A based ethernet port. I get 
-these where I work and I am not expected to detach them from the office 
-equipment. I'll see what I can do.
-
->> This may be the same issue reported here:https://discussion.fedoraproject.org/t/ax88179-178a-network-fails-to-start-usb-to-eth/77687
->> where the user says he cannot use the adapter when Network Manager is
->> configured to employ a randomized MAC address.
->>
-> Confused...
-
-The discussion on the fedora forum that I linked is what provided me 
-with a hint about the issue with the manual MAC address. In that 
-discussion a user reports an issue about an AX88179A unusable in fedora 
-(that uses fairly recent kernels). The user solved the issue disabling 
-randomization of the MAC address (which implies changing the MAC). 
-Namely he says "The wired connection had a “virtual mac address” 
-randomly generated set in Network Manager GUI (I can’t remember why I 
-had set that before) [...] disabling this configuration the wired 
-connection started ok". However, the details are modest, so that user 
-might as well had encountered an unrelated problem, pointing me to the 
-manual MAC setting just by coincidence.
-
-Thanks for your reply that testifies attention for the issue.
-
-Sergio Callegari
-
+I doubt I tried it with a 1kB block size, so I'll focus on that too.
