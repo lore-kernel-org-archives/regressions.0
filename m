@@ -1,84 +1,77 @@
-Received: from muru.com (muru.com [72.249.23.125])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993F8EBC
-	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 06:17:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by muru.com (Postfix) with ESMTPS id 070D380A3;
-	Tue,  5 Sep 2023 06:17:41 +0000 (UTC)
-Date: Tue, 5 Sep 2023 09:17:39 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Adam Ford <aford173@gmail.com>, Linux OMAP <linux-omap@vger.kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Linux Stable <stable@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: 6.1.y Regression found on AM3517
-Message-ID: <20230905061739.GX11676@atomide.com>
-References: <CAHCN7xJjK=BaNHa=+OKzOmFtNRYKX_APTp5Zj3g-X_iQcpyK6g@mail.gmail.com>
- <ZPZ2zTS9loj06u31@debian.me>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D142C8F5
+	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 11:37:50 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qdUNJ-0007xD-Bz; Tue, 05 Sep 2023 13:37:41 +0200
+Message-ID: <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info>
+Date: Tue, 5 Sep 2023 13:37:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZPZ2zTS9loj06u31@debian.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Lexar NM790 SSDs are not recognized anymore after 6.1.50 LTS
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Claudio Sampaio <patola@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux NVMe <linux-nvme@lists.infradead.org>,
+ Linux Stable <stable@vger.kernel.org>
+References: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693913870;71bb82aa;
+X-HE-SMSGID: 1qdUNJ-0007xD-Bz
 
-* Bagas Sanjaya <bagasdotme@gmail.com> [230905 00:31]:
-> On Mon, Sep 04, 2023 at 11:37:46AM -0500, Adam Ford wrote:
-> > I have an AM3517-EVM board that I am trying to use the latest 6.1.y
-> > stable, currently 6.1.51.
-> >=20
-> > With git bisect, I narrowed the regression between 6.1.15 and 6.1.16 to=
- commit
-> > eaf9b5612a47 ("driver core: fw_devlink: Don't purge child fwnode's
-> > consumer links")
-> >=20
-> > In the regression, 48002000.scm appears as not ready.  This affects a
-> > variety of dependent peripherals making them unavailable:
-> >=20
-> > wl12xx_buf platform: supplier 48002000.scm not ready
-> > wl12xx_vmmc2 platform: supplier wl12xx_buf not ready
-> > 48050000.dss platform: supplier display@0 not ready
-> > 48064800.ehci platform: supplier hsusb1_phy not ready
-> > backlight platform: supplier 48002000.scm not ready
-> > display@0 platform: supplier backlight not ready
-> > dmtimer-pwm@11 platform: supplier 48002000.scm not ready
-> > hsusb1_phy platform: supplier 48002000.scm not ready
-> > gpio-leds platform: supplier 48002000.scm not ready
-> > 480b4000.mmc platform: supplier wl12xx_vmmc2 not ready
-> >=20
-> > If I build 6.1.51 but I checkout drivers/base/core.c from commit
-> > 2455b81afe68 ("driver core: fw_devlink: Add DL_FLAG_CYCLE support to
-> > device links"),
-> > the regression is gone.
+On 04.09.23 13:07, Bagas Sanjaya wrote:
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>
+>> I bought a new 4 TB Lexar NM790 and I was using kernel 6.3.13 at the time. It wasn't recognized, with these messages in dmesg:
+>>
+>> [ 358.950147] nvme nvme0: pci function 0000:06:00.0
+>> [ 358.958327] nvme nvme0: Device not ready; aborting initialisation, CSTS=0x0
+>>
+>> My other NVMe appears correctly in the nvme list though.
+>>
+>>
+>> So I tried using other kernels I had installed at the time: 6.3.7, 6.4.10, 6.5.0rc6, 6.5.0, 6.5.1 and none of these recognized the disk.
+>> I installed the 6.1.50 lts kernel from arch repositories (I can compile my own too if this would be an issue) and then the device was correctly recognized:
+>>
+>> [    4.654613] nvme 0000:06:00.0: platform quirk: setting simple suspend
+>> [    4.654632] nvme nvme0: pci function 0000:06:00.0
+>> [    4.667290] nvme nvme0: allocated 40 MiB host memory buffer.
+>> [    4.709473] nvme nvme0: 16/0/0 default/read/poll queues
 
-Adam, maybe check if 6.1 stable series is missing something to be
-backported from this mailing list thread:
+FWIW, the quoted mail missed one crucial detail:
+"""
+ Claudio Sampaio 2023-09-02 19:04:29 UTC
 
-https://lore.kernel.org/lkml/20230207014207.1678715-2-saravanak@google.com/
+Adding the two lines
 
-That email thread version seemed to work for me based on my reply in the
-thread. I recall issues with the earlier revisions but don't remember
-what fixed them.
+│ 3457   { PCI_DEVICE(0x1d97, 0x1602), /* Lexar NM790 */
+│ 3458   │ .driver_data = NVME_QUIRK_BOGUS_NID, },
 
-> > I checked the 6.5 kernel, and it appears fine, so I think there is a
-> > possible backport commit missing, and I was hoping Saravana or Tony
-> > might have a suggestion as to which one(s) I should try.  I don't know
-> > if this is found on other OMAP3 boards, but I wouldn't be surprised.
-> >=20
->=20
-> Thanks for the regression report. I'm adding it to regzbot as stable-spec=
-ific
-> entry:
->=20
-> #regzbot ^introduced: eaf9b5612a47f0
-> #regzbot title: keeping consumer links of child fwnode doesn't prepare AM=
-3517-EVM suppliers
+in file drivers/nvme/host/pci.c made my NVMe work correctly. Compiled a
+new 6.5.1 kernel and everything works.
+"""
 
-Regards,
+@NVME maintainers: is there anything more you need from Claudio at this
+point?
 
-Tony
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
