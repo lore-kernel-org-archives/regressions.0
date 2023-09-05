@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D142C8F5
-	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 11:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A03566D
+	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 12:01:38 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qdUNJ-0007xD-Bz; Tue, 05 Sep 2023 13:37:41 +0200
-Message-ID: <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info>
-Date: Tue, 5 Sep 2023 13:37:36 +0200
+	id 1qdUkM-0004Lb-5r; Tue, 05 Sep 2023 14:01:30 +0200
+Message-ID: <8dc067e5-d81f-4c5b-be76-bf0c1227b71e@leemhuis.info>
+Date: Tue, 5 Sep 2023 14:01:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,63 +15,89 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Lexar NM790 SSDs are not recognized anymore after 6.1.50 LTS
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Claudio Sampaio <patola@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>,
- Linux Stable <stable@vger.kernel.org>
-References: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+Subject: Re: [PATCH v3] tpm: Enable hwrng only for Pluton on AMD CPUs
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: linux-integrity@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
+ stable@vger.kernel.org, Todd Brandt <todd.e.brandt@intel.com>,
+ Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-kernel@vger.kernel.org, Patrick Steinhardt <ps@pks.im>,
+ Ronan Pigott <ronan@rjp.ie>, Raymond Jay Golo <rjgolo@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Dusty Mabe <dusty@dustymabe.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+References: <20230822231510.2263255-1-jarkko@kernel.org>
+ <705b9769-4132-450b-bd47-2423c419db2a@molgen.mpg.de>
+ <CV03X3OEI7RE.3NI1QJ6MBJSHA@suppilovahvero>
+ <1eeddbdc-c1f0-4499-b3d1-24c96f42a50b@amd.com>
+ <CV3J3TCMB74C.1WA96NQ9J593U@suppilovahvero>
+ <f6d75cac-2556-484e-8a2c-3531b24b1ca5@amd.com>
+ <fcf2f600-d1f0-de14-956b-4d4f3f0cb3fa@leemhuis.info>
+ <116dd56f-695f-4ecd-dace-805db83f5c3e@leemhuis.info>
+ <CVAHNI7PWVDL.W8194GZA0SMK@suppilovahvero>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CVAHNI7PWVDL.W8194GZA0SMK@suppilovahvero>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693913870;71bb82aa;
-X-HE-SMSGID: 1qdUNJ-0007xD-Bz
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1693915298;6567f445;
+X-HE-SMSGID: 1qdUkM-0004Lb-5r
 
-On 04.09.23 13:07, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->
->> I bought a new 4 TB Lexar NM790 and I was using kernel 6.3.13 at the time. It wasn't recognized, with these messages in dmesg:
->>
->> [ 358.950147] nvme nvme0: pci function 0000:06:00.0
->> [ 358.958327] nvme nvme0: Device not ready; aborting initialisation, CSTS=0x0
->>
->> My other NVMe appears correctly in the nvme list though.
->>
->>
->> So I tried using other kernels I had installed at the time: 6.3.7, 6.4.10, 6.5.0rc6, 6.5.0, 6.5.1 and none of these recognized the disk.
->> I installed the 6.1.50 lts kernel from arch repositories (I can compile my own too if this would be an issue) and then the device was correctly recognized:
->>
->> [    4.654613] nvme 0000:06:00.0: platform quirk: setting simple suspend
->> [    4.654632] nvme nvme0: pci function 0000:06:00.0
->> [    4.667290] nvme nvme0: allocated 40 MiB host memory buffer.
->> [    4.709473] nvme nvme0: 16/0/0 default/read/poll queues
+On 05.09.23 00:32, Jarkko Sakkinen wrote:
+> On Fri Sep 1, 2023 at 11:49 AM EEST, Thorsten Leemhuis wrote:
+>> On 29.08.23 10:38, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 28.08.23 02:35, Mario Limonciello wrote:
+>>>> On 8/27/2023 13:12, Jarkko Sakkinen wrote:
+>>>>> On Wed Aug 23, 2023 at 9:58 PM EEST, Mario Limonciello wrote:
+>>>>>> On 8/23/2023 12:40, Jarkko Sakkinen wrote:
+>>>>>>> On Wed Aug 23, 2023 at 11:23 AM EEST, Paul Menzel wrote:
+>>>>>>>> Am 23.08.23 um 01:15 schrieb Jarkko Sakkinen:
+>>>>>>>>> The vendor check introduced by commit 554b841d4703 ("tpm: Disable
+>>>>>>>>> RNG for
+>>>>>>>>> all AMD fTPMs") doesn't work properly on a number of Intel fTPMs. 
+>>>>>>>>> On the
+>>>>>>>>> reported systems the TPM doesn't reply at bootup and returns back the
+>>>>>>>>> command code. This makes the TPM fail probe.
+> [...]
+>> Hmmm. Quite a bit progress to fix the issue was made in the first week
+>> after Todd's report; Jarkko apparently even applied the earlier patch
+>> from Mario to his master branch:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=b1a62d41bdc1d15b0641759717e8c3651f0a810c
+>> But since then (aka in the past week) there was not much progress.
 
-FWIW, the quoted mail missed one crucial detail:
-"""
- Claudio Sampaio 2023-09-02 19:04:29 UTC
+Jarkko, many thx for picking this up and submitting it to Linus, much
+appreciated. Sorry again for prodding things, but I felt I had to. Hope
+you didn't mind too much.
 
-Adding the two lines
+> Could it be possible to extend the actual kernel documentation
+> to give at least some guidelines how a maintainer should deal
+> with the bugzilla?
 
-│ 3457   { PCI_DEVICE(0x1d97, 0x1602), /* Lexar NM790 */
-│ 3458   │ .driver_data = NVME_QUIRK_BOGUS_NID, },
+I guess it's best if that is done by somebody that cares about bugzilla
+(I don't fall into that group[1]) and knows the official status.
 
-in file drivers/nvme/host/pci.c made my NVMe work correctly. Compiled a
-new 6.5.1 kernel and everything works.
-"""
+But FWIW, I wonder what you actually want to see documented. From
+https://lore.kernel.org/all/CVAC8VQPD3PK.1CBS5QTWDSS2C@suppilovahvero/
+it sounds like you had trouble with Link:/Closes: tag and Reported-by.
+From what I can see I don't think bugzilla.kernel.org needs special
+documentation in that area:
 
-@NVME maintainers: is there anything more you need from Claudio at this
-point?
+ * just use Link:/Closes: to reports to public reports that might be
+helpful later in case somebody wants to look at the backstory of a
+commit, wherever those reports may be (lore, bugzilla.kernel.org,
+https://gitlab.freedesktop.org/drm/intel/-/issues,
+https://github.com/thesofproject/linux/issues, ...)
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+ * use Reported-by: to give credit to anyone that deserves it, as it is
+a nice way to say thx while motivate people to help again in the future.
+That usually will include the initial reporter, but might also include
+people that replied to a report from somebody else and helped
+perceptible with debugging or fixing.
+
+Ciao, Thorsten
+
+[1] I only sometimes help people that report regressions to
+bugzilla.kernel.org that otherwise would likely would fall through the
+cracks (among others because many reports are never forwarded to the
+proper developers otherwise).
