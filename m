@@ -1,133 +1,91 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933CED50E
-	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 12:31:50 +0000 (UTC)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-68a56401b9aso1444576b3a.1
-        for <regressions@lists.linux.dev>; Tue, 05 Sep 2023 05:31:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693917110; x=1694521910; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dW96Ep6tAlYqLl+EhUsJM6oCycz537s8rOvwpx/HVWc=;
-        b=B+J5q2c0Kenls0xHNGIiM42RFJS2EFOOHnWIRwv+++vHVCtEyfZTze7rQZ0dkeaDYN
-         cZ8FaTRH+UvcYXTtN6LdtFWsLXDA2JWK3i0tdYrPFRBmXzQfuKyS+G1LLCjyGx6hSt83
-         U2yn+9VajPcDkt4/xoHEHcQunzoEWFnUpialqYAjdMZDl+pssIUy6WKy1SWmnu6c6+UE
-         5HVKtBfKTzcsJ52/fJ70JBt+W88WDUkwlpmAiEaGVW6c/ewt3cT4Y3XCWOoR1B6XM6Jh
-         /Ez2WVNAPV6vn5v1JE0rjWMtZz+t/8pLHhZxEvfRU5cWL5o0KHA/fmZG6iTMHK5JGZFC
-         CW5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693917110; x=1694521910;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dW96Ep6tAlYqLl+EhUsJM6oCycz537s8rOvwpx/HVWc=;
-        b=gEFH+VSoI97lujtLk2oYCgy+T6g+8yZvBdI02G8dpGmJO6jFiGzMDN0Fuggx/1d3iP
-         1PKCMfHXd+l6+7tjD7ZCi68kGpFDoE1xKCJ0ItbCC1OCFH39yw44nTQr7tjY8zMl+fKR
-         UhDdKlvtxLdJpQ4vcQLGbEHfTKJwzkozUptQVgOAVNnJLhBQA6WW8+arzqQ5E9qBe5Tr
-         HcFequen9uayQGXH43a3//lwsOceOcXNKR+ewaUJms3jfj+pCVtKXWTdmkYnQecoxHh7
-         gxfK/PPCR+s9U6aAq1L47SVk4nF0sRUI9uL8TweyfO2T16mxm2X2BvC/pz94sgyKzABE
-         NrtQ==
-X-Gm-Message-State: AOJu0Yzr6eHIJWO4Zz8O8OLmRP/xnQooFy+b5Or0Y8S7Z7MIR3XfYlNA
-	KtEh49BNDwa8nGZzv6Pd+iI=
-X-Google-Smtp-Source: AGHT+IEmGWFsqNhyKrtj4OHuD6dAwlJv8WS7VZO8yRe+T2bB0Zs9oKYINFiRl0Eyfapnb0s+9vzqPw==
-X-Received: by 2002:a05:6a20:157:b0:12f:c61e:7cac with SMTP id 23-20020a056a20015700b0012fc61e7cacmr10167664pzs.31.1693917109387;
-        Tue, 05 Sep 2023 05:31:49 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id t18-20020aa79392000000b0068bda522245sm9005966pfe.155.2023.09.05.05.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 05:31:48 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id B3C5581A82FF; Tue,  5 Sep 2023 19:31:45 +0700 (WIB)
-Date: Tue, 5 Sep 2023 19:31:45 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Sergio Callegari <sergio.callegari@gmail.com>, netdev@vger.kernel.org
-Cc: Linux Kernel Mailing list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Oliver Neukum <oliver@neukum.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Regression with AX88179A: can't manually set MAC address anymore
-Message-ID: <ZPcfsd_QcJwQq0dK@debian.me>
-References: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E64063C7
+	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 14:35:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA49C433C9;
+	Tue,  5 Sep 2023 14:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693924546;
+	bh=mUv7viaR4QlhOU9eEIWkBwFQjliy5qzSydoTR+5jNRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hItTlG6DKaq9eTGg36u1qPRFPWE7r53/vFnmWFG1YNX5mUCJdUifX9YQvIYQ1ATUE
+	 eqS0b7zftUsg5F2Nf/uN46t4/4aQin9iB4CZ2qWMozK8cNz+GyIa8ezllt9ZM0eb7F
+	 z6jMAxFMQpsX9w43ofaVynlSikqa9QuU9PVJfXM2mXEVtqfJbVHZYOBX5DT8/Zg5yx
+	 XX4ysi/YOe7MD+EjzgneNQYFVH2C4/kU7ZYjRb2z61UAp1cDj06m+XtFxat7IAAmze
+	 33AslZb7VQSaLqi7TsinuXOukVbAwWXoU3itXfffHYgTY2WphsrSYBNAD635T+rqsq
+	 ZAVH7WdcaGm1g==
+Date: Tue, 5 Sep 2023 08:35:43 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Claudio Sampaio <patola@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux NVMe <linux-nvme@lists.infradead.org>,
+	Linux Stable <stable@vger.kernel.org>
+Subject: Re: Fwd: Lexar NM790 SSDs are not recognized anymore after 6.1.50 LTS
+Message-ID: <ZPc8v9-lHF4jAcxL@kbusch-mbp>
+References: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+ <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nH/2YECNnxQNvcbH"
-Content-Disposition: inline
-In-Reply-To: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
-
-
---nH/2YECNnxQNvcbH
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info>
 
-On Tue, Sep 05, 2023 at 01:02:22PM +0200, Sergio Callegari wrote:
-> Hi, reporting here as the issue I am seeing is cross distro and relevant =
-to
-> recent kernels. Hope this is appropriate.
->=20
-> I have a USB hub with AX88179A ethernet. I was able to use it regularly,
-> until something changed in recent kernels to have this interface supported
-> by the cdc_ncm driver. After this change it is not possible anymore to wo=
-rk
-> with a manually set MAC address.
+On Tue, Sep 05, 2023 at 01:37:36PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 04.09.23 13:07, Bagas Sanjaya wrote:
+> > 
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >
+> >> I bought a new 4 TB Lexar NM790 and I was using kernel 6.3.13 at the time. It wasn't recognized, with these messages in dmesg:
+> >>
+> >> [ 358.950147] nvme nvme0: pci function 0000:06:00.0
+> >> [ 358.958327] nvme nvme0: Device not ready; aborting initialisation, CSTS=0x0
+> >>
+> >> My other NVMe appears correctly in the nvme list though.
+> >>
+> >>
+> >> So I tried using other kernels I had installed at the time: 6.3.7, 6.4.10, 6.5.0rc6, 6.5.0, 6.5.1 and none of these recognized the disk.
+> >> I installed the 6.1.50 lts kernel from arch repositories (I can compile my own too if this would be an issue) and then the device was correctly recognized:
+> >>
+> >> [    4.654613] nvme 0000:06:00.0: platform quirk: setting simple suspend
+> >> [    4.654632] nvme nvme0: pci function 0000:06:00.0
+> >> [    4.667290] nvme nvme0: allocated 40 MiB host memory buffer.
+> >> [    4.709473] nvme nvme0: 16/0/0 default/read/poll queues
+> 
+> FWIW, the quoted mail missed one crucial detail:
+> """
+>  Claudio Sampaio 2023-09-02 19:04:29 UTC
+> 
+> Adding the two lines
+> 
+> │ 3457   { PCI_DEVICE(0x1d97, 0x1602), /* Lexar NM790 */
+> │ 3458   │ .driver_data = NVME_QUIRK_BOGUS_NID, },
+> 
+> in file drivers/nvme/host/pci.c made my NVMe work correctly. Compiled a
+> new 6.5.1 kernel and everything works.
+> """
+> 
+> @NVME maintainers: is there anything more you need from Claudio at this
+> point?
 
-Exactly on what version range?
+Yes: it doesn't really make any sense. The report says the device
+stopped showing up with message:
 
->=20
-> More details:
->=20
-> - before the kernel changes, the interface was supported by a dedicated
-> kernel driver. The driver had glitches but was more or less working. The
-> main issue was that after some usage the driver stopped working. Could fix
-> these glitches with the driver at
-> https://github.com/nothingstopsme/AX88179_178A_Linux_Driver
+  nvme nvme0: Device not ready; aborting initialisation, CSTS=0x0
 
-Did you mean that you use out-of-tree module?
+That (a) happens long before the mentioned quirk is considered by the
+driver, and (b) the "quirk" behavior is now the default in 6.5 and
+several of the listed stable kernels anyway.
 
->=20
-> - after the kernel changes, loading the ax88179_178a.ko does not create a
-> network device anymore. The interface can be used with the cdc_ncm driver,
-> however it is not possible anymore to use a manually set MAC address.
->=20
-> When you manually set a MAC this appears to be accepted (e.g. ip link
-> reports it correctly), but the card does not receive data anymore. For
-> instance, trying to connect to a DHCP server, you see that the server
-> receives the request, makes an offer, but the offer is never received by =
-the
-> network card.
->=20
-
-How is the reproducer?
-
-> This may be the same issue reported here: https://discussion.fedoraprojec=
-t.org/t/ax88179-178a-network-fails-to-start-usb-to-eth/77687
-> where the user says he cannot use the adapter when Network Manager is
-> configured to employ a randomized MAC address.
->=20
-
-Confused...
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---nH/2YECNnxQNvcbH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPcfrQAKCRD2uYlJVVFO
-o4t4AQCq6e+cB3g8wF3hG3znVE6qwGatCPbWsaRhJsdexMHdLwEA5VL908vv2rdx
-W+LDNhRjkNQ0ysX7pN4mOhe2wGNaQA8=
-=W4x3
------END PGP SIGNATURE-----
-
---nH/2YECNnxQNvcbH--
+It more likely sounds like the device is flaky and either never becomes
+ready due to some unspecified internal firmware condition, or
+inaccurately reports how long it actually needs to become ready in
+worst-case-scenario.
