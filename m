@@ -1,125 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253EEDF5A
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 13:49:33 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qdsuI-0002DX-9q; Wed, 06 Sep 2023 15:49:22 +0200
-Message-ID: <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
-Date: Wed, 6 Sep 2023 15:49:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A19710798
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 15:09:00 +0000 (UTC)
+Received: from mh by torres.zugschlus.de with local (Exim 4.96)
+	(envelope-from <mh+linux-kernel@zugschlus.de>)
+	id 1qdtib-006SiW-2q;
+	Wed, 06 Sep 2023 16:41:21 +0200
+Date: Wed, 6 Sep 2023 16:41:21 +0200
+From: Marc Haber <mh+linux-kernel@zugschlus.de>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux KVM <kvm@vger.kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
+ related
+Message-ID: <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
+References: <ZO2piz5n1MiKR-3-@debian.me>
+ <ZO3sA2GuDbEuQoyj@torres.zugschlus.de>
+ <ZO4GeazfcA09SfKw@google.com>
+ <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
+ <ZO4RzCr/Ugwi70bZ@google.com>
+ <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
+ <ZO4nbzkd4tovKpxx@google.com>
+ <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
+ <ZPEPFJ8QvubbD3H9@google.com>
+ <20230901122431.GU11676@atomide.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: zynq: restore
- zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
-Content-Language: en-US, de-DE
-To: Daniel Mack <daniel@zonque.org>, linux-gpio@vger.kernel.org,
- manikanta.guntupalli@amd.com
-Cc: linux-kernel@vger.kernel.org, stable@kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230901122424.247070-1-daniel@zonque.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230901122424.247070-1-daniel@zonque.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694008174;f9852fca;
-X-HE-SMSGID: 1qdsuI-0002DX-9q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230901122431.GU11676@atomide.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
 
-CCing Arnd (wrote the culprit), Linus (reviewed it), Bartosz (applied
-it), and the regressions mailing list
+On Fri, Sep 01, 2023 at 03:24:31PM +0300, Tony Lindgren wrote:
+> Yes two somewhat minimal qemu command lines for working and failing test
+> case sure would help to debug this.
 
-On 01.09.23 14:24, Daniel Mack wrote:
-> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
-> warning") ditched the open-coded resource allocation handlers in favor
-> of the generic ones. These generic handlers don't maintain the PM
-> runtime anymore, which causes a regression in that level IRQs are no
-> longer reported.
-> 
-> Restore the original handlers to fix this.
-> 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
-> Cc: stable@kernel.org
+I have spent some time with that but have failed yet. I would appreciate
+help about which qemu option I'd need to get a serial console configured
+AND to get access to this serial console, alternatively get access to a
+VNC console.
 
-This seems to be a regression report that comes straight with a fix, but
-there wasn't a single reply yet afaics. :-/ Maybe the extended list of
-recipients will get things moving. But to ensure this doesn't fall
-through the cracks, I'll add it to the list of tracked regressions.
+I have the following qemu start script so far (command line pulled from
+libvirt log and simplified):
+export LC_ALL=C
+export QEMU_AUDIO_DRV=spice
 
-#regzbot ^introduced f56914393537
-#regzbot title gpio: zynq: in that level IRQs are no longer reported
-#regzbot fix: gpio: zynq: restore
-zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
-#regzbot ignore-activity
+/usr/bin/qemu-system-x86_64 \
+-name guest=lasso2,debug-threads=on \
+-S \
+-machine pc-i440fx-2.1,accel=kvm,usb=off,dump-guest-core=off \
+-m 768 \
+-realtime mlock=off \
+-smp 1,sockets=1,cores=1,threads=1 \
+-uuid 7954f7a6-9418-4ab5-9571-97ccbea263ec \
+-no-user-config \
+-rtc base=utc,driftfix=slew \
+-global kvm-pit.lost_tick_policy=delay \
+-no-hpet \
+-no-shutdown \
+-nodefaults \
+-global PIIX4_PM.disable_s3=1 \
+-global PIIX4_PM.disable_s4=1 \
+-boot strict=on \
+-device ich9-usb-ehci1,id=usb,bus=pci.0,addr=0x5.0x7 \
+-device ich9-usb-uhci1,masterbus=usb.0,firstport=0,bus=pci.0,multifunction=on,addr=0x5 \
+-device ich9-usb-uhci2,masterbus=usb.0,firstport=2,bus=pci.0,addr=0x5.0x1 \
+-device ich9-usb-uhci3,masterbus=usb.0,firstport=4,bus=pci.0,addr=0x5.0x2 \
+-device virtio-serial-pci,id=virtio-serial0,bus=pci.0,addr=0x6 \
+-drive file=/dev/prom/lasso2,format=raw,if=none,id=drive-virtio-disk0,cache=none,discard=unmap,aio=native \
+-device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x3,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1,write-cache=on \
+-chardev pty,id=charserial0 \
+-device isa-serial,chardev=charserial0,id=serial0 \
+-device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x8 \
+-msg timestamp=on \
+-device qxl-vga,id=video0,ram_size=67108864,vram_size=67108864,vram64_size_mb=0,vgamem_mb=16,max_outputs=1,bus=pci.0,addr=0x2 \
+-vnc :1
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+The quoted qemu command line will listen on port 5901, but trying to
+connect with tightvncviewer or vinagre yields an immediate RST. 
 
-> ---
->  drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-> index 0a7264aabe48..324e942c0650 100644
-> --- a/drivers/gpio/gpio-zynq.c
-> +++ b/drivers/gpio/gpio-zynq.c
-> @@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
->  	return 0;
->  }
->  
-> +static int zynq_gpio_irq_reqres(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	int ret;
-> +
-> +	ret = pm_runtime_resume_and_get(chip->parent);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return gpiochip_reqres_irq(chip, d->hwirq);
-> +}
-> +
-> +static void zynq_gpio_irq_relres(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +
-> +	gpiochip_relres_irq(chip, d->hwirq);
-> +	pm_runtime_put(chip->parent);
-> +}
-> +
->  /* irq chip descriptor */
->  static const struct irq_chip zynq_gpio_level_irqchip = {
->  	.name		= DRIVER_NAME,
-> @@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip = {
->  	.irq_unmask	= zynq_gpio_irq_unmask,
->  	.irq_set_type	= zynq_gpio_set_irq_type,
->  	.irq_set_wake	= zynq_gpio_set_wake,
-> +	.irq_request_resources = zynq_gpio_irq_reqres,
-> +	.irq_release_resources = zynq_gpio_irq_relres,
->  	.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
->  			  IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->  
->  static const struct irq_chip zynq_gpio_edge_irqchip = {
-> @@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip = {
->  	.irq_unmask	= zynq_gpio_irq_unmask,
->  	.irq_set_type	= zynq_gpio_set_irq_type,
->  	.irq_set_wake	= zynq_gpio_set_wake,
-> +	.irq_request_resources = zynq_gpio_irq_reqres,
-> +	.irq_release_resources = zynq_gpio_irq_relres,
->  	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->  
->  static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
+If I cannot see the host boot, I cannot debug, and if I cannot type into
+grub, I cannot find out whether removing the serial console from the
+kernel command line fixes the issue. I have removed the network
+interface to simplify things, so I need a working console.
+
+With my tools I have found out that it really seems to be related to the
+CPU of the host. I have changed my VM definition to "copy host CPU
+configuration to VM" in libvirt and have moved this very VM (image and
+settings) to hosts with a "Ryzen 5 Pro 4650G" and to an "Intel Xeon
+E3-1246" where they work flawlessly, while on both APUs I have available
+("AMD G-T40E" and "AMD GX-412TC SOC") the regression in 6.5 shows. And
+if I boot other VMs on the APUs with 6.5 the issue comes up. It is a
+clear regression since going back to 4.6's serial code solves the issue
+on the APUs.
+
+Greetings
+Marc
+
+
+-- 
+-----------------------------------------------------------------------------
+Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
+Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
+Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
