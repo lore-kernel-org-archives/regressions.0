@@ -1,134 +1,205 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C37E7E
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 11:03:33 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b962535808so56034591fa.0
-        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 04:03:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B837E
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 11:03:40 +0000 (UTC)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-68a402c1fcdso2456675b3a.1
+        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 04:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.com; s=cloud; t=1693998212; x=1694603012; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4cP1GgEPsuH5x3JwCdVLlQl6m1HOoYau4dFR4xNCE00=;
-        b=VK9gvT9AT/PTyhsofknauUezIa7hfBzO2eIgWXBbIxTuh6H0tHxmNGNKqHye8cmIGt
-         B5U5Rd0sKEWs43PXqfOheI6FxVmj+DJxutw1p/CnXn0aG2B13M6vM0K2SsY/lv+egZWV
-         Fy8mXzxjz0qn4PSkdsvTsodqc1rSIFG5+h324=
+        d=gmail.com; s=20221208; t=1693998220; x=1694603020; darn=lists.linux.dev;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s1qYqCtssvqiHioBvjkIJJ1Y75CiETGY1Tw2rUu5oTU=;
+        b=jGK/lL5sw4OGrJHSb+1f1ZwoRX3CB2E+Z11av1VCbV1jPdI4WA4TucCNsLrf7zsw5q
+         IIeIONBBA/1HPeac8ppxMovkrs9p2ph5XLXwmOehXZ5T6B3LljSWsi9h5vFWSgZTbon1
+         M5q9G2s46v2jzmqt4X/H7UWKl022o2c/NWSWSgbrhzG7eZrT0NNjm9TGFV+sBsVHl3c+
+         Zn/KDu5gxFR93Qothp/2nxjOSBYMrcvjsDQ5KKjPXKOuSvs10pO5UxkiJicAhs/SCHyI
+         JuD/tdrzDQe8tAfme0tDzPjTa0E4+ZKq0Lt0a59ijLsZradIhyWy61lvlhRI7FCZ8+go
+         ShLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693998212; x=1694603012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4cP1GgEPsuH5x3JwCdVLlQl6m1HOoYau4dFR4xNCE00=;
-        b=BQvdHDE6prf3jzxoJqjxS9Th5FaErvn4jJRwZ7SiUuSq3iiKkhsbI3KtE7EFSYeIz1
-         At87abp+6pKwU42Y+X4AJx23QrgvwSWds6iOkiJj/N63Umwf2hdOQx11WJU5PBOehGld
-         4l+FTVyA9x+aX9v6sJsqdrHMd1j3stgW727cGSIho8bsEsViassS5iGAlOpJLCNGYBYn
-         udaocsDkV0K234YB4oDXS4BZmTfy2GVN9d8g07CPlLuDx9RDS8jPuIHa61s6CpTZrxlJ
-         IU4bGw46aTYF8eOQQaAcTd9ZICLIrs+2ufXSsq5DFj/Ai9Z77lA7ZPb+8Ng5ocxUUkIs
-         CsZQ==
-X-Gm-Message-State: AOJu0Yy5pjfe4ffJ7RnntxSIkkpxNsEDA4QX5HKYtKRh0hZXbnrztM5s
-	LXokAXMtRHWTBECKRRESUFhXnRrIQBWfTpkRmuyM
-X-Google-Smtp-Source: AGHT+IGajkHriDp2V73gLnt8w9Q25yWyd69bww3RGThTXV/dyVspDiEGJ6yxe7gAgW9hORJWYBsEuf4z+KZwKyH4opw=
-X-Received: by 2002:a05:6512:2393:b0:500:b5db:990b with SMTP id
- c19-20020a056512239300b00500b5db990bmr2354910lfv.47.1693998211695; Wed, 06
- Sep 2023 04:03:31 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693998220; x=1694603020;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s1qYqCtssvqiHioBvjkIJJ1Y75CiETGY1Tw2rUu5oTU=;
+        b=MCWv1n2n8Dg0kEz+8vhczAJQMSOgjX6tmhadCLl+olAQyjMdwouguDEnOmAj9eugTW
+         ptVUIzRsgtYDYgJTcHwWjtMqLdyrfxfxgzI/fG1s6HJ5y8/JEVMFO1f9nB1NdLJWcFck
+         bs5JnGo8fWwxtxodiD0POsd7UgL1m59JJCSwP342mMajYOcPyrNvJL8Am08MXBGwfQBT
+         wdnUeWtkOUJBmgNbZOHhbLtR1QzRH9D7GLWEibwKZeXIKEQMtStUc+mTSYBbUJpIQ6yT
+         d8hOpJqSunIH6m4z3U/e4dHCWnoatZF5nsmoNcgukNOlGz2jxhQ8ly9V8h8L0FeK3ht+
+         IEkw==
+X-Gm-Message-State: AOJu0Yy0mOsDjV+IMK+ELQTNxiiTajZoL6d1W8WNaCufezeuGPhRIwbi
+	mrjCB+7J4Yk6UAYvAnUUQLo=
+X-Google-Smtp-Source: AGHT+IFvwE/fu2/yZsMgCXl32c9r0jYFbW/R5iB3G/dzjvIHlKfu+5GOzbkxHpe1LzKa5irjB22oZg==
+X-Received: by 2002:a05:6a20:914d:b0:153:4ea6:d127 with SMTP id x13-20020a056a20914d00b001534ea6d127mr2617602pzc.18.1693998220051;
+        Wed, 06 Sep 2023 04:03:40 -0700 (PDT)
+Received: from dw-tp ([49.207.223.191])
+        by smtp.gmail.com with ESMTPSA id v19-20020a62a513000000b006732786b5f1sm10613961pfm.213.2023.09.06.04.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 04:03:39 -0700 (PDT)
+Date: Wed, 06 Sep 2023 16:33:35 +0530
+Message-Id: <87wmx336ns.fsf@doe.com>
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>
+Cc: Zorro Lang <zlang@kernel.org>, linux-ext4@vger.kernel.org, fstests@vger.kernel.org, regressions@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery test fails
+In-Reply-To: <ZPendrb8gSbAC6fM@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <878r9sga1t.fsf@kernel.org> <CAG7k0Epk6KJvoDJKVc86sc_ems3DTbKvPLouBzOoVvn1tZwQ=w@mail.gmail.com>
- <87o7ifelt7.fsf@kernel.org>
-In-Reply-To: <87o7ifelt7.fsf@kernel.org>
-From: Ross Lagerwall <ross.lagerwall@cloud.com>
-Date: Wed, 6 Sep 2023 12:03:20 +0100
-Message-ID: <CAG7k0Ep6ZT6f_wcr67ZOz-kDjNx2M-wax8QFoA5-WfyMhycR3A@mail.gmail.com>
-Subject: Re: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ath11k@lists.infradead.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 6, 2023 at 9:40=E2=80=AFAM Kalle Valo <kvalo@kernel.org> wrote:
->
-> Ross Lagerwall <ross.lagerwall@cloud.com> writes:
->
-> > On Wed, Aug 30, 2023 at 10:21=E2=80=AFAM Kalle Valo <kvalo@kernel.org> =
-wrote:
-> >
-> >>
-> >> I noticed that starting from v6.5-rc1 my ath11k tests reported several
-> >> memory leaks from swapper/0:
-> >>
-> >> unreferenced object 0xffff88810a02b7a8 (size 96):
-> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
-> >>   hex dump (first 32 bytes):
-> >>     80 b8 02 0a 81 88 ff ff b8 72 07 00 00 c9 ff ff  .........r......
-> >>     c8 b7 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-> >>   backtrace:
-> >> unreferenced object 0xffff88810a02b880 (size 96):
-> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
-> >>   hex dump (first 32 bytes):
-> >>     58 b9 02 0a 81 88 ff ff a8 b7 02 0a 81 88 ff ff  X...............
-> >>     a0 b8 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-> >>   backtrace:
-> >> unreferenced object 0xffff88810a02b958 (size 96):
-> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
-> >>   hex dump (first 32 bytes):
-> >>     30 ba 02 0a 81 88 ff ff 80 b8 02 0a 81 88 ff ff  0...............
-> >>     78 b9 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  x...............
-> >>   backtrace:
-> >> unreferenced object 0xffff88810a02ba30 (size 96):
-> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
-> >>   hex dump (first 32 bytes):
-> >>     08 bb 02 0a 81 88 ff ff 58 b9 02 0a 81 88 ff ff  ........X.......
-> >>     50 ba 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  P...............
-> >>   backtrace:
-> >> unreferenced object 0xffff88810a02bb08 (size 96):
-> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
-> >>   hex dump (first 32 bytes):
-> >>     e0 bb 02 0a 81 88 ff ff 30 ba 02 0a 81 88 ff ff  ........0.......
-> >>     28 bb 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  (...............
-> >>   backtrace:
-> >>
-> >> I can easily reproduce this by doing a simple insmod and rmmod of ath1=
-1k
-> >> and it's dependencies (mac80211, MHI etc). I can reliability reproduce
-> >> the leaks but I only see them once after a boot, I need to reboot the
-> >> host to see the leaks again. v6.4 has no leaks.
-> >>
-> >> I did a bisect and found the commit below. I verified reverting the
-> >> commit makes the leaks go away.
-> >>
-> >> commit e54223275ba1bc6f704a6bab015fcd2ae4f72572
-> >> Author:     Ross Lagerwall <ross.lagerwall@citrix.com>
-> >> AuthorDate: Thu May 25 16:32:48 2023 +0100
-> >> Commit:     Bjorn Helgaas <bhelgaas@google.com>
-> >> CommitDate: Fri Jun 9 15:06:16 2023 -0500
-> >>
-> >>     PCI: Release resource invalidated by coalescing
-> >
-> > Hi Kalle,
-> >
-> > I can't reproduce the leak by loading/unloading the ath11k module. I su=
-spect
-> > that the leak is always there when PCI resources are coalesced but
-> > kmemleak doesn't notice until ath11k is loaded.
-> >
-> > Can you please try the following to confirm it fixes it?
->
-> I run various tests with your patch and I don't see leaks anymore. I
-> also veried that without your patch I see the leak immediately.
->
-> Thanks for fixing this so quickly, it would good to have this fix in
-> v6.6 if possible.
->
-> Tested-by: Kalle Valo <kvalo@kernel.org>
->
+Matthew Wilcox <willy@infradead.org> writes:
 
-Thanks, I will send out a proper patch now.
+> On Mon, Sep 04, 2023 at 02:08:19AM -0400, Theodore Ts'o wrote:
+>> #regzbot introduced: 8147c4c4546f9f05ef03bb839b741473b28bb560 ^
+>> 
+>> OK, I've isolated the regression of generic/455 failing with ext4/1k
+>> to this commit, which came in via the mm tree.  Nothing seems
+>> *obviously* wrong, but I'm not sure if there are any differences in
+>> the semantics of the new folio functions such as kmap_local_folio,
+>> offset_in_folio, set_folio_bh() which might be making a difference.
+>
+> Thanks for the cc,  Let's see what we can do ...
+>
+> virt_to_folio() - For an order-0 page, there is no difference.
+> offset_in_folio() - Ditto
+> bh->b_page vs bh->b_folio - Ditto
+> virt_to_folio() - Ditto
+> folio_set_bh() - Ditto
+>
+> kmap_local_folio() vs kmap_atomic - Here, we have a difference.
+> memcpy_from_folio() - Same difference as above.
+>
+> I suppose it must be this, and yet I cannot understand how it would
+> make a difference.  Perhaps you can help me?
+>
+> static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+> {
+>         if (IS_ENABLED(CONFIG_PREEMPT_RT))
+>                 migrate_disable();
+>         else
+>                 preempt_disable();
+>
+>         pagefault_disable();
+>         return __kmap_local_page_prot(page, prot);
+> }
+>
+> vs
+>
+> static inline void *kmap_local_folio(struct folio *folio, size_t offset)
+> {
+>         struct page *page = folio_page(folio, offset / PAGE_SIZE);
+>         return __kmap_local_page_prot(page, kmap_prot) + offset % PAGE_SIZE;
+> }
+>
+> I don't believe that returning the address with the offset included
+> is the problem here.  It must be disabling preemption / migration.
+> There's no chace this funcation accesses userspace (... is there?) so
+> it can't be the pagefault_disable().
+>
+> We can try splitting this up into tiny commits and figuring out which
+> of them is the problem.  I'll be back at work tomorrow and can look
+> more deeply then.
+>
+>> Using kvm-xfstests[1] I bisected this via the command:
+>> 
+>> % install-kconfig ; kbuild ; kvm-xfstests -c ext4/1k -C 10 generic/455
+>> 
+>> [1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
+>> 
+>> 
+>> And the bisection pointed me at this commit:
+>> 
+>>     commit 8147c4c4546f9f05ef03bb839b741473b28bb560 (refs/bisect/bad)
+>>     Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+>>     AuthorDate: Thu Jul 13 04:55:11 2023 +0100
+>>     Commit: Andrew Morton <akpm@linux-foundation.org>
+>>     CommitDate: Fri Aug 18 10:12:30 2023 -0700
+>> 
+>>         jbd2: use a folio in jbd2_journal_write_metadata_buffer()
+>>     
 
-Ross
+This is inline with my observation too. 
+
+However, is this log expected with below diff when running with ext4/1k?
+I am finding a folio with order > 0 here.
+
+<diff>
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 768fa05bcbed..152c08e83fa2 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -369,6 +369,12 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
+                new_offset = offset_in_folio(new_folio, jh2bh(jh_in)->b_data);
+        }
+
++       if (folio_size(new_folio) > PAGE_SIZE) {
++               pr_crit("%s: folio_size=%lu, folio_order=%d, new_offset=%u bh_size=%lu folio_test_large=%d\n",
++                       __func__, folio_size(new_folio), folio_order(new_folio), new_offset,
++                       bh_in->b_size, folio_test_large(new_folio));
++       }
++
+        mapped_data = kmap_local_folio(new_folio, new_offset);
+        /*
+         * Fire data frozen trigger if data already wasn't frozen.  Do this
+
+<dmesg log>
+[   40.419772] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=0 bh_size=1024 folio_test_large=1
+[   40.444737] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=2048 bh_size=1024 folio_test_large=1
+[   40.472385] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=3072 bh_size=1024 folio_test_large=1
+[   40.560581] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=8192 bh_size=1024 folio_test_large=1
+[   40.588512] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=10240 bh_size=1024 folio_test_large=1
+[   40.612103] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=7168 bh_size=1024 folio_test_large=1
+[   40.636800] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=9216 bh_size=1024 folio_test_large=1
+[   40.661166] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=10240 bh_size=1024 folio_test_large=1
+
+
+Is this code path a possibility, which can cause above logs?
+
+   ptr = jbd2_alloc() -> kmem_cache_alloc()
+   <..>
+   new_folio = virt_to_folio(ptr)
+   new_offset = offset_in_folio(new_folio, ptr)
+
+And then I am still not sure what the problem really is? 
+Is it because at the time of checkpointing, the path is still not fully
+converted to folio?
+
+I am still missing a lot of pieces here, sorry. 
+
+-ritesh
+
+>> During the bisection, I treated a commit with 3+ failures as "bad",
+>> and 0-2 commits as "good".  Running generic/455 50 times to get a
+>> sense of the failure, with the first bad commit (8147c4c4546f), I got:
+>> 
+>>     ext4/1k: 50 tests, 21 failures, 223 seconds
+>>       Flaky: generic/455: 42% (21/50)
+>>     Totals: 50 tests, 0 skipped, 21 failures, 0 errors, 223s
+>> 
+>> While with the immediately preceding commit (07811230c3cd), I got:
+>> 
+>>     ext4/1k: 50 tests, 4 failures, 235 seconds
+>>       Flaky: generic/455:  8% (4/50)
+>>     Totals: 50 tests, 0 skipped, 4 failures, 0 errors, 235s
+>> 
+>> 
+>> 
+>> Comparing these two commits (8147c4c4546f vs 07811230c3cd) using the
+>> ext4 with a 4k block size, I get:
+>> 
+>>     ext4/4k: 50 tests, 2 failures, 365 seconds
+>>       Flaky: generic/455:  4% (2/50)
+>>     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 365s
+>> 
+>> vs
+>> 
+>>     ext4/4k: 50 tests, 2 failures, 349 seconds
+>>       Flaky: generic/455:  4% (2/50)
+>>     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 349s
+>> 
+>> So issue seems to be specifically with a sub-page size block size,
+>> since ext4/4k doesn't show any issues, while ext4/1k does.
+>
+> I doubt I tried it with a 1kB block size, so I'll focus on that too.
