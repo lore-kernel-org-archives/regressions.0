@@ -1,32 +1,37 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5042410FC
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 12:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xzKnxGMihiQTZzTgBY6Hc/r1gngtuD8yL7c68hqDTsU=; b=mXQN4kdJtgWAXG/bePp1hy05vF
-	/XQpKHCMy3jJjEHmdHnPjShhRvie+x4kNSFTqNUlJGDjRDY9ThIxoWRKG4QN3AZtEWCLV9V3wMRku
-	AMmmtQb79Q0LRYMNrlmGydhszbcedvbhlY04zeDxKakQZ4I1uiGMZ9to0P73MxLB2BxtHrsQfd2b/
-	dVnXU6zHohpwrX3w4CftasOOBMQdAsLXEAIGR3SDshVeYLCnl6/FrsVzYnXhyS4rvauDaQlF4o82L
-	oBsvjcFRQthXXFHiXMWQEErW4/RFk6wxO4z5MnFzZTqzCnXclUGmN++2rn5UApGbf9aaY89xl8Hn2
-	vOGu1JbQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qdrnb-002LZ8-Gm; Wed, 06 Sep 2023 12:38:23 +0000
-Date: Wed, 6 Sep 2023 13:38:23 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Zorro Lang <zlang@kernel.org>,
-	linux-ext4@vger.kernel.org, fstests@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
- test fails
-Message-ID: <ZPhyv7cHxO9vbciL@casper.infradead.org>
-References: <ZPendrb8gSbAC6fM@casper.infradead.org>
- <87wmx336ns.fsf@doe.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2944417
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 13:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=l8w5U8Lo+Ib8rdRaUcxv84w69rTq14NU8ZSfpAgImrU=; b=KLQuWSv0mz09IR2wkr3eCTIWVL
+	IYXnu+t86H2cLlxaTw9o+mnMOG7rWaRPL7MJo+0Fln0PYbzGi+HW9TQVc74baXCt1qnHlTgmeriEr
+	6vQlYkNQB12trzCJGjM9H7WTN8xYSG5Z3vcdNpFw1OCijfK7RYNrHI8Z1bqgi5QKfcGg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qdrgi-005tx3-Fm; Wed, 06 Sep 2023 14:31:16 +0200
+Date: Wed, 6 Sep 2023 14:31:16 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sergio Callegari <sergio.callegari@gmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, netdev@vger.kernel.org,
+	Linux Kernel Mailing list <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Oliver Neukum <oliver@neukum.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Regression with AX88179A: can't manually set MAC address anymore
+Message-ID: <d6777bc1-46ad-4ad9-a7e3-655dbe4f6317@lunn.ch>
+References: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
+ <ZPcfsd_QcJwQq0dK@debian.me>
+ <6315027e-d1ab-4dec-acf2-0a77bb948807@gmail.com>
+ <ZPfZQsLKG9LKGR1G@debian.me>
+ <075308b2-7768-40b2-9c00-a5a14df62678@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,128 +40,25 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wmx336ns.fsf@doe.com>
+In-Reply-To: <075308b2-7768-40b2-9c00-a5a14df62678@gmail.com>
 
-On Wed, Sep 06, 2023 at 04:33:35PM +0530, Ritesh Harjani wrote:
-> Matthew Wilcox <willy@infradead.org> writes:
-> 
-> > On Mon, Sep 04, 2023 at 02:08:19AM -0400, Theodore Ts'o wrote:
-> >> #regzbot introduced: 8147c4c4546f9f05ef03bb839b741473b28bb560 ^
-> >> 
-> >> OK, I've isolated the regression of generic/455 failing with ext4/1k
-> >> to this commit, which came in via the mm tree.  Nothing seems
-> >> *obviously* wrong, but I'm not sure if there are any differences in
-> >> the semantics of the new folio functions such as kmap_local_folio,
-> >> offset_in_folio, set_folio_bh() which might be making a difference.
-> >
-> > Thanks for the cc,  Let's see what we can do ...
-> >
-> > virt_to_folio() - For an order-0 page, there is no difference.
-> > offset_in_folio() - Ditto
-> > bh->b_page vs bh->b_folio - Ditto
-> > virt_to_folio() - Ditto
-> > folio_set_bh() - Ditto
-> >
-> > kmap_local_folio() vs kmap_atomic - Here, we have a difference.
-> > memcpy_from_folio() - Same difference as above.
-> >
-> > I suppose it must be this, and yet I cannot understand how it would
-> > make a difference.  Perhaps you can help me?
-> >
-> > static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-> > {
-> >         if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> >                 migrate_disable();
-> >         else
-> >                 preempt_disable();
-> >
-> >         pagefault_disable();
-> >         return __kmap_local_page_prot(page, prot);
-> > }
-> >
-> > vs
-> >
-> > static inline void *kmap_local_folio(struct folio *folio, size_t offset)
-> > {
-> >         struct page *page = folio_page(folio, offset / PAGE_SIZE);
-> >         return __kmap_local_page_prot(page, kmap_prot) + offset % PAGE_SIZE;
-> > }
-> >
-> > I don't believe that returning the address with the offset included
-> > is the problem here.  It must be disabling preemption / migration.
-> > There's no chace this funcation accesses userspace (... is there?) so
-> > it can't be the pagefault_disable().
-> >
-> > We can try splitting this up into tiny commits and figuring out which
-> > of them is the problem.  I'll be back at work tomorrow and can look
-> > more deeply then.
-> >
-> >> Using kvm-xfstests[1] I bisected this via the command:
-> >> 
-> >> % install-kconfig ; kbuild ; kvm-xfstests -c ext4/1k -C 10 generic/455
-> >> 
-> >> [1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
-> >> 
-> >> 
-> >> And the bisection pointed me at this commit:
-> >> 
-> >>     commit 8147c4c4546f9f05ef03bb839b741473b28bb560 (refs/bisect/bad)
-> >>     Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-> >>     AuthorDate: Thu Jul 13 04:55:11 2023 +0100
-> >>     Commit: Andrew Morton <akpm@linux-foundation.org>
-> >>     CommitDate: Fri Aug 18 10:12:30 2023 -0700
-> >> 
-> >>         jbd2: use a folio in jbd2_journal_write_metadata_buffer()
-> >>     
-> 
-> This is inline with my observation too. 
-> 
-> However, is this log expected with below diff when running with ext4/1k?
-> I am finding a folio with order > 0 here.
-> 
-> <diff>
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 768fa05bcbed..152c08e83fa2 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -369,6 +369,12 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->                 new_offset = offset_in_folio(new_folio, jh2bh(jh_in)->b_data);
->         }
-> 
-> +       if (folio_size(new_folio) > PAGE_SIZE) {
-> +               pr_crit("%s: folio_size=%lu, folio_order=%d, new_offset=%u bh_size=%lu folio_test_large=%d\n",
-> +                       __func__, folio_size(new_folio), folio_order(new_folio), new_offset,
-> +                       bh_in->b_size, folio_test_large(new_folio));
-> +       }
-> +
->         mapped_data = kmap_local_folio(new_folio, new_offset);
->         /*
->          * Fire data frozen trigger if data already wasn't frozen.  Do this
-> 
-> <dmesg log>
-> [   40.419772] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=0 bh_size=1024 folio_test_large=1
-> [   40.444737] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=2048 bh_size=1024 folio_test_large=1
-> [   40.472385] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=3072 bh_size=1024 folio_test_large=1
-> [   40.560581] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=8192 bh_size=1024 folio_test_large=1
-> [   40.588512] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=10240 bh_size=1024 folio_test_large=1
-> [   40.612103] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=7168 bh_size=1024 folio_test_large=1
-> [   40.636800] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=9216 bh_size=1024 folio_test_large=1
-> [   40.661166] jbd2_journal_write_metadata_buffer: folio_size=16384, folio_order=2, new_offset=10240 bh_size=1024 folio_test_large=1
-> 
-> 
-> Is this code path a possibility, which can cause above logs?
-> 
->    ptr = jbd2_alloc() -> kmem_cache_alloc()
->    <..>
->    new_folio = virt_to_folio(ptr)
->    new_offset = offset_in_folio(new_folio, ptr)
-> 
-> And then I am still not sure what the problem really is? 
-> Is it because at the time of checkpointing, the path is still not fully
-> converted to folio?
+> So if the in-tree driver could be fixed to correctly support the manual
+> configuration of the hardware (MAC) address as it used to be that would be
+> the best. I hope that Andrew Lunn's hypothesis is correct, and that cdc_ncm
+> can be extended to work with AX88179A even when a manual MAC addr is
+> configured.
 
-Oh yikes!  I didn't know that the allocation might come from kmalloc!
-Yes, slab might use high-order allocations.  I'll have to look through
-this and figure out what the problem might be.
+I think it can, but it looks like it needs a different
+implementation. The CDC NCM standard is publicly available. It
+documents an optional call to set the MAC address, and there appears
+to be a capability bit to indicate if its implemented in a specific
+device. Ideally if the bit is not set -EOPNOTSUPP should be returned
+when trying to set the MAC address, otherwise make the call to let the
+hardware know of the new MAC address.
 
-Thanks for debugging this.
+Sorry, i don't have the time or the hardware to actually implement
+this. But i can review patches and help with processes.
+
+      Andrew
+
+	
