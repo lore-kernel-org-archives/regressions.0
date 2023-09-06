@@ -1,110 +1,78 @@
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325DC6AB3
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 20:13:07 +0000 (UTC)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailnew.nyi.internal (Postfix) with ESMTP id D74F7581298;
-	Wed,  6 Sep 2023 16:13:06 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 06 Sep 2023 16:13:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1694031186; x=1694038386; bh=4D
-	QpkjWhlnU/jRaOv5cdvU9fDBTugxJNiIsRvReEP5Q=; b=B/0zM6yqj9l7vx9sk4
-	eNPXsFyJgJcYg4fAxPjGMeD6oYtP6/MxD79AJifJc6ZZIbg+mQIpDI+/3AtxbMXL
-	Ft+ECX9UGtQT7GxpY9ozLVVnKoVqFnPn/C80bZllK3I0G30w3ZKqUBKmhiHr6h5e
-	JbQnidbQWuEToSqmf1ijLXt9v9+yug430tseWzahpScJ/yzr0b2VsubJ32jlVjLO
-	fNeTuFnuVYgFGpobHBvSWM5bWV8j9vFTaZUaZp+uoEmgbJMhFn66NVUsrP9N4jcG
-	CM2gndG8yjxDXyGIqAfjXWuUIOcz5hwk7rkgLk4PA5dCVijxnIem/aOR8qmnUM3E
-	22mg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1694031186; x=1694038386; bh=4DQpkjWhlnU/j
-	RaOv5cdvU9fDBTugxJNiIsRvReEP5Q=; b=I8BDpAvNFOe3vb6c6SYdbJSOvTHjC
-	jWkK5/vL46nf4cbwv89chgSRUHu2AT1z/fjDP17xKeV7WCqtCojQEBRQHvJFxgSb
-	tIpLbt7U3dBKxMbux9t6OgCAPXWQnJR6qPGj/ooER3OhjYxkrcs7N32IWS57dspJ
-	sf6VWA4CDw8XJkt/rehjNnKji16SP9FI6po/GK5/TFg/Ka6ux7G5ptXQqo33X6CW
-	YLWWO8LMtA9ShXpPbjy0jvE/OPCDf4GJvD9n8KqQaVFyUz/KMTm6JmoTceSFx7MY
-	yW/mSH2nI1cIVqM6XYRxgmSSDNEZIb6Tkk8/IgcpXdg/gjalJm348HHAw==
-X-ME-Sender: <xms:Ut34ZFd4r0fnLRJavypQ55BBrmGd4tfg4K6xGkBzqUBafIQ71ZFrxQ>
-    <xme:Ut34ZDOD_tVL5KIp0FQ6kG9H0MAmI534dnH8pm8YEzhaV0C4LQwYl7fM60FpxOHz1
-    NwL7osZ0f8lWodShQY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehfedgudeghecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:Ut34ZOgGouuk1xWd80zCX_HPvgQuKqiJxWNppQopv8KFuzF5U0O_vA>
-    <xmx:Ut34ZO_M9LhzJIZGWrLcuxiN4bSCzSnWUCepDsvSUtPS2z6M6wO5dA>
-    <xmx:Ut34ZBvA8RrH1dVbVcg6-aKo5kihYmXpAJp3GXTjJsmR-C9eStAnuw>
-    <xmx:Ut34ZFihV2WwqtoBQOOIDv381VDcDlTmMY-yv8lpSO6xYMmxEqn8PQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 88D49B60089; Wed,  6 Sep 2023 16:13:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-711-g440737448e-fm-20230828.001-g44073744
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B26AB3
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 20:19:02 +0000 (UTC)
+Received: from mh by torres.zugschlus.de with local (Exim 4.96)
+	(envelope-from <mh+linux-kernel@zugschlus.de>)
+	id 1qdyzG-006ZTz-1m;
+	Wed, 06 Sep 2023 22:18:54 +0200
+Date: Wed, 6 Sep 2023 22:18:54 +0200
+From: Marc Haber <mh+linux-kernel@zugschlus.de>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux KVM <kvm@vger.kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
+ related
+Message-ID: <ZPjernao1DVQouhb@torres.zugschlus.de>
+References: <ZO4GeazfcA09SfKw@google.com>
+ <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
+ <ZO4RzCr/Ugwi70bZ@google.com>
+ <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
+ <ZO4nbzkd4tovKpxx@google.com>
+ <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
+ <ZPEPFJ8QvubbD3H9@google.com>
+ <20230901122431.GU11676@atomide.com>
+ <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
+ <20230906152616.GE11676@atomide.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
-In-Reply-To: <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
-References: <20230901122424.247070-1-daniel@zonque.org>
- <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
-Date: Wed, 06 Sep 2023 16:12:43 -0400
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thorsten Leemhuis" <regressions@leemhuis.info>,
- "Daniel Mack" <daniel@zonque.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- manikanta.guntupalli@amd.com
-Cc: linux-kernel@vger.kernel.org, stable@kernel.org,
- "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Linux kernel regressions list" <regressions@lists.linux.dev>
-Subject: Re: [PATCH] gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres
- callbacks
-Content-Type: text/plain
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230906152616.GE11676@atomide.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
 
-On Wed, Sep 6, 2023, at 09:49, Thorsten Leemhuis wrote:
-> CCing Arnd (wrote the culprit), Linus (reviewed it), Bartosz (applied
-> it), and the regressions mailing list
+On Wed, Sep 06, 2023 at 06:26:16PM +0300, Tony Lindgren wrote:
+> * Marc Haber <mh+linux-kernel@zugschlus.de> [230906 14:41]:
+> > With my tools I have found out that it really seems to be related to the
+> > CPU of the host. I have changed my VM definition to "copy host CPU
+> > configuration to VM" in libvirt and have moved this very VM (image and
+> > settings) to hosts with a "Ryzen 5 Pro 4650G" and to an "Intel Xeon
+> > E3-1246" where they work flawlessly, while on both APUs I have available
+> > ("AMD G-T40E" and "AMD GX-412TC SOC") the regression in 6.5 shows. And
+> > if I boot other VMs on the APUs with 6.5 the issue comes up. It is a
+> > clear regression since going back to 4.6's serial code solves the issue
+> > on the APUs.
+> 
+> Not sure why the CPU matters here..
 
-Thanks
+Neither am I.
 
-> On 01.09.23 14:24, Daniel Mack wrote:
->> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
->> warning") ditched the open-coded resource allocation handlers in favor
->> of the generic ones. These generic handlers don't maintain the PM
->> runtime anymore, which causes a regression in that level IRQs are no
->> longer reported.
->> 
->> Restore the original handlers to fix this.
->> 
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
->> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
->> Cc: stable@kernel.org
->
-> This seems to be a regression report that comes straight with a fix, but
-> there wasn't a single reply yet afaics. :-/ Maybe the extended list of
-> recipients will get things moving. But to ensure this doesn't fall
-> through the cracks, I'll add it to the list of tracked regressions.
+> One thing to check is if you have these in your .config:
+> 
+> CONFIG_SERIAL_CORE=y
+> CONFIG_SERIAL_CORE_CONSOLE=y
 
-I don't understand what the GPIOCHIP_IRQ_RESOURCE_HELPERS change
-intended to do in the first place: Manikanta's patch changed the behavior
-here with the addition of GPIOCHIP_IRQ_RESOURCE_HELPERS, while my patch
-was a cleanup that removed the dead code.
+That's affirmative. Otherwise, I think that serial console wouldn't work
+at all, but I get early kernel messages just fine and even at normal
+speed.
 
-Daniel's fix reverts both my cleanup patch and part of the original
-change, which may or may not be what we want here.
+> Or do you maybe have CONFIG_SERIAL_CORE=m as loadable module?
 
-      Arnd
+Negative.
+
+Greetings
+Marc
+
+-- 
+-----------------------------------------------------------------------------
+Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
+Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
+Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
