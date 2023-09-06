@@ -1,78 +1,75 @@
-Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B26AB3
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 20:19:02 +0000 (UTC)
-Received: from mh by torres.zugschlus.de with local (Exim 4.96)
-	(envelope-from <mh+linux-kernel@zugschlus.de>)
-	id 1qdyzG-006ZTz-1m;
-	Wed, 06 Sep 2023 22:18:54 +0200
-Date: Wed, 6 Sep 2023 22:18:54 +0200
-From: Marc Haber <mh+linux-kernel@zugschlus.de>
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
- related
-Message-ID: <ZPjernao1DVQouhb@torres.zugschlus.de>
-References: <ZO4GeazfcA09SfKw@google.com>
- <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
- <ZO4RzCr/Ugwi70bZ@google.com>
- <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
- <ZO4nbzkd4tovKpxx@google.com>
- <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
- <ZPEPFJ8QvubbD3H9@google.com>
- <20230901122431.GU11676@atomide.com>
- <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
- <20230906152616.GE11676@atomide.com>
+Received: from mail.bugwerft.de (mail.bugwerft.de [46.23.86.59])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274B86ADB
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 21:01:18 +0000 (UTC)
+Received: from [10.251.0.9] (unknown [176.126.217.202])
+	by mail.bugwerft.de (Postfix) with ESMTPSA id 9247628029E;
+	Wed,  6 Sep 2023 20:50:50 +0000 (UTC)
+Message-ID: <6422b80a-7588-eeaa-360d-ae12c7628ee0@zonque.org>
+Date: Wed, 6 Sep 2023 22:50:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230906152616.GE11676@atomide.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] gpio: zynq: restore
+ zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
+To: Arnd Bergmann <arnd@arndb.de>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ manikanta.guntupalli@amd.com
+Cc: linux-kernel@vger.kernel.org, stable@kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230901122424.247070-1-daniel@zonque.org>
+ <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
+ <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
+Content-Language: en-US
+From: Daniel Mack <daniel@zonque.org>
+In-Reply-To: <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 06, 2023 at 06:26:16PM +0300, Tony Lindgren wrote:
-> * Marc Haber <mh+linux-kernel@zugschlus.de> [230906 14:41]:
-> > With my tools I have found out that it really seems to be related to the
-> > CPU of the host. I have changed my VM definition to "copy host CPU
-> > configuration to VM" in libvirt and have moved this very VM (image and
-> > settings) to hosts with a "Ryzen 5 Pro 4650G" and to an "Intel Xeon
-> > E3-1246" where they work flawlessly, while on both APUs I have available
-> > ("AMD G-T40E" and "AMD GX-412TC SOC") the regression in 6.5 shows. And
-> > if I boot other VMs on the APUs with 6.5 the issue comes up. It is a
-> > clear regression since going back to 4.6's serial code solves the issue
-> > on the APUs.
+On 9/6/23 22:12, Arnd Bergmann wrote:
+>> On 01.09.23 14:24, Daniel Mack wrote:
+>>> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
+>>> warning") ditched the open-coded resource allocation handlers in favor
+>>> of the generic ones. These generic handlers don't maintain the PM
+>>> runtime anymore, which causes a regression in that level IRQs are no
+>>> longer reported.
+>>>
+>>> Restore the original handlers to fix this.
+>>>
+>>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>>> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
+>>> Cc: stable@kernel.org
+>>
+>> This seems to be a regression report that comes straight with a fix, but
+>> there wasn't a single reply yet afaics. :-/ Maybe the extended list of
+>> recipients will get things moving. But to ensure this doesn't fall
+>> through the cracks, I'll add it to the list of tracked regressions.
 > 
-> Not sure why the CPU matters here..
+> I don't understand what the GPIOCHIP_IRQ_RESOURCE_HELPERS change
+> intended to do in the first place: Manikanta's patch changed the behavior
+> here with the addition of GPIOCHIP_IRQ_RESOURCE_HELPERS, while my patch
+> was a cleanup that removed the dead code.
 
-Neither am I.
+Manikanta's patch (f56914393537 "gpio: zynq: fix zynqmp_gpio not an
+immutable chip warning") did many things at once, the move to the
+generic resource handlers was just one of the changes. I can only guess
+that it intended to simply the code a bit, and the dropped pm runtime
+detail was just an oversight.
 
-> One thing to check is if you have these in your .config:
-> 
-> CONFIG_SERIAL_CORE=y
-> CONFIG_SERIAL_CORE_CONSOLE=y
+> Daniel's fix reverts both my cleanup patch and part of the original
+> change, which may or may not be what we want here.
 
-That's affirmative. Otherwise, I think that serial console wouldn't work
-at all, but I get early kernel messages just fine and even at normal
-speed.
+Enabling the pm runtime is necessary on my boards, at least for level
+IRQs. Edge IRQs are still handled fine, interestingly.
 
-> Or do you maybe have CONFIG_SERIAL_CORE=m as loadable module?
 
-Negative.
+Thanks,
+Daniel
 
-Greetings
-Marc
-
--- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
