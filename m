@@ -1,64 +1,125 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2944417
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 13:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=l8w5U8Lo+Ib8rdRaUcxv84w69rTq14NU8ZSfpAgImrU=; b=KLQuWSv0mz09IR2wkr3eCTIWVL
-	IYXnu+t86H2cLlxaTw9o+mnMOG7rWaRPL7MJo+0Fln0PYbzGi+HW9TQVc74baXCt1qnHlTgmeriEr
-	6vQlYkNQB12trzCJGjM9H7WTN8xYSG5Z3vcdNpFw1OCijfK7RYNrHI8Z1bqgi5QKfcGg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qdrgi-005tx3-Fm; Wed, 06 Sep 2023 14:31:16 +0200
-Date: Wed, 6 Sep 2023 14:31:16 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sergio Callegari <sergio.callegari@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, netdev@vger.kernel.org,
-	Linux Kernel Mailing list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Oliver Neukum <oliver@neukum.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Regression with AX88179A: can't manually set MAC address anymore
-Message-ID: <d6777bc1-46ad-4ad9-a7e3-655dbe4f6317@lunn.ch>
-References: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
- <ZPcfsd_QcJwQq0dK@debian.me>
- <6315027e-d1ab-4dec-acf2-0a77bb948807@gmail.com>
- <ZPfZQsLKG9LKGR1G@debian.me>
- <075308b2-7768-40b2-9c00-a5a14df62678@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253EEDF5A
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 13:49:33 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qdsuI-0002DX-9q; Wed, 06 Sep 2023 15:49:22 +0200
+Message-ID: <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
+Date: Wed, 6 Sep 2023 15:49:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <075308b2-7768-40b2-9c00-a5a14df62678@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: zynq: restore
+ zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
+Content-Language: en-US, de-DE
+To: Daniel Mack <daniel@zonque.org>, linux-gpio@vger.kernel.org,
+ manikanta.guntupalli@amd.com
+Cc: linux-kernel@vger.kernel.org, stable@kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230901122424.247070-1-daniel@zonque.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20230901122424.247070-1-daniel@zonque.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694008174;f9852fca;
+X-HE-SMSGID: 1qdsuI-0002DX-9q
 
-> So if the in-tree driver could be fixed to correctly support the manual
-> configuration of the hardware (MAC) address as it used to be that would be
-> the best. I hope that Andrew Lunn's hypothesis is correct, and that cdc_ncm
-> can be extended to work with AX88179A even when a manual MAC addr is
-> configured.
+CCing Arnd (wrote the culprit), Linus (reviewed it), Bartosz (applied
+it), and the regressions mailing list
 
-I think it can, but it looks like it needs a different
-implementation. The CDC NCM standard is publicly available. It
-documents an optional call to set the MAC address, and there appears
-to be a capability bit to indicate if its implemented in a specific
-device. Ideally if the bit is not set -EOPNOTSUPP should be returned
-when trying to set the MAC address, otherwise make the call to let the
-hardware know of the new MAC address.
+On 01.09.23 14:24, Daniel Mack wrote:
+> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
+> warning") ditched the open-coded resource allocation handlers in favor
+> of the generic ones. These generic handlers don't maintain the PM
+> runtime anymore, which causes a regression in that level IRQs are no
+> longer reported.
+> 
+> Restore the original handlers to fix this.
+> 
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
+> Cc: stable@kernel.org
 
-Sorry, i don't have the time or the hardware to actually implement
-this. But i can review patches and help with processes.
+This seems to be a regression report that comes straight with a fix, but
+there wasn't a single reply yet afaics. :-/ Maybe the extended list of
+recipients will get things moving. But to ensure this doesn't fall
+through the cracks, I'll add it to the list of tracked regressions.
 
-      Andrew
+#regzbot ^introduced f56914393537
+#regzbot title gpio: zynq: in that level IRQs are no longer reported
+#regzbot fix: gpio: zynq: restore
+zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
+#regzbot ignore-activity
 
-	
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+> ---
+>  drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index 0a7264aabe48..324e942c0650 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
+>  	return 0;
+>  }
+>  
+> +static int zynq_gpio_irq_reqres(struct irq_data *d)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +	int ret;
+> +
+> +	ret = pm_runtime_resume_and_get(chip->parent);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return gpiochip_reqres_irq(chip, d->hwirq);
+> +}
+> +
+> +static void zynq_gpio_irq_relres(struct irq_data *d)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +
+> +	gpiochip_relres_irq(chip, d->hwirq);
+> +	pm_runtime_put(chip->parent);
+> +}
+> +
+>  /* irq chip descriptor */
+>  static const struct irq_chip zynq_gpio_level_irqchip = {
+>  	.name		= DRIVER_NAME,
+> @@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip = {
+>  	.irq_unmask	= zynq_gpio_irq_unmask,
+>  	.irq_set_type	= zynq_gpio_set_irq_type,
+>  	.irq_set_wake	= zynq_gpio_set_wake,
+> +	.irq_request_resources = zynq_gpio_irq_reqres,
+> +	.irq_release_resources = zynq_gpio_irq_relres,
+>  	.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
+>  			  IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>  
+>  static const struct irq_chip zynq_gpio_edge_irqchip = {
+> @@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip = {
+>  	.irq_unmask	= zynq_gpio_irq_unmask,
+>  	.irq_set_type	= zynq_gpio_set_irq_type,
+>  	.irq_set_wake	= zynq_gpio_set_wake,
+> +	.irq_request_resources = zynq_gpio_irq_reqres,
+> +	.irq_release_resources = zynq_gpio_irq_relres,
+>  	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>  
+>  static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
