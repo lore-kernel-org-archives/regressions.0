@@ -1,129 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CF53FEF
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 10:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693996081; x=1725532081;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xi2arI2T8vGuQePjOisCBAGoEzD7ON/P0tWYno67vjY=;
-  b=hvjzsRvhSYapMSjaohvRsvbFwmSUyQVS8jkuh3rrWYgFyArheoKGx8uq
-   KBP5W2HwEmKk+F5LE046N8m9FYjDoetPjw0XeweyB1ytEn8XYFAOXYgkH
-   xS0HHErxsVSRU5qAJnORwatPNvQMwUotHlHVAvGxAZcKDxnaih2pUl4DR
-   0HALIEs74O97XbJ8QTk8A7injZbOem3gHtRyX52IMbXXBCeEUQSEk5eiI
-   nEBM0kFMdDZhi3GBLcgHNagTJkofKGK2+tBvo5iK58966ZXl0qiBmjc6a
-   4DU7av83FHclFtlsUVYrSzjNYl52wH/WGllpBCbWXJ/QqnQtp3qs2d6SS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="379740998"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="379740998"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 03:27:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="811603688"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="811603688"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.138.106])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 03:27:56 -0700
-Date: Wed, 6 Sep 2023 12:27:51 +0200
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: AceLan Kao <acelan@gmail.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>, Guoqing
- Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Regressions
- <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>,
- "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-Message-ID: <20230906122751.00001e5b@linux.intel.com>
-In-Reply-To: <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
-	<20230818101630.000027f4@linux.intel.com>
-	<b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
-	<CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
-	<20230822083923.00007fb6@linux.intel.com>
-	<CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
-	<35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
-	<CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
-	<CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
-	<CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
-	<CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
-	<354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
-	<03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
-	<20230831085057.00001795@linux.intel.com>
-	<CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE357E
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 10:59:40 +0000 (UTC)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d7cbcfdf137so3013443276.2
+        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 03:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693997979; x=1694602779; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0TRaWE9RdpS1f61w4iMZcHsGOS8rUsx58CiFxRqJCtY=;
+        b=JElDPwX8/8ISWCqKJ5z+0/94hfBxUZ51SxwaN73OAXz4xhv4Th3uryUhaypraFDbyU
+         zP5usI7TJ8oUNZokdlrB+ZaI5T8gOkUtOUgM/wmzsA/ti1nGnzXWTmKKj7tVzIfvIGmJ
+         cu7f4ufI25zdbcNzW9PIqC7kyBkbvkOrSWzZAAfzOuSsQDGLdVycPmcYwg4/tltM6/fP
+         HdquiS4VnOQWDJbe0SbfYX0YKBkAVKgP7mETqEqp7+H1hVYL3iEM1Kzl+brbgMvHkQhA
+         3rzhlq8ueeqz3UEiqnxjwr8s6kQLpcUSOB0k8OhK1UvN3EH7IjRmQZ/xMiMhDjn4S9zw
+         RqmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693997979; x=1694602779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0TRaWE9RdpS1f61w4iMZcHsGOS8rUsx58CiFxRqJCtY=;
+        b=AGWBTAjJqRWfGViC57co1MZRTtECyb8+m3IB0vDA9FlF2muWvWh0An8NEg5a1qnK2d
+         ybF/NRZPUdUZEgEjwBm6+wQsM1UBfa2q4ItWofHqgG0385BqTS9E4HVSGY7M1RyPHUOC
+         +jng/y+7mbCB+NI+t8nPflVP4DGPhM0AncPCpdTK8yDTrNo3s66MvYM9TgNSfd5TYJkZ
+         qTAjZEjHprFvarvMDCY1RbW+9Nd8zIhd1y5YcMfXvXfp8HpN3j+ZgwlkGZEm9pwdKAWh
+         M+DT4GDvk3eG8oZxdmXfANBXXouK//NooJ+P3pwUDfN3dLHqPQ4Mstpimuezsa61srjB
+         mGNw==
+X-Gm-Message-State: AOJu0YzUZmpfm52zPQ2WYH9+m7HDKXOKaq2ca/ltA1AQ5/Ofl0qDw5Sj
+	oucEElL9JeQquzxx4NzGw/aC8VOiM08SMK+jJy8=
+X-Google-Smtp-Source: AGHT+IGDVLUdQ05ge/G4dn3Y38GXLHKZ7EF0tbkdsL28txPHQxHktzsEeW+78m6I3GUAbE9DNyViC+klXVifYe3z/QM=
+X-Received: by 2002:a05:6902:188:b0:d7f:95f6:e13e with SMTP id
+ t8-20020a056902018800b00d7f95f6e13emr3169281ybh.33.1693997979142; Wed, 06 Sep
+ 2023 03:59:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAHCN7xJjK=BaNHa=+OKzOmFtNRYKX_APTp5Zj3g-X_iQcpyK6g@mail.gmail.com>
+ <ZPZ2zTS9loj06u31@debian.me> <20230905061739.GX11676@atomide.com>
+In-Reply-To: <20230905061739.GX11676@atomide.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Wed, 6 Sep 2023 05:59:27 -0500
+Message-ID: <CAHCN7xJo=pJkcChHm9AsNQGCJuHXgpRKKRK9ckEwdk3U-41ukw@mail.gmail.com>
+Subject: Re: 6.1.y Regression found on AM3517
+To: Tony Lindgren <tony@atomide.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux OMAP <linux-omap@vger.kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Linux Stable <stable@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 6 Sep 2023 14:26:30 +0800
-AceLan Kao <acelan@gmail.com> wrote:
+On Tue, Sep 5, 2023 at 11:25=E2=80=AFAM Tony Lindgren <tony@atomide.com> wr=
+ote:
+>
+> * Bagas Sanjaya <bagasdotme@gmail.com> [230905 00:31]:
+> > On Mon, Sep 04, 2023 at 11:37:46AM -0500, Adam Ford wrote:
+> > > I have an AM3517-EVM board that I am trying to use the latest 6.1.y
+> > > stable, currently 6.1.51.
+> > >
+> > > With git bisect, I narrowed the regression between 6.1.15 and 6.1.16 =
+to commit
+> > > eaf9b5612a47 ("driver core: fw_devlink: Don't purge child fwnode's
+> > > consumer links")
+> > >
+> > > In the regression, 48002000.scm appears as not ready.  This affects a
+> > > variety of dependent peripherals making them unavailable:
+> > >
+> > > wl12xx_buf platform: supplier 48002000.scm not ready
+> > > wl12xx_vmmc2 platform: supplier wl12xx_buf not ready
+> > > 48050000.dss platform: supplier display@0 not ready
+> > > 48064800.ehci platform: supplier hsusb1_phy not ready
+> > > backlight platform: supplier 48002000.scm not ready
+> > > display@0 platform: supplier backlight not ready
+> > > dmtimer-pwm@11 platform: supplier 48002000.scm not ready
+> > > hsusb1_phy platform: supplier 48002000.scm not ready
+> > > gpio-leds platform: supplier 48002000.scm not ready
+> > > 480b4000.mmc platform: supplier wl12xx_vmmc2 not ready
+> > >
+> > > If I build 6.1.51 but I checkout drivers/base/core.c from commit
+> > > 2455b81afe68 ("driver core: fw_devlink: Add DL_FLAG_CYCLE support to
+> > > device links"),
+> > > the regression is gone.
+>
+> Adam, maybe check if 6.1 stable series is missing something to be
+> backported from this mailing list thread:
+>
+> https://lore.kernel.org/lkml/20230207014207.1678715-2-saravanak@google.co=
+m/
+>
+> That email thread version seemed to work for me based on my reply in the
+> thread. I recall issues with the earlier revisions but don't remember
+> what fixed them.
 
-> From previous testing, I don't think it's an issue in systemd, so I
-> did a simple test and found the issue is gone.
-> You only need to add a small delay in md_release(), then the issue
-> can't be reproduced.
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 78be7811a89f..ef47e34c1af5 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
-> {
->        struct mddev *mddev = disk->private_data;
-> 
-> +       msleep(10);
->        BUG_ON(!mddev);
->        atomic_dec(&mddev->openers);
->        mddev_put(mddev);
+Tony,
 
-I have repro and I tested it on my setup. It is not working for me.
-My setup could be more "advanced" to maximalize chance of reproduction:
+Indeed, it does appear that a patch was missing from the back-ported series=
+.
 
-# cat /proc/mdstat
-Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
-md121 : active raid0 nvme2n1[1] nvme5n1[0]
-      7126394880 blocks super external:/md127/0 128k chunks
+Applying commit 4a032827daa8 ("of: property: Simplify
+of_link_to_phandle()") to the 6.1.y branch appears
+to fix the regression.
 
-md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
-      104857600 blocks super external:/md126/0 64K chunks 2 near-copies [4/4]
-[UUUU]
+Thanks for the pointer to the series.
 
-md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
-      2655765504 blocks super external:/md126/1 level 5, 32k chunk, algorithm 0
-[4/4] [UUUU]
+Stable group,
 
-md124 : active raid1 nvme0n1[1] nvme3n1[0]
-      99614720 blocks super external:/md125/0 [2/2] [UU]
+Do I need to send a separate e-mail requesting the backporting of that
+commit to the 6.1.y branch?
 
-md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
-      10402 blocks super external:imsm
-
-md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
-      20043 blocks super external:imsm
-
-md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
-      10402 blocks super external:imsm
-
-I have almost 99% repro ratio, slowly moving forward..
-
-It is endless loop because systemd-shutdown sends ioctl "stop_array" which is
-successful but array is not stopped. For that reason it sets "changed = true".
-
-Systemd-shutdown see the change and retries to check if there is something else
-which can be stopped now, and again, again...
-
-I will check what is returned first, it could be 0 or it could be positive
-errno (nit?) because systemd cares "if(r < 0)".
-
-Thanks,
-Mariusz
+adam
+>
+> > > I checked the 6.5 kernel, and it appears fine, so I think there is a
+> > > possible backport commit missing, and I was hoping Saravana or Tony
+> > > might have a suggestion as to which one(s) I should try.  I don't kno=
+w
+> > > if this is found on other OMAP3 boards, but I wouldn't be surprised.
+> > >
+> >
+> > Thanks for the regression report. I'm adding it to regzbot as stable-sp=
+ecific
+> > entry:
+> >
+> > #regzbot ^introduced: eaf9b5612a47f0
+> > #regzbot title: keeping consumer links of child fwnode doesn't prepare =
+AM3517-EVM suppliers
+>
+> Regards,
+>
+> Tony
