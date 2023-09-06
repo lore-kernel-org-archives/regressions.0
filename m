@@ -1,136 +1,134 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE357E
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 10:59:40 +0000 (UTC)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d7cbcfdf137so3013443276.2
-        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 03:59:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C37E7E
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 11:03:33 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2b962535808so56034591fa.0
+        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 04:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693997979; x=1694602779; darn=lists.linux.dev;
+        d=cloud.com; s=cloud; t=1693998212; x=1694603012; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0TRaWE9RdpS1f61w4iMZcHsGOS8rUsx58CiFxRqJCtY=;
-        b=JElDPwX8/8ISWCqKJ5z+0/94hfBxUZ51SxwaN73OAXz4xhv4Th3uryUhaypraFDbyU
-         zP5usI7TJ8oUNZokdlrB+ZaI5T8gOkUtOUgM/wmzsA/ti1nGnzXWTmKKj7tVzIfvIGmJ
-         cu7f4ufI25zdbcNzW9PIqC7kyBkbvkOrSWzZAAfzOuSsQDGLdVycPmcYwg4/tltM6/fP
-         HdquiS4VnOQWDJbe0SbfYX0YKBkAVKgP7mETqEqp7+H1hVYL3iEM1Kzl+brbgMvHkQhA
-         3rzhlq8ueeqz3UEiqnxjwr8s6kQLpcUSOB0k8OhK1UvN3EH7IjRmQZ/xMiMhDjn4S9zw
-         RqmA==
+        bh=4cP1GgEPsuH5x3JwCdVLlQl6m1HOoYau4dFR4xNCE00=;
+        b=VK9gvT9AT/PTyhsofknauUezIa7hfBzO2eIgWXBbIxTuh6H0tHxmNGNKqHye8cmIGt
+         B5U5Rd0sKEWs43PXqfOheI6FxVmj+DJxutw1p/CnXn0aG2B13M6vM0K2SsY/lv+egZWV
+         Fy8mXzxjz0qn4PSkdsvTsodqc1rSIFG5+h324=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693997979; x=1694602779;
+        d=1e100.net; s=20221208; t=1693998212; x=1694603012;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0TRaWE9RdpS1f61w4iMZcHsGOS8rUsx58CiFxRqJCtY=;
-        b=AGWBTAjJqRWfGViC57co1MZRTtECyb8+m3IB0vDA9FlF2muWvWh0An8NEg5a1qnK2d
-         ybF/NRZPUdUZEgEjwBm6+wQsM1UBfa2q4ItWofHqgG0385BqTS9E4HVSGY7M1RyPHUOC
-         +jng/y+7mbCB+NI+t8nPflVP4DGPhM0AncPCpdTK8yDTrNo3s66MvYM9TgNSfd5TYJkZ
-         qTAjZEjHprFvarvMDCY1RbW+9Nd8zIhd1y5YcMfXvXfp8HpN3j+ZgwlkGZEm9pwdKAWh
-         M+DT4GDvk3eG8oZxdmXfANBXXouK//NooJ+P3pwUDfN3dLHqPQ4Mstpimuezsa61srjB
-         mGNw==
-X-Gm-Message-State: AOJu0YzUZmpfm52zPQ2WYH9+m7HDKXOKaq2ca/ltA1AQ5/Ofl0qDw5Sj
-	oucEElL9JeQquzxx4NzGw/aC8VOiM08SMK+jJy8=
-X-Google-Smtp-Source: AGHT+IGDVLUdQ05ge/G4dn3Y38GXLHKZ7EF0tbkdsL28txPHQxHktzsEeW+78m6I3GUAbE9DNyViC+klXVifYe3z/QM=
-X-Received: by 2002:a05:6902:188:b0:d7f:95f6:e13e with SMTP id
- t8-20020a056902018800b00d7f95f6e13emr3169281ybh.33.1693997979142; Wed, 06 Sep
- 2023 03:59:39 -0700 (PDT)
+        bh=4cP1GgEPsuH5x3JwCdVLlQl6m1HOoYau4dFR4xNCE00=;
+        b=BQvdHDE6prf3jzxoJqjxS9Th5FaErvn4jJRwZ7SiUuSq3iiKkhsbI3KtE7EFSYeIz1
+         At87abp+6pKwU42Y+X4AJx23QrgvwSWds6iOkiJj/N63Umwf2hdOQx11WJU5PBOehGld
+         4l+FTVyA9x+aX9v6sJsqdrHMd1j3stgW727cGSIho8bsEsViassS5iGAlOpJLCNGYBYn
+         udaocsDkV0K234YB4oDXS4BZmTfy2GVN9d8g07CPlLuDx9RDS8jPuIHa61s6CpTZrxlJ
+         IU4bGw46aTYF8eOQQaAcTd9ZICLIrs+2ufXSsq5DFj/Ai9Z77lA7ZPb+8Ng5ocxUUkIs
+         CsZQ==
+X-Gm-Message-State: AOJu0Yy5pjfe4ffJ7RnntxSIkkpxNsEDA4QX5HKYtKRh0hZXbnrztM5s
+	LXokAXMtRHWTBECKRRESUFhXnRrIQBWfTpkRmuyM
+X-Google-Smtp-Source: AGHT+IGajkHriDp2V73gLnt8w9Q25yWyd69bww3RGThTXV/dyVspDiEGJ6yxe7gAgW9hORJWYBsEuf4z+KZwKyH4opw=
+X-Received: by 2002:a05:6512:2393:b0:500:b5db:990b with SMTP id
+ c19-20020a056512239300b00500b5db990bmr2354910lfv.47.1693998211695; Wed, 06
+ Sep 2023 04:03:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHCN7xJjK=BaNHa=+OKzOmFtNRYKX_APTp5Zj3g-X_iQcpyK6g@mail.gmail.com>
- <ZPZ2zTS9loj06u31@debian.me> <20230905061739.GX11676@atomide.com>
-In-Reply-To: <20230905061739.GX11676@atomide.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Wed, 6 Sep 2023 05:59:27 -0500
-Message-ID: <CAHCN7xJo=pJkcChHm9AsNQGCJuHXgpRKKRK9ckEwdk3U-41ukw@mail.gmail.com>
-Subject: Re: 6.1.y Regression found on AM3517
-To: Tony Lindgren <tony@atomide.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux OMAP <linux-omap@vger.kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Linux Stable <stable@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <878r9sga1t.fsf@kernel.org> <CAG7k0Epk6KJvoDJKVc86sc_ems3DTbKvPLouBzOoVvn1tZwQ=w@mail.gmail.com>
+ <87o7ifelt7.fsf@kernel.org>
+In-Reply-To: <87o7ifelt7.fsf@kernel.org>
+From: Ross Lagerwall <ross.lagerwall@cloud.com>
+Date: Wed, 6 Sep 2023 12:03:20 +0100
+Message-ID: <CAG7k0Ep6ZT6f_wcr67ZOz-kDjNx2M-wax8QFoA5-WfyMhycR3A@mail.gmail.com>
+Subject: Re: [regression v6.5-rc1] PCI: comm "swapper/0" leaking memory
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ath11k@lists.infradead.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 5, 2023 at 11:25=E2=80=AFAM Tony Lindgren <tony@atomide.com> wr=
-ote:
+On Wed, Sep 6, 2023 at 9:40=E2=80=AFAM Kalle Valo <kvalo@kernel.org> wrote:
 >
-> * Bagas Sanjaya <bagasdotme@gmail.com> [230905 00:31]:
-> > On Mon, Sep 04, 2023 at 11:37:46AM -0500, Adam Ford wrote:
-> > > I have an AM3517-EVM board that I am trying to use the latest 6.1.y
-> > > stable, currently 6.1.51.
-> > >
-> > > With git bisect, I narrowed the regression between 6.1.15 and 6.1.16 =
-to commit
-> > > eaf9b5612a47 ("driver core: fw_devlink: Don't purge child fwnode's
-> > > consumer links")
-> > >
-> > > In the regression, 48002000.scm appears as not ready.  This affects a
-> > > variety of dependent peripherals making them unavailable:
-> > >
-> > > wl12xx_buf platform: supplier 48002000.scm not ready
-> > > wl12xx_vmmc2 platform: supplier wl12xx_buf not ready
-> > > 48050000.dss platform: supplier display@0 not ready
-> > > 48064800.ehci platform: supplier hsusb1_phy not ready
-> > > backlight platform: supplier 48002000.scm not ready
-> > > display@0 platform: supplier backlight not ready
-> > > dmtimer-pwm@11 platform: supplier 48002000.scm not ready
-> > > hsusb1_phy platform: supplier 48002000.scm not ready
-> > > gpio-leds platform: supplier 48002000.scm not ready
-> > > 480b4000.mmc platform: supplier wl12xx_vmmc2 not ready
-> > >
-> > > If I build 6.1.51 but I checkout drivers/base/core.c from commit
-> > > 2455b81afe68 ("driver core: fw_devlink: Add DL_FLAG_CYCLE support to
-> > > device links"),
-> > > the regression is gone.
+> Ross Lagerwall <ross.lagerwall@cloud.com> writes:
 >
-> Adam, maybe check if 6.1 stable series is missing something to be
-> backported from this mailing list thread:
->
-> https://lore.kernel.org/lkml/20230207014207.1678715-2-saravanak@google.co=
-m/
->
-> That email thread version seemed to work for me based on my reply in the
-> thread. I recall issues with the earlier revisions but don't remember
-> what fixed them.
-
-Tony,
-
-Indeed, it does appear that a patch was missing from the back-ported series=
-.
-
-Applying commit 4a032827daa8 ("of: property: Simplify
-of_link_to_phandle()") to the 6.1.y branch appears
-to fix the regression.
-
-Thanks for the pointer to the series.
-
-Stable group,
-
-Do I need to send a separate e-mail requesting the backporting of that
-commit to the 6.1.y branch?
-
-adam
->
-> > > I checked the 6.5 kernel, and it appears fine, so I think there is a
-> > > possible backport commit missing, and I was hoping Saravana or Tony
-> > > might have a suggestion as to which one(s) I should try.  I don't kno=
-w
-> > > if this is found on other OMAP3 boards, but I wouldn't be surprised.
-> > >
+> > On Wed, Aug 30, 2023 at 10:21=E2=80=AFAM Kalle Valo <kvalo@kernel.org> =
+wrote:
 > >
-> > Thanks for the regression report. I'm adding it to regzbot as stable-sp=
-ecific
-> > entry:
+> >>
+> >> I noticed that starting from v6.5-rc1 my ath11k tests reported several
+> >> memory leaks from swapper/0:
+> >>
+> >> unreferenced object 0xffff88810a02b7a8 (size 96):
+> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+> >>   hex dump (first 32 bytes):
+> >>     80 b8 02 0a 81 88 ff ff b8 72 07 00 00 c9 ff ff  .........r......
+> >>     c8 b7 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+> >>   backtrace:
+> >> unreferenced object 0xffff88810a02b880 (size 96):
+> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+> >>   hex dump (first 32 bytes):
+> >>     58 b9 02 0a 81 88 ff ff a8 b7 02 0a 81 88 ff ff  X...............
+> >>     a0 b8 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+> >>   backtrace:
+> >> unreferenced object 0xffff88810a02b958 (size 96):
+> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+> >>   hex dump (first 32 bytes):
+> >>     30 ba 02 0a 81 88 ff ff 80 b8 02 0a 81 88 ff ff  0...............
+> >>     78 b9 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  x...............
+> >>   backtrace:
+> >> unreferenced object 0xffff88810a02ba30 (size 96):
+> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+> >>   hex dump (first 32 bytes):
+> >>     08 bb 02 0a 81 88 ff ff 58 b9 02 0a 81 88 ff ff  ........X.......
+> >>     50 ba 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  P...............
+> >>   backtrace:
+> >> unreferenced object 0xffff88810a02bb08 (size 96):
+> >>   comm "swapper/0", pid 1, jiffies 4294671838 (age 98.120s)
+> >>   hex dump (first 32 bytes):
+> >>     e0 bb 02 0a 81 88 ff ff 30 ba 02 0a 81 88 ff ff  ........0.......
+> >>     28 bb 02 0a 81 88 ff ff 00 00 00 00 00 00 00 00  (...............
+> >>   backtrace:
+> >>
+> >> I can easily reproduce this by doing a simple insmod and rmmod of ath1=
+1k
+> >> and it's dependencies (mac80211, MHI etc). I can reliability reproduce
+> >> the leaks but I only see them once after a boot, I need to reboot the
+> >> host to see the leaks again. v6.4 has no leaks.
+> >>
+> >> I did a bisect and found the commit below. I verified reverting the
+> >> commit makes the leaks go away.
+> >>
+> >> commit e54223275ba1bc6f704a6bab015fcd2ae4f72572
+> >> Author:     Ross Lagerwall <ross.lagerwall@citrix.com>
+> >> AuthorDate: Thu May 25 16:32:48 2023 +0100
+> >> Commit:     Bjorn Helgaas <bhelgaas@google.com>
+> >> CommitDate: Fri Jun 9 15:06:16 2023 -0500
+> >>
+> >>     PCI: Release resource invalidated by coalescing
 > >
-> > #regzbot ^introduced: eaf9b5612a47f0
-> > #regzbot title: keeping consumer links of child fwnode doesn't prepare =
-AM3517-EVM suppliers
+> > Hi Kalle,
+> >
+> > I can't reproduce the leak by loading/unloading the ath11k module. I su=
+spect
+> > that the leak is always there when PCI resources are coalesced but
+> > kmemleak doesn't notice until ath11k is loaded.
+> >
+> > Can you please try the following to confirm it fixes it?
 >
-> Regards,
+> I run various tests with your patch and I don't see leaks anymore. I
+> also veried that without your patch I see the leak immediately.
 >
-> Tony
+> Thanks for fixing this so quickly, it would good to have this fix in
+> v6.6 if possible.
+>
+> Tested-by: Kalle Valo <kvalo@kernel.org>
+>
+
+Thanks, I will send out a proper patch now.
+
+Ross
