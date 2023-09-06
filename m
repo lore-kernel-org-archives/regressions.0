@@ -1,15 +1,12 @@
-Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A19710798
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 15:09:00 +0000 (UTC)
-Received: from mh by torres.zugschlus.de with local (Exim 4.96)
-	(envelope-from <mh+linux-kernel@zugschlus.de>)
-	id 1qdtib-006SiW-2q;
-	Wed, 06 Sep 2023 16:41:21 +0200
-Date: Wed, 6 Sep 2023 16:41:21 +0200
-From: Marc Haber <mh+linux-kernel@zugschlus.de>
-To: Tony Lindgren <tony@atomide.com>
+Received: from muru.com (muru.com [72.249.23.125])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0F7E101E1
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 15:21:15 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by muru.com (Postfix) with ESMTPS id 783DC8050;
+	Wed,  6 Sep 2023 15:21:08 +0000 (UTC)
+Date: Wed, 6 Sep 2023 18:21:07 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Marc Haber <mh+linux-kernel@zugschlus.de>
 Cc: Sean Christopherson <seanjc@google.com>,
 	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
 	Linux Regressions <regressions@lists.linux.dev>,
@@ -17,9 +14,8 @@ Cc: Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>
 Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
  related
-Message-ID: <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
-References: <ZO2piz5n1MiKR-3-@debian.me>
- <ZO3sA2GuDbEuQoyj@torres.zugschlus.de>
+Message-ID: <20230906152107.GD11676@atomide.com>
+References: <ZO3sA2GuDbEuQoyj@torres.zugschlus.de>
  <ZO4GeazfcA09SfKw@google.com>
  <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
  <ZO4RzCr/Ugwi70bZ@google.com>
@@ -28,86 +24,27 @@ References: <ZO2piz5n1MiKR-3-@debian.me>
  <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
  <ZPEPFJ8QvubbD3H9@google.com>
  <20230901122431.GU11676@atomide.com>
+ <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230901122431.GU11676@atomide.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+In-Reply-To: <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
 
-On Fri, Sep 01, 2023 at 03:24:31PM +0300, Tony Lindgren wrote:
-> Yes two somewhat minimal qemu command lines for working and failing test
-> case sure would help to debug this.
+* Marc Haber <mh+linux-kernel@zugschlus.de> [230906 14:41]:
+> If I cannot see the host boot, I cannot debug, and if I cannot type into
+> grub, I cannot find out whether removing the serial console from the
+> kernel command line fixes the issue. I have removed the network
+> interface to simplify things, so I need a working console.
 
-I have spent some time with that but have failed yet. I would appreciate
-help about which qemu option I'd need to get a serial console configured
-AND to get access to this serial console, alternatively get access to a
-VNC console.
+I use something like this for a serial console:
 
-I have the following qemu start script so far (command line pulled from
-libvirt log and simplified):
-export LC_ALL=C
-export QEMU_AUDIO_DRV=spice
+-serial stdio -append "console=ttyS0 other kernel command line options"
 
-/usr/bin/qemu-system-x86_64 \
--name guest=lasso2,debug-threads=on \
--S \
--machine pc-i440fx-2.1,accel=kvm,usb=off,dump-guest-core=off \
--m 768 \
--realtime mlock=off \
--smp 1,sockets=1,cores=1,threads=1 \
--uuid 7954f7a6-9418-4ab5-9571-97ccbea263ec \
--no-user-config \
--rtc base=utc,driftfix=slew \
--global kvm-pit.lost_tick_policy=delay \
--no-hpet \
--no-shutdown \
--nodefaults \
--global PIIX4_PM.disable_s3=1 \
--global PIIX4_PM.disable_s4=1 \
--boot strict=on \
--device ich9-usb-ehci1,id=usb,bus=pci.0,addr=0x5.0x7 \
--device ich9-usb-uhci1,masterbus=usb.0,firstport=0,bus=pci.0,multifunction=on,addr=0x5 \
--device ich9-usb-uhci2,masterbus=usb.0,firstport=2,bus=pci.0,addr=0x5.0x1 \
--device ich9-usb-uhci3,masterbus=usb.0,firstport=4,bus=pci.0,addr=0x5.0x2 \
--device virtio-serial-pci,id=virtio-serial0,bus=pci.0,addr=0x6 \
--drive file=/dev/prom/lasso2,format=raw,if=none,id=drive-virtio-disk0,cache=none,discard=unmap,aio=native \
--device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x3,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1,write-cache=on \
--chardev pty,id=charserial0 \
--device isa-serial,chardev=charserial0,id=serial0 \
--device virtio-balloon-pci,id=balloon0,bus=pci.0,addr=0x8 \
--msg timestamp=on \
--device qxl-vga,id=video0,ram_size=67108864,vram_size=67108864,vram64_size_mb=0,vgamem_mb=16,max_outputs=1,bus=pci.0,addr=0x2 \
--vnc :1
+Regards,
 
-The quoted qemu command line will listen on port 5901, but trying to
-connect with tightvncviewer or vinagre yields an immediate RST. 
-
-If I cannot see the host boot, I cannot debug, and if I cannot type into
-grub, I cannot find out whether removing the serial console from the
-kernel command line fixes the issue. I have removed the network
-interface to simplify things, so I need a working console.
-
-With my tools I have found out that it really seems to be related to the
-CPU of the host. I have changed my VM definition to "copy host CPU
-configuration to VM" in libvirt and have moved this very VM (image and
-settings) to hosts with a "Ryzen 5 Pro 4650G" and to an "Intel Xeon
-E3-1246" where they work flawlessly, while on both APUs I have available
-("AMD G-T40E" and "AMD GX-412TC SOC") the regression in 6.5 shows. And
-if I boot other VMs on the APUs with 6.5 the issue comes up. It is a
-clear regression since going back to 4.6's serial code solves the issue
-on the APUs.
-
-Greetings
-Marc
-
-
--- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
+Tony
