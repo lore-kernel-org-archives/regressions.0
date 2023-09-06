@@ -1,140 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3986FC0F
-	for <regressions@lists.linux.dev>; Tue,  5 Sep 2023 22:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GeP4MIuZrBFvrMvcXRvi2QnFxUlFhMKNwjLk6UGDJZ8=; b=kWZNxsuzHVS8No9JHSY0DoVH0c
-	kfFSUvNxy9UWj5dWPo0ifDJg42hkAP0pxpJdfgm4WwjQokZWYb3r4DT8KLLqHTJg8BlnejG0DZ5vH
-	fSvbHjx+PKkPX+rLYQhILwxPMPUT8HFi2Ue4ul3D8hTFcHdoOsUuIxdURXhEs4VsSVlo3RorKHH70
-	jHVRT2bv48jv5BagNKEzq+rbl+nib9isuh8b9Ywcgj+O5Wcd5ZgLiECFD+UGJkt7M7fi8WOmQOlZA
-	YZxjnC6smy8l//2I+rnMDAmr7zzJ6j6HI2pZ2X7EU+/642QbZI+aqZUmpJccj28Bb2gj/hOJ7zIcX
-	PtVMND6Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qdeGE-00DwXa-LY; Tue, 05 Sep 2023 22:11:02 +0000
-Date: Tue, 5 Sep 2023 23:11:02 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Zorro Lang <zlang@kernel.org>, linux-ext4@vger.kernel.org,
-	fstests@vger.kernel.org, regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
- test fails
-Message-ID: <ZPendrb8gSbAC6fM@casper.infradead.org>
-References: <20230903120001.qjv5uva2zaqthgk2@zlang-mailbox>
- <ZPTvIb6hwIjY7T2M@mit.edu>
- <20230904060819.GB701295@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF11162B
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 01:01:56 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-68a56401c12so2150651b3a.2
+        for <regressions@lists.linux.dev>; Tue, 05 Sep 2023 18:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693962116; x=1694566916; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fwjOextC4o2E3xgdiq4cQxhzdLA0veFCKTQAeNbsF4Q=;
+        b=REFOCYQaY8P/iz6zOI8roS7kDoPS6uTLtq/5GlzdEiSuw6KYvzlLmNi4eZAVgB7Jvj
+         bHXin2u6ejzzwtI/SyaNusC6APbjuFNwN76S20j3t5aiKqxVJB46R8nRcfbwjRi+msbA
+         NJA/z3uIWhx2A/O+bIAFK69jakicSPBoKyZS91qH4KUI4mXfFinqRpkcVVfKFffvLUa/
+         ypZmg1fK2kZyipkK6aiCQpTjfP50LKPuLpWmJblwZBn+t/eObp1vRBGVe86iefN962BE
+         WklYJM2uYXhnP9rFRtCXgItP9c9IOBGp2Xk3S0nNnNaNWEL1fxJJa/qab/rvgETWt59b
+         cntA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693962116; x=1694566916;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fwjOextC4o2E3xgdiq4cQxhzdLA0veFCKTQAeNbsF4Q=;
+        b=jo7Yjmahc5Qt+eTKGC/ex+aK2TI1UIzOVsTAUl46YTdihIsWY4p2pILs4h9NTcYBN7
+         9bAy27ntp7/P5tRKeAkk7Qpd6J2ZVhv1vVwVqtxhZMK9ImvWB+Inrl0MhUDkQzgZ7x/v
+         DUsGuTZtAF8lnU4xLnZRiQ47DkC93cqdIW3OogsCyvSrXEuCa64X9wyY0XJP/BBlZbKy
+         rzPxqp/f997h+/IeP+YGGE6nW0C5PFy1qv8gAiCgn2CdzJzmf0QTRt2pM/uipReUs8zB
+         s/s061l+ZqLHVRf4xzqLoU0IfBh5knp+OATL+NCLhNME68zTvbGseoiKVumEw0pcx2Dj
+         BE0A==
+X-Gm-Message-State: AOJu0YzvAlOOmRoHHh7zArMGXMptamyCDGzJriMb9uOYEy36iuE3AghR
+	7UyFM8Zq1XM5EEwU9EIx/QE=
+X-Google-Smtp-Source: AGHT+IGRnRlHz9ycOwplwkvnFbkqexspTRxCaYtSS6ST+LLd9YaU8M7qGFIoU8ZkEvIigFIKIA6K1w==
+X-Received: by 2002:a05:6a20:1448:b0:132:cd2d:16fd with SMTP id a8-20020a056a20144800b00132cd2d16fdmr15406140pzi.38.1693962115871;
+        Tue, 05 Sep 2023 18:01:55 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id c22-20020aa78816000000b006883561b421sm9628358pfo.162.2023.09.05.18.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 18:01:55 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 3B2ED81A82C1; Wed,  6 Sep 2023 08:01:52 +0700 (WIB)
+Date: Wed, 6 Sep 2023 08:01:51 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Brian Pardy <brian.pardy@gmail.com>,
+	Linux CIFS <linux-cifs@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Steve French <sfrench@samba.org>
+Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS
+ share is mounted (cifsd-cfid-laundromat in"D" state)
+Message-ID: <ZPfPfyIoVxw5L6El@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4rKL3SGhEKB4JeVE"
 Content-Disposition: inline
-In-Reply-To: <20230904060819.GB701295@mit.edu>
+In-Reply-To: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
 
-On Mon, Sep 04, 2023 at 02:08:19AM -0400, Theodore Ts'o wrote:
-> #regzbot introduced: 8147c4c4546f9f05ef03bb839b741473b28bb560 ^
-> 
-> OK, I've isolated the regression of generic/455 failing with ext4/1k
-> to this commit, which came in via the mm tree.  Nothing seems
-> *obviously* wrong, but I'm not sure if there are any differences in
-> the semantics of the new folio functions such as kmap_local_folio,
-> offset_in_folio, set_folio_bh() which might be making a difference.
 
-Thanks for the cc,  Let's see what we can do ...
+--4rKL3SGhEKB4JeVE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-virt_to_folio() - For an order-0 page, there is no difference.
-offset_in_folio() - Ditto
-bh->b_page vs bh->b_folio - Ditto
-virt_to_folio() - Ditto
-folio_set_bh() - Ditto
+On Tue, Sep 05, 2023 at 01:09:05PM -0400, Brian Pardy wrote:
+> My apologies if I do not have the bug report protocol correct in posting =
+here.
+>=20
+> I've noticed an issue with the CIFS client in kernel 6.5.0/6.5.1 that
+> does not exist in 6.4.12 or other previous kernels (I have not tested
+> 6.4.13). Almost immediately after mounting a CIFS share, the reported
+> load average on my system goes up by 2. At the time this occurs I see
+> two [cifsd-cfid-laundromat] kernel threads running the "D" state,
+> where they remain for the entire time the CIFS share is mounted. The
+> load will remain stable at 2 (otherwise idle) until the share is
+> unmounted, at which point the [cifsd-cfid-laundromat] threads
+> disappear and load drops back down to 0. This is easily reproducible
+> on my system, but I am not sure what to do to retrieve more useful
+> debugging information. If I mount two shares from this server, I get
+> four laundromat threads in "D" state and a sustained load average of
+> 4.
+>=20
+> The client is running Gentoo Linux, the server is a Seagate Personal
+> Cloud NAS running Samba 4.6.5. Mount options used are
+> "noperm,guest,vers=3D3.02". The CPUs do not actually appear to be
+> spinning, the reported load average appears incorrect as far as actual
+> CPU use is concerned.
+>=20
+> I am happy to follow any instructions provided to gather more details
+> if I can help to track this down. Nothing that appears relevant
+> appears in syslog or dmesg output.
 
-kmap_local_folio() vs kmap_atomic - Here, we have a difference.
-memcpy_from_folio() - Same difference as above.
+Thanks for the regression report. But if you want to get it fixed,
+you have to do your part: perform bisection. See Documentation/admin-guide/=
+bug-bisect.rst in the kernel sources for how to do that.
 
-I suppose it must be this, and yet I cannot understand how it would
-make a difference.  Perhaps you can help me?
+Anyway, I'm adding it to regzbot:
 
-static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-{
-        if (IS_ENABLED(CONFIG_PREEMPT_RT))
-                migrate_disable();
-        else
-                preempt_disable();
+#regzbot ^introduced: v6.4..v6.5
+#regzbot title: incorrect CPU utilization report (multiplied) when mounting=
+ CIFS
 
-        pagefault_disable();
-        return __kmap_local_page_prot(page, prot);
-}
+Bye!
 
-vs
+--=20
+An old man doll... just what I always wanted! - Clara
 
-static inline void *kmap_local_folio(struct folio *folio, size_t offset)
-{
-        struct page *page = folio_page(folio, offset / PAGE_SIZE);
-        return __kmap_local_page_prot(page, kmap_prot) + offset % PAGE_SIZE;
-}
+--4rKL3SGhEKB4JeVE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I don't believe that returning the address with the offset included
-is the problem here.  It must be disabling preemption / migration.
-There's no chace this funcation accesses userspace (... is there?) so
-it can't be the pagefault_disable().
+-----BEGIN PGP SIGNATURE-----
 
-We can try splitting this up into tiny commits and figuring out which
-of them is the problem.  I'll be back at work tomorrow and can look
-more deeply then.
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPfPegAKCRD2uYlJVVFO
+o4xSAP9MTEw9rpwNO2GX2ldlyf6tZs7LUFf/8V5oQauTdsPQoQEA7E5sLnGg02jT
+O2+azRU4Z7PkAoBG++gly3dnBnx2ggo=
+=cr2w
+-----END PGP SIGNATURE-----
 
-> Using kvm-xfstests[1] I bisected this via the command:
-> 
-> % install-kconfig ; kbuild ; kvm-xfstests -c ext4/1k -C 10 generic/455
-> 
-> [1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
-> 
-> 
-> And the bisection pointed me at this commit:
-> 
->     commit 8147c4c4546f9f05ef03bb839b741473b28bb560 (refs/bisect/bad)
->     Author: Matthew Wilcox (Oracle) <willy@infradead.org>
->     AuthorDate: Thu Jul 13 04:55:11 2023 +0100
->     Commit: Andrew Morton <akpm@linux-foundation.org>
->     CommitDate: Fri Aug 18 10:12:30 2023 -0700
-> 
->         jbd2: use a folio in jbd2_journal_write_metadata_buffer()
->     
-> During the bisection, I treated a commit with 3+ failures as "bad",
-> and 0-2 commits as "good".  Running generic/455 50 times to get a
-> sense of the failure, with the first bad commit (8147c4c4546f), I got:
-> 
->     ext4/1k: 50 tests, 21 failures, 223 seconds
->       Flaky: generic/455: 42% (21/50)
->     Totals: 50 tests, 0 skipped, 21 failures, 0 errors, 223s
-> 
-> While with the immediately preceding commit (07811230c3cd), I got:
-> 
->     ext4/1k: 50 tests, 4 failures, 235 seconds
->       Flaky: generic/455:  8% (4/50)
->     Totals: 50 tests, 0 skipped, 4 failures, 0 errors, 235s
-> 
-> 
-> 
-> Comparing these two commits (8147c4c4546f vs 07811230c3cd) using the
-> ext4 with a 4k block size, I get:
-> 
->     ext4/4k: 50 tests, 2 failures, 365 seconds
->       Flaky: generic/455:  4% (2/50)
->     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 365s
-> 
-> vs
-> 
->     ext4/4k: 50 tests, 2 failures, 349 seconds
->       Flaky: generic/455:  4% (2/50)
->     Totals: 50 tests, 0 skipped, 2 failures, 0 errors, 349s
-> 
-> So issue seems to be specifically with a sub-page size block size,
-> since ext4/4k doesn't show any issues, while ext4/1k does.
-
-I doubt I tried it with a 1kB block size, so I'll focus on that too.
+--4rKL3SGhEKB4JeVE--
