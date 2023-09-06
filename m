@@ -1,86 +1,110 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EE16AB1
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 19:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lYqvfUxrjJBI3W5sFQK8JINW4dgJBOR0soBLBY+UK1E=; b=igC4ioi+4p97koDXBrAP/oiqGk
-	pOIvoHwFWFBftnB0pl86swEClAGjyHMnhl4d8aEfJDfaDsngXiBd6cP2cHkyB3UedGn8hsCEek4Xc
-	CK9RMeGc6zFtss1QIbxX0pHMAwIMZpcCQh89aFFlt/VAU/YkLqgqG2gJMyqwSrj1frP+baLfXBaRU
-	6Ix+acVvbn01n9s25FQT2GE/bg7AXYXiRJJ5LS+enLHiASvnVEJioYIKy19J/pZ+J7N57cMWw08sQ
-	3CfwxmcqZoZ3OUxa6msPHaKlswK0uFrLMbgKBaHGTsQ7SBDckpADQaq8zgmwFBN/b9PR6ZwUZDKDw
-	sDuFdXxg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qdyYu-0055PK-SO; Wed, 06 Sep 2023 19:51:40 +0000
-Date: Wed, 6 Sep 2023 20:51:40 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Zorro Lang <zlang@kernel.org>,
-	linux-ext4@vger.kernel.org, fstests@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
- test fails
-Message-ID: <ZPjYTDB6x83BIJMc@casper.infradead.org>
-References: <ZPendrb8gSbAC6fM@casper.infradead.org>
- <87wmx336ns.fsf@doe.com>
- <ZPhyv7cHxO9vbciL@casper.infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325DC6AB3
+	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 20:13:07 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailnew.nyi.internal (Postfix) with ESMTP id D74F7581298;
+	Wed,  6 Sep 2023 16:13:06 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 06 Sep 2023 16:13:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1694031186; x=1694038386; bh=4D
+	QpkjWhlnU/jRaOv5cdvU9fDBTugxJNiIsRvReEP5Q=; b=B/0zM6yqj9l7vx9sk4
+	eNPXsFyJgJcYg4fAxPjGMeD6oYtP6/MxD79AJifJc6ZZIbg+mQIpDI+/3AtxbMXL
+	Ft+ECX9UGtQT7GxpY9ozLVVnKoVqFnPn/C80bZllK3I0G30w3ZKqUBKmhiHr6h5e
+	JbQnidbQWuEToSqmf1ijLXt9v9+yug430tseWzahpScJ/yzr0b2VsubJ32jlVjLO
+	fNeTuFnuVYgFGpobHBvSWM5bWV8j9vFTaZUaZp+uoEmgbJMhFn66NVUsrP9N4jcG
+	CM2gndG8yjxDXyGIqAfjXWuUIOcz5hwk7rkgLk4PA5dCVijxnIem/aOR8qmnUM3E
+	22mg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1694031186; x=1694038386; bh=4DQpkjWhlnU/j
+	RaOv5cdvU9fDBTugxJNiIsRvReEP5Q=; b=I8BDpAvNFOe3vb6c6SYdbJSOvTHjC
+	jWkK5/vL46nf4cbwv89chgSRUHu2AT1z/fjDP17xKeV7WCqtCojQEBRQHvJFxgSb
+	tIpLbt7U3dBKxMbux9t6OgCAPXWQnJR6qPGj/ooER3OhjYxkrcs7N32IWS57dspJ
+	sf6VWA4CDw8XJkt/rehjNnKji16SP9FI6po/GK5/TFg/Ka6ux7G5ptXQqo33X6CW
+	YLWWO8LMtA9ShXpPbjy0jvE/OPCDf4GJvD9n8KqQaVFyUz/KMTm6JmoTceSFx7MY
+	yW/mSH2nI1cIVqM6XYRxgmSSDNEZIb6Tkk8/IgcpXdg/gjalJm348HHAw==
+X-ME-Sender: <xms:Ut34ZFd4r0fnLRJavypQ55BBrmGd4tfg4K6xGkBzqUBafIQ71ZFrxQ>
+    <xme:Ut34ZDOD_tVL5KIp0FQ6kG9H0MAmI534dnH8pm8YEzhaV0C4LQwYl7fM60FpxOHz1
+    NwL7osZ0f8lWodShQY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehfedgudeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:Ut34ZOgGouuk1xWd80zCX_HPvgQuKqiJxWNppQopv8KFuzF5U0O_vA>
+    <xmx:Ut34ZO_M9LhzJIZGWrLcuxiN4bSCzSnWUCepDsvSUtPS2z6M6wO5dA>
+    <xmx:Ut34ZBvA8RrH1dVbVcg6-aKo5kihYmXpAJp3GXTjJsmR-C9eStAnuw>
+    <xmx:Ut34ZFihV2WwqtoBQOOIDv381VDcDlTmMY-yv8lpSO6xYMmxEqn8PQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 88D49B60089; Wed,  6 Sep 2023 16:13:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-711-g440737448e-fm-20230828.001-g44073744
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZPhyv7cHxO9vbciL@casper.infradead.org>
+Mime-Version: 1.0
+Message-Id: <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
+In-Reply-To: <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
+References: <20230901122424.247070-1-daniel@zonque.org>
+ <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
+Date: Wed, 06 Sep 2023 16:12:43 -0400
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thorsten Leemhuis" <regressions@leemhuis.info>,
+ "Daniel Mack" <daniel@zonque.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ manikanta.guntupalli@amd.com
+Cc: linux-kernel@vger.kernel.org, stable@kernel.org,
+ "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Linux kernel regressions list" <regressions@lists.linux.dev>
+Subject: Re: [PATCH] gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres
+ callbacks
+Content-Type: text/plain
 
-On Wed, Sep 06, 2023 at 01:38:23PM +0100, Matthew Wilcox wrote:
-> > Is this code path a possibility, which can cause above logs?
-> > 
-> >    ptr = jbd2_alloc() -> kmem_cache_alloc()
-> >    <..>
-> >    new_folio = virt_to_folio(ptr)
-> >    new_offset = offset_in_folio(new_folio, ptr)
-> > 
-> > And then I am still not sure what the problem really is? 
-> > Is it because at the time of checkpointing, the path is still not fully
-> > converted to folio?
-> 
-> Oh yikes!  I didn't know that the allocation might come from kmalloc!
-> Yes, slab might use high-order allocations.  I'll have to look through
-> this and figure out what the problem might be.
+On Wed, Sep 6, 2023, at 09:49, Thorsten Leemhuis wrote:
+> CCing Arnd (wrote the culprit), Linus (reviewed it), Bartosz (applied
+> it), and the regressions mailing list
 
-I think the probable cause is bh_offset().  Before these patches, if
-we allocated a buffer at offset 9kB into an order-2 slab, we'd fill in
-b_page with the third page of the slab and calculate bh_offset as 1kB.
-With these patches, we set b_page to the first page of the slab, and
-bh_offset still comes back as 1kB so we read from / write to entirely
-the wrong place.
+Thanks
 
-With this redefinition of bh_offset(), we calculate the offset relative
-to the base page if it's a tail page, and relative to the folio if it's
-a folio.  Works out nicely ;-)
+> On 01.09.23 14:24, Daniel Mack wrote:
+>> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
+>> warning") ditched the open-coded resource allocation handlers in favor
+>> of the generic ones. These generic handlers don't maintain the PM
+>> runtime anymore, which causes a regression in that level IRQs are no
+>> longer reported.
+>> 
+>> Restore the original handlers to fix this.
+>> 
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
+>> Cc: stable@kernel.org
+>
+> This seems to be a regression report that comes straight with a fix, but
+> there wasn't a single reply yet afaics. :-/ Maybe the extended list of
+> recipients will get things moving. But to ensure this doesn't fall
+> through the cracks, I'll add it to the list of tracked regressions.
 
-I have three other things I'm trying to debug right now, so this isn't
-tested, but if you have time you might want to give it a run.
+I don't understand what the GPIOCHIP_IRQ_RESOURCE_HELPERS change
+intended to do in the first place: Manikanta's patch changed the behavior
+here with the addition of GPIOCHIP_IRQ_RESOURCE_HELPERS, while my patch
+was a cleanup that removed the dead code.
 
-diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-index 6cb3e9af78c9..dc8fcdc40e95 100644
---- a/include/linux/buffer_head.h
-+++ b/include/linux/buffer_head.h
-@@ -173,7 +173,10 @@ static __always_inline int buffer_uptodate(const struct buffer_head *bh)
- 	return test_bit_acquire(BH_Uptodate, &bh->b_state);
- }
- 
--#define bh_offset(bh)		((unsigned long)(bh)->b_data & ~PAGE_MASK)
-+static inline unsigned long bh_offset(struct buffer_head *bh)
-+{
-+	return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
-+}
- 
- /* If we *know* page->private refers to buffer_heads */
- #define page_buffers(page)					\
+Daniel's fix reverts both my cleanup patch and part of the original
+change, which may or may not be what we want here.
+
+      Arnd
