@@ -1,260 +1,246 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1395698
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 12:14:09 +0000 (UTC)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RhJ7c3JN9z4f3pC9
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 20:14:04 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgD3hqmLvvlkmFdZCg--.9288S3;
-	Thu, 07 Sep 2023 20:14:04 +0800 (CST)
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Yu Kuai <yukuai1@huaweicloud.com>,
- Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc: AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>,
- Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
- <20230822083923.00007fb6@linux.intel.com>
- <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
- <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
- <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
- <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
- <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
- <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
- <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
- <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
- <20230831085057.00001795@linux.intel.com>
- <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
- <20230906122751.00001e5b@linux.intel.com>
- <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
- <20230907121819.00005a15@linux.intel.com>
- <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <3e7edf0c-cadd-59b0-4e10-dffdb86b93b7@huaweicloud.com>
-Date: Thu, 7 Sep 2023 20:14:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAA163C0
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 12:34:52 +0000 (UTC)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-d74a012e613so1182669276.1
+        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 05:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694090092; x=1694694892; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cI3qPKykEdBORFQX/2gwFAk427YJVxD6Vt6XnXeCVFE=;
+        b=a4pX+tcdvHvIxmblBHTPUpfR2hwhZqrkhKg61BM2f/WU04Zf1v2cdqUIaiRJwxz1XJ
+         iOXWLDSxBI8l/ZFo1H4jd5OBKKLqUziHgjgXzfxifG638+5YgEueCnU+FwgqVtnSmD1D
+         klspcwo4XqlEN+2F2tkK+jB6GQ1BozLDmiKM8SKeanHAZaufyzJDTXQUpCK63EcSYW6G
+         U59zckXqFvR73bDnyCybl3PO6LHnbwmQYKupDyx66hunyWFJ+C1YEdWZR0nJe8vnyTHH
+         /qoqyNCEjdGdjpcGDsiBoetdFFnETUoj8cphrhen3lx5Mf21ERrKXgSvFRPBM8nLpM5w
+         Kjbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694090092; x=1694694892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cI3qPKykEdBORFQX/2gwFAk427YJVxD6Vt6XnXeCVFE=;
+        b=R15laNV9ydv7r+ds53aGJrdbZzIpumjTk+u46626swZqC6iwIh5Bs/baMbb9W9IC3T
+         O/f+lx3XWD1KuQ4h/bOz9sJz7TuMDsNwqv5+CL3W0ZVh20/oi7sy4f0wrvZHxPC+9J/w
+         +iSeKe/4XBUB0l6em5LWOwq9B+lDjtFxKEW1wieRaUdGMHhXWBqvmZh7sPorM0DAg18v
+         gX8I9OXfexWIi52rkvCKpLXi57wtNILyT9BsKl7UgUTcCtbaNhKZxgYaGPUsE4sz7kV8
+         XTYitS8VhGWG20FqDs7JiEMQNDKRjSG7/RFnPVn0xmVDsWe+jxpmgDBXsvWDEdHvIB76
+         WwKw==
+X-Gm-Message-State: AOJu0YzQosfmMUljFJVK6wgBMLaZcKmizW8KTHsuFZVYdlw5R+h6w8Kx
+	/sS1lY1tsjr/Epax6OSDbqzZrp/7grSkVKmP6nE=
+X-Google-Smtp-Source: AGHT+IF2f4clu8FhKmXoRyt84gz3p/VGGZk0W2EEiHKFFPj3WYNiCuC7y3dygDgVnoHXLhkSMaZJGcIsjO8h6WPehI4=
+X-Received: by 2002:a25:b29d:0:b0:d78:2258:f5b8 with SMTP id
+ k29-20020a25b29d000000b00d782258f5b8mr3003998ybj.19.1694090091695; Thu, 07
+ Sep 2023 05:34:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3hqmLvvlkmFdZCg--.9288S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xw17GrWktry8ury8KrWxWFg_yoWxGFykpr
-	WkJF4YkrWUWw1xJ3yjqr18Xa4rtrn3Ja98Wry5JF97A34ktrySgr13Xr4q9Fn8ur4fGr4j
-	qw1DtFW7Zw1Ut37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
-	Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
+References: <CAF1eZtsBzGb_UxOqZpNiEsk8Uk7DkqPh5AnYRRNc_kkr-tFasQ@mail.gmail.com>
+ <ZPUciRLUcjDywMVS@debian.me> <20230906013209.jlcxluxemyg3va6l@synopsys.com> <ZPio6QD64cjJza29@xhacker>
+In-Reply-To: <ZPio6QD64cjJza29@xhacker>
+From: Kenta Sato <tosainu.maple@gmail.com>
+Date: Thu, 7 Sep 2023 21:34:35 +0900
+Message-ID: <CAF1eZttQbY23MHK7tKyaUORc6WAkMWaNqt3VyaBsDuhi0TOmRQ@mail.gmail.com>
+Subject: Re: usb: dwc3: some USB devices not working after 6.4.8
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux USB <linux-usb@vger.kernel.org>, 
+	Linux Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-在 2023/09/07 19:26, Yu Kuai 写道:
-> Hi,
-> 
-> 在 2023/09/07 18:18, Mariusz Tkaczyk 写道:
->> On Thu, 7 Sep 2023 10:04:11 +0800
->> Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->>> Hi,
->>>
->>> 在 2023/09/06 18:27, Mariusz Tkaczyk 写道:
->>>> On Wed, 6 Sep 2023 14:26:30 +0800
->>>> AceLan Kao <acelan@gmail.com> wrote:
->>>>>   From previous testing, I don't think it's an issue in systemd, so I
->>>>> did a simple test and found the issue is gone.
->>>>> You only need to add a small delay in md_release(), then the issue
->>>>> can't be reproduced.
->>>>>
->>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>>>> index 78be7811a89f..ef47e34c1af5 100644
->>>>> --- a/drivers/md/md.c
->>>>> +++ b/drivers/md/md.c
->>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
->>>>> {
->>>>>          struct mddev *mddev = disk->private_data;
->>>>>
->>>>> +       msleep(10);
->>>>>          BUG_ON(!mddev);
->>>>>          atomic_dec(&mddev->openers);
->>>>>          mddev_put(mddev);
->>>>
->>>> I have repro and I tested it on my setup. It is not working for me.
->>>> My setup could be more "advanced" to maximalize chance of reproduction:
->>>>
->>>> # cat /proc/mdstat
->>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
->>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
->>>>         7126394880 blocks super external:/md127/0 128k chunks
->>>>
->>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->>>>         104857600 blocks super external:/md126/0 64K chunks 2 
->>>> near-copies
->>>> [4/4] [UUUU]
->>>>
->>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->>>>         2655765504 blocks super external:/md126/1 level 5, 32k chunk,
->>>> algorithm 0 [4/4] [UUUU]
->>>>
->>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
->>>>         99614720 blocks super external:/md125/0 [2/2] [UU]
->>>>
->>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
->>>>         10402 blocks super external:imsm
->>>>
->>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) 
->>>> nvme4n1[0](S)
->>>>         20043 blocks super external:imsm
->>>>
->>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
->>>>         10402 blocks super external:imsm
->>>>
->>>> I have almost 99% repro ratio, slowly moving forward..
->>>>
->>>> It is endless loop because systemd-shutdown sends ioctl "stop_array" 
->>>> which
->>>> is successful but array is not stopped. For that reason it sets 
->>>> "changed =
->>>> true".
->>>
->>> How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
->>> ls /dev/md* or other way?
->>
->> Hi Yu,
->>
->> It trusts return result, I confirmed that 0 is returned.
->> The most weird is we are returning 0 but array is still there, and it is
->> stopped again in next systemd loop. I don't understand why yet..
->>
->>>> Systemd-shutdown see the change and retries to check if there is 
->>>> something
->>>> else which can be stopped now, and again, again...
->>>>
->>>> I will check what is returned first, it could be 0 or it could be 
->>>> positive
->>>> errno (nit?) because systemd cares "if(r < 0)".
->>>
->>> I do noticed that there are lots of log about md123 stopped:
->>>
->>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
->>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
->>> [ 1371.846845] md: md123 stopped.
->>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
->>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
->>> [ 1371.862941] md: md123 stopped.
->>>
->>> And md_ioctl->do_md_stop doesn't have error path after printing this
->>> log, hence 0 will be returned to user.
->>>
->>> The normal case is that:
->>>
->>> open md123
->>> ioctl STOP_ARRAY -> all rdev should be removed from array
->>> close md123 -> mddev will finally be freed by:
->>>     md_release
->>>      mddev_put
->>>       set_bit(MD_DELETED, &mddev->flags) -> user shound not see this 
->>> mddev
->>>       queue_work(md_misc_wq, &mddev->del_work)
->>>
->>>     mddev_delayed_delete
->>>      kobject_put(&mddev->kobj)
->>>
->>>     md_kobj_release
->>>      del_gendisk
->>>       md_free_disk
->>>        mddev_free
->>>
->> Ok thanks, I understand that md_release is called on descriptor 
->> closing, right?
->>
-> 
-> Yes, normally close md123 should drop that last reference.
->>
->>> Now that you can reporduce this problem 99%, can you dig deeper and find
->>> out what is wrong?
->>
->> Yes, working on it!
->>
->> My first idea was that mddev_get and mddev_put are missing on 
->> md_ioctl() path
->> but it doesn't help for the issue. My motivation here was that 
->> md_attr_store and
->> md_attr_show are using them.
->>
->> Systemd regenerates list of MD arrays on every loop and it is always
->> there, systemd is able to open file descriptor (maybe inactive?).
-> 
-> md123 should not be opended again, ioctl(STOP_ARRAY) already set the
-> flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdown do
-> open and close the array in each loop?
+On Thu, Sep 7, 2023 at 1:41=E2=80=AFAM Jisheng Zhang <jszhang@kernel.org> w=
+rote:
+>
+> On Wed, Sep 06, 2023 at 01:32:22AM +0000, Thinh Nguyen wrote:
+> > On Mon, Sep 04, 2023, Bagas Sanjaya wrote:
+> > > On Sun, Sep 03, 2023 at 09:19:13PM +0900, Kenta Sato wrote:
+> > > > Hi,
+> > > >
+> > > > I am using the FriendlyElec NanoPi R4S board.
+> > > > When I update the kernel from 6.4.7 to 6.4.11, 6.4.13, and 6.5.1, i=
+t
+> > > > doesn't recognize some USB devices.
+> > > >
+> > > > The board has two USB 3.0 ports. I connected 1) BUFFALO USB Flash D=
+isk
+> > > > (high-speed) and 2) NETGEAR A6210 (SuperSpeed) to each port.
+> > > > 1) is often not recognized. On the other hand, 2) was working while=
+ I
+> > > > was testing.
+> > > > Regardless of whether a USB device is connected, I could see the be=
+low
+> > > > message on dmesg:
+>
+> Hi Kenta,
+>
+>
+> Besides the comments and patch from Thinh, may I know some details of
+> your HW and SW env? Such as
+>
+> From HW support points of view, is the usb3.0 ports dual mode or host onl=
+y?
+The board should be designed for host-only as it has two USB 3.0 Type-A por=
+ts.
 
-I realized that I'm wrong here. 'MD_CLOSING' is cleared before ioctl
-return by commit 065e519e71b2 ("md: MD_CLOSING needs to be cleared after
-called md_set_readonly or do_md_stop").
+>
+> From SW side, how do you configure the host controller? I.E set dual
+> mode or host only?
+According to the device tree file in the kernel source tree
+(arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi), it is configured
+as host only.
+&usbdrd_dwc3_1 {
+  dr_mode =3D "host";
+  status =3D "okay";
+};
 
-I'm confused here, commit message said 'MD_CLOSING' shold not be set for
-the case STOP_ARRAY_RO, but I don't understand why it's cleared for
-STOP_ARRAY as well.
+>
+> Lastly, did you have modifications or local patches to dwc3 driver?
+No, except for reverting the commit I mentioned in the first post.
 
-Thanks,
-Kuai
+Right now I am using the tag 6.5.1 with a few small patches. You can
+find them and config in the link below.
+https://github.com/Tosainu/PKGBUILDs/tree/a460f4826e44d666661f3049413628f30=
+64a2751/core/linux-aarch64
 
-> 
->> My fix with checking mddev_get and mddev_put should address that so it 
->> seems to
->> be something different.
->>
->> BTW. I opened a discussion on slack proposed by Paul. I'm adding 
->> updates there
->> more frequently. If you are interested please join. I can see that you 
->> were
->> invited as:
->> Email Address
->> yukuai1@huaweicloud.com
->> Perhaps, that is the reason you can't join. Let me know, I will add you.
-> 
-> Sorry that I ususally just use this address for sending. Please add
-> yukuai3@huawei.com. And I can't access slack in company computer,
-> please add yukuai1994@gmail.com as well so that I can join with my
-> personal phone and PC.
-> 
-> Thanks,
-> Kuai
-> 
->>
->> Thanks,
->> Mariusz
->>
->>
->> .
->>
-> 
-> .
-> 
+>
+> Thanks in advance
+>
+> > > >
+> > > > [    0.740993] phy phy-ff7c0000.phy.8: phy poweron failed --> -110
+> > > > [    0.741585] dwc3 fe800000.usb: error -ETIMEDOUT: failed to initi=
+alize core
+> > > > [    0.742334] dwc3: probe of fe800000.usb failed with error -110
+> > > > [    0.751635] rockchip-usb2phy ff770000.syscon:usb2phy@e460:
+> > > > Requested PHY is disabled
+> > > >
+> > > > Is there any idea on this?
+> > > >
+> > > > The cause seems to be related to this commit. I tried reverting thi=
+s
+> > > > change and the issue seemed to be solved.
+> > > >
+> > > > >From 317d6e4c12b46bde61248ea4ab5e19f68cbd1c57 Mon Sep 17 00:00:00 =
+2001
+> > > > From: Jisheng Zhang <jszhang@kernel.org>
+> > > > Date: Wed, 28 Jun 2023 00:20:18 +0800
+> > > > Subject: usb: dwc3: don't reset device side if dwc3 was configured =
+as
+> > > >  host-only
+> > > >
+> > > > commit e835c0a4e23c38531dcee5ef77e8d1cf462658c7 upstream.
+> > > >
+> > > > Commit c4a5153e87fd ("usb: dwc3: core: Power-off core/PHYs on
+> > > > system_suspend in host mode") replaces check for HOST only dr_mode =
+with
+> > > > current_dr_role. But during booting, the current_dr_role isn't
+> > > > initialized, thus the device side reset is always issued even if dw=
+c3
+> > > > was configured as host-only. What's more, on some platforms with ho=
+st
+> > > > only dwc3, aways issuing device side reset by accessing device regi=
+ster
+> > > > block can cause kernel panic.
+> > > >
+> > > > Fixes: c4a5153e87fd ("usb: dwc3: core: Power-off core/PHYs on
+> > > > system_suspend in host mode")
+> > > > Cc: stable <stable@kernel.org>
+> > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > > > Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+> > > > Link: https://lore.kernel.org/r/20230627162018.739-1-jszhang@kernel=
+.org
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > ---
+> > > >  drivers/usb/dwc3/core.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/co=
+mmit/?h=3Dv6.4.8&id=3D317d6e4c12b46bde61248ea4ab5e19f68cbd1c57
+> > > >
+> > >
+> > > Thanks for the regression report. I'm adding it to regzbot:
+> > >
+> > > #regzbot ^introduced: e835c0a4e23c38
+> > > #regzbot title: some USB devices unrecognized caused by not resetting=
+ dwc3 device if it is host-only
+> > >
+> >
+> > When there's phy reconfiguration, we need follow through a soft reset
+> > sequence. It may be done when we pass to xHCI driver through its
+> > initialization of USBCMD.HCRST. However, looks like we need to do a
+> > soft reset before setting more core parameters in dwc3.
+> >
+> > Can we try to just reset the phy instead to see if it helps? If not, we
+> > may have to teach dwc3 about xHCI's USBCMD.HCRST.
+> >
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index 9c6bf054f15d..66186ef34c6d 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -1104,9 +1104,42 @@ static int dwc3_core_init(struct dwc3 *dwc)
+> >       if (ret)
+> >               goto err_exit_ulpi;
+> >
+> > -     ret =3D dwc3_core_soft_reset(dwc);
+> > -     if (ret)
+> > -             goto err_exit_phy;
+> > +     /*
+> > +      * Note: GUSB3PIPECTL[n] and GUSB2PHYCFG[n] are port settings whe=
+re n
+> > +      * is port index. If this is a multiport host, then we need to re=
+set
+> > +      * all active ports.
+> > +      */
+> > +     reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
+> > +     reg |=3D DWC3_GUSB3PIPECTL_PHYSOFTRST;
+> > +     dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
+> > +
+> > +     /*
+> > +      * Must meet usb3 phy reset assertion timing,
+> > +      * should be much less than 20ms.
+> > +      */
+> > +     msleep(20);
+> > +
+> > +     reg &=3D ~DWC3_GUSB3PIPECTL_PHYSOFTRST;
+> > +     dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
+> > +
+> > +     reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
+> > +     reg |=3D DWC3_GUSB2PHYCFG_PHYSOFTRST;
+> > +     dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+> > +
+> > +     /*
+> > +      * Must meet usb2 phy reset assertion timing,
+> > +      * should be much less than 20ms.
+> > +      */
+> > +     msleep(20);
+> > +
+> > +     reg &=3D ~DWC3_GUSB3PIPECTL_PHYSOFTRST;
+> > +     dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+> > +
+> > +     /*
+> > +      * Some platforms may need more time to synchronize the clocks,
+> > +      * 100ms should be enough for all.
+> > +      */
+> > +     msleep(100);
+> >
+> >       if (hw_mode =3D=3D DWC3_GHWPARAMS0_MODE_DRD &&
+> >           !DWC3_VER_IS_WITHIN(DWC3, ANY, 194A)) {
+> >
+> >
+> > --
+> >
+> > Thanks,
+> > Thinh
 
+Thank you,
+kenta
