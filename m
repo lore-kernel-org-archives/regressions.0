@@ -1,87 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9FA63D8
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 13:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694092695; x=1725628695;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O6ZhqWgwoI8MAxW6/N8+5IhjZO91cgxHuTDSEqgn/Ok=;
-  b=dyKaXAa/CPfbdrfcoy0h6ezwq3JNRioXo9VrJgmcB91zb5yLhaPpKyG5
-   v99Cb+XByG/8RyMtvXj/ROcr+cqcyyKKbbE8nM4oKttcCvz63hZlsxBU3
-   u16akE/rYrJVyIkPQv/pDwV7LWV6uA7fWLCyv4FEpYKnBYQe+t8EfsBEv
-   xRdhoxBDE4bSKv9LazAZuZMWFGRQe01yMIqoTDy+0WgW+nc2NRomkFwKt
-   ZCRFMORU5YFZ9zyiRvKjygmqJmj/BIJ/ATAdcLnNWbYkM2RwzNW6pj3CZ
-   yAt1WkTOdSV8nNPjl3GFmP4289Mf0oHbSmtUSOpflRYckiDr5FG/9/7ce
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="367579636"
-X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
-   d="scan'208";a="367579636"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 06:14:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="885141188"
-X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
-   d="scan'208";a="885141188"
-Received: from oshragax-mobl1.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.215.248])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 06:13:58 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 73345104860; Thu,  7 Sep 2023 16:14:09 +0300 (+03)
-Date: Thu, 7 Sep 2023 16:14:09 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Borislav Petkov <bp@alien8.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: kexec reboot failed due to commit 75d090fd167ac
-Message-ID: <20230907131409.masxz42ik6u456qp@box.shutemov.name>
-References: <20230829114816.GA508985@ziqianlu-dell>
- <ZO3hQ0rbr8QuUjVI@debian.me>
- <20230829125134.GA509331@ziqianlu-dell>
- <20230829125939.bcg2r6hwqf45npko@box.shutemov.name>
- <20230829140451.GA509854@ziqianlu-dell>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB66263D8
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 13:25:09 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1c336f5b1ffso7585525ad.2
+        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 06:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694093109; x=1694697909; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5xAG8vAki6OKzGSmwZKwpc8XIZTasbZNRXeMNLWYhYg=;
+        b=qhTcDnMNCsL/EB7zjLxNMelV2yCKKvMudhHHzZFygq+TYQ+FjO3k2QzvWwQxys+HOZ
+         oVyeXFuFqe3WD//vtKnlSqZ298Pns05dC/nv9eK8miN7KrH7O5b4SVx6rF089RnsSWZ5
+         cCM/bN4U2bmnmKpPW9uf4dYRNh8ChyJextNSEmZ9Au4Crtei1UamQzYst5W1b60rl9wE
+         YGe0zx4A2KfY7GjxfZZeC2uLjEYjens8uXH1daMb85Z2mWOWbJv/HSmhvGC2R/DWpdqT
+         raqN3loHJ0aseL2hdbIRYxJa4cOW/kVuxj3hRCwBHeG13JoCq+VkywGuvqorAGDuuEEw
+         +h4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694093109; x=1694697909;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5xAG8vAki6OKzGSmwZKwpc8XIZTasbZNRXeMNLWYhYg=;
+        b=Q4Ub/iEDMTU7fRtq2SgKPXpUQ4Z4dzPAIc02dfhjWxfd6KbMsrE5YcRuqo6ry/bsBP
+         DdFYctwlqMz/2lY8MdOxN8qL8fXq1kQRY2FlYvxLZHAq7+3fQ3NTgIqD7ua1pLB3yk9s
+         fNUozrZKnRBzQI9b3tXGW0HDxodYKAyOAY9EXQPMuU6Lu6xSNkTAAkHOUE0ihONN9W/6
+         GQaemScdYNJXDlDfgYJp0IIg/gEZv5C4/oHmFp2Ub0qxoBNhURptlG9HyFm4HxhuuysR
+         IKBsgRRGGEt399M5AQJ1rZ2MRg5SFQ8+gniTKiAWz/OwnpDuFQUgmemzA5/6gAzN6MVw
+         qa4Q==
+X-Gm-Message-State: AOJu0Yx+ECXXPOwtZwwDkBLylSDXx5ygsZeKCN8OCgMKmrGIi46L0+sL
+	mcvLk2Pc9yflNuYVAOra4vc=
+X-Google-Smtp-Source: AGHT+IH0oluWC/uZc5YWidmp8znrZ8ZfkiAQICtKAN+RZbG6DRdaEMFt4bVn9WEICH5+t1I9GRJ9dA==
+X-Received: by 2002:a17:902:ecc8:b0:1bc:7001:6e5e with SMTP id a8-20020a170902ecc800b001bc70016e5emr23293177plh.32.1694093109112;
+        Thu, 07 Sep 2023 06:25:09 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id jl1-20020a170903134100b001c32fd9e412sm8148306plb.58.2023.09.07.06.25.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Sep 2023 06:25:08 -0700 (PDT)
+Message-ID: <5011708f-b0ae-2853-0f87-a3b59845a2cc@gmail.com>
+Date: Thu, 7 Sep 2023 20:25:04 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230829140451.GA509854@ziqianlu-dell>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Content-Language: en-US
+To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Luis Chamberlain <mcgrof@kernel.org>,
+ Russ Weight <russell.h.weight@intel.com>,
+ Marcus Seyfarth <m.seyfarth@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Integrity <linux-integrity@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Slow boot and shutdown/reboot problems with 6.5.0+
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 29, 2023 at 10:04:51PM +0800, Aaron Lu wrote:
-> > Could you show dmesg of the first kernel before kexec?
+Hi,
+
+I notice a regression report on Bugzilla [1]. Quoting from it:
+
+> I've observed a slow boot and shutdown/reboot problems that have been verified on the stock Arch 6.5.1, CachyOS 6.5.0-2 and a custom-compiled 6.5.1 Kernel. I originally had seen a RCU-related trace which I thought to be the cause for these problems as well and reported it in https://bugzilla.kernel.org/show_bug.cgi?id=217864. However that specific trace turned out to be caused by an old patch that I carried around with me since 2022.
 > 
-> Attached.
+> systemd-analyze with my custom compiled 6.5.1 shows a suspiciously long firmware time:
+> Startup finished in 2min 42.000s (firmware) + 4.201s (loader) + 6.895s (kernel) + 1.541s (userspace) = 2min 54.640s  
+> graphical.target reached after 1.539s in userspace.
 > 
-> BTW, kexec is invoked like this:
-> kver=6.4.0-rc5-00009-g75d090fd167a
-> kdir=$HOME/kernels/$kver
-> sudo kexec -l $kdir/vmlinuz-$kver --initrd=$kdir/initramfs-$kver.img --append="root=UUID=4381321e-e01e-455a-9d46-5e8c4c5b2d02 ro net.ifnames=0 acpi_rsdp=0x728e8014 no_hash_pointers sched_verbose selinux=0"
+> For comparison, 6.4.14 starts in 16 seconds and doesn't even show a firmware section.
+> 
+> System:
+>   Host: klx99 Kernel: 6.5.1-3.1-cachyos-lto arch: x86_64 bits: 64
+>     Desktop: KDE Plasma v: 5.27.7 Distro: CachyOS
+> Machine:
+>   Mobo: Lenovo model: X99-TF Gaming v: G368J V1.1, NALEX
+>     serial: <superuser required> UEFI: American Megatrends v: CX99DE26
+>     date: 10/10/2020
+> CPU:
+>   Info: 18-core model: Intel Xeon E5-2696 v3 bits: 64 type: MT MCP cache:
+>     L2: 4.5 MiB
+> Graphics:
+>   Device-1: AMD Navi 21 [Radeon RX 6950 XT] driver: amdgpu v: kernel
+>   Display: x11 server: X.Org v: 21.1.99 with: Xwayland v: 23.2.0 driver: X:
+>     loaded: amdgpu unloaded: modesetting dri: radeonsi gpu: amdgpu
+>     resolution: 2560x1440~165Hz
+>   API: OpenGL v: 4.6 Mesa 23.3.0-devel (git-8a32614a18) renderer: AMD
+>     Radeon RX 6950 XT (navi21 LLVM 16.0.6 DRM 3.54 6.5.1-3.1-cachyos-lto)
 
-I don't understand why it happens.
+See Bugzilla for the full thread.
 
-Could you check if this patch changes anything:
+FYI, it seems like this regression is related to systemd boot loop
+reported earlier [2].
 
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 94b7abcf624b..172c476ff6f3 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -456,10 +456,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 
- 	debug_putstr("\nDecompressing Linux... ");
- 
-+#if 0
- 	if (init_unaccepted_memory()) {
- 		debug_putstr("Accepting memory... ");
- 		accept_memory(__pa(output), __pa(output) + needed_size);
- 	}
-+#endif
- 
- 	__decompress(input_data, input_len, NULL, NULL, output, output_len,
- 			NULL, error);
+To Marcus: On Bugzilla, Artem had asked you to bisect. Do you have
+any conclusion on it?
+
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217874
+#regzbot title: slow boot possibly due to firmware (TPM?) issues
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217874
+[2]: https://lore.kernel.org/all/028a21df-4397-80aa-c2a5-7c754560f595@gmail.com/
+
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+An old man doll... just what I always wanted! - Clara
