@@ -1,87 +1,230 @@
-Received: from muru.com (muru.com [72.249.23.125])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A8C3C38
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:51:53 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by muru.com (Postfix) with ESMTPS id 0CB9880F9;
-	Thu,  7 Sep 2023 10:51:52 +0000 (UTC)
-Date: Thu, 7 Sep 2023 13:51:50 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Marc Haber <mh+linux-kernel@zugschlus.de>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
- related
-Message-ID: <20230907105150.GJ11676@atomide.com>
-References: <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
- <ZO4RzCr/Ugwi70bZ@google.com>
- <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
- <ZO4nbzkd4tovKpxx@google.com>
- <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
- <ZPEPFJ8QvubbD3H9@google.com>
- <20230901122431.GU11676@atomide.com>
- <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
- <20230906152107.GD11676@atomide.com>
- <ZPmignexOJvJ5J5W@torres.zugschlus.de>
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68959291C
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 11:26:34 +0000 (UTC)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RhH4h2vQ2z4f3k6S
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 19:26:28 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgCXc6Zjs_lksaVWCg--.41071S3;
+	Thu, 07 Sep 2023 19:26:28 +0800 (CST)
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ Yu Kuai <yukuai1@huaweicloud.com>
+Cc: AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>,
+ Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com>
+ <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+ <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+ <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+ <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+ <20230831085057.00001795@linux.intel.com>
+ <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+ <20230906122751.00001e5b@linux.intel.com>
+ <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+ <20230907121819.00005a15@linux.intel.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
+Date: Thu, 7 Sep 2023 19:26:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZPmignexOJvJ5J5W@torres.zugschlus.de>
+In-Reply-To: <20230907121819.00005a15@linux.intel.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXc6Zjs_lksaVWCg--.41071S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3GFWkXF1fKw17JFWxWw13twb_yoW7WFW5pF
+	Z5Ja1YkrsrWw1xAayjqr18X3WrKwnay3y5Gry3t3sFy3s5tryxGw1Sgr45uFs8uF4Sk3y2
+	vw1DtFW7Zw1Fqa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 
-* Marc Haber <mh+linux-kernel@zugschlus.de> [230907 10:14]:
-> The most basic reproducer I found is:
+Hi,
+
+在 2023/09/07 18:18, Mariusz Tkaczyk 写道:
+> On Thu, 7 Sep 2023 10:04:11 +0800
+> Yu Kuai <yukuai1@huaweicloud.com> wrote:
 > 
-> /usr/bin/qemu-system-x86_64 \
-> -m 768 \
-> -machine pc-i440fx-2.1,accel=kvm,usb=off,dump-guest-core=off \
-> -nodefaults \
-> -drive file=/dev/prom/lasso2,format=raw,if=none,id=drive-virtio-disk0,cache=none,discard=unmap,aio=native \
-> -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x3,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1,write-cache=on \
-> -serial stdio
-
-So I tried something similar with just kernel and ramdisk:
-
-qemu-system-x86_64 \
--m 768 \
--machine pc-i440fx-2.1,accel=kvm,usb=off,dump-guest-core=off \
--nodefaults \
--kernel ~/bzImage \
--initrd ~/ramdisk.img \
--serial stdio \
--append "console=ttyS0 debug"
-
-It boots just fine for me. Console seems to come up a bit faster if I
-leave out the machine option. I tried this with qemu 8.0.3 on a m1 laptop
-running linux in case the machine running the qemu host might make some
-difference..
-
-On dmesg I see 8250 come up:
-
-[    0.671877] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-[    0.680185] 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-
-> Simplifying the drive and device virtio-blk-pci lines prevents the
-> initramfs of the VM from finding the disk and thus the system doesn't
-> get as far to show the issue.
+>> Hi,
+>>
+>> 在 2023/09/06 18:27, Mariusz Tkaczyk 写道:
+>>> On Wed, 6 Sep 2023 14:26:30 +0800
+>>> AceLan Kao <acelan@gmail.com> wrote:
+>>>    
+>>>>   From previous testing, I don't think it's an issue in systemd, so I
+>>>> did a simple test and found the issue is gone.
+>>>> You only need to add a small delay in md_release(), then the issue
+>>>> can't be reproduced.
+>>>>
+>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>>>> index 78be7811a89f..ef47e34c1af5 100644
+>>>> --- a/drivers/md/md.c
+>>>> +++ b/drivers/md/md.c
+>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
+>>>> {
+>>>>          struct mddev *mddev = disk->private_data;
+>>>>
+>>>> +       msleep(10);
+>>>>          BUG_ON(!mddev);
+>>>>          atomic_dec(&mddev->openers);
+>>>>          mddev_put(mddev);
+>>>
+>>> I have repro and I tested it on my setup. It is not working for me.
+>>> My setup could be more "advanced" to maximalize chance of reproduction:
+>>>
+>>> # cat /proc/mdstat
+>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
+>>>         7126394880 blocks super external:/md127/0 128k chunks
+>>>
+>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>>>         104857600 blocks super external:/md126/0 64K chunks 2 near-copies
+>>> [4/4] [UUUU]
+>>>
+>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>>>         2655765504 blocks super external:/md126/1 level 5, 32k chunk,
+>>> algorithm 0 [4/4] [UUUU]
+>>>
+>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
+>>>         99614720 blocks super external:/md125/0 [2/2] [UU]
+>>>
+>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+>>>         10402 blocks super external:imsm
+>>>
+>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
+>>>         20043 blocks super external:imsm
+>>>
+>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+>>>         10402 blocks super external:imsm
+>>>
+>>> I have almost 99% repro ratio, slowly moving forward..
+>>>
+>>> It is endless loop because systemd-shutdown sends ioctl "stop_array" which
+>>> is successful but array is not stopped. For that reason it sets "changed =
+>>> true".
+>>
+>> How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
+>> ls /dev/md* or other way?
 > 
-> If you want to see it work, add
-> -device qxl-vga,id=video0,ram_size=67108864,vram_size=67108864,vram64_size_mb=0,vgamem_mb=16,max_outputs=1,bus=pci.0,addr=0x2 \
-> -vnc :1
-> point a vncviewer to port 5901, remove the "serial=ttyS0" configuration
-> and see the system run normally.
+> Hi Yu,
 > 
-> What else can I do?
+> It trusts return result, I confirmed that 0 is returned.
+> The most weird is we are returning 0 but array is still there, and it is
+> stopped again in next systemd loop. I don't understand why yet..
+> 
+>>> Systemd-shutdown see the change and retries to check if there is something
+>>> else which can be stopped now, and again, again...
+>>>
+>>> I will check what is returned first, it could be 0 or it could be positive
+>>> errno (nit?) because systemd cares "if(r < 0)".
+>>
+>> I do noticed that there are lots of log about md123 stopped:
+>>
+>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
+>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+>> [ 1371.846845] md: md123 stopped.
+>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
+>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+>> [ 1371.862941] md: md123 stopped.
+>>
+>> And md_ioctl->do_md_stop doesn't have error path after printing this
+>> log, hence 0 will be returned to user.
+>>
+>> The normal case is that:
+>>
+>> open md123
+>> ioctl STOP_ARRAY -> all rdev should be removed from array
+>> close md123 -> mddev will finally be freed by:
+>> 	md_release
+>> 	 mddev_put
+>> 	  set_bit(MD_DELETED, &mddev->flags) -> user shound not see this mddev
+>> 	  queue_work(md_misc_wq, &mddev->del_work)
+>>
+>> 	mddev_delayed_delete
+>> 	 kobject_put(&mddev->kobj)
+>>
+>> 	md_kobj_release
+>> 	 del_gendisk
+>> 	  md_free_disk
+>> 	   mddev_free
+>>
+> Ok thanks, I understand that md_release is called on descriptor closing, right?
+> 
 
-Still a minimal reproducable test case is needed.. Or do you have the
-dmesg output of the failing boot?
+Yes, normally close md123 should drop that last reference.
+> 
+>> Now that you can reporduce this problem 99%, can you dig deeper and find
+>> out what is wrong?
+> 
+> Yes, working on it!
+> 
+> My first idea was that mddev_get and mddev_put are missing on md_ioctl() path
+> but it doesn't help for the issue. My motivation here was that md_attr_store and
+> md_attr_show are using them.
+> 
+> Systemd regenerates list of MD arrays on every loop and it is always
+> there, systemd is able to open file descriptor (maybe inactive?).
 
-Regards,
+md123 should not be opended again, ioctl(STOP_ARRAY) already set the
+flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdown do
+open and close the array in each loop?
 
-Tony
+> My fix with checking mddev_get and mddev_put should address that so it seems to
+> be something different.
+> 
+> BTW. I opened a discussion on slack proposed by Paul. I'm adding updates there
+> more frequently. If you are interested please join. I can see that you were
+> invited as:
+> Email Address
+> yukuai1@huaweicloud.com
+> Perhaps, that is the reason you can't join. Let me know, I will add you.
+
+Sorry that I ususally just use this address for sending. Please add
+yukuai3@huawei.com. And I can't access slack in company computer,
+please add yukuai1994@gmail.com as well so that I can join with my
+personal phone and PC.
+
+Thanks,
+Kuai
+
+> 
+> Thanks,
+> Mariusz
+> 
+> 
+> .
+> 
+
