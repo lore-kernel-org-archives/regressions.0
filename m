@@ -1,74 +1,318 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAB36FD9
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 14:59:51 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1bf7a6509deso7771125ad.3
-        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 07:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694098790; x=1694703590; darn=lists.linux.dev;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=urjDqpz6JCoVdXTCwnSCnDwjuGCc92hRjBH5AnvNVH0=;
-        b=XlZzF6H/r0uvidUqX+RYpF++IWqqwxtUJDEF++RTd/w0yh5Isxd9KOcu/nZI2WnGSD
-         nlP45lJQLYQ3f7bIosBzBfTrLMv+5o3mdrKIss2+WnS/UoKFXLusZZ9NdGkNJj6ORTGR
-         ewgbQXrWDukOiCXwXwg63QSP0xL16XcfvkT+gwkoFuAT10JsjMVDDYRPjwo3gxD6z292
-         P2V6ZGOb+pniywaiLb5gqBJaOpq1FGsIw1bapt03yZY8SdMPnKNRwjSlC/w0nSW+0/Bf
-         PPKDYN16+OkAFrNbJZr4wx2zFz/0A39hMUW2EDQWtbItiJ4qsr6h4t13n5YBitdCHHFM
-         EwCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694098790; x=1694703590;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=urjDqpz6JCoVdXTCwnSCnDwjuGCc92hRjBH5AnvNVH0=;
-        b=Az9smYLQNE22ReNQQQsCWSPBEZ9G2MZVZ+o/rsq3vaZiTz7B0tc7jDo7yYSHGVVWp1
-         CE3XtU0Qin5sOJpgB9aANIoHnIVJXCpQPbDKCrYWyEoS6IpdqcIVLlZ6mJDWt52oTXLH
-         /NKblBXe7OSilmdpiclh2TLozcmuQRAe+vsZ9vyMkO1SPp/H6onSPY0PfxY+34bpALdw
-         kPJUUSAS98hkpCscdtNoC1czlJMgEvIDqjJmAfACOMfJYVY7cCW5nCHGXkMld++uP9vA
-         j2lu51GA53+eVQtfNBFiO/CwURrdT3xdI1bLsZfx3U+MPXIgemKegqIy01wNzLB8igQP
-         Vj6g==
-X-Gm-Message-State: AOJu0YwuLvq4Jx0BbyAlrkRqFT0GLzGhQE7zh/32g1DJlfdC5xbpKYr6
-	A25N1Kf/I69PWc9t5X/+GaE=
-X-Google-Smtp-Source: AGHT+IERPfSLD6z/hrsGzfaFdF27geuZZvH21GXJbPEkTHeARJYKwphV4IEmCtpatJ5OII53dYfvZQ==
-X-Received: by 2002:a17:902:b490:b0:1c1:e52e:49e3 with SMTP id y16-20020a170902b49000b001c1e52e49e3mr15980676plr.36.1694098790523;
-        Thu, 07 Sep 2023 07:59:50 -0700 (PDT)
-Received: from dw-tp ([49.207.223.191])
-        by smtp.gmail.com with ESMTPSA id n11-20020a170902e54b00b001ba066c589dsm12850300plf.137.2023.09.07.07.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Sep 2023 07:59:49 -0700 (PDT)
-Date: Thu, 07 Sep 2023 20:29:45 +0530
-Message-Id: <87o7ie2fmm.fsf@doe.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Zorro Lang <zlang@kernel.org>, linux-ext4@vger.kernel.org, fstests@vger.kernel.org, regressions@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery test fails
-In-Reply-To: <ZPnbHhUDkmUQ5906@casper.infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF5323C3
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 15:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694100275; x=1725636275;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LHa2isBNY8NCc8TgUnH8Hj+JtkoH9ieMz/XfvCm2ldY=;
+  b=LP9P3ccJ5V0v7wdgODZII1adYwrWPCJzqYmcJuLcF1RuuIpsqWkr7v2Q
+   WRFrwqvrmszJKc6XT3yN+vbjAyc4fmJUA+CDa1s+byN3FgpVUXuLX46hR
+   mUl4i9L84MmZL55IcxFVZZ/ADiJWN0pXhRuBizV5WfV8644yk6t5Thawr
+   Mo2TOPXRXxXHOIwgk/oOZElOwXUSDk2FoPfNauwVKtgJJMpt6wLFF2ZGN
+   DEFYtw0M7xpLOVjTB9UScQDfpdElAZvamM99RRrhZeNOzqQwDLnnY2tGl
+   OTWPH3C6xupXb+pIK4Gwm9h5nCyzsQszFrHPWHzIHW4fzO5QI1KRQTU/v
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="367632654"
+X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
+   d="scan'208";a="367632654"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 08:09:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="832211526"
+X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
+   d="scan'208";a="832211526"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.139.35])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 08:09:45 -0700
+Date: Thu, 7 Sep 2023 17:09:40 +0200
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>, Guoqing Jiang
+ <guoqing.jiang@linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@lst.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Regressions
+ <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>, "yukuai (C)"
+ <yukuai3@huawei.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+Message-ID: <20230907170940.00002fe4@linux.intel.com>
+In-Reply-To: <513ea05e-cc2e-e0c8-43cc-6636b0631cdf@huaweicloud.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+ <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+ <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+ <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+ <20230831085057.00001795@linux.intel.com>
+ <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+ <20230906122751.00001e5b@linux.intel.com>
+ <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+ <20230907121819.00005a15@linux.intel.com>
+ <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
+ <3e7edf0c-cadd-59b0-4e10-dffdb86b93b7@huaweicloud.com>
+ <20230907144153.00002492@linux.intel.com>
+ <513ea05e-cc2e-e0c8-43cc-6636b0631cdf@huaweicloud.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Matthew Wilcox <willy@infradead.org> writes:
+On Thu, 7 Sep 2023 20:53:30 +0800
+Yu Kuai <yukuai1@huaweicloud.com> wrote:
 
-> On Thu, Sep 07, 2023 at 07:05:38PM +0530, Ritesh Harjani wrote:
->> Thanks Matthew for proposing the final changes using folio.
->> (there were just some minor change required for fs/reiserfs/ for unused variables)
->> Pasting the final patch below (you as the author with my Signed-off-by &
->> Tested-by), which I have tested it on my system with "ext4/1k -g auto"
->
-> I'd rather split that patch up a bit -- I don't think the reiserfs
-> part fixes any actual problem.  I've pushed out
-> https://git.infradead.org/users/willy/pagecache.git/shortlog/refs/heads/bh-fixes
->
-> or git clone git://git.infradead.org/users/willy/pagecache.git
->
-> I credited you as the author on the second two since I just tidied up
-> your proposed fixes.
->
-> I've also checked ocfs2 as the other user of JBD2 and I don't see any
-> problems there.
+> Hi,
+>=20
+> =E5=9C=A8 2023/09/07 20:41, Mariusz Tkaczyk =E5=86=99=E9=81=93:
+> > On Thu, 7 Sep 2023 20:14:03 +0800
+> > Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> >  =20
+> >> Hi,
+> >>
+> >> =E5=9C=A8 2023/09/07 19:26, Yu Kuai =E5=86=99=E9=81=93: =20
+> >>> Hi,
+> >>>
+> >>> =E5=9C=A8 2023/09/07 18:18, Mariusz Tkaczyk =E5=86=99=E9=81=93: =20
+> >>>> On Thu, 7 Sep 2023 10:04:11 +0800
+> >>>> Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> >>>>    =20
+> >>>>> Hi,
+> >>>>>
+> >>>>> =E5=9C=A8 2023/09/06 18:27, Mariusz Tkaczyk =E5=86=99=E9=81=93: =20
+> >>>>>> On Wed, 6 Sep 2023 14:26:30 +0800
+> >>>>>> AceLan Kao <acelan@gmail.com> wrote: =20
+> >>>>>>>  =C2=A0 From previous testing, I don't think it's an issue in sys=
+temd, so I
+> >>>>>>> did a simple test and found the issue is gone.
+> >>>>>>> You only need to add a small delay in md_release(), then the issue
+> >>>>>>> can't be reproduced.
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> >>>>>>> index 78be7811a89f..ef47e34c1af5 100644
+> >>>>>>> --- a/drivers/md/md.c
+> >>>>>>> +++ b/drivers/md/md.c
+> >>>>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
+> >>>>>>> {
+> >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mddev *m=
+ddev =3D disk->private_data;
+> >>>>>>>
+> >>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msleep(10);
+> >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(!mddev);
+> >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_dec(&mdd=
+ev->openers);
+> >>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev_put(mddev=
+); =20
+> >>>>>>
+> >>>>>> I have repro and I tested it on my setup. It is not working for me.
+> >>>>>> My setup could be more "advanced" to maximalize chance of reproduc=
+tion:
+> >>>>>>
+> >>>>>> # cat /proc/mdstat
+> >>>>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+> >>>>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 7126394880 blocks supe=
+r external:/md127/0 128k chunks
+> >>>>>>
+> >>>>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 104857600 blocks super=
+ external:/md126/0 64K chunks 2
+> >>>>>> near-copies
+> >>>>>> [4/4] [UUUU]
+> >>>>>>
+> >>>>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2655765504 blocks supe=
+r external:/md126/1 level 5, 32k chunk,
+> >>>>>> algorithm 0 [4/4] [UUUU]
+> >>>>>>
+> >>>>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 99614720 blocks super =
+external:/md125/0 [2/2] [UU]
+> >>>>>>
+> >>>>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 10402 blocks super ext=
+ernal:imsm
+> >>>>>>
+> >>>>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S)
+> >>>>>> nvme4n1[0](S)
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20043 blocks super ext=
+ernal:imsm
+> >>>>>>
+> >>>>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+> >>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 10402 blocks super ext=
+ernal:imsm
+> >>>>>>
+> >>>>>> I have almost 99% repro ratio, slowly moving forward..
+> >>>>>>
+> >>>>>> It is endless loop because systemd-shutdown sends ioctl "stop_arra=
+y"
+> >>>>>> which
+> >>>>>> is successful but array is not stopped. For that reason it sets
+> >>>>>> "changed =3D
+> >>>>>> true". =20
+> >>>>>
+> >>>>> How does systemd-shutdown judge if array is stopped? cat /proc/mdst=
+at or
+> >>>>> ls /dev/md* or other way? =20
+> >>>>
+> >>>> Hi Yu,
+> >>>>
+> >>>> It trusts return result, I confirmed that 0 is returned.
+> >>>> The most weird is we are returning 0 but array is still there, and i=
+t is
+> >>>> stopped again in next systemd loop. I don't understand why yet..
+> >>>>    =20
+> >>>>>> Systemd-shutdown see the change and retries to check if there is
+> >>>>>> something
+> >>>>>> else which can be stopped now, and again, again...
+> >>>>>>
+> >>>>>> I will check what is returned first, it could be 0 or it could be
+> >>>>>> positive
+> >>>>>> errno (nit?) because systemd cares "if(r < 0)". =20
+> >>>>>
+> >>>>> I do noticed that there are lots of log about md123 stopped:
+> >>>>>
+> >>>>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
+> >>>>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+> >>>>> [ 1371.846845] md: md123 stopped.
+> >>>>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
+> >>>>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+> >>>>> [ 1371.862941] md: md123 stopped.
+> >>>>>
+> >>>>> And md_ioctl->do_md_stop doesn't have error path after printing this
+> >>>>> log, hence 0 will be returned to user.
+> >>>>>
+> >>>>> The normal case is that:
+> >>>>>
+> >>>>> open md123
+> >>>>> ioctl STOP_ARRAY -> all rdev should be removed from array
+> >>>>> close md123 -> mddev will finally be freed by:
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0md_release
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0 mddev_put
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_bit(MD_DELETED, &mddev->flags) =
+-> user shound not see this
+> >>>>> mddev
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 queue_work(md_misc_wq, &mddev->del_=
+work)
+> >>>>>
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0mddev_delayed_delete
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0 kobject_put(&mddev->kobj)
+> >>>>>
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0md_kobj_release
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0 del_gendisk
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 md_free_disk
+> >>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mddev_free
+> >>>>>    =20
+> >>>> Ok thanks, I understand that md_release is called on descriptor
+> >>>> closing, right?
+> >>>>    =20
+> >>>
+> >>> Yes, normally close md123 should drop that last reference. =20
+> >>>>    =20
+> >>>>> Now that you can reporduce this problem 99%, can you dig deeper and=
+ find
+> >>>>> out what is wrong? =20
+> >>>>
+> >>>> Yes, working on it!
+> >>>>
+> >>>> My first idea was that mddev_get and mddev_put are missing on
+> >>>> md_ioctl() path
+> >>>> but it doesn't help for the issue. My motivation here was that
+> >>>> md_attr_store and
+> >>>> md_attr_show are using them.
+> >>>>
+> >>>> Systemd regenerates list of MD arrays on every loop and it is always
+> >>>> there, systemd is able to open file descriptor (maybe inactive?). =20
+> >>>
+> >>> md123 should not be opended again, ioctl(STOP_ARRAY) already set the
+> >>> flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdown=
+ do
+> >>> open and close the array in each loop? =20
+> >>
+> >> I realized that I'm wrong here. 'MD_CLOSING' is cleared before ioctl
+> >> return by commit 065e519e71b2 ("md: MD_CLOSING needs to be cleared aft=
+er
+> >> called md_set_readonly or do_md_stop").
+> >>
+> >> I'm confused here, commit message said 'MD_CLOSING' shold not be set f=
+or
+> >> the case STOP_ARRAY_RO, but I don't understand why it's cleared for
+> >> STOP_ARRAY as well.
+> >> =20
+>=20
+> Can you try the following patch?
+>=20
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 3afd57622a0b..31b9cec7e4c0 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -7668,7 +7668,8 @@ static int md_ioctl(struct block_device *bdev,=20
+> fmode_t mode,
+>                          err =3D -EBUSY;
+>                          goto out;
+>                  }
+> -               did_set_md_closing =3D true;
+> +               if (cmd =3D=3D STOP_ARRAY_RO)
+> +                       did_set_md_closing =3D true;
+>                  mutex_unlock(&mddev->open_mutex);
+>                  sync_blockdev(bdev);
+>          }
+>=20
+> I think prevent array to be opened again after STOP_ARRAY might fix
+> this.
 
-Thanks Matthew! :) 
+I didn't help. I tried much more:
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 0fe7ab6e8ab9..807387f37755 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -608,7 +608,7 @@ static inline struct mddev *mddev_get(struct mddev *mdd=
+ev)
+ {
+        lockdep_assert_held(&all_mddevs_lock);
 
--ritesh 
+-       if (test_bit(MD_DELETED, &mddev->flags))
++       if (test_bit(MD_DELETED, &mddev->flags) || test_bit(MD_CLOSING,
+  &mddev->flags)) return NULL;
+        atomic_inc(&mddev->active);
+        return mddev;
+
+
+Issue is still reproducible. I was shocked so I removed clearing MD_CLOSING:
+ out:
+-       if(did_set_md_closing)
+-               clear_bit(MD_CLOSING, &mddev->flags);
++       //if(did_set_md_closing)
++       //      clear_bit(MD_CLOSING, &mddev->flags);
+
+Still reproducible. Then I found this:
+@@ -6177,7 +6179,7 @@ static void md_clean(struct mddev *mddev)
+        mddev->persistent =3D 0;
+        mddev->level =3D LEVEL_NONE;
+        mddev->clevel[0] =3D 0;
+-       mddev->flags =3D 0;
++       //mddev->flags =3D 0;
+        mddev->sb_flags =3D 0;
+        mddev->ro =3D MD_RDWR;
+        mddev->metadata_type[0] =3D 0;
+
+Issue not reproducible. I can see in log that attempt to stop device is not
+repeated.
+
+Well, with the change of using time-sensitive lock in mddev_put we need to
+ensure that we can still can remove mddevice so setting and preserving
+MD_CLOSING is reasonable for me. I will combine this into patches tomorrow.
+
+Yu, really appreciate your help! Glad to heave you here.
+
+Thanks,
+Mariusz
