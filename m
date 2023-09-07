@@ -1,86 +1,48 @@
-Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A131A566C
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:14:31 +0000 (UTC)
-Received: from mh by torres.zugschlus.de with local (Exim 4.96)
-	(envelope-from <mh+linux-kernel@zugschlus.de>)
-	id 1qeC1q-006qTE-1u;
-	Thu, 07 Sep 2023 12:14:26 +0200
-Date: Thu, 7 Sep 2023 12:14:26 +0200
-From: Marc Haber <mh+linux-kernel@zugschlus.de>
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
- related
-Message-ID: <ZPmignexOJvJ5J5W@torres.zugschlus.de>
-References: <ZO4GeazfcA09SfKw@google.com>
- <ZO4JCfnzRRL1RIZt@torres.zugschlus.de>
- <ZO4RzCr/Ugwi70bZ@google.com>
- <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
- <ZO4nbzkd4tovKpxx@google.com>
- <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
- <ZPEPFJ8QvubbD3H9@google.com>
- <20230901122431.GU11676@atomide.com>
- <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
- <20230906152107.GD11676@atomide.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADC6566C
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:17:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17127C116A6;
+	Thu,  7 Sep 2023 10:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1694081852;
+	bh=D0YOmx6OmWNMjeQsTguLfhAxPqjOL7Fqu32QbhYTxuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xFnH3zyxOjdc/5PApRBOvRxsczKfMFO53DMNu+7ggCtE6+fkwfmdo2vpIReLjKM8r
+	 bgL7WDhHKggA/SmDHlNcKXhkBLk2rDDDpbTlwNGUXxPJIeoRDA9qJNTMHIQGWFsWt+
+	 q+YvS982eyZA9HKSi9Hwwfw4iM/RNd1MnFaKWiiE=
+Date: Thu, 7 Sep 2023 11:17:30 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: Consider picking up "tpm: Enable hwrng only for Pluton on AMD
+ CPUs" rather sooner than later
+Message-ID: <2023090722-molehill-ranking-65e8@gregkh>
+References: <a8d206b6-d1d8-4c9a-b82c-724c2def0491@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230906152107.GD11676@atomide.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+In-Reply-To: <a8d206b6-d1d8-4c9a-b82c-724c2def0491@leemhuis.info>
 
-On Wed, Sep 06, 2023 at 06:21:07PM +0300, Tony Lindgren wrote:
-> * Marc Haber <mh+linux-kernel@zugschlus.de> [230906 14:41]:
-> > If I cannot see the host boot, I cannot debug, and if I cannot type into
-> > grub, I cannot find out whether removing the serial console from the
-> > kernel command line fixes the issue. I have removed the network
-> > interface to simplify things, so I need a working console.
-> 
-> I use something like this for a serial console:
-> 
-> -serial stdio -append "console=ttyS0 other kernel command line options"
+On Wed, Sep 06, 2023 at 01:21:07PM +0200, Thorsten Leemhuis wrote:
+> Hi stable team, JFYI, the recently mainline commit 8f7f35e5aa6f21 ("tpm:
+> Enable hwrng only for Pluton on AMD CPUs") from Jarkko contains a stable
+> tag, but it might be worth picking up rather sooner than later, as it
+> fixes a regression that seems to annoy quite a few users of 6.1.y, 6.4.y
+> and 6.5; that's why at least Fedora is already working on picking the
+> fix up ahead of the stable-tree.
 
-Looks like my problem was that I had "-S" on my qemu command line with
-didn't even start the VM after setting it up. Removing the -S makes VNC
-and the serial console work.
+Now queued up, thanks.
 
-The most basic reproducer I found is:
-
-/usr/bin/qemu-system-x86_64 \
--m 768 \
--machine pc-i440fx-2.1,accel=kvm,usb=off,dump-guest-core=off \
--nodefaults \
--drive file=/dev/prom/lasso2,format=raw,if=none,id=drive-virtio-disk0,cache=none,discard=unmap,aio=native \
--device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x3,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1,write-cache=on \
--serial stdio
-
-Simplifying the drive and device virtio-blk-pci lines prevents the
-initramfs of the VM from finding the disk and thus the system doesn't
-get as far to show the issue.
-
-If you want to see it work, add
--device qxl-vga,id=video0,ram_size=67108864,vram_size=67108864,vram64_size_mb=0,vgamem_mb=16,max_outputs=1,bus=pci.0,addr=0x2 \
--vnc :1
-point a vncviewer to port 5901, remove the "serial=ttyS0" configuration
-and see the system run normally.
-
-What else can I do?
-
-Greetings
-Marc
-
--- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
+greg k-h
