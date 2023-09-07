@@ -1,181 +1,217 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E29A29
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 02:21:15 +0000 (UTC)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rh2bx16H4z4f3pBb
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:04:13 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgAXp6mbL_lkF5I2Cg--.12332S3;
-	Thu, 07 Sep 2023 10:04:13 +0800 (CST)
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- AceLan Kao <acelan@gmail.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>,
- Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <20230818101630.000027f4@linux.intel.com>
- <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
- <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
- <20230822083923.00007fb6@linux.intel.com>
- <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
- <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
- <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
- <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
- <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
- <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
- <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
- <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
- <20230831085057.00001795@linux.intel.com>
- <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
- <20230906122751.00001e5b@linux.intel.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
-Date: Thu, 7 Sep 2023 10:04:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D11A21
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 02:56:40 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1c337aeefbdso4595615ad.0
+        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 19:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694055400; x=1694660200; darn=lists.linux.dev;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vECF2v0aoKNOXBJ7Lx7exLL11HKeotVPrQhskxEeZcQ=;
+        b=AAqxvVVPZR13yWuZkgRJjprlf08nTIcugYa/z4wZl8lyQ6ZQTUQgDciVWBTliK6jLH
+         rptRH3GVssMV1CJ9oFPvDWB341/OLavI6PneNarpFxn50Uir1jg3yO4Xst/Q51bFyVW1
+         XlZqgGSQrrVnKkYVEtHvwWZxGAN3nI4k7Gwf8vsJqhfpvV3Bf4GqofXQKImGOeFyec36
+         p2UPVeSpKtRnrvdWz6m5X+8kgbilz2VCVnWe22/GBbOunzoydnxmEN27GOn1lMHN7m99
+         TrHeRnuwkA2fwJ5hfKaZAQ3O5RwIFurY5OkdYsS6vNQPmuj2LMM0I5EJ+HI4KTqB5E1F
+         bg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694055400; x=1694660200;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vECF2v0aoKNOXBJ7Lx7exLL11HKeotVPrQhskxEeZcQ=;
+        b=KQhUMQg6lK8K6xWyH3xyuYqlQvoAIXVdGX7QaqoOjVg2nmHxf6nyWHGykZzpEkvMZ5
+         kGJm29DMSixYyteUhMPeeYTBlzr/0Ba7ID980P3CV5qZc1MvTD8ElteEEoatO8ho6kPu
+         Q5y+9aVRD5RHaz27PxvjoKzJAbVaQfpxz/fvr5GwWUU4JPXCtbP95gwd5MdVGNkRJ+fW
+         2tmzezGMj9S2qCxg6CT1Tbv0JfreUj0eT0PZ0M0H6ytEqD9O2cUzMPUrFH14stdevcRl
+         2OiZO42jkD0Naxr1WDsFg58pS2e5U1bfoyhBsL04buiqWT1xpMvj/b1NesUB+bTyhU+h
+         U0yA==
+X-Gm-Message-State: AOJu0Yz+/dcBwGN0usRdrHapdnsT0zHr5AGoyvSM7PuQR8cTTJRJR4gs
+	nu3Q711eKIMQB5W0VP36J18=
+X-Google-Smtp-Source: AGHT+IFX7EOOvW+giJUHxkZTFk2jOHD8kl0zg/4Lv/0P7DLtO3XVZLpQV5WpAwt65q10pxaCElwr/Q==
+X-Received: by 2002:a17:903:1206:b0:1bc:2d43:c741 with SMTP id l6-20020a170903120600b001bc2d43c741mr20702410plh.66.1694055400295;
+        Wed, 06 Sep 2023 19:56:40 -0700 (PDT)
+Received: from dw-tp ([49.207.223.191])
+        by smtp.gmail.com with ESMTPSA id ik11-20020a170902ab0b00b001b8a7e1b116sm11906309plb.191.2023.09.06.19.56.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 19:56:39 -0700 (PDT)
+Date: Thu, 07 Sep 2023 08:26:35 +0530
+Message-Id: <87tts63d3w.fsf@doe.com>
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, Zorro Lang <zlang@kernel.org>, linux-ext4@vger.kernel.org, fstests@vger.kernel.org, regressions@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery test fails
+In-Reply-To: <ZPjYTDB6x83BIJMc@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <20230906122751.00001e5b@linux.intel.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXp6mbL_lkF5I2Cg--.12332S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF45Gw18XFy7ZrWruFWkXrb_yoW5tr4xpF
-	Z5XF1YkrnrWw17AayUXry8X3Z3Kasaya98Kry3K39Iy34fJryxGw13Wr45WFZxWF4Skr42
-	vw1DtF4jvwnYga7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
-	Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
 
-Hi,
+Matthew Wilcox <willy@infradead.org> writes:
 
-ÔÚ 2023/09/06 18:27, Mariusz Tkaczyk Ð´µÀ:
-> On Wed, 6 Sep 2023 14:26:30 +0800
-> AceLan Kao <acelan@gmail.com> wrote:
-> 
->>  From previous testing, I don't think it's an issue in systemd, so I
->> did a simple test and found the issue is gone.
->> You only need to add a small delay in md_release(), then the issue
->> can't be reproduced.
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index 78be7811a89f..ef47e34c1af5 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
->> {
->>         struct mddev *mddev = disk->private_data;
->>
->> +       msleep(10);
->>         BUG_ON(!mddev);
->>         atomic_dec(&mddev->openers);
->>         mddev_put(mddev);
-> 
-> I have repro and I tested it on my setup. It is not working for me.
-> My setup could be more "advanced" to maximalize chance of reproduction:
-> 
-> # cat /proc/mdstat
-> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
-> md121 : active raid0 nvme2n1[1] nvme5n1[0]
->        7126394880 blocks super external:/md127/0 128k chunks
-> 
-> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->        104857600 blocks super external:/md126/0 64K chunks 2 near-copies [4/4]
-> [UUUU]
-> 
-> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->        2655765504 blocks super external:/md126/1 level 5, 32k chunk, algorithm 0
-> [4/4] [UUUU]
-> 
-> md124 : active raid1 nvme0n1[1] nvme3n1[0]
->        99614720 blocks super external:/md125/0 [2/2] [UU]
-> 
-> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
->        10402 blocks super external:imsm
-> 
-> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
->        20043 blocks super external:imsm
-> 
-> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
->        10402 blocks super external:imsm
-> 
-> I have almost 99% repro ratio, slowly moving forward..
-> 
-> It is endless loop because systemd-shutdown sends ioctl "stop_array" which is
-> successful but array is not stopped. For that reason it sets "changed = true".
+> On Wed, Sep 06, 2023 at 01:38:23PM +0100, Matthew Wilcox wrote:
+>> > Is this code path a possibility, which can cause above logs?
+>> > 
+>> >    ptr = jbd2_alloc() -> kmem_cache_alloc()
+>> >    <..>
+>> >    new_folio = virt_to_folio(ptr)
+>> >    new_offset = offset_in_folio(new_folio, ptr)
+>> > 
+>> > And then I am still not sure what the problem really is? 
+>> > Is it because at the time of checkpointing, the path is still not fully
+>> > converted to folio?
+>> 
+>> Oh yikes!  I didn't know that the allocation might come from kmalloc!
+>> Yes, slab might use high-order allocations.  I'll have to look through
+>> this and figure out what the problem might be.
+>
+> I think the probable cause is bh_offset().  Before these patches, if
+> we allocated a buffer at offset 9kB into an order-2 slab, we'd fill in
+> b_page with the third page of the slab and calculate bh_offset as 1kB.
+> With these patches, we set b_page to the first page of the slab, and
+> bh_offset still comes back as 1kB so we read from / write to entirely
+> the wrong place.
+>
+> With this redefinition of bh_offset(), we calculate the offset relative
+> to the base page if it's a tail page, and relative to the folio if it's
+> a folio.  Works out nicely ;-)
 
-How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
-ls /dev/md* or other way?
-> 
-> Systemd-shutdown see the change and retries to check if there is something else
-> which can be stopped now, and again, again...
-> 
-> I will check what is returned first, it could be 0 or it could be positive
-> errno (nit?) because systemd cares "if(r < 0)".
+Thanks Matthew for explaining the problem clearly.
 
-I do noticed that there are lots of log about md123 stopped:
 
-[ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
-[ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
-[ 1371.846845] md: md123 stopped.
-[ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
-[ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
-[ 1371.862941] md: md123 stopped.
+>
+> I have three other things I'm trying to debug right now, so this isn't
+> tested, but if you have time you might want to give it a run.
 
-And md_ioctl->do_md_stop doesn't have error path after printing this
-log, hence 0 will be returned to user.
+sure, I gave it a try.
 
-The normal case is that:
+>
+> diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+> index 6cb3e9af78c9..dc8fcdc40e95 100644
+> --- a/include/linux/buffer_head.h
+> +++ b/include/linux/buffer_head.h
+> @@ -173,7 +173,10 @@ static __always_inline int buffer_uptodate(const struct buffer_head *bh)
+>  	return test_bit_acquire(BH_Uptodate, &bh->b_state);
+>  }
+>  
+> -#define bh_offset(bh)		((unsigned long)(bh)->b_data & ~PAGE_MASK)
+> +static inline unsigned long bh_offset(struct buffer_head *bh)
+> +{
+> +	return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
+> +}
+>  
+>  /* If we *know* page->private refers to buffer_heads */
+>  #define page_buffers(page)					\
 
-open md123
-ioctl STOP_ARRAY -> all rdev should be removed from array
-close md123 -> mddev will finally be freed by:
-	md_release
-	 mddev_put
-	  set_bit(MD_DELETED, &mddev->flags) -> user shound not see this mddev
-	  queue_work(md_misc_wq, &mddev->del_work)
 
-	mddev_delayed_delete
-	 kobject_put(&mddev->kobj)
+I used "const" for bh to avoid warnings from fs/nilfs/alloc.c
 
-	md_kobj_release
-	 del_gendisk
-	  md_free_disk
-	   mddev_free
+diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+index 4ede47649a81..b61fa79cb7f5 100644
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -171,7 +171,10 @@ static __always_inline int buffer_uptodate(const struct buffer_head *bh)
+        return test_bit_acquire(BH_Uptodate, &bh->b_state);
+ }
 
-Now that you can reporduce this problem 99%, can you dig deeper and find
-out what is wrong?
+-#define bh_offset(bh)          ((unsigned long)(bh)->b_data & ~PAGE_MASK)
++static inline unsigned long bh_offset(const struct buffer_head *bh)
++{
++       return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
++}
 
-Thanks,
-Kuai
+ /* If we *know* page->private refers to buffer_heads */
+ #define page_buffers(page)                                     \
 
-> 
-> Thanks,
-> Mariusz
-> 
-> .
-> 
 
+But this change alone was still giving me failures. On looking into
+usage of b_data, I found we use offset_in_page() instead of bh_offset()
+in jbd2. So I added below changes in fs/jbd2 to replace offset_in_page()
+to bh_offset()...
+
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 1073259902a6..0c25640714ac 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -304,7 +304,7 @@ static __u32 jbd2_checksum_data(__u32 crc32_sum, struct buffer_head *bh)
+
+        addr = kmap_atomic(page);
+        checksum = crc32_be(crc32_sum,
+-               (void *)(addr + offset_in_page(bh->b_data)), bh->b_size);
++               (void *)(addr + bh_offset(bh)), bh->b_size);
+        kunmap_atomic(addr);
+
+        return checksum;
+@@ -333,7 +333,7 @@ static void jbd2_block_tag_csum_set(journal_t *j, journal_block_tag_t *tag,
+        seq = cpu_to_be32(sequence);
+        addr = kmap_atomic(page);
+        csum32 = jbd2_chksum(j, j->j_csum_seed, (__u8 *)&seq, sizeof(seq));
+-       csum32 = jbd2_chksum(j, csum32, addr + offset_in_page(bh->b_data),
++       csum32 = jbd2_chksum(j, csum32, addr + bh_offset(bh),
+                             bh->b_size);
+        kunmap_atomic(addr);
+
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 4d1fda1f7143..2ac57f7a242d 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -942,7 +942,7 @@ static void jbd2_freeze_jh_data(struct journal_head *jh)
+
+        J_EXPECT_JH(jh, buffer_uptodate(bh), "Possible IO failure.\n");
+        page = bh->b_page;
+-       offset = offset_in_page(bh->b_data);
++       offset = bh_offset(bh);
+        source = kmap_atomic(page);
+        /* Fire data frozen trigger just before we copy the data */
+        jbd2_buffer_frozen_trigger(jh, source + offset, jh->b_triggers);
+
+
+With all of above diffs, here are the results.
+
+ext4/1k: 15 tests, 1 failures, 1709 seconds
+  generic/455  Pass     43s
+  generic/475  Pass     128s
+  generic/482  Pass     183s
+  generic/455  Pass     43s
+  generic/475  Pass     134s
+  generic/482  Pass     191s
+  generic/455  Pass     41s
+  generic/475  Pass     139s
+  generic/482  Pass     135s
+  generic/455  Pass     46s
+  generic/475  Pass     132s
+  generic/482  Pass     146s
+  generic/455  Pass     47s
+  generic/475  Failed   145s
+  generic/482  Pass     156s
+Totals: 15 tests, 0 skipped, 1 failures, 0 errors, 1709s
+
+I guess the above failure (generic/475) could be due to it's flakey
+behaviour which Ted was mentioning.
+
+
+Now, while we are at it, I think we should also make change to reiserfs from
+offset_in_page() to bh_offset()
+
+diff --git a/fs/reiserfs/journal.c b/fs/reiserfs/journal.c
+index 015bfe4e4524..23411ec163d4 100644
+--- a/fs/reiserfs/journal.c
++++ b/fs/reiserfs/journal.c
+@@ -4217,7 +4217,7 @@ static int do_journal_end(struct reiserfs_transaction_handle *th, int flags)
+                        page = cn->bh->b_page;
+                        addr = kmap(page);
+                        memcpy(tmp_bh->b_data,
+-                              addr + offset_in_page(cn->bh->b_data),
++                              addr + bh_offset(cn->bh),
+                               cn->bh->b_size);
+                        kunmap(page);
+                        mark_buffer_dirty(tmp_bh);
+
+
+I will also run "auto" group with ext4/1k with all of above change. Will
+update the results once it is done.
+
+
+-ritesh
