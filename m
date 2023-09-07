@@ -1,126 +1,181 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111146ADB
-	for <regressions@lists.linux.dev>; Wed,  6 Sep 2023 21:04:02 +0000 (UTC)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-52c9f1bd05dso241060a12.3
-        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 14:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694034241; x=1694639041; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ayxzwMlaIa8aBHyrJnwJW2G9gVUNOm3mCQTU2C2XbwE=;
-        b=Wn4fvIQiPZP9OeGLrt8mmUGeLHFAO+HVXeJdsbXnK4hj6R8isnbUTCyDcFw9PJkQZQ
-         VRB7y32RaCeuE0EPdR6Ks6K9VtWwKL21JqOqHpbKDdMOnrBHpgYgP0CkKe5muzBerCRc
-         m9p7G3a2pzlvQB0Fn3KUt7ojtcZwELTZkQ31g2oqcWmIgrnmlj71wb1oJ4ZrFnyJqYTQ
-         6suHGv7l5I0+8KtMNv3ZotwsxnzBd81cpRhagMTGRRBFiAHN9PlTzvvpMF8Z+DTBnM9E
-         3+5kLAYsVQTxGS488UqcItywVedmQBhy0c5vHbiBZqr07TloRZnnBFyygn29AYvhwmYm
-         KVrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694034241; x=1694639041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ayxzwMlaIa8aBHyrJnwJW2G9gVUNOm3mCQTU2C2XbwE=;
-        b=Ed6hfLJ/LS4/JBD8j+uz6PBBBTQzSreaiv60BetvohEQ7doAzsjBojr81wZ9mGJVhQ
-         ZZq67qh3grF/mBr0PLq0EpXL8dD7gpmjFpe8jkwFv8TIXpaoaFDtbRWd6+js9aI2sJec
-         I+hxCuA+x1eypTSQvYbgPeyBJBjalVLZoI1f2hfAa28i3uM97ZpjkOxG6xiQ/BtJoZ0m
-         1EU+JceqCKcRvwM5GRdpVHI0uvBeKQmUtRu2J6o+9wP70CkpFxlKSUfpBSF5iGF8IPEV
-         /mlDO+dkNikPBGPpQI84Fz9446mDNgYxvoGRKg06+5cLaWbWOn1C0ydKuojbltYrSTvi
-         Wj7Q==
-X-Gm-Message-State: AOJu0Yxq9VT4Y6msZgfE20KzTPaGf+eZs60zv6dMAFmBY4t4GvHX5Q84
-	AIqfd/t29Ghoxp3onfheTXV4H/CxkpJQ6Nnl3sw=
-X-Google-Smtp-Source: AGHT+IHZFaYn2Ozf5KGvXEZ9HNBQtrzOXhDAjhZYSjPt87z8JWO2xSAnqi44xFQC2aNFozkZOHjZj5OOMGgIb/uy278=
-X-Received: by 2002:a17:906:297:b0:9a5:c5fe:af85 with SMTP id
- 23-20020a170906029700b009a5c5feaf85mr3614951ejf.3.1694034240716; Wed, 06 Sep
- 2023 14:04:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E29A29
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 02:21:15 +0000 (UTC)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rh2bx16H4z4f3pBb
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:04:13 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP4 (Coremail) with SMTP id gCh0CgAXp6mbL_lkF5I2Cg--.12332S3;
+	Thu, 07 Sep 2023 10:04:13 +0800 (CST)
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+ AceLan Kao <acelan@gmail.com>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, Song Liu <song@kernel.org>,
+ Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux RAID <linux-raid@vger.kernel.org>, "yukuai (C)" <yukuai3@huawei.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <20230818101630.000027f4@linux.intel.com>
+ <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+ <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+ <20230822083923.00007fb6@linux.intel.com>
+ <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+ <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+ <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+ <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+ <20230831085057.00001795@linux.intel.com>
+ <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+ <20230906122751.00001e5b@linux.intel.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+Date: Thu, 7 Sep 2023 10:04:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
- <ZPfPfyIoVxw5L6El@debian.me>
-In-Reply-To: <ZPfPfyIoVxw5L6El@debian.me>
-From: Brian Pardy <brian.pardy@gmail.com>
-Date: Wed, 6 Sep 2023 17:03:48 -0400
-Message-ID: <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
-Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
- is mounted (cifsd-cfid-laundromat in"D" state)
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux CIFS <linux-cifs@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Steve French <sfrench@samba.org>, 
-	Ronnie Sahlberg <lsahlber@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230906122751.00001e5b@linux.intel.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXp6mbL_lkF5I2Cg--.12332S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF45Gw18XFy7ZrWruFWkXrb_yoW5tr4xpF
+	Z5XF1YkrnrWw17AayUXry8X3Z3Kasaya98Kry3K39Iy34fJryxGw13Wr45WFZxWF4Skr42
+	vw1DtF4jvwnYga7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
+	Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-CFilter-Loop: Reflected
 
-Added committer Ronnie Sahlberg to CC.
+Hi,
 
-On Tue, Sep 5, 2023 at 9:01=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.com>=
- wrote:
-> On Tue, Sep 05, 2023 at 01:09:05PM -0400, Brian Pardy wrote:
-> > I've noticed an issue with the CIFS client in kernel 6.5.0/6.5.1 that
-> > does not exist in 6.4.12 or other previous kernels (I have not tested
-> > 6.4.13). Almost immediately after mounting a CIFS share, the reported
-> > load average on my system goes up by 2. At the time this occurs I see
-> > two [cifsd-cfid-laundromat] kernel threads running the "D" state,
-> > where they remain for the entire time the CIFS share is mounted. The
-> > load will remain stable at 2 (otherwise idle) until the share is
-> > unmounted, at which point the [cifsd-cfid-laundromat] threads
-> > disappear and load drops back down to 0. This is easily reproducible
-> > on my system, but I am not sure what to do to retrieve more useful
-> > debugging information. If I mount two shares from this server, I get
-> > four laundromat threads in "D" state and a sustained load average of
-> > 4.
-> >
-> > The client is running Gentoo Linux, the server is a Seagate Personal
-> > Cloud NAS running Samba 4.6.5. Mount options used are
-> > "noperm,guest,vers=3D3.02". The CPUs do not actually appear to be
-> > spinning, the reported load average appears incorrect as far as actual
-> > CPU use is concerned.
->
-> Thanks for the regression report. But if you want to get it fixed,
-> you have to do your part: perform bisection. See Documentation/admin-guid=
-e/bug-bisect.rst in the kernel sources for how to do that.
->
-> Anyway, I'm adding it to regzbot:
->
-> #regzbot ^introduced: v6.4..v6.5
-> #regzbot title: incorrect CPU utilization report (multiplied) when mounti=
-ng CIFS
+ÔÚ 2023/09/06 18:27, Mariusz Tkaczyk Ð´µÀ:
+> On Wed, 6 Sep 2023 14:26:30 +0800
+> AceLan Kao <acelan@gmail.com> wrote:
+> 
+>>  From previous testing, I don't think it's an issue in systemd, so I
+>> did a simple test and found the issue is gone.
+>> You only need to add a small delay in md_release(), then the issue
+>> can't be reproduced.
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 78be7811a89f..ef47e34c1af5 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
+>> {
+>>         struct mddev *mddev = disk->private_data;
+>>
+>> +       msleep(10);
+>>         BUG_ON(!mddev);
+>>         atomic_dec(&mddev->openers);
+>>         mddev_put(mddev);
+> 
+> I have repro and I tested it on my setup. It is not working for me.
+> My setup could be more "advanced" to maximalize chance of reproduction:
+> 
+> # cat /proc/mdstat
+> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+> md121 : active raid0 nvme2n1[1] nvme5n1[0]
+>        7126394880 blocks super external:/md127/0 128k chunks
+> 
+> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>        104857600 blocks super external:/md126/0 64K chunks 2 near-copies [4/4]
+> [UUUU]
+> 
+> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+>        2655765504 blocks super external:/md126/1 level 5, 32k chunk, algorithm 0
+> [4/4] [UUUU]
+> 
+> md124 : active raid1 nvme0n1[1] nvme3n1[0]
+>        99614720 blocks super external:/md125/0 [2/2] [UU]
+> 
+> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+>        10402 blocks super external:imsm
+> 
+> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
+>        20043 blocks super external:imsm
+> 
+> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+>        10402 blocks super external:imsm
+> 
+> I have almost 99% repro ratio, slowly moving forward..
+> 
+> It is endless loop because systemd-shutdown sends ioctl "stop_array" which is
+> successful but array is not stopped. For that reason it sets "changed = true".
 
-Thank you for directing me to the bug-bisect documentation. Results below:
+How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
+ls /dev/md* or other way?
+> 
+> Systemd-shutdown see the change and retries to check if there is something else
+> which can be stopped now, and again, again...
+> 
+> I will check what is returned first, it could be 0 or it could be positive
+> errno (nit?) because systemd cares "if(r < 0)".
 
-# git bisect bad
-d14de8067e3f9653cdef5a094176d00f3260ab20 is the first bad commit
-commit d14de8067e3f9653cdef5a094176d00f3260ab20
-Author: Ronnie Sahlberg <lsahlber@redhat.com>
-Date:   Thu Jul 6 12:32:24 2023 +1000
+I do noticed that there are lots of log about md123 stopped:
 
-    cifs: Add a laundromat thread for cached directories
+[ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
+[ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+[ 1371.846845] md: md123 stopped.
+[ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
+[ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+[ 1371.862941] md: md123 stopped.
 
-    and drop cached directories after 30 seconds
+And md_ioctl->do_md_stop doesn't have error path after printing this
+log, hence 0 will be returned to user.
 
-    Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-    Signed-off-by: Steve French <stfrench@microsoft.com>
+The normal case is that:
 
- fs/smb/client/cached_dir.c | 67 ++++++++++++++++++++++++++++++++++++++++++=
-++++
- fs/smb/client/cached_dir.h |  1 +
- 2 files changed, 68 insertions(+)
+open md123
+ioctl STOP_ARRAY -> all rdev should be removed from array
+close md123 -> mddev will finally be freed by:
+	md_release
+	 mddev_put
+	  set_bit(MD_DELETED, &mddev->flags) -> user shound not see this mddev
+	  queue_work(md_misc_wq, &mddev->del_work)
 
-I do not know what other debug info may be useful, but here is
-/proc/[pid]/stack output for one of these threads in D state:
+	mddev_delayed_delete
+	 kobject_put(&mddev->kobj)
 
-# cat /proc/17314/stack
-[<0>] msleep+0x24/0x40
-[<0>] cifs_cfids_laundromat_thread+0x5e/0x1c0 [cifs]
-[<0>] kthread+0xc4/0xf0
-[<0>] ret_from_fork+0x28/0x40
-[<0>] ret_from_fork_asm+0x1b/0x30
+	md_kobj_release
+	 del_gendisk
+	  md_free_disk
+	   mddev_free
 
-I will provide any other details requested. Thank you.
+Now that you can reporduce this problem 99%, can you dig deeper and find
+out what is wrong?
 
-#regzbot introduced: d14de8067e3
+Thanks,
+Kuai
+
+> 
+> Thanks,
+> Mariusz
+> 
+> .
+> 
+
