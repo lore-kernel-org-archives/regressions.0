@@ -1,48 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADC6566C
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:17:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17127C116A6;
-	Thu,  7 Sep 2023 10:17:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1694081852;
-	bh=D0YOmx6OmWNMjeQsTguLfhAxPqjOL7Fqu32QbhYTxuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xFnH3zyxOjdc/5PApRBOvRxsczKfMFO53DMNu+7ggCtE6+fkwfmdo2vpIReLjKM8r
-	 bgL7WDhHKggA/SmDHlNcKXhkBLk2rDDDpbTlwNGUXxPJIeoRDA9qJNTMHIQGWFsWt+
-	 q+YvS982eyZA9HKSi9Hwwfw4iM/RNd1MnFaKWiiE=
-Date: Thu, 7 Sep 2023 11:17:30 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: Consider picking up "tpm: Enable hwrng only for Pluton on AMD
- CPUs" rather sooner than later
-Message-ID: <2023090722-molehill-ranking-65e8@gregkh>
-References: <a8d206b6-d1d8-4c9a-b82c-724c2def0491@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93AA566C
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 10:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694081907; x=1725617907;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aHVqwOrO+75etqT56c3Qz8PRUggG+wPxnNaCzndSWqw=;
+  b=nBDibRcgkjKeUVvxzzT4Np8HVSKL9Sdi2YNU4E3Bs/3uY8AFKfcAPs96
+   4AV87rejNeEOGqVT1I42qI3omnzNdlb92Lny6Pyr95gAwpTXmsaa34bjG
+   PvhMGdjQRHTeJZ+OerfhMHKBOwm02vlBSB04RHFiPEN/GTpVABoNDrPn1
+   EKPc5tyX780dXx+2zg9E2Rv/RGjVevtOTEDd/UIep146zm51N1g5LFvNL
+   Wcj8ml+dR+HEFkkqWwUr/wHnG6tjy/nAdSiIvNX504H67sxUzpDEKcU7O
+   EYWDMfyNNVddUNH95Fy7d4N3aGwviSCRyIuWA7OBBH4JhDLO6QPD7Bbrr
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="463693112"
+X-IronPort-AV: E=Sophos;i="6.02,234,1688454000"; 
+   d="scan'208";a="463693112"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 03:18:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="807488492"
+X-IronPort-AV: E=Sophos;i="6.02,234,1688454000"; 
+   d="scan'208";a="807488492"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.249.139.35])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 03:18:23 -0700
+Date: Thu, 7 Sep 2023 12:18:19 +0200
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>, Guoqing Jiang
+ <guoqing.jiang@linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@lst.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Regressions
+ <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>,
+ "yukuai (C)" <yukuai3@huawei.com>, "yangerkun@huawei.com"
+ <yangerkun@huawei.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+Message-ID: <20230907121819.00005a15@linux.intel.com>
+In-Reply-To: <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+	<20230818101630.000027f4@linux.intel.com>
+	<b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
+	<CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
+	<20230822083923.00007fb6@linux.intel.com>
+	<CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
+	<35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
+	<CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+	<CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+	<CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+	<CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+	<354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
+	<03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+	<20230831085057.00001795@linux.intel.com>
+	<CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+	<20230906122751.00001e5b@linux.intel.com>
+	<43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8d206b6-d1d8-4c9a-b82c-724c2def0491@leemhuis.info>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 06, 2023 at 01:21:07PM +0200, Thorsten Leemhuis wrote:
-> Hi stable team, JFYI, the recently mainline commit 8f7f35e5aa6f21 ("tpm:
-> Enable hwrng only for Pluton on AMD CPUs") from Jarkko contains a stable
-> tag, but it might be worth picking up rather sooner than later, as it
-> fixes a regression that seems to annoy quite a few users of 6.1.y, 6.4.y
-> and 6.5; that's why at least Fedora is already working on picking the
-> fix up ahead of the stable-tree.
+On Thu, 7 Sep 2023 10:04:11 +0800
+Yu Kuai <yukuai1@huaweicloud.com> wrote:
 
-Now queued up, thanks.
+> Hi,
+> 
+> ÔÚ 2023/09/06 18:27, Mariusz Tkaczyk Ð´µÀ:
+> > On Wed, 6 Sep 2023 14:26:30 +0800
+> > AceLan Kao <acelan@gmail.com> wrote:
+> >   
+> >>  From previous testing, I don't think it's an issue in systemd, so I
+> >> did a simple test and found the issue is gone.
+> >> You only need to add a small delay in md_release(), then the issue
+> >> can't be reproduced.
+> >>
+> >> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> >> index 78be7811a89f..ef47e34c1af5 100644
+> >> --- a/drivers/md/md.c
+> >> +++ b/drivers/md/md.c
+> >> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
+> >> {
+> >>         struct mddev *mddev = disk->private_data;
+> >>
+> >> +       msleep(10);
+> >>         BUG_ON(!mddev);
+> >>         atomic_dec(&mddev->openers);
+> >>         mddev_put(mddev);  
+> > 
+> > I have repro and I tested it on my setup. It is not working for me.
+> > My setup could be more "advanced" to maximalize chance of reproduction:
+> > 
+> > # cat /proc/mdstat
+> > Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+> > md121 : active raid0 nvme2n1[1] nvme5n1[0]
+> >        7126394880 blocks super external:/md127/0 128k chunks
+> > 
+> > md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+> >        104857600 blocks super external:/md126/0 64K chunks 2 near-copies
+> > [4/4] [UUUU]
+> > 
+> > md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+> >        2655765504 blocks super external:/md126/1 level 5, 32k chunk,
+> > algorithm 0 [4/4] [UUUU]
+> > 
+> > md124 : active raid1 nvme0n1[1] nvme3n1[0]
+> >        99614720 blocks super external:/md125/0 [2/2] [UU]
+> > 
+> > md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+> >        10402 blocks super external:imsm
+> > 
+> > md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
+> >        20043 blocks super external:imsm
+> > 
+> > md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+> >        10402 blocks super external:imsm
+> > 
+> > I have almost 99% repro ratio, slowly moving forward..
+> > 
+> > It is endless loop because systemd-shutdown sends ioctl "stop_array" which
+> > is successful but array is not stopped. For that reason it sets "changed =
+> > true".  
+> 
+> How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
+> ls /dev/md* or other way?
 
-greg k-h
+Hi Yu,
+
+It trusts return result, I confirmed that 0 is returned.
+The most weird is we are returning 0 but array is still there, and it is
+stopped again in next systemd loop. I don't understand why yet..
+
+> > Systemd-shutdown see the change and retries to check if there is something
+> > else which can be stopped now, and again, again...
+> > 
+> > I will check what is returned first, it could be 0 or it could be positive
+> > errno (nit?) because systemd cares "if(r < 0)".  
+> 
+> I do noticed that there are lots of log about md123 stopped:
+> 
+> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
+> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+> [ 1371.846845] md: md123 stopped.
+> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
+> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+> [ 1371.862941] md: md123 stopped.
+> 
+> And md_ioctl->do_md_stop doesn't have error path after printing this
+> log, hence 0 will be returned to user.
+> 
+> The normal case is that:
+> 
+> open md123
+> ioctl STOP_ARRAY -> all rdev should be removed from array
+> close md123 -> mddev will finally be freed by:
+> 	md_release
+> 	 mddev_put
+> 	  set_bit(MD_DELETED, &mddev->flags) -> user shound not see this mddev
+> 	  queue_work(md_misc_wq, &mddev->del_work)
+> 
+> 	mddev_delayed_delete
+> 	 kobject_put(&mddev->kobj)
+> 
+> 	md_kobj_release
+> 	 del_gendisk
+> 	  md_free_disk
+> 	   mddev_free
+> 
+Ok thanks, I understand that md_release is called on descriptor closing, right?
+
+
+> Now that you can reporduce this problem 99%, can you dig deeper and find
+> out what is wrong?
+
+Yes, working on it!
+
+My first idea was that mddev_get and mddev_put are missing on md_ioctl() path
+but it doesn't help for the issue. My motivation here was that md_attr_store and
+md_attr_show are using them.
+
+Systemd regenerates list of MD arrays on every loop and it is always
+there, systemd is able to open file descriptor (maybe inactive?).
+My fix with checking mddev_get and mddev_put should address that so it seems to
+be something different.
+
+BTW. I opened a discussion on slack proposed by Paul. I'm adding updates there
+more frequently. If you are interested please join. I can see that you were
+invited as:
+Email Address
+yukuai1@huaweicloud.com
+Perhaps, that is the reason you can't join. Let me know, I will add you.
+
+Thanks,
+Mariusz
+
