@@ -1,271 +1,93 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54754EA9
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 03:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nFNrx+1oT35lq3jlqAiBGWUXRAbURzvzkzb4iEv8f+4=; b=iu2WETm6UjNAezwa5WiNZ3KIJL
-	MMT4GxcKyFaJdS9aKyZ/qB6SZ1h3q0n5LMfk63dvhhh//KDnLw/+ZAlWFDw8tw8DqI9PUFp3wqj78
-	TBmRN22nKrLVU4XwMPQ8oJOoIZ23o9L44O3xp51KW/Lln0+0yFh+c2mWQSqHaN7ewrSslqo7kt0HH
-	yElUCbYXfSjnDod/iHOVUh+rE9cgPFzlfKTnS7qsoX38y5q9t50OsmHQLBxLi7zGIlK5jWb6iupSb
-	hHYmfqyEi3utmAGR3eilB8+NTBUOMHorqmZe0FkUMUkgSWLviSygGR3iV6AQzZDWAMiPxtColHyl0
-	sshJwOCg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qe5zq-007whg-Lf; Thu, 07 Sep 2023 03:47:58 +0000
-Date: Thu, 7 Sep 2023 04:47:58 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Zorro Lang <zlang@kernel.org>,
-	linux-ext4@vger.kernel.org, fstests@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [fstests generic/388, 455, 475, 482 ...] Ext4 journal recovery
- test fails
-Message-ID: <ZPlH7rGfslnFmgYn@casper.infradead.org>
-References: <ZPjYTDB6x83BIJMc@casper.infradead.org>
- <87tts63d3w.fsf@doe.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790A7EDA
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 06:56:47 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-99bdcade7fbso62477166b.1
+        for <regressions@lists.linux.dev>; Wed, 06 Sep 2023 23:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694069805; x=1694674605; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ukwWb4lAr/3M8hE9KXN4tPWduEYh1NIPGybMurdhdDs=;
+        b=N23GMVeGcoE9GlFq+ziiqN4AVa4Fu03ju/D3101XQ+Do+02IX7FnZQzqJRtTHILhvV
+         Pvj2fnaULn4kcmnPB7ahZZfkgX16x5B7CmkwJkZ3QB8SKTlFMHDiOE6cxHmUJYBCDIDI
+         4Hz/Yb1C5o5vjpbS7LXS8TvQbJNDFp5UtGgPrF8LDzs/k0HsV0fE+YmjI89ZwyAXgqyQ
+         GHIR/kSMHhmfRcwIzYovezFSTtyg7rx0an7lXI6+TevthmDW1VCYhsUdpAFtPcV+VC5l
+         lk8SXXbSg+MJabBmT4zI5Bm8l31Xo1XtGRhPnd62O8mm1MDxvkJ0LsUAtw0ZVJ5F4tma
+         T4IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694069805; x=1694674605;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ukwWb4lAr/3M8hE9KXN4tPWduEYh1NIPGybMurdhdDs=;
+        b=ahsxja88Dau6QEV2CfDX2t+2dgELXFLIxDe019SWqQnpsVB5Lpt2CrDJ6ThMiLpkom
+         UoBzH8CX0XfqeRynispscV6zepy0Yqw77XLnouZQmCz4GDRPH7Z5x61UZrQL8j4Js0tV
+         gQqpmzuPg5+EM/UciHxOnZhXH+LoEtpJ9OqL5mUrPUJXgMSpNQtKXeinqgDbeTDcH4Og
+         pLj8J7cY9rjQEjIK+vfVEC4/nA5F8cl4JqXhkJOoX0lpYLlikwobwSw2xfOWrMmpw6Vh
+         eq7KP6RHNYLHGcBnyTbdOvOscSpbUOaII/iVs9/nf5euGOYOhkUDpWZyy+UmOjl5RR5X
+         Q3Cw==
+X-Gm-Message-State: AOJu0YyYrWXRe3aYgNymy4QUeD4n/0YCFPCsNkxgVgbZ0dCB8p2IT3f6
+	XiKf2VQU7UP/GleFcNo+JJQ=
+X-Google-Smtp-Source: AGHT+IHzD3+7U/HMiG0HNnmS8wQfLyYxkOxPsIA17E+zzuw8hfcSZKf9zcGA32rVbqmD7IIsU/pYUQ==
+X-Received: by 2002:a17:907:2cec:b0:9a2:292d:ea60 with SMTP id hz12-20020a1709072cec00b009a2292dea60mr4229274ejc.40.1694069805206;
+        Wed, 06 Sep 2023 23:56:45 -0700 (PDT)
+Received: from [192.168.10.127] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
+        by smtp.gmail.com with ESMTPSA id qw14-20020a170906fcae00b0099b7276235esm10092169ejb.93.2023.09.06.23.56.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Sep 2023 23:56:44 -0700 (PDT)
+Message-ID: <51c98bc8-b9df-4cd8-adf8-55c1f2790b08@gmail.com>
+Date: Thu, 7 Sep 2023 08:56:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tts63d3w.fsf@doe.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression with AX88179A: can't manually set MAC address anymore
+Content-Language: en-US, it-IT
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, netdev@vger.kernel.org,
+ Linux Kernel Mailing list <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Oliver Neukum <oliver@neukum.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <54cb50af-b8e7-397b-ff7e-f6933b01a4b9@gmail.com>
+ <ZPcfsd_QcJwQq0dK@debian.me> <6315027e-d1ab-4dec-acf2-0a77bb948807@gmail.com>
+ <ZPfZQsLKG9LKGR1G@debian.me> <075308b2-7768-40b2-9c00-a5a14df62678@gmail.com>
+ <d6777bc1-46ad-4ad9-a7e3-655dbe4f6317@lunn.ch>
+From: Sergio Callegari <sergio.callegari@gmail.com>
+In-Reply-To: <d6777bc1-46ad-4ad9-a7e3-655dbe4f6317@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 07, 2023 at 08:26:35AM +0530, Ritesh Harjani wrote:
-> Matthew Wilcox <willy@infradead.org> writes:
-> 
-> > On Wed, Sep 06, 2023 at 01:38:23PM +0100, Matthew Wilcox wrote:
-> >> > Is this code path a possibility, which can cause above logs?
-> >> > 
-> >> >    ptr = jbd2_alloc() -> kmem_cache_alloc()
-> >> >    <..>
-> >> >    new_folio = virt_to_folio(ptr)
-> >> >    new_offset = offset_in_folio(new_folio, ptr)
-> >> > 
-> >> > And then I am still not sure what the problem really is? 
-> >> > Is it because at the time of checkpointing, the path is still not fully
-> >> > converted to folio?
-> >> 
-> >> Oh yikes!  I didn't know that the allocation might come from kmalloc!
-> >> Yes, slab might use high-order allocations.  I'll have to look through
-> >> this and figure out what the problem might be.
-> >
-> > I think the probable cause is bh_offset().  Before these patches, if
-> > we allocated a buffer at offset 9kB into an order-2 slab, we'd fill in
-> > b_page with the third page of the slab and calculate bh_offset as 1kB.
-> > With these patches, we set b_page to the first page of the slab, and
-> > bh_offset still comes back as 1kB so we read from / write to entirely
-> > the wrong place.
-> >
-> > With this redefinition of bh_offset(), we calculate the offset relative
-> > to the base page if it's a tail page, and relative to the folio if it's
-> > a folio.  Works out nicely ;-)
-> 
-> Thanks Matthew for explaining the problem clearly.
-> 
-> 
-> >
-> > I have three other things I'm trying to debug right now, so this isn't
-> > tested, but if you have time you might want to give it a run.
-> 
-> sure, I gave it a try.
-> 
-> >
-> > diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-> > index 6cb3e9af78c9..dc8fcdc40e95 100644
-> > --- a/include/linux/buffer_head.h
-> > +++ b/include/linux/buffer_head.h
-> > @@ -173,7 +173,10 @@ static __always_inline int buffer_uptodate(const struct buffer_head *bh)
-> >  	return test_bit_acquire(BH_Uptodate, &bh->b_state);
-> >  }
-> >  
-> > -#define bh_offset(bh)		((unsigned long)(bh)->b_data & ~PAGE_MASK)
-> > +static inline unsigned long bh_offset(struct buffer_head *bh)
-> > +{
-> > +	return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
-> > +}
-> >  
-> >  /* If we *know* page->private refers to buffer_heads */
-> >  #define page_buffers(page)					\
-> 
-> 
-> I used "const" for bh to avoid warnings from fs/nilfs/alloc.c
+For the time being having AX88179A error out on attempts to set an 
+hardware address would possibly be useful, though.
 
-Excellent.  I didn't try compiling nilfs ;-)
+Sergio
 
-> diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
-> index 4ede47649a81..b61fa79cb7f5 100644
-> --- a/include/linux/buffer_head.h
-> +++ b/include/linux/buffer_head.h
-> @@ -171,7 +171,10 @@ static __always_inline int buffer_uptodate(const struct buffer_head *bh)
->         return test_bit_acquire(BH_Uptodate, &bh->b_state);
->  }
-> 
-> -#define bh_offset(bh)          ((unsigned long)(bh)->b_data & ~PAGE_MASK)
-> +static inline unsigned long bh_offset(const struct buffer_head *bh)
-> +{
-> +       return (unsigned long)(bh)->b_data & (page_size(bh->b_page) - 1);
-> +}
-> 
->  /* If we *know* page->private refers to buffer_heads */
->  #define page_buffers(page)                                     \
-> 
-> 
-> But this change alone was still giving me failures. On looking into
-> usage of b_data, I found we use offset_in_page() instead of bh_offset()
-> in jbd2. So I added below changes in fs/jbd2 to replace offset_in_page()
-> to bh_offset()...
-> 
-> diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-> index 1073259902a6..0c25640714ac 100644
-> --- a/fs/jbd2/commit.c
-> +++ b/fs/jbd2/commit.c
-> @@ -304,7 +304,7 @@ static __u32 jbd2_checksum_data(__u32 crc32_sum, struct buffer_head *bh)
-> 
->         addr = kmap_atomic(page);
->         checksum = crc32_be(crc32_sum,
-> -               (void *)(addr + offset_in_page(bh->b_data)), bh->b_size);
-> +               (void *)(addr + bh_offset(bh)), bh->b_size);
->         kunmap_atomic(addr);
-
-Hm, that's not going to work on a highmem machine.  It'll work on 64-bit!
-Actually, no, it'll work on a highmem machine because slab doesn't
-allocate from highmem.  Still, it's a bit unclean.  Let's go full folio
-on this one:
-
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 1073259902a6..8d6f934c3d95 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -298,14 +298,12 @@ static int journal_finish_inode_data_buffers(journal_t *journal,
- 
- static __u32 jbd2_checksum_data(__u32 crc32_sum, struct buffer_head *bh)
- {
--	struct page *page = bh->b_page;
- 	char *addr;
- 	__u32 checksum;
- 
--	addr = kmap_atomic(page);
--	checksum = crc32_be(crc32_sum,
--		(void *)(addr + offset_in_page(bh->b_data)), bh->b_size);
--	kunmap_atomic(addr);
-+	addr = kmap_local_folio(bh->b_folio, bh_offset(bh));
-+	checksum = crc32_be(crc32_sum, addr, bh->b_size);
-+	kunmap_local(addr);
- 
- 	return checksum;
- }
-@@ -322,7 +320,6 @@ static void jbd2_block_tag_csum_set(journal_t *j, journal_block_tag_t *tag,
- 				    struct buffer_head *bh, __u32 sequence)
- {
- 	journal_block_tag3_t *tag3 = (journal_block_tag3_t *)tag;
--	struct page *page = bh->b_page;
- 	__u8 *addr;
- 	__u32 csum32;
- 	__be32 seq;
-@@ -331,11 +328,10 @@ static void jbd2_block_tag_csum_set(journal_t *j, journal_block_tag_t *tag,
- 		return;
- 
- 	seq = cpu_to_be32(sequence);
--	addr = kmap_atomic(page);
-+	addr = kmap_local_folio(bh->b_folio, bh_offset(bh));
- 	csum32 = jbd2_chksum(j, j->j_csum_seed, (__u8 *)&seq, sizeof(seq));
--	csum32 = jbd2_chksum(j, csum32, addr + offset_in_page(bh->b_data),
--			     bh->b_size);
--	kunmap_atomic(addr);
-+	csum32 = jbd2_chksum(j, csum32, addr, bh->b_size);
-+	kunmap_local(addr);
- 
- 	if (jbd2_has_feature_csum3(j))
- 		tag3->t_checksum = cpu_to_be32(csum32);
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 4d1fda1f7143..5f08b5fd105a 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -935,19 +935,15 @@ static void warn_dirty_buffer(struct buffer_head *bh)
- /* Call t_frozen trigger and copy buffer data into jh->b_frozen_data. */
- static void jbd2_freeze_jh_data(struct journal_head *jh)
- {
--	struct page *page;
--	int offset;
- 	char *source;
- 	struct buffer_head *bh = jh2bh(jh);
- 
- 	J_EXPECT_JH(jh, buffer_uptodate(bh), "Possible IO failure.\n");
--	page = bh->b_page;
--	offset = offset_in_page(bh->b_data);
--	source = kmap_atomic(page);
-+	source = kmap_local_folio(bh->b_folio, bh_offset(bh));
- 	/* Fire data frozen trigger just before we copy the data */
--	jbd2_buffer_frozen_trigger(jh, source + offset, jh->b_triggers);
--	memcpy(jh->b_frozen_data, source + offset, bh->b_size);
--	kunmap_atomic(source);
-+	jbd2_buffer_frozen_trigger(jh, source, jh->b_triggers);
-+	memcpy(jh->b_frozen_data, source, bh->b_size);
-+	kunmap_local(source);
- 
- 	/*
- 	 * Now that the frozen data is saved off, we need to store any matching
-
-(I've been thinking about adding a kmap_local_bh(bh))
-
-> ext4/1k: 15 tests, 1 failures, 1709 seconds
->   generic/455  Pass     43s
->   generic/475  Pass     128s
->   generic/482  Pass     183s
->   generic/455  Pass     43s
->   generic/475  Pass     134s
->   generic/482  Pass     191s
->   generic/455  Pass     41s
->   generic/475  Pass     139s
->   generic/482  Pass     135s
->   generic/455  Pass     46s
->   generic/475  Pass     132s
->   generic/482  Pass     146s
->   generic/455  Pass     47s
->   generic/475  Failed   145s
->   generic/482  Pass     156s
-> Totals: 15 tests, 0 skipped, 1 failures, 0 errors, 1709s
-> 
-> I guess the above failure (generic/475) could be due to it's flakey
-> behaviour which Ted was mentioning.
-> 
-> 
-> Now, while we are at it, I think we should also make change to reiserfs from
-> offset_in_page() to bh_offset()
-> 
-> diff --git a/fs/reiserfs/journal.c b/fs/reiserfs/journal.c
-> index 015bfe4e4524..23411ec163d4 100644
-> --- a/fs/reiserfs/journal.c
-> +++ b/fs/reiserfs/journal.c
-> @@ -4217,7 +4217,7 @@ static int do_journal_end(struct reiserfs_transaction_handle *th, int flags)
->                         page = cn->bh->b_page;
->                         addr = kmap(page);
->                         memcpy(tmp_bh->b_data,
-> -                              addr + offset_in_page(cn->bh->b_data),
-> +                              addr + bh_offset(cn->bh),
->                                cn->bh->b_size);
->                         kunmap(page);
-
-This one should probably be:
-
--			addr = kmap(page);
--			memcpy(tmp_bh->b_data,
--				addr + offset_in_page(cn->bh->b_data),
--				cn->bh->b_size);
--			kunmap(page);
-+			memcpy_from_folio(tmp_bh->b_data, cn->bh->b_folio,
-+					bh_offset(cn->bh), cn->bh->b_size);
-
-> I will also run "auto" group with ext4/1k with all of above change. Will
-> update the results once it is done.
-
-Appreciate it!  I don't think you'll see a significant difference with
-the patches above; you've nailed the actual problems and I'm just
-using slighlty nicer APIs.
+On 06/09/2023 14:31, Andrew Lunn wrote:
+>> So if the in-tree driver could be fixed to correctly support the manual
+>> configuration of the hardware (MAC) address as it used to be that would be
+>> the best. I hope that Andrew Lunn's hypothesis is correct, and that cdc_ncm
+>> can be extended to work with AX88179A even when a manual MAC addr is
+>> configured.
+> I think it can, but it looks like it needs a different
+> implementation. The CDC NCM standard is publicly available. It
+> documents an optional call to set the MAC address, and there appears
+> to be a capability bit to indicate if its implemented in a specific
+> device. Ideally if the bit is not set -EOPNOTSUPP should be returned
+> when trying to set the MAC address, otherwise make the call to let the
+> hardware know of the new MAC address.
+>
+> Sorry, i don't have the time or the hardware to actually implement
+> this. But i can review patches and help with processes.
+>
+>        Andrew
+>
+> 	
