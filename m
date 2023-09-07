@@ -1,230 +1,89 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68959291C
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 11:26:34 +0000 (UTC)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RhH4h2vQ2z4f3k6S
-	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 19:26:28 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP4 (Coremail) with SMTP id gCh0CgCXc6Zjs_lksaVWCg--.41071S3;
-	Thu, 07 Sep 2023 19:26:28 +0800 (CST)
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- Yu Kuai <yukuai1@huaweicloud.com>
-Cc: AceLan Kao <acelan@gmail.com>, Song Liu <song@kernel.org>,
- Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Christoph Hellwig <hch@lst.de>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux RAID <linux-raid@vger.kernel.org>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <b0488ff7-10c8-4b4e-28b8-01809133c297@linux.dev>
- <CAPhsuW6cSLqwRVO_EpFyimvc7hgi1rb3T8-NA+stHdwrqrScBA@mail.gmail.com>
- <20230822083923.00007fb6@linux.intel.com>
- <CAMz9Wg8KE1rDkSaQnUTJ5ikzH7YGGYbkLM3AcrVue3=JgK+14w@mail.gmail.com>
- <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev>
- <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
- <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
- <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
- <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
- <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com>
- <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
- <20230831085057.00001795@linux.intel.com>
- <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
- <20230906122751.00001e5b@linux.intel.com>
- <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
- <20230907121819.00005a15@linux.intel.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
-Date: Thu, 7 Sep 2023 19:26:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFEF291C
+	for <regressions@lists.linux.dev>; Thu,  7 Sep 2023 11:37:08 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bdc19b782aso6396035ad.0
+        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 04:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694086628; x=1694691428; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LlmQ0g0rcR8jIM0YGYnNYLZ2qWdNbYZUYP0dv1VJcEc=;
+        b=CS4w3ZhaB8t56KUreFV9di6dmhEp8eWFpR6EnXuhRx0MrEm6puf5J1Xao9jgizK5cY
+         49+Jlo/lL7BUS1b3B8o94XF0quzVBrHiI+dUWyzNBi1M/tIDvosNjBqsNRlY583MRYeN
+         WKUAvpdEZznJQO40By21w/ArpqJ5RTquGIWcXb+6B9u4HGcyNXydVMQxh2ACFN4R5MTL
+         mEKnFldw8yDlhagHyfKc1FesWG3bqMuNjosBfOK1NlqbFC8u9cjZdTabucc7397XUJyc
+         USLOpIyXIiDA14fumq45BiR1WLEk+YOuUjP4E1n9vGttLiXQ8Wxdm0fSbj9IpV0/HGO8
+         M+Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694086628; x=1694691428;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LlmQ0g0rcR8jIM0YGYnNYLZ2qWdNbYZUYP0dv1VJcEc=;
+        b=cIpxkVwjlbTBPUXxTOkY3k4GULZRHAfAEvNd61LGi2tXeT/phNPLoSq/urHK7sbXun
+         l6pOyp2gv6CTq6ATKHJNn5vpMMEsMArDDlcPyuljRJQGgksyEkafH8ih3T0lui58Aaln
+         ktSUay2G628y19a5cM/nswsg5XI1+1cG0nJPNU3LoM/Kyyo0m7cXTjxUQC8pyeqgrwTX
+         30Y95an0HJj7XgpdBgpenUKWwce387K5n6V+bbPWm7RuXbRdLK39na/rLaDAXTa6Ck62
+         0DY6IZgPgYCKb9HZEnapKUCTFt+xm1a8+P/JRnfGS93Pzx/Dc8KCHoh9Ooe/gRhlrCwI
+         5W2A==
+X-Gm-Message-State: AOJu0YzwMnZTb2m0rxzaSpLUCzoy9B2bjTlBVoRsRFJwRYyg7On0IZ6h
+	NLnqFSX7hny1zQaQjlGWSfQ=
+X-Google-Smtp-Source: AGHT+IErairZ9yBTSt2kN6hRRi4u5s+turR2d2XrvcJUpHHW7n53nfz3i2uJ5+X8D5O10AqLjMSI7Q==
+X-Received: by 2002:a17:902:bd45:b0:1c0:c0af:ba59 with SMTP id b5-20020a170902bd4500b001c0c0afba59mr16388444plx.34.1694086628392;
+        Thu, 07 Sep 2023 04:37:08 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id t11-20020a170902bc4b00b0019ee045a2b3sm12601833plz.308.2023.09.07.04.37.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Sep 2023 04:37:08 -0700 (PDT)
+Message-ID: <9a28c2fc-d769-4802-a1f2-77ba2cb34d25@gmail.com>
+Date: Thu, 7 Sep 2023 18:37:00 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20230907121819.00005a15@linux.intel.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXc6Zjs_lksaVWCg--.41071S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3GFWkXF1fKw17JFWxWw13twb_yoW7WFW5pF
-	Z5Ja1YkrsrWw1xAayjqr18X3WrKwnay3y5Gry3t3sFy3s5tryxGw1Sgr45uFs8uF4Sk3y2
-	vw1DtFW7Zw1Fqa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
-	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Content-Language: en-US
+To: Andres Salomon <dilinger@queued.net>,
+ "Timur I. Davletshin" <timur.davletshin@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux AMD GEODE <linux-geode@lists.infradead.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: AMD Geode LX hardware RNG driver produces regular patterns
+ (geode-rng.c)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-在 2023/09/07 18:18, Mariusz Tkaczyk 写道:
-> On Thu, 7 Sep 2023 10:04:11 +0800
-> Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> 
->> Hi,
->>
->> 在 2023/09/06 18:27, Mariusz Tkaczyk 写道:
->>> On Wed, 6 Sep 2023 14:26:30 +0800
->>> AceLan Kao <acelan@gmail.com> wrote:
->>>    
->>>>   From previous testing, I don't think it's an issue in systemd, so I
->>>> did a simple test and found the issue is gone.
->>>> You only need to add a small delay in md_release(), then the issue
->>>> can't be reproduced.
->>>>
->>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>>> index 78be7811a89f..ef47e34c1af5 100644
->>>> --- a/drivers/md/md.c
->>>> +++ b/drivers/md/md.c
->>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *disk)
->>>> {
->>>>          struct mddev *mddev = disk->private_data;
->>>>
->>>> +       msleep(10);
->>>>          BUG_ON(!mddev);
->>>>          atomic_dec(&mddev->openers);
->>>>          mddev_put(mddev);
->>>
->>> I have repro and I tested it on my setup. It is not working for me.
->>> My setup could be more "advanced" to maximalize chance of reproduction:
->>>
->>> # cat /proc/mdstat
->>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
->>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
->>>         7126394880 blocks super external:/md127/0 128k chunks
->>>
->>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->>>         104857600 blocks super external:/md126/0 64K chunks 2 near-copies
->>> [4/4] [UUUU]
->>>
->>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
->>>         2655765504 blocks super external:/md126/1 level 5, 32k chunk,
->>> algorithm 0 [4/4] [UUUU]
->>>
->>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
->>>         99614720 blocks super external:/md125/0 [2/2] [UU]
->>>
->>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
->>>         10402 blocks super external:imsm
->>>
->>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S) nvme4n1[0](S)
->>>         20043 blocks super external:imsm
->>>
->>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
->>>         10402 blocks super external:imsm
->>>
->>> I have almost 99% repro ratio, slowly moving forward..
->>>
->>> It is endless loop because systemd-shutdown sends ioctl "stop_array" which
->>> is successful but array is not stopped. For that reason it sets "changed =
->>> true".
->>
->> How does systemd-shutdown judge if array is stopped? cat /proc/mdstat or
->> ls /dev/md* or other way?
-> 
-> Hi Yu,
-> 
-> It trusts return result, I confirmed that 0 is returned.
-> The most weird is we are returning 0 but array is still there, and it is
-> stopped again in next systemd loop. I don't understand why yet..
-> 
->>> Systemd-shutdown see the change and retries to check if there is something
->>> else which can be stopped now, and again, again...
->>>
->>> I will check what is returned first, it could be 0 or it could be positive
->>> errno (nit?) because systemd cares "if(r < 0)".
->>
->> I do noticed that there are lots of log about md123 stopped:
->>
->> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -16
->> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
->> [ 1371.846845] md: md123 stopped.
->> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -16
->> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
->> [ 1371.862941] md: md123 stopped.
->>
->> And md_ioctl->do_md_stop doesn't have error path after printing this
->> log, hence 0 will be returned to user.
->>
->> The normal case is that:
->>
->> open md123
->> ioctl STOP_ARRAY -> all rdev should be removed from array
->> close md123 -> mddev will finally be freed by:
->> 	md_release
->> 	 mddev_put
->> 	  set_bit(MD_DELETED, &mddev->flags) -> user shound not see this mddev
->> 	  queue_work(md_misc_wq, &mddev->del_work)
->>
->> 	mddev_delayed_delete
->> 	 kobject_put(&mddev->kobj)
->>
->> 	md_kobj_release
->> 	 del_gendisk
->> 	  md_free_disk
->> 	   mddev_free
->>
-> Ok thanks, I understand that md_release is called on descriptor closing, right?
-> 
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-Yes, normally close md123 should drop that last reference.
+> System: Alix board 2d13 (AMD Geode LX800) running OpenWrt 23.05.0-rc3 (kernel 5.15.127)
 > 
->> Now that you can reporduce this problem 99%, can you dig deeper and find
->> out what is wrong?
+> Steps to reproduce:
 > 
-> Yes, working on it!
+> cat /dev/hwrng and see output. Output in console shows regular pattern, rngd daemon (from rng-tools) refuses to run because of low entropy from /dev/hwrng. Pattern doesn't change until I reboot system.
 > 
-> My first idea was that mddev_get and mddev_put are missing on md_ioctl() path
-> but it doesn't help for the issue. My motivation here was that md_attr_store and
-> md_attr_show are using them.
+> Important notice: This problem started somewhere between 4.14.267 (kernel used in OpenWrt 19.07.9) and my current 5.15.127.
 > 
-> Systemd regenerates list of MD arrays on every loop and it is always
-> there, systemd is able to open file descriptor (maybe inactive?).
+> OpenWrt developers recommended addressing this problem upstream since they did not alter this driver in any way.
 
-md123 should not be opended again, ioctl(STOP_ARRAY) already set the
-flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdown do
-open and close the array in each loop?
+See Bugzilla for the full thread.
 
-> My fix with checking mddev_get and mddev_put should address that so it seems to
-> be something different.
-> 
-> BTW. I opened a discussion on slack proposed by Paul. I'm adding updates there
-> more frequently. If you are interested please join. I can see that you were
-> invited as:
-> Email Address
-> yukuai1@huaweicloud.com
-> Perhaps, that is the reason you can't join. Let me know, I will add you.
+Anyway, I'm adding it to regzbot:
 
-Sorry that I ususally just use this address for sending. Please add
-yukuai3@huawei.com. And I can't access slack in company computer,
-please add yukuai1994@gmail.com as well so that I can join with my
-personal phone and PC.
+#regzbot ^introduced: v4.14.267..v5.15.127
+#regzbot title: predictable urandom output on Alix 2d13
 
-Thanks,
-Kuai
+Thanks.
 
-> 
-> Thanks,
-> Mariusz
-> 
-> 
-> .
-> 
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217882
 
+-- 
+An old man doll... just what I always wanted! - Clara
