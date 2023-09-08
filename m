@@ -1,85 +1,122 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F103EA0
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 01:38:27 +0000 (UTC)
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6c0b727c1caso782328a34.0
-        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 18:38:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC88111B
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 03:28:41 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-573f722b86eso1229262a12.1
+        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 20:28:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694137107; x=1694741907; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GoqYLLTWFIzyoZFuY1x7lHwA6k4s+5qXgOEmq2+YoYU=;
-        b=ILr2CNmAVpGaruK4COUveA+zMByh5aDrttLp69QSG2LjJHrYuR7nttHoAw11RDwhw9
-         /q5YBx2DuyaELvHktAo/16ZIWHS2Ve3iG7la7c++FXbOQQrPoNfI5Q9iMoqQuP6pRcVb
-         3eVjndqxvT3smu9W1OeOAqPrl7WM38dS1pzQug5rOGUN/SFKphtfTkdI0kXGcK3wCm5u
-         BydaagNM4i7H5sCdF/OLl6PGUv1aPrhOY/yAWwtdrLM2YawkzyPrP8a3Aq8AXEgNbYFV
-         4qGPowxXBnconjOmcxw8fxhEGpV5SLP3z1UHhTY5Z98nFAXwY8yNb+u99acoI6kA45ed
-         gCrQ==
+        d=bytedance.com; s=google; t=1694143721; x=1694748521; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xyga/bR7KnO0AZcMSgesUn85OC4rXik7va8Pa71Uoy8=;
+        b=cIiJ+Jo+astRTtcmKzr8MDU3wVxdPjePbNhDl1aeL+U64BJN8uPXb2puRryEdnPXQM
+         UImwfXxG/ab0ALCGE+Gd+QqUh+ZylZC689SDmFLzvXNL0XIE8WKoQEIyTk8gUYpFCIY6
+         qUdTsMN46PCy8JXhdJMatsrr4l1qX23IFeoDa/XDpaJZESV4RVtWukisobndWm1lXAWf
+         6BxG6IIYj/VOoibAErj2ABOL84LPI3BA6fum/Y2iRFeWFG4l8sZqeP9zPuUNgMm9Dxtw
+         C2706KkjAd4SNzGdDiheG3wCgVUBJbiBepbvlH7iCVvCFZfZrcEOVOAekbcwylkb1ohx
+         ODyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694137107; x=1694741907;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GoqYLLTWFIzyoZFuY1x7lHwA6k4s+5qXgOEmq2+YoYU=;
-        b=fLKzFOtXTw2XQs7QdgUT6Qolk1pHzIopQf4zFA7Sk4rV+6Gjl6Va2SNl5hXvIg7qhr
-         gQug0sU3SRAvnSQEVHsG1D/HLJnSbZWFItLS/bL+vFU1P6pToNHgSsVAHbDPqQ3318wm
-         68t2ocJ3SNN+w3ujR5dAW5Pw0y2Yo4hK+fj4Irdaf6tv5BqzgcGMIGi16Nj3Tu9/Z60o
-         0Tghduzy1V/kx7c0VcuESYNszNgBNvYaBUIGl1SeMO5+x3Mw1qR47WoN8XOSZtNduxBt
-         TYgpCz2X6ITW20QhI0Lbv7SuLio5dLwAEBnl5M0LUbBSS/9raTB1C0lwoFnDIxeZKK0H
-         wAVA==
-X-Gm-Message-State: AOJu0YwtqbcpGOhyRpKpRM0r/FPfsRwekwavOhZeC8g8dMpcYX7iNJ3x
-	OEJAXVBeKTehvmB1gRNv99A=
-X-Google-Smtp-Source: AGHT+IEX3ezoCJxl3ylzzZ+PxyXa4OnAcfwLdtTuYgj04ghqbAq39XjRtCcti+FtWFJm+Zk3a/JwUA==
-X-Received: by 2002:a9d:665a:0:b0:6bc:f20a:3b65 with SMTP id q26-20020a9d665a000000b006bcf20a3b65mr1067072otm.23.1694137107026;
-        Thu, 07 Sep 2023 18:38:27 -0700 (PDT)
-Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id i3-20020a63b303000000b00570574feda0sm171870pgf.19.2023.09.07.18.38.24
+        d=1e100.net; s=20230601; t=1694143721; x=1694748521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xyga/bR7KnO0AZcMSgesUn85OC4rXik7va8Pa71Uoy8=;
+        b=T8fbiLjjQMgcD6EkKN27wIsuHp1O6aTDvh7LqNsX7iZmfRgbcdfQowpENlktoFkFQn
+         1tgfiP9ncRzE9/Ri8Cb2MlC8X8NKNpD17EJ1rbAwC+MNZfVY2odznyZjDH2r0vhceIcz
+         Ala4bHw3IY3/OYqUHVERbjlt7ZHew4WTjpseAeqPqse/63JwevUv6b9cBUehSAOqbwHO
+         I63zTYWE+JLuZKvvEXezNYRmjeNyXCZ1podvSC9JCSajnCcGFyHWdwulF66Zoy7J3y7i
+         pHCZMmJeKfENelWo/dvcx3Uxjov39RBrsGOYLvYm58C25WIxCls/uWA81zx6ySkNnSxF
+         k6yw==
+X-Gm-Message-State: AOJu0YxZy1GT+u1wk/qPq0Et/YXN8r/33EI0R6f6reefqz4mpQ0bG4a9
+	O6hLSY5Jjyklqcxh3UTlsiqSEA==
+X-Google-Smtp-Source: AGHT+IG3Fnhkv/ckb8v3efpkXk9m5bSeAiGH/2YqrB6IQjg0wzVL6kqNDRi12CQ/J7lIdOJcXpjfyA==
+X-Received: by 2002:a05:6a20:158d:b0:14c:e8d4:fb3e with SMTP id h13-20020a056a20158d00b0014ce8d4fb3emr1828439pzj.43.1694143720902;
+        Thu, 07 Sep 2023 20:28:40 -0700 (PDT)
+Received: from [10.84.158.67] ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id jf3-20020a170903268300b001bf095dfb79sm453948plb.235.2023.09.07.20.28.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Sep 2023 18:38:26 -0700 (PDT)
-Message-ID: <470bd522-3e12-0e6c-de4e-2da8164d694b@gmail.com>
-Date: Fri, 8 Sep 2023 08:38:22 +0700
+        Thu, 07 Sep 2023 20:28:40 -0700 (PDT)
+Message-ID: <dd8e6bfb-9d84-6a5d-94cb-4833f5d1943b@bytedance.com>
+Date: Fri, 8 Sep 2023 11:28:34 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: Slow boot and shutdown/reboot problems with 6.5.0+
-Content-Language: en-US
-To: Marcus Seyfarth <m.seyfarth@gmail.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Luis Chamberlain <mcgrof@kernel.org>,
- Russ Weight <russell.h.weight@intel.com>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Subject: Re: [External] Re: Fwd: WARNING: CPU: 13 PID: 3837105 at
+ kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
+To: Tim Chen <tim.c.chen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Benjamin Segall <bsegall@google.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Igor Raits <igor.raits@gmail.com>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Linux Integrity <linux-integrity@vger.kernel.org>
-References: <5011708f-b0ae-2853-0f87-a3b59845a2cc@gmail.com>
- <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ Linux Stable <stable@vger.kernel.org>
+References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+ <xm26cyz4ibnb.fsf@google.com>
+ <55e2861e-9722-08f8-2c49-966035ff4218@bytedance.com>
+ <20230904222351.GC2568@noisy.programming.kicks-ass.net>
+ <3544d5e3-3070-9ddc-fa6c-a05ed35dfd14@bytedance.com>
+ <171e6a9435a33885a73b48762f86954e447c26c2.camel@linux.intel.com>
+From: Hao Jia <jiahao.os@bytedance.com>
+In-Reply-To: <171e6a9435a33885a73b48762f86954e447c26c2.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 07/09/2023 20:56, Marcus Seyfarth wrote:
-> Thanks for picking this up! Just to keep track, you can remove my earlier report (https://bugzilla.kernel.org/show_bug.cgi?id=217864 <https://bugzilla.kernel.org/show_bug.cgi?id=217864>) from regzbot. I've split out the boot/shutdown/reboot part from there into this new one as that was still reproducible on default distro Kernels.
+
+
+On 2023/9/8 Tim Chen wrote:
+> On Thu, 2023-09-07 at 16:59 +0800, Hao Jia wrote:
+>>
+>> On 2023/9/5 Peter Zijlstra wrote:
+>>> On Thu, Aug 31, 2023 at 04:48:29PM +0800, Hao Jia wrote:
+>>>
+>>>> If I understand correctly, rq->clock_update_flags may be set to
+>>>> RQCF_ACT_SKIP after __schedule() holds the rq lock, and sometimes the rq
+>>>> lock may be released briefly in __schedule(), such as newidle_balance(). At
+>>>> this time Other CPUs hold this rq lock, and then calling
+>>>> rq_clock_start_loop_update() may trigger this warning.
+>>>>
+>>>> This warning check might be wrong. We need to add assert_clock_updated() to
+>>>> check that the rq clock has been updated before calling
+>>>> rq_clock_start_loop_update().
+>>>>
+>>>> Maybe some things can be like this?
+>>>
+>>> Urgh, aside from it being white space mangled, I think this is entirely
+>>> going in the wrong direction.
+>>>
+>>> Leaking ACT_SKIP is dodgy as heck.. it's entirely too late to think
+>>> clearly though, I'll have to try again tomorrow.
 > 
-> As to bisecting: Unfortunately I cannot afford the time right now to bisect this further as the system is used in production and already did invest a lot of time without success into it. Hopefully someone else can find the root cause of the problem. My systemd version is: 254.1, and I also use dbus 1.14.10 and dbus-broker 33.r35.g2220a84 which was configured with -D linux-4-17=true.
+> I am trying to understand why this is an ACT_SKIP leak.
+> Before call to __cfsb_csd_unthrottle(), is it possible someone
+> else lock the runqueue, set ACT_SKIP and release rq_lock?
+> And then that someone never update the rq_clock?
 > 
 
-Do you have test environment with similar configurations so that
-you can bisect there?
+Yes, we want to set rq->clock_update_flags to RQCF_ACT_SKIP to avoid 
+updating the rq clock multiple times in __cfsb_csd_unthrottle().
 
-> Some other observations: It was very odd to notice that with 6.5.* local h264 video playback with mpv did not work any longer - mpv did not even open the files (it works fine with the older Kernel); the monitor refresh rate was set to 165 Hz (instead of the manually set 120 Hz) and opening of the task bar, Dolphin or attaching files to an E-mail took a lot longer to bring up the dialog than with the older Kernel. Hitting the power button still could successfully turn off the PC though, but clicking on the usual shutdown/reboot Plasma Desktop icons did not seem to work, at least not reliably in every case.
+But now we find ACT_SKIP leak, so we cannot unconditionally set 
+rq->clock_update_flags to RQCF_ACT_SKIP in rq_clock_start_loop_update().
+
+
+>>
+>> Hi Peter,
+>>
+>> Do you think this fix method is correct? Or should we go back to the
+>> beginning and move update_rq_clock() from unthrottle_cfs_rq()?
+>>
+> If anyone who locked the runqueue set ACT_SKIP also will update rq_clock,
+> I think your change is okay.  Otherwise rq_clock could be missing update.
 > 
-
-In that case, can you attach mpv output?
-
-Thanks.
-
--- 
-An old man doll... just what I always wanted! - Clara
-
+> Thanks.
+> 
+> Tim
