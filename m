@@ -1,320 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F7830F96
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 20:25:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B589FC43397
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 20:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694204720;
-	bh=oICsfMZ9zcXdQx62GRWHsb78WN87mQZ6kdZzxuWVlLw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=np5QNcHV6ppednrPrSrut4jUIvhZmjh9Lq6RR+Nrh/bGli/5LDm1RlRcXjMRsm4Py
-	 EfEu5ZFnSIC3b+Q10BR6WL8HDgCG9xo7AGZBRLuzQj6HDZ7YlODM6YEhtZV8BL0OiJ
-	 aKEwlTeEoZFaRB+3ghwOMPP0jcy2qUuY7sW+aQgmuizAZ04gtmueUaYgBl3UwKDEz4
-	 28PqxY2kNf3cOY2CYRBXObrAH8gViWaNrIv+lx5d8rB6zmZB+C1QfEnpUqnm3XP689
-	 LTU+qgjaSGSjEgG7/9cggBZJ9906x3l0VYT1BOWzPc2XxjpZlz90BzZ/LBv4NAoh4i
-	 e6UY8w8aOOO/w==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-502a7e1bdc7so267141e87.0
-        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 13:25:20 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyijIF8IsWsIbSlqxrOQZALH9XjC/LtxYU6zCBW1A3eWhp2c7e9
-	/pAZHtMJMTBCeLiF0ZHYca9xztNAPtUIkPf88X0=
-X-Google-Smtp-Source: AGHT+IFfBSYL+XX4tBhb29IpCYv+gn37nS694W+gRm2KIccPnRUcRy+AaCekwP01g8GK9+U5N6kYLYqIjbsC4lbAvCw=
-X-Received: by 2002:ac2:57c7:0:b0:500:9839:b13a with SMTP id
- k7-20020ac257c7000000b005009839b13amr2102297lfo.66.1694204718841; Fri, 08 Sep
- 2023 13:25:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A9DB643
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 22:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+ s=s31663417; t=1694210622; x=1694815422; i=quwenruo.btrfs@gmx.com;
+ bh=5Ljgq+H7SkTzVPfsF1yYeLRPgCNrb/4ZGlnQM0A/jG8=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=KePvt+I8bcx3rrjyEPjoB8ifmjOwKmFvjlGI2TRZRA4GhGkywr3yxcGNpumaEkDhw3NMoUN
+ KI4CmW0Z5CscarlypUTSZP3LCdp8vncN6vnu9lwf2toWOVmTdbPmzQp07wV4hGqgi2WEmimrf
+ X/RGrDUVuYDmyiEAmNo4lXuKqknidRq5zHqhgLpYJ6TcgxAKx84tXudQPyUrwoOzB0VbZH5VM
+ vDXZM7E3rUeO6Bbo40eNh7+pTYvqN3OqBR6xob7y0+0r1uBarun2NXxEaWQxpLXW/NqyItA/7
+ cCbid3dB3R+xQxiuvF9emz995FJrsR3X6ZY5h5zz+g1XB/7CtUOA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N5GE1-1pfw0h0EmD-011Bkp; Sat, 09
+ Sep 2023 00:03:42 +0200
+Message-ID: <4f5fee23-2ccb-41a2-a64c-1675bc378ff5@gmx.com>
+Date: Sat, 9 Sep 2023 06:03:38 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
- <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
- <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
- <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
- <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
- <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com> <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
- <20230831085057.00001795@linux.intel.com> <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
- <20230906122751.00001e5b@linux.intel.com> <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
- <20230907121819.00005a15@linux.intel.com> <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
- <3e7edf0c-cadd-59b0-4e10-dffdb86b93b7@huaweicloud.com> <20230907144153.00002492@linux.intel.com>
- <513ea05e-cc2e-e0c8-43cc-6636b0631cdf@huaweicloud.com> <20230907170940.00002fe4@linux.intel.com>
-In-Reply-To: <20230907170940.00002fe4@linux.intel.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 8 Sep 2023 13:25:06 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5t3e2VmhktCLDMV90KBKYzzyB_oVXbJ+J11_4ZydeR9Q@mail.gmail.com>
-Message-ID: <CAPhsuW5t3e2VmhktCLDMV90KBKYzzyB_oVXbJ+J11_4ZydeR9Q@mail.gmail.com>
-Subject: Re: Infiniate systemd loop when power off the machine with multiple
- MD RAIDs
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc: Yu Kuai <yukuai1@huaweicloud.com>, AceLan Kao <acelan@gmail.com>, 
-	Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>, 
-	"yangerkun@huawei.com" <yangerkun@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Scrub of my nvme SSD has slowed by about 2/3
+To: Martin Steigerwald <martin@lichtvoll.de>, linux-btrfs@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Tim Cuthbertson <ratcheer@gmail.com>
+References: <CAAKzf7=yS9vnf5zNid1CyvN19wyAgPz5o9sJP0vBqN6LReqXVg@mail.gmail.com>
+ <1d611dbb-8aee-9a6e-701c-6498f1b51c34@leemhuis.info>
+ <efbe13a5-1c6d-e6fe-25be-bd942823432c@leemhuis.info>
+ <2169630.irdbgypaU6@lichtvoll.de>
+Content-Language: en-US
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
+ pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
+ BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
+ XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
+ jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
+ LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
+ mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
+ CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
+ tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
+ INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
+ DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
+ iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
+In-Reply-To: <2169630.irdbgypaU6@lichtvoll.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PIn7D1LkpohwKyNMIhYgxukMOg89dhtWUrhOd28xvQerO86oT7n
+ /TL9eHxCAwKbMOFi2ysjcCdj5th8+5pyjEJfCQDUEC5+SZ0yym/S9D3N6F8VzuX4EZx6xU3
+ MHJOdcVvQHfMhPQSAq6vUOZTDomrLvdCKPvQiVc1/eQAPFM4n2o9vaelz/MX1a+jxdtTVvj
+ a7YeG15bPLyGPpXrw2Udg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VF7NGNkx3Gg=;IeRp0KLJcvnxc0fRyIxgVZOu+zi
+ UcqtVrCWSvA35uQ9MFjL0V4UGRrOnEqgg8S90+DI5uaJQoXkLel9wcnpL0lh1OlfH+2wyUVuQ
+ ZRtx7afQ8ShFHLdoO4teJVsO0uQFIO40hVpPS78b7jU5vV+oZ4u2U4e/Ga4nOxpa6JU6Vxmma
+ e8QZHCR7mWNxbjvATrjUxZ7cN21DDurwO/nCcNHMV2pIsj9yF/GdE8UTZO1UNaHpu3lufopIu
+ 984RwzlYZPQhitZJp9BopnbxIih4wTVvGMyhr5ibVvRTv5NEIQ0M3hy0+3Q9sH96tCgxsY198
+ sZyKXgCiyMlNxtPXVbNfA/qNzsb8ND0TnT3deI4ISMP2wv9uZrEER7SCiioFWBmiSueCXX+GA
+ sYnpo3aqjdOgvJfA+xnXEzpBqJCdbT2xwhZWU8HqPTeinzOPqp2UXbjq74mXl6S4AGikLi6oj
+ QuGmxOnetGX3KVK4GrJIzPnN+7lPSJtiYrW50X1cNGJcIvhC+gmc+PaRF/7EjG1jNtDvimObw
+ 56eLfMdM+bBTlHEBek4zGjGM10gnVxbOQEZDw1xnA8xJyNicBm2RcMCCa/YbHBh4RKOhfd8YV
+ PM09X2ncLjBdt+jjM7ex1xSx8Hh+eQJvazoNmXjDiifaMKP7a788OM0etMiNy+EUl2wRDTBVh
+ gux42aBvC7u/7vzQjsJlNKJoBgUJNbPEkAOCEz1Q0+rSB862oMGNXuxFUxsfHaN10+qX+D6nB
+ afstYy+Z4AJWrtia4AVck/fdu7wFSQY3DpYR22rR0G544t8o9EcbKSFEMJFmAUt+/F43r4RvG
+ torYUVTW8SU8Kq7zb8nhDatZStmEZDNLZ6GjVZWmbR/y2o5HY6yLhxu2IkwCU153QpDWjEnqZ
+ +QqY7gR3Q0O0bC8638sa/sVbLlC49if9Oa+pcdPDur999Eogdwh0dHdnRh1WneJqLAMYW+Tmz
+ Prgmf3bIYvlqiXwylsuaqF0wCRk=
 
-On Thu, Sep 7, 2023 at 8:24=E2=80=AFAM Mariusz Tkaczyk
-<mariusz.tkaczyk@linux.intel.com> wrote:
->
-> On Thu, 7 Sep 2023 20:53:30 +0800
-> Yu Kuai <yukuai1@huaweicloud.com> wrote:
->
-> > Hi,
-> >
-> > =E5=9C=A8 2023/09/07 20:41, Mariusz Tkaczyk =E5=86=99=E9=81=93:
-> > > On Thu, 7 Sep 2023 20:14:03 +0800
-> > > Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> > >
-> > >> Hi,
-> > >>
-> > >> =E5=9C=A8 2023/09/07 19:26, Yu Kuai =E5=86=99=E9=81=93:
-> > >>> Hi,
-> > >>>
-> > >>> =E5=9C=A8 2023/09/07 18:18, Mariusz Tkaczyk =E5=86=99=E9=81=93:
-> > >>>> On Thu, 7 Sep 2023 10:04:11 +0800
-> > >>>> Yu Kuai <yukuai1@huaweicloud.com> wrote:
-> > >>>>
-> > >>>>> Hi,
-> > >>>>>
-> > >>>>> =E5=9C=A8 2023/09/06 18:27, Mariusz Tkaczyk =E5=86=99=E9=81=93:
-> > >>>>>> On Wed, 6 Sep 2023 14:26:30 +0800
-> > >>>>>> AceLan Kao <acelan@gmail.com> wrote:
-> > >>>>>>>    From previous testing, I don't think it's an issue in system=
-d, so I
-> > >>>>>>> did a simple test and found the issue is gone.
-> > >>>>>>> You only need to add a small delay in md_release(), then the is=
-sue
-> > >>>>>>> can't be reproduced.
-> > >>>>>>>
-> > >>>>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> > >>>>>>> index 78be7811a89f..ef47e34c1af5 100644
-> > >>>>>>> --- a/drivers/md/md.c
-> > >>>>>>> +++ b/drivers/md/md.c
-> > >>>>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *di=
-sk)
-> > >>>>>>> {
-> > >>>>>>>           struct mddev *mddev =3D disk->private_data;
-> > >>>>>>>
-> > >>>>>>> +       msleep(10);
-> > >>>>>>>           BUG_ON(!mddev);
-> > >>>>>>>           atomic_dec(&mddev->openers);
-> > >>>>>>>           mddev_put(mddev);
-> > >>>>>>
-> > >>>>>> I have repro and I tested it on my setup. It is not working for =
-me.
-> > >>>>>> My setup could be more "advanced" to maximalize chance of reprod=
-uction:
-> > >>>>>>
-> > >>>>>> # cat /proc/mdstat
-> > >>>>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
-> > >>>>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
-> > >>>>>>          7126394880 blocks super external:/md127/0 128k chunks
-> > >>>>>>
-> > >>>>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0=
-]
-> > >>>>>>          104857600 blocks super external:/md126/0 64K chunks 2
-> > >>>>>> near-copies
-> > >>>>>> [4/4] [UUUU]
-> > >>>>>>
-> > >>>>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
-> > >>>>>>          2655765504 blocks super external:/md126/1 level 5, 32k =
-chunk,
-> > >>>>>> algorithm 0 [4/4] [UUUU]
-> > >>>>>>
-> > >>>>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
-> > >>>>>>          99614720 blocks super external:/md125/0 [2/2] [UU]
-> > >>>>>>
-> > >>>>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
-> > >>>>>>          10402 blocks super external:imsm
-> > >>>>>>
-> > >>>>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S)
-> > >>>>>> nvme4n1[0](S)
-> > >>>>>>          20043 blocks super external:imsm
-> > >>>>>>
-> > >>>>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
-> > >>>>>>          10402 blocks super external:imsm
-> > >>>>>>
-> > >>>>>> I have almost 99% repro ratio, slowly moving forward..
-> > >>>>>>
-> > >>>>>> It is endless loop because systemd-shutdown sends ioctl "stop_ar=
-ray"
-> > >>>>>> which
-> > >>>>>> is successful but array is not stopped. For that reason it sets
-> > >>>>>> "changed =3D
-> > >>>>>> true".
-> > >>>>>
-> > >>>>> How does systemd-shutdown judge if array is stopped? cat /proc/md=
-stat or
-> > >>>>> ls /dev/md* or other way?
-> > >>>>
-> > >>>> Hi Yu,
-> > >>>>
-> > >>>> It trusts return result, I confirmed that 0 is returned.
-> > >>>> The most weird is we are returning 0 but array is still there, and=
- it is
-> > >>>> stopped again in next systemd loop. I don't understand why yet..
-> > >>>>
-> > >>>>>> Systemd-shutdown see the change and retries to check if there is
-> > >>>>>> something
-> > >>>>>> else which can be stopped now, and again, again...
-> > >>>>>>
-> > >>>>>> I will check what is returned first, it could be 0 or it could b=
-e
-> > >>>>>> positive
-> > >>>>>> errno (nit?) because systemd cares "if(r < 0)".
-> > >>>>>
-> > >>>>> I do noticed that there are lots of log about md123 stopped:
-> > >>>>>
-> > >>>>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -=
-16
-> > >>>>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
-> > >>>>> [ 1371.846845] md: md123 stopped.
-> > >>>>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -=
-16
-> > >>>>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
-> > >>>>> [ 1371.862941] md: md123 stopped.
-> > >>>>>
-> > >>>>> And md_ioctl->do_md_stop doesn't have error path after printing t=
-his
-> > >>>>> log, hence 0 will be returned to user.
-> > >>>>>
-> > >>>>> The normal case is that:
-> > >>>>>
-> > >>>>> open md123
-> > >>>>> ioctl STOP_ARRAY -> all rdev should be removed from array
-> > >>>>> close md123 -> mddev will finally be freed by:
-> > >>>>>      md_release
-> > >>>>>       mddev_put
-> > >>>>>        set_bit(MD_DELETED, &mddev->flags) -> user shound not see =
-this
-> > >>>>> mddev
-> > >>>>>        queue_work(md_misc_wq, &mddev->del_work)
-> > >>>>>
-> > >>>>>      mddev_delayed_delete
-> > >>>>>       kobject_put(&mddev->kobj)
-> > >>>>>
-> > >>>>>      md_kobj_release
-> > >>>>>       del_gendisk
-> > >>>>>        md_free_disk
-> > >>>>>         mddev_free
-> > >>>>>
-> > >>>> Ok thanks, I understand that md_release is called on descriptor
-> > >>>> closing, right?
-> > >>>>
-> > >>>
-> > >>> Yes, normally close md123 should drop that last reference.
-> > >>>>
-> > >>>>> Now that you can reporduce this problem 99%, can you dig deeper a=
-nd find
-> > >>>>> out what is wrong?
-> > >>>>
-> > >>>> Yes, working on it!
-> > >>>>
-> > >>>> My first idea was that mddev_get and mddev_put are missing on
-> > >>>> md_ioctl() path
-> > >>>> but it doesn't help for the issue. My motivation here was that
-> > >>>> md_attr_store and
-> > >>>> md_attr_show are using them.
-> > >>>>
-> > >>>> Systemd regenerates list of MD arrays on every loop and it is alwa=
-ys
-> > >>>> there, systemd is able to open file descriptor (maybe inactive?).
-> > >>>
-> > >>> md123 should not be opended again, ioctl(STOP_ARRAY) already set th=
-e
-> > >>> flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdo=
-wn do
-> > >>> open and close the array in each loop?
-> > >>
-> > >> I realized that I'm wrong here. 'MD_CLOSING' is cleared before ioctl
-> > >> return by commit 065e519e71b2 ("md: MD_CLOSING needs to be cleared a=
-fter
-> > >> called md_set_readonly or do_md_stop").
-> > >>
-> > >> I'm confused here, commit message said 'MD_CLOSING' shold not be set=
- for
-> > >> the case STOP_ARRAY_RO, but I don't understand why it's cleared for
-> > >> STOP_ARRAY as well.
-> > >>
-> >
-> > Can you try the following patch?
-> >
-> > diff --git a/drivers/md/md.c b/drivers/md/md.c
-> > index 3afd57622a0b..31b9cec7e4c0 100644
-> > --- a/drivers/md/md.c
-> > +++ b/drivers/md/md.c
-> > @@ -7668,7 +7668,8 @@ static int md_ioctl(struct block_device *bdev,
-> > fmode_t mode,
-> >                          err =3D -EBUSY;
-> >                          goto out;
-> >                  }
-> > -               did_set_md_closing =3D true;
-> > +               if (cmd =3D=3D STOP_ARRAY_RO)
-> > +                       did_set_md_closing =3D true;
-> >                  mutex_unlock(&mddev->open_mutex);
-> >                  sync_blockdev(bdev);
-> >          }
-> >
-> > I think prevent array to be opened again after STOP_ARRAY might fix
-> > this.
->
-> I didn't help. I tried much more:
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 0fe7ab6e8ab9..807387f37755 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -608,7 +608,7 @@ static inline struct mddev *mddev_get(struct mddev *m=
-ddev)
->  {
->         lockdep_assert_held(&all_mddevs_lock);
->
-> -       if (test_bit(MD_DELETED, &mddev->flags))
-> +       if (test_bit(MD_DELETED, &mddev->flags) || test_bit(MD_CLOSING,
->   &mddev->flags)) return NULL;
->         atomic_inc(&mddev->active);
->         return mddev;
->
->
-> Issue is still reproducible. I was shocked so I removed clearing MD_CLOSI=
-NG:
->  out:
-> -       if(did_set_md_closing)
-> -               clear_bit(MD_CLOSING, &mddev->flags);
-> +       //if(did_set_md_closing)
-> +       //      clear_bit(MD_CLOSING, &mddev->flags);
->
-> Still reproducible. Then I found this:
-> @@ -6177,7 +6179,7 @@ static void md_clean(struct mddev *mddev)
->         mddev->persistent =3D 0;
->         mddev->level =3D LEVEL_NONE;
->         mddev->clevel[0] =3D 0;
-> -       mddev->flags =3D 0;
-> +       //mddev->flags =3D 0;
->         mddev->sb_flags =3D 0;
->         mddev->ro =3D MD_RDWR;
->         mddev->metadata_type[0] =3D 0;
->
-> Issue not reproducible. I can see in log that attempt to stop device is n=
-ot
-> repeated.
->
-> Well, with the change of using time-sensitive lock in mddev_put we need t=
-o
-> ensure that we can still can remove mddevice so setting and preserving
-> MD_CLOSING is reasonable for me. I will combine this into patches tomorro=
-w.
->
-> Yu, really appreciate your help! Glad to heave you here.
 
-Thanks to everyone for looking into this tricky issue and running various t=
-ests!
 
-Mariusz, please let me know if you need any help with the patch. Hopefully =
-we
-can fix this soon.
+On 2023/9/8 19:54, Martin Steigerwald wrote:
+> Hi Thorsten, Qu, Tim, everyone,
+>
+> Linux regression tracking #update (Thorsten Leemhuis) - 29.08.23, 14:17:=
+33
+> CEST:
+>> On 12.07.23 13:02, Linux regression tracking #adding (Thorsten Leemhuis=
+)
+>> wrote:
+>>> On 03.07.23 22:19, Tim Cuthbertson wrote:
+>>>> Yesterday, I noticed that a scrub of my main system filesystem has
+>>>> slowed from about 2.9 gb/sec to about 949 mb/sec. My scrub used to
+>>>> run
+>>>> in about 12 seconds, now it is taking 51 seconds. I had just
+>>>> installed
+>>>> Linux kernel 6.4.1 on Arch Linux, upgrading from 6.3.9. At first I
+>>>> suspected the new kernel, but now I am not so sure.
+>>>
+>>> Thanks for the report. It seems it will take some work to address
+>>> this,
+>>> so to be sure the issue doesn't fall through the cracks unnoticed, I'm
+>>> adding it to regzbot, the Linux kernel regression tracking bot:
+>>>
+>>> #regzbot ^introduced e02ee89baa66
+>>
+>> #regzbot resolve: various changes merged for 6.6 improve things again;
+>> more planned; backporting is planned, too;
+>> #regzbot ignore-activity
+>>
+>> (yes, that is not idea, but that's how it is sometimes)
+>
+> ideal?
+>
+> Scrubbing "/home" with 304.61GiB (interestingly both back then with 6.4
+> and now with 6.5.2):
+>
+> - 6.4: 966.84MiB/s
+> - 6.5.2:  748.02MiB/s
+>
+> I expected an improvement.
+>
+> Same Lenovo ThinkPad T14 AMD Gen 1 with AMD Ryzen 7 PRO 4750U, 32 GiB RA=
+M
+> and 2TB Samsung 980 Pro NVME SSD as before.
 
-Thanks again,
-Song
+The fixes didn't arrive until v6.6.
+
+Thanks,
+Qu
+
+>
+> Ciao,
