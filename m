@@ -1,122 +1,134 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC88111B
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 03:28:41 +0000 (UTC)
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-573f722b86eso1229262a12.1
-        for <regressions@lists.linux.dev>; Thu, 07 Sep 2023 20:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1694143721; x=1694748521; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xyga/bR7KnO0AZcMSgesUn85OC4rXik7va8Pa71Uoy8=;
-        b=cIiJ+Jo+astRTtcmKzr8MDU3wVxdPjePbNhDl1aeL+U64BJN8uPXb2puRryEdnPXQM
-         UImwfXxG/ab0ALCGE+Gd+QqUh+ZylZC689SDmFLzvXNL0XIE8WKoQEIyTk8gUYpFCIY6
-         qUdTsMN46PCy8JXhdJMatsrr4l1qX23IFeoDa/XDpaJZESV4RVtWukisobndWm1lXAWf
-         6BxG6IIYj/VOoibAErj2ABOL84LPI3BA6fum/Y2iRFeWFG4l8sZqeP9zPuUNgMm9Dxtw
-         C2706KkjAd4SNzGdDiheG3wCgVUBJbiBepbvlH7iCVvCFZfZrcEOVOAekbcwylkb1ohx
-         ODyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694143721; x=1694748521;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xyga/bR7KnO0AZcMSgesUn85OC4rXik7va8Pa71Uoy8=;
-        b=T8fbiLjjQMgcD6EkKN27wIsuHp1O6aTDvh7LqNsX7iZmfRgbcdfQowpENlktoFkFQn
-         1tgfiP9ncRzE9/Ri8Cb2MlC8X8NKNpD17EJ1rbAwC+MNZfVY2odznyZjDH2r0vhceIcz
-         Ala4bHw3IY3/OYqUHVERbjlt7ZHew4WTjpseAeqPqse/63JwevUv6b9cBUehSAOqbwHO
-         I63zTYWE+JLuZKvvEXezNYRmjeNyXCZ1podvSC9JCSajnCcGFyHWdwulF66Zoy7J3y7i
-         pHCZMmJeKfENelWo/dvcx3Uxjov39RBrsGOYLvYm58C25WIxCls/uWA81zx6ySkNnSxF
-         k6yw==
-X-Gm-Message-State: AOJu0YxZy1GT+u1wk/qPq0Et/YXN8r/33EI0R6f6reefqz4mpQ0bG4a9
-	O6hLSY5Jjyklqcxh3UTlsiqSEA==
-X-Google-Smtp-Source: AGHT+IG3Fnhkv/ckb8v3efpkXk9m5bSeAiGH/2YqrB6IQjg0wzVL6kqNDRi12CQ/J7lIdOJcXpjfyA==
-X-Received: by 2002:a05:6a20:158d:b0:14c:e8d4:fb3e with SMTP id h13-20020a056a20158d00b0014ce8d4fb3emr1828439pzj.43.1694143720902;
-        Thu, 07 Sep 2023 20:28:40 -0700 (PDT)
-Received: from [10.84.158.67] ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id jf3-20020a170903268300b001bf095dfb79sm453948plb.235.2023.09.07.20.28.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Sep 2023 20:28:40 -0700 (PDT)
-Message-ID: <dd8e6bfb-9d84-6a5d-94cb-4833f5d1943b@bytedance.com>
-Date: Fri, 8 Sep 2023 11:28:34 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38076373
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 04:41:40 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GZRviynFOnSvyO/u01XcAMtnSxk9sS9HTXZZIow+zr85L24D8kVmF559TS9EhtlBcyTpAF75yS7wSCa4awb0sZEkES1dJ5R0hDqQuoC2hRz3ghnOmf6lLmEq+4UjUwce0jxtXQXi5fmnvY+KdpfA6QmmFX5KLLiVYlN8DdUOlwa+EeEDXb4S0+mBOyO77NBNvFAY8tf+T57kYfcnenxxDDXnliX8V89mLF9kbxu7uUwG5NJhUnpGgNdRfuwogxhnrMdG2XP2ZKv+uHdgg3NbwDdIGmgmuML3xPW2SbkohQx7wNQCCKq9ooGqvzkYwMGkFxlCxEQmlLHWCp/syN+szQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vVUUZUBk0mn2jR4PSxiuGbL+IRpdjofzDqfHTWLSyxo=;
+ b=O/n0d9IwbM6DhJJXGR66Y97pXbSiw0voGqWHq6e35BZvsICb3CeWoiX2uX/rYanoWU1k0Vr/XhiAoMKcCq27gkebI52lcuGvX62Yh/3cClt2wF24i3FnD/ehwiQKcXdixDxTA730YkPk7b+GlbeN+yIotpHrnY0o/Xnz2Jjko17PC9PuieN5XsRsQJ3z1WdPiPxu+7vHezH90QsGqznrP9Pe3umI7CtuNQDk1rbRAjIOiTJ1+B4RYX/U2q15DnR2ZNdBExjC0HLm2kgT1e2yVBvc9Ps1eJBidJOUBLwpcTXsfmqWwyJREMEyz7+Bs7t1GR9zzQoG676lm8HgdLMuHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vVUUZUBk0mn2jR4PSxiuGbL+IRpdjofzDqfHTWLSyxo=;
+ b=g8tCXFEFOGhHPEQ6BTDdM7NpqKdebNlih601qvaugA89gkhemt+U3kQ/9lEmFxij7EHpqYN6RI5p1pMpvDNuVgOXaB7wAbAehj/yOvzS3XkxkK3K8UOJohc2i34kh1q6ktmv9/n9TWE40QxlWJILwTZMl+kgosT8vn8KeC+y33o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8690.namprd12.prod.outlook.com (2603:10b6:a03:540::10)
+ by DM4PR12MB5795.namprd12.prod.outlook.com (2603:10b6:8:62::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6745.34; Fri, 8 Sep 2023 04:41:38 +0000
+Received: from SJ2PR12MB8690.namprd12.prod.outlook.com
+ ([fe80::da13:5f6:45:fa40]) by SJ2PR12MB8690.namprd12.prod.outlook.com
+ ([fe80::da13:5f6:45:fa40%4]) with mapi id 15.20.6768.029; Fri, 8 Sep 2023
+ 04:41:38 +0000
+Date: Fri, 8 Sep 2023 12:41:14 +0800
+From: Huang Rui <ray.huang@amd.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Meng Li <li.meng@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Michele Della Guardia <micheledellaguardia@yahoo.it>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: Fwd: Abnormal battery drain with kernel 6.5 (Ryzen 5500u)
+Message-ID: <ZPql6tqBCnXJh64J@amd.com>
+References: <bede02c1-ef90-8e30-aa8b-e6fae49a8ccf@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bede02c1-ef90-8e30-aa8b-e6fae49a8ccf@gmail.com>
+X-ClientProxiedBy: SG2PR02CA0001.apcprd02.prod.outlook.com
+ (2603:1096:3:17::13) To SJ2PR12MB8690.namprd12.prod.outlook.com
+ (2603:10b6:a03:540::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [External] Re: Fwd: WARNING: CPU: 13 PID: 3837105 at
- kernel/sched/sched.h:1561 __cfsb_csd_unthrottle+0x149/0x160
-To: Tim Chen <tim.c.chen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Benjamin Segall <bsegall@google.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>,
- Igor Raits <igor.raits@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Stable <stable@vger.kernel.org>
-References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
- <xm26cyz4ibnb.fsf@google.com>
- <55e2861e-9722-08f8-2c49-966035ff4218@bytedance.com>
- <20230904222351.GC2568@noisy.programming.kicks-ass.net>
- <3544d5e3-3070-9ddc-fa6c-a05ed35dfd14@bytedance.com>
- <171e6a9435a33885a73b48762f86954e447c26c2.camel@linux.intel.com>
-From: Hao Jia <jiahao.os@bytedance.com>
-In-Reply-To: <171e6a9435a33885a73b48762f86954e447c26c2.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8690:EE_|DM4PR12MB5795:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d648b4d-6ee3-40d6-0239-08dbb025e344
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	fHob19sj/7cO56365udB/hsfDbaVVB4sh3vY1FqvLAL2YeWOOVE5aXxHOdaBdGdpWgimApNjvg/l3B1FjLHM1ZduUwEZxF0lmxO4t+20BCQ3dgUukHgfPrCpD5SIA5P1FtSCtYjeuJAUQu6X7Aha7L2xirD7N5Mip8UUA/AmSUUqrVDahlaFvYNW362/J/Hpq5dP7D6yKkirGFNN2Hg6TN4uZiPFfcBDpNiY58o4trzyVvBIPFmdM58yw/Tkvvt4gaqU5Tjh6ezMF2RpQ5cfSIe9GjZQQJ7JjlX2dTZx///ZzcLbC0JgsNMN1Kb6xgiotli1Roq9oaTmtv0ouy9i2GibTk01eLklEwrf+lji+aewixMnaTi9Nlx7zgSa4baB5p/Nm3O1gtesQZwoEzb7Q/68uwySpCPcKXXgC9OCO0X5SJ2KgeIuPtCwNNDi0/pzSQyEtMkhwDXd0x5btriwlFEB2reTvVd6OShtTQIWaiLC4lfW4IWlaDwFFtiPa+qLMUcPbdasvaKiysEd+bBA4EsMFWUe3NQ1B6xBil1j85s=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8690.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(39860400002)(366004)(396003)(376002)(186009)(1800799009)(451199024)(2616005)(26005)(38100700002)(6486002)(6512007)(6506007)(36756003)(83380400001)(8676002)(478600001)(66476007)(4326008)(966005)(8936002)(66946007)(110136005)(66556008)(5660300002)(86362001)(54906003)(6636002)(316002)(2906002)(6666004)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nMa9MDpsU09YtUvy/yZHUSguExt5OjKph4bBRBXLazQyxnxEesojtxsypd5S?=
+ =?us-ascii?Q?Gr/TBx2uVlBMiG3B+GY8t93qTfBHhqCs7M28L4Ya3I94k3JXnw1Y4JlFkbAn?=
+ =?us-ascii?Q?QIHShEhLKdq9aiwT+a8mtEU1wEiUf47ANUjQS4FMba+UqFolZf2n3rYQ/jwt?=
+ =?us-ascii?Q?QhQ879K2yoOQE2ik/rpoZEN3KyTjlJMc43ZOb32ilLs5dxGX0xjHk+3Xjk5/?=
+ =?us-ascii?Q?o7INM4558bTB+lKzYXHsZuczMPodhl2IbJRQKXyjbyp0aEPs69TLYQbguBs1?=
+ =?us-ascii?Q?aU6dpR57qaUeqCshhBsJoYcXKOaIfhGYlKyZfrKPzlXr78k1DfmbN+AE2erg?=
+ =?us-ascii?Q?qETOstogujVziDPaWx/dfSRIqSFgwpGqOW2f/CUH8ZpvNLk9MHFx1OTpwUPx?=
+ =?us-ascii?Q?02LVrkrlYXBOQCCWURQnm+Met2ZKSiVLRX66lYg+wHGz625J+xB3xnpBN95Q?=
+ =?us-ascii?Q?9HQoddB0crkds/lWS+MOA4gCO359jwzWHbSaO2swDFwrx6inveKu0BreNT7L?=
+ =?us-ascii?Q?R+4cisfQ2bn8/rPVtWSqrjKcdS60FL0nPJ3Fl1pXHMLSzmCTQ11op0mdQLcV?=
+ =?us-ascii?Q?fJlF8praBv7Ocv9eDvh+PfEfmkpdPVzow9fgQiGJaRhZXoHDEeRljEFaeRm8?=
+ =?us-ascii?Q?EIfgYYHayKru1H0yS6Rd1SdCicZQ1t6MKOTq1rW15IeYB7PaMxntvoA+jiDN?=
+ =?us-ascii?Q?IocSfRHG4v2AJmSrfRacViFHHWkNrGuFwDoVXp/ckr9KzOBFR4nZwP+BIkTG?=
+ =?us-ascii?Q?+OT9kVfoslTKfEyFtdZez3RPvnVMp4QoftXVLP22e7BSOYXANcypMl+6z431?=
+ =?us-ascii?Q?7vh2ubOh59YCVuEEhIchC/6+6vUkB0Zxj3SZ2KOUVQXf/mAdr24xr5Cw3b4q?=
+ =?us-ascii?Q?HamTgFiQ+sl1PSY2oioiwfWb0SoGXfMc9wKOS+WbzHpFAS1nkuI0MGnPUpze?=
+ =?us-ascii?Q?Yh5f6QUw+b9BE9KCq7k5kkZi4fx6IjPc9p6FSuKr6nY9/JcOl4/Cmmx4700y?=
+ =?us-ascii?Q?Ftc92+Uj9YcLUJQz2fsWTtzRDb7gmm7VRegTQFV0lWsfP/kDENxo6HxKtwMm?=
+ =?us-ascii?Q?U3KlQ2W0k8Phh7b617fpyid7mLllu76LDOZpogwNwiOIL2BPYSOmh/jNMJ6H?=
+ =?us-ascii?Q?zqOB03FvOYi4tUaqfPeZ3ac6RnnLOIDV+QG0qtrJ6/k35n0sQVBw3TuVW0PJ?=
+ =?us-ascii?Q?pfY8uM88Q43zLodJPMRMPr4+hZ8IMS+FECEEenikudFVLRGNnTHEAIUHUV0M?=
+ =?us-ascii?Q?HsLX5qW+icfT9Z2KKEeZT+BAZduQBj2Hlvevm6rRURyhR1xj+EhsC79wszOa?=
+ =?us-ascii?Q?WJ4uO3WtEP60mFvN1xu/FcOQV54JiuqOV0XbbneP8ZqXPASkPSwJqo9PBFtB?=
+ =?us-ascii?Q?fRtUtf31yRrlV+Cr8X8Tc/PE1I6JY7I8gnz8lvK88Df0wiHcJFvKSbIU8mcT?=
+ =?us-ascii?Q?YzSSxesfAK45mKt3dfhkWtZ8vFzrl4RoMke6lY2hKEvPiRHXxLyG6wKBdI65?=
+ =?us-ascii?Q?RHXjIGtnPnBZRmNodU7IL+bkhBctM4NCW4BuEkJ7DwmA2y0uVSKPC+tp+0RL?=
+ =?us-ascii?Q?A+3tJuD6yDbJ86oUdkiT/JIdYMtrTLOUfMBQDmMb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d648b4d-6ee3-40d6-0239-08dbb025e344
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8690.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2023 04:41:38.0992
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aGqT18U6SGFvCA9IGXq+raub9mY+eJ5LjUG1GBj70J9jy7fQpk2+69xv5wH5Wg4AvUJRAIdYmVLgD2YKCSFcYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5795
 
-
-
-On 2023/9/8 Tim Chen wrote:
-> On Thu, 2023-09-07 at 16:59 +0800, Hao Jia wrote:
->>
->> On 2023/9/5 Peter Zijlstra wrote:
->>> On Thu, Aug 31, 2023 at 04:48:29PM +0800, Hao Jia wrote:
->>>
->>>> If I understand correctly, rq->clock_update_flags may be set to
->>>> RQCF_ACT_SKIP after __schedule() holds the rq lock, and sometimes the rq
->>>> lock may be released briefly in __schedule(), such as newidle_balance(). At
->>>> this time Other CPUs hold this rq lock, and then calling
->>>> rq_clock_start_loop_update() may trigger this warning.
->>>>
->>>> This warning check might be wrong. We need to add assert_clock_updated() to
->>>> check that the rq clock has been updated before calling
->>>> rq_clock_start_loop_update().
->>>>
->>>> Maybe some things can be like this?
->>>
->>> Urgh, aside from it being white space mangled, I think this is entirely
->>> going in the wrong direction.
->>>
->>> Leaking ACT_SKIP is dodgy as heck.. it's entirely too late to think
->>> clearly though, I'll have to try again tomorrow.
+On Fri, Sep 01, 2023 at 05:42:22PM +0800, Bagas Sanjaya wrote:
+> Hi,
 > 
-> I am trying to understand why this is an ACT_SKIP leak.
-> Before call to __cfsb_csd_unthrottle(), is it possible someone
-> else lock the runqueue, set ACT_SKIP and release rq_lock?
-> And then that someone never update the rq_clock?
+> I notice a regression report on Bugzilla [1] that have been already handled
+> there. Quoting from it:
+> 
+> > After switching from 6.4.x kernel to 6.5 I experienced an abnormal battery drain since my laptop is actually never idle.
+> > I accepted default CPUfreq to schedutil and AMD Processor P-State mode is 3 (active). 
+> > 
+> > I expected a different behaviour, but am I missing something?
+> > In my boot configuration I had "amd_pstate.shared_mem=1" and tried to remove this switch, but did not affect my power consuption.
+> > 
+> > Is there something changed from 6.4.x to 6.5 that requires a different configuration to get an optimal power consumption?
+> > 
+> > Thanks a lot for your attention
+> 
+> See Bugzilla for the full thread.
+> 
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217853
 > 
 
-Yes, we want to set rq->clock_update_flags to RQCF_ACT_SKIP to avoid 
-updating the rq clock multiple times in __cfsb_csd_unthrottle().
++ Meng Li/Perry,
 
-But now we find ACT_SKIP leak, so we cannot unconditionally set 
-rq->clock_update_flags to RQCF_ACT_SKIP in rq_clock_start_loop_update().
+May we know which CPU type are you using? Try "lscpu"?
 
-
->>
->> Hi Peter,
->>
->> Do you think this fix method is correct? Or should we go back to the
->> beginning and move update_rq_clock() from unthrottle_cfs_rq()?
->>
-> If anyone who locked the runqueue set ACT_SKIP also will update rq_clock,
-> I think your change is okay.  Otherwise rq_clock could be missing update.
-> 
-> Thanks.
-> 
-> Tim
+Thanks,
+Ray
