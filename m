@@ -1,170 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic309-26.consmr.mail.ir2.yahoo.com (sonic309-26.consmr.mail.ir2.yahoo.com [77.238.179.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9515415C8
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 06:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694152970; x=1725688970;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Z1x9UCJwV/8gVIKzEPbzDP1L/cdAdLLShC1out+avmM=;
-  b=Ocr8UEW7J4sp/PcCCqsUlGdaT+hTnZCN14npTAKATevXLcHJ3ouH4Ti9
-   EPeUry9U5CrKuMyHTravj224MQMIt6tQyV5a8qWlIbmZr0iCK2GTKoiSV
-   c8yoiTdPeBzvzq9v4KpL1kfWJe9DB5ClFExZSZaRDCey3X8kdUc5uWxcH
-   zpWWESOD5x/0gNX/vxY5Zz4aE3okhbDcLM/14sEoxFPfCCPkXPhlBvo3r
-   c3PZjblx8ARwy3zyIm7sCsjSRI+4xE0o6kxS3lY24UaQwXqYdLNMHksj6
-   ip/LjuPYbUFZKEn3Oc07X9YbyPnIZ2EDk8rsTJUGQSSlq5AQyOkAi3tLq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="380306840"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="380306840"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 23:02:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="1073178255"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="1073178255"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Sep 2023 23:02:43 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Thu, 7 Sep 2023 23:02:43 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Thu, 7 Sep 2023 23:02:43 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Thu, 7 Sep 2023 23:02:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c2DlNgaJT6wPwOVKBEGGmjfRuvusnej6tjkHA2hmWth4OXqVIQiHNZ+/lguBYSalYv/pjln0J3DdLNTYzqGJF7q0RFn3/sylVHJVLzKpHHV9BygEPYJ6DYz1Cm5jQ5/nlYf9ArDDtCrL5MAU1U7nZGDfooh8beqTU9YqUlijBKngdieS7/eqdY4A+dwAgI+15qun6QTUWq3jYThE6oYGpWkY72Aa3oCY9XQKuMVkLMmnEkdxmLaErl7xmr3YeokiSEKzv8T3qFh+b9zQHALeaqx84Wpj6AW0GeEhhqfsPcYYMdROMp8ANQyU8JukKgbF76gBR6RLmLrzI0uy8lw3SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6EbkJhUREzuYA58y1VCgzWYEr8MwcmNpxM7xFOIR/NU=;
- b=OKiTEwFQMatfOdjqre/T5L3wDCBD5uAuZppSw7wgbQEcGKZ5oaFOH8hkMgMi9OzUOHhe7kkF/x+VHMwSO8LmiSQDJ7AeQUy5KcHqP1shpi5NAEu31V1AueuX2ShBfBXbgLQh+cBnwnziGn93g0Z1CU7rQoaJPFvt7h+8EUlCl7C6ZL3DFRidykUFSyuVWec/7a9LaCj99GRq+xiGJqwSdNhXFJ5GGEBHwNB/EBBuZAS3fiuuzuqtwWsEzZqEHBQb/pMUzHKvXW3rCyhhuOw1Ye+L2OCfrLWaWdWNHIGzn6AnnOCjlacp+ijq4cnpLsbg3hbukRUfnpXN/qYR8C9gqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3062.namprd11.prod.outlook.com (2603:10b6:a03:92::18)
- by IA1PR11MB8173.namprd11.prod.outlook.com (2603:10b6:208:44e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Fri, 8 Sep
- 2023 06:02:41 +0000
-Received: from BYAPR11MB3062.namprd11.prod.outlook.com
- ([fe80::d0db:d23:1d85:ed85]) by BYAPR11MB3062.namprd11.prod.outlook.com
- ([fe80::d0db:d23:1d85:ed85%4]) with mapi id 15.20.6745.034; Fri, 8 Sep 2023
- 06:02:41 +0000
-Date: Fri, 8 Sep 2023 14:02:30 +0800
-From: Aaron Lu <aaron.lu@intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-CC: Bagas Sanjaya <bagasdotme@gmail.com>, Borislav Petkov <bp@alien8.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>
-Subject: Re: kexec reboot failed due to commit 75d090fd167ac
-Message-ID: <20230908060230.GA283801@ziqianlu-dell>
-References: <20230829114816.GA508985@ziqianlu-dell>
- <ZO3hQ0rbr8QuUjVI@debian.me>
- <20230829125134.GA509331@ziqianlu-dell>
- <20230829125939.bcg2r6hwqf45npko@box.shutemov.name>
- <20230829140451.GA509854@ziqianlu-dell>
- <20230907131409.masxz42ik6u456qp@box.shutemov.name>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230907131409.masxz42ik6u456qp@box.shutemov.name>
-X-ClientProxiedBy: SG2PR06CA0193.apcprd06.prod.outlook.com (2603:1096:4:1::25)
- To BYAPR11MB3062.namprd11.prod.outlook.com (2603:10b6:a03:92::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB941867
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 07:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.it; s=s2048; t=1694156643; bh=ao+HO0aDJmdMm2403+HAbJS5xC4S8ZTxz/tRjzTI1fY=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=bH0//1dPXox6NDvs0bL6/Cj1+i5k4YDnFPq4a36waGfXONxXZbyTBBfc+uj7E/INEDjpzKxpwukPjkUGnn8R5lYQq7DB2P4N1/uBGcgBehcdzZvkc7wv4Fa2mrhXKxG7PQbxupMT2wwne1KFltaxhrhARWJAf/m0oDg3aq/LqXp+OkS4b3sbBEuRTxDlI91vzrmQMwyH5fBDTsefmn6w5e6tuZFM/PBHhTl9O6yrmWEuzDkzjvvBkZhJbhyDrzxpG1NNU/uEX7L8d9+n7echY6fpdzmGLXQ47ER9F1QVi4UJB7udgVtctcDUGbMFmBeaHJSn3NIjPd9mRkvyYaHnfg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1694156643; bh=1HwthscXmEXM9KMZawuTrCK4njobjkk/OsNGXB+0zFf=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=pBU0Mm4fxImIn39SdrasuqTfl7qgsBpYev63GXg/OuyvQPqn8J7S6ugEso6d3aXN4F/AhCDBQfBSbiP0ToDIgV0DsKodS3OxIsfywPln3k5mn5EilOUcFvG+cadzBiU0dHx5M9dOTyYCl3yZMsnrYMXhw5wAD4gxFQGaaXIXelJC1+zfqL1KXs7Nh7mcecSG8SHwgEVQjXxNL5ibJDeHobjnIOX5bUxL24nkNHYJfV0E9WCe8M7Vz59Qtac0k5b4Whi8wDl139X9Guww8DiGO7sH4GbnjJam3O4+2Lmsd3AqhiucfeccBSAQJbj47IggKtwkNFnB81W0AWwsgOx42Q==
+X-YMail-OSG: WMrUmFsVM1moNNElV83JcDrPsPUv2hvZSJJchynlX1YRj9psZOnFa_RXDRwFhCj
+ lPBziTC6GlM8Yw36nNGDB.vWbDvhm03wmSwZ_2wFNbAI32JQvPkcYAZlA0tktcBv2zhBN3RlwlCb
+ YGEIsMU6NahXoeCZoBBAaHEOJqQtYpKTOB9dax3ggiAbQfxTJxyNYF0nq_d53QUu6zALi6nOL9G7
+ jGLT8topLjVtOkAq8C2VjGb5Gfs1zOLjY.UsoxqaZ6Z6e5gh2xZSUZDT36fhDHq8u4.lyBn47jR6
+ S3WpS2oSRt9SJu9SsrAfbLYKWv9M8s6jdr63YC79HraOaNVDxkTMsm1XHukXe0TyTkGdfOo8fCE4
+ F0C1m3rk_f7QLukr2x0QQ3TvDQo9YK.AOjPsXjn0epEsouxeozwtbify3K3JV38Eqz9lhuF9TSWA
+ ejOIOJNNGFBnIfBZRiAEPiw1H_w6CP.RKqQW5xvQqIe_YhPVR1JjLY2AOGok8Y3qOZ1Dkl0YMbsG
+ 3utYZPNGLFXhxJA1G.jserN_M9pjNJDLyEhnZY6Y33p8B5R5VsD5GF5TcmP5c28y4kAPySaKRJCM
+ i3gnCxRe9yEy3UrYFN1Q0cg5YX7k0MT.KJkSYJYjXL5KlAbkDL1zBzj3N.k.tL_22bYQUmncNAq0
+ lfGFM_2FoynzQnq4iqYvo8fSYBCRKeeOBQ.uEbE9kiXBpGM39z678KK5q8VMNeCNnzUkfLfdZvoK
+ _ST_1kOSZ6Mdn8F7OQ0mvsMTkL0T7UtV6vEd3Y5GhdCbkAdTaucTfleM_sDvZYXp9fCPzCwhfYzn
+ KRrgi_87szl_M3k2kVhLkhedgjcZPLnHAE3eiaIwgLPL9a4xgL7Qu6qx_gIlblfSEQsbamdlcW_a
+ FIS8LWNUtUWnst.8iv5P7a7ZeVEZwOytRlam25g_v6aWJWdvAyWHKZjIfA7hkE3CCoBJxGbyAAYB
+ p0NJEBi5IYqBJhw8cWpsWNM91y4f0_ra1rNn1b0ead1OPywlFQz4_xeqH8thIbG4R3Jzl_NqX2zz
+ 9nmTnSjtJbtlB9Cv_8kf_W44OJGLUF0hTzaDPNmZEjSFfr7BLcDIGizIURnmF8Ow3hvP_oEfOHnD
+ B_HrcMh.X3n4_6WOA5AW.IasETqKCJFO6l7THPlpYgYX8pcU4PKt49Bbwy4XgWC..ifzrrYDlDt2
+ OWixro0K8BDG47esQV1QIey.1BTKukohMhB_njXGQ3hiD3uwLTceqDOX3tyuTkkYYYPegT2Ahyhq
+ azWAiKbAeBYRC8MU_sjRYlgVxTsdmlK_IKf.z9Ovb2vu9KW6lWNZwuAydvS.FOMcvzo4qTw8fPAj
+ vez2ujtw9akyyhCjnMHMHl53oQ4l4obdqDoRw5fOItyny1cHyJIhwmyekMRN7Zlc0xU00tAl9YRM
+ kBoOSn.pfitIELnPks5bJCsvCSIm9ZnGVZjNjwGcb6qlGyklXMEj19LcL9iFR.STaJZDWf4D8yTw
+ WtWnE6iuKfV_9uEeN0tzLUX6lfytNYdxH570TfHG1KU42ZrjNOaCPq.M0Nf4N6FsRkS7KSW5UJyn
+ KVXt5Wr9oHTxLKkcc_ikc_DC27sY7e3nKuQ7DVGhyGpG8JGimlEVD0TyakkZ9kp.UXDqrgZ3GeIE
+ W_u5r0CtJeVL197Nmn4RpZXPtL0g9jA6rtwf8EZuT3GAgBBwA1acgDlHON73F16kllygRIzYvN5o
+ YeHCG07ugyJtgZV_DVchBKiC1DkxvByh0Lx2jD9N5pkPucbEtulRl6Ta7Aivk0OMmYHWvRTcNL.B
+ TjEJ_PbcS6WOvPY5IjklyPGOgxsdEKogSREZjV3nkvZ7EzXomTxhpCmDUui_Q3UaLzeiNIM232i7
+ bfapH4METwFyK5Brm2Z5FaxV7agf.zeRDaR9ea6PqHGm.PaFyR7XU5MVIYqM0yQenmYFYrUh5205
+ 8PzIoWeBCc01s9.iXXumdFSHqd9iJQ68caKrI9psDdHeuiwEo9QpdHlxEbpmtcOn69F0gSC7SB1K
+ lvLj9YYTc3CBmutlWxOXifAk37hyUQtK2FbFVrCFuTnjrAdNCU39qqX4RsJnVqXdazLclSG3uMS5
+ Rx9N4mo90SB_G.FbW5BL9RZtS2nNOTKuxMNt358hFSEtn9q0wL6TIn1K1dohCauQOmtfYRD0BwhX
+ gDBk5D8dcjtfEzZiPPMMhBu_Cudh.7sHZcx9E2iFig81KK84quP19YUdmAt9fumeblEHWqFI37Tz
+ veGw6WX0-
+X-Sonic-MF: <micheledellaguardia@yahoo.it>
+X-Sonic-ID: 4273f5a8-94ff-4f53-8166-28a63e1f702e
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ir2.yahoo.com with HTTP; Fri, 8 Sep 2023 07:04:03 +0000
+Date: Fri, 8 Sep 2023 07:04:00 +0000 (UTC)
+From: Michele Della Guardia <micheledellaguardia@yahoo.it>
+To: Meng Li <li.meng@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Huang Rui <ray.huang@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, 
+	Linux Power Management <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>
+Message-ID: <1881372085.9115426.1694156640596@mail.yahoo.com>
+In-Reply-To: <ZPql6tqBCnXJh64J@amd.com>
+References: <bede02c1-ef90-8e30-aa8b-e6fae49a8ccf@gmail.com> <ZPql6tqBCnXJh64J@amd.com>
+Subject: Re: Abnormal battery drain with kernel 6.5 (Ryzen 5500u)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3062:EE_|IA1PR11MB8173:EE_
-X-MS-Office365-Filtering-Correlation-Id: 658c3c2b-accb-4d6e-7291-08dbb0313606
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wC0oJg0xK0wnFuQ2vlV2KJnDkvd71/b36dG+ozeZralE5ClLEiUDF//bCF0MtxX1EAjABsR/zicRtkoXTkIv3X6A/Pdu4cXnwliaeNND7OBfAJJ9v8hsWexbnZFFCHmFHGts70hUfj64tR6lnk/04FuyP+Cme3DKx2obHKKbs1l5eRJV3692CFJAYoYoX8MVY7N1OvMxoEdQPrQSvc5YIukdX2LhUQGuR2LMddp62yXOcLe9rfkb3em3S3HlaQhdb2lOYNFWUGPoHM3G+ZsQNL4sQk6p0+4cUrF9gpfhrlGDq68ORGpjXuUgm1zbSsQDAlDWYwjU2fUiRRfA/kMvGNEAZLDaM0UQu644eFbODeuBEAb3dnuQ/RD2WbhprfgFTremSAvbgLlWi7P3rLjKvGgYOv3O6S6re7TOgAZHc4wbhDCj8C67IpkIkC3MlsfKyqqsAGfl3e2UmDsxiFwRBWIVmid9twqy3vBMxoQjxc3TVTA12B69uExLoSGACPVTpt7CzNo+jmQ/kTGoOABISrYR9VloXgu0yu1wuy4V9WTbHlV+bFE5SsT56MgBrX56
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3062.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(376002)(39860400002)(366004)(396003)(136003)(1800799009)(451199024)(186009)(82960400001)(38100700002)(86362001)(33656002)(33716001)(478600001)(2906002)(6512007)(9686003)(6666004)(6486002)(4326008)(6506007)(8676002)(8936002)(44832011)(5660300002)(54906003)(6916009)(66476007)(66946007)(316002)(66556008)(41300700001)(1076003)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?s+xDB/1ld5DBP2XB4e9jvCPL0Br4/o6q/JC0SiBQbw0yDN+Rzfv/G7fpkvle?=
- =?us-ascii?Q?ZlJRu1fuBgmEpSYbQiwg9XaxH0yJH66NIpVwqiAlZ69X4i7g+mJ3HmqJnmAW?=
- =?us-ascii?Q?CO2LL1fOQ+qyg652Bqy92GqVcnxm/ZS6pNbAShXRx2MstHp+vXJ9025OPTdT?=
- =?us-ascii?Q?Tjkfeed763JX6MBE1n4YFSr/1uaaOANcUpxyPkv5lBuGYSsx/PR3nqMmFHkS?=
- =?us-ascii?Q?xY6SAp4ZamKkYF1WTC0Z88lqI1ebC3EJ6Lo80E/RXUtcILENSz1OwJvEjNMl?=
- =?us-ascii?Q?qQCuvQ8PnBh0+grI+jLYpm3feT3G9ZgB+zblApxu/yx7x5jfqM1p3vIKq3qe?=
- =?us-ascii?Q?wCAANrXFckjrJItOX7hPA18Ieatt7ofFcRd+uCqszuigTNOMQB4qsnRC0qCg?=
- =?us-ascii?Q?KsQ/uI+/zEajGqqiMse24E9VJbnBhlQDgTCuhjtDJ+dqoUXDiaauby8uKtFg?=
- =?us-ascii?Q?R05JMrY3vWrc/OKzbRirY3OSK8f71Y/DVu02jxFpz9qbG4nM2kJAdzDntaaq?=
- =?us-ascii?Q?aBWa/8qISUKAtVBK4yXwgh+nRBgkGImw/kCNz7PUt1CC+YbXYzofQfCb80e8?=
- =?us-ascii?Q?WqFNtHAIp0W8EvuJStk/1S6NA/p9lXZTqyTxZfcFpjRyVomGaHmZDtXfdk9x?=
- =?us-ascii?Q?94YN8mrp9NOaPdkpPrBPN0wPCKbZr3JFFoEcKPnSA0Ey16vvzoPYZnr020+I?=
- =?us-ascii?Q?PnxZsQanETltuNgZ6KLCgre7tyWUzwSgRgN+S3EbHhnJxj70fraCrOFOn2J0?=
- =?us-ascii?Q?LwaM1QxEfGpsD80VJNQCivD3FwwDBqJuQR1JSjH6Rkb8wWAtypQWMUfR3Kdo?=
- =?us-ascii?Q?N346hawiUK8ZwLl42o9DdkQLUp57fcwSEr6ROxa3UxCde9qLjChPR9XbfR0t?=
- =?us-ascii?Q?WBbjwkruNGwn7GNurIXEQpO8+a7NiKsAAQ3hpJeRQWLMQWpvP8gWoTWg4g0j?=
- =?us-ascii?Q?zt7gRJ13J9+yidf8VNFF0IOICBS63e5fsZLeo89rWHako9+F+Ex90MZzAnFf?=
- =?us-ascii?Q?KQFiYpESk0KCbx0nzaTTPVAiSv/CbyANiTZrL86s6PD3TksxW6EjSzkWvmO0?=
- =?us-ascii?Q?pCQE/algt+7MS34MPp0iZk6tdxDU5WQiWtwkGPidVdV9bOrlRrAFZA2PV1C3?=
- =?us-ascii?Q?1PSoFOVLWlaafzHSw+D8WOhSwxXPQS7G4KrWhn3R4Lut+IeumsVHQefn6J2z?=
- =?us-ascii?Q?WsVr2ySHoh3bOw5PF4l7bqqJ/oYy+AMmRnLUui4gk3bSV/0anyq2hTkvd6Pv?=
- =?us-ascii?Q?kU3+J4+GZLKmXx3/U1qE/m5ZSxsZkHyZsqH944291GYC1s7aZt12Q2KGWR5S?=
- =?us-ascii?Q?Mv2ShE1hg8z51DOmEZiRVgSF9Lb6q9Aoe0Z3WboviyjZyuFJGetD6WWSkqrt?=
- =?us-ascii?Q?2c54pzZdmeV3ptKIVWODeOfe70zvedhoKZvYFFonjS9Zhn7ByfXdvTU7E26+?=
- =?us-ascii?Q?FqfEUAX2q4n2nCZhYZTLlLftkNnHP3un/bCnRmBrxeAEA+HHJJjs6dUzUg6l?=
- =?us-ascii?Q?gBIwRFOJhUtj3ZL7R/2pCdQVsYCfZvp6H+HyOfJvlYJK7PiYJq7S3OkP44qx?=
- =?us-ascii?Q?U1TIzkRWtFaqqBSLMxQWVf6T5RptdBNW02LzjLJP?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 658c3c2b-accb-4d6e-7291-08dbb0313606
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3062.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2023 06:02:41.1657
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YdgLgCkqjDwSNmUw5W5GNyNoOeJ3wtjelgj3dZWIZzBRidMxCSQBD3einb+gHL7aJsSkQqqDLwFp0z3hKo0p6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8173
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: WebService/1.1.21763 YMailNorrin
 
-On Thu, Sep 07, 2023 at 04:14:09PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Aug 29, 2023 at 10:04:51PM +0800, Aaron Lu wrote:
-> > > Could you show dmesg of the first kernel before kexec?
-> > 
-> > Attached.
-> > 
-> > BTW, kexec is invoked like this:
-> > kver=6.4.0-rc5-00009-g75d090fd167a
-> > kdir=$HOME/kernels/$kver
-> > sudo kexec -l $kdir/vmlinuz-$kver --initrd=$kdir/initramfs-$kver.img --append="root=UUID=4381321e-e01e-455a-9d46-5e8c4c5b2d02 ro net.ifnames=0 acpi_rsdp=0x728e8014 no_hash_pointers sched_verbose selinux=0"
-> 
-> I don't understand why it happens.
-> 
-> Could you check if this patch changes anything:
-> 
-> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-> index 94b7abcf624b..172c476ff6f3 100644
-> --- a/arch/x86/boot/compressed/misc.c
-> +++ b/arch/x86/boot/compressed/misc.c
-> @@ -456,10 +456,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
->  
->  	debug_putstr("\nDecompressing Linux... ");
->  
-> +#if 0
->  	if (init_unaccepted_memory()) {
->  		debug_putstr("Accepting memory... ");
->  		accept_memory(__pa(output), __pa(output) + needed_size);
->  	}
-> +#endif
->  
->  	__decompress(input_data, input_len, NULL, NULL, output, output_len,
->  			NULL, error);
-> -- 
+Hi, my CPU is AMD Ryzen 5500u.
+Thanks a lot
 
-It solved the problem.
+Michele
+
+---
+Architecture:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0x86_64
+CPU op-mode(s):=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A032-bit, 64-bit
+Byte Order:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0Little Endian
+Address sizes:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 48 bits physical, 48 bits virtual
+CPU(s):=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A012
+On-line CPU(s) list:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ 0-11
+Thread(s) per core:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A02
+Core(s) per socket:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A06
+Socket(s):=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 1
+NUMA node(s):=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A01
+Vendor ID:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 AuthenticAMD
+CPU family:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A023
+Model:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 104
+Model name:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0AMD Ryzen 5 5500U with Radeon Graphics
+Stepping:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A01
+Frequency boost:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 enabled
+CPU MHz:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 975.888
+CPU max MHz:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 4056,0000
+CPU min MHz:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 400,0000
+BogoMIPS:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A04191.99
+Virtualization:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0AMD-V
+L1d cache:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 192 KiB
+L1i cache:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 192 KiB
+L2 cache:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A03 MiB
+L3 cache:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A08 MiB
+NUMA node0 CPU(s):=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 0-11
+Vulnerability Gather data sampling: Not affected
+Vulnerability Itlb multihit:=C2=A0 =C2=A0 =C2=A0 =C2=A0 Not affected
+Vulnerability L1tf:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0Not affected
+Vulnerability Mds:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 Not affected
+Vulnerability Meltdown:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Not =
+affected
+Vulnerability Mmio stale data:=C2=A0 =C2=A0 =C2=A0 Not affected
+Vulnerability Retbleed:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Miti=
+gation; untrained return thunk; SMT enab
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 led with STIBP protect=
+ion
+Vulnerability Spec rstack overflow: Mitigation; safe RET
+Vulnerability Spec store bypass:=C2=A0 =C2=A0 Mitigation; Speculative Store=
+ Bypass disable
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 d via prctl
+Vulnerability Spectre v1:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Mitigatio=
+n; usercopy/swapgs barriers and __u
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ser pointer sanitizati=
+on
+Vulnerability Spectre v2:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Mitigatio=
+n; Retpolines, IBPB conditional, ST
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 IBP always-on, RSB fil=
+ling, PBRSB-eIBRS Not=C2=A0
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 affected
+Vulnerability Srbds:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ Not affected
+Vulnerability Tsx async abort:=C2=A0 =C2=A0 =C2=A0 Not affected
+Flags:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 fpu vme de pse tsc msr pae mce cx8 apic=
+ sep=C2=A0
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mtrr pge mca cmov pat =
+pse36 clflush mmx fxsr
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sse sse2 ht sysc=
+all nx mmxext fxsr_opt pdpe
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 1gb rdtscp lm constant=
+_tsc rep_good nopl non
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 stop_tsc cpuid extd_ap=
+icid aperfmperf rapl p
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ni pclmulqdq monitor s=
+sse3 fma cx16 sse4_1 s
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 se4_2 movbe popcnt aes=
+ xsave avx f16c rdrand
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0lahf_lm cmp_lega=
+cy svm extapic cr8_legacy a
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bm sse4a misalignsse 3=
+dnowprefetch osvw ibs=C2=A0
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 skinit wdt tce topoext=
+ perfctr_core perfctr_
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 nb bpext perfctr_llc m=
+waitx cpb cat_l3 cdp_l
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 3 hw_pstate ssbd mba i=
+brs ibpb stibp vmmcall
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fsgsbase bmi1 av=
+x2 smep bmi2 cqm rdt_a rdse
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ed adx smap clflushopt=
+ clwb sha_ni xsaveopt=C2=A0
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 xsavec xgetbv1 cqm_llc=
+ cqm_occup_llc cqm_mbm
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _total cqm_mbm_local c=
+lzero irperf xsaveerpt
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 r rdpru wbnoinvd cppc =
+arat npt lbrv svm_lock
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0nrip_save tsc_sc=
+ale vmcb_clean flushbyasid=C2=A0
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 decodeassists pausefil=
+ter pfthreshold avic v
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 _vmsave_vmload vgif v_=
+spec_ctrl umip rdpid o
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 verflow_recov succor s=
+mca
+
+
+
+
+
+Il venerd=C3=AC 8 settembre 2023 alle ore 06:41:42 CEST, Huang Rui <ray.hua=
+ng@amd.com> ha scritto:=20
+
+
+
+
+
+On Fri, Sep 01, 2023 at 05:42:22PM +0800, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1] that have been already handl=
+ed
+> there. Quoting from it:
+>=20
+> > After switching from 6.4.x kernel to 6.5 I experienced an abnormal batt=
+ery drain since my laptop is actually never idle.
+> > I accepted default CPUfreq to schedutil and AMD Processor P-State mode =
+is 3 (active).=20
+> >=20
+> > I expected a different behaviour, but am I missing something?
+> > In my boot configuration I had "amd_pstate.shared_mem=3D1" and tried to=
+ remove this switch, but did not affect my power consuption.
+> >=20
+> > Is there something changed from 6.4.x to 6.5 that requires a different =
+configuration to get an optimal power consumption?
+> >=20
+> > Thanks a lot for your attention
+>=20
+> See Bugzilla for the full thread.
+>=20
+> Anyway, I'm adding it to regzbot:
+>=20
+> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?=
+id=3D217853
+>=20
+
++ Meng Li/Perry,
+
+May we know which CPU type are you using? Try "lscpu"?
+
+
+Thanks,
+
+Ray
+
