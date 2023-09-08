@@ -1,163 +1,320 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DEC4C93
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 16:18:05 +0000 (UTC)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-414ba610766so374191cf.0
-        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 09:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1694189884; x=1694794684; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6mPUcamzfc2K80JTRcSh37SDRo35tgdoJ7iQ161IJKQ=;
-        b=XF1T0VVJdgwMPmZ3Fmje9TAY2jNwSYGBWT1GIN1TCnYTgbZ2+loPw/iJgLNa1Eq4n8
-         LP1sae9rBVjX7fR1T2ovjJVdtpFIt9sETXGWjEfmNmkLrSx24bHLHvDEKrv9T/m2/7PZ
-         +ynVYbXqtjIk2KStIjNz2uiBEusbzI0/QQS6CdDg74d4aideRCsJlBPA9pXgN8H6NRTR
-         o8TpTONzBSMo4RGh3FzHcfcZ6kN5dkVy7IMPJfO0Td5tWRIBNYt6MNvHlm92a674UwDn
-         WdfXavnGzVT/r9gfF61jhLGu5b5TjAUzudTUEYqWj6GJicV90PIZCDoF+0THskxNAXKs
-         P1SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694189884; x=1694794684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6mPUcamzfc2K80JTRcSh37SDRo35tgdoJ7iQ161IJKQ=;
-        b=DvgmZJWkeQFFc3hbetNvksEqSnJE65esCgCOD2wgxUJjGpRWOjP9woEiBNE/2dC1R0
-         d3mq8LAMHY3NIl9AHyH1l4/9T5DQA/DKIfVaplSaElNlGC9/uHzJXWeQtpVIkKHEjXbM
-         yb3bssRtKWN2cz2ZENX3n/Z+/krm72jO50LpJ1phOthQYuvtsBh/HdrGCqhN7R3xvV5/
-         ezKcOudDSK3/Wl72YtEAcPpcFqWa5rkVRvPKHSCm3jtXkLdCKnSMJGZXg2WjWX7zqvOY
-         HvHPNqxmEMm3xxMa8/nfYQtgR/39+nMitK4YwtjGZKDw7XnXZo6JQrvqDROQpMTI15oT
-         cdjQ==
-X-Gm-Message-State: AOJu0YyBW0qhWKsIrldbas6C52sqisFbLAGvInfYHXn6PG3gKO8gQplB
-	LSbcAuv9cmvMjvmjxKLGok7cPbPqCArTEK7sBos1ug==
-X-Google-Smtp-Source: AGHT+IHtLyt9dQcuUoOfYf1XNrLfr+Mr+5RBsmmaFIHjpge9TqIpMpMbRpg9LYwLrIjKFnT+OXss3NklaJ5bD0W+MUw=
-X-Received: by 2002:a05:622a:148b:b0:405:47aa:7ffd with SMTP id
- t11-20020a05622a148b00b0040547aa7ffdmr220836qtx.19.1694189884551; Fri, 08 Sep
- 2023 09:18:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F7830F96
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 20:25:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B589FC43397
+	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 20:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694204720;
+	bh=oICsfMZ9zcXdQx62GRWHsb78WN87mQZ6kdZzxuWVlLw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=np5QNcHV6ppednrPrSrut4jUIvhZmjh9Lq6RR+Nrh/bGli/5LDm1RlRcXjMRsm4Py
+	 EfEu5ZFnSIC3b+Q10BR6WL8HDgCG9xo7AGZBRLuzQj6HDZ7YlODM6YEhtZV8BL0OiJ
+	 aKEwlTeEoZFaRB+3ghwOMPP0jcy2qUuY7sW+aQgmuizAZ04gtmueUaYgBl3UwKDEz4
+	 28PqxY2kNf3cOY2CYRBXObrAH8gViWaNrIv+lx5d8rB6zmZB+C1QfEnpUqnm3XP689
+	 LTU+qgjaSGSjEgG7/9cggBZJ9906x3l0VYT1BOWzPc2XxjpZlz90BzZ/LBv4NAoh4i
+	 e6UY8w8aOOO/w==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-502a7e1bdc7so267141e87.0
+        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 13:25:20 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyijIF8IsWsIbSlqxrOQZALH9XjC/LtxYU6zCBW1A3eWhp2c7e9
+	/pAZHtMJMTBCeLiF0ZHYca9xztNAPtUIkPf88X0=
+X-Google-Smtp-Source: AGHT+IFfBSYL+XX4tBhb29IpCYv+gn37nS694W+gRm2KIccPnRUcRy+AaCekwP01g8GK9+U5N6kYLYqIjbsC4lbAvCw=
+X-Received: by 2002:ac2:57c7:0:b0:500:9839:b13a with SMTP id
+ k7-20020ac257c7000000b005009839b13amr2102297lfo.66.1694204718841; Fri, 08 Sep
+ 2023 13:25:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230829114816.GA508985@ziqianlu-dell> <ZO3hQ0rbr8QuUjVI@debian.me>
- <20230829125134.GA509331@ziqianlu-dell> <20230829125939.bcg2r6hwqf45npko@box.shutemov.name>
- <20230829140451.GA509854@ziqianlu-dell> <20230907131409.masxz42ik6u456qp@box.shutemov.name>
- <20230908060230.GA283801@ziqianlu-dell> <20230908123233.dpbpohgrbyyxekzk@box.shutemov.name>
- <202309080856.F066F92C98@keescook>
-In-Reply-To: <202309080856.F066F92C98@keescook>
-From: Ard Biesheuvel <ardb@google.com>
-Date: Fri, 8 Sep 2023 18:17:53 +0200
-Message-ID: <CAGnOC3aG9BuoVEGs4LQhhczdhAF0gFBmXR7GXKAf4Z8FPTb1PQ@mail.gmail.com>
-Subject: Re: kexec reboot failed due to commit 75d090fd167ac
-To: Kees Cook <keescook@chromium.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>
+References: <028a21df-4397-80aa-c2a5-7c754560f595@gmail.com>
+ <35130b3f-c0fd-e2d6-e849-a5ceb6a2895f@linux.dev> <CAMz9Wg_zKSJ2vL=r2zAtLBOv4GSMT63+ZQGXfYTjVJsE+DLQGA@mail.gmail.com>
+ <CAPhsuW6W0XgFjH1zNC+EFYjujd4smEiWs+-nYCWQ+KaFmbuvkg@mail.gmail.com>
+ <CAMz9Wg9y52iuxJRSQFC2N5Katt72v-o=JvEjegJt-MwORmw9tQ@mail.gmail.com>
+ <CAPhsuW7XEy4q3XR389F7CUvXvJ=0JR0QkMOr4LU03avT0erAfg@mail.gmail.com>
+ <354004ce-ad4e-5ad5-8fe6-303216647e0c@huaweicloud.com> <03b79ab0-0bb0-ac29-4a70-37d902f9a05b@huaweicloud.com>
+ <20230831085057.00001795@linux.intel.com> <CAMz9Wg8bhCG=qSLia943dwr=LV7Kum=bZPq2s_2coV6a_bmDeA@mail.gmail.com>
+ <20230906122751.00001e5b@linux.intel.com> <43b0b2f4-17c0-61d2-9c41-0595fb6f2efc@huaweicloud.com>
+ <20230907121819.00005a15@linux.intel.com> <cffca94f-5729-622d-9327-632b3ff2891a@huaweicloud.com>
+ <3e7edf0c-cadd-59b0-4e10-dffdb86b93b7@huaweicloud.com> <20230907144153.00002492@linux.intel.com>
+ <513ea05e-cc2e-e0c8-43cc-6636b0631cdf@huaweicloud.com> <20230907170940.00002fe4@linux.intel.com>
+In-Reply-To: <20230907170940.00002fe4@linux.intel.com>
+From: Song Liu <song@kernel.org>
+Date: Fri, 8 Sep 2023 13:25:06 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5t3e2VmhktCLDMV90KBKYzzyB_oVXbJ+J11_4ZydeR9Q@mail.gmail.com>
+Message-ID: <CAPhsuW5t3e2VmhktCLDMV90KBKYzzyB_oVXbJ+J11_4ZydeR9Q@mail.gmail.com>
+Subject: Re: Infiniate systemd loop when power off the machine with multiple
+ MD RAIDs
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, AceLan Kao <acelan@gmail.com>, 
+	Guoqing Jiang <guoqing.jiang@linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Linux RAID <linux-raid@vger.kernel.org>, 
+	"yangerkun@huawei.com" <yangerkun@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 8, 2023 at 5:58=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
+On Thu, Sep 7, 2023 at 8:24=E2=80=AFAM Mariusz Tkaczyk
+<mariusz.tkaczyk@linux.intel.com> wrote:
 >
-> On Fri, Sep 08, 2023 at 03:32:33PM +0300, Kirill A. Shutemov wrote:
-> > On Fri, Sep 08, 2023 at 02:02:30PM +0800, Aaron Lu wrote:
-> > > On Thu, Sep 07, 2023 at 04:14:09PM +0300, Kirill A. Shutemov wrote:
-> > > > On Tue, Aug 29, 2023 at 10:04:51PM +0800, Aaron Lu wrote:
-> > > > > > Could you show dmesg of the first kernel before kexec?
-> > > > >
-> > > > > Attached.
-> > > > >
-> > > > > BTW, kexec is invoked like this:
-> > > > > kver=3D6.4.0-rc5-00009-g75d090fd167a
-> > > > > kdir=3D$HOME/kernels/$kver
-> > > > > sudo kexec -l $kdir/vmlinuz-$kver --initrd=3D$kdir/initramfs-$kve=
-r.img --append=3D"root=3DUUID=3D4381321e-e01e-455a-9d46-5e8c4c5b2d02 ro net=
-.ifnames=3D0 acpi_rsdp=3D0x728e8014 no_hash_pointers sched_verbose selinux=
-=3D0"
-> > > >
-> > > > I don't understand why it happens.
-> > > >
-> > > > Could you check if this patch changes anything:
-> > > >
-> > > > diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compre=
-ssed/misc.c
-> > > > index 94b7abcf624b..172c476ff6f3 100644
-> > > > --- a/arch/x86/boot/compressed/misc.c
-> > > > +++ b/arch/x86/boot/compressed/misc.c
-> > > > @@ -456,10 +456,12 @@ asmlinkage __visible void *extract_kernel(voi=
-d *rmode, memptr heap,
-> > > >
-> > > >   debug_putstr("\nDecompressing Linux... ");
-> > > >
-> > > > +#if 0
-> > > >   if (init_unaccepted_memory()) {
-> > > >           debug_putstr("Accepting memory... ");
-> > > >           accept_memory(__pa(output), __pa(output) + needed_size);
-> > > >   }
-> > > > +#endif
-> > > >
-> > > >   __decompress(input_data, input_len, NULL, NULL, output, output_le=
-n,
-> > > >                   NULL, error);
-> > > > --
+> On Thu, 7 Sep 2023 20:53:30 +0800
+> Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>
+> > Hi,
+> >
+> > =E5=9C=A8 2023/09/07 20:41, Mariusz Tkaczyk =E5=86=99=E9=81=93:
+> > > On Thu, 7 Sep 2023 20:14:03 +0800
+> > > Yu Kuai <yukuai1@huaweicloud.com> wrote:
 > > >
-> > > It solved the problem.
+> > >> Hi,
+> > >>
+> > >> =E5=9C=A8 2023/09/07 19:26, Yu Kuai =E5=86=99=E9=81=93:
+> > >>> Hi,
+> > >>>
+> > >>> =E5=9C=A8 2023/09/07 18:18, Mariusz Tkaczyk =E5=86=99=E9=81=93:
+> > >>>> On Thu, 7 Sep 2023 10:04:11 +0800
+> > >>>> Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> > >>>>
+> > >>>>> Hi,
+> > >>>>>
+> > >>>>> =E5=9C=A8 2023/09/06 18:27, Mariusz Tkaczyk =E5=86=99=E9=81=93:
+> > >>>>>> On Wed, 6 Sep 2023 14:26:30 +0800
+> > >>>>>> AceLan Kao <acelan@gmail.com> wrote:
+> > >>>>>>>    From previous testing, I don't think it's an issue in system=
+d, so I
+> > >>>>>>> did a simple test and found the issue is gone.
+> > >>>>>>> You only need to add a small delay in md_release(), then the is=
+sue
+> > >>>>>>> can't be reproduced.
+> > >>>>>>>
+> > >>>>>>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> > >>>>>>> index 78be7811a89f..ef47e34c1af5 100644
+> > >>>>>>> --- a/drivers/md/md.c
+> > >>>>>>> +++ b/drivers/md/md.c
+> > >>>>>>> @@ -7805,6 +7805,7 @@ static void md_release(struct gendisk *di=
+sk)
+> > >>>>>>> {
+> > >>>>>>>           struct mddev *mddev =3D disk->private_data;
+> > >>>>>>>
+> > >>>>>>> +       msleep(10);
+> > >>>>>>>           BUG_ON(!mddev);
+> > >>>>>>>           atomic_dec(&mddev->openers);
+> > >>>>>>>           mddev_put(mddev);
+> > >>>>>>
+> > >>>>>> I have repro and I tested it on my setup. It is not working for =
+me.
+> > >>>>>> My setup could be more "advanced" to maximalize chance of reprod=
+uction:
+> > >>>>>>
+> > >>>>>> # cat /proc/mdstat
+> > >>>>>> Personalities : [raid1] [raid6] [raid5] [raid4] [raid10] [raid0]
+> > >>>>>> md121 : active raid0 nvme2n1[1] nvme5n1[0]
+> > >>>>>>          7126394880 blocks super external:/md127/0 128k chunks
+> > >>>>>>
+> > >>>>>> md122 : active raid10 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0=
+]
+> > >>>>>>          104857600 blocks super external:/md126/0 64K chunks 2
+> > >>>>>> near-copies
+> > >>>>>> [4/4] [UUUU]
+> > >>>>>>
+> > >>>>>> md123 : active raid5 nvme6n1[3] nvme4n1[2] nvme1n1[1] nvme7n1[0]
+> > >>>>>>          2655765504 blocks super external:/md126/1 level 5, 32k =
+chunk,
+> > >>>>>> algorithm 0 [4/4] [UUUU]
+> > >>>>>>
+> > >>>>>> md124 : active raid1 nvme0n1[1] nvme3n1[0]
+> > >>>>>>          99614720 blocks super external:/md125/0 [2/2] [UU]
+> > >>>>>>
+> > >>>>>> md125 : inactive nvme3n1[1](S) nvme0n1[0](S)
+> > >>>>>>          10402 blocks super external:imsm
+> > >>>>>>
+> > >>>>>> md126 : inactive nvme7n1[3](S) nvme1n1[2](S) nvme6n1[1](S)
+> > >>>>>> nvme4n1[0](S)
+> > >>>>>>          20043 blocks super external:imsm
+> > >>>>>>
+> > >>>>>> md127 : inactive nvme2n1[1](S) nvme5n1[0](S)
+> > >>>>>>          10402 blocks super external:imsm
+> > >>>>>>
+> > >>>>>> I have almost 99% repro ratio, slowly moving forward..
+> > >>>>>>
+> > >>>>>> It is endless loop because systemd-shutdown sends ioctl "stop_ar=
+ray"
+> > >>>>>> which
+> > >>>>>> is successful but array is not stopped. For that reason it sets
+> > >>>>>> "changed =3D
+> > >>>>>> true".
+> > >>>>>
+> > >>>>> How does systemd-shutdown judge if array is stopped? cat /proc/md=
+stat or
+> > >>>>> ls /dev/md* or other way?
+> > >>>>
+> > >>>> Hi Yu,
+> > >>>>
+> > >>>> It trusts return result, I confirmed that 0 is returned.
+> > >>>> The most weird is we are returning 0 but array is still there, and=
+ it is
+> > >>>> stopped again in next systemd loop. I don't understand why yet..
+> > >>>>
+> > >>>>>> Systemd-shutdown see the change and retries to check if there is
+> > >>>>>> something
+> > >>>>>> else which can be stopped now, and again, again...
+> > >>>>>>
+> > >>>>>> I will check what is returned first, it could be 0 or it could b=
+e
+> > >>>>>> positive
+> > >>>>>> errno (nit?) because systemd cares "if(r < 0)".
+> > >>>>>
+> > >>>>> I do noticed that there are lots of log about md123 stopped:
+> > >>>>>
+> > >>>>> [ 1371.834034] md122:systemd-shutdow bd_prepare_to_claim return -=
+16
+> > >>>>> [ 1371.840294] md122:systemd-shutdow blkdev_get_by_dev return -16
+> > >>>>> [ 1371.846845] md: md123 stopped.
+> > >>>>> [ 1371.850155] md122:systemd-shutdow bd_prepare_to_claim return -=
+16
+> > >>>>> [ 1371.856411] md122:systemd-shutdow blkdev_get_by_dev return -16
+> > >>>>> [ 1371.862941] md: md123 stopped.
+> > >>>>>
+> > >>>>> And md_ioctl->do_md_stop doesn't have error path after printing t=
+his
+> > >>>>> log, hence 0 will be returned to user.
+> > >>>>>
+> > >>>>> The normal case is that:
+> > >>>>>
+> > >>>>> open md123
+> > >>>>> ioctl STOP_ARRAY -> all rdev should be removed from array
+> > >>>>> close md123 -> mddev will finally be freed by:
+> > >>>>>      md_release
+> > >>>>>       mddev_put
+> > >>>>>        set_bit(MD_DELETED, &mddev->flags) -> user shound not see =
+this
+> > >>>>> mddev
+> > >>>>>        queue_work(md_misc_wq, &mddev->del_work)
+> > >>>>>
+> > >>>>>      mddev_delayed_delete
+> > >>>>>       kobject_put(&mddev->kobj)
+> > >>>>>
+> > >>>>>      md_kobj_release
+> > >>>>>       del_gendisk
+> > >>>>>        md_free_disk
+> > >>>>>         mddev_free
+> > >>>>>
+> > >>>> Ok thanks, I understand that md_release is called on descriptor
+> > >>>> closing, right?
+> > >>>>
+> > >>>
+> > >>> Yes, normally close md123 should drop that last reference.
+> > >>>>
+> > >>>>> Now that you can reporduce this problem 99%, can you dig deeper a=
+nd find
+> > >>>>> out what is wrong?
+> > >>>>
+> > >>>> Yes, working on it!
+> > >>>>
+> > >>>> My first idea was that mddev_get and mddev_put are missing on
+> > >>>> md_ioctl() path
+> > >>>> but it doesn't help for the issue. My motivation here was that
+> > >>>> md_attr_store and
+> > >>>> md_attr_show are using them.
+> > >>>>
+> > >>>> Systemd regenerates list of MD arrays on every loop and it is alwa=
+ys
+> > >>>> there, systemd is able to open file descriptor (maybe inactive?).
+> > >>>
+> > >>> md123 should not be opended again, ioctl(STOP_ARRAY) already set th=
+e
+> > >>> flag 'MD_CLOSING' to prevent that. Are you sure that systemd-shutdo=
+wn do
+> > >>> open and close the array in each loop?
+> > >>
+> > >> I realized that I'm wrong here. 'MD_CLOSING' is cleared before ioctl
+> > >> return by commit 065e519e71b2 ("md: MD_CLOSING needs to be cleared a=
+fter
+> > >> called md_set_readonly or do_md_stop").
+> > >>
+> > >> I'm confused here, commit message said 'MD_CLOSING' shold not be set=
+ for
+> > >> the case STOP_ARRAY_RO, but I don't understand why it's cleared for
+> > >> STOP_ARRAY as well.
+> > >>
 > >
-> > Looks like increasing BOOT_INIT_PGT_SIZE fixes the issue. I don't yet
-> > understand why and how unaccepted memory is involved. I will look more
-> > into it.
+> > Can you try the following patch?
 > >
-> > Enabling CONFIG_RANDOMIZE_BASE also makes the issue go away.
->
-> Is this perhaps just luck? I.e. does is break ever on, say, 1000 boot
-> attempts? (i.e. maybe some position is bad and KASLR happens to usually
-> avoid it?)
->
-> > Kees, maybe you have a clue?
->
-> The only thing I can think of is that something isn't being counted
-> correctly due to the size of code, and it just happens that this commit
-> makes the code large enough to exceed some set of mappings?
->
+> > diff --git a/drivers/md/md.c b/drivers/md/md.c
+> > index 3afd57622a0b..31b9cec7e4c0 100644
+> > --- a/drivers/md/md.c
+> > +++ b/drivers/md/md.c
+> > @@ -7668,7 +7668,8 @@ static int md_ioctl(struct block_device *bdev,
+> > fmode_t mode,
+> >                          err =3D -EBUSY;
+> >                          goto out;
+> >                  }
+> > -               did_set_md_closing =3D true;
+> > +               if (cmd =3D=3D STOP_ARRAY_RO)
+> > +                       did_set_md_closing =3D true;
+> >                  mutex_unlock(&mddev->open_mutex);
+> >                  sync_blockdev(bdev);
+> >          }
 > >
-> > diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-> > index 9191280d9ea3..26ccce41d781 100644
-> > --- a/arch/x86/include/asm/boot.h
-> > +++ b/arch/x86/include/asm/boot.h
-> > @@ -40,7 +40,7 @@
-> >  #ifdef CONFIG_X86_64
-> >  # define BOOT_STACK_SIZE     0x4000
-> >
-> > -# define BOOT_INIT_PGT_SIZE  (6*4096)
-> > +# define BOOT_INIT_PGT_SIZE  (7*4096)
+> > I think prevent array to be opened again after STOP_ARRAY might fix
+> > this.
 >
-> That's why this might be working, for example? How large is the boot
-> image before/after the commit, etc?
+> I didn't help. I tried much more:
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 0fe7ab6e8ab9..807387f37755 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -608,7 +608,7 @@ static inline struct mddev *mddev_get(struct mddev *m=
+ddev)
+>  {
+>         lockdep_assert_held(&all_mddevs_lock);
 >
+> -       if (test_bit(MD_DELETED, &mddev->flags))
+> +       if (test_bit(MD_DELETED, &mddev->flags) || test_bit(MD_CLOSING,
+>   &mddev->flags)) return NULL;
+>         atomic_inc(&mddev->active);
+>         return mddev;
+>
+>
+> Issue is still reproducible. I was shocked so I removed clearing MD_CLOSI=
+NG:
+>  out:
+> -       if(did_set_md_closing)
+> -               clear_bit(MD_CLOSING, &mddev->flags);
+> +       //if(did_set_md_closing)
+> +       //      clear_bit(MD_CLOSING, &mddev->flags);
+>
+> Still reproducible. Then I found this:
+> @@ -6177,7 +6179,7 @@ static void md_clean(struct mddev *mddev)
+>         mddev->persistent =3D 0;
+>         mddev->level =3D LEVEL_NONE;
+>         mddev->clevel[0] =3D 0;
+> -       mddev->flags =3D 0;
+> +       //mddev->flags =3D 0;
+>         mddev->sb_flags =3D 0;
+>         mddev->ro =3D MD_RDWR;
+>         mddev->metadata_type[0] =3D 0;
+>
+> Issue not reproducible. I can see in log that attempt to stop device is n=
+ot
+> repeated.
+>
+> Well, with the change of using time-sensitive lock in mddev_put we need t=
+o
+> ensure that we can still can remove mddevice so setting and preserving
+> MD_CLOSING is reasonable for me. I will combine this into patches tomorro=
+w.
+>
+> Yu, really appreciate your help! Glad to heave you here.
 
-Not sure why these changes would make a difference here, but choking
-on accept_memory() on a non-TDX suggests that init_unaccepted_memory()
-is poking into unmapped memory before it even decides that the
-unaccepted memory does not exist.
+Thanks to everyone for looking into this tricky issue and running various t=
+ests!
 
-init_unaccepted_memory() has
+Mariusz, please let me know if you need any help with the patch. Hopefully =
+we
+can fix this soon.
 
-        ret =3D efi_get_conf_table(boot_params, &cfg_table_pa, &cfg_table_l=
-en);
-        if (ret) {
-                warn("EFI config table not found.");
-                return false;
-        }
-
-which looks for <guid, phys_addr> tuples in an array pointed to by the
-EFI system table, and if either of those is not mapped, things can be
-expected to explode.
-
-The only odd thing there is that this code is invoked after setting up
-the 'demand paging' logic in the decompressor.
-
-If you haven't yet, could you please retry the kexec boot with
-earlyprintk=3Dtty<insert your UART params here>?
+Thanks again,
+Song
