@@ -1,139 +1,93 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A9DB643
-	for <regressions@lists.linux.dev>; Fri,  8 Sep 2023 22:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
- s=s31663417; t=1694210622; x=1694815422; i=quwenruo.btrfs@gmx.com;
- bh=5Ljgq+H7SkTzVPfsF1yYeLRPgCNrb/4ZGlnQM0A/jG8=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=KePvt+I8bcx3rrjyEPjoB8ifmjOwKmFvjlGI2TRZRA4GhGkywr3yxcGNpumaEkDhw3NMoUN
- KI4CmW0Z5CscarlypUTSZP3LCdp8vncN6vnu9lwf2toWOVmTdbPmzQp07wV4hGqgi2WEmimrf
- X/RGrDUVuYDmyiEAmNo4lXuKqknidRq5zHqhgLpYJ6TcgxAKx84tXudQPyUrwoOzB0VbZH5VM
- vDXZM7E3rUeO6Bbo40eNh7+pTYvqN3OqBR6xob7y0+0r1uBarun2NXxEaWQxpLXW/NqyItA/7
- cCbid3dB3R+xQxiuvF9emz995FJrsR3X6ZY5h5zz+g1XB/7CtUOA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N5GE1-1pfw0h0EmD-011Bkp; Sat, 09
- Sep 2023 00:03:42 +0200
-Message-ID: <4f5fee23-2ccb-41a2-a64c-1675bc378ff5@gmx.com>
-Date: Sat, 9 Sep 2023 06:03:38 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BC517C5
+	for <regressions@lists.linux.dev>; Sat,  9 Sep 2023 05:28:26 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-68a41035828so2334694b3a.1
+        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 22:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694237306; x=1694842106; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AhGcYIVxPZwLXUPMQ7arLtBywPpQ4z3xctSy6TWk6XU=;
+        b=ZMpVhjpxeN4osdnNQBxpYrh8CPyAMIpXw5L3IfNhRa3MGttpFIiZleHXZQ6Fs7LkNF
+         FSydPB4xjuHBZDKYWok8i0COuXP5oDT9R9kHq/VQWUTYX1xY91mGUO4d6Nw/wj/7eTyo
+         y41yHC4oRIzQnr3ewMmVwExkEnObZHDbGXB4TuYwsuMJ60HtS2w2ZjrbyssX4DRL+xGI
+         CiOjn/AvimX3/oDxDGD2kt0OpZiEHyLCIYiKTbW40V4NSIKozgKCjNtcdR1O4cUJeYx3
+         +PopSjhQ8wsC0/eek0S6t5uzBCBquuN2K/6prgX71nTuYFyRl3W+20k6PmaF+7XnQw4n
+         sn/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694237306; x=1694842106;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AhGcYIVxPZwLXUPMQ7arLtBywPpQ4z3xctSy6TWk6XU=;
+        b=MhD7Yz4hRKqGs5iRUwvz90n3YLL5AZIr0YB4Y7+gY0cCIhIVA7b16TTRy3le/fak26
+         xSYObhBnXy0MbYOpBrSAeoi94iW18HuD4G5K1ZwN6IKYinVK9TI+E+2d/psNSfPSko7O
+         WZxgL11CP0/fg3JMLdYVOKttdMk+MHdKjoTbid+zSCHICkBEB6XJizTz/cvDtFLDYJ2Z
+         pOE50tHU5cCyabeRAYP1HYCg1EcUnCeRfl+V9fgcpX/dJ5cEOG0haXLpNQj6oBYchaRj
+         pqDxxXceQHTfAFwlpLrFPYVJL4MX6zbFqIqyRG6nM1sufximola+dZ7HwZ689G4auZEl
+         5h2g==
+X-Gm-Message-State: AOJu0Yyj+C9J8++xHfM1dnjP9b9hac2DHz/xn6S2xd6ZJAt1tOBGQ+rM
+	einBLje9qpSy6j0WoiMSf0w=
+X-Google-Smtp-Source: AGHT+IGw0ulupui94qNdMz252mwrFm6dOVwPF7ntkmtDhRPf3eauIShtH1mkNSqQIgh2r194qOvtMA==
+X-Received: by 2002:a05:6a00:15ca:b0:68a:4dfa:ea63 with SMTP id o10-20020a056a0015ca00b0068a4dfaea63mr4581797pfu.19.1694237306156;
+        Fri, 08 Sep 2023 22:28:26 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id n26-20020aa78a5a000000b006828e49c04csm2088013pfa.75.2023.09.08.22.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Sep 2023 22:28:25 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 89ED6803A58F; Sat,  9 Sep 2023 12:28:21 +0700 (WIB)
+Date: Sat, 9 Sep 2023 12:28:21 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	TatriX <tatrics@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
+	Linux Kernel Build System <linux-kbuild@vger.kernel.org>
+Subject: Re: Fwd: Bluetooth LE scan doesn't show device name
+Message-ID: <ZPwCdd6lnOTbcDS0@debian.me>
+References: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Scrub of my nvme SSD has slowed by about 2/3
-To: Martin Steigerwald <martin@lichtvoll.de>, linux-btrfs@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tim Cuthbertson <ratcheer@gmail.com>
-References: <CAAKzf7=yS9vnf5zNid1CyvN19wyAgPz5o9sJP0vBqN6LReqXVg@mail.gmail.com>
- <1d611dbb-8aee-9a6e-701c-6498f1b51c34@leemhuis.info>
- <efbe13a5-1c6d-e6fe-25be-bd942823432c@leemhuis.info>
- <2169630.irdbgypaU6@lichtvoll.de>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
- pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
- BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
- XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
- jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
- LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
- mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
- CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
- tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
- INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
- DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
- iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
-In-Reply-To: <2169630.irdbgypaU6@lichtvoll.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yHJYS4swNGsW/wbV"
+Content-Disposition: inline
+In-Reply-To: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
+
+
+--yHJYS4swNGsW/wbV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PIn7D1LkpohwKyNMIhYgxukMOg89dhtWUrhOd28xvQerO86oT7n
- /TL9eHxCAwKbMOFi2ysjcCdj5th8+5pyjEJfCQDUEC5+SZ0yym/S9D3N6F8VzuX4EZx6xU3
- MHJOdcVvQHfMhPQSAq6vUOZTDomrLvdCKPvQiVc1/eQAPFM4n2o9vaelz/MX1a+jxdtTVvj
- a7YeG15bPLyGPpXrw2Udg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VF7NGNkx3Gg=;IeRp0KLJcvnxc0fRyIxgVZOu+zi
- UcqtVrCWSvA35uQ9MFjL0V4UGRrOnEqgg8S90+DI5uaJQoXkLel9wcnpL0lh1OlfH+2wyUVuQ
- ZRtx7afQ8ShFHLdoO4teJVsO0uQFIO40hVpPS78b7jU5vV+oZ4u2U4e/Ga4nOxpa6JU6Vxmma
- e8QZHCR7mWNxbjvATrjUxZ7cN21DDurwO/nCcNHMV2pIsj9yF/GdE8UTZO1UNaHpu3lufopIu
- 984RwzlYZPQhitZJp9BopnbxIih4wTVvGMyhr5ibVvRTv5NEIQ0M3hy0+3Q9sH96tCgxsY198
- sZyKXgCiyMlNxtPXVbNfA/qNzsb8ND0TnT3deI4ISMP2wv9uZrEER7SCiioFWBmiSueCXX+GA
- sYnpo3aqjdOgvJfA+xnXEzpBqJCdbT2xwhZWU8HqPTeinzOPqp2UXbjq74mXl6S4AGikLi6oj
- QuGmxOnetGX3KVK4GrJIzPnN+7lPSJtiYrW50X1cNGJcIvhC+gmc+PaRF/7EjG1jNtDvimObw
- 56eLfMdM+bBTlHEBek4zGjGM10gnVxbOQEZDw1xnA8xJyNicBm2RcMCCa/YbHBh4RKOhfd8YV
- PM09X2ncLjBdt+jjM7ex1xSx8Hh+eQJvazoNmXjDiifaMKP7a788OM0etMiNy+EUl2wRDTBVh
- gux42aBvC7u/7vzQjsJlNKJoBgUJNbPEkAOCEz1Q0+rSB862oMGNXuxFUxsfHaN10+qX+D6nB
- afstYy+Z4AJWrtia4AVck/fdu7wFSQY3DpYR22rR0G544t8o9EcbKSFEMJFmAUt+/F43r4RvG
- torYUVTW8SU8Kq7zb8nhDatZStmEZDNLZ6GjVZWmbR/y2o5HY6yLhxu2IkwCU153QpDWjEnqZ
- +QqY7gR3Q0O0bC8638sa/sVbLlC49if9Oa+pcdPDur999Eogdwh0dHdnRh1WneJqLAMYW+Tmz
- Prgmf3bIYvlqiXwylsuaqF0wCRk=
 
+On Tue, Aug 08, 2023 at 08:44:36PM +0700, Bagas Sanjaya wrote:
+> #regzbot introduced: v5.9..v6.4 https://bugzilla.kernel.org/show_bug.cgi?=
+id=3D217773
+>=20
 
+#regzbot fix: 52bf4fd43f759a
 
-On 2023/9/8 19:54, Martin Steigerwald wrote:
-> Hi Thorsten, Qu, Tim, everyone,
->
-> Linux regression tracking #update (Thorsten Leemhuis) - 29.08.23, 14:17:=
-33
-> CEST:
->> On 12.07.23 13:02, Linux regression tracking #adding (Thorsten Leemhuis=
-)
->> wrote:
->>> On 03.07.23 22:19, Tim Cuthbertson wrote:
->>>> Yesterday, I noticed that a scrub of my main system filesystem has
->>>> slowed from about 2.9 gb/sec to about 949 mb/sec. My scrub used to
->>>> run
->>>> in about 12 seconds, now it is taking 51 seconds. I had just
->>>> installed
->>>> Linux kernel 6.4.1 on Arch Linux, upgrading from 6.3.9. At first I
->>>> suspected the new kernel, but now I am not so sure.
->>>
->>> Thanks for the report. It seems it will take some work to address
->>> this,
->>> so to be sure the issue doesn't fall through the cracks unnoticed, I'm
->>> adding it to regzbot, the Linux kernel regression tracking bot:
->>>
->>> #regzbot ^introduced e02ee89baa66
->>
->> #regzbot resolve: various changes merged for 6.6 improve things again;
->> more planned; backporting is planned, too;
->> #regzbot ignore-activity
->>
->> (yes, that is not idea, but that's how it is sometimes)
->
-> ideal?
->
-> Scrubbing "/home" with 304.61GiB (interestingly both back then with 6.4
-> and now with 6.5.2):
->
-> - 6.4: 966.84MiB/s
-> - 6.5.2:  748.02MiB/s
->
-> I expected an improvement.
->
-> Same Lenovo ThinkPad T14 AMD Gen 1 with AMD Ryzen 7 PRO 4750U, 32 GiB RA=
-M
-> and 2TB Samsung 980 Pro NVME SSD as before.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-The fixes didn't arrive until v6.6.
+--yHJYS4swNGsW/wbV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Qu
+-----BEGIN PGP SIGNATURE-----
 
->
-> Ciao,
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPwCbwAKCRD2uYlJVVFO
+o3YPAQCu8g+OeR/FT4e0bLiH5epWupufFcZnNZzU0y5VYqsNqQD/Zy1WqYyTeb3n
+nOxfRLCWsV9IJ3KNPiTfR0i2jHbzKwU=
+=TM2y
+-----END PGP SIGNATURE-----
+
+--yHJYS4swNGsW/wbV--
