@@ -1,157 +1,188 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EDC15B4
-	for <regressions@lists.linux.dev>; Sat,  9 Sep 2023 11:00:55 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2406157a12.3
-        for <regressions@lists.linux.dev>; Sat, 09 Sep 2023 04:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694257254; x=1694862054; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0MKE8EZz8+wkisaN/pk04lbVR7Q5FuzqtTxgn480aHE=;
-        b=J47tEto0t58cMat2AVqwe0n0zD3eV2KLjSAUvryyJzLeLI+ctOsXzFEFXKvkyPlr4V
-         ypup1rNpWscQcuSCTG9XJa2thaxWhw32aU9vJmU+XKPixXdfVBHPEyIPFwcrakdBru8J
-         wdBQATyM1JnLbnMn2cc8IdwfjjpdiFz4OapBOxeCV3KTBSBFmO7yVld8D9r5QkJvJoZU
-         Efpy+heg1x/xJUlntOSkIDpQXmTHNwRwgFVkgV+q+KRua5hSMyx8atSHqiW3f2u9j8Ec
-         hpEEf941vdbc4RneD6rmWys8kGYP1kO/aZc89uAZimlA4F8xby44DR2AYnCXeo++M4kz
-         i20Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694257254; x=1694862054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0MKE8EZz8+wkisaN/pk04lbVR7Q5FuzqtTxgn480aHE=;
-        b=X/o9arIDzMV+lRXfX6hM5qpCr4f60cCyRrMBPImBBqAHKw19nfMtuzei+e7SXSjmlY
-         /yWr0gL125xG4i/xIB0V6rSrFlYJNtbb/jPQDxYU0J0iVmpyn8Htc2yGkrQUU4GhuT7v
-         KAa0hNbrsPWonS4wG6ryymYv5irg0WP2wBU3C6BMkgDCq75h0GISpvFqU1jcjlTMaQii
-         5XTHwGC1Ls51vZjGXeFIfxF7EojJEh7Ulf2Wj0u/v27gt4QMGDGIyU2zOaSYUP1o0x18
-         0iswnxQ2FwvnJYaeuhP0F/zeXvSzkmukkX8ORGoS3tzXomjtW1MfLCg0VyuFCMeh0wB8
-         mhhw==
-X-Gm-Message-State: AOJu0YwLyAnOSVjZ4hoV3iGZecLgrvvxLCn331PifRvI403MrWRiOfJ8
-	3dC8BMNzz9GnauGrogr9ze0=
-X-Google-Smtp-Source: AGHT+IHjR9ImlRNAJDU14CsSwYU+UYCaHpx9AY/5PxIX5+9RLyupEWZUwucf1ozgfoBZISKR1BTvIg==
-X-Received: by 2002:a17:902:ea0a:b0:1bf:4a1f:2b57 with SMTP id s10-20020a170902ea0a00b001bf4a1f2b57mr6365856plg.13.1694257254474;
-        Sat, 09 Sep 2023 04:00:54 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id 17-20020a170902c11100b001b8a1a25e6asm3028909pli.128.2023.09.09.04.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Sep 2023 04:00:53 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 39C208A6E187; Sat,  9 Sep 2023 18:00:49 +0700 (WIB)
-Date: Sat, 9 Sep 2023 18:00:49 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: bugzilla-daemon@kernel.org, dri-devel@lists.freedesktop.org,
-	Michael Mair-Keimberger <mmk+bugs@levelnine.at>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Pan@debian.me, Xinhui <Xinhui.Pan@amd.com>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug 217892] New: [amdgpu]: system freezes when trying to turn
- back on monitor
-Message-ID: <ZPxQYWLJQl7x2qAc@debian.me>
-References: <bug-217892-2300@https.bugzilla.kernel.org/>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451421FC2
+	for <regressions@lists.linux.dev>; Sat,  9 Sep 2023 11:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694259136; x=1725795136;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=nUYLq5T9/GHcLWl6uTwmBe2oMwAzdBhwkG/9NeVxpJk=;
+  b=VmDjNzzvKblpTTV0sNrE/38bVok/t7dsiomxwuKg1N8uKv6nbzeTYq7S
+   D0Dim4YxUVTBSom/6tzP2ZJn7KrzkH8bT6M01at5xRl6aTC2KLZHYuavh
+   GWhX5qFfpctfSxdT4HediA0rOOm9EtkEtfQzD5WJ3kWqtwiuiWpIfyvmx
+   Z6Gh1b1WOGVpE1Da/lcOwV1KvD7unFfv6qp71BL44o+BbFVMI/vOQxD/f
+   VD/RGScEV2vdeRE7DJ77/MtZsl9+Ms51/Z1YyS+iiWZpeubcDQXSu43sB
+   FJUqua8L40qEa/zzpbXXRb6nLIUp/2XmFK4FOY6d1bu9zW1jx+CmS/aV5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="376722592"
+X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
+   d="scan'208";a="376722592"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2023 04:32:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="745879626"
+X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
+   d="scan'208";a="745879626"
+Received: from rdota-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.216.166])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2023 04:32:13 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id A293C104CCE; Sat,  9 Sep 2023 14:32:09 +0300 (+03)
+Date: Sat, 9 Sep 2023 14:32:09 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Ard Biesheuvel <ardb@google.com>
+Cc: Kees Cook <keescook@chromium.org>, Aaron Lu <aaron.lu@intel.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: kexec reboot failed due to commit 75d090fd167ac
+Message-ID: <20230909113209.actnan6hczrclz2d@box.shutemov.name>
+References: <20230829114816.GA508985@ziqianlu-dell>
+ <ZO3hQ0rbr8QuUjVI@debian.me>
+ <20230829125134.GA509331@ziqianlu-dell>
+ <20230829125939.bcg2r6hwqf45npko@box.shutemov.name>
+ <20230829140451.GA509854@ziqianlu-dell>
+ <20230907131409.masxz42ik6u456qp@box.shutemov.name>
+ <20230908060230.GA283801@ziqianlu-dell>
+ <20230908123233.dpbpohgrbyyxekzk@box.shutemov.name>
+ <202309080856.F066F92C98@keescook>
+ <CAGnOC3aG9BuoVEGs4LQhhczdhAF0gFBmXR7GXKAf4Z8FPTb1PQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pfTqKnr0Pj4UuA1x"
-Content-Disposition: inline
-In-Reply-To: <bug-217892-2300@https.bugzilla.kernel.org/>
-
-
---pfTqKnr0Pj4UuA1x
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGnOC3aG9BuoVEGs4LQhhczdhAF0gFBmXR7GXKAf4Z8FPTb1PQ@mail.gmail.com>
 
-On Sat, Sep 09, 2023 at 10:19:36AM +0000, bugzilla-daemon@kernel.org wrote:
-> Hi,
->=20
-> My setup is a dual monitor 4K/144Hz with running sway on it. Both monitor=
-s are
-> connected via DP to a Advanced Micro Devices, Inc. [AMD/ATI] Navi 31 [Rad=
-eon RX
-> 7900 XT/7900 XTX]. Usually if i don't change monitor settings everything =
-works
-> as expected. The monitors do also wake up flawlessly after system idling.=
-=20
->=20
-> However, sometimes i turn off the second monitor (for example for playing
-> games). For that i made a shortcut in sway which looks like this.=20
-> > bindsym $mod+Shift+F12 output DP-2 toggle
->=20
-> Now, turning the monitor of works as expected. However, turning it back o=
-n i
-> encounter following erros/problems:
-> Main Workspace (Desktop) freezes, second monitor tries to get turned on. =
-(The
-> monitor led goes up)
-> After some time (couple of seconds, around 10-15sec) the main desktop wor=
-ks
-> again, the second screen goes off again.
-> At that point i usually have to reboot the system to get the second monit=
-or
-> back.
->=20
-> In dmesg is see following entries:
-> [ 8623.325357] [drm] enabling link 1 failed: 15
-> [ 8623.382238] [drm] REG_WAIT timeout 10us * 5000 tries -
-> enc32_stream_encoder_dp_unblank line:348
-> [ 8623.437493] [drm] REG_WAIT timeout 10us * 5000 tries -
-> enc32_stream_encoder_dp_unblank line:357
-> [ 8638.435963] [drm:amdgpu_dm_atomic_check] *ERROR* [CRTC:81:crtc-3] hw_d=
-one or
-> flip_done timed out
->=20
-> This is also something which can be reproduces quite easily. However some=
-times
-> it works almost without problems. (in that case, the monitor comes back b=
-ut the
-> desktop on the main monitor looks distorted/corruped - maximizing a appli=
-cation
-> fixes that)
->=20
-> This also seems to be a regression. With kernel 6.2 and 6.3 this worked as
-> expected.
->=20
-> I'm using following kernel:
-> Linux x2 6.5.2-gentoo #1 SMP PREEMPT_DYNAMIC Sat Sep  9 00:29:42 CEST 2023
-> x86_64 AMD Ryzen 9 7950X3D 16-Core Processor AuthenticAMD GNU/Linux
->=20
-> As soon as there is a linux-6.6 kernel available in gentoo i'll try that =
-one
-> too.
+On Fri, Sep 08, 2023 at 06:17:53PM +0200, Ard Biesheuvel wrote:
+> On Fri, Sep 8, 2023 at 5:58 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Fri, Sep 08, 2023 at 03:32:33PM +0300, Kirill A. Shutemov wrote:
+> > > On Fri, Sep 08, 2023 at 02:02:30PM +0800, Aaron Lu wrote:
+> > > > On Thu, Sep 07, 2023 at 04:14:09PM +0300, Kirill A. Shutemov wrote:
+> > > > > On Tue, Aug 29, 2023 at 10:04:51PM +0800, Aaron Lu wrote:
+> > > > > > > Could you show dmesg of the first kernel before kexec?
+> > > > > >
+> > > > > > Attached.
+> > > > > >
+> > > > > > BTW, kexec is invoked like this:
+> > > > > > kver=6.4.0-rc5-00009-g75d090fd167a
+> > > > > > kdir=$HOME/kernels/$kver
+> > > > > > sudo kexec -l $kdir/vmlinuz-$kver --initrd=$kdir/initramfs-$kver.img --append="root=UUID=4381321e-e01e-455a-9d46-5e8c4c5b2d02 ro net.ifnames=0 acpi_rsdp=0x728e8014 no_hash_pointers sched_verbose selinux=0"
+> > > > >
+> > > > > I don't understand why it happens.
+> > > > >
+> > > > > Could you check if this patch changes anything:
+> > > > >
+> > > > > diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> > > > > index 94b7abcf624b..172c476ff6f3 100644
+> > > > > --- a/arch/x86/boot/compressed/misc.c
+> > > > > +++ b/arch/x86/boot/compressed/misc.c
+> > > > > @@ -456,10 +456,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> > > > >
+> > > > >   debug_putstr("\nDecompressing Linux... ");
+> > > > >
+> > > > > +#if 0
+> > > > >   if (init_unaccepted_memory()) {
+> > > > >           debug_putstr("Accepting memory... ");
+> > > > >           accept_memory(__pa(output), __pa(output) + needed_size);
+> > > > >   }
+> > > > > +#endif
+> > > > >
+> > > > >   __decompress(input_data, input_len, NULL, NULL, output, output_len,
+> > > > >                   NULL, error);
+> > > > > --
+> > > >
+> > > > It solved the problem.
+> > >
+> > > Looks like increasing BOOT_INIT_PGT_SIZE fixes the issue. I don't yet
+> > > understand why and how unaccepted memory is involved. I will look more
+> > > into it.
+> > >
+> > > Enabling CONFIG_RANDOMIZE_BASE also makes the issue go away.
+> >
+> > Is this perhaps just luck? I.e. does is break ever on, say, 1000 boot
+> > attempts? (i.e. maybe some position is bad and KASLR happens to usually
+> > avoid it?)
 
-You may try compiling your own kernel instead of having to wait for the ker=
-nel
-package to be updated. See
-Documentation/admin-guide/quickly-build-trimmed-linux.rst for full
-instructions.
+Yes, it can be luck.
 
-In any case, please also report to freedesktop tracker [1].
+> > > Kees, maybe you have a clue?
+> >
+> > The only thing I can think of is that something isn't being counted
+> > correctly due to the size of code, and it just happens that this commit
+> > makes the code large enough to exceed some set of mappings?
+> >
+> > >
+> > > diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+> > > index 9191280d9ea3..26ccce41d781 100644
+> > > --- a/arch/x86/include/asm/boot.h
+> > > +++ b/arch/x86/include/asm/boot.h
+> > > @@ -40,7 +40,7 @@
+> > >  #ifdef CONFIG_X86_64
+> > >  # define BOOT_STACK_SIZE     0x4000
+> > >
+> > > -# define BOOT_INIT_PGT_SIZE  (6*4096)
+> > > +# define BOOT_INIT_PGT_SIZE  (7*4096)
+> >
+> > That's why this might be working, for example? How large is the boot
+> > image before/after the commit, etc?
+> >
+> 
+> Not sure why these changes would make a difference here, but choking
+> on accept_memory() on a non-TDX suggests that init_unaccepted_memory()
+> is poking into unmapped memory before it even decides that the
+> unaccepted memory does not exist.
+> 
+> init_unaccepted_memory() has
+> 
+>         ret = efi_get_conf_table(boot_params, &cfg_table_pa, &cfg_table_len);
+>         if (ret) {
+>                 warn("EFI config table not found.");
+>                 return false;
+>         }
+> 
+> which looks for <guid, phys_addr> tuples in an array pointed to by the
+> EFI system table, and if either of those is not mapped, things can be
+> expected to explode.
+> 
+> The only odd thing there is that this code is invoked after setting up
+> the 'demand paging' logic in the decompressor.
+> 
+> If you haven't yet, could you please retry the kexec boot with
+> earlyprintk=tty<insert your UART params here>?
 
-Thanks.
+early console in extract_kernel
+input_data: 0x000000807eb433a8
+input_len: 0x0000000000d26271
+output: 0x000000807b000000
+output_len: 0x0000000004800c10
+kernel_total_size: 0x0000000003e28000
+needed_size: 0x0000000004a00000
+trampoline_32bit: 0x000000000009d000
 
-[1]: https://gitlab.freedesktop.org/drm/amd/-/issues
+Decompressing Linux... out of pgt_buf in arch/x86/boot/compressed/ident_map_64.c!?
+pages->pgt_buf_offset: 0x0000000000006000
+pages->pgt_buf_size: 0x0000000000006000
 
---=20
-An old man doll... just what I always wanted! - Clara
 
---pfTqKnr0Pj4UuA1x
-Content-Type: application/pgp-signature; name="signature.asc"
+Error: kernel_ident_mapping_init() failed
 
------BEGIN PGP SIGNATURE-----
+It crashes on #PF due to stbl->nr_tables dereference in
+efi_get_conf_table() called from init_unaccepted_memory().
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPxQXQAKCRD2uYlJVVFO
-o7KZAQDWMADIGvvTcahTyNGWKOyAYdfWQGERAaGcM4K0W5ionQD+KHDoQB1jBzbF
-QbCHiwM1qujrWM3QbnITdlz1lWH8kAs=
-=wMBf
------END PGP SIGNATURE-----
+I don't see anything special about stbl location: 0x775d6018.
 
---pfTqKnr0Pj4UuA1x--
+One other bit of information: disabling 5-level paging also helps the
+issue.
+
+I will debug further.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
