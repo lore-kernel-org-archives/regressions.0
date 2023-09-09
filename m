@@ -1,57 +1,58 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BC517C5
-	for <regressions@lists.linux.dev>; Sat,  9 Sep 2023 05:28:26 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-68a41035828so2334694b3a.1
-        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 22:28:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F3830F92
+	for <regressions@lists.linux.dev>; Sat,  9 Sep 2023 05:36:20 +0000 (UTC)
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-573449a364fso1696926eaf.1
+        for <regressions@lists.linux.dev>; Fri, 08 Sep 2023 22:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694237306; x=1694842106; darn=lists.linux.dev;
+        d=gmail.com; s=20221208; t=1694237779; x=1694842579; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AhGcYIVxPZwLXUPMQ7arLtBywPpQ4z3xctSy6TWk6XU=;
-        b=ZMpVhjpxeN4osdnNQBxpYrh8CPyAMIpXw5L3IfNhRa3MGttpFIiZleHXZQ6Fs7LkNF
-         FSydPB4xjuHBZDKYWok8i0COuXP5oDT9R9kHq/VQWUTYX1xY91mGUO4d6Nw/wj/7eTyo
-         y41yHC4oRIzQnr3ewMmVwExkEnObZHDbGXB4TuYwsuMJ60HtS2w2ZjrbyssX4DRL+xGI
-         CiOjn/AvimX3/oDxDGD2kt0OpZiEHyLCIYiKTbW40V4NSIKozgKCjNtcdR1O4cUJeYx3
-         +PopSjhQ8wsC0/eek0S6t5uzBCBquuN2K/6prgX71nTuYFyRl3W+20k6PmaF+7XnQw4n
-         sn/A==
+        bh=T9QdRpHmKF7Dl0phviBz7WSuqViIRbheRKqXILmxCEw=;
+        b=qSkKCvSGlxdDLRT7VyP2Mh+8HA9vmW2VbJPgUWj/AJbRYm2//1LXBZBcuwNOsaPjGT
+         qudkNRquLuXHm92JN/j6grdbLMQCypqw/DrOgy1TWvmEG8sZDqQubaZq66RY86ZUJo7B
+         lIxHg/PPZ9IML11nF+/otxo2AaUMMwxLFQGOkzTg78Q3Pp8CvpQo0ApamWmpRuz1ZMnU
+         rr1kCy4X/B5rwE0WunRFjUafOZfFYWzP/JBYbY9ZnEW9mNFD6kyzkuRpsjNC36Dw5+9d
+         W/FiqolscdqKd4hkWLgsKyPxlD4GpNLov4E1RaWbNJhv4uez7cnaSZisTe7uTQt8FCNs
+         LHhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694237306; x=1694842106;
+        d=1e100.net; s=20230601; t=1694237779; x=1694842579;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AhGcYIVxPZwLXUPMQ7arLtBywPpQ4z3xctSy6TWk6XU=;
-        b=MhD7Yz4hRKqGs5iRUwvz90n3YLL5AZIr0YB4Y7+gY0cCIhIVA7b16TTRy3le/fak26
-         xSYObhBnXy0MbYOpBrSAeoi94iW18HuD4G5K1ZwN6IKYinVK9TI+E+2d/psNSfPSko7O
-         WZxgL11CP0/fg3JMLdYVOKttdMk+MHdKjoTbid+zSCHICkBEB6XJizTz/cvDtFLDYJ2Z
-         pOE50tHU5cCyabeRAYP1HYCg1EcUnCeRfl+V9fgcpX/dJ5cEOG0haXLpNQj6oBYchaRj
-         pqDxxXceQHTfAFwlpLrFPYVJL4MX6zbFqIqyRG6nM1sufximola+dZ7HwZ689G4auZEl
-         5h2g==
-X-Gm-Message-State: AOJu0Yyj+C9J8++xHfM1dnjP9b9hac2DHz/xn6S2xd6ZJAt1tOBGQ+rM
-	einBLje9qpSy6j0WoiMSf0w=
-X-Google-Smtp-Source: AGHT+IGw0ulupui94qNdMz252mwrFm6dOVwPF7ntkmtDhRPf3eauIShtH1mkNSqQIgh2r194qOvtMA==
-X-Received: by 2002:a05:6a00:15ca:b0:68a:4dfa:ea63 with SMTP id o10-20020a056a0015ca00b0068a4dfaea63mr4581797pfu.19.1694237306156;
-        Fri, 08 Sep 2023 22:28:26 -0700 (PDT)
+        bh=T9QdRpHmKF7Dl0phviBz7WSuqViIRbheRKqXILmxCEw=;
+        b=LU/pN44z35UgRVqU14WJaghoHyrwLwhTHTIKwtkBMR2RYEdhALOgpQQ6ZrdPuEcn7c
+         4zS2ie1IqoadJJJ4oGDfUf+GgYDG9vANthfd3w6EFz1pocE8Onw9sLnhQYgaqXCTg6qI
+         31gn5ReEO+VEZIiSPGSxX9w6eWqt+RD0asdttzl270duBVL93RVKJ+lC2R0Gnlviv/HN
+         wvc0iKvSZi6dJCRUFT+P6cveQ1D1H9iVhO/RvSe0XCQDqr98Q7Il7TxSVVHhytT/w5ko
+         dtJLRKMelgXT5Zblw6ebNucAhjcPl31vcILxqU5Plnf2hYMe13rt4CQnWfNlews1fTZC
+         ArGw==
+X-Gm-Message-State: AOJu0YwoDlDL60+BvaivJniJVsdpepxem7hAG6/U0eMOKphAlnBjlRCo
+	kQ+tWJXPxLvFvccFbjP9vsg=
+X-Google-Smtp-Source: AGHT+IFsBaaCIIBHfXy6K9EBhaseuwvlm/ZF7VeyFi6SRkSkOxHCXNBxcjku48ptQPAr+1Rdzbe1Sg==
+X-Received: by 2002:a05:6870:fb8a:b0:1bb:6cca:3468 with SMTP id kv10-20020a056870fb8a00b001bb6cca3468mr4623544oab.47.1694237779496;
+        Fri, 08 Sep 2023 22:36:19 -0700 (PDT)
 Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa78a5a000000b006828e49c04csm2088013pfa.75.2023.09.08.22.28.24
+        by smtp.gmail.com with ESMTPSA id 25-20020a17090a01d900b0026b46ad94c9sm2312333pjd.24.2023.09.08.22.36.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Sep 2023 22:28:25 -0700 (PDT)
+        Fri, 08 Sep 2023 22:36:18 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 89ED6803A58F; Sat,  9 Sep 2023 12:28:21 +0700 (WIB)
-Date: Sat, 9 Sep 2023 12:28:21 +0700
+	id 165109A5D464; Sat,  9 Sep 2023 12:36:14 +0700 (WIB)
+Date: Sat, 9 Sep 2023 12:36:14 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	TatriX <tatrics@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	shenlinghai@163.com, Jens Axboe <axboe@fb.com>,
+	Sagi Grimberg <sagi@grimberg.me>, dwmw2@infradead.org
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
-	Linux Kernel Build System <linux-kbuild@vger.kernel.org>
-Subject: Re: Fwd: Bluetooth LE scan doesn't show device name
-Message-ID: <ZPwCdd6lnOTbcDS0@debian.me>
-References: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
+	Linux NVMe <linux-nvme@lists.infradead.org>
+Subject: Re: Fwd: Ubuntu 22.04, "nvme list" will hang for 60 seconds after
+ "nvme subsystem-reset"
+Message-ID: <ZPwETorRO60QGen6@debian.me>
+References: <8edde583-2b5f-2332-e59a-f1f4688b9e40@gmail.com>
+ <d7290782-bf72-3a65-26fa-b58e75bcae2c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,35 +60,41 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yHJYS4swNGsW/wbV"
+	protocol="application/pgp-signature"; boundary="NwbKn5UmL+2AYyp/"
 Content-Disposition: inline
-In-Reply-To: <97224321-c839-c0a7-52dd-3fb6e52fc15e@gmail.com>
+In-Reply-To: <d7290782-bf72-3a65-26fa-b58e75bcae2c@leemhuis.info>
 
 
---yHJYS4swNGsW/wbV
+--NwbKn5UmL+2AYyp/
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 08, 2023 at 08:44:36PM +0700, Bagas Sanjaya wrote:
-> #regzbot introduced: v5.9..v6.4 https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D217773
+On Mon, Aug 07, 2023 at 12:30:30PM +0200, Thorsten Leemhuis wrote:
+> >> root:~# uname -a
+> >> Linux dapu-Star-Lake 5.19.0-46-generic #47~22.04.1-Ubuntu SMP PREEMPT_=
+DYNAMIC Wed Jun 21 15:35:31 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 >=20
+> Bagas, please don't forward reports to the developers (and also don't
+> add them to the regression tracking) if the report is about a problem
+> with a vendor kernel that is known or likely to be patched[1].
+> Developers otherwise will just start to ignore your mails, as you are
+> wasting their time.
 
-#regzbot fix: 52bf4fd43f759a
+OK, thanks!
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---yHJYS4swNGsW/wbV
+--NwbKn5UmL+2AYyp/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPwCbwAKCRD2uYlJVVFO
-o3YPAQCu8g+OeR/FT4e0bLiH5epWupufFcZnNZzU0y5VYqsNqQD/Zy1WqYyTeb3n
-nOxfRLCWsV9IJ3KNPiTfR0i2jHbzKwU=
-=TM2y
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZPwETgAKCRD2uYlJVVFO
+o2JTAQCJLs9Rku/9XRes2BQ/A134vw5Uq14Ob4IgfIZtAQclqQD+P+WKjV56tT5N
+6XJnoVyWpHG3yHNHWtMHvwS0QKpfoAY=
+=Pizn
 -----END PGP SIGNATURE-----
 
---yHJYS4swNGsW/wbV--
+--NwbKn5UmL+2AYyp/--
