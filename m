@@ -1,99 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C07DC8E3
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 11:53:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A1FC433C9;
-	Mon, 11 Sep 2023 11:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1694433180;
-	bh=MA/5d013dmoyw8XVBXGWjc27M5fZqs9m1db384t9D7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UEJ4xr/ewJ5lXBflvtgOsE9IyErAalec3iz7xiHRYV/Wz3vI5o/UUsl/EqjPrPj7y
-	 TlO0C+19wvHMIcyKg+xDGFYttfsLjqQtkn2dfyXnpvGAMNbSP/rPXslNXqXHD460Wn
-	 R3B/0M9iJkNWXSitSnQv5zMUexI7ZmTC9xycP+tw=
-Date: Mon, 11 Sep 2023 13:52:56 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Dave Hansen <dave.hansen@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Saranya Gopal <saranya.gopal@intel.com>,
-	Rajaram Regupathy <rajaram.regupathy@intel.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Wayne Chang <waynec@nvidia.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	linux-usb@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] usb: typec: ucsi: Fix NULL pointer dereference
-Message-ID: <2023091140-getting-seldom-1046@gregkh>
-References: <20230906084842.1922052-1-heikki.krogerus@linux.intel.com>
- <2023090638-overexert-endearing-3726@gregkh>
- <288ac4c1-b66d-477a-ba2e-9b8d8dde4dc6@amd.com>
- <5fe38b0a-e8de-466b-b35b-a827eae3e766@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D0CF9D9
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 12:21:13 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qffug-0007nd-WF; Mon, 11 Sep 2023 14:21:11 +0200
+Message-ID: <41deab3f-3dd8-449e-ba68-1aca4e38cd46@leemhuis.info>
+Date: Mon, 11 Sep 2023 14:21:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5fe38b0a-e8de-466b-b35b-a827eae3e766@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Bug 216646 - having TRANSPARENT_HUGEPAGE enabled
+ hangs some applications
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>
+References: <37cd0a8d-bbd1-baf3-9c37-0cb8325b4cb3@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <37cd0a8d-bbd1-baf3-9c37-0cb8325b4cb3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694434873;ebb3d1db;
+X-HE-SMSGID: 1qffug-0007nd-WF
 
-On Mon, Sep 11, 2023 at 11:46:17AM +0200, Thorsten Leemhuis wrote:
-> On 06.09.23 14:05, Mario Limonciello wrote:
-> > On 9/6/2023 03:57, Greg Kroah-Hartman wrote:
-> >> On Wed, Sep 06, 2023 at 11:48:42AM +0300, Heikki Krogerus wrote:
-> >>> Making sure the UCSI debugfs entry actually exists before
-> >>> attempting to remove it.
-> >>>
-> >>> Fixes: df0383ffad64 ("usb: typec: ucsi: Add debugfs for ucsi commands")
-> >>> Reported-by: Dave Hansen <dave.hansen@intel.com>
-> >>> Closes:
-> >>> https://lore.kernel.org/linux-usb/700df3c4-2f6c-85f9-6c61-065bc5b2db3a@intel.com/
-> >>> Suggested-by: Dave Hansen <dave.hansen@intel.com>
-> >>> Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-> >>> Cc: Saranya Gopal <saranya.gopal@intel.com>
-> >>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > 
-> > I could also reproduce it with 7733171926cc336ddf0c8f847eefaff569dbff86
-> > on two different laptops.
-> > 
-> >>> ---
-> >>>   drivers/usb/typec/ucsi/debugfs.c | 3 +++
-> >>>   1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/drivers/usb/typec/ucsi/debugfs.c
-> >>> b/drivers/usb/typec/ucsi/debugfs.c
-> >>> index 0c7bf88d4a7f..f67733cecfdf 100644
-> >>> --- a/drivers/usb/typec/ucsi/debugfs.c
-> >>> +++ b/drivers/usb/typec/ucsi/debugfs.c
-> >>> @@ -84,6 +84,9 @@ void ucsi_debugfs_register(struct ucsi *ucsi)
-> >>>     void ucsi_debugfs_unregister(struct ucsi *ucsi)
-> >>>   {
-> >>> +    if (IS_ERR_OR_NULL(ucsi) || !ucsi->debugfs)
-> >>> +        return;
-> >>> +
-> >>>       debugfs_remove_recursive(ucsi->debugfs->dentry);
-> >>
-> >> Why are you saving the dentry at all?  Why not just have debugfs look it
-> >> up when you want to remove it based on the filename?
-> >>
-> >> Anyway, not a big deal here, just a comment.  I'll queue this up after
-> >> -rc1 is out.
-> > 
-> > It might be worth sending before rc1 if it ends up being widespread.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 03.11.22 14:51, Thorsten Leemhuis wrote:
 > 
-> FWIW, as someone that afaics just ran into the regression fixed by this
-> patch with -rc1, I would have liked that patch to be in -rc1 as well...
+> Matthew, I noticed a regression report in bugzilla.kernel.org. As many
+> (most?) kernel developer don't keep an eye on it, I decided to forward
+> it by mail. Quoting from
+> https://bugzilla.kernel.org/show_bug.cgi?id=216646 :
+>
+> #regzbot introduced: 56a4d67c264
+> https://bugzilla.kernel.org/show_bug.cgi?id=216646
+> #regzbot ignore-activity
 
-It's now queued up and will go to Linus this week.
+#regzbot fix: cbc02854331edc6dc22d8b77b6e22e38ebc7dd51
+#regzbot ignore-activity
 
-thanks,
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-greg k-h
