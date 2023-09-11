@@ -1,99 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798AB320A
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 08:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694421857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VAxzSaG1M4DEhsNtImwQoNwLcsSsvtzLnn+O3t93MMI=;
-	b=fJL/efwIL6NMgj9q7u8KxtS3OrXCTN6OfUYQc8T/qzSRyiPwwRB//hdOVw4VyvRVvt41LJ
-	sCl+QQxrSTUDiYdSTp0cjV8/IwedC63TDIZfFfGRo35YPVsxNPlroys4ozekwoAbghQljV
-	yGHnk6bAA3/0tRFHopcRY97hhJzTM10=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-173-2uDrEZ8IOcOwQoushEl_LQ-1; Mon, 11 Sep 2023 04:44:16 -0400
-X-MC-Unique: 2uDrEZ8IOcOwQoushEl_LQ-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9aa20a75780so80872066b.2
-        for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 01:44:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694421855; x=1695026655;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VAxzSaG1M4DEhsNtImwQoNwLcsSsvtzLnn+O3t93MMI=;
-        b=fxGT27V6NWmHC0vtLL6qWMsyvIYoqs3GLVDcyW68V8PfAnM2IsGts3JndGtJ7jWCbs
-         9C1SF5e7v6PqxSBF7SvwI7xrAyAsv91BUFRePzl/5XPKwUsDlnC8OoNYVmME5Svu+X9F
-         n5E2ib441aYjM2nlvb4nrtOrR2gypWIYhr+EyqtPsRhYm6yMeNsxg7O9IJZ+HOqEMzIB
-         7h1uMo/I782pJCRrkIFkOuMNX7hW6x33vo4qbDL4GtA6a+Meb+SikPCrcsFCZYPpUXPW
-         ZVaITxD2HwYC6mpSFJ6Gihp3dUlzPOQruF0fIx50430dp0m9njcOfoxYq1t7+cH7wRFM
-         Q1Aw==
-X-Gm-Message-State: AOJu0YymD6XTzkn779ndawb5bG0DEWisd/NkN2JzFG0rLhk5+k1wD/Jg
-	nDVZLYkivCZbjyvb8v7xBXT5cobuNijPO961WjQOnhMDwJ2xqiv2BvIdthpUm2yYdWg2pTCIvCp
-	FTJEMOu0LG2dni+y/YXP/bYB33esnR9M=
-X-Received: by 2002:a17:907:7791:b0:9a1:c669:6e66 with SMTP id ky17-20020a170907779100b009a1c6696e66mr7315329ejc.70.1694421854837;
-        Mon, 11 Sep 2023 01:44:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2tHs3/adAoSKiOx8eGAOvxWunKF+gY3lM/wIxzRQSYHdnxfQMOCzk0ts3VZHw6/fo3thefw==
-X-Received: by 2002:a17:907:7791:b0:9a1:c669:6e66 with SMTP id ky17-20020a170907779100b009a1c6696e66mr7315318ejc.70.1694421854530;
-        Mon, 11 Sep 2023 01:44:14 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id k21-20020a17090646d500b00988dbbd1f7esm4953072ejs.213.2023.09.11.01.44.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 01:44:13 -0700 (PDT)
-Message-ID: <472fc5a1-46cb-66e0-463a-934806595997@redhat.com>
-Date: Mon, 11 Sep 2023 10:44:13 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A86320A
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 08:48:43 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qfcay-0004oo-4O; Mon, 11 Sep 2023 10:48:36 +0200
+Message-ID: <fd58e1e9-0a15-4320-9a0a-cceeed45d0b4@leemhuis.info>
+Date: Mon, 11 Sep 2023 10:48:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: power button stopped working on lenovo ideapad 5 since
- a855724dc08b
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <7b78505a-a8c9-4770-b283-807581b5edfb@leemhuis.info>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <7b78505a-a8c9-4770-b283-807581b5edfb@leemhuis.info>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: Odroid-C1 regression with commit 4bc31edebde5 ("mmc: core: Set HS
+ clock speed before sending HS CMD13")
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+ Brian Norris <briannorris@chromium.org>, Shawn Lin
+ <shawn.lin@rock-chips.com>, Luca Weiss <luca@z3ntu.xyz>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Ziyang Huang <hzyitc@outlook.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CAFBinCD0RT0p-jk86W0JuMT3ufohRh1RqWCcM35DKZJpuc10HQ@mail.gmail.com>
+ <CAPDyKFqgYnBfm-NespEZF8AJ5Ou4Bya8jLfVEnfyZvfAZ05Q7Q@mail.gmail.com>
+ <CAFBinCDjPJHEhN-Jx3DhhhHJ3yi8oEoW7u4-Ld6Rd1+W826ttA@mail.gmail.com>
+ <CAPDyKFqKSWJkJwgCO89jgKQ6AB==P9BWkuX6XtKj=ASOH15y9g@mail.gmail.com>
+ <CAFBinCDwgYw3v31hP4AtV3+Z1o+esDqMKugRwMMMLqSX0Acjzw@mail.gmail.com>
+ <CAPDyKFr+hQo+N31r=3f58taf9sYW0UF0ApCJhwz9vRsyNizcvg@mail.gmail.com>
+ <CAFBinCDSv_vdu5887vveotvaOGFrZvaSX4jM+7Q3QvDhTdazzw@mail.gmail.com>
+ <CAPDyKFpS-UwiaRPMqSpX0mNPrS5p=yJzu3g0=pGyCkWHSYyqWg@mail.gmail.com>
+ <CAFBinCCnB=po9x6tsxCzRM99ZqgV9=5jBxS9LaoJqLPGZYSH6g@mail.gmail.com>
+ <CAPDyKFpAGUudAJKAmzMbcM=LrALU6ELpwaD-ijy18o7yrPgOqA@mail.gmail.com>
+ <3a6f8d86-b369-bcf7-406b-4f7d0cd5cfa3@leemhuis.info>
+In-Reply-To: <3a6f8d86-b369-bcf7-406b-4f7d0cd5cfa3@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694422124;20df7cf4;
+X-HE-SMSGID: 1qfcay-0004oo-4O
 
-Hi,
-
-On 9/11/23 09:50, Thorsten Leemhuis wrote:
-> [TLDR: Just adding a regression reported to bko to the tracking]
+On 29.08.23 11:59, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
 > 
-> Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
-> regression reported in bugzilla.kernel.org that seems to be handled
-> there already, nevertheless I'd like to add to the tracking to ensure
-> it's doesn't fall through the cracks in the end:
+> I still have this regression (caused by a commit from Brian, applied by
+> Ulf) on my list of tracked issues. Was there any progress to finally get
+> this fixed[1]? Doesn't look like it from here, but I might have easily
+> missed something, that's why I'm asking.
 > 
-> #regzbot introduced: a855724dc08b
-> https://bugzilla.kernel.org/show_bug.cgi?id=217833
-> #regzbot title: power button stopped working on lenovo ideapad 5
-> #regzbot dup-of:
-> https://lore.kernel.org/stable/aa1649b6-b7a8-4fbe-8356-2c856951e283@gmail.com/
-> #regzbot ignore-activity
+> [1] this patch from Ziyang Huang afaics was supposed to help, but it
+> went nowhere afaics
+> https://lore.kernel.org/linux-amlogic/TYZPR01MB5556B56D834E02F41C44D81DC95FA@TYZPR01MB5556.apcprd01.prod.exchangelabs.com/
 > 
-> See the ticket for details, there were a few replies already.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> Or does anybody stop caring?
 
-Note there is a patch-series which fixes this (and which is planned
-to be reworked to fix it slightly different) pending here:
+No reply, then I assume that's the case. In that case I won't waste any
+cycles tracking this:
 
-#regzbot link: https://lore.kernel.org/regressions/20230829165627.156542-1-mario.limonciello@amd.com/
+#regzbot inconclusive: seem nobody cares anymore
 
-Regards,
+Martin, if this is wrong and you want to see this fixed, please speak up.
 
-Hans
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
+> On 20.06.23 11:53, Ulf Hansson wrote:
+>> On Mon, 19 Jun 2023 at 21:54, Martin Blumenstingl
+>> <martin.blumenstingl@googlemail.com> wrote:
+>>>
+>>> On Wed, Jun 14, 2023 at 5:49 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>> [...]
+>>>>> Full register dump:
+>>>>> # cat /sys/kernel/debug/regmap/c1108e00.mmc/registers
+>>>>> 00: 00000900
+>>>>> 04: 0000004d
+>>>>> 08: e7ffe002
+>>>>> 0c: 02f0003f
+>>>>> 10: 0003f009
+>>>>> 14: 03b81c00
+>>>>> 18: 2c43bcf0
+>>>>> 1c: e0000150
+>>>>> 20: 00000000
+>>>>> 24: 00003067
+>>>>> 28: 00000000
+>>>>> 2c: 00000000
+>>>>> 30: 00000000
+>>>>> 34: 00fe0cff
+>>>>> 38: 0000100b
+>>>>>
+>>>>> In case you are curious, the driver is: drivers/mmc/host/meson-mx-sdhc-mmc.c
+>>>>
+>>>> Thanks for sharing this data!
+>>>>
+>>>> I assume the above registers indicate that we have sent the command
+>>>> and are now waiting for an IRQ for a response/error, but we never
+>>>> receive one.
+>>>>
+>>>> To really figure out what is going on, I think we need to do some
+>>>> additional low level debugging/testing.
+>>>>
+>>>> I was looking at the commit message from e4bf1b0970ef ("mmc: host:
+>>>> meson-mx-sdhc: new driver for the Amlogic Meson SDHC host"), which
+>>>> indicates that the clock management is quite limited for this HW. For
+>>>> example, the 51000000Hz isn't one of the supported frequencies. Could
+>>>> that be the reason for the problem? Perhaps if we play with changing
+>>>> the frequency to something that is considered supported - then can we
+>>>> make this work?
+>>> You seem to be more familiar with this Amlogic MMC controller than I am ;-)
+>>
+>> Sometimes a well written commit message actually helps. :-)
+>>
+>>> Today I finally had some time for testing and when I started Ziyang
+>>> Huang provided a patch [0] (admittedly: I think it needs to be
+>>> improved, but finally we know that it's a MMC controller driver
+>>> limitation and not an MMC core bug)
+>>
+>> Great news!
+>>
+>> I will continue to monitor the thread and defer to apply anything
+>> until you have given it your blessing, of course.
+>>
+>> Kind regards
+>> Uffe
