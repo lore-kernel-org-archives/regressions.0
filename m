@@ -1,55 +1,69 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D0CF9D9
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 12:21:13 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qffug-0007nd-WF; Mon, 11 Sep 2023 14:21:11 +0200
-Message-ID: <41deab3f-3dd8-449e-ba68-1aca4e38cd46@leemhuis.info>
-Date: Mon, 11 Sep 2023 14:21:10 +0200
+Received: from muru.com (muru.com [72.249.23.125])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEC76C8DB
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 12:53:42 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by muru.com (Postfix) with ESMTPS id E961280A2;
+	Mon, 11 Sep 2023 12:53:41 +0000 (UTC)
+Date: Mon, 11 Sep 2023 15:53:40 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Marc Haber <mh+linux-kernel@zugschlus.de>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux KVM <kvm@vger.kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
+ related
+Message-ID: <20230911125340.GB5285@atomide.com>
+References: <ZO4YJlhHYjM7MsK4@torres.zugschlus.de>
+ <ZO4nbzkd4tovKpxx@google.com>
+ <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
+ <ZPEPFJ8QvubbD3H9@google.com>
+ <20230901122431.GU11676@atomide.com>
+ <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
+ <20230906152107.GD11676@atomide.com>
+ <ZPmignexOJvJ5J5W@torres.zugschlus.de>
+ <20230907105150.GJ11676@atomide.com>
+ <ZPzQvXUW+dbkLMZ2@torres.zugschlus.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Bug 216646 - having TRANSPARENT_HUGEPAGE enabled
- hangs some applications
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>
-References: <37cd0a8d-bbd1-baf3-9c37-0cb8325b4cb3@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <37cd0a8d-bbd1-baf3-9c37-0cb8325b4cb3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694434873;ebb3d1db;
-X-HE-SMSGID: 1qffug-0007nd-WF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZPzQvXUW+dbkLMZ2@torres.zugschlus.de>
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 03.11.22 14:51, Thorsten Leemhuis wrote:
+* Marc Haber <mh+linux-kernel@zugschlus.de> [230909 20:08]:
+> On Thu, Sep 07, 2023 at 01:51:50PM +0300, Tony Lindgren wrote:
+> > Still a minimal reproducable test case is needed.. Or do you have the
+> > dmesg output of the failing boot?
 > 
-> Matthew, I noticed a regression report in bugzilla.kernel.org. As many
-> (most?) kernel developer don't keep an eye on it, I decided to forward
-> it by mail. Quoting from
-> https://bugzilla.kernel.org/show_bug.cgi?id=216646 :
->
-> #regzbot introduced: 56a4d67c264
-> https://bugzilla.kernel.org/show_bug.cgi?id=216646
-> #regzbot ignore-activity
+> I have both dmesg output of a failing boot (with my kernel) and of a
+> successful boot (with the Debian kernel). Attached.
 
-#regzbot fix: cbc02854331edc6dc22d8b77b6e22e38ebc7dd51
-#regzbot ignore-activity
+Thanks I don't see anything strange there, serial ports are probed in
+both cases.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> In the last few days I have made some additional experiments. Since 6.5
+> has landed in Debian experimental in the mean time, I tried with the
+> Debian kernel: It works. I then used the Debian .config with my kernel
+> tree and my build environment, it works as well. I tried again with my
+> own .config, doesn't work.
 
+OK
+
+> I spent the next days with kind of binary searching the .config
+> differences between mine and Debian's (they're huge), and I now have two
+> configurations that only differ in CONFIG_PREEMPT_VOLUNTARY and
+> CONFIG_PREMPT. The version with CONFIG_PREEMPT_VOLUNTARY seems to work
+> (both attached). Sadly, my "own" .config uses CONFIG_PREEMPT_VOLUNTARY
+> and doesn't work, so the actual problem seems to be a bit more complex
+> still.
+
+OK
+
+Regards,
+
+Tony
