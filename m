@@ -1,82 +1,129 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902F1170E
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 14:00:55 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-68e3083aa1dso4326714b3a.1
-        for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 07:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694440855; x=1695045655; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u2Q+4HmWdmD9If9N6/Rge7uDA1fBSwpfjskqILwBtyY=;
-        b=WZiHT8EXx2k9XsOPXY2kfdz62MKNFqlJKpC7JSR9fNqHeTOiZvql2G+5Dbuh1u+WW5
-         f7vuR/knmDygljk/fcd8sD5nzCMg7bl38bdc0N2rZDsqdXd58prnzTEFDFGT7EubFkXQ
-         H3Nr1/pz1LBU1H1XuQNbw2yHXncEb7hy34j0IzvISz3jMaNrrP9oKScV6wdgNtF26VV9
-         rtLYZJqgGo+CxJ0NlTj09pHc79AH4hPJ7JDjs5SkjFLohHq9Zk2jzcAi0xuafHEW3Qnj
-         LoKnF9PgkV67x6H5uVjDEXJB019cyjXWRHi4WcTFrd5Y4c/jsySccgkaAuhASPtPV6bA
-         USNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694440855; x=1695045655;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u2Q+4HmWdmD9If9N6/Rge7uDA1fBSwpfjskqILwBtyY=;
-        b=vm/DeupoyyuCEYqK2WTJcvZNExNSBQXc/Qrv+dctMwp+Qn8X3AR7MSYkae68qGxSPF
-         j65YhZnSbP7US5NQqTS9+OSs0kEu+hLlS1b4s6V8AwZeqb5p2PPxxYiBhA5saKpBmOvN
-         k+WBWFW54qqO2pr8LoNem47raNo/+i1Ey7oM1dL0ChMo1xXeOLevYxOVxhAODhzlM2j3
-         pxMX0nuubfyvtmNcKk20qP2S40nXsvlrCvaaR4WfIkDt09Cm97lYU2YZHw1DuIoXWT7L
-         0vfgIYK32ByqZejqTNv6FJruUxqdkd/kUIfllBRrt2UTOdPtC+6Krt2wL2KfFD6rqoK/
-         0GpA==
-X-Gm-Message-State: AOJu0Ywdx2EYOappft9BAUzm+PbGP81XCFbMP0ybcccOgMTbSt6x2zB3
-	DJ+vayDqocR3MXNseYYw3ZA=
-X-Google-Smtp-Source: AGHT+IF+5c9+fQ4xKQsvS/HkkOz8hj7VmzC06mn57xXfwBGYWcR9O0Oc90MXkr1cUCqA0/oKcvITYA==
-X-Received: by 2002:a05:6a20:e11b:b0:140:6d68:ce07 with SMTP id kr27-20020a056a20e11b00b001406d68ce07mr13423508pzb.52.1694440855159;
-        Mon, 11 Sep 2023 07:00:55 -0700 (PDT)
-Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id k17-20020aa78211000000b00682d79199e7sm5586494pfi.200.2023.09.11.07.00.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 07:00:54 -0700 (PDT)
-Message-ID: <9a8d2090-a58e-49a0-3b1d-00bb5b8f04f2@gmail.com>
-Date: Mon, 11 Sep 2023 21:00:49 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2402611714
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 14:03:36 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qfhVk-0001JK-HG; Mon, 11 Sep 2023 16:03:32 +0200
+Message-ID: <96bcfe54-fcee-4c14-9772-b8191ee10c03@leemhuis.info>
+Date: Mon, 11 Sep 2023 16:03:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: Slow boot and shutdown/reboot problems with 6.5.0+
-To: Marcus Seyfarth <m.seyfarth@gmail.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Luis Chamberlain <mcgrof@kernel.org>,
- Russ Weight <russell.h.weight@intel.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Unexplainable packet drop starting at v6.4
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Tirthendu Sarkar <tirthendu.sarkar@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Linux Integrity <linux-integrity@vger.kernel.org>,
- "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-References: <5011708f-b0ae-2853-0f87-a3b59845a2cc@gmail.com>
- <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Intel Ethernet Drivers <intel-wired-lan@lists.osuosl.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <e79edb0f-de89-5041-186f-987d30e0187c@gmail.com>
+ <e9644f38-57be-5d26-0c08-08a74eee7cb1@leemhuis.info>
+In-Reply-To: <e9644f38-57be-5d26-0c08-08a74eee7cb1@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694441017;1b9d727a;
+X-HE-SMSGID: 1qfhVk-0001JK-HG
 
-On 07/09/2023 20:56, Marcus Seyfarth wrote:
-> As to bisecting: Unfortunately I cannot afford the time right now to bisect this further as the system is used in production and already did invest a lot of time without success into it. Hopefully someone else can find the root cause of the problem. My systemd version is: 254.1, and I also use dbus 1.14.10 and dbus-broker 33.r35.g2220a84 which was configured with -D linux-4-17=true.
+On 30.08.23 12:07, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [replying with a heavily adjust set of recipients]
 > 
+> On 18.07.23 02:51, Bagas Sanjaya wrote:
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+> Tirthendu Sarkar, turned out this regressions reported in
+> https://bugzilla.kernel.org/show_bug.cgi?id=217678 is caused by your
+> change e9031f2da1a ("i40e: introduce next_to_process to i40e_ring")
+> [v6.4-rc1] that Tony applied in March.
+> 
+> Could you (or someone else) please take a look? The bugzilla ticket has
+> details and a comment from a second person that seems to be affected by
+> the same problem. And 6.5 seems to still show the problem.
 
-[also Cc: Thorsten]
+Hey i40e developers, did you see that message reg this regression in
+your driver I sent one and a half week ago? It would be good to get at
+least some progress here, as this report is around for quite some time
+already, as it was misdirected first. :-/ Two people are apparently
+affected by this, one re-confirmed today that this is still happening.
 
-To Thorsten: It looks like the reporter can neither bisect nor
-test the mainline since he only has production machine instead.
-What can I (and the reporter do) in this case?
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Thanks.
+#regzbot poke
 
--- 
-An old man doll... just what I always wanted! - Clara
-
+>>> Hi,
+>>>
+>>> After I updated to 6.4 through Archlinux kernel update, suddenly I noticed random packet losses on my routers like nodes. I have these networking relevant config on my nodes
+>>>
+>>> 1. Using archlinux
+>>> 2. Network config through systemd-networkd
+>>> 3. Using bird2 for BGP routing, but not relevant to this bug.
+>>> 4. Using nftables for traffic control, but seems not relevant to this bug. 
+>>> 5. Not using fail2ban like dymanic filtering tools, at least at L3/L4 level
+>>>
+>>> After I ruled out systemd-networkd, nftables related issues. I tracked down issues to kernel.
+>>>
+>>> Here's the tcpdump I'm seeing on one side of my node ""
+>>>
+>>> ```
+>>> sudo tcpdump -i fios_wan port 38851
+>>> tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+>>> listening on fios_wan, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+>>> 10:33:06.073236 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+>>> 10:33:11.406607 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+>>> 10:33:16.739969 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+>>> 10:33:21.859856 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+>>> 10:33:27.193176 IP [BOS1_NODE].38851 > [REDACTED_PUBLIC_IPv4_1].38851: UDP, length 148
+>>> 5 packets captured
+>>> 5 packets received by filter
+>>> 0 packets dropped by kernel
+>>> ```
+>>>
+>>> But on the other side "[REDACTED_PUBLIC_IPv4_1]", tcpdump is replying packets in this wireguard stream. So packet is lost somewhere in the link.
+>>>
+>>> From the otherside, I can do "mtr" to "[BOS1_NODE]"'s public IP and found the moment the link got lost is right at "[BOS1_NODE]", that means "[BOS1_NODE]"'s networking stack completely drop the inbound packets from specific ip addresses.
+>>>
+>>> Some more digging
+>>>
+>>> 1. This situation began after booting in different delays. Sometimes can trigger after 30 seconds after booting, and sometimes will be after 18 hours or more.
+>>> 2. It can envolve into worse case that when I do "ip neigh show", the ipv4 ARP table and ipv6 neighbor discovery start to appear as "invalid", meaning the internet is completely loss.
+>>> 3. When this happened to wan facing interface, it seems OK with lan facing interfaces. WAN interface was using Intel X710-T4L using i40e and lan side was using virtio
+>>> 4. I tried to bisect in between 6.3 and 6.4, and the first bad commit it reports was "a3efabee5878b8d7b1863debb78cb7129d07a346". But this is not relevant to networking at all, maybe it's the wrong commit to look at. At the meantime, because I haven't found a reproducible way of 100% trigger the issue, it may be the case during bisect some "good" commits are actually bad. 
+>>> 5. I also tried to look at "dmesg", nothing interesting pop up. But I'll make it available upon request.
+>>>
+>>> This is my first bug reports. Sorry for any confusion it may lead to and thanks for reading.
+>>
+>> See Bugzilla for the full thread.
+>>
+>> Thorsten: The reporter had a bad bisect (some bad commits were marked as good
+>> instead), hence SoB chain for culprit (unrelated) ipvu commit is in To:
+>> list. I also asked the reporter (also in To:) to provide dmesg and request
+>> rerunning bisection, but he doesn't currently have a reliable reproducer.
+>> Is it the best I can do?
+>>
+>> Anyway, I'm adding this regression to be tracked in regzbot:
+>>
+>> #regzbot introduced: a3efabee5878b8 https://bugzilla.kernel.org/show_bug.cgi?id=217678
+>> #regzbot title: packet drop on Intel X710-T4L due to ipvu boot fix
+>>
+>> Thanks.
+>>
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217678
+>>
+> 
+> #regzbot introduced: e9031f2da1a
+> #regzbot poke
