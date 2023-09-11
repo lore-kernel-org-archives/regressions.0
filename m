@@ -1,69 +1,130 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F48F9F4
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 13:40:48 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qfh9i-0000KI-UM; Mon, 11 Sep 2023 15:40:46 +0200
-Message-ID: <de698d06-9784-43ed-9437-61d6edf9672b@leemhuis.info>
-Date: Mon, 11 Sep 2023 15:40:46 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781FE1170E;
+	Mon, 11 Sep 2023 13:57:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DCBC433C7;
+	Mon, 11 Sep 2023 13:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1694440653;
+	bh=CU1g8Lrs6EaUNCYAPQHJ7zHQs/cwzFvskhy2PCvPc98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=R1YVtmnarCG1NzXEslc0QO12B4eWDiAycYzExvbrbPxKyFvPCCAgDkzl19UqGyjTZ
+	 ioVI+/Q03ulHEgj5lZm9pLsIsD1nRv6cYBQPB07OFx8uR6KdPYVDBXIr9tgDskC3nS
+	 77p3jjpI5betd/rMrMr4de6hAKZuPQ7GDclEBTm8=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	=?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Harald Freudenberger <freude@linux.vnet.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-crypto@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.5 110/739] crypto: af_alg - Fix missing initialisation affecting gcm-aes-s390
+Date: Mon, 11 Sep 2023 15:38:29 +0200
+Message-ID: <20230911134654.173764504@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230911134650.921299741@linuxfoundation.org>
+References: <20230911134650.921299741@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Bluetooth: hci_sync: Fix handling of
- HCI_QUIRK_STRICT_DUPLICATE_FILTER
-Content-Language: en-US, de-DE
-To: patchwork-bot+bluetooth@kernel.org,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- netdev <netdev@vger.kernel.org>, Stefan Agner <stefan@agner.ch>
-References: <20230829205936.766544-1-luiz.dentz@gmail.com>
- <169343402479.21564.11565149320234658166.git-patchwork-notify@kernel.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <169343402479.21564.11565149320234658166.git-patchwork-notify@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694439649;973ad249;
-X-HE-SMSGID: 1qfh9i-0000KI-UM
+Content-Transfer-Encoding: 8bit
 
-On 31.08.23 00:20, patchwork-bot+bluetooth@kernel.org wrote:
-> 
-> This patch was applied to bluetooth/bluetooth-next.git (master)
-> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-> 
-> On Tue, 29 Aug 2023 13:59:36 -0700 you wrote:
->> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
->>
->> When HCI_QUIRK_STRICT_DUPLICATE_FILTER is set LE scanning requires
->> periodic restarts of the scanning procedure as the controller would
->> consider device previously found as duplicated despite of RSSI changes,
->> but in order to set the scan timeout properly set le_scan_restart needs
->> to be synchronous so it shall not use hci_cmd_sync_queue which defers
->> the command processing to cmd_sync_work.
->>
->> [...]
-> 
-> Here is the summary with links:
->   - Bluetooth: hci_sync: Fix handling of HCI_QUIRK_STRICT_DUPLICATE_FILTER
->     https://git.kernel.org/bluetooth/bluetooth-next/c/52bf4fd43f75
+6.5-stable review patch.  If anyone has any objections, please let me know.
 
-That is (maybe among others?) a fix for a regression from 6.1, so why
-was this merged into a "for-next" branch instead of a branch that
-targets the current cycle?
+------------------
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+From: David Howells <dhowells@redhat.com>
 
-[1] see
-https://lore.kernel.org/linux-bluetooth/b0b672069ee6a9e43fed1a07406c6dd3@agner.ch/
+[ Upstream commit 6a4b8aa0a916b39a39175584c07222434fa6c6ef ]
+
+Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
+to the scatterlist array in areq->first_rsgl.sgl.sgl.
+
+Without this, the gcm-aes-s390 driver will oops when it tries to do
+gcm_walk_start() on req->dst because req->dst is set to the value of
+areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
+aead_request_set_crypt().
+
+The problem comes if an empty ciphertext is passed: the loop in
+af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
+up.
+
+This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
+as I can tell, that ignores req->dst and only uses req->src[*].
+
+[*] Is this a bug in aesni-intel_glue.c?
+
+The s390x oops looks something like:
+
+ Unable to handle kernel pointer dereference in virtual kernel address space
+ Failing address: 0000000a00000000 TEID: 0000000a00000803
+ Fault in home space mode while using kernel ASCE.
+ AS:00000000a43a0007 R3:0000000000000024
+ Oops: 003b ilc:2 [#1] SMP
+ ...
+ Call Trace:
+  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
+  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
+  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
+  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
+  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
+  [<00000000a273e066>] vfs_read+0x26e/0x2a8
+  [<00000000a273e8c4>] ksys_read+0xbc/0x100
+  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
+  [<00000000a312ff30>] system_call+0x70/0x98
+ Last Breaking-Event-Address:
+  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
+
+Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create scatterlists")
+Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: Sven Schnelle <svens@linux.ibm.com>
+cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-crypto@vger.kernel.org
+cc: linux-s390@vger.kernel.org
+cc: regressions@lists.linux.dev
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
+Tested-by: Ondrej Mosnáček <omosnacek@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ crypto/af_alg.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 10efb56d8b481..ad02ca0a8cdde 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct sock *sk,
+ 
+ 	areq->areqlen = areqlen;
+ 	areq->sk = sk;
++	areq->first_rsgl.sgl.sgt.sgl = areq->first_rsgl.sgl.sgl;
+ 	areq->last_rsgl = NULL;
+ 	INIT_LIST_HEAD(&areq->rsgl_list);
+ 	areq->tsgl = NULL;
+-- 
+2.40.1
+
+
+
