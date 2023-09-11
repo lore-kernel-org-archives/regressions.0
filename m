@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3420E2F28
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 08:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BE73D8C
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 09:46:33 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qfccN-0004oo-TO; Mon, 11 Sep 2023 10:50:04 +0200
-Message-ID: <4819de40-7eba-4ed4-a210-c5bb2f9c2378@leemhuis.info>
-Date: Mon, 11 Sep 2023 10:50:03 +0200
+	id 1qfdUo-00017y-87; Mon, 11 Sep 2023 11:46:18 +0200
+Message-ID: <5fe38b0a-e8de-466b-b35b-a827eae3e766@leemhuis.info>
+Date: Mon, 11 Sep 2023 11:46:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,46 +15,73 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: power button stopped working on lenovo ideapad 5 since
- a855724dc08b
-Content-Language: en-US, de-DE
-To: Hans de Goede <hdegoede@redhat.com>,
+Subject: Re: [PATCH] usb: typec: ucsi: Fix NULL pointer dereference
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Saranya Gopal <saranya.gopal@intel.com>,
+ Rajaram Regupathy <rajaram.regupathy@intel.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Wayne Chang <waynec@nvidia.com>, Hans de Goede <hdegoede@redhat.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <7b78505a-a8c9-4770-b283-807581b5edfb@leemhuis.info>
- <472fc5a1-46cb-66e0-463a-934806595997@redhat.com>
+References: <20230906084842.1922052-1-heikki.krogerus@linux.intel.com>
+ <2023090638-overexert-endearing-3726@gregkh>
+ <288ac4c1-b66d-477a-ba2e-9b8d8dde4dc6@amd.com>
+Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <472fc5a1-46cb-66e0-463a-934806595997@redhat.com>
+In-Reply-To: <288ac4c1-b66d-477a-ba2e-9b8d8dde4dc6@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694422206;9e5db2f8;
-X-HE-SMSGID: 1qfccN-0004oo-TO
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694425594;786d0b6f;
+X-HE-SMSGID: 1qfdUo-00017y-87
 
-On 11.09.23 10:44, Hans de Goede wrote:
-> On 9/11/23 09:50, Thorsten Leemhuis wrote:
->> [TLDR: Just adding a regression reported to bko to the tracking]
->>
->> Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
->> regression reported in bugzilla.kernel.org that seems to be handled
->> there already, nevertheless I'd like to add to the tracking to ensure
->> it's doesn't fall through the cracks in the end:
->>
->> #regzbot introduced: a855724dc08b
->> https://bugzilla.kernel.org/show_bug.cgi?id=217833
->> #regzbot title: power button stopped working on lenovo ideapad 5
->> #regzbot dup-of:
->> https://lore.kernel.org/stable/aa1649b6-b7a8-4fbe-8356-2c856951e283@gmail.com/
->> #regzbot ignore-activity
->>
->> See the ticket for details, there were a few replies already.
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+On 06.09.23 14:05, Mario Limonciello wrote:
+> On 9/6/2023 03:57, Greg Kroah-Hartman wrote:
+>> On Wed, Sep 06, 2023 at 11:48:42AM +0300, Heikki Krogerus wrote:
+>>> Making sure the UCSI debugfs entry actually exists before
+>>> attempting to remove it.
+>>>
+>>> Fixes: df0383ffad64 ("usb: typec: ucsi: Add debugfs for ucsi commands")
+>>> Reported-by: Dave Hansen <dave.hansen@intel.com>
+>>> Closes:
+>>> https://lore.kernel.org/linux-usb/700df3c4-2f6c-85f9-6c61-065bc5b2db3a@intel.com/
+>>> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+>>> Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> Cc: Saranya Gopal <saranya.gopal@intel.com>
+>>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > 
-> Note there is a patch-series which fixes this (and which is planned
-> to be reworked to fix it slightly different) pending here:
+> I could also reproduce it with 7733171926cc336ddf0c8f847eefaff569dbff86
+> on two different laptops.
 > 
-> #regzbot link: https://lore.kernel.org/regressions/20230829165627.156542-1-mario.limonciello@amd.com/
+>>> ---
+>>>   drivers/usb/typec/ucsi/debugfs.c | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/typec/ucsi/debugfs.c
+>>> b/drivers/usb/typec/ucsi/debugfs.c
+>>> index 0c7bf88d4a7f..f67733cecfdf 100644
+>>> --- a/drivers/usb/typec/ucsi/debugfs.c
+>>> +++ b/drivers/usb/typec/ucsi/debugfs.c
+>>> @@ -84,6 +84,9 @@ void ucsi_debugfs_register(struct ucsi *ucsi)
+>>>     void ucsi_debugfs_unregister(struct ucsi *ucsi)
+>>>   {
+>>> +    if (IS_ERR_OR_NULL(ucsi) || !ucsi->debugfs)
+>>> +        return;
+>>> +
+>>>       debugfs_remove_recursive(ucsi->debugfs->dentry);
+>>
+>> Why are you saving the dentry at all?  Why not just have debugfs look it
+>> up when you want to remove it based on the filename?
+>>
+>> Anyway, not a big deal here, just a comment.  I'll queue this up after
+>> -rc1 is out.
+> 
+> It might be worth sending before rc1 if it ends up being widespread.
 
-thx, yeah, I had noticed it, but forgot to tell regzbot about it after I
-noticed discussions for now moved to bugzilla. Thx for taking care of this!
+FWIW, as someone that afaics just ran into the regression fixed by this
+patch with -rc1, I would have liked that patch to be in -rc1 as well...
 
 Ciao, Thorsten
