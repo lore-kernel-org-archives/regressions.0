@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB503C27
-	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 08:02:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D250259B
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 08:29:11 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qfbsB-0006KC-TZ; Mon, 11 Sep 2023 10:02:20 +0200
-Message-ID: <d544fac1-ed2b-4417-8edd-1a81ed8a41d6@leemhuis.info>
-Date: Mon, 11 Sep 2023 10:02:19 +0200
+	id 1qfcI9-0004AU-UU; Mon, 11 Sep 2023 10:29:10 +0200
+Message-ID: <03d60769-3fe1-4c62-922b-c2e4aa0415de@leemhuis.info>
+Date: Mon, 11 Sep 2023 10:29:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,67 +15,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Possible nvme regression in 6.4.11
+Subject: Re: [REGRESSION] comedi: add HAS_IOPORT dependencies
 Content-Language: en-US, de-DE
-To: Genes Lists <lists@sapience.com>, Ricky WU <ricky_wu@realtek.com>,
- Keith Busch <kbusch@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "axboe@kernel.dk" <axboe@kernel.dk>, "sagi@grimberg.me" <sagi@grimberg.me>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "hch@lst.de" <hch@lst.de>, "arnd@arndb.de" <arnd@arndb.de>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <5f968b95-6b1c-4d6f-aac7-5d54f66834a8@sapience.com>
- <ZN050TFnKZ54LJ5v@kbusch-mbp.dhcp.thefacebook.com>
- <30b69186-5a6e-4f53-b24c-2221926fc3b4@sapience.com>
- <570d465a-7500-4b58-98f0-fd781c8740cc@sapience.com>
- <ZOZEwafA8+tknJNT@kbusch-mbp.dhcp.thefacebook.com>
- <7cf188d0-77b4-4e80-8da6-2045a7f29866@sapience.com>
- <180a2bbd2c314ede8f6c4c16cc4603bf@realtek.com>
- <903830f8-9f9a-4071-9ced-761a55018c5a@sapience.com>
- <97cee217-e438-4fff-836a-186f59d6d256@sapience.com>
- <fa82d9dcbe83403abc644c20922b47f9@realtek.com>
- <5d38cf11-114a-4997-a0fc-4627402468f8@sapience.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Linux Regressions <regressions@lists.linux.dev>
+Cc: Linux Stable <stable@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <aaf05569-1564-43de-8706-d604e583bf42@mev.co.uk>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <5d38cf11-114a-4997-a0fc-4627402468f8@sapience.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <aaf05569-1564-43de-8706-d604e583bf42@mev.co.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694419355;2d91493f;
-X-HE-SMSGID: 1qfbsB-0006KC-TZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694420952;8a4fc802;
+X-HE-SMSGID: 1qfcI9-0004AU-UU
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-On 30.08.23 23:09, Genes Lists wrote:
-> ...
->> I think maybe it is a system power saving issue....
->> In the past if the BIOS(config space) not set L1-substate, our driver
->> will keep drive low CLKREQ# when HOST want to enter power saving state
->> that make whole system not enter the power saving state.
->> But this patch we release the CLKREQ# to HOST, make whole system can
->> enter power saving state success when the HOST want to enter the power
->> saving state, but I don't  know why your system can not wake out
->> success from power saving stat on the platform
+On 04.09.23 16:28, Ian Abbott wrote:
+> Hi,
 > 
->    Thanks for continuing to look into this. Can you share your thoughts
-> on best way to proceed going forward - do you plan to revert or
-> something else?
+> Commit b5c75b68b7de ("comedi: add HAS_IOPORT dependencies") in v6.5-rc1
+> onwards makes it impossible to select some comedi configuration options
+> that were previously selectable.  In addition to adding 'depends on
+> HAS_IOPORT' directives (which is OK for most of the options), it also
+> changes 'select COMEDI_8254', 'select COMEDI_DAS08', 'select
+> COMEDI_NI_LABPC', and 'select COMEDI_AMPLC_DIO200' directives to
+> 'depends on' directives.  Since there is no other way to select those
+> options it renders the options that depend on them permanently disabled.
+> It also adds a dependency on HAS_IOPORT to COMEDI_PCI_DRIVERS even
+> though several configuration options that depend on COMEDI_PCI_DRIVERS
+> are for drivers that neither use I/O ports nor depend on modules that
+> call the I/O port functions (inb()/outb() and friends).
+> 
+> Arnd Bergmann recommends[1] reverting the patch and following up with a
+> fixed version.  I intend to do that.  Niklas Schnelle confirms[2] that
+> it will not break anything.
+> 
+> [1] Link:
+> https://lore.kernel.org/all/33c2292b-08cb-44c7-9438-07d4060976ab@app.fastmail.com
+> 
+> [2] Link:
+> https://lore.kernel.org/all/65d620b2644e2d60b041815fa4bb544a818ae55a.camel@linux.ibm.com
+> 
+> #regzbot introduced: b5c75b68b7de
 
-Hmmm. This looks like it fell through the cracks. Or am I missing something?
-
-Anyway, 6.4.y will likely be EOL in a week or two. Which bears the
-question: are 6.5.y and 6.6-rc1 working better for you? From the
-bugzilla ticket (https://bugzilla.kernel.org/show_bug.cgi?id=217802) and
-comments from others that are affected it sounds like that's not the
-case. If that's how it is I guess it overdue that the 101bd907b4244a
-("misc: rtsx: judge ASPM Mode to set PETXCFG Reg") is reverted. Or am I
-missing something?
+#regzbot fix: Revert "comedi: add HAS_IOPORT dependencies"
+#regzbot monitor:
+https://lore.kernel.org/all/20230905090922.3314-1-abbotti@mev.co.uk/
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-#regzbot poke
