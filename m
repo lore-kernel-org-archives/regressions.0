@@ -1,130 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781FE1170E;
-	Mon, 11 Sep 2023 13:57:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DCBC433C7;
-	Mon, 11 Sep 2023 13:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1694440653;
-	bh=CU1g8Lrs6EaUNCYAPQHJ7zHQs/cwzFvskhy2PCvPc98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R1YVtmnarCG1NzXEslc0QO12B4eWDiAycYzExvbrbPxKyFvPCCAgDkzl19UqGyjTZ
-	 ioVI+/Q03ulHEgj5lZm9pLsIsD1nRv6cYBQPB07OFx8uR6KdPYVDBXIr9tgDskC3nS
-	 77p3jjpI5betd/rMrMr4de6hAKZuPQ7GDclEBTm8=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	=?UTF-8?q?Ondrej=20Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.vnet.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-crypto@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.5 110/739] crypto: af_alg - Fix missing initialisation affecting gcm-aes-s390
-Date: Mon, 11 Sep 2023 15:38:29 +0200
-Message-ID: <20230911134654.173764504@linuxfoundation.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230911134650.921299741@linuxfoundation.org>
-References: <20230911134650.921299741@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902F1170E
+	for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 14:00:55 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-68e3083aa1dso4326714b3a.1
+        for <regressions@lists.linux.dev>; Mon, 11 Sep 2023 07:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694440855; x=1695045655; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u2Q+4HmWdmD9If9N6/Rge7uDA1fBSwpfjskqILwBtyY=;
+        b=WZiHT8EXx2k9XsOPXY2kfdz62MKNFqlJKpC7JSR9fNqHeTOiZvql2G+5Dbuh1u+WW5
+         f7vuR/knmDygljk/fcd8sD5nzCMg7bl38bdc0N2rZDsqdXd58prnzTEFDFGT7EubFkXQ
+         H3Nr1/pz1LBU1H1XuQNbw2yHXncEb7hy34j0IzvISz3jMaNrrP9oKScV6wdgNtF26VV9
+         rtLYZJqgGo+CxJ0NlTj09pHc79AH4hPJ7JDjs5SkjFLohHq9Zk2jzcAi0xuafHEW3Qnj
+         LoKnF9PgkV67x6H5uVjDEXJB019cyjXWRHi4WcTFrd5Y4c/jsySccgkaAuhASPtPV6bA
+         USNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694440855; x=1695045655;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u2Q+4HmWdmD9If9N6/Rge7uDA1fBSwpfjskqILwBtyY=;
+        b=vm/DeupoyyuCEYqK2WTJcvZNExNSBQXc/Qrv+dctMwp+Qn8X3AR7MSYkae68qGxSPF
+         j65YhZnSbP7US5NQqTS9+OSs0kEu+hLlS1b4s6V8AwZeqb5p2PPxxYiBhA5saKpBmOvN
+         k+WBWFW54qqO2pr8LoNem47raNo/+i1Ey7oM1dL0ChMo1xXeOLevYxOVxhAODhzlM2j3
+         pxMX0nuubfyvtmNcKk20qP2S40nXsvlrCvaaR4WfIkDt09Cm97lYU2YZHw1DuIoXWT7L
+         0vfgIYK32ByqZejqTNv6FJruUxqdkd/kUIfllBRrt2UTOdPtC+6Krt2wL2KfFD6rqoK/
+         0GpA==
+X-Gm-Message-State: AOJu0Ywdx2EYOappft9BAUzm+PbGP81XCFbMP0ybcccOgMTbSt6x2zB3
+	DJ+vayDqocR3MXNseYYw3ZA=
+X-Google-Smtp-Source: AGHT+IF+5c9+fQ4xKQsvS/HkkOz8hj7VmzC06mn57xXfwBGYWcR9O0Oc90MXkr1cUCqA0/oKcvITYA==
+X-Received: by 2002:a05:6a20:e11b:b0:140:6d68:ce07 with SMTP id kr27-20020a056a20e11b00b001406d68ce07mr13423508pzb.52.1694440855159;
+        Mon, 11 Sep 2023 07:00:55 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id k17-20020aa78211000000b00682d79199e7sm5586494pfi.200.2023.09.11.07.00.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 07:00:54 -0700 (PDT)
+Message-ID: <9a8d2090-a58e-49a0-3b1d-00bb5b8f04f2@gmail.com>
+Date: Mon, 11 Sep 2023 21:00:49 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: Slow boot and shutdown/reboot problems with 6.5.0+
+To: Marcus Seyfarth <m.seyfarth@gmail.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Luis Chamberlain <mcgrof@kernel.org>,
+ Russ Weight <russell.h.weight@intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Integrity <linux-integrity@vger.kernel.org>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+References: <5011708f-b0ae-2853-0f87-a3b59845a2cc@gmail.com>
+ <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <CA+FbhJO8b5V_So2mMPu1ApKXTxk0ieWvNMa=HBTYTWDXLEA-ew@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-6.5-stable review patch.  If anyone has any objections, please let me know.
+On 07/09/2023 20:56, Marcus Seyfarth wrote:
+> As to bisecting: Unfortunately I cannot afford the time right now to bisect this further as the system is used in production and already did invest a lot of time without success into it. Hopefully someone else can find the root cause of the problem. My systemd version is: 254.1, and I also use dbus 1.14.10 and dbus-broker 33.r35.g2220a84 which was configured with -D linux-4-17=true.
+> 
 
-------------------
+[also Cc: Thorsten]
 
-From: David Howells <dhowells@redhat.com>
+To Thorsten: It looks like the reporter can neither bisect nor
+test the mainline since he only has production machine instead.
+What can I (and the reporter do) in this case?
 
-[ Upstream commit 6a4b8aa0a916b39a39175584c07222434fa6c6ef ]
+Thanks.
 
-Fix af_alg_alloc_areq() to initialise areq->first_rsgl.sgl.sgt.sgl to point
-to the scatterlist array in areq->first_rsgl.sgl.sgl.
-
-Without this, the gcm-aes-s390 driver will oops when it tries to do
-gcm_walk_start() on req->dst because req->dst is set to the value of
-areq->first_rsgl.sgl.sgl by _aead_recvmsg() calling
-aead_request_set_crypt().
-
-The problem comes if an empty ciphertext is passed: the loop in
-af_alg_get_rsgl() just passes straight out and doesn't set areq->first_rsgl
-up.
-
-This isn't a problem on x86_64 using gcmaes_crypt_by_sg() because, as far
-as I can tell, that ignores req->dst and only uses req->src[*].
-
-[*] Is this a bug in aesni-intel_glue.c?
-
-The s390x oops looks something like:
-
- Unable to handle kernel pointer dereference in virtual kernel address space
- Failing address: 0000000a00000000 TEID: 0000000a00000803
- Fault in home space mode while using kernel ASCE.
- AS:00000000a43a0007 R3:0000000000000024
- Oops: 003b ilc:2 [#1] SMP
- ...
- Call Trace:
-  [<000003ff7fc3d47e>] gcm_walk_start+0x16/0x28 [aes_s390]
-  [<00000000a2a342f2>] crypto_aead_decrypt+0x9a/0xb8
-  [<00000000a2a60888>] aead_recvmsg+0x478/0x698
-  [<00000000a2e519a0>] sock_recvmsg+0x70/0xb0
-  [<00000000a2e51a56>] sock_read_iter+0x76/0xa0
-  [<00000000a273e066>] vfs_read+0x26e/0x2a8
-  [<00000000a273e8c4>] ksys_read+0xbc/0x100
-  [<00000000a311d808>] __do_syscall+0x1d0/0x1f8
-  [<00000000a312ff30>] system_call+0x70/0x98
- Last Breaking-Event-Address:
-  [<000003ff7fc3e6b4>] gcm_aes_crypt+0x104/0xa68 [aes_s390]
-
-Fixes: c1abe6f570af ("crypto: af_alg: Use extract_iter_to_sg() to create scatterlists")
-Reported-by: Ondrej Mosnáček <omosnacek@gmail.com>
-Link: https://lore.kernel.org/r/CAAUqJDuRkHE8fPgZJGaKjUjd3QfGwzfumuJBmStPqBhubxyk_A@mail.gmail.com/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: Sven Schnelle <svens@linux.ibm.com>
-cc: Harald Freudenberger <freude@linux.vnet.ibm.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-crypto@vger.kernel.org
-cc: linux-s390@vger.kernel.org
-cc: regressions@lists.linux.dev
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
-Tested-by: Ondrej Mosnáček <omosnacek@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- crypto/af_alg.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 10efb56d8b481..ad02ca0a8cdde 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -1192,6 +1192,7 @@ struct af_alg_async_req *af_alg_alloc_areq(struct sock *sk,
- 
- 	areq->areqlen = areqlen;
- 	areq->sk = sk;
-+	areq->first_rsgl.sgl.sgt.sgl = areq->first_rsgl.sgl.sgl;
- 	areq->last_rsgl = NULL;
- 	INIT_LIST_HEAD(&areq->rsgl_list);
- 	areq->tsgl = NULL;
 -- 
-2.40.1
-
-
+An old man doll... just what I always wanted! - Clara
 
