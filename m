@@ -1,105 +1,106 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8C0631
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 08:33:05 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qfypO-0003Kf-NB; Tue, 12 Sep 2023 10:32:58 +0200
-Message-ID: <b30a81fa-6b59-4bac-b109-99a4dca689de@leemhuis.info>
-Date: Tue, 12 Sep 2023 10:32:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D843015AE
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 08:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694509110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Et4XrSW8efLvThc1V89jDZFB/myxZezLXAdDv36HbvY=;
+	b=Vc5Sbm3TPiwZkCXKy5DfnS7iZk6zmm6Hl1UI3EpLPfOgcXE9wWYxnQSMER1CIMEtLNG0AI
+	4zjQDHoe8vWGqYGFYvBObnkHs2iNqT5E/+Bbw9vOitoWkf4DGE8RJgyrUjzJRLiEESf1/w
+	xcLN7vNnBoN+j1MsI9jTwq2teDoFpSE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-277-GeQb13YvOEy2WW9kTtExVA-1; Tue, 12 Sep 2023 04:58:29 -0400
+X-MC-Unique: GeQb13YvOEy2WW9kTtExVA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a9d7a801a3so353650366b.2
+        for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 01:58:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694509108; x=1695113908;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Et4XrSW8efLvThc1V89jDZFB/myxZezLXAdDv36HbvY=;
+        b=ZIoZEgU0SIWpRl6KT4Ugo20q77wOo67nQn8M4J64mo2Le2FPTEU7/RfJmh8Ok2Hh80
+         /kqCCDGx+6GZwSaBirDSXrqfaLcjw8aDtaRBeWJ3qtLxbgh1vs0hq/uF9ks8b210YcXA
+         EB7Bgl92Lz3/se3JDtuVcpIDivdMIcV5+wOPEUKNHcHVkNP25uCZ9J4y45FFxy/5usEk
+         rt3UAlKR7lOYi8bVM1jkRJ4VgUBrp0TdwncQ9J6IBj2zEvEU3evktlp84iI3GHF/pXQA
+         aIDmh0MS53JZfrV8HFsUdZzNaAePFbhL3N5pMgKhuPHYLVUplZkd0ZtoYzbeHjG2yIzl
+         fwsA==
+X-Gm-Message-State: AOJu0YyK1nnk22TU/JBeZij6Y/CGf9q+OsiQYAgnOE+CfXIaYkfOvz/C
+	6DxtKPHHa5hatQFB6rJHvdbMJQiCSZMwCzKAsyyQThvD/MThjcpLVNf7EFc+kIPCW4zTbEfAhU/
+	/YQPvjlFHCIoWu3y1NRpZ+is=
+X-Received: by 2002:a17:907:2c59:b0:9a1:af6f:e375 with SMTP id hf25-20020a1709072c5900b009a1af6fe375mr9077127ejc.35.1694509108239;
+        Tue, 12 Sep 2023 01:58:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFGcKLf77LasWyQfqqzucp8Wj0iTzjDeVCvR4PK9N9Sl0R5dh6jR9ZhKvk/teVxGmkfyYmNg==
+X-Received: by 2002:a17:907:2c59:b0:9a1:af6f:e375 with SMTP id hf25-20020a1709072c5900b009a1af6fe375mr9077114ejc.35.1694509107930;
+        Tue, 12 Sep 2023 01:58:27 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id gs9-20020a170906f18900b0099bd5d28dc4sm6585633ejb.195.2023.09.12.01.58.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Sep 2023 01:58:27 -0700 (PDT)
+Message-ID: <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
+Date: Tue, 12 Sep 2023 10:58:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: Commit "netfilter: nf_tables: disallow rule addition
- to bound chain via NFTA_RULE_CHAIN_ID" breaks ruleset loading in linux-stable
-Content-Language: en-US, de-DE
-To: Pablo Neira Ayuso <pablo@netfilter.org>,
- Timo Sigurdsson <public_timo.s@silentcreek.de>
-Cc: kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev, sashal@kernel.org,
- carnil@debian.org, 1051592@bugs.debian.org
-References: <20230911213750.5B4B663206F5@dd20004.kasserver.com>
- <ZP+bUpxJiFcmTWhy@calendula>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZP+bUpxJiFcmTWhy@calendula>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, lucapgl2001@gmail.com
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
+ <20230829165627.156542-4-mario.limonciello@amd.com>
+ <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+ <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
+ <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
+ <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
+ <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
+ <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
+ <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694507586;0108f719;
-X-HE-SMSGID: 1qfypO-0003Kf-NB
+Content-Transfer-Encoding: 8bit
 
-On 12.09.23 00:57, Pablo Neira Ayuso wrote:
-> On Mon, Sep 11, 2023 at 11:37:50PM +0200, Timo Sigurdsson wrote:
->>
->> recently, Debian updated their stable kernel from 6.1.38 to 6.1.52
->> which broke nftables ruleset loading on one of my machines with lots
->> of "Operation not supported" errors. I've reported this to the
->> Debian project (see link below) and Salvatore Bonaccorso and I
->> identified "netfilter: nf_tables: disallow rule addition to bound
->> chain via NFTA_RULE_CHAIN_ID" (0ebc1064e487) as the offending commit
->> that introduced the regression. Salvatore also found that this issue
->> affects the 5.10 stable tree as well (observed in 5.10.191), but he
->> cannot reproduce it on 6.4.13 and 6.5.2.
->>
->> The issue only occurs with some rulesets. While I can't trigger it
->> with simple/minimal rulesets that I use on some machines, it does
->> occur with a more complex ruleset that has been in use for months
->> (if not years, for large parts of it). I'm attaching a somewhat
->> stripped down version of the ruleset from the machine I originally
->> observed this issue on. It's still not a small or simple ruleset,
->> but I'll try to reduce it further when I have more time.
->>
->> The error messages shown when trying to load the ruleset don't seem
->> to be helpful. Just two simple examples: Just to give two simple
->> examples from the log when nftables fails to start:
->> /etc/nftables.conf:99:4-44: Error: Could not process rule: Operation not supported
->>                         tcp option maxseg size 1-500 counter drop
->>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> /etc/nftables.conf:308:4-27: Error: Could not process rule: Operation not supported
->>                         tcp dport sip-tls accept
->>                         ^^^^^^^^^^^^^^^^^^^^^^^^
+Hi,
+
+On 9/12/23 09:08, Linus Walleij wrote:
+> On Thu, Aug 31, 2023 at 7:53 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
 > 
-> I can reproduce this issue with 5.10.191 and 6.1.52 and nftables v1.0.6,
-> this is not reproducible with v1.0.7 and v1.0.8.
+>> Linus - please disregard version 1.
 > 
->> Since the issue only affects some stable trees, Salvatore thought it
->> might be an incomplete backport that causes this.
+> OK!
+> 
+>> I provided Luca a new series that implements this approach that Hans and
+>> I discussed and they confirmed it works.
 >>
->> If you need further information, please let me know.
+>> I have some minor modifications to it to narrow where it's applied so we
+>> don't have needless notifications and will send it for review after the
+>> new modifications are tested as well.
 > 
-> Userspace nftables v1.0.6 generates incorrect bytecode that hits a new
-> kernel check that rejects adding rules to bound chains. The incorrect
-> bytecode adds the chain binding, attach it to the rule and it adds the
-> rules to the chain binding. I have cherry-picked these three patches
-> for nftables v1.0.6 userspace and your ruleset restores fine.
-> [...]
+> OK standing by, I'll wait for Hans' ACK and then merge it for fixes.
 
-Hmmmm. Well, this sounds like a kernel regression to me that normally
-should be dealt with on the kernel level, as users after updating the
-kernel should never have to update any userspace stuff to continue what
-they have been doing before the kernel update.
+AFAICT Mario has not posted a new version (yet),
+so there is nothing for me to ack (yet).
 
-Can't the kernel somehow detect the incorrect bytecode and do the right
-thing(tm) somehow?
+Regards,
 
-But yes, don't worry, I know that reality is not black and white and
-that it's crucial that things like package filtering do exactly what the
-user expect it to do; that's why this might be one of those rare
-situations where "user has to update userspace components to support
-newer kernels" might be the better of two bad choices. But I had to ask
-to ensure it's something like that.
+Hans
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+
