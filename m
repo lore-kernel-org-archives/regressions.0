@@ -1,79 +1,149 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544C71640D
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 07:08:48 +0000 (UTC)
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6befdb1f545so4014374a34.3
-        for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 00:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694502527; x=1695107327; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hv2L+KIK91RPAfSw2HE5xZRSf6YXmZwJ93Tmif92bV4=;
-        b=tco6k+Ws+0tShUxw7iqcCdGc/zC/9aczd6zC7DHwvCMsNjRNI67uYyp3BdyWc4yiwT
-         otbfU7Be6/pfHjywh3ZEZ0sJoTYD7FB6LU0Psb+STYFphzc/zmAFj46xCM4RVmla1XcG
-         vvNwoj7w5IfGPlqcdIsW/mFDW8zgRQK7b7VzXf875l0UwcBoBOGJzu+ntOkPW/zFPB6u
-         KEx4SCQYlgtV+wPvsYflE8AhFAOHNsTUkSC2TUeoBLfGEzD9ziqJILEVTltgroJsT71y
-         XPvGSkdowy93Ywzq2b7OrjPkIl2CuvZ7JcK9MM7iNBk4S4mtIpQqq2xP91PJ1nu2cPNQ
-         Cvaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694502527; x=1695107327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hv2L+KIK91RPAfSw2HE5xZRSf6YXmZwJ93Tmif92bV4=;
-        b=qUXxg5YPdj2PfC3gMHU0vdNFeBc0mn4GUnBgAH+/tcs27VuAtWTPhQ07Rc+vb59oCX
-         M10CkCcdKqyUXqQ/8vwMUfQMxQxSzPk9texrfgP96GONxobbb+ZO+msR/+WSUzAgjLE5
-         NnMlfq4QL3+p6PdemcvtVudyZpwEQuDSXDup0oFsxlcRVvllLWsgC1mw5EU91DTN+beK
-         Ixvt8C5L8Qvlo6kT0MqMz/n80ira+1aGZDaYfTAJVqxvRPsg9OXkhNJP0GDVMPJagALX
-         ACIvazsj74ehW9fVVni12NCFyad8S6OSMsdtYPzxyPT8c79iU4lvOkyPV94HxhrpJexJ
-         qnSQ==
-X-Gm-Message-State: AOJu0Yw9j/82XaLg3Ofuwi9SA0/MwS8V7AoC5VVHyMo6105y2mvfH7q4
-	cLGh9BO7D7clL4w1OpHwVNF2SLHxJItd/7ciSgQqVw==
-X-Google-Smtp-Source: AGHT+IHBe3WqmlJ9znIl9UDkcdScIM2fyekx+hlEsGTzORc2dGYHkEZ989cOo3htoGUENtuvxLjItVsneETXU9qweME=
-X-Received: by 2002:a9d:6e83:0:b0:6bf:1fed:95ce with SMTP id
- a3-20020a9d6e83000000b006bf1fed95cemr11702047otr.22.1694502527347; Tue, 12
- Sep 2023 00:08:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF701640D
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 07:58:19 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qfyHo-0003Im-3Z; Tue, 12 Sep 2023 09:58:16 +0200
+Message-ID: <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
+Date: Tue, 12 Sep 2023 09:58:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230829165627.156542-1-mario.limonciello@amd.com>
- <20230829165627.156542-4-mario.limonciello@amd.com> <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
- <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com> <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
- <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com> <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
- <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
-In-Reply-To: <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 12 Sep 2023 09:08:36 +0200
-Message-ID: <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Shyam-sundar.S-k@amd.com, 
-	Basavaraj.Natikar@amd.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	lucapgl2001@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
+Content-Language: en-US, de-DE
+To: Wang Yugui <wangyugui@e16-tech.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Chris Mason <clm@meta.com>, Christoph Hellwig <hch@lst.de>,
+ linux-btrfs@vger.kernel.org, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
+References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
+ <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
+ <20230912072057.C1F5.409509F4@e16-tech.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230912072057.C1F5.409509F4@e16-tech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694505500;fc553ed2;
+X-HE-SMSGID: 1qfyHo-0003Im-3Z
 
-On Thu, Aug 31, 2023 at 7:53=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On 12.09.23 01:20, Wang Yugui wrote:
+> 
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Hmmm, nothing happened wrt to this regression during the past two weeks
+>> afaics. Wonder if it fell through the cracks due to the merge window or
+>> if there is a good reason. Was there progress and I just missed it? To
+>> rule out the latter:
+>>
+>> Wang Yugui, does the problem still happen with 6.6-rc1?
+> 
+> The problem still happen with 6.6-rc1.
+> Yet no related patch is released for this problem.
 
-> Linus - please disregard version 1.
+Thx. Adding Josef and David to the list of recipients, maybe they might
+have an idea why that commit of Christoph (da023618076a13 ("btrfs:
+submit IO synchronously for fast checksum implementations") [v6.5-rc1])
+seems to slow down things for Wang Yugui's Btrfs setup (hope I
+understood things correctly). FWIW, the start of the thread is here:
+https://lore.kernel.org/linux-btrfs/20230731152223.4EFB.409509F4@e16-tech.com/
 
-OK!
+Christoph later wrote "so you have a case where the offload for the
+checksumming generation actually helps (by a lot)" and asked for advice
+from the Btrfs side:
+https://lore.kernel.org/linux-btrfs/20230802092631.GA27963@lst.de/
 
-> I provided Luca a new series that implements this approach that Hans and
-> I discussed and they confirmed it works.
->
-> I have some minor modifications to it to narrow where it's applied so we
-> don't have needless notifications and will send it for review after the
-> new modifications are tested as well.
+/me hopes that will get things rolling again.
 
-OK standing by, I'll wait for Hans' ACK and then merge it for fixes.
+/me meanwhile wonders if there were other reports like this, or if Wang
+Yugui's system is somehow special.
 
-Yours,
-Linus Walleij
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+>> On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 13.08.23 11:50, Wang Yugui wrote:
+>>>>> On 8/11/23 10:23 AM, Wang Yugui wrote:
+>>>>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
+>>>>>>>>> And with only a revert of
+>>>>>>>>>
+>>>>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
+>>>>>>>> checksum implementations") 
+>>>>>>> Ok, so you have a case where the offload for the checksumming generation
+>>>>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
+>>>>>>> involved with this.
+>>>>>>>
+>>>>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>>>>>                 return false;
+>>>>>>>>> This disables synchronous checksum calculation entirely for data I/O.
+>>>>>>>> without this fix, data I/O checksum is always synchronous?
+>>>>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>>>>> It is never with the above patch.
+>>>>>>>
+>>>>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
+>>>>>>>>> single profile) workload.
+>>>>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
+>>>>>>>> case.
+>>>>>>> How does it compare with and without the revert?  Can you add the numbers?
+>>>>>
+>>>>> Looking through the thread, you're comparing -m single -d single, but
+>>>>> btrfs is still doing the raid.
+>>>>>
+>>>>> Sorry to keep asking for more runs, but these numbers are a surprise,
+>>>>> and I probably won't have time today to reproduce before vacation next
+>>>>> week (sadly, Christoph and I aren't going together).
+>>>
+>>> Sadly I also did not run into either you or Christoph during my own
+>>> vacation during the last two weeks. But I'm back from it how, which got
+>>> me wondering:
+>>>
+>>> What happened to this regression? Was any progress made to resolve this
+>>> in one way or another?
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+>>>>> Can you please do a run where lvm or MD raid are providing the raid0?
+>>>> no LVM/MD used here.
+>>>>
+>>>>> It doesn't look like you're using compression, but I wanted to double check.
+>>>>
+>>>> Yes. '-m xx -d yy' with other default mkfs.btrfs option, so no compression.
+>>>>
+>>>>> How much ram do you have?
+>>>>
+>>>> 192G ECC memory.
+>>>>
+>>>> two CPU numa nodes, but all PCIe3 NVMe SSD are connected to one NVMe HBA/
+>>>> one numa node.
+>>>>
+>>>>> Your fio run has 4 jobs going, can I please see the full fio output for
+>>>>> a fast run and a slow run?
+>>>>
+>>>> fio results are saved into attachment files (fast.text & slow.txt)
+>>>>
+>>>> Best Regards
+>>>> Wang Yugui (wangyugui@e16-tech.com)
+>>>> 2023/08/13
+> 
+> 
+> 
+> 
