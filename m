@@ -1,112 +1,155 @@
-Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2086.outbound.protection.outlook.com [40.107.244.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97039455
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 17:46:46 +0000 (UTC)
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4RlW7W4dQSz4x1PM
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 19:40:07 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:a74b:c851:eeda:f0c8])
-	by xavier.telenet-ops.be with bizsmtp
-	id l5fz2A00S0nS7QV015fzeq; Tue, 12 Sep 2023 19:40:00 +0200
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1qg7Ml-0033vI-Jc;
-	Tue, 12 Sep 2023 19:39:59 +0200
-Date: Tue, 12 Sep 2023 19:39:59 +0200 (CEST)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org, 
-    "Martin K . Petersen" <martin.petersen@oracle.com>, 
-    Paul Ausbeck <paula@soe.ucsc.edu>, 
-    Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>, 
-    regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>, 
-    linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
-Message-ID: <8be9c370-2f1-5815-431-f68ab868669@linux-m68k.org>
-References: <20230731003956.572414-1-dlemoal@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86648F7D
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 18:21:35 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lC69xclRV6rNnrvG+3DV1uGMVCE0ZkSxzOzl6PRbk0I7g+VWaKWtwCqNrn1dsowz8VJ0r6FjNN1zMA061fq6+rOxGE7Dzkq6XKl9dyj7uFi3//RZIVtcRwnTx9rZF2gzITdn6fV/CTpVguX6ACeYaY3upd2/U/f6JgDI2738PUmshDZwBoPf7K630YU9+3Pp6zxo86vHKDBbGq/YbJByud+VA6mk8xZBM61K8Milnrk+FFA09AQWx4BqudtTIZdQY5VuFawOVvks6bTUOFYo7IAE3ynBgPUztAU1FahGLUB8OhTOJO+ZUyC5Gm/aSt7FNI7CL5pLHLW3T0rfs0gc9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bsv5dUtXUXWWtqCwy2qxROCcjm3Vxyenv+a5wm2OltE=;
+ b=QC12s9X4gWAvJbk1pV2bmOt4uL3fdd3gvAjb/NqmT7zL2zMgLCcn3nk6VAUmLsyj0Nlfn2qswP3NmnQxGEL0poogHCWAGEJMTrxx0RZ9JPkYBizbRxRFCM5Xgd+pER009+hy0lgCADr8TE4Up0wAtcxrvmuCeJyR5kXNCAyCBEj+d49wkz/c4In9DNyLA7nUAZAvDYoZj3no19DgVUjcSS7AFh6GYhvgEoJE53lN8zTYXTrnITTNB51HDDKijZ4NRiFsyIyTRvw4nxQlBvLcBL4JtCDOJQ2TBMSx3Xs2t/hZDuYibG5wbGgnBSUaWNr4C3uzslyBNYG4XpXt+3K8Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bsv5dUtXUXWWtqCwy2qxROCcjm3Vxyenv+a5wm2OltE=;
+ b=C5h33i2Na4rZu6DyjOFShoalsIVevCfuBZjW8WlkjrqrxOfNuFPKJp5AVhMguKYvBxo0zheYbuGqZb9LiC9Kc14WcDYg2ETi52vBWXxZTaYMrshdRArE6p2RkhSL/hPN/mGuI0hga+zckg74+OByldJjHMMVVhrmo8Ug3HMTWf8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH3PR12MB9123.namprd12.prod.outlook.com (2603:10b6:610:1a4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 12 Sep
+ 2023 18:21:33 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 18:21:33 +0000
+Message-ID: <b9f879d5-55b8-401d-b154-8066cb66d20f@amd.com>
+Date: Tue, 12 Sep 2023 13:21:30 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
+To: Hans de Goede <hdegoede@redhat.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, lucapgl2001@gmail.com
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
+ <20230829165627.156542-4-mario.limonciello@amd.com>
+ <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+ <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
+ <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
+ <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
+ <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
+ <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
+ <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
+ <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:806:20::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB9123:EE_
+X-MS-Office365-Filtering-Correlation-Id: d6f2e35d-2ee8-4961-28b2-08dbb3bd17be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wRlgTl6jeWqB8/95Jvblp2CjB4EglOyTDsgTfm+UoRtEvtJeRIlioWaEvgXQC2klsczpykLXnAIruCYR+P0q9UPXn59rGObzH1s9oZg6Y48cewUyytmjTTo6DlKGy8XmKxsvXdABfP87SeHcoEvnMPTm4F74SvQqeZnitDkvZ2F7AohWLUMDxlgVB6mdSm2oMB8qkL6Ok7eiOT3eTDr6yY+18/bXb5CU7Bbts3EIcHLmKjsXJC88fCeD31j8zU1vFIiASH9fdIbEfjrqfD+dqkklBg4Yr7gL4gYNZE0aWVqgN4CwoVgTMz0VygAhHe6rVdurXbTzyTls96V3XWBZZM4Vb+onq7UKzDrkbOPa2ww27YvH0eGVZu0HlNetes0RATD43NrMs3kE5BPr9Zesju2uf8coP+Vxcynd0gBM7G4QNo5U7pUxERr+ha9e4wZLvnuZGmmVJSoB1ukdYhs8E5S7Elj3w17TVM11IThEtOlpzKJHYAU73EQ0n8lh2fowYaXnb5G7+iT3jvuc6UbCk9sDoiURNCSuGiVz06Ne7DqoyXQzPxh13MIULsWDRLwRYLjfWYqfctf5RoPcCO9dazpVr3+iiV5GHkfBTRfrHm2SirCwSJ5ZGL7wAND8ZthhjU+QiaEeKQ+xXPVos+zaQA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(39860400002)(136003)(396003)(451199024)(186009)(1800799009)(6506007)(53546011)(66476007)(110136005)(316002)(5660300002)(6512007)(41300700001)(44832011)(66946007)(66556008)(2616005)(4326008)(8676002)(8936002)(26005)(31686004)(478600001)(6486002)(83380400001)(2906002)(4744005)(31696002)(86362001)(38100700002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QVNRZE95V0RzdWVtOUd6dmtYaTZxUjhIY1NETjZRM21Lcks4Y2pRakF5V1Qr?=
+ =?utf-8?B?THJhMVBWNXNBUkltZU53NmN2OStQNTY2emQ3cm03dWlMdk1ZdlNqL3BiTnph?=
+ =?utf-8?B?S1FkeitMSk9LSzVLYW1VbUtaS1g1YTZKa1Zwc0tIWTZ0UFZVYkdPMnJRVFE4?=
+ =?utf-8?B?K2ZmNGRpUUZ0ZkxSU2dOK0JKS1ZLa1hFdmgwOHJhUXVxK3BwUmRqVTFDZVFh?=
+ =?utf-8?B?UWJHMjJPazhQWmkwdCtHbW56bU5MWG95MlRaUWNJc09iQVZveEY3VUpwdWRt?=
+ =?utf-8?B?Z1RKUGkxUngrMTFkSFh4MHhuR0NRak1HNm5jdWgra0hLTms3bmZ1MGg0Q2FF?=
+ =?utf-8?B?QWZYWllKVDR5aXhEVkU0a09TTTlCSCszQnkybysxZ3l1MWpiMUU1ajdMZHBv?=
+ =?utf-8?B?NFgrczhQS3ZiQmsxZ05QRGpSc3RVS29mdENEc2dJcVpVWTR5RmU1TjNiTTRq?=
+ =?utf-8?B?YW53OVFQdGNjVEdMN2c5ZjBKdDRhMWppTGZ6VGZ0RElHREQ0VFFZUWNlUEl6?=
+ =?utf-8?B?OFI5MkJmaGVjM0tDSGhwV3o0WEtYNU9DK1R4K0FQWE51WDVGcHNzK0Z6RlJx?=
+ =?utf-8?B?NEZkU1A1OVMwRHZkanc4MGM3dWU1MkhTbkRNMm1TS0tuOU9NVi9mUFZGVHV6?=
+ =?utf-8?B?S2I1bGJJRTAxLzhnNDU1bVJGNTdJQ0ZicE1GU1ZyczZmNys5WnhseUoxTkV5?=
+ =?utf-8?B?dVBSNUsxWlJPNkVkbXM2RzVPdkh4bklHbmNxVzFHZk9YekdUa29uUTFTK0FE?=
+ =?utf-8?B?OTBzWHRuRGtwMTBvZ1ZkU1UzSmFudTczcWUxcTU0QXJkeCsxWDVEbzdjVmNQ?=
+ =?utf-8?B?cnNYaTh2UjZTYXlvTk9VUEdYWVhhbWQxVy82eE9IMHppWXZxamhnWnhUMWlZ?=
+ =?utf-8?B?T0l1MGthVnE4b3cralMvQTBtTkd1NDJDVUZmWkh0Mks0U2dkRnAvL3k2NU1G?=
+ =?utf-8?B?aHk2aGVaRk82ODJSN0tTa3g0T09mUFRQSGNjWHg0eXBPVDRxcUozc1hJTzRp?=
+ =?utf-8?B?bmlvNG1EMkRQMkRYRWpsMkJDbGhmSDNiaEFaSnBrL0ZndURoUGNzSW9JNGtz?=
+ =?utf-8?B?cHRlTko3N1JWc0lLd0x1VlpHc3ZkNnVCcGIvYUZmYXluRDEzNFM5clRIWFc5?=
+ =?utf-8?B?aVJtV0ZhQzFkY1o5eTRZU1VwWldMUE1XV2RqZVRBeS84N21pUm40dlVONkwz?=
+ =?utf-8?B?dHNjeVNXR0lZd0lKV1JJcmU2RGQ2NzZpUlJHMjFhQkFxMXRoOG1DdDMyZkxk?=
+ =?utf-8?B?d01ha3dscnBuSVozSzFsL0hRNkloMW5iakVBUkRQS0U0cXhRUEtkdFNmOVAz?=
+ =?utf-8?B?WENlRjFadnB5Qy9XTThpSFhZUWt0VTdxZmhyMk5JU0x5akJGTEx6WUp1N1N5?=
+ =?utf-8?B?bEZVZjZZMFAzaExDT2FZV1lrM1BzSjNLaW1tVS9YV1VQaGhPR1BtVmtHSWRp?=
+ =?utf-8?B?Yy9iLzV4T0RLdWVBbi9OQlRYOTBiWXMzWmZGTktET29MbVQzbnQ4eDMyYnh4?=
+ =?utf-8?B?UkpldXlqMnNKRFV1ejZGSkdkenRGZStBaUNnbWtZM2Q3akZxS0tBSlFnS0VB?=
+ =?utf-8?B?eGNCU2hHdTNFR3ZQcmd1NDJrbnFucnFkcit0bzhkZWVOcERwWnZob3loNkZK?=
+ =?utf-8?B?bWxyWTlDcUVENDdxQkZ6MkJsN3h3QkhsZVlIM3RZSnU1ekF0YXJUYkJBZ0kv?=
+ =?utf-8?B?MXNDWi9YSkNPMzg5SmRiWFJsaWpMQTNxWU1Nczh0L2VkeVVpODRiWVdvekxL?=
+ =?utf-8?B?a3JKV0IxQVZYeUdZTGROU0p2VDF4VDdmVHBDTWtkVDM0Vkl4V0FrNDIxZzl2?=
+ =?utf-8?B?Rzd6N09Wak1tK1ZhYmpQTTQyandjTVFYZXNmSnJ5NUxvUjdVenkzME5ibDMy?=
+ =?utf-8?B?dHNMRDJoTThLNWlpL0F0ZTU5NENQbTVOQitFRkp0T1pKREdKRlF6WTFueHVD?=
+ =?utf-8?B?NnBSZUNTV1dXMG5OdzJjQW8vbmc2NGVBUll0a3lXQW1mVnlXQkNaaS9LRGpO?=
+ =?utf-8?B?Q0JIT1kwcjFhcEMwQ3EzS1JnaWdwVTA2WFFpYzJELzIzcE5vbnlLV2t5TXZ0?=
+ =?utf-8?B?QmR3NDhDNFNUVGMrTWIxM1pOL09lODNTVkdQbmwwN3hNOWc0dmpQd3BJTWRl?=
+ =?utf-8?Q?97CPcYwgX052e58ucQ+7tEI5E?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f2e35d-2ee8-4961-28b2-08dbb3bd17be
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 18:21:33.3640
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m4IyKJBacMod7xg7TjoJTUfcWhmLUKX4XUB8wvULxqqqyhu5zSjvAd16PVz2NU8wiWlqOWIyEeecN1GLchfRFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9123
 
- 	Hi Damien,
+On 9/12/2023 03:58, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/12/23 09:08, Linus Walleij wrote:
+>> On Thu, Aug 31, 2023 at 7:53 PM Mario Limonciello
+>> <mario.limonciello@amd.com> wrote:
+>>
+>>> Linus - please disregard version 1.
+>>
+>> OK!
+>>
+>>> I provided Luca a new series that implements this approach that Hans and
+>>> I discussed and they confirmed it works.
+>>>
+>>> I have some minor modifications to it to narrow where it's applied so we
+>>> don't have needless notifications and will send it for review after the
+>>> new modifications are tested as well.
+>>
+>> OK standing by, I'll wait for Hans' ACK and then merge it for fixes.
+> 
+> AFAICT Mario has not posted a new version (yet),
+> so there is nothing for me to ack (yet).
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
 
-On Mon, 31 Jul 2023, Damien Le Moal wrote:
-> During system resume, ata_port_pm_resume() triggers ata EH to
-> 1) Resume the controller
-> 2) Reset and rescan the ports
-> 3) Revalidate devices
-> This EH execution is started asynchronously from ata_port_pm_resume(),
-> which means that when sd_resume() is executed, none or only part of the
-> above processing may have been executed. However, sd_resume() issues a
-> START STOP UNIT to wake up the drive from sleep mode. This command is
-> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
-> device. However, depending on the state of execution of the EH process
-> and revalidation triggerred by ata_port_pm_resume(), two things may
-> happen:
-> 1) The START STOP UNIT fails if it is received before the controller has
->   been reenabled at the beginning of the EH execution. This is visible
->   with error messages like:
->
-> ata10.00: device reported invalid CHS sector 0
-> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
-> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
-> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
-> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
-> sd 9:0:0:0: PM: failed to resume async: error -5
->
-> 2) The START STOP UNIT command is received while the EH process is
->   on-going, which mean that it is stopped and must wait for its
->   completion, at which point the command is rather useless as the drive
->   is already fully spun up already. This case results also in a
->   significant delay in sd_resume() which is observable by users as
->   the entire system resume completion is delayed.
->
-> Given that ATA devices will be woken up by libata activity on resume,
-> sd_resume() has no need to issue a START STOP UNIT command, which solves
-> the above mentioned problems. Do not issue this command by introducing
-> the new scsi_device flag no_start_on_resume and setting this flag to 1
-> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
-> UNIT command only if this flag is not set.
->
-> Reported-by: Paul Ausbeck <paula@soe.ucsc.edu>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215880
-> Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-
-Thanks for your patch, which is now commit 0a8589055936d8fe
-("ata,scsi: do not issue START STOP UNIT on resume") in v6.5-rc5.
-Sorry for being late to the party, but this commit landed upstream
-during my summer holidays, and apparently I wasn't that focussed on
-noticing small behavioral changes after getting back to work...
-
-I noticed an oddity after s2idle or s2ram on Renesas Salvator-XS (R-Car
-H3 ES2.0) with an old (spinning rust) SATA drive, and bisected it to
-this commit: when accessing the drive after system resume, there is now
-a delay of ca. 5s before data is returned, presumably due to starting
-the drive, and having to wait for it to spin up to be able to read data.
-But the good news is that the actual system resume takes less time than
-before (reduced by even more than ca. 5s!), so this looks like a net
-win...
-
-I'm not sure this is to be called a regression, I just wanted you to be
-aware of it.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
+Yeah it looked like we were about to have a new version to post last 
+week but there are some inconsistent results that we need to understand 
+still, especially with comparing to Windows.
