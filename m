@@ -1,131 +1,65 @@
-Received: from out28-45.mail.aliyun.com (out28-45.mail.aliyun.com [115.124.28.45])
+Received: from torres.zugschlus.de (torres.zugschlus.de [85.214.160.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CA1EDE
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 01:22:25 +0000 (UTC)
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.04465303|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.154846-0.00357943-0.841574;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047203;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.UcrXWGm_1694474457;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.UcrXWGm_1694474457)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Sep 2023 07:20:58 +0800
-Date: Tue, 12 Sep 2023 07:20:58 +0800
-From: Wang Yugui <wangyugui@e16-tech.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-Cc: Chris Mason <clm@meta.com>,
- Christoph Hellwig <hch@lst.de>,
- linux-btrfs@vger.kernel.org,
- Chris Mason <clm@fb.com>
-In-Reply-To: <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
-References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info> <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
-Message-Id: <20230912072057.C1F5.409509F4@e16-tech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014598F44
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 06:53:43 +0000 (UTC)
+Received: from mh by torres.zugschlus.de with local (Exim 4.96)
+	(envelope-from <mh+linux-kernel@zugschlus.de>)
+	id 1qfxHB-000H07-1W;
+	Tue, 12 Sep 2023 08:53:33 +0200
+Date: Tue, 12 Sep 2023 08:53:33 +0200
+From: Marc Haber <mh+linux-kernel@zugschlus.de>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux KVM <kvm@vger.kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: Linux 6.5 speed regression, boot VERY slow with anything systemd
+ related
+Message-ID: <ZQAK7e/yuNFiBb56@torres.zugschlus.de>
+References: <ZO4nbzkd4tovKpxx@google.com>
+ <ZO5OeoKA7TbAnrI1@torres.zugschlus.de>
+ <ZPEPFJ8QvubbD3H9@google.com>
+ <20230901122431.GU11676@atomide.com>
+ <ZPiPkSY6NRzfWV5Z@torres.zugschlus.de>
+ <20230906152107.GD11676@atomide.com>
+ <ZPmignexOJvJ5J5W@torres.zugschlus.de>
+ <20230907105150.GJ11676@atomide.com>
+ <ZPzQvXUW+dbkLMZ2@torres.zugschlus.de>
+ <20230911125340.GB5285@atomide.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.81.04 [en]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230911125340.GB5285@atomide.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
 
-Hi,
-
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+On Mon, Sep 11, 2023 at 03:53:40PM +0300, Tony Lindgren wrote:
+> * Marc Haber <mh+linux-kernel@zugschlus.de> [230909 20:08]:
+> > On Thu, Sep 07, 2023 at 01:51:50PM +0300, Tony Lindgren wrote:
+> > > Still a minimal reproducable test case is needed.. Or do you have the
+> > > dmesg output of the failing boot?
+> > 
+> > I have both dmesg output of a failing boot (with my kernel) and of a
+> > successful boot (with the Debian kernel). Attached.
 > 
-> Hmmm, nothing happened wrt to this regression during the past two weeks
-> afaics. Wonder if it fell through the cracks due to the merge window or
-> if there is a good reason. Was there progress and I just missed it? To
-> rule out the latter:
-> 
-> Wang Yugui, does the problem still happen with 6.6-rc1?
+> Thanks I don't see anything strange there, serial ports are probed in
+> both cases.
 
-The problem still happen with 6.6-rc1.
-Yet no related patch is released for this problem.
+Yes, they do actually WORK in both cases, and even with the normal
+speed, unless systemd begins doing its work, then the "bad" case keeps
+running into obvious 30 second timeouts.
 
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2023/09/12
+Greetings
+Marc
 
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-> 
-> On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 13.08.23 11:50, Wang Yugui wrote:
-> >>> On 8/11/23 10:23 AM, Wang Yugui wrote:
-> >>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
-> >>>>>>> And with only a revert of
-> >>>>>>>
-> >>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
-> >>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
-> >>>>>> checksum implementations") 
-> >>>>> Ok, so you have a case where the offload for the checksumming generation
-> >>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
-> >>>>> involved with this.
-> >>>>>
-> >>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
-> >>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
-> >>>>>>>>                 return false;
-> >>>>>>> This disables synchronous checksum calculation entirely for data I/O.
-> >>>>>> without this fix, data I/O checksum is always synchronous?
-> >>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
-> >>>>> It is never with the above patch.
-> >>>>>
-> >>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
-> >>>>>>> single profile) workload.
-> >>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
-> >>>>>> case.
-> >>>>> How does it compare with and without the revert?  Can you add the numbers?
-> >>>
-> >>> Looking through the thread, you're comparing -m single -d single, but
-> >>> btrfs is still doing the raid.
-> >>>
-> >>> Sorry to keep asking for more runs, but these numbers are a surprise,
-> >>> and I probably won't have time today to reproduce before vacation next
-> >>> week (sadly, Christoph and I aren't going together).
-> > 
-> > Sadly I also did not run into either you or Christoph during my own
-> > vacation during the last two weeks. But I'm back from it how, which got
-> > me wondering:
-> > 
-> > What happened to this regression? Was any progress made to resolve this
-> > in one way or another?
-> > 
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> > 
-> > #regzbot poke
-> > 
-> >>> Can you please do a run where lvm or MD raid are providing the raid0?
-> >> no LVM/MD used here.
-> >>
-> >>> It doesn't look like you're using compression, but I wanted to double check.
-> >>
-> >> Yes. '-m xx -d yy' with other default mkfs.btrfs option, so no compression.
-> >>
-> >>> How much ram do you have?
-> >>
-> >> 192G ECC memory.
-> >>
-> >> two CPU numa nodes, but all PCIe3 NVMe SSD are connected to one NVMe HBA/
-> >> one numa node.
-> >>
-> >>> Your fio run has 4 jobs going, can I please see the full fio output for
-> >>> a fast run and a slow run?
-> >>
-> >> fio results are saved into attachment files (fast.text & slow.txt)
-> >>
-> >> Best Regards
-> >> Wang Yugui (wangyugui@e16-tech.com)
-> >> 2023/08/13
-
-
+-- 
+-----------------------------------------------------------------------------
+Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
+Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
+Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
