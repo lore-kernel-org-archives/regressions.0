@@ -1,149 +1,136 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF701640D
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 07:58:19 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qfyHo-0003Im-3Z; Tue, 12 Sep 2023 09:58:16 +0200
-Message-ID: <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
-Date: Tue, 12 Sep 2023 09:58:15 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226751640D
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 08:09:00 +0000 (UTC)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-502153ae36cso8524270e87.3
+        for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 01:09:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694506139; x=1695110939; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BRy58mtOMfLsnyOd5KeG4RjAf/fDpf2NPVmv4pRKN3U=;
+        b=sve4wpIDdsosSF3TFGQoI+E4CXuPxSAyyZZR4/TUFwk0bR/czAct2i4rPgXKWui0Go
+         Wc8X7Nk5KiurXWkYP+V5fU2yHDFyiksiCtPOGBfQonRv1gVGjx0fGnXFQ9uRqfmzRq0b
+         6bfOfdw9DO79ucMvNB+zw9gVVSvyWfJbCIZH969fdeeUpZVFNFL6GbuyyYhulAx7cPy7
+         ejHUSyvxszwv2ciUd3ZBOZIWDtNVdnylkH1HU9Krsgm2uHW7Lbbyq9sXwHpHT62QZsSr
+         vRCtEOfDnHqrgw7WMofa5bVCFyMyFDGUtuYiX++cqU12XDq+qwZS+8baIr+1OIkkG+kw
+         TrOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694506139; x=1695110939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BRy58mtOMfLsnyOd5KeG4RjAf/fDpf2NPVmv4pRKN3U=;
+        b=DOXGkHQAe2XmbYHs5AZGIZWM8ymADejFmutooVOY6lrqsCBWywB/RTo86iVLnk+bmR
+         E3yDsIh3Rydo6XvdZVXUu3GB9IzuTPZI9+GGmhFS2KG4djzeOd152ZcrnWOBcd7WycQt
+         K91zYvA58vrVU1S/A8INrZbZq+Td9zSvcoZgIZKPJaoRCrEvCdqyiYKe/MOsxPlx1Ubh
+         P+A+b2gH3NpAnaDCpP6lQkBp/AtiII8urMIfzUnPY2oBO86wBgQbM022ncwb3M9ydNEh
+         BLG30+gnu0SBwDWk8meb5l1cvg6cddwezmLtEcyEE+p0wxxnrf+teEjZ/O5bkVsRbYw0
+         cpmg==
+X-Gm-Message-State: AOJu0YzIgnVuXfQA99uiZzREEtjiAEaV56+yf9hG5WceaWVxsKgOsPof
+	xMU8bH8lbH6u1MhBN3Xjwo89vSr6SWz8f9DmIGg=
+X-Google-Smtp-Source: AGHT+IFwDwJhrpy8HowhIBYcBi/whf/X/T3w9uKWfcXrLILoGcUMzinlah9wOUe1t9L08eJ9Z5UmcgaMaRFE2N9j4uo=
+X-Received: by 2002:a05:6512:33c8:b0:502:a56b:65f7 with SMTP id
+ d8-20020a05651233c800b00502a56b65f7mr8526287lfg.16.1694506138521; Tue, 12 Sep
+ 2023 01:08:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-Content-Language: en-US, de-DE
-To: Wang Yugui <wangyugui@e16-tech.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Chris Mason <clm@meta.com>, Christoph Hellwig <hch@lst.de>,
- linux-btrfs@vger.kernel.org, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
- <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
- <20230912072057.C1F5.409509F4@e16-tech.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230912072057.C1F5.409509F4@e16-tech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694505500;fc553ed2;
-X-HE-SMSGID: 1qfyHo-0003Im-3Z
+References: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
+ <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info> <ZPc8v9-lHF4jAcxL@kbusch-mbp>
+In-Reply-To: <ZPc8v9-lHF4jAcxL@kbusch-mbp>
+From: =?UTF-8?Q?Cl=C3=A1udio_Sampaio?= <patola@gmail.com>
+Date: Tue, 12 Sep 2023 10:08:48 +0200
+Message-ID: <CA+4wXKCAYM19H7n4TpbnrtRy_Yv1JOjT3CHVuxh_18Mb7NB4+A@mail.gmail.com>
+Subject: Re: Fwd: Lexar NM790 SSDs are not recognized anymore after 6.1.50 LTS
+To: Keith Busch <kbusch@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
+	Linux Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12.09.23 01:20, Wang Yugui wrote:
-> 
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Hmmm, nothing happened wrt to this regression during the past two weeks
->> afaics. Wonder if it fell through the cracks due to the merge window or
->> if there is a good reason. Was there progress and I just missed it? To
->> rule out the latter:
->>
->> Wang Yugui, does the problem still happen with 6.6-rc1?
-> 
-> The problem still happen with 6.6-rc1.
-> Yet no related patch is released for this problem.
+Hi, Keith... Just to give you guys a response concerning this, I'm
+sorry for the late reply -- too much work. But yes, you are correct,
+due to having tried patching the kernel in different days and too much
+stuff going on at the same time, I applied this two-line patch to the
+same source where I have applied the other patch that multiplies the
+timeout by 2 and occurs at an earlier time on activation. I thought I
+had an unpatched kernel at the time and ended up compiling it this
+way. Sorry for the mistake, but I also saw that now there's a better
+patch for the issue.
 
-Thx. Adding Josef and David to the list of recipients, maybe they might
-have an idea why that commit of Christoph (da023618076a13 ("btrfs:
-submit IO synchronously for fast checksum implementations") [v6.5-rc1])
-seems to slow down things for Wang Yugui's Btrfs setup (hope I
-understood things correctly). FWIW, the start of the thread is here:
-https://lore.kernel.org/linux-btrfs/20230731152223.4EFB.409509F4@e16-tech.com/
+On Tue, Sep 5, 2023 at 4:35=E2=80=AFPM Keith Busch <kbusch@kernel.org> wrot=
+e:
+>
+> On Tue, Sep 05, 2023 at 01:37:36PM +0200, Linux regression tracking (Thor=
+sten Leemhuis) wrote:
+> > On 04.09.23 13:07, Bagas Sanjaya wrote:
+> > >
+> > > I notice a regression report on Bugzilla [1]. Quoting from it:
+> > >
+> > >> I bought a new 4 TB Lexar NM790 and I was using kernel 6.3.13 at the=
+ time. It wasn't recognized, with these messages in dmesg:
+> > >>
+> > >> [ 358.950147] nvme nvme0: pci function 0000:06:00.0
+> > >> [ 358.958327] nvme nvme0: Device not ready; aborting initialisation,=
+ CSTS=3D0x0
+> > >>
+> > >> My other NVMe appears correctly in the nvme list though.
+> > >>
+> > >>
+> > >> So I tried using other kernels I had installed at the time: 6.3.7, 6=
+.4.10, 6.5.0rc6, 6.5.0, 6.5.1 and none of these recognized the disk.
+> > >> I installed the 6.1.50 lts kernel from arch repositories (I can comp=
+ile my own too if this would be an issue) and then the device was correctly=
+ recognized:
+> > >>
+> > >> [    4.654613] nvme 0000:06:00.0: platform quirk: setting simple sus=
+pend
+> > >> [    4.654632] nvme nvme0: pci function 0000:06:00.0
+> > >> [    4.667290] nvme nvme0: allocated 40 MiB host memory buffer.
+> > >> [    4.709473] nvme nvme0: 16/0/0 default/read/poll queues
+> >
+> > FWIW, the quoted mail missed one crucial detail:
+> > """
+> >  Claudio Sampaio 2023-09-02 19:04:29 UTC
+> >
+> > Adding the two lines
+> >
+> > =E2=94=82 3457   { PCI_DEVICE(0x1d97, 0x1602), /* Lexar NM790 */
+> > =E2=94=82 3458   =E2=94=82 .driver_data =3D NVME_QUIRK_BOGUS_NID, },
+> >
+> > in file drivers/nvme/host/pci.c made my NVMe work correctly. Compiled a
+> > new 6.5.1 kernel and everything works.
+> > """
+> >
+> > @NVME maintainers: is there anything more you need from Claudio at this
+> > point?
+>
+> Yes: it doesn't really make any sense. The report says the device
+> stopped showing up with message:
+>
+>   nvme nvme0: Device not ready; aborting initialisation, CSTS=3D0x0
+>
+> That (a) happens long before the mentioned quirk is considered by the
+> driver, and (b) the "quirk" behavior is now the default in 6.5 and
+> several of the listed stable kernels anyway.
+>
+> It more likely sounds like the device is flaky and either never becomes
+> ready due to some unspecified internal firmware condition, or
+> inaccurately reports how long it actually needs to become ready in
+> worst-case-scenario.
 
-Christoph later wrote "so you have a case where the offload for the
-checksumming generation actually helps (by a lot)" and asked for advice
-from the Btrfs side:
-https://lore.kernel.org/linux-btrfs/20230802092631.GA27963@lst.de/
 
-/me hopes that will get things rolling again.
 
-/me meanwhile wonders if there were other reports like this, or if Wang
-Yugui's system is somehow special.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
->> On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 13.08.23 11:50, Wang Yugui wrote:
->>>>> On 8/11/23 10:23 AM, Wang Yugui wrote:
->>>>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
->>>>>>>>> And with only a revert of
->>>>>>>>>
->>>>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
->>>>>>>> checksum implementations") 
->>>>>>> Ok, so you have a case where the offload for the checksumming generation
->>>>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
->>>>>>> involved with this.
->>>>>>>
->>>>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>>>>                 return false;
->>>>>>>>> This disables synchronous checksum calculation entirely for data I/O.
->>>>>>>> without this fix, data I/O checksum is always synchronous?
->>>>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>>>> It is never with the above patch.
->>>>>>>
->>>>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
->>>>>>>>> single profile) workload.
->>>>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
->>>>>>>> case.
->>>>>>> How does it compare with and without the revert?  Can you add the numbers?
->>>>>
->>>>> Looking through the thread, you're comparing -m single -d single, but
->>>>> btrfs is still doing the raid.
->>>>>
->>>>> Sorry to keep asking for more runs, but these numbers are a surprise,
->>>>> and I probably won't have time today to reproduce before vacation next
->>>>> week (sadly, Christoph and I aren't going together).
->>>
->>> Sadly I also did not run into either you or Christoph during my own
->>> vacation during the last two weeks. But I'm back from it how, which got
->>> me wondering:
->>>
->>> What happened to this regression? Was any progress made to resolve this
->>> in one way or another?
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
->>>
->>>>> Can you please do a run where lvm or MD raid are providing the raid0?
->>>> no LVM/MD used here.
->>>>
->>>>> It doesn't look like you're using compression, but I wanted to double check.
->>>>
->>>> Yes. '-m xx -d yy' with other default mkfs.btrfs option, so no compression.
->>>>
->>>>> How much ram do you have?
->>>>
->>>> 192G ECC memory.
->>>>
->>>> two CPU numa nodes, but all PCIe3 NVMe SSD are connected to one NVMe HBA/
->>>> one numa node.
->>>>
->>>>> Your fio run has 4 jobs going, can I please see the full fio output for
->>>>> a fast run and a slow run?
->>>>
->>>> fio results are saved into attachment files (fast.text & slow.txt)
->>>>
->>>> Best Regards
->>>> Wang Yugui (wangyugui@e16-tech.com)
->>>> 2023/08/13
-> 
-> 
-> 
-> 
+--=20
+Cl=C3=A1udio "Patola" Sampaio
+MakerLinux Labs - Campinas, SP
+Resume Gmail - YOUTUBE!
+Facebook - Facebook da MakerLinux - Lattes
