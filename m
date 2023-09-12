@@ -1,77 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2902F21
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 14:58:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 413D8C433C7;
-	Tue, 12 Sep 2023 14:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694530726;
-	bh=xuo3FQJBuHtKVaZ47fDycI+jaARYxTGdjsIR1CB+gpQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=N+yz3y4fbg0tyoshpVBvM3cZdgcpeOdeH5TYWk9OJruL6rMM9GPJT/ow/9KZc+/KD
-	 FUcLv3z9uz+tY7WTax0F4wVZ+12zSTd3XhMvcEpkG9eVi+QfN1T0BixL6SemZRq3Gt
-	 6KAV2trBEDW9ldFaUI8y7vgcdCuKDuFANOE3ESusez3OF9kI8ItOVQd+JXORuzTVW8
-	 c+hKZp6pipFW9FbEqD1/4gNcBJyIOFc/HEVxFOggTDpfupzvcYxWfxs+7ze1FNV1h3
-	 Vulem5hSJB/DkhP9SBcOa2A8uYBf6+l34Oupd67ikntb6AWuLDtaNMgQxHQyrVZNti
-	 sCzqKJ9yhghwA==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- August Wikerfors <git@augustwikerfors.se>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, 
- alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev
-In-Reply-To: <20230911213409.6106-1-git@augustwikerfors.se>
-References: <20230911213409.6106-1-git@augustwikerfors.se>
-Subject: Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF
- and 82UG
-Message-Id: <169453072498.64014.17577108685886768504.b4-ty@kernel.org>
-Date: Tue, 12 Sep 2023 15:58:44 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FF01C04
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 17:10:42 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qg6uN-0008KM-0i; Tue, 12 Sep 2023 19:10:39 +0200
+Message-ID: <82469f2f-59e4-49d5-823d-344589cbb119@leemhuis.info>
+Date: Tue, 12 Sep 2023 19:10:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-034f2
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
+ drivers/misc/cardreader breaks NVME power state, preventing system boot
+Content-Language: en-US, de-DE
+To: Paul Grandperrin <paul.grandperrin@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Wei WANG <wei_wang@realsil.com.cn>,
+ Roger Tseng <rogerable@realtek.com>, Ricky WU <ricky_wu@realtek.com>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <5DHV0S.D0F751ZF65JA1@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5DHV0S.D0F751ZF65JA1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694538643;1001dfa7;
+X-HE-SMSGID: 1qg6uN-0008KM-0i
 
-On Mon, 11 Sep 2023 23:34:09 +0200, August Wikerfors wrote:
-> Like the Lenovo 82TL and 82V2, the Lenovo 82QF (Yoga 7 14ARB7) and 82UG
-> (Legion S7 16ARHA7) both need a quirk entry for the internal microphone to
-> function. Commit c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on
-> Lenovo 82SJ") restricted the quirk that previously matched "82" to "82V2",
-> breaking microphone functionality on these devices. Fix this by adding
-> specific quirks for these models, as was done for the Lenovo 82TL.
+(CCing Greg, as he merged the culprit, and Linus, in case he wants to
+revert this from mainline directly as this apparently affects and annoys
+quite a few people)
+
+On 12.09.23 14:29, Paul Grandperrin wrote:
 > 
-> [...]
+> My computer doesn't boot with kernels newer than 6.1.45.>
+> Here's what happens:
+> - system boots in initramfs
+> - detects my encrypted ZFS pool and asks for password
+> - mount system, pivots to it, starts real init
+> - before any daemon had time to start, the system hangs and the kernel
+> writes on the console
+> "nvme 0000:04:00.0: Unable to change power state from D3cold to D0,
+> device inaccessible"
+> - if I reboot directly without powering off (using magic sysrq or
+> panic=10), even the UEFI complains about not finding any storage to boot
+> from.
+> - after a real power off, I can boot using a kernel <= 6.1.45.
 
-Applied to
+Thx for the report.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> The bug has been discussed here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217705
 
-Thanks!
+And recently here:
+https://bugzilla.kernel.org/show_bug.cgi?id=217802
+https://lore.kernel.org/all/5f968b95-6b1c-4d6f-aac7-5d54f66834a8@sapience.com/
 
-[1/1] ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG
-      commit: 1263cc0f414d212129c0f1289b49b7df77f92084
+And in
+https://bugzilla.suse.com/show_bug.cgi?id=1214428
+and a few other places iirc, too.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+openSUSE Tumblewed reverted the culprit a while ago:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+https://github.com/openSUSE/kernel-source/commit/1b02b1528a26f4e9b577e215c114d8c5e773ee10
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I think we should do the same for mainline (and stable afterwards).
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Ciao, Thorsten
 
-Thanks,
-Mark
-
+> My laptop is a Dell XPS 15 9560 (Intel 7700hq).
+> 
+> I bisected between 6.1.45 and 6.1.46 and found this commit
+> 
+> commit 8ee39ec479147e29af704639f8e55fce246ed2d9
+> Author: Ricky WU <ricky_wu@realtek.com>
+> Date:   Tue Jul 25 09:10:54 2023 +0000
+> 
+>    misc: rtsx: judge ASPM Mode to set PETXCFG Reg
+> 
+>    commit 101bd907b4244a726980ee67f95ed9cafab6ff7a upstream.
+> 
+>    ASPM Mode is ASPM_MODE_CFG need to judge the value of clkreq_0
+>    to set HIGH or LOW, if the ASPM Mode is ASPM_MODE_REG
+>    always set to HIGH during the initialization.
+> 
+>    Cc: stable@vger.kernel.org
+>    Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+>    Link:
+> https://lore.kernel.org/r/52906c6836374c8cb068225954c5543a@realtek.com
+>    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> drivers/misc/cardreader/rts5227.c  |  2 +-
+> drivers/misc/cardreader/rts5228.c  | 18 ------------------
+> drivers/misc/cardreader/rts5249.c  |  3 +--
+> drivers/misc/cardreader/rts5260.c  | 18 ------------------
+> drivers/misc/cardreader/rts5261.c  | 18 ------------------
+> drivers/misc/cardreader/rtsx_pcr.c |  5 ++++-
+> 6 files changed, 6 insertions(+), 58 deletions(-)
+> 
+> If I build 6.1.51 with this commit reverted, my laptop works again,
+> confirming that this commit is to blame.
+> 
+> Also, blacklisting `rtsx_pci_sdmmc` and `rtsx_pci`, while preventing to
+> use the sd card reading, allows to boot the system.
+> 
+> I can't try 6.4 or 6.5 because my system is dependent on ZFS..
+> 
+> Have a nice day,
+> Paul Grandperrin
+> 
