@@ -1,72 +1,117 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF16BE4B
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 12:23:09 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qg2Q7-0002Bg-GF; Tue, 12 Sep 2023 14:23:07 +0200
-Message-ID: <e264149e-c053-4346-a645-e694ed791569@leemhuis.info>
-Date: Tue, 12 Sep 2023 14:23:06 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D49216430
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 12:29:38 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-31ae6bf91a9so5602594f8f.2
+        for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 05:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694521777; x=1695126577; darn=lists.linux.dev;
+        h=mime-version:message-id:cc:to:subject:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=R9IuEw4G9LWwDgWkkTsMBJnIy6GFGBJ28aUkaVyc45w=;
+        b=fw2XQBzYYB3LSK3TboNUVV7P81X7bLJt7unsHU2HmATEjNZtWdB8LR+XAYMPZS1Pe0
+         8g+BLZFZnFUM8YbY9PbSCyS2qtidUN6El3KQsfgr9f1tOfKnSXFFw7ooCd46ZjIagpHC
+         kC7tLJZCbFqdWeHx8tHltQ1gp4UJGO91tAbkP4Qr8zu1ivhtpy1AgN4grtpA+plXMKcN
+         bJJ5yJe0gBKkPKe1+vRZcLi5UpRMlBw/F2O6nzh8xQvqTlWcCIL6xmw86pn15DKRiXvM
+         9G1ktGK2QChFZQCmVCFQD3fStgmhuck6heFicpn1UhohneYJ1qTz3ciYuzj86r5PvtcO
+         fW9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694521777; x=1695126577;
+        h=mime-version:message-id:cc:to:subject:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R9IuEw4G9LWwDgWkkTsMBJnIy6GFGBJ28aUkaVyc45w=;
+        b=vG8eQ0SUWMFDDs7cLA5ub02boMrO9KmSx9qkoJi7d6iRTNxgrWu6BFrATFSvsk+GOq
+         n9qdiaicHP6lhRNp1JCnaLeMFIgR2uRD6pUPGujsvKcR7292k++Y19KF5rGoDPD3OEoI
+         1IofoYVmmAPoamDtCjXnBmS7WeFDK0VzwZbT+YnSMHmgVIX1P9AKpdf8XzYA6exvxaQ/
+         GX7ttYB07rmucORVVT6lcRLLKTW3evGLZ+gijfznK0H3gLKpgP9fHUF81jIWMoVSCQrH
+         AvN1IFsKMw+0aCMc0FA+jDWr6kXmUpoSTWi79Koes4LVjlLo9DMliAP8S/6Jyp0oNPmE
+         5O4A==
+X-Gm-Message-State: AOJu0YyigPZO/TlYXPZbxBQ9m45j9cimaGq3c5kj0Qlz9au9sMwAuQhN
+	kLov0nWvVi0ZvphJL7XfYY4=
+X-Google-Smtp-Source: AGHT+IEzzh91BX3W97ldgbmINVWNcJhn9/xYPrxDri1Hu+B+eA5d2IN7V8Y33pF7Dwo7/aiEVn5ytw==
+X-Received: by 2002:adf:cd0b:0:b0:317:3b13:94c3 with SMTP id w11-20020adfcd0b000000b003173b1394c3mr10518864wrm.41.1694521776281;
+        Tue, 12 Sep 2023 05:29:36 -0700 (PDT)
+Received: from [192.168.1.7] (82-64-78-170.subs.proxad.net. [82.64.78.170])
+        by smtp.gmail.com with ESMTPSA id e12-20020a5d594c000000b0031ad5470f89sm12645807wri.18.2023.09.12.05.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Sep 2023 05:29:35 -0700 (PDT)
+Date: Tue, 12 Sep 2023 14:29:29 +0200
+From: Paul Grandperrin <paul.grandperrin@gmail.com>
+Subject: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
+ drivers/misc/cardreader breaks NVME power state, preventing system boot
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Wei WANG <wei_wang@realsil.com.cn>,
+	Roger Tseng <rogerable@realtek.com>, Ricky WU <ricky_wu@realtek.com>
+Message-Id: <5DHV0S.D0F751ZF65JA1@gmail.com>
+X-Mailer: geary/43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: regression with 33140e668b10 thermal/drivers/mediatek: Control
- buffer enablement tweaks
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Frank Wunderlich <frank-w@public-files.de>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>
-References: <trinity-6713557b-fe0a-4dae-84aa-1aa86f7619fa-1693473911557@3c-app-gmx-bs12>
- <ZPBjGWPjSfl-HmDJ@debian.me>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZPBjGWPjSfl-HmDJ@debian.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694521390;3e9ff248;
-X-HE-SMSGID: 1qg2Q7-0002Bg-GF
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Closes: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
+Hi kernel maintainers!
 
-On 31.08.23 11:53, Bagas Sanjaya wrote:
-> On Thu, Aug 31, 2023 at 11:25:11AM +0200, Frank Wunderlich wrote:
->>
->> The commit 33140e668b10 "thermal/drivers/mediatek: Control buffer enablement tweaks" is merged between 6.3 and 6.4 and causes a regression where temperature cannot be read correctly at least for mt7986/Bpi-R3.
->>
->> bpi-r3 ~ # cat /sys/class/thermal/thermal_zone0/temp
->> -274000
->>
->> after reverting the commit and fixing some build-errors in 6.5-rc7 because new members used in mt8365_thermal_data too, we can read temperature on mt7986 again.
->>
-> 
-> Thanks for the regression report. I'm adding it to regzbot:
-> 
-> #regzbot ^introduced: 33140e668b1020
-> #regzbot title: incorrect temperature on MT7986 due to tweaking buffer
+My computer doesn't boot with kernels newer than 6.1.45.
 
+Here's what happens:
+- system boots in initramfs
+- detects my encrypted ZFS pool and asks for password
+- mount system, pivots to it, starts real init
+- before any daemon had time to start, the system hangs and the kernel 
+writes on the console
+"nvme 0000:04:00.0: Unable to change power state from D3cold to D0, 
+device inaccessible"
+- if I reboot directly without powering off (using magic sysrq or 
+panic=10), even the UEFI complains about not finding any storage to 
+boot from.
+- after a real power off, I can boot using a kernel <= 6.1.45.
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230907112018.52811-1-linux@fw-web.de/
-#regzbot fix: thermal/drivers/mediatek: Fix control buffer enablement on
-MT7896
-#regzbot ignore-activity
+The bug has been discussed here: 
+https://bugzilla.kernel.org/show_bug.cgi?id=217705
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+My laptop is a Dell XPS 15 9560 (Intel 7700hq).
+
+I bisected between 6.1.45 and 6.1.46 and found this commit
+
+commit 8ee39ec479147e29af704639f8e55fce246ed2d9
+Author: Ricky WU <ricky_wu@realtek.com>
+Date:   Tue Jul 25 09:10:54 2023 +0000
+
+    misc: rtsx: judge ASPM Mode to set PETXCFG Reg
+
+    commit 101bd907b4244a726980ee67f95ed9cafab6ff7a upstream.
+
+    ASPM Mode is ASPM_MODE_CFG need to judge the value of clkreq_0
+    to set HIGH or LOW, if the ASPM Mode is ASPM_MODE_REG
+    always set to HIGH during the initialization.
+
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+    Link: 
+https://lore.kernel.org/r/52906c6836374c8cb068225954c5543a@realtek.com
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+ drivers/misc/cardreader/rts5227.c  |  2 +-
+ drivers/misc/cardreader/rts5228.c  | 18 ------------------
+ drivers/misc/cardreader/rts5249.c  |  3 +--
+ drivers/misc/cardreader/rts5260.c  | 18 ------------------
+ drivers/misc/cardreader/rts5261.c  | 18 ------------------
+ drivers/misc/cardreader/rtsx_pcr.c |  5 ++++-
+ 6 files changed, 6 insertions(+), 58 deletions(-)
+
+If I build 6.1.51 with this commit reverted, my laptop works again, 
+confirming that this commit is to blame.
+
+Also, blacklisting `rtsx_pci_sdmmc` and `rtsx_pci`, while preventing to 
+use the sd card reading, allows to boot the system.
+
+I can't try 6.4 or 6.5 because my system is dependent on ZFS..
+
+Have a nice day,
+Paul Grandperrin
 
 
