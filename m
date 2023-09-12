@@ -1,136 +1,105 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226751640D
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 08:09:00 +0000 (UTC)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-502153ae36cso8524270e87.3
-        for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 01:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694506139; x=1695110939; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BRy58mtOMfLsnyOd5KeG4RjAf/fDpf2NPVmv4pRKN3U=;
-        b=sve4wpIDdsosSF3TFGQoI+E4CXuPxSAyyZZR4/TUFwk0bR/czAct2i4rPgXKWui0Go
-         Wc8X7Nk5KiurXWkYP+V5fU2yHDFyiksiCtPOGBfQonRv1gVGjx0fGnXFQ9uRqfmzRq0b
-         6bfOfdw9DO79ucMvNB+zw9gVVSvyWfJbCIZH969fdeeUpZVFNFL6GbuyyYhulAx7cPy7
-         ejHUSyvxszwv2ciUd3ZBOZIWDtNVdnylkH1HU9Krsgm2uHW7Lbbyq9sXwHpHT62QZsSr
-         vRCtEOfDnHqrgw7WMofa5bVCFyMyFDGUtuYiX++cqU12XDq+qwZS+8baIr+1OIkkG+kw
-         TrOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694506139; x=1695110939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BRy58mtOMfLsnyOd5KeG4RjAf/fDpf2NPVmv4pRKN3U=;
-        b=DOXGkHQAe2XmbYHs5AZGIZWM8ymADejFmutooVOY6lrqsCBWywB/RTo86iVLnk+bmR
-         E3yDsIh3Rydo6XvdZVXUu3GB9IzuTPZI9+GGmhFS2KG4djzeOd152ZcrnWOBcd7WycQt
-         K91zYvA58vrVU1S/A8INrZbZq+Td9zSvcoZgIZKPJaoRCrEvCdqyiYKe/MOsxPlx1Ubh
-         P+A+b2gH3NpAnaDCpP6lQkBp/AtiII8urMIfzUnPY2oBO86wBgQbM022ncwb3M9ydNEh
-         BLG30+gnu0SBwDWk8meb5l1cvg6cddwezmLtEcyEE+p0wxxnrf+teEjZ/O5bkVsRbYw0
-         cpmg==
-X-Gm-Message-State: AOJu0YzIgnVuXfQA99uiZzREEtjiAEaV56+yf9hG5WceaWVxsKgOsPof
-	xMU8bH8lbH6u1MhBN3Xjwo89vSr6SWz8f9DmIGg=
-X-Google-Smtp-Source: AGHT+IFwDwJhrpy8HowhIBYcBi/whf/X/T3w9uKWfcXrLILoGcUMzinlah9wOUe1t9L08eJ9Z5UmcgaMaRFE2N9j4uo=
-X-Received: by 2002:a05:6512:33c8:b0:502:a56b:65f7 with SMTP id
- d8-20020a05651233c800b00502a56b65f7mr8526287lfg.16.1694506138521; Tue, 12 Sep
- 2023 01:08:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8C0631
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 08:33:05 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qfypO-0003Kf-NB; Tue, 12 Sep 2023 10:32:58 +0200
+Message-ID: <b30a81fa-6b59-4bac-b109-99a4dca689de@leemhuis.info>
+Date: Tue, 12 Sep 2023 10:32:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <8af186ba-5f64-2102-8f9c-3969b0906893@gmail.com>
- <faa245bf-e925-45b0-9827-b0c9c117e06c@leemhuis.info> <ZPc8v9-lHF4jAcxL@kbusch-mbp>
-In-Reply-To: <ZPc8v9-lHF4jAcxL@kbusch-mbp>
-From: =?UTF-8?Q?Cl=C3=A1udio_Sampaio?= <patola@gmail.com>
-Date: Tue, 12 Sep 2023 10:08:48 +0200
-Message-ID: <CA+4wXKCAYM19H7n4TpbnrtRy_Yv1JOjT3CHVuxh_18Mb7NB4+A@mail.gmail.com>
-Subject: Re: Fwd: Lexar NM790 SSDs are not recognized anymore after 6.1.50 LTS
-To: Keith Busch <kbusch@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux NVMe <linux-nvme@lists.infradead.org>, 
-	Linux Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression: Commit "netfilter: nf_tables: disallow rule addition
+ to bound chain via NFTA_RULE_CHAIN_ID" breaks ruleset loading in linux-stable
+Content-Language: en-US, de-DE
+To: Pablo Neira Ayuso <pablo@netfilter.org>,
+ Timo Sigurdsson <public_timo.s@silentcreek.de>
+Cc: kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev, sashal@kernel.org,
+ carnil@debian.org, 1051592@bugs.debian.org
+References: <20230911213750.5B4B663206F5@dd20004.kasserver.com>
+ <ZP+bUpxJiFcmTWhy@calendula>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZP+bUpxJiFcmTWhy@calendula>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694507586;0108f719;
+X-HE-SMSGID: 1qfypO-0003Kf-NB
 
-Hi, Keith... Just to give you guys a response concerning this, I'm
-sorry for the late reply -- too much work. But yes, you are correct,
-due to having tried patching the kernel in different days and too much
-stuff going on at the same time, I applied this two-line patch to the
-same source where I have applied the other patch that multiplies the
-timeout by 2 and occurs at an earlier time on activation. I thought I
-had an unpatched kernel at the time and ended up compiling it this
-way. Sorry for the mistake, but I also saw that now there's a better
-patch for the issue.
+On 12.09.23 00:57, Pablo Neira Ayuso wrote:
+> On Mon, Sep 11, 2023 at 11:37:50PM +0200, Timo Sigurdsson wrote:
+>>
+>> recently, Debian updated their stable kernel from 6.1.38 to 6.1.52
+>> which broke nftables ruleset loading on one of my machines with lots
+>> of "Operation not supported" errors. I've reported this to the
+>> Debian project (see link below) and Salvatore Bonaccorso and I
+>> identified "netfilter: nf_tables: disallow rule addition to bound
+>> chain via NFTA_RULE_CHAIN_ID" (0ebc1064e487) as the offending commit
+>> that introduced the regression. Salvatore also found that this issue
+>> affects the 5.10 stable tree as well (observed in 5.10.191), but he
+>> cannot reproduce it on 6.4.13 and 6.5.2.
+>>
+>> The issue only occurs with some rulesets. While I can't trigger it
+>> with simple/minimal rulesets that I use on some machines, it does
+>> occur with a more complex ruleset that has been in use for months
+>> (if not years, for large parts of it). I'm attaching a somewhat
+>> stripped down version of the ruleset from the machine I originally
+>> observed this issue on. It's still not a small or simple ruleset,
+>> but I'll try to reduce it further when I have more time.
+>>
+>> The error messages shown when trying to load the ruleset don't seem
+>> to be helpful. Just two simple examples: Just to give two simple
+>> examples from the log when nftables fails to start:
+>> /etc/nftables.conf:99:4-44: Error: Could not process rule: Operation not supported
+>>                         tcp option maxseg size 1-500 counter drop
+>>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> /etc/nftables.conf:308:4-27: Error: Could not process rule: Operation not supported
+>>                         tcp dport sip-tls accept
+>>                         ^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> I can reproduce this issue with 5.10.191 and 6.1.52 and nftables v1.0.6,
+> this is not reproducible with v1.0.7 and v1.0.8.
+> 
+>> Since the issue only affects some stable trees, Salvatore thought it
+>> might be an incomplete backport that causes this.
+>>
+>> If you need further information, please let me know.
+> 
+> Userspace nftables v1.0.6 generates incorrect bytecode that hits a new
+> kernel check that rejects adding rules to bound chains. The incorrect
+> bytecode adds the chain binding, attach it to the rule and it adds the
+> rules to the chain binding. I have cherry-picked these three patches
+> for nftables v1.0.6 userspace and your ruleset restores fine.
+> [...]
 
-On Tue, Sep 5, 2023 at 4:35=E2=80=AFPM Keith Busch <kbusch@kernel.org> wrot=
-e:
->
-> On Tue, Sep 05, 2023 at 01:37:36PM +0200, Linux regression tracking (Thor=
-sten Leemhuis) wrote:
-> > On 04.09.23 13:07, Bagas Sanjaya wrote:
-> > >
-> > > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > >
-> > >> I bought a new 4 TB Lexar NM790 and I was using kernel 6.3.13 at the=
- time. It wasn't recognized, with these messages in dmesg:
-> > >>
-> > >> [ 358.950147] nvme nvme0: pci function 0000:06:00.0
-> > >> [ 358.958327] nvme nvme0: Device not ready; aborting initialisation,=
- CSTS=3D0x0
-> > >>
-> > >> My other NVMe appears correctly in the nvme list though.
-> > >>
-> > >>
-> > >> So I tried using other kernels I had installed at the time: 6.3.7, 6=
-.4.10, 6.5.0rc6, 6.5.0, 6.5.1 and none of these recognized the disk.
-> > >> I installed the 6.1.50 lts kernel from arch repositories (I can comp=
-ile my own too if this would be an issue) and then the device was correctly=
- recognized:
-> > >>
-> > >> [    4.654613] nvme 0000:06:00.0: platform quirk: setting simple sus=
-pend
-> > >> [    4.654632] nvme nvme0: pci function 0000:06:00.0
-> > >> [    4.667290] nvme nvme0: allocated 40 MiB host memory buffer.
-> > >> [    4.709473] nvme nvme0: 16/0/0 default/read/poll queues
-> >
-> > FWIW, the quoted mail missed one crucial detail:
-> > """
-> >  Claudio Sampaio 2023-09-02 19:04:29 UTC
-> >
-> > Adding the two lines
-> >
-> > =E2=94=82 3457   { PCI_DEVICE(0x1d97, 0x1602), /* Lexar NM790 */
-> > =E2=94=82 3458   =E2=94=82 .driver_data =3D NVME_QUIRK_BOGUS_NID, },
-> >
-> > in file drivers/nvme/host/pci.c made my NVMe work correctly. Compiled a
-> > new 6.5.1 kernel and everything works.
-> > """
-> >
-> > @NVME maintainers: is there anything more you need from Claudio at this
-> > point?
->
-> Yes: it doesn't really make any sense. The report says the device
-> stopped showing up with message:
->
->   nvme nvme0: Device not ready; aborting initialisation, CSTS=3D0x0
->
-> That (a) happens long before the mentioned quirk is considered by the
-> driver, and (b) the "quirk" behavior is now the default in 6.5 and
-> several of the listed stable kernels anyway.
->
-> It more likely sounds like the device is flaky and either never becomes
-> ready due to some unspecified internal firmware condition, or
-> inaccurately reports how long it actually needs to become ready in
-> worst-case-scenario.
+Hmmmm. Well, this sounds like a kernel regression to me that normally
+should be dealt with on the kernel level, as users after updating the
+kernel should never have to update any userspace stuff to continue what
+they have been doing before the kernel update.
 
+Can't the kernel somehow detect the incorrect bytecode and do the right
+thing(tm) somehow?
 
+But yes, don't worry, I know that reality is not black and white and
+that it's crucial that things like package filtering do exactly what the
+user expect it to do; that's why this might be one of those rare
+situations where "user has to update userspace components to support
+newer kernels" might be the better of two bad choices. But I had to ask
+to ensure it's something like that.
 
---=20
-Cl=C3=A1udio "Patola" Sampaio
-MakerLinux Labs - Campinas, SP
-Resume Gmail - YOUTUBE!
-Facebook - Facebook da MakerLinux - Lattes
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
