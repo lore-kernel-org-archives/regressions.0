@@ -1,117 +1,112 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FF01C04
-	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 17:10:42 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qg6uN-0008KM-0i; Tue, 12 Sep 2023 19:10:39 +0200
-Message-ID: <82469f2f-59e4-49d5-823d-344589cbb119@leemhuis.info>
-Date: Tue, 12 Sep 2023 19:10:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97039455
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 17:46:46 +0000 (UTC)
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4RlW7W4dQSz4x1PM
+	for <regressions@lists.linux.dev>; Tue, 12 Sep 2023 19:40:07 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:a74b:c851:eeda:f0c8])
+	by xavier.telenet-ops.be with bizsmtp
+	id l5fz2A00S0nS7QV015fzeq; Tue, 12 Sep 2023 19:40:00 +0200
+Received: from geert (helo=localhost)
+	by ramsan.of.borg with local-esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1qg7Ml-0033vI-Jc;
+	Tue, 12 Sep 2023 19:39:59 +0200
+Date: Tue, 12 Sep 2023 19:39:59 +0200 (CEST)
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org, 
+    "Martin K . Petersen" <martin.petersen@oracle.com>, 
+    Paul Ausbeck <paula@soe.ucsc.edu>, 
+    Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>, 
+    regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>, 
+    linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
+In-Reply-To: <20230731003956.572414-1-dlemoal@kernel.org>
+Message-ID: <8be9c370-2f1-5815-431-f68ab868669@linux-m68k.org>
+References: <20230731003956.572414-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
- drivers/misc/cardreader breaks NVME power state, preventing system boot
-Content-Language: en-US, de-DE
-To: Paul Grandperrin <paul.grandperrin@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, Wei WANG <wei_wang@realsil.com.cn>,
- Roger Tseng <rogerable@realtek.com>, Ricky WU <ricky_wu@realtek.com>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <5DHV0S.D0F751ZF65JA1@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5DHV0S.D0F751ZF65JA1@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694538643;1001dfa7;
-X-HE-SMSGID: 1qg6uN-0008KM-0i
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-(CCing Greg, as he merged the culprit, and Linus, in case he wants to
-revert this from mainline directly as this apparently affects and annoys
-quite a few people)
+ 	Hi Damien,
 
-On 12.09.23 14:29, Paul Grandperrin wrote:
-> 
-> My computer doesn't boot with kernels newer than 6.1.45.>
-> Here's what happens:
-> - system boots in initramfs
-> - detects my encrypted ZFS pool and asks for password
-> - mount system, pivots to it, starts real init
-> - before any daemon had time to start, the system hangs and the kernel
-> writes on the console
-> "nvme 0000:04:00.0: Unable to change power state from D3cold to D0,
-> device inaccessible"
-> - if I reboot directly without powering off (using magic sysrq or
-> panic=10), even the UEFI complains about not finding any storage to boot
-> from.
-> - after a real power off, I can boot using a kernel <= 6.1.45.
+On Mon, 31 Jul 2023, Damien Le Moal wrote:
+> During system resume, ata_port_pm_resume() triggers ata EH to
+> 1) Resume the controller
+> 2) Reset and rescan the ports
+> 3) Revalidate devices
+> This EH execution is started asynchronously from ata_port_pm_resume(),
+> which means that when sd_resume() is executed, none or only part of the
+> above processing may have been executed. However, sd_resume() issues a
+> START STOP UNIT to wake up the drive from sleep mode. This command is
+> translated to ATA with ata_scsi_start_stop_xlat() and issued to the
+> device. However, depending on the state of execution of the EH process
+> and revalidation triggerred by ata_port_pm_resume(), two things may
+> happen:
+> 1) The START STOP UNIT fails if it is received before the controller has
+>   been reenabled at the beginning of the EH execution. This is visible
+>   with error messages like:
+>
+> ata10.00: device reported invalid CHS sector 0
+> sd 9:0:0:0: [sdc] Start/Stop Unit failed: Result: hostbyte=DID_OK driverbyte=DRIVER_OK
+> sd 9:0:0:0: [sdc] Sense Key : Illegal Request [current]
+> sd 9:0:0:0: [sdc] Add. Sense: Unaligned write command
+> sd 9:0:0:0: PM: dpm_run_callback(): scsi_bus_resume+0x0/0x90 returns -5
+> sd 9:0:0:0: PM: failed to resume async: error -5
+>
+> 2) The START STOP UNIT command is received while the EH process is
+>   on-going, which mean that it is stopped and must wait for its
+>   completion, at which point the command is rather useless as the drive
+>   is already fully spun up already. This case results also in a
+>   significant delay in sd_resume() which is observable by users as
+>   the entire system resume completion is delayed.
+>
+> Given that ATA devices will be woken up by libata activity on resume,
+> sd_resume() has no need to issue a START STOP UNIT command, which solves
+> the above mentioned problems. Do not issue this command by introducing
+> the new scsi_device flag no_start_on_resume and setting this flag to 1
+> in ata_scsi_dev_config(). sd_resume() is modified to issue a START STOP
+> UNIT command only if this flag is not set.
+>
+> Reported-by: Paul Ausbeck <paula@soe.ucsc.edu>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215880
+> Fixes: a19a93e4c6a9 ("scsi: core: pm: Rely on the device driver core for async power management")
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
-Thx for the report.
+Thanks for your patch, which is now commit 0a8589055936d8fe
+("ata,scsi: do not issue START STOP UNIT on resume") in v6.5-rc5.
+Sorry for being late to the party, but this commit landed upstream
+during my summer holidays, and apparently I wasn't that focussed on
+noticing small behavioral changes after getting back to work...
 
-> The bug has been discussed here:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217705
+I noticed an oddity after s2idle or s2ram on Renesas Salvator-XS (R-Car
+H3 ES2.0) with an old (spinning rust) SATA drive, and bisected it to
+this commit: when accessing the drive after system resume, there is now
+a delay of ca. 5s before data is returned, presumably due to starting
+the drive, and having to wait for it to spin up to be able to read data.
+But the good news is that the actual system resume takes less time than
+before (reduced by even more than ca. 5s!), so this looks like a net
+win...
 
-And recently here:
-https://bugzilla.kernel.org/show_bug.cgi?id=217802
-https://lore.kernel.org/all/5f968b95-6b1c-4d6f-aac7-5d54f66834a8@sapience.com/
+I'm not sure this is to be called a regression, I just wanted you to be
+aware of it.
 
-And in
-https://bugzilla.suse.com/show_bug.cgi?id=1214428
-and a few other places iirc, too.
+Thanks!
 
-openSUSE Tumblewed reverted the culprit a while ago:
+Gr{oetje,eeting}s,
 
-https://github.com/openSUSE/kernel-source/commit/1b02b1528a26f4e9b577e215c114d8c5e773ee10
+ 						Geert
 
-I think we should do the same for mainline (and stable afterwards).
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Ciao, Thorsten
-
-> My laptop is a Dell XPS 15 9560 (Intel 7700hq).
-> 
-> I bisected between 6.1.45 and 6.1.46 and found this commit
-> 
-> commit 8ee39ec479147e29af704639f8e55fce246ed2d9
-> Author: Ricky WU <ricky_wu@realtek.com>
-> Date:   Tue Jul 25 09:10:54 2023 +0000
-> 
->    misc: rtsx: judge ASPM Mode to set PETXCFG Reg
-> 
->    commit 101bd907b4244a726980ee67f95ed9cafab6ff7a upstream.
-> 
->    ASPM Mode is ASPM_MODE_CFG need to judge the value of clkreq_0
->    to set HIGH or LOW, if the ASPM Mode is ASPM_MODE_REG
->    always set to HIGH during the initialization.
-> 
->    Cc: stable@vger.kernel.org
->    Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
->    Link:
-> https://lore.kernel.org/r/52906c6836374c8cb068225954c5543a@realtek.com
->    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> drivers/misc/cardreader/rts5227.c  |  2 +-
-> drivers/misc/cardreader/rts5228.c  | 18 ------------------
-> drivers/misc/cardreader/rts5249.c  |  3 +--
-> drivers/misc/cardreader/rts5260.c  | 18 ------------------
-> drivers/misc/cardreader/rts5261.c  | 18 ------------------
-> drivers/misc/cardreader/rtsx_pcr.c |  5 ++++-
-> 6 files changed, 6 insertions(+), 58 deletions(-)
-> 
-> If I build 6.1.51 with this commit reverted, my laptop works again,
-> confirming that this commit is to blame.
-> 
-> Also, blacklisting `rtsx_pci_sdmmc` and `rtsx_pci`, while preventing to
-> use the sd card reading, allows to boot the system.
-> 
-> I can't try 6.4 or 6.5 because my system is dependent on ZFS..
-> 
-> Have a nice day,
-> Paul Grandperrin
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
