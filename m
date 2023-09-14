@@ -1,162 +1,123 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42EDED9
-	for <regressions@lists.linux.dev>; Thu, 14 Sep 2023 06:53:22 +0000 (UTC)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5924093a9b2so7189597b3.2
-        for <regressions@lists.linux.dev>; Wed, 13 Sep 2023 23:53:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694674401; x=1695279201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MubaXS4LapmWRsdSNbB72rtVm488qlzx9GSVnCeypz4=;
-        b=RRqdTcTNRTFfp9NHivgwrd1hg8LItwTv1kbt/CUMCmifsB3AbOfbkV9yserHWQ+K07
-         eMwl6tWcJ2m7GywcOgx8u4lvbw2f7it7Srylhll3VDagHK3o7dgaARmrEzUydvWOyJJ8
-         8oD7XwjE81BNHX6vUv3kH1FwDmXF0IL78ipWPWWJFKAH0fKgPfWrxaiiUdPC7heV5Zro
-         TnNQFiP+RVe5SUiUOIj97n/AWCzMz04xUXA3U2kSxvRpMvsNM17kDhAmwCDvVUqI5b+F
-         DPm6y9h2RmZ0jArvTPxk8RLVeeCASBpTRCOto1y1ETS/2vfcbSvZ5kMrfhrff6ij3jKv
-         4pfA==
-X-Gm-Message-State: AOJu0YwCoFSaL/XhHif8XIzBDFBDVhaka3nq8XrktizHp86qmwCEPjW1
-	N+Q1ImzerFdRmqOZsWU7/n8yvmn/H8xncw==
-X-Google-Smtp-Source: AGHT+IERJHtXhTU1VOijXMhJ7fTrZ4BD4SEYvGUyfvakgATlzws8VNX9uR7M6PE0miO5pNVrtukYmQ==
-X-Received: by 2002:a81:5f43:0:b0:58c:6121:48e8 with SMTP id t64-20020a815f43000000b0058c612148e8mr5137938ywb.33.1694674401370;
-        Wed, 13 Sep 2023 23:53:21 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id n124-20020a817282000000b0059b17647dcbsm188682ywc.69.2023.09.13.23.53.20
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 23:53:20 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d8198ca891fso204779276.1
-        for <regressions@lists.linux.dev>; Wed, 13 Sep 2023 23:53:20 -0700 (PDT)
-X-Received: by 2002:a25:acd5:0:b0:d80:a9d:aea9 with SMTP id
- x21-20020a25acd5000000b00d800a9daea9mr4631207ybd.34.1694674400192; Wed, 13
- Sep 2023 23:53:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9F6ED9
+	for <regressions@lists.linux.dev>; Thu, 14 Sep 2023 06:58:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB278C433C8;
+	Thu, 14 Sep 2023 06:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694674709;
+	bh=tvOMWhno4qW0NNw8WiKZfKMoQticUHymzv2JF0+MLAs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OhlUUpAVtkXI5EghBPL8aQuuMUojpIDjICnRvgoHHvkXlXH4VH6W6zd+4KsJu6Sqt
+	 bV3pDhPu2hO+FaJpKnkEkcyAQ9XiRehG5bkdxGWTBrYmkuWeuIZNuOLg54YGKppCkb
+	 xckeGUe8lDHg1RQaX5HhAj2WCePp7z9Cu9DShuF1pU9IBClVgCKQ3Zed00ScYzCkAF
+	 w4MTUCTSu/FpWsmh1UTw0gBw9yuieyt5IPLOFUcljf6Bq26JMsC7TAr1eb/s9sLS1h
+	 3f7h3gzVp6RdNf/wvjmaHVzVChtSq7FHZX8rgik51ptNnhiWLmnZ8ojP8qWaK91dW/
+	 rts81twgZgQcQ==
+Message-ID: <ced723bd-dc88-d796-c86f-9fa96641d982@kernel.org>
+Date: Thu, 14 Sep 2023 15:58:26 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230731003956.572414-1-dlemoal@kernel.org> <8be9c370-2f1-5815-431-f68ab868669@linux-m68k.org>
- <ffc1442b-698e-65ab-9aaf-e4ca076b697c@kernel.org> <CAMuHMdXK-pnzMNzbNw=zWaMbQtWtca850eYv98oUjQkypgBfwg@mail.gmail.com>
- <2d90bd7c-5c34-a345-bc29-44dfa923fc19@kernel.org>
-In-Reply-To: <2d90bd7c-5c34-a345-bc29-44dfa923fc19@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 14 Sep 2023 08:53:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVHu3zeM0WA7TcTA2QT9X68cTttU-TzjsQw6ZuYCu4t=A@mail.gmail.com>
-Message-ID: <CAMuHMdVHu3zeM0WA7TcTA2QT9X68cTttU-TzjsQw6ZuYCu4t=A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
 Subject: Re: [PATCH] ata,scsi: do not issue START STOP UNIT on resume
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Paul Ausbeck <paula@soe.ucsc.edu>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>, 
-	regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Paul Ausbeck <paula@soe.ucsc.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, TW <dalzot@gmail.com>,
+ regressions@lists.linux.dev, Bart Van Assche <bvanassche@acm.org>,
+ linux-renesas-soc@vger.kernel.org
+References: <20230731003956.572414-1-dlemoal@kernel.org>
+ <8be9c370-2f1-5815-431-f68ab868669@linux-m68k.org>
+ <ffc1442b-698e-65ab-9aaf-e4ca076b697c@kernel.org>
+ <CAMuHMdXK-pnzMNzbNw=zWaMbQtWtca850eYv98oUjQkypgBfwg@mail.gmail.com>
+ <2d90bd7c-5c34-a345-bc29-44dfa923fc19@kernel.org>
+ <CAMuHMdVHu3zeM0WA7TcTA2QT9X68cTttU-TzjsQw6ZuYCu4t=A@mail.gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <CAMuHMdVHu3zeM0WA7TcTA2QT9X68cTttU-TzjsQw6ZuYCu4t=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Damien,
+On 9/14/23 15:53, Geert Uytterhoeven wrote:
+> Hi Damien,
+> 
+> On Thu, Sep 14, 2023 at 12:03 AM Damien Le Moal <dlemoal@kernel.org> wrote:
+>> On 9/13/23 19:21, Geert Uytterhoeven wrote:
+>>>> Thanks for the report. The delay for the first data access from user space right
+>>>> after resume is 100% expected, with or without this patch. The reason is that
+>>>> waking up the drive (spinning it up) is done asynchronously from the PM resume
+>>>> context, so when you get "PM suspend exit" message signaling that the system is
+>>>> resumed, the drive may not yet be spinning. Any access will wait for that to
+>>>> happen before proceeding. Depending on the drive that can take up to 10s or so.
+>>>
+>>> That does not match with what I am seeing: before this patch, there
+>>> was no delay on first data access from user space, as the drive is fully
+>>> spun up when system resume returns.
+>>
+>> Yes, that is a possibility, but not by design. Some users have complained about
+>> the long resume times which causes laptop screens to be "black" until disks spin
+>> up. That did not happen before 5.16, when the change to scsi using the PM async
+>> ops to do suspend/resume created all the issues with suspend/resume on ata side.
+>> I am going to run 5.15 again to check.
+>>
+>> The patch "do not issue START STOP UNIT on resume" was a botch attempt to remove
+>> this delay. But it is a bad one because the ATA specs define that a drive can
+>> get out of standby (spun down) power state only with a media access command (a
+>> VERIFY command is used to spin up the disk). And furthermore, the specs also
+>> says that even a reset shall not change the device power state. So issuing a
+>> VERIFY command to spin up the drive is required per specs. Note that I do see
+>> many of my drives (I have hundreds in the lab) spinning up on reset, which is
+>> against the specs. But not all of them. So with the patch "do not issue START
+>> STOP UNIT on resume", one risks not seeing the drive resuming correctly (timeout
+>> errors on IDENTIFY command issued on resume will get the drive removed).
+>>
+>>> With this patch, system resume returns earlier, and the drive is only
+>>> spun up when user space starts accessing data.
+>>
+>> Yes, but "when user space starts accessing data" -> "user space accesses are
+>> processed only after the drive completes spinning up" would be more accurate.
+> 
+> Sure, I wrote it down in terms of what the user is experiencing, which may
+> not be identical to what's happening under the hood.
+> 
+>> That is by design and expected. This is the behavior one would see if the drive
+>> is set to use standby timers (to go to standby on its own after some idle time)
+>> or if runtime suspend is used. I do not see any issue with this behavior. Is
+>> this causing any issue on your end ? Do you have concerns about this approach ?
+>>
+>> Having the resume process wait for the drive to fully spin-up is easy to do. But
+>> as I mentioned, many users are really not happy about how slow resuming become
+>> with that. If I do that, you will get back the previous behavior you mention,
+>> but I will be again getting emails about "resume is broken".
+>>
+>> I made a decision: no waiting for spinup. That causes a delay for the user on
+>> first access, but that makes resume overall far faster. I do not want to go back
+>> on that, unless you can confirm that there is a real regression/error/data
+>> corruption happening.
+> 
+> I agree that is fine.
 
-On Thu, Sep 14, 2023 at 12:03=E2=80=AFAM Damien Le Moal <dlemoal@kernel.org=
-> wrote:
-> On 9/13/23 19:21, Geert Uytterhoeven wrote:
-> >> Thanks for the report. The delay for the first data access from user s=
-pace right
-> >> after resume is 100% expected, with or without this patch. The reason =
-is that
-> >> waking up the drive (spinning it up) is done asynchronously from the P=
-M resume
-> >> context, so when you get "PM suspend exit" message signaling that the =
-system is
-> >> resumed, the drive may not yet be spinning. Any access will wait for t=
-hat to
-> >> happen before proceeding. Depending on the drive that can take up to 1=
-0s or so.
-> >
-> > That does not match with what I am seeing: before this patch, there
-> > was no delay on first data access from user space, as the drive is full=
-y
-> > spun up when system resume returns.
->
-> Yes, that is a possibility, but not by design. Some users have complained=
- about
-> the long resume times which causes laptop screens to be "black" until dis=
-ks spin
-> up. That did not happen before 5.16, when the change to scsi using the PM=
- async
-> ops to do suspend/resume created all the issues with suspend/resume on at=
-a side.
-> I am going to run 5.15 again to check.
->
-> The patch "do not issue START STOP UNIT on resume" was a botch attempt to=
- remove
-> this delay. But it is a bad one because the ATA specs define that a drive=
- can
-> get out of standby (spun down) power state only with a media access comma=
-nd (a
-> VERIFY command is used to spin up the disk). And furthermore, the specs a=
-lso
-> says that even a reset shall not change the device power state. So issuin=
-g a
-> VERIFY command to spin up the drive is required per specs. Note that I do=
- see
-> many of my drives (I have hundreds in the lab) spinning up on reset, whic=
-h is
-> against the specs. But not all of them. So with the patch "do not issue S=
-TART
-> STOP UNIT on resume", one risks not seeing the drive resuming correctly (=
-timeout
-> errors on IDENTIFY command issued on resume will get the drive removed).
->
-> > With this patch, system resume returns earlier, and the drive is only
-> > spun up when user space starts accessing data.
->
-> Yes, but "when user space starts accessing data" -> "user space accesses =
-are
-> processed only after the drive completes spinning up" would be more accur=
-ate.
+Still, R-CAR is not working for you with the patch adding the link. Looking into
+it now. Trying to verify things with qemu & regular AHCI on PCs too as I do not
+have an R-CAR board. Hard to debug :)
 
-Sure, I wrote it down in terms of what the user is experiencing, which may
-not be identical to what's happening under the hood.
+Preparing some patches for you to get more debug info.
 
-> That is by design and expected. This is the behavior one would see if the=
- drive
-> is set to use standby timers (to go to standby on its own after some idle=
- time)
-> or if runtime suspend is used. I do not see any issue with this behavior.=
- Is
-> this causing any issue on your end ? Do you have concerns about this appr=
-oach ?
->
-> Having the resume process wait for the drive to fully spin-up is easy to =
-do. But
-> as I mentioned, many users are really not happy about how slow resuming b=
-ecome
-> with that. If I do that, you will get back the previous behavior you ment=
-ion,
-> but I will be again getting emails about "resume is broken".
->
-> I made a decision: no waiting for spinup. That causes a delay for the use=
-r on
-> first access, but that makes resume overall far faster. I do not want to =
-go back
-> on that, unless you can confirm that there is a real regression/error/dat=
-a
-> corruption happening.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
-I agree that is fine.
+-- 
+Damien Le Moal
+Western Digital Research
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
