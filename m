@@ -1,105 +1,153 @@
-Received: from disco.pogo.org.uk (disco.pogo.org.uk [93.93.128.62])
+Received: from dd20004.kasserver.com (dd20004.kasserver.com [85.13.150.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99111097E
-	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 18:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xwax.org;
-	s=swing; h=Content-Type:MIME-Version:References:Message-ID:In-Reply-To:
-	Subject:cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=XI4pp0oduPn/A0YqvObMvK3fxrovFz787U1W3QhLrvU=; b=eyKOZHZj0O7U/Sq7UbMk8n7rCA
-	zHk46uk/3tAqg/wV8BMsVl1j2+0uNV3opRer/5KGR/VCs2XHnr3IawXPi67yj13PaH6BqEUpFVVeD
-	jB1UvvmnvzrXRopHuJM4LcJlSsk6/kxBXkaTmP1U/cejjXYJxYPgQhIz2QxrYuEtm2PE=;
-Received: from cpc93786-hari17-2-0-cust786.20-2.cable.virginm.net ([82.36.99.19] helo=stax)
-	by disco.pogo.org.uk with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96 (FreeBSD))
-	(envelope-from <mark@xwax.org>)
-	id 1qhDQM-0003f6-2T;
-	Fri, 15 Sep 2023 19:20:14 +0100
-Received: from localhost (stax.localdomain [local])
-	by stax.localdomain (OpenSMTPD) with ESMTPA id fda34262;
-	Fri, 15 Sep 2023 18:20:12 +0000 (UTC)
-Date: Fri, 15 Sep 2023 19:20:12 +0100 (BST)
-From: Mark Hills <mark@xwax.org>
-To: Takashi Iwai <tiwai@suse.de>
-cc: Ash Holland <ash@sorrel.sh>, alsa-devel@alsa-project.org, 
-    regressions@lists.linux.dev
-Subject: Re: [REGRESSION] rust midir MIDI library causes kernel oops
-In-Reply-To: <871qezux3d.wl-tiwai@suse.de>
-Message-ID: <ba096915-4d9e-0cfa-2dfb-57cb476b3544@xwax.org>
-References: <8a555319-9f31-4ea2-878f-adc338bc40d4@sorrel.sh> <87msy1ip6l.wl-tiwai@suse.de> <ef9118c3-a2eb-d0ff-1efa-cc5fb6416bde@xwax.org> <874jjvuywk.wl-tiwai@suse.de> <871qezux3d.wl-tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A1611CAA
+	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 20:44:36 +0000 (UTC)
+Received: from dd20004.kasserver.com (dd0806.kasserver.com [85.13.161.252])
+	by dd20004.kasserver.com (Postfix) with ESMTPSA id 37CC96320BA2;
+	Fri, 15 Sep 2023 22:44:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silentcreek.de;
+	s=kas202306171005; t=1694810669;
+	bh=GTAOtFXfmJE5tMJE+b2ZF9kJaBinx/6Zrq5uUHmsRiY=;
+	h=Subject:To:References:Cc:From:In-Reply-To:Date:From;
+	b=MLShIkK3WmQ5Jthg3oQker3OrjJzHIR+RHpiZ+vylYdomMeOjvP8EVCmtaqBAkcrk
+	 NxCUHrpC8HrGnQOjvCcy2iBzQEgDq+HCJvOqHFPp7JxVsCW7lhgfin93Kxvxu9nw5H
+	 qfVF8j/GIAt/1Sx9UGQWHHJ1/8AUqDxgRfMmvxUoV/hh6mV+xALtgFRJKW0mdmpdjq
+	 oC/vaQExav7xH4AItkRgx81Wm+/J+goaJzeIv+cW1uwhGH51tudeayMBPiqWvPGWk7
+	 HUCPNKkG56jozD+SP1EqtWvHVWLGdfRkaEpSNW7KB70+XPjnzv0OZH55eShLF9mG7W
+	 nXSjDMjZ2qEXw==
+Subject: Re: Regression: Commit "netfilter: nf_tables: disallow rule addition
+ to bound chain via NFTA_RULE_CHAIN_ID" breaks ruleset loading in linux-stable
+To: carnil@debian.org
+References: <20230911213750.5B4B663206F5@dd20004.kasserver.com>
+ <ZP+bUpxJiFcmTWhy@calendula>
+ <20230912113959.8F8B26321005@dd20004.kasserver.com><ZQC4bcVVK99Q8WrO@eldamar.lan>
+Cc: pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev, sashal@kernel.org,
+ 1051592@bugs.debian.org, arturo@debian.org
+From: "Timo Sigurdsson" <public_timo.s@silentcreek.de>
+User-Agent: ALL-INKL Webmail 2.11
+X-SenderIP: 89.246.185.100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <ZQC4bcVVK99Q8WrO@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Message-Id: <20230915204429.37CC96320BA2@dd20004.kasserver.com>
+Date: Fri, 15 Sep 2023 22:44:29 +0200 (CEST)
+X-Spamd-Bar: /
 
-On Fri, 15 Sep 2023, Takashi Iwai wrote:
+Hi,
 
-> On Fri, 15 Sep 2023 19:30:51 +0200, Takashi Iwai wrote:
-> > 
-> > On Fri, 15 Sep 2023 18:04:35 +0200, Mark Hills wrote:
-[...]
-> > > I upgraded from 6.1.0 to 6.5.3 and Reaper now crashes or hangs on startup 
-> > > with the trace below in dmesg.
-> > > 
-> > > The newer kernel already includes a fix very similar to below, so I think 
-> > > an issue remains.
-> > > 
-> > > I did not dig deeper than capturing information and finding this related 
-> > > thread.
-> > (snip)
-> > > [   72.601440] BUG: kernel NULL pointer dereference, address: 0000000000000020
-> > (snip)
-> > > [   72.601455] RIP: 0010:snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
-> > (snip)
-> > > [   72.601477] Call Trace:
-> > > [   72.601478]  <TASK>
-> > > [   72.601479]  ? __die+0x1b/0x60
-> > > [   72.601482]  ? page_fault_oops+0x154/0x420
-> > > [   72.601485]  ? mas_update_gap.part.0+0xac/0x1f0
-> > > [   72.601488]  ? sched_clock_cpu+0xb/0x190
-> > > [   72.601491]  ? __smp_call_single_queue+0x2f/0x50
-> > > [   72.601493]  ? exc_page_fault+0x37a/0x560
-> > > [   72.601495]  ? seq_open+0x4b/0x70
-> > > [   72.601497]  ? asm_exc_page_fault+0x22/0x30
-> > > [   72.601501]  ? snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
-> > > [   72.601505]  snd_info_seq_show+0x21/0x40 [snd]
-> > > [   72.601511]  seq_read_iter+0x105/0x4a0
-> > > [   72.601514]  seq_read+0x9e/0xd0
-> > > [   72.601516]  proc_reg_read+0x50/0xa0
-> > > [   72.601518]  vfs_read+0xa4/0x300
-> > > [   72.601521]  ? __do_sys_newfstatat+0x35/0x60
-> > > [   72.601524]  ksys_read+0x5a/0xe0
-> > > [   72.601526]  do_syscall_64+0x38/0x90
-> > > [   72.601528]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> > 
-> > It must be a completely different bug.  It comes from the proc fs
-> > read, not the read over sequencer device itself.
+Salvatore Bonaccorso schrieb am 12.09.2023 21:13 (GMT +02:00):
+
+> Hi Timo,
 > 
-> Does the change below fix the problem?
-
-It does! At least it passes my initial test. Reaper starts up now.
-
-> -- 8< --
-> --- a/sound/core/rawmidi.c
-> +++ b/sound/core/rawmidi.c
-> @@ -1770,7 +1770,7 @@ static void snd_rawmidi_proc_info_read(struct snd_info_entry *entry,
->  	if (IS_ENABLED(CONFIG_SND_UMP))
->  		snd_iprintf(buffer, "Type: %s\n",
->  			    rawmidi_is_ump(rmidi) ? "UMP" : "Legacy");
-> -	if (rmidi->ops->proc_read)
-> +	if (rmidi->ops && rmidi->ops->proc_read)
->  		rmidi->ops->proc_read(entry, buffer);
->  	mutex_lock(&rmidi->open_mutex);
->  	if (rmidi->info_flags & SNDRV_RAWMIDI_INFO_OUTPUT) {
+> On Tue, Sep 12, 2023 at 01:39:59PM +0200, Timo Sigurdsson wrote:
+>> Hi Pablo,
+>> 
+>> Pablo Neira Ayuso schrieb am 12.09.2023 00:57 (GMT +02:00):
+>> 
+>> > Hi Timo,
+>> > 
+>> > On Mon, Sep 11, 2023 at 11:37:50PM +0200, Timo Sigurdsson wrote:
+>> >> Hi,
+>> >> 
+>> >> recently, Debian updated their stable kernel from 6.1.38 to 6.1.52
+>> >> which broke nftables ruleset loading on one of my machines with lots
+>> >> of "Operation not supported" errors. I've reported this to the
+>> >> Debian project (see link below) and Salvatore Bonaccorso and I
+>> >> identified "netfilter: nf_tables: disallow rule addition to bound
+>> >> chain via NFTA_RULE_CHAIN_ID" (0ebc1064e487) as the offending commit
+>> >> that introduced the regression. Salvatore also found that this issue
+>> >> affects the 5.10 stable tree as well (observed in 5.10.191), but he
+>> >> cannot reproduce it on 6.4.13 and 6.5.2.
+>> >> 
+>> >> The issue only occurs with some rulesets. While I can't trigger it
+>> >> with simple/minimal rulesets that I use on some machines, it does
+>> >> occur with a more complex ruleset that has been in use for months
+>> >> (if not years, for large parts of it). I'm attaching a somewhat
+>> >> stripped down version of the ruleset from the machine I originally
+>> >> observed this issue on. It's still not a small or simple ruleset,
+>> >> but I'll try to reduce it further when I have more time.
+>> >> 
+>> >> The error messages shown when trying to load the ruleset don't seem
+>> >> to be helpful. Just two simple examples: Just to give two simple
+>> >> examples from the log when nftables fails to start:
+>> >> /etc/nftables.conf:99:4-44: Error: Could not process rule: Operation not
+>> >> supported
+>> >>                         tcp option maxseg size 1-500 counter drop
+>> >>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> >> /etc/nftables.conf:308:4-27: Error: Could not process rule: Operation not
+>> >> supported
+>> >>                         tcp dport sip-tls accept
+>> >>                         ^^^^^^^^^^^^^^^^^^^^^^^^
+>> > 
+>> > I can reproduce this issue with 5.10.191 and 6.1.52 and nftables v1.0.6,
+>> > this is not reproducible with v1.0.7 and v1.0.8.
+>> > 
+>> >> Since the issue only affects some stable trees, Salvatore thought it
+>> >> might be an incomplete backport that causes this.
+>> >> 
+>> >> If you need further information, please let me know.
+>> > 
+>> > Userspace nftables v1.0.6 generates incorrect bytecode that hits a new
+>> > kernel check that rejects adding rules to bound chains. The incorrect
+>> > bytecode adds the chain binding, attach it to the rule and it adds the
+>> > rules to the chain binding. I have cherry-picked these three patches
+>> > for nftables v1.0.6 userspace and your ruleset restores fine.
+>> 
+>> hmm, that doesn't explain why Salvatore didn't observe this with
+>> more recent kernels.
+>> 
+>> Salvatore, did you use newer userspace components when you tested
+>> your 6.4.13 and 6.5.2 builds?
 > 
+> It does explain now because understanding the issue better. While one
+> while experinting should only change each one constraint for the
+> 6.4.13 and 6.5.2 testing I indeed switched to a Debian unstable
+> system, which has newer userpace nftables and so not triggering the
+> issue. This was missleading for the report.
 > 
+>> As for the regression and how it be dealt with: Personally, I don't
+>> really care whether the regression is solved in the kernel or
+>> userspace. If everybody agrees that this is the best or only viable
+>> option and Debian decides to push a nftables update to fix this,
+>> that works for me. But I do feel the burden to justify this should
+>> be high. A kernel change that leaves users without a working packet
+>> filter after upgrading their machines is serious, if you ask me. And
+>> since it affects several stable/longterm trees, I would assume this
+>> will hit other stable (non-rolling) distributions as well, since
+>> they will also use older userspace components (unless this is
+>> behavior specific to nftables 1.0.6 but not older versions). They
+>> probably should get a heads up then.
 > 
+> So if it is generally believed on kernel side there should not happen
+> any further changes to work with older userland, I guess in Debian we
+> will need to patch nftables. I'm CC'ing Arturo Borrero Gonzalez
+> <arturo@debian.org>, maintainer for the package. The update should go
+> ideally in the next point releases from October (and maybe released
+> earlier as well trough the stable-updates mechanism).
 
--- 
-Mark
+So, I built nftables 1.0.6-2+deb12u1 with the three cherry-picked patches from Pablo and can confirm that they resolve the issue for me on bookworm. I can now run linux 6.1.52-1 and load my original nftables ruleset again.
+ 
+> FWIW: In Debian bullseye we have 0.9.8 based nftables, in bookworm
+> 1.0.6, so both will need those fixes.
+> 
+> As 0ebc1064e487 is to address CVE-2023-4147 other distros picking the
+> fix will likely encounter the problem at some point. It looks Red Hat
+> has taken it (some RHSA's were released), I assume Ubuntu will shortly
+> as well release USN's containing a fix.
+
+SUSE has also picked this patch for SLES/SLED. I hope maintainers follow the mailing lists cc'ed here or that someone gives them a heads up before this hits more production systems.
+
+Thanks and regards,
+
+Timo
