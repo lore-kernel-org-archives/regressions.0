@@ -1,153 +1,108 @@
-Received: from dd20004.kasserver.com (dd20004.kasserver.com [85.13.150.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A1611CAA
-	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 20:44:36 +0000 (UTC)
-Received: from dd20004.kasserver.com (dd0806.kasserver.com [85.13.161.252])
-	by dd20004.kasserver.com (Postfix) with ESMTPSA id 37CC96320BA2;
-	Fri, 15 Sep 2023 22:44:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silentcreek.de;
-	s=kas202306171005; t=1694810669;
-	bh=GTAOtFXfmJE5tMJE+b2ZF9kJaBinx/6Zrq5uUHmsRiY=;
-	h=Subject:To:References:Cc:From:In-Reply-To:Date:From;
-	b=MLShIkK3WmQ5Jthg3oQker3OrjJzHIR+RHpiZ+vylYdomMeOjvP8EVCmtaqBAkcrk
-	 NxCUHrpC8HrGnQOjvCcy2iBzQEgDq+HCJvOqHFPp7JxVsCW7lhgfin93Kxvxu9nw5H
-	 qfVF8j/GIAt/1Sx9UGQWHHJ1/8AUqDxgRfMmvxUoV/hh6mV+xALtgFRJKW0mdmpdjq
-	 oC/vaQExav7xH4AItkRgx81Wm+/J+goaJzeIv+cW1uwhGH51tudeayMBPiqWvPGWk7
-	 HUCPNKkG56jozD+SP1EqtWvHVWLGdfRkaEpSNW7KB70+XPjnzv0OZH55eShLF9mG7W
-	 nXSjDMjZ2qEXw==
-Subject: Re: Regression: Commit "netfilter: nf_tables: disallow rule addition
- to bound chain via NFTA_RULE_CHAIN_ID" breaks ruleset loading in linux-stable
-To: carnil@debian.org
-References: <20230911213750.5B4B663206F5@dd20004.kasserver.com>
- <ZP+bUpxJiFcmTWhy@calendula>
- <20230912113959.8F8B26321005@dd20004.kasserver.com><ZQC4bcVVK99Q8WrO@eldamar.lan>
-Cc: pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev, sashal@kernel.org,
- 1051592@bugs.debian.org, arturo@debian.org
-From: "Timo Sigurdsson" <public_timo.s@silentcreek.de>
-User-Agent: ALL-INKL Webmail 2.11
-X-SenderIP: 89.246.185.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB3A18E1B
+	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 23:04:33 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5308430052fso1504676a12.1
+        for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 16:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1694819071; x=1695423871; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dxG2q7F6Mkp+vlHGfUkxcAXUqWVC7Xr/x4rCnTi+nw=;
+        b=lVy+Vsz6QROV8l3ocmXZz2wFw/ytuUcos8Pwh/H9b6xOWRW8DB5c3ec3Aqyi59Z6uA
+         MDgW8YDjOmqoJxoBQaDOgCf6GoZcdsChE7pkMPFzfogba56ZMRu5lBu0vGC9DCxsA6QQ
+         z/hxKKeJKhrW6RbPvAA6zY9jK/tukVCYHV/7SQG64BdcEMRpvSCDt2TllzHJ45FlfJJD
+         2jokLF5w9yr+nIBDgPiEfd22PisS7iA0d2x4V4SLdzLC5YNuBpCmlyxaJBJg+OzgueXx
+         UpCqw4eqyDjJYvrcIOHFMjOJaxZyRNk9Nm6vRrZt81F/OYGPbPa9ws8zzhVl6pQ204ds
+         qWJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694819071; x=1695423871;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/dxG2q7F6Mkp+vlHGfUkxcAXUqWVC7Xr/x4rCnTi+nw=;
+        b=wHzJCZR2E8FkZ/BEjKzALlkWBwfF+ap5YsUAl6zT9CAzyuu9oJ2AqX02mVUIhcheTX
+         eIIMtbm8MnL5WO6aDQkjvP/UViZ6ISs2BTAwxXxCXx3zPqXsT4dE4Oj82B/HpGVlcaKa
+         WYTsAfJjYW/UVmvO+CZs9yvd6hmrSRRY7pcUWGQR/9+Pxop1Kba//JTCxTLFqH+Z9BWl
+         ak1sk7SXeRAAGxFPSJGNWCgSY+dgp4XYjRBrYyI61ZBMNTjd0EiqfmAcihsOaIv9672h
+         NscbwsJEzAfN2br6CwEQUiIX4qipgliy/3S0TCOGMST5TBCWwf96RhHdq5+O5U2ssQnn
+         evuw==
+X-Gm-Message-State: AOJu0YyuTXnwVdvbFwcj6AE+FoaQc5hmndLzpV2glSeyoqKXKJamNwnr
+	6Ux1Lkxjr9CTQeuD6qqBj6MduJoRjFcaDeTLdfHCX8kMJ30=
+X-Google-Smtp-Source: AGHT+IFk/4QQIsJh5pUlO7CGZk+/3wXfyCvaMWmuJ3//r/dMlCJwaGmfCc9vG36qHgaiFk9OzPuixZAzv6zA93Qcl9c=
+X-Received: by 2002:a05:6402:344e:b0:525:6772:1595 with SMTP id
+ l14-20020a056402344e00b0052567721595mr2291463edc.6.1694819071151; Fri, 15 Sep
+ 2023 16:04:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <ZQC4bcVVK99Q8WrO@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Message-Id: <20230915204429.37CC96320BA2@dd20004.kasserver.com>
-Date: Fri, 15 Sep 2023 22:44:29 +0200 (CEST)
-X-Spamd-Bar: /
+References: <5a7f2a6e-46a4-a5c8-fe6a-c2581496b5cd@gmail.com> <c7e70f54-9696-4b39-aa17-576987ffce85@leemhuis.info>
+In-Reply-To: <c7e70f54-9696-4b39-aa17-576987ffce85@leemhuis.info>
+From: brett hassall <brett.hassall@gmail.com>
+Date: Sat, 16 Sep 2023 09:04:19 +1000
+Message-ID: <CANiJ1U80VNiLGKEmgYpGjUQ2poREN9uGnv2QXM_GtzjgBtUSWQ@mail.gmail.com>
+Subject: Re: Fwd: 5c8a79e8e12b ("wifi: rtw88: correct PS calculation for
+ SUPPORTS_DYNAMIC_PS", 2023-05-27) increases CPU usage usage for irq
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
+	Kalle Valo <kvalo@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Wireless <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi
 
-Salvatore Bonaccorso schrieb am 12.09.2023 21:13 (GMT +02:00):
+I'd suggest that there are actually 2 regressions
+(https://bugzilla.kernel.org/show_bug.cgi?id=217841 and this bug). Bug
+217841 masks this bug as it prevents the laptop reaching package C8
+and I'm assuming this bug shows when in C8. The patch for 21784 only
+affects devices connected to a VMD controller so I wouldn't expect it
+to affect the 8822CE.
 
-> Hi Timo,
-> 
-> On Tue, Sep 12, 2023 at 01:39:59PM +0200, Timo Sigurdsson wrote:
->> Hi Pablo,
->> 
->> Pablo Neira Ayuso schrieb am 12.09.2023 00:57 (GMT +02:00):
->> 
->> > Hi Timo,
->> > 
->> > On Mon, Sep 11, 2023 at 11:37:50PM +0200, Timo Sigurdsson wrote:
->> >> Hi,
->> >> 
->> >> recently, Debian updated their stable kernel from 6.1.38 to 6.1.52
->> >> which broke nftables ruleset loading on one of my machines with lots
->> >> of "Operation not supported" errors. I've reported this to the
->> >> Debian project (see link below) and Salvatore Bonaccorso and I
->> >> identified "netfilter: nf_tables: disallow rule addition to bound
->> >> chain via NFTA_RULE_CHAIN_ID" (0ebc1064e487) as the offending commit
->> >> that introduced the regression. Salvatore also found that this issue
->> >> affects the 5.10 stable tree as well (observed in 5.10.191), but he
->> >> cannot reproduce it on 6.4.13 and 6.5.2.
->> >> 
->> >> The issue only occurs with some rulesets. While I can't trigger it
->> >> with simple/minimal rulesets that I use on some machines, it does
->> >> occur with a more complex ruleset that has been in use for months
->> >> (if not years, for large parts of it). I'm attaching a somewhat
->> >> stripped down version of the ruleset from the machine I originally
->> >> observed this issue on. It's still not a small or simple ruleset,
->> >> but I'll try to reduce it further when I have more time.
->> >> 
->> >> The error messages shown when trying to load the ruleset don't seem
->> >> to be helpful. Just two simple examples: Just to give two simple
->> >> examples from the log when nftables fails to start:
->> >> /etc/nftables.conf:99:4-44: Error: Could not process rule: Operation not
->> >> supported
->> >>                         tcp option maxseg size 1-500 counter drop
->> >>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->> >> /etc/nftables.conf:308:4-27: Error: Could not process rule: Operation not
->> >> supported
->> >>                         tcp dport sip-tls accept
->> >>                         ^^^^^^^^^^^^^^^^^^^^^^^^
->> > 
->> > I can reproduce this issue with 5.10.191 and 6.1.52 and nftables v1.0.6,
->> > this is not reproducible with v1.0.7 and v1.0.8.
->> > 
->> >> Since the issue only affects some stable trees, Salvatore thought it
->> >> might be an incomplete backport that causes this.
->> >> 
->> >> If you need further information, please let me know.
->> > 
->> > Userspace nftables v1.0.6 generates incorrect bytecode that hits a new
->> > kernel check that rejects adding rules to bound chains. The incorrect
->> > bytecode adds the chain binding, attach it to the rule and it adds the
->> > rules to the chain binding. I have cherry-picked these three patches
->> > for nftables v1.0.6 userspace and your ruleset restores fine.
->> 
->> hmm, that doesn't explain why Salvatore didn't observe this with
->> more recent kernels.
->> 
->> Salvatore, did you use newer userspace components when you tested
->> your 6.4.13 and 6.5.2 builds?
-> 
-> It does explain now because understanding the issue better. While one
-> while experinting should only change each one constraint for the
-> 6.4.13 and 6.5.2 testing I indeed switched to a Debian unstable
-> system, which has newer userpace nftables and so not triggering the
-> issue. This was missleading for the report.
-> 
->> As for the regression and how it be dealt with: Personally, I don't
->> really care whether the regression is solved in the kernel or
->> userspace. If everybody agrees that this is the best or only viable
->> option and Debian decides to push a nftables update to fix this,
->> that works for me. But I do feel the burden to justify this should
->> be high. A kernel change that leaves users without a working packet
->> filter after upgrading their machines is serious, if you ask me. And
->> since it affects several stable/longterm trees, I would assume this
->> will hit other stable (non-rolling) distributions as well, since
->> they will also use older userspace components (unless this is
->> behavior specific to nftables 1.0.6 but not older versions). They
->> probably should get a heads up then.
-> 
-> So if it is generally believed on kernel side there should not happen
-> any further changes to work with older userland, I guess in Debian we
-> will need to patch nftables. I'm CC'ing Arturo Borrero Gonzalez
-> <arturo@debian.org>, maintainer for the package. The update should go
-> ideally in the next point releases from October (and maybe released
-> earlier as well trough the stable-updates mechanism).
+Options that I can see are:
+1. Park this bug until 217841 is resolved
+2. Try to test on a laptop with a Realtek 8822CE but not a VMD
+controller. I have access to 5 different laptop models but none meet
+those criteria.
 
-So, I built nftables 1.0.6-2+deb12u1 with the three cherry-picked patches from Pablo and can confirm that they resolve the issue for me on bookworm. I can now run linux 6.1.52-1 and load my original nftables ruleset again.
- 
-> FWIW: In Debian bullseye we have 0.9.8 based nftables, in bookworm
-> 1.0.6, so both will need those fixes.
-> 
-> As 0ebc1064e487 is to address CVE-2023-4147 other distros picking the
-> fix will likely encounter the problem at some point. It looks Red Hat
-> has taken it (some RHSA's were released), I assume Ubuntu will shortly
-> as well release USN's containing a fix.
 
-SUSE has also picked this patch for SLES/SLED. I hope maintainers follow the mailing lists cc'ed here or that someone gives them a heads up before this hits more production systems.
+Thanks for the reply
+Brett
 
-Thanks and regards,
-
-Timo
+On Mon, 11 Sept 2023 at 23:29, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 27.08.23 04:37, Bagas Sanjaya wrote:
+> >
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >
+> >> This commit improves power saving - it enables the kernel to
+> >> achieve package C8. To achieve package C8, 3 Ubuntu VMD commits
+> >> must be applied as well. [...]
+>
+> To me that sounds like there is no upstream problem, hence this
+> shouldn't be tracked as a regression. Please correct me if I'm wrong.
+>
+> > #regzbot introduced: 26a125f550a3bf
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217828 #regzbot title:
+> > correcting SUPPORTS_DYNAMIC_PS calculation for rtw88 increases CPU
+> > utilization #regzbot link:
+> > https://bugs.launchpad.net/ubuntu/+source/linux-hwe-6.2/+bug/2025040
+> >
+> > Thanks.
+> >
+> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217828
+>
+> #regzbot resolved: invalid: seems to only be a problem with a patched kernel
+> #regzbot ignore-activity
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+>
