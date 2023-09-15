@@ -1,13 +1,51 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B971D54D
-	for <regressions@lists.linux.dev>; Thu, 14 Sep 2023 18:08:40 +0000 (UTC)
-Received: from [2a02:8108:d00:dcc::d6ab]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qgqla-0002SE-QL; Thu, 14 Sep 2023 20:08:38 +0200
-Message-ID: <ff2abfbe-a46b-414b-a757-8185495838b7@leemhuis.info>
-Date: Thu, 14 Sep 2023 20:08:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674AC211A
+	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 03:28:25 +0000 (UTC)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+	id 730411D57FB; Fri, 15 Sep 2023 11:22:32 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694748152;
+	bh=yXQyOokVKuRuBBGZrk5jYZQNuKOW+gvtulUP9frgc30=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ojcJ/zDvSuEFSPHoXWXUQ7y/7bQZE726le0Yd31n2vVKJo70uYrZCGX7wX/o/3emo
+	 pub6S0RqsSj3f8uOeWqrbJ8ZWolQA2YwvLkZpTCiz35l0raQocq1q49GujkN2W7wA8
+	 zuqkaZrmQBFwElUu4DEyOEGEgTnfcxWOQ2yRdfWdfpzYMvdAveg3rog9wF4ZD00BqZ
+	 E7aneXFHyr8bB71VAzG/uvSfVW5C2QKgh0EwKvgGb7q7h/rqRIsi32s5FDgk7fPRLE
+	 BnkT8C/07b35hUDUxPk5eqtcyshK4AEA5MqZTJlXClX7SqppS/knnUmSmFAnZdN2vG
+	 Kw5W/bB6sxNnt+YnBJyRAGO4PvERvHlPclnWwBQ7QoTqZCYJ2SQc4TvAwU5zZuRv40
+	 BO8dXnHNOqEkQzWCffJT3TCavIH1/iC26R7x3kJzrKuVolf4f2WVTz5zrwyQltNjPI
+	 RENP3T20mESnOEsk9BT6WgfguATASVzfc4QjXSbDTimWR+D7EdJqH5v548zg/Tcne0
+	 YFX64YqDOPWYaOajsaxQSumhiWDPCyuBNFAiUiWNFAeeyO07qp5gyEWQdVPQivgL61
+	 ptwfYt1C0pSvH2KcanGFFT0DUUfN3nN8nkW5NBDk1jNEthCcAFpP8ESg5lA22sXEJ8
+	 F/lbGvL8K/6zbsvyW/efHWBg=
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	sphereful.davidgow.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU autolearn=unavailable autolearn_force=no
+	version=3.4.4
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+	by sphereful.davidgow.net (Postfix) with ESMTPSA id 573341D57F7;
+	Fri, 15 Sep 2023 11:22:19 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694748139;
+	bh=yXQyOokVKuRuBBGZrk5jYZQNuKOW+gvtulUP9frgc30=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FT+c/0nqvmmJ8ErjgrsLbfav1tec05UdP3xK4Pvl4IDdhNFHWnqdOMMiKVwE2a/6q
+	 0gzNpznDu0czUXO9709+kdU0dJlEPQFGhFt3coVTkhsmlHnOl1SBNu2RGVnMYt0gyg
+	 NouksuUX6OEKW1uRbFrpUJMdTyM94q84t3m6BTH2zpkoBt1qkuXkQs7ELsyxoFVG9q
+	 EOlDdN6BmyqhcAXxNeHTULTq9ednE/5dH6M2X5m07JRYEflxGfB4CEz5/KSjdWpdh6
+	 JOFJZ9ptoJ5ugjymetQ/5b7WFkOp7ULrwNAfVya4DO4g4M++VEpKeXf9FQoDsGUD1+
+	 tyGBgmk3qlaJjiv3kS+maOTnE9s/Ok5hd4SGYGQ06dwSPX3u4/+Vkl36zOQoAxHHE/
+	 Wx44cg97pDuj3VECDJFUqntpgwKKwlSXQ17fVDRWGXm39mG2KGA/+eKKgo3nCi7soz
+	 0lBVQ51ROAz8zIOZRLiVoLBAqWFOcw7RX8y72LyjjZSQtzuiR716/ybba7/S1jbl7k
+	 hpxsYNjHSNWoenDDnsArDnHnTFDaySmaVAfu+6ZZR0Js6VoR8UyG1vd6Tv3GW1udIi
+	 4qwg2zV5DFRiM23LeJjRu4I9h1evATV/4/yHeDmf9qqAAw4BKSenvA4Znagx7WE/DW
+	 awbxQbN5I0CRTF47i5YiUT0c=
+Message-ID: <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+Date: Fri, 15 Sep 2023 11:22:14 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,79 +53,131 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: hci_sync: Fix handling of
- HCI_QUIRK_STRICT_DUPLICATE_FILTER
-Content-Language: en-US, de-DE
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- patchwork-bot+bluetooth@kernel.org, linux-bluetooth@vger.kernel.org,
- netdev <netdev@vger.kernel.org>, Stefan Agner <stefan@agner.ch>
-References: <20230829205936.766544-1-luiz.dentz@gmail.com>
- <169343402479.21564.11565149320234658166.git-patchwork-notify@kernel.org>
- <de698d06-9784-43ed-9437-61d6edf9672b@leemhuis.info>
- <CABBYNZK2PPkLra8Au-fdN2nG2YLkfFRmPtEPQL0suLzBv=HHcA@mail.gmail.com>
- <574ca8dd-ee97-4c8b-a154-51faf83cabdf@leemhuis.info>
- <CABBYNZJ=5VH2+my7Gw1fMCaGgdOQfbWNtBGOc27_XQqCP7jD-A@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CABBYNZJ=5VH2+my7Gw1fMCaGgdOQfbWNtBGOc27_XQqCP7jD-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To: Niklas Cassel <Niklas.Cassel@wdc.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ patenteng <dimitar@daskalov.co.uk>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux IDE and libata <linux-ide@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+From: David Gow <david@davidgow.net>
+In-Reply-To: <ZQHRQHAPQdG+Nu1o@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694714921;07dc0098;
-X-HE-SMSGID: 1qgqla-0002SE-QL
 
-On 14.09.23 19:51, Luiz Augusto von Dentz wrote:
-> On Wed, Sep 13, 2023 at 10:13 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 12.09.23 21:09, Luiz Augusto von Dentz wrote:
->>> On Mon, Sep 11, 2023 at 6:40 AM Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>> On 31.08.23 00:20, patchwork-bot+bluetooth@kernel.org wrote:
->>>>> This patch was applied to bluetooth/bluetooth-next.git (master)
->>>>> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
->>>>> On Tue, 29 Aug 2023 13:59:36 -0700 you wrote:
->>>>>> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
->>>>>>
->>>>>> When HCI_QUIRK_STRICT_DUPLICATE_FILTER is set LE scanning requires
->>>>>> periodic restarts of the scanning procedure as the controller would
->>>>>> consider device previously found as duplicated despite of RSSI changes,
->>>>>> but in order to set the scan timeout properly set le_scan_restart needs
->>>>>> to be synchronous so it shall not use hci_cmd_sync_queue which defers
->>>>>> the command processing to cmd_sync_work.
->>>>>> [...]
->>>>>
->>>>> Here is the summary with links:
->>>>>   - Bluetooth: hci_sync: Fix handling of HCI_QUIRK_STRICT_DUPLICATE_FILTER
->>>>>     https://git.kernel.org/bluetooth/bluetooth-next/c/52bf4fd43f75
->>>>
->>>> That is (maybe among others?) a fix for a regression from 6.1, so why
->>>> was this merged into a "for-next" branch instead of a branch that
->>>> targets the current cycle?
-> [...]
->> That answer doesn't answer the question afaics, as both 6.1 and 6.4 were
->> released in the past year -- the fix thus should not wait till the next
->> merge window, unless it's high risk or something. See this statement
->> from Linus:
->> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-> Thanks for the feedback, I will try to push fixes to net more often.
+Le 2023/09/13 à 23:12, Niklas Cassel a écrit :
+> On Wed, Sep 13, 2023 at 06:25:31PM +0700, Bagas Sanjaya wrote:
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
+>>>
+>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>
+>>> So I've tracked the offending device:
+>>>
+>>> ll /sys/class/ata_port/ata16
+>>> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
+>>>
+>>> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
+>>> DRIVER=ahci
+>>> PCI_CLASS=10601
+>>> PCI_ID=1B4B:9130
+>>> PCI_SUBSYS_ID=1043:8438
+>>> PCI_SLOT_NAME=0000:0a:00.0
+>>> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
+>>>
+>>> lspci | grep 0a:00.0
+>>> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
+>>>
+>>> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
+>>
+>> See Bugzilla for the full thread.
+>>
+>> patenteng: I have asked you to bisect this regression. Any conclusion?
+>>
+>> Anyway, I'm adding this regression to regzbot:
+>>
+>> #regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
+> 
+> Hello Bagas, patenteng,
+> 
+> 
+> FYI, the prints:
+> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+> [ 9683.270399] ata16.00: configured for UDMA/66
+> 
+> Just show that ATA error handler has been invoked.
+> There was no reset performed.
+> 
+> If there was a reset, you would have seen something like:
+> [    1.441326] ata8: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+> [    1.541250] ata8.00: configured for UDMA/133
+> [    1.541411] ata8: hard resetting link
+> 
+> 
+> Could you please try this patch and see if it improves things for you:
+> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+> 
 
-Great, many thx!
+FWIW, I'm seeing a very similar issue both in 6.5.2 and in git master 
+[aed8aee11130 ("Merge tag 'pmdomain-v6.6-rc1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm") with that 
+patch applied.
 
->>> but I could probably have it marked for stable just
->>> to make sure it would get backported to affected versions.
->> That would be great, too!
-> Well now that it has already been merged via -next tree shall we still
-> attempt to mark it as stable? Perhaps we need to check if it was not
-> backported already based on the Fixes tag.
 
-Changes only get backported once they hit mainline, which hasn't
-happened yet. And to get them into the net branch (and from there to
-mainline) a new commit is needed anyway, so you might as well add the
-stable tag to it. Side note: And don't worry that identical commit is
-already in -next, git handles that well afaik (but if you rebase
-bluetooth-next for other reasons anyway you might as well remove it).
+The log is similar (the last two lines repeat several times a second):
+[    0.369632] ata14: SATA max UDMA/133 abar m2048@0xf7c10000 port 
+0xf7c10480 irq 33
+[    0.683693] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.031662] ata14.00: ATAPI: MARVELL VIRTUALL, 1.09, max UDMA/66
+[    1.031852] ata14.00: configured for UDMA/66
+[    1.414145] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.414505] ata14.00: configured for UDMA/66
+[    1.744094] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    1.744368] ata14.00: configured for UDMA/66
+[    2.073916] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    2.074276] ata14.00: configured for UDMA/66
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+
+lspci shows:
+09:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0 
+x2 4-port SATA 6 Gb/s RAID Controller (rev 10) (prog-if 01 [AHCI 1.0])
+         Subsystem: Gigabyte Technology Co., Ltd Device b000
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx+
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0, Cache Line Size: 64 bytes
+         Interrupt: pin A routed to IRQ 33
+         Region 0: I/O ports at b050 [size=8]
+         Region 1: I/O ports at b040 [size=4]
+         Region 2: I/O ports at b030 [size=8]
+         Region 3: I/O ports at b020 [size=4]
+         Region 4: I/O ports at b000 [size=32]
+         Region 5: Memory at f7c10000 (32-bit, non-prefetchable) [size=2K]
+         Expansion ROM at f7c00000 [disabled] [size=64K]
+         Capabilities: <access denied>
+         Kernel driver in use: ahci
+
+The controller in question lives on a Gigabyte Z87X-UD5H-CF motherboard. 
+I'm using the controller for several drives, and it's working, it's just 
+spammy. (At worst, there's some performance hitching, but that might 
+just be journald rotating logs as they fill up with the message).
+
+I haven't had a chance to bisect yet (this is a slightly awkward machine 
+for me to install test kernels on), but can also confirm it worked with 
+6.4.12.
+
+Hopefully that's useful. I'll get back to you if I manage to bisect it.
+
+Cheers,
+-- David
