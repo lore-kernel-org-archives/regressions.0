@@ -1,211 +1,133 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2109.outbound.protection.outlook.com [40.107.6.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFB7125AE
-	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 16:28:25 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CasTkR2yvqvf9NlspiKnpl7o81qpCiqLeUnnmd9ZVpuefWv+AoTnRBf6RvsxR0By6TWh8bBrpsWYHVBXk7FJbsE7DtkcvnvhRuf71rBvuou7a0YIsjIb24inE/466m0CykM6oMbv2GZl7rWvaFRtQiAopG3X2rw4sPz1gls5Qadbm9oBCbPfd8a00/bXcFRvWqprt4tl6ZgVaNILO3GiVlzjMrNzUgnStZQodqvl1YLwgh6s2rVToEyeFdo1mZ5Rtv6ZIlbraXiYq1kAkWy2PWWipxX/LtLB8CRe3pDzzf2MfEapaaSTbVZ5fgMVx69WPHRMFOr7kDQXrl5kx5NU6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uIp9c0r4oDhvktFlmE+QUXKFtuojSvUvh6DDju83kTE=;
- b=eoJVhQyZbkZbGugohmBPyOLm7o7SOAGib9HY3he/KaFUF0CfKNWD1+gNQ2+NqU0p1I3vUE0Vhn0usNhTTEpSDB54/uYNJJA4ChlQngoyLGbCfMQYkrpvNkJVjaW0aSZoWtHYlljwJCN7aiSywR5CwH6eUaeTMYUHhRw4Tl5uFPMvWvR5I7gfHoQVPHRZeikktkajYUZAOqa6yEtGJGdPQQIR/ikjdT0Z84kAl7ipBHBw7L7Xr/524GrRUbO9u0bg+3Mv2KBZtZMqGCs/cUyLYD8ZKjPy1HqQm54EhZr2H1xdSgBPWmu2gxm1DyuOsF26pp9MsxtxzZtWww0A3RQCMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uIp9c0r4oDhvktFlmE+QUXKFtuojSvUvh6DDju83kTE=;
- b=XKXd1sMVzKMZwM3nmmN3PwW9sziFNvvcLnpPSlddRz6yiBdG+bPUMypyMgQwWm6Lcaj0Zy7tYFcqv2u9KiOEJOZIcmFmmTFHd6B0FjTMil0RMdBDlqc7kwtzIHQs8zuirLhIX3INSFXvVyCZUtEN6hosu+voUNORaTut39o0h5vkkcQCg9eAlDe/5K8XflmUS0VPygC2Pr6YEC8CmqVI4FjabwfFuNBwikvw8D0R0rUgjQyLAuEPwGZF7cstRmfamdf3ODmDwlNUo8tnPVt9lb4OZJf9ad5MdY+he7VRVOoat+u0AGgr+vLbEAzBureOrssY6u5M6Un7Ui1RLhplJA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=virtuozzo.com;
-Received: from AM0PR08MB3298.eurprd08.prod.outlook.com (2603:10a6:208:5e::31)
- by PR3PR08MB5867.eurprd08.prod.outlook.com (2603:10a6:102:87::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Fri, 15 Sep
- 2023 16:28:22 +0000
-Received: from AM0PR08MB3298.eurprd08.prod.outlook.com
- ([fe80::7ca3:ff75:8b46:deb9]) by AM0PR08MB3298.eurprd08.prod.outlook.com
- ([fe80::7ca3:ff75:8b46:deb9%6]) with mapi id 15.20.6792.021; Fri, 15 Sep 2023
- 16:28:22 +0000
-Message-ID: <30f16b4f-a2fa-fc42-fe6e-abad01c3f794@virtuozzo.com>
-Date: Fri, 15 Sep 2023 19:27:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Content-Language: ru-RU, en-US
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Linux PARISC <linux-parisc@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-References: <1694366957@msgid.manchmal.in-ulm.de> <ZQEBkjSgdXSOMq3t@debian.me>
-From: Michael Labiuk <michael.labiuk@virtuozzo.com>
-Subject: Re: Possible 6.5 regression: Huge values for "commited memory"
-In-Reply-To: <ZQEBkjSgdXSOMq3t@debian.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1P191CA0012.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:800:1ba::15) To AM0PR08MB3298.eurprd08.prod.outlook.com
- (2603:10a6:208:5e::31)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B275F125A1
+	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 17:30:59 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0EDF81FD6E;
+	Fri, 15 Sep 2023 17:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1694799052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RQQTFTfoJhINlFPQeTi2ZFYQCbm4RkSVI4Z+IpD1pQo=;
+	b=pD27TyyWHhMHjHR5RsQaZNoOo8hvAeDA861UxJQlRwJuz48ebkeXhmMqRwJMspQcaxLJM4
+	KEK3ASAzrhrVtXF7k96S8RUOCGENJqJ01Vepi5r509JhwmL7T4LtVmZOKLbvFZx8RMCz6f
+	024fFuiW+QRt++f4bigyIRF4OruC/+c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1694799052;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RQQTFTfoJhINlFPQeTi2ZFYQCbm4RkSVI4Z+IpD1pQo=;
+	b=fJnjfKMAWjCWFcPy94Hgd+pALKmnIPza34UQTRC9y7vmSJyqXNqEFys9rOCq2kSY1fQ6Vc
+	rEtmlGDciXQT7nDw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DBE831358A;
+	Fri, 15 Sep 2023 17:30:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id yVXINMuUBGUmUQAAMHmgww
+	(envelope-from <tiwai@suse.de>); Fri, 15 Sep 2023 17:30:51 +0000
+Date: Fri, 15 Sep 2023 19:30:51 +0200
+Message-ID: <874jjvuywk.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Hills <mark@xwax.org>
+Cc: Ash Holland <ash@sorrel.sh>,
+	alsa-devel@alsa-project.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] rust midir MIDI library causes kernel oops
+In-Reply-To: <ef9118c3-a2eb-d0ff-1efa-cc5fb6416bde@xwax.org>
+References: <8a555319-9f31-4ea2-878f-adc338bc40d4@sorrel.sh>
+	<87msy1ip6l.wl-tiwai@suse.de>
+	<ef9118c3-a2eb-d0ff-1efa-cc5fb6416bde@xwax.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3298:EE_|PR3PR08MB5867:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6d1a7150-e7d3-4290-bdfe-08dbb608c73d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+rXAVkoUg/w77H1KsUpZd9s+c+FHSx1O4bSI4PD3/lbfmVxXx0zIMAf5HOeXGmvlf0l+hoqMIlDt5pwRe9SqVvvGJNT0hJDd/SJJEIXLVUP9UHLXiDLBUcn83Lix9GEyDc9zWqTmwjPhKVgBMBzE27ov+lPlCCg+wC3bynAKisTOg7jlLNhvUZ7SZfpcJBcSJeG9oBQMDAaNZqyEHjUwIxd1106YeVxepdOYuyWH/sdYniJ5iN6dJo1V+s1aclVr5A3w3FhgTh5zbaEKktL75osQOizuTadzfTBJPf03JQ5dPzXLZpsgcN74I5MXsldfmQ13lG3K/9FdCyYVnbj70Os4+EO6uHzP2E/PRhFX5wUeiooZBUfT6HX/CCDXeuW/aKB/VXelM4Axvrn6GZr+18JJO4r0ZC6RJ+ukrqJUOSWazKb9sNTqcjlgT5Tha7/BwUOptvQBtIj29jLUydYqyx+tRIdKqNupVwgSoIQy+b+hRPCS1JhsErhJ3ZuUvf43Xu71xCrXl/Ml+V1zo3B7XajsDQqUTXHdoJiMvqmJktM0AZAlp09NYTL8AOz9ioAO5iKOg0fPGGPUguvHsYXxrPQM1BfTi7x5GLT7Mh5MA4TqLILBYeCsQK/vtzzzBfBI3F8kp4SIMyKcuFrwJVucMKec0mqYrYhRcJ79J5Ogchs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3298.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(39850400004)(376002)(346002)(366004)(186009)(1800799009)(451199024)(41300700001)(316002)(110136005)(86362001)(66946007)(66556008)(66899024)(66476007)(54906003)(478600001)(38100700002)(36756003)(2906002)(31696002)(44832011)(5660300002)(4326008)(8936002)(8676002)(26005)(2616005)(31686004)(6486002)(83380400001)(6506007)(6512007)(6666004)(14583001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFBxSENHRHRkR0Y2TWQzQnRHRTBnMnRtRzJnbCtJYllQSkdEZHJRZGc4NVY3?=
- =?utf-8?B?L0YzTkRRRlRSczBNak1SWTY2SDM2NkN3TUMvQU1PazZKa0sybkcyTkp6SkJB?=
- =?utf-8?B?c2pReWhDSUhBN1J4clovSkRMdzlEL1IvZmVwY1VQZlllcWJxdmx4MVQwUmY5?=
- =?utf-8?B?eGlOQXNQNjVhTFhINllSelVXcFpWUGJCT2s4aVNVN2lwTXpjNFlhMWRZNkt0?=
- =?utf-8?B?cVVyWXhIWFEySU9BdUFoUnBXZ1BlY2gwWFhZMHZBeWs5R3hZMWp2NmlxRE9o?=
- =?utf-8?B?bUJKdmk1S3Z6bzc3R1ZYaWZXYldQeElHUnpITE9GSk9WUXFSdEMwbXJoSWRR?=
- =?utf-8?B?YTU1ZnZCODVqSStHcHRsWkFOaUpZYmhTUURvS3hRcXBJV21VcGxSaXNpMDdt?=
- =?utf-8?B?cko2WFVxWEN1ZWlnNXdJUkp1TU95ek85eFhCbk15ekRLNm16SWxZQ1lDOFZC?=
- =?utf-8?B?T0g5dHNKa1N1QmluZHFJVFJqNnNoUFVEQ1pFdCsxSUdYM21rWkRBdVM4Rngr?=
- =?utf-8?B?eFN4U0Y1K1FVSDJmTHB1MG1zQitzcjBzL3dMdlZPM3JiKzVrSDdFekdncUhN?=
- =?utf-8?B?b3BxU1lvR2s4WFFNM2dRNWNXelZMQW16VndvQTVIa2kvampReVliV2JXTzd6?=
- =?utf-8?B?cEM0eFlOajk5UWxkclp1MGtHQ3dRSjAxUVNxQlN1NXdIUnM4M3dya1YzWS9r?=
- =?utf-8?B?L3ZwczJsSlV0WGFPZnFPK2hmU0hFRVV3aWkrdEVxSStrRlJNdWRCUk1zY1hm?=
- =?utf-8?B?MER0WFhDME5WV2JOQ1ZGbGdTRFJCdjk4ZmNreW9sU1BDclpwUGhRSzVXaWJz?=
- =?utf-8?B?eDJxaFNuNzZWbTFIYVliRG5tbWJwaTRvOFZuWWdtdDBFSkVmcnZZcVFqZ0g3?=
- =?utf-8?B?MzFFdXBCc3R5ZXl5YTdISHVQRWUzaTF4OWF0anJiRExjWmQyMmh5aXQ5L0xK?=
- =?utf-8?B?TGtEcVdFbHRrS0llTER0VEhDUEFtMk5hK3pyTDBBQjJ1TWYvVXlZbkpla1hi?=
- =?utf-8?B?SFd6QWs1dVh0eUo4RHBJVTd0OXFtT1FPemNHaFkyTG02Ujk0azB1MExnd25U?=
- =?utf-8?B?SkdlUmNTa3BqOEdZaHhxR09ablI0MlQ2em03RjVRVnkwUllaTWJuNFp6OU9X?=
- =?utf-8?B?bWlVa2RxNkl6TFRyd1M3a0VSRjZGUU9LMjQzZ1h0ZmROdHhpaUxWUHVBdlQz?=
- =?utf-8?B?aERpWnZpbnQ4MWtxVGliM2x2SWU4QmZvMXpITXlxOEhLNE1KZGZKQ2hoc2k1?=
- =?utf-8?B?UzljY0pHK0RwSloybjdPWWZIaVAyNC9Hd1ByTTdQMHVFeXh2YzNoYWlwZndy?=
- =?utf-8?B?NlFzRTlaR2g0SExTejFpZHhLY2ZrNWFpWHo1M0cydmliakY3Q3VETXVheGt2?=
- =?utf-8?B?Nk9HaCtQb3VmcDVVbDFCcnpTYVZOemhGYURyUWswaTV6T09FTFNQM2E5elM1?=
- =?utf-8?B?WWdrbGh6NWRkaC9EVXVWcytRSHdKSlNnRFlRYmZpQk90OURjMVBFbFB4dFJs?=
- =?utf-8?B?cGx1bXpLSUYwSCtoYzEvMTBYQ0hYdjJicmJhbGdZSnhRUE9IbW1zMWttN1Bj?=
- =?utf-8?B?YUd0OEZRam8yTGtvZFAxZmwyWFpCMnpKUVdkQiswMDhseER1VThNT3daN3Bl?=
- =?utf-8?B?YnF3QTBkRTZKVDNhUGRrYXhvWUlvYUVJbG91QmhnYUlSUzQ3M3luSWVMZkRS?=
- =?utf-8?B?MFBpWXVJbkFBdXpwcHl1U2duUjVmTHZHcmVzNmFPOHIzbERmdGhzNWc3OTdO?=
- =?utf-8?B?WFRPWWVlTk9sM2o5anpEcVFrNUE1bDNCMzZHUXd3MlNST2txME9RNllacnJ0?=
- =?utf-8?B?U3hncmdHUHl1OFlmKytJL3lPbUgyVUk2ZldtQWREaWMyd3pWcWllbTBFN2R4?=
- =?utf-8?B?ZGVVNjFldDdWZGVaa2NDUm5kTGRCT3U1VWVkYldJaWc2dzZTN0ZKeElHaVhs?=
- =?utf-8?B?MnFqNmJCRHdTa2thcWxMblo1TGRYUmlkRGc1L0dCYlhOT2FabVVUR1hLZ25R?=
- =?utf-8?B?YUgrU1lzN0ZEVzBuS3pBeW8zRUJDN0NjbnorZlZqYVRpelpjR3d0d1NqZXNS?=
- =?utf-8?B?UmpmVm45YllNcDZmakpINm5rRXZLL1dNaHl2Yld4SkdPVHl4VG50UllyZ0Ex?=
- =?utf-8?B?dlJ3NnVLQVRDVVdxb3d0U1pKQmo2d2VoVS9ZRVYyNkZ6eEtPQ2QwUHlCZnZB?=
- =?utf-8?B?SGc9PQ==?=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d1a7150-e7d3-4290-bdfe-08dbb608c73d
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR08MB3298.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 16:28:22.2986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wz+zYXKMW0fSrSFF4IE5jxn1tPUVJWdrRGRnCra5Ih1KWUllkhLMV2WicDcwjkz4TtRgq8T1WYK15+PnhQjSbay8O9L2lcnn51NHRJrM4wU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR08MB5867
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-I am also reproducing this issue.
+On Fri, 15 Sep 2023 18:04:35 +0200,
+Mark Hills wrote:
+> 
+> On Mon, 4 Sep 2023, Takashi Iwai wrote:
+> 
+> > On Mon, 04 Sep 2023 20:10:45 +0200,
+> > Ash Holland wrote:
+> 
+> > > I upgraded to Linux 6.5 and found that my MIDI-input application no longer
+> > > works, and causes an oops when I launch it.
+> [...]
+> > > I bisected this to:
+> > > 
+> > > commit f80e6d60d677be1d4dbbcdbf97379b8fbcf97ff0
+> > > Author: Takashi Iwai <tiwai@suse.de>
+> > > Date:   2023-05-23 09:53:38 +0200
+> > > 
+> > >     ALSA: seq: Clear padded bytes at expanding events
+> > > 
+> > >     There can be a small memory hole that may not be cleared at expanding
+> > >     an event with the variable length type.  Make sure to clear it.
+> > > 
+> > >     Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+> > >     Link: https://lore.kernel.org/r/20230523075358.9672-18-tiwai@suse.de
+> > >     Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > 
+> > > #regzbot introduced: f80e6d60d677be1d4dbbcdbf97379b8fbcf97ff0
+> > > 
+> > > I guess the problematic part is the `memset(buf + len, 0, newlen - len)`, which
+> > > tries to memset a buffer that can be allocated in userspace.
+> > 
+> > Yes, that was a bad change.  Could you try the fix below?
+> 
+> I think this problem is recurring -- page_fault_oops triggered via MIDI. 
+> But with the new fix.
+> 
+> I upgraded from 6.1.0 to 6.5.3 and Reaper now crashes or hangs on startup 
+> with the trace below in dmesg.
+> 
+> The newer kernel already includes a fix very similar to below, so I think 
+> an issue remains.
+> 
+> I did not dig deeper than capturing information and finding this related 
+> thread.
+(snip)
+> [   72.601440] BUG: kernel NULL pointer dereference, address: 0000000000000020
+(snip)
+> [   72.601455] RIP: 0010:snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
+(snip)
+> [   72.601477] Call Trace:
+> [   72.601478]  <TASK>
+> [   72.601479]  ? __die+0x1b/0x60
+> [   72.601482]  ? page_fault_oops+0x154/0x420
+> [   72.601485]  ? mas_update_gap.part.0+0xac/0x1f0
+> [   72.601488]  ? sched_clock_cpu+0xb/0x190
+> [   72.601491]  ? __smp_call_single_queue+0x2f/0x50
+> [   72.601493]  ? exc_page_fault+0x37a/0x560
+> [   72.601495]  ? seq_open+0x4b/0x70
+> [   72.601497]  ? asm_exc_page_fault+0x22/0x30
+> [   72.601501]  ? snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
+> [   72.601505]  snd_info_seq_show+0x21/0x40 [snd]
+> [   72.601511]  seq_read_iter+0x105/0x4a0
+> [   72.601514]  seq_read+0x9e/0xd0
+> [   72.601516]  proc_reg_read+0x50/0xa0
+> [   72.601518]  vfs_read+0xa4/0x300
+> [   72.601521]  ? __do_sys_newfstatat+0x35/0x60
+> [   72.601524]  ksys_read+0x5a/0xe0
+> [   72.601526]  do_syscall_64+0x38/0x90
+> [   72.601528]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
 
-Memory overcommit is disabled in my setup. Committed_AS grows to 
-mem+swap after 1-2 hours of compilation load and system becomes 
-nonoperational.
-
-I've bisected this issue:
-
-$ git bisect log
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
-git bisect bad 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-# status: waiting for good commit(s), bad commit known
-# good: [f60d5fd5e950c89a38578ae6f25877de511bb031] Linux 6.4.15
-git bisect good f60d5fd5e950c89a38578ae6f25877de511bb031
-# good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
-git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
-# good: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag 'mips_6.5' 
-of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
-git bisect good b775d6c5859affe00527cbe74263de05cfe6b9f9
-# bad: [56cbceab928d7ac3702de172ff8dcc1da2a6aaeb] Merge tag 
-'usb-6.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-git bisect bad 56cbceab928d7ac3702de172ff8dcc1da2a6aaeb
-# good: [b30d7a77c53ec04a6d94683d7680ec406b7f3ac8] Merge tag 
-'perf-tools-for-v6.5-1-2023-06-28' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next
-git bisect good b30d7a77c53ec04a6d94683d7680ec406b7f3ac8
-# bad: [dfab92f27c600fea3cadc6e2cb39f092024e1fef] Merge tag 
-'nfs-for-6.5-1' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
-git bisect bad dfab92f27c600fea3cadc6e2cb39f092024e1fef
-# good: [28968f384be3c064d66954aac4c534a5e76bf973] Merge tag 
-'pinctrl-v6.5-1' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
-git bisect good 28968f384be3c064d66954aac4c534a5e76bf973
-# good: [5d95ff84e62be914b4a4dabfa814e4096b05b1b0] Merge tag 'v6.5-p1' 
-of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
-git bisect good 5d95ff84e62be914b4a4dabfa814e4096b05b1b0
-# bad: [d25f002575146d67b5ebea541e6db3696c957c25] Merge tag 
-'cxl-for-6.5' of git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl
-git bisect bad d25f002575146d67b5ebea541e6db3696c957c25
-# bad: [0a1c979c6b7dfe5b6c105d0f0f9f068b5eb07e25] Merge tag 
-'libnvdimm-for-6.5' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-git bisect bad 0a1c979c6b7dfe5b6c105d0f0f9f068b5eb07e25
-# good: [a507db1d8fdc39802415e4d2ef6d1aecd67927fa] Merge tag 
-'6.5-rc-smb3-client-fixes-part1' of git://git.samba.org/sfrench/cifs-2.6
-git bisect good a507db1d8fdc39802415e4d2ef6d1aecd67927fa
-# good: [46e66dab8565f742374e9cc4ff7d35f344d774e2] dax/kmem: Pass valid 
-argument to memory_group_register_static
-git bisect good 46e66dab8565f742374e9cc4ff7d35f344d774e2
-# bad: [170ab6c51a42a8a1c1a7ce09367b578db6f2f383] Merge tag 
-'flex-array-transformations-6.5-rc1' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux
-git bisect bad 170ab6c51a42a8a1c1a7ce09367b578db6f2f383
-# bad: [408579cd627a15bd703fe3eeb8485fd02726e9d3] mm: Update 
-do_vmi_align_munmap() return semantics
-git bisect bad 408579cd627a15bd703fe3eeb8485fd02726e9d3
-# good: [e4bd84c069f212c01258e405f86e91f327888e41] mm: Always downgrade 
-mmap_lock if requested
-git bisect good e4bd84c069f212c01258e405f86e91f327888e41
-# first bad commit: [408579cd627a15bd703fe3eeb8485fd02726e9d3] mm: 
-Update do_vmi_align_munmap() return semantics
+It must be a completely different bug.  It comes from the proc fs
+read, not the read over sequencer device itself.
 
 
-commit 408579cd627a15bd703fe3eeb8485fd02726e9d3
-Author: Liam R. Howlett
-Date:   Thu Jun 29 22:28:16 2023 -0400
-
-     mm: Update do_vmi_align_munmap() return semantics
-
-     Since do_vmi_align_munmap() will always honor the downgrade request on
-     the success, the callers no longer have to deal with confusing return
-     codes.  Since all callers that request downgrade actually want the lock
-     to be dropped, change the downgrade to an unlock request.
-
-     Note that the lock still needs to be held in read mode during the page
-     table clean up to avoid races with a map request.
-
-     Update do_vmi_align_munmap() to return 0 for success.  Clean up the
-     callers and comments to always expect the unlock to be honored on the
-     success path.  The error path will always leave the lock untouched.
-
-     As part of the cleanup, the wrapper function do_vmi_munmap() and 
-callers
-     to the wrapper are also updated.
-
-Looks like memory statistics depends on removed locks.
-
-Thanks.
+Takashi
