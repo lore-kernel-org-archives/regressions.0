@@ -1,242 +1,273 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7B06AD7;
-	Fri, 15 Sep 2023 09:33:53 +0000 (UTC)
-Received: from [IPV6:2405:201:0:21ea:7672:a60c:c80:abca] (unknown [IPv6:2405:201:0:21ea:7672:a60c:c80:abca])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id B603C66072F9;
-	Fri, 15 Sep 2023 10:33:49 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1694770432;
-	bh=b4vRNHUDXfwABShZ8uXFXtw1t6P/fZTl2xv1VxRp3Sc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A09101C6
+	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 12:27:07 +0000 (UTC)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+	id 1EFD41D581A; Fri, 15 Sep 2023 20:27:05 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694780825;
+	bh=hnw4+F5CXXiG5poJbVxyNM5eJG1cjLqBF2kaMkJl0BE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VLY45sPufM1XJF1mRdyJNHT2GsTPm+hVlLW/mtlyDefoEdznYinvNaKx9CnP+/8t7
-	 3uqYy5kIC/ZSdnqPNt33UYjW2SzxtkJVOgTEmrdJpZdt2NdHcehD6LToobFX3XAalt
-	 Za7Jr9n2RLwEzEfuitJetbstmLbgesHGHwgsIeUIeM/czYKjlFhJA1R9Jc/dWAj8Dn
-	 dgkxy5Cp0TIspu9L5a4LEQrE1RLDu2c3hl06Mk1jSxmGMsDv675GYyGTPApj+9dvev
-	 k07gnFUT1WMOBzFdg8Zn1SLgiAqMVzKE9Cx08lKfBALzHXulYznxC4k19vojt70bFU
-	 kQva9LYlm69ew==
-Message-ID: <b31cae57-89ab-eb8b-1085-1d7476735d58@collabora.com>
-Date: Fri, 15 Sep 2023 15:03:44 +0530
+	b=FziRuIFXuI60weU+lGQiiGRyfZoW6luMtGmaU1LEtRoivNg2JYKuntI3XctB+WE5R
+	 MT9ZYpofySdVFNQ22acaKE5gUxm/vUe0/Bfl0zBUA5fyJhP7t5g6crg9cRuhxMfMrD
+	 YPphvH/QUFTN9FZc1zhpXq0a6h4ax1Jn0NjhO76pk1jx9Cy+P+biWGvzIJFNVjSZC3
+	 IyzGZkfIvh2loVGSWSlXewPk1SSdQVSaV1fvgnfLToDJ2eeL2j7zRfiDWT2/1+XjPk
+	 QsNSSLFDI6JFjP+3ugk+kYnlCKZi2v26gGd5Gtzo7kH1kspmM3tFkY3vkXs7iZ8U6n
+	 qs926QNHTfOTOsSH+w5GH/tmGGYUnGR8kfwkCIWH5Y6eTTPTXWnibo28/AwmsHV7Ll
+	 bzt95f+PrRWc2PuCBKx5XsY/GRtritqktHlJSiXjyQGVVd4dOl+4Ejg9OKAfEPiNm3
+	 5LJtpx6ksUw+N3ETWkumL1hr8/Kp4ltBRK5lAAmoxKoIWhNqGO6NbfoBIbqelvAKcG
+	 1w/tXZeWEt0VRlR6DDtVWJZkzLhBXpcteXqOeo4TprK4mfZXbvtDTln+SHlP+O76y5
+	 v3+ffKS2gCfwq3zujFFXkIr0PyG1TMRuEMd7r2C5I8o9Z6hvEHXQdErMzaToTHhFlN
+	 HpwbuMpCFDk+oZT2swdyDH+w=
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	sphereful.davidgow.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU autolearn=unavailable autolearn_force=no
+	version=3.4.4
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+	by sphereful.davidgow.net (Postfix) with ESMTPSA id 8B6BA1D5811;
+	Fri, 15 Sep 2023 20:27:01 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694780821;
+	bh=hnw4+F5CXXiG5poJbVxyNM5eJG1cjLqBF2kaMkJl0BE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=elX93ZgJtmwnMCrAD2oBI6HWJnjcy9PNuzOd3e4eJyOtbszyDSKZQoQYoi+JH9clH
+	 SqpQwsqAGdn6J5reO9koZ++WxMvFFXVU1Nv/OxaPnRs5TXKk4xt0wl2uAMPDqAe7Ju
+	 Z1X39iB7bev37B+NYUfvrnzHky5wefVyMFrCqBGPA0mkXq1D2yAYHGFuc59tpOCIX7
+	 cygWhQVbs8rp8wZoglyLPlAhy/64JtSAVooYUI6+2Y0K2z2F5xZPOLNyonK7PWNGpO
+	 RZhV6mMfr6xQCAJ3vwVyDiyNO9KWCUrbU8xVafJCH4jSbDrIe+BoE1K+YxMVbh3EV2
+	 6bqP3XQYvAN8+wUehyvAEHXeeyXBtppeSquAYNt2F8wNIBvSOzWcS9K+ZJXUNOEIS6
+	 eHRxYrV377uKCvegcxdT2/wOg8IMeai7KGSm9YJuylqVphBEHWDQ0ms65sbgHRmNgT
+	 tUJK2OpBaKr9CN7lgcHsqKHG+2hX/5UnAvThy2qmTDvOZpYjlFiOFEwYilsu0FZwYs
+	 i5mRH1hqc0fDkBFAT7AeXowq8Jxl6v0jji3GRS6tEr6yTrJeYcr65sWlonw9kElwPd
+	 6PlAvyBsedAF0D++e2p+6sYvaDaI/Gb3ynqDMudnnIy1YIkjnjLM/ZREaf7z8MbWEa
+	 TRFKuB55Eae8ZYxvRmq9w93c=
+Message-ID: <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
+Date: Fri, 15 Sep 2023 20:26:58 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Masahiro Yamada <masahiroy@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Maksim Panchenko <maks@meta.com>,
- =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- Michal Marek <michal.lkml@markovi.net>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To: Niklas Cassel <Niklas.Cassel@wdc.com>, Damien Le Moal <dlemoal@kernel.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, patenteng <dimitar@daskalov.co.uk>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, Bill Wendling <morbo@google.com>,
- Nathan Chancellor <nathan@kernel.org>,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- Guillaume Charles Tucker <guillaume.tucker@collabora.com>,
- denys.f@collabora.com, Nick Desaulniers <ndesaulniers@google.com>,
- kernelci@lists.linux.dev, Collabora Kernel ML <kernel@collabora.com>
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh>
- <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
- <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com>
- <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
- <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com>
- <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
- <267b73d6-8c4b-40d9-542d-1910dffc3238@leemhuis.info>
- <2833d0db-f122-eccd-7393-1f0169dc0741@collabora.com>
- <26aa6f92-2376-51a4-bbdc-abbbd62c23d2@leemhuis.info>
- <859c6dde-37ad-492e-baa0-4ea100d8381f@leemhuis.info>
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <859c6dde-37ad-492e-baa0-4ea100d8381f@leemhuis.info>
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux IDE and libata <linux-ide@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+ <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+ <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
+ <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
+ <ZQQa0QRhm1BuI5IT@x1-carbon>
+From: David Gow <david@davidgow.net>
+In-Reply-To: <ZQQa0QRhm1BuI5IT@x1-carbon>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11/09/23 15:35, Thorsten Leemhuis wrote:
-
-Hi Thorsten,
-
-> On 29.08.23 13:28, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 11.07.23 13:16, Shreeya Patel wrote:
->>> On 10/07/23 17:39, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>>> for once, to make this easily accessible to everyone.
->>>>
->>>> Shreeya Patel, Masahiro Yamada: what's the status of this? Was any
->>>> progress made to address this? Or is this maybe (accidentally?) fixed
->>>> with 6.5-rc1?
->>> I still see the regression happening so it doesn't seem to be fixed.
->>> https://linux.kernelci.org/test/case/id/64ac675a8aebf63753bb2a8c/
->>>
->>> Masahiro had submitted a fix for this issue here.
->>>
->>> https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/#t
->>>
->>> But I don't see any movement there. Masahiro, are you planning to send a
->>> v2 for it?
->> That was weeks ago and we didn't get a answer. :-/ Was this fixed in
->> between? Doesn't look like it from here, but I might be missing something.
-> Still no reply. :-/
->
-> Shreeya Patel, does the problem still happen with 6.6-rc1 and do you
-> still want to see it fixed? In that case our only option to get things
-> rolling again might be to involve Linus, unless someone in the CC list
-> has a idea to resolve this. Might also be good to know if reverting the
-> culprit fixes the problem.
-
-
-I don't see this issue happening on 6.6-rc1 kernel and it was only last 
-seen in 6.5 kernel.
-But there was no fix added to Kbuild in the meantime so not sure which 
-commit really fixed this issue.
-
-For now we can mark this as resolved and I'll keep an eye on the future 
-test results to see if this pops up again.
-
-
-Thanks,
-Shreeya Patel
-
-#regzbot resolve: Fixed in 6.6-rc1 kernel, fix commit is unknown.
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot poke
->
->>>> On 20.06.23 06:19, Masahiro Yamada wrote:
->>>>> On Mon, Jun 12, 2023 at 7:10 PM Shreeya Patel
->>>>> <shreeya.patel@collabora.com> wrote:
->>>>>> On 24/05/23 02:57, Nick Desaulniers wrote:
->>>>>>> On Tue, May 23, 2023 at 3:27 AM Shreeya Patel
->>>>>>> <shreeya.patel@collabora.com> wrote:
->>>>>>>> Hi Nick and Masahiro,
->>>>>>>>
->>>>>>>> On 23/05/23 01:22, Nick Desaulniers wrote:
->>>>>>>>> On Mon, May 22, 2023 at 9:52 AM Greg KH
->>>>>>>>> <gregkh@linuxfoundation.org> wrote:
->>>>>>>>>> On Mon, May 22, 2023 at 12:09:34PM +0200, Ricardo Cañuelo wrote:
->>>>>>>>>>> On vie, may 19 2023 at 08:57:24, Nick Desaulniers
->>>>>>>>>>> <ndesaulniers@google.com> wrote:
->>>>>>>>>>>> It could be; if the link order was changed, it's possible that
->>>>>>>>>>>> this
->>>>>>>>>>>> target may be hitting something along the lines of:
->>>>>>>>>>>> https://isocpp.org/wiki/faq/ctors#static-init-order i.e. the
->>>>>>>>>>>> "static
->>>>>>>>>>>> initialization order fiasco"
->>>>>>>>>>>>
->>>>>>>>>>>> I'm struggling to think of how this appears in C codebases, but I
->>>>>>>>>>>> swear years ago I had a discussion with GKH (maybe?) about
->>>>>>>>>>>> this. I
->>>>>>>>>>>> think I was playing with converting Kbuild to use Ninja rather
->>>>>>>>>>>> than
->>>>>>>>>>>> Make; the resulting kernel image wouldn't boot because I had
->>>>>>>>>>>> modified
->>>>>>>>>>>> the order the object files were linked in.  If you were to
->>>>>>>>>>>> randomly
->>>>>>>>>>>> shuffle the object files in the kernel, I recall some hazard
->>>>>>>>>>>> that may
->>>>>>>>>>>> prevent boot.
->>>>>>>>>>> I thought that was specifically a C++ problem? But then again, the
->>>>>>>>>>> kernel docs explicitly say that the ordering of obj-y goals in
->>>>>>>>>>> kbuild is
->>>>>>>>>>> significant in some instances [1]:
->>>>>>>>>> Yes, it matters, you can not change it.  If you do, systems will
->>>>>>>>>> break.
->>>>>>>>>> It is the only way we have of properly ordering our init calls
->>>>>>>>>> within
->>>>>>>>>> the same "level".
->>>>>>>>> Ah, right it was the initcall ordering. Thanks for the reminder.
->>>>>>>>>
->>>>>>>>> (There's a joke in there similar to the use of regexes to solve a
->>>>>>>>> problem resulting in two new problems; initcalls have levels for
->>>>>>>>> ordering, but we still have (unexpressed) dependencies between calls
->>>>>>>>> of the same level; brittle!).
->>>>>>>>>
->>>>>>>>> +Maksim, since that might be relevant info for the BOLT+Kernel work.
->>>>>>>>>
->>>>>>>>> Ricardo,
->>>>>>>>> https://elinux.org/images/e/e8/2020_ELCE_initcalls_myjosserand.pdf
->>>>>>>>> mentions that there's a kernel command line param `initcall_debug`.
->>>>>>>>> Perhaps that can be used to see if
->>>>>>>>> 5750121ae7382ebac8d47ce6d68012d6cd1d7926 somehow changed initcall
->>>>>>>>> ordering, resulting in a config that cannot boot?
->>>>>>>> Here are the links to Lava jobs ran with initcall_debug added to the
->>>>>>>> kernel command line.
->>>>>>>>
->>>>>>>> 1. Where regression happens
->>>>>>>> (5750121ae7382ebac8d47ce6d68012d6cd1d7926)
->>>>>>>> https://lava.collabora.dev/scheduler/job/10417706
->>>>>>>> <https://lava.collabora.dev/scheduler/job/10417706>
->>>>>>>>
->>>>>>>> 2. With a revert of the commit
->>>>>>>> 5750121ae7382ebac8d47ce6d68012d6cd1d7926
->>>>>>>> https://lava.collabora.dev/scheduler/job/10418012
->>>>>>>> <https://lava.collabora.dev/scheduler/job/10418012>
->>>>>>> Thanks!
->>>>>>>
->>>>>>> Yeah, I can see a diff in the initcall ordering as a result of
->>>>>>> commit 5750121ae738 ("kbuild: list sub-directories in ./Kbuild")
->>>>>>>
->>>>>>> https://gist.github.com/nickdesaulniers/c09db256e42ad06b90842a4bb85cc0f4
->>>>>>>
->>>>>>> Not just different orderings, but some initcalls seem unique to the
->>>>>>> before vs. after, which is troubling. (example init_events and
->>>>>>> init_fs_sysctls respectively)
->>>>>>>
->>>>>>> That isn't conclusive evidence that changes to initcall ordering are
->>>>>>> to blame, but I suspect confirming that precisely to be very very time
->>>>>>> consuming.
->>>>>>>
->>>>>>> Masahiro, what are your thoughts on reverting 5750121ae738? There are
->>>>>>> conflicts in Kbuild and Makefile when reverting 5750121ae738 on
->>>>>>> mainline.
->>>>>> I'm not sure if you followed the conversation but we are still seeing
->>>>>> this regression with the latest kernel builds and would like to know if
->>>>>> you plan to revert 5750121ae738?
->>>>> Reverting 5750121ae738 does not solve the issue
->>>>> because the issue happens even before 5750121ae738.
->>>>> multi_v7_defconfig + debug.config + CONFIG_MODULES=n
->>>>> fails to boot in the same way.
->>>>>
->>>>> The revert would hide the issue on a particular build setup.
->>>>>
->>>>>
->>>>> I submitted a patch to more pin-point the issue.
->>>>> Let's see how it goes.
->>>>> https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/#t
->>>>>
->>>>>
->>>>> (BTW, the initcall order is unrelated)
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>> Thanks,
->>>>>> Shreeya Patel
+Le 2023/09/15 à 16:50, Niklas Cassel a écrit :
+> On Fri, Sep 15, 2023 at 02:54:19PM +0800, David Gow wrote:
+>> Le 2023/09/15 à 13:41, Damien Le Moal a écrit :
+>>> On 9/15/23 12:22, David Gow wrote:
+>>>> Le 2023/09/13 à 23:12, Niklas Cassel a écrit :
+>>>>> On Wed, Sep 13, 2023 at 06:25:31PM +0700, Bagas Sanjaya wrote:
+>>>>>> Hi,
 >>>>>>
->>>>>>>> Thanks,
->>>>>>>> Shreeya Patel
->>>>>>>>
->>>>> -- 
->>>>> Best Regards
->>>>> Masahiro Yamada
+>>>>>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>>>>>
+>>>>>>> After upgrading to 6.5.2 from 6.4.12 I keep getting the following kernel messages around three times per second:
+>>>>>>>
+>>>>>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>>>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>>>>>
+>>>>>>> So I've tracked the offending device:
+>>>>>>>
+>>>>>>> ll /sys/class/ata_port/ata16
+>>>>>>> lrwxrwxrwx 1 root root 0 Sep 10 21:51 /sys/class/ata_port/ata16 -> ../../devices/pci0000:00/0000:00:1c.7/0000:0a:00.0/ata16/ata_port/ata16
+>>>>>>>
+>>>>>>> cat /sys/bus/pci/devices/0000:0a:00.0/uevent
+>>>>>>> DRIVER=ahci
+>>>>>>> PCI_CLASS=10601
+>>>>>>> PCI_ID=1B4B:9130
+>>>>>>> PCI_SUBSYS_ID=1043:8438
+>>>>>>> PCI_SLOT_NAME=0000:0a:00.0
+>>>>>>> MODALIAS=pci:v00001B4Bd00009130sv00001043sd00008438bc01sc06i01
+>>>>>>>
+>>>>>>> lspci | grep 0a:00.0
+>>>>>>> 0a:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe SATA 6 Gb/s RAID controller with HyperDuo (rev 11)
+>>>>>>>
+>>>>>>> I am not using the 88SE9128, so I have no way of knowing whether it works or not. It may simply be getting reset a couple of times per second or it may not function at all.
+>>>>>>
+>>>>>> See Bugzilla for the full thread.
+>>>>>>
+>>>>>> patenteng: I have asked you to bisect this regression. Any conclusion?
+>>>>>>
+>>>>>> Anyway, I'm adding this regression to regzbot:
+>>>>>>
+>>>>>> #regzbot: introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217902
+>>>>>
+>>>>> Hello Bagas, patenteng,
 >>>>>
 >>>>>
+>>>>> FYI, the prints:
+>>>>> [ 9683.269830] ata16: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>>> [ 9683.270399] ata16.00: configured for UDMA/66
+>>>>>
+>>>>> Just show that ATA error handler has been invoked.
+>>>>> There was no reset performed.
+>>>>>
+>>>>> If there was a reset, you would have seen something like:
+>>>>> [    1.441326] ata8: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+>>>>> [    1.541250] ata8.00: configured for UDMA/133
+>>>>> [    1.541411] ata8: hard resetting link
+>>>>>
+>>>>>
+>>>>> Could you please try this patch and see if it improves things for you:
+>>>>> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+>>>>>
+>>>>
+>>>> FWIW, I'm seeing a very similar issue both in 6.5.2 and in git master
+>>>> [aed8aee11130 ("Merge tag 'pmdomain-v6.6-rc1' of
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm") with that
+>>>> patch applied.
+>>>>
+>>>>
+>>>> The log is similar (the last two lines repeat several times a second):
+>>>> [    0.369632] ata14: SATA max UDMA/133 abar m2048@0xf7c10000 port
+>>>> 0xf7c10480 irq 33
+>>>> [    0.683693] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.031662] ata14.00: ATAPI: MARVELL VIRTUALL, 1.09, max UDMA/66
+>>>> [    1.031852] ata14.00: configured for UDMA/66
+>>>> [    1.414145] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.414505] ata14.00: configured for UDMA/66
+>>>> [    1.744094] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    1.744368] ata14.00: configured for UDMA/66
+>>>> [    2.073916] ata14: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+>>>> [    2.074276] ata14.00: configured for UDMA/66
+>>>>
+>>>>
+>>>> lspci shows:
+>>>> 09:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9230 PCIe 2.0
+>>>> x2 4-port SATA 6 Gb/s RAID Controller (rev 10) (prog-if 01 [AHCI 1.0])
+>>>>            Subsystem: Gigabyte Technology Co., Ltd Device b000
+>>>>            Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+>>>> ParErr- Stepping- SERR- FastB2B- DisINTx+
+>>>>            Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+>>>> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>>>>            Latency: 0, Cache Line Size: 64 bytes
+>>>>            Interrupt: pin A routed to IRQ 33
+>>>>            Region 0: I/O ports at b050 [size=8]
+>>>>            Region 1: I/O ports at b040 [size=4]
+>>>>            Region 2: I/O ports at b030 [size=8]
+>>>>            Region 3: I/O ports at b020 [size=4]
+>>>>            Region 4: I/O ports at b000 [size=32]
+>>>>            Region 5: Memory at f7c10000 (32-bit, non-prefetchable) [size=2K]
+>>>>            Expansion ROM at f7c00000 [disabled] [size=64K]
+>>>>            Capabilities: <access denied>
+>>>>            Kernel driver in use: ahci
+>>>>
+>>>> The controller in question lives on a Gigabyte Z87X-UD5H-CF motherboard.
+>>>> I'm using the controller for several drives, and it's working, it's just
+>>>> spammy. (At worst, there's some performance hitching, but that might
+>>>> just be journald rotating logs as they fill up with the message).
+>>>>
+>>>> I haven't had a chance to bisect yet (this is a slightly awkward machine
+>>>> for me to install test kernels on), but can also confirm it worked with
+>>>> 6.4.12.
+>>>>
+>>>> Hopefully that's useful. I'll get back to you if I manage to bisect it.
 >>>
+>>> Bisect will definitely be welcome. But first, please try adding the patch that
+>>> Niklas mentioned above:
+>>>
+>>> https://lore.kernel.org/linux-ide/20230913150443.1200790-1-nks@flawful.org/T/#u
+>>>
+>>> If that fixes the issue, we know the culprit :)
+>>>
+>>
+>>
+>> Sorry: I wasn't clear. I did try with that patch (applied on top of
+>> torvalds/master), and the issue remained.
+>>
+>> I've started bisecting, but fear it'll take a while.
+> 
+> I can recommend using QEMU and PCI passthrough to bisect, as it is much
+> faster to boot a kernel using QEMU with KVM than to do a real reboot.
+> 
+> It takes a while to set up the first time, but you know what they say:
+> "give a man a fish and you feed him for a day;
+> teach a man to fish and you feed him for a lifetime".
+> 
+> There are many ways to do it, but here is an example guide:
+> https://github.com/floatious/qemu-bisect-doc
+> 
+
+Thanks. Alas, this machine doesn't have an IOMMU, which makes that 
+difficult. I've definitely saved the link for the future, though.
+
+In any case, the bisect is done:
+
+624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
+commit 624885209f31eb9985bf51abe204ecbffe2fdeea
+Author: Damien Le Moal <dlemoal@kernel.org>
+Date:   Thu May 11 03:13:41 2023 +0200
+
+     scsi: core: Detect support for command duration limits
+
+     Introduce the function scsi_cdl_check() to detect if a device supports
+     command duration limits (CDL). Support for the READ 16, WRITE 16, 
+READ 32
+     and WRITE 32 commands are checked using the function 
+scsi_report_opcode()
+     to probe the rwcdlp and cdlp bits as they indicate the mode page 
+defining
+     the command duration limits descriptors that apply to the command being
+     tested.
+
+     If any of these commands support CDL, the field cdl_supported of struct
+     scsi_device is set to 1 to indicate that the device supports CDL.
+
+     Support for CDL for a device is advertizes through sysfs using the new
+     cdl_supported device attribute. This attribute value is 1 for a device
+     supporting CDL and 0 otherwise.
+
+     Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+     Reviewed-by: Hannes Reinecke <hare@suse.de>
+     Co-developed-by: Niklas Cassel <niklas.cassel@wdc.com>
+     Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+     Link: https://lore.kernel.org/r/20230511011356.227789-9-nks@flawful.org
+     Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+  Documentation/ABI/testing/sysfs-block-device |  9 ++++
+  drivers/scsi/scsi.c                          | 81 
+++++++++++++++++++++++++++++
+  drivers/scsi/scsi_scan.c                     |  3 ++
+  drivers/scsi/scsi_sysfs.c                    |  2 +
+  include/scsi/scsi_device.h                   |  3 ++
+  5 files changed, 98 insertions(+)
+
+
+This seems to match what was found on the Arch Linux forums, too:
+https://bbs.archlinux.org/viewtopic.php?id=288723&p=3
+
+I haven't tried it yet, but according to that forum thread, removing the 
+calls to scsi_cdl_check() seems to resolve the issue. This is all well 
+beyond my SCSI knowledge, but maybe a quirk to disable these CDL checks 
+for these older marvell controllers is required? Though it seems odd 
+that the device would be rescanned and/or scsi_add_lun called multiple 
+times a second -- is that normal?
+
+In any case, this seems to be the cause.
+
+Thanks!
+-- David
+
