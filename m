@@ -1,108 +1,99 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB3A18E1B
-	for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 23:04:33 +0000 (UTC)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5308430052fso1504676a12.1
-        for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 16:04:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9D2367
+	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 00:05:13 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-68fc9e0e22eso2262207b3a.1
+        for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 17:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694819071; x=1695423871; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dxG2q7F6Mkp+vlHGfUkxcAXUqWVC7Xr/x4rCnTi+nw=;
-        b=lVy+Vsz6QROV8l3ocmXZz2wFw/ytuUcos8Pwh/H9b6xOWRW8DB5c3ec3Aqyi59Z6uA
-         MDgW8YDjOmqoJxoBQaDOgCf6GoZcdsChE7pkMPFzfogba56ZMRu5lBu0vGC9DCxsA6QQ
-         z/hxKKeJKhrW6RbPvAA6zY9jK/tukVCYHV/7SQG64BdcEMRpvSCDt2TllzHJ45FlfJJD
-         2jokLF5w9yr+nIBDgPiEfd22PisS7iA0d2x4V4SLdzLC5YNuBpCmlyxaJBJg+OzgueXx
-         UpCqw4eqyDjJYvrcIOHFMjOJaxZyRNk9Nm6vRrZt81F/OYGPbPa9ws8zzhVl6pQ204ds
-         qWJg==
+        d=gmail.com; s=20230601; t=1694822713; x=1695427513; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBFU91Ab8Ty50yBCscF+Su8H4xiggY1DMOJHupjwHzg=;
+        b=Z1tBy35MKyud/YbGZoLLOGXsffoCrsJO1VNkThi92L7xvsqsFc0Amn+cATEVMfoaV0
+         EyAUXL0wFYnLEYaU2AfQH4kYPZsQlELVHyxSw+L1OzyiR3zu7UZFxpgNCvlmrqJvZvSH
+         W3+4lJnly14E2PSG65YlCmQzjiUrt9WbLkQ6fR595ieMXvtgoyeylz0sBlWTSjvLHVVr
+         8L5uR4dl2nUxmIsCz9ULWCvjvUhdvfeao78T5WFKl4hHsV3ovX5E7XdO91jzwqiTk8H3
+         Zp5M6fFHhX6N/WEyMUFFhnk95tQXjzsk4cKlaxLi9cQ/uiFmqspIs4lBZ+zJNZa6uCzk
+         g1Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694819071; x=1695423871;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/dxG2q7F6Mkp+vlHGfUkxcAXUqWVC7Xr/x4rCnTi+nw=;
-        b=wHzJCZR2E8FkZ/BEjKzALlkWBwfF+ap5YsUAl6zT9CAzyuu9oJ2AqX02mVUIhcheTX
-         eIIMtbm8MnL5WO6aDQkjvP/UViZ6ISs2BTAwxXxCXx3zPqXsT4dE4Oj82B/HpGVlcaKa
-         WYTsAfJjYW/UVmvO+CZs9yvd6hmrSRRY7pcUWGQR/9+Pxop1Kba//JTCxTLFqH+Z9BWl
-         ak1sk7SXeRAAGxFPSJGNWCgSY+dgp4XYjRBrYyI61ZBMNTjd0EiqfmAcihsOaIv9672h
-         NscbwsJEzAfN2br6CwEQUiIX4qipgliy/3S0TCOGMST5TBCWwf96RhHdq5+O5U2ssQnn
-         evuw==
-X-Gm-Message-State: AOJu0YyuTXnwVdvbFwcj6AE+FoaQc5hmndLzpV2glSeyoqKXKJamNwnr
-	6Ux1Lkxjr9CTQeuD6qqBj6MduJoRjFcaDeTLdfHCX8kMJ30=
-X-Google-Smtp-Source: AGHT+IFk/4QQIsJh5pUlO7CGZk+/3wXfyCvaMWmuJ3//r/dMlCJwaGmfCc9vG36qHgaiFk9OzPuixZAzv6zA93Qcl9c=
-X-Received: by 2002:a05:6402:344e:b0:525:6772:1595 with SMTP id
- l14-20020a056402344e00b0052567721595mr2291463edc.6.1694819071151; Fri, 15 Sep
- 2023 16:04:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694822713; x=1695427513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uBFU91Ab8Ty50yBCscF+Su8H4xiggY1DMOJHupjwHzg=;
+        b=UEnVYRRYY9Awte4L8hMhdvAyoPkor6in3QrBXHGWAkfdOYGHhFxCrOLg0IXs/O+drc
+         FqSLU8Xe1jkScQX8RK9YX6rCWowZR3POYjbjqA/7Wx8MUKrTylTDvfFGC70yHHqV0dCK
+         m2eGhB7q6A7cA+oWaYJ0EUM4VjpXVmi09jFQUp0w6X1cfxBtAsifDTxweVE5hMGYOs4j
+         55Jc143e0uGEisGX/CgK+hmmazlKQLEVlcu+7dOLf6i2btEyNrI8p3DSyZSBzTkTfCxT
+         bFJy+kpSrcPn39mAbQ7erN8pCEMrQd5TcgIFdH0oud7MKctsoZlASpQ56z0LVUCxbhem
+         1RUg==
+X-Gm-Message-State: AOJu0YzHk6RD8T6vkFUsp17zcFQsZk2hgkRLhSOoHOQfrqYiHxW+2ya9
+	MdRy7FzTGAlOCmZKLSSNFSM=
+X-Google-Smtp-Source: AGHT+IF0Gziwgjs8IBkPNW32gp0eqmvsqmMuvS0x7PTIdUhgCFb6Vt3ZXEPLS8yJVzATlvoLr0H0cw==
+X-Received: by 2002:a05:6a00:1588:b0:68c:4e22:8f78 with SMTP id u8-20020a056a00158800b0068c4e228f78mr3528463pfk.25.1694822712935;
+        Fri, 15 Sep 2023 17:05:12 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id c5-20020aa78805000000b0068ff6d21563sm3569946pfo.148.2023.09.15.17.05.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 17:05:11 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 33456811F023; Sat, 16 Sep 2023 07:05:07 +0700 (WIB)
+Date: Sat, 16 Sep 2023 07:05:07 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, Tester47 <e598@gmx.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux TTY & Serial <linux-serial@vger.kernel.org>,
+	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: Fwd: Kernel 6.6-rc1 fails to reboot or shutdown Ryzen 5825U
+Message-ID: <ZQTxM0JdyV8mpxbt@debian.me>
+References: <2bc62c07-2195-e378-c057-f28e8d4a6034@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <5a7f2a6e-46a4-a5c8-fe6a-c2581496b5cd@gmail.com> <c7e70f54-9696-4b39-aa17-576987ffce85@leemhuis.info>
-In-Reply-To: <c7e70f54-9696-4b39-aa17-576987ffce85@leemhuis.info>
-From: brett hassall <brett.hassall@gmail.com>
-Date: Sat, 16 Sep 2023 09:04:19 +1000
-Message-ID: <CANiJ1U80VNiLGKEmgYpGjUQ2poREN9uGnv2QXM_GtzjgBtUSWQ@mail.gmail.com>
-Subject: Re: Fwd: 5c8a79e8e12b ("wifi: rtw88: correct PS calculation for
- SUPPORTS_DYNAMIC_PS", 2023-05-27) increases CPU usage usage for irq
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>, 
-	Kalle Valo <kvalo@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Wireless <linux-wireless@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-
-Hi
-
-I'd suggest that there are actually 2 regressions
-(https://bugzilla.kernel.org/show_bug.cgi?id=217841 and this bug). Bug
-217841 masks this bug as it prevents the laptop reaching package C8
-and I'm assuming this bug shows when in C8. The patch for 21784 only
-affects devices connected to a VMD controller so I wouldn't expect it
-to affect the 8822CE.
-
-Options that I can see are:
-1. Park this bug until 217841 is resolved
-2. Try to test on a laptop with a Realtek 8822CE but not a VMD
-controller. I have access to 5 different laptop models but none meet
-those criteria.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Xh9/EH8MO3HbfOrP"
+Content-Disposition: inline
+In-Reply-To: <2bc62c07-2195-e378-c057-f28e8d4a6034@gmail.com>
 
 
-Thanks for the reply
-Brett
+--Xh9/EH8MO3HbfOrP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 11 Sept 2023 at 23:29, Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 27.08.23 04:37, Bagas Sanjaya wrote:
-> >
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> >
-> >> This commit improves power saving - it enables the kernel to
-> >> achieve package C8. To achieve package C8, 3 Ubuntu VMD commits
-> >> must be applied as well. [...]
->
-> To me that sounds like there is no upstream problem, hence this
-> shouldn't be tracked as a regression. Please correct me if I'm wrong.
->
-> > #regzbot introduced: 26a125f550a3bf
-> > https://bugzilla.kernel.org/show_bug.cgi?id=217828 #regzbot title:
-> > correcting SUPPORTS_DYNAMIC_PS calculation for rtw88 increases CPU
-> > utilization #regzbot link:
-> > https://bugs.launchpad.net/ubuntu/+source/linux-hwe-6.2/+bug/2025040
-> >
-> > Thanks.
-> >
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217828
->
-> #regzbot resolved: invalid: seems to only be a problem with a patched kernel
-> #regzbot ignore-activity
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
->
+On Thu, Sep 14, 2023 at 02:03:00PM +0700, Bagas Sanjaya wrote:
+> #regzbot introduced: v6.5..v6.6 https://bugzilla.kernel.org/show_bug.cgi?=
+id=3D217905
+> #regzbot title: shutdown/reboot hang on Ryzen 5825U (stuck on amdgpu init=
+ialization)
+>=20
+
+Fixing up commit range:
+
+#regzbot introduced: v6.5..v6.6-rc1
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--Xh9/EH8MO3HbfOrP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQTxLQAKCRD2uYlJVVFO
+o8rgAPwIzBXYXKeK6pcEOYV2weLfbQUqgqPF2jOk3Ec5KM6KWQD/bUH8Sr/mt0Fy
+cMDw3XSd1I3kgWf0GonS0cLKCV7tpQ0=
+=kMdp
+-----END PGP SIGNATURE-----
+
+--Xh9/EH8MO3HbfOrP--
