@@ -1,148 +1,117 @@
-Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D4E1107
-	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 02:22:02 +0000 (UTC)
-Received: by sphereful.davidgow.net (Postfix, from userid 119)
-	id 7071F1D5832; Sat, 16 Sep 2023 10:22:00 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
-	s=201606; t=1694830920;
-	bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bt0sq8rpKmyJtSfTvpTeQHNuYIr4PwCfKXLf/gJU/KfUHfxeyR+snNUYyHDv7vLKR
-	 eT1N5OpmQ1dIV7LzG8VuLa/CdzNemLPNKk4SYVZ2O4q6arqU9a7iuhqNsbQ0xeWPUu
-	 v/imFF9FKEJjPUHYUPYnKI4/QEKdRhloEroYtydKfPq1grdBClolt6fwgXPNMv5ERh
-	 byeVX5WXPUBFg/684XOXgtuL3rvDvNkCyL6w16BxMQOaOjO47WRckgLaRaDjGPrbzB
-	 EXSQFfo+b45VS6HiXs1FX39QXH159OyAqwVF/oHhRamBu641xgkBackzQOg3mO3Qx0
-	 ho36lWsCvtQhQxpe/PgZs9OvyaW9CMTtN5S8o4D2J6SKCXPEa563oOq4SUJIYPFapo
-	 znPZVdSMEPqvA5AJeQYBDUeFnGjVzwP7N2Q7Z14d2mzeWF1YMatp2OlrXXk3K+k2Xp
-	 r+FSBJ4gyTp1T2hc+ZcCAFENCicevBXL0FEjEZ1m9AooSvT0LEXZOUwE14ooPeMEiD
-	 t9kZ065fVa0RxzQqJpDxwl71dxi7fAyya7a2n2nWFIVYIQbucilZaBgcRTHz9ToHOd
-	 McrQP3Cqg4k7KUOole9pLVKbxSFavmT6oaIhRHSqMkYOKq9BlLrpLt8UIzBZ9ejrqu
-	 HmUEjHU24QKwxkBCVwPZUWkE=
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-	sphereful.davidgow.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU autolearn=unavailable autolearn_force=no
-	version=3.4.4
-Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
-	by sphereful.davidgow.net (Postfix) with ESMTPSA id C55A21D580B;
-	Sat, 16 Sep 2023 10:21:57 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
-	s=201606; t=1694830917;
-	bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d3c1T6dDVieNLo1yeoJaClHy8gD1NTEsUphxaHWqXVNgPzKoEsTeDWecTQ0zSy8B5
-	 ZLjYFhBEJdf9zNGTjrbzaw4uCg8iAycQuFgIrk21wl1Lvk1QMCezUTVp/B91OGfrfK
-	 Usew6qzj+mXdiwYKyhl75Kf7yGcbXbTBk8C9YnfF+CmyBS6qRYeNIiQ6Kv5epbPWbt
-	 Sqb9+tYsnuAAv2h4toCYBoawXbuwHleAtETHixVO5Txk56VcwunisJmg5DdaO8mm7q
-	 1GWEUeXYRqqGY9yL6uOuRvPlupQaOQI7qCrZJBVTj1OKZSyeESd03jp2tIZ95AldVp
-	 laxrLuNmlOca8z6lVJ54h2R7vEvCAhm7C/SeWSwWraNM4CcW2051ssb+Yku/xhsi3S
-	 uPOvHU8WzS9gCvj7tuv1e/y1yVuThPu28x0hlo4+pu0iHpnH3x7XLE7nx+me0zmOK6
-	 2PFxoKomldV4lMj7Z/J/6NS41RLW6xBJ2uwqOiqi38TrUePzmLcWTnHh1lkb6Rk8zX
-	 LAQMKmXcoROhzrtKC2bXfPGmURsrthCoSLq3cijcyN1m+uzvJd0W7xmQAcF8mFMHug
-	 7+JC17Z7LGiXAAY9y6IVMh1CbazdYk4C8P3SFzn0crdk2pJzvQtWX4Q3KWkBP22kIv
-	 kaNho1Sa5AbfVCLvrtQ9zA68=
-Message-ID: <bbe4ae16-86b3-4629-b5e0-c704881fe5cb@davidgow.net>
-Date: Sat, 16 Sep 2023 10:21:53 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ABD3C36
+	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 06:11:50 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8BE962197E;
+	Sat, 16 Sep 2023 06:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1694844361; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MKJPVMkfCPsAMBC1n6lximFInfxVkA6IUNTVb85qc70=;
+	b=TuZEJ/fZuOkZjYIvqj7wBizy0xRWY+crKyCyqoR4u+Qsh3ThpV/ysvTpvGNGymLsKEmkbk
+	SBiJ3JxTQM5joQjmigkmJ8kPpSBphgsS+XrkDPpvobqC4fD4QWRzWThByZwmUcNyjdgmd5
+	b9cxr8b9rlnTCmis3hUhWe2CLj9/js8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1694844361;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MKJPVMkfCPsAMBC1n6lximFInfxVkA6IUNTVb85qc70=;
+	b=LJWUrQoB/bEFmoHkCJr0nseXLpmxnMElbbppZCq4rXdDze8oyDi1nk/C9o7NqSE1MD64PO
+	TmuRQ21vFJT1PjDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6B43E13499;
+	Sat, 16 Sep 2023 06:06:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 6KX3GMlFBWUMVwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sat, 16 Sep 2023 06:06:01 +0000
+Date: Sat, 16 Sep 2023 08:06:01 +0200
+Message-ID: <87y1h6tzxy.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Hills <mark@xwax.org>
+Cc: Ash Holland <ash@sorrel.sh>,
+	alsa-devel@alsa-project.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] rust midir MIDI library causes kernel oops
+In-Reply-To: <ba096915-4d9e-0cfa-2dfb-57cb476b3544@xwax.org>
+References: <8a555319-9f31-4ea2-878f-adc338bc40d4@sorrel.sh>
+	<87msy1ip6l.wl-tiwai@suse.de>
+	<ef9118c3-a2eb-d0ff-1efa-cc5fb6416bde@xwax.org>
+	<874jjvuywk.wl-tiwai@suse.de>
+	<871qezux3d.wl-tiwai@suse.de>
+	<ba096915-4d9e-0cfa-2dfb-57cb476b3544@xwax.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
- SATA to Constantly Reset
-Content-Language: fr
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- patenteng <dimitar@daskalov.co.uk>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux IDE and libata <linux-ide@vger.kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>
-References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
- <ZQHRQHAPQdG+Nu1o@x1-carbon>
- <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
- <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
- <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
- <ZQQa0QRhm1BuI5IT@x1-carbon>
- <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
- <ZQSEXl0GB3iKoqjZ@x1-carbon>
-From: David Gow <david@davidgow.net>
-In-Reply-To: <ZQSEXl0GB3iKoqjZ@x1-carbon>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-Le 2023/09/16 à 0:20, Niklas Cassel a écrit :
-> On Fri, Sep 15, 2023 at 08:26:58PM +0800, David Gow wrote:
->> In any case, the bisect is done:
->>
->> 624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
->> commit 624885209f31eb9985bf51abe204ecbffe2fdeea
->> Author: Damien Le Moal <dlemoal@kernel.org>
->> Date:   Thu May 11 03:13:41 2023 +0200
->>
->>      scsi: core: Detect support for command duration limits
->>
->>      Introduce the function scsi_cdl_check() to detect if a device supports
->>      command duration limits (CDL). Support for the READ 16, WRITE 16, READ
->> 32
->>      and WRITE 32 commands are checked using the function
->> scsi_report_opcode()
->>      to probe the rwcdlp and cdlp bits as they indicate the mode page
->> defining
->>      the command duration limits descriptors that apply to the command being
->>      tested.
->>
->>      If any of these commands support CDL, the field cdl_supported of struct
->>      scsi_device is set to 1 to indicate that the device supports CDL.
->>
->>      Support for CDL for a device is advertizes through sysfs using the new
->>      cdl_supported device attribute. This attribute value is 1 for a device
->>      supporting CDL and 0 otherwise.
->>
->>      Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->>      Reviewed-by: Hannes Reinecke <hare@suse.de>
->>      Co-developed-by: Niklas Cassel <niklas.cassel@wdc.com>
->>      Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
->>      Link: https://lore.kernel.org/r/20230511011356.227789-9-nks@flawful.org
->>      Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
->>
->>   Documentation/ABI/testing/sysfs-block-device |  9 ++++
->>   drivers/scsi/scsi.c                          | 81
->> ++++++++++++++++++++++++++++
->>   drivers/scsi/scsi_scan.c                     |  3 ++
->>   drivers/scsi/scsi_sysfs.c                    |  2 +
->>   include/scsi/scsi_device.h                   |  3 ++
->>   5 files changed, 98 insertions(+)
->>
->>
->> This seems to match what was found on the Arch Linux forums, too:
->> https://bbs.archlinux.org/viewtopic.php?id=288723&p=3
->>
->> I haven't tried it yet, but according to that forum thread, removing the
->> calls to scsi_cdl_check() seems to resolve the issue. This is all well
->> beyond my SCSI knowledge, but maybe a quirk to disable these CDL checks for
->> these older marvell controllers is required? Though it seems odd that the
->> device would be rescanned and/or scsi_add_lun called multiple times a second
->> -- is that normal?
->>
->> In any case, this seems to be the cause.
+On Fri, 15 Sep 2023 20:20:12 +0200,
+Mark Hills wrote:
 > 
-> Hello David,
+> On Fri, 15 Sep 2023, Takashi Iwai wrote:
 > 
-> Thank you very much for your effort of bisecting this.
+> > On Fri, 15 Sep 2023 19:30:51 +0200, Takashi Iwai wrote:
+> > > 
+> > > On Fri, 15 Sep 2023 18:04:35 +0200, Mark Hills wrote:
+> [...]
+> > > > I upgraded from 6.1.0 to 6.5.3 and Reaper now crashes or hangs on startup 
+> > > > with the trace below in dmesg.
+> > > > 
+> > > > The newer kernel already includes a fix very similar to below, so I think 
+> > > > an issue remains.
+> > > > 
+> > > > I did not dig deeper than capturing information and finding this related 
+> > > > thread.
+> > > (snip)
+> > > > [   72.601440] BUG: kernel NULL pointer dereference, address: 0000000000000020
+> > > (snip)
+> > > > [   72.601455] RIP: 0010:snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
+> > > (snip)
+> > > > [   72.601477] Call Trace:
+> > > > [   72.601478]  <TASK>
+> > > > [   72.601479]  ? __die+0x1b/0x60
+> > > > [   72.601482]  ? page_fault_oops+0x154/0x420
+> > > > [   72.601485]  ? mas_update_gap.part.0+0xac/0x1f0
+> > > > [   72.601488]  ? sched_clock_cpu+0xb/0x190
+> > > > [   72.601491]  ? __smp_call_single_queue+0x2f/0x50
+> > > > [   72.601493]  ? exc_page_fault+0x37a/0x560
+> > > > [   72.601495]  ? seq_open+0x4b/0x70
+> > > > [   72.601497]  ? asm_exc_page_fault+0x22/0x30
+> > > > [   72.601501]  ? snd_rawmidi_proc_info_read+0x35/0x220 [snd_rawmidi]
+> > > > [   72.601505]  snd_info_seq_show+0x21/0x40 [snd]
+> > > > [   72.601511]  seq_read_iter+0x105/0x4a0
+> > > > [   72.601514]  seq_read+0x9e/0xd0
+> > > > [   72.601516]  proc_reg_read+0x50/0xa0
+> > > > [   72.601518]  vfs_read+0xa4/0x300
+> > > > [   72.601521]  ? __do_sys_newfstatat+0x35/0x60
+> > > > [   72.601524]  ksys_read+0x5a/0xe0
+> > > > [   72.601526]  do_syscall_64+0x38/0x90
+> > > > [   72.601528]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> > > 
+> > > It must be a completely different bug.  It comes from the proc fs
+> > > read, not the read over sequencer device itself.
+> > 
+> > Does the change below fix the problem?
 > 
-> Could you please try this patch and see if it improves things for you:
-> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
-> 
+> It does! At least it passes my initial test. Reaper starts up now.
 
-Thanks very much: this seems to fix it here (on top of torvalds/master).
+Good to hear.  I'll submit the proper fix patch.
 
-Cheers,
--- David
 
+thanks,
+
+Takashi
