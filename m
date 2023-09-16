@@ -1,141 +1,135 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2109.outbound.protection.outlook.com [40.107.247.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728801C293
-	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 21:17:29 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-9aa2c6f0806so417045866b.3
-        for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 14:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1694899047; x=1695503847; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nsQTPm1Pcces4jObIPICpUNhN/fBbrd7/cdATB/UoXo=;
-        b=fsCn/t9+R+RohC2HQbiwe5urgbfe4oVIx4jK0Y1kTa8tG4aVCj9R0WTrWC8bVtEFG0
-         7uH6fUBVBRlAUMHlt9ewBq7jz36TxzWg4Ts7fd5g2VfANtsi7yKDHqHerpIUngANzasM
-         18B6fwN62frxK4G6FpjUtzDf4xMeeVjWEvuHc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694899047; x=1695503847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nsQTPm1Pcces4jObIPICpUNhN/fBbrd7/cdATB/UoXo=;
-        b=WdT0JtEk4iHvGaMx3r3WZqzhA600Ipkfw9RChgAAJQiGAL3tg45E0ehucAshvv7ICM
-         GEPDzVtuWVOLkuHjAWOVfu5Khb5VhBF7EOhdjvLnaJmry0KJCK02NPPxn4/td4COfjDn
-         UleNanUdPpP4RMWRZ/uqZ0/kuvjDjBEnyClg//lGoWbXr7bO4dBi2pgC23Z+7AfYPsoq
-         GOkb67u+//KkHwoB51RcQ8MPfSjJ5VIvGccz9+gwfoeQAu8quueoK+UmXDYvaVhwKN3t
-         uqxhhnCkDXi5xO4F/LKV2bHiiORNraFkwaVbOassCqJZbc8+R9DA/Gt5rETZLqHHJxjf
-         yalg==
-X-Gm-Message-State: AOJu0YxPFQrSe1l9VjhStLyJavFYRhwhje95/KfgTN+HBc0VAvqKW1Ee
-	8GOvUmkvulzoBZIX4z2Lo43UAnzm9HuMJ8rvz0RZXswP
-X-Google-Smtp-Source: AGHT+IHzDuaB0NIfD38jLnMRdx0C/rjV73s/+zjgslakH8tioHo16SFbweY71ZxcWS+5oUqPDSvr9g==
-X-Received: by 2002:a17:907:7892:b0:9a6:1eab:9c84 with SMTP id ku18-20020a170907789200b009a61eab9c84mr4663877ejc.9.1694899047467;
-        Sat, 16 Sep 2023 14:17:27 -0700 (PDT)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id fi26-20020a170906da1a00b0099bc8db97bcsm4134004ejb.131.2023.09.16.14.17.26
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Sep 2023 14:17:26 -0700 (PDT)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-52a39a1c4d5so3953641a12.3
-        for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 14:17:26 -0700 (PDT)
-X-Received: by 2002:aa7:cad3:0:b0:52c:e607:3866 with SMTP id
- l19-20020aa7cad3000000b0052ce6073866mr4342397edt.32.1694899046430; Sat, 16
- Sep 2023 14:17:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A34134DE
+	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 22:20:48 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LLviDRwASAENPp2xnqTuuODlcfmFRyrjt2bPZiQMbad8zTKnhTtXHntRM2tpcQIqfEpEqjtURj8bCLHhm8z8ClFZ7t6kYBB76BnXYQF3AIfg6M8is21hZZBFhZA5BGt7DwfCLyqOs/k6kE2Rws+nT9pB3HVf4JJxdvVta0/54fHD7np7s74ydd5LgV28NDjwtYrxLCbU+KoGH2hBMaIVILt9lHVTQlbFv6AKnr02Woa2gj0ioTlaZFRJ8eDIjNUa6Eu35QVc3Sxm31P56LeCXvMEXaSu7CN7S5/vo1gHhcUr/cFqraCpwsRvL/qwZXYgYxNSFMZIgoGT4zNEgkdDPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jjloVZIP/s+fe9Z2CXwLSgW8kydhhQr0k/4sCN/Tzos=;
+ b=I+l04U/fn1L+K9eLoSpcN1uzhP57MTiTiEjfjr/rUSxKNefh+BSHgjXCUq7NpSZn1VQDlcO8+NhazPj7dFQKbBkV3DZo8/FSwACbXnXHe7ixOVbful0Gv9pN2cP+85too6XIzxuTkqgpFrXtvRodwXyZ2Dly/1nuyss9vze/yImp5FgGvdLt/xIGk+xA8o8D7jPHSOabHoEDHQMz6McU8rxzXgP3Sk0UN7NIyiNauXQnrhc/9wNzWNmiGPMzjA3O/mJMqDa0Sl2DgmhowfoLo63xSOc1LHqeKSrThXzB8Aj7H0p6iFAHHHzhysBOzt31W6AuBSkU45B98bD7V/Paqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jjloVZIP/s+fe9Z2CXwLSgW8kydhhQr0k/4sCN/Tzos=;
+ b=oPjhzpW0m+wgTeXlale4vz1LWqxyEtZjZ86JRQY/RbBg7jKZoE/B+plJl554EJlhjoXu08rxLSfp4IC4y0vIT9gUBoc9vgE/zmmyIoUPbaRAnDIEH03VY0hbw+XWKYa185TRZNyE97R3iI9yBUeJAnVey2yx6TLj/2fCkWIz/FMqUL/yZmy7CfRKvoPgE+c8RHozc9HvOFkW/TpI3PHw2N/cq1At0lhqVxS+WSQdu7MT+nzQ2rr6OKaUd8dgcoi9cXoMYAQhn38ORF80u01TWANcaUKeDnrzrSCY37Qg6ogiMY1BcOqSdzVM+mZ2ffdPSxZO7uUNquemxSZBTcsoLQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=virtuozzo.com;
+Received: from AM0PR08MB3298.eurprd08.prod.outlook.com (2603:10a6:208:5e::31)
+ by DB9PR08MB7606.eurprd08.prod.outlook.com (2603:10a6:10:309::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.24; Sat, 16 Sep
+ 2023 22:20:45 +0000
+Received: from AM0PR08MB3298.eurprd08.prod.outlook.com
+ ([fe80::7ca3:ff75:8b46:deb9]) by AM0PR08MB3298.eurprd08.prod.outlook.com
+ ([fe80::7ca3:ff75:8b46:deb9%6]) with mapi id 15.20.6792.024; Sat, 16 Sep 2023
+ 22:20:45 +0000
+Message-ID: <40eecbdf-40d4-0fa2-6718-3875ed852104@virtuozzo.com>
+Date: Sun, 17 Sep 2023 01:20:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: Possible 6.5 regression: Huge values for "commited memory"
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
+Cc: Linux PARISC <linux-parisc@vger.kernel.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+References: <1694366957@msgid.manchmal.in-ulm.de> <ZQWUzwiKWLk79qbp@debian.me>
+ <CAHk-=wh29JJSVGyJM7ubxOs51-Nxp6YnmU9Bw1gdOk3rrQ_0mg@mail.gmail.com>
+ <CAHk-=wjrEjaUw3oFVEYpF=AWAwrSM3sQTQHuPfFjFdQsvQxHeg@mail.gmail.com>
+Content-Language: ru-RU, en-US
+From: Michael Labiuk <michael.labiuk@virtuozzo.com>
+In-Reply-To: <CAHk-=wjrEjaUw3oFVEYpF=AWAwrSM3sQTQHuPfFjFdQsvQxHeg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1P194CA0033.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:803:3c::22) To AM0PR08MB3298.eurprd08.prod.outlook.com
+ (2603:10a6:208:5e::31)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1694366957@msgid.manchmal.in-ulm.de> <ZQWUzwiKWLk79qbp@debian.me> <CAHk-=wh29JJSVGyJM7ubxOs51-Nxp6YnmU9Bw1gdOk3rrQ_0mg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh29JJSVGyJM7ubxOs51-Nxp6YnmU9Bw1gdOk3rrQ_0mg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 16 Sep 2023 14:17:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjrEjaUw3oFVEYpF=AWAwrSM3sQTQHuPfFjFdQsvQxHeg@mail.gmail.com>
-Message-ID: <CAHk-=wjrEjaUw3oFVEYpF=AWAwrSM3sQTQHuPfFjFdQsvQxHeg@mail.gmail.com>
-Subject: Re: Possible 6.5 regression: Huge values for "commited memory"
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Michael Labiuk <michael.labiuk@virtuozzo.com>, 
-	Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
-Cc: Linux PARISC <linux-parisc@vger.kernel.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Content-Type: multipart/mixed; boundary="0000000000009839770605806f0b"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR08MB3298:EE_|DB9PR08MB7606:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e1e7a87-7639-4136-053d-08dbb7032b90
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	h9frdjV4Ay6yOc9i6J0eZ9O47cgd5fdEDxe1ruFvyKjISwZ0Z++MgvyfpoEM7G8plFNt+fJOCXUsrHaprv16KYfW78o40eKpnbMR2Fx1ezYtdZmNdc9iLS8I64JDoVRIJAiZF4jMlXgPoeSOJpgL/QYAn6myiMcAOtg22K5qqqisg8IjvNG4/OvXu03d+y9TP11+8fQqDnoVE99RibaRFzCdsho6xj1BNs4klRJQ8+1vNuqd3duxzghXRl+roan1WlyhE4O8gN/KK76exiR8DnGw+Pz8vhOgSmUsTI+JaPOnr2Fhy3BVbuu/U7MjD+elElZiE8BR6VSrWsPYxd6B0ywsrir5p0wO3OR9KaVip7URuZlrnL8cXhGXwxRi3ptkUalft1iV0frjr4m/xx0qZIb1o6lCq5KyulGK+kZmUKeL9BLa2pgQ6oYvO2oRPuA10neotnCPGepSntadOA/joc+TeWgll9CQqLsgl+bcGoc58A11rsy8Ne+o2pGhfYTcRvmt07iqe0YIWnygW1DTJJmCZB72MZ6V335jAIr7XSyy2Q0Mz2bg9va3pyTPEshF4MKoRcRRS94GLJrPyprT706CEG9dkicnwJ4oG7tSyy3EutDKtn/5FEMdU2/md7Oz08B3SBPhUM2l9STITYtryVpAVJ7IEiDdVAty3BC5shU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3298.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(39840400004)(376002)(396003)(186009)(1800799009)(451199024)(26005)(2616005)(8936002)(8676002)(4326008)(7416002)(558084003)(2906002)(36756003)(31696002)(5660300002)(44832011)(86362001)(53546011)(6506007)(6486002)(478600001)(6666004)(31686004)(316002)(54906003)(6512007)(110136005)(66946007)(66476007)(41300700001)(38100700002)(66556008)(14583001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V0F4aG5jVVh5cXR4aVhIam40cDZRRFViRFo3SERNeTZMblo2b0szejBRMURm?=
+ =?utf-8?B?UVJ2TFhnUEZ2ZkFhaGZ6R1BhSnlmenNPTEVYTCtUYld0blhNLzJBZkc4alFx?=
+ =?utf-8?B?Tlc0WnA5cEJOTDBuZlpmVHhNUm41SGJKdGpYdG5wd1ZQWXRvaWU2ZFVkWURM?=
+ =?utf-8?B?VCs0dStTZjF3T01zd2o4eURXQ0VZWklLN0lIbXhDOFJNU3ZmSVQxamdyb0E1?=
+ =?utf-8?B?UFQ2ZTZRdHNFKzdhWUFwZmJ6RVhuZHd6NUFnbGhQSXBRQzdkdWZVYllvQVE0?=
+ =?utf-8?B?bm9rWEs2Q0NRa290aUljYnVGZ2RDemwvV2dVV2w2L3ZKOFE3SnY5MEt1Y2dj?=
+ =?utf-8?B?bUR1VFoycm5vQW5JOGFTelhEc2tLc1VsNE14bXpVcXZBR2tyYkhLTmpockZj?=
+ =?utf-8?B?aGJCN1hJQjNocEpNQVBIUDZjaHBGWHhNRFVkbmFPZjhzczA1ektiYUZzTGNF?=
+ =?utf-8?B?cUgzTHhBbkphSzViaEJRTlJkVWRNbEZNZ3Y3Z1JPeFhtWnYwNTJxWS81Vmw1?=
+ =?utf-8?B?VExISHkzdzhEOC9ySGhWR1RvcTFwTjdvalhiZkIrUVlDTXAydFFGMWxDYTUz?=
+ =?utf-8?B?WU9rNy93WHlLRkM5K0dYRzRTeTk5eHMwVXo3UkxJdCtjQUpuaVF4Yk10QTRm?=
+ =?utf-8?B?MS8wOG50ZEVDbFo4eStySTlEUktLNlZEc2pIYytIN1JWTFRxZlQ3UGhPM2x3?=
+ =?utf-8?B?TXYxS2JHMDNkcDRpSDVBL1NuY2JPUXdZY0x4WFprM0FHUFFqZzBOOWxTbTNK?=
+ =?utf-8?B?Y1plMDN2cldDTmplTnAyZXJRSlRpeWFrRlhmNThleW14eVh5RFBsTmlwUUlD?=
+ =?utf-8?B?Zk96RWhRRFJqcU5INVJMSDdCNzNIM3ZKZmY4bEtDZy81dExocjRKUGl3dHZF?=
+ =?utf-8?B?eE9YZEwzYnNvVHVoQk1Ra2hPVGtqTDZOaEEraWRNUVJ6QXRuQlFkRldxZU5v?=
+ =?utf-8?B?UTNjeGNVRytqdXBoNVFEZW1YNjZRTHUzZ3JUd2ZrOUcvTjN5WXk3WWJFc3I0?=
+ =?utf-8?B?Z2NWTERRWmlGU3VZalpybURtZ2x0SU8zeEJqRyszaVAzdkZPS3F1VlE1cDZK?=
+ =?utf-8?B?dzE0UllDV282WVRKdS9sd2owaG1CMlNqSGNoek1BMktNdGdmemdCSE0zaVRr?=
+ =?utf-8?B?SnEvM2dMVmJLN21qcUtFTklWL1ErKy94b1hHdGI0UUFnVzFMenUyOU4wd0Rh?=
+ =?utf-8?B?cjArdVVUUklvbnNxdTRaYWJHUG1YWkVOWkVPTkUrMWUvbGVuMjJYbm1iRlBn?=
+ =?utf-8?B?NjVpeWtyUFpwU0ZHaUZWbkZiaXUvdGx4TTBLQ0lqWWo2TlRQL1dPZFAyZXBv?=
+ =?utf-8?B?aXUzcXJzcG8rSlVjemw3OGdJVjJmVEY5WE1TSEppbkpOb3U4bHhHT2sybVZI?=
+ =?utf-8?B?VlRXTU9scHdyQVlqUForT0pZZFdhdWF1QUY3aUhUT21PT0tUNFU4U1pBWXdC?=
+ =?utf-8?B?Z1dtaDFXRnV1azhQZjlvRnpDMEs1UFllbERyODBicVk3ck9oemwvaUZvbWla?=
+ =?utf-8?B?dG45ajc0d2FQNDQxWWtBenhkWDNHWkN2ZXo3VzJ1aXYxMEtXajN2OFJJR1Z5?=
+ =?utf-8?B?dFRaWm9WQWFlSDJiMndtQm85YTV6Y28rSnJVaW94VCtlc0hDKy9SMEhwd3Ez?=
+ =?utf-8?B?L1U4bUVNcEs2Q0VrZkFmRWNiQzJ1aEl3TmQ0MHUyUVdYZ0FjTko2Zk1PdTNx?=
+ =?utf-8?B?NU5hcWQ5NjlkTWpwWlBXNEl4dUtnMlRhaHhuWGxGQWRUdFNmeCs3VFlZT1RY?=
+ =?utf-8?B?RHNYUzFNdGZNckhlUy8rK1FPTDhCTVU5Ni95dVVPdFlLVkZzSjZkMnhEdVJt?=
+ =?utf-8?B?TFVYQ1dTOVI1R0YvQWJhL0RHMVJ2SHZwL08rbkNIVldGSHdyc2hmNUxkb0Z4?=
+ =?utf-8?B?Q081NFFsa09jdy9mZkp3cGZCSjlaY2JBVE10aGFXRVhoMkdRKzFoZEtQa0hp?=
+ =?utf-8?B?RDhrOXppMkI0LzFRSDFFaGhvbWNKWmxVTm52ZlFaUzVPSGJSdHpTeHNPUlRw?=
+ =?utf-8?B?OGZiMThrQm5OZFhRbk1OeWhRU0dDM2FJSlFiTWlkNXAxZUxEdnBkVTZQMXQ2?=
+ =?utf-8?B?d3k1ZjJQRjBXR01DVlBSZkdhMHdJU0k2Q0JGUjNOeklDNWpsRkJFQjlMRi9I?=
+ =?utf-8?B?S1U2b1hSWkJ5c0RkTGYwbnd6UDdWc05WTElNcnF1WThFWE92YnBaNERrK21N?=
+ =?utf-8?B?UkE9PQ==?=
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e1e7a87-7639-4136-053d-08dbb7032b90
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR08MB3298.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2023 22:20:44.8431
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dj7iumeUvkWyjotuMqLWJKByobH+2DhcJ35Px0diYJ+GTOYoGxkxVpzs28hykde/zg7/OKRGu4oJFsVIfOWXH11JHeovQVBHUNzcalpp9m4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7606
 
---0000000000009839770605806f0b
-Content-Type: text/plain; charset="UTF-8"
+On 17.09.2023 00:17, Linus Torvalds wrote:
 
-On Sat, 16 Sept 2023 at 12:31, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+> On Sat, 16 Sept 2023 at 12:31, Linus Torvalds 
+> <torvalds@linux-foundation.org> wrote:
 >
-> Does the attached patch fix the problem?
+>> Does the attached patch fix the problem?
+>>
+This patch fixes problem with counter for committed memory.
 
-So while I didn't confirm the fix myself, I'm pretty sure that was it.
-Getting the return value wrong would cause an incorrect extra
-vm_acct_memory() call in the non-error case when VM_ACCOUNT is set
-(and mean the loss of one in the error case, but the error case never
-happens in practice).
+Thanks!
 
-Which then causes 'vm_committed_as' to grow when it shouldn't, and
-causes exactly that "Committed_AS" in /proc/meminfo to be off.
-
-So here's the same patch, but now with a proper commit message etc.
-
-I haven't pushed it out (because it would be lovely to get a
-"Tested-by" for it, and that will make the commit ID change), but I'll
-probably do so later today, with or without confirmation, because it
-does seem to be the problem.
-
-              Linus
-
---0000000000009839770605806f0b
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-vm-fix-move_vma-memory-accounting-being-off.patch"
-Content-Disposition: attachment; 
-	filename="0001-vm-fix-move_vma-memory-accounting-being-off.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lmmj2etv0>
-X-Attachment-Id: f_lmmj2etv0
-
-RnJvbSA2NWEwZTEwMGM4YTZmODc2M2E5YzNiZjJjMGIzNjFjOGY0MzZlNDJkIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+CkRhdGU6IFNhdCwgMTYgU2VwIDIwMjMgMTI6MzE6NDIgLTA3MDAKU3ViamVjdDog
-W1BBVENIXSB2bTogZml4IG1vdmVfdm1hKCkgbWVtb3J5IGFjY291bnRpbmcgYmVpbmcgb2ZmCgpD
-b21taXQgNDA4NTc5Y2Q2MjdhICgibW06IFVwZGF0ZSBkb192bWlfYWxpZ25fbXVubWFwKCkgcmV0
-dXJuCnNlbWFudGljcyIpIHNlZW1zIHRvIGhhdmUgdXBkYXRlZCBvbmUgb2YgdGhlIGNhbGxlcnMg
-b2YgZG9fdm1pX211bm1hcCgpCmluY29ycmVjdGx5OiBpdCB1c2VkIHRvIGNoZWNrIGZvciB0aGUg
-ZXJyb3IgY2FzZSAod2hpY2ggZGlkbid0CmNoYW5nZTogbmVnYXRpdmUgbWVhbnMgZXJyb3IpLgoK
-VGhhdCBjb21taXQgY2hhbmdlZCB0aGUgY2hlY2sgdG8gdGhlIHN1Y2Nlc3MgY2FzZSAod2hpY2gg
-ZGlkIGNoYW5nZToKYmVmb3JlIHRoYXQgY29tbWl0LCAwIHdhcyBzdWNjZXNzLCBhbmQgMSB3YXMg
-InN1Y2Nlc3MgYW5kIGxvY2sKZG93bmdyYWRlZCIuICBBZnRlciB0aGUgY2hhbmdlLCBpdCdzIGFs
-d2F5cyAwIGZvciBzdWNjZXNzLCBhbmQgdGhlIGxvY2sKd2lsbCBoYXZlIGJlZW4gcmVsZWFzZWQg
-aWYgcmVxdWVzdGVkKS4KClRoaXMgZGlkbid0IGNoYW5nZSBhbnkgYWN0dWFsIFZNIGJlaGF2aW9y
-IF9leGNlcHRfIGZvciBtZW1vcnkgYWNjb3VudGluZwp3aGVuICdWTV9BQ0NPVU5UJyB3YXMgc2V0
-IG9uIHRoZSB2bWEuICBXaGljaCBtYWRlIHRoZSB3cm9uZyByZXR1cm4gdmFsdWUKdGVzdCBmYWly
-bHkgc3VidGxlLCBzaW5jZSBldmVyeXRoaW5nIGNvbnRpbnVlcyB0byB3b3JrLgoKT3IgcmF0aGVy
-IC0gaXQgY29udGludWVzIHRvIHdvcmsgYnV0IHRoZSAiQ29tbWl0dGVkIG1lbW9yeSIgYWNjb3Vu
-dGluZwpnb2VzIGFsbCB3b25reSAoQ29tbWl0dGVkX0FTIHZhbHVlIGluIC9wcm9jL21lbWluZm8p
-LCBhbmQgZGVwZW5kaW5nIG9uCnNldHRpbmdzIHRoYXQgdGhlbiBjYXVzZXMgcHJvYmxlbXMgbXVj
-aCBtdWNoIGxhdGVyIGFzIHRoZSBWTSByZWxpZXMgb24KYm9ndXMgc3RhdGlzdGljcyBmb3IgaXRz
-IGhldXJpc3RpY3MuCgpSZXZlcnQgdGhhdCBvbmUgbGluZSBvZiB0aGUgY2hhbmdlIGJhY2sgdG8g
-dGhlIG9yaWdpbmFsIGxvZ2ljLgoKRml4ZXM6IDQwODU3OWNkNjI3YSAoIm1tOiBVcGRhdGUgZG9f
-dm1pX2FsaWduX211bm1hcCgpIHJldHVybiBzZW1hbnRpY3MiKQpSZXBvcnRlZC1ieTogQ2hyaXN0
-b3BoIEJpZWRsIDxsaW51eC1rZXJuZWwuYmZyekBtYW5jaG1hbC5pbi11bG0uZGU+ClJlcG9ydGVk
-LWFuZC1iaXNlY3RlZC1ieTogTWljaGFlbCBMYWJpdWsgPG1pY2hhZWwubGFiaXVrQHZpcnR1b3p6
-by5jb20+CkNjOiBCYWdhcyBTYW5qYXlhIDxiYWdhc2RvdG1lQGdtYWlsLmNvbT4KQ2M6IExpYW0g
-Ui4gSG93bGV0dCA8TGlhbS5Ib3dsZXR0QG9yYWNsZS5jb20+Ckxpbms6IGh0dHBzOi8vbG9yZS5r
-ZXJuZWwub3JnL2FsbC8xNjk0MzY2OTU3QG1zZ2lkLm1hbmNobWFsLmluLXVsbS5kZS8KU2lnbmVk
-LW9mZi1ieTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPgot
-LS0KIG1tL21yZW1hcC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvbW0vbXJlbWFwLmMgYi9tbS9tcmVtYXAuYwppbmRl
-eCAwNTY0NzhjMTA2ZWUuLjM4MmU4MWMzM2ZjNCAxMDA2NDQKLS0tIGEvbW0vbXJlbWFwLmMKKysr
-IGIvbW0vbXJlbWFwLmMKQEAgLTcxNSw3ICs3MTUsNyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBt
-b3ZlX3ZtYShzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSwKIAl9CiAKIAl2bWFfaXRlcl9pbml0
-KCZ2bWksIG1tLCBvbGRfYWRkcik7Ci0JaWYgKCFkb192bWlfbXVubWFwKCZ2bWksIG1tLCBvbGRf
-YWRkciwgb2xkX2xlbiwgdWZfdW5tYXAsIGZhbHNlKSkgeworCWlmIChkb192bWlfbXVubWFwKCZ2
-bWksIG1tLCBvbGRfYWRkciwgb2xkX2xlbiwgdWZfdW5tYXAsIGZhbHNlKSA8IDApIHsKIAkJLyog
-T09NOiB1bmFibGUgdG8gc3BsaXQgdm1hLCBqdXN0IGdldCBhY2NvdW50cyByaWdodCAqLwogCQlp
-ZiAodm1fZmxhZ3MgJiBWTV9BQ0NPVU5UICYmICEoZmxhZ3MgJiBNUkVNQVBfRE9OVFVOTUFQKSkK
-IAkJCXZtX2FjY3RfbWVtb3J5KG9sZF9sZW4gPj4gUEFHRV9TSElGVCk7Ci0tIAoyLjQyLjAucmMw
-LjMwLmdjYTgxYWJhM2IwCgo=
---0000000000009839770605806f0b--
