@@ -1,99 +1,148 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9D2367
-	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 00:05:13 +0000 (UTC)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-68fc9e0e22eso2262207b3a.1
-        for <regressions@lists.linux.dev>; Fri, 15 Sep 2023 17:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694822713; x=1695427513; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uBFU91Ab8Ty50yBCscF+Su8H4xiggY1DMOJHupjwHzg=;
-        b=Z1tBy35MKyud/YbGZoLLOGXsffoCrsJO1VNkThi92L7xvsqsFc0Amn+cATEVMfoaV0
-         EyAUXL0wFYnLEYaU2AfQH4kYPZsQlELVHyxSw+L1OzyiR3zu7UZFxpgNCvlmrqJvZvSH
-         W3+4lJnly14E2PSG65YlCmQzjiUrt9WbLkQ6fR595ieMXvtgoyeylz0sBlWTSjvLHVVr
-         8L5uR4dl2nUxmIsCz9ULWCvjvUhdvfeao78T5WFKl4hHsV3ovX5E7XdO91jzwqiTk8H3
-         Zp5M6fFHhX6N/WEyMUFFhnk95tQXjzsk4cKlaxLi9cQ/uiFmqspIs4lBZ+zJNZa6uCzk
-         g1Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694822713; x=1695427513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uBFU91Ab8Ty50yBCscF+Su8H4xiggY1DMOJHupjwHzg=;
-        b=UEnVYRRYY9Awte4L8hMhdvAyoPkor6in3QrBXHGWAkfdOYGHhFxCrOLg0IXs/O+drc
-         FqSLU8Xe1jkScQX8RK9YX6rCWowZR3POYjbjqA/7Wx8MUKrTylTDvfFGC70yHHqV0dCK
-         m2eGhB7q6A7cA+oWaYJ0EUM4VjpXVmi09jFQUp0w6X1cfxBtAsifDTxweVE5hMGYOs4j
-         55Jc143e0uGEisGX/CgK+hmmazlKQLEVlcu+7dOLf6i2btEyNrI8p3DSyZSBzTkTfCxT
-         bFJy+kpSrcPn39mAbQ7erN8pCEMrQd5TcgIFdH0oud7MKctsoZlASpQ56z0LVUCxbhem
-         1RUg==
-X-Gm-Message-State: AOJu0YzHk6RD8T6vkFUsp17zcFQsZk2hgkRLhSOoHOQfrqYiHxW+2ya9
-	MdRy7FzTGAlOCmZKLSSNFSM=
-X-Google-Smtp-Source: AGHT+IF0Gziwgjs8IBkPNW32gp0eqmvsqmMuvS0x7PTIdUhgCFb6Vt3ZXEPLS8yJVzATlvoLr0H0cw==
-X-Received: by 2002:a05:6a00:1588:b0:68c:4e22:8f78 with SMTP id u8-20020a056a00158800b0068c4e228f78mr3528463pfk.25.1694822712935;
-        Fri, 15 Sep 2023 17:05:12 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id c5-20020aa78805000000b0068ff6d21563sm3569946pfo.148.2023.09.15.17.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 17:05:11 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 33456811F023; Sat, 16 Sep 2023 07:05:07 +0700 (WIB)
-Date: Sat, 16 Sep 2023 07:05:07 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, Tester47 <e598@gmx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux TTY & Serial <linux-serial@vger.kernel.org>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Linux DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: Fwd: Kernel 6.6-rc1 fails to reboot or shutdown Ryzen 5825U
-Message-ID: <ZQTxM0JdyV8mpxbt@debian.me>
-References: <2bc62c07-2195-e378-c057-f28e8d4a6034@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D4E1107
+	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 02:22:02 +0000 (UTC)
+Received: by sphereful.davidgow.net (Postfix, from userid 119)
+	id 7071F1D5832; Sat, 16 Sep 2023 10:22:00 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694830920;
+	bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bt0sq8rpKmyJtSfTvpTeQHNuYIr4PwCfKXLf/gJU/KfUHfxeyR+snNUYyHDv7vLKR
+	 eT1N5OpmQ1dIV7LzG8VuLa/CdzNemLPNKk4SYVZ2O4q6arqU9a7iuhqNsbQ0xeWPUu
+	 v/imFF9FKEJjPUHYUPYnKI4/QEKdRhloEroYtydKfPq1grdBClolt6fwgXPNMv5ERh
+	 byeVX5WXPUBFg/684XOXgtuL3rvDvNkCyL6w16BxMQOaOjO47WRckgLaRaDjGPrbzB
+	 EXSQFfo+b45VS6HiXs1FX39QXH159OyAqwVF/oHhRamBu641xgkBackzQOg3mO3Qx0
+	 ho36lWsCvtQhQxpe/PgZs9OvyaW9CMTtN5S8o4D2J6SKCXPEa563oOq4SUJIYPFapo
+	 znPZVdSMEPqvA5AJeQYBDUeFnGjVzwP7N2Q7Z14d2mzeWF1YMatp2OlrXXk3K+k2Xp
+	 r+FSBJ4gyTp1T2hc+ZcCAFENCicevBXL0FEjEZ1m9AooSvT0LEXZOUwE14ooPeMEiD
+	 t9kZ065fVa0RxzQqJpDxwl71dxi7fAyya7a2n2nWFIVYIQbucilZaBgcRTHz9ToHOd
+	 McrQP3Cqg4k7KUOole9pLVKbxSFavmT6oaIhRHSqMkYOKq9BlLrpLt8UIzBZ9ejrqu
+	 HmUEjHU24QKwxkBCVwPZUWkE=
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	sphereful.davidgow.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.1 required=5.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU autolearn=unavailable autolearn_force=no
+	version=3.4.4
+Received: from [IPV6:2001:8003:8824:9e00::bec] (unknown [IPv6:2001:8003:8824:9e00::bec])
+	by sphereful.davidgow.net (Postfix) with ESMTPSA id C55A21D580B;
+	Sat, 16 Sep 2023 10:21:57 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=davidgow.net;
+	s=201606; t=1694830917;
+	bh=Hjtk5BbVsm8eL9+VXeOx9qTRndZHLmAyy1xJeOlFiBs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d3c1T6dDVieNLo1yeoJaClHy8gD1NTEsUphxaHWqXVNgPzKoEsTeDWecTQ0zSy8B5
+	 ZLjYFhBEJdf9zNGTjrbzaw4uCg8iAycQuFgIrk21wl1Lvk1QMCezUTVp/B91OGfrfK
+	 Usew6qzj+mXdiwYKyhl75Kf7yGcbXbTBk8C9YnfF+CmyBS6qRYeNIiQ6Kv5epbPWbt
+	 Sqb9+tYsnuAAv2h4toCYBoawXbuwHleAtETHixVO5Txk56VcwunisJmg5DdaO8mm7q
+	 1GWEUeXYRqqGY9yL6uOuRvPlupQaOQI7qCrZJBVTj1OKZSyeESd03jp2tIZ95AldVp
+	 laxrLuNmlOca8z6lVJ54h2R7vEvCAhm7C/SeWSwWraNM4CcW2051ssb+Yku/xhsi3S
+	 uPOvHU8WzS9gCvj7tuv1e/y1yVuThPu28x0hlo4+pu0iHpnH3x7XLE7nx+me0zmOK6
+	 2PFxoKomldV4lMj7Z/J/6NS41RLW6xBJ2uwqOiqi38TrUePzmLcWTnHh1lkb6Rk8zX
+	 LAQMKmXcoROhzrtKC2bXfPGmURsrthCoSLq3cijcyN1m+uzvJd0W7xmQAcF8mFMHug
+	 7+JC17Z7LGiXAAY9y6IVMh1CbazdYk4C8P3SFzn0crdk2pJzvQtWX4Q3KWkBP22kIv
+	 kaNho1Sa5AbfVCLvrtQ9zA68=
+Message-ID: <bbe4ae16-86b3-4629-b5e0-c704881fe5cb@davidgow.net>
+Date: Sat, 16 Sep 2023 10:21:53 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Xh9/EH8MO3HbfOrP"
-Content-Disposition: inline
-In-Reply-To: <2bc62c07-2195-e378-c057-f28e8d4a6034@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
+ SATA to Constantly Reset
+Content-Language: fr
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ patenteng <dimitar@daskalov.co.uk>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux IDE and libata <linux-ide@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>
+References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
+ <ZQHRQHAPQdG+Nu1o@x1-carbon>
+ <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
+ <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
+ <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
+ <ZQQa0QRhm1BuI5IT@x1-carbon>
+ <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
+ <ZQSEXl0GB3iKoqjZ@x1-carbon>
+From: David Gow <david@davidgow.net>
+In-Reply-To: <ZQSEXl0GB3iKoqjZ@x1-carbon>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Le 2023/09/16 à 0:20, Niklas Cassel a écrit :
+> On Fri, Sep 15, 2023 at 08:26:58PM +0800, David Gow wrote:
+>> In any case, the bisect is done:
+>>
+>> 624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
+>> commit 624885209f31eb9985bf51abe204ecbffe2fdeea
+>> Author: Damien Le Moal <dlemoal@kernel.org>
+>> Date:   Thu May 11 03:13:41 2023 +0200
+>>
+>>      scsi: core: Detect support for command duration limits
+>>
+>>      Introduce the function scsi_cdl_check() to detect if a device supports
+>>      command duration limits (CDL). Support for the READ 16, WRITE 16, READ
+>> 32
+>>      and WRITE 32 commands are checked using the function
+>> scsi_report_opcode()
+>>      to probe the rwcdlp and cdlp bits as they indicate the mode page
+>> defining
+>>      the command duration limits descriptors that apply to the command being
+>>      tested.
+>>
+>>      If any of these commands support CDL, the field cdl_supported of struct
+>>      scsi_device is set to 1 to indicate that the device supports CDL.
+>>
+>>      Support for CDL for a device is advertizes through sysfs using the new
+>>      cdl_supported device attribute. This attribute value is 1 for a device
+>>      supporting CDL and 0 otherwise.
+>>
+>>      Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>>      Reviewed-by: Hannes Reinecke <hare@suse.de>
+>>      Co-developed-by: Niklas Cassel <niklas.cassel@wdc.com>
+>>      Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+>>      Link: https://lore.kernel.org/r/20230511011356.227789-9-nks@flawful.org
+>>      Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+>>
+>>   Documentation/ABI/testing/sysfs-block-device |  9 ++++
+>>   drivers/scsi/scsi.c                          | 81
+>> ++++++++++++++++++++++++++++
+>>   drivers/scsi/scsi_scan.c                     |  3 ++
+>>   drivers/scsi/scsi_sysfs.c                    |  2 +
+>>   include/scsi/scsi_device.h                   |  3 ++
+>>   5 files changed, 98 insertions(+)
+>>
+>>
+>> This seems to match what was found on the Arch Linux forums, too:
+>> https://bbs.archlinux.org/viewtopic.php?id=288723&p=3
+>>
+>> I haven't tried it yet, but according to that forum thread, removing the
+>> calls to scsi_cdl_check() seems to resolve the issue. This is all well
+>> beyond my SCSI knowledge, but maybe a quirk to disable these CDL checks for
+>> these older marvell controllers is required? Though it seems odd that the
+>> device would be rescanned and/or scsi_add_lun called multiple times a second
+>> -- is that normal?
+>>
+>> In any case, this seems to be the cause.
+> 
+> Hello David,
+> 
+> Thank you very much for your effort of bisecting this.
+> 
+> Could you please try this patch and see if it improves things for you:
+> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
+> 
 
---Xh9/EH8MO3HbfOrP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks very much: this seems to fix it here (on top of torvalds/master).
 
-On Thu, Sep 14, 2023 at 02:03:00PM +0700, Bagas Sanjaya wrote:
-> #regzbot introduced: v6.5..v6.6 https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D217905
-> #regzbot title: shutdown/reboot hang on Ryzen 5825U (stuck on amdgpu init=
-ialization)
->=20
+Cheers,
+-- David
 
-Fixing up commit range:
-
-#regzbot introduced: v6.5..v6.6-rc1
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---Xh9/EH8MO3HbfOrP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQTxLQAKCRD2uYlJVVFO
-o8rgAPwIzBXYXKeK6pcEOYV2weLfbQUqgqPF2jOk3Ec5KM6KWQD/bUH8Sr/mt0Fy
-cMDw3XSd1I3kgWf0GonS0cLKCV7tpQ0=
-=kMdp
------END PGP SIGNATURE-----
-
---Xh9/EH8MO3HbfOrP--
