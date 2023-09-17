@@ -1,223 +1,242 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A125D1102
-	for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 22:36:01 +0000 (UTC)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38GMDbMf007758;
-	Sat, 16 Sep 2023 22:35:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-03-30;
- bh=eu+fgDhJukmDv0rB7hYu7J5Bm16Q9IPzIJKgoqTnpt8=;
- b=BZKI+DgCruDMIUntsw6jZO376vMpXZG++nh2bW5s1E0sEPYv78YxEi7hFnxZM8lUd2Ss
- Bl37HodnThIfG6q9rTtmnlXlcxSZZhlAuKYhA34qjN+7AK3qW3cdyKNWofSsKE8eCepN
- WEJFC9YNTvdQscGby5qSmNtKaAnmsak5dHeQtIoE7oi1mHT+fpnE+hTKOGxxn537yNiO
- zq6PQy43ybl3EkYpDS0Dp214FmMlqf/InvINeDAsYjzPZGzcEjDsO9xQesKnMV0ASfuR
- PR5Qllr0jdnbCVcFGfbrNWaS3CXaduGipj1x3Ay/peT7nr4WhOiDywfs9ue1IHFbRae4 zg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t52y1rqmt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 16 Sep 2023 22:35:25 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38GJHmEG002078;
-	Sat, 16 Sep 2023 22:35:25 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2102.outbound.protection.outlook.com [104.47.55.102])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3t52t2nrt1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 16 Sep 2023 22:35:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EwbCukiam2a+WU3v+lOboNLuRjsgikeftrAUHOx/hM8BbYCIBLGU5g1i4bEfPq/ipmfoC+yOnlr2fE4ge83S1sp9dKpfHxO+nPaZwgN/96eGLj9R1OTcsii2W0bb7rjpQyDeFKYrTK1GN6HWNQyHJj5teQmEy94foBHOEz3plddZFvJSjX2g2+dqhXWIIY/MgY155UjvHZDvDpM7gM2dtB1lZjXxdu7DvuOzL7JeJO9Mudqv7jpX7C7KjX9LIHmYFYZu0RKDWKRw9kXEmyTKOf5x6oRHsLDrUtU6YKcpY1QLGDAdBr3RtafijyKIVpj9Do1fKzHx3ffC+7Tl0y1Ufg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eu+fgDhJukmDv0rB7hYu7J5Bm16Q9IPzIJKgoqTnpt8=;
- b=SY8fzfXWXPeJ8Jme19U46midA85KT+OnQme7hvbYNI7iJ0QkNA2bPc2DDGg8jA9qHspoTFGS3OiEAaQG1luVpKbJvtamdMULzstexFi0D8xSuUvLP4YbR4KfJH/zIG0j/IvzAL/aKvtMrEevkSH8Kq6gWB5ReIWTERlN0TYE+G1cZls+omWBEPka5vj9eXvl2GPzepfOV7mlfUVmyMANLN8VnpEcQQ1wmLfTJUR3YBU52ZUx60iE6OhmB0J26LUvfI9rRtIvEAAEtjXamoXCVvt9QtrhsmIRAuwx+PVvRDwg+T4HC6JnfxlLPrwzzlRyJ0l8E+eNVDVIuzY1aTEDiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC2836B
+	for <regressions@lists.linux.dev>; Sun, 17 Sep 2023 00:35:07 +0000 (UTC)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1c364fb8a4cso31821785ad.1
+        for <regressions@lists.linux.dev>; Sat, 16 Sep 2023 17:35:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eu+fgDhJukmDv0rB7hYu7J5Bm16Q9IPzIJKgoqTnpt8=;
- b=LRtn4mSUbGPYqHAKfFnXKh1wAxl4q/0Bu213zRRPdIltqdVBCrxzwfqGVnFRCucJawF0kjhVfQHy0vOio2Z+9IblqIeYxUjur63/tMe54P0PdZGCou42xghuEqEsPZA0cETAzd3OSfAikZVzqemOGNMMgWJazn9Lo4icEstmBOo=
-Received: from SN6PR10MB3022.namprd10.prod.outlook.com (2603:10b6:805:d8::25)
- by DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.24; Sat, 16 Sep
- 2023 22:35:22 +0000
-Received: from SN6PR10MB3022.namprd10.prod.outlook.com
- ([fe80::8979:3e3f:c3e0:8dfa]) by SN6PR10MB3022.namprd10.prod.outlook.com
- ([fe80::8979:3e3f:c3e0:8dfa%4]) with mapi id 15.20.6792.024; Sat, 16 Sep 2023
- 22:35:22 +0000
-Date: Sat, 16 Sep 2023 18:35:18 -0400
-From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-        Michael Labiuk <michael.labiuk@virtuozzo.com>,
-        Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
-        Linux PARISC <linux-parisc@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: Re: Possible 6.5 regression: Huge values for "commited memory"
-Message-ID: <20230916223518.h7zv2ysybitemoab@revolver>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Michael Labiuk <michael.labiuk@virtuozzo.com>,
-	Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
-	Linux PARISC <linux-parisc@vger.kernel.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-References: <1694366957@msgid.manchmal.in-ulm.de>
- <ZQWUzwiKWLk79qbp@debian.me>
- <CAHk-=wh29JJSVGyJM7ubxOs51-Nxp6YnmU9Bw1gdOk3rrQ_0mg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh29JJSVGyJM7ubxOs51-Nxp6YnmU9Bw1gdOk3rrQ_0mg@mail.gmail.com>
-User-Agent: NeoMutt/20220429
-X-ClientProxiedBy: YT4PR01CA0060.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:111::29) To SN6PR10MB3022.namprd10.prod.outlook.com
- (2603:10b6:805:d8::25)
+        d=gmail.com; s=20230601; t=1694910907; x=1695515707; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvnoTq8kgRLmMYnH92XBBzRZojHSijMAth7s/bu24Ek=;
+        b=MSxy94DBsJ/S0SvMDtzJ1j3A18ubJHVi4QtLS8pokZWOCw71gTbrysbGSFHZMfMqgm
+         DraHpYnBGt7CNxcWoAONr/b7Cyq5bkrCid17XbPrNwSItd3s31+EtVWKp+6V4VYa5UBE
+         PLJ0MDX7oCe/YcBpbI154dkl0hoyRD+U9qiPI0oc7HD0hSIxIvKYc1T+yv+k67DNVtCX
+         2DMcCeXkv9t/f5SZWDMaQUKEn88IVwrdudVNsIL1NwODjLN1/9rWHS1CxP2f1YD9K8KG
+         T2S5V0FrP8/e5vC4Xqxzw9c6wYcPy3GOTp9X6XP+Bf8K7Pg/fLLYxA5f7D1wyj2Oj4Lt
+         rQ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694910907; x=1695515707;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UvnoTq8kgRLmMYnH92XBBzRZojHSijMAth7s/bu24Ek=;
+        b=Dtb+DjqTxzrW+csNjBarTqkXFaRXHPHg0hiQ6Ni0M60X98wvlJmcmZvWsFq82G73CZ
+         ZhRwWVHOk6fmxZVuEnavkaYihfi+Tiu2bd8oQ2+j+p42qhNIMhaNsCRA2UBwW79s+IJ+
+         sxocaIN3gY59wQuo6vnU0UASyZ+m5yWZ3gxUvhEwHXrU4Xl4fpKtdvZcZcB8H0yTOmuF
+         E8jX9y+oamZF25JrZ1TwJdV4l4IeEqBPHrZqpazEFUqvBikT8Iel9VPTkpWTK0cS+SLk
+         Lh+xKahPaXyfROa2KaYvSBw5au5NQkU6SrBoWOFLiqrSLQwSkb1s23DkmHSDhGopZ9N+
+         8q/Q==
+X-Gm-Message-State: AOJu0Ywx97JspES7WDHmZtch4TralQHoQDT0UIyHbdYr2jYR5uFCdFCL
+	SzN9jh+R8huFPuNIuyV0rfg=
+X-Google-Smtp-Source: AGHT+IFroDpN4Ujpq3VcM5VtaIKGIiCy/YHwzx5lROriXPLYoQ1gZCRSNunUo2t3Ozd6qgfdWDrKhQ==
+X-Received: by 2002:a17:902:6b05:b0:1c2:218c:3754 with SMTP id o5-20020a1709026b0500b001c2218c3754mr5441599plk.53.1694910906841;
+        Sat, 16 Sep 2023 17:35:06 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id q20-20020a170902e31400b001b8baa83639sm5790896plc.200.2023.09.16.17.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 Sep 2023 17:35:06 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 32000819BFC0; Sun, 17 Sep 2023 07:35:00 +0700 (WIB)
+Date: Sun, 17 Sep 2023 07:35:00 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Yi Zhang <yi.zhang@redhat.com>, Ming Lei <ming.lei@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	Changhui Zhong <czhong@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra (Intel) <peterz@infradead.org>,
+	Kees Cook <keescook@chromium.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [czhong@redhat.com: [bug report] WARNING: CPU: 121 PID: 93233 at
+ fs/dcache.c:365 __dentry_kill+0x214/0x278]
+Message-ID: <ZQZJtHHPZwCeQH9v@debian.me>
+References: <ZOWFtqA2om0w5Vmz@fedora>
+ <20230823-kuppe-lassen-bc81a20dd831@brauner>
+ <CAFj5m9KiBDzNHCsTjwUevZh3E3RRda2ypj9+QcRrqEsJnf9rXQ@mail.gmail.com>
+ <CAHj4cs_MqqWYy+pKrNrLqTb=eoSOXcZdjPXy44x-aA1WvdVv0w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR10MB3022:EE_|DS0PR10MB7933:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb993b2b-f996-4f74-43e7-08dbb705365e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	7TEcSPxCJYaT+bGZL6oc9UlRqZxIbC2D6R1UjmSnNsA7gzFODbwiQUyJuj11FNZX1cNYWzaL6J8n1TY0rfGeouC3OCGhJuw/1r3dPlOQFk8JIaNOM3Wj7uGezse48HRfK29zlJlPF5WrrrL7D1Qu2ZeljWuByf1eRqEPkKpEwO/4KsKjD0uzZ8Hcx+Ifm5eseo7M8c4PwRNQiYRxmh8rvOFJAVKcqXxmOCqvihHx8lihOPvzNoauK6bWycPJ2uFPT8soby4NIwuMhs24nuXPVXZfpHqy7DtfBI3Tv/04+fy+VAqyauBwV+yNsvl9W0gonk7egOGAFXjPfsSexLfB3SdQSSMAZgCtj9hvgeAkI66zEgpJq2CbNjHdSKcy9/EdbzYUsVIzvpWVDUkcmSpYpJChSKGYipgYbgndKniUTeoBBj8TatUAJ5p5qke+P6fPzKD7rNb+KncynL1NRzMfgqzS+XtGF4FAUw0DyVBxd561Q5l6z/DCVtYChLtzdD2+RnwV4Xtz7+bqMRlvFUeHNiJwaNoXLv0se8+SEDUM89n5Cr1p7eg2IW7sTDOhdlcQw1PaDad5YfFLwu6uWKZxhO02bcfVUSG7yMHfwJtAjqE=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB3022.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(396003)(346002)(136003)(39860400002)(376002)(186009)(1800799009)(451199024)(6512007)(9686003)(54906003)(2906002)(41300700001)(8936002)(316002)(8676002)(4326008)(6916009)(7416002)(5660300002)(66946007)(66476007)(66556008)(6486002)(478600001)(6506007)(6666004)(38100700002)(1076003)(33716001)(26005)(966005)(83380400001)(86362001)(14583001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?AU9tYGEbhUTa4gdleOhYg+OHkrTkN9VJUMAvvPWPqiYmsB0b0PX57KkiK+h4?=
- =?us-ascii?Q?T39zyV2wRzRHNXpZvxRNZL0ZnHgCP5Lo6J56c8XPPXSo0pJylkok6vBul/O6?=
- =?us-ascii?Q?lWqQbSR2x+7zqSg8Bu3PD4w9/QBoLxxSx3hgs96PBergDe502MYmnxcFVLz0?=
- =?us-ascii?Q?JFjg2N+Mkj36VChy+xnw2pgHCV1zGigzvqv2YLBZSwOULIYyJlSxgXlOz+AK?=
- =?us-ascii?Q?9FiyZ32VpXzBw2v2gNzR+h1+pwqQ2fEN22m5pcLW83MI/p8m82+EqqmYQrJ/?=
- =?us-ascii?Q?59JouUDFurrcyX0IaAgq1/C3OkcNKDPlI1SsAH0WJE9Edx3u3ovlZRALJEwh?=
- =?us-ascii?Q?3uFNycdKN4EMh3MasI71q4OOTpouoy5djGbwUDcPhv0L6OoQ9af9f75VUJmP?=
- =?us-ascii?Q?VmGIBUsndp9UbNX1oQJpWqK8jqk8C8ltTnnbkLIk9s+kk8jpQypqtoHX8hrs?=
- =?us-ascii?Q?CaFbAeq2F3jsZs7+bwxrZIAEx2loJGRgUJGspTDNDdtfc/z7ew1Fad4+LLxq?=
- =?us-ascii?Q?GUibd8a+e8Ixtn1p1QyNeaoavlc8/lauSV5q1kWu/kGe/fFc5GYf8h9fMitf?=
- =?us-ascii?Q?TZ1D5wOCdSgeuxuU4ZbEUJwxyrsyYbTSxfHiOWZIw8ywokPcsXRuqKXTY2yd?=
- =?us-ascii?Q?FJGgwXsFDuZFBwW683yzKUvS/nhpTxqiSGB2GxDmMCV/NX0YprrvgRuOiZOo?=
- =?us-ascii?Q?9q63UKLg0GO7K97+RCcXzhEU4cpGto8hoA+De/Y0CvokK2s+pIzYFhtB+3Oi?=
- =?us-ascii?Q?wM0FxB4sNI2hy2azgSoV++HXyb4OyS6Q80Nsn3h0l8AYS/pjrtmCCZkbxk5T?=
- =?us-ascii?Q?xHFphS5/wpsIXziKBMEZ3FlQ1hz8wj/9PsZdcI2oBEwuhnhA4Qk5dXxKx9ma?=
- =?us-ascii?Q?P/3NB8FHcGa64nDOQ5FlOTbESeBfkW8u+20YOeS1r1QnEV//nUMkPUPiJnQv?=
- =?us-ascii?Q?1BIKoQYbDHZ1b1c3HFkFjlQWaGYHaaSJmLE86+ygAw1zoiorJxwvhFQ5QlkD?=
- =?us-ascii?Q?KUbKhnii5ghf/RVr6NRVyazkvdpibH71azC9VfYQqd4V+2t80um6MH7WskuG?=
- =?us-ascii?Q?a211+0MG4hjN385MKdIhysxhWW3pmYUtGXqIK+LjIcCAjZxA0oU+25mZXL2n?=
- =?us-ascii?Q?OaHX64trxBvMpMV7kzRVrdahSpSA6HHdu+GtOdgRjzHo2gFakIwxxc5uIZA0?=
- =?us-ascii?Q?uZ2BgtEaYniTAaCw4k87qdS9rFnszI8Y/m2Mi4OG89pVTLjGijRNSFGzekgS?=
- =?us-ascii?Q?zNCsQd13EPnGV3zKR1dh76Ybf919O/4WeELM3nKqAkU/QDH64UPm/83y86g+?=
- =?us-ascii?Q?ck3GVUuguv2XNE3ZpIvZm6RnLRrA3+lHb0Hef1FMl9NTPtQxa4QnWBL7l/uc?=
- =?us-ascii?Q?X6XvhmzT2M3ZL5324W0QS3Lr9HZCkTRzij06oFELbmtRn3KGm0pXr/QvI4S2?=
- =?us-ascii?Q?FWXtsrD+26UPbuw2vK69ownm7ksfn2Yvc66BiIVi9HZU4AVBuz/rNNWDDvtV?=
- =?us-ascii?Q?5YjnB9EMBSG+Tu9q8MNh+ONaKxFS0BK6Dl9qWYnJOqHETmdXvVGQTzm1adGi?=
- =?us-ascii?Q?Qo3jwSIk6nuI3FjaaynpOZp0UjjSgXSTV6tJiWtI?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?us-ascii?Q?R9JFucxrqXL329ghR/nBezAn0NuW/OvLpDhCJsTx+wmOVc6tFVQNFznIA/eb?=
- =?us-ascii?Q?rMMIt0iw8a3d5c+eOAQg+6IBTBytArXnfSTwMmGNna17E6shcn2lV1Kh45fl?=
- =?us-ascii?Q?XwE9UH/idW3jxdfg2bwhKwF1UmfJUxayybzkEWMkDJfkmOHQHoMEaFdZAv1y?=
- =?us-ascii?Q?tHz62M3n1Dw5rVgp/80RGlKEIuchjRyZ5yRuY5b1SKafdyzeHpn5GqzS6qjF?=
- =?us-ascii?Q?deqzOeeb1fpI4tgCzX6YZdlVALiYtliO5EeYecRST3vOpUBkw7GpqOafv7GD?=
- =?us-ascii?Q?O1GxK1HhO2RvE5oFoP4EeVaRp3Wlw7XBQKRbrr98341tQVnpeK5kkruh9m3G?=
- =?us-ascii?Q?fEBe0ivgsjSFWmcInA1lKSFItd6t+D4yr52DORsut9SSbm425mqagKFCUQRE?=
- =?us-ascii?Q?CKXAgofPFtwzeOesKGxcaakA9k9dtu637DRWL8I167gNEmqQ3bDLVLAWeGeS?=
- =?us-ascii?Q?T9c3c3zqkSs0/6IY4yi6Sjwhy5qdF40xWj3+zKqPD9eX4oVw+P+uvnBvMFQ8?=
- =?us-ascii?Q?ydnQftjmR1C4VmNF3ZoQcIYDvF5WwLD5gQlw8JW9EmO4qi11csIXTETsrVFO?=
- =?us-ascii?Q?qmRV+J26UpBAKJzL2eOYMl8Wjgb46l7vZmF5WdBxUVV/mlYPU6/YCdQErh6S?=
- =?us-ascii?Q?hzCWaOfDLsXV5ffjJKuCWNUVDFyxoIPsqCNhMjDFI0+BwMBo5U1EywBEkCQc?=
- =?us-ascii?Q?pD6LrOSp+KbsJtY8Kno1ZHbGl75v3MLAf5EHyS+d4IwBFGULNlwrCpJzzvyf?=
- =?us-ascii?Q?bfeKX9qHJJoXA9Fc9o0s24vPB946GWp+ne5SkuagzN3c2rSgDc3A0dA/OVk2?=
- =?us-ascii?Q?/HkIF9jCLPr4mHBklPTY1n4hFFpAutgEcVD1/3NIFrtB+iV+qsQIkrc8WpQt?=
- =?us-ascii?Q?gkEIin+ERm7fs4/jXbDdDOE4JpLF/j7Gc2F8aqvOC4QzNa7cDteVzpinqwuc?=
- =?us-ascii?Q?QLGT8FZoqjBWyJFQFFVF/Objnck7lAaXxiz/PRs/mbdbscxRcaJsXh7kD3Bk?=
- =?us-ascii?Q?TZ1KIZrmwd9ReVFUDmIF9o3MARbmYX3BYtO4Dya+QhAgiZk=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb993b2b-f996-4f74-43e7-08dbb705365e
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB3022.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2023 22:35:21.9538
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L1pzDjAL95Rertakz3rziKYc7eLt9Ox0mCT1XfdQD3DRe7PeELoGA/L6ZodMgerJ44lY91lJ8u5qshxZDkxgEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7933
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-15_20,2023-09-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=919
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309160201
-X-Proofpoint-GUID: iArYud8SkCSHyc9bhy-nJ7lpVJMwKSIJ
-X-Proofpoint-ORIG-GUID: iArYud8SkCSHyc9bhy-nJ7lpVJMwKSIJ
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q4BzXabHRQeqqnGy"
+Content-Disposition: inline
+In-Reply-To: <CAHj4cs_MqqWYy+pKrNrLqTb=eoSOXcZdjPXy44x-aA1WvdVv0w@mail.gmail.com>
 
-* Linus Torvalds <torvalds@linux-foundation.org> [230916 15:32]:
-> On Sat, 16 Sept 2023 at 04:43, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> >
-> > Thanks for the regression report. Michael had already bisected it [1], so
-> > telling regzbot:
-> >
-> > #regzbot ^introduced: 408579cd627a15
-> > #regzbot title: huge committed memory due to returning 0 on do_vmi_align_mmunmap() success
-> >
-> > [1]: https://lore.kernel.org/linux-parisc/30f16b4f-a2fa-fc42-fe6e-abad01c3f794@virtuozzo.com/
-> 
-> Funky. That commit isn't actually supposed to change anything, and the
-> only locking change was because it incorrectly ended up doing the
-> unlock a bit too early (before it did a validate_mm() - fixed in
-> commit b5641a5d8b8b ("mm: don't do validate_mm() unnecessarily and
-> without mmap locking").
-> 
-> HOWEVER.
-> 
-> Now that I look at it again, I note this change in move_vma().
-> 
-> -       if (do_vmi_munmap(&vmi, mm, old_addr, old_len, uf_unmap, false) < 0) {
-> +       if (!do_vmi_munmap(&vmi, mm, old_addr, old_len, uf_unmap, false)) {
-> 
-> and I think that is wrong.
-> 
-> The return value that changed was the old "return 1 if successful
-> _and_ lock downgraded".
-> 
-> Now it does "lock is always released on success if requested". So the
-> special "1" return went away, but the failure case didn't change.
-> 
-> So that change to "move_vma()" seems to be bogus. It used to do "if
-> failed". Now it does "if success".
-> 
-> Does the attached patch fix the problem?
-> 
-> Liam - or am I just crazy? That return value check change really looks
-> bogus to me, but it looks *so* bogus that it makes me think I'm
-> missing something.
 
-You are correct.  I should not have changed that check.
+--q4BzXabHRQeqqnGy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I haven't devised a way to check this on parisc (I finally have a qemu
-parisc vm booting), but it should happen on any call to move_vma().
+On Wed, Sep 13, 2023 at 04:59:31PM +0800, Yi Zhang wrote:
+> The issue still can be reproduced on the latest linux tree[2].
+> To reproduce I need to run about 1000 times blktests block/001, and
+> bisect shows it was introduced with commit[1], as it was not 100%
+> reproduced, not sure if it's the culprit?
+>=20
+>=20
+> [1] 9257959a6e5b locking/atomic: scripts: restructure fallback ifdeffery
+> [2]
+> [ 2304.536339] scsi 48:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.540805] sr 50:0:0:0: Attached scsi CD-ROM sr3
+> [ 2304.544574] scsi 48:0:0:0: Power-on or device reset occurred
+> [ 2304.600645] sr 48:0:0:0: [sr1] scsi-1 drive
+> [ 2304.616364] scsi 51:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.624639] scsi 51:0:0:0: Power-on or device reset occurred
+> [ 2304.626634] sr 48:0:0:0: Attached scsi CD-ROM sr1
+> [ 2304.680537] sr 51:0:0:0: [sr2] scsi-1 drive
+> [ 2304.706394] sr 51:0:0:0: Attached scsi CD-ROM sr2
+> [ 2304.746329] scsi 49:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.754569] scsi 49:0:0:0: Power-on or device reset occurred
+> [ 2304.756302] scsi 50:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.768483] scsi 50:0:0:0: Power-on or device reset occurred
+> [ 2304.806321] scsi 48:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.810587] sr 49:0:0:0: [sr0] scsi-1 drive
+> [ 2304.814561] scsi 48:0:0:0: Power-on or device reset occurred
+> [ 2304.824475] sr 50:0:0:0: [sr3] scsi-1 drive
+> [ 2304.836384] scsi 51:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2304.840364] sr 49:0:0:0: Attached scsi CD-ROM sr0
+> [ 2304.844619] scsi 51:0:0:0: Power-on or device reset occurred
+> [ 2304.850444] sr 50:0:0:0: Attached scsi CD-ROM sr3
+> [ 2304.874563] sr 48:0:0:0: [sr1] scsi-1 drive
+> [ 2304.900660] sr 51:0:0:0: [sr2] scsi-1 drive
+> [ 2304.901506] sr 48:0:0:0: Attached scsi CD-ROM sr1
+> [ 2304.926306] sr 51:0:0:0: Attached scsi CD-ROM sr2
+> [ 2305.056432] scsi 50:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2305.056572] scsi 49:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2305.064635] scsi 50:0:0:0: Power-on or device reset occurred
+> [ 2305.072821] scsi 49:0:0:0: Power-on or device reset occurred
+> [ 2305.086286] scsi 51:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2305.086357] scsi 48:0:0:0: CD-ROM            Linux    scsi_debug
+>    0191 PQ: 0 ANSI: 7
+> [ 2305.094521] scsi 51:0:0:0: Power-on or device reset occurred
+> [ 2305.102693] scsi 48:0:0:0: Power-on or device reset occurred
+> [ 2305.128785] sr 50:0:0:0: [sr0] scsi-1 drive
+> [ 2305.134445] sr 49:0:0:0: [sr1] scsi-1 drive
+> [ 2305.154728] sr 50:0:0:0: Attached scsi CD-ROM sr0
+> [ 2305.158607] sr 51:0:0:0: [sr2] scsi-1 drive
+> [ 2305.160392] sr 49:0:0:0: Attached scsi CD-ROM sr1
+> [ 2305.164254] sr 48:0:0:0: [sr3] scsi-1 drive
+> [ 2305.184185] sr 51:0:0:0: Attached scsi CD-ROM sr2
+> [ 2305.190086] sr 48:0:0:0: Attached scsi CD-ROM sr3
+> [ 2305.555658] Unable to handle kernel execute from non-executable
+> memory at virtual address ffffc61b656052e8
+> [ 2305.565301] Mem abort info:
+> [ 2305.568086]   ESR =3D 0x000000008600000e
+> [ 2305.571822]   EC =3D 0x21: IABT (current EL), IL =3D 32 bits
+> [ 2305.577123]   SET =3D 0, FnV =3D 0
+> [ 2305.580164]   EA =3D 0, S1PTW =3D 0
+> [ 2305.583292]   FSC =3D 0x0e: level 2 permission fault
+> [ 2305.588074] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D0000080731fa=
+0000
+> [ 2305.594761] [ffffc61b656052e8] pgd=3D1000080ffffff003,
+> p4d=3D1000080ffffff003, pud=3D1000080fffffe003, pmd=3D0068080732e00f01
+> [ 2305.605362] Internal error: Oops: 000000008600000e [#1] SMP
+> [ 2305.610922] Modules linked in: scsi_debug sr_mod pktcdvd cdrom
+> rfkill sunrpc vfat fat acpi_ipmi arm_spe_pmu ipmi_ssif ipmi_devintf
+> ipmi_msghandler arm_cmn arm_dmc620_pmu arm_dsu_pmu cppc_cpufreq loop
+> fuse zram xfs crct10dif_ce ghash_ce nvme sha2_ce nvme_core
+> sha256_arm64 igb sha1_ce ast sbsa_gwdt nvme_common
+> i2c_designware_platform i2c_algo_bit i2c_designware_core xgene_hwmon
+> dm_mod [last unloaded: scsi_debug]
+> [ 2305.647236] CPU: 85 PID: 1 Comm: systemd Kdump: loaded Not tainted
+> 6.6.0-rc1+ #13
+> [ 2305.654706] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS
+> F31n (SCP: 2.10.20220810) 09/30/2022
+> [ 2305.663997] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [ 2305.670946] pc : in_lookup_hashtable+0x1138/0x2000
+> [ 2305.675728] lr : rcu_do_batch+0x194/0x488
+> [ 2305.679727] sp : ffff8000802abe60
+> [ 2305.683029] x29: ffff8000802abe60 x28: ffffc61b6524c7c0 x27: ffffc61b6=
+3452f40
+> [ 2305.690152] x26: ffff080f37ab6438 x25: 000000000000000a x24: 000000000=
+0000000
+> [ 2305.697274] x23: 0000000000000002 x22: ffff8000802abec0 x21: ffff080f3=
+7ab63c0
+> [ 2305.704396] x20: ffff07ff8136a580 x19: 0000000000000003 x18: 000000000=
+0000000
+> [ 2305.711519] x17: ffff41f3d3161000 x16: ffff8000802a8000 x15: 000000000=
+0000000
+> [ 2305.718641] x14: 0000000000000000 x13: ffff07ffa131802d x12: ffff80008=
+041bb94
+> [ 2305.725764] x11: 0000000000000040 x10: ffff07ff802622e8 x9 : ffffc61b6=
+3452e30
+> [ 2305.732887] x8 : 000002189dce1780 x7 : ffff07ff8d5c1000 x6 : ffff41f3d=
+3161000
+> [ 2305.740009] x5 : ffff07ff8136a580 x4 : ffff080f37aba960 x3 : 000000001=
+550a055
+> [ 2305.747131] x2 : 0000000000000000 x1 : ffffc61b656052e8 x0 : ffff08018=
+4c565f0
+> [ 2305.754254] Call trace:
+> [ 2305.756687]  in_lookup_hashtable+0x1138/0x2000
+> [ 2305.761119]  rcu_core+0x268/0x350
+> [ 2305.764422]  rcu_core_si+0x18/0x30
+> [ 2305.767812]  __do_softirq+0x120/0x3d4
+> [ 2305.771462]  ____do_softirq+0x18/0x30
+> [ 2305.775112]  call_on_irq_stack+0x24/0x30
+> [ 2305.779022]  do_softirq_own_stack+0x24/0x38
+> [ 2305.783192]  __irq_exit_rcu+0xfc/0x130
+> [ 2305.786929]  irq_exit_rcu+0x18/0x30
+> [ 2305.790404]  el1_interrupt+0x4c/0xe8
+> [ 2305.793969]  el1h_64_irq_handler+0x18/0x28
+> [ 2305.798052]  el1h_64_irq+0x78/0x80
+> [ 2305.801441]  d_same_name+0x50/0xd0
+> [ 2305.804832]  __lookup_slow+0x64/0x158
+> [ 2305.808482]  walk_component+0xe0/0x1a0
+> [ 2305.812219]  path_lookupat+0x7c/0x1b8
+> [ 2305.815869]  filename_lookup+0xb4/0x1b8
+> [ 2305.819692]  vfs_statx+0x94/0x1a8
+> [ 2305.822995]  vfs_fstatat+0xd4/0x110
+> [ 2305.826471]  __do_sys_newfstatat+0x58/0xa8
+> [ 2305.830556]  __arm64_sys_newfstatat+0x28/0x40
+> [ 2305.834901]  invoke_syscall.constprop.0+0x80/0xd8
+> [ 2305.839592]  do_el0_svc+0x48/0xd0
+> [ 2305.842894]  el0_svc+0x4c/0x1c0
+> [ 2305.846023]  el0t_64_sync_handler+0x120/0x130
+> [ 2305.850367]  el0t_64_sync+0x1a4/0x1a8
+> [ 2305.854017] Code: 00000000 00000000 00000000 00000000 (84c565f1)
+> [ 2305.860098] SMP: stopping secondary CPUs
+> [ 2305.865048] Starting crashdump kernel...
+> [ 2305.868958] Bye!
+>=20
+>=20
 
-It looks like you have a tester though, so I'll return to dinner.
+Please don't top-post; reply inline with appropriate context instead.
 
-Thanks,
-Liam
+Anyway, thanks for bisecting this regression. I'm adding it to regzbot:
+
+#regzbot ^introduced: 9257959a6e5b4f
+#regzbot title: restructuring atomic locking conditionals causes vfs dentry=
+ lock protection failure
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--q4BzXabHRQeqqnGy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQZJrQAKCRD2uYlJVVFO
+o/cMAP4tqfKbPeBA1hX9fv2VX6jLpP1MGeMpbnLIDlk3WBEDXAEA5ST9sg+34d+r
+Bece/dxoiVhrFu/YWO++BE54Bh2r1QE=
+=fBuF
+-----END PGP SIGNATURE-----
+
+--q4BzXabHRQeqqnGy--
