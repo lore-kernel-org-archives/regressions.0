@@ -1,288 +1,92 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC92262A7
-	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 17:09:41 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1c434c33ec0so23339365ad.3
-        for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 10:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jade-fyi.20230601.gappssmtp.com; s=20230601; t=1695056981; x=1695661781; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IItNc+Zt5nnQ/8UdDotMfLHi/NEp9s9tuV8PI8RzTEg=;
-        b=gPr4bLgEbA4jZz1b1b/lCpkUo7FBug4YpkCEihKqJQN/zHjGV4yWZ+UYljxn7hRdB9
-         K8JfZcRZDMCcYOB/qcKWzRDLXuEBrw0kiTEh4er9F4W4vYdhD02ouA/dJgCA1wIRR0M6
-         UOsb1E9P9jhSxXByTInoXlrbCRTBrKbxU7s6MqU+gXdvqICq9JONoSLRPl7WhCmR7eq4
-         JdbTSZoRLvPlMmwcikBWwM22IPT2eLXN6o8uKBYqBVLgxotllaXMf0ssDRbEkRkxRaTP
-         TIBGgDunBB1VOOonp1LUASZy5MAHQk6fuZIp6P9smcQ5vMl1X+7QYRlY879CLptNOzXr
-         M02w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695056981; x=1695661781;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IItNc+Zt5nnQ/8UdDotMfLHi/NEp9s9tuV8PI8RzTEg=;
-        b=XSZ5F/9U7C7gAQjmMDrmLGbMuAofI1VAlVtoxT4yH1XI9T9RDaTDX24ZdZlzFJk+PR
-         ZmYdYkZMbw4zxjBGcgNiyVppfqjkYgF5i/czPn01ACc2FItMrEJfIKdojOnmBA2HQCVz
-         66HXyVF5ii0WQQ9nDji5NuvxqDJ6xWsiAkcubuD2zZ6Q3cMnbTRdo+jbz1kVAD3/W5YY
-         xLLn/PAcG6UaZ/fSGcprmPJOP7ONzR8e8sy562nKfybpYdIZgsWRtcmscOKKE6pdWXmv
-         OPv3KyA1Ahm4Br9/2oYb5vLO0AQVGl47OQXdh1Ccot8dvdpYFF3wTQ2043dCvsuHZHxZ
-         A2fw==
-X-Gm-Message-State: AOJu0YwcaoB4x/EYSVsfZNp8vD5UPhYsws7VQ50i8fzYEik9tJaHAClg
-	EbfTySm8pErPv+QymfbgYwnDNw==
-X-Google-Smtp-Source: AGHT+IGICE7p0GqE8Tg9jhcYRkzC3fqApnNRjDURAFmQTFb9i/QX9MA1iUEb6QiwhikQ+AKuqo0Hjg==
-X-Received: by 2002:a17:902:e9d5:b0:1bd:e64c:5c71 with SMTP id 21-20020a170902e9d500b001bde64c5c71mr6845120plk.21.1695056981249;
-        Mon, 18 Sep 2023 10:09:41 -0700 (PDT)
-Received: from localhost ([172.103.222.8])
-        by smtp.gmail.com with ESMTPSA id l13-20020a170902eb0d00b001c57aac6e5esm1604567plb.23.2023.09.18.10.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 10:09:40 -0700 (PDT)
-From: Jade Lovelace <lists@jade.fyi>
-To: Gene <lists@sapience.com>,
-	Ricky WU <ricky_wu@realtek.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev,
-	Alyssa Ross <hi@alyssa.is>,
-	Michal Suchanek <msuchanek@suse.de>,
-	"axboe @ kernel . dk " <axboe@kernel.dk>,
-	"sagi @ grimberg . me " <sagi@grimberg.me>,
-	"linux-nvme @ lists . infradead . org " <linux-nvme@lists.infradead.org>,
-	"hch@lst.de" <hch@lst.de>,
-	"arnd@arndb.de" <arnd@arndb.de>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org,
-	Gene <geneslists@sapience.com>
-Subject: [PATCH] Revert "misc: rtsx: judge ASPM Mode to set PETXCFG Reg"
-Date: Mon, 18 Sep 2023 10:07:39 -0700
-Message-ID: <20230918170831.1677690-3-lists@jade.fyi>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <66bc5229-8131-4111-96fe-bd5ee90314b0@leemhuis.info>
-References: <66bc5229-8131-4111-96fe-bd5ee90314b0@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF4A450FA
+	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 22:08:04 +0000 (UTC)
+Received: from letrec.thunk.org (c-73-8-226-230.hsd1.il.comcast.net [73.8.226.230])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 38IM7tV0032420
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Sep 2023 18:07:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1695074878; bh=I/OPhMVwEE+FwTeKxUk3XfclqMUzxdhNE/ZJTqJbFUs=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=qVm6xg5cusG8V92imaVhpgMCM7daJ0Gxrue+ArwTiVjd0A0eFqRkP+8RttOUSgqXi
+	 GTfUxYvHZB6dqwm7jUZBSFa0BqtYVembC5hPIRFRu3SaEWN+gKK3yxOvinJtBKA7K9
+	 dgApbjcFy/AQnHDi8RSWy61LEOqLUQbVA+sfr9jEwvxAhDXH+rPKlGT8tthDIrMkNV
+	 ijqfCmAdCy2Kfe1KyqFztJIZHG8ZPTfdPfn7KO+GbDt7Nbgv4Xtth1BR0gUo4dGh2s
+	 rdZJnVvccRA/HLmGy8Rgh1rJpyXeh+RUcbkrIyMSFMC100TRumx/h1Lt2us03SXTZG
+	 kWf4vh3QBMPFQ==
+Received: by letrec.thunk.org (Postfix, from userid 15806)
+	id D4E808C02E6; Mon, 18 Sep 2023 18:07:54 -0400 (EDT)
+Date: Mon, 18 Sep 2023 18:07:54 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Shreeya Patel <shreeya.patel@collabora.com>
+Cc: linux-ext4@vger.kernel.org,
+        Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+        "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
+        groeck@google.com, zsm@google.com, garrick@google.com,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
+Message-ID: <ZQjKOjrjDYsoXBXj@mit.edu>
+References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
 
-This reverts commit 101bd907b4244a726980ee67f95ed9cafab6ff7a.
+On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
+> Hi Everyone,
+> 
+> syzbot has reported a task hung issue in ext4_fallocate, crash report can be
+> seen at the bottom of the email.
 
-This commit causes the NVMe controller to not work on the Dell XPS 15
-9560, and similar laptop models. It appears to happen with any SSD
-model.
+What's the link to the syzbot dashboard URL?  This is typically the
+first line of the reproducer, but it's been snipped out in your
+reproducer.
 
-This commit is broken on 6.1, 6.4, 6.5, and 6.6-rc1.
+> 
+> When I tried to reproduce this issue on mainline linux kernel using the
+> reproducer provided by syzbot, I see an endless loop of following errors :-
+> 
+> [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
+> [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
+> inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
+> [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
 
-OpenSUSE has already reverted, and I have submitted a revert to NixOS.
-As far as I can tell, this regression has fallen through the cracks.
+Please note that maliciously corrupted file system is considered low
+priority by ext4 developers.  If this is something which is important
+to Google, then it needs to fund more headcount so that we have time
+to take a look at these things.  There has been plenty of discussions
+about how syzbot is effectively a denial of service attack on upstream
+resources, and the only way we can respond is to down-prioritize such
+bug reports.
 
-Symptom:
+This is *especially* true when we receive reports from private syzbot
+instances where we don't have any of the features provided by syzbot
+console --- including convenient access to the file system image that
+was mounted as part of the test, the ability to use #syz test to try
+out patches --- and more importantly, so we can introduce debugging
+messages and using the syzbot testing facility to run the tests.
 
-kernel: nvme nvme0: controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0xffff
-kernel: nvme nvme0: Does your device have a faulty power saving mode enabled?
-kernel: nvme nvme0: Try "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off" and report a bug
-kernel: nvme 0000:04:00.0: Unable to change power state from D3cold to D0, device inaccessible
-kernel: nvme nvme0: Disabling device after reset failure: -19
-systemd-cryptsetup[169]: Device /dev/disk/by-uuid/b80aedf8-ddd4-46fa-8d09-5215d5f286b9 READ lock released.
-systemd-cryptsetup[169]: IO error while decrypting keyslot.
-systemd-cryptsetup[169]: Keyslot 0 (luks2) open failed with -5.
-systemd-cryptsetup[169]: Keyslot open failed.
-systemd-cryptsetup[169]: Failed to activate with specified passphrase: Input/output error
+If you really are concerned about the threat model of users picking up
+random USB thumb drives that they found in the parking lot, consider
+running fsck.ext4 -f on the file system first, and if the file system
+checker is not able to fix the file system, refuse to mount it.
+Alternatively, consider using cros-vm, and mounting the file system in
+the guest-kernel so that the VMM provides an additional sandbox layer.
 
-There are several downstream bugs, these are the ones I know of:
-- https://bugzilla.suse.com/show_bug.cgi?id=1214428
-- https://github.com/NixOS/nixpkgs/issues/253418
-- https://bugs.archlinux.org/task/79439#comment221866
+Anyway, please provide a link to a public Syzkaller dashboard report,
+and we'll take a look at it when we have time...
 
-Upstream revert links:
-- https://github.com/openSUSE/kernel-source/commit/1b02b1528a26f4e9b577e215c114d8c5e773ee10
-- https://github.com/NixOS/nixpkgs/pull/255824
+Cheers,
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217802
-Reported-and-bisected-by: Gene <geneslists@sapience.com>
-Link: https://lore.kernel.org/lkml/30b69186-5a6e-4f53-b24c-2221926fc3b4@sapience.com/
-Signed-off-by: Jade Lovelace <lists@jade.fyi>
----
- drivers/misc/cardreader/rts5227.c  |  2 +-
- drivers/misc/cardreader/rts5228.c  | 18 ++++++++++++++++++
- drivers/misc/cardreader/rts5249.c  |  3 ++-
- drivers/misc/cardreader/rts5260.c  | 18 ++++++++++++++++++
- drivers/misc/cardreader/rts5261.c  | 18 ++++++++++++++++++
- drivers/misc/cardreader/rtsx_pcr.c |  5 +----
- 6 files changed, 58 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index 3dae5e3a1697..d676cf63a966 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -195,7 +195,7 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
- 		}
- 	}
- 
--	if (option->force_clkreq_0 && pcr->aspm_mode == ASPM_MODE_CFG)
-+	if (option->force_clkreq_0)
- 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
- 				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
- 	else
-diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
-index f4ab09439da7..cfebad51d1d8 100644
---- a/drivers/misc/cardreader/rts5228.c
-+++ b/drivers/misc/cardreader/rts5228.c
-@@ -435,10 +435,17 @@ static void rts5228_init_from_cfg(struct rtsx_pcr *pcr)
- 			option->ltr_enabled = false;
- 		}
- 	}
-+
-+	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
-+				| PM_L1_1_EN | PM_L1_2_EN))
-+		option->force_clkreq_0 = false;
-+	else
-+		option->force_clkreq_0 = true;
- }
- 
- static int rts5228_extra_init_hw(struct rtsx_pcr *pcr)
- {
-+	struct rtsx_cr_option *option = &pcr->option;
- 
- 	rtsx_pci_write_register(pcr, RTS5228_AUTOLOAD_CFG1,
- 			CD_RESUME_EN_MASK, CD_RESUME_EN_MASK);
-@@ -469,6 +476,17 @@ static int rts5228_extra_init_hw(struct rtsx_pcr *pcr)
- 	else
- 		rtsx_pci_write_register(pcr, PETXCFG, 0x30, 0x00);
- 
-+	/*
-+	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
-+	 * to drive low, and we forcibly request clock.
-+	 */
-+	if (option->force_clkreq_0)
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
-+	else
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
-+
- 	rtsx_pci_write_register(pcr, PWD_SUSPEND_EN, 0xFF, 0xFB);
- 
- 	if (pcr->rtd3_en) {
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index 47ab72a43256..91d240dd68fa 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -327,11 +327,12 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
- 		}
- 	}
- 
-+
- 	/*
- 	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
- 	 * to drive low, and we forcibly request clock.
- 	 */
--	if (option->force_clkreq_0 && pcr->aspm_mode == ASPM_MODE_CFG)
-+	if (option->force_clkreq_0)
- 		rtsx_pci_write_register(pcr, PETXCFG,
- 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
- 	else
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index 79b18f6f73a8..9b42b20a3e5a 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -517,10 +517,17 @@ static void rts5260_init_from_cfg(struct rtsx_pcr *pcr)
- 			option->ltr_enabled = false;
- 		}
- 	}
-+
-+	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
-+				| PM_L1_1_EN | PM_L1_2_EN))
-+		option->force_clkreq_0 = false;
-+	else
-+		option->force_clkreq_0 = true;
- }
- 
- static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
- {
-+	struct rtsx_cr_option *option = &pcr->option;
- 
- 	/* Set mcu_cnt to 7 to ensure data can be sampled properly */
- 	rtsx_pci_write_register(pcr, 0xFC03, 0x7F, 0x07);
-@@ -539,6 +546,17 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
- 
- 	rts5260_init_hw(pcr);
- 
-+	/*
-+	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
-+	 * to drive low, and we forcibly request clock.
-+	 */
-+	if (option->force_clkreq_0)
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
-+	else
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
-+
- 	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
- 
- 	return 0;
-diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
-index 94af6bf8a25a..b1e76030cafd 100644
---- a/drivers/misc/cardreader/rts5261.c
-+++ b/drivers/misc/cardreader/rts5261.c
-@@ -498,10 +498,17 @@ static void rts5261_init_from_cfg(struct rtsx_pcr *pcr)
- 			option->ltr_enabled = false;
- 		}
- 	}
-+
-+	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
-+				| PM_L1_1_EN | PM_L1_2_EN))
-+		option->force_clkreq_0 = false;
-+	else
-+		option->force_clkreq_0 = true;
- }
- 
- static int rts5261_extra_init_hw(struct rtsx_pcr *pcr)
- {
-+	struct rtsx_cr_option *option = &pcr->option;
- 	u32 val;
- 
- 	rtsx_pci_write_register(pcr, RTS5261_AUTOLOAD_CFG1,
-@@ -547,6 +554,17 @@ static int rts5261_extra_init_hw(struct rtsx_pcr *pcr)
- 	else
- 		rtsx_pci_write_register(pcr, PETXCFG, 0x30, 0x00);
- 
-+	/*
-+	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
-+	 * to drive low, and we forcibly request clock.
-+	 */
-+	if (option->force_clkreq_0)
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
-+	else
-+		rtsx_pci_write_register(pcr, PETXCFG,
-+				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
-+
- 	rtsx_pci_write_register(pcr, PWD_SUSPEND_EN, 0xFF, 0xFB);
- 
- 	if (pcr->rtd3_en) {
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index a3f4b52bb159..32b7783e9d4f 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1326,11 +1326,8 @@ static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
- 			return err;
- 	}
- 
--	if (pcr->aspm_mode == ASPM_MODE_REG) {
-+	if (pcr->aspm_mode == ASPM_MODE_REG)
- 		rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, 0x30, 0x30);
--		rtsx_pci_write_register(pcr, PETXCFG,
--				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
--	}
- 
- 	/* No CD interrupt if probing driver with card inserted.
- 	 * So we need to initialize pcr->card_exist here.
--- 
-2.42.0
+							- Ted
 
