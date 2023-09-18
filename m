@@ -1,178 +1,103 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB69179F0
-	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 07:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1695022499; x=1726558499;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=PZxWt5m6k/mTkrGKk32Ftls6yBi4/8hcZHg4r6zq7fI=;
-  b=lCPKKitTSBXdrvnng5dDK670dTDxXB0dMoTDIIArsgnM7znIs8P1Q10A
-   L04mBU+f8g4NBNZBjnf3jpsSj5aaG3oLPy/aNkD7bkKt3Y4YUag6wrRZx
-   PfZ/7E3chl9lYZ1l2qbUp9TJLVn7T2Kj5tZCAya7V/iO8eIMJGwiKhgXf
-   VoTZhGYHpBMN4OZ3T1ayePRW+dNog0GheRgrGifxbPNwhrlQeuyq6+VAC
-   /saULOI1/YsYagnYdJPfnK0eWeAdp8HamplQ9eR9UgjnqDeXAKHLw2PS0
-   VK/raspsbFn61y6sI7znMjlJPYjFgDWeVAlSdNHxy0OS0hrAfD+9KX+cR
-   g==;
-X-CSE-ConnectionGUID: /6Q7CdytQmOWesHzf7K7NQ==
-X-CSE-MsgGUID: AHIR+pSfSIGHr8PgaK4QrQ==
-X-IronPort-AV: E=Sophos;i="6.02,156,1688400000"; 
-   d="scan'208";a="242422851"
-Received: from mail-bn8nam12lp2173.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.173])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Sep 2023 15:34:53 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BPQ4LCK5rB7EujEj8fJushfkpXRkvQqLdaHrZkEbnDl/d9NkQWtkKavmsGHgeCjUjgOKuvPmAr2xI1t2Y8/hOiEjvG4OViOdZF4wMfqTJmjvX0Q0pcX/Sq745Un70honQroIuk1+B8VMwqMWzYJQGaf69w4s0gl2wxf+OVjlFpYd5H96OCXK7GobPlkIPR/7LUbaT0bEQxQM999thSaX7/8HmkdUJwMgI2MaZFPBKKGYEzTuzN7Kpofe3cRt/EH1cJLG+s8grNZ+v/ukfkpPuxfUrMvemSPfZlv7r51BAiBP8h4/ZDb9iXZdxTiws4lYFxzrpJBZ4GHoFVffHLQZMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PZxWt5m6k/mTkrGKk32Ftls6yBi4/8hcZHg4r6zq7fI=;
- b=fIRtZf/ntLkc00Xbs8M/fQHqn3yX7vjbkRI0qV1TmYvqxrJ+yLLxTrJLV+SgoMB3loURLxRjCG4Dew78L84nZKQ81eQEHgn7ppKl1PkYYuyAouGZY3mfO6fHuZelJUDsCjQOe3r3jg7D+y4c0eyMkUvl1fd0x5EmcuRcHCkhQ6v5W6F2PXYmi5QglKNEGGG/FaPgNgH77mqgNP9QFBqMfgwN/mrT+Ain5BLRIV4SrLjcHJ/f5vRZDsWm/hBdngJMny3JgYylAiKfNRxwSLWniMVvtGeSZJ0KtK8z2fk/cMtwMKr2EE3inLzudqLW9JKxAfrBXKqrn05j7/RjCWERHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30CE749D
+	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 07:40:22 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-68fba57030fso3565337b3a.3
+        for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 00:40:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PZxWt5m6k/mTkrGKk32Ftls6yBi4/8hcZHg4r6zq7fI=;
- b=cBlIk3kmwTkav20Crs92SthHkDEaMm8Lp5uEeAtx5/ei2fQjyRmzFAiFH/zFPlX5CMSdG2uutT94sIJfFNtlDKORxOh8ZLf+uDWDQtEGJh23IvKQT6K7mNJYFmEaRGZjYgEEb2k2qLyCZu3HgXsBCNtchZEphzHoyusxv9SB23s=
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com (2603:10b6:208:e0::27)
- by CH2PR04MB6872.namprd04.prod.outlook.com (2603:10b6:610:93::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.16; Mon, 18 Sep
- 2023 07:34:51 +0000
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::dc1b:888b:342:3b75]) by MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::dc1b:888b:342:3b75%6]) with mapi id 15.20.6813.013; Mon, 18 Sep 2023
- 07:34:51 +0000
-From: Niklas Cassel <Niklas.Cassel@wdc.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-CC: "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, Damien Le Moal <dlemoal@kernel.org>, Song Liu
-	<song@kernel.org>, Timo Gurr <timo.gurr@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Linux SCSI <linux-scsi@vger.kernel.org>, Linux
- IDE and libata <linux-ide@vger.kernel.org>, Linux RAID
-	<linux-raid@vger.kernel.org>
-Subject: Re: Fwd: Marvell RAID Controller issues since 6.5.x
-Thread-Topic: Fwd: Marvell RAID Controller issues since 6.5.x
-Thread-Index: AQHZ6gKbG/jznQ51z0m6I88wj8s10A==
-Date: Mon, 18 Sep 2023 07:34:50 +0000
-Message-ID: <ZQf9mh3v5qfN5Tm0@x1-carbon>
-References: <224f10a4-7a6a-48bb-88be-491faf8ecff7@gmail.com>
-In-Reply-To: <224f10a4-7a6a-48bb-88be-491faf8ecff7@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR04MB6272:EE_|CH2PR04MB6872:EE_
-x-ms-office365-filtering-correlation-id: da33f6a9-3793-469a-f9ec-08dbb819be5d
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- f2UgcLW7Rf0jRERhBxz5xv3BOwVg+geaQXATr1Bn9s8A9ZDnzmNweTktUFi5E2SvsR4+jxpGknmLNEQ/zspe/0zptM+lrpJoDk7POq88NmbhiVTOkCAmSo2LLZsSPGsHXSojN8z1FogbkJhNPqWwScSOMI5zR9q0ZOcC4L0vTLoFub+98op19PVRuAlVLoHTfmEh0CoqQBDJkDqrCs9slhc4w3FgkNDO596jnTycxkzKxV+sgBi7s6DB0DBkaG/k5RiKmNupKb/kE4si+WhaL7gZHP9a4mcDEKo57Hwfr7NgRPiz5i4vZYTCeZwBv8jqmtClkc8ksrNxwCEVw7SiUq6H5wWhoGyOcA+NDAyM+p5yXbunFxMZ2ljruMm22Pa0qfgxx7/EtSLz1YMliKCQuKHaqmfuSI636nROERNVBhZA7r4rrN4f9hOuCActQCFomnzVdUwRrdgm8SumGa988fIETIJXHQm7u2iLoDplbZCHZ2Ddngm5KBMEDczZQT97X5EQ4tZ5lpH0wpfUMmWxpjOmv6rm9F4iivPWrtkOl8K/YSyo2iLn/BIq8SeDBU+Aj349pb8eHEEncjhFxT2ZrskuARvAqGY7CW1aUGIKgkY=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6272.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(396003)(366004)(39860400002)(376002)(136003)(451199024)(186009)(1800799009)(64756008)(6506007)(54906003)(6486002)(66946007)(66556008)(66476007)(66446008)(38070700005)(316002)(38100700002)(6916009)(82960400001)(83380400001)(91956017)(76116006)(86362001)(33716001)(6512007)(9686003)(966005)(478600001)(26005)(2906002)(71200400001)(4326008)(8936002)(8676002)(7416002)(4744005)(122000001)(5660300002)(41300700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?eedtoHlQV0l+A80Xq/luziFyRocOTduwAX7KzBVH6nkx4jPAWZ7+5WZrk9x7?=
- =?us-ascii?Q?Tha53FJVMtS+193/TcQzcNhlJfN4zazjv0kuqj1JaPbuf4amBFEI5IHoL1rL?=
- =?us-ascii?Q?3KCebn8JDnXdum4eAO1Xn0eDLS9DptUl6FioU1WvmEHUFCFeY6pdMWvc9ank?=
- =?us-ascii?Q?syzbTcjGWGc/1yhoJts8YZKlS9vyBMH28g7hJrPKTLWNs0UYRMT/TxsbdUSv?=
- =?us-ascii?Q?zE5jVDQH3bPmvUwTHGiN1mtAknd6WxesmHfduhgSX8CCwMbgQhahfJY7UGqO?=
- =?us-ascii?Q?tdJ+nTa07RcZI46IL4a2Ek8VqDpuxR1cSWUY6BidsYmafSVyJ2IC3FP9FSkB?=
- =?us-ascii?Q?pMYJdrxrXZbVq64EMpkNwOCHFqbzdFJN57v5WjlS8CS817jYegN8oA4+kJQh?=
- =?us-ascii?Q?Jz+qMpxY3MGfNuPd1t3ccLgGY5kQvD43wpI7vw8i3c/MkVPjJhqPnShXzuWf?=
- =?us-ascii?Q?pB0d9CfhqjaPSo55/fLjFp9C1q3Ts5JL+a2h/NejRjs4jVols3EFCshjW1Ai?=
- =?us-ascii?Q?PGKI9zpjjQipHtXcXQDQagiEVDZaiLb9E5TskXJH4OEk3rGwdfFHRkJN46d4?=
- =?us-ascii?Q?gzT+OHhysHRinPqDKAQ6D9eB7hH4Y2FV1FpPyXj1bSBottc7UmnvKDAipXmK?=
- =?us-ascii?Q?RqGRmCpBLQXGzCewBf0SgInw47QzOlEViri6SjwFQKNQhLbDmXbvcPhvcEr6?=
- =?us-ascii?Q?gNl2uSXZKNVDEHOELk+XVl1vwgOm8zPSS/ZsoN7pnNyWIXHWuzyGRmHzC+I5?=
- =?us-ascii?Q?6UU45vB+VQcJZaJr83W4+Nmu8w7eBfMTMcoVI7HtiGWr+oiEPlkkDkGl52TM?=
- =?us-ascii?Q?mlrUuT0aU5nj4QqureD158iDPNDbPYBNARcyyA43ZGR9u5yVqkpc7FkL36nr?=
- =?us-ascii?Q?m8TL63zF1LPNFiAQkzJJCf9+SwmR+jimP8d+xuaFohKTDIgC3M3TXWVYgMNU?=
- =?us-ascii?Q?+XoJnVi8lHl3kwZI2bgK4Qy+wf1FYa9G3oHT3tHwqrtEIpQMmblw5xHRzfSo?=
- =?us-ascii?Q?uWzurWz9PvIHHjnwUrGSYli1dGvOSgK3XeRaTTRSCKrB1aZjfwaPMfbCKv1r?=
- =?us-ascii?Q?Heh4ELHFM0HjPx5NwoH9d2gunc0lP+cquCVN6JJZ7ULrR1AmS6Wg4oeXFPym?=
- =?us-ascii?Q?R3yABKeniruuvNCneEvYNvor8sgxBdFdkqZcbSWplzhjp+/1cTegR+CgLPSl?=
- =?us-ascii?Q?WLX5i+vjVZ5/Qz8g1B9AhEIJAPcscEIQMKUkgCvWOXjghv02+VIGcaPPjd46?=
- =?us-ascii?Q?np4rgC0qYWAzVdpzur/FgsN88txWg7ZND0rlOlYuhLMYvy6qacegiKZO9BsZ?=
- =?us-ascii?Q?bVhkS23SQPw9BeTP0+k/XOAzmBSU1CnvS9LKTN3OKUkm+zXRJuMuObZPZWMc?=
- =?us-ascii?Q?tGmHnDUhnqjXQIdIkxXlB8pitWx9ylMOhN13wlcWH021H8FscO8Jk2v7l0dN?=
- =?us-ascii?Q?pwCczhC79fF9bSybCdfHSGTvhwd7RlOlcVZ4Kln7rmtDfQfcm1l2gvWmIcY4?=
- =?us-ascii?Q?UiSM7VKvxcXqdgI6n8eBpCfHpqI0FTotbIEHXoKsnP0YTmkDOvxYzJlu7gvF?=
- =?us-ascii?Q?P7aKlH7Q0fxxhCWCUg1WMr7nSjo4FanvlJjwCqM1CwwHOHs/Z8kCfOZErWGY?=
- =?us-ascii?Q?Gw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1539F7F2F13DDA469EFD154DD1D494BA@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20230601; t=1695022822; x=1695627622; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYE1PmwGI48qu45rnC2t2CT34fWKqdW5IxOG5V0vDZU=;
+        b=PCsHhyOXzRWeTp4lT+e8omlY23gMgQMqQtmEMt9SUwRJ0+pYCh6RKEQSN6f1+hFNb+
+         e7cvtPVPKJf0XwY7h/g6q2T24RpVaRC6C0dAAnejPybCc9onrmywcXK5Spp/imMrwBeK
+         u1q+gj8Z5FKjk0LN0rbVL8hZ6Ds9Rs3ghz2jCFxGuoQZWyjPfbv3skIhgEpGNalUz59A
+         RARyCzZaxcL7zrdDGWM/EjuZz7f7hBxhw46wPazvogIdXiZaym+9bJ72gQj1q58o5AoO
+         D9lxig/0DFYebKwsNfOVI6HMMLq1jYEg2GuzvA0j5pyPVLel+eI7A3anJC4SVXZmw2+l
+         wlWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695022822; x=1695627622;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jYE1PmwGI48qu45rnC2t2CT34fWKqdW5IxOG5V0vDZU=;
+        b=OzD9cvAK5unwC81jekf2e0FoqjlSUETSGRumfz56SR29+C+4yXGJHFMDc6Eri4Uzc2
+         3QnMo0BDRNEtVG8p34Kysl5Y+HmYhjpHNsH5zOeOoGmYKiooXrQVfJxFPuEnabrOvGHe
+         UZxgcsrHj4oL85P2T8v0oKRsbXBIh63apTUbPwKsT1YtLDBVk2klzSk7jy4Fd6SkwwQx
+         CVia1QiNEQdVl+BfHb0bdyg/Ts5t8x+sYireTOhtPO0l/g22+qJ0q8rdn9VUWRO+jzff
+         dAnku2Qbg3aLDC5D372Z/hkKj6meB8JV+TqDioCoe4hHs2bD/nEx/14bZedCHkoG0vZZ
+         hpVg==
+X-Gm-Message-State: AOJu0YxA8kwCGOgKQqqCcsKzZqx5IUS59hVz3O01x2ZXPCJP+9+J5HU+
+	fHFmPenHxvYOCzXKKzszIvw=
+X-Google-Smtp-Source: AGHT+IFBY9iVIRBuVg6dN+6n28kVZBaQ3QpU3pvyd80I1f86lsgh4AzZzEITsYThn6COBiwc+ysWdg==
+X-Received: by 2002:a05:6a21:3e0b:b0:156:e1ce:d4a1 with SMTP id bk11-20020a056a213e0b00b00156e1ced4a1mr6476863pzc.9.1695022821893;
+        Mon, 18 Sep 2023 00:40:21 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id k7-20020aa792c7000000b0068be3489b0dsm6827221pfa.172.2023.09.18.00.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 00:40:21 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 941E480D9E27; Mon, 18 Sep 2023 14:40:18 +0700 (WIB)
+Date: Mon, 18 Sep 2023 14:40:18 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
+Cc: Huacai Chen <chenhuacai@kernel.org>, javierm@redhat.com,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
+Message-ID: <ZQf-4r1K1Dx_LQ5t@debian.me>
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	=?us-ascii?Q?3UVpH1Z0nwuGcEC81AyiuTsRS4Ao+lG4Dr/Tf9FOH9aYDH4yeLK5Huc+cEnh?=
- =?us-ascii?Q?xW/39uy4mc6Q+APhsnONT4FWHm9n8RnFyJ9TQAuB8r+oJQffLXtzrmgefJ8D?=
- =?us-ascii?Q?St7CzQ4gxjQrdamOQM5BCPqivRZEiq99mmARBIc4ruEaPkxLy2La3QU9QV1V?=
- =?us-ascii?Q?I+zcZUgXACx2yvtA/t3EZHqqyU6NIbn1cuVUmBKIEw52+f5rGo3dkHik3TBB?=
- =?us-ascii?Q?6jjnbmUbF5T7om2IelyEbunEsS+e4x7LZZaIBHcMKAgu+JoWT/tarlJHNYOF?=
- =?us-ascii?Q?W4DMmoIC/8Bui/zmenH5yJ//EtkwOV7BTiIS/nBdRgHC2Tfh4n8vukWUKc98?=
- =?us-ascii?Q?CAgwVSygsTf7+Cryhl1isRhiPzAXIPhYg6iOGCJLelYWTrHho4ZfayaY149p?=
- =?us-ascii?Q?OA27v3fw+5vxEw6Y99x+xptfFJKAxDt8zwdHax9686rgadQtrTQ1c0Pad1En?=
- =?us-ascii?Q?51of//mLtDSju0oMBjxOK4b3q0r+FKJjHIvdkQpF2n4iLQ1oV58nU4CG8p4C?=
- =?us-ascii?Q?KbTI6jgGvEfxScKsVwVeqilwBiFPf2HT+PYeDHeN7Ly+CB00oIalQw6GuS1f?=
- =?us-ascii?Q?JaeLfwP3Sv1WzrbuwvGLEJaF4MsEvquH9RYiGKfSpJqCzg/rXW3NouVp+hj4?=
- =?us-ascii?Q?03Jzzl6h3Nn/YQcOcqoe0sqVEDtwem1I+QypsCH+c3qgErFBWUDEzwr3PkaS?=
- =?us-ascii?Q?NUqPevan5767mmRg1lpufanB4u+g8IVulKKZV6c5c55W3Lt9RWh9yiFutP5D?=
- =?us-ascii?Q?6qq2/Out0kJp9mG1JNlNT5Z8RaNLUGFZRp9KYsfDi35cp3ffUYbegZqQgWkr?=
- =?us-ascii?Q?TdCyVMpymBms8q3R/8MdktR1j9BrpbKHlwxA6yZZQ02HHCEqgX9b4MR1EvEf?=
- =?us-ascii?Q?PURWXnpiIEt4XeYh742HaOhj8S89PawQjvVFCi5L4IbcIbSw32D4Ke/sCcHS?=
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6272.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da33f6a9-3793-469a-f9ec-08dbb819be5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2023 07:34:51.0152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qIPisiGDpLMupcBtqKA3HYrmOs2CdPNEqbKyn40htstGmw1oizUVlnH3HSRNmKM+Xc5W5vAUxJ5VMcC7fNdgew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6872
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t9fjxRqYgtt2EzW7"
+Content-Disposition: inline
+In-Reply-To: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
 
-On Mon, Sep 18, 2023 at 07:18:28AM +0700, Bagas Sanjaya wrote:
-> Hi,
+
+--t9fjxRqYgtt2EzW7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 13, 2023 at 03:02:26PM +0300, Jaak Ristioja wrote:
+> Hello,
 >=20
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank scr=
+een
+> after boot until the display manager starts... if it does start at all.
+> Using the nomodeset kernel parameter seems to be a workaround.
 >=20
-> Anyway, I'm adding this regression to be tracked by regzbot:
+> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> ("drivers/firmware: Move sysfb_init() from device_initcall to
+> subsys_initcall_sync").
 >=20
-> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D217920
-> #regzbot title: UDMA configured spam on Marvell RAID controller
->=20
-> Thanks.
->=20
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217920
 
-Hello Bagas,
+Thanks for the regression report. I'm adding it to regzbot:
 
-This is a duplicate of:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217902
+#regzbot ^introduced: 60aebc9559492c
 
-Problem is solved by:
-https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.o=
-rg/
+--=20
+An old man doll... just what I always wanted! - Clara
 
+--t9fjxRqYgtt2EzW7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind regards,
-Niklas=
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQf+4QAKCRD2uYlJVVFO
+o1LjAQCyinSeRmWO5M3jxuESwFV9c/eJAgHm+YsA35cHfR8mBwEAsDAhYG4Bnm8h
+/2YyuCaC0lYoTEIdf+2AEN/OKWxH9QA=
+=hSUf
+-----END PGP SIGNATURE-----
+
+--t9fjxRqYgtt2EzW7--
