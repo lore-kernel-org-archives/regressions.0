@@ -1,56 +1,60 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30CE749D
-	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 07:40:22 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-68fba57030fso3565337b3a.3
-        for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 00:40:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC6333EA
+	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 07:56:20 +0000 (UTC)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-68fbd31d9ddso3162319b3a.0
+        for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 00:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695022822; x=1695627622; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1695023780; x=1695628580; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jYE1PmwGI48qu45rnC2t2CT34fWKqdW5IxOG5V0vDZU=;
-        b=PCsHhyOXzRWeTp4lT+e8omlY23gMgQMqQtmEMt9SUwRJ0+pYCh6RKEQSN6f1+hFNb+
-         e7cvtPVPKJf0XwY7h/g6q2T24RpVaRC6C0dAAnejPybCc9onrmywcXK5Spp/imMrwBeK
-         u1q+gj8Z5FKjk0LN0rbVL8hZ6Ds9Rs3ghz2jCFxGuoQZWyjPfbv3skIhgEpGNalUz59A
-         RARyCzZaxcL7zrdDGWM/EjuZz7f7hBxhw46wPazvogIdXiZaym+9bJ72gQj1q58o5AoO
-         D9lxig/0DFYebKwsNfOVI6HMMLq1jYEg2GuzvA0j5pyPVLel+eI7A3anJC4SVXZmw2+l
-         wlWw==
+        bh=Xqxu9XqJgrwv9dQeN2TLGjQoXj5OVfZLMHNwc4EUVI4=;
+        b=M1F8TSTrU0nldNCFCcvbBiLleALJCERXCcvevHYAriCFUKlOPXTdBmhkZDvhCSEksr
+         yvXdNW/P1MMzqDriuUVOQGgNWo4hLG3GpZGe24j5voekp7YPCM1He0P9KM6Mc9PJMSHn
+         zBlbf7xCHiXvEo+enXU4A+glK3h3v9EqChXaYOvLER+ISR3ouP+2P2gxXifw5Q+2eNjU
+         NWWiqzu4vZG39DRzdAM3LCE5xA0+4HISGa+bKT4mHVpMeFF538voYYKPTq/KSNfMm7vV
+         O7KqqUwLcZHh3x9n3bj3AUZzmqCH9IKgHR/EuoZwDRSAAth1caTLqJKQ1l4kat7ahXlL
+         Cu9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695022822; x=1695627622;
+        d=1e100.net; s=20230601; t=1695023780; x=1695628580;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jYE1PmwGI48qu45rnC2t2CT34fWKqdW5IxOG5V0vDZU=;
-        b=OzD9cvAK5unwC81jekf2e0FoqjlSUETSGRumfz56SR29+C+4yXGJHFMDc6Eri4Uzc2
-         3QnMo0BDRNEtVG8p34Kysl5Y+HmYhjpHNsH5zOeOoGmYKiooXrQVfJxFPuEnabrOvGHe
-         UZxgcsrHj4oL85P2T8v0oKRsbXBIh63apTUbPwKsT1YtLDBVk2klzSk7jy4Fd6SkwwQx
-         CVia1QiNEQdVl+BfHb0bdyg/Ts5t8x+sYireTOhtPO0l/g22+qJ0q8rdn9VUWRO+jzff
-         dAnku2Qbg3aLDC5D372Z/hkKj6meB8JV+TqDioCoe4hHs2bD/nEx/14bZedCHkoG0vZZ
-         hpVg==
-X-Gm-Message-State: AOJu0YxA8kwCGOgKQqqCcsKzZqx5IUS59hVz3O01x2ZXPCJP+9+J5HU+
-	fHFmPenHxvYOCzXKKzszIvw=
-X-Google-Smtp-Source: AGHT+IFBY9iVIRBuVg6dN+6n28kVZBaQ3QpU3pvyd80I1f86lsgh4AzZzEITsYThn6COBiwc+ysWdg==
-X-Received: by 2002:a05:6a21:3e0b:b0:156:e1ce:d4a1 with SMTP id bk11-20020a056a213e0b00b00156e1ced4a1mr6476863pzc.9.1695022821893;
-        Mon, 18 Sep 2023 00:40:21 -0700 (PDT)
+        bh=Xqxu9XqJgrwv9dQeN2TLGjQoXj5OVfZLMHNwc4EUVI4=;
+        b=F5eYpEzCRyymPOlJhW7g8YKEfg0loir0L3+JCE7O6zHyoDyd3SJT/UQrQcuMK4ySIZ
+         p4MCw4B/TzyhgCcxKjuM+OMdqO9WlV6c3VDcdoLy4nBtxkJTSTXWWv74cNbDJHqfKTl+
+         xYb9sqRqXgU3sCO0Adb3OCdJKuEKLH7bWDwXD2itvAId0biNP6N0IMuX4wgMxRmLR4S8
+         2z32W8F5/TI7y6YYtUQvIEuMjm6+EBOsG1W9MGJMMjGJ190QoCdMd2IagDwM/nTfGCfa
+         DYQSe+STr9U9zEZ0HLL29rqampPkmgmJ9r/xfZ1ZFhtzC7l8Hdgc+7c5wgX/QD3Xu2Xl
+         Uetg==
+X-Gm-Message-State: AOJu0Ywvz5MeDlEkDVJKlgE88zbaqHyptClJCIpBzhJwAgSTuaozq8Vg
+	n3YOTmKQEzG21iFlyzWqrmg=
+X-Google-Smtp-Source: AGHT+IH/qxcDfX7UFoxk/ogaqzsqV1A4Qsvo/qqLJzoiAwIwKRGOhAmWzzeFeLJSkwIVnH5SmhaxVA==
+X-Received: by 2002:a05:6a00:181c:b0:68e:351b:15b8 with SMTP id y28-20020a056a00181c00b0068e351b15b8mr8287951pfa.12.1695023779938;
+        Mon, 18 Sep 2023 00:56:19 -0700 (PDT)
 Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id k7-20020aa792c7000000b0068be3489b0dsm6827221pfa.172.2023.09.18.00.40.21
+        by smtp.gmail.com with ESMTPSA id k10-20020a637b4a000000b00573f958f6a3sm6503830pgn.5.2023.09.18.00.56.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 00:40:21 -0700 (PDT)
+        Mon, 18 Sep 2023 00:56:19 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 941E480D9E27; Mon, 18 Sep 2023 14:40:18 +0700 (WIB)
-Date: Mon, 18 Sep 2023 14:40:18 +0700
+	id 361B2978D56F; Mon, 18 Sep 2023 14:56:17 +0700 (WIB)
+Date: Mon, 18 Sep 2023 14:56:16 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, javierm@redhat.com,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Song Liu <song@kernel.org>,
+	Timo Gurr <timo.gurr@gmail.com>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
- L570
-Message-ID: <ZQf-4r1K1Dx_LQ5t@debian.me>
-References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux SCSI <linux-scsi@vger.kernel.org>,
+	Linux IDE and libata <linux-ide@vger.kernel.org>,
+	Linux RAID <linux-raid@vger.kernel.org>
+Subject: Re: Fwd: Marvell RAID Controller issues since 6.5.x
+Message-ID: <ZQgCoJ17UioOtdOJ@debian.me>
+References: <224f10a4-7a6a-48bb-88be-491faf8ecff7@gmail.com>
+ <ZQf9mh3v5qfN5Tm0@x1-carbon>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -58,46 +62,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t9fjxRqYgtt2EzW7"
+	protocol="application/pgp-signature"; boundary="kc+WLW1HFUSqWTkE"
 Content-Disposition: inline
-In-Reply-To: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+In-Reply-To: <ZQf9mh3v5qfN5Tm0@x1-carbon>
 
 
---t9fjxRqYgtt2EzW7
+--kc+WLW1HFUSqWTkE
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 13, 2023 at 03:02:26PM +0300, Jaak Ristioja wrote:
-> Hello,
+On Mon, Sep 18, 2023 at 07:34:50AM +0000, Niklas Cassel wrote:
+> On Mon, Sep 18, 2023 at 07:18:28AM +0700, Bagas Sanjaya wrote:
+> > Hi,
+> >=20
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >=20
+> > Anyway, I'm adding this regression to be tracked by regzbot:
+> >=20
+> > #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cg=
+i?id=3D217920
+> > #regzbot title: UDMA configured spam on Marvell RAID controller
+> >=20
+> > Thanks.
+> >=20
+> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217920
 >=20
-> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
-> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank scr=
-een
-> after boot until the display manager starts... if it does start at all.
-> Using the nomodeset kernel parameter seems to be a workaround.
+> Hello Bagas,
 >=20
-> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
-> ("drivers/firmware: Move sysfb_init() from device_initcall to
-> subsys_initcall_sync").
+> This is a duplicate of:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217902
+>=20
+> Problem is solved by:
+> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel=
+=2Eorg/
+>=20
 >=20
 
-Thanks for the regression report. I'm adding it to regzbot:
+I have asked the reporter on Bugzilla to check the fix above. When he
+reports back successfully, I'll mark this report as fixed.
 
-#regzbot ^introduced: 60aebc9559492c
+Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---t9fjxRqYgtt2EzW7
+--kc+WLW1HFUSqWTkE
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQf+4QAKCRD2uYlJVVFO
-o1LjAQCyinSeRmWO5M3jxuESwFV9c/eJAgHm+YsA35cHfR8mBwEAsDAhYG4Bnm8h
-/2YyuCaC0lYoTEIdf+2AEN/OKWxH9QA=
-=hSUf
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQgCoAAKCRD2uYlJVVFO
+o55MAP9OtvCLRaHNTrxGJhOPpui1xIREaJ0wkOwmLE+BjudivQD9ETPSmeIq6maO
+Zk4SipJureLWv7qF9uJiIx2qzKDqbQg=
+=w8vJ
 -----END PGP SIGNATURE-----
 
---t9fjxRqYgtt2EzW7--
+--kc+WLW1HFUSqWTkE--
