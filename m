@@ -1,107 +1,105 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907E335884
-	for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 08:10:13 +0000 (UTC)
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bf6ea270b2so40437105ad.0
-        for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 01:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jade-fyi.20230601.gappssmtp.com; s=20230601; t=1695111013; x=1695715813; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XDaVHG8otiJPEb7VvRQaEf7e+HpyXbPyMYQtyJhoTbE=;
-        b=VPJ9UfqEi2yz7eBMc5fe5fjeDpR8nrltZxfX/DjJUsnGca1dZmcwXdXauHwUhUIo32
-         Psrn/jl3a2IFFT9DmrMsGKxuMak45ION6lJXUpHGRs4m/ZsQpJ6WVboWvh0LAotUNiMT
-         sldLTVWlT41Wffv/USX1cpajuWiHeZx4meTEJQNyGR3ESneRc8n1uDvyAzFyPHXLl+/p
-         Y30A0n8HCnQhOGJzTMUFfit1fNM9ttN3R1RW1+RbbWYyGp9PDNnT6GMtU4AJxWnJAlIf
-         1mheFB6BcXAEjaYJZCUtAJzaYswcecz65LbKK13kdzXzLcBZ0ctTSl48E8QxnKTpOZk2
-         yvcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695111013; x=1695715813;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XDaVHG8otiJPEb7VvRQaEf7e+HpyXbPyMYQtyJhoTbE=;
-        b=shUJdwJS1m4tWqijjKgQRqw2rKdKHKbjNHAV3P1iwG3NLpVxOf5Q1aBMapPJ5iLeo4
-         2KAeqZYU4Y8iy+V8ycpFmBtscaYon+gK1SXM3OoykQ02nsFnpSryN4ZYY3OBKSTfIoII
-         IS80rSYEjllt9x9S+JX9xoN0tfwlMRAEoM9oMWAhp+rRy+Pi3e+l3YcpUSbUuxrKcIfX
-         PQ9pA1h2OnFEr8Dg5kqAUGKKeq4PS0FeDWLcwA/orwGchfumLi/1gGtTlEvGbUtkTy1j
-         ET6vVb+YBAHCkANvgf1H/bF84hvt7MhoEM2XaTMxtBWt712+E4cwua44G41v0qsHjxkh
-         9ldw==
-X-Gm-Message-State: AOJu0Yy5GgtoKsrUmkuEehmiVd6ctuSiEXAW0ejj3aS/rFlZmfWwcShE
-	6Lz8JGY8EPBsHpepMVTLyuzhWQ==
-X-Google-Smtp-Source: AGHT+IGVJowM4/9XEQHW4+PaTqlhWRPWK+4eWaInB4DrrZBm59Vtc7nXUAWRCf4YZwM6CZm0oVKf5g==
-X-Received: by 2002:a17:902:d485:b0:1c3:9764:764f with SMTP id c5-20020a170902d48500b001c39764764fmr10700562plg.48.1695111012747;
-        Tue, 19 Sep 2023 01:10:12 -0700 (PDT)
-Received: from localhost ([172.103.222.8])
-        by smtp.gmail.com with ESMTPSA id y10-20020a170902b48a00b001bdc8a5e96csm9491983plr.169.2023.09.19.01.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Sep 2023 01:10:12 -0700 (PDT)
-From: Jade Lovelace <lists@jade.fyi>
-To: ricky_wu@realtek.com
-Cc: paul.grandperrin@gmail.com,
-	regressions@lists.linux.dev,
-	rogerable@realtek.com,
-	stable@vger.kernel.org,
-	wei_wang@realsil.com.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2E73D3B6
+	for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 09:11:18 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 38J9B5dF43369498, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 38J9B5dF43369498
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Sep 2023 17:11:05 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Tue, 19 Sep 2023 17:11:05 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 19 Sep 2023 17:11:04 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Tue, 19 Sep 2023 17:11:04 +0800
+From: Ricky WU <ricky_wu@realtek.com>
+To: Jade Lovelace <lists@jade.fyi>
+CC: "paul.grandperrin@gmail.com" <paul.grandperrin@gmail.com>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Roger Tseng
+	<rogerable@realtek.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wei_wang <wei_wang@realsil.com.cn>
 Subject: RE: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from drivers/misc/cardreader breaks NVME power state, preventing system boot
-Date: Tue, 19 Sep 2023 01:04:49 -0700
-Message-ID: <20230919080447.2594902-3-lists@jade.fyi>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <c7bdd821686e496eb31e4298050dfb72@realtek.com>
+Thread-Topic: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
+ drivers/misc/cardreader breaks NVME power state, preventing system boot
+Thread-Index: AQHZ5XTPQHzxhN3m602gmLzU6tUtJLAYEMCAgAk+JoCAAJGokA==
+Date: Tue, 19 Sep 2023 09:11:04 +0000
+Message-ID: <5acda839bf8b4d5f960d623662b001ec@realtek.com>
 References: <c7bdd821686e496eb31e4298050dfb72@realtek.com>
+ <20230919080447.2594902-3-lists@jade.fyi>
+In-Reply-To: <20230919080447.2594902-3-lists@jade.fyi>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.22.81.100]
+x-kse-serverinfo: RTEXMBS05.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hi,=0D
-=0D
-> In the past if the BIOS(config space) not set L1-substate our driver will=
- keep drive low CLKREQ# when HOST want to enter power saving state that mak=
-e whole system not enter the power saving state.=0D
-> But this patch we release the CLKREQ# to HOST, make whole system can ente=
-r power saving state success when the HOST want to enter the power saving s=
-tate, but I don't  know why this system can not wake out success from power=
- saving state"=0D
-> =0D
-> This is a PCIE CLKREQ# design problem on those platform, the pcie spec al=
-low device release the CLKREQ# to HOST, this patch only do this....=0D
-=0D
-I spent some time debugging today but I am not a PCIe expert. I think=0D
-that the card reader is actually violating the PCIe spec by not forcing=0D
-CLKREQ# low on systems that don't support ASPM, as appears to be done=0D
-(accidentally?) by the regressing driver change.=0D
-=0D
-The kernel logs on the affected system states the following:=0D
-[    0.142326] ACPI FADT declares the system doesn't support PCIe ASPM, so =
-disable it=0D
-=0D
-The PCIe 3.0 spec states (in the description of the Link Control=0D
-Register), regarding enabling clock power management:=0D
-> Enable Clock Power Management =E2=80=93 Applicable only for Upstream Port=
-s and with form factors that support a =E2=80=9CClock Request=E2=80=9D (CLK=
-REQ#) mechanism, this bit operates as follows: =0D
-> 0b Clock power management is disabled and device must hold CLKREQ# signal=
- low. =0D
-> 1b When this bit is Set, the device is permitted to use CLKREQ# signal to=
- power manage Link clock=0D
-> according to protocol defined in appropriate form factor specification.=0D
-=0D
-My reading of this is that on this system which does not support ASPM=0D
-and therefore also does not support clock PM, the driver must have the=0D
-device hold the line low, but I may be wrong.=0D
-=0D
-It's still unclear to me based on studying the schematic of the laptop=0D
-and the PCH datasheet why the one PCIe port is able to break the other=0D
-one like it does. The CLKREQ# lines are simply connected directly to the=0D
-SRCCLKREQ# lines of the PCH, plus a 10k pull-up to 3v3, which seems=0D
-entirely reasonable; any breakage surely would be some software/firmware le=
-vel=0D
-misconfiguration.=0D
-=0D
-Jade=0D
+DQpIaSBKYWRl77yMDQoNCkkgdGhpbmsgeW91IGhhdmUgc29tZSBtaXN1bmRlcnN0YW5kLCBvdXIg
+c2V0IGNsa3JlZyByZWdpc3RlciBpcyBub3QgZ28gZGlyZWN0bHkgdG8gY29udHJvbCBDTEtSRVEj
+IGFmdGVyIHNldHRpbmcuLi4uDQpPdXIgZGV2aWNlIGtlZXAgQ0xLUkVRIyBsb3cgdW50aWwgZW50
+ZXIgQVNQTSwgc28gdGhlIHN5c3RlbSBsZXQgb3VyIGRldmljZSB0byBBU1BNIG1vZGUgdGhlbiB3
+ZSByZWxlYXNlIHRoaXMgQ0xLUkVRIyBwaW4NCg0KPiANCj4gPiBJbiB0aGUgcGFzdCBpZiB0aGUg
+QklPUyhjb25maWcgc3BhY2UpIG5vdCBzZXQgTDEtc3Vic3RhdGUgb3VyIGRyaXZlciB3aWxsIGtl
+ZXANCj4gZHJpdmUgbG93IENMS1JFUSMgd2hlbiBIT1NUIHdhbnQgdG8gZW50ZXIgcG93ZXIgc2F2
+aW5nIHN0YXRlIHRoYXQgbWFrZQ0KPiB3aG9sZSBzeXN0ZW0gbm90IGVudGVyIHRoZSBwb3dlciBz
+YXZpbmcgc3RhdGUuDQo+IA0KPiA+IEJ1dCB0aGlzIHBhdGNoIHdlIHJlbGVhc2UgdGhlIENMS1JF
+USMgdG8gSE9TVCwgbWFrZSB3aG9sZSBzeXN0ZW0gY2FuDQo+IGVudGVyIHBvd2VyIHNhdmluZyBz
+dGF0ZSBzdWNjZXNzIHdoZW4gdGhlIEhPU1Qgd2FudCB0byBlbnRlciB0aGUgcG93ZXINCj4gc2F2
+aW5nIHN0YXRlLCBidXQgSSBkb24ndCAga25vdyB3aHkgdGhpcyBzeXN0ZW0gY2FuIG5vdCB3YWtl
+IG91dCBzdWNjZXNzIGZyb20NCj4gcG93ZXIgc2F2aW5nIHN0YXRlIg0KPiANCj4gPg0KPiANCj4g
+PiBUaGlzIGlzIGEgUENJRSBDTEtSRVEjIGRlc2lnbiBwcm9ibGVtIG9uIHRob3NlIHBsYXRmb3Jt
+LCB0aGUgcGNpZSBzcGVjDQo+IGFsbG93IGRldmljZSByZWxlYXNlIHRoZSBDTEtSRVEjIHRvIEhP
+U1QsIHRoaXMgcGF0Y2ggb25seSBkbyB0aGlzLi4uLg0KPiANCj4gDQo+IA0KPiBJIHNwZW50IHNv
+bWUgdGltZSBkZWJ1Z2dpbmcgdG9kYXkgYnV0IEkgYW0gbm90IGEgUENJZSBleHBlcnQuIEkgdGhp
+bmsNCj4gDQo+IHRoYXQgdGhlIGNhcmQgcmVhZGVyIGlzIGFjdHVhbGx5IHZpb2xhdGluZyB0aGUg
+UENJZSBzcGVjIGJ5IG5vdCBmb3JjaW5nDQo+IA0KPiBDTEtSRVEjIGxvdyBvbiBzeXN0ZW1zIHRo
+YXQgZG9uJ3Qgc3VwcG9ydCBBU1BNLCBhcyBhcHBlYXJzIHRvIGJlIGRvbmUNCj4gDQo+IChhY2Np
+ZGVudGFsbHk/KSBieSB0aGUgcmVncmVzc2luZyBkcml2ZXIgY2hhbmdlLg0KPiANCj4gDQo+IA0K
+PiBUaGUga2VybmVsIGxvZ3Mgb24gdGhlIGFmZmVjdGVkIHN5c3RlbSBzdGF0ZXMgdGhlIGZvbGxv
+d2luZzoNCj4gDQo+IFsgICAgMC4xNDIzMjZdIEFDUEkgRkFEVCBkZWNsYXJlcyB0aGUgc3lzdGVt
+IGRvZXNuJ3Qgc3VwcG9ydCBQQ0llIEFTUE0sIHNvDQo+IGRpc2FibGUgaXQNCj4gDQo+IA0KPiAN
+Cj4gVGhlIFBDSWUgMy4wIHNwZWMgc3RhdGVzIChpbiB0aGUgZGVzY3JpcHRpb24gb2YgdGhlIExp
+bmsgQ29udHJvbA0KPiANCj4gUmVnaXN0ZXIpLCByZWdhcmRpbmcgZW5hYmxpbmcgY2xvY2sgcG93
+ZXIgbWFuYWdlbWVudDoNCj4gDQo+ID4gRW5hYmxlIENsb2NrIFBvd2VyIE1hbmFnZW1lbnQg4oCT
+IEFwcGxpY2FibGUgb25seSBmb3IgVXBzdHJlYW0gUG9ydHMgYW5kDQo+IHdpdGggZm9ybSBmYWN0
+b3JzIHRoYXQgc3VwcG9ydCBhIOKAnENsb2NrIFJlcXVlc3TigJ0gKENMS1JFUSMpIG1lY2hhbmlz
+bSwgdGhpcw0KPiBiaXQgb3BlcmF0ZXMgYXMgZm9sbG93czoNCj4gDQo+ID4gMGIgQ2xvY2sgcG93
+ZXIgbWFuYWdlbWVudCBpcyBkaXNhYmxlZCBhbmQgZGV2aWNlIG11c3QgaG9sZCBDTEtSRVEjDQo+
+IHNpZ25hbCBsb3cuDQo+IA0KPiA+IDFiIFdoZW4gdGhpcyBiaXQgaXMgU2V0LCB0aGUgZGV2aWNl
+IGlzIHBlcm1pdHRlZCB0byB1c2UgQ0xLUkVRIyBzaWduYWwgdG8NCj4gcG93ZXIgbWFuYWdlIExp
+bmsgY2xvY2sNCj4gDQo+ID4gYWNjb3JkaW5nIHRvIHByb3RvY29sIGRlZmluZWQgaW4gYXBwcm9w
+cmlhdGUgZm9ybSBmYWN0b3Igc3BlY2lmaWNhdGlvbi4NCj4gDQo+IA0KPiANCj4gTXkgcmVhZGlu
+ZyBvZiB0aGlzIGlzIHRoYXQgb24gdGhpcyBzeXN0ZW0gd2hpY2ggZG9lcyBub3Qgc3VwcG9ydCBB
+U1BNDQo+IA0KPiBhbmQgdGhlcmVmb3JlIGFsc28gZG9lcyBub3Qgc3VwcG9ydCBjbG9jayBQTSwg
+dGhlIGRyaXZlciBtdXN0IGhhdmUgdGhlDQo+IA0KPiBkZXZpY2UgaG9sZCB0aGUgbGluZSBsb3cs
+IGJ1dCBJIG1heSBiZSB3cm9uZy4NCj4gDQo+IA0KPiANCj4gSXQncyBzdGlsbCB1bmNsZWFyIHRv
+IG1lIGJhc2VkIG9uIHN0dWR5aW5nIHRoZSBzY2hlbWF0aWMgb2YgdGhlIGxhcHRvcA0KPiANCj4g
+YW5kIHRoZSBQQ0ggZGF0YXNoZWV0IHdoeSB0aGUgb25lIFBDSWUgcG9ydCBpcyBhYmxlIHRvIGJy
+ZWFrIHRoZSBvdGhlcg0KPiANCj4gb25lIGxpa2UgaXQgZG9lcy4gVGhlIENMS1JFUSMgbGluZXMg
+YXJlIHNpbXBseSBjb25uZWN0ZWQgZGlyZWN0bHkgdG8gdGhlDQo+IA0KPiBTUkNDTEtSRVEjIGxp
+bmVzIG9mIHRoZSBQQ0gsIHBsdXMgYSAxMGsgcHVsbC11cCB0byAzdjMsIHdoaWNoIHNlZW1zDQo+
+IA0KPiBlbnRpcmVseSByZWFzb25hYmxlOyBhbnkgYnJlYWthZ2Ugc3VyZWx5IHdvdWxkIGJlIHNv
+bWUgc29mdHdhcmUvZmlybXdhcmUNCj4gbGV2ZWwNCj4gDQo+IG1pc2NvbmZpZ3VyYXRpb24uDQo+
+IA0KPiANCj4gDQo+IEphZGUNCg0K
