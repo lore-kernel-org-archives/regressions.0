@@ -1,102 +1,87 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3447728DA6
-	for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 22:56:10 +0000 (UTC)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-9ad8bf9bfabso660728866b.3
-        for <regressions@lists.linux.dev>; Mon, 18 Sep 2023 15:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695077769; x=1695682569; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tftkfCRDvcs4v9yhjyjUTVMx7qSfJ5Yv3Qi6b8m0pFI=;
-        b=akdVwicNRiPQRvclBg08UnejkXfpax/BnZGOElmh/FCRLprAoCGyYtCV5+/WyO9Q6G
-         KTcDFkyFJf1V023H99/7dzFZpt7+EeNZlRFWrzzkNxlHpflYsVXNy9XTwkKvsETNaCTi
-         sWsOsV4ptVv2KXSByp/6KLdwSwlmSEfg3jPMM1uzcLD4BjN2mlhtS2qJVjzq5LWbW9iB
-         ZqEy7Smm+lRX+BNzwYKx4vTNsGHOBfqBF49MYee1PZ7pr3Nbm/Hr6LomxOkifujYDSQa
-         Aiw5jI8Wn+HuINjqtRODkOB2Nvbfm+ytZwJJqBX4yd1JkKAmAX3gp5gm/hdr2lKMZxnY
-         pSlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695077769; x=1695682569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tftkfCRDvcs4v9yhjyjUTVMx7qSfJ5Yv3Qi6b8m0pFI=;
-        b=eniw+l7JX+mRqs+kbJRmIlR+pYy7eHBQTd9ZSdxdpTJpqHpb5VRvsNBkG9qQnVEIkw
-         lyJey3ncGohEsWnZ/8vu59jIr6cmZYlX0m//DmAcZTtpxc1nRwfUps1ItIkZHLsdHlQY
-         SAd/MrUdwsBxVzLlrvSMxQiPwPMoAxcwbYG1FkUuyfgCP2KiqSJjQTHoxorV0ZlBTTCg
-         kaVSX8kGytW61OPgPZ0IPJ6bYlhKgiMLzJS5n1rB5LhqCWMAPMzq2wRFus6ceR3yaZA3
-         FGxy+epjDYmaMDSv//fU2v+5i5fn7PIvA+a3ZmF+LJM4+E3fms9bc4dp4FiXI+VcRhGY
-         ta6g==
-X-Gm-Message-State: AOJu0YxGR5KLUsyIE73OO/a6VU8lRb2vzAWlea3uzJ6uY67PxWVfLK31
-	SguPA2I776QRjmzX5iaGfg0i5B3mFN+mp40rlzU=
-X-Google-Smtp-Source: AGHT+IFpC7h3oiR2e/FsAxZpvqmdBeNGyNbZC00OQ9F6uY4pZs5emDtplxQ/fvPIz/FLvbM4UJDM2JpjENynkjMDLyA=
-X-Received: by 2002:a17:906:519b:b0:9ad:e298:a5d with SMTP id
- y27-20020a170906519b00b009ade2980a5dmr9218002ejk.19.1695077769209; Mon, 18
- Sep 2023 15:56:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DD6450CD
+	for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 02:21:12 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 38J2KtHR22873115, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 38J2KtHR22873115
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Sep 2023 10:20:55 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Tue, 19 Sep 2023 10:20:55 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 19 Sep 2023 10:20:53 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Tue, 19 Sep 2023 10:20:53 +0800
+From: Ricky WU <ricky_wu@realtek.com>
+To: Greg KH <gregkh@linuxfoundation.org>,
+        Linux regressions mailing list
+	<regressions@lists.linux.dev>
+CC: Paul Grandperrin <paul.grandperrin@gmail.com>,
+        "stable@vger.kernel.org"
+	<stable@vger.kernel.org>,
+        Wei_wang <wei_wang@realsil.com.cn>,
+        Roger Tseng
+	<rogerable@realtek.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: RE: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from drivers/misc/cardreader breaks NVME power state, preventing system boot
+Thread-Topic: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
+ drivers/misc/cardreader breaks NVME power state, preventing system boot
+Thread-Index: AQHZ5XTPQHzxhN3m602gmLzU6tUtJLAYNE4TgAk8SwA=
+Date: Tue, 19 Sep 2023 02:20:53 +0000
+Message-ID: <7991b5bd7fb5469c971a2984194e815f@realtek.com>
+References: <5DHV0S.D0F751ZF65JA1@gmail.com>
+ <82469f2f-59e4-49d5-823d-344589cbb119@leemhuis.info>
+ <2023091333-fiftieth-trustless-d69d@gregkh>
+In-Reply-To: <2023091333-fiftieth-trustless-d69d@gregkh>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.22.81.100]
+x-kse-serverinfo: RTEXMBS05.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
- <ZPfPfyIoVxw5L6El@debian.me> <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
-In-Reply-To: <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
-From: Brian Pardy <brian.pardy@gmail.com>
-Date: Mon, 18 Sep 2023 18:55:58 -0400
-Message-ID: <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
-Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
- is mounted (cifsd-cfid-laundromat in"D" state)
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux CIFS <linux-cifs@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Steve French <sfrench@samba.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-[RS removed from CC due to bounce message]
-
-On Wed, Sep 6, 2023 at 5:03=E2=80=AFPM Brian Pardy <brian.pardy@gmail.com> =
-wrote:
-> On Tue, Sep 5, 2023 at 9:01=E2=80=AFPM Bagas Sanjaya <bagasdotme@gmail.co=
-m> wrote:
-> > Thanks for the regression report. But if you want to get it fixed,
-> > you have to do your part: perform bisection. See Documentation/admin-gu=
-ide/bug-bisect.rst in the kernel sources for how to do that.
-> >
-> > Anyway, I'm adding it to regzbot:
-> >
-> > #regzbot ^introduced: v6.4..v6.5
-> > #regzbot title: incorrect CPU utilization report (multiplied) when moun=
-ting CIFS
->
-> Thank you for directing me to the bug-bisect documentation. Results below=
-:
->
-> # git bisect bad
-> d14de8067e3f9653cdef5a094176d00f3260ab20 is the first bad commit
-> commit d14de8067e3f9653cdef5a094176d00f3260ab20
-> Author: Ronnie Sahlberg <lsahlber@redhat.com>
-> Date:   Thu Jul 6 12:32:24 2023 +1000
->
->     cifs: Add a laundromat thread for cached directories
->
->     and drop cached directories after 30 seconds
->
->     Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
->     Signed-off-by: Steve French <stfrench@microsoft.com>
->
->  fs/smb/client/cached_dir.c | 67 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  fs/smb/client/cached_dir.h |  1 +
->  2 files changed, 68 insertions(+)
-
-Is there any further information I can provide to aid in debugging
-this issue? Should I just expect incorrect load average reporting when
-a CIFS share is mounted on any kernel >6.5.0?
-
-I'm not clear on the value or necessity of this "laundromat thread" -
-everything worked as expected before it was added - shall I just patch
-it out of my kernel builds going forward if there is no interest in
-fixing it? Is a .config option to disable it possible?
+SGkgR3JlZyBrLWihQQ0KDQpJbiBvcmRlciB0byBjb3ZlciB0aGUgdGhvc2UgcGxhdGZvcm0gUG93
+ZXIgc2F2aW5nIGlzc3VlLCANCm91ciBhcHByb2FjaCBvbiBuZXcgcGF0Y2ggd2lsbCBiZSBkaWZm
+ZXJlbnQgZnJvbSB0aGUgcHJldmlvdXMgcGF0Y2ggKDEwMWJkOTA3YjQyNDRhNzI2OTgwZWU2N2Y5
+NWVkOWNhZmFiNmZmN2EpLg0KDQpTbyB3ZSBuZWVkIHVzZWQgZml4ZWQgVGFnIG9uIDEwMWJkOTA3
+YjQyNDRhNzI2OTgwZWU2N2Y5NWVkOWNhZmFiNmZmN2EgDQpvciBhIG5ldyBwYXRjaCBmb3IgdGhp
+cyBwcm9ibGVtPw0KDQpSaWNreQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IEdyZWcgS0ggPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPg0KPiBTZW50OiBXZWRuZXNk
+YXksIFNlcHRlbWJlciAxMywgMjAyMyAxOjAzIFBNDQo+IFRvOiBMaW51eCByZWdyZXNzaW9ucyBt
+YWlsaW5nIGxpc3QgPHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4NCj4gQ2M6IFBhdWwgR3Jh
+bmRwZXJyaW4gPHBhdWwuZ3JhbmRwZXJyaW5AZ21haWwuY29tPjsgc3RhYmxlQHZnZXIua2VybmVs
+Lm9yZzsNCj4gV2VpX3dhbmcgPHdlaV93YW5nQHJlYWxzaWwuY29tLmNuPjsgUm9nZXIgVHNlbmcN
+Cj4gPHJvZ2VyYWJsZUByZWFsdGVrLmNvbT47IFJpY2t5IFdVIDxyaWNreV93dUByZWFsdGVrLmNv
+bT47IExpbnVzIFRvcnZhbGRzDQo+IDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4NCj4g
+U3ViamVjdDogUmU6IFJlZ3Jlc3Npb24gc2luY2UgNi4xLjQ2IChjb21taXQgOGVlMzllYyk6IHJ0
+c3hfcGNpIGZyb20NCj4gZHJpdmVycy9taXNjL2NhcmRyZWFkZXIgYnJlYWtzIE5WTUUgcG93ZXIg
+c3RhdGUsIHByZXZlbnRpbmcgc3lzdGVtIGJvb3QNCj4gDQo+IA0KPiBFeHRlcm5hbCBtYWlsLg0K
+PiANCj4gDQo+IA0KPiBPbiBUdWUsIFNlcCAxMiwgMjAyMyBhdCAwNzoxMDozOFBNICswMjAwLCBM
+aW51eCByZWdyZXNzaW9uIHRyYWNraW5nIChUaG9yc3Rlbg0KPiBMZWVtaHVpcykgd3JvdGU6DQo+
+ID4gKENDaW5nIEdyZWcsIGFzIGhlIG1lcmdlZCB0aGUgY3VscHJpdCwgYW5kIExpbnVzLCBpbiBj
+YXNlIGhlIHdhbnRzIHRvDQo+ID4gcmV2ZXJ0IHRoaXMgZnJvbSBtYWlubGluZSBkaXJlY3RseSBh
+cyB0aGlzIGFwcGFyZW50bHkgYWZmZWN0cyBhbmQNCj4gPiBhbm5veXMgcXVpdGUgYSBmZXcgcGVv
+cGxlKQ0KPiANCj4gVGhlIGRyaXZlciBhdXRob3JzIGtub3cgYWJvdXQgdGhpcyBhbmQgaGF2ZSBz
+YWlkIHRoZXkgYXJlIHdvcmtpbmcgb24gYQ0KPiBzb2x1dGlvbi4gIExldCdzIGdpdmUgdGhlbSBh
+IGZldyBtb3JlIGRheXMgb24gaXQgYmVmb3JlIHJldmVydGluZyBzdHVmZi4NCj4gDQo+IHRoYW5r
+cywNCj4gDQo+IGdyZWcgay1oDQo=
