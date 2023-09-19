@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433FB847F
-	for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 11:48:20 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qiZDG-000218-3R; Tue, 19 Sep 2023 13:48:18 +0200
-Message-ID: <acef4b9e-a6be-45be-91bf-40ad5fb469d2@leemhuis.info>
-Date: Tue, 19 Sep 2023 13:48:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A272E8475
+	for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 12:08:53 +0000 (UTC)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-68fcb4dc8a9so5091272b3a.2
+        for <regressions@lists.linux.dev>; Tue, 19 Sep 2023 05:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695125333; x=1695730133; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S6xhmX02krfuudIK/kDSdYE25699Zi1WYmFbMkp7FRE=;
+        b=AkfWUshOmTf7vus10579NmMZ1gcbVNHcoiLI1mbZTkBXCFJle9i3tAsWl6HjFfGWMP
+         7dQcrTm3VFl6NxJz7ehZuvMdKVGB3UNHh8xLeTqBwuUSK0Obv9DgfNlPOpR/wzyudmes
+         RtostILtZMUwVhSSr5yKmIeuMhYd7ZYd711T/kI6KxaT5QIM9MUMEf/YpqfB/7tKMSOy
+         /xNeYyWPrn0sg6Th9berRxL0ZyPn/YEYv/QRgJy0r9vNw78yqj9j61EObzVKsLsPtrV4
+         bUxoirR93utcuEx9zQaTJfd9Lw4qFCORcZ94Atb3rq8lHB1L9ri+f7X6Y9deqflsdNIg
+         t/1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695125333; x=1695730133;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S6xhmX02krfuudIK/kDSdYE25699Zi1WYmFbMkp7FRE=;
+        b=cnKZV3vKTx/4S9rX9WX1ve34niWNfnpOHvp+ev8Jwi2Q7j5DsGOf5m2x7Q1wkFBzej
+         6gmNOA5A3XIZdO5/7yc6jeC2A1iarIU0UVJi41rGKaPAYhHkZpgJKvpnNGpc9kHyTpkO
+         Zck+Q21VgF81Lh2lxbxZAJAZ892G+ftxhM8jVyL0ZJOT2VO6yvKf8qb6CG/ExBVQ9oc7
+         0kjl69UawefUvvLTW7zfmUc5+Xn25bUBBfRvm/yx2phTJ8WOmkfGA7ALIigqaOxBx361
+         Ue4BRryP/oAZbDW12vLhPaH+2IDIWy+bmmt8KKAbHq4f7jESjQL4igLsF24pbB0rrO/w
+         KELg==
+X-Gm-Message-State: AOJu0Yy75dKLILG2epKJLlwzwgqsfl3nUp5++2ZWadEnD2VrpKapuzrq
+	H+MLbZ9bsNZzrFBjlQrD4+EjagxZkg0=
+X-Google-Smtp-Source: AGHT+IGWrKUt1gJtfuwgclUNdSACapHw0G929wnxRxw67DgRvp8vDesvlYLDs+VGKnIIi/plOt67HA==
+X-Received: by 2002:a05:6a00:813:b0:68e:39b5:7e63 with SMTP id m19-20020a056a00081300b0068e39b57e63mr12467455pfk.16.1695125332780;
+        Tue, 19 Sep 2023 05:08:52 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id c21-20020aa781d5000000b0068fe68de4e1sm8758513pfn.145.2023.09.19.05.08.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Sep 2023 05:08:52 -0700 (PDT)
+Message-ID: <bbc73924-299d-4de5-a06c-995a49e5f27e@gmail.com>
+Date: Tue, 19 Sep 2023 19:08:41 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,65 +47,47 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Kernel 6.5.2 Causes Marvell Technology Group 88SE9128 PCIe
- SATA to Constantly Reset
-Content-Language: en-US, de-DE
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Linux Regressions <regressions@lists.linux.dev>,
+Subject: Re: Fwd: Marvell RAID Controller issues since 6.5.x
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Song Liu <song@kernel.org>,
+ Timo Gurr <timo.gurr@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux SCSI <linux-scsi@vger.kernel.org>,
  Linux IDE and libata <linux-ide@vger.kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>
-References: <dacb34e4-ce58-bc0e-8206-672d743a3e34@gmail.com>
- <ZQHRQHAPQdG+Nu1o@x1-carbon>
- <59f6ff78-6b45-465a-bd41-28c7a5d10931@davidgow.net>
- <10f65dfe-5e8a-10ab-4d89-efe693c07caa@kernel.org>
- <658b9285-e030-4987-86a7-57cdb6c7f161@davidgow.net>
- <ZQQa0QRhm1BuI5IT@x1-carbon>
- <49d92af6-4968-4066-b33c-0fd06f8fdf28@davidgow.net>
- <ZQSEXl0GB3iKoqjZ@x1-carbon>
- <bbe4ae16-86b3-4629-b5e0-c704881fe5cb@davidgow.net>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <bbe4ae16-86b3-4629-b5e0-c704881fe5cb@davidgow.net>
+ Linux RAID <linux-raid@vger.kernel.org>
+References: <224f10a4-7a6a-48bb-88be-491faf8ecff7@gmail.com>
+ <ZQf9mh3v5qfN5Tm0@x1-carbon> <ZQgCoJ17UioOtdOJ@debian.me>
+ <ZQlFg4GsULu633P1@debian.me>
+ <9c791f68-bbfe-4722-9cbb-5e791ce042ec@leemhuis.info>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <9c791f68-bbfe-4722-9cbb-5e791ce042ec@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695124100;d36f9ec2;
-X-HE-SMSGID: 1qiZDG-000218-3R
+Content-Transfer-Encoding: 7bit
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Closes: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
-
-On 16.09.23 04:21, David Gow wrote:
-> Le 2023/09/16 à 0:20, Niklas Cassel a écrit :
->> On Fri, Sep 15, 2023 at 08:26:58PM +0800, David Gow wrote:
->>> In any case, the bisect is done:
->>>
->>> 624885209f31eb9985bf51abe204ecbffe2fdeea is the first bad commit
->>> commit 624885209f31eb9985bf51abe204ecbffe2fdeea
->>> Author: Damien Le Moal <dlemoal@kernel.org>
->>> Date:   Thu May 11 03:13:41 2023 +0200
-> [...]
->> Thank you very much for your effort of bisecting this.
->>
->> Could you please try this patch and see if it improves things for you:
->> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
+On 19/09/2023 18:32, Linux regression tracking #update (Thorsten Leemhuis) wrote:
+> [TLDR: This mail in primarily relevant for Linux kernel regression
+> tracking. See link in footer if these mails annoy you.]
 > 
-> Thanks very much: this seems to fix it here (on top of torvalds/master).
+> On 19.09.23 08:53, Bagas Sanjaya wrote:
+>> Another user has confirmed the fix (see Bugzilla), so:
+>>
+>> #regzbot fix: https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
+> 
+> Bagas, FWIW, using "#regzbot fix" is not supported (maybe it should, but
+> I have other priorities currently), hence let me fix this up:
+> 
+> #regzbot fix: scsi: Do no try to probe for CDL on old drives
+> #regzbot monitor:
+> https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
+> #regzbot ignore-activity
+> 
 
-#regzbot: introduced: 624885209f31eb9
-#regzbot fix: scsi: Do no try to probe for CDL on old drives
-#regzbot monitor:
-https://lore.kernel.org/linux-scsi/20230915022034.678121-1-dlemoal@kernel.org/
-#regzbot ignore-activity
+Duh! I should have read regzbot doc then. Thanks anyway.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
+-- 
+An old man doll... just what I always wanted! - Clara
 
