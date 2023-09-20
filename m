@@ -1,159 +1,126 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03olkn2021.outbound.protection.outlook.com [40.92.58.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5463CD04
-	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 18:27:17 +0000 (UTC)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2bfea381255so1394421fa.3
-        for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 11:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695234435; x=1695839235; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/B51hhManBxQCDJi8s/bZ6EVrxt2B6zMHpl9BIven/A=;
-        b=NGNPuKZ4rtETSyRtHVPJ5OGosH8GG2+jR00rLE7FJ089ajmmgrX/Gcqznc4RKYy6du
-         OcPrfkZCaCj6YosQXpcDSrfVvKXLlSM3aKPUSxwY4OEv5mtQxp/N0Bk3S28BxpUEt1Ww
-         z6fjyQjlerkRMarRyUUTcOLcuvj4jltQuImEhlwCYyezSIuQuzU5y2ftXsHRWeoN7vlF
-         cy/0OETwsu3ctClmvd1AxcOKJ8EnaAJXZHNaTWscaR7bsuiWDD1yEJxDbaQCjaArBL3G
-         uwQg/KBaqExaO+zGvZJKLnhZ9CjEYuldt4In7HZwDBERLcAe5gh0CCTakWcjf7LA7CiK
-         WpuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695234435; x=1695839235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/B51hhManBxQCDJi8s/bZ6EVrxt2B6zMHpl9BIven/A=;
-        b=nrI8PZV69NvLIyuHJw+bKKFweo4r0tM1ilzPXIUTHP4O96kKJmY4tJeJHXO58W/sSm
-         aicOxodqPRoARQnQnK4xGWt07lcoRsmcvfupTJG6VG0OJW6J+FijlEs/gH88qNVXxjvg
-         mCpTNuXnL64e4xat9Hv5lEbVHz0MOQD6IBKLozB18YLeRnsDUvTgczKyVDVDLGT01boo
-         2+HXCKD76MJounNj5ag3VldimVOi+ALCnqGvG0Jb2TqdPP59VmbaSPG72TjIEUbs/bf/
-         8DZD//82NEU5njjCuFr6sBZry0tRnLrMdajNwxQ8lTf7QuOnjLWXpD6zT+iqnTkirLms
-         h5Kg==
-X-Gm-Message-State: AOJu0YyGqC7uJh1/t1ut8GF7WrgDTHs4eoHPtwOty2iLzY8D4h/M7jaF
-	xD0kk1fmV/GvpG8AV4hpj0GO7WaU1xVFH7jEx4o=
-X-Google-Smtp-Source: AGHT+IF0iUJNRicLpJin3ByiycK68Xagu/oZrfx1jraD/qFlUAPWvrmPcx4u8CUjgnhAlieVUWLkWumO10WZWKvzyDY=
-X-Received: by 2002:a05:651c:108:b0:2bd:133c:2d71 with SMTP id
- a8-20020a05651c010800b002bd133c2d71mr2718462ljb.52.1695234435115; Wed, 20 Sep
- 2023 11:27:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5046B19C
+	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 18:53:01 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Myb38JIcppN72cCIzpL63rvJsCp0diGLzqUA8cpTrdRD7asAI7IDLCaFGHTU34bsE1dTw7jzObbJU4PMIE7FnXklJGbz4npGEZnyvPSpo9RtQvAuXCNgugWhMJK+v7cFNAAqqUPBioNew3EpGKM4eIZg7StxDCovMQAwLJhEMMATS9PcsZsF49fcZgXRUsWYdD+Fx7b59OaCZ1g2U6nnqk9nwCrGJsRlZHxk72SkrB8BSoidttX0yWSwTKiRXEpEHCPr9VS1zRPrrGflHnK6kZRg55xv4ud5cKHoiVEvQ+/a0C+Mz7oRkqFv9OpYwip7rIcTuF9UBhak7+Y0kij6BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2tg55b0SolvFYalcr4uQqS3gKIR93RaI5ZecBYndA7U=;
+ b=dWX4K+Bb2MvET6iHFLkPR537yh9fLa0lI22sYQhFM1P4eBSx9fyfLq6sahrBkFkxgLx/mvB8cJoFu/ThPuolEoa6miFuX1m42K2DoggMRuDRYVoGQDuJVrmIgv0vYc3yGo+9jJLjOnqH40lLK1KzjmK/qnvS4xU/io5IJqZmTSXvoH4L2KKMC96EkoOB4YD2tTJWsgKuYAH1BJ3VW/q5v019CxX2144pm7JFTOetnJzdiiadCAts8llZDQIRBJjrMwOXVpYSnoLEZphW/RffmLVTie2NnPTlBFMPoHMqMGzYfD3JTrfuSZ6fFbQpCSmt47DIFpS0H+0GRmYRpQLmbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from GVXP194MB1759.EURP194.PROD.OUTLOOK.COM (2603:10a6:150::12) by
+ AM9P194MB1266.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:3a8::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6813.20; Wed, 20 Sep 2023 18:53:00 +0000
+Received: from GVXP194MB1759.EURP194.PROD.OUTLOOK.COM
+ ([fe80::fd80:c57c:1bc9:9846]) by GVXP194MB1759.EURP194.PROD.OUTLOOK.COM
+ ([fe80::fd80:c57c:1bc9:9846%4]) with mapi id 15.20.6813.018; Wed, 20 Sep 2023
+ 18:52:59 +0000
+Message-ID:
+ <GVXP194MB17595E1811E5132B6E03BADF80F9A@GVXP194MB1759.EURP194.PROD.OUTLOOK.COM>
+Date: Wed, 20 Sep 2023 19:52:56 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] Bug 216360 - No power to DVD drive
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <d0433877-2971-b54d-fcbe-2837ae9248be@leemhuis.info>
+ <ZQryrfLC6GPhSCnu@debian.me>
+Content-Language: en-GB
+From: bruce <bhealey@live.co.uk>
+In-Reply-To: <ZQryrfLC6GPhSCnu@debian.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN: [JhQQEmZDCq5OKhRTwvxb1hbF4aX5Xret]
+X-ClientProxiedBy: PR1P264CA0080.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:2cc::18) To GVXP194MB1759.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:150::12)
+X-Microsoft-Original-Message-ID:
+ <e4a5508b-0540-412a-ac21-ebeb942718f7@live.co.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230829205936.766544-1-luiz.dentz@gmail.com> <169343402479.21564.11565149320234658166.git-patchwork-notify@kernel.org>
- <de698d06-9784-43ed-9437-61d6edf9672b@leemhuis.info> <CABBYNZK2PPkLra8Au-fdN2nG2YLkfFRmPtEPQL0suLzBv=HHcA@mail.gmail.com>
- <574ca8dd-ee97-4c8b-a154-51faf83cabdf@leemhuis.info> <CABBYNZJ=5VH2+my7Gw1fMCaGgdOQfbWNtBGOc27_XQqCP7jD-A@mail.gmail.com>
- <ff2abfbe-a46b-414b-a757-8185495838b7@leemhuis.info> <cd12622b-bfc6-093d-5c10-493e10935440@leemhuis.info>
-In-Reply-To: <cd12622b-bfc6-093d-5c10-493e10935440@leemhuis.info>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Wed, 20 Sep 2023 11:27:02 -0700
-Message-ID: <CABBYNZKg8dbD0CY2yR=JUYLjXcRm_Pq7GU3W5gPErx6-_7GAJQ@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: hci_sync: Fix handling of HCI_QUIRK_STRICT_DUPLICATE_FILTER
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, patchwork-bot+bluetooth@kernel.org, 
-	linux-bluetooth@vger.kernel.org, netdev <netdev@vger.kernel.org>, 
-	Stefan Agner <stefan@agner.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVXP194MB1759:EE_|AM9P194MB1266:EE_
+X-MS-Office365-Filtering-Correlation-Id: e211aed2-be2b-4068-5429-08dbba0acf64
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	dR/SLwe2TRlgQAAIfWkNzmR3mvkmXIDhwRkenRM1QFDFy0xoF4EKs3AlpIXnu4DYk+j6p/iYuvSOnKL21Pl9gG4RQBDYnSep6DCF6j7Sv8A381QX0HxTaXC0PJzj36xXxX2uisquTifkgT9CCJpiSJlm/o0GHiFr1vfs38ljzvM5G5Y1Ay3QktWmzhjZS46Nqp84jPcO9QiKbd0UMExqqd7Vf6tj5cu9Rr0+RCPV49Yuc/ZnTj6XHstuLE2gU7v5uzbsaFELF5moaTRu12hcjhKQWntYswZ1ZCmO9G/2BjmvV76AJxkmiW6R0fB55zxVA4SEDuyN6MQpdczkEgGe/g02jVPn20Sf3Wy5Rlm8s83s0UOsueJUFD+gbnbxnzNwFttOyvWAhLfoAz6gtam3Qy84ZhM/CkEPmK6dbZeJRUs1+HPX8buSjCrXBQdvq9omDM5z3othPODNMj/7KJOsgRYqKRCI6X168jqXIeLUYXeORF5wc9debXCk+PtrKstzWHtvHYjqL4Rq/6dk+hGwSk+fIZ8/F/ocHQbW3jlnXrkYl2m9cLaHW2O+fk3mZYWJSC79VFzdcha1jdvWBsXTcCXwd9MIcilKRpkrymFHmn4=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?am5BeGFxMzBuc0JvemZNVis5a2laejl1UmNMQm5GSG4yVGxtcVp6ZlZrWTV1?=
+ =?utf-8?B?aGYyRjhJRi9TdExNVXdXTlR4VjZCZXFKcTBpa2xMRDhzUzM2TTNCVHB1RmE4?=
+ =?utf-8?B?ZVUrVXFWS3BuQkMxeEdzdjcvYiszd0x0UkhkVUhWV1YwcU1iTWxuNzJnNmVO?=
+ =?utf-8?B?ZFZWWUJ1VkpKcm1xd2xuZ0hpcmNPeTg4aEk3eVVGUnRNMnAvUHN5dGJpZDFI?=
+ =?utf-8?B?eWlXV2FoSGVxRmRML2dLazVkTVdWTzEyMi95UTZOMTdLdHBJQ3BPQWNrWE1s?=
+ =?utf-8?B?K25TLzM2RE1xbVJ6UjJUV0hzcUpJRTV6K3VHZDR4VExmSGpENmQwQ0tYaDZm?=
+ =?utf-8?B?WEhNSWgvd1M3RWtaaTV5RzQ0OHdnQVlnUHljR1kyaUliYnNBS1diMU1pOUQy?=
+ =?utf-8?B?R05SN1ViRGI2c2R2OHNGQ0pPdGgyVThuWncrQVpyMXY2cjlVSVRvWHVaYVJT?=
+ =?utf-8?B?Q1JqZFQwdTAwWVpPbzlnZEo1ZHVSMHBHL3Fxc1dyVnhOUzBKZHJkdlBBV1Nh?=
+ =?utf-8?B?bmtQSzdDSm5vWUJFRmpJbkVWU0FwVHA4Q0cxdzNlQW5heEVrTkZOZThrVUNu?=
+ =?utf-8?B?NUJ2c0pkT1JQTktxajc4ME1GM3hnbUgxZHlENGJSMVVkbDJXQ0lVQzVKYWpW?=
+ =?utf-8?B?SVNXdDRKOHlmbjc4bDVYZnpqa09VdStTcC9kRFVEQy94VlUrOFBFRUpMUjJL?=
+ =?utf-8?B?TmcrZ2Z5NldqMmRyYzh6SnVYcXVZekcrWTVxYW5MY2J1UmdqdUdtYkRpYWth?=
+ =?utf-8?B?dSsxVFBTb2dha3UrTDgrcytDUi92NnY4N2VpeFRiZzlRZHdWbFU4UzVyaUJL?=
+ =?utf-8?B?Vjd6VWlGQ3Zxb3pWK212cnEvREZMdVNmQ3RhQ2dhV1h0L214MkdaNzZsWjRR?=
+ =?utf-8?B?UElkTHdVVmEwa0lDRkloVC8xa2RnVlpmcm00YmlEQUZlZ1lCVjFOWG4yd1dN?=
+ =?utf-8?B?VE5XWkZFTmNTVWt0WGFLVHZyQVZIdS80SUtuTkFieno2SCtzSk9MMTNza1M0?=
+ =?utf-8?B?RjBwNlVSWmNYZUcyZUFTdkxIRk9DUkdUOWVkeG9yMWkxZXo1RjNLU0U0U0Qx?=
+ =?utf-8?B?T3VYUk5vdGlLaEphcmtXTVNQd1I2OVBwaVNnOXMyR09yc2dzNkttWmlCTitk?=
+ =?utf-8?B?OE8wNWZMUW0xYWdBSHlsUjJqM0F5dWdUdlQyV2U4Mi93Qi9MZURpV1BqcEJJ?=
+ =?utf-8?B?WCtwL1NmeEVCTTM4dVFDODFNZjk1d1hPOTczVWxxbXRkMWg1MUJTQk54b3lM?=
+ =?utf-8?B?eWtLUnNzK3FmbmRsdmR2MVh2a0ZXTWVhVkVxMWlMbUlOTlJ1SndEZjl6aW1k?=
+ =?utf-8?B?Ky9GcXl1UzFObDVVUzhPV0FnVHJqS2o5SWZzU04xSEJSdDlGMDE0UkVkR1Uw?=
+ =?utf-8?B?cVBtd252N05LeGt3bHhqdjJGU3JVZmh5NUYzVFZSUDM1eU01R3dsbUI2NEVq?=
+ =?utf-8?B?UVJDMlBzNHd1WWlVSmZOc1BMTTBVeHhxMnJKQnFBcTdzVElRcHVTanFkSHBw?=
+ =?utf-8?B?V25scDhxMUI2RXBtdDgrRXArZk5EMUlsRG81OUppczlhcnpMU3VROTFBN3RQ?=
+ =?utf-8?B?ZjNYdE9qd05EVzVCd0hFSmVNMzB3bzVpb2FMS2dDYlBuYXlSMVcyWjNVL25v?=
+ =?utf-8?B?WmF5V3JzeSt4YnRMSkpScFJ0dllZVGc9PQ==?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-84264.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: e211aed2-be2b-4068-5429-08dbba0acf64
+X-MS-Exchange-CrossTenant-AuthSource: GVXP194MB1759.EURP194.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 18:52:59.9267
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9P194MB1266
 
-Hi Thorsten,
+All,
 
-On Wed, Sep 20, 2023 at 7:02=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+I have started work on trying to find which version of the kernel this 
+bug first appeared. It is taking me some time to find how to do this 
+(might be easy for you). But I have other priorities at present which 
+mean I have not had the time to work on this. My present commitments end 
+at the end of October and I expect to get back to this at that point.
+
+Yes, I do care about this bug and I will get round to it but it on the 
+equipment I have it is inconvenient, takes a long time for each build 
+and stops me working on other things.
+
+Regards,
+
+Bruce Healey
+
+On 20/09/2023 14:25, Bagas Sanjaya wrote:
+> On Fri, Aug 26, 2022 at 12:13:13PM +0200, Thorsten Leemhuis wrote:
+>> #regzbot introduced: v5.15..v5.16
+>> https://bugzilla.kernel.org/show_bug.cgi?id=216360
+>> #regzbot ignore-activity
+>>
+> This regression looks stalled (no reply from Bruce or maintainers), so
+> to clean up:
 >
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
+> #regzbot inconclusive: no one cares the regression
 >
-> @Luiz Augusto von Dentz: did you make any progress to get this into net
-> to make sure this rather sooner then later heads to mainline? Doesn't
-> looks like it from here, but maybe I'm missing something.
-
-Just sent the pull-request:
-
-https://patchwork.kernel.org/project/bluetooth/patch/20230920181344.571274-=
-1-luiz.dentz@gmail.com/
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot poke
->
->
-> On 14.09.23 20:08, Thorsten Leemhuis wrote:
-> > On 14.09.23 19:51, Luiz Augusto von Dentz wrote:
-> >> On Wed, Sep 13, 2023 at 10:13=E2=80=AFPM Thorsten Leemhuis
-> >> <regressions@leemhuis.info> wrote:
-> >>> On 12.09.23 21:09, Luiz Augusto von Dentz wrote:
-> >>>> On Mon, Sep 11, 2023 at 6:40=E2=80=AFAM Linux regression tracking (T=
-horsten
-> >>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> >>>>> On 31.08.23 00:20, patchwork-bot+bluetooth@kernel.org wrote:
-> >>>>>> This patch was applied to bluetooth/bluetooth-next.git (master)
-> >>>>>> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-> >>>>>> On Tue, 29 Aug 2023 13:59:36 -0700 you wrote:
-> >>>>>>> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> >>>>>>>
-> >>>>>>> When HCI_QUIRK_STRICT_DUPLICATE_FILTER is set LE scanning require=
-s
-> >>>>>>> periodic restarts of the scanning procedure as the controller wou=
-ld
-> >>>>>>> consider device previously found as duplicated despite of RSSI ch=
-anges,
-> >>>>>>> but in order to set the scan timeout properly set le_scan_restart=
- needs
-> >>>>>>> to be synchronous so it shall not use hci_cmd_sync_queue which de=
-fers
-> >>>>>>> the command processing to cmd_sync_work.
-> >>>>>>> [...]
-> >>>>>>
-> >>>>>> Here is the summary with links:
-> >>>>>>   - Bluetooth: hci_sync: Fix handling of HCI_QUIRK_STRICT_DUPLICAT=
-E_FILTER
-> >>>>>>     https://git.kernel.org/bluetooth/bluetooth-next/c/52bf4fd43f75
-> >>>>>
-> >>>>> That is (maybe among others?) a fix for a regression from 6.1, so w=
-hy
-> >>>>> was this merged into a "for-next" branch instead of a branch that
-> >>>>> targets the current cycle?
-> >> [...]
-> >>> That answer doesn't answer the question afaics, as both 6.1 and 6.4 w=
-ere
-> >>> released in the past year -- the fix thus should not wait till the ne=
-xt
-> >>> merge window, unless it's high risk or something. See this statement
-> >>> from Linus:
-> >>> https://lore.kernel.org/all/CAHk-=3Dwis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5=
-wmB6SRUwQUBQ@mail.gmail.com/
-> >> Thanks for the feedback, I will try to push fixes to net more often.
-> >
-> > Great, many thx!
-> >
-> >>>> but I could probably have it marked for stable just
-> >>>> to make sure it would get backported to affected versions.
-> >>> That would be great, too!
-> >> Well now that it has already been merged via -next tree shall we still
-> >> attempt to mark it as stable? Perhaps we need to check if it was not
-> >> backported already based on the Fixes tag.
-> >
-> > Changes only get backported once they hit mainline, which hasn't
-> > happened yet. And to get them into the net branch (and from there to
-> > mainline) a new commit is needed anyway, so you might as well add the
-> > stable tag to it. Side note: And don't worry that identical commit is
-> > already in -next, git handles that well afaik (but if you rebase
-> > bluetooth-next for other reasons anyway you might as well remove it).
-> >
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-
-
-
---=20
-Luiz Augusto von Dentz
