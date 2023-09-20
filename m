@@ -1,153 +1,86 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D206C8E0;
-	Wed, 20 Sep 2023 08:17:17 +0000 (UTC)
-Received: by linux.microsoft.com (Postfix, from userid 1112)
-	id 00268212C4B0; Wed, 20 Sep 2023 01:11:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 00268212C4B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695197462;
-	bh=MCcFdYcZBq72znSVOGs8taMAEPXbYkraDxusQXChN6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KU12UclarmRWfDJZUmgx0gvenLqRo5r/VS7sUpslwGHf4LO3Wws2ZA5jOG84QhruY
-	 8HhLeUk21ak2eADTaCPLv7qJcrj3VPOyLofny44JVT1JcWCDMyJGhLum8gTiXCOLhN
-	 zyL+vxc/1fN0wN6vRAIz+G6P9iGEfIDV/r+0ixK4=
-Date: Wed, 20 Sep 2023 01:11:01 -0700
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	Michal Hocko <mhocko@suse.com>, Shakeel Butt <shakeelb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	mathieu.tortuyaux@gmail.com
-Subject: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop kmem.limit_in_bytes
-Message-ID: <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20230917191040.964416434@linuxfoundation.org>
- <20230917191042.204185566@linuxfoundation.org>
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE3D111AB
+	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 08:32:28 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 38K8WIZ00869755, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 38K8WIZ00869755
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 Sep 2023 16:32:18 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 20 Sep 2023 16:32:18 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Wed, 20 Sep 2023 16:32:17 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Wed, 20 Sep 2023 16:32:17 +0800
+From: Ricky WU <ricky_wu@realtek.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: Linux regressions mailing list <regressions@lists.linux.dev>,
+        "Paul
+ Grandperrin" <paul.grandperrin@gmail.com>,
+        "stable@vger.kernel.org"
+	<stable@vger.kernel.org>,
+        Wei_wang <wei_wang@realsil.com.cn>,
+        Roger Tseng
+	<rogerable@realtek.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: RE: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from drivers/misc/cardreader breaks NVME power state, preventing system boot
+Thread-Topic: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
+ drivers/misc/cardreader breaks NVME power state, preventing system boot
+Thread-Index: AQHZ5XTPQHzxhN3m602gmLzU6tUtJLAYNE4TgAk8SwD//83wgIACG3Pg//9+6YCAAIkp0A==
+Date: Wed, 20 Sep 2023 08:32:17 +0000
+Message-ID: <3ddcf5fae0164fbda79081650da79600@realtek.com>
+References: <5DHV0S.D0F751ZF65JA1@gmail.com>
+ <82469f2f-59e4-49d5-823d-344589cbb119@leemhuis.info>
+ <2023091333-fiftieth-trustless-d69d@gregkh>
+ <7991b5bd7fb5469c971a2984194e815f@realtek.com>
+ <2023091921-unscented-renegade-6495@gregkh>
+ <995632624f0e4d26b73fb934a8eeaebc@realtek.com>
+ <2023092041-shopper-prozac-0640@gregkh>
+In-Reply-To: <2023092041-shopper-prozac-0640@gregkh>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.22.81.100]
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230917191042.204185566@linuxfoundation.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Sun, Sep 17, 2023 at 09:12:40PM +0200, Greg Kroah-Hartman wrote:
-> 6.1-stable review patch.  If anyone has any objections, please let me know.
-> 
-> ------------------
+> On Wed, Sep 20, 2023 at 07:30:00AM +0000, Ricky WU wrote:
+> > Hi Greg k-h,
+> >
+> > This patch is our solution for this issue...
+> > And now how can I push this?
+>=20
+> Submit it properly like any other patch, what is preventing that from
+> happening?
+>=20
 
-Hi Greg/Michal,
+(commit 8ee39ec) some reader no longer force #CLKREQ to low when system nee=
+d to enter ASPM.
+But some platform maybe not implement complete ASPM? I don't know..... it c=
+auses problems...
 
-This commit breaks userspace which makes it a bad commit for mainline and an
-even worse commit for stable.
+Like in the past Only the platform support L1ss we release the #CLKREQ.
+But new patch we move the judgment (L1ss) to probe, because we met some hos=
+t will clean the config space from S3 or some power saving mode=20
+And also we think just to read config space one time when the driver start =
+is enough =20
 
-We ingested 6.1.54 into our nightly testing and found that runc fails to gather
-cgroup statistics (when reading kmem.limit_in_bytes). The same code is vendored
-into kubelet and kubelet fails to start if this operation fails. 6.1.53 is
-fine.
-
-> Address this by wiping out the file completely and effectively get back to
-> pre 4.5 era and CONFIG_MEMCG_KMEM=n configuration.
-
-On reads, the runc code checks for MEMCG_KMEM=n by checking
-kmem.usage_in_bytes. If it is present then runc expects the other cgroup files
-to be there (including kmem.limit_in_bytes). So this change is not effectively
-the same.
-
-Here's a link to the PR that would be needed to handle this change in userspace
-(not merged yet and would need to be propagated through the ecosystem):
-
-https://github.com/opencontainers/runc/pull/4018.
-
-Jeremi
-
-> 
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> commit 86327e8eb94c52eca4f93cfece2e29d1bf52acbf upstream.
-> 
-> kmem.limit_in_bytes (v1 way to limit kernel memory usage) has been
-> deprecated since 58056f77502f ("memcg, kmem: further deprecate
-> kmem.limit_in_bytes") merged in 5.16.  We haven't heard about any serious
-> users since then but it seems that the mere presence of the file is
-> causing more harm thatn good.  We (SUSE) have had several bug reports from
-> customers where Docker based containers started to fail because a write to
-> kmem.limit_in_bytes has failed.
-> 
-> This was unexpected because runc code only expects ENOENT (kmem disabled)
-> or EBUSY (tasks already running within cgroup).  So a new error code was
-> unexpected and the whole container startup failed.  This has been later
-> addressed by
-> https://github.com/opencontainers/runc/commit/52390d68040637dfc77f9fda6bbe70952423d380
-> so current Docker runtimes do not suffer from the problem anymore.  There
-> are still older version of Docker in use and likely hard to get rid of
-> completely.
-> 
-> Address this by wiping out the file completely and effectively get back to
-> pre 4.5 era and CONFIG_MEMCG_KMEM=n configuration.
-> 
-> I would recommend backporting to stable trees which have picked up
-> 58056f77502f ("memcg, kmem: further deprecate kmem.limit_in_bytes").
-> 
-> [mhocko@suse.com: restore _KMEM switch case]
->   Link: https://lkml.kernel.org/r/ZKe5wxdbvPi5Cwd7@dhcp22.suse.cz
-> Link: https://lkml.kernel.org/r/20230704115240.14672-1-mhocko@kernel.org
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> Acked-by: Shakeel Butt <shakeelb@google.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Muchun Song <muchun.song@linux.dev>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  Documentation/admin-guide/cgroup-v1/memory.rst |    2 --
->  mm/memcontrol.c                                |   10 ----------
->  2 files changed, 12 deletions(-)
-> 
-> --- a/Documentation/admin-guide/cgroup-v1/memory.rst
-> +++ b/Documentation/admin-guide/cgroup-v1/memory.rst
-> @@ -91,8 +91,6 @@ Brief summary of control files.
->   memory.oom_control		     set/show oom controls.
->   memory.numa_stat		     show the number of memory usage per numa
->  				     node
-> - memory.kmem.limit_in_bytes          This knob is deprecated and writing to
-> -                                     it will return -ENOTSUPP.
->   memory.kmem.usage_in_bytes          show current kernel memory allocation
->   memory.kmem.failcnt                 show the number of kernel memory usage
->  				     hits limits
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3841,10 +3841,6 @@ static ssize_t mem_cgroup_write(struct k
->  		case _MEMSWAP:
->  			ret = mem_cgroup_resize_max(memcg, nr_pages, true);
->  			break;
-> -		case _KMEM:
-> -			/* kmem.limit_in_bytes is deprecated. */
-> -			ret = -EOPNOTSUPP;
-> -			break;
->  		case _TCP:
->  			ret = memcg_update_tcp_max(memcg, nr_pages);
->  			break;
-> @@ -5056,12 +5052,6 @@ static struct cftype mem_cgroup_legacy_f
->  	},
->  #endif
->  	{
-> -		.name = "kmem.limit_in_bytes",
-> -		.private = MEMFILE_PRIVATE(_KMEM, RES_LIMIT),
-> -		.write = mem_cgroup_write,
-> -		.read_u64 = mem_cgroup_read_u64,
-> -	},
-> -	{
->  		.name = "kmem.usage_in_bytes",
->  		.private = MEMFILE_PRIVATE(_KMEM, RES_USAGE),
->  		.read_u64 = mem_cgroup_read_u64,
-> 
-> 
+> thanks,
+>=20
+> greg k-h
