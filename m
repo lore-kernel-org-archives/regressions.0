@@ -1,101 +1,93 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1EF36AEE
-	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 13:11:15 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qiwON-0003gR-8R; Wed, 20 Sep 2023 14:33:19 +0200
-Message-ID: <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
-Date: Wed, 20 Sep 2023 14:33:18 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F367E36B16
+	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 13:25:05 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1c3d6d88231so54609125ad.0
+        for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 06:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695216305; x=1695821105; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FFsngITIjI03ksoUl3I+rbp3apjfGwx+AaNpfxzZFvA=;
+        b=cvE0NZkG3oyaBY2KtGEmEo2SDR2zAFqkIXMSz9KRySFEpS6f3dGJFI9eIwqJ9evNzk
+         Vu/d5hWvkvGKXdC6AlKh3Qc4nhPu+PK7k80SkUWaOpQmsse5cAReeVFR4rkQqrgLpBKc
+         h/aUlYABxQf8i2a9+YF87jE4kXlR2+M57q0wPp42TzM9OoeLwZUOaa0JBVjCQY6QYhUK
+         l55tKMrukyybAKXv3CGXgDawNPYOwVhcoEcvhYcz0F6YFuuKSEGeXUN+VUYL5StgXBbF
+         vT4j9zX4GN7EDTpPSghetRkEy9ZXRPIZyiCRvjy0QMCXCi2l/pNgOI1dwfkf08DvYIWH
+         jUxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695216305; x=1695821105;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FFsngITIjI03ksoUl3I+rbp3apjfGwx+AaNpfxzZFvA=;
+        b=eqTb3MZ0n66kRbgkn+bndJaRzDvoGHYgsrDOBPxPSOogejZov8AUzp0WNhEdQn4zQ4
+         LXTGC41OXCyQ95d3cKjoOGumXNUWWYgg7TItMBqHwul48cNwcltUSbxBy3Qdo03TO5dL
+         96W6tGFsUM1VsrbbvaRAx0iFsx14O0ExVa7lkpgJlOZkKVr6Ptg3jAt4laD7EJfA2FS2
+         S6MfB8uQPYseLBgC26jHt0mMjjSYHxowslNjw1A9P5v3xORKutstiRliQMEsnQy6nSYO
+         lC8EDO7ZSGq4OGLA55l9yTaZ+f3FNArIG4lE8S8kbjkLA3feJiz7A4bNLZnsjx2QTKFu
+         CtsA==
+X-Gm-Message-State: AOJu0YzPv2JgYtW6+4Pcm7UTx6yQg9zX3HGeOiEAmE3Qnm8vbMvTVtto
+	fopV6GEjtWjiqpOz5axO6D8=
+X-Google-Smtp-Source: AGHT+IF78yHLXq0/tsXqhz9aHhHttLj+acrfqYJTFo7JzrOoJowfhiof7iZXhhMn5wSH3q2svb8Avg==
+X-Received: by 2002:a17:902:ef82:b0:1c5:bc83:556b with SMTP id iz2-20020a170902ef8200b001c5bc83556bmr1427624plb.52.1695216305102;
+        Wed, 20 Sep 2023 06:25:05 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id p10-20020a170902eaca00b001b89f6550d1sm9764574pld.16.2023.09.20.06.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Sep 2023 06:25:04 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id A697281A3119; Wed, 20 Sep 2023 20:25:01 +0700 (WIB)
+Date: Wed, 20 Sep 2023 20:25:01 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	bhealey@live.co.uk
+Subject: Re: [Regression] Bug 216360 - No power to DVD drive
+Message-ID: <ZQryrfLC6GPhSCnu@debian.me>
+References: <d0433877-2971-b54d-fcbe-2837ae9248be@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
-Content-Language: en-US, de-DE
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
- bhelgaas@google.com, linux-kernel@vger.kernel.org, kw@linux.com,
- lpieralisi@kernel.org, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
- <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
- <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
- <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
- <20230907011828.GA2865@thinkpad>
- <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
- <20230907050805.GA3218@thinkpad>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <20230907050805.GA3218@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695215475;f8c34f64;
-X-HE-SMSGID: 1qiwON-0003gR-8R
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kQV8aQAtfnCna2uR"
+Content-Disposition: inline
+In-Reply-To: <d0433877-2971-b54d-fcbe-2837ae9248be@leemhuis.info>
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 07.09.23 07:08, Manivannan Sadhasivam wrote:
-> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
->> 在 2023/9/7 9:18, Manivannan Sadhasivam 写道:
->> [...]
->>> Why do you need to walk through every single device instead of just bridges?
->>> I'm not the maintainer, but my suggestion is to go for Huacai Chen's solution.
->>
->> Thanks for your reply, unfortunately Huacai's solution is impractical in
->> this case.
->>
->> The problem we have, is firmware (or BIOS) setting improper MRRS for devices
->> attached under those bridges. So we have to fix up MRRS for every single
->> device.
->> We can't iterate child device in bridge quirk because there is no guarantee
->> that
->> bridge will be probed before  it's child device, partly due to hotplug.
-> 
-> Okay, this clarifies and also warrants improvement in commit message.
-> 
-> You could also use pci_walk_bus() after pci_host_probe() to iterate over the
-> child devices under root bridge and set MRRS. IMO that would look neat.
+--kQV8aQAtfnCna2uR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Thorsten here, the Linux kernel's regression tracker. What's the
-status here? The regression that was supposed to be fixed by the patched
-that started this thread was reported 9 weeks ago[1] and the culprit
-made it to many stable kernels as well. Would be really good to finally
-fix this, as a regression like this should ideally be fixed within 2 to
-3 weeks (in both mainline and stable). With a revert if necessary -- is
-this maybe still a option, or would that cause more trouble then it
-solved (I guess that's the case).
+On Fri, Aug 26, 2022 at 12:13:13PM +0200, Thorsten Leemhuis wrote:
+> #regzbot introduced: v5.15..v5.16
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D216360
+> #regzbot ignore-activity
+>=20
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=217680
+This regression looks stalled (no reply from Bruce or maintainers), so
+to clean up:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+#regzbot inconclusive: no one cares the regression
 
->> This quirk has been in tree for a while, until Huacai refactored it and
->> broke some
->> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases").
->>
->> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-keystone.c
->> uses similar approach.
->>> This avoids iterating over bridges/devices two times.
->>>
->>> Also, please rename firmware to BIOS, as firmware commonly represents the
->>> software running on PCIe endpoint devices.
->> Ack, will fix in next reversion.
->>
->> Thanks
->> - Jiaxun
->>>
->>> - Mani
->> [...]
-> 
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--kQV8aQAtfnCna2uR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQryrQAKCRD2uYlJVVFO
+oxi0AP9V1RoATkT1onzX8TGs388i+cvqlb8dv9y9h4AsUT7kaAD/c/ZTvgfvT85L
+1nGTIRyiqEan0L4sRDByNdVYrB4dJwA=
+=FCi5
+-----END PGP SIGNATURE-----
+
+--kQV8aQAtfnCna2uR--
