@@ -1,65 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D141915AE8;
-	Wed, 20 Sep 2023 11:16:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FAEDC433C7;
-	Wed, 20 Sep 2023 11:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1695208564;
-	bh=lnb0O1ksQMJ7rJw1NAKO+dUYTXlWkz3GfIFHZ4hjhYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hRpFtbRooXyjFa0r5RNeNmIgeYTw6ZeBzweQfv2VXCt+CXluRcoGptjDCBFLqGNQE
-	 rI+uyvPzuwHnB+vjJow0Oh53grNRxT8JIvmHwWR1+UR7lH/XBoMhaL/M67wMqmAUSo
-	 ruPUpZGkpO0u7KjxmPUYyEZFa/aVb7nxkoxappq4=
-Date: Wed, 20 Sep 2023 13:16:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	Shakeel Butt <shakeelb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	mathieu.tortuyaux@gmail.com
-Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
- kmem.limit_in_bytes
-Message-ID: <2023092016-shield-confused-0e12@gregkh>
-References: <20230917191040.964416434@linuxfoundation.org>
- <20230917191042.204185566@linuxfoundation.org>
- <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZQqwzK/fDm+GLiKM@dhcp22.suse.cz>
- <2023092032-applied-gave-0bff@gregkh>
- <76525b1a-6857-434d-86ee-3c2ff4db0e4c@linux.microsoft.com>
- <2023092044-porthole-impeding-e539@gregkh>
- <ZQrSu8lfwkk/nNxi@dhcp22.suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1EF36AEE
+	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 13:11:15 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qiwON-0003gR-8R; Wed, 20 Sep 2023 14:33:19 +0200
+Message-ID: <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
+Date: Wed, 20 Sep 2023 14:33:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQrSu8lfwkk/nNxi@dhcp22.suse.cz>
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+Content-Language: en-US, de-DE
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-pci@vger.kernel.org,
+ bhelgaas@google.com, linux-kernel@vger.kernel.org, kw@linux.com,
+ lpieralisi@kernel.org, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+ <20230907011828.GA2865@thinkpad>
+ <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
+ <20230907050805.GA3218@thinkpad>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230907050805.GA3218@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695215475;f8c34f64;
+X-HE-SMSGID: 1qiwON-0003gR-8R
 
-On Wed, Sep 20, 2023 at 01:08:43PM +0200, Michal Hocko wrote:
-> On Wed 20-09-23 12:45:08, Greg KH wrote:
-> [...]
-> > Ok, then we should revert this, I'll go drop it in the stable trees, it
-> > should also be reverted in Linus's tree too.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 07.09.23 07:08, Manivannan Sadhasivam wrote:
+> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
+>> 在 2023/9/7 9:18, Manivannan Sadhasivam 写道:
+>> [...]
+>>> Why do you need to walk through every single device instead of just bridges?
+>>> I'm not the maintainer, but my suggestion is to go for Huacai Chen's solution.
+>>
+>> Thanks for your reply, unfortunately Huacai's solution is impractical in
+>> this case.
+>>
+>> The problem we have, is firmware (or BIOS) setting improper MRRS for devices
+>> attached under those bridges. So we have to fix up MRRS for every single
+>> device.
+>> We can't iterate child device in bridge quirk because there is no guarantee
+>> that
+>> bridge will be probed before  it's child device, partly due to hotplug.
 > 
-> A simple revert would break other users as noted in other response so
-> wait with sending reverts to Linus before we agreen on the least painful
-> solution.
+> Okay, this clarifies and also warrants improvement in commit message.
+> 
+> You could also use pci_walk_bus() after pci_host_probe() to iterate over the
+> child devices under root bridge and set MRRS. IMO that would look neat.
 
-A revert should cause the systems that stopped working to start working
-again, so I'll keep the revert in the stable trees and wait for you to
-work out the real solution in Linus's tree and then backport all of them
-as needed.
+Hi, Thorsten here, the Linux kernel's regression tracker. What's the
+status here? The regression that was supposed to be fixed by the patched
+that started this thread was reported 9 weeks ago[1] and the culprit
+made it to many stable kernels as well. Would be really good to finally
+fix this, as a regression like this should ideally be fixed within 2 to
+3 weeks (in both mainline and stable). With a revert if necessary -- is
+this maybe still a option, or would that cause more trouble then it
+solved (I guess that's the case).
 
-thanks,
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217680
 
-greg k-h
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+>> This quirk has been in tree for a while, until Huacai refactored it and
+>> broke some
+>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases").
+>>
+>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-keystone.c
+>> uses similar approach.
+>>> This avoids iterating over bridges/devices two times.
+>>>
+>>> Also, please rename firmware to BIOS, as firmware commonly represents the
+>>> software running on PCIe endpoint devices.
+>> Ack, will fix in next reversion.
+>>
+>> Thanks
+>> - Jiaxun
+>>>
+>>> - Mani
+>> [...]
+> 
