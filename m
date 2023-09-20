@@ -1,95 +1,111 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9177C36AEE;
-	Wed, 20 Sep 2023 13:47:39 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D8C71200A3;
-	Wed, 20 Sep 2023 13:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1695217657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S/snCuZpEV/rtAoiDV8eTkiFsU9tul7/5xeWIzs69P4=;
-	b=SieMIAkivNWy3EVUvOjPG5/PORQlkKhXDFby+/Llv1MT4g5OqJjZL+SnRmLeRk5vzysjdf
-	wg8/6w1A5jKCofvAFHe8UMJaBGMF4YlAWwKFVeAWKQZtcUNErEikKd/i0mpm6rl3gF5NU4
-	waD4aVwTbnXNUjHh/k0mM5kmMD99RRM=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B50D71333E;
-	Wed, 20 Sep 2023 13:47:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id p93hKfn3CmVNCwAAMHmgww
-	(envelope-from <mhocko@suse.com>); Wed, 20 Sep 2023 13:47:37 +0000
-Date: Wed, 20 Sep 2023 15:47:37 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	mathieu.tortuyaux@gmail.com
-Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
- kmem.limit_in_bytes
-Message-ID: <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
-References: <20230917191040.964416434@linuxfoundation.org>
- <20230917191042.204185566@linuxfoundation.org>
- <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZQqwzK/fDm+GLiKM@dhcp22.suse.cz>
- <101987a1-b1ab-429d-af03-b6bdf6216474@linux.microsoft.com>
- <ZQrSXh+riB7NnZuE@dhcp22.suse.cz>
- <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B312F36B12
+	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 14:02:03 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qixmD-0004OH-7z; Wed, 20 Sep 2023 16:02:01 +0200
+Message-ID: <cd12622b-bfc6-093d-5c10-493e10935440@leemhuis.info>
+Date: Wed, 20 Sep 2023 16:02:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: hci_sync: Fix handling of
+ HCI_QUIRK_STRICT_DUPLICATE_FILTER
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ patchwork-bot+bluetooth@kernel.org, linux-bluetooth@vger.kernel.org,
+ netdev <netdev@vger.kernel.org>, Stefan Agner <stefan@agner.ch>
+References: <20230829205936.766544-1-luiz.dentz@gmail.com>
+ <169343402479.21564.11565149320234658166.git-patchwork-notify@kernel.org>
+ <de698d06-9784-43ed-9437-61d6edf9672b@leemhuis.info>
+ <CABBYNZK2PPkLra8Au-fdN2nG2YLkfFRmPtEPQL0suLzBv=HHcA@mail.gmail.com>
+ <574ca8dd-ee97-4c8b-a154-51faf83cabdf@leemhuis.info>
+ <CABBYNZJ=5VH2+my7Gw1fMCaGgdOQfbWNtBGOc27_XQqCP7jD-A@mail.gmail.com>
+ <ff2abfbe-a46b-414b-a757-8185495838b7@leemhuis.info>
+In-Reply-To: <ff2abfbe-a46b-414b-a757-8185495838b7@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695218523;629cc3e1;
+X-HE-SMSGID: 1qixmD-0004OH-7z
 
-On Wed 20-09-23 15:25:23, Jeremi Piotrowski wrote:
-> On 9/20/2023 1:07 PM, Michal Hocko wrote:
-[...]
-> > I mean, normally I would be just fine reverting this API change because
-> > it is disruptive but the only way to have the file available and not
-> > break somebody is to revert 58056f77502f ("memcg, kmem: further
-> > deprecate kmem.limit_in_bytes") as well. Or to ignore any value written
-> > there but that sounds rather dubious. Although one could argue this
-> > would mimic nokmem kernel option.
-> > 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
+
+@Luiz Augusto von Dentz: did you make any progress to get this into net
+to make sure this rather sooner then later heads to mainline? Doesn't
+looks like it from here, but maybe I'm missing something.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+
+On 14.09.23 20:08, Thorsten Leemhuis wrote:
+> On 14.09.23 19:51, Luiz Augusto von Dentz wrote:
+>> On Wed, Sep 13, 2023 at 10:13 PM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>> On 12.09.23 21:09, Luiz Augusto von Dentz wrote:
+>>>> On Mon, Sep 11, 2023 at 6:40 AM Linux regression tracking (Thorsten
+>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>> On 31.08.23 00:20, patchwork-bot+bluetooth@kernel.org wrote:
+>>>>>> This patch was applied to bluetooth/bluetooth-next.git (master)
+>>>>>> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+>>>>>> On Tue, 29 Aug 2023 13:59:36 -0700 you wrote:
+>>>>>>> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>>>>>>
+>>>>>>> When HCI_QUIRK_STRICT_DUPLICATE_FILTER is set LE scanning requires
+>>>>>>> periodic restarts of the scanning procedure as the controller would
+>>>>>>> consider device previously found as duplicated despite of RSSI changes,
+>>>>>>> but in order to set the scan timeout properly set le_scan_restart needs
+>>>>>>> to be synchronous so it shall not use hci_cmd_sync_queue which defers
+>>>>>>> the command processing to cmd_sync_work.
+>>>>>>> [...]
+>>>>>>
+>>>>>> Here is the summary with links:
+>>>>>>   - Bluetooth: hci_sync: Fix handling of HCI_QUIRK_STRICT_DUPLICATE_FILTER
+>>>>>>     https://git.kernel.org/bluetooth/bluetooth-next/c/52bf4fd43f75
+>>>>>
+>>>>> That is (maybe among others?) a fix for a regression from 6.1, so why
+>>>>> was this merged into a "for-next" branch instead of a branch that
+>>>>> targets the current cycle?
+>> [...]
+>>> That answer doesn't answer the question afaics, as both 6.1 and 6.4 were
+>>> released in the past year -- the fix thus should not wait till the next
+>>> merge window, unless it's high risk or something. See this statement
+>>> from Linus:
+>>> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+>> Thanks for the feedback, I will try to push fixes to net more often.
 > 
-> I just want to make sure we don't introduce yet another new behavior in this legacy
-> system. I have not seen breakage due to 58056f77502f. Mimicing nokmem sounds good but
-> does this mean "don't enforce limits" (that should be fine) or "ignore writes to the limit"
-> (=don't event store the written limit). The latter might have unintended consequences.
-
-Yes it would mean that the limit is never enforced. Bad as it is the
-thing is that the hard limit on kernel memory is broken by design and
-unfixable.  This causes all sorts of unexpected kernel allocation
-failures that this is simply unsafe to use.
-
-All that being said I can see the following options
-1) keep the current upstream status and not export the file
-2) revert both 58056f77502f and 86327e8eb94 and make it clear
-   that kmem.limit_in_bytes is unsupported so failures or misbehavior
-   as a result of the limit being hit are likely not going to be
-   investigated or fixed.
-3) reverting like in 2) but never inforce the limit (so basically nokmem
-   semantic)
-
-Shakeel, Johannes, Roman, Muchun Song what do you think?
--- 
-Michal Hocko
-SUSE Labs
+> Great, many thx!
+> 
+>>>> but I could probably have it marked for stable just
+>>>> to make sure it would get backported to affected versions.
+>>> That would be great, too!
+>> Well now that it has already been merged via -next tree shall we still
+>> attempt to mark it as stable? Perhaps we need to check if it was not
+>> backported already based on the Fixes tag.
+> 
+> Changes only get backported once they hit mainline, which hasn't
+> happened yet. And to get them into the net branch (and from there to
+> mainline) a new commit is needed anyway, so you might as well add the
+> stable tag to it. Side note: And don't worry that identical commit is
+> already in -next, git handles that well afaik (but if you rebase
+> bluetooth-next for other reasons anyway you might as well remove it).
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
