@@ -1,93 +1,186 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F367E36B16
-	for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 13:25:05 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1c3d6d88231so54609125ad.0
-        for <regressions@lists.linux.dev>; Wed, 20 Sep 2023 06:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695216305; x=1695821105; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FFsngITIjI03ksoUl3I+rbp3apjfGwx+AaNpfxzZFvA=;
-        b=cvE0NZkG3oyaBY2KtGEmEo2SDR2zAFqkIXMSz9KRySFEpS6f3dGJFI9eIwqJ9evNzk
-         Vu/d5hWvkvGKXdC6AlKh3Qc4nhPu+PK7k80SkUWaOpQmsse5cAReeVFR4rkQqrgLpBKc
-         h/aUlYABxQf8i2a9+YF87jE4kXlR2+M57q0wPp42TzM9OoeLwZUOaa0JBVjCQY6QYhUK
-         l55tKMrukyybAKXv3CGXgDawNPYOwVhcoEcvhYcz0F6YFuuKSEGeXUN+VUYL5StgXBbF
-         vT4j9zX4GN7EDTpPSghetRkEy9ZXRPIZyiCRvjy0QMCXCi2l/pNgOI1dwfkf08DvYIWH
-         jUxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695216305; x=1695821105;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FFsngITIjI03ksoUl3I+rbp3apjfGwx+AaNpfxzZFvA=;
-        b=eqTb3MZ0n66kRbgkn+bndJaRzDvoGHYgsrDOBPxPSOogejZov8AUzp0WNhEdQn4zQ4
-         LXTGC41OXCyQ95d3cKjoOGumXNUWWYgg7TItMBqHwul48cNwcltUSbxBy3Qdo03TO5dL
-         96W6tGFsUM1VsrbbvaRAx0iFsx14O0ExVa7lkpgJlOZkKVr6Ptg3jAt4laD7EJfA2FS2
-         S6MfB8uQPYseLBgC26jHt0mMjjSYHxowslNjw1A9P5v3xORKutstiRliQMEsnQy6nSYO
-         lC8EDO7ZSGq4OGLA55l9yTaZ+f3FNArIG4lE8S8kbjkLA3feJiz7A4bNLZnsjx2QTKFu
-         CtsA==
-X-Gm-Message-State: AOJu0YzPv2JgYtW6+4Pcm7UTx6yQg9zX3HGeOiEAmE3Qnm8vbMvTVtto
-	fopV6GEjtWjiqpOz5axO6D8=
-X-Google-Smtp-Source: AGHT+IF78yHLXq0/tsXqhz9aHhHttLj+acrfqYJTFo7JzrOoJowfhiof7iZXhhMn5wSH3q2svb8Avg==
-X-Received: by 2002:a17:902:ef82:b0:1c5:bc83:556b with SMTP id iz2-20020a170902ef8200b001c5bc83556bmr1427624plb.52.1695216305102;
-        Wed, 20 Sep 2023 06:25:05 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id p10-20020a170902eaca00b001b89f6550d1sm9764574pld.16.2023.09.20.06.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 06:25:04 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id A697281A3119; Wed, 20 Sep 2023 20:25:01 +0700 (WIB)
-Date: Wed, 20 Sep 2023 20:25:01 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	bhealey@live.co.uk
-Subject: Re: [Regression] Bug 216360 - No power to DVD drive
-Message-ID: <ZQryrfLC6GPhSCnu@debian.me>
-References: <d0433877-2971-b54d-fcbe-2837ae9248be@leemhuis.info>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B210636AF3;
+	Wed, 20 Sep 2023 13:25:29 +0000 (UTC)
+Received: from [192.168.2.41] (77-166-152-30.fixed.kpn.net [77.166.152.30])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E405B212C4B7;
+	Wed, 20 Sep 2023 06:25:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E405B212C4B7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695216327;
+	bh=+TFCyhLrjU2GRB3G3Q8iRvFT2orGxXvTmChxV5qs6Zw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gM3OCePsIjHUaMbiv7MbJMJw/8oYmz0qHYOZrdvg7+1n7bjVyOAuBE4CLMpR3zsrV
+	 /ZQ5ML7SX/MwuePkPxDBfAWeDjwKsepvl5FoTJBXTEjXWqQdtQshVGinujOfiRjXgs
+	 zV8utcR0SgzC40NFBHREnWvI1P+91ogOH7My327o=
+Message-ID: <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
+Date: Wed, 20 Sep 2023 15:25:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kQV8aQAtfnCna2uR"
-Content-Disposition: inline
-In-Reply-To: <d0433877-2971-b54d-fcbe-2837ae9248be@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
+ kmem.limit_in_bytes
+Content-Language: en-US
+To: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ patches@lists.linux.dev, Shakeel Butt <shakeelb@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Tejun Heo <tj@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, mathieu.tortuyaux@gmail.com
+References: <20230917191040.964416434@linuxfoundation.org>
+ <20230917191042.204185566@linuxfoundation.org>
+ <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <ZQqwzK/fDm+GLiKM@dhcp22.suse.cz>
+ <101987a1-b1ab-429d-af03-b6bdf6216474@linux.microsoft.com>
+ <ZQrSXh+riB7NnZuE@dhcp22.suse.cz>
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+In-Reply-To: <ZQrSXh+riB7NnZuE@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 9/20/2023 1:07 PM, Michal Hocko wrote:
+> On Wed 20-09-23 12:04:48, Jeremi Piotrowski wrote:
+>> On 9/20/2023 10:43 AM, Michal Hocko wrote:
+>>> On Wed 20-09-23 01:11:01, Jeremi Piotrowski wrote:
+>>>> On Sun, Sep 17, 2023 at 09:12:40PM +0200, Greg Kroah-Hartman wrote:
+>>>>> 6.1-stable review patch.  If anyone has any objections, please let me know.
+>>>>>
+>>>>> ------------------
+>>>>
+>>>> Hi Greg/Michal,
+>>>>
+>>>> This commit breaks userspace which makes it a bad commit for mainline and an
+>>>> even worse commit for stable.
+>>>>
+>>>> We ingested 6.1.54 into our nightly testing and found that runc fails to gather
+>>>> cgroup statistics (when reading kmem.limit_in_bytes). The same code is vendored
+>>>> into kubelet and kubelet fails to start if this operation fails. 6.1.53 is
+>>>> fine.
+>>>
+>>> Could you expand some more on why is the file read? It doesn't support
+>>> writing to it for some time so how does reading it helps in any sense?
+>>>
+>>> Anyway, I do agree that the stable backport should be reverted.
+>>>
+>>
+>> This file is read together with all the other memcg files. Each prefix:
+>>
+>> memory
+>> memory.memsw
+>> memory.kmem
+>> memory.kmem.tcp
+>>
+>> is combined with these suffixes
+>>
+>> .usage_in_bytes
+>> .max_usage_in_bytes
+>> .failcnt
+>> .limit_in_bytes
+>>
+>> and read, the values are then forwarded on to other components for scheduling decisions.
+>> You want to know the limit when checking the usage (is the usage close to the limit or not).
+> 
+> You know there is no kmem limit as there is no way to set it for some
+> time (since 5.16 - i.e. 2 years ago). I can see that users following old
+> kernels could have missed that though.
 
---kQV8aQAtfnCna2uR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I know what you mean, but I think this generally went unnoticed because the limit file is read
+unconditionally, but only written when a kmem limit is explicitly requested for a specific
+container, which is rarely (if ever) done.
 
-On Fri, Aug 26, 2022 at 12:13:13PM +0200, Thorsten Leemhuis wrote:
-> #regzbot introduced: v5.15..v5.16
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D216360
-> #regzbot ignore-activity
->=20
+Regarding following old kernels: a majority of kubernetes users are still on 5.15 and only slowly
+started shifting to >=6.1 very recently (this summer). This is mostly driven by distro vendor
+policies which tend to follow the pattern of "follow LTS kernels but don't switch to the next
+LTS immediately".
 
-This regression looks stalled (no reply from Bruce or maintainers), so
-to clean up:
+I know this is far from ideal for reporting these kinds of issues, would love to report
+them as soon as a kernel release happens.
 
-#regzbot inconclusive: no one cares the regression
+> 
+>> Userspace tolerates MEMCG/MEMCG_KMEM being disabled, but having a single file out of the
+>> set missing is an anomaly. So maybe we could keep the dummy file just for the
+>> sake of consistency? Cgroupv1 is legacy after all.
+> 
+> What we had was a dummy file. It didn't allow to write any value so it
+> would have always reported unlimited. The reason I've decided to remove
+> the file was that there were other users not being able to handle the
+> write failure while they are just fine not having the file. So we are
+> effectively between a rock and hard place here. Either way something is
+> broken. The other SW got fixed as well but similar to your case it takes
+> some time to absorb the change through all 3rd party users.
+> 
+>>>>> Address this by wiping out the file completely and effectively get back to
+>>>>> pre 4.5 era and CONFIG_MEMCG_KMEM=n configuration.
+>>>>
+>>>> On reads, the runc code checks for MEMCG_KMEM=n by checking
+>>>> kmem.usage_in_bytes.
+> 
+> Just one side note. Config options get renamed and their semantic
+> changes over time so I would just recomment to never make any
+> dependencies on any specific one. 
+> 
 
---=20
-An old man doll... just what I always wanted! - Clara
+Right, what i meant is the logic is this, with checking the "usage"
+file to determine whether the controller is available:
 
---kQV8aQAtfnCna2uR
-Content-Type: application/pgp-signature; name="signature.asc"
+    value, err := fscommon.GetCgroupParamUint(path, usage)
+    if err != nil {
+        if name != "" && os.IsNotExist(err) {
+            // Ignore ENOENT as swap and kmem controllers
+            // are optional in the kernel.
+            return cgroups.MemoryData{}, nil
+        }
+        return cgroups.MemoryData{}, err
+    }
 
------BEGIN PGP SIGNATURE-----
+and if it is, then it proceeds to read "limit_in_bytes" and the others.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZQryrQAKCRD2uYlJVVFO
-oxi0AP9V1RoATkT1onzX8TGs388i+cvqlb8dv9y9h4AsUT7kaAD/c/ZTvgfvT85L
-1nGTIRyiqEan0L4sRDByNdVYrB4dJwA=
-=FCi5
------END PGP SIGNATURE-----
+>>>> If it is present then runc expects the other cgroup files
+>>>> to be there (including kmem.limit_in_bytes). So this change is not effectively
+>>>> the same.
+>>>>
+>>>> Here's a link to the PR that would be needed to handle this change in userspace
+>>>> (not merged yet and would need to be propagated through the ecosystem):
+>>>>
+>>>> https://github.com/opencontainers/runc/pull/4018.
+>>>
+>>> Thanks. Does that mean the revert is still necessary for the Linus tree
+>>> or do you expect that the fix can be merged and propagated in a
+>>> reasonable time?
+>>>
+>>
+>> We can probably get runc and currently supported kubernetes versions patched in time
+>> before 6.6 (or the next LTS kernel) hits LTS distros.
+>>
+>> But there's still a bunch of users running cgroupv1 with unsupported kubernetes
+>> versions that are still taking kernel updates as they come, so this might get reported
+>> again next year if it stays in mainline.
+> 
+> I can see how 3rd party users are hard to get aligned but having a fix
+> available should allow them to apply it or is there any actual roadblock
+> for them to adapt as soon as they hit the issue?
+> 
 
---kQV8aQAtfnCna2uR--
+The issue with this is that these users are running a frozen set of kubernetes (+runc)
+binaries, but still pull kernel updates from the base distro. These kubernetes versions
+are out of maintenance so the code will not get fixed and no one will release fixed
+binaries.
+
+> I mean, normally I would be just fine reverting this API change because
+> it is disruptive but the only way to have the file available and not
+> break somebody is to revert 58056f77502f ("memcg, kmem: further
+> deprecate kmem.limit_in_bytes") as well. Or to ignore any value written
+> there but that sounds rather dubious. Although one could argue this
+> would mimic nokmem kernel option.
+> 
+
+I just want to make sure we don't introduce yet another new behavior in this legacy
+system. I have not seen breakage due to 58056f77502f. Mimicing nokmem sounds good but
+does this mean "don't enforce limits" (that should be fine) or "ignore writes to the limit"
+(=don't event store the written limit). The latter might have unintended consequences.
+
