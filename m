@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ED01E534
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 09:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB9A1DA4A
+	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 10:12:48 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qjcnb-0000O5-6N; Fri, 22 Sep 2023 11:50:11 +0200
-Message-ID: <bab8164c-f74f-44fe-ac3e-c078d30ab1e4@leemhuis.info>
-Date: Fri, 22 Sep 2023 11:50:09 +0200
+	id 1qjd9R-0004p2-AR; Fri, 22 Sep 2023 12:12:45 +0200
+Message-ID: <08a432e0-4e16-41a6-bad6-e6a51ea34a97@leemhuis.info>
+Date: Fri, 22 Sep 2023 12:12:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,84 +15,85 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Urgent Bug Report Kernel crash 6.5.2
+Subject: Re: kexec reboot failed due to commit 75d090fd167ac
 Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Martin Zaharinov <micron10@gmail.com>
-Cc: Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- netdev <netdev@vger.kernel.org>, patchwork-bot+netdevbpf@kernel.org,
- Jakub Kicinski <kuba@kernel.org>,
- Stephen Hemminger <stephen@networkplumber.org>, kuba+netdrv@kernel.org,
- dsahern@gmail.com, Florian Westphal <fw@strlen.de>,
- Pablo Neira Ayuso <pablo@netfilter.org>,
- Wangyang Guo <wangyang.guo@intel.com>,
- Arjan Van De Ven <arjan.van.de.ven@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <A416E134-BFAA-45FE-9061-9545F6DCC246@gmail.com>
- <CANn89iKXxyAQG-N+mdhNA8H+LEf=OK+goMFxYCV6yU1BpE=Xvw@mail.gmail.com>
- <BB129799-E196-428C-909D-721670DD5E21@gmail.com> <ZQqOJOa_qTwz_k0V@debian.me>
- <94BC75CD-A34A-4FED-A2EA-C18A28512230@gmail.com>
- <CANn89iKvv7F9G8AbYTEu7wca_SDHEp4GVTOEWk7_Yq0KFJrWgw@mail.gmail.com>
- <CANn89iJCJhJ=RWqPGkdbPoXhoa1W9ovi0s1t4242vsz-1=0WLw@mail.gmail.com>
- <85F1F301-BECA-4210-A81F-12CAEEC85FD7@gmail.com>
- <be58d429-90d1-42ff-a36b-da318db6ee68@gmail.com>
- <6A98504D-DB99-42A5-A829-B81739822CB2@gmail.com> <ZQ0EtyRxjzQTrPNd@debian.me>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@google.com>,
+ Kees Cook <keescook@chromium.org>, Aaron Lu <aaron.lu@intel.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Borislav Petkov <bp@alien8.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ kexec@lists.infradead.org, Tom Lendacky <thomas.lendacky@amd.com>,
+ x86@kernel.org
+References: <20230907131409.masxz42ik6u456qp@box.shutemov.name>
+ <20230908060230.GA283801@ziqianlu-dell>
+ <20230908123233.dpbpohgrbyyxekzk@box.shutemov.name>
+ <202309080856.F066F92C98@keescook>
+ <CAGnOC3aG9BuoVEGs4LQhhczdhAF0gFBmXR7GXKAf4Z8FPTb1PQ@mail.gmail.com>
+ <20230909113209.actnan6hczrclz2d@box.shutemov.name>
+ <CALu+AoSKpgbbKmsL8iuWpQB2ANqnhhfXR5pN5m0EsKZeFUBPkw@mail.gmail.com>
+ <20230911145707.hslq47ngknshrlyk@box.shutemov.name>
+ <20230913142410.dfqsg3l5v44mr5j3@box>
+ <91daa8b6-57c2-424f-8c6c-647e05f2a8c9@leemhuis.info>
+ <20230921160325.g5ei2gfads6deb32@box.shutemov.name>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZQ0EtyRxjzQTrPNd@debian.me>
+In-Reply-To: <20230921160325.g5ei2gfads6deb32@box.shutemov.name>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695376229;4852bd26;
-X-HE-SMSGID: 1qjcnb-0000O5-6N
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695377568;fb0c8c6c;
+X-HE-SMSGID: 1qjd9R-0004p2-AR
 
-On 22.09.23 05:06, Bagas Sanjaya wrote:
-> On Thu, Sep 21, 2023 at 11:13:55AM +0300, Martin Zaharinov wrote:
+On 21.09.23 18:03, Kirill A. Shutemov wrote:
+> On Thu, Sep 21, 2023 at 11:54:15AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 13.09.23 16:24, Kirill A. Shutemov wrote:
+>>> On Mon, Sep 11, 2023 at 05:57:07PM +0300, Kirill A. Shutemov wrote:
+>>>> On Mon, Sep 11, 2023 at 10:56:36PM +0800, Dave Young wrote:
+>>>>>> early console in extract_kernel
+>>>>>> input_data: 0x000000807eb433a8
+>>>>>> input_len: 0x0000000000d26271
+>>>>>> output: 0x000000807b000000
+>>>>>> output_len: 0x0000000004800c10
+>>>>>> kernel_total_size: 0x0000000003e28000
+>>>>>> needed_size: 0x0000000004a00000
+>>>>>> trampoline_32bit: 0x000000000009d000
+>>>>>>
+>>>>>> Decompressing Linux... out of pgt_buf in arch/x86/boot/compressed/ident_map_64.c!?
+>>>>>> pages->pgt_buf_offset: 0x0000000000006000
+>>>>>> pages->pgt_buf_size: 0x0000000000006000
+>>>>>>
+>>>>>> Error: kernel_ident_mapping_init() failed
+>>> [...]
+>>>> The problem is not limited to unaccepted memory, it also triggers if we
+>>>> reach efi_get_rsdp_addr() in the same setup.
+>>>>
+>>>> I think we have several problems here.
+>>> [...]
+>>>> Any comments?
+>>>
+>>> I struggle to come up with anything better than increasing the constant to
+>>> a value that "ought to be enough for anybody" ©, let's say 128K.
+>>>
+>>> And we can eliminate logic on no-KASLR vs. KASLR vs. KASLR+VERBOSE_BOOTUP.
+>>>
+>>> Objections?
 >>
->> Its not easy to make this on production, have too many users on it.
->>
->> i make checks and find with kernel 6.3.12-6.5.13 all is fine.
->> on first machine that i have with kernel 6.4 and still work run kernel 6.4.2 and have problem.
-
-This is confusing and hard to follow. You want to describe more
-carefully which kernels worked (avoid ranges, as I doubt you have tested
-everything between 6.3.12-6.5.13) and try to avoid complexity (you seem
-to have two machines? if everything works on one, don't even bring it up
-except maybe as a side note)
-
->> in my investigation problem is start after migration to kernel 6.4.x 
->>
->> in 6.4 kernel is add rcuref : 
->>
->> https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.4 
->>
->> commit bc9d3a9f2afca189a6ae40225b6985e3c775375e
->> Author: Thomas Gleixner <tglx@linutronix.de>
->> Date: Thu Mar 23 21:55:32 2023 +0100
->>
->> net: dst: Switch to rcuref_t reference counting
+>> Apparently not, as there was no reply since then (which is why I show up
+>> here, as it looked like fixing this regression stalled).
 > 
-> Is it the culprit you look for? Had you done the bisection and it points
-> the culprit to that commit
+> It has been fixed in upstream by the commit f530ee95b72e
+> ("x86/boot/compressed: Reserve more memory for page tables")
 
-Martin, if you suspect this to be the culprit try to revert it on top of
-the latest kernel; if the problem then goes away it likely is the cause.
+Ahh, great, thx for letting me know. That commit sadly missed a Link: or
+Closes: tag to the regression report, which Linus and the docs ask for
+(and regression tracking relies on), then it would have noticed this
+automatically. Whatever, things happen, thx again.
 
-> [...]
->> but this is my thinking
-> 
-> What do you think that above causes your regression?
-> 
-> Confused...
-> 
-> [To Thorsten: I'm unsure if the reporter do the bisection and suddenly he found
-> the culprit commit. Should I add it to regzbot?
+#regzbot fix: f530ee95b72e
 
-For now: no, things are too confusing and without knowing the culprit I
-guess nobody will look into this unless we are extremely lucky.
-
-Ciao, Thorsten
-
-
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
