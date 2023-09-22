@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C581F16B
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 11:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8CC1EA8F
+	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 11:22:37 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qje6w-0008RG-6E; Fri, 22 Sep 2023 13:14:14 +0200
-Message-ID: <d44b0746-2aa6-4608-ab22-bcb9efb27a26@leemhuis.info>
-Date: Fri, 22 Sep 2023 13:14:13 +0200
+	id 1qjeF0-0001kI-Kc; Fri, 22 Sep 2023 13:22:34 +0200
+Message-ID: <b5e822ff-4b7c-4617-96c8-5b132df814ab@leemhuis.info>
+Date: Fri, 22 Sep 2023 13:22:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,67 +16,83 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
- kmem.limit_in_bytes
+Subject: Re: [PATCH 1/3] wifi: mt76: mt7915: remove VHT160 capability on
+ MT7915
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-References: <20230917191040.964416434@linuxfoundation.org>
- <20230917191042.204185566@linuxfoundation.org>
- <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>,
+ linux-wireless@vger.kernel.org
+Cc: Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230726091704.25795-1-nbd@nbd.name>
+ <12289744.O9o76ZdvQC@natalenko.name>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To: <12289744.O9o76ZdvQC@natalenko.name>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695381256;9f95c760;
-X-HE-SMSGID: 1qje6w-0008RG-6E
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695381757;e84daf01;
+X-HE-SMSGID: 1qjeF0-0001kI-Kc
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 20.09.23 10:11, Jeremi Piotrowski wrote:
-> On Sun, Sep 17, 2023 at 09:12:40PM +0200, Greg Kroah-Hartman wrote:
->> 6.1-stable review patch.  If anyone has any objections, please let me know.
+On 21.09.23 07:02, Oleksandr Natalenko wrote:
+> 
+> On středa 26. července 2023 11:17:02 CEST Felix Fietkau wrote:
+>> The IEEE80211_VHT_CAP_EXT_NSS_BW value already indicates support for half-NSS
+>> 160 MHz support, so it is wrong to also advertise full 160 MHz support.
 >>
->> ------------------
+>> Fixes: c2f73eacee3b ("wifi: mt76: mt7915: add back 160MHz channel width support for MT7915")
+>> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+>> ---
+>>  drivers/net/wireless/mediatek/mt76/mt7915/init.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/init.c b/drivers/net/wireless/mediatek/mt76/mt7915/init.c
+>> index ee976657bfc3..78552f10b377 100644
+>> --- a/drivers/net/wireless/mediatek/mt76/mt7915/init.c
+>> +++ b/drivers/net/wireless/mediatek/mt76/mt7915/init.c
+>> @@ -414,7 +414,6 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
+>>  			if (!dev->dbdc_support)
+>>  				vht_cap->cap |=
+>>  					IEEE80211_VHT_CAP_SHORT_GI_160 |
+>> -					IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ |
+>>  					FIELD_PREP(IEEE80211_VHT_CAP_EXT_NSS_BW_MASK, 1);
+>>  		} else {
+>>  			vht_cap->cap |=
+>>
 > 
-> Hi Greg/Michal,
+> For some reason this got backported into the stable kernel:
 > 
-> This commit breaks userspace which makes it a bad commit for mainline and an
-> even worse commit for stable.
+> ```
+> $ git log --oneline v6.5.2..v6.5.4 -- drivers/net/wireless/mediatek/mt76/mt7915/
+> c43017fbebcc3 wifi: mt76: mt7915: fix power-limits while chan_switch
+> edb1afe042c74 wifi: mt76: mt7915: fix tlv length of mt7915_mcu_get_chan_mib_info
+> 9ec0dec0baea3 wifi: mt76: mt7915: remove VHT160 capability on MT7915
+> 0e61f73e6ebc0 wifi: mt76: mt7915: fix capabilities in non-AP mode
+> 6bce28ce28390 wifi: mt76: mt7915: fix command timeout in AP stop period
+> 7af917d4864c6 wifi: mt76: mt7915: rework tx bytes counting when WED is active
+> feae00c6468ce wifi: mt76: mt7915: rework tx packets counting when WED is active
+> 70bbcc4ad6544 wifi: mt76: mt7915: fix background radar event being blocked
+> ```
 > 
-> We ingested 6.1.54 into our nightly testing and found that runc fails to gather
-> cgroup statistics (when reading kmem.limit_in_bytes). The same code is vendored
-> into kubelet and kubelet fails to start if this operation fails. 6.1.53 is
-> fine.
+> and this broke my mt7915-based AP.
 > 
->> Address this by wiping out the file completely and effectively get back to
->> pre 4.5 era and CONFIG_MEMCG_KMEM=n configuration.
+> However, if I remove `[VT160]` capability from the hostapd config, things go back to normal. It does seem that 160 MHz still works even.
 > 
-> On reads, the runc code checks for MEMCG_KMEM=n by checking
-> kmem.usage_in_bytes. If it is present then runc expects the other cgroup files
-> to be there (including kmem.limit_in_bytes). So this change is not effectively
-> the same.
-> 
-> Here's a link to the PR that would be needed to handle this change in userspace
-> (not merged yet and would need to be propagated through the ecosystem):
-> 
-> https://github.com/opencontainers/runc/pull/4018.
+> Is this expected?
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 86327e8eb94c52
-#regzbot title mm, memcg: runc fails to gather cgroup statistics
-#regzbot fix: mm, memcg: reconsider kmem.limit_in_bytes deprecation
+#regzbot ^introduced 3ec5ac12ac8a4e..fe0ea395f0a351
+#regzbot title wifi: mt76: mt7915: removal of VHT160 capability broke hostap
 #regzbot ignore-activity
-
-FWIW, the porposed fix can be found here:
-https://lore.kernel.org/all/ZQwnUpX7FlzIOWXP@dhcp22.suse.cz/
 
 This isn't a regression? This issue or a fix for it are already
 discussed somewhere else? It was fixed already? You want to clarify when
