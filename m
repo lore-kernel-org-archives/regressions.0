@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8CC1EA8F
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 11:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1609B1F937
+	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 11:46:05 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qjeF0-0001kI-Kc; Fri, 22 Sep 2023 13:22:34 +0200
-Message-ID: <b5e822ff-4b7c-4617-96c8-5b132df814ab@leemhuis.info>
-Date: Fri, 22 Sep 2023 13:22:33 +0200
+	id 1qjebe-00063Z-UW; Fri, 22 Sep 2023 13:45:59 +0200
+Message-ID: <785cbc11-3d85-4551-8290-0ca31e9be77e@leemhuis.info>
+Date: Fri, 22 Sep 2023 13:45:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,98 +15,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/3] wifi: mt76: mt7915: remove VHT160 capability on
- MT7915
+Subject: Re: [PATCH] PCI/PM: Mark devices disconnected if their upstream PCIe
+ link is down on resume
 Content-Language: en-US, de-DE
-To: Oleksandr Natalenko <oleksandr@natalenko.name>,
- linux-wireless@vger.kernel.org
-Cc: Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org,
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+ Mark Blakeney <mark.blakeney@bullet-systems.net>,
+ Kamil Paral <kparal@redhat.com>, Chris Chiu <chris.chiu@canonical.com>,
+ linux-pci@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230726091704.25795-1-nbd@nbd.name>
- <12289744.O9o76ZdvQC@natalenko.name>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <12289744.O9o76ZdvQC@natalenko.name>
+References: <20230921201945.GA343804@bhelgaas>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20230921201945.GA343804@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695381757;e84daf01;
-X-HE-SMSGID: 1qjeF0-0001kI-Kc
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695383166;c9282489;
+X-HE-SMSGID: 1qjebe-00063Z-UW
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 21.09.23 07:02, Oleksandr Natalenko wrote:
+On 21.09.23 22:19, Bjorn Helgaas wrote:
+> [+cc Kamil, Chris]
 > 
-> On středa 26. července 2023 11:17:02 CEST Felix Fietkau wrote:
->> The IEEE80211_VHT_CAP_EXT_NSS_BW value already indicates support for half-NSS
->> 160 MHz support, so it is wrong to also advertise full 160 MHz support.
+> On Mon, Sep 18, 2023 at 08:30:41AM +0300, Mika Westerberg wrote:
+>> Mark Blakeney reported that when suspending system with a Thunderbolt
+>> dock connected and then unplugging the dock before resume (which is
+>> pretty normal flow with laptops), resuming takes long time.
 >>
->> Fixes: c2f73eacee3b ("wifi: mt76: mt7915: add back 160MHz channel width support for MT7915")
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> ---
->>  drivers/net/wireless/mediatek/mt76/mt7915/init.c | 1 -
->>  1 file changed, 1 deletion(-)
->>
->> diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/init.c b/drivers/net/wireless/mediatek/mt76/mt7915/init.c
->> index ee976657bfc3..78552f10b377 100644
->> --- a/drivers/net/wireless/mediatek/mt76/mt7915/init.c
->> +++ b/drivers/net/wireless/mediatek/mt76/mt7915/init.c
->> @@ -414,7 +414,6 @@ mt7915_init_wiphy(struct mt7915_phy *phy)
->>  			if (!dev->dbdc_support)
->>  				vht_cap->cap |=
->>  					IEEE80211_VHT_CAP_SHORT_GI_160 |
->> -					IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ |
->>  					FIELD_PREP(IEEE80211_VHT_CAP_EXT_NSS_BW_MASK, 1);
->>  		} else {
->>  			vht_cap->cap |=
->>
+>> What happens is that the PCIe link from the root port to the PCIe switch
+>> inside the Thunderbolt device does not train (as expected, the link is
+>> upplugged):
+> [...]
+>> Fixes: e8b908146d44 ("PCI/PM: Increase wait time after resume")
+>> Reported-by: Mark Blakeney <mark.blakeney@bullet-systems.net>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217915
+>> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> For some reason this got backported into the stable kernel:
-> 
-> ```
-> $ git log --oneline v6.5.2..v6.5.4 -- drivers/net/wireless/mediatek/mt76/mt7915/
-> c43017fbebcc3 wifi: mt76: mt7915: fix power-limits while chan_switch
-> edb1afe042c74 wifi: mt76: mt7915: fix tlv length of mt7915_mcu_get_chan_mib_info
-> 9ec0dec0baea3 wifi: mt76: mt7915: remove VHT160 capability on MT7915
-> 0e61f73e6ebc0 wifi: mt76: mt7915: fix capabilities in non-AP mode
-> 6bce28ce28390 wifi: mt76: mt7915: fix command timeout in AP stop period
-> 7af917d4864c6 wifi: mt76: mt7915: rework tx bytes counting when WED is active
-> feae00c6468ce wifi: mt76: mt7915: rework tx packets counting when WED is active
-> 70bbcc4ad6544 wifi: mt76: mt7915: fix background radar event being blocked
-> ```
-> 
-> and this broke my mt7915-based AP.
-> 
-> However, if I remove `[VT160]` capability from the hostapd config, things go back to normal. It does seem that 160 MHz still works even.
-> 
-> Is this expected?
+> Applied with Lukas' Reviewed-by to pm for v6.7.
+>
+> e8b908146d44 appeared in v6.4. 
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Then why did you apply this for 6.7 and not to a branch targeting the
+current cycle? Linus wants regression introduced during round about the
+last 12 months to be handled liked regressions from the current cycle,
+unless there is some good reason to treat the fix differently (big risk
+of other regressions for example).
 
-#regzbot ^introduced 3ec5ac12ac8a4e..fe0ea395f0a351
-#regzbot title wifi: mt76: mt7915: removal of VHT160 capability broke hostap
-#regzbot ignore-activity
+> Seems like maybe a candidate for stable? 
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
++1
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
