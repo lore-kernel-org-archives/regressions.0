@@ -1,84 +1,74 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11851EA7D
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 14:59:19 +0000 (UTC)
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4121b5334f3so14276441cf.0
-        for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 07:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1695394759; x=1695999559; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1XFv7wzgSRzNlMpAIAXPdx/9Ru1HG5ToVHBwYeRkmP8=;
-        b=eA/EiV2+aYxlRmmP+Xu4fDp/xXSNYrBvI8MdS2EAoE4fdMqlBRyBuhNWeqMAAkgx8U
-         inOV9Qkhsh5uwNKoBRlyN76DDBoliDnV3k3IB91LqQstfU1WdBS4hqiWMfnFp4S9Ffk9
-         5Ygu5vY03VdXING1nYRUMCHrEO/C+pXdENj7TEBHcWukFq/S2L56TBQ46mJrV0mzJvaD
-         RUZ8a0ygTkh7/EeUIUYojNdL3YemSCzm3r0w/kmoB2kkQYKj9PlVBOcogiclgwWr4MfP
-         2RZVAlsC3deRx8qh4pRBGP5wC+1RgacY97Q2TTEVIcIIy8m4/fDVJi8KMpqayla0vqRU
-         vyNw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5AF3CD0D;
+	Fri, 22 Sep 2023 16:40:52 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-9adb9fa7200so615284566b.0;
+        Fri, 22 Sep 2023 09:40:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695394759; x=1695999559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1XFv7wzgSRzNlMpAIAXPdx/9Ru1HG5ToVHBwYeRkmP8=;
-        b=DdTubE1MTA8cH6CHiU+3LFk8ovtNKQcqXEEVeADETwhef1PM7siRE4jjYWl/qsbBKv
-         3Oyte42bSDdZfb9v4SAr3/I83jRWMfGB4fHLgcob8fSbqJNGYO4WmCm1X4hW6VNVKNpP
-         bWFkhpQuatTrqE9T0HyR1MdR+6TmIu48TL2m6RPyFkqGhwolLV6w/96UdLKvuJqnuZD/
-         +FY+7Paki10kW30cH+ulpf1xVeMOsFKuTiuhq77pPiRILvCUg9nAz0FlF1hoqlgIZHTY
-         cCJ5lHsu9QFdFTciFpUThd5mobdopPTIn4rClH+eepsHMRLxhVxmonWA8f4MYZPT+hFP
-         b0+w==
-X-Gm-Message-State: AOJu0YzJGiiiGFM/w5nV7YFG9QIPkEXOxVgbzqiFvl+jzrUYrieNhfzW
-	48Uwu3nPhj7ktd+ZdJNn+oQCPA==
-X-Google-Smtp-Source: AGHT+IFepS22bGXECBY+vUBb2rhMrd9rmdSAqafKVqKT+SSCdNN/lwEK0LNLwifMHk5me/tHvErfGQ==
-X-Received: by 2002:ac8:5d0c:0:b0:403:72fa:630b with SMTP id f12-20020ac85d0c000000b0040372fa630bmr10093264qtx.58.1695394758807;
-        Fri, 22 Sep 2023 07:59:18 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-26-201.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.26.201])
-        by smtp.gmail.com with ESMTPSA id t16-20020ac85310000000b00405553305casm1501734qtn.86.2023.09.22.07.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 07:59:18 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1qjhcj-000Ygf-KE;
-	Fri, 22 Sep 2023 11:59:17 -0300
-Date: Fri, 22 Sep 2023 11:59:17 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Hector Martin <marcan@marcan.st>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Joerg Roedel <jroedel@suse.de>, Neal Gompa <neal@gompa.dev>,
-	"Justin M. Forbes" <jforbes@fedoraproject.org>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH REGRESSION v2] iommu/apple-dart: Handle DMA_FQ domains in
- attach_dev()
-Message-ID: <20230922145917.GG13795@ziepe.ca>
-References: <20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st>
+        d=1e100.net; s=20230601; t=1695400850; x=1696005650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oLMEZvzr2hDeQFoHwg/p7D4qUJztpTY+iNBV1OWqyi4=;
+        b=uueiCGULXR25DTMVnxHQz/KrUt+waBcqMuxzyLghi4pqYFlnACJWfm6q3c3vjGNoLI
+         08SAsHQhwGlJCyvo50afpwElcilljOQ7OIJKYLfwbsvirajHdlsBoJiGeJOrG5Uzm1JQ
+         Xl/xk9ZDp4Go9wzGUKbpLbp6eJ+klFc045rJlYYTS69uvc3YyJV4EAPBsbTtAOFjDBSa
+         OVWLPqHlmFNS5k6mHv3X4xi0FxtxfDAEsnss2IQaLQe2P1T653WEDai2z3mPvmQ75l0k
+         +DAluUiX9ywquVEyO0qp+nn8YQkQIoMJlzbM9TScpgZgqDYo6UwfnW07u/U8Wpvtb4e4
+         iC6A==
+X-Gm-Message-State: AOJu0Yw3v9hZWY7jXJ4yxAshh/LMMMTYucqb6RXUPHwQc+ZU1gpy+nNI
+	ZuYT1vhsAulFbYoCyMVR6uX+P2EMzsese8Ip
+X-Google-Smtp-Source: AGHT+IF+uA/lvlIQ8HKaL+Q5zwugz/95vPcBBSZwkjDZiBIj332DZvt1MLzRZ0U1NEh46WhufivKVQ==
+X-Received: by 2002:a17:907:75c4:b0:9a2:143e:a070 with SMTP id jl4-20020a17090775c400b009a2143ea070mr347123ejc.20.1695400850283;
+        Fri, 22 Sep 2023 09:40:50 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id v12-20020a170906564c00b0099ddc81903asm2939889ejr.221.2023.09.22.09.40.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Sep 2023 09:40:49 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so8611313a12.1;
+        Fri, 22 Sep 2023 09:40:49 -0700 (PDT)
+X-Received: by 2002:a05:6402:5c4:b0:530:8fdb:39c8 with SMTP id
+ n4-20020a05640205c400b005308fdb39c8mr4374304edx.15.1695400848925; Fri, 22 Sep
+ 2023 09:40:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st>
 In-Reply-To: <20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st>
+From: Neal Gompa <neal@gompa.dev>
+Date: Fri, 22 Sep 2023 12:40:12 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je8b-gJZDs5Q6n=XgU5xyPWiJ3utX9yf0DPN5bfLqUx4PA@mail.gmail.com>
+Message-ID: <CAEg-Je8b-gJZDs5Q6n=XgU5xyPWiJ3utX9yf0DPN5bfLqUx4PA@mail.gmail.com>
+Subject: Re: [PATCH REGRESSION v2] iommu/apple-dart: Handle DMA_FQ domains in attach_dev()
+To: Hector Martin <marcan@marcan.st>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jerry Snitselaar <jsnitsel@redhat.com>, Joerg Roedel <jroedel@suse.de>, 
+	"Justin M. Forbes" <jforbes@fedoraproject.org>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 22, 2023 at 11:55:23PM +0900, Hector Martin wrote:
+On Fri, Sep 22, 2023 at 10:55=E2=80=AFAM Hector Martin <marcan@marcan.st> w=
+rote:
+>
 > Commit a4fdd9762272 ("iommu: Use flush queue capability") hid the
 > IOMMU_DOMAIN_DMA_FQ domain type from domain allocation. A check was
 > introduced in iommu_dma_init_domain() to fall back if not supported, but
 > this check runs too late: by that point, devices have been attached to
 > the IOMMU, and apple-dart's attach_dev() callback does not expect
 > IOMMU_DOMAIN_DMA_FQ domains.
-> 
+>
 > Change the logic so the IOMMU_DOMAIN_DMA codepath is the default,
 > instead of explicitly enumerating all types.
-> 
+>
 > Fixes an apple-dart regression in v6.5.
-> 
+>
 > Cc: regressions@lists.linux.dev
 > Cc: stable@vger.kernel.org
 > Suggested-by: Robin Murphy <robin.murphy@arm.com>
@@ -88,15 +78,42 @@ On Fri, Sep 22, 2023 at 11:55:23PM +0900, Hector Martin wrote:
 > Changes in v2:
 > - Fixed the issue in apple-dart instead of the iommu core, per Robin's
 >   suggestion.
-> - Link to v1: https://lore.kernel.org/r/20230922-iommu-type-regression-v1-1-1ed3825b2c38@marcan.st
+> - Link to v1: https://lore.kernel.org/r/20230922-iommu-type-regression-v1=
+-1-1ed3825b2c38@marcan.st
 > ---
 >  drivers/iommu/apple-dart.c | 3 +--
 >  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+> index 2082081402d3..0b8927508427 100644
+> --- a/drivers/iommu/apple-dart.c
+> +++ b/drivers/iommu/apple-dart.c
+> @@ -671,8 +671,7 @@ static int apple_dart_attach_dev(struct iommu_domain =
+*domain,
+>                 return ret;
+>
+>         switch (domain->type) {
+> -       case IOMMU_DOMAIN_DMA:
+> -       case IOMMU_DOMAIN_UNMANAGED:
+> +       default:
+>                 ret =3D apple_dart_domain_add_streams(dart_domain, cfg);
+>                 if (ret)
+>                         return ret;
+>
+> ---
+> base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
+> change-id: 20230922-iommu-type-regression-25b4f43df770
+>
+> Best regards,
+> --
+> Hector Martin <marcan@marcan.st>
+>
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Looks good to me.
 
-It is weird looking, but I have a followup series that will clean it -
-this should go to -rc
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
-Thanks,
-Jason
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
