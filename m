@@ -1,109 +1,103 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2D02AB46
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 13:30:19 +0000 (UTC)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7740cd2e393so103730985a.1
-        for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 06:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1695389418; x=1695994218; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=25YXU+FGYNokEvJDmLWZ05x6wqgiem9ZONDjs8ENa1c=;
-        b=P4jo0c7xMANhbTaRRziuqWiSor+ITbFiWRqcGPB0DCdROLWyZ88ksyPVw7nHxL7Ig6
-         aHmCLA73kpU9ItR5/O9jvRhZ7J54HcMZPJYUdYyxvE90IfZPGB5F3O0RABLOsK++MABA
-         S8LtM6ZYYxKtQXwUweHWz5qrD1FIPy9aAIUCzgK0DsX+FtbBLiGmsM6alXODOVz/xvDi
-         YJkkgBaILk/hh5D0hMpGKBOz4U30o3nlvukpfnS6CuUjXqUNHsT+RuVWQngFc0zzs1Q4
-         wTB6NQ4lMtRvHM4zxeo9b7LS/eK2DvfjVSRtVkHYL6U1bxzEz3xa2J8UzflemiMJ0HBy
-         9o/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695389418; x=1695994218;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=25YXU+FGYNokEvJDmLWZ05x6wqgiem9ZONDjs8ENa1c=;
-        b=IYM4HIzLIq+XnIfuMqiCrscH9nmyFo3+arvYw7lBV28Wj9+wxnEDZHAXj071X70VsK
-         EC7wkE49/NoPhep0/MBgMqk7tcnGf4y6WpUVogCr5hPBEAB4vlZPKklU8ycOsG1HgCIX
-         ibm7nBxPAS+ZzD932yhU1f3efsBUuu7Mvyh5odWXi1OrFOxjRyR3F5mkI+RT7EZqvYjD
-         QKi3va126x7CEGJh8hH5s5mBNv+L1UkeTnWDs6zwJkjRhP1ez7Ds+tQGFKNOCzTCRote
-         4I6SC6wLMULk+S0/Y4tlzIpmbn+gZapnkgjFTYC1i38Lo8hh6fXLdLMtynLK6k403TMz
-         isOg==
-X-Gm-Message-State: AOJu0Yyv3P+sfF39gw8hF81u/8ivGQSBMDEgB49uBpnEmRal3WS/xxUx
-	drjKncgyHwL880msL/IhMKbHpQ==
-X-Google-Smtp-Source: AGHT+IGXdvy0h/AAP4iGOiWzOq4RBdacLRt7M19j/1maM6/SRiZF/MBIleQ4bgzfkum4End6z3qCgQ==
-X-Received: by 2002:a05:620a:795:b0:76d:9b15:de71 with SMTP id 21-20020a05620a079500b0076d9b15de71mr7888694qka.31.1695389418545;
-        Fri, 22 Sep 2023 06:30:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:400::5:ba06])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05620a056d00b007740c0e52edsm1240421qkp.89.2023.09.22.06.30.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 06:30:18 -0700 (PDT)
-Date: Fri, 22 Sep 2023 09:30:17 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	mathieu.tortuyaux@gmail.com
-Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
- kmem.limit_in_bytes
-Message-ID: <20230922133017.GD124289@cmpxchg.org>
-References: <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
- <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
- <CALvZod7E_Jm9y+40OKtLs5EFA0ptKGjoe2BU58SY29pUiPc93g@mail.gmail.com>
- <ZQskGGAwlsr1YxAp@dhcp22.suse.cz>
- <CALvZod6b3=+=xXEUeWOQW3t_URJpeeVX46WjBHv5BS+436KoFA@mail.gmail.com>
- <ZQtRKzUOfdaVKRCF@dhcp22.suse.cz>
- <CALvZod5DSMoEGY0CwGz=P-2=Opbr4SmMfwHhZRROBx7yCaBdDA@mail.gmail.com>
- <ZQv2MXOynlEPW/bX@dhcp22.suse.cz>
- <f01b5d93-0f43-41c8-b3d8-40ef9696dcf8@linux.microsoft.com>
- <ZQwnUpX7FlzIOWXP@dhcp22.suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388763D3A9;
+	Fri, 22 Sep 2023 13:48:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sendonly@marcansoft.com)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id E9BE24203C;
+	Fri, 22 Sep 2023 13:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1695390035; bh=wnRMaJBOS2DBNUxEtrGxJj6grzGED1qsQnxvwl3853Q=;
+	h=From:Date:Subject:To:Cc;
+	b=EL+kQP6z2D1r/FcD1TXdu49qUlyYgYgj0amx/V7WZ9ABEa/REXdo+1rVGrP5gIKpu
+	 geBzkpMjccNNO5cAGwX2nbtGyBjoKy0G5FwgpoB5xobEZXQdtOe4vKBrZLUavK08HW
+	 cxRQAeVZdV2m+EYqL0bjS3NA7Gx6HxP6jFJuxVMLBGyCsm8TtvhygKKpF+bi49b166
+	 4uC99oKwrAvYnU20loGtw829HDNtfL3B/s8vNfiSEgQLcGJsg+7mTo/gTrDZpa+Gaq
+	 y4U7QZohJ04few8TmHtIC1vkcmc1HvG3dD6Hs2nOw42BMUobiKs9v5wkoPn7dhvDlS
+	 gG8UbmaElcWNw==
+From: Hector Martin <marcan@marcan.st>
+Date: Fri, 22 Sep 2023 22:40:20 +0900
+Subject: [PATCH REGRESSION] iommu: Only allocate FQ domains for IOMMUs that
+ support them
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQwnUpX7FlzIOWXP@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230922-iommu-type-regression-v1-1-1ed3825b2c38@marcan.st>
+X-B4-Tracking: v=1; b=H4sIAEOZDWUC/x3Myw5AQAxA0V+RrjUZRYRfEQuPDl14pIOQiX83L
+ O/iXA+OVdhBFXlQPsXJuoRI4gj6qV1GRhlCAxlKTUmEss7zgfu9MSqPyu4TSHmX2SwdbFEYCHZ
+ TtnL937p5nhd8EatbZwAAAA==
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Joerg Roedel <jroedel@suse.de>, Neal Gompa <neal@gompa.dev>, 
+ "Justin M. Forbes" <jforbes@fedoraproject.org>, iommu@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev, stable@vger.kernel.org, 
+ regressions@lists.linux.dev, Hector Martin <marcan@marcan.st>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1654; i=marcan@marcan.st;
+ h=from:subject:message-id; bh=wnRMaJBOS2DBNUxEtrGxJj6grzGED1qsQnxvwl3853Q=;
+ b=owGbwMvMwCUm+yP4NEe/cRLjabUkhlTemf6MGpdr17EecAmcefbUi4gtXz2fGH8+UWdeZCSzT
+ uqnx3arjlIWBjEuBlkxRZbGE72nuj2nn1NXTZkOM4eVCWQIAxenAEyk4gvDT8bEBMkPJ67IfVtn
+ yV+s31PwoTNX+83atU/P8m3g375coYeRoX/Oi7b2+oKDy0Sr3eZP3Hw85t/sV/OsFJfeuW7EPyn
+ HgRkA
+X-Developer-Key: i=marcan@marcan.st; a=openpgp;
+ fpr=FC18F00317968B7BE86201CBE22A629A4C515DD5
 
-On Thu, Sep 21, 2023 at 01:21:54PM +0200, Michal Hocko wrote:
-> @@ -3097,6 +3097,7 @@ static void obj_cgroup_uncharge_pages(struct obj_cgroup *objcg,
->  static int obj_cgroup_charge_pages(struct obj_cgroup *objcg, gfp_t gfp,
->  				   unsigned int nr_pages)
->  {
-> +	struct page_counter *counter;
->  	struct mem_cgroup *memcg;
->  	int ret;
->  
-> @@ -3107,6 +3108,10 @@ static int obj_cgroup_charge_pages(struct obj_cgroup *objcg, gfp_t gfp,
->  		goto out;
->  
->  	memcg_account_kmem(memcg, nr_pages);
-> +
-> +	/* There is no way to set up kmem hard limit so this operation cannot fail */
-> +	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
-> +		WARN_ON(!page_counter_try_charge(&memcg->kmem, nr_pages, &counter));
+Commit a4fdd9762272 ("iommu: Use flush queue capability") hid the
+IOMMU_DOMAIN_DMA_FQ domain type from domain allocation. A check was
+introduced in iommu_dma_init_domain() to fall back if not supported, but
+this check runs too late: by that point, devices have been attached to
+the IOMMU, and the IOMMU driver might not expect FQ domains at
+ops->attach_dev() time.
 
-This hunk doesn't look quite right.
+Ensure that we immediately clamp FQ domains to plain DMA if not
+supported by the driver at device attach time, not later.
 
-static void memcg_account_kmem(struct mem_cgroup *memcg, int nr_pages)
-{
-	mod_memcg_state(memcg, MEMCG_KMEM, nr_pages);
-	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
-		if (nr_pages > 0)
-			page_counter_charge(&memcg->kmem, nr_pages);
-		else
-			page_counter_uncharge(&memcg->kmem, -nr_pages);
-	}
-}
+This regressed apple-dart in v6.5.
 
-Other than that, please add
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Fixes: a4fdd9762272 ("iommu: Use flush queue capability")
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ drivers/iommu/iommu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3bfc56df4f78..12464eaa8d91 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2039,6 +2039,15 @@ static int __iommu_attach_device(struct iommu_domain *domain,
+ 	if (unlikely(domain->ops->attach_dev == NULL))
+ 		return -ENODEV;
+ 
++	/*
++	 * Ensure we do not try to attach devices to FQ domains if the
++	 * IOMMU does not support them. We can safely fall back to
++	 * non-FQ.
++	 */
++	if (domain->type == IOMMU_DOMAIN_DMA_FQ &&
++	    !device_iommu_capable(dev, IOMMU_CAP_DEFERRED_FLUSH))
++		domain->type = IOMMU_DOMAIN_DMA;
++
+ 	ret = domain->ops->attach_dev(domain, dev);
+ 	if (ret)
+ 		return ret;
+
+---
+base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
+change-id: 20230922-iommu-type-regression-25b4f43df770
+
+Best regards,
+-- 
+Hector Martin <marcan@marcan.st>
+
