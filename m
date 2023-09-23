@@ -1,87 +1,88 @@
-Received: from out-206.mta1.migadu.com (out-206.mta1.migadu.com [95.215.58.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E6E37F
-	for <regressions@lists.linux.dev>; Fri, 22 Sep 2023 23:00:39 +0000 (UTC)
-Date: Fri, 22 Sep 2023 16:00:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1695423637;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xnLthAI2KKZwUYazrEPUSMFwID0MKjI3FCNZtFBM4m4=;
-	b=E35HnXox4DMrYu3DkYtdgmp0uOW7ubbbmSyrum1CRnX+YpPXnGRoXIqr21W5ok6+a5jcR5
-	KJdYqD8of5GS6tMtn3L1CKtyBVVxIrjiG8nUcORjD1mPjNYsdtJSFSZOomwvYiNfPOr+XR
-	Rqo+dUaRoJrsrQX0lusdx455KWZkuxg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	Tejun Heo <tj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	mathieu.tortuyaux@gmail.com
-Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
- kmem.limit_in_bytes
-Message-ID: <ZQ4cjqQLhgX1pOVX@P9FQF9L96D.corp.robot.car>
-References: <20230917191040.964416434@linuxfoundation.org>
- <20230917191042.204185566@linuxfoundation.org>
- <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <ZQqwzK/fDm+GLiKM@dhcp22.suse.cz>
- <101987a1-b1ab-429d-af03-b6bdf6216474@linux.microsoft.com>
- <ZQrSXh+riB7NnZuE@dhcp22.suse.cz>
- <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
- <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58EF15E96
+	for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 15:03:06 +0000 (UTC)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so11569273a12.1
+        for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 08:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695481385; x=1696086185; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mf35qT3wdmI9FAWcSv+LLoKLH4mSf1lcVMZuMPVU6oU=;
+        b=deUIswWVeqsLq4KkAGtNlCyLar0jpn7byhPDg+3ViDXTE8Qk362ZdN5iAGKlcKgRoI
+         DYstgtWYJjYEvnLPEnojgrcotSBoe0JXQTY2NaTKviWjoDT+qtppeXf15Os3m5hmi610
+         AI3K4Z4qZCLDuYPCSw3Cxhm+xt4hLudCFxap5mD6X+agYLSQGLysx70xJ/QestkXsFF0
+         A0KmX4ygQCMieRdcqQYo+ImXt+9tUU/WOPKsMftG/uKT6Be31mNYYTsHuTT3SiwkE60u
+         44HsUulE6L3tdsVA3R893dcunyMy7D3XsxYweLD9RSkZ4l/9jxkBcmJ1+J+InaW4EFV1
+         oRIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695481385; x=1696086185;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mf35qT3wdmI9FAWcSv+LLoKLH4mSf1lcVMZuMPVU6oU=;
+        b=pDpF8MBjRIMWH91D3aw9a3nnv82zew6XQdyqbYIGAkDK7RPRG17CEKfufYyVFJl9ye
+         wTAn/LLvOFgcO/zDyJzZlTLS4hDxMVleiajXrnSXBc+xgqZVf8AQf4dlx9ybenliE5st
+         BhR45a3VYEmkCzPbDU0oaE4DXx6qyfYFeZqZ62SD9B/LaHyddmUH7X0spPAlvLP3ixGZ
+         he8BtfWtsv6tbpwhOgY8gE1TTj5p6LNvyIUq+gFOVY5fh7bN5LCr7i8hD3+Eu9ag7weZ
+         4gmgtZFv4OCrzG6vM1dh6WfU6QcRWKieDZSEByua+LKD4fjnnAjL1lnt1e/fov5Q5r1/
+         klcg==
+X-Gm-Message-State: AOJu0YyVFcI6XH3T31TAytZirpYnCS/KhUZV55fiopL5k+No2w3aGegB
+	k8L2f3oNqYJ0mlr03I5l2qjV8wSf2aVnp0pg53UiVKpAEYU=
+X-Google-Smtp-Source: AGHT+IFTXCZmW7UzyuZf1BuVac1rOqZQiIlUVcsQFdbBPX4v4s9HlTCZMWamY4v7PtF6t8H1zObaw34V4PtUnHSsCTU=
+X-Received: by 2002:a05:6402:270d:b0:530:bfb6:66cd with SMTP id
+ y13-20020a056402270d00b00530bfb666cdmr7966668edd.7.1695481379778; Sat, 23 Sep
+ 2023 08:02:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
-X-Migadu-Flow: FLOW_OUT
+References: <ZO8oNb2hpegB6BbE@debian>
+In-Reply-To: <ZO8oNb2hpegB6BbE@debian>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date: Sat, 23 Sep 2023 16:02:23 +0100
+Message-ID: <CADVatmNY=KB-KCpMAGU_krpoX-eKxha3BSHT0u9XfcPuEoOMPQ@mail.gmail.com>
+Subject: Re: mainline build failure due to ace6d1448138 ("mfd: cs42l43: Add
+ support for cs42l43 core driver")
+To: James Schulman <james.schulman@cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee@kernel.org>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 20, 2023 at 03:47:37PM +0200, Michal Hocko wrote:
-> On Wed 20-09-23 15:25:23, Jeremi Piotrowski wrote:
-> > On 9/20/2023 1:07 PM, Michal Hocko wrote:
-> [...]
-> > > I mean, normally I would be just fine reverting this API change because
-> > > it is disruptive but the only way to have the file available and not
-> > > break somebody is to revert 58056f77502f ("memcg, kmem: further
-> > > deprecate kmem.limit_in_bytes") as well. Or to ignore any value written
-> > > there but that sounds rather dubious. Although one could argue this
-> > > would mimic nokmem kernel option.
-> > > 
-> > 
-> > I just want to make sure we don't introduce yet another new behavior in this legacy
-> > system. I have not seen breakage due to 58056f77502f. Mimicing nokmem sounds good but
-> > does this mean "don't enforce limits" (that should be fine) or "ignore writes to the limit"
-> > (=don't event store the written limit). The latter might have unintended consequences.
-> 
-> Yes it would mean that the limit is never enforced. Bad as it is the
-> thing is that the hard limit on kernel memory is broken by design and
-> unfixable.  This causes all sorts of unexpected kernel allocation
-> failures that this is simply unsafe to use.
-> 
-> All that being said I can see the following options
-> 1) keep the current upstream status and not export the file
-> 2) revert both 58056f77502f and 86327e8eb94 and make it clear
->    that kmem.limit_in_bytes is unsupported so failures or misbehavior
->    as a result of the limit being hit are likely not going to be
->    investigated or fixed.
-> 3) reverting like in 2) but never inforce the limit (so basically nokmem
->    semantic)
+Hi All,
 
-Since it's a part of cgroup v1 interface, which is in a frozen state as a whole,
-and there is no significant (performance, code complexity) benefit of
-additionally deprecating kmem.limit_in_bytes, I vote for 2).
-1) is also an option.
+On Wed, 30 Aug 2023 at 12:29, Sudip Mukherjee (Codethink)
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> Hi All,
+>
+> The latest mainline kernel branch fails to build alpha, csky and s390
+> allmodconfig with the error:
+>
+> drivers/mfd/cs42l43.c:1138:12: error: 'cs42l43_runtime_resume' defined but not used [-Werror=unused-function]
+>  1138 | static int cs42l43_runtime_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/mfd/cs42l43.c:1124:12: error: 'cs42l43_runtime_suspend' defined but not used [-Werror=unused-function]
+>  1124 | static int cs42l43_runtime_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~~
+> drivers/mfd/cs42l43.c:1106:12: error: 'cs42l43_resume' defined but not used [-Werror=unused-function]
+>  1106 | static int cs42l43_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~
+> drivers/mfd/cs42l43.c:1076:12: error: 'cs42l43_suspend' defined but not used [-Werror=unused-function]
+>  1076 | static int cs42l43_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~
+>
+> git bisect pointed to ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
 
-Thanks!
+Since its almost time for v6.6-rc3, so just a quick reminder that this
+build failure is still not fixed.
+
+
+-- 
+Regards
+Sudip
