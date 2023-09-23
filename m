@@ -1,88 +1,109 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58EF15E96
-	for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 15:03:06 +0000 (UTC)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so11569273a12.1
-        for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 08:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695481385; x=1696086185; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mf35qT3wdmI9FAWcSv+LLoKLH4mSf1lcVMZuMPVU6oU=;
-        b=deUIswWVeqsLq4KkAGtNlCyLar0jpn7byhPDg+3ViDXTE8Qk362ZdN5iAGKlcKgRoI
-         DYstgtWYJjYEvnLPEnojgrcotSBoe0JXQTY2NaTKviWjoDT+qtppeXf15Os3m5hmi610
-         AI3K4Z4qZCLDuYPCSw3Cxhm+xt4hLudCFxap5mD6X+agYLSQGLysx70xJ/QestkXsFF0
-         A0KmX4ygQCMieRdcqQYo+ImXt+9tUU/WOPKsMftG/uKT6Be31mNYYTsHuTT3SiwkE60u
-         44HsUulE6L3tdsVA3R893dcunyMy7D3XsxYweLD9RSkZ4l/9jxkBcmJ1+J+InaW4EFV1
-         oRIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695481385; x=1696086185;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mf35qT3wdmI9FAWcSv+LLoKLH4mSf1lcVMZuMPVU6oU=;
-        b=pDpF8MBjRIMWH91D3aw9a3nnv82zew6XQdyqbYIGAkDK7RPRG17CEKfufYyVFJl9ye
-         wTAn/LLvOFgcO/zDyJzZlTLS4hDxMVleiajXrnSXBc+xgqZVf8AQf4dlx9ybenliE5st
-         BhR45a3VYEmkCzPbDU0oaE4DXx6qyfYFeZqZ62SD9B/LaHyddmUH7X0spPAlvLP3ixGZ
-         he8BtfWtsv6tbpwhOgY8gE1TTj5p6LNvyIUq+gFOVY5fh7bN5LCr7i8hD3+Eu9ag7weZ
-         4gmgtZFv4OCrzG6vM1dh6WfU6QcRWKieDZSEByua+LKD4fjnnAjL1lnt1e/fov5Q5r1/
-         klcg==
-X-Gm-Message-State: AOJu0YyVFcI6XH3T31TAytZirpYnCS/KhUZV55fiopL5k+No2w3aGegB
-	k8L2f3oNqYJ0mlr03I5l2qjV8wSf2aVnp0pg53UiVKpAEYU=
-X-Google-Smtp-Source: AGHT+IFTXCZmW7UzyuZf1BuVac1rOqZQiIlUVcsQFdbBPX4v4s9HlTCZMWamY4v7PtF6t8H1zObaw34V4PtUnHSsCTU=
-X-Received: by 2002:a05:6402:270d:b0:530:bfb6:66cd with SMTP id
- y13-20020a056402270d00b00530bfb666cdmr7966668edd.7.1695481379778; Sat, 23 Sep
- 2023 08:02:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AC76AAB
+	for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 22:46:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81E7C433C7;
+	Sat, 23 Sep 2023 22:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695509173;
+	bh=4UfwH6VmlNKKImeBmtrRRLIIR9fj+duJLOrCRpOD3Sg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SwmsMaoE/wtzt8ANF73jdoqN1Ru9HGVV4hqFTjNe1WOKuT3CHje0vbx1KlDbsAc6o
+	 g5iK7+sxmLMMkR/RgPDW/YqsJKwkm+B8xWvdBIMYFX8XC8C0CbAPEDSVeZHbs7uDdL
+	 80aB0wNpMnyzYSbU8roADRyR2mSyW3VR4zKQHpFfk0AO+GbcieJYZ6aAZFb1EiAxLb
+	 IdLGLOKKJ1ExhV8PnLc3Xjgy9yYNDAFTwTNjmwP0Bn/XLYMGeEICfu9rVG198r4c96
+	 BGlfAnm2wavGIsOa4VqSX+EnJxUGt0Yl+ewjMowCqB8StevwLgZOKRFisAISaN3nPS
+	 yVbGkYvgtQiEA==
+Date: Sat, 23 Sep 2023 17:46:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kamil Paral <kparal@redhat.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230923224610.GA371821@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZO8oNb2hpegB6BbE@debian>
-In-Reply-To: <ZO8oNb2hpegB6BbE@debian>
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date: Sat, 23 Sep 2023 16:02:23 +0100
-Message-ID: <CADVatmNY=KB-KCpMAGU_krpoX-eKxha3BSHT0u9XfcPuEoOMPQ@mail.gmail.com>
-Subject: Re: mainline build failure due to ace6d1448138 ("mfd: cs42l43: Add
- support for cs42l43 core driver")
-To: James Schulman <james.schulman@cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee@kernel.org>
-Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
-	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
 
-Hi All,
+On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
+> On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > One thing I noticed, probably has nothing to do with this, but you have
+> > the "security level" set to "secure". Now this is fine and actually
+> > recommended but I wonder if anything changes if you switch that
+> > temporarily to "user"? What is happening here is that once the system
+> > enters S3 the Thunderbolt driver tells the firmware to save the
+> > connected device list, and then once it exits S3 it is expected to
+> > re-connect the PCIe tunnels of the devices on that list but this is not
+> > happening and that's why the dock "dissappears" during resume.
+> 
+> That was a great suggestion. After switching to the user security
+> level, the resume delay is gone, and my dock devices seem to be
+> working almost immediately after resume! The dmesg for that is here:
+> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
+> 
+> I've done tens of cycles and haven't found any race conditions, unlike
+> with the TB assist mode. (Only once, my USB mouse wasn't working at
+> all, but that's something that occasionally happens on most docks I've
+> worked with and seems to be some different issue).
+> 
+> I'm sorry I haven't found this earlier myself. I did try switching
+> these options, but I bundled it together with enabling the TB assist
+> mode, which has quirks, so I didn't realize switching just this one
+> option might have an impact.
+> 
+> > In any case we can conclude that the commit in question has nothing to
+> > do with the issue. This is completely Thunderbolt related problem.
+> 
+> Considering the information above, does this appear to be a solely
+> dock-related issue (bugged firmware), or does it make sense to follow
+> up on this in some different kernel list? I have to say I'm completely
+> OK with running the laptop using the "user" TB security level, but if
+> you think I should follow up somewhere to get the "secure" level fixed
+> (or some workaround applied, etc), I can.
 
-On Wed, 30 Aug 2023 at 12:29, Sudip Mukherjee (Codethink)
-<sudipm.mukherjee@gmail.com> wrote:
->
-> Hi All,
->
-> The latest mainline kernel branch fails to build alpha, csky and s390
-> allmodconfig with the error:
->
-> drivers/mfd/cs42l43.c:1138:12: error: 'cs42l43_runtime_resume' defined but not used [-Werror=unused-function]
->  1138 | static int cs42l43_runtime_resume(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/mfd/cs42l43.c:1124:12: error: 'cs42l43_runtime_suspend' defined but not used [-Werror=unused-function]
->  1124 | static int cs42l43_runtime_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~~~~~
-> drivers/mfd/cs42l43.c:1106:12: error: 'cs42l43_resume' defined but not used [-Werror=unused-function]
->  1106 | static int cs42l43_resume(struct device *dev)
->       |            ^~~~~~~~~~~~~~
-> drivers/mfd/cs42l43.c:1076:12: error: 'cs42l43_suspend' defined but not used [-Werror=unused-function]
->  1076 | static int cs42l43_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~
->
-> git bisect pointed to ace6d1448138 ("mfd: cs42l43: Add support for cs42l43 core driver")
+I'm confused about this issue.  Correct me if I go wrong:
 
-Since its almost time for v6.6-rc3, so just a quick reminder that this
-build failure is still not fixed.
+The hierarchy is:
 
+  00:1c.4 Root Port to [bus 04-3c]
+  04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
+  05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
+  07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
 
--- 
-Regards
-Sudip
+With security level=secure, before e8b908146d44 ("PCI/PM: Increase
+wait time after resume"), resume takes ~5 seconds, but the hierarchy
+below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
+e8b908146d44, the same thing happens except the resume takes 60+
+seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
+below 05:01.0 work after resume.
+
+With security level=user, resume takes << 5 seconds regardless of
+e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
+re-enumerated (dmesg [3]).
+
+So if that's all accurate, it sounds like we've always had some
+problem with security level=secure that causes the hierarchy to get
+removed and re-enumerated, and e8b908146d44 just makes this problem
+much more visible?
+
+I don't know anything at all about how Thunderbolt security levels
+work.  If "secure" means the hierarchy must be re-enumerated after
+resume, we can detect that case immediately and get on with it without
+having to wait for a timeout?
+
+Bjorn
+
+[1] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984726
+[2] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984803
+[3] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
