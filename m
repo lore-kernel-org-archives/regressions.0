@@ -1,109 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AC76AAB
-	for <regressions@lists.linux.dev>; Sat, 23 Sep 2023 22:46:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81E7C433C7;
-	Sat, 23 Sep 2023 22:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695509173;
-	bh=4UfwH6VmlNKKImeBmtrRRLIIR9fj+duJLOrCRpOD3Sg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SwmsMaoE/wtzt8ANF73jdoqN1Ru9HGVV4hqFTjNe1WOKuT3CHje0vbx1KlDbsAc6o
-	 g5iK7+sxmLMMkR/RgPDW/YqsJKwkm+B8xWvdBIMYFX8XC8C0CbAPEDSVeZHbs7uDdL
-	 80aB0wNpMnyzYSbU8roADRyR2mSyW3VR4zKQHpFfk0AO+GbcieJYZ6aAZFb1EiAxLb
-	 IdLGLOKKJ1ExhV8PnLc3Xjgy9yYNDAFTwTNjmwP0Bn/XLYMGeEICfu9rVG198r4c96
-	 BGlfAnm2wavGIsOa4VqSX+EnJxUGt0Yl+ewjMowCqB8StevwLgZOKRFisAISaN3nPS
-	 yVbGkYvgtQiEA==
-Date: Sat, 23 Sep 2023 17:46:10 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kamil Paral <kparal@redhat.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230923224610.GA371821@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E048B65B;
+	Sun, 24 Sep 2023 07:49:48 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qkJrw-0003js-LP; Sun, 24 Sep 2023 09:49:32 +0200
+Message-ID: <16f0e113-9103-408f-bf5f-9f90442c99ed@leemhuis.info>
+Date: Sun, 24 Sep 2023 09:49:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTej22hWEFvMOnFfKy16tuzS_+S7kccPPYXNoGVbYMoEdA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH REGRESSION] iommu: Only allocate FQ domains for IOMMUs
+ that support them
+Content-Language: en-US, de-DE
+To: Hector Martin <marcan@marcan.st>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Joerg Roedel <jroedel@suse.de>, Neal Gompa <neal@gompa.dev>,
+ "Justin M. Forbes" <jforbes@fedoraproject.org>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev, stable@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20230922-iommu-type-regression-v1-1-1ed3825b2c38@marcan.st>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230922-iommu-type-regression-v1-1-1ed3825b2c38@marcan.st>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695541789;de4ea16e;
+X-HE-SMSGID: 1qkJrw-0003js-LP
 
-On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
-> On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > One thing I noticed, probably has nothing to do with this, but you have
-> > the "security level" set to "secure". Now this is fine and actually
-> > recommended but I wonder if anything changes if you switch that
-> > temporarily to "user"? What is happening here is that once the system
-> > enters S3 the Thunderbolt driver tells the firmware to save the
-> > connected device list, and then once it exits S3 it is expected to
-> > re-connect the PCIe tunnels of the devices on that list but this is not
-> > happening and that's why the dock "dissappears" during resume.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 22.09.23 15:40, Hector Martin wrote:
+> Commit a4fdd9762272 ("iommu: Use flush queue capability") hid the
+> IOMMU_DOMAIN_DMA_FQ domain type from domain allocation. A check was
+> introduced in iommu_dma_init_domain() to fall back if not supported, but
+> this check runs too late: by that point, devices have been attached to
+> the IOMMU, and the IOMMU driver might not expect FQ domains at
+> ops->attach_dev() time.
 > 
-> That was a great suggestion. After switching to the user security
-> level, the resume delay is gone, and my dock devices seem to be
-> working almost immediately after resume! The dmesg for that is here:
-> https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
+> Ensure that we immediately clamp FQ domains to plain DMA if not
+> supported by the driver at device attach time, not later.
 > 
-> I've done tens of cycles and haven't found any race conditions, unlike
-> with the TB assist mode. (Only once, my USB mouse wasn't working at
-> all, but that's something that occasionally happens on most docks I've
-> worked with and seems to be some different issue).
-> 
-> I'm sorry I haven't found this earlier myself. I did try switching
-> these options, but I bundled it together with enabling the TB assist
-> mode, which has quirks, so I didn't realize switching just this one
-> option might have an impact.
-> 
-> > In any case we can conclude that the commit in question has nothing to
-> > do with the issue. This is completely Thunderbolt related problem.
-> 
-> Considering the information above, does this appear to be a solely
-> dock-related issue (bugged firmware), or does it make sense to follow
-> up on this in some different kernel list? I have to say I'm completely
-> OK with running the laptop using the "user" TB security level, but if
-> you think I should follow up somewhere to get the "secure" level fixed
-> (or some workaround applied, etc), I can.
+> This regressed apple-dart in v6.5.
+> [...]
 
-I'm confused about this issue.  Correct me if I go wrong:
 
-The hierarchy is:
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-  00:1c.4 Root Port to [bus 04-3c]
-  04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
-  05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
-  07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
+#regzbot ^introduced a4fdd9762272
+#regzbot title iommu: apple-dart regressed
+#regzbot monitor:
+https://lore.kernel.org/all/20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st/
+#regzbot fix: iommu/apple-dart: Handle DMA_FQ domains in attach_dev()
+#regzbot ignore-activity
 
-With security level=secure, before e8b908146d44 ("PCI/PM: Increase
-wait time after resume"), resume takes ~5 seconds, but the hierarchy
-below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
-e8b908146d44, the same thing happens except the resume takes 60+
-seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
-below 05:01.0 work after resume.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-With security level=user, resume takes << 5 seconds regardless of
-e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
-re-enumerated (dmesg [3]).
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-So if that's all accurate, it sounds like we've always had some
-problem with security level=secure that causes the hierarchy to get
-removed and re-enumerated, and e8b908146d44 just makes this problem
-much more visible?
-
-I don't know anything at all about how Thunderbolt security levels
-work.  If "secure" means the hierarchy must be re-enumerated after
-resume, we can detect that case immediately and get on with it without
-having to wait for a timeout?
-
-Bjorn
-
-[1] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984726
-[2] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1984803
-[3] https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
