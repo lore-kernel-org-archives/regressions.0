@@ -1,157 +1,144 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0152BD279
-	for <regressions@lists.linux.dev>; Sun, 24 Sep 2023 16:17:44 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qkRnh-0002j1-KF; Sun, 24 Sep 2023 18:17:41 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-09-24]
-Date: Sun, 24 Sep 2023 16:17:40 +0000
-Message-Id: <169557219938.3206394.2779757887621800924@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448D5DF41
+	for <regressions@lists.linux.dev>; Sun, 24 Sep 2023 20:18:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF95C433C8;
+	Sun, 24 Sep 2023 20:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695586682;
+	bh=wzkKs8nM61tPb/cbpTmVydWM/rN37xJ2tQNhVuWGjn0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QSzGtzGTwcKSTw2T7rm29OuIobJa5AgJNmSmCPx5n6qiE85tFuB+20RcM2nfcti8F
+	 j3+IUvh+NNAmA07DWEP5Clu7f5KkIDtLHwg/3b70PHl8fVNzXdl78yjhy2+JVnGdcf
+	 suf4eI2qR5MvVYrhfwzNfhUXNqqvD7A/5QssnuXQWPJzOXvmr3F3ILI6Bdd/C1Ij3D
+	 OgoS+F7Qd6VBBgUnQRJcbOQIE2RrqSlfTgiRNYdru94zkborY7xRkfoCcMGnazBZ65
+	 AfsdLxqimI3ORDiC2X6JEGCRDIJZHbJZvL++d8RiTRLz/P/LGsjCf+xmewm0zYFZDp
+	 UXF+wD/GmOFkw==
+Date: Sun, 24 Sep 2023 15:18:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev, bhelgaas@google.com,
+	chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230924201800.GA375331@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695572265;81d18de9;
-X-HE-SMSGID: 1qkRnh-0002j1-KF
+In-Reply-To: <20230924132722.GE3208943@black.fi.intel.com>
 
-Hi Linus. There is not much to report wrt to regressions introduced
-during the current cycle, as many of those I tracked were fixed over the
-past week (not totally sure, but I think this includes all Guenter
-reported for -rc1). There is only one regression left that I'm aware of
-and a fix for that is under discussion already, so there is nothing to
-worry about (FWIW, there are also three vague reports, but I'll ignore
-those here).
+On Sun, Sep 24, 2023 at 04:27:22PM +0300, Mika Westerberg wrote:
+> On Sat, Sep 23, 2023 at 05:46:10PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
+> > > On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > > One thing I noticed, probably has nothing to do with this, but you have
+> > > > the "security level" set to "secure". Now this is fine and actually
+> > > > recommended but I wonder if anything changes if you switch that
+> > > > temporarily to "user"? What is happening here is that once the system
+> > > > enters S3 the Thunderbolt driver tells the firmware to save the
+> > > > connected device list, and then once it exits S3 it is expected to
+> > > > re-connect the PCIe tunnels of the devices on that list but this is not
+> > > > happening and that's why the dock "dissappears" during resume.
+> > > 
+> > > That was a great suggestion. After switching to the user security
+> > > level, the resume delay is gone, and my dock devices seem to be
+> > > working almost immediately after resume! The dmesg for that is here:
+> > > https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
+> > > 
+> > > I've done tens of cycles and haven't found any race conditions, unlike
+> > > with the TB assist mode. (Only once, my USB mouse wasn't working at
+> > > all, but that's something that occasionally happens on most docks I've
+> > > worked with and seems to be some different issue).
+> > > 
+> > > I'm sorry I haven't found this earlier myself. I did try switching
+> > > these options, but I bundled it together with enabling the TB assist
+> > > mode, which has quirks, so I didn't realize switching just this one
+> > > option might have an impact.
+> > > 
+> > > > In any case we can conclude that the commit in question has nothing to
+> > > > do with the issue. This is completely Thunderbolt related problem.
+> > > 
+> > > Considering the information above, does this appear to be a solely
+> > > dock-related issue (bugged firmware), or does it make sense to follow
+> > > up on this in some different kernel list? I have to say I'm completely
+> > > OK with running the laptop using the "user" TB security level, but if
+> > > you think I should follow up somewhere to get the "secure" level fixed
+> > > (or some workaround applied, etc), I can.
+> > 
+> > I'm confused about this issue.  Correct me if I go wrong:
+> > 
+> > The hierarchy is:
+> > 
+> >   00:1c.4 Root Port to [bus 04-3c]
+> >   04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
+> >   05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
+> >   07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
+> > 
+> > With security level=secure, before e8b908146d44 ("PCI/PM: Increase
+> > wait time after resume"), resume takes ~5 seconds, but the hierarchy
+> > below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
+> > e8b908146d44, the same thing happens except the resume takes 60+
+> > seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
+> > below 05:01.0 work after resume.
+> > 
+> > With security level=user, resume takes << 5 seconds regardless of
+> > e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
+> > re-enumerated (dmesg [3]).
+> > 
+> > So if that's all accurate, it sounds like we've always had some
+> > problem with security level=secure that causes the hierarchy to get
+> > removed and re-enumerated, and e8b908146d44 just makes this problem
+> > much more visible?
+> 
+> Yes.
+> 
+> > I don't know anything at all about how Thunderbolt security levels
+> > work.  If "secure" means the hierarchy must be re-enumerated after
+> > resume, we can detect that case immediately and get on with it without
+> > having to wait for a timeout?
+> 
+> "secure" means that the Thunderbolt device that is connected can "prove"
+> it is the device we "authorized". It basically has a random number we
+> generated flashed on the NVM. This is the security "measure" used before
+> PC world aligned to use IOMMU instead.
+> 
+> (there is an explanation of all these here:
+> https://docs.kernel.org/admin-guide/thunderbolt.html#security-levels-and-how-to-use-them).
 
-That being said, there are two other recent regression that I want to
-tell you about, as I'm not sure if they are handled as you would like
-them to be handled.
+So is there some user-level software that runs between the removal and
+re-enumeration?  Something that authorizes the 07:00.0 Upstream Port?
 
-(1) Userspace nftables v1.0.6 generated incorrect bytecode that hits a
-new kernel check introduced in 0ebc1064e4874d ("netfilter: nf_tables:
-disallow rule addition to bound chain via NFTA_RULE_CHAIN_ID")
-[v6.5-rc4, v6.4.8, v6.1.43, v5.15.124, v5.10.190]). This causes trouble
-for Debian users, as the latest version apparently was using such a
-nftables release[1]. Pablo provided patches for the Debian devs to fix
-their nftables package[2]; I asked if this could be fixed on the kernel
-level and got this reply from Florian: "So while this can be
-theoretically fixed in the kernel I don't see a sane way to do it.
-Error unwinding / recovery from deeply nested errors is already too
-complex for my taste."[3]. That's not really how we normally handle the
-"no regression" rule, OTOH due to what Florian said might be the right
-thing to do; but it's a judgement call, hence I wanted to tell you about it.
+> Now, in case of resume the Thunderbolt firmware is expected to connect
+> the PCIe tunnel before the OS gets to resume its PCIe stack but this is
+> not happening in this particular system when the security level is set
+> to "secure". It could be firmware issue, and also if the BIOS settings
+> get changed from the defaults it is entirely possible that the system
+> enters paths that are not fully validated. Yes, changing security level
+> should definitely work and the PCIe tunnel should be properly
+> established but in any case this is Thunderbolt issue not PCIe issue.
+> 
+> I don't recall if I suggested this already but if not, try to see there
+> is a firmware update for your system. Lenovo supports LVFS so if there
+> is newer one fwupd should allow you to upgrade it.
 
-[1] https://lore.kernel.org/all/20230911213750.5B4B663206F5@dd20004.kasserver.com/
-[2] https://lore.kernel.org/all/ZP+bUpxJiFcmTWhy@calendula/
-[3] https://lore.kernel.org/all/20230912102701.GA13516@breakpoint.cc/
+I think you have suggested a firmware update, but I don't think that's
+a great solution for most users.  An ordinary user who has the
+security level set to "secure" and updates to a v6.4 kernel is just
+going to think resume is broken.  That user will not be willing or
+able to diagnose it as a security setting that could be changed or
+firmware that could be updated.
 
+It would be ideal if we could make "secure" resume as fast as "user"
+resume, but at the very least, I think we need to make it no worse
+than it was in v6.3.
 
-(2) Nearly six weeks ago there was a report that 101bd907b4244a ("misc:
-rtsx: judge ASPM Mode to set PETXCFG Reg") [v6.5-rc6, v6.4.11, v6.1.46,
-v5.15.127] broke booting various laptops (many or all of them are Dell).
-This apparently plagues quite a few users, hence there were multiple
-reports (see [2] for those I'm aware of). At least Fedora, openSUSE, and
-nixOS have meanwhile reverted the change in their latest stable kernels
-[3]. I one and a half week proposed to revert the culprit when I fully
-noticed it's impact, but Greg wanted to give the developers more time.
-We finally have a fix in sight now [5]; someone affected replied that it
-helps. Not sure what's the right way forward now. But overall this to me
-feels a lot like "this is not how a regression should be handled".
-That's why I wanted to bring it up here in case to ensure your are aware
-of this.
-
-[1]
-https://lore.kernel.org/all/5f968b95-6b1c-4d6f-aac7-5d54f66834a8@sapience.com/
-https://lore.kernel.org/all/30b69186-5a6e-4f53-b24c-2221926fc3b4@sapience.com/
-
-[2]
-https://bugs.archlinux.org/task/79439#comment221866
-https://bugzilla.kernel.org/show_bug.cgi?id=217802
-https://bugzilla.suse.com/show_bug.cgi?id=1214428
-https://github.com/NixOS/nixpkgs/issues/253418
-https://lore.kernel.org/all/5DHV0S.D0F751ZF65JA1@gmail.com/
-
-[3]
-https://gitlab.com/cki-project/kernel-ark/-/commit/80c615ec2edb4aadded21fe924e2caa172d59577
-https://github.com/openSUSE/kernel-source/commit/1b02b1528a26f4e9b577e215c114d8c5e773ee10
-https://github.com/NixOS/nixpkgs/pull/255824
-
-[4]
-https://lore.kernel.org/all/2023091333-fiftieth-trustless-d69d@gregkh/
-
-[5]
-https://lore.kernel.org/all/37b1afb997f14946a8784c73d1f9a4f5@realtek.com/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 1 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] mm, memcg: runc fails to gather cgroup statistics
------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
-https://lore.kernel.org/lkml/20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
-
-By Jeremi Piotrowski; 4 days ago; 25 activities, latest 1 days ago.
-Introduced in 86327e8eb94c (v6.6-rc1)
-
-Fix incoming:
-* mm, memcg: reconsider kmem.limit_in_bytes deprecation
-  https://lore.kernel.org/lkml/d44b0746-2aa6-4608-ab22-bcb9efb27a26@leemhuis.info/
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169436306694.2246708.7828658786502488268@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+Bjorn
