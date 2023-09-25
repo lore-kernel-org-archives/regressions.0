@@ -1,179 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CDA63CB
-	for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 04:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695617973; x=1727153973;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=pdaB8lXOLYn4cozBzE1hRgyOBU92AGkqXVw8MKc21s8=;
-  b=E97U9vv3EM2xaCJIoYalZX034YYpbRu1oG0lVnRXvuZM4cF8pN/bwwyx
-   ihqR9rd+eG51Fm0iBlkbs2vRSID2kkpeNes8HvrbqjN+aQE3ytTAt9iOT
-   ecMf8QKQJZMftdKEsY5X0uCbt4n2XdIiFq534udgSyWERFs3FhINWjYxg
-   IPrv5Mnod+fauXZBOpn7lwX622Gl9uQokNisRIWwSoe675XttaMqzhdGv
-   zfo+WmS6QqbQcQeLY+x1Dzez3ZMtt5Z9rzYsljOWDQbbep4Iek9dbsMo7
-   pCbuosMXGVCs5ZM6wKyLzYKpMP2EzTwktapOg5oZWWp56OM26wKVZ0i0W
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="384996312"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="384996312"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 21:59:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="741781123"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="741781123"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 24 Sep 2023 21:59:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 07CDB1C7; Mon, 25 Sep 2023 07:59:28 +0300 (EEST)
-Date: Mon, 25 Sep 2023 07:59:28 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev, bhelgaas@google.com,
-	chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230925045928.GH3208943@black.fi.intel.com>
-References: <20230924132722.GE3208943@black.fi.intel.com>
- <20230924201800.GA375331@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E9A6FBB;
+	Mon, 25 Sep 2023 07:40:13 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 44D3C21857;
+	Mon, 25 Sep 2023 07:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1695627605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cSu4wGVek0BpbH4wGaaZGcCAl5X/0fUdoCQft3qzdm0=;
+	b=CNO4eidZTSFsEwCrbZKgUsxjnL0x2ozTqiff12xj46x8FFPA5YgDrohM6ns2BU5VGOaQ1F
+	atOF8BNkP153oygRxIF49wztP6mMmKBQVsAqrPs+gnV1VGL6qdd1jzGPqDpNVSUTHq2bwb
+	KSv8Q+xk7S/tEvdGUx0YTNIFepXXP5w=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2697A13A67;
+	Mon, 25 Sep 2023 07:40:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id ZSFfBlU5EWUqQQAAMHmgww
+	(envelope-from <mhocko@suse.com>); Mon, 25 Sep 2023 07:40:05 +0000
+Date: Mon, 25 Sep 2023 09:40:04 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
+	Shakeel Butt <shakeelb@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, mathieu.tortuyaux@gmail.com
+Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
+ kmem.limit_in_bytes
+Message-ID: <ZRE5VJozPZt9bRPy@dhcp22.suse.cz>
+References: <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
+ <CALvZod7E_Jm9y+40OKtLs5EFA0ptKGjoe2BU58SY29pUiPc93g@mail.gmail.com>
+ <ZQskGGAwlsr1YxAp@dhcp22.suse.cz>
+ <CALvZod6b3=+=xXEUeWOQW3t_URJpeeVX46WjBHv5BS+436KoFA@mail.gmail.com>
+ <ZQtRKzUOfdaVKRCF@dhcp22.suse.cz>
+ <CALvZod5DSMoEGY0CwGz=P-2=Opbr4SmMfwHhZRROBx7yCaBdDA@mail.gmail.com>
+ <ZQv2MXOynlEPW/bX@dhcp22.suse.cz>
+ <f01b5d93-0f43-41c8-b3d8-40ef9696dcf8@linux.microsoft.com>
+ <ZQwnUpX7FlzIOWXP@dhcp22.suse.cz>
+ <20230922133017.GD124289@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230924201800.GA375331@bhelgaas>
+In-Reply-To: <20230922133017.GD124289@cmpxchg.org>
 
-On Sun, Sep 24, 2023 at 03:18:00PM -0500, Bjorn Helgaas wrote:
-> On Sun, Sep 24, 2023 at 04:27:22PM +0300, Mika Westerberg wrote:
-> > On Sat, Sep 23, 2023 at 05:46:10PM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Aug 25, 2023 at 10:42:55AM +0200, Kamil Paral wrote:
-> > > > On Thu, Aug 24, 2023 at 1:43 PM Mika Westerberg
-> > > > <mika.westerberg@linux.intel.com> wrote:
-> > > > > One thing I noticed, probably has nothing to do with this, but you have
-> > > > > the "security level" set to "secure". Now this is fine and actually
-> > > > > recommended but I wonder if anything changes if you switch that
-> > > > > temporarily to "user"? What is happening here is that once the system
-> > > > > enters S3 the Thunderbolt driver tells the firmware to save the
-> > > > > connected device list, and then once it exits S3 it is expected to
-> > > > > re-connect the PCIe tunnels of the devices on that list but this is not
-> > > > > happening and that's why the dock "dissappears" during resume.
-> > > > 
-> > > > That was a great suggestion. After switching to the user security
-> > > > level, the resume delay is gone, and my dock devices seem to be
-> > > > working almost immediately after resume! The dmesg for that is here:
-> > > > https://bugzilla-attachments.redhat.com/attachment.cgi?id=1985262
-> > > > 
-> > > > I've done tens of cycles and haven't found any race conditions, unlike
-> > > > with the TB assist mode. (Only once, my USB mouse wasn't working at
-> > > > all, but that's something that occasionally happens on most docks I've
-> > > > worked with and seems to be some different issue).
-> > > > 
-> > > > I'm sorry I haven't found this earlier myself. I did try switching
-> > > > these options, but I bundled it together with enabling the TB assist
-> > > > mode, which has quirks, so I didn't realize switching just this one
-> > > > option might have an impact.
-> > > > 
-> > > > > In any case we can conclude that the commit in question has nothing to
-> > > > > do with the issue. This is completely Thunderbolt related problem.
-> > > > 
-> > > > Considering the information above, does this appear to be a solely
-> > > > dock-related issue (bugged firmware), or does it make sense to follow
-> > > > up on this in some different kernel list? I have to say I'm completely
-> > > > OK with running the laptop using the "user" TB security level, but if
-> > > > you think I should follow up somewhere to get the "secure" level fixed
-> > > > (or some workaround applied, etc), I can.
-> > > 
-> > > I'm confused about this issue.  Correct me if I go wrong:
-> > > 
-> > > The hierarchy is:
-> > > 
-> > >   00:1c.4 Root Port to [bus 04-3c]
-> > >   04:00.0 Upstream Port (Thunderbolt) to [bus 05-3c]
-> > >   05:01.0 Downstream Port (Thunderbolt) to [bus 07-3b]
-> > >   07:00.0 Upstream Port (Thunderbolt) to [bus 08-3b]
-> > > 
-> > > With security level=secure, before e8b908146d44 ("PCI/PM: Increase
-> > > wait time after resume"), resume takes ~5 seconds, but the hierarchy
-> > > below 05:01.0 gets removed and re-enumerated (dmesg [1]).  After
-> > > e8b908146d44, the same thing happens except the resume takes 60+
-> > > seconds (dmesg [2]).  In both cases, the devices (USB mouse, LAN, etc)
-> > > below 05:01.0 work after resume.
-> > > 
-> > > With security level=user, resume takes << 5 seconds regardless of
-> > > e8b908146d44, and the hierarchy below 05:01.0 does not get removed and
-> > > re-enumerated (dmesg [3]).
-> > > 
-> > > So if that's all accurate, it sounds like we've always had some
-> > > problem with security level=secure that causes the hierarchy to get
-> > > removed and re-enumerated, and e8b908146d44 just makes this problem
-> > > much more visible?
-> > 
-> > Yes.
-> > 
-> > > I don't know anything at all about how Thunderbolt security levels
-> > > work.  If "secure" means the hierarchy must be re-enumerated after
-> > > resume, we can detect that case immediately and get on with it without
-> > > having to wait for a timeout?
-> > 
-> > "secure" means that the Thunderbolt device that is connected can "prove"
-> > it is the device we "authorized". It basically has a random number we
-> > generated flashed on the NVM. This is the security "measure" used before
-> > PC world aligned to use IOMMU instead.
-> > 
-> > (there is an explanation of all these here:
-> > https://docs.kernel.org/admin-guide/thunderbolt.html#security-levels-and-how-to-use-them).
+On Fri 22-09-23 09:30:17, Johannes Weiner wrote:
+> On Thu, Sep 21, 2023 at 01:21:54PM +0200, Michal Hocko wrote:
+> > @@ -3097,6 +3097,7 @@ static void obj_cgroup_uncharge_pages(struct obj_cgroup *objcg,
+> >  static int obj_cgroup_charge_pages(struct obj_cgroup *objcg, gfp_t gfp,
+> >  				   unsigned int nr_pages)
+> >  {
+> > +	struct page_counter *counter;
+> >  	struct mem_cgroup *memcg;
+> >  	int ret;
+> >  
+> > @@ -3107,6 +3108,10 @@ static int obj_cgroup_charge_pages(struct obj_cgroup *objcg, gfp_t gfp,
+> >  		goto out;
+> >  
+> >  	memcg_account_kmem(memcg, nr_pages);
+> > +
+> > +	/* There is no way to set up kmem hard limit so this operation cannot fail */
+> > +	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+> > +		WARN_ON(!page_counter_try_charge(&memcg->kmem, nr_pages, &counter));
 > 
-> So is there some user-level software that runs between the removal and
-> re-enumeration?  Something that authorizes the 07:00.0 Upstream Port?
-
-No.
-
-They get "authorized" upon plug by boltd based on user decision and
-after that the firmware should keep them authorized as long as the
-device is connected, including also resume.
-
-> > Now, in case of resume the Thunderbolt firmware is expected to connect
-> > the PCIe tunnel before the OS gets to resume its PCIe stack but this is
-> > not happening in this particular system when the security level is set
-> > to "secure". It could be firmware issue, and also if the BIOS settings
-> > get changed from the defaults it is entirely possible that the system
-> > enters paths that are not fully validated. Yes, changing security level
-> > should definitely work and the PCIe tunnel should be properly
-> > established but in any case this is Thunderbolt issue not PCIe issue.
-> > 
-> > I don't recall if I suggested this already but if not, try to see there
-> > is a firmware update for your system. Lenovo supports LVFS so if there
-> > is newer one fwupd should allow you to upgrade it.
+> This hunk doesn't look quite right.
 > 
-> I think you have suggested a firmware update, but I don't think that's
-> a great solution for most users.  An ordinary user who has the
-> security level set to "secure" and updates to a v6.4 kernel is just
-> going to think resume is broken.  That user will not be willing or
-> able to diagnose it as a security setting that could be changed or
-> firmware that could be updated.
+> static void memcg_account_kmem(struct mem_cgroup *memcg, int nr_pages)
+> {
+> 	mod_memcg_state(memcg, MEMCG_KMEM, nr_pages);
+> 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
+> 		if (nr_pages > 0)
+> 			page_counter_charge(&memcg->kmem, nr_pages);
+> 		else
+> 			page_counter_uncharge(&memcg->kmem, -nr_pages);
+> 	}
+> }
+> 
+> Other than that, please add
 
-It does not affect every single system there with security level set to
-"secure". It is just this one AFAICT. Like I said the firmware is
-expected to connect the PCIe tunnel (and for some unknown reason in this
-particular system it does not).
+Good point. I have missed a8c49af3be5f ("memcg: add per-memcg total kernel memory stat")
+introduced in 4.18
 
-> It would be ideal if we could make "secure" resume as fast as "user"
-> resume, but at the very least, I think we need to make it no worse
-> than it was in v6.3.
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Well what else can we do here? The link goes down regardless what we do
-in the PCI stack. If you want to revert the patch that caused the delay,
-fine but that does not cure the problem tha thet device stack get torn
-down upon resume. For instance if there is USB stick connected to the
-dock and the filesystem is mounted, all that is gone upon resume
-regardless of the delay. If you want to detect the "secure" vs. "user"
-fine feel free to do so but keep in mind that there are other systems
-out there where this works just fine so avoid breaking them.
+Fixed version below. Andrew, it seems we have a good consensus for this.
+Could you queue this up and send it to Linus please?
+--- 
+From 8c3cbe68bba0fe5103d8fe73a06b3608ed49bda0 Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Thu, 21 Sep 2023 09:38:29 +0200
+Subject: [PATCH] mm, memcg: reconsider kmem.limit_in_bytes deprecation
+
+This reverts commits 86327e8eb94c ("memcg: drop kmem.limit_in_bytes")
+and partially reverts 58056f77502f ("memcg, kmem: further deprecate
+kmem.limit_in_bytes") which have incrementally removed support for the
+kernel memory accounting hard limit. Unfortunately it has turned out
+that there is still userspace depending on the existence of
+memory.kmem.limit_in_bytes [1]. The underlying functionality is not
+really required but the non-existent file just confuses the userspace
+which fails in the result. The patch to fix this on the userspace side
+has been submitted but it is hard to predict how it will propagate
+through the maze of 3rd party consumers of the software.
+
+Now, reverting alone 86327e8eb94c is not an option because there is
+another set of userspace which cannot cope with ENOTSUPP returned when
+writing to the file. Therefore we have to go and revisit 58056f77502f
+as well. There are two ways to go ahead. Either we give up on the
+deprecation and fully revert 58056f77502f as well or we can keep
+kmem.limit_in_bytes but make the write a noop and warn about the fact.
+This should work for both known breaking workloads which depend on the
+existence but do not depend on the hard limit enforcement.
+
+Note to backporters to stable trees. a8c49af3be5f ("memcg: add per-memcg
+total kernel memory stat") introduced in 4.18 has added memcg_account_kmem
+so the accounting is not done by obj_cgroup_charge_pages directly for v1
+anymore. Prior kernels need to add it explicitly (thanks to Johannes for
+pointing this out).
+
+[1] http://lkml.kernel.org/r/20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+Cc: stable
+Fixes: 86327e8eb94c ("memcg: drop kmem.limit_in_bytes")
+Fixes: 58056f77502f ("memcg, kmem: further deprecate kmem.limit_in_bytes")
+Acked-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ Documentation/admin-guide/cgroup-v1/memory.rst |  7 +++++++
+ mm/memcontrol.c                                | 14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/Documentation/admin-guide/cgroup-v1/memory.rst b/Documentation/admin-guide/cgroup-v1/memory.rst
+index 5f502bf68fbc..ff456871bf4b 100644
+--- a/Documentation/admin-guide/cgroup-v1/memory.rst
++++ b/Documentation/admin-guide/cgroup-v1/memory.rst
+@@ -92,6 +92,13 @@ Brief summary of control files.
+  memory.oom_control		     set/show oom controls.
+  memory.numa_stat		     show the number of memory usage per numa
+ 				     node
++ memory.kmem.limit_in_bytes          Deprecated knob to set and read the kernel
++                                     memory hard limit. Kernel hard limit is not
++                                     supported since 5.16. Writing any value to
++                                     do file will not have any effect same as if
++                                     nokmem kernel parameter was specified.
++                                     Kernel memory is still charged and reported
++                                     by memory.kmem.usage_in_bytes.
+  memory.kmem.usage_in_bytes          show current kernel memory allocation
+  memory.kmem.failcnt                 show the number of kernel memory usage
+ 				     hits limits
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index a4d3282493b6..63bdaab2a906 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3097,6 +3097,7 @@ static void obj_cgroup_uncharge_pages(struct obj_cgroup *objcg,
+ static int obj_cgroup_charge_pages(struct obj_cgroup *objcg, gfp_t gfp,
+ 				   unsigned int nr_pages)
+ {
++	struct page_counter *counter;
+ 	struct mem_cgroup *memcg;
+ 	int ret;
+ 
+@@ -3867,6 +3868,13 @@ static ssize_t mem_cgroup_write(struct kernfs_open_file *of,
+ 		case _MEMSWAP:
+ 			ret = mem_cgroup_resize_max(memcg, nr_pages, true);
+ 			break;
++		case _KMEM:
++			pr_warn_once("kmem.limit_in_bytes is deprecated and will be removed. "
++				     "Writing any value to this file has no effect. "
++				     "Please report your usecase to linux-mm@kvack.org if you "
++				     "depend on this functionality.\n");
++			ret = 0;
++			break;
+ 		case _TCP:
+ 			ret = memcg_update_tcp_max(memcg, nr_pages);
+ 			break;
+@@ -5077,6 +5085,12 @@ static struct cftype mem_cgroup_legacy_files[] = {
+ 		.seq_show = memcg_numa_stat_show,
+ 	},
+ #endif
++	{
++		.name = "kmem.limit_in_bytes",
++		.private = MEMFILE_PRIVATE(_KMEM, RES_LIMIT),
++		.write = mem_cgroup_write,
++		.read_u64 = mem_cgroup_read_u64,
++	},
+ 	{
+ 		.name = "kmem.usage_in_bytes",
+ 		.private = MEMFILE_PRIVATE(_KMEM, RES_USAGE),
+-- 
+2.30.2
+
+-- 
+Michal Hocko
+SUSE Labs
