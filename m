@@ -1,156 +1,100 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2073.outbound.protection.outlook.com [40.107.212.73])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBCC125D8
-	for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 13:25:37 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iPBIHdWXkf5NcjumMO2h5H5qq/evhUS99xgIVS/cSzmrNalMqzXkwtmClQnO8NojJNwd6NByLAxc7TDLoGB6rXF5ezzWAcTyQu4lryEYSrM7UbYdekKo3DYAxwyZfyXhlPqDFBeQMr2B3eU0x1rvCxKK6ZZwAlovLiZ3VpmitYwCktuXHDqgHeYnSvfbREyebAvzrKVCY+W5ii3mNB1IPK620f9b4VJw7EQju93D5QvBLfHI+DMWjWrhfLCS6793CUqt8pXjgEtyGuEQlAu5debNObbDkgKmHIiQcPMYIwkMO6t1Cv3RnHH2G3QIDdrqJtG6Ql72KSHmbe8mwZ86LQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2xjCa6tKMKiA69jCD8NO10QS+q3XbvKykd1Ez6jAdpc=;
- b=KOEteKqGrdUuYtOJpieFcxEisDIMkozy9edb8v+DRu7MpDsFiOhvC+Q8FIXZJOuzNq4T/Of4+muoPKdg8g05PFXbJ2X+3NnJ+QncRLsY+bVypMRCehbwd0NHohn+MW8GVHQJoHQcRXqBqUqv5nLyqW4gkwnx/OzsB5OPjHLvpM8CwB11O0hn9PxexQp3xscwfj9wjz4zL8J5i+pQvS3lAtF8Fp7ZtMcGoiQeUYtOb+lg/9vI91zBctqrgWLOqkJmz2VGSil6jYPKdieCU/1qdD+j437q5pfqIxK73x65n9vrLHhXUUv/6db+qPP2C/dBa14pfe/7jCYptgJgjx6x4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2xjCa6tKMKiA69jCD8NO10QS+q3XbvKykd1Ez6jAdpc=;
- b=pGAMCqFGlSXSzMh/UC0NkdDxdF7rTUErMETpAMduwpNc0IWacHah84BydnXsdxLrjmVojMZxNqS/2GbOd3QtIFE+PHG1GELGcWiwWoAV8C4BMeP+Z/CMLof3++44iz65X5Cl71is64pCwOTaYtO4xgHVijMsm1dFSXQ8QhiGOow=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS0PR12MB6437.namprd12.prod.outlook.com (2603:10b6:8:cb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.34; Mon, 25 Sep
- 2023 13:25:34 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4%3]) with mapi id 15.20.6813.017; Mon, 25 Sep 2023
- 13:25:34 +0000
-Message-ID: <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
-Date: Mon, 25 Sep 2023 08:25:31 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: s2idle stopped working with 6.6-rc on Thinkpad T14 G1 (AMD)
-Content-Language: en-US
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0083.namprd04.prod.outlook.com
- (2603:10b6:806:121::28) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461A91B299
+	for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 13:45:51 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qkluH-0001kB-8Q; Mon, 25 Sep 2023 15:45:49 +0200
+Message-ID: <e049aa41-b136-4071-850f-d06b47fe67a1@leemhuis.info>
+Date: Mon, 25 Sep 2023 15:45:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB6437:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8592c461-bbdf-4163-63e2-08dbbdcae62a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HsGxeuO7CgJ+GcKRg2USyyJPNkD+LrWEvvDzJ04Ud6tSc06NsjighgUnUzXm+FKUtlnfUtF9o2vErpSuUkzN1ZU/euv4Z3DvV8Oqjq+yL1/Hb92zOoQXpu8OdeikQBjo9G9g4bCDaA7RZs/r0kuA4F3wxekPYNVSMToVmdL6Vr+lj8a78GzHzRh6kXoAgLOLPoelZeMeiF07jz3mzho30WVbOL9EOBfbVL/fVcOLVMhSfPvPG3p68Lcrij6cB6W07b+lz0PR1FufFz/aEyLINhql/Cb9F/1TLFo980qFWNkzo0SDDplLCjZzymEFyOKD8Y1DQWwKou0JfSzZeRrFB5gbyNgT60tKKRTR/z4rZD4PzorlHyAu3EA+z5YClasFni5pk9Vnmz3G13eL56yenmC+IqzCVfBTSHeTikhs2dci/Z5tfYfx5xDAyoxtzGL9xUwRXqP0EIzsjPl/u8nALwABTTUy4NeO4BBno5BGRxGeCDUuHVr3/hgxyDh4XtVqT1HlyPEnbTsmiQ5Bw5n8O7eIA3dZ+BN5HwNxGnehNhudad03PsmoSA6sv04fIU8HwGE9kMkPmkNHTcyGRfiT+OWzXVQhlqc7Ca8yJUwZjdSeknBWwrCN6BWhNLjNF6ecLq7aFHVTp6ux4ApQTee1CA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(396003)(136003)(376002)(366004)(230922051799003)(186009)(1800799009)(451199024)(86362001)(38100700002)(31696002)(36756003)(478600001)(2906002)(966005)(6916009)(6666004)(54906003)(66476007)(66946007)(66556008)(6512007)(2616005)(6486002)(4326008)(8936002)(8676002)(6506007)(5660300002)(44832011)(31686004)(316002)(41300700001)(83380400001)(53546011)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d3JKVjZpZUtIZWQyd2l2TVNjM3ZCUXBHYU94MHR6aHI4UEpmOEJtWFdpK0NO?=
- =?utf-8?B?VUlUU09CaGF3WC84WS90Y3ZuVDgzdG5kVytxOVg2RzUxcW5tQXgybitCVHd0?=
- =?utf-8?B?dm5DOHJKVUozMjBsVnJicENWQkNpd0pZZWRNc1Q1M09tM2tTZGlhVzZ4dDh3?=
- =?utf-8?B?Ti9uVHViU1ZpWVc5RXFXSXhaeU9QaVExUi9QM28zU2FyakdpTFA3RzY2amR0?=
- =?utf-8?B?R0F6VXhsbm80UlJhRzNJZVp5QVJGVjBia21nTWFtaHMrc1pEWjFUY2FFdERX?=
- =?utf-8?B?eUZ4VlJyQWNHOFRBWmYvdmNjalVkSytSNldHMVc1dlQ4TlB4dWcrcGp5dkMw?=
- =?utf-8?B?WU9lZWVkTUVUelF3YS9JUmRDWVBCR0NwQ3dvMHROV3Y5SHFxT3pBNmN6QXdt?=
- =?utf-8?B?c3FxQmZ4TGZMaXFFK2VwMWdsam5QWDMxak11dFhoemc3Z29DT0ptWkdYbWU5?=
- =?utf-8?B?TG5jd0dKQTREY0V4RFJpbkx1MDN1SjRNK3RPREFsdEZXY09YZlZCb2JwQ2Z6?=
- =?utf-8?B?dVdLQlVhYlVJcjdaMkNBUXhqQWszajgrK1QvVzBzNUNXZWl6dDkvYkhMcG5K?=
- =?utf-8?B?RW10QkNWZjllL2NFa3lQdTBXS3FkdWtXckUvc3lFWVhGWnZXRjdzWUxPWStZ?=
- =?utf-8?B?N2R6RlBqUVlmN3hocHpjM3d3L1I2b3NWdTYxbEpmTVlOYmFCaEg5Nkxrd0Ey?=
- =?utf-8?B?ek1WNHJVN3oySkpDS1lhdU00NGhmSmdZVDlmc3BqeDVTckRUVk5ZSVYxSHd0?=
- =?utf-8?B?VFRSckFkZVJqOWFBVnpHN3FyMnJBRjhyODAvdUdVLzlrRWIwRkZncFdSWmFB?=
- =?utf-8?B?VTNYWW1BNVB4MGx1RlFGa01jOWVFeHZnc3VsSDFuNnBDVmZQUEU1a1ZXZExF?=
- =?utf-8?B?eUh2SEpRUXF1OEFxeUt4TEZTdVFnY3NLVTB0a1puRjJjOE13SmFwdnZtNGQz?=
- =?utf-8?B?R2xDMXVHSkZpZC83Q0dWam5xZ241S3RwQy84Y0dCc3F1MWhTTUo3UjI5KzV4?=
- =?utf-8?B?S1ZCZ0h5Tmt4QUdMMXBwZnNhL2d6OGE0UjBtZ3dZUlh2NFVZWml2THZuT05C?=
- =?utf-8?B?SnYrYTRvZ2liMWZhenlJUERwa05xOFVaRHVaZXozZE0yVVpxckZpU0NSVElI?=
- =?utf-8?B?M3UvODNRVG5EOVNZc0RFdGtnWWRNRkg3OFdhTUFNT2hTcHNGSVk1cXEybVFk?=
- =?utf-8?B?dHBBSkQzSzFPczVIQXRTczFmMmxoR0VtdFZYMmNhc0tSM1hxRTNXY1d3eXRy?=
- =?utf-8?B?UDNTN3VwWk1vUXB3aFM1bStKWUw5YmR3L1lucE55dXVENnR1c3lzTjhvVVBt?=
- =?utf-8?B?WGpBa0c1SURaallXRS9NajhUTzlkS2hZMDZjS0RUdTVKSVJ1d3pGMEpoUXU0?=
- =?utf-8?B?SFRJQzgwRVdVOTFCWXVxMjMvM3gxOFo5N1doMjRwYWNJWjZnOEloRjg2NjNx?=
- =?utf-8?B?dkZKYnhlZzV4eUdIbDNodWtPY1ZMVmlOTnNWbkt2UnN0bzRPaGVwY1FTcjBK?=
- =?utf-8?B?alE5RzRpemEralFVeHQxQXRwSG1mNzlqcUROMTZqakNwbFc2SUkvTTk5RnFo?=
- =?utf-8?B?NExFdUhXVkRxd0krWkdYazEvR2VtbVREM0s3d3hDVDNUamVxMkRaa1J0WXE2?=
- =?utf-8?B?TFdTc3RLeHIybWtGalN3VUtIYytiNEhSZVZHcnUvTVU0SG5KdzZFaXI1elhG?=
- =?utf-8?B?VlJXb2VLVER6YzBZQXpEL0hQNjBhQUQzSVB2d1JwdUxYSG1LY0dmNGovRVV6?=
- =?utf-8?B?UnFDbUo3a2hBQlJ6OTYwYUVvNnZWNUdZcHNEcXpybWl1WGF0MWJLZW82bWFH?=
- =?utf-8?B?ejg4QzllS0JzU2JHWjNuWFBzSW5Lb3lPOHlnV1ZBY3V6OUdNKzFkY25LZHVS?=
- =?utf-8?B?Zkw0WUtnakIxL0R3OE1lenBJTThDV1ZCa01IL3gxQkc0ZGtZM3BWTHF0RFFt?=
- =?utf-8?B?WGdYRGFHYjl2cC9YMHVUWTMxYTF2eEhCQnE3aEkzakYwRkhLazArdHR0amZZ?=
- =?utf-8?B?UDR3d1pSWit5dXU5TlRrN1pLYXFPcExFTWRZcTBuUTQ5Z2FiWTBINFU1QWJR?=
- =?utf-8?B?bUxMdHZKNkZXYTI0YUtDTHdadUQySWhZL214L2RSaHF4SzlKTHJCTDRsT2du?=
- =?utf-8?Q?14BYkpHUxnNdeyTaeUdlzxf0A?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8592c461-bbdf-4163-63e2-08dbbdcae62a
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2023 13:25:34.7403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UzV/+KxOI5DKzxM/fWbLK1oM3MF8i28intNTBtkbOw4bjZktHU/w1rQzTl08DqmcT9MG8BNxHphRlSDKjijXhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6437
+User-Agent: Mozilla Thunderbird
+Subject: Re: s2idle stopped working with 6.6-rc on Thinkpad T14 G1 (AMD)
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
+ <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1695649551;a712ef3c;
+X-HE-SMSGID: 1qkluH-0001kB-8Q
 
-On 9/25/2023 05:55, Thorsten Leemhuis wrote:
-> Hi Mario! Did you by chance hear anything about lock-ups on resume with
-> mainline affecting AMD systems? I'm asking, as s2idle stopped working
-> for me with 6.6-rc on my Thinkpad T14 G1 (AMD). 
+On 25.09.23 15:25, Mario Limonciello wrote:
+> On 9/25/2023 05:55, Thorsten Leemhuis wrote:
+>> Hi Mario! Did you by chance hear anything about lock-ups on resume with
+>> mainline affecting AMD systems? I'm asking, as s2idle stopped working
+>> for me with 6.6-rc on my Thinkpad T14 G1 (AMD). 
+> You're the first report I've heard of this.
 
-You're the first report I've heard of this.  I've personally done s2idle 
-on 6.6-rc1 + patch to fix the UCSI issue and 6.6-rc2 on a newer model 
-(Lenovo Z13).
+Thx for taking the time and replying.
 
-I haven't checked 6.6-rc3.
+> Yeah not too much useful stuff here unfortunately.  Can you check
+> /var/lib/systemd/pstore to see if you got a traceback for whatever
+> caused the problem?
 
-> I'm as of now not sure
-> exactly when the problem started, as 6.6-rc1 didn't boot for me due to
-> another regression fixed for -rc2. But 6.6-rc2 was affected and -rc3
-> still is. Haven't found time for a bisection yet and will unlikely to be
-> so in the next two or three days, that's why I thought "ask Mario, with
-> a bit of luck he might be aware of a problem or even a fix".
+Sadly nothing there.
+
+>> Dmesg for 6.6-rc3 (with a USB-C dock, but problem happens without it,
+>> too):
+>> https://www.leemhuis.info/files/misc/dmesg-6.6_rc3
 > 
+> Being G1, can you try "amdgpu.mcbp=0" on kernel command line?
 
-For any bisect steps that are failing to boot, I suggest you either 
-compile without UCSI support (it shouldn't be critical) or apply
+Just tried it, but didn't help.
 
-f26a679ed799 ("usb: typec: ucsi: Fix NULL pointer dereference")
+Guess it bisection time then...
 
-> FWIW, I ran your amd_s2idle.py script, but the machine seems to lock up
-> hard on resume, so I guess it's not much or help.
-> 
-> https://www.leemhuis.info/files/misc/s2idle_report-6.5.4-2023-09-25.txt
-> https://www.leemhuis.info/files/misc/s2idle_report-6.6_rc3-2023-09-25.txt
-> 
-
-Yeah not too much useful stuff here unfortunately.  Can you check 
-/var/lib/systemd/pstore to see if you got a traceback for whatever 
-caused the problem?
-
-> Dmesg for 6.6-rc3 (with a USB-C dock, but problem happens without it, too):
-> https://www.leemhuis.info/files/misc/dmesg-6.6_rc3
-> 
-> Ciao, Thorsten
-> 
-> #regzbot introduced v6.5..v6.6-rc2
-
-Being G1, can you try "amdgpu.mcbp=0" on kernel command line?
-
+Thx again for your reply. Ciao, Thorsten
