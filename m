@@ -1,80 +1,138 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8449A273CB
-	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 11:51:25 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ql6b3-0004gD-Li; Tue, 26 Sep 2023 13:51:21 +0200
-Message-ID: <2e9c9b6a-daee-4d6d-ba93-47965fa2b443@leemhuis.info>
-Date: Tue, 26 Sep 2023 13:51:20 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4172E625
+	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 14:31:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402E8C433CA
+	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 14:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695738689;
+	bh=mkBLXj+ramnSsuiPXWmKzHsmrk5qMxt2DFlL297W4FA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TJilO/40mgXdgOGGhALv4oupM32sdOjtdFKEbNNlk88oYRYcwCXHuIYEeIMNwp4xE
+	 RHC4qHbiG9UPZPQOrMQiQwl3cRgj6oex8avRMCx522sVcS7AwoV7HTejgSkBAfuaKa
+	 AVCVHTe27JGRYzI5/+jGsNU1375dfdaklDuraT5S35XJPcubje51krDVPg2amZKmAw
+	 6qimA8bAsA7rKw4BVgge+rXV1Si9qHy0bheWVz/Y9rskbEONGGF1cafZoqg84VAUkM
+	 jc8lVgL/kQ5ydHOss6k5u0mfczZzgpjmVgDPIYJbGY83jQPSizoRO23SjfJFLUW8fg
+	 cqlOnmZ/BYnMA==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2bff7d81b5eso152092401fa.0
+        for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 07:31:29 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwRH/nJ7lgngrwNJvRQzx94vnVdPUgqgU29pkdsxzerzRoNbSz7
+	xzPwNYNsP2y8whL86/reWjMBXcDIzvknyd0NiOk=
+X-Google-Smtp-Source: AGHT+IGCokDnEGgmKMUa491gE66S/SBZNnLYF/KOknaoXZlpK861avLg1M3E57GUJe37zXMdTyz6QECZkuhKNtYQJGA=
+X-Received: by 2002:a2e:9b96:0:b0:2bc:b9c7:7ba8 with SMTP id
+ z22-20020a2e9b96000000b002bcb9c77ba8mr8428873lji.43.1695738687383; Tue, 26
+ Sep 2023 07:31:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression since 6.1.46 (commit 8ee39ec): rtsx_pci from
- drivers/misc/cardreader breaks NVME power state, preventing system boot
-To: Salvatore Bonaccorso <carnil@debian.org>, Ricky WU <ricky_wu@realtek.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Paul Grandperrin <paul.grandperrin@gmail.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Wei_wang <wei_wang@realsil.com.cn>, Roger Tseng <rogerable@realtek.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <5DHV0S.D0F751ZF65JA1@gmail.com>
- <82469f2f-59e4-49d5-823d-344589cbb119@leemhuis.info>
- <2023091333-fiftieth-trustless-d69d@gregkh>
- <7991b5bd7fb5469c971a2984194e815f@realtek.com>
- <2023091921-unscented-renegade-6495@gregkh>
- <995632624f0e4d26b73fb934a8eeaebc@realtek.com>
- <2023092041-shopper-prozac-0640@gregkh>
- <3ddcf5fae0164fbda79081650da79600@realtek.com> <ZRK_Iqj1ZSjx1fZS@eldamar.lan>
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZRK_Iqj1ZSjx1fZS@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695729086;2bb22162;
-X-HE-SMSGID: 1ql6b3-0004gD-Li
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee> <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+In-Reply-To: <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 26 Sep 2023 22:31:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+Message-ID: <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad L570
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: javierm@redhat.com, Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26.09.23 13:23, Salvatore Bonaccorso wrote:
-> On Wed, Sep 20, 2023 at 08:32:17AM +0000, Ricky WU wrote:
->>> On Wed, Sep 20, 2023 at 07:30:00AM +0000, Ricky WU wrote:
+Hi, all,
+
+On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
 >
->>>> This patch is our solution for this issue...
->>>> And now how can I push this?
->>>
->>> Submit it properly like any other patch, what is preventing that from
->>> happening?
->>
->> (commit 8ee39ec) some reader no longer force #CLKREQ to low when system need to enter ASPM.
->> But some platform maybe not implement complete ASPM? I don't know..... it causes problems...
->>
->> Like in the past Only the platform support L1ss we release the #CLKREQ.
->> But new patch we move the judgment (L1ss) to probe, because we met some host will clean the config space from S3 or some power saving mode 
->> And also we think just to read config space one time when the driver start is enough  
-> 
-> Is there a potential fix which is queued for this or would be the
-> safest option to unbreak the regression to revert the commit in the
-> stable trees temporarily?
-> 
-> I'm asking because in Debian we got the report at 
-> https://bugs.debian.org/1052063 
-> 
-> (and ideally to unbreak the situation for the user I would like to
-> include a fix in the next upload we do, but following what you as
-> upstream will do ideally).
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>
+> On 13.09.23 14:02, Jaak Ristioja wrote:
+> >
+> > Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> > Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+> > screen after boot until the display manager starts... if it does start
+> > at all. Using the nomodeset kernel parameter seems to be a workaround.
+> >
+> > I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > ("drivers/firmware: Move sysfb_init() from device_initcall to
+> > subsys_initcall_sync").
+>
+> Hmmm, no reaction since it was posted a while ago, unless I'm missing
+> something.
+>
+> Huacai Chen, did you maybe miss this report? The problem is apparently
+> caused by a commit of yours (that Javier applied), you hence should look
+> into this.
+I'm sorry but it looks very strange, could you please share your config fil=
+e?
 
-A fix is out for review and will likely be merged for mainline soon:
-https://lore.kernel.org/all/37b1afb997f14946a8784c73d1f9a4f5@realtek.com/
-https://lore.kernel.org/all/2023092522-climatic-commend-8c99@gregkh/
+Huacai
 
-A few distros reverted the culprit for now in their stable trees.
-
-HTH, Ciao,  Thorsten
-
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> > git bisect start
+> > # status: waiting for both good and bad commits
+> > # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+> > git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> > # status: waiting for bad commit, 1 good commit known
+> > # bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
+> > git bisect bad 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+> > # bad: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag 'mips_6.5'
+> > of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+> > git bisect bad b775d6c5859affe00527cbe74263de05cfe6b9f9
+> > # good: [3a8a670eeeaa40d87bd38a587438952741980c18] Merge tag
+> > 'net-next-6.5' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+> > git bisect good 3a8a670eeeaa40d87bd38a587438952741980c18
+> > # bad: [188d3f80fc6d8451ab5e570becd6a7b2d3033023] drm/amdgpu: vcn_4_0
+> > set instance 0 init sched score to 1
+> > git bisect bad 188d3f80fc6d8451ab5e570becd6a7b2d3033023
+> > # good: [12fb1ad70d65edc3405884792d044fa79df7244f] drm/amdkfd: update
+> > process interrupt handling for debug events
+> > git bisect good 12fb1ad70d65edc3405884792d044fa79df7244f
+> > # bad: [9cc31938d4586f72eb8e0235ad9d9eb22496fcee] i915/perf: Drop the
+> > aging_tail logic in perf OA
+> > git bisect bad 9cc31938d4586f72eb8e0235ad9d9eb22496fcee
+> > # bad: [51d86ee5e07ccef85af04ee9850b0baa107999b6] drm/msm: Switch to
+> > fdinfo helper
+> > git bisect bad 51d86ee5e07ccef85af04ee9850b0baa107999b6
+> > # good: [bfdede3a58ea970333d77a05144a7bcec13cf515] drm/rockchip: cdn-dp=
+:
+> > call drm_connector_update_edid_property() unconditionally
+> > git bisect good bfdede3a58ea970333d77a05144a7bcec13cf515
+> > # good: [123ee07ba5b7123e0ce0e0f9d64938026c16a2ce] drm: sun4i_tcon: use
+> > devm_clk_get_enabled in `sun4i_tcon_init_clocks`
+> > git bisect good 123ee07ba5b7123e0ce0e0f9d64938026c16a2ce
+> > # bad: [20d54e48d9c705091a025afff5839da2ea606f6b] fbdev: Rename
+> > fb_mem*() helpers
+> > git bisect bad 20d54e48d9c705091a025afff5839da2ea606f6b
+> > # bad: [728cb3f061e2b3a002fd76d91c2449b1497b6640] gpu: drm: bridge: No
+> > need to set device_driver owner
+> > git bisect bad 728cb3f061e2b3a002fd76d91c2449b1497b6640
+> > # bad: [0f1cb4d777281ca3360dbc8959befc488e0c327e] drm/ssd130x: Fix
+> > include guard name
+> > git bisect bad 0f1cb4d777281ca3360dbc8959befc488e0c327e
+> > # good: [0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630] dt-bindings: display=
+:
+> > simple: Add BOE EV121WXM-N10-1850 panel
+> > git bisect good 0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630
+> > # bad: [60aebc9559492cea6a9625f514a8041717e3a2e4] drivers/firmware: Mov=
+e
+> > sysfb_init() from device_initcall to subsys_initcall_sync
+> > git bisect bad 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > # good: [8bb7c7bca5b70f3cd22d95b4d36029295c4274f6] drm/panel:
+> > panel-simple: Add BOE EV121WXM-N10-1850 panel support
+> > git bisect good 8bb7c7bca5b70f3cd22d95b4d36029295c4274f6
+> > # first bad commit: [60aebc9559492cea6a9625f514a8041717e3a2e4]
+> > drivers/firmware: Move sysfb_init() from device_initcall to
+> > subsys_initcall_sync
