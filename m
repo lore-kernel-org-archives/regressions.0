@@ -1,151 +1,287 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F141F5F2
-	for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 17:44:09 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lwsRBKTQSU/FGAOCt+7BhforhzxtOks+y+3B2j40qETNaGAWHW4eb5MPUJWz2oIz7bFVJLx6zLrwPdo9znOgYkHZqSBEwWxmm3PMN+Yb537zBF0j2YB4qdIhpfJWO/slXXWDKNn7lbLYlnMe71L7woeHC5vqMLb+btaC/Ez4AyLPChV2EY82V7YBN3HLj+wcXxSIhXXwD/VnVFZJLUi0CCCGx1C77UcblXvlDFqC4zRhFy7RqaxXYYcjHCzaj+UY4mIeec+q+flDBfIx49LZPEVxD6GEgCvUhRqfy1ysWTvFEEwoxW0D/CnLhYhqPVZjuxRjGYUdt4tvo8F9Tr07fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qebci4ddA9IEgx+nuBYmn6erSfL1iI/kCSQ6K6stPcU=;
- b=jcT1wPSEsMjFnFY3Oaa2TQZpP4h3B2FpLtvKWdiWakNoAuBmX23rDljxbxIlbLNHHzGfXZutFCzgwBWtjvXq8veH65HKAnijctK4LlrJXKUvtCys5Q/0dw+KvKd642tOwATGilnO2gfSu14pczXwOD7qDC/nrYmxf4wY5D0CeMRFEFPGu21UOvYAyZR7/4GU9SzVhhjBY5Xz7L5YX8Dmft8xu60ZdLiX0G9ZYbPSbLf6LPVPGNdjDIF1QpTBh2pvZiFOqRXFIGlhVntj0c+dchLJ79J5tTRMt/Cc0tdJMaw/iBAqBvul5kejGzzXnJQhLMAAL3DCowUCsV0rSVQgAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qebci4ddA9IEgx+nuBYmn6erSfL1iI/kCSQ6K6stPcU=;
- b=mMWSMt43UwcbTlgTvGM7ZoGmlQKraB4AeLsJ1MUmyMkaxVBN466srunVK9SldQ18A39XltHqfGAySd5J9O9ZbVSBeY5NtNKrAoim1weIEtEiXG0GB+lDFvB5Bk4sCmAgYq+79nzpeA94YRTOIO1FZwmsJtaLT+7ChwWZAYwAvNc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW4PR12MB5668.namprd12.prod.outlook.com (2603:10b6:303:16b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Mon, 25 Sep
- 2023 17:44:06 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::3e65:d396:58fb:27d4%3]) with mapi id 15.20.6813.017; Mon, 25 Sep 2023
- 17:44:06 +0000
-Message-ID: <5f753ef4-caec-479a-bff4-43c16fb3317b@amd.com>
-Date: Mon, 25 Sep 2023 12:44:03 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: s2idle stopped working with 6.6-rc on Thinkpad T14 G1 (AMD)
-Content-Language: en-US
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
- <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
- <e049aa41-b136-4071-850f-d06b47fe67a1@leemhuis.info>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <e049aa41-b136-4071-850f-d06b47fe67a1@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR18CA0021.namprd18.prod.outlook.com
- (2603:10b6:806:f3::12) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB96173
+	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 00:03:28 +0000 (UTC)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-68fb85afef4so5981511b3a.1
+        for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 17:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695686608; x=1696291408; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKXQw5QYXz2D2jj+Q8+nTjGlZTvinbpTsyGmUzbDi9k=;
+        b=QHYHl9jkT5unXF8cftk8ksWXzvinzXlS/IGt1kEHE8ZmgN+y/egzV1x4VQ2SZH+akT
+         JGyBI3cGtGUSFlGM9Ei090am1rIeuGAeWpeEVYHOL5/24eJTTiSKn7BbRaGsIebB51fb
+         kGUDSyhRwy+Bp/WpaG9mzGGa/XUL3cQZBlH6S5avNtgPk2kWzldU+y+eVI9+MtjpS5Uq
+         8dFwM5u0a2SmCPq030UWn6o6NFsnjucZBWf2Owhy81ypqf1zDceqjN1jGKdRnmoQNncb
+         MBbCP6ZxU0Z7sIiCYT3jrm5zTAGINetn23C9Jx8i5nhbv4zcec1OAfdvJBCc3jW5YoLM
+         Vmow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695686608; x=1696291408;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qKXQw5QYXz2D2jj+Q8+nTjGlZTvinbpTsyGmUzbDi9k=;
+        b=JVE+N56TmYULi1VOZmsvLHDVewmAmeyLrW0bJ2IkfJp4uX0U1QjB6TLXWQiexYxD+q
+         Fnm5+VWbAEaXAqiABMk36ffFjvrgNpqoRTJ+/nGSpW0jI1GhIB58dW0mn4ZpeZfEUyk5
+         91R5EZHg9TB54Qm9Yl/AfwviE9g+yEhxFSPeYFwp8rvX6pOg/PQRPNzB+aA0e0imiAPw
+         cxCj0w9sLV4v54l1K+oCbrHvMi6k5iW7FyqPBrc6VTBNi8vB6tfN2IBh2Wng7/rJXo77
+         DVEbM/gseERci/E+VpU0KU1XGhowTM485I+0bHNsxQEiPJRrCjp+nZwDhdiSfdEnRHZp
+         rRIg==
+X-Gm-Message-State: AOJu0YwUQElL1Glp6nFEonoO7+Bgkw3m0rq+cW2D68XKb2mpIJw6G8iv
+	GmSVo60Ba1rMW1M69JhQP4Y=
+X-Google-Smtp-Source: AGHT+IGnZeukV1KyOLRqQItbRvu+ZlfGq0OejOR2dNrk5mwfD9TUlXRoazhaKpyVHzb5gRdbjKmGAA==
+X-Received: by 2002:a05:6a20:9699:b0:15d:684d:f51b with SMTP id hp25-20020a056a20969900b0015d684df51bmr5900298pzc.45.1695686607848;
+        Mon, 25 Sep 2023 17:03:27 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id mu4-20020a17090b388400b0025bfda134ccsm8785046pjb.16.2023.09.25.17.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Sep 2023 17:03:26 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 498A880B20CF; Tue, 26 Sep 2023 07:03:22 +0700 (WIB)
+Date: Tue, 26 Sep 2023 07:03:22 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Erhard Furtner <erhard_f@mailbox.org>,
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+	Linux Maple Tree <maple-tree@lists.infradead.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [Bisected] PowerMac G4 getting "BUG: Unable to handle kernel
+ data access on write at 0x00001ff0" at boot with CONFIG_VMAP_STACK=y on
+ kernels 6.5.x (regression over 6.4.x)
+Message-ID: <ZRIfyp5YKH36_9df@debian.me>
+References: <20230926010159.0f25161c@yea>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW4PR12MB5668:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97e9b8fd-b7dc-43d3-4af3-08dbbdef03e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Ba2U4qxrMB3EnsGae3XTWtYUikCQltsDAEBkmJj60YkD7xFqSUxgjzmeTR/twSIwd7FDZn7hJ4QOvFaNkELs3vJmMPbcchC3MyhGFxfU3fSxPqCT4HJ8iRXdGtWfdnn9tLU0vGuy/4Qi36JBQT5QUsP64TAirkoZR4UuOtHZG6K2ADOwGwsdGSibSAo4ADPk982ZGCBL5v75AqHmSxI4joAZZkD2zt/QlT2fjyeIWSn19dg59NPxxnDwtJzN/dOZjNRtiPglqKJwMPomw+zYt2x70GCjabzz6Baed0erKBhVGElTlGHnLa+NOiJQRRud4Le4BPmsVQFhOcT+YtijEkZhuVtgoPyy+9HRMTDHCqoKJiwvBnPdfZ33fBxvaK44LP6V7PVta6c/GnEd3rhOTtNYYn/WA7CgPYNrxrA//41ueddSzzu2w1lQGwreHK85LuSETZqc6Z8ZHEgAP1jP2SzqVsA6shNfRAcy57MCkcNnsLJ0rDw4U9Aa9+FOoayL9w3ClfLaTqeX3OhinGRG3DoERLxk4e08NkmUGGY+OUF6KBmls8qpPBse0bYHkZa1H+t3Rv0eZ0lWMA6xmiagSu7zfFaJUlbgSuXTpEIwx35M2mBRU221lD1vhoLqi6gMq6TmAW8v26tTUlEJeFBdYw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(39860400002)(366004)(376002)(346002)(230922051799003)(1800799009)(451199024)(186009)(966005)(53546011)(6666004)(6506007)(6486002)(6512007)(44832011)(8936002)(83380400001)(478600001)(54906003)(66476007)(31686004)(66946007)(8676002)(6916009)(316002)(66556008)(5660300002)(2616005)(26005)(36756003)(38100700002)(4326008)(86362001)(31696002)(2906002)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L1o4eXRkSnRMWTc1NzRXTHlvaGJZWHpORlZsT2dvdkV1VERpRHlTL2tSelJP?=
- =?utf-8?B?ZmRpekY5UEtNSUc1dHhZRXVDV01oRFo4eUU2T01GNlFkeVBNRFNzMUtrVWUw?=
- =?utf-8?B?U2YyTW5kUU8wQjFxb1NMMlFRVllOQm9Ya1pqSS9hTjZwMVJjMGovWXJuM2Uv?=
- =?utf-8?B?cUVJSXhLRUY3RzBzbG1yaWFiZDFINnptZHpGN1NPei9WdnpsRkZyMytRUTcr?=
- =?utf-8?B?ZHZldHRuNFRkZDVoNEZXSnYxMGJUYTUyNGF6YVlkeGlyclpjZmRCZWFVeEZ5?=
- =?utf-8?B?WWpTeDM1WnpxRmZOeWNhUytQdXF2WWs1eC9pcFhDZ3VoSGVpYUVyRHdyRXQ1?=
- =?utf-8?B?Uk1qK2Fvem9lQzZyMXpZSXl4MElab3QwRGFkaXY5d2MvYXRhYWtyNkhWeVpE?=
- =?utf-8?B?V3dGU2tEMEovWUJwWnZRQzJmUjNEVGdQaExJYmlncmVnVTR0dUZyMGd6NzRy?=
- =?utf-8?B?T1lIMFNBWDZVUXlQdzZYOXFZdmdlQnV4OVM4bFJValJCUS92RWxIRjJiajho?=
- =?utf-8?B?bHdIVWU4Zld0WW4xdno4SDkwanZJa1dRVTFZSXFmK1RVT04zQUhRZVV5THRT?=
- =?utf-8?B?cnZiVEthbE1nd0JETmVwbVJCeVU3dE12N3pqcWU1L3R1YjNHNkZDdzU2b05m?=
- =?utf-8?B?WGJTT2FNcjhDanhNQXkwRWZJeHd0K1VWQ3FuZEVDSk1hRno1Znl2MGY0QW95?=
- =?utf-8?B?NGhSL3RwQ1NNVDNKUGJ1TjJhTEpNeHBmQzhFQTVyNzl4VW1SMEVSeExIOGZF?=
- =?utf-8?B?N1VCdVFYZ3lnR0xFV0FEOU1nbU5STTh1dHF1amNQWm1aU3lGVUh6NElVT1px?=
- =?utf-8?B?eVUvdEtZeXhlRlNlYTBsd0lVMzQ1amc2eUJPaGhoK1Q3YWZKVSszdkN6WTlF?=
- =?utf-8?B?eVlGbHdKNitITG9IcmgyWnVUMGpwNDA5M3lTd0xLY25CNGVxOVFOSGN0eUlE?=
- =?utf-8?B?ZkNUL1kvUlltQmwwMzZFc2ljWUhVeGVwM3h2RE5MdEo3OXQ3TTE0dHRKb0J6?=
- =?utf-8?B?LytRY0RyVWRYRVhsK2VjN3dKVUxobnFYMDNlM1NzTUJnem1BejNmeVVQSUtB?=
- =?utf-8?B?cEZzSDJMaWozeTJlNWZZR280M2V5SmZoVWVRK29RVldPczdiT0k4VWU5QmJx?=
- =?utf-8?B?ZTh1S3FWOUVqeFFBVW1vMEU4K08vN20wZld3NnhDd2FUYXo4eDVDWDRWRzg1?=
- =?utf-8?B?bVFHVjlsMk81NVFUT210aFhsdmVaSVZ5WTN3Tyt1RU9UeGQyZUFlU2p5ZXJv?=
- =?utf-8?B?ZVhKMEZ1QTJTTTh4YnBMNkRuWEJzTk95OE9hdnVRZVplN3NYZ2x3blRndm0z?=
- =?utf-8?B?b2RMMlpodHpDSVJnelVjVWM3S3I2bWxyUkFVSStNQXNMMnBoZjlPd1owMXhJ?=
- =?utf-8?B?SnFHRjdLUHl4S1JHTks2TXZvV3p0Mi9iMG1lQUoreStEOGE5OWR0UjVJT2Vn?=
- =?utf-8?B?V3BXZEJxSWdpMEwzaklDbGZrMkVtbGhqL1NlS0s3NWlSU3VEMFhzNk9jakRr?=
- =?utf-8?B?STFlWWgrNWYraXNvZjlmNE9oWVRBWTJvZXRqb0grc0I4ZDZtN1JGdm5WUG16?=
- =?utf-8?B?R2J6WVlSNnV3YmpoSkd1RXJuYnNLTDBOWnpHQXFHcDY1cy9SQWpmNkVqMSs4?=
- =?utf-8?B?eVB4ZUFmb0tvaXpldFVvUzhqbmVkSXdWM3EyU3FTU1FEWit5eFJVNXpxd3dT?=
- =?utf-8?B?OHF2VU4yYWE0YkFjM3hmMURIVXJoMjJZaTExTmlDTE03dDZ2TENCYnAyOEJn?=
- =?utf-8?B?N1RFSjUvWEtCMDl3NzJ5L0wzTURwRlFCVjlHN0pkNlo4TGQrd2ZrTURYOUJ5?=
- =?utf-8?B?YWVyK3liRldWdFQ5U1JGWDBTVzg5Mk9NTytaOXBRWWNTdVlQSmVMbjdOVUpj?=
- =?utf-8?B?RFBhMnRPTk5wd1NmMCtSK3U4ZitlZHl6eExCTzNySHN1YzBQU1FIMkZzZWVS?=
- =?utf-8?B?T0VJSkRSZW11d2Q0eU1LOVVlYVljY3R2a1ovQjNoU0p5VVhzWTlCNWVlVkNJ?=
- =?utf-8?B?anMrRTNqZkNCVzIyQWhPaFh3dW9IaWNicWJlMGFRMU5FVHRQUnFJcFprblJm?=
- =?utf-8?B?anZtUUdTMVNtUGxjYkpBaytrTXpkdVpRMWMyTUJmeTFJS1QreXJpZ0lWZHdD?=
- =?utf-8?Q?//Tbq+yVnKqvnGnr8XdqIKDEV?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97e9b8fd-b7dc-43d3-4af3-08dbbdef03e2
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2023 17:44:06.5844
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ugtj4FuO+CWmMuMVEN6bKdMHQjZ3iTAFXq9q32LqSHQGKQOSsu0LAMlbEMl54+GwvK+Euxcf5g5bNm/Z4q4xpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5668
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lld9pQtn+sLceWro"
+Content-Disposition: inline
+In-Reply-To: <20230926010159.0f25161c@yea>
 
-On 9/25/2023 08:45, Thorsten Leemhuis wrote:
-> On 25.09.23 15:25, Mario Limonciello wrote:
->> On 9/25/2023 05:55, Thorsten Leemhuis wrote:
->>> Hi Mario! Did you by chance hear anything about lock-ups on resume with
->>> mainline affecting AMD systems? I'm asking, as s2idle stopped working
->>> for me with 6.6-rc on my Thinkpad T14 G1 (AMD).
->> You're the first report I've heard of this.
-> 
-> Thx for taking the time and replying.
-> 
->> Yeah not too much useful stuff here unfortunately.  Can you check
->> /var/lib/systemd/pstore to see if you got a traceback for whatever
->> caused the problem?
-> 
-> Sadly nothing there.
-> 
->>> Dmesg for 6.6-rc3 (with a USB-C dock, but problem happens without it,
->>> too):
->>> https://www.leemhuis.info/files/misc/dmesg-6.6_rc3
->>
->> Being G1, can you try "amdgpu.mcbp=0" on kernel command line?
-> 
-> Just tried it, but didn't help.
-> 
-> Guess it bisection time then...
-> 
-> Thx again for your reply. Ciao, Thorsten
 
-FWIW your email prompted me to double check the two other Lenovo systems 
-I have on hand at my desk:
-* P14s Gen 1
-* L14 Gen2a
+--lld9pQtn+sLceWro
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One of them had a Ubuntu userspace (20.04 IIRC) and the other a Fedora 
-38.  I built 6.6-rc3 and couldn't reproduce any issues with s2idle.
+On Tue, Sep 26, 2023 at 01:01:59AM +0200, Erhard Furtner wrote:
+> Greetings!
+>=20
+> Had a chat on #gentoo-powerpc with another user whose G4 Mini fails booti=
+ng kernel 6.5.0 when CONFIG_VMAP_STACK=3Dy is enabled. I was able to replic=
+ate the issue on my PowerMac G4. Also I was able to bisect the issue.
+>=20
+> Kernels 6.4.x boot ok with CONFIG_VMAP_STACK=3Dy but on 6.5.5 I get:
+>=20
+> [...]
+> Kernel attempted to write user page (1ff0) - exploit attempt? (uid: 0)
+> BUG: Unable to handle kernel data access on write at 0x00001ff0
+> Faulting instruction address: 0xc0008750
+> Oops: Kernel access of bad area, sig: 11 [#1]
+> BE PAGE_SIZE=3D4K MMU=3DHash PowerMac
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper Not tainted 6.5.5-PMacG4 #5
+> Hardware name: PowerMac3,6 7455 0x80010303 PowerMac
+> NIP:  c0008750 LR: c0041848 CTR: c0070988
+> REGS: c0d3dcd0 TRAP: 0300   Not tainted (6.5.5-PMacG4)
+> MSR:  00001032 <ME,IR,DR,RI>  CR: 22d3ddc0 XER: 20000000
+> DAR: 00001ff0 DSISR: 42000000
+> GPR00: c0041848 c0d3dd90 c0d06360 c0d3ddd0 c0d06360 c0d3dea8 c0d3adc0 000=
+00000
+> GPR08: 00000000 c0d40000 00000000 c0d3ddc0 00000000 00000000 00000000 000=
+00004
+> GPR16: 00000002 00000000 00000002 00402dc2 00402dc2 00002000 f1004000 000=
+00000
+> GPR24: c0d45220 c0d06644 c0843c34 00000002 c0d06360 c0d0ce00 c0d06360 000=
+00000
+> NIP [c0008750] do_softirq_own_stack+0x18/0x3c
+> LR [c0041848] irq_exit+0x98/0xc4
+> Call Trace:
+> [c0d3dd90] [c0d69564] 0xc0d69564 (unreliable)
+> [c0d3ddb0] [c0041848] irq_exit+0x98/0xc4
+> [c0d3ddc0] [c0004a98] Decrementer_virt+0x108/0x10c
+> --- interrupt: 900 at __schedule+0x43c/0x4e0
+> NIP:  c0843940 LR: c084398c CTR: c0070988
+> REGS: c0d3ddd0 TRAP: 0900   Not tainted  (6.5.5-PMacG4)
+> MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 22024484  XER: 00000000
+>=20
+> GPR00: c0843574 c0d3de90 c0d06360 c0d06360 c0d06360 c0d3dea8 00000001 000=
+00000
+> GPR08: 00000000 00009032 c099ce2c 0007ffbf 22024484 00000000 00000000 000=
+00004
+> GPR16: 00000002 00000000 00000002 00402dc2 00402dc2 00002000 f1004000 000=
+00000
+> GPR24: c0d45220 c0d06644 c0843c34 00000002 c0d06360 c0d0ce00 c0d06360 c0d=
+063ac
+> NIP [c0843940] __schedule+0x43c/0x4e0
+> LR [c084390c] __schedule+0x408/0x4e0
+> --- interrupt: 900
+> [c0d3de90] [c0843574] __schedule+0x70/0x4e0 (unreliable)
+> [c0d3ded0] [c0843c34] __cond_resched+0x34/0x54
+> [c0d3dee0] [c0141068] __vmalloc_node_range+0x27c/0x64c
+> [c0d3de60] [c0141794] __vmalloc_node+0x44/0x54
+> [c8d3df80] [c0c06510] init_IRQ+0x34/0xd4
+> [c8d3dfa0] [c0c03440] start_kernel+0x424/0x558
+> [c8d3dff0] [00003540] 0x3540
+> Code: 39490999 7d4901a4 39290aaa 7d2a01a4 4c00012c 4bffff20 9421ffe0 7c08=
+002a6 3d20c0d4 93e1001c 90010024 83e95278 <943f1ff0> 7fe1fb78 48840c6d 8021=
+0000
+> ---[ end trace 0000000000000000 ]---
+>=20
+> Kernel panic - not syncing: Attempted to kill the idle task!
+> Rebooting in 48 seconds..
+>=20
+>=20
+> The bisect revealed this commit:
+>  # git bisect good
+> cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b is the first bad commit
+> commit cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b
+> Author: Liam R. Howlett <Liam.Howlett@oracle.com>
+> Date:   Fri Aug 18 20:43:55 2023 -0400
+>=20
+>     maple_tree: disable mas_wr_append() when other readers are possible
+>    =20
+>     The current implementation of append may cause duplicate data and/or
+>     incorrect ranges to be returned to a reader during an update.  Althou=
+gh
+>     this has not been reported or seen, disable the append write operation
+>     while the tree is in rcu mode out of an abundance of caution.
+>    =20
+>     During the analysis of the mas_next_slot() the following was
+>     artificially created by separating the writer and reader code:
+>    =20
+>     Writer:                                 reader:
+>     mas_wr_append
+>         set end pivot
+>         updates end metata
+>         Detects write to last slot
+>         last slot write is to start of slot
+>         store current contents in slot
+>         overwrite old end pivot
+>                                             mas_next_slot():
+>                                                     read end metadata
+>                                                     read old end pivot
+>                                                     return with incorrect=
+ range
+>         store new value
+>    =20
+>     Alternatively:
+>    =20
+>     Writer:                                 reader:
+>     mas_wr_append
+>         set end pivot
+>         updates end metata
+>         Detects write to last slot
+>         last lost write to end of slot
+>         store value
+>                                             mas_next_slot():
+>                                                     read end metadata
+>                                                     read old end pivot
+>                                                     read new end pivot
+>                                                     return with incorrect=
+ range
+>         set old end pivot
+>    =20
+>     There may be other accesses that are not safe since we are now updati=
+ng
+>     both metadata and pointers, so disabling append if there could be rcu
+>     readers is the safest action.
+>    =20
+>     Link: https://lkml.kernel.org/r/20230819004356.1454718-2-Liam.Howlett=
+@oracle.com
+>     Fixes: 54a611b60590 ("Maple Tree: add new data structure")
+>     Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+>     Cc: <stable@vger.kernel.org>
+>     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>=20
+>  lib/maple_tree.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+>=20
+> And indeed when I revert commit cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b =
+kernel 6.5.5 succeeds booting with CONFIG_VMAP_STACK=3Dy enabled. dmesg of =
+the successful boot with the reverted commit attached, also kernel .config =
+and the bisect.log.
+>=20
+> Regards,
+> Erhard F.
 
-So yes; bisect is the next step, thanks.
+
+
+> git bisect start
+> # Status: warte auf guten und schlechten Commit
+> # bad: [2309983b0ac063045af3b01b0251dfd118d45449] Linux 6.5.5
+> git bisect bad 2309983b0ac063045af3b01b0251dfd118d45449
+> # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+> git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> # good: [6c1561fb900524c5bceb924071b3e9b8a67ff3da] Merge tag 'soc-dt-6.5'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> git bisect good 6c1561fb900524c5bceb924071b3e9b8a67ff3da
+> # good: [9f57c13f7ed70a94ecc135645bc764efdd378acd] Merge tag 'soc-fixes-6=
+=2E5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> git bisect good 9f57c13f7ed70a94ecc135645bc764efdd378acd
+> # good: [b9f052dc68f69dac89fe1e24693354c033daa091] netfilter: nf_tables: =
+fix false-positive lockdep splat
+> git bisect good b9f052dc68f69dac89fe1e24693354c033daa091
+> # bad: [7e2229d14234bbea8fbb5e426d5f3533b0f1b262] arm64: dts: qcom: sc818=
+0x-pmics: add missing qcom,spmi-gpio fallbacks
+> git bisect bad 7e2229d14234bbea8fbb5e426d5f3533b0f1b262
+> # good: [93f5de5f648d2b1ce3540a4ac71756d4a852dc23] Merge tag 'acpi-6.5-rc=
+8' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+> git bisect good 93f5de5f648d2b1ce3540a4ac71756d4a852dc23
+> # bad: [25130b27e0352acb83e91c467853eb9afad3b644] OPP: Fix potential null=
+ ptr dereference in dev_pm_opp_get_required_pstate()
+> git bisect bad 25130b27e0352acb83e91c467853eb9afad3b644
+> # good: [4942fed84b98cfb71d3cdff1a3df0072a57bbdfa] Merge tag 'riscv-for-l=
+inus-6.5-rc8' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+> git bisect good 4942fed84b98cfb71d3cdff1a3df0072a57bbdfa
+> # bad: [ecd7e1c562cb08e41957fcd4b0e404de5ab38e20] ksmbd: fix slub overflo=
+w in ksmbd_decode_ntlmssp_auth_blob()
+> git bisect bad ecd7e1c562cb08e41957fcd4b0e404de5ab38e20
+> # bad: [7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e] Merge tag 'clk-fixes-fo=
+r-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+> git bisect bad 7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e
+> # good: [2f406263e3e954aa24c1248edcfa9be0c1bb30fa] madvise:madvise_cold_o=
+r_pageout_pte_range(): don't use mapcount() against large folio for sharing=
+ check
+> git bisect good 2f406263e3e954aa24c1248edcfa9be0c1bb30fa
+> # bad: [e5548f85b4527c4c803b7eae7887c10bf8f90c97] shmem: fix smaps BUG sl=
+eeping while atomic
+> git bisect bad e5548f85b4527c4c803b7eae7887c10bf8f90c97
+> # bad: [cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b] maple_tree: disable mas=
+_wr_append() when other readers are possible
+> git bisect bad cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b
+> # good: [0e0e9bd5f7b9d40fd03b70092367247d52da1db0] madvise:madvise_free_p=
+te_range(): don't use mapcount() against large folio for sharing check
+> git bisect good 0e0e9bd5f7b9d40fd03b70092367247d52da1db0
+> # first bad commit: [cfeb6ae8bcb96ccf674724f223661bbcef7b0d0b] maple_tree=
+: disable mas_wr_append() when other readers are possible
+
+Thanks for the regression report. I'm adding it to regzbot:
+
+#regzbot ^introduced: cfeb6ae8bcb96c
+#regzbot title: CONFIG_VMAP_STACK kernel data write access bug due to disab=
+ling mas_wr_append()
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--lld9pQtn+sLceWro
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZRIfvwAKCRD2uYlJVVFO
+o6gHAQCxV5UfvCfqqe6xs7APp058UsXK4eGknebLBCc9FNz/7QD/Tv1xHYqUlo1G
+2IqRdTvPYp/wLk3PJaZDRciyOpcZrws=
+=UC+U
+-----END PGP SIGNATURE-----
+
+--lld9pQtn+sLceWro--
