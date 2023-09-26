@@ -1,129 +1,101 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-209.mta0.migadu.com (out-209.mta0.migadu.com [91.218.175.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF42637
-	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 00:55:04 +0000 (UTC)
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3add83c9043so3880353b6e.2
-        for <regressions@lists.linux.dev>; Mon, 25 Sep 2023 17:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695689704; x=1696294504; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0CXYLwtV6hI1Lwk84mbKyAHp+fTnm6/oOKkcYYEM0gg=;
-        b=EtpxXDnQffpNTsewhfuHgj/XzJoT2zYYED/sON6+m7VMoUMFsanU1kj5XkUu2G33Q9
-         JedynouCeJThCwsreVk83PDFyz71zWRAS+flmSBOCDmeLMSR7iNKwYycB3gb5BixF4M4
-         w/fsV/fb/HgO1mlVOfPhtehK3QzZAEF0TQ36vJSUD2WabRU1WraVeiYpFULaJ84tbNEx
-         tr1BVRaYCTB2rA/vYXeutTX6tWT6vOKYnSxH96f8VzTZDkPVXZGlAo7W54IKC1uzc5RW
-         6NEPHVSRhOmggQbfnH/WM1igVzXAhwvX603jtVJHRL2v/vAbGNV5z6LsHHmqhgoJE4S8
-         W4Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695689704; x=1696294504;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0CXYLwtV6hI1Lwk84mbKyAHp+fTnm6/oOKkcYYEM0gg=;
-        b=D7HgrZq627+2SDGG6QhL0l/MKLJm/ASeVlkgEsAffprgBR9hI59nrObtU+fmgfTkz9
-         torwkDu+dQ2R2aHMbbPbTrq6cbOcSFaVoJ+w+ifj7ORosL58N7o/v/prAeMYp9LXzPna
-         d47XbbS8Rr7upKW7ft/U7ErZ0nlDDgV+zo5qFUYtGYjVI0HxIih6STw7Efmo653NmKFQ
-         ysx0XMoU2eJ+vW31Jt1eZ8HXogQoiQ+snfXAhABOxJcqbKYPhJXJxmB7iOPk4HU71i+n
-         sAMKa5fTTnLGSk6nnz3NgjBVi05sBl/fQQy606jInDfHHFJiwpxgyeLclHjZ2UN4MUXx
-         nsOA==
-X-Gm-Message-State: AOJu0Yxf1TwOvH/hZqucyVfEEmaJyUa7DJVTVWZJAC8rB+Vi9UeL0GSP
-	34y8XPrlM+zy0rjlWDexUR2KVwYNNNdNEg==
-X-Google-Smtp-Source: AGHT+IGRPQKNCawBo+MIk51/Ou91oPvmW1z8tu8Kdu8Tn3tbO1vseAeAhM3xQggtwn7ms17BTXXKuA==
-X-Received: by 2002:a05:6808:1a88:b0:3ae:e0d:1548 with SMTP id bm8-20020a0568081a8800b003ae0e0d1548mr7579294oib.15.1695689704020;
-        Mon, 25 Sep 2023 17:55:04 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id h5-20020aa786c5000000b006889511ab14sm8654484pfo.37.2023.09.25.17.55.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 17:55:03 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id ABC7B8DABD81; Tue, 26 Sep 2023 07:55:00 +0700 (WIB)
-Date: Tue, 26 Sep 2023 07:55:00 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	Verot <verot.wrongdoer713@simplelogin.com>
-Cc: Linux Input Devices <linux-input@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Stable <stable@vger.kernel.org>
-Subject: Re: Fwd: Kernel 6.4.4 breaks Elan Touchpad 1206
-Message-ID: <ZRIr5E2FAFVqhtmw@debian.me>
-References: <42bc8e02-5ee0-f1c8-610e-e16391e54ee2@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B10A7F
+	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 02:49:39 +0000 (UTC)
+Date: Mon, 25 Sep 2023 19:49:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1695696577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KsOaFDbsgZ6azgPIUFRm68AgjbUNl5+lAAmJUzShuJw=;
+	b=OOns7TyqlCgDQgzlUHreD4BhyUyXY3xo2emigxpQd7k+0klb4BK9Wiegn7DEXkGXiZxsy2
+	57HdGmEhMcUYkwpgHMPzc4L+kmbQLQMYgcfANprQafT9rN9X8H/hRAYj9mVGEfJhuxxLnT
+	LTSxHhKYeTUSFO83ggkzRFlhAjfeuwM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
+	Shakeel Butt <shakeelb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	Tejun Heo <tj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	mathieu.tortuyaux@gmail.com
+Subject: Re: [REGRESSION] Re: [PATCH 6.1 033/219] memcg: drop
+ kmem.limit_in_bytes
+Message-ID: <ZRJGu6iHDcub_IwR@P9FQF9L96D.corp.robot.car>
+References: <20230917191040.964416434@linuxfoundation.org>
+ <20230917191042.204185566@linuxfoundation.org>
+ <20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <ZQqwzK/fDm+GLiKM@dhcp22.suse.cz>
+ <101987a1-b1ab-429d-af03-b6bdf6216474@linux.microsoft.com>
+ <ZQrSXh+riB7NnZuE@dhcp22.suse.cz>
+ <4eb47d6a-b127-4aad-af30-896c3b9505b4@linux.microsoft.com>
+ <ZQr3+YfcBM2Er6F7@dhcp22.suse.cz>
+ <ZQ4cjqQLhgX1pOVX@P9FQF9L96D.corp.robot.car>
+ <ZRE5pHgr28SaOmMC@dhcp22.suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="H68YQ2lTD34t8/zF"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <42bc8e02-5ee0-f1c8-610e-e16391e54ee2@gmail.com>
+In-Reply-To: <ZRE5pHgr28SaOmMC@dhcp22.suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
+On Mon, Sep 25, 2023 at 09:41:24AM +0200, Michal Hocko wrote:
+> On Fri 22-09-23 16:00:30, Roman Gushchin wrote:
+> > On Wed, Sep 20, 2023 at 03:47:37PM +0200, Michal Hocko wrote:
+> > > On Wed 20-09-23 15:25:23, Jeremi Piotrowski wrote:
+> > > > On 9/20/2023 1:07 PM, Michal Hocko wrote:
+> > > [...]
+> > > > > I mean, normally I would be just fine reverting this API change because
+> > > > > it is disruptive but the only way to have the file available and not
+> > > > > break somebody is to revert 58056f77502f ("memcg, kmem: further
+> > > > > deprecate kmem.limit_in_bytes") as well. Or to ignore any value written
+> > > > > there but that sounds rather dubious. Although one could argue this
+> > > > > would mimic nokmem kernel option.
+> > > > > 
+> > > > 
+> > > > I just want to make sure we don't introduce yet another new behavior in this legacy
+> > > > system. I have not seen breakage due to 58056f77502f. Mimicing nokmem sounds good but
+> > > > does this mean "don't enforce limits" (that should be fine) or "ignore writes to the limit"
+> > > > (=don't event store the written limit). The latter might have unintended consequences.
+> > > 
+> > > Yes it would mean that the limit is never enforced. Bad as it is the
+> > > thing is that the hard limit on kernel memory is broken by design and
+> > > unfixable.  This causes all sorts of unexpected kernel allocation
+> > > failures that this is simply unsafe to use.
+> > > 
+> > > All that being said I can see the following options
+> > > 1) keep the current upstream status and not export the file
+> > > 2) revert both 58056f77502f and 86327e8eb94 and make it clear
+> > >    that kmem.limit_in_bytes is unsupported so failures or misbehavior
+> > >    as a result of the limit being hit are likely not going to be
+> > >    investigated or fixed.
+> > > 3) reverting like in 2) but never inforce the limit (so basically nokmem
+> > >    semantic)
+> > 
+> > Since it's a part of cgroup v1 interface, which is in a frozen state as a whole,
+> > and there is no significant (performance, code complexity) benefit of
+> > additionally deprecating kmem.limit_in_bytes, I vote for 2).
+> > 1) is also an option.
+> 
+> We have a stronger agrement over 3)
+> http://lkml.kernel.org/r/ZRE5VJozPZt9bRPy@dhcp22.suse.cz. Please speak
+> up if you disagree.
 
---H68YQ2lTD34t8/zF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This works for me too.
+Thank you!
 
-On Tue, Jul 25, 2023 at 07:00:21AM +0700, Bagas Sanjaya wrote:
-> Hi,
->=20
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> > Description:
-> > When booting into Linux 6.4.4, system no longer recognizes touchpad inp=
-ut (confirmed with xinput). On the lts release, 6.1.39, the input is still =
-recognized.
-> >=20
-> > Additional info:
-> > * package version(s): Linux 6.4.4, 6.1.39
-> > * Device: ELAN1206:00 04F3:30F1 Touchpad
-> >=20
-> > Steps to reproduce:
-> > - Install 6.4.4 with Elan Touchpad 1206
-> > - Reboot
-> >=20
-> > The issue might be related to bisected commit id: 7b63a88bb62ba2ddf5fcd=
-956be85fe46624628b9
-> > This is the only recent commit related to Elantech drivers I've noticed=
- that may have broken the input.
->=20
-> See Bugzilla for the full thread:
->=20
-> To the reporter (Verot): Can you attach dmesg and lspci output?
->=20
-> Anyway, I'm adding this regression to be tracked by regzbot:
->=20
-> #regzbot introduced: 7b63a88bb62ba2 https://bugzilla.kernel.org/show_bug.=
-cgi?id=3D217701
-> #regzbot title: OOB protocol access fix breaks Elan Touchpad 1206
->=20
-> Thanks.
->=20
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217701
->=20
+Btw, it seems like going forward we should be more resistant for any
+cgroup v1 changes and just leave it as it is.
 
-No reply from the reporter in regards to required bisection, thus:
-
-#regzbot inconclusive: not bisected, reporter MIA
-
-Sorry for inconvenience.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---H68YQ2lTD34t8/zF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZRIr5AAKCRD2uYlJVVFO
-o+6iAP98gFN37T7GtXeidZpgcd13kL448gj8ctLYAeJCo5rDLgEA4SxE9qTuQslN
-rHvLTpJT8v9HsUWYqm0ApWfaI4nE9QA=
-=7F3z
------END PGP SIGNATURE-----
-
---H68YQ2lTD34t8/zF--
+Thanks.
