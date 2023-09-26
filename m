@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66B8107B3
-	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 10:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1231125DD
+	for <regressions@lists.linux.dev>; Tue, 26 Sep 2023 11:15:36 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ql5ig-0000oV-Kv; Tue, 26 Sep 2023 12:55:10 +0200
-Message-ID: <6ba3e137-ba01-4f29-b0f2-bfc9afcffce8@leemhuis.info>
-Date: Tue, 26 Sep 2023 12:55:09 +0200
+	id 1ql62Q-0005FQ-74; Tue, 26 Sep 2023 13:15:34 +0200
+Message-ID: <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+Date: Tue, 26 Sep 2023 13:15:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,32 +15,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Chris Mason <clm@meta.com>, linux-btrfs@vger.kernel.org,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, Wang Yugui <wangyugui@e16-tech.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
- <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
- <20230912072057.C1F5.409509F4@e16-tech.com>
- <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
 Content-Language: en-US, de-DE
-In-Reply-To: <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: javierm@redhat.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695725722;aede33f0;
-X-HE-SMSGID: 1ql5ig-0000oV-Kv
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695726936;2d1b97f2;
+X-HE-SMSGID: 1ql62Q-0005FQ-74
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Christoph, I'm sorry to annoy you, but things look stalled here: it
-seems the Btrfs developer don't care or simply have no idea what might
-be causing this. So how do we get this running again? Or was some
-progress made and I just missed it?
+Hi, Thorsten here, the Linux kernel's regression tracker.
+
+On 13.09.23 14:02, Jaak Ristioja wrote:
+> 
+> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+> screen after boot until the display manager starts... if it does start
+> at all. Using the nomodeset kernel parameter seems to be a workaround.
+> 
+> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> ("drivers/firmware: Move sysfb_init() from device_initcall to
+> subsys_initcall_sync").
+
+Hmmm, no reaction since it was posted a while ago, unless I'm missing
+something.
+
+Huacai Chen, did you maybe miss this report? The problem is apparently
+caused by a commit of yours (that Javier applied), you hence should look
+into this.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -48,119 +61,56 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-#regzbot poke
-
-On 12.09.23 09:58, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 12.09.23 01:20, Wang Yugui wrote:
->>
->>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>> for once, to make this easily accessible to everyone.
->>>
->>> Hmmm, nothing happened wrt to this regression during the past two weeks
->>> afaics. Wonder if it fell through the cracks due to the merge window or
->>> if there is a good reason. Was there progress and I just missed it? To
->>> rule out the latter:
->>>
->>> Wang Yugui, does the problem still happen with 6.6-rc1?
->>
->> The problem still happen with 6.6-rc1.
->> Yet no related patch is released for this problem.
-> 
-> Thx. Adding Josef and David to the list of recipients, maybe they might
-> have an idea why that commit of Christoph (da023618076a13 ("btrfs:
-> submit IO synchronously for fast checksum implementations") [v6.5-rc1])
-> seems to slow down things for Wang Yugui's Btrfs setup (hope I
-> understood things correctly). FWIW, the start of the thread is here:
-> https://lore.kernel.org/linux-btrfs/20230731152223.4EFB.409509F4@e16-tech.com/
-> 
-> Christoph later wrote "so you have a case where the offload for the
-> checksumming generation actually helps (by a lot)" and asked for advice
-> from the Btrfs side:
-> https://lore.kernel.org/linux-btrfs/20230802092631.GA27963@lst.de/
-> 
-> /me hopes that will get things rolling again.
-> 
-> /me meanwhile wonders if there were other reports like this, or if Wang
-> Yugui's system is somehow special.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
->>> On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 13.08.23 11:50, Wang Yugui wrote:
->>>>>> On 8/11/23 10:23 AM, Wang Yugui wrote:
->>>>>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
->>>>>>>>>> And with only a revert of
->>>>>>>>>>
->>>>>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
->>>>>>>>> checksum implementations") 
->>>>>>>> Ok, so you have a case where the offload for the checksumming generation
->>>>>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
->>>>>>>> involved with this.
->>>>>>>>
->>>>>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>>>>>                 return false;
->>>>>>>>>> This disables synchronous checksum calculation entirely for data I/O.
->>>>>>>>> without this fix, data I/O checksum is always synchronous?
->>>>>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>>>>> It is never with the above patch.
->>>>>>>>
->>>>>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
->>>>>>>>>> single profile) workload.
->>>>>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
->>>>>>>>> case.
->>>>>>>> How does it compare with and without the revert?  Can you add the numbers?
->>>>>>
->>>>>> Looking through the thread, you're comparing -m single -d single, but
->>>>>> btrfs is still doing the raid.
->>>>>>
->>>>>> Sorry to keep asking for more runs, but these numbers are a surprise,
->>>>>> and I probably won't have time today to reproduce before vacation next
->>>>>> week (sadly, Christoph and I aren't going together).
->>>>
->>>> Sadly I also did not run into either you or Christoph during my own
->>>> vacation during the last two weeks. But I'm back from it how, which got
->>>> me wondering:
->>>>
->>>> What happened to this regression? Was any progress made to resolve this
->>>> in one way or another?
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>>
->>>> #regzbot poke
->>>>
->>>>>> Can you please do a run where lvm or MD raid are providing the raid0?
->>>>> no LVM/MD used here.
->>>>>
->>>>>> It doesn't look like you're using compression, but I wanted to double check.
->>>>>
->>>>> Yes. '-m xx -d yy' with other default mkfs.btrfs option, so no compression.
->>>>>
->>>>>> How much ram do you have?
->>>>>
->>>>> 192G ECC memory.
->>>>>
->>>>> two CPU numa nodes, but all PCIe3 NVMe SSD are connected to one NVMe HBA/
->>>>> one numa node.
->>>>>
->>>>>> Your fio run has 4 jobs going, can I please see the full fio output for
->>>>>> a fast run and a slow run?
->>>>>
->>>>> fio results are saved into attachment files (fast.text & slow.txt)
->>>>>
->>>>> Best Regards
->>>>> Wang Yugui (wangyugui@e16-tech.com)
->>>>> 2023/08/13
->>
->>
->>
->>
+> git bisect start
+> # status: waiting for both good and bad commits
+> # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+> git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> # status: waiting for bad commit, 1 good commit known
+> # bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
+> git bisect bad 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+> # bad: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag 'mips_6.5'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+> git bisect bad b775d6c5859affe00527cbe74263de05cfe6b9f9
+> # good: [3a8a670eeeaa40d87bd38a587438952741980c18] Merge tag
+> 'net-next-6.5' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+> git bisect good 3a8a670eeeaa40d87bd38a587438952741980c18
+> # bad: [188d3f80fc6d8451ab5e570becd6a7b2d3033023] drm/amdgpu: vcn_4_0
+> set instance 0 init sched score to 1
+> git bisect bad 188d3f80fc6d8451ab5e570becd6a7b2d3033023
+> # good: [12fb1ad70d65edc3405884792d044fa79df7244f] drm/amdkfd: update
+> process interrupt handling for debug events
+> git bisect good 12fb1ad70d65edc3405884792d044fa79df7244f
+> # bad: [9cc31938d4586f72eb8e0235ad9d9eb22496fcee] i915/perf: Drop the
+> aging_tail logic in perf OA
+> git bisect bad 9cc31938d4586f72eb8e0235ad9d9eb22496fcee
+> # bad: [51d86ee5e07ccef85af04ee9850b0baa107999b6] drm/msm: Switch to
+> fdinfo helper
+> git bisect bad 51d86ee5e07ccef85af04ee9850b0baa107999b6
+> # good: [bfdede3a58ea970333d77a05144a7bcec13cf515] drm/rockchip: cdn-dp:
+> call drm_connector_update_edid_property() unconditionally
+> git bisect good bfdede3a58ea970333d77a05144a7bcec13cf515
+> # good: [123ee07ba5b7123e0ce0e0f9d64938026c16a2ce] drm: sun4i_tcon: use
+> devm_clk_get_enabled in `sun4i_tcon_init_clocks`
+> git bisect good 123ee07ba5b7123e0ce0e0f9d64938026c16a2ce
+> # bad: [20d54e48d9c705091a025afff5839da2ea606f6b] fbdev: Rename
+> fb_mem*() helpers
+> git bisect bad 20d54e48d9c705091a025afff5839da2ea606f6b
+> # bad: [728cb3f061e2b3a002fd76d91c2449b1497b6640] gpu: drm: bridge: No
+> need to set device_driver owner
+> git bisect bad 728cb3f061e2b3a002fd76d91c2449b1497b6640
+> # bad: [0f1cb4d777281ca3360dbc8959befc488e0c327e] drm/ssd130x: Fix
+> include guard name
+> git bisect bad 0f1cb4d777281ca3360dbc8959befc488e0c327e
+> # good: [0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630] dt-bindings: display:
+> simple: Add BOE EV121WXM-N10-1850 panel
+> git bisect good 0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630
+> # bad: [60aebc9559492cea6a9625f514a8041717e3a2e4] drivers/firmware: Move
+> sysfb_init() from device_initcall to subsys_initcall_sync
+> git bisect bad 60aebc9559492cea6a9625f514a8041717e3a2e4
+> # good: [8bb7c7bca5b70f3cd22d95b4d36029295c4274f6] drm/panel:
+> panel-simple: Add BOE EV121WXM-N10-1850 panel support
+> git bisect good 8bb7c7bca5b70f3cd22d95b4d36029295c4274f6
+> # first bad commit: [60aebc9559492cea6a9625f514a8041717e3a2e4]
+> drivers/firmware: Move sysfb_init() from device_initcall to
+> subsys_initcall_sync
