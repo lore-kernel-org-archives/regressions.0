@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC81114ABB
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 08:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECAA13ADF
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 08:57:45 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qlQKi-0001vm-Al; Wed, 27 Sep 2023 10:55:48 +0200
-Message-ID: <3efa338a-6d0c-46a9-ae59-d96fbe6aa5af@leemhuis.info>
-Date: Wed, 27 Sep 2023 10:55:48 +0200
+	id 1qlQMZ-0002b8-BV; Wed, 27 Sep 2023 10:57:43 +0200
+Message-ID: <e3cc6486-48be-46fb-9850-32add544530b@leemhuis.info>
+Date: Wed, 27 Sep 2023 10:57:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,8 +15,9 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Subject: Re: s2idle stopped working with 6.6-rc on Thinkpad T14 G1 (AMD)
-Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
 To: Mario Limonciello <mario.limonciello@amd.com>
 Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
  Linux kernel regressions list <regressions@lists.linux.dev>
@@ -24,14 +25,14 @@ References: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
  <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
  <e049aa41-b136-4071-850f-d06b47fe67a1@leemhuis.info>
  <5f753ef4-caec-479a-bff4-43c16fb3317b@amd.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
 In-Reply-To: <5f753ef4-caec-479a-bff4-43c16fb3317b@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695804950;c9f8156f;
-X-HE-SMSGID: 1qlQKi-0001vm-Al
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695805065;3394f52e;
+X-HE-SMSGID: 1qlQMZ-0002b8-BV
+
+[one more time, please ignore the previous message]
 
 On 25.09.23 19:44, Mario Limonciello wrote:
 > On 9/25/2023 08:45, Thorsten Leemhuis wrote:
@@ -53,6 +54,17 @@ On 25.09.23 19:44, Mario Limonciello wrote:
 > 
 > So yes; bisect is the next step, thanks.
 
-Thx again for your work. Turns out it was
+Thx again for your work.
+
+FWIW, turned out the problem is caused by 92e24e0e57f72e ("Input:
+psmouse - add delay when deactivating for SMBus mode"). Guess it's a
+timing issue. Reported it in a new thread:
+
+#regzbot dup-of:
+https://lore.kernel.org/regressions/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
+
+Ciao, Thorsten
+
+
 
 
