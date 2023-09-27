@@ -1,200 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A526F1D6AE
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 18:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695837725; x=1727373725;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hHsXtYJYbGMBzqMcwOwqnjO2lOpeB+xlM/cM3hDaKig=;
-  b=b77x5k3028MNHdf0McS/CM5SD5uNGMefR37Mo/8XlztWxDjfGxS+yNXo
-   AUsEa7IW9huq/vJ5t+pgcvMuVgqXB8y15JKxVWroexTEVsVClEGZS3E+c
-   nSmYjxhZR2CF8NO4MxswH5OabkuagN+w+L0mnP+60zfr6c1mHbqSi7iDF
-   kECFprP+dPA3jxlO74ocYSUco/adOAKYAOE49kU+v2jkQlCpNZGyeQzhI
-   mIhZ0bAi/S/zujVOggrVW0ot+0+YeKQ4Ill790M9rZTcNJyY6/pYYHGhw
-   1NKJHDG5I7CYZa66EL/zmh5WsAG9Mz8H+arSIEggqUuCaJxRYrGYrWrdE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="381798908"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="381798908"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 11:02:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="749313990"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="749313990"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 27 Sep 2023 11:02:01 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id B653B177; Wed, 27 Sep 2023 21:02:00 +0300 (EEST)
-Date: Wed, 27 Sep 2023 21:02:00 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230927180200.GQ3208943@black.fi.intel.com>
-References: <20230927170114.GP3208943@black.fi.intel.com>
- <20230927172455.GA455882@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E1579FD
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 18:49:59 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-405524e6769so61837795e9.1
+        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 11:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695840597; x=1696445397; darn=lists.linux.dev;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R1itOLkylDTQc/2A2yBLCkbYqw9eu/lNAc5CXGwFbJ0=;
+        b=R85AiXwmCUwc7QFOhvg4HMeMuY6f5GA1SHTqOPYypWXgHidGCGjICbWLrpLhSYm4+T
+         gIcBmOWPaZQVGheGNzbopKlP29rh7bvADF+gSlRg4ptzOOetRq7J0yx+aodvLrQfpDvD
+         1SjEvaXyv2X0rFCzSkdzPQB12NW8H3cEPwV3DBB3QpjGomuDg2UTC+1bAQaCDkc6Rp9Z
+         4pNiBv6uDofpTX9eTlSneiYWQyS5bQ5hBNUkFohWCc5RSIf5OhvOv5tahcaVXeGQ0B2b
+         38YxqcS+b0S8kzmazmv4wa2NkC1ruks3j+sWET6KIZXh4POjto/6JomqD0XyzHZ5Nrv2
+         eWMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695840597; x=1696445397;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R1itOLkylDTQc/2A2yBLCkbYqw9eu/lNAc5CXGwFbJ0=;
+        b=t+Yvag5fXEfPZRW24YnO6MScBAT1miYhjOrAcYGlkSqZkV7IEzaVbkq8XFy1tTIhNe
+         zMB71fVeN3IneIUOGys6azpxzeUlZxUGBFXsDxiB1CG2UPW/iKqM/jifCWFU4xVJSf4O
+         tlZ1R5NwnE7hGWR+DvgS+m98AJACMZmdIGh1Jb5BA49yO6uRm1wY3vRfIjMNDMUacCdB
+         eU6uBi9J3QZ2CMGEwFJAExlDL4Hm8Ew0eGSAuCGVBpOzvDwgEz+mxcmFhWykoc3DrpYk
+         8N8S6mrxILzzSOmxRjtjQ591OIsmCLzImocJpRT7CIaIZmrGKJO7X/uOCv9z+/ajVmI8
+         ucYw==
+X-Gm-Message-State: AOJu0YzSVzt4cCUcwUlfqfDCsfC+7gLuhS1BzbD/NOAQWJH7BbpnmYiO
+	+DLb0ORiuRn4qhSBfDevoSe+z0okwU0yAA==
+X-Google-Smtp-Source: AGHT+IGeFdsdEIFmk8RA4GwxSOTEPxHmjmcwLkojsHT6AEJXOvOw35P8cqeCoxyKpOpJNO67PqbsrQ==
+X-Received: by 2002:a05:600c:2044:b0:405:3941:ce2c with SMTP id p4-20020a05600c204400b004053941ce2cmr5457597wmg.6.1695840597222;
+        Wed, 27 Sep 2023 11:49:57 -0700 (PDT)
+Received: from yoga ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
+        by smtp.gmail.com with ESMTPSA id p19-20020a05600c1d9300b0040531f5c51asm18515027wms.5.2023.09.27.11.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Sep 2023 11:49:56 -0700 (PDT)
+Date: Wed, 27 Sep 2023 20:49:50 +0200
+From: Sven Frotscher <sven.frotscher@gmail.com>
+Subject: Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
+To: August Wikerfors <git@augustwikerfors.se>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
+	regressions@lists.linux.dev
+Message-Id: <2ZQN1S.P7M0RX306S1D3@gmail.com>
+In-Reply-To: <e8479eff-a5cb-41b0-8bf6-bcc20ccbecfb@augustwikerfors.se>
+References: <R5KN1S.18M6QDS4T9PY1@gmail.com>
+	<e8479eff-a5cb-41b0-8bf6-bcc20ccbecfb@augustwikerfors.se>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230927172455.GA455882@bhelgaas>
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
-On Wed, Sep 27, 2023 at 12:24:55PM -0500, Bjorn Helgaas wrote:
-> On Wed, Sep 27, 2023 at 08:01:14PM +0300, Mika Westerberg wrote:
-> > On Wed, Sep 27, 2023 at 11:50:36AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Sep 27, 2023 at 03:47:32PM +0300, Mika Westerberg wrote:
-> > > > On Wed, Sep 27, 2023 at 06:57:03AM -0500, Bjorn Helgaas wrote:
-> > > > > On Wed, Sep 27, 2023 at 08:16:02AM +0300, Mika Westerberg wrote:
-> > > > > > On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
-> > > > > > > On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
-> > > > > > > > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
-> > > > > > > > > Now pciehp thinks the slot is occupied and the link is up, so we
-> > > > > > > > > re-enumerate the hierarchy.  Is this because thunderbolt did something
-> > > > > > > > > to 06:00.0 that made the link from 05:01.0 come up?
-> > > > > > > > 
-> > > > > > > > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
-> > > > > > > > alongside DisplayPort and other data over the same physical link.
-> > > > > > > > 
-> > > > > > > > For this to work, PCIe tunnels need to be set up between the Thunderbolt
-> > > > > > > > host controller and attached devices.  Once a tunnel is established,
-> > > > > > > > the PCIe link magically goes up and TLPs can be transmitted.
-> > > > > > > > 
-> > > > > > > > There are two ways to establish those tunnels:
-> > > > > > > > 
-> > > > > > > > 1/ By a firmware in the Thunderbolt host controller.
-> > > > > > > >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
-> > > > > > > > 
-> > > > > > > > 2/ Natively by the kernel.
-> > > > > > > >    (software connection manager)
-> > > > > > > > 
-> > > > > > > > I'm assuming that the laptop in question exclusively uses the firmware
-> > > > > > > > connection manager, hence the kernel is reliant on that firmware to
-> > > > > > > > establish tunnels and can't really do anything if it fails to do so.
-> > > > > > > 
-> > > > > > > Thanks for the background; that improves my meager understanding a
-> > > > > > > lot.
-> > > > > > > 
-> > > > > > > Since this seems to be a firmware issue, it does sound like this
-> > > > > > > laptop uses a firmware connection manager.  But there still seems to
-> > > > > > > be some kernel connection because pre-e8b908146d44, the link came up
-> > > > > > > in <5 seconds, and after the minor e8b908146d44 change, it takes >60
-> > > > > > > seconds.
-> > > > > > 
-> > > > > > In both cases (with or without) the commit what happens is that after
-> > > > > > resume is finished the firmware connection manager notices the
-> > > > > > connection, announces it to the Thunderbolt driver that exposes it to
-> > > > > > the userspace where boltd re-authorizes the device. This brings up the
-> > > > > > PCIe tunnel again and things get working.
-> > > > > > 
-> > > > > > (What is expected to happen is that during the resume the firmware
-> > > > > >  connection manager re-connects the PCIe tunnel.)
-> > > > > > 
-> > > > > > This took previously the ~5s before resume is complete so that the above
-> > > > > > steps can happen where as after the commit it got delayed more up to the
-> > > > > > arbitrary ~60s because we started to use that with the commit
-> > > > > > e8b908146d44 (PCIE_RESET_READY_POLL_MS).
-> > > > > 
-> > > > > Why does the kernel delay affect the timing of when the firmware
-> > > > > connection manager notices the connection?  It seems like Linux waits
-> > > > > for the timeout, then Linux does something that kicks the firmware
-> > > > > connection manager.  That's why I asked about this sequence:
-> > > > > 
-> > > > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
-> > > > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
-> > > > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
-> > > > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
-> > > > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
-> > > > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> > > > > 
-> > > > > where we wait for the timeout, decide the device is gone, remove
-> > > > > everything, and then the thunderbolt driver does something, and we
-> > > > > notice the device is magically back.
-> > > > 
-> > > > Well the delay delays the whole resume and this includes Thunderbolt
-> > > > driver resume too, and userspace (where the bolt daemon authorizes the
-> > > > device again).
-> > > 
-> > > I don't know how the Thunderbolt driver works.  I assume this refers
-> > > to "thunderbolt 0000:06:00.0"?  Is the 06:00.0 resume related to the
-> > > firmware connection manager somehow?
-> > > 
-> > > The removal affects the sub-hierarchy below 05:01.0 (bus 07-3b).
-> > > 06:00.0 is below 05:00.0, so it's in a different sub-hierarchy.  I
-> > > don't think there's a PCIe requirement that 05:01.0 be resumed before
-> > > 05:00.0, or even that they be serialized at all.
-> > > 
-> > > The hierarchy:
-> > > 
-> > >   pci 0000:00:1c.4: PCI bridge to [bus 04-3c]
-> > >   pci 0000:04:00.0: PCI bridge to [bus 05-3c]
-> > >   pci 0000:05:00.0: PCI bridge to [bus 06]
-> > >   pci 0000:05:01.0: PCI bridge to [bus 07-3b]
-> > > 
-> > > It looks like we start the 06:00.0 resume first (118.9), but it
-> > > doesn't complete until after the timeout (191.7):
-> > > 
-> > >   [  118.915870] thunderbolt 0000:06:00.0: control channel starting...
-> > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
-> > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
-> > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
-> > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
-> > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
-> > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> > > 
-> > > Did the Thunderbolt driver do something to 06:00.0 that caused the
-> > > 05:01.0 link to come up, or is the timing just coincidental?
-> > 
-> > Yes it sent the firmware a command telling that the driver is ready
-> > again, then the firmware sends back notification that there is a new
-> > device:
-> > 
-> > [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
-> > [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
-> > [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
-> > 
-> > this then is send to the userspace via uevent where bolt goes and
-> > authorizes it and this results the tunnel to be created which show in
-> > the log as:
-> > 
-> > [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> 
-> So the obvious next question is why we have to wait for the 05:01.0
-> link timeout before sending the command to the 06:00.0 firmware, since
-> there's no PCI connection between them.
+Hello,
 
-No there is not - it is a PCIe tunnel.
+ > > Signed-off-by: Sven Frotscher <sven.frotscher@gmail.com>
+ > Since this fixes a regression caused by commit c008323fe361 which has
+ > been backported to stable, please add "Fixes:" and "Cc:" tags above 
+the
+ > "Signed-off-by:" tag to ensure the fix also gets backported in a 
+timely
+ > manner [1]:
+ >
+ > Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on 
+Lenovo 82SJ")
+ > Cc: stable@vger.kernel.org
+I will.
 
-> But there must be *some* connection between the 05:01.0 link coming up
-> and the 06:00.0 behavior.  Maybe this is related to the
-> nhi_resume_noirq() comment about "The tunneled pci bridges are
-> siblings of us. Use resume_noirq to reenable the tunnels asap. A
-> corresponding pci quirk blocks the downstream bridges resume_noirq
-> until we are done." Unfortunately the comment doesn't mention the NAME
-> of the quirk, so I lost the trail there.
-> 
-> Maybe there's an opportunity for a quirk that says "this Thunderbolt
-> device should never need a whole second for the link to come up", for
-> example.
+ > > +>..>...>...DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+ > > +>..>...>...DMI_MATCH(DMI_PRODUCT_NAME, "82YM"),
+ > Your e-mail client seems to have mangled the leading whitespace here,
+ > which will prevent the patch from applying cleanly.
+My e-mail client isn't the problem here, but my Vim syntax highlighting
+for tabs... I should've noticed that when copy-pasting from test e-mail
+to patch e-mail via Vim.
 
-The PCIe stack needs to follow PCIe spec (regardless of what is the
-actual medium the packets go through). And regadless what we do here the
-PCIe link goes down and that breaks the usage of any devices behind that
-link such as mounted disks so the delay is definitely not the worst
-thing that can happen.
+Should I reply to this thread with a [PATCH v2] message or create a new
+thread?
+Anyway, thank you for pointing out these issues.
 
-Now, If you read anything that Kamil said, this actually works now with
-the "secure" mode when he turned the "Wake from Thunderbolt" option back
-to the default. So now it works as expected but upon unplug there is the
-issue that we fixed with the commit that marks the devices disconnected.
-He will test that next week so we can be sure.
+Regards,
+Sven
+
+
