@@ -1,42 +1,42 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A0EDB
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 22:32:21 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-405524e6769so63849465e9.1
-        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 15:32:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87888746A
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 22:38:23 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31f71b25a99so12009163f8f.2
+        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 15:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695853939; x=1696458739; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1695854302; x=1696459102; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9WCpJ9NzeLVvWIWMoXZNdOxnnzDXic6RaiR8cReCog=;
-        b=Qw7tX6aiiaQdSCgSznM9qUe3EwTOTdgA5y1Vpwi1qfidVDkp8MWZOyg1dax8AM0Lbe
-         I1BiqdTyAqoYIen2ZZpBazmVGxNfdW8JMZfyCGdtMKoRQXy/vIGsCgLFUXta9w86N1y5
-         lUUiIyq6QmoXL0DmejEmudM/OWBwZApnsia3MQfpA1ri9mEjvE73j7a6nEfA5pA0jL+4
-         clB2nA4Z0Te48HkP/GstCbpGfwI0PAJA0Eteclgs5rCKx1FYES07mJjj1UgYCqeZyVdZ
-         n4poanK4C9giCMNp3cli42MPTvdhg9Jg+6uHEgNkyToM03u0rGIcEAJcvbLUffD5N4nR
-         hfSA==
+        bh=9RqKnQ384vFzLQtfAR/lBEgRDbU9k5LVLEF+EOb6OZQ=;
+        b=IkyRS9NSbnizTwHn7SgbrkHe+MekYPtGK6cCZz+XpFiSeJw0J+r9Sk7Vut9LSyP0wC
+         8tSrZh69ctuztn1OabP4QQNwvMw3gi8Dem5RIgaUqYE6ydnXKiW4W+5QTLWSgox8AycY
+         egs1RxEebLd++zS7h45ndscLTQ8Y/qmOmkR2UGXU1Hop233eJ4i+JMeY6y8zCN9+Hw+B
+         RLIjKeSA/eJ4GMoIG9uJyetKKzobbyMdhR9HOYlQW0gxkSGjX0YUdj0+/kl61HaQbFdJ
+         Ngy3XxcE8/ktthhmKPd58vOwf7GRIB3WiE8WSQ1xKbA5y1ToiQbB6FBuj2eAQKnNh/En
+         9alg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695853939; x=1696458739;
+        d=1e100.net; s=20230601; t=1695854302; x=1696459102;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T9WCpJ9NzeLVvWIWMoXZNdOxnnzDXic6RaiR8cReCog=;
-        b=Da40/6Y+r6iaqh5zmVIa37uX2ebnCVYPVJGCldq8iJFY09gL8R3G+vg9K7+4u2setm
-         m2gsigHBgjxVDU1SSwJptA8iuukY2Njoux9u+v3ml2sPaXREPqtbTDngLDPKWlLo35od
-         Gg3uI6h189p6YeYyus4FFX5q8bjt0eNN2ZtemTlFbzax+FK4tNyzbGtkVhNBGih4J21p
-         FkyG55YQwjqn3rzsvRve7NmaSndZ3pAM80BO7FsUSx5yOXV4d+86FDemvxfipYJHP2lL
-         b0TvNb3s6IJ7POaQVjz/o0LNiWlKTP8AbqUd8MUUhu9HtQXeve5QJr1ETR2l1rXtc4zO
-         kd7g==
-X-Gm-Message-State: AOJu0YwJXI5pcPxZmkk7N58t0dkSU3zO2h1GrzrdWZnlAtfUignlas4/
-	E3d9eLJnOQ23kpnmsisFJkk=
-X-Google-Smtp-Source: AGHT+IFj90YtQ231dKDr0LEfgiMpXwVWVmPmdjVad5uEus1rDhNZDLL8aaM/ziz9du6rV9rqF69JKg==
-X-Received: by 2002:a05:600c:1c13:b0:401:c717:ec6d with SMTP id j19-20020a05600c1c1300b00401c717ec6dmr5932985wms.15.1695853939206;
-        Wed, 27 Sep 2023 15:32:19 -0700 (PDT)
+        bh=9RqKnQ384vFzLQtfAR/lBEgRDbU9k5LVLEF+EOb6OZQ=;
+        b=AT3iytUVIgKk4kzg1A5QgCjOmjidS7WXVwggd48HNaShfI63RfNk04UAy2Hy9OI/UN
+         +EapozA4MhQqyEFsY+K9J3Wz2uaWJshTMrpvrtZVMlk8RgzBIO2KhO0OQaivZuyZsEsb
+         e4ULV+DekUJ97c3CyN4hzjTULzUXYS7Fys4/WG9PWeShZvuemtNBz+pWO+puubI0xf5k
+         0crCBg70XDPriD/DMG7CsVZv9ZV9yvE42nFbMddf1ovDaQR7SxxPIjBdS508e98fX3JP
+         VlmtXTDtGXZR4fDIOTUjj7cG3kUsx4AmTemLE+9wEev11+fosGCCOZCt4kLtC5rvo1zE
+         K6Eg==
+X-Gm-Message-State: AOJu0Yzey5AcsH5jT6syS+8459CmiblmPOZcp2Q2koWFbysosJfjXoW8
+	lkMWpmlrcZpeYYiYO4MaSxM=
+X-Google-Smtp-Source: AGHT+IEtPyqOdvggdme1F7Zk7QQYP32qu1nZmurf+Vdr4qpg/HWLBeF4/Hp888VsCYml8AiGnn90Rw==
+X-Received: by 2002:adf:e749:0:b0:320:bb1:5a73 with SMTP id c9-20020adfe749000000b003200bb15a73mr2917396wrn.22.1695854301359;
+        Wed, 27 Sep 2023 15:38:21 -0700 (PDT)
 Received: from yoga.fem.tu-ilmenau.de ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
-        by smtp.gmail.com with ESMTPSA id o11-20020a5d4a8b000000b0031ffb51f6f9sm18019304wrq.30.2023.09.27.15.32.17
+        by smtp.gmail.com with ESMTPSA id j2-20020a5d4642000000b00317e77106dbsm18013776wrs.48.2023.09.27.15.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Sep 2023 15:32:18 -0700 (PDT)
+        Wed, 27 Sep 2023 15:38:21 -0700 (PDT)
 From: Sven Frotscher <sven.frotscher@gmail.com>
 To: broonie@kernel.org
 Cc: git@augustwikerfors.se,
@@ -47,9 +47,9 @@ Cc: git@augustwikerfors.se,
 	regressions@lists.linux.dev,
 	Sven Frotscher <sven.frotscher@gmail.com>,
 	stable@vger.kernel.org
-Subject: [PATCH v3] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-Date: Wed, 27 Sep 2023 23:48:02 +0200
-Message-ID: <20230927215058.16220-2-sven.frotscher@gmail.com>
+Subject: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
+Date: Thu, 28 Sep 2023 00:36:07 +0200
+Message-ID: <20230927223758.18870-1-sven.frotscher@gmail.com>
 X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -59,6 +59,7 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+
 Like the Lenovo 82TL, 82V2, 82QF and 82UG, the 82YM (Yoga 7 14ARP8)
 requires an entry in the quirk list to enable the internal microphone.
 The latter two received similar fixes in commit 1263cc0f414d
@@ -67,6 +68,9 @@ The latter two received similar fixes in commit 1263cc0f414d
 Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82SJ")
 Cc: stable@vger.kernel.org
 Signed-off-by: Sven Frotscher <sven.frotscher@gmail.com>
+---
+v3->v4 changes:
+* re-add blank line between commit message title and body
 ---
 v2->v3 changes:
 * add message title of referenced commit to commit message
