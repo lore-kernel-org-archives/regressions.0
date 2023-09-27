@@ -1,98 +1,128 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872E1450E8
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 19:35:21 +0000 (UTC)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-32157c8e4c7so11727317f8f.1
-        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 12:35:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695843319; x=1696448119; darn=lists.linux.dev;
-        h=mime-version:message-id:cc:to:subject:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b/kwHgGSPER833mfnZsloSnG2/QVneER5ld9wWGGfCM=;
-        b=HVFI65vUSClKm5XBbKpdrAOn3m6LQQ/zToYNSWIbk3AlOEdI1jLkq87F8DxWE3qem1
-         5HFO65JUsWowy41DKFZutzU10WW6k+wT3hX4uBrSUbCnZ2bvXuiqmWdqMRgJAQ0fUZDb
-         RyM8zrY4hbcsmS1oSxqCNfelUDhXm+G1Ju2ANxIVCH++QVYyXLVU7gYE/PaK40sphnpI
-         gyY1em8C9gStTpbtH8TZ8dk6UGR7RopKd2FIuzVPosbxC9g4wf/GAnXNYLQiAy6gXUb1
-         qLSHT33xKL8U98N2fqepB134hrMCVS8747MG86wUWp2AmUc7dE+C+B3G/R4lyXqdnVX4
-         trhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695843319; x=1696448119;
-        h=mime-version:message-id:cc:to:subject:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b/kwHgGSPER833mfnZsloSnG2/QVneER5ld9wWGGfCM=;
-        b=xNft2jeVeYAcTNe1nw9hQoB6aWju5JveYZfiu7Wen5mzcOHPo7gTQSx+oGXp/H2MO4
-         2WkB5N2SobYROkms3Orh8KhASG+ApxVTaz+do6sxWzQbQ2vHu/YC0uxuyaMeUskz95yA
-         jG3DF4yaoiAqJ+6RYfgFZ0GT5AmAiFFshOo3f+lpmmjTKSFpcuWR6JKia/o/AH2WivZq
-         tJrJpbyS2tXraOznzOUMuu9tBROhuKv7q9RcFNvKJGR4qzhcfNXoq9JGwei6m4EOIAzS
-         8JjOhRl0Ykxlt0yW3wv6oJAk0FoqFqOZTd0p+umzHYR9CYG7T5rGw0J51jy9sFtvQaJ2
-         a6oQ==
-X-Gm-Message-State: AOJu0YyL7KRG7VJOGhqc1GLoOXHSe6++Fhhks9WH6erxk/oRCKe2uBM2
-	9sYdW5l4ot8bhSyNqxTUpFw=
-X-Google-Smtp-Source: AGHT+IHl9dYpXN9XqXHiG6al2NGt7W95zzeD9nIMVhn3PlsdI/RctpeCZKJ/BoF5mQLG7aW3oIiarw==
-X-Received: by 2002:a05:6000:1112:b0:321:6a61:e45a with SMTP id z18-20020a056000111200b003216a61e45amr3040357wrw.15.1695843319317;
-        Wed, 27 Sep 2023 12:35:19 -0700 (PDT)
-Received: from yoga ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
-        by smtp.gmail.com with ESMTPSA id m4-20020adff384000000b00321673de0d7sm2379099wro.25.2023.09.27.12.35.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Sep 2023 12:35:18 -0700 (PDT)
-Date: Wed, 27 Sep 2023 21:35:12 +0200
-From: Sven Frotscher <sven.frotscher@gmail.com>
-Subject: [PATCH v2] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-To: broonie@kernel.org
-Cc: git@augustwikerfors.se, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
-	regressions@lists.linux.dev
-Message-Id: <O2TN1S.57QJOL6TXOBC1@gmail.com>
-X-Mailer: geary/44.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F722F4D
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 19:41:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA584C433C7;
+	Wed, 27 Sep 2023 19:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695843708;
+	bh=Trm3RqqOiy92ME4Oa0+RXzVr0s6T3RzxQQwbGOeke8A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jv7AAcvjzZpKX0KBhoQukVlarrAOyFJOtbAUPJHjhh/qccjG9m3anoVeJ7SNZ/BsJ
+	 xqRytYfP8OdedaLj8URfli3eHrRFVVRO7uRJPxLT/LOJjbNRJRaUyNotvXwujIXiI/
+	 082FN4S6fKijXzaiL206kiU2FSZNhVoNM7okGDPYzixtcg5iO5i+Ku+n2JTh0lPwll
+	 h7oC9Kjka9BKsDgh+PCidWwm9cQfaHmnIQDHuEctjC5HSWbEqc+CsNyguOowo6EqGA
+	 oo8aF/j5xGKZDKsFZOSMzTkhj1xcbxYYG8x4ANw66KtrHIRsjre7SimQB4bCOTEL+5
+	 FdVib9fH6HSRA==
+Date: Wed, 27 Sep 2023 14:41:45 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230927194145.GA458987@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230927180200.GQ3208943@black.fi.intel.com>
 
+On Wed, Sep 27, 2023 at 09:02:00PM +0300, Mika Westerberg wrote:
+> On Wed, Sep 27, 2023 at 12:24:55PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Sep 27, 2023 at 08:01:14PM +0300, Mika Westerberg wrote:
+> > > On Wed, Sep 27, 2023 at 11:50:36AM -0500, Bjorn Helgaas wrote:
+> > > ...
 
-Like the Lenovo 82TL, 82V2, 82QF and 82UG, the 82YM (Yoga 7 14ARP8)
-requires an entry in the quirk list to enable the internal microphone.
-The latter two received similar fixes in commit 1263cc0f414d.
+> > > > The hierarchy:
+> > > > 
+> > > >   pci 0000:00:1c.4: PCI bridge to [bus 04-3c]
+> > > >   pci 0000:04:00.0: PCI bridge to [bus 05-3c]
+> > > >   pci 0000:05:00.0: PCI bridge to [bus 06]
+> > > >   pci 0000:05:01.0: PCI bridge to [bus 07-3b]
+> > > > 
+> > > > It looks like we start the 06:00.0 resume first (118.9), but it
+> > > > doesn't complete until after the timeout (191.7):
+> > > > 
+> > > >   [  118.915870] thunderbolt 0000:06:00.0: control channel starting...
+> > > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
+> > > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
+> > > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > > > 
+> > > > Did the Thunderbolt driver do something to 06:00.0 that caused the
+> > > > 05:01.0 link to come up, or is the timing just coincidental?
+> > > 
+> > > Yes it sent the firmware a command telling that the driver is ready
+> > > again, then the firmware sends back notification that there is a new
+> > > device:
+> > > 
+> > > [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > 
+> > > this then is send to the userspace via uevent where bolt goes and
+> > > authorizes it and this results the tunnel to be created which show in
+> > > the log as:
+> > > 
+> > > [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > 
+> > So the obvious next question is why we have to wait for the 05:01.0
+> > link timeout before sending the command to the 06:00.0 firmware, since
+> > there's no PCI connection between them.
+> 
+> No there is not - it is a PCIe tunnel.
 
-Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 
-82SJ")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sven Frotscher <sven.frotscher@gmail.com>
----
-v1->v2 changes:
-* add Fixes and Cc tags to commit message
-* remove redundant LKML link from commit message
-* fix mangled diff
+You confirmed my assertion that in terms of the PCI topology, there is
+no connection between 05:01.0 and 06:00.0.
 
-sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
-1 file changed, 7 insertions(+)
+So the question remains: do we need to wait for the 05:01.0 link
+timeout before the 06:00.0 driver does something that leads to
+firmware starting the process of bringing up the tunnel and the link?
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c 
-b/sound/soc/amd/yc/acp6x-mach.c
-index 3d8a51351e29..e3d2b9d01552 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -241,6 +241,13 @@ static const struct dmi_system_id 
-yc_acp_quirk_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
- 	}
- 	},
-+	{
-+	.driver_data = &acp6x_card,
-+	.matches = {
-+		DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "82YM"),
-+	}
-+	},
- 	{
- 	.driver_data = &acp6x_card,
- 	.matches = {
---
-2.42.0
+> > But there must be *some* connection between the 05:01.0 link coming up
+> > and the 06:00.0 behavior.  Maybe this is related to the
+> > nhi_resume_noirq() comment about "The tunneled pci bridges are
+> > siblings of us. Use resume_noirq to reenable the tunnels asap. A
+> > corresponding pci quirk blocks the downstream bridges resume_noirq
+> > until we are done." Unfortunately the comment doesn't mention the NAME
+> > of the quirk, so I lost the trail there.
+> > 
+> > Maybe there's an opportunity for a quirk that says "this Thunderbolt
+> > device should never need a whole second for the link to come up", for
+> > example.
+> 
+> The PCIe stack needs to follow PCIe spec (regardless of what is the
+> actual medium the packets go through). And regadless what we do here the
+> PCIe link goes down and that breaks the usage of any devices behind that
+> link such as mounted disks so the delay is definitely not the worst
+> thing that can happen.
 
+Sure.  But if we resume in a reasonable time, we at least have the
+opportunity to notice what happened and warn about why the mounted
+disk broke.  That's way better than getting bug reports that say
+"resume is broken."
 
+> Now, If you read anything that Kamil said, this actually works now with
+> the "secure" mode when he turned the "Wake from Thunderbolt" option back
+> to the default. So now it works as expected but upon unplug there is the
+> issue that we fixed with the commit that marks the devices disconnected.
+> He will test that next week so we can be sure.
 
+I did see that.  You may have also seen my sentiment that it's painful
+for users to diagnose an apparent resume failure and find a BIOS
+option to fix it.
+
+If we can't make resume work in a reasonable time, can we at least
+detect the case where it's going to take too long?  If so, maybe we
+can warn about it, avoid suspend, or change the way we do it.
+
+Bjorn
