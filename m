@@ -1,128 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F722F4D
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 19:41:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA584C433C7;
-	Wed, 27 Sep 2023 19:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695843708;
-	bh=Trm3RqqOiy92ME4Oa0+RXzVr0s6T3RzxQQwbGOeke8A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jv7AAcvjzZpKX0KBhoQukVlarrAOyFJOtbAUPJHjhh/qccjG9m3anoVeJ7SNZ/BsJ
-	 xqRytYfP8OdedaLj8URfli3eHrRFVVRO7uRJPxLT/LOJjbNRJRaUyNotvXwujIXiI/
-	 082FN4S6fKijXzaiL206kiU2FSZNhVoNM7okGDPYzixtcg5iO5i+Ku+n2JTh0lPwll
-	 h7oC9Kjka9BKsDgh+PCidWwm9cQfaHmnIQDHuEctjC5HSWbEqc+CsNyguOowo6EqGA
-	 oo8aF/j5xGKZDKsFZOSMzTkhj1xcbxYYG8x4ANw66KtrHIRsjre7SimQB4bCOTEL+5
-	 FdVib9fH6HSRA==
-Date: Wed, 27 Sep 2023 14:41:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230927194145.GA458987@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE06D1A586
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 19:56:05 +0000 (UTC)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-65b2463d651so25905756d6.3
+        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 12:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695844565; x=1696449365; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5A+e538uMQ9k/uzyhmViIJnbml3dasNee8PoGBFz6DE=;
+        b=iBFyp5XI5/6jhVZJpa1qEp2ODCBXbz/okkxojwPE497epz6NOMfzh/kCjfHji39Yoi
+         rSxyqjJuYXCnm0m/XnajC44ie6J9Fz8yWn1rdTTPTOV2+x8A3Luzc/ynVlpJjfNkEHY0
+         l4vLQv/9yKzbTkUS7tVBRUOSK0MYxUmis226gHUim3+NSc7LWICtI2YgCR7+CyBTyuZh
+         EZpgQHNXQrFQWMQR5KusoPvWm5PNmdcYVIouCUwdDzjNuz1MNGqVieRgQ5BZLaWEJ31I
+         IUpmBpSlY55AoUf8HOQRFudGq9tcBTs7hkI2M+nxyRtjgcxprhZCS7jQ2W8nhP6zfz7T
+         AVgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695844565; x=1696449365;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5A+e538uMQ9k/uzyhmViIJnbml3dasNee8PoGBFz6DE=;
+        b=gaKATBWxEz6TV5Ko4FadUvDFmBRBgExx3dKsNj9dqsAm5n3I2IpNxEXm3o75yjRNXF
+         vwHx6CX+hTpgzX6iIDT73dqmDyzORAxfHZQSaHISYdbLwoGcA5uMgxkcweZa1bBs76gT
+         xpVVtSUmhVSGrmnK8b8ayHWIbSdtwkXIpVLF2H9Dx3//cCJtuwaavvGV1hUSfAzEoLR0
+         5DdiroXGVs2tm5B/2ROtcro6844ohBNCK5WOAXdx4/0pXjvsl5ikI0MO1pqbK24ivHsS
+         soFTvlUUP6AzX1WBu3MDWqPIXsYkhUYppWK0AWYe/nVZcmSEM5dcvWbf3G+1I9FO1tDz
+         /uAw==
+X-Gm-Message-State: AOJu0Yz91EGqK0UdgwyD4F9vOBiuN1uU2v0cMiK2F0lBEa3s/yu8lRxt
+	KtPFOBtSTub+WOk4i84GSnqc6kdOdftgqVq9l1yWfwKe1ZqrRU2D
+X-Google-Smtp-Source: AGHT+IGHzPPg4FYPmcv6LpEYvSLXtkhXZXZ6WSl/my37BuK9tBvcubscOLBy5wWBmJcEfgA2qADHhdeBIf2VV86idc8=
+X-Received: by 2002:a0c:e4c9:0:b0:656:34c5:13b9 with SMTP id
+ g9-20020a0ce4c9000000b0065634c513b9mr3489700qvm.34.1695844564830; Wed, 27 Sep
+ 2023 12:56:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230927180200.GQ3208943@black.fi.intel.com>
+From: Simon Kaegi <simon.kaegi@gmail.com>
+Date: Wed, 27 Sep 2023 15:55:49 -0400
+Message-ID: <CACW2H-5W6KE6UJ8HwD6r9pOx4Ow_W6ACZyg9LpTykjU6tHHB3g@mail.gmail.com>
+Subject: [REGRESSION] EINVAL with mount in selinux_set_mnt_opts when mounting
+ in a guest vm with selinux disabled
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, dhowells@redhat.com, 
+	jpiotrowski@linux.microsoft.com, jlayton@kernel.org, brauner@kernel.org, 
+	sashal@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 27, 2023 at 09:02:00PM +0300, Mika Westerberg wrote:
-> On Wed, Sep 27, 2023 at 12:24:55PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Sep 27, 2023 at 08:01:14PM +0300, Mika Westerberg wrote:
-> > > On Wed, Sep 27, 2023 at 11:50:36AM -0500, Bjorn Helgaas wrote:
-> > > ...
+#regzbot introduced v6.1.52..v6.1.53
+#regzbot introduced: ed134f284b4ed85a70d5f760ed0686e3cd555f9b
 
-> > > > The hierarchy:
-> > > > 
-> > > >   pci 0000:00:1c.4: PCI bridge to [bus 04-3c]
-> > > >   pci 0000:04:00.0: PCI bridge to [bus 05-3c]
-> > > >   pci 0000:05:00.0: PCI bridge to [bus 06]
-> > > >   pci 0000:05:01.0: PCI bridge to [bus 07-3b]
-> > > > 
-> > > > It looks like we start the 06:00.0 resume first (118.9), but it
-> > > > doesn't complete until after the timeout (191.7):
-> > > > 
-> > > >   [  118.915870] thunderbolt 0000:06:00.0: control channel starting...
-> > > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
-> > > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
-> > > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
-> > > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
-> > > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
-> > > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> > > > 
-> > > > Did the Thunderbolt driver do something to 06:00.0 that caused the
-> > > > 05:01.0 link to come up, or is the timing just coincidental?
-> > > 
-> > > Yes it sent the firmware a command telling that the driver is ready
-> > > again, then the firmware sends back notification that there is a new
-> > > device:
-> > > 
-> > > [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
-> > > [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
-> > > [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
-> > > 
-> > > this then is send to the userspace via uevent where bolt goes and
-> > > authorizes it and this results the tunnel to be created which show in
-> > > the log as:
-> > > 
-> > > [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
-> > 
-> > So the obvious next question is why we have to wait for the 05:01.0
-> > link timeout before sending the command to the 06:00.0 firmware, since
-> > there's no PCI connection between them.
-> 
-> No there is not - it is a PCIe tunnel.
+We hit this regression when updating our guest vm kernel from 6.1.52 to
+6.1.53 -- bisecting this problem was introduced
+in ed134f284b4ed85a70d5f760ed0686e3cd555f9b -- vfs, security: Fix automount
+superblock LSM init problem, preventing NFS sb sharing --
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.53&id=ed134f284b4ed85a70d5f760ed0686e3cd555f9b
 
-You confirmed my assertion that in terms of the PCI topology, there is
-no connection between 05:01.0 and 06:00.0.
+We're getting an EINVAL in `selinux_set_mnt_opts` in
+`security/selinux/hooks.c` when mounting a folder in a guest VM where
+selinux is disabled. We're mounting from another folder that we suspect has
+selinux labels set from the host. The EINVAL is getting set in the
+following block...
+```
+if (!selinux_initialized(&selinux_state)) {
+        if (!opts) {
+                /* Defer initialization until selinux_complete_init,
+                        after the initial policy is loaded and the security
+                        server is ready to handle calls. */
+                goto out;
+        }
+        rc = -EINVAL;
+        pr_warn("SELinux: Unable to set superblock options "
+                "before the security server is initialized\n");
+        goto out;
+}
+```
+We can reproduce 100% of the time but don't currently have a simple
+reproducer as the problem was found in our build service which uses
+kata-containers (with cloud-hypervisor and rootfs mounted via virtio-blk).
 
-So the question remains: do we need to wait for the 05:01.0 link
-timeout before the 06:00.0 driver does something that leads to
-firmware starting the process of bringing up the tunnel and the link?
+We have not checked the mainline as we currently are tied to 6.1.x.
 
-> > But there must be *some* connection between the 05:01.0 link coming up
-> > and the 06:00.0 behavior.  Maybe this is related to the
-> > nhi_resume_noirq() comment about "The tunneled pci bridges are
-> > siblings of us. Use resume_noirq to reenable the tunnels asap. A
-> > corresponding pci quirk blocks the downstream bridges resume_noirq
-> > until we are done." Unfortunately the comment doesn't mention the NAME
-> > of the quirk, so I lost the trail there.
-> > 
-> > Maybe there's an opportunity for a quirk that says "this Thunderbolt
-> > device should never need a whole second for the link to come up", for
-> > example.
-> 
-> The PCIe stack needs to follow PCIe spec (regardless of what is the
-> actual medium the packets go through). And regadless what we do here the
-> PCIe link goes down and that breaks the usage of any devices behind that
-> link such as mounted disks so the delay is definitely not the worst
-> thing that can happen.
-
-Sure.  But if we resume in a reasonable time, we at least have the
-opportunity to notice what happened and warn about why the mounted
-disk broke.  That's way better than getting bug reports that say
-"resume is broken."
-
-> Now, If you read anything that Kamil said, this actually works now with
-> the "secure" mode when he turned the "Wake from Thunderbolt" option back
-> to the default. So now it works as expected but upon unplug there is the
-> issue that we fixed with the commit that marks the devices disconnected.
-> He will test that next week so we can be sure.
-
-I did see that.  You may have also seen my sentiment that it's painful
-for users to diagnose an apparent resume failure and find a BIOS
-option to fix it.
-
-If we can't make resume work in a reasonable time, can we at least
-detect the case where it's going to take too long?  If so, maybe we
-can warn about it, avoid suspend, or change the way we do it.
-
-Bjorn
+-Simon
