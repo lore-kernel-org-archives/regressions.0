@@ -1,97 +1,120 @@
-Received: from o-chul.darkrain42.org (o-chul.darkrain42.org [74.207.241.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B63A195
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 01:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
- d=darkrain42.org; i=@darkrain42.org; q=dns/txt; s=ed25519-2022-03;
- t=1695776052; h=date : from : to : cc : subject : message-id :
- references : mime-version : content-type : content-transfer-encoding :
- in-reply-to : from; bh=bVtmHHpgJCvGOFI6j4m1G3ZAqun1acSnHjfkUYd7U/I=;
- b=9CNMYB3TlWXem1lRqknxmOBYkF+aJVQ/zUy4wfeS5FtjpV50zJv4hKs6uPjnk+l7o7TFY
- vRQhlrEG+oguS1pBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=darkrain42.org;
- i=@darkrain42.org; q=dns/txt; s=rsa-2022-03; t=1695776052; h=date :
- from : to : cc : subject : message-id : references : mime-version :
- content-type : content-transfer-encoding : in-reply-to : from;
- bh=bVtmHHpgJCvGOFI6j4m1G3ZAqun1acSnHjfkUYd7U/I=;
- b=W9a9iBrXr2byHDgqBLXaHtOItJyJQ/wrXhNEfrls49oh93nGVDFbCnwo18KdU1lhyYgeR
- wE4syUf8u6MD7hQmm2Qtix/rsrqGJ2/TPqohtkz2HSH6si6f50Ml96bvcjdtum8NuvYcCgY
- sFKj1GQUW+CcEyGqwo7ZOx/xghZzrz62LyghWF7vZeQc8W4v4kumfB9qwU6mkaIciIU4Sij
- dAhherZwqLUtl3DuxF+yWF4YZ0bcGHLV6KBwI6G0oRYItqMrXROxfVC3l7k8Vd4t1x2bRgI
- RnvW6EpERdjYfnSMPXTzxKfqTbtSceFm1jGa9SMx/1LevQ2WwjBpQytF9g0Q==
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-	 client-signature ED25519)
-	(Client CN "otters", Issuer "otters" (not verified))
-	by o-chul.darkrain42.org (Postfix) with ESMTPS id 049828162;
-	Tue, 26 Sep 2023 17:54:12 -0700 (PDT)
-Received: by vaarsuvius.localdomain (Postfix, from userid 1000)
-	id 96EC58C247B; Tue, 26 Sep 2023 17:54:10 -0700 (PDT)
-Date: Tue, 26 Sep 2023 17:54:10 -0700
-From: Paul Aurich <paul@darkrain42.org>
-To: Steve French <smfrench@gmail.com>, Tom Talpey <tom@talpey.com>
-Cc: Brian Pardy <brian.pardy@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux CIFS <linux-cifs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Paulo Alcantara <pc@manguebit.com>,
-	ronnie sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Bharath S M <bharathsm@microsoft.com>
-Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS
- share is mounted (cifsd-cfid-laundromat in"D" state)
-Message-ID: <ZRN9MtBqYnT6oX60@vaarsuvius>
-Mail-Followup-To: Steve French <smfrench@gmail.com>,
-	Tom Talpey <tom@talpey.com>, Brian Pardy <brian.pardy@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux CIFS <linux-cifs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Paulo Alcantara <pc@manguebit.com>,
-	ronnie sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Bharath S M <bharathsm@microsoft.com>
-References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
- <ZPfPfyIoVxw5L6El@debian.me>
- <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
- <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
- <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
- <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
- <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
- <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
- <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com>
- <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A075250
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 05:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695791767; x=1727327767;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ETJatUXksZxv7GcmiGmwoAcRbp77sOm1M4V6YfLhYAE=;
+  b=Ol38PL11+4/0GS6VqKsGoqTtrOk6xswBZoMwx5zuqwW6sQteSc4bM+1W
+   qg8oB2sTNFXwzz19/+x0OqtrFR4t7paL2XyRfPOPUwbPlHQMATOptqQsO
+   Oplyyx8n7dEuYIzF8YrNS8XW6hy5A9wH0z1I/UOsWn9xthjd8csPFtNOe
+   5zyJk04mWdB1qlfPpDrHNpYC4l6pw13n8CJJiW+jmYFfGacw8fY/HkKXH
+   CJbUW3Vt5BPE+481ECH+pjtJRkdwxAGeEc4rIGiM22178nvamDzE8m+5J
+   w3XckAPZs1NBsA2bYlfaLsZWcnCoaFZblrKhDdslMsixk4NM3Q6+bJj2f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="379014373"
+X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
+   d="scan'208";a="379014373"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 22:16:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="819285800"
+X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
+   d="scan'208";a="819285800"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Sep 2023 22:16:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id B2D6B177; Wed, 27 Sep 2023 08:16:02 +0300 (EEST)
+Date: Wed, 27 Sep 2023 08:16:02 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230927051602.GX3208943@black.fi.intel.com>
+References: <20230925141930.GA21033@wunner.de>
+ <20230926175530.GA418550@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+In-Reply-To: <20230926175530.GA418550@bhelgaas>
 
-On 2023-09-19 13:23:44 -0500, Steve French wrote:
->On Tue, Sep 19, 2023 at 1:07 PM Tom Talpey <tom@talpey.com> wrote:
->> These changes are good, but I'm skeptical they will reduce the load
->> when the laundromat thread is actually running. All these do is avoid
->> creating it when not necessary, right?
->
->It does create half as many laundromat threads (we don't need
->laundromat on connection to IPC$) even for the Windows server target
->example, but helps more for cases where server doesn't support
->directory leases.
+On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
+> On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
+> > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
+> > > Now pciehp thinks the slot is occupied and the link is up, so we
+> > > re-enumerate the hierarchy.  Is this because thunderbolt did something
+> > > to 06:00.0 that made the link from 05:01.0 come up?
+> > 
+> > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
+> > alongside DisplayPort and other data over the same physical link.
+> > 
+> > For this to work, PCIe tunnels need to be set up between the Thunderbolt
+> > host controller and attached devices.  Once a tunnel is established,
+> > the PCIe link magically goes up and TLPs can be transmitted.
+> > 
+> > There are two ways to establish those tunnels:
+> > 
+> > 1/ By a firmware in the Thunderbolt host controller.
+> >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
+> > 
+> > 2/ Natively by the kernel.
+> >    (software connection manager)
+> > 
+> > I'm assuming that the laptop in question exclusively uses the firmware
+> > connection manager, hence the kernel is reliant on that firmware to
+> > establish tunnels and can't really do anything if it fails to do so.
+> 
+> Thanks for the background; that improves my meager understanding a
+> lot.
+> 
+> Since this seems to be a firmware issue, it does sound like this
+> laptop uses a firmware connection manager.  But there still seems to
+> be some kernel connection because pre-e8b908146d44, the link came up
+> in <5 seconds, and after the minor e8b908146d44 change, it takes >60
+> seconds.
 
-Perhaps the laundromat thread should be using msleep_interruptible()?
+In both cases (with or without) the commit what happens is that after
+resume is finished the firmware connection manager notices the
+connection, announces it to the Thunderbolt driver that exposes it to
+the userspace where boltd re-authorizes the device. This brings up the
+PCIe tunnel again and things get working.
 
-Using an interruptible sleep appears to prevent the thread from contributing 
-to the load average, and has the happy side-effect of removing the up-to-1s delay 
-when tearing down the tcon (since a7c01fa93ae, kthread_stop() will return 
-early triggered by kthread_stop).
+(What is expected to happen is that during the resume the firmware
+ connection manager re-connects the PCIe tunnel.)
 
-~Paul
+This took previously the ~5s before resume is complete so that the above
+steps can happen where as after the commit it got delayed more up to the
+arbitrary ~60s because we started to use that with the commit
+e8b908146d44 (PCIE_RESET_READY_POLL_MS).
 
+> I'm kind of at a loss here because I don't have a clear path forward.
+> What I'm hearing is that the real fix is a firmware update or a BIOS
+> setting change (Thunderbolt "user" instead of "secure" mode).
+
+There are lots of firmares involved so, say if any of them are turned
+from the default value the system may enter code paths that are not
+fully validated unfortunately.
+
+I would also try to change all the BIOS settings back to defaults, see
+that it works (it is probably in "user" security level then), then
+switch back to "secure" (only change this one option) and try if it now
+works. It could be that some setting just did not get commited properly.
+
+> That is problematic for users, who will think resume got broken and
+> they don't know how to fix it.  It's problematic for me, because it
+> *looks* like a PCI issue and a PCI change exposed it, so I'll have to
+> deal with the reports.
+
+I'm sorry about that. Trying best I can to remedy this.
