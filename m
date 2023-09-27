@@ -1,120 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A075250
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 05:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695791767; x=1727327767;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ETJatUXksZxv7GcmiGmwoAcRbp77sOm1M4V6YfLhYAE=;
-  b=Ol38PL11+4/0GS6VqKsGoqTtrOk6xswBZoMwx5zuqwW6sQteSc4bM+1W
-   qg8oB2sTNFXwzz19/+x0OqtrFR4t7paL2XyRfPOPUwbPlHQMATOptqQsO
-   Oplyyx8n7dEuYIzF8YrNS8XW6hy5A9wH0z1I/UOsWn9xthjd8csPFtNOe
-   5zyJk04mWdB1qlfPpDrHNpYC4l6pw13n8CJJiW+jmYFfGacw8fY/HkKXH
-   CJbUW3Vt5BPE+481ECH+pjtJRkdwxAGeEc4rIGiM22178nvamDzE8m+5J
-   w3XckAPZs1NBsA2bYlfaLsZWcnCoaFZblrKhDdslMsixk4NM3Q6+bJj2f
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="379014373"
-X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="379014373"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 22:16:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="819285800"
-X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="819285800"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Sep 2023 22:16:04 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id B2D6B177; Wed, 27 Sep 2023 08:16:02 +0300 (EEST)
-Date: Wed, 27 Sep 2023 08:16:02 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230927051602.GX3208943@black.fi.intel.com>
-References: <20230925141930.GA21033@wunner.de>
- <20230926175530.GA418550@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982F4111A1
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 08:54:22 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qlQJG-0001vm-2R; Wed, 27 Sep 2023 10:54:18 +0200
+Message-ID: <ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info>
+Date: Wed, 27 Sep 2023 10:54:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230926175530.GA418550@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: [regression] Resume broken on T14s Gen1 (AMD) due to "Input: psmouse
+ - add delay when deactivating for SMBus mode"
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+To: Jeffery Miller <jefferymiller@google.com>
+Cc: Andrew Duggan <aduggan@synaptics.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1695804862;6fddfb78;
+X-HE-SMSGID: 1qlQJG-0001vm-2R
 
-On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
-> On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
-> > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
-> > > Now pciehp thinks the slot is occupied and the link is up, so we
-> > > re-enumerate the hierarchy.  Is this because thunderbolt did something
-> > > to 06:00.0 that made the link from 05:01.0 come up?
-> > 
-> > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
-> > alongside DisplayPort and other data over the same physical link.
-> > 
-> > For this to work, PCIe tunnels need to be set up between the Thunderbolt
-> > host controller and attached devices.  Once a tunnel is established,
-> > the PCIe link magically goes up and TLPs can be transmitted.
-> > 
-> > There are two ways to establish those tunnels:
-> > 
-> > 1/ By a firmware in the Thunderbolt host controller.
-> >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
-> > 
-> > 2/ Natively by the kernel.
-> >    (software connection manager)
-> > 
-> > I'm assuming that the laptop in question exclusively uses the firmware
-> > connection manager, hence the kernel is reliant on that firmware to
-> > establish tunnels and can't really do anything if it fails to do so.
-> 
-> Thanks for the background; that improves my meager understanding a
-> lot.
-> 
-> Since this seems to be a firmware issue, it does sound like this
-> laptop uses a firmware connection manager.  But there still seems to
-> be some kernel connection because pre-e8b908146d44, the link came up
-> in <5 seconds, and after the minor e8b908146d44 change, it takes >60
-> seconds.
+Hi Jeffery! Your change 92e24e0e57f72e ("Input: psmouse - add delay when
+deactivating for SMBus mode") [merged for v6.6-rc1] broke resume on my
+T14s Gen1 (AMD): the system didn't really resume again at all (the
+display almost always didn't re-initialize) and there was nothing in the
+logs. I found your commit to be the culprit using a bisection and
+confirmed that reverting it on top of Linux 6.6-rc3 makes thing work
+again for me.
 
-In both cases (with or without) the commit what happens is that after
-resume is finished the firmware connection manager notices the
-connection, announces it to the Thunderbolt driver that exposes it to
-the userspace where boltd re-authorizes the device. This brings up the
-PCIe tunnel again and things get working.
+My dmesg from a kernel with the revert:
+https://www.leemhuis.info/files/misc/dmesg
 
-(What is expected to happen is that during the resume the firmware
- connection manager re-connects the PCIe tunnel.)
+My config:
+https://www.leemhuis.info/files/misc/config
 
-This took previously the ~5s before resume is complete so that the above
-steps can happen where as after the commit it got delayed more up to the
-arbitrary ~60s because we started to use that with the commit
-e8b908146d44 (PCIE_RESET_READY_POLL_MS).
+Funny detail: this is the full-blown Fedora rawhide config, apart from
+disabling UCSI (it caused another problem that was fixed after -rc1); I
+first had tried to use localmodconfig to strip down the config, but then
+the problem did not happen for some reason (or I did something stupid).
 
-> I'm kind of at a loss here because I don't have a clear path forward.
-> What I'm hearing is that the real fix is a firmware update or a BIOS
-> setting change (Thunderbolt "user" instead of "secure" mode).
+Ciao, Thorsten
 
-There are lots of firmares involved so, say if any of them are turned
-from the default value the system may enter code paths that are not
-fully validated unfortunately.
-
-I would also try to change all the BIOS settings back to defaults, see
-that it works (it is probably in "user" security level then), then
-switch back to "secure" (only change this one option) and try if it now
-works. It could be that some setting just did not get commited properly.
-
-> That is problematic for users, who will think resume got broken and
-> they don't know how to fix it.  It's problematic for me, because it
-> *looks* like a PCI issue and a PCI change exposed it, so I'll have to
-> deal with the reports.
-
-I'm sorry about that. Trying best I can to remedy this.
+#regzbot introduced 92e24e0e57f72e
+#regzbot title Input: psmouse - Resume broken on T14s Gen1 (AMD) due to
+a new delay when deactivating for SMBus mode
