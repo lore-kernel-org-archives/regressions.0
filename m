@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECAA13ADF
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 08:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24A426E13
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 11:30:28 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qlQMZ-0002b8-BV; Wed, 27 Sep 2023 10:57:43 +0200
-Message-ID: <e3cc6486-48be-46fb-9850-32add544530b@leemhuis.info>
-Date: Wed, 27 Sep 2023 10:57:42 +0200
+	id 1qlSkE-0003a8-UQ; Wed, 27 Sep 2023 13:30:18 +0200
+Message-ID: <40003db4-6414-4446-aca1-a4808519aa45@leemhuis.info>
+Date: Wed, 27 Sep 2023 13:30:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,56 +15,40 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: s2idle stopped working with 6.6-rc on Thinkpad T14 G1 (AMD)
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info>
- <e556ae63-0539-4b34-b33f-5f5beb4183d1@amd.com>
- <e049aa41-b136-4071-850f-d06b47fe67a1@leemhuis.info>
- <5f753ef4-caec-479a-bff4-43c16fb3317b@amd.com>
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
 Content-Language: en-US, de-DE
-In-Reply-To: <5f753ef4-caec-479a-bff4-43c16fb3317b@amd.com>
+To: Chris Mason <clm@meta.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Christoph Hellwig <hch@lst.de>
+Cc: linux-btrfs@vger.kernel.org, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Wang Yugui <wangyugui@e16-tech.com>
+References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
+ <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
+ <20230912072057.C1F5.409509F4@e16-tech.com>
+ <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
+ <6ba3e137-ba01-4f29-b0f2-bfc9afcffce8@leemhuis.info>
+ <9b98c3c1-2915-2a04-e27a-defb739832a0@meta.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <9b98c3c1-2915-2a04-e27a-defb739832a0@meta.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695805065;3394f52e;
-X-HE-SMSGID: 1qlQMZ-0002b8-BV
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695814229;74bdee31;
+X-HE-SMSGID: 1qlSkE-0003a8-UQ
 
-[one more time, please ignore the previous message]
-
-On 25.09.23 19:44, Mario Limonciello wrote:
-> On 9/25/2023 08:45, Thorsten Leemhuis wrote:
->> On 25.09.23 15:25, Mario Limonciello wrote:
->>> On 9/25/2023 05:55, Thorsten Leemhuis wrote:
->>>> Hi Mario! Did you by chance hear anything about lock-ups on resume with
->>>> mainline affecting AMD systems? I'm asking, as s2idle stopped working
->>>> for me with 6.6-rc on my Thinkpad T14 G1 (AMD).
->>> You're the first report I've heard of this.
->> Thx for taking the time and replying.
-> [...]
-> FWIW your email prompted me to double check the two other Lenovo systems
-> I have on hand at my desk:
-> * P14s Gen 1
-> * L14 Gen2a
+On 26.09.23 19:18, Chris Mason wrote:
+> On 9/26/23 6:55 AM, Thorsten Leemhuis wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Christoph, I'm sorry to annoy you, but things look stalled here: it
+>> seems the Btrfs developer don't care or simply have no idea what might
+>> be causing this. So how do we get this running again? Or was some
+>> progress made and I just missed it?
 > 
-> One of them had a Ubuntu userspace (20.04 IIRC) and the other a Fedora
-> 38.  I built 6.6-rc3 and couldn't reproduce any issues with s2idle.
-> 
-> So yes; bisect is the next step, thanks.
+> I've been trying to reproduce with the hardware I have on hand, but
+> unfortunately it all loves the change.  I'll take another pass.
 
-Thx again for your work.
-
-FWIW, turned out the problem is caused by 92e24e0e57f72e ("Input:
-psmouse - add delay when deactivating for SMBus mode"). Guess it's a
-timing issue. Reported it in a new thread:
-
-#regzbot dup-of:
-https://lore.kernel.org/regressions/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-
-Ciao, Thorsten
-
-
-
-
+Many thx! Ciao, Thorsten
