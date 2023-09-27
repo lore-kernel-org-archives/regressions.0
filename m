@@ -1,86 +1,111 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2469C7498
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 13:30:24 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qlUcP-0007o8-2A; Wed, 27 Sep 2023 15:30:21 +0200
-Message-ID: <ac51e942-7348-411d-8532-99fe0101df2b@leemhuis.info>
-Date: Wed, 27 Sep 2023 15:30:20 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7081FA1
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 13:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695822831; x=1727358831;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=haT1fSV6soV0FUnrzUGyc+avJhyyZ/F8BuUJ1FLT//I=;
+  b=W5i5MUKVH5kNUNipNvpFyTWS6hUnERkv+AFKA721zXyYVSGsdn8XBeC9
+   zyQ0zDYcnfbMMPQt6UmjmA79T/nud8Biwpxwv/kVahrr7hCu8zaBm+DIN
+   lHkzwoZUGJ3wtugWW2cBMKU1S/3iB83gka5KPj+DLpGxZF0A+EPpCB8Fd
+   j9BelE7NbfLpCXuBVLH8WXtCRNeQQ7BbWIlAYXX0QkZM+q+94J9UcDFC2
+   GjDGXeceiXy0JqikWpyIoGrGS772Kog5GKq8osuN9+WIAzd9CoV/2NSJM
+   6S02ekVkRSAVajjqY7yiRHxa041j43zRzM6hrcWarsRY4+V2fXPhmNUvd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="380709186"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="380709186"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:53:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="839450067"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="839450067"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2023 06:53:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 10D2B24C; Wed, 27 Sep 2023 16:53:46 +0300 (EEST)
+Date: Wed, 27 Sep 2023 16:53:46 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230927135346.GJ3208943@black.fi.intel.com>
+References: <20230925141930.GA21033@wunner.de>
+ <20230926175530.GA418550@bhelgaas>
+ <20230927051602.GX3208943@black.fi.intel.com>
+ <CA+cBOTds9k1Q2haC_gTpsUvjP02dHOv9vSconFEAu-Fsxwf36A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Data corruption with 5.10.x client -> 6.5.x server
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>,
- linux-nfs@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <f1d0b234-e650-0f6e-0f5d-126b3d51d1eb@gmail.com>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <f1d0b234-e650-0f6e-0f5d-126b3d51d1eb@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695821425;b5482b0a;
-X-HE-SMSGID: 1qlUcP-0007o8-2A
+In-Reply-To: <CA+cBOTds9k1Q2haC_gTpsUvjP02dHOv9vSconFEAu-Fsxwf36A@mail.gmail.com>
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hi,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 24.09.23 15:07, Mantas Mikulėnas wrote:
-> I've recently upgraded my home NFS server from 6.4.12 to 6.5.4 (running
-> Arch Linux x86_64).
+On Wed, Sep 27, 2023 at 03:43:29PM +0200, Kamil Paral wrote:
+>    On Wed, Sep 27, 2023 at 7:16 AM Mika Westerberg
+>    <[1]mika.westerberg@linux.intel.com> wrote:
 > 
-> Now, when I'm accessing the server over NFSv4.2 from a client that's
-> running 5.10.0 (32-bit x86, Debian 11), if the mount is using sec=krb5i
-> or sec=krb5p, trying to read a file that's <= 4092 bytes in size will
-> return all-zero data. (That is, `hexdump -C file` shows "00 00 00...")
-> Files that are 4093 bytes or larger seem to be unaffected.
+>    > I would also try to change all the BIOS settings back to defaults, see
+>    > that it works (it is probably in "user" security level then), then
+>    > switch back to "secure" (only change this one option) and try if it now
+>    > works. It could be that some setting just did not get commited properly.
 > 
-> Only sec=krb5i/krb5p are affected by this – plain sec=krb5 (or sec=sys
-> for that matter) seems to work without any problems.
-> 
-> Newer clients (like 6.1.x or 6.4.x) don't seem to have any issues, it's
-> only 5.10.0 that does... though it might also be that the client is
-> 32-bit, but the same client did work previously when the server was
-> running older kernels, so I still suspect 6.5.x on the server being the
-> problem.
-> 
-> Upgrading to 6.6.0-rc2 on the server hasn't changed anything.
-> The server is using Btrfs but I've tested with tmpfs as well.
+>    Hello, I have some interesting findings.
+>    I reset the BIOS ("load BIOS defaults"), however that doesn't reset the TB
+>    security level option - whatever is set is kept. So I can't really find
+>    out what the default value is and whether I changed it. However, to my
+>    surprise, the resume was suddenly fast even with the Secure Connect
+>    security level. So I went through options one by one and finally
+>    discovered that the "Wake by Thunderbolt 3" option makes the difference.
+>    It has the following description:
+>    "Enable/Disable Wake Feature with Thunderbolt 3 ports. If Enabled, the
+>    battery life during low power state may become shorter."
+>    It is enabled by default, I had it disabled before. When I enable it, I
+>    have a 5 sec resume even with Secure Connect TB security level. The dmesg
+>    for such a resume is here:
+>    [2]https://bugzilla-attachments.redhat.com/attachment.cgi?id=1990815
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Okay that now looks like what is expected. The firmware re-connects the
+tunnels and the resume can continue.
 
-#regzbot ^introduced 703d7521555504b3a316b105b4806d641
-#regzbot title nfs: Data corruption with 5.10.x client -> 6.5.x server
-#regzbot ignore-activity
+I actually don't know what that option does either but I would expect
+that it leaves the PME and small power enabled for the port so that
+probably allows the firmware to do this even in "secure" mode or so.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+>    I'm sorry I haven't spotted and tested such an obviously named option
+>    earlier. My understanding was that this option either wakes up my laptop
+>    when I connect the cable (tested now, it doesn't appear to do so), or that
+>    it wakes it up when I move/click my dock-connected mouse (tested, doesn't
+>    appear to do so). So originally I wanted this disabled (and I had no
+>    kernel issues with it disabled, prior to e8b908146d44), but it seems I
+>    misunderstood what it does. And I'm still unsure what exactly it's
+>    supposed to do and why it should kill my battery life in the process,
+>    according to its description.
+>    Hopefully this helps to bring more light into this?
+>    However, I also discovered that even though Wake by TB3 + Secure Connect
+>    gives me a fast resume in a normal case, I still see a 60+ sec resume
+>    delay when I disconnect and then reconnect the TB cable while the laptop
+>    is suspended (which is a frequent use case for me). That doesn't happen
+>    with the User Authorization level (regardless of Wake by TB value). So I'm
+>    staying with User Authorization for the moment.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+If you apply the patch from here:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=pm&id=6786c2941fe1788035f99c98c932672138b3fbc5
+
+Does the problem go away with the disconnect case too (and so that you
+have "secure" enabled)?
