@@ -1,77 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6152548E81
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 15:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695829015; x=1727365015;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4y2ufGhmhaXTWIjmW47x7Uel7sXWt7hrK42AXxm10zk=;
-  b=VjNin6qzSHEjzZSjWj1PqNoukYf9H28GI38TILHI9FF9W9+gHthsgk3N
-   i6lUNSPp/oMjDkGntdOuAQ9+nu4csgT/3OJr1RuRNUUXHT7ANckD3oT3f
-   ugfXobzKHIALjl+8QuxiqoThiNKBWj3mZCTId9DzGTH6/fep5mpehuYlP
-   JYESGmPDbxR4idSINapyorLvdYr0cOwejJyhdGnMm7x6y3075P34hv6m7
-   bXcg+nAfLsQm0Zwoiso7V14ycZgV+dlKXOslEkECSCOb+96XZCBSt+mwC
-   KEpvldm36noUmrl0LggMJv9uCzLmSEyvL5xY4gqk1SQKMkZP5aNZRwZyY
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="384651405"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="384651405"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 08:36:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="725854404"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="725854404"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 27 Sep 2023 08:36:52 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id AE3C5177; Wed, 27 Sep 2023 18:36:50 +0300 (EEST)
-Date: Wed, 27 Sep 2023 18:36:50 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Kamil Paral <kparal@redhat.com>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20230927153650.GL3208943@black.fi.intel.com>
-References: <20230927051602.GX3208943@black.fi.intel.com>
- <20230927115703.GA445616@bhelgaas>
- <20230927124732.GI3208943@black.fi.intel.com>
- <20230927143143.GA16217@wunner.de>
- <20230927144248.GK3208943@black.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD31B111AB
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 15:55:13 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so23208a12.0
+        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 08:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695830112; x=1696434912; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vSrmv8CdZOJwg8Rjk/t0kAfEdW3//3EbfZ/Siaum1BY=;
+        b=afIfWQOrFxOnBEDsb4MYS8oezP3KkisO5JXoSYwvar9QtzFUOFMGbo0kZ2to8/7BF5
+         UGFDyj0Txha8N3zhNK821nhvKqSiE3FqwRMVxszgFEs2OJmJP/e6R4Zknl7lWjunXvHb
+         dUrfYeLYczjka+h8hCW7sYCm1olZT4zDOSctG0iWx0en8E3JefWm+dQF+ZV1/3WZ0y5U
+         LarnVT/SJu07t14tJrZ5EryYBrxhhktViIAvqNLUv06xIE/GOSxiCriocnL+bWLkiw2z
+         fppCmbt79v4NzboIlaY8DEA2O5Qvuqb9gNiCmCmenCPQrC4MXL/J0CrEOT9ez26s2ciu
+         MFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695830112; x=1696434912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vSrmv8CdZOJwg8Rjk/t0kAfEdW3//3EbfZ/Siaum1BY=;
+        b=QwcBRk7b7nEa+PYBocRgX+fXdjwpgld46//clcz1BnlsELjffFAbPEeEvCrdut7BaV
+         hn4AkfMROrRp/Gma7Agr88v3S7yyTCg0DnYp4DSO9/1VIDFbR891IIkysmiA/bNULY/q
+         +tsyX9nfeyCgnV/QbBO3pAnZSSfEM7NzXPsLApNKRoZZGclVPieANd9o/C67g3boxvCV
+         YrwIXOPMqVKmMjKU7NW5lJPHsyOWoPtvTaX+pH8xMSA03LCxbeqZUqtWq3tC+A5ulZVE
+         nG6xUMUAYjlx1HyH9KJmTCe1paYLdpC5sSg5fjHbV6rTfjnUyHbEe9hjuHzPgO+xUy48
+         hDkQ==
+X-Gm-Message-State: AOJu0YzqyUMb3QHWVuZIwJD7LLyoMLqga1jbe6xqAktWfTHIWHlguB7D
+	gdg2s+UKt5KgVDlFgZ7MVYNyxhH9bQzxJq+JAByA6g==
+X-Google-Smtp-Source: AGHT+IH0RKGEqZ50b13IkHIPc4aRaJwDAkjl9e3uG8Mv6eJajLiyCcSvo5RAHFMmzFLDsmR8oJbDoGjAv+5jxCncXkI=
+X-Received: by 2002:a50:9fef:0:b0:525:573c:6444 with SMTP id
+ c102-20020a509fef000000b00525573c6444mr266714edf.1.1695830111711; Wed, 27 Sep
+ 2023 08:55:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230927144248.GK3208943@black.fi.intel.com>
+References: <ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info> <CAAzPG9NkoaUz_JRtZt_JomsYj-8ZPn4QH0w0eeR-oxd55-18Qg@mail.gmail.com>
+In-Reply-To: <CAAzPG9NkoaUz_JRtZt_JomsYj-8ZPn4QH0w0eeR-oxd55-18Qg@mail.gmail.com>
+From: Jeffery Miller <jefferymiller@google.com>
+Date: Wed, 27 Sep 2023 10:55:00 -0500
+Message-ID: <CAAzPG9NWp8yPU52o7d2-jLjxjLodFOiE_AjoxmCAZ=MXtV__Aw@mail.gmail.com>
+Subject: Re: [regression] Resume broken on T14s Gen1 (AMD) due to "Input:
+ psmouse - add delay when deactivating for SMBus mode"
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 27, 2023 at 05:42:48PM +0300, Mika Westerberg wrote:
-> On Wed, Sep 27, 2023 at 04:31:43PM +0200, Lukas Wunner wrote:
-> > On Wed, Sep 27, 2023 at 03:47:32PM +0300, Mika Westerberg wrote:
-> > > This is not a Linux defect. The firmware is expected to create that
-> > > tunnel so regardless of the "delay" the devices are already back. This
-> > > is not happening.
-> > 
-> > I recall that newer chips can be switched over to software connection
-> > manager at runtime.
-> > 
-> > Can we determine that the ICM firmware failed to do what it should,
-> > kick it out and let the software connection manager take over?
-> 
-> No that's not possible. In Macs it was "partially" possible but even
-> there you lose all the PM and the like. I don't even want to speculate
-> what happens if you run the same on PCs.
-> 
-> There is an option to "force" this but I do not recommend this (pass
-> thunderbolt.start_icm=1 in the command line).
+Hi Thorsten,
 
-Sorry, this is the complete opposite. This starts the firmware not stops
-it but anyways everything else above is true ;-)
+On Wed, Sep 27, 2023 at 10:43=E2=80=AFAM Jeffery Miller
+<jefferymiller@google.com> wrote:
+>
+>
+> On Wed, Sep 27, 2023 at 3:54=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis=
+.info> wrote:
+>>
+>> My dmesg from a kernel with the revert:
+>> https://www.leemhuis.info/files/misc/dmesg
+>>
+> In this dmesg output it shows that this is an elantech smbus device:
+> ```
+> [    4.260415] psmouse serio1: elantech: assuming hardware version 4 (wit=
+h firmware version 0x7f3001)
+> [    4.279297] psmouse serio1: elantech: Synaptics capabilities query res=
+ult 0x90, 0x18, 0x0f.
+> [    4.292788] psmouse serio1: elantech: Elan sample query result 00, 80,=
+ c9
+> [    4.319184] psmouse serio1: elantech: Elan ic body: 0x10, current fw v=
+ersion: 0x3
+> ...
+> [    4.346951] psmouse serio1: elantech: Trying to set up SMBus access
+> [    4.346986] psmouse serio1: elantech: SMbus companion is not ready yet
+> [    4.369993] input: ETPS/2 Elantech TrackPoint as /devices/platform/i80=
+42/serio1/input/input7
+> [    4.376200] systemd[1]: bpf-lsm: LSM BPF program attached
+> [    4.385192] input: ETPS/2 Elantech Touchpad as /devices/platform/i8042=
+/serio1/input/input5
+> ```
+> The change in 92e24e0e57f72e shouldn't affect the elantouch device as  el=
+antech_setup_smbus
+> initializes `psmouse_smbus_init` with need_deactivate =3D false.
+>
+> Did you store dmesg logs from boot without the applied patch?
+
+I intended to ask if you have logs from a boot without 92e24e0e57f72e rever=
+ted.
+
+> If the delay was being applied the timestamps should show the 30ms delay =
+between
+> `psmouse serio1: elantech: Trying to set up SMBus access`
+> and
+> `psmouse serio1: elantech: SMbus companion is not ready yet`
+>
+
+Thank You,
+Jeff
