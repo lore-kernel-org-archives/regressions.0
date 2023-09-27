@@ -1,54 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24A426E13
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 11:30:28 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qlSkE-0003a8-UQ; Wed, 27 Sep 2023 13:30:18 +0200
-Message-ID: <40003db4-6414-4446-aca1-a4808519aa45@leemhuis.info>
-Date: Wed, 27 Sep 2023 13:30:18 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DCB6D19
+	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 11:57:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270D3C433C7;
+	Wed, 27 Sep 2023 11:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695815825;
+	bh=XmLCWHtkeqOe/dkpGs1V/n51u/PXtXb7fnZHBANYjoU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=riOc55ag7rWjtJnzNVG8BmU0ILQd8Ff2BnNTPARzh3o3HqoN0iirKxhkIOASEMsm1
+	 PlErbMEbf3a/qSOHMHiI4dTWWQZ6W7dRUReAYTdHsS35qzrvddjnLvI2Bdl30m1V9g
+	 n3USxOKDDVruJPZkyVAXIhTEd787UNuw4lFT3f3EBH31SzyyYOjQQHXhqvFFc144Kf
+	 3SPprK4LKVm8O4e8jB3xitFcJsBh+qrx9f4y34L6zSz9V0StiMDPdDkcwtJSOPbTqa
+	 lpr8MzjoWiu3vGumKtkavAOCLnhAOSsj1evF1KMsbp/wZj2/VOU2bAUpkpuG0wg8vb
+	 klA2d4Yu9I0hw==
+Date: Wed, 27 Sep 2023 06:57:03 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230927115703.GA445616@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-Content-Language: en-US, de-DE
-To: Chris Mason <clm@meta.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Christoph Hellwig <hch@lst.de>
-Cc: linux-btrfs@vger.kernel.org, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Wang Yugui <wangyugui@e16-tech.com>
-References: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
- <706df63f-ec5b-457a-b0ab-2d18816e3911@leemhuis.info>
- <20230912072057.C1F5.409509F4@e16-tech.com>
- <34cbea07-8049-4089-a0cc-79d6c423c4f5@leemhuis.info>
- <6ba3e137-ba01-4f29-b0f2-bfc9afcffce8@leemhuis.info>
- <9b98c3c1-2915-2a04-e27a-defb739832a0@meta.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9b98c3c1-2915-2a04-e27a-defb739832a0@meta.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695814229;74bdee31;
-X-HE-SMSGID: 1qlSkE-0003a8-UQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230927051602.GX3208943@black.fi.intel.com>
 
-On 26.09.23 19:18, Chris Mason wrote:
-> On 9/26/23 6:55 AM, Thorsten Leemhuis wrote:
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Christoph, I'm sorry to annoy you, but things look stalled here: it
->> seems the Btrfs developer don't care or simply have no idea what might
->> be causing this. So how do we get this running again? Or was some
->> progress made and I just missed it?
+On Wed, Sep 27, 2023 at 08:16:02AM +0300, Mika Westerberg wrote:
+> On Tue, Sep 26, 2023 at 12:55:30PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Sep 25, 2023 at 04:19:30PM +0200, Lukas Wunner wrote:
+> > > On Mon, Sep 25, 2023 at 08:48:41AM -0500, Bjorn Helgaas wrote:
+> > > > Now pciehp thinks the slot is occupied and the link is up, so we
+> > > > re-enumerate the hierarchy.  Is this because thunderbolt did something
+> > > > to 06:00.0 that made the link from 05:01.0 come up?
+> > > 
+> > > PCIe TLPs are encapsulated into Thunderbolt packets and transmitted
+> > > alongside DisplayPort and other data over the same physical link.
+> > > 
+> > > For this to work, PCIe tunnels need to be set up between the Thunderbolt
+> > > host controller and attached devices.  Once a tunnel is established,
+> > > the PCIe link magically goes up and TLPs can be transmitted.
+> > > 
+> > > There are two ways to establish those tunnels:
+> > > 
+> > > 1/ By a firmware in the Thunderbolt host controller.
+> > >    (firmware or "internal" connection manager, drivers/thunderbolt/icm.c)
+> > > 
+> > > 2/ Natively by the kernel.
+> > >    (software connection manager)
+> > > 
+> > > I'm assuming that the laptop in question exclusively uses the firmware
+> > > connection manager, hence the kernel is reliant on that firmware to
+> > > establish tunnels and can't really do anything if it fails to do so.
+> > 
+> > Thanks for the background; that improves my meager understanding a
+> > lot.
+> > 
+> > Since this seems to be a firmware issue, it does sound like this
+> > laptop uses a firmware connection manager.  But there still seems to
+> > be some kernel connection because pre-e8b908146d44, the link came up
+> > in <5 seconds, and after the minor e8b908146d44 change, it takes >60
+> > seconds.
 > 
-> I've been trying to reproduce with the hardware I have on hand, but
-> unfortunately it all loves the change.  I'll take another pass.
+> In both cases (with or without) the commit what happens is that after
+> resume is finished the firmware connection manager notices the
+> connection, announces it to the Thunderbolt driver that exposes it to
+> the userspace where boltd re-authorizes the device. This brings up the
+> PCIe tunnel again and things get working.
+> 
+> (What is expected to happen is that during the resume the firmware
+>  connection manager re-connects the PCIe tunnel.)
+> 
+> This took previously the ~5s before resume is complete so that the above
+> steps can happen where as after the commit it got delayed more up to the
+> arbitrary ~60s because we started to use that with the commit
+> e8b908146d44 (PCIE_RESET_READY_POLL_MS).
 
-Many thx! Ciao, Thorsten
+Why does the kernel delay affect the timing of when the firmware
+connection manager notices the connection?  It seems like Linux waits
+for the timeout, then Linux does something that kicks the firmware
+connection manager.  That's why I asked about this sequence:
+
+  [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
+  [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
+  [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+  [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+  [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+  [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+
+where we wait for the timeout, decide the device is gone, remove
+everything, and then the thunderbolt driver does something, and we
+notice the device is magically back.
+
+> I would also try to change all the BIOS settings back to defaults, see
+> that it works (it is probably in "user" security level then), then
+> switch back to "secure" (only change this one option) and try if it now
+> works. It could be that some setting just did not get commited properly.
+
+If this might lead to fixing a Linux defect, I'm all for this kind of
+experimentation.  But if it only leads to understanding a firmware
+defect better or figuring out better advice to users, I'm not, because
+I don't want to address this with a release note.
+
+Bjorn
