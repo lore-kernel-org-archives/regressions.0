@@ -1,61 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BEB1118
-	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 13:04:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11F8C433C8;
-	Thu, 28 Sep 2023 13:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1695906255;
-	bh=JuiGqphlzi+zpVMiN/0CFYkzc2zHSO21pjDawbVduIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BfZdbE/d88ZSxbSf3ugJGDmyLrrX/+qvOAAwh7bNHjAPd9LXdVy5UtL//J3aJHhbO
-	 4gWJsnPjPj/WQeWS7+nQ31RBYNyBtR1Fptn7RSRoFQj2WAgAHF4lSBdHyxULh55HgB
-	 Pmi4aEk4MtPeP2e8RHDI/ixIEAo10tmifKFDOsXE=
-Date: Thu, 28 Sep 2023 15:04:11 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Linux regressions report for mainline [2023-09-24]
-Message-ID: <2023092846-envy-underpaid-cd36@gregkh>
-References: <169557219938.3206394.2779757887621800924@leemhuis.info>
- <2023092522-climatic-commend-8c99@gregkh>
- <0efa9992-c2f8-4ae3-943f-9b17d0e1b1b7@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311A53FB01
+	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 14:43:30 +0000 (UTC)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-77421a47db6so632586385a.0
+        for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 07:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695912210; x=1696517010; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EEvAYAapqiaXm0tIJM5yoNgVHww0X7eA8eny72ES378=;
+        b=HyYiz0x5olvw79h69kFRmL5T38Z9XxZCKKv/dljN1GXA8GB9vJ3KWXwOz8tA1mWlsq
+         h2G5oMCLDefokaMbPLuR4uYLUmy2laZYzscZ1FVxgMT+6x4p9AnQLxlThGFSHMkUBH1U
+         L3RwbW0kY9u/KHttXRA7IHN7MdQwFMuvuOojlfaoeryC/xLfslGhhgQUCH7aaMVCfp7q
+         hmy/G4pgqDNYUA1W4fQBvfEWt4V5Syhj8hBafGP9Cos41aznGE+qyk7NpQGzx7a1S9t/
+         9wVDEr1rvYJ09PqQnobsVab8mw0Yy9oV5R2P3G1w/o0KKj/cQeVvfdppMgwjEB+C3RBG
+         qdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695912210; x=1696517010;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EEvAYAapqiaXm0tIJM5yoNgVHww0X7eA8eny72ES378=;
+        b=JIS1NFmIcu/gFk1eVYcvoO9+a2h4PWzo4Qa1WVAjUYKl/QUbR+RiZMcm6nCDzTfjHr
+         zU4cfRYVmhEX53axw6CpiF399hVfoMC3KHpQAq1A35CK6yENyeNV0QwjDYUILzHwZw4a
+         kgovbEb5C3e+sKPhCN8HXpNuk+auMPo9oGdRpEAnu3IWReUahn1aZunCNgqQHoLulipW
+         xSFEuURYe8uJRHEi+g3+ioAGYzK9LIesTJlFRVzLEg3EgwqhbztzVtQ9eh/Eld8tlrDx
+         ziC+EVpa8NUsW4CQdl1X1puyj16+TqyY+tJzowAk4DxmsEpd4Mpy4tHEoECwinSU+OCo
+         VTTg==
+X-Gm-Message-State: AOJu0Yyu79gz0iLyPUSMTQoURD+dyjKKrEitqd5RlHtZ1+1tYES3Dor0
+	VKvixcuoDn/ys8+B2NDQEnJxkywYJvsToCDAYxM=
+X-Google-Smtp-Source: AGHT+IG+ec8FIIBvgJDkegfTZ8Pve3+o4Pl8ogfUyDno53sg8GfpCoV7qHr3TG+xffedjcZ9vcaaXEeAkll2Yy5EAUA=
+X-Received: by 2002:a0c:b384:0:b0:655:f784:9d25 with SMTP id
+ t4-20020a0cb384000000b00655f7849d25mr1222960qve.59.1695912209847; Thu, 28 Sep
+ 2023 07:43:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0efa9992-c2f8-4ae3-943f-9b17d0e1b1b7@leemhuis.info>
+References: <CACW2H-5W6KE6UJ8HwD6r9pOx4Ow_W6ACZyg9LpTykjU6tHHB3g@mail.gmail.com>
+ <9c208dd856b82a4012370b201c08b2d73a6c130e.camel@kernel.org>
+In-Reply-To: <9c208dd856b82a4012370b201c08b2d73a6c130e.camel@kernel.org>
+From: Simon Kaegi <simon.kaegi@gmail.com>
+Date: Thu, 28 Sep 2023 10:43:17 -0400
+Message-ID: <CACW2H-7-KyYrAcnO+QKBV9fs4mGfzOpKvAutbj6hkq7D0m+EzQ@mail.gmail.com>
+Subject: Re: [REGRESSION] EINVAL with mount in selinux_set_mnt_opts when
+ mounting in a guest vm with selinux disabled
+To: Jeff Layton <jlayton@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, dhowells@redhat.com, 
+	jpiotrowski@linux.microsoft.com, brauner@kernel.org, sashal@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 25, 2023 at 11:11:51AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 25.09.23 10:02, Greg KH wrote:
-> >  I've been
-> > traveling all last week and this week for conferences so my response
-> > times have been a bit slow, sorry.
-> 
-> No worries, I already suspected this[1]. The major aspect in this whole
-> episode that bugs me a lot is different anyway:
-> 
-> Wouldn't it have been much much better to revert[2] the culprit quickly
-> once it was known to cause a regression that annoyed some users a whole
-> lot[3, 4]?
+Thanks Jeff. I've confirmed that Ondrej's patch fixes the issue we
+were having. Definitely would be great to get this in 6.1.x. soon.
+-Simon
 
-Possibly, yes.  It's a balancing act between keeping the pressure on the
-developer to provide a fix, vs. the severity of the issue and how
-wide-spread it is, vs. my ability to do anything at all due to
-non-development issues (i.e. travel and conference work.)
-
-Trying to pick the best thing with all of those is hard, sometimes we
-get it wrong, sometimes we get it wrong, usually someone is upset no
-matter what we pick, including a lack of sleep for the maintainer.
-
-So "it's complicated", as you know...
-
-thanks,
-
-greg k-h
+On Wed, Sep 27, 2023 at 4:21=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> On Wed, 2023-09-27 at 15:55 -0400, Simon Kaegi wrote:
+> > #regzbot introduced v6.1.52..v6.1.53
+> > #regzbot introduced: ed134f284b4ed85a70d5f760ed0686e3cd555f9b
+> >
+> > We hit this regression when updating our guest vm kernel from 6.1.52 to
+> > 6.1.53 -- bisecting this problem was introduced
+> > in ed134f284b4ed85a70d5f760ed0686e3cd555f9b -- vfs, security: Fix autom=
+ount
+> > superblock LSM init problem, preventing NFS sb sharing --
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit=
+/?h=3Dv6.1.53&id=3Ded134f284b4ed85a70d5f760ed0686e3cd555f9b
+> >
+> > We're getting an EINVAL in `selinux_set_mnt_opts` in
+> > `security/selinux/hooks.c` when mounting a folder in a guest VM where
+> > selinux is disabled. We're mounting from another folder that we suspect=
+ has
+> > selinux labels set from the host. The EINVAL is getting set in the
+> > following block...
+> > ```
+> > if (!selinux_initialized(&selinux_state)) {
+> >         if (!opts) {
+> >                 /* Defer initialization until selinux_complete_init,
+> >                         after the initial policy is loaded and the secu=
+rity
+> >                         server is ready to handle calls. */
+> >                 goto out;
+> >         }
+> >         rc =3D -EINVAL;
+> >         pr_warn("SELinux: Unable to set superblock options "
+> >                 "before the security server is initialized\n");
+> >         goto out;
+> > }
+> > ```
+> > We can reproduce 100% of the time but don't currently have a simple
+> > reproducer as the problem was found in our build service which uses
+> > kata-containers (with cloud-hypervisor and rootfs mounted via virtio-bl=
+k).
+> >
+> > We have not checked the mainline as we currently are tied to 6.1.x.
+> >
+> > -Simon
+>
+> This sounds very similar to the bug that Ondrej fixed here:
+>
+>     https://lore.kernel.org/selinux/20230911142358.883728-1-omosnace@redh=
+at.com/
+>
+> You may want to try that patch and see if it helps.
+> --
+> Jeff Layton <jlayton@kernel.org>
