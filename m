@@ -1,108 +1,107 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87888746A
-	for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 22:38:23 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-31f71b25a99so12009163f8f.2
-        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 15:38:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78852163
+	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 00:17:37 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c5bbb205e3so111175855ad.0
+        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 17:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695854302; x=1696459102; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9RqKnQ384vFzLQtfAR/lBEgRDbU9k5LVLEF+EOb6OZQ=;
-        b=IkyRS9NSbnizTwHn7SgbrkHe+MekYPtGK6cCZz+XpFiSeJw0J+r9Sk7Vut9LSyP0wC
-         8tSrZh69ctuztn1OabP4QQNwvMw3gi8Dem5RIgaUqYE6ydnXKiW4W+5QTLWSgox8AycY
-         egs1RxEebLd++zS7h45ndscLTQ8Y/qmOmkR2UGXU1Hop233eJ4i+JMeY6y8zCN9+Hw+B
-         RLIjKeSA/eJ4GMoIG9uJyetKKzobbyMdhR9HOYlQW0gxkSGjX0YUdj0+/kl61HaQbFdJ
-         Ngy3XxcE8/ktthhmKPd58vOwf7GRIB3WiE8WSQ1xKbA5y1ToiQbB6FBuj2eAQKnNh/En
-         9alg==
+        d=gmail.com; s=20230601; t=1695860257; x=1696465057; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
+        b=cNo6QaAq78hG3rM0aios5S4HNJ3BxSYUwPOziKFJEKx4mfkjMghri1ZOuTVSTzsb/I
+         xweUPBCJ3owYWFnHX4lbzmWt/4QfbOUmAqFn1Mk9Sos9jH2tsfldx6jLr/1SfYEUKJaJ
+         Njb4j53nVRf9hS25UkpR3KZ6Ixmxx+lp/hh2rlDB57F2pZ/mfy10MqCYkaSEf/FGa6BI
+         c3lPAVnpNV9CmwMOZSbAyh23hMGkbIQwllOq2/VVOcguX4BAggKPNajeobjDLf+29c2u
+         AxtCJQ/8jpS6biR3hfcwxAVtwFu9UI5EDg/28sTUZlnoJw8tRr8RRchTcswpT/VUMu4l
+         gtXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695854302; x=1696459102;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9RqKnQ384vFzLQtfAR/lBEgRDbU9k5LVLEF+EOb6OZQ=;
-        b=AT3iytUVIgKk4kzg1A5QgCjOmjidS7WXVwggd48HNaShfI63RfNk04UAy2Hy9OI/UN
-         +EapozA4MhQqyEFsY+K9J3Wz2uaWJshTMrpvrtZVMlk8RgzBIO2KhO0OQaivZuyZsEsb
-         e4ULV+DekUJ97c3CyN4hzjTULzUXYS7Fys4/WG9PWeShZvuemtNBz+pWO+puubI0xf5k
-         0crCBg70XDPriD/DMG7CsVZv9ZV9yvE42nFbMddf1ovDaQR7SxxPIjBdS508e98fX3JP
-         VlmtXTDtGXZR4fDIOTUjj7cG3kUsx4AmTemLE+9wEev11+fosGCCOZCt4kLtC5rvo1zE
-         K6Eg==
-X-Gm-Message-State: AOJu0Yzey5AcsH5jT6syS+8459CmiblmPOZcp2Q2koWFbysosJfjXoW8
-	lkMWpmlrcZpeYYiYO4MaSxM=
-X-Google-Smtp-Source: AGHT+IEtPyqOdvggdme1F7Zk7QQYP32qu1nZmurf+Vdr4qpg/HWLBeF4/Hp888VsCYml8AiGnn90Rw==
-X-Received: by 2002:adf:e749:0:b0:320:bb1:5a73 with SMTP id c9-20020adfe749000000b003200bb15a73mr2917396wrn.22.1695854301359;
-        Wed, 27 Sep 2023 15:38:21 -0700 (PDT)
-Received: from yoga.fem.tu-ilmenau.de ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
-        by smtp.gmail.com with ESMTPSA id j2-20020a5d4642000000b00317e77106dbsm18013776wrs.48.2023.09.27.15.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Sep 2023 15:38:21 -0700 (PDT)
-From: Sven Frotscher <sven.frotscher@gmail.com>
-To: broonie@kernel.org
-Cc: git@augustwikerfors.se,
-	alsa-devel@alsa-project.org,
-	lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
-	regressions@lists.linux.dev,
-	Sven Frotscher <sven.frotscher@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-Date: Thu, 28 Sep 2023 00:36:07 +0200
-Message-ID: <20230927223758.18870-1-sven.frotscher@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        d=1e100.net; s=20230601; t=1695860257; x=1696465057;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
+        b=uTB2e0XOesMdGkINdEXNzyE4uExsJ2wrXllSrCs+4J9xxKpA4wMSnp9vRAD0hJUrpl
+         qtkzanDwNGDrO163Qy+tE7HvwSe6iEFsBPFcAkWQqBWT//Y+51jzu2ydDwcqDRflHgFt
+         FaD1us+k0m46j6HT9vMvk4C7AIIgftE4lDrLiv1yHBKWiZZsKnQJ57Sbjcb7T2EIcwHu
+         0MT6pXTJ6nZ1Cz+fvylaazkUDuRMAyqgsQtdExBycgAeyVkaG2xY+IOyiL7RHaSikSWv
+         P/Q0e0ajyZHcqp61mWimHbmh/T0VTlM9VjSGBQiD0BlQ4bordaQU/n8N7oNK/xzY4tjd
+         cIDg==
+X-Gm-Message-State: AOJu0Yy9ZykDIvXDehQFku6uRXgWXPGOoLUM5Z9nznwyYhIgZMKWy+gF
+	fOfFndU2YQjh/sMsrnf4qj6cO77LyhwEnw==
+X-Google-Smtp-Source: AGHT+IHlbfoihbCEKofpMw/0JZU0HYH2cWhIJn6F5hSC1Meu2QrWUcExGMHVTjyVpnTlXGel2ufM8w==
+X-Received: by 2002:a17:902:da84:b0:1c6:183a:f4ec with SMTP id j4-20020a170902da8400b001c6183af4ecmr3632437plx.17.1695860256324;
+        Wed, 27 Sep 2023 17:17:36 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id p11-20020a170902eacb00b001c625d6ffccsm5887624pld.129.2023.09.27.17.17.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Sep 2023 17:17:35 -0700 (PDT)
+Message-ID: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Date: Thu, 28 Sep 2023 07:17:27 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Hardening <linux-hardening@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Performance regression: resume_console takes 100ms longer in
+ S2idle/S3 resume in v6.6-rc1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-Like the Lenovo 82TL, 82V2, 82QF and 82UG, the 82YM (Yoga 7 14ARP8)
-requires an entry in the quirk list to enable the internal microphone.
-The latter two received similar fixes in commit 1263cc0f414d
-("ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG").
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82SJ")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sven Frotscher <sven.frotscher@gmail.com>
----
-v3->v4 changes:
-* re-add blank line between commit message title and body
----
-v2->v3 changes:
-* add message title of referenced commit to commit message
-* make whitespace consistent with surrounding code
-* use a patch-friendly e-mail client
----
-v1->v2 changes:
-* add Fixes and Cc tags to commit message
-* remove redundant LKML link from commit message
-* fix mangled diff
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
+> 
+> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
+> Author: John Ogness <john.ogness@linutronix.de>
+> Date:   Mon Jul 17 21:52:06 2023 +0206
+> 
+>     printk: Add per-console suspended state
+>     
+>     Currently the global @console_suspended is used to determine if
+>     consoles are in a suspended state. Its primary purpose is to allow
+>     usage of the console_lock when suspended without causing console
+>     printing. It is synchronized by the console_lock.
+>     
+>     Rather than relying on the console_lock to determine suspended
+>     state, make it an official per-console state that is set within
+>     console->flags. This allows the state to be queried via SRCU.
+>     
+>     Remove @console_suspended. Console printing will still be avoided
+>     when suspended because console_is_usable() returns false when
+>     the new suspended flag is set for that console.
+> 
+> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 94e9eb8e73f2..15a864dcd7bd 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -241,6 +241,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "82YM"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
+Then,
+
+> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
+
+See Bugzilla for the full thread and attached sleepgraph timelines
+(in html format).
+
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
+#regzbot title: resume_console performance regression due to per-console suspended state
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217955
+
 -- 
-2.42.0
-
+An old man doll... just what I always wanted! - Clara
