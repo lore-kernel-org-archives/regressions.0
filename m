@@ -1,107 +1,166 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78852163
-	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 00:17:37 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c5bbb205e3so111175855ad.0
-        for <regressions@lists.linux.dev>; Wed, 27 Sep 2023 17:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695860257; x=1696465057; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
-        b=cNo6QaAq78hG3rM0aios5S4HNJ3BxSYUwPOziKFJEKx4mfkjMghri1ZOuTVSTzsb/I
-         xweUPBCJ3owYWFnHX4lbzmWt/4QfbOUmAqFn1Mk9Sos9jH2tsfldx6jLr/1SfYEUKJaJ
-         Njb4j53nVRf9hS25UkpR3KZ6Ixmxx+lp/hh2rlDB57F2pZ/mfy10MqCYkaSEf/FGa6BI
-         c3lPAVnpNV9CmwMOZSbAyh23hMGkbIQwllOq2/VVOcguX4BAggKPNajeobjDLf+29c2u
-         AxtCJQ/8jpS6biR3hfcwxAVtwFu9UI5EDg/28sTUZlnoJw8tRr8RRchTcswpT/VUMu4l
-         gtXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695860257; x=1696465057;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
-        b=uTB2e0XOesMdGkINdEXNzyE4uExsJ2wrXllSrCs+4J9xxKpA4wMSnp9vRAD0hJUrpl
-         qtkzanDwNGDrO163Qy+tE7HvwSe6iEFsBPFcAkWQqBWT//Y+51jzu2ydDwcqDRflHgFt
-         FaD1us+k0m46j6HT9vMvk4C7AIIgftE4lDrLiv1yHBKWiZZsKnQJ57Sbjcb7T2EIcwHu
-         0MT6pXTJ6nZ1Cz+fvylaazkUDuRMAyqgsQtdExBycgAeyVkaG2xY+IOyiL7RHaSikSWv
-         P/Q0e0ajyZHcqp61mWimHbmh/T0VTlM9VjSGBQiD0BlQ4bordaQU/n8N7oNK/xzY4tjd
-         cIDg==
-X-Gm-Message-State: AOJu0Yy9ZykDIvXDehQFku6uRXgWXPGOoLUM5Z9nznwyYhIgZMKWy+gF
-	fOfFndU2YQjh/sMsrnf4qj6cO77LyhwEnw==
-X-Google-Smtp-Source: AGHT+IHlbfoihbCEKofpMw/0JZU0HYH2cWhIJn6F5hSC1Meu2QrWUcExGMHVTjyVpnTlXGel2ufM8w==
-X-Received: by 2002:a17:902:da84:b0:1c6:183a:f4ec with SMTP id j4-20020a170902da8400b001c6183af4ecmr3632437plx.17.1695860256324;
-        Wed, 27 Sep 2023 17:17:36 -0700 (PDT)
-Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id p11-20020a170902eacb00b001c625d6ffccsm5887624pld.129.2023.09.27.17.17.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Sep 2023 17:17:35 -0700 (PDT)
-Message-ID: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
-Date: Thu, 28 Sep 2023 07:17:27 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0441133FF
+	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 04:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695876158; x=1727412158;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=97XV/CRP5aIuqNvyzML6MfTx6/d7HwiUMaxjQQhuLrA=;
+  b=izXfIE6y3xjPHen4FVZPFQ5y4BNBrUzcHgd6NaTXof+eSHMOBSIlR7v1
+   N6efW0rY4+MUVj3CUKcECqI59OptHA90pdD39x1A0XEXoOpreQtKD0MkK
+   i+vbicJlEYfj6sQrL7MFZsD3WwV+vZ/eRIhmq9Ph9f5yKGcZAXgcuj0K1
+   s0neLFE2klQAUv3QoiCTimmNhj2SPV+Bc4Dr6YBVsEhl57tW0vI6sHguK
+   Y5llJJo41iFhjuLgLEufbxEvSctCfWyidFttGYoiROm8E7NLDJN7Nq3v8
+   7l/PDKCHhsXobmU7IYF186sgsihoHQpyyBdL25vpMBWQcXWeLbfL/cosM
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="380864001"
+X-IronPort-AV: E=Sophos;i="6.03,182,1694761200"; 
+   d="scan'208";a="380864001"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 21:42:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="815106641"
+X-IronPort-AV: E=Sophos;i="6.03,182,1694761200"; 
+   d="scan'208";a="815106641"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Sep 2023 21:42:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 70046192; Thu, 28 Sep 2023 07:42:33 +0300 (EEST)
+Date: Thu, 28 Sep 2023 07:42:33 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Kamil Paral <kparal@redhat.com>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20230928044233.GR3208943@black.fi.intel.com>
+References: <20230927180200.GQ3208943@black.fi.intel.com>
+ <20230927194145.GA458987@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
- <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Hardening <linux-hardening@vger.kernel.org>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Performance regression: resume_console takes 100ms longer in
- S2idle/S3 resume in v6.6-rc1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230927194145.GA458987@bhelgaas>
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
+On Wed, Sep 27, 2023 at 02:41:45PM -0500, Bjorn Helgaas wrote:
+> On Wed, Sep 27, 2023 at 09:02:00PM +0300, Mika Westerberg wrote:
+> > On Wed, Sep 27, 2023 at 12:24:55PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Sep 27, 2023 at 08:01:14PM +0300, Mika Westerberg wrote:
+> > > > On Wed, Sep 27, 2023 at 11:50:36AM -0500, Bjorn Helgaas wrote:
+> > > > ...
 > 
-> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
-> Author: John Ogness <john.ogness@linutronix.de>
-> Date:   Mon Jul 17 21:52:06 2023 +0206
+> > > > > The hierarchy:
+> > > > > 
+> > > > >   pci 0000:00:1c.4: PCI bridge to [bus 04-3c]
+> > > > >   pci 0000:04:00.0: PCI bridge to [bus 05-3c]
+> > > > >   pci 0000:05:00.0: PCI bridge to [bus 06]
+> > > > >   pci 0000:05:01.0: PCI bridge to [bus 07-3b]
+> > > > > 
+> > > > > It looks like we start the 06:00.0 resume first (118.9), but it
+> > > > > doesn't complete until after the timeout (191.7):
+> > > > > 
+> > > > >   [  118.915870] thunderbolt 0000:06:00.0: control channel starting...
+> > > > >   [  118.985530] pcieport 0000:05:01.0: Data Link Layer Link Active not set in 1000 msec
+> > > > >   [  190.090902] pcieport 0000:05:01.0: pciehp: Slot(1): Card not present
+> > > > >   [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > > >   [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > > >   [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > > >   [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > > > > 
+> > > > > Did the Thunderbolt driver do something to 06:00.0 that caused the
+> > > > > 05:01.0 link to come up, or is the timing just coincidental?
+> > > > 
+> > > > Yes it sent the firmware a command telling that the driver is ready
+> > > > again, then the firmware sends back notification that there is a new
+> > > > device:
+> > > > 
+> > > > [  191.754347] thunderbolt 0000:06:00.0: 1: DROM version: 1
+> > > > [  191.762638] thunderbolt 0-1: new device found, vendor=0x108 device=0x1630
+> > > > [  191.762641] thunderbolt 0-1: Lenovo ThinkPad Thunderbolt 3 Dock
+> > > > 
+> > > > this then is send to the userspace via uevent where bolt goes and
+> > > > authorizes it and this results the tunnel to be created which show in
+> > > > the log as:
+> > > > 
+> > > > [  191.943506] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+> > > 
+> > > So the obvious next question is why we have to wait for the 05:01.0
+> > > link timeout before sending the command to the 06:00.0 firmware, since
+> > > there's no PCI connection between them.
+> > 
+> > No there is not - it is a PCIe tunnel.
 > 
->     printk: Add per-console suspended state
->     
->     Currently the global @console_suspended is used to determine if
->     consoles are in a suspended state. Its primary purpose is to allow
->     usage of the console_lock when suspended without causing console
->     printing. It is synchronized by the console_lock.
->     
->     Rather than relying on the console_lock to determine suspended
->     state, make it an official per-console state that is set within
->     console->flags. This allows the state to be queried via SRCU.
->     
->     Remove @console_suspended. Console printing will still be avoided
->     when suspended because console_is_usable() returns false when
->     the new suspended flag is set for that console.
+> You confirmed my assertion that in terms of the PCI topology, there is
+> no connection between 05:01.0 and 06:00.0.
 > 
-> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
+> So the question remains: do we need to wait for the 05:01.0 link
+> timeout before the 06:00.0 driver does something that leads to
+> firmware starting the process of bringing up the tunnel and the link?
 
-Then,
+In the expected case this should not matter. It is the ACPI _PR0
+resource that when turned on starts bringing up all the links.
 
-> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
+It is enough for the firmware that we follow the delays in the PCIe spec.
 
-See Bugzilla for the full thread and attached sleepgraph timelines
-(in html format).
+In this case I think we don't need to wait for the link timeout.
 
-Anyway, I'm adding this regression to be tracked by regzbot:
+> > > But there must be *some* connection between the 05:01.0 link coming up
+> > > and the 06:00.0 behavior.  Maybe this is related to the
+> > > nhi_resume_noirq() comment about "The tunneled pci bridges are
+> > > siblings of us. Use resume_noirq to reenable the tunnels asap. A
+> > > corresponding pci quirk blocks the downstream bridges resume_noirq
+> > > until we are done." Unfortunately the comment doesn't mention the NAME
+> > > of the quirk, so I lost the trail there.
+> > > 
+> > > Maybe there's an opportunity for a quirk that says "this Thunderbolt
+> > > device should never need a whole second for the link to come up", for
+> > > example.
+> > 
+> > The PCIe stack needs to follow PCIe spec (regardless of what is the
+> > actual medium the packets go through). And regadless what we do here the
+> > PCIe link goes down and that breaks the usage of any devices behind that
+> > link such as mounted disks so the delay is definitely not the worst
+> > thing that can happen.
+> 
+> Sure.  But if we resume in a reasonable time, we at least have the
+> opportunity to notice what happened and warn about why the mounted
+> disk broke.  That's way better than getting bug reports that say
+> "resume is broken."
 
-#regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
-#regzbot title: resume_console performance regression due to per-console suspended state
+Well "resume is broken" is much better than "your precious eata just got
+lost, have fun."
 
-Thanks.
+> > Now, If you read anything that Kamil said, this actually works now with
+> > the "secure" mode when he turned the "Wake from Thunderbolt" option back
+> > to the default. So now it works as expected but upon unplug there is the
+> > issue that we fixed with the commit that marks the devices disconnected.
+> > He will test that next week so we can be sure.
+> 
+> I did see that.  You may have also seen my sentiment that it's painful
+> for users to diagnose an apparent resume failure and find a BIOS
+> option to fix it.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217955
+Unfortunately todays systems are such that if you go and change BIOS
+options from the defaults you may accidentally enter untested
+territories. Changing things back to defaults is a reasonable ask IMHO.
 
--- 
-An old man doll... just what I always wanted! - Clara
+> If we can't make resume work in a reasonable time, can we at least
+> detect the case where it's going to take too long?  If so, maybe we
+> can warn about it, avoid suspend, or change the way we do it.
+
+Only thing we are missing now is the result of Kamil's testing to see if
+the real uplug case is working. I would expect so, this is the issue we
+fixed with:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=pm&id=6786c2941fe1788035f99c98c932672138b3fbc5
+
+If that's true then there is nothing more to be fixed, no hacks need to
+be put anywhere, and this discussion can be ended too.
