@@ -1,69 +1,61 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1118BF4
-	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 12:55:39 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qlqYK-0002Ga-Bp; Thu, 28 Sep 2023 14:55:36 +0200
-Message-ID: <8343dcf3-96e9-4601-aaac-e0a80686586b@leemhuis.info>
-Date: Thu, 28 Sep 2023 14:55:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BEB1118
+	for <regressions@lists.linux.dev>; Thu, 28 Sep 2023 13:04:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11F8C433C8;
+	Thu, 28 Sep 2023 13:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1695906255;
+	bh=JuiGqphlzi+zpVMiN/0CFYkzc2zHSO21pjDawbVduIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BfZdbE/d88ZSxbSf3ugJGDmyLrrX/+qvOAAwh7bNHjAPd9LXdVy5UtL//J3aJHhbO
+	 4gWJsnPjPj/WQeWS7+nQ31RBYNyBtR1Fptn7RSRoFQj2WAgAHF4lSBdHyxULh55HgB
+	 Pmi4aEk4MtPeP2e8RHDI/ixIEAo10tmifKFDOsXE=
+Date: Thu, 28 Sep 2023 15:04:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Linux regressions report for mainline [2023-09-24]
+Message-ID: <2023092846-envy-underpaid-cd36@gregkh>
+References: <169557219938.3206394.2779757887621800924@leemhuis.info>
+ <2023092522-climatic-commend-8c99@gregkh>
+ <0efa9992-c2f8-4ae3-943f-9b17d0e1b1b7@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: kmalloc memory leak over time.
-Content-Language: en-US, de-DE
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Kees Cook <keescook@chromium.org>,
- Daniel Micay <danielmicay@gmail.com>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, freeze0985@gmail.com
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Memory Management List <linux-mm@kvack.org>
-References: <4f01f302-9d59-4146-b7ff-0478c4bd94b1@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <4f01f302-9d59-4146-b7ff-0478c4bd94b1@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695905739;12f311b6;
-X-HE-SMSGID: 1qlqYK-0002Ga-Bp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0efa9992-c2f8-4ae3-943f-9b17d0e1b1b7@leemhuis.info>
 
-On 28.09.23 10:40, Bagas Sanjaya wrote:
+On Mon, Sep 25, 2023 at 11:11:51AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 25.09.23 10:02, Greg KH wrote:
+> >  I've been
+> > traveling all last week and this week for conferences so my response
+> > times have been a bit slow, sorry.
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+> No worries, I already suspected this[1]. The major aspect in this whole
+> episode that bugs me a lot is different anyway:
+> 
+> Wouldn't it have been much much better to revert[2] the culprit quickly
+> once it was known to cause a regression that annoyed some users a whole
+> lot[3, 4]?
 
-@mm developers: feel free to ignore this, the user has Nvidia's driver
-loaded (see bugzilla; I'll ask to reproduce without it).
+Possibly, yes.  It's a balancing act between keeping the pressure on the
+developer to provide a fix, vs. the severity of the issue and how
+wide-spread it is, vs. my ability to do anything at all due to
+non-development issues (i.e. travel and conference work.)
 
-Ciao, Thorsten
+Trying to pick the best thing with all of those is hard, sometimes we
+get it wrong, sometimes we get it wrong, usually someone is upset no
+matter what we pick, including a lack of sleep for the maintainer.
 
->> Since 1st weak of Sept I have been observing memory leak in my system, so after doing a little big of digging I found out that the leak is caused by kmalloc. In Linux 6.5.3 memory leak would increase  to nearly 50% of my ram over a period of 6-9 hours. In the Newer Linux 6.5.4 I am yet to observe that much memory leak(Haven't used my laptop for that long till now) but over a period of 3 hours I see 2.2GB reserved and it is not used by any program at all. this is just after 3 hours of usage on Linux 6.5.4.
-> 
-> Later, the reporter (Cc'ed) narrowed down the version range, with
-> memory statistics:
-> 
->> 6.4 works fine I down graded to it before linux 6.5.4 was released. no memory leak.
->>
->> today i ran my laptop for 6 hours and 40 mins and this memory leak is still happening at same rate.
->>
->>               total        used        free      shared  buff/cache   available
->> Mem:            15Gi       7.2Gi       2.8Gi       797Mi       6.4Gi       8.1Gi
->> Swap:             0B          0B          0B
->> Total:          15Gi       7.2Gi       2.8Gi
-> 
-> See Bugzilla for the full thread.
-> 
-> Anyway, I'm adding this regression to be tracked by regzbot:
-> 
-> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217943
-> 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217943
-> 
+So "it's complicated", as you know...
+
+thanks,
+
+greg k-h
