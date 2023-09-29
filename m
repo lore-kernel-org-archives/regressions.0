@@ -1,109 +1,76 @@
-Received: from mail.cyberchaos.dev (mail.cyberchaos.dev [195.39.247.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A936669B
-	for <regressions@lists.linux.dev>; Fri, 29 Sep 2023 21:17:46 +0000 (UTC)
-Message-ID: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yuka.dev; s=mail;
-	t=1696021736; bh=XV5Y16Sh8E+QCHNMyp4Lgqfg/vvxKHsouALRr9hLWMI=;
-	h=Date:Cc:From:To:Subject;
-	b=aKyw//Ump1xtGivSUOOIkvVtpybcwhTDIYGEhyyxyN3CpfDUFrx3s4ZC65EEMdq7f
-	 7ZUBhQhP4uRNvdcYfGr/sORZE0iNrh1Gw9RpzYa+WBwUgjq91Qm+TYv5NDVo9izWF5
-	 iiiMXdINxZSYX8LoB8lwRYdrzAjmT+WM5tLz8jD8=
-Date: Fri, 29 Sep 2023 23:08:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61561347C1
+	for <regressions@lists.linux.dev>; Fri, 29 Sep 2023 22:43:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C37C433C8;
+	Fri, 29 Sep 2023 22:43:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696027408;
+	bh=UYc7qcXwIPN8R+5u/B3YnekPh2cUVdEgNsXWyhg6OR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZrUibAlV4Q4kEEnJGVockzjSmIcXxeZnRM9kpZnb8BoZ65fYHiMcjlwm4IZ3XT2vQ
+	 NS8mwJIFDRyV2x2Ka8HjAgNuCnwkqqPnsScJpvG/sFTEmxrMe0IoYwSthX9WUqDTO3
+	 5rl1HC7ZLX9zttFLu7ZOtp2ETKHkO22Hk6hx6PjFDcT9GnY2A8l8yQnJw1DJy1PrDf
+	 t37Pu+oLy/urZEncbDdXysWWu/wrLDm9e5FhWLZAOF2Chz4Zbmxz+JTozbbkUQ0Apq
+	 /8bCzHnaHfzzueQm2UZCkejsfhGtoABQn/V8TO+0pS7Iloz51dOgRCoT4rw8lVmSRG
+	 n0EreCRz32Xkw==
+Date: Fri, 29 Sep 2023 22:43:27 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Yureka <yuka@yuka.dev>
+Cc: linux-crypto@vger.kernel.org, regressions@lists.linux.dev,
+	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@redhat.com,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	Arnaud Ebalard <arno@natisbad.org>,
+	Srujana Challa <schalla@marvell.com>
+Subject: Re: [REGRESSION] dm_crypt essiv ciphers do not use async driver
+ mv-aes-cbc anymore
+Message-ID: <20230929224327.GA11839@google.com>
+References: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Language: en-US
-Cc: ebiggers@google.com, ebiggers@kernel.org, regressions@lists.linux.dev
-From: Yureka <yuka@yuka.dev>
-To: linux-crypto@vger.kernel.org
-Subject: [REGRESSION] dm_crypt essiv ciphers do not use async driver
- mv-aes-cbc anymore
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
 
-#regzbot introduced: 7bcb2c99f8ed
+Hi Yureka,
 
-I am running the NixOS distribution cross-compiled from x86_64 to a Marvell Armada 388 armv7 SoC.
+On Fri, Sep 29, 2023 at 11:08:55PM +0200, Yureka wrote:
+> #regzbot introduced: 7bcb2c99f8ed
+> 
+> I am running the NixOS distribution cross-compiled from x86_64 to a Marvell
+> Armada 388 armv7 SoC.
+> 
+> I am not getting expected speeds when reading/writing on my encrypted hard
+> drive with 6.5.5, while it is fast on 5.4.257. Volume is formatted like this:
+> `cryptsetup luksFormat -c aes-cbc-essiv:sha256 /dev/sda`.
+> 
+> Specifically, I tracked this down to the changes to crypto/essiv.c from
+> 7bcb2c99f8ed mentioned above. Reverting those changes on top of a 6.5.5 kernel
+> provides working (see applicable diff further below).
+> 
+> I'm *guessing* that this is related to the mv-aes-cbc crypto driver (from the
+> marvell-cesa module) being registered as async (according to /proc/crypto),
+> and I *suspect* that async drivers are not being used anymore by essiv or
+> dm_crypt. Going by the commit description, which sounds more like a refactor,
+> this does not seem intentional.
 
-I am not getting expected speeds when reading/writing on my encrypted hard drive with 6.5.5, while it is fast on 5.4.257. Volume is formatted like this: `cryptsetup luksFormat -c aes-cbc-essiv:sha256 /dev/sda`.
+This is actually from commit b8aa7dc5c753 ("crypto: drivers - set the flag
+CRYPTO_ALG_ALLOCATES_MEMORY"), which set CRYPTO_ALG_ALLOCATES_MEMORY in
+marvell-cesa.  7bcb2c99f8ed is just one of the prerequisite commits.
 
-Specifically, I tracked this down to the changes to crypto/essiv.c from 7bcb2c99f8ed mentioned above. Reverting those changes on top of a 6.5.5 kernel provides working (see applicable diff further below).
+I understand that the dm-crypt developers did this as an intentional bug fix in
+order to prevent dm-crypt from using crypto drivers that are known to cause
+deadlocks due to allocating memory during requests.
 
-I'm *guessing* that this is related to the mv-aes-cbc crypto driver (from the marvell-cesa module) being registered as async (according to /proc/crypto), and I *suspect* that async drivers are not being used anymore by essiv or dm_crypt. Going by the commit description, which sounds more like a refactor, this does not seem intentional.
+If you are interested in still being able to use marvell-cesa with dm-crypt, I
+believe it would need to be fixed to meet the requirements for not needing
+CRYPTO_ALG_ALLOCATES_MEMORY.  I've Cc'ed the maintainers of that driver.
 
-Would appreciate a lot if someone more experienced with the crypto subsystem can have a look at this.
+#regzbot introduced: b8aa7dc5c753
 
-
-Greetings,
-
-Yureka
-
-
----
-Some more detailed information
-
-
-Excerpt from /proc/crypto in 5.4.257:
-
-name         : essiv(cbc(aes),sha256)
-driver       : essiv(mv-cbc-aes,sha256-generic)
-async        : yes
-
-speeds of 130MB/s can be observed
-
-In 5.10.197 (the first branch that has this issue and is still receiving updates):
-
-name         : essiv(cbc(aes),sha256)
-driver       : essiv(cbc(aes-arm),sha256-generic)
-async        : no
-
-speeds are less than half, 55MB/s
-the other listings in /proc/crypto seem to be unchanged. mv-cbc-aes is still the highest priority driver providing cbc(aes)
-
-
-diff that restores the working state on recent kernels (tested with 6.5.5):
-
-
-diff --git a/crypto/essiv.c b/crypto/essiv.c
-index 85bb624e32b9..8d57245add54 100644
---- a/crypto/essiv.c
-+++ b/crypto/essiv.c
-@@ -471,7 +471,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
-                return PTR_ERR(shash_name);
- 
-        type = algt->type & algt->mask;
--       mask = crypto_algt_inherited_mask(algt);
-+       mask = (algt->type ^ CRYPTO_ALG_ASYNC) & algt->mask & CRYPTO_ALG_ASYNC;
- 
-        switch (type) {
-        case CRYPTO_ALG_TYPE_SKCIPHER:
-@@ -530,7 +530,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
-        /* Synchronous hash, e.g., "sha256" */
-        _hash_alg = crypto_alg_mod_lookup(shash_name,
-                                          CRYPTO_ALG_TYPE_SHASH,
--                                         CRYPTO_ALG_TYPE_MASK | mask);
-+                                         CRYPTO_ALG_TYPE_MASK);
-        if (IS_ERR(_hash_alg)) {
-                err = PTR_ERR(_hash_alg);
-                goto out_drop_skcipher;
-@@ -562,12 +562,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
-                     hash_alg->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
-                goto out_free_hash;
- 
--       /*
--        * hash_alg wasn't gotten via crypto_grab*(), so we need to inherit its
--        * flags manually.
--        */
--       base->cra_flags        |= (hash_alg->base.cra_flags &
--                                  CRYPTO_ALG_INHERITED_FLAGS);
-+       base->cra_flags         = block_base->cra_flags & CRYPTO_ALG_ASYNC;
-        base->cra_blocksize     = block_base->cra_blocksize;
-        base->cra_ctxsize       = sizeof(struct essiv_tfm_ctx);
-        base->cra_alignmask     = block_base->cra_alignmask;
-
-
+- Eric
