@@ -1,46 +1,109 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.cyberchaos.dev (mail.cyberchaos.dev [195.39.247.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1B43C37
-	for <regressions@lists.linux.dev>; Fri, 29 Sep 2023 14:06:38 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qmE8a-0003Oq-N4; Fri, 29 Sep 2023 16:06:36 +0200
-Message-ID: <89cb7e1c-8b87-4072-af90-e920a9d69b88@leemhuis.info>
-Date: Fri, 29 Sep 2023 16:06:36 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A936669B
+	for <regressions@lists.linux.dev>; Fri, 29 Sep 2023 21:17:46 +0000 (UTC)
+Message-ID: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yuka.dev; s=mail;
+	t=1696021736; bh=XV5Y16Sh8E+QCHNMyp4Lgqfg/vvxKHsouALRr9hLWMI=;
+	h=Date:Cc:From:To:Subject;
+	b=aKyw//Ump1xtGivSUOOIkvVtpybcwhTDIYGEhyyxyN3CpfDUFrx3s4ZC65EEMdq7f
+	 7ZUBhQhP4uRNvdcYfGr/sORZE0iNrh1Gw9RpzYa+WBwUgjq91Qm+TYv5NDVo9izWF5
+	 iiiMXdINxZSYX8LoB8lwRYdrzAjmT+WM5tLz8jD8=
+Date: Fri, 29 Sep 2023 23:08:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Read from RTC broken upon resume from suspend on HP Pro x360
- 435 G9 w/ AMD Ryzen 7 5825U
-Content-Language: en-US, de-DE
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, x86@kernel.org
-References: <591e089a-6ccd-c5f3-4cd4-a332e2eae724@gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <591e089a-6ccd-c5f3-4cd4-a332e2eae724@gmail.com>
+Content-Language: en-US
+Cc: ebiggers@google.com, ebiggers@kernel.org, regressions@lists.linux.dev
+From: Yureka <yuka@yuka.dev>
+To: linux-crypto@vger.kernel.org
+Subject: [REGRESSION] dm_crypt essiv ciphers do not use async driver
+ mv-aes-cbc anymore
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1695996398;4af6d0f4;
-X-HE-SMSGID: 1qmE8a-0003Oq-N4
+Content-Transfer-Encoding: 8bit
 
-On 03.07.23 15:25, Bagas Sanjaya wrote:
-> Anyway, I'm adding it to regzbot:
-> 
-> #regzbot introduced: d2a632a8a11756 https://bugzilla.kernel.org/show_bug.cgi?id=217626
-> #regzbot title: reducing RTC_UIP polling period causes broken RTC on resume from suspend
+#regzbot introduced: 7bcb2c99f8ed
 
-#regzbot resolve: apparently resolved by a BIOS update
-#regzbot ignore-activity
+I am running the NixOS distribution cross-compiled from x86_64 to a Marvell Armada 388 armv7 SoC.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+I am not getting expected speeds when reading/writing on my encrypted hard drive with 6.5.5, while it is fast on 5.4.257. Volume is formatted like this: `cryptsetup luksFormat -c aes-cbc-essiv:sha256 /dev/sda`.
+
+Specifically, I tracked this down to the changes to crypto/essiv.c from 7bcb2c99f8ed mentioned above. Reverting those changes on top of a 6.5.5 kernel provides working (see applicable diff further below).
+
+I'm *guessing* that this is related to the mv-aes-cbc crypto driver (from the marvell-cesa module) being registered as async (according to /proc/crypto), and I *suspect* that async drivers are not being used anymore by essiv or dm_crypt. Going by the commit description, which sounds more like a refactor, this does not seem intentional.
+
+Would appreciate a lot if someone more experienced with the crypto subsystem can have a look at this.
+
+
+Greetings,
+
+Yureka
+
+
+---
+Some more detailed information
+
+
+Excerpt from /proc/crypto in 5.4.257:
+
+name         : essiv(cbc(aes),sha256)
+driver       : essiv(mv-cbc-aes,sha256-generic)
+async        : yes
+
+speeds of 130MB/s can be observed
+
+In 5.10.197 (the first branch that has this issue and is still receiving updates):
+
+name         : essiv(cbc(aes),sha256)
+driver       : essiv(cbc(aes-arm),sha256-generic)
+async        : no
+
+speeds are less than half, 55MB/s
+the other listings in /proc/crypto seem to be unchanged. mv-cbc-aes is still the highest priority driver providing cbc(aes)
+
+
+diff that restores the working state on recent kernels (tested with 6.5.5):
+
+
+diff --git a/crypto/essiv.c b/crypto/essiv.c
+index 85bb624e32b9..8d57245add54 100644
+--- a/crypto/essiv.c
++++ b/crypto/essiv.c
+@@ -471,7 +471,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
+                return PTR_ERR(shash_name);
+ 
+        type = algt->type & algt->mask;
+-       mask = crypto_algt_inherited_mask(algt);
++       mask = (algt->type ^ CRYPTO_ALG_ASYNC) & algt->mask & CRYPTO_ALG_ASYNC;
+ 
+        switch (type) {
+        case CRYPTO_ALG_TYPE_SKCIPHER:
+@@ -530,7 +530,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
+        /* Synchronous hash, e.g., "sha256" */
+        _hash_alg = crypto_alg_mod_lookup(shash_name,
+                                          CRYPTO_ALG_TYPE_SHASH,
+-                                         CRYPTO_ALG_TYPE_MASK | mask);
++                                         CRYPTO_ALG_TYPE_MASK);
+        if (IS_ERR(_hash_alg)) {
+                err = PTR_ERR(_hash_alg);
+                goto out_drop_skcipher;
+@@ -562,12 +562,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
+                     hash_alg->base.cra_driver_name) >= CRYPTO_MAX_ALG_NAME)
+                goto out_free_hash;
+ 
+-       /*
+-        * hash_alg wasn't gotten via crypto_grab*(), so we need to inherit its
+-        * flags manually.
+-        */
+-       base->cra_flags        |= (hash_alg->base.cra_flags &
+-                                  CRYPTO_ALG_INHERITED_FLAGS);
++       base->cra_flags         = block_base->cra_flags & CRYPTO_ALG_ASYNC;
+        base->cra_blocksize     = block_base->cra_blocksize;
+        base->cra_ctxsize       = sizeof(struct essiv_tfm_ctx);
+        base->cra_alignmask     = block_base->cra_alignmask;
+
+
