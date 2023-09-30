@@ -1,76 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61561347C1
-	for <regressions@lists.linux.dev>; Fri, 29 Sep 2023 22:43:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C37C433C8;
-	Fri, 29 Sep 2023 22:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E942F5F;
+	Sat, 30 Sep 2023 10:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83005C433C9;
+	Sat, 30 Sep 2023 10:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696027408;
-	bh=UYc7qcXwIPN8R+5u/B3YnekPh2cUVdEgNsXWyhg6OR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrUibAlV4Q4kEEnJGVockzjSmIcXxeZnRM9kpZnb8BoZ65fYHiMcjlwm4IZ3XT2vQ
-	 NS8mwJIFDRyV2x2Ka8HjAgNuCnwkqqPnsScJpvG/sFTEmxrMe0IoYwSthX9WUqDTO3
-	 5rl1HC7ZLX9zttFLu7ZOtp2ETKHkO22Hk6hx6PjFDcT9GnY2A8l8yQnJw1DJy1PrDf
-	 t37Pu+oLy/urZEncbDdXysWWu/wrLDm9e5FhWLZAOF2Chz4Zbmxz+JTozbbkUQ0Apq
-	 /8bCzHnaHfzzueQm2UZCkejsfhGtoABQn/V8TO+0pS7Iloz51dOgRCoT4rw8lVmSRG
-	 n0EreCRz32Xkw==
-Date: Fri, 29 Sep 2023 22:43:27 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Yureka <yuka@yuka.dev>
-Cc: linux-crypto@vger.kernel.org, regressions@lists.linux.dev,
-	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@redhat.com,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	Arnaud Ebalard <arno@natisbad.org>,
-	Srujana Challa <schalla@marvell.com>
-Subject: Re: [REGRESSION] dm_crypt essiv ciphers do not use async driver
- mv-aes-cbc anymore
-Message-ID: <20230929224327.GA11839@google.com>
-References: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
+	s=k20201202; t=1696069488;
+	bh=ywUyJEuvnD0Kgh/Zdaq0tfehPoYx9KX55IzcG8hICEE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MxFwfYaOxaybirbDqia4s9Jeg1tkYSJOUnqURDXYpjT74rStmD3hwGIRwzZDzUYwq
+	 WjBReF2NVj5yvBHquqzritT7CX/QYVE/0gMrnkFy+jvc8FYWTH/8nFkEvZc1jLpWYF
+	 7d3yKt/4FpG8k2ceCgYnyDfx6z5uquwQcABLjNq3OqEu7gdavt3/zEqD3BVDlAnH4f
+	 5YafvbpcNTY3DWmp7DtOQp4j9HprnZMPV4DbkUTKO79MfSz+WGmlNU7ucgl/87BmQr
+	 I1Scgy1wCk9yXxia1B4dEp4/6TaucijUIeY1/cZC7ToUYpiaMWSD60THVjnnVceut+
+	 S5iuyGbycaEDw==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1dcdfeb7e44so6775610fac.0;
+        Sat, 30 Sep 2023 03:24:48 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwjJ6i41oI5u2sKU6X5wKk5k0dUAZXo0ca9vQZ0K4C3B4ceuiCI
+	1PawV00sklkcNLUiV9OMnftC30Xq0xiFpvxd7xI=
+X-Google-Smtp-Source: AGHT+IFQY627N4XOGyg1zrHOyarFome//M5MMfUPvElHfYga63GM8cBT9gzNQaseQuRx+LxO0LDTMzT33lUgZv6xYM4=
+X-Received: by 2002:a05:6870:b4a1:b0:1d5:5660:3ae0 with SMTP id
+ y33-20020a056870b4a100b001d556603ae0mr7274199oap.20.1696069487933; Sat, 30
+ Sep 2023 03:24:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
+References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
+ <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
+ <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
+ <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+ <2023052247-bobtail-factsheet-d104@gregkh> <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
+ <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com> <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
+ <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com> <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
+ <267b73d6-8c4b-40d9-542d-1910dffc3238@leemhuis.info> <2833d0db-f122-eccd-7393-1f0169dc0741@collabora.com>
+ <26aa6f92-2376-51a4-bbdc-abbbd62c23d2@leemhuis.info> <859c6dde-37ad-492e-baa0-4ea100d8381f@leemhuis.info>
+ <b31cae57-89ab-eb8b-1085-1d7476735d58@collabora.com>
+In-Reply-To: <b31cae57-89ab-eb8b-1085-1d7476735d58@collabora.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 30 Sep 2023 19:24:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQCNVHg=brV-iPL__HAhoNtAKzCiiG2M3Q9jkMvTnrbog@mail.gmail.com>
+Message-ID: <CAK7LNAQCNVHg=brV-iPL__HAhoNtAKzCiiG2M3Q9jkMvTnrbog@mail.gmail.com>
+Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
+ compiler-specific macros
+To: Shreeya Patel <shreeya.patel@collabora.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>, 
+	Maksim Panchenko <maks@meta.com>, =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>, 
+	Michal Marek <michal.lkml@markovi.net>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
+	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
+	Nick Desaulniers <ndesaulniers@google.com>, kernelci@lists.linux.dev, 
+	Collabora Kernel ML <kernel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yureka,
+On Fri, Sep 15, 2023 at 6:33=E2=80=AFPM Shreeya Patel
+<shreeya.patel@collabora.com> wrote:
+>
+> On 11/09/23 15:35, Thorsten Leemhuis wrote:
+>
+> Hi Thorsten,
+>
+> > On 29.08.23 13:28, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 11.07.23 13:16, Shreeya Patel wrote:
+> >>> On 10/07/23 17:39, Linux regression tracking (Thorsten Leemhuis) wrot=
+e:
+> >>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-postin=
+g
+> >>>> for once, to make this easily accessible to everyone.
+> >>>>
+> >>>> Shreeya Patel, Masahiro Yamada: what's the status of this? Was any
+> >>>> progress made to address this? Or is this maybe (accidentally?) fixe=
+d
+> >>>> with 6.5-rc1?
+> >>> I still see the regression happening so it doesn't seem to be fixed.
+> >>> https://linux.kernelci.org/test/case/id/64ac675a8aebf63753bb2a8c/
+> >>>
+> >>> Masahiro had submitted a fix for this issue here.
+> >>>
+> >>> https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/=
+#t
+> >>>
+> >>> But I don't see any movement there. Masahiro, are you planning to sen=
+d a
+> >>> v2 for it?
+> >> That was weeks ago and we didn't get a answer. :-/ Was this fixed in
+> >> between? Doesn't look like it from here, but I might be missing someth=
+ing.
+> > Still no reply. :-/
+> >
+> > Shreeya Patel, does the problem still happen with 6.6-rc1 and do you
+> > still want to see it fixed? In that case our only option to get things
+> > rolling again might be to involve Linus, unless someone in the CC list
+> > has a idea to resolve this. Might also be good to know if reverting the
+> > culprit fixes the problem.
+>
+>
+> I don't see this issue happening on 6.6-rc1 kernel and it was only last
+> seen in 6.5 kernel.
+> But there was no fix added to Kbuild in the meantime so not sure which
+> commit really fixed this issue.
+>
+> For now we can mark this as resolved and I'll keep an eye on the future
+> test results to see if this pops up again.
+>
+>
+> Thanks,
+> Shreeya Patel
+>
+> #regzbot resolve: Fixed in 6.6-rc1 kernel, fix commit is unknown.
 
-On Fri, Sep 29, 2023 at 11:08:55PM +0200, Yureka wrote:
-> #regzbot introduced: 7bcb2c99f8ed
-> 
-> I am running the NixOS distribution cross-compiled from x86_64 to a Marvell
-> Armada 388 armv7 SoC.
-> 
-> I am not getting expected speeds when reading/writing on my encrypted hard
-> drive with 6.5.5, while it is fast on 5.4.257. Volume is formatted like this:
-> `cryptsetup luksFormat -c aes-cbc-essiv:sha256 /dev/sda`.
-> 
-> Specifically, I tracked this down to the changes to crypto/essiv.c from
-> 7bcb2c99f8ed mentioned above. Reverting those changes on top of a 6.5.5 kernel
-> provides working (see applicable diff further below).
-> 
-> I'm *guessing* that this is related to the mv-aes-cbc crypto driver (from the
-> marvell-cesa module) being registered as async (according to /proc/crypto),
-> and I *suspect* that async drivers are not being used anymore by essiv or
-> dm_crypt. Going by the commit description, which sounds more like a refactor,
-> this does not seem intentional.
 
-This is actually from commit b8aa7dc5c753 ("crypto: drivers - set the flag
-CRYPTO_ALG_ALLOCATES_MEMORY"), which set CRYPTO_ALG_ALLOCATES_MEMORY in
-marvell-cesa.  7bcb2c99f8ed is just one of the prerequisite commits.
 
-I understand that the dm-crypt developers did this as an intentional bug fix in
-order to prevent dm-crypt from using crypto drivers that are known to cause
-deadlocks due to allocating memory during requests.
+Not fixed in 6.6-rc1.
 
-If you are interested in still being able to use marvell-cesa with dm-crypt, I
-believe it would need to be fixed to meet the requirements for not needing
-CRYPTO_ALG_ALLOCATES_MEMORY.  I've Cc'ed the maintainers of that driver.
+I submitted a patch to shoot the root cause.
 
-#regzbot introduced: b8aa7dc5c753
+https://lore.kernel.org/all/20230925110023.1796789-1-masahiroy@kernel.org/
 
-- Eric
+
+Now it is in Russell's patch tracker.
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
