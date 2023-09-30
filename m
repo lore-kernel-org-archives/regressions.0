@@ -1,135 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E942F5F;
-	Sat, 30 Sep 2023 10:24:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83005C433C9;
-	Sat, 30 Sep 2023 10:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696069488;
-	bh=ywUyJEuvnD0Kgh/Zdaq0tfehPoYx9KX55IzcG8hICEE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MxFwfYaOxaybirbDqia4s9Jeg1tkYSJOUnqURDXYpjT74rStmD3hwGIRwzZDzUYwq
-	 WjBReF2NVj5yvBHquqzritT7CX/QYVE/0gMrnkFy+jvc8FYWTH/8nFkEvZc1jLpWYF
-	 7d3yKt/4FpG8k2ceCgYnyDfx6z5uquwQcABLjNq3OqEu7gdavt3/zEqD3BVDlAnH4f
-	 5YafvbpcNTY3DWmp7DtOQp4j9HprnZMPV4DbkUTKO79MfSz+WGmlNU7ucgl/87BmQr
-	 I1Scgy1wCk9yXxia1B4dEp4/6TaucijUIeY1/cZC7ToUYpiaMWSD60THVjnnVceut+
-	 S5iuyGbycaEDw==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1dcdfeb7e44so6775610fac.0;
-        Sat, 30 Sep 2023 03:24:48 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwjJ6i41oI5u2sKU6X5wKk5k0dUAZXo0ca9vQZ0K4C3B4ceuiCI
-	1PawV00sklkcNLUiV9OMnftC30Xq0xiFpvxd7xI=
-X-Google-Smtp-Source: AGHT+IFQY627N4XOGyg1zrHOyarFome//M5MMfUPvElHfYga63GM8cBT9gzNQaseQuRx+LxO0LDTMzT33lUgZv6xYM4=
-X-Received: by 2002:a05:6870:b4a1:b0:1d5:5660:3ae0 with SMTP id
- y33-20020a056870b4a100b001d556603ae0mr7274199oap.20.1696069487933; Sat, 30
- Sep 2023 03:24:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CADD1845
+	for <regressions@lists.linux.dev>; Sat, 30 Sep 2023 12:31:41 +0000 (UTC)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-692a9bc32bcso11364077b3a.2
+        for <regressions@lists.linux.dev>; Sat, 30 Sep 2023 05:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696077101; x=1696681901; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
+        b=D5bgSqTUZE4bQrbAcP0pEvtIgHMR+UnWvT5iNBpUKxpfo3QPylsGtWhgaMVlMtUhgN
+         zTkUJ9srblDuvZJCGTGvVhAy7K4sihOOgi/fS48Jplu5/2/Ln0kkA58KRL7rdUY5rzBN
+         HSigwpVBIeUJ/csw8vloQ4kjIvTG6pe/XiBh4L8/sKq4OJ45YIyOJC0cHJz5x0a3qAr+
+         BlEmvNDpFU5ii5Z6rwQG8v0t1yEfhqn/p1fjBkxpMqSWiAK4xGvtpdI0Idr6uA5bEo5u
+         aFAX20lMTNSccy0bv78wV3gQWhzdZduRBavuUPsQwEXZXmFuvkryIZ2sN1CL617trAgg
+         6kjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696077101; x=1696681901;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
+        b=GbNifPIiEby3HeWIFQ+1QJtLcd/lf6zrXzd/83x3GzVtCFdYO8TaKZEmGi0n2OWSg0
+         HHEP12v8sLeb82YHOjLBcJzlYy0JUDq1kwmfUhJ1abjq6Pa6/r1pr5v3kwAJPYu5FsDg
+         +FdoVvFK3GH9+Gha1hROpEpPaFnOcAeHlenlQcuW52hP41CvSRwDFTmeBpuX4BkLJOKW
+         4bbJx8BzPzh/lXhMZS5Q3lpXzChvTxlvhgc+ELkg4Jqvj7O33OSbuJ1BXcYcTZ4o5Uqw
+         pSYLNGAqVZMRIxTcqszNAhT+egsZ8ogdhTdh8YFbOM5OHO4pUiQ96zeiDYgqUvm6T/rj
+         48IQ==
+X-Gm-Message-State: AOJu0YzbcD6fW8+XcsTGYFKVbEvVOsHPxZJMSvkP2w5viXAn1bGY8Ain
+	SrDFj+ytcgEHcAWq2uF+5e8=
+X-Google-Smtp-Source: AGHT+IEhI7eA8uS9H8VpG7zI0niIhieHYI5PZG8NgJ2DvP5MEnONifsqFETJAiDku+qqJ+SYqEFV2A==
+X-Received: by 2002:a05:6a00:24c6:b0:68c:2be:67bb with SMTP id d6-20020a056a0024c600b0068c02be67bbmr7158316pfv.20.1696077100602;
+        Sat, 30 Sep 2023 05:31:40 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id e25-20020a62ee19000000b00690d9901ce5sm7900536pfi.102.2023.09.30.05.31.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Sep 2023 05:31:39 -0700 (PDT)
+Message-ID: <da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com>
+Date: Sat, 30 Sep 2023 19:31:34 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKwvOd=4hBcU4fAkddU0b-GOZc9FzTZoj3PFW6ZZrX0jS8x+bg@mail.gmail.com>
- <CAKwvOd=8LVU+iANkFx18Wm1jg7gYiAXovAmo9t5ZZaVdMULn-Q@mail.gmail.com>
- <875y8ok9b5.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <CAKwvOdmJJibt6sHSp91v2s7BxUWBC6xG7F7+3C6gUxNMzZ2xRA@mail.gmail.com>
- <87353ok78h.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
- <2023052247-bobtail-factsheet-d104@gregkh> <CAKwvOd=2zAV_mizvzLFdyHE_4OzBY5OVu6KLWuQPOMZK37vsmQ@mail.gmail.com>
- <cff33e12-3d80-7e62-1993-55411ccabc01@collabora.com> <CAKwvOd=F29-UkNO7FtUWpVV=POOZLb6QgD=mhLMWtRfkRSSi2A@mail.gmail.com>
- <a037a08c-44c4-24e8-1cba-7e4e8b21ffaa@collabora.com> <CAK7LNAS8Y9syCiHMO2r75D6hgCSsDDvJ_=VMKpYqjondnbSZjw@mail.gmail.com>
- <267b73d6-8c4b-40d9-542d-1910dffc3238@leemhuis.info> <2833d0db-f122-eccd-7393-1f0169dc0741@collabora.com>
- <26aa6f92-2376-51a4-bbdc-abbbd62c23d2@leemhuis.info> <859c6dde-37ad-492e-baa0-4ea100d8381f@leemhuis.info>
- <b31cae57-89ab-eb8b-1085-1d7476735d58@collabora.com>
-In-Reply-To: <b31cae57-89ab-eb8b-1085-1d7476735d58@collabora.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 30 Sep 2023 19:24:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQCNVHg=brV-iPL__HAhoNtAKzCiiG2M3Q9jkMvTnrbog@mail.gmail.com>
-Message-ID: <CAK7LNAQCNVHg=brV-iPL__HAhoNtAKzCiiG2M3Q9jkMvTnrbog@mail.gmail.com>
-Subject: Re: [PATCH v4] Makefile.compiler: replace cc-ifversion with
- compiler-specific macros
-To: Shreeya Patel <shreeya.patel@collabora.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>, 
-	Maksim Panchenko <maks@meta.com>, =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>, 
-	Michal Marek <michal.lkml@markovi.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>, 
-	Bill Wendling <morbo@google.com>, Nathan Chancellor <nathan@kernel.org>, 
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>, 
-	Guillaume Charles Tucker <guillaume.tucker@collabora.com>, denys.f@collabora.com, 
-	Nick Desaulniers <ndesaulniers@google.com>, kernelci@lists.linux.dev, 
-	Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Performance regression: resume_console takes 100ms longer in
+ S2idle/S3 resume in v6.6-rc1
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Hardening <linux-hardening@vger.kernel.org>
+References: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Content-Language: en-US
+In-Reply-To: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 15, 2023 at 6:33=E2=80=AFPM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
->
-> On 11/09/23 15:35, Thorsten Leemhuis wrote:
->
-> Hi Thorsten,
->
-> > On 29.08.23 13:28, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 11.07.23 13:16, Shreeya Patel wrote:
-> >>> On 10/07/23 17:39, Linux regression tracking (Thorsten Leemhuis) wrot=
-e:
-> >>>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-postin=
-g
-> >>>> for once, to make this easily accessible to everyone.
-> >>>>
-> >>>> Shreeya Patel, Masahiro Yamada: what's the status of this? Was any
-> >>>> progress made to address this? Or is this maybe (accidentally?) fixe=
-d
-> >>>> with 6.5-rc1?
-> >>> I still see the regression happening so it doesn't seem to be fixed.
-> >>> https://linux.kernelci.org/test/case/id/64ac675a8aebf63753bb2a8c/
-> >>>
-> >>> Masahiro had submitted a fix for this issue here.
-> >>>
-> >>> https://lore.kernel.org/lkml/ZJEni98knMMkU%2Fcl@buildd.core.avm.de/T/=
-#t
-> >>>
-> >>> But I don't see any movement there. Masahiro, are you planning to sen=
-d a
-> >>> v2 for it?
-> >> That was weeks ago and we didn't get a answer. :-/ Was this fixed in
-> >> between? Doesn't look like it from here, but I might be missing someth=
-ing.
-> > Still no reply. :-/
-> >
-> > Shreeya Patel, does the problem still happen with 6.6-rc1 and do you
-> > still want to see it fixed? In that case our only option to get things
-> > rolling again might be to involve Linus, unless someone in the CC list
-> > has a idea to resolve this. Might also be good to know if reverting the
-> > culprit fixes the problem.
->
->
-> I don't see this issue happening on 6.6-rc1 kernel and it was only last
-> seen in 6.5 kernel.
-> But there was no fix added to Kbuild in the meantime so not sure which
-> commit really fixed this issue.
->
-> For now we can mark this as resolved and I'll keep an eye on the future
-> test results to see if this pops up again.
->
->
-> Thanks,
-> Shreeya Patel
->
-> #regzbot resolve: Fixed in 6.6-rc1 kernel, fix commit is unknown.
+On 28/09/2023 07:17, Bagas Sanjaya wrote:
+> Hi,
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
+>>
+>> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
+>> Author: John Ogness <john.ogness@linutronix.de>
+>> Date:   Mon Jul 17 21:52:06 2023 +0206
+>>
+>>     printk: Add per-console suspended state
+>>     
+>>     Currently the global @console_suspended is used to determine if
+>>     consoles are in a suspended state. Its primary purpose is to allow
+>>     usage of the console_lock when suspended without causing console
+>>     printing. It is synchronized by the console_lock.
+>>     
+>>     Rather than relying on the console_lock to determine suspended
+>>     state, make it an official per-console state that is set within
+>>     console->flags. This allows the state to be queried via SRCU.
+>>     
+>>     Remove @console_suspended. Console printing will still be avoided
+>>     when suspended because console_is_usable() returns false when
+>>     the new suspended flag is set for that console.
+>>
+>> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
+> 
+> Then,
+> 
+>> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
+> 
+> See Bugzilla for the full thread and attached sleepgraph timelines
+> (in html format).
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
+> #regzbot title: resume_console performance regression due to per-console suspended state
+> 
 
+#regzbot fix: printk: flush consoles before checking progress
 
+-- 
+An old man doll... just what I always wanted! - Clara
 
-Not fixed in 6.6-rc1.
-
-I submitted a patch to shoot the root cause.
-
-https://lore.kernel.org/all/20230925110023.1796789-1-masahiroy@kernel.org/
-
-
-Now it is in Russell's patch tracker.
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
