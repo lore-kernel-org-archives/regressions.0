@@ -1,182 +1,143 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA808F5A
-	for <regressions@lists.linux.dev>; Sun,  1 Oct 2023 13:43:58 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qmwjf-0006FY-CT; Sun, 01 Oct 2023 15:43:51 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-10-01]
-Date: Sun,  1 Oct 2023 13:43:50 +0000
-Message-Id: <169616777754.3766264.2663767892794249034@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DFF659
+	for <regressions@lists.linux.dev>; Sun,  1 Oct 2023 16:39:45 +0000 (UTC)
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vulcan.natalenko.name (Postfix) with ESMTPSA id 969DA15278A8;
+	Sun,  1 Oct 2023 18:32:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1696177967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=kzlx67CZy1QScrq/jKerHGDJqCFa+KgwdJ4AQpm3+/U=;
+	b=wBqt2wD+/+KVgBjumuMHmn7e24m7vh0dC5jcwSmWh+WHGJfdxoit0e8N0UgyRmw0UW66w8
+	TjqbY0kuJHHuNvHOC4fbYnt73wJogoap/aGirEUX1vDiKQkno2VY1axPktvNwrbuB21OhG
+	8AszvDBNaOI55a6C9VdO1TN3kLWcOps=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ dri-devel@lists.freedesktop.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+ Linux Regressions <regressions@lists.linux.dev>
+Subject:
+ [REGRESSION] BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
+Date: Sun, 01 Oct 2023 18:32:34 +0200
+Message-ID: <13360591.uLZWGnKmhe@natalenko.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696167838;27bd781e;
-X-HE-SMSGID: 1qmwjf-0006FY-CT
+Content-Type: multipart/signed; boundary="nextPart2904309.e9J7NaK4W3";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Hi Linus. There is not much to report wrt to regressions introduced
-during the current cycle; quite a few new reports showed up this week
-(see below), but nothing to worry about afaics. And the 6.5-rc6
-regression I mentioned in last weeks report is also soon history, as
-Greg sent you the merge request with the fix today (see "[GIT PULL]
-Char/Misc driver fix for 6.6-rc4").
+--nextPart2904309.e9J7NaK4W3
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org
+Date: Sun, 01 Oct 2023 18:32:34 +0200
+Message-ID: <13360591.uLZWGnKmhe@natalenko.name>
+MIME-Version: 1.0
 
-Ciao, Thorsten
+Hello.
 
----
+I've got a VM from a cloud provider, and since v6.5 I observe the following kfence splat in dmesg during boot:
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+```
+BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
 
-Currently I'm aware of 8 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ] (in kfence-#108):
+ drm_gem_put_pages+0x186/0x250
+ drm_gem_shmem_put_pages_locked+0x43/0xc0
+ drm_gem_shmem_object_vunmap+0x83/0xe0
+ drm_gem_vunmap_unlocked+0x46/0xb0
+ drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
+ drm_fb_helper_damage_work+0x96/0x170
+ process_one_work+0x254/0x470
+ worker_thread+0x55/0x4f0
+ kthread+0xe8/0x120
+ ret_from_fork+0x34/0x50
+ ret_from_fork_asm+0x1b/0x30
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+kfence-#108: 0x00000000cda343af-0x00000000aec2c095, size=3072, cache=kmalloc-4k
 
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+allocated by task 51 on cpu 0 at 14.668667s:
+ drm_gem_get_pages+0x94/0x2b0
+ drm_gem_shmem_get_pages+0x5d/0x110
+ drm_gem_shmem_object_vmap+0xc4/0x1e0
+ drm_gem_vmap_unlocked+0x3c/0x70
+ drm_client_buffer_vmap+0x23/0x50
+ drm_fbdev_generic_helper_fb_dirty+0xae/0x310
+ drm_fb_helper_damage_work+0x96/0x170
+ process_one_work+0x254/0x470
+ worker_thread+0x55/0x4f0
+ kthread+0xe8/0x120
+ ret_from_fork+0x34/0x50
+ ret_from_fork_asm+0x1b/0x30
 
+freed by task 51 on cpu 0 at 14.668697s:
+ drm_gem_put_pages+0x186/0x250
+ drm_gem_shmem_put_pages_locked+0x43/0xc0
+ drm_gem_shmem_object_vunmap+0x83/0xe0
+ drm_gem_vunmap_unlocked+0x46/0xb0
+ drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
+ drm_fb_helper_damage_work+0x96/0x170
+ process_one_work+0x254/0x470
+ worker_thread+0x55/0x4f0
+ kthread+0xe8/0x120
+ ret_from_fork+0x34/0x50
+ ret_from_fork_asm+0x1b/0x30
 
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
+CPU: 0 PID: 51 Comm: kworker/0:2 Not tainted 6.5.0-pf4 #1 8b557a4173114d86eef7240f7a080080cfc4617e
+Hardware name: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
+Workqueue: events drm_fb_helper_damage_work
+```
 
+This repeats a couple of times and then stops.
 
-[ *NEW* ] x86,static_call: crash on x86 kernel with CONFIG_DEBUG_VIRTUAL=y.
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZRhKq6e5nF/4ZIV1@fedora/
-https://lore.kernel.org/lkml/ZRhKq6e5nF%2F4ZIV1@fedora/
+Currently, I'm running v6.5.5. So far, there's no impact on how VM functions for me.
 
-By Hyeonggon Yoo; 0 days ago; 1 activities, latest 0 days ago.
-Introduced in aee9d30b9744 (v6.6-rc3)
+The VGA adapter is as follows: 00:02.0 VGA compatible controller: Cirrus Logic GD 5446
 
-Recent activities from: Hyeonggon Yoo (1)
+Please check.
 
+Thanks.
 
-[ *NEW* ] resume_console performance regression due to per-console suspended state
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com/
-https://lore.kernel.org/lkml/99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com/
+-- 
+Oleksandr Natalenko (post-factum)
+--nextPart2904309.e9J7NaK4W3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-By Todd Brandt; 3 days ago; 2 activities, latest 1 days ago.
-Introduced in 9e70a5e109a4 (v6.6-rc1)
+-----BEGIN PGP SIGNATURE-----
 
-Fix incoming:
-* printk: flush consoles before checking progress
-  https://lore.kernel.org/lkml/da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com/
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUZnyIACgkQil/iNcg8
+M0tJmQ/8DhTcxuPGXLnGUgCfwyogSk1PChHX3rmyptaGWxzJGH5ztqyjcdoHIYkI
+38js69NPzumIuHUMhGF6ipb7ZDkqfhJTzVAWyf7s86Aau9SBWFkUDieoIxqm6CaJ
+CyIxgTtVi2FalaIZiRcrJOW4bOy7tujJKlEvz43RBSoHHgBEjSx3dCYiGHNWxvWw
+pG3SFZLdDNKzZs1kUdrfwqft6OxOvA85hATzVJDKs7OvMuYDCU2trDspGVs9XVa6
+I99s6DJGA2uGENneAlgwti8ACY3xH+IkfNI6Fe/9vIqQYHFHpTnKqyp3HbUN18fS
+En8QDtGCNChlHwFEWcB7HaFW9VXg89lpWM9MRyuSixVFijbq/vFt1AJMUEgUhYEu
+nGm68xtaE/OktfzsMuOm3VV5pt4Q5MfgbFMql/a1VBpqt+NQH1jf3U6X6Mu3CBrN
+QWUaQGgZMfF4y15r+lBKkDr4mrdH5kdWNu2kP5MNG8qixn4XrxCd/EkRvN4QpstC
+pP+lpwVuoPpDYnqOm//zhS3p+sJdTN5B9IhBhrFOCdgisLzIyJzyLlTjDi+CRGS9
+NXLPrzvFUxfpgy23N41lqYUvShb3WXsHnSWtULbrFv3J1JN/rCQ+I9tk7HuXW6W/
+SPJzW28+5hoTrUF7EPl84GYXm0dJBU0BA1atbhfqFJO/AKaWHKo=
+=wsqg
+-----END PGP SIGNATURE-----
 
-
-[ *NEW* ] resume_console performance regression due to per-console suspended state
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217955/
-https://bugzilla.kernel.org/show_bug.cgi?id=217955
-https://lore.kernel.org/lkml/99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com/
-
-By Todd Brandt and Todd Brandt; 3 days ago; 15 activities, latest 1 days ago.
-Introduced in 9e70a5e109a4 (v6.6-rc1)
-
-Fix incoming:
-* printk: flush consoles before checking progress
-  https://lore.kernel.org/lkml/da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com/
-
-
-mm, memcg: runc fails to gather cgroup statistics
--------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
-https://lore.kernel.org/lkml/20230920081101.GA12096@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
-
-By Jeremi Piotrowski; 11 days ago; 33 activities, latest 1 days ago.
-Introduced in 86327e8eb94c (v6.6-rc1)
-
-Fix incoming:
-* mm, memcg: reconsider kmem.limit_in_bytes deprecation
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=7fb34d99d835ad56dc1827e0753ba53b7c27a2e4
-
-
-wifi: mt76: mt7915: removal of VHT160 capability broke hostap
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/12289744.O9o76ZdvQC@natalenko.name/
-https://lore.kernel.org/lkml/12289744.O9o76ZdvQC@natalenko.name/
-
-By Oleksandr Natalenko; 10 days ago; 3 activities, latest 1 days ago.
-Introduced in 3ec5ac12ac8a (v6.6-rc1)
-
-Recent activities from: Oleksandr Natalenko (1), Nicolas Cavallari (1)
-
-
-[ *NEW* ] powerpc: new page table range API causes PowerMac G5 to fail booting
-------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230929132750.3cd98452@yea/
-https://lore.kernel.org/linuxppc-dev/20230929132750.3cd98452@yea/
-
-By Erhard Furtner; 2 days ago; 1 activities, latest 2 days ago.
-Introduced in 9fee28baa601 (v6.6-rc1)
-
-Recent activities from: Erhard Furtner (1)
-
-
-[ *NEW* ] Input: psmouse - Resume broken on T14s Gen1 (AMD) due to a new delay when deactivating for SMBus mode
----------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-https://lore.kernel.org/lkml/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-https://lore.kernel.org/lkml/0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info/
-
-By Thorsten Leemhuis and Thorsten Leemhuis; 4 days ago; 4 activities, latest 3 days ago.
-Introduced in 92e24e0e57f7 (v6.6-rc1)
-
-Recent activities from: Thorsten Leemhuis (3), Jeffery Miller (1)
+--nextPart2904309.e9J7NaK4W3--
 
 
-[ *NEW* ] virtio: network-related regression when using SWIOTLB in the guest
-----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230926130451.axgodaa6tvwqs3ut@amd.com/
-https://lore.kernel.org/lkml/20230926130451.axgodaa6tvwqs3ut@amd.com/
 
-By Michael Roth; 5 days ago; 4 activities, latest 4 days ago.
-Introduced in 295525e29a (v6.6-rc1)
-
-Fix incoming:
-* virtio_net: fix the missing of the dma cpu sync
-  https://lore.kernel.org/lkml/a7a2bf25-cfc1-47a8-baf4-487a8574fb5a@leemhuis.info/
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169557219938.3206394.2779757887621800924@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
