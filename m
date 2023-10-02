@@ -1,125 +1,255 @@
-Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817271A715
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 15:39:05 +0000 (UTC)
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vulcan.natalenko.name (Postfix) with ESMTPSA id 9BE981528EB4;
-	Mon,  2 Oct 2023 17:39:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1696261142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cOB88vPQiLyH370nTLoYIxokwI7a/8OLj2bT7Vxp3cw=;
-	b=pWXunvHw7ykTJg5hBsOg9EX0UAyT7FxfqVQMTpPDUw0Ad3+mLwq+Vj11H1fg015DGMouCo
-	HDMokGSEED/qVoVe/NscrAb22quvRHi7Y+jUpi2n0kKzJZt4v0y0NCA2RqDB8IODILxZlF
-	JC4Gq82iC3zo/kynuS1cSb+zfeXbs2c=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- dri-devel@lists.freedesktop.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
- Linux Regressions <regressions@lists.linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject:
- Re: [REGRESSION] BUG: KFENCE: memory corruption in
- drm_gem_put_pages+0x186/0x250
-Date: Mon, 02 Oct 2023 17:38:48 +0200
-Message-ID: <2160215.irdbgypaU6@natalenko.name>
-In-Reply-To: <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
-References:
- <13360591.uLZWGnKmhe@natalenko.name> <2300189.ElGaqSPkdT@natalenko.name>
- <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAD11CFA5
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 16:52:51 +0000 (UTC)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so365a12.0
+        for <regressions@lists.linux.dev>; Mon, 02 Oct 2023 09:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696265569; x=1696870369; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=igoBjAAAiCSsukRTgta1GLwRPFnj6RSNNecifLHOqA4=;
+        b=fNCj7QExG67kUscCblW0Kipdwn3hY7w2xHY4ZaLa+71Om6Fk/HQtwy5NE8Y6xivdQO
+         yb+8hl9HIdrHvWVlDzdV0T9asztltW7W2HeDc6rNfLjDfi+meUXaGefpxvThR5f7kv1P
+         uCE5N2uzQvfFtj7vaaRcAIuw60p0IIqTEJdOPC79hO9Ew5w4NRqZTtZ1m/v7tXin2bRJ
+         dpoGDC1TRmJKnTEqassFRAnN1mUiG/dE5kw+6ArENQ1vqV5sP7drMbjmu9IdzM/7rxdF
+         UIkSg8y/5VCcGDX+5YSLLw4dCydAG0yJfwY3jvEt3UqdT7cHPyBYWQphmvkzHmVUydrv
+         wvwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696265569; x=1696870369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igoBjAAAiCSsukRTgta1GLwRPFnj6RSNNecifLHOqA4=;
+        b=uC7fJpnG6VFdMCmNH3aczsOHUAkXvzvHv9SBe3nuafzANhCeFUw5WVKRwQPv8kh4Q3
+         mcQZ8An6HY0rKbROmrMlmN1EETn4EpcFBlnYFbASYDvzIdjh2Rocd7JiPAwN5MA8nvy4
+         5rlFrL3HSyIxS61YuofYX8xDQy2JHLnFo+SuhcBgRn6F6Gbg4xyWNX7Bk2Vlb9ZEbVE0
+         SSHAWmBC/57we+HVLn3Ipfun1wGqB6iZjBf+TAEHRHXvac9Q1XgHeKBU2TRj9cBxCCfY
+         Nozje+dVZkNskeDMLB+R9KHMpUqvEOd1aIL8vyL1RalvznAQnJlp2kRgdftvopx40MP3
+         GJwg==
+X-Gm-Message-State: AOJu0Yxp5gz+Bx/byQ2H09korhs/KcAbNCTJ/Q50xMXPGXkfBFRxeMPh
+	1tvQYsrpFxl+92iTQNuU4UshvAsDZ7ZQdTDI4/jnNQ==
+X-Google-Smtp-Source: AGHT+IEDcd/akFxKXLV4v7AAEvHjgPo5rqcFY5wL3h7WBcwRtCbjUm4T3Gg8FZh2/3M9W0iz+0sXhB+XWfxCgD0J7EU=
+X-Received: by 2002:a50:d5c5:0:b0:538:5f9e:f0fc with SMTP id
+ g5-20020a50d5c5000000b005385f9ef0fcmr5386edj.0.1696265565270; Mon, 02 Oct
+ 2023 09:52:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart13361251.uLZWGnKmhe";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart13361251.uLZWGnKmhe
+References: <ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info>
+ <CAAzPG9NkoaUz_JRtZt_JomsYj-8ZPn4QH0w0eeR-oxd55-18Qg@mail.gmail.com>
+ <CAAzPG9NWp8yPU52o7d2-jLjxjLodFOiE_AjoxmCAZ=MXtV__Aw@mail.gmail.com>
+ <cf87d6a5-7ff3-4add-8c48-fd3447b32697@leemhuis.info> <1b3f8dd2-6364-4f00-a33e-8b15b8911dbf@leemhuis.info>
+In-Reply-To: <1b3f8dd2-6364-4f00-a33e-8b15b8911dbf@leemhuis.info>
+From: Jeffery Miller <jefferymiller@google.com>
+Date: Mon, 2 Oct 2023 11:52:33 -0500
+Message-ID: <CAAzPG9MD+UQb_RdiMkPkpQGYe-arD1nMKWngMj4P5s3_zJvphQ@mail.gmail.com>
+Subject: Re: [regression] Resume broken on T14s Gen1 (AMD) due to "Input:
+ psmouse - add delay when deactivating for SMBus mode"
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Matthew Wilcox <willy@infradead.org>
-Date: Mon, 02 Oct 2023 17:38:48 +0200
-Message-ID: <2160215.irdbgypaU6@natalenko.name>
-In-Reply-To: <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
-MIME-Version: 1.0
 
-On pond=C4=9Bl=C3=AD 2. =C5=99=C3=ADjna 2023 16:32:45 CEST Matthew Wilcox w=
-rote:
-> On Mon, Oct 02, 2023 at 01:02:52PM +0200, Oleksandr Natalenko wrote:
-> > > > > > BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
-> > > > > >=20
-> > > > > > Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! =
-! ! ! ! ! ] (in kfence-#108):
-> > > > > >  drm_gem_put_pages+0x186/0x250
-> > > > > >  drm_gem_shmem_put_pages_locked+0x43/0xc0
-> > > > > >  drm_gem_shmem_object_vunmap+0x83/0xe0
-> > > > > >  drm_gem_vunmap_unlocked+0x46/0xb0
-> > > > > >  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
-> > > > > >  drm_fb_helper_damage_work+0x96/0x170
-> >=20
-> > Matthew, before I start dancing around, do you think ^^ could have the =
-same cause as 0b62af28f249b9c4036a05acfb053058dc02e2e2 which got fixed by 8=
-63a8eb3f27098b42772f668e3977ff4cae10b04?
->=20
-> Yes, entirely plausible.  I think you have two useful points to look at
-> before delving into a full bisect -- 863a8e and the parent of 0b62af.
-> If either of them work, I think you have no more work to do.
+Hello,
 
-OK, I've did this against v6.5.5:
+On Sat, Sep 30, 2023 at 4:04=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
+nfo> wrote:
+>
+> [FWIW, in case sending this in private happened accidentally, feel free
+> to make this public again.]
 
+This was unintentional. Replying back to the list.
+
+> """
+> > diff --git a/drivers/input/mouse/psmouse-smbus.c b/drivers/input/mouse/=
+psmouse-smbus.c
+> > index 7b13de979908..fe12385bb856 100644
+> > --- a/drivers/input/mouse/psmouse-smbus.c
+> > +++ b/drivers/input/mouse/psmouse-smbus.c
+> > @@ -121,11 +121,11 @@ static psmouse_ret_t psmouse_smbus_process_byte(s=
+truct psmouse *psmouse)
+> >
+> >  static void psmouse_activate_smbus_mode(struct psmouse_smbus_dev *smbd=
+ev)
+> >  {
+> > -       if (smbdev->need_deactivate) {
+> > -               psmouse_deactivate(smbdev->psmouse);
+> > -               /* Give the device time to switch into SMBus mode */
+> > -               msleep(30);
+> > -       }
+> > +        if (smbdev->psmouse =3D=3D NULL) {
+> > +           printk("XXX: smbdev->psmouse is null\n");
+> > +        } else {
+> > +           printk("XXX: smbdev->psmouse is set\n");
+> > +        }
+> >  }
+> >
+> >  static int psmouse_smbus_reconnect(struct psmouse *psmouse)
+> """
+>
+> During boot this prints "XXX: smbdev->psmouse is set". But it helped, as
+> the machine now resumes from s2idle again -- while printing "XXX:
+> smbdev->psmouse is null". And that should not be the case I assume. Or
+> did my brute force test go sideways due to my limited skills?
+
+This was a good test. You've identified where it is crashing.
+
+Maybe we could confirm that `psmouse->private` is not-NULL?:
 ```
-git log --oneline HEAD~3..
-7c1e7695ca9b8 (HEAD -> test) Revert "mm: remove struct pagevec"
-8f2ad53b6eac6 Revert "mm: remove check_move_unevictable_pages()"
-fa1e3c0b5453c Revert "drm: convert drm_gem_put_pages() to use a folio_batch"
+diff --git a/drivers/input/mouse/psmouse-smbus.c
+b/drivers/input/mouse/psmouse-smbus.c
+index 7b13de979908..432615df9ae8 100644
+--- a/drivers/input/mouse/psmouse-smbus.c
++++ b/drivers/input/mouse/psmouse-smbus.c
+@@ -130,7 +130,10 @@ static void psmouse_activate_smbus_mode(struct
+psmouse_smbus_dev *smbdev)
+
+ static int psmouse_smbus_reconnect(struct psmouse *psmouse)
+ {
+-       psmouse_activate_smbus_mode(psmouse->private);
++       if (psmouse->private =3D=3D NULL) {
++               printk("XXX smbdev is null");
++       }
++       //psmouse_activate_smbus_mode(psmouse->private);
+        return 0;
+ }
 ```
 
-then rebooted the host multiple times, and the issue is not seen any more.
+Thanks,
+Jeff
 
-So I guess 3291e09a463870610b8227f32b16b19a587edf33 is the culprit.
-
-Thanks.
-
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart13361251.uLZWGnKmhe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUa5AgACgkQil/iNcg8
-M0syzg/7BciM9R4z20hUehuS7SJe83FiC1Cgucq3pMgk42d+48MZTzND3Xui+p8v
-WXpF98grtGA1nzPzfBngpkwzPVHCL2Psf/mT+ea86et2jNMPtoQBJ0BQYo4DL83F
-AG7VP9HRo9aPKwppoYsOnEEJmXqx1iqsHn0O89uworE0aV6aRRM4POZVsafKNjdT
-vAlYmRrueMS/F6YhfjcVlPd7G4K7SQTg0glBOgWo9rY9C7Ox/oNgf1MqGcp+L/V3
-2lYuFDFzj4fAHikW1zm74ujUbEXJ3FtG0knmkWcqNIjJ5yWwJk3l3birm0ni0PX6
-e22IoVoShI0W9rTpDlUEPkx7OEQ6taAwadWJbKhNdBMOjdpm1BFkDCmWH4HCWOgd
-o1ChU5iQfJldc50ymThnHVX5JxutVaPmNZDYWWAL9iMUdTkI0NkgqtWm5ZgaXRq3
-vJbZLqWAiHxA3UqvstvrzGwX3VswbJsjDV+Lqi1I27MW+xti81I3BzBP2+kfM/0I
-7bqi/XC5DboJFpNy5ac2BJdZn2ZktqAi3tkGKr4cAJViohE1/50kjAWrS+gWISOJ
-8f7UivDTV+AxizGySF88gekEA9raxURl40GK7rvBvQMwi7Fd1njzRct/O4neDlaP
-MlmoKVsz6VJoOuANweZqkyHyHYRALaxRGXxkE3yPXIfeWaFwGWc=
-=38a+
------END PGP SIGNATURE-----
-
---nextPart13361251.uLZWGnKmhe--
-
-
-
+On Thu, Sep 28, 2023 at 4:08=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
+nfo> wrote:
+>
+> On 27.09.23 19:23, Thorsten Leemhuis wrote:
+> > On 27.09.23 17:55, Jeffery Miller wrote:
+> >> On Wed, Sep 27, 2023 at 10:43=E2=80=AFAM Jeffery Miller
+> >> <jefferymiller@google.com> wrote:
+> >>> On Wed, Sep 27, 2023 at 3:54=E2=80=AFAM Thorsten Leemhuis <linux@leem=
+huis.info> wrote:
+> >>>>
+> >>>> My dmesg from a kernel with the revert:
+> >>>> https://www.leemhuis.info/files/misc/dmesg
+> >
+> > Thx for looking into this!
+> >
+> >>> In this dmesg output it shows that this is an elantech smbus device:
+> >>> ```
+> >>> [    4.260415] psmouse serio1: elantech: assuming hardware version 4 =
+(with firmware version 0x7f3001)
+> >>> [    4.279297] psmouse serio1: elantech: Synaptics capabilities query=
+ result 0x90, 0x18, 0x0f.
+> >>> [    4.292788] psmouse serio1: elantech: Elan sample query result 00,=
+ 80, c9
+> >>> [    4.319184] psmouse serio1: elantech: Elan ic body: 0x10, current =
+fw version: 0x3
+> >>> ...
+> >>> [    4.346951] psmouse serio1: elantech: Trying to set up SMBus acces=
+s
+> >>> [    4.346986] psmouse serio1: elantech: SMbus companion is not ready=
+ yet
+> >>> [    4.369993] input: ETPS/2 Elantech TrackPoint as /devices/platform=
+/i8042/serio1/input/input7
+> >>> [    4.376200] systemd[1]: bpf-lsm: LSM BPF program attached
+> >>> [    4.385192] input: ETPS/2 Elantech Touchpad as /devices/platform/i=
+8042/serio1/input/input5
+> >>> ```
+> >>> The change in 92e24e0e57f72e shouldn't affect the elantouch device as=
+  elantech_setup_smbus
+> >>> initializes `psmouse_smbus_init` with need_deactivate =3D false.
+> >
+> > Hmmm. Wondering if I should warm up the compiler again to recheck my
+> > result one more time[1].
+>
+> Just did that. Ran "make clean" and compiled mainline as of now
+> (633b47cb009d) and the machine does never resume from s2idle; then I
+> reverted 92e24e0e57f7 and compiled again (for completeness: without
+> running "make clean" beforehand) and with that kernel s2idle resume
+> works perfectly fine.
+>
+> Wondering if I or the compiler is doing something stupid here -- or if
+> we missed some small but important detail somewhere.
+>
+> Ciao, Thorsten
+>
+> >>> Did you store dmesg logs from boot without the applied patch?
+> >> I intended to ask if you have logs from a boot without 92e24e0e57f72e =
+reverted.
+> >
+> > https://www.leemhuis.info/files/misc/dmesg-6.6-rc3-vanilla
+> >
+> >>> If the delay was being applied the timestamps should show the 30ms de=
+lay between
+> >>> `psmouse serio1: elantech: Trying to set up SMBus access`
+> >>> and
+> >>> `psmouse serio1: elantech: SMbus companion is not ready yet`
+> >
+> > Unless I missed something there is not difference. :-/
+> >
+> > Ciao, Thorsten
+> >
+> > [1] FWIW, this is my bisect log
+> >
+> > """
+> >> git bisect start
+> >> # status: waiting for both good and bad commits
+> >> # bad: [6465e260f48790807eef06b583b38ca9789b6072] Linux 6.6-rc3
+> >> git bisect bad 6465e260f48790807eef06b583b38ca9789b6072
+> >> # status: waiting for good commit(s), bad commit known
+> >> # good: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
+> >> git bisect good 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+> >> # good: [4fb0dacb78c6a041bbd38ddd998df806af5c2c69] Merge tag 'sound-6.=
+6-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+> >> git bisect good 4fb0dacb78c6a041bbd38ddd998df806af5c2c69
+> >> # good: [307d59039fb26212a84a9aa6a134a7d2bdea34ca] Merge tag 'media/v6=
+.6-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> >> git bisect good 307d59039fb26212a84a9aa6a134a7d2bdea34ca
+> >> # bad: [4a0fc73da97efd23a383ca839e6fe86410268f6b] Merge tag 's390-6.6-=
+2' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+> >> git bisect bad 4a0fc73da97efd23a383ca839e6fe86410268f6b
+> >> # good: [e4f1b8202fb59c56a3de7642d50326923670513f] Merge tag 'for_linu=
+s' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+> >> git bisect good e4f1b8202fb59c56a3de7642d50326923670513f
+> >> # good: [5eea5820c7340d39e56e169e1b87199391105f6b] Merge tag 'mm-stabl=
+e-2023-09-04-14-00' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/m=
+m
+> >> git bisect good 5eea5820c7340d39e56e169e1b87199391105f6b
+> >> # good: [65d6e954e37872fd9afb5ef3fc0481bb3c2f20f4] Merge tag 'gfs2-v6.=
+5-rc5-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gf=
+s2
+> >> git bisect good 65d6e954e37872fd9afb5ef3fc0481bb3c2f20f4
+> >> # bad: [744a759492b5c57ff24a6e8aabe47b17ad8ee964] Merge tag 'input-for=
+-v6.6-rc0' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+> >> git bisect bad 744a759492b5c57ff24a6e8aabe47b17ad8ee964
+> >> # good: [dbce1a7d5dce7318d8465b1e0d052ef1d2202237] Input: Explicitly i=
+nclude correct DT includes
+> >> git bisect good dbce1a7d5dce7318d8465b1e0d052ef1d2202237
+> >> # good: [29057cc5bddc785ea0a11534d7ad2546fa0872d3] Merge tag 'linux-wa=
+tchdog-6.6-rc1' of git://www.linux-watchdog.org/linux-watchdog
+> >> git bisect good 29057cc5bddc785ea0a11534d7ad2546fa0872d3
+> >> # bad: [3e4bb047b23375a34dbf5885709ac3729d9cfb22] Input: qt2160 - conv=
+ert to use devm_* api
+> >> git bisect bad 3e4bb047b23375a34dbf5885709ac3729d9cfb22
+> >> # good: [e175eae16c1bf92062f1f431a95f476a61a77c48] Input: mcs-touchkey=
+ - convert to use devm_* api
+> >> git bisect good e175eae16c1bf92062f1f431a95f476a61a77c48
+> >> # bad: [92e24e0e57f72e06c2df87116557331fd2d4dda2] Input: psmouse - add=
+ delay when deactivating for SMBus mode
+> >> git bisect bad 92e24e0e57f72e06c2df87116557331fd2d4dda2
+> >> # good: [8362bf82fb5441613aac7c6c9dbb6b83def6ad3b] Input: mcs-touchkey=
+ - fix uninitialized use of error in mcs_touchkey_probe()
+> >> git bisect good 8362bf82fb5441613aac7c6c9dbb6b83def6ad3b
+> >> # first bad commit: [92e24e0e57f72e06c2df87116557331fd2d4dda2] Input: =
+psmouse - add delay when deactivating for SMBus mode
+> > """
+> >
+> >
