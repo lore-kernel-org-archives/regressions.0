@@ -1,160 +1,95 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23382B67E
-	for <regressions@lists.linux.dev>; Sun,  1 Oct 2023 23:45:48 +0000 (UTC)
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-692b2bdfce9so12820128b3a.3
-        for <regressions@lists.linux.dev>; Sun, 01 Oct 2023 16:45:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8457E18F
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 00:11:21 +0000 (UTC)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-69335ddbe16so4974056b3a.1
+        for <regressions@lists.linux.dev>; Sun, 01 Oct 2023 17:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696203948; x=1696808748; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vvjOV/SJHwlBfuAQ9Hpu2fBDMywi9nmiPQcO1/0180=;
-        b=WdovxW7/Vo186j3QdAVRbB7N3SIGtb4qXMdlyYO/BjVPx0hDyZ5mMXICkMkiUUiUbt
-         6PPbymZ3R30CHl01mi1wX+hqv3DfKDst5/SLVHf4OAQgezD+ohCaHFmJox0LP8EsLQP9
-         7sa8LNLGihfBkVupGbiFxnkqEsbr//bVLZUUhu7OLLybIyP4JI9P10bTHMZ0LJIzzwMp
-         oZvZCeUzF8Kv5JdJ8tyAY8oQEAn8G1e3tZORXkBJCKU/9DltFx0GrhRbICbKEVyiaXfs
-         AVBcQXP+uLs3DGQmZ8futTPnVHnD3N1CMxAp3i/UOYMxOOKrm/RjtrwUIIz7PqvkYDsl
-         kvdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696203948; x=1696808748;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1696205481; x=1696810281; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8vvjOV/SJHwlBfuAQ9Hpu2fBDMywi9nmiPQcO1/0180=;
-        b=bgGhfYdX70pXTwIU8nPbRmWNfjmNyg5LlzVUFee0sIBPrIhGrJzK43jxFKwOSZeEVF
-         YUv1O9apmQ2zMXVTapkKHsKO2MjKlpXhPnNeFQOSPreHDgSvYVH5jLDIuOC8yfRhGGay
-         8nL17elcL1geNlplXnORJIQZZQlZfcb0+riGfJ1OiqMkedP9BqDCafR8RLMhfwRoGnMj
-         QrNBVq4KiFJODYlJpTfLDDNvw59MbEuvWg/Qk9UndHh34Dt5x0WXD/QD9j5uaREvC7ng
-         Onlykh60yzF/4u0VhektAAyfpVpn1enNc5GnB+GV9YYG/zAKPSl86YXpnv20Z7BU3bhx
-         76Qg==
-X-Gm-Message-State: AOJu0YwiS01piVvLxAJSoEcmIpRdeM2T6g6QktwVcM+bL9Oh6OIekkO1
-	JPkzSaK3Am16/xaJhzI2Xpc=
-X-Google-Smtp-Source: AGHT+IHz8QtBxh5UpcXHxqq1V7wU5Le8vKu+zUqpAxF2dUNjqVwWaUCWgNdN7SxncLebsJNcFYx8tQ==
-X-Received: by 2002:a05:6a00:982:b0:68e:36bc:194a with SMTP id u2-20020a056a00098200b0068e36bc194amr13053460pfg.15.1696203948274;
-        Sun, 01 Oct 2023 16:45:48 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id f1-20020aa782c1000000b0069305627494sm10416369pfn.165.2023.10.01.16.45.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Oct 2023 16:45:47 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 0070F8017C4F; Mon,  2 Oct 2023 06:45:44 +0700 (WIB)
-Date: Mon, 2 Oct 2023 06:45:44 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>,
-	linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	dri-devel@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] BUG: KFENCE: memory corruption in
- drm_gem_put_pages+0x186/0x250
-Message-ID: <ZRoEqEPxPAz3QlEz@debian.me>
-References: <13360591.uLZWGnKmhe@natalenko.name>
+        bh=VIeMQoi8QBaB+nwPjIVi58PASB0t9qKzyA1DxUjQEJw=;
+        b=MkZwKfPRi+kQaQY2IlDqU2G+f64wOJ1zDFXPVTvvInEoltCDVzzFwUM8d3uv/x3ZAK
+         yEVtvwSjscUSz4q+NEDTB04Jtt5s55xgWigKkd7JRv7UFCFKBESz4i4rDl20bgqx7ljP
+         HBNxuB6oQLfk3RYlFCYd/mxxQXwvD2v6spbZ6nPLFkz7itkNy/jSBeqnO1/5WaXdabCT
+         muaYS/dMMO1mCfc2ts6Uf9MFP6rr43KFtcRtQHM5IQK8lnVBH6N2FKfS41W74tAF1XYX
+         Yz6r48g3TxoxQXsoSx8ChAvu1VDhQ78/WcKFTENOPc1WGtJXdRglYqEIvJke8lHXe8uV
+         zvSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696205481; x=1696810281;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VIeMQoi8QBaB+nwPjIVi58PASB0t9qKzyA1DxUjQEJw=;
+        b=E/i0Au8bGMH85gYGh+oXVf4sATGf09NMYx2hy2QtpWbOziuzlEVCuXaLdlWhjrqqgD
+         VvhVKq6Ebmmhw3puQus257LLFrgU/cGPZ30kywHfgNl0EUJ+eOSBhzwG+S8B8N6g9KhH
+         CQNjS7y+Yko/PlrKcfMNKi5wiZiRtmgPQx7TIEwT0+i6OL5XnN2WIda9sN9SRzjX2KQb
+         27CJibZOZ1i9U5Hw+OO/5MAt2tRgsJpD563NNSmN0q/2UjkvJfU3LC+eFPF2TCCIeTBK
+         AA00eteb99Zn15SqNLVN+IQXp2T7iP3l33KZKpIkb2tAtOIp3Vloi8Ksu4ka54spT1bj
+         UIDg==
+X-Gm-Message-State: AOJu0YyJgC9uiN9cMeqLzq6V1wiIP0FLUJPNmn5l/Y+qP1DHDLA4uHYP
+	ViZvGaRTJz6/mLFnshbahTI=
+X-Google-Smtp-Source: AGHT+IHFJvgcO6flKb7/yHNDIK1vTFu3smZotdPeIA/oCOYBhQ73JmK42VMb03xGAWU+89kmOfuYsQ==
+X-Received: by 2002:a05:6a00:2e10:b0:691:1eb:7dda with SMTP id fc16-20020a056a002e1000b0069101eb7ddamr10552347pfb.7.1696205480810;
+        Sun, 01 Oct 2023 17:11:20 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id q26-20020a62ae1a000000b00689f1ce7dacsm18539800pff.23.2023.10.01.17.11.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Oct 2023 17:11:20 -0700 (PDT)
+Message-ID: <bcfdaf76-8d0f-4365-9ad9-a8b285dc70dd@gmail.com>
+Date: Mon, 2 Oct 2023 07:11:08 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yoF7gxy4SjBfUd1U"
-Content-Disposition: inline
-In-Reply-To: <13360591.uLZWGnKmhe@natalenko.name>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux USB <linux-usb@vger.kernel.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Samuel_=C4=8Cavoj?= <samuel@cavoj.net>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Oleksii Shevchuk <alxchk@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Linux 6.5.5 - kernel BUG with ucsi_acpi
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
---yoF7gxy4SjBfUd1U
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-On Sun, Oct 01, 2023 at 06:32:34PM +0200, Oleksandr Natalenko wrote:
-> Hello.
->=20
-> I've got a VM from a cloud provider, and since v6.5 I observe the followi=
-ng kfence splat in dmesg during boot:
->=20
-> ```
-> BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
->=20
-> Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! =
-] (in kfence-#108):
->  drm_gem_put_pages+0x186/0x250
->  drm_gem_shmem_put_pages_locked+0x43/0xc0
->  drm_gem_shmem_object_vunmap+0x83/0xe0
->  drm_gem_vunmap_unlocked+0x46/0xb0
->  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
->  drm_fb_helper_damage_work+0x96/0x170
->  process_one_work+0x254/0x470
->  worker_thread+0x55/0x4f0
->  kthread+0xe8/0x120
->  ret_from_fork+0x34/0x50
->  ret_from_fork_asm+0x1b/0x30
->=20
-> kfence-#108: 0x00000000cda343af-0x00000000aec2c095, size=3D3072, cache=3D=
-kmalloc-4k
->=20
-> allocated by task 51 on cpu 0 at 14.668667s:
->  drm_gem_get_pages+0x94/0x2b0
->  drm_gem_shmem_get_pages+0x5d/0x110
->  drm_gem_shmem_object_vmap+0xc4/0x1e0
->  drm_gem_vmap_unlocked+0x3c/0x70
->  drm_client_buffer_vmap+0x23/0x50
->  drm_fbdev_generic_helper_fb_dirty+0xae/0x310
->  drm_fb_helper_damage_work+0x96/0x170
->  process_one_work+0x254/0x470
->  worker_thread+0x55/0x4f0
->  kthread+0xe8/0x120
->  ret_from_fork+0x34/0x50
->  ret_from_fork_asm+0x1b/0x30
->=20
-> freed by task 51 on cpu 0 at 14.668697s:
->  drm_gem_put_pages+0x186/0x250
->  drm_gem_shmem_put_pages_locked+0x43/0xc0
->  drm_gem_shmem_object_vunmap+0x83/0xe0
->  drm_gem_vunmap_unlocked+0x46/0xb0
->  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
->  drm_fb_helper_damage_work+0x96/0x170
->  process_one_work+0x254/0x470
->  worker_thread+0x55/0x4f0
->  kthread+0xe8/0x120
->  ret_from_fork+0x34/0x50
->  ret_from_fork_asm+0x1b/0x30
->=20
-> CPU: 0 PID: 51 Comm: kworker/0:2 Not tainted 6.5.0-pf4 #1 8b557a4173114d8=
-6eef7240f7a080080cfc4617e
-> Hardware name: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
-> Workqueue: events drm_fb_helper_damage_work
-> ```
->=20
-> This repeats a couple of times and then stops.
->=20
-> Currently, I'm running v6.5.5. So far, there's no impact on how VM functi=
-ons for me.
->=20
-> The VGA adapter is as follows: 00:02.0 VGA compatible controller: Cirrus =
-Logic GD 5446
->=20
+> After update to linux 6.5.5 I observed several crashes during bootup when USB drive connected to USB-C hub. To find out what has been crashed I enabled EFI pstore. Unfortunately there were no crashes after that. However, there are kernel BUG traces in dmesg. After several experiments I found strong correlation between ucsi_acpi driver and the crash.
+> 
+> I blacklisted:
+> blacklist typec_ucsi
+> blacklist ucsi_acpi
+> blacklist roles
+> blacklist typec
+> 
+> Two dmesgs are in attachment. 
+> 
+> The messages to search:
+> ucsi_acpi USBC000:00: possible UCSI driver bug 2
+> ucsi_acpi USBC000:00: error -EINVAL: PPM init failed
 
-Do you have this issue on v6.4?
+See Bugzilla for the full thread.
 
---=20
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217960
+#regzbot title: ucsi_acpi boot crash when USB drive is connected to USB-C port
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217960
+
+-- 
 An old man doll... just what I always wanted! - Clara
-
---yoF7gxy4SjBfUd1U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZRoEoAAKCRD2uYlJVVFO
-o9s5AP9kGuHk47ES1xM3sSRWMksEAyOgSfb9PPRtW2GW6eLYrwEAncNNUUPjdgsp
-of+ra71dF0EDOM0682RgxNmO1A/YTQw=
-=/Uxd
------END PGP SIGNATURE-----
-
---yoF7gxy4SjBfUd1U--
