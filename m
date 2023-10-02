@@ -1,66 +1,125 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06571A5A8
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 14:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xn7mU0O8AywxfzFuGVmvml/wEV+n9HbyxBG52KH4Jls=; b=OK5OobfEO9IkO7vYm+2tBaPoOQ
-	I3+u7tkrIuhJWRf+G8nxoJ5B7rAN4dKUKvYQVJJAEIyMYOvRJ/VDsOepxi2ABVPnTQTJ+ZW943QGT
-	ArjBQExuTUJAaEuGIyz1s6DZOcLy4oiEwWa18YXy7W5F13d/y/4jF78IbBrpbbvg0LUHxuxV4w7fF
-	VtGCf1eQ1ilduhoKehjj/YtBJhcUJe5PG+mQ/nx9VINhzJ22B50vJ5Dtuitd9TTquUV5x0i8AlZ1f
-	wxqRgsbtAzZvuaBJjnY8r5zVF/yYW47Re9Ody/bBDl5qwYEfcQ4Dj2uJkLWfgXdWgyLAUfeNMHzSQ
-	buUqbQ9w==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qnJyX-009YFL-Pv; Mon, 02 Oct 2023 14:32:45 +0000
-Date: Mon, 2 Oct 2023 15:32:45 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817271A715
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 15:39:05 +0000 (UTC)
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vulcan.natalenko.name (Postfix) with ESMTPSA id 9BE981528EB4;
+	Mon,  2 Oct 2023 17:39:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1696261142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cOB88vPQiLyH370nTLoYIxokwI7a/8OLj2bT7Vxp3cw=;
+	b=pWXunvHw7ykTJg5hBsOg9EX0UAyT7FxfqVQMTpPDUw0Ad3+mLwq+Vj11H1fg015DGMouCo
+	HDMokGSEED/qVoVe/NscrAb22quvRHi7Y+jUpi2n0kKzJZt4v0y0NCA2RqDB8IODILxZlF
+	JC4Gq82iC3zo/kynuS1cSb+zfeXbs2c=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: Matthew Wilcox <willy@infradead.org>
 Cc: linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	dri-devel@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: Re: [REGRESSION] BUG: KFENCE: memory corruption in
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ dri-devel@lists.freedesktop.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject:
+ Re: [REGRESSION] BUG: KFENCE: memory corruption in
  drm_gem_put_pages+0x186/0x250
-Message-ID: <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
-References: <13360591.uLZWGnKmhe@natalenko.name>
- <2701570.mvXUDI8C0e@natalenko.name>
- <ZRqeoiZ2ayrAR6AV@debian.me>
- <2300189.ElGaqSPkdT@natalenko.name>
+Date: Mon, 02 Oct 2023 17:38:48 +0200
+Message-ID: <2160215.irdbgypaU6@natalenko.name>
+In-Reply-To: <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
+References:
+ <13360591.uLZWGnKmhe@natalenko.name> <2300189.ElGaqSPkdT@natalenko.name>
+ <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2300189.ElGaqSPkdT@natalenko.name>
+Content-Type: multipart/signed; boundary="nextPart13361251.uLZWGnKmhe";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Mon, Oct 02, 2023 at 01:02:52PM +0200, Oleksandr Natalenko wrote:
-> > > > > BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
-> > > > > 
-> > > > > Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ] (in kfence-#108):
-> > > > >  drm_gem_put_pages+0x186/0x250
-> > > > >  drm_gem_shmem_put_pages_locked+0x43/0xc0
-> > > > >  drm_gem_shmem_object_vunmap+0x83/0xe0
-> > > > >  drm_gem_vunmap_unlocked+0x46/0xb0
-> > > > >  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
-> > > > >  drm_fb_helper_damage_work+0x96/0x170
-> 
-> Matthew, before I start dancing around, do you think ^^ could have the same cause as 0b62af28f249b9c4036a05acfb053058dc02e2e2 which got fixed by 863a8eb3f27098b42772f668e3977ff4cae10b04?
+--nextPart13361251.uLZWGnKmhe
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: Matthew Wilcox <willy@infradead.org>
+Date: Mon, 02 Oct 2023 17:38:48 +0200
+Message-ID: <2160215.irdbgypaU6@natalenko.name>
+In-Reply-To: <ZRrUjcWqtmzPV3Fs@casper.infradead.org>
+MIME-Version: 1.0
 
-Yes, entirely plausible.  I think you have two useful points to look at
-before delving into a full bisect -- 863a8e and the parent of 0b62af.
-If either of them work, I think you have no more work to do.
+On pond=C4=9Bl=C3=AD 2. =C5=99=C3=ADjna 2023 16:32:45 CEST Matthew Wilcox w=
+rote:
+> On Mon, Oct 02, 2023 at 01:02:52PM +0200, Oleksandr Natalenko wrote:
+> > > > > > BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
+> > > > > >=20
+> > > > > > Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! =
+! ! ! ! ! ] (in kfence-#108):
+> > > > > >  drm_gem_put_pages+0x186/0x250
+> > > > > >  drm_gem_shmem_put_pages_locked+0x43/0xc0
+> > > > > >  drm_gem_shmem_object_vunmap+0x83/0xe0
+> > > > > >  drm_gem_vunmap_unlocked+0x46/0xb0
+> > > > > >  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
+> > > > > >  drm_fb_helper_damage_work+0x96/0x170
+> >=20
+> > Matthew, before I start dancing around, do you think ^^ could have the =
+same cause as 0b62af28f249b9c4036a05acfb053058dc02e2e2 which got fixed by 8=
+63a8eb3f27098b42772f668e3977ff4cae10b04?
+>=20
+> Yes, entirely plausible.  I think you have two useful points to look at
+> before delving into a full bisect -- 863a8e and the parent of 0b62af.
+> If either of them work, I think you have no more work to do.
+
+OK, I've did this against v6.5.5:
+
+```
+git log --oneline HEAD~3..
+7c1e7695ca9b8 (HEAD -> test) Revert "mm: remove struct pagevec"
+8f2ad53b6eac6 Revert "mm: remove check_move_unevictable_pages()"
+fa1e3c0b5453c Revert "drm: convert drm_gem_put_pages() to use a folio_batch"
+```
+
+then rebooted the host multiple times, and the issue is not seen any more.
+
+So I guess 3291e09a463870610b8227f32b16b19a587edf33 is the culprit.
+
+Thanks.
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart13361251.uLZWGnKmhe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUa5AgACgkQil/iNcg8
+M0syzg/7BciM9R4z20hUehuS7SJe83FiC1Cgucq3pMgk42d+48MZTzND3Xui+p8v
+WXpF98grtGA1nzPzfBngpkwzPVHCL2Psf/mT+ea86et2jNMPtoQBJ0BQYo4DL83F
+AG7VP9HRo9aPKwppoYsOnEEJmXqx1iqsHn0O89uworE0aV6aRRM4POZVsafKNjdT
+vAlYmRrueMS/F6YhfjcVlPd7G4K7SQTg0glBOgWo9rY9C7Ox/oNgf1MqGcp+L/V3
+2lYuFDFzj4fAHikW1zm74ujUbEXJ3FtG0knmkWcqNIjJ5yWwJk3l3birm0ni0PX6
+e22IoVoShI0W9rTpDlUEPkx7OEQ6taAwadWJbKhNdBMOjdpm1BFkDCmWH4HCWOgd
+o1ChU5iQfJldc50ymThnHVX5JxutVaPmNZDYWWAL9iMUdTkI0NkgqtWm5ZgaXRq3
+vJbZLqWAiHxA3UqvstvrzGwX3VswbJsjDV+Lqi1I27MW+xti81I3BzBP2+kfM/0I
+7bqi/XC5DboJFpNy5ac2BJdZn2ZktqAi3tkGKr4cAJViohE1/50kjAWrS+gWISOJ
+8f7UivDTV+AxizGySF88gekEA9raxURl40GK7rvBvQMwi7Fd1njzRct/O4neDlaP
+MlmoKVsz6VJoOuANweZqkyHyHYRALaxRGXxkE3yPXIfeWaFwGWc=
+=38a+
+-----END PGP SIGNATURE-----
+
+--nextPart13361251.uLZWGnKmhe--
+
 
 
