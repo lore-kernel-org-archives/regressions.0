@@ -1,95 +1,162 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8457E18F
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 00:11:21 +0000 (UTC)
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-69335ddbe16so4974056b3a.1
-        for <regressions@lists.linux.dev>; Sun, 01 Oct 2023 17:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696205481; x=1696810281; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VIeMQoi8QBaB+nwPjIVi58PASB0t9qKzyA1DxUjQEJw=;
-        b=MkZwKfPRi+kQaQY2IlDqU2G+f64wOJ1zDFXPVTvvInEoltCDVzzFwUM8d3uv/x3ZAK
-         yEVtvwSjscUSz4q+NEDTB04Jtt5s55xgWigKkd7JRv7UFCFKBESz4i4rDl20bgqx7ljP
-         HBNxuB6oQLfk3RYlFCYd/mxxQXwvD2v6spbZ6nPLFkz7itkNy/jSBeqnO1/5WaXdabCT
-         muaYS/dMMO1mCfc2ts6Uf9MFP6rr43KFtcRtQHM5IQK8lnVBH6N2FKfS41W74tAF1XYX
-         Yz6r48g3TxoxQXsoSx8ChAvu1VDhQ78/WcKFTENOPc1WGtJXdRglYqEIvJke8lHXe8uV
-         zvSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696205481; x=1696810281;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VIeMQoi8QBaB+nwPjIVi58PASB0t9qKzyA1DxUjQEJw=;
-        b=E/i0Au8bGMH85gYGh+oXVf4sATGf09NMYx2hy2QtpWbOziuzlEVCuXaLdlWhjrqqgD
-         VvhVKq6Ebmmhw3puQus257LLFrgU/cGPZ30kywHfgNl0EUJ+eOSBhzwG+S8B8N6g9KhH
-         CQNjS7y+Yko/PlrKcfMNKi5wiZiRtmgPQx7TIEwT0+i6OL5XnN2WIda9sN9SRzjX2KQb
-         27CJibZOZ1i9U5Hw+OO/5MAt2tRgsJpD563NNSmN0q/2UjkvJfU3LC+eFPF2TCCIeTBK
-         AA00eteb99Zn15SqNLVN+IQXp2T7iP3l33KZKpIkb2tAtOIp3Vloi8Ksu4ka54spT1bj
-         UIDg==
-X-Gm-Message-State: AOJu0YyJgC9uiN9cMeqLzq6V1wiIP0FLUJPNmn5l/Y+qP1DHDLA4uHYP
-	ViZvGaRTJz6/mLFnshbahTI=
-X-Google-Smtp-Source: AGHT+IHFJvgcO6flKb7/yHNDIK1vTFu3smZotdPeIA/oCOYBhQ73JmK42VMb03xGAWU+89kmOfuYsQ==
-X-Received: by 2002:a05:6a00:2e10:b0:691:1eb:7dda with SMTP id fc16-20020a056a002e1000b0069101eb7ddamr10552347pfb.7.1696205480810;
-        Sun, 01 Oct 2023 17:11:20 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id q26-20020a62ae1a000000b00689f1ce7dacsm18539800pff.23.2023.10.01.17.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Oct 2023 17:11:20 -0700 (PDT)
-Message-ID: <bcfdaf76-8d0f-4365-9ad9-a8b285dc70dd@gmail.com>
-Date: Mon, 2 Oct 2023 07:11:08 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4817415AB
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 06:20:29 +0000 (UTC)
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vulcan.natalenko.name (Postfix) with ESMTPSA id 4C3141528555;
+	Mon,  2 Oct 2023 08:20:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1696227627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fQdtHTcIZFqz9pyHvM86qId7PCboP0/SwERmpmp9sI=;
+	b=ONz3hpW9j8RF6uHRMXa68TnztyZYRzydfE2lxBSAEw0iZGjJQah4g7y/OA1hihmmfMifaG
+	F5ngSTIh0qsF2PRoFRSjBmpHTTk6n4p26wiJ1Ow6qddOhl7GR+IymQ9YRZ9O+xwlO9ejiH
+	DyXUk27v4ac8uJe1qZiUK2zyj3mUpsU=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+ dri-devel@lists.freedesktop.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+ Linux Regressions <regressions@lists.linux.dev>
+Subject:
+ Re: [REGRESSION] BUG: KFENCE: memory corruption in
+ drm_gem_put_pages+0x186/0x250
+Date: Mon, 02 Oct 2023 08:20:15 +0200
+Message-ID: <2701570.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <ZRoEqEPxPAz3QlEz@debian.me>
+References: <13360591.uLZWGnKmhe@natalenko.name> <ZRoEqEPxPAz3QlEz@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux USB <linux-usb@vger.kernel.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Samuel_=C4=8Cavoj?= <samuel@cavoj.net>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Oleksii Shevchuk <alxchk@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Linux 6.5.5 - kernel BUG with ucsi_acpi
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart12296369.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Hi,
+--nextPart12296369.O9o76ZdvQC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
+Date: Mon, 02 Oct 2023 08:20:15 +0200
+Message-ID: <2701570.mvXUDI8C0e@natalenko.name>
+In-Reply-To: <ZRoEqEPxPAz3QlEz@debian.me>
+MIME-Version: 1.0
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Hello.
 
-> After update to linux 6.5.5 I observed several crashes during bootup when USB drive connected to USB-C hub. To find out what has been crashed I enabled EFI pstore. Unfortunately there were no crashes after that. However, there are kernel BUG traces in dmesg. After several experiments I found strong correlation between ucsi_acpi driver and the crash.
-> 
-> I blacklisted:
-> blacklist typec_ucsi
-> blacklist ucsi_acpi
-> blacklist roles
-> blacklist typec
-> 
-> Two dmesgs are in attachment. 
-> 
-> The messages to search:
-> ucsi_acpi USBC000:00: possible UCSI driver bug 2
-> ucsi_acpi USBC000:00: error -EINVAL: PPM init failed
+On pond=C4=9Bl=C3=AD 2. =C5=99=C3=ADjna 2023 1:45:44 CEST Bagas Sanjaya wro=
+te:
+> On Sun, Oct 01, 2023 at 06:32:34PM +0200, Oleksandr Natalenko wrote:
+> > Hello.
+> >=20
+> > I've got a VM from a cloud provider, and since v6.5 I observe the follo=
+wing kfence splat in dmesg during boot:
+> >=20
+> > ```
+> > BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
+> >=20
+> > Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! =
+! ] (in kfence-#108):
+> >  drm_gem_put_pages+0x186/0x250
+> >  drm_gem_shmem_put_pages_locked+0x43/0xc0
+> >  drm_gem_shmem_object_vunmap+0x83/0xe0
+> >  drm_gem_vunmap_unlocked+0x46/0xb0
+> >  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
+> >  drm_fb_helper_damage_work+0x96/0x170
+> >  process_one_work+0x254/0x470
+> >  worker_thread+0x55/0x4f0
+> >  kthread+0xe8/0x120
+> >  ret_from_fork+0x34/0x50
+> >  ret_from_fork_asm+0x1b/0x30
+> >=20
+> > kfence-#108: 0x00000000cda343af-0x00000000aec2c095, size=3D3072, cache=
+=3Dkmalloc-4k
+> >=20
+> > allocated by task 51 on cpu 0 at 14.668667s:
+> >  drm_gem_get_pages+0x94/0x2b0
+> >  drm_gem_shmem_get_pages+0x5d/0x110
+> >  drm_gem_shmem_object_vmap+0xc4/0x1e0
+> >  drm_gem_vmap_unlocked+0x3c/0x70
+> >  drm_client_buffer_vmap+0x23/0x50
+> >  drm_fbdev_generic_helper_fb_dirty+0xae/0x310
+> >  drm_fb_helper_damage_work+0x96/0x170
+> >  process_one_work+0x254/0x470
+> >  worker_thread+0x55/0x4f0
+> >  kthread+0xe8/0x120
+> >  ret_from_fork+0x34/0x50
+> >  ret_from_fork_asm+0x1b/0x30
+> >=20
+> > freed by task 51 on cpu 0 at 14.668697s:
+> >  drm_gem_put_pages+0x186/0x250
+> >  drm_gem_shmem_put_pages_locked+0x43/0xc0
+> >  drm_gem_shmem_object_vunmap+0x83/0xe0
+> >  drm_gem_vunmap_unlocked+0x46/0xb0
+> >  drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
+> >  drm_fb_helper_damage_work+0x96/0x170
+> >  process_one_work+0x254/0x470
+> >  worker_thread+0x55/0x4f0
+> >  kthread+0xe8/0x120
+> >  ret_from_fork+0x34/0x50
+> >  ret_from_fork_asm+0x1b/0x30
+> >=20
+> > CPU: 0 PID: 51 Comm: kworker/0:2 Not tainted 6.5.0-pf4 #1 8b557a4173114=
+d86eef7240f7a080080cfc4617e
+> > Hardware name: Red Hat KVM, BIOS 1.11.0-2.el7 04/01/2014
+> > Workqueue: events drm_fb_helper_damage_work
+> > ```
+> >=20
+> > This repeats a couple of times and then stops.
+> >=20
+> > Currently, I'm running v6.5.5. So far, there's no impact on how VM func=
+tions for me.
+> >=20
+> > The VGA adapter is as follows: 00:02.0 VGA compatible controller: Cirru=
+s Logic GD 5446
+> >=20
+>=20
+> Do you have this issue on v6.4?
 
-See Bugzilla for the full thread.
-
-Anyway, I'm adding this regression to regzbot:
-
-#regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=217960
-#regzbot title: ucsi_acpi boot crash when USB drive is connected to USB-C port
+No, I did not have this issue with v6.4.
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217960
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart12296369.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
--- 
-An old man doll... just what I always wanted! - Clara
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUaYR8ACgkQil/iNcg8
+M0tfyBAAnP91s5U8yswmuT3DF9ceF6Wd92FqSCJ7Sl0tmXBvCZEeGDYG+mHJroBS
+vU/TynG7tClvuIbjGWMYtPY6rYpQ7R76RfzPvFVgweHxvlMgFZ4c5WWIeJ6DlaIO
+uQ+MEH+lxO/kdG3J9wgnpMKwzqqozP4k80oXibP0vFeoerb/UVnk+YHtXsBollmi
+kgxel8QcEZrwac33ns2JoxgDFULEoeUVAdOxrutl84ZRDhzR2RED08lnvoAVf+E7
+a8rwA3FQj4tg005l6X5Dgjs2QcAxDkpZ0A/n6ZoHdnMzO+3VBGfkOqGqOVlaOqYN
+cFjZ9rstkV6QA6mjAPAzoyPBASXK/jH0Aj2YAPZTSRh01H1BATbbduCp6Q/QtX4s
+PlrcWRprA22wyhhRsaMBAU0fjTgs4mVmZgdfflZR98Jzdb/J9SJFIl6bDlWE72C7
+l7NtFubLbuK3PsDVmvBa/r+QOLMCIZDQcDwAa+k+rn7eT+Is5CQC5YCCzL5hfyTJ
+Nu2pjwVR6qDY+/OEasJj7QQvRrgDfB6Bwr6MDvj5ktT0GO17XizM/u2Jq/z+xKpa
+8hqtszU5BHwIZdnt/MZTGCBghp7CoOKcV9uEUh13AKU5e0GiClb3DlpzWAhOF1KA
+gPE+PNMujL5D1SQ9k8cbEPoZuq91SStdFwEnk3e1nJMWeSjmmFs=
+=83J6
+-----END PGP SIGNATURE-----
+
+--nextPart12296369.O9o76ZdvQC--
+
+
+
