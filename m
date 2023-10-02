@@ -1,72 +1,78 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C09168AC
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 13:00:52 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3248e90f032so4014053f8f.1
-        for <regressions@lists.linux.dev>; Mon, 02 Oct 2023 06:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696251650; x=1696856450; darn=lists.linux.dev;
-        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovbV2eys6IIdOiXHS9kD3zODjwel8FxTC6gNW0c8hfc=;
-        b=fLpDPg2aDb0rokLJXKaRtwZsbVWaivhyD1Qttw3fKsTSmU6PW+UZvZyBeohgHPItxm
-         Z+pGH+FJFnQ6lTR/h35EBawGWEKzBVG5Y7HbGXaS0cHj5VShGF1wm79c7hjdrcmETibZ
-         se2tqI/bxU7KFxZ5jcHspAOzBRrzJ5hYBEfg5LHh56gTmPG/k8/Ioi7nmPbkyo/4YbzG
-         UeOzwiApEtmPiHSAUQbDq63cBdERLSbpjogMJBjT2dLEsalz5Xk4KCNo4c7naNryPKx8
-         vMjaFzqVLs5OwUj2+s9K91ny44c9btySrr9pH5UHaoV66C28CP6zfVC3MZ4EAwrk8ybn
-         /Oww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696251650; x=1696856450;
-        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovbV2eys6IIdOiXHS9kD3zODjwel8FxTC6gNW0c8hfc=;
-        b=mejMCnh25IpZTidpVO28IZz1DvBNa63+T2KL2+jsqhkbMLtWerFVgQoKewhBz1nk6/
-         CZehDmbNRj7YoRNPZdFKZEkw5SFtksAvgX5EZS7yQaLK0XwtSnrV6vv3dLIevIZ/uiBB
-         OBtb47Ix0iwo9NevZWYa9vNY+PV1gK0MJtKnqlFV9dQlKdCECishPtT0/YNCOiDDKzhy
-         hZQTBTtG9qS80zdSDVQvsxwEYa0dHz8iCeL4jieFTU76WcmUoK8LeUm+tuPAY0Hxh075
-         G8+O1JkUnMG9BK+Vd99WmThmGhxu9dAvtSsOZBCD5MhFO84DIYi1K8RCJg350XrXsyq5
-         Z4+A==
-X-Gm-Message-State: AOJu0YyCdiegbTaRpqTkf6+IEECDUv1DL6sDGVU7nTq54A3D2clYsanb
-	nxnh0D6gCUZz14zrxO7RiTs=
-X-Google-Smtp-Source: AGHT+IGsS0ybABVU0gSlvh634b7lSev/pAic38BOQT0jBO2o4HznWacSqgb/YE8IgpbdE5p0M3B43g==
-X-Received: by 2002:a05:6000:18c9:b0:319:62e0:f2fe with SMTP id w9-20020a05600018c900b0031962e0f2femr9647539wrq.36.1696251649490;
-        Mon, 02 Oct 2023 06:00:49 -0700 (PDT)
-Received: from yoga ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
-        by smtp.gmail.com with ESMTPSA id e9-20020adfe7c9000000b003197efd1e7bsm14065942wrn.114.2023.10.02.06.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Oct 2023 06:00:49 -0700 (PDT)
-Date: Mon, 02 Oct 2023 15:00:42 +0200
-From: Sven Frotscher <sven.frotscher@gmail.com>
-Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-To: Mark Brown <broonie@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0838B171A7
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 13:04:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56B2C433C7;
+	Mon,  2 Oct 2023 13:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696251861;
+	bh=AFn+gVXbUD0U4Y6bUXqTweEbLHVA0KrcQKlngrIzbJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m3xKYy6amE4sejsfFYH8X2/F22UfVwfhG3qQDtBSK2Sk9lu9vm3DA9+PiIMuDkVIA
+	 6x8JSfOzNGbU/scZWI3UbLrrG5R7/sp2z8XbYRJBCetpMRwID/jZR92vJHnwdeuQLf
+	 h7ZGaPS4qfsMzcO0bV9IAJHjD7QrbPZy0l5ON0Q+mtw2fPYP1zjHIGtQAbRt/XiVuq
+	 1HBp+KOnq6EuJtASfW5G4IxzxtypXIgEJ2Z422Etd7kGHwccAVkAV9ZXoCE6GSjASj
+	 9dNj2Tvz9G3cWQxAZv52eUtdF+doS2I4oImit/a0NvNFw1+Epyky0yG5W9ub5STiTv
+	 +eysXJ9BIWcLQ==
+Date: Mon, 2 Oct 2023 14:04:15 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Sven Frotscher <sven.frotscher@gmail.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
 	mario.limonciello@amd.com, git@augustwikerfors.se,
 	alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Takashi Iwai
-	<tiwai@suse.com>
-Message-Id: <65KW1S.A6C8VBV29YCM@gmail.com>
-In-Reply-To: <64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
+Message-ID: <89698b5f-a616-4f49-802a-21326a868c7f@sirena.org.uk>
 References: <20230927223758.18870-1-sven.frotscher@gmail.com>
-	<46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
-	<4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
-	<541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
-	<64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
-X-Mailer: geary/44.1
+ <46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
+ <4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
+ <541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
+ <64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
+ <65KW1S.A6C8VBV29YCM@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-
-Am Mo, 2. Okt 2023 um 13:54:59 +01:00:00 schrieb Mark Brown 
-<broonie@kernel.org>:
-> Until someone tests or otherwise provides specific information on a
-> given machine we're just guessing about how it's wired up.
-
-What specific information are we talking about here? I have the 82YM in 
-front of me and could help investigate.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="T3pA0U+bnE9JGR4j"
+Content-Disposition: inline
+In-Reply-To: <65KW1S.A6C8VBV29YCM@gmail.com>
+X-Cookie: Postage will be paid by addressee.
 
 
+--T3pA0U+bnE9JGR4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Oct 02, 2023 at 03:00:42PM +0200, Sven Frotscher wrote:
+> Am Mo, 2. Okt 2023 um 13:54:59 +01:00:00 schrieb Mark Brown
+
+> > Until someone tests or otherwise provides specific information on a
+> > given machine we're just guessing about how it's wired up.
+
+> What specific information are we talking about here? I have the 82YM in
+> front of me and could help investigate.
+
+We need to know what magic set of quirks makes the thing work.  Are you
+saying that your patch doesn't actually do that?
+
+--T3pA0U+bnE9JGR4j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUav84ACgkQJNaLcl1U
+h9Cz6Qf9H7niacF30Y0k3OYJeoCcMMTuQYXuwjRZLJuCVOI/Uq8KIC/E3ovi+GX8
+CEcICKguhEX6gtzClAEOWWdRRmLubWi4kHEfZAaMMmKdNxa3xMEqazvbKLK1gidP
+1Mq4xx7BmNDoK1CSVInPoPl1Q5S9CEUOr9T855Mio0rY+4SjjOcTKjCmw9+SSkPr
+mpMTIdixcEm235K5rOh8KNcGtYqXmDvSHE0VFtkPu9iTC5Ik3Rh/CF4iC5Yl7u8u
+wkjKg+LSPqSTuf+FNJjqYARLOLFsTYhcbKQIcweBRHSxLDz9XHZSni20mX3V4Zlt
+t6c9FH0ejAjo0hZbJ9p8VRqOJJHHnA==
+=SH/+
+-----END PGP SIGNATURE-----
+
+--T3pA0U+bnE9JGR4j--
