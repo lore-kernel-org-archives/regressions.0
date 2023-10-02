@@ -1,87 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCD81640F
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 12:55:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4116EC433C8;
-	Mon,  2 Oct 2023 12:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696251305;
-	bh=M1E0aQTcKPqPpOVXRkLzvTlr/tOXmy+Lm7ozsdfR5Ts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Njb26VRY73ArbIxu8CRCs71wwrsFTmbqx9OjEgbl+CpJrJ08n0s3qz/JHx7YWzD+t
-	 IEESmQ6T9NOY4jy+wFSELhDxOApdDfNP0mXvTA2+1Ey+8v+4RI29hIo3xbAY+f2LyA
-	 nK9YhljTUPkuwxCXtIeBNtKV6awphJ+N1oY/Vh0ukvOP2lFhpUJngplgYvBGc3eVAk
-	 kZscP1ItCutXmpWM0Dy/T5ZgXTPwPJF5uMeV6CRKve4wI120zaf9wDWKGcLEUj0Tal
-	 FsIQtylvIWy8Z1/C8FFdB74Y5fVKEJJPIgaSdqzkCVnCHkFDZHrk+VpiO9LIfPrSJm
-	 eYIwKOQZlk2Zg==
-Date: Mon, 2 Oct 2023 13:54:59 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Sven Frotscher <sven.frotscher@gmail.com>, mario.limonciello@amd.com,
-	git@augustwikerfors.se, alsa-devel@alsa-project.org,
-	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C09168AC
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 13:00:52 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3248e90f032so4014053f8f.1
+        for <regressions@lists.linux.dev>; Mon, 02 Oct 2023 06:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696251650; x=1696856450; darn=lists.linux.dev;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovbV2eys6IIdOiXHS9kD3zODjwel8FxTC6gNW0c8hfc=;
+        b=fLpDPg2aDb0rokLJXKaRtwZsbVWaivhyD1Qttw3fKsTSmU6PW+UZvZyBeohgHPItxm
+         Z+pGH+FJFnQ6lTR/h35EBawGWEKzBVG5Y7HbGXaS0cHj5VShGF1wm79c7hjdrcmETibZ
+         se2tqI/bxU7KFxZ5jcHspAOzBRrzJ5hYBEfg5LHh56gTmPG/k8/Ioi7nmPbkyo/4YbzG
+         UeOzwiApEtmPiHSAUQbDq63cBdERLSbpjogMJBjT2dLEsalz5Xk4KCNo4c7naNryPKx8
+         vMjaFzqVLs5OwUj2+s9K91ny44c9btySrr9pH5UHaoV66C28CP6zfVC3MZ4EAwrk8ybn
+         /Oww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696251650; x=1696856450;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovbV2eys6IIdOiXHS9kD3zODjwel8FxTC6gNW0c8hfc=;
+        b=mejMCnh25IpZTidpVO28IZz1DvBNa63+T2KL2+jsqhkbMLtWerFVgQoKewhBz1nk6/
+         CZehDmbNRj7YoRNPZdFKZEkw5SFtksAvgX5EZS7yQaLK0XwtSnrV6vv3dLIevIZ/uiBB
+         OBtb47Ix0iwo9NevZWYa9vNY+PV1gK0MJtKnqlFV9dQlKdCECishPtT0/YNCOiDDKzhy
+         hZQTBTtG9qS80zdSDVQvsxwEYa0dHz8iCeL4jieFTU76WcmUoK8LeUm+tuPAY0Hxh075
+         G8+O1JkUnMG9BK+Vd99WmThmGhxu9dAvtSsOZBCD5MhFO84DIYi1K8RCJg350XrXsyq5
+         Z4+A==
+X-Gm-Message-State: AOJu0YyCdiegbTaRpqTkf6+IEECDUv1DL6sDGVU7nTq54A3D2clYsanb
+	nxnh0D6gCUZz14zrxO7RiTs=
+X-Google-Smtp-Source: AGHT+IGsS0ybABVU0gSlvh634b7lSev/pAic38BOQT0jBO2o4HznWacSqgb/YE8IgpbdE5p0M3B43g==
+X-Received: by 2002:a05:6000:18c9:b0:319:62e0:f2fe with SMTP id w9-20020a05600018c900b0031962e0f2femr9647539wrq.36.1696251649490;
+        Mon, 02 Oct 2023 06:00:49 -0700 (PDT)
+Received: from yoga ([2001:638:904:ffe5:5742:c50f:bd0:6aa6])
+        by smtp.gmail.com with ESMTPSA id e9-20020adfe7c9000000b003197efd1e7bsm14065942wrn.114.2023.10.02.06.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Oct 2023 06:00:49 -0700 (PDT)
+Date: Mon, 02 Oct 2023 15:00:42 +0200
+From: Sven Frotscher <sven.frotscher@gmail.com>
 Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-Message-ID: <64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
+To: Mark Brown <broonie@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	mario.limonciello@amd.com, git@augustwikerfors.se,
+	alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Takashi Iwai
+	<tiwai@suse.com>
+Message-Id: <65KW1S.A6C8VBV29YCM@gmail.com>
+In-Reply-To: <64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
 References: <20230927223758.18870-1-sven.frotscher@gmail.com>
- <46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
- <4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
- <541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
+	<46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
+	<4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
+	<541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
+	<64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y3s07sEkApCR/FW0"
-Content-Disposition: inline
-In-Reply-To: <541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
-X-Cookie: Postage will be paid by addressee.
+Content-Type: text/plain; charset=us-ascii; format=flowed
+
+Am Mo, 2. Okt 2023 um 13:54:59 +01:00:00 schrieb Mark Brown 
+<broonie@kernel.org>:
+> Until someone tests or otherwise provides specific information on a
+> given machine we're just guessing about how it's wired up.
+
+What specific information are we talking about here? I have the 82YM in 
+front of me and could help investigate.
 
 
---y3s07sEkApCR/FW0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 02, 2023 at 02:28:47PM +0200, Linux regression tracking (Thorst=
-en Leemhuis) wrote:
-> On 02.10.23 13:52, Mark Brown wrote:
-
-> > x86 firmware descriptions are terrible, it's just an endless procession
-> > of quirks.  The model for ACPI is not to describe key information in the
-> > kernel and instead on Windows load device specific information from
-> > separately supplied tables.  On Linux that translates into these endless
-> > quirks, on Windows it's platform specific drivers for otherwise generic
-> > audio hardware.
-
-> I know all of that, but from the many recent regression reports and
-> patches it seems quirks were not needed for a bunch of Lenovo machines
-> before c008323fe361bd ("ASoC: amd: yc: Fix a non-functional mic on
-> Lenovo 82SJ") [v6.5]. That made me wonder if that commit really did the
-> right thing or if there is a underlying bug somewhere that the newly
-> added quirks hide, as I had a few such situations during the past few
-> months. If you or others the experts in this area say that this is not
-> the case here then I'm totally fine with that, it was just a question.
-
-Until someone tests or otherwise provides specific information on a
-given machine we're just guessing about how it's wired up. =20
-
---y3s07sEkApCR/FW0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUavaMACgkQJNaLcl1U
-h9BfhQf+NMxz5LFXKKLUI6Fkw2l2NPDiDWIevr7NcQr0fjBmf4mJei8Jv9zUXHWb
-GctXb9s6EQvNS6lbUPhWPBsz5+U5knIFWIFpLuhs8N8MoSVWO0IltodXKPCIX7cx
-ZxKiNV7JN0s/YSzQpRr+wPWXTUyYVRDpCCgJ/Fm+JH2TV4MU5dPnFTSb0eHTkEsZ
-RjMlhF9RG81Vm1J+srCzUp2UaiTrA7g0ibCf5+iSf6fu18rOnyZw/THhhXlRQmbW
-gCuM3yaySZZqhQoppGz5UjWfN11bw8wrDll9kDIOLGj1nvbWCJS3XvLOCjRUY1U3
-6nnzwCZV39gIKRz8cIb3KwIjEUYlFw==
-=fv+B
------END PGP SIGNATURE-----
-
---y3s07sEkApCR/FW0--
