@@ -1,75 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884831E517
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 18:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBF30C433C9;
-	Mon,  2 Oct 2023 18:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696272668;
-	bh=5CTwTLBEvduUICvuu4skaNUm4ejcj7Qi7S/UNZzRJiE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=S8AF7ciAoQ2kkg5GltwcBo7ww4CDBBhPHcFnC3/w/u/OM2IdygZ8Nl11+7XXddPCm
-	 A4MP+YkhXNhN515RN+L7svKr7FzXiq5K+G1zWkgOV7wkP9dTBAn0sCHNtTRUY/4bgm
-	 L0z8iUucUsRpPB6zZCW93SpmPCBSbyeQQxtbzJf+BtTBJQ0cia/HAL2FtzV/Jv632g
-	 6O5GdBPF8D606o/VXHA0vm1zAuj4PXkPTq2b+l1+UrBsb8Q0IRIGSVoi2OJKfvpBYI
-	 wDsZQekeqMPdBVCsOJ7a5h5Em9RLPQwdSLGSbpSMUdoxgQ7S9Rm+l4okPEf4QtUjPk
-	 8wDzs1JM2oQpQ==
-From: Mark Brown <broonie@kernel.org>
-To: Sven Frotscher <sven.frotscher@gmail.com>
-Cc: git@augustwikerfors.se, alsa-devel@alsa-project.org, 
- lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
- mario.limonciello@amd.com, regressions@lists.linux.dev, 
- stable@vger.kernel.org
-In-Reply-To: <20230927223758.18870-1-sven.frotscher@gmail.com>
-References: <20230927223758.18870-1-sven.frotscher@gmail.com>
-Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo
- 82YM
-Message-Id: <169627266558.110968.10545623851131128761.b4-ty@kernel.org>
-Date: Mon, 02 Oct 2023 19:51:05 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287E91F174
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 19:17:36 +0000 (UTC)
+Received: (wp-smtpd smtp.wp.pl 42026 invoked from network); 2 Oct 2023 20:50:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1696272654; bh=GepljF1EQTI9r70EH4tqi9RpNkoQyh/hyQxu9GZweVk=;
+          h=From:To:Cc:Subject;
+          b=IWGGnhxfjpYf6rC2AzOjOIHwe/vB1LOrIcefmkfFh25VqtFS5EqdYTiKGun2Fim6t
+           rTPdESj/5rszSFz5/JDkHBVs0QDnjJSN+F+QucwuMfLkcDqws+Zccvr28B811SM+SV
+           IKXeZi6JJC6kq7HQCU6AgaNDi7yYEwQz4EmcmTsc=
+Received: from 89-64-13-175.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.13.175])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <bagasdotme@gmail.com>; 2 Oct 2023 20:50:54 +0200
+Date: Mon, 2 Oct 2023 20:50:53 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: enc0der <enc0der@gmail.com>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Wireless <linux-wireless@vger.kernel.org>
+Subject: Re: rt8000usb driver issue (maybe interaction with other drivers)
+Message-ID: <20231002185053.GB402943@wp.pl>
+References: <CAEXpi5Rd6Y4umKOWRsCjX0kit=W5ZrVhn=MuRkyvJPwmjjDVnA@mail.gmail.com>
+ <ZRj_ovMi-Xbb8i-D@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRj_ovMi-Xbb8i-D@debian.me>
+X-WP-MailID: 5ca95ff5381d87fae914a0949b3625fa
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [IWPl]                               
 
-On Thu, 28 Sep 2023 00:36:07 +0200, Sven Frotscher wrote:
-> Like the Lenovo 82TL, 82V2, 82QF and 82UG, the 82YM (Yoga 7 14ARP8)
-> requires an entry in the quirk list to enable the internal microphone.
-> The latter two received similar fixes in commit 1263cc0f414d
-> ("ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG").
+
+(cc list is too big, I shrink it)
+
+On Sun, Oct 01, 2023 at 12:12:02PM +0700, Bagas Sanjaya wrote:
+> On Sat, Sep 30, 2023 at 06:04:22PM -0400, enc0der wrote:
+> > Hello all!
+> > 
+> > This is the first time I have ever reported anything linux related, so
+> > if this is not the proper way, please let me know what the correct way
+> > is.
+> > 
+> > I am using an NVIDIA Jetson Orin Nano developer platform.  They
+> > release what they call a jetpack that comes with linux and their
+> > additions on top.  We are using the latest version they release (just
+> > released about a month ago)
 > 
+> Something like a distro? What version?
 > 
+> > 
+> > When I plug in a USB WiFi adapter that uses the rt8000usb driver, if I
+> > connect to a network it sees, I get a kernel panic.  If I have
+> > "automatically connect" it kernel panics when I plug the USB in.
+> > 
+> > The version of the kernel they ship is:
+> > 
+> > 5.10.120-tegra. (tegra is their additions)
+> > 
+> > I talked with NVIDIA first on what I was seeing and after looking at
+> > my log, they said it is likely a driver problem.
 
-Applied to
+Is possible that this is rt2800usb or usb host driver issue. But without
+full logs we can not be sure.  
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> > Right after I plug in the device, this is the sequence of messages I see:
+> > 
+> > [  264.400281] BUG: scheduling while atomic: NetworkManager/622/0x00000203
 
-Thanks!
+After that message there should be stack trace visible. To debug this
+you would need to find a way to see the full logs (dmesg/kmsg) after the crash.
+It can be serial console, netconsole, pstore or some other thing. Perhaps
+your platform allow to boot debug kernel with various check, which will
+not panic when the bug occures and will show useful info in the logs.
 
-[1/1] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-      commit: 1948fa64727685ac3f6584755212e2e738b6b051
+> > [   28.071586] lr : arm_smmu_dma_sync+0x40/0x70
+> > [   28.075965] sp : ffff8000100231a0
+> > [   28.079365] x29: 0000000000001000 x28: ffff4655c01d0ec0
+> > [   28.084817] x27: ffffaced1f227000 x26: ffff4655c6ee32c0
+> > [   28.090270] x25: 0000000000000000 x24: ffffaced1e405858
+> > [   28.095718] x23: ffff46572e84ae00 x22: ffff4655c6ee2c40
+> > [   28.101165] x21: ffff4655c82c3480 x20: ffffaced1db49e08
+> > [   28.106618] x19: ffff8000100231c0 x18: 0000000000010101
+> > [   28.112073] x17: 0000000000cccccc x16: ffffaced1d23382c
+> > [   28.117520] x15: 0000000000000000 x14: 0000000000000000
+> > [   28.122970] x13: 0000000000000001 x12: 0000000000000000
+> > [   28.128421] x11: 0000000000000008 x10: 0000000000000ab0
+> > [   28.133863] x9 : ffff800010023180 x8 : ffff4655c6ee3750
+> > [   28.139309] x7 : 000000067eb29c20 x6 : 0000000000000238
+> > [   28.144763] x5 : 00000000410fd420 x4 : 0000000000f0000f
+> > [   28.150214] x3 : 0000000000001000 x2 : ffff4655c82c3480
+> > [   28.155658] x1 : ffffaced1db49e08 x0 : ffff465704c37558
+> > [   28.161107] Call trace:
+> > [   28.163620]  0x1000
+> > [   28.165777] Code: bad PC value
+> > [   28.168911] ---[ end trace 62dc42c98ec427ca ]---
+> > [   28.183964] Kernel panic - not syncing: Oops: Fatal exception
+> > [   28.189864] SMP: stopping secondary CPUs
+> > [   29.275883] SMP: failed to stop secondary CPUs 0-5
+> > [   29.280811] Kernel Offset: 0x2ced0d200000 from 0xffff800010000000
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+This actually suggest that the issue is somewhere in the core.
+But again, without full logs we can not be sure.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> > [   29.287066] PHYS_OFFSET: 0xffffb9ab40000000
+> > [   29.291360] CPU features: 0x08040006,4a80aa38
+> > [   29.295832] Memory Limit: none
+> > [   29.309234] ---[ end Kernel panic - not syncing: Oops: Fatal exception ]---
+> > 
+> > (This one I believe when I started with the wifi adapter connected to
+> > USB3 and networking was set to automatically connect.
+> > 
+> > I see in the git repo that these drivers have been changed over the
+> > last few years.  Given the age of the kernel that NVIDIA is using, I
+> > am not sure how to correlate changes listed in the history of the
+> > files with the release.  I guess I could download and diff them until
+> > I figure out where.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The rt2800 driver wasn't modified for ages. It's rater stable, but
+perhaps there are issues in other involved modules i.e. mac80211.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Regards
+Stanislaw
 
