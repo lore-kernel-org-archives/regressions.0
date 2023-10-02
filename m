@@ -1,81 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DAD2106
-	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 13:48:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D613C433C7;
-	Mon,  2 Oct 2023 13:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696254479;
-	bh=bbYKXZTl9YSdySAEA++jPVV9QQyRDBWMWVktu8dI+gA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDxkhaSil/n9GhT+RwXlX5YqDYkw46UgUqPMJIvq+FlwnKpxAFAQ56hCrrVZfaNX1
-	 FznHYoFC87kGxr0xhsr96G/aM9IwqjSzCmurcSJ3mbx8Lpb4MMuT9G7D8gXT04VEgN
-	 w3oOGTWrA1DxfF2+VXijB9iLu7dhuFI1mwu771sYMKmpib3ewEtfNfFGmYfiKQ3CIW
-	 PiIgVRA9akXzzz0oIpcmaaKcZbyTckf6XCWhWK4A0VnxWyuTsMosbwsPKmhZvqWIZ8
-	 Uquy4WIbZVCdUye+eFhRJ7/AemMnYXaIKpA82G5/Oltud8ey6Ht1dt8gjslzGyVAll
-	 Cgb+dGCruwoFg==
-Date: Mon, 2 Oct 2023 14:47:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Sven Frotscher <sven.frotscher@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	mario.limonciello@amd.com, git@augustwikerfors.se,
-	alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
-Message-ID: <37101767-9bca-419c-9ce5-92c4c1360c81@sirena.org.uk>
-References: <20230927223758.18870-1-sven.frotscher@gmail.com>
- <46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
- <4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
- <541ac45b-8de7-4fa2-85ee-456d34e60aa9@leemhuis.info>
- <64c78944-4d62-4eda-b92b-3b415fea3333@sirena.org.uk>
- <65KW1S.A6C8VBV29YCM@gmail.com>
- <89698b5f-a616-4f49-802a-21326a868c7f@sirena.org.uk>
- <9XKW1S.IRRCIDM08XWX1@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC30319BAB
+	for <regressions@lists.linux.dev>; Mon,  2 Oct 2023 14:14:01 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qnJgH-0003Y1-AM; Mon, 02 Oct 2023 16:13:53 +0200
+Message-ID: <048d9715-9cb2-4bc0-b8b0-5e30a0db54c7@leemhuis.info>
+Date: Mon, 2 Oct 2023 16:13:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rV9cXJVA+sC7cXdh"
-Content-Disposition: inline
-In-Reply-To: <9XKW1S.IRRCIDM08XWX1@gmail.com>
-X-Cookie: Postage will be paid by addressee.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] ASoC: amd: yc: Fix non-functional mic on Lenovo 82YM
+Content-Language: en-US, de-DE
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Brown <broonie@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Sven Frotscher <sven.frotscher@gmail.com>, git@augustwikerfors.se,
+ alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Takashi Iwai <tiwai@suse.com>
+References: <20230927223758.18870-1-sven.frotscher@gmail.com>
+ <46560887-0b6e-42ac-96c3-b4dbc1d7cb61@leemhuis.info>
+ <4fa7d39d-dc34-4550-97fa-2b089f364cca@sirena.org.uk>
+ <0a3feafc-b843-420a-9b04-c835f8210c1a@amd.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <0a3feafc-b843-420a-9b04-c835f8210c1a@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696256041;cb1c7dbd;
+X-HE-SMSGID: 1qnJgH-0003Y1-AM
 
+On 02.10.23 15:47, Mario Limonciello wrote:
+> On 10/2/2023 06:52, Mark Brown wrote:
+>> On Mon, Oct 02, 2023 at 11:32:48AM +0200, Linux regression tracking
+>> (Thorsten Leemhuis) wrote:
+>>
+>>> Makes me wonder: How many more such quirk entries will be needed? Will
+>>> we have all machines listed soon, or do we expect that future Lenovo
+>>> hardware will need entries as well? If it's the latter: are quirks
+>>> really the right solution here, or do they just hide some bug or then
+>>> need for code that automatically handles things?
+>>
+>> x86 firmware descriptions are terrible, it's just an endless procession
+>> of quirks.  The model for ACPI is not to describe key information in the
+>> kernel and instead on Windows load device specific information from
+>> separately supplied tables.  On Linux that translates into these endless
+>> quirks, on Windows it's platform specific drivers for otherwise generic
+>> audio hardware.
+> 
+> I knew there was a TON of "82" prefix systems from Lenovo so it was an
+> educated guess that all of them needed DMIC support.  This was incorrect
+> because one of them didn't have DMIC and that caused a no mic support
+> problem on that system.
+> 
+> So in the case of this seemingly endless list of systems being added to
+> enable DMIC support Mark is right, Windows does it differently.
 
---rV9cXJVA+sC7cXdh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Now I understand things better, many thx. But please allow me one more
+question from the cheap seats:
 
-On Mon, Oct 02, 2023 at 03:17:33PM +0200, Sven Frotscher wrote:
+Seems before c008323fe361 things worked for a lot of systems for about
+one year thx to 2232b2dd8cd4 (which added the wide "82" prefix quirk).
+We then made that one machine work with c008323fe361, but broke a lot of
+others with it that now need to be fixed with additional quirks; that
+"TON of 82 prefix systems" sounds like we might not be close to the end
+of that journey.
 
-> > We need to know what magic set of quirks makes the thing work.  Are you
-> > saying that your patch doesn't actually do that?
+So can't we just do it the other way around and assume DMIC support on
+Lenovo 82* machines, except on those where we know it to cause trouble?
 
-> It does.
+Again: you are the experts here. If you are positive that we soon got
+all machines covered where c008323fe361 causes a regression, then I
+guess it's best to continue the patch we're on.
 
-> Maybe the non-quirk check (ll. 395-403, seems to be using ACPI) is too
-> specific? But I'm a bit out of my depth here, so I can't investigate that by
-> myself.
-
-Like I say it's all just guesses without someone providing information.
-
---rV9cXJVA+sC7cXdh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUaygkACgkQJNaLcl1U
-h9CGmQf/Vc1+y1dKGunpBhuliT2pZe10C87on6X9xclHZuRaeHgIR0yc9BkNFk+c
-CYPJbCQnlKHIFMGijfyRVPuxZ31YhpjpDgCPn7i4fUVAvpN5n/AJm2TuDP1mZJk3
-TrbnQO5ye2tPA3XPgdRCgtX8B/PrhD5c0mp38mwOqlYRGq2b5/FdGGOpe47snler
-L2l2AHSX64vLBi/PxUyHSIIok2M1QpJSCobqdU9sUIYOTMWm3QXpxO9DfLcpFyXi
-k55bVdm4PEOPxqOnP1QmmSWEUjjjHTHWEZ9vTHUrB1zb/tCYgHpuEnFPs5zKKp/5
-eUFQoE/I/ymdnkka2oDtQmmFjeAZBA==
-=MCug
------END PGP SIGNATURE-----
-
---rV9cXJVA+sC7cXdh--
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
