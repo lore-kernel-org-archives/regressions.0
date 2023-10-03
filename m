@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E633DD302
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 10:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18932135D
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 11:35:40 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qncaH-0002AJ-7T; Tue, 03 Oct 2023 12:24:57 +0200
-Message-ID: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
-Date: Tue, 3 Oct 2023 12:24:56 +0200
+	id 1qndgZ-0003Sc-5N; Tue, 03 Oct 2023 13:35:31 +0200
+Message-ID: <436a7e20-082f-4aa9-bfbd-703d149d5463@leemhuis.info>
+Date: Tue, 3 Oct 2023 13:35:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,77 +15,70 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo Yoga Slim
- 7 Pro 14ARH7 82UU
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH V2] hwrng: bcm2835: Fix hwrng throughput regression
 Content-Language: en-US, de-DE
-To: Markus Meier <kerneldev@epic-bytes.net>, alsa-devel@alsa-project.org
-References: <10347605.nUPlyArG6x@kali>
+To: Herbert Xu <herbert@gondor.apana.org.au>, Stefan Wahren <wahrenst@gmx.net>
+Cc: Olivia Mackall <olivia@selenic.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Mark Brown <broonie@kernel.org>,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230905232757.36459-1-wahrenst@gmx.net>
+ <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Mark Brown <broonie@kernel.org>, Sven Frotscher <sven.frotscher@gmail.com>,
- August Wikerfors <git@augustwikerfors.se>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <10347605.nUPlyArG6x@kali>
+In-Reply-To: <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696328701;5bfde271;
-X-HE-SMSGID: 1qncaH-0002AJ-7T
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696332940;be04e71c;
+X-HE-SMSGID: 1qndgZ-0003Sc-5N
 
-On 02.10.23 23:04, Markus Meier wrote:
+On 15.09.23 12:45, Herbert Xu wrote:
+> On Wed, Sep 06, 2023 at 01:27:57AM +0200, Stefan Wahren wrote:
+>> The last RCU stall fix caused a massive throughput regression of the
+>> hwrng on Raspberry Pi 0 - 3. hwrng_msleep doesn't sleep precisely enough
+>> and usleep_range doesn't allow scheduling. So try to restore the
+>> best possible throughput by introducing hwrng_yield which interruptable
+>> sleeps for one jiffy.
+>>
+>> Some performance measurements on Raspberry Pi 3B+ (arm64/defconfig):
+>>
+>> sudo dd if=/dev/hwrng of=/dev/null count=1 bs=10000
+>>
+>> cpu_relax              ~138025 Bytes / sec
+>> hwrng_msleep(1000)         ~13 Bytes / sec
+>> hwrng_yield              ~2510 Bytes / sec
+>>
+>> Fixes: 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of cpu_relax()")
+>> Link: https://lore.kernel.org/linux-arm-kernel/bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net/
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> ---
+>>
+>> Changes in V2:
+>> - introduce hwrng_yield and use it
+>>
+>>  drivers/char/hw_random/bcm2835-rng.c | 2 +-
+>>  drivers/char/hw_random/core.c        | 6 ++++++
+>>  include/linux/hw_random.h            | 1 +
+>>  3 files changed, 8 insertions(+), 1 deletion(-)
 > 
-> I own a  Lenovo Yoga Slim 7 Pro 14ARH7 where the microphone is not showing up.
-> I added the system to the quirk table and the mic is working correctly (but 
-> with very low volume) now.
-> 
-> Here's an except from dmidecode:
-> System Information
->         Manufacturer: LENOVO
->         Product Name: 82UU
->         Version: Yoga Slim 7 Pro 14ARH7
->         SKU Number: LENOVO_MT_82UU_BU_idea_FM_Yoga Slim 7 Pro 14ARH7
->         Family: Yoga Slim 7 Pro 14ARH7
->
-> Please add this patch to the kernel and add it to the stable kernels too. I 
-> guess the microphone should have worked before. Seems to be a regression 
-> introduced by c008323fe361bd62a43d9fb29737dacd5c067fb7
->
-> [-- Attachment #2: yoga-slim-7-pro-82UU-microphone.patch --]
-> [-- Type: text/x-patch, Size: 451 bytes --]
-> 
-> --- a/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:31:03.753786095 +0200
-> +++ b/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:32:06.414276453 +0200
-> @@ -217,6 +217,13 @@
->  		.driver_data = &acp6x_card,
->  		.matches = {
->  			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "82UU"),
-> +		}
-> +	},
-> +	{
-> +		.driver_data = &acp6x_card,
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
->  		}
->  	},
+> Patch applied.  Thanks.
 
-I CCed a bunch of lists and people to make sure everyone is aware of
-that patch, as it otherwise might fall through the cracks.
+Hi Herbert, I there a strong reason why you merged this to what from
+here looks like the branch that targets the next merge window? The patch
+fixes a regression introduced during the last 12 months and thus
+normally should not wait for the next merge window. For details see
+"Expectations and best practices for fixing regressions" in
+Documentation/process/handling-regressions.rst; or if you want to hear
+it from Linus directly, check these out:
+https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/
 
-Markus, quick question: do you have (a) an interest in contributing a
-change to Linux or (b) did you just post this because Mario asked you to
-do so in https://bugzilla.kernel.org/show_bug.cgi?id=217063#c25 ?
-
-If it's (a) then you might want to take a closer look at
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-, as your patch lacks a few important things before it can be applied
-(most notably a Signed-off-by tag)
-
-If it's (b) I wonder if it would be easier for everyone involved if some
-kernel developer could create a patch own their own, as that likely is
-way easier to review and thus likely gets the problem resolved a lot faster.
-
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
