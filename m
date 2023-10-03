@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18932135D
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 11:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5824C2134F
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 11:52:28 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qndgZ-0003Sc-5N; Tue, 03 Oct 2023 13:35:31 +0200
-Message-ID: <436a7e20-082f-4aa9-bfbd-703d149d5463@leemhuis.info>
-Date: Tue, 3 Oct 2023 13:35:29 +0200
+	id 1qndwu-00069f-HO; Tue, 03 Oct 2023 13:52:24 +0200
+Message-ID: <5d0904a4-bc0d-42dd-aae8-6b50e5c567ba@leemhuis.info>
+Date: Tue, 3 Oct 2023 13:52:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,66 +16,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH V2] hwrng: bcm2835: Fix hwrng throughput regression
+Subject: Re: Microcode SW error since Linux 6.5
 Content-Language: en-US, de-DE
-To: Herbert Xu <herbert@gondor.apana.org.au>, Stefan Wahren <wahrenst@gmx.net>
-Cc: Olivia Mackall <olivia@selenic.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Mark Brown <broonie@kernel.org>,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- bcm-kernel-feedback-list@broadcom.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230905232757.36459-1-wahrenst@gmx.net>
- <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
+To: Johannes Berg <johannes@sipsolutions.net>,
+ Gregory Greenman <gregory.greenman@intel.com>
+Cc: ilan.peer@intel.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Antoine_Beaupr=C3=A9?= <anarcat@debian.org>,
+ linux-wireless@vger.kernel.org
+References: <87ttrncuc8.fsf@angela.anarc.at>
+ <60e2c052f3cedc5c80964e4be90c50cdaa899a87.camel@sipsolutions.net>
+ <87jzsf9dme.fsf@angela.anarc.at>
+ <0190dde1170bd1ee810e99b9799678f4f5b8f30e.camel@sipsolutions.net>
+ <8734z29jx7.fsf@angela.anarc.at>
+ <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
+In-Reply-To: <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696332940;be04e71c;
-X-HE-SMSGID: 1qndgZ-0003Sc-5N
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696333948;69d3ac3c;
+X-HE-SMSGID: 1qndwu-00069f-HO
 
-On 15.09.23 12:45, Herbert Xu wrote:
-> On Wed, Sep 06, 2023 at 01:27:57AM +0200, Stefan Wahren wrote:
->> The last RCU stall fix caused a massive throughput regression of the
->> hwrng on Raspberry Pi 0 - 3. hwrng_msleep doesn't sleep precisely enough
->> and usleep_range doesn't allow scheduling. So try to restore the
->> best possible throughput by introducing hwrng_yield which interruptable
->> sleeps for one jiffy.
+[CCing the regressions list]
+
+On 25.09.23 21:03, Johannes Berg wrote:
+> On Mon, 2023-09-25 at 14:39 -0400, Antoine Beaupré wrote:
+>>> Did that patch help?
 >>
->> Some performance measurements on Raspberry Pi 3B+ (arm64/defconfig):
->>
->> sudo dd if=/dev/hwrng of=/dev/null count=1 bs=10000
->>
->> cpu_relax              ~138025 Bytes / sec
->> hwrng_msleep(1000)         ~13 Bytes / sec
->> hwrng_yield              ~2510 Bytes / sec
->>
->> Fixes: 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of cpu_relax()")
->> Link: https://lore.kernel.org/linux-arm-kernel/bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net/
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> ---
->>
->> Changes in V2:
->> - introduce hwrng_yield and use it
->>
->>  drivers/char/hw_random/bcm2835-rng.c | 2 +-
->>  drivers/char/hw_random/core.c        | 6 ++++++
->>  include/linux/hw_random.h            | 1 +
->>  3 files changed, 8 insertions(+), 1 deletion(-)
+>> I haven't tried, to be honest. It's been years since I compiled a
+>> kernel, so I haven't actually seriously considered it. But I can
+>> definitely put that on my list if it would be useful for you!
+> Heh ok. Well we can also try it I guess. Or reason our way through it,
+> but I'm pretty sure something like that should be done here.
 > 
-> Patch applied.  Thanks.
+>>> Yes, you can ... but I mean, we still do want to consider this a bug, I
+>>> think, since we explicitly built the thing to load the older firmware.
+>>> It just gets _far_ less testing.
+>>
+>> Got it, happy to play guinea pig a little further if that's useful.
+> Well you might want to go for the extra stability instead :-) I'm kind
+> of thinking along the lines of "if you can download the next wifi
+> firmware with the current one, that's probably good enough". :)
 
-Hi Herbert, I there a strong reason why you merged this to what from
-here looks like the branch that targets the next merge window? The patch
-fixes a regression introduced during the last 12 months and thus
-normally should not wait for the next merge window. For details see
-"Expectations and best practices for fixing regressions" in
-Documentation/process/handling-regressions.rst; or if you want to hear
-it from Linus directly, check these out:
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/
+Well, that's not how Linus wants things to be, as due to this "no
+regression" rule things should continue to work if people update the
+kernel without updating linux-firmware (as also explained in
+Documentation/driver-api/firmware/firmware-usage-guidelines.rst).
+
+That's what I though when I saw that message initially, but I thought:
+well, not worth a comment, the reporter apparently doesn't mind that
+much. But since then I saw more and more reports that looked related to
+my untrained eyes (and thus might not be related at all!).
+
+https://bugzilla.kernel.org/show_bug.cgi?id=217894
+https://bugzilla.kernel.org/show_bug.cgi?id=217894#c6 (same ticket)
+https://bugzilla.kernel.org/show_bug.cgi?id=217963
+https://lore.kernel.org/all/f6448719-14e2-4962-ac3d-1be3c19156ed@dolce-energy.com/
+
+Gregory, Johannes, is there something wrong here with 6.5.y? If yes: is
+anything already been done to improve the state of things?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
