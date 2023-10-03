@@ -1,122 +1,116 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8969923C9
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 23:25:21 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-111-143.bstnma.fios.verizon.net [173.48.111.143])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 393NP5tU020762
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Oct 2023 19:25:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1696375508; bh=j9XN+IkTAwuVm7/CBLpjxGCYIwV9bGQ6BJq8lQ3MHz8=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=jGD1xuKehceFXnhiEvHGX6V9ZUa3yJL/uprdYnfQmJ4iWYaaJPnq5wlUPHX+Cu3mT
-	 WUqXlHHWqhi0hzeA+xDNJ/4QI1YADj9t4dMlJ5tdXzuGbXe4cFoAhYM/AR2ty95ZRu
-	 yrXpq3hIBI8FrFgXV52oUdhIkDSHNcoWQBPAXAQqQiJoW389XDrZDm33qFuL1rVZb3
-	 0WRtvotGbcWhyJVfu92jogc2T6B3pEYTyyMAmOerOObLdUXU889V7TT+nnUulCs1D+
-	 +lE0G1iWYsy584kpnoeCsqOJQH5Tjpu5HV+7ymsa8DPWiRnsMBkpJaNNuccEVtUmbU
-	 KRKxYjLKtdinA==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 6967715C0266; Tue,  3 Oct 2023 19:25:05 -0400 (EDT)
-Date: Tue, 3 Oct 2023 19:25:05 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Andres Freund <andres@anarazel.de>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
-        Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
-        "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
-        groeck@google.com, zsm@google.com, garrick@google.com,
-        Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
-Message-ID: <20231003232505.GA444157@mit.edu>
-References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
- <ZQjKOjrjDYsoXBXj@mit.edu>
- <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E593D996
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 23:56:22 +0000 (UTC)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1c61bde0b4bso12963395ad.3
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 16:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696377381; x=1696982181; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZCCBj410ajq0re8t8s28xHlISeDJPhGS19VANz63K9o=;
+        b=fErces9pr52M6WD7V8gLVBIhfrSFGby5LGFYw2icfP/S19LMh6+vWlfN2xPJAX0WzW
+         VsmL6vJW/uj3HowDI/AcNhjtp4ksKVIKPamqjVAW7w7YtUigzLqYpmAFTp2e4VXfqnfJ
+         vLCZAuEKmL4s+6cJfFavv59XzpxOa8Za+zwBr+nPTel9vpKSZCdTDIuoJUJBLlbFzyZo
+         Fj7eKOVSQmzzsmkI6zJ1ZVmBcLiYsHmw8Ws6mE5+do9y8d1jF1Aot+aDMdd/Gg631F1b
+         VFNoyJKxWh5LMSQlasGewrLRq/FU5lQRqVPRC00havhSEGswUs46WwUNt62X6Mvbw5c0
+         OXlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696377381; x=1696982181;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZCCBj410ajq0re8t8s28xHlISeDJPhGS19VANz63K9o=;
+        b=iID586kTabcpalRg6pO5Zsf6JfhxHWIfyF6qqO+oUElfaaUq7tu06dwe4+nI4rg3ur
+         eSnayEWeln2669rAR0e/Hv1fcSejI/DuLV9AyKG3+i3jJuoYnLp3sJ8K4EBJ9xxMLGPd
+         fsAzV0VQAcZrJirZQT3whB2Rzj7Mxah64VX3gzlF1kC5YRtBJgGwosLJ1p6Xy4YAOCnt
+         Py7n1r6j6qPjt7AirAFKEf5Df47TJMzvFhA4/yPiq3s0ZaK9VHquqXjKaJVKJ8hFGWgn
+         m99X3eqolGIsyKYCEr8UD5twEKRJIxGyFckHVuGUgOAUfAgQpVF4h3xmDCu7QcRWrU6b
+         dVsg==
+X-Gm-Message-State: AOJu0Yy06FPTX5ATWzD0b1D3GYJc7baMkW/A15o8Eh/l4jaUbKADkrKE
+	MHCHyvmQPfzd2CYxAv2xWWA=
+X-Google-Smtp-Source: AGHT+IEQ/w1Y8P4IJ6FMYu9I9SDAvd9lq2qE+CakE2eHWL6oVHapQH7nJH+ONsuq9pi4d0n04dR+CQ==
+X-Received: by 2002:a17:902:9885:b0:1c6:117b:7086 with SMTP id s5-20020a170902988500b001c6117b7086mr935395plp.5.1696377381492;
+        Tue, 03 Oct 2023 16:56:21 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id m1-20020a170902db0100b001b8b45b177esm2179485plx.274.2023.10.03.16.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Oct 2023 16:56:20 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id A41D781A7EC5; Wed,  4 Oct 2023 06:56:18 +0700 (WIB)
+Date: Wed, 4 Oct 2023 06:56:18 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>,
+	Hilda Wu <hildawu@realtek.com>
+Cc: Alex Lu <alex_lu@realsil.com.cn>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	Max Chou <max.chou@realtek.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Juerg Haefliger <juerg.haefliger@canonical.com>,
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth adapter
+Message-ID: <ZRyqIn0_qqEFBPdy@debian.me>
+References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lOp0O5Hmv9c8nMC0"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
+In-Reply-To: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
 
-On Tue, Oct 03, 2023 at 07:11:38AM -0700, Andres Freund wrote:
+
+--lOp0O5Hmv9c8nMC0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Oct 03, 2023 at 09:20:38PM +0300, Kirill A. Shutemov wrote:
 > Hi,
-> 
-> On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
-> > On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
-> > > When I tried to reproduce this issue on mainline linux kernel using the
-> > > reproducer provided by syzbot, I see an endless loop of following errors :-
-> > >
-> > > [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
-> > > [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
-> > > inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
-> > > [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
-> >
-> > Please note that maliciously corrupted file system is considered low
-> > priority by ext4 developers.
-> 
-> FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
-> just doing database development on my laptop.
+>=20
+> Commit 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
+> broke Realtek-based ASUS USB-BT500, ID 0b05:190e.
+>=20
+> Devices failed to connect. hciconfig showed a controller with all-zero BD
+> address.
 
-Unless you are using a corrupted file system (e.g., there are EXT4-fs
-error messages in dmesg), it's likely a different issue.
+What is its output then? And dmesg log?
 
-There is issue here which doesn't involve a corrupted file system
-recently reported:
+>=20
+> I reverted the commit as well as bd003fb338af that depends on the commit.
+> It made the problem go away.
+>=20
+> I know virtually nothing about bluetooth. Let me know what info you need
+> to debug the issue.
+>=20
 
-	https://bugzilla.kernel.org/show_bug.cgi?id=217965
+Hilda, it looks like this regression is caused by a commit of yours. Would
+you like to take a look on it?
 
-However, *please* let's not conflate bug reports unless we know they
-are the same thing.  It's better to keep reports separate, as opposed
-to having users see multiple bug reports with vaguely the same
-symptoms (say, like a headache) and pestering a doctor at a cocktail
-party claiming that *of* *course* their issue is the same as the one
-they read about in some vlog because the symptoms are the same.
+Regardless, thanks for the regression report. I'm adding it to regzbot:
 
-(This is why I hate, hate, HATE bug reports via Launchpad, which tend
-very much to be a flaming hott mess....)
+#regzbot ^introduced: 044014ce85a17c
 
-Can you give us details about (a) what kind of block device; are you
-using dm-crypt, or just a HDD or a SSD?  If an SSD, what kind of SSD?
-What CPU architecture is it?  And can you send me the output of
-dumpe2fs -h <block device>?  And while the file system is mounted,
-please send the contents of /proc/fs/<block-device>/options, e.g.:
+--=20
+An old man doll... just what I always wanted! - Clara
 
-% cat /proc/fs/ext4/dm-0/options 
-rw
-bsddf
-nogrpid
-block_validity
-dioread_nolock
-nodiscard
-delalloc
-nowarn_on_error
-journal_checksum
-barrier
-auto_da_alloc
-user_xattr
-acl
-noquota
-resuid=0
-resgid=0
-errors=remount-ro
-commit=5
-min_batch_time=0
-max_batch_time=15000
-stripe=0
-data=ordered
-inode_readahead_blks=32
-init_itable=10
-max_dir_size_kb=0
+--lOp0O5Hmv9c8nMC0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And finally, how full was the file system?  What is the output of "df
-<mountpoint>" and "df -i <mountpoint>".
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZRyqGwAKCRD2uYlJVVFO
+o6UyAP9Slr9mZ+rRmtvUXh8WNdiIJEL1pcR6Ja0Bt3M/3Qr4qgEAnebbqTZM6ny7
+9ZiB/gqtVQo7ARGVnp9hOJXS5BHafQQ=
+=IV+/
+-----END PGP SIGNATURE-----
 
-						- Ted
+--lOp0O5Hmv9c8nMC0--
