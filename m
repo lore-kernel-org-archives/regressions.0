@@ -1,155 +1,139 @@
-Received: from mail.meier-coaching.de (mail.epic-bytes.net [45.83.105.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B6FBF1
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 15:11:31 +0000 (UTC)
-From: Markus Meier <kerneldev@epic-bytes.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epic-bytes.net;
-	s=2020; t=1696345466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qVteM+WyhCWgGKmgpjhnWHSPzBzizjYf1Mb5ewbwwLc=;
-	b=JFq/ZLqSlpnnLU/2G+6t7Dy+lzyi4pGx2eX+ogWFbWuAhW/uq0i4OmT6EK4Y0CIQ9G9myM
-	rws652AqnFxfjAxYIDyrAZA7WQkSoavZyRPzRvzqWGxjnsrk2V6GjQhyzq+x68+/a+TkvO
-	qa95ohwhQ3xdv2GeS5unOhTAGIYh5Fej8XoTlA6zy5VadG+3PvxqXYVt6LK8aToYnaSagL
-	CL8w6plrNuFPm9FaSPk7MvNX0qM8/JLKPbKDuCnb6ywGQWMObOOu4sSP58hPb9SxplVJoQ
-	GUFmWgsPnd2DSa3OEhG7eDCndatFHxo6pdzjtZLfEJID0dpjNiwT/JlR1pXN9Q==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=markus smtp.mailfrom=kerneldev@epic-bytes.net
-To: Markus Meier <kerneldev@epic-bytes.net>, alsa-devel@alsa-project.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Mark Brown <broonie@kernel.org>, Sven Frotscher <sven.frotscher@gmail.com>,
- August Wikerfors <git@augustwikerfors.se>
-Subject:
- Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo Yoga Slim 7 Pro
- 14ARH7 82UU
-Date: Tue, 03 Oct 2023 17:04:25 +0200
-Message-ID: <4836369.GXAFRqVoOG@mobile>
-In-Reply-To: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
-References:
- <10347605.nUPlyArG6x@kali>
- <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047D531A82
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 16:10:58 +0000 (UTC)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d90da64499cso1165091276.0
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 09:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696349458; x=1696954258; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KJIb/JY4n8tGZSqHXme95COkElXYXHHoPPYozHgYq+o=;
+        b=NF+mV4pZXAjZ5AGEP7xV/MsvCy2K+uG9btmnhk4ZwfCN2WFSdLEVu65EEKYoYI9ecG
+         LKWYWSAzWLpgIaODK2CYgNLyBCN4jXcLLVReJcPuNPQqQtCTDJ+hl/2xOAk4ebl6sriZ
+         5E67UXpVcqCGUgzgy1h2K2ZzXX9++D7KdTA7nMahs4re4dLDbbQx9T8j8V5gmF/UB7WF
+         DHmkdnFmTuAqhOSZzETO1vw2/iRZuyiyrQq70WzLhqnjDTR0k3HKwPy0VxPrBio0Tiv1
+         xPwygRzvK9q2f6uGnjq4nzJd/BoGq6/mugqgwrafed26gtwcJMfnHJJrIcmrRD5e9RV8
+         R77w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696349458; x=1696954258;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJIb/JY4n8tGZSqHXme95COkElXYXHHoPPYozHgYq+o=;
+        b=qCV3LJC1BYZt8LmVBXMk+Aa6eeq2euNnD/k/EqJgwttZdsDYQz3q1jIdX4xr/MTI2I
+         qTPAIn/8F/zVOEwsDfP0qxIVbIj4O/4RLaYyyNV/uqXAVy0agssy0Vlxctr6zC2AnbCD
+         gl6oSq3ZBRXaBcTyVuqxWHaeBzMyJvGxmLKccyX1jCrItn8LkymRoWe8DBJGo02p7EBj
+         c86d6j/jl1ryBzXXe5ToTWkaPKiix/9kBgKsnxP4+Y+SSJqecd2F3OCcjRMD4We7cmgt
+         tZJ4iXg3GHhIadV4u1T1CmqWjBJdqIjmdKXwdwCA77e397thR7/vHwTe6ZtL6nAlgfr+
+         4qaw==
+X-Gm-Message-State: AOJu0YygUYCyftK6eh5uJfpbaV1Nc0s3MNVdH5prs1ENBhPNw0Lj7A0K
+	2EDyAADj/2pSF6go68jZbLnd3eKD/NAnyjhBy3s=
+X-Google-Smtp-Source: AGHT+IG/rOtVRw7F1FQYoc2gJxlkY9rYdDDcV+U8qqwVIQAeOKxjsSAmjvcNMnfvzHJq5/eE+kYTAKspnaDSyL4EZ10=
+X-Received: by 2002:a25:cf95:0:b0:d80:1161:5ec1 with SMTP id
+ f143-20020a25cf95000000b00d8011615ec1mr13414568ybg.20.1696349457871; Tue, 03
+ Oct 2023 09:10:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1865545.tdWV9SEqCh";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
+ <ZRtWcgiH5JhD5NU2@debian.me> <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
+ <834062302e6a98e773dc4b03d7ed568a0f1c44fc.camel@nordicsemi.no>
+ <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com> <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
+In-Reply-To: <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
+From: =?UTF-8?Q?Erik_Dob=C3=A1k?= <erik.dobak@gmail.com>
+Date: Tue, 3 Oct 2023 18:10:46 +0200
+Message-ID: <CAH7-e5unq6ggNjVkSsriUAmpvk4s7-NCYJrZnLK_3BjFO_Dceg@mail.gmail.com>
+Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
+ devices - /linux/drivers/bluetooth/btusb.c
+To: =?UTF-8?Q?Tomasz_Mo=C5=84?= <tomasz.mon@nordicsemi.no>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Stable <stable@vger.kernel.org>, 
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Mediatek <linux-mediatek@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---nextPart1865545.tdWV9SEqCh
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Markus Meier <kerneldev@epic-bytes.net>
-Date: Tue, 03 Oct 2023 17:04:25 +0200
-Message-ID: <4836369.GXAFRqVoOG@mobile>
-In-Reply-To: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
-MIME-Version: 1.0
+Sorry Tomasz,
 
-Am Dienstag, 3. Oktober 2023, 12:24:56 CEST schrieben Sie:
-> On 02.10.23 23:04, Markus Meier wrote:
-> > I own a  Lenovo Yoga Slim 7 Pro 14ARH7 where the microphone is not showing
-> > up. I added the system to the quirk table and the mic is working
-> > correctly (but with very low volume) now.
-> > 
-> > Here's an except from dmidecode:
-> > System Information
-> > 
-> >         Manufacturer: LENOVO
-> >         Product Name: 82UU
-> >         Version: Yoga Slim 7 Pro 14ARH7
-> >         SKU Number: LENOVO_MT_82UU_BU_idea_FM_Yoga Slim 7 Pro 14ARH7
-> >         Family: Yoga Slim 7 Pro 14ARH7
-> > 
-> > Please add this patch to the kernel and add it to the stable kernels too.
-> > I
-> > guess the microphone should have worked before. Seems to be a regression
-> > introduced by c008323fe361bd62a43d9fb29737dacd5c067fb7
-> > 
-> > [-- Attachment #2: yoga-slim-7-pro-82UU-microphone.patch --]
-> > [-- Type: text/x-patch, Size: 451 bytes --]
-> > 
-> > --- a/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:31:03.753786095 
-+0200
-> > +++ b/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:32:06.414276453 
-+0200
-> > @@ -217,6 +217,13 @@
-> > 
-> >  		.driver_data = &acp6x_card,
-> >  		.matches = {
-> >  		
-> >  			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-> > 
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "82UU"),
-> > +		}
-> > +	},
-> > +	{
-> > +		.driver_data = &acp6x_card,
-> > +		.matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-> > 
-> >  			DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
-> >  		
-> >  		}
-> >  	
-> >  	},
-> 
-> I CCed a bunch of lists and people to make sure everyone is aware of
-> that patch, as it otherwise might fall through the cracks.
-> 
-> Markus, quick question: do you have (a) an interest in contributing a
-> change to Linux or (b) did you just post this because Mario asked you to
-> do so in https://bugzilla.kernel.org/show_bug.cgi?id=217063#c25 ?
+that must have been a reality glitch with your commit (cant find the
+page refering to your commit now). But yes it is probably a kernel bug
+as it manifests kernels 6.4 and not in the 6.1 LTS version.
 
-Nope I don't plan to become some kind of kernel developer. I just want to use 
-my notebook without any issues and want to help others who want to use this 
-device with Linux too. I just followed Mario's suggestions. I thought it would 
-be easier for everyone when I create a patch, try if it works and then submit 
-it to a bugtracker to get the bug fixed.
+Yours
 
-> If it's (a) then you might want to take a closer look at
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-> , as your patch lacks a few important things before it can be applied
-> (most notably a Signed-off-by tag)
-> 
-> If it's (b) I wonder if it would be easier for everyone involved if some
-> kernel developer could create a patch own their own, as that likely is
-> way easier to review and thus likely gets the problem resolved a lot faster.
+E
 
-Please feel free to create a patch based on mine, when it's easier and faster 
-that way. I don't really care as long as the microphone is working in one of 
-the next kernel releases. 
-
-Thanks for your help Thorsten. I really enjoyed your Heise Kernel-Log series 
-and I really miss those series. Was always a pleasure to read that.
-
-Kind regards
-Markus
-
-
---nextPart1865545.tdWV9SEqCh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEERBSE7v1a64GvZ1KmZ8XdFW0AfzsFAmUcLXkACgkQZ8XdFW0A
-fzseVAf9GbHjcHa2amWp0h43dfHGYjL9JR3njUJnLGfz4JWEyNBfaDtYatzr0YjY
-7TNxkbqH/lbGWoTsIBzHO540T2VmTLluHpQDWdB2xL857gIgPH5Ddtg1CUjODK2H
-xTyqnHvURs2QadjITFN5ox3z32RjkXxBjIAA6C0xF/CXg+WXsxG9fPqZhifAhqxJ
-LcE1D5K0VWT7qrbIJ2SHQy0GCHz98bOx7rNkduLNspyHwtVgG+ujgMRo2jDa1yBH
-OGat/Tf/It66GQs18PAnuW3rM5EZKNt7PE5XDX9jT5wgnG5DkkdygGPdZo1lhrnj
-r2W9M96d5MphyPQm9YcopDbMPOnseQ==
-=F8i4
------END PGP SIGNATURE-----
-
---nextPart1865545.tdWV9SEqCh--
-
-
-
+On Tue, 3 Oct 2023 at 15:08, Tomasz Mo=C5=84 <tomasz.mon@nordicsemi.no> wro=
+te:
+>
+> On Tue, 2023-10-03 at 14:42 +0200, Erik Dob=C3=A1k wrote:
+> > Sure here you go:
+> >
+> > # lsusb -d 04c5:1670 -v
+> >
+> > Bus 001 Device 004: ID 04c5:1670 Fujitsu, Ltd Bluetooth Radio
+> > Device Descriptor:
+> >   bLength                18
+> >   bDescriptorType         1
+> >   bcdUSB               1.00
+> >   bDeviceClass          224 Wireless
+> >   bDeviceSubClass         1 Radio Frequency
+> >   bDeviceProtocol         1 Bluetooth
+> >   bMaxPacketSize0        64
+> >   idVendor           0x04c5 Fujitsu, Ltd
+> >   idProduct          0x1670
+> >   bcdDevice            0.00
+> >   iManufacturer           1 Realtek
+> >   iProduct                2 Bluetooth Radio
+> >   iSerial                 3 00e04c000001
+> >   bNumConfigurations      1
+> >   Configuration Descriptor:
+> >     bLength                 9
+> >     bDescriptorType         2
+> >     wTotalLength       0x00b1
+> >     bNumInterfaces          2
+> >     bConfigurationValue     1
+> >     iConfiguration          0
+> >     bmAttributes         0xe0
+> >       Self Powered
+> >       Remote Wakeup
+> >     MaxPower              500mA
+> >     Interface Descriptor:
+> >       bLength                 9
+> >       bDescriptorType         4
+> >       bInterfaceNumber        0
+> >       bAlternateSetting       0
+> >       bNumEndpoints           3
+> >       bInterfaceClass       224 Wireless
+> >       bInterfaceSubClass      1 Radio Frequency
+> >       bInterfaceProtocol      1 Bluetooth
+> >       iInterface              4 Bluetooth Radio
+>
+> I have no idea why you referred to my commits, i.e. c13380a55522
+> ("Bluetooth: btusb: Do not require hardcoded interface numbers") later
+> fixed by eaac6e223a0d ("Bluetooth: btusb: Fix bluetooth on Intel
+> Macbook 2014") in the first place.
+>
+> BTUSB_IFNUM_2 is not even getting set for this device and therefore the
+> patches have no impact on your issue. If you were affected, like the
+> Intel Macbook 2014 was, then bear in mind that the issue would manifest
+> as btusb driver not even binding to the device. From your emails
+> however it appears that the issue is something different.
+>
+> I honestly don't think it has anything to do with my patches. If you
+> know a Linux version where your bluetooth device works, then the next
+> step would be to bisect to find the first bad commit.
+>
+> Best Regards,
+> Tomasz Mo=C5=84
