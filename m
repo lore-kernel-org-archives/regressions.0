@@ -1,84 +1,129 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5824C2134F
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 11:52:28 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qndwu-00069f-HO; Tue, 03 Oct 2023 13:52:24 +0200
-Message-ID: <5d0904a4-bc0d-42dd-aae8-6b50e5c567ba@leemhuis.info>
-Date: Tue, 3 Oct 2023 13:52:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E30921361
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 12:25:59 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-d7e904674aeso897875276.3
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 05:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696335958; x=1696940758; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LNO5GJBfVgDppnnjLs8Ey/aGvi+SY8q8n/RPtqg6Lb0=;
+        b=JuszM1kayAw/4eOnNI90rQkXE6JCnzg5J0lrRf/KPl8dLGhUN58xpQ27OwEFr+VHqz
+         vVeVpUG9LmcGsy0PAWRWdCE4+8XOljnr2HwQpLlMClcqGQwvGecGYlyrcuvdGbwkUpQv
+         1b3WHfNYumkL+2u/xJdigbgCEQrhMktuTw/uHHg0Uqy2trsgl1JRUeCRnGh8uJEKblQ6
+         ARBz4A6SN/qhMSi3FvWKHNhacQOlho1fpLe/h+ukNTfwnATVt5Ic0uEXYzaR9Ylm8ySb
+         1HiNoNMOCg4aL6K2b4tCHOdhEZs25+9iFBypB2ZagxkG///BXxZ58C8JG3p113VzgO26
+         xz/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696335958; x=1696940758;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LNO5GJBfVgDppnnjLs8Ey/aGvi+SY8q8n/RPtqg6Lb0=;
+        b=pG+II4upfpbYv0vVDVKGbDqKZokV63dREI36GnN4d2oSZJSyASQJs6fy96JbIpa7Kf
+         STcbgx9Mi0FmnNwCpyNLDlqlXdlJDZ2I60yMH6Id7Bgp8huwBbPif3mPhv1BHyajZcDz
+         9Hz/sN0tEe1EST3GtVhNJp5Z+2tDuzJsS6MLZ4po+YUJE5gPkkdtLZ7EpN9dxDQgGXn2
+         E8U8kkrO0c9/CoE0/bRHkFGCYh1Tau5Ahzxlxg2yL1Jq+dBkY5LSZxSQbxnYKo94u6E7
+         DuN8ZnTHvxlCJrNSHl0HNHQNZuLuPZ0OUsfMxHjHofBAqWZMYAG7sF0GsXx/TkLco4pl
+         mfAg==
+X-Gm-Message-State: AOJu0YwJly1+BL00M6GcpTSFOHFrALygz2QpzFBBE6QE52BCxLYxjxAb
+	4Qhu6zYmK8j+9Cv0K1r/UvhvLjMiWncYnm0l5TY=
+X-Google-Smtp-Source: AGHT+IH3vFPI8wkZPSB+huGryIAf1o97KjtxkawCjpbmFqLZ7a060PcmeyqhgyDquT7PF4ujt0bcej93HgDs77wHvAQ=
+X-Received: by 2002:a05:6902:707:b0:d85:aa81:53f0 with SMTP id
+ k7-20020a056902070700b00d85aa8153f0mr16641798ybt.4.1696335957740; Tue, 03 Oct
+ 2023 05:25:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Microcode SW error since Linux 6.5
-Content-Language: en-US, de-DE
-To: Johannes Berg <johannes@sipsolutions.net>,
- Gregory Greenman <gregory.greenman@intel.com>
-Cc: ilan.peer@intel.com,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Antoine_Beaupr=C3=A9?= <anarcat@debian.org>,
- linux-wireless@vger.kernel.org
-References: <87ttrncuc8.fsf@angela.anarc.at>
- <60e2c052f3cedc5c80964e4be90c50cdaa899a87.camel@sipsolutions.net>
- <87jzsf9dme.fsf@angela.anarc.at>
- <0190dde1170bd1ee810e99b9799678f4f5b8f30e.camel@sipsolutions.net>
- <8734z29jx7.fsf@angela.anarc.at>
- <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696333948;69d3ac3c;
-X-HE-SMSGID: 1qndwu-00069f-HO
+References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
+ <ZRtWcgiH5JhD5NU2@debian.me>
+In-Reply-To: <ZRtWcgiH5JhD5NU2@debian.me>
+From: =?UTF-8?Q?Erik_Dob=C3=A1k?= <erik.dobak@gmail.com>
+Date: Tue, 3 Oct 2023 14:25:46 +0200
+Message-ID: <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
+Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
+ devices - /linux/drivers/bluetooth/btusb.c
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Stable <stable@vger.kernel.org>, 
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Mediatek <linux-mediatek@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?UTF-8?Q?Tomasz_Mo=C5=84?= <tomasz.mon@nordicsemi.no>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[CCing the regressions list]
+On Tue, 3 Oct 2023 at 01:47, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>
+> On Sun, Oct 01, 2023 at 07:47:54AM +0200, Erik Dob=C3=A1k wrote:
+> > Hello!
+> >
+> > I bought a new laptop fujitsu life book and everything is going fine
+> > on artix just the bt makes trouble:
+> >
+> > /var/log/error.log
+> > Sep 30 18:43:48 nexus bluetoothd[2266]:
+> > src/adapter.c:reset_adv_monitors_complete() Failed to reset Adv
+> > Monitors: Failed (0x03)
+> > Sep 30 18:43:48 nexus bluetoothd[2266]: Failed to clear UUIDs: Failed (=
+0x03)
+> > Sep 30 18:43:48 nexus bluetoothd[2266]: Failed to add UUID: Failed (0x0=
+3)
+> > Sep 30 18:43:48 nexus bluetoothd[2266]: Failed to add UUID: Failed (0x0=
+3)
+> >
+> > i searched a bit the webs and found a new commit at kernel org that
+> > does do the trouble:
+> > https://bugs.archlinux.org/task/78980
+> >
+> > follow the linkeys inside the commits there or read this one:
+> >
+> > ---------------before------------------------------------
+> > /* interface numbers are hardcoded in the spec */
+> >         if (intf->cur_altsetting->desc.bInterfaceNumber !=3D 0) {
+> >                 if (!(id->driver_info & BTUSB_IFNUM_2))
+> >                         return -ENODEV;
+> >                 if (intf->cur_altsetting->desc.bInterfaceNumber !=3D 2)
+> >                         return -ENODEV;
+> >         }
+> > -----------after----------------------------------------------------
+> > if ((id->driver_info & BTUSB_IFNUM_2) &&
+> >     (intf->cur_altsetting->desc.bInterfaceNumber !=3D 0) &&
+> >     (intf->cur_altsetting->desc.bInterfaceNumber !=3D 2))
+> > return -ENODEV;
+> > --------------------------------------------------------
+> >
+> > the dude just hooked up 3 conditions in a row with && where before it
+> > was 2 conditions in 1 condition. + the comment was removed.
+> >
+> >
+>
+> Try latest mainline first (currently v6.6-rc4). Because you have to
+> compile your own kernel, please refer to
+> Documentation/admin-guide/quickly-build-trimmed-linux.rst if you don't kn=
+ow how to do the compilation.
+>
+> Also, don't top-post when replying; reply inline with appropriate context
+> instead.
+>
+> Thanks.
+>
+> --
+> An old man doll... just what I always wanted! - Clara
 
-On 25.09.23 21:03, Johannes Berg wrote:
-> On Mon, 2023-09-25 at 14:39 -0400, Antoine Beaupré wrote:
->>> Did that patch help?
->>
->> I haven't tried, to be honest. It's been years since I compiled a
->> kernel, so I haven't actually seriously considered it. But I can
->> definitely put that on my list if it would be useful for you!
-> Heh ok. Well we can also try it I guess. Or reason our way through it,
-> but I'm pretty sure something like that should be done here.
-> 
->>> Yes, you can ... but I mean, we still do want to consider this a bug, I
->>> think, since we explicitly built the thing to load the older firmware.
->>> It just gets _far_ less testing.
->>
->> Got it, happy to play guinea pig a little further if that's useful.
-> Well you might want to go for the extra stability instead :-) I'm kind
-> of thinking along the lines of "if you can download the next wifi
-> firmware with the current one, that's probably good enough". :)
+Hi i booted now into linux-6.6-rc4 and the issue is still there. No
+bluetooth devices are discovered.
+with this device: Bus 001 Device 004: ID 04c5:1670 Fujitsu, Ltd Bluetooth R=
+adio
 
-Well, that's not how Linus wants things to be, as due to this "no
-regression" rule things should continue to work if people update the
-kernel without updating linux-firmware (as also explained in
-Documentation/driver-api/firmware/firmware-usage-guidelines.rst).
-
-That's what I though when I saw that message initially, but I thought:
-well, not worth a comment, the reporter apparently doesn't mind that
-much. But since then I saw more and more reports that looked related to
-my untrained eyes (and thus might not be related at all!).
-
-https://bugzilla.kernel.org/show_bug.cgi?id=217894
-https://bugzilla.kernel.org/show_bug.cgi?id=217894#c6 (same ticket)
-https://bugzilla.kernel.org/show_bug.cgi?id=217963
-https://lore.kernel.org/all/f6448719-14e2-4962-ac3d-1be3c19156ed@dolce-energy.com/
-
-Gregory, Johannes, is there something wrong here with 6.5.y? If yes: is
-anything already been done to improve the state of things?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+E
