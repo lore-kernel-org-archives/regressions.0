@@ -1,143 +1,155 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from mail.meier-coaching.de (mail.epic-bytes.net [45.83.105.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2C29436
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 14:11:40 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 629AF5C01BC;
-	Tue,  3 Oct 2023 10:11:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 03 Oct 2023 10:11:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-	1696342299; x=1696428699; bh=f5OIuVSTUdWImnFCTEXCJMtsDWw6OTj7aIC
-	1dkPr/+Q=; b=iGYfw28UfzEEnbujsAk437h4/+fwFRbhOpFhoPtuEriGamzD6K8
-	+sYn9RE8tx+rHKSfGEh1i4+R7cQGdNXakhIymSYcimIIG8EjDuPQQ0/gAlY/z420
-	dpQFTdhPjDiiRK43FE0gshknHE7pr8CN66Bodob8yB4wm8P18fqd0Wdw5m4txbo4
-	iOe90uvohzoowhFBykSrxOf6SDPd8dzivAPTpIw+RF7BeWADgj1jLMsl/dQvGAPc
-	UtZGTHusgQJlAZ78IogHGhoCMq1Ct+Z6FWyEzVrUfDGzLfFFrqu6uncXLnMvGosh
-	kMqZokPkFV7iLwyVExYLh+qQ7YMNk4pjFlw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1696342299; x=1696428699; bh=f5OIuVSTUdWImnFCTEXCJMtsDWw6OTj7aIC
-	1dkPr/+Q=; b=o9BvMg2K1BoCZ1BF8l6iHmwf826o/tYoI3GRjfVkT5P4CILp1dQ
-	wapaqqPm8Ou3MA3qBzU3pMS+3RTEXlNt51Totj3+JjE8Z6M0EAb9V83QEQdjNcJX
-	x6Ll/uOb7xYtdgGPrkth+2fuVKudFBsUuEL5KX4UkkFvo/Ctb+QAcyJ9rK3RaDu1
-	03w+aH96pN5LpXoPHc+arwMyFY6hjBoTfuTBDa9o3WIRtle8JYsUkp2bmfCZLiFs
-	qoENro4GYQkkpla87zdOT147PHPFpC8eEU//dlyqxxzgE5Jw9hVgiHE4G75lgIiE
-	jrjA0NiApYnh18c58SPYyyhCAkjh1SwzWew==
-X-ME-Sender: <xms:GiEcZXwfCYLQPJjv_7CO7Dgk0TJ7e6rAqMtteYo8pd21MyFEpjyuYw>
-    <xme:GiEcZfTrcWbcLXQd23vDLzGcU4lbgJxnsfuQy86WvbX-h9TwG5JYyFl_k697ydEM3
-    nhmddqLe_ae2BoZaw>
-X-ME-Received: <xmr:GiEcZRUHzwwp0bsFLbdC9CMRd6ST6s3b0phrbsEP19iUMVj8JgLNh4NerPeyKH5Q7fVUO8Ri>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeeigdejudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheptehnughr
-    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrf
-    grthhtvghrnhepuddtieegleejheeujeeiveegueelhfekleeuffdukeduleduffehfffg
-    teeivefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvghssegrnhgrrhgriigvlhdruggv
-X-ME-Proxy: <xmx:GyEcZRhOwnaI1uNMV-mWPRwFrecdddlQf19nrEPeZ5tAxmS6UTkE7g>
-    <xmx:GyEcZZCUSC1ZhVoYVNAAaLndn9-6YL5IlZpsGfqLFkEh2ZIVLgKpDg>
-    <xmx:GyEcZaI9B9OoGePo1ycpc5BXbNWrHZYMTL1fHsliQ3t-gr8O8jIXgw>
-    <xmx:GyEcZTBbvkMjUcuWjYtWW0P8xSTNjCJ1e2z4wS5otyW-TAd7zCqwAA>
-Feedback-ID: id4a34324:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 3 Oct 2023 10:11:38 -0400 (EDT)
-Date: Tue, 3 Oct 2023 07:11:38 -0700
-From: Andres Freund <andres@anarazel.de>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
-	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
-	groeck@google.com, zsm@google.com, garrick@google.com,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
-Message-ID: <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
-References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
- <ZQjKOjrjDYsoXBXj@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B6FBF1
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 15:11:31 +0000 (UTC)
+From: Markus Meier <kerneldev@epic-bytes.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epic-bytes.net;
+	s=2020; t=1696345466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qVteM+WyhCWgGKmgpjhnWHSPzBzizjYf1Mb5ewbwwLc=;
+	b=JFq/ZLqSlpnnLU/2G+6t7Dy+lzyi4pGx2eX+ogWFbWuAhW/uq0i4OmT6EK4Y0CIQ9G9myM
+	rws652AqnFxfjAxYIDyrAZA7WQkSoavZyRPzRvzqWGxjnsrk2V6GjQhyzq+x68+/a+TkvO
+	qa95ohwhQ3xdv2GeS5unOhTAGIYh5Fej8XoTlA6zy5VadG+3PvxqXYVt6LK8aToYnaSagL
+	CL8w6plrNuFPm9FaSPk7MvNX0qM8/JLKPbKDuCnb6ywGQWMObOOu4sSP58hPb9SxplVJoQ
+	GUFmWgsPnd2DSa3OEhG7eDCndatFHxo6pdzjtZLfEJID0dpjNiwT/JlR1pXN9Q==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=markus smtp.mailfrom=kerneldev@epic-bytes.net
+To: Markus Meier <kerneldev@epic-bytes.net>, alsa-devel@alsa-project.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Brown <broonie@kernel.org>, Sven Frotscher <sven.frotscher@gmail.com>,
+ August Wikerfors <git@augustwikerfors.se>
+Subject:
+ Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo Yoga Slim 7 Pro
+ 14ARH7 82UU
+Date: Tue, 03 Oct 2023 17:04:25 +0200
+Message-ID: <4836369.GXAFRqVoOG@mobile>
+In-Reply-To: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
+References:
+ <10347605.nUPlyArG6x@kali>
+ <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZQjKOjrjDYsoXBXj@mit.edu>
+Content-Type: multipart/signed; boundary="nextPart1865545.tdWV9SEqCh";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-Hi,
+--nextPart1865545.tdWV9SEqCh
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Markus Meier <kerneldev@epic-bytes.net>
+Date: Tue, 03 Oct 2023 17:04:25 +0200
+Message-ID: <4836369.GXAFRqVoOG@mobile>
+In-Reply-To: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
+MIME-Version: 1.0
 
-On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
-> On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
-> > When I tried to reproduce this issue on mainline linux kernel using the
-> > reproducer provided by syzbot, I see an endless loop of following errors :-
-> >
-> > [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
-> > [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
-> > inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
-> > [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
->
-> Please note that maliciously corrupted file system is considered low
-> priority by ext4 developers.
+Am Dienstag, 3. Oktober 2023, 12:24:56 CEST schrieben Sie:
+> On 02.10.23 23:04, Markus Meier wrote:
+> > I own a  Lenovo Yoga Slim 7 Pro 14ARH7 where the microphone is not showing
+> > up. I added the system to the quirk table and the mic is working
+> > correctly (but with very low volume) now.
+> > 
+> > Here's an except from dmidecode:
+> > System Information
+> > 
+> >         Manufacturer: LENOVO
+> >         Product Name: 82UU
+> >         Version: Yoga Slim 7 Pro 14ARH7
+> >         SKU Number: LENOVO_MT_82UU_BU_idea_FM_Yoga Slim 7 Pro 14ARH7
+> >         Family: Yoga Slim 7 Pro 14ARH7
+> > 
+> > Please add this patch to the kernel and add it to the stable kernels too.
+> > I
+> > guess the microphone should have worked before. Seems to be a regression
+> > introduced by c008323fe361bd62a43d9fb29737dacd5c067fb7
+> > 
+> > [-- Attachment #2: yoga-slim-7-pro-82UU-microphone.patch --]
+> > [-- Type: text/x-patch, Size: 451 bytes --]
+> > 
+> > --- a/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:31:03.753786095 
++0200
+> > +++ b/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:32:06.414276453 
++0200
+> > @@ -217,6 +217,13 @@
+> > 
+> >  		.driver_data = &acp6x_card,
+> >  		.matches = {
+> >  		
+> >  			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> > 
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "82UU"),
+> > +		}
+> > +	},
+> > +	{
+> > +		.driver_data = &acp6x_card,
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> > 
+> >  			DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
+> >  		
+> >  		}
+> >  	
+> >  	},
+> 
+> I CCed a bunch of lists and people to make sure everyone is aware of
+> that patch, as it otherwise might fall through the cracks.
+> 
+> Markus, quick question: do you have (a) an interest in contributing a
+> change to Linux or (b) did you just post this because Mario asked you to
+> do so in https://bugzilla.kernel.org/show_bug.cgi?id=217063#c25 ?
 
-FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
-just doing database development on my laptop.
+Nope I don't plan to become some kind of kernel developer. I just want to use 
+my notebook without any issues and want to help others who want to use this 
+device with Linux too. I just followed Mario's suggestions. I thought it would 
+be easier for everyone when I create a patch, try if it works and then submit 
+it to a bugtracker to get the bug fixed.
 
-Oct 03 06:48:30 alap5 kernel: INFO: task postgres:132485 blocked for more than 122 seconds.
-Oct 03 06:48:30 alap5 kernel:       Not tainted 6.6.0-rc4-andres-00009-ge38f6d0c8360 #74
-Oct 03 06:48:30 alap5 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-Oct 03 06:48:30 alap5 kernel: task:postgres        state:D stack:0     pid:132485 ppid:132017 flags:0x00020006
-Oct 03 06:48:30 alap5 kernel: Call Trace:
-Oct 03 06:48:30 alap5 kernel:  <TASK>
-Oct 03 06:48:30 alap5 kernel:  __schedule+0x388/0x13e0
-Oct 03 06:48:30 alap5 kernel:  ? nvme_queue_rqs+0x1e6/0x290
-Oct 03 06:48:30 alap5 kernel:  schedule+0x5f/0xe0
-Oct 03 06:48:30 alap5 kernel:  inode_dio_wait+0xd5/0x100
-Oct 03 06:48:30 alap5 kernel:  ? membarrier_register_private_expedited+0xa0/0xa0
-Oct 03 06:48:30 alap5 kernel:  ext4_fallocate+0x12f/0x1040
-Oct 03 06:48:30 alap5 kernel:  ? io_submit_sqes+0x392/0x660
-Oct 03 06:48:30 alap5 kernel:  vfs_fallocate+0x135/0x360
-Oct 03 06:48:30 alap5 kernel:  __x64_sys_fallocate+0x42/0x70
-Oct 03 06:48:30 alap5 kernel:  do_syscall_64+0x38/0x80
-Oct 03 06:48:30 alap5 kernel:  entry_SYSCALL_64_after_hwframe+0x46/0xb0
-Oct 03 06:48:30 alap5 kernel: RIP: 0033:0x7fda32415f82
-Oct 03 06:48:30 alap5 kernel: RSP: 002b:00007ffedbea0828 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
-Oct 03 06:48:30 alap5 kernel: RAX: ffffffffffffffda RBX: 00000000002a6000 RCX: 00007fda32415f82
-Oct 03 06:48:30 alap5 kernel: RDX: 0000000014b22000 RSI: 0000000000000000 RDI: 0000000000000016
-Oct 03 06:48:30 alap5 kernel: RBP: 0000000014b22000 R08: 0000000014b22000 R09: 0000558f70eabed0
-Oct 03 06:48:30 alap5 kernel: R10: 00000000002a6000 R11: 0000000000000246 R12: 00000000000000e0
-Oct 03 06:48:30 alap5 kernel: R13: 000000000a000013 R14: 0000000000000004 R15: 0000558f709d4e70
-Oct 03 06:48:30 alap5 kernel:  </TASK>
+> If it's (a) then you might want to take a closer look at
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+> , as your patch lacks a few important things before it can be applied
+> (most notably a Signed-off-by tag)
+> 
+> If it's (b) I wonder if it would be easier for everyone involved if some
+> kernel developer could create a patch own their own, as that likely is
+> way easier to review and thus likely gets the problem resolved a lot faster.
 
-cat /proc/132485/stack
-[<0>] inode_dio_wait+0xd5/0x100
-[<0>] ext4_fallocate+0x12f/0x1040
-[<0>] vfs_fallocate+0x135/0x360
-[<0>] __x64_sys_fallocate+0x42/0x70
-[<0>] do_syscall_64+0x38/0x80
-[<0>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
+Please feel free to create a patch based on mine, when it's easier and faster 
+that way. I don't really care as long as the microphone is working in one of 
+the next kernel releases. 
 
-cat /sys/kernel/debug/block/nvme1n1/hctx*/busy
-doesn't show any active IO. Nor does the issue resolve when resetting the
-controller - so I don't think this is a disk/block level issue.
+Thanks for your help Thorsten. I really enjoyed your Heise Kernel-Log series 
+and I really miss those series. Was always a pleasure to read that.
+
+Kind regards
+Markus
 
 
-This is on 8f1b4600373f, with one local, unrelated, commit ontop.
+--nextPart1865545.tdWV9SEqCh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Unfortunately, so far, I've only reproduced this every couple hours of
-interactive work, so bisecting isn't really feasible. I've not hit it on 6.5
-over a considerably longer time, so I am reasonably confident this isn't an
-older issue.
+-----BEGIN PGP SIGNATURE-----
 
-Greetings,
+iQEzBAABCgAdFiEERBSE7v1a64GvZ1KmZ8XdFW0AfzsFAmUcLXkACgkQZ8XdFW0A
+fzseVAf9GbHjcHa2amWp0h43dfHGYjL9JR3njUJnLGfz4JWEyNBfaDtYatzr0YjY
+7TNxkbqH/lbGWoTsIBzHO540T2VmTLluHpQDWdB2xL857gIgPH5Ddtg1CUjODK2H
+xTyqnHvURs2QadjITFN5ox3z32RjkXxBjIAA6C0xF/CXg+WXsxG9fPqZhifAhqxJ
+LcE1D5K0VWT7qrbIJ2SHQy0GCHz98bOx7rNkduLNspyHwtVgG+ujgMRo2jDa1yBH
+OGat/Tf/It66GQs18PAnuW3rM5EZKNt7PE5XDX9jT5wgnG5DkkdygGPdZo1lhrnj
+r2W9M96d5MphyPQm9YcopDbMPOnseQ==
+=F8i4
+-----END PGP SIGNATURE-----
 
-Andres Freund
+--nextPart1865545.tdWV9SEqCh--
+
+
+
