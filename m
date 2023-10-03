@@ -1,100 +1,91 @@
-Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26128D278
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 09:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
- d=augustwikerfors.se;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=gEeJIPzvzVkyH+NRCBLOt631AmVlDSMa/1+fcXZ5V4I=;
- b=cpgEdHA1ORayguhDshh9wTP273qjpW9M1AEv2E4g4Cl29ZWg5r1mH2yQZiv7bvza4jtei32plCuz
-   xrOp+y2PRzTxz4ohLM1vEH8wFD7AO190Pg3f2pGTinv0QTjeLyndsdouOPzSBaGPwL2+wRq+BXDE
-   y4Vkjq/Ua7LsrUj0zbPb3DHvAp+3OqhmJrOBGBff28PdGfH5TRGZ62rXowuO0Hh4xbjxXAXJjLpF
-   Y2lf5pA2rroTKih3DTlZLT4zjZMbJVPWzjRW2X4PyqyKS03F7VWy9Le/qS+RUXqhYT/usiT/7bX1
-   LsWmHf/zbMQfsfEhZhlHdkvEULO4k9PlZAFCQA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
- d=arn1.rp.oracleemaildelivery.com;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=gEeJIPzvzVkyH+NRCBLOt631AmVlDSMa/1+fcXZ5V4I=;
- b=QR2wy4jKD7aeG2qoZH9lOmWHQ2qKOYh6omKF8BbKgeRMdqEvCNxLyNobAysrmGW/SnAxnI1mBQfa
-   3RvVg2Pbi3uwsZiuke6f0B+DfFXV0FkBqQRAZAIgLuwkihb/xZPnciLaK5eofpaK9AJBJbYXbcu2
-   DY4JbAevTRD7GbnWeYSEgMAt2tUtBNjnfJbPynzBtUXpVX+plz9TYpmiGx5e607kBYlTZlKj9uQ/
-   Na9wLkhQD8u6J3iUGuKhilCT2h+onXyjwNwWWI13gR75V5F/Z0bzWs6IJ7JobxsgfRv6l1dYyDDf
-   uVu/8kbCekfc4QJGJs022DR+HpvO23OebZMZlA==
-Received: by omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
- (Oracle Communications Messaging Server 8.1.0.1.20230808 64bit (built Aug  8
- 2023))
- with ESMTPS id <0S1Y00B2W5H7C800@omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
- for regressions@lists.linux.dev; Tue, 03 Oct 2023 09:39:07 +0000 (GMT)
-Message-id: <99eb37e0-5ade-4137-93d5-901f598f4082@augustwikerfors.se>
-Date: Tue, 3 Oct 2023 11:39:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E633DD302
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 10:25:00 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qncaH-0002AJ-7T; Tue, 03 Oct 2023 12:24:57 +0200
+Message-ID: <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
+Date: Tue, 3 Oct 2023 12:24:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-version: 1.0
-From: August Wikerfors <git@augustwikerfors.se>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo Yoga Slim
  7 Pro 14ARH7 82UU
-To: Markus Meier <kerneldev@epic-bytes.net>
-Cc: alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, regressions@lists.linux.dev
+Content-Language: en-US, de-DE
+To: Markus Meier <kerneldev@epic-bytes.net>, alsa-devel@alsa-project.org
 References: <10347605.nUPlyArG6x@kali>
-Content-language: en-US
-In-reply-to: <10347605.nUPlyArG6x@kali>
-Content-type: text/plain; charset=UTF-8; format=flowed
-Content-transfer-encoding: 7bit
-Reporting-Meta:
- AAHPA+lGEgh+LcklqCHZGU1AP61IUJVJAlVMR4F30wXN/+sMVQlUrFG9qeJ7+B13
- 94A63Ql7MW3ThyqPcAp3RL3tvPxJ5j49hsH09MAMDV107XX4396QxhQMYkzLWjN5
- 4Zjd/LMs9BetumpnuTFIm/kacsw80cSghbJy/OpPcPcWmzx8cbBLKaAq/PnCj70+
- 24MrHdIpBjiIIGKW+xiAMcKMFtaxeOpExhocul9KKdi07xjwcMLF8j7H2ARNBUPO
- 1MjsQcWuQ5nhPkSt+jJqLIEfpPzzQQiZc2vakAOKVVtR3mad1NrbW4MymKQohjuH
- Q7TKYV8+R38vlC4f4nYvJvzfphUgUA6bPv5N0UJYGUBEHE1RNCC3aOyTV2hx1jSe
- QZPrpJ90eB334EFQLlw4avC6AsGJkBwfo8dy/l9rdBkByl2ZyGe+72jtIaYM2pGb RXnyjcA=
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Brown <broonie@kernel.org>, Sven Frotscher <sven.frotscher@gmail.com>,
+ August Wikerfors <git@augustwikerfors.se>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <10347605.nUPlyArG6x@kali>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696328701;5bfde271;
+X-HE-SMSGID: 1qncaH-0002AJ-7T
 
-[+Cc Mark, Mario, regressions]
-
-Hi Markus,
-
-On 2023-10-02 23:04, Markus Meier wrote:
-> Hi,
+On 02.10.23 23:04, Markus Meier wrote:
 > 
 > I own a  Lenovo Yoga Slim 7 Pro 14ARH7 where the microphone is not showing up.
-> I added the system to the quirk table and the mic is working correctly (but
+> I added the system to the quirk table and the mic is working correctly (but 
 > with very low volume) now.
 > 
 > Here's an except from dmidecode:
 > System Information
->          Manufacturer: LENOVO
->          Product Name: 82UU
->          Version: Yoga Slim 7 Pro 14ARH7
->          SKU Number: LENOVO_MT_82UU_BU_idea_FM_Yoga Slim 7 Pro 14ARH7
->          Family: Yoga Slim 7 Pro 14ARH7
-> 
-> Please add this patch to the kernel
-Please read [1] for how to properly format and submit kernel patches. In
-particular your patch is missing a "Signed-off-by:" line and it should
-ideally be sent inline instead of as an attachment (it is strongly
-recommended to use git send-email for this, see [2] for a tutorial on
-how to set up and use it).
-
-Also, since this fixes a regression caused by a commit that has been
-backported to stable, see below for "Cc:" and "Fixes:" tags that should
-be added above "Signed-off-by:" to ensure the fix also gets backported
-in a timely manner [3].
-
-> and add it to the stable kernels too. I
-Cc: stable@vger.kernel.org
-
-> guess the microphone should have worked before. Seems to be a regression
+>         Manufacturer: LENOVO
+>         Product Name: 82UU
+>         Version: Yoga Slim 7 Pro 14ARH7
+>         SKU Number: LENOVO_MT_82UU_BU_idea_FM_Yoga Slim 7 Pro 14ARH7
+>         Family: Yoga Slim 7 Pro 14ARH7
+>
+> Please add this patch to the kernel and add it to the stable kernels too. I 
+> guess the microphone should have worked before. Seems to be a regression 
 > introduced by c008323fe361bd62a43d9fb29737dacd5c067fb7
-Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82SJ")
+>
+> [-- Attachment #2: yoga-slim-7-pro-82UU-microphone.patch --]
+> [-- Type: text/x-patch, Size: 451 bytes --]
+> 
+> --- a/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:31:03.753786095 +0200
+> +++ b/sound/soc/amd/yc/acp6x-mach.c	2023-09-29 19:32:06.414276453 +0200
+> @@ -217,6 +217,13 @@
+>  		.driver_data = &acp6x_card,
+>  		.matches = {
+>  			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "82UU"),
+> +		}
+> +	},
+> +	{
+> +		.driver_data = &acp6x_card,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "82V2"),
+>  		}
+>  	},
 
-[1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-[2] https://git-send-email.io/
-[3] https://www.kernel.org/doc/html/latest/process/handling-regressions.html#what-s-important-when-fixing-regressions
+I CCed a bunch of lists and people to make sure everyone is aware of
+that patch, as it otherwise might fall through the cracks.
 
-Regards,
-August Wikerfors
+Markus, quick question: do you have (a) an interest in contributing a
+change to Linux or (b) did you just post this because Mario asked you to
+do so in https://bugzilla.kernel.org/show_bug.cgi?id=217063#c25 ?
+
+If it's (a) then you might want to take a closer look at
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+, as your patch lacks a few important things before it can be applied
+(most notably a Signed-off-by tag)
+
+If it's (b) I wonder if it would be easier for everyone involved if some
+kernel developer could create a patch own their own, as that likely is
+way easier to review and thus likely gets the problem resolved a lot faster.
+
+Ciao, Thorsten
