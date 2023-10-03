@@ -1,139 +1,91 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047D531A82
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 16:10:58 +0000 (UTC)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d90da64499cso1165091276.0
-        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 09:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696349458; x=1696954258; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KJIb/JY4n8tGZSqHXme95COkElXYXHHoPPYozHgYq+o=;
-        b=NF+mV4pZXAjZ5AGEP7xV/MsvCy2K+uG9btmnhk4ZwfCN2WFSdLEVu65EEKYoYI9ecG
-         LKWYWSAzWLpgIaODK2CYgNLyBCN4jXcLLVReJcPuNPQqQtCTDJ+hl/2xOAk4ebl6sriZ
-         5E67UXpVcqCGUgzgy1h2K2ZzXX9++D7KdTA7nMahs4re4dLDbbQx9T8j8V5gmF/UB7WF
-         DHmkdnFmTuAqhOSZzETO1vw2/iRZuyiyrQq70WzLhqnjDTR0k3HKwPy0VxPrBio0Tiv1
-         xPwygRzvK9q2f6uGnjq4nzJd/BoGq6/mugqgwrafed26gtwcJMfnHJJrIcmrRD5e9RV8
-         R77w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696349458; x=1696954258;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KJIb/JY4n8tGZSqHXme95COkElXYXHHoPPYozHgYq+o=;
-        b=qCV3LJC1BYZt8LmVBXMk+Aa6eeq2euNnD/k/EqJgwttZdsDYQz3q1jIdX4xr/MTI2I
-         qTPAIn/8F/zVOEwsDfP0qxIVbIj4O/4RLaYyyNV/uqXAVy0agssy0Vlxctr6zC2AnbCD
-         gl6oSq3ZBRXaBcTyVuqxWHaeBzMyJvGxmLKccyX1jCrItn8LkymRoWe8DBJGo02p7EBj
-         c86d6j/jl1ryBzXXe5ToTWkaPKiix/9kBgKsnxP4+Y+SSJqecd2F3OCcjRMD4We7cmgt
-         tZJ4iXg3GHhIadV4u1T1CmqWjBJdqIjmdKXwdwCA77e397thR7/vHwTe6ZtL6nAlgfr+
-         4qaw==
-X-Gm-Message-State: AOJu0YygUYCyftK6eh5uJfpbaV1Nc0s3MNVdH5prs1ENBhPNw0Lj7A0K
-	2EDyAADj/2pSF6go68jZbLnd3eKD/NAnyjhBy3s=
-X-Google-Smtp-Source: AGHT+IG/rOtVRw7F1FQYoc2gJxlkY9rYdDDcV+U8qqwVIQAeOKxjsSAmjvcNMnfvzHJq5/eE+kYTAKspnaDSyL4EZ10=
-X-Received: by 2002:a25:cf95:0:b0:d80:1161:5ec1 with SMTP id
- f143-20020a25cf95000000b00d8011615ec1mr13414568ybg.20.1696349457871; Tue, 03
- Oct 2023 09:10:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C150536B18
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 18:20:46 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id ACBA35C03B3;
+	Tue,  3 Oct 2023 14:20:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 03 Oct 2023 14:20:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1696357245; x=1696443645; bh=cZ3i6Y2QIq
+	3PAJzVDebB72rPaqZEye6CfGXDyYu7v7c=; b=fnsb4hFFsUKYvQkI96u/CyuEjg
+	kCt/Vje5c2fVB0X3Z2fWOS9SBF1LBUwHBF9HFYbbfDXZWHLo2Ef7M3mcOiwHb/dE
+	MQGjD9bArkRtfQ5AhAJXFIu6IjAYmhrbkLGbJ/sMgxNZNdLQ+2FWWslfHkJdWFCr
+	VFkpSTSHjm67vP6zxSDwMkV8abKmMjf+rv1x/9Tz9TH+tIRl5LJuQnfgypOKZ2JL
+	v64kNbqJ7c7MwCXjvsOKVsZ2+BK8o6PAbUP4guwfhd/ar1wXDuBRvTw0hUDxTRO/
+	3hDfRO6A4gC0jX1XCMDk9a5DzWK10YG/MuFUhzN8NkW1yBQ+QUhS8DL3OqOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1696357245; x=1696443645; bh=cZ3i6Y2QIq3PAJzVDebB72rPaqZEye6CfGX
+	DyYu7v7c=; b=RHxrmFqEpV4XAxu9KYZ4PN4yapyMs1X4Jz0m/XEIcSccPthD4mv
+	QOri0Zg8ScT2iZ8Y8WX0rO2l3bnVKvzQ5TqXz51j9a/mfjff0oy6POo4kOaFfLne
+	pEtkLYuJ1GXwiq/rQx/I8B3GMuiKfGa+vAxiH0b1uWQf5eNgq0JXQE5MhDi3lwSP
+	shjJ6hmrrfYaeEkFZf1IIVUOiWdXq2OSSTT4Povz9vqDcbWYg0XZ64za6kKuNZTZ
+	qUJVypIWZQZe/df1t9uEWKDaTWF4l2Q61T8Sn20LsjmOqAiFIKB87HWAUUuial/v
+	Su11jx/7kiIWgcQ/sFazj/+mdTOqktEE/ww==
+X-ME-Sender: <xms:fFscZdNLhjXh74J_7qEfCwAOKGnsWh1qYs8sl3t5DNdK4rTBkEXBYQ>
+    <xme:fFscZf_2x5rCIMAv04NjbuCLh5cSPe4JHkoNQvcTihgJpZjwcb_g98oyfPNaAZR4Q
+    f4tE8orJVvOjlmbny0>
+X-ME-Received: <xmr:fFscZcScgVsw-uaaXz5FCs7N_JNrgZDBfN61EFk1qjqnuG3QSZ23sIRznsEHsmQb29Qv5Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeejgdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfggtggusehttddttddttddvnecuhfhrohhmpedfmfhirhhilhhl
+    ucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
+    eqnecuggftrfgrthhtvghrnhepiefgjeeujeekjeeiveekfeeivdehgfehtdffjeeuveff
+    teeiveffvdeuleeuhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
+X-ME-Proxy: <xmx:fFscZZtDmyqULPsFWBNNAw8wZx0qvCLi5Blr2zvJiKsk8bnymXsWHg>
+    <xmx:fFscZVfPAJwba5dNuGbGf8S6PEShQPDx07JA6cN7QFnPYSPeAJ67WA>
+    <xmx:fFscZV0Ouz3xlLiM6CSKfHg6Sw14o4l11dSRnZZ3ohgqJ9kAcaB3JQ>
+    <xmx:fVscZUw-of-KVI-6CY-FxjDPvLVvSEhw9ClgJP5AAMzz5e_OvsgzFA>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 3 Oct 2023 14:20:44 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id C360310A08E; Tue,  3 Oct 2023 21:20:38 +0300 (+03)
+Date: Tue, 3 Oct 2023 21:20:38 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Hilda Wu <hildawu@realtek.com>
+Cc: Alex Lu <alex_lu@realsil.com.cn>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	Max Chou <max.chou@realtek.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Regression: devcoredump patch broke Realtek usb bluetooth adapter
+Message-ID: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
- <ZRtWcgiH5JhD5NU2@debian.me> <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
- <834062302e6a98e773dc4b03d7ed568a0f1c44fc.camel@nordicsemi.no>
- <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com> <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
-In-Reply-To: <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
-From: =?UTF-8?Q?Erik_Dob=C3=A1k?= <erik.dobak@gmail.com>
-Date: Tue, 3 Oct 2023 18:10:46 +0200
-Message-ID: <CAH7-e5unq6ggNjVkSsriUAmpvk4s7-NCYJrZnLK_3BjFO_Dceg@mail.gmail.com>
-Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
- devices - /linux/drivers/bluetooth/btusb.c
-To: =?UTF-8?Q?Tomasz_Mo=C5=84?= <tomasz.mon@nordicsemi.no>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Stable <stable@vger.kernel.org>, 
-	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Mediatek <linux-mediatek@lists.infradead.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry Tomasz,
+Hi,
 
-that must have been a reality glitch with your commit (cant find the
-page refering to your commit now). But yes it is probably a kernel bug
-as it manifests kernels 6.4 and not in the 6.1 LTS version.
+Commit 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
+broke Realtek-based ASUS USB-BT500, ID 0b05:190e.
 
-Yours
+Devices failed to connect. hciconfig showed a controller with all-zero BD
+address.
 
-E
+I reverted the commit as well as bd003fb338af that depends on the commit.
+It made the problem go away.
 
-On Tue, 3 Oct 2023 at 15:08, Tomasz Mo=C5=84 <tomasz.mon@nordicsemi.no> wro=
-te:
->
-> On Tue, 2023-10-03 at 14:42 +0200, Erik Dob=C3=A1k wrote:
-> > Sure here you go:
-> >
-> > # lsusb -d 04c5:1670 -v
-> >
-> > Bus 001 Device 004: ID 04c5:1670 Fujitsu, Ltd Bluetooth Radio
-> > Device Descriptor:
-> >   bLength                18
-> >   bDescriptorType         1
-> >   bcdUSB               1.00
-> >   bDeviceClass          224 Wireless
-> >   bDeviceSubClass         1 Radio Frequency
-> >   bDeviceProtocol         1 Bluetooth
-> >   bMaxPacketSize0        64
-> >   idVendor           0x04c5 Fujitsu, Ltd
-> >   idProduct          0x1670
-> >   bcdDevice            0.00
-> >   iManufacturer           1 Realtek
-> >   iProduct                2 Bluetooth Radio
-> >   iSerial                 3 00e04c000001
-> >   bNumConfigurations      1
-> >   Configuration Descriptor:
-> >     bLength                 9
-> >     bDescriptorType         2
-> >     wTotalLength       0x00b1
-> >     bNumInterfaces          2
-> >     bConfigurationValue     1
-> >     iConfiguration          0
-> >     bmAttributes         0xe0
-> >       Self Powered
-> >       Remote Wakeup
-> >     MaxPower              500mA
-> >     Interface Descriptor:
-> >       bLength                 9
-> >       bDescriptorType         4
-> >       bInterfaceNumber        0
-> >       bAlternateSetting       0
-> >       bNumEndpoints           3
-> >       bInterfaceClass       224 Wireless
-> >       bInterfaceSubClass      1 Radio Frequency
-> >       bInterfaceProtocol      1 Bluetooth
-> >       iInterface              4 Bluetooth Radio
->
-> I have no idea why you referred to my commits, i.e. c13380a55522
-> ("Bluetooth: btusb: Do not require hardcoded interface numbers") later
-> fixed by eaac6e223a0d ("Bluetooth: btusb: Fix bluetooth on Intel
-> Macbook 2014") in the first place.
->
-> BTUSB_IFNUM_2 is not even getting set for this device and therefore the
-> patches have no impact on your issue. If you were affected, like the
-> Intel Macbook 2014 was, then bear in mind that the issue would manifest
-> as btusb driver not even binding to the device. From your emails
-> however it appears that the issue is something different.
->
-> I honestly don't think it has anything to do with my patches. If you
-> know a Linux version where your bluetooth device works, then the next
-> step would be to bisect to find the first bad commit.
->
-> Best Regards,
-> Tomasz Mo=C5=84
+I know virtually nothing about bluetooth. Let me know what info you need
+to debug the issue.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
