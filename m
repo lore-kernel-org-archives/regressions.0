@@ -1,157 +1,143 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2064.outbound.protection.outlook.com [40.107.21.64])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D5B2915
-	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 13:08:41 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HnO4SB47sj4pB6uiE9AUlox3+liDqaOAh1eEE8pide5Regf2B2urXH7GAXg40ZxZ5oBrUVLP/66gn4t9FfTa5OGquTogm9dkNs8apuyVkmT9nw22TkbpEw7gLqjpB7whKF++dsAAM9CelvGAnk3AsxO9166rYxfbesQEg7dfsHk1y8F8gFuaFxbYnS3TdZJq/P1TCeS5/ALi8ZaiRxmr4Sdo/XLpVBTNfLl7AhmGTN6QZoS3rBb2OWWr00ogyfLWwbvwGY1ktQLm06tEC9F8oS1gWXAfrpyW2sKGHPLK6aC6LUuzS9DHAumMIgnUPrRCss3KjTJz/qR1vqD4+iV6eQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9u6V0UP1yF0lbRwRj0p3ciRQWa73V/FyreOMa0xJN+A=;
- b=cRqAofqHMChBJNuXjAIzpxAmU1ChKS0/hJPiwE1Y1NwWQmgLB+v1PSP14sEak+JmFSOMZHK0AlBFOaYgFhGkzvMsunhlAZsqP1YZK8WcCQrgpnXFFwHZpE0TreooqbhLn4dL4sEyGyOzGNylRiONikoktDmngeHqmnexUZDNoclflx+IO1naGwt4f9hYhf1jdRxeZhCb6vJnq7/nGwCFPHtUsMUjpaeOI67dSecwe39oAckUcITgZQ402uIIXzfC6uB8tChsuCOBQ68RPSI+CQqHXGfg8cPzQRleA8zrt60SDirOKTHnhSQAe0Ey5OcYU0SigiL2OV+6sY9yFMYq/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.19.86.146) smtp.rcpttodomain=gmail.com smtp.mailfrom=nordicsemi.no;
- dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nordicsemi.no; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nordicsemi.no;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9u6V0UP1yF0lbRwRj0p3ciRQWa73V/FyreOMa0xJN+A=;
- b=U7KTLGCBWmHwZkVgYrxBaa4dykhYih8QzKIxEoZGy4M5GmZ+Vc/IuUC5NV6Oa8ABBSbJWN35ZNZ4BW7ZhkaxOC1gq3ib66hWZpEsU1zIAUoEtAsYynecu6ZkBKMPRO4vwDaL2B9+I0mEA4JkOUg9IAJuHeQf7KSvC/V+IrPLQdQTx+4GZRAjgJhNxAOkK2c/zhk6lHMW224vEdQBFK5u7u1mYspNnejM4MIfoVdq529cd6yqpwfd7nROf9PCYCx8Hjor4jqiZ/JkAZ8fSQFIytr/t9YFfcJf3sqqy/A3xsO8fwLCvunUO0m8WI1LqWRRWvD/rzrC32saDZJqndLFGA==
-Received: from DUZP191CA0050.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:4fa::23)
- by AS8PR05MB8742.eurprd05.prod.outlook.com (2603:10a6:20b:34f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.28; Tue, 3 Oct
- 2023 13:08:38 +0000
-Received: from DBAEUR03FT040.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:4fa:cafe::5c) by DUZP191CA0050.outlook.office365.com
- (2603:10a6:10:4fa::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.33 via Frontend
- Transport; Tue, 3 Oct 2023 13:08:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.19.86.146)
- smtp.mailfrom=nordicsemi.no; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nordicsemi.no;
-Received-SPF: Pass (protection.outlook.com: domain of nordicsemi.no designates
- 194.19.86.146 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.19.86.146; helo=mail.nordicsemi.no; pr=C
-Received: from mail.nordicsemi.no (194.19.86.146) by
- DBAEUR03FT040.mail.protection.outlook.com (100.127.142.157) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.6863.26 via Frontend Transport; Tue, 3 Oct 2023 13:08:38 +0000
-Message-ID: <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
-Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
- devices - /linux/drivers/bluetooth/btusb.c
-From: Tomasz =?UTF-8?Q?Mo=C5=84?= <tomasz.mon@nordicsemi.no>
-To: Erik =?ISO-8859-1?Q?Dob=E1k?= <erik.dobak@gmail.com>
-CC: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Stable
-	<stable@vger.kernel.org>, Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM
-	<linux-arm-kernel@lists.infradead.org>, Linux Mediatek
-	<linux-mediatek@lists.infradead.org>, Linux Regressions
-	<regressions@lists.linux.dev>, Marcel Holtmann <marcel@holtmann.org>, "Johan
- Hedberg" <johan.hedberg@gmail.com>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Date: Tue, 3 Oct 2023 15:08:35 +0200
-In-Reply-To: <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com>
-References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
-	 <ZRtWcgiH5JhD5NU2@debian.me>
-	 <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
-	 <834062302e6a98e773dc4b03d7ed568a0f1c44fc.camel@nordicsemi.no>
-	 <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2C29436
+	for <regressions@lists.linux.dev>; Tue,  3 Oct 2023 14:11:40 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 629AF5C01BC;
+	Tue,  3 Oct 2023 10:11:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 03 Oct 2023 10:11:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+	1696342299; x=1696428699; bh=f5OIuVSTUdWImnFCTEXCJMtsDWw6OTj7aIC
+	1dkPr/+Q=; b=iGYfw28UfzEEnbujsAk437h4/+fwFRbhOpFhoPtuEriGamzD6K8
+	+sYn9RE8tx+rHKSfGEh1i4+R7cQGdNXakhIymSYcimIIG8EjDuPQQ0/gAlY/z420
+	dpQFTdhPjDiiRK43FE0gshknHE7pr8CN66Bodob8yB4wm8P18fqd0Wdw5m4txbo4
+	iOe90uvohzoowhFBykSrxOf6SDPd8dzivAPTpIw+RF7BeWADgj1jLMsl/dQvGAPc
+	UtZGTHusgQJlAZ78IogHGhoCMq1Ct+Z6FWyEzVrUfDGzLfFFrqu6uncXLnMvGosh
+	kMqZokPkFV7iLwyVExYLh+qQ7YMNk4pjFlw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1696342299; x=1696428699; bh=f5OIuVSTUdWImnFCTEXCJMtsDWw6OTj7aIC
+	1dkPr/+Q=; b=o9BvMg2K1BoCZ1BF8l6iHmwf826o/tYoI3GRjfVkT5P4CILp1dQ
+	wapaqqPm8Ou3MA3qBzU3pMS+3RTEXlNt51Totj3+JjE8Z6M0EAb9V83QEQdjNcJX
+	x6Ll/uOb7xYtdgGPrkth+2fuVKudFBsUuEL5KX4UkkFvo/Ctb+QAcyJ9rK3RaDu1
+	03w+aH96pN5LpXoPHc+arwMyFY6hjBoTfuTBDa9o3WIRtle8JYsUkp2bmfCZLiFs
+	qoENro4GYQkkpla87zdOT147PHPFpC8eEU//dlyqxxzgE5Jw9hVgiHE4G75lgIiE
+	jrjA0NiApYnh18c58SPYyyhCAkjh1SwzWew==
+X-ME-Sender: <xms:GiEcZXwfCYLQPJjv_7CO7Dgk0TJ7e6rAqMtteYo8pd21MyFEpjyuYw>
+    <xme:GiEcZfTrcWbcLXQd23vDLzGcU4lbgJxnsfuQy86WvbX-h9TwG5JYyFl_k697ydEM3
+    nhmddqLe_ae2BoZaw>
+X-ME-Received: <xmr:GiEcZRUHzwwp0bsFLbdC9CMRd6ST6s3b0phrbsEP19iUMVj8JgLNh4NerPeyKH5Q7fVUO8Ri>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeeigdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheptehnughr
+    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrf
+    grthhtvghrnhepuddtieegleejheeujeeiveegueelhfekleeuffdukeduleduffehfffg
+    teeivefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvghssegrnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:GyEcZRhOwnaI1uNMV-mWPRwFrecdddlQf19nrEPeZ5tAxmS6UTkE7g>
+    <xmx:GyEcZZCUSC1ZhVoYVNAAaLndn9-6YL5IlZpsGfqLFkEh2ZIVLgKpDg>
+    <xmx:GyEcZaI9B9OoGePo1ycpc5BXbNWrHZYMTL1fHsliQ3t-gr8O8jIXgw>
+    <xmx:GyEcZTBbvkMjUcuWjYtWW0P8xSTNjCJ1e2z4wS5otyW-TAd7zCqwAA>
+Feedback-ID: id4a34324:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 3 Oct 2023 10:11:38 -0400 (EDT)
+Date: Tue, 3 Oct 2023 07:11:38 -0700
+From: Andres Freund <andres@anarazel.de>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
+	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
+	groeck@google.com, zsm@google.com, garrick@google.com,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
+Message-ID: <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
+References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
+ <ZQjKOjrjDYsoXBXj@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Originating-IP: [10.241.138.38]
-X-ClientProxiedBy: exch02.nvlsi.no (192.9.200.127) To exch01.nvlsi.no
- (192.9.200.126)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBAEUR03FT040:EE_|AS8PR05MB8742:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cb6e9da-034c-473a-e031-08dbc411dba1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GwhxN1KSJ1Hk1JapuNUx1OivnIvTKE9YD5oL12WWcQzfTY3ss2mPH1dgtVMNSZ55tg3qcsTw2Ks08tHYmr9J5WyOUv9IaBUrGTiMStEcY2YmlP09W5UpjJS9N5AijP2Fj+FZG96crnlCGI3pgkMUOsOGQ8ZGzME9PK71e4vTJyqKiw61JWYy38xdLrjiayXyUjncqG0gQtFL/PRVCqAS+diAqnmDOWnjx+7M9bIN81IDliycHc4MRSZkUzT1GhoBkQMSsK2xKKi6FMZ5cDYKriAejyS+YYn8ZkPuUUaKUfC+8nqmYwR/edhJVi+BxgZIvoMJfOwKbQH4bqdHxSzbCzMZohNdkRrLPbR3DZTVgM1i74useOCWAecb+HfEmWz+269X5m6GgSU3+ZGapFdxbNfP1/zOScdKOCHytNZu6RsmoF/+EjA3ch39SX+Yb7gkQqXaQhquv30uqxmOqs7Tdg2ewhQVC6cbCItGPt2FWASBTB5xHmcfCdZdhpEarEwDzdJHns8W5ui6+yZ7X6gODJMPp7zmsXDuaERet6ZA//i/c+oaAOc+HZ2V+5cGhcOxeGrrQ0qlJh6qOWXJc4PMTL6L4rJ171s51jo/iGXchyB1uOaz0Ml/aSyQ5y7cOgjrOXjsIRD29APVXFsNER0spfr+LhmeHY/hYm4XTmWSMO6HdgsF3RgVU9QEOPYTPlhl+XT01sop/DdC22sWeH2hxQ==
-X-Forefront-Antispam-Report:
-	CIP:194.19.86.146;CTRY:NO;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nordicsemi.no;PTR:mx01.nordicsemi.no;CAT:NONE;SFS:(13230031)(4636009)(39850400004)(376002)(346002)(396003)(136003)(230922051799003)(82310400011)(186009)(451199024)(1800799009)(64100799003)(36840700001)(46966006)(40480700001)(86362001)(7636003)(70586007)(356005)(6916009)(82740400003)(70206006)(316002)(54906003)(36736006)(478600001)(118246002)(2906002)(7416002)(4326008)(5660300002)(36860700001)(6666004)(47076005)(41300700001)(6486002)(26005)(956004)(8676002)(2616005)(8936002)(7696005)(336012)(9316004)(36756003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: nordicsemi.no
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2023 13:08:38.0270
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cb6e9da-034c-473a-e031-08dbc411dba1
-X-MS-Exchange-CrossTenant-Id: 28e5afa2-bf6f-419a-8cf6-b31c6e9e5e8d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=28e5afa2-bf6f-419a-8cf6-b31c6e9e5e8d;Ip=[194.19.86.146];Helo=[mail.nordicsemi.no]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DBAEUR03FT040.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR05MB8742
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZQjKOjrjDYsoXBXj@mit.edu>
 
-On Tue, 2023-10-03 at 14:42 +0200, Erik Dob=C3=A1k wrote:
-> Sure here you go:
->=20
-> # lsusb -d 04c5:1670 -v
->=20
-> Bus 001 Device 004: ID 04c5:1670 Fujitsu, Ltd Bluetooth Radio
-> Device Descriptor:
->   bLength                18
->   bDescriptorType         1
->   bcdUSB               1.00
->   bDeviceClass          224 Wireless
->   bDeviceSubClass         1 Radio Frequency
->   bDeviceProtocol         1 Bluetooth
->   bMaxPacketSize0        64
->   idVendor           0x04c5 Fujitsu, Ltd
->   idProduct          0x1670
->   bcdDevice            0.00
->   iManufacturer           1 Realtek
->   iProduct                2 Bluetooth Radio
->   iSerial                 3 00e04c000001
->   bNumConfigurations      1
->   Configuration Descriptor:
->     bLength                 9
->     bDescriptorType         2
->     wTotalLength       0x00b1
->     bNumInterfaces          2
->     bConfigurationValue     1
->     iConfiguration          0
->     bmAttributes         0xe0
->       Self Powered
->       Remote Wakeup
->     MaxPower              500mA
->     Interface Descriptor:
->       bLength                 9
->       bDescriptorType         4
->       bInterfaceNumber        0
->       bAlternateSetting       0
->       bNumEndpoints           3
->       bInterfaceClass       224 Wireless
->       bInterfaceSubClass      1 Radio Frequency
->       bInterfaceProtocol      1 Bluetooth
->       iInterface              4 Bluetooth Radio
+Hi,
 
-I have no idea why you referred to my commits, i.e. c13380a55522
-("Bluetooth: btusb: Do not require hardcoded interface numbers") later
-fixed by eaac6e223a0d ("Bluetooth: btusb: Fix bluetooth on Intel
-Macbook 2014") in the first place.
+On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
+> On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
+> > When I tried to reproduce this issue on mainline linux kernel using the
+> > reproducer provided by syzbot, I see an endless loop of following errors :-
+> >
+> > [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
+> > [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
+> > inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
+> > [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
+>
+> Please note that maliciously corrupted file system is considered low
+> priority by ext4 developers.
 
-BTUSB_IFNUM_2 is not even getting set for this device and therefore the
-patches have no impact on your issue. If you were affected, like the
-Intel Macbook 2014 was, then bear in mind that the issue would manifest
-as btusb driver not even binding to the device. From your emails
-however it appears that the issue is something different.
+FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
+just doing database development on my laptop.
 
-I honestly don't think it has anything to do with my patches. If you
-know a Linux version where your bluetooth device works, then the next
-step would be to bisect to find the first bad commit.
+Oct 03 06:48:30 alap5 kernel: INFO: task postgres:132485 blocked for more than 122 seconds.
+Oct 03 06:48:30 alap5 kernel:       Not tainted 6.6.0-rc4-andres-00009-ge38f6d0c8360 #74
+Oct 03 06:48:30 alap5 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Oct 03 06:48:30 alap5 kernel: task:postgres        state:D stack:0     pid:132485 ppid:132017 flags:0x00020006
+Oct 03 06:48:30 alap5 kernel: Call Trace:
+Oct 03 06:48:30 alap5 kernel:  <TASK>
+Oct 03 06:48:30 alap5 kernel:  __schedule+0x388/0x13e0
+Oct 03 06:48:30 alap5 kernel:  ? nvme_queue_rqs+0x1e6/0x290
+Oct 03 06:48:30 alap5 kernel:  schedule+0x5f/0xe0
+Oct 03 06:48:30 alap5 kernel:  inode_dio_wait+0xd5/0x100
+Oct 03 06:48:30 alap5 kernel:  ? membarrier_register_private_expedited+0xa0/0xa0
+Oct 03 06:48:30 alap5 kernel:  ext4_fallocate+0x12f/0x1040
+Oct 03 06:48:30 alap5 kernel:  ? io_submit_sqes+0x392/0x660
+Oct 03 06:48:30 alap5 kernel:  vfs_fallocate+0x135/0x360
+Oct 03 06:48:30 alap5 kernel:  __x64_sys_fallocate+0x42/0x70
+Oct 03 06:48:30 alap5 kernel:  do_syscall_64+0x38/0x80
+Oct 03 06:48:30 alap5 kernel:  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+Oct 03 06:48:30 alap5 kernel: RIP: 0033:0x7fda32415f82
+Oct 03 06:48:30 alap5 kernel: RSP: 002b:00007ffedbea0828 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
+Oct 03 06:48:30 alap5 kernel: RAX: ffffffffffffffda RBX: 00000000002a6000 RCX: 00007fda32415f82
+Oct 03 06:48:30 alap5 kernel: RDX: 0000000014b22000 RSI: 0000000000000000 RDI: 0000000000000016
+Oct 03 06:48:30 alap5 kernel: RBP: 0000000014b22000 R08: 0000000014b22000 R09: 0000558f70eabed0
+Oct 03 06:48:30 alap5 kernel: R10: 00000000002a6000 R11: 0000000000000246 R12: 00000000000000e0
+Oct 03 06:48:30 alap5 kernel: R13: 000000000a000013 R14: 0000000000000004 R15: 0000558f709d4e70
+Oct 03 06:48:30 alap5 kernel:  </TASK>
 
-Best Regards,
-Tomasz Mo=C5=84
+cat /proc/132485/stack
+[<0>] inode_dio_wait+0xd5/0x100
+[<0>] ext4_fallocate+0x12f/0x1040
+[<0>] vfs_fallocate+0x135/0x360
+[<0>] __x64_sys_fallocate+0x42/0x70
+[<0>] do_syscall_64+0x38/0x80
+[<0>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
+
+cat /sys/kernel/debug/block/nvme1n1/hctx*/busy
+doesn't show any active IO. Nor does the issue resolve when resetting the
+controller - so I don't think this is a disk/block level issue.
+
+
+This is on 8f1b4600373f, with one local, unrelated, commit ontop.
+
+Unfortunately, so far, I've only reproduced this every couple hours of
+interactive work, so bisecting isn't really feasible. I've not hit it on 6.5
+over a considerably longer time, so I am reasonably confident this isn't an
+older issue.
+
+Greetings,
+
+Andres Freund
