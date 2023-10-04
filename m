@@ -1,112 +1,89 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB6CD514
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 11:46:17 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 8ECAF32009AF;
-	Wed,  4 Oct 2023 07:46:15 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 04 Oct 2023 07:46:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm1; t=1696419975; x=
-	1696506375; bh=Q/KtTjvMil+v8KL+aP+mJR97Myi1BBiXbwWlZPHU1Nk=; b=W
-	QU7IJa8O83F6rFW5rMKN2xMNCNAO1E7kUjaswcY+1o/OLZI1+fUzPCt2QpdcBQNy
-	133NAH7ERLxK6zxMxRSIyhuYHevx1B5hqmgCxC8fcpHvonn1WZLjG6pg6G0VqWLV
-	VxjQG8vCnyaXwDHSxn4yH0ih/7v8GErRNK3gkQ+qHwrFEibMWTZoIE6YKW/+dQiX
-	ec1wbiu2/9/bjopMAJlM5gysJwhmooAwCzzRrhTP9ztCFzZvnC5FJmQR0PeJB84m
-	iWme/Bil+ufrmwcyJiAzvpsoaY+MRdqxeGix8n4LhFBH6jIEi3HjBunYm+rAqBPr
-	7J+R58NuSauCqFvmm4muw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1696419975; x=1696506375; bh=Q/KtTjvMil+v8
-	KL+aP+mJR97Myi1BBiXbwWlZPHU1Nk=; b=eFnwXzXm1yTdESHDZdKWoRIe9KrRJ
-	IgPDpJaykVDGIUCjSwXnP5pdlL1NxvdPahaHo+ySa1sbe1nBQX2k9J7fT/sOks5F
-	u3czjoFrLfJ9GdLxaGo5swCw3e4WBQthLLlAD+GgYpkW+ueCmXm4enGlHsyY6Zkk
-	UPvmddDgMESAntvoytwnuqEDVuQeOWO4X67YhnkXh/SkQGDHKAVvBrthcKzmbjg4
-	/jakHeX1HZw7duKvycYugS39KGwFxJsUM7pIi/m0RskCdp1yZjH6Mj6ksqV4KcZW
-	X6XR5o2Im49KqMGZ6orpCDsjdgjduJgKkFMgGo33ZhghmGsPi5GhaK+pA==
-X-ME-Sender: <xms:hVAdZUtoJ0iPK9HFbvQ9SKfr1XB7_yfGF7r9iPlilrWJBoBEGw7U2A>
-    <xme:hVAdZRfmlJflt9ZWukW7n5BFWK67Z9Z35YA9XJJWa7QOv16NXgTih5mRHJR8kJBWk
-    caXui3JO69XBBPNd4Y>
-X-ME-Received: <xmr:hVAdZfz5sldCLkd4cNsslD93WhLhJsDOp5DvdhlHpJdoMsK_hkz9KnGw0e2gZcx_ct3nYA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrgedvgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttddttddttddvnecuhfhrohhmpedfmfhirhhi
-    lhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrg
-    hmvgeqnecuggftrfgrthhtvghrnhephfeigefhtdefhedtfedthefghedutddvueehtedt
-    tdehjeeukeejgeeuiedvkedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
-X-ME-Proxy: <xmx:hVAdZXNEAGWcGCtzozspDnqIn2K0H6T6T4HNNgbVjAb5miVRmITD3w>
-    <xmx:hVAdZU875E7jEbhJIjeFLh74_j9-qkEnzKwTMbo1it_fi1AyiHnNxQ>
-    <xmx:hVAdZfXWMFTrVfF75yasj8R6qpYy0AunTXqpp_mQ3q7TVrYIJoVT5Q>
-    <xmx:h1AdZV0_nOCEO7VcmXqGnqVYN5ipphMc1jm1NvwYUFmZhWSqv9oVeA>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 4 Oct 2023 07:46:13 -0400 (EDT)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id C8BD710989F; Wed,  4 Oct 2023 14:46:09 +0300 (+03)
-Date: Wed, 4 Oct 2023 14:46:09 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Max Chou <max.chou@realtek.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Hilda Wu <hildawu@realtek.com>,
-	"alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>,
-	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Juerg Haefliger <juerg.haefliger@canonical.com>,
-	Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth adapter
-Message-ID: <20231004114609.dca6ebtmx37fsx5l@box.shutemov.name>
-References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
- <ZRyqIn0_qqEFBPdy@debian.me>
- <b2ef2f1c457a4cf7a246b2e8b8598a30@realtek.com>
- <20231004044947.vgegwvxxindkjo7g@box.shutemov.name>
- <7507ad6c8a964b179bf2b3318104a124@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8CB13FE3
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 12:50:36 +0000 (UTC)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c87e55a6baso1303495ad.3
+        for <regressions@lists.linux.dev>; Wed, 04 Oct 2023 05:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696423836; x=1697028636; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BhOZL0I3FBTOfyJ3ennuGJmU/lunAyqILUznWBH305w=;
+        b=ZxPp55LKTk16UrIXgo8RBv0cuoA7NfaFbHu0i62tc8lkzcyMcUZVuiUd1VVh1qX1wy
+         yP+WiLQVivHe1YdkuJ6ZTiTUbAMPdmf+OERaNpJkVt7akkSGlaQvKlO0qOJnuCgPx4oz
+         RISCLDqw2RncLnOwsiuHutmbHnk3F0cS1RF60/0v0VZgIX/aJmjGqmSBR8Eot9x6n76r
+         ZKzCyAWJP58PSdqQgJF7LRLmjwrtPVsWqyNMgwrJ/u8v0CRjVWhddqftuonW9LiVL2AV
+         FeSfpM40APMQ4InJXyoayqiQQiiZ9B2Mnl0lQ/u52ClGR5Mplmjgw7M15SZv6oA8B82Q
+         os7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696423836; x=1697028636;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BhOZL0I3FBTOfyJ3ennuGJmU/lunAyqILUznWBH305w=;
+        b=nFVFO1rN2M2UGNpT4G5BOve1jtvyH41l95ecc/0CEOKBr8LW8i/XCUImix+n2DM7+h
+         u4f/QvSIQFunYm8QQXp/n2mjAwV1yDCBaFhGrsq4tmfgDePcCreZK2Bk0v2V+GfYi+pF
+         Z7EzKZ1nyGhJOb5X+0Kpaea/cK8LagAXTFECauuCK6Dm/n4n//uG3kxik17TRRVLjBux
+         D66E+sIZ9RcU67pq4zV6xHHSX0honWc2Acl/foFKo2rXZKq6wv86EaoJ+vFbEPetswof
+         KFR8YtP88/GVCU+EvZ47KVtl/MM9wJd1VYVrusAdzYvFyX8DEYqOmfeX5DADpJfo+kY8
+         fizw==
+X-Gm-Message-State: AOJu0Yz9LPber/jM20BEzqW+tynuhHFiENUnGmGNKVnxQlBAhQfAo/lR
+	TeGJrwg9fCRfP9+sFKRKSyY=
+X-Google-Smtp-Source: AGHT+IFcjMsOQQhmGdfIuMvLf8hz8TNgdUnzohKk0xxDDt4+Vc0L1eBz/HGGC0IQWyDiJNN4xSJjKg==
+X-Received: by 2002:a17:902:e810:b0:1c5:59ea:84de with SMTP id u16-20020a170902e81000b001c559ea84demr2643108plg.29.1696423835809;
+        Wed, 04 Oct 2023 05:50:35 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id p18-20020a170902e75200b001c61073b079sm3612247plf.71.2023.10.04.05.50.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Oct 2023 05:50:35 -0700 (PDT)
+Message-ID: <bcf1998e-5efa-4505-a8d2-3381c16de885@gmail.com>
+Date: Wed, 4 Oct 2023 19:50:29 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7507ad6c8a964b179bf2b3318104a124@realtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: what to do on no reproducer case? (was Re: Fwd: Uhhuh. NMI
+ received for unknown reason 3d/2d/ on CPU xx)
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <0e6de51b-da1d-43f0-ffae-fb521febbe07@gmail.com>
+ <ZQo8hzP-eRjXvtXf@debian.me>
+ <2a298145-b6ec-4b4e-bd45-0cddf62b6052@leemhuis.info>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <2a298145-b6ec-4b4e-bd45-0cddf62b6052@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 04, 2023 at 07:28:45AM +0000, Max Chou wrote:
-> Hi! Kirill,
-> I guess the root cause is as below.
-> ===
-> static int btrtl_register_devcoredump_support(struct hci_dev *hdev)
-> {
->         int err;
+On 21/09/2023 15:10, Thorsten Leemhuis wrote:
+> On 20.09.23 02:27, Bagas Sanjaya wrote:
+>> This regression looks stalled: on Bugzilla, the reporter keeps asking to me,
+>> for which I'm not the expert of involved subsystem. And apparently, he still
+>> had not any reproducer yet (is it triggered by random chance?). Should I
+>> mark this as inconclusive?
 > 
->         err = hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
+> Yes, without a reliable bisection result there sometimes is not much we
+> can do -- apart from prodding various developers directly and asking for
+> help or an idea. But in this case that's not worth it afaics, as
+> messages like
+> https://lore.kernel.org/all/e08e33d5-4f6d-91aa-f335-9404d16a983c@amd.com/
+> indicate that it might be a hardware problem and not really a
+> regression. Hence:
 > 
->         return err;
-> }
-> ===
-> If CONFIG_DEV_COREDUMP is not enabled, it would return -EOPNOTSUPP for hci_devcd_register().
-> Unfortunately, btrtl_register_devcoredump_support() will return it. 
-> Finally, -EOPNOSTUPP will be returned for btrtl_setup_realtek().
+> #regzbot resolve: inconclusive: not bisected and might be a hardware
+> problem after all
 > 
-> Could you have the following workaround for the root cause checked?
-> Please share dmesg as well. Thanks,
 
-Yes. It works and I see 
+Thanks for the tip! Now to fix up:
 
-[    3.640539] Bluetooth: hci0: RTL: btrtl_register_devcoredump_support(): err = -95
-
-in dmesg. -EOPNOTSUPP indeed.
+#regzbot inconclusive: regression not bisected - possibly hardware issue
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+An old man doll... just what I always wanted! - Clara
+
