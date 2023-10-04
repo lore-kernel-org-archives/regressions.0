@@ -1,152 +1,65 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC6F539D
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 05:45:18 +0000 (UTC)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3945ionlF2967808, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3945ionlF2967808
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Oct 2023 13:44:51 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Wed, 4 Oct 2023 13:44:51 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Wed, 4 Oct 2023 13:44:50 +0800
-Received: from RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3]) by
- RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3%2]) with mapi id
- 15.01.2375.007; Wed, 4 Oct 2023 13:44:50 +0800
-From: Max Chou <max.chou@realtek.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-CC: Bagas Sanjaya <bagasdotme@gmail.com>, Hilda Wu <hildawu@realtek.com>,
-        "alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>,
-        Luiz Augusto von Dentz
-	<luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "Johan
- Hedberg" <johan.hedberg@gmail.com>,
-        Juerg Haefliger
-	<juerg.haefliger@canonical.com>,
-        Linux Bluetooth
-	<linux-bluetooth@vger.kernel.org>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>
-Subject: RE: Regression: devcoredump patch broke Realtek usb bluetooth adapter
-Thread-Topic: Regression: devcoredump patch broke Realtek usb bluetooth
- adapter
-Thread-Index: AQHZ9iZZqIk9cnxrEkOIPrwHFnXgfLA4N/0AgAA1ZDCAABycgIAAkrXQ
-Date: Wed, 4 Oct 2023 05:44:49 +0000
-Message-ID: <b452257b550a47feb1c45b905018fe17@realtek.com>
-References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
- <ZRyqIn0_qqEFBPdy@debian.me> <b2ef2f1c457a4cf7a246b2e8b8598a30@realtek.com>
- <20231004044947.vgegwvxxindkjo7g@box.shutemov.name>
-In-Reply-To: <20231004044947.vgegwvxxindkjo7g@box.shutemov.name>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-originating-ip: [172.21.132.197]
-x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D4E525E
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:19:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4ACAC433C7;
+	Wed,  4 Oct 2023 06:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696400375;
+	bh=CmI8BoWddO62EOPgmJUjKO2JAaho87P2B5wkjnr6E9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TjItGs2brBGEUSMVlCA4ApDeGNDKiVtfnwMyjE53ZsZEFr8M+dNRnX/I9BDb+Movq
+	 32BOUCvZqwoagIY7wj85crNWV7WpQOygMowOYZC+AmIZd9ULix0WkurMAdDvbOngbc
+	 0oxcZ30ccBm3jFLwxGbH8jBVXWA+YgRYRbCf+jPQ=
+Date: Wed, 4 Oct 2023 08:19:33 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jeffery Miller <jefferymiller@google.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	regressions@lists.linux.dev, benjamin.tissoires@redhat.com,
+	linux@leemhuis.info, Andrew Duggan <aduggan@synaptics.com>,
+	Andrew Duggan <andrew@duggan.us>, loic.poulain@linaro.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
+Message-ID: <2023100418-clapping-driven-bc09@gregkh>
+References: <20231004005729.3943515-1-jefferymiller@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231004005729.3943515-1-jefferymiller@google.com>
 
-Hi! Kirill,
-As your mentions, there's not obvious wrong from the dmesg.
-Could you capture btmon log with raw data? (btmon -w xxx.log)
-In additional, did you build the last version of bluetooth-next?
-By my understanding, you can just duplicate the issue by the commit "044014=
-ce85a1 Bluetooth: btrtl: Add Realtek devcoredump support"?
-Unfortunately, I can not duplicate this issue sofar.
+On Tue, Oct 03, 2023 at 07:57:24PM -0500, Jeffery Miller wrote:
+> Make `elantech_setup_ps2` set a compatible fast_reconnect pointer
+> when its ps2 mode is used.
+> 
+> When an SMBus connection is attempted and fails `psmouse_smbus_init`
+> sets fast_reconnect to `psmouse_smbus_reconnect`.
+> `psmouse_smbus_reconnect` expects `psmouse->private` to be
+> `struct psmouse_smbus_dev` but `elantech_setup_ps2` replaces
+> it with its private data. This was causing an issue on resume
+> since psmouse_smbus_reconnect was being called while in ps2, not SMBus
+> mode.
+> 
+> This was uncovered by commit 92e24e0e57f7 ("Input: psmouse - add delay when
+> deactivating for SMBus mode")
+> 
+> Closes:
+> Link:https://lore.kernel.org/all/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
+> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> 
+> Signed-off-by: Jeffery Miller <jefferymiller@google.com>
+> ---
+> 
+> The other callbacks set in psmouse_smbus_init are already replaced.
+> Should fast_reconnect be set to `elantech_reconnect` instead?
 
+What commit id does this fix?  Should it also have a cc: stable tag?
 
-BRs,
-Max
+thanks,
 
-
-> -----Original Message-----
-> From: Kirill A. Shutemov <kirill@shutemov.name>
-> Sent: Wednesday, October 4, 2023 12:50 PM
-> To: Max Chou <max.chou@realtek.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>; Hilda Wu
-> <hildawu@realtek.com>; alex_lu@realsil.com.cn; Luiz Augusto von Dentz
-> <luiz.von.dentz@intel.com>; Marcel Holtmann <marcel@holtmann.org>;
-> Johan Hedberg <johan.hedberg@gmail.com>; Juerg Haefliger
-> <juerg.haefliger@canonical.com>; Linux Bluetooth
-> <linux-bluetooth@vger.kernel.org>; Thorsten Leemhuis <linux@leemhuis.info=
->;
-> Linux Regressions <regressions@lists.linux.dev>; Linux Kernel Mailing Lis=
-t
-> <linux-kernel@vger.kernel.org>
-> Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth
-> adapter
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Wed, Oct 04, 2023 at 03:07:24AM +0000, Max Chou wrote:
-> > Hi! Kirill,
-> > I based on Kernel v6.5.5 and updated drivers/bluetooth to the last vers=
-ion of
-> bluetooth-next tree for a test with RTL8761BUV.
-> > The dmesg log and "hciconfig -a" are correct.
-> > Could you share the dmesg for your failure case?
-> >
-> > [56133.563293] usb 3-1: new full-speed USB device number 28 using
-> > xhci_hcd [56133.712559] usb 3-1: New USB device found, idVendor=3D0bda,
-> > idProduct=3D8771, bcdDevice=3D 2.00 [56133.712577] usb 3-1: New USB dev=
-ice
-> > strings: Mfr=3D1, Product=3D2, SerialNumber=3D3 [56133.712582] usb 3-1:
-> > Product: Bluetooth Radio [56133.712585] usb 3-1: Manufacturer: Realtek
-> > [56133.712588] usb 3-1: SerialNumber: 00E04C239987 [56133.737812]
-> > usbcore: registered new interface driver btusb [56133.742126]
-> > Bluetooth: hci0: RTL: examining hci_ver=3D0a hci_rev=3D000b lmp_ver=3D0=
-a
-> > lmp_subver=3D8761 [56133.743115] Bluetooth: hci0: RTL: rom_version
-> > status=3D0 version=3D1 [56133.743124] Bluetooth: hci0: RTL: loading
-> > rtl_bt/rtl8761bu_fw.bin [56133.743754] Bluetooth: hci0: RTL: loading
-> > rtl_bt/rtl8761bu_config.bin [56133.743829] Bluetooth: hci0: RTL:
-> > cfg_sz 6, total sz 30210 [56133.913311] Bluetooth: hci0: RTL: fw
-> > version 0xdfc6d922 [56133.980299] Bluetooth: MGMT ver 1.22
-> >
-> > hci0:   Type: Primary  Bus: USB
-> >         BD Address: 98:A2:35:85:56:F1  ACL MTU: 1021:6  SCO MTU:
-> 255:12
-> >         UP RUNNING
-> >         RX bytes:1670 acl:0 sco:0 events:184 errors:0
-> >         TX bytes:33917 acl:0 sco:0 commands:184 errors:0
-> >         Features: 0xff 0xff 0xff 0xfe 0xdb 0xfd 0x7b 0x87
-> >         Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
-> >         Link policy: RSWITCH HOLD SNIFF PARK
-> >         Link mode: PERIPHERAL ACCEPT
-> >         Name: 'max-ThinkPad-X230'
-> >         Class: 0x6c010c
-> >         Service Classes: Rendering, Capturing, Audio, Telephony
-> >         Device Class: Computer, Laptop
-> >         HCI Version: 5.1 (0xa)  Revision: 0xdfc6
-> >         LMP Version: 5.1 (0xa)  Subversion: 0xd922
-> >         Manufacturer: Realtek Semiconductor Corporation (93)
->=20
-> I don't see anything obviously wrong in dmesg. Attached hciconfig and dme=
-sg
-> for both functional and broken cases.
->=20
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+greg k-h
