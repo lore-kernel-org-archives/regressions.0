@@ -1,120 +1,111 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC163D7
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 16:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=mJVDX3StT92iZZZB1DwyeljX4JE7L2QJNwBNTCnTGZc=;
-	t=1696435775; x=1697645375; b=ocs3v9DAKyYXhAq8z+Pwzneo4xWc6BWTJZaAZJ37ZnhJ1yT
-	7i5vos4IOMDXtCeJ5zAs29FioZAoHRFQwufHy/LO4f7zWh4+JW3IDhAOmccY0tJ7ljI9mM5cR/SB9
-	inIdAafqDCyGfq+FXHiYl4F/VDdbtnKC2qSVRZmypF/q5QWNXdlo8zhrAbnfGmAPYsNHvdD7dO2LE
-	sjcJyMl0ZXa0tE2sNhaOyPKa04ZdcdFx3X2RERCjuT5u0uVRj5RGUu/J9Ntf5sn8uE13XPhLPtJRj
-	he8Gi2YgygVOhEe+KKQemVMqPeLEw0YQImNCVWlomqTJNEeFCaBBstenJ2Al/usw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1qo3tB-00435L-2G;
-	Wed, 04 Oct 2023 17:34:17 +0200
-Message-ID: <a0da9cf2365b4478eddc7c1d6e9ee8565e4e2a1f.camel@sipsolutions.net>
-Subject: Re: Microcode SW error since Linux 6.5
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	"Greenman, Gregory" <gregory.greenman@intel.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
- "Peer, Ilan" <ilan.peer@intel.com>, "anarcat@debian.org"
- <anarcat@debian.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>
-Date: Wed, 04 Oct 2023 17:34:16 +0200
-In-Reply-To: <0c07b6bf-a9cc-4dc0-b71c-a2257e501e5f@leemhuis.info>
-References: <87ttrncuc8.fsf@angela.anarc.at>
-	 <60e2c052f3cedc5c80964e4be90c50cdaa899a87.camel@sipsolutions.net>
-	 <87jzsf9dme.fsf@angela.anarc.at>
-	 <0190dde1170bd1ee810e99b9799678f4f5b8f30e.camel@sipsolutions.net>
-	 <8734z29jx7.fsf@angela.anarc.at>
-	 <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
-	 <5d0904a4-bc0d-42dd-aae8-6b50e5c567ba@leemhuis.info>
-	 <42e000913e3af714c77fb7a55dd898733e271be0.camel@intel.com>
-	 <0c07b6bf-a9cc-4dc0-b71c-a2257e501e5f@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1E515E84
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 16:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=8T0PGx2dNJlnTyxCzlVq4bOxn0w4Q9z3eZpQdiPzdRU=;
+ b=G60Gta9gOZ/E3LGGrRm3EShbs4AV8X9tq3dH6Z+O5z2vbG5lIYIEZSoQE1RkFxmXWH0LdrILaUnK
+   46u89YI1+bQ57txxV4T0bynE8rY4GNrlwC6IU9QjpWknLsvMjzhRoLJUne0OEYn84H0jOPqekKZj
+   IB/TcWFDvljcNOgDpiRFciFzOdYMliaiDnI9tl8W787A6G0cYXWywO/ku+vCUBymGjBg7c93m7ig
+   1QCKQOLlZ4/+9zsWzOy2EEq7+z6ILmE032yruVwTHUv5ONdmQjaBK2IEemtc/0WRNKbfw3vYVsj3
+   IXFphRVOwl/y+C8nF8YGQRQYoryypFsUZIwJvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=8T0PGx2dNJlnTyxCzlVq4bOxn0w4Q9z3eZpQdiPzdRU=;
+ b=N30DlDb52o7ps8zoqhHRYRQgz1K9YK3GEIAIb0DOJDifUhUN1dd9uRpFRsxDYonthnV/OhRlY8PQ
+   Pgfre6sfotICob5A1gtyLkRUiPhbaG2v7Yd4+J6W/S7mCrTYGRd1PINx1Nw5QxR+xosEfv13opWX
+   +qgarbJAtwINpxFXBf+2TIJg9ztn75cZ3MJtcSvkXPuSJ8N2Bakf8Gnft6HvvySXPQXEG5mA4x0P
+   +TWQrQbe7peIbarusaT7ojsGJYBPV9uOG6BIvX0jHogK9Y5XbQrVM1mBQW/l4za3VljAyHxCrTjR
+   RF2vBkf+zqwhlsqxyOoJZ6mE6/YbJPE68Xc30A==
+Received: by omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230808 64bit (built Aug  8
+ 2023))
+ with ESMTPS id <0S20002V9JCYDZ30@omta-ad1-fd1-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Wed, 04 Oct 2023 16:34:10 +0000 (GMT)
+Content-type: text/plain; charset=utf-8
+Content-transfer-encoding: quoted-printable
+From: August Wikerfors <git@augustwikerfors.se>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+MIME-version: 1.0
+Subject: Re: Patch
+ "ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG" has been added
+ to the 6.1-stable tree
+Message-id: <B48DED01-5B50-4EF7-B0AC-2DC742D07890@augustwikerfors.se>
+Date: Wed, 4 Oct 2023 18:33:55 +0200
+Cc: broonie@kernel.org, stable-commits@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>, regressions@lists.linux.dev
+To: gregkh@linuxfoundation.org, stable@vger.kernel.org
+Reporting-Meta:
+ AAEHWQsg/CM5M6X2tVhNU4NXmxPo0N7v07ec6PufRpyTJI3MyRZ78LZwL2o/Wwp9
+ FHmUjMf8uxnMCWG7lXdRqo7w80jiK9yzPzi4nJr2rxMHUpITY+VyN1lOYIYTG/UB
+ bEvWq+5RKEsTuyyp/9sTBc0Q7lAaG6+moEcTSCYQM4/aEPLZm/0xC9eaxHP9TfvN
+ OO6rEsWSv3ylD4JRIc7BW9VgfMusrzlSFjArsV1d9m9UNJg04p7i947SVKR1ka2I
+ p/vqqrdimg2d8IsC4OCviDBjSSq2sHJIj46Fp3SvBUD1VKhxp2arZaNe1UmQvlmt
+ I8FtbRrLuTvRM7roK9k/quB0lqIIeRgF2VoEcKvH9jHfYw3lDWdw+2Rti6wp2zXd
+ MrAKa6hSO796byHfcFE0dbJn21aV0x2H5K/wctf+HiLPoSV8M+MqnO2bIGd5j0WQ XQuRgQ==
 
-Thorsten,
+Hi Greg,
 
-You know ... when you started this regression tracking project, I
-actually naively thought it might be a good idea, and _help_ us.
-
-Honestly though, now after seeing it for a while, for me it's done the
-opposite.
-
-Pretty much all interactions we have with it are like this:
-
-> (2) Would have been great if that fix would have had a stable tag to
-> ensure a quick backport to 6.5. :-/ Made me wonder if this is an
-> accident, but doesn't look like it:
+> On 4 Oct 2023, at 16:58, gregkh@linuxfoundation.org wrote:
 >=20
-> $ git log --oneline --grep 'CC:.*stable@vger.kernel.org' mainline/master
->  -- drivers/net/wireless/intel/iwlwifi/ | wc -l
-> 11
+> =EF=BB=BF
+> This is a note to let you know that I've just added the patch titled
 >=20
-> Is there a reason why iwlwifi patches nearly never contain stable tags?
-> Reminder: a "Fixes:" tag alone does not guarantee that the fix is
-> backported.
+>  ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG
+>=20
+> to the 6.1-stable tree which can be found at:
+>  http://www.kernel.org/git/?p=3Dlinux/kernel/git/stable/stable-queue.git;a=
+=3Dsummary
+>=20
+> The filename of the patch is:
+>   asoc-amd-yc-fix-non-functional-mic-on-lenovo-82qf-and-82ug.patch
+> and it can be found in the queue-6.1 subdirectory.
+>=20
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+>=20
+>=20
+> =46rom 1263cc0f414d212129c0f1289b49b7df77f92084 Mon Sep 17 00:00:00 2001
+> From: August Wikerfors <git@augustwikerfors.se>
+> Date: Mon, 11 Sep 2023 23:34:09 +0200
+> Subject: ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG
+>=20
+> From: August Wikerfors <git@augustwikerfors.se>
+>=20
+> commit 1263cc0f414d212129c0f1289b49b7df77f92084 upstream.
+>=20
+> Like the Lenovo 82TL and 82V2, the Lenovo 82QF (Yoga 7 14ARB7) and 82UG
+> (Legion S7 16ARHA7) both need a quirk entry for the internal microphone to=
 
-Yeah, that's wrapped in a "question", but really it's not, it's a
-demand. You're demanding that we do our job differently, you might say
-better, but you're demanding things of us.
+> function. Commit c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on=
 
-Seeing this seriously makes me want to reconsider being a maintainer at
-all. Why bother? All people do is feel entitled to you doing _more_.
+> Lenovo 82SJ") restricted the quirk that previously matched "82" to "82V2",=
 
-Never mind that the the whole phrasing/reminder thing is pretty
-condescending, like we don't know that?
+> breaking microphone functionality on these devices. Fix this by adding
+> specific quirks for these models, as was done for the Lenovo 82TL.
+>=20
+> Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82=
+SJ")
+> Closes: https://github.com/tomsom/yoga-linux/issues/51
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D208555#c780
+> Cc: stable@vger.kernel.org
+> Signed-off-by: August Wikerfors <git@augustwikerfors.se>
+> Link: https://lore.kernel.org/r/20230911213409.6106-1-git@augustwikerfors.=
+se
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Yeah, sure, I can already see how you're going to apologise, say you
-didn't mean it that way, you're just doing your job etc., like last time
-when you did the same to Kalle, etc. And I'm pretty sure we're _far_
-from the only ones.
+Please also add commit cfff2a7794d2 ("ASoC: amd: yc: Fix a non-functional mi=
+c on Lenovo 82TL") to 6.1+ as it fixed the same regression for another model=
+ (but wasn=E2=80=99t tagged for stable).
 
-But honestly, _you_ chose this job. _You_ chose to be demanding in this
-way. _You_ chose to complain to people about these things. _You_ decided
-(as far as I can tell) to demand that stable maintenance was now the
-subsystem maintainer job, rather than the stable maintainer's job.
-
-This isn't helping. In fact, it's the exact opposite of helping.
-
-You _could_ have decided that the patch was indeed worth it for stable,
-submitted it there (once in mainline), and then maybe send a nudge
-saying something like "I've proposed this patch for stable, it would've
-been nice if you could add a Cc tag for future similar patches", or so?
-But no, you decided to complain, counted wrongly (*), accused us of not
-doing a job (that you signed us up for to boot!), etc.
-
-(*) I'll leave it as an exercise to figure out why, because really, this
-email isn't about the actual count or proportion patches or anything,
-it's about the fact that you decided to count at all.
-
-And also, "Cc'ing netdev because it's not merged" - have you paid any
-attention at all? There are conferences going on, some parts of the
-world have fall/autumn vacations, etc. It's been what, a week? Even
-Linus noted there wasn't a net pull request, but I'll note that nowhere
-did he actually _complain_ about that, unlike you. Relax!
-
-
-So ... in summary: Can you please just stop? In fact, I'm tempted to
-just ask you to simply stop rendering your services unto wireless, but I
-haven't spoken with Kalle about it now.
-
-Thanks,
-johannes
+Regards,
+August Wikerfors=
