@@ -1,85 +1,183 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D732A610E
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:48:30 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2774aa96947so1315014a91.2
-        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 23:48:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D90B610E
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:58:15 +0000 (UTC)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3af6cd01323so1157539b6e.3
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 23:58:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696402110; x=1697006910; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=23AGVAWCx64NlSwPlvRbIMj9BD4UvwLfDZ70pzkv7wo=;
-        b=HRb2t7EGq6P1Xh1zkGK+iY15w4B2W3QWd8pYFx9yRNo+ATSCg19IMu7qNYaf58ywtP
-         R5gCy/7NK/6TYny86Yc5CsLTQDFb3wLn5ZRxAwN+RBqlHG8ojVPPuuIIRQouLMkRnpys
-         sU64/dkMjsGEohB5A0curZNVbhomijeY1gAeHTZU5snAkbFqoSesrVKuJBiTOO+IYCY5
-         jaXbZmt3uubJZlKAdHMvJsISD7o21zuU3C1Bmn5IAg2hrAqyaieoI3tNgNxLmIcofA8i
-         52I+How2VWPo4M9icw8kDZzCd0TbbPDwmKMyAEnAuGkJtsEX+lJFp7x8PlabyK/vI/H/
-         Royw==
+        d=gmail.com; s=20230601; t=1696402694; x=1697007494; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nXwmR+/3Lhqmxga+S8/sE/k6mhMWvQB9Ir68rrB9KbI=;
+        b=HYGyTUcZ5x9WlVR4do4Jy1pbW3DZiWJSAU5ugUOlMlgdBDgeTIoKtCSZCLXwJB1/LC
+         XZmE3ZuAw7cRsA+vqCbZZaNSVwDWZR55/hIg2Kt5QVmj2LiXiDdPgTPSPoKh/T4c6ZLw
+         p7khMVXiCe7VYxD5/A9Y9Ax2eetidWwn25TxdYClbJrkdWX0pRCpYejyt50N3IIDqxW2
+         9WxTrgTNbJaKfaebRvS/aJ7Yls19eZ71CSo0O2OP5p6Ol/tV6nLsQmATEE0jt+KSMbLf
+         EXrmf++3JprQ5rxTLXVZchPAorZfJvQZLhEi2YOAMJsG5aX3UtgPd9ooApdVL9a0a2Dy
+         ZPqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696402110; x=1697006910;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23AGVAWCx64NlSwPlvRbIMj9BD4UvwLfDZ70pzkv7wo=;
-        b=RaQ9YyB4eBXpD/D3j66m5TWTroaQqjm2bOLN33nBoRzAn02rUL6WKgLiOqJFTDcAGO
-         6bREHOMT+TzAkaz5Io1P+lbKs6XMhr1XcT36Uq5OeIu6zZXUqrrlZe43/CS54wZFEboq
-         tNVWtuxB72hzUOsGvrscFyebwxfgYjpseL0A4X1pcGuG0MBikyKXnIg7fFty6NUVdd4N
-         yqQMmPO09HnQHOP1mDJt55cE7vmxFvkh0341Ga3t/oik9GvY8J1KmoZlk8644nwgh3D5
-         NPftRS33ueAvEpYWz43s6PhNrfcbkbH+ueE8UEpu2uhWgDuSr4QUkazvwnQ+cH8Fitb1
-         eQ0Q==
-X-Gm-Message-State: AOJu0YzDAt9XZ8MwEY1jOJhp9Q77rnXuWbjpoC+xDUjrKiQ5ckmMcwlR
-	xrWi1j5R5QD8oemllIOTOZl2A7zQT/Q=
-X-Google-Smtp-Source: AGHT+IGXW/NMBPkNnO9VKm//8nQQhh5XUC2SXJXHjrF4PYjXr48wJqNEjYrN84A+dyZZwJ6Yt1jS2g==
-X-Received: by 2002:a17:90a:e60f:b0:26d:2d77:da7b with SMTP id j15-20020a17090ae60f00b0026d2d77da7bmr1396480pjy.6.1696402110051;
-        Tue, 03 Oct 2023 23:48:30 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id t13-20020a1709028c8d00b001c7373769basm2789290plo.88.2023.10.03.23.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Oct 2023 23:48:29 -0700 (PDT)
-Message-ID: <7392af01-af99-4b42-b491-eb4f56120bc1@gmail.com>
-Date: Wed, 4 Oct 2023 13:48:23 +0700
+        d=1e100.net; s=20230601; t=1696402694; x=1697007494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nXwmR+/3Lhqmxga+S8/sE/k6mhMWvQB9Ir68rrB9KbI=;
+        b=W/3qTCkL7QXU55g/DHITUaxrW9kkbUclJysWBob9DCZjOjwbFXy9qnn6+JqMzeFrr0
+         QHCm3rKrRXDQBGlSM4q0tKI16Wmq0EBruk1WaO7OHZLFqFf7FrflEzaC85kFcH99F1jE
+         ZuxVhQKqfcTBrcTLpV4+GWh6dPSNUwCCIOnFUgOoafBc5snLqU243+yuOGSoq8C7hkA9
+         l4n0Fr1MNew01wWu6O4iELXSQktCPrf2dkT4WNq7jOKfnlPd5oyLVEOCg5AG9Go1gr67
+         gz8Gny45QphO/w0PvGOK8FVOAa+7x3tFF2KP2K8TxvS6BOsOhfS8vfkZdIucUgy18MZW
+         WUiw==
+X-Gm-Message-State: AOJu0YwZmcSd/6lsbq+t8uqf64N4NZX+3z1clsOnMXJfD/GtU7r37+F4
+	lV5M6RHuR+dV8j0kEnC3SUI=
+X-Google-Smtp-Source: AGHT+IGqsgWDkSM7doaaePtiYpnvMHIiKZHVQq+DdlenyLQukhdNxnwcflE6mDXiyk6HB9DH39hqoQ==
+X-Received: by 2002:a05:6808:1506:b0:3ae:5e0e:1667 with SMTP id u6-20020a056808150600b003ae5e0e1667mr2115336oiw.43.1696402694356;
+        Tue, 03 Oct 2023 23:58:14 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id bt8-20020a632908000000b0056b27af8715sm2466712pgb.43.2023.10.03.23.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Oct 2023 23:58:13 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id E8AC981A7EC4; Wed,  4 Oct 2023 13:58:00 +0700 (WIB)
+Date: Wed, 4 Oct 2023 13:58:00 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Eric Whitney <enwlinux@gmail.com>,
+	Linux ext4 <linux-ext4@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
+Cc: Jan Kara <jack@suse.com>, Baokun Li <libaokun1@huawei.com>
+Subject: Re: probable quota bug introduced in 6.6-rc1
+Message-ID: <ZR0M-CFmh567Ogyg@debian.me>
+References: <ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: ThinkPad T430 (BCM20702) Can't Detect Bluetooth Devices
- Starting from Kernel v6.1.0 Until Now v6.3.1
-To: Moh Oktavi Aziz Nugraha <moktavizzen@gmail.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- avisaziz123@gmail.com, linux-bluetooth@vger.kernel.org,
- Linux Regressions <regressions@lists.linux.dev>
-References: <CAHCNbp3ztCcp31JdVYuxy+s1qXaa+Zy74eGJmfPmyrx_6Wjhhw@mail.gmail.com>
- <ZK32l3yQEMdmttOG@debian.me> <ZLyL7+IOqRSysJrl@debian.me>
- <CAHCNbp2BhCPe23XyM-x24NN=tcrhsETWy1eUMXHzTBXp3yu=qg@mail.gmail.com>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <CAHCNbp2BhCPe23XyM-x24NN=tcrhsETWy1eUMXHzTBXp3yu=qg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VKPvnRvQ0Pv/ixYX"
+Content-Disposition: inline
+In-Reply-To: <ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64>
 
-On 04/10/2023 11:32, Moh Oktavi Aziz Nugraha wrote:
-> hello, first i would like to say sorry because of this very very very
-> late response. After this problem report i had a 6 month internship
-> (college program) until december, so i had to switch to windows
-> immediately after the initial report.
-> but right now im writing this email in Fedora using the latest kernel
-> and the problem seems to be fixed! my T430 can detect bluetooth
-> devices fine right now
 
-Please don't top-post; reply inline with appropriate context instead.
-This allows readers to easily follow the conversation flow.
+--VKPvnRvQ0Pv/ixYX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyway, telling regzbot:
+On Tue, Oct 03, 2023 at 08:11:11PM -0400, Eric Whitney wrote:
+> When run on my test hardware, generic/270 triggers hung task timeouts when
+> run on a 6.6-rc1 (or -rc2, -rc3, -rc4) kernel with kvm-xfstests using the
+> nojournal test scenario.  The test always passes, but about 60% of the ti=
+me
+> the running time of the test increases by an order of magnitude or more a=
+nd
+> one or more of the hung task timeout warnings included below can be found=
+ in
+> the log.
+>=20
+> This does not reproduce on 6.5.  Bisection leads to this patch:
+>=20
+> dabc8b207566 ("quota: fix dqput() to follow the guarantees dquot_srcu sho=
+uld
+> provide")
 
-#regzbot resolve: unbisected but fixed in v6.5.y
+Can you revert the culprit to see if it helps?
 
-Thanks.
+>=20
+> >From the log:
+>=20
+> generic/270 306s ...  [20:08:45][  311.322318] run fstests generic/270 at=
+ 2023-10-03 20:08:45
+> [  311.579641] EXT4-fs (vdc): mounted filesystem d0e542a0-3342-4d43-aa1f-=
+c918cc92aafa r/w without journal. Quota mode: writeback.
+> [  311.587978] EXT4-fs (vdc): re-mounted d0e542a0-3342-4d43-aa1f-c918cc92=
+aafa ro. Quota mode: writeback.
+> [  311.592725] EXT4-fs (vdc): re-mounted d0e542a0-3342-4d43-aa1f-c918cc92=
+aafa r/w. Quota mode: writeback.
+> [  335.491107] 270 (3092): drop_caches: 3
+> [  491.167988] INFO: task quotaon:3450 blocked for more than 122 seconds.
+> [  491.168334]       Not tainted 6.4.0+ #13
+> [  491.168544] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disable=
+s this message.
+> [  491.168936] task:quotaon         state:D stack:0     pid:3450  ppid:30=
+92   flags:0x00004000
+> [  491.169363] Call Trace:
+> [  491.169503]  <TASK>
+> [  491.169620]  __schedule+0x394/0xd40
+> [  491.169813]  schedule+0x5d/0xd0
+> [  491.169981]  schedule_timeout+0x1a7/0x1c0
+> [  491.170191]  ? lock_release+0x139/0x280
+> [  491.170395]  ? lock_acquire+0xb9/0x180
+> [  491.170605]  ? do_raw_spin_unlock+0x4b/0xa0
+> [  491.170837]  __wait_for_common+0xb6/0x1e0
+> [  491.171046]  ? __pfx_schedule_timeout+0x10/0x10
+> [  491.171324]  __flush_work+0x2da/0x430
+> [  491.171517]  ? __pfx_wq_barrier_func+0x10/0x10
+> [  491.171747]  ? 0xffffffff81000000
+> [  491.171932]  dquot_disable+0x3e5/0x670
+> [  491.172134]  ext4_quota_off+0x50/0x1a0
+> [  491.172332]  __x64_sys_quotactl+0x87/0x1c0
+> [  491.172545]  do_syscall_64+0x38/0x90
+> [  491.172731]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [  491.172990] RIP: 0033:0x7f3c7c79eada
+> [  491.173176] RSP: 002b:00007ffed2ff4478 EFLAGS: 00000246 ORIG_RAX: 0000=
+0000000000b3
+> [  491.173558] RAX: ffffffffffffffda RBX: 000055886a3997d0 RCX: 00007f3c7=
+c79eada
+> [  491.173915] RDX: 0000000000000000 RSI: 000055886bf43de0 RDI: 000000008=
+0000301
+> [  491.174271] RBP: 000055886bf43de0 R08: 0000000000000001 R09: 000000000=
+0000002
+> [  491.174657] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000=
+0000002
+> [  491.175014] R13: 000055886bf43ea0 R14: 0000000000000001 R15: 000000000=
+0000000
+> [  491.175373]  </TASK>
+> [  491.175491]=20
+> [  491.175491] Showing all locks held in the system:
+> [  491.176706] 1 lock held by rcu_tasks_kthre/12:
+> [  491.178126]  #0: ffffffff82763970 (rcu_tasks.tasks_gp_mutex){....}-{3:=
+3}, at: rcu_tasks_one_gp+0x30/0x3f0
+> [  491.180955] 1 lock held by rcu_tasks_rude_/13:
+> [  491.182394]  #0: ffffffff827636f0 (rcu_tasks_rude.tasks_gp_mutex){....=
+}-{3:3}, at: rcu_tasks_one_gp+0x30/0x3f0
+> [  491.194388] 1 lock held by khungtaskd/26:
+> [  491.196153]  #0: ffffffff82764020 (rcu_read_lock){....}-{1:2}, at: deb=
+ug_show_all_locks+0xe/0x110
+> [  491.199676] 2 locks held by kworker/u4:4/59:
+> [  491.200722]  #0: ffff88800385cd38 ((wq_completion)events_unbound){....=
+}-{0:0}, at: process_one_work+0x1f6/0x550
+> [  491.201600]  #1: ffffc90000513e80 ((quota_release_work).work){....}-{0=
+:0}, at: process_one_work+0x1f6/0x550
+> [  491.202746] 1 lock held by quotaon/3450:
+> [  491.203184]  #0: ffff88800afd60e0 (&type->s_umount_key#33){....}-{3:3}=
+, at: user_get_super+0xd3/0x100
+> [  491.204217]=20
+> [  491.204373] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+>=20
 
--- 
+Anyway, thanks for the regression report. I'm adding it to regzbot:
+
+#regzbot ^introduced: dabc8b20756601
+#regzbot title: dqput() fix causes kvm-xfstests nojournal test time longer
+
+--=20
 An old man doll... just what I always wanted! - Clara
 
+--VKPvnRvQ0Pv/ixYX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZR0M8wAKCRD2uYlJVVFO
+o0YAAQCXj/x0ivIXS36slQzBtYpiBrScim99oNIsooNjGAJE+QD/Y0Q3eCfSCDAr
+4Ox1OjcO2vxK3v/Otsa9cVU7kfNarg4=
+=K0YG
+-----END PGP SIGNATURE-----
+
+--VKPvnRvQ0Pv/ixYX--
