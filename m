@@ -1,89 +1,82 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8CB13FE3
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 12:50:36 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c87e55a6baso1303495ad.3
-        for <regressions@lists.linux.dev>; Wed, 04 Oct 2023 05:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696423836; x=1697028636; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BhOZL0I3FBTOfyJ3ennuGJmU/lunAyqILUznWBH305w=;
-        b=ZxPp55LKTk16UrIXgo8RBv0cuoA7NfaFbHu0i62tc8lkzcyMcUZVuiUd1VVh1qX1wy
-         yP+WiLQVivHe1YdkuJ6ZTiTUbAMPdmf+OERaNpJkVt7akkSGlaQvKlO0qOJnuCgPx4oz
-         RISCLDqw2RncLnOwsiuHutmbHnk3F0cS1RF60/0v0VZgIX/aJmjGqmSBR8Eot9x6n76r
-         ZKzCyAWJP58PSdqQgJF7LRLmjwrtPVsWqyNMgwrJ/u8v0CRjVWhddqftuonW9LiVL2AV
-         FeSfpM40APMQ4InJXyoayqiQQiiZ9B2Mnl0lQ/u52ClGR5Mplmjgw7M15SZv6oA8B82Q
-         os7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696423836; x=1697028636;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BhOZL0I3FBTOfyJ3ennuGJmU/lunAyqILUznWBH305w=;
-        b=nFVFO1rN2M2UGNpT4G5BOve1jtvyH41l95ecc/0CEOKBr8LW8i/XCUImix+n2DM7+h
-         u4f/QvSIQFunYm8QQXp/n2mjAwV1yDCBaFhGrsq4tmfgDePcCreZK2Bk0v2V+GfYi+pF
-         Z7EzKZ1nyGhJOb5X+0Kpaea/cK8LagAXTFECauuCK6Dm/n4n//uG3kxik17TRRVLjBux
-         D66E+sIZ9RcU67pq4zV6xHHSX0honWc2Acl/foFKo2rXZKq6wv86EaoJ+vFbEPetswof
-         KFR8YtP88/GVCU+EvZ47KVtl/MM9wJd1VYVrusAdzYvFyX8DEYqOmfeX5DADpJfo+kY8
-         fizw==
-X-Gm-Message-State: AOJu0Yz9LPber/jM20BEzqW+tynuhHFiENUnGmGNKVnxQlBAhQfAo/lR
-	TeGJrwg9fCRfP9+sFKRKSyY=
-X-Google-Smtp-Source: AGHT+IFcjMsOQQhmGdfIuMvLf8hz8TNgdUnzohKk0xxDDt4+Vc0L1eBz/HGGC0IQWyDiJNN4xSJjKg==
-X-Received: by 2002:a17:902:e810:b0:1c5:59ea:84de with SMTP id u16-20020a170902e81000b001c559ea84demr2643108plg.29.1696423835809;
-        Wed, 04 Oct 2023 05:50:35 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id p18-20020a170902e75200b001c61073b079sm3612247plf.71.2023.10.04.05.50.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 05:50:35 -0700 (PDT)
-Message-ID: <bcf1998e-5efa-4505-a8d2-3381c16de885@gmail.com>
-Date: Wed, 4 Oct 2023 19:50:29 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12C314009
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 13:09:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644F6C433C7;
+	Wed,  4 Oct 2023 13:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696424987;
+	bh=1KMiCQ4GF1yebZeJQUOFvoggMENRJNEp1ySztWeeoaQ=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=hfGPaZ9IiJjxWKrNkLefmfTSa/1Xf8u/qGfr/neXnOAmEFeODqpOdrTaj4gNb7jiJ
+	 GmvJ2MLJciwNIqLfxWWOv2JdXJocQ3ByPWfE8rSnjD5WTQ1k5u5rRhIlgfZIiFKAWA
+	 ZESrdVSVfxFzthyxqwhir0mXIpRv5VJgqOdGkDWxzQT+37DIFA//hnUhNX2mJ/sey/
+	 Lu3AhzCr2GEZJAPb7Lohp7TQGRJ7Ux96wf2ufvvHbZV0/XfdTnCQcJbJ14s7phbmlR
+	 ehBe4BCWNSFEENLj49hV0NKNMALV7hjkKsHBZrFGbLeauKOtQwoihxR/QzL/sKPLp7
+	 RpavAPBjKTtvw==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: "Greenman, Gregory" <gregory.greenman@intel.com>,
+  "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+  "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+  "Peer, Ilan" <ilan.peer@intel.com>,  "anarcat@debian.org"
+ <anarcat@debian.org>,  "David S. Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>
+Subject: Re: Microcode SW error since Linux 6.5
+References: <87ttrncuc8.fsf@angela.anarc.at>
+	<60e2c052f3cedc5c80964e4be90c50cdaa899a87.camel@sipsolutions.net>
+	<87jzsf9dme.fsf@angela.anarc.at>
+	<0190dde1170bd1ee810e99b9799678f4f5b8f30e.camel@sipsolutions.net>
+	<8734z29jx7.fsf@angela.anarc.at>
+	<7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
+	<5d0904a4-bc0d-42dd-aae8-6b50e5c567ba@leemhuis.info>
+	<42e000913e3af714c77fb7a55dd898733e271be0.camel@intel.com>
+	<0c07b6bf-a9cc-4dc0-b71c-a2257e501e5f@leemhuis.info>
+Date: Wed, 04 Oct 2023 16:12:03 +0300
+In-Reply-To: <0c07b6bf-a9cc-4dc0-b71c-a2257e501e5f@leemhuis.info> (Linux
+	regression tracking's message of "Wed, 4 Oct 2023 10:35:54 +0200")
+Message-ID: <87h6n6h6qk.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: what to do on no reproducer case? (was Re: Fwd: Uhhuh. NMI
- received for unknown reason 3d/2d/ on CPU xx)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <0e6de51b-da1d-43f0-ffae-fb521febbe07@gmail.com>
- <ZQo8hzP-eRjXvtXf@debian.me>
- <2a298145-b6ec-4b4e-bd45-0cddf62b6052@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <2a298145-b6ec-4b4e-bd45-0cddf62b6052@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 21/09/2023 15:10, Thorsten Leemhuis wrote:
-> On 20.09.23 02:27, Bagas Sanjaya wrote:
->> This regression looks stalled: on Bugzilla, the reporter keeps asking to me,
->> for which I'm not the expert of involved subsystem. And apparently, he still
->> had not any reproducer yet (is it triggered by random chance?). Should I
->> mark this as inconclusive?
-> 
-> Yes, without a reliable bisection result there sometimes is not much we
-> can do -- apart from prodding various developers directly and asking for
-> help or an idea. But in this case that's not worth it afaics, as
-> messages like
-> https://lore.kernel.org/all/e08e33d5-4f6d-91aa-f335-9404d16a983c@amd.com/
-> indicate that it might be a hardware problem and not really a
-> regression. Hence:
-> 
-> #regzbot resolve: inconclusive: not bisected and might be a hardware
-> problem after all
-> 
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
+>> The patch in [1] should solve the issue. The problem was that wrong version
+>> of Firmware API was used for some older versions.
+>> 
+>> [1]
+>> https://patchwork.kernel.org/project/linux-wireless/patch/20230926165546.086e635fbbe6.Ia660f35ca0b1079f2c2ea92fd8d14d8101a89d03@changeid/
+>
+> Ahh, great, many thx for the reply. Two things then:
+>
+> (1) I wanted to ask why this patch is not in mainline or -net yet, but
+> then noticed the fix is among the patches of a one week old pull request
+> that afaics was not handled yet:
+> https://lore.kernel.org/all/20230927095835.25803-2-johannes@sipsolutions.net/
+>
+> Guess that one fell through the cracks due to the Netconf 2023 workshop?
+> Maybe this msg gets things rolling again.
 
-Thanks for the tip! Now to fix up:
+At least on Monday there were something 500 patches in netdev patchwork
+and today I see still 340 patches. Understandably it takes time to
+process all that, let's just wait patiently and let the maintainers do
+their job in peace.
 
-#regzbot inconclusive: regression not bisected - possibly hardware issue
+I see our pull request is in active state in patchwork so I don't think
+it has fell through the cracks:
+
+https://patchwork.kernel.org/project/netdevbpf/patch/20230927095835.25803-2-johannes@sipsolutions.net/
 
 -- 
-An old man doll... just what I always wanted! - Clara
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
