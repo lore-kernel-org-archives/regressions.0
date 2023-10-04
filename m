@@ -1,275 +1,98 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F089182
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 00:42:54 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id B0CBA5C0214;
-	Tue,  3 Oct 2023 20:42:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 03 Oct 2023 20:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-	1696380171; x=1696466571; bh=kJpwFm5Gz5R/g5OrrIjxAvkE7QNlJ2N9/+p
-	Xu8JNMQc=; b=L6FwAR7XWi7sFQBGw0DwNJ7ZoVyhCfZYpM2lL5H9MUbmcx3CL2F
-	2Hh9ys+t1bheh9gvjfTAn16S1pjBkzzS0MK4DFDRsek8l/8Qv/q9Dstv+ZqZZUPD
-	wdsks57h/T+h7wSqSgePJXdj5c0ffMozPVkZwEaPOQ0AVu74DiFO8DRsGLpVSHla
-	amke1XVwadOwbft9P8gGEvGjCi1K9b/1/dUPsmrKoZhEMmCTE8H2Xotfo0sSuX0d
-	rl6MLoBVUApV60qUZ36MZlnY9sF73Ig4RcPAfP10IAxP1PFT7nOVFs7+XYkQbtqu
-	gy4l4/GCNKmkK0wFcJg7MlaOW96eDW4LLdg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1696380171; x=1696466571; bh=kJpwFm5Gz5R/g5OrrIjxAvkE7QNlJ2N9/+p
-	Xu8JNMQc=; b=FdRy6w7Dftmf4XUXBrAvSad8Sy48CoKgt0JI/e+fyGHo73untwt
-	LkfseQn344MEFEc/h0Pm0S5Jy2JYxYvoX7+vmSaM62BCtbQNyw0X477l/m8GAd4X
-	r4iWWc5ycQMSAsgWgSyRQYCrgK0zn1KMhBhRWMVquWmNKxZD37PsFz8dhn0kuDS9
-	1KDqQk0cFiKR85bU2eBmdvLQ0w7GQt2/EdeapF82s58XcppB48MG7eMRI5KsJ7lM
-	q76gyYbnX8hAE3csTOpOzMwOAgXTw/huSxeCwehzW0hQai4UA3nZ9o3NwKnEeRNg
-	6i0ga2keRRVYopl4yiX0SQ4cbjCryPzlS2g==
-X-ME-Sender: <xms:C7UcZZvLfK5LkPSCn4Y_7WNKzHtqV-Zi3qW1VtaUSzRh3Q5YBMpnpA>
-    <xme:C7UcZScP6s6zYCPXRECg05Epz_pHob2Mx8ldHhWOB1IFJHpt6Ir4wtxCVtWasWD9o
-    CI42t8qY57jHVsX9Q>
-X-ME-Received: <xmr:C7UcZczVmST2QR8RaO8phyu--tDJif74H7-k0qnfinISbhGtgSEJOKLhmekx6oDIRCNoDr8wic20VhPOfyBKnGQvIAKHrumvm568cxyYXIYtXyMx5mqCvyGfQEeU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfeekgdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheptehnughr
-    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrf
-    grthhtvghrnhepuddtieegleejheeujeeiveegueelhfekleeuffdukeduleduffehfffg
-    teeivefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvghssegrnhgrrhgriigvlhdruggv
-X-ME-Proxy: <xmx:C7UcZQO8iBAcOPdzmZ4O9zZxrFZEue6IPyQ9e_tnm1oyx2S1S3N0og>
-    <xmx:C7UcZZ-DKgxQkJ-M8AJfBGgeEXQKr6MDVgsCYsC6jBLXfvJGylKPoA>
-    <xmx:C7UcZQWB1Rmayjbb8vSwugScB1LPA0pBhmYV6qoEltK39Pozfl86gg>
-    <xmx:C7UcZSOxoc1ByQzvIYhviRt6juCor8-HNzO7vTFc1x_GMSOKzqVLLg>
-Feedback-ID: id4a34324:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 3 Oct 2023 20:42:51 -0400 (EDT)
-Date: Tue, 3 Oct 2023 17:42:47 -0700
-From: Andres Freund <andres@anarazel.de>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
-	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-	"gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
-	groeck@google.com, zsm@google.com, garrick@google.com,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
-Message-ID: <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
-References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
- <ZQjKOjrjDYsoXBXj@mit.edu>
- <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
- <20231003232505.GA444157@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CCB376
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 00:58:03 +0000 (UTC)
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-d8997e79faeso351227276.1
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 17:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696381082; x=1696985882; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uThSy4yEdZygz3nx9AdT/+Ka5ZDArvLjVeK3y4dcvFg=;
+        b=oyLqbJj/TtM4X69/gykypINUu3YnvNDAcS5xycRCqpP+9I//KFhUKy1/1ANTJSmcj0
+         m9f5ZAj1sk22gpzuzwwTYmWLj/Fs2OBuuhZmP0aYRVlBQLmBY+FUQc3jvJ3egZWGjEm/
+         yQE1Vl1YoqMAdG2fGiO2BY2ayJN8MuLejkHxEqFjSFQ4OdsFX4hp/MpKlE2i7INAbQU5
+         4rUKoJ72LmUe9kreKPsWnnycI6nr6toMjz6XE2uvmX4goLkvh3edSQR3l/oIEjxhhNyI
+         T/av358G59e/Ivpp65rS16CSBLub4a2JdbNKyNuyo34gJp1PlUT+AN2o6vPuRl8//NwL
+         GCFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696381082; x=1696985882;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uThSy4yEdZygz3nx9AdT/+Ka5ZDArvLjVeK3y4dcvFg=;
+        b=bdfRAPbN5Gt6ERuHRCH/GE3LORu/lP/uRQSMcFeLxcG99abgcjE2P1UyaQH9BZU+WT
+         uLvM75qzkWq17w8XhaCMXvZkwkvvmjeETYnULUbSWkmQm/I0bNAAdmunDooJwKj/ujE/
+         jypN/h0xmfrnn2DmwhaV+dijFt44nmygYJx7RGPrYy4LrY45+NsCKIgjJHy/odmSeW8o
+         LTs9YD/sCvqKoypHIyl6bcuTSx7XHh949hjzplntaIMtBTl9B8rh/UDXYw4gvLsVZqIl
+         z6wO+2fq/ncxzFdtJG79A23l3wKLgSfU/4S0stUjT/kkAReJR/lhrzU6PGcOwM6SWcme
+         9XAw==
+X-Gm-Message-State: AOJu0YzTX8jQCJn7Z80+tI0JqbJEa39paBQA3R3hBb0ghPf1hZ/DLciQ
+	Nk8014x403pcuxcH6iF1cTzELXHjq1GNEZr+ZTXr
+X-Google-Smtp-Source: AGHT+IGMPS6riiI0T9ofgPM70mrTKqdYfgP6uvgJ51Ftij4XuTNLRixV8U6nH5DOAQqNufqzPO4Xi4IrIJQsw+E9dJwJ
+X-Received: from horchata.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:5b3])
+ (user=jefferymiller job=sendgmr) by 2002:a25:b8d:0:b0:d89:42d7:e72d with SMTP
+ id 135-20020a250b8d000000b00d8942d7e72dmr82813ybl.3.1696381082437; Tue, 03
+ Oct 2023 17:58:02 -0700 (PDT)
+Date: Tue,  3 Oct 2023 19:57:24 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231003232505.GA444157@mit.edu>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
+Message-ID: <20231004005729.3943515-1-jefferymiller@google.com>
+Subject: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
+From: Jeffery Miller <jefferymiller@google.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: regressions@lists.linux.dev, benjamin.tissoires@redhat.com, 
+	linux@leemhuis.info, Andrew Duggan <aduggan@synaptics.com>, 
+	Andrew Duggan <andrew@duggan.us>, loic.poulain@linaro.org, 
+	Jeffery Miller <jefferymiller@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Make `elantech_setup_ps2` set a compatible fast_reconnect pointer
+when its ps2 mode is used.
 
-On 2023-10-03 19:25:05 -0400, Theodore Ts'o wrote:
-> On Tue, Oct 03, 2023 at 07:11:38AM -0700, Andres Freund wrote:
-> > On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
-> > > On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
-> > > > When I tried to reproduce this issue on mainline linux kernel using the
-> > > > reproducer provided by syzbot, I see an endless loop of following errors :-
-> > > >
-> > > > [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
-> > > > [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
-> > > > inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
-> > > > [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
-> > >
-> > > Please note that maliciously corrupted file system is considered low
-> > > priority by ext4 developers.
-> >
-> > FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
-> > just doing database development on my laptop.
->
-> Unless you are using a corrupted file system (e.g., there are EXT4-fs
-> error messages in dmesg), it's likely a different issue.
+When an SMBus connection is attempted and fails `psmouse_smbus_init`
+sets fast_reconnect to `psmouse_smbus_reconnect`.
+`psmouse_smbus_reconnect` expects `psmouse->private` to be
+`struct psmouse_smbus_dev` but `elantech_setup_ps2` replaces
+it with its private data. This was causing an issue on resume
+since psmouse_smbus_reconnect was being called while in ps2, not SMBus
+mode.
 
-Indeed quite possibly unrelated - the only reason that I mentioned it here was
-the fact that so far I've only hit it in 6.6-rc*, not earlier.
+This was uncovered by commit 92e24e0e57f7 ("Input: psmouse - add delay when
+deactivating for SMBus mode")
 
-I've since then "downgraded" to 6.5.5, without hitting the issue so far,
-despite continuing to run a similar workload for most of the day.
+Closes:
+Link:https://lore.kernel.org/all/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
+Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
 
-I did actually find ext4 messages in dmesg, but only during the latest boot
-into 6.5.5, despite encountering the hang four times (resolved via reboot each
-time).
+Signed-off-by: Jeffery Miller <jefferymiller@google.com>
+---
 
-Oct 03 07:35:16 alap5 kernel: Linux version 6.5.5-andres-00001-g97e7c1c17aa1 (andres@alap5) (gcc (Debian 13.2.0-4) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41) #76 SMP PREEMPT_DYNAMIC Tue Oct  3 07:29:10 PDT 2023
-Oct 03 07:35:16 alap5 kernel: Command line: BOOT_IMAGE=/vmlinuz-6.5.5-andres-00001-g97e7c1c17aa1 root=/dev/mapper/alap5-root ro apparmor=0 rd.luks.options=discard systemd.show_status=1 i915.fastboot=1 i915.modeset=1 psmouse.synaptics_intertouch=1 systemd.unified_cgroup_hierarchy nvme.poll_queues=2 nvme.write_queues=2 intel_iommu=sm_on,igfx_off iommu=pt
-...
-Oct 03 07:35:17 alap5 systemd[1]: Starting systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8...
-...
-Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: recovering journal
-...
-Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: clean, 90863/122101760 files, 110935625/488378368 blocks
-Oct 03 07:35:17 alap5 systemd[1]: Finished systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8.
-...
-Oct 03 07:35:18 alap5 kernel: EXT4-fs (nvme1n1p1): mounted filesystem b77a2f23-bb0d-48bf-8c36-327c73460cb8 r/w with ordered data mode. Quota mode: none.
-...
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 2240, len 32000; IO logical block 2240, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 4288, len 29952; IO logical block 4288, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 6336, len 27904; IO logical block 6336, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 8384, len 25856; IO logical block 8384, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 10432, len 23808; IO logical block 10432, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 12480, len 21760; IO logical block 12480, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 14528, len 19712; IO logical block 14528, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 16576, len 17664; IO logical block 16576, len 2048
-Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 18624, len 15616; IO logical block 18624, len 320
-Oct 03 07:38:11 alap5 kernel: wl0: disconnect from AP 04:62:73:d2:2f:ff for new auth to fc:5b:39:c6:6e:9f
-...
-Oct 03 07:38:11 alap5 kernel: wl0: Limiting TX power to 2 dBm as advertised by fc:5b:39:c6:6e:9f
-Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 152080, len 9856; IO logical block 152080, len 2048
-Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 154128, len 7808; IO logical block 154128, len 768
-
-I'm somewhat surprised to see the "
+The other callbacks set in psmouse_smbus_init are already replaced.
+Should fast_reconnect be set to `elantech_reconnect` instead?
 
 
-> Can you give us details about (a) what kind of block device; are you
-> using dm-crypt, or just a HDD or a SSD?  If an SSD, what kind of SSD?
+ drivers/input/mouse/elantech.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-NVMe, Samsung SSD 970 EVO Plus 2TB. No dm_crypt, raid or whatever.
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 2118b2075f43..4e38229404b4 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -2114,6 +2114,7 @@ static int elantech_setup_ps2(struct psmouse *psmouse,
+ 	psmouse->protocol_handler = elantech_process_byte;
+ 	psmouse->disconnect = elantech_disconnect;
+ 	psmouse->reconnect = elantech_reconnect;
++	psmouse->fast_reconnect = NULL;
+ 	psmouse->pktsize = info->hw_version > 1 ? 6 : 4;
+ 
+ 	return 0;
+-- 
+2.42.0.582.g8ccd20d70d-goog
 
-smartctl / nvme smart-log indicates no data correctness errors or such. Not
-that that's a guarantee of anything.
-
-A forced fsck doesn't find any corruption, but did report a number of
-Inode 82984754 extent tree (at level 2) could be narrower.  Optimize<y>?
-style "issues".
-
-
-> What CPU architecture is it?
-
-x86-64 (i9-9880H in a ThinkPad X1 Extreme 2nd). The laptop does have a battery
-that's not, uhm, perfect, anymore (turning off while supposedly still having
-around 15% capacity), so there have been a few out-of-power hard "shutdowns".
-
-
-> And can you send me the output of dumpe2fs -h <block device>?
-
-dumpe2fs 1.47.0 (5-Feb-2023)
-Filesystem volume name:   <none>
-Last mounted on:          /srv
-Filesystem UUID:          b77a2f23-bb0d-48bf-8c36-327c73460cb8
-Filesystem magic number:  0xEF53
-Filesystem revision #:    1 (dynamic)
-Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
-Filesystem flags:         signed_directory_hash
-Default mount options:    user_xattr acl
-Filesystem state:         clean
-Errors behavior:          Continue
-Filesystem OS type:       Linux
-Inode count:              122101760
-Block count:              488378368
-Reserved block count:     0
-Overhead clusters:        7947216
-Free blocks:              377442743
-Free inodes:              122010897
-First block:              0
-Block size:               4096
-Fragment size:            4096
-Group descriptor size:    64
-Reserved GDT blocks:      1024
-Blocks per group:         32768
-Fragments per group:      32768
-Inodes per group:         8192
-Inode blocks per group:   512
-Flex block group size:    16
-Filesystem created:       Thu Jan  2 20:13:09 2020
-Last mount time:          Tue Oct  3 07:35:18 2023
-Last write time:          Tue Oct  3 07:35:18 2023
-Mount count:              3
-Maximum mount count:      -1
-Last checked:             Mon Oct  2 12:55:12 2023
-Check interval:           0 (<none>)
-Lifetime writes:          7662 GB
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-First inode:              11
-Inode size:	          256
-Required extra isize:     32
-Desired extra isize:      32
-Journal inode:            8
-Default directory hash:   half_md4
-Directory Hash Seed:      03b91d34-4d2d-44b4-ac94-0c055f696e8a
-Journal backup:           inode blocks
-Checksum type:            crc32c
-Checksum:                 0xbee0f98e
-Journal features:         journal_incompat_revoke journal_64bit journal_checksum_v3
-Total journal size:       1024M
-Total journal blocks:     262144
-Max transaction length:   262144
-Fast commit length:       0
-Journal sequence:         0x0004f764
-Journal start:            23369
-Journal checksum type:    crc32c
-Journal checksum:         0x66761981
-
-
-> And while the file system is mounted, please send the contents of
-> /proc/fs/<block-device>/options, e.g.:
->
-> % cat /proc/fs/ext4/dm-0/options
-
-cat /proc/fs/ext4/nvme1n1p1/options
-rw
-bsddf
-nogrpid
-block_validity
-dioread_nolock
-nodiscard
-delalloc
-nowarn_on_error
-journal_checksum
-barrier
-auto_da_alloc
-user_xattr
-acl
-noquota
-resuid=0
-resgid=0
-errors=continue
-commit=5
-min_batch_time=0
-max_batch_time=15000
-stripe=0
-data=ordered
-inode_readahead_blks=32
-init_itable=10
-max_dir_size_kb=0
-
->
-> And finally, how full was the file system?  What is the output of "df
-> <mountpoint>" and "df -i <mountpoint>".
-
-root@alap5:/# df /srv/
-Filesystem      1K-blocks      Used  Available Use% Mounted on
-/dev/nvme1n1p1 1921724608 542905720 1378802504  29% /srv
-root@alap5:/# df -i /srv/
-Filesystem        Inodes IUsed     IFree IUse% Mounted on
-/dev/nvme1n1p1 122101760 91292 122010468    1% /srv
-
-
-However, fullness of this filesystem varies substantially over time, as I use
-it for developing / testing postgres, albeit primarily when travelling.  I was
-e.g. benchmarking bulk-loading of data (knowingly on a mediocre SSD) at the
-time of the last crash, space usage during that goes up by a few hundred GB,
-with the data being deleted afterwards.
-
-Greetings,
-
-Andres Freund
