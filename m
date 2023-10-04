@@ -1,28 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD0218B1C
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 17:16:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4273C433C8;
-	Wed,  4 Oct 2023 17:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1696439780;
-	bh=4ASCGJlKUkPzZR1q9AJsbJfWmb02kFK0srB6/vt/Sk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=coVBEOSs0x81o5p23+TO4PnI3wbfyeZNM3hyWHmPK010uaxaAV1YlKPCEhOnxgkGL
-	 KlFn45fMrROksso7Gosni1pfQulcNKTZ45RrxLSE2Nx0COAH/dLaPN0l5ynpLZrWqk
-	 KqUMvTYAp5X0JKRaRCddqXkLTfkBSNV1nZ3cxZEw=
-Date: Wed, 4 Oct 2023 19:16:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: August Wikerfors <git@augustwikerfors.se>
-Cc: stable@vger.kernel.org, broonie@kernel.org,
-	stable-commits@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	regressions@lists.linux.dev
-Subject: Re: Patch "ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and
- 82UG" has been added to the 6.1-stable tree
-Message-ID: <2023100411-unsecured-angler-f25b@gregkh>
-References: <B48DED01-5B50-4EF7-B0AC-2DC742D07890@augustwikerfors.se>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A8120B37
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 18:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="h3Fqop8Q"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+Received: (wp-smtpd smtp.wp.pl 34923 invoked from network); 4 Oct 2023 20:28:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1696444107; bh=9WqA8RBus0lT/tlmpFJJ73tod3YptX81Tc2dYpc1LK4=;
+          h=From:To:Cc:Subject;
+          b=h3Fqop8Q6R+02M6NAU7WmxsvBqSVKRWybFa4bVqNvp8gmCfipWX6UD+KJsDnzZGbL
+           HlA8bbigIsqnvpHJ3pFfMuA5731n3g67RC6UZaL1bHsR1nAdbDGlFDOZWZpYbb+26X
+           4c/PWDoFdCtktw/GOYywu07X0TLQSX3JCjYaWJ+o=
+Received: from 89-64-13-175.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.13.175])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <enc0der@gmail.com>; 4 Oct 2023 20:28:27 +0200
+Date: Wed, 4 Oct 2023 20:28:26 +0200
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: enc0der <enc0der@gmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Wireless <linux-wireless@vger.kernel.org>
+Subject: Re: rt8000usb driver issue (maybe interaction with other drivers)
+Message-ID: <20231004182826.GA411448@wp.pl>
+References: <CAEXpi5Rd6Y4umKOWRsCjX0kit=W5ZrVhn=MuRkyvJPwmjjDVnA@mail.gmail.com>
+ <ZRj_ovMi-Xbb8i-D@debian.me>
+ <20231002185053.GB402943@wp.pl>
+ <CAEXpi5StYwujiTaH2_5PE9Hg_cgzAEtBuFxfgVxEJvbqRNv_4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -32,56 +40,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <B48DED01-5B50-4EF7-B0AC-2DC742D07890@augustwikerfors.se>
+In-Reply-To: <CAEXpi5StYwujiTaH2_5PE9Hg_cgzAEtBuFxfgVxEJvbqRNv_4A@mail.gmail.com>
+X-WP-MailID: f0179e23565c96ae6547a30aa0eda1e9
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [IYOV]                               
 
-On Wed, Oct 04, 2023 at 06:33:55PM +0200, August Wikerfors wrote:
-> Hi Greg,
+Hi
+
+On Tue, Oct 03, 2023 at 09:34:32PM -0400, enc0der wrote:
+> Hello Stanislaw!
 > 
-> > On 4 Oct 2023, at 16:58, gregkh@linuxfoundation.org wrote:
-> > 
-> > ﻿
-> > This is a note to let you know that I've just added the patch titled
-> > 
-> >  ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG
-> > 
-> > to the 6.1-stable tree which can be found at:
-> >  http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> > 
-> > The filename of the patch is:
-> >   asoc-amd-yc-fix-non-functional-mic-on-lenovo-82qf-and-82ug.patch
-> > and it can be found in the queue-6.1 subdirectory.
-> > 
-> > If you, or anyone else, feels it should not be added to the stable tree,
-> > please let <stable@vger.kernel.org> know about it.
-> > 
-> > 
-> > From 1263cc0f414d212129c0f1289b49b7df77f92084 Mon Sep 17 00:00:00 2001
-> > From: August Wikerfors <git@augustwikerfors.se>
-> > Date: Mon, 11 Sep 2023 23:34:09 +0200
-> > Subject: ASoC: amd: yc: Fix non-functional mic on Lenovo 82QF and 82UG
-> > 
-> > From: August Wikerfors <git@augustwikerfors.se>
-> > 
-> > commit 1263cc0f414d212129c0f1289b49b7df77f92084 upstream.
-> > 
-> > Like the Lenovo 82TL and 82V2, the Lenovo 82QF (Yoga 7 14ARB7) and 82UG
-> > (Legion S7 16ARHA7) both need a quirk entry for the internal microphone to
-> > function. Commit c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on
-> > Lenovo 82SJ") restricted the quirk that previously matched "82" to "82V2",
-> > breaking microphone functionality on these devices. Fix this by adding
-> > specific quirks for these models, as was done for the Lenovo 82TL.
-> > 
-> > Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82SJ")
-> > Closes: https://github.com/tomsom/yoga-linux/issues/51
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=208555#c780
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: August Wikerfors <git@augustwikerfors.se>
-> > Link: https://lore.kernel.org/r/20230911213409.6106-1-git@augustwikerfors.se
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> On Mon, Oct 2, 2023 at 2:50 PM Stanislaw Gruszka <stf_xl@wp.pl> wrote:
+> >
+> > Is possible that this is rt2800usb or usb host driver issue. But without
+> > full logs we can not be sure.
 > 
-> Please also add commit cfff2a7794d2 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo 82TL") to 6.1+ as it fixed the same regression for another model (but wasn’t tagged for stable).
+> Okay, I was able to use dmesg -w before it kernel panic'd to grab some
+> additional details, first this is when I plug in th USB WiFi adapter
+> but I have it not automatically connect.  In this state, it will not
+> kernel panic:
 
-Now queued up, thanks.
+<snip>
+> [ 1542.242112] BUG: scheduling while atomic: ksoftirqd/3/29/0x00000103
+> [ 1542.248587] Modules linked in: rt2800usb(E) rt2x00usb(E)
+> rt2800lib(E) rt2x00lib(E) mac80211(E) cfg80211(E) nvidia_modeset(OE)
+> fuse(E) lzo_rle(E) lzo_compress(E) zram(E) ramoops(E) reed_solomon(E)
+> loop(E) snd_soc_tegra186_asrc(E) snd_soc_tegra210_ope(E)
+> snd_soc_tegra186_arad(E) snd_soc_tegra186_dspk(E)
+> snd_soc_tegra210_iqc(E) aes_ce_blk(E) crypto_simd(E) cryptd(E)
+> snd_soc_tegra210_mvc(E) snd_soc_tegra210_afc(E) aes_ce_cipher(E)
+> snd_soc_tegra210_dmic(E) snd_soc_tegra210_adx(E) ghash_ce(E)
+> snd_soc_tegra210_amx(E) sha2_ce(E) snd_soc_tegra210_i2s(E)
+> snd_soc_tegra210_mixer(E) snd_soc_tegra210_admaif(E) sha256_arm64(E)
+> snd_soc_tegra210_sfc(E) snd_soc_tegra_pcm(E) hid_ite(E) sha1_ce(E)
+> input_leds(E) spidev(E) snd_soc_tegra210_adsp(E)
+> snd_soc_tegra_machine_driver(E) snd_soc_spdif_tx(E)
+> snd_soc_tegra_utils(E) snd_soc_simple_card_utils(E)
+> snd_hda_codec_hdmi(E) snd_soc_tegra210_ahub(E) nvadsp(E)
+> userspace_alert(E) snd_hda_tegra(E) tegra_bpmp_thermal(E)
+> tegra210_adma(E) nv_imx219(E) snd_hda_codec(E)
+> [ 1542.248665]  snd_hda_core(E) spi_tegra114(E) nvidia(OE)
+> binfmt_misc(E) ina3221(E) pwm_fan(E) nvgpu(E) nvmap(E) ip_tables(E)
+> x_tables(E) [last unloaded: mtd]
+> [ 1542.248686] CPU: 3 PID: 29 Comm: ksoftirqd/3 Tainted: G        W
+> OE     5.10.120-tegra #1
+> [ 1542.248687] Hardware name: Unknown NVIDIA Orin Nano Developer
+> Kit/NVIDIA Orin Nano Developer Kit, BIOS 4.1-33958178 08/01/2023
+> [ 1542.248690] Call trace:
+> [ 1542.248702]  dump_backtrace+0x0/0x1d0
+> [ 1542.248705]  show_stack+0x30/0x40
+> [ 1542.248712]  dump_stack+0xd8/0x138
+> [ 1542.248717]  __schedule_bug+0x78/0x90
+> [ 1542.248722]  __schedule+0x844/0x910
+> [ 1542.248724]  schedule+0x78/0x110
+> [ 1542.248727]  schedule_timeout+0x184/0x340
+> [ 1542.248731]  nvhost_syncpt_wait_timeout+0x450/0x720
+> [ 1542.248733]  nvhost_syncpt_wait_timeout_ext+0xf4/0x120
+> [ 1542.248738]  tegra_se_channel_submit_gather.isra.0+0x160/0x440
+> [ 1542.248740]  tegra_se_ccm_compute_auth+0x2d8/0x650
+> [ 1542.248743]  tegra_se_aes_ccm_encrypt+0x6c/0x150
+> [ 1542.248746]  crypto_aead_encrypt+0x38/0x50
+> [ 1542.248768]  aead_encrypt+0x130/0x180 [mac80211]
+> [ 1542.248782]  ieee80211_crypto_ccmp_encrypt+0x1f8/0x270 [mac80211]
+> [ 1542.248793]  ieee80211_txq_schedule_start+0xae4/0xc10 [mac80211]
+Here is the issue. We send the frames with spin_lock taken, in such
+case no sleep (i.e. schedule() call) is allowed. Some function from 
+tegra/nvhost is actually sleeping, hence the bug.
 
-greg k-h
+As already pointed Thorsten, those tegra_/nvhost_ are proprietary functions,
+which are not included in the upstream linux kernel, so we can not fix them.
+
+However I can advice you to detach those from crypto_aead_encrypt,
+this should be doable. At worst your will need to  recompile your
+kernel with those crypto offload engines disabled, but perhaps
+this can be configured dynamically.
+
+Regards
+Stanislaw
