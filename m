@@ -1,112 +1,112 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFD41FD9
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 08:35:59 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qnxMJ-0001a7-Gb; Wed, 04 Oct 2023 10:35:55 +0200
-Message-ID: <0c07b6bf-a9cc-4dc0-b71c-a2257e501e5f@leemhuis.info>
-Date: Wed, 4 Oct 2023 10:35:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB6CD514
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 11:46:17 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 8ECAF32009AF;
+	Wed,  4 Oct 2023 07:46:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Wed, 04 Oct 2023 07:46:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm1; t=1696419975; x=
+	1696506375; bh=Q/KtTjvMil+v8KL+aP+mJR97Myi1BBiXbwWlZPHU1Nk=; b=W
+	QU7IJa8O83F6rFW5rMKN2xMNCNAO1E7kUjaswcY+1o/OLZI1+fUzPCt2QpdcBQNy
+	133NAH7ERLxK6zxMxRSIyhuYHevx1B5hqmgCxC8fcpHvonn1WZLjG6pg6G0VqWLV
+	VxjQG8vCnyaXwDHSxn4yH0ih/7v8GErRNK3gkQ+qHwrFEibMWTZoIE6YKW/+dQiX
+	ec1wbiu2/9/bjopMAJlM5gysJwhmooAwCzzRrhTP9ztCFzZvnC5FJmQR0PeJB84m
+	iWme/Bil+ufrmwcyJiAzvpsoaY+MRdqxeGix8n4LhFBH6jIEi3HjBunYm+rAqBPr
+	7J+R58NuSauCqFvmm4muw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1696419975; x=1696506375; bh=Q/KtTjvMil+v8
+	KL+aP+mJR97Myi1BBiXbwWlZPHU1Nk=; b=eFnwXzXm1yTdESHDZdKWoRIe9KrRJ
+	IgPDpJaykVDGIUCjSwXnP5pdlL1NxvdPahaHo+ySa1sbe1nBQX2k9J7fT/sOks5F
+	u3czjoFrLfJ9GdLxaGo5swCw3e4WBQthLLlAD+GgYpkW+ueCmXm4enGlHsyY6Zkk
+	UPvmddDgMESAntvoytwnuqEDVuQeOWO4X67YhnkXh/SkQGDHKAVvBrthcKzmbjg4
+	/jakHeX1HZw7duKvycYugS39KGwFxJsUM7pIi/m0RskCdp1yZjH6Mj6ksqV4KcZW
+	X6XR5o2Im49KqMGZ6orpCDsjdgjduJgKkFMgGo33ZhghmGsPi5GhaK+pA==
+X-ME-Sender: <xms:hVAdZUtoJ0iPK9HFbvQ9SKfr1XB7_yfGF7r9iPlilrWJBoBEGw7U2A>
+    <xme:hVAdZRfmlJflt9ZWukW7n5BFWK67Z9Z35YA9XJJWa7QOv16NXgTih5mRHJR8kJBWk
+    caXui3JO69XBBPNd4Y>
+X-ME-Received: <xmr:hVAdZfz5sldCLkd4cNsslD93WhLhJsDOp5DvdhlHpJdoMsK_hkz9KnGw0e2gZcx_ct3nYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrgedvgdegvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttddttddttddvnecuhfhrohhmpedfmfhirhhi
+    lhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrg
+    hmvgeqnecuggftrfgrthhtvghrnhephfeigefhtdefhedtfedthefghedutddvueehtedt
+    tdehjeeukeejgeeuiedvkedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
+X-ME-Proxy: <xmx:hVAdZXNEAGWcGCtzozspDnqIn2K0H6T6T4HNNgbVjAb5miVRmITD3w>
+    <xmx:hVAdZU875E7jEbhJIjeFLh74_j9-qkEnzKwTMbo1it_fi1AyiHnNxQ>
+    <xmx:hVAdZfXWMFTrVfF75yasj8R6qpYy0AunTXqpp_mQ3q7TVrYIJoVT5Q>
+    <xmx:h1AdZV0_nOCEO7VcmXqGnqVYN5ipphMc1jm1NvwYUFmZhWSqv9oVeA>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 4 Oct 2023 07:46:13 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id C8BD710989F; Wed,  4 Oct 2023 14:46:09 +0300 (+03)
+Date: Wed, 4 Oct 2023 14:46:09 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Max Chou <max.chou@realtek.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Hilda Wu <hildawu@realtek.com>,
+	"alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Juerg Haefliger <juerg.haefliger@canonical.com>,
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth adapter
+Message-ID: <20231004114609.dca6ebtmx37fsx5l@box.shutemov.name>
+References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
+ <ZRyqIn0_qqEFBPdy@debian.me>
+ <b2ef2f1c457a4cf7a246b2e8b8598a30@realtek.com>
+ <20231004044947.vgegwvxxindkjo7g@box.shutemov.name>
+ <7507ad6c8a964b179bf2b3318104a124@realtek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Microcode SW error since Linux 6.5
-Content-Language: en-US, de-DE
-To: "Greenman, Gregory" <gregory.greenman@intel.com>,
- "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "Peer, Ilan" <ilan.peer@intel.com>, "anarcat@debian.org"
- <anarcat@debian.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-References: <87ttrncuc8.fsf@angela.anarc.at>
- <60e2c052f3cedc5c80964e4be90c50cdaa899a87.camel@sipsolutions.net>
- <87jzsf9dme.fsf@angela.anarc.at>
- <0190dde1170bd1ee810e99b9799678f4f5b8f30e.camel@sipsolutions.net>
- <8734z29jx7.fsf@angela.anarc.at>
- <7bd483fd0d004aed37931561a7faa2e176ca3fac.camel@sipsolutions.net>
- <5d0904a4-bc0d-42dd-aae8-6b50e5c567ba@leemhuis.info>
- <42e000913e3af714c77fb7a55dd898733e271be0.camel@intel.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <42e000913e3af714c77fb7a55dd898733e271be0.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696408559;b00fbef0;
-X-HE-SMSGID: 1qnxMJ-0001a7-Gb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7507ad6c8a964b179bf2b3318104a124@realtek.com>
 
-[CCing the net maintainers due to the related merge request not yet
-processed]
-
-On 04.10.23 09:51, Greenman, Gregory wrote:
-> On Tue, 2023-10-03 at 13:52 +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 25.09.23 21:03, Johannes Berg wrote:
->>> On Mon, 2023-09-25 at 14:39 -0400, Antoine Beaupré wrote:
->>> [...]
->>>>> Yes, you can ... but I mean, we still do want to consider this a bug, I
->>>>> think, since we explicitly built the thing to load the older firmware.
->>>>> It just gets _far_ less testing.
->>>> Got it, happy to play guinea pig a little further if that's useful.
->>> Well you might want to go for the extra stability instead :-) I'm kind
->>> of thinking along the lines of "if you can download the next wifi
->>> firmware with the current one, that's probably good enough". :)
->>
->> Well, that's not how Linus wants things to be, as due to this "no
->> regression" rule things should continue to work if people update the
->> kernel without updating linux-firmware (as also explained in
->> Documentation/driver-api/firmware/firmware-usage-guidelines.rst).
->>
->> That's what I though when I saw that message initially, but I thought:
->> well, not worth a comment, the reporter apparently doesn't mind that
->> much. But since then I saw more and more reports that looked related to
->> my untrained eyes (and thus might not be related at all!).
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=217894
->> https://bugzilla.kernel.org/show_bug.cgi?id=217894#c6 (same ticket)
->> https://bugzilla.kernel.org/show_bug.cgi?id=217963
->> https://lore.kernel.org/all/f6448719-14e2-4962-ac3d-1be3c19156ed@dolce-energy.com/
->>
->> Gregory, Johannes, is there something wrong here with 6.5.y? If yes: is
->> anything already been done to improve the state of things?
-
-> The patch in [1] should solve the issue. The problem was that wrong version
-> of Firmware API was used for some older versions.
+On Wed, Oct 04, 2023 at 07:28:45AM +0000, Max Chou wrote:
+> Hi! Kirill,
+> I guess the root cause is as below.
+> ===
+> static int btrtl_register_devcoredump_support(struct hci_dev *hdev)
+> {
+>         int err;
 > 
-> [1] https://patchwork.kernel.org/project/linux-wireless/patch/20230926165546.086e635fbbe6.Ia660f35ca0b1079f2c2ea92fd8d14d8101a89d03@changeid/
+>         err = hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
+> 
+>         return err;
+> }
+> ===
+> If CONFIG_DEV_COREDUMP is not enabled, it would return -EOPNOTSUPP for hci_devcd_register().
+> Unfortunately, btrtl_register_devcoredump_support() will return it. 
+> Finally, -EOPNOSTUPP will be returned for btrtl_setup_realtek().
+> 
+> Could you have the following workaround for the root cause checked?
+> Please share dmesg as well. Thanks,
 
-Ahh, great, many thx for the reply. Two things then:
+Yes. It works and I see 
 
-(1) I wanted to ask why this patch is not in mainline or -net yet, but
-then noticed the fix is among the patches of a one week old pull request
-that afaics was not handled yet:
-https://lore.kernel.org/all/20230927095835.25803-2-johannes@sipsolutions.net/
+[    3.640539] Bluetooth: hci0: RTL: btrtl_register_devcoredump_support(): err = -95
 
-Guess that one fell through the cracks due to the Netconf 2023 workshop?
-Maybe this msg gets things rolling again.
+in dmesg. -EOPNOTSUPP indeed.
 
-
-(2) Would have been great if that fix would have had a stable tag to
-ensure a quick backport to 6.5. :-/ Made me wonder if this is an
-accident, but doesn't look like it:
-
-$ git log --oneline --grep 'CC:.*stable@vger.kernel.org' mainline/master
- -- drivers/net/wireless/intel/iwlwifi/ | wc -l
-11
-
-Is there a reason why iwlwifi patches nearly never contain stable tags?
-Reminder: a "Fixes:" tag alone does not guarantee that the fix is
-backported.
-
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
