@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDBB110E
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 05:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DA91879
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 05:20:23 +0000 (UTC)
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qnu6l-0002RL-L6; Wed, 04 Oct 2023 07:07:39 +0200
-Message-ID: <f8ce2911-e6f2-4423-9ace-262432ec19ad@leemhuis.info>
-Date: Wed, 4 Oct 2023 07:07:38 +0200
+	id 1qnuIy-0004Si-FW; Wed, 04 Oct 2023 07:20:16 +0200
+Message-ID: <3e86e69c-64bc-4776-9ee8-75b98be1bf3e@leemhuis.info>
+Date: Wed, 4 Oct 2023 07:20:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,95 +15,115 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
-To: Jeffery Miller <jefferymiller@google.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: regressions@lists.linux.dev, benjamin.tissoires@redhat.com,
- Andrew Duggan <aduggan@synaptics.com>, Andrew Duggan <andrew@duggan.us>,
- loic.poulain@linaro.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231004005729.3943515-1-jefferymiller@google.com>
+Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
+ devices - /linux/drivers/bluetooth/btusb.c
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20231004005729.3943515-1-jefferymiller@google.com>
+To: =?UTF-8?Q?Erik_Dob=C3=A1k?= <erik.dobak@gmail.com>,
+ =?UTF-8?Q?Tomasz_Mo=C5=84?= <tomasz.mon@nordicsemi.no>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Stable <stable@vger.kernel.org>,
+ Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ Linux Mediatek <linux-mediatek@lists.infradead.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
+ <ZRtWcgiH5JhD5NU2@debian.me>
+ <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
+ <834062302e6a98e773dc4b03d7ed568a0f1c44fc.camel@nordicsemi.no>
+ <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com>
+ <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
+ <CAH7-e5unq6ggNjVkSsriUAmpvk4s7-NCYJrZnLK_3BjFO_Dceg@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAH7-e5unq6ggNjVkSsriUAmpvk4s7-NCYJrZnLK_3BjFO_Dceg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1696396062;d6fbbc9e;
-X-HE-SMSGID: 1qnu6l-0002RL-L6
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696396823;4693e961;
+X-HE-SMSGID: 1qnuIy-0004Si-FW
 
-On 04.10.23 02:57, Jeffery Miller wrote:
-> Make `elantech_setup_ps2` set a compatible fast_reconnect pointer
-> when its ps2 mode is used.
+On 03.10.23 18:10, Erik Dobák wrote:
+> Sorry Tomasz,
 > 
-> When an SMBus connection is attempted and fails `psmouse_smbus_init`
-> sets fast_reconnect to `psmouse_smbus_reconnect`.
-> `psmouse_smbus_reconnect` expects `psmouse->private` to be
-> `struct psmouse_smbus_dev` but `elantech_setup_ps2` replaces
-> it with its private data. This was causing an issue on resume
-> since psmouse_smbus_reconnect was being called while in ps2, not SMBus
-> mode.
+> that must have been a reality glitch with your commit (cant find the
+> page refering to your commit now). But yes it is probably a kernel bug
+> as it manifests kernels 6.4 and not in the 6.1 LTS version.
+
+Could you then please try a bisection to get us closer to the problem?
+You might want to try mainline (e.g. 6.6-rc4) first, with a bit of luck
+the problem is fixed there already; FWIW, a few BT fixes that might or
+might not be relevant for your case are heading that way and will most
+likely be in 6.6-rc5.
+
+Ciao, Thorsten
+
+> On Tue, 3 Oct 2023 at 15:08, Tomasz Moń <tomasz.mon@nordicsemi.no> wrote:
+>>
+>> On Tue, 2023-10-03 at 14:42 +0200, Erik Dobák wrote:
+>>> Sure here you go:
+>>>
+>>> # lsusb -d 04c5:1670 -v
+>>>
+>>> Bus 001 Device 004: ID 04c5:1670 Fujitsu, Ltd Bluetooth Radio
+>>> Device Descriptor:
+>>>   bLength                18
+>>>   bDescriptorType         1
+>>>   bcdUSB               1.00
+>>>   bDeviceClass          224 Wireless
+>>>   bDeviceSubClass         1 Radio Frequency
+>>>   bDeviceProtocol         1 Bluetooth
+>>>   bMaxPacketSize0        64
+>>>   idVendor           0x04c5 Fujitsu, Ltd
+>>>   idProduct          0x1670
+>>>   bcdDevice            0.00
+>>>   iManufacturer           1 Realtek
+>>>   iProduct                2 Bluetooth Radio
+>>>   iSerial                 3 00e04c000001
+>>>   bNumConfigurations      1
+>>>   Configuration Descriptor:
+>>>     bLength                 9
+>>>     bDescriptorType         2
+>>>     wTotalLength       0x00b1
+>>>     bNumInterfaces          2
+>>>     bConfigurationValue     1
+>>>     iConfiguration          0
+>>>     bmAttributes         0xe0
+>>>       Self Powered
+>>>       Remote Wakeup
+>>>     MaxPower              500mA
+>>>     Interface Descriptor:
+>>>       bLength                 9
+>>>       bDescriptorType         4
+>>>       bInterfaceNumber        0
+>>>       bAlternateSetting       0
+>>>       bNumEndpoints           3
+>>>       bInterfaceClass       224 Wireless
+>>>       bInterfaceSubClass      1 Radio Frequency
+>>>       bInterfaceProtocol      1 Bluetooth
+>>>       iInterface              4 Bluetooth Radio
+>>
+>> I have no idea why you referred to my commits, i.e. c13380a55522
+>> ("Bluetooth: btusb: Do not require hardcoded interface numbers") later
+>> fixed by eaac6e223a0d ("Bluetooth: btusb: Fix bluetooth on Intel
+>> Macbook 2014") in the first place.
+>>
+>> BTUSB_IFNUM_2 is not even getting set for this device and therefore the
+>> patches have no impact on your issue. If you were affected, like the
+>> Intel Macbook 2014 was, then bear in mind that the issue would manifest
+>> as btusb driver not even binding to the device. From your emails
+>> however it appears that the issue is something different.
+>>
+>> I honestly don't think it has anything to do with my patches. If you
+>> know a Linux version where your bluetooth device works, then the next
+>> step would be to bisect to find the first bad commit.
+>>
+>> Best Regards,
+>> Tomasz Moń
 > 
-> This was uncovered by commit 92e24e0e57f7 ("Input: psmouse - add delay when
-> deactivating for SMBus mode")
-
-Ahh, thx for investigating. This fixes things for me. Feel free to add:
-
-Tested-by: Thorsten Leemhuis <linux@leemhuis.info>
-
-> Closes:
-> Link:https://lore.kernel.org/all/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-
-Side note: something went sideways here, it afaics should look something
-like this:
-
-"""
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Closes:
-https://lore.kernel.org/all/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-"""
-
-Thx again. Ciao, Thorsten
+> 
