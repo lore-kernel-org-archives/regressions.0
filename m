@@ -1,159 +1,212 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2265C1856
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 07:07:56 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qnvz4-0007mC-Np; Wed, 04 Oct 2023 09:07:50 +0200
-Message-ID: <edf349c4-0ba3-4df3-8c83-f10072e24018@leemhuis.info>
-Date: Wed, 4 Oct 2023 09:07:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410417F8
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 07:29:18 +0000 (UTC)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3947SmKhA3077984, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3947SmKhA3077984
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Oct 2023 15:28:48 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Wed, 4 Oct 2023 15:28:47 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Wed, 4 Oct 2023 15:28:45 +0800
+Received: from RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3]) by
+ RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3%2]) with mapi id
+ 15.01.2375.007; Wed, 4 Oct 2023 15:28:45 +0800
+From: Max Chou <max.chou@realtek.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+CC: Bagas Sanjaya <bagasdotme@gmail.com>, Hilda Wu <hildawu@realtek.com>,
+        "alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>,
+        Luiz Augusto von Dentz
+	<luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        "Johan
+ Hedberg" <johan.hedberg@gmail.com>,
+        Juerg Haefliger
+	<juerg.haefliger@canonical.com>,
+        Linux Bluetooth
+	<linux-bluetooth@vger.kernel.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>
+Subject: RE: Regression: devcoredump patch broke Realtek usb bluetooth adapter
+Thread-Topic: Regression: devcoredump patch broke Realtek usb bluetooth
+ adapter
+Thread-Index: AQHZ9iZZqIk9cnxrEkOIPrwHFnXgfLA4N/0AgAA1ZDCAABycgIAAkrXQgAAclfA=
+Date: Wed, 4 Oct 2023 07:28:45 +0000
+Message-ID: <7507ad6c8a964b179bf2b3318104a124@realtek.com>
+References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
+ <ZRyqIn0_qqEFBPdy@debian.me> <b2ef2f1c457a4cf7a246b2e8b8598a30@realtek.com>
+ <20231004044947.vgegwvxxindkjo7g@box.shutemov.name> 
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.21.132.197]
+x-kse-serverinfo: RTEXMBS05.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] hwrng: bcm2835: Fix hwrng throughput regression
-Content-Language: en-US, de-DE
-To: Herbert Xu <herbert@gondor.apana.org.au>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Olivia Mackall <olivia@selenic.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Mark Brown <broonie@kernel.org>,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- bcm-kernel-feedback-list@broadcom.com,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230905232757.36459-1-wahrenst@gmx.net>
- <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
- <436a7e20-082f-4aa9-bfbd-703d149d5463@leemhuis.info>
- <ZRy9cvCZMdo0QbIz@gondor.apana.org.au>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZRy9cvCZMdo0QbIz@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696403278;d9c09131;
-X-HE-SMSGID: 1qnvz4-0007mC-Np
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-[CCing Linus in case he wants to voice in to clarify how fixes for
-regressions that are nearly a year old should be handled]
+Hi! Kirill,
+I guess the root cause is as below.
+=3D=3D=3D
+static int btrtl_register_devcoredump_support(struct hci_dev *hdev)
+{
+        int err;
 
-On 04.10.23 03:18, Herbert Xu wrote:
-> On Tue, Oct 03, 2023 at 01:35:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->>
->> Hi Herbert, I there a strong reason why you merged this to what from
->> here looks like the branch that targets the next merge window? The patch
->> fixes a regression introduced during the last 12 months and thus
->> normally should not wait for the next merge window. For details see
->> "Expectations and best practices for fixing regressions" in
->> Documentation/process/handling-regressions.rst; or if you want to hear
->> it from Linus directly, check these out:
->> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
->> https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/
-> 
-> This is a one-year-old regression,
+        err =3D hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NUL=
+L);
 
-From day the culprit was authored and merged to mainline: yes, nearly;
-but it's only roughly 9 months from the release of 6.1 till the report
-and the posting of the fix you applied.
+        return err;
+}
+=3D=3D=3D
+If CONFIG_DEV_COREDUMP is not enabled, it would return -EOPNOTSUPP for hci_=
+devcd_register().
+Unfortunately, btrtl_register_devcoredump_support() will return it.=20
+Finally, -EOPNOSTUPP will be returned for btrtl_setup_realtek().
 
-But that's splitting hairs; pretty sure Linus meant those 12 months just
-as a rough estimate. Other things also matter, among them how many
-people are affected and how risky the fix is; but to my untrained eyes
-this one doesn't look very dangerous (but I of course might be totally
-wrong with that).
+Could you have the following workaround for the root cause checked?
+Please share dmesg as well. Thanks,
+=3D=3D=3D
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -967,8 +967,9 @@ static int btrtl_register_devcoredump_support(struct hc=
+i_dev *hdev)
+        int err;
 
-> and the fix is not a trivial reversion.
+        err =3D hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NUL=
+L);
++       rtl_dev_info(hdev, "%s(): err =3D %d", __func__, err);
 
-What makes you think the strategy outlined earlier is only relevant for
-reverts? Yes, one of those links above points to a discussion about a
-revert, but the other is not about it.
+-       return err;
++       return 0;
+ }
 
->  So there is no urgency in pushing this out.
+ void btrtl_set_driver_name(struct hci_dev *hdev, const char *driver_name)
+=3D=3D=3D
 
-I don't care to much about this particular case, but it would help my
-work to know how Linus think about it. That's why I CCed him, that way
-he can comment on this if he wants to.
+BRs,
+Max
 
-Linus, FWIW, the thread starts here with the fix for the regression:
-https://lore.kernel.org/all/20230905232757.36459-1-wahrenst@gmx.net/
 
-Is also in -next for a while as b58a36008bfa1a. Quoting from there below
-for convenience.
-
-Ciao, Thorsten
-
-"""> From b58a36008bfa1aadf55f516bcbfae40c779eb54b Mon Sep 17 00:00:00 2001
-> From: Stefan Wahren <wahrenst@gmx.net>
-> Date: Wed, 6 Sep 2023 01:27:57 +0200
-> Subject: hwrng: bcm2835 - Fix hwrng throughput regression
-> 
-> The last RCU stall fix caused a massive throughput regression of the
-> hwrng on Raspberry Pi 0 - 3. hwrng_msleep doesn't sleep precisely enough
-> and usleep_range doesn't allow scheduling. So try to restore the
-> best possible throughput by introducing hwrng_yield which interruptable
-> sleeps for one jiffy.
-> 
-> Some performance measurements on Raspberry Pi 3B+ (arm64/defconfig):
-> 
-> sudo dd if=/dev/hwrng of=/dev/null count=1 bs=10000
-> 
-> cpu_relax              ~138025 Bytes / sec
-> hwrng_msleep(1000)         ~13 Bytes / sec
-> hwrng_yield              ~2510 Bytes / sec
-> 
-> Fixes: 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of cpu_relax()")
-> Link: https://lore.kernel.org/linux-arm-kernel/bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net/
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> ---
->  drivers/char/hw_random/bcm2835-rng.c | 2 +-
->  drivers/char/hw_random/core.c        | 6 ++++++
->  include/linux/hw_random.h            | 1 +
->  3 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
-> index eb04b12f9f01b..b03e803006275 100644
-> --- a/drivers/char/hw_random/bcm2835-rng.c
-> +++ b/drivers/char/hw_random/bcm2835-rng.c
-> @@ -70,7 +70,7 @@ static int bcm2835_rng_read(struct hwrng *rng, void *buf, size_t max,
->  	while ((rng_readl(priv, RNG_STATUS) >> 24) == 0) {
->  		if (!wait)
->  			return 0;
-> -		hwrng_msleep(rng, 1000);
-> +		hwrng_yield(rng);
->  	}
->  
->  	num_words = rng_readl(priv, RNG_STATUS) >> 24;
-> diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-> index e3598ec9cfca8..420f155d251fb 100644
-> --- a/drivers/char/hw_random/core.c
-> +++ b/drivers/char/hw_random/core.c
-> @@ -678,6 +678,12 @@ long hwrng_msleep(struct hwrng *rng, unsigned int msecs)
->  }
->  EXPORT_SYMBOL_GPL(hwrng_msleep);
->  
-> +long hwrng_yield(struct hwrng *rng)
-> +{
-> +	return wait_for_completion_interruptible_timeout(&rng->dying, 1);
-> +}
-> +EXPORT_SYMBOL_GPL(hwrng_yield);
-> +
->  static int __init hwrng_modinit(void)
->  {
->  	int ret;
-> diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
-> index 8a3115516a1ba..136e9842120e8 100644
-> --- a/include/linux/hw_random.h
-> +++ b/include/linux/hw_random.h
-> @@ -63,5 +63,6 @@ extern void hwrng_unregister(struct hwrng *rng);
->  extern void devm_hwrng_unregister(struct device *dve, struct hwrng *rng);
->  
->  extern long hwrng_msleep(struct hwrng *rng, unsigned int msecs);
-> +extern long hwrng_yield(struct hwrng *rng);
->  
->  #endif /* LINUX_HWRANDOM_H_ */
-"""
+> -----Original Message-----
+> From: Max Chou
+> Sent: Wednesday, October 4, 2023 1:45 PM
+> To: 'Kirill A. Shutemov' <kirill@shutemov.name>
+> Cc: Bagas Sanjaya <bagasdotme@gmail.com>; Hilda Wu
+> <hildawu@realtek.com>; alex_lu@realsil.com.cn; Luiz Augusto von Dentz
+> <luiz.von.dentz@intel.com>; Marcel Holtmann <marcel@holtmann.org>;
+> Johan Hedberg <johan.hedberg@gmail.com>; Juerg Haefliger
+> <juerg.haefliger@canonical.com>; Linux Bluetooth
+> <linux-bluetooth@vger.kernel.org>; Thorsten Leemhuis <linux@leemhuis.info=
+>;
+> Linux Regressions <regressions@lists.linux.dev>; Linux Kernel Mailing Lis=
+t
+> <linux-kernel@vger.kernel.org>
+> Subject: RE: Regression: devcoredump patch broke Realtek usb bluetooth
+> adapter
+>=20
+> Hi! Kirill,
+> As your mentions, there's not obvious wrong from the dmesg.
+> Could you capture btmon log with raw data? (btmon -w xxx.log) In addition=
+al,
+> did you build the last version of bluetooth-next?
+> By my understanding, you can just duplicate the issue by the commit
+> "044014ce85a1 Bluetooth: btrtl: Add Realtek devcoredump support"?
+> Unfortunately, I can not duplicate this issue sofar.
+>=20
+>=20
+> BRs,
+> Max
+>=20
+>=20
+> > -----Original Message-----
+> > From: Kirill A. Shutemov <kirill@shutemov.name>
+> > Sent: Wednesday, October 4, 2023 12:50 PM
+> > To: Max Chou <max.chou@realtek.com>
+> > Cc: Bagas Sanjaya <bagasdotme@gmail.com>; Hilda Wu
+> > <hildawu@realtek.com>; alex_lu@realsil.com.cn; Luiz Augusto von Dentz
+> > <luiz.von.dentz@intel.com>; Marcel Holtmann <marcel@holtmann.org>;
+> > Johan Hedberg <johan.hedberg@gmail.com>; Juerg Haefliger
+> > <juerg.haefliger@canonical.com>; Linux Bluetooth
+> > <linux-bluetooth@vger.kernel.org>; Thorsten Leemhuis
+> > <linux@leemhuis.info>; Linux Regressions
+> > <regressions@lists.linux.dev>; Linux Kernel Mailing List
+> > <linux-kernel@vger.kernel.org>
+> > Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth
+> > adapter
+> >
+> >
+> > External mail.
+> >
+> >
+> >
+> > On Wed, Oct 04, 2023 at 03:07:24AM +0000, Max Chou wrote:
+> > > Hi! Kirill,
+> > > I based on Kernel v6.5.5 and updated drivers/bluetooth to the last
+> > > version of
+> > bluetooth-next tree for a test with RTL8761BUV.
+> > > The dmesg log and "hciconfig -a" are correct.
+> > > Could you share the dmesg for your failure case?
+> > >
+> > > [56133.563293] usb 3-1: new full-speed USB device number 28 using
+> > > xhci_hcd [56133.712559] usb 3-1: New USB device found,
+> > > idVendor=3D0bda, idProduct=3D8771, bcdDevice=3D 2.00 [56133.712577] u=
+sb
+> > > 3-1: New USB device
+> > > strings: Mfr=3D1, Product=3D2, SerialNumber=3D3 [56133.712582] usb 3-=
+1:
+> > > Product: Bluetooth Radio [56133.712585] usb 3-1: Manufacturer:
+> > > Realtek [56133.712588] usb 3-1: SerialNumber: 00E04C239987
+> > > [56133.737812]
+> > > usbcore: registered new interface driver btusb [56133.742126]
+> > > Bluetooth: hci0: RTL: examining hci_ver=3D0a hci_rev=3D000b lmp_ver=
+=3D0a
+> > > lmp_subver=3D8761 [56133.743115] Bluetooth: hci0: RTL: rom_version
+> > > status=3D0 version=3D1 [56133.743124] Bluetooth: hci0: RTL: loading
+> > > rtl_bt/rtl8761bu_fw.bin [56133.743754] Bluetooth: hci0: RTL: loading
+> > > rtl_bt/rtl8761bu_config.bin [56133.743829] Bluetooth: hci0: RTL:
+> > > cfg_sz 6, total sz 30210 [56133.913311] Bluetooth: hci0: RTL: fw
+> > > version 0xdfc6d922 [56133.980299] Bluetooth: MGMT ver 1.22
+> > >
+> > > hci0:   Type: Primary  Bus: USB
+> > >         BD Address: 98:A2:35:85:56:F1  ACL MTU: 1021:6  SCO MTU:
+> > 255:12
+> > >         UP RUNNING
+> > >         RX bytes:1670 acl:0 sco:0 events:184 errors:0
+> > >         TX bytes:33917 acl:0 sco:0 commands:184 errors:0
+> > >         Features: 0xff 0xff 0xff 0xfe 0xdb 0xfd 0x7b 0x87
+> > >         Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
+> > >         Link policy: RSWITCH HOLD SNIFF PARK
+> > >         Link mode: PERIPHERAL ACCEPT
+> > >         Name: 'max-ThinkPad-X230'
+> > >         Class: 0x6c010c
+> > >         Service Classes: Rendering, Capturing, Audio, Telephony
+> > >         Device Class: Computer, Laptop
+> > >         HCI Version: 5.1 (0xa)  Revision: 0xdfc6
+> > >         LMP Version: 5.1 (0xa)  Subversion: 0xd922
+> > >         Manufacturer: Realtek Semiconductor Corporation (93)
+> >
+> > I don't see anything obviously wrong in dmesg. Attached hciconfig and
+> > dmesg for both functional and broken cases.
+> >
+> > --
+> >   Kiryl Shutsemau / Kirill A. Shutemov
