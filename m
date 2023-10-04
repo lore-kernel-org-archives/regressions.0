@@ -1,183 +1,159 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D90B610E
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:58:15 +0000 (UTC)
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3af6cd01323so1157539b6e.3
-        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 23:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696402694; x=1697007494; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nXwmR+/3Lhqmxga+S8/sE/k6mhMWvQB9Ir68rrB9KbI=;
-        b=HYGyTUcZ5x9WlVR4do4Jy1pbW3DZiWJSAU5ugUOlMlgdBDgeTIoKtCSZCLXwJB1/LC
-         XZmE3ZuAw7cRsA+vqCbZZaNSVwDWZR55/hIg2Kt5QVmj2LiXiDdPgTPSPoKh/T4c6ZLw
-         p7khMVXiCe7VYxD5/A9Y9Ax2eetidWwn25TxdYClbJrkdWX0pRCpYejyt50N3IIDqxW2
-         9WxTrgTNbJaKfaebRvS/aJ7Yls19eZ71CSo0O2OP5p6Ol/tV6nLsQmATEE0jt+KSMbLf
-         EXrmf++3JprQ5rxTLXVZchPAorZfJvQZLhEi2YOAMJsG5aX3UtgPd9ooApdVL9a0a2Dy
-         ZPqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696402694; x=1697007494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nXwmR+/3Lhqmxga+S8/sE/k6mhMWvQB9Ir68rrB9KbI=;
-        b=W/3qTCkL7QXU55g/DHITUaxrW9kkbUclJysWBob9DCZjOjwbFXy9qnn6+JqMzeFrr0
-         QHCm3rKrRXDQBGlSM4q0tKI16Wmq0EBruk1WaO7OHZLFqFf7FrflEzaC85kFcH99F1jE
-         ZuxVhQKqfcTBrcTLpV4+GWh6dPSNUwCCIOnFUgOoafBc5snLqU243+yuOGSoq8C7hkA9
-         l4n0Fr1MNew01wWu6O4iELXSQktCPrf2dkT4WNq7jOKfnlPd5oyLVEOCg5AG9Go1gr67
-         gz8Gny45QphO/w0PvGOK8FVOAa+7x3tFF2KP2K8TxvS6BOsOhfS8vfkZdIucUgy18MZW
-         WUiw==
-X-Gm-Message-State: AOJu0YwZmcSd/6lsbq+t8uqf64N4NZX+3z1clsOnMXJfD/GtU7r37+F4
-	lV5M6RHuR+dV8j0kEnC3SUI=
-X-Google-Smtp-Source: AGHT+IGqsgWDkSM7doaaePtiYpnvMHIiKZHVQq+DdlenyLQukhdNxnwcflE6mDXiyk6HB9DH39hqoQ==
-X-Received: by 2002:a05:6808:1506:b0:3ae:5e0e:1667 with SMTP id u6-20020a056808150600b003ae5e0e1667mr2115336oiw.43.1696402694356;
-        Tue, 03 Oct 2023 23:58:14 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id bt8-20020a632908000000b0056b27af8715sm2466712pgb.43.2023.10.03.23.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 23:58:13 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id E8AC981A7EC4; Wed,  4 Oct 2023 13:58:00 +0700 (WIB)
-Date: Wed, 4 Oct 2023 13:58:00 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Eric Whitney <enwlinux@gmail.com>,
-	Linux ext4 <linux-ext4@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Filesystems Development <linux-fsdevel@vger.kernel.org>
-Cc: Jan Kara <jack@suse.com>, Baokun Li <libaokun1@huawei.com>
-Subject: Re: probable quota bug introduced in 6.6-rc1
-Message-ID: <ZR0M-CFmh567Ogyg@debian.me>
-References: <ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2265C1856
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 07:07:56 +0000 (UTC)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qnvz4-0007mC-Np; Wed, 04 Oct 2023 09:07:50 +0200
+Message-ID: <edf349c4-0ba3-4df3-8c83-f10072e24018@leemhuis.info>
+Date: Wed, 4 Oct 2023 09:07:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VKPvnRvQ0Pv/ixYX"
-Content-Disposition: inline
-In-Reply-To: <ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] hwrng: bcm2835: Fix hwrng throughput regression
+Content-Language: en-US, de-DE
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Stefan Wahren <wahrenst@gmx.net>, Olivia Mackall <olivia@selenic.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Mark Brown <broonie@kernel.org>,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20230905232757.36459-1-wahrenst@gmx.net>
+ <ZQQ1tgDEGGXwfu/4@gondor.apana.org.au>
+ <436a7e20-082f-4aa9-bfbd-703d149d5463@leemhuis.info>
+ <ZRy9cvCZMdo0QbIz@gondor.apana.org.au>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <ZRy9cvCZMdo0QbIz@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696403278;d9c09131;
+X-HE-SMSGID: 1qnvz4-0007mC-Np
 
+[CCing Linus in case he wants to voice in to clarify how fixes for
+regressions that are nearly a year old should be handled]
 
---VKPvnRvQ0Pv/ixYX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04.10.23 03:18, Herbert Xu wrote:
+> On Tue, Oct 03, 2023 at 01:35:29PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> Hi Herbert, I there a strong reason why you merged this to what from
+>> here looks like the branch that targets the next merge window? The patch
+>> fixes a regression introduced during the last 12 months and thus
+>> normally should not wait for the next merge window. For details see
+>> "Expectations and best practices for fixing regressions" in
+>> Documentation/process/handling-regressions.rst; or if you want to hear
+>> it from Linus directly, check these out:
+>> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+>> https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/
+> 
+> This is a one-year-old regression,
 
-On Tue, Oct 03, 2023 at 08:11:11PM -0400, Eric Whitney wrote:
-> When run on my test hardware, generic/270 triggers hung task timeouts when
-> run on a 6.6-rc1 (or -rc2, -rc3, -rc4) kernel with kvm-xfstests using the
-> nojournal test scenario.  The test always passes, but about 60% of the ti=
-me
-> the running time of the test increases by an order of magnitude or more a=
-nd
-> one or more of the hung task timeout warnings included below can be found=
- in
-> the log.
->=20
-> This does not reproduce on 6.5.  Bisection leads to this patch:
->=20
-> dabc8b207566 ("quota: fix dqput() to follow the guarantees dquot_srcu sho=
-uld
-> provide")
+From day the culprit was authored and merged to mainline: yes, nearly;
+but it's only roughly 9 months from the release of 6.1 till the report
+and the posting of the fix you applied.
 
-Can you revert the culprit to see if it helps?
+But that's splitting hairs; pretty sure Linus meant those 12 months just
+as a rough estimate. Other things also matter, among them how many
+people are affected and how risky the fix is; but to my untrained eyes
+this one doesn't look very dangerous (but I of course might be totally
+wrong with that).
 
->=20
-> >From the log:
->=20
-> generic/270 306s ...  [20:08:45][  311.322318] run fstests generic/270 at=
- 2023-10-03 20:08:45
-> [  311.579641] EXT4-fs (vdc): mounted filesystem d0e542a0-3342-4d43-aa1f-=
-c918cc92aafa r/w without journal. Quota mode: writeback.
-> [  311.587978] EXT4-fs (vdc): re-mounted d0e542a0-3342-4d43-aa1f-c918cc92=
-aafa ro. Quota mode: writeback.
-> [  311.592725] EXT4-fs (vdc): re-mounted d0e542a0-3342-4d43-aa1f-c918cc92=
-aafa r/w. Quota mode: writeback.
-> [  335.491107] 270 (3092): drop_caches: 3
-> [  491.167988] INFO: task quotaon:3450 blocked for more than 122 seconds.
-> [  491.168334]       Not tainted 6.4.0+ #13
-> [  491.168544] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disable=
-s this message.
-> [  491.168936] task:quotaon         state:D stack:0     pid:3450  ppid:30=
-92   flags:0x00004000
-> [  491.169363] Call Trace:
-> [  491.169503]  <TASK>
-> [  491.169620]  __schedule+0x394/0xd40
-> [  491.169813]  schedule+0x5d/0xd0
-> [  491.169981]  schedule_timeout+0x1a7/0x1c0
-> [  491.170191]  ? lock_release+0x139/0x280
-> [  491.170395]  ? lock_acquire+0xb9/0x180
-> [  491.170605]  ? do_raw_spin_unlock+0x4b/0xa0
-> [  491.170837]  __wait_for_common+0xb6/0x1e0
-> [  491.171046]  ? __pfx_schedule_timeout+0x10/0x10
-> [  491.171324]  __flush_work+0x2da/0x430
-> [  491.171517]  ? __pfx_wq_barrier_func+0x10/0x10
-> [  491.171747]  ? 0xffffffff81000000
-> [  491.171932]  dquot_disable+0x3e5/0x670
-> [  491.172134]  ext4_quota_off+0x50/0x1a0
-> [  491.172332]  __x64_sys_quotactl+0x87/0x1c0
-> [  491.172545]  do_syscall_64+0x38/0x90
-> [  491.172731]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [  491.172990] RIP: 0033:0x7f3c7c79eada
-> [  491.173176] RSP: 002b:00007ffed2ff4478 EFLAGS: 00000246 ORIG_RAX: 0000=
-0000000000b3
-> [  491.173558] RAX: ffffffffffffffda RBX: 000055886a3997d0 RCX: 00007f3c7=
-c79eada
-> [  491.173915] RDX: 0000000000000000 RSI: 000055886bf43de0 RDI: 000000008=
-0000301
-> [  491.174271] RBP: 000055886bf43de0 R08: 0000000000000001 R09: 000000000=
-0000002
-> [  491.174657] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000=
-0000002
-> [  491.175014] R13: 000055886bf43ea0 R14: 0000000000000001 R15: 000000000=
-0000000
-> [  491.175373]  </TASK>
-> [  491.175491]=20
-> [  491.175491] Showing all locks held in the system:
-> [  491.176706] 1 lock held by rcu_tasks_kthre/12:
-> [  491.178126]  #0: ffffffff82763970 (rcu_tasks.tasks_gp_mutex){....}-{3:=
-3}, at: rcu_tasks_one_gp+0x30/0x3f0
-> [  491.180955] 1 lock held by rcu_tasks_rude_/13:
-> [  491.182394]  #0: ffffffff827636f0 (rcu_tasks_rude.tasks_gp_mutex){....=
-}-{3:3}, at: rcu_tasks_one_gp+0x30/0x3f0
-> [  491.194388] 1 lock held by khungtaskd/26:
-> [  491.196153]  #0: ffffffff82764020 (rcu_read_lock){....}-{1:2}, at: deb=
-ug_show_all_locks+0xe/0x110
-> [  491.199676] 2 locks held by kworker/u4:4/59:
-> [  491.200722]  #0: ffff88800385cd38 ((wq_completion)events_unbound){....=
-}-{0:0}, at: process_one_work+0x1f6/0x550
-> [  491.201600]  #1: ffffc90000513e80 ((quota_release_work).work){....}-{0=
-:0}, at: process_one_work+0x1f6/0x550
-> [  491.202746] 1 lock held by quotaon/3450:
-> [  491.203184]  #0: ffff88800afd60e0 (&type->s_umount_key#33){....}-{3:3}=
-, at: user_get_super+0xd3/0x100
-> [  491.204217]=20
-> [  491.204373] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->=20
+> and the fix is not a trivial reversion.
 
-Anyway, thanks for the regression report. I'm adding it to regzbot:
+What makes you think the strategy outlined earlier is only relevant for
+reverts? Yes, one of those links above points to a discussion about a
+revert, but the other is not about it.
 
-#regzbot ^introduced: dabc8b20756601
-#regzbot title: dqput() fix causes kvm-xfstests nojournal test time longer
+>  So there is no urgency in pushing this out.
 
---=20
-An old man doll... just what I always wanted! - Clara
+I don't care to much about this particular case, but it would help my
+work to know how Linus think about it. That's why I CCed him, that way
+he can comment on this if he wants to.
 
---VKPvnRvQ0Pv/ixYX
-Content-Type: application/pgp-signature; name="signature.asc"
+Linus, FWIW, the thread starts here with the fix for the regression:
+https://lore.kernel.org/all/20230905232757.36459-1-wahrenst@gmx.net/
 
------BEGIN PGP SIGNATURE-----
+Is also in -next for a while as b58a36008bfa1a. Quoting from there below
+for convenience.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZR0M8wAKCRD2uYlJVVFO
-o0YAAQCXj/x0ivIXS36slQzBtYpiBrScim99oNIsooNjGAJE+QD/Y0Q3eCfSCDAr
-4Ox1OjcO2vxK3v/Otsa9cVU7kfNarg4=
-=K0YG
------END PGP SIGNATURE-----
+Ciao, Thorsten
 
---VKPvnRvQ0Pv/ixYX--
+"""> From b58a36008bfa1aadf55f516bcbfae40c779eb54b Mon Sep 17 00:00:00 2001
+> From: Stefan Wahren <wahrenst@gmx.net>
+> Date: Wed, 6 Sep 2023 01:27:57 +0200
+> Subject: hwrng: bcm2835 - Fix hwrng throughput regression
+> 
+> The last RCU stall fix caused a massive throughput regression of the
+> hwrng on Raspberry Pi 0 - 3. hwrng_msleep doesn't sleep precisely enough
+> and usleep_range doesn't allow scheduling. So try to restore the
+> best possible throughput by introducing hwrng_yield which interruptable
+> sleeps for one jiffy.
+> 
+> Some performance measurements on Raspberry Pi 3B+ (arm64/defconfig):
+> 
+> sudo dd if=/dev/hwrng of=/dev/null count=1 bs=10000
+> 
+> cpu_relax              ~138025 Bytes / sec
+> hwrng_msleep(1000)         ~13 Bytes / sec
+> hwrng_yield              ~2510 Bytes / sec
+> 
+> Fixes: 96cb9d055445 ("hwrng: bcm2835 - use hwrng_msleep() instead of cpu_relax()")
+> Link: https://lore.kernel.org/linux-arm-kernel/bc97ece5-44a3-4c4e-77da-2db3eb66b128@gmx.net/
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> ---
+>  drivers/char/hw_random/bcm2835-rng.c | 2 +-
+>  drivers/char/hw_random/core.c        | 6 ++++++
+>  include/linux/hw_random.h            | 1 +
+>  3 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
+> index eb04b12f9f01b..b03e803006275 100644
+> --- a/drivers/char/hw_random/bcm2835-rng.c
+> +++ b/drivers/char/hw_random/bcm2835-rng.c
+> @@ -70,7 +70,7 @@ static int bcm2835_rng_read(struct hwrng *rng, void *buf, size_t max,
+>  	while ((rng_readl(priv, RNG_STATUS) >> 24) == 0) {
+>  		if (!wait)
+>  			return 0;
+> -		hwrng_msleep(rng, 1000);
+> +		hwrng_yield(rng);
+>  	}
+>  
+>  	num_words = rng_readl(priv, RNG_STATUS) >> 24;
+> diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
+> index e3598ec9cfca8..420f155d251fb 100644
+> --- a/drivers/char/hw_random/core.c
+> +++ b/drivers/char/hw_random/core.c
+> @@ -678,6 +678,12 @@ long hwrng_msleep(struct hwrng *rng, unsigned int msecs)
+>  }
+>  EXPORT_SYMBOL_GPL(hwrng_msleep);
+>  
+> +long hwrng_yield(struct hwrng *rng)
+> +{
+> +	return wait_for_completion_interruptible_timeout(&rng->dying, 1);
+> +}
+> +EXPORT_SYMBOL_GPL(hwrng_yield);
+> +
+>  static int __init hwrng_modinit(void)
+>  {
+>  	int ret;
+> diff --git a/include/linux/hw_random.h b/include/linux/hw_random.h
+> index 8a3115516a1ba..136e9842120e8 100644
+> --- a/include/linux/hw_random.h
+> +++ b/include/linux/hw_random.h
+> @@ -63,5 +63,6 @@ extern void hwrng_unregister(struct hwrng *rng);
+>  extern void devm_hwrng_unregister(struct device *dve, struct hwrng *rng);
+>  
+>  extern long hwrng_msleep(struct hwrng *rng, unsigned int msecs);
+> +extern long hwrng_yield(struct hwrng *rng);
+>  
+>  #endif /* LINUX_HWRANDOM_H_ */
+"""
