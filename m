@@ -1,116 +1,94 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF0F1850
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:35:01 +0000 (UTC)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qnvTG-000313-TH; Wed, 04 Oct 2023 08:34:58 +0200
-Message-ID: <fbac1212-7206-4fe5-9c28-7372e95f8575@leemhuis.info>
-Date: Wed, 4 Oct 2023 08:34:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B431C3C
+	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 06:35:32 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-d8afe543712so1842684276.0
+        for <regressions@lists.linux.dev>; Tue, 03 Oct 2023 23:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696401331; x=1697006131; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rV98O++0wueY4Se3RDk4FS6DnLpx+AEq9azMKtwZP3M=;
+        b=MSzi8xJjY8I27/3CuOWnl/JsVDwG8RwmifDKfSCCjq2nyvulY+8KPY3Zv2RkWH+oau
+         4Y/h65WShT7/qjNNXtx080paOX7HdAkFgbeTr7Ag6wSv3fL05xrxZF67dzS3MlXpryUw
+         oyHbj6PTtA49a+aAew+IxKjzLkekfl/tqodOrmVbFABLh96o+yh7dsO1wf2fzUXbcmQi
+         uFFcSpcK0dMVZNYXRrNxXwbYGMWsYtxe9mKjwEy4EBqx3Op0zeffDM49Q6N050YCgI+p
+         HT6T3N5PRkHIfcqaa22FRFe2rfziAb0kHC9kJseiFsdC/bfA6OXvH76fZLFQwzHMbZeS
+         YRmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696401331; x=1697006131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rV98O++0wueY4Se3RDk4FS6DnLpx+AEq9azMKtwZP3M=;
+        b=SRmbLMI/nKQ9s8hFmGRONJvPft7+sFqUqzj5cQ3qF2JLcWKdRKhIIt56V00njg3FrJ
+         wlIlOSG6LST/0Gu9ZC3EbntsW50DZ3ddbQXPXZWh9gnozVsoA9BbB/1vBWGL3w0hSIt8
+         paASJYPswQU40shMcqJ0RXeNexkcFM080s8WcNc1Dra2rmDIiNZvyAuLyZ2H4WEZjLb+
+         NNLpiv29Els2ktBBeJ6Lq9D74EDJvt5Ab2Vg8U5Shsy+mRk5j7EI026lIiMEa9wPjb2H
+         urGC8G/Z50OvDb2jgaAV4wuie4mDJkIs74M0E39w7NcQvqZhMY12ry3WbpPzvFLRdajm
+         X0rg==
+X-Gm-Message-State: AOJu0YxwH4Yp14ohPmrhgW9gRUD35Lb8Z5vsm/SwV4FoWNf4QxagKpjc
+	yWzn/8OqG0JQGHX70gwJ5s6CRTFHZ7K+bQPj7Cvax46oM3a9gQ==
+X-Google-Smtp-Source: AGHT+IG7t8/D8MEUEDHRVj12H+fsSO3OXBRZh3THZje73nXUbViNRQLJzuIsSOZ8BZVwVH1m0A8ACfq2fRgIxM82ZRU=
+X-Received: by 2002:a25:d18a:0:b0:d84:b0f8:90e with SMTP id
+ i132-20020a25d18a000000b00d84b0f8090emr1303793ybg.5.1696401331543; Tue, 03
+ Oct 2023 23:35:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
-Content-Language: en-US, de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jeffery Miller <jefferymiller@google.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, regressions@lists.linux.dev,
- benjamin.tissoires@redhat.com, Andrew Duggan <aduggan@synaptics.com>,
- Andrew Duggan <andrew@duggan.us>, loic.poulain@linaro.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231004005729.3943515-1-jefferymiller@google.com>
- <2023100418-clapping-driven-bc09@gregkh>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <2023100418-clapping-driven-bc09@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1696401302;cd930bfe;
-X-HE-SMSGID: 1qnvTG-000313-TH
+References: <CAH7-e5sb+kT_LRb1_y-c5JaFN0=KrrRT97otUPKzTCgzGsVdrQ@mail.gmail.com>
+ <ZRtWcgiH5JhD5NU2@debian.me> <CAH7-e5uspavg_VBJxKLOKJfU3nAq-OrPqzihF2opffY-ReiC-w@mail.gmail.com>
+ <834062302e6a98e773dc4b03d7ed568a0f1c44fc.camel@nordicsemi.no>
+ <CAH7-e5uZzmnFJAJrG664G6_JbK--DfbKC50aeVN5gMMxDJ51UA@mail.gmail.com>
+ <ba7aaaed859ea2c4f5aac597deb382cceab33d65.camel@nordicsemi.no>
+ <CAH7-e5unq6ggNjVkSsriUAmpvk4s7-NCYJrZnLK_3BjFO_Dceg@mail.gmail.com> <3e86e69c-64bc-4776-9ee8-75b98be1bf3e@leemhuis.info>
+In-Reply-To: <3e86e69c-64bc-4776-9ee8-75b98be1bf3e@leemhuis.info>
+From: =?UTF-8?Q?Erik_Dob=C3=A1k?= <erik.dobak@gmail.com>
+Date: Wed, 4 Oct 2023 08:35:20 +0200
+Message-ID: <CAH7-e5vfhcsPiM4qqFdTxv4C=1An=y0uk1o44ryPc+FZ5wa=cw@mail.gmail.com>
+Subject: Re: bluetooth issues since kernel 6.4 - not discovering other bt
+ devices - /linux/drivers/bluetooth/btusb.c
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: =?UTF-8?Q?Tomasz_Mo=C5=84?= <tomasz.mon@nordicsemi.no>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Linux Stable <stable@vger.kernel.org>, 
+	Linux Bluetooth <linux-bluetooth@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Mediatek <linux-mediatek@lists.infradead.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04.10.23 08:19, Greg Kroah-Hartman wrote:
-> On Tue, Oct 03, 2023 at 07:57:24PM -0500, Jeffery Miller wrote:
->> Make `elantech_setup_ps2` set a compatible fast_reconnect pointer
->> when its ps2 mode is used.
->>
->> When an SMBus connection is attempted and fails `psmouse_smbus_init`
->> sets fast_reconnect to `psmouse_smbus_reconnect`.
->> `psmouse_smbus_reconnect` expects `psmouse->private` to be
->> `struct psmouse_smbus_dev` but `elantech_setup_ps2` replaces
->> it with its private data. This was causing an issue on resume
->> since psmouse_smbus_reconnect was being called while in ps2, not SMBus
->> mode.
->>
->> This was uncovered by commit 92e24e0e57f7 ("Input: psmouse - add delay when
->> deactivating for SMBus mode")
->>
->> Closes:
->> Link:https://lore.kernel.org/all/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
->> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
->>
->> Signed-off-by: Jeffery Miller <jefferymiller@google.com>
->> ---
->>
->> The other callbacks set in psmouse_smbus_init are already replaced.
->> Should fast_reconnect be set to `elantech_reconnect` instead?
-> 
-> What commit id does this fix? 
+On Wed, 4 Oct 2023 at 07:20, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 03.10.23 18:10, Erik Dob=C3=A1k wrote:
+> > Sorry Tomasz,
+> >
+> > that must have been a reality glitch with your commit (cant find the
+> > page refering to your commit now). But yes it is probably a kernel bug
+> > as it manifests kernels 6.4 and not in the 6.1 LTS version.
+>
+> Could you then please try a bisection to get us closer to the problem?
+> You might want to try mainline (e.g. 6.6-rc4) first, with a bit of luck
+> the problem is fixed there already; FWIW, a few BT fixes that might or
+> might not be relevant for your case are heading that way and will most
+> likely be in 6.6-rc5.
+>
+> Ciao, Thorsten
+Hi Thorsten,
 
-Good point, yes, it also needs this:
+i was able to compile vanila kernel 6.6-rc4 yesterday and the issue
+was still there. as it takes ages to compile i will try the
+precompiled artix kernel 6.3.4 next to see if the issue disapears.
 
-Fixes: 92e24e0e57f72e ("Input: psmouse - add delay when deactivating for
-SMBus mode")
+Regards
 
-> Should it also have a cc: stable tag?
-
-Not that I can see, as that commit was merged for 6.6 and not backported
-(no idea why Jeffery CCed the stable list, maybe I'm missing something)
-
-Ciao, Thorsten
+E
