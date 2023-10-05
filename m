@@ -1,157 +1,258 @@
-Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2677F
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 07:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BB47F
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 09:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="h7xrC5Pk"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IwdzV0c0"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from [IPV6:2405:201:0:21ea:4ff2:cbfc:a520:890d] (unknown [IPv6:2405:201:0:21ea:4ff2:cbfc:a520:890d])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
-	by vulcan.natalenko.name (Postfix) with ESMTPSA id A74A5152DF11;
-	Thu,  5 Oct 2023 09:56:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1696492577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qLErRg+IY+M+tMiWfSLlVJCQY74BdF5SCkyderIHIa0=;
-	b=h7xrC5PkklBLzvH13lJaXipMzYLk7ODNLFPeypzjuPHUyCP+2NbcQ+lR7VinR5D68csHYC
-	ER5lSQNMZ1BujtcDRgS1EEmaOkSp5YuOTsVmySu1ONKkk1UjK2aNxkLw21T5v35ccRaPjP
-	ET8Ej0R8oBGTFKEcgEr9SS7Use/bjM4=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Matthew Wilcox <willy@infradead.org>,
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Linux Regressions <regressions@lists.linux.dev>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
- linaro-mm-sig@lists.linaro.org, linux-mm@kvack.org,
- Maxime Ripard <mripard@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
-Subject:
- Re: [REGRESSION] BUG: KFENCE: memory corruption in
- drm_gem_put_pages+0x186/0x250
-Date: Thu, 05 Oct 2023 09:56:03 +0200
-Message-ID: <3254850.aeNJFYEL58@natalenko.name>
-In-Reply-To: <fed1cbf3-0926-4895-a8ba-d6fa9fd53dbe@suse.de>
-References:
- <13360591.uLZWGnKmhe@natalenko.name> <2160215.irdbgypaU6@natalenko.name>
- <fed1cbf3-0926-4895-a8ba-d6fa9fd53dbe@suse.de>
+	(Authenticated sender: shreeya)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id EFD5C66072FC;
+	Thu,  5 Oct 2023 10:04:53 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1696496695;
+	bh=dUWeUiPqZMpiNXP8oij1NRtBtsH1i1H9yAPl53dh8Sc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IwdzV0c0Gaca5L3q46jFPhDMXJZGn20TdximlY1GxCevNb2XOVY+u2UDfJ13Po1f4
+	 JVdBoaFP1CWjC2Ev4OK3sV2/zjDnFHgyjdlsBgJ4Cb03ra6S0oBX0atvO+9JzSM0Zw
+	 ZCxggalOZlRXcj+6zi1VGiub89mSGEKAVq+gv9rn7ktn1ehPjs6UHf2FbzvACXQtDK
+	 0D7Kwz3DRl8nrqX5I+ymW6GxTUByScvin7a25chUy+tZAnHAjc2zW23DH0azhoNtcj
+	 d+j0QAaeJYroalzruQ11093Meo4LWlbq046NtVLWlhv8m8KqH5kR3vECLTJ9NUX+BG
+	 aqqc1q493+bHQ==
+Message-ID: <604bc623-a090-005b-cbfc-39805a8a7b20@collabora.com>
+Date: Thu, 5 Oct 2023 14:34:50 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3261088.44csPzL39Z";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
+Content-Language: en-US
+To: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>
+Cc: linux-ext4@vger.kernel.org,
+ =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
+ "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
+ groeck@google.com, zsm@google.com, garrick@google.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
+ <ZQjKOjrjDYsoXBXj@mit.edu>
+ <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
+ <20231003232505.GA444157@mit.edu>
+ <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
+From: Shreeya Patel <shreeya.patel@collabora.com>
+In-Reply-To: <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---nextPart3261088.44csPzL39Z
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Thu, 05 Oct 2023 09:56:03 +0200
-Message-ID: <3254850.aeNJFYEL58@natalenko.name>
-In-Reply-To: <fed1cbf3-0926-4895-a8ba-d6fa9fd53dbe@suse.de>
-MIME-Version: 1.0
+Hi Andres,
 
-Hello.
+On 04/10/23 06:12, Andres Freund wrote:
+> Hi,
+>
+> On 2023-10-03 19:25:05 -0400, Theodore Ts'o wrote:
+>> On Tue, Oct 03, 2023 at 07:11:38AM -0700, Andres Freund wrote:
+>>> On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
+>>>> On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
+>>>>> When I tried to reproduce this issue on mainline linux kernel using the
+>>>>> reproducer provided by syzbot, I see an endless loop of following errors :-
+>>>>>
+>>>>> [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
+>>>>> [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
+>>>>> inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
+>>>>> [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
+>>>> Please note that maliciously corrupted file system is considered low
+>>>> priority by ext4 developers.
+>>> FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
+>>> just doing database development on my laptop.
+>> Unless you are using a corrupted file system (e.g., there are EXT4-fs
+>> error messages in dmesg), it's likely a different issue.
+> Indeed quite possibly unrelated - the only reason that I mentioned it here was
+> the fact that so far I've only hit it in 6.6-rc*, not earlier.
 
-On =C4=8Dtvrtek 5. =C5=99=C3=ADjna 2023 9:44:42 CEST Thomas Zimmermann wrot=
-e:
-> Hi
->=20
-> Am 02.10.23 um 17:38 schrieb Oleksandr Natalenko:
-> > On pond=C4=9Bl=C3=AD 2. =C5=99=C3=ADjna 2023 16:32:45 CEST Matthew Wilc=
-ox wrote:
-> >> On Mon, Oct 02, 2023 at 01:02:52PM +0200, Oleksandr Natalenko wrote:
-> >>>>>>> BUG: KFENCE: memory corruption in drm_gem_put_pages+0x186/0x250
-> >>>>>>>
-> >>>>>>> Corrupted memory at 0x00000000e173a294 [ ! ! ! ! ! ! ! ! ! ! ! ! =
-! ! ! ! ] (in kfence-#108):
-> >>>>>>>   drm_gem_put_pages+0x186/0x250
-> >>>>>>>   drm_gem_shmem_put_pages_locked+0x43/0xc0
-> >>>>>>>   drm_gem_shmem_object_vunmap+0x83/0xe0
-> >>>>>>>   drm_gem_vunmap_unlocked+0x46/0xb0
-> >>>>>>>   drm_fbdev_generic_helper_fb_dirty+0x1dc/0x310
-> >>>>>>>   drm_fb_helper_damage_work+0x96/0x170
-> >>>
-> >>> Matthew, before I start dancing around, do you think ^^ could have th=
-e same cause as 0b62af28f249b9c4036a05acfb053058dc02e2e2 which got fixed by=
- 863a8eb3f27098b42772f668e3977ff4cae10b04?
-> >>
-> >> Yes, entirely plausible.  I think you have two useful points to look at
-> >> before delving into a full bisect -- 863a8e and the parent of 0b62af.
-> >> If either of them work, I think you have no more work to do.
-> >=20
-> > OK, I've did this against v6.5.5:
-> >=20
-> > ```
-> > git log --oneline HEAD~3..
-> > 7c1e7695ca9b8 (HEAD -> test) Revert "mm: remove struct pagevec"
-> > 8f2ad53b6eac6 Revert "mm: remove check_move_unevictable_pages()"
-> > fa1e3c0b5453c Revert "drm: convert drm_gem_put_pages() to use a folio_b=
-atch"
-> > ```
-> >=20
-> > then rebooted the host multiple times, and the issue is not seen any mo=
-re.
-> >=20
-> > So I guess 3291e09a463870610b8227f32b16b19a587edf33 is the culprit.
->=20
-> Ignore my other email. It's apparently been fixed already. Thanks!
+Sorry about the previous html formatted email.
 
-Has it? I think I was able to identify offending commit, but I'm not aware =
-of any fix to that.
+Since the issue that I reported is not reproducable locally, to confirm 
+if it happens on the mainline kernel or not,
+we did a #syz test: https://github.com/torvalds/linux master
 
-Thanks.
-
-> Best regards
-> Thomas
->=20
-> >=20
-> > Thanks.
-> >=20
->=20
-> --=20
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->=20
+But it wasn't reproduced on the mainline kernel so it is very unlikely 
+that the issue you are seeing is same as this one.
 
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart3261088.44csPzL39Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUebBMACgkQil/iNcg8
-M0tJ/Q/9FPtmZXPGSlNkh2qFBHnyONCuzzj6LT+47+l6Fm7nsJgSnF74o/yV/pMh
-q7vpMK9rD5WvRyb5fgLxv+qfYz0t09dnOs5K+ZMjpLdeM5GMp78fFB1E/HOUAADx
-JjTDrWvykfLEDoTBnZedZjxZTaHeR8b0wLvh9f9tF4Z25jeYvy9zWFDueXX97rBo
-/VxH88ZCRlNwFstWH8qwa6W6DP2hiSb4osfYsftRib0xU3Gu1fNKrsWyw95VfeTd
-ReiHGad9mQ4Y1AN3Ff9NeoT6/rM/2rG7h6xSgvsVrt1MAw/iwW24bH1lKUe+5f1k
-fgR7nv6flGS4FF7zZ+deiI+dUaiyt1urG1zZh5U6VhzzW2VandPoTJHE+L1kT8WF
-kAEsYCwRV2v0lw0YL9JhIPhDgCOT7pLWsIXmZXUKnr7IcR7cGwBPMNYpgxgpYyj0
-YqujL4hPU64n46AHLaVlHBAsXO0CLgDqDJjgfbsiWe15XPnAkq0bm8QJRLBjTM0M
-7Z6yr0eiGA1cdZtu8wgwen7ZEH94Lq2aBPhHAhSjSqWLlGJunN/aNSi6u3dVGy4h
-ag1vpbsw2un3WU97sd3AjDunpUn01rk0GiyCWjraCbAyFAQKyVNgdonMGcV5wzX4
-fTHWSuLNytga3UcQ/hCYxldyK/iT/HkFV37Z/aKGJX752dw9KNA=
-=eWGs
------END PGP SIGNATURE-----
-
---nextPart3261088.44csPzL39Z--
+Thanks,
+Shreeya Patel
 
 
-
+> I've since then "downgraded" to 6.5.5, without hitting the issue so far,
+> despite continuing to run a similar workload for most of the day.
+>
+> I did actually find ext4 messages in dmesg, but only during the latest boot
+> into 6.5.5, despite encountering the hang four times (resolved via reboot each
+> time).
+>
+> Oct 03 07:35:16 alap5 kernel: Linux version 6.5.5-andres-00001-g97e7c1c17aa1 (andres@alap5) (gcc (Debian 13.2.0-4) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41) #76 SMP PREEMPT_DYNAMIC Tue Oct  3 07:29:10 PDT 2023
+> Oct 03 07:35:16 alap5 kernel: Command line: BOOT_IMAGE=/vmlinuz-6.5.5-andres-00001-g97e7c1c17aa1 root=/dev/mapper/alap5-root ro apparmor=0 rd.luks.options=discard systemd.show_status=1 i915.fastboot=1 i915.modeset=1 psmouse.synaptics_intertouch=1 systemd.unified_cgroup_hierarchy nvme.poll_queues=2 nvme.write_queues=2 intel_iommu=sm_on,igfx_off iommu=pt
+> ...
+> Oct 03 07:35:17 alap5 systemd[1]: Starting systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8...
+> ...
+> Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: recovering journal
+> ...
+> Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: clean, 90863/122101760 files, 110935625/488378368 blocks
+> Oct 03 07:35:17 alap5 systemd[1]: Finished systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8.
+> ...
+> Oct 03 07:35:18 alap5 kernel: EXT4-fs (nvme1n1p1): mounted filesystem b77a2f23-bb0d-48bf-8c36-327c73460cb8 r/w with ordered data mode. Quota mode: none.
+> ...
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 2240, len 32000; IO logical block 2240, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 4288, len 29952; IO logical block 4288, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 6336, len 27904; IO logical block 6336, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 8384, len 25856; IO logical block 8384, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 10432, len 23808; IO logical block 10432, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 12480, len 21760; IO logical block 12480, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 14528, len 19712; IO logical block 14528, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 16576, len 17664; IO logical block 16576, len 2048
+> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 18624, len 15616; IO logical block 18624, len 320
+> Oct 03 07:38:11 alap5 kernel: wl0: disconnect from AP 04:62:73:d2:2f:ff for new auth to fc:5b:39:c6:6e:9f
+> ...
+> Oct 03 07:38:11 alap5 kernel: wl0: Limiting TX power to 2 dBm as advertised by fc:5b:39:c6:6e:9f
+> Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 152080, len 9856; IO logical block 152080, len 2048
+> Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 154128, len 7808; IO logical block 154128, len 768
+>
+> I'm somewhat surprised to see the "
+>
+>
+>> Can you give us details about (a) what kind of block device; are you
+>> using dm-crypt, or just a HDD or a SSD?  If an SSD, what kind of SSD?
+> NVMe, Samsung SSD 970 EVO Plus 2TB. No dm_crypt, raid or whatever.
+>
+> smartctl / nvme smart-log indicates no data correctness errors or such. Not
+> that that's a guarantee of anything.
+>
+> A forced fsck doesn't find any corruption, but did report a number of
+> Inode 82984754 extent tree (at level 2) could be narrower.  Optimize<y>?
+> style "issues".
+>
+>
+>> What CPU architecture is it?
+> x86-64 (i9-9880H in a ThinkPad X1 Extreme 2nd). The laptop does have a battery
+> that's not, uhm, perfect, anymore (turning off while supposedly still having
+> around 15% capacity), so there have been a few out-of-power hard "shutdowns".
+>
+>
+>> And can you send me the output of dumpe2fs -h <block device>?
+> dumpe2fs 1.47.0 (5-Feb-2023)
+> Filesystem volume name:   <none>
+> Last mounted on:          /srv
+> Filesystem UUID:          b77a2f23-bb0d-48bf-8c36-327c73460cb8
+> Filesystem magic number:  0xEF53
+> Filesystem revision #:    1 (dynamic)
+> Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
+> Filesystem flags:         signed_directory_hash
+> Default mount options:    user_xattr acl
+> Filesystem state:         clean
+> Errors behavior:          Continue
+> Filesystem OS type:       Linux
+> Inode count:              122101760
+> Block count:              488378368
+> Reserved block count:     0
+> Overhead clusters:        7947216
+> Free blocks:              377442743
+> Free inodes:              122010897
+> First block:              0
+> Block size:               4096
+> Fragment size:            4096
+> Group descriptor size:    64
+> Reserved GDT blocks:      1024
+> Blocks per group:         32768
+> Fragments per group:      32768
+> Inodes per group:         8192
+> Inode blocks per group:   512
+> Flex block group size:    16
+> Filesystem created:       Thu Jan  2 20:13:09 2020
+> Last mount time:          Tue Oct  3 07:35:18 2023
+> Last write time:          Tue Oct  3 07:35:18 2023
+> Mount count:              3
+> Maximum mount count:      -1
+> Last checked:             Mon Oct  2 12:55:12 2023
+> Check interval:           0 (<none>)
+> Lifetime writes:          7662 GB
+> Reserved blocks uid:      0 (user root)
+> Reserved blocks gid:      0 (group root)
+> First inode:              11
+> Inode size:	          256
+> Required extra isize:     32
+> Desired extra isize:      32
+> Journal inode:            8
+> Default directory hash:   half_md4
+> Directory Hash Seed:      03b91d34-4d2d-44b4-ac94-0c055f696e8a
+> Journal backup:           inode blocks
+> Checksum type:            crc32c
+> Checksum:                 0xbee0f98e
+> Journal features:         journal_incompat_revoke journal_64bit journal_checksum_v3
+> Total journal size:       1024M
+> Total journal blocks:     262144
+> Max transaction length:   262144
+> Fast commit length:       0
+> Journal sequence:         0x0004f764
+> Journal start:            23369
+> Journal checksum type:    crc32c
+> Journal checksum:         0x66761981
+>
+>
+>> And while the file system is mounted, please send the contents of
+>> /proc/fs/<block-device>/options, e.g.:
+>>
+>> % cat /proc/fs/ext4/dm-0/options
+> cat /proc/fs/ext4/nvme1n1p1/options
+> rw
+> bsddf
+> nogrpid
+> block_validity
+> dioread_nolock
+> nodiscard
+> delalloc
+> nowarn_on_error
+> journal_checksum
+> barrier
+> auto_da_alloc
+> user_xattr
+> acl
+> noquota
+> resuid=0
+> resgid=0
+> errors=continue
+> commit=5
+> min_batch_time=0
+> max_batch_time=15000
+> stripe=0
+> data=ordered
+> inode_readahead_blks=32
+> init_itable=10
+> max_dir_size_kb=0
+>
+>> And finally, how full was the file system?  What is the output of "df
+>> <mountpoint>" and "df -i <mountpoint>".
+> root@alap5:/# df /srv/
+> Filesystem      1K-blocks      Used  Available Use% Mounted on
+> /dev/nvme1n1p1 1921724608 542905720 1378802504  29% /srv
+> root@alap5:/# df -i /srv/
+> Filesystem        Inodes IUsed     IFree IUse% Mounted on
+> /dev/nvme1n1p1 122101760 91292 122010468    1% /srv
+>
+>
+> However, fullness of this filesystem varies substantially over time, as I use
+> it for developing / testing postgres, albeit primarily when travelling.  I was
+> e.g. benchmarking bulk-loading of data (knowingly on a mediocre SSD) at the
+> time of the last crash, space usage during that goes up by a few hundred GB,
+> with the data being deleted afterwards.
+>
+> Greetings,
+>
+> Andres Freund
