@@ -1,149 +1,82 @@
-Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4572B1BDC4
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A5421105
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 14:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="havpDLvC"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vulcan.natalenko.name (Postfix) with ESMTPSA id A4062152ED08;
-	Thu,  5 Oct 2023 15:34:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1696512891;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G7OmVnDV4XM8M5IsSqI8Ix0o10uDr9wvy0myjlHH3sQ=;
-	b=havpDLvC8JWRtLhfFGMQj/UvPRh0H2e6jJMdt1Zz4hkVWvrV2SqusX3rt4TpbPHVlY9OAh
-	8ANmKHrpFZ4FGDEDT1mIdcmdLwWnsS66V2HQv44D0pdkjD+Iqc+i7OmshCMHTNSVrwekOE
-	shIQriGGfhLeu/kTmHZVG6NVUU7SE4A=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
- Linux Regressions <regressions@lists.linux.dev>,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
- linaro-mm-sig@lists.linaro.org, linux-mm@kvack.org,
- Maxime Ripard <mripard@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
-Subject:
- Re: [REGRESSION] BUG: KFENCE: memory corruption in
- drm_gem_put_pages+0x186/0x250
-Date: Thu, 05 Oct 2023 15:34:41 +0200
-Message-ID: <9175204.CDJkKcVGEf@natalenko.name>
-In-Reply-To: <ZR60lylMtLO6ZGp7@casper.infradead.org>
-References:
- <13360591.uLZWGnKmhe@natalenko.name> <22037450.EfDdHjke4D@natalenko.name>
- <ZR60lylMtLO6ZGp7@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhQw+IVD"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-690fe10b6a4so834366b3a.3
+        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 07:14:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696515275; x=1697120075; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JRX3/Gt3srv/e7AHO8IUFPoIUo5JbeHrDyopAPxYQfg=;
+        b=HhQw+IVDINsMgDaxtcRib4bcKuCRBVbrBBgOnEGutmP1PQJhKh163PlCJHhlg6S/Zf
+         nex+PuX+qZn98d8M5HshGVKdMpOnecZJ32GjokF+ZtBEbfAKpL++dAFopLU149dP1heP
+         208M+1+DvsdWUB/ZBmIuuyE+FjOw+S7QM9otlkKuhj7Q5a71SMs4w386KrBGoviAHlg8
+         EMi//mde/n9oXzazCT9oMH+XOUfNSNpkWEM3HOgxiTCZBTrN/x6x04Fcb8dIEEqYc9Ss
+         Z77CGFco5LAfaviGU+pYsbl/pCA71KPmdM/OUCesPyNX9y8yfHvNlTTMWr3KtXq3EBP3
+         1uIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696515275; x=1697120075;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRX3/Gt3srv/e7AHO8IUFPoIUo5JbeHrDyopAPxYQfg=;
+        b=jeXQ5eHLw9ik9fkBk/9qDokSd8oJgvuJP2i8PlRe0MQJuwJKpDH+RqMdhJp4bak5rL
+         oyDOuo9VT5PVxytPfO8La9ZWxEpBmqL/+sM8FN9F395BBcD6UH7H2/BtWJSmNhEFhNq/
+         pj/gtqBmX6LEzy4zewp7tqHmPNpgTATXuleZKSYzHAxB4QAFQLEPavWUKUgJclkvVhCQ
+         g9fzk692cYE0U8YCIaPvatUue/HjiN44+Aw6+Hs8QPLghRFZ8l5xGbBCbLHHpb+IAEa9
+         LlOeW1gaqgr3h7YgGHcQBvy5ndG5D8v/QMGZhPdmj2iE0hV2xMALU2X7JHcePGQ4zsot
+         bTSw==
+X-Gm-Message-State: AOJu0YxpnVP4btFe3rhMKuL8sopZ+0h4QDAngZ2nOnufbkMOEyYkEM73
+	UiV6sPsKXi6AVeuTLek7pDjEqCNIoLE=
+X-Google-Smtp-Source: AGHT+IEeRx+XgfA3+fP3kfww/bCY0zMNHEVM8tRFijHwPIggIPn9wkl6mwbyfwRVRyHDGBW6QDgYwg==
+X-Received: by 2002:a05:6a20:1a9d:b0:158:17e6:7a6 with SMTP id ci29-20020a056a201a9d00b0015817e607a6mr4517939pzb.42.1696515275091;
+        Thu, 05 Oct 2023 07:14:35 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id w18-20020aa78592000000b0064f76992905sm1392751pfn.202.2023.10.05.07.14.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Oct 2023 07:14:34 -0700 (PDT)
+Message-ID: <20cb9f71-cb69-4e8a-b2c5-566292c802f2@gmail.com>
+Date: Thu, 5 Oct 2023 21:14:29 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3187816.5fSG56mABF";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: kmalloc memory leak over time.
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Kees Cook <keescook@chromium.org>, Daniel Micay <danielmicay@gmail.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, freeze0985@gmail.com
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Memory Management List <linux-mm@kvack.org>
+References: <4f01f302-9d59-4146-b7ff-0478c4bd94b1@gmail.com>
+ <8343dcf3-96e9-4601-aaac-e0a80686586b@leemhuis.info>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <8343dcf3-96e9-4601-aaac-e0a80686586b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---nextPart3187816.5fSG56mABF
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: Matthew Wilcox <willy@infradead.org>
-Date: Thu, 05 Oct 2023 15:34:41 +0200
-Message-ID: <9175204.CDJkKcVGEf@natalenko.name>
-In-Reply-To: <ZR60lylMtLO6ZGp7@casper.infradead.org>
-MIME-Version: 1.0
+On 28/09/2023 19:55, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 28.09.23 10:40, Bagas Sanjaya wrote:
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+> @mm developers: feel free to ignore this, the user has Nvidia's driver
+> loaded (see bugzilla; I'll ask to reproduce without it).
+> 
 
-On =C4=8Dtvrtek 5. =C5=99=C3=ADjna 2023 15:05:27 CEST Matthew Wilcox wrote:
-> On Thu, Oct 05, 2023 at 02:30:55PM +0200, Oleksandr Natalenko wrote:
-> > No-no, sorry for possible confusion. Let me explain again:
-> >=20
-> > 1. we had an issue with i915, which was introduced by 0b62af28f249, and=
- later was fixed by 863a8eb3f270
-> > 2. now I've discovered another issue, which looks very similar to 1., b=
-ut in a VM with Cirrus VGA, and it happens even while having 863a8eb3f270 a=
-pplied
-> > 3. I've tried reverting 3291e09a4638, after which I cannot reproduce th=
-e issue with Cirrus VGA, but clearly there was no fix for it discussed
-> >=20
-> > IOW, 863a8eb3f270 is the fix for 0b62af28f249, but not for 3291e09a4638=
-=2E It looks like 3291e09a4638 requires a separate fix.
->=20
-> Thank you!  Sorry about the misunderstanding.  Try this:
->=20
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index 6129b89bb366..44a948b80ee1 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -540,7 +540,7 @@ struct page **drm_gem_get_pages(struct drm_gem_object=
- *obj)
->  	struct page **pages;
->  	struct folio *folio;
->  	struct folio_batch fbatch;
-> -	int i, j, npages;
-> +	long i, j, npages;
-> =20
->  	if (WARN_ON(!obj->filp))
->  		return ERR_PTR(-EINVAL);
-> @@ -564,11 +564,13 @@ struct page **drm_gem_get_pages(struct drm_gem_obje=
-ct *obj)
-> =20
->  	i =3D 0;
->  	while (i < npages) {
-> +		long nr;
->  		folio =3D shmem_read_folio_gfp(mapping, i,
->  				mapping_gfp_mask(mapping));
->  		if (IS_ERR(folio))
->  			goto fail;
-> -		for (j =3D 0; j < folio_nr_pages(folio); j++, i++)
-> +		nr =3D min(npages - i, folio_nr_pages(folio));
-> +		for (j =3D 0; j < nr; j++, i++)
->  			pages[i] =3D folio_file_page(folio, i);
-> =20
->  		/* Make sure shmem keeps __GFP_DMA32 allocated pages in the
+#regzbot invalid: reinstalling nvidia driver solves the regression
 
-No issues after five reboots with this patch applied on top of v6.5.5.
-
-Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Link: https://lore.kernel.org/lkml/13360591.uLZWGnKmhe@natalenko.name/
-=46ixes: 3291e09a4638 ("drm: convert drm_gem_put_pages() to use a folio_bat=
-ch")
-Cc: stable@vger.kernel.org # 6.5.x
-
-Thank you!
-
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart3187816.5fSG56mABF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUeu3EACgkQil/iNcg8
-M0ukOxAAp/BVEyQy2PylnOYA9bNDAnOlxHaslswKSerCTxALAYhIo/Fs7a1/eOIf
-OosjDaawXSueUi47gxloa/ZdEi5RUtYZTBB8L2FK7QX9CdKwwHIWLfkMzW0AuIiY
-CVeP6MMsulrSD0Uu0IwaifAwP9G0AL9EE/a3dRbh29AJhqwmUmzHtxuqsJkg8/+e
-K3O7HedfPZg7bBHdyoNcpjDGdXQE/sZiCW8mSYJgM9kvoXEOsaB52TxGoiooF6Ti
-ETsLn2AQBabbt/XcTNMcLLf6hL56mmd7xA4LpGqkqftjTBVl9SjLKzrHu0fY4pMb
-eff23+Z1uRoHeEiSMpy75/JDN2emeYR5dsvpcFK/DcT4A3VLl9YyJ6iB9LBtLthk
-lMz1ftAOhBrULfLGMJQhub0PDxcRPuEgpwyu3IBqwuNAf9mlGH/SDMg/7Q7mX1Oe
-nVyhqhq9YHHe5ZgTkV8lTCMOPLwQAAIk2aRDmZQAhnhNtPpCaP6/FG6d9++y1hY/
-WglEFusswiz2sjm86xWHnvaX1TB7+eMf7yh8rhYjcVxR86QFDoGnVkdXFap6Hp7c
-uPQ/EoUocvVxfIqYBQlWf2Lrg4BGszBG1LDxie6bLQKoQWilFN3Z1CO/vWOfvfx+
-LJCyyZBPa6+M7ADFb1VLjQ/+sE9jimijlPcpm7degwY1X1+Ifck=
-=7qWv
------END PGP SIGNATURE-----
-
---nextPart3187816.5fSG56mABF--
-
-
+-- 
+An old man doll... just what I always wanted! - Clara
 
