@@ -1,258 +1,119 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BB47F
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 09:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5883863BE
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 09:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IwdzV0c0"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from [IPV6:2405:201:0:21ea:4ff2:cbfc:a520:890d] (unknown [IPv6:2405:201:0:21ea:4ff2:cbfc:a520:890d])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id EFD5C66072FC;
-	Thu,  5 Oct 2023 10:04:53 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1696496695;
-	bh=dUWeUiPqZMpiNXP8oij1NRtBtsH1i1H9yAPl53dh8Sc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IwdzV0c0Gaca5L3q46jFPhDMXJZGn20TdximlY1GxCevNb2XOVY+u2UDfJ13Po1f4
-	 JVdBoaFP1CWjC2Ev4OK3sV2/zjDnFHgyjdlsBgJ4Cb03ra6S0oBX0atvO+9JzSM0Zw
-	 ZCxggalOZlRXcj+6zi1VGiub89mSGEKAVq+gv9rn7ktn1ehPjs6UHf2FbzvACXQtDK
-	 0D7Kwz3DRl8nrqX5I+ymW6GxTUByScvin7a25chUy+tZAnHAjc2zW23DH0azhoNtcj
-	 d+j0QAaeJYroalzruQ11093Meo4LWlbq046NtVLWlhv8m8KqH5kR3vECLTJ9NUX+BG
-	 aqqc1q493+bHQ==
-Message-ID: <604bc623-a090-005b-cbfc-39805a8a7b20@collabora.com>
-Date: Thu, 5 Oct 2023 14:34:50 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WreirQsF"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-505748580ceso955853e87.3
+        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 02:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696499988; x=1697104788; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fHh0oBhZAG630AHNboT2hexNbuam5K6tY+jffHRgTKc=;
+        b=WreirQsFFX223oKUQBmY+kdyavXMm9zGXxvVgRSi7IM0zvEL+v+lzoDJCO6EZpQxPy
+         2oj0Z3gIDTbLodT/PLkl8pDkXDJEIhC2CUYcO3Kgl4iKgzvzrynqdu+4n+b1aJmiZnMe
+         qNpSmEXY33/hm874Y7g+H0VsUzEiGpkfW+vzX/wDYrSiK1aKuKDVxZIgHMylYl3jlsxc
+         /5hr/nqz8FqsMr5hKEX6xMpPUZSCcmKr4+1/8bBSdTaPcEQcWnEUkSyswtBt1QL1NmJL
+         HI929xpf/7CLJgl6G/c9KxW/8Rd7fi2fHMgOHJBrf03BCxV61aLrZNci8qfoa2qok8Sk
+         2npA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696499988; x=1697104788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fHh0oBhZAG630AHNboT2hexNbuam5K6tY+jffHRgTKc=;
+        b=YY1I8df8+yvBxKr2VWfu2ekim1J5nsWBulo0XfuAaTiCPGB8bhjJgI28V+VclzpBO1
+         F5GPNt6JUziCwHbWKQEDWxh/38bBqsnB+E0FXw+l75jPkWLdmNe+RElJ5T44EwISo95j
+         deXayxfpyMX0YtZ67IrttAh8xYQiPsmLZsyESQqCDaEkIhYnDiltRAL3buyA9afR4g2a
+         0k/LZY6lGxZDiXmY73m0YiEbN4URSWYd+yF1QAJeEAvtpWW48Q/hVrq3H2SaND7fOgdU
+         bi/PdFox48RqFX7ahGGX1NcyW5VzLM2gRfateKBVRjQBVbuln5zCzEy86SvJftEvbaVa
+         yRrg==
+X-Gm-Message-State: AOJu0YyR2gc4cYEUG2RKX6jqhVkOJ7FbRT3ctUmBMqOrOXU57cc1lsnp
+	I8sZWT80JhOASEcaxqSrrDBiiFFLP5sWnobbHXA=
+X-Google-Smtp-Source: AGHT+IFPACz7sGrDxBezV8qEBr3BzG13f2a87qwimWoz1maBHX2sPJvKE9svxA7G7+G6Ym0GhIJpzXKiz5DHQo/FB0E=
+X-Received: by 2002:a05:6512:3a83:b0:505:7360:6023 with SMTP id
+ q3-20020a0565123a8300b0050573606023mr5442022lfu.39.1696499987978; Thu, 05 Oct
+ 2023 02:59:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
-Content-Language: en-US
-To: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>
-Cc: linux-ext4@vger.kernel.org,
- =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- groeck@google.com, zsm@google.com, garrick@google.com,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
- <ZQjKOjrjDYsoXBXj@mit.edu>
- <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
- <20231003232505.GA444157@mit.edu>
- <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
+ <ZPfPfyIoVxw5L6El@debian.me> <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
+ <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
+ <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
+ <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
+ <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
+ <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
+ <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com> <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+ <ZRN9MtBqYnT6oX60@vaarsuvius> <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
+In-Reply-To: <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 5 Oct 2023 04:59:36 -0500
+Message-ID: <CAH2r5msDEs5Wi1aGc7KSDXXJv6FT_a5XmzM9oH-AnAWg2jCvTg@mail.gmail.com>
+Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
+ is mounted (cifsd-cfid-laundromat in"D" state)
+To: "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>
+Cc: "tom@talpey.com" <tom@talpey.com>, "paul@darkrain42.org" <paul@darkrain42.org>, 
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>, "bagasdotme@gmail.com" <bagasdotme@gmail.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "pc@manguebit.com" <pc@manguebit.com>, 
+	"ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>, 
+	"nspmangalore@gmail.com" <nspmangalore@gmail.com>, "brian.pardy@gmail.com" <brian.pardy@gmail.com>, 
+	"bharathsm@microsoft.com" <bharathsm@microsoft.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andres,
+FYI - Paulo is looking at an additional patch to address this (and one
+small patch was also just added)
 
-On 04/10/23 06:12, Andres Freund wrote:
-> Hi,
+On Thu, Oct 5, 2023 at 4:55=E2=80=AFAM Dr. Bernd Feige
+<bernd.feige@uniklinik-freiburg.de> wrote:
 >
-> On 2023-10-03 19:25:05 -0400, Theodore Ts'o wrote:
->> On Tue, Oct 03, 2023 at 07:11:38AM -0700, Andres Freund wrote:
->>> On 2023-09-18 18:07:54 -0400, Theodore Ts'o wrote:
->>>> On Mon, Sep 18, 2023 at 08:13:30PM +0530, Shreeya Patel wrote:
->>>>> When I tried to reproduce this issue on mainline linux kernel using the
->>>>> reproducer provided by syzbot, I see an endless loop of following errors :-
->>>>>
->>>>> [   89.689751][ T3922] loop1: detected capacity change from 0 to 512
->>>>> [   89.690514][ T3916] EXT4-fs error (device loop4): ext4_map_blocks:577:
->>>>> inode #3: block 9: comm poc: lblock 0 mapped to illegal pblock 9 (length 1)
->>>>> [   89.694709][ T3890] EXT4-fs error (device loop0): ext4_map_blocks:577:
->>>> Please note that maliciously corrupted file system is considered low
->>>> priority by ext4 developers.
->>> FWIW, I am seeing occasional hangs in ext4_fallocate with 6.6-rc4 as well,
->>> just doing database development on my laptop.
->> Unless you are using a corrupted file system (e.g., there are EXT4-fs
->> error messages in dmesg), it's likely a different issue.
-> Indeed quite possibly unrelated - the only reason that I mentioned it here was
-> the fact that so far I've only hit it in 6.6-rc*, not earlier.
+> Am Dienstag, dem 26.09.2023 um 17:54 -0700 schrieb Paul Aurich:
+> > Perhaps the laundromat thread should be using msleep_interruptible()?
+> >
+> > Using an interruptible sleep appears to prevent the thread from
+> > contributing
+> > to the load average, and has the happy side-effect of removing the
+> > up-to-1s delay
+> > when tearing down the tcon (since a7c01fa93ae, kthread_stop() will
+> > return
+> > early triggered by kthread_stop).
+>
+> Sorry for chiming in so late - I'm also on gentoo (kernel 6.5.5-
+> gentoo), but as a client of Windows AD.
+>
+> Just want to emphasize that using uninterruptible sleep has not just
+> unhappy but devastating side-effects.
+>
+> I have 8 processors and 16 cifsd-cfid-laundromat processes, so
+> /proc/loadavg reports a load average of 16 on a totally idle system.
+>
+> This means that load-balancing software will never start additional
+> tasks on this system - "make -l" but also any other load-dependent
+> system. Just reducing the number of cifsd-cfid-laundromat processes
+> does not fix this - even a single one makes loadavg report a wrong
+> result for load balancing.
+>
+> So, if cifsd-cfid-laundromat must really be uninterruptible, the only
+> solution would be to change the way loadavg is computed by the kernel
+> to exclude uninterruptible but sleeping processes. But must it be
+> uninterruptible?
+>
+> Thanks and best regards,
+> Bernd
 
-Sorry about the previous html formatted email.
-
-Since the issue that I reported is not reproducable locally, to confirm 
-if it happens on the mainline kernel or not,
-we did a #syz test: https://github.com/torvalds/linux master
-
-But it wasn't reproduced on the mainline kernel so it is very unlikely 
-that the issue you are seeing is same as this one.
 
 
+--=20
 Thanks,
-Shreeya Patel
 
-
-> I've since then "downgraded" to 6.5.5, without hitting the issue so far,
-> despite continuing to run a similar workload for most of the day.
->
-> I did actually find ext4 messages in dmesg, but only during the latest boot
-> into 6.5.5, despite encountering the hang four times (resolved via reboot each
-> time).
->
-> Oct 03 07:35:16 alap5 kernel: Linux version 6.5.5-andres-00001-g97e7c1c17aa1 (andres@alap5) (gcc (Debian 13.2.0-4) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41) #76 SMP PREEMPT_DYNAMIC Tue Oct  3 07:29:10 PDT 2023
-> Oct 03 07:35:16 alap5 kernel: Command line: BOOT_IMAGE=/vmlinuz-6.5.5-andres-00001-g97e7c1c17aa1 root=/dev/mapper/alap5-root ro apparmor=0 rd.luks.options=discard systemd.show_status=1 i915.fastboot=1 i915.modeset=1 psmouse.synaptics_intertouch=1 systemd.unified_cgroup_hierarchy nvme.poll_queues=2 nvme.write_queues=2 intel_iommu=sm_on,igfx_off iommu=pt
-> ...
-> Oct 03 07:35:17 alap5 systemd[1]: Starting systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8...
-> ...
-> Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: recovering journal
-> ...
-> Oct 03 07:35:17 alap5 systemd-fsck[705]: /dev/nvme1n1p1: clean, 90863/122101760 files, 110935625/488378368 blocks
-> Oct 03 07:35:17 alap5 systemd[1]: Finished systemd-fsck@dev-disk-by\x2duuid-b77a2f23\x2dbb0d\x2d48bf\x2d8c36\x2d327c73460cb8.service - File System Check on /dev/disk/by-uuid/b77a2f23-bb0d-48bf-8c36-327c73460cb8.
-> ...
-> Oct 03 07:35:18 alap5 kernel: EXT4-fs (nvme1n1p1): mounted filesystem b77a2f23-bb0d-48bf-8c36-327c73460cb8 r/w with ordered data mode. Quota mode: none.
-> ...
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 2240, len 32000; IO logical block 2240, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 4288, len 29952; IO logical block 4288, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 6336, len 27904; IO logical block 6336, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 8384, len 25856; IO logical block 8384, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 10432, len 23808; IO logical block 10432, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 12480, len 21760; IO logical block 12480, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 14528, len 19712; IO logical block 14528, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 16576, len 17664; IO logical block 16576, len 2048
-> Oct 03 07:38:09 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984794) finished: extent logical block 18624, len 15616; IO logical block 18624, len 320
-> Oct 03 07:38:11 alap5 kernel: wl0: disconnect from AP 04:62:73:d2:2f:ff for new auth to fc:5b:39:c6:6e:9f
-> ...
-> Oct 03 07:38:11 alap5 kernel: wl0: Limiting TX power to 2 dBm as advertised by fc:5b:39:c6:6e:9f
-> Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 152080, len 9856; IO logical block 152080, len 2048
-> Oct 03 07:38:22 alap5 kernel: EXT4-fs warning (device nvme1n1p1): ext4_convert_unwritten_extents_endio:3743: Inode (82984800) finished: extent logical block 154128, len 7808; IO logical block 154128, len 768
->
-> I'm somewhat surprised to see the "
->
->
->> Can you give us details about (a) what kind of block device; are you
->> using dm-crypt, or just a HDD or a SSD?  If an SSD, what kind of SSD?
-> NVMe, Samsung SSD 970 EVO Plus 2TB. No dm_crypt, raid or whatever.
->
-> smartctl / nvme smart-log indicates no data correctness errors or such. Not
-> that that's a guarantee of anything.
->
-> A forced fsck doesn't find any corruption, but did report a number of
-> Inode 82984754 extent tree (at level 2) could be narrower.  Optimize<y>?
-> style "issues".
->
->
->> What CPU architecture is it?
-> x86-64 (i9-9880H in a ThinkPad X1 Extreme 2nd). The laptop does have a battery
-> that's not, uhm, perfect, anymore (turning off while supposedly still having
-> around 15% capacity), so there have been a few out-of-power hard "shutdowns".
->
->
->> And can you send me the output of dumpe2fs -h <block device>?
-> dumpe2fs 1.47.0 (5-Feb-2023)
-> Filesystem volume name:   <none>
-> Last mounted on:          /srv
-> Filesystem UUID:          b77a2f23-bb0d-48bf-8c36-327c73460cb8
-> Filesystem magic number:  0xEF53
-> Filesystem revision #:    1 (dynamic)
-> Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
-> Filesystem flags:         signed_directory_hash
-> Default mount options:    user_xattr acl
-> Filesystem state:         clean
-> Errors behavior:          Continue
-> Filesystem OS type:       Linux
-> Inode count:              122101760
-> Block count:              488378368
-> Reserved block count:     0
-> Overhead clusters:        7947216
-> Free blocks:              377442743
-> Free inodes:              122010897
-> First block:              0
-> Block size:               4096
-> Fragment size:            4096
-> Group descriptor size:    64
-> Reserved GDT blocks:      1024
-> Blocks per group:         32768
-> Fragments per group:      32768
-> Inodes per group:         8192
-> Inode blocks per group:   512
-> Flex block group size:    16
-> Filesystem created:       Thu Jan  2 20:13:09 2020
-> Last mount time:          Tue Oct  3 07:35:18 2023
-> Last write time:          Tue Oct  3 07:35:18 2023
-> Mount count:              3
-> Maximum mount count:      -1
-> Last checked:             Mon Oct  2 12:55:12 2023
-> Check interval:           0 (<none>)
-> Lifetime writes:          7662 GB
-> Reserved blocks uid:      0 (user root)
-> Reserved blocks gid:      0 (group root)
-> First inode:              11
-> Inode size:	          256
-> Required extra isize:     32
-> Desired extra isize:      32
-> Journal inode:            8
-> Default directory hash:   half_md4
-> Directory Hash Seed:      03b91d34-4d2d-44b4-ac94-0c055f696e8a
-> Journal backup:           inode blocks
-> Checksum type:            crc32c
-> Checksum:                 0xbee0f98e
-> Journal features:         journal_incompat_revoke journal_64bit journal_checksum_v3
-> Total journal size:       1024M
-> Total journal blocks:     262144
-> Max transaction length:   262144
-> Fast commit length:       0
-> Journal sequence:         0x0004f764
-> Journal start:            23369
-> Journal checksum type:    crc32c
-> Journal checksum:         0x66761981
->
->
->> And while the file system is mounted, please send the contents of
->> /proc/fs/<block-device>/options, e.g.:
->>
->> % cat /proc/fs/ext4/dm-0/options
-> cat /proc/fs/ext4/nvme1n1p1/options
-> rw
-> bsddf
-> nogrpid
-> block_validity
-> dioread_nolock
-> nodiscard
-> delalloc
-> nowarn_on_error
-> journal_checksum
-> barrier
-> auto_da_alloc
-> user_xattr
-> acl
-> noquota
-> resuid=0
-> resgid=0
-> errors=continue
-> commit=5
-> min_batch_time=0
-> max_batch_time=15000
-> stripe=0
-> data=ordered
-> inode_readahead_blks=32
-> init_itable=10
-> max_dir_size_kb=0
->
->> And finally, how full was the file system?  What is the output of "df
->> <mountpoint>" and "df -i <mountpoint>".
-> root@alap5:/# df /srv/
-> Filesystem      1K-blocks      Used  Available Use% Mounted on
-> /dev/nvme1n1p1 1921724608 542905720 1378802504  29% /srv
-> root@alap5:/# df -i /srv/
-> Filesystem        Inodes IUsed     IFree IUse% Mounted on
-> /dev/nvme1n1p1 122101760 91292 122010468    1% /srv
->
->
-> However, fullness of this filesystem varies substantially over time, as I use
-> it for developing / testing postgres, albeit primarily when travelling.  I was
-> e.g. benchmarking bulk-loading of data (knowingly on a mediocre SSD) at the
-> time of the last crash, space usage during that goes up by a few hundred GB,
-> with the data being deleted afterwards.
->
-> Greetings,
->
-> Andres Freund
+Steve
