@@ -1,91 +1,96 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBB1182A0
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:05:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA43182A0
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8lzia3e"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Mkk02uRjKGFB4e8aG+3kpHFTSQxewntkAdfkHaxdesI=; b=e8lzia3eWGjc2IATz+le3lrKVu
-	gOGiebot8NBca6IuY1/7+0Md+gtJwtDVfAHSbA0UWbreBJzbz2kT+hFv+RpLa6r5qqRoffNUXfRGU
-	VA7jnn8XW5RZTzKlM7OWo4x9vALqRV3miM8Zj4Wp1GxFCK1GDxu9CMi+opvVuCBcDMsxrXr1VD/GA
-	ISl5cGU9QCIbPRtkw/08b6pYXUxKIhk56rJaYx/OV4skaPAarzqcWN2klpsiXE8vITVUS0/02QcWn
-	rDUIB+fTSXu4BQliJpqS6UwH588iRi1GdKAdsFAPCdE/peTEyKFsQeCaJqVQf6gemqeoarlPqa0Hy
-	z8Nh6/3A==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qoO2h-009V8J-IJ; Thu, 05 Oct 2023 13:05:27 +0000
-Date: Thu, 5 Oct 2023 14:05:27 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linaro-mm-sig@lists.linaro.org, linux-mm@kvack.org,
-	Maxime Ripard <mripard@kernel.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
-Subject: Re: [REGRESSION] BUG: KFENCE: memory corruption in
- drm_gem_put_pages+0x186/0x250
-Message-ID: <ZR60lylMtLO6ZGp7@casper.infradead.org>
-References: <13360591.uLZWGnKmhe@natalenko.name>
- <3254850.aeNJFYEL58@natalenko.name>
- <ZR6p4MpDbQpZiUSZ@casper.infradead.org>
- <22037450.EfDdHjke4D@natalenko.name>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBa74QjG"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696511382; x=1728047382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=KzpeFTx8zrn8+AF9NwBkDldV/9DUbJCChCOgqhxZ3gk=;
+  b=HBa74QjGszB0Y9e86XrvNqVmmaGC6g3TxnfPQwJ3/469J+Maj1mEjrQ4
+   28hKpnbpQ74UE7hCu4HUcfJuITSm04ovK4sGSueJsFn2P/UWtl0tnPDsQ
+   h8Gc+LCvn+6sFjxoOo2PYhDt1MPNQV1bez0WtGvWL+/9g4J3QINc2Iq2l
+   PN+y6Jy6Sd8E1gsA18pv+RI6DI/RCg73xiRz00mlwtiusKOA3tU4W1b+X
+   20REbo7ZRdFbtwgBfaR7RQQToJIdChl8udUuyKILq7yJbo/n12fDDHioc
+   gz2ZAXMEnHk3MjQMVStwLr7LURctQ67q7dUf+ggto9NeTJgRsyQ6n014u
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="469758236"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="469758236"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:09:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="781243723"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="781243723"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 05 Oct 2023 06:09:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 17E8535A; Thu,  5 Oct 2023 16:09:37 +0300 (EEST)
+Date: Thu, 5 Oct 2023 16:09:37 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kamil Paral <kparal@redhat.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+	bhelgaas@google.com, chris.chiu@canonical.com
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
+Message-ID: <20231005130937.GS3208943@black.fi.intel.com>
+References: <20230925141930.GA21033@wunner.de>
+ <20230926175530.GA418550@bhelgaas>
+ <20230927051602.GX3208943@black.fi.intel.com>
+ <CA+cBOTds9k1Q2haC_gTpsUvjP02dHOv9vSconFEAu-Fsxwf36A@mail.gmail.com>
+ <20230927135346.GJ3208943@black.fi.intel.com>
+ <CA+cBOTfCy-KOptir9yfkVz1=bfOTPQanqe9ofX-jphm7oeBEXg@mail.gmail.com>
+ <CA+cBOTdzp+6whm=Sj5nE2=MC4a+45y0CFtk4hDGq0XgF6f0f2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <22037450.EfDdHjke4D@natalenko.name>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+cBOTdzp+6whm=Sj5nE2=MC4a+45y0CFtk4hDGq0XgF6f0f2A@mail.gmail.com>
 
-On Thu, Oct 05, 2023 at 02:30:55PM +0200, Oleksandr Natalenko wrote:
-> No-no, sorry for possible confusion. Let me explain again:
+Hi Kamil,
+
+On Thu, Oct 05, 2023 at 02:54:23PM +0200, Kamil Paral wrote:
+> On Wed, Sep 27, 2023 at 4:12 PM Kamil Paral <kparal@redhat.com> wrote:
+> >
+> > On Wed, Sep 27, 2023 at 3:53 PM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > If you apply the patch from here:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=pm&id=6786c2941fe1788035f99c98c932672138b3fbc5
+> > >
+> > > Does the problem go away with the disconnect case too (and so that you
+> > > have "secure" enabled)?
+> >
+> > Thanks, I'll test it, but I can't do it this week. I'll reply next week.
 > 
-> 1. we had an issue with i915, which was introduced by 0b62af28f249, and later was fixed by 863a8eb3f270
-> 2. now I've discovered another issue, which looks very similar to 1., but in a VM with Cirrus VGA, and it happens even while having 863a8eb3f270 applied
-> 3. I've tried reverting 3291e09a4638, after which I cannot reproduce the issue with Cirrus VGA, but clearly there was no fix for it discussed
+> Hello Mika, sorry for taking me so long. The URL above gives me a "Bad
+> commit reference" error, but I found a patch mentioned in a different
+> thread, so I used that one, and I hope it's the correct one :-) It's
+> quoted below.
 > 
-> IOW, 863a8eb3f270 is the fix for 0b62af28f249, but not for 3291e09a4638. It looks like 3291e09a4638 requires a separate fix.
+> With the patch applied, I can confirm that disconnecting and
+> reconnecting the cable during suspend is no longer a problem. I tested
+> both "user" and "secure" Thunderbolt security levels. The resume is
+> fast in all cases, and I've found no issues. Thanks for working on it!
+> 
+> The patch I used:
 
-Thank you!  Sorry about the misunderstanding.  Try this:
+Yes, that patch is the correct one. Bjorn moved it to his "for-linus"
+branch so it got different Commit ID:
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 6129b89bb366..44a948b80ee1 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -540,7 +540,7 @@ struct page **drm_gem_get_pages(struct drm_gem_object *obj)
- 	struct page **pages;
- 	struct folio *folio;
- 	struct folio_batch fbatch;
--	int i, j, npages;
-+	long i, j, npages;
- 
- 	if (WARN_ON(!obj->filp))
- 		return ERR_PTR(-EINVAL);
-@@ -564,11 +564,13 @@ struct page **drm_gem_get_pages(struct drm_gem_object *obj)
- 
- 	i = 0;
- 	while (i < npages) {
-+		long nr;
- 		folio = shmem_read_folio_gfp(mapping, i,
- 				mapping_gfp_mask(mapping));
- 		if (IS_ERR(folio))
- 			goto fail;
--		for (j = 0; j < folio_nr_pages(folio); j++, i++)
-+		nr = min(npages - i, folio_nr_pages(folio));
-+		for (j = 0; j < nr; j++, i++)
- 			pages[i] = folio_file_page(folio, i);
- 
- 		/* Make sure shmem keeps __GFP_DMA32 allocated pages in the
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=c82458101d5490230d735caecce14c9c27b1010c
 
-
+Thanks a lot for testing!
