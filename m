@@ -1,96 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [104.207.131.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA43182A0
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4572B1BDC4
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBa74QjG"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696511382; x=1728047382;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=KzpeFTx8zrn8+AF9NwBkDldV/9DUbJCChCOgqhxZ3gk=;
-  b=HBa74QjGszB0Y9e86XrvNqVmmaGC6g3TxnfPQwJ3/469J+Maj1mEjrQ4
-   28hKpnbpQ74UE7hCu4HUcfJuITSm04ovK4sGSueJsFn2P/UWtl0tnPDsQ
-   h8Gc+LCvn+6sFjxoOo2PYhDt1MPNQV1bez0WtGvWL+/9g4J3QINc2Iq2l
-   PN+y6Jy6Sd8E1gsA18pv+RI6DI/RCg73xiRz00mlwtiusKOA3tU4W1b+X
-   20REbo7ZRdFbtwgBfaR7RQQToJIdChl8udUuyKILq7yJbo/n12fDDHioc
-   gz2ZAXMEnHk3MjQMVStwLr7LURctQ67q7dUf+ggto9NeTJgRsyQ6n014u
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="469758236"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="469758236"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:09:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="781243723"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="781243723"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 05 Oct 2023 06:09:38 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 17E8535A; Thu,  5 Oct 2023 16:09:37 +0300 (EEST)
-Date: Thu, 5 Oct 2023 16:09:37 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kamil Paral <kparal@redhat.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev,
-	bhelgaas@google.com, chris.chiu@canonical.com
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-Message-ID: <20231005130937.GS3208943@black.fi.intel.com>
-References: <20230925141930.GA21033@wunner.de>
- <20230926175530.GA418550@bhelgaas>
- <20230927051602.GX3208943@black.fi.intel.com>
- <CA+cBOTds9k1Q2haC_gTpsUvjP02dHOv9vSconFEAu-Fsxwf36A@mail.gmail.com>
- <20230927135346.GJ3208943@black.fi.intel.com>
- <CA+cBOTfCy-KOptir9yfkVz1=bfOTPQanqe9ofX-jphm7oeBEXg@mail.gmail.com>
- <CA+cBOTdzp+6whm=Sj5nE2=MC4a+45y0CFtk4hDGq0XgF6f0f2A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="havpDLvC"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vulcan.natalenko.name (Postfix) with ESMTPSA id A4062152ED08;
+	Thu,  5 Oct 2023 15:34:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1696512891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G7OmVnDV4XM8M5IsSqI8Ix0o10uDr9wvy0myjlHH3sQ=;
+	b=havpDLvC8JWRtLhfFGMQj/UvPRh0H2e6jJMdt1Zz4hkVWvrV2SqusX3rt4TpbPHVlY9OAh
+	8ANmKHrpFZ4FGDEDT1mIdcmdLwWnsS66V2HQv44D0pdkjD+Iqc+i7OmshCMHTNSVrwekOE
+	shIQriGGfhLeu/kTmHZVG6NVUU7SE4A=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+ linaro-mm-sig@lists.linaro.org, linux-mm@kvack.org,
+ Maxime Ripard <mripard@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
+Subject:
+ Re: [REGRESSION] BUG: KFENCE: memory corruption in
+ drm_gem_put_pages+0x186/0x250
+Date: Thu, 05 Oct 2023 15:34:41 +0200
+Message-ID: <9175204.CDJkKcVGEf@natalenko.name>
+In-Reply-To: <ZR60lylMtLO6ZGp7@casper.infradead.org>
+References:
+ <13360591.uLZWGnKmhe@natalenko.name> <22037450.EfDdHjke4D@natalenko.name>
+ <ZR60lylMtLO6ZGp7@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+cBOTdzp+6whm=Sj5nE2=MC4a+45y0CFtk4hDGq0XgF6f0f2A@mail.gmail.com>
+Content-Type: multipart/signed; boundary="nextPart3187816.5fSG56mABF";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Hi Kamil,
+--nextPart3187816.5fSG56mABF
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: Matthew Wilcox <willy@infradead.org>
+Date: Thu, 05 Oct 2023 15:34:41 +0200
+Message-ID: <9175204.CDJkKcVGEf@natalenko.name>
+In-Reply-To: <ZR60lylMtLO6ZGp7@casper.infradead.org>
+MIME-Version: 1.0
 
-On Thu, Oct 05, 2023 at 02:54:23PM +0200, Kamil Paral wrote:
-> On Wed, Sep 27, 2023 at 4:12 PM Kamil Paral <kparal@redhat.com> wrote:
-> >
-> > On Wed, Sep 27, 2023 at 3:53 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > If you apply the patch from here:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=pm&id=6786c2941fe1788035f99c98c932672138b3fbc5
-> > >
-> > > Does the problem go away with the disconnect case too (and so that you
-> > > have "secure" enabled)?
-> >
-> > Thanks, I'll test it, but I can't do it this week. I'll reply next week.
-> 
-> Hello Mika, sorry for taking me so long. The URL above gives me a "Bad
-> commit reference" error, but I found a patch mentioned in a different
-> thread, so I used that one, and I hope it's the correct one :-) It's
-> quoted below.
-> 
-> With the patch applied, I can confirm that disconnecting and
-> reconnecting the cable during suspend is no longer a problem. I tested
-> both "user" and "secure" Thunderbolt security levels. The resume is
-> fast in all cases, and I've found no issues. Thanks for working on it!
-> 
-> The patch I used:
+On =C4=8Dtvrtek 5. =C5=99=C3=ADjna 2023 15:05:27 CEST Matthew Wilcox wrote:
+> On Thu, Oct 05, 2023 at 02:30:55PM +0200, Oleksandr Natalenko wrote:
+> > No-no, sorry for possible confusion. Let me explain again:
+> >=20
+> > 1. we had an issue with i915, which was introduced by 0b62af28f249, and=
+ later was fixed by 863a8eb3f270
+> > 2. now I've discovered another issue, which looks very similar to 1., b=
+ut in a VM with Cirrus VGA, and it happens even while having 863a8eb3f270 a=
+pplied
+> > 3. I've tried reverting 3291e09a4638, after which I cannot reproduce th=
+e issue with Cirrus VGA, but clearly there was no fix for it discussed
+> >=20
+> > IOW, 863a8eb3f270 is the fix for 0b62af28f249, but not for 3291e09a4638=
+=2E It looks like 3291e09a4638 requires a separate fix.
+>=20
+> Thank you!  Sorry about the misunderstanding.  Try this:
+>=20
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index 6129b89bb366..44a948b80ee1 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -540,7 +540,7 @@ struct page **drm_gem_get_pages(struct drm_gem_object=
+ *obj)
+>  	struct page **pages;
+>  	struct folio *folio;
+>  	struct folio_batch fbatch;
+> -	int i, j, npages;
+> +	long i, j, npages;
+> =20
+>  	if (WARN_ON(!obj->filp))
+>  		return ERR_PTR(-EINVAL);
+> @@ -564,11 +564,13 @@ struct page **drm_gem_get_pages(struct drm_gem_obje=
+ct *obj)
+> =20
+>  	i =3D 0;
+>  	while (i < npages) {
+> +		long nr;
+>  		folio =3D shmem_read_folio_gfp(mapping, i,
+>  				mapping_gfp_mask(mapping));
+>  		if (IS_ERR(folio))
+>  			goto fail;
+> -		for (j =3D 0; j < folio_nr_pages(folio); j++, i++)
+> +		nr =3D min(npages - i, folio_nr_pages(folio));
+> +		for (j =3D 0; j < nr; j++, i++)
+>  			pages[i] =3D folio_file_page(folio, i);
+> =20
+>  		/* Make sure shmem keeps __GFP_DMA32 allocated pages in the
 
-Yes, that patch is the correct one. Bjorn moved it to his "for-linus"
-branch so it got different Commit ID:
+No issues after five reboots with this patch applied on top of v6.5.5.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=c82458101d5490230d735caecce14c9c27b1010c
+Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Link: https://lore.kernel.org/lkml/13360591.uLZWGnKmhe@natalenko.name/
+=46ixes: 3291e09a4638 ("drm: convert drm_gem_put_pages() to use a folio_bat=
+ch")
+Cc: stable@vger.kernel.org # 6.5.x
 
-Thanks a lot for testing!
+Thank you!
+
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart3187816.5fSG56mABF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmUeu3EACgkQil/iNcg8
+M0ukOxAAp/BVEyQy2PylnOYA9bNDAnOlxHaslswKSerCTxALAYhIo/Fs7a1/eOIf
+OosjDaawXSueUi47gxloa/ZdEi5RUtYZTBB8L2FK7QX9CdKwwHIWLfkMzW0AuIiY
+CVeP6MMsulrSD0Uu0IwaifAwP9G0AL9EE/a3dRbh29AJhqwmUmzHtxuqsJkg8/+e
+K3O7HedfPZg7bBHdyoNcpjDGdXQE/sZiCW8mSYJgM9kvoXEOsaB52TxGoiooF6Ti
+ETsLn2AQBabbt/XcTNMcLLf6hL56mmd7xA4LpGqkqftjTBVl9SjLKzrHu0fY4pMb
+eff23+Z1uRoHeEiSMpy75/JDN2emeYR5dsvpcFK/DcT4A3VLl9YyJ6iB9LBtLthk
+lMz1ftAOhBrULfLGMJQhub0PDxcRPuEgpwyu3IBqwuNAf9mlGH/SDMg/7Q7mX1Oe
+nVyhqhq9YHHe5ZgTkV8lTCMOPLwQAAIk2aRDmZQAhnhNtPpCaP6/FG6d9++y1hY/
+WglEFusswiz2sjm86xWHnvaX1TB7+eMf7yh8rhYjcVxR86QFDoGnVkdXFap6Hp7c
+uPQ/EoUocvVxfIqYBQlWf2Lrg4BGszBG1LDxie6bLQKoQWilFN3Z1CO/vWOfvfx+
+LJCyyZBPa6+M7ADFb1VLjQ/+sE9jimijlPcpm7degwY1X1+Ifck=
+=7qWv
+-----END PGP SIGNATURE-----
+
+--nextPart3187816.5fSG56mABF--
+
+
+
