@@ -1,82 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EFF182A0
-	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBB1182A0
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 13:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwMtcyn8"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696510947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yidy6TZBy1CWG6Oo6GwAJihK7/D77PxhLMlTWyhd8wc=;
-	b=DwMtcyn8na6LrNt+WcAU8vF9CUkCCEVnfHTRlRK91ttYnDXVCIPjttlxOSVhAm/a14KWKl
-	EggF2qtb+zJ7dSpBDP0NdgU8e34AbRmU7Vqfc4kjcDosyKU4J+ZX8qb7nMm9feJSJ3Vk8A
-	b+MOuZpWC2rjheNdacdVPh7zFeaIYNM=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-380-WdyyLdzyMXqXEiYWgXXhxA-1; Thu, 05 Oct 2023 09:02:24 -0400
-X-MC-Unique: WdyyLdzyMXqXEiYWgXXhxA-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-27911ce6206so874922a91.0
-        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 06:02:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696510943; x=1697115743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yidy6TZBy1CWG6Oo6GwAJihK7/D77PxhLMlTWyhd8wc=;
-        b=e61n5sBwh5rycSZWZU9rIiR5LETV03h9sSGjUslxeOVOhygI7x55pmwOq/npdcfEMa
-         BYHHJdmrSpVwXV7e+JswZhuCalDhPH0+VYgJiKJJHLK98J9VzHbxN2vGNxkyGZGG0cp/
-         5oX+Grt5S0JnZ1Usa9bjuKE26ja5WJ8vaVXNJybCxY4xpmrFzCyCbANSnWKyGd4Zrdcb
-         cXA6GNMameJDVttwRzXygIETtfdnrPBwRCYTIUsKpSZL/KKUYVwbCFFgls54Z4Tv6Nh0
-         G92szWC/2C2lst+RJSeEnZvoPUZjdVbKEha+/YVoYtgv0xZDOrBzn5YCg1rMLzAIoVaT
-         lXQw==
-X-Gm-Message-State: AOJu0Yw/Fiwd3XDgytuqtLZwhb7ERSxRjdZTxB6tzcYG1F5FKW1T3Gi4
-	LHMjePaZjSs4yRUNFglocgHnUgSQcc15caU0B57yiANJcvcyeva2JriimdELIpXLzk28oZ5tVTB
-	lvCh7GLXm/QZQRmmiYRkqt61IPQsi1MMM4PLQPQ==
-X-Received: by 2002:a17:90b:4ad0:b0:274:a021:9383 with SMTP id mh16-20020a17090b4ad000b00274a0219383mr5102298pjb.17.1696510943635;
-        Thu, 05 Oct 2023 06:02:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUGIakY6gmiMMg7VIrDCgG6A1oUd7mRza4EcAODeKOxvfyAvfCd+QT1JpHAONy6e0NM9gveMU8O4PPolgXz5g=
-X-Received: by 2002:a17:90b:4ad0:b0:274:a021:9383 with SMTP id
- mh16-20020a17090b4ad000b00274a0219383mr5102281pjb.17.1696510943386; Thu, 05
- Oct 2023 06:02:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8lzia3e"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Mkk02uRjKGFB4e8aG+3kpHFTSQxewntkAdfkHaxdesI=; b=e8lzia3eWGjc2IATz+le3lrKVu
+	gOGiebot8NBca6IuY1/7+0Md+gtJwtDVfAHSbA0UWbreBJzbz2kT+hFv+RpLa6r5qqRoffNUXfRGU
+	VA7jnn8XW5RZTzKlM7OWo4x9vALqRV3miM8Zj4Wp1GxFCK1GDxu9CMi+opvVuCBcDMsxrXr1VD/GA
+	ISl5cGU9QCIbPRtkw/08b6pYXUxKIhk56rJaYx/OV4skaPAarzqcWN2klpsiXE8vITVUS0/02QcWn
+	rDUIB+fTSXu4BQliJpqS6UwH588iRi1GdKAdsFAPCdE/peTEyKFsQeCaJqVQf6gemqeoarlPqa0Hy
+	z8Nh6/3A==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qoO2h-009V8J-IJ; Thu, 05 Oct 2023 13:05:27 +0000
+Date: Thu, 5 Oct 2023 14:05:27 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linaro-mm-sig@lists.linaro.org, linux-mm@kvack.org,
+	Maxime Ripard <mripard@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org
+Subject: Re: [REGRESSION] BUG: KFENCE: memory corruption in
+ drm_gem_put_pages+0x186/0x250
+Message-ID: <ZR60lylMtLO6ZGp7@casper.infradead.org>
+References: <13360591.uLZWGnKmhe@natalenko.name>
+ <3254850.aeNJFYEL58@natalenko.name>
+ <ZR6p4MpDbQpZiUSZ@casper.infradead.org>
+ <22037450.EfDdHjke4D@natalenko.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230928044233.GR3208943@black.fi.intel.com> <20230928154934.GA484133@bhelgaas>
-In-Reply-To: <20230928154934.GA484133@bhelgaas>
-From: Kamil Paral <kparal@redhat.com>
-Date: Thu, 5 Oct 2023 15:01:56 +0200
-Message-ID: <CA+cBOTdOVnzbXXPhWhWHDs8=n3A1ixcEg6aDVxjCdsneXySdSA@mail.gmail.com>
-Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
- e8b908146d44 "PCI/PM: Increase wait time after resume"
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev, bhelgaas@google.com, 
-	chris.chiu@canonical.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22037450.EfDdHjke4D@natalenko.name>
 
-On Thu, Sep 28, 2023 at 5:49=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
-> Do we know how suspend/resume works with Windows in this
-> configuration?
+On Thu, Oct 05, 2023 at 02:30:55PM +0200, Oleksandr Natalenko wrote:
+> No-no, sorry for possible confusion. Let me explain again:
+> 
+> 1. we had an issue with i915, which was introduced by 0b62af28f249, and later was fixed by 863a8eb3f270
+> 2. now I've discovered another issue, which looks very similar to 1., but in a VM with Cirrus VGA, and it happens even while having 863a8eb3f270 applied
+> 3. I've tried reverting 3291e09a4638, after which I cannot reproduce the issue with Cirrus VGA, but clearly there was no fix for it discussed
+> 
+> IOW, 863a8eb3f270 is the fix for 0b62af28f249, but not for 3291e09a4638. It looks like 3291e09a4638 requires a separate fix.
 
-Hello Bjorn. I'm not sure if you're asking in general or about my
-laptop in particular. I don't have Windows installed, so I don't have
-an easy way to test this. There used to be some "evaluation" version
-of Windows that I think I could use to test it, but it would be a
-considerable time investment for me (including backing up my data,
-etc), and I'm currently low on spare time. So at this moment I'm
-unfortunately unable to help with this question.
+Thank you!  Sorry about the misunderstanding.  Try this:
+
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index 6129b89bb366..44a948b80ee1 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -540,7 +540,7 @@ struct page **drm_gem_get_pages(struct drm_gem_object *obj)
+ 	struct page **pages;
+ 	struct folio *folio;
+ 	struct folio_batch fbatch;
+-	int i, j, npages;
++	long i, j, npages;
+ 
+ 	if (WARN_ON(!obj->filp))
+ 		return ERR_PTR(-EINVAL);
+@@ -564,11 +564,13 @@ struct page **drm_gem_get_pages(struct drm_gem_object *obj)
+ 
+ 	i = 0;
+ 	while (i < npages) {
++		long nr;
+ 		folio = shmem_read_folio_gfp(mapping, i,
+ 				mapping_gfp_mask(mapping));
+ 		if (IS_ERR(folio))
+ 			goto fail;
+-		for (j = 0; j < folio_nr_pages(folio); j++, i++)
++		nr = min(npages - i, folio_nr_pages(folio));
++		for (j = 0; j < nr; j++, i++)
+ 			pages[i] = folio_file_page(folio, i);
+ 
+ 		/* Make sure shmem keeps __GFP_DMA32 allocated pages in the
+
 
