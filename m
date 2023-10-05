@@ -1,119 +1,88 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A8120B37
-	for <regressions@lists.linux.dev>; Wed,  4 Oct 2023 18:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA9B7F
+	for <regressions@lists.linux.dev>; Thu,  5 Oct 2023 00:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="h3Fqop8Q"
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
-Received: (wp-smtpd smtp.wp.pl 34923 invoked from network); 4 Oct 2023 20:28:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1696444107; bh=9WqA8RBus0lT/tlmpFJJ73tod3YptX81Tc2dYpc1LK4=;
-          h=From:To:Cc:Subject;
-          b=h3Fqop8Q6R+02M6NAU7WmxsvBqSVKRWybFa4bVqNvp8gmCfipWX6UD+KJsDnzZGbL
-           HlA8bbigIsqnvpHJ3pFfMuA5731n3g67RC6UZaL1bHsR1nAdbDGlFDOZWZpYbb+26X
-           4c/PWDoFdCtktw/GOYywu07X0TLQSX3JCjYaWJ+o=
-Received: from 89-64-13-175.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.13.175])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <enc0der@gmail.com>; 4 Oct 2023 20:28:27 +0200
-Date: Wed, 4 Oct 2023 20:28:26 +0200
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: enc0der <enc0der@gmail.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Wireless <linux-wireless@vger.kernel.org>
-Subject: Re: rt8000usb driver issue (maybe interaction with other drivers)
-Message-ID: <20231004182826.GA411448@wp.pl>
-References: <CAEXpi5Rd6Y4umKOWRsCjX0kit=W5ZrVhn=MuRkyvJPwmjjDVnA@mail.gmail.com>
- <ZRj_ovMi-Xbb8i-D@debian.me>
- <20231002185053.GB402943@wp.pl>
- <CAEXpi5StYwujiTaH2_5PE9Hg_cgzAEtBuFxfgVxEJvbqRNv_4A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="De+hQJkm"
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50348c54439so1123e87.1
+        for <regressions@lists.linux.dev>; Wed, 04 Oct 2023 17:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696464816; x=1697069616; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vRF+vIlJA3ZehEMRKa/evOkO3sf/u/GsKZC4fdcnalA=;
+        b=De+hQJkm5JXNFot1/mgwmpIFQiqm2G7qf+LWh8NLMqhVOzx7z7dBTiWj9xsRs+YtKf
+         8CzMkk7rT+4ZovhKU0uY1Npx0eE9kCbM37s3lXC6EBiX/RcFxGQlWobCDLHKKRU4gONk
+         M9cME0e73YdqJtb5uuPTbTwkj/gkbbanqEH0derRIGZQAlpDCWqwTpNuiJTLYLh20kYk
+         aVsUo9iQb9NzrGgO5By6H0mHDo531fyq7b3z9Rz8EYup3sa2DK1nPbWiCQ5OuamJU+rb
+         rA6YViwBTTiLTqiI4MmZk0KPtnk4bU0MTv7tdxdiJZBr8TGCbgsBMcfpN6dZjfwOLKFf
+         33cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696464816; x=1697069616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vRF+vIlJA3ZehEMRKa/evOkO3sf/u/GsKZC4fdcnalA=;
+        b=qGwZD1n8pA3jok6CWYRCuBne0Nj1h497N3i7QCUbc7FkirDSceva4n2FFT1ly9oEzW
+         AoFs72hyR0Y2VQt6a2p3dWO+Na6xv5WRMLgj+IZqpsxBq6KHB6BZiAKm1XAbPjkbqfrv
+         T7ulgwiM+c/MNpLeHxisFjp6ldW+CFyW6a0oZ1YGzCClAsuNxUtjAAMOnWta12kBZgm3
+         y07FqaJq/1BiedEo5gZZtc6VrPgE2idSZC2TXHRY5AjZEv4My88RwfOHHn1jAMX3GdqI
+         mQNVCZvWnpG3xZl7G2BZbNEI2EjBSbO5iHA/eEEviYeAWiRIOosoKRqto9V+asL8AgAA
+         g+uw==
+X-Gm-Message-State: AOJu0YwlZ6755qJPH2HSal7rWUlmgwP8rdA34QThmSstHJ2y/Pe4N8TA
+	yoY62OQVfF3jS2VAi56NmCHyyKypST0saP2xsMIkYw==
+X-Google-Smtp-Source: AGHT+IG24SY+AmaIc+GhrEz329Y4vBmKjCMcDq+rUUT0zgxupE8c2rrSkXUVRsTg1cVaRBl7z6gixwGZa6VYIoacwHE=
+X-Received: by 2002:ac2:5d67:0:b0:502:932e:2e36 with SMTP id
+ h7-20020ac25d67000000b00502932e2e36mr31850lft.2.1696464816245; Wed, 04 Oct
+ 2023 17:13:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEXpi5StYwujiTaH2_5PE9Hg_cgzAEtBuFxfgVxEJvbqRNv_4A@mail.gmail.com>
-X-WP-MailID: f0179e23565c96ae6547a30aa0eda1e9
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [IYOV]                               
+References: <20231004005729.3943515-1-jefferymiller@google.com> <ZR1yUFJ8a9Zt606N@penguin>
+In-Reply-To: <ZR1yUFJ8a9Zt606N@penguin>
+From: Jeffery Miller <jefferymiller@google.com>
+Date: Wed, 4 Oct 2023 19:13:24 -0500
+Message-ID: <CAAzPG9Pp6mHfEziJiUuhDRmkKMfiiPD6axtfAMaCJcEAcuQPiA@mail.gmail.com>
+Subject: Re: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: regressions@lists.linux.dev, benjamin.tissoires@redhat.com, 
+	linux@leemhuis.info, Andrew Duggan <aduggan@synaptics.com>, 
+	Andrew Duggan <andrew@duggan.us>, loic.poulain@linaro.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+Dmitry,
 
-On Tue, Oct 03, 2023 at 09:34:32PM -0400, enc0der wrote:
-> Hello Stanislaw!
-> 
-> On Mon, Oct 2, 2023 at 2:50 PM Stanislaw Gruszka <stf_xl@wp.pl> wrote:
-> >
-> > Is possible that this is rt2800usb or usb host driver issue. But without
-> > full logs we can not be sure.
-> 
-> Okay, I was able to use dmesg -w before it kernel panic'd to grab some
-> additional details, first this is when I plug in th USB WiFi adapter
-> but I have it not automatically connect.  In this state, it will not
-> kernel panic:
+On Wed, Oct 4, 2023 at 9:11=E2=80=AFAM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> In fact, now that I think about it more, we should rework the original
+> patch that added the delay, so that we do not wait these 30 msec in the
+> "fast" reconnect handler. It turns out your original approach was
+> better, but we should not be using retries, but rather the existing
+> reset_delay_ms already defined in rmi platform data. I would appreciate
+> if you try the draft patch at the end of this email (to be applied after
+> reverting your original one adding the delay in psmouse-smbus.c).
 
-<snip>
-> [ 1542.242112] BUG: scheduling while atomic: ksoftirqd/3/29/0x00000103
-> [ 1542.248587] Modules linked in: rt2800usb(E) rt2x00usb(E)
-> rt2800lib(E) rt2x00lib(E) mac80211(E) cfg80211(E) nvidia_modeset(OE)
-> fuse(E) lzo_rle(E) lzo_compress(E) zram(E) ramoops(E) reed_solomon(E)
-> loop(E) snd_soc_tegra186_asrc(E) snd_soc_tegra210_ope(E)
-> snd_soc_tegra186_arad(E) snd_soc_tegra186_dspk(E)
-> snd_soc_tegra210_iqc(E) aes_ce_blk(E) crypto_simd(E) cryptd(E)
-> snd_soc_tegra210_mvc(E) snd_soc_tegra210_afc(E) aes_ce_cipher(E)
-> snd_soc_tegra210_dmic(E) snd_soc_tegra210_adx(E) ghash_ce(E)
-> snd_soc_tegra210_amx(E) sha2_ce(E) snd_soc_tegra210_i2s(E)
-> snd_soc_tegra210_mixer(E) snd_soc_tegra210_admaif(E) sha256_arm64(E)
-> snd_soc_tegra210_sfc(E) snd_soc_tegra_pcm(E) hid_ite(E) sha1_ce(E)
-> input_leds(E) spidev(E) snd_soc_tegra210_adsp(E)
-> snd_soc_tegra_machine_driver(E) snd_soc_spdif_tx(E)
-> snd_soc_tegra_utils(E) snd_soc_simple_card_utils(E)
-> snd_hda_codec_hdmi(E) snd_soc_tegra210_ahub(E) nvadsp(E)
-> userspace_alert(E) snd_hda_tegra(E) tegra_bpmp_thermal(E)
-> tegra210_adma(E) nv_imx219(E) snd_hda_codec(E)
-> [ 1542.248665]  snd_hda_core(E) spi_tegra114(E) nvidia(OE)
-> binfmt_misc(E) ina3221(E) pwm_fan(E) nvgpu(E) nvmap(E) ip_tables(E)
-> x_tables(E) [last unloaded: mtd]
-> [ 1542.248686] CPU: 3 PID: 29 Comm: ksoftirqd/3 Tainted: G        W
-> OE     5.10.120-tegra #1
-> [ 1542.248687] Hardware name: Unknown NVIDIA Orin Nano Developer
-> Kit/NVIDIA Orin Nano Developer Kit, BIOS 4.1-33958178 08/01/2023
-> [ 1542.248690] Call trace:
-> [ 1542.248702]  dump_backtrace+0x0/0x1d0
-> [ 1542.248705]  show_stack+0x30/0x40
-> [ 1542.248712]  dump_stack+0xd8/0x138
-> [ 1542.248717]  __schedule_bug+0x78/0x90
-> [ 1542.248722]  __schedule+0x844/0x910
-> [ 1542.248724]  schedule+0x78/0x110
-> [ 1542.248727]  schedule_timeout+0x184/0x340
-> [ 1542.248731]  nvhost_syncpt_wait_timeout+0x450/0x720
-> [ 1542.248733]  nvhost_syncpt_wait_timeout_ext+0xf4/0x120
-> [ 1542.248738]  tegra_se_channel_submit_gather.isra.0+0x160/0x440
-> [ 1542.248740]  tegra_se_ccm_compute_auth+0x2d8/0x650
-> [ 1542.248743]  tegra_se_aes_ccm_encrypt+0x6c/0x150
-> [ 1542.248746]  crypto_aead_encrypt+0x38/0x50
-> [ 1542.248768]  aead_encrypt+0x130/0x180 [mac80211]
-> [ 1542.248782]  ieee80211_crypto_ccmp_encrypt+0x1f8/0x270 [mac80211]
-> [ 1542.248793]  ieee80211_txq_schedule_start+0xae4/0xc10 [mac80211]
-Here is the issue. We send the frames with spin_lock taken, in such
-case no sleep (i.e. schedule() call) is allowed. Some function from 
-tegra/nvhost is actually sleeping, hence the bug.
+I tested the draft patch and it works. I did revert the previous delay
+patch while testing it.
 
-As already pointed Thorsten, those tegra_/nvhost_ are proprietary functions,
-which are not included in the upstream linux kernel, so we can not fix them.
+>
+> I think we need a similar change in synaptics.c as that one also can
+> fall back to PS/2 mode.
+>
+Ah, good point, yes it does appear this needs to be done as well.
+I have tested and will post an new version of the patch to include
+the fix in synaptics.c as well.
 
-However I can advice you to detach those from crypto_aead_encrypt,
-this should be doable. At worst your will need to  recompile your
-kernel with those crypto offload engines disabled, but perhaps
-this can be configured dynamically.
-
-Regards
-Stanislaw
+Thanks,
+Jeff
