@@ -1,88 +1,94 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE169125B7
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 11:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faWI7Zkb"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-503f39d3236so2469264e87.0
-        for <regressions@lists.linux.dev>; Fri, 06 Oct 2023 04:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696590217; x=1697195017; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z+TRwFSu5xqtCS4GBmrR7m1FXCNdXTVhpoe8UmPcZTw=;
-        b=faWI7ZkbWsIK1o8YlBuf8u+483XFmzFJq80qc2kO9uyjgHuy3DyiL1s2a6VUEPwKOy
-         xUNSq+py+e+LoS6zDS3VXV4IMRuVi2Cb8k3zqFIc9CZ+GmF5YD2qpJfsvfZvnY6AeVGR
-         /mTZNGt1kDo5ohKVlBXPta0gvX/cNOQdXdJScGhl15AwyQ0EnneEAWwKuttG+/AXRGI4
-         j5ZvyvAIfxbENXf1Wt3VScFFM21226AdrJXBk+rS2ZRIT9Ovk3DeqaGoEtTFNp//+wq9
-         UPcrnn8fjUlBkyooaNV2KVBeHTtHEZJw8oymfLLTQFna+yNgMR3mS+/8WqSza1F0D0Su
-         Brfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696590217; x=1697195017;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z+TRwFSu5xqtCS4GBmrR7m1FXCNdXTVhpoe8UmPcZTw=;
-        b=PBOD/Zlqvr2eXFbYU5wWk9Uxn2RoMxJK5qj3mUy2xtCpe8QtOyMx9oo98tpQXMnZtV
-         fwr8NkCpY0aJKOp+PBthqc+pyu/obST6PaURusJQj6Rnt4Zq9zTpdegaLtUqqtKGsUEk
-         jedWBV5wsvdwjtB+kJwTiWairZzvMVNn9xwDpDVVVAHqk6azuB8JCKf6YntUntwcPQLl
-         G+HkqJjDIFames6zMSX5yLvcaH6WqD8IvSvmIV3vFoFW0C/yzCHnVBWn0sMUfqRl9IS4
-         /Tj2HvIa54CjfUrM66Okd3Fl4gxs94grMwV8WyCwavVKpHuSltu7lRZCwiz7GWj87EN/
-         MZ+g==
-X-Gm-Message-State: AOJu0Yy2JymmMYMPaIFWzMV3MNUqg6TlbmJGpavt3v9tFWc+NHK5U4JZ
-	Dl0ZFyCoZZ/Ea9bWUlg+1TE=
-X-Google-Smtp-Source: AGHT+IHbJIkrY2O3p6RlIgFAJE8d2tiwnAaepkLjqi+oST9E8RjdFvBeCrjedWjwJRAvUsWAv5tVTQ==
-X-Received: by 2002:ac2:5de2:0:b0:4f8:ff52:93b7 with SMTP id z2-20020ac25de2000000b004f8ff5293b7mr6840655lfq.30.1696590216741;
-        Fri, 06 Oct 2023 04:03:36 -0700 (PDT)
-Received: from [192.168.0.9] (88-114-1-11.elisa-laajakaista.fi. [88.114.1.11])
-        by smtp.gmail.com with ESMTPSA id u7-20020a056512040700b00501ce0cacb6sm259934lfk.188.2023.10.06.04.03.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 04:03:36 -0700 (PDT)
-Message-ID: <48b3624d-ef0c-96e7-ff3d-9f34eb1caad8@gmail.com>
-Date: Fri, 6 Oct 2023 14:03:35 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3826A2F58
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 11:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qojUI-0006Lx-Bk; Fri, 06 Oct 2023 13:59:22 +0200
+Message-ID: <62e54bf9-18fe-41cb-86d4-20f24074d267@leemhuis.info>
+Date: Fri, 6 Oct 2023 13:59:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-To: herbert@gondor.apana.org.au
-Cc: agk@redhat.com, bagasdotme@gmail.com, dm-devel@redhat.com,
- linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, snitzer@kernel.org
-References: <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
-Subject: Re: [PATCH] dm crypt: Fix reqsize in crypt_iv_eboiv_gen
-Content-Language: en-US
-From: =?UTF-8?Q?Tatu_Heikkil=c3=a4?= <tatu.heikkila@gmail.com>
-In-Reply-To: <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: amd: yc: Fix non-functional mic on Lenovo Yoga Slim
+ 7 Pro 14ARH7 82UU
+Content-Language: en-US, de-DE
+To: Markus Meier <kerneldev@epic-bytes.net>, alsa-devel@alsa-project.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Brown <broonie@kernel.org>, Sven Frotscher <sven.frotscher@gmail.com>,
+ August Wikerfors <git@augustwikerfors.se>
+References: <10347605.nUPlyArG6x@kali>
+ <aa54a70c-e7fc-4ca2-9a4d-425675ed0be3@leemhuis.info>
+ <4836369.GXAFRqVoOG@mobile>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <4836369.GXAFRqVoOG@mobile>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696593565;5eacbf86;
+X-HE-SMSGID: 1qojUI-0006Lx-Bk
 
-On Fri, Oct 06, 2023 at 09:41:55 +0800, Herbert Xu wrote:
->
-> On Fri, Oct 06, 2023 at 08:04:18AM +0700, Bagas Sanjaya wrote:
-> >
-> > > Git bisect lead me to:
-> > > # first bad commit: [e3023094dffb41540330fb0c74cd3a019cd525c2] dm crypt:
-> > > Avoid using MAX_CIPHER_BLOCKSIZE
-> > > 
-> > > If I git revert e3023094dffb41540330fb0c74cd3a019cd525c2 on current Linus'
-> > > git master, the issue goes away. So I'm personally not all that affected
-> > > anymore (if I'm ready to compile my kernels from now on), and I understand
-> > > that you have no clear way to reproduce this as it seems strongly bound to
-> > > hardware, but seems like this could point to a potentially serious security
-> > > issue since it involves both crypto and undefined behaviour.
+On 03.10.23 17:04, Markus Meier wrote:
+> Am Dienstag, 3. Oktober 2023, 12:24:56 CEST schrieben Sie:
+>> On 02.10.23 23:04, Markus Meier wrote:
+>>> I own a  Lenovo Yoga Slim 7 Pro 14ARH7 where the microphone is not showing
+>>> up. I added the system to the quirk table and the mic is working
+>>> correctly (but with very low volume) now.
+> [...]
+>> I CCed a bunch of lists and people to make sure everyone is aware of
+>> that patch, as it otherwise might fall through the cracks.
+>>
+>> Markus, quick question: do you have (a) an interest in contributing a
+>> change to Linux or (b) did you just post this because Mario asked you to
+>> do so in https://bugzilla.kernel.org/show_bug.cgi?id=217063#c25 ?
 > 
-> Thanks for the report.  Sorry this is indeed my fault.  The allocated
-> buffer is too small as it's missing the size for the request object
-> itself.
+> Nope I don't plan to become some kind of kernel developer. I just want to use 
+> my notebook without any issues and want to help others who want to use this 
+> device with Linux too. I just followed Mario's suggestions. I thought it would 
+> be easier for everyone when I create a patch, try if it works and then submit 
+> it to a bugtracker to get the bug fixed.
 
-Thank you for your prompt fix, I can access the volume without issue now. :-)
--Tatu
+And that's good, as that way we know that the fix works, so many thx for
+it. It's just that the patch description needs to be more like the
+following.
 
+"""
+The 82UU (Lenovo Yoga Slim 7 Pro 14ARH7) requires an entry in the quirk
+list to enable the internal microphone, just like many other Lenovo 82*
+devices recently added.
+
+Fixes: c008323fe361 ("ASoC: amd: yc: Fix a non-functional mic on Lenovo
+82SJ")
+Cc: stable@vger.kernel.org
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217063#c23
+"""
+
+Add another line right below with your sign-off, as explained here:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+
+Then send it again. The patch likely must be inline (but maybe Mark
+accepts attached patches as well, not sure, some maintainers do).
+
+If you want the easy way out, just reply to your mail that started this
+thread (with me in CC) with a signed-off-by tag for the patch, then I'll
+handle the rest.
+
+> [...]
+> Thanks for your help Thorsten. I really enjoyed your Heise Kernel-Log series 
+> and I really miss those series. Was always a pleasure to read that.
+
+Thx, great to hear!
+
+Ciao, Thorsten
