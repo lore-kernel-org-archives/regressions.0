@@ -1,208 +1,88 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F8114A98
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 10:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE169125B7
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 11:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="QcvC75h9"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1696589512;
-	bh=HGa8c10xvK/NHUXiTFrZYL/EKgFpWUXN0LPr1D3e83g=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=QcvC75h9aDKEOpxsnLcRCnTzd4FcEG9DzmGKpFecctFrBz0wlDuNXgjDOHmXZO+d3
-	 K94yYE3QMkKj0QL3hCX7mP1gTnZ0K2ibJLTLBeIKmFgKvfEsxOIYspM96W3OMHvtv6
-	 xjPAZ4x9k/3mY0O6O2M3JNbeplOOov29VXKkESGk=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faWI7Zkb"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-503f39d3236so2469264e87.0
+        for <regressions@lists.linux.dev>; Fri, 06 Oct 2023 04:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696590217; x=1697195017; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z+TRwFSu5xqtCS4GBmrR7m1FXCNdXTVhpoe8UmPcZTw=;
+        b=faWI7ZkbWsIK1o8YlBuf8u+483XFmzFJq80qc2kO9uyjgHuy3DyiL1s2a6VUEPwKOy
+         xUNSq+py+e+LoS6zDS3VXV4IMRuVi2Cb8k3zqFIc9CZ+GmF5YD2qpJfsvfZvnY6AeVGR
+         /mTZNGt1kDo5ohKVlBXPta0gvX/cNOQdXdJScGhl15AwyQ0EnneEAWwKuttG+/AXRGI4
+         j5ZvyvAIfxbENXf1Wt3VScFFM21226AdrJXBk+rS2ZRIT9Ovk3DeqaGoEtTFNp//+wq9
+         UPcrnn8fjUlBkyooaNV2KVBeHTtHEZJw8oymfLLTQFna+yNgMR3mS+/8WqSza1F0D0Su
+         Brfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696590217; x=1697195017;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z+TRwFSu5xqtCS4GBmrR7m1FXCNdXTVhpoe8UmPcZTw=;
+        b=PBOD/Zlqvr2eXFbYU5wWk9Uxn2RoMxJK5qj3mUy2xtCpe8QtOyMx9oo98tpQXMnZtV
+         fwr8NkCpY0aJKOp+PBthqc+pyu/obST6PaURusJQj6Rnt4Zq9zTpdegaLtUqqtKGsUEk
+         jedWBV5wsvdwjtB+kJwTiWairZzvMVNn9xwDpDVVVAHqk6azuB8JCKf6YntUntwcPQLl
+         G+HkqJjDIFames6zMSX5yLvcaH6WqD8IvSvmIV3vFoFW0C/yzCHnVBWn0sMUfqRl9IS4
+         /Tj2HvIa54CjfUrM66Okd3Fl4gxs94grMwV8WyCwavVKpHuSltu7lRZCwiz7GWj87EN/
+         MZ+g==
+X-Gm-Message-State: AOJu0Yy2JymmMYMPaIFWzMV3MNUqg6TlbmJGpavt3v9tFWc+NHK5U4JZ
+	Dl0ZFyCoZZ/Ea9bWUlg+1TE=
+X-Google-Smtp-Source: AGHT+IHbJIkrY2O3p6RlIgFAJE8d2tiwnAaepkLjqi+oST9E8RjdFvBeCrjedWjwJRAvUsWAv5tVTQ==
+X-Received: by 2002:ac2:5de2:0:b0:4f8:ff52:93b7 with SMTP id z2-20020ac25de2000000b004f8ff5293b7mr6840655lfq.30.1696590216741;
+        Fri, 06 Oct 2023 04:03:36 -0700 (PDT)
+Received: from [192.168.0.9] (88-114-1-11.elisa-laajakaista.fi. [88.114.1.11])
+        by smtp.gmail.com with ESMTPSA id u7-20020a056512040700b00501ce0cacb6sm259934lfk.188.2023.10.06.04.03.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Oct 2023 04:03:36 -0700 (PDT)
+Message-ID: <48b3624d-ef0c-96e7-ff3d-9f34eb1caad8@gmail.com>
+Date: Fri, 6 Oct 2023 14:03:35 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
- requirement
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
-Date: Fri, 6 Oct 2023 12:51:32 +0200
-Cc: stable@vger.kernel.org,
- netdev@vger.kernel.org,
- davem@davemloft.net,
- edumazet@google.com,
- kuba@kernel.org,
- pabeni@redhat.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BBEA77E4-D376-45CE-9A93-415F2E0703D7@flyingcircus.io>
-References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
- <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
- <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
- <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+To: herbert@gondor.apana.org.au
+Cc: agk@redhat.com, bagasdotme@gmail.com, dm-devel@redhat.com,
+ linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, snitzer@kernel.org
+References: <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
+Subject: Re: [PATCH] dm crypt: Fix reqsize in crypt_iv_eboiv_gen
+Content-Language: en-US
+From: =?UTF-8?Q?Tatu_Heikkil=c3=a4?= <tatu.heikkila@gmail.com>
+In-Reply-To: <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri, Oct 06, 2023 at 09:41:55 +0800, Herbert Xu wrote:
+>
+> On Fri, Oct 06, 2023 at 08:04:18AM +0700, Bagas Sanjaya wrote:
+> >
+> > > Git bisect lead me to:
+> > > # first bad commit: [e3023094dffb41540330fb0c74cd3a019cd525c2] dm crypt:
+> > > Avoid using MAX_CIPHER_BLOCKSIZE
+> > > 
+> > > If I git revert e3023094dffb41540330fb0c74cd3a019cd525c2 on current Linus'
+> > > git master, the issue goes away. So I'm personally not all that affected
+> > > anymore (if I'm ready to compile my kernels from now on), and I understand
+> > > that you have no clear way to reproduce this as it seems strongly bound to
+> > > hardware, but seems like this could point to a potentially serious security
+> > > issue since it involves both crypto and undefined behaviour.
+> 
+> Thanks for the report.  Sorry this is indeed my fault.  The allocated
+> buffer is too small as it's missing the size for the request object
+> itself.
 
-sorry, no I didn=E2=80=99t. I don=E2=80=99t have a testbed available =
-right now to try this out quickly.
-
-Christian
-
-> On 6. Oct 2023, at 11:16, Linux regression tracking (Thorsten =
-Leemhuis) <regressions@leemhuis.info> wrote:
->=20
-> On 06.10.23 11:07, Christian Theune wrote:
->>=20
->> it seems that 6.6rc4 is affected as well:
->>=20
->> ----
->> commit b3d26c5702c7d6c45456326e56d2ccf3f103e60f
->> Author: Budimir Markovic <markovicbudimir@gmail.com>
->> Date:   Thu Aug 24 01:49:05 2023 -0700
->>=20
->>    net/sched: sch_hfsc: Ensure inner classes have fsc curve
->> =E2=80=94=E2=80=94
->=20
-> Did you actually try if the problem occurs with 6.6-rc4? That the =
-commit
-> is in there is expected (everything that lands in stable trees has to =
-go
-> to mainline first).
->=20
-> Ciao, Thorsten
->=20
->> I have not found newer commits that would suggest they change any =
-behaviour around this in any way, but I might be wrong.
->>=20
->> Christian
->>=20
->>> On 6. Oct 2023, at 11:01, Linux regression tracking (Thorsten =
-Leemhuis) <regressions@leemhuis.info> wrote:
->>>=20
->>> On 06.10.23 10:37, Christian Theune wrote:
->>>>=20
->>>> (prefix, I was not aware of the regression reporting process and =
-incorrectly reported this informally with the developers mentioned in =
-the change)
->>>=20
->>> Don't worry too much about that, but thx for taking care of all the
->>> details. FWIW, there is one more thing that would be good to know:
->>>=20
->>> Does the problem happen with mainline (e.g. 6.6-rc4) as well? That's
->>> relevant, as different people might care[1].
->>>=20
->>> Ciao, Thorsten
->>>=20
->>> [1] this among others is explained here:
->>> =
-https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-ke=
-rnel-bug-reports-are-ignored/
->>>=20
->>>> I upgraded from 6.1.38 to 6.1.55 this morning and it broke my =
-traffic shaping script, leaving me with a non-functional uplink on a =
-remote router.
->>>>=20
->>>> The script errors out like this:
->>>>=20
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ext=3DispA
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + =
-ext_ingress=3Difb0
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe =
-ifb
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe =
-act_mirred
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-del dev ispA root
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2061]: Error: =
-Cannot delete qdisc with handle of zero.
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-del dev ispA ingress
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2064]: Error: =
-Cannot find specified qdisc on specified device.
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-del dev ifb0 root
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2066]: Error: =
-Cannot delete qdisc with handle of zero.
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-del dev ifb0 ingress
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2067]: Error: =
-Cannot find specified qdisc on specified device.
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-add dev ispA handle ffff: ingress
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ifconfig =
-ifb0 up
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc filter =
-add dev ispA parent ffff: protocol all u32 match u32 0 0 action mirred =
-egress redirect dev ifb0
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc =
-add dev ifb0 root handle 1: hfsc default 1
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class =
-add dev ifb0 parent 1: classid 1:999 hfsc rt m2 2.5gbit
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class =
-add dev ifb0 parent 1:999 classid 1:1 hfsc sc rate 50mbit
->>>> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2077]: Error: =
-Invalid parent - parent class must have FSC.
->>>>=20
->>>> The error message is also a bit weird (but that=E2=80=99s likely =
-due to iproute2 being weird) as the CLI interface for `tc` and the error =
-message do not map well. (I think I would have to choose `hfsc sc` on =
-the parent to enable the FSC option which isn=E2=80=99t mentioned =
-anywhere in the hfsc manpage).
->>>>=20
->>>> The breaking change was introduced in 6.1.53[1] and a multitude of =
-other currently supported kernels:
->>>>=20
->>>> ----
->>>> commit a1e820fc7808e42b990d224f40e9b4895503ac40
->>>> Author: Budimir Markovic <markovicbudimir@gmail.com>
->>>> Date: Thu Aug 24 01:49:05 2023 -0700
->>>>=20
->>>> net/sched: sch_hfsc: Ensure inner classes have fsc curve
->>>>=20
->>>> [ Upstream commit b3d26c5702c7d6c45456326e56d2ccf3f103e60f ]
->>>>=20
->>>> HFSC assumes that inner classes have an fsc curve, but it is =
-currently
->>>> possible for classes without an fsc curve to become parents. This =
-leads
->>>> to bugs including a use-after-free.
->>>>=20
->>>> Don't allow non-root classes without HFSC_FSC to become parents.
->>>>=20
->>>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->>>> Reported-by: Budimir Markovic <markovicbudimir@gmail.com>
->>>> Signed-off-by: Budimir Markovic <markovicbudimir@gmail.com>
->>>> Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
->>>> Link: =
-https://lore.kernel.org/r/20230824084905.422-1-markovicbudimir@gmail.com
->>>> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
->>>> ----
->>>>=20
->>>> Regards,
->>>> Christian
->>>>=20
->>>> [1] https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.53
->>>>=20
->>>> #regzbot introduced: a1e820fc7808e42b990d224f40e9b4895503ac40
->>>>=20
->>>>=20
->>=20
->> Liebe Gr=C3=BC=C3=9Fe,
->> Christian Theune
->>=20
-
-Liebe Gr=C3=BC=C3=9Fe,
-Christian Theune
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
+Thank you for your prompt fix, I can access the volume without issue now. :-)
+-Tatu
 
