@@ -1,53 +1,97 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DEE7E5
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 02:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F36F7E5
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 02:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1qoaeL-0044GQ-OJ; Fri, 06 Oct 2023 10:33:10 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Oct 2023 10:33:14 +0800
-Date: Fri, 6 Oct 2023 10:33:14 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Tatu =?iso-8859-1?Q?Heikkil=E4?= <tatu.heikkila@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Device Mapper <dm-devel@redhat.com>,
-	Alasdair Kergon <agk@redhat.com>
-Subject: Re: dm crypt: Fix reqsize in crypt_iv_eboiv_gen
-Message-ID: <ZR9x6ifhd6axh5Ki@gondor.apana.org.au>
-References: <f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com>
- <ZR9dEiXhQv-wBVA2@debian.me>
- <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
- <ZR9wRq7Rkz+LocDX@redhat.com>
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3962lCOb91244999, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3962lCOb91244999
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 6 Oct 2023 10:47:15 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Fri, 6 Oct 2023 10:47:12 +0800
+Received: from localhost.localhost (172.21.132.123) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 6 Oct 2023 10:47:11 +0800
+From: <max.chou@realtek.com>
+To: <marcel@holtmann.org>
+CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
+        <max.chou@realtek.com>, <regressions@lists.linux.dev>,
+        <kirill@shutemov.name>, <bagasdotme@gmail.com>, <linux@leemhuis.info>
+Subject: [PATCH] Bluetooth: btrtl: Ignore error return for hci_devcd_register()
+Date: Fri, 6 Oct 2023 10:47:07 +0800
+Message-ID: <20231006024707.413349-1-max.chou@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZR9wRq7Rkz+LocDX@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.21.132.123]
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS03.realtek.com.tw (172.21.6.96)
+X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Thu, Oct 05, 2023 at 10:26:14PM -0400, Mike Snitzer wrote:
->
-> Sure, please do.  Shouldn't your header Cc: stable given that the
-> Fixes commit implies v6.5 needs this fix?
+From: Max Chou <max.chou@realtek.com>
 
-Sure I'll add it although it will be picked up automatically due
-to the Fixes header.  I'll also fix the reporter's name.
+If CONFIG_DEV_COREDUMP was not set, it would return -EOPNOTSUPP for
+hci_devcd_register().
+In this commit, ignore error return for hci_devcd_register().
+Otherwise Bluetooth initialization will be failed.
 
-> Reviewed-by: Mike Mike Snitzer <snitzer@kernel.org>
+Fixes: 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
+Cc: stable@vger.kernel.org
+Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+Closes: https://lore.kernel.org/all/ZRyqIn0_qqEFBPdy@debian.me/T/
+Signed-off-by: Max Chou <max.chou@realtek.com>
+---
+ drivers/bluetooth/btrtl.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-Thanks!
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 84c2c2e1122f..277d039ecbb4 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -962,13 +962,10 @@ static void btrtl_dmp_hdr(struct hci_dev *hdev, struct sk_buff *skb)
+ 	skb_put_data(skb, buf, strlen(buf));
+ }
+ 
+-static int btrtl_register_devcoredump_support(struct hci_dev *hdev)
++static void btrtl_register_devcoredump_support(struct hci_dev *hdev)
+ {
+-	int err;
++	hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
+ 
+-	err = hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
+-
+-	return err;
+ }
+ 
+ void btrtl_set_driver_name(struct hci_dev *hdev, const char *driver_name)
+@@ -1255,8 +1252,7 @@ int btrtl_download_firmware(struct hci_dev *hdev,
+ 	}
+ 
+ done:
+-	if (!err)
+-		err = btrtl_register_devcoredump_support(hdev);
++	btrtl_register_devcoredump_support(hdev);
+ 
+ 	return err;
+ }
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.34.1
+
