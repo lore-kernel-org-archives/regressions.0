@@ -1,141 +1,79 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66D31CFB4
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 12:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1qojrn-00008q-N2; Fri, 06 Oct 2023 14:23:39 +0200
-Date: Fri, 6 Oct 2023 14:23:39 +0200
-From: Florian Westphal <fw@strlen.de>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	netdev@vger.kernel.org, markovicbudimir@gmail.com
-Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
- requirement
-Message-ID: <20231006122339.GC29258@breakpoint.cc>
-References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
- <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
- <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1095A134B1
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 12:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="FO27+Vlx"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1696595884;
+	bh=QROki/xLmnzh8Ufw7wb6+X7Eml957imSqlgKLlkSy5s=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=FO27+VlxnQ3cXrTELOkkm8HUlgD1XHloGN6D9tHnuiZAZ14IoN7cVZEBaiHrqMaDI
+	 iK1NFrEvV6wdFPLG2J7I8qdMT3cPgW+gqnF/etTXonALd9oVdUarNd0cD4Ios/lOHv
+	 HNqXnriIu3z1BRIa88uYaCanBBy1f9+T3B1fuEIw=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
+ requirement
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <982dc76d-0832-4c8a-a486-5e6a2f5fb49a@gmail.com>
+Date: Fri, 6 Oct 2023 14:37:43 +0200
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org,
+ netdev@vger.kernel.org,
+ davem@davemloft.net,
+ edumazet@google.com,
+ kuba@kernel.org,
+ pabeni@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0AAB089F-A296-472B-8E6F-0D60B9ACCB95@flyingcircus.io>
+References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+ <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
+ <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
+ <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
+ <BBEA77E4-D376-45CE-9A93-415F2E0703D7@flyingcircus.io>
+ <982dc76d-0832-4c8a-a486-5e6a2f5fb49a@gmail.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Christian Theune <ct@flyingcircus.io> wrote:
+Hi,
 
-[ Trimming CCs, adding patch author ]
+> On 6. Oct 2023, at 14:07, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>=20
+> On 06/10/2023 17:51, Christian Theune wrote:
+>> Hi,
+>>=20
+>> sorry, no I didn=E2=80=99t. I don=E2=80=99t have a testbed available =
+right now to try this out quickly.
+>>=20
+>=20
+> Please don't top-post; reply inline with appropriate context instead.
 
-> it seems that 6.6rc4 is affected as well:
-> ----
-> commit b3d26c5702c7d6c45456326e56d2ccf3f103e60f
-> Author: Budimir Markovic <markovicbudimir@gmail.com>
-> Date:   Thu Aug 24 01:49:05 2023 -0700
-> 
->     net/sched: sch_hfsc: Ensure inner classes have fsc curve
-> ——
-> 
-> I have not found newer commits that would suggest they change any behaviour around this in any way, but I might be wrong.
-> 
-> Christian
-> 
-> > On 6. Oct 2023, at 11:01, Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
-> > 
-> > On 06.10.23 10:37, Christian Theune wrote:
-> >> 
-> >> (prefix, I was not aware of the regression reporting process and incorrectly reported this informally with the developers mentioned in the change)
-> > 
-> > Don't worry too much about that, but thx for taking care of all the
-> > details. FWIW, there is one more thing that would be good to know:
-> > 
-> > Does the problem happen with mainline (e.g. 6.6-rc4) as well? That's
-> > relevant, as different people might care[1].
-> > 
-> > Ciao, Thorsten
-> > 
-> > [1] this among others is explained here:
-> > https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
-> > 
-> >> I upgraded from 6.1.38 to 6.1.55 this morning and it broke my traffic shaping script, leaving me with a non-functional uplink on a remote router.
-> >> 
-> >> The script errors out like this:
-> >> 
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ext=ispA
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ext_ingress=ifb0
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe ifb
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe act_mirred
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ispA root
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2061]: Error: Cannot delete qdisc with handle of zero.
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ispA ingress
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2064]: Error: Cannot find specified qdisc on specified device.
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ifb0 root
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2066]: Error: Cannot delete qdisc with handle of zero.
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ifb0 ingress
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2067]: Error: Cannot find specified qdisc on specified device.
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc add dev ispA handle ffff: ingress
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ifconfig ifb0 up
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc filter add dev ispA parent ffff: protocol all u32 match u32 0 0 action mirred egress redirect dev ifb0
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc add dev ifb0 root handle 1: hfsc default 1
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class add dev ifb0 parent 1: classid 1:999 hfsc rt m2 2.5gbit
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class add dev ifb0 parent 1:999 classid 1:1 hfsc sc rate 50mbit
-> >> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2077]: Error: Invalid parent - parent class must have FSC.
-> >> 
-> >> The error message is also a bit weird (but that’s likely due to iproute2 being weird) as the CLI interface for `tc` and the error message do not map well. (I think I would have to choose `hfsc sc` on the parent to enable the FSC option which isn’t mentioned anywhere in the hfsc manpage).
-> >> 
-> >> The breaking change was introduced in 6.1.53[1] and a multitude of other currently supported kernels:
-> >> 
-> >> ----
-> >> commit a1e820fc7808e42b990d224f40e9b4895503ac40
-> >> Author: Budimir Markovic <markovicbudimir@gmail.com>
-> >> Date: Thu Aug 24 01:49:05 2023 -0700
-> >> 
-> >> net/sched: sch_hfsc: Ensure inner classes have fsc curve
-> >> 
-> >> [ Upstream commit b3d26c5702c7d6c45456326e56d2ccf3f103e60f ]
-> >> 
-> >> HFSC assumes that inner classes have an fsc curve, but it is currently
-> >> possible for classes without an fsc curve to become parents. This leads
-> >> to bugs including a use-after-free.
-> >> 
-> >> Don't allow non-root classes without HFSC_FSC to become parents.
-> >> 
-> >> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> >> Reported-by: Budimir Markovic <markovicbudimir@gmail.com>
-> >> Signed-off-by: Budimir Markovic <markovicbudimir@gmail.com>
-> >> Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
-> >> Link: https://lore.kernel.org/r/20230824084905.422-1-markovicbudimir@gmail.com
-> >> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >> ----
-> >> 
-> >> Regards,
-> >> Christian
-> >> 
-> >> [1] https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.53
-> >> 
-> >> #regzbot introduced: a1e820fc7808e42b990d224f40e9b4895503ac40
-> >> 
-> >> 
-> 
-> Liebe Grüße,
-> Christian Theune
-> 
-> -- 
-> Christian Theune · ct@flyingcircus.io · +49 345 219401 0
-> Flying Circus Internet Operations GmbH · https://flyingcircus.io
-> Leipziger Str. 70/71 · 06108 Halle (Saale) · Deutschland
-> HR Stendal HRB 21169 · Geschäftsführer: Christian Theune, Christian Zagrodnick
+Sorry, I will avoid that in the future - I was a bit in a hurry and thus =
+negligent, but you=E2=80=99re right of course.
+
+> You need to have testing system, unfortunately. It should mimic your
+> production setup as much as possible. Your organization may have one
+> already, but if not, you have to arrange for it.
+
+I=E2=80=99m able to do that, I just didn=E2=80=99t have one at hand at =
+this very moment and no time to prepare one within a few minutes. I=E2=80=99=
+ll try to reproduce with a 6.6rc in the next days.
+
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
