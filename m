@@ -1,100 +1,153 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abi149hd126.arn1.oracleemaildelivery.com (abi149hd126.arn1.oracleemaildelivery.com [129.149.84.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0984310969
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 14:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5532376B
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 14:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arn1.rp.oracleemaildelivery.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwA7jaLZ"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1c760b34d25so16870145ad.3
-        for <regressions@lists.linux.dev>; Fri, 06 Oct 2023 07:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696601645; x=1697206445; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=se+93OT/Osj2QCJD0bLmh5PXf8LhiyfIU3o8SYbOIfk=;
-        b=FwA7jaLZwp31SBcrdT3mJwqH8gUTdAQZlkm2zZ43gdXSKNYxGMhnjhIUMNrvXQwhQb
-         yDWSIhz2DTyil4N6DWhRNcbO5wBBYjWlTUMuea0Ku0yvADuUZQuiZDYJ8FacJ52ZXncr
-         hJL2Y/3qlDcebRpsp9W6AjwChXc8rB+Xw8fjDHA3zOiD5eHhKOFOBKqlm0zJBjx6auzT
-         PzIn/x6VOUXXXV57Q7dFSIWGdC4vaLCbb4kBRicKcpyOqUIprplxiDwifO1w3wh6+dzn
-         UsMFn9Tcp1Bo43H9en3TmliBOtuZWl5mnhODDJ2uTFUtMcdS1mjsFhl7q/E5gapn9aIW
-         6RXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696601645; x=1697206445;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=se+93OT/Osj2QCJD0bLmh5PXf8LhiyfIU3o8SYbOIfk=;
-        b=qY7OKbFYsLaKESd/5J0gO5CJxsKPmszR5kldPOHWsMZ6cHPsmIiTSbPOFAYrABnJm8
-         j3yp0OAelwziGIWLVARYZ7KcZSWgJh9cbF6vEywSzlWdlC0AONdlYml36ve/kEehA9jn
-         Olh76fvdxGOKgTxiCAEO4mOpzXWxf7iHS8NwIDPB8jG/ZbKEJwJ2oFabZAQpric5NJ6s
-         O7nwrc/EH3VT5XODkAj21VtrW9fR3jWnQQ+enxPinuoSa64c7jYRkRxHxUoKh0rJyf3p
-         5w02oxRY4A9qzsPLnAcLzvzSkkHBwRRhbQcMpHZ1gMXH8DhRdyQKsM7xqmK2NwPqQ3Dr
-         GlmA==
-X-Gm-Message-State: AOJu0Yxz5cYMdkws09vqamcYuzqHBZbfp4P5H5bv9YSbMo8JZ+6QS0yv
-	044JFrrSNpbRzwVvQ7G6EeM=
-X-Google-Smtp-Source: AGHT+IHXpB3kWyz99GEFTIMPxct/mdKgGLEGMKjfizAva+sEXhbN+7W4V3GP6TJHgppuXPuqTHYDnQ==
-X-Received: by 2002:a17:903:2305:b0:1c6:c3f:9dc3 with SMTP id d5-20020a170903230500b001c60c3f9dc3mr8663224plh.54.1696601645140;
-        Fri, 06 Oct 2023 07:14:05 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id q16-20020a170902dad000b001c5fda4d3eesm3880746plx.261.2023.10.06.07.14.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 07:14:04 -0700 (PDT)
-Message-ID: <31b59df2-d668-478e-a546-c3805f74c3a3@gmail.com>
-Date: Fri, 6 Oct 2023 21:13:49 +0700
+	dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b="CUiiRAET";
+	dkim=pass (2048-bit key) header.d=arn1.rp.oracleemaildelivery.com header.i=@arn1.rp.oracleemaildelivery.com header.b="Z1Gn40R+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=aVEtphrFM7XGVmNaoicY2hacQNy6vbztvG/piAN/eGw=;
+ b=CUiiRAETlJPa6eghm+trc2N6kjHcKsYbqFnQ1TMz41tjRWkscPELdRUiAgPOemA78Yo16my0XTVl
+   gvaL6mPCBcx8IBg4MGebsyaCE/AQnG7KB9gSdUsNeOeJ+yMX0O4QpYw+a8HcCH35bRWJyDMtStA5
+   BgBSA+v2mByCKUREYi6sUJhosKaISb5kivgs7U6perWpRrsUX0drrBLyBlGRT6akb8o+3vmJe5u2
+   BK4QOWr21fD/9c3XQopuWICXeJlCJVEH0NwfmBH9PPLTqLFLqrmuDFn2tVEASbdiX4PzsWORG6BW
+   r8OxF+fM/ZQhdHT8i4cyYK0aFIQaAfCC5JHIJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=aVEtphrFM7XGVmNaoicY2hacQNy6vbztvG/piAN/eGw=;
+ b=Z1Gn40R+rkVvU2K3GiBVBk7kPxEQjtjWN1XPDLZf4jcwIYG5xllutOHs0QnuacIP8shDXXgAaK7B
+   KPH4IlnFHITJIx+BTjbOFIAk55mM6i2rERRVsPytH6hZpxnO6+Qs2p0FAEz+R2bBAMZKm/H1AedB
+   zxthRtZHiNGYwhsN+3Wzs7dXkNvoInYDpkCeLyUwA9/XmFW7IlqErW+oMzOgPZ6P1ShFYO/RxD6G
+   nnac6boB2OcWp9VRcCHDsVTFzjUW0v1m2Iy3+X6rQQF7MRzTx/deSrYTNfS/RDKcTSXIACRkg0UF
+   6jrFt/Mwp+AytDl0SvE7aAqvK+q5TrpLbwBZ5w==
+Received: by omta-ad1-fd3-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20230928 64bit (built Sep 28
+ 2023))
+ with ESMTPS id <0S2400KKI2EDJEA0@omta-ad1-fd3-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Fri, 06 Oct 2023 14:18:13 +0000 (GMT)
+Message-id: <ed4672a7-439c-4240-aadc-7a36858c36b2@augustwikerfors.se>
+Date: Fri, 6 Oct 2023 16:18:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
- requirement
-Content-Language: en-US
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
- <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
- <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
- <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
- <BBEA77E4-D376-45CE-9A93-415F2E0703D7@flyingcircus.io>
- <982dc76d-0832-4c8a-a486-5e6a2f5fb49a@gmail.com>
- <0AAB089F-A296-472B-8E6F-0D60B9ACCB95@flyingcircus.io>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <0AAB089F-A296-472B-8E6F-0D60B9ACCB95@flyingcircus.io>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-version: 1.0
+Subject: Re: [PATCH v2] ACPI: resource: Add TongFang GM6BGEQ,
+ GM6BG5Q and GM6BG0Q to irq1_edge_low_force_override[]
+Content-language: en-US
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ Mario Limonciello <Mario.Limonciello@amd.com>, linux-acpi@vger.kernel.org,
+ Francesco <f.littarru@outlook.com>, regressions@lists.linux.dev
+References: <20231006123304.32686-1-hdegoede@redhat.com>
+From: August Wikerfors <git@augustwikerfors.se>
+In-reply-to: <20231006123304.32686-1-hdegoede@redhat.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAFxb8QDQo2eFSySz8ItSVTo02kHbz5wF0F7TtCY0dvk7+D7xoQx6o/1MyX7HeB4
+ DPJJd2a9Zx4qxX+O+GoUHKLRwEi4r8QlpebcXVT+/JIt9+xDcfo+WgQ036/dBjzW
+ HFEEY7fFVphXkBFS6bruPe5Qhr49iaPJPmJwurP3ToCA/PS1Zx8KLDCkMVMoAB/J
+ SsUzpVgjpx9o7LPW+OmcbVZf/ZVuSh/2JadTr3BF+8aPVm51la7N0YxS32u9MXJe
+ izwFsVE/GPRXB12cMAKwK48ECjiI4onR4tuzCir0H3ulwHIYdHgdLaO1NCGwO9tp
+ ACRAP5jAgXE5e+ZuqgO2JQ32kCp693omh6eShWgvMv2dS5Efm6cuLeD9Mx7G+iJW
+ aOMqtXvwBL/I3izFT2nwULlXaqogwEAbYlPrkg2zrcdyyQ3DFMEhzJgf//F1ciAU FCKrLg8=
 
-On 06/10/2023 19:37, Christian Theune wrote:
-> Hi,
-> 
->> On 6. Oct 2023, at 14:07, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->>
->> On 06/10/2023 17:51, Christian Theune wrote:
->>> Hi,
->>>
->>> sorry, no I didn’t. I don’t have a testbed available right now to try this out quickly.
->>>
->>
->> Please don't top-post; reply inline with appropriate context instead.
-> 
-> Sorry, I will avoid that in the future - I was a bit in a hurry and thus negligent, but you’re right of course.
-> 
->> You need to have testing system, unfortunately. It should mimic your
->> production setup as much as possible. Your organization may have one
->> already, but if not, you have to arrange for it.
-> 
-> I’m able to do that, I just didn’t have one at hand at this very moment and no time to prepare one within a few minutes. I’ll try to reproduce with a 6.6rc in the next days.
-> 
+Hi Hans,
 
-OK, thanks!
+On 2023-10-06 14:33, Hans de Goede wrote:
+> The TongFang GM6BGEQ, GM6BG5Q and GM6BG0Q are 3 GPU variants of a TongFang
+> barebone design which is sold under various brand names.
+> 
+> The ACPI IRQ override for the keyboard IRQ must be used on these AMD Zen
+> laptops in order for the IRQ to work.
+> 
+> Adjust the irq1_edge_low_force_override[] DMI match table for this:
+> 
+> 1. Drop the sys-vendor match from the existing PCSpecialist Elimina Pro 16
+>     entry for the GM6BGEQ (RTX3050 GPU) model so that it will also match
+>     the laptop when sold by other vendors such as hyperbook.pl.
+> 
+> 2. Add board-name matches for the GM6BG5Q (RTX4050) and GM6B0Q (RTX4060)
+>     models.
+> 
+> Suggested-by: August Wikerfors <git@augustwikerfors.se>
+> Reported-by: Francesco <f.littarru@outlook.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217394
+> Link: https://laptopparts4less.frl/index.php?route=product/search&filter_name=GM6BG
+> Link: https://hyperbook.pl/en/content/14-hyperbook-drivers
+> Link: https://linux-hardware.org/?probe=bfa70344e3
+> Link: https://bbs.archlinuxcn.org/viewtopic.php?id=13313
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Since this is a regression fix for 453b014e2c29 ("ACPI: resource: Fix 
+IRQ override quirk for PCSpecialist Elimina Pro 16 M") (for PCSpecialist 
+systems like Francesco's with product name "Elimina Pro 16 M" but not 
+board name "GM6BGEQ") and 2d331a6ac481 ("ACPI: resource: revert "Remove 
+"Zen" specific match and quirks"") (for other vendors using the same 
+TongFang design), it should have a "Fixes:" tag for at least one of those.
 
+Both of those commits are in 6.5 (and 6.6-rc) so this should go into 
+6.6-rc and be backported to 6.5, but the patch seems to depend on 
+424009ab2030 ("ACPI: resource: Drop .ident values from dmi_system_id 
+tables") and maybe also d37273af0e42 ("ACPI: resource: Consolidate IRQ 
+trigger-type override DMI tables") to apply cleanly, which seem to only 
+be queued for linux-next/6.7? I'm not familiar with what the correct 
+process is for such cases.
 
--- 
-An old man doll... just what I always wanted! - Clara
+> ---
+> Changes in v2:
+> - Add missing reported and suggested by tags
+> ---
+>   drivers/acpi/resource.c | 20 +++++++++++++-------
+>   1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 014a3911381b..18f6353c142e 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -512,17 +512,23 @@ static const struct dmi_system_id irq1_edge_low_force_override[] = {
+>   		},
+>   	},
+>   	{
+> -		/*
+> -		 * PCSpecialist Elimina Pro 16 M
+> -		 *
+> -		 * Some models have product-name "Elimina Pro 16 M",
+> -		 * others "GM6BGEQ". Match on board-name to match both.
+> -		 */
+> +		/* TongFang GM6BGEQ / PCSpecialist Elimina Pro 16 M, RTX 3050 */
+>   		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
+>   			DMI_MATCH(DMI_BOARD_NAME, "GM6BGEQ"),
+>   		},
+>   	},
+> +	{
+> +		/* TongFang GM6BG5Q, RTX 4050 */
+FWIW the PCSpecialist Elimina Pro 16 M is sold with all three GPU 
+options: https://www.pcspecialist.ie/notebooks/elimina-pro-16-M/
+Presumably the RTX 4050 option has board name "GM6BG5Q" but maybe it's 
+better to leave it out if it's not confirmed.
 
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "GM6BG5Q"),
+> +		},
+> +	},
+> +	{
+> +		/* TongFang GM6BG0Q / PCSpecialist Elimina Pro 16 M, RTX 4060 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
+> +		},
+> +	},
+>   	{ }
+>   };
+>   
+
+Regards,
+August Wikerfors
