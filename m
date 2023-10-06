@@ -1,49 +1,16 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB3EBB
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 06:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSnnRwgt"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c62d61dc96so13336525ad.0
-        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 23:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696575439; x=1697180239; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ltCjm4aJUWe9aYqASEplzIRx3exF5lO5oefAHyj9uWI=;
-        b=CSnnRwgt7rIuUCYDBNz4N39/R5eQ7yJTKGUzYrrRDL+Newxkb3uG3V512pcddQYpYb
-         MMWkbAVbJoy66rLJ0rvgepcJxbj6IemhvqV6pZM643Oki08AyOPAKtFovhdgSlTNtisk
-         QoBAF4gf2+7IS0blnHO6BI6D4syATZJHAQD4xm+Iyfn56/v4N+e0yFW7NSctp6z+PZgU
-         XQlJz2IGpGIeiSUVmhF8d+sP2659XKMclH6cl06QXKgIbe7/Nx6CIg8MPUjIfUSvaoYi
-         J+Bxv4QdXY7FVU0bCPsroDU7gb6C4W2Ew+huG+YLC8iCwEJxkThlM6NbsGuOxLVy5ZJs
-         KiSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696575439; x=1697180239;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ltCjm4aJUWe9aYqASEplzIRx3exF5lO5oefAHyj9uWI=;
-        b=wIqNs8g8Xgf8rbXJzWlhDHMz8+myPQsPcLI2Ho9kAZYkgG83gTe3owXS3vvTGX7/aB
-         q7heVHi+i1TBNcsqXUaePMURnoxhziIg6uCB5ZNZEvL0DE0wB+jbASyzgHGH/hFMJ4Rx
-         TdDgzmQJaqN9CuiQjVESPjn1GJzzG1xGROE3KMpDyVQ3t72vbWEc9aoyVUwt03LGCXXl
-         WicgEYzGeHRRlz0I2O+OA8rlBjtfKZrgKZlOmle5CENwN4/RhUdvtDM8FNXNmusJB0Ad
-         r/VH/gZ5/aelkkwxaJReheWcQ0PvZIlogmQZaAtoI7Wt4/q0QMk6Hw34GGbhzS/GdGoI
-         qOBg==
-X-Gm-Message-State: AOJu0Yw538KRpiNLqqje2xuMH1lAQuVusdCYpwdu3/MPMfIshMsiXj8r
-	E4TU3N0hERFdBMn1R355Xw4=
-X-Google-Smtp-Source: AGHT+IGqQwQOB9t6/yYKRaS6b8thQhpGRr5Dk8tWrNhV15C8CICkgfRtYX3GSYgryu7yNxfhJNi1eQ==
-X-Received: by 2002:a17:902:ecc8:b0:1c4:29dd:2519 with SMTP id a8-20020a170902ecc800b001c429dd2519mr7615049plh.67.1696575439280;
-        Thu, 05 Oct 2023 23:57:19 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id q1-20020a170902a3c100b001c61512f2a6sm3035443plb.220.2023.10.05.23.57.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 23:57:18 -0700 (PDT)
-Message-ID: <0802bc5a-9fb0-433a-8491-47806cc7c549@gmail.com>
-Date: Fri, 6 Oct 2023 13:57:12 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FC35CB5
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 08:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qog4t-0006XM-43; Fri, 06 Oct 2023 10:20:55 +0200
+Message-ID: <9ffdce44-c1ca-4587-bcae-4bd1ebb52f61@leemhuis.info>
+Date: Fri, 6 Oct 2023 10:20:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,36 +18,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable
- to handle kernel data access at 0xfeffbb62ffec65fe)
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Erhard Furtner <erhard_f@mailbox.org>,
- Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Subject: Re: dm crypt: Fix reqsize in crypt_iv_eboiv_gen
+Content-Language: en-US, de-DE
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+ Mike Snitzer <snitzer@kernel.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-References: <20230929132750.3cd98452@yea> <ZR9esG8H17LY2KOX@debian.me>
- <ZR9gkZKafUSNOAEf@casper.infradead.org>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <ZR9gkZKafUSNOAEf@casper.infradead.org>
+ =?UTF-8?Q?Tatu_Heikkil=C3=A4?= <tatu.heikkila@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Device Mapper <dm-devel@redhat.com>, Alasdair Kergon <agk@redhat.com>
+References: <f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com>
+ <ZR9dEiXhQv-wBVA2@debian.me> <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
+ <ZR9wRq7Rkz+LocDX@redhat.com> <ZR9x6ifhd6axh5Ki@gondor.apana.org.au>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZR9x6ifhd6axh5Ki@gondor.apana.org.au>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696580464;29c6fdf2;
+X-HE-SMSGID: 1qog4t-0006XM-43
 
-On 06/10/2023 08:19, Matthew Wilcox wrote:
-> On Fri, Oct 06, 2023 at 08:11:12AM +0700, Bagas Sanjaya wrote:
->> Matthew Wilcox, did you miss this regression report? You should look into it
->> since it is (apparently) cause by a commit of yours.
+On 06.10.23 04:33, Herbert Xu wrote:
+> On Thu, Oct 05, 2023 at 10:26:14PM -0400, Mike Snitzer wrote:
+
+BTW, Herbert, thx for taking care of this quickly!
+
+>> Sure, please do.  Shouldn't your header Cc: stable given that the
+>> Fixes commit implies v6.5 needs this fix?
 > 
-> No, I didn't miss it.  I'm simply choosing to work on other things.
-> All this regression tracking nonsense and being told to work on things
-> by people who've appointed themselves my manager has completely sapped
-> my motivation to work on bugs.  If you want me to work on things, *don't*
-> harass me.
-> 
+> Sure I'll add it although it will be picked up automatically due
+> to the Fixes header.
 
-OK, thanks!
+FWIW, as some people don't know this: that might be the case, but there
+is no guarantee, hence it's better to add it:
 
--- 
-An old man doll... just what I always wanted! - Clara
+https://lore.kernel.org/all/2023060703-colony-shakily-3514@gregkh/
 
+>  I'll also fix the reporter's name.
+
+Side note: a Link: or Closes: tag to the report
+(https://lore.kernel.org/all/f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com/
+) would be nice as well.
+
+Thx again. Ciao, Thorsten
