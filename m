@@ -1,97 +1,86 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F36F7E5
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 02:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3962lCOb91244999, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3962lCOb91244999
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Oct 2023 10:47:15 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 6 Oct 2023 10:47:12 +0800
-Received: from localhost.localhost (172.21.132.123) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 6 Oct 2023 10:47:11 +0800
-From: <max.chou@realtek.com>
-To: <marcel@holtmann.org>
-CC: <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alex_lu@realsil.com.cn>, <hildawu@realtek.com>,
-        <max.chou@realtek.com>, <regressions@lists.linux.dev>,
-        <kirill@shutemov.name>, <bagasdotme@gmail.com>, <linux@leemhuis.info>
-Subject: [PATCH] Bluetooth: btrtl: Ignore error return for hci_devcd_register()
-Date: Fri, 6 Oct 2023 10:47:07 +0800
-Message-ID: <20231006024707.413349-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB3EBB
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 06:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSnnRwgt"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c62d61dc96so13336525ad.0
+        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 23:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696575439; x=1697180239; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ltCjm4aJUWe9aYqASEplzIRx3exF5lO5oefAHyj9uWI=;
+        b=CSnnRwgt7rIuUCYDBNz4N39/R5eQ7yJTKGUzYrrRDL+Newxkb3uG3V512pcddQYpYb
+         MMWkbAVbJoy66rLJ0rvgepcJxbj6IemhvqV6pZM643Oki08AyOPAKtFovhdgSlTNtisk
+         QoBAF4gf2+7IS0blnHO6BI6D4syATZJHAQD4xm+Iyfn56/v4N+e0yFW7NSctp6z+PZgU
+         XQlJz2IGpGIeiSUVmhF8d+sP2659XKMclH6cl06QXKgIbe7/Nx6CIg8MPUjIfUSvaoYi
+         J+Bxv4QdXY7FVU0bCPsroDU7gb6C4W2Ew+huG+YLC8iCwEJxkThlM6NbsGuOxLVy5ZJs
+         KiSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696575439; x=1697180239;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ltCjm4aJUWe9aYqASEplzIRx3exF5lO5oefAHyj9uWI=;
+        b=wIqNs8g8Xgf8rbXJzWlhDHMz8+myPQsPcLI2Ho9kAZYkgG83gTe3owXS3vvTGX7/aB
+         q7heVHi+i1TBNcsqXUaePMURnoxhziIg6uCB5ZNZEvL0DE0wB+jbASyzgHGH/hFMJ4Rx
+         TdDgzmQJaqN9CuiQjVESPjn1GJzzG1xGROE3KMpDyVQ3t72vbWEc9aoyVUwt03LGCXXl
+         WicgEYzGeHRRlz0I2O+OA8rlBjtfKZrgKZlOmle5CENwN4/RhUdvtDM8FNXNmusJB0Ad
+         r/VH/gZ5/aelkkwxaJReheWcQ0PvZIlogmQZaAtoI7Wt4/q0QMk6Hw34GGbhzS/GdGoI
+         qOBg==
+X-Gm-Message-State: AOJu0Yw538KRpiNLqqje2xuMH1lAQuVusdCYpwdu3/MPMfIshMsiXj8r
+	E4TU3N0hERFdBMn1R355Xw4=
+X-Google-Smtp-Source: AGHT+IGqQwQOB9t6/yYKRaS6b8thQhpGRr5Dk8tWrNhV15C8CICkgfRtYX3GSYgryu7yNxfhJNi1eQ==
+X-Received: by 2002:a17:902:ecc8:b0:1c4:29dd:2519 with SMTP id a8-20020a170902ecc800b001c429dd2519mr7615049plh.67.1696575439280;
+        Thu, 05 Oct 2023 23:57:19 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id q1-20020a170902a3c100b001c61512f2a6sm3035443plb.220.2023.10.05.23.57.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Oct 2023 23:57:18 -0700 (PDT)
+Message-ID: <0802bc5a-9fb0-433a-8491-47806cc7c549@gmail.com>
+Date: Fri, 6 Oct 2023 13:57:12 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.21.132.123]
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS03.realtek.com.tw (172.21.6.96)
-X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable
+ to handle kernel data access at 0xfeffbb62ffec65fe)
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Erhard Furtner <erhard_f@mailbox.org>,
+ Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+References: <20230929132750.3cd98452@yea> <ZR9esG8H17LY2KOX@debian.me>
+ <ZR9gkZKafUSNOAEf@casper.infradead.org>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <ZR9gkZKafUSNOAEf@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Max Chou <max.chou@realtek.com>
+On 06/10/2023 08:19, Matthew Wilcox wrote:
+> On Fri, Oct 06, 2023 at 08:11:12AM +0700, Bagas Sanjaya wrote:
+>> Matthew Wilcox, did you miss this regression report? You should look into it
+>> since it is (apparently) cause by a commit of yours.
+> 
+> No, I didn't miss it.  I'm simply choosing to work on other things.
+> All this regression tracking nonsense and being told to work on things
+> by people who've appointed themselves my manager has completely sapped
+> my motivation to work on bugs.  If you want me to work on things, *don't*
+> harass me.
+> 
 
-If CONFIG_DEV_COREDUMP was not set, it would return -EOPNOTSUPP for
-hci_devcd_register().
-In this commit, ignore error return for hci_devcd_register().
-Otherwise Bluetooth initialization will be failed.
+OK, thanks!
 
-Fixes: 044014ce85a1 ("Bluetooth: btrtl: Add Realtek devcoredump support")
-Cc: stable@vger.kernel.org
-Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
-Closes: https://lore.kernel.org/all/ZRyqIn0_qqEFBPdy@debian.me/T/
-Signed-off-by: Max Chou <max.chou@realtek.com>
----
- drivers/bluetooth/btrtl.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 84c2c2e1122f..277d039ecbb4 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -962,13 +962,10 @@ static void btrtl_dmp_hdr(struct hci_dev *hdev, struct sk_buff *skb)
- 	skb_put_data(skb, buf, strlen(buf));
- }
- 
--static int btrtl_register_devcoredump_support(struct hci_dev *hdev)
-+static void btrtl_register_devcoredump_support(struct hci_dev *hdev)
- {
--	int err;
-+	hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
- 
--	err = hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr, NULL);
--
--	return err;
- }
- 
- void btrtl_set_driver_name(struct hci_dev *hdev, const char *driver_name)
-@@ -1255,8 +1252,7 @@ int btrtl_download_firmware(struct hci_dev *hdev,
- 	}
- 
- done:
--	if (!err)
--		err = btrtl_register_devcoredump_support(hdev);
-+	btrtl_register_devcoredump_support(hdev);
- 
- 	return err;
- }
 -- 
-2.34.1
+An old man doll... just what I always wanted! - Clara
 
