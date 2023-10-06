@@ -1,55 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C56273E9
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 15:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B97326E04
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 18:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcRQn+lT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696605463;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CtGazeMDVs11juc+046JIkadiDiGDKBQoMZvQIXcRhM=;
-	b=PcRQn+lTLk2o7rblWyIZZS76fnnQSl91fqLYt+BE78CS2mRmYc06pF7Qsi3vXyq0EtRqhb
-	Hv9F826ugiua50VNZHepCO0C/xYQolhqvsDB+UHjbAEQfVcscToqyMapjldQWTtAoo4sw9
-	73xyuw2sGVLlu0etlPbE6IkG/1PW3cM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-344-r9gdjOZyMXG_z0fJ2CNpfA-1; Fri, 06 Oct 2023 11:17:42 -0400
-X-MC-Unique: r9gdjOZyMXG_z0fJ2CNpfA-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-538c5748a50so1890401a12.3
-        for <regressions@lists.linux.dev>; Fri, 06 Oct 2023 08:17:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="rwnyv8kc"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1c364fb8a4cso20772095ad.1
+        for <regressions@lists.linux.dev>; Fri, 06 Oct 2023 11:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1696618279; x=1697223079; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xCV04zCvYMSRZ8PLVrYCErwlWKz0o53q1/ujh2vCW2I=;
+        b=rwnyv8kcFp80ood9KueFxl6sljU/SyNRXFEv5cCSJVA4KO9hOlL1UR2F1O1HmrU2XL
+         XJorBDRM3l0rCb0chPDJiDA/DWh2CoYH8GE8XoF+cEU7zz3z+jIsMSOT4CEbOnpXVulY
+         A+MVMr0hH6p1JAMheTSQUE/pxntt4jMH1McexbNwHK2NljWhNtxKqhIcO9Ug+3V3rXgh
+         3j/aToPXpgDWr0wtjIJJEn0FVYVOtaGWqRLi9Y2xbuhREd9SvEJNCYyoIC/P1vDWJE9t
+         jQKKu6IDkbV54vAs2ZbDCEN+m/X+QLa/YiqA81Q523+apyhmjdUE6GijDRfmyOb1Rxa7
+         IyMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696605460; x=1697210260;
+        d=1e100.net; s=20230601; t=1696618279; x=1697223079;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CtGazeMDVs11juc+046JIkadiDiGDKBQoMZvQIXcRhM=;
-        b=AX0k+8qPdTPLv88C8vV5eNVSk+NJXhIBppqkHDhy9kmDLKhEPwsqZeACSWc7A0Jxgm
-         DIW4j1rCMVfDPZsh279Ni/fVYoDG7rz/HWgCjAnQQnFJMbjPmktdUCA16CN1pDovJYgB
-         1uPHNYbYc6dmfhDrjWir3J6G/3t66UhChT4tmPWCaJHEIJso1KEkGIBKlbA3C0nmChLg
-         yBAoN4kFZT+NwuXDws+EyuvnEbyFER+KYsmdajjy0dMbDrXdEpRGcyqJlJcwP8DjjGwQ
-         J2no6ESzFRpLlZxnYa/rAh7gkvoyUBo7BZ8frr55njiFNlrAEhQUZejhYJ0lCp0kF6RG
-         ScuA==
-X-Gm-Message-State: AOJu0YwOoswq6B7Q1kmHvsc0LGgR8QRIqduI09dO/YmpvSmD1YVRkgRW
-	eC8VIQ0GRFScUhZTuTKhWTtxVC3MTHbTKHw89vfHuIIMaYOCypPYYjfJC58vO5ao+Uc9eiXCmh+
-	9V+Vd7/RV8fFHSt44q9fAwdnH6Q31dh0=
-X-Received: by 2002:a05:6402:544:b0:534:5e2a:d443 with SMTP id i4-20020a056402054400b005345e2ad443mr7422599edx.29.1696605460510;
-        Fri, 06 Oct 2023 08:17:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGokPFz/Wy5FDk3w3bAVj0cR6YYJTT2f6ESS/2aLaUWO9TRQ1GEIEu69o54NihpLI6UzA1zHQ==
-X-Received: by 2002:a05:6402:544:b0:534:5e2a:d443 with SMTP id i4-20020a056402054400b005345e2ad443mr7422572edx.29.1696605460150;
-        Fri, 06 Oct 2023 08:17:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id p26-20020aa7d31a000000b00534ac155da7sm2699665edq.29.2023.10.06.08.17.39
+        bh=xCV04zCvYMSRZ8PLVrYCErwlWKz0o53q1/ujh2vCW2I=;
+        b=cr+Jjr6IWA0HxQLVuW7vcFSr7vIx6BuGNfsQJwwmRtLqsFfEe2U3mg+8pFmpUIOVBG
+         AOmAjPdt8SLlraxJ8g4X/T1TAMjyCsHj+zFzbbFUGBVN/TvsfN2hMSPBS8DXIEQJAAPi
+         NRus2iO92lhSiFV/cKu9MjAbPs3O80T1XixDS97NVDEiSRH4a3Qs+WB32nwBuHSHNpMS
+         xlLQ+Ed4kXgAsSV/P/Pg+7pi8lglXuPYyPfZH001amg+L/YorsVHj0Gz+5ZjWILu3vW1
+         OV8vx+wwIgT3L97rSsP++5lS2TQrWVV1Fb46AwAzaIkP56wsdQhxO8IAf/4z7E8sChG9
+         qPng==
+X-Gm-Message-State: AOJu0Yx+zdxnakTfWfmUfS9mZI8qmAQbfQbUWtIP1FBdYQLowbHTbGTd
+	qxDwKsU8DaXB+5bI7Cg+Tu48tw==
+X-Google-Smtp-Source: AGHT+IEFrO5y5ULP5CWa6iaqkAW2+FU1lSXIQ3Vc6+v8Jz0uz9VPVoCU5MsvSwDlydQL8BKJvZTrlQ==
+X-Received: by 2002:a17:902:e5c7:b0:1c5:b855:38f with SMTP id u7-20020a170902e5c700b001c5b855038fmr10107695plf.24.1696618278642;
+        Fri, 06 Oct 2023 11:51:18 -0700 (PDT)
+Received: from ?IPV6:2804:14d:5c5e:44fb:c07e:d4ae:2d8a:ba4? ([2804:14d:5c5e:44fb:c07e:d4ae:2d8a:ba4])
+        by smtp.gmail.com with ESMTPSA id o1-20020a170902d4c100b001b9f7bc3e77sm4251840plg.189.2023.10.06.11.51.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 08:17:39 -0700 (PDT)
-Message-ID: <9a905931-6210-8f6b-92f5-3c863d4a2e86@redhat.com>
-Date: Fri, 6 Oct 2023 17:17:38 +0200
+        Fri, 06 Oct 2023 11:51:18 -0700 (PDT)
+Message-ID: <c7d4fe7e-5229-71c7-b93d-f6203e163f02@mojatatu.com>
+Date: Fri, 6 Oct 2023 15:51:14 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,119 +51,89 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] ACPI: resource: Add TongFang GM6BGEQ, GM6BG5Q and
- GM6BG0Q to irq1_edge_low_force_override[]
-To: August Wikerfors <git@augustwikerfors.se>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Mario Limonciello <Mario.Limonciello@amd.com>, linux-acpi@vger.kernel.org,
- Francesco <f.littarru@outlook.com>, regressions@lists.linux.dev
-References: <20231006123304.32686-1-hdegoede@redhat.com>
- <ed4672a7-439c-4240-aadc-7a36858c36b2@augustwikerfors.se>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ed4672a7-439c-4240-aadc-7a36858c36b2@augustwikerfors.se>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.15.1
+Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
+ requirement
+Content-Language: en-US
+To: Christian Theune <ct@flyingcircus.io>, stable@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: regressions@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, Jamal Hadi Salim <jhs@mojatatu.com>
+References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+From: Pedro Tammela <pctammela@mojatatu.com>
+In-Reply-To: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi August,
-
-On 10/6/23 16:18, August Wikerfors wrote:
-> Hi Hans,
+On 06/10/2023 05:37, Christian Theune wrote:
+> Hi,
 > 
-> On 2023-10-06 14:33, Hans de Goede wrote:
->> The TongFang GM6BGEQ, GM6BG5Q and GM6BG0Q are 3 GPU variants of a TongFang
->> barebone design which is sold under various brand names.
->>
->> The ACPI IRQ override for the keyboard IRQ must be used on these AMD Zen
->> laptops in order for the IRQ to work.
->>
->> Adjust the irq1_edge_low_force_override[] DMI match table for this:
->>
->> 1. Drop the sys-vendor match from the existing PCSpecialist Elimina Pro 16
->>     entry for the GM6BGEQ (RTX3050 GPU) model so that it will also match
->>     the laptop when sold by other vendors such as hyperbook.pl.
->>
->> 2. Add board-name matches for the GM6BG5Q (RTX4050) and GM6B0Q (RTX4060)
->>     models.
->>
->> Suggested-by: August Wikerfors <git@augustwikerfors.se>
->> Reported-by: Francesco <f.littarru@outlook.com>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217394
->> Link: https://laptopparts4less.frl/index.php?route=product/search&filter_name=GM6BG
->> Link: https://hyperbook.pl/en/content/14-hyperbook-drivers
->> Link: https://linux-hardware.org/?probe=bfa70344e3
->> Link: https://bbs.archlinuxcn.org/viewtopic.php?id=13313
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> Since this is a regression fix for 453b014e2c29 ("ACPI: resource: Fix IRQ override quirk for PCSpecialist Elimina Pro 16 M") (for PCSpecialist systems like Francesco's with product name "Elimina Pro 16 M" but not board name "GM6BGEQ") and 2d331a6ac481 ("ACPI: resource: revert "Remove "Zen" specific match and quirks"") (for other vendors using the same TongFang design), it should have a "Fixes:" tag for at least one of those.
+> (prefix, I was not aware of the regression reporting process and incorrectly reported this informally with the developers mentioned in the change)
 > 
-> Both of those commits are in 6.5 (and 6.6-rc) so this should go into 6.6-rc and be backported to 6.5, but the patch seems to depend on 424009ab2030 ("ACPI: resource: Drop .ident values from dmi_system_id tables") and maybe also d37273af0e42 ("ACPI: resource: Consolidate IRQ trigger-type override DMI tables") to apply cleanly, which seem to only be queued for linux-next/6.7? I'm not familiar with what the correct process is for such cases.
-
-You are right:
-
-Fixes: 453b014e2c29 ("ACPI: resource: Fix IRQ override quirk for PCSpecialist Elimina Pro 16 M")
-
-Note likewise this commit should really also be send as a fix
-for 6.6 and backported to the stable kernels:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/drivers/acpi/resource.c?h=bleeding-edge&id=c1ed72171ed580fbf159e703b77685aa4b0d0df5
-
-Regards,
-
-Hans
-
-
-
+> I upgraded from 6.1.38 to 6.1.55 this morning and it broke my traffic shaping script, leaving me with a non-functional uplink on a remote router.
 > 
->> ---
->> Changes in v2:
->> - Add missing reported and suggested by tags
->> ---
->>   drivers/acpi/resource.c | 20 +++++++++++++-------
->>   1 file changed, 13 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
->> index 014a3911381b..18f6353c142e 100644
->> --- a/drivers/acpi/resource.c
->> +++ b/drivers/acpi/resource.c
->> @@ -512,17 +512,23 @@ static const struct dmi_system_id irq1_edge_low_force_override[] = {
->>           },
->>       },
->>       {
->> -        /*
->> -         * PCSpecialist Elimina Pro 16 M
->> -         *
->> -         * Some models have product-name "Elimina Pro 16 M",
->> -         * others "GM6BGEQ". Match on board-name to match both.
->> -         */
->> +        /* TongFang GM6BGEQ / PCSpecialist Elimina Pro 16 M, RTX 3050 */
->>           .matches = {
->> -            DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
->>               DMI_MATCH(DMI_BOARD_NAME, "GM6BGEQ"),
->>           },
->>       },
->> +    {
->> +        /* TongFang GM6BG5Q, RTX 4050 */
-> FWIW the PCSpecialist Elimina Pro 16 M is sold with all three GPU options: https://www.pcspecialist.ie/notebooks/elimina-pro-16-M/
-> Presumably the RTX 4050 option has board name "GM6BG5Q" but maybe it's better to leave it out if it's not confirmed.
+> The script errors out like this:
 > 
->> +        .matches = {
->> +            DMI_MATCH(DMI_BOARD_NAME, "GM6BG5Q"),
->> +        },
->> +    },
->> +    {
->> +        /* TongFang GM6BG0Q / PCSpecialist Elimina Pro 16 M, RTX 4060 */
->> +        .matches = {
->> +            DMI_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
->> +        },
->> +    },
->>       { }
->>   };
->>   
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ext=ispA
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ext_ingress=ifb0
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe ifb
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + modprobe act_mirred
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ispA root
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2061]: Error: Cannot delete qdisc with handle of zero.
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ispA ingress
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2064]: Error: Cannot find specified qdisc on specified device.
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ifb0 root
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2066]: Error: Cannot delete qdisc with handle of zero.
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc del dev ifb0 ingress
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2067]: Error: Cannot find specified qdisc on specified device.
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + true
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc add dev ispA handle ffff: ingress
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + ifconfig ifb0 up
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc filter add dev ispA parent ffff: protocol all u32 match u32 0 0 action mirred egress redirect dev ifb0
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc qdisc add dev ifb0 root handle 1: hfsc default 1
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class add dev ifb0 parent 1: classid 1:999 hfsc rt m2 2.5gbit
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2053]: + tc class add dev ifb0 parent 1:999 classid 1:1 hfsc sc rate 50mbit
+> Oct 06 05:49:22 wendy00 isp-setup-shaping-start[2077]: Error: Invalid parent - parent class must have FSC.
+> 
+> The error message is also a bit weird (but that’s likely due to iproute2 being weird) as the CLI interface for `tc` and the error message do not map well. (I think I would have to choose `hfsc sc` on the parent to enable the FSC option which isn’t mentioned anywhere in the hfsc manpage).
+> 
+> The breaking change was introduced in 6.1.53[1] and a multitude of other currently supported kernels:
+> 
+> ----
+> commit a1e820fc7808e42b990d224f40e9b4895503ac40
+> Author: Budimir Markovic <markovicbudimir@gmail.com>
+> Date: Thu Aug 24 01:49:05 2023 -0700
+> 
+> net/sched: sch_hfsc: Ensure inner classes have fsc curve
+> 
+> [ Upstream commit b3d26c5702c7d6c45456326e56d2ccf3f103e60f ]
+> 
+> HFSC assumes that inner classes have an fsc curve, but it is currently
+> possible for classes without an fsc curve to become parents. This leads
+> to bugs including a use-after-free.
+> 
+> Don't allow non-root classes without HFSC_FSC to become parents.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Reported-by: Budimir Markovic <markovicbudimir@gmail.com>
+> Signed-off-by: Budimir Markovic <markovicbudimir@gmail.com>
+> Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+> Link: https://lore.kernel.org/r/20230824084905.422-1-markovicbudimir@gmail.com
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ----
 > 
 > Regards,
-> August Wikerfors
+> Christian
+> 
+> [1] https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.53
+> 
+> #regzbot introduced: a1e820fc7808e42b990d224f40e9b4895503ac40
+> 
 > 
 
+I will take a look,
+Thanks!
