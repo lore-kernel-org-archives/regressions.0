@@ -1,133 +1,87 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B07139B
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 01:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7E4139B
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 01:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3961MSNK01139866, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3961MSNK01139866
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 6 Oct 2023 09:22:28 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 6 Oct 2023 09:22:29 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 6 Oct 2023 09:22:28 +0800
-Received: from RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3]) by
- RTEXMBS03.realtek.com.tw ([fe80::5510:ad08:5390:1ed3%2]) with mapi id
- 15.01.2375.007; Fri, 6 Oct 2023 09:22:28 +0800
-From: Max Chou <max.chou@realtek.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-CC: Bagas Sanjaya <bagasdotme@gmail.com>, Hilda Wu <hildawu@realtek.com>,
-        "alex_lu@realsil.com.cn" <alex_lu@realsil.com.cn>,
-        Luiz Augusto von Dentz
-	<luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "Johan
- Hedberg" <johan.hedberg@gmail.com>,
-        Juerg Haefliger
-	<juerg.haefliger@canonical.com>,
-        Linux Bluetooth
-	<linux-bluetooth@vger.kernel.org>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>
-Subject: RE: Regression: devcoredump patch broke Realtek usb bluetooth adapter
-Thread-Topic: Regression: devcoredump patch broke Realtek usb bluetooth
- adapter
-Thread-Index: AQHZ9iZZqIk9cnxrEkOIPrwHFnXgfLA4N/0AgAA1ZDCAABycgIAAkrXQgAAclfD//8ULgIAC/Ddg
-Date: Fri, 6 Oct 2023 01:22:28 +0000
-Message-ID: <732012844f544d0daf790434025c8fb3@realtek.com>
-References: <20231003182038.k57nirtt4sonvt7c@box.shutemov.name>
- <ZRyqIn0_qqEFBPdy@debian.me> <b2ef2f1c457a4cf7a246b2e8b8598a30@realtek.com>
- <20231004044947.vgegwvxxindkjo7g@box.shutemov.name>
- <7507ad6c8a964b179bf2b3318104a124@realtek.com>
- <20231004114609.dca6ebtmx37fsx5l@box.shutemov.name>
-In-Reply-To: <20231004114609.dca6ebtmx37fsx5l@box.shutemov.name>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-originating-ip: [172.21.132.197]
-x-kse-serverinfo: RTEXMBS05.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1qoZqh-0043of-2s; Fri, 06 Oct 2023 09:41:52 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Oct 2023 09:41:55 +0800
+Date: Fri, 6 Oct 2023 09:41:55 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Cc: Tatu =?iso-8859-1?Q?Heikkil=E4?= <tatu.heikkila@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Device Mapper <dm-devel@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, Alasdair Kergon <agk@redhat.com>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: [PATCH] dm crypt: Fix reqsize in crypt_iv_eboiv_gen
+Message-ID: <ZR9l446ndB4n1Xl4@gondor.apana.org.au>
+References: <f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com>
+ <ZR9dEiXhQv-wBVA2@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZR9dEiXhQv-wBVA2@debian.me>
 
-Hi!=20
-Realtek will send a patch to fix this issue.
+On Fri, Oct 06, 2023 at 08:04:18AM +0700, Bagas Sanjaya wrote:
+>
+> > Git bisect lead me to:
+> > # first bad commit: [e3023094dffb41540330fb0c74cd3a019cd525c2] dm crypt:
+> > Avoid using MAX_CIPHER_BLOCKSIZE
+> > 
+> > If I git revert e3023094dffb41540330fb0c74cd3a019cd525c2 on current Linus'
+> > git master, the issue goes away. So I'm personally not all that affected
+> > anymore (if I'm ready to compile my kernels from now on), and I understand
+> > that you have no clear way to reproduce this as it seems strongly bound to
+> > hardware, but seems like this could point to a potentially serious security
+> > issue since it involves both crypto and undefined behaviour.
 
-BRs,
-Max
+Thanks for the report.  Sorry this is indeed my fault.  The allocated
+buffer is too small as it's missing the size for the request object
+itself.
 
+Mike, would you be OK with me picking this fix up and pushing it to
+Linus?
 
-> -----Original Message-----
-> From: Kirill A. Shutemov <kirill@shutemov.name>
-> Sent: Wednesday, October 4, 2023 7:46 PM
-> To: Max Chou <max.chou@realtek.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>; Hilda Wu
-> <hildawu@realtek.com>; alex_lu@realsil.com.cn; Luiz Augusto von Dentz
-> <luiz.von.dentz@intel.com>; Marcel Holtmann <marcel@holtmann.org>;
-> Johan Hedberg <johan.hedberg@gmail.com>; Juerg Haefliger
-> <juerg.haefliger@canonical.com>; Linux Bluetooth
-> <linux-bluetooth@vger.kernel.org>; Thorsten Leemhuis <linux@leemhuis.info=
->;
-> Linux Regressions <regressions@lists.linux.dev>; Linux Kernel Mailing Lis=
-t
-> <linux-kernel@vger.kernel.org>
-> Subject: Re: Regression: devcoredump patch broke Realtek usb bluetooth
-> adapter
->=20
->=20
-> External mail.
->=20
->=20
->=20
-> On Wed, Oct 04, 2023 at 07:28:45AM +0000, Max Chou wrote:
-> > Hi! Kirill,
-> > I guess the root cause is as below.
-> > =3D=3D=3D
-> > static int btrtl_register_devcoredump_support(struct hci_dev *hdev) {
-> >         int err;
-> >
-> >         err =3D hci_devcd_register(hdev, btrtl_coredump, btrtl_dmp_hdr,
-> > NULL);
-> >
-> >         return err;
-> > }
-> > =3D=3D=3D
-> > If CONFIG_DEV_COREDUMP is not enabled, it would return -EOPNOTSUPP
-> for hci_devcd_register().
-> > Unfortunately, btrtl_register_devcoredump_support() will return it.
-> > Finally, -EOPNOSTUPP will be returned for btrtl_setup_realtek().
-> >
-> > Could you have the following workaround for the root cause checked?
-> > Please share dmesg as well. Thanks,
->=20
-> Yes. It works and I see
->=20
-> [    3.640539] Bluetooth: hci0: RTL: btrtl_register_devcoredump_support()=
-:
-> err =3D -95
->=20
-> in dmesg. -EOPNOTSUPP indeed.
->=20
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+Cheers,
+
+---8<---
+A skcipher_request object is made up of struct skcipher_request
+followed by a variable-sized trailer.  The allocation of the
+skcipher_request and IV in crypt_iv_eboiv_gen is missing the
+memory for struct skcipher_request.  Fix it by adding it to
+reqsize.
+
+Fixes: e3023094dffb ("dm crypt: Avoid using MAX_CIPHER_BLOCKSIZE")
+Reported-by: Tatu Heikkil� <tatu.heikkila@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index f2662c21a6df..5315fd261c23 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -753,7 +753,8 @@ static int crypt_iv_eboiv_gen(struct crypt_config *cc, u8 *iv,
+ 	int err;
+ 	u8 *buf;
+ 
+-	reqsize = ALIGN(crypto_skcipher_reqsize(tfm), __alignof__(__le64));
++	reqsize = sizeof(*req) + crypto_skcipher_reqsize(tfm);
++	reqsize = ALIGN(reqsize, __alignof__(__le64));
+ 
+ 	req = kmalloc(reqsize + cc->iv_size, GFP_NOIO);
+ 	if (!req)
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
