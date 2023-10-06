@@ -1,60 +1,61 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFD7629
-	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 01:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFD510F9
+	for <regressions@lists.linux.dev>; Fri,  6 Oct 2023 01:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDIBZwhR"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3af603da0d1so1008922b6e.1
-        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 18:04:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJc3/FNg"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1c874b43123so13282945ad.2
+        for <regressions@lists.linux.dev>; Thu, 05 Oct 2023 18:11:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696554263; x=1697159063; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1696554675; x=1697159475; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xbWXVkPufIc/8Du+zQCnrHClPnWAOU4FcdQfVWLhTPM=;
-        b=bDIBZwhRDLry4/o2mBYLkhCNy2Rlh6eEAc2Pf9TC1l8Hq6qcVE+zDoV/5CWMoELKAc
-         9jMqgDyQ8yd5HM9NkHUFUbGrBbZcbvStHOZ9QgmZb336XmhYy4OWPH583JePEbRKksNh
-         sNtzMX+ZMl/G0LCFyDIJoAyEq2CYDQcDjUsSgyR7WIXSNg2qGMqCTF+E4y4S98Z8wnWT
-         n3/2DMvMz3azBxJeYja3PA6T/kvvOe0kSB8o/pWaBUaO/Y17xWeqKjR6CZzPaujPwVRR
-         Nq/gI94KrRJdtEqg5FMvUf25ipulCLXFq4qTqi9MmC8H4BbSGBaBgZQ2C6kj7CHQnYDD
-         9L9w==
+        bh=SnMIZQ1itOmcDHvskxmE8+4KsR3yjh22yfXupSgvUf8=;
+        b=jJc3/FNg+G+4fCF482nZK4VgMc4oNALI/07MFsDCe4GagqQnRyiQBKLXhSGhRPXouX
+         w7HCQ+r3xDq/BtCccXKZrzjw/dUFhWhc/6JJ+fbzcweYn4rs90pndbxT2KuR5lbtBNEG
+         ATq2PwReiugB2Q0c4bJXTMqpUVaksFkK+HYK/m+fcSOrbJxdLrUusd6x3GGSd2M0D5/s
+         0SyDCcp4iW4NO7ZX4sOPMkVpR5Gpjm7+EA2LiGI/M/07vBPM8ELJNoGtzvRkCR92l49h
+         FX+6Ra68NBxLn8hkWb6Ds1zR0mQeeMKUQMDjM3pLc6D54naStoo+Hw7FrBzaS6AlMhe+
+         53Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696554263; x=1697159063;
+        d=1e100.net; s=20230601; t=1696554675; x=1697159475;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xbWXVkPufIc/8Du+zQCnrHClPnWAOU4FcdQfVWLhTPM=;
-        b=W3WzXUW7yAvP/wizkFyexNlg3rN0ENYNHZu1vEhv+eqk0Tuv33dPEZaNeMJtfgHUHI
-         /i8jdPXcpJDv+0BWvtI+uMKp3RLP4LDIZaRWo4w9+e04O03LTESp0ONoQONX+ipgeZJC
-         36UPr05dfKB33C0TRBwTBI5C8hnnxjum+OoZoSn/KkN6E3oTBypIIPVBWeEZM3PLn/49
-         Rbj4URBkVCT3iflRAqSmRd56p0mYaRcQFkqAmpqJ5ZZyVxFno/Tm2yxw0eC3shFVNTIN
-         62uS3hbIBfel4rh2zI+p2d4g24564Zte6LeUi+72NGFmvSq0oGZv2iCWukqgcTK1Mje7
-         ZlxQ==
-X-Gm-Message-State: AOJu0YxDSlMpkZ1FsdAQNQi4oOtiRza/HKl8HSQ6D+e+Fr4aogLkBfmD
-	uv4FOkL6je3CTcv6yCv5foM=
-X-Google-Smtp-Source: AGHT+IFh2w6zzhV5IY1apER8J1+pgvye6XXqvRnnMvh23W1RQguKILS+24Zm9m4xUzHHHEty7//QLg==
-X-Received: by 2002:a05:6808:138a:b0:3a7:1d15:28fe with SMTP id c10-20020a056808138a00b003a71d1528femr7789531oiw.56.1696554262692;
-        Thu, 05 Oct 2023 18:04:22 -0700 (PDT)
+        bh=SnMIZQ1itOmcDHvskxmE8+4KsR3yjh22yfXupSgvUf8=;
+        b=wbtOvogqURo8vrHrCgJHPymjuSJLO/Y6ry1PBQwxYSo1xHZV0WvjRjBb7TrJTp+cH6
+         NtWbtAGw8sgEUaxeYhKjh3dsgoW5iUSK9bwMbCjfLsAxF+s/df8D4fOBsRpOqTTBI3RD
+         WmCPoALzs2qeM2q32k2UlyDBngqcKj3G8/gkXQSzDlAdv55TM4+wdEcgE3hJH6KepYbU
+         xwjYS6EzOanIu3PQdQJfpYgWV+kWlTdA7C26VapA+y+Nd9M9lid8mzD76d4j3UQiGuE6
+         twlFMmqd0TPBO5Y6A87dDxYz3wBnNH+AtSsIVRDkYmWSSHKdu3rq+yBqf/DTCtUGvKI3
+         m6fA==
+X-Gm-Message-State: AOJu0YxX9EoiLeuVx02fLXuP6N6iEd7A59yRbRGldq8TIOibFgaynUck
+	Q4JE8o6S5qmCnLOckVKlAy0=
+X-Google-Smtp-Source: AGHT+IGAx1Lm/RUNQQ+9sW6I2ski4xP3nLI1Kx5SFKlCCkyX1kqAVSqEi8dZKwe6tcK2oBNe/Fh6BQ==
+X-Received: by 2002:a17:903:22ce:b0:1c7:733b:27c7 with SMTP id y14-20020a17090322ce00b001c7733b27c7mr8569944plg.56.1696554675358;
+        Thu, 05 Oct 2023 18:11:15 -0700 (PDT)
 Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id g2-20020a63ad02000000b00584d035c08asm2083377pgf.24.2023.10.05.18.04.21
+        by smtp.gmail.com with ESMTPSA id s20-20020a170902989400b001c5b8087fe5sm2421494plp.94.2023.10.05.18.11.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 18:04:22 -0700 (PDT)
+        Thu, 05 Oct 2023 18:11:14 -0700 (PDT)
 Received: by debian.me (Postfix, from userid 1000)
-	id 777638209CB9; Fri,  6 Oct 2023 08:04:18 +0700 (WIB)
-Date: Fri, 6 Oct 2023 08:04:18 +0700
+	id AF3D48209CB9; Fri,  6 Oct 2023 08:11:12 +0700 (WIB)
+Date: Fri, 6 Oct 2023 08:11:12 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Tatu =?utf-8?B?SGVpa2tpbMOk?= <tatu.heikkila@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Device Mapper <dm-devel@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, Alasdair Kergon <agk@redhat.com>,
+To: Erhard Furtner <erhard_f@mailbox.org>,
+	Linux PowerPC <linuxppc-dev@lists.ozlabs.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: (Bisected) Accessing opened Bitlocker partition leads to memory
- fault and kernel panic on Imac8,1
-Message-ID: <ZR9dEiXhQv-wBVA2@debian.me>
-References: <f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>,
+	Mike Rapoport (IBM) <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable
+ to handle kernel data access at 0xfeffbb62ffec65fe)
+Message-ID: <ZR9esG8H17LY2KOX@debian.me>
+References: <20230929132750.3cd98452@yea>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,93 +63,158 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Jb5IqaSpz/f9tNpy"
+	protocol="application/pgp-signature"; boundary="Xlus9BP6q0VwNtKi"
 Content-Disposition: inline
-In-Reply-To: <f1b8d8f5-2079-537e-9d0f-d58da166fe50@gmail.com>
+In-Reply-To: <20230929132750.3cd98452@yea>
 
 
---Jb5IqaSpz/f9tNpy
+--Xlus9BP6q0VwNtKi
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 05, 2023 at 08:15:43PM +0300, Tatu Heikkil=C3=A4 wrote:
-> Hello,
-> I think you and the lists are right recipients, forgive me if not, I've
-> never reported kernel bugs before. Naively this seems a crypto issue and
-> Herbert Xu from crypto maintainers made the buggy commit, but it edits
-> drivers/md/dm_crypt.c maintained by dm-devel people per MAINTAINERS, so I=
-'m
-> going by that.
+On Fri, Sep 29, 2023 at 01:27:50PM +0200, Erhard Furtner wrote:
+> Greetings!
 >=20
-> At the center of the issue is my Imac8,1 and an external 2TB SSD with 5
-> partitions: an EFI+MBR portable Arch Linux install with LUKS encrypted ex=
-t4
-> /home, and a 1.7TB exFAT encrypted with Bitlocker.
+> Kernel 6.5.5 boots fine on my PowerMac G5 11,2 but kernel 6.6-rc3 fails t=
+o boot with following dmesg shown on the OpenFirmware console (transcribed =
+screenshot):
 >=20
-> Mounting the LUKS partition works fine on all my 4 computers (Imac8,1,
-> Imac12,2, two generic Intels; Fedora's GNOME gvfs volume monitor often
-> crashes on mount using this drive), and mounting the Bitlocker partition
-> works on all other computers, but my Imac8,1. On my other computers, I can
-> boot into the portable install which automounts the Bitlocker partition
-> fine. However, on my Imac8,1, regardless if I boot into the external driv=
-e's
-> portable Arch Linux install, or use the Imac's own internal Debian testing
-> install, any post-6.4 kernel reliably panics (50+ times so far, 100% of t=
-he
-> time) when accessing the unlocked Bitlocker volume:
+> [...]
+> SLUB: HWalign=3D128, Order=3D0-3, MinObjects=3D0, CPUs=3D2, Nodes=3D1
+> rcu: Hierarchical RCU implementation.
+>  Tracing variant of Tasks RCU enabled.
+> rcu: RCU calculated value of scheduler-enlistment delay is 30 jiffies.
+> NR_IRQS: 512, nr_irqs: 512, preallocated irqs: 16
+> mpic: Setting up MPIC " MPIC 1   " version 1.2 at f8040000, max 2 CPUs
+> mpic: ISU size: 124, shift: 7, mask: 7f
+> mpic: Initializing for 124 sources
+> mpic: Setting up HT PICs workarounds for U3/U4
+> BUG: Unable to handle kernel data access at 0xfeffbb62ffec65fe
+> Faulting instruction address: 0xc00000000005dc40
+> Oops: Kernel access of bad area, sig: 11 [#1]
+> BE PAGE_SIZE=3D4K MMU=3DHash SMP NR_CPUS=3D2 PowerMac
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Tainted: G                T  6.6.0-rc3-PMac=
+GS #1
+> Hardware name: PowerMac11,2 PPC970MP 0x440101 PowerMac
+> NIP:  c00000000005dc40 LR: c000000000066660 CTR: c000000000007730
+> REGS: c0000000022bf510 TRAP: 0380   Tainted: G                T (6.6.0-rc=
+3-PMacGS)
+> MSR:  9000000000001032 <SF,HV,ME,IR,DR,RI>  CR: 44004242  XER: 00000000
+> IRQMASK: 3
+> GPR00: 0000000000000000 c0000000022bf7b0 c0000000010c0b00 00000000000001ac
+> GPR04: 0000000003c80000 0000000000000300 c0000000f20001ae 0000000000000300
+> GPR08: 0000000000000006 feffbb62ffec65ff 0000000000000001 0000000000000000
+> GPR12: 9000000000001032 c000000002362000 c000000000f76b80 000000000349ecd8
+> GPR16: 0000000002367ba8 0000000002367f08 0000000000000006 0000000000000000
+> GPR20: 00000000000001ac c000000000f6f920 c0000000022cd985 000000000000000c
+> GPR24: 0000000000000300 00000003b0a3691d c0003e008030000e 0000000000000000
+> GPR28: c00000000000000c c0000000f20001ee feffbb62ffec65fe 00000000000001ac
+> NIP [c00000000005dc40] hash_page_do_lazy_icache+0x50/0x100
+> LR [c000000000066660] __hash_page_4K+0x420/0x590
+> Call Trace:
+> [c0000000022bf7e0] [ffffffffffffffff] 0xffffffffffffffff
+> [c0000000022bf8c0] [c00000000005e164] hash_page_mm+0x364/0x6f0
+> [c0000000022bf990] [c00000000005e684] do_hash_fault+0x114/0x2b0
+> [c0000000022bf9c0] [c0000000000078e8] data_access_common_virt+0x198/0x1f0
+> --- interrupt: 300 at mpic_init+0x4bc/0x10c4
+> NIP:  c000000002020a5c LR: c000000002020a04 CTR: 0000000000000000
+> REGS: c0000000022bf9f0 TRAP: 0300   Tainted: G                T (6.6.0-rc=
+3-PMacGS)
+> MSR:  9000000000001032 <SF,HV,ME,IR,DR,RI>  CR: 24004248  XER: 00000000
+> DAR: c0003e008030000e DSISR: 40000000 IRQMASK: 1
+> GPR00: 0000000000000000 c0000000022bfc90 c0000000010c0b00 c0003e0080300000
+> GPR04: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+> GPR08: 0000000000000000 221b80894c06df2f 0000000000000000 0000000000000000
+> GPR12: 0000000000000000 c000000002362000 c000000000f76b80 000000000349ecd8
+> GPR16: 0000000002367ba8 0000000002367f08 0000000002367c70 0000000000000000
+> GPR20: 567ce25e8c9202b7 c000000000f6f920 0000000000000001 c0003e0080300000
+> GPR24: c00000000226f348 0000000000000004 c00000000404c640 0000000000000000
+> GPR28: c0003e0080300000 c00000000404c000 45886d8559cb69b4 c0000000022bfc90
+> NIP [c00000000005dc40] mpic_init+0x4bc/0x10c4
+> LR [c000000000066660] mpic_init+0x464/0x10c4
+> ~~~ interrupt: 300
+> [c0000000022bfd90] [c000000002022ae4] pmac_setup_one_mpic+0x258/0x2dc
+> [c0000000022bf2e0] [c000000002022df4] pmac_pic_init+0x28c/0x3d8
+> [c0000000022bfef0] [c00000000200b750] init_IRQ+0x90/0x140
+> [c0000000022bff30] [c0000000020053c0] start_kernel+0x57c/0x78c
+> [c0000000022bffe0] [c00000000000cb48] start_here_common+0x1c/0x20
+> Code: 09290000 7c292040 4081007c fbc10020 3d220127 78843664 3929d700 ebc9=
+0000 7fde2214 e93e0000 712a0001 40820064 <e93e0000> 71232000 40820048 e93e0=
+000
+> ---[ end trace 0000000000000000 ]---
 >=20
-> # cryptsetup open /dev/sdb5 --type bitlk crucial
-> Enter passphrase for /dev/sdb5:
-> # mount /dev/mapper/crucial temp [kernel immediately panics if I try to
-> tab-complete the mount point, making the shell also access the decrypted
-> device I assume, or try to run the command]
+> Kernel panic - not syncing: Fatal exception
+> Rebooting in 40 seconds..
 >=20
-> I originally ran into this when mounting using XFCE's Thunar implementati=
-on.
-> Using it, the mount fails with "Operation was cancelled" and the system
-> crashes within a minute.
 >=20
-> Git bisect lead me to:
-> # first bad commit: [e3023094dffb41540330fb0c74cd3a019cd525c2] dm crypt:
-> Avoid using MAX_CIPHER_BLOCKSIZE
+> I bisected the issue and got 9fee28baa601f4dbf869b1373183b312d2d5ef3d as =
+1st bad commit:
 >=20
-> If I git revert e3023094dffb41540330fb0c74cd3a019cd525c2 on current Linus'
-> git master, the issue goes away. So I'm personally not all that affected
-> anymore (if I'm ready to compile my kernels from now on), and I understand
-> that you have no clear way to reproduce this as it seems strongly bound to
-> hardware, but seems like this could point to a potentially serious securi=
-ty
-> issue since it involves both crypto and undefined behaviour.
+>  # git bisect good
+> 9fee28baa601f4dbf869b1373183b312d2d5ef3d is the first bad commit
+> commit 9fee28baa601f4dbf869b1373183b312d2d5ef3d
+> Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Date:   Wed Aug 2 16:13:49 2023 +0100
 >=20
-> Kdump dmesg logs (the error output is not completely consistent between
-> panics) & .config can be found in a dummy Bugzilla report
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217982
+>     powerpc: implement the new page table range API
+>    =20
+>     Add set_ptes(), update_mmu_cache_range() and flush_dcache_folio().  C=
+hange
+>     the PG_arch_1 (aka PG_dcache_dirty) flag from being per-page to per-f=
+olio.
+>    =20
+>     [willy@infradead.org: re-export flush_dcache_icache_folio()]
+>       Link: https://lkml.kernel.org/r/ZMx1daYwvD9EM7Cv@casper.infradead.o=
+rg
+>     Link: https://lkml.kernel.org/r/20230802151406.3735276-22-willy@infra=
+dead.org
+>     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+>     Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+>     Cc: Michael Ellerman <mpe@ellerman.id.au>
+>     Cc: Nicholas Piggin <npiggin@gmail.com>
+>     Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 >=20
-> Please let me know if I can help you in any way. I don't mind using this =
-as
-> a gateway to learn more about kernel debugging etc.
+>  arch/powerpc/include/asm/book3s/32/pgtable.h |  5 ---
+>  arch/powerpc/include/asm/book3s/64/pgtable.h |  6 +---
+>  arch/powerpc/include/asm/book3s/pgtable.h    | 11 ++----
+>  arch/powerpc/include/asm/cacheflush.h        | 14 +++++---
+>  arch/powerpc/include/asm/kvm_ppc.h           | 10 +++---
+>  arch/powerpc/include/asm/nohash/pgtable.h    | 16 +++------
+>  arch/powerpc/include/asm/pgtable.h           | 12 +++++++
+>  arch/powerpc/mm/book3s64/hash_utils.c        | 11 +++---
+>  arch/powerpc/mm/cacheflush.c                 | 41 ++++++++-------------
+>  arch/powerpc/mm/nohash/e500_hugetlbpage.c    |  3 +-
+>  arch/powerpc/mm/pgtable.c                    | 53 ++++++++++++++++------=
+------
+>  11 files changed, 89 insertions(+), 93 deletions(-)
+>=20
+>=20
+> And indeed when I revert commit 9fee28baa601f4dbf869b1373183b312d2d5ef3d =
+I get a booting kernel again. I reverted the commit on top of 864609c6a0b5f=
+0464f6ec7869cb2a45a529c35d7 (HEAD) as I get build issues when I revert it o=
+n top of 6.6-rc3.
 >=20
 
-Thanks for the regression report. I'm adding it to regzbot:
+Matthew Wilcox, did you miss this regression report? You should look into it
+since it is (apparently) cause by a commit of yours.
 
-#regzbot ^introduced: e3023094dffb41
-#regzbot title: kernel panic when accessing opened bitlocker partition due =
-to avoiding MAX_CIPHER_BLOCKSIZE
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217982
+Thanks.
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---Jb5IqaSpz/f9tNpy
+--Xlus9BP6q0VwNtKi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZR9dDAAKCRD2uYlJVVFO
-oz5dAQCMP/K95ZXJESKmwYJsaJzV2PzQpaGweREO01xriKlshQD9FfLS/rj+AhM0
-sYS2+qls+vEXoyzp5laVX3fWeL1l1Ao=
-=7sAU
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZR9esAAKCRD2uYlJVVFO
+o+TGAQCdrCrLD0HMpTA2w8CpBJAhudhKSVy2zSJ3jHgytqqHMgD+MVl2fKY2FZB6
+6pLZlCRFuswIcZ6OhAerNePRnnzSyQ4=
+=/NDm
 -----END PGP SIGNATURE-----
 
---Jb5IqaSpz/f9tNpy--
+--Xlus9BP6q0VwNtKi--
