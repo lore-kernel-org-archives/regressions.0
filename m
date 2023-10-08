@@ -1,107 +1,219 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FA9C8EA
-	for <regressions@lists.linux.dev>; Sun,  8 Oct 2023 14:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE99G1lT"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1c5db4925f9so27481315ad.1
-        for <regressions@lists.linux.dev>; Sun, 08 Oct 2023 07:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696774049; x=1697378849; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MCzYakcpTcETitAtIw4d5gEkmbg6TBgqI55HTypQAD4=;
-        b=hE99G1lTdHnHYeI66k1wClAAfCBnHPMuqp4+i8vBlEPoqKF+efnuQA52iyjg236C7i
-         T20ULZr72Ex+VnEiDFiZdVLUNY2/cW+whiB14+gZPT/WlZkXBv5MIAVFZk0eUXN33A/i
-         NIqsx0bYXCpxVVZ1xA0qy58BOoDq+FaRddtKChsGeBB0daSsaYZcS0pycvvjOejcfeEE
-         XehTjIPyUOqx/G724Xv+QiWSN/ZiqDBdWm+WssALIyVFux7YR006uQ1lAb5o4JApNMzy
-         LKwk3GxdJ/Jq6ZG2AXZZKZEayHJwKaxTskCCQHw911qf4qjLABe2Uph9ZlzqK8XCob63
-         kW8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696774049; x=1697378849;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MCzYakcpTcETitAtIw4d5gEkmbg6TBgqI55HTypQAD4=;
-        b=SR1QaG9l2p4vtCZGt28KoN6XEyIMMfrwNMbUuvzg/mHDBNR/mB4cMYyfIl0NjrYNVE
-         rtmQ0QtpRU9lS+45OphySNGBuCpK5ZQxkj5Rvc+4D5ZFEQrn8Kldode26Q3zyKsrdnh5
-         oDLc7oDuKJyTADv/WXf0nha7+1GZ4JDOqY+4R9/iTWVN8W9Mek/TrM+2MJ7/YyXS/AlR
-         tE2zNsVZPWfLqhKGE6y943NQtE3icHHGZofwVAC477NFQ6euM5Y58QdbzSCVgFXOCx9M
-         r2lRDTWK0TL2pPfQTDiCFGpECdu7oj2EQFYToKF0CaLXKtSjWMtaTMZjKtuSAyo/kUxn
-         D+Nw==
-X-Gm-Message-State: AOJu0YzGhd6QneJqDR2oczBpBtr93qiJuTRgkS80FQXEd2QiIiRJArqP
-	5SE5UMJhJnCuehwsfgl3dfY=
-X-Google-Smtp-Source: AGHT+IEuG5Dq8Oms/y2PngPTgvKQircr+FmzMSKiNRi0dDe4aZQk5y2v/Jz2z7VHMmWqJWr8HQT27A==
-X-Received: by 2002:a17:902:d4c5:b0:1c5:6f4d:d6dd with SMTP id o5-20020a170902d4c500b001c56f4dd6ddmr15240247plg.24.1696774049170;
-        Sun, 08 Oct 2023 07:07:29 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id g6-20020a170902740600b001bc18e579aesm7479450pll.101.2023.10.08.07.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Oct 2023 07:07:28 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 6CCB981B12C1; Sun,  8 Oct 2023 21:07:05 +0700 (WIB)
-Date: Sun, 8 Oct 2023 21:07:04 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: dianlujitao@gmail.com, Matthew Wilcox <willy@infradead.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Filesystem Development <linux-fsdevel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: Fwd: kernel bug when performing heavy IO operations
-Message-ID: <ZSK3iAX0LASTiczY@debian.me>
-References: <f847bc14-8f53-0547-9082-bb3d1df9ae96@gmail.com>
- <ZOrG5698LPKTp5xM@casper.infradead.org>
- <7d8b4679-5cd5-4ba1-9996-1a239f7cb1c5@gmail.com>
- <ZOs5j93aAmZhrA/G@casper.infradead.org>
- <b290c417-de1b-4af8-9f5e-133abb79580d@gmail.com>
- <ZRPXlfGFWiCNZ6sh@casper.infradead.org>
- <162d90ab-e538-402e-90f1-304183bf6e76@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736E42F27
+	for <regressions@lists.linux.dev>; Sun,  8 Oct 2023 16:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1qpWLB-0002Ub-VJ; Sun, 08 Oct 2023 18:09:14 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-10-08]
+Date: Sun,  8 Oct 2023 16:09:13 +0000
+Message-Id: <169678126224.160034.5275230285223450822@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p6UxYEauVSIXOnHn"
-Content-Disposition: inline
-In-Reply-To: <162d90ab-e538-402e-90f1-304183bf6e76@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696781357;da3f7080;
+X-HE-SMSGID: 1qpWLB-0002Ub-VJ
+
+Hi Linus. There is not much to report wrt to regressions introduced
+during the current cycle: there are a few, put people are working on
+fixing them.
+
+Except maybe one; but I'll likely drop that from the list of tracked
+issues anyway, unless you object:
+https://lore.kernel.org/all/eab8e74b-61e0-4ef4-bfb3-751047d879bc@green-communications.fr/
+
+As far as I understand things the cause is 3ec5ac12ac8a4e ("wifi: mt76:
+mt7915: remove VHT160 capability on MT7915") [v6.6-rc1] which removed a
+erroneously added feature flag (introduced in c2f73eacee3bf1 ("wifi:
+mt76: mt7915: add back 160MHz channel width support for MT7915")
+[v6.3-rc4]) which broke a user's hostap configuration. But I guess there
+is nothing much we can do here, as the hardware doesn't support that
+feature. See above link for details.
+
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 10 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
 
---p6UxYEauVSIXOnHn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+======================================================
+current cycle (v6.5.. aka v6.6-rc), culprit identified
+======================================================
 
-On Sun, Oct 08, 2023 at 09:35:58PM +0800, dianlujitao@gmail.com wrote:
-> The problem does not occur with 6.1.56 lts kernel, not that old as you
-> expected.
->=20
 
-Please don't top-post; reply inline with appropriate context instead.
+virtio: network-related regression when using SWIOTLB in the guest
+------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230926130451.axgodaa6tvwqs3ut@amd.com/
+https://lore.kernel.org/lkml/20230926130451.axgodaa6tvwqs3ut@amd.com/
 
-OK, now please find the culprit by bisection (see
-Documentation/admin-guide/bug-bisect.rst in the kernel sources for how).
+By Michael Roth; 12 days ago; 5 activities, latest 0 days ago.
+Introduced in 295525e29a (v6.6-rc1)
 
-Thanks.
+Fix incoming:
+* virtio_net: fix the missing of the dma cpu sync
+  https://lore.kernel.org/lkml/a7a2bf25-cfc1-47a8-baf4-487a8574fb5a@leemhuis.info/
 
---=20
-An old man doll... just what I always wanted! - Clara
 
---p6UxYEauVSIXOnHn
-Content-Type: application/pgp-signature; name="signature.asc"
+[ *NEW* ] Regression: devcoredump patch broke Realtek usb bluetooth adapter
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
+https://lore.kernel.org/lkml/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
 
------BEGIN PGP SIGNATURE-----
+By Kirill A. Shutemov; 4 days ago; 11 activities, latest 1 days ago.
+Introduced in 044014ce85a1 (v6.6-rc1)
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZSK3gwAKCRD2uYlJVVFO
-o1UMAQCDIIiOIKgA0D91V27q0wwqHdlmfdne/CpU3JUhZIyFuwD/WwEttZpHXT8F
-UWjLIkh7OrKNK4II7/zCyx61ii5llwk=
-=Ru5o
------END PGP SIGNATURE-----
+Recent activities from: Max Chou (4), Kirill A. Shutemov (3), patchwork-
+  bot+bluetooth@kernel.org (1), bluez.test.bot@gmail.com (1),
+  max.chou@realtek.com (1), Bagas Sanjaya (1)
 
---p6UxYEauVSIXOnHn--
+One patch associated with this regression:
+* RE: Regression: devcoredump patch broke Realtek usb bluetooth adapter
+  https://lore.kernel.org/lkml/7507ad6c8a964b179bf2b3318104a124@realtek.com/
+  4 days ago, by Max Chou
+
+Noteworthy links:
+* [PATCH] Bluetooth: btrtl: Ignore error return for hci_devcd_register()
+  https://lore.kernel.org/lkml/20231006024707.413349-1-max.chou@realtek.com/
+  2 days ago, by max.chou@realtek.com; thread monitored.
+
+
+powerpc: new page table range API causes PowerMac G5 to fail booting
+--------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230929132750.3cd98452@yea/
+https://lore.kernel.org/linuxppc-dev/20230929132750.3cd98452@yea/
+
+By Erhard Furtner; 9 days ago; 8 activities, latest 2 days ago.
+Introduced in 9fee28baa601 (v6.6-rc1)
+
+Recent activities from: Erhard Furtner (2), Aneesh Kumar K.V (2), Bagas
+  Sanjaya (2), Matthew Wilcox (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable to handle kernel data access at 0xfeffbb62ffec65fe)
+  https://lore.kernel.org/linuxppc-dev/87mswwnec1.fsf@linux.ibm.com/
+  2 days ago, by Aneesh Kumar K.V
+
+
+resume_console performance regression due to per-console suspended state
+------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217955/
+https://bugzilla.kernel.org/show_bug.cgi?id=217955
+https://lore.kernel.org/lkml/99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com/
+
+By Todd Brandt and Todd Brandt; 10 days ago; 21 activities, latest 2 days ago.
+Introduced in 9e70a5e109a4 (v6.6-rc1)
+
+Fix incoming:
+* printk: flush consoles before checking progress
+  https://lore.kernel.org/lkml/da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com/
+
+
+x86,static_call: crash on x86 kernel with CONFIG_DEBUG_VIRTUAL=y.
+-----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZRhKq6e5nF/4ZIV1@fedora/
+https://lore.kernel.org/lkml/ZRhKq6e5nF%2F4ZIV1@fedora/
+
+By Hyeonggon Yoo; 7 days ago; 11 activities, latest 2 days ago.
+Introduced in aee9d30b9744 (v6.6-rc3)
+
+Fix incoming:
+* KEYS: trusted: Remove redundant static calls usage
+  https://lore.kernel.org/lkml/019424f6-b39b-41d9-bb4a-40bfc8953d98@leemhuis.info/
+
+
+Input: psmouse - Resume broken on T14s Gen1 (AMD) due to a new delay when deactivating for SMBus mode
+-----------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
+https://lore.kernel.org/lkml/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
+https://lore.kernel.org/lkml/0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info/
+
+By Thorsten Leemhuis and Thorsten Leemhuis; 11 days ago; 9 activities, latest 3 days ago.
+Introduced in 92e24e0e57f7 (v6.6-rc1)
+
+Recent activities from: Jeffery Miller (3), Thorsten Leemhuis (2)
+
+One patch associated with this regression:
+* Re: [regression] Resume broken on T14s Gen1 (AMD) due to "Input: psmouse - add delay when deactivating for SMBus mode"
+  https://lore.kernel.org/lkml/CAAzPG9MD%2BUQb_RdiMkPkpQGYe-arD1nMKWngMj4P5s3_zJvphQ@mail.gmail.com/
+  5 days ago, by Jeffery Miller
+
+Noteworthy links:
+* [PATCH v2] Input: psmouse - fix fast_reconnect function for PS/2 mode
+  https://lore.kernel.org/lkml/20231005002249.554877-1-jefferymiller@google.com/
+  3 days ago, by Jeffery Miller; thread monitored.
+
+
+[ *NEW* ] dqput() fix causes kvm-xfstests nojournal test time longer
+--------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64/
+https://lore.kernel.org/linux-ext4/ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64/
+
+By Eric Whitney; 4 days ago; 4 activities, latest 3 days ago.
+Introduced in dabc8b207566 (v6.6-rc1)
+
+Recent activities from: Eric Whitney (2), Jan Kara (1), Bagas
+  Sanjaya (1)
+
+
+wifi: mt76: mt7915: removal of VHT160 capability broke hostap
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/12289744.O9o76ZdvQC@natalenko.name/
+https://lore.kernel.org/lkml/12289744.O9o76ZdvQC@natalenko.name/
+
+By Oleksandr Natalenko; 17 days ago; 3 activities, latest 8 days ago.
+Introduced in 3ec5ac12ac8a (v6.6-rc1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/169616777754.3766264.2663767892794249034@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
