@@ -1,144 +1,53 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37419464
-	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 13:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528E77493;
+	Mon,  9 Oct 2023 15:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="MVEFcIZd"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1696857365;
-	bh=LM+eM7modYOnqrVh/3dhXyW83yRoxFdZ9tfpmyW8ugk=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=MVEFcIZdfqdBw2CTs80FmBM5+kruiOb2zT9RBE/uUo01DSUTspQfTDwOYLBuXxc8v
-	 ShItfhs2wPOlM2nJQGAvUmPUv6LlhRUDLCA+nxMmPzxP3a3kyOAGXm0k1mccSrZbzq
-	 t+46LIg1WWloKeUTRWfhvH2vozIj2OFO3oKAlEns=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quXvC67a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1B9C433C7;
+	Mon,  9 Oct 2023 15:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696864007;
+	bh=Mvl8gmMUGBGCZa2+BmF3BHc0Ktp7URfkGdtj2C5AfQg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=quXvC67axl7GtJTGnQ+A38R+W+N0CdCyMvV+QOKYW6YMMjK8eHvjtnJIIkDljGNDZ
+	 jNHSvIrlT+ZDsxEUo+Lv8y1fTNYDDD5XGgOmkLrSUdfXSx7QbFNXpmVF5E3kQycapg
+	 qHq1GxUvMMFur9nqe/rTweSWIHQeN6UQhkMmaWfA6sX976l4A/txWbMg3FjcXvL3qE
+	 YVPFdT2sfNdQ1SyiWj0E3/NY48pM8yg+D7V3FFechGbU6gKx2+UX9BjkKRzF2zPyCN
+	 sbb3qG2GjnB6qc2Hx3OYDOZs/Gyt88in4KNipyZw1GSQyBPsM3bNkotUi9xgEhudJj
+	 CbOoV3aErUiEQ==
+Date: Mon, 9 Oct 2023 08:06:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Pedro Tammela <pctammela@mojatatu.com>, markovicbudimir@gmail.com
+Cc: Christian Theune <ct@flyingcircus.io>, stable@vger.kernel.org,
+ netdev@vger.kernel.org, Linux regressions mailing list
+ <regressions@lists.linux.dev>, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com
+Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
+ requirement
+Message-ID: <20231009080646.60ce9920@kernel.org>
+In-Reply-To: <0BC2C22C-F9AA-4B13-905D-FE32F41BDA8A@flyingcircus.io>
+References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+	<065a0dac-499f-7375-ddb4-1800e8ef61d1@mojatatu.com>
+	<0BC2C22C-F9AA-4B13-905D-FE32F41BDA8A@flyingcircus.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
- requirement
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <31b59df2-d668-478e-a546-c3805f74c3a3@gmail.com>
-Date: Mon, 9 Oct 2023 15:15:44 +0200
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org,
- netdev@vger.kernel.org,
- davem@davemloft.net,
- edumazet@google.com,
- kuba@kernel.org,
- pabeni@redhat.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4220ECCB-4B99-43AD-BE6B-36AE86B72871@flyingcircus.io>
-References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
- <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
- <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
- <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
- <BBEA77E4-D376-45CE-9A93-415F2E0703D7@flyingcircus.io>
- <982dc76d-0832-4c8a-a486-5e6a2f5fb49a@gmail.com>
- <0AAB089F-A296-472B-8E6F-0D60B9ACCB95@flyingcircus.io>
- <31b59df2-d668-478e-a546-c3805f74c3a3@gmail.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Hi,
+On Sat, 7 Oct 2023 06:10:42 +0200 Christian Theune wrote:
+> The idea of not bricking your system by upgrading the Linux kernel
+> seems to apply here. IMHO the change could maybe done in a way that
+> keeps the system running but informs the user that something isn=E2=80=99t
+> working as intended?
 
-> On 6. Oct 2023, at 16:13, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->>=20
->>> You need to have testing system, unfortunately. It should mimic your
->>> production setup as much as possible. Your organization may have one
->>> already, but if not, you have to arrange for it.
->>=20
->> I=E2=80=99m able to do that, I just didn=E2=80=99t have one at hand =
-at this very moment and no time to prepare one within a few minutes. =
-I=E2=80=99ll try to reproduce with a 6.6rc in the next days.
->>=20
->=20
-> OK, thanks!
+Herm, how did we get this far without CCing the author of the patch.
+Adding Budimir.
 
-So, I got around running this with 6.6-rc5 today and yes, it=E2=80=99s =
-broken there as well:
-
-Here=E2=80=99s the output from my testing environment:
-
-#### snip
-subtest: try hfsc
-machine: must succeed: uname -a
-(finished: must succeed: uname -a, in 0.02 seconds)
-Linux machine 6.6.0-rc5 #1-NixOS SMP PREEMPT_DYNAMIC Tue Jan  1 00:00:00 =
-UTC 1980 x86_64 GNU/Linux
-
-machine: must succeed: modprobe ifb
-(finished: must succeed: modprobe ifb, in 0.02 seconds)
-machine: must succeed: modprobe act_mirred
-machine # [    9.187251] (udev-worker)[851]: ifb0: Could not set Alias=3D,=
- MACAddress=3D/MACAddressPolicy=3D, TransmitQueues=3D, ReceiveQueues=3D, =
-TransmitQueueLength=3D, MTUBytes=3D, GenericSegmentOffloadMaxBytes=3D or =
-GenericSegmentOffloadMaxSegments=3D, ignoring: Operation not supported
-machine # [    9.190616] (udev-worker)[851]: Network interface =
-NamePolicy=3D disabled on kernel command line.
-machine # [    9.192605] (udev-worker)[928]: ifb1: Could not set Alias=3D,=
- MACAddress=3D/MACAddressPolicy=3D, TransmitQueues=3D, ReceiveQueues=3D, =
-TransmitQueueLength=3D, MTUBytes=3D, GenericSegmentOffloadMaxBytes=3D or =
-GenericSegmentOffloadMaxSegments=3D, ignoring: Operation not supported
-machine # [    9.197607] (udev-worker)[928]: Network interface =
-NamePolicy=3D disabled on kernel command line.
-machine # [    9.292073] Mirror/redirect action on
-(finished: must succeed: modprobe act_mirred, in 0.04 seconds)
-machine: must succeed: tc qdisc add dev eth0 handle ffff: ingress
-(finished: must succeed: tc qdisc add dev eth0 handle ffff: ingress, in =
-0.05 seconds)
-machine: must succeed: ifconfig ifb0 up
-machine # [    9.276585] dhcpcd[672]: ifb0: waiting for carrier
-machine # [    9.278532] dhcpcd[672]: ifb0: carrier acquired
-machine # [    9.287692] dhcpcd[672]: ifb0: IAID df:2e:ad:2b
-machine # [    9.288225] dhcpcd[672]: ifb0: adding address =
-fe80::40d2:dfff:fe2e:ad2b
-(finished: must succeed: ifconfig ifb0 up, in 0.02 seconds)
-machine: must succeed: tc filter add dev eth0 parent ffff: protocol all =
-u32 match u32 0 0 action mirred egress redirect dev ifb0
-machine # [    9.396408] u32 classifier
-machine # [    9.396613]     Performance counters on
-machine # [    9.396895]     input device check on
-machine # [    9.397148]     Actions configured
-(finished: must succeed: tc filter add dev eth0 parent ffff: protocol =
-all u32 match u32 0 0 action mirred egress redirect dev ifb0, in 0.04 =
-seconds)
-machine: must succeed: tc qdisc add dev ifb0 root handle 1: hfsc default =
-1
-machine # [    9.330784] dhcpcd[672]: ifb1: waiting for carrier
-machine # [    9.332246] dhcpcd[672]: ifb1: carrier acquired
-machine # [    9.343280] dhcpcd[672]: ifb1: IAID ab:f5:e8:5d
-machine # [    9.343868] dhcpcd[672]: ifb1: adding address =
-fe80::2c7f:abff:fef5:e85d
-(finished: must succeed: tc qdisc add dev ifb0 root handle 1: hfsc =
-default 1, in 0.03 seconds)
-machine: must succeed: tc class add dev ifb0 parent 1: classid 1:999 =
-hfsc rt m2 2.5gbit
-(finished: must succeed: tc class add dev ifb0 parent 1: classid 1:999 =
-hfsc rt m2 2.5gbit, in 0.01 seconds)
-machine: must succeed: tc class add dev ifb0 parent 1:999 classid 1:1 =
-hfsc sc rate 50mbit
-machine # Error: Invalid parent - parent class must have FSC.
-machine: output:
-Test "try hfsc" failed with error: "command `tc class add dev ifb0 =
-parent 1:999 classid 1:1 hfsc sc rate 50mbit` failed (exit code 2)"
-cleanup
-kill machine (pid 6)
-#### snap
-
-Liebe Gr=C3=BC=C3=9Fe,
-Christian Theune
-
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
-
+Pedro, Budimir, any idea what the original bug was? There isn't much
+info in the commit message.
