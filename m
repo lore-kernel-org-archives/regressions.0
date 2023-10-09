@@ -1,219 +1,167 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736E42F27
-	for <regressions@lists.linux.dev>; Sun,  8 Oct 2023 16:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qpWLB-0002Ub-VJ; Sun, 08 Oct 2023 18:09:14 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-10-08]
-Date: Sun,  8 Oct 2023 16:09:13 +0000
-Message-Id: <169678126224.160034.5275230285223450822@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42891A5B
+	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 01:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFERmspS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AADC433C8
+	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 01:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696814836;
+	bh=ePI4sPrOJVud3B+wyuF05+QlHDAmRa99/XgMjusQ7CQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QFERmspS24rcUU3iuTm8gr9nliikS/l5t9bTg7T1Q57nW8cP/fJ/AdsM7NcYGf0ex
+	 xyANJy32Scm15YEev3mZgypetPQk+K2Ou2Jkn2F8EQWyTAZQNipIO+TOFqDT/TU1YI
+	 kK9/rQ89qcBiLOPNW0wTHMGpHTMOsi4b4N26KWxOI57Tv0zX9SwdbkSDXUZOKUwfU6
+	 Op7Hqb5VksdQfk8uZbMzkc/75P0aNbJMk5zIiJPV8ucBwkJtRTVAXaCFzisfAV0tnf
+	 WCIwsEETjfdGfhe0c5tcmo/ZeLMJMQR6Ao6IZzWt/QIanpUzAZJUltH6R/HSgVkIDY
+	 /AfHGLcBAqbCg==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-523100882f2so6501224a12.2
+        for <regressions@lists.linux.dev>; Sun, 08 Oct 2023 18:27:16 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzGy0vyIMZ1rvxwwhhjWKgnAIgTjPaYHLZFSnV8Rj8gG4yPNQoy
+	TdBL9F8R1ZKjIojrVd5y0WyaNsxXlGp59Pf/pvw=
+X-Google-Smtp-Source: AGHT+IFuDZWcAXMv/BZKi3giWjLwkrVXd4Fi2eK4WckAot0Lrfx277Vb/p+cHTJaqBzDigw2umg+GIz7HsTJU5Knxlw=
+X-Received: by 2002:aa7:d9d4:0:b0:52f:a162:f4c2 with SMTP id
+ v20-20020aa7d9d4000000b0052fa162f4c2mr11856309eds.22.1696814835101; Sun, 08
+ Oct 2023 18:27:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1696781357;da3f7080;
-X-HE-SMSGID: 1qpWLB-0002Ub-VJ
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+ <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info> <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+In-Reply-To: <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 9 Oct 2023 09:27:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
+Message-ID: <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad L570
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: javierm@redhat.com, Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus. There is not much to report wrt to regressions introduced
-during the current cycle: there are a few, put people are working on
-fixing them.
+Hi, all,
 
-Except maybe one; but I'll likely drop that from the list of tracked
-issues anyway, unless you object:
-https://lore.kernel.org/all/eab8e74b-61e0-4ef4-bfb3-751047d879bc@green-communications.fr/
+On Tue, Sep 26, 2023 at 10:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
+> wrote:
+>
+> Hi, all,
+>
+> On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tracking (Thorst=
+en
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > [CCing the regression list, as it should be in the loop for regressions=
+:
+> > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> >
+> > Hi, Thorsten here, the Linux kernel's regression tracker.
+> >
+> > On 13.09.23 14:02, Jaak Ristioja wrote:
+> > >
+> > > Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> > > Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+> > > screen after boot until the display manager starts... if it does star=
+t
+> > > at all. Using the nomodeset kernel parameter seems to be a workaround=
+.
+> > >
+> > > I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > > ("drivers/firmware: Move sysfb_init() from device_initcall to
+> > > subsys_initcall_sync").
+> >
+> > Hmmm, no reaction since it was posted a while ago, unless I'm missing
+> > something.
+> >
+> > Huacai Chen, did you maybe miss this report? The problem is apparently
+> > caused by a commit of yours (that Javier applied), you hence should loo=
+k
+> > into this.
+> I'm sorry but it looks very strange, could you please share your config f=
+ile?
+As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+again. So I guess the reason:
 
-As far as I understand things the cause is 3ec5ac12ac8a4e ("wifi: mt76:
-mt7915: remove VHT160 capability on MT7915") [v6.6-rc1] which removed a
-erroneously added feature flag (introduced in c2f73eacee3bf1 ("wifi:
-mt76: mt7915: add back 160MHz channel width support for MT7915")
-[v6.3-rc4]) which broke a user's hostap configuration. But I guess there
-is nothing much we can do here, as the hardware doesn't support that
-feature. See above link for details.
+When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+sysfb_init() from device_initcall to subsys_initcall_sync") there is
+no platform device created for SIMPLEDRM at early stage, so it seems
+also "no problem".
 
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 10 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
-
-
-virtio: network-related regression when using SWIOTLB in the guest
-------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230926130451.axgodaa6tvwqs3ut@amd.com/
-https://lore.kernel.org/lkml/20230926130451.axgodaa6tvwqs3ut@amd.com/
-
-By Michael Roth; 12 days ago; 5 activities, latest 0 days ago.
-Introduced in 295525e29a (v6.6-rc1)
-
-Fix incoming:
-* virtio_net: fix the missing of the dma cpu sync
-  https://lore.kernel.org/lkml/a7a2bf25-cfc1-47a8-baf4-487a8574fb5a@leemhuis.info/
-
-
-[ *NEW* ] Regression: devcoredump patch broke Realtek usb bluetooth adapter
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
-https://lore.kernel.org/lkml/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
-
-By Kirill A. Shutemov; 4 days ago; 11 activities, latest 1 days ago.
-Introduced in 044014ce85a1 (v6.6-rc1)
-
-Recent activities from: Max Chou (4), Kirill A. Shutemov (3), patchwork-
-  bot+bluetooth@kernel.org (1), bluez.test.bot@gmail.com (1),
-  max.chou@realtek.com (1), Bagas Sanjaya (1)
-
-One patch associated with this regression:
-* RE: Regression: devcoredump patch broke Realtek usb bluetooth adapter
-  https://lore.kernel.org/lkml/7507ad6c8a964b179bf2b3318104a124@realtek.com/
-  4 days ago, by Max Chou
-
-Noteworthy links:
-* [PATCH] Bluetooth: btrtl: Ignore error return for hci_devcd_register()
-  https://lore.kernel.org/lkml/20231006024707.413349-1-max.chou@realtek.com/
-  2 days ago, by max.chou@realtek.com; thread monitored.
+Huacai
 
 
-powerpc: new page table range API causes PowerMac G5 to fail booting
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230929132750.3cd98452@yea/
-https://lore.kernel.org/linuxppc-dev/20230929132750.3cd98452@yea/
-
-By Erhard Furtner; 9 days ago; 8 activities, latest 2 days ago.
-Introduced in 9fee28baa601 (v6.6-rc1)
-
-Recent activities from: Erhard Furtner (2), Aneesh Kumar K.V (2), Bagas
-  Sanjaya (2), Matthew Wilcox (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable to handle kernel data access at 0xfeffbb62ffec65fe)
-  https://lore.kernel.org/linuxppc-dev/87mswwnec1.fsf@linux.ibm.com/
-  2 days ago, by Aneesh Kumar K.V
-
-
-resume_console performance regression due to per-console suspended state
-------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/217955/
-https://bugzilla.kernel.org/show_bug.cgi?id=217955
-https://lore.kernel.org/lkml/99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com/
-
-By Todd Brandt and Todd Brandt; 10 days ago; 21 activities, latest 2 days ago.
-Introduced in 9e70a5e109a4 (v6.6-rc1)
-
-Fix incoming:
-* printk: flush consoles before checking progress
-  https://lore.kernel.org/lkml/da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com/
-
-
-x86,static_call: crash on x86 kernel with CONFIG_DEBUG_VIRTUAL=y.
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZRhKq6e5nF/4ZIV1@fedora/
-https://lore.kernel.org/lkml/ZRhKq6e5nF%2F4ZIV1@fedora/
-
-By Hyeonggon Yoo; 7 days ago; 11 activities, latest 2 days ago.
-Introduced in aee9d30b9744 (v6.6-rc3)
-
-Fix incoming:
-* KEYS: trusted: Remove redundant static calls usage
-  https://lore.kernel.org/lkml/019424f6-b39b-41d9-bb4a-40bfc8953d98@leemhuis.info/
-
-
-Input: psmouse - Resume broken on T14s Gen1 (AMD) due to a new delay when deactivating for SMBus mode
------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-https://lore.kernel.org/lkml/ca0109fa-c64b-43c1-a651-75b294d750a1@leemhuis.info/
-https://lore.kernel.org/lkml/0d84fb59-4628-4c7f-ab1a-f58889ef2c9b@leemhuis.info/
-
-By Thorsten Leemhuis and Thorsten Leemhuis; 11 days ago; 9 activities, latest 3 days ago.
-Introduced in 92e24e0e57f7 (v6.6-rc1)
-
-Recent activities from: Jeffery Miller (3), Thorsten Leemhuis (2)
-
-One patch associated with this regression:
-* Re: [regression] Resume broken on T14s Gen1 (AMD) due to "Input: psmouse - add delay when deactivating for SMBus mode"
-  https://lore.kernel.org/lkml/CAAzPG9MD%2BUQb_RdiMkPkpQGYe-arD1nMKWngMj4P5s3_zJvphQ@mail.gmail.com/
-  5 days ago, by Jeffery Miller
-
-Noteworthy links:
-* [PATCH v2] Input: psmouse - fix fast_reconnect function for PS/2 mode
-  https://lore.kernel.org/lkml/20231005002249.554877-1-jefferymiller@google.com/
-  3 days ago, by Jeffery Miller; thread monitored.
-
-
-[ *NEW* ] dqput() fix causes kvm-xfstests nojournal test time longer
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64/
-https://lore.kernel.org/linux-ext4/ZRytn6CxFK2oECUt@debian-BULLSEYE-live-builder-AMD64/
-
-By Eric Whitney; 4 days ago; 4 activities, latest 3 days ago.
-Introduced in dabc8b207566 (v6.6-rc1)
-
-Recent activities from: Eric Whitney (2), Jan Kara (1), Bagas
-  Sanjaya (1)
-
-
-wifi: mt76: mt7915: removal of VHT160 capability broke hostap
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/12289744.O9o76ZdvQC@natalenko.name/
-https://lore.kernel.org/lkml/12289744.O9o76ZdvQC@natalenko.name/
-
-By Oleksandr Natalenko; 17 days ago; 3 activities, latest 8 days ago.
-Introduced in 3ec5ac12ac8a (v6.6-rc1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169616777754.3766264.2663767892794249034@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+>
+> Huacai
+>
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
+)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.
+> >
+> > > git bisect start
+> > > # status: waiting for both good and bad commits
+> > > # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+> > > git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
+> > > # status: waiting for bad commit, 1 good commit known
+> > > # bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
+> > > git bisect bad 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+> > > # bad: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag 'mips_6.5=
+'
+> > > of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+> > > git bisect bad b775d6c5859affe00527cbe74263de05cfe6b9f9
+> > > # good: [3a8a670eeeaa40d87bd38a587438952741980c18] Merge tag
+> > > 'net-next-6.5' of
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+> > > git bisect good 3a8a670eeeaa40d87bd38a587438952741980c18
+> > > # bad: [188d3f80fc6d8451ab5e570becd6a7b2d3033023] drm/amdgpu: vcn_4_0
+> > > set instance 0 init sched score to 1
+> > > git bisect bad 188d3f80fc6d8451ab5e570becd6a7b2d3033023
+> > > # good: [12fb1ad70d65edc3405884792d044fa79df7244f] drm/amdkfd: update
+> > > process interrupt handling for debug events
+> > > git bisect good 12fb1ad70d65edc3405884792d044fa79df7244f
+> > > # bad: [9cc31938d4586f72eb8e0235ad9d9eb22496fcee] i915/perf: Drop the
+> > > aging_tail logic in perf OA
+> > > git bisect bad 9cc31938d4586f72eb8e0235ad9d9eb22496fcee
+> > > # bad: [51d86ee5e07ccef85af04ee9850b0baa107999b6] drm/msm: Switch to
+> > > fdinfo helper
+> > > git bisect bad 51d86ee5e07ccef85af04ee9850b0baa107999b6
+> > > # good: [bfdede3a58ea970333d77a05144a7bcec13cf515] drm/rockchip: cdn-=
+dp:
+> > > call drm_connector_update_edid_property() unconditionally
+> > > git bisect good bfdede3a58ea970333d77a05144a7bcec13cf515
+> > > # good: [123ee07ba5b7123e0ce0e0f9d64938026c16a2ce] drm: sun4i_tcon: u=
+se
+> > > devm_clk_get_enabled in `sun4i_tcon_init_clocks`
+> > > git bisect good 123ee07ba5b7123e0ce0e0f9d64938026c16a2ce
+> > > # bad: [20d54e48d9c705091a025afff5839da2ea606f6b] fbdev: Rename
+> > > fb_mem*() helpers
+> > > git bisect bad 20d54e48d9c705091a025afff5839da2ea606f6b
+> > > # bad: [728cb3f061e2b3a002fd76d91c2449b1497b6640] gpu: drm: bridge: N=
+o
+> > > need to set device_driver owner
+> > > git bisect bad 728cb3f061e2b3a002fd76d91c2449b1497b6640
+> > > # bad: [0f1cb4d777281ca3360dbc8959befc488e0c327e] drm/ssd130x: Fix
+> > > include guard name
+> > > git bisect bad 0f1cb4d777281ca3360dbc8959befc488e0c327e
+> > > # good: [0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630] dt-bindings: displ=
+ay:
+> > > simple: Add BOE EV121WXM-N10-1850 panel
+> > > git bisect good 0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630
+> > > # bad: [60aebc9559492cea6a9625f514a8041717e3a2e4] drivers/firmware: M=
+ove
+> > > sysfb_init() from device_initcall to subsys_initcall_sync
+> > > git bisect bad 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > > # good: [8bb7c7bca5b70f3cd22d95b4d36029295c4274f6] drm/panel:
+> > > panel-simple: Add BOE EV121WXM-N10-1850 panel support
+> > > git bisect good 8bb7c7bca5b70f3cd22d95b4d36029295c4274f6
+> > > # first bad commit: [60aebc9559492cea6a9625f514a8041717e3a2e4]
+> > > drivers/firmware: Move sysfb_init() from device_initcall to
+> > > subsys_initcall_sync
