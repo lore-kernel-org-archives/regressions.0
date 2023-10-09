@@ -1,45 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B98BA51
-	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 12:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA1517990;
+	Mon,  9 Oct 2023 13:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7Vwimm2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696853472;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1/JqwyopreX1kjFg5mhS3BPCYV+I1wSPG3uAu0++yrs=;
-	b=Q7Vwimm2T6oDo25LTvNSO4MEAtFD8Gd69/sm918hxyJyx7F1tiUg1C9Jvs/ye+rthYcwAV
-	hJhpMBn12iDWJ2dL+lWxjBUrJiinE5hqopDFijL5Tp7NdljeUi6PDRM35+Lg5XdkU/YtDF
-	mznjBFlbSmoi17/iTPLgF9Z6Y23du2U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-546-vrmejoJiOQer-jAO2NCr9A-1; Mon, 09 Oct 2023 08:11:08 -0400
-X-MC-Unique: vrmejoJiOQer-jAO2NCr9A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43D758030D4;
-	Mon,  9 Oct 2023 12:11:08 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.194.125])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3C3B33C54;
-	Mon,  9 Oct 2023 12:11:07 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mario Limonciello <Mario.Limonciello@amd.com>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X1atmBRn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1893FC433C7;
+	Mon,  9 Oct 2023 13:08:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696856895;
+	bh=lAN8x9K8fBhye9sJsF1Tvik9GDRyszA47lZl4z35bzI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=X1atmBRnb6x1BiUC6zgCumhDe6AbSEWHxv+IK6gcUd/yvGtvIuNo4DacRll6HQWni
+	 4N/O9ekWokFeIi1xhfAzFQjjCz/tES6Q7ETY4Bo7CNJHm46r3KbpYGHNloRtiJxT6e
+	 jGR2qPOtppL7ZbRnzQu0Ab7UxHhcuwpxP+MS96NA=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
 	regressions@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	August Wikerfors <git@augustwikerfors.se>,
-	Francesco <f.littarru@outlook.com>
-Subject: [PATCH v3] ACPI: resource: Add TongFang GM6BGEQ, GM6BG5Q and GM6BG0Q to irq1_edge_low_force_override[]
-Date: Mon,  9 Oct 2023 14:11:01 +0200
-Message-ID: <20231009121101.63309-1-hdegoede@redhat.com>
+	Robin Murphy <robin.murphy@arm.com>,
+	Hector Martin <marcan@marcan.st>,
+	Neal Gompa <neal@gompa.dev>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 6.5 026/163] iommu/apple-dart: Handle DMA_FQ domains in attach_dev()
+Date: Mon,  9 Oct 2023 14:59:50 +0200
+Message-ID: <20231009130124.730201469@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231009130124.021290599@linuxfoundation.org>
+References: <20231009130124.021290599@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,78 +40,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-The TongFang GM6BGEQ, GM6BG5Q and GM6BG0Q are 3 GPU variants of a TongFang
-barebone design which is sold under various brand names.
+6.5-stable review patch.  If anyone has any objections, please let me know.
 
-The ACPI IRQ override for the keyboard IRQ must be used on these AMD Zen
-laptops in order for the IRQ to work.
+------------------
 
-Adjust the pcspecialist_laptop[] DMI match table for this:
+From: Hector Martin <marcan@marcan.st>
 
-1. Drop the sys-vendor match from the existing PCSpecialist Elimina Pro 16
-   entry for the GM6BGEQ (RTX3050 GPU) model so that it will also match
-   the laptop when sold by other vendors such as hyperbook.pl.
+commit c7bd8a1f45bada7725d11266df7fd5cb549b3098 upstream.
 
-2. Add board-name matches for the GM6BG5Q (RTX4050) and GM6B0Q (RTX4060)
-   models.
+Commit a4fdd9762272 ("iommu: Use flush queue capability") hid the
+IOMMU_DOMAIN_DMA_FQ domain type from domain allocation. A check was
+introduced in iommu_dma_init_domain() to fall back if not supported, but
+this check runs too late: by that point, devices have been attached to
+the IOMMU, and apple-dart's attach_dev() callback does not expect
+IOMMU_DOMAIN_DMA_FQ domains.
 
-Note the .ident values of the dmi_system_id structs are left unset
-since these are not used.
+Change the logic so the IOMMU_DOMAIN_DMA codepath is the default,
+instead of explicitly enumerating all types.
 
-Suggested-by: August Wikerfors <git@augustwikerfors.se>
-Reported-by: Francesco <f.littarru@outlook.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217394
-Link: https://laptopparts4less.frl/index.php?route=product/search&filter_name=GM6BG
-Link: https://hyperbook.pl/en/content/14-hyperbook-drivers
-Link: https://linux-hardware.org/?probe=bfa70344e3
-Link: https://bbs.archlinuxcn.org/viewtopic.php?id=13313
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Fixes an apple-dart regression in v6.5.
+
+Cc: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: a4fdd9762272 ("iommu: Use flush queue capability")
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://lore.kernel.org/r/20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-Changes in v3:
-- Backport with v6.6-rc1 as base for merging as fix for v6.6
+ drivers/iommu/apple-dart.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Changes in v2:
-- Add missing reported and suggested by tags
----
- drivers/acpi/resource.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index 32cfa3f4efd3..f5ed33873dfd 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -500,16 +500,23 @@ static const struct dmi_system_id maingear_laptop[] = {
+diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+index 2082081402d3..0b8927508427 100644
+--- a/drivers/iommu/apple-dart.c
++++ b/drivers/iommu/apple-dart.c
+@@ -671,8 +671,7 @@ static int apple_dart_attach_dev(struct iommu_domain *domain,
+ 		return ret;
  
- static const struct dmi_system_id pcspecialist_laptop[] = {
- 	{
--		.ident = "PCSpecialist Elimina Pro 16 M",
--		/*
--		 * Some models have product-name "Elimina Pro 16 M",
--		 * others "GM6BGEQ". Match on board-name to match both.
--		 */
-+		/* TongFang GM6BGEQ / PCSpecialist Elimina Pro 16 M, RTX 3050 */
- 		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "PCSpecialist"),
- 			DMI_MATCH(DMI_BOARD_NAME, "GM6BGEQ"),
- 		},
- 	},
-+	{
-+		/* TongFang GM6BG5Q, RTX 4050 */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM6BG5Q"),
-+		},
-+	},
-+	{
-+		/* TongFang GM6BG0Q / PCSpecialist Elimina Pro 16 M, RTX 4060 */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GM6BG0Q"),
-+		},
-+	},
- 	{ }
- };
- 
+ 	switch (domain->type) {
+-	case IOMMU_DOMAIN_DMA:
+-	case IOMMU_DOMAIN_UNMANAGED:
++	default:
+ 		ret = apple_dart_domain_add_streams(dart_domain, cfg);
+ 		if (ret)
+ 			return ret;
 -- 
-2.41.0
+2.42.0
+
+
 
