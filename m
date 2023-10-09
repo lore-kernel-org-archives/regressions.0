@@ -1,167 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42891A5B
-	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 01:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1535800
+	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 08:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFERmspS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AADC433C8
-	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 01:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696814836;
-	bh=ePI4sPrOJVud3B+wyuF05+QlHDAmRa99/XgMjusQ7CQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QFERmspS24rcUU3iuTm8gr9nliikS/l5t9bTg7T1Q57nW8cP/fJ/AdsM7NcYGf0ex
-	 xyANJy32Scm15YEev3mZgypetPQk+K2Ou2Jkn2F8EQWyTAZQNipIO+TOFqDT/TU1YI
-	 kK9/rQ89qcBiLOPNW0wTHMGpHTMOsi4b4N26KWxOI57Tv0zX9SwdbkSDXUZOKUwfU6
-	 Op7Hqb5VksdQfk8uZbMzkc/75P0aNbJMk5zIiJPV8ucBwkJtRTVAXaCFzisfAV0tnf
-	 WCIwsEETjfdGfhe0c5tcmo/ZeLMJMQR6Ao6IZzWt/QIanpUzAZJUltH6R/HSgVkIDY
-	 /AfHGLcBAqbCg==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-523100882f2so6501224a12.2
-        for <regressions@lists.linux.dev>; Sun, 08 Oct 2023 18:27:16 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzGy0vyIMZ1rvxwwhhjWKgnAIgTjPaYHLZFSnV8Rj8gG4yPNQoy
-	TdBL9F8R1ZKjIojrVd5y0WyaNsxXlGp59Pf/pvw=
-X-Google-Smtp-Source: AGHT+IFuDZWcAXMv/BZKi3giWjLwkrVXd4Fi2eK4WckAot0Lrfx277Vb/p+cHTJaqBzDigw2umg+GIz7HsTJU5Knxlw=
-X-Received: by 2002:aa7:d9d4:0:b0:52f:a162:f4c2 with SMTP id
- v20-20020aa7d9d4000000b0052fa162f4c2mr11856309eds.22.1696814835101; Sun, 08
- Oct 2023 18:27:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNHgTkuW"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1c8a1541232so12096675ad.0
+        for <regressions@lists.linux.dev>; Mon, 09 Oct 2023 01:45:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696841150; x=1697445950; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+UYiBL6SRbLOPgrNzGh3TGoyVQnJviY/7sooyahS/D8=;
+        b=gNHgTkuWPnsvNHI21Y7rvynzgy3oMOehJ+6Nol3Sp0T/33xTKAAMFl4/FpHhDsv7sB
+         LOPNsjL2y5hlGrqpYK/RnxQh8AsLWCK5d/l7J5AdPQyipTrimnqun/cvvbaOf8v6CrJH
+         IGT+3soJAWPrz9hq/Slb0W2ag05+kZOic78ulCXd+/4Fo4V72dOoIsrHyknJquISB0PP
+         k3pYcH2huSsvbrUvES38zRDEV11Y4/ak6UvsuMJ3G3LJ8vOF93kmAR4aEpNZQJ0OTOpv
+         CaCnIdoKFoA32NV93uOyxJVx1hFEW8eZGLM0DV910QSQXtTtbOx8RIcP3W9xN1JRUwqD
+         cSHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696841150; x=1697445950;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+UYiBL6SRbLOPgrNzGh3TGoyVQnJviY/7sooyahS/D8=;
+        b=hdf+iKVhQII9k2tsfflvgzEkwkYgMlUjdYI+Aapga0RSPELf3GnMYOtKrwLlzzUK20
+         UNCcf9zGuDJXFKYO+/DyHwP/1kMFwZ18iKJmISb1reMrDqhATJy/ge7Am1ACXSHsWId3
+         0LNcj5iq2EKcMExslhahNArCnsPl4W097ER5VD2lmQgnfzyotedAd/EBosMcPMRJLcIP
+         4ntHrzUHzux8O72+Jc8O50aY5Q6+hMnPBnaodQFmQMy2jOlVFOQt7dx/EGKaY3mWnUUK
+         /ysi53OnrUYLKw2TfJDTwAiVOJkNL9O95Oz013CsyZQ9AqvGJjSyszPmq0D4McU2Km3b
+         zgjQ==
+X-Gm-Message-State: AOJu0YwBJrxZSJf+dmIwbKne6sxraLCzCF77HqfqbvtcJUoxbl0wQFEh
+	BgScL3rtDutGl5Vo8Ai6uoM=
+X-Google-Smtp-Source: AGHT+IF05H4q63Cso7kjB1N3kLjdHmG3CmMzZbm0KtDP2GgiRIwTZqg0Tsw0un0gXDUMCRkfRhFrHw==
+X-Received: by 2002:a17:902:d349:b0:1c5:e527:68b0 with SMTP id l9-20020a170902d34900b001c5e52768b0mr15337660plk.62.1696841149660;
+        Mon, 09 Oct 2023 01:45:49 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id a12-20020a170902ee8c00b001bde65894c8sm8936969pld.268.2023.10.09.01.45.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 01:45:48 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id D98058FE13DF; Mon,  9 Oct 2023 15:45:44 +0700 (WIB)
+Date: Mon, 9 Oct 2023 15:45:44 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Jaak Ristioja <jaak@ristioja.ee>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
+Message-ID: <ZSO9uArAtsPMPeTP@debian.me>
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+ <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+ <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+ <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
- <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info> <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
-In-Reply-To: <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 9 Oct 2023 09:27:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
-Message-ID: <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
-Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad L570
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: javierm@redhat.com, Jaak Ristioja <jaak@ristioja.ee>, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e+saoYv3HPZRi7+a"
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
+
+
+--e+saoYv3HPZRi7+a
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi, all,
-
-On Tue, Sep 26, 2023 at 10:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
+On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
 > Hi, all,
->
-> On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tracking (Thorst=
-en
-> Leemhuis) <regressions@leemhuis.info> wrote:
+>=20
+> On Tue, Sep 26, 2023 at 10:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.o=
+rg> wrote:
 > >
-> > [CCing the regression list, as it should be in the loop for regressions=
-:
-> > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> > Hi, all,
 > >
-> > Hi, Thorsten here, the Linux kernel's regression tracker.
-> >
-> > On 13.09.23 14:02, Jaak Ristioja wrote:
+> > On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tracking (Thor=
+sten
+> > Leemhuis) <regressions@leemhuis.info> wrote:
 > > >
-> > > Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
-> > > Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
-> > > screen after boot until the display manager starts... if it does star=
-t
-> > > at all. Using the nomodeset kernel parameter seems to be a workaround=
-.
+> > > [CCing the regression list, as it should be in the loop for regressio=
+ns:
+> > > https://docs.kernel.org/admin-guide/reporting-regressions.html]
 > > >
-> > > I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
-> > > ("drivers/firmware: Move sysfb_init() from device_initcall to
-> > > subsys_initcall_sync").
-> >
-> > Hmmm, no reaction since it was posted a while ago, unless I'm missing
-> > something.
-> >
-> > Huacai Chen, did you maybe miss this report? The problem is apparently
-> > caused by a commit of yours (that Javier applied), you hence should loo=
-k
-> > into this.
-> I'm sorry but it looks very strange, could you please share your config f=
-ile?
-As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
-again. So I guess the reason:
+> > > Hi, Thorsten here, the Linux kernel's regression tracker.
+> > >
+> > > On 13.09.23 14:02, Jaak Ristioja wrote:
+> > > >
+> > > > Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel =
+HD
+> > > > Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a bla=
+nk
+> > > > screen after boot until the display manager starts... if it does st=
+art
+> > > > at all. Using the nomodeset kernel parameter seems to be a workarou=
+nd.
+> > > >
+> > > > I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2=
+e4
+> > > > ("drivers/firmware: Move sysfb_init() from device_initcall to
+> > > > subsys_initcall_sync").
+> > >
+> > > Hmmm, no reaction since it was posted a while ago, unless I'm missing
+> > > something.
+> > >
+> > > Huacai Chen, did you maybe miss this report? The problem is apparently
+> > > caused by a commit of yours (that Javier applied), you hence should l=
+ook
+> > > into this.
+> > I'm sorry but it looks very strange, could you please share your config=
+ file?
+> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+> again. So I guess the reason:
 
-When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
-know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
-sysfb_init() from device_initcall to subsys_initcall_sync") there is
-no platform device created for SIMPLEDRM at early stage, so it seems
-also "no problem".
+Did Jaak reply privately? It should have been disclosed in public
+ML here instead.
 
-Huacai
+>=20
+> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+> no platform device created for SIMPLEDRM at early stage, so it seems
+> also "no problem".
 
+I don't understand above. You mean that after that commit the platform
+device is also none, right?
 
->
-> Huacai
->
-> >
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> >
-> > > git bisect start
-> > > # status: waiting for both good and bad commits
-> > > # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
-> > > git bisect good 6995e2de6891c724bfeb2db33d7b87775f913ad1
-> > > # status: waiting for bad commit, 1 good commit known
-> > > # bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
-> > > git bisect bad 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> > > # bad: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag 'mips_6.5=
-'
-> > > of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
-> > > git bisect bad b775d6c5859affe00527cbe74263de05cfe6b9f9
-> > > # good: [3a8a670eeeaa40d87bd38a587438952741980c18] Merge tag
-> > > 'net-next-6.5' of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> > > git bisect good 3a8a670eeeaa40d87bd38a587438952741980c18
-> > > # bad: [188d3f80fc6d8451ab5e570becd6a7b2d3033023] drm/amdgpu: vcn_4_0
-> > > set instance 0 init sched score to 1
-> > > git bisect bad 188d3f80fc6d8451ab5e570becd6a7b2d3033023
-> > > # good: [12fb1ad70d65edc3405884792d044fa79df7244f] drm/amdkfd: update
-> > > process interrupt handling for debug events
-> > > git bisect good 12fb1ad70d65edc3405884792d044fa79df7244f
-> > > # bad: [9cc31938d4586f72eb8e0235ad9d9eb22496fcee] i915/perf: Drop the
-> > > aging_tail logic in perf OA
-> > > git bisect bad 9cc31938d4586f72eb8e0235ad9d9eb22496fcee
-> > > # bad: [51d86ee5e07ccef85af04ee9850b0baa107999b6] drm/msm: Switch to
-> > > fdinfo helper
-> > > git bisect bad 51d86ee5e07ccef85af04ee9850b0baa107999b6
-> > > # good: [bfdede3a58ea970333d77a05144a7bcec13cf515] drm/rockchip: cdn-=
-dp:
-> > > call drm_connector_update_edid_property() unconditionally
-> > > git bisect good bfdede3a58ea970333d77a05144a7bcec13cf515
-> > > # good: [123ee07ba5b7123e0ce0e0f9d64938026c16a2ce] drm: sun4i_tcon: u=
-se
-> > > devm_clk_get_enabled in `sun4i_tcon_init_clocks`
-> > > git bisect good 123ee07ba5b7123e0ce0e0f9d64938026c16a2ce
-> > > # bad: [20d54e48d9c705091a025afff5839da2ea606f6b] fbdev: Rename
-> > > fb_mem*() helpers
-> > > git bisect bad 20d54e48d9c705091a025afff5839da2ea606f6b
-> > > # bad: [728cb3f061e2b3a002fd76d91c2449b1497b6640] gpu: drm: bridge: N=
-o
-> > > need to set device_driver owner
-> > > git bisect bad 728cb3f061e2b3a002fd76d91c2449b1497b6640
-> > > # bad: [0f1cb4d777281ca3360dbc8959befc488e0c327e] drm/ssd130x: Fix
-> > > include guard name
-> > > git bisect bad 0f1cb4d777281ca3360dbc8959befc488e0c327e
-> > > # good: [0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630] dt-bindings: displ=
-ay:
-> > > simple: Add BOE EV121WXM-N10-1850 panel
-> > > git bisect good 0bd5bd65cd2e4d1335ea6c17cd2c8664decbc630
-> > > # bad: [60aebc9559492cea6a9625f514a8041717e3a2e4] drivers/firmware: M=
-ove
-> > > sysfb_init() from device_initcall to subsys_initcall_sync
-> > > git bisect bad 60aebc9559492cea6a9625f514a8041717e3a2e4
-> > > # good: [8bb7c7bca5b70f3cd22d95b4d36029295c4274f6] drm/panel:
-> > > panel-simple: Add BOE EV121WXM-N10-1850 panel support
-> > > git bisect good 8bb7c7bca5b70f3cd22d95b4d36029295c4274f6
-> > > # first bad commit: [60aebc9559492cea6a9625f514a8041717e3a2e4]
-> > > drivers/firmware: Move sysfb_init() from device_initcall to
-> > > subsys_initcall_sync
+Confused...
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--e+saoYv3HPZRi7+a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZSO9swAKCRD2uYlJVVFO
+oydtAQCjpra6tsxV4/98CtIBJeEv9SPFN/GBEOiRr+a0amnAaAD9HnpgYUQGuUI3
+Li7bRmsGwGPIno+QwWiW2fiZl9ZcOwM=
+=bSd7
+-----END PGP SIGNATURE-----
+
+--e+saoYv3HPZRi7+a--
