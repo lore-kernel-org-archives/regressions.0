@@ -1,96 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA1517990;
-	Mon,  9 Oct 2023 13:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37419464
+	for <regressions@lists.linux.dev>; Mon,  9 Oct 2023 13:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X1atmBRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1893FC433C7;
-	Mon,  9 Oct 2023 13:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1696856895;
-	bh=lAN8x9K8fBhye9sJsF1Tvik9GDRyszA47lZl4z35bzI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X1atmBRnb6x1BiUC6zgCumhDe6AbSEWHxv+IK6gcUd/yvGtvIuNo4DacRll6HQWni
-	 4N/O9ekWokFeIi1xhfAzFQjjCz/tES6Q7ETY4Bo7CNJHm46r3KbpYGHNloRtiJxT6e
-	 jGR2qPOtppL7ZbRnzQu0Ab7UxHhcuwpxP+MS96NA=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	regressions@lists.linux.dev,
-	Robin Murphy <robin.murphy@arm.com>,
-	Hector Martin <marcan@marcan.st>,
-	Neal Gompa <neal@gompa.dev>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 6.5 026/163] iommu/apple-dart: Handle DMA_FQ domains in attach_dev()
-Date: Mon,  9 Oct 2023 14:59:50 +0200
-Message-ID: <20231009130124.730201469@linuxfoundation.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231009130124.021290599@linuxfoundation.org>
-References: <20231009130124.021290599@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="MVEFcIZd"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1696857365;
+	bh=LM+eM7modYOnqrVh/3dhXyW83yRoxFdZ9tfpmyW8ugk=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=MVEFcIZdfqdBw2CTs80FmBM5+kruiOb2zT9RBE/uUo01DSUTspQfTDwOYLBuXxc8v
+	 ShItfhs2wPOlM2nJQGAvUmPUv6LlhRUDLCA+nxMmPzxP3a3kyOAGXm0k1mccSrZbzq
+	 t+46LIg1WWloKeUTRWfhvH2vozIj2OFO3oKAlEns=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
+ requirement
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <31b59df2-d668-478e-a546-c3805f74c3a3@gmail.com>
+Date: Mon, 9 Oct 2023 15:15:44 +0200
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org,
+ netdev@vger.kernel.org,
+ davem@davemloft.net,
+ edumazet@google.com,
+ kuba@kernel.org,
+ pabeni@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4220ECCB-4B99-43AD-BE6B-36AE86B72871@flyingcircus.io>
+References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+ <207a8e5d-5f2a-4b33-9fc1-86811ad9f48a@leemhuis.info>
+ <879EA0B7-F334-4A17-92D5-166F627BEE6F@flyingcircus.io>
+ <740b0d7e-c789-47b5-b419-377014a99f22@leemhuis.info>
+ <BBEA77E4-D376-45CE-9A93-415F2E0703D7@flyingcircus.io>
+ <982dc76d-0832-4c8a-a486-5e6a2f5fb49a@gmail.com>
+ <0AAB089F-A296-472B-8E6F-0D60B9ACCB95@flyingcircus.io>
+ <31b59df2-d668-478e-a546-c3805f74c3a3@gmail.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
 
-6.5-stable review patch.  If anyone has any objections, please let me know.
+Hi,
 
-------------------
+> On 6. Oct 2023, at 16:13, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>>=20
+>>> You need to have testing system, unfortunately. It should mimic your
+>>> production setup as much as possible. Your organization may have one
+>>> already, but if not, you have to arrange for it.
+>>=20
+>> I=E2=80=99m able to do that, I just didn=E2=80=99t have one at hand =
+at this very moment and no time to prepare one within a few minutes. =
+I=E2=80=99ll try to reproduce with a 6.6rc in the next days.
+>>=20
+>=20
+> OK, thanks!
 
-From: Hector Martin <marcan@marcan.st>
+So, I got around running this with 6.6-rc5 today and yes, it=E2=80=99s =
+broken there as well:
 
-commit c7bd8a1f45bada7725d11266df7fd5cb549b3098 upstream.
+Here=E2=80=99s the output from my testing environment:
 
-Commit a4fdd9762272 ("iommu: Use flush queue capability") hid the
-IOMMU_DOMAIN_DMA_FQ domain type from domain allocation. A check was
-introduced in iommu_dma_init_domain() to fall back if not supported, but
-this check runs too late: by that point, devices have been attached to
-the IOMMU, and apple-dart's attach_dev() callback does not expect
-IOMMU_DOMAIN_DMA_FQ domains.
+#### snip
+subtest: try hfsc
+machine: must succeed: uname -a
+(finished: must succeed: uname -a, in 0.02 seconds)
+Linux machine 6.6.0-rc5 #1-NixOS SMP PREEMPT_DYNAMIC Tue Jan  1 00:00:00 =
+UTC 1980 x86_64 GNU/Linux
 
-Change the logic so the IOMMU_DOMAIN_DMA codepath is the default,
-instead of explicitly enumerating all types.
+machine: must succeed: modprobe ifb
+(finished: must succeed: modprobe ifb, in 0.02 seconds)
+machine: must succeed: modprobe act_mirred
+machine # [    9.187251] (udev-worker)[851]: ifb0: Could not set Alias=3D,=
+ MACAddress=3D/MACAddressPolicy=3D, TransmitQueues=3D, ReceiveQueues=3D, =
+TransmitQueueLength=3D, MTUBytes=3D, GenericSegmentOffloadMaxBytes=3D or =
+GenericSegmentOffloadMaxSegments=3D, ignoring: Operation not supported
+machine # [    9.190616] (udev-worker)[851]: Network interface =
+NamePolicy=3D disabled on kernel command line.
+machine # [    9.192605] (udev-worker)[928]: ifb1: Could not set Alias=3D,=
+ MACAddress=3D/MACAddressPolicy=3D, TransmitQueues=3D, ReceiveQueues=3D, =
+TransmitQueueLength=3D, MTUBytes=3D, GenericSegmentOffloadMaxBytes=3D or =
+GenericSegmentOffloadMaxSegments=3D, ignoring: Operation not supported
+machine # [    9.197607] (udev-worker)[928]: Network interface =
+NamePolicy=3D disabled on kernel command line.
+machine # [    9.292073] Mirror/redirect action on
+(finished: must succeed: modprobe act_mirred, in 0.04 seconds)
+machine: must succeed: tc qdisc add dev eth0 handle ffff: ingress
+(finished: must succeed: tc qdisc add dev eth0 handle ffff: ingress, in =
+0.05 seconds)
+machine: must succeed: ifconfig ifb0 up
+machine # [    9.276585] dhcpcd[672]: ifb0: waiting for carrier
+machine # [    9.278532] dhcpcd[672]: ifb0: carrier acquired
+machine # [    9.287692] dhcpcd[672]: ifb0: IAID df:2e:ad:2b
+machine # [    9.288225] dhcpcd[672]: ifb0: adding address =
+fe80::40d2:dfff:fe2e:ad2b
+(finished: must succeed: ifconfig ifb0 up, in 0.02 seconds)
+machine: must succeed: tc filter add dev eth0 parent ffff: protocol all =
+u32 match u32 0 0 action mirred egress redirect dev ifb0
+machine # [    9.396408] u32 classifier
+machine # [    9.396613]     Performance counters on
+machine # [    9.396895]     input device check on
+machine # [    9.397148]     Actions configured
+(finished: must succeed: tc filter add dev eth0 parent ffff: protocol =
+all u32 match u32 0 0 action mirred egress redirect dev ifb0, in 0.04 =
+seconds)
+machine: must succeed: tc qdisc add dev ifb0 root handle 1: hfsc default =
+1
+machine # [    9.330784] dhcpcd[672]: ifb1: waiting for carrier
+machine # [    9.332246] dhcpcd[672]: ifb1: carrier acquired
+machine # [    9.343280] dhcpcd[672]: ifb1: IAID ab:f5:e8:5d
+machine # [    9.343868] dhcpcd[672]: ifb1: adding address =
+fe80::2c7f:abff:fef5:e85d
+(finished: must succeed: tc qdisc add dev ifb0 root handle 1: hfsc =
+default 1, in 0.03 seconds)
+machine: must succeed: tc class add dev ifb0 parent 1: classid 1:999 =
+hfsc rt m2 2.5gbit
+(finished: must succeed: tc class add dev ifb0 parent 1: classid 1:999 =
+hfsc rt m2 2.5gbit, in 0.01 seconds)
+machine: must succeed: tc class add dev ifb0 parent 1:999 classid 1:1 =
+hfsc sc rate 50mbit
+machine # Error: Invalid parent - parent class must have FSC.
+machine: output:
+Test "try hfsc" failed with error: "command `tc class add dev ifb0 =
+parent 1:999 classid 1:1 hfsc sc rate 50mbit` failed (exit code 2)"
+cleanup
+kill machine (pid 6)
+#### snap
 
-Fixes an apple-dart regression in v6.5.
+Liebe Gr=C3=BC=C3=9Fe,
+Christian Theune
 
-Cc: regressions@lists.linux.dev
-Cc: stable@vger.kernel.org
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Fixes: a4fdd9762272 ("iommu: Use flush queue capability")
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20230922-iommu-type-regression-v2-1-689b2ba9b673@marcan.st
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/iommu/apple-dart.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
-index 2082081402d3..0b8927508427 100644
---- a/drivers/iommu/apple-dart.c
-+++ b/drivers/iommu/apple-dart.c
-@@ -671,8 +671,7 @@ static int apple_dart_attach_dev(struct iommu_domain *domain,
- 		return ret;
- 
- 	switch (domain->type) {
--	case IOMMU_DOMAIN_DMA:
--	case IOMMU_DOMAIN_UNMANAGED:
-+	default:
- 		ret = apple_dart_domain_add_streams(dart_domain, cfg);
- 		if (ret)
- 			return ret;
--- 
-2.42.0
-
-
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
