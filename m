@@ -1,192 +1,125 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535CB1A588
-	for <regressions@lists.linux.dev>; Wed, 11 Oct 2023 08:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A612A3992D
+	for <regressions@lists.linux.dev>; Wed, 11 Oct 2023 17:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0QO98Tg"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-53d8320f0easo2411361a12.3
-        for <regressions@lists.linux.dev>; Wed, 11 Oct 2023 01:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="QbnbXO95"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5a7eef0b931so1332537b3.0
+        for <regressions@lists.linux.dev>; Wed, 11 Oct 2023 10:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697013004; x=1697617804; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dDT7A8icxhw8bdAXxISSLC37kpezMa0dIgpPSbbiAFU=;
-        b=Y0QO98Tgaf1nlA5VuH0o/29IXnWm4SAMc7h1UgUSW+HM8DAdDZ0NjNhlxPnGJaPxn8
-         VbiELQaZs1N++dNTYEAP//9qYKLZV16agqry2LORVUKBGDpB2IUjclt4NDjj80k1+kP7
-         hsjx6YDyVm1Ig55dRDIbBuj/FI+mYuRMzMOufRrk4+j5cWgvDqCC+3/RH/vBX/Acna+6
-         aKUwe0lNR7O/xhbTL5CouaBjTQQsugLHlrFfiLSgxtI1W7Y1Xi59h675XT9l8b877o6P
-         Iqnfj9ldPfSrr/hwHRyMNPtllnxSPmHtJKXBU7vX0/m+lNlsf8ySY0pUPvGXvEQoa4jE
-         4xyQ==
+        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1697045194; x=1697649994; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QNew73H8cLV959XSqwiYY0ad0O2l97cOQFlYDKMA/zo=;
+        b=QbnbXO95fmmaHfac2JHuqvvjPliYTBfv+afXwtBpEG+0wum36iHip6cNLohVEorC59
+         S4sRyg5wILWQkIkPCw6OC8NAaWDOB7sfHgj0t7iQhiD7ujSXpVDroQvMobesZhGkFtYD
+         1VE7iV+4JwAVXrJE3jI0H8DGZKji/tfn/oZKmauBqbfIK9FTiB3o3/ta3nUYnATcW1I5
+         1pHXM5X8xmqe9BjdpSk/SKtFKV0jJxgEU2RMqK6gphbrz1I3cBNRtrNBdDoslGsdRvgn
+         vhAmeRuyuCdw/1iVZ5l6QCluamzbGOSd9m05rJzPw/W7NLCSGyivy+narhlHkSrSwfdE
+         N57w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697013004; x=1697617804;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDT7A8icxhw8bdAXxISSLC37kpezMa0dIgpPSbbiAFU=;
-        b=fwpk8Sl02Vig0UjMqnE3Kv+D75aLlXWz4aQASaJi7jT8QE4JOA5LVygIX5sOUex8/c
-         XM5RYwU1fuUiXuyhpQd3K2MGtVZn3qm7QgNljWcPom30K9+AMItpYgNgpj1MEOhgjFuo
-         8xR37Fp3LXmqyzV/1iEzxmsGnIBtDp/Bj1s+vpDUURtdEmIEoXFuz+c3H6gnU7Y3yB6S
-         dMTnkUhMN+NJVvU5dCKsbQ5uGv4l8BefZ3aZnEU4iwHTILApowrab7lAJ/sx1ulK/3nm
-         VTsXQCWKOUfT35j21dlcjpO9zJEinBkyw3tDa/V3oGQGGqbzGvaxWaYRuaPs26jx8LV9
-         sx6A==
-X-Gm-Message-State: AOJu0Yy/2bMao3SXNy6pHlCNVmG+NpZyOpFp38uUoeOK5PuLSMXWg/oV
-	L52YX3FvZtQlu/goBu4ACfk=
-X-Google-Smtp-Source: AGHT+IE47tjUWmivTn7+cC6WKPpXW3xBoBSyN5C7ZSwcZmbJxEr5aMe3n9GXXHKyBq9tHY5RX7wMmg==
-X-Received: by 2002:a50:ee84:0:b0:531:2b0b:9b8 with SMTP id f4-20020a50ee84000000b005312b0b09b8mr19616250edr.7.1697013004247;
-        Wed, 11 Oct 2023 01:30:04 -0700 (PDT)
-Received: from [147.251.42.107] (laomedon.fi.muni.cz. [147.251.42.107])
-        by smtp.gmail.com with ESMTPSA id c26-20020a056402101a00b00533e915923asm8560549edu.49.2023.10.11.01.30.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 01:30:03 -0700 (PDT)
-Message-ID: <acf5d5b5-b3d9-403d-ad57-a865774b260f@gmail.com>
-Date: Wed, 11 Oct 2023 10:30:02 +0200
+        d=1e100.net; s=20230601; t=1697045194; x=1697649994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QNew73H8cLV959XSqwiYY0ad0O2l97cOQFlYDKMA/zo=;
+        b=RiOIlWyihGNcDkXTRhFvgZTuT84aebocPqxOWupS+ljWe6JZZrFlsKowTvnbDvm5wX
+         6sDZpR0/AEMm61jCJeYBd1J420DODnat6KiQ5cFVSQdBKAWZrb+gx1g4BNkR1U02U0gt
+         FI2Er6CSLJItii/iBLmPNizZHzOtB2zbUYuVSmZR8/kTWo3RMz5NDdVh8a94mj+vgyTD
+         1M8aB9BNuxS1xA802a/bCnWUmksTXPbPxc3tKWZ3BRFv4OBqzf2T8fAK3Mek8pO58l4u
+         l7K5GM149Y0pKdiO8nsHJaFutzPjM8QhomhcZt9xkNoxdTAL9jNPjTzsnzBVuaX+5FAM
+         HOcA==
+X-Gm-Message-State: AOJu0Ywmwz1nBgvW8WCP3//ZnFOqmIQCUb8MNZ5GRbAwgw9GxnJtu42E
+	ZAfa2KWrbc52rlpTLDSEKvyu1XvGRX9YWvYTFsOZBg==
+X-Google-Smtp-Source: AGHT+IEp5ojjWgF2jbZMwhTPCU3vssABraPBQDjt2Us+Xxi5NO6ntvquWBFk9mwc8p87fRKuk04zCdroPyd0DKql4c0=
+X-Received: by 2002:a25:9012:0:b0:d9a:5f25:d0df with SMTP id
+ s18-20020a259012000000b00d9a5f25d0dfmr5073058ybl.57.1697045194529; Wed, 11
+ Oct 2023 10:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Fix regression in sed-opal for a saved key.
-Content-Language: en-US
-To: axboe@kernel.dk
-Cc: jonathan.derrick@linux.dev, linux-kernel@vger.kernel.org,
- Ondrej Kozina <okozina@redhat.com>, regressions@lists.linux.dev,
- gjoyce@linux.vnet.ibm.com, linux-block@vger.kernel.org
-References: <20231003100209.380037-1-gmazyland@gmail.com>
- <5c4fbafb1daa45f2faf60c7d587cd23c53d9393c.camel@linux.vnet.ibm.com>
- <59535b4b-9f07-44c5-a7da-e6b2fc1c67bb@gmail.com>
- <53755a0fbd6318d4783078259f2d2f8ab5f2f0b7.camel@linux.vnet.ibm.com>
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- xsFNBE94p38BEADZRET8y1gVxlfDk44/XwBbFjC7eM6EanyCuivUPMmPwYDo9qRey0JdOGhW
- hAZeutGGxsKliozmeTL25Z6wWICu2oeY+ZfbgJQYHFeQ01NVwoYy57hhytZw/6IMLFRcIaWS
- Hd7oNdneQg6mVJcGdA/BOX68uo3RKSHj6Q8GoQ54F/NpCotzVcP1ORpVJ5ptyG0x6OZm5Esn
- 61pKE979wcHsz7EzcDYl+3MS63gZm+O3D1u80bUMmBUlxyEiC5jo5ksTFheA8m/5CAPQtxzY
- vgezYlLLS3nkxaq2ERK5DhvMv0NktXSutfWQsOI5WLjG7UWStwAnO2W+CVZLcnZV0K6OKDaF
- bCj4ovg5HV0FyQZknN2O5QbxesNlNWkMOJAnnX6c/zowO7jq8GCpa3oJl3xxmwFbCZtH4z3f
- EVw0wAFc2JlnufR4dhaax9fhNoUJ4OSVTi9zqstxhEyywkazakEvAYwOlC5+1FKoc9UIvApA
- GvgcTJGTOp7MuHptHGwWvGZEaJqcsqoy7rsYPxtDQ7bJuJJblzGIUxWAl8qsUsF8M4ISxBkf
- fcUYiR0wh1luUhXFo2rRTKT+Ic/nJDE66Ee4Ecn9+BPlNODhlEG1vk62rhiYSnyzy5MAUhUl
- stDxuEjYK+NGd2aYH0VANZalqlUZFTEdOdA6NYROxkYZVsVtXQARAQABzSBNaWxhbiBCcm96
- IDxnbWF6eWxhbmRAZ21haWwuY29tPsLBlQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwEC
- HgECF4AWIQQqKRgkP95GZI0GhvnZsFd72T6Y/AUCYaUUZgUJJPhv5wAKCRDZsFd72T6Y/D5N
- D/438pkYd5NyycQ2Gu8YAjF57Od2GfeiftCDBOMXzh1XxIx7gLosLHvzCZ0SaRYPVF/Nr/X9
- sreJVrMkwd1ILNdCQB1rLBhhKzwYFztmOYvdCG9LRrBVJPgtaYqO/0493CzXwQ7FfkEc4OVB
- uhBs4YwFu+kmhh0NngcP4jaaaIziHw/rQ9vLiAi28p1WeVTzOjtBt8QisTidS2VkZ+/iAgqB
- 9zz2UPkE1UXBAPU4iEsGCVXGWRz99IULsTNjP4K3p8ZpdZ6ovy7X6EN3lYhbpmXYLzZ3RXst
- PEojSvqpkSQsjUksR5VBE0GnaY4B8ZlM3Ng2o7vcxbToQOsOkbVGn+59rpBKgiRadRFuT+2D
- x80VrwWBccaph+VOfll9/4FVv+SBQ1wSPOUHl11TWVpdMFKtQgA5/HHldVqrcEssWJb9/tew
- 9pqxTDn6RHV/pfzKCspiiLVkI66BF802cpyboLBBSvcDuLHbOBHrpC+IXCZ7mgkCrgMlZMql
- wFWBjAu8Zlc5tQJPgE9eeQAQrfZRcLgux88PtxhVihA1OsMNoqYapgMzMTubLUMYCCsjrHZe
- nzw5uTcjig0RHz9ilMJlvVbhwVVLmmmf4p/R37QYaqm1RycLpvkUZUzSz2NCyTcZp9nM6ooR
- GhpDQWmUdH1Jz9T6E9//KIhI6xt4//P15ZfiIs7BTQRPeKd/ARAA3oR1fJ/D3GvnoInVqydD
- U9LGnMQaVSwQe+fjBy5/ILwo3pUZSVHdaKeVoa84gLO9g6JLToTo+ooMSBtsCkGHb//oiGTU
- 7KdLTLiFh6kmL6my11eiK53o1BI1CVwWMJ8jxbMBPet6exUubBzceBFbmqq3lVz4RZ2D1zKV
- njxB0/KjdbI53anIv7Ko1k+MwaKMTzO/O6vBmI71oGQkKO6WpcyzVjLIip9PEpDUYJRCrhKg
- hBeMPwe+AntP9Om4N/3AWF6icarGImnFvTYswR2Q+C6AoiAbqI4WmXOuzJLKiImwZrSYnSfQ
- 7qtdDGXWYr/N1+C+bgI8O6NuAg2cjFHE96xwJVhyaMzyROUZgm4qngaBvBvCQIhKzit61oBe
- I/drZ/d5JolzlKdZZrcmofmiCQRa+57OM3Fbl8ykFazN1ASyCex2UrftX5oHmhaeeRlGVaTV
- iEbAvU4PP4RnNKwaWQivsFhqQrfFFhvFV9CRSvsR6qu5eiFI6c8CjB49gBcKKAJ9a8gkyWs8
- sg4PYY7L15XdRn8kOf/tg98UCM1vSBV2moEJA0f98/Z48LQXNb7dgvVRtH6owARspsV6nJyD
- vktsLTyMW5BW9q4NC1rgQC8GQXjrQ+iyQLNwy5ESe2MzGKkHogxKg4Pvi1wZh9Snr+RyB0Rq
- rIrzbXhyi47+7wcAEQEAAcLBfAQYAQgAJgIbDBYhBCopGCQ/3kZkjQaG+dmwV3vZPpj8BQJh
- pRSXBQkk+HAYAAoJENmwV3vZPpj8BPMP/iZV+XROOhs/MsKd7ngQeFgETkmt8YVhb2Rg3Vgp
- AQe9cn6aw9jk3CnB0ecNBdoyyt33t3vGNau6iCwlRfaTdXg9qtIyctuCQSewY2YMk5AS8Mmb
- XoGvjH1Z/irrVsoSz+N7HFPKIlAy8D/aRwS1CHm9saPQiGoeR/zThciVYncRG/U9J6sV8XH9
- OEPnQQR4w/V1bYI9Sk+suGcSFN7pMRMsSslOma429A3bEbZ7Ikt9WTJnUY9XfL5ZqQnjLeRl
- 8243OTfuHSth26upjZIQ2esccZMYpQg0/MOlHvuFuFu6MFL/gZDNzH8jAcBrNd/6ABKsecYT
- nBInKH2TONc0kC65oAhrSSBNLudTuPHce/YBCsUCAEMwgJTybdpMQh9NkS68WxQtXxU6neoQ
- U7kEJGGFsc7/yXiQXuVvJUkK/Xs04X6j0l1f/6KLoNQ9ep/2In596B0BcvvaKv7gdDt1Trgg
- vlB+GpT+iFRLvhCBe5kAERREfRfmWJq1bHod/ulrp/VLGAaZlOBTgsCzufWF5SOLbZkmV2b5
- xy2F/AU3oQUZncCvFMTWpBC+gO/o3kZCyyGCaQdQe4jS/FUJqR1suVwNMzcOJOP/LMQwujE/
- Ch7XLM35VICo9qqhih4OvLHUAWzC5dNSipL+rSGHvWBdfXDhbezJIl6sp7/1rJfS8qPs
-In-Reply-To: <53755a0fbd6318d4783078259f2d2f8ab5f2f0b7.camel@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
+ <065a0dac-499f-7375-ddb4-1800e8ef61d1@mojatatu.com> <0BC2C22C-F9AA-4B13-905D-FE32F41BDA8A@flyingcircus.io>
+ <20231009080646.60ce9920@kernel.org> <da08ba06-e24c-d2c3-b9a0-8415a83ae791@mojatatu.com>
+ <20231009172849.00f4a6c5@kernel.org> <CAM0EoM=mnOdEgHPzbPxCAotoy4C54XyGiisrjwnO_raqVWPryw@mail.gmail.com>
+ <7058E983-D543-4C5B-91ED-A8728775260A@flyingcircus.io>
+In-Reply-To: <7058E983-D543-4C5B-91ED-A8728775260A@flyingcircus.io>
+From: Jamal Hadi Salim <jhs@mojatatu.com>
+Date: Wed, 11 Oct 2023 13:26:23 -0400
+Message-ID: <CAM0EoM=jXYtbzo3W7eaVD5a=8DJde5Mu1wCQ7MvYigDT1k_Mkw@mail.gmail.com>
+Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC requirement
+To: Christian Theune <ct@flyingcircus.io>
+Cc: Jakub Kicinski <kuba@kernel.org>, Pedro Tammela <pctammela@mojatatu.com>, markovicbudimir@gmail.com, 
+	stable@vger.kernel.org, netdev@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/5/23 19:58, Greg Joyce wrote:
-> On Thu, 2023-10-05 at 08:58 +0200, Milan Broz wrote:
->> On 10/4/23 22:54, Greg Joyce wrote:
->>> On Tue, 2023-10-03 at 12:02 +0200, Milan Broz wrote:
->>>> The commit 3bfeb61256643281ac4be5b8a57e9d9da3db4335
->>>> introduced the use of keyring for sed-opal.
->>>>
->>>> Unfortunately, there is also a possibility to save
->>>> the Opal key used in opal_lock_unlock().
->>>>
->>>> This patch switches the order of operation, so the cached
->>>> key is used instead of failure for opal_get_key.
->>>>
->>>> The problem was found by the cryptsetup Opal test recently
->>>> added to the cryptsetup tree.
->>>>
->>>> Fixes: 3bfeb6125664 ("block: sed-opal: keyring support for SED
->>>> keys")
->>>> Tested-by: Ondrej Kozina <okozina@redhat.com>
->>>> Signed-off-by: Milan Broz <gmazyland@gmail.com>
->>>> ---
->>>>    block/sed-opal.c | 7 +++----
->>>>    1 file changed, 3 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/block/sed-opal.c b/block/sed-opal.c
->>>> index 6d7f25d1711b..04f38a3f5d95 100644
->>>> --- a/block/sed-opal.c
->>>> +++ b/block/sed-opal.c
->>>> @@ -2888,12 +2888,11 @@ static int opal_lock_unlock(struct
->>>> opal_dev
->>>> *dev,
->>>>    	if (lk_unlk->session.who > OPAL_USER9)
->>>>    		return -EINVAL;
->>>>
->>>> -	ret = opal_get_key(dev, &lk_unlk->session.opal_key);
->>>> -	if (ret)
->>>> -		return ret;
->>>>    	mutex_lock(&dev->dev_lock);
->>>>    	opal_lock_check_for_saved_key(dev, lk_unlk);
->>>> -	ret = __opal_lock_unlock(dev, lk_unlk);
->>>> +	ret = opal_get_key(dev, &lk_unlk->session.opal_key);
->>>> +	if (!ret)
->>>> +		ret = __opal_lock_unlock(dev, lk_unlk);
->>>
->>> This is relying on opal_get_key() returning 0 to decide if
->>> __opal_lock_unlock() is called. Is this really what you want? It
->>> seems
->>> that you would want to unlock if the key is a LUKS key, even if
->>> opal_get_key() returns non-zero.
->>
->> I think it is ok. That was logic introduced in your keyring patch
->> anyway.
->>
->> I just fixed that if key is cached (stored in OPAL struct), that key
->> is used
->> and subsequent opal_get_key() does nothing, returning 0.
->>
->> The story is here that both OPAL lock and unlock need key, while LUKS
->> logic never required key for lock (deactivation), so we rely on the
->> cached
->> OPAL key here. We do not need any key stored for unlocking (that is
->> always
->> decrypted from a keyslot)
->> (I think requiring key for locking range is a design mistake in OPAL
->> but
->> that's not relevant for now :-)
-> 
-> Okay, if the key is such that opal_get_key() always returns 0, then I
-> agree there isn't an issue.
+On Tue, Oct 10, 2023 at 1:32=E2=80=AFPM Christian Theune <ct@flyingcircus.i=
+o> wrote:
+>
+> Hi,
+>
+> > On 10. Oct 2023, at 17:02, Jamal Hadi Salim <jhs@mojatatu.com> wrote:
+> >
+> > This is a tough one - as it stands right now we dont see a good way
+> > out. It's either "exploitable by root / userns" or break uapi.
+> > Christian - can you send your "working" scripts, simplified if
+> > possible, and we'll take a look.
+>
+> Sure, what kind of simplification are we talking about? Something like th=
+is?
+>
+> #### snip
+> #!/bin/bash
+> modprobe ifb
+> modprobe act_mirred
+>
+> uplink=3Deth0
+> uplink_ingress=3Difb0
+>
+> tc qdisc add dev $uplink handle ffff: ingress
+> ifconfig $uplink up
+>
+> tc filter add dev $uplink parent ffff: protocol all u32 match u32 0 0 act=
+ion mirred egress redirect dev $uplink_ingress
+>
+> tc qdisc add dev $uplink_ingress root handle 1: hfsc default 1
+> tc class add dev $uplink_ingress parent 1: classid 1:999 hfsc rt m2 2.5gb=
+it
+> tc class add dev $uplink_ingress parent 1:999 classid 1:1 hfsc sc rate 50=
+mbit
+> #### snap
+>
+> This should provoke the error reliably. You might need to point it at wha=
+tever network interface is available but need to be prepared to loose conne=
+ctivity.
+>
 
+Ok - thanks, we'll look at this from the perspective of both ensuring
+UAF is gone and making your config happy. TBH, in my view UAF comes
+first but we can debate that later.
 
-Jens, what's the status of this patch?
-
-It is clear regression in 6.6 (I forgot to add regression list, fixed now.)
-
-For reference, the original report and patch is here
-#regzbot link: https://lore.kernel.org/linux-block/20231003100209.380037-1-gmazyland@gmail.com/
-#regzbot ^introduced 3bfeb6125664
-
-Thanks,
-Milan
+cheers,
+jamal
+> Christian
+>
+>
+> Liebe Gr=C3=BC=C3=9Fe,
+> Christian Theune
+>
+> --
+> Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+> Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+> Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+> HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+>
