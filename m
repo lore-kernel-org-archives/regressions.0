@@ -1,112 +1,106 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DD63D01C
-	for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 22:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA412C840
+	for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 23:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzvQbEVg"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-690b7cb71aeso1129931b3a.0
-        for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 15:53:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjThi49c"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1142112a12.2
+        for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 16:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697151188; x=1697755988; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+        d=gmail.com; s=20230601; t=1697155060; x=1697759860; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=78dLfHiKtRMa9+mkxUCYKM56t0Kv23O6vbCoyWzPuyY=;
-        b=DzvQbEVgJtITgFuglDWRC/z551X3vOyizEvdEQm35QTH57bzWwQcOiOwvuNn6NWanC
-         vVs6FQYtjhydxUsb9mWeHyjpbD/4WV+JuV/8MVHQs25T59hAcflTyvDbRcnH4fKa/zWn
-         l96cyE8quud7qsSw4Bhono7w1ZVZWQl2bgVTBezMzYB8DCFvs36VBJmlQdsAqVSt2Ko+
-         xPTIiH80LgscqFbb8Y//ZhXpxO8hA3IHJVQJqB4/7+1r5IP7V80kqbm3Z0piZvXc6TtH
-         oI7/p5WZFYAusgJMy2u3CXFwH2KKELMqGoc5wU2Yevk3t0IRdfLXYbJ2UeP54/FOLqSG
-         QlvQ==
+        bh=IMk7ef3z6b35hTlTRh2H+b/l6njrMDplSZDZc4/1mAU=;
+        b=gjThi49c27pmQS6aWKrwKyrH9caT17JfBy1esLgG3+3SltSD6GBGXy2X4JhFZIDMtI
+         rpMk4yxp4l0w0vbIAb8bRMritEsH0e3AqNxq1K0ECL0EGAsjxiju0ZtWAY7z8gjYlf1D
+         lL4ZXubnDPO9wnMhIxJK6Fu2qGr84kgEASyecDsh2leyZRioh7qq6Ix416u5ba6ijQZL
+         xMAP/L/+REFroG2K8Cipy03QjjxkfLJV4ivQynCG7w2H0g9RAGuJPIPOX7jGAsJPpdJb
+         28pCr7D+sgdUqyZPY1G5fNXBSa/v40vqApw1TxN90+/z9jHfRsq9vliEKv0ctfvsijBu
+         KS/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697151188; x=1697755988;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1697155060; x=1697759860;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=78dLfHiKtRMa9+mkxUCYKM56t0Kv23O6vbCoyWzPuyY=;
-        b=CM6Cknka5yX2mqp0uy2ViYbvlZhvDN7VVOY3QSjtq+QmpJHdtpXDExI3dVwZOs3u1K
-         UysJaQfd7Dak/teZQGFzoR9myPDUT5H7oS6UnAqAjXG6xXZzAph3DBRUgxpym2LH/GdO
-         mjDycW04nXGS/1zaQCTinu3MLIrAwZrnY0AiW76sTQScSXLq1tV61ct8EigVoU1Mqv57
-         q1EH+8O33vBUaZ95XupmGAipbuxeOQW1vNK/iGCv9g73rV647S/hmvf2Jqrl4MHrvJ3a
-         iIZBEtM1mdxncsPhGpXURNjHMRFyefTtbyvdZ8ldrXVLs3+LCVmyp6YaH+lu2gkNYUKN
-         +WKg==
-X-Gm-Message-State: AOJu0YzDAPYdO5PhTmKJqi+c59VfW9WC5yIDLdNflozDHISsrwk3LCZy
-	H4luDEd/wY2HGv/5DUifry4=
-X-Google-Smtp-Source: AGHT+IG5S/ip7RUwzEiiwV3FfRhxwAfJzPoA0AHgoWOeXhvM1SNfgqC3HnPqI744GDUGdf3PgLP/VQ==
-X-Received: by 2002:a05:6a00:21cc:b0:68e:351b:15b9 with SMTP id t12-20020a056a0021cc00b0068e351b15b9mr35521708pfj.4.1697151187538;
-        Thu, 12 Oct 2023 15:53:07 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:a118:bd3a:f198:d7ed])
-        by smtp.gmail.com with ESMTPSA id a19-20020a637f13000000b00578bb0066b6sm2220692pgd.71.2023.10.12.15.53.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 15:53:06 -0700 (PDT)
-Date: Thu, 12 Oct 2023 15:53:04 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Jeffery Miller <jefferymiller@google.com>, regressions@lists.linux.dev,
-	benjamin.tissoires@redhat.com,
-	Andrew Duggan <aduggan@synaptics.com>,
-	Andrew Duggan <andrew@duggan.us>, loic.poulain@linaro.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: elantech - fix fast_reconnect callback in ps2 mode
-Message-ID: <ZSh40JethapBAjq1@google.com>
-References: <20231004005729.3943515-1-jefferymiller@google.com>
- <ZR1yUFJ8a9Zt606N@penguin>
- <CAAzPG9Pp6mHfEziJiUuhDRmkKMfiiPD6axtfAMaCJcEAcuQPiA@mail.gmail.com>
- <25ac6b17-e3fa-4e98-95a6-eac12bdbcdd2@leemhuis.info>
+        bh=IMk7ef3z6b35hTlTRh2H+b/l6njrMDplSZDZc4/1mAU=;
+        b=gFKZCbsSiVnd07gia5EHyUjAW0NCpj/b7V24sYRV3sqHSkVFtXMdudt0vTze5L2tAl
+         FYjlwiW4PAyLtCoINqo3zxFbyZo+UlNl8IOihLNoboPBuMRPRlXkcA4NIe8voETyRkYH
+         UShTDTAZDl6cAc47bA+uuEBK1DixOb/WmujrygF38CflnvwwkUzbDJEBN+V7uraTR86r
+         KIaS1GKqiB4HdDU44ee+Z72jIDaxQPxAM13g8GrFcDdsWTNTh6On7+lti6d/0ZqChErk
+         tOixdhgHJYlqy07CXR5gs3KXCurBTn1PUNdVvM/1nwYoh0BLn29khQcAIlMZ44ssh5Od
+         RSQQ==
+X-Gm-Message-State: AOJu0Yx95NoT/8ZmJj6QixiA5kg328cGI9UK12WHWGpHb1O7PNaXS+tg
+	/tFLEWAR745YHUUXdH4P0rQ=
+X-Google-Smtp-Source: AGHT+IGXYpN9ClsEETOLPh4A+17Ca/iEmHa91MMqRHzbAa627nCzyd9VHmCdfnui/FFLZ8NActc9kg==
+X-Received: by 2002:a05:6a21:1f16:b0:152:1ce8:ce3a with SMTP id ry22-20020a056a211f1600b001521ce8ce3amr20185803pzb.18.1697155059665;
+        Thu, 12 Oct 2023 16:57:39 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id q2-20020a170902edc200b001b7f40a8959sm2553077plk.76.2023.10.12.16.57.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 16:57:38 -0700 (PDT)
+Message-ID: <d1354343-8fe0-4338-8d71-b8a90c960017@gmail.com>
+Date: Fri, 13 Oct 2023 06:57:33 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <25ac6b17-e3fa-4e98-95a6-eac12bdbcdd2@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Intel 7560 LTE Modem stops working after resuming from
+ standby
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Intel Wireless WAN <linuxwwan@intel.com>
+Cc: M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Loic Poulain <loic.poulain@linaro.org>,
+ Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+ Johannes Berg <johannes@sipsolutions.net>
+References: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
+Content-Language: en-US
+In-Reply-To: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thorsten,
-
-On Tue, Oct 10, 2023 at 09:08:23AM +0200, Thorsten Leemhuis wrote:
-> On 05.10.23 02:13, Jeffery Miller wrote:
-> > 
-> > On Wed, Oct 4, 2023 at 9:11 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> >>
-> >> In fact, now that I think about it more, we should rework the original
-> >> patch that added the delay, so that we do not wait these 30 msec in the
-> >> "fast" reconnect handler. It turns out your original approach was
-> >> better, but we should not be using retries, but rather the existing
-> >> reset_delay_ms already defined in rmi platform data. I would appreciate
-> >> if you try the draft patch at the end of this email (to be applied after
-> >> reverting your original one adding the delay in psmouse-smbus.c).
-> > I tested the draft patch and it works. I did revert the previous delay
-> > patch while testing it.
-> > 
-> >> I think we need a similar change in synaptics.c as that one also can
-> >> fall back to PS/2 mode.
-> >>
-> > Ah, good point, yes it does appear this needs to be done as well.
-> > I have tested and will post an new version of the patch to include
-> > the fix in synaptics.c as well.
+On 12/10/2023 16:52, Bagas Sanjaya wrote:
+> Hi,
 > 
-> As I'm affected by this problem (and somebody else reported to me in
-> private to be affected as well) and nothing afaics happened in the past
-> few days a quick question:
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 > 
-> What's the way forward here now that -rc6 slowly comes into sight? Apply
-> Jeff's patch to fix my problem? Revert the culprit and fix this properly
-> up with Dmitry's and Jeff's patches in the next cycle? Something else?
+>> I noticed a few days ago, after Fedora moved to Kernel 6.5, that my Intel LTE Modem was not working anymore after resuming from standby. 
+>>
+>> The journal listed this error message multiple times:
+>> kernel: iosm 0000:01:00.0: msg timeout
+>>
+>> It took me a while to determine the root cause of the problem, since the modem did not work either in the following warm reboots. 
+>> Only a shutdown revived the modem.
+>>
+>> I did a bisection of the error and I was able to find the culprit:
+>>
+>> [e4f5073d53be6cec0c654fac98372047efb66947] net: wwan: iosm: enable runtime pm support for 7560
+> 
+> See Bugzilla for the full thread.
+> 
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: e4f5073d53be6c https://bugzilla.kernel.org/show_bug.cgi?id=217996
+> #regzbot title: pm support for Intel 7560 makes the modem stops working after resume
+> 
 
-I will revert the original patch introducing the delay now that we argee
-there is a better way. In the mean time I will merge Jeff's patch to
-reset fast_reconnect handlers, as it is right thing to do anyway, and
-will get into shape the patch setting reset-delay in RMI code.
+FYI, the reporter had uploaded full dmesg output on Bugzilla.
+Also, he noted shutdown abnormality:
+
+> also I should mention, that if this error occurs, I am unable to shutdown my system anymore. "poweroff" does not turn the laptop off, it simply triggers a reboot, where the modem is still not functional. Only pressing the powerbutton >4 secs "resets" the device.
 
 Thanks.
 
 -- 
-Dmitry
+An old man doll... just what I always wanted! - Clara
+
