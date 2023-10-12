@@ -1,73 +1,92 @@
-Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E3339944
-	for <regressions@lists.linux.dev>; Wed, 11 Oct 2023 18:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B56FC13
+	for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 09:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="Wzr+nymK"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
-	s=mail; t=1697047907;
-	bh=d+Sr05wOr6odmI26LohhC7IvZbIgvBSxxhLMDUKBFdk=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=Wzr+nymKX+HnvaqMcmiXM5WSsO1EAMKuqTH188SJLylosOJe72/Lxe+UqhG8Oufat
-	 vV8Z1T6Ji6w/c734v2bpHlY7xr9mdKEnEtQmaKKC9XwnjTACE1LgzUuNfE7Yoy4BJ2
-	 H9s+wO0OLXhsH0R/VGZHlD6GFhVEVDkmX2DVDjcc=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAiKXq4+"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-690d2441b95so558338b3a.1
+        for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 02:37:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697103468; x=1697708268; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fdZgfymsyd7ehqcxRdjpYNBTpQVaXLUbV7TLN4E1/DA=;
+        b=eAiKXq4+TS/nrgVZ79WB37KJuxG3MtNAwAnz7cm0q5u+EK4Jno7OtUIaNPhfFjO32i
+         kLlwuHWvNr76C+epS7Ap2a9Mt8ER0tCFNofyGECH788RsAQZyfi/KtmUmhYrCsyjYOfH
+         pYzyfkMxbjfeKK9usFl5dADJdzRVBSI63otn4DimXUknyqkbT0jeGgNPmWFlwKG6U1YB
+         9FLv3GrPua/ZkMGS89NcMlr7JG7OyxrlBFEGNE84Vr63+W3As22MQiWhJSzkCCZz1FuQ
+         c7XqgciLxL1PdaF3a/cjL7SXwsC/Ow3V+Pm7E/80z+Jl2xBF0nfhZlS+3U/XVf+QLCj0
+         78GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697103468; x=1697708268;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fdZgfymsyd7ehqcxRdjpYNBTpQVaXLUbV7TLN4E1/DA=;
+        b=U0RfqoAwd84kwulw/U/DZvh97UaENGE/WEaUHNNJsGXby9mDR5qydrwYrKOLvGd3Oo
+         i53owf7METn4lsgp1X1OLDfvzjOpHsAlwDmtQY9tnxt1705/sTQZwWP2g0UQkzTZhQwF
+         WJ2ucsCqdipIJWSFg8JeXoYS0t6C90hq/Oi2XtG2l7Sauc6zRWTBFMk71CC7d/pXGH/0
+         spIBD3hQ+VAtp0mozXxtYib+uFaMtHwTEfDSgwg1JM/KtEO2mp9ISABYBW/Eg0MJ5w02
+         56pwtVcz9FWWhghobQOMUN9LW3owagT/5HFKDhdGgnIi8gLpyJF0bx+Jl/XlO+wYboce
+         nKWQ==
+X-Gm-Message-State: AOJu0YxyAudYXQBRMXwzfpt5wo1FvyleWfhvvj5h4JXqy45PTrNL2nss
+	+CYuf+Axgg0usBiA6J8DtaU=
+X-Google-Smtp-Source: AGHT+IFtx9yabPtRA17h06vlo13OrJKoThnA6kM+dAvk+E82XxXruxxbs4KeGiTVxMXiCnkNk0pDTQ==
+X-Received: by 2002:a05:6a00:1595:b0:68f:cb69:8e66 with SMTP id u21-20020a056a00159500b0068fcb698e66mr31525387pfk.15.1697103468109;
+        Thu, 12 Oct 2023 02:37:48 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id x15-20020aa7918f000000b00690dbab1623sm11371659pfa.81.2023.10.12.02.37.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 02:37:47 -0700 (PDT)
+Message-ID: <e6d1dae8-e28a-455a-a851-661c825fbdcf@gmail.com>
+Date: Thu, 12 Oct 2023 16:37:42 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [REGRESSION] Userland interface breaks due to hard HFSC_FSC
- requirement
-From: Christian Theune <ct@flyingcircus.io>
-In-Reply-To: <CAM0EoMkKm4VcQB7p1abg9d-Pozz7fV-isexDtA1rGX+NuJEykA@mail.gmail.com>
-Date: Wed, 11 Oct 2023 20:11:26 +0200
-Cc: Jakub Kicinski <kuba@kernel.org>,
- Pedro Tammela <pctammela@mojatatu.com>,
- markovicbudimir@gmail.com,
- stable@vger.kernel.org,
- netdev@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- davem@davemloft.net,
- edumazet@google.com,
- pabeni@redhat.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D7464B3C-53BE-435F-B58D-B9C612D3CAC7@flyingcircus.io>
-References: <297D84E3-736E-4AB4-B825-264279E2043C@flyingcircus.io>
- <065a0dac-499f-7375-ddb4-1800e8ef61d1@mojatatu.com>
- <0BC2C22C-F9AA-4B13-905D-FE32F41BDA8A@flyingcircus.io>
- <20231009080646.60ce9920@kernel.org>
- <da08ba06-e24c-d2c3-b9a0-8415a83ae791@mojatatu.com>
- <20231009172849.00f4a6c5@kernel.org>
- <CAM0EoM=mnOdEgHPzbPxCAotoy4C54XyGiisrjwnO_raqVWPryw@mail.gmail.com>
- <20231010112647.2cd6590c@kernel.org>
- <CAM0EoMkKm4VcQB7p1abg9d-Pozz7fV-isexDtA1rGX+NuJEykA@mail.gmail.com>
-To: Jamal Hadi Salim <jhs@mojatatu.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Yanjun Yang <yangyj.ee@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernel 6.5 hangs on shutdown
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-> On 11. Oct 2023, at 19:27, Jamal Hadi Salim <jhs@mojatatu.com> wrote:
->=20
-> On Tue, Oct 10, 2023 at 2:26=E2=80=AFPM Jakub Kicinski =
-<kuba@kernel.org> wrote:
->=20
-> The qdisc is non-trivial. The good news is we now know there's at
-> least one user for this qdisc ;->
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-Thanks everyone for taking the time to look at it. I hope and guess =
-I=E2=80=99m not the only user =E2=80=A6 :)
+> I use Dell OptiPlex 7050, and kernel hangs when shutting down the computer. 
+> Similar symptom has been reported on some forums, and all of them are using
+> Dell computers:
+> https://bbs.archlinux.org/viewtopic.php?pid=2124429
+> https://www.reddit.com/r/openSUSE/comments/16qq99b/tumbleweed_shutdown_did_not_finish_completely/
+> https://forum.artixlinux.org/index.php/topic,5997.0.html
+> 
+> Tested with various kernel and this bug seems to be caused by commit: 88afbb21d4b36fee6acaa167641f9f0fc122f01b.
 
-Hugs,
-Christian
+See Bugzilla for the full thread.
 
---=20
-Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
-Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
-Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
-HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
-Christian Zagrodnick
+Anyway, I'm adding this regression to be tracked by regzbot:
 
+#regzbot introduced: 88afbb21d4b36f https://bugzilla.kernel.org/show_bug.cgi?id=217995
+#regzbot title: x86 core fix pull causes shutdown hang on Dell OptiPlex 7050
+#regzbot link: https://bbs.archlinux.org/viewtopic.php?pid=2124429
+#regzbot link: https://www.reddit.com/r/openSUSE/comments/16qq99b/tumbleweed_shutdown_did_not_finish_completely/
+#regzbot link: https://forum.artixlinux.org/index.php/topic,5997.0.html
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217995
+
+-- 
+An old man doll... just what I always wanted! - Clara
