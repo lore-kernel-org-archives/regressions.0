@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB8E14011
-	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 12:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6895F11CBF
+	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 12:51:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qrGv4-0004ip-VD; Fri, 13 Oct 2023 14:05:31 +0200
-Message-ID: <9787bd09-91b3-4a79-9ca9-e7199c925f36@leemhuis.info>
-Date: Fri, 13 Oct 2023 14:05:29 +0200
+	id 1qrHdz-0005GC-6y; Fri, 13 Oct 2023 14:51:55 +0200
+Message-ID: <f831fbbb-c750-4fba-9b37-d6e6ded9b451@leemhuis.info>
+Date: Fri, 13 Oct 2023 14:51:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,60 +18,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [regression] some Dell systems hang at shutdown due to "x86/smp: Put
- CPUs into INIT on shutdown if possible" (was Fwd: Kernel 6.5 hangs on
- shutdown)
+Subject: Re: [bug report] blktests srp/002 hang
 Content-Language: en-US, de-DE
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Yanjun Yang <yangyj.ee@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>, "Borislav Petkov (AMD)"
- <bp@alien8.de>, Ashok Raj <ashok.raj@intel.com>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- the arch/x86 maintainers <x86@kernel.org>
-References: <e6d1dae8-e28a-455a-a851-661c825fbdcf@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <e6d1dae8-e28a-455a-a851-661c825fbdcf@gmail.com>
+To: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <dsg6rd66tyiei32zaxs6ddv5ebefr5vtxjwz6d2ewqrcwisogl@ge7jzan7dg5u>
+ <e8b76fae-780a-470e-8ec4-c6b650793d10@leemhuis.info>
+In-Reply-To: <e8b76fae-780a-470e-8ec4-c6b650793d10@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697198742;a983dc30;
-X-HE-SMSGID: 1qrGv4-0004ip-VD
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697201517;8275ca92;
+X-HE-SMSGID: 1qrHdz-0005GC-6y
 
-[CCing x86 maintainers]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-Hi Thomas!
-
-On 12.10.23 11:37, Bagas Sanjaya wrote:
+On 22.09.23 13:06, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 21.08.23 08:46, Shinichiro Kawasaki wrote:
+>> I observed a process hang at the blktests test case srp/002 occasionally, using
+>> kernel v6.5-rcX. Kernel reported stall of many kworkers [1]. PID 2757 hanged at
+>> inode_sleep_on_writeback(). Other kworkers hanged at __inode_wait_for_writeback.
+>>
+>> The hang is recreated in stable manner by repeating the test case srp/002 (from
+>> 15 times to 30 times).
+>>
+>> I bisected and found the commit 9b4b7c1f9f54 ("RDMA/rxe: Add workqueue support
+>> for rxe tasks") looks like the trigger commit. When I revert it from the kernel
+>> v6.5-rc7, the hang symptom disappears. I'm not sure how the commit relates to
+>> the hang. Comments will be welcomed.
+>> […]
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->>> I use Dell OptiPlex 7050, and kernel hangs when shutting down the
-computer.
->> Similar symptom has been reported on some forums, and all of them are using
->> Dell computers:
->> https://bbs.archlinux.org/viewtopic.php?pid=2124429
->> https://www.reddit.com/r/openSUSE/comments/16qq99b/tumbleweed_shutdown_did_not_finish_completely/
->> https://forum.artixlinux.org/index.php/topic,5997.0.html
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced 9b4b7c1f9f54
+> #regzbot title RDMA/rxe: occasionally pocess hang at the blktests test
+> case srp/002
+> #regzbot ignore-activity
 
-Another report: https://bugzilla.redhat.com/show_bug.cgi?id=2241279
+#regzbot monitor:
+https://lore.kernel.org/all/20230922163231.2237811-1-yanjun.zhu@intel.com/
+#regzbot ignore-activity
 
-From all those links it seems quite a lot of users with Dell machines
-are affected by this problem.
-
->> Tested with various kernel and this bug seems to be caused by commit: 88afbb21d4b36fee6acaa167641f9f0fc122f01b.
-
-Thomas, turns out that bisection result was slightly wrong: a recheck
-confirmed that the regression is actually caused by 45e34c8af58f23
-("x86/smp: Put CPUs into INIT on shutdown if possible") [v6.5-rc1] of
-yours. See https://bugzilla.kernel.org/show_bug.cgi?id=217995 for details.
-
-Ciao, Thorsten
-
-> Anyway, I'm adding this regression to be tracked by regzbot:
-> [...]
-
-#regzbot introduced: 45e34c8af58f
-#regzbot link: https://bugzilla.redhat.com/show_bug.cgi?id=2241279
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
