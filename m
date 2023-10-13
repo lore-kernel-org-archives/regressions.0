@@ -1,106 +1,125 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA412C840
-	for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 23:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EF87F1
+	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 00:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjThi49c"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1142112a12.2
-        for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 16:57:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9I82yb+"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3af65455e7cso951314b6e.1
+        for <regressions@lists.linux.dev>; Thu, 12 Oct 2023 17:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697155060; x=1697759860; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IMk7ef3z6b35hTlTRh2H+b/l6njrMDplSZDZc4/1mAU=;
-        b=gjThi49c27pmQS6aWKrwKyrH9caT17JfBy1esLgG3+3SltSD6GBGXy2X4JhFZIDMtI
-         rpMk4yxp4l0w0vbIAb8bRMritEsH0e3AqNxq1K0ECL0EGAsjxiju0ZtWAY7z8gjYlf1D
-         lL4ZXubnDPO9wnMhIxJK6Fu2qGr84kgEASyecDsh2leyZRioh7qq6Ix416u5ba6ijQZL
-         xMAP/L/+REFroG2K8Cipy03QjjxkfLJV4ivQynCG7w2H0g9RAGuJPIPOX7jGAsJPpdJb
-         28pCr7D+sgdUqyZPY1G5fNXBSa/v40vqApw1TxN90+/z9jHfRsq9vliEKv0ctfvsijBu
-         KS/g==
+        d=gmail.com; s=20230601; t=1697155454; x=1697760254; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oh67ucGuzIvE780j/LrVx5Elx34xcaAEoCizzJ+iHF8=;
+        b=Z9I82yb+L24qw+ma3RfWZlKDLA+8ZnFM/GmsbHqknhMYOmN6kp3RssF117HuHRjzbK
+         pSXKW4CpTx1gfCTCf9rRQ72F3qE6HFCGFXSjR38qy+k0rZyFfGA1n/bFi+4XUisjAYLA
+         d4/QecqKb0bxHDAfJ8EUkVejbeE7c8/YQsuRAybOg6m1Pb37MA4KHH+v5VkPqv4lGW9W
+         SXCIAp8AxZLrRfi8Ad2rkvbTaJ2cG5T9otnf55ob7af4VNyPzfvZhOBOxJAHRn/l7Qtm
+         GWDvuV9jmeEU35IS2DKg2oUhFzb9K6IagTYVNBm1Ijkj1XQO+I0zKf5nYuvEbaEa4MAz
+         kADQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697155060; x=1697759860;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IMk7ef3z6b35hTlTRh2H+b/l6njrMDplSZDZc4/1mAU=;
-        b=gFKZCbsSiVnd07gia5EHyUjAW0NCpj/b7V24sYRV3sqHSkVFtXMdudt0vTze5L2tAl
-         FYjlwiW4PAyLtCoINqo3zxFbyZo+UlNl8IOihLNoboPBuMRPRlXkcA4NIe8voETyRkYH
-         UShTDTAZDl6cAc47bA+uuEBK1DixOb/WmujrygF38CflnvwwkUzbDJEBN+V7uraTR86r
-         KIaS1GKqiB4HdDU44ee+Z72jIDaxQPxAM13g8GrFcDdsWTNTh6On7+lti6d/0ZqChErk
-         tOixdhgHJYlqy07CXR5gs3KXCurBTn1PUNdVvM/1nwYoh0BLn29khQcAIlMZ44ssh5Od
-         RSQQ==
-X-Gm-Message-State: AOJu0Yx95NoT/8ZmJj6QixiA5kg328cGI9UK12WHWGpHb1O7PNaXS+tg
-	/tFLEWAR745YHUUXdH4P0rQ=
-X-Google-Smtp-Source: AGHT+IGXYpN9ClsEETOLPh4A+17Ca/iEmHa91MMqRHzbAa627nCzyd9VHmCdfnui/FFLZ8NActc9kg==
-X-Received: by 2002:a05:6a21:1f16:b0:152:1ce8:ce3a with SMTP id ry22-20020a056a211f1600b001521ce8ce3amr20185803pzb.18.1697155059665;
-        Thu, 12 Oct 2023 16:57:39 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id q2-20020a170902edc200b001b7f40a8959sm2553077plk.76.2023.10.12.16.57.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 16:57:38 -0700 (PDT)
-Message-ID: <d1354343-8fe0-4338-8d71-b8a90c960017@gmail.com>
-Date: Fri, 13 Oct 2023 06:57:33 +0700
+        d=1e100.net; s=20230601; t=1697155454; x=1697760254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oh67ucGuzIvE780j/LrVx5Elx34xcaAEoCizzJ+iHF8=;
+        b=KbUAqrbjQ0Zec/72uVeYKE6fVGFwpbHkEL7dBu87Snp5mK19OcY++wvrNHx4tV2LGE
+         cb4yLSR2wlo0NG5E9zivHPkbsARWCbTDwt+HLj75sS9OHPV5DSxkZKk2tEOQa7HAIDkT
+         LfDUI+BXxOs4iLYM4oPyiC4c1GrZetQgkkXKuit/K6B4yItMAu7yzyLeXV7xxxc+jlYQ
+         Mz+jZrUKMbPhb6cpn4s/LGXuhTd8taleXNXWJzCR78yqqiU3eQrGakjGEvobotjRw9FS
+         XqGjK34b5Gex+AVNzeXLtE0gLlbs9jHeXh+3kUorvmhPl5D+twRmsVXWrnxTkUy012+k
+         GVrw==
+X-Gm-Message-State: AOJu0Ywc0fOH/j5ZJgaYaywfsBNr3wB309j5fhDUK9mqsfrpYifI+KAF
+	shvzP81QxBhVcoYuc1JUQ2Y=
+X-Google-Smtp-Source: AGHT+IEoD+6r6arnZjsqloxzLh2yK4Ao1EbLkqH70J3zGd6qS6Bha/trbmFxeZQVi0Pk+lVNP9d65w==
+X-Received: by 2002:aca:1c18:0:b0:3ae:5c89:dcc2 with SMTP id c24-20020aca1c18000000b003ae5c89dcc2mr27713272oic.34.1697155454577;
+        Thu, 12 Oct 2023 17:04:14 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id d9-20020a634f09000000b005aa800c149bsm196524pgb.39.2023.10.12.17.04.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Oct 2023 17:04:13 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 9E3208061F09; Fri, 13 Oct 2023 07:04:07 +0700 (WIB)
+Date: Fri, 13 Oct 2023 07:04:07 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Loic Poulain <loic.poulain@linaro.org>,
+	M Chetan Kumar <m.chetan.kumar@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux Intel Wireless WAN <linuxwwan@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: Intel 7560 LTE Modem stops working after resuming from standby
+Message-ID: <ZSiJdxjokD0P9wRc@debian.me>
+References: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
+ <CAMZdPi9RDSAsA8bCwN1f-4v3Ahqh8+eFLTArdyE5qZeocAMhtQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Intel 7560 LTE Modem stops working after resuming from
- standby
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Intel Wireless WAN <linuxwwan@intel.com>
-Cc: M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Loic Poulain <loic.poulain@linaro.org>,
- Sergey Ryazanov <ryazanov.s.a@gmail.com>,
- Johannes Berg <johannes@sipsolutions.net>
-References: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
-Content-Language: en-US
-In-Reply-To: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PP7bwyu6fGW3EUdk"
+Content-Disposition: inline
+In-Reply-To: <CAMZdPi9RDSAsA8bCwN1f-4v3Ahqh8+eFLTArdyE5qZeocAMhtQ@mail.gmail.com>
 
-On 12/10/2023 16:52, Bagas Sanjaya wrote:
-> Hi,
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> I noticed a few days ago, after Fedora moved to Kernel 6.5, that my Intel LTE Modem was not working anymore after resuming from standby. 
->>
->> The journal listed this error message multiple times:
->> kernel: iosm 0000:01:00.0: msg timeout
->>
->> It took me a while to determine the root cause of the problem, since the modem did not work either in the following warm reboots. 
->> Only a shutdown revived the modem.
->>
->> I did a bisection of the error and I was able to find the culprit:
->>
->> [e4f5073d53be6cec0c654fac98372047efb66947] net: wwan: iosm: enable runtime pm support for 7560
-> 
-> See Bugzilla for the full thread.
-> 
-> Anyway, I'm adding this regression to regzbot:
-> 
-> #regzbot introduced: e4f5073d53be6c https://bugzilla.kernel.org/show_bug.cgi?id=217996
-> #regzbot title: pm support for Intel 7560 makes the modem stops working after resume
-> 
 
-FYI, the reporter had uploaded full dmesg output on Bugzilla.
-Also, he noted shutdown abnormality:
+--PP7bwyu6fGW3EUdk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> also I should mention, that if this error occurs, I am unable to shutdown my system anymore. "poweroff" does not turn the laptop off, it simply triggers a reboot, where the modem is still not functional. Only pressing the powerbutton >4 secs "resets" the device.
+On Thu, Oct 12, 2023 at 06:54:11PM +0200, Loic Poulain wrote:
+> Hi Chetan,
+>=20
+> On Thu, 12 Oct 2023 at 11:52, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> > I notice a regression report on Bugzilla [1]. Quoting from it:
+> >
+> > > I noticed a few days ago, after Fedora moved to Kernel 6.5, that my I=
+ntel LTE Modem was not working anymore after resuming from standby.
+> > >
+> > > The journal listed this error message multiple times:
+> > > kernel: iosm 0000:01:00.0: msg timeout
+> > >
+> > > It took me a while to determine the root cause of the problem, since =
+the modem did not work either in the following warm reboots.
+> > > Only a shutdown revived the modem.
+> > >
+> > > I did a bisection of the error and I was able to find the culprit:
+> > >
+> > > [e4f5073d53be6cec0c654fac98372047efb66947] net: wwan: iosm: enable ru=
+ntime pm support for 7560
+>=20
+> Any quick fix for this issue? alternatively we will probably revert e4f50=
+73d53.
+
+Chetan can't be contacted as sending to his address bounces (error 550)
+(had he left Intel?). Last message on LKML is this culprit patch [1].
+Hence, revert for now.
 
 Thanks.
 
--- 
+[1]: https://lore.kernel.org/all/1b0829943267c30de27f271666cb7ce897f5b54a.1=
+686218573.git.m.chetan.kumar@linux.intel.com/
+
+--=20
 An old man doll... just what I always wanted! - Clara
 
+--PP7bwyu6fGW3EUdk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZSiJcQAKCRD2uYlJVVFO
+o3T4AQC2eZBwGIxvu1lYm3OWhuSJWAkmt205gwAEftFVbJMb4wD/eOyi70nh9Io+
+kMI6SLXZyG8rleaKEg9MYV9rZ3LfCwk=
+=dFVx
+-----END PGP SIGNATURE-----
+
+--PP7bwyu6fGW3EUdk--
