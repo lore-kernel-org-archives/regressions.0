@@ -1,74 +1,62 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6895F11CBF
-	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 12:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9549D613A
+	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 13:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qrHdz-0005GC-6y; Fri, 13 Oct 2023 14:51:55 +0200
-Message-ID: <f831fbbb-c750-4fba-9b37-d6e6ded9b451@leemhuis.info>
-Date: Fri, 13 Oct 2023 14:51:53 +0200
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id 2A6EF7DD41A;
+	Fri, 13 Oct 2023 15:07:26 +0200 (CEST)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: linux-btrfs@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: Tim Cuthbertson <ratcheer@gmail.com>
+Subject: Re: Scrub of my nvme SSD has slowed by about 2/3
+Date: Fri, 13 Oct 2023 15:07:25 +0200
+Message-ID: <2727176.mvXUDI8C0e@lichtvoll.de>
+In-Reply-To: <4f5fee23-2ccb-41a2-a64c-1675bc378ff5@gmx.com>
+References:
+ <CAAKzf7=yS9vnf5zNid1CyvN19wyAgPz5o9sJP0vBqN6LReqXVg@mail.gmail.com>
+ <2169630.irdbgypaU6@lichtvoll.de>
+ <4f5fee23-2ccb-41a2-a64c-1675bc378ff5@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] blktests srp/002 hang
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <dsg6rd66tyiei32zaxs6ddv5ebefr5vtxjwz6d2ewqrcwisogl@ge7jzan7dg5u>
- <e8b76fae-780a-470e-8ec4-c6b650793d10@leemhuis.info>
-In-Reply-To: <e8b76fae-780a-470e-8ec4-c6b650793d10@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697201517;8275ca92;
-X-HE-SMSGID: 1qrHdz-0005GC-6y
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Hello Qu, hello,
 
-On 22.09.23 13:06, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 21.08.23 08:46, Shinichiro Kawasaki wrote:
->> I observed a process hang at the blktests test case srp/002 occasionally, using
->> kernel v6.5-rcX. Kernel reported stall of many kworkers [1]. PID 2757 hanged at
->> inode_sleep_on_writeback(). Other kworkers hanged at __inode_wait_for_writeback.
->>
->> The hang is recreated in stable manner by repeating the test case srp/002 (from
->> 15 times to 30 times).
->>
->> I bisected and found the commit 9b4b7c1f9f54 ("RDMA/rxe: Add workqueue support
->> for rxe tasks") looks like the trigger commit. When I revert it from the kernel
->> v6.5-rc7, the hang symptom disappears. I'm not sure how the commit relates to
->> the hang. Comments will be welcomed.
->> […]
+Qu Wenruo - 09.09.23, 00:03:38 CEST:
+> > Scrubbing "/home" with 304.61GiB (interestingly both back then with
+> > 6.4
+> > and now with 6.5.2):
+> > 
+> > - 6.4: 966.84MiB/s
+> > - 6.5.2:  748.02MiB/s
+> > 
+> > I expected an improvement.
+> > 
+> > Same Lenovo ThinkPad T14 AMD Gen 1 with AMD Ryzen 7 PRO 4750U, 32 GiB
+> > RAM and 2TB Samsung 980 Pro NVME SSD as before.
 > 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 9b4b7c1f9f54
-> #regzbot title RDMA/rxe: occasionally pocess hang at the blktests test
-> case srp/002
-> #regzbot ignore-activity
+> The fixes didn't arrive until v6.6.
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230922163231.2237811-1-yanjun.zhu@intel.com/
-#regzbot ignore-activity
+Thank you for making scrub fast again: /home with 1.88GiB/s ;) on 6.5.6.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Best,
+-- 
+Martin
+
+
