@@ -1,122 +1,129 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEEC21A0A
-	for <regressions@lists.linux.dev>; Fri, 13 Oct 2023 19:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65CE15EB8
+	for <regressions@lists.linux.dev>; Sat, 14 Oct 2023 00:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ligLbR3I";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tbH9+L9P"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1697226009;
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="osPC+RLV"
+Date: Fri, 13 Oct 2023 20:52:11 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1697241140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fCGKxzLZWj4S4hrSXmX4P870KGjXpVAyocmh4+CYbI4=;
-	b=ligLbR3II+rQuW3nERxkfAV4vIwezv3LZTd5q3RS+zzYk4aYdY3Dwo/+oSyF9DAdAQvxVA
-	upgaXl6SoCuc7+OJrYvbjX5NtX3RjrO2t3iCb5XjDSgsfVaM5v+xOPApvbWMTskksmRdzl
-	W4QVOcDC+EctWHdinlOGIVOY1aUlDYj+USyNxJJWEtZPdvcTD2CM/JPKg/SJGItsYl/UfL
-	A+HvOPBXPNYAAiw2wfNF6s6UCEKPSu3RSnmYzbq74Kqbscv1AmzQCVMVKjDFRkZFLSLN5j
-	+QdU8SPaIYeUX4aqXuzZlgel8zXBBDsLcpzLffGN+FU2XAtbYWpNhAKVb9tLvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1697226009;
+	bh=5bsDw6yHHct7yDhePGgvyRyMqwFfVNp3FGbg+Dajzw0=;
+	b=osPC+RLVzn4ub/0Wy0HXidTzTCaiamTKskPsHwgDS1dqDLy4cVJDxxmlgEQVpRvCX/+MWF
+	G/B4gMOg/Otx7VTt6wH1f+oM793bHoZ7vxOTv3I/pxyrrxN8SJNRv/PPyzL1wSh1i2WrB2
+	+Yhb5+OroSxPUIykL2Nr1i3U1H1NBRwSgJWQsj0CnP9cHjqtDuIh+9sg/Y/TLZU/3WAnW3
+	dIjw+XEGF7ADXonAhUIBmF4GNXesHZVBzC5hiFzyulKdRiIuvA4sN3p2nSML+BEFfuajgS
+	Gyn7jG8I/PRL+XU69q6hZjKsSa+7XoBW0cVnqGYGGg9bVw0i75f6Tbz/mij0eQ==
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1697241140; a=rsa-sha256;
+	cv=none;
+	b=Ewo+65jKz8/FLnZh8lOE5/KEHvEZndFBHCFzEwnUHv+QWH7xtnVEF2sGT/7GF4CYKC7ulZ
+	Nn5VcSKLawgTH/CRGrMe7P52dYv0mEGSRHAYOdIEm198azmq9CZgyt7Um+AB+wYazbf4in
+	GG7lHdG0bA26DgwbZDy3D+qv8EGgE56wVig7p236flGgDd+g7xke09hN4jTSKX1awOivdV
+	2AXmtJOGxLHsQvW84mV9MFclfiExdOjeOcL4hr2zc8w6tDpKcsjByIOfxbtojzW1GQVNVu
+	Q8bYOyhtHfJ8H1OkGtxz2ucf5RTRrYkrboCEjF8nA1Uo3r0KqwqW0vykjjxNgg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=pc@manguebit.com smtp.mailfrom=pc@manguebit.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1697241140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fCGKxzLZWj4S4hrSXmX4P870KGjXpVAyocmh4+CYbI4=;
-	b=tbH9+L9P8/gKKy+nwLESO74sTCLWDX7T59YT/ZAVNZsKpam+mFI8bFJLrFKB+oDmnYi7X2
-	+D99R10IjkfTx0Aw==
-To: Linus Torvalds <torvalds@linux-foundation.org>, Linux regressions
- mailing list <regressions@lists.linux.dev>
-Cc: Yanjun Yang <yangyj.ee@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Ashok Raj <ashok.raj@intel.com>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [regression] some Dell systems hang at shutdown due to
- "x86/smp: Put CPUs into INIT on shutdown if possible" (was Fwd: Kernel 6.5
- hangs on shutdown)
-In-Reply-To: <CAHk-=wj99i00K5ZD_OJj3d8rLG07bnTH=0_GxpzxrSzNF-WYQQ@mail.gmail.com>
-References: <e6d1dae8-e28a-455a-a851-661c825fbdcf@gmail.com>
- <9787bd09-91b3-4a79-9ca9-e7199c925f36@leemhuis.info>
- <CAHk-=wj99i00K5ZD_OJj3d8rLG07bnTH=0_GxpzxrSzNF-WYQQ@mail.gmail.com>
-Date: Fri, 13 Oct 2023 21:40:08 +0200
-Message-ID: <87pm1i71lz.ffs@tglx>
+	bh=5bsDw6yHHct7yDhePGgvyRyMqwFfVNp3FGbg+Dajzw0=;
+	b=s55wGhOQnNGZLioGpGqp8uX9GsKVa/ZMbXV36rUJkUkDch/3dFoMkUyLZega8ivqCy+2y/
+	mf/5ZF3orU99tW73oRdtfwMr1Lug3uGc3zAoutA+kL8rI84BxPaVt+jhV7cY6icn+4rd6P
+	Jz7M2U8qmfGjfRe51zLCAgt2JkCvoDBReu3Q5nssYJtmQbeT+Msa071GXRMiNzj+yszCLV
+	AbFgeTnMvoNmyfP22zvu05uSfRuxa6ObUvHEEiV2bzSq/IFaudqicrwcnBoh/oUHXYoSyh
+	fi058u0dQ90IP2iyJDsdDunW4m7Lzm+y9+bBAhE5aUsnE+yR5KukoTJbuPZP6g==
+From: Paulo Alcantara <pc@manguebit.com>
+To: matoro <matoro_mailinglist_kernel@matoro.tk>,
+ "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>
+CC: tom@talpey.com, smfrench@gmail.com, paul@darkrain42.org,
+ linux-cifs@vger.kernel.org, bagasdotme@gmail.com,
+ regressions@lists.linux.dev, ronniesahlberg@gmail.com,
+ nspmangalore@gmail.com, brian.pardy@gmail.com, bharathsm@microsoft.com,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_Possible_bug_report=3A_kern?= =?US-ASCII?Q?el_6=2E5=2E0/6=2E5=2E1_high_load_when?= =?US-ASCII?Q?_CIFS_share_is_mounted_=28cifsd?= =?US-ASCII?Q?-cfid-laundromat_in=22D=22_state=29?=
+In-Reply-To: <83d00d50bc628a85db71adb440d8afb5@matoro.tk>
+References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com> <ZPfPfyIoVxw5L6El@debian.me> <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com> <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com> <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com> <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com> <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com> <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com> <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com> <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com> <ZRN9MtBqYnT6oX60@vaarsuvius> <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de> <83d00d50bc628a85db71adb440d8afb5@matoro.tk>
+Message-ID: <E1F307C7-9B1E-40F6-860B-6050856E8395@manguebit.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 13 2023 at 10:48, Linus Torvalds wrote:
-> On Fri, 13 Oct 2023 at 05:05, Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> Thomas, turns out that bisection result was slightly wrong: a recheck
->> confirmed that the regression is actually caused by 45e34c8af58f23
->> ("x86/smp: Put CPUs into INIT on shutdown if possible") [v6.5-rc1] of
->> yours. See https://bugzilla.kernel.org/show_bug.cgi?id=217995 for details.
+Could you please try two commits[1][2] from for-next?
+
+[1] https://git=2Esamba=2Eorg/?p=3Dsfrench/cifs-2=2E6=2Egit;a=3Dcommit;h=
+=3De95f3f74465072c2545d8e65a3c3a96e37129cf8
+[2] https://git=2Esamba=2Eorg/?p=3Dsfrench/cifs-2=2E6=2Egit;a=3Dcommit;h=
+=3D81ba10959970d15c388bf29866b01b62f387e6a3
+
+On 13 October 2023 20:19:37 GMT-03:00, matoro <matoro_mailinglist_kernel@m=
+atoro=2Etk> wrote:
+>On 2023-10-05 05:55, Dr=2E Bernd Feige wrote:
+>> Am Dienstag, dem 26=2E09=2E2023 um 17:54 -0700 schrieb Paul Aurich:
+>>> Perhaps the laundromat thread should be using msleep_interruptible()?
+>>>=20
+>>> Using an interruptible sleep appears to prevent the thread from
+>>> contributing
+>>> to the load average, and has the happy side-effect of removing the
+>>> up-to-1s delay
+>>> when tearing down the tcon (since a7c01fa93ae, kthread_stop() will
+>>> return
+>>> early triggered by kthread_stop)=2E
+>>=20
+>> Sorry for chiming in so late - I'm also on gentoo (kernel 6=2E5=2E5-
+>> gentoo), but as a client of Windows AD=2E
+>>=20
+>> Just want to emphasize that using uninterruptible sleep has not just
+>> unhappy but devastating side-effects=2E
+>>=20
+>> I have 8 processors and 16 cifsd-cfid-laundromat processes, so
+>> /proc/loadavg reports a load average of 16 on a totally idle system=2E
+>>=20
+>> This means that load-balancing software will never start additional
+>> tasks on this system - "make -l" but also any other load-dependent
+>> system=2E Just reducing the number of cifsd-cfid-laundromat processes
+>> does not fix this - even a single one makes loadavg report a wrong
+>> result for load balancing=2E
+>>=20
+>> So, if cifsd-cfid-laundromat must really be uninterruptible, the only
+>> solution would be to change the way loadavg is computed by the kernel
+>> to exclude uninterruptible but sleeping processes=2E But must it be
+>> uninterruptible?
+>>=20
+>> Thanks and best regards,
+>> Bernd
 >
-> That commit does look pretty dangerous.
+>This is a huge problem here as well, as a client to Samba using SMB1 (for=
+ Unix extensions)=2E
 >
-> If *anything* is done through SMI after the code does that
-> smp_park_other_cpus_in_init() sequence, I wouldn't be surprised in the
-> least if the machine is hung.
+>For others encountering this problem, I was able to work around it with t=
+he following snippet:
 >
-> That's made worse since it looks like the shutdown sequence isn't
-> necessarily run on the boot CPU, so the boot CPU itself may be in
-> INIT, and any SMI quite possibly ends up treating that CPU specially.
-
-smp_park_other_cpus_in_init() bails out early when it's not invoked on
-the boot CPU because sending INIT to the BSP results in a full machine
-reset. So that's definitely not the problem.
-
-> Who knows what SMI does, but the fact that the affected machines seem
-> to be mainly from one particular manufacturer does tend to imply it's
-> something like that.
-
-It's mostly DELL machines. The rest seems to be Lenovo and Sony with
-Alderlake/Raptorlake CPUs - at least that's what I could figure out from
-the various bug reports. I don't know which CPUs the DELL machines have,
-so I can't say it's a pattern.
-
-Bagas, can you please provide the output of /proc/cpuinfo ?
-
-> And the code does do a fair amount *after* shutting down cpu's. Not
-> just things like calling x86_platform.iommu_shutdown(), but also
-> things like possibly the tboot shutdown sequence (which almost
-> *certainly* is some SMI thing).
-
-That should not matter, but who the heck knows.
-
-> I dunno. Thomas - I htink the argument for that commit was fairly
-> theoretical, and reverting it seems the obvious thing, unless you have
-> some idea of what might be wrong.
-
-I agree with the revert for now.
-
-The problem is not entirely theoretical in the kexec() case, but yes for
-shutdown/reboot it's irrelevant.
-
-The reason why I ended up with this is the initial problem of soft
-offlined CPUs sitting in MWAIT. The kexec() kernel can end up writing to
-the monitor cache line reliably after it overwrote the original kernel
-mappings, which results in completely undebugable chaos or triple
-faults.
-
-The MWAIT issue is mitigated by writing to the monitor cache lines and
-forcing the CPUs into HLT.
-
-Extensive testing revealed that HLT is not entirely safe either, so we
-ended up with the INIT trick, which turned out to be very reliable in
-testing. Though it's obviously making some BIOSes very unhappy. Sigh...
-
-Did I mention before that I hate computers with a passion?
-
-Thanks,
-
-        tglx
+>diff --git a/fs/smb/client/cached_dir=2Ec b/fs/smb/client/cached_dir=2Ec
+>index 2d5e9a9d5b8b=2E=2Efc2caccb597a 100644
+>--- a/fs/smb/client/cached_dir=2Ec
+>+++ b/fs/smb/client/cached_dir=2Ec
+>@@ -576,7 +576,7 @@ cifs_cfids_laundromat_thread(void *p)
+>        struct list_head entry;
+>
+>        while (!kthread_should_stop()) {
+>-               ssleep(1);
+>+               msleep_interruptible(1000);
+>                INIT_LIST_HEAD(&entry);
+>                if (kthread_should_stop())
+>                        return 0;
