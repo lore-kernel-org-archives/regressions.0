@@ -1,123 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3487185C;
-	Mon, 16 Oct 2023 07:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcjYNHTj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 14A24C433C7;
-	Mon, 16 Oct 2023 07:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697440414;
-	bh=xNlXAuE+bCPUAWJr1nwMfcT6VUi0d0nMbIyJW/0hZW8=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=PcjYNHTjD/zqBiMcLKzPl6308JDp1LgAibKKMuFEsec11g5fAofXcmS5E3JbMI0mi
-	 0zg+X8vMWKbomehNTxU7efFC8Ym3+Yvc531ud2TSlUs0uoG6+kBNKQ1RnEmnq+S0ix
-	 XA6AgGhwyjkT/+wdFOp5xkCgTjZ/Niyye89F7uhCvoCDfZmYZ2kl95zVB4qXUj5Pxk
-	 i6TaPDnRL2zkQcHFfkgm1DtdaSzBOx21E+OQAg9lBU++5ZikE2PmyXlBx3R39a82yj
-	 uQGi7K9hx/tHN5cJfYeDAA6CjeMxzlyx68cGXHLHUdehH/gtGU4bG0l2JqoDb40071
-	 85I0VkblLnygg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA340CDB465;
-	Mon, 16 Oct 2023 07:13:33 +0000 (UTC)
-From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Date: Mon, 16 Oct 2023 09:13:08 +0200
-Subject: [PATCH] Bluetooth: hci_bcm4377: Mark bcm4378/bcm4387 as
- BROKEN_LE_CODED
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EE81802D
+	for <regressions@lists.linux.dev>; Mon, 16 Oct 2023 08:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qsIdV-0000s6-09; Mon, 16 Oct 2023 10:07:37 +0200
+Message-ID: <0ee79296-a404-4d0d-b8ed-42578a77692c@leemhuis.info>
+Date: Mon, 16 Oct 2023 10:07:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] Bluetooth: btrtl: Ignore error return for
+ hci_devcd_register()
+To: patchwork-bot+bluetooth@kernel.org, Max Chou <max.chou@realtek.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alex_lu@realsil.com.cn, hildawu@realtek.com, regressions@lists.linux.dev,
+ kirill@shutemov.name, bagasdotme@gmail.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20231006024707.413349-1-max.chou@realtek.com>
+ <169664042379.23949.8315443049400174883.git-patchwork-notify@kernel.org>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <169664042379.23949.8315443049400174883.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id:
- <20231016-bt-bcm4377-quirk-broken-le-coded-v1-1-52ea69d3c979@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAIPiLGUC/x3NywrCMBBG4Vcps3YgaWovvoq4aJJfHaqJTlSE0
- nc3uPw256xUoIJCh2YlxUeK5FRhdw2F65wuYInV1JrWWWN79i/24d65YeDnW3Rhr3lB4hs45Ij
- I+2nqxxEudLOhmnkozvL9L46nbfsB4PTdgHIAAAA=
-To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, 
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev, stable@vger.kernel.org
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2372; i=j@jannau.net;
- h=from:subject:message-id; bh=tGCXqB0xwKnmC4wp0Z2D26g3zMlTAh/Veq7m/j3H66A=;
- b=owGbwMvMwCG2UNrmdq9+ahrjabUkhlSdR3N8Ll/eFrPoypqAqzppXl93h7Rt0NBQeXLi9fkna
- 0KuBzFEdJSyMIhxMMiKKbIkab/sYFhdoxhT+yAMZg4rE8gQBi5OAZiIsDUjQ98EJ1aXF7zHfXwE
- Hc/YvDj59n/7livy05TF44sudn3dVMzIsITZmXeuLEvwp6v/0hZNCFrCdki8cunOZ5O0uEWPph6
- /yAsA
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Endpoint-Received: by B4 Relay for j@jannau.net/default with auth_id=62
-X-Original-From: Janne Grunau <j@jannau.net>
-Reply-To: <j@jannau.net>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697443665;8395933a;
+X-HE-SMSGID: 1qsIdV-0000s6-09
 
-From: Janne Grunau <j@jannau.net>
+On 07.10.23 03:00, patchwork-bot+bluetooth@kernel.org wrote:
+> 
+> This patch was applied to bluetooth/bluetooth-next.git (master)
+> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-bcm4378 and bcm4387 claim to support LE Coded PHY but fail to pair
-(reliably) with BLE devices if it is enabled.
-On bcm4378 pairing usually succeeds after 2-3 tries. On bcm4387
-pairing appears to be completely broken.
+Hi Luiz. Many thx for picking this up. From the branch name is sounds
+like you plan to submit this change in the next merge window (If I
+misread the signs feel free to ignore this mail!). Wouldn't it be better
+to merge this in this cycle, as the commit afaics fixes a regression
+that was only introduced this cycle?
 
-Cc: stable@vger.kernel.org # 6.4.y+
-Link: https://discussion.fedoraproject.org/t/mx-master-3-bluetooth-mouse-doesnt-connect/87072/33
-Link: https://github.com/AsahiLinux/linux/issues/177
-Fixes: 288c90224eec ("Bluetooth: Enable all supported LE PHY by default")
-Signed-off-by: Janne Grunau <j@jannau.net>
----
- drivers/bluetooth/hci_bcm4377.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/bluetooth/hci_bcm4377.c b/drivers/bluetooth/hci_bcm4377.c
-index 19ad0e788646..a61757835695 100644
---- a/drivers/bluetooth/hci_bcm4377.c
-+++ b/drivers/bluetooth/hci_bcm4377.c
-@@ -512,6 +512,7 @@ struct bcm4377_hw {
- 	unsigned long disable_aspm : 1;
- 	unsigned long broken_ext_scan : 1;
- 	unsigned long broken_mws_transport_config : 1;
-+	unsigned long broken_le_coded : 1;
- 
- 	int (*send_calibration)(struct bcm4377_data *bcm4377);
- 	int (*send_ptb)(struct bcm4377_data *bcm4377,
-@@ -2372,6 +2373,8 @@ static int bcm4377_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		set_bit(HCI_QUIRK_BROKEN_MWS_TRANSPORT_CONFIG, &hdev->quirks);
- 	if (bcm4377->hw->broken_ext_scan)
- 		set_bit(HCI_QUIRK_BROKEN_EXT_SCAN, &hdev->quirks);
-+	if (bcm4377->hw->broken_le_coded)
-+		set_bit(HCI_QUIRK_BROKEN_LE_CODED, &hdev->quirks);
- 
- 	pci_set_drvdata(pdev, bcm4377);
- 	hci_set_drvdata(hdev, bcm4377);
-@@ -2461,6 +2464,7 @@ static const struct bcm4377_hw bcm4377_hw_variants[] = {
- 		.bar0_core2_window2 = 0x18107000,
- 		.has_bar0_core2_window2 = true,
- 		.broken_mws_transport_config = true,
-+		.broken_le_coded = true,
- 		.send_calibration = bcm4378_send_calibration,
- 		.send_ptb = bcm4378_send_ptb,
- 	},
-@@ -2474,6 +2478,7 @@ static const struct bcm4377_hw bcm4377_hw_variants[] = {
- 		.has_bar0_core2_window2 = true,
- 		.clear_pciecfg_subsystem_ctrl_bit19 = true,
- 		.broken_mws_transport_config = true,
-+		.broken_le_coded = true,
- 		.send_calibration = bcm4387_send_calibration,
- 		.send_ptb = bcm4378_send_ptb,
- 	},
-
----
-base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
-change-id: 20231016-bt-bcm4377-quirk-broken-le-coded-599688e3c4a0
-
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
-
+Ciao, Thorsten
