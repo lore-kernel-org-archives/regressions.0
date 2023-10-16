@@ -1,149 +1,123 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C68185E
-	for <regressions@lists.linux.dev>; Sun, 15 Oct 2023 12:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qrzzF-0006hc-Fr; Sun, 15 Oct 2023 14:12:49 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-10-15]
-Date: Sun, 15 Oct 2023 12:12:48 +0000
-Message-Id: <169737193299.624972.12831031401706621880@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346BC163
+	for <regressions@lists.linux.dev>; Mon, 16 Oct 2023 00:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+dcuAjT"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6b497c8575aso2211398b3a.1
+        for <regressions@lists.linux.dev>; Sun, 15 Oct 2023 17:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697415612; x=1698020412; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J7+oJHozaJp3ARwDpXhkbVM/mB5nFnC7YhE1nMQs+T4=;
+        b=S+dcuAjTO+kLoXLMZVQRGs6i7Bmzwg+hYChZNd8EK9Xo9GhUp7+5GKUEX9VCjFXVVQ
+         cnRXYDPk7KEqv9veV3Ojj53fERSuhe8FQ9psYYnuln3j0k3Jq6L3o8kyvwOqZ18DYqp2
+         XZGAggSLu8FdR4s4rP+pYjhKcMwkEZjLqLf6Lqi90FsCsClxZHf9EjQgICgm/+MJJV42
+         CKiQZ+f1n35di0sUgb8orkbdXKH3X9g7sE9zQAW51Gdhz6+Gt8itizsNmur35abDBhFL
+         wNw6piSr1sC/797Nxwh4RaDEMG0v4s/brRAJmtWh8A2keeCa4JFGGDoGmARO+DLwQV8x
+         6Sww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697415612; x=1698020412;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J7+oJHozaJp3ARwDpXhkbVM/mB5nFnC7YhE1nMQs+T4=;
+        b=BktPORcmxUzAwOu7oJTohfvheSJ+IMlg0ufpnD0Cuibm0+xKLJ+cnJg8dseH2YVjT5
+         kPcB84kWkPxYFc/XpO8XHwrPqDx3pcKjxI8mpn5HX6yykjrXkoykSEJDSNd5OJGrniHL
+         AYY1175KPULGURskdcD2QB6v1J3yS4D4jjB5xOqPb/WfJ3vpNGEjV9duDhnFbCjtpQHI
+         bC0DvMfY82CwtAMgCp04cBxhvreTFPbzn2L79HvNGPj2fTkR2klsnjJp7Pmh0PoZ8fem
+         bRU6IIfToaywizjxhLVy0ST7YTZap+0Rqs2GhlKZLMRVyeci6tP8KeBYywC1dTNA7CN+
+         XWCA==
+X-Gm-Message-State: AOJu0Ywm/ksO7WcZxz+95ACVVTaPGxst9CWJAcnS/UcwjLklPhzn2IsV
+	oi/sqBqh1SwXIXZMvj0LEQ4=
+X-Google-Smtp-Source: AGHT+IH2laczeXL+VN9BrWY3NVZ8iTr+4c1jER2bvqsu4716PkKX0BkrL3EJtryJWJwyVs5iZp4OAg==
+X-Received: by 2002:a05:6a20:7f95:b0:140:3aa:e2ce with SMTP id d21-20020a056a207f9500b0014003aae2cemr43344864pzj.42.1697415612184;
+        Sun, 15 Oct 2023 17:20:12 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902ec8600b001c44c8d857esm7208939plg.120.2023.10.15.17.20.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Oct 2023 17:20:11 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id 3520A801B59F; Mon, 16 Oct 2023 07:20:07 +0700 (WIB)
+Date: Mon, 16 Oct 2023 07:20:06 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Vladimir Smelhaus <vl.sm@email.cz>,
+	Linux Netfilter <netfilter@vger.kernel.org>, coreteam@netfilter.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Subject: Re: Flowtables ignore timeout settings in recent kernels
+Message-ID: <ZSyBtn8cplLWoNn-@debian.me>
+References: <ughg4v$130b$1@ciao.gmane.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697371977;c82a7199;
-X-HE-SMSGID: 1qrzzF-0006hc-Fr
-
-Hi Linus. My list of unresolved regressions introduced during this cycle
-got a lot shorter, as quite a few fixes for tracked issues found their
-way into mainline over the past few days.
-
-But there is one regression where things looked stalled despite the
-following fix existing for a while:
-
-https://lore.kernel.org/netdev/20230927055246.121544-1-xuanzhuo@linux.alibaba.com/
-
-That fix was posted two and a half weeks ago (one day after the
-regression linked in the patch description was reported) and got one ACK
-one week ago; but apart for that nothing has happened afaics. Not sure
-what's up there.
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 4 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="N2rAuLPZGqdFV0iZ"
+Content-Disposition: inline
+In-Reply-To: <ughg4v$130b$1@ciao.gmane.io>
 
 
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
+--N2rAuLPZGqdFV0iZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Oct 15, 2023 at 09:56:14PM +0200, Vladimir Smelhaus wrote:
+> Netfilter ignores the timeout settings for a flowtable
+>=20
+> # sysctl -a -r flowtable
+> net.netfilter.nf_flowtable_tcp_timeout =3D 30
+> net.netfilter.nf_flowtable_udp_timeout =3D 30
+>=20
+> Situation. A long udp connection (tunnel) with some data flowing through a
+> router. The connection is sent to a flowtable on the router. It's a few
+> packets per second, more here and there, a pause here and there, and so on
+> over and over. The pauses are minimal and are also limited by the tunnel
+> settings to be no longer than 25 seconds. Everything is satisfying to make
+> the connection last continuously in the flowtable and not reappear in
+> forward. However, the connection keeps dropping out of the flowtable. It
+> stays in the flowtable (offloaded) for a second at most and then it is
+> kicked out, back to forward.
+>=20
+> In an attached test script you can see counters that should be zero but a=
+re not. If I watch the normal packet flow on a particular router, I can see=
+ packets in the conntrack table that should be OFFLOAD as ASSURED.
+>=20
+> Tested in kernel 6.5.6. In an old(er) kernel 5.10 it works as expected.
+>=20
 
-[ *NEW* ] Re:block: Fix regression in sed-opal for a saved key.
----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/53755a0fbd6318d4783078259f2d2f8ab5f2f0b7.camel@linux.vnet.ibm.com/
-https://lore.kernel.org/lkml/53755a0fbd6318d4783078259f2d2f8ab5f2f0b7.camel@linux.vnet.ibm.com/
+Then please perform bisection to find a culprit that introduces your
+regression (see Documentation/admin-guide/bug-bisect.rst in the kernel
+sources for reference). Also, it'd been great if you also post the
+reproducer script inline (within your email) instead, as some MUAs
+(like mutt that I'm using now) may ignore the attachment.
 
-By Greg Joyce; 9 days ago; 3 activities, latest 1 days ago.
-Introduced in 3bfeb6125664 (v6.6-rc1)
+Anyway, thanks for the regression report. I'm adding it to regzbot:
 
-Fix incoming:
-* block: Fix regression in sed-opal for a saved key.
-  https://lore.kernel.org/lkml/2519b67c-58d3-4f87-9513-5321b1722b60@leemhuis.info/
+#regzbot ^introduced: v5.10..v6.5
 
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Regression: devcoredump patch broke Realtek usb bluetooth adapter
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
-https://lore.kernel.org/lkml/20231003182038.k57nirtt4sonvt7c@box.shutemov.name/
+--N2rAuLPZGqdFV0iZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-By Kirill A. Shutemov; 11 days ago; 12 activities, latest 1 days ago.
-Introduced in 044014ce85a1 (v6.6-rc1)
+-----BEGIN PGP SIGNATURE-----
 
-Fix incoming:
-* Bluetooth: btrtl: Ignore error return for hci_devcd_register()
-  https://lore.kernel.org/lkml/b96190f1-44f4-4562-9030-6916e97c8b82@leemhuis.info/
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZSyBsAAKCRD2uYlJVVFO
+oxD9AQDAp/pXr+d44wTxEyg9copCJnaEVKIixfFsamXwbWpI/QD/W2ZAb9J8yPcv
+V/en2pgBB1CgZDhm7JzlxcWUrsKROwM=
+=u4d8
+-----END PGP SIGNATURE-----
 
-
-powerpc: new page table range API causes PowerMac G5 to fail booting
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230929132750.3cd98452@yea/
-https://lore.kernel.org/linuxppc-dev/20230929132750.3cd98452@yea/
-
-By Erhard Furtner; 16 days ago; 12 activities, latest 2 days ago.
-Introduced in 9fee28baa601 (v6.6-rc1)
-
-Recent activities from: Erhard Furtner (2), Michael Ellerman (2)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable to handle kernel data access at 0xfeffbb62ffec65fe)
-  https://lore.kernel.org/linuxppc-dev/87mswwnec1.fsf@linux.ibm.com/
-  9 days ago, by Aneesh Kumar K.V
-
-
-virtio: network-related regression when using SWIOTLB in the guest
-------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230926130451.axgodaa6tvwqs3ut@amd.com/
-https://lore.kernel.org/lkml/20230926130451.axgodaa6tvwqs3ut@amd.com/
-
-By Michael Roth; 18 days ago; 5 activities, latest 7 days ago.
-Introduced in 295525e29a (v6.6-rc1)
-
-Fix incoming:
-* virtio_net: fix the missing of the dma cpu sync
-  https://lore.kernel.org/lkml/a7a2bf25-cfc1-47a8-baf4-487a8574fb5a@leemhuis.info/
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169678126224.160034.5275230285223450822@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+--N2rAuLPZGqdFV0iZ--
