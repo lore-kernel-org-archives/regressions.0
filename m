@@ -1,93 +1,136 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5C208CA
-	for <regressions@lists.linux.dev>; Mon, 16 Oct 2023 13:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0gIidsV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-53e16f076b3so8177107a12.0
-        for <regressions@lists.linux.dev>; Mon, 16 Oct 2023 06:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697462373; x=1698067173; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ofsX2ld2Y35hldDs43R40eV9lYWcpyBA4x3tj2sdNUM=;
-        b=W0gIidsVaCBmHk1BIAZhYILZ+Gmpx73KVSB7gTjyBOPuPRwL7UZ8NHGmMtcHhnUgkm
-         RuLvfclK9QmrzSdrYBXlCEQtyf14hHXihlEyWYuofrf0bPXfBCtds11tUBEWn80enkq3
-         rXgT7rIeoOTsyALGAWGK5oX4uAUpViT4XlS0YCKg/YmoUUg8CaBomKa2gfJn6873qwRw
-         JDA6jCRFHopkR2Ixf3fiBaAdaP4+H+i8UXzOwO6T5bR7evh9TFLVNPT7W/oJL/XpbN6x
-         tLACRFhrS+BLwiJTm1ys9Q3LB6OuOW77cUbjgTgEKrmzgM1nCf31Q15J3QgO3hgToeK3
-         4cWQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5992E633;
+	Mon, 16 Oct 2023 16:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-9b2cee55056so829320966b.3;
+        Mon, 16 Oct 2023 09:03:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697462373; x=1698067173;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ofsX2ld2Y35hldDs43R40eV9lYWcpyBA4x3tj2sdNUM=;
-        b=fJTWPm30bJEHEM0n81Qdj+Crxu/U+bZW9NoW5WRpacmrCCwSPz/HnQtwF/nVYBdYUV
-         mXocXiajgHOZmDN0Q5db4y5sxWBYYT6QeTpZ/23iZ5yVATqqGW0UjBc7InIttq3fbDKw
-         r3Fd1DMBsk0NXBqyV4x7RIjBKxRNqnCJgxLb46p0jBIxc+Zg4OEtnbspeJTWSxyb+eSY
-         5z6gC+oxNc6Rh0teM5LtEDJa9v4D7JeTPFkwH0ovXbUefOqUaibsEHv45B7ApMpp128I
-         e+xAJE9g5N9Hp21kRm5bzwaCNmgWcsjBAbUbRvd4kj/lxT3T4rSw1yGMsIX56JzCgUk7
-         1hCw==
-X-Gm-Message-State: AOJu0YyN9h17gTpCf13Vap6T4miMcGWNMURVEGjBZqthowyd1E/jvv6E
-	uBeaVkj4tJQ6ruNR2E7z9M69OXfjCaq21+dGN1SX7LFo8lEAv+oE9KA=
-X-Google-Smtp-Source: AGHT+IFuH/XgysB7Sxky39MfcG4hkkSZ6xm21/9jC7buhA0x7DsWtKnFalffqQ9KEVpl9pkg+JUIfKq8xTStyGVkKkM=
-X-Received: by 2002:a17:907:5ca:b0:9ae:6648:9b53 with SMTP id
- wg10-20020a17090705ca00b009ae66489b53mr6876194ejb.23.1697462373491; Mon, 16
- Oct 2023 06:19:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697472227; x=1698077027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1o1Sjx05gX0rIxT2he/9e9a3FERmo9S5QHOTVv8X/pQ=;
+        b=K27/vGXOgssm6v99CPeETrMVWqTmUUiG5JHK+VFwN10/cvWxPR6NZ927NDG599pZjY
+         6hfpruXzWJNHWzcI6EQfGQNiiM3Wcnm2psXT/cwcjQfKZSpitUU7YO2ch6898vbK8zI1
+         Fv1yiPX+ZHcr7tCrWg2N4SYvcN7/6/0zBcfLw5MpIGizSEv+hNRVgXlX2Hw+zmUhaUuk
+         Gkr2iEIQpdOc1O8X/uKgMS4EY4JBbOoK8d3JVG3RVklHL9+vDUlbHvGAyn30SELHkh4D
+         aI9NTgxBrUvnKSOyN1x3sz3VNU4Ksn2rnrssuy7nHhEKaPJHQxGMjq7nfPjjPHnAOx/y
+         M0Ug==
+X-Gm-Message-State: AOJu0YxRDvxlGqV7iA1qvqVf+CB8aNnnXtRjeRRGnLZpnld/Q9gIeNx5
+	DggrBr5ebeQDXOuCFtVIQbUHNMfyvk4eGxYU
+X-Google-Smtp-Source: AGHT+IHhfJiosJMVRqTWKaYVOFefu6RUT1be2SdnwaG3h2siT8RvrBKreI7BW6MlBDC3mGpvBOQCog==
+X-Received: by 2002:a17:907:7712:b0:9ae:46c7:90fe with SMTP id kw18-20020a170907771200b009ae46c790femr30172487ejc.72.1697472227385;
+        Mon, 16 Oct 2023 09:03:47 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id dv23-20020a170906b81700b0099cb1a2cab0sm4348029ejb.28.2023.10.16.09.03.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Oct 2023 09:03:47 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-9b95622c620so831299066b.0;
+        Mon, 16 Oct 2023 09:03:46 -0700 (PDT)
+X-Received: by 2002:a17:907:74b:b0:9bd:a669:d682 with SMTP id
+ xc11-20020a170907074b00b009bda669d682mr8603309ejb.20.1697472226085; Mon, 16
+ Oct 2023 09:03:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <267abf02-4b60-4a2e-92cd-709e3da6f7d3@gmail.com>
- <CAMZdPi9RDSAsA8bCwN1f-4v3Ahqh8+eFLTArdyE5qZeocAMhtQ@mail.gmail.com> <ZSiJdxjokD0P9wRc@debian.me>
-In-Reply-To: <ZSiJdxjokD0P9wRc@debian.me>
-From: Loic Poulain <loic.poulain@linaro.org>
-Date: Mon, 16 Oct 2023 15:18:56 +0200
-Message-ID: <CAMZdPi8qmc4aKPsm3J60Fb+wa0ixVCV+KK11TDsvqFJk81Gfrw@mail.gmail.com>
-Subject: Re: Intel 7560 LTE Modem stops working after resuming from standby
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: M Chetan Kumar <m.chetan.kumar@linux.intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, Linux Networking <netdev@vger.kernel.org>, 
-	Linux Intel Wireless WAN <linuxwwan@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>, Johannes Berg <johannes@sipsolutions.net>
+References: <20231016-bt-bcm4377-quirk-broken-le-coded-v1-1-52ea69d3c979@jannau.net>
+In-Reply-To: <20231016-bt-bcm4377-quirk-broken-le-coded-v1-1-52ea69d3c979@jannau.net>
+From: Neal Gompa <neal@gompa.dev>
+Date: Mon, 16 Oct 2023 12:03:09 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je8rBdgAnpxfW_jP6io1x0MxLu+x_AHbCGrTmjc8XKCLiQ@mail.gmail.com>
+Message-ID: <CAEg-Je8rBdgAnpxfW_jP6io1x0MxLu+x_AHbCGrTmjc8XKCLiQ@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: hci_bcm4377: Mark bcm4378/bcm4387 as BROKEN_LE_CODED
+To: j@jannau.net
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bagas,
-
-On Fri, 13 Oct 2023 at 02:04, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+On Mon, Oct 16, 2023 at 3:13=E2=80=AFAM Janne Grunau via B4 Relay
+<devnull+j.jannau.net@kernel.org> wrote:
 >
-> On Thu, Oct 12, 2023 at 06:54:11PM +0200, Loic Poulain wrote:
-> > Hi Chetan,
-> >
-> > On Thu, 12 Oct 2023 at 11:52, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> > > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > >
-> > > > I noticed a few days ago, after Fedora moved to Kernel 6.5, that my Intel LTE Modem was not working anymore after resuming from standby.
-> > > >
-> > > > The journal listed this error message multiple times:
-> > > > kernel: iosm 0000:01:00.0: msg timeout
-> > > >
-> > > > It took me a while to determine the root cause of the problem, since the modem did not work either in the following warm reboots.
-> > > > Only a shutdown revived the modem.
-> > > >
-> > > > I did a bisection of the error and I was able to find the culprit:
-> > > >
-> > > > [e4f5073d53be6cec0c654fac98372047efb66947] net: wwan: iosm: enable runtime pm support for 7560
-> >
-> > Any quick fix for this issue? alternatively we will probably revert e4f5073d53.
+> From: Janne Grunau <j@jannau.net>
 >
-> Chetan can't be contacted as sending to his address bounces (error 550)
-> (had he left Intel?). Last message on LKML is this culprit patch [1].
-> Hence, revert for now.
+> bcm4378 and bcm4387 claim to support LE Coded PHY but fail to pair
+> (reliably) with BLE devices if it is enabled.
+> On bcm4378 pairing usually succeeds after 2-3 tries. On bcm4387
+> pairing appears to be completely broken.
+>
+> Cc: stable@vger.kernel.org # 6.4.y+
+> Link: https://discussion.fedoraproject.org/t/mx-master-3-bluetooth-mouse-=
+doesnt-connect/87072/33
+> Link: https://github.com/AsahiLinux/linux/issues/177
+> Fixes: 288c90224eec ("Bluetooth: Enable all supported LE PHY by default")
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
+>  drivers/bluetooth/hci_bcm4377.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/bluetooth/hci_bcm4377.c b/drivers/bluetooth/hci_bcm4=
+377.c
+> index 19ad0e788646..a61757835695 100644
+> --- a/drivers/bluetooth/hci_bcm4377.c
+> +++ b/drivers/bluetooth/hci_bcm4377.c
+> @@ -512,6 +512,7 @@ struct bcm4377_hw {
+>         unsigned long disable_aspm : 1;
+>         unsigned long broken_ext_scan : 1;
+>         unsigned long broken_mws_transport_config : 1;
+> +       unsigned long broken_le_coded : 1;
+>
+>         int (*send_calibration)(struct bcm4377_data *bcm4377);
+>         int (*send_ptb)(struct bcm4377_data *bcm4377,
+> @@ -2372,6 +2373,8 @@ static int bcm4377_probe(struct pci_dev *pdev, cons=
+t struct pci_device_id *id)
+>                 set_bit(HCI_QUIRK_BROKEN_MWS_TRANSPORT_CONFIG, &hdev->qui=
+rks);
+>         if (bcm4377->hw->broken_ext_scan)
+>                 set_bit(HCI_QUIRK_BROKEN_EXT_SCAN, &hdev->quirks);
+> +       if (bcm4377->hw->broken_le_coded)
+> +               set_bit(HCI_QUIRK_BROKEN_LE_CODED, &hdev->quirks);
+>
+>         pci_set_drvdata(pdev, bcm4377);
+>         hci_set_drvdata(hdev, bcm4377);
+> @@ -2461,6 +2464,7 @@ static const struct bcm4377_hw bcm4377_hw_variants[=
+] =3D {
+>                 .bar0_core2_window2 =3D 0x18107000,
+>                 .has_bar0_core2_window2 =3D true,
+>                 .broken_mws_transport_config =3D true,
+> +               .broken_le_coded =3D true,
+>                 .send_calibration =3D bcm4378_send_calibration,
+>                 .send_ptb =3D bcm4378_send_ptb,
+>         },
+> @@ -2474,6 +2478,7 @@ static const struct bcm4377_hw bcm4377_hw_variants[=
+] =3D {
+>                 .has_bar0_core2_window2 =3D true,
+>                 .clear_pciecfg_subsystem_ctrl_bit19 =3D true,
+>                 .broken_mws_transport_config =3D true,
+> +               .broken_le_coded =3D true,
+>                 .send_calibration =3D bcm4387_send_calibration,
+>                 .send_ptb =3D bcm4378_send_ptb,
+>         },
+>
+> ---
+> base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+> change-id: 20231016-bt-bcm4377-quirk-broken-le-coded-599688e3c4a0
+>
 
-Could you please submit the revert fix?
+LGTM.
 
-Regards,
-Loic
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
