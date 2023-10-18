@@ -1,110 +1,88 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from w4.tutanota.de (w4.tutanota.de [81.3.6.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EBA17C4
-	for <regressions@lists.linux.dev>; Wed, 18 Oct 2023 00:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F84EC3
+	for <regressions@lists.linux.dev>; Wed, 18 Oct 2023 01:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bens.haus
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="gWpxmVvL"
-Received: from cwcc.thunk.org (pool-173-48-111-143.bstnma.fios.verizon.net [173.48.111.143])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 39I0hZXS011900
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Oct 2023 20:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1697589818; bh=P9/9YNXWwQxn0dILxlsrcPkLVXG8uSZ/9sAG6wchdLs=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=gWpxmVvLJ1ex0TOrGNOUOEHmqFE20WTcXwWrLrd0cmIAaWsZfGa6nauLkjSZubAnc
-	 oegqAzfReC3nIwHDmoaSzNgZHtmplOXJt59nM+dTydZUGpnvSAPuCz6gM0Qp5CNlWc
-	 uki7a6lT6Qweog3YKDJLcCShn2ygd4QrUIT5FT/Mgju4fh8mBlGQNTC/Hw8axHUzBX
-	 M4d51sAeF1W7HK3gPbpAjdmd6Y4ScICF9U6zQf1A2o0qzd1yyOO+igPZTWKxTG0g6J
-	 8TtH9jtgL2vcYBy+9rWIdei1WwBzAUXZv07peMOEIJCVSp82XMc8FdLTukB3Jox9AL
-	 POGIP/lP8WmHQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 8868A15C0243; Tue, 17 Oct 2023 20:43:35 -0400 (EDT)
-Date: Tue, 17 Oct 2023 20:43:35 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Andres Freund <andres@anarazel.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-        Shreeya Patel <shreeya.patel@collabora.com>,
-        linux-ext4@vger.kernel.org,
-        Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
-        gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
-        Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: task hung in ext4_fallocate #2
-Message-ID: <20231018004335.GA593012@mit.edu>
-References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+	dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b="TbfW2WQ2"
+Received: from tutadb.w10.tutanota.de (unknown [192.168.1.10])
+	by w4.tutanota.de (Postfix) with ESMTP id C634810602E9;
+	Wed, 18 Oct 2023 01:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1697591929;
+	s=s1; d=bens.haus;
+	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:Sender;
+	bh=NV9Ui7WPiv06N20hCTJ4MNdUogbGN6WVmx0Xbz99u0w=;
+	b=TbfW2WQ2eAxSCG0f9iYFRbx4QjW/VG9gIBmAi5NGtKrrbSl+PUN8x/3T0TUNMLMI
+	KGNceXxNHwOv96tX8Qw913dnwHfdBZbtglgRA5FSMl+13+2hgTrgbqoAPEpaMXzys/y
+	EnobUwV89ATcIHD+ITF+lmP99NrSf2p9UVtOli5/X130WXwqTRah0NBw7Dc7ZtjlxWq
+	g4ItZtjtTY4+fxY/0GzLkYrnslIn9moAra3EUHpYiUjNjjg3QIGg2uvpWLXOG6uTlRA
+	e+Vu6BF9tEdRsFJJnfu7EWbZqHqY0C8BSWrFlnba1oRUeVdfO6uShxlA2ojBgaJn5Zm
+	zqS2/MqNgw==
+Date: Wed, 18 Oct 2023 03:18:49 +0200 (CEST)
+From: Ben Schneider <ben@bens.haus>
+To: Ardb <ardb@kernel.org>
+Cc: Regressions <regressions@lists.linux.dev>,
+	Linux Efi <linux-efi@vger.kernel.org>,
+	Stable <stable@vger.kernel.org>
+Message-ID: <Nh-DzlX--3-9@bens.haus>
+Subject: [REGRESSION] boot fails for EFI boot stub loaded by u-boot
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 16, 2023 at 08:37:25PM -0700, Andres Freund wrote:
-> I just was able to reproduce the issue, after upgrading to 6.6-rc6 - this time
-> it took ~55min of high load (io_uring using branch of postgres, running a
-> write heavy transactional workload concurrently with concurrent bulk data
-> load) to trigger the issue.
-> 
-> For now I have left the system running, in case there's something you would
-> like me to check while the system is hung.
-> 
-> The first hanging task that I observed:
-> 
-> cat /proc/57606/stack
-> [<0>] inode_dio_wait+0xd5/0x100
-> [<0>] ext4_fallocate+0x12f/0x1040
-> [<0>] vfs_fallocate+0x135/0x360
-> [<0>] __x64_sys_fallocate+0x42/0x70
-> [<0>] do_syscall_64+0x38/0x80
-> [<0>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
+Hi Ard,
 
-This stack trace is from some process (presumably postgres) trying to
-do a fallocate() system call:
+I have an ESPRESSObin Ultra (aarch64) that uses U-Boot as its bootloader. I=
+t shipped from the manufacturer with with v5.10, and I've been trying to up=
+grade. U-Boot supports booting Image directly via EFI (https://u-boot.readt=
+hedocs.io/en/latest/usage/cmd/bootefi.html), and I have been using it that =
+way to successfully boot the system up to and including v6.0.19. However, v=
+6.1 and v6.5 kernels fail to boot.
 
-	/* Wait all existing dio workers, newcomers will block on i_rwsem */
-	inode_dio_wait(inode);
+When booting successfully, the following messages are displayed:
 
-The reason for this is that we can't manipulate the extent tree until
-any data block I/Os comlplete.  This will block until
-iomap_dio_complete() in fs/iomap/direct-io.c calls inode_dio_end().
+EFI stub: Booting Linux Kernel...EFI stub: ERROR: FIRMWARE BUG: efi_loaded_=
+image_t::image_base has bogus value
+EFI stub: ERROR: FIRMWARE BUG: kernel image not aligned on 64k boundary
+EFI stub: Using DTB from configuration table
+EFI stub: ERROR: Failed to install memreserve config table!
+EFI stub: Exiting boot services...
+[=C2=A0=C2=A0=C2=A0 0.000000] Booting Linux on physical CPU 0x0000000000 [0=
+x410fd034]
 
-> [ 3194.579297] INFO: task iou-wrk-58004:58874 blocked for more than 122 seconds.
-> [ 3194.579304]       Not tainted 6.6.0-rc6-andres-00001-g01edcfe38260 #77
-> [ 3194.579310] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [ 3194.579314] task:iou-wrk-58004   state:D stack:0     pid:58874 ppid:52606  flags:0x00004000
-> [ 3194.579325] Call Trace:
-> [ 3194.579329]  <TASK>
-> [ 3194.579334]  __schedule+0x388/0x13e0
-> [ 3194.579349]  schedule+0x5f/0xe0
-> [ 3194.579361]  schedule_preempt_disabled+0x15/0x20
-> [ 3194.579374]  rwsem_down_read_slowpath+0x26e/0x4c0
-> [ 3194.579385]  down_read+0x44/0xa0
-> [ 3194.579393]  ext4_file_write_iter+0x432/0xa80
-> [ 3194.579407]  io_write+0x129/0x420
+I suspect many of the above error messages are simply attributable to using=
+ U-Boot to load an EFI stub and can be safely ignored given that the system=
+ boots and runs fine.
 
-This could potentially be a interesting stack trace; but this is where
-we really need to map the stack address to line numbers.  Is that
-something you could do?
+When boot fails (v6.5), the following messages are displayed:
 
-> Once I hear that you don't want me to test something out on the running
-> system, I think a sensible next step could be to compile with lockdep and see
-> if that finds a problem?
+EFI stub: Booting Linux Kernel...
+EFI stub: ERROR: FIRMWARE BUG: efi_loaded_image_t::image_base has bogus val=
+ue
+EFI stub: ERROR: FIRMWARE BUG: kernel image not aligned on 64k boundary
+EFI stub: ERROR: Failed to install memreserve config table!
+EFI stub: Using DTB from configuration table
+EFI stub: Exiting boot services...
+EFI stub: ERROR: Unable to construct new device tree.
+EFI stub: ERROR: Failed to update FDT and exit boot services
 
-That's certainly a possibiity.  But also please make sure that you can
-compile with with debugging information enabled so that we can get
-reliable line numbers.  I use:
+In case it's relevant, the device tree for this device is arch/arm64/boot/m=
+arvell/armada-3720-espressobin-ultra.dts
 
-CONFIG_DEBUG_INFO=y
-CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
-CONFIG_DEBUG_INFO_REDUCED=y
+Hopefully I've reported this in the correct place or that the information p=
+rovided is sufficient to get it where it needs to be. Let me know if there =
+is additional information I can provide. I am also able to use the device t=
+o test.
 
-Cheers,
+Sincerely,
 
-						- Ted
+Ben Schneider
+
+#regzbot introduced v6.0..v6.1
