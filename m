@@ -1,143 +1,110 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD1644464
-	for <regressions@lists.linux.dev>; Tue, 17 Oct 2023 14:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EBA17C4
+	for <regressions@lists.linux.dev>; Wed, 18 Oct 2023 00:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NlMxK13/"
-Received: from [IPV6:2405:201:0:21ea:361f:b50c:f05e:b4ff] (unknown [IPv6:2405:201:0:21ea:361f:b50c:f05e:b4ff])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: shreeya)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id BFD526600873;
-	Tue, 17 Oct 2023 15:58:56 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1697554738;
-	bh=BU8GFKhyn9Cx+jHDzSOLg8+88kdTePMu8NxieAweOj4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NlMxK13/6DKb3EuCrsAydzXmnqXG+/sqSPy+BK3HiZQgT00b0yaLGIheIBMNfWT36
-	 bvEFwHb3Gy2N0niXnBrcDDqz78u4/C4RsZJctso6aSUtf8R7OtGH0hWGcsJsXwlGtk
-	 9CxePqeUlRIyBJdD8UIfRLvgRSxt49p6qLg9j/nvFr4NujZxZU88IlV9VuKQ2CE3G3
-	 LAUp53gU93BRlrq68T+SdmEvmoswykqdpEBk9IGw2BtFlWh24ateCrTmGU9Ebf5CTj
-	 UTw9nemcPM8CWvkrg5/kKfHMgowE04aCukVASvxcvkwtZxjf2K2/JPlefxdjEcF8qX
-	 CkKXXNoWNwE6Q==
-Message-ID: <a05c68bf-715c-a447-77e1-e4b57974d031@collabora.com>
-Date: Tue, 17 Oct 2023 20:28:52 +0530
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="gWpxmVvL"
+Received: from cwcc.thunk.org (pool-173-48-111-143.bstnma.fios.verizon.net [173.48.111.143])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 39I0hZXS011900
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 20:43:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1697589818; bh=P9/9YNXWwQxn0dILxlsrcPkLVXG8uSZ/9sAG6wchdLs=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=gWpxmVvLJ1ex0TOrGNOUOEHmqFE20WTcXwWrLrd0cmIAaWsZfGa6nauLkjSZubAnc
+	 oegqAzfReC3nIwHDmoaSzNgZHtmplOXJt59nM+dTydZUGpnvSAPuCz6gM0Qp5CNlWc
+	 uki7a6lT6Qweog3YKDJLcCShn2ygd4QrUIT5FT/Mgju4fh8mBlGQNTC/Hw8axHUzBX
+	 M4d51sAeF1W7HK3gPbpAjdmd6Y4ScICF9U6zQf1A2o0qzd1yyOO+igPZTWKxTG0g6J
+	 8TtH9jtgL2vcYBy+9rWIdei1WwBzAUXZv07peMOEIJCVSp82XMc8FdLTukB3Jox9AL
+	 POGIP/lP8WmHQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 8868A15C0243; Tue, 17 Oct 2023 20:43:35 -0400 (EDT)
+Date: Tue, 17 Oct 2023 20:43:35 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Andres Freund <andres@anarazel.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        linux-ext4@vger.kernel.org,
+        Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+        gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: task hung in ext4_fallocate #2
+Message-ID: <20231018004335.GA593012@mit.edu>
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [syzbot] INFO: task hung in ext4_fallocate
-Content-Language: en-US
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Andres Freund <andres@anarazel.de>, linux-ext4@vger.kernel.org,
- =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
- "gustavo.padovan@collabora.com" <gustavo.padovan@collabora.com>,
- groeck@google.com, zsm@google.com, garrick@google.com,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- gustavo.noronha@collabora.com
-References: <d89989ef-e53b-050e-2916-a4f06433798b@collabora.com>
- <ZQjKOjrjDYsoXBXj@mit.edu>
- <20231003141138.owt6qwqyf4slgqgp@alap3.anarazel.de>
- <20231003232505.GA444157@mit.edu>
- <20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de>
- <604bc623-a090-005b-cbfc-39805a8a7b20@collabora.com>
- <c9632187-bcbc-483f-8b18-1fa403b46ebb@leemhuis.info>
- <e6277feb-e444-4d47-8376-fa2909fbac96@collabora.com>
- <20231014015453.GE255452@mit.edu>
-From: Shreeya Patel <shreeya.patel@collabora.com>
-In-Reply-To: <20231014015453.GE255452@mit.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
 
+On Mon, Oct 16, 2023 at 08:37:25PM -0700, Andres Freund wrote:
+> I just was able to reproduce the issue, after upgrading to 6.6-rc6 - this time
+> it took ~55min of high load (io_uring using branch of postgres, running a
+> write heavy transactional workload concurrently with concurrent bulk data
+> load) to trigger the issue.
+> 
+> For now I have left the system running, in case there's something you would
+> like me to check while the system is hung.
+> 
+> The first hanging task that I observed:
+> 
+> cat /proc/57606/stack
+> [<0>] inode_dio_wait+0xd5/0x100
+> [<0>] ext4_fallocate+0x12f/0x1040
+> [<0>] vfs_fallocate+0x135/0x360
+> [<0>] __x64_sys_fallocate+0x42/0x70
+> [<0>] do_syscall_64+0x38/0x80
+> [<0>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
 
-On 14/10/23 07:24, Theodore Ts'o wrote:
+This stack trace is from some process (presumably postgres) trying to
+do a fallocate() system call:
 
-Hi Ted,
+	/* Wait all existing dio workers, newcomers will block on i_rwsem */
+	inode_dio_wait(inode);
 
+The reason for this is that we can't manipulate the extent tree until
+any data block I/Os comlplete.  This will block until
+iomap_dio_complete() in fs/iomap/direct-io.c calls inode_dio_end().
 
-> On Fri, Oct 13, 2023 at 02:28:52AM +0530, Shreeya Patel wrote:
->> Just to clarify, this issue is still seen on upstream 5.10 and earlier
->> kernels.
->> I can confirm that we did not see this issue being reproduced on mainline
->> kernel using #sys test feature.
-> So I'm confused.  In the original post on this thread[1], it was stated:
->
->> When I tried to reproduce this issue on mainline linux kernel using the
->> reproducer provided by syzbot, I see an endless loop of following errors :-
+> [ 3194.579297] INFO: task iou-wrk-58004:58874 blocked for more than 122 seconds.
+> [ 3194.579304]       Not tainted 6.6.0-rc6-andres-00001-g01edcfe38260 #77
+> [ 3194.579310] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [ 3194.579314] task:iou-wrk-58004   state:D stack:0     pid:58874 ppid:52606  flags:0x00004000
+> [ 3194.579325] Call Trace:
+> [ 3194.579329]  <TASK>
+> [ 3194.579334]  __schedule+0x388/0x13e0
+> [ 3194.579349]  schedule+0x5f/0xe0
+> [ 3194.579361]  schedule_preempt_disabled+0x15/0x20
+> [ 3194.579374]  rwsem_down_read_slowpath+0x26e/0x4c0
+> [ 3194.579385]  down_read+0x44/0xa0
+> [ 3194.579393]  ext4_file_write_iter+0x432/0xa80
+> [ 3194.579407]  io_write+0x129/0x420
 
-I stated this because at that time we didn't know we could use #syz test 
-feature on buganizer tickets as well.
-I locally tested it using the reproducer and I was seeing an endless 
-loops of errors which I thought
-is something not an expected behaviour.
+This could potentially be a interesting stack trace; but this is where
+we really need to map the stack address to line numbers.  Is that
+something you could do?
 
-This was happening on mainline as well as 5.10 kernel.
+> Once I hear that you don't want me to test something out on the running
+> system, I think a sensible next step could be to compile with lockdep and see
+> if that finds a problem?
 
-> and
->
->> #regzbot introduced: v6.6-rc1..
-> [1] https://lore.kernel.org/all/d89989ef-e53b-050e-2916-a4f06433798b@collabora.com/
->
-> ... and now you're sayingg this *wasn't* reproduced upstream?  And of
-> course, because this was a private syzbot instance, there was syzbot
-> dashboard given, and the reproducer had the serial number filed off
-> (there is a URL in the comments at the beginning of the reproducer for
-> a *reason*), so *I* couldn't run "#syz test".
->
-> Huh?
->
-> Reading between the lines, it looks like the only similarity between
-> what was happening in the 5.10 kernel and the mainline kernel was that
-> it did not *hang* the kernel, but it was generating a stream of
-> EXT4-fs error messages.  Well, if you take a deliberately corrupted
-> kernel, and mount it with errors=continue, and then keep pounding it
-> with lots of file system operations, of *course* it will continually
-> spew ext4 errors message.  That is "Working As Intended" by
-> *definition*.
+That's certainly a possibiity.  But also please make sure that you can
+compile with with debugging information enabled so that we can get
+reliable line numbers.  I use:
 
+CONFIG_DEBUG_INFO=y
+CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+CONFIG_DEBUG_INFO_REDUCED=y
 
-This is what I actually wanted to understand if the loops of errors were 
-something of concern or not.
-I'm not an expert in the area of filesystem so I assumed loops of errors 
-that I was seeing
-shouldn't be an intented behaviour.
+Cheers,
 
-
-> And this is why I maintain that irresponsible use of syzbot is
-> effectively a denial of service attack on upstream maintainers.
->
-> At this point, just as upstream policy is that debugging ancient LTS
-> kernels is not something upstream maintainers to do (and attempting to
-> trick them to debug it by claiming it is found in mainline is *really*
-> uncool), if there are bugs that are reported using private syzbot
-> instances, or where there isn't a URL to a public syzbot dashboard,
-> they should be treated as P4 priority or worse....
-
-
-We never had the intention to trick you into debugging this issue. When 
-I reported this issue,
-I did it on the basis of what I saw after using the reproducer locally.
-After some days when I came to know we could use #syz test in buganizer, 
-I tested mainline and 5.10 kernel again through it
-but I didn't see it getting reproduced on mainline kernel and hence I 
-said it didn't reproduce upstream in my second email.
-
-I should have given you more context when I said it doesn't happen in 
-upstream kernel so I'm sorry for the misunderstanding.
-
-
-Thanks,
-Shreeya Patel
-
-
-> 	      	     		       	  - Ted
->
+						- Ted
