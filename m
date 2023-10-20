@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5B611708
-	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 08:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826EA12E77
+	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 09:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qtkxp-0007ci-Gi; Fri, 20 Oct 2023 10:34:37 +0200
-Message-ID: <38bf9c2b-25e2-498e-ae50-362792219e50@leemhuis.info>
-Date: Fri, 20 Oct 2023 10:34:36 +0200
+	id 1qtlut-0003Mz-MB; Fri, 20 Oct 2023 11:35:39 +0200
+Message-ID: <c9b79a69-bdc1-4457-900d-709a15d99568@leemhuis.info>
+Date: Fri, 20 Oct 2023 11:35:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,67 +18,95 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] attr: block mode changes of symlinks
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
 Content-Language: en-US, de-DE
-To: Jesse Hathaway <jesse@mbuki-mvuki.org>,
- "Christian Brauner (Microsoft)" <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Christoph Hellwig <hch@lst.de>, Florian Weimer <fweimer@redhat.com>,
- Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
- Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <CANSNSoUYMdPPLuZhofOW6DaKzCF47WhZ+T9BnL8sA37M7b4F+g@mail.gmail.com>
- <2023101819-satisfied-drool-49bb@gregkh>
- <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Jaak Ristioja <jaak@ristioja.ee>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+ <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+ <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+ <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
+ <ZSO9uArAtsPMPeTP@debian.me>
+ <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697790886;428979be;
-X-HE-SMSGID: 1qtkxp-0007ci-Gi
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697794542;f9661a6a;
+X-HE-SMSGID: 1qtlut-0003Mz-MB
 
-[adding Christian, the author of what appears to be the culprit]
-
-On 18.10.23 20:49, Jesse Hathaway wrote:
-> On Wed, Oct 18, 2023 at 1:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-
-FWIW, this thread afaics was supposed to be in reply to this submission:
-
-https://lore.kernel.org/all/20230712-vfs-chmod-symlinks-v1-1-27921df6011f@kernel.org/
-
-That patch later became 5d1f903f75a80d ("attr: block mode changes of
-symlinks") [v6.6-rc1, v6.5.5, v6.1.55, v5.4.257, v5.15.133, v5.10.197,
-v4.19.295, v4.14.326]
-
->>> Unfortunately, this has not held up in LTSes without causing
->>> regressions, specifically in crun:
->>>
->>> Crun issue and patch
->>>  1. https://github.com/containers/crun/issues/1308
->>>  2. https://github.com/containers/crun/pull/1309
+On 09.10.23 10:54, Huacai Chen wrote:
+> On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
+>>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
+>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
+>>>>>>
+>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+>>>>>> screen after boot until the display manager starts... if it does start
+>>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
+>>>>>>
+>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
+>>>>>> subsys_initcall_sync").
+>>>>>
+>>>>> Hmmm, no reaction since it was posted a while ago, unless I'm missing
+>>>>> something.
+>>>>>
+>>>>> Huacai Chen, did you maybe miss this report? The problem is apparently
+>>>>> caused by a commit of yours (that Javier applied), you hence should look
+>>>>> into this.
+>>>> I'm sorry but it looks very strange, could you please share your config file?
+>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+>>> again. So I guess the reason:
 >>
->> So thre's a fix already for this, they agree that symlinks shouldn't
->> have modes, so what's the issue?
-> 
-> The problem is that it breaks crun in Debian stable. They have fixed the
-> issue in crun, but that patch may not be backported to Debian's stable
-> version. In other words the patch seems to break existing software in
-> the wild.
-> 
->> It needs to reverted in Linus's tree first, otherwise you will hit the
->> same problem when moving to a new kernel.
-> 
-> Okay, I'll raise the issue on the linux kernel mailing list.
+>> Did Jaak reply privately? It should have been disclosed in public
+>> ML here instead.
+> Yes, he replied privately, and disabling DRM_SIMPLEDRM was suggested by me.
 
-Did you do that? I could not find anything. Just wondering, as right now
-there is still some time to fix this regression before 6.6 is released
-(and then the fix can be backported to the stable trees, too).
+Well, this to me still looks a lot (please correct me if I'm wrong) like
+regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
+if I understood things correctly. Or is there a proper fix for this
+already in the works and I just missed this? Or is there some good
+reason why this won't/can't be fixed?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+>>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+>>> no platform device created for SIMPLEDRM at early stage, so it seems
+>>> also "no problem".
+>>
+>> I don't understand above. You mean that after that commit the platform
+>> device is also none, right?
+> No. The SIMPLEDRM driver needs a platform device to work, and that
+> commit makes the platform device created earlier. So, before that
+> commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
+> commit, SIMPLEDRM works, but the screen is blank.
+> 
+> Huacai
+>>
+>> Confused...
+>>
+>> --
+>> An old man doll... just what I always wanted! - Clara
+> 
+> 
