@@ -1,56 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from a1712.mx.srv.dfn.de (a1712.mx.srv.dfn.de [194.95.232.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCF61A29D;
-	Fri, 20 Oct 2023 14:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED5A15EBB
+	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 14:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniklinik-freiburg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniklinik-freiburg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LJ/3joCf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7265C433CC;
-	Fri, 20 Oct 2023 14:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1697811923;
-	bh=wldg2zwOkncbKRJtGFBFpmkGBwcFXywZnG13CG3zHhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LJ/3joCf+5FMJaprCbr89oaXtaFok28cVqNP3CRzEhEVviVmSBnfJEbf9nyriexnS
-	 kyIo8D2DFuBycYxVqzbD0Folujn5QAbqFEUqMSbxuUnEi4CIGcomqNtXAcZAdshQS4
-	 oL+F3/lLdsPNrI1aA6ZpIXh3qpjnRQeYFi0xTIBA=
-Date: Fri, 20 Oct 2023 16:25:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jesse Hathaway <jesse@mbuki-mvuki.org>,
-	Christoph Hellwig <hch@lst.de>, Florian Weimer <fweimer@redhat.com>,
-	Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
-	Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	giuseppe@scrivano.org
-Subject: Re: [PATCH] attr: block mode changes of symlinks
-Message-ID: <2023102034-atlas-obligate-46bb@gregkh>
-References: <CANSNSoUYMdPPLuZhofOW6DaKzCF47WhZ+T9BnL8sA37M7b4F+g@mail.gmail.com>
- <2023101819-satisfied-drool-49bb@gregkh>
- <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
- <38bf9c2b-25e2-498e-ae50-362792219e50@leemhuis.info>
- <20231020-allgegenwart-torbogen-33dc58e9a7aa@brauner>
+	dkim=pass (1024-bit key) header.d=uniklinik-freiburg.de header.i=@uniklinik-freiburg.de header.b="oD/pujR9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+	uniklinik-freiburg.de; h=mime-version:content-transfer-encoding
+	:content-id:content-type:content-type:content-language
+	:accept-language:in-reply-to:references:message-id:date:date
+	:subject:subject:from:from:received:received:received; s=s1; t=
+	1697812663; x=1699627064; bh=xaqiTiaHUMKPQPBP2nbNQFRpF0OrJpSUn2k
+	mUFCgflc=; b=oD/pujR9AhuFCJ9xQ0EebHSnfvqT85mYsDvTx0wvZcWUQbzGVq8
+	jC9A4G3qxjysZ9sWzY7TtfRGND/nsJfylCW0BkpFf1edOHOvkRK4GHvRSAARZzwN
+	wo8Hyis2eRUWESBQu21hzbI+/EtML4NeEu3gSk6uCvCLdJdPMpYXDpC0=
+Received: from ukl-fm1.ukl.uni-freiburg.de (ukl-fm-ha.ukl.uni-freiburg.de [193.196.199.18])
+	by a1712.mx.srv.dfn.de (Postfix) with ESMTPS id A7D2E380161
+	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 16:37:43 +0200 (CEST)
+Received: from ukl-ex2.ad.uniklinik-freiburg.de (xxx52.ukl.uni-freiburg.de [193.196.253.52])
+	by ukl-fm1.ukl.uni-freiburg.de  with ESMTPS id 39KEbeb8015176-39KEbebA015176
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Fri, 20 Oct 2023 16:37:40 +0200
+Received: from UKL-EX4.ad.uniklinik-freiburg.de (193.196.253.54) by
+ ukl-ex2.ad.uniklinik-freiburg.de (193.196.253.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 20 Oct 2023 16:37:40 +0200
+Received: from UKL-EX4.ad.uniklinik-freiburg.de ([fe80::6c6e:c675:beef:7071])
+ by UKL-EX4.ad.uniklinik-freiburg.de ([fe80::6c6e:c675:beef:7071%5]) with mapi
+ id 15.01.2507.032; Fri, 20 Oct 2023 16:37:40 +0200
+From: "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>
+To: "smfrench@gmail.com" <smfrench@gmail.com>,
+	"matoro_mailinglist_kernel@matoro.tk" <matoro_mailinglist_kernel@matoro.tk>,
+	"pc@manguebit.com" <pc@manguebit.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "paul@darkrain42.org"
+	<paul@darkrain42.org>, "tom@talpey.com" <tom@talpey.com>,
+	"ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>,
+	"bharathsm@microsoft.com" <bharathsm@microsoft.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"brian.pardy@gmail.com" <brian.pardy@gmail.com>, "nspmangalore@gmail.com"
+	<nspmangalore@gmail.com>
+Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
+ is mounted (cifsd-cfid-laundromat in"D" state)
+Thread-Topic: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS
+ share is mounted (cifsd-cfid-laundromat in"D" state)
+Thread-Index: AQHaA2L6GXEWZinVBEmsDkQRFDlV8A==
+Date: Fri, 20 Oct 2023 14:37:40 +0000
+Message-ID: <779ef3ac542e7e39027dee19d669ad2f81b05bcc.camel@uniklinik-freiburg.de>
+References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
+	 <ZPfPfyIoVxw5L6El@debian.me>
+	 <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
+	 <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
+	 <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
+	 <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
+	 <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
+	 <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
+	 <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com>
+	 <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+	 <ZRN9MtBqYnT6oX60@vaarsuvius>
+	 <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
+	 <83d00d50bc628a85db71adb440d8afb5@matoro.tk>
+	 <E1F307C7-9B1E-40F6-860B-6050856E8395@manguebit.com>
+	 <CA6E0F87-65FD-4672-AA0C-A761E5006B7D@manguebit.com>
+	 <CAH2r5mse_2sfXF+tdTmie5LLtBuc+6DOumDH3rn=5V24yhrYVQ@mail.gmail.com>
+	 <c88b2ecd27524153c2acd8aba6ae3c80@matoro.tk>
+	 <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
+In-Reply-To: <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [193.196.253.71]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EB79D542FA71234BB0135EE8EF78E273@ad.uniklinik-freiburg.de>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231020-allgegenwart-torbogen-33dc58e9a7aa@brauner>
+X-FEAS-Client-IP: 193.196.253.52
+X-FE-Last-Public-Client-IP: 193.196.253.52
+X-FE-Policy-ID: 1:4:1:SYSTEM
 
-On Fri, Oct 20, 2023 at 01:01:44PM +0200, Christian Brauner wrote:
-> The other option to consider would be to revert the backport of the attr
-> changes to stable kernels. I'm not sure what Greg's stance on this is
-> but given that crun versions in -testing already include that fix that
-> means all future Debian releases will already have a fixed crun version.
-
-I will be glad to revert a change in a stable tree that is also reverted
-in Linus's tree, but to just "delay" a change getting into the tree,
-that's not ok (either the change is good or not.)
-
-thanks,
-
-greg k-h
+QW0gTW9udGFnLCBkZW0gMTYuMTAuMjAyMyB1bSAxNTo0MSAtMDMwMCBzY2hyaWViIFBhdWxvIEFs
+Y2FudGFyYToNCj4gbWF0b3JvIDxtYXRvcm9fbWFpbGluZ2xpc3Rfa2VybmVsQG1hdG9yby50az4g
+d3JpdGVzOg0KPiANCj4gPiBEbyB5b3UgaGF2ZSBiYWNrcG9ydHMgb2YgdGhlc2UgdG8gNi41P8Kg
+IEkgdHJpZWQgdG8gZG8gaXQgbWFudWFsbHkNCj4gPiBidXQgDQo+ID4gdGhlcmUncyBhbHJlYWR5
+IHNvIG1hbnkgY2hhbmdlcyBiZXR3ZWVuIDYuNSBhbmQgdGhlc2UgY29tbWl0cy4NCj4gDQo+IFBs
+ZWFzZSBmaW5kIGF0dGFjaGVkIHR3byBwYXRjaGVzIHRoYXQgc2hvdWxkIGZpeCB5b3VyIFNNQjEg
+Y2FzZS7CoA0KPiBUaGV5DQo+IGFwcGxpZWQgY2xlYW5seSBvbiB0b3Agb2YgdjYuNS55IGJyYW5j
+aC4NCj4gDQo+IExldCBtZSBrbm93IGlmIGl0IHdvcmtzIGZvciB5b3UgYW5kIHRoZW4gSSdsbCBh
+c2sgc3RhYmxlIHRlYW0gdG8gcGljaw0KPiB0aG9zZSB1cC4NCg0KVGhhbmtzIQ0KSSBjYW4gY29u
+ZmlybSB0aGF0IHRoZSBwYXRjaGVzIGFwcGx5IGNsZWFubHkgb24gNi41LjggYW5kIGhlbHAgYSBs
+b3QNCndpdGggdGhlIGlzc3VlIGhlcmUgKHZlcnM9My4xLjEsIGdlbnRvbyBjbGllbnQsIE1TIEFE
+IHNlcnZlciB3aXRoIERGUykuDQoNCg==
