@@ -1,65 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B41F179BE
-	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 10:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qtnAc-0001wr-FQ; Fri, 20 Oct 2023 12:55:58 +0200
-Message-ID: <37c2c8ee-d909-413d-9cf7-e67efd7fdb30@leemhuis.info>
-Date: Fri, 20 Oct 2023 12:55:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833B51804D;
+	Fri, 20 Oct 2023 11:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUVpp1pl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6448DC433C8;
+	Fri, 20 Oct 2023 11:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697799709;
+	bh=4Rkb5V2D8bP++SzpqDTXV2hlkoc7FCRIfbSezE4goj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RUVpp1plkdOHyyFAde2H/Cn0OKs1eY343jIXt+VEfhg6e25IqEkTenBDwlTD0kBf4
+	 TWuJ/UbvrzK2VihpOsWF0IaSwXAEkxZ4Mzz2DsgwHWru0nD5lBn1fjiXdHcGHXS/0u
+	 kRqudxzqp1lftoa+HgmsSm50bq/jgUdDmVpiy8M6qbT8i4SDa5r7+sYJkdh3z+VPS6
+	 jud37U/LvIdCTy4HA4okQOhqwILpyrOY5fjP6r5tkZY3W2bUUTELVjRXnFigCX0Gnh
+	 ng1HjGxAv3fRnlLxqYzqbear4pGhLpzjR/1x4O20u28EUXWfjyIjhOuw9eRcZFpeYK
+	 kPQGWdgXjVZCg==
+Date: Fri, 20 Oct 2023 13:01:44 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jesse Hathaway <jesse@mbuki-mvuki.org>, Christoph Hellwig <hch@lst.de>,
+	Florian Weimer <fweimer@redhat.com>,
+	Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
+	Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	giuseppe@scrivano.org
+Subject: Re: [PATCH] attr: block mode changes of symlinks
+Message-ID: <20231020-allgegenwart-torbogen-33dc58e9a7aa@brauner>
+References: <CANSNSoUYMdPPLuZhofOW6DaKzCF47WhZ+T9BnL8sA37M7b4F+g@mail.gmail.com>
+ <2023101819-satisfied-drool-49bb@gregkh>
+ <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
+ <38bf9c2b-25e2-498e-ae50-362792219e50@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: High cpu usage caused by kernel process when upgraded to
- linux 5.19.17 or later
-Content-Language: en-US, de-DE
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Netfilter Development <netfilter-devel@vger.kernel.org>,
- Netfilter Core Developers <coreteam@netfilter.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Power Management <linux-pm@vger.kernel.org>
-References: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <01ac399d-f793-49d4-844b-72cd8e0034df@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697799360;0c50cbf2;
-X-HE-SMSGID: 1qtnAc-0001wr-FQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38bf9c2b-25e2-498e-ae50-362792219e50@leemhuis.info>
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 23.06.23 02:58, Bagas Sanjaya wrote:
+On Fri, Oct 20, 2023 at 10:34:36AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [adding Christian, the author of what appears to be the culprit]
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+> On 18.10.23 20:49, Jesse Hathaway wrote:
+> > On Wed, Oct 18, 2023 at 1:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
->> kernel process "kworker/events_power_efficient" uses a lot of cpu power (100% on ESXI 6.7, ~30% on ESXI 7.0U3 or later) after upgrading from 5.17.3 to 5.19.17 or later.
-> [...]
-> #regzbot introduced: v5.17.3..v5.19.17 https://bugzilla.kernel.org/show_bug.cgi?id=217586
-> #regzbot title: kworker/events_power_efficient utilizes full CPU power after kernel upgrade
+> FWIW, this thread afaics was supposed to be in reply to this submission:
 > 
-> Thanks.
+> https://lore.kernel.org/all/20230712-vfs-chmod-symlinks-v1-1-27921df6011f@kernel.org/
 > 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217586
+> That patch later became 5d1f903f75a80d ("attr: block mode changes of
+> symlinks") [v6.6-rc1, v6.5.5, v6.1.55, v5.4.257, v5.15.133, v5.10.197,
+> v4.19.295, v4.14.326]
+> 
+> >>> Unfortunately, this has not held up in LTSes without causing
+> >>> regressions, specifically in crun:
+> >>>
+> >>> Crun issue and patch
+> >>>  1. https://github.com/containers/crun/issues/1308
+> >>>  2. https://github.com/containers/crun/pull/1309
+> >>
+> >> So thre's a fix already for this, they agree that symlinks shouldn't
+> >> have modes, so what's the issue?
+> > 
+> > The problem is that it breaks crun in Debian stable. They have fixed the
+> > issue in crun, but that patch may not be backported to Debian's stable
+> > version. In other words the patch seems to break existing software in
+> > the wild.
+> > 
+> >> It needs to reverted in Linus's tree first, otherwise you will hit the
+> >> same problem when moving to a new kernel.
+> > 
+> > Okay, I'll raise the issue on the linux kernel mailing list.
+> 
+> Did you do that? I could not find anything. Just wondering, as right now
+> there is still some time to fix this regression before 6.6 is released
+> (and then the fix can be backported to the stable trees, too).
 
-#regzbot resolve: afaics: misconfiguration became more problematic due
-to new mitigations
-#regzbot ignore-activity
+I have not seen a report other than the crun fix I commented on.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+The crun authors had agreed to fix this in crun. As symlink mode changes
+are severly broken to the point that it's not even supported through the
+official glibc and musl system call wrappers anymore not having to
+revert this from mainline would be the ideal outcome.
 
+So ideally, the crun bugfix would be backported to Debian stable just as
+it was already backported to Fedora or crun make a new point release for
+the 1.8.* series.
+
+The other option to consider would be to revert the backport of the attr
+changes to stable kernels. I'm not sure what Greg's stance on this is
+but given that crun versions in -testing already include that fix that
+means all future Debian releases will already have a fixed crun version.
+
+That symlink stuff is so brittle and broken that we'd do more long-term
+harm by letting it go on. Which is why we did this.
+
+@Linus, this is ultimately your call of course.
