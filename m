@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E06ACA6C
-	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 07:01:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5B611708
+	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 08:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qtjVK-0008J0-A1; Fri, 20 Oct 2023 09:01:06 +0200
-Message-ID: <00375284-2071-4dea-9009-9cd2d0de71e1@leemhuis.info>
-Date: Fri, 20 Oct 2023 09:01:05 +0200
+	id 1qtkxp-0007ci-Gi; Fri, 20 Oct 2023 10:34:37 +0200
+Message-ID: <38bf9c2b-25e2-498e-ae50-362792219e50@leemhuis.info>
+Date: Fri, 20 Oct 2023 10:34:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,65 +18,67 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: task hung in ext4_fallocate #2
-Content-Language: en-US, de-DE
-To: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>
-Cc: Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
- =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
- gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+Subject: Re: [PATCH] attr: block mode changes of symlinks
+Content-Language: en-US, de-DE
+To: Jesse Hathaway <jesse@mbuki-mvuki.org>,
+ "Christian Brauner (Microsoft)" <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Christoph Hellwig <hch@lst.de>, Florian Weimer <fweimer@redhat.com>,
+ Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
+ Al Viro <viro@zeniv.linux.org.uk>, stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <CANSNSoUYMdPPLuZhofOW6DaKzCF47WhZ+T9BnL8sA37M7b4F+g@mail.gmail.com>
+ <2023101819-satisfied-drool-49bb@gregkh>
+ <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <CANSNSoV6encjhH2u-Ua8wmjy==emvpi+76HTZasxbfzobMQ_Vw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697785270;8ab9d00d;
-X-HE-SMSGID: 1qtjVK-0008J0-A1
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697790886;428979be;
+X-HE-SMSGID: 1qtkxp-0007ci-Gi
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+[adding Christian, the author of what appears to be the culprit]
 
-On 17.10.23 05:37, Andres Freund wrote:
+On 18.10.23 20:49, Jesse Hathaway wrote:
+> On Wed, Oct 18, 2023 at 1:40 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+
+FWIW, this thread afaics was supposed to be in reply to this submission:
+
+https://lore.kernel.org/all/20230712-vfs-chmod-symlinks-v1-1-27921df6011f@kernel.org/
+
+That patch later became 5d1f903f75a80d ("attr: block mode changes of
+symlinks") [v6.6-rc1, v6.5.5, v6.1.55, v5.4.257, v5.15.133, v5.10.197,
+v4.19.295, v4.14.326]
+
+>>> Unfortunately, this has not held up in LTSes without causing
+>>> regressions, specifically in crun:
+>>>
+>>> Crun issue and patch
+>>>  1. https://github.com/containers/crun/issues/1308
+>>>  2. https://github.com/containers/crun/pull/1309
+>>
+>> So thre's a fix already for this, they agree that symlinks shouldn't
+>> have modes, so what's the issue?
 > 
-> As previously reported in https://lore.kernel.org/all/20231004004247.zkswbseowwwc6vvk@alap3.anarazel.de/
-> I found some hangs below ext4_fallocate(), in 6.6-rc*.  As it looks like my
-> issue was unrelated to the thread I had responded to, I was asked to start
-> this new thread.
+> The problem is that it breaks crun in Debian stable. They have fixed the
+> issue in crun, but that patch may not be backported to Debian's stable
+> version. In other words the patch seems to break existing software in
+> the wild.
 > 
-> I just was able to reproduce the issue, after upgrading to 6.6-rc6 - this time
-> it took ~55min of high load (io_uring using branch of postgres, running a
-> write heavy transactional workload concurrently with concurrent bulk data
-> load) to trigger the issue.
+>> It needs to reverted in Linus's tree first, otherwise you will hit the
+>> same problem when moving to a new kernel.
 > 
-> For now I have left the system running, in case there's something you would
-> like me to check while the system is hung.
-> [...]
+> Okay, I'll raise the issue on the linux kernel mailing list.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced v6.5..v6.6-rc6
-#regzbot title ext4: task hung in ext4_fallocate
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+Did you do that? I could not find anything. Just wondering, as right now
+there is still some time to fix this regression before 6.6 is released
+(and then the fix can be backported to the stable trees, too).
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
