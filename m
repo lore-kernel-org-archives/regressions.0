@@ -1,101 +1,53 @@
-Received: from a1712.mx.srv.dfn.de (a1712.mx.srv.dfn.de [194.95.232.209])
+Received: from w4.tutanota.de (w4.tutanota.de [81.3.6.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED5A15EBB
-	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 14:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniklinik-freiburg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniklinik-freiburg.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F51A626
+	for <regressions@lists.linux.dev>; Sat, 21 Oct 2023 00:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bens.haus
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniklinik-freiburg.de header.i=@uniklinik-freiburg.de header.b="oD/pujR9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-	uniklinik-freiburg.de; h=mime-version:content-transfer-encoding
-	:content-id:content-type:content-type:content-language
-	:accept-language:in-reply-to:references:message-id:date:date
-	:subject:subject:from:from:received:received:received; s=s1; t=
-	1697812663; x=1699627064; bh=xaqiTiaHUMKPQPBP2nbNQFRpF0OrJpSUn2k
-	mUFCgflc=; b=oD/pujR9AhuFCJ9xQ0EebHSnfvqT85mYsDvTx0wvZcWUQbzGVq8
-	jC9A4G3qxjysZ9sWzY7TtfRGND/nsJfylCW0BkpFf1edOHOvkRK4GHvRSAARZzwN
-	wo8Hyis2eRUWESBQu21hzbI+/EtML4NeEu3gSk6uCvCLdJdPMpYXDpC0=
-Received: from ukl-fm1.ukl.uni-freiburg.de (ukl-fm-ha.ukl.uni-freiburg.de [193.196.199.18])
-	by a1712.mx.srv.dfn.de (Postfix) with ESMTPS id A7D2E380161
-	for <regressions@lists.linux.dev>; Fri, 20 Oct 2023 16:37:43 +0200 (CEST)
-Received: from ukl-ex2.ad.uniklinik-freiburg.de (xxx52.ukl.uni-freiburg.de [193.196.253.52])
-	by ukl-fm1.ukl.uni-freiburg.de  with ESMTPS id 39KEbeb8015176-39KEbebA015176
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Fri, 20 Oct 2023 16:37:40 +0200
-Received: from UKL-EX4.ad.uniklinik-freiburg.de (193.196.253.54) by
- ukl-ex2.ad.uniklinik-freiburg.de (193.196.253.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 20 Oct 2023 16:37:40 +0200
-Received: from UKL-EX4.ad.uniklinik-freiburg.de ([fe80::6c6e:c675:beef:7071])
- by UKL-EX4.ad.uniklinik-freiburg.de ([fe80::6c6e:c675:beef:7071%5]) with mapi
- id 15.01.2507.032; Fri, 20 Oct 2023 16:37:40 +0200
-From: "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>
-To: "smfrench@gmail.com" <smfrench@gmail.com>,
-	"matoro_mailinglist_kernel@matoro.tk" <matoro_mailinglist_kernel@matoro.tk>,
-	"pc@manguebit.com" <pc@manguebit.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "paul@darkrain42.org"
-	<paul@darkrain42.org>, "tom@talpey.com" <tom@talpey.com>,
-	"ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>,
-	"bharathsm@microsoft.com" <bharathsm@microsoft.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"brian.pardy@gmail.com" <brian.pardy@gmail.com>, "nspmangalore@gmail.com"
-	<nspmangalore@gmail.com>
-Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
- is mounted (cifsd-cfid-laundromat in"D" state)
-Thread-Topic: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS
- share is mounted (cifsd-cfid-laundromat in"D" state)
-Thread-Index: AQHaA2L6GXEWZinVBEmsDkQRFDlV8A==
-Date: Fri, 20 Oct 2023 14:37:40 +0000
-Message-ID: <779ef3ac542e7e39027dee19d669ad2f81b05bcc.camel@uniklinik-freiburg.de>
-References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
-	 <ZPfPfyIoVxw5L6El@debian.me>
-	 <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
-	 <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
-	 <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
-	 <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
-	 <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
-	 <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
-	 <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com>
-	 <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
-	 <ZRN9MtBqYnT6oX60@vaarsuvius>
-	 <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
-	 <83d00d50bc628a85db71adb440d8afb5@matoro.tk>
-	 <E1F307C7-9B1E-40F6-860B-6050856E8395@manguebit.com>
-	 <CA6E0F87-65FD-4672-AA0C-A761E5006B7D@manguebit.com>
-	 <CAH2r5mse_2sfXF+tdTmie5LLtBuc+6DOumDH3rn=5V24yhrYVQ@mail.gmail.com>
-	 <c88b2ecd27524153c2acd8aba6ae3c80@matoro.tk>
-	 <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
-In-Reply-To: <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [193.196.253.71]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EB79D542FA71234BB0135EE8EF78E273@ad.uniklinik-freiburg.de>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b="U4ruX1La"
+Received: from tutadb.w10.tutanota.de (unknown [192.168.1.10])
+	by w4.tutanota.de (Postfix) with ESMTP id CFD011060170;
+	Sat, 21 Oct 2023 00:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1697846876;
+	s=s1; d=bens.haus;
+	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
+	bh=Sw9x7wuuA1QNrztZOrHa/S9dqjr9j06JtwY8MvJxGR0=;
+	b=U4ruX1LaDK1WgzzvxwkFPrvUBJ2D5dKO0dBUlsQDA+z18DRSLkDdv20fDvBFYkpn
+	wJK+8iaTVlga43jzXy62RzAx4snpdvcSGHtdN3dEi5s8LebtQ/NAtFjQSeCHtbA7klj
+	a/TIC00+68zOrXZCs2oCgkra4nFPbecTpoXHhycrqmXLi1LOcJM494PY48fb3rFd2FT
+	3U285vwOHf5hJLAOSkmLYcxrJW6x07rUm+zDWUeMSCKI7Yze7zTcl79eyCugnA1SiE0
+	RRGqJ9CxBD93xsKidaCH99TkiL/Lia51vCaeErE3cOF3Sy0F7MEiCzYwvuzhSxg5B//
+	ZIR6USBkHw==
+Date: Sat, 21 Oct 2023 02:07:56 +0200 (CEST)
+From: Ben Schneider <ben@bens.haus>
+To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Cc: Regressions <regressions@lists.linux.dev>,
+	Linux Efi <linux-efi@vger.kernel.org>,
+	Stable <stable@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Message-ID: <NhEYpWg--3-9@bens.haus>
+In-Reply-To: <Nh8pThy--3-9@bens.haus>
+References: <Nh-DzlX--3-9@bens.haus> <CAMj1kXFKe6piagNLdSUhxUhwLB+RfNHqjNWt8-r2CNS-rBdJKA@mail.gmail.com> <817366c2-33e0-4908-90ec-57c63e3eb471@canonical.com> <CAC_iWjJB3OTWiYX5YsJmNcPQw+rHSm955c1Z5pUajedWGM5QgA@mail.gmail.com> <Nh30qsF--3-9@bens.haus> <57062702-f858-46d3-bccc-f0f96891128b@canonical.com> <Nh8pThy--3-9@bens.haus>
+Subject: Re: [REGRESSION] boot fails for EFI boot stub loaded by u-boot
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 193.196.253.52
-X-FE-Last-Public-Client-IP: 193.196.253.52
-X-FE-Policy-ID: 1:4:1:SYSTEM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-QW0gTW9udGFnLCBkZW0gMTYuMTAuMjAyMyB1bSAxNTo0MSAtMDMwMCBzY2hyaWViIFBhdWxvIEFs
-Y2FudGFyYToNCj4gbWF0b3JvIDxtYXRvcm9fbWFpbGluZ2xpc3Rfa2VybmVsQG1hdG9yby50az4g
-d3JpdGVzOg0KPiANCj4gPiBEbyB5b3UgaGF2ZSBiYWNrcG9ydHMgb2YgdGhlc2UgdG8gNi41P8Kg
-IEkgdHJpZWQgdG8gZG8gaXQgbWFudWFsbHkNCj4gPiBidXQgDQo+ID4gdGhlcmUncyBhbHJlYWR5
-IHNvIG1hbnkgY2hhbmdlcyBiZXR3ZWVuIDYuNSBhbmQgdGhlc2UgY29tbWl0cy4NCj4gDQo+IFBs
-ZWFzZSBmaW5kIGF0dGFjaGVkIHR3byBwYXRjaGVzIHRoYXQgc2hvdWxkIGZpeCB5b3VyIFNNQjEg
-Y2FzZS7CoA0KPiBUaGV5DQo+IGFwcGxpZWQgY2xlYW5seSBvbiB0b3Agb2YgdjYuNS55IGJyYW5j
-aC4NCj4gDQo+IExldCBtZSBrbm93IGlmIGl0IHdvcmtzIGZvciB5b3UgYW5kIHRoZW4gSSdsbCBh
-c2sgc3RhYmxlIHRlYW0gdG8gcGljaw0KPiB0aG9zZSB1cC4NCg0KVGhhbmtzIQ0KSSBjYW4gY29u
-ZmlybSB0aGF0IHRoZSBwYXRjaGVzIGFwcGx5IGNsZWFubHkgb24gNi41LjggYW5kIGhlbHAgYSBs
-b3QNCndpdGggdGhlIGlzc3VlIGhlcmUgKHZlcnM9My4xLjEsIGdlbnRvbyBjbGllbnQsIE1TIEFE
-IHNlcnZlciB3aXRoIERGUykuDQoNCg==
+Oct 20, 2023, 01:25 by ben@bens.haus:
+
+> Oct 19, 2023, 07:21 by heinrich.schuchardt@canonical.com:
+>
+>> Compiling upstream U-Boot's qemu_arm64_defconfig yields lib/efi_loader/dtbdump.efi. If you run this instead of the kernel, you can write the device-tree as it is passed in a configuration table to the ESP.
+>>
+> I compiled and ran this fine, but I was unable to save the device tree. I suspect this is because the program searches for an ESP, and there is none on the device. U-boot was compiled with support to load directly from an ext4 filesystem so I didn't bother setting one up. I will work on it. 
+>
+Hi Heinrich, I loaded dtbdump.efi from a FAT32 formatted partition with type EFI System, but attempts to run the save command return "Failed to open simple file system protocol". Sorry if there is something else I am missing.
+
+Ben
