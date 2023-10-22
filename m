@@ -1,163 +1,184 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D31310A0F
-	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 16:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qubds-0001Oj-9E; Sun, 22 Oct 2023 18:49:32 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-10-22]
-Date: Sun, 22 Oct 2023 16:49:31 +0000
-Message-Id: <169799330468.525178.1969942838211820764@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A911C3C
+	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 23:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=epreston.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epreston.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=epreston.net header.i=@epreston.net header.b="Ta90tR8f"
+X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 888EA6C147F;
+	Sun, 22 Oct 2023 22:54:08 +0000 (UTC)
+Received: from s147.servername.online (unknown [127.0.0.6])
+	(Authenticated sender: hostpapa)
+	by relay.mailchannels.net (Postfix) with ESMTPA id C958A6C14FE;
+	Sun, 22 Oct 2023 22:54:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1698015248; a=rsa-sha256;
+	cv=none;
+	b=p1XSiuDfEGfFFe133Drjv75NmISP3m2xKtSYnEKxA9QAZ6eo+RU/A2Ir8KRxVQNc6G22Gx
+	574elESDREfq//cB5VLr1Gfqzv1oguiWdh2fucFdiERCACNp1gCk8ixSQiSKqpS9sD/E6V
+	UvOfS6oFWt4XMUpBFCOAxouhW8fsDdsQKw8yuV0bvXYrbrzUruM20v3a2IyrWibLR7zvWB
+	eCgSePRcc1UwpeBf20F5Z52QcMIcn2TAVMvKcZH9LQ6sBY2jtczfSlQZX5IJ/Dcg7+R0jD
+	EmucH1FfHchVoVvXSDRFq6WIetLvTyqWfT3mcgsTNdyKmBzdoi4GvkulXUPoSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1698015248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=gDWtLghsWx6nnjrewvz+iHsajZfjSscfDKYT9XWGKC4=;
+	b=N77UMFFiUqGn7YwdJM1eTxCeWT+Nxq/6oHAn0YTsvlDHPQEy0cZ8ghvrTVZaKEaz58iEg5
+	hjfH+7kQS6exB5shNst6o0wtUsueBlTyIh9YKLO1+L+rwIi1PNtYfAwwIsrSYPQu2Vf1Uk
+	kjuKkLISt2/yQ2YDJuL4NraPudTqdk84OmgTrXNGnHcf3xZMtb1lW8BeMNHZoghXztFUnx
+	17BGigJIhP0iIBBUdsEfNBJ1oIjX3axFnaVw1oIleEMeet+p8RquVnfedEtYgdc2pLlzC4
+	xfWojJyAkMPldM/3UjMYAkFN1E4RFSsNDNc+p3kbH5yuqnqthWk7/jS4Drk0eQ==
+ARC-Authentication-Results: i=1;
+	rspamd-846f4b758b-nczqm;
+	auth=pass smtp.auth=hostpapa smtp.mailfrom=x.arch@epreston.net
+X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostpapa|x-authuser|x.reply@epreston.net
+X-MailChannels-Auth-Id: hostpapa
+X-Share-Unite: 72aad6c35d547ad4_1698015248342_2281811999
+X-MC-Loop-Signature: 1698015248342:1735253197
+X-MC-Ingress-Time: 1698015248342
+Received: from s147.servername.online (s147.servername.online
+ [204.44.192.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384)
+	by 100.101.178.134 (trex/6.9.2);
+	Sun, 22 Oct 2023 22:54:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=epreston.net; s=default; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gDWtLghsWx6nnjrewvz+iHsajZfjSscfDKYT9XWGKC4=; b=Ta90tR8fH+Hn0FFKu0Klb+TL/0
+	2md2e0S2BvJ/k5oyLoQ0rGdYeEY02Mx1sWL2FCOchqFntR/rhP0mirFaj/GAs/2wtlGe/SwyAjgeF
+	ut8oso2MupsKV49YQ5tzdge0cIGO93h6m2/HKPcAC1lwMfJsPbeeZCc6kgapZ9vuPCKXV61uiFxpI
+	5i5fB98KdSZHWj0YQjOIvzzwuu5N9IPVYGIphI549lQqhdDSz0Llmg9xHHHhE6SmnhzoddNr/sPhd
+	nLDlWnp2gN4+h4RJJb3mO6Mdt2lD4ninByZqRx7dF2x5RnkjB/yPJcPejk2ltXkWRc0dlNig9FSjs
+	jliRyrkw==;
+Received: from [50.35.115.28] (port=46014 helo=P70.localdomain)
+	by s147.servername.online with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <x.arch@epreston.net>)
+	id 1quhKf-0009tT-2z;
+	Sun, 22 Oct 2023 15:54:07 -0700
+Date: Sun, 22 Oct 2023 15:54:05 -0700
+From: Evan Preston <x.arch@epreston.net>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Jaak Ristioja <jaak@ristioja.ee>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
+Message-ID: <ZTWoDSPxGO-ApR4r@P70.localdomain>
+References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
+ <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
+ <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
+ <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
+ <ZSO9uArAtsPMPeTP@debian.me>
+ <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
+ <c9b79a69-bdc1-4457-900d-709a15d99568@leemhuis.info>
+ <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1697993374;a456cabc;
-X-HE-SMSGID: 1qubds-0001Oj-9E
+In-Reply-To: <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
+X-AuthUser: x.reply@epreston.net
 
-Hi Linus. My list of unresolved regressions from this cycle became quite
-short: it's mainly Andy's boot problem on Merrifield exposed by a quota
-change (you already know about it, the tricky investigation is ongoing)
-and a PowerMac G5 boot problem (will likely be fixed in the next few
-days, as the root of the problem was recently found). There is also a
-ext4 problem, but it's not bisected and tricky to debug (investigation
-is slow, but in the works).
+On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
+> On Fri, Oct 20, 2023 at 5:35 PM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+> >
+> > On 09.10.23 10:54, Huacai Chen wrote:
+> > > On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> > >> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
+> > >>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > >>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
+> > >>>> Leemhuis) <regressions@leemhuis.info> wrote:
+> > >>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
+> > >>>>>>
+> > >>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> > >>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+> > >>>>>> screen after boot until the display manager starts... if it does start
+> > >>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
+> > >>>>>>
+> > >>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > >>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
+> > >>>>>> subsys_initcall_sync").
+> > >>>>>
+> > >>>>> Hmmm, no reaction since it was posted a while ago, unless I'm missing
+> > >>>>> something.
+> > >>>>>
+> > >>>>> Huacai Chen, did you maybe miss this report? The problem is apparently
+> > >>>>> caused by a commit of yours (that Javier applied), you hence should look
+> > >>>>> into this.
+> > >>>> I'm sorry but it looks very strange, could you please share your config file?
+> > >>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+> > >>> again. So I guess the reason:
+> > >>
+> > >> Did Jaak reply privately? It should have been disclosed in public
+> > >> ML here instead.
+> > > Yes, he replied privately, and disabling DRM_SIMPLEDRM was suggested by me.
+> >
+> > Well, this to me still looks a lot (please correct me if I'm wrong) like
+> > regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
+> > if I understood things correctly. Or is there a proper fix for this
+> > already in the works and I just missed this? Or is there some good
+> > reason why this won't/can't be fixed?
+> DRM_SIMPLEDRM was enabled but it didn't work at all because there was
+> no corresponding platform device. Now DRM_SIMPLEDRM works but it has a
+> blank screen. Of course it is valuable to investigate further about
+> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort because
+> I don't have a same machine.
+> 
+> Huacai
 
-So let me use this opportunity to mention two other regressions I tracke
-that were introduced in earlier cycles. I suspect they are not handled
-like you want them to be handled, but I'm not totally sure; hence I
-decided to mention them here to give you a chance to chime in yourself
-or tell me what to do.
+I am having the same issue on a Lenovo Thinkpad P70 (Intel Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).  Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank screen after boot and a rapidly flashing device-access-status indicator.
 
-- On a Lenovo ThinkPad L570 since 60aebc9559492c ("drivers/firmware:
-Move sysfb_init() from device_initcall to subsys_initcall_sync")
-[v6.5-rc1] the screen stays dark during boot until the display manager
-starts; the reporter was able to work around that by disabling
-DRM_SIMPLEDRM (which had been enabled before). But the problem itself
-remains and it seems the developer of said commit wants to leave things
-as they are due to lack of access to the affected device:
-https://lore.kernel.org/dri-devel/7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee/
-https://lore.kernel.org/dri-devel/CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com/
-
-- Since 3066ff93476c35 ("fuse: Apply flags2 only when userspace set the
-FUSE_INIT_EXT") [v6.5-rc3] creating new files or reading existing files
-on Android apparently now returns -EFAULT; this was reported with a
-patch to revert the culprit a few weeks ago; there was some discussion
-(some a few days ago), but doesn't look like the revert or some other
-fix is heading your way, unless I missed something:
-https://lore.kernel.org/all/20230904133321.104584-1-git@andred.net/
-https://lore.kernel.org/all/5cd87a64-c506-46f2-9fed-ac8a74658631@ddn.com/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 3 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] quota: boot on Intel Merrifield after merge commit 1500e7e0726e
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZS5hhpG97QSvgYPf@smile.fi.intel.com/
-https://lore.kernel.org/linux-fsdevel/ZS5hhpG97QSvgYPf@smile.fi.intel.com/
-
-By Andy Shevchenko; 5 days ago; 41 activities, latest 0 days ago.
-Introduced in 024128477809 (v6.6-rc1)
-
-Recent activities from: Andy Shevchenko (23), Jan Kara (7), Linus
-  Torvalds (6), andy.shevchenko@gmail.com (2), Kees Cook (1), Baokun
-  Li (1), Josh Poimboeuf (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [GIT PULL] ext2, quota, and udf fixes for 6.6-rc1
-  https://lore.kernel.org/linux-fsdevel/ZTKUDzONVHXnWAJc@smile.fi.intel.com/
-  2 days ago, by Andy Shevchenko
-
-
-powerpc: new page table range API causes PowerMac G5 to fail booting
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20230929132750.3cd98452@yea/
-https://lore.kernel.org/linuxppc-dev/20230929132750.3cd98452@yea/
-
-By Erhard Furtner; 23 days ago; 15 activities, latest 4 days ago.
-Introduced in 9fee28baa601 (v6.6-rc1)
-
-Recent activities from: Michael Ellerman (2), Erhard Furtner (1)
-
-3 patch postings are associated with this regression, the latest is this:
-* Re: [Bisected] PowerMac G5 fails booting kernel 6.6-rc3 (BUG: Unable to handle kernel data access at 0xfeffbb62ffec65fe)
-  https://lore.kernel.org/linuxppc-dev/8734y8zdpb.fsf@mail.lhotse/
-  4 days ago, by Michael Ellerman
-
-
-===================================================
-current cycle (v6.5.. aka v6.6-rc), unknown culprit
-===================================================
-
-
-[ *NEW* ] ext4: task hung in ext4_fallocate
--------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de/
-https://lore.kernel.org/linux-ext4/20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de/
-
-By Andres Freund; 5 days ago; 4 activities, latest 4 days ago.
-Introduced in v6.5..v6.6-rc6
-
-Recent activities from: Andres Freund (3), Theodore Ts'o (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169737193299.624972.12831031401706621880@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.
+> >
+> > #regzbot poke
+> >
+> > >>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+> > >>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+> > >>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+> > >>> no platform device created for SIMPLEDRM at early stage, so it seems
+> > >>> also "no problem".
+> > >>
+> > >> I don't understand above. You mean that after that commit the platform
+> > >> device is also none, right?
+> > > No. The SIMPLEDRM driver needs a platform device to work, and that
+> > > commit makes the platform device created earlier. So, before that
+> > > commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
+> > > commit, SIMPLEDRM works, but the screen is blank.
+> > >
+> > > Huacai
+> > >>
+> > >> Confused...
+> > >>
+> > >> --
+> > >> An old man doll... just what I always wanted! - Clara
+> > >
+> > >
