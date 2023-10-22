@@ -1,95 +1,208 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9616510FC
-	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 10:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9594E6130
+	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 13:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="nA1iJQjB"
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 33C443FFF1
-	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 10:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1697969818;
-	bh=gColUGB2JSdwsFjV3ExI1Ly4vT+H+2Kv7wPXR0ErwzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=nA1iJQjBmzlslyUpNOKyJCCSMcBkARErg0J0HIC+kbHpGJTBrH0NEoMHEhC5S8g/H
-	 jGC/w7l3LCcPwC+FYd3P9t+smYWKS797Uqerqi39USgjwTAAbLb3JnB2V9LDMOVyGB
-	 xttOahZXw5NRHbyXCutH/ggmc7ZxPVg0SE5k83WFWlyJfLT1zPmqvmS/eY/NOrENvD
-	 uViXz4ySajkaLiuitSbMkAYM3efczVQZqsI5QxDit6enG/h4GU/UORHqCbVeTxPkQC
-	 loypEykDAoa4JaEF3Sc4M/4IgRELGwkdUCyDTbpJcYLJu9XHPP3ZX8EtL9qUnfJyoD
-	 uXms0u2X9wX0A==
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40839252e81so13312035e9.3
-        for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 03:16:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697969817; x=1698574617;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gColUGB2JSdwsFjV3ExI1Ly4vT+H+2Kv7wPXR0ErwzI=;
-        b=HYGL+qCsH9dht2qeA6JTi3gQwfym+tFwgCZBj5lORF4TefMufiaMnXYIUBFcBy+C29
-         u1n04RMoLFOgqzjvOp1ejBiI/AFaN+IUOf0sCv39SKfNKlNA/ZTrHq13kQpJvqFkPWMb
-         qQPv/YGxC8C3AZLWN9ykJF7PPencDZV1c2yBFjyHk8NZ0d0FicYmV2eb8FQVlFPFGQc4
-         lhcr9m4BKhaVnVk2+mCkJI5sCtcSBUlk1etksgfe9m7miiCF2FFRP3gyXfoocXjK2m9N
-         Aj7o07kMMJM/cczYU6qyF5rlmesKqSXysoyI3CjSuE8QZr68GI26aUKdLbPs072WSDY+
-         tl8A==
-X-Gm-Message-State: AOJu0YweIIPEeQINYc9/JacswMURv0OOsp0pTsaEljkXUUhLs2quGHAh
-	NDxu7iNDW8rXlpcSz4dm91l/JDnzdR9zxgVXaJz+SIwu9ZrD26BR/38ojaJhOAveOdtBkUUHliN
-	+dVgKb3CRpjFP8u0W611l1vSfQW6xx66yqfPeNt/D
-X-Received: by 2002:a05:600c:a02:b0:405:4daa:6e3d with SMTP id z2-20020a05600c0a0200b004054daa6e3dmr4857185wmp.39.1697969817326;
-        Sun, 22 Oct 2023 03:16:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHR9ajGyAKxGnJTHGXo85cKGVbITf+pxIsTZxiW6T8a2EGRQXazCWzonnmgcZkbqGRIZyg5GQ==
-X-Received: by 2002:a05:600c:a02:b0:405:4daa:6e3d with SMTP id z2-20020a05600c0a0200b004054daa6e3dmr4857170wmp.39.1697969816846;
-        Sun, 22 Oct 2023 03:16:56 -0700 (PDT)
-Received: from [192.168.123.94] (ip-178-202-040-247.um47.pools.vodafone-ip.de. [178.202.40.247])
-        by smtp.gmail.com with ESMTPSA id 1-20020a05600c028100b004077219aed5sm11287461wmk.6.2023.10.22.03.16.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Oct 2023 03:16:56 -0700 (PDT)
-Message-ID: <d3afc8dc-51db-43fd-abb8-b9030d86bbe2@canonical.com>
-Date: Sun, 22 Oct 2023 12:17:02 +0200
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="mdb3o1qi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NPOGMiwB"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id BF08C320046F;
+	Sun, 22 Oct 2023 09:36:33 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Sun, 22 Oct 2023 09:36:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+	1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
+	bgNRgITc=; b=mdb3o1qiwZJ7GziAMlEdciFjbuylXPyQzJ281BNLoD/GOCCb8oA
+	sMvcaI7+VmGgsqxp4HC1e11OvGBFvr49S234RVIfFcFhWlM/FUA2BVzrCgRKqGOm
+	51xN5BM4jO/0G/qU77ca3pSGs8P5QNfmfLUbr036rDmLx7EYzrMSZ4QhuQCyEL04
+	+o9040SJQAavBbcmzb3OIZlY7qrLvMFdasKZMvKDvceMBM3HdtLVea25/Ttl0PKS
+	VBgVM+ZvDJhsSihHxg5qq+mebdwn3N1mVFVgs8wjnGJrzgCAxMRnS6DXehTj/u46
+	c+riAcCoHRHlqpuX2RLHWfAAUn9YkvovHFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1697981793; x=1698068193; bh=3+zHI5XxJ0GdEW2zOOWUQBzlNnmU90B1H+l
+	bgNRgITc=; b=NPOGMiwB0Xz18tHXSfDKOzkvPdCOzD5F2v1MpDWpZ2SKr+/paOz
+	NkegnWTgcdFqlTevmFoFroBVjh7v2XAImNk8Gst9vpS8HbfoJQ8HA63wutgLrJ+D
+	nqppOUEOWIO0YGtwqv0QegXTdYO1fVN8RHSyFvgekJOa3V2TADNInH/VMxW804Go
+	a3OPyzSW7Y5NcxQnohNyOUw+UT6x6jagH0EFKJhB1zbZ6BOwhSNu7BZAMUIKZ1hW
+	hurATdBsyHKrBZDp9D9MHhkoBbpKGDarPGeAePv6ZRcZABnetjiNgfTKa7huxdzd
+	a3Q5FwbLWmooJzehGhf+8bQWclJ+O6YzOCA==
+X-ME-Sender: <xms:YSU1Zdko4eyVyDV1GyUNkEmDsi5tOA5PNTr3eymu5JXeKQxKOgvkiQ>
+    <xme:YSU1ZY12k0TtNJl7LZyPnedeBLbSXkvFt1X3S-pLRBuKfes-TQVPqor-9CXWiWOwV
+    kL4F15oLzrUFRGkKlA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeefgdeiiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepteduledttdelgeejfeejffeihfelhffgteetudfgkedt
+    tdfhkeehtdekjeefgeelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdplhgvvghmhh
+    huihhsrdhinhhfohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:YSU1ZTqAqDZhnbnmHdCoArEOY-IgQOeNKZb77Tcw9btK6WS4ZA5vsg>
+    <xmx:YSU1ZdkgTm8H5JIungjwQiwFX1hphYAPnr9mQN0NM0RGOvRTXIo2Ag>
+    <xmx:YSU1Zb22FkhT2LU8UZqN2ZqCV94BjbwR90D3wxhC0EmxOsFus_Tm4A>
+    <xmx:YSU1ZVp2PnUiOHlxYUUsAsi4i33ekrz6E9QRLrPtgj4W4EGyM53rVA>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D9A5136A0077; Sun, 22 Oct 2023 09:36:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] boot fails for EFI boot stub loaded by u-boot
-Content-Language: en-US, de-DE
-To: Ben Schneider <ben@bens.haus>
-Cc: Regressions <regressions@lists.linux.dev>,
- Linux Efi <linux-efi@vger.kernel.org>, Stable <stable@vger.kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>
-References: <Nh-DzlX--3-9@bens.haus>
- <CAMj1kXFKe6piagNLdSUhxUhwLB+RfNHqjNWt8-r2CNS-rBdJKA@mail.gmail.com>
- <817366c2-33e0-4908-90ec-57c63e3eb471@canonical.com>
- <CAC_iWjJB3OTWiYX5YsJmNcPQw+rHSm955c1Z5pUajedWGM5QgA@mail.gmail.com>
- <Nh30qsF--3-9@bens.haus> <57062702-f858-46d3-bccc-f0f96891128b@canonical.com>
- <Nh8pThy--3-9@bens.haus> <NhEYpWg--3-9@bens.haus>
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <NhEYpWg--3-9@bens.haus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-Id: <52ec45eb-6633-4d51-96ff-d29d1743e1aa@app.fastmail.com>
+In-Reply-To: <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
+References: <20230725061008.1504292-1-jiaxun.yang@flygoat.com>
+ <e9c103dc-98ac-9a51-7291-f5da1467b2ff@flygoat.com>
+ <CAAhV-H7_OjTaU_wn6mUW0-JSrXS+=A2rXCiBc8cyce5ob49BLg@mail.gmail.com>
+ <861a809d-3df1-327e-e033-87506f6d89e5@flygoat.com>
+ <20230907011828.GA2865@thinkpad>
+ <6e1bdebf-f335-23a5-c79f-d603c5d0150c@flygoat.com>
+ <20230907050805.GA3218@thinkpad>
+ <91336c97-0831-3ce3-5ff0-54344f18e065@leemhuis.info>
+ <c9a99e29-1a16-4b46-8e3a-afd0aae5b76e@leemhuis.info>
+Date: Sun, 22 Oct 2023 14:36:13 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Linux regressions mailing list" <regressions@lists.linux.dev>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+Cc: "Huacai Chen" <chenhuacai@kernel.org>,
+ linux-pci <linux-pci@vger.kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] pci: loongson: Workaround MIPS firmware MRRS settings
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 10/21/23 02:07, Ben Schneider wrote:
-> Oct 20, 2023, 01:25 by ben@bens.haus:
-> 
->> Oct 19, 2023, 07:21 by heinrich.schuchardt@canonical.com:
->>
->>> Compiling upstream U-Boot's qemu_arm64_defconfig yields lib/efi_loader/dtbdump.efi. If you run this instead of the kernel, you can write the device-tree as it is passed in a configuration table to the ESP.
+
+
+=E5=9C=A82023=E5=B9=B410=E6=9C=8820=E6=97=A5=E5=8D=81=E6=9C=88 =E4=B8=8B=
+=E5=8D=8812:04=EF=BC=8CThorsten Leemhuis=E5=86=99=E9=81=93=EF=BC=9A
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Just wondering what's up here. The patch this thread is about afaics w=
+as
+> supposed to fix a regression reported in July
+> (https://bugzilla.kernel.org/show_bug.cgi?id=3D217680 ), but has made =
+not
+> steps closer to get mainlined during the past few weeks. Is there a
+> reason, or did it maybe fell through the cracks?
+>
+> Jiaxun Yang, from it quick look it seems like you wanted to post a v3,
+> but never did so; but I might be mistaken there.
+
+I just figure out the problem of this implementation.
+Will resend and explain.
+
+Thanks
+- Jiaxun
+
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
+t)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> On 20.09.23 14:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing the regression list, as it should be in the loop for regressio=
+ns:
+>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+>>=20
+>> On 07.09.23 07:08, Manivannan Sadhasivam wrote:
+>>> On Thu, Sep 07, 2023 at 11:13:00AM +0800, Jiaxun Yang wrote:
+>>>> =E5=9C=A8 2023/9/7 9:18, Manivannan Sadhasivam =E5=86=99=E9=81=93:
+>>>> [...]
+>>>>> Why do you need to walk through every single device instead of jus=
+t bridges?
+>>>>> I'm not the maintainer, but my suggestion is to go for Huacai Chen=
+'s solution.
+>>>>
+>>>> Thanks for your reply, unfortunately Huacai's solution is impractic=
+al in
+>>>> this case.
+>>>>
+>>>> The problem we have, is firmware (or BIOS) setting improper MRRS fo=
+r devices
+>>>> attached under those bridges. So we have to fix up MRRS for every s=
+ingle
+>>>> device.
+>>>> We can't iterate child device in bridge quirk because there is no g=
+uarantee
+>>>> that
+>>>> bridge will be probed before=C2=A0 it's child device, partly due to=
+ hotplug.
 >>>
->> I compiled and ran this fine, but I was unable to save the device tree. I suspect this is because the program searches for an ESP, and there is none on the device. U-boot was compiled with support to load directly from an ext4 filesystem so I didn't bother setting one up. I will work on it.
->>
-> Hi Heinrich, I loaded dtbdump.efi from a FAT32 formatted partition with type EFI System, but attempts to run the save command return "Failed to open simple file system protocol". Sorry if there is something else I am missing.
+>>> Okay, this clarifies and also warrants improvement in commit message.
+>>>
+>>> You could also use pci_walk_bus() after pci_host_probe() to iterate =
+over the
+>>> child devices under root bridge and set MRRS. IMO that would look ne=
+at.
+>>=20
+>> Hi, Thorsten here, the Linux kernel's regression tracker. What's the
+>> status here? The regression that was supposed to be fixed by the patc=
+hed
+>> that started this thread was reported 9 weeks ago[1] and the culprit
+>> made it to many stable kernels as well. Would be really good to final=
+ly
+>> fix this, as a regression like this should ideally be fixed within 2 =
+to
+>> 3 weeks (in both mainline and stable). With a revert if necessary -- =
+is
+>> this maybe still a option, or would that cause more trouble then it
+>> solved (I guess that's the case).
+>>=20
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217680
+>>=20
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
+at)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>=20
+>>>> This quirk has been in tree for a while, until Huacai refactored it=
+ and
+>>>> broke some
+>>>> systems in 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increase=
+s").
+>>>>
+>>>> Also to note that ks_pcie_quirk in drivers/pci/controller/dwc/pci-k=
+eystone.c
+>>>> uses similar approach.
+>>>>> This avoids iterating over bridges/devices two times.
+>>>>>
+>>>>> Also, please rename firmware to BIOS, as firmware commonly represe=
+nts the
+>>>>> software running on PCIe endpoint devices.
+>>>> Ack, will fix in next reversion.
+>>>>
+>>>> Thanks
+>>>> - Jiaxun
+>>>>>
+>>>>> - Mani
+>>>> [...]
+>>>
 
-On upstream U-Boot I cannot see this problem.
-
-Best regards
-
-Heinrich
+--=20
+- Jiaxun
