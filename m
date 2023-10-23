@@ -1,184 +1,103 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A5B23C2
-	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 07:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53513FE5
+	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 14:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ybq7EU9/"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so2191130b3a.1
-        for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 00:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698046953; x=1698651753; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pa8Ycg4ZbuyhxwxZIcfT7kG/2CbPeVVKLuGjTYraxqk=;
-        b=Ybq7EU9/kuVvy3Jd3j6/jxsCM8tePOaEUFWnVT8IfS6GYFUg9/w9VPv+bPbVl410cy
-         XDTxYEZHfE/XaAhL//0TPbtynnyrXlczYxr4FF9bheRpbJEO4saLs713uP+HA+V0NB+D
-         nVVsSLuFZ5n4lIfWnbYlpnTqxot+pDbKVl9HcutIRVVKE+7hFsSchLE+1kNtcZljnPZ7
-         GRfw2372zfSK0zhN4mo6sgIuvtap5A+4JhFNEQ0QtK5vlqGWiM6JiA0tiNEHyRjicexT
-         e1u1tHiz+ypA3u1TnCifCZ70ycGghiRf0w1A3TyLcAEYQlcs1TgBCEnRLKpBev28whUJ
-         6Y2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698046953; x=1698651753;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pa8Ycg4ZbuyhxwxZIcfT7kG/2CbPeVVKLuGjTYraxqk=;
-        b=EtiVKvQh1yPklUgq2rHDvk+2wZno16TQSw3dXqmymyHj31HJ4tmqcGCtxO8dexpO3i
-         /4szEPma5NDBL9EbrheBfNGi741e0Oqniz4RX536KxIqjf1p2q6P4y3//Rg7r7NXVsT5
-         JKSiDNfrnjfouTixvogNdAl/v11zYRr5c2/i4g1vz9Jh7KZBitS5guJjUBHCnqDs7DAA
-         fvZLlUhfjuNwXl8+4DH/hK0OLYgazblVWpnDsC71pzkqpGj1s4me2vbHs/cAgfhd51jh
-         AnVkrBcRFuzx2AyCz/S6kw2mUQiuvVkAw1T1zroD/rftbim8tvhuEvNHP2NN0T82FyQ7
-         3MeA==
-X-Gm-Message-State: AOJu0YxCvdCAuBnQG6RZ6ZAJLLecC2Gr57qYKAbTwEAY4B4ZW+CF2B1e
-	LJlp9/X67gL7uKu1q7ZClWo=
-X-Google-Smtp-Source: AGHT+IEs7/8FcfO1BLY4N1AIr3dYPHCRPbKB0+2YYwmIFSVIC2Crej+Is3LJdco4cmwE80d3fxdVOA==
-X-Received: by 2002:a05:6a20:1592:b0:12f:c0c1:d70 with SMTP id h18-20020a056a20159200b0012fc0c10d70mr7030892pzj.40.1698046953213;
-        Mon, 23 Oct 2023 00:42:33 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id b2-20020a17090a990200b0027758c7f585sm5021888pjp.52.2023.10.23.00.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 00:42:32 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id DD669818DF16; Mon, 23 Oct 2023 14:42:29 +0700 (WIB)
-Date: Mon, 23 Oct 2023 14:42:29 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Jia, Fang" <fang.jia@windriver.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: Linux Networking <netdev@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regression <regressions@lists.linux.dev>
-Subject: Re: phy: fixed link 1000 or 100 set with autoneg off
-Message-ID: <ZTYj5Wyg8qD7_Npd@debian.me>
-References: <d7aa45f8-adf8-ff9a-b2c4-04b0f2cc3c06@windriver.com>
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="R/eh6H29"
+Message-ID: <b8e37bfc992532038f9d562f5596cbf3.pc@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1698070028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QSfE4hORG5Bzst26B7/qFOcc4kmlRNLkRDCUrI5g4lM=;
+	b=R/eh6H29weLnIvT1D1BzpiD4xSKUHOnLDjToKZODoxIIpghfBMZJDQGtgb6LHdfbNBUnRQ
+	0T2HUTlZ9pCB6VV3kpGA2wN3wShu4M1cW0JhXGcQ+SDYCIhtFZ6Yi5piuiQW9UfVUzHPgs
+	3bQsql4Uwc6MwcswUsCKgLojKk2rG3UeTHgC+elJVdjFx3MAUpK4YQJgGmIx09WtSOhRfl
+	TmUoWvndhMK3B3FSoRmjTanSaRHXpWOVVWI2MxKkTnkrNF6WU7h57erRnuDGdULD0QW97l
+	cri0YnFFsEfRa4wdi/8ixseE39NLQIxV0CfjI3MWEDImfUoC1IKfKXCE3GOImw==
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1698070028; a=rsa-sha256;
+	cv=none;
+	b=G8AJmOZ03AuCgY4HtmnxgHECvGLV7G9XNqAzCuohuAt8tGRd1ucBdvOO/QUWo3EvFjHL9L
+	x43mZXL82Atu6HWjeHb7pWcfDyMHJUk5aCXiuBFFu0wBIF4X2u1UBFKpdo87wSNIeSydip
+	0jGa+Mj/VOJ4NbHsftppn8yTX4SLFE0cl5BwZJQpdxt60RI85z+PKB+R+YKEoO+DpCvaoG
+	QkrmiQixG3DzLGMUJ5SMh+5Pa+wImxZjdhtuAV+eFV6QGRB70k8/7i3SvkXQD9I6RUa45E
+	mWR7mhoQvFk99kyFMYjo+xNR0yYPCHO+JldfeSFbALsAojbgkCdfgZadrlqtaA==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=pc@manguebit.com smtp.mailfrom=pc@manguebit.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1698070028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QSfE4hORG5Bzst26B7/qFOcc4kmlRNLkRDCUrI5g4lM=;
+	b=c4p4K4a7lNTqPnjWqZywQUxMMmNipxxDjCIRLbWcKZrMgVEy/zyX6yIcFN1b7wcA4fzxPC
+	vnJusKqOwmvAynEGqxiKRDhsTtGlMiRUqJ+NU7twuXzBDka0xI8HDW1qvg4vbEyTYvV6Ai
+	IwQlO0kUtFZ+WwRaq6+1mtweRgaTfMVxFnJ6z63f9vHj+zcxVGP5jG2l9CXvzW7qz2IJ/r
+	dj6gHPtuccpy8zHWAMhc2v24bRVrbbCnq3OrMqE/XfS+uKMSimetWaq3veu03ptrL0Jr+c
+	SFm0WyRHI+VZGIkZQTiY4aPheq77nMeIcHyRGWDRGb0WbpPUXhzwwi20qbo+2w==
+From: Paulo Alcantara <pc@manguebit.com>
+To: "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>,
+ "smfrench@gmail.com" <smfrench@gmail.com>,
+ "matoro_mailinglist_kernel@matoro.tk"
+ <matoro_mailinglist_kernel@matoro.tk>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "bagasdotme@gmail.com" <bagasdotme@gmail.com>, "paul@darkrain42.org"
+ <paul@darkrain42.org>, "tom@talpey.com" <tom@talpey.com>,
+ "ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>,
+ "bharathsm@microsoft.com" <bharathsm@microsoft.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "brian.pardy@gmail.com" <brian.pardy@gmail.com>, "nspmangalore@gmail.com"
+ <nspmangalore@gmail.com>
+Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS
+ share is mounted (cifsd-cfid-laundromat in"D" state)
+In-Reply-To: <779ef3ac542e7e39027dee19d669ad2f81b05bcc.camel@uniklinik-freiburg.de>
+References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
+ <ZPfPfyIoVxw5L6El@debian.me>
+ <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
+ <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
+ <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
+ <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
+ <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
+ <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
+ <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com>
+ <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+ <ZRN9MtBqYnT6oX60@vaarsuvius>
+ <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
+ <83d00d50bc628a85db71adb440d8afb5@matoro.tk>
+ <E1F307C7-9B1E-40F6-860B-6050856E8395@manguebit.com>
+ <CA6E0F87-65FD-4672-AA0C-A761E5006B7D@manguebit.com>
+ <CAH2r5mse_2sfXF+tdTmie5LLtBuc+6DOumDH3rn=5V24yhrYVQ@mail.gmail.com>
+ <c88b2ecd27524153c2acd8aba6ae3c80@matoro.tk>
+ <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
+ <779ef3ac542e7e39027dee19d669ad2f81b05bcc.camel@uniklinik-freiburg.de>
+Date: Mon, 23 Oct 2023 11:07:01 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KNi0/Pi1fnSluti+"
-Content-Disposition: inline
-In-Reply-To: <d7aa45f8-adf8-ff9a-b2c4-04b0f2cc3c06@windriver.com>
+Content-Type: text/plain
 
+"Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de> writes:
 
---KNi0/Pi1fnSluti+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I can confirm that the patches apply cleanly on 6.5.8 and help a lot
+> with the issue here (vers=3.1.1, gentoo client, MS AD server with DFS).
 
-On Mon, Oct 23, 2023 at 03:01:10PM +0800, Jia, Fang wrote:
-> Hi Experts,
->=20
-> We use NXP LS1046 board and face an issue about the eth interface speed.
->=20
-> 1) Scenario
->=20
-> we set fixed link 1000Mb/s in device tree.
->=20
-> However, after we set the auto-neg off, then the eth1's speed changed to =
-10M
-> and Duplex changed to Half.
-> The value of /sys/class/net/eth1/speed is 10 and /sys/class/net/eth1/dupl=
-ex
-> is half
->=20
-> 2) Log is as following.
->=20
-> # ifconfig eth1 up
-> # ethtool eth1
-> Settings for eth1:
->         Supported ports: [ MII ]
->=20
->         Supported link modes:   1000baseT/Full
->         Supported pause frame use: Symmetric Receive-only
->         Supports auto-negotiation: Yes
->=20
->=20
->         Supported FEC modes: Not reported
->=20
->=20
->         Advertised link modes:  1000baseT/Full
->         Advertised pause frame use: Symmetric Receive-only
->=20
->=20
->         Advertised auto-negotiation: Yes
->         Advertised FEC modes: Not reported
->         Speed: 1000Mb/s
->         Duplex: Full
->         Port: MII
->         PHYAD: 1
->         Transceiver: internal
->         Auto-negotiation: on
->         Supports Wake-on: d
->         Wake-on: d
->         Current message level: 0xffffffff (-1)
->                                drv probe link timer ifdown ifup rx_err
-> tx_err tx_queued intr tx_done rx_status pktdata hw wol 0xffff8000
->         Link detected: yes
->=20
-> # ethtool -s eth1 autoneg off
-> # ethtool eth1
-> Settings for eth1:
->         Supported ports: [ MII ]
->         Supported link modes:   1000baseT/Full
->         Supported pause frame use: Symmetric Receive-only
->         Supports auto-negotiation: Yes
->         Supported FEC modes: Not reported
->         Advertised link modes:  1000baseT/Full
->         Advertised pause frame use: Symmetric Receive-only
->         Advertised auto-negotiation: No
->         Advertised FEC modes: Not reported
->         Speed: 10Mb/s
->         Duplex: Half
->         Port: MII
->         PHYAD: 1
->         Transceiver: internal
->         Auto-negotiation: off
->         Supports Wake-on: d
->         Wake-on: d
->         Current message level: 0xffffffff (-1)
->                                drv probe link timer ifdown ifup rx_err
-> tx_err tx_queued intr tx_done rx_status pktdata hw wol 0xffff8000
->         Link detected: yes
->=20
-> 3) After code tracing, we found that:
->=20
-> phy_state_machine()
-> 	state PHY_RUNNING: phy_check_link_status()
-> 		phy_read_status()
-> 			genphy_read_status()
-> 				genphy_read_status_fixed()
->=20
-> In genphy_read_status_fixed(), the speed and duplex changed.
-> It seems like the bmcr value is always 0x1000 from swphy_read_reg().
->=20
-> After revert the commit 726097d6d6d(net: phy: improve auto-neg emulation =
-in
-> swphy), then the Speed and Duplex shown comes back to 1000M and Full.
->=20
+Thanks for testing it.
 
-Thanks for the regression report. I'm adding it to regzbot
+Steve, I would suggest below commits for v6.5.y
 
-#regzbot ^introduced: 726097d6d6d8e9
+	238b351d0935 ("smb3: allow controlling length of time directory entries are cached with dir leases")
+	6a50d71d0fff ("smb3: allow controlling maximum number of cached directories")
+	2da338ff752a ("smb3: do not start laundromat thread when dir leases  disabled")
+	e95f3f744650 ("smb: client: make laundromat a delayed worker")
+	81ba10959970 ("smb: client: prevent new fids from being removed by laundromat")
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---KNi0/Pi1fnSluti+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZTYj3QAKCRD2uYlJVVFO
-oxlGAP9AXy3/h8cT+yMgk2wxRTXoknz4RCWC3o5I9Rg6TOIXwAEA+nlhPhUX/wl4
-6atnTHxo3agKlgNdUhi76kpTfg5qDAI=
-=cCKp
------END PGP SIGNATURE-----
-
---KNi0/Pi1fnSluti+--
+If OK, please ask stable team to pick those up.
