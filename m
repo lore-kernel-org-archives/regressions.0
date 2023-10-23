@@ -1,172 +1,238 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5011CA96
-	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 16:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A3219E0
+	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 20:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IeFFQYyJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gm14cnExuGT9NLQLS9TeV08AFI5pE6aYnWCw9/WQfA7RXnsNV0e5YKerNnQT8FEuG5dS8lmbPgED/bWw/ncNswlM+wNlk8I6/JKLiYES5H71CcLR83tg7QEZ75qY7feadFsVbWGQbjyZFpzCzm2rzb+mh9ePp9WwTQ7zYKJfLfBqyIYF2W36oMmvqV6AYtY6jM8EYbtalEOnb1MFbFjvdufGqk64mB1SqIB32Em4MajMTx+k5n3/Br4oxt1uTdzB/O3g+OwrxFchbJOWMxlNSDqHv4Lkov8WtOJIFs5DCiOKgYgkbwrRQrwKgUuqX2Jx+A2tbuE9gFZ2lelta++3UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SSFbEQeXZqNILCgUNRgd8D+EDBpuFMk9fWnK1lyHOO8=;
- b=ZYFT+dS1oM96wuUgOMxMBAu4tVPd1D/9SENO0kMVEmjK7dNmT1dqHcpVHFPx+aQIaHQrwnyv+EUkC1gq5nbfXnzwXnxJqI1wy0yJCVtFepjhVAcRxRCJDnAh9nat07WQiM+FoJOQjqkXraXuP0Gx5Gl8/gvwF0WGCPt4bNKaU1sDbzr6h3IGYAHe9+yyGdFFATGOofH67x9Qk6NkjTq4mGJxQm4rXLkLCfLec5F6T03+fnlSo0VFl/cx4mNJMC8+fy1SpRclBov1wSZKBuxPP31b4aXL6vaxpudjdhO/xZLRLFXMH3ltuFYPQm7/Z2z6Bm8s/6BAgWgYUhhJbKdtyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SSFbEQeXZqNILCgUNRgd8D+EDBpuFMk9fWnK1lyHOO8=;
- b=IeFFQYyJwHfzHnztXEIyQpiRH7FN/aQrR1o9cU2crcLxO2rUCMuu8Pd5TkqDPhRm8XJmBAkhmH3Aae7Kz53mmwPy9b9Za+bFgOyuFgc5GCPCxvjU/IufAjWZD3E3tRCA7baKZjj059V5dXRWUNmbd+mp/Ef3/fhSEulwx4SjMqc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH0PR12MB5418.namprd12.prod.outlook.com (2603:10b6:510:e5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.26; Mon, 23 Oct
- 2023 16:04:34 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%4]) with mapi id 15.20.6907.022; Mon, 23 Oct 2023
- 16:04:33 +0000
-Message-ID: <450e06f8-5655-406e-b485-c19862bba6d8@amd.com>
-Date: Mon, 23 Oct 2023 11:04:31 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: X86 parallel bring up regression
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: x86@kernel.org, David Woodhouse <dwmw@amazon.co.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, "Gong, Richard"
- <Richard.Gong@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Michael Kelley <mikelley@microsoft.com>,
- Oleksandr Natalenko <oleksandr@natalenko.name>, Helge Deller
- <deller@gmx.de>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-References: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
-In-Reply-To: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR03CA0004.namprd03.prod.outlook.com
- (2603:10b6:806:2d3::8) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gk48TBhV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698094782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlJt6eYLJ8ET7xeE+diC8z8eWuyVZyJEdzUzasfnIlk=;
+	b=Gk48TBhVvC1StpX3IeGcqNYoR/zwukNfrMHIQqelmhehQGWqrU08/X9j5THRB8Xqt3y9Zw
+	hPb1uTvrNGym/McZ9V9SlsaeDg83I8R58PSrqQ24hxKSQhuUuNJA9Ck+yrsXcBCWiaf3hH
+	KLJ/PP1mD3+7qRSyt6YVkpWWpqTTzh8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-29-INu2BEadPwqjFhtoTtGA-A-1; Mon, 23 Oct 2023 16:59:40 -0400
+X-MC-Unique: INu2BEadPwqjFhtoTtGA-A-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7492D8115B5;
+	Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 610D7492BFB;
+	Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 3252830C0521; Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 2DF233FB77;
+	Mon, 23 Oct 2023 22:59:40 +0200 (CEST)
+Date: Mon, 23 Oct 2023 22:59:40 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: =?ISO-8859-15?Q?Marek_Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
+cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@redhat.com
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+In-Reply-To: <ZTNH0qtmint/zLJZ@mail-itl>
+Message-ID: <e427823c-e869-86a2-3549-61b3fdf29537@redhat.com>
+References: <ZTNH0qtmint/zLJZ@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB5418:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6723a6d-84c2-42dc-1cf4-08dbd3e1bf2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+p9gYNiIVmma+zPvqsOOYEmj4l5bTTtEF5o9Vjft3+Ok3R2CffXkf9CtpbMm8N0MdKh9stlNT7TYlqw7Y9HJ8VREPi9f5rPSyeLwpHO9rK8MvWfLlMiLoFgGbJum2TUPyohWMr/v+aWR8CiiyxUbsnADyRcfEvAZHELzEPVRJ053LZ8ooXs4w5RALPBnjntXyxdvqkKY6U4N7ZipFQI9hFrjwjnxbHB9xaaqOEfXVT8wZ2BUYLnrhfplXFZh7K4eRI0S6HI0SaXw3alumyAUoFYw9OtXfJlt+rY5G13wHRK8Gp7UNa82WX1y07nFk/TzbMHhT1X3zIRuv2/nLQpRli//z59RVYg24R7dM1FCyR8mOaTsfiX5lgtxqo1VRlAOEIim++SsABq0+L8VY9b3t2UhwByX436Rjt2xShVYhiUdMK2rHF6JZnCqtXtTDr3wfXOrC08u/jAUaTOJoXNCHhWrFDR4Mm5zn8cG3+IueohnhHohMOduC11eiRoN77tBRDKVNfWSx81AMrgsmwlLIO5we2WOpbfeg4D000aJe/Cn7wzwvqBvNEqI1bC9IxyFyHpic6h+TxQHxe7cyxLJ7kBNLxVI+3PT19v+xOr09WL4DF1CdxJzSkg4/TXfULTWBUnbyfJx4cN7ZiFdlSRPxmrtdDi2rLCvtf1wu2Dl/cU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(376002)(396003)(346002)(39860400002)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(2616005)(26005)(53546011)(38100700002)(66556008)(8676002)(83380400001)(6916009)(316002)(966005)(6486002)(66476007)(54906003)(4326008)(66946007)(36756003)(41300700001)(8936002)(478600001)(31686004)(31696002)(6512007)(6506007)(86362001)(5660300002)(2906002)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SHlLb1lteFIxVVhRSWNSYURxOENoczdUTGFHQ0Q3K3ZxaGRNUnpQWXVOeU5i?=
- =?utf-8?B?WjBYOGczVGk4VHdFaVBJZnRTUmltUklqQ2h1MXhCVFJZTGNWc2srR2tScDJS?=
- =?utf-8?B?K2Jvd0sxVmtSdlkraFVQQmp4NStmV1krSjN1cC95Z3FXb2VHWGZrRkI3WENt?=
- =?utf-8?B?SGd1TFZyTmVlUDZWY2xUSUNMbDE4QjROVlRWaDJmRUNIa2ZLSGZNbDMxVG9K?=
- =?utf-8?B?U1YxN0ZVdER6clB1Zm4wSERVdzBWNzZjNTZLeUJGN0lHM0N0THZ4OE5NNnQr?=
- =?utf-8?B?VVBWSU1wVEoyWmJLcUdTK0F4QzZoaWNpMHhsT2VpUHRIVEVWZFJpaTZwVW9w?=
- =?utf-8?B?dTBNRklTL3N0YkxiUG9ZSXltOTRuR3J2ZUNBNzZvOVJyamFVQlNBQlJic25F?=
- =?utf-8?B?eGpnSUU5aUNxMmY5TmpxZXo0WXlwemFNWnpTRlkxRnJyejhlSjNFSkVpOWZo?=
- =?utf-8?B?UGxwVXZNRW9WMjFwRFdLRm9Sc0l4QnAxRXRqdnp2eFZjRU5wcVg2WW9VbEYw?=
- =?utf-8?B?bUI5WCsvaDNIb3JxbVN2UTZnT0FWOUJVS0h6L3pGdWJtdWQ1bTllL0VST3Jh?=
- =?utf-8?B?VlpJdXJmdkkraGRlc3UzZ2FFODUrTXZFRXE1TlY5eHNYbk1WN2VDRlNiUmNy?=
- =?utf-8?B?bjVSTXBrTVVkWHRSNnhoa3diemhheURmVmYzTTNBN04vV0U1Uk5qRi9kTFEy?=
- =?utf-8?B?cVF5MTJaZXhNbUJaSk9DVnI5V3VPdWxBMEQ5YTJDVFpoYlM4bWJzSE00b2VH?=
- =?utf-8?B?dk9Nb0QxSThnL2tkSVpCeUJwZG01Z2NubDVYZG1WZkR6c01qaWRtRUpFVmZz?=
- =?utf-8?B?SkR2cVdGQWpuZnpXY1JtN0VoaWFDdmtZT0xRbHgyaXpBQ2ZzQTFvRFRSd3Z6?=
- =?utf-8?B?dFRNcmpCQlpiL2JDN2lOL1dLTENib0ZxQ3FwNGFuYjZXQWx4aWx4M3poc1FB?=
- =?utf-8?B?NkdET3NWaFhBemJYZWRCYWx1aUxSbVJHTWlDMWRHTWtZVkJzb0ZKSk04eUJ1?=
- =?utf-8?B?WkpqYTlmOEl6eHh1T0dIRDl2L21JK2JJdGVlRXFlY2Q2dmhXNTNCN2FnWmww?=
- =?utf-8?B?L25SaENsa0RrdlhJQzVWSXZ4a1VnbnhsTGcxaW14NG9NNlphMVdEejd2OUtJ?=
- =?utf-8?B?NXRmQndIQU5XZHJFSzdEbnhZSGhRdmVHbUJpT1BuRE80MG5PRXFBRWhGLzZT?=
- =?utf-8?B?TWJWY2s3RXNMVCtEc3pxa2xmWWo1MXpCZitnelpHeC9nVkFxMXo3eVhaODFR?=
- =?utf-8?B?dnBTb3RyT0t2dVI1WmhPak5lUUhLc21MTFlkZmN3U1lDbWdicEdOZXIvUUdr?=
- =?utf-8?B?aW9MMG1NOWRDMENxSzB6ZXNRU0gyYWJ6K29ScWh2cy91T0pZdWZMRko5NEd1?=
- =?utf-8?B?aktoaW5DL0x5TC9qZ0Z3bVpCd29DNDZTb0pURGxWdmJkYXBiNzZvTld4MmRS?=
- =?utf-8?B?SzZoZ2dVSTVONEJFeXZYNjBWWXd3aTM0Tk5qeVFZL1hZS0ZEb04zYkxEV0wr?=
- =?utf-8?B?VjZNZHBvWXp2NWQ3YTJxUllpSi9rQjAyVndUSVM3ODdqS0pLQ2pGTmlNSDhL?=
- =?utf-8?B?Sk5BWjRvalJDSGZvQkI1enZCdkh4TnBHTmFsVUd0WVREUEFadnVjN0wyR09u?=
- =?utf-8?B?SXJLb2NjYzRtSkxYUXM1NHYvUGtLSjQzSVZsL2NaWXRjbWNYVHVlc3pjTVdS?=
- =?utf-8?B?anFWMUdCd0hJb1RobzFuS3U3MlpFSlRaQVZTbk9iM1V2ei9OZlVSb0R3Q1p2?=
- =?utf-8?B?dGdjU251YkxqL3RuK2hPemZBWDhOVzdQRFhCblZBWElHNU03dHpDZDZ4blFN?=
- =?utf-8?B?STFJYWtrR043TDJxcklCUDB5TGlYWTBuS1NwNDBPNktXWW8yUHFxMGtreHdR?=
- =?utf-8?B?SXRGWnMyYTdLcTN2WmU5WjNVZmpxaHdPYTVTeFQxeFNTZ3IvSkZMYUZSbVl5?=
- =?utf-8?B?VjFyQnYvWWlDRzBGcCtreTNGUWQ1alNtby96VnZZVkhGVDR4eXJSNzEwUG5R?=
- =?utf-8?B?VlpSVkdobmJlSGlia0dEc0lRT0haQ2REa2U3TjZDeVJDS29MMk1jd3RZRGtY?=
- =?utf-8?B?M0Y5VUh3bjBseVVDMTdvKytkV0EwbHg3QVZ1VWQyMHJ0N05ocHlPNm94WTVI?=
- =?utf-8?Q?CKCRNOOuUsmpczQKxN0lfgqo1?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6723a6d-84c2-42dc-1cf4-08dbd3e1bf2c
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2023 16:04:33.9197
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fv56ySMLP1VQGwF+xqRN0Ik/IX6n8h+viAANeNKQw+ey11cqNfgi0ucqSkKO3oPtq/M37kuTsgWSewj2M1KDtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5418
+Content-Type: multipart/mixed; boundary="185210117-2082018339-1698094780=:2210101"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On 10/19/2023 15:26, Mario Limonciello wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--185210117-2082018339-1698094780=:2210101
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+Hi
+
+It's hard to say what causes this. Perhaps dm-crypt exhausts all the 
+higher-order pages and some subsystem stalls because of it.
+
+In drivers/md/dm-crypt.c in function crypt_alloc_buffer there is
+"unsigned int order = MAX_ORDER - 1"
+
+What happens if you set the "order" variable to some small value, like 1, 
+2 or 3. Does the problem go away? Could you find a threshold value 
+(something between 0 and MAX_ORDER-1) where the bug starts to appear?
+
+What happens if you replace
+"pages = alloc_pages(gfp_mask"
+with
+"pages = alloc_pages((gfp_mask & ~__GFP_KSWAPD_RECLAIM)"
+? Does the bug go away?
+
+Mikulas
+
+
+On Sat, 21 Oct 2023, Marek Marczykowski-Górecki wrote:
+
 > Hi,
 > 
-> We've recently found that there was a regression from 6.5 that broke 
-> resume from suspend-to-ram on some AMD platforms.
+> Since updating from 6.4.13 to 6.5.5 occasionally I hit a storage
+> subsystem freeze - any I/O ends up frozen. I'm not sure what exactly
+> triggers the issue, but often it happens when doing some LVM operations
+> (lvremove, lvrename etc) on a dm-thin volume together with bulk data
+> copy to/from another LVM thin volume with ext4 fs.
 > 
-> We bisected it and confirmed it's introduced by 0c7ffa32dbd6 
-> ("x86/smpboot/64: Implement arch_cpuhp_init_parallel_bringup() and 
-> enable it").
+> The storage stack I use is:
+>   nvme -> dm-crypt (LUKS) -> dm-thin (LVM thin pool) -> ext4
 > 
-> Furthermore; we confirmed that on 6.6-rc6 adding cpuhp.parallel=0 to the 
-> kernel command line avoids the issue.
+> And this whole thing running in a (PV) dom0 under Xen, on Qubes OS 4.2 to be
+> specific.
 > 
-> Here are bootup kernel logs from an affected system at 7e75178 (doesn't 
-> reproduce) and 0c7ffa32 (does reproduce).
-> https://gist.github.com/superm1/c251c0849956b8389309f03871fba091
+> I can reproduce the issue on at least 3 different machines. I did tried
+> also 6.5.6 and the issue is still there. I haven't checked newer
+> versions, but briefly reviewed git log and haven't found anything
+> suggesting a fix to similar issue.
 > 
-> Is it possible that this is caused by the system entering S3 with x2apic 
-> enabled but leaving with it disabled?
+> I managed to bisect it down to this commit:
 > 
-> I notice in the resume path on a boot with cpuhp.parallel=0 that x2apic 
-> "explicitly" gets turned on again.
+>     commit 5054e778fcd9cd29ddaa8109077cd235527e4f94
+>     Author: Mikulas Patocka <mpatocka@redhat.com>
+>     Date:   Mon May 1 09:19:17 2023 -0400
 > 
-> <snip>
-> smpboot: CPU 127 is now offline
-> ACPI: PM: Low-level resume complete
-> ACPI: PM: Restoring platform NVS memory
-> x2apic enabled
-> AMD-Vi: Virtual APIC enabled
-> AMD-Vi: Virtual APIC enabled
-> LVT offset 0 assigned for vector 0x400
-> Enabling non-boot CPUs ...
-> smpboot: Booting Node 0 Processor 1 APIC 0x2
-> masked ExtINT on CPU#1
-> ACPI: \_SB_.PLTF.C002: Found 2 idle states
-> CPU1 is up
-> smpboot: Booting Node 0 Processor 2 APIC 0x4
-> </snip>
+>     dm crypt: allocate compound pages if possible
+>     
+>     It was reported that allocating pages for the write buffer in dm-crypt
+>     causes measurable overhead [1].
+>     
+>     Change dm-crypt to allocate compound pages if they are available. If
+>     not, fall back to the mempool.
+>     
+>     [1] https://listman.redhat.com/archives/dm-devel/2023-February/053284.html
+>     
+>     Suggested-by: Matthew Wilcox <willy@infradead.org>
+>     Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+>     Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > 
-> I hypothesize this could be caused by .Lread_apicid finding x2apic 
-> disabled but then trying to read from apic_mmio_base which isn't 
-> initialized because x2apic was used (AFAICT apic_set_fixmap() never gets 
-> called in this case).
+> TBH, I'm not sure if the bug is in this commit, or maybe in some
+> functions it uses (I don't see dm-crypt functions directly involved in
+> the stack traces I collected). But reverting this commit on top of 6.5.6
+> seems to fix the issue.
 > 
-> Thanks,
+> I tried also CONFIG_PROVE_LOCKING, but it didn't show any issue.
+> 
+> I managed to collect "blocked tasks" dump via sysrq below. Few more can
+> be found at https://github.com/QubesOS/qubes-issues/issues/8575
+> 
+>     [ 4246.558313] sysrq: Show Blocked State
+>     [ 4246.558388] task:journal-offline state:D stack:0     pid:8098  ppid:1      flags:0x00000002
+>     [ 4246.558407] Call Trace:
+>     [ 4246.558414]  <TASK>
+>     [ 4246.558422]  __schedule+0x23d/0x670
+>     [ 4246.558440]  schedule+0x5e/0xd0
+>     [ 4246.558450]  io_schedule+0x46/0x70
+>     [ 4246.558461]  folio_wait_bit_common+0x13d/0x350
+>     [ 4246.558475]  ? __pfx_wake_page_function+0x10/0x10
+>     [ 4246.558488]  folio_wait_writeback+0x2c/0x90
+>     [ 4246.558498]  mpage_prepare_extent_to_map+0x15c/0x4d0
+>     [ 4246.558512]  ext4_do_writepages+0x25f/0x770
+>     [ 4246.558523]  ext4_writepages+0xad/0x180
+>     [ 4246.558533]  do_writepages+0xcf/0x1e0
+>     [ 4246.558543]  ? __seccomp_filter+0x32a/0x4f0
+>     [ 4246.558554]  filemap_fdatawrite_wbc+0x63/0x90
+>     [ 4246.558567]  __filemap_fdatawrite_range+0x5c/0x80
+>     [ 4246.558578]  file_write_and_wait_range+0x4a/0xb0
+>     [ 4246.558588]  ext4_sync_file+0x88/0x380
+>     [ 4246.558598]  __x64_sys_fsync+0x3b/0x70
+>     [ 4246.558609]  do_syscall_64+0x5c/0x90
+>     [ 4246.558621]  ? exit_to_user_mode_prepare+0xb2/0xd0
+>     [ 4246.558632]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+>     [ 4246.558644] RIP: 0033:0x7710cf124d0a
+>     [ 4246.558654] RSP: 002b:00007710ccdfda40 EFLAGS: 00000293 ORIG_RAX: 000000000000004a
+>     [ 4246.558668] RAX: ffffffffffffffda RBX: 000064bb92f67e60 RCX: 00007710cf124d0a
+>     [ 4246.558679] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000028
+>     [ 4246.558691] RBP: 000064bb92f72670 R08: 0000000000000000 R09: 00007710ccdfe6c0
+>     [ 4246.558702] R10: 00007710cf0adfee R11: 0000000000000293 R12: 000064bb92505940
+>     [ 4246.558713] R13: 0000000000000002 R14: 00007ffc05649500 R15: 00007710cc5fe000
+>     [ 4246.558728]  </TASK>
+>     [ 4246.558836] task:lvm             state:D stack:0     pid:7835  ppid:5665   flags:0x00004006
+>     [ 4246.558852] Call Trace:
+>     [ 4246.558857]  <TASK>
+>     [ 4246.558863]  __schedule+0x23d/0x670
+>     [ 4246.558874]  schedule+0x5e/0xd0
+>     [ 4246.558884]  io_schedule+0x46/0x70
+>     [ 4246.558894]  dm_wait_for_bios_completion+0xfc/0x110
+>     [ 4246.558909]  ? __pfx_autoremove_wake_function+0x10/0x10
+>     [ 4246.558922]  __dm_suspend+0x7e/0x1b0
+>     [ 4246.558932]  dm_internal_suspend_noflush+0x5c/0x80
+>     [ 4246.558946]  pool_presuspend+0xcc/0x130 [dm_thin_pool]
+>     [ 4246.558968]  dm_table_presuspend_targets+0x3f/0x60
+>     [ 4246.558980]  __dm_suspend+0x41/0x1b0
+>     [ 4246.558991]  dm_suspend+0xc0/0xe0
+>     [ 4246.559001]  dev_suspend+0xa5/0xd0
+>     [ 4246.559011]  ctl_ioctl+0x26e/0x350
+>     [ 4246.559020]  ? __pfx_dev_suspend+0x10/0x10
+>     [ 4246.559032]  dm_ctl_ioctl+0xe/0x20
+>     [ 4246.559041]  __x64_sys_ioctl+0x94/0xd0
+>     [ 4246.559052]  do_syscall_64+0x5c/0x90
+>     [ 4246.559062]  ? do_syscall_64+0x6b/0x90
+>     [ 4246.559072]  ? do_syscall_64+0x6b/0x90
+>     [ 4246.559081]  ? xen_pv_evtchn_do_upcall+0x54/0xb0
+>     [ 4246.559093]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+>     [ 4246.559104] RIP: 0033:0x7f1cb77cfe0f
+>     [ 4246.559112] RSP: 002b:00007fff870f2560 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>     [ 4246.559141] RAX: ffffffffffffffda RBX: 00005b8d13c16580 RCX: 00007f1cb77cfe0f
+>     [ 4246.559152] RDX: 00005b8d144a2180 RSI: 00000000c138fd06 RDI: 0000000000000003
+>     [ 4246.559164] RBP: 00005b8d144a2180 R08: 00005b8d132b1190 R09: 00007fff870f2420
+>     [ 4246.559175] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
+>     [ 4246.559186] R13: 00005b8d132aacf0 R14: 00005b8d1324414d R15: 00005b8d144a21b0
+>     [ 4246.559199]  </TASK>
+>     [ 4246.559207] task:kworker/u8:3    state:D stack:0     pid:8033  ppid:2      flags:0x00004000
+>     [ 4246.559222] Workqueue: writeback wb_workfn (flush-253:4)
+>     [ 4246.559238] Call Trace:
+>     [ 4246.559244]  <TASK>
+>     [ 4246.559249]  __schedule+0x23d/0x670
+>     [ 4246.559260]  schedule+0x5e/0xd0
+>     [ 4246.559270]  io_schedule+0x46/0x70
+>     [ 4246.559280]  folio_wait_bit_common+0x13d/0x350
+>     [ 4246.559290]  ? __pfx_wake_page_function+0x10/0x10
+>     [ 4246.559302]  mpage_prepare_extent_to_map+0x309/0x4d0
+>     [ 4246.559314]  ext4_do_writepages+0x25f/0x770
+>     [ 4246.559324]  ext4_writepages+0xad/0x180
+>     [ 4246.559334]  do_writepages+0xcf/0x1e0
+>     [ 4246.559344]  ? find_busiest_group+0x42/0x1a0
+>     [ 4246.559354]  __writeback_single_inode+0x3d/0x280
+>     [ 4246.559368]  writeback_sb_inodes+0x1ed/0x4a0
+>     [ 4246.559381]  __writeback_inodes_wb+0x4c/0xf0
+>     [ 4246.559393]  wb_writeback+0x298/0x310
+>     [ 4246.559403]  wb_do_writeback+0x230/0x2b0
+>     [ 4246.559414]  wb_workfn+0x5f/0x260
+>     [ 4246.559424]  ? _raw_spin_unlock+0xe/0x30
+>     [ 4246.559434]  ? finish_task_switch.isra.0+0x95/0x2b0
+>     [ 4246.559447]  ? __schedule+0x245/0x670
+>     [ 4246.559457]  process_one_work+0x1df/0x3e0
+>     [ 4246.559466]  worker_thread+0x51/0x390
+>     [ 4246.559475]  ? __pfx_worker_thread+0x10/0x10
+>     [ 4246.559484]  kthread+0xe5/0x120
+>     [ 4246.559495]  ? __pfx_kthread+0x10/0x10
+>     [ 4246.559504]  ret_from_fork+0x31/0x50
+>     [ 4246.559514]  ? __pfx_kthread+0x10/0x10
+>     [ 4246.559523]  ret_from_fork_asm+0x1b/0x30
+>     [ 4246.559536]  </TASK>
+> 
+> -- 
+> Best Regards,
+> Marek Marczykowski-Górecki
+> Invisible Things Lab
+> 
+--185210117-2082018339-1698094780=:2210101--
 
-AFAICT the issue is indeed that x2apic isn't re-enabled during s3
-resume.
-
-I've posted a series that I confirmed resolves the issue here:
-
-https://lore.kernel.org/all/20231023160018.164054-1-mario.limonciello@amd.com/T/#t
