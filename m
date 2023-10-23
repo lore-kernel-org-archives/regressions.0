@@ -1,184 +1,184 @@
-Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A911C3C
-	for <regressions@lists.linux.dev>; Sun, 22 Oct 2023 23:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=epreston.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epreston.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A5B23C2
+	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 07:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=epreston.net header.i=@epreston.net header.b="Ta90tR8f"
-X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 888EA6C147F;
-	Sun, 22 Oct 2023 22:54:08 +0000 (UTC)
-Received: from s147.servername.online (unknown [127.0.0.6])
-	(Authenticated sender: hostpapa)
-	by relay.mailchannels.net (Postfix) with ESMTPA id C958A6C14FE;
-	Sun, 22 Oct 2023 22:54:07 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1698015248; a=rsa-sha256;
-	cv=none;
-	b=p1XSiuDfEGfFFe133Drjv75NmISP3m2xKtSYnEKxA9QAZ6eo+RU/A2Ir8KRxVQNc6G22Gx
-	574elESDREfq//cB5VLr1Gfqzv1oguiWdh2fucFdiERCACNp1gCk8ixSQiSKqpS9sD/E6V
-	UvOfS6oFWt4XMUpBFCOAxouhW8fsDdsQKw8yuV0bvXYrbrzUruM20v3a2IyrWibLR7zvWB
-	eCgSePRcc1UwpeBf20F5Z52QcMIcn2TAVMvKcZH9LQ6sBY2jtczfSlQZX5IJ/Dcg7+R0jD
-	EmucH1FfHchVoVvXSDRFq6WIetLvTyqWfT3mcgsTNdyKmBzdoi4GvkulXUPoSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1698015248;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=gDWtLghsWx6nnjrewvz+iHsajZfjSscfDKYT9XWGKC4=;
-	b=N77UMFFiUqGn7YwdJM1eTxCeWT+Nxq/6oHAn0YTsvlDHPQEy0cZ8ghvrTVZaKEaz58iEg5
-	hjfH+7kQS6exB5shNst6o0wtUsueBlTyIh9YKLO1+L+rwIi1PNtYfAwwIsrSYPQu2Vf1Uk
-	kjuKkLISt2/yQ2YDJuL4NraPudTqdk84OmgTrXNGnHcf3xZMtb1lW8BeMNHZoghXztFUnx
-	17BGigJIhP0iIBBUdsEfNBJ1oIjX3axFnaVw1oIleEMeet+p8RquVnfedEtYgdc2pLlzC4
-	xfWojJyAkMPldM/3UjMYAkFN1E4RFSsNDNc+p3kbH5yuqnqthWk7/jS4Drk0eQ==
-ARC-Authentication-Results: i=1;
-	rspamd-846f4b758b-nczqm;
-	auth=pass smtp.auth=hostpapa smtp.mailfrom=x.arch@epreston.net
-X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostpapa|x-authuser|x.reply@epreston.net
-X-MailChannels-Auth-Id: hostpapa
-X-Share-Unite: 72aad6c35d547ad4_1698015248342_2281811999
-X-MC-Loop-Signature: 1698015248342:1735253197
-X-MC-Ingress-Time: 1698015248342
-Received: from s147.servername.online (s147.servername.online
- [204.44.192.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384)
-	by 100.101.178.134 (trex/6.9.2);
-	Sun, 22 Oct 2023 22:54:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=epreston.net; s=default; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gDWtLghsWx6nnjrewvz+iHsajZfjSscfDKYT9XWGKC4=; b=Ta90tR8fH+Hn0FFKu0Klb+TL/0
-	2md2e0S2BvJ/k5oyLoQ0rGdYeEY02Mx1sWL2FCOchqFntR/rhP0mirFaj/GAs/2wtlGe/SwyAjgeF
-	ut8oso2MupsKV49YQ5tzdge0cIGO93h6m2/HKPcAC1lwMfJsPbeeZCc6kgapZ9vuPCKXV61uiFxpI
-	5i5fB98KdSZHWj0YQjOIvzzwuu5N9IPVYGIphI549lQqhdDSz0Llmg9xHHHhE6SmnhzoddNr/sPhd
-	nLDlWnp2gN4+h4RJJb3mO6Mdt2lD4ninByZqRx7dF2x5RnkjB/yPJcPejk2ltXkWRc0dlNig9FSjs
-	jliRyrkw==;
-Received: from [50.35.115.28] (port=46014 helo=P70.localdomain)
-	by s147.servername.online with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <x.arch@epreston.net>)
-	id 1quhKf-0009tT-2z;
-	Sun, 22 Oct 2023 15:54:07 -0700
-Date: Sun, 22 Oct 2023 15:54:05 -0700
-From: Evan Preston <x.arch@epreston.net>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ybq7EU9/"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so2191130b3a.1
+        for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 00:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698046953; x=1698651753; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pa8Ycg4ZbuyhxwxZIcfT7kG/2CbPeVVKLuGjTYraxqk=;
+        b=Ybq7EU9/kuVvy3Jd3j6/jxsCM8tePOaEUFWnVT8IfS6GYFUg9/w9VPv+bPbVl410cy
+         XDTxYEZHfE/XaAhL//0TPbtynnyrXlczYxr4FF9bheRpbJEO4saLs713uP+HA+V0NB+D
+         nVVsSLuFZ5n4lIfWnbYlpnTqxot+pDbKVl9HcutIRVVKE+7hFsSchLE+1kNtcZljnPZ7
+         GRfw2372zfSK0zhN4mo6sgIuvtap5A+4JhFNEQ0QtK5vlqGWiM6JiA0tiNEHyRjicexT
+         e1u1tHiz+ypA3u1TnCifCZ70ycGghiRf0w1A3TyLcAEYQlcs1TgBCEnRLKpBev28whUJ
+         6Y2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698046953; x=1698651753;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pa8Ycg4ZbuyhxwxZIcfT7kG/2CbPeVVKLuGjTYraxqk=;
+        b=EtiVKvQh1yPklUgq2rHDvk+2wZno16TQSw3dXqmymyHj31HJ4tmqcGCtxO8dexpO3i
+         /4szEPma5NDBL9EbrheBfNGi741e0Oqniz4RX536KxIqjf1p2q6P4y3//Rg7r7NXVsT5
+         JKSiDNfrnjfouTixvogNdAl/v11zYRr5c2/i4g1vz9Jh7KZBitS5guJjUBHCnqDs7DAA
+         fvZLlUhfjuNwXl8+4DH/hK0OLYgazblVWpnDsC71pzkqpGj1s4me2vbHs/cAgfhd51jh
+         AnVkrBcRFuzx2AyCz/S6kw2mUQiuvVkAw1T1zroD/rftbim8tvhuEvNHP2NN0T82FyQ7
+         3MeA==
+X-Gm-Message-State: AOJu0YxCvdCAuBnQG6RZ6ZAJLLecC2Gr57qYKAbTwEAY4B4ZW+CF2B1e
+	LJlp9/X67gL7uKu1q7ZClWo=
+X-Google-Smtp-Source: AGHT+IEs7/8FcfO1BLY4N1AIr3dYPHCRPbKB0+2YYwmIFSVIC2Crej+Is3LJdco4cmwE80d3fxdVOA==
+X-Received: by 2002:a05:6a20:1592:b0:12f:c0c1:d70 with SMTP id h18-20020a056a20159200b0012fc0c10d70mr7030892pzj.40.1698046953213;
+        Mon, 23 Oct 2023 00:42:33 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id b2-20020a17090a990200b0027758c7f585sm5021888pjp.52.2023.10.23.00.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 00:42:32 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id DD669818DF16; Mon, 23 Oct 2023 14:42:29 +0700 (WIB)
+Date: Mon, 23 Oct 2023 14:42:29 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Jia, Fang" <fang.jia@windriver.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Linux Networking <netdev@vger.kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Jaak Ristioja <jaak@ristioja.ee>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Linux DRI Development <dri-devel@lists.freedesktop.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
- L570
-Message-ID: <ZTWoDSPxGO-ApR4r@P70.localdomain>
-References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
- <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
- <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
- <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
- <ZSO9uArAtsPMPeTP@debian.me>
- <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
- <c9b79a69-bdc1-4457-900d-709a15d99568@leemhuis.info>
- <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
+	Linux Regression <regressions@lists.linux.dev>
+Subject: Re: phy: fixed link 1000 or 100 set with autoneg off
+Message-ID: <ZTYj5Wyg8qD7_Npd@debian.me>
+References: <d7aa45f8-adf8-ff9a-b2c4-04b0f2cc3c06@windriver.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KNi0/Pi1fnSluti+"
+Content-Disposition: inline
+In-Reply-To: <d7aa45f8-adf8-ff9a-b2c4-04b0f2cc3c06@windriver.com>
+
+
+--KNi0/Pi1fnSluti+
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
-X-AuthUser: x.reply@epreston.net
+Content-Transfer-Encoding: quoted-printable
 
-On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
-> On Fri, Oct 20, 2023 at 5:35 PM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
-> >
-> > On 09.10.23 10:54, Huacai Chen wrote:
-> > > On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> > >> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
-> > >>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> > >>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
-> > >>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> > >>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
-> > >>>>>>
-> > >>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
-> > >>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
-> > >>>>>> screen after boot until the display manager starts... if it does start
-> > >>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
-> > >>>>>>
-> > >>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
-> > >>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
-> > >>>>>> subsys_initcall_sync").
-> > >>>>>
-> > >>>>> Hmmm, no reaction since it was posted a while ago, unless I'm missing
-> > >>>>> something.
-> > >>>>>
-> > >>>>> Huacai Chen, did you maybe miss this report? The problem is apparently
-> > >>>>> caused by a commit of yours (that Javier applied), you hence should look
-> > >>>>> into this.
-> > >>>> I'm sorry but it looks very strange, could you please share your config file?
-> > >>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
-> > >>> again. So I guess the reason:
-> > >>
-> > >> Did Jaak reply privately? It should have been disclosed in public
-> > >> ML here instead.
-> > > Yes, he replied privately, and disabling DRM_SIMPLEDRM was suggested by me.
-> >
-> > Well, this to me still looks a lot (please correct me if I'm wrong) like
-> > regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
-> > if I understood things correctly. Or is there a proper fix for this
-> > already in the works and I just missed this? Or is there some good
-> > reason why this won't/can't be fixed?
-> DRM_SIMPLEDRM was enabled but it didn't work at all because there was
-> no corresponding platform device. Now DRM_SIMPLEDRM works but it has a
-> blank screen. Of course it is valuable to investigate further about
-> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort because
-> I don't have a same machine.
-> 
-> Huacai
+On Mon, Oct 23, 2023 at 03:01:10PM +0800, Jia, Fang wrote:
+> Hi Experts,
+>=20
+> We use NXP LS1046 board and face an issue about the eth interface speed.
+>=20
+> 1) Scenario
+>=20
+> we set fixed link 1000Mb/s in device tree.
+>=20
+> However, after we set the auto-neg off, then the eth1's speed changed to =
+10M
+> and Duplex changed to Half.
+> The value of /sys/class/net/eth1/speed is 10 and /sys/class/net/eth1/dupl=
+ex
+> is half
+>=20
+> 2) Log is as following.
+>=20
+> # ifconfig eth1 up
+> # ethtool eth1
+> Settings for eth1:
+>         Supported ports: [ MII ]
+>=20
+>         Supported link modes:   1000baseT/Full
+>         Supported pause frame use: Symmetric Receive-only
+>         Supports auto-negotiation: Yes
+>=20
+>=20
+>         Supported FEC modes: Not reported
+>=20
+>=20
+>         Advertised link modes:  1000baseT/Full
+>         Advertised pause frame use: Symmetric Receive-only
+>=20
+>=20
+>         Advertised auto-negotiation: Yes
+>         Advertised FEC modes: Not reported
+>         Speed: 1000Mb/s
+>         Duplex: Full
+>         Port: MII
+>         PHYAD: 1
+>         Transceiver: internal
+>         Auto-negotiation: on
+>         Supports Wake-on: d
+>         Wake-on: d
+>         Current message level: 0xffffffff (-1)
+>                                drv probe link timer ifdown ifup rx_err
+> tx_err tx_queued intr tx_done rx_status pktdata hw wol 0xffff8000
+>         Link detected: yes
+>=20
+> # ethtool -s eth1 autoneg off
+> # ethtool eth1
+> Settings for eth1:
+>         Supported ports: [ MII ]
+>         Supported link modes:   1000baseT/Full
+>         Supported pause frame use: Symmetric Receive-only
+>         Supports auto-negotiation: Yes
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  1000baseT/Full
+>         Advertised pause frame use: Symmetric Receive-only
+>         Advertised auto-negotiation: No
+>         Advertised FEC modes: Not reported
+>         Speed: 10Mb/s
+>         Duplex: Half
+>         Port: MII
+>         PHYAD: 1
+>         Transceiver: internal
+>         Auto-negotiation: off
+>         Supports Wake-on: d
+>         Wake-on: d
+>         Current message level: 0xffffffff (-1)
+>                                drv probe link timer ifdown ifup rx_err
+> tx_err tx_queued intr tx_done rx_status pktdata hw wol 0xffff8000
+>         Link detected: yes
+>=20
+> 3) After code tracing, we found that:
+>=20
+> phy_state_machine()
+> 	state PHY_RUNNING: phy_check_link_status()
+> 		phy_read_status()
+> 			genphy_read_status()
+> 				genphy_read_status_fixed()
+>=20
+> In genphy_read_status_fixed(), the speed and duplex changed.
+> It seems like the bmcr value is always 0x1000 from swphy_read_reg().
+>=20
+> After revert the commit 726097d6d6d(net: phy: improve auto-neg emulation =
+in
+> swphy), then the Speed and Duplex shown comes back to 1000M and Full.
+>=20
 
-I am having the same issue on a Lenovo Thinkpad P70 (Intel Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).  Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank screen after boot and a rapidly flashing device-access-status indicator.
+Thanks for the regression report. I'm adding it to regzbot
 
-> >
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > --
-> > Everything you wanna know about Linux kernel regression tracking:
-> > https://linux-regtracking.leemhuis.info/about/#tldr
-> > If I did something stupid, please tell me, as explained on that page.
-> >
-> > #regzbot poke
-> >
-> > >>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
-> > >>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
-> > >>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
-> > >>> no platform device created for SIMPLEDRM at early stage, so it seems
-> > >>> also "no problem".
-> > >>
-> > >> I don't understand above. You mean that after that commit the platform
-> > >> device is also none, right?
-> > > No. The SIMPLEDRM driver needs a platform device to work, and that
-> > > commit makes the platform device created earlier. So, before that
-> > > commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
-> > > commit, SIMPLEDRM works, but the screen is blank.
-> > >
-> > > Huacai
-> > >>
-> > >> Confused...
-> > >>
-> > >> --
-> > >> An old man doll... just what I always wanted! - Clara
-> > >
-> > >
+#regzbot ^introduced: 726097d6d6d8e9
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--KNi0/Pi1fnSluti+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZTYj3QAKCRD2uYlJVVFO
+oxlGAP9AXy3/h8cT+yMgk2wxRTXoknz4RCWC3o5I9Rg6TOIXwAEA+nlhPhUX/wl4
+6atnTHxo3agKlgNdUhi76kpTfg5qDAI=
+=cCKp
+-----END PGP SIGNATURE-----
+
+--KNi0/Pi1fnSluti+--
