@@ -1,138 +1,134 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DE71863
-	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 01:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anarazel.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anarazel.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7071863
+	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 02:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="laaBaHL8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OKq3Coa0"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.nyi.internal (Postfix) with ESMTP id 05C805C039A;
-	Mon, 23 Oct 2023 21:36:19 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Mon, 23 Oct 2023 21:36:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1698111379; x=1698197779; bh=9J
-	0ZoSHZZJfNIXjsydauE4Wu3MSGMm0P6Y6Lgsx/GH0=; b=laaBaHL84tTgZVXECW
-	5LTJeVP7eWWuorRB9p0QnWRCi9+2jXPQTvzUfcwxh0yHZtS51x+BBAoaEpKl3trj
-	4viciQ7ctOUKJ/GAcg91lL/lyg/QTY9M/OWzdBpDVV+UUJQIyqRgnGET75GqqDWh
-	tjqBCNPIlsXhTShh3uGmagzZCmmTO11P0PzkitZodnVFWbz4+MLrMlUBNsO53Tus
-	zxR0W1+xWmWqHv+6mvEObYdGcEJiBqcvG4YEUrNjhkE8UjEkPO6IFqU/Rr01erYW
-	4vSYK5BvNlbHZcNTGGPREAPBViscT3lFG7o70ADlGt0YP/kUCi8PEWiT61SgLEu0
-	eV3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1698111379; x=1698197779; bh=9J0ZoSHZZJfNI
-	XjsydauE4Wu3MSGMm0P6Y6Lgsx/GH0=; b=OKq3Coa0rNBd/0W4x+PmsT9zPJmaS
-	J0hUFQASvmahTuECcvsqrehMpzDCwjrjH3fpS0Y/PwCFGzfIyUUB3rsXolOoqVxW
-	uwUXnZCVqLZ1ZwQEau3YWwBJlPm4jgkWad+zbmIiA460+kDzETaluQzLjErVatq1
-	oQF7CVdRq6xebn/tex6TeT4DXiaJVcW6ctJ/eShl0ozz9vCo9RTxB99Nk1mYmrR/
-	sk0SXTlaJGPEWoUwqMgAyt3NRZtGNOTZbl9iBQ2ks8TRMo8GRbrg1uMQxX1HeFCT
-	CK0LJxIfV3bbtOla2ceqQLQ/cJsCdX3Uu1z3IZ/ePn9O+9fZ610vy/zUQ==
-X-ME-Sender: <xms:kh83ZRPeEWMGVEVR2s3M1OSI4LDEDTMRkzuuEGOznVJvqDIGVtGMbA>
-    <xme:kh83ZT-8mreZXyvCYgAsK5bYfq4wGfpIZhY_jJvF_yWZtZbD08_dvreOjahsxw33z
-    oVl5rZ9B_J1EGJpqQ>
-X-ME-Received: <xmr:kh83ZQQZd1UfQw-4bU0cGWIu8u7QTvT85CVxRHLdObx-he5aaZLNUJSA28OL38GZp7izLBEmSbPSLtCPoHVPVbJLBX5Lldplga9f3MzEk9MiSikIvqG9wAG2xjF2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkeejgdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
-    htthgvrhhnpedvffefvefhteevffegieetfefhtddvffejvefhueetgeeludehteevudei
-    tedtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhgurhgvshesrghnrghrrgiivghlrdguvg
-X-ME-Proxy: <xmx:kh83ZduqwjBAvoklMkE4ENR5EP2tu6GGA_ncF10RpGKP7ggRFp7J9w>
-    <xmx:kh83ZZdFi1DeXebW5qR3USskkXcJhKPUh9Vy8c4nWhs1IpDHZeMxBg>
-    <xmx:kh83ZZ3n7AWqtqzkYtUejhAg9upmWa73mqb_G0xCdfMCt0AEEoEJWg>
-    <xmx:kx83ZaVrukIljQDpw8ZgK55tMJcsBytTwqi6ekGJ14yswXeW3DSUjg>
-Feedback-ID: id4a34324:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 23 Oct 2023 21:36:18 -0400 (EDT)
-Date: Mon, 23 Oct 2023 18:36:16 -0700
-From: Andres Freund <andres@anarazel.de>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	linux-ext4@vger.kernel.org,
-	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
-Subject: Re: task hung in ext4_fallocate #2
-Message-ID: <20231024013616.pq5wdgmfb55mnyze@awork3.anarazel.de>
-References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
- <20231018004335.GA593012@mit.edu>
- <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
- <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfZ/LflM"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-507d1cc0538so5832057e87.2
+        for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 19:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698115893; x=1698720693; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YZaWM6/+je0+6Ad3eiiKjXQ3HfajEyj0oCdz07xSxDw=;
+        b=VfZ/LflMMKSijKTHvD6B8W580Psr7FBJD/qGjLBvwHWD3/kqhutvA00R/AE0Am8HWq
+         fnMAEAWS5jXCCQ0Yf+Tpkya9lv2SoTqnrCzdt02BWlwizZiU0PQyzktMq9diTPpAkJXy
+         19A9CUskBiyckySeqme5ZnKoVUim2NDVOGpwMIQ38eYmeBsz95fsA/FlCjlFvpWD/imy
+         tKj2ZOCADnJn2meSXeymoOagXe4IVZn/X5rV6nmxI71XhvLVWre19VrtMg+aQnFR4eD6
+         ZbE1jlIexPwKmP5nRiOBZ1V1IjneYCxSW1j0RSr5OQ2l3cUVIIvxvl63gpijU2P9MT9Y
+         0mDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698115893; x=1698720693;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YZaWM6/+je0+6Ad3eiiKjXQ3HfajEyj0oCdz07xSxDw=;
+        b=gkcgHTmsKPQ8N/02RiuZSYfSnRBsAiqtU+a44MOpsQJ+OqSWK5EE+OHvbLBkacbpD9
+         h4ABBlTLLJ9ZmwUiwV9Uc5lWvA+o9u2LCHo740/T0MW//iPyn2Y0UuJUSGbEC+6i1yzT
+         P8JpHMoC7pw+j8HBbXiQMfWd4ZNor0IR3Pbn0xOkpMlW5fR6iPUMbPb1UN1Ff3JfK/+A
+         ZS6SoGRLvKswqUlhdAU5ZQWqr2DV+XlJKznNBI8KzVws078mGxjr2kwXCmL3Ubou9vue
+         H8/SSylDhYkuPs/hWEZKT93iUWcwLpSs95S6dA2f343xMJ2xAx4cTtr+hxJQip4w1VZj
+         YKfw==
+X-Gm-Message-State: AOJu0YzUNjU05DO4jmBBvXfhuWs1fynxkjBQ0FW8CFeKVhUD12hSTQR8
+	5jvAoCJdQIDYf05C7rTomplqbpiedqzC9uvXE+w=
+X-Google-Smtp-Source: AGHT+IE15gUn9K7p+MAoiUp78PHfvPFV8p3z4lXTdH0WVzVhQJC7geJvFnoRawPbvYwyDQxTWNWSLhDT2MuUwDpIUfo=
+X-Received: by 2002:a05:6512:10c9:b0:507:aa8d:a572 with SMTP id
+ k9-20020a05651210c900b00507aa8da572mr9566227lfg.49.1698115892433; Mon, 23 Oct
+ 2023 19:51:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+References: <CAO+kfxTwOvaxYV0ZRESxZB-4LHsF9b_VBjAKahhwUm5a1_c4ug@mail.gmail.com>
+ <ZPfPfyIoVxw5L6El@debian.me> <CAO+kfxQgXOsx6u+xLKGJe0KDiFsRAGstSpnrwxjQF6udgz5HFQ@mail.gmail.com>
+ <CAO+kfxTvA6N=i+jGf0XbSyqf85i=q+vR6R9d_42OWfM2sWWXaA@mail.gmail.com>
+ <CAH2r5mtUedfLSv81Z-Yb3_=AbD_QpT3tVbU1PRzMTituaw7bgA@mail.gmail.com>
+ <CAH2r5mt6YzapEKDo=hQ64yvBn7=jwMmY1c85NOABKcMPKPp3KA@mail.gmail.com>
+ <CAO+kfxQtOKoKdb+LtMeFxgu8VXa73nbmTPSfscbdwjUXM7ME_A@mail.gmail.com>
+ <CAH2r5msNf9WDHrBZSi5FhHDSewSNxMAuXTetMJDnoNh3CF_oMA@mail.gmail.com>
+ <a895f860-11fa-e6d9-d042-a32bd08f9e9d@talpey.com> <CAH2r5mszCxPtdURenMVgeVDX5zc8knumH=ASXyUufPa7SxbJBw@mail.gmail.com>
+ <ZRN9MtBqYnT6oX60@vaarsuvius> <85d538fec5a086acf62d5a803056586a6c00e4bd.camel@uniklinik-freiburg.de>
+ <83d00d50bc628a85db71adb440d8afb5@matoro.tk> <E1F307C7-9B1E-40F6-860B-6050856E8395@manguebit.com>
+ <CA6E0F87-65FD-4672-AA0C-A761E5006B7D@manguebit.com> <CAH2r5mse_2sfXF+tdTmie5LLtBuc+6DOumDH3rn=5V24yhrYVQ@mail.gmail.com>
+ <c88b2ecd27524153c2acd8aba6ae3c80@matoro.tk> <457a5483c3c4ca5bb6c7ec6f4231074c.pc@manguebit.com>
+ <779ef3ac542e7e39027dee19d669ad2f81b05bcc.camel@uniklinik-freiburg.de> <b8e37bfc992532038f9d562f5596cbf3.pc@manguebit.com>
+In-Reply-To: <b8e37bfc992532038f9d562f5596cbf3.pc@manguebit.com>
+From: Steve French <smfrench@gmail.com>
+Date: Mon, 23 Oct 2023 21:51:21 -0500
+Message-ID: <CAH2r5muM71aR9gwgu7ep0dP3SBTkMjVnH5OmXz5JEiB2JsuBBw@mail.gmail.com>
+Subject: Re: Possible bug report: kernel 6.5.0/6.5.1 high load when CIFS share
+ is mounted (cifsd-cfid-laundromat in"D" state)
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>, 
+	"matoro_mailinglist_kernel@matoro.tk" <matoro_mailinglist_kernel@matoro.tk>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>, "bagasdotme@gmail.com" <bagasdotme@gmail.com>, 
+	"paul@darkrain42.org" <paul@darkrain42.org>, "tom@talpey.com" <tom@talpey.com>, 
+	"ronniesahlberg@gmail.com" <ronniesahlberg@gmail.com>, 
+	"bharathsm@microsoft.com" <bharathsm@microsoft.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"brian.pardy@gmail.com" <brian.pardy@gmail.com>, "nspmangalore@gmail.com" <nspmangalore@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+We probably want this one as well ...
 
-On 2023-10-24 12:12:23 +1100, Dave Chinner wrote:
-> [cc Jens, io-uring]
+commit 2da338ff752a2789470d733111a5241f30026675
+Author: Steve French <stfrench@microsoft.com>
+Date:   Tue Sep 19 11:35:53 2023 -0500
 
-Yes, good call, had been meaning to do that but forgot.
+    smb3: do not start laundromat thread when dir leases
+     disabled
 
-> On Tue, Oct 17, 2023 at 07:50:09PM -0700, Andres Freund wrote:
-> > I had the idea to look at the stacks (via /proc/$pid/stack) for all postgres
-> > processes and the associated io-uring threads, and then to deduplicate them.
-> > 
-> > 22x:
-> > ext4_file_write_iter (./include/linux/fs.h:1073 fs/ext4/file.c:57 fs/ext4/file.c:564 fs/ext4/file.c:715)
-> > io_write (./include/linux/fs.h:1956 io_uring/rw.c:926)
-> > io_issue_sqe (io_uring/io_uring.c:1878)
-> > io_wq_submit_work (io_uring/io_uring.c:1960)
-> > io_worker_handle_work (io_uring/io-wq.c:596)
-> > io_wq_worker (io_uring/io-wq.c:258 io_uring/io-wq.c:648)
-> > ret_from_fork (arch/x86/kernel/process.c:147)
-> > ret_from_fork_asm (arch/x86/entry/entry_64.S:312)
-> 
-> io_uring does some interesting stuff with IO completion and iomap
-> now - IIRC IOCB_DIO_CALLER_COMP is new 6.6-rc1 functionality. This
-> flag is set by io_write() to tell the iomap IO completion handler
-> that the caller will the IO completion, avoiding a context switch
-> to run the completion in a kworker thread.
-> 
-> It's not until the caller runs iocb->dio_complete() that
-> inode_dio_end() is called to drop the i_dio_count. This happens when
-> io_uring gets completion notification from iomap via
-> iocb->ki_complete(iocb, 0);
-> 
-> It then requires the io_uring layer to process the completion
-> and call iocb->dio_complete() before the inode->i_dio_count is
-> dropped and inode_dio_wait() will complete.
-> 
-> So what I suspect here is that we have a situation where the worker
-> that would run the completion is blocked on the inode rwsem because
-> this isn't a IOCB_NOWAIT IO and the fallocate call holds the rwsem
-> exclusive and is waiting on inode_dio_wait() to return.
-> 
-> Cc Jens, because I'm not sure this is actually an ext4 problem - I
-> can't see why XFS won't have the same issue w.r.t.
-> truncate/fallocate and IOCB_DIO_CALLER_COMP delaying the
-> inode_dio_end() until whenever the io_uring code can get around to
-> processing the delayed completion....
+    When no directory lease support, or for IPC shares where directories
+    can not be opened, do not start an unneeded laundromat thread for
+    that mount (it wastes resources).
 
-The absence of a reproducer obviously is not proof of an absence of
-problems. With that said, I have run the workload on xfs for far longer on
-both bigger and smaller machines, without triggering the same symptoms.
+    Fixes: d14de8067e3f ("cifs: Add a laundromat thread for cached director=
+ies")
+    Reviewed-by: Paulo Alcantara (SUSE) <pc@manguebit.com>
+    Acked-by: Tom Talpey <tom@talpey.com>
+    Signed-off-by: Steve French <stfrench@microsoft.com>
 
-Greetings,
 
-Andres Freund
+
+Any objections to adding that one to the list as well?  The patches
+all seem to apply fine to current 6.5-stable-rc
+
+On Mon, Oct 23, 2023 at 9:07=E2=80=AFAM Paulo Alcantara <pc@manguebit.com> =
+wrote:
+>
+> "Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de> writes:
+>
+> > I can confirm that the patches apply cleanly on 6.5.8 and help a lot
+> > with the issue here (vers=3D3.1.1, gentoo client, MS AD server with DFS=
+).
+>
+> Thanks for testing it.
+>
+> Steve, I would suggest below commits for v6.5.y
+>
+>         238b351d0935 ("smb3: allow controlling length of time directory e=
+ntries are cached with dir leases")
+>         6a50d71d0fff ("smb3: allow controlling maximum number of cached d=
+irectories")
+>         2da338ff752a ("smb3: do not start laundromat thread when dir leas=
+es  disabled")
+>         e95f3f744650 ("smb: client: make laundromat a delayed worker")
+>         81ba10959970 ("smb: client: prevent new fids from being removed b=
+y laundromat")
+>
+> If OK, please ask stable team to pick those up.
+
+
+
+--=20
+Thanks,
+
+Steve
