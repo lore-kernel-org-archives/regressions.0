@@ -1,184 +1,78 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D363CCF9
-	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 18:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IGklAHBY"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7a66bf80fa3so54807439f.0
-        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 11:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1698172528; x=1698777328; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rh49hnxveSHpPqxFNsKHQhjblqpWbfArPQXsCbv9Cx8=;
-        b=IGklAHBYQLf+3JzFZaZMbBvhRdc6tXs5Np37o7lq92tfgdQYWrTTDFEs7sIzTqywtk
-         /AWe1/HMhmojjpNW/MPZHDm8MwKLXOeh6T3cva/LewJok0rsJ4fFaXU+WRZHZny3YSxl
-         T1d2gPUx9xsgn5y9ee09ADkPCtdj6AOdf8w9l2S7JSgYl706TQYC+463xOJHul6a6lqc
-         93e5hYMc0wIMD4RVOE+FMZT8u+Jz9U7OxObsKZBBkjEaMq/jjPPLM9zosB0/mI/lAAns
-         YF195lI2WSbamauemZF+HGlm6IoGQ+/3tRp14EPCre88ehPIhcrGFtOPTZBJkVwvUXRc
-         o+lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698172528; x=1698777328;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rh49hnxveSHpPqxFNsKHQhjblqpWbfArPQXsCbv9Cx8=;
-        b=TBQdiVZ8NJIR/1y9eNniVM0tqbx7tQfaCzp3soQLc+fihYkiD1XNyXxc6L3LVdzgaQ
-         50FUYkvJmOiRTU0AXGa3kO4NDNsHryou6Pt6xGoaeod63EvwmmQfzeBd0Xk9J2AlcLuX
-         4725huybvEjFoPQHKJYQLHUlx6LAuWAJKJTNkosXn8ygJE5SeKZQ4w1bbiRcoTac+zLi
-         sz85FRwMjY++70tzDuU1376Pdanq2kKLKhhewy/6QB1cL3gqzxirkLRbLIF1DtrtFft5
-         qECNXYkgyxwl+/sBwhm1MyhNlhrKfqRdoZSk17Jnj+xEJsZBZ9t0pCOehm6pPuGPmJTU
-         Ng0A==
-X-Gm-Message-State: AOJu0YwBwD9C6sGZCWKrIuD9DgT5vP4p6BeLePvwSViaoo6p8BWl7Do/
-	LDPXzuCcs3p991jf0a5uO3s+mg==
-X-Google-Smtp-Source: AGHT+IFdz/vLyj7MWTKRr/BUKOjk0rXEkOJDBYY0Lt8T3CuGdx3jA9ZeQwlZxJOIMUJWoiayiIsJVw==
-X-Received: by 2002:a05:6e02:4ac:b0:34e:2a69:883c with SMTP id e12-20020a056e0204ac00b0034e2a69883cmr11603414ils.1.1698172527817;
-        Tue, 24 Oct 2023 11:35:27 -0700 (PDT)
-Received: from [192.168.1.94] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id dp35-20020a0566381ca300b0042b068d921esm3025149jab.16.2023.10.24.11.35.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Oct 2023 11:35:27 -0700 (PDT)
-Message-ID: <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
-Date: Tue, 24 Oct 2023 12:35:26 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7775A323C
+	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 20:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [78.30.35.151] (port=58754 helo=gnumonks.org)
+	by ganesha.gnumonks.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <pablo@gnumonks.org>)
+	id 1qvNkf-008pvw-J8; Tue, 24 Oct 2023 22:11:47 +0200
+Date: Tue, 24 Oct 2023 22:11:44 +0200
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Vladimir Smelhaus <vl.sm@email.cz>,
+	Linux Netfilter <netfilter@vger.kernel.org>, coreteam@netfilter.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Subject: Re: Flowtables ignore timeout settings in recent kernels
+Message-ID: <ZTglADWVBgKxKOIC@calendula>
+References: <ughg4v$130b$1@ciao.gmane.io>
+ <ZSyBtn8cplLWoNn-@debian.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: task hung in ext4_fallocate #2
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-To: Dave Chinner <david@fromorbit.com>, Andres Freund <andres@anarazel.de>
-Cc: Theodore Ts'o <tytso@mit.edu>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
- =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
- gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- io-uring@vger.kernel.org
-References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
- <20231018004335.GA593012@mit.edu>
- <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
- <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
- <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
-In-Reply-To: <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZSyBtn8cplLWoNn-@debian.me>
+X-Spam-Score: -1.9 (-)
 
-On 10/24/23 8:30 AM, Jens Axboe wrote:
-> I don't think this is related to the io-wq workers doing non-blocking
-> IO. The callback is eventually executed by the task that originally
-> submitted the IO, which is the owner and not the async workers. But...
-> If that original task is blocked in eg fallocate, then I can see how
-> that would potentially be an issue.
+On Mon, Oct 16, 2023 at 07:20:06AM +0700, Bagas Sanjaya wrote:
+> On Sun, Oct 15, 2023 at 09:56:14PM +0200, Vladimir Smelhaus wrote:
+> > Netfilter ignores the timeout settings for a flowtable
+> > 
+> > # sysctl -a -r flowtable
+> > net.netfilter.nf_flowtable_tcp_timeout = 30
+> > net.netfilter.nf_flowtable_udp_timeout = 30
+> > 
+> > Situation. A long udp connection (tunnel) with some data flowing through a
+> > router. The connection is sent to a flowtable on the router. It's a few
+> > packets per second, more here and there, a pause here and there, and so on
+> > over and over. The pauses are minimal and are also limited by the tunnel
+> > settings to be no longer than 25 seconds. Everything is satisfying to make
+> > the connection last continuously in the flowtable and not reappear in
+> > forward. However, the connection keeps dropping out of the flowtable. It
+> > stays in the flowtable (offloaded) for a second at most and then it is
+> > kicked out, back to forward.
+> > 
+> > In an attached test script you can see counters that should be zero but are not. If I watch the normal packet flow on a particular router, I can see packets in the conntrack table that should be OFFLOAD as ASSURED.
+> > 
+> > Tested in kernel 6.5.6. In an old(er) kernel 5.10 it works as expected.
+> > 
 > 
-> I'll take a closer look.
+> Then please perform bisection to find a culprit that introduces your
+> regression (see Documentation/admin-guide/bug-bisect.rst in the kernel
+> sources for reference). Also, it'd been great if you also post the
+> reproducer script inline (within your email) instead, as some MUAs
+> (like mutt that I'm using now) may ignore the attachment.
+> 
+> Anyway, thanks for the regression report. I'm adding it to regzbot:
+> 
+> #regzbot ^introduced: v5.10..v6.5
 
-I think the best way to fix this is likely to have inode_dio_wait() be
-interruptible, and return -ERESTARTSYS if it should be restarted. Now
-the below is obviously not a full patch, but I suspect it'll make ext4
-and xfs tick, because they should both be affected.
+Fix here:
 
-Andres, any chance you can throw this into the testing mix?
+https://patchwork.ozlabs.org/project/netfilter-devel/patch/20231024193815.1987-1-pablo@netfilter.org/
 
+it is a bug from Jun 2023, regression was introduced in the v6.5
+development cycle.
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 202c76996b62..0d946b6d36fe 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4747,7 +4747,9 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 	}
- 
- 	/* Wait all existing dio workers, newcomers will block on i_rwsem */
--	inode_dio_wait(inode);
-+	ret = inode_dio_wait(inode);
-+	if (ret)
-+		goto out;
- 
- 	ret = file_modified(file);
- 	if (ret)
-diff --git a/fs/inode.c b/fs/inode.c
-index 84bc3c76e5cc..c4eca812b16b 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -2417,17 +2417,24 @@ EXPORT_SYMBOL(inode_owner_or_capable);
- /*
-  * Direct i/o helper functions
-  */
--static void __inode_dio_wait(struct inode *inode)
-+static int __inode_dio_wait(struct inode *inode)
- {
- 	wait_queue_head_t *wq = bit_waitqueue(&inode->i_state, __I_DIO_WAKEUP);
- 	DEFINE_WAIT_BIT(q, &inode->i_state, __I_DIO_WAKEUP);
-+	int ret = 0;
- 
- 	do {
--		prepare_to_wait(wq, &q.wq_entry, TASK_UNINTERRUPTIBLE);
--		if (atomic_read(&inode->i_dio_count))
--			schedule();
-+		prepare_to_wait(wq, &q.wq_entry, TASK_INTERRUPTIBLE);
-+		if (!atomic_read(&inode->i_dio_count))
-+			break;
-+		schedule();
-+		if (signal_pending(current)) {
-+			ret = -ERESTARTSYS;
-+			break;
-+		}
- 	} while (atomic_read(&inode->i_dio_count));
- 	finish_wait(wq, &q.wq_entry);
-+	return ret;
- }
- 
- /**
-@@ -2440,10 +2447,11 @@ static void __inode_dio_wait(struct inode *inode)
-  * Must be called under a lock that serializes taking new references
-  * to i_dio_count, usually by inode->i_mutex.
-  */
--void inode_dio_wait(struct inode *inode)
-+int inode_dio_wait(struct inode *inode)
- {
- 	if (atomic_read(&inode->i_dio_count))
--		__inode_dio_wait(inode);
-+		return __inode_dio_wait(inode);
-+	return 0;
- }
- EXPORT_SYMBOL(inode_dio_wait);
- 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 203700278ddb..8ea0c414b173 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -936,7 +936,9 @@ xfs_file_fallocate(
- 	 * the on disk and in memory inode sizes, and the operations that follow
- 	 * require the in-memory size to be fully up-to-date.
- 	 */
--	inode_dio_wait(inode);
-+	error = inode_dio_wait(inode);
-+	if (error)
-+		goto out_unlock;
- 
- 	/*
- 	 * Now AIO and DIO has drained we flush and (if necessary) invalidate
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4a40823c3c67..7dff3167cb0c 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2971,7 +2971,7 @@ static inline ssize_t blockdev_direct_IO(struct kiocb *iocb,
- }
- #endif
- 
--void inode_dio_wait(struct inode *inode);
-+int inode_dio_wait(struct inode *inode);
- 
- /**
-  * inode_dio_begin - signal start of a direct I/O requests
-
--- 
-Jens Axboe
-
+Thanks for reporting.
