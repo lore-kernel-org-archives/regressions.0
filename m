@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1A9273C7
-	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 12:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F872C844
+	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 14:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qvGaR-0007R8-2s; Tue, 24 Oct 2023 14:32:43 +0200
-Message-ID: <c36ebd70-0b2c-487f-a7ef-d13256f68c5c@leemhuis.info>
-Date: Tue, 24 Oct 2023 14:32:42 +0200
+	id 1qvIF3-0006SC-6t; Tue, 24 Oct 2023 16:18:45 +0200
+Message-ID: <f21c7064-dac1-4667-96c6-0d85368300ca@leemhuis.info>
+Date: Tue, 24 Oct 2023 16:18:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,50 +18,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: kernel tried to execute NX-protected page - exploit attempt?
- (uid: 0) (qbittorrent with tx-nocache-copy)
+Subject: Re: Fwd: Memleaks in offset_ctx->xa (shmem)
 Content-Language: en-US, de-DE
-To: Eric Dumazet <edumazet@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Memory Management List <linux-mm@kvack.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- "David S. Miller" <davem@davemloft.net>, Benjamin Poirier
- <bpoirier@suse.de>, Tom Herbert <therbert@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, CM76 <cmaff76@gmail.com>
-References: <2bf06faa-a0a7-4dee-90cd-a054b4e4c947@gmail.com>
- <17a017b9-9807-48ef-bc7b-be8f5df750c5@gmail.com>
- <CANn89iJxCqGeEM2sJbs8TU00Rj-iddoyoabvB7x4eEaPwCKTMA@mail.gmail.com>
+ Linux Filesystem Development <linux-fsdevel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Andrew Morton <akpm@linux-foundation.org>, vladbu@nvidia.com
+References: <429b452c-2211-436a-9af7-21332f68db7d@gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CANn89iJxCqGeEM2sJbs8TU00Rj-iddoyoabvB7x4eEaPwCKTMA@mail.gmail.com>
+In-Reply-To: <429b452c-2211-436a-9af7-21332f68db7d@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698150772;f98d06ea;
-X-HE-SMSGID: 1qvGaR-0007R8-2s
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698157128;e906a0cb;
+X-HE-SMSGID: 1qvIF3-0006SC-6t
 
-On 24.10.23 11:25, Eric Dumazet wrote:
-> On Tue, Oct 24, 2023 at 10:53 AM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->>
->> On 24/10/2023 15:15, Bagas Sanjaya wrote:
->>>
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>> I believe this is also an issue with the Broadcom bnx2 drivers since it only seem to happen when I enable "tx-nocache-copy" in ethtool.
->>[...]
->> Thanks.
->
-> This has been fixed already two weeks ago.
+On 24.10.23 09:55, Bagas Sanjaya wrote:
 > 
-> commit 71c299c711d1f44f0bf04f1fea66baad565240f1
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> We have been getting memleaks in offset_ctx->xa in our networking tests:
+>>
+>> unreferenced object 0xffff8881004cd080 (size 576):
+> [...]
+> #regzbot introduced: 6faddda69f623d https://bugzilla.kernel.org/show_bug.cgi?id=218039
+> #regzbot title: stable offsets directory operation support triggers offset_ctx->xa memory leak
 
-Eric, thx for letting us know!
+Thx for adding this to regzbot.
 
-#regzbot fix: 71c299c711d1f44f0
+Bagas, FWIW, before doing so you in the future might want to search lore
+for an abbreviated commit-id with a wildcard (e.g.
+https://lore.kernel.org/all/?q=6faddda6* ) and the bugzilla url (e.g.
+https://lore.kernel.org/all/?q=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D218039).
+Because then in this case you would have noticed that this was already
+discussed on the lists and Chuck asked to bring it to bugzilla for
+further tracking, so forwarding this likely was not worth it:
+https://lore.kernel.org/all/87ttqhq0i7.fsf@nvidia.com/
 
-Bagas, maybe in a case like this wait with forwarding the report until
-the reporter confirmed that the bug happens with a really fresh kernel.
+OTOH I wonder if what Chuck asked for was wise: '''Looks like "Memory
+Management / Other" is appropriate for shmem, and Hugh or Andrew can
+re-assign ownership to me.'''
+
+Not sure if Hugh or Andrew actually do anything like that. I doubt that,
+but maybe I'm wrong. Ahh, the joys of our bugzilla instance that many
+core developers avoid... (FWIW, I don't blame anyone for that, I
+understand why it's like that; but it complicated things...).
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -69,4 +76,6 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
+P.S., FWIW:
 
+#regzbot monitor: https://lore.kernel.org/all/87y1g9xjre.fsf@nvidia.com/
