@@ -1,238 +1,256 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A3219E0
-	for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 20:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214437E
+	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 01:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gk48TBhV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698094782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlJt6eYLJ8ET7xeE+diC8z8eWuyVZyJEdzUzasfnIlk=;
-	b=Gk48TBhVvC1StpX3IeGcqNYoR/zwukNfrMHIQqelmhehQGWqrU08/X9j5THRB8Xqt3y9Zw
-	hPb1uTvrNGym/McZ9V9SlsaeDg83I8R58PSrqQ24hxKSQhuUuNJA9Ck+yrsXcBCWiaf3hH
-	KLJ/PP1mD3+7qRSyt6YVkpWWpqTTzh8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-29-INu2BEadPwqjFhtoTtGA-A-1; Mon, 23 Oct 2023 16:59:40 -0400
-X-MC-Unique: INu2BEadPwqjFhtoTtGA-A-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7492D8115B5;
-	Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 610D7492BFB;
-	Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 3252830C0521; Mon, 23 Oct 2023 20:59:40 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 2DF233FB77;
-	Mon, 23 Oct 2023 22:59:40 +0200 (CEST)
-Date: Mon, 23 Oct 2023 22:59:40 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: =?ISO-8859-15?Q?Marek_Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
-cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-    dm-devel@redhat.com
-Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
-In-Reply-To: <ZTNH0qtmint/zLJZ@mail-itl>
-Message-ID: <e427823c-e869-86a2-3549-61b3fdf29537@redhat.com>
-References: <ZTNH0qtmint/zLJZ@mail-itl>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="SPCoGFCa"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3b2d9ac9926so2674172b6e.2
+        for <regressions@lists.linux.dev>; Mon, 23 Oct 2023 18:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698109947; x=1698714747; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i19dNL387EHarULoiwvYkhsMJkYUTQDqMA+r1AyQVYk=;
+        b=SPCoGFCa37mZDnt5IkJ12vCGxkIiloNfBxq22o/7/Vfjkf0yWTKylIpMcmGddfKuWK
+         oJ9KjNFvnk7TvfEsL3GuO/h9jUlzXv0V3wxM8o6j2iuUBTpEcOF18U181ywmMBCNbihr
+         OH416xgNIiULQ8AeiUNCytqI7HuC3HeL1q7XRrDOPkwN0Xn+hIIAirVYQSVj4VNNA27W
+         vR2q+gFnzmlWRIgNQbtK2xWv7l1s2Rv/FKBecRmHXYlbD0YVWaESqjvOkp3pNEfCytTF
+         CqdJK7dVfuZLMPrjOFjo65sxk0MY+yNUV2gvzvf6eFe9550f1+jZgCXaoFOqYlBQszWm
+         6Vlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698109947; x=1698714747;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i19dNL387EHarULoiwvYkhsMJkYUTQDqMA+r1AyQVYk=;
+        b=HxTj2uXzxwLrWE+dRb5W8V6cR3owKudwZsCPXPuiBEWcV7OZzyfWD63YJKtFOyxRRp
+         6kyIcwr8rSFpmYz+4YAJ2bopWj2kaWrbKF13ZGUgdQH7i5BumVGlo1reSAsaVCcft1SD
+         Nh/uBcKhXEyhyiF9788dShYXSzZvS0Df2b+cRDcfCog6cpAw3HjsJXjPv5U004xmBhR0
+         pVd4LsiqHgYU2GMq0x4jrUkj3SVPbqRtKReSGs4NLyEFXnpgcQfwUYDw8kxZGQjNjRzK
+         yXoT/66AHp/6KHfuX1W7RslioY4fEW61S/4wCFictPP/LOIafTgyUaF6HpVrSX7PIPFr
+         r6AQ==
+X-Gm-Message-State: AOJu0YzXXjmdhMkM9AKMIipQONaquclGwx/fhQEoQGpkTdNe6qjwcRjd
+	h72hcC2UvjqF0fh+p7aDy8xuHQ==
+X-Google-Smtp-Source: AGHT+IELxuNbh4ViaFGaaBDuDIdC0BRWNEXeQMZjZ4q5+hPRszCZ+5ELnmiNMDJ6NmnlXf+xSZohTQ==
+X-Received: by 2002:a54:408f:0:b0:3b2:e0f0:e53d with SMTP id i15-20020a54408f000000b003b2e0f0e53dmr12162830oii.37.1698109947033;
+        Mon, 23 Oct 2023 18:12:27 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id x190-20020a6263c7000000b006b5b46e4098sm7040318pfb.169.2023.10.23.18.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 18:12:26 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1qv5y3-0036UX-1X;
+	Tue, 24 Oct 2023 12:12:23 +1100
+Date: Tue, 24 Oct 2023 12:12:23 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Andres Freund <andres@anarazel.de>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	linux-ext4@vger.kernel.org,
+	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org
+Subject: Re: task hung in ext4_fallocate #2
+Message-ID: <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+ <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="185210117-2082018339-1698094780=:2210101"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+[cc Jens, io-uring]
 
---185210117-2082018339-1698094780=:2210101
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-Hi
-
-It's hard to say what causes this. Perhaps dm-crypt exhausts all the 
-higher-order pages and some subsystem stalls because of it.
-
-In drivers/md/dm-crypt.c in function crypt_alloc_buffer there is
-"unsigned int order = MAX_ORDER - 1"
-
-What happens if you set the "order" variable to some small value, like 1, 
-2 or 3. Does the problem go away? Could you find a threshold value 
-(something between 0 and MAX_ORDER-1) where the bug starts to appear?
-
-What happens if you replace
-"pages = alloc_pages(gfp_mask"
-with
-"pages = alloc_pages((gfp_mask & ~__GFP_KSWAPD_RECLAIM)"
-? Does the bug go away?
-
-Mikulas
-
-
-On Sat, 21 Oct 2023, Marek Marczykowski-Górecki wrote:
-
+On Tue, Oct 17, 2023 at 07:50:09PM -0700, Andres Freund wrote:
 > Hi,
 > 
-> Since updating from 6.4.13 to 6.5.5 occasionally I hit a storage
-> subsystem freeze - any I/O ends up frozen. I'm not sure what exactly
-> triggers the issue, but often it happens when doing some LVM operations
-> (lvremove, lvrename etc) on a dm-thin volume together with bulk data
-> copy to/from another LVM thin volume with ext4 fs.
+> On 2023-10-17 20:43:35 -0400, Theodore Ts'o wrote:
+> > On Mon, Oct 16, 2023 at 08:37:25PM -0700, Andres Freund wrote:
+> > > I just was able to reproduce the issue, after upgrading to 6.6-rc6 - this time
+> > > it took ~55min of high load (io_uring using branch of postgres, running a
+> > > write heavy transactional workload concurrently with concurrent bulk data
+> > > load) to trigger the issue.
+> > >
+> > > For now I have left the system running, in case there's something you would
+> > > like me to check while the system is hung.
+> > >
+> > > The first hanging task that I observed:
+> > >
+> > > cat /proc/57606/stack
+> > > [<0>] inode_dio_wait+0xd5/0x100
+> > > [<0>] ext4_fallocate+0x12f/0x1040
+> > > [<0>] vfs_fallocate+0x135/0x360
+> > > [<0>] __x64_sys_fallocate+0x42/0x70
+> > > [<0>] do_syscall_64+0x38/0x80
+> > > [<0>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
+> >
+> > This stack trace is from some process (presumably postgres) trying to
+> > do a fallocate() system call:
 > 
-> The storage stack I use is:
->   nvme -> dm-crypt (LUKS) -> dm-thin (LVM thin pool) -> ext4
+> Yes, it's indeed postgres.
 > 
-> And this whole thing running in a (PV) dom0 under Xen, on Qubes OS 4.2 to be
-> specific.
 > 
-> I can reproduce the issue on at least 3 different machines. I did tried
-> also 6.5.6 and the issue is still there. I haven't checked newer
-> versions, but briefly reviewed git log and haven't found anything
-> suggesting a fix to similar issue.
+> > > [ 3194.579297] INFO: task iou-wrk-58004:58874 blocked for more than 122 seconds.
+> > > [ 3194.579304]       Not tainted 6.6.0-rc6-andres-00001-g01edcfe38260 #77
+> > > [ 3194.579310] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > > [ 3194.579314] task:iou-wrk-58004   state:D stack:0     pid:58874 ppid:52606  flags:0x00004000
+> > > [ 3194.579325] Call Trace:
+> > > [ 3194.579329]  <TASK>
+> > > [ 3194.579334]  __schedule+0x388/0x13e0
+> > > [ 3194.579349]  schedule+0x5f/0xe0
+> > > [ 3194.579361]  schedule_preempt_disabled+0x15/0x20
+> > > [ 3194.579374]  rwsem_down_read_slowpath+0x26e/0x4c0
+> > > [ 3194.579385]  down_read+0x44/0xa0
+> > > [ 3194.579393]  ext4_file_write_iter+0x432/0xa80
+> > > [ 3194.579407]  io_write+0x129/0x420
+> >
+> > This could potentially be a interesting stack trace; but this is where
+> > we really need to map the stack address to line numbers.  Is that
+> > something you could do?
 > 
-> I managed to bisect it down to this commit:
+> Converting the above with scripts/decode_stacktrace.sh yields:
 > 
->     commit 5054e778fcd9cd29ddaa8109077cd235527e4f94
->     Author: Mikulas Patocka <mpatocka@redhat.com>
->     Date:   Mon May 1 09:19:17 2023 -0400
+> __schedule (kernel/sched/core.c:5382 kernel/sched/core.c:6695)
+> schedule (./arch/x86/include/asm/preempt.h:85 (discriminator 13) kernel/sched/core.c:6772 (discriminator 13))
+> schedule_preempt_disabled (./arch/x86/include/asm/preempt.h:80 (discriminator 10) kernel/sched/core.c:6831 (discriminator 10))
+> rwsem_down_read_slowpath (kernel/locking/rwsem.c:1073 (discriminator 4))
+> down_read (./arch/x86/include/asm/preempt.h:95 kernel/locking/rwsem.c:1257 kernel/locking/rwsem.c:1263 kernel/locking/rwsem.c:1522)
+> ext4_file_write_iter (./include/linux/fs.h:1073 fs/ext4/file.c:57 fs/ext4/file.c:564 fs/ext4/file.c:715)
+> io_write (./include/linux/fs.h:1956 io_uring/rw.c:926)
 > 
->     dm crypt: allocate compound pages if possible
->     
->     It was reported that allocating pages for the write buffer in dm-crypt
->     causes measurable overhead [1].
->     
->     Change dm-crypt to allocate compound pages if they are available. If
->     not, fall back to the mempool.
->     
->     [1] https://listman.redhat.com/archives/dm-devel/2023-February/053284.html
->     
->     Suggested-by: Matthew Wilcox <willy@infradead.org>
->     Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
->     Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> But I'm not sure that that stacktrace is quite right (e.g. what's
+> ./include/linux/fs.h:1073 doing in this stacktrace?). But with an optimized
+> build it's a bit hard to tell what's an optimization artifact and what's an
+> off stack trace...
 > 
-> TBH, I'm not sure if the bug is in this commit, or maybe in some
-> functions it uses (I don't see dm-crypt functions directly involved in
-> the stack traces I collected). But reverting this commit on top of 6.5.6
-> seems to fix the issue.
 > 
-> I tried also CONFIG_PROVE_LOCKING, but it didn't show any issue.
+> I had the idea to look at the stacks (via /proc/$pid/stack) for all postgres
+> processes and the associated io-uring threads, and then to deduplicate them.
 > 
-> I managed to collect "blocked tasks" dump via sysrq below. Few more can
-> be found at https://github.com/QubesOS/qubes-issues/issues/8575
-> 
->     [ 4246.558313] sysrq: Show Blocked State
->     [ 4246.558388] task:journal-offline state:D stack:0     pid:8098  ppid:1      flags:0x00000002
->     [ 4246.558407] Call Trace:
->     [ 4246.558414]  <TASK>
->     [ 4246.558422]  __schedule+0x23d/0x670
->     [ 4246.558440]  schedule+0x5e/0xd0
->     [ 4246.558450]  io_schedule+0x46/0x70
->     [ 4246.558461]  folio_wait_bit_common+0x13d/0x350
->     [ 4246.558475]  ? __pfx_wake_page_function+0x10/0x10
->     [ 4246.558488]  folio_wait_writeback+0x2c/0x90
->     [ 4246.558498]  mpage_prepare_extent_to_map+0x15c/0x4d0
->     [ 4246.558512]  ext4_do_writepages+0x25f/0x770
->     [ 4246.558523]  ext4_writepages+0xad/0x180
->     [ 4246.558533]  do_writepages+0xcf/0x1e0
->     [ 4246.558543]  ? __seccomp_filter+0x32a/0x4f0
->     [ 4246.558554]  filemap_fdatawrite_wbc+0x63/0x90
->     [ 4246.558567]  __filemap_fdatawrite_range+0x5c/0x80
->     [ 4246.558578]  file_write_and_wait_range+0x4a/0xb0
->     [ 4246.558588]  ext4_sync_file+0x88/0x380
->     [ 4246.558598]  __x64_sys_fsync+0x3b/0x70
->     [ 4246.558609]  do_syscall_64+0x5c/0x90
->     [ 4246.558621]  ? exit_to_user_mode_prepare+0xb2/0xd0
->     [ 4246.558632]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
->     [ 4246.558644] RIP: 0033:0x7710cf124d0a
->     [ 4246.558654] RSP: 002b:00007710ccdfda40 EFLAGS: 00000293 ORIG_RAX: 000000000000004a
->     [ 4246.558668] RAX: ffffffffffffffda RBX: 000064bb92f67e60 RCX: 00007710cf124d0a
->     [ 4246.558679] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000028
->     [ 4246.558691] RBP: 000064bb92f72670 R08: 0000000000000000 R09: 00007710ccdfe6c0
->     [ 4246.558702] R10: 00007710cf0adfee R11: 0000000000000293 R12: 000064bb92505940
->     [ 4246.558713] R13: 0000000000000002 R14: 00007ffc05649500 R15: 00007710cc5fe000
->     [ 4246.558728]  </TASK>
->     [ 4246.558836] task:lvm             state:D stack:0     pid:7835  ppid:5665   flags:0x00004006
->     [ 4246.558852] Call Trace:
->     [ 4246.558857]  <TASK>
->     [ 4246.558863]  __schedule+0x23d/0x670
->     [ 4246.558874]  schedule+0x5e/0xd0
->     [ 4246.558884]  io_schedule+0x46/0x70
->     [ 4246.558894]  dm_wait_for_bios_completion+0xfc/0x110
->     [ 4246.558909]  ? __pfx_autoremove_wake_function+0x10/0x10
->     [ 4246.558922]  __dm_suspend+0x7e/0x1b0
->     [ 4246.558932]  dm_internal_suspend_noflush+0x5c/0x80
->     [ 4246.558946]  pool_presuspend+0xcc/0x130 [dm_thin_pool]
->     [ 4246.558968]  dm_table_presuspend_targets+0x3f/0x60
->     [ 4246.558980]  __dm_suspend+0x41/0x1b0
->     [ 4246.558991]  dm_suspend+0xc0/0xe0
->     [ 4246.559001]  dev_suspend+0xa5/0xd0
->     [ 4246.559011]  ctl_ioctl+0x26e/0x350
->     [ 4246.559020]  ? __pfx_dev_suspend+0x10/0x10
->     [ 4246.559032]  dm_ctl_ioctl+0xe/0x20
->     [ 4246.559041]  __x64_sys_ioctl+0x94/0xd0
->     [ 4246.559052]  do_syscall_64+0x5c/0x90
->     [ 4246.559062]  ? do_syscall_64+0x6b/0x90
->     [ 4246.559072]  ? do_syscall_64+0x6b/0x90
->     [ 4246.559081]  ? xen_pv_evtchn_do_upcall+0x54/0xb0
->     [ 4246.559093]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
->     [ 4246.559104] RIP: 0033:0x7f1cb77cfe0f
->     [ 4246.559112] RSP: 002b:00007fff870f2560 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->     [ 4246.559141] RAX: ffffffffffffffda RBX: 00005b8d13c16580 RCX: 00007f1cb77cfe0f
->     [ 4246.559152] RDX: 00005b8d144a2180 RSI: 00000000c138fd06 RDI: 0000000000000003
->     [ 4246.559164] RBP: 00005b8d144a2180 R08: 00005b8d132b1190 R09: 00007fff870f2420
->     [ 4246.559175] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
->     [ 4246.559186] R13: 00005b8d132aacf0 R14: 00005b8d1324414d R15: 00005b8d144a21b0
->     [ 4246.559199]  </TASK>
->     [ 4246.559207] task:kworker/u8:3    state:D stack:0     pid:8033  ppid:2      flags:0x00004000
->     [ 4246.559222] Workqueue: writeback wb_workfn (flush-253:4)
->     [ 4246.559238] Call Trace:
->     [ 4246.559244]  <TASK>
->     [ 4246.559249]  __schedule+0x23d/0x670
->     [ 4246.559260]  schedule+0x5e/0xd0
->     [ 4246.559270]  io_schedule+0x46/0x70
->     [ 4246.559280]  folio_wait_bit_common+0x13d/0x350
->     [ 4246.559290]  ? __pfx_wake_page_function+0x10/0x10
->     [ 4246.559302]  mpage_prepare_extent_to_map+0x309/0x4d0
->     [ 4246.559314]  ext4_do_writepages+0x25f/0x770
->     [ 4246.559324]  ext4_writepages+0xad/0x180
->     [ 4246.559334]  do_writepages+0xcf/0x1e0
->     [ 4246.559344]  ? find_busiest_group+0x42/0x1a0
->     [ 4246.559354]  __writeback_single_inode+0x3d/0x280
->     [ 4246.559368]  writeback_sb_inodes+0x1ed/0x4a0
->     [ 4246.559381]  __writeback_inodes_wb+0x4c/0xf0
->     [ 4246.559393]  wb_writeback+0x298/0x310
->     [ 4246.559403]  wb_do_writeback+0x230/0x2b0
->     [ 4246.559414]  wb_workfn+0x5f/0x260
->     [ 4246.559424]  ? _raw_spin_unlock+0xe/0x30
->     [ 4246.559434]  ? finish_task_switch.isra.0+0x95/0x2b0
->     [ 4246.559447]  ? __schedule+0x245/0x670
->     [ 4246.559457]  process_one_work+0x1df/0x3e0
->     [ 4246.559466]  worker_thread+0x51/0x390
->     [ 4246.559475]  ? __pfx_worker_thread+0x10/0x10
->     [ 4246.559484]  kthread+0xe5/0x120
->     [ 4246.559495]  ? __pfx_kthread+0x10/0x10
->     [ 4246.559504]  ret_from_fork+0x31/0x50
->     [ 4246.559514]  ? __pfx_kthread+0x10/0x10
->     [ 4246.559523]  ret_from_fork_asm+0x1b/0x30
->     [ 4246.559536]  </TASK>
-> 
-> -- 
-> Best Regards,
-> Marek Marczykowski-Górecki
-> Invisible Things Lab
-> 
---185210117-2082018339-1698094780=:2210101--
+> 22x:
+> ext4_file_write_iter (./include/linux/fs.h:1073 fs/ext4/file.c:57 fs/ext4/file.c:564 fs/ext4/file.c:715)
+> io_write (./include/linux/fs.h:1956 io_uring/rw.c:926)
+> io_issue_sqe (io_uring/io_uring.c:1878)
+> io_wq_submit_work (io_uring/io_uring.c:1960)
+> io_worker_handle_work (io_uring/io-wq.c:596)
+> io_wq_worker (io_uring/io-wq.c:258 io_uring/io-wq.c:648)
+> ret_from_fork (arch/x86/kernel/process.c:147)
+> ret_from_fork_asm (arch/x86/entry/entry_64.S:312)
 
+io_uring does some interesting stuff with IO completion and iomap
+now - IIRC IOCB_DIO_CALLER_COMP is new 6.6-rc1 functionality. This
+flag is set by io_write() to tell the iomap IO completion handler
+that the caller will the IO completion, avoiding a context switch
+to run the completion in a kworker thread.
+
+It's not until the caller runs iocb->dio_complete() that
+inode_dio_end() is called to drop the i_dio_count. This happens when
+io_uring gets completion notification from iomap via
+iocb->ki_complete(iocb, 0);
+
+It then requires the io_uring layer to process the completion
+and call iocb->dio_complete() before the inode->i_dio_count is
+dropped and inode_dio_wait() will complete.
+
+So what I suspect here is that we have a situation where the worker
+that would run the completion is blocked on the inode rwsem because
+this isn't a IOCB_NOWAIT IO and the fallocate call holds the rwsem
+exclusive and is waiting on inode_dio_wait() to return.
+
+Cc Jens, because I'm not sure this is actually an ext4 problem - I
+can't see why XFS won't have the same issue w.r.t.
+truncate/fallocate and IOCB_DIO_CALLER_COMP delaying the
+inode_dio_end() until whenever the io_uring code can get around to
+processing the delayed completion....
+
+-Dave.
+
+> 
+> 8x:
+> __do_sys_io_uring_enter (io_uring/io_uring.c:2553 (discriminator 1) io_uring/io_uring.c:2622 (discriminator 1) io_uring/io_uring.c:3706 (discriminator 1))
+> do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> 
+> 2x:
+> io_wq_worker (./arch/x86/include/asm/current.h:41 (discriminator 5) io_uring/io-wq.c:668 (discriminator 5))
+> ret_from_fork (arch/x86/kernel/process.c:147)
+> ret_from_fork_asm (arch/x86/entry/entry_64.S:312)
+> 
+> 2x:
+> futex_wait_queue (./arch/x86/include/asm/current.h:41 (discriminator 5) kernel/futex/waitwake.c:357 (discriminator 5))
+> futex_wait (kernel/futex/waitwake.c:660)
+> do_futex (kernel/futex/syscalls.c:106 (discriminator 1))
+> __x64_sys_futex (kernel/futex/syscalls.c:183 kernel/futex/syscalls.c:164 kernel/futex/syscalls.c:164)
+> do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> 
+> 1x:
+> do_epoll_wait (fs/eventpoll.c:1921 (discriminator 1) fs/eventpoll.c:2318 (discriminator 1))
+> __x64_sys_epoll_wait (fs/eventpoll.c:2325)
+> do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> 
+> 1x:
+> inode_dio_wait (./arch/x86/include/asm/atomic.h:23 ./include/linux/atomic/atomic-arch-fallback.h:444 ./include/linux/atomic/atomic-instrumented.h:33 fs/inode.c:2429 fs/inode.c:2446)
+> ext4_fallocate (fs/ext4/extents.c:4752)
+> vfs_fallocate (fs/open.c:324)
+> __x64_sys_fallocate (./include/linux/file.h:45 fs/open.c:348 fs/open.c:355 fs/open.c:353 fs/open.c:353)
+> do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> 
+> 
+> 
+> 
+> > > Once I hear that you don't want me to test something out on the running
+> > > system, I think a sensible next step could be to compile with lockdep and see
+> > > if that finds a problem?
+> >
+> > That's certainly a possibiity.  But also please make sure that you can
+> > compile with with debugging information enabled so that we can get
+> > reliable line numbers.  I use:
+> >
+> > CONFIG_DEBUG_INFO=y
+> > CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
+> > CONFIG_DEBUG_INFO_REDUCED=y
+> 
+> The kernel from above had debug info enabled, albeit forced to dwarf4 (IIRC I
+> ran into issues with pahole not understanding all of dwarf5):
+> 
+> $ zgrep DEBUG_INFO /proc/config.gz
+> CONFIG_DEBUG_INFO=y
+> # CONFIG_DEBUG_INFO_NONE is not set
+> # CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT is not set
+> CONFIG_DEBUG_INFO_DWARF4=y
+> # CONFIG_DEBUG_INFO_DWARF5 is not set
+> # CONFIG_DEBUG_INFO_REDUCED is not set
+> CONFIG_DEBUG_INFO_COMPRESSED_NONE=y
+> # CONFIG_DEBUG_INFO_COMPRESSED_ZLIB is not set
+> # CONFIG_DEBUG_INFO_COMPRESSED_ZSTD is not set
+> # CONFIG_DEBUG_INFO_SPLIT is not set
+> CONFIG_DEBUG_INFO_BTF=y
+> CONFIG_DEBUG_INFO_BTF_MODULES=y
+> 
+> I switched it to CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y and am rebuilding
+> with lockdep enabled. Curious to see how long it'll take to trigger the
+> problem with it enabled...
+> 
+> Greetings,
+> 
+> Andres Freund
+> 
+
+-- 
+Dave Chinner
+david@fromorbit.com
