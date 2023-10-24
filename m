@@ -1,49 +1,49 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFACC13FED
-	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 07:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9541B7461
+	for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 08:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFKCV29J"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1cab2c24ecdso25739865ad.0
-        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 00:55:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPCt6mJL"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3b3ec45d6e9so2720214b6e.0
+        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 01:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698134133; x=1698738933; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rryMd0X9WV6QFu55eyAQUdUJEIXyug/kgmEK9WWRvfQ=;
-        b=MFKCV29JyLCrSZ3RMMpE72bB/DRTLTK9EDa2iJLPLc6lkFt6Ta9zY20HMJ0psky346
-         LLsOAUdJk1UORi5+BjUD1/XjaHnlqKrU9jXSabYa15pzUTtxmhe1D3R/ax0jEm3diZtO
-         gaCuL3bZz4u8uP5l/6nc5Iz9SEO+mVa5y7uwJm3Np6t9oJKLh1PO2cW7n2WEAIWTfS0C
-         krVdyzUizKnRa8W3qvK1p/i3kJHJ4In/bvoy/hsbcmftTpBkLgA4TPT5kT/pHtNcRhr6
-         JbBXf7Fat0ztr1kuSXxX5LOGiFOUGfB+zz589taiDpsG797ra9GeArucMlO64ByGnubc
-         Cx3w==
+        d=gmail.com; s=20230601; t=1698137616; x=1698742416; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O9ge7DvX5uTQGrTHmKjRH1P6TrhyZBVDxOOvmHA4GjM=;
+        b=OPCt6mJLylhv8YX/aT8PwpV0hWN4kEpCRP5U8/1Rv+2WHjvzxZeccj/J3llIJuBauk
+         w5mj5EN7amQdaPdUVFMurrVAoVJs4IAm2KitwiQD04Az9AFezWT6AIWUs36fGyxqqU0L
+         grQdAmeCUEfn+blfvmLbuBb11VALnjlcD9+dTkmYielq7kAxYnxP/pFKlERlgb1fWQre
+         aStolvX11ewkEZ0VPu5GD1wryRJQt6+1vWIjh/cYdB/pWAk7I++DrkZ5zcjdicT8HBOA
+         XYmAiYbBK00JyxQ95pq7qAqFn/0oeQARs2j/T6JvUYM9oPUhdP/lYlwFtctsV7Utt1Kl
+         a4ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698134133; x=1698738933;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rryMd0X9WV6QFu55eyAQUdUJEIXyug/kgmEK9WWRvfQ=;
-        b=sr4P/5ntNmjWJWjg17RgjcqQ2+figX3S8E9w9gc/oyA9qyXGpOmRVhJMFXu2JkRK44
-         eCIbDzFoFacosO9BQZ8gRuAIqk5yqOgj02sshHhDOQ9TlT/VAuVU/hpj7o6PTkYQS0zS
-         cWyc1fFwUCpeTtvu8cGqJ7bMmKygGnGbqNCHcpHWp/kF74EY0Ttz2ZTb7/aQhc6IgV0c
-         do1Fg6ysxqq4sD+TnYqAB4ulwRDzey/has/o92H5vaHlS0OMhmrV/tuxj6+LJV/HDe4I
-         e7x41A+xqc9FrFZVOJ36YPeV2Vyvtg09LwMfRkw7LqD4naeaDyW2L3PDXXicgzuzI6bL
-         u2YA==
-X-Gm-Message-State: AOJu0Yyqhix3hmkJAzOwiFTNeoFlb6Dv2ycZO15uHiiT0FAFs3BpMVl/
-	roY9Wpu1ZRJhbGb7sssv/DM=
-X-Google-Smtp-Source: AGHT+IFzIRaOleX12I4ui38DgrzuR5MDHSegKCH+0WDtTjaT5p3P/qRLJ2gPYCdahRV3qCjph6dhEw==
-X-Received: by 2002:a17:902:ca0b:b0:1c4:72c9:64ef with SMTP id w11-20020a170902ca0b00b001c472c964efmr7090388pld.40.1698134133184;
-        Tue, 24 Oct 2023 00:55:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698137616; x=1698742416;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9ge7DvX5uTQGrTHmKjRH1P6TrhyZBVDxOOvmHA4GjM=;
+        b=hcNuOvY9znU6wGnUJ0hGkHXRazlF5sKbUI7fu6LpRXxhBJDKSCE4wOQ1dkkoFk8v1a
+         JnTtEm5CfOTzaCWqrg9EMfhaFMJtFu62IMJEzKNxyl57/v0zfyAkMtMHDMHj/2Bt4iNu
+         6ngRv/Nld8I9oR8REftRJFa3A355EgfwQXA24xiX1P5CM9+bxh38NJWMAeeodTHYOEh/
+         DQYVmuJPLb7JgqLH92cYMuD9qDm1jVSawUiw6UDWej9uF1Nr+lVA9ud+HnVBCTbBrzX0
+         6xDE8SiUMmp3Nq269Bv/HymFDB62Rt7uMNfv8kRaCOWeILxONeF1XVZlgJhI1c14stTR
+         J3EQ==
+X-Gm-Message-State: AOJu0YwJSyetKwVKsDL8Z8onTanSuyXwdkthAOraZH95Pq837BgUgZLZ
+	Y4ypnNF22ehqJ/dGv3GqU/I=
+X-Google-Smtp-Source: AGHT+IEqqPr0OzOsAFNyW/iW2ScTpruPjIzH8Zt03Y43R1aLW2vVe7XfXJ6SeJHIxhf4kD6UumPAtA==
+X-Received: by 2002:a05:6808:144d:b0:3ae:5e0e:1671 with SMTP id x13-20020a056808144d00b003ae5e0e1671mr16232011oiv.4.1698137616505;
+        Tue, 24 Oct 2023 01:53:36 -0700 (PDT)
 Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id iy17-20020a170903131100b001ca86a9caccsm7051112plb.228.2023.10.24.00.55.29
+        by smtp.gmail.com with ESMTPSA id t4-20020a63f344000000b0056606274e54sm6919560pgj.31.2023.10.24.01.53.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Oct 2023 00:55:32 -0700 (PDT)
-Message-ID: <429b452c-2211-436a-9af7-21332f68db7d@gmail.com>
-Date: Tue, 24 Oct 2023 14:55:27 +0700
+        Tue, 24 Oct 2023 01:53:36 -0700 (PDT)
+Message-ID: <17a017b9-9807-48ef-bc7b-be8f5df750c5@gmail.com>
+Date: Tue, 24 Oct 2023 15:53:31 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,60 +51,206 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: kernel tried to execute NX-protected page - exploit attempt?
+ (uid: 0) (qbittorrent with tx-nocache-copy)
 Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Filesystem Development <linux-fsdevel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
- Christian Brauner <brauner@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Andrew Morton <akpm@linux-foundation.org>, vladbu@nvidia.com
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Memleaks in offset_ctx->xa (shmem)
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Networking <netdev@vger.kernel.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Benjamin Poirier <bpoirier@suse.de>,
+ Tom Herbert <therbert@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ CM76 <cmaff76@gmail.com>
+References: <2bf06faa-a0a7-4dee-90cd-a054b4e4c947@gmail.com>
+In-Reply-To: <2bf06faa-a0a7-4dee-90cd-a054b4e4c947@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi CM76,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+On 24/10/2023 15:15, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+>> I believe this is also an issue with the Broadcom bnx2 drivers since i=
+t only seem to happen when I enable "tx-nocache-copy" in ethtool. =20
+>>
+>> The issue started when I was running Mainline/stable Kernel v6.5.x on =
+another machine, after google-ing a bit I landed on an article from redha=
+t that pointed at the possibility of an issue caused by a failing hardwar=
+e. I was renting the server, so I didn't bother to fill a bug report and =
+assumed it was the server that was going bad. But then it happened again =
+on my other server as soon as I switched the bittorrent client to the sam=
+e I was using on that other server. I turned "tx-nocache-copy" off and ra=
+n mainline kernel v6.5 (on Ubuntu 23.04) for a day or two without issue. =
+After that I switched the kernel back to Ubuntu's kernel (v6.2) and the s=
+erver ran for a couple more days without issue. Two days ago I turned "tx=
+-nocache-copy" on again out of curiosity (kernel v6.2), and the server di=
+dn't run into any issue with this setting set to on. This morning I upgra=
+ded to Ubuntu 23.10 that runs their version of Kernel v6.5. The kernel pa=
+nicked and server rebooted a couple of hours later.=20
+>>
+>>
+>> The issue seem to be triggered with a certain configuration of applica=
+tions, I've ran Mainline/stable kernel 6.5.x since its release (and befor=
+e that v6.4.x) with the rtorrent bittorrent client and "tx-nocache-copy" =
+turned on, the kernel didn't run into any issue for weeks until I switche=
+d to another bittorrent client (qbittorrent) last week. It doesn't seem t=
+o matter when it happens, the kernel can Opps when the client is download=
+ing a single small sized torrent to when it's downloading multiple torren=
+ts at the same time.=20
+>>
+>>
+>> I tried to use the crash utiliy to get the backtrace but it doesn't se=
+em to work correctly. I get "crash: invalid structure member offset: modu=
+le_core_size FILE: kernel.c  LINE: 3781  FUNCTION: module_init()" when I =
+try to load the kernel dump.=20
+>>
+>> The kernel panic happens with 6.5.x Mainline/stable kernel as well as =
+the 6.5 kernel that comes with ubuntu 23.10.
+>>
+>> The bittorrent clients run as systemd services with normal user privil=
+eges and "ProtectKernelModules=3Dyes" "NoNewPrivileges=3Dyes" set in the =
+systemd service.=20
+>>
+>> I joined the full dmesg as attachement, and I can send the kdump gener=
+ated kernel dump file if needed.=20
+>>
+>>
+>> ------------------------
+>> [12090.273551] kernel tried to execute NX-protected page - exploit att=
+empt? (uid: 0)
+>> [12090.273577] BUG: unable to handle page fault for address: ffff9441c=
+9734458
+>> [12090.273590] #PF: supervisor instruction fetch in kernel mode
+>> [12090.273602] #PF: error_code(0x0011) - permissions violation
+>> [12090.273614] PGD 157401067 P4D 157401067 PUD 23ffff067 PMD 108a81063=
+ PTE 8000000109734063
+>> [12090.273632] Oops: 0011 [#1] PREEMPT SMP PTI
+>> [12090.273643] CPU: 1 PID: 0 Comm: swapper/1 Kdump: loaded Not tainted=
+ 6.5.0-9-generic #9-Ubuntu
+>> [12090.273658] Hardware name: Dell Inc. PowerEdge R210 II/03X6X0, BIOS=
+ 2.10.0 05/24/2018
+>> [12090.273674] RIP: 0010:0xffff9441c9734458
+>> [12090.273694] Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=
+ 00 <00> 00 00 00 00 00 00 00 58 44 73 c9 41 94 ff ff 00 00 00 00 00 00
+>> [12090.273723] RSP: 0018:ffffb3c380138980 EFLAGS: 00010282
+>> [12090.273734] RAX: ffff9441c9734458 RBX: ffff9441c9734400 RCX: 000000=
+0000000000
+>> [12090.273746] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff94=
+41c9734400
+>> [12090.273758] RBP: ffffb3c380138990 R08: 0000000000000000 R09: 000000=
+0000000000
+>> [12090.273771] R10: 0000000000000000 R11: 0000000000000000 R12: ffff94=
+41c9734400
+>> [12090.273783] R13: 00000000000005dc R14: ffff9441c49dda00 R15: ffffff=
+ff9e55ec40
+>> [12090.273795] FS:  0000000000000000(0000) GS:ffff9442f7c40000(0000) k=
+nlGS:0000000000000000
+>> [12090.273811] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [12090.273823] CR2: ffff9441c9734458 CR3: 0000000155a3a006 CR4: 000000=
+00001706e0
+>> [12090.273837] Call Trace:
+>> [12090.273845]  <IRQ>
+>> [12090.273851]  ? show_regs+0x6d/0x80
+>> [12090.273864]  ? __die+0x24/0x80
+>> [12090.273873]  ? page_fault_oops+0x99/0x1b0
+>> [12090.273884]  ? kernelmode_fixup_or_oops+0xb2/0x140
+>> [12090.273896]  ? __bad_area_nosemaphore+0x1a5/0x2c0
+>> [12090.273908]  ? bad_area_nosemaphore+0x16/0x30
+>> [12090.273918]  ? do_kern_addr_fault+0x7b/0xa0
+>> [12090.273927]  ? exc_page_fault+0x1a4/0x1b0
+>> [12090.273939]  ? asm_exc_page_fault+0x27/0x30
+>> [12090.273952]  ? skb_release_head_state+0x27/0xb0
+>> [12090.273964]  consume_skb+0x33/0xf0
+>> [12090.273973]  tcp_mtu_probe+0x565/0x5d0
+>> [12090.273984]  tcp_write_xmit+0x579/0xab0
+>> [12090.273994]  __tcp_push_pending_frames+0x37/0x110
+>> [12090.274005]  tcp_rcv_established+0x264/0x730
+>> [12090.274015]  ? security_sock_rcv_skb+0x39/0x60
+>> [12090.274027]  tcp_v4_do_rcv+0x169/0x2a0
+>> [12090.274037]  tcp_v4_rcv+0xd92/0xe00
+>> [12090.274046]  ? raw_v4_input+0xaa/0x240
+>> [12090.274056]  ip_protocol_deliver_rcu+0x3c/0x210
+>> [12090.274068]  ip_local_deliver_finish+0x77/0xa0
+>> [12090.274078]  ip_local_deliver+0x6e/0x120
+>> [12090.274089]  ? __pfx_ip_local_deliver_finish+0x10/0x10
+>> [12090.274369]  ip_sublist_rcv_finish+0x6f/0x80
+>> [12090.274638]  ip_sublist_rcv+0x171/0x220
+>> [12090.274931]  ? __pfx_ip_rcv_finish+0x10/0x10
+>> [12090.275201]  ip_list_rcv+0x102/0x140
+>> [12090.275459]  __netif_receive_skb_list_core+0x22d/0x250
+>> [12090.275714]  netif_receive_skb_list_internal+0x1a3/0x2d0
+>> [12090.275967]  napi_complete_done+0x74/0x1c0
+>> [12090.276218]  bnx2_poll_msix+0xa1/0xe0 [bnx2]
+>> [12090.276468]  __napi_poll+0x33/0x1f0
+>> [12090.276708]  net_rx_action+0x181/0x2e0
+>> [12090.276943]  __do_softirq+0xd9/0x346
+>> [12090.277172]  ? handle_irq_event+0x52/0x80
+>> [12090.277393]  ? handle_edge_irq+0xda/0x250
+>> [12090.277604]  __irq_exit_rcu+0x75/0xa0
+>> [12090.277812]  irq_exit_rcu+0xe/0x20
+>> [12090.278015]  common_interrupt+0xa4/0xb0
+>> [12090.278217]  </IRQ>
+>> [12090.278411]  <TASK>
+>> [12090.278602]  asm_common_interrupt+0x27/0x40
+>> [12090.278798] RIP: 0010:cpuidle_enter_state+0xda/0x730
+>> [12090.278992] Code: 11 04 ff e8 a8 f5 ff ff 8b 53 04 49 89 c7 0f 1f 4=
+4 00 00 31 ff e8 26 bb 02 ff 80 7d d0 00 0f 85 61 02 00 00 fb 0f 1f 44 00=
+ 00 <45> 85 f6 0f 88 f7 01 00 00 4d 63 ee 49 83 fd 0a 0f 83 17 05 00 00
+>> [12090.279402] RSP: 0018:ffffb3c3800cbe18 EFLAGS: 00000246
+>> [12090.279612] RAX: 0000000000000000 RBX: ffff9442f7c7ec00 RCX: 000000=
+0000000000
+>> [12090.279827] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 000000=
+0000000000
+>> [12090.280042] RBP: ffffb3c3800cbe68 R08: 0000000000000000 R09: 000000=
+0000000000
+>> [12090.280259] R10: 0000000000000000 R11: 0000000000000000 R12: ffffff=
+ff9d0d24a0
+>> [12090.280478] R13: 0000000000000003 R14: 0000000000000003 R15: 00000a=
+fefc75867b
+>> [12090.280698]  ? cpuidle_enter_state+0xca/0x730
+>> [12090.280918]  ? finish_task_switch.isra.0+0x89/0x2b0
+>> [12090.281142]  cpuidle_enter+0x2e/0x50
+>> [12090.281363]  call_cpuidle+0x23/0x60
+>> [12090.281583]  cpuidle_idle_call+0x11d/0x190
+>> [12090.281804]  do_idle+0x82/0xf0
+>> [12090.282022]  cpu_startup_entry+0x1d/0x20
+>> [12090.282240]  start_secondary+0x129/0x160
+>> [12090.282460]  secondary_startup_64_no_verify+0x17e/0x18b
+>> [12090.282685]  </TASK>
+>> [12090.282902] Modules linked in: tcp_diag inet_diag ip6table_filter i=
+p6_tables xt_LOG nf_log_syslog xt_recent xt_limit xt_tcpudp xt_conntrack =
+iptable_filter xt_CT xt_set iptable_raw bpfilter ip_set_hash_ip ip_set_ha=
+sh_net ip_set_hash_ipport ip_set_list_set ip_set_bitmap_port ip_set_hash_=
+netiface ip_set nfnetlink binfmt_misc intel_rapl_msr intel_rapl_common x8=
+6_pkg_temp_thermal intel_powerclamp coretemp crct10dif_pclmul polyval_clm=
+ulni polyval_generic ghash_clmulni_intel aesni_intel crypto_simd cryptd r=
+apl intel_cstate ipmi_ssif mgag200 drm_shmem_helper cfg80211 input_leds d=
+rm_kms_helper dcdbas at24 i2c_i801 lpc_ich i2c_smbus ie31200_edac acpi_ip=
+mi i2c_algo_bit ipmi_si ipmi_devintf ipmi_msghandler sch_fq tcp_bbr nf_co=
+nntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c drm efi_pstore dmi_sysfs =
+ip_tables x_tables autofs4 hid_generic usbhid hid crc32_pclmul ahci mpt3s=
+as libahci raid_class bnx2 scsi_transport_sas wmi
+>> [12090.285082] CR2: ffff9441c9734458
+>> ----
+>=20
 
-> We have been getting memleaks in offset_ctx->xa in our networking tests:
-> 
-> unreferenced object 0xffff8881004cd080 (size 576):
->   comm "systemd", pid 1, jiffies 4294893373 (age 1992.864s)
->   hex dump (first 32 bytes):
->     00 00 06 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     38 5c 7c 02 81 88 ff ff 98 d0 4c 00 81 88 ff ff  8\|.......L.....
->   backtrace:
->     [<000000000f554608>] xas_alloc+0x306/0x430
->     [<0000000075537d52>] xas_create+0x4b4/0xc80
->     [<00000000a927aab2>] xas_store+0x73/0x1680
->     [<0000000020a61203>] __xa_alloc+0x1d8/0x2d0
->     [<00000000ae300af2>] __xa_alloc_cyclic+0xf1/0x310
->     [<000000001032332c>] simple_offset_add+0xd8/0x170
->     [<0000000073229fad>] shmem_mknod+0xbf/0x180
->     [<00000000242520ce>] vfs_mknod+0x3b0/0x5c0
->     [<000000001ef218dd>] unix_bind+0x2c2/0xdb0
->     [<0000000009b9a8dd>] __sys_bind+0x127/0x1e0
->     [<000000003c949fbb>] __x64_sys_bind+0x6e/0xb0
->     [<00000000b8a767c7>] do_syscall_64+0x3d/0x90
->     [<000000006132ae0d>] entry_SYSCALL_64_after_hwframe+0x46/0xb0
-> 
-> Memleak trace points to some syscall performed by systemd and none of our tests do anything more advanced with it than 'systemctl restart ovs-vswitchd'. Basically it is a setup with Fedora and an upstream kernel that executes bunch of network offload tests with Open vSwitch, iproute2 tc, Linux bridge, etc.
-> 
-> It looks like those may be caused by recent commit 6faddda69f62 ("libfs: Add directory operations for stable offsets") but we don't have a proper reproduction, just sometimes arbitrary getting the memleak complains during/after the regression run.
+Please see [1] for how to decode stack trace symbols.
+And also, the most important thing to get this regression fixed
+is to find culprit commit by bisecting (for reference see
+Documentation/admin-guide/bug-bisect.rst).
 
-See Bugzilla for the full thread.
-
-Anyway, I'm adding it to regzbot:
-
-#regzbot introduced: 6faddda69f623d https://bugzilla.kernel.org/show_bug.cgi?id=218039
-#regzbot title: stable offsets directory operation support triggers offset_ctx->xa memory leak
+[1]: https://lore.kernel.org/all/CANn89iL9Twf+Rzm9v_dwsH_iG4YkW3fAc2Hnx2j=
+ypN_Qf9oojw@mail.gmail.com/
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218039
-
--- 
+--=20
 An old man doll... just what I always wanted! - Clara
+
