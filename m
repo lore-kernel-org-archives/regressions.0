@@ -1,65 +1,35 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4D08480
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 13:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBsiGXJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698240569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RKM+gb1rWlbrsyGe0ru+asYHoehN8Amt0gEY38pCGlY=;
-	b=IBsiGXJbcARP/w9BYFZW/T21wCFTOoLYrJ2pffW9FGyGsY4L2gOG8wTK9oacyUE165CAVo
-	Owhhy2dUfOKZTO5b/wJ7G9FwRiLCWODgQMdSWNhKwlboTCF/g1u5WWIp5HHeNejjvb4F30
-	KfL3JFlS1hF/F8jl6f34B806oRyRMwA=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-475-0ZZHG2aKOneYrbn_qLeSlQ-1; Wed, 25 Oct 2023 09:29:28 -0400
-X-MC-Unique: 0ZZHG2aKOneYrbn_qLeSlQ-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2c50d4a1a33so43932321fa.0
-        for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 06:29:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698240566; x=1698845366;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RKM+gb1rWlbrsyGe0ru+asYHoehN8Amt0gEY38pCGlY=;
-        b=EYK3a09Y1N0OpnLlLU0D4gK7qrXFwsUvLFOZWOeVwM1BH6JbqLY4WzSD/gaa8iiFwo
-         FEprHfPFwV+XnTGYs7xNe3rUzYedHuk1rsnP1L1zD1bnNoTD2ZJCum2K9Oz/meRQrFuc
-         edbRToIXNYNlZ5hQn1vsKB0w70CGEk2hcRwEcSaueLXLCHHijatWDa9DUKvSoQ8mr1yV
-         xD0TA9di4bzr05K67Z8JoRkNplURo+Ke4UYXHXj6/V+p7BQ/BGnSGaVjVCSFF3hfPaNN
-         V25146OWluFzmIsOLD2SijdwhZMCiaUAqCTPGFEjHSqVBZpy3Ibb5gaVepkA6gMn4GB3
-         y3xw==
-X-Gm-Message-State: AOJu0YyjJdDWAPxsTXuc8Uqd8IVUOP8OsPsd0SBEGsEJsENasBKlLCCW
-	O6Za2vR+dS7du7OmCUIpvXzmtfElz6Udxpyo9Pjw3a8KOKRcf0ws6iZa9q2/M/pEgekTdZaf7ce
-	7ZNL48uqP5HvBkV9uh/BHclg=
-X-Received: by 2002:a2e:a167:0:b0:2c5:2242:ba5f with SMTP id u7-20020a2ea167000000b002c52242ba5fmr10223985ljl.26.1698240566735;
-        Wed, 25 Oct 2023 06:29:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/bd1sv994kl11qxaY4JhVZknbw1CMFlecWdVOEe4wLnbmCw3X4wu/FtaHxVQeGg/8wymYQw==
-X-Received: by 2002:a2e:a167:0:b0:2c5:2242:ba5f with SMTP id u7-20020a2ea167000000b002c52242ba5fmr10223969ljl.26.1698240566378;
-        Wed, 25 Oct 2023 06:29:26 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id q12-20020a05600c2e4c00b0040648217f4fsm19250273wmf.39.2023.10.25.06.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 06:29:26 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Huacai Chen <chenhuacai@kernel.org>, Thorsten Leemhuis
- <regressions@leemhuis.info>
-Cc: Evan Preston <x.arch@epreston.net>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Jaak Ristioja <jaak@ristioja.ee>, Linux
- DRI Development <dri-devel@lists.freedesktop.org>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann
- <tzimmermann@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCD826E08
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 13:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qve9u-0002YC-Np; Wed, 25 Oct 2023 15:42:54 +0200
+Message-ID: <c1f50467-1524-40a3-b0ae-44795990a912@leemhuis.info>
+Date: Wed, 25 Oct 2023 15:42:54 +0200
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
  L570
-In-Reply-To: <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com>
+Content-Language: en-US, de-DE
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Evan Preston <x.arch@epreston.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Jaak Ristioja <jaak@ristioja.ee>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>
 References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
  <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info>
  <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
@@ -71,49 +41,131 @@ References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
  <ZTWoDSPxGO-ApR4r@P70.localdomain>
  <82f1b533-3bd8-4418-843a-718d9a6b5786@leemhuis.info>
  <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com>
-Date: Wed, 25 Oct 2023 15:29:24 +0200
-Message-ID: <87v8auhlu3.fsf@minerva.mail-host-address-is-not-set>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698241382;c2326b85;
+X-HE-SMSGID: 1qve9u-0002YC-Np
 
-Huacai Chen <chenhuacai@kernel.org> writes:
-
-Hello,
-
-> On Wed, Oct 25, 2023 at 6:08=E2=80=AFPM Thorsten Leemhuis
+On 25.10.23 15:23, Huacai Chen wrote:
+> On Wed, Oct 25, 2023 at 6:08 PM Thorsten Leemhuis
 > <regressions@leemhuis.info> wrote:
+>>
+>> Javier, Dave, Sima,
+>>
+>> On 23.10.23 00:54, Evan Preston wrote:
+>>> On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
+>>>> On Fri, Oct 20, 2023 at 5:35 PM Linux regression tracking (Thorsten
+>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>> On 09.10.23 10:54, Huacai Chen wrote:
+>>>>>> On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>>>>>>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
+>>>>>>>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>>>>>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
+>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+>>>>>>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+>>>>>>>>>>> screen after boot until the display manager starts... if it does start
+>>>>>>>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
+>>>>>>>>>>>
+>>>>>>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+>>>>>>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
+>>>>>>>>>>> subsys_initcall_sync").
+>>>>>>>>>>
+>>>>>>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+>>>>>>>> again. So I guess the reason:
+>>>>>
+>>>>> Well, this to me still looks a lot (please correct me if I'm wrong) like
+>>>>> regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
+>>>>> if I understood things correctly. Or is there a proper fix for this
+>>>>> already in the works and I just missed this? Or is there some good
+>>>>> reason why this won't/can't be fixed?
+>>>>
+>>>> DRM_SIMPLEDRM was enabled but it didn't work at all because there was
+>>>> no corresponding platform device. Now DRM_SIMPLEDRM works but it has a
+>>>> blank screen. Of course it is valuable to investigate further about
+>>>> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort because
+>>>> I don't have a same machine.
+>>
+>> Side note: Huacai, have you tried working with Jaak to get down to the
+>> real problem? Evan, might you be able to help out here?
+> No, Jaak has no response after he 'fixed' his problem by disabling SIMPLEDRM.
 
-[...]
+Yeah, understood, already suspected something like that, thx for confirming.
 
+>> But I write this mail for a different reason:
+>>
+>>> I am having the same issue on a Lenovo Thinkpad P70 (Intel
+>>> Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).
+>>> Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank
+>>> screen after boot and a rapidly flashing device-access-status
+>>> indicator.
 >>
 >> This additional report makes me wonder if we should revert the culprit
 >> (60aebc9559492c ("drivers/firmware: Move sysfb_init() from
 >> device_initcall to subsys_initcall_sync") [v6.5-rc1]). But I guess that
 >> might lead to regressions for some users? But the patch description says
->> that this is not a common configuration, so can we maybe get away with t=
-hat?
-> From my point of view, this is not a regression, 60aebc9559492c
-> doesn't cause a problem, but exposes a problem. So we need to fix the
+>> that this is not a common configuration, so can we maybe get away with that?
+>>From my point of view, this is not a regression, 60aebc9559492c
+> doesn't cause a problem, but exposes a problem.
+
+From my understanding of Linus stance in cases like this I think that
+aspect doesn't matter. To for example quote
+https://lore.kernel.org/lkml/CAHk-=wiP4K8DRJWsCo=20hn_6054xBamGKF2kPgUzpB5aMaofA@mail.gmail.com/
+
+""
+But it ended up exposing another problem, and as such caused a kernel
+upgrade to fail for a user. So it got reverted.
+"""
+
+For other examples of his view see the bottom half of
+https://docs.kernel.org/process/handling-regressions.html
+
+We could bring Linus in to clarify if needed, but I for now didn't CC
+him, as I hope we can solve this without him.
+
+> So we need to fix the
 > real problem (SIMPLEDRM has a blank screen on some conditions). This
 > needs Jaak or Evan's help.
->
 
-I agree with this.
+I'm all for solving the real problem, but if that is not possible within
+a reasonable timeframe (which seems to be the case here) I assume Linus
+in cases like this would want the culprit to be reverted. Unless of
+cause that itself might cause a regression (which is possible, as the
+commit made it into 6.5), then things become tricky.
 
-> Huacai
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
---=20
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+>>>>>>>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+>>>>>>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+>>>>>>>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+>>>>>>>> no platform device created for SIMPLEDRM at early stage, so it seems
+>>>>>>>> also "no problem".
+>>>>>>> I don't understand above. You mean that after that commit the platform
+>>>>>>> device is also none, right?
+>>>>>> No. The SIMPLEDRM driver needs a platform device to work, and that
+>>>>>> commit makes the platform device created earlier. So, before that
+>>>>>> commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
+>>>>>> commit, SIMPLEDRM works, but the screen is blank.
+>>>>>>
+>>>>>> Huacai
+>>>>>>>
+>>>>>>> Confused...
+>>>>>>>
+>>>>>>> --
+>>>>>>> An old man doll... just what I always wanted! - Clara
+>>>>>>
+>>>>>>
+>>>
+>>>
+> 
+> 
