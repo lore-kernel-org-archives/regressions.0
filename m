@@ -1,86 +1,127 @@
 Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361507E2
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 00:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3687180
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 00:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ica1r+IO"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-27d18475ed4so3886678a91.0
-        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 17:02:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="FWvFBcnT"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-27cfb8bc7eeso4029782a91.0
+        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 17:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698192123; x=1698796923; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Q7n7eEoCIAK2rGAN6IyglN3NhntUutFp1NL35nDz+g=;
-        b=ica1r+IOFpy9jl22fAyhZ8iLafzZUMoQ6JLowwkUM7k0/9GdlqDjw2eH2M046+tUb4
-         dZ5XLSPUEa9eSp2ZxO3htbOFFb3k5hYgFShTfZVMQaYUox0rQyxxB2bGz78ywZbDAtUI
-         +bqe22BdRAYOMJCdOwEEpAHA3zr6UKtadYq5BwEI+PhZrkVkefBfsjy6LPcmezr+nTiz
-         4RZnn9tz0SqG7VuwwEexYcT8b2kL0FDTo4BfDfuGvGKnoGRO79H/mYr/xTnSukLFzDHk
-         E0+/MAAost0mCbGW4DTmOsJ+cRjKIPwExUbYuWwLvePfYYmB0monnW3OacMACASg/h0h
-         DSlw==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698192389; x=1698797189; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9cuh9pnEhjPE9K0Glopq/FvywTEeksxy32LVZfdqmQU=;
+        b=FWvFBcnTqz/bQGUPYDG0jwoC29Bn7VrFaEtNuHpE6TQ0n2fLTAMi1sZ93v2qRUmFf+
+         WMe9ZKV+coTGer4ECKl7MeO+V0R8PZeOqYoHQje727FBCfq5WcxBtGPbt66o4A5HqDW8
+         7gQhdy1QB0F9XtbtvGoYr/mu0h1NZYQaSXsEjvBkqzNA9mVq2c8oNcp84VPm+nOsjBgb
+         Z0jpgxK/bNUkq675gAVQA13M/hF3bGDL0CP7J05hwINg9GkNidgRLQduhVye3Xqchqfw
+         gxQU7Kw84LSvrfLyqgzGhQzRS7O5M+aTewCqt+uLpwXUmpwrXscANcQu6yT9kg9GgxCp
+         LRgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698192123; x=1698796923;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Q7n7eEoCIAK2rGAN6IyglN3NhntUutFp1NL35nDz+g=;
-        b=OnMI63yLVXOuG3mmc8EoqIJV9cYsnCOitIkYI7yFXrbFw2HsAgDi8zY+44P7cl9UfO
-         QMWMLEEaZL3sb55pJ4QRLnXdCOms9F/r0ccg3nyY/M+8GDDKQW0kSTKYWVgpCU2Dwrb/
-         KZp4SFy65d+i4yCb9MgN/9jWwOW1318KONqEQTe0yvw/N7P7l7R0IxMJ+72n0GJNYB7o
-         I7+GPEDQQ7/Rkovpj3dBvilOwuNlJZpghO3+FIj11qgqgNpGMQBKpGEdpAQMW5F3hKYa
-         VtSQTOz3tXGFWFzdKWVsf47ut/wiCjuYQi+naes8UAuntFIrtHs/hP1WcluGZDBrIS4f
-         VIhg==
-X-Gm-Message-State: AOJu0Yxr5eDG37OcG+8uAuhCZ8szDLTrRLiz0vk5pFjA9qQHKzH34oZN
-	3wIjikUi4onHutZA4YYL4DS4ZMeGiW8=
-X-Google-Smtp-Source: AGHT+IHqp0fgXno/O+LMjdsIA9+MhoOLdZSecl/wbg0PuSHBIWNGSfBx3I4yfchMij2mH/s+AytZgA==
-X-Received: by 2002:a17:90a:df8f:b0:27d:237b:558b with SMTP id p15-20020a17090adf8f00b0027d237b558bmr11985553pjv.5.1698192123380;
-        Tue, 24 Oct 2023 17:02:03 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id 21-20020a17090a01d500b0027732eb24bbsm10501271pjd.4.2023.10.24.17.02.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Oct 2023 17:02:02 -0700 (PDT)
-Message-ID: <04c51182-97b7-4a10-a6f7-195da19358be@gmail.com>
-Date: Wed, 25 Oct 2023 07:01:56 +0700
+        d=1e100.net; s=20230601; t=1698192389; x=1698797189;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9cuh9pnEhjPE9K0Glopq/FvywTEeksxy32LVZfdqmQU=;
+        b=dIBa5gLu5Y586+fgCzuj70TnymIa3wXO4wnLfpzfNrCUvUQ6rUeJLS+zdzu9uhf8z2
+         vec5+mRRunp16kTV5XK1ZqHZ3oXP4m1l9PIi4A+iGZfbNrvfDUTF8PdB+iJ+OwiM/EX7
+         VW7brBS9FIrYrdBgwDlq2iw0CPdRvnmtP8pMwHhPSBmKAFUVfZXCBNZOyMZ9IRxmcXlI
+         aBTc+OSsRNQfIq2LcIdRKtRmCgNu9zbz7nPCe4dAABHOv0VOXoTO5blYKVhZ3jtaA0rO
+         dumtfAQJKyfavJEe9KN1++wXRY3MG+ZBcL6WNb0oopX+mu6ULASplFqN1Ptf5/EOhJrp
+         SPYA==
+X-Gm-Message-State: AOJu0YwvOZO4lbEQI6jgBJMvZmWFFm+wzMpDbGPiWZIp42MBcKxSb3NW
+	ayWAOMCmhz/HMwNgkGOWFAIYSg==
+X-Google-Smtp-Source: AGHT+IGSZwJ0taLJbzZLoOLZipUFJapJ0Aw/EtOpCWXjmdi7fPpKB8dPeh4YhevyeutE/Ky3HymhDA==
+X-Received: by 2002:a17:90b:3d8a:b0:27d:b87b:a9d4 with SMTP id pq10-20020a17090b3d8a00b0027db87ba9d4mr13144116pjb.7.1698192389083;
+        Tue, 24 Oct 2023 17:06:29 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id l21-20020a17090a599500b00277560ecd5dsm9144553pji.46.2023.10.24.17.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 17:06:28 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1qvRPl-003WMY-2O;
+	Wed, 25 Oct 2023 11:06:25 +1100
+Date: Wed, 25 Oct 2023 11:06:25 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	linux-ext4@vger.kernel.org,
+	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	io-uring@vger.kernel.org
+Subject: Re: task hung in ext4_fallocate #2
+Message-ID: <ZThcATP9zOoxb4Ec@dread.disaster.area>
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+ <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
+ <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+ <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
+ <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Memleaks in offset_ctx->xa (shmem)
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux Filesystem Development <linux-fsdevel@vger.kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
- Christian Brauner <brauner@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Andrew Morton <akpm@linux-foundation.org>, vladbu@nvidia.com
-References: <429b452c-2211-436a-9af7-21332f68db7d@gmail.com>
- <f21c7064-dac1-4667-96c6-0d85368300ca@leemhuis.info>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <f21c7064-dac1-4667-96c6-0d85368300ca@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
 
-On 24/10/2023 21:18, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Bagas, FWIW, before doing so you in the future might want to search lore
-> for an abbreviated commit-id with a wildcard (e.g.
-> https://lore.kernel.org/all/?q=6faddda6* ) and the bugzilla url (e.g.
-> https://lore.kernel.org/all/?q=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D218039).
-> Because then in this case you would have noticed that this was already
-> discussed on the lists and Chuck asked to bring it to bugzilla for
-> further tracking, so forwarding this likely was not worth it:
-> https://lore.kernel.org/all/87ttqhq0i7.fsf@nvidia.com/
+On Tue, Oct 24, 2023 at 12:35:26PM -0600, Jens Axboe wrote:
+> On 10/24/23 8:30 AM, Jens Axboe wrote:
+> > I don't think this is related to the io-wq workers doing non-blocking
+> > IO.
+
+The io-wq worker that has deadlocked _must_ be doing blocking IO. If
+it was doing non-blocking IO (i.e. IOCB_NOWAIT) then it would have
+done a trylock and returned -EAGAIN to the worker for it to try
+again later. I'm not sure that would avoid the issue, however - it
+seems to me like it might just turn it into a livelock rather than a
+deadlock....
+
+> > The callback is eventually executed by the task that originally
+> > submitted the IO, which is the owner and not the async workers. But...
+> > If that original task is blocked in eg fallocate, then I can see how
+> > that would potentially be an issue.
+> > 
+> > I'll take a closer look.
 > 
+> I think the best way to fix this is likely to have inode_dio_wait() be
+> interruptible, and return -ERESTARTSYS if it should be restarted. Now
+> the below is obviously not a full patch, but I suspect it'll make ext4
+> and xfs tick, because they should both be affected.
 
-Thanks for the tip reminder! I always forget it then...
+How does that solve the problem? Nothing will issue a signal to the
+process that is waiting in inode_dio_wait() except userspace, so I
+can't see how this does anything to solve the problem at hand...
 
+I'm also very leary of adding new error handling complexity to paths
+like truncate, extent cloning, fallocate, etc which expect to block
+on locks until they can perform the operation safely.
+
+On further thinking, this could be a self deadlock with
+just async direct IO submission - submit an async DIO with
+IOCB_CALLER_COMP, then run an unaligned async DIO that attempts to
+drain in-flight DIO before continuing. Then the thread waits in
+inode_dio_wait() because it can't run the completion that will drop
+the i_dio_count to zero.
+
+Hence it appears to me that we've missed some critical constraints
+around nesting IO submission and completion when using
+IOCB_CALLER_COMP. Further, it really isn't clear to me how deep the
+scope of this problem is yet, let alone what the solution might be.
+
+With all this in mind, and how late this is in the 6.6 cycle, can we
+just revert the IOCB_CALLER_COMP changes for now?
+
+-Dave.
 -- 
-An old man doll... just what I always wanted! - Clara
-
+Dave Chinner
+david@fromorbit.com
