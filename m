@@ -1,109 +1,150 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592BD620
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 00:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094EB620
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 00:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6LV3SFN"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ac865d1358so3301286a12.3
-        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 17:40:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhspAG8t"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ca74e77aecso2536575ad.1
+        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 17:56:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698194417; x=1698799217; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oy3ZCxUaOTBccOyYOfscwNqRTq+2Vm1/fUY8yV/tkg8=;
-        b=O6LV3SFNmJBUQFVdvQ+52b3qE+j2AivJveB4F5pqNyvqzavJgJ6hynJyBDzVHgY3EZ
-         ILq3IdIQ89m6g7oUw84sdXW6OeU/zwU/i1DW9zv9paCNIjKpXRmbxLN8RRyVPQtMbg+R
-         F3w8pQaqynp6LAoCxpUN50uFnewAUaiPz1O9KzdX5uNlS/lcxYTcVzJHkq9SQAwlTwkc
-         D7uEFh5D5kBfvcuKuWYgZ74zjPIaz/Z5yO3lx5E1dzn7drysVxWkZesQs5iCSqIpbWRM
-         5R4aabdaLqMNunDoQvwM2GY+vnc7IQJYa1mgubow4oiHoGY3eHFjvcYgBk33aPmnN26j
-         eieQ==
+        d=gmail.com; s=20230601; t=1698195398; x=1698800198; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=idCmePkmuapOmhTFu8C7IFO+GDsYxAan7/9IMTzaD9M=;
+        b=OhspAG8tTKqyvutn4VyDjK3aMmwmksGHjnDAsiXdw+uuwkzTWxyfzibfz9BtXTlRJ4
+         hDci4ok4vEOrsp9Jcn8YM6i76XIo7xrhWH3uGsLMreUY65FcIBvMyMdWvJYvfLJyxwYm
+         /0DuNS8G3v/8K9cePWxg6s3BloaTUOqM8bJ/+FJR1G43bbFOuXXTa8VNYPCEWmVgVMKF
+         Q+iylnjsxXxEJDJekJMcagMFFnQTfq5lLP0PX3HIvZbc2WJyzJYJcY72RdNjz+8LEQO9
+         FZotBpfnP0a7OMQBm97SLb5H08GuDYzSqMRiw61RUKqRe4yLbFBP75bZFoUaWqLIYfc0
+         QKfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698194417; x=1698799217;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Oy3ZCxUaOTBccOyYOfscwNqRTq+2Vm1/fUY8yV/tkg8=;
-        b=FchbA/OrPEPWb7pfp4oibDElveCo5f2pxCcYL4fusxaL80h3YMhnkCYw/Ea3/C/vs1
-         QfNRTgygClesKGLtkI82TslyflM+L4fOYbQYiBShHu/cN4P6cZZG3HomOMmsAN0q+EPq
-         mMQi1Y7UtONzW4Ud+HhpJu+IRQmN7tgUgWUNE+IRevZTtISGz5gxtYvx8VCvxWpGiqA3
-         Km896wU3mhlAhGf3YhiLahmCvvpd2Mk2nIAQkJ7/4uULHXe4h8DjvhBloGtgrOMw14Cj
-         sW+aWFJCJDQpRv/qd4aJxo2gL8GLqrgfjtSqPjp5NspOEYxoYE4PyNWtQ+1pvbnNQQTL
-         ZFFQ==
-X-Gm-Message-State: AOJu0Yx3rSPUjQmPiOvcLbSNL0+qZYYZ4Vrk3cyiMebuG2PGiIR+/auc
-	l+DYtLchf9a4YLn0md50R4U=
-X-Google-Smtp-Source: AGHT+IGNKaEZC7W8MQaC26f2qUIAnpX/xebK0G7PQ8bDsxQN4pRfDpZ3iswNsTR1vE87PzfChReSdg==
-X-Received: by 2002:a05:6a21:7182:b0:17d:ed85:541e with SMTP id wq2-20020a056a21718200b0017ded85541emr4333239pzb.45.1698194417473;
-        Tue, 24 Oct 2023 17:40:17 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id ji18-20020a170903325200b001c99b3a1e45sm8024928plb.84.2023.10.24.17.40.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Oct 2023 17:40:17 -0700 (PDT)
-Message-ID: <cd397c88-bf53-4768-9ab8-9d107df9e613@gmail.com>
-Date: Wed, 25 Oct 2023 07:40:11 +0700
+        d=1e100.net; s=20230601; t=1698195398; x=1698800198;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=idCmePkmuapOmhTFu8C7IFO+GDsYxAan7/9IMTzaD9M=;
+        b=jI3umyse4buvxpAdZQtjbBf/SjckZFBAZppIA5biCwJJ+h0waOQtBiEWjizSFKIO1a
+         ENjV/Wk86ExdodxC6vzOXSgELwu2HNDFwQuJxER62JXG9RjAT1HzJAOL2t1R1M3zT6V5
+         yHtRJ/NQLXteHFRRDmQHFbK/PeYvZ3pnKcHefzlF1Jw6gciFaoLPi40rinXDb59k/Lwe
+         QBHkYmhIJnGxOfk8dgF+rPkuq8p7rHoknudEhaHf2DEkR6BiEvLFRHGaBzv6vcHe6zYt
+         NX4L+sRF4rBx1NdNxW0XjQ18uvD5VjCBXhvDW2tdSUgD2FERtBGHqUjohL3TQ806Ogeb
+         dnUA==
+X-Gm-Message-State: AOJu0YwAQy1ZzRgF6xnJzkEBovfTcRxiOdxMqnC2SmtLlb7kFSlxJquP
+	SgfPsz/EsMLdZ5dTNm4sle0=
+X-Google-Smtp-Source: AGHT+IGJgyhZvs/DxUdMPw6LHhjYzSVzjI+gdVIZdAFLgzhN4L4CKfQAIgUW6oEW7DPYNUXPlg8zzA==
+X-Received: by 2002:a17:903:6cc:b0:1c3:868f:5958 with SMTP id kj12-20020a17090306cc00b001c3868f5958mr17419062plb.20.1698195397893;
+        Tue, 24 Oct 2023 17:56:37 -0700 (PDT)
+Received: from debian.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id e17-20020a17090301d100b001b898595be7sm7917360plh.291.2023.10.24.17.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 17:56:37 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+	id C6D39819CFF3; Wed, 25 Oct 2023 07:56:34 +0700 (WIB)
+Date: Wed, 25 Oct 2023 07:56:34 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Vladimir Smelhaus <vl.sm@email.cz>,
+	Linux Netfilter <netfilter@vger.kernel.org>, coreteam@netfilter.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>
+Subject: Re: Flowtables ignore timeout settings in recent kernels
+Message-ID: <ZThnwhWD308vrkUP@debian.me>
+References: <ughg4v$130b$1@ciao.gmane.io>
+ <ZSyBtn8cplLWoNn-@debian.me>
+ <ZTglADWVBgKxKOIC@calendula>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux IDE and libata <linux-ide@vger.kernel.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, Tejun Heo
- <tj@kernel.org>, Totallyreal Name <kotversuchung@gmail.com>,
- loqs <kernel_bugzilla@entropy-collector.net>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: bbbf096ea227607cbb348155eeda7af71af1a35b results in "dirty"
- shutdown
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cM5L7aeMb6NeOAH/"
+Content-Disposition: inline
+In-Reply-To: <ZTglADWVBgKxKOIC@calendula>
 
-Hi,
 
-I notice a regression report on Bugzilla that seems to have been
-handled already there [1]. Quoting from it:
+--cM5L7aeMb6NeOAH/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I have noticed that after each shutdown SMART would log +1 on each raw_value of drives that count power related issues.
-> 
-> Here are some of the smart values where i noticed increase among different drives
-> 
-> POR_Recovery_Count 
-> Unexpect_Power_Loss_Ct  
-> Power-Off_Retract_Count 
-> 
-> That doesn't happen on previous Kernels.. and it stops as soon as i switch back to LTS.
-> I seeked through the Bug Reports but couldn't really find the issue. So i don't know if this has been reported or patched already.
+On Tue, Oct 24, 2023 at 10:11:44PM +0200, Pablo Neira Ayuso wrote:
+> On Mon, Oct 16, 2023 at 07:20:06AM +0700, Bagas Sanjaya wrote:
+> > On Sun, Oct 15, 2023 at 09:56:14PM +0200, Vladimir Smelhaus wrote:
+> > > Netfilter ignores the timeout settings for a flowtable
+> > >=20
+> > > # sysctl -a -r flowtable
+> > > net.netfilter.nf_flowtable_tcp_timeout =3D 30
+> > > net.netfilter.nf_flowtable_udp_timeout =3D 30
+> > >=20
+> > > Situation. A long udp connection (tunnel) with some data flowing thro=
+ugh a
+> > > router. The connection is sent to a flowtable on the router. It's a f=
+ew
+> > > packets per second, more here and there, a pause here and there, and =
+so on
+> > > over and over. The pauses are minimal and are also limited by the tun=
+nel
+> > > settings to be no longer than 25 seconds. Everything is satisfying to=
+ make
+> > > the connection last continuously in the flowtable and not reappear in
+> > > forward. However, the connection keeps dropping out of the flowtable.=
+ It
+> > > stays in the flowtable (offloaded) for a second at most and then it is
+> > > kicked out, back to forward.
+> > >=20
+> > > In an attached test script you can see counters that should be zero b=
+ut are not. If I watch the normal packet flow on a particular router, I can=
+ see packets in the conntrack table that should be OFFLOAD as ASSURED.
+> > >=20
+> > > Tested in kernel 6.5.6. In an old(er) kernel 5.10 it works as expecte=
+d.
+> > >=20
+> >=20
+> > Then please perform bisection to find a culprit that introduces your
+> > regression (see Documentation/admin-guide/bug-bisect.rst in the kernel
+> > sources for reference). Also, it'd been great if you also post the
+> > reproducer script inline (within your email) instead, as some MUAs
+> > (like mutt that I'm using now) may ignore the attachment.
+> >=20
+> > Anyway, thanks for the regression report. I'm adding it to regzbot:
+> >=20
+> > #regzbot ^introduced: v5.10..v6.5
+>=20
+> Fix here:
+>=20
+> https://patchwork.ozlabs.org/project/netfilter-devel/patch/20231024193815=
+=2E1987-1-pablo@netfilter.org/
+>=20
+> it is a bug from Jun 2023, regression was introduced in the v6.5
+> development cycle.
+>=20
 
-Another reporter had found the culprit:
+Telling regzbot:
 
-> 
-> 
-> This has been reported as being introduced in stable 6.5.8 [1].  Reverting commit 	bbbf096ea227607cbb348155eeda7af71af1a35b is reported to solve the issue [2]. bbbf096ea227607cbb348155eeda7af71af1a35b [3] is mainline commit aa3998dbeb3abce63653b7f6d4542e7dcd022590 [4] which was introduced in 6.6-rc4 which matches the original report.
-> 
-> [1]: https://bugs.archlinux.org/task/80064
-> [2]: https://bugs.archlinux.org/task/80064#comment223100
-> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=bbbf096ea227607cbb348155eeda7af71af1a35b
-> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aa3998dbeb3abce63653b7f6d4542e7dcd022590
-
-See Bugzilla for the full thread.
-
-Anyway, I'm adding this regression to regzbot:
-
-#regzbot introduced: aa3998dbeb3abc https://bugzilla.kernel.org/show_bug.cgi?id=218038
-#regzbot title: dirty shutdown due to disabling manage_system_start_stop on SCSI devices
-#regzbot link: https://bugs.archlinux.org/task/80064
+#regzbot fix: netfilter: nf_flow_table: GC pushes back packets to classic p=
+ath
 
 Thanks.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218038
-
--- 
+--=20
 An old man doll... just what I always wanted! - Clara
+
+--cM5L7aeMb6NeOAH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZThnvgAKCRD2uYlJVVFO
+o8J0AQD7MDH2zNbKZM6ZlcvUYRSmRK0rvX6lR+6/MFllgRlZnAEA7GV4EePorg3E
+0xZhimBiax8M/oW2TAW86qCo9VyAegY=
+=3CKf
+-----END PGP SIGNATURE-----
+
+--cM5L7aeMb6NeOAH/--
