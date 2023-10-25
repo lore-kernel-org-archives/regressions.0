@@ -1,263 +1,180 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E9B34195
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 22:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287F2286B0
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 22:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nWUduoYg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UNA6RicH+eV7dPRJAEnj3CgtCO7qr8h1Ouau9i3LDpiRpPV4DTdXNE/LSVdVI60u+lXhhFjCHTUDWf4e3LZ3gjHpgwUdb5kjM61+oDeKs7CnWBBb5LHHzlGgRjSB7u6FyQFJunOGNrmOtAlkYwvCVFoO0UIZJGvU1HAzUYQPxsvd1zmjvvZ+kVnxS3uopiLrl/9tPJ+BoA5+c2vTl4NxUEXFfG2pc58GJOQPAEEr25IvfiPWGp14M13V/nuCQImSjAKF+Ffwd7e+mjnGIpGa78RlaZZzNrkmkRkFHMSISTs2kP2YfxL3JdTyv/1GsLBnmQF7W8jyQBqbuAXZ1oqQBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WzHlocHAwzCZcDExP1gWKKl+zBR1gL/RRwb5nybkOG0=;
- b=iTUZqWOUwCWxHKzE+CG2ZEi6OeuK2z/6hQdKTyXUHI7PKCGrKdr39BQxnAyNkhW4L2JL+00mHXWqcoqi7t8xBuxlxi1EFuIts82TKw5xLU++bVMjxIZYVKKrFXBVhErp4bS64dBxEEc7Xv8vyD1jCTmoVDaWWKrU44S0xmx11YxuOtzK6qXNcd4roM1T4s9KvGLEI3CeaM/IvQS1rf+PyQr/Lt8iC+CT4c0v2SO4fL5yha0xup07cB0YN4cQlxYQ5LfgSwc5dVtJP0TCy8glfkQpwLqtuWYnQiQn0Zllng41q/0bahxvkCzd9q3mPxarHfHqpsEuLYajPLm19bNgsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WzHlocHAwzCZcDExP1gWKKl+zBR1gL/RRwb5nybkOG0=;
- b=nWUduoYgbUJ+9bNQn7P1jtSvpFRtcyh2DCxoebs1cCJge6BCCO8i1btZxlTvcq4omMNn2Sp5+N9DJfXlotQfWmttA0XGg7aWUt/lGXHcV2lCZTsMypM1iiIicbgsKQEB0qlJjaJymk8LhwI/mxA0VYdBJxvDf0nQLMc3FSrY4NA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA0PR12MB9048.namprd12.prod.outlook.com (2603:10b6:208:408::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Wed, 25 Oct
- 2023 22:11:56 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%4]) with mapi id 15.20.6907.022; Wed, 25 Oct 2023
- 22:11:56 +0000
-Message-ID: <ad3affd0-58d3-41b3-8014-cb0fc953dc6d@amd.com>
-Date: Wed, 25 Oct 2023 17:11:53 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re:
-Content-Language: en-US
-To: Thomas Gleixner <tglx@linutronix.de>, David Lazar <dlazar@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, kys@microsoft.com,
- hpa@linux.intel.com, x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <c8d43894-7e66-4a01-88fc-10708dc53b6b@amd.com>
- <878r7z4kb4.ffs@tglx> <e79dea49-0c07-4ca2-b359-97dd1bc579c8@amd.com>
- <87ttqhcotn.ffs@tglx> <87v8avawe0.ffs@tglx>
- <32bcaa8a-0413-4aa4-97a0-189830da8654@amd.com> <ZTkzYA3w2p3L4SVA@localhost>
- <87jzra6235.ffs@tglx> <875y2u5s8g.ffs@tglx>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <875y2u5s8g.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR13CA0069.namprd13.prod.outlook.com
- (2603:10b6:5:134::46) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Zoenw+AN"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6b709048f32so238860b3a.0
+        for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 15:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698272912; x=1698877712; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a/zohdYHYB8xgSRg6885BBGHf24YwLAdAnopLL9bSYk=;
+        b=Zoenw+ANdfd5yuDtA8jEfJ48PCMxSpM0ed4nf/Ot8VMxut9viTByWPzjY3sK5ywDAr
+         whULYSTiU9hLKk/I5SPM5ytix2Y3F93BFS1+iVwphvabvMW9KtABPhPVv1dlj2B05pzR
+         3Lk3cZ1wahYSxBlampVZypa5f+tGf/D/CMs54mEmaU6pxT/vZE2brzETn4GzyV0D0XLv
+         QDKzlqSCFW7K4XQlCukO3BvGauLpYA8rwdDbg7dttcC21+Fg5aXAxsEYgt4NnKtENXXM
+         A+zr64ma5SVeb2jh+Su1yVtj1xk9h5Bv1waiZymB9Q2h6o93JQU0iThax82Fe2vy8nU+
+         Nb+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698272912; x=1698877712;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a/zohdYHYB8xgSRg6885BBGHf24YwLAdAnopLL9bSYk=;
+        b=aTjGFVAemLFXtr+hbNd9zNmbTVukg7UzA3t7OCM0xvy2QM6/chco6fX9P8MY3dlQrR
+         DaESdV5LnExHo1p+XVzUfITuB3RYXsYAIXOsoBaf+UZ6BV3jY/nMvmyT/nBuWeZsH5Gv
+         gdfEqODSZ7DtqDAp/CUg/vqmhJp3rUC6kZmT/t/j0FBhzsFPVB/H7vaeOnU2JHGzzgZZ
+         L53clQR9WWyd6iP+EzeMnpIHxVmk1E6H8URTKUT3fxjumJOMxmNrIWqpEJCar7Z32GRS
+         H2kRYkRd7NMZGSt/RsSQHDwWF4Wlq9FACiPXXpQb4r+ZkHAVDyRalcPanoL0jLK7kioU
+         QVMA==
+X-Gm-Message-State: AOJu0YxisIKoqOrtMwTvZbMjzPvgCJMtT1u+8lnd21F13hOqc4NAfVLS
+	2x0y5s2VMBBKsJloDCqpNGrJkQ==
+X-Google-Smtp-Source: AGHT+IE5kNtbyYxea9Ya2MFjMHtE2mIq6uXnsSrALqEqZ2Kta9K4sQrMCR7le9WQ8lzn5OFVbfU2rQ==
+X-Received: by 2002:a05:6a00:855:b0:690:2e46:aca3 with SMTP id q21-20020a056a00085500b006902e46aca3mr14596181pfk.25.1698272912282;
+        Wed, 25 Oct 2023 15:28:32 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id q29-20020aa7983d000000b006bdb0f011e2sm9861014pfl.123.2023.10.25.15.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 15:28:31 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1qvmMX-003vaO-03;
+	Thu, 26 Oct 2023 09:28:29 +1100
+Date: Thu, 26 Oct 2023 09:28:29 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	linux-ext4@vger.kernel.org,
+	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	io-uring@vger.kernel.org
+Subject: Re: task hung in ext4_fallocate #2
+Message-ID: <ZTmWjWeNCgGcdIy+@dread.disaster.area>
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+ <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
+ <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+ <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
+ <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
+ <ZThcATP9zOoxb4Ec@dread.disaster.area>
+ <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA0PR12MB9048:EE_
-X-MS-Office365-Filtering-Correlation-Id: be855356-c404-4e1d-605a-08dbd5a766ce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FTRfaU+MAvxVEUCuDBCRC0mVtqklZ0SV7PpqHf4n3emdq6PeTpnaFHcNOISN6rQGuWanFvxxP3IxD4qgzhdfWcg4CRxLqzLQIQhaHEG500oH2VhyBFG8lfpVFlA8hhstFHU1kqew4IFM4HwpmP176pdHL1+kCz7l1wwhEdnNl4F3vjaRvVp0w/Gv1EiLmnlodmL1tGxBMarobmHp4XzCzUJ7e7OKkr0Wlawr/MXgRHN1WHx9qm8pjX3PoXpTVHLIgJ/JsThFl5FBx981XTrvpI3KOa917+z0jTGKotj0QzdtsO1rhMtApgxPGe+5Jd+ob2H3R4qg65ptGIrSUjL9S9yYK5vivKn9/9HvV0oBSNtECe8cWhxO+hirr7t3LvfAiLCwFr8Xw1HjkednONgKEFV9U3U+qqugj5NFb2FbIuV57VZAXWNCUPdQOgXib8Bc/NG11PYKpuNt4SAn704MWQGN4H9kTN58EL36PG9MbyNlT4Rv/98kNfoLaYoEgbr1dJuq9wSecHgMzFn0xzWstkY07TCnsXEt/mfy1DmnFGkdxW0+IfZFXHzFMjz3VKoNZ12UB+4AB/waeSn3HshfOy11Gurj3MiWlcc+OfJEWOC8L2QHIutvQ7mztOTiozPnrq1zYCSB6sePopQcrRBEOQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(136003)(366004)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(2616005)(110136005)(66476007)(66946007)(66556008)(54906003)(316002)(26005)(478600001)(966005)(6486002)(6506007)(6666004)(6512007)(53546011)(41300700001)(44832011)(31686004)(7116003)(38100700002)(31696002)(3480700007)(86362001)(2906002)(5660300002)(7416002)(36756003)(4326008)(83380400001)(8676002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZVo4cy9MRjd4ZzA0d1ZZZTBDR3lQdUpEZ29hRHV1czNkMDRRait6SU00MW5y?=
- =?utf-8?B?NW1hclA2SGV0Z0RTejdDUVFnakxhT2J5ZTNGMkVzZU92MDdnTkt3aUVGNlUw?=
- =?utf-8?B?R3pxL1d4Mk9lUnZCanFENHRlUHVXVTB6WnJ6N08wWnJuck4ydmlGTlFyeWdm?=
- =?utf-8?B?RXhNc3g2SndKdjhtUEVFRGpyb041VHlTNTllWlFKTXlTV3hqNjBNMDc1NkFP?=
- =?utf-8?B?eGNnK2xMNDdyZEZMYmRUdzBCejFKSWZoZVlRczdlSzFSb0xHbWdHMTcrTXI4?=
- =?utf-8?B?SVZpMFN0S0gyeUtHM3VkOWhsR2YvRkZPOGE0TEdtRjNyV2lvcnZmSnpaSWxk?=
- =?utf-8?B?dzdSSnUzY01nY3FxNG14UjRDbXVKbWVVbTYrRGlMNmVWNmJjdWV1SnhsWTIy?=
- =?utf-8?B?NUJxRzN1cUROSVYzZTgrNGM4NUp1VUJ2clRrbEx6U1llT0VwNWpmcEhvN3lQ?=
- =?utf-8?B?T1VWZDdRSGdkVmFWQ2g5ODFIVlpqemhGU3hMeTdvUkVnUzUrZkVONTMrbmJZ?=
- =?utf-8?B?UG1SUlBBa0UyZ0VXV0xFVU5iaFJFTDFqcVVqQzRDemZwNVZpQmN6SmpLN290?=
- =?utf-8?B?ZS9OUHlBcEdqdk9ENjZZbmVwMmRXUUNSbGtlTjRkdzJKYXZYNUVuNWNLVmZC?=
- =?utf-8?B?N1E3NFFvemtpaldzT0lCazM1Y3dFWnhUZ3RwblNEZlRaMlF3cUc0Y3pwRkxW?=
- =?utf-8?B?M3dyRW05c1hBdjFRVkpBTGJDZjZ4dVRZK1FvVmkvc1p0L0dneTV4djZjN2RY?=
- =?utf-8?B?VmxrZ0xsZWJrdElNckFVUGtrNWozV2VDcmVOVjBBTGRreVNJM2RHeWROY2sw?=
- =?utf-8?B?UUFhbEw0aFlZTkdMU0hwbHdPc2VTMkFEODNmeWRDSWVXU0lMSXV3cm51NkxQ?=
- =?utf-8?B?dFRERkgxVGFpelprYmk3M0NUTE5YWHJJKzZDNFpqeTdNbk5RVDJIelRuVFZR?=
- =?utf-8?B?NE5sTmhTUDY4QmdDQ2lHd0xLNk5yS2FFV2cyNEd1aEczaXJPdWpoOHltNllV?=
- =?utf-8?B?MDVzNnV1RXpSUXI1R2VMdnZQaGRBeDhIMUhSMnZrME9JOXFIb0N3OEY0QlA4?=
- =?utf-8?B?c1R5Um1zcSswYS9hdXVKTHhLV24wMTBkelpudnhCOUlnc3gwZ1F4QTVHTFdF?=
- =?utf-8?B?VnZUUmwrTEszbCtMRWc4Z3lCOTE5NzJoZmxkOUpkdHB4TWpTdHpJOGYyZVpG?=
- =?utf-8?B?ZHRzb1NsYlF3aVhIOEhvTXlrV0VwaVdyWHdLZy9JK3Y1RkluYWJ0TnhCZ2FF?=
- =?utf-8?B?TDRNMEtBZlkyWGVsUzd3WXFRRWxBNStBUVIxL3RGSVlHcEFoRGQ4VXUwUDFl?=
- =?utf-8?B?QitUbVQrMzFkMmhUUXZUYXRGTCtwM25VV1hVd080UVhOTTFsb2ZtU2RpYUFH?=
- =?utf-8?B?aGs5OVBHMHVJT1hETUlLSTNtWVdGTjNIYlZCM0VvdzAzMlZpSDhZejJ1U0Jv?=
- =?utf-8?B?d0p0OFZTYTA3Z3lHWjNnbjFnNWJFN1JrTWJSMFJtbWhxd0REZ2cybHBUenlu?=
- =?utf-8?B?WFhqL3dlOElJYy84MGgySFRlTXlyK1BOQldWT1NVU3hyRkRodnhlN2lLMnpz?=
- =?utf-8?B?VDVzOTBkc0JIaWdBdEY0VXk2c0FURDVOZlhkVFZxaEk3bEN2SDFVMnBjYlJZ?=
- =?utf-8?B?QWlTUjBNaEFxUG5kWnJkdE1IMlJpc1loNGJZVVpNR2FNYUowR3d2UUtlV2ZX?=
- =?utf-8?B?UVlLU1JZT2c5WnhMbE4vNVBMTEhrL2RvRy91LzVtYlR6YjQ3ejdoTElJSkk0?=
- =?utf-8?B?OHJTVzB1aEIyZ091a05oTkRzZE5jSzBwbTlXL3UxbVU5WlM0eVQ0UzM5U3Vq?=
- =?utf-8?B?ZEpYQWJTc2hLU2piT25wbnU1eUttNXBoaG4xQ25BM2lIdUFOcU5vd3pNTUVz?=
- =?utf-8?B?VU55bWVCYmRENlJzOXdtRjlIdDBxUjlPS2JxaVM5MG9wcGd6dEN2N1BBWW94?=
- =?utf-8?B?aHVKMnBUZlNTVi9HZ1d6bEdIRjM0TFVsbVVwdXJybHhNNUZQNWdWRmFJR2pr?=
- =?utf-8?B?Y29DMklHZHg3cWJQR0s5Wm95VmJwNHdGYU5ydWdOVXN6alZVQUVPTmE2TWZm?=
- =?utf-8?B?M0lERnZVV3JtZk5uMkg5ZWZTR0NTVG14N3BoWXhaOW8zSUY2YmVkQTBNbG1B?=
- =?utf-8?Q?M8h+muNXWQIbCQ+bFOyQKNtOZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be855356-c404-4e1d-605a-08dbd5a766ce
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2023 22:11:56.5162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KU7bNTpFnxzFwU+yIJ5FtfJFnzR7ltkA9P9cqN0T5WrMCpzk08mIJYEuQg0KZGud/OhhIrkX4wDNnk2EyhkSMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB9048
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
 
-On 10/25/2023 16:04, Thomas Gleixner wrote:
-> David and a few others reported that on certain newer systems some legacy
-> interrupts fail to work correctly.
+On Tue, Oct 24, 2023 at 06:34:05PM -0600, Jens Axboe wrote:
+> On 10/24/23 6:06 PM, Dave Chinner wrote:
+> > On Tue, Oct 24, 2023 at 12:35:26PM -0600, Jens Axboe wrote:
+> >> On 10/24/23 8:30 AM, Jens Axboe wrote:
+> >>> I don't think this is related to the io-wq workers doing non-blocking
+> >>> IO.
+> > 
+> > The io-wq worker that has deadlocked _must_ be doing blocking IO. If
+> > it was doing non-blocking IO (i.e. IOCB_NOWAIT) then it would have
+> > done a trylock and returned -EAGAIN to the worker for it to try
+> > again later. I'm not sure that would avoid the issue, however - it
+> > seems to me like it might just turn it into a livelock rather than a
+> > deadlock....
 > 
-> Debugging revealed that the BIOS of these systems leaves the legacy PIC in
-> uninitialized state which makes the PIC detection fail and the kernel
-> switches to a dummy implementation.
+> Sorry typo, yes they are doing blocking IO, that's all they ever do. My
+> point is that it's not related to the issue.
 > 
-> Unfortunately this fallback causes quite some code to fail as it depends on
-> checks for the number of legacy PIC interrupts or the availability of the
-> real PIC.
+> >>> The callback is eventually executed by the task that originally
+> >>> submitted the IO, which is the owner and not the async workers. But...
+> >>> If that original task is blocked in eg fallocate, then I can see how
+> >>> that would potentially be an issue.
+> >>>
+> >>> I'll take a closer look.
+> >>
+> >> I think the best way to fix this is likely to have inode_dio_wait() be
+> >> interruptible, and return -ERESTARTSYS if it should be restarted. Now
+> >> the below is obviously not a full patch, but I suspect it'll make ext4
+> >> and xfs tick, because they should both be affected.
+> > 
+> > How does that solve the problem? Nothing will issue a signal to the
+> > process that is waiting in inode_dio_wait() except userspace, so I
+> > can't see how this does anything to solve the problem at hand...
 > 
-> In theory there is no reason to use the PIC on any modern system when
-> IO/APIC is available, but the dependencies on the related checks cannot be
-> resolved trivially and on short notice. This needs lots of analysis and
-> rework.
-> 
-> The PIC detection has been added to avoid quirky checks and force selection
-> of the dummy implementation all over the place, especially in VM guest
-> scenarios. So it's not an option to revert the relevant commit as that
-> would break a lot of other scenarios.
-> 
-> One solution would be to try to initialize the PIC on detection fail and
-> retry the detection, but that puts the burden on everything which does not
-> have a PIC.
-> 
-> Fortunately the ACPI/MADT table header has a flag field, which advertises
-> in bit 0 that the system is PCAT compatible, which means it has a legacy
-> 8259 PIC.
-> 
-> Evaluate that bit and if set avoid the detection routine and keep the real
-> PIC installed, which then gets initialized (for nothing) and makes the rest
-> of the code with all the dependencies work again.
-> 
-> Fixes: e179f6914152 ("x86, irq, pic: Probe for legacy PIC and set legacy_pic appropriately")
-> Reported-by: David Lazar <dlazar@gmail.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: David Lazar <dlazar@gmail.com>
-> Cc: stable@vger.kernel.org
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218003
+> Except task_work, which when it completes, will increment the i_dio
+> count again. This is the whole point of the half assed patch I sent out.
 
-s/Link/Closes/
+What task_work is that?  When does that actually run?
 
-Presumably you will add a proper subject when this is committed?
+Please don't assume that everyone is intimately familiar with the
+subtle complexities of io_uring infrastructure - if the fix relies
+on a signal from -somewhere- then you need to explain where
+that signal comes from and why we should be able to rely on that...
 
-With adding title and fixing that tag:
-
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-
-> ---
-> ---
->   arch/x86/include/asm/i8259.h |    2 ++
->   arch/x86/kernel/acpi/boot.c  |    3 +++
->   arch/x86/kernel/i8259.c      |   38 ++++++++++++++++++++++++++++++--------
->   3 files changed, 35 insertions(+), 8 deletions(-)
 > 
-> --- a/arch/x86/include/asm/i8259.h
-> +++ b/arch/x86/include/asm/i8259.h
-> @@ -69,6 +69,8 @@ struct legacy_pic {
->   	void (*make_irq)(unsigned int irq);
->   };
->   
-> +void legacy_pic_pcat_compat(void);
-> +
->   extern struct legacy_pic *legacy_pic;
->   extern struct legacy_pic null_legacy_pic;
->   
-> --- a/arch/x86/kernel/acpi/boot.c
-> +++ b/arch/x86/kernel/acpi/boot.c
-> @@ -148,6 +148,9 @@ static int __init acpi_parse_madt(struct
->   		pr_debug("Local APIC address 0x%08x\n", madt->address);
->   	}
->   
-> +	if (madt->flags & ACPI_MADT_PCAT_COMPAT)
-> +		legacy_pic_pcat_compat();
-> +
->   	/* ACPI 6.3 and newer support the online capable bit. */
->   	if (acpi_gbl_FADT.header.revision > 6 ||
->   	    (acpi_gbl_FADT.header.revision == 6 &&
-> --- a/arch/x86/kernel/i8259.c
-> +++ b/arch/x86/kernel/i8259.c
-> @@ -32,6 +32,7 @@
->    */
->   static void init_8259A(int auto_eoi);
->   
-> +static bool pcat_compat __ro_after_init;
->   static int i8259A_auto_eoi;
->   DEFINE_RAW_SPINLOCK(i8259A_lock);
->   
-> @@ -299,15 +300,32 @@ static void unmask_8259A(void)
->   
->   static int probe_8259A(void)
->   {
-> +	unsigned char new_val, probe_val = ~(1 << PIC_CASCADE_IR);
->   	unsigned long flags;
-> -	unsigned char probe_val = ~(1 << PIC_CASCADE_IR);
-> -	unsigned char new_val;
-> +
-> +	/*
-> +	 * If MADT has the PCAT_COMPAT flag set, then do not bother probing
-> +	 * for the PIC. Some BIOSes leave the PIC uninitialized and probing
-> +	 * fails.
-> +	 *
-> +	 * Right now this causes problems as quite some code depends on
-> +	 * nr_legacy_irqs() > 0 or has_legacy_pic() == true. This is silly
-> +	 * when the system has an IO/APIC because then PIC is not required
-> +	 * at all, except for really old machines where the timer interrupt
-> +	 * must be routed through the PIC. So just pretend that the PIC is
-> +	 * there and let legacy_pic->init() initialize it for nothing.
-> +	 *
-> +	 * Alternatively this could just try to initialize the PIC and
-> +	 * repeat the probe, but for cases where there is no PIC that's
-> +	 * just pointless.
-> +	 */
-> +	if (pcat_compat)
-> +		return nr_legacy_irqs();
-> +
->   	/*
-> -	 * Check to see if we have a PIC.
-> -	 * Mask all except the cascade and read
-> -	 * back the value we just wrote. If we don't
-> -	 * have a PIC, we will read 0xff as opposed to the
-> -	 * value we wrote.
-> +	 * Check to see if we have a PIC.  Mask all except the cascade and
-> +	 * read back the value we just wrote. If we don't have a PIC, we
-> +	 * will read 0xff as opposed to the value we wrote.
->   	 */
->   	raw_spin_lock_irqsave(&i8259A_lock, flags);
->   
-> @@ -429,5 +447,9 @@ static int __init i8259A_init_ops(void)
->   
->   	return 0;
->   }
-> -
->   device_initcall(i8259A_init_ops);
-> +
-> +void __init legacy_pic_pcat_compat(void)
-> +{
-> +	pcat_compat = true;
-> +}
+> > I'm also very leary of adding new error handling complexity to paths
+> > like truncate, extent cloning, fallocate, etc which expect to block
+> > on locks until they can perform the operation safely.
+> 
+> I actually looked at all of them, ext4 and xfs specifically. It really
+> doesn't seem to bad.
+> 
+> > On further thinking, this could be a self deadlock with
+> > just async direct IO submission - submit an async DIO with
+> > IOCB_CALLER_COMP, then run an unaligned async DIO that attempts to
+> > drain in-flight DIO before continuing. Then the thread waits in
+> > inode_dio_wait() because it can't run the completion that will drop
+> > the i_dio_count to zero.
+> 
+> No, because those will be non-blocking. Any blocking IO will go via
+> io-wq, and that won't then hit the deadlock. If you're doing
+> inode_dio_wait() from the task itself for a non-blocking issue, then
+> that would surely be an issue. But we should not be doing that, and we
+> are checking for it.
 
+There's no documentation that says IO submission inside a
+IOCB_DIO_CALLER_COMP context must be IOCB_NOWAIT.
+
+I don't recall it being mentioned during patch submission or review,
+and if it was ithe implications certainly didn't register with me -
+I would not have given a rvb without such a landmine either being
+removed or very well documented.
+
+I don't see anywhere that is checked and I don't see how it can be,
+because the filesystem IO submission path itself has no idea if the
+caller is already has a IOCB_DIO_CALLER_COMP IO in flight and
+pending completion.
+
+> > Hence it appears to me that we've missed some critical constraints
+> > around nesting IO submission and completion when using
+> > IOCB_CALLER_COMP. Further, it really isn't clear to me how deep the
+> > scope of this problem is yet, let alone what the solution might be.
+> 
+> I think you're missing exactly what the deadlock is.
+
+Then you need to explain exactly what it is, not send undocumented
+hacks that appear to do absolutely nothing to fix the problem.
+
+> > With all this in mind, and how late this is in the 6.6 cycle, can we
+> > just revert the IOCB_CALLER_COMP changes for now?
+> 
+> Yeah I'm going to do a revert of the io_uring side, which effectively
+> disables it. Then a revised series can be done, and when done, we could
+> bring it back.
+
+Please revert the whole lot, I'm now unconvinced that this is
+functionality we can sanely support at the filesystem level without
+a whole lot more thought.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
