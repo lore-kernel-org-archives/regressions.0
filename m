@@ -1,150 +1,103 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094EB620
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 00:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6242D610
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 02:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhspAG8t"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ca74e77aecso2536575ad.1
-        for <regressions@lists.linux.dev>; Tue, 24 Oct 2023 17:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698195398; x=1698800198; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=idCmePkmuapOmhTFu8C7IFO+GDsYxAan7/9IMTzaD9M=;
-        b=OhspAG8tTKqyvutn4VyDjK3aMmwmksGHjnDAsiXdw+uuwkzTWxyfzibfz9BtXTlRJ4
-         hDci4ok4vEOrsp9Jcn8YM6i76XIo7xrhWH3uGsLMreUY65FcIBvMyMdWvJYvfLJyxwYm
-         /0DuNS8G3v/8K9cePWxg6s3BloaTUOqM8bJ/+FJR1G43bbFOuXXTa8VNYPCEWmVgVMKF
-         Q+iylnjsxXxEJDJekJMcagMFFnQTfq5lLP0PX3HIvZbc2WJyzJYJcY72RdNjz+8LEQO9
-         FZotBpfnP0a7OMQBm97SLb5H08GuDYzSqMRiw61RUKqRe4yLbFBP75bZFoUaWqLIYfc0
-         QKfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698195398; x=1698800198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=idCmePkmuapOmhTFu8C7IFO+GDsYxAan7/9IMTzaD9M=;
-        b=jI3umyse4buvxpAdZQtjbBf/SjckZFBAZppIA5biCwJJ+h0waOQtBiEWjizSFKIO1a
-         ENjV/Wk86ExdodxC6vzOXSgELwu2HNDFwQuJxER62JXG9RjAT1HzJAOL2t1R1M3zT6V5
-         yHtRJ/NQLXteHFRRDmQHFbK/PeYvZ3pnKcHefzlF1Jw6gciFaoLPi40rinXDb59k/Lwe
-         QBHkYmhIJnGxOfk8dgF+rPkuq8p7rHoknudEhaHf2DEkR6BiEvLFRHGaBzv6vcHe6zYt
-         NX4L+sRF4rBx1NdNxW0XjQ18uvD5VjCBXhvDW2tdSUgD2FERtBGHqUjohL3TQ806Ogeb
-         dnUA==
-X-Gm-Message-State: AOJu0YwAQy1ZzRgF6xnJzkEBovfTcRxiOdxMqnC2SmtLlb7kFSlxJquP
-	SgfPsz/EsMLdZ5dTNm4sle0=
-X-Google-Smtp-Source: AGHT+IGJgyhZvs/DxUdMPw6LHhjYzSVzjI+gdVIZdAFLgzhN4L4CKfQAIgUW6oEW7DPYNUXPlg8zzA==
-X-Received: by 2002:a17:903:6cc:b0:1c3:868f:5958 with SMTP id kj12-20020a17090306cc00b001c3868f5958mr17419062plb.20.1698195397893;
-        Tue, 24 Oct 2023 17:56:37 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id e17-20020a17090301d100b001b898595be7sm7917360plh.291.2023.10.24.17.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 17:56:37 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id C6D39819CFF3; Wed, 25 Oct 2023 07:56:34 +0700 (WIB)
-Date: Wed, 25 Oct 2023 07:56:34 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Vladimir Smelhaus <vl.sm@email.cz>,
-	Linux Netfilter <netfilter@vger.kernel.org>, coreteam@netfilter.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>
-Subject: Re: Flowtables ignore timeout settings in recent kernels
-Message-ID: <ZThnwhWD308vrkUP@debian.me>
-References: <ughg4v$130b$1@ciao.gmane.io>
- <ZSyBtn8cplLWoNn-@debian.me>
- <ZTglADWVBgKxKOIC@calendula>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVWETUna"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD15C433C7;
+	Wed, 25 Oct 2023 02:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698199872;
+	bh=XqSsIpjt0jIyZn7qo3bPFPqEdb+PQBuF8ciog/cTS3k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TVWETUnaYoM74TyyGZNyWwa9rzO5bBRy5EHR8Bk9H4fieHqpt+dmZpTNC2wdiEnkU
+	 teFwryJJotMK4JcDktGOaXMzL5fic8dej3ViDt+rtfkyIIdf3oDG6n7Ro8UFX3kVnV
+	 sWFfla00iE0xEL9jWMO3evQcx6IJH6iv3mQnJB9WTkEQt4WdkaI/2QAzpfxY6JZvlW
+	 /XN2P+vrOEd4JhQbMTFhuV+Il7r/2ON+25CaFeozA1MT73BZcPT5+jctYBYQhkDUF+
+	 zrTSeAgDJ5A467sNR80kkOi5IzY4MSqpq0nCmEBKekkc9hrOxVSN/UYLYMYqch3Hrf
+	 ELz4ZncJ/ZPVQ==
+Message-ID: <ba2115a9-46a5-4bc7-be5d-97ee2c0a0492@kernel.org>
+Date: Wed, 25 Oct 2023 11:11:09 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cM5L7aeMb6NeOAH/"
-Content-Disposition: inline
-In-Reply-To: <ZTglADWVBgKxKOIC@calendula>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: bbbf096ea227607cbb348155eeda7af71af1a35b results in "dirty"
+ shutdown
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux IDE and libata <linux-ide@vger.kernel.org>
+Cc: Hannes Reinecke <hare@suse.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, Tejun Heo
+ <tj@kernel.org>, Totallyreal Name <kotversuchung@gmail.com>,
+ loqs <kernel_bugzilla@entropy-collector.net>
+References: <cd397c88-bf53-4768-9ab8-9d107df9e613@gmail.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <cd397c88-bf53-4768-9ab8-9d107df9e613@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/25/23 09:40, Bagas Sanjaya wrote:
+> Hi,
+> 
+> I notice a regression report on Bugzilla that seems to have been
+> handled already there [1]. Quoting from it:
+> 
+>> I have noticed that after each shutdown SMART would log +1 on each raw_value of drives that count power related issues.
+>>
+>> Here are some of the smart values where i noticed increase among different drives
+>>
+>> POR_Recovery_Count 
+>> Unexpect_Power_Loss_Ct  
+>> Power-Off_Retract_Count 
+>>
+>> That doesn't happen on previous Kernels.. and it stops as soon as i switch back to LTS.
+>> I seeked through the Bug Reports but couldn't really find the issue. So i don't know if this has been reported or patched already.
+> 
+> Another reporter had found the culprit:
+> 
+>>
+>>
+>> This has been reported as being introduced in stable 6.5.8 [1].  Reverting commit 	bbbf096ea227607cbb348155eeda7af71af1a35b is reported to solve the issue [2]. bbbf096ea227607cbb348155eeda7af71af1a35b [3] is mainline commit aa3998dbeb3abce63653b7f6d4542e7dcd022590 [4] which was introduced in 6.6-rc4 which matches the original report.
+>>
+>> [1]: https://bugs.archlinux.org/task/80064
+>> [2]: https://bugs.archlinux.org/task/80064#comment223100
+>> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=bbbf096ea227607cbb348155eeda7af71af1a35b
+>> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=aa3998dbeb3abce63653b7f6d4542e7dcd022590
+> 
+> See Bugzilla for the full thread.
 
---cM5L7aeMb6NeOAH/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am aware of this and looking into it. The patch mentioned above seems to have
+introduced the issue that drives are not being stopped on shutdown with real
+PCs. But they are with qemu VM. So this seems to relate to ACPI shutdown as
+well. Not sure, looking into it.
 
-On Tue, Oct 24, 2023 at 10:11:44PM +0200, Pablo Neira Ayuso wrote:
-> On Mon, Oct 16, 2023 at 07:20:06AM +0700, Bagas Sanjaya wrote:
-> > On Sun, Oct 15, 2023 at 09:56:14PM +0200, Vladimir Smelhaus wrote:
-> > > Netfilter ignores the timeout settings for a flowtable
-> > >=20
-> > > # sysctl -a -r flowtable
-> > > net.netfilter.nf_flowtable_tcp_timeout =3D 30
-> > > net.netfilter.nf_flowtable_udp_timeout =3D 30
-> > >=20
-> > > Situation. A long udp connection (tunnel) with some data flowing thro=
-ugh a
-> > > router. The connection is sent to a flowtable on the router. It's a f=
-ew
-> > > packets per second, more here and there, a pause here and there, and =
-so on
-> > > over and over. The pauses are minimal and are also limited by the tun=
-nel
-> > > settings to be no longer than 25 seconds. Everything is satisfying to=
- make
-> > > the connection last continuously in the flowtable and not reappear in
-> > > forward. However, the connection keeps dropping out of the flowtable.=
- It
-> > > stays in the flowtable (offloaded) for a second at most and then it is
-> > > kicked out, back to forward.
-> > >=20
-> > > In an attached test script you can see counters that should be zero b=
-ut are not. If I watch the normal packet flow on a particular router, I can=
- see packets in the conntrack table that should be OFFLOAD as ASSURED.
-> > >=20
-> > > Tested in kernel 6.5.6. In an old(er) kernel 5.10 it works as expecte=
-d.
-> > >=20
-> >=20
-> > Then please perform bisection to find a culprit that introduces your
-> > regression (see Documentation/admin-guide/bug-bisect.rst in the kernel
-> > sources for reference). Also, it'd been great if you also post the
-> > reproducer script inline (within your email) instead, as some MUAs
-> > (like mutt that I'm using now) may ignore the attachment.
-> >=20
-> > Anyway, thanks for the regression report. I'm adding it to regzbot:
-> >=20
-> > #regzbot ^introduced: v5.10..v6.5
->=20
-> Fix here:
->=20
-> https://patchwork.ozlabs.org/project/netfilter-devel/patch/20231024193815=
-=2E1987-1-pablo@netfilter.org/
->=20
-> it is a bug from Jun 2023, regression was introduced in the v6.5
-> development cycle.
->=20
+The main issue I have is that I cannot reproduce the old behavior mentioned in
+this case, which is, the counters not incrementing on shutdown. They do increase
+for me, always, even prior to the patch mentioned above.
 
-Telling regzbot:
+Digging.
 
-#regzbot fix: netfilter: nf_flow_table: GC pushes back packets to classic p=
-ath
+> Anyway, I'm adding this regression to regzbot:
+> 
+> #regzbot introduced: aa3998dbeb3abc https://bugzilla.kernel.org/show_bug.cgi?id=218038
+> #regzbot title: dirty shutdown due to disabling manage_system_start_stop on SCSI devices
+> #regzbot link: https://bugs.archlinux.org/task/80064
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218038
+> 
 
-Thanks.
+-- 
+Damien Le Moal
+Western Digital Research
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---cM5L7aeMb6NeOAH/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZThnvgAKCRD2uYlJVVFO
-o8J0AQD7MDH2zNbKZM6ZlcvUYRSmRK0rvX6lR+6/MFllgRlZnAEA7GV4EePorg3E
-0xZhimBiax8M/oW2TAW86qCo9VyAegY=
-=3CKf
------END PGP SIGNATURE-----
-
---cM5L7aeMb6NeOAH/--
