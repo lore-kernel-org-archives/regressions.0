@@ -1,73 +1,66 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9512B156E5
-	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 15:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anarazel.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anarazel.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4425156E5
+	for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 15:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="qlZiRKS1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aG9JQ6Vc"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id 485AD5C0256;
-	Wed, 25 Oct 2023 11:31:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 25 Oct 2023 11:31:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1698247898; x=1698334298; bh=ai
-	Kn5n1MmCFRtwo5nv9MUY6v3o4pix8zhxOK0UebHoU=; b=qlZiRKS1hTasqNg1V3
-	6EMQ8eFcjguQKiyx51dthiJWn7PeWXjptt4ZasZPeaAfXtd+4AjNiqBz30JkSe+m
-	wcfV9E8sb/udijqwx5QXCsTwzB/JpLeYFG8tHyUC6XIm6gXr+JlyZMl8EYJ/v11S
-	4IbbZQN6P3qqP4+ksKOEPTT7ukFoXc22TiMXG2FLtv0uAsAKp+M0Iv0wzJWSkFrQ
-	cXM2xmoYnMWrpFw+ul+phHv0BCh2XetJM0tbfLWK9f42ljNZF+LWvVquGOIJX3uT
-	/G7wT6PDIol/jbH3jW6QhTbpPaejIYZnGQyFIjhwxOO8dSjSFQ6MJTewiaKbjpsz
-	hfgg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1698247898; x=1698334298; bh=aiKn5n1MmCFRt
-	wo5nv9MUY6v3o4pix8zhxOK0UebHoU=; b=aG9JQ6VcOe1TF/z3wY+6b2jsplXNQ
-	dvyUMjp8wxRK6ywjTxpq1Fje6P4fcB0nQnMMee5wHdZB+a4ucUng9pMOeABOxxml
-	m+Nm391FtIFjLuZ+iIzeU2nTLpQeJV6DovlZ+iTE9ia0WZtay9sC2hgBOnnOMeUj
-	bZ7dq/YSybDz4p/ZpNivfjUDAi4kKRiTMy/Du8zIcsvNs8Mwo7yhLOtC8efeDlv8
-	jSvpxcr33uNq8UEXIBw/FQ0SLwU+xw8OJAIRsWLGbpZwYZvLfPPWRfctjavcjfjh
-	Nsnz9NzJaSVFC2EUpkmHRkwjXOQ9fwrBcbg1h6+Y4DO6Tyik7GSf4M0Ag==
-X-ME-Sender: <xms:2TQ5ZZNkE7jiyLA5sxO2KBcCBVjxDOG-6cx4NWSYf7qgUzIXhYfgKg>
-    <xme:2TQ5Zb8AGEbtUuW00kjcw56S5UR9PUKppskZ8dr0q5lqTfLpcV1bX0fbSzg7MaKIY
-    _rOhdKPFyX-MM0lDw>
-X-ME-Received: <xmr:2TQ5ZYRDWLJnMACKezkyJtr7feL_zaHfk29WQYAYUxKkGK9TWfgQaStAg2GrpVf8jrquInXyxwCfyahw3l6l57Mlp6z4gww59p8-tkxjtt-SvI0P7bNRNe_1gVa5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrledtgdekhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
-    htthgvrhhnpedvffefvefhteevffegieetfefhtddvffejvefhueetgeeludehteevudei
-    tedtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grnhgurhgvshesrghnrghrrgiivghlrdguvg
-X-ME-Proxy: <xmx:2TQ5ZVvD0DZDpRu3VBcgin-3OVd5hv0URQYfmEEvNuiHX1-gfAELtw>
-    <xmx:2TQ5ZRe0jiSIvdqTRlRm2ObbkelgGlivqFcfYgPihiaXuT7ax2IODQ>
-    <xmx:2TQ5ZR30qT7waBTZvxtt_dx9vwkqKyAaa-J200x2C2ExSWrqXAOoRg>
-    <xmx:2jQ5ZSV6djBNyKGJ1S8TXj4qcTlm6tPOEeaSJJ-Potq7Nezc1pSEnQ>
-Feedback-ID: id4a34324:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Oct 2023 11:31:37 -0400 (EDT)
-Date: Wed, 25 Oct 2023 08:31:35 -0700
-From: Andres Freund <andres@anarazel.de>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Dave Chinner <david@fromorbit.com>, Theodore Ts'o <tytso@mit.edu>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	linux-ext4@vger.kernel.org,
-	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	io-uring@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="RXGfNH9G"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7a680e6a921so68011639f.1
+        for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 08:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1698248163; x=1698852963; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KnuRFrtZBpuNFclBQXRPUdRtFW5zT4PqP+dECAz1in8=;
+        b=RXGfNH9GacDFBCwEOrgHlqXjFrTk3oqpBt4AO+44qKTwYj8NdSk6vWibkUyFWfwnVf
+         6MMI0kQLM5wu6UJJUmrMAF6Fxys/u+po02ToOJCUNKEr18cqfyVIx2acmdKf+OzYwC/2
+         QIuZzAXamXAEBLX+xunUDlKHeK/17ypzyjqmwQN4u/ID/zcP7vYZXIinYvBLLn8qo3OF
+         u9RjbpzT+qd0vd+2muATgDVAUctvD0T7QsyacPQ1kSPXLglaklYyyiqGVAenF6sZxu4S
+         0/6j4biECgyfk8imvMg2bpYLAuP8vuAiWIQm6xxUvK4P/tlJl4NJOhfe15X1BgavCtaJ
+         WjZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698248163; x=1698852963;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KnuRFrtZBpuNFclBQXRPUdRtFW5zT4PqP+dECAz1in8=;
+        b=NsUhdHTxJpl9A58xvKOcj5oY0XMjZ/mI2aGY3FFlX2D6/rvmkNCBvG1GmPwfx9zSlI
+         7q6m+LgkHKCQimqA1wTydh0SWwXUMhCpOZ8qcYNks78KC/smWygZZm3Ol+3PD/2iQ7KZ
+         vIzanWv1nn34IMLQzJQtxp70gMo1Yczo+nucRORKu3DxfFi6NLnRBQNsgRZ4HAbrDNpU
+         0dunqVbKTf51kGt8WnWuSVW6ZnSai3jRCVfeR0BfvT2tJpaU2cRVUOPil6znTL93NBJD
+         ilf/x8HNj3rXE+8A+NDxMQP9x5Rpg3qcgCofxVI4OWjVAXK8y0ucSpG60wKmfxOrpLyj
+         JNuQ==
+X-Gm-Message-State: AOJu0YzQGTc0yxxQ0JwRuvG468ifg7GCphx21h9oKPCfKgozbA3vESKP
+	CgGwFnbPjnKOR9stzoY0bhHBzioHNI59TX0DfHN4XQ==
+X-Google-Smtp-Source: AGHT+IEOLRtW5YwlT60QddLXFI/rLcPlmOHK2aANzAgxSiLa1sZUbzM8HDq6JCpjwUL/NH5D/cEq0A==
+X-Received: by 2002:a5e:d70d:0:b0:79f:a8c2:290d with SMTP id v13-20020a5ed70d000000b0079fa8c2290dmr16583391iom.0.1698248162883;
+        Wed, 25 Oct 2023 08:36:02 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id s8-20020a02cc88000000b004567567da78sm19032jap.151.2023.10.25.08.36.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Oct 2023 08:36:02 -0700 (PDT)
+Message-ID: <b5578447-81f6-4207-b83d-812da7c981a5@kernel.dk>
+Date: Wed, 25 Oct 2023 09:36:01 -0600
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: task hung in ext4_fallocate #2
-Message-ID: <20231025153135.kfnldzle3rglmfvp@awork3.anarazel.de>
+Content-Language: en-US
+To: Andres Freund <andres@anarazel.de>
+Cc: Dave Chinner <david@fromorbit.com>, Theodore Ts'o <tytso@mit.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
+ =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+ gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ io-uring@vger.kernel.org
 References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
  <20231018004335.GA593012@mit.edu>
  <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
@@ -76,26 +69,127 @@ References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
  <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
  <ZThcATP9zOoxb4Ec@dread.disaster.area>
  <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
+ <20231025153135.kfnldzle3rglmfvp@awork3.anarazel.de>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20231025153135.kfnldzle3rglmfvp@awork3.anarazel.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 10/25/23 9:31 AM, Andres Freund wrote:
+> Hi,
+> 
+> On 2023-10-24 18:34:05 -0600, Jens Axboe wrote:
+>> Yeah I'm going to do a revert of the io_uring side, which effectively
+>> disables it. Then a revised series can be done, and when done, we could
+>> bring it back.
+> 
+> I'm queueing a test to confirm that the revert actually fixes things.
+> Is there still benefit in testing your other patch in addition
+> upstream?
 
-On 2023-10-24 18:34:05 -0600, Jens Axboe wrote:
-> Yeah I'm going to do a revert of the io_uring side, which effectively
-> disables it. Then a revised series can be done, and when done, we could
-> bring it back.
+Don't think there's much point to testing the quick hack, I believe it
+should work. So testing the most recent revert is useful, though I also
+fully expect that to work. And then we can test the re-enable once that
+is sent out, I did prepare a series. But timing is obviously unfortunate
+for that, as it'll miss 6.6 and now also 6.7 due to the report timing.
 
-I'm queueing a test to confirm that the revert actually fixes things. Is there
-still benefit in testing your other patch in addition upstream?
+FWIW, I wrote a small test case which does seem to trigger it very fast,
+as expected:
 
-Greetings,
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <liburing.h>
 
-Andres Freund
+#define BS	4096
+#define FSIZE	(128 * 1024 * 1024UL)
+
+static int set_file_size(int fd, off_t file_size)
+{
+	off_t this_size;
+	char buf[BS];
+	int ret;
+
+	memset(buf, 0, BS);
+	this_size = 0;
+	while (this_size < file_size) {
+		ret = write(fd, buf, BS);
+		if (ret != BS) {
+			fprintf(stderr, "write ret %d\n", ret);
+			return 1;
+		}
+		this_size += BS;
+	}
+	fsync(fd);
+	posix_fadvise(fd, 0, file_size, POSIX_FADV_DONTNEED);
+	return 0;
+}
+
+int main(int argc, char *argv[])
+{
+	struct io_uring_sqe *sqe;
+	struct io_uring_cqe *cqe;
+	struct io_uring ring;
+	off_t off, foff;
+	int fd, i, ret;
+	void *buf;
+
+	if (argc < 2) {
+		fprintf(stderr, "%s <file>\n", argv[0]);
+		return 1;
+	}
+
+	fd = open(argv[1], O_RDWR | O_CREAT | O_TRUNC | O_DIRECT, 0644);
+	if (fd < 0) {
+		perror("open");
+		return 1;
+	}
+
+	if (set_file_size(fd, FSIZE))
+		return 1;
+
+	if (posix_memalign(&buf, 4096, BS))
+		return 1;
+
+	io_uring_queue_init(8, &ring, 0);
+
+	i = 0;
+	off = 0;
+	foff = FSIZE + BS;
+	do {
+		sqe = io_uring_get_sqe(&ring);
+		io_uring_prep_write(sqe, fd, buf, BS, off);
+		off += BS;
+		if (off == FSIZE)
+			off = 0;
+
+		io_uring_submit(&ring);
+
+		ret = posix_fallocate(fd, 0, foff);
+		if (ret < 0) {
+			perror("fallocate");
+			return 1;
+		}
+		foff += BS;
+
+		ret = io_uring_wait_cqe(&ring, &cqe);
+		if (ret) {
+			fprintf(stderr, "wait cqe %d\n", ret);
+			return 1;
+		}
+
+		io_uring_cqe_seen(&ring, cqe);
+		i++;
+		if (!(i & 1023))
+			fprintf(stdout, "Loop iteration %d\n", i);
+	} while (1);
+
+	return 0;
+}
+
+-- 
+Jens Axboe
+
