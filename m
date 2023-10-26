@@ -1,70 +1,66 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC5326E20
-	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 09:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F62411C9F
+	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 13:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y8aNq0w4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mVCVx/S0"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1698312430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRhYRtBirUPXDp/2RewNMGJIV5PnhG7EQeVGJmNmtuY=;
-	b=y8aNq0w4IgHdsQOLBrgI++aznBQayz2Ao5PgCcuI+uOPrtfJjNEXaS7+lnOeVOq33+WSDh
-	nwGL72MOXJ0xgpOHddvdznTOPA45kSdRZijozg1+44v4G5tPj52A/A6Cr0RKmcX4kDDiyQ
-	HV8HSpY4noacGCbN0ixRce388NEkzyZfyY+Jl+oJd52aJ00knRVPlehKoX3p0AUH81e0Jf
-	YjDOTw0rozdK4B5OoxswpWMnOW0nrNaD78mtu47XS9UZyc5kIbOgpbMh1E3WW6plwsmFzK
-	tplGndJKmTnf46xUPvRj8NEDh1UqW/VaUcxXVLWiF4CiC9WjLejj4WBa2os0mA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1698312430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRhYRtBirUPXDp/2RewNMGJIV5PnhG7EQeVGJmNmtuY=;
-	b=mVCVx/S0ECmQ+yBQY50eCICD/Fu5vUhJPwB2i+xv8A8a2ZjIRc1w7qyHIGrC09kRuA2qT+
-	mHvs4xG9wAv3ozAA==
-To: Mario Limonciello <mario.limonciello@amd.com>, David Lazar
- <dlazar@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, kys@microsoft.com,
- hpa@linux.intel.com, x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Borislav Petkov <bp@alien8.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re:
-In-Reply-To: <ad3affd0-58d3-41b3-8014-cb0fc953dc6d@amd.com>
-References: <c8d43894-7e66-4a01-88fc-10708dc53b6b@amd.com>
- <878r7z4kb4.ffs@tglx> <e79dea49-0c07-4ca2-b359-97dd1bc579c8@amd.com>
- <87ttqhcotn.ffs@tglx> <87v8avawe0.ffs@tglx>
- <32bcaa8a-0413-4aa4-97a0-189830da8654@amd.com>
- <ZTkzYA3w2p3L4SVA@localhost> <87jzra6235.ffs@tglx> <875y2u5s8g.ffs@tglx>
- <ad3affd0-58d3-41b3-8014-cb0fc953dc6d@amd.com>
-Date: Thu, 26 Oct 2023 11:27:09 +0200
-Message-ID: <87ttqd4tua.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OM528WhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68744C433C7;
+	Thu, 26 Oct 2023 13:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698325773;
+	bh=vLtTWv/ZXAwWN12pv3/dVO7bz32AKqwKVCQQHN3iznY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OM528WhCh6iPSwzmv1DJU3ufjYkaUJzYCRb9aWQjrn+DmaMHFj7K1GfmfzlI8zNZj
+	 ole1GaSiM0jekzEzL+Ag+5Trxex4iAJrXP6bx/6fX7h/h4fNqqWk1w2xz5WR7gWMWC
+	 fgNBwdvpFmkFGOmUmNL9tqqDplWqlvpNChqX4UBdMajFm0P5/dymayeq8jW/4PLSXg
+	 QlTTZEApOljM6o4fkGMjBL+sCayRlcBTLkMBoFOFmThx/NGNltYMnTHh0aIJ72muwf
+	 Mxiyl2n0MtfnETdD150bGd7Xy7zlSTrwL7/VpvQ9aJF3mYr3UiFeUVpZVfdoISE/HE
+	 4wsQnaRizbYow==
+Date: Thu, 26 Oct 2023 09:09:31 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Steve French <smfrench@gmail.com>
+Cc: Stable <stable@vger.kernel.org>, Paulo Alcantara <pc@manguebit.com>,
+	ronnie sahlberg <ronniesahlberg@gmail.com>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	"Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>,
+	CIFS <linux-cifs@vger.kernel.org>
+Subject: Re: Some additional cifs patches for 6.5 stable to address issue
+ brought up by kernel regression tracker
+Message-ID: <ZTplC1_qJYL1wR2G@sashalap>
+References: <CAH2r5mvHUnxfOU1URs2s6O3As8WLyMEkK+KNdUy6Ct9u+=d5YA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAH2r5mvHUnxfOU1URs2s6O3As8WLyMEkK+KNdUy6Ct9u+=d5YA@mail.gmail.com>
 
-On Wed, Oct 25 2023 at 17:11, Mario Limonciello wrote:
-> On 10/25/2023 16:04, Thomas Gleixner wrote:
->> Cc: stable@vger.kernel.org
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218003
+On Mon, Oct 23, 2023 at 11:32:21PM -0500, Steve French wrote:
+>There were a set of issues brought up in 6.5 by the introduction of
+>the "laundromat" (which cleans up directory leases).  After discussion
+>and testing with Paulo, Bernd Feige and others, we request that the
+>following set also be included to address these problems.  They are
+>all in mainline (added in 6.6) and the patches (from mainline since
+>they apply cleanly) are also attached.
 >
-> s/Link/Closes/
+>        238b351d0935 ("smb3: allow controlling length of time
+>directory entries are cached with dir leases")
+>        6a50d71d0fff ("smb3: allow controlling maximum number of
+>cached directories")
+>        2da338ff752a ("smb3: do not start laundromat thread when dir
+>leases  disabled")
+>        3b8bb3171571 ("smb: client: do not start laundromat thread on
+>nohandlecache")
+>        e95f3f744650 ("smb: client: make laundromat a delayed worker")
+>        81ba10959970 ("smb: client: prevent new fids from being
+>removed by laundromat")
 
-Sure.
+Queued up, thanks!
 
-> Presumably you will add a proper subject when this is committed?
-
-Bah, yes. I stopped replacing the subject line right after clearing it :(
-
-> With adding title and fixing that tag:
->
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+-- 
+Thanks,
+Sasha
