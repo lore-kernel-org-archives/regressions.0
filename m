@@ -1,201 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFD017D2
-	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 00:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B86E623
+	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 02:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anarazel.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anarazel.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qi84bvid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF559C433C8
-	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 00:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698281909;
-	bh=DkeMVHQTwqHPkZCBmMyFQJiD0l2SV8/DrHGVDUxDcgA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qi84bvidwho9O+RuWOkqnNfuZY6G/rPh2FBDMMpecNEQdE2Cxjw5I1PvvGjpc77jE
-	 0ezB7QZMLQw5L4EZ4DeUQ6WyzgikQJuUoOv3e2KYdjL//1Tu9drQCqUqSCFzUUu+w0
-	 gN6ItEFOZJzbd5DNFtj/TaY2B7tFXEDHJIu9W0tJ+GJPI7K83FFspUFXOOmHp/ryi/
-	 u185kj5IF+TCtnjMgdtDxxlGqfP3sII8ezZ9za0aeOTB9Dq/VF4dU+zYO+XaxKgiMt
-	 qPlFynu+sc0oN37ppOxMRYvC/j6mIVgH69qYX6cTbXvQ5GOrZCmuApe8DOXpzPPZCU
-	 HsYqD5iu/pAmQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-53d9f001b35so437058a12.2
-        for <regressions@lists.linux.dev>; Wed, 25 Oct 2023 17:58:29 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwKP3YruvaJoiWfndTFU6RWwXRUwYzWxXWiKcDLefCEAXfLpFzI
-	6vycHX1zvdLOdnD+nIL9ZvFB7sYDk9UDE9xYhJA=
-X-Google-Smtp-Source: AGHT+IFQNbdFKIMr/pC0MGklXxtlajx5n2H7h8L6DhFOvIJSNkXZmdDuG0auEc6tkz7AjOC6nnisP99r+mVq0KP01Is=
-X-Received: by 2002:a50:aa9b:0:b0:53e:1f7d:10f2 with SMTP id
- q27-20020a50aa9b000000b0053e1f7d10f2mr11930371edc.10.1698281908233; Wed, 25
- Oct 2023 17:58:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="k4S+qME+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m37B8FGm"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 165815C025C;
+	Wed, 25 Oct 2023 22:48:32 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 25 Oct 2023 22:48:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1698288512; x=1698374912; bh=p4
+	mm4cDQKu961WJfXf5ZKxas8+Y9WvFVFAtM+Ijwt/o=; b=k4S+qME+vDCFI/L+OE
+	XhNh0TqTdiBzriTPN5QsC9VvK6NV7nRTgPgoflUo/Y15/p+SOYJChzCnnvvmUd8I
+	Do6TnS/l2w1DNQaC1iOX9X8HTIlUta5vP7HmYBwLJSCAyQr+1VBpMN9eSDi+6/8L
+	JQl2cfx+sQgmzrCPVBdJlCylt+iDrEgThoMNL3aVmpXtym84z87A2m/YSJ4HwRJ2
+	LbXnBcuvlbkAw7wz1IMdPq51p0hlKNQkBSuyGp1vRvhu5RXI+tDtXJzXo1LqPX9R
+	DA8BX+MzBEn+95d0qWPlS6QGorvS6X6G4WaetdVSWe7Kcq9ORkxmp47o8Ze9LaJm
+	cdPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1698288512; x=1698374912; bh=p4mm4cDQKu961
+	WJfXf5ZKxas8+Y9WvFVFAtM+Ijwt/o=; b=m37B8FGmXPiLCc/wixUuL3tx5MeWN
+	WEV60oXL8y0gVVM6KpZp5O6HuLZSV0rjWdQqW8EyyFds3CHZ3FbJxXbgOpmv4fif
+	9t7bFiqNtfu6+UYovL/Z7wtCNAXOIjpAPiaKpcmS6CVZ+XFrFJq4e9fHwrTMMUbs
+	ViqWd0t4nd5ERoVmkgQCvl/nQouQwRrvhkphcaeeA7IZoGQOBLIE9xNaQgM+DHqy
+	0+M6o3X0Izp66zzVTXcoJA3mEfEGBCEnlZJP74bJ9gXYG0jA1/QiZSSLktlxKV+S
+	0eG856i7RlL8AoCCq8kMZX9zkhBjF6iu2UgpgrN8A1VwEOFm1tJM2rE8g==
+X-ME-Sender: <xms:f9M5ZeU1dIt9cfQJ7qS3wBOpMIQGjnlwQESweSSCRl7kZg90RsB1kg>
+    <xme:f9M5ZanM-FUf5OmTE2tJj68dUdw6ulCKBBDQkYNeVUCOuhieHn1gwYR3VWcPv8QFC
+    ug2EGuusn1xnGS2fA>
+X-ME-Received: <xmr:f9M5ZSZS-1MWjXlshEB1KHVR4G3ge99u8NPsxT6c2V1HGI3N-rkzhF7ry-1obz9O1W9OedCYI6UJEKhNrskS485jvq3ZOELYlOMvrqmqcy0V5RNdirYpxNIyasjB>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrledugdeivdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
+    htthgvrhhnpedvffefvefhteevffegieetfefhtddvffejvefhueetgeeludehteevudei
+    tedtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvshesrghnrghrrgiivghlrdguvg
+X-ME-Proxy: <xmx:f9M5ZVWKu4F5X-DEJrWOUPifnOs31R0_UQbFRqLMaVqXVq8QpKEYIQ>
+    <xmx:f9M5ZYkIwjOWSJdlvQK6OTpGPmHv3W1VbW_UKaP_SDHxfQAWCaUWQg>
+    <xmx:f9M5ZadUe4qrbz4oamXvJv7LqT7MyNns6TimcIUCzqxeyTaUdyf78w>
+    <xmx:gNM5ZRfPz3Z-EL5qoeIfU84DQ-FTiFEcdK-pab72Trhe8Slka9CEgQ>
+Feedback-ID: id4a34324:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Oct 2023 22:48:31 -0400 (EDT)
+Date: Wed, 25 Oct 2023 19:48:29 -0700
+From: Andres Freund <andres@anarazel.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Dave Chinner <david@fromorbit.com>, Theodore Ts'o <tytso@mit.edu>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	linux-ext4@vger.kernel.org,
+	Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+	gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	io-uring@vger.kernel.org
+Subject: Re: task hung in ext4_fallocate #2
+Message-ID: <20231026024829.vcnlmdmwi5hjjquz@awork3.anarazel.de>
+References: <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
+ <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+ <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
+ <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
+ <ZThcATP9zOoxb4Ec@dread.disaster.area>
+ <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
+ <20231025153135.kfnldzle3rglmfvp@awork3.anarazel.de>
+ <b5578447-81f6-4207-b83d-812da7c981a5@kernel.dk>
+ <20231025161405.eroaskwdauj57wz6@awork3.anarazel.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
- <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info> <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
- <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
- <ZSO9uArAtsPMPeTP@debian.me> <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
- <c9b79a69-bdc1-4457-900d-709a15d99568@leemhuis.info> <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
- <ZTWoDSPxGO-ApR4r@P70.localdomain> <82f1b533-3bd8-4418-843a-718d9a6b5786@leemhuis.info>
- <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com> <ba16ad66-4b35-4fb4-b4e6-1d785f260eea@ristioja.ee>
-In-Reply-To: <ba16ad66-4b35-4fb4-b4e6-1d785f260eea@ristioja.ee>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 26 Oct 2023 08:58:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H64AKdGoHnVLLOYXznpr_aq1jC_TUYXFQRdOjoBxanxkw@mail.gmail.com>
-Message-ID: <CAAhV-H64AKdGoHnVLLOYXznpr_aq1jC_TUYXFQRdOjoBxanxkw@mail.gmail.com>
-Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad L570
-To: Jaak Ristioja <jaak@ristioja.ee>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Evan Preston <x.arch@epreston.net>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>, 
-	Linux DRI Development <dri-devel@lists.freedesktop.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231025161405.eroaskwdauj57wz6@awork3.anarazel.de>
 
-Hi, Jaak,
+Hi,
 
-On Thu, Oct 26, 2023 at 2:49=E2=80=AFAM Jaak Ristioja <jaak@ristioja.ee> wr=
-ote:
->
-> On 25.10.23 16:23, Huacai Chen wrote:
-> > On Wed, Oct 25, 2023 at 6:08=E2=80=AFPM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> Javier, Dave, Sima,
-> >>
-> >> On 23.10.23 00:54, Evan Preston wrote:
-> >>> On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
-> >>>> On Fri, Oct 20, 2023 at 5:35=E2=80=AFPM Linux regression tracking (T=
-horsten
-> >>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> >>>>> On 09.10.23 10:54, Huacai Chen wrote:
-> >>>>>> On Mon, Oct 9, 2023 at 4:45=E2=80=AFPM Bagas Sanjaya <bagasdotme@g=
-mail.com> wrote:
-> >>>>>>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
-> >>>>>>>> On Tue, Sep 26, 2023 at 10:31=E2=80=AFPM Huacai Chen <chenhuacai=
-@kernel.org> wrote:
-> >>>>>>>>> On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tracki=
-ng (Thorsten
-> >>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> >>>>>>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
-> >>>>>>>>>>>
-> >>>>>>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated =
-Intel HD
-> >>>>>>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in=
- a blank
-> >>>>>>>>>>> screen after boot until the display manager starts... if it d=
-oes start
-> >>>>>>>>>>> at all. Using the nomodeset kernel parameter seems to be a wo=
-rkaround.
-> >>>>>>>>>>>
-> >>>>>>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a80417=
-17e3a2e4
-> >>>>>>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
-> >>>>>>>>>>> subsys_initcall_sync").
-> >>>>>>>>>>
-> >>>>>>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work =
-fine
-> >>>>>>>> again. So I guess the reason:
-> >>>>>
-> >>>>> Well, this to me still looks a lot (please correct me if I'm wrong)=
- like
-> >>>>> regression that should be fixed, as DRM_SIMPLEDRM was enabled befor=
-ehand
-> >>>>> if I understood things correctly. Or is there a proper fix for this
-> >>>>> already in the works and I just missed this? Or is there some good
-> >>>>> reason why this won't/can't be fixed?
-> >>>>
-> >>>> DRM_SIMPLEDRM was enabled but it didn't work at all because there wa=
-s
-> >>>> no corresponding platform device. Now DRM_SIMPLEDRM works but it has=
- a
-> >>>> blank screen. Of course it is valuable to investigate further about
-> >>>> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort becaus=
-e
-> >>>> I don't have a same machine.
-> >>
-> >> Side note: Huacai, have you tried working with Jaak to get down to the
-> >> real problem? Evan, might you be able to help out here?
-> > No, Jaak has no response after he 'fixed' his problem by disabling SIMP=
-LEDRM.
+On 2023-10-25 09:14:05 -0700, Andres Freund wrote:
+> On 2023-10-25 09:36:01 -0600, Jens Axboe wrote:
+> > On 10/25/23 9:31 AM, Andres Freund wrote:
+> > > Hi,
+> > >
+> > > On 2023-10-24 18:34:05 -0600, Jens Axboe wrote:
+> > >> Yeah I'm going to do a revert of the io_uring side, which effectively
+> > >> disables it. Then a revised series can be done, and when done, we could
+> > >> bring it back.
+> > >
+> > > I'm queueing a test to confirm that the revert actually fixes things.
+> > > Is there still benefit in testing your other patch in addition
+> > > upstream?
 > >
+> > Don't think there's much point to testing the quick hack, I believe it
+> > should work. So testing the most recent revert is useful, though I also
+> > fully expect that to work.
 >
-> I'm sorry, what was it exactly you want me to do? Please be mindful that
-> I'm not familiar with the internals of the Linux kernel and DRI, and it
-> might sometimes take weeks before I have time to work and respond on this=
-.
-It doesn't matter. I hope you can do some experiments to investigate
-deeper. The first experiment you can do is enabling SIMPLEFB (i.e.
-CONFIG_FB_SIMPLE) instead of SIMPLEDRM (CONFIG_DRM_SIMPLEDRM) to see
-whether there is also a blank screen. If no blank screen, that
-probably means SIMPLEDRM has a bug, if still blank screen, that means
-the firmware may pass wrong screen information.
+> I'll leave it running for a few hours, just to be sure.
 
-Huacai
+Quite a few hours and > 15TBW written later, no hang....
 
->
-> Jaak
->
-> >>
-> >> But I write this mail for a different reason:
-> >>
-> >>> I am having the same issue on a Lenovo Thinkpad P70 (Intel
-> >>> Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).
-> >>> Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank
-> >>> screen after boot and a rapidly flashing device-access-status
-> >>> indicator.
-> >>
-> >> This additional report makes me wonder if we should revert the culprit
-> >> (60aebc9559492c ("drivers/firmware: Move sysfb_init() from
-> >> device_initcall to subsys_initcall_sync") [v6.5-rc1]). But I guess tha=
-t
-> >> might lead to regressions for some users? But the patch description sa=
-ys
-> >> that this is not a common configuration, so can we maybe get away with=
- that?
-> >  From my point of view, this is not a regression, 60aebc9559492c
-> > doesn't cause a problem, but exposes a problem. So we need to fix the
-> > real problem (SIMPLEDRM has a blank screen on some conditions). This
-> > needs Jaak or Evan's help.
-> >
-> > Huacai
-> >>
-> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
-t)
-> >> --
-> >> Everything you wanna know about Linux kernel regression tracking:
-> >> https://linux-regtracking.leemhuis.info/about/#tldr
-> >> If I did something stupid, please tell me, as explained on that page.
-> >>
-> >>>>>>>> When SIMPLEDRM takes over the framebuffer, the screen is blank (=
-don't
-> >>>>>>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware=
-: Move
-> >>>>>>>> sysfb_init() from device_initcall to subsys_initcall_sync") ther=
-e is
-> >>>>>>>> no platform device created for SIMPLEDRM at early stage, so it s=
-eems
-> >>>>>>>> also "no problem".
-> >>>>>>> I don't understand above. You mean that after that commit the pla=
-tform
-> >>>>>>> device is also none, right?
-> >>>>>> No. The SIMPLEDRM driver needs a platform device to work, and that
-> >>>>>> commit makes the platform device created earlier. So, before that
-> >>>>>> commit, SIMPLEDRM doesn't work, but the screen isn't blank; after =
-that
-> >>>>>> commit, SIMPLEDRM works, but the screen is blank.
-> >>>>>>
-> >>>>>> Huacai
-> >>>>>>>
-> >>>>>>> Confused...
-> >>>>>>>
-> >>>>>>> --
-> >>>>>>> An old man doll... just what I always wanted! - Clara
-> >>>>>>
-> >>>>>>
-> >>>
-> >>>
->
+Greetings,
+
+Andres Freund
