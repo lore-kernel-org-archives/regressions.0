@@ -1,66 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw22-4.mail.saunalahti.fi (fgw22-4.mail.saunalahti.fi [62.142.5.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F62411C9F
-	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 13:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OM528WhC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68744C433C7;
-	Thu, 26 Oct 2023 13:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698325773;
-	bh=vLtTWv/ZXAwWN12pv3/dVO7bz32AKqwKVCQQHN3iznY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OM528WhCh6iPSwzmv1DJU3ufjYkaUJzYCRb9aWQjrn+DmaMHFj7K1GfmfzlI8zNZj
-	 ole1GaSiM0jekzEzL+Ag+5Trxex4iAJrXP6bx/6fX7h/h4fNqqWk1w2xz5WR7gWMWC
-	 fgNBwdvpFmkFGOmUmNL9tqqDplWqlvpNChqX4UBdMajFm0P5/dymayeq8jW/4PLSXg
-	 QlTTZEApOljM6o4fkGMjBL+sCayRlcBTLkMBoFOFmThx/NGNltYMnTHh0aIJ72muwf
-	 Mxiyl2n0MtfnETdD150bGd7Xy7zlSTrwL7/VpvQ9aJF3mYr3UiFeUVpZVfdoISE/HE
-	 4wsQnaRizbYow==
-Date: Thu, 26 Oct 2023 09:09:31 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Steve French <smfrench@gmail.com>
-Cc: Stable <stable@vger.kernel.org>, Paulo Alcantara <pc@manguebit.com>,
-	ronnie sahlberg <ronniesahlberg@gmail.com>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	"Dr. Bernd Feige" <bernd.feige@uniklinik-freiburg.de>,
-	CIFS <linux-cifs@vger.kernel.org>
-Subject: Re: Some additional cifs patches for 6.5 stable to address issue
- brought up by kernel regression tracker
-Message-ID: <ZTplC1_qJYL1wR2G@sashalap>
-References: <CAH2r5mvHUnxfOU1URs2s6O3As8WLyMEkK+KNdUy6Ct9u+=d5YA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B962F502
+	for <regressions@lists.linux.dev>; Thu, 26 Oct 2023 15:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [192.168.1.15] (81-175-205-118.bb.dnainternet.fi [81.175.205.118])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTPSA
+	id cf9cb88a-7414-11ee-a9de-005056bdf889;
+	Thu, 26 Oct 2023 18:32:03 +0300 (EEST)
+Message-ID: <7bfd4f9e-9f8d-4102-ab03-7d0401f00513@gmail.com>
+Date: Thu, 26 Oct 2023 18:32:02 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAH2r5mvHUnxfOU1URs2s6O3As8WLyMEkK+KNdUy6Ct9u+=d5YA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: LihaSika <lihasika@gmail.com>
+Subject: Linux kernel 6.1 - drivers/usb/storage/unusual_cypress.h "Super Top"
+ minimum bcdDevice too high
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 23, 2023 at 11:32:21PM -0500, Steve French wrote:
->There were a set of issues brought up in 6.5 by the introduction of
->the "laundromat" (which cleans up directory leases).  After discussion
->and testing with Paulo, Bernd Feige and others, we request that the
->following set also be included to address these problems.  They are
->all in mainline (added in 6.6) and the patches (from mainline since
->they apply cleanly) are also attached.
->
->        238b351d0935 ("smb3: allow controlling length of time
->directory entries are cached with dir leases")
->        6a50d71d0fff ("smb3: allow controlling maximum number of
->cached directories")
->        2da338ff752a ("smb3: do not start laundromat thread when dir
->leases  disabled")
->        3b8bb3171571 ("smb: client: do not start laundromat thread on
->nohandlecache")
->        e95f3f744650 ("smb: client: make laundromat a delayed worker")
->        81ba10959970 ("smb: client: prevent new fids from being
->removed by laundromat")
+Hi,	
 
-Queued up, thanks!
+in kernel 6.1 (maybe 5.x - 6.x) there's an ATACB setting for "Super Top 
+USB 2.0 SATA Bridge" -devices, where the minimum bcdDevice version to 
+match has been set to 1.60. It's in the file 
+drivers/usb/storage/unusual_cypress.h:
 
--- 
-Thanks,
-Sasha
+"""
+UNUSUAL_DEV( 0x14cd, 0x6116, 0x0160, 0x0160,
+  		"Super Top",
+  		"USB 2.0  SATA BRIDGE",
+  		USB_SC_CYP_ATACB, USB_PR_DEVICE, NULL, 0),
+"""
+
+My old USB HDD with a "Super Top" bridge has bcdDevice version 1.50, 
+thus the setting won't match and it will not mount.
+
+I'm not sure when this changed (after kernel 4.x?), but it used to work 
+before. Reading some earlier bug reports, it seems that the max version 
+used to be 0x9999, which then caused corruption in "Super Top" devices 
+with version >=2.20. So that's a reason for lowering the maximum value, 
+but I wonder why the minimum value has also been set to 0x0160.
+
+
+I created a patch, changing 0x0160 to 0x0150 (though I should've left 
+the max version as it was...):
+
+"""
+UNUSUAL_DEV( 0x14cd, 0x6116, 0x0150, 0x0150,
+"""
+
+Built, installed and rebooted; now the USB HDD can be mounted and works 
+perfectly again. I did some write & read tests, checked with diff, cmp 
+and md5sum - no corruption, everything OK 👍
+
+
+Best regards,
+LihaS
