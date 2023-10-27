@@ -1,251 +1,281 @@
-Received: from outbound-ip160b.ess.barracuda.com (outbound-ip160b.ess.barracuda.com [209.222.82.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A836218654
-	for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 14:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ddn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ddn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC5937168
+	for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 14:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="vq69i6rQ"
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169]) by mx-outbound41-133.us-east-2c.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Fri, 27 Oct 2023 14:54:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TuPQxzG2OE51PZp6InpDW8Yz4EmIMa5/HhT7gIdUpa6Q9vuVm47y4yGgh/Yhlr7WcreqGGzB++ELo7mh7/ysvqv60aB2iMACGzJQtNczZyWjxHBsNmGhstq7ZKFZ5MnEbP0sMWbM4+yR+wR6DNia4Nd9F7mVjOg1lgKOI9kG4wwX4FKY/WDmWXr/ezTJTqsEzgZLGVl5pdByTHqfICNriINjS63H2NNfZuoRFnRWO6EQDiHpdde2jDbMqle17CICmysaO/nuJD0qkPtaXs7jX9wvcXV0RBQl8SUsK+7CsC5yTUjd6D4fvcWMcyGa33G571Rm5VsDZNeMYW6jHtqfaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yNJzENrWdv7X6bJty1vDWv9RuwkY/u1AUl1pO18akmk=;
- b=kR9Fqxf/bvS8YW22odWQdVBtqLaei52OcylduDWcb6rgWR25ZcvrZ195f4h+WopBXxTsBebZ8ckNDKMX0P4xCjeAa1rJA32/Bk532Gx5UyYV3x9kgP/ekOCSRAfbtA+rCPoHhjr/pHnrZxag3/8YoLO4Gnb+ZcbFnO9xyjTtSYt833GxjJ1ezPnb+17GKJKVAgskMov8/BY6H/4kDZL9zEQ/d3oY2NWKZq+4+/xuknnX5GnS0SEfpq7eo2aNJfm2zBpltjjOa63YfS2P6Xv7ygCK17ABv0vqApvpk7GVrPwxfhFj1peBolsce4rRPt2UkPab1EmRrp0Qe/paXCL4Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yNJzENrWdv7X6bJty1vDWv9RuwkY/u1AUl1pO18akmk=;
- b=vq69i6rQ8OYmCzcYJwLbbgUGH7zUX9T3eOph2iFB9DykO7sQ97vGNvq6NyED0Mie4WKWYJoGJyEXeCzT0YGkuECseIIq8GWBOth7LRnOokmwR7+Eqg9MTFzwYZE05ni3ACxW4JMv6fFqnF35u8QRr1T8RQHGWX6RvXbItkkcml0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ddn.com;
-Received: from DM5PR1901MB2037.namprd19.prod.outlook.com (2603:10b6:4:aa::29)
- by SA1PR19MB6792.namprd19.prod.outlook.com (2603:10b6:806:24f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.33; Fri, 27 Oct
- 2023 13:21:19 +0000
-Received: from DM5PR1901MB2037.namprd19.prod.outlook.com
- ([fe80::74ca:a803:412c:fcb3]) by DM5PR1901MB2037.namprd19.prod.outlook.com
- ([fe80::74ca:a803:412c:fcb3%6]) with mapi id 15.20.6907.032; Fri, 27 Oct 2023
- 13:21:18 +0000
-Message-ID: <3a7b0345-7a74-42ad-bce9-fea52ccf7ee2@ddn.com>
-Date: Fri, 27 Oct 2023 15:20:55 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Revert "fuse: Apply flags2 only when userspace set the
- FUSE_INIT_EXT"
-Content-Language: en-US, de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miklos Szeredi <mszeredi@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Paul Lawrence <paullawrence@google.com>, Daniel Rosenberg
- <drosen@google.com>, Alessio Balsini <balsini@android.com>,
- Amir Goldstein <amir73il@gmail.com>, =?UTF-8?Q?Andr=C3=A9_Draszik?=
- <andre.draszik@linaro.org>
-References: <717fd97a-6d14-4dc9-808c-d752d718fb80@ddn.com>
- <4b0b46f29955956916765d8d615f96849c8ce3f7.camel@linaro.org>
- <fa3510f3-d3cc-45d2-b38e-e8717e2a9f83@ddn.com>
- <1b03f355170333f20ee20e47c5f355dc73d3a91c.camel@linaro.org>
- <9afc3152-5448-42eb-a7f4-4167fc8bc589@ddn.com>
- <5cd87a64-c506-46f2-9fed-ac8a74658631@ddn.com>
- <8ae8ce4d-6323-4160-848a-5e94895ae60e@leemhuis.info>
- <CAOssrKdvy9qTGSwwPVqYLAYYEk0jbqhGg4Lz=jEff7U58O4Yqw@mail.gmail.com>
- <2023102731-wobbly-glimpse-97f5@gregkh>
- <CAOssrKfNkMmHB2oHHO8gWbzDX27vS--e9dZoh_Mjv-17mSUTBw@mail.gmail.com>
- <2023102740-think-hatless-ab87@gregkh>
-From: Bernd Schubert <bschubert@ddn.com>
-In-Reply-To: <2023102740-think-hatless-ab87@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PR1P264CA0119.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:2cd::13) To DM5PR1901MB2037.namprd19.prod.outlook.com
- (2603:10b6:4:aa::29)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Y2sujQi5"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3579874b5easo412565ab.1
+        for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 07:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1698418536; x=1699023336; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SFsU9jeD7RU70nHde8K3vwOxVJS3tmKj0LIhCekxbrU=;
+        b=Y2sujQi5jc/k62UseOuxA3me0ZvYFF8ctxrbMZSst0j/ymQxMS0GJaAlCKCEZWJu4J
+         lvEBJNKVK9xMFyzYJVjJthYzp94nL4E8lCPZMJqXmVz/mUKLHCBlBbxt4n16SsROT5Un
+         d6w3u3xbc8yvKnNkequxBfZEvsS6vOh332aF/NA/JKNoivEshZ8Yibs6ZT9OK/g7f063
+         bGLC6f1n1VtHiiJhe7kAbDyG2XNyR6R/h98QGpuEnBa//TdgImfLaCcKcjZ3ItnxzUWQ
+         v4GftysHIi7d3I/HHJ2oefWRNLUJmJpv/KZvRUPFEehWYp07wXnJg+zTClY2HgWBluTL
+         L53w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698418536; x=1699023336;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFsU9jeD7RU70nHde8K3vwOxVJS3tmKj0LIhCekxbrU=;
+        b=e/w2qzurwOexQkxrBghid/l4F9AF9D/gFmAYY91tHKAKE6ZufeQ6JnGv7E7U9XZQNm
+         UKh/Q4aXYOz28huozMVigjsNKb3FsKMFH14yCHdSxWRsIOouTXM+kZCFG+PtX2WALXGR
+         sWMhKIJFEv0e5C+a7XT4Cv0D2KuDnhunsjyEYNucYOz+WDKBKFXVTlG5WW+aHjRA4ZO3
+         Xxl4XGbko3cAV55M5RYqGLmkKNEfdATubvjEcr73Ji+61AjA1L4wKIjS164YSTl767NH
+         wckKZwU2KwI5Ua280WPn17TH36DFgpcBpPQ6J5ZkIbCLGvFeg3QkIN8dkW5LGF9JlXqN
+         suvg==
+X-Gm-Message-State: AOJu0YzNBZy73NBXqXGKQwYp74+PvqvORYtJy8oAxYIN70sELuqxs1+F
+	kjPHPq7enFtPDsB23JfSBT3XlA==
+X-Google-Smtp-Source: AGHT+IEQzj+UFlLASkIGgdxDxGo2LzR1jEPx3AOkbgmUqyNogZRHE+2aIWF8Czi6sLD/Siy/8BjQiw==
+X-Received: by 2002:a6b:5c10:0:b0:790:958e:a667 with SMTP id z16-20020a6b5c10000000b00790958ea667mr3021146ioh.2.1698418536450;
+        Fri, 27 Oct 2023 07:55:36 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id r4-20020a5e9504000000b0079fd98bbe9bsm501631ioj.15.2023.10.27.07.55.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Oct 2023 07:55:35 -0700 (PDT)
+Message-ID: <c34467c5-2d57-436a-a357-a230727214ed@kernel.dk>
+Date: Fri, 27 Oct 2023 08:55:34 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR1901MB2037:EE_|SA1PR19MB6792:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85dee115-ae5b-4d8c-a04a-08dbd6ef8f60
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	dJICB80D2WihPxo0rlqhoUFplxv9MKfPXs4/x3CNhPzKqlJHALi3f3bCQTYB9sCSswRZ/Rs2gp6rfYCE20KNKaJEmfye4q6R1APuhWzrojJ6Zv5Us19Mq4nskmhSM/NyVgnmXtDx4mAQb+2ODqE5LclgPvYOc3RUT2DlTB3wYqCbr4nXhrriyr7eSKqclCqi/HZcRGSXMXZxSpzkaRycMV+3kt15cQTZUyn/LP5TDbgNdnuz6jgRQuuraQ2SlNjScsY8uu2w+w2mE2VCtdrRiqjZf/4SJE7fIZnSpwYqDapJk8Z13uwVbH22E2hsXvVllpS0foik855R1wLEq9ywAAWwYe/pAiDKK/EsuaOLb85PweyN6wcIcJ/1xtr2FvWu4l9vdmipGzk0WUowc7fx1/U37Uun9ehiai3N3FhQf2tsEBrcLKPGVHYmt6qVCDJjfALwdgVwc4YmVTyb/JLttN0MxwdvkegLsH6rtQjVEBit0GJIwz3DASqu7b7pU1/2gNmWilGTeaslOQhgf8d6E7UU7SlXKTiQh7DyIQZTjvq8+whFZyDKl6d1QhdePzfmfHHtYavkm9Y0Wdir+JpzNfl40bABPB5Amvmvdi3K/GpWu1N27ecvDOnBn8e11tapp63YPYk8U8ZZ1tC53DQp9w==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1901MB2037.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(136003)(396003)(346002)(39850400004)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(83380400001)(6666004)(6506007)(6512007)(53546011)(6486002)(478600001)(316002)(110136005)(66946007)(66556008)(54906003)(66476007)(36756003)(86362001)(31686004)(38100700002)(2616005)(31696002)(8936002)(4326008)(41300700001)(8676002)(7416002)(2906002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QTJvR3NwdGV3WE5UcHBuckVFcy9CaWRlamc4TEZGb2pDZE90UE5iZ05HU0Vh?=
- =?utf-8?B?TWNHTW5qbkcxcytLRkpUNHBmVHlIYk5oMkRkdmhUZUY2SzZVN1g3RzhXK1JF?=
- =?utf-8?B?dzhBRmgva1hFckpmaDZ1R2lMRnFTRTN5bDU5KzJuTTZ2TTZpbXdPdkJpZWsz?=
- =?utf-8?B?RXY0clJDdVd6bFdscjlKVmkyM0FISGIvY3NZNU45L3ZMcmdUQ1pvd1BYWUJQ?=
- =?utf-8?B?NS9ubHBXTGNrU09xckZuaGZWbEo5Wk1IMEgwK0RJVkxTSWI1YXl0MDF2MUFx?=
- =?utf-8?B?YnpNUTJCREsvNEpJbGtnV3BWbUh2UFF0VHlaN0lIYlhSTmltaFBHZFVIRkM2?=
- =?utf-8?B?ZS9vRTI0cHdabXVDQ0dYSTlwZ0lMUHpEdUpZTlg3ajBtNS9Ib3RTRWZHcmlI?=
- =?utf-8?B?MkxLUTl1MlVFZXFYVmZnYmEyc3o0LzNkUFZkSG52azZRTWhmemdIVXg5V09x?=
- =?utf-8?B?WW0yRWFwS0Zib2U5K2E0V1grNnIwTEQ2d0JTRE9XZUwxR0U1WkRYTTJPa2Fu?=
- =?utf-8?B?dFZ2UDZaV0VwTmtGbHNmdFhDWUtwZytMem9IcDRqcnFOajVOREp6OUUvZzAv?=
- =?utf-8?B?eHVPTi91a1l6bjcvVk5UeENMRDN5eHhyUU9pZHBCK0ZpNEtTZUZqUUFObG51?=
- =?utf-8?B?cVlzVGVaOGN4bU9FakQ3Tm5PQWxENDVvbmdqUDBLVlZTalE3QURkTFI5cEtU?=
- =?utf-8?B?UlphTzFBWnMzb0ZDazJQWDJCVEppdkY5WmVWMlhYUmpwaXY4Z2cwWGVMNlZ5?=
- =?utf-8?B?RGY1WWYyK2E1ckFvdjdaQlhiM243aE5oWVlBTUMrZFByZHJKZWFLSzl3bUlQ?=
- =?utf-8?B?c0JSYnpYVUlqWUQ2KzVJUXg5MjBYUkNFY1doNitRVWIxbk9zaXhuVUhpSGIx?=
- =?utf-8?B?OXp3RDBiR3UrVzJZQXUrUFZPaTA1MHYvTnpSaSswQTZ6TVhIYWxBNmJySGxQ?=
- =?utf-8?B?Zk9QYzZaWlgvYnNSU2ZkR0hmME5Md0RxVFFJUjdNQWZTbFV1VmpjV1JLenhr?=
- =?utf-8?B?UHNTRW1RRlFFTXJWNDlwYTAraWFoN1lhRFlwM0FxYTN4UDljazh0c1dBdFE4?=
- =?utf-8?B?aldBNzJjcS9iN3d6YXl2cm9QbHNEMG9YRDNmTE5OOXNGN05LTWxYenNweVRZ?=
- =?utf-8?B?dGdhZFZvbk82cHMzVloyUkNjUVNXODdITlB5ZHhzY0kwdXBJV01scDQ4VGtO?=
- =?utf-8?B?S0IvWXRwN1NJWC9tR24zZ0JQUjVaWTF1QU5ZQ1ZlUzBmR0dsdzgxeVRkR1k1?=
- =?utf-8?B?M3RoalhmY1h1bktYQW8yOGhjTm5mTU5JYWlqanAzS2dLZkVXSkhMaEdFSXF6?=
- =?utf-8?B?c1FDMTd3eFdVWGRXTVBpTWh3aXlla3NUVC9JOEdhQlRzcGlocTVmNVhHY1k3?=
- =?utf-8?B?Y00wNHE5SmFTOFRabjRCcldHZ3VEbDJmOERQRUljZjhjQUp3REhoV3Ivb2s3?=
- =?utf-8?B?Qk9oSnA2a0t3UGpLZC9hbWJ0b1BFcTk2TW5QTDI1cVYzVjVxd01PcGtRSDZr?=
- =?utf-8?B?RmZIazhVL250eWJ0K3VzMmJaQU5mNCtrZ3EzQUgwNnArTUlLaUtVNjFiL0Nl?=
- =?utf-8?B?bFZid3hFU3RPbjJRaWJoeFpHUGcwUnlPUEdLbjRZN25OVlU1RkdCenhsRHg4?=
- =?utf-8?B?Vjh6UXJDSTRNVHZNbTVqbi9sT1hsRjQvODhBRE4wUkFwaG94RFhReTlqc2lY?=
- =?utf-8?B?dWdHUDFEdEM0ZHJ1NzRWODdNOTdnOWU2cVp6UUU3dXJDZk5mVHV2YjhOc0Jt?=
- =?utf-8?B?L1JWSzdaR09HTjNuTjJtNVZBaURTWmt5ckhxRjFEZXQ1MW9LZjRjd2RRQmEw?=
- =?utf-8?B?V2hwL3pNQjlpTkswaVpEQk5FWVN1RHByemo0bktKWVhzeTJ2Tzd2Um1uaGV4?=
- =?utf-8?B?VDVCSm9qQUs3YjAyWGZISkdrU1NLZ2I3Z3R3YzBMRTZNOXQ1QkxiWi9EQUo3?=
- =?utf-8?B?VFdXWHBDWWVpaEx2TE00dHpMeWVNS1JEQ3NFNlZEaWd5Rko4VEV6cmluMGNB?=
- =?utf-8?B?SGVZODFlWnNTVzdUdGdkSUZMK1JFT3YxZzVBTjBlMjFVbXJ4NTFpTWJUS0Iv?=
- =?utf-8?B?WWM5UktpeG9wSENWdHNLNjNHRHVuN0I2cmhJWEFlNG1FSWY0bDM5V3Arc1dv?=
- =?utf-8?B?M0p4V3lHSE84cHNPWkpoSmVpOWt0V3k5NkIvOFIxNGt6dHRLK3RtY0J0eXgv?=
- =?utf-8?Q?vtdgvt9WQg//0t7mlJSKagbPPJjyTwhjnGnfRicFCkao?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	=?utf-8?B?d3AwNWhtOWdGanV2c3R2WS9XS0Z2Sm1YWFl4UXA5OVhWaHhFUUY5Zml0UVZQ?=
- =?utf-8?B?Y0pjU1UwWHhYc1Y0SU42ZU11cFkvYkN1UVkwU1h3clIwOXlheXRjNWdBVk81?=
- =?utf-8?B?VWtGUGNXOW1UVDBJNFFKTzNmQitxa1pydUN5VDM2QXRTSkJ0aWFnNXFDcjYx?=
- =?utf-8?B?d2Q1ZnkyK2dTdll5VVV4bCt0TUZQUERJaUdabWhCb0UyS3FLSnBiYi9JWElB?=
- =?utf-8?B?bW1xeEpSTEJuZnp0enBmWndiemMrYlJZTk55ZmR6ek82Z0YzS0E2enJoMVZj?=
- =?utf-8?B?UXFWWFhsOTlwVVpaakQ5L3lOdEYrbmdWRGJHd1FGQ3NMQmMvNFZoZ25vcHRh?=
- =?utf-8?B?b2hGY1h1am5ub25jN1RTbU1zVzV5VWZuYWNhbVIrc2ZVeHJVZTcwbTBjZXRk?=
- =?utf-8?B?K3puaGlKWmdMR0FLK21xMGQ5OFY1ZUFZc1cwWEJBUy9WV0x1QkJZd3JmTGdp?=
- =?utf-8?B?eVEwcEFncW1aUWo3cHBUQVJ1elBQeXMwWHEvTkF1bDVTVG1RWnRhWEVhQ1pT?=
- =?utf-8?B?eTBwM1dPMWd6VjdhT3VuS01uWEw2aTI1akoyUWVXT2daWWo0YjU1d3EyaHB5?=
- =?utf-8?B?WERjM1NlWjN4bWowNlJwMFhGQWpGVHN1a0dGZ0ZuM01UVHNIOHhDZ0sxWU41?=
- =?utf-8?B?NFl4Ris5blNFb1k5dGpsNEZQT0FEOVpZaXowbEhrNDU3TjA1d2IwRnB5T3Yw?=
- =?utf-8?B?WjZhM0k4MlpiT0ZLMjlCTTgyWnVaTDI2V2o4bmt1NmpLbzdlSjhxRUY3VndG?=
- =?utf-8?B?S1dKTk9FNGFleVNSelh3eFgzZmxDUXgrYzJnRzAzbnpGYm1ySFZmNFEzNWVq?=
- =?utf-8?B?aTd5TVQ4Qi9RSzZEc0hiS3Y3dU96VjFyeHl0R3MvOU9VUzF3c1AvYnNYQTJW?=
- =?utf-8?B?aFNKZy90LzQvdXh0aU84ajFTWlowbUhpUDZITEpCV1oydXliTEREUHRYdXUy?=
- =?utf-8?B?Tnd3OUsvNlBqQmxMZGIyL1dLbTZ0aVR2YTBKNVBHZG83QVpjS3FFVWtTUS92?=
- =?utf-8?B?K29MOFZYcTdBNTBYZUdaSzNUSTkvNVJsSllOa1Y3bE1lVDdPRnlFb3ZjVGVa?=
- =?utf-8?B?YnJtcnpaWTlBQUNKTXBRMHNKUktrMkZNbXdvK3dWa3JlRFVBL3lkTDVkVWtp?=
- =?utf-8?B?dXZLM1RZMVJ3dXhlVnJGdUhTQi9VaWszcVdDOGRqbEpsYThxcmkvTDBTYjQ4?=
- =?utf-8?B?ZXZLRnMzRnUxbW9pdGdXUlh4MHpnQ2FaMVo4UUY5SHBGRlRDR3dkRUdPSlN1?=
- =?utf-8?B?RDRoVFk5eEJzK2xIUTRMMEp0RnNUbVVkRWdjalN3NHZlbHFzUExjc3BZYy9L?=
- =?utf-8?B?UnNYY1dnSk1SQm1NUHNMZ2M3NmU0cG0xYlU2QTZyYnMxUEtVcjNOZVY4ZWJW?=
- =?utf-8?Q?wHQMxSJF54grUWvW8xK62eKPu8Q+oW+E=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85dee115-ae5b-4d8c-a04a-08dbd6ef8f60
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1901MB2037.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 13:20:59.6826
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zhIaFnm4jtb0EIpoq2/cQwJknfjMBHtz4AZKLt60n9je7UHd5EWxRSiC98taWluajhTHJXlWqt5bpVMD+yQcTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR19MB6792
-X-OriginatorOrg: ddn.com
-X-BESS-ID: 1698418475-110629-26501-5791-1
-X-BESS-VER: 2019.1_20231024.1900
-X-BESS-Apparent-Source-IP: 104.47.58.169
-X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKVsbGpqZAVgZQMNnEyMAs2djAKN
-	k0zdjEyNgozSzN3MzM2DQpLc3AxNhCqTYWAJJLkRtBAAAA
-X-BESS-Outbound-Spam-Score: 0.00
-X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.251721 [from 
-	cloudscan15-57.us-east-2a.ess.aws.cudaops.com]
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------
-	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
-	0.00 BSF_SC0_MISMATCH_TO    META: Envelope rcpt doesn't match header 
-X-BESS-Outbound-Spam-Status: SCORE=0.00 using account:ESS124931 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND, BSF_SC0_MISMATCH_TO
-X-BESS-BRTS-Status:1
+User-Agent: Mozilla Thunderbird
+Subject: Re: task hung in ext4_fallocate #2
+Content-Language: en-US
+To: Dave Chinner <david@fromorbit.com>
+Cc: Andres Freund <andres@anarazel.de>, Theodore Ts'o <tytso@mit.edu>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
+ =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+ gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ io-uring@vger.kernel.org
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+ <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
+ <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+ <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
+ <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
+ <ZThcATP9zOoxb4Ec@dread.disaster.area>
+ <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
+ <ZTmWjWeNCgGcdIy+@dread.disaster.area>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZTmWjWeNCgGcdIy+@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 10/27/23 14:46, Greg Kroah-Hartman wrote:
-> On Fri, Oct 27, 2023 at 02:36:55PM +0200, Miklos Szeredi wrote:
->> On Fri, Oct 27, 2023 at 12:40 PM Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
+On 10/25/23 4:28 PM, Dave Chinner wrote:
+> On Tue, Oct 24, 2023 at 06:34:05PM -0600, Jens Axboe wrote:
+>> On 10/24/23 6:06 PM, Dave Chinner wrote:
+>>> On Tue, Oct 24, 2023 at 12:35:26PM -0600, Jens Axboe wrote:
+>>>> On 10/24/23 8:30 AM, Jens Axboe wrote:
+>>>>> I don't think this is related to the io-wq workers doing non-blocking
+>>>>> IO.
 >>>
->>> On Wed, Oct 25, 2023 at 03:17:09PM +0200, Miklos Szeredi wrote:
+>>> The io-wq worker that has deadlocked _must_ be doing blocking IO. If
+>>> it was doing non-blocking IO (i.e. IOCB_NOWAIT) then it would have
+>>> done a trylock and returned -EAGAIN to the worker for it to try
+>>> again later. I'm not sure that would avoid the issue, however - it
+>>> seems to me like it might just turn it into a livelock rather than a
+>>> deadlock....
 >>
->>>> I don't think the Android use case counts as a regression.
->>>
->>> Why not?  In the changelog for this commit, it says:
->>>
->>>      There is a risk with this change, though - it might break existing user
->>>      space libraries, which are already using flags2 without setting
->>>      FUSE_INIT_EXT.
->>>
->>> And that's exactly what Android was doing.  Not all the world uses libfuse,
->>> unfortunatly.
+>> Sorry typo, yes they are doing blocking IO, that's all they ever do. My
+>> point is that it's not related to the issue.
 >>
->> No, this is not about libfuse or not libfuse.   It's about upstream or
->> downstream.  If upstream maintainers would need to care about
->> downstream regressions, then it would be hell.
-> 
-> I agree, that's not what I'm saying here.
-> 
->> How should Android handle this?  Here's how: they have an internal
->> patch, which conflicts with the patch they want to revert.  Well, let
->> them revert that patch in their kernel.  It's not like it's a big
->> maintenance burden, since it's just a few lines.  This is the sort of
->> thing that downstream maintainers do all the time.
+>>>>> The callback is eventually executed by the task that originally
+>>>>> submitted the IO, which is the owner and not the async workers. But...
+>>>>> If that original task is blocked in eg fallocate, then I can see how
+>>>>> that would potentially be an issue.
+>>>>>
+>>>>> I'll take a closer look.
+>>>>
+>>>> I think the best way to fix this is likely to have inode_dio_wait() be
+>>>> interruptible, and return -ERESTARTSYS if it should be restarted. Now
+>>>> the below is obviously not a full patch, but I suspect it'll make ext4
+>>>> and xfs tick, because they should both be affected.
+>>>
+>>> How does that solve the problem? Nothing will issue a signal to the
+>>> process that is waiting in inode_dio_wait() except userspace, so I
+>>> can't see how this does anything to solve the problem at hand...
 >>
->> It's a no-brainer, what are we talking about then?
+>> Except task_work, which when it completes, will increment the i_dio
+>> count again. This is the whole point of the half assed patch I sent out.
 > 
-> I'm talking about a patch where you are changing the existing
-> user/kernel api by filtering out values that you previously accepted.
-> And it was done in a patch saying "this might break userspace", and
-> guess what, it did!
+> What task_work is that?  When does that actually run?
 > 
-> So why not revert it as obviously you all anticipated that this might
-> happen?
+> Please don't assume that everyone is intimately familiar with the
+> subtle complexities of io_uring infrastructure - if the fix relies
+> on a signal from -somewhere- then you need to explain where
+> that signal comes from and why we should be able to rely on that...
+
+Sorry yes, I should explain that more clearly.
+
+For buffered reads/writes, we get the completion on the IRQ side, as you
+know. io_uring posts the completion from task context, for which it uses
+task_work to do so. task_work is run by the task itself, when it exits
+to userspace from the kernel. TIF_NOTIFY_SIGNAL is used for this, which
+is like per-thread signals, not shared across thread groups. But they do
+break waiting, so we can exit and process them.
+
+With the iomap workqueue punt, we get the block layer callback and then
+queue processing to the workqueue. Once that is run, we'll queue up the
+task_work and post the completion. With DIO_CALLER_COMP, we move more of
+this context to the task_work, most notably the inode_dio_end(). And
+this is where our problem is coming from. Now we need the task to
+actually run this task_work, and when the task does inode_dio_wait() and
+blocks in there, we have a deadlock where we are waiting on task_work
+being run to run inode_dio_end(), yet preventing it from actually
+running.
+
+>>> I'm also very leary of adding new error handling complexity to paths
+>>> like truncate, extent cloning, fallocate, etc which expect to block
+>>> on locks until they can perform the operation safely.
+>>
+>> I actually looked at all of them, ext4 and xfs specifically. It really
+>> doesn't seem to bad.
+>>
+>>> On further thinking, this could be a self deadlock with
+>>> just async direct IO submission - submit an async DIO with
+>>> IOCB_CALLER_COMP, then run an unaligned async DIO that attempts to
+>>> drain in-flight DIO before continuing. Then the thread waits in
+>>> inode_dio_wait() because it can't run the completion that will drop
+>>> the i_dio_count to zero.
+>>
+>> No, because those will be non-blocking. Any blocking IO will go via
+>> io-wq, and that won't then hit the deadlock. If you're doing
+>> inode_dio_wait() from the task itself for a non-blocking issue, then
+>> that would surely be an issue. But we should not be doing that, and we
+>> are checking for it.
 > 
-> The "internal" patch from Android was just using the upper values of the
-> fuse api because they didn't want to conflict with the upstream values
-> before their code was accepted (and it was submitted already, but not
-> accepted.)
+> There's no documentation that says IO submission inside a
+> IOCB_DIO_CALLER_COMP context must be IOCB_NOWAIT.
 > 
-> So how do you want developers to work on changes before they are
-> accepted with this user/kernel numbering scheme that you have?  You just
-> broke anyone who was using a not-accepted-in-the-tree value, right?
+> I don't recall it being mentioned during patch submission or review,
+> and if it was ithe implications certainly didn't register with me -
+> I would not have given a rvb without such a landmine either being
+> removed or very well documented.
+> 
+> I don't see anywhere that is checked and I don't see how it can be,
+> because the filesystem IO submission path itself has no idea if the
+> caller is already has a IOCB_DIO_CALLER_COMP IO in flight and
+> pending completion.
 
-It is not related to accepted-in-tree, but server (userspace) side now 
-has to set the flag "FUSE_INIT_EXT" itself, to tell the kernel it knows 
-about these flags and that these bits are initialized. Not setting these 
-flags would cause random issues with any fuse userspace/server side that 
-does not have zeroed 'struct fuse_init_out' - from my point of view that 
-is a regression as well. And In that sense the patch is a regression fix 
-- which now has other side effects.
+The io-wq threads can do IOCB_DIO_CALLER_COMP with blocking writes just
+fine, as they are not the ones that will ultimately run the task_work
+that does inode_dio_end(). Hence there's no deadlock from that
+perspective.
 
-Regarding out-of-tree development, I'm just right now in the position to 
-have to back port my own features (and while they are still in 
-development and being pushed upstream) to older distribution kernels. 
-This is one of the reasons why I currently look at each and every fuse 
-patch that is posted to the list - I'm looking if it can cause issues 
-for my company/myself and at the same time I can give a bit reviews and 
-maybe help Miklos that way. (@Amir overlay patches are on my todo list). 
-To be honest, given the rather huge Android overlay patch, I'm missing 
-reviews from the Android team... Especially for Amir, who took over 
-overlay work. And if Android team would have monitored and reviewed, 
-they would have noticed possible issue beforehand.
+The task that runs the task_work that does inode_dio_end() must not be
+calling inode_dio_wait() blocking, that would run into this deadlock
+we're currently seeing with fallocate. See end-of-email for a lockdep
+addition for this.
 
-Thanks,
-Bernd
+>>> Hence it appears to me that we've missed some critical constraints
+>>> around nesting IO submission and completion when using
+>>> IOCB_CALLER_COMP. Further, it really isn't clear to me how deep the
+>>> scope of this problem is yet, let alone what the solution might be.
+>>
+>> I think you're missing exactly what the deadlock is.
+> 
+> Then you need to explain exactly what it is, not send undocumented
+> hacks that appear to do absolutely nothing to fix the problem.
 
+For the io-wq case, when a write completes, it's queued with the
+_original_ task for processing, and the original task is the one that
+will run the task_work and hence inode_dio_done(). This is why it's
+totally fine for io-wq to do blocking writes, even hitting
+inode_dio_wait() as well.
+
+>>> With all this in mind, and how late this is in the 6.6 cycle, can we
+>>> just revert the IOCB_CALLER_COMP changes for now?
+>>
+>> Yeah I'm going to do a revert of the io_uring side, which effectively
+>> disables it. Then a revised series can be done, and when done, we could
+>> bring it back.
+> 
+> Please revert the whole lot, I'm now unconvinced that this is
+> functionality we can sanely support at the filesystem level without
+> a whole lot more thought.
+
+I'd prefer just eliminating the caller for now. I already have a full
+series that does the inode_dio_wait(), so let's please give that a go
+first. The only other potential user of CALLER_COMP would be aio, and
+that would need some substantial changes to enable it as-is. So we
+should not really be at risk here, and I'd rather avoid doing another
+round of merge conflicts with the whole thing.
+
+I'll be posting that soon, for a 6.8 target. It's obviously too late for
+6.7 at this point.
+
+I did also look into adding lockdep support for this, so we can detect
+the dependency, and it seems to be working for me. Here's the test case
+on current -git with lockdep enabled. This shows that we have a
+dependency with someone having done inode_dio_begin() and then
+inode_dio_wait() on the same inode. With that in place, we should be
+able to catch any violations of this. Trace:
+
+[   17.897351] ============================================
+[   17.897677] WARNING: possible recursive locking detected
+[   17.897999] 6.6.0-rc7-00123-g3a568e3a961b-dirty #4300 Not tainted
+[   17.898413] --------------------------------------------
+[   17.898783] falloc-dio/502 is trying to acquire lock:
+[   17.899135] ffff000205318648 (inode){++++}-{3:3}, at: xfs_file_fallocate+0x74/0x40
+[   17.899681] 
+[   17.899681] but task is already holding lock:
+[   17.900085] ffff000205318648 (inode){++++}-{3:3}, at: __iomap_dio_rw+0x164/0x87c
+[   17.900606] 
+[   17.900606] other info that might help us debug this:
+[   17.901058]  Possible unsafe locking scenario:
+[   17.901058] 
+[   17.901472]        CPU0
+[   17.901645]        ----
+[   17.901820]   lock(inode);
+[   17.902014]   lock(inode);
+[   17.902209] 
+[   17.902209]  *** DEADLOCK ***
+[   17.902209] 
+[   17.902619]  May be due to missing lock nesting notation
+[   17.902619] 
+[   17.903089] 4 locks held by falloc-dio/502:
+[   17.903383]  #0: ffff000205318648 (inode){++++}-{3:3}, at: __iomap_dio_rw+0x164/0c
+[   17.903926]  #1: ffff0000c3e9d3e8 (sb_writers#12){.+.+}-{0:0}, at: vfs_fallocate+0
+[   17.904512]  #2: ffff000205318338 (&sb->s_type->i_mutex_key#17){++++}-{3:3}, at: 4
+[   17.905158]  #3: ffff0002053184c8 (mapping.invalidate_lock#3){+.+.}-{3:3}, at: xf4
+[   17.905808] 
+[   17.905808] stack backtrace:
+[   17.906124] CPU: 0 PID: 502 Comm: falloc-dio Not tainted 6.6.0-rc7-00123-g3a568e30
+[   17.906762] Hardware name: linux,dummy-virt (DT)
+[   17.907094] Call trace:
+[   17.907270]  dump_backtrace+0x90/0xe4
+[   17.907537]  show_stack+0x14/0x1c
+[   17.907770]  dump_stack_lvl+0x5c/0xa0
+[   17.908038]  dump_stack+0x14/0x1c
+[   17.908297]  print_deadlock_bug+0x24c/0x334
+[   17.908612]  __lock_acquire+0xe18/0x20d4
+[   17.908876]  lock_acquire+0x1e0/0x30c
+[   17.909137]  inode_dio_wait+0xc8/0x114
+[   17.909378]  xfs_file_fallocate+0x74/0x440
+[   17.909672]  vfs_fallocate+0x1a0/0x2f0
+[   17.909943]  ksys_fallocate+0x48/0x90
+[   17.910212]  __arm64_sys_fallocate+0x1c/0x28
+[   17.910518]  invoke_syscall+0x44/0x104
+[   17.910759]  el0_svc_common.constprop.0+0xb4/0xd4
+[   17.911085]  do_el0_svc+0x18/0x20
+[   17.911334]  el0_svc+0x4c/0xec
+[   17.911549]  el0t_64_sync_handler+0x118/0x124
+[   17.911833]  el0t_64_sync+0x168/0x16c
+
+-- 
+Jens Axboe
 
