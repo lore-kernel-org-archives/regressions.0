@@ -1,109 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FACE358AD
-	for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 14:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E1417990
+	for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 14:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HPnzN/Tg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698415541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qmiVVEtRZXlvZiCEBDmIRly02OLScsCRxyCghuB2vJE=;
-	b=HPnzN/TgmnTvk9LO8GBD920+sr6JcceWOwd1hFCBkxIEmnHxHcpZz8ElQq9M0QDxbEYnMs
-	L165fwfsHLci1eJAiX1Hmd+kON5CHdioOyU3m3aAzxPOLMGqFEWl+FvQNKFS3ObTGCTK7p
-	PTz86KgN0Z/RRtKtQ7PZQqTHt7LCwPY=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-466-Q84iz8k-NEa7kxbAlmuBqg-1; Fri, 27 Oct 2023 10:05:39 -0400
-X-MC-Unique: Q84iz8k-NEa7kxbAlmuBqg-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2801ff79244so27092a91.2
-        for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 07:05:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OdkEnxxh"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7a94c5489a4so831939f.0
+        for <regressions@lists.linux.dev>; Fri, 27 Oct 2023 07:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1698417963; x=1699022763; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w3WKPOInrEdvQkvpwxwv5Fja/uHzd3UARsSrjsxhvxA=;
+        b=OdkEnxxhEUFnFjsvo4xzdaiVfP+PffuZ8AbmYjngx067FKJP5SzlIviDrjk5P0qRUR
+         Pbt9iP9lt4HrYt8U9Pmzo+6pHMsT0kUYBKBqjOP0kY2AOn+8iNQcO+MeqCLh9JS5v593
+         mRLE+L3RbYfch6oYlYUndhKKTR2tzLcgP7INS8wQnGLt5zxFtjJ10ejczYEolm4a7CT2
+         tg5ZELbnR19dlcZBez/V58dwrxDaAhvxR/3DI6ahw3uWje9+Z80GaeuqXv2xz7VBvVLQ
+         qUde5wGmBpYvWyDm+HeU7Zcfrks92KEXRQy3nZ542kEQ8QbbAEVFmo8ZGveR+RalBucG
+         g4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698415538; x=1699020338;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qmiVVEtRZXlvZiCEBDmIRly02OLScsCRxyCghuB2vJE=;
-        b=Xxwv589yS3Dn2kz4k+qyDjn7SKSYx/LFRkVOluefM1vGCemSiAxfuQdUubejsi8ptC
-         dKkpbu8IhobkQ1rM5NSgZscP6x3b7VWWhq0MGpOL/XCf7MynhheWHusiQQy9kMXQAm5B
-         vh12jNluBwoRaBVXghTjEYTwSSy9UoHw79tEPsg15zaEcYTeeuY3rhHBUuGLj0aWSIcG
-         cQQeGzYfG5KEDpRmA7K8C3J5UxuqOjOPe14M139SlbMfh4zuIGgEBSq/vBfPXiN70Evq
-         i2VlB6tFhbManON+mpWYKf7cGHfxxqCQEYwpiE4/LMUWUOGS06AE1P81SewEtz+VQdgS
-         zl7w==
-X-Gm-Message-State: AOJu0YxCoXTIjZFoTZLda4+sIZpMpcDwuy50porZQmXIDfGq0YthD/ro
-	Mx0cWSwoyA0JhrRz4i141rC2kuHBKFVTxPEiZTvEZAHJoruwX3k7Dzh86kQAPlkygfzH6jWJA2I
-	avRmlEGIYklSiWoOQGd2vErDfWU2SIOYjHbPZL1o=
-X-Received: by 2002:a17:90a:4f48:b0:27d:166b:40f6 with SMTP id w8-20020a17090a4f4800b0027d166b40f6mr2532538pjl.41.1698415538768;
-        Fri, 27 Oct 2023 07:05:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFz7lrTl+zAdmgTnAvT/azIXBCe0/XGufVtBRSSehgdm4mTofu5iqEwH7u2CGPh9s/wxC1dldLVGTED5Rv21bY=
-X-Received: by 2002:a17:90a:4f48:b0:27d:166b:40f6 with SMTP id
- w8-20020a17090a4f4800b0027d166b40f6mr2532514pjl.41.1698415538507; Fri, 27 Oct
- 2023 07:05:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698417963; x=1699022763;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w3WKPOInrEdvQkvpwxwv5Fja/uHzd3UARsSrjsxhvxA=;
+        b=C1ggf2DeuvPyWU9Phpf4m59JPdaSzQsSrDojHTMT9gtSjoXKnr2QASLEVO2iON4L06
+         c0OP8Ps6+2G7LGqEUtvAFV48onul2Kp0SfZtFqLqTVMGPqKXu30EfwwoUMY39UKGGweB
+         f/JgLymxiTJoB/doE5YBv1kfsQfY2vhxFTfhjtH9xC/sSvUYnPBTgzqRM/rmR2tgFVxR
+         DpH5fXORq/5rstxhp0PSj8IZofRGaobssKVJtEWSN6xXKHWLXd7iCPMxBq7CYTNm8WYN
+         JFoB279XxFF5DFL8ztVfcPBikYx+Su47j7uQHZRbpxfE7WRSYTKYJOoZp04pcXlq2S03
+         qH9A==
+X-Gm-Message-State: AOJu0YyGMoVm+dPkXu1B+zmoqr85lfGYI6iKBx245H+KI4hp8xQ8Zbra
+	wPUTb/Ez+FRY07grOoIocmggSw==
+X-Google-Smtp-Source: AGHT+IHmCzlqOlY3EomSO6T6RBCPoJ56NrwN0Ratf4Xmk5f2jtUUYWADjfWiLvNvMD7NWy9RJpRVLw==
+X-Received: by 2002:a6b:500a:0:b0:792:6068:dcc8 with SMTP id e10-20020a6b500a000000b007926068dcc8mr3504618iob.2.1698417962713;
+        Fri, 27 Oct 2023 07:46:02 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id h5-20020a0566380f0500b00452a3ffe215sm439470jas.87.2023.10.27.07.46.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Oct 2023 07:46:01 -0700 (PDT)
+Message-ID: <84a42959-e15f-4128-ae2f-df9650879556@kernel.dk>
+Date: Fri, 27 Oct 2023 08:46:00 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <717fd97a-6d14-4dc9-808c-d752d718fb80@ddn.com> <4b0b46f29955956916765d8d615f96849c8ce3f7.camel@linaro.org>
- <fa3510f3-d3cc-45d2-b38e-e8717e2a9f83@ddn.com> <1b03f355170333f20ee20e47c5f355dc73d3a91c.camel@linaro.org>
- <9afc3152-5448-42eb-a7f4-4167fc8bc589@ddn.com> <5cd87a64-c506-46f2-9fed-ac8a74658631@ddn.com>
- <8ae8ce4d-6323-4160-848a-5e94895ae60e@leemhuis.info> <CAOssrKdvy9qTGSwwPVqYLAYYEk0jbqhGg4Lz=jEff7U58O4Yqw@mail.gmail.com>
- <2023102731-wobbly-glimpse-97f5@gregkh> <CAOssrKfNkMmHB2oHHO8gWbzDX27vS--e9dZoh_Mjv-17mSUTBw@mail.gmail.com>
- <2023102740-think-hatless-ab87@gregkh> <CAOssrKd-O1JKEPzvnM1VkQ0-oTpDv0RfY6B5oF5p63AtQ4HoqA@mail.gmail.com>
- <689f677b84b484636b673b362b17a6501a056968.camel@linaro.org>
- <CAOssrKfP+t-cy322ujizQofgZkPZsBu1H4+zfbWNEFCmTsXwug@mail.gmail.com> <afe378bf254f6c4ac73bb55be3fa7422f2da3f5f.camel@linaro.org>
-In-Reply-To: <afe378bf254f6c4ac73bb55be3fa7422f2da3f5f.camel@linaro.org>
-From: Miklos Szeredi <mszeredi@redhat.com>
-Date: Fri, 27 Oct 2023 16:05:27 +0200
-Message-ID: <CAOssrKeJB7BZ7fA6Uqo6rHohybmgovc6rVwDeHbegvweSyZeeA@mail.gmail.com>
-Subject: Re: [PATCH v2] Revert "fuse: Apply flags2 only when userspace set the FUSE_INIT_EXT"
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Lawrence <paullawrence@google.com>, 
-	Daniel Rosenberg <drosen@google.com>, Alessio Balsini <balsini@android.com>, 
-	Amir Goldstein <amir73il@gmail.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: task hung in ext4_fallocate #2
+Content-Language: en-US
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Andres Freund <andres@anarazel.de>, Dave Chinner <david@fromorbit.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Shreeya Patel <shreeya.patel@collabora.com>, linux-ext4@vger.kernel.org,
+ =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+ gustavo.padovan@collabora.com, zsm@google.com, garrick@google.com,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ io-uring@vger.kernel.org
+References: <20231017033725.r6pfo5a4ayqisct7@awork3.anarazel.de>
+ <20231018004335.GA593012@mit.edu>
+ <20231018025009.ulkykpefwdgpfvzf@awork3.anarazel.de>
+ <ZTcZ9+n+jX6UDrgd@dread.disaster.area>
+ <74921cba-6237-4303-bb4c-baa22aaf497b@kernel.dk>
+ <ab4f311b-9700-4d3d-8f2e-09ccbcfb3df5@kernel.dk>
+ <ZThcATP9zOoxb4Ec@dread.disaster.area>
+ <4ace2109-3d05-4ca0-b582-f7b8db88a0ca@kernel.dk>
+ <20231025153135.kfnldzle3rglmfvp@awork3.anarazel.de>
+ <b5578447-81f6-4207-b83d-812da7c981a5@kernel.dk>
+ <20231025195539.GA2897448@mit.edu>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20231025195539.GA2897448@mit.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 27, 2023 at 3:39=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@l=
-inaro.org> wrote:
->
-> On Fri, 2023-10-27 at 15:24 +0200, Miklos Szeredi wrote:
-> > On Fri, Oct 27, 2023 at 3:14=E2=80=AFPM Andr=C3=A9 Draszik
-> > <andre.draszik@linaro.org> wrote:
-> >
-> > > The patch in question has broken all users that use the higher
-> > > flags
-> > > and that don't use your version of libfuse, not just Android.
-> > > You're
-> > > filtering them out now when you didn't at the time that those
-> > > ('official) high flags were added. There are a couple more high
-> > > flags
-> > > than just the one that Android added.
-> >
-> > Okay.  Where are all those users?
->
-> That's not the point. The point is the kernel<->user API has rendered
-> them too non-working.
+On 10/25/23 1:55 PM, Theodore Ts'o wrote:
+> On Wed, Oct 25, 2023 at 09:36:01AM -0600, Jens Axboe wrote:
+>>
+>> FWIW, I wrote a small test case which does seem to trigger it very fast,
+>> as expected:
+> 
+> Great!  I was about to ask if we had an easy reproducer.  Any chance
+> you can package this up as an test in xfstests?  Or would you like
+> some help with that?
 
-It is a very important point.  A theoretical bug isn't a regression.
-Nor is a broken test case BTW.
+I think it's good to convert to a test case as-is, would just need to
+loop X iterations or something rather than go forever. If you want to
+run with it, please do!
 
-Please read section 'What is a "regression" and what is the "no
-regressions rule"?' in
-Documentation/admin-guide/reporting-regressions.rst.
-
- Thanks,
-Miklos
+-- 
+Jens Axboe
 
