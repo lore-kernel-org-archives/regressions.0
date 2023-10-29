@@ -1,153 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A463EEDF
-	for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1qx6DU-0002G8-Ax; Sun, 29 Oct 2023 14:52:36 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-10-29]
-Date: Sun, 29 Oct 2023 13:52:35 +0000
-Message-Id: <169858752781.1095326.10615907253726224231@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40733B67F
+	for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 17:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="V4ZQQFN0"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9d10972e63eso236659266b.2
+        for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 10:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1698599961; x=1699204761; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CPMtoFSixsFd7J/sBpL5LC1nviwgRkdiMzTnhelk2A=;
+        b=V4ZQQFN097TVNi/gMoSzRuduKl8aBe2sXO3ZR6Xs5d1CtM5yWNDVkt4ajChDKG0Tyc
+         pJ+eIv7njjw7QrjXyjGu3NipkzpY/xSv/A+CksjXb7obyuoKVUxCVbHRWyM0lY6MEkI2
+         SmSNw+L678nFScpb6KhWaQeKTOiFIxJjYNg7M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698599961; x=1699204761;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/CPMtoFSixsFd7J/sBpL5LC1nviwgRkdiMzTnhelk2A=;
+        b=e94sgpNZQhhRptIITLyuLgdaNgzP/fB7T7eskkyU3AF6GOwoj1+nq/pZXyPYMeIUBp
+         X0X5x/EkkBkxfMuA2lw89c5m1mmkTwSNwTEFuFeoyPn+ApPuD8t0MnWB/XnCmhDNzRD0
+         BQfE+eXbV/Jt4g7XmbnFrUPwHfXjQXAmN6V+yAXe/3tD4KYAOpyaRUfSDql/tSq1IpoB
+         kP2N3aF90fsEQGgA8cTgdA1Ii+Wu3MFtCD5552jFAsEY35fiCanpmdxOxghz39npcMWB
+         rQkax13a9wfJp5cBVs5qW+Tl5uzakQQ6w3msG/0Mtk4l/+hSHgzwNjhGYRBq/pDB/Bcv
+         YN/Q==
+X-Gm-Message-State: AOJu0Ywiy4XDKWJwDPUFf0vyXHUeJ7+9nC+dEBV05O8b2q7se2nkXu29
+	VPF4dFKnV9jkNfrlH+09HxaXOBRG2OI12kzEuTkG8Q==
+X-Google-Smtp-Source: AGHT+IGvBFC3TC1ztRYNG4CKoka5oqs5rthyWYpxfWbbKlohapNcY1A2sOCYo3SSuFJki4pMekb1Rw==
+X-Received: by 2002:a17:906:da82:b0:9b2:a96c:9290 with SMTP id xh2-20020a170906da8200b009b2a96c9290mr7127455ejb.33.1698599960961;
+        Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id m5-20020a1709060d8500b009b2b9af0784sm4639313eji.110.2023.10.29.10.19.20
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9c41e95efcbso517528166b.3
+        for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
+X-Received: by 2002:a17:907:3dac:b0:9ad:eb9c:dd00 with SMTP id
+ he44-20020a1709073dac00b009adeb9cdd00mr6680680ejc.12.1698599960057; Sun, 29
+ Oct 2023 10:19:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698587558;c36f483f;
-X-HE-SMSGID: 1qx6DU-0002G8-Ax
+References: <169858752781.1095326.10615907253726224231@leemhuis.info>
+In-Reply-To: <169858752781.1095326.10615907253726224231@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 29 Oct 2023 07:19:03 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
+Message-ID: <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2023-10-29]
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Huacai Chen <chenhuacai@kernel.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus. Just three 6.6 regression remain on my list after a few I
-tracked were resolved last week.  One of the remaining ones is new:
-module loading trouble on some laptops. Not nice, but likely nothing
-many users will encounter. The quota compilation oddity problem from
-Andy is also still around (unless it was fixed without me noticing); and
-a memleak, too. See below for details.
+On Sun, 29 Oct 2023 at 03:52, Regzbot (on behalf of Thorsten Leemhuis)
+<regressions@leemhuis.info> wrote:
+>
+>                          One of the remaining ones is new:
+> module loading trouble on some laptops. Not nice, but likely nothing
+> many users will encounter. The quota compilation oddity problem from
+> Andy is also still around (unless it was fixed without me noticing); and
+> a memleak, too.
 
-FWIW, there was some news wrt to the two 6.5 regressions I mentioned in
-last weeks report[1]:
+The quota thing remains unexplained, and honestly seems like a timing
+issue that just happens to hit Andy. Very strange, but I suspect that
+without more reports (that may or may not ever happen), we're stuck.
 
-* There was another report about a blank screen during boot on a Lenovo
-laptop because simpledrm (that users apparently had enabled without
-problems beforehand) started to support those machines due to
-60aebc9559492c ("drivers/firmware: Move sysfb_init() from
-device_initcall to subsys_initcall_sync"). I suggested a revert, but the
-developers disagree (to quote: "From my point of view, this is not a
-regression, 60aebc9559492c doesn't cause a problem, but exposes a
-problem.") and the DRM maintainer didn't comment. At least we got a very
-small step closer to finding the root cause. In case you care about the
-details or want to speak up, check out this thread:
-https://lore.kernel.org/dri-devel/82f1b533-3bd8-4418-843a-718d9a6b5786@leemhuis.info/
+> * There was another report about a blank screen during boot on a Lenovo
+> laptop because simpledrm (that users apparently had enabled without
+> problems beforehand) started to support those machines due to
+> 60aebc9559492c ("drivers/firmware: Move sysfb_init() from
+> device_initcall to subsys_initcall_sync"). I suggested a revert, but the
+> developers disagree (to quote: "From my point of view, this is not a
+> regression, 60aebc9559492c doesn't cause a problem, but exposes a
+> problem.")
 
-* The Fuse on Android breakage is still discussed; it's still unclear to
-me if this really is a regression, as the reporter did not answer some
-questions I brought up to hopefully clarify the situation. But it seems
-Greg thinks that this is a regression. In case you care, check out this
-thread:
-https://lore.kernel.org/all/2023102731-wobbly-glimpse-97f5@gregkh/
+Honestly, "exposes a problem" is pretty much the *definition* of a
+regression. So that excuse is particularly bad.
 
-[1]
-https://lore.kernel.org/all/169799330468.525178.1969942838211820764@leemhuis.info/
+The whole point of "regression" is "things that used to work no longer work".
 
-Ciao, Thorsten
+And no, "there's another bug that needs to be fixed" is _not_ the
+answer - not unless you have that fix in hand.
 
----
+That said, this already went into 6.5, so I'm not going to revert it
+now just before the 6.6 release. That would be more dangerous than
+just letting things be. But yes, a revert is likely the right thing to
+do, unless people have figured out what is wrong with simplefb.
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 3 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.5.. aka v6.6-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] sysfs: cannot create duplicate filename .../system76_acpi::kbd_backlight/color
-----------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218045/
-https://bugzilla.kernel.org/show_bug.cgi?id=218045
-https://lore.kernel.org/lkml/b5646db3-acff-45aa-baef-df3f660486fb@gmail.com/
-
-By Johannes Penßel and Johannes Penßel; 3 days ago; 3 activities, latest 0 days ago.
-Introduced in c7d80059b086 (v6.6-rc1)
-
-Recent activities from: Johannes Penßel (2), Bagas Sanjaya (1)
-
-
-[ *NEW* ] stable offsets directory operation support triggers offset_ctx->xa memory leak
-----------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218039/
-https://bugzilla.kernel.org/show_bug.cgi?id=218039
-https://lore.kernel.org/lkml/429b452c-2211-436a-9af7-21332f68db7d@gmail.com/
-
-By vladbu and vladbu; 6 days ago; 4 activities, latest 3 days ago.
-Introduced in 6faddda69f62 (v6.6-rc1)
-
-Recent activities from: vladbu (2), Bagas Sanjaya (1), Vlad Buslov (1)
-
-
-quota: boot on Intel Merrifield after merge commit 1500e7e0726e
----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZS5hhpG97QSvgYPf@smile.fi.intel.com/
-https://lore.kernel.org/linux-fsdevel/ZS5hhpG97QSvgYPf@smile.fi.intel.com/
-
-By Andy Shevchenko; 12 days ago; 46 activities, latest 5 days ago.
-Introduced in 024128477809 (v6.6-rc1)
-
-Recent activities from: Andy Shevchenko (2), Kees Cook (1), Baokun
-  Li (1), Jan Kara (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* Re: [GIT PULL] ext2, quota, and udf fixes for 6.6-rc1
-  https://lore.kernel.org/linux-fsdevel/ZTKUDzONVHXnWAJc@smile.fi.intel.com/
-  8 days ago, by Andy Shevchenko
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/169799330468.525178.1969942838211820764@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+                 Linus
