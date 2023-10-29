@@ -1,101 +1,185 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40733B67F
-	for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 17:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE43D512;
+	Sun, 29 Oct 2023 20:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="V4ZQQFN0"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9d10972e63eso236659266b.2
-        for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 10:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1698599961; x=1699204761; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CPMtoFSixsFd7J/sBpL5LC1nviwgRkdiMzTnhelk2A=;
-        b=V4ZQQFN097TVNi/gMoSzRuduKl8aBe2sXO3ZR6Xs5d1CtM5yWNDVkt4ajChDKG0Tyc
-         pJ+eIv7njjw7QrjXyjGu3NipkzpY/xSv/A+CksjXb7obyuoKVUxCVbHRWyM0lY6MEkI2
-         SmSNw+L678nFScpb6KhWaQeKTOiFIxJjYNg7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698599961; x=1699204761;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/CPMtoFSixsFd7J/sBpL5LC1nviwgRkdiMzTnhelk2A=;
-        b=e94sgpNZQhhRptIITLyuLgdaNgzP/fB7T7eskkyU3AF6GOwoj1+nq/pZXyPYMeIUBp
-         X0X5x/EkkBkxfMuA2lw89c5m1mmkTwSNwTEFuFeoyPn+ApPuD8t0MnWB/XnCmhDNzRD0
-         BQfE+eXbV/Jt4g7XmbnFrUPwHfXjQXAmN6V+yAXe/3tD4KYAOpyaRUfSDql/tSq1IpoB
-         kP2N3aF90fsEQGgA8cTgdA1Ii+Wu3MFtCD5552jFAsEY35fiCanpmdxOxghz39npcMWB
-         rQkax13a9wfJp5cBVs5qW+Tl5uzakQQ6w3msG/0Mtk4l/+hSHgzwNjhGYRBq/pDB/Bcv
-         YN/Q==
-X-Gm-Message-State: AOJu0Ywiy4XDKWJwDPUFf0vyXHUeJ7+9nC+dEBV05O8b2q7se2nkXu29
-	VPF4dFKnV9jkNfrlH+09HxaXOBRG2OI12kzEuTkG8Q==
-X-Google-Smtp-Source: AGHT+IGvBFC3TC1ztRYNG4CKoka5oqs5rthyWYpxfWbbKlohapNcY1A2sOCYo3SSuFJki4pMekb1Rw==
-X-Received: by 2002:a17:906:da82:b0:9b2:a96c:9290 with SMTP id xh2-20020a170906da8200b009b2a96c9290mr7127455ejb.33.1698599960961;
-        Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id m5-20020a1709060d8500b009b2b9af0784sm4639313eji.110.2023.10.29.10.19.20
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9c41e95efcbso517528166b.3
-        for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 10:19:20 -0700 (PDT)
-X-Received: by 2002:a17:907:3dac:b0:9ad:eb9c:dd00 with SMTP id
- he44-20020a1709073dac00b009adeb9cdd00mr6680680ejc.12.1698599960057; Sun, 29
- Oct 2023 10:19:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="fiST6Ivg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Mdow0UmQ"
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A950F1FE7B;
+	Sun, 29 Oct 2023 20:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1698609746; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a+mlAZHkXveu53BHYO2pmLq8ql1sbVoGFayTg1Oh0KA=;
+	b=fiST6IvgoZIdmx9DkTg4Jsr5QsELiCPNnOHQwoj5n+r0mYE6rkA3zQwykgQxT3KI9TfOKJ
+	YX8KHxfq9DFs29ig4JhtNq2cG4FSDIkwBczXVJYMAf9jNfggxRCBH4dFrw1n5N8nhU+wak
+	5KE86uWVZOJHC8mKpo2X+2jr/tJFyo8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1698609746;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a+mlAZHkXveu53BHYO2pmLq8ql1sbVoGFayTg1Oh0KA=;
+	b=Mdow0UmQrZQW1NV8ErMqBdWwHXRLFrMxjKTF3f+IP3xmy7uyM4hixHbdhNYQUqawSmgGki
+	lfPAHDmI9GJQ3rAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8052E1391D;
+	Sun, 29 Oct 2023 20:02:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id II2SHlK6PmX8XQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Sun, 29 Oct 2023 20:02:26 +0000
+Message-ID: <89320668-67a2-2a41-e577-a2f561e3dfdd@suse.cz>
+Date: Sun, 29 Oct 2023 21:02:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <169858752781.1095326.10615907253726224231@leemhuis.info>
-In-Reply-To: <169858752781.1095326.10615907253726224231@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 29 Oct 2023 07:19:03 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
-Message-ID: <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-10-29]
-To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Huacai Chen <chenhuacai@kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+To: Mikulas Patocka <mpatocka@redhat.com>,
+ =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
+ <marmarek@invisiblethingslab.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>,
+ Michal Hocko <mhocko@suse.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+ dm-devel@lists.linux.dev, linux-mm@kvack.org
+References: <ZTNH0qtmint/zLJZ@mail-itl>
+ <e427823c-e869-86a2-3549-61b3fdf29537@redhat.com> <ZTiHQDY54E7WAld+@mail-itl>
+ <ZTiJ3CO8w0jauOzW@mail-itl> <a413efbf-7194-95ff-562b-f2eb766ca5c1@redhat.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <a413efbf-7194-95ff-562b-f2eb766ca5c1@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 29 Oct 2023 at 03:52, Regzbot (on behalf of Thorsten Leemhuis)
-<regressions@leemhuis.info> wrote:
->
->                          One of the remaining ones is new:
-> module loading trouble on some laptops. Not nice, but likely nothing
-> many users will encounter. The quota compilation oddity problem from
-> Andy is also still around (unless it was fixed without me noticing); and
-> a memleak, too.
+On 10/25/23 12:13, Mikulas Patocka wrote:
+> So, I forward this to memory management maintainers.
 
-The quota thing remains unexplained, and honestly seems like a timing
-issue that just happens to hit Andy. Very strange, but I suspect that
-without more reports (that may or may not ever happen), we're stuck.
+Hi,
 
-> * There was another report about a blank screen during boot on a Lenovo
-> laptop because simpledrm (that users apparently had enabled without
-> problems beforehand) started to support those machines due to
-> 60aebc9559492c ("drivers/firmware: Move sysfb_init() from
-> device_initcall to subsys_initcall_sync"). I suggested a revert, but the
-> developers disagree (to quote: "From my point of view, this is not a
-> regression, 60aebc9559492c doesn't cause a problem, but exposes a
-> problem.")
+> What do you think? - We have a problem that if dm-crypt allocates pages 
+> with order > 3 (PAGE_ALLOC_COSTLY_ORDER), the system occasionally freezes 
+> waiting in writeback.
 
-Honestly, "exposes a problem" is pretty much the *definition* of a
-regression. So that excuse is particularly bad.
+Hmm, so I've checked the backtraces provided and none seems to show the
+actual allocating task doing the crypt_alloc_buffer(), do we know what it's
+doing? Is it blocked or perhaps spinning in some infinite loop?
 
-The whole point of "regression" is "things that used to work no longer work".
+> dm-crypt allocates the pages with GFP_NOWAIT | __GFP_HIGHMEM | 
+> __GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN | __GFP_COMP, so it 
+> shouldn't put any pressure on the system. If the allocations fails, it 
+> falls back to smaller order allocation or to mempool as a last resort.
 
-And no, "there's another bug that needs to be fixed" is _not_ the
-answer - not unless you have that fix in hand.
+Right. I noticed it may also fallback to __GFP_DIRECT_RECLAIM but then it's
+only order-0.
 
-That said, this already went into 6.5, so I'm not going to revert it
-now just before the 6.6 release. That would be more dangerous than
-just letting things be. But yes, a revert is likely the right thing to
-do, unless people have figured out what is wrong with simplefb.
+> When the freeze happens, there is "349264kB" free memory - so the system 
+> is not short on memory.
 
-                 Linus
+Yeah, it may still be fragmented, although in [1] the sysqr show memory
+report suggests it's not, pages do exist up to MAX_ORDER. Weird.
+
+[1] https://lore.kernel.org/all/ZTiJ3CO8w0jauOzW@mail-itl/
+
+> Should we restrict the dm-crypt allocation size to 
+> PAGE_ALLOC_COSTLY_ORDER? Or is it a bug somewhere in memory management 
+> system that needs to be fixes there?
+
+Haven't found any. However I'd like to point out some things I noticed in
+crypt_alloc_buffer(), although they are probably not related.
+
+> static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
+> {
+> 	struct crypt_config *cc = io->cc;
+> 	struct bio *clone;
+> 	unsigned int nr_iovecs = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
+> 	gfp_t gfp_mask = GFP_NOWAIT | __GFP_HIGHMEM;
+> 	unsigned int remaining_size;
+> 	unsigned int order = MAX_ORDER - 1;
+> 
+> retry:
+> 	if (unlikely(gfp_mask & __GFP_DIRECT_RECLAIM))
+> 		mutex_lock(&cc->bio_alloc_lock);
+
+What if we end up in "goto retry" more than once? I don't see a matching
+unlock. Yeah, very unlikely to happen that order-0 in page allocator which
+includes __GFP_DIRECT_RECLAIM would fail, but not impossible, and also I see
+crypt_page_alloc() for the mempool can fail for another reason, due to a
+counter being too high. Looks dangerous.
+
+> 
+> 	clone = bio_alloc_bioset(cc->dev->bdev, nr_iovecs, io->base_bio->bi_opf,
+> 				 GFP_NOIO, &cc->bs);
+> 	clone->bi_private = io;
+> 	clone->bi_end_io = crypt_endio;
+> 
+> 	remaining_size = size;
+> 
+> 	while (remaining_size) {
+> 		struct page *pages;
+> 		unsigned size_to_add;
+> 		unsigned remaining_order = __fls((remaining_size + PAGE_SIZE - 1) >> PAGE_SHIFT);
+
+Tip: you can use get_order(remaining_size) here.
+
+> 		order = min(order, remaining_order);
+> 
+> 		while (order > 0) {
+
+Is this intentionally > 0 and not >= 0? We could still succeed avoiding
+mempool with order-0...
+
+> 			pages = alloc_pages(gfp_mask
+> 				| __GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN | __GFP_COMP,
+> 				order);
+> 			if (likely(pages != NULL))
+> 				goto have_pages;
+> 			order--;
+> 		}
+> 
+> 		pages = mempool_alloc(&cc->page_pool, gfp_mask);
+> 		if (!pages) {
+> 			crypt_free_buffer_pages(cc, clone);
+> 			bio_put(clone);
+> 			gfp_mask |= __GFP_DIRECT_RECLAIM;
+> 			order = 0;
+> 			goto retry;
+> 		}
+> 
+> have_pages:
+> 		size_to_add = min((unsigned)PAGE_SIZE << order, remaining_size);
+> 		__bio_add_page(clone, pages, size_to_add, 0);
+> 		remaining_size -= size_to_add;
+> 	}
+> 
+> 	/* Allocate space for integrity tags */
+> 	if (dm_crypt_integrity_io_alloc(io, clone)) {
+> 		crypt_free_buffer_pages(cc, clone);
+> 		bio_put(clone);
+> 		clone = NULL;
+> 	}
+> 
+> 	if (unlikely(gfp_mask & __GFP_DIRECT_RECLAIM))
+> 		mutex_unlock(&cc->bio_alloc_lock);
+> 
+> 	return clone;
+> }
+
