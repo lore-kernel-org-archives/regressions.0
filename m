@@ -1,119 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8564F10E8
-	for <regressions@lists.linux.dev>; Mon, 30 Oct 2023 03:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168B363C1
+	for <regressions@lists.linux.dev>; Mon, 30 Oct 2023 07:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ezHslCVo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE718C433C7
-	for <regressions@lists.linux.dev>; Mon, 30 Oct 2023 03:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698635423;
-	bh=TFMOp8TzxITL1T38IXFw5jxaPucw+UKxCq1ogDHX0+o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ezHslCVovDxqYyrUN3R6ud1mW+905ohpo1hVH1Jfl8DuAGd9lcos7+THpyGeLGwAQ
-	 dlbWxXmGBD+gynza7Ox2CoiT4VtUSnPaJe5DNJNQOuUXtie20pk2yv2Zs8ITal801h
-	 nMEapnXiDkkab9WkcNk3AznKAmLp5Iafr3L2OQWmgM+HNlWy/kCuf7/Q2W2CCIPuVn
-	 hxXhrHco+Ht0t3oGJVvUak5wCBqDkn8XuFiARX/IdDKGM1SM3fpYRtVW6OzdgRVpjG
-	 ouXcv7XaO9zEWzxxlnpDeh8atv3aJS6sLS4okzjNrZsxf2HEqgGPhp/LpUEAB+7ZO+
-	 727jtP7pEofmQ==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-9be02fcf268so591426366b.3
-        for <regressions@lists.linux.dev>; Sun, 29 Oct 2023 20:10:22 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzR7BLJx+XldNn0dqL2Bo0MlcQ0mDuD0Srx2BuZv48gqi4bBUR3
-	aV+Tr7l6JqN5orZtCnKP9Eb2rn0bsFMF6FaqNkw=
-X-Google-Smtp-Source: AGHT+IGJrWtby1GutFekFhw5fGf6mylDk25rQb8iD/nOoRoHbwxcfcI9kcaJqNpGTN/jhEGiXrCib4X9oP5t+unxXpY=
-X-Received: by 2002:a17:907:2da4:b0:9b2:7b89:8199 with SMTP id
- gt36-20020a1709072da400b009b27b898199mr7883603ejc.53.1698635421420; Sun, 29
- Oct 2023 20:10:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LuFILMns"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698651464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9x1xINqPKW24VJSZvIxrqGM94OrSE3vzkj8Ji7WoEIE=;
+	b=LuFILMnsUwGWz4JhDsw1Bl9J6JOIofV/MD26+Gbs2QVqcfp71eXjyW2d/HD2LLOHyk6mVW
+	c00/dNfo6eRXQwbpC6tD7gsHmf0HrEpSNyjRj4+brxg1nmnwlrFW3L2n64N7xiJ8dVHBK5
+	WDCNCDPFZgqWDsInl0i6Yq5GeO7bEdc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-81-HtQO4g_9OzSL8hAv1k6QaQ-1; Mon, 30 Oct 2023 03:37:41 -0400
+X-MC-Unique: HtQO4g_9OzSL8hAv1k6QaQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F2D2F857D07;
+	Mon, 30 Oct 2023 07:37:40 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E2CCC1596C;
+	Mon, 30 Oct 2023 07:37:40 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 088A230C72A4; Mon, 30 Oct 2023 07:37:40 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 0381D3D99F;
+	Mon, 30 Oct 2023 08:37:40 +0100 (CET)
+Date: Mon, 30 Oct 2023 08:37:39 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+cc: =?ISO-8859-15?Q?Marek_Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+    stable@vger.kernel.org, regressions@lists.linux.dev, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@lists.linux.dev, linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+In-Reply-To: <89320668-67a2-2a41-e577-a2f561e3dfdd@suse.cz>
+Message-ID: <818a23f2-c242-1c51-232d-d479c3bcbb6@redhat.com>
+References: <ZTNH0qtmint/zLJZ@mail-itl> <e427823c-e869-86a2-3549-61b3fdf29537@redhat.com> <ZTiHQDY54E7WAld+@mail-itl> <ZTiJ3CO8w0jauOzW@mail-itl> <a413efbf-7194-95ff-562b-f2eb766ca5c1@redhat.com> <89320668-67a2-2a41-e577-a2f561e3dfdd@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <169858752781.1095326.10615907253726224231@leemhuis.info>
- <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
- <CAAhV-H4DXYm+nEV8zrfMMPvqstHV+FsQaFB8s1_rNu_ENC-q7g@mail.gmail.com> <CAHk-=wiX0j=8DB0EbCheAAfcx2z99QUZMTeJUxSBGpb0J5pjVg@mail.gmail.com>
-In-Reply-To: <CAHk-=wiX0j=8DB0EbCheAAfcx2z99QUZMTeJUxSBGpb0J5pjVg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 30 Oct 2023 11:10:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Z_yiOvc_BxZvcb4TZW9uOqMfMcX8JHCaJsgawoabmXw@mail.gmail.com>
-Message-ID: <CAAhV-H4Z_yiOvc_BxZvcb4TZW9uOqMfMcX8JHCaJsgawoabmXw@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-10-29]
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Javier Martinez Canillas <javierm@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Hi, Linus,
 
-On Mon, Oct 30, 2023 at 10:53=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, 29 Oct 2023 at 16:18, Huacai Chen <chenhuacai@kernel.org> wrote:
-> >
-> > We are investigating and hope the simpledrm problem can be fixed in
-> > some days [1],
->
-> I don't understand your "some days".  The original report was two+
-> weeks ago, and the link you point to does not seem to have a suggested
-> patch for the problem either.
->
-> So where does the "some days" come from?
->
-> The WHOLE POINT of the "no regressions" rule - and the reason it came
-> to be in the first place - was that we used to have these endless "one
-> step forward, two steps back" things with suspend/resume in
-> particular, where people fixed one device, but then broke a random
-> number of other devices, and kept saying " but I fixed something".
->
-> No. If you broke something else, YOU DIDN'T FIX ANYTHING AT ALL.
->
-> This is literally why we have that "no regressions" rule. No amount of
-> "but it's a fix" is valid at all if something else breaks. And no
-> amount of "I will fix the thing I broke in the future"  is valid
-> either.
->
-> If you don't have a fix for it, it's broken. And I don't even see a
-> *suggested* fix for people to try out.
->
-> > and the blank screen seems not a very harmful problem
-> > (maybe I'm wrong but I think most of people are using GUI now). So,
-> > can we keep the commit 60aebc9559492c at this time?
->
-> At least the email from Evan Preston seems to imply it's a blank
-> screen that doesn't go away.
->
->   "Upgrading from Linux 6.4.12 to 6.5 and later results in only a
-> blank screen after boot and a rapidly flashing device-access-status
-> indicator"
->
-> And no, "most people using GUI" doesn't matter. You are supposed to be
-> able to upgrade your working kernel, and it's supposed to keep
-> working. That's *important*, because it's really really important that
-> people *trust* that they can upgrade the kernel and not end up with
-> something non-working, because that's how people then dare do kernel
-> updates and dare test new kernels.
->
-> If people then stop testing new kernels because they think new kernels
-> might break their setup, we have lost something truly important.
->
-> And yes, there are always exceptions. At some point, devices are just
-> too old legacy and there is no way of testing. Or we've had some
-> interface that was *so* mis-designed that it was a fundamental
-> security issue or something like that.
->
-> But no, this does not seem to be one of those issues.
->
-> Now, I'm not going to revert it just before releasing v6.6 (which I
-> have locally tagged, but not pushed out yet). And I'll have the merge
-> window for 6.7 opening tomorrow. But if this is not fixed by -rc1,
-> we'll just revert it.
-OK, I know. I will try my best. Thank you.
 
-Huacai
+On Sun, 29 Oct 2023, Vlastimil Babka wrote:
 
->
->                     Linus
+> Haven't found any. However I'd like to point out some things I noticed in
+> crypt_alloc_buffer(), although they are probably not related.
+> 
+> > static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
+> > {
+> > 	struct crypt_config *cc = io->cc;
+> > 	struct bio *clone;
+> > 	unsigned int nr_iovecs = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
+> > 	gfp_t gfp_mask = GFP_NOWAIT | __GFP_HIGHMEM;
+> > 	unsigned int remaining_size;
+> > 	unsigned int order = MAX_ORDER - 1;
+> > 
+> > retry:
+> > 	if (unlikely(gfp_mask & __GFP_DIRECT_RECLAIM))
+> > 		mutex_lock(&cc->bio_alloc_lock);
+> 
+> What if we end up in "goto retry" more than once? I don't see a matching
+
+It is impossible. Before we jump to the retry label, we set 
+__GFP_DIRECT_RECLAIM. mempool_alloc can't ever fail if 
+__GFP_DIRECT_RECLAIM is present (it will just wait until some other task 
+frees some objects into the mempool).
+
+> unlock. Yeah, very unlikely to happen that order-0 in page allocator which
+> includes __GFP_DIRECT_RECLAIM would fail, but not impossible, and also I see
+> crypt_page_alloc() for the mempool can fail for another reason, due to a
+> counter being too high. Looks dangerous.
+
+If crypt_page_alloc fails, mempool falls back to allocating from a 
+pre-allocated list.
+
+But now I see that there is a bug that the compound pages don't contribute 
+to the "cc->n_allocated_pages" counter. I'll have to fix it.
+
+> > 
+> > 	clone = bio_alloc_bioset(cc->dev->bdev, nr_iovecs, io->base_bio->bi_opf,
+> > 				 GFP_NOIO, &cc->bs);
+> > 	clone->bi_private = io;
+> > 	clone->bi_end_io = crypt_endio;
+> > 
+> > 	remaining_size = size;
+> > 
+> > 	while (remaining_size) {
+> > 		struct page *pages;
+> > 		unsigned size_to_add;
+> > 		unsigned remaining_order = __fls((remaining_size + PAGE_SIZE - 1) >> PAGE_SHIFT);
+> 
+> Tip: you can use get_order(remaining_size) here.
+
+get_order rounds the size up and we need to round it down here (rounding 
+it up would waste memory).
+
+> > 		order = min(order, remaining_order);
+> > 
+> > 		while (order > 0) {
+> 
+> Is this intentionally > 0 and not >= 0? We could still succeed avoiding
+> mempool with order-0...
+
+Yes, it is intentional. mempool alloc will try to allocate the page using 
+alloc_page, so there is no need to go to the "pages = alloc_pages" branch 
+before it.
+
+> > 			pages = alloc_pages(gfp_mask
+> > 				| __GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN | __GFP_COMP,
+> > 				order);
+> > 			if (likely(pages != NULL))
+> > 				goto have_pages;
+> > 			order--;
+> > 		}
+> > 
+> > 		pages = mempool_alloc(&cc->page_pool, gfp_mask);
+> > 		if (!pages) {
+> > 			crypt_free_buffer_pages(cc, clone);
+> > 			bio_put(clone);
+> > 			gfp_mask |= __GFP_DIRECT_RECLAIM;
+> > 			order = 0;
+> > 			goto retry;
+> > 		}
+> > 
+> > have_pages:
+> > 		size_to_add = min((unsigned)PAGE_SIZE << order, remaining_size);
+> > 		__bio_add_page(clone, pages, size_to_add, 0);
+> > 		remaining_size -= size_to_add;
+> > 	}
+> > 
+> > 	/* Allocate space for integrity tags */
+> > 	if (dm_crypt_integrity_io_alloc(io, clone)) {
+> > 		crypt_free_buffer_pages(cc, clone);
+> > 		bio_put(clone);
+> > 		clone = NULL;
+> > 	}
+> > 
+> > 	if (unlikely(gfp_mask & __GFP_DIRECT_RECLAIM))
+> > 		mutex_unlock(&cc->bio_alloc_lock);
+> > 
+> > 	return clone;
+> > }
+
+Mikulas
+
