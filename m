@@ -1,155 +1,116 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0BE53A6
-	for <regressions@lists.linux.dev>; Mon, 30 Oct 2023 15:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qxUVm-0001ed-Q8; Mon, 30 Oct 2023 16:49:06 +0100
-Message-ID: <6e9968a0-c511-4a29-aec5-42892b8254d2@leemhuis.info>
-Date: Mon, 30 Oct 2023 16:49:06 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFEE18C08;
+	Mon, 30 Oct 2023 15:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kR38w7x3";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YmGYY48H"
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B1A051F7AB;
+	Mon, 30 Oct 2023 15:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1698681363; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E3XSA6WYBW8wrapbDS0LhBDnP8RGWsuPkduvqjedEqs=;
+	b=kR38w7x3BQ7gPL3vFPD9UWK/Ssfj/pyDTaDMbLv2qaWIQteL3Hwcf4Vbkrc9on90TpC1F4
+	lr8Cbs1p4oNm14I8vNHRq7HSAU0ulEbAVm42YXxdQLgCb8cqyxqwxdry+JgM5ymFXtVjeq
+	xgoLjsKgHtKY/Y9oK+NdacDzYqsOeOA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1698681363;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E3XSA6WYBW8wrapbDS0LhBDnP8RGWsuPkduvqjedEqs=;
+	b=YmGYY48HATodz9rPRuIhG053z/Hc+GzKDncp3XcDsaOpjoqlYV+AVRowhJZE1aLiHA9Zwa
+	gMionwcRsqOM67AA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9F9E8138EF;
+	Mon, 30 Oct 2023 15:56:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id lVjgJhPSP2XqegAAMHmgww
+	(envelope-from <jack@suse.cz>); Mon, 30 Oct 2023 15:56:03 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 293D2A05BC; Mon, 30 Oct 2023 16:56:03 +0100 (CET)
+Date: Mon, 30 Oct 2023 16:56:03 +0100
+From: Jan Kara <jack@suse.cz>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
+	linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+Message-ID: <20231030155603.k3kejytq2e4vnp7z@quack3>
+References: <ZTiJ3CO8w0jauOzW@mail-itl>
+ <a413efbf-7194-95ff-562b-f2eb766ca5c1@redhat.com>
+ <89320668-67a2-2a41-e577-a2f561e3dfdd@suse.cz>
+ <818a23f2-c242-1c51-232d-d479c3bcbb6@redhat.com>
+ <18a38935-3031-1f35-bc36-40406e2e6fd2@suse.cz>
+ <3514c87f-c87f-f91f-ca90-1616428f6317@redhat.com>
+ <1a47fa28-3968-51df-5b0b-a19c675cc289@suse.cz>
+ <20231030122513.6gds75hxd65gu747@quack3>
+ <ZT+wDLwCBRB1O+vB@mail-itl>
+ <a2a8dbf6-d22e-65d0-6fab-b9cdf9ec3320@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Linux regressions report for mainline [2023-10-29]
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <169858752781.1095326.10615907253726224231@leemhuis.info>
- <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
-Content-Language: en-US, de-DE
-In-Reply-To: <CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698680955;c2af3158;
-X-HE-SMSGID: 1qxUVm-0001ed-Q8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a2a8dbf6-d22e-65d0-6fab-b9cdf9ec3320@redhat.com>
 
-On 29.10.23 18:19, Linus Torvalds wrote:
-> On Sun, 29 Oct 2023 at 03:52, Regzbot (on behalf of Thorsten Leemhuis)
-> <regressions@leemhuis.info> wrote:
+On Mon 30-10-23 15:08:56, Mikulas Patocka wrote:
+> On Mon, 30 Oct 2023, Marek Marczykowski-Górecki wrote:
 > 
->> * There was another report about a blank screen during boot on a Lenovo
->> laptop because simpledrm (that users apparently had enabled without
->> problems beforehand) started to support those machines due to
->> 60aebc9559492c ("drivers/firmware: Move sysfb_init() from
->> device_initcall to subsys_initcall_sync"). I suggested a revert, but the
->> developers disagree (to quote: "From my point of view, this is not a
->> regression, 60aebc9559492c doesn't cause a problem, but exposes a
->> problem.")
+> > > Well, it would be possible that larger pages in a bio would trip e.g. bio
+> > > splitting due to maximum segment size the disk supports (which can be e.g.
+> > > 0xffff) and that upsets something somewhere. But this is pure
+> > > speculation. We definitely need more debug data to be able to tell more.
+> > 
+> > I can collect more info, but I need some guidance how :) Some patch
+> > adding extra debug messages?
+> > Note I collect those via serial console (writing to disk doesn't work
+> > when it freezes), and that has some limits in the amount of data I can
+> > extract especially when printed quickly. For example sysrq-t is too much.
+> > Or maybe there is some trick to it, like increasing log_bug_len?
 > 
-> Honestly, "exposes a problem" is pretty much the *definition* of a
-> regression. So that excuse is particularly bad.
+> If you can do more tests, I would suggest this:
 > 
-> The whole point of "regression" is "things that used to work no longer work".
+> We already know that it works with order 3 and doesn't work with order 4.
 > 
-> And no, "there's another bug that needs to be fixed" is _not_ the
-> answer - not unless you have that fix in hand.
+> So, in the file include/linux/mmzone.h, change PAGE_ALLOC_COSTLY_ORDER 
+> from 3 to 4 and in the file drivers/md/dm-crypt.c leave "unsigned int 
+> order = PAGE_ALLOC_COSTLY_ORDER" there.
+> 
+> Does it deadlock or not?
+> 
+> So, that we can see whether the deadlock depends on 
+> PAGE_ALLOC_COSTLY_ORDER or whether it is just a coincidence.
 
-Thx for stating it so clearly. I had tried to get that point across, but
-failed despite some links to LKML messages from you that covered similar
-situations.
+Good idea. Also if the kernel hangs, please find kcryptd processes. In what
+state are they? If they are sleeping, please send what's in
+/proc/<kcryptd-pid>/stack. Thanks!
 
-This happens frequently, which is tiresome and draining for me. I wish
-we had *your* overall view on what regressions and how they are meant to
-be handled written up in one short text you explicitly vetted. That
-might give me a better lever and makes things easier for maintainers as
-well, especially new ones.
-
-See the text below[1] to give you a rough idea what kind of text I'm
-thinking of.
-
-The beginning of the merge window is a bad time to bring this up for
-discussion, especially when your also traveling. So I will let this rest
-for now and get back to you. Unless you say "that's a bad idea, don't
-waste your time on it".
-
-> That said, this already went into 6.5, so I'm not going to revert it
-> now just before the 6.6 release. That would be more dangerous than
-> just letting things be.
-
-Yup, fully agreed. Thx again for looking into this.
-
-Ciao, Thorsten
-
-
-[1] here is something I quickly complied
-
-"""
-Linus "no regressions rule"
----------------------------
-
-The goal
-~~~~~~~~
-
-People should always feel like they can update to a new kernel version
-without worrying anything might break.
-
-
-What qualifies as regression
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It's a regression if some practical use case running fine with one Linux
-version works worse or not at all with a newer version compiled using a
-similar configuration.
-
-To elaborate:
-
-* The aspect "works worse" includes higher power consumption or lower
-performance, unless the difference is minor.
-
-* Among the things that do not qualify as "practical use case" are
-legacy museum style equipment, ABI/API test scripts, and microbenchmarks.
-
-* It's irrelevant if the change causing the regression only does so by
-exposing a problem that beforehand was silently lurking somewhere else
-(hardware, firmware, userland, or some other part of the kernel).
-
-* It's irrelevant if a change is fixing some undefined behavior or a bug.
-
-* It's irrelevant if users could easily avoid the problem somehow, e.g.
-by changing the configuration or updating some other software (this
-includes firmware stored in the device or shipped in the linux-firmware
-package).
-
-* A "similar configuration" usually means that the .config of the old
-kernel was taken as base for the newer one and processed with
-"olddefconfig".
-
-* Old and new kernel versions obviously must both be untainted vanilla
-kernels.
-
-
-How to handle regression report
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIXME: this section is missing for now this requires some more thought;
-I guess what's needed here is basically the very essence of what
-Documentation/process/handling-regressions.rst outlines in "Expectations
-and best practices for fixing regressions"]
-
-
-Closing words
-~~~~~~~~~~~~~
-
-Reality is never entirely black-and-white, therefore in rare cases
-exceptions will not be fixed.
-
-For example, sometimes it is impossible to resolve a security
-vulnerability without causing a regression. That being said, developers
-should try hard to avoid such an outcome and when unable to do so
-minimize the impact as much as possible.
-
-Another example: regressions only found years after the culprit was
-merged might be handled like regular bugs or not addressed at all, as
-the developers which introduced it might have moved on to other endeavors.
-"""
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
