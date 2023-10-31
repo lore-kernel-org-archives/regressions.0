@@ -1,49 +1,16 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837371FDA
-	for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 08:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwELK5e5"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5ab53b230f1so3758944a12.3
-        for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 01:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698740486; x=1699345286; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=59ItUKeKAfQl6Pm0GuI2gI2GpUNLzTXJ8v/99uj7RTc=;
-        b=YwELK5e5GsJ0M4z5GmzigqZ2LKWmQnqnpce+/PunOXZlhfDF5zb8u1FctUU/MKKCHi
-         HpWtfBXYUPjXN44bg+/2KhYXJTatVAPs/ujuKhRQGZWOSldfgT0i+dMOs4DG/6/Dt9nj
-         YPkNqjxtUHm28qP0+OkGKpP9/UMi7Z6rYrCDLQRLZoISsNDjdGi9pLYdyQYX+YZbYfc5
-         z3OokOBLvaRfRlvRVpD0egk2aFkpB1YpjxX/iaA3owTXnL6Nh7gNd4F9Y3ZWqM5Nj08j
-         WVBSzHXdn1B6+4QNV5lda9qvu9NHLfpQMEQlN76ZICr4QbGMS5yVoHufiMnHrFGqrg8B
-         2N7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698740486; x=1699345286;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=59ItUKeKAfQl6Pm0GuI2gI2GpUNLzTXJ8v/99uj7RTc=;
-        b=AdOCDOsYmjQX5rnV7Pu4qDrFiCyamnRpmaHDnfsseluAHHSdpyvJaxPl64hwez8DME
-         ELTfERH8H3HaVjOVaAYS7MTqnkKKrfFvz71iIjK4j+zGON71YtkhcFXAng8KKYXHRLo/
-         Q6JkOzN2FJz6eCS8LAgvT5vusBdZRulc+54DHWYVE/7f+X2wEk2cYB0eG5gW3DBqeg+f
-         DDYh5V4F+7LWju50DxxRf77t+gAhv8yZ9CE7NEfOjtcMMTB11/eZpWBWCfDsqJq4610b
-         0Z9333vJjIGaxyXtxHY2kPs0mzOZZj3ezFa18pej1gZvXcsiLgCimcrsrG/0yMFyXi7a
-         MXnA==
-X-Gm-Message-State: AOJu0YzRkWzmWW1e6GlcYObomNCzRHCGq/fzgxjQ/IUYurFfRvT/2b9S
-	R2i8DbZholXQpmETuXUJ/qM=
-X-Google-Smtp-Source: AGHT+IHHBHVRJNDBt0RAGcu/t+Q6uNYCEvGjtPkxGzeePph6Ndp8DOdzVsRjMIOiIjmUcvhZ8C81LQ==
-X-Received: by 2002:a05:6a21:7747:b0:180:f227:57f3 with SMTP id bc7-20020a056a21774700b00180f22757f3mr1149592pzc.60.1698740485779;
-        Tue, 31 Oct 2023 01:21:25 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id fi18-20020a056a00399200b0068fb8080939sm733810pfb.65.2023.10.31.01.21.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Oct 2023 01:21:25 -0700 (PDT)
-Message-ID: <0e784280-02bb-4e0e-a5ae-4e0a40ea4c51@gmail.com>
-Date: Tue, 31 Oct 2023 15:21:20 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720B113AD6
+	for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 09:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qxktf-0002kf-K2; Tue, 31 Oct 2023 10:18:51 +0100
+Message-ID: <5ecf0eac-a089-4da9-b76e-b45272c98393@leemhuis.info>
+Date: Tue, 31 Oct 2023 10:18:50 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,68 +18,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux NVMe <linux-nvme@lists.infradead.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Chaitanya Kulkarni <kch@nvidia.com>,
- Christoph Hellwig <hch@lst.de>, gloriouseggroll@gmail.com
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Regression: Kernel 6.4 rc1 and higher causes Steam Deck to fail
- to wake from suspend (bisected)
+Subject: Re: [REGRESSION]: nouveau: Asynchronous wait on fence
+Content-Language: en-US, de-DE
+To: "Owen T. Heisler" <writer@owenh.net>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, nouveau@lists.freedesktop.org,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>
+References: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698743935;109fa59d;
+X-HE-SMSGID: 1qxktf-0002kf-K2
 
-Hi,
-
-I notice a regression report on Bugzilla [1]. Quoting from it:
-
-> On Kernel 6.4 rc1 and higher if you put the Steam Deck into suspend then press the power button again it will not wake up. 
+On 28.10.23 04:46, Owen T. Heisler wrote:
+> #regzbot introduced: d386a4b54607cf6f76e23815c2c9a3abc1d66882
+> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/180
 > 
-> I don't have a clue as to -why- this commit breaks wake from suspend on steam deck, but it does. Bisected to:
+> ## Problem
 > 
-> ```
-> 1ad11eafc63ac16e667853bee4273879226d2d1b is the first bad commit
-> commit 1ad11eafc63ac16e667853bee4273879226d2d1b
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Tue Mar 7 14:32:43 2023 -0600
+> 1. Connect external display to DVI port on dock and run X with both
+>    displays in use.
+> 2. Wait hours or days.
+> 3. Suddenly the secondary Nvidia-connected display turns off and X stops
+>    responding to keyboard/mouse input. In *some* cases it is possible to
+>    switch to a virtual TTY with Ctrl+Alt+Fn and log in there. In any
+>    case, shutdown/reboot after this happens is *usually* not successful
+>    (forced power-off is required).
 > 
->     nvme-pci: drop redundant pci_enable_pcie_error_reporting()
->     
->     pci_enable_pcie_error_reporting() enables the device to send ERR_*
->     Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
->     native"), the PCI core does this for all devices during enumeration, so the
->     driver doesn't need to do it itself.
->     
->     Remove the redundant pci_enable_pcie_error_reporting() call from the
->     driver.  Also remove the corresponding pci_disable_pcie_error_reporting()
->     from the driver .remove() path.
->     
->     Note that this only controls ERR_* Messages from the device.  An ERR_*
->     Message may cause the Root Port to generate an interrupt, depending on the
->     AER Root Error Command register managed by the AER service driver.
->     
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
->     Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 
->  drivers/nvme/host/pci.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> ```
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.4.y&id=1ad11eafc63ac16e667853bee4273879226d2d1b
-> 
-> Reverting that commit by itself on top of 6.5.9 (stable) allows it to wake from suspend properly.
+> This started happening after the upgrade to Debian bullseye, and the
+> problem remains with Debian bookworm.
+> [...] 
 
-See Bugzilla for the full thread.
+Thanks for your report. With a bit of luck someone will look into this,
+But I doubt it, as this report has some aspects why it might be ignored.
+Mainly: (a) the report was about a stable/longterm kernel and (b)it's
+afaics unclear if the problem even happens with the latest mainline
+kernel. For details about these aspects, see:
+https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
 
-Anyway, I'm adding this regression to regzbot:
+You thus might want to check if the problem occurs with 6.6 -- and
+ideally also check if reverting the culprit there fixes things for you.
 
-#regression introduced: 1ad11eafc63ac1 https://bugzilla.kernel.org/show_bug.cgi?id=218090
-#regression title: Steam Deck fails to wake from suspend due to pci_enable_pcie_error_reporting() removal
+That might help getting things rolling, but it's a pretty old
+regression, which complicates things.
 
-Thanks.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-
--- 
-An old man doll... just what I always wanted! - Clara
