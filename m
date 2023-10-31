@@ -1,257 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048061DA41
-	for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 12:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816D85255;
+	Tue, 31 Oct 2023 14:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhRu3R8V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777DAC43395
-	for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 12:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698754683;
-	bh=+07EIdZzApKtvodl/APXonDCzegu5yRYYAndOuglU3Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JhRu3R8VaNTiInn8hLaSfS1Gs6sGSF9ntO2za+/VJ0IkjwAAkvHBWQPm+ihOmUjb7
-	 VdbBdwVvX6Xlalhm4w9b7pF1gle+0iQOAudadZdiY5GM3x5uPtMmYOwFw9iMbL80Zx
-	 7itKmsyGHrKv56OfENB64o6jgfqZfADRY6opfIgGhINQ5QrcSIgsd3gqAtPS4Q+sKI
-	 bHk2zPgIsVKng/HTIvr0klsOKEx9b/RWNJdVf65u1EU5qgcrv64nbt9A80+g9a2M9v
-	 5y1X84kYs0zQ33m40vXz3AGeaLjN6KVN8oUEJfBsqn61yDyHTdpIodhqGxjRlYC7FC
-	 Ps/kBtNtD5ppQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9d10f94f70bso519560166b.3
-        for <regressions@lists.linux.dev>; Tue, 31 Oct 2023 05:18:03 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyQfhMr1VwLVXQzdU9RNJ2L7yh+Fwnc5/MjEYQrYGINMuQVpryi
-	0LB1aV6wErhQTp5LzwUeQ0BTtexM61a8kAeTTec=
-X-Google-Smtp-Source: AGHT+IEUyC50HI4SBbvFRIsBS2tkEZDUrTMVdws+u+gRrQJccqgLqe+zPJt91ueb+OCWKgegYZyb+/rcSQGIqibYB2Y=
-X-Received: by 2002:a17:907:da0:b0:9bd:a73a:7a0d with SMTP id
- go32-20020a1709070da000b009bda73a7a0dmr12467189ejc.13.1698754681849; Tue, 31
- Oct 2023 05:18:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ftzu5Fhv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5AehXmbL"
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0F9DF1F38C;
+	Tue, 31 Oct 2023 14:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1698760897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1LF7kbHX9N77tVn1FdmTn2yQglSxGX4kd1aiT/nhq30=;
+	b=Ftzu5FhvcqTcaOYiHY91lRJ/oN1s8Qz2uzrsxDg8ACQGCpWpL93PeQDVfINnK7CpjomSpE
+	NXAbrLkoe3mb8TfnGpUS70JM+8YxPaJzg7w3rNjI0SBpXmF5BIRurx7ZD6OV3D7ZVGiajY
+	oWTbXPPTJKemeoCQE8dwtnBjOOYXmvs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1698760897;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1LF7kbHX9N77tVn1FdmTn2yQglSxGX4kd1aiT/nhq30=;
+	b=5AehXmbL1cgO0YhZ0g3JQJBoKhxnlVe5OHvpvwxfI0mcRDdnIpEDe+uHpt80iAs8NMxPIQ
+	HqrlJuHl1wvzhNDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 002D3138EF;
+	Tue, 31 Oct 2023 14:01:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 4EQNAMEIQWV8BAAAMHmgww
+	(envelope-from <jack@suse.cz>); Tue, 31 Oct 2023 14:01:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7B01AA06E5; Tue, 31 Oct 2023 15:01:36 +0100 (CET)
+Date: Tue, 31 Oct 2023 15:01:36 +0100
+From: Jan Kara <jack@suse.cz>
+To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Mikulas Patocka <mpatocka@redhat.com>, Jan Kara <jack@suse.cz>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
+	linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+Message-ID: <20231031140136.25bio5wajc5pmdtl@quack3>
+References: <18a38935-3031-1f35-bc36-40406e2e6fd2@suse.cz>
+ <3514c87f-c87f-f91f-ca90-1616428f6317@redhat.com>
+ <1a47fa28-3968-51df-5b0b-a19c675cc289@suse.cz>
+ <20231030122513.6gds75hxd65gu747@quack3>
+ <ZT+wDLwCBRB1O+vB@mail-itl>
+ <a2a8dbf6-d22e-65d0-6fab-b9cdf9ec3320@redhat.com>
+ <20231030155603.k3kejytq2e4vnp7z@quack3>
+ <ZT/e/EaBIkJEgevQ@mail-itl>
+ <98aefaa9-1ac-a0e4-fb9a-89ded456750@redhat.com>
+ <ZUB5HFeK3eHeI8UH@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee>
- <31bdf7b1-0ed9-4217-b459-1d857e53120b@leemhuis.info> <CAAhV-H7fRpykesVUEyaTpVnFiGwpP+fPbtdrp6JwfgD=bDp06Q@mail.gmail.com>
- <CAAhV-H7XCmbgS=N4-SE8FnASAws8hnDRZsQJgXE+dwyARaqzNw@mail.gmail.com>
- <ZSO9uArAtsPMPeTP@debian.me> <CAAhV-H5GbidUx8YanUc7S9oGqBkDd53xeT=2O4aCuX7KpM-+8A@mail.gmail.com>
- <c9b79a69-bdc1-4457-900d-709a15d99568@leemhuis.info> <CAAhV-H4qQW_fOdkTxmT1xbvo4LOapzw_tOw7Kma47xmh0PvpPA@mail.gmail.com>
- <ZTWoDSPxGO-ApR4r@P70.localdomain> <82f1b533-3bd8-4418-843a-718d9a6b5786@leemhuis.info>
- <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com>
- <ba16ad66-4b35-4fb4-b4e6-1d785f260eea@ristioja.ee> <CAAhV-H64AKdGoHnVLLOYXznpr_aq1jC_TUYXFQRdOjoBxanxkw@mail.gmail.com>
- <c3bb7983-86e4-424e-aadd-e82a0cb6ef37@ristioja.ee> <CAAhV-H7UTnTWQeT_qo7VgBczaZo37zjosREr16H8DsLi21XPqQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H7UTnTWQeT_qo7VgBczaZo37zjosREr16H8DsLi21XPqQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 31 Oct 2023 20:17:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7fJS3-3_hqA4BUdH+q5EG6wSmEoPpO-fUZn5h35O=6OA@mail.gmail.com>
-Message-ID: <CAAhV-H7fJS3-3_hqA4BUdH+q5EG6wSmEoPpO-fUZn5h35O=6OA@mail.gmail.com>
-Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad L570
-To: Jaak Ristioja <jaak@ristioja.ee>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Javier Martinez Canillas <javierm@redhat.com>, 
-	Linux DRI Development <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Evan Preston <x.arch@epreston.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZUB5HFeK3eHeI8UH@mail-itl>
 
-Hi, Jaak and Evan,
+On Tue 31-10-23 04:48:44, Marek Marczykowski-Górecki wrote:
+> On Mon, Oct 30, 2023 at 06:50:35PM +0100, Mikulas Patocka wrote:
+> > On Mon, 30 Oct 2023, Marek Marczykowski-Górecki wrote:
+> > > Then retried with order=PAGE_ALLOC_COSTLY_ORDER and
+> > > PAGE_ALLOC_COSTLY_ORDER back at 3, and also got similar crash.
+> > 
+> > So, does it mean that even allocating with order=PAGE_ALLOC_COSTLY_ORDER 
+> > isn't safe?
+> 
+> That seems to be another bug, see below.
+> 
+> > Try enabling CONFIG_DEBUG_VM (it also needs CONFIG_DEBUG_KERNEL) and try 
+> > to provoke a similar crash. Let's see if it crashes on one of the 
+> > VM_BUG_ON statements.
+> 
+> This was very interesting idea. With this, immediately after login I get
+> the crash like below. Which makes sense, as this is when pulseaudio
+> starts and opens /dev/snd/*. I then tried with the dm-crypt commit
+> reverted and still got the crash! But, after blacklisting snd_pcm,
+> there is no BUG splat, but the storage freeze still happens on vanilla
+> 6.5.6.
 
-On Sun, Oct 29, 2023 at 9:42=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> On Sat, Oct 28, 2023 at 7:06=E2=80=AFPM Jaak Ristioja <jaak@ristioja.ee> =
-wrote:
-> >
-> > On 26.10.23 03:58, Huacai Chen wrote:
-> > > Hi, Jaak,
-> > >
-> > > On Thu, Oct 26, 2023 at 2:49=E2=80=AFAM Jaak Ristioja <jaak@ristioja.=
-ee> wrote:
-> > >>
-> > >> On 25.10.23 16:23, Huacai Chen wrote:
-> > >>> On Wed, Oct 25, 2023 at 6:08=E2=80=AFPM Thorsten Leemhuis
-> > >>> <regressions@leemhuis.info> wrote:
-> > >>>>
-> > >>>> Javier, Dave, Sima,
-> > >>>>
-> > >>>> On 23.10.23 00:54, Evan Preston wrote:
-> > >>>>> On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
-> > >>>>>> On Fri, Oct 20, 2023 at 5:35=E2=80=AFPM Linux regression trackin=
-g (Thorsten
-> > >>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> > >>>>>>> On 09.10.23 10:54, Huacai Chen wrote:
-> > >>>>>>>> On Mon, Oct 9, 2023 at 4:45=E2=80=AFPM Bagas Sanjaya <bagasdot=
-me@gmail.com> wrote:
-> > >>>>>>>>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
-> > >>>>>>>>>> On Tue, Sep 26, 2023 at 10:31=E2=80=AFPM Huacai Chen <chenhu=
-acai@kernel.org> wrote:
-> > >>>>>>>>>>> On Tue, Sep 26, 2023 at 7:15=E2=80=AFPM Linux regression tr=
-acking (Thorsten
-> > >>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> > >>>>>>>>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
-> > >>>>>>>>>>>>>
-> > >>>>>>>>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integra=
-ted Intel HD
-> > >>>>>>>>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) result=
-s in a blank
-> > >>>>>>>>>>>>> screen after boot until the display manager starts... if =
-it does start
-> > >>>>>>>>>>>>> at all. Using the nomodeset kernel parameter seems to be =
-a workaround.
-> > >>>>>>>>>>>>>
-> > >>>>>>>>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8=
-041717e3a2e4
-> > >>>>>>>>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcal=
-l to
-> > >>>>>>>>>>>>> subsys_initcall_sync").
-> > >>>>>>>>>>>>
-> > >>>>>>>>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things w=
-ork fine
-> > >>>>>>>>>> again. So I guess the reason:
-> > >>>>>>>
-> > >>>>>>> Well, this to me still looks a lot (please correct me if I'm wr=
-ong) like
-> > >>>>>>> regression that should be fixed, as DRM_SIMPLEDRM was enabled b=
-eforehand
-> > >>>>>>> if I understood things correctly. Or is there a proper fix for =
-this
-> > >>>>>>> already in the works and I just missed this? Or is there some g=
-ood
-> > >>>>>>> reason why this won't/can't be fixed?
-> > >>>>>>
-> > >>>>>> DRM_SIMPLEDRM was enabled but it didn't work at all because ther=
-e was
-> > >>>>>> no corresponding platform device. Now DRM_SIMPLEDRM works but it=
- has a
-> > >>>>>> blank screen. Of course it is valuable to investigate further ab=
-out
-> > >>>>>> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort be=
-cause
-> > >>>>>> I don't have a same machine.
-> > >>>>
-> > >>>> Side note: Huacai, have you tried working with Jaak to get down to=
- the
-> > >>>> real problem? Evan, might you be able to help out here?
-> > >>> No, Jaak has no response after he 'fixed' his problem by disabling =
-SIMPLEDRM.
-> > >>>
-> > >>
-> > >> I'm sorry, what was it exactly you want me to do? Please be mindful =
-that
-> > >> I'm not familiar with the internals of the Linux kernel and DRI, and=
- it
-> > >> might sometimes take weeks before I have time to work and respond on=
- this.
-> > > It doesn't matter. I hope you can do some experiments to investigate
-> > > deeper. The first experiment you can do is enabling SIMPLEFB (i.e.
-> > > CONFIG_FB_SIMPLE) instead of SIMPLEDRM (CONFIG_DRM_SIMPLEDRM) to see
-> > > whether there is also a blank screen. If no blank screen, that
-> > > probably means SIMPLEDRM has a bug, if still blank screen, that means
-> > > the firmware may pass wrong screen information.
-> >
-> > Testing with 6.5.9 I get a blank screen with CONFIG_DRM_SIMPLEDRM=3Dy a=
-nd
-> > get no blank screen with CONFIG_FB_SIMPLE=3Dy and CONFIG_DRM_SIMPLEDRM =
-unset.
-> CONFIG_FB_SIMPLE and  CONFIG_DRM_SIMPLEDRM use the same device created
-> by sysfb_init(). Since FB_SIMPLE works fine, I think the real problem
-> is that DRM_SIMPLEDRM has a bug. The next step is to enable
-> CONFIG_DRM_SIMPLEDRM and trace its initialization. In detail, adding
-> some printk() in simpledrm_probe() and its sub-routines to see where
-> the driver fails. The output of these printk() can be seen by the
-> 'dmesg' command after boot.
-I need your help. I tried with my laptop (ThinkPad E490, Intel Core
-i3-8145U, UHD Graphics 620) but I can't reproduce your problem. So
-please patch your 6.5.x kernel with this temporary patch [1], then
-build a "bad kernel" with SIMPLEDRM enabled. And after booting your
-machine with this "bad kernel", please give me the dmesg output. Thank
-you very much.
+OK, great. Thanks for testing.
 
-[1] http://ddns.miaomiaomiao.top:9000/download/kernel/patch-6.5.9
+<snip snd_pcm bug>
 
+> Plain 6.5.6 (so order = MAX_ORDER - 1, and PAGE_ALLOC_COSTLY_ORDER=3), in frozen state:
+> [  143.196106] task:blkdiscard      state:D stack:13672 pid:4884  ppid:2025   flags:0x00000002
+> [  143.196130] Call Trace:
+> [  143.196139]  <TASK>
+> [  143.196147]  __schedule+0x30e/0x8b0
+> [  143.196162]  schedule+0x59/0xb0
+> [  143.196175]  schedule_timeout+0x14c/0x160
+> [  143.196193]  io_schedule_timeout+0x4b/0x70
+> [  143.196207]  wait_for_completion_io+0x81/0x130
+> [  143.196226]  submit_bio_wait+0x5c/0x90
+> [  143.196241]  blkdev_issue_discard+0x94/0xe0
+> [  143.196260]  blkdev_common_ioctl+0x79e/0x9c0
+> [  143.196279]  blkdev_ioctl+0xc7/0x270
+> [  143.196293]  __x64_sys_ioctl+0x8f/0xd0
+> [  143.196310]  do_syscall_64+0x3c/0x90
 
-Huacai
+So this shows there was bio submitted and it never ran to completion.
+ 
+> for f in $(grep -l crypt /proc/*/comm); do head $f ${f/comm/stack}; done
+<snip some backtraces>
 
->
-> Huacai
->
-> >
-> > Jaak
-> >
-> > >
-> > > Huacai
-> > >
-> > >>
-> > >> Jaak
-> > >>
-> > >>>>
-> > >>>> But I write this mail for a different reason:
-> > >>>>
-> > >>>>> I am having the same issue on a Lenovo Thinkpad P70 (Intel
-> > >>>>> Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ=
-).
-> > >>>>> Upgrading from Linux 6.4.12 to 6.5 and later results in only a bl=
-ank
-> > >>>>> screen after boot and a rapidly flashing device-access-status
-> > >>>>> indicator.
-> > >>>>
-> > >>>> This additional report makes me wonder if we should revert the cul=
-prit
-> > >>>> (60aebc9559492c ("drivers/firmware: Move sysfb_init() from
-> > >>>> device_initcall to subsys_initcall_sync") [v6.5-rc1]). But I guess=
- that
-> > >>>> might lead to regressions for some users? But the patch descriptio=
-n says
-> > >>>> that this is not a common configuration, so can we maybe get away =
-with that?
-> > >>>   From my point of view, this is not a regression, 60aebc9559492c
-> > >>> doesn't cause a problem, but exposes a problem. So we need to fix t=
-he
-> > >>> real problem (SIMPLEDRM has a blank screen on some conditions). Thi=
-s
-> > >>> needs Jaak or Evan's help.
-> > >>>
-> > >>> Huacai
-> > >>>>
-> > >>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker=
-' hat)
-> > >>>> --
-> > >>>> Everything you wanna know about Linux kernel regression tracking:
-> > >>>> https://linux-regtracking.leemhuis.info/about/#tldr
-> > >>>> If I did something stupid, please tell me, as explained on that pa=
-ge.
-> > >>>>
-> > >>>>>>>>>> When SIMPLEDRM takes over the framebuffer, the screen is bla=
-nk (don't
-> > >>>>>>>>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firm=
-ware: Move
-> > >>>>>>>>>> sysfb_init() from device_initcall to subsys_initcall_sync") =
-there is
-> > >>>>>>>>>> no platform device created for SIMPLEDRM at early stage, so =
-it seems
-> > >>>>>>>>>> also "no problem".
-> > >>>>>>>>> I don't understand above. You mean that after that commit the=
- platform
-> > >>>>>>>>> device is also none, right?
-> > >>>>>>>> No. The SIMPLEDRM driver needs a platform device to work, and =
-that
-> > >>>>>>>> commit makes the platform device created earlier. So, before t=
-hat
-> > >>>>>>>> commit, SIMPLEDRM doesn't work, but the screen isn't blank; af=
-ter that
-> > >>>>>>>> commit, SIMPLEDRM works, but the screen is blank.
-> > >>>>>>>>
-> > >>>>>>>> Huacai
-> > >>>>>>>>>
-> > >>>>>>>>> Confused...
-> > >>>>>>>>>
-> > >>>>>>>>> --
-> > >>>>>>>>> An old man doll... just what I always wanted! - Clara
-> > >>>>>>>>
-> > >>>>>>>>
-> > >>>>>
-> > >>>>>
-> > >>
-> >
+So this shows dm-crypt layer isn't stuck anywhere. So the allocation path
+itself doesn't seem to be locking up, looping or anything.
+
+> Then tried:
+>  - PAGE_ALLOC_COSTLY_ORDER=4, order=4 - cannot reproduce,
+>  - PAGE_ALLOC_COSTLY_ORDER=4, order=5 - cannot reproduce,
+>  - PAGE_ALLOC_COSTLY_ORDER=4, order=6 - freeze rather quickly
+> 
+> I've retried the PAGE_ALLOC_COSTLY_ORDER=4,order=5 case several times
+> and I can't reproduce the issue there. I'm confused...
+
+And this kind of confirms that allocations > PAGE_ALLOC_COSTLY_ORDER
+causing hangs is most likely just a coincidence. Rather something either in
+the block layer or in the storage driver has problems with handling bios
+with sufficiently high order pages attached. This is going to be a bit
+painful to debug I'm afraid. How long does it take for you trigger the
+hang? I'm asking to get rough estimate how heavy tracing we can afford so
+that we don't overwhelm the system...
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
