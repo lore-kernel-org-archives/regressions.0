@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7859A10A2B
-	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 10:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7454E10954
+	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 10:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qy8qL-00058V-3m; Wed, 01 Nov 2023 11:53:01 +0100
-Message-ID: <2b98b39a-5919-474d-a7e5-6640fc9ac704@leemhuis.info>
-Date: Wed, 1 Nov 2023 11:53:00 +0100
+	id 1qy8wt-0006AC-4r; Wed, 01 Nov 2023 11:59:47 +0100
+Message-ID: <0f256363-430c-49c9-b395-94c3c7ceab06@leemhuis.info>
+Date: Wed, 1 Nov 2023 11:59:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,36 +18,38 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: WARNING: CPU: 13 PID: 3837105 at kernel/sched/sched.h:1561
- __cfsb_csd_unthrottle+0x149/0x160
+Subject: Re: [REGRESSION] resume with a Thunderbolt dock broke with commit
+ e8b908146d44 "PCI/PM: Increase wait time after resume"
 Content-Language: en-US, de-DE
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Stable <stable@vger.kernel.org>
-References: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Kamil Paral <kparal@redhat.com>, linux-pci@vger.kernel.org
+Cc: regressions@lists.linux.dev
+References: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <a5dd536d-041a-2ce9-f4b7-64d8d85c86dc@gmail.com>
+In-Reply-To: <CA+cBOTeWrsTyANjLZQ=bGoBQ_yOkkV1juyRvJq-C8GOrbW6t9Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698835983;8f1b7102;
-X-HE-SMSGID: 1qy8qL-00058V-3m
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698836389;f180921b;
+X-HE-SMSGID: 1qy8wt-0006AC-4r
 
-[TLDR: This mail in primarily relevant for Linux regression tracking. A
-change or fix related to the regression discussed in this thread was
-posted or applied, but it did not use a Closes: tag to point to the
-report, as Linus and the documentation call for. Things happen, no
-worries -- but now the regression tracking bot needs to be told manually
-about the fix. See link in footer if these mails annoy you.]
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking.]
 
-On 30.08.23 02:37, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+On 21.08.23 12:39, Kamil Paral wrote:
+> = Summary =
+> A Thinkpad T480s laptop with a Thinkpad Thunderbolt 3 Dock connected
+> can no longer resume from suspend. The problem was introduced in
+> e8b908146d44 "PCI/PM: Increase wait time after resume".
 > [...]
-> #regzbot introduced: ebb83d84e49b54 https://bugzilla.kernel.org/show_bug.cgi?id=217843
+> #regzbot introduced: e8b908146d44
 
-#regzbot fix: 5ebde09d91707a4a9bec
+Kamil, It looks like you found a workaround and lack time to further
+look into this. Nobody else seems to have run into this and it seems
+this is a odd corner case. Hence I guess there is not much value in
+tracking this regression further for now. Please speak up if you disagree.
+
+#regzbot inconclusive: workaround found, debugging stuck
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -55,3 +57,5 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
+
+
