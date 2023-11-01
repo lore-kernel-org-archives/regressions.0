@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6F8A28
-	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 12:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9C01170A
+	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 12:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qy9xo-0001cN-9r; Wed, 01 Nov 2023 13:04:48 +0100
-Message-ID: <070dd167-9278-42fa-aef5-66621a602fd3@leemhuis.info>
-Date: Wed, 1 Nov 2023 13:04:45 +0100
+	id 1qyA8R-0003Rl-V8; Wed, 01 Nov 2023 13:15:48 +0100
+Message-ID: <fef5e8f0-12e3-4755-92db-dcf16a7db9aa@leemhuis.info>
+Date: Wed, 1 Nov 2023 13:15:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,70 +18,39 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] dm_crypt essiv ciphers do not use async driver
- mv-aes-cbc anymore
+Subject: Re: X86 parallel bring up regression
 Content-Language: en-US, de-DE
-To: Yureka <yuka@yuka.dev>
-Cc: linux-crypto@vger.kernel.org, regressions@lists.linux.dev,
- Mikulas Patocka <mpatocka@redhat.com>, dm-devel@redhat.com,
- Boris Brezillon <bbrezillon@kernel.org>, Arnaud Ebalard <arno@natisbad.org>,
- Srujana Challa <schalla@marvell.com>, Eric Biggers <ebiggers@kernel.org>
-References: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
- <20230929224327.GA11839@google.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230929224327.GA11839@google.com>
+In-Reply-To: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698840291;2c6ccb74;
-X-HE-SMSGID: 1qy9xo-0001cN-9r
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698840949;54ae380b;
+X-HE-SMSGID: 1qyA8R-0003Rl-V8
 
-n 30.09.23 00:43, Eric Biggers wrote:
-> On Fri, Sep 29, 2023 at 11:08:55PM +0200, Yureka wrote:
->>
->> I am running the NixOS distribution cross-compiled from x86_64 to a Marvell
->> Armada 388 armv7 SoC.
->>
->> I am not getting expected speeds when reading/writing on my encrypted hard
->> drive with 6.5.5, while it is fast on 5.4.257. Volume is formatted like this:
->> `cryptsetup luksFormat -c aes-cbc-essiv:sha256 /dev/sda`.
->>
->> Specifically, I tracked this down to the changes to crypto/essiv.c from
->> 7bcb2c99f8ed mentioned above. Reverting those changes on top of a 6.5.5 kernel
->> provides working (see applicable diff further below).
->>
->> I'm *guessing* that this is related to the mv-aes-cbc crypto driver (from the
->> marvell-cesa module) being registered as async (according to /proc/crypto),
->> and I *suspect* that async drivers are not being used anymore by essiv or
->> dm_crypt. Going by the commit description, which sounds more like a refactor,
->> this does not seem intentional.
-> 
-> This is actually from commit b8aa7dc5c753 ("crypto: drivers - set the flag
-> CRYPTO_ALG_ALLOCATES_MEMORY"), which set CRYPTO_ALG_ALLOCATES_MEMORY in
-> marvell-cesa.  7bcb2c99f8ed is just one of the prerequisite commits.
-> 
-> I understand that the dm-crypt developers did this as an intentional bug fix in
-> order to prevent dm-crypt from using crypto drivers that are known to cause
-> deadlocks due to allocating memory during requests.
-> 
-> If you are interested in still being able to use marvell-cesa with dm-crypt, I
-> believe it would need to be fixed to meet the requirements for not needing
-> CRYPTO_ALG_ALLOCATES_MEMORY.  I've Cc'ed the maintainers of that driver.
-> 
-> #regzbot introduced: b8aa7dc5c753
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-BTW: Eric, thx for this.
+On 19.10.23 22:26, Mario Limonciello wrote:
+> 
+> We've recently found that there was a regression from 6.5 that broke
+> resume from suspend-to-ram on some AMD platforms.
 
-Boris, Arnaud, Srujana, and Mikulas, could you maybe comment on this? I
-understand that this is not some everyday regression due to deadlock
-risk, but it nevertheless would be good to get this resolved somehow to
-stay in line with our "no regressions" rule.
+#regzbot monitor
+https://lore.kernel.org/all/20231023160018.164054-1-mario.limonciello@amd.com/
+#regzbot monitor
+https://lore.kernel.org/all/20231026170330.4657-1-mario.limonciello@amd.com/
+#regzbot ignore-activity
+#regzbot resolve: turned out to be a BIOS bug
+
+For details see https://lore.kernel.org/all/878r7imlb0.ffs@tglx/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+That page also explains what to do if mails like this annoy you.
