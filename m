@@ -1,92 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E4D134B6
-	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 12:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PdmLmuX6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698842843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L18jqjZ/YFC+R7qqPrcdbK+tbLtkdiO++O5gj8jOKcw=;
-	b=PdmLmuX6e69O76KMBg86YgHverjauZuoC/N1zRpeGJlDHCtTZ8bF2/SDvxWDpVlx7tg1JL
-	GECrIokmRQ/9QQ8FfoF6adpa16b3r4jpXGvRQooGPr7M9uWpF8bkW9DlcZXDMQaeokqRAv
-	/5Xhp1AuWIiAOiyJxygO3LBxbFHhDoc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-9Mgdi-T9MmaKi_n3PhP7mA-1; Wed, 01 Nov 2023 08:47:20 -0400
-X-MC-Unique: 9Mgdi-T9MmaKi_n3PhP7mA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7035E811E8F;
-	Wed,  1 Nov 2023 12:47:19 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D9A24C1290F;
-	Wed,  1 Nov 2023 12:47:18 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id C096130C2A86; Wed,  1 Nov 2023 12:47:18 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id BDD333FB77;
-	Wed,  1 Nov 2023 13:47:18 +0100 (CET)
-Date: Wed, 1 Nov 2023 13:47:18 +0100 (CET)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-cc: Yureka <yuka@yuka.dev>, linux-crypto@vger.kernel.org, dm-devel@redhat.com, 
-    Boris Brezillon <bbrezillon@kernel.org>, 
-    Arnaud Ebalard <arno@natisbad.org>, Srujana Challa <schalla@marvell.com>, 
-    Eric Biggers <ebiggers@kernel.org>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, 
-    "David S. Miller" <davem@davemloft.net>
-Subject: Re: [REGRESSION] dm_crypt essiv ciphers do not use async driver
- mv-aes-cbc anymore
-In-Reply-To: <070dd167-9278-42fa-aef5-66621a602fd3@leemhuis.info>
-Message-ID: <518e373e-673e-82a-24ff-b9e8b3927c85@redhat.com>
-References: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev> <20230929224327.GA11839@google.com> <070dd167-9278-42fa-aef5-66621a602fd3@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6E9134CD
+	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 15:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qyCmF-0001LJ-J3; Wed, 01 Nov 2023 16:05:03 +0100
+Message-ID: <74466a74-0c42-40ce-8176-ba7ba56cb6d6@leemhuis.info>
+Date: Wed, 1 Nov 2023 16:05:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Nouveau] Fwd: System (Xeon Nvidia) hangs at boot terminal after
+ kernel 6.4.7
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux Regressions <regressions@lists.linux.dev>
+Cc: Linux Nouveau <nouveau@lists.freedesktop.org>,
+ Linux Stable <stable@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>
+References: <4b0c06ba-b05c-071c-d494-67775bd7250f@gmail.com>
+ <94a31824-016a-7fe3-7477-e3ab500844c1@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <94a31824-016a-7fe3-7477-e3ab500844c1@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698851107;3fabe3da;
+X-HE-SMSGID: 1qyCmF-0001LJ-J3
 
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
+On 10.08.23 06:19, Thorsten Leemhuis wrote:
+> On 10.08.23 05:03, Bagas Sanjaya wrote:
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>> [...]
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217776
 
-On Wed, 1 Nov 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
+#regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/255
+#regzbot fix: 6eb4a83e612af65bab8492957cba
+#regzbot ignore-activity
 
-> > #regzbot introduced: b8aa7dc5c753
-> 
-> BTW: Eric, thx for this.
-> 
-> Boris, Arnaud, Srujana, and Mikulas, could you maybe comment on this? I
-> understand that this is not some everyday regression due to deadlock
-> risk, but it nevertheless would be good to get this resolved somehow to
-> stay in line with our "no regressions" rule.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-Hi
-
-The driver drivers/crypto/marvell/cesa/cipher.c uses GFP_ATOMIC 
-allocations (see mv_cesa_skcipher_dma_req_init). So, it is not really safe 
-to use it for dm-crypt.
-
-GFP_ATOMIC allocations may fail anytime (for example, they fill fail if 
-the machine receives too many network packets in a short timeframe and 
-runs temporarily out of memory). And when the GFP_ATOMIC allocation fails, 
-you get a write I/O error and data corruption.
-
-It could be possible to change it to use GFP_NOIO allocations, then we 
-would risk deadlock instead of data corruption. The best thing would be to 
-convert the driver to use mempools.
-
-Mikulas
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
