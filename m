@@ -1,56 +1,83 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9C01170A
-	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 12:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qyA8R-0003Rl-V8; Wed, 01 Nov 2023 13:15:48 +0100
-Message-ID: <fef5e8f0-12e3-4755-92db-dcf16a7db9aa@leemhuis.info>
-Date: Wed, 1 Nov 2023 13:15:47 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE5F11CAC
+	for <regressions@lists.linux.dev>; Wed,  1 Nov 2023 12:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+93qWLd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698841002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a5UIfMBVdGIbdKNzRDMLvhiScyxGbvuh4NifZMx02eQ=;
+	b=U+93qWLddcwdJSFSzvdlkEKqheqcwd/S2+yPLUUgbeKHwkAAr6VUDM3QnKajkxGoBdDNlg
+	dhpG6im33u3bXTH4Ddj7spAmEbuNKsEjZY7AUSNYzLf61KKq24qgHn/atP/9UFL1rLP+wr
+	zqo7CKFodlQey+/yTwdOXWGgw/rSwok=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-633-rsj5tSE7PqiyMazlfvH37A-1; Wed,
+ 01 Nov 2023 08:16:40 -0400
+X-MC-Unique: rsj5tSE7PqiyMazlfvH37A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C7E02803022;
+	Wed,  1 Nov 2023 12:16:38 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id EA5C11121309;
+	Wed,  1 Nov 2023 12:16:37 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id D85C230C2A86; Wed,  1 Nov 2023 12:16:37 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id D3EFE3FB77;
+	Wed,  1 Nov 2023 13:16:37 +0100 (CET)
+Date: Wed, 1 Nov 2023 13:16:37 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Hannes Reinecke <hare@suse.de>
+cc: Ming Lei <tom.leiming@gmail.com>, 
+    =?ISO-8859-15?Q?Marek_Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>, 
+    Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+    stable@vger.kernel.org, regressions@lists.linux.dev, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@lists.linux.dev, linux-mm@kvack.org, linux-block@vger.kernel.org, 
+    linux-nvme@lists.infradead.org, ming.lei@redhat.com
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+In-Reply-To: <ab02413f-4bf2-4d92-baf7-62fbd106f5df@suse.de>
+Message-ID: <fd2e3ba-d681-4856-3d50-9f63a2fcb0a8@redhat.com>
+References: <ZT+wDLwCBRB1O+vB@mail-itl> <a2a8dbf6-d22e-65d0-6fab-b9cdf9ec3320@redhat.com> <20231030155603.k3kejytq2e4vnp7z@quack3> <ZT/e/EaBIkJEgevQ@mail-itl> <98aefaa9-1ac-a0e4-fb9a-89ded456750@redhat.com> <ZUB5HFeK3eHeI8UH@mail-itl> <20231031140136.25bio5wajc5pmdtl@quack3>
+ <ZUEgWA5P8MFbyeBN@mail-itl> <CACVXFVOEWDyzasS7DWDvLOhC3Hr6qOn5ks3HLX+fbRYCxYv26w@mail.gmail.com> <ZUG0gcRhUlFm57qN@mail-itl> <ZUHE52SznRaZQxnG@fedora> <ab02413f-4bf2-4d92-baf7-62fbd106f5df@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: X86 parallel bring up regression
-Content-Language: en-US, de-DE
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <3d96c70e-da3b-49c2-a776-930a9f1b815d@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698840949;54ae380b;
-X-HE-SMSGID: 1qyA8R-0003Rl-V8
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
 
-On 19.10.23 22:26, Mario Limonciello wrote:
-> 
-> We've recently found that there was a regression from 6.5 that broke
-> resume from suspend-to-ram on some AMD platforms.
 
-#regzbot monitor
-https://lore.kernel.org/all/20231023160018.164054-1-mario.limonciello@amd.com/
-#regzbot monitor
-https://lore.kernel.org/all/20231026170330.4657-1-mario.limonciello@amd.com/
-#regzbot ignore-activity
-#regzbot resolve: turned out to be a BIOS bug
+On Wed, 1 Nov 2023, Hannes Reinecke wrote:
 
-For details see https://lore.kernel.org/all/878r7imlb0.ffs@tglx/
+> And that is something I've been wondering (for quite some time now):
+> What _is_ the appropriate error handling for -ENOMEM?
+> At this time, we assume it to be a retryable error and re-run the queue
+> in the hope that things will sort itself out.
+> But if they don't we're stuck.
+> Can we somehow figure out if we make progress during submission, and (at
+> least) issue a warning once we detect a stall?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+The appropriate way is to use mempools. mempool_alloc (with 
+__GFP_DIRECT_RECLAIM) can't ever fail.
+
+But some kernel code does GFP_NOIO allocations in the I/O path and the 
+authors hope that they get away with it.
+
+Mikulas
+
