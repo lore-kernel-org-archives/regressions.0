@@ -1,81 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4901FA3
-	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 08:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1qyTFj-0006qe-4a; Thu, 02 Nov 2023 09:40:35 +0100
-Message-ID: <f8d48009-cf9c-411d-9753-1b01b5aae168@leemhuis.info>
-Date: Thu, 2 Nov 2023 09:40:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F64B7498
+	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 08:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSaMX+Bg"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-32faea0fa1fso118246f8f.1
+        for <regressions@lists.linux.dev>; Thu, 02 Nov 2023 01:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698915011; x=1699519811; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BKF4AuwBxKpYd7Ly1Ezs8kH7+emBGdvuLRRIRObR8w8=;
+        b=NSaMX+BgcJlLI0q7WTHIuGGXSxp/VaPJVWmJtndlWIVF7s/1PR6xgby/gR/0C8PBsq
+         f0/j/Y/SrzXib1wCwa6naMCvJ7I9UwsorRjAlcCE8/qMVwxtvz9xpPVCF0QHT+zt37ni
+         iAgGQJ1Fjn6uO1zxRy1i1VeoKwkrEOtB/upQE9p29uRY27YM89FP8S3S0rs5KMJu9l6h
+         DDS8cbte5sQcPdQh19u4UvsS0L3rI4DwxTQm1Ho4gTCaXTHftL2wPCk6sK8Mp4b06sl9
+         r1gENXhDP5gIDGpglJgdfTukmyG+jnTotVHSN8EV/nBD9G5sP58Dge791+guaNtivPT3
+         qF6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698915011; x=1699519811;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKF4AuwBxKpYd7Ly1Ezs8kH7+emBGdvuLRRIRObR8w8=;
+        b=PcjeSKYldDb82b+hWGga+UVxBJzqjK2oj3Bb6Ryry/YuHYGkRk1U8Dg9tTsiHipkUZ
+         t2c3/XYkhSxTUDexTmoFXV1D1YLdpMWn6hWSC7kBHVexXhzRX5qy08JPklqXosE+1MVl
+         uTlYDnZn0V8dV+okyxNcL8H/BlbNsMDqqRGY1XPot3deBeen/3jh+dBrXtoWTKd1Imyk
+         hj4hAOt3JUnyZXOqcteaOG/px+Ytmmeqv59TDoNd2g18VjyXSWXmuPB/DTMbeZveJVT3
+         sH1O+VO4vSiMhSGNKtTHCVbxEDx879uFySPDiDZ+FVRs3/HMwT9pVOAP962FWggp34De
+         OTFQ==
+X-Gm-Message-State: AOJu0YxStCwBM46IXUbpTxxcUwo9iunZyFSekQI20fo5VV2vZDg0yjd3
+	olqBSceT2wpDch5hxGffeeo=
+X-Google-Smtp-Source: AGHT+IFpPQcz2g4e80rRiQAB/q8Kh3kmpvmcK2UWFhQwt3wEtaM8jzxqzZ92RFRUnkmGnE3MC2eaiQ==
+X-Received: by 2002:a05:6000:1565:b0:32d:8c67:be05 with SMTP id 5-20020a056000156500b0032d8c67be05mr9214808wrz.22.1698915011124;
+        Thu, 02 Nov 2023 01:50:11 -0700 (PDT)
+Received: from debian ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id n9-20020a5d4849000000b0032d8eecf901sm1844107wrs.3.2023.11.02.01.50.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 01:50:10 -0700 (PDT)
+Date: Thu, 2 Nov 2023 08:50:08 +0000
+From: "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
+To: Chuyi Zhou <zhouchuyi@bytedance.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	regressions@lists.linux.dev,
+	Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: mainline build failure due to 9c66dc94b62a ("bpf: Introduce css_task
+ open-coded iterator kfuncs")
+Message-ID: <ZUNiwMLBsL52X9wa@debian>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Possibly broken Linux 5.10.198 backport spi: spi-zynqmp-gqspi:
- Fix runtime PM imbalance in zynqmp_qspi_probe
-Content-Language: en-US, de-DE
-Cc: Linux Stable <stable@vger.kernel.org>
-References: <9afe9285-6f46-46d9-bd21-2ea5c4dc43c0@denx.de>
- <ZSjYC_ATX193mJOA@debian.me> <ZSrERw6ucvl1wLWX@sashalap>
- <ZSt4wfx1EMeC0lnX@debian.me>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Linux Regressions <regressions@lists.linux.dev>
-In-Reply-To: <ZSt4wfx1EMeC0lnX@debian.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698914437;a689c69c;
-X-HE-SMSGID: 1qyTFj-0006qe-4a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Hi All,
 
-On 15.10.23 07:29, Bagas Sanjaya wrote:
-> On Sat, Oct 14, 2023 at 12:39:35PM -0400, Sasha Levin wrote:
->> On Fri, Oct 13, 2023 at 12:39:23PM +0700, Bagas Sanjaya wrote:
->>> On Thu, Oct 12, 2023 at 06:39:10PM +0200, Marek Vasut wrote:
->>>> Linux 5.10.198 commit
->>>> 2cdec9c13f81 ("spi: spi-zynqmp-gqspi: Fix runtime PM imbalance in
->>>> zynqmp_qspi_probe")
->>>>
->>>> looks very different compared to matching upstream commit:
->>>> a21fbc42807b ("spi: spi-zynqmp-gqspi: Fix runtime PM imbalance in
->>>> zynqmp_qspi_probe")
->>>>
->>>> The Linux 5.10.198 change breaks a platform for me and it really looks like
->>>> an incorrect backport.
->>>>
->>>> Dinghao, can you have a look ?
->>>>
->>>
->>> Thanks for the regression report. I'm adding it to regzbot (as stable-specific
->>> one):
->>>
->>> #regzbot ^introduced: 2cdec9c13f81
->>
->> I'm going to revert it from 5.10.
->>
-> 
-> OK, thanks!
-> 
-> Don't forget to add Link: to this regression report and most importantly,
-> Fixes: to the culprit commit when reverting.
+The latest mainline kernel branch fails to build mips decstation_64_defconfig,
+decstation_defconfig and decstation_r4k_defconfig with the error:
 
-That did not happen, but no big deal:
+kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_new':
+kernel/bpf/task_iter.c:917:14: error: 'CSS_TASK_ITER_PROCS' undeclared (first use in this function)
+  917 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+      |              ^~~~~~~~~~~~~~~~~~~
+kernel/bpf/task_iter.c:917:14: note: each undeclared identifier is reported only once for each function it appears in
+kernel/bpf/task_iter.c:917:36: error: 'CSS_TASK_ITER_THREADED' undeclared (first use in this function)
+  917 |         case CSS_TASK_ITER_PROCS | CSS_TASK_ITER_THREADED:
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~
+kernel/bpf/task_iter.c:925:60: error: invalid application of 'sizeof' to incomplete type 'struct css_task_iter'
+  925 |         kit->css_it = bpf_mem_alloc(&bpf_global_ma, sizeof(struct css_task_iter));
+      |                                                            ^~~~~~
+kernel/bpf/task_iter.c:928:9: error: implicit declaration of function 'css_task_iter_start'; did you mean 'task_seq_start'? [-Werror=implicit-function-declaration]
+  928 |         css_task_iter_start(css, flags, kit->css_it);
+      |         ^~~~~~~~~~~~~~~~~~~
+      |         task_seq_start
+kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_next':
+kernel/bpf/task_iter.c:938:16: error: implicit declaration of function 'css_task_iter_next'; did you mean 'class_dev_iter_next'? [-Werror=implicit-function-declaration]
+  938 |         return css_task_iter_next(kit->css_it);
+      |                ^~~~~~~~~~~~~~~~~~
+      |                class_dev_iter_next
+kernel/bpf/task_iter.c:938:16: warning: returning 'int' from a function with return type 'struct task_struct *' makes pointer from integer without a cast [-Wint-conversion]
+  938 |         return css_task_iter_next(kit->css_it);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/bpf/task_iter.c: In function 'bpf_iter_css_task_destroy':
+kernel/bpf/task_iter.c:947:9: error: implicit declaration of function 'css_task_iter_end' [-Werror=implicit-function-declaration]
+  947 |         css_task_iter_end(kit->css_it);
+      |         ^~~~~~~~~~~~~~~~~
 
-#regzbot fix: 1ceaf0d3a883bd5f
-#regzbot ignore-activity
+git bisect pointed to 9c66dc94b62a ("bpf: Introduce css_task open-coded iterator kfuncs")
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+I will be happy to test any patch or provide any extra log if needed.
+
+#regzbot introduced: 9c66dc94b62aef23300f05f63404afb8990920b4
+
+-- 
+Regards
+Sudip
