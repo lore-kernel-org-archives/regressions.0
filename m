@@ -1,123 +1,289 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8B319BC2
-	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 14:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357275227
+	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 15:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MX4MYehI"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6c3443083f2so278056b3a.0
-        for <regressions@lists.linux.dev>; Thu, 02 Nov 2023 07:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698934312; x=1699539112; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YeyFP7WMW0RjDqklzVx1kbYfEg/rdHyVxFLBKwTmGxA=;
-        b=MX4MYehIYtNOwvZZDn6m8sXZ4QoShExlUWKFdNwa2qYotqeH6vbepapaseXRAu2XOw
-         ABrcYoSYMH2j/2Q05mQkXkJzawPP6fLZyQ8YCrqnMH10eJkw458UAonObuXjVDRq76kP
-         WhzAAVR3gsNdRe/Hl9pHEtBH1IRex/pmX4GiVQA7EFgKxwcTotDp2KhoKvKiLD2Hj6bN
-         G4SF3CgGNtRackw6fJOBkTe52r+3Z8hnU0Etp+OKlEhhie91gwDzWOpUF/6ymT2mgC7V
-         AlBTzqxCvdW93h9fEYrBHByyCpu1Lj70hMFqR29+YfHQp86Sq3ujzhXwpWiTCRkFT8/x
-         qs5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698934312; x=1699539112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YeyFP7WMW0RjDqklzVx1kbYfEg/rdHyVxFLBKwTmGxA=;
-        b=gB9hs9qP+MVeQS78RMNBdZLRpkt/uokEggeFBoHG5NM0pv7n60QNUmxiCsq6VDRZOs
-         RHM6mMPoDUPv8hp7bm6erTJOm+hymjAbF2k8N/skgeyZ9uUd9S58AXvTdisfYJbNHfGu
-         lTwGB4FDamMs2cZRL80cUJwLaSrIGENiZsQ+dbSzyOVT49efCTg+dZBR1HOrgccfHstC
-         n0Q5kmPS9/6i/j9QmHkkJvgzJTxcX0RGEk+3jE/tiRH+jcrhMigEHIw/G50scYwytrnu
-         ztdHrL+PNW3thZt67AKSufggjEcJ8kpg8Jodp1GWp+Ot6Wa3V29F0/Yi2e6PMb4d3+i3
-         GU2g==
-X-Gm-Message-State: AOJu0YyO9FA9AXJomJAd1jWmywUPsJd+ua4iN4Seh2xvqGqmo9tpUr/f
-	eIe25t2E1FZ5AgzR2Fzy8UA=
-X-Google-Smtp-Source: AGHT+IEOJ0B7C0nr9peL6eqLxZmuiUXorl8e5tMZ2eb2nOkE3SyIQIQwO5CMJg8XGG7sEFw+ZGTAGA==
-X-Received: by 2002:a05:6a20:548b:b0:14e:a1f0:a8ea with SMTP id i11-20020a056a20548b00b0014ea1f0a8eamr21471203pzk.3.1698934311673;
-        Thu, 02 Nov 2023 07:11:51 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id v5-20020aa78085000000b006bdc8bb2ed5sm2945197pff.82.2023.11.02.07.11.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Nov 2023 07:11:50 -0700 (PDT)
-Message-ID: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
-Date: Thu, 2 Nov 2023 21:11:42 +0700
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="OcFJOXhJ"
+From: Christian Theune <ct@flyingcircus.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1698936856;
+	bh=HdXjuFDV8s5hD+WloDCoPcT4i4ktAoVnOHYyA7SRG+o=;
+	h=From:Subject:Date:Cc:To;
+	b=OcFJOXhJmsvcbY0OyF/zRxlGpObefPqohE7PXdpMPwBQlJzVsIvFsVXg1ahD9ipo1
+	 DT5oZNcTgpMrsDem+RHumKSQE2zZJouy7mEuS1jKUSOtdJWfxSYky2gg1w8F/q07zt
+	 xCyXSPzYfEzXTTcVnrIqfN0ZtHMe2WbaNpEcRk7k=
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Input Devices <linux-input@vger.kernel.org>
-Cc: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
- =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>,
- Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>,
- LinuxCat <masch77.linuxcat@gmail.com>, Marcelo <mmbossoni@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.4\))
+Subject: [REGRESSION] Backport? RIP: 0010:throtl_trim_slice+0xc6/0x320 caused
+ kernel panic 
+Message-Id: <F5E0BC95-9883-4E8E-83A6-CD9962B7E90C@flyingcircus.io>
+Date: Thu, 2 Nov 2023 15:53:56 +0100
+Cc: linux-block@vger.kernel.org,
+ yukuai3@huawei.com,
+ ming.lei@redhat.com
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
 
 Hi,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+I hope i=E2=80=99m not jumping the gun, but I guess I=E2=80=99d be =
+interested in a backport to said issue =E2=80=A6 ;)
 
-> Hello,
-> After upgrading from 6.5.9 to 6.6.0, my keyboard started acting really weird in its wireless mode, key actions sent are completely wrong, see video attached. 
-> 
-> Most keys are perceived as either E, 3 or F7, with F8 and <, as well. 
-> 
-> Modifier keys (CTRL, ALT, ALT GR, Shift and Super) are working normally, as well as media control keys (pause/play, previous, next, mute and sound up/down).
-> 
-> The keyboard works as expected if it's wired.
+We=E2=80=99re running on 6.1.55/57 and this has started breaking for us =
+after we updated from 6.1.51.
 
-Another reporter bisected the regression:
+The issue seems to be well-described and already fixed in
+=
+https://lkml.kernel.org/linux-block/e1d7c106-ea6f-922f-971f-691e7e0faf9d@h=
+uaweicloud.com/T/
+but I can=E2=80=99t post to that thread easily and it seems backporting =
+isn=E2=80=99t on the radar as of now.
 
-> Bisected to 
-> 
-> 9d1bd9346241cd6963b58da7ffb7ed303285f684 is the first bad commit
-> commit 9d1bd9346241cd6963b58da7ffb7ed303285f684
-> Author: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
-> Date: Sun Jul 16 18:23:44 2023 +0000
-> 
-> HID: logitech-dj: Add support for a new lightspeed receiver iteration
-> 
-> The lightspeed receiver for the Pro X Superlight uses 13 byte mouse reports
-> without a report id. The workaround for such cases has been adjusted to
-> handle these larger packets.
-> 
-> The device now reports the status of its battery in wireless mode and
-> libratbag now recognizes the device and it can be configured with Piper.
-> 
-> https://github.com/libratbag/libratbag/pull/1122
-> 
-> Co-developed-by: Filipe Laíns <lains@riseup.net>
-> Signed-off-by: Filipe Laíns <lains@riseup.net>
-> Signed-off-by: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
-> Reviewed-by: Bastien Nocera <hadess@hadess.net>
-> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-> 
-> drivers/hid/hid-ids.h | 1 +
-> drivers/hid/hid-logitech-dj.c | 11 ++++++++---
-> 2 files changed, 9 insertions(+), 3 deletions(-)
+The errors we have seen (multiple times by now) are:
 
-See Bugzilla for the full thread.
+[90152.012696] divide error: 0000 [#1] PREEMPT SMP PTI
+[90152.013534] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.57 #1-NixOS
+[90152.014465] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), =
+BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[90152.016103] RIP: 0010:throtl_trim_slice+0xe1/0x340
+[90152.016809] Code: 89 c8 48 f7 f6 48 29 d1 48 89 cd 74 98 41 0f b6 f5 =
+48 89 df 89 34 24 e8 ad fa ff ff 8b 34 24 b9 e8 03 00 00 48 89 df 48 f7 =
+e5 <48> f7 f1 49 03 84 24 f8 01 00 00 49 89 c7 e8 8c ea ff ff be ff ff
+[90152.019454] RSP: 0018:ffffaca040003d70 EFLAGS: 00010887
+[90152.020217] RAX: fffffffffffff574 RBX: ffff9f1bf124f000 RCX: =
+00000000000003e8
+[90152.021293] RDX: 0000000000000a8b RSI: 0000000000000001 RDI: =
+ffff9f1bf124f000
+[90152.022324] RBP: 0000000000000a8c R08: ffff9f1b83e23c00 R09: =
+ffff9f1b83e67030
+[90152.023363] R10: ffff9f1b85765010 R11: ffff9f1b83e67060 R12: =
+ffff9f1bf124f008
+[90152.024386] R13: 0000000000000001 R14: 0000000000000001 R15: =
+ffff9f1b85765008
+[90152.025409] FS: 0000000000000000(0000) GS:ffff9f1bfdc00000(0000) =
+knlGS:0000000000000000
+[90152.026560] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[90152.027407] CR2: 00007f4874f38638 CR3: 000000006e9ee004 CR4: =
+00000000001706f0
+[90152.028439] Call Trace:
+[90152.028831] <IRQ>
+[90152.029165] ? __die_body.cold+0x1a/0x1f
+[90152.029738] ? die+0x2a/0x50
+[90152.030175] ? do_trap+0xc5/0x110
+[90152.030668] ? throtl_trim_slice+0xe1/0x340
+[90152.031290] ? do_error_trap+0x6a/0x90
+[90152.031838] ? throtl_trim_slice+0xe1/0x340
+[90152.032463] ? exc_divide_error+0x34/0x50
+[90152.033060] ? throtl_trim_slice+0xe1/0x340
+[90152.033664] ? asm_exc_divide_error+0x16/0x20
+[90152.034314] ? throtl_trim_slice+0xe1/0x340
+[90152.034918] ? enqueue_entity+0x195/0x4c0
+[90152.035509] tg_dispatch_one_bio+0x1f7/0x370
+[90152.036137] throtl_pending_timer_fn+0x1ee/0x510
+[90152.036805] ? tg_update_disptime+0x130/0x130
+[90152.037467] ? tg_update_disptime+0x130/0x130
+[90152.038107] call_timer_fn+0x27/0x130
+[90152.038642] __run_timers+0x21c/0x2a0
+[90152.039185] run_timer_softirq+0x2b/0x50
+[90152.039756] __do_softirq+0xf0/0x2fe
+[90152.040288] __irq_exit_rcu+0xc4/0x130
+[90152.040836] sysvec_apic_timer_interrupt+0x9e/0xc0
+[90152.041535] </IRQ>
+[90152.041852] <TASK>
+[90152.042179] asm_sysvec_apic_timer_interrupt+0x16/0x20
+[90152.042918] RIP: 0010:native_safe_halt+0xb/0x10
+[90152.043587] Code: 02 00 3e 80 48 02 20 48 8b 00 a8 08 75 bf e9 7b ff =
+ff ff cc cc cc cc cc cc cc cc cc cc cc cc eb 07 0f 00 2d 69 69 47 00 fb =
+f4 <c3> cc cc cc cc eb 07 0f 00 2d 59 69 47 00 f4 c3 cc cc cc cc cc 0f
+[90152.046237] RSP: 0018:ffffffff8e803e90 EFLAGS: 00000296
+[90152.046999] RAX: ffffffff8db932f0 RBX: ffffffff8e81aa40 RCX: =
+0000000000000000
+[90152.048026] RDX: 0000000000000001 RSI: ffffffff8e2ca669 RDI: =
+ffffffff8e2d6977
+[90152.049046] RBP: 0000000000000000 R08: 000001c16d552fdc R09: =
+0000000000000000
+[90152.050080] R10: 0000000000000000 R11: 0000000000000000 R12: =
+0000000000000000
+[90152.051100] R13: 0000000000000000 R14: ffffffff8e81a118 R15: =
+0000000000000000
+[90152.052145] ? __sched_text_end+0x6/0x6
+[90152.052711] default_idle+0xa/0x10
+[90152.053218] default_idle_call+0x36/0xf0
+[90152.053794] do_idle+0x210/0x270
+[90152.054292] cpu_startup_entry+0x26/0x30
+[90152.054860] rest_init+0xcc/0xd0
+[90152.055345] arch_call_rest_init+0xa/0x14
+[90152.055934] start_kernel+0x6f0/0x719
+[90152.056477] secondary_startup_64_no_verify+0xe5/0xeb
+[90152.057214] </TASK>
+[90152.057555] Modules linked in: tls intel_rapl_msr intel_rapl_common =
+crc32_pclmul polyval_clmulni polyval_generic gf128mul =
+ghash_clmulni_intel sha512_ssse3 sha512_generic aesni_intel libaes =
+crypto_simd cryptd rapl nft_chain_nat bochs drm_vram_helper =
+drm_ttm_helper ttm ip6_tables drm_kms_helper joydev xt_conntrack =
+mousedev fb_sys_fops intel_agp syscopyarea intel_gtt psmouse sysfillrect =
+sysimgblt ata_generic agpgart input_leds pata_acpi evdev i2c_piix4 =
+ip6t_rpfilter ipt_rpfilter xt_pkttype led_class xt_LOG nf_log_syslog =
+ip6t_REJECT nf_reject_ipv6 floppy ipt_REJECT nf_reject_ipv4 =
+tiny_power_button button xt_tcpudp nft_compat mac_hid serio_raw =
+nf_tables nfnetlink tcp_bbr sch_fq_codel nf_nat_ftp nf_conntrack_ftp =
+nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 loop tun tap drm =
+macvlan bridge fuse stp llc backlight i2c_core efi_pstore configfs =
+dmi_sysfs qemu_fw_cfg ip_tables x_tables autofs4 xfs libcrc32c =
+crc32c_generic ata_piix libata atkbd libps2 vivaldi_fmap =
+crct10dif_pclmul
+[90152.057673] crct10dif_common crc32c_intel i8042 rtc_cmos serio dm_mod =
+dax bfq i6300esb watchdog virtio_scsi scsi_mod scsi_common virtio_rng =
+rng_core virtio_pci virtio_pci_legacy_dev virtio_pci_modern_dev =
+virtio_net net_failover failover virtio_console virtio_blk virtio =
+virtio_ring
+[90152.076458] ---[ end trace 0000000000000000 ]---
+[90152.077136] RIP: 0010:throtl_trim_slice+0xe1/0x340
+[90152.077845] Code: 89 c8 48 f7 f6 48 29 d1 48 89 cd 74 98 41 0f b6 f5 =
+48 89 df 89 34 24 e8 ad fa ff ff 8b 34 24 b9 e8 03 00 00 48 89 df 48 f7 =
+e5 <48> f7 f1 49 03 84 24 f8 01 00 00 49 89 c7 e8 8c ea ff ff be ff ff
+[90152.080549] RSP: 0018:ffffaca040003d70 EFLAGS: 00010887
+[90152.081307] RAX: fffffffffffff574 RBX: ffff9f1bf124f000 RCX: =
+00000000000003e8
+[90152.082338] RDX: 0000000000000a8b RSI: 0000000000000001 RDI: =
+ffff9f1bf124f000
+[90152.083371] RBP: 0000000000000a8c R08: ffff9f1b83e23c00 R09: =
+ffff9f1b83e67030
+[90152.084399] R10: ffff9f1b85765010 R11: ffff9f1b83e67060 R12: =
+ffff9f1bf124f008
+[90152.085441] R13: 0000000000000001 R14: 0000000000000001 R15: =
+ffff9f1b85765008
+[90152.086469] FS: 0000000000000000(0000) GS:ffff9f1bfdc00000(0000) =
+knlGS:0000000000000000
+[90152.087835] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[90152.088681] CR2: 00007f4874f38638 CR3: 000000006e9ee004 CR4: =
+00000000001706f0
+[90152.089708] Kernel panic - not syncing: Fatal exception in interrupt
+[90152.090682] Kernel Offset: 0xc200000 from 0xffffffff81000000 =
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[90152.092197] Rebooting in 1 seconds..
 
-Anyway, I'm adding this regression to regzbot:
 
-#regzbot introduced: 9d1bd9346241cd https://bugzilla.kernel.org/show_bug.cgi?id=218094
-#regzbot title: Logitech G915 Wireless Keyboard key event only detects few key codes
-#regzbot link: https://streamable.com/ac6l8u
+and=20
 
-Thanks.
+[1755541.782316] CPU: 0 PID: 14 Comm: ksoftirqd/0 Not tainted 6.1.55 =
+#1-NixOS
+[1755541.782868] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), =
+BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[1755541.783796] RIP: 0010:throtl_trim_slice+0xe1/0x340
+[1755541.784212] Code: 89 c8 48 f7 f6 48 29 d1 48 89 cd 74 98 41 0f b6 =
+f5 48 89 df 89 34 24 e8 ad fa ff ff 8b 34 24 b9 e8 03 00 00 48 89 df 48 =
+f7 e5 <48> f7 f1 49 03 84 24 f8 01 00 00 49 89 c
+7 e8 8c ea ff ff be ff ff
+[1755541.785689] RSP: 0018:ffffb7ccc007bc70 EFLAGS: 00010887
+[1755541.786134] RAX: fffffffffffff3e4 RBX: ffff8b6207540000 RCX: =
+00000000000003e8
+[1755541.786719] RDX: 0000000000000c1b RSI: 0000000000000000 RDI: =
+ffff8b6207540000
+[1755541.787306] RBP: 0000000000000c1c R08: ffff8b6201e1d800 R09: =
+ffff8b6201e56830
+[1755541.787891] R10: ffff8b620757b010 R11: ffff8b6201e56860 R12: =
+ffff8b6207540000
+[1755541.788476] R13: 0000000000000000 R14: 0000000000000000 R15: =
+ffff8b620757b000
+[1755541.789066] FS: 0000000000000000(0000) GS:ffff8b623bc00000(0000) =
+knlGS:0000000000000000
+[1755541.789721] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[1755541.790200] CR2: 00007f70c5f4a008 CR3: 000000010b70a000 CR4: =
+00000000000006f0
+[1755541.790782] Call Trace:
+[1755541.791012] <TASK>
+[1755541.791208] ? __die_body.cold+0x1a/0x1f
+[1755541.791544] ? die+0x2a/0x50
+[1755541.791799] ? do_trap+0xc5/0x110
+[1755541.792090] ? throtl_trim_slice+0xe1/0x340
+[1755541.792444] ? do_error_trap+0x6a/0x90
+[1755541.792762] ? throtl_trim_slice+0xe1/0x340
+[1755541.793120] ? exc_divide_error+0x34/0x50
+[1755541.793459] ? throtl_trim_slice+0xe1/0x340
+[1755541.793812] ? asm_exc_divide_error+0x16/0x20
+[1755541.794191] ? throtl_trim_slice+0xe1/0x340
+[1755541.794546] tg_dispatch_one_bio+0x1f7/0x370
+[1755541.794907] throtl_pending_timer_fn+0x18c/0x510
+[1755541.795305] ? tg_update_disptime+0x130/0x130
+[1755541.795662] ? tg_update_disptime+0x130/0x130
+[1755541.796036] call_timer_fn+0x27/0x130
+[1755541.796350] __run_timers+0x21c/0x2a0
+[1755541.796662] run_timer_softirq+0x2b/0x50
+[1755541.796998] __do_softirq+0xf0/0x2fe
+[1755541.797311] ? sort_range+0x20/0x20
+[1755541.797602] run_ksoftirqd+0x34/0x40
+[1755541.797900] smpboot_thread_fn+0x188/0x220
+[1755541.798271] kthread+0xe9/0x110
+[1755541.798551] ? kthread_complete_and_exit+0x20/0x20
+[1755541.798949] ret_from_fork+0x22/0x30
+[1755541.799266] </TASK>
+[1755541.799468] Modules linked in: tls rpcsec_gss_krb5 auth_rpcgss =
+nfsv4 dns_resolver nfs lockd grace fscache sunrpc bochs drm_vram_helper =
+drm_ttm_helper ttm nft_chain_nat ip6_tables drm_kms_helper fb_sys_fops =
+xt_conntrack syscopyarea ata_generic sysfillrect pata_acpi sysimgblt =
+intel_agp i2c_piix4 intel_gtt agpgart ip6t_rpfilter ipt_rpfilter =
+xt_pkttype xt_LOG nf_log_syslog ip6t_REJECT nf_reject_ipv6 ipt_REJECT =
+nf_reject_ipv4 xt_tcpudp input_leds tiny_power_button evdev joydev =
+led_class mousedev nft_compat floppy button psmouse mac_hid serio_raw =
+nf_tables nfnetlink tcp_bbr sch_fq_codel nf_nat_ftp nf_conntrack_ftp =
+nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 loop tun tap macvlan =
+drm bridge stp llc backlight i2c_core fuse efi_pstore configfs dmi_sysfs =
+qemu_fw_cfg ip_tables x_tables autofs4 xfs libcrc32c crc32c_generic =
+ata_piix libata atkbd libps2 vivaldi_fmap i8042 rtc_cmos serio dm_mod =
+dax bfq i6300esb watchdog virtio_scsi scsi_mod scsi_common virtio_rng =
+rng_core virtio_pci
+[1755541.799597] virtio_pci_legacy_dev virtio_pci_modern_dev virtio_net =
+net_failover failover virtio_console virtio_blk virtio virtio_ring
+[1755541.807332] ---[ end trace 0000000000000000 ]---
+[1755541.807718] RIP: 0010:throtl_trim_slice+0xe1/0x340
+[1755541.808124] Code: 89 c8 48 f7 f6 48 29 d1 48 89 cd 74 98 41 0f b6 =
+f5 48 89 df 89 34 24 e8 ad fa ff ff 8b 34 24 b9 e8 03 00 00 48 89 df 48 =
+f7 e5 <48> f7 f1 49 03 84 24 f8 01 00 00 49 89 c
+7 e8 8c ea ff ff be ff ff
+[1755541.809603] RSP: 0018:ffffb7ccc007bc70 EFLAGS: 00010887
+[1755541.810039] RAX: fffffffffffff3e4 RBX: ffff8b6207540000 RCX: =
+00000000000003e8
+[1755541.810623] RDX: 0000000000000c1b RSI: 0000000000000000 RDI: =
+ffff8b6207540000
+[1755541.811223] RBP: 0000000000000c1c R08: ffff8b6201e1d800 R09: =
+ffff8b6201e56830
+[1755541.811805] R10: ffff8b620757b010 R11: ffff8b6201e56860 R12: =
+ffff8b6207540000
+[1755541.812390] R13: 0000000000000000 R14: 0000000000000000 R15: =
+ffff8b620757b000
+[1755541.812974] FS: 0000000000000000(0000) GS:ffff8b623bc00000(0000) =
+knlGS:0000000000000000
+[1755541.813637] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[1755541.814113] CR2: 00007f70c5f4a008 CR3: 000000010b70a000 CR4: =
+00000000000006f0
+[1755541.814691] Kernel panic - not syncing: Fatal exception in =
+interrupt
+[1755541.815239] Kernel Offset: 0x32400000 from 0xffffffff81000000 =
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[1755541.816100] Rebooting in 1 seconds..
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218094
+Backports to LTS where applicable (6.1 for us) would be appreciated.
 
--- 
-An old man doll... just what I always wanted! - Clara
+Liebe Gr=C3=BC=C3=9Fe,
+Christian Theune
+
+#regzbot introduced: v6.1.51..v6.1.55
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
