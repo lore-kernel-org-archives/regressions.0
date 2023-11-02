@@ -1,72 +1,78 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56651860
-	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 04:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=owenh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=owenh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=owenh.net header.i=@owenh.net header.b="rrGbY2xW"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4SLVmk1wmwz9sjT;
-	Thu,  2 Nov 2023 05:11:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=owenh.net; s=MBO0001;
-	t=1698898278;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WN5fmOdVvci8BiTSNTkQ11/6+0Vp0IU6VwTOPcaqcaQ=;
-	b=rrGbY2xW1+rXEaQIHig+TA8Z9R5mZ/w4e0xwsXUEFojPDzbZ7sKhEhVYzH4xpRTZ5H2X48
-	T6h7IdM00xkClDJDZ/H+03qZJouT0nZsDaEAW5h08dbXKz0qnv3dn1IOlacW3CzfbIAUgM
-	LJ4GU4G9hQo5ihfIGvHxYZ5B6uoH9TC+FDTgO1EEEH4qSyrbMwEUHZcTmH9wHyohUhP95Z
-	raj36ltUy+sBcX7xMgoch2fn5ihKDCD3yIqZbMLXYVTjaKmo1NHanvnKxElj34B6U+pWEK
-	crFALFWXUoXJLH9eTsYjEYg5zzQL86vvSp5iZwQdxyRh50wzB+3D2JdeD5zjHw==
-Message-ID: <f98d5544-34f8-4b35-9466-80fa9671686d@owenh.net>
-Date: Wed, 1 Nov 2023 23:11:08 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1CB63AD
+	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 06:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1qyREP-0000UV-Ez; Thu, 02 Nov 2023 07:31:05 +0100
+Message-ID: <ba7aeb6b-19ee-4491-a60f-efc5216177a7@leemhuis.info>
+Date: Thu, 2 Nov 2023 07:31:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION]: nouveau: Asynchronous wait on fence
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-Cc: nouveau@lists.freedesktop.org, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
- Sasha Levin <sashal@kernel.org>
-References: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
- <5ecf0eac-a089-4da9-b76e-b45272c98393@leemhuis.info>
-From: "Owen T. Heisler" <writer@owenh.net>
-In-Reply-To: <5ecf0eac-a089-4da9-b76e-b45272c98393@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Requesting your attention and expertise regarding a Tablet/Kernel
+ issue
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+ David Revoy <davidrevoy@protonmail.com>
+Cc: "jason.gerecke@wacom.com" <jason.gerecke@wacom.com>,
+ "jose.exposito89@gmail.com" <jose.exposito89@gmail.com>,
+ "ilya.ostapyshyn@gmail.com" <ilya.ostapyshyn@gmail.com>,
+ Nils Fuhler <nils@nilsfuhler.de>, Ping Cheng <ping.cheng@wacom.com>,
+ Peter Hutterer <peter.hutterer@who-t.net>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Input Devices <linux-input@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <kRKTNDYigUSblpNgSuZ2H4dX03Of1yD4j_L9GgbyKXcDqZ67yh5HOQfcd7_83U3jZuQzxpKT3L6FXcRkkZIGdl_-PQF14oIB0QmRSfvpc2k=@protonmail.com>
+ <nycvar.YFH.7.76.2311012033290.29220@cbobk.fhfr.pm>
+ <ZULw6AcBaD6z2UZA@debian.me>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZULw6AcBaD6z2UZA@debian.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1698906672;bf1cab2c;
+X-HE-SMSGID: 1qyREP-0000UV-Ez
 
-On 10/31/23 04:18, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Thanks for your report. With a bit of luck someone will look into this,
-> But I doubt it, as this report has some aspects why it might be ignored.
-> Mainly: (a) the report was about a stable/longterm kernel and (b)it's
-> afaics unclear if the problem even happens with the latest mainline
-> kernel.
+On 02.11.23 01:44, Bagas Sanjaya wrote:
+> On Wed, Nov 01, 2023 at 08:37:40PM +0100, Jiri Kosina wrote:
+>> On Wed, 1 Nov 2023, David Revoy wrote:
+>>
+>>> Hi Jason Gerecke, José Expósito, Jiri Kosina and Illia Ostapyshyn,
+>>>
+>>> I am emailing to draw your attention and expertise to a problem I had 
+>>> earlier this week with my Xp-Pen Artist 24 Pro display tablet under 
+>>> Fedora Linux 38 KDE after a kernel update.
+>>>
+> […]
 
-> You thus might want to check if the problem occurs with 6.6 -- and
-> ideally also check if reverting the culprit there fixes things for you.
+>>> Thank you very much if you can help me.
+> […]
+> Thanks for the report.
+> 
+> David, can you resend the regression report as plain text email (preferably
+> with 276e14e6c3 people and regressions@lists.linux.dev Cc'ed)? You may need to
+> see kernel documentation [1] for how to configure your email client to send
+> plain text emails. Also, include in your report details from your blog post.
 
-Thorsten,
+Bagas, I know you mean well, but I think you are making things
+unnecessarily complicated for both David and the developers here. Sure,
+the mail Jiri quoted did not make it to lore, but whatever, for him it
+was apparently good enough; and I suspect this "quote forwarding to
+others" is good enough for the people he brought into the loop as well.
+Yes, there are developers that don't want to go to a website for
+details, but if that's the case it's likely better to ask for details in
+this thread instead of opening a second one. And regression tracking can
+work without a separate mail as well.
 
-Thank you for your reply and suggestions. I will try (a) testing on 
-mainline (when I tried before I was interrupted by another, unrelated 
-regression) and (b) reverting the culprit commit there if I am able to 
-reproduce the problem.
-
-Thanks,
-Owen
-
---
-Owen T. Heisler
-https://owenh.net
+Ciao, Thorsten
