@@ -1,85 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED631BDC6;
-	Thu,  2 Nov 2023 14:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8B319BC2
+	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 14:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SX4WtNKm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B93C433C9;
-	Thu,  2 Nov 2023 14:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698933759;
-	bh=fgOZjn0WdFzXtcn8lGgDLoPHzxr8QdP2NR/ys5t0Tbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SX4WtNKm5pDj9w492ahqKstWDnWh6M4sJIDEesfWnzHG+qb9Q4yNf6O/VTmBrzQ+B
-	 J+lN6pLndYpPJ2///jW3lO8ULdP1cvkId8z0QLLU9SCD1Vn3MCh+blaB22zqDAiR/o
-	 XR4l+VlEP7zQokYYie6zAycHpAphfEalcKMzDRGBY7DIFdzBxEoSIM1JcGC8CJxbij
-	 F9Ali9mUj5nbbM9wS1hvCdR6/H4SvGkafHYkIN0s4b7pqOGcZS/Zcm6+PYMZJDJNev
-	 2MmTfCZEAoTWDPXuEvghazEUvKAcFhgHBcECGGT8wd3jtYaMQqEyBmgULjji+2X7SU
-	 nEdY57VcxKcNQ==
-Date: Thu, 2 Nov 2023 08:02:34 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.de>, Ming Lei <tom.leiming@gmail.com>,
-	Marek =?us-ascii?Q?Marczykowski-G'orecki?= <marmarek@invisiblethingslab.com>,
-	Jan Kara <jack@suse.cz>, Mikulas Patocka <mpatocka@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
-	linux-mm@kvack.org, linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org
-Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
-Message-ID: <ZUOr-vp0yRkLyvyi@kbusch-mbp.dhcp.thefacebook.com>
-References: <ZT/e/EaBIkJEgevQ@mail-itl>
- <98aefaa9-1ac-a0e4-fb9a-89ded456750@redhat.com>
- <ZUB5HFeK3eHeI8UH@mail-itl>
- <20231031140136.25bio5wajc5pmdtl@quack3>
- <ZUEgWA5P8MFbyeBN@mail-itl>
- <CACVXFVOEWDyzasS7DWDvLOhC3Hr6qOn5ks3HLX+fbRYCxYv26w@mail.gmail.com>
- <ZUG0gcRhUlFm57qN@mail-itl>
- <ZUHE52SznRaZQxnG@fedora>
- <ab02413f-4bf2-4d92-baf7-62fbd106f5df@suse.de>
- <ZUI1GSSL4vdsFVHq@fedora>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MX4MYehI"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6c3443083f2so278056b3a.0
+        for <regressions@lists.linux.dev>; Thu, 02 Nov 2023 07:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698934312; x=1699539112; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YeyFP7WMW0RjDqklzVx1kbYfEg/rdHyVxFLBKwTmGxA=;
+        b=MX4MYehIYtNOwvZZDn6m8sXZ4QoShExlUWKFdNwa2qYotqeH6vbepapaseXRAu2XOw
+         ABrcYoSYMH2j/2Q05mQkXkJzawPP6fLZyQ8YCrqnMH10eJkw458UAonObuXjVDRq76kP
+         WhzAAVR3gsNdRe/Hl9pHEtBH1IRex/pmX4GiVQA7EFgKxwcTotDp2KhoKvKiLD2Hj6bN
+         G4SF3CgGNtRackw6fJOBkTe52r+3Z8hnU0Etp+OKlEhhie91gwDzWOpUF/6ymT2mgC7V
+         AlBTzqxCvdW93h9fEYrBHByyCpu1Lj70hMFqR29+YfHQp86Sq3ujzhXwpWiTCRkFT8/x
+         qs5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698934312; x=1699539112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YeyFP7WMW0RjDqklzVx1kbYfEg/rdHyVxFLBKwTmGxA=;
+        b=gB9hs9qP+MVeQS78RMNBdZLRpkt/uokEggeFBoHG5NM0pv7n60QNUmxiCsq6VDRZOs
+         RHM6mMPoDUPv8hp7bm6erTJOm+hymjAbF2k8N/skgeyZ9uUd9S58AXvTdisfYJbNHfGu
+         lTwGB4FDamMs2cZRL80cUJwLaSrIGENiZsQ+dbSzyOVT49efCTg+dZBR1HOrgccfHstC
+         n0Q5kmPS9/6i/j9QmHkkJvgzJTxcX0RGEk+3jE/tiRH+jcrhMigEHIw/G50scYwytrnu
+         ztdHrL+PNW3thZt67AKSufggjEcJ8kpg8Jodp1GWp+Ot6Wa3V29F0/Yi2e6PMb4d3+i3
+         GU2g==
+X-Gm-Message-State: AOJu0YyO9FA9AXJomJAd1jWmywUPsJd+ua4iN4Seh2xvqGqmo9tpUr/f
+	eIe25t2E1FZ5AgzR2Fzy8UA=
+X-Google-Smtp-Source: AGHT+IEOJ0B7C0nr9peL6eqLxZmuiUXorl8e5tMZ2eb2nOkE3SyIQIQwO5CMJg8XGG7sEFw+ZGTAGA==
+X-Received: by 2002:a05:6a20:548b:b0:14e:a1f0:a8ea with SMTP id i11-20020a056a20548b00b0014ea1f0a8eamr21471203pzk.3.1698934311673;
+        Thu, 02 Nov 2023 07:11:51 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id v5-20020aa78085000000b006bdc8bb2ed5sm2945197pff.82.2023.11.02.07.11.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Nov 2023 07:11:50 -0700 (PDT)
+Message-ID: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
+Date: Thu, 2 Nov 2023 21:11:42 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUI1GSSL4vdsFVHq@fedora>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Input Devices <linux-input@vger.kernel.org>
+Cc: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
+ =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>,
+ Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>,
+ LinuxCat <masch77.linuxcat@gmail.com>, Marcelo <mmbossoni@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 01, 2023 at 07:23:05PM +0800, Ming Lei wrote:
-> On Wed, Nov 01, 2023 at 11:15:02AM +0100, Hannes Reinecke wrote:
-> > > nvme_queue_rq() on the above request.
-> > > 
-> > And that is something I've been wondering (for quite some time now):
-> > What _is_ the appropriate error handling for -ENOMEM?
-> 
-> It is just my guess.
-> 
-> Actually it shouldn't fail since the sgl allocation is backed with
-> memory pool, but there is also dma pool allocation and dma mapping.
-> 
-> > At this time, we assume it to be a retryable error and re-run the queue
-> > in the hope that things will sort itself out.
-> 
-> It should not be hard to figure out why nvme_queue_rq() can't move on.
+Hi,
 
-There's only a few reasons nvme_queue_rq would return BLK_STS_RESOURCE
-for a typical read/write command:
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-  DMA mapping error
-  Can't allocate SGL from mempool
-  Can't allocate PRP from dma_pool
-  Controller stuck in resetting state
+> Hello,
+> After upgrading from 6.5.9 to 6.6.0, my keyboard started acting really weird in its wireless mode, key actions sent are completely wrong, see video attached. 
+> 
+> Most keys are perceived as either E, 3 or F7, with F8 and <, as well. 
+> 
+> Modifier keys (CTRL, ALT, ALT GR, Shift and Super) are working normally, as well as media control keys (pause/play, previous, next, mute and sound up/down).
+> 
+> The keyboard works as expected if it's wired.
 
-We should always be able to get at least one allocation from the memory
-pools, so I think the only one the driver doesn't have a way to
-guarantee eventual forward progress are the DMA mapping error
-conditions. Is there some other limit that the driver needs to consider
-when configuring it's largest supported transfers?
+Another reporter bisected the regression:
+
+> Bisected to 
+> 
+> 9d1bd9346241cd6963b58da7ffb7ed303285f684 is the first bad commit
+> commit 9d1bd9346241cd6963b58da7ffb7ed303285f684
+> Author: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
+> Date: Sun Jul 16 18:23:44 2023 +0000
+> 
+> HID: logitech-dj: Add support for a new lightspeed receiver iteration
+> 
+> The lightspeed receiver for the Pro X Superlight uses 13 byte mouse reports
+> without a report id. The workaround for such cases has been adjusted to
+> handle these larger packets.
+> 
+> The device now reports the status of its battery in wireless mode and
+> libratbag now recognizes the device and it can be configured with Piper.
+> 
+> https://github.com/libratbag/libratbag/pull/1122
+> 
+> Co-developed-by: Filipe Laíns <lains@riseup.net>
+> Signed-off-by: Filipe Laíns <lains@riseup.net>
+> Signed-off-by: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
+> Reviewed-by: Bastien Nocera <hadess@hadess.net>
+> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> 
+> drivers/hid/hid-ids.h | 1 +
+> drivers/hid/hid-logitech-dj.c | 11 ++++++++---
+> 2 files changed, 9 insertions(+), 3 deletions(-)
+
+See Bugzilla for the full thread.
+
+Anyway, I'm adding this regression to regzbot:
+
+#regzbot introduced: 9d1bd9346241cd https://bugzilla.kernel.org/show_bug.cgi?id=218094
+#regzbot title: Logitech G915 Wireless Keyboard key event only detects few key codes
+#regzbot link: https://streamable.com/ac6l8u
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218094
+
+-- 
+An old man doll... just what I always wanted! - Clara
