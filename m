@@ -1,129 +1,127 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9492D618
-	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 09:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFD31173A
+	for <regressions@lists.linux.dev>; Thu,  2 Nov 2023 09:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhdXPlEE"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5845213c583so333368eaf.0
-        for <regressions@lists.linux.dev>; Thu, 02 Nov 2023 02:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698916525; x=1699521325; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:references:in-reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=caPEzYV4J4M0wWYvtr+GB3NqWn9lERS8wHGxpAZ7shc=;
-        b=DhdXPlEE+YkAQ9delRIKac7VfdbTIJe/NhJlE+bMrXCl73MLfyXVkt6KbF2U0znkrf
-         8IwgVkXqCEHagxIzPfl3iUD38ODQ+A/z/6RRuB8pYq/JkdnsH1sRWlBO8HGCaqhAfrX3
-         x/gEz0Hft0xU5ycquB5d3Hj9+b7dJvA4aKO4kKe+crGtp50lC+StjMkSh5EAI+rZS2ui
-         q7LGFL9ZOnxtH8D9sMSK7Y0D/eTwjmtX/NHERROgr1YfQzLeV8fzYHh4AAj5c6u2Z4Su
-         cNPhp5m0UVJa6H3Dbkyo1f8HXYn8/Xe53TcfyJF2Niku9noNxYHa3efojMfI1r/S0mo/
-         bi9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698916525; x=1699521325;
-        h=cc:to:subject:message-id:date:from:references:in-reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=caPEzYV4J4M0wWYvtr+GB3NqWn9lERS8wHGxpAZ7shc=;
-        b=QXX1thiK1biE3e2zKLBlqi947OGfA1ETk9dEVnRzXQIyWP7zh1FJrSTMwuMUHf959s
-         SGZBIBwU6ZrGfv1YSvyZaXteSzOildHCWNDOlZ48hKeRTxmAog2Cn36r6JmVKmlFOu+6
-         KdMQahKNnVd3Zw03Obdi50fWHsxK0/t+NR53wLSJ/dRgDcGBTnTP81Id53PKmAd6Xw/c
-         cLXCMVMS7Hwi6bXB78RQG5P48GO7aCuvejatt42vc/xjl2jlWsBP8reMvnHQ47ud8aru
-         aHKIOKN11654iZLBSUTg5xQQCK4eyJzGpKvPxFU/Ii/Mfzudj8A7iTCU89/ONGUF7jz9
-         pSxQ==
-X-Gm-Message-State: AOJu0YwCV06zZNmFKLAwRD7yaenRaGI6tq9u/bxOUobNQAy+e4mVSmNO
-	4ldNAWerirpAHtFBs4IOTwAEWY/islrX0s9/qkk=
-X-Google-Smtp-Source: AGHT+IGcPuomBK8TNpeziKDesTihsWNjAp2h3J1FWTC79dSussXvee+MrBWw6arKMMvPhYHRrxeyLSdrDICPywYRba8=
-X-Received: by 2002:a4a:bb09:0:b0:56e:466c:7393 with SMTP id
- f9-20020a4abb09000000b0056e466c7393mr16749040oop.5.1698916525728; Thu, 02 Nov
- 2023 02:15:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A1RTVziJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1698917343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X1JjT78ESQHu9+RVUysRtBfcjHinR8ppQOAAQBOcIyM=;
+	b=A1RTVziJIVTAthhz64/yIbxmQFkY1EMAAWXwN2+ahAz7gT1Nz9GW++tBTG2hbIIi96gU3x
+	RbqgRa8kSHx1pRrHakaTpD5oJn6p1dTdZ7IGik7qrpnrPbnjiUX8ipS7QlUCTRysOOVkX+
+	B9B/5zsjKmwHcFtintsZoPTsH0hRAj0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-156-UaLZFHJ7PIu_aYZZTZ7-Iw-1; Thu, 02 Nov 2023 05:28:58 -0400
+X-MC-Unique: UaLZFHJ7PIu_aYZZTZ7-Iw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F89E810FC0;
+	Thu,  2 Nov 2023 09:28:57 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 77264502B;
+	Thu,  2 Nov 2023 09:28:57 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 6304D30C72B0; Thu,  2 Nov 2023 09:28:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 5E29F3FD16;
+	Thu,  2 Nov 2023 10:28:57 +0100 (CET)
+Date: Thu, 2 Nov 2023 10:28:57 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: =?ISO-8859-15?Q?Marek_Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>, 
+    Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>, 
+    Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
+cc: Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+    stable@vger.kernel.org, regressions@lists.linux.dev, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@lists.linux.dev, linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+In-Reply-To: <ZULvkPhcpgAVyI8w@mail-itl>
+Message-ID: <ac5b5ac0-9e8-c1b0-a26-62f832f845f0@redhat.com>
+References: <ZT+wDLwCBRB1O+vB@mail-itl> <a2a8dbf6-d22e-65d0-6fab-b9cdf9ec3320@redhat.com> <20231030155603.k3kejytq2e4vnp7z@quack3> <ZT/e/EaBIkJEgevQ@mail-itl> <98aefaa9-1ac-a0e4-fb9a-89ded456750@redhat.com> <ZUB5HFeK3eHeI8UH@mail-itl> <20231031140136.25bio5wajc5pmdtl@quack3>
+ <ZUEgWA5P8MFbyeBN@mail-itl> <8a35cdea-3a1a-e859-1f7c-55d1c864a48@redhat.com> <ebbc7ca7-5169-dbdc-9ea8-c6d8c3ae31e2@redhat.com> <ZULvkPhcpgAVyI8w@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: by 2002:a8a:118c:0:b0:4f0:1250:dd51 with HTTP; Thu, 2 Nov 2023
- 02:15:25 -0700 (PDT)
-In-Reply-To: <ZUNYNEnGC8cm6ALH@debian.me>
-References: <bede02c1-ef90-8e30-aa8b-e6fae49a8ccf@gmail.com>
- <ZPql6tqBCnXJh64J@amd.com> <ZUNYNEnGC8cm6ALH@debian.me>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 2 Nov 2023 10:15:25 +0100
-Message-ID: <CAGudoHGfjRd9r7ec7S+HcGf7=dVTAJz9WDxPc_5w5Fykns+vrg@mail.gmail.com>
-Subject: Re: Fwd: Abnormal battery drain with kernel 6.5 (Ryzen 5500u)
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Huang Rui <ray.huang@amd.com>, Meng Li <li.meng@amd.com>, Perry Yuan <Perry.Yuan@amd.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, 
-	Michele Della Guardia <micheledellaguardia@yahoo.it>, 
-	Linux Power Management <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; BOUNDARY="185210117-2130454234-1698916941=:474267"
+Content-ID: <c4e9bbcd-d17d-7d73-83e0-6bb6d8b0a6a2@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On 11/2/23, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> On Fri, Sep 08, 2023 at 12:41:14PM +0800, Huang Rui wrote:
->> On Fri, Sep 01, 2023 at 05:42:22PM +0800, Bagas Sanjaya wrote:
->> > Hi,
->> >
->> > I notice a regression report on Bugzilla [1] that have been already
->> > handled
->> > there. Quoting from it:
->> >
->> > > After switching from 6.4.x kernel to 6.5 I experienced an abnormal
->> > > battery drain since my laptop is actually never idle.
->> > > I accepted default CPUfreq to schedutil and AMD Processor P-State mode
->> > > is 3 (active).
->> > >
->> > > I expected a different behaviour, but am I missing something?
->> > > In my boot configuration I had "amd_pstate.shared_mem=1" and tried to
->> > > remove this switch, but did not affect my power consuption.
->> > >
->> > > Is there something changed from 6.4.x to 6.5 that requires a different
->> > > configuration to get an optimal power consumption?
->> > >
->> > > Thanks a lot for your attention
->> >
->> > See Bugzilla for the full thread.
->> >
->> > Anyway, I'm adding it to regzbot:
->> >
->> > #regzbot introduced: v6.4..v6.5
->> > https://bugzilla.kernel.org/show_bug.cgi?id=217853
->> >
->>
->> + Meng Li/Perry,
->>
->> May we know which CPU type are you using? Try "lscpu"?
->>
->
-> Sorry for the replying just now.
->
-> The reporter (on Bugzilla) had bisected to commit c8afaa1b0f8bc9 ("locking:
-> remove spin_lock_prefetch"). Telling regzbot:
->
-> #regzbot introduced: c8afaa1b0f8bc9
-> #regzbot title: spin_lock_prefetch() removal causes abnormal battery drain
-> on Ryzen 5500u
->
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-This particular commit is highly unlikely to be causing anything of the sort.
+--185210117-2130454234-1698916941=:474267
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <c020389a-683d-e881-89ae-58d817e7d3db@redhat.com>
 
-Looking at the bz I suspect the reporter did not follow through with
-bisection, to quote:
-> Tried to bisect following docs and I had just this output:
-> [c8afaa1b0f8bc93d013ab2ea6b9649958af3f1d3] locking: remove spin_lock_prefetch
 
-But that's what one gets when bisection is still in progress.
 
-Final message, should one go through with everything and this commit
-indeed was the culprit, would start with this:
-> c8afaa1b0f8bc93d013ab2ea6b9649958af3f1d3 is the first bad commit
+On Thu, 2 Nov 2023, Marek Marczykowski-Górecki wrote:
 
-Perhaps you could help the reporter through building the kernel and
-picking good/bad status. I don't know how easily visible the issue is.
+> On Tue, Oct 31, 2023 at 06:24:19PM +0100, Mikulas Patocka wrote:
+> 
+> > > Hi
+> > > 
+> > > I would like to ask you to try this patch. Revert the changes to "order" 
+> > > and "PAGE_ALLOC_COSTLY_ORDER" back to normal and apply this patch on a 
+> > > clean upstream kernel.
+> > > 
+> > > Does it deadlock?
+> > > 
+> > > There is a bug in dm-crypt that it doesn't account large pages in 
+> > > cc->n_allocated_pages, this patch fixes the bug.
+> 
+> This patch did not help.
+> 
+> > If the previous patch didn't fix it, try this patch (on a clean upstream 
+> > kernel).
+> >
+> > This patch allocates large pages, but it breaks them up into single-page 
+> > entries when adding them to the bio.
+> 
+> But this does help.
 
--- 
-Mateusz Guzik <mjguzik gmail.com>
+Thanks. So we can stop blaming the memory allocator and start blaming the 
+NVMe subsystem.
+
+
+I added NVMe maintainers to this thread - the summary of the problem is: 
+In dm-crypt, we allocate a large compound page and add this compound page 
+to the bio as a single big vector entry. Marek reports that on his system 
+it causes deadlocks, the deadlocks look like a lost bio that was never 
+completed. When I chop the large compound page to individual pages in 
+dm-crypt and add bio vector for each of them, Marek reports that there are 
+no longer any deadlocks. So, we have a problem (either hardware or 
+software) that the NVMe subsystem doesn't like bio vectors with large 
+bv_len. This is the original bug report: 
+https://lore.kernel.org/stable/ZTNH0qtmint%2FzLJZ@mail-itl/
+
+
+Marek, what NVMe devices do you use? Do you use the same device on all 3 
+machines where you hit this bug?
+
+In the directory /sys/block/nvme0n1/queue: what is the value of 
+dma_alignment, max_hw_sectors_kb, max_sectors_kb, max_segment_size, 
+max_segments, virt_boundary_mask?
+
+Try lowring /sys/block/nvme0n1/queue/max_sectors_kb to some small value 
+(for example 64) and test if it helps.
+
+Mikulas
+--185210117-2130454234-1698916941=:474267--
+
