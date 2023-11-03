@@ -1,132 +1,167 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2043.outbound.protection.outlook.com [40.107.220.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29E817729
-	for <regressions@lists.linux.dev>; Fri,  3 Nov 2023 13:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44E5182BD
+	for <regressions@lists.linux.dev>; Fri,  3 Nov 2023 13:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSZWmOgH"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1cc3216b2a1so21719495ad.2
-        for <regressions@lists.linux.dev>; Fri, 03 Nov 2023 06:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699017227; x=1699622027; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3MwPMVH4LDuJgobt9cfmpj/2pKioxsX4geRXK7wNjBk=;
-        b=XSZWmOgHc6DAXXJyRGpZO0IFzOmj3Hag2TKc+ZuMgg/sB/CS9qyhdGvtarqh+NbDRN
-         /lemsKNQKBg4WT81cletRZUa6FUFk2HpNc/bRqzWNlhtMkt0V9RsCf68us4yRAmv9sQU
-         ihWxZm4wAXtu7z93oqdQXnosPeVfR4eEQZGT2FsT8EycWElwgOM2wNy9/mR2ExIbVvys
-         YCBYQHGVIsODIGzolEGFkA9bjOeSvI/z8biMSdM5v2KYDG9zpmgBCk/z6AnDtLScG45e
-         LVeX3ncAqX/xJo89a5P2IcUwwVdp37sfnJgg3UuVusKzpcHCGco9WSGf4OF6BvuDxRyq
-         SRBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699017227; x=1699622027;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3MwPMVH4LDuJgobt9cfmpj/2pKioxsX4geRXK7wNjBk=;
-        b=uyYXnrZpSwza/ItLgWgO5NYwactnXnQcgc3mhtUAOCz3OkWpn3NrJunLWBhAb7q4+t
-         hNthSCrvWzInyyEYSHYumwCmKNdo98HvGPMJzR0sfdtjFDfGaAkBX7oFORYOCCtM9ONo
-         olK1qz5iokhlVx99V+e56+7nY+IQh6qex0i7gMTX383gZOUSmYbp30qzVnkjaCpnWLsC
-         RhXBrRVW0C2WgoDxyOO4TbKalEfHr2o6/oJLejEJQjoS565sJaKs/oy6odwivGLqh1rs
-         p3pm5bFlWTY99HfVt3INwJg6spwalu66XnNlfz2tCAKlExcW6j6J2hc3LTl2Xl00tN9o
-         OclA==
-X-Gm-Message-State: AOJu0Yw4yoibt+FmUcSiq/p5vpLapcqzm5oq7FP3B5zzar65egdz2RWg
-	KX3Xf4XGkOG7S/DdSLo523w=
-X-Google-Smtp-Source: AGHT+IGox8sPxCi41z2/fQ07a38d3a66J0bRgzx3BiBzfXjqXw/i/vdXI5phmjIVWUfpgfDcGS/OIA==
-X-Received: by 2002:a17:902:e54e:b0:1cc:3fe1:f45e with SMTP id n14-20020a170902e54e00b001cc3fe1f45emr17035703plf.27.1699017226695;
-        Fri, 03 Nov 2023 06:13:46 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id iw14-20020a170903044e00b001cc50146b43sm1377428plb.202.2023.11.03.06.13.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Nov 2023 06:13:46 -0700 (PDT)
-Message-ID: <2fa930bb-54dd-4942-a88d-05a47c8e9731@gmail.com>
-Date: Fri, 3 Nov 2023 20:13:39 +0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x+Sa4YVG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EPMH2KhvnZ+I0KXlqZrDfzaXpKEKoieCAg1ty81rwvQT2vezXKUr7eswCPOGmvVPzNEKnMfmRyW0qCfEM4OFJe0Pemmdn/HGI/AwNzUVxuB/upieWjBOmey1Ppnu/lfUD6HQUbvBy3Rji6DvMTFXIZSqd6jPKy5G4c3v+e6n0MeVuP7Eiv6+L1SRG7Qsl+TusDKOmweziqUp7ox7zFFIbk6JGN9LhucADS0onM52hhbopgrPC47nDmQvLkOg1XcH7sgM9cjrW0fjpngquUJzO/9aprCz3bvDXfFmWW3Ytpe4bSrdoC9VU0ybqcLXFo0T6H/PHngcy8K571C3ZWjtNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3guKPN+wluGfCLaFvOYjM2WDwIFi4bDcqFZuId2kyWI=;
+ b=nPbG78I7Wlg0qvYGEhDg0wF25bb331UphNQB2tgme4M6T+1AxpmlSnEUGFfKKR7I6MznJ4I0AqdPQHCv3pnG8rR1DNqxmqXd+rDrjjHmLZ6EzXeC3wsN+cZeC7UOjYSH4MTA+eDwvGRwaOPMdEOdhmkheD3Hg8Jesc8vQ0oAhYXPmmLZ9uZSt26Z/4i3eUN+CTp67WdF7hw59oLgOoYbyi0bhThmv9+0qCzmeRBMW4n+J2rUiubCe77xNzQZAr24bfzqc8/HbUPWMS4aBPofIoA48RwFV64K0RHY3jz0zDYqPzsDSyMo60ZLVRQKDJvZ8hmqo6nemA9fxBuBjPi7Zw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3guKPN+wluGfCLaFvOYjM2WDwIFi4bDcqFZuId2kyWI=;
+ b=x+Sa4YVGXX279JfWAiJwyaFddSTaAgxfzQHqfOKK2Fm4Rr47GExZ41HnaAsbfzxSm659/jdN9o7yG0xztrAtxRB3rM6fjIdRVLEuS1616VDd1XEd7+xJDRJNuHEgN7zblVFHMT2ioCOu+N3KejoOpj8tpjZSAOqiCxhIMHW3JE4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3661.namprd12.prod.outlook.com (2603:10b6:208:169::31)
+ by DS7PR12MB6072.namprd12.prod.outlook.com (2603:10b6:8:9c::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Fri, 3 Nov
+ 2023 13:31:05 +0000
+Received: from MN2PR12MB3661.namprd12.prod.outlook.com
+ ([fe80::7354:d327:ee4:dd79]) by MN2PR12MB3661.namprd12.prod.outlook.com
+ ([fe80::7354:d327:ee4:dd79%4]) with mapi id 15.20.6954.021; Fri, 3 Nov 2023
+ 13:31:05 +0000
+Message-ID: <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
+Date: Fri, 3 Nov 2023 19:00:55 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression apparently caused by commit
+ 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
+ for acp pci driver"
+Content-Language: en-US
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Marian Postevca
+ <posteuca@mutex.one>, Syed Saba Kareem <Syed.SabaKareem@amd.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
+ Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
+ Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Yang Yingliang <yangyingliang@huawei.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
+ ye xingchen <ye.xingchen@zte.com.cn>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
+From: syed saba kareem <ssabakar@amd.com>
+In-Reply-To: <ZUQssoD2rUHSYQ2v@debian.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0138.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:bf::10) To MN2PR12MB3661.namprd12.prod.outlook.com
+ (2603:10b6:208:169::31)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>
-Cc: Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
- Gregory Greenman <gregory.greenman@intel.com>,
- Johannes Berg <johannes.berg@intel.com>,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Fabio Comolli <fabio.comolli@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: iwlmvm: Linux 6.7 pre-rc1 prints stack trace of
- iwl_op_mode_mvm_start; caused by commit b6e3d1ba4fcf
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3661:EE_|DS7PR12MB6072:EE_
+X-MS-Office365-Filtering-Correlation-Id: 514e1a3a-01b2-4491-87d8-08dbdc712110
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uhqEuphOKxAEAjFjBBryCbkro4lHmcYseFGvpZv/rwYTTBTXH9CH52h1rpKaOIB3T7qmpBLVl/7ZXtIFEbawtI88ugdo5egTxn5yx8E3e4CwwS/dsAkpGuKxCQ9jheDo6zWT3uXgmOQExn2m5HrzZcCheOI44859yvOdfiwYiJjm7EnIrJPF+edL54qaV/LN2/6i0nj2PSX6RTk8HoXV6ejdWPXJ4W3AKjYkp+7dsIHxPCV0mvRxhYaMGHz5NMuzjTzoHy2cU33/cPm2eAV7YiEPnixg+dkvvaz8IsqRPIRqo+rHDqnfzL+jJKX/+jFEaFeAbsvMEuMRPAgv4BASaGQ+J7Qhsq7FGw40SCVxLlIPgfiqd4MFRZPTfJBKIljTCkSGY3oIcuVF4jsbuphjkkXDg9jMMslAF2hlFq3yi7kZafJ4jYe+Rp7SAP3ploEXCKbPXATUu9IbGQpi0u4sM5A9D1AmJfgcIwKDj8Fko/naLtn8ABK2l3IzA9tvQ3Md1Zp3Mz9TIlEpjKnnTbLnbWw9N7PaSoRSnabFDmEE6/mBJJKbR1YD4jiISSXiVNwH94FaZEoaxOqygwlFU/dAyCXxk4iivEVs5BYz3vk0gmzm2a4zyDiufee/BAyCgtUOs70KSig3HBHsMmH3QoUIrP3BGqDyXdZS/ZlihFduJlrKA9lwpKpxp1sZBM1oMXyE
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3661.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(136003)(346002)(376002)(396003)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(26005)(6512007)(2616005)(53546011)(6506007)(478600001)(6666004)(7416002)(5660300002)(2906002)(83380400001)(6486002)(110136005)(41300700001)(966005)(66556008)(8676002)(4326008)(8936002)(66476007)(66946007)(6636002)(316002)(54906003)(38100700002)(31696002)(36756003)(31686004)(66899024)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WjF4ZGFDK2hYNC9rUjdDQTA3dWJGR3Y1VnUrdVpTVmRYZDBJTFh4V1oxZWRO?=
+ =?utf-8?B?RHdmOG1nUExZeVlwcVpRSzYvMkRkelZqUER3K0tqYzZsaWpJSmpnb2hYZlhV?=
+ =?utf-8?B?cktXWEkveWVPcTJ0YUV1REV3enJISmtjUEFOUE9JczlFem1QdmMvRWhGS1Rs?=
+ =?utf-8?B?ekY5UU9wMEVzMnMvaWpVaFRDMmFucjZqVnE2TzlqWmVjeWFhQzNCZUpERzJK?=
+ =?utf-8?B?Sy91MTRuYVhmV3FzTmVtYnZaLzBvZ3Q0ZXZNb1EycnBsWlpEK3V1TFRRVWQv?=
+ =?utf-8?B?U2JpQVBtVWRuWUhNSjFUc0g2clZ1ZVIvWEFjWkZYc01ZeU9maVNCaEU4eVUw?=
+ =?utf-8?B?K1F3QlRnbkNhYXBhcTZrbWg1ckZSS3pXT0RnY2lRVzZ6VzlDK0JtTi9JcklY?=
+ =?utf-8?B?S3pxZ25YK2RLQUJ4RTVDS2J3blpSSUMxZmZLTjhVVVc2S1lFNmJvUCt4bEpC?=
+ =?utf-8?B?cG5oN0JvVEZ2NG8xYTUvNjFCZkpVMGsrZmR2OExXeHNwbEpqZUM0MWJmNllx?=
+ =?utf-8?B?c1BqQmIrMXpSY3R2Uk5KOFRnWW01cEtNeURxMlp3WnY1Um9KMXZZcnduVlo1?=
+ =?utf-8?B?QkdwbVhWRXhLMWN0LzhCaEQ0SjIrMUJLd2xtajJMaUhGRnhKVitxNzBFanZY?=
+ =?utf-8?B?TEZsUDFGa3FHc0tPT2ZjOE1vSUFJRGtWVUkrN1N1aks0anBYZ0lrVTUyMXUy?=
+ =?utf-8?B?ek9kbEdINFIrZ2tnVVJtSERxVDZWKzExaE9LMzJJbXVnYVF0eklkYzFwaHc0?=
+ =?utf-8?B?ekVCTUJZdVQxajRKbVFEbjgyWWQvQ0ZPNmFXM1hjMWZyVDQ1dWpDYzE5SjBZ?=
+ =?utf-8?B?bDVUbkJqRjhjeGFXWEw5bFA3YkNXSTZVZHVBVWF5Y0ptWlBtRVRxUXRibUxz?=
+ =?utf-8?B?TEk1alJYR09udmRwcitjK3E5UHVtdjdTZWQ5NU9KU3BCRTV1UGpHc09SNCtk?=
+ =?utf-8?B?TkE4VFV0Ti9RSjFFMFNPQWlhZll4dm1CRFhmRkR4b0w3TE5kNzVCN1ZENEgx?=
+ =?utf-8?B?R0dFc0dOWFNJYlplblQ1VWc3SjVEK1RpQTNyVnNSNDJiRThuMVllSUt4YjFO?=
+ =?utf-8?B?eWpaVTM5Vmw2V0tkNjdkUVJBM09uU2ZveUZTWjhKT2EvM3Nwc2pqN1VoQUw3?=
+ =?utf-8?B?ZHpKVVFzOTVFRzdZRG1sWmlGb2xCU05OTkw2dkJmL0tQS28wUFliK3N6YytR?=
+ =?utf-8?B?S3ZjKyszcHkrYlQ5NklGSklCdUhzYjZaK1AzclFrckNhU0dxaUVvOEIvNDg3?=
+ =?utf-8?B?VDFjbjNLZWtrUlVKcEF6Nk9aTyt3S2JmS3h2ZngzQmtXMFl5amR1dkhQOWFj?=
+ =?utf-8?B?dnF5dkYyV0wrUkhpeHU2SUZzZVdMbTBzSFU0S1R2OXdEREUwSEFQbW45cWUr?=
+ =?utf-8?B?WjBtZHdUazlQdDdBNG53dnBpeGRyR3ZnYWVibmVmWEhqenJ5c0xxUVpiZ3RQ?=
+ =?utf-8?B?TCtFalhOKzdzSWNOWndvbU82enVvQTQ0V2k2NU9QRXFBWVBEeWdtYldzRWli?=
+ =?utf-8?B?RStjMFY2dnlwdnZVbnBUWXQwTkxNdVlhK2RzUStCeFJjVGlEdm1Qc1BlUG9t?=
+ =?utf-8?B?czhNQWU0Z3oyVnlHNzNDNlpuQU0wTlRrRGpsVkQwMDJyL0dwUU9QV2dUS2RB?=
+ =?utf-8?B?RkcrWTAwZ1crbHNtSThjSmlIY2JQeDkwZjk2K3FHc1AwUTQ0c1NMc2djRzdI?=
+ =?utf-8?B?d09hSDJtUXc0Y0s3YVhCZTErNGhxWUZTRkcwZTlKTlgyZnJqV1pSZEZDU21O?=
+ =?utf-8?B?blI1Tno2enpGMnIydExtY2lhN2ZDbmZrTS9vT3g4SExxa085TjU4TE5PdUpw?=
+ =?utf-8?B?RStHUXl4Ly9pVEFISytYd1BhNEEyZDZWVWpFQVlOQ1M5STd4SjZNVzlYYjU5?=
+ =?utf-8?B?UExWYjRtMWR2Q0ZpNjB2Z0xNdlRJZ29PK0pSU0YyLzRSdEY1eVJtTm4rWmZF?=
+ =?utf-8?B?alM2SFY4N2ZWaWtoSlhDQjdmdTRmSnVad3B1K1l0OC9RdGVyVzRKcTdCZ0ls?=
+ =?utf-8?B?VXZzcTR4ZUZCM2F3bWp1T0puOXRxM2NjN283RnQ1bjNDcFdSTXFPM0M0QWhV?=
+ =?utf-8?B?c0U5RTJjaXFxUU9QZzlHekgrM29jNHFMRU1pamJVNEpUMWlFRzkzeDdlWFFX?=
+ =?utf-8?Q?ZZu+fejzKowYO9vZSz+QgS1lc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 514e1a3a-01b2-4491-87d8-08dbdc712110
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3661.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2023 13:31:05.0757
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a198ya78CR8yz/Rdqf9jkSQ0KD+PWRv9km2a3m2+NLZ1PtSX2/sU9Nc+/aJ6niXU4PvrWgbdQ8eUTUhSIp7qiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6072
 
-Hi,
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+On 11/3/23 04:41, Bagas Sanjaya wrote:
+> On Thu, Aug 03, 2023 at 10:22:07PM +0300, Marian Postevca wrote:
+>> I'm trying to develop a sound machine driver based on the acp legacy driver.
+>> The first version of the driver was sent for review on the alsa mailing list this
+>> spring: https://lore.kernel.org/all/20230320203519.20137-1-posteuca@mutex.one
+>>
+>> I'm trying to fix some of the issues that were brought up during the review back then,
+>> but when I ported the patches to the latest commit on the for-next
+>> branch, I noticed a regression where I couldn't hear any sound at all.
+>>
+>> So I started a bisect session and found that the first bad commit is:
+>> ASoC: amd: acp: add pm ops support for acp pci driver
+>> commit 088a40980efbc2c449b72f0f2c7ebd82f71d08e2
+>> https://lore.kernel.org/lkml/20230622152406.3709231-11-Syed.SabaKareem@amd.com
+>>
+>> If I revert this commit sound works as expected. So I started tinkering a little bit
+>> with it and I believe that what happens is that the acp pci driver
+>> enters the autosuspend state and never leaves this state at all.
+>> I noticed this because if I increase the autosuspend delay to a much
+>> larger value, then the sound works until that delay passes.
+>> I added traces and I can see that when the delay expires the suspend callback snd_acp_suspend()
+>> gets called, but the resume callback snd_acp_resume() never gets called.
+>>
+>> I'm no expert in runtime power management (though I did read a bit on it), so I don't understand
+>> all the things that happen underneath, but one thing that is not clear to me is who's supposed
+>> to mark activity on this device and keep it from entering autosuspend if the user wants to play
+>> some sound? Shouldn't there be some counterpart that calls pm_runtime_mark_last_busy() ?
+>> I looked through the code and can't find who's calling pm_runtime_mark_last_busy().
+>>
+>> Some help here would be welcome. Is there something missing in my machine driver code, or
+>> is the runtime pm handling in acp pci driver wrong?
+> Thanks for the regression report. I'm adding it to regzbot:
+>
+> #regzbot ^introduced: 088a40980efbc2
+>
+We were working on some other priority tasks, will upstream the changes
 
-> When testing the branch that will become Linux 6.7-rc1, ever since commit b6e3d1ba4fcf02176846d03a930203d8133c0aaf I have observed the following abbreviated kernel stack trace (please see attachments for the full trace):
-> 
-> ```
-> [    6.733281]  ? __warn+0xc3/0x1d0
-> [    6.733284]  ? iwl_op_mode_mvm_start+0x9c4/0x9d0 [iwlmvm]
-> [    6.733299]  ? report_bug+0x167/0x220
-> [    6.733301]  ? handle_bug+0x3d/0x90
-> [    6.733304]  ? exc_invalid_op+0x1a/0x60
-> [    6.733306]  ? asm_exc_invalid_op+0x1a/0x20
-> [    6.733309]  ? iwl_op_mode_mvm_start+0x9c4/0x9d0 [iwlmvm]
-> [    6.733325]  _iwl_op_mode_start+0x66/0xe0 [iwlwifi]
-> [    6.733338]  iwl_opmode_register+0x87/0xd0 [iwlwifi]
-> [    6.733350]  ? __cfi_init_module+0x10/0x10 [iwlmvm]
-> [    6.733364]  init_module+0x22/0xff0 [iwlmvm]
-> [    6.733378]  ? __cfi_init_module+0x10/0x10 [iwlmvm]
-> [    6.733392]  do_one_initcall+0x129/0x380
-> [    6.733395]  ? idr_alloc_cyclic+0x148/0x1e0
-> [    6.733397]  ? security_kernfs_init_security+0x41/0x80
-> [    6.733399]  ? __kernfs_new_node+0x1be/0x250
-> [    6.733401]  ? preempt_count_add+0x55/0xb0
-> [    6.733404]  ? up_write+0x4a/0xe0
-> [    6.733406]  ? preempt_count_add+0x55/0xb0
-> [    6.733408]  ? sysvec_call_function+0xa4/0xb0
-> [    6.733410]  ? asm_sysvec_call_function+0x1a/0x20
-> [    6.733411]  ? free_unref_page_prepare+0xf3/0x410
-> [    6.733413]  ? preempt_count_add+0x62/0xb0
-> [    6.733415]  ? _raw_spin_trylock+0x19/0x60
-> [    6.733417]  ? _raw_spin_unlock+0x11/0x30
-> [    6.733419]  ? __kmem_cache_free+0x29a/0x3c0
-> [    6.733421]  ? vfree+0xd2/0x150
-> [    6.733422]  ? slab_post_alloc_hook+0x76/0x3d0
-> [    6.733425]  ? do_init_module+0x3f/0x230
-> [    6.733427]  ? __kmem_cache_alloc_node+0x1fe/0x2f0
-> [    6.733430]  do_init_module+0x7a/0x230
-> [    6.733432]  __se_sys_init_module+0x1a0/0x220
-> [    6.733435]  do_syscall_64+0x7a/0x100
-> [    6.733438]  ? syscall_exit_to_user_mode+0x2d/0x1d0
-> [    6.733440]  ? do_syscall_64+0x89/0x100
-> [    6.733442]  ? do_user_addr_fault+0x4e7/0x680
-> [    6.733444]  ? exc_page_fault+0x61/0x150
-> [    6.733446]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> ```
-> 
-> I did try reverting the offending commit but the result did not compile and I did not want to dig deeper to identify any subsequent commits what would need reverting to fix compilation.
-> 
-> If it's relevant, I'm building the kernel with Clang 17.0.4 toolchain by setting the LLVM=1 variable. CFI is enabled but I'm not sure if it's actually functional.
+by next week.
 
-See Bugzilla for the full thread.
-
-Anyway, I'm adding this regression to regzbot:
-
-#regzbot introduced: b6e3d1ba4fcf02 https://bugzilla.kernel.org/show_bug.cgi?id=218095
-#regzbot title: new iwlwifi firmware statistics API triggers stack trace
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218095
-
--- 
-An old man doll... just what I always wanted! - Clara
