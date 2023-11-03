@@ -1,246 +1,172 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C75915480
-	for <regressions@lists.linux.dev>; Fri,  3 Nov 2023 14:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1301A585;
+	Fri,  3 Nov 2023 15:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWBJghpC"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1cc330e8f58so17312775ad.3
-        for <regressions@lists.linux.dev>; Fri, 03 Nov 2023 07:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699020640; x=1699625440; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vRdYzHxL3gfr6VCUgayf89+jAGfr/W9R5c0lf16Blfg=;
-        b=dWBJghpCP8uigovIcSPhMYSVHsPjONJ4PaeMS2FD1V2fQqv//jWl03P9A9l3kgqOQf
-         FjJlrad7orNvSb1brAcZAaBvyCC+mPvV3PhTf/qLzsWjLvhiwWP1HNfpCjVubg+ZRPzc
-         rhfD+kkNLTVrkNgYinojk96pUwA3L55D51c/GwSYDs7GlElL4yTa89HEzcipDV7g5DH9
-         tSGp9l8Hzu4lxRhvpsOUIpbK/2fWvYCdT6eb1hXOvUzN7gq/WEhsXHmIRibhfM2MhxT+
-         bOlo3ZcdT1ISqxezOoINjYy8UDw8tJlA3xwJvNVBn+m59UeQVk5shiNEQYYL+OgRKm1l
-         sTjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699020640; x=1699625440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vRdYzHxL3gfr6VCUgayf89+jAGfr/W9R5c0lf16Blfg=;
-        b=NPig9a+aKOm0UfTUnfdClAeieYbmv465Xfpz193C+lGV74d4OBfomjXckf0vD6DBre
-         DVNHmPJD73sFCD4sV8hUcrsmqbxeIKO0NbD5Mp9PHxrN1yeqjzmOgSNqBWqFk2yN8ROK
-         kCSESKuxxXL+aGmZ+sJsl2y4OJYxtcuy4KF4FCluuGt1I3oVikstcGv0POTWZL3W6jDS
-         mnFIGVRunh3OQQt7pUFAc5NZX9p7sHM3yCb3ekG2o65bi9G1sWu3PXnLorwVsAsaXdcS
-         C9ZqHoMhiks2/7ECIExWFIWIGfele5yxzPQSJEt9sA8sIf/PaKUcKzyoxRna6F2aqqJj
-         m9Nw==
-X-Gm-Message-State: AOJu0Yz7knMi2g/nsy17uyAEHpadprt9PihK644FFBnB+2030JAvFi/C
-	PMebN0ALuZ1fdmqdhaqj3dzCs7pmKX8=
-X-Google-Smtp-Source: AGHT+IH1ub89ebQ5wde40LLn6GkKI7dOJTPjO3pvmfEJkZ2lynARmsZ+dyNh2ohUu3mu6QpmxKCx+Q==
-X-Received: by 2002:a17:903:44d:b0:1cc:87f8:96bc with SMTP id iw13-20020a170903044d00b001cc87f896bcmr4405162plb.15.1699020639556;
-        Fri, 03 Nov 2023 07:10:39 -0700 (PDT)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id a6-20020a170902ee8600b001c0a4146961sm1458058pld.19.2023.11.03.07.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 07:10:39 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 71BAA948E4FE; Fri,  3 Nov 2023 21:10:35 +0700 (WIB)
-Date: Fri, 3 Nov 2023 21:10:35 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Daire Byrne <daire@dneg.com>, Linux NFS <linux-nfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>
-Subject: Re: autofs mount/umount hangs with recent kernel?
-Message-ID: <ZUT_W8yoJ5wqSvLv@debian.me>
-References: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="w96ZssLt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Tc3yw/8i"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.west.internal (Postfix) with ESMTP id A1DF33200921;
+	Fri,  3 Nov 2023 11:01:26 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Fri, 03 Nov 2023 11:01:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1699023686; x=1699110086; bh=8rI9gXS7PRI2oTRO29ALzS6qReZNHb1zj/h
+	ti9DlwAo=; b=w96ZssLttYEYRJHkH7AbUgFmzxSm9R0UX6HonBkBV4JTc09juJ6
+	zOs4kpvDt0Rjllhy8Mg/lp/LedBBMS0wa4Hx33ybYAw2Uq8RIztol1nuJ3GL7qch
+	SKhUIIzo3/uUbuOhuPz8tqQ2v/NRIH4eBmKJCQrWCh1NTaa+Y0z7cRikixE8R4dl
+	XBz50Uvu3TD6qtDQ7gxkYbUp+gd9nRhDI3GO0XNMXNFX+CLmzKukfO1dlfa5R4OK
+	zUT8JQe1fhX8tVgoEZjlhDRSoPTZ4Co/Q33zIGXT8N9A+YFmfXwblI4VptLvv+VT
+	DMFwJQnzbxxY4CR8kYLQc+Yw5pux+IIH7Ag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1699023686; x=1699110086; bh=8rI9gXS7PRI2o
+	TRO29ALzS6qReZNHb1zj/hti9DlwAo=; b=Tc3yw/8iSXzh40pTuZcHpImoly+ew
+	7HN9xOokJDzzlbawsfta1TmGebJlQdCwJcxPuPPR9Utqt4rTwET6GYSHyguvR1er
+	kftDET/nagoXCad56oCIQLVXQWPuoPfdI05VFnQDAVnqKZixUEz+rwib2jngjURu
+	HkZS3ZpMjbRJNoyUl3TN26KD6S6UZ+0EYwDkjqp6DyaX0bt3TFiL5n0g/6DvfH/L
+	1xaiyTYNPoX+tvWb6dVK3XRPooCkeBqK8G29bljJvMTN2R7WwuD/WeJ3DMo9AYM0
+	Q1mOeQ+ucdeWPqW9pYcjOg7QbtL4pX2hEEZhudUeI5HkbULGjlnWGyG7Q==
+X-ME-Sender: <xms:RAtFZesuDBgmtXQQmrC3txh3tPhYeL_K74o5l_i8zNJ_he1VyyXwTg>
+    <xme:RAtFZTc48YG2caMuraTQ9IefKMX1W3zWha1C5Z27td1IQVbs3l6TpASt04f0h--xt
+    b63gzrGuSWsog>
+X-ME-Received: <xmr:RAtFZZyxSoi-y8ftEJXBU49VVzjSoi2u3gIHDc7eC4HUY-sgOKFM8Avz9Du2YUxsGLbrymwJ7MKz7GteTOqoV1l1IMylByRJcVI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddtkedgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgv
+    khcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinh
+    hvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepgfdu
+    leetfeevhfefheeiteeliefhjefhleduveetteekveettddvgeeuteefjedunecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghk
+    sehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:RAtFZZMzE2wYFu6UoTeRn6K505TltGpU-tckaqm-9a3Flrd91L9IPA>
+    <xmx:RAtFZe_LSoaxWy_KFPEBVhaIY-GjaUI1QhUYgGm25b5OkF5z-z6Zuw>
+    <xmx:RAtFZRUrTCSBU7ZKhOVYyi3SVRXbVFZXoFaQstXF2X2PxvjxVhGwdA>
+    <xmx:RgtFZQcwZf5BiNLX260xrKD1g4tsKhuMdTvNQG-D8hJKf0FtuNnIGg>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 Nov 2023 11:01:22 -0400 (EDT)
+Date: Fri, 3 Nov 2023 16:01:19 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
+	linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
+Message-ID: <ZUULQBAwS2/KknwH@mail-itl>
+References: <98aefaa9-1ac-a0e4-fb9a-89ded456750@redhat.com>
+ <ZUB5HFeK3eHeI8UH@mail-itl>
+ <20231031140136.25bio5wajc5pmdtl@quack3>
+ <ZUEgWA5P8MFbyeBN@mail-itl>
+ <8a35cdea-3a1a-e859-1f7c-55d1c864a48@redhat.com>
+ <ebbc7ca7-5169-dbdc-9ea8-c6d8c3ae31e2@redhat.com>
+ <ZULvkPhcpgAVyI8w@mail-itl>
+ <ac5b5ac0-9e8-c1b0-a26-62f832f845f0@redhat.com>
+ <ZUOL8kXVTF1OngeN@mail-itl>
+ <3cb4133c-b6db-9187-a678-11ed8c9456e@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="joeJk2L0VzDKjgFZ"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jJXFS76+C6nnDWam"
 Content-Disposition: inline
-In-Reply-To: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+In-Reply-To: <3cb4133c-b6db-9187-a678-11ed8c9456e@redhat.com>
 
 
---joeJk2L0VzDKjgFZ
-Content-Type: text/plain; charset=utf-8
+--jJXFS76+C6nnDWam
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Date: Fri, 3 Nov 2023 16:01:19 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
+	linux-mm@kvack.org
+Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
 
-On Fri, Nov 03, 2023 at 09:40:44AM +0000, Daire Byrne wrote:
-> Hi,
+On Thu, Nov 02, 2023 at 06:06:33PM +0100, Mikulas Patocka wrote:
 >=20
-> We have large compute clusters that, amongst other things, spend their
-> day mounting & unounting lots of Linux NFS servers via autofs. This
-> has worked fine for many years and client kernel versions and was
-> working without incident even with our current v6.3.x production
-> kernels.
 >=20
-> During the v6.6-rc cycle while testing that kernel, I noticed that
-> every now and then, the umount/mount would hang randomly and the
-> compute host would get stuck and not complete it's work until a
-> reboot. I thought I'd wait until v6.6 was released and check again -
-> the issue persists.
+> On Thu, 2 Nov 2023, Marek Marczykowski-G=C3=B3recki wrote:
 >=20
-> I have not had the opportunity to test the v6.4 & v6.5 kernels in
-> between yet. The stack traces look something like this:
-
-Please do bisection to find the exact commit that introduces your
-regression. See Documentation/admin-guide/bug-bisect.rst in the kernel
-sources for more information.
-
+> > On Thu, Nov 02, 2023 at 10:28:57AM +0100, Mikulas Patocka wrote:
+> >=20
+> > > Try lowring /sys/block/nvme0n1/queue/max_sectors_kb to some small val=
+ue=20
+> > > (for example 64) and test if it helps.
+> >=20
+> > Yes, this helps too.
 >=20
-> [202752.264187] INFO: task umount.nfs:58118 blocked for more than 245 sec=
-onds.
-> [202752.264237]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
+> On a plain upstream kernel with no other modifications (and with default=
+=20
+> max_sectors_kb), set the value /sys/module/nvme/parameters/sgl_threshold=
+=20
+> to "0" and test it if it deadlocks. Then, set this value to "1" and test=
+=20
+> it again.
 
-Can you reproduce on untainted (vanilla) kernel?
+Got deadlock wit both values.
 
-> [202752.264267] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [202752.264296] task:umount.nfs      state:D stack:0     pid:58118
-> ppid:1      flags:0x00004002
-> [202752.264304] Call Trace:
-> [202752.264308]  <TASK>
-> [202752.264313]  __schedule+0x30b/0xa10
-> [202752.264327]  schedule+0x68/0xf0
-> [202752.264332]  io_schedule+0x16/0x40
-> [202752.264337]  __folio_lock+0xfc/0x220
-> [202752.264346]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264353]  ? __pfx_wake_page_function+0x10/0x10
-> [202752.264361]  truncate_inode_pages_range+0x441/0x460
-> [202752.264411]  truncate_inode_pages_final+0x41/0x50
-> [202752.264425]  nfs_evict_inode+0x1a/0x40 [nfs]
-> [202752.264476]  evict+0xdc/0x190
-> [202752.264485]  dispose_list+0x4d/0x70
-> [202752.264491]  evict_inodes+0x16b/0x1b0
-> [202752.264499]  generic_shutdown_super+0x3e/0x160
-> [202752.264507]  kill_anon_super+0x17/0x50
-> [202752.264513]  nfs_kill_super+0x27/0x50 [nfs]
-> [202752.264556]  deactivate_locked_super+0x35/0x90
-> [202752.264562]  deactivate_super+0x42/0x50
-> [202752.264568]  cleanup_mnt+0x109/0x170
-> [202752.264574]  __cleanup_mnt+0x12/0x20
-> [202752.264580]  task_work_run+0x61/0x90
-> [202752.264588]  exit_to_user_mode_prepare+0x1d8/0x200
-> [202752.264596]  syscall_exit_to_user_mode+0x1c/0x40
-> [202752.264603]  do_syscall_64+0x48/0x90
-> [202752.264609]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [202752.264617] RIP: 0033:0x7fcb9befeba7
-> [202752.264622] RSP: 002b:00007ffdd63ef348 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000000a6
-> [202752.264628] RAX: 0000000000000000 RBX: 00005561e35da010 RCX:
-> 00007fcb9befeba7
-> [202752.264632] RDX: 0000000000000001 RSI: 0000000000000000 RDI:
-> 00005561e35da1e0
-> [202752.264634] RBP: 00005561e35da1e0 R08: 00005561e35dbfa0 R09:
-> 00005561e35db790
-> [202752.264637] R10: 00007ffdd63eeda0 R11: 0000000000000246 R12:
-> 00007fcb9c442d78
-> [202752.264640] R13: 0000000000000000 R14: 00005561e35db2c0 R15:
-> 00007ffdd63f0dcb
-> [202752.264648]  </TASK>
->=20
-> [202752.264658] INFO: task mount.nfs:60827 blocked for more than 122 seco=
-nds.
-> [202752.264686]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
-> [202752.264713] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [202752.264743] task:mount.nfs       state:D stack:0     pid:60827
-> ppid:60826  flags:0x00004000
-> [202752.264751] Call Trace:
-> [202752.264753]  <TASK>
-> [202752.264757]  __schedule+0x30b/0xa10
-> [202752.264763]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264771]  schedule+0x68/0xf0
-> [202752.264776]  schedule_preempt_disabled+0x15/0x30
-> [202752.264782]  rwsem_down_write_slowpath+0x2b3/0x640
-> [202752.264788]  ? try_to_wake_up+0x242/0x5f0
-> [202752.264797]  ? __x86_indirect_jump_thunk_r15+0x20/0x20
-> [202752.264803]  ? wake_up_q+0x50/0x90
-> [202752.264809]  down_write+0x55/0x70
-> [202752.264815]  super_lock+0x44/0x130
-> [202752.264821]  ? kernfs_activate+0x54/0x60
-> [202752.264828]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264833]  ? kernfs_add_one+0x11f/0x160
-> [202752.264841]  grab_super+0x2e/0x80
-> [202752.264847]  grab_super_dead+0x31/0xe0
-> [202752.264855]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264860]  ? sysfs_create_link_nowarn+0x22/0x40
-> [202752.264865]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264871]  ? __pfx_nfs_compare_super+0x10/0x10 [nfs]
-> [202752.264915]  sget_fc+0xd4/0x280
-> [202752.264921]  ? __pfx_nfs_set_super+0x10/0x10 [nfs]
-> [202752.264965]  nfs_get_tree_common+0x86/0x520 [nfs]
-> [202752.265009]  nfs_try_get_tree+0x5c/0x2e0 [nfs]
-> [202752.265052]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265058]  ? try_module_get+0x1d/0x30
-> [202752.265064]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265068]  ? get_nfs_version+0x29/0x90 [nfs]
-> [202752.265111]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265116]  ? nfs_fs_context_validate+0x4fe/0x710 [nfs]
-> [202752.265163]  nfs_get_tree+0x38/0x60 [nfs]
-> [202752.265202]  vfs_get_tree+0x2a/0xe0
-> [202752.265207]  ? capable+0x19/0x20
-> [202752.265213]  path_mount+0x2fe/0xa90
-> [202752.265219]  ? putname+0x55/0x70
-> [202752.265226]  do_mount+0x80/0xa0
-> [202752.265233]  __x64_sys_mount+0x8b/0xe0
-> [202752.265240]  do_syscall_64+0x3b/0x90
-> [202752.265245]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [202752.265250] RIP: 0033:0x7fbf5d4ff26a
-> [202752.265253] RSP: 002b:00007ffeb24fdd98 EFLAGS: 00000202 ORIG_RAX:
-> 00000000000000a5
-> [202752.265258] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
-> 00007fbf5d4ff26a
-> [202752.265261] RDX: 000055c814e78100 RSI: 000055c814e771e0 RDI:
-> 000055c814e77320
-> [202752.265264] RBP: 00007ffeb24fdfb0 R08: 000055c814e85510 R09:
-> 000000000000006d
-> [202752.265266] R10: 0000000000000004 R11: 0000000000000202 R12:
-> 00007fbf5e2307e0
-> [202752.265269] R13: 00007ffeb24fdfb0 R14: 00007ffeb24fde90 R15:
-> 000055c814e855a0
-> [202752.265277]  </TASK>
->=20
-> And like I said, the mount/umount against the server hangs
-> indefinitely on the client. It is somewhat interesting that autofs
-> still tries to trigger a subsequent mount even though the umount has
-> not completed.
->=20
-> The NFS servers are running RHEL8.5 and we are using NFSv3. I also
-> reproduced it with a fairly recent nfs-utils-2.6.2 on the client
-> compute hosts.
+> Revert sgl_threshold back to the default (32768). Boot the kernel with th=
+e=20
+> option "iommu=3Dpanic". Reproduce the deadlock and if you get a kernel=20
+> panic, send us the panic log.
 
-What distro on the client?
+This is a Xen PV, so Linux is not in charge of IOMMU here. And there is
+SWIOTLB involved (64MB of it), I'm not sure if for every DMA, but
+definitely for some.=20
 
->=20
-> Because these happen quite rarely, it takes time and many clients and
-> mount/umount cycles to reproduce, so I thought I'd post here before
-> working through the bisect testing. If you think this is better as a
-> kernel.org bugzilla ticket, I'm happy to do that too.
+> Then, try this patch (without "iommu=3Dpanic"), reproduce the deadlock an=
+d=20
+> tell us which one of the "printk" statements is triggered during the=20
+> deadlock.
 
-For now, posting to the ML is preferred as many developers don't take
-a look on bugzilla.kernel.org.
-
-Thanks.
+I'll try this next.
 
 --=20
-An old man doll... just what I always wanted! - Clara
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
 
---joeJk2L0VzDKjgFZ
+--jJXFS76+C6nnDWam
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZUT/VQAKCRD2uYlJVVFO
-o9YGAQC6TVhfKtbAQH4iO0E7UDc9W+XXwCC0R7RmC7azt60qcAEAq9xy7cZqv45W
-GvOa9uEgMdd/l3Scd8a4XSj/+p0ccAI=
-=V4vb
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmVFC0AACgkQ24/THMrX
+1yxTwAf/SFlkRMbe2ZO3nNL4wgyZQkhMn5+snIYJwfkUhabco4QTc1GHGfsaMD7N
+fjghgVc3TYnCGTU/vIMZlZg+zv+6Ol2Sp2XIoglAX7EhpHuHdgb6X+RnOk0jNvBr
+BqvMILFZdElEuB260lKCrH1xV2CGDo+MmvU18UszgOmy3uMR8Pb6b493ckklabyC
+w+p80dzKcjNSKzSpMtjU/w21s0dWgFGoSouz9xqtQFWQEHjLw8TptA3+qSSFl/Yq
+VlTy+zGB+Buj3qMOzXW97roTJH8KxI7I9wdbKboZWq3EXH7eFD9t6k000i72z/6T
+qTVgLfU0itg1QJHAFMcAV0LsZKkEJA==
+=bk7Z
 -----END PGP SIGNATURE-----
 
---joeJk2L0VzDKjgFZ--
+--jJXFS76+C6nnDWam--
