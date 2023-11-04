@@ -1,77 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B55822338;
-	Fri,  3 Nov 2023 22:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5333A19A
+	for <regressions@lists.linux.dev>; Sat,  4 Nov 2023 00:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfmzVrQX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C91C433C8;
-	Fri,  3 Nov 2023 22:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699051343;
-	bh=M+ptlKAOA+sEX04/48lagPpY5EWZpkTUmUL2k+ef/pE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qfmzVrQXas81SSCB36xz6q8EtGP9twOOIhmsKM+uoZfMsW+0wM/d/2SasJdjn2WwE
-	 fl/yMQXNLZ0NuKwY/i9K7SiBWM+pukZzeYlx6ZpnS8SMfWzQnDrxKXtxqJ+kLhDfA7
-	 sXk24jYSI/be0ykfa1mka/drdfyx724vCRMX/uaYshRasQkMCBroWscqqQv+X3HJ/R
-	 jyJacUYfBNZ0XqBztWabkaMXJr8qfcfcNxCJJ2Kxcstq0rnTNwgE2ArwLfNnbHRJet
-	 VOxYUE1gAB/nWF/jIy0KoHFAQVGPLJTenAKFF86kL4jbLv09qscuDGu8v7dQlZn83S
-	 WkSaQZTeGvgig==
-Date: Fri, 3 Nov 2023 16:42:20 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Marek Marczykowski-G'orecki <marmarek@invisiblethingslab.com>
-Cc: Mikulas Patocka <mpatocka@redhat.com>, Jens Axboe <axboe@fb.com>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, dm-devel@lists.linux.dev,
-	linux-mm@kvack.org
-Subject: Re: Intermittent storage (dm-crypt?) freeze - regression 6.4->6.5
-Message-ID: <ZUV3TApYYoh_oiRR@kbusch-mbp.dhcp.thefacebook.com>
-References: <ZUEgWA5P8MFbyeBN@mail-itl>
- <8a35cdea-3a1a-e859-1f7c-55d1c864a48@redhat.com>
- <ebbc7ca7-5169-dbdc-9ea8-c6d8c3ae31e2@redhat.com>
- <ZULvkPhcpgAVyI8w@mail-itl>
- <ac5b5ac0-9e8-c1b0-a26-62f832f845f0@redhat.com>
- <ZUOL8kXVTF1OngeN@mail-itl>
- <3cb4133c-b6db-9187-a678-11ed8c9456e@redhat.com>
- <ZUUctamEFtAlSnSV@mail-itl>
- <ZUUlqJoS6_1IznzT@kbusch-mbp.dhcp.thefacebook.com>
- <ZUVYT1Xp4+hFT27W@mail-itl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jETZns5v"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6c34e87b571so1571298b3a.3
+        for <regressions@lists.linux.dev>; Fri, 03 Nov 2023 17:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699057643; x=1699662443; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSruXExCC7oyLfN8ZSYHDj8sJJzKMrm8E7odv0JQbpk=;
+        b=jETZns5v5S6dwn+ioxGo1tqrTWiUj/t1u3iAHtmjLCPz4qyccT63yFoVTUEwqyjbuZ
+         n83XZPBqmWij66ZT1TQgZJ88CSpkjZDhtXVPYvDdknTlK+mnPHIqjsy2keH4ZAl/2XXT
+         C+no33GTpOSE+ZX6SghTmCNjQ92twN1KBa4FTwB8FEHZjcoh4by9miyt4hOUW88NYvvF
+         p7R3zhjjJIczYrv/fHnBD4Du2LeGcLgpT1GuZ6SUpO2oJ2HNgWQBMQrOtOiEfdMnRrIj
+         VjDpMrL8IMwNDHc+qqmtGU0h6+Jv4PPPjLtoMGBvOSIDK0audSqdStWpmtiNNCz2C6RP
+         pIiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699057643; x=1699662443;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSruXExCC7oyLfN8ZSYHDj8sJJzKMrm8E7odv0JQbpk=;
+        b=CPl1AtAy586O4WL+0bXZelcvQjC+t2MOTbRMtbP06hPCgWBPTAsR3cxa3RoPifmvaq
+         GeEWgt9LEacEVtgTJMDgSH25jc3wLV1uX228+4U0lyiQpJf6QPGQ8X8KOli0ywRVucMh
+         SsVzbY5meaHXD39A4E9M4F3b8TncrDu9H/m1mxcLDdQGSTBDLKIFKM5vH8/bfc0YHHSK
+         hVEjC5XrgKBIHWqcBHpPdZeSg9g8EPQCWmYs/LccXr91/15tdGUzoQYuyWzvtuENX4oK
+         5k8DXh2CzIb+4UEnJgtEsMYtkbkYDTJ7JqHUtVyGKzoupvBL/Yw+WFZkUqgTcy+yLhT8
+         +gzA==
+X-Gm-Message-State: AOJu0YwUOcdXHjeGFxDvo2UiEDJMpa2pgStKLIYjALuEFhcU/UAs2XAL
+	9b2ddEhq1qy5PSWP27xk9c0=
+X-Google-Smtp-Source: AGHT+IFfm/C4eEi089pE7HOXJTu6LK5uaY2KHPfzzcBQCM008GsYRPPDZ9ry9IpfM7Ka0d7L3TLDfw==
+X-Received: by 2002:a05:6a00:10d2:b0:693:3963:847a with SMTP id d18-20020a056a0010d200b006933963847amr22580602pfu.30.1699057643443;
+        Fri, 03 Nov 2023 17:27:23 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id it10-20020a056a00458a00b0068ffd4eb66dsm1952259pfb.35.2023.11.03.17.27.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Nov 2023 17:27:22 -0700 (PDT)
+Message-ID: <e93d5996-e9fc-4c28-ad33-5fd62fbac92d@gmail.com>
+Date: Sat, 4 Nov 2023 07:27:15 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUVYT1Xp4+hFT27W@mail-itl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: autofs mount/umount hangs with recent kernel?
+To: Charles Hedrick <hedrick@rutgers.edu>, Daire Byrne <daire@dneg.com>,
+ Linux NFS <linux-nfs@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>
+References: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+ <ZUT_W8yoJ5wqSvLv@debian.me>
+ <PH0PR14MB5493BD73D14C0002DE32DAE3AAA5A@PH0PR14MB5493.namprd14.prod.outlook.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <PH0PR14MB5493BD73D14C0002DE32DAE3AAA5A@PH0PR14MB5493.namprd14.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 03, 2023 at 09:30:07PM +0100, Marek Marczykowski-G'orecki wrote:
-> On Fri, Nov 03, 2023 at 10:54:00AM -0600, Keith Busch wrote:
-> > On Fri, Nov 03, 2023 at 05:15:49PM +0100, Marek Marczykowski-G'orecki wrote:
-> > > On Thu, Nov 02, 2023 at 06:06:33PM +0100, Mikulas Patocka wrote:
-> > > > Then, try this patch (without "iommu=panic"), reproduce the deadlock and 
-> > > > tell us which one of the "printk" statements is triggered during the 
-> > > > deadlock.
-> > > 
-> > > The "821" one - see below.
-> > 
-> > Thanks for confirming!
-> > 
-> > Could you try this patch?
+On 04/11/2023 03:07, Charles Hedrick wrote:
+> We've seen behavior like that throughout the lifetime of 4.10 and 5.15 as well. It may be a different issue, though. For us it happens only with NFS 4.2. NFS 3 is fine. And once it happens, rebooting the client doesn't help. We have to reboot the NFS server. We're trying setting automount to never unmount, as an attempt to figure out whether the problem is actually caused by the unmounts and mounts.
 > 
-> Besides min3() being unhappy about types, it works.
+> I'd be happy to help diagnose if someone could tell me what data would be useful.
+> 
 
-Oops, should have changed the constant to "ul" instead of just "u".
+Please don't top-post; reply inline with appropriate context instead.
+And don't send HTML emails either, since mailing lists reject them.
 
-Anyway, the overall idea makes sense to me, but I don't know the swiotlb
-stuff well.
+First, you may want to test the mainline (currently at v6.6) on both
+the server and the client. Then, please attach full system log
+(most likely journalctl) to see if you have the same one as Daire
+reported.
 
-Christoph, does that patch make sense? For reference:
+Thanks.
 
-   https://lore.kernel.org/linux-mm/ZUOr-vp0yRkLyvyi@kbusch-mbp.dhcp.thefacebook.com/T/#m8d34245e0eef43f8e9fe6cba6038d77ed2a93ad6
+-- 
+An old man doll... just what I always wanted! - Clara
+
