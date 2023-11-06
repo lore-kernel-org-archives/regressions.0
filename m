@@ -1,118 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2084.outbound.protection.outlook.com [40.107.212.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AFC29CEF
-	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 17:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A2E1A591
+	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 20:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+0xfMr2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699290755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtsXGyrCZBmUJfCxzrPKMMdVxxHur1sL8JecsuLgwa0=;
-	b=Y+0xfMr2o5tCEnJaHnfqd7QUVxuT1ZZgxZs+imYKxly0YcZ/DEkMftE2YZBB7d0m3kIAZ/
-	S8Pfphv0I1F7+uesArUFqzAuOaUh7tDy4ZR8RlcdyjQHab+0zecKpDpdK8Eia1QhtST6Md
-	wWpQ9XED4ohq9YgBOEgLsuISksliftA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-632-_45CrAGuNjOuxKLbB7FT_Q-1; Mon,
- 06 Nov 2023 12:12:31 -0500
-X-MC-Unique: _45CrAGuNjOuxKLbB7FT_Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 674ED3821568;
-	Mon,  6 Nov 2023 17:12:30 +0000 (UTC)
-Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 47C5D1121308;
-	Mon,  6 Nov 2023 17:12:30 +0000 (UTC)
-Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
-	id 3227530C72A7; Mon,  6 Nov 2023 17:12:30 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 2E33F3FD16;
-	Mon,  6 Nov 2023 18:12:30 +0100 (CET)
-Date: Mon, 6 Nov 2023 18:12:30 +0100 (CET)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Mike Snitzer <snitzer@kernel.org>
-cc: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-    Juergen Gross <jgross@suse.com>, 
-    Stefano Stabellini <sstabellini@kernel.org>, 
-    xen-devel@lists.xenproject.org, iommu@lists.linux.dev, 
-    Marek Marczykowski-G'orecki <marmarek@invisiblethingslab.com>, 
-    Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>, 
-    Jan Kara <jack@suse.cz>, Vlastimil Babka <vbabka@suse.cz>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
-    stable@vger.kernel.org, regressions@lists.linux.dev, 
-    Alasdair Kergon <agk@redhat.com>, dm-devel@lists.linux.dev, 
-    linux-mm@kvack.org
-Subject: [PATCH v2] swiotlb-xen: provide the "max_mapping_size" method
-In-Reply-To: <ZUkGpblDX637QV9y@redhat.com>
-Message-ID: <151bef41-e817-aea9-675-a35fdac4ed@redhat.com>
-References: <3cb4133c-b6db-9187-a678-11ed8c9456e@redhat.com> <ZUUctamEFtAlSnSV@mail-itl> <ZUUlqJoS6_1IznzT@kbusch-mbp.dhcp.thefacebook.com> <ZUVYT1Xp4+hFT27W@mail-itl> <ZUV3TApYYoh_oiRR@kbusch-mbp.dhcp.thefacebook.com> <11a9886d-316c-edcd-d6da-24ad0b9a2b4@redhat.com>
- <ZUZOKitOAqqKiJ4n@kbusch-mbp.dhcp.thefacebook.com> <20231106071008.GB17022@lst.de> <928b5df7-fada-cf2f-6f6a-257a84547c3@redhat.com> <ZUkDUXDF6g4P86F3@kbusch-mbp.dhcp.thefacebook.com> <ZUkGpblDX637QV9y@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OBkepZqA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Su5XVP/vrcfxLZ3sJHgF9CXtQCCKM4dawXTeuXMlEfhCfNa8Vz5sAL44Yeng6+u80nxiQ/pQr1BatzFzrXZEjC7N2j97OeN8oA4HKazSJzdJrILsO6T+olX6fwBJklMIxPEfh0NPzFSvsD6HsuxRC/u0UffdbiJrhwUd4vTiw6e+SQz5AnH5QNBMIQBYVqyuqylNcy3D2DSRjyVMh0f+KIjwrCa3aXPelGY9T1y4XEgnv+0w0/J2x9pOHaboswLUGV66ivn4ltOTBPLImnJcg3/IqmMdwT+MP/Otw8mqNvGWqPDGG0RwY+tnTYRds9A6g3mzKq3nydqHwt1EJMBR1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MGOkS1VxZDUH82HJzxWuRDjKQkdLoboiLm3OwCOS/vU=;
+ b=E7oCLbBmm8N0d/FZefZh4f9Mq88+j13npz1vtPmnYlGJvmYBmv9qPg5pTpzk6iyct3eyWdhGMEqRu1YSRtPgq7OE0pDn5o7nIA0t2FCwmy475u5nJ667S8fZxw2mpD7esXhGvg4JZjiBxcIltvbvucIv1b76kA5CcBhvbsfABCWTdBweqSvV19H0a28KybDwy3v2LRJowFkjLQ77zbMYFsJIjXAoW/usxAQCykn4jVOBtbcZqBA1LVVJaq0kbPNW51map9hA2dUySQu/vYL/l5GeCA0ETtk5ZGvbxAhZ0dWumtE7uz25eqvDgApW9a87m9cmKgl7CRRGSg4UXb8/sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MGOkS1VxZDUH82HJzxWuRDjKQkdLoboiLm3OwCOS/vU=;
+ b=OBkepZqAt8qy7PzLGG4ojM1NQENDgFD4Phx/IZevMtPD0wLviHojvsssNKFN6Lq34Mv56h+gaimwW/WZ4Snp2rB+l/2KHVr26VK5/KsKwbYrH9pEvq8s6EGCw1RpOwdFYgtDSpAvUucOoo0YpqulC2LBfABFWeBZ55jcnXRJ3IE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MN2PR12MB4583.namprd12.prod.outlook.com (2603:10b6:208:26e::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.28; Mon, 6 Nov
+ 2023 20:14:42 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.6954.027; Mon, 6 Nov 2023
+ 20:14:41 +0000
+Message-ID: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
+Date: Mon, 6 Nov 2023 14:14:39 -0600
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux kernel regressions list <regressions@lists.linux.dev>,
+ o-takashi@sakamocchi.jp
+Cc: a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
+ LKML <linux-kernel@vger.kernel.org>, aros@gmx.com, bagasdotme@gmail.com
+From: Mario Limonciello <mario.limonciello@amd.com>
+Subject: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0157.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::12) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="185210117-1837111149-1699290694=:1497320"
-Content-ID: <478c056-3a19-eb50-34da-911cf13fc558@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MN2PR12MB4583:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ac917a5-3b5c-4540-1787-08dbdf0502c4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	X4cGAFp9t+fOCBtRJAKl3XQpBsjjwIkgGLrX/uwGcbentaaKdaeIkv1e13Auk8RZ+yMs3eY9jidP9ta3c7DriYGn621c9PQVslUGXCZNZ8xKX9GfFvrhzYF/O729m0BEdnvlxeB3Uc3MrkZ4/wcyIe7T6mJV0ndDqtxdnuxgp+JmtyZ1TbqZeWJ2gv/LwacJLzISZ6FaSPjxT4RxLoK/A/GfyvAvyGaEZStCZU5yMGoNXuXt8DtqrosKN9tngrU3XR7DJzSfLh5jiA22i8QC4e1lr/YFeq3Xs3wd6lDoBCGAoc2UwRUT/RfASzIweOD/BgwAhmTJGcZw+JOdr8J5EmolWFvRz0ycZmcnbzhbzgzuFo1JV16BA4Zrf99WbJ+L+dvPN0tXh8kQcgJffPBk8wnOj8+cqSwB59QA+tDFPGhxTJ61ak9w1o4zFu+pApt8/TAWRv3rfn9AsDuOI/vGm5bjlEZDbzlJLaZKVtAh10cEZxR2TfflXt7iemNpGvNjoJ1bWX/wLANBDFNDAcc20kd6lQCQHT68xS2Q1n5hwqduUFNHLWUiaRpiwgnUe59GOmB6VGrjJoIPottyl2CADZ6MaATD09LAB3mfTUrDpkCpTNrY+XkbSwNBrpCQPQsd2QzXBlxpueQUU0oUKuof0A==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(366004)(376002)(396003)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(36756003)(316002)(4326008)(7116003)(8936002)(8676002)(4744005)(83380400001)(26005)(66476007)(66946007)(66556008)(5660300002)(44832011)(41300700001)(478600001)(966005)(6486002)(6512007)(6506007)(2616005)(31686004)(2906002)(86362001)(31696002)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QjRNUHVNWUlFMUk3b1dnTGdyYVF4eW15NEVkTk45OXA3anRQYTFVcVB5RHZR?=
+ =?utf-8?B?TXRTTWN6ajkzRlNSWG1GL1RDMCtMQ3R4a2ttRnFzVEZTTURmTEgzamFoTXdu?=
+ =?utf-8?B?SEFXQkMxT3Evd3RZQmJaTjdnSVh2REJ6V0RGM2ZkK0hWYTBXSkx4ZmdFWUE2?=
+ =?utf-8?B?Y0VoOGhtdTJic05DWXM1VXliaFRXN0FkcXFGS3gyRVprdzZYSUJWR0hKRitL?=
+ =?utf-8?B?am9OMVVsTmZSSGtja1d3MGZJSnNXQnVjS3FKVTFNaFQ3SmJQWTd0dnEvcHFz?=
+ =?utf-8?B?MjJZSjB5cTlQVjNVWU1CZEJPU1ovUEdoMHBUSHUxaTVaUXROYXU2ZUwzN0p1?=
+ =?utf-8?B?YXhzaWFjUmJseGlNMDRoSXdhZHAzZktmdm44WnVaQTZUdEUzMU5EMXJRVTVR?=
+ =?utf-8?B?N3FwRmZtTVhvaHVlc1JiWjhkVkk1SGNDelozUkptUmJOaE1lYmZzZmdNK2py?=
+ =?utf-8?B?Q25aRGdrOEZlbWdCcU1LN0JEc2JLMENmQ09GTFF4bm5VbFJBMDk5VkovVUYy?=
+ =?utf-8?B?L3JTbXc3WE9FZjM5WFRpd29XS1laOCtidDBsMkxFalpaeDBXcGpTTlJxa3BF?=
+ =?utf-8?B?UW9EQ0U5SmwrTm9saDBTTG9HelpiQ3ZvUFhodmZBZ1pBS3VIdlVMaUJqOS9x?=
+ =?utf-8?B?Z2ZhNDlSQ29hSGFQcFhKRkZ2aFgxckVkUXN3UVZuU3JQRVllamp2Z1NYdVJ2?=
+ =?utf-8?B?SkJ2bjdJUUxZdytlUkd1RkhTMVBpTlljOFM2NW9NRWpFaHRFN0NFQlZHWGZ3?=
+ =?utf-8?B?Tnc1YXJ6RjNCUFlNZVcveFJaMkhlYjNmVTVibnA2TlZBRTlzdWFlNWc4YmtK?=
+ =?utf-8?B?YWRKR3Y2RW01SVluZUs1cjkyK1VFVTByOGU2Z1FCNkJoeFJFdzdlVTJtaFhG?=
+ =?utf-8?B?Tyt3cXRnSkx1T3ZWajM1ZDVGQVpqR2FxMHMyVWlCbGJxSUQzWk02QXJjTGNE?=
+ =?utf-8?B?R29lYlJnSGRNUDBZZzFqTml0U1hqL2wvbGYzYURnZWJrYkNmcHNoVDU5czdD?=
+ =?utf-8?B?ZWhiMXZMYnBacEwyd0ZuM2xDempyVDF2WDlVUW1VLzVtRUJsM0YyZEttTjg1?=
+ =?utf-8?B?THJtSVAyL0hXZ3MrOW4xZVg1aWhVaXhnMjBXaGlZNVNKRVEvNHc0UUxFZURR?=
+ =?utf-8?B?REpxdzFxMCt0Mzk4cC9RTDRUMldQbUZBRWUyZmxZcXJOalpNVGtTRjN1R2NP?=
+ =?utf-8?B?dnhFMjdzM0w3LytpZXFleTBEdSs5MG5wbEFIbjM3Mzl6b3dKbXZiZkxzTE1s?=
+ =?utf-8?B?ZWRUUmxuWW82czYyOXpYWjc5Wm4vZWIrcEYzTnVjYlZQbjNTNmhlQUMrQWtj?=
+ =?utf-8?B?TlptL2NRTE5zNU45M0srbXh3bXkvQkNDOG9Ob0lLL2l2dFpHTGdHTmJSc3By?=
+ =?utf-8?B?ek9veW9KUWZtQ3J4Wm5NaDNQTWJBTkNVYlZLWVkwcGRteXA3YVhJb29nWm1W?=
+ =?utf-8?B?YXFZMlpzdTAvTnhEbnhVZjBXcitkWkdzbitueDFDRUVVR2RQOThnK0x5Z1k4?=
+ =?utf-8?B?YzBHVzRLMHlOY2NaYkZYOUJ5NUdiRkdlNUhKSFNvZ3EyNXJPZ2hkVHdoa3dO?=
+ =?utf-8?B?OEFiU1ZvZlhpSVhjQ2xqSUxJaDdhTk9mc05ZancycklEcUhvUndJS1IwOGw5?=
+ =?utf-8?B?R2hiQmZaQWpWdXM1OUNMUUJKUCtGMnVMMzErNCthUnZCVFQ2cm1hYWtUSVB1?=
+ =?utf-8?B?T2pneXNKNXovSWJHT0s5dWFtbmU2QlVYYlhGTXY2Ry9iVXNaYmFKR092bVhV?=
+ =?utf-8?B?Y0tDR2dudmk5Uml5WTUzQW9GcURac1R1QWtCYXNMRDNUNGsrRjc1R3EyVmhx?=
+ =?utf-8?B?VmRrTnpScUxHM2M2TzF1S21uMXlURHllZmI4eHhJMHE3ZDZFcVA4K3JIc1dH?=
+ =?utf-8?B?RlB2Z25GQkx5K2JpSFJRY2xRck5EbnpKS3VEaXQ4RW54SjFUQ3FGd3FhWW15?=
+ =?utf-8?B?K3IreS9oemxxV0lvOGgzRUJmNllXQUIwOGdFb21HcE0zd3l4VGhJdzBQVWg5?=
+ =?utf-8?B?NmlmVVVWZ3UrS01XNDZiNUx3cVNUQmNTSFdPZkpyNTRLU3lRQVpHbHRybjdT?=
+ =?utf-8?B?SWxJUGE5WU5BRm5XeDVRY3NHeEltd0pJem1qL2VtUFdnUS9laCtVYktsbjYv?=
+ =?utf-8?Q?IOBxPhWTn/dwKaDz5VSgAA6jr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac917a5-3b5c-4540-1787-08dbdf0502c4
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2023 20:14:41.9281
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rV/bEvhnC3Oq2/0wy/px9w25mDzt41edXgBTCFubnz+O3dU33g+DiJqK+I3Cv+9CVo4EDzqqUzVkNYotlVvzoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4583
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---185210117-1837111149-1699290694=:1497320
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <4468b751-727c-3ffb-15cc-683422283a27@redhat.com>
+I recently came across a kernel bugzilla that bisected a boot problem 
+[1] introduced in kernel 6.5 to this change.
 
-From: Keith Busch <kbusch@kernel.org>
+commit dcadfd7f7c74ef9ee415e072a19bdf6c085159eb (HEAD -> dcadfd7f7c7)
+Author: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Date:   Tue May 30 08:12:40 2023 +0900
 
-There's a bug that when using the XEN hypervisor with bios with large
-multi-page bio vectors on NVMe, the kernel deadlocks [1].
+     firewire: core: use union for callback of transaction completion
 
-The deadlocks are caused by inability to map a large bio vector -
-dma_map_sgtable always returns an error, this gets propagated to the block
-layer as BLK_STS_RESOURCE and the block layer retries the request
-indefinitely.
+Removing the firewire card from the system fixes it for both reporters 
+(CC'ed)
 
-XEN uses the swiotlb framework to map discontiguous pages into contiguous
-runs that are submitted to the PCIe device. The swiotlb framework has a
-limitation on the length of a mapping - this needs to be announced with
-the max_mapping_size method to make sure that the hardware drivers do not
-create larger mappings.
+As the author of this issue can you please take a look at it?
 
-Without max_mapping_size, the NVMe block driver would create large
-mappings that overrun the maximum mapping size.
+Thanks,
 
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Link: https://lore.kernel.org/stable/ZTNH0qtmint%2FzLJZ@mail-itl/ [1]
-Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-
----
- drivers/xen/swiotlb-xen.c |    1 +
- 1 file changed, 1 insertion(+)
-
-Index: linux-stable/drivers/xen/swiotlb-xen.c
-===================================================================
---- linux-stable.orig/drivers/xen/swiotlb-xen.c	2023-11-03 17:57:18.000000000 +0100
-+++ linux-stable/drivers/xen/swiotlb-xen.c	2023-11-06 15:30:59.000000000 +0100
-@@ -405,4 +405,5 @@ const struct dma_map_ops xen_swiotlb_dma
- 	.get_sgtable = dma_common_get_sgtable,
- 	.alloc_pages = dma_common_alloc_pages,
- 	.free_pages = dma_common_free_pages,
-+	.max_mapping_size = swiotlb_max_mapping_size,
- };
---185210117-1837111149-1699290694=:1497320--
-
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
