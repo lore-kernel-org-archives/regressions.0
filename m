@@ -1,236 +1,422 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.heh.ee (heh.ee [213.35.143.160])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72A220B33
-	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 13:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BF01A71D
+	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 13:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ristioja.ee
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ristioja.ee
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWj4XlqF"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6b5af4662b7so3577453b3a.3
-        for <regressions@lists.linux.dev>; Mon, 06 Nov 2023 05:23:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699276999; x=1699881799; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fr+joEsWrYcl8ukIVzt78+UYYlxwhETFVKbvjb+usu8=;
-        b=bWj4XlqFLtDtArqS+UcLOCd6NIvLE6lAIw0goCZ3bpsde8F6T0ecj68cr774Iw7Kki
-         fYLLoutfjU3q/7/yLO/eukLSPbj3VnyMQL3+Nnmc+zrVGFt//k05gv0OpciNufmw1Nwe
-         3wIVqVaYurG+Us4QBILh76sJ0OV8yAsAAbWvmwEcOn+Z87vn35r9kXMi54bL4GNhWKLg
-         fgKrxKoGk8Qr+8QCs5BFmKO8mpjqKd1DY5Ks9zFH8Hr0UIMFG3HwZHRWJyMglpNyV0xb
-         tPp9CR4WQrADXXK9zGHqJUwtpIuZAh5wi+jpb8jqfdh80vjxXxGBVyIOlJoGb+SQNRtv
-         rmMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699276999; x=1699881799;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fr+joEsWrYcl8ukIVzt78+UYYlxwhETFVKbvjb+usu8=;
-        b=F5gAOaDPJWXX1CYHjvEzTWigqBS3WbQsx1g6140W8/UjK58kidIi2LQzPPKaYXHyzP
-         vEa+Sjx08QiQSp+kIASWN9bwyrfgsjvagfMn2WluHNYEdzAzuE24qbOYp8K5n84+Rx/y
-         huzsz6bKeBZJ0N6OYNludjY+rdDQALGV5wroFQbdWR11kM1xTNvzATrZjmzDMhMoySNN
-         v4JbyrUuAJjVzmOOlEX1Ikmq3ILue9ZHFsm5In9tcU/8kR9JpkvHnqQaTkjKSqhGGpiU
-         SqeSiauRQwrgVidpuEoyyesb+qxV63hIPiFpbIOJ16dChHIwyF7mSP0F6SxgF5kFUtcR
-         5blA==
-X-Gm-Message-State: AOJu0YwDuoayCJynxRl1ANycdP0S/d2m+TtPTFwthkS/i0F/8+258Qn/
-	6Vsm74P+lrPRMSiK56go+GZSm6u6awc=
-X-Google-Smtp-Source: AGHT+IES65Beeo5CtT0KG2gVpssf1mIWeJn7zOSJ55OXkJjOpdHjEhG2JP0PsCRTcF1nhxyE/FWrSw==
-X-Received: by 2002:a05:6a20:8e1f:b0:174:210c:34b0 with SMTP id y31-20020a056a208e1f00b00174210c34b0mr27396156pzj.0.1699276998794;
-        Mon, 06 Nov 2023 05:23:18 -0800 (PST)
-Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id ge8-20020a17090b0e0800b00277371fd346sm1370106pjb.30.2023.11.06.05.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 05:23:17 -0800 (PST)
-Received: by debian.me (Postfix, from userid 1000)
-	id CB5EB815CB68; Mon,  6 Nov 2023 20:23:14 +0700 (WIB)
-Date: Mon, 6 Nov 2023 20:23:14 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Daire Byrne <daire@dneg.com>, Charles Hedrick <hedrick@rutgers.edu>,
-	Linux NFS <linux-nfs@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>
-Subject: Re: autofs mount/umount hangs with recent kernel?
-Message-ID: <ZUjowgTNt3uW-p4y@debian.me>
-References: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ristioja.ee header.i=@ristioja.ee header.b="KlcW6lPN"
+Received: from [10.0.0.254] (unknown [10.0.0.254])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.heh.ee (Hehee) with ESMTPSA id EFA3917550F;
+	Mon,  6 Nov 2023 15:49:15 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ristioja.ee; s=mail;
+	t=1699278556; bh=e2sJiUuWKJUln2IhsXBg8kvudgbD/K99MBCT5ewhw+8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=KlcW6lPNqLGXCCHlFHDpPpZFMyQNhhoY5OCrCA2DuMhcpyvcFcJ2UJqDnmVGhorlQ
+	 ewClzTqXfYihZb/X19oHPF+6VPLR0LmpzNCb5Lw/o7j5ocYvX00sjTrVB2VttW/ywE
+	 HCTyUFywcj9L/CDJfitqdEW6TJSa6Dzf9ZhqXZAs=
+Message-ID: <be82874b-d41b-4547-9ab5-dac9a5ddfeaf@ristioja.ee>
+Date: Mon, 6 Nov 2023 15:49:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ce7L8x7nY1fZntQ6"
-Content-Disposition: inline
-In-Reply-To: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
+Content-Language: et-EE
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Evan Preston <x.arch@epreston.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Linux DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Bagas Sanjaya <bagasdotme@gmail.com>
+References: <CAAhV-H5DH3Oj3ttSpa_k6jUdZ+0_pMwgoaqUTGGFr46j7DMXRw@mail.gmail.com>
+ <ba16ad66-4b35-4fb4-b4e6-1d785f260eea@ristioja.ee>
+ <CAAhV-H64AKdGoHnVLLOYXznpr_aq1jC_TUYXFQRdOjoBxanxkw@mail.gmail.com>
+ <c3bb7983-86e4-424e-aadd-e82a0cb6ef37@ristioja.ee>
+ <CAAhV-H7UTnTWQeT_qo7VgBczaZo37zjosREr16H8DsLi21XPqQ@mail.gmail.com>
+ <CAAhV-H7fJS3-3_hqA4BUdH+q5EG6wSmEoPpO-fUZn5h35O=6OA@mail.gmail.com>
+ <31ed0db1-9398-4c46-a391-fc644ec49268@ristioja.ee>
+ <CAAhV-H4MekBgYZ1nJ-M7bnpo3bczOMcTanij18ACCALz2svjQQ@mail.gmail.com>
+ <ZUSJDG82vzbuyFEY@P70.localdomain>
+ <CAAhV-H6GyOnTOm6b8Xp=ySctyE-T905WKDUS2AZuqnEyzM7ZEg@mail.gmail.com>
+ <ZUWtTuIcMwwCWg7z@P70.localdomain>
+ <CAAhV-H7wnjac1Znr2yh8S2bGwuxF1RRGp=cn9oracrWm6y5VVQ@mail.gmail.com>
+ <51add74a-1d1a-493d-bb50-fccdad11b22c@ristioja.ee>
+ <CAAhV-H7nhkvLoDMwQDwNEhykZANGMq-Qrzip48qYzgQs1fNUgA@mail.gmail.com>
+From: Jaak Ristioja <jaak@ristioja.ee>
+Autocrypt: addr=jaak@ristioja.ee; keydata=
+ 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
+In-Reply-To: <CAAhV-H7nhkvLoDMwQDwNEhykZANGMq-Qrzip48qYzgQs1fNUgA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 06.11.23 04:15, Huacai Chen wrote:
+> Hi, Jaak and Evan,
+> 
+> On Mon, Nov 6, 2023 at 12:28 AM Jaak Ristioja <jaak@ristioja.ee> wrote:
+>>
+>> On 05.11.23 14:40, Huacai Chen wrote:
+>>> Hi, Evan,
+>>>
+>>> On Sat, Nov 4, 2023 at 10:50 AM Evan Preston <x.arch@epreston.net> wrote:
+>>>>
+>>>> Hi Huacai,
+>>>>
+>>>> On 2023-11-03 Fri 02:36pm, Huacai Chen wrote:
+>>>>> Hi, Evan,
+>>>>>
+>>>>> On Fri, Nov 3, 2023 at 1:54 PM Evan Preston <x.arch@epreston.net> wrote:
+>>>>>>
+>>>>>> Hi Huacai,
+>>>>>>
+>>>>>> On 2023-11-02 Thu 08:38pm, Huacai Chen wrote:
+>>>>>>> Hi, Jaak,
+>>>>>>>
+>>>>>>> On Wed, Nov 1, 2023 at 7:52 PM Jaak Ristioja <jaak@ristioja.ee> wrote:
+>>>>>>>>
+>>>>>>>> On 31.10.23 14:17, Huacai Chen wrote:
+>>>>>>>>> Hi, Jaak and Evan,
+>>>>>>>>>
+>>>>>>>>> On Sun, Oct 29, 2023 at 9:42 AM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On Sat, Oct 28, 2023 at 7:06 PM Jaak Ristioja <jaak@ristioja.ee> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> On 26.10.23 03:58, Huacai Chen wrote:
+>>>>>>>>>>>> Hi, Jaak,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On Thu, Oct 26, 2023 at 2:49 AM Jaak Ristioja <jaak@ristioja.ee> wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 25.10.23 16:23, Huacai Chen wrote:
+>>>>>>>>>>>>>> On Wed, Oct 25, 2023 at 6:08 PM Thorsten Leemhuis
+>>>>>>>>>>>>>> <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Javier, Dave, Sima,
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> On 23.10.23 00:54, Evan Preston wrote:
+>>>>>>>>>>>>>>>> On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
+>>>>>>>>>>>>>>>>> On Fri, Oct 20, 2023 at 5:35 PM Linux regression tracking (Thorsten
+>>>>>>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>>>>>>>> On 09.10.23 10:54, Huacai Chen wrote:
+>>>>>>>>>>>>>>>>>>> On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>>>>>>>>>>>>>>>>>>>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
+>>>>>>>>>>>>>>>>>>>>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>>>>>>>>>>>>>>>>>>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
+>>>>>>>>>>>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>>>>>>>>>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
+>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+>>>>>>>>>>>>>>>>>>>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+>>>>>>>>>>>>>>>>>>>>>>>> screen after boot until the display manager starts... if it does start
+>>>>>>>>>>>>>>>>>>>>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
+>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+>>>>>>>>>>>>>>>>>>>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
+>>>>>>>>>>>>>>>>>>>>>>>> subsys_initcall_sync").
+>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+>>>>>>>>>>>>>>>>>>>>> again. So I guess the reason:
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> Well, this to me still looks a lot (please correct me if I'm wrong) like
+>>>>>>>>>>>>>>>>>> regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
+>>>>>>>>>>>>>>>>>> if I understood things correctly. Or is there a proper fix for this
+>>>>>>>>>>>>>>>>>> already in the works and I just missed this? Or is there some good
+>>>>>>>>>>>>>>>>>> reason why this won't/can't be fixed?
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> DRM_SIMPLEDRM was enabled but it didn't work at all because there was
+>>>>>>>>>>>>>>>>> no corresponding platform device. Now DRM_SIMPLEDRM works but it has a
+>>>>>>>>>>>>>>>>> blank screen. Of course it is valuable to investigate further about
+>>>>>>>>>>>>>>>>> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort because
+>>>>>>>>>>>>>>>>> I don't have a same machine.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Side note: Huacai, have you tried working with Jaak to get down to the
+>>>>>>>>>>>>>>> real problem? Evan, might you be able to help out here?
+>>>>>>>>>>>>>> No, Jaak has no response after he 'fixed' his problem by disabling SIMPLEDRM.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I'm sorry, what was it exactly you want me to do? Please be mindful that
+>>>>>>>>>>>>> I'm not familiar with the internals of the Linux kernel and DRI, and it
+>>>>>>>>>>>>> might sometimes take weeks before I have time to work and respond on this.
+>>>>>>>>>>>> It doesn't matter. I hope you can do some experiments to investigate
+>>>>>>>>>>>> deeper. The first experiment you can do is enabling SIMPLEFB (i.e.
+>>>>>>>>>>>> CONFIG_FB_SIMPLE) instead of SIMPLEDRM (CONFIG_DRM_SIMPLEDRM) to see
+>>>>>>>>>>>> whether there is also a blank screen. If no blank screen, that
+>>>>>>>>>>>> probably means SIMPLEDRM has a bug, if still blank screen, that means
+>>>>>>>>>>>> the firmware may pass wrong screen information.
+>>>>>>>>>>>
+>>>>>>>>>>> Testing with 6.5.9 I get a blank screen with CONFIG_DRM_SIMPLEDRM=y and
+>>>>>>>>>>> get no blank screen with CONFIG_FB_SIMPLE=y and CONFIG_DRM_SIMPLEDRM unset.
+>>>>>>>>>> CONFIG_FB_SIMPLE and  CONFIG_DRM_SIMPLEDRM use the same device created
+>>>>>>>>>> by sysfb_init(). Since FB_SIMPLE works fine, I think the real problem
+>>>>>>>>>> is that DRM_SIMPLEDRM has a bug. The next step is to enable
+>>>>>>>>>> CONFIG_DRM_SIMPLEDRM and trace its initialization. In detail, adding
+>>>>>>>>>> some printk() in simpledrm_probe() and its sub-routines to see where
+>>>>>>>>>> the driver fails. The output of these printk() can be seen by the
+>>>>>>>>>> 'dmesg' command after boot.
+>>>>>>>>> I need your help. I tried with my laptop (ThinkPad E490, Intel Core
+>>>>>>>>> i3-8145U, UHD Graphics 620) but I can't reproduce your problem. So
+>>>>>>>>> please patch your 6.5.x kernel with this temporary patch [1], then
+>>>>>>>>> build a "bad kernel" with SIMPLEDRM enabled. And after booting your
+>>>>>>>>> machine with this "bad kernel", please give me the dmesg output. Thank
+>>>>>>>>> you very much.
+>>>>>>>>>
+>>>>>>>>> [1] http://ddns.miaomiaomiao.top:9000/download/kernel/patch-6.5.9
+>>>>>>>>
+>>>>>>>> I'm unable to download it. Can you please send it by e-mail?
+>>>>>>> I'm sorry, please download from attachment.
+>>>>>>
+>>>>>> When applying this patch the first hunk (drivers/firmware/sysfb.c) fails for
+>>>>>> me with 6.5.9.  Attempting to load the 6.5.9 kernel without this patch
+>>>>>> produces no dmesg output on my machine.
+>>>>> You copy-paste the patch? If you download it directly it can be
+>>>>> applied successfully, I think.
+>>>>
+>>>> The patch downloaded from your URL applies successfully.  However, I still
+>>>> see no dmesg output using the patched 6.5.9 kernel.  'journalctl -k -b all'
+>>>> shows no dmesg output from any 6.5.x boots, only from 6.4.12 boots.
+>>> Thank you for your testing. Since you cannot boot to GUI successfully
+>>> as Jaak, you may have some troubles with getting the dmesg output. But
+>>> you can try to use "systemd.unit=multi-user.target" boot parameters.
+>>> In this way you may boot to the login: prompt and then you can get
+>>> dmesg output. Or if you still fail, you may use 'jornalctl -k -b -1'
+>>> to get the previous dmesg output with 6.4.12.
+>>>
+>>> Hi, Jaak,
+>>>
+>>> Have you tested? I think you can successfully get a dmesg output with my patch.
+>>
+>> Yes, just tested it, here I think are the relevant parts from a dmesg
+>> produced with CONFIG_DRM_SIMPLEDRM and the patch provided by Huacai:
+>>
+>> ...
+>> [    2.909625] sysfb 1
+>> [    2.909627] sysfb 2
+>> ...
+>> [    2.951477] ACPI: bus type drm_connector registered
+>> [    2.952096] i915 0000:00:02.0: [drm] VT-d active for gfx access
+>> [    2.952105] resource: resource sanity check: requesting [mem
+>> 0x00000000e0000000-0x00000000efffffff], which spans more than BOOTFB
+>> [mem 0xe0000000-0xe012bfff]
+>> [    2.952111] caller i915_ggtt_init_hw+0x88/0x120 mapping multiple BARs
+>> [    2.952138] i915 0000:00:02.0: [drm] Using Transparent Hugepages
+>> [    2.953204] Loading firmware: i915/kbl_dmc_ver1_04.bin
+>> [    2.953485] i915 0000:00:02.0: [drm] Finished loading DMC firmware
+>> i915/kbl_dmc_ver1_04.bin (v1.4)
+>> ...
+>> [    4.142075] [drm] Initialized i915 1.6.0 20201103 for 0000:00:02.0 on
+>> minor 0
+>> [    4.144269] ACPI: video: Video Device [GFX0] (multi-head: yes  rom:
+>> no  post: no)
+>> [    4.144414] input: Video Bus as
+>> /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input4
+>> [    4.144580] [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 1
+>> [    4.144590] usbcore: registered new interface driver udl
+>> [    4.144603] T: probe 1
+>> [    4.144605] T: create 1
+>> [    4.144610] T: create 2
+>> [    4.144611] T: create 3a-1
+>> [    4.144613] T: create 3a-2
+>> [    4.144614] T: create 3a-3
+>> [    4.144616] T: create 3a-4
+>> [    4.144618] T: create 4
+>> [    4.144619] T: create 5
+>> [    4.144621] simple-framebuffer simple-framebuffer.0: [drm] display
+>> mode={"": 60 18432 640 640 640 640 480 480 480 480 0x40 0x0}
+>> [    4.144628] simple-framebuffer simple-framebuffer.0: [drm]
+>> framebuffer format=XR24 little-endian (0x34325258), size=640x480,
+>> stride=2560 byte
+>> [    4.144633] T: create 6b-1
+>> [    4.144635] T: create 6b-2
+>> [    4.144637] simple-framebuffer simple-framebuffer.0: [drm] using I/O
+>> memory framebuffer at [mem 0xe0000000-0xe012bfff flags 0x200]
+>> [    4.144643] T: create 6b-3
+>> [    4.144660] T: create 6b-4
+>> [    4.144662] T: create 7
+>> [    4.144673] T: create 8
+>> [    4.144676] T: create 9
+>> [    4.144678] T: create 10
+>> [    4.144681] T: create 11
+>> [    4.144685] T: create 12
+>> [    4.144689] T: probe 2
+>> [    4.144728] [drm] Initialized simpledrm 1.0.0 20200625 for
+>> simple-framebuffer.0 on minor 2
+>> [    4.144732] T: probe 3
+>> [    4.145905] Console: switching to colour frame buffer device 80x30
+>> [    4.150437] simple-framebuffer simple-framebuffer.0: [drm] fb0:
+>> simpledrmdrmfb frame buffer device
+>> [    4.150766] T: probe 4
+>> [    4.151218] loop: module loaded
+>> [    4.154434] i915 0000:00:02.0: [drm] fb1: i915drmfb frame buffer device
+>> ...
+>> [   44.630789] simple-framebuffer simple-framebuffer.0: swiotlb buffer
+>> is full (sz: 1310720 bytes), total 32768 (slots), used 0 (slots)
+>> ...
+>>
+>> The last message might be due to the display manager starting up.
+>>
+>> Hope it helps.
+> Thank you for your testing. Jaak's problem seems related to the
+> initialization order, you can try to modify drivers/gpu/drm/Makefile,
+> move
+> 
+> obj-y                  += tiny/
+> 
+> to between these two lines
+> 
+> obj-$(CONFIG_DRM_SCHED) += scheduler/
+> obj-$(CONFIG_DRM_RADEON)+= radeon/
+> 
+> then build a new 6.5.x kernel to see whether your problem is resolved.
 
---ce7L8x7nY1fZntQ6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, this seems to have resolved it.
 
-On Fri, Nov 03, 2023 at 09:40:44AM +0000, Daire Byrne wrote:
-> Hi,
->=20
-> We have large compute clusters that, amongst other things, spend their
-> day mounting & unounting lots of Linux NFS servers via autofs. This
-> has worked fine for many years and client kernel versions and was
-> working without incident even with our current v6.3.x production
-> kernels.
->=20
-> During the v6.6-rc cycle while testing that kernel, I noticed that
-> every now and then, the umount/mount would hang randomly and the
-> compute host would get stuck and not complete it's work until a
-> reboot. I thought I'd wait until v6.6 was released and check again -
-> the issue persists.
->=20
-> I have not had the opportunity to test the v6.4 & v6.5 kernels in
-> between yet. The stack traces look something like this:
->=20
-> [202752.264187] INFO: task umount.nfs:58118 blocked for more than 245 sec=
-onds.
-> [202752.264237]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
-> [202752.264267] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [202752.264296] task:umount.nfs      state:D stack:0     pid:58118
-> ppid:1      flags:0x00004002
-> [202752.264304] Call Trace:
-> [202752.264308]  <TASK>
-> [202752.264313]  __schedule+0x30b/0xa10
-> [202752.264327]  schedule+0x68/0xf0
-> [202752.264332]  io_schedule+0x16/0x40
-> [202752.264337]  __folio_lock+0xfc/0x220
-> [202752.264346]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264353]  ? __pfx_wake_page_function+0x10/0x10
-> [202752.264361]  truncate_inode_pages_range+0x441/0x460
-> [202752.264411]  truncate_inode_pages_final+0x41/0x50
-> [202752.264425]  nfs_evict_inode+0x1a/0x40 [nfs]
-> [202752.264476]  evict+0xdc/0x190
-> [202752.264485]  dispose_list+0x4d/0x70
-> [202752.264491]  evict_inodes+0x16b/0x1b0
-> [202752.264499]  generic_shutdown_super+0x3e/0x160
-> [202752.264507]  kill_anon_super+0x17/0x50
-> [202752.264513]  nfs_kill_super+0x27/0x50 [nfs]
-> [202752.264556]  deactivate_locked_super+0x35/0x90
-> [202752.264562]  deactivate_super+0x42/0x50
-> [202752.264568]  cleanup_mnt+0x109/0x170
-> [202752.264574]  __cleanup_mnt+0x12/0x20
-> [202752.264580]  task_work_run+0x61/0x90
-> [202752.264588]  exit_to_user_mode_prepare+0x1d8/0x200
-> [202752.264596]  syscall_exit_to_user_mode+0x1c/0x40
-> [202752.264603]  do_syscall_64+0x48/0x90
-> [202752.264609]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [202752.264617] RIP: 0033:0x7fcb9befeba7
-> [202752.264622] RSP: 002b:00007ffdd63ef348 EFLAGS: 00000246 ORIG_RAX:
-> 00000000000000a6
-> [202752.264628] RAX: 0000000000000000 RBX: 00005561e35da010 RCX:
-> 00007fcb9befeba7
-> [202752.264632] RDX: 0000000000000001 RSI: 0000000000000000 RDI:
-> 00005561e35da1e0
-> [202752.264634] RBP: 00005561e35da1e0 R08: 00005561e35dbfa0 R09:
-> 00005561e35db790
-> [202752.264637] R10: 00007ffdd63eeda0 R11: 0000000000000246 R12:
-> 00007fcb9c442d78
-> [202752.264640] R13: 0000000000000000 R14: 00005561e35db2c0 R15:
-> 00007ffdd63f0dcb
-> [202752.264648]  </TASK>
->=20
-> [202752.264658] INFO: task mount.nfs:60827 blocked for more than 122 seco=
-nds.
-> [202752.264686]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
-> [202752.264713] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [202752.264743] task:mount.nfs       state:D stack:0     pid:60827
-> ppid:60826  flags:0x00004000
-> [202752.264751] Call Trace:
-> [202752.264753]  <TASK>
-> [202752.264757]  __schedule+0x30b/0xa10
-> [202752.264763]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264771]  schedule+0x68/0xf0
-> [202752.264776]  schedule_preempt_disabled+0x15/0x30
-> [202752.264782]  rwsem_down_write_slowpath+0x2b3/0x640
-> [202752.264788]  ? try_to_wake_up+0x242/0x5f0
-> [202752.264797]  ? __x86_indirect_jump_thunk_r15+0x20/0x20
-> [202752.264803]  ? wake_up_q+0x50/0x90
-> [202752.264809]  down_write+0x55/0x70
-> [202752.264815]  super_lock+0x44/0x130
-> [202752.264821]  ? kernfs_activate+0x54/0x60
-> [202752.264828]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264833]  ? kernfs_add_one+0x11f/0x160
-> [202752.264841]  grab_super+0x2e/0x80
-> [202752.264847]  grab_super_dead+0x31/0xe0
-> [202752.264855]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264860]  ? sysfs_create_link_nowarn+0x22/0x40
-> [202752.264865]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.264871]  ? __pfx_nfs_compare_super+0x10/0x10 [nfs]
-> [202752.264915]  sget_fc+0xd4/0x280
-> [202752.264921]  ? __pfx_nfs_set_super+0x10/0x10 [nfs]
-> [202752.264965]  nfs_get_tree_common+0x86/0x520 [nfs]
-> [202752.265009]  nfs_try_get_tree+0x5c/0x2e0 [nfs]
-> [202752.265052]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265058]  ? try_module_get+0x1d/0x30
-> [202752.265064]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265068]  ? get_nfs_version+0x29/0x90 [nfs]
-> [202752.265111]  ? srso_alias_return_thunk+0x5/0x7f
-> [202752.265116]  ? nfs_fs_context_validate+0x4fe/0x710 [nfs]
-> [202752.265163]  nfs_get_tree+0x38/0x60 [nfs]
-> [202752.265202]  vfs_get_tree+0x2a/0xe0
-> [202752.265207]  ? capable+0x19/0x20
-> [202752.265213]  path_mount+0x2fe/0xa90
-> [202752.265219]  ? putname+0x55/0x70
-> [202752.265226]  do_mount+0x80/0xa0
-> [202752.265233]  __x64_sys_mount+0x8b/0xe0
-> [202752.265240]  do_syscall_64+0x3b/0x90
-> [202752.265245]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [202752.265250] RIP: 0033:0x7fbf5d4ff26a
-> [202752.265253] RSP: 002b:00007ffeb24fdd98 EFLAGS: 00000202 ORIG_RAX:
-> 00000000000000a5
-> [202752.265258] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
-> 00007fbf5d4ff26a
-> [202752.265261] RDX: 000055c814e78100 RSI: 000055c814e771e0 RDI:
-> 000055c814e77320
-> [202752.265264] RBP: 00007ffeb24fdfb0 R08: 000055c814e85510 R09:
-> 000000000000006d
-> [202752.265266] R10: 0000000000000004 R11: 0000000000000202 R12:
-> 00007fbf5e2307e0
-> [202752.265269] R13: 00007ffeb24fdfb0 R14: 00007ffeb24fde90 R15:
-> 000055c814e855a0
-> [202752.265277]  </TASK>
->=20
-> And like I said, the mount/umount against the server hangs
-> indefinitely on the client. It is somewhat interesting that autofs
-> still tries to trigger a subsequent mount even though the umount has
-> not completed.
->=20
-> The NFS servers are running RHEL8.5 and we are using NFSv3. I also
-> reproduced it with a fairly recent nfs-utils-2.6.2 on the client
-> compute hosts.
->=20
-> Because these happen quite rarely, it takes time and many clients and
-> mount/umount cycles to reproduce, so I thought I'd post here before
-> working through the bisect testing. If you think this is better as a
-> kernel.org bugzilla ticket, I'm happy to do that too.
->=20
+Jaak
 
-Thanks for the regression report. I'm adding it to regzbot:
+> 
+> Evan's problem seems a little strange, could you please give me your
+> config files of both 6.4.12 and 6.5.x? And you can also try the above
+> method to see if anything changes.
+> 
+> Huacai
+> 
+>>
+>> J
+>>
+>>>
+>>>>
+>>>> Evan
+>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Evan
+>>>>>>
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Jaak
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Huacai
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Huacai
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Jaak
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Jaak
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> But I write this mail for a different reason:
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> I am having the same issue on a Lenovo Thinkpad P70 (Intel
+>>>>>>>>>>>>>>>> Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).
+>>>>>>>>>>>>>>>> Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank
+>>>>>>>>>>>>>>>> screen after boot and a rapidly flashing device-access-status
+>>>>>>>>>>>>>>>> indicator.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> This additional report makes me wonder if we should revert the culprit
+>>>>>>>>>>>>>>> (60aebc9559492c ("drivers/firmware: Move sysfb_init() from
+>>>>>>>>>>>>>>> device_initcall to subsys_initcall_sync") [v6.5-rc1]). But I guess that
+>>>>>>>>>>>>>>> might lead to regressions for some users? But the patch description says
+>>>>>>>>>>>>>>> that this is not a common configuration, so can we maybe get away with that?
+>>>>>>>>>>>>>>      From my point of view, this is not a regression, 60aebc9559492c
+>>>>>>>>>>>>>> doesn't cause a problem, but exposes a problem. So we need to fix the
+>>>>>>>>>>>>>> real problem (SIMPLEDRM has a blank screen on some conditions). This
+>>>>>>>>>>>>>> needs Jaak or Evan's help.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>>>>>>>>>>> --
+>>>>>>>>>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>>>>>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>>>>>>>>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+>>>>>>>>>>>>>>>>>>>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+>>>>>>>>>>>>>>>>>>>>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+>>>>>>>>>>>>>>>>>>>>> no platform device created for SIMPLEDRM at early stage, so it seems
+>>>>>>>>>>>>>>>>>>>>> also "no problem".
+>>>>>>>>>>>>>>>>>>>> I don't understand above. You mean that after that commit the platform
+>>>>>>>>>>>>>>>>>>>> device is also none, right?
+>>>>>>>>>>>>>>>>>>> No. The SIMPLEDRM driver needs a platform device to work, and that
+>>>>>>>>>>>>>>>>>>> commit makes the platform device created earlier. So, before that
+>>>>>>>>>>>>>>>>>>> commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
+>>>>>>>>>>>>>>>>>>> commit, SIMPLEDRM works, but the screen is blank.
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> Confused...
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> --
+>>>>>>>>>>>>>>>>>>>> An old man doll... just what I always wanted! - Clara
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>>>
+>>
 
-#regzbot ^introduced: v6.5..v6.6
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---ce7L8x7nY1fZntQ6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZUjowgAKCRD2uYlJVVFO
-o7IwAP9DsSr/mJ9kz/lpJb8+LA0eTKCjju+vzkoWgJ3NMX+ePAEA2b8L/6KUSPYo
-NAH1ijhluRkl1Ulei5ZjCRQdGnFwvAE=
-=0FBA
------END PGP SIGNATURE-----
-
---ce7L8x7nY1fZntQ6--
