@@ -1,65 +1,60 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC4A208CA
-	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 13:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72A220B33
+	for <regressions@lists.linux.dev>; Mon,  6 Nov 2023 13:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7Me6Bnt"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6be1bc5aa1cso4583167b3a.3
-        for <regressions@lists.linux.dev>; Mon, 06 Nov 2023 05:19:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWj4XlqF"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6b5af4662b7so3577453b3a.3
+        for <regressions@lists.linux.dev>; Mon, 06 Nov 2023 05:23:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699276754; x=1699881554; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1699276999; x=1699881799; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=chBp0c2H1AOjgpm073E/0LSCNHycI9DtFBsa1gzati8=;
-        b=C7Me6BntKvxOFNrBqeu9huS9QRxjo1b37m6UfGhIhazmoGQos+LSsmisW4zNZ8oJ44
-         tZ7hbzVAej8Xelu3k3NyST4MU9WSWtwHghpn99JP9C+yC7Ytc2/nyVWAc0wN6EURgeYu
-         5cP7rLF6mdShJv4+Bpinawj9/M3y6M7ptqrogq60ZCC6fIM1hf0HJILaS/ih6JZSyVnO
-         kJpKuWjrp5zlI+VlOyqF2xrZMeg8Toz9EUOySv908BfZVXciLf8wnxczh0/zkgV2s5r0
-         GqUceKub008xc57ePsKtCMAfERykX1PFh4z+kTiTSYVp2lN+lTeCzJxV05DWHblQ3UEB
-         UDwg==
+        bh=fr+joEsWrYcl8ukIVzt78+UYYlxwhETFVKbvjb+usu8=;
+        b=bWj4XlqFLtDtArqS+UcLOCd6NIvLE6lAIw0goCZ3bpsde8F6T0ecj68cr774Iw7Kki
+         fYLLoutfjU3q/7/yLO/eukLSPbj3VnyMQL3+Nnmc+zrVGFt//k05gv0OpciNufmw1Nwe
+         3wIVqVaYurG+Us4QBILh76sJ0OV8yAsAAbWvmwEcOn+Z87vn35r9kXMi54bL4GNhWKLg
+         fgKrxKoGk8Qr+8QCs5BFmKO8mpjqKd1DY5Ks9zFH8Hr0UIMFG3HwZHRWJyMglpNyV0xb
+         tPp9CR4WQrADXXK9zGHqJUwtpIuZAh5wi+jpb8jqfdh80vjxXxGBVyIOlJoGb+SQNRtv
+         rmMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699276754; x=1699881554;
+        d=1e100.net; s=20230601; t=1699276999; x=1699881799;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=chBp0c2H1AOjgpm073E/0LSCNHycI9DtFBsa1gzati8=;
-        b=CajTXjMhkE9dL8m6h+24kUCJEkW/vPlXAFw0EdDsbkSYxvNIClJzF5MMBQkBerBv+i
-         JNhAFB7JO0kyttCgJxvvobyKkiwXzkFmshpTiUpL+gO9BtbPa3JWglsB3bF44GPYRkVl
-         pi54Vuou9xy67Mp99D1p47ipL6axs66VnpfRrx5HjQDBApZWNGt12XKNY9S5T4cP72+5
-         qyTyILzzd1Q+XBmg5gca2IoHBQrfhl8Qnpu8HD+irer023CgeYCdMqUgLPRkV8lXgUaT
-         4GBvoHifexoDppuX+VDvom79Fd/CfVSsV0tWQAGAE3gRnWyHknbiLtYNgjCtLLqglA0w
-         koyA==
-X-Gm-Message-State: AOJu0Yx/cJheKsIGI3MrofnD3xrg7wd4X6MiZw8hsyWiln0nIjKuIuJP
-	vldRdD38aVGYl06FTGycp1M=
-X-Google-Smtp-Source: AGHT+IHUQ6Z7qSYKU+hBoeLA+kbz9hl5AQRtQpiHAX90PUW/NvlibvuwgpYKImASI5xzCqd+qJkj/w==
-X-Received: by 2002:a05:6a21:6da2:b0:17e:2afd:407b with SMTP id wl34-20020a056a216da200b0017e2afd407bmr38264150pzb.9.1699276753788;
-        Mon, 06 Nov 2023 05:19:13 -0800 (PST)
+        bh=fr+joEsWrYcl8ukIVzt78+UYYlxwhETFVKbvjb+usu8=;
+        b=F5gAOaDPJWXX1CYHjvEzTWigqBS3WbQsx1g6140W8/UjK58kidIi2LQzPPKaYXHyzP
+         vEa+Sjx08QiQSp+kIASWN9bwyrfgsjvagfMn2WluHNYEdzAzuE24qbOYp8K5n84+Rx/y
+         huzsz6bKeBZJ0N6OYNludjY+rdDQALGV5wroFQbdWR11kM1xTNvzATrZjmzDMhMoySNN
+         v4JbyrUuAJjVzmOOlEX1Ikmq3ILue9ZHFsm5In9tcU/8kR9JpkvHnqQaTkjKSqhGGpiU
+         SqeSiauRQwrgVidpuEoyyesb+qxV63hIPiFpbIOJ16dChHIwyF7mSP0F6SxgF5kFUtcR
+         5blA==
+X-Gm-Message-State: AOJu0YwDuoayCJynxRl1ANycdP0S/d2m+TtPTFwthkS/i0F/8+258Qn/
+	6Vsm74P+lrPRMSiK56go+GZSm6u6awc=
+X-Google-Smtp-Source: AGHT+IES65Beeo5CtT0KG2gVpssf1mIWeJn7zOSJ55OXkJjOpdHjEhG2JP0PsCRTcF1nhxyE/FWrSw==
+X-Received: by 2002:a05:6a20:8e1f:b0:174:210c:34b0 with SMTP id y31-20020a056a208e1f00b00174210c34b0mr27396156pzj.0.1699276998794;
+        Mon, 06 Nov 2023 05:23:18 -0800 (PST)
 Received: from debian.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id 13-20020a17090a004d00b0027782f611d1sm6096806pjb.36.2023.11.06.05.19.12
+        by smtp.gmail.com with ESMTPSA id ge8-20020a17090b0e0800b00277371fd346sm1370106pjb.30.2023.11.06.05.23.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 05:19:13 -0800 (PST)
+        Mon, 06 Nov 2023 05:23:17 -0800 (PST)
 Received: by debian.me (Postfix, from userid 1000)
-	id EB878815BAB0; Mon,  6 Nov 2023 20:19:08 +0700 (WIB)
-Date: Mon, 6 Nov 2023 20:19:08 +0700
+	id CB5EB815CB68; Mon,  6 Nov 2023 20:23:14 +0700 (WIB)
+Date: Mon, 6 Nov 2023 20:23:14 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
+To: Daire Byrne <daire@dneg.com>, Charles Hedrick <hedrick@rutgers.edu>,
+	Linux NFS <linux-nfs@vger.kernel.org>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux LEDs <linux-leds@vger.kernel.org>
-Cc: Tim Crawford <tcrawford@system76.com>,
-	Jeremy Soller <jeremy@system76.com>,
-	System76 Product Development <productdev@system76.com>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	Johannes =?utf-8?Q?Pen=C3=9Fel?= <johannes.penssel@gmail.com>
-Subject: Re: Fwd: sysfs: cannot create duplicate filename
- .../system76_acpi::kbd_backlight/color
-Message-ID: <ZUjnzB2RL2iLzIQG@debian.me>
-References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
- <ZT25-gUmLl8MPk93@debian.me>
- <dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>
+Subject: Re: autofs mount/umount hangs with recent kernel?
+Message-ID: <ZUjowgTNt3uW-p4y@debian.me>
+References: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,55 +62,175 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mLSYxFe79vSgKXQn"
+	protocol="application/pgp-signature"; boundary="ce7L8x7nY1fZntQ6"
 Content-Disposition: inline
-In-Reply-To: <dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+In-Reply-To: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
 
 
---mLSYxFe79vSgKXQn
+--ce7L8x7nY1fZntQ6
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
->=20
->=20
-> On 29/10/2023 02:48, Bagas Sanjaya wrote:
-> > On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
-> > > The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8e=
-ea, which introduces a new 'color' attribute for led sysfs class devices. T=
-he problem is that the system76-acpi platform driver tries to create the ex=
-act same sysfs attribute itself for the system76_acpi::kbd_backlight device=
-, leading to the conflict. For testing purposes, I've just rebuilt the kern=
-el with the system76-apci color attribute renamed to kb_color, and that fix=
-es the issue.
-> >=20
-> > Jean-Jacques Hiblot, would you like to take a look on this regression,
-> > since you authored the culprit?
+On Fri, Nov 03, 2023 at 09:40:44AM +0000, Daire Byrne wrote:
 > Hi,
 >=20
-> The offending commit stores the color in struct led_classdev and exposes =
-it
-> via sysfs. It was part of a series that create a RGB leds from multiple
-> single-color LEDs. for this series, we need the color information but we
-> don't really need to expose it it via sysfs. In order to fix the issue, we
-> can remove the 'color' attribute from the sysfs.
+> We have large compute clusters that, amongst other things, spend their
+> day mounting & unounting lots of Linux NFS servers via autofs. This
+> has worked fine for many years and client kernel versions and was
+> working without incident even with our current v6.3.x production
+> kernels.
+>=20
+> During the v6.6-rc cycle while testing that kernel, I noticed that
+> every now and then, the umount/mount would hang randomly and the
+> compute host would get stuck and not complete it's work until a
+> reboot. I thought I'd wait until v6.6 was released and check again -
+> the issue persists.
+>=20
+> I have not had the opportunity to test the v6.4 & v6.5 kernels in
+> between yet. The stack traces look something like this:
+>=20
+> [202752.264187] INFO: task umount.nfs:58118 blocked for more than 245 sec=
+onds.
+> [202752.264237]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
+> [202752.264267] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [202752.264296] task:umount.nfs      state:D stack:0     pid:58118
+> ppid:1      flags:0x00004002
+> [202752.264304] Call Trace:
+> [202752.264308]  <TASK>
+> [202752.264313]  __schedule+0x30b/0xa10
+> [202752.264327]  schedule+0x68/0xf0
+> [202752.264332]  io_schedule+0x16/0x40
+> [202752.264337]  __folio_lock+0xfc/0x220
+> [202752.264346]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.264353]  ? __pfx_wake_page_function+0x10/0x10
+> [202752.264361]  truncate_inode_pages_range+0x441/0x460
+> [202752.264411]  truncate_inode_pages_final+0x41/0x50
+> [202752.264425]  nfs_evict_inode+0x1a/0x40 [nfs]
+> [202752.264476]  evict+0xdc/0x190
+> [202752.264485]  dispose_list+0x4d/0x70
+> [202752.264491]  evict_inodes+0x16b/0x1b0
+> [202752.264499]  generic_shutdown_super+0x3e/0x160
+> [202752.264507]  kill_anon_super+0x17/0x50
+> [202752.264513]  nfs_kill_super+0x27/0x50 [nfs]
+> [202752.264556]  deactivate_locked_super+0x35/0x90
+> [202752.264562]  deactivate_super+0x42/0x50
+> [202752.264568]  cleanup_mnt+0x109/0x170
+> [202752.264574]  __cleanup_mnt+0x12/0x20
+> [202752.264580]  task_work_run+0x61/0x90
+> [202752.264588]  exit_to_user_mode_prepare+0x1d8/0x200
+> [202752.264596]  syscall_exit_to_user_mode+0x1c/0x40
+> [202752.264603]  do_syscall_64+0x48/0x90
+> [202752.264609]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [202752.264617] RIP: 0033:0x7fcb9befeba7
+> [202752.264622] RSP: 002b:00007ffdd63ef348 EFLAGS: 00000246 ORIG_RAX:
+> 00000000000000a6
+> [202752.264628] RAX: 0000000000000000 RBX: 00005561e35da010 RCX:
+> 00007fcb9befeba7
+> [202752.264632] RDX: 0000000000000001 RSI: 0000000000000000 RDI:
+> 00005561e35da1e0
+> [202752.264634] RBP: 00005561e35da1e0 R08: 00005561e35dbfa0 R09:
+> 00005561e35db790
+> [202752.264637] R10: 00007ffdd63eeda0 R11: 0000000000000246 R12:
+> 00007fcb9c442d78
+> [202752.264640] R13: 0000000000000000 R14: 00005561e35db2c0 R15:
+> 00007ffdd63f0dcb
+> [202752.264648]  </TASK>
+>=20
+> [202752.264658] INFO: task mount.nfs:60827 blocked for more than 122 seco=
+nds.
+> [202752.264686]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
+> [202752.264713] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [202752.264743] task:mount.nfs       state:D stack:0     pid:60827
+> ppid:60826  flags:0x00004000
+> [202752.264751] Call Trace:
+> [202752.264753]  <TASK>
+> [202752.264757]  __schedule+0x30b/0xa10
+> [202752.264763]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.264771]  schedule+0x68/0xf0
+> [202752.264776]  schedule_preempt_disabled+0x15/0x30
+> [202752.264782]  rwsem_down_write_slowpath+0x2b3/0x640
+> [202752.264788]  ? try_to_wake_up+0x242/0x5f0
+> [202752.264797]  ? __x86_indirect_jump_thunk_r15+0x20/0x20
+> [202752.264803]  ? wake_up_q+0x50/0x90
+> [202752.264809]  down_write+0x55/0x70
+> [202752.264815]  super_lock+0x44/0x130
+> [202752.264821]  ? kernfs_activate+0x54/0x60
+> [202752.264828]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.264833]  ? kernfs_add_one+0x11f/0x160
+> [202752.264841]  grab_super+0x2e/0x80
+> [202752.264847]  grab_super_dead+0x31/0xe0
+> [202752.264855]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.264860]  ? sysfs_create_link_nowarn+0x22/0x40
+> [202752.264865]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.264871]  ? __pfx_nfs_compare_super+0x10/0x10 [nfs]
+> [202752.264915]  sget_fc+0xd4/0x280
+> [202752.264921]  ? __pfx_nfs_set_super+0x10/0x10 [nfs]
+> [202752.264965]  nfs_get_tree_common+0x86/0x520 [nfs]
+> [202752.265009]  nfs_try_get_tree+0x5c/0x2e0 [nfs]
+> [202752.265052]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.265058]  ? try_module_get+0x1d/0x30
+> [202752.265064]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.265068]  ? get_nfs_version+0x29/0x90 [nfs]
+> [202752.265111]  ? srso_alias_return_thunk+0x5/0x7f
+> [202752.265116]  ? nfs_fs_context_validate+0x4fe/0x710 [nfs]
+> [202752.265163]  nfs_get_tree+0x38/0x60 [nfs]
+> [202752.265202]  vfs_get_tree+0x2a/0xe0
+> [202752.265207]  ? capable+0x19/0x20
+> [202752.265213]  path_mount+0x2fe/0xa90
+> [202752.265219]  ? putname+0x55/0x70
+> [202752.265226]  do_mount+0x80/0xa0
+> [202752.265233]  __x64_sys_mount+0x8b/0xe0
+> [202752.265240]  do_syscall_64+0x3b/0x90
+> [202752.265245]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [202752.265250] RIP: 0033:0x7fbf5d4ff26a
+> [202752.265253] RSP: 002b:00007ffeb24fdd98 EFLAGS: 00000202 ORIG_RAX:
+> 00000000000000a5
+> [202752.265258] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
+> 00007fbf5d4ff26a
+> [202752.265261] RDX: 000055c814e78100 RSI: 000055c814e771e0 RDI:
+> 000055c814e77320
+> [202752.265264] RBP: 00007ffeb24fdfb0 R08: 000055c814e85510 R09:
+> 000000000000006d
+> [202752.265266] R10: 0000000000000004 R11: 0000000000000202 R12:
+> 00007fbf5e2307e0
+> [202752.265269] R13: 00007ffeb24fdfb0 R14: 00007ffeb24fde90 R15:
+> 000055c814e855a0
+> [202752.265277]  </TASK>
+>=20
+> And like I said, the mount/umount against the server hangs
+> indefinitely on the client. It is somewhat interesting that autofs
+> still tries to trigger a subsequent mount even though the umount has
+> not completed.
+>=20
+> The NFS servers are running RHEL8.5 and we are using NFSv3. I also
+> reproduced it with a fairly recent nfs-utils-2.6.2 on the client
+> compute hosts.
+>=20
+> Because these happen quite rarely, it takes time and many clients and
+> mount/umount cycles to reproduce, so I thought I'd post here before
+> working through the bisect testing. If you think this is better as a
+> kernel.org bugzilla ticket, I'm happy to do that too.
 >=20
 
-OK, see you in the patch!
+Thanks for the regression report. I'm adding it to regzbot:
+
+#regzbot ^introduced: v6.5..v6.6
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---mLSYxFe79vSgKXQn
+--ce7L8x7nY1fZntQ6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZUjnyAAKCRD2uYlJVVFO
-o00MAP46Ar3NgVvRankXk1V4h3zoLCr89KoQ1Lfibtd5doJaUQD/cn2uxDs4aSlz
-/9jB4eJEcHBWxonDhaWcpvJGoxYoRgw=
-=lEvF
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZUjowgAKCRD2uYlJVVFO
+o7IwAP9DsSr/mJ9kz/lpJb8+LA0eTKCjju+vzkoWgJ3NMX+ePAEA2b8L/6KUSPYo
+NAH1ijhluRkl1Ulei5ZjCRQdGnFwvAE=
+=0FBA
 -----END PGP SIGNATURE-----
 
---mLSYxFe79vSgKXQn--
+--ce7L8x7nY1fZntQ6--
