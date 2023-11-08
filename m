@@ -1,238 +1,488 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from purple.birch.relay.mailchannels.net (purple.birch.relay.mailchannels.net [23.83.209.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271F76ADE
-	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 05:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B828F7E
+	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 05:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=epreston.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epreston.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="d7+I+fmk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qn/BBBsr"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id ED1365C0118;
-	Wed,  8 Nov 2023 00:16:43 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 08 Nov 2023 00:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm3; t=1699420603; x=
-	1699507003; bh=z8xumBIVGV5NN7X6wcuwW9xKiIyujIbyq+r8oTDHiuU=; b=d
-	7+I+fmkLDy80pcn2iecngh+P1bNNSO4gJcwtcnFjlrQ11N/iXKIogvXgsjTU2nyP
-	YGGyGNH93QkbwltMm3O3EwmrSVbOYi2uVWGQkQ+9QzLWE/e8sBg6PBQNRBKi6N3a
-	jiYXDjE9hBCN/pdREsfuCHggJGtVhUEsY+3WjclmMvuff58Ib+nFLOU5gHJatNko
-	Y29V/C/qVp8e/MPTnfEjvqO4+se/rsibizF4L8jcwmS/GtIJdZ7r6tifW4xEAY5X
-	ZI+a+sGLbO/Lb7Bq3aJ3aKFzX6q3Ev3p5wXeOmu3y3DaLBQIW8o8viv1eMN9ZRaU
-	IWMGab4auK3y9J84Arfjw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1699420603; x=1699507003; bh=z8xumBIVGV5NN
-	7X6wcuwW9xKiIyujIbyq+r8oTDHiuU=; b=qn/BBBsr6/MO3B8BWyktfGrdhuTFl
-	2UycJCpFGrnMVG6RUI57hdHjq0UCa75tYJoWqPMZtr+bH1PoABKYvHXg29beXTJh
-	AUsXuur7yhf4ihmL3lne841/ZsOOL4CcXRTWrCUCE03Uw43a/DDQhliiD7xh548o
-	6hbBpOc43ymiQ2f8XGuIg+DLQL79/K/cb3nj2suO7mkNpWzYyuLt2rT9vNVN23Eg
-	Q9zACY1oFSS6Rct3fsXZ5E3vieM9DGzHI0FOMWzgI5BYYFmbzKYF6yEM6Ci8/GIW
-	3LAjay5/JHWuMtWy16qeZJ9lLaj+v8XrbeSMv/BsINGiQYjKdGgQCWBew==
-X-ME-Sender: <xms:uxlLZf-AzrgUaZtMpy64tZ8RvPCslwvFZGqptOccn-jKdJp8lVjuAg>
-    <xme:uxlLZbsi3IzNFCnNrF_8-SdCFHiDU0SPL3g6xshSqmDY9d_j9LP0OhYRvYO6rUpf6
-    W0UNr6_ZgzQdgmRRTs>
-X-ME-Received: <xmr:uxlLZdAjs-bwBk4O3Wyxi2froVLZsBMn8COomo5hskSw0jqtZTYW_Ob_MLwyMHUdk-1p-QfU6cxeZcAy-g2Irs_-t0lfiDaQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddukedgjeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeffudduvedvfeduleelfeeg
-    ieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:uxlLZbeLFtXEKR3-JkffoccG_xjMfT-sCr0sRpYJ72w74bVAbsE-OQ>
-    <xmx:uxlLZUOrF7drlwObLAT2RM_u4l6yKALJfIPZLXL3PqSkvq4hsH7Gvw>
-    <xmx:uxlLZdm5nLVa95kGbpl0DpmO5tlqRf1BcegURxBD0s5axWwmZu_vLw>
-    <xmx:uxlLZbfRT0uAHFcpp_QVlUEY3G5lFmlA7oTxS1b77WnprQv2OypZhg>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 8 Nov 2023 00:16:41 -0500 (EST)
-Date: Wed, 8 Nov 2023 14:16:38 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
-	a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
-	LKML <linux-kernel@vger.kernel.org>, aros@gmx.com,
-	bagasdotme@gmail.com,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
-Message-ID: <20231108051638.GA194133@workstation.local>
-Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
-	LKML <linux-kernel@vger.kernel.org>, aros@gmx.com,
-	bagasdotme@gmail.com,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
- <20231107121756.GA168964@workstation.local>
- <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=epreston.net header.i=@epreston.net header.b="OAcwtOhS"
+X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 33DBEC13C0;
+	Wed,  8 Nov 2023 05:23:14 +0000 (UTC)
+Received: from s147.servername.online (unknown [127.0.0.6])
+	(Authenticated sender: hostpapa)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 02C70C140F;
+	Wed,  8 Nov 2023 05:23:12 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1699420993; a=rsa-sha256;
+	cv=none;
+	b=VvsSPmnIic4clobvZBUp/mYdN7hBg4U5rJJ7Dn7hKgjNt70+EmG+nBlXYu6gnRqQHwMsue
+	tzwC1mZ1aZrVxjt4C4YMOTBYXffa5Jeg5WiH+gOY5LQcB7Z7yZlXkRua/tVpS+kX0IhzaO
+	WkvSWafSLo8OIZRG6NhXCbVplFvj8eDUFwB4Nq1zLX5oWQarH9j+ibnS20AVxIjzv14Eaz
+	FGIZoqpSgDjn0ASGmGmgT/OdRT6aMQXgA+w7O5FSoJcPhs0rT26/4OZGAJRoTTHUURcQSx
+	pyVgeTGPtGOnfuSl+dfoRryfSPO6D5kHCQQ17ZcxP8tcY91fg5VUs31TMv3iMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1699420993;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=yWYZn03K0ypTuPktOXkOsEdKXZPUsCXhWsa2XXUQspk=;
+	b=6wEzByTdhwOCDeXwM0X4b4M7nccP8HKRN7VJiXzrOb+mzm5QLPdyR50Ux7NqCsEWh1yj9p
+	VPSjBDgG5P7RDRU/VbeSjdOaDa6g4Nll87YRmSKhfpXItUfEIP4Sg51/L3DvsMEaK8JK9M
+	rX0K+YmnrfpT++nSXckirT56RO1IgmJn0k9o6p+ZISiUlvOz5dIspsFwSuEA1FUE+JR++6
+	u4Fy/gVM7dg1/7AazbQBE04ODNiR03vI0Yu6duMnDC/+WB5dyGyXwnp3V+RtgWsjbNPa8J
+	NcUJaJt/fQy83LqESh//smdtQWfAZzOR60Rj6z0mry4s9P09jhnf+kaxedcdQQ==
+ARC-Authentication-Results: i=1;
+	rspamd-6f98f74948-v699j;
+	auth=pass smtp.auth=hostpapa smtp.mailfrom=x.arch@epreston.net
+X-Sender-Id: hostpapa|x-authuser|x.reply@epreston.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostpapa|x-authuser|x.reply@epreston.net
+X-MailChannels-Auth-Id: hostpapa
+X-Whistle-Towering: 7f537eb47d364ffb_1699420993577_3551812287
+X-MC-Loop-Signature: 1699420993577:644350144
+X-MC-Ingress-Time: 1699420993577
+Received: from s147.servername.online (s147.servername.online
+ [204.44.192.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384)
+	by 100.101.67.122 (trex/6.9.2);
+	Wed, 08 Nov 2023 05:23:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=epreston.net; s=default; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yWYZn03K0ypTuPktOXkOsEdKXZPUsCXhWsa2XXUQspk=; b=OAcwtOhS/WdpUIXw2tj5uru1NA
+	L5R+I369rnQz1u9SsHuAM8px37AdO9quPlqAkx9M9b1bK0ce6IoA9vOx5klcUZLR65Bv3lS64O0GV
+	Ulvo6Y3EFaOCT09SKKHhHejFjmHhN3c+IK6+0vI2oEFOKrV9NUZ1sUKtzVWMB2uulKUATTAYE0NjN
+	Ld/ZgwVy87cGRHyUR+n4YlahrdsTAFLqCGyXHqudgWwgjVTkDwRil52U5OemgbtkFv66iDhgpTh3d
+	vp6vl4YzDgQjtP0Hfj8A5tKesjFY7SJTE3L34jpT9sd21O6/uewGVdXKDLkUc5QzeNXo1I07dGGZl
+	tNej1SNw==;
+Received: from [50.35.115.28] (port=36688 helo=P70.localdomain)
+	by s147.servername.online with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <x.arch@epreston.net>)
+	id 1r0b1w-008Rl3-25;
+	Tue, 07 Nov 2023 21:23:11 -0800
+Date: Tue, 7 Nov 2023 21:23:07 -0800
+From: Evan Preston <x.arch@epreston.net>
+To: Evan Preston <x.arch@epreston.net>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jaak Ristioja <jaak@ristioja.ee>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: Blank screen on boot of Linux 6.5 and later on Lenovo ThinkPad
+ L570
+Message-ID: <ZUsbO7syWsbiCcdo@P70.localdomain>
+References: <CAAhV-H6GyOnTOm6b8Xp=ySctyE-T905WKDUS2AZuqnEyzM7ZEg@mail.gmail.com>
+ <ZUWtTuIcMwwCWg7z@P70.localdomain>
+ <CAAhV-H7wnjac1Znr2yh8S2bGwuxF1RRGp=cn9oracrWm6y5VVQ@mail.gmail.com>
+ <51add74a-1d1a-493d-bb50-fccdad11b22c@ristioja.ee>
+ <CAAhV-H7nhkvLoDMwQDwNEhykZANGMq-Qrzip48qYzgQs1fNUgA@mail.gmail.com>
+ <be82874b-d41b-4547-9ab5-dac9a5ddfeaf@ristioja.ee>
+ <CAAhV-H6zjW3XzDWP1_Hu-owBPLyJVB-_V3z9bMtOgubp1p5kZA@mail.gmail.com>
+ <ZUlNbpo_l8JYDdlu@P70.localdomain>
+ <CAAhV-H5vSJ+KXw3SPAsx=EEpdLhXh06kC3sj6jMrK_XUmXe8LA@mail.gmail.com>
+ <ZUnNi3q3yB3zZfTl@P70.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZUnNi3q3yB3zZfTl@P70.localdomain>
+X-AuthUser: x.reply@epreston.net
 
-Hi Mario,
-
-On Tue, Nov 07, 2023 at 03:27:08PM -0600, Mario Limonciello wrote:
-> +linux-pci / Bjorn
-> On 11/7/2023 06:17, Takashi Sakamoto wrote:
-> > Hi Mario,
-> > 
-> > Thanks for the report.
-> > 
-> > I apologize for the inconvenience you and your reporter facing, however
-> > I can not avoid to say that the problem appears to be specific to the AMD
-> > Ryzen machines.
+On 2023-11-06 Mon 09:39pm, Evan Preston wrote:
+> Hi Huacai,
 > 
-> Unfortunately I don't have this 1394 hardware myself.  I was just looking at
-> another completely unrelated issue on Bugzilla and noticed the report come
-> up in my search and wanted to ensure it's on your radar already as the
-> author as it's lingered a while.
-
-It is your misfortune to face this kind of machine trouble.
-
-In the report[1], Matthias Schrumpf and Mark Broadworth noted to use AMD
-Ryzen 7 5800X on B550/X570 chipsets, and insert VT6307 in their PCIe bus.
-I guess that the device attends PCI bridge (ASM1083) since VT6307 has PCI
-interface only.
-
-We can see MCE error in another report[2]. Unfortunately, the reporter,
-Ian Donnelly, have less suspiction about machine architecture, and never
-provides hardware information. But I believe that it comes from AMD Ryzen
-machine. I transcribe the error here:
-
-```
-[    0.860834] mce: [Hardware Error]: Machine check events logged
-[    0.860834] microcode: CPU20: patch_level=0x0a201025
-[    0.860835] microcode: CPU21: patch_level=0x0a201025
-[    0.860836] microcode: CPU23: patch_level=0x0a201025
-[    0.860836] microcode: CPU22: patch_level=0x0a201025
-[    0.860837] mce: [Hardware Error]: CPU 17: Machine Check: 0 Bank 0: bc00080001010135
-[    0.860845] fbcon: Taking over console
-[    0.860847] mce: [Hardware Error]: TSC 0 ADDR fca000f0 MISC d012000000000000 IPID 1000b000000000 
-[    0.860854] mce: [Hardware Error]: PROCESSOR 2:a20f10 TIME 1696955537 SOCKET 0 APIC b microcode a201025
-[    0.860860] microcode: CPU0: patch_level=0x0a201025
-[    0.861676] microcode: Microcode Update Driver: v2.2.
-```
-
-Additionally, as I note in the PR[3], I observed cache-coherence failure
-over memory dedicated for DMA transmission. The mapping is created by
-`dmam_alloc_coherent()` and no need to have extra care such as streaming
-API. However, the combination of ASM1083 and VT6307 provides me bogus
-values from the memory in AMD Ryzen machine, and I can see no issue in
-Intel machines.
-
-Essentially, the host system reboots when firewire-ohci module in guest
-system probes the PCI device for 1394 OHCI hardware provided by PCI
-pass-though[4].
-
-> > I've already received the similar report[1], and have been
-> > investigating it in the last few weeks, then got the insight. Please take
-> > a look at my short report about it in PR to Linus for 6.7-rc1:
-> > https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+> On 2023-11-07 Tue 09:49am, Huacai Chen wrote:
+> > Hi, Evan,
 > > 
-> > I can confirm that I have been abe to reproduce the problem on AMD Ryzen
-> > machine. However, it's important to note that I have not observed the
-> > problem on the following systems:
+> > On Tue, Nov 7, 2023 at 4:32 AM Evan Preston <x.arch@epreston.net> wrote:
+> > >
+> > > Hi Huacai,
+> > >
+> > > On 2023-11-06 Mon 10:22pm, Huacai Chen wrote:
+> > > > On Mon, Nov 6, 2023 at 9:49 PM Jaak Ristioja <jaak@ristioja.ee> wrote:
+> > > > >
+> > > > > On 06.11.23 04:15, Huacai Chen wrote:
+> > > > > > Hi, Jaak and Evan,
+> > > > > >
+> > > > > > On Mon, Nov 6, 2023 at 12:28 AM Jaak Ristioja <jaak@ristioja.ee> wrote:
+> > > > > >>
+> > > > > >> On 05.11.23 14:40, Huacai Chen wrote:
+> > > > > >>> Hi, Evan,
+> > > > > >>>
+> > > > > >>> On Sat, Nov 4, 2023 at 10:50 AM Evan Preston <x.arch@epreston.net> wrote:
+> > > > > >>>>
+> > > > > >>>> Hi Huacai,
+> > > > > >>>>
+> > > > > >>>> On 2023-11-03 Fri 02:36pm, Huacai Chen wrote:
+> > > > > >>>>> Hi, Evan,
+> > > > > >>>>>
+> > > > > >>>>> On Fri, Nov 3, 2023 at 1:54 PM Evan Preston <x.arch@epreston.net> wrote:
+> > > > > >>>>>>
+> > > > > >>>>>> Hi Huacai,
+> > > > > >>>>>>
+> > > > > >>>>>> On 2023-11-02 Thu 08:38pm, Huacai Chen wrote:
+> > > > > >>>>>>> Hi, Jaak,
+> > > > > >>>>>>>
+> > > > > >>>>>>> On Wed, Nov 1, 2023 at 7:52 PM Jaak Ristioja <jaak@ristioja.ee> wrote:
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> On 31.10.23 14:17, Huacai Chen wrote:
+> > > > > >>>>>>>>> Hi, Jaak and Evan,
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> On Sun, Oct 29, 2023 at 9:42 AM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > >>>>>>>>>>
+> > > > > >>>>>>>>>> On Sat, Oct 28, 2023 at 7:06 PM Jaak Ristioja <jaak@ristioja.ee> wrote:
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>> On 26.10.23 03:58, Huacai Chen wrote:
+> > > > > >>>>>>>>>>>> Hi, Jaak,
+> > > > > >>>>>>>>>>>>
+> > > > > >>>>>>>>>>>> On Thu, Oct 26, 2023 at 2:49 AM Jaak Ristioja <jaak@ristioja.ee> wrote:
+> > > > > >>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>> On 25.10.23 16:23, Huacai Chen wrote:
+> > > > > >>>>>>>>>>>>>> On Wed, Oct 25, 2023 at 6:08 PM Thorsten Leemhuis
+> > > > > >>>>>>>>>>>>>> <regressions@leemhuis.info> wrote:
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> Javier, Dave, Sima,
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> On 23.10.23 00:54, Evan Preston wrote:
+> > > > > >>>>>>>>>>>>>>>> On 2023-10-20 Fri 05:48pm, Huacai Chen wrote:
+> > > > > >>>>>>>>>>>>>>>>> On Fri, Oct 20, 2023 at 5:35 PM Linux regression tracking (Thorsten
+> > > > > >>>>>>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+> > > > > >>>>>>>>>>>>>>>>>> On 09.10.23 10:54, Huacai Chen wrote:
+> > > > > >>>>>>>>>>>>>>>>>>> On Mon, Oct 9, 2023 at 4:45 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> > > > > >>>>>>>>>>>>>>>>>>>> On Mon, Oct 09, 2023 at 09:27:02AM +0800, Huacai Chen wrote:
+> > > > > >>>>>>>>>>>>>>>>>>>>> On Tue, Sep 26, 2023 at 10:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> > > > > >>>>>>>>>>>>>>>>>>>>>> On Tue, Sep 26, 2023 at 7:15 PM Linux regression tracking (Thorsten
+> > > > > >>>>>>>>>>>>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+> > > > > >>>>>>>>>>>>>>>>>>>>>>> On 13.09.23 14:02, Jaak Ristioja wrote:
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> Upgrading to Linux 6.5 on a Lenovo ThinkPad L570 (Integrated Intel HD
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> Graphics 620 (rev 02), Intel(R) Core(TM) i7-7500U) results in a blank
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> screen after boot until the display manager starts... if it does start
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> at all. Using the nomodeset kernel parameter seems to be a workaround.
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> I've bisected this to commit 60aebc9559492cea6a9625f514a8041717e3a2e4
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> ("drivers/firmware: Move sysfb_init() from device_initcall to
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>> subsys_initcall_sync").
+> > > > > >>>>>>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>>> As confirmed by Jaak, disabling DRM_SIMPLEDRM makes things work fine
+> > > > > >>>>>>>>>>>>>>>>>>>>> again. So I guess the reason:
+> > > > > >>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>> Well, this to me still looks a lot (please correct me if I'm wrong) like
+> > > > > >>>>>>>>>>>>>>>>>> regression that should be fixed, as DRM_SIMPLEDRM was enabled beforehand
+> > > > > >>>>>>>>>>>>>>>>>> if I understood things correctly. Or is there a proper fix for this
+> > > > > >>>>>>>>>>>>>>>>>> already in the works and I just missed this? Or is there some good
+> > > > > >>>>>>>>>>>>>>>>>> reason why this won't/can't be fixed?
+> > > > > >>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>> DRM_SIMPLEDRM was enabled but it didn't work at all because there was
+> > > > > >>>>>>>>>>>>>>>>> no corresponding platform device. Now DRM_SIMPLEDRM works but it has a
+> > > > > >>>>>>>>>>>>>>>>> blank screen. Of course it is valuable to investigate further about
+> > > > > >>>>>>>>>>>>>>>>> DRM_SIMPLEDRM on Jaak's machine, but that needs Jaak's effort because
+> > > > > >>>>>>>>>>>>>>>>> I don't have a same machine.
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> Side note: Huacai, have you tried working with Jaak to get down to the
+> > > > > >>>>>>>>>>>>>>> real problem? Evan, might you be able to help out here?
+> > > > > >>>>>>>>>>>>>> No, Jaak has no response after he 'fixed' his problem by disabling SIMPLEDRM.
+> > > > > >>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>> I'm sorry, what was it exactly you want me to do? Please be mindful that
+> > > > > >>>>>>>>>>>>> I'm not familiar with the internals of the Linux kernel and DRI, and it
+> > > > > >>>>>>>>>>>>> might sometimes take weeks before I have time to work and respond on this.
+> > > > > >>>>>>>>>>>> It doesn't matter. I hope you can do some experiments to investigate
+> > > > > >>>>>>>>>>>> deeper. The first experiment you can do is enabling SIMPLEFB (i.e.
+> > > > > >>>>>>>>>>>> CONFIG_FB_SIMPLE) instead of SIMPLEDRM (CONFIG_DRM_SIMPLEDRM) to see
+> > > > > >>>>>>>>>>>> whether there is also a blank screen. If no blank screen, that
+> > > > > >>>>>>>>>>>> probably means SIMPLEDRM has a bug, if still blank screen, that means
+> > > > > >>>>>>>>>>>> the firmware may pass wrong screen information.
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>> Testing with 6.5.9 I get a blank screen with CONFIG_DRM_SIMPLEDRM=y and
+> > > > > >>>>>>>>>>> get no blank screen with CONFIG_FB_SIMPLE=y and CONFIG_DRM_SIMPLEDRM unset.
+> > > > > >>>>>>>>>> CONFIG_FB_SIMPLE and  CONFIG_DRM_SIMPLEDRM use the same device created
+> > > > > >>>>>>>>>> by sysfb_init(). Since FB_SIMPLE works fine, I think the real problem
+> > > > > >>>>>>>>>> is that DRM_SIMPLEDRM has a bug. The next step is to enable
+> > > > > >>>>>>>>>> CONFIG_DRM_SIMPLEDRM and trace its initialization. In detail, adding
+> > > > > >>>>>>>>>> some printk() in simpledrm_probe() and its sub-routines to see where
+> > > > > >>>>>>>>>> the driver fails. The output of these printk() can be seen by the
+> > > > > >>>>>>>>>> 'dmesg' command after boot.
+> > > > > >>>>>>>>> I need your help. I tried with my laptop (ThinkPad E490, Intel Core
+> > > > > >>>>>>>>> i3-8145U, UHD Graphics 620) but I can't reproduce your problem. So
+> > > > > >>>>>>>>> please patch your 6.5.x kernel with this temporary patch [1], then
+> > > > > >>>>>>>>> build a "bad kernel" with SIMPLEDRM enabled. And after booting your
+> > > > > >>>>>>>>> machine with this "bad kernel", please give me the dmesg output. Thank
+> > > > > >>>>>>>>> you very much.
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> [1] http://ddns.miaomiaomiao.top:9000/download/kernel/patch-6.5.9
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> I'm unable to download it. Can you please send it by e-mail?
+> > > > > >>>>>>> I'm sorry, please download from attachment.
+> > > > > >>>>>>
+> > > > > >>>>>> When applying this patch the first hunk (drivers/firmware/sysfb.c) fails for
+> > > > > >>>>>> me with 6.5.9.  Attempting to load the 6.5.9 kernel without this patch
+> > > > > >>>>>> produces no dmesg output on my machine.
+> > > > > >>>>> You copy-paste the patch? If you download it directly it can be
+> > > > > >>>>> applied successfully, I think.
+> > > > > >>>>
+> > > > > >>>> The patch downloaded from your URL applies successfully.  However, I still
+> > > > > >>>> see no dmesg output using the patched 6.5.9 kernel.  'journalctl -k -b all'
+> > > > > >>>> shows no dmesg output from any 6.5.x boots, only from 6.4.12 boots.
+> > > > > >>> Thank you for your testing. Since you cannot boot to GUI successfully
+> > > > > >>> as Jaak, you may have some troubles with getting the dmesg output. But
+> > > > > >>> you can try to use "systemd.unit=multi-user.target" boot parameters.
+> > > > > >>> In this way you may boot to the login: prompt and then you can get
+> > > > > >>> dmesg output. Or if you still fail, you may use 'jornalctl -k -b -1'
+> > > > > >>> to get the previous dmesg output with 6.4.12.
+> > > > > >>>
+> > > > > >>> Hi, Jaak,
+> > > > > >>>
+> > > > > >>> Have you tested? I think you can successfully get a dmesg output with my patch.
+> > > > > >>
+> > > > > >> Yes, just tested it, here I think are the relevant parts from a dmesg
+> > > > > >> produced with CONFIG_DRM_SIMPLEDRM and the patch provided by Huacai:
+> > > > > >>
+> > > > > >> ...
+> > > > > >> [    2.909625] sysfb 1
+> > > > > >> [    2.909627] sysfb 2
+> > > > > >> ...
+> > > > > >> [    2.951477] ACPI: bus type drm_connector registered
+> > > > > >> [    2.952096] i915 0000:00:02.0: [drm] VT-d active for gfx access
+> > > > > >> [    2.952105] resource: resource sanity check: requesting [mem
+> > > > > >> 0x00000000e0000000-0x00000000efffffff], which spans more than BOOTFB
+> > > > > >> [mem 0xe0000000-0xe012bfff]
+> > > > > >> [    2.952111] caller i915_ggtt_init_hw+0x88/0x120 mapping multiple BARs
+> > > > > >> [    2.952138] i915 0000:00:02.0: [drm] Using Transparent Hugepages
+> > > > > >> [    2.953204] Loading firmware: i915/kbl_dmc_ver1_04.bin
+> > > > > >> [    2.953485] i915 0000:00:02.0: [drm] Finished loading DMC firmware
+> > > > > >> i915/kbl_dmc_ver1_04.bin (v1.4)
+> > > > > >> ...
+> > > > > >> [    4.142075] [drm] Initialized i915 1.6.0 20201103 for 0000:00:02.0 on
+> > > > > >> minor 0
+> > > > > >> [    4.144269] ACPI: video: Video Device [GFX0] (multi-head: yes  rom:
+> > > > > >> no  post: no)
+> > > > > >> [    4.144414] input: Video Bus as
+> > > > > >> /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input4
+> > > > > >> [    4.144580] [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 1
+> > > > > >> [    4.144590] usbcore: registered new interface driver udl
+> > > > > >> [    4.144603] T: probe 1
+> > > > > >> [    4.144605] T: create 1
+> > > > > >> [    4.144610] T: create 2
+> > > > > >> [    4.144611] T: create 3a-1
+> > > > > >> [    4.144613] T: create 3a-2
+> > > > > >> [    4.144614] T: create 3a-3
+> > > > > >> [    4.144616] T: create 3a-4
+> > > > > >> [    4.144618] T: create 4
+> > > > > >> [    4.144619] T: create 5
+> > > > > >> [    4.144621] simple-framebuffer simple-framebuffer.0: [drm] display
+> > > > > >> mode={"": 60 18432 640 640 640 640 480 480 480 480 0x40 0x0}
+> > > > > >> [    4.144628] simple-framebuffer simple-framebuffer.0: [drm]
+> > > > > >> framebuffer format=XR24 little-endian (0x34325258), size=640x480,
+> > > > > >> stride=2560 byte
+> > > > > >> [    4.144633] T: create 6b-1
+> > > > > >> [    4.144635] T: create 6b-2
+> > > > > >> [    4.144637] simple-framebuffer simple-framebuffer.0: [drm] using I/O
+> > > > > >> memory framebuffer at [mem 0xe0000000-0xe012bfff flags 0x200]
+> > > > > >> [    4.144643] T: create 6b-3
+> > > > > >> [    4.144660] T: create 6b-4
+> > > > > >> [    4.144662] T: create 7
+> > > > > >> [    4.144673] T: create 8
+> > > > > >> [    4.144676] T: create 9
+> > > > > >> [    4.144678] T: create 10
+> > > > > >> [    4.144681] T: create 11
+> > > > > >> [    4.144685] T: create 12
+> > > > > >> [    4.144689] T: probe 2
+> > > > > >> [    4.144728] [drm] Initialized simpledrm 1.0.0 20200625 for
+> > > > > >> simple-framebuffer.0 on minor 2
+> > > > > >> [    4.144732] T: probe 3
+> > > > > >> [    4.145905] Console: switching to colour frame buffer device 80x30
+> > > > > >> [    4.150437] simple-framebuffer simple-framebuffer.0: [drm] fb0:
+> > > > > >> simpledrmdrmfb frame buffer device
+> > > > > >> [    4.150766] T: probe 4
+> > > > > >> [    4.151218] loop: module loaded
+> > > > > >> [    4.154434] i915 0000:00:02.0: [drm] fb1: i915drmfb frame buffer device
+> > > > > >> ...
+> > > > > >> [   44.630789] simple-framebuffer simple-framebuffer.0: swiotlb buffer
+> > > > > >> is full (sz: 1310720 bytes), total 32768 (slots), used 0 (slots)
+> > > > > >> ...
+> > > > > >>
+> > > > > >> The last message might be due to the display manager starting up.
+> > > > > >>
+> > > > > >> Hope it helps.
+> > > > > > Thank you for your testing. Jaak's problem seems related to the
+> > > > > > initialization order, you can try to modify drivers/gpu/drm/Makefile,
+> > > > > > move
+> > > > > >
+> > > > > > obj-y                  += tiny/
+> > > > > >
+> > > > > > to between these two lines
+> > > > > >
+> > > > > > obj-$(CONFIG_DRM_SCHED) += scheduler/
+> > > > > > obj-$(CONFIG_DRM_RADEON)+= radeon/
+> > > > > >
+> > > > > > then build a new 6.5.x kernel to see whether your problem is resolved.
+> > > > >
+> > > > > Yes, this seems to have resolved it.
+> > > > Hi, Jaak,
+> > > >
+> > > > Thank you very much, and I hope this also solves Evan's problem.
+> > >
+> > > I still get a blank screen if I modify drivers/gpu/drm/Makefile to move the
+> > > order of 'tiny'.
+> > You probably encounter another problem which has no relationship with
+> > 60aebc9559492cea6a9625f514a804 ("drivers/firmware: Move sysfb_init()
+> > from device_initcall to subsys_initcall_sync"). You can revert it to
+> > test 6.5.x again.
 > 
-> Any chance you (or anyone with the issue) has a serial output available?
-> I think it would be really good to look at the circumstances surrounding the
-> reboot.
->
+> You are right.  I reverted "drivers/firmware: Move sysfb_init() from 
+> device_initcall to subsys_initcall_sync" on 6.5.9 and still get a blank 
+> screen immediately after boot loader entry selection.
+> 
+> Evan
+> 
+
+Just to close the loop on my issue: after a BIOS update I can boot 6.5.x 
+successfully.
+
+Evan
+
 > > 
-> > * Intel machine (Sandy Bridge and Skylake generations)
-> > * AMD machines predating Ryzen (Sempron 145)
-> > * Machines using different 1394 OHCI hardware from other vendors such as
-> >    TI
-> > * VIA VT6307 connected directly to PCI slot (i.e. without the issued
-> >    PCIe/PCI bridge)
+> > Huacai
 > > 
-> > Currently, I have not been able to obtain any useful debug output from
-> > the Linux system or any hardware error reports when the system reboots.
-> > It seems that the system reboots spontaneously. My assumption at this
-> > point is that AMD Ryzen machines detect a specific hardware error
-> > triggered by Ryzen machine quirk related to the combination of the Asmedia
-> > ASM1083/1085 and VIA VT6306/6307/6308, leading to power reset.
-> > 
-> 
-> Recent kernels have enabled PCI AER.  Could that be factoring in perhaps?
-
-I ordered equipments for the workflow, and waiting for shipping, since
-my motherboard has no interface for serial output.
-
-(However, I predict that we can no helpful output via the interface.)
-
-> > I genuinely appreciate your assistance in debugging this elusive
-> > hardware issue. If any workaround specific to AMD Ryzen machine quirk is
-> > required in PCI driver for 1394 OHCI hardware, I'm willing to apply it.
-> > However, it is preferable to figure out the reboot mechanism at first,
-> > I think.
-> 
-> Does the BIOS on these machines enable a watchdog timer?  If so, I'd suggest
-> disabling that for a starting point.
- 
-For consumer use, the machine has no such function, I think. For
-your information, this is the machine information I used:
-
-* Ryzen 5 2400G
-* Gigabyte Technology Co., Ltd. AX370-Gaming 5/AX370-Gaming 5
-    * BIOS F51h 02/09/2023
-
-> How about if you compile as a module and then modprobe.blacklist the module
-> on kernel command line and load it later.  Can you trigger the fault/reboot
-> this way?  If so, it at least rules out some conditions that happen during a
-> race at boot.
-
-Nowadays FireWire software stack is optional in the most of
-distributions. I can encounter the same issue at deferred probing enough
-after booting up, even if the load of system is very low.
-
-> Looking more closely at the change, I would guess the fault is specifically
-> in get_cycle_time().  I can see that the VIA devices do set
-> QUIRK_CYCLE_TIMER which will cause additional reads.
-
-I've already tested with the driver compiled without these codes, but the
-system reboots again.
-
-> Another guesses worth looking at is to see if iommu=pt or amd_iommu=off
-> help.
-> 
-> If either of those help it could point at being a problem with
-> get_cycle_time() and IOMMU.  The older systems you mentioned working
-> probably didn't enable IOMMU by default but most AMD Ryzen systems do.
-
-I already suspect platform IOMMU and kernel implementation, however it
-is helpless to disable AMD SVM and IOMMU in BIOS settings. Of course, it
-is helpless as well to provide any options to iommu in kernel command line.
-
-If I had any opportunity to access to AMD machines for enterprise-grade
-usage somehow, I would have done it. However, I am a private-time
-contributor and what I can access to is the ones for consumer use
-without any hardware support for RAS reporting.
-
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=217994
-[3] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
-[4] https://lore.kernel.org/lkml/20231016155657.GA7904@workstation.local/
-
-Thanks
-
-Takashi Sakamoto
+> > >
+> > > >
+> > > > Hi, Javier,
+> > > >
+> > > > I think I have mostly found the root cause. DRM_SIMPLEDRM has no bugs,
+> > > > Jaak's problem is due to the initialization order of drivers, and this
+> > > > order depends on the Makefile.
+> > > >
+> > > > FB_SIMPLE is before native DRM drivers (e.g. i915, radeon, amdgpu, and
+> > > > so on), but DRM_SIMPLEDRM is after them. Thus, if Jaak uses FB_SIMPLE,
+> > > > I915 will takeover FB_SIMPLE, then no problem; and if Jaak uses
+> > > > DRM_SIMPLEDRM, DRM_SIMPLEDRM will try to takeover I915, but fails to
+> > > > work.
+> > > >
+> > > > So, when I move the "tiny" directory before i915, the problem is
+> > > > solved. But the new problem is: is it acceptable to solve this problem
+> > > > by adjusting Makefile?
+> > > >
+> > > > Huacai
+> > > >
+> > > > >
+> > > > > Jaak
+> > > > >
+> > > > > >
+> > > > > > Evan's problem seems a little strange, could you please give me your
+> > > > > > config files of both 6.4.12 and 6.5.x? And you can also try the above
+> > > > > > method to see if anything changes.
+> > >
+> > > I'll send you my config files.
+> > >
+> > > > > >
+> > > > > > Huacai
+> > > > > >
+> > > > > >>
+> > > > > >> J
+> > > > > >>
+> > > > > >>>
+> > > > > >>>>
+> > > > > >>>> Evan
+> > > > > >>>>
+> > > > > >>>>>
+> > > > > >>>>> Huacai
+> > > > > >>>>>
+> > > > > >>>>>>
+> > > > > >>>>>> Evan
+> > > > > >>>>>>
+> > > > > >>>>>>>
+> > > > > >>>>>>> Huacai
+> > > > > >>>>>>>
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> Jaak
+> > > > > >>>>>>>>
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> Huacai
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>>>
+> > > > > >>>>>>>>>> Huacai
+> > > > > >>>>>>>>>>
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>> Jaak
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>>>
+> > > > > >>>>>>>>>>>> Huacai
+> > > > > >>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>> Jaak
+> > > > > >>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> But I write this mail for a different reason:
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>> I am having the same issue on a Lenovo Thinkpad P70 (Intel
+> > > > > >>>>>>>>>>>>>>>> Corporation HD Graphics 530 (rev 06), Intel(R) Core(TM) i7-6700HQ).
+> > > > > >>>>>>>>>>>>>>>> Upgrading from Linux 6.4.12 to 6.5 and later results in only a blank
+> > > > > >>>>>>>>>>>>>>>> screen after boot and a rapidly flashing device-access-status
+> > > > > >>>>>>>>>>>>>>>> indicator.
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> This additional report makes me wonder if we should revert the culprit
+> > > > > >>>>>>>>>>>>>>> (60aebc9559492c ("drivers/firmware: Move sysfb_init() from
+> > > > > >>>>>>>>>>>>>>> device_initcall to subsys_initcall_sync") [v6.5-rc1]). But I guess that
+> > > > > >>>>>>>>>>>>>>> might lead to regressions for some users? But the patch description says
+> > > > > >>>>>>>>>>>>>>> that this is not a common configuration, so can we maybe get away with that?
+> > > > > >>>>>>>>>>>>>>      From my point of view, this is not a regression, 60aebc9559492c
+> > > > > >>>>>>>>>>>>>> doesn't cause a problem, but exposes a problem. So we need to fix the
+> > > > > >>>>>>>>>>>>>> real problem (SIMPLEDRM has a blank screen on some conditions). This
+> > > > > >>>>>>>>>>>>>> needs Jaak or Evan's help.
+> > > > > >>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>> Huacai
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > > > > >>>>>>>>>>>>>>> --
+> > > > > >>>>>>>>>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+> > > > > >>>>>>>>>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+> > > > > >>>>>>>>>>>>>>> If I did something stupid, please tell me, as explained on that page.
+> > > > > >>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>>> When SIMPLEDRM takes over the framebuffer, the screen is blank (don't
+> > > > > >>>>>>>>>>>>>>>>>>>>> know why). And before 60aebc9559492cea6a9625f ("drivers/firmware: Move
+> > > > > >>>>>>>>>>>>>>>>>>>>> sysfb_init() from device_initcall to subsys_initcall_sync") there is
+> > > > > >>>>>>>>>>>>>>>>>>>>> no platform device created for SIMPLEDRM at early stage, so it seems
+> > > > > >>>>>>>>>>>>>>>>>>>>> also "no problem".
+> > > > > >>>>>>>>>>>>>>>>>>>> I don't understand above. You mean that after that commit the platform
+> > > > > >>>>>>>>>>>>>>>>>>>> device is also none, right?
+> > > > > >>>>>>>>>>>>>>>>>>> No. The SIMPLEDRM driver needs a platform device to work, and that
+> > > > > >>>>>>>>>>>>>>>>>>> commit makes the platform device created earlier. So, before that
+> > > > > >>>>>>>>>>>>>>>>>>> commit, SIMPLEDRM doesn't work, but the screen isn't blank; after that
+> > > > > >>>>>>>>>>>>>>>>>>> commit, SIMPLEDRM works, but the screen is blank.
+> > > > > >>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>> Huacai
+> > > > > >>>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>> Confused...
+> > > > > >>>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>> --
+> > > > > >>>>>>>>>>>>>>>>>>>> An old man doll... just what I always wanted! - Clara
+> > > > > >>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>>>
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>
+> > > > > >>>>>>
+> > > > > >>>>>>
+> > > > > >>
+> > > > >
