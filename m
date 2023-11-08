@@ -1,133 +1,238 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465671C36
-	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 04:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271F76ADE
+	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 05:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="uD1wn4Vf"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 4F6E08285745;
-	Tue,  7 Nov 2023 22:00:48 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 1SQ6zSrF5CdV; Tue,  7 Nov 2023 22:00:46 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id A3F7982856EE;
-	Tue,  7 Nov 2023 22:00:46 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com A3F7982856EE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1699416046; bh=b/TPDzLLS8IiaJGu63CY35vrariPL++Xjvo/jUhX2Ec=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=uD1wn4VfwAfr3gss0+MYTYYo+CF8OqCP2D6zu5yAj64EcTyxqkoG3BFu/lC6V9k9V
-	 5zo2296LxRXm7fak9LE7702OBlPuuaUzbpHFM7c2eA/uxcclrCzO3R4R/u0x/wAevH
-	 LAFQH73CFkcm78EZb4A8vmomrFlleVG/hKGDlMEE=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id uho3GE0OUHF6; Tue,  7 Nov 2023 22:00:46 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 811A48284E9F;
-	Tue,  7 Nov 2023 22:00:46 -0600 (CST)
-Date: Tue, 7 Nov 2023 22:00:44 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Timothy Pearson <tpearson@raptorengineering.com>, 
-	regressions <regressions@lists.linux.dev>, 
-	Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <431496020.45688461.1699416044413.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <217cea83-f527-4e86-97c2-dc9a2f8f937b@kernel.dk>
-References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <727263b4-2f8c-44bf-b7b8-5a936718df76@kernel.dk> <505960353.45641688.1699398777243.JavaMail.zimbra@raptorengineeringinc.com> <7bd67c30-3b9f-4541-864a-b082917ee8b5@kernel.dk> <712095554.45645374.1699400040368.JavaMail.zimbra@raptorengineeringinc.com> <8d966878-f7fd-43c8-bd91-ac33408c9317@kernel.dk> <1768720690.45649923.1699401768289.JavaMail.zimbra@raptorengineeringinc.com> <217cea83-f527-4e86-97c2-dc9a2f8f937b@kernel.dk>
-Subject: Re: Regression in io_uring, leading to data corruption
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="d7+I+fmk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qn/BBBsr"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id ED1365C0118;
+	Wed,  8 Nov 2023 00:16:43 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 08 Nov 2023 00:16:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; t=1699420603; x=
+	1699507003; bh=z8xumBIVGV5NN7X6wcuwW9xKiIyujIbyq+r8oTDHiuU=; b=d
+	7+I+fmkLDy80pcn2iecngh+P1bNNSO4gJcwtcnFjlrQ11N/iXKIogvXgsjTU2nyP
+	YGGyGNH93QkbwltMm3O3EwmrSVbOYi2uVWGQkQ+9QzLWE/e8sBg6PBQNRBKi6N3a
+	jiYXDjE9hBCN/pdREsfuCHggJGtVhUEsY+3WjclmMvuff58Ib+nFLOU5gHJatNko
+	Y29V/C/qVp8e/MPTnfEjvqO4+se/rsibizF4L8jcwmS/GtIJdZ7r6tifW4xEAY5X
+	ZI+a+sGLbO/Lb7Bq3aJ3aKFzX6q3Ev3p5wXeOmu3y3DaLBQIW8o8viv1eMN9ZRaU
+	IWMGab4auK3y9J84Arfjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; t=1699420603; x=1699507003; bh=z8xumBIVGV5NN
+	7X6wcuwW9xKiIyujIbyq+r8oTDHiuU=; b=qn/BBBsr6/MO3B8BWyktfGrdhuTFl
+	2UycJCpFGrnMVG6RUI57hdHjq0UCa75tYJoWqPMZtr+bH1PoABKYvHXg29beXTJh
+	AUsXuur7yhf4ihmL3lne841/ZsOOL4CcXRTWrCUCE03Uw43a/DDQhliiD7xh548o
+	6hbBpOc43ymiQ2f8XGuIg+DLQL79/K/cb3nj2suO7mkNpWzYyuLt2rT9vNVN23Eg
+	Q9zACY1oFSS6Rct3fsXZ5E3vieM9DGzHI0FOMWzgI5BYYFmbzKYF6yEM6Ci8/GIW
+	3LAjay5/JHWuMtWy16qeZJ9lLaj+v8XrbeSMv/BsINGiQYjKdGgQCWBew==
+X-ME-Sender: <xms:uxlLZf-AzrgUaZtMpy64tZ8RvPCslwvFZGqptOccn-jKdJp8lVjuAg>
+    <xme:uxlLZbsi3IzNFCnNrF_8-SdCFHiDU0SPL3g6xshSqmDY9d_j9LP0OhYRvYO6rUpf6
+    W0UNr6_ZgzQdgmRRTs>
+X-ME-Received: <xmr:uxlLZdAjs-bwBk4O3Wyxi2froVLZsBMn8COomo5hskSw0jqtZTYW_Ob_MLwyMHUdk-1p-QfU6cxeZcAy-g2Irs_-t0lfiDaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddukedgjeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeffudduvedvfeduleelfeeg
+    ieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:uxlLZbeLFtXEKR3-JkffoccG_xjMfT-sCr0sRpYJ72w74bVAbsE-OQ>
+    <xmx:uxlLZUOrF7drlwObLAT2RM_u4l6yKALJfIPZLXL3PqSkvq4hsH7Gvw>
+    <xmx:uxlLZdm5nLVa95kGbpl0DpmO5tlqRf1BcegURxBD0s5axWwmZu_vLw>
+    <xmx:uxlLZbfRT0uAHFcpp_QVlUEY3G5lFmlA7oTxS1b77WnprQv2OypZhg>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 8 Nov 2023 00:16:41 -0500 (EST)
+Date: Wed, 8 Nov 2023 14:16:38 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+	a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
+	LKML <linux-kernel@vger.kernel.org>, aros@gmx.com,
+	bagasdotme@gmail.com,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
+Message-ID: <20231108051638.GA194133@workstation.local>
+Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
+	LKML <linux-kernel@vger.kernel.org>, aros@gmx.com,
+	bagasdotme@gmail.com,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
+ <20231107121756.GA168964@workstation.local>
+ <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: Regression in io_uring, leading to data corruption
-Thread-Index: S/0/XUhulcFqwZ6Ag874G0P359UiJg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
 
+Hi Mario,
 
-
------ Original Message -----
-> From: "Jens Axboe" <axboe@kernel.dk>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
-> Sent: Tuesday, November 7, 2023 6:09:39 PM
-> Subject: Re: Regression in io_uring, leading to data corruption
-
-> On 11/7/23 5:02 PM, Timothy Pearson wrote:
->> 
->> 
->> ----- Original Message -----
->>> From: "Jens Axboe" <axboe@kernel.dk>
->>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->>> <asml.silence@gmail.com>
->>> Sent: Tuesday, November 7, 2023 5:52:54 PM
->>> Subject: Re: Regression in io_uring, leading to data corruption
->> 
->>> On 11/7/23 4:34 PM, Timothy Pearson wrote:
->>>>
->>>>
->>>> ----- Original Message -----
->>>>> From: "Jens Axboe" <axboe@kernel.dk>
->>>>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>>>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->>>>> <asml.silence@gmail.com>
->>>>> Sent: Tuesday, November 7, 2023 5:16:24 PM
->>>>> Subject: Re: Regression in io_uring, leading to data corruption
->>>>>
->>>>> But since you said you're seeing exits on signal 9, that would seem to
->>>>> indicate that someone ran SIGKILL with potentially pending IO.
->>>>
->>>> Just to make sure we're talking about the same thing, when I refer to
->>>> signal 9 I am referring to instrumentation I added to the
->>>> get_signal(&ksig) call.  I am seeing 9 in the ksig.sig field.  I
->>>> assume the SIGKILL is not expected, i.e. not coming from another
->>>> location in the io_uring kernel code?
->>>
->>> ksig.sig is set to signr, which is the number of the signal. So that
->>> would seem to indicate that _someone_ is sending SIGKILL. But at the
->>> same time, you don't see any of the cancel-on-exit triggering. Puzzling!
->>> io_uring or io-wq doesn't send any signals.
->>>
->>> In your instrumentation, are you checking where the signal is coming
->>> from?Is it being dequeued as an actual signal, or is it some other
->>> condition in get_signal() that ends up setting it to SIGKILL?
->> 
->> I still need to check this in more detail.  What I do know at the
->> moment is that the kill seems to be related to the entire workqueue
->> going down, i.e. it is sent to the workers of a given workqueue after
->> io_wq_put_and_exit() and io_wq_exit_workers() are called for that
->> workqueue.  Not sure if that helps any, will keep digging...
+On Tue, Nov 07, 2023 at 03:27:08PM -0600, Mario Limonciello wrote:
+> +linux-pci / Bjorn
+> On 11/7/2023 06:17, Takashi Sakamoto wrote:
+> > Hi Mario,
+> > 
+> > Thanks for the report.
+> > 
+> > I apologize for the inconvenience you and your reporter facing, however
+> > I can not avoid to say that the problem appears to be specific to the AMD
+> > Ryzen machines.
 > 
-> Another option is that it's doing exec() with pending IO, which will
-> cancel it. But I'm also assuming that mtr/friends will check result
-> values of writes and would've caught that there.
+> Unfortunately I don't have this 1394 hardware myself.  I was just looking at
+> another completely unrelated issue on Bugzilla and noticed the report come
+> up in my search and wanted to ensure it's on your radar already as the
+> author as it's lingered a while.
 
-Here's something potentially more useful, the stack trace of what's calling the workqueue exit function:
+It is your misfortune to face this kind of machine trouble.
 
-[   35.074923] Call Trace:
-[   35.074939] [c000000007183890] [c0000000005c0804] io_wq_exit_workers+0x48/0x214 (unreliable)
-[   35.074994] [c000000007183920] [c0000000005c0410] io_wq_put+0xa0/0x27c
-[   35.075034] [c0000000071839f0] [c0000000005a92a8] io_uring_clean_tctx+0x98/0xe0
-[   35.075082] [c000000007183a30] [c0000000005bdc78] __io_uring_files_cancel+0x4f8/0x580
-[   35.075129] [c000000007183b20] [c000000000153fc8] do_exit+0x1c8/0xce0
-[   35.075169] [c000000007183bf0] [c000000000154c58] do_group_exit+0x108/0x110
-[   35.075209] [c000000007183c30] [c00000000016ac6c] get_signal+0xbfc/0xce0
-[   35.075251] [c000000007183d10] [c00000000001ed50] do_notify_resume+0xd0/0x420
-[   35.075298] [c000000007183dc0] [c00000000002dbbc] syscall_exit_prepare+0x15c/0x360
-[   35.075348] [c000000007183e10] [c00000000000cf74] system_call_vectored_common+0xf4/0x260
+In the report[1], Matthias Schrumpf and Mark Broadworth noted to use AMD
+Ryzen 7 5800X on B550/X570 chipsets, and insert VT6307 in their PCIe bus.
+I guess that the device attends PCI bridge (ASM1083) since VT6307 has PCI
+interface only.
 
-This call is associated with the mariadb userspace PID:
+We can see MCE error in another report[2]. Unfortunately, the reporter,
+Ian Donnelly, have less suspiction about machine architecture, and never
+provides hardware information. But I believe that it comes from AMD Ryzen
+machine. I transcribe the error here:
 
-[   35.074242] CPU: 12 PID: 1260 Comm: mariadbd
+```
+[    0.860834] mce: [Hardware Error]: Machine check events logged
+[    0.860834] microcode: CPU20: patch_level=0x0a201025
+[    0.860835] microcode: CPU21: patch_level=0x0a201025
+[    0.860836] microcode: CPU23: patch_level=0x0a201025
+[    0.860836] microcode: CPU22: patch_level=0x0a201025
+[    0.860837] mce: [Hardware Error]: CPU 17: Machine Check: 0 Bank 0: bc00080001010135
+[    0.860845] fbcon: Taking over console
+[    0.860847] mce: [Hardware Error]: TSC 0 ADDR fca000f0 MISC d012000000000000 IPID 1000b000000000 
+[    0.860854] mce: [Hardware Error]: PROCESSOR 2:a20f10 TIME 1696955537 SOCKET 0 APIC b microcode a201025
+[    0.860860] microcode: CPU0: patch_level=0x0a201025
+[    0.861676] microcode: Microcode Update Driver: v2.2.
+```
 
-To me, it almost looks like the mariadb I/O worker thread is getting terminated via signal and that this termination is taking out the write before it can complete.  Is that even possible?
+Additionally, as I note in the PR[3], I observed cache-coherence failure
+over memory dedicated for DMA transmission. The mapping is created by
+`dmam_alloc_coherent()` and no need to have extra care such as streaming
+API. However, the combination of ASM1083 and VT6307 provides me bogus
+values from the memory in AMD Ryzen machine, and I can see no issue in
+Intel machines.
+
+Essentially, the host system reboots when firewire-ohci module in guest
+system probes the PCI device for 1394 OHCI hardware provided by PCI
+pass-though[4].
+
+> > I've already received the similar report[1], and have been
+> > investigating it in the last few weeks, then got the insight. Please take
+> > a look at my short report about it in PR to Linus for 6.7-rc1:
+> > https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+> > 
+> > I can confirm that I have been abe to reproduce the problem on AMD Ryzen
+> > machine. However, it's important to note that I have not observed the
+> > problem on the following systems:
+> 
+> Any chance you (or anyone with the issue) has a serial output available?
+> I think it would be really good to look at the circumstances surrounding the
+> reboot.
+>
+> > 
+> > * Intel machine (Sandy Bridge and Skylake generations)
+> > * AMD machines predating Ryzen (Sempron 145)
+> > * Machines using different 1394 OHCI hardware from other vendors such as
+> >    TI
+> > * VIA VT6307 connected directly to PCI slot (i.e. without the issued
+> >    PCIe/PCI bridge)
+> > 
+> > Currently, I have not been able to obtain any useful debug output from
+> > the Linux system or any hardware error reports when the system reboots.
+> > It seems that the system reboots spontaneously. My assumption at this
+> > point is that AMD Ryzen machines detect a specific hardware error
+> > triggered by Ryzen machine quirk related to the combination of the Asmedia
+> > ASM1083/1085 and VIA VT6306/6307/6308, leading to power reset.
+> > 
+> 
+> Recent kernels have enabled PCI AER.  Could that be factoring in perhaps?
+
+I ordered equipments for the workflow, and waiting for shipping, since
+my motherboard has no interface for serial output.
+
+(However, I predict that we can no helpful output via the interface.)
+
+> > I genuinely appreciate your assistance in debugging this elusive
+> > hardware issue. If any workaround specific to AMD Ryzen machine quirk is
+> > required in PCI driver for 1394 OHCI hardware, I'm willing to apply it.
+> > However, it is preferable to figure out the reboot mechanism at first,
+> > I think.
+> 
+> Does the BIOS on these machines enable a watchdog timer?  If so, I'd suggest
+> disabling that for a starting point.
+ 
+For consumer use, the machine has no such function, I think. For
+your information, this is the machine information I used:
+
+* Ryzen 5 2400G
+* Gigabyte Technology Co., Ltd. AX370-Gaming 5/AX370-Gaming 5
+    * BIOS F51h 02/09/2023
+
+> How about if you compile as a module and then modprobe.blacklist the module
+> on kernel command line and load it later.  Can you trigger the fault/reboot
+> this way?  If so, it at least rules out some conditions that happen during a
+> race at boot.
+
+Nowadays FireWire software stack is optional in the most of
+distributions. I can encounter the same issue at deferred probing enough
+after booting up, even if the load of system is very low.
+
+> Looking more closely at the change, I would guess the fault is specifically
+> in get_cycle_time().  I can see that the VIA devices do set
+> QUIRK_CYCLE_TIMER which will cause additional reads.
+
+I've already tested with the driver compiled without these codes, but the
+system reboots again.
+
+> Another guesses worth looking at is to see if iommu=pt or amd_iommu=off
+> help.
+> 
+> If either of those help it could point at being a problem with
+> get_cycle_time() and IOMMU.  The older systems you mentioned working
+> probably didn't enable IOMMU by default but most AMD Ryzen systems do.
+
+I already suspect platform IOMMU and kernel implementation, however it
+is helpless to disable AMD SVM and IOMMU in BIOS settings. Of course, it
+is helpless as well to provide any options to iommu in kernel command line.
+
+If I had any opportunity to access to AMD machines for enterprise-grade
+usage somehow, I would have done it. However, I am a private-time
+contributor and what I can access to is the ones for consumer use
+without any hardware support for RAS reporting.
+
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=217994
+[3] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+[4] https://lore.kernel.org/lkml/20231016155657.GA7904@workstation.local/
+
+Thanks
+
+Takashi Sakamoto
