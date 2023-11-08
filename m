@@ -1,71 +1,82 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909D45254
-	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 18:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF3236B0B
+	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 19:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="FDnBL0kk"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id B99CA82855DF;
-	Wed,  8 Nov 2023 12:51:24 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id LEYi-XAYwN80; Wed,  8 Nov 2023 12:51:23 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 6FDBC82857E9;
-	Wed,  8 Nov 2023 12:51:23 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 6FDBC82857E9
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="QJuY9AFf"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3593f3ef420so87455ab.1
+        for <regressions@lists.linux.dev>; Wed, 08 Nov 2023 11:06:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1699469483; bh=iMmmwlj1OjowPX3rB+Tuq1uAyfH9+XEHni1gL35VlCw=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=FDnBL0kkR9g7jkvdVB+lvumVQhusJ1SBDUPKu/j4fiOh/1mgz1Vd2b2m2kj7GUOKz
-	 yglz7NnC9XitllldIMIeUv3XoOoHVI96d1DZvyIRxPbVLKERs6OmGLh9uMrVshx9ga
-	 ut8kp4cmTEp06KS1CREHGSdwtqko8rrNj+cXFw8s=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id hvplf6zpYVeW; Wed,  8 Nov 2023 12:51:23 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 2CCFA82855DF;
-	Wed,  8 Nov 2023 12:51:23 -0600 (CST)
-Date: Wed, 8 Nov 2023 12:51:20 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <469846692.45828995.1699469480871.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
-References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <da7acad5-3297-4d25-95bf-81eb559d5244@kernel.dk> <479322567.45813366.1699463423245.JavaMail.zimbra@raptorengineeringinc.com> <716eb4a2-94c4-4da9-b1ed-b94858e3ee08@kernel.dk> <1449911021.45817655.1699465215683.JavaMail.zimbra@raptorengineeringinc.com> <74d15590-3af6-40ed-8d3b-5bf8cd3881a5@kernel.dk> <217080ad-adb4-4cbd-ae91-1287bb6a5400@kernel.dk> <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: Regression in io_uring, leading to data corruption
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1699470415; x=1700075215; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zk+M4bWxQ4UmE+wU5Q9dwEKn5yI2Y/AjI9RR2VoqRg8=;
+        b=QJuY9AFfSf9xH8bRH4WHC8kaxiuApnJJPzg3v9YWygDZkZyVg5NyX/5rLUf7n8TZIv
+         H4mIfF0ROgdq6jpJ02avaEKywsuCXwLQjesH+aVHJM/j9yIEBxU+ZLYu47GPjrbfcL36
+         uSOWvE6URE8mV3EbodKtvmxKvKy7LYMOLlURiAuK9l9XSj7zlv04Myh/Uay4Pz+yL86k
+         2P0kjEe+QPCkxZtalbcHE98nVeBTUP6yc7PFhU1oCvzWd1HrL9pgfQKBiOxql+zXOtxm
+         FsvqWvPZ1739o2QJ/4BKZjk9zLuLCrRV+5paU+gshA53zdjNc+f0pxYtohttK12mBhxm
+         RwDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699470415; x=1700075215;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zk+M4bWxQ4UmE+wU5Q9dwEKn5yI2Y/AjI9RR2VoqRg8=;
+        b=LyeKRPBx85oSK7nbjvG41aRD14T4+mPMsR20qWyO/OtpSap1q7qbLnNTAKHSEaAxoR
+         WAicUaJg0uo8Wex5rKeN1hcQmnD9hfkp5xb7UFZXOxsXV00dUsK2zkgepkOojN4j7Yp5
+         Chtk1/QDbA5Z00y2U98W/nPgJbET6J2Ud8xhQx8GVrTpRmg6egwdYNrc0xU6sLBVOIs+
+         qkFVAN1F+AgTALAyEe1mpVGV6XEx7QtUlGYZYudoQ5W+NfBfQbPXXHo77AAntWNWyzHK
+         aOyCq4lXcehUS+NETHgXGO8CQQoZ+QqqfsarCbSqi4RdLVVAgp2mCqwrtDYzE1C1ECqJ
+         5Z0g==
+X-Gm-Message-State: AOJu0YxJwmaDk+uSOcr9Wc0mKWMVF+VxpOXN95TgxukgHW9dXdo6YpYy
+	6tGvF0gIN+9wi1ft2jNQH5lFog==
+X-Google-Smtp-Source: AGHT+IFioONBbACEWlWQA5omcbT0wltxz/22RwFmkEs0OM2H578dJRXoMQJCE6K7YP4LRIxVM2Ue3w==
+X-Received: by 2002:a92:2e0b:0:b0:359:9c0:de81 with SMTP id v11-20020a922e0b000000b0035909c0de81mr2998653ile.2.1699470415053;
+        Wed, 08 Nov 2023 11:06:55 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id n4-20020a056e02140400b00359442195d3sm3946457ilo.15.2023.11.08.11.06.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Nov 2023 11:06:54 -0800 (PST)
+Message-ID: <2225dc79-37ec-4239-b13a-ac444bfa6a6b@kernel.dk>
+Date: Wed, 8 Nov 2023 12:06:53 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression in io_uring, leading to data corruption
+Content-Language: en-US
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: regressions <regressions@lists.linux.dev>,
+ Pavel Begunkov <asml.silence@gmail.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
+ <f1761483-1f59-42bd-b556-ad3dde998dbc@kernel.dk>
+ <da7acad5-3297-4d25-95bf-81eb559d5244@kernel.dk>
+ <479322567.45813366.1699463423245.JavaMail.zimbra@raptorengineeringinc.com>
+ <716eb4a2-94c4-4da9-b1ed-b94858e3ee08@kernel.dk>
+ <1449911021.45817655.1699465215683.JavaMail.zimbra@raptorengineeringinc.com>
+ <74d15590-3af6-40ed-8d3b-5bf8cd3881a5@kernel.dk>
+ <217080ad-adb4-4cbd-ae91-1287bb6a5400@kernel.dk>
+ <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: Regression in io_uring, leading to data corruption
-Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 
-
-
------ Original Message -----
-> From: "Timothy Pearson" <tpearson@raptorengineering.com>
-> To: "Jens Axboe" <axboe@kernel.dk>
-> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
-> Sent: Wednesday, November 8, 2023 12:36:01 PM
-> Subject: Re: Regression in io_uring, leading to data corruption
-
+On 11/8/23 11:36 AM, Timothy Pearson wrote:
+> 
+> 
 > ----- Original Message -----
 >> From: "Jens Axboe" <axboe@kernel.dk>
 >> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->> <asml.silence@gmail.com>
+>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
 >> Sent: Wednesday, November 8, 2023 11:57:59 AM
 >> Subject: Re: Regression in io_uring, leading to data corruption
 > 
@@ -133,21 +144,21 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >>>>
 >>>> Yes, it does indeed trigger.  Is there a way to directly check for the
 >>>> unstarted requests?
->>> 
+>>>
 >>> Let me hack up a debug patch for this, give me a minute.
->> 
+>>
 >> This should do it - whenever this condition hits, you should see
 >> something ala:
->> 
+>>
 >> [   97.960877] io_wq_dump: work_items=0, cur=0, next=0
->> 
+>>
 >> in dmesg. work_items is the number of work items we found that haven't
 >> been scheduled yet. cur is what a worker is currently processing, and
 >> next is basically a way for cancel to find a work item before it gets
 >> assigned. work_items and next may get canceled, work_items should always
 >> finish for storage IO, since signals don't interrupt them.
->> 
->> 
+>>
+>>
 >> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
 >> index 522196dfb0ff..643b8e9de518 100644
 >> --- a/io_uring/io-wq.c
@@ -155,12 +166,12 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >> @@ -553,6 +553,8 @@ static void io_worker_handle_work(struct io_wq_acct *acct,
 >> 	struct io_wq *wq = worker->wq;
 >> 	bool do_kill = test_bit(IO_WQ_BIT_EXIT, &wq->state);
->> 
+>>
 >> +	WARN_ON_ONCE(do_kill);
 >> +
 >> 	do {
 >> 		struct io_wq_work *work;
->> 
+>>
 >> @@ -889,6 +891,7 @@ static bool io_wq_worker_wake(struct io_worker *worker, void
 >> *data)
 >> static void io_run_cancel(struct io_wq_work *work, struct io_wq *wq)
@@ -182,7 +193,7 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >> @@ -1369,6 +1373,54 @@ int io_wq_max_workers(struct io_wq *wq, int *new_count)
 >> 	return 0;
 >> }
->> 
+>>
 >> +struct worker_lookup {
 >> +	int cur_work;
 >> +	int next_work;
@@ -239,7 +250,7 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >> --- a/io_uring/io_uring.c
 >> +++ b/io_uring/io_uring.c
 >> @@ -1943,7 +1943,9 @@ void io_wq_submit_work(struct io_wq_work *work)
->> 
+>>
 >> 	/* either cancelled or io-wq is dying, so don't touch tctx->iowq */
 >> 	if (work->flags & IO_WQ_WORK_CANCEL) {
 >> +		WARN_ON_ONCE(1);
@@ -255,7 +266,7 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >> @@ -988,6 +988,8 @@ SYSCALL_DEFINE1(exit, int, error_code)
 >> 	do_exit((error_code&0xff)<<8);
 >> }
->> 
+>>
 >> +void io_wq_dump(struct io_uring_task *);
 >> +
 >> /*
@@ -272,9 +283,31 @@ Thread-Index: e1ZefXj+G0YAJWziTARIcKWa01rH1KmwOpRg
 >> 			sig->flags = SIGNAL_GROUP_EXIT;
 >> 			zap_other_threads(current);
 > 
-> Unfortunately it's only returning work_items=0, cur=0, next=0, so that was a bit
-> of a red herring.
+> Unfortunately it's only returning work_items=0, cur=0, next=0, so that
+> was a bit of a red herring.
 
-Another data point on this...the tests run in a loop, approximately 2 seconds per test run.  For runs where things are *not* corrupted, I do not see the io_wq_dump message printed.  For runs that do show corruption, I see a batch of io_wq_dump: work_items=0, cur=0, next=0 messages.
+Well that's probably a good thing, as it also didn't make a lot of sense
+:-)
 
-I wonder if what we're actually seeing here is the corruption being detected by mariadb, and it self-terminating in userspace, hence the io_uring system seeing the sudden termination of the application and associated workers.
+> I have been giving some thought to the CPU pinning of the workers, and
+> one thing that may have been overlooked is that this could potentially
+> force-serialize worker operations.  Did you just have to pin the io
+> workers or did the workqueue also need to be pinned for the corruption
+> to disappear?
+
+Not sure I follow, the workers ARE the workqueue. For the pinning, I
+just made sure that the workers are on the same CPU. I honestly don't
+remember all the details there outside of what I can read back from the
+emails I sent, it's been a while. My suspicion back then was that it was
+some weird ppc cache aliasing effect with the copy into kernel memory
+happening on cpu X, and then we immediately punt it to cpu Y for
+processing.
+
+I didn't see the corruption happening if I just forced the requests to
+complete inline (eg always on the CPU being submitted, no punt to
+io-wq), and I didn't see it if I ensured that the io-wq worker was
+running on the same CPU as the submitter.
+
+-- 
+Jens Axboe
+
