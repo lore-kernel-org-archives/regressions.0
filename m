@@ -1,121 +1,132 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from butterfly.birch.relay.mailchannels.net (butterfly.birch.relay.mailchannels.net [23.83.209.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076F21E51E
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 18:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AB9ED0
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 02:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="OK0MC1Wc"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 0DD1A8285431;
-	Thu,  9 Nov 2023 12:20:32 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id CRZa0xix8WT4; Thu,  9 Nov 2023 12:20:31 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 163148285626;
-	Thu,  9 Nov 2023 12:20:31 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 163148285626
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1699554031; bh=x0YXOrR0Zy1N1cNk0SuzhOFgDr2Yp6701jfm5mOK5Os=;
-	h=Message-ID:Date:From:To:MIME-Version;
-	b=OK0MC1Wc4zI7KwcY2BK98tb3z73zYbUlFdCp7ufBESbmKeB65PF+PmnwRqsniBGFh
-	 zJqVSZr6tgXBfRAwK+VV4lYxvVvftyALeoAE50P99t6dGeqkVZ2rgo3QaLeq8YXFJC
-	 KPYOiI3A6U336QtTx/mSOPHrvSLQfUNB3HdEQbmg=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9ZrViMBjrvij; Thu,  9 Nov 2023 12:20:30 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id C37FC8285431;
-	Thu,  9 Nov 2023 12:20:30 -0600 (CST)
-Received: from 192.168.3.91 (proxying for 172.59.186.90)
-        (SquirrelMail authenticated user tpearson@raptorengineering.com)
-        by vali.starlink.edu with HTTP;
-        Thu, 9 Nov 2023 12:20:30 -0600
-Message-ID: <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu>
-In-Reply-To: <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk>
-References:
-    <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
-    <9860f9b2-1d98-497c-9480-56852fda781b@kernel.dk>
-    <1557819821.46044536.1699549241816.JavaMail.zimbra@raptorengineeringinc.com>
-    <f4fffe29-7c95-4d22-918b-f2835fb76366@kernel.dk>
-    <597693097.46047776.1699550641104.JavaMail.zimbra@raptorengineeringinc.com>
-    <e3e1b31f-a9a0-4387-982e-aba6d9763c6b@kernel.dk>
-    <1926532589.46050149.1699551411577.JavaMail.zimbra@raptorengineeringinc.com>
-    <a262a91e-f2ec-402f-ba40-adacb76c72b9@kernel.dk>
-    <871420600.46050861.1699551732591.JavaMail.zimbra@raptorengineeringinc.com>
-    <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk>
-Date: Thu, 9 Nov 2023 12:20:30 -0600
-Subject: Re: Regression in io_uring, leading to data corruption
-From: tpearson@raptorengineering.com
-To: "Jens Axboe" <axboe@kernel.dk>
-Cc: "regressions" <regressions@lists.linux.dev>,
- "Pavel Begunkov" <asml.silence@gmail.com>
-User-Agent: SquirrelMail/1.4.22
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="iXdBe3Qq"
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4C3B650117F
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 22:37:32 +0000 (UTC)
+Received: from pdx1-sub0-mail-a219.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E5C2D50113F
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 22:37:31 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1699569452; a=rsa-sha256;
+	cv=none;
+	b=JYWcF96rUuzwqoyn4UySdzp0nmmyarPx+XS7W3Jlf6aYxe30OZm2qJ09pPx6RDf71eBWyo
+	E+Jq7QSl45U3KH4AipJT4alxYwF5/WPuSEDB1HtBR0xJH0P9wg20G4gQAeMi2v31DybmSd
+	uz8J+MRg4bqYDdTUBdL31yHOJ6S6mb24p4kYGAvrpkzVT04DiG3PbUjVmJdwrFICogptUf
+	QzJtUHFiTVy+Ojif/5HxGYVYsj5rWR9cFu/nHDqz4Dlk7FT5vXyysxn0i6ad59Wzp5M+2e
+	xkcrH4W6lpcu3cBVrdyVIA+zwUq6Oi4QE+kHA/TPYQCJEbilZ8IY8+RFjU4PMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1699569452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 dkim-signature; bh=8YwB9PBpFMCaeiI6zpE8rWC2hSXeSpyA9B0exPLdmbY=;
+	b=Ok41G6Fuv7ouQgtTNrwYuXSxVK6FGrjLZKCB/BL2rq6dJAZOMfn9GN3WQzp6/S7oB3jvh0
+	JvYttw8ww4mIkvbh8QRCXP1HFx27IpNhH/QQ69LCpFtPS0kaKjyXPjTarJ8CKqgInkWhem
+	Teq04kfz0MfPlkbOoPBCMUsFP45O3FtaqFsEOHn3EA9ELRnDFw90RP5W3P550kmc2wc2g2
+	/+BEjm+GI10l0ikzyZ5FI8XgJlPBFPT0gKP+X3RZA5Cu5Prh5oJYofnOsoPrna9H6oxcDn
+	XbmfCf296iqs7/5PTfR+X+y13WvFeLWnKhfVUXKEezdCo14JKvm19fDZ9/6CbA==
+ARC-Authentication-Results: i=1;
+	rspamd-6f98f74948-hmzgl;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Decisive-Tangy: 67fff2743090ef7b_1699569452144_875317654
+X-MC-Loop-Signature: 1699569452144:2128282334
+X-MC-Ingress-Time: 1699569452143
+Received: from pdx1-sub0-mail-a219.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.104.0.148 (trex/6.9.2);
+	Thu, 09 Nov 2023 22:37:32 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-231-176-24.hsd1.ca.comcast.net [73.231.176.24])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a219.dreamhost.com (Postfix) with ESMTPSA id 4SRGzv2YdMzTP
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 14:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1699569451;
+	bh=8YwB9PBpFMCaeiI6zpE8rWC2hSXeSpyA9B0exPLdmbY=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=iXdBe3QqD7hYZNkR3gTX16NMfS0osjVYrWrrlW8DpMru9YBAnHLloxIKsO8SV603N
+	 MOIz6lOQprbztIl3bFRxvSl9ypsW7G7Gkr8dA2R94UNg+zcTr+bLNDcdJoYITKVL/w
+	 tq9BS9p/FqpsbsjtTbs/7b8aSRyNK1W977KkkOuaTUSaB1Qe2hvqbMjUv63N+yqhgT
+	 sgZwk0cVlbCuwyMF2NS9FTBmi/UeYF4/SLgdCgvd1L58tdp0DrTGGny+No6gJ0uaFD
+	 0xELaaZPVi72foXlwG+c4GacYIbH93Maub+Lg5+xXyy1Sbd1qOnHRwA25f79d18+bW
+	 Sn91mwHOfiGYQ==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e0044
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Thu, 09 Nov 2023 14:36:57 -0800
+Date: Thu, 9 Nov 2023 14:36:57 -0800
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org
+Cc: Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org,
+	German Maglione <gmaglione@redhat.com>, Greg Kurz <groug@kaod.org>,
+	Max Reitz <mreitz@redhat.com>,
+	Bernd Schubert <bernd.schubert@fastmail.fm>,
+	"Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
+	"Saarinen, Jani" <jani.saarinen@intel.com>,
+	lkft-triage@lists.linaro.org, linux-kselftest@vger.kernel.org,
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org
+Subject: [PATCH 0/2] Fuse submount_lookup needs to be initialized
+Message-ID: <cover.1699564053.git.kjlx@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-X-Priority: 3 (Normal)
-Importance: Normal
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On 11/9/23 10:42 AM, Timothy Pearson wrote:
->>
->>
->> ----- Original Message -----
->>> From: "Jens Axboe" <axboe@kernel.dk>
->>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->>> <asml.silence@gmail.com>
->>> Sent: Thursday, November 9, 2023 11:38:10 AM
->>> Subject: Re: Regression in io_uring, leading to data corruption
->>
->>> On 11/9/23 10:36 AM, Timothy Pearson wrote:
->>>>> Hmm ok, that is odd. How quickly does it trigger for you?
->>>>
->>>> Almost immediately.  Third pass in this case, which is pretty typica=
-l
->>>> -- without any delays etc. it will normally fail in under 10
->>>> iterations.  When I add other delays in e.g. the worker thread it
->>>> becomes less likely to fail, but still fails.   Only adding the udel=
-ay
->>>> in the one specific (IRQ locked) location allows it to pass all 200
->>>> iterations.
->>>
->>> What specific IRQ locked location? Hard to know where you are adding
->>> these things without seeing the patches.
->>>
->>> --
->>> Jens Axboe
->>
->> Sorry about that.  Here's the patch that automagically makes things
->> work (bear in mind line numbers etc. are munged since I have a bunch
->> of other debug stuff in here at this point):
->>
->>  static void io_wqe_dec_running(struct io_worker *worker)
->> @@ -312,19 +326,39 @@ static void io_wqe_dec_running(struct io_worker
->> *worker)
->>         if (!(worker->flags & IO_WORKER_F_UP))
->>                 return;
->>
->> +       udelay(1000);
->>         if (atomic_dec_and_test(&acct->nr_running) &&
->> io_wqe_run_queue(wqe)) {
->>                 atomic_inc(&acct->nr_running);
->>                 atomic_inc(&wqe->wq->worker_refs);
->
-> Ah I see, you're on older stable? What specifically?
+Hi Miklos,
+I got a couple of bug reports[1][2] this morning from teams that are
+tracking regresssions in linux-next.  My patch 513dfacefd71 ("fuse:
+share lookup state between submount and its parent") is causing panics
+in the fuse unmount path.  The reports came from users with SLUB_DEBUG
+enabled, and the additional debug sanitization catches the fact that the
+submount_lookup field isn't getting initialized which could lead to a
+subsequently bogus attempt to access the submount_lookup structure and
+adjust its refcount.
 
-I run two test branches, one right after the issues showed up (5.12-rc7+)=
-,
-and one basically at GIT master (6.6+).  I tend to test on 5.12 just so
-that we're not inadvertently compounding issues, once we figure out what
-is wrong on 5.12 then I can try to forward port to 6.6.
+I've added SLUB_DEBUG to my testing kconfig, and have reproduced the
+problem using the memfd self-test that was triggering the problem for
+both reporters.  With the fix that follows this e-mail, I see no more
+erroneous accesses of poisoned slub memory.
 
+I'm a bit unsure of the desired approach for fixing these kinds of
+problems.  I'm also away from the office on Nov 10th and Nov 13th, but
+expect to be back on the console on the Nov 14th.  Given the gap, I've
+prepared a pair of patches, but we only need one.
+
+The first is simply a followup fix that addresses the problem in a
+subsequent one-line commit.
+
+If you'd rather revert the entire bad patch and go again, the second
+patch in the series is a v5 of the original with the submount_lookup
+initialization added.
+
+Either should do, but I wasn't sure which approach was preferable.
+
+Thanks, and my apologies for the inconvenience.
+
+-K
+
+[1] https://lore.kernel.org/linux-fsdevel/CA+G9fYue-dV7t-NrOhWwGshvyboXjb2B6HpCDVDe3bgG7fbnsg@mail.gmail.com/T/#u
+[2] https://lore.kernel.org/intel-gfx/SJ1PR11MB6129508509896AD7D0E03114B9AFA@SJ1PR11MB6129.namprd11.prod.outlook.com/T/#u
