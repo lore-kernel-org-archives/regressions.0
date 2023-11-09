@@ -1,162 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978C21E526
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 14:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC571DFF0
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 15:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/b2s6jg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 242A3C433C8;
-	Thu,  9 Nov 2023 14:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699538586;
-	bh=7D6Jijux2YM7BGQPWYbE7z6xuhCQoT6kUZvx28WELZo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E/b2s6jgw0f3HF554QO9GLbSz9LFpxbkF1nEeyiXCL6BP0bgSbW+TLePAZuVO4J/4
-	 LBeUQyoiGYDzbHVpS66PnheQiL3g1KEn5blDtX8WCWqIl+g6z8bJ0MGyY6FBvYJVF1
-	 O3FWMjM43LGNdPE/g2sINSbMTO7SBjDxu8eld2EU045D2iskyREniimsgKj0npy1rN
-	 vhRyiI6jZ1hx/aBXX9ulC+YpYPtKnd8u+Yr60Jp5mk4UxHV0jpb9fraZQlZWTg1kRk
-	 xXY7tJYXq/t8CCpbsw0w5wGxWvbb/zKlZ+/Sq3w91+iqIjlPb71JvgP387EzD31VKU
-	 Xvl6i3ScSJbiw==
-Date: Thu, 9 Nov 2023 14:03:02 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-mm <linux-mm@kvack.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <keescook@chromium.org>
-Subject: Re: WARNING: CPU: 6 PID: 474 at include/linux/maple_tree.h:712
- mmap_region (include/linux/maple_tree.h:556 include/linux/maple_tree.h:731
-Message-ID: <ZUzmlhvRv66I3J6P@finisterre.sirena.org.uk>
-References: <CA+G9fYs-j2FYZSFSVZj48mgoM9gQd4-7M2mu2Ez3D1DqDdW2bQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Ivtelw3/"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3593f3ef420so1413465ab.1
+        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 07:12:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1699542730; x=1700147530; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Y3tF+xbVFEAh0KxH0chR+TxnNRjfrIUTW+/I5k45E+0=;
+        b=Ivtelw3/xBClQ7FSF8OFfY/IOMmcY3u7Z5T1yMc4S0BYaxSFI/dXGCBkPs/2kYA1CX
+         sWhPSlPUacv0a9M6fDUJpE6uNp3XCn3do2h+TfxOAwlmSOilNn28f1ZA8wTp6q1e+uO8
+         62kwOJC/c4Glqj5kMLHSJta+ULiWS6DG8vChUzgvjdp/MLjT5A8XeeVal++ryGoU9k6V
+         rnY5U9JSM9yFVjcoFFbkyCvwAMkDvm3tTeLuLXG5tKmuneGBtTPt5q5TrCyLMQaTPSgG
+         fP6fHtME0D0+w8jlXRNHmtQ2u0Zu13txh7R5sIMgjMgUKtMbWHxkFQEuAxkCKcOJtu3M
+         xuHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699542730; x=1700147530;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y3tF+xbVFEAh0KxH0chR+TxnNRjfrIUTW+/I5k45E+0=;
+        b=hx5FJ/+EhnTVdPfKsYYmapsOo8iRbeuJ89oT5rcF7Ko0AC2ttCdujmSGf0GS01L7P1
+         fCyY7OHDwA8RzS2n0NaKcBx0IA7S92fh7ryG+KkrsS/DXfgOLDJkjZQ0lZeKUFyerXKu
+         qMJabwr15O6H68xXYOKpC96FHnlr93VH6Ei9Kzf6+Kvo771BArAeiULo7nObW1NtgXdO
+         z9RU3zEJUMEnfrNJ0T+psKd9uNyrRcXq7T5FKGVIpS9Joef8/6ZoMPIE5MfRZH7TiR9U
+         ytuadVs1DLZXia19E2MuCNw/5PCQZTYaodWspa30jMxA/dZqLXh43D8QhgWYlbFUqQU5
+         O4xg==
+X-Gm-Message-State: AOJu0YxtBnI3OqaB0n8mNUFn2KWBfdARooIWR1ivF3RbXk8yc0BZsu7W
+	kOFPB+cR2St8aQm3k9FIPND/fA==
+X-Google-Smtp-Source: AGHT+IEf/1PR7tYAiah51uqsI7fiSCqUNIYx4/LGhfHDI/ntdTByMbCxvTl24iLnckUbLas/mzF9xQ==
+X-Received: by 2002:a5d:8716:0:b0:7a9:7aa9:c175 with SMTP id u22-20020a5d8716000000b007a97aa9c175mr4872195iom.1.1699542729976;
+        Thu, 09 Nov 2023 07:12:09 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id z60-20020a0293c2000000b00463fb5dd52dsm3268668jah.57.2023.11.09.07.12.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Nov 2023 07:12:09 -0800 (PST)
+Message-ID: <9860f9b2-1d98-497c-9480-56852fda781b@kernel.dk>
+Date: Thu, 9 Nov 2023 08:12:07 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="N4lmr59gPo+3oBVi"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYs-j2FYZSFSVZj48mgoM9gQd4-7M2mu2Ez3D1DqDdW2bQ@mail.gmail.com>
-X-Cookie: Slow day.  Practice crawling.
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression in io_uring, leading to data corruption
+From: Jens Axboe <axboe@kernel.dk>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: regressions <regressions@lists.linux.dev>,
+ Pavel Begunkov <asml.silence@gmail.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
+ <716eb4a2-94c4-4da9-b1ed-b94858e3ee08@kernel.dk>
+ <1449911021.45817655.1699465215683.JavaMail.zimbra@raptorengineeringinc.com>
+ <74d15590-3af6-40ed-8d3b-5bf8cd3881a5@kernel.dk>
+ <217080ad-adb4-4cbd-ae91-1287bb6a5400@kernel.dk>
+ <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
+ <2225dc79-37ec-4239-b13a-ac444bfa6a6b@kernel.dk>
+ <3f2dcaba-d18e-4d1d-9b96-2a168f550881@kernel.dk>
+ <262637196.45862863.1699481726721.JavaMail.zimbra@raptorengineeringinc.com>
+ <b40fd4c2-ea0e-4260-87f6-a3d43dd06c9d@kernel.dk>
+ <0672220d-1b3a-46b3-811d-0a691e380097@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <0672220d-1b3a-46b3-811d-0a691e380097@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 11/8/23 4:58 PM, Jens Axboe wrote:
+> On 11/8/23 3:18 PM, Jens Axboe wrote:
+>> OK, let me actually test this thing and see if I can make it solid
+>> first...
+> 
+> Here's a suitable hack - it just creates a new io worker for each item,
+> ensuring that that worker is run on the same CPU.
 
---N4lmr59gPo+3oBVi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Turns out I didn't send you the current one, this one was older and
+untested. Please try this one instead.
 
-On Thu, Nov 09, 2023 at 06:57:08PM +0530, Naresh Kamboju wrote:
-> Following kernel panic noticed while running  selftests: exec: load_addre=
-ss
-> on Fastmodels (FVP) running Linux next-20231109.
->=20
+diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+index 522196dfb0ff..41b4e281db8c 100644
+--- a/io_uring/io-wq.c
++++ b/io_uring/io-wq.c
+@@ -178,6 +178,8 @@ bool io_wq_worker_stopped(void)
+ {
+ 	struct io_worker *worker = current->worker_private;
+ 
++	if (current->worker_private == current)
++		return false;
+ 	if (WARN_ON_ONCE(!io_wq_current_is_worker()))
+ 		return true;
+ 
+@@ -693,7 +695,7 @@ void io_wq_worker_running(struct task_struct *tsk)
+ {
+ 	struct io_worker *worker = tsk->worker_private;
+ 
+-	if (!worker)
++	if (!worker || tsk->worker_private == tsk)
+ 		return;
+ 	if (!(worker->flags & IO_WORKER_F_UP))
+ 		return;
+@@ -711,7 +713,7 @@ void io_wq_worker_sleeping(struct task_struct *tsk)
+ {
+ 	struct io_worker *worker = tsk->worker_private;
+ 
+-	if (!worker)
++	if (!worker || tsk->worker_private == tsk)
+ 		return;
+ 	if (!(worker->flags & IO_WORKER_F_UP))
+ 		return;
+@@ -921,6 +923,67 @@ static bool io_wq_work_match_item(struct io_wq_work *work, void *data)
+ 	return work == data;
+ }
+ 
++struct work_data {
++	struct io_wq_work *work;
++	struct io_wq *wq;
++	int cpu;
++};
++
++static int io_wq_single_worker(void *data)
++{
++	struct work_data *wd = data;
++	struct io_wq_work *work = wd->work;
++	struct io_wq *wq = wd->wq;
++
++	WARN_ON_ONCE(wd->cpu != raw_smp_processor_id());
++	kfree(wd);
++	do {
++		if (test_bit(IO_WQ_BIT_EXIT, &wq->state))
++			work->flags |= IO_WQ_WORK_CANCEL;
++		wq->do_work(work);
++		work = wq->free_work(work);
++	} while (work);
++
++	do_exit(0);
++	return 0;
++}
++
++static int io_wq_create_single(struct io_wq *wq, struct io_wq_work *work)
++{
++	struct task_struct *tsk;
++	struct work_data *wd;
++	cpumask_var_t new_mask;
++
++	wd = kmalloc(sizeof(*wd), GFP_NOIO);
++	if (!wd)
++		return false;
++
++	if (!alloc_cpumask_var(&new_mask, GFP_NOIO)) {
++		kfree(wd);
++		return false;
++	}
++
++	wd->work = work;
++	wd->cpu = raw_smp_processor_id();
++	wd->wq = wq,
++
++	cpumask_clear(new_mask);
++	cpumask_set_cpu(wd->cpu, new_mask);
++
++	tsk = create_io_thread(io_wq_single_worker, wd, NUMA_NO_NODE);
++	if (!IS_ERR(tsk)) {
++		tsk->worker_private = tsk;
++		set_cpus_allowed_ptr(tsk, new_mask);
++		free_cpumask_var(new_mask);
++		wake_up_new_task(tsk);
++		return true;
++	}
++
++	free_cpumask_var(new_mask);
++	kfree(wd);
++	return false;
++}
++
+ void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work)
+ {
+ 	struct io_wq_acct *acct = io_work_get_acct(wq, work);
+@@ -938,6 +1001,10 @@ void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work)
+ 		return;
+ 	}
+ 
++	if (io_wq_create_single(wq, work))
++		return;
++
++	WARN_ON_ONCE(1);
+ 	raw_spin_lock(&acct->lock);
+ 	io_wq_insert_work(wq, work);
+ 	clear_bit(IO_ACCT_STALLED_BIT, &acct->flags);
 
-Copying in Kees and Eric who maintain the exec API.
+-- 
+Jens Axboe
 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> log:
-> ---
->=20
-> # timeout set to 45
-> # selftests: exec: load_address_16777216
-> [  238.405168] ------------[ cut here ]------------
-> [  238.405244] WARNING: CPU: 6 PID: 474 at
-> include/linux/maple_tree.h:712 mmap_region
-> (include/linux/maple_tree.h:556 include/linux/maple_tree.h:731
-> include/linux/maple_tree.h:747 include/linux/mm.h:1033 mm/mmap.c:2828)
-> [  238.405432] Modules linked in: arm_spe_pmu crct10dif_ce
-> panel_simple pl111_drm drm_dma_helper drm_kms_helper fuse drm
-> backlight dm_mod ip_tables x_tables
-> [  238.405932] CPU: 6 PID: 474 Comm: load_address_16 Not tainted
-> 6.6.0-next-20231109 #1
-> [  238.406070] Hardware name: FVP Base RevC (DT)
-> [  238.406151] pstate: 123402009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTY=
-PE=3D--)
-> [  238.406294] pc : mmap_region (include/linux/maple_tree.h:556
-> include/linux/maple_tree.h:731 include/linux/maple_tree.h:747
-> include/linux/mm.h:1033 mm/mmap.c:2828)
-> [  238.406424] lr : mmap_region (mm/mmap.c:2836)
-> [  238.406554] sp : ffff8000819639b0
-> [  238.406629] x29: ffff8000819639c0 x28: ffff000806f79000 x27: 000000000=
-2002000
-> [  238.406829] x26: ffff000806f798f0 x25: ffff000806f790b0 x24: 000000000=
-0000006
-> [  238.407029] x23: 0000000000000ffc x22: ffff000805d6e100 x21: ffff00080=
-16adf00
-> [  238.407229] x20: 0000000000100073 x19: 0000000001ffc000 x18: fffffffff=
-fffffff
-> [  238.407425] x17: 0000000000000000 x16: ffffd7c64ceb7c10 x15: fffffffff=
-fffffff
-> [  238.407627] x14: 0000000000000000 x13: 1fffe001002bc9a1 x12: ffff00080=
-15e4d0c
-> [  238.407825] x11: ffff800081963a48 x10: ffff0008015e4d00 x9 : ffffd7c64=
-b49c9f0
-> [  238.408028] x8 : ffff800081963778 x7 : 0000000000000000 x6 : 000000000=
-0000000
-> [  238.408223] x5 : ffffd7c64e35f000 x4 : ffffd7c64e35f278 x3 : 000000000=
-0000000
-> [  238.408420] x2 : ffffd7c64e92fd78 x1 : 0000000002001fff x0 : 000000000=
-0479fff
-> [  238.408618] Call trace:
-> [  238.408681] mmap_region (include/linux/maple_tree.h:556
-> include/linux/maple_tree.h:731 include/linux/maple_tree.h:747
-> include/linux/mm.h:1033 mm/mmap.c:2828)
-> [  238.408812] do_mmap (arch/arm64/include/asm/mman.h:18
-> include/linux/mman.h:147 mm/mmap.c:1274)
-> [  238.408940] vm_mmap_pgoff (mm/util.c:546)
-> [  238.409088] vm_mmap (mm/util.c:559)
-> [  238.409229] elf_load (fs/binfmt_elf.c:385 fs/binfmt_elf.c:408)
-> [  238.409337] load_elf_binary (fs/binfmt_elf.c:1134 (discriminator 1))
-> [  238.409454] bprm_execve (fs/exec.c:1940)
-> [  238.409598] do_execveat_common.isra.0 (fs/exec.c:1938)
-> [  238.409757] __arm64_sys_execve (fs/exec.c:2106)
-> [  238.409910] invoke_syscall (arch/arm64/kernel/syscall.c:46
-> (discriminator 19))
-> [  238.410058] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:13=
-6)
-> [  238.410218] do_el0_svc (arch/arm64/kernel/syscall.c:155)
-> [  238.410363] el0_svc (arch/arm64/include/asm/daifflags.h:75
-> arch/arm64/kernel/entry-common.c:677)
-> [  238.410508] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697)
-> [  238.410623] el0t_64_sync (arch/arm64/kernel/entry.S:595)
-> [  238.410735] ---[ end trace 0000000000000000 ]---
->=20
->=20
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202311=
-09/testrun/21009598/suite/log-parser-test/test/check-kernel-exception/log
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202311=
-09/testrun/21009598/suite/log-parser-test/tests/
->  - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2Xv9w=
-ca3SPRN4lh73fIuUxVRNHI
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv9vEpjybxlDA4=
-IvgDBm4bjzVT/
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-
---N4lmr59gPo+3oBVi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVM5pYACgkQJNaLcl1U
-h9CbYQf/fZxm3kKPgU5OonTWLdsnp6rcIDmyLmn+U8D73IEEMEWq/W9yPn2rCEkt
-KWqxFAI9dAlpFt3/k3KNEaarsy1iIYPkd0lvajoKbXqtMdFYdyvDxgrJ6vmK1E6D
-1vfDmZEsnpAziQdiwMu06BS932Byl5kddd3AK+lfU2M2erLZOCI4phBJrC7E8qwX
-JCCosGgadkPURnR+X/awEIN++TGHfFVDqQoGcGuccP4V6Di1jXD+24oUNd/bSF78
-yvHBWCY/tpZG9Lds2T0j65iOG4g2ATU6BBfkB8X8cssXRX4zsLIcmhSnxcn3Gb4H
-npRfGhblaEB3uHIeXWS3F4m+89xAEA==
-=LvGW
------END PGP SIGNATURE-----
-
---N4lmr59gPo+3oBVi--
