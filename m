@@ -1,42 +1,42 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1DA1944C
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 13:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0260517741
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 13:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GqqWo58K"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7bae0c07086so382528241.1
-        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 05:04:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sL7HTIEx"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-45db31f9156so383801137.1
+        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 05:27:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699535076; x=1700139876; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1699536440; x=1700141240; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rJHV5wjvEmu0+H0pswwKbUsYcGzXtjcRUmurBVcTMsY=;
-        b=GqqWo58KiCshJT0p2BViHVszAAgTyE6PaSBB6xzSA2H64DBFHouBf5idZoSpTS7vj9
-         zYJnIPpakPmaQrCHSfKAXmR8OzB1ybTW9ynnIaPeRvGJcZmycaP2nbqztM72+q7aFrBt
-         XtChV0iRz9S0b9MNVbmYebuEkSaOPk239z9ucrit1fWBu//lOPIeS9oq8KK15jafARhd
-         mMjrPHSCRj3w/wQiB4Qnw9k6yCBoEJhxlbbrFTEpgTJa4tcNBeDfxBQwY8KqS7A+a5HE
-         nmTQXuyWoLIAy38vertz+boJL+q26H69xuS6Mr/AqLQ59jLs0mc0lSfHeVISncYJVhOh
-         eGIA==
+        bh=cbopAyKk2nUSkgWtHiP/bLtiSi3hylXJFxrxhIdXSa4=;
+        b=sL7HTIExF9eshWqkOkzFY6Oj4jdaqXr6gHLl6auv36AZIMZO29lrBxF+VuARDPVGwt
+         2LqEpjCxANz3sJfajmtawUbe0u+BCTuKgMDIFOBE1ZY99i6xMkVDStWRdl+IRkjRoYXN
+         hCNF76YnwYmi9mfHggd6ISMMRf2YcHWXxPv6w3V3ytwCNuR1flK6lX499ccXGzyweEBB
+         NCkXJeq+RV7GWUGsg6lRw1f6FYx3VCi0n7c1qr09Bp3REkb8QS5nsMvEtgU/1oR4avHo
+         Q4W/Xmo/vcrGdkdWIm0g6KamjQrJLwwe+66Rn98sNuoQi7q/tU6Ay5+a80ppLfmdA4hA
+         Vw0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699535076; x=1700139876;
+        d=1e100.net; s=20230601; t=1699536440; x=1700141240;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rJHV5wjvEmu0+H0pswwKbUsYcGzXtjcRUmurBVcTMsY=;
-        b=Tyv/8TDLmLncDBDOrAHAu6qWNjaN0hnrTj4tvgP4sxc5yz2r0jGdyQW9gPwMlrsrnV
-         pT3lfjfwRn8A1nJW+0KwH2J3gPljQepcj9Kf3KAbc8mg64gx56kgaLTFjOIPSK9+vNST
-         Lc/hKMevcDjbhwP0Y8FffDLhq65lFohkUNm0Z5yxw2B5ReszymEpFJ1FGJvfuIPYos20
-         5kWEs2nfTIugUGrZu8B/Ecvi96nlTFq1I+AOYooqTNiIN/QAFMwV2Kukea6Bxty8aAdk
-         10HAyYsWgTT2j9mdR/ZxM8wR7w9+0XlHPHdvKrR5HMCbVzgs2LKHpJh5Swe40a91FQxn
-         mBXA==
-X-Gm-Message-State: AOJu0YzO8SkSRlHSgWpdLCO5g1yzxtznFE7l59gz5J04+DtBq0f+3Q+3
-	yuEnvA2cCouYRCwIhEiBssIBbOKto9qEdQumiUfTDQ==
-X-Google-Smtp-Source: AGHT+IG9nwtGQRIOzqK10AkgRk7c+flhGsr/w/ZJgOnvHz+uB1IeZ5JtclgUH4I84oq/WNIfY/7UjG0NLcht5wwj2yQ=
-X-Received: by 2002:a1f:6e4e:0:b0:49d:fab:fa37 with SMTP id
- j75-20020a1f6e4e000000b0049d0fabfa37mr1381042vkc.4.1699535076016; Thu, 09 Nov
- 2023 05:04:36 -0800 (PST)
+        bh=cbopAyKk2nUSkgWtHiP/bLtiSi3hylXJFxrxhIdXSa4=;
+        b=T5V4kYMg9zFJYCC3B2TNc8mFItrLR/y5DEf+YFP0y3HEZeffbC6lZcYqeUv+i5dOUs
+         Y8T2/FaitRoGYOxGgoHdEGpQ9e48HwcpldhJNqC9IWVCAmuL6C8vuMT97ae8ttzIbyDV
+         senPzI6QMIRSAji5XRsLHIQ/LEeiBVvG0iXJqV0x7dxPTfZBvIg1FObI4FfXu6WSJhS1
+         yV/28WaWMQI0T5Hma0z8VuEncw+0j4WHzE8vwzOH+KPNNkR8o9CFXcUlB386PSmtJtq5
+         kiCzxC2GbTpj2OfoUY6jjfwaZVzVvK+uq2M3RvBnxJ0ucuh3di0d2B7wNT7bPIn/sPg5
+         KLRg==
+X-Gm-Message-State: AOJu0Yyp/m2vF0EA9idpuCRcwqjD+N9ezG1S6Kmk0K0Ns2pr6lyOudC0
+	x7wRmK/PWbdHqkQuyLQJOa7lwE0NbapQVljaMxNRZA==
+X-Google-Smtp-Source: AGHT+IHZv6/tHioQIWcjB+aBmS/UdtoC1McUwT/k73qnfV49+CgnR/jgai3mHG1zVSK7o4helKC44xQ1U97V1/xXSTQ=
+X-Received: by 2002:a67:cc16:0:b0:45d:962e:f17b with SMTP id
+ q22-20020a67cc16000000b0045d962ef17bmr4553293vsl.30.1699536439712; Thu, 09
+ Nov 2023 05:27:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,143 +44,85 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 9 Nov 2023 18:34:24 +0530
-Message-ID: <CA+G9fYue-dV7t-NrOhWwGshvyboXjb2B6HpCDVDe3bgG7fbnsg@mail.gmail.com>
-Subject: selftests: memfd: run_fuse_test.sh - fuse_evict_inode -
- fs/fuse/inode.c:162 - panic
-To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, regressions@lists.linux.dev
-Cc: Miklos Szeredi <mszeredi@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, 
+Date: Thu, 9 Nov 2023 18:57:08 +0530
+Message-ID: <CA+G9fYs-j2FYZSFSVZj48mgoM9gQd4-7M2mu2Ez3D1DqDdW2bQ@mail.gmail.com>
+Subject: WARNING: CPU: 6 PID: 474 at include/linux/maple_tree.h:712
+ mmap_region (include/linux/maple_tree.h:556 include/linux/maple_tree.h:731
+To: linux-mm <linux-mm@kvack.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
 	Dan Carpenter <dan.carpenter@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Following kernel panic noticed while running selftests: memfd: run_fuse_test.sh
-on arm64 Juno-r2 and x86 devices running Linux next-20231109.
+Following kernel panic noticed while running  selftests: exec: load_address
+on Fastmodels (FVP) running Linux next-20231109.
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
 log:
 ---
-# timeout set to 45
-# selftests: memfd: run_fuse_test.sh
-# opening: ./mnt/memfd
-# fuse: DONE
-[ 1931.860330] Unable to handle kernel paging request at virtual
-address 005a5a5a5a5a5a5a
-[ 1931.868645] Mem abort info:
-[ 1931.871505]   ESR = 0x0000000096000021
-[ 1931.875311]   EC = 0x25: DABT (current EL), IL = 32 bits
-[ 1931.880805]   SET = 0, FnV = 0
-[ 1931.883924]   EA = 0, S1PTW = 0
-[ 1931.887563]   FSC = 0x21: alignment fault
-[ 1931.891618] Data abort info:
-[ 1931.894542]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
-[ 1931.900219]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[ 1931.905305]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[ 1931.910692] [005a5a5a5a5a5a5a] address between user and kernel address ranges
-[ 1931.918091] Internal error: Oops: 0000000096000021 [#1] PREEMPT SMP
-[ 1931.924375] Modules linked in: gpio_sim onboard_usb_hub tda998x
-hdlcd crct10dif_ce cec drm_dma_helper dm_mod [last unloaded:
-gpio_mockup]
-[ 1931.936789] CPU: 1 PID: 20739 Comm: fusermount Not tainted
-6.6.0-next-20231109 #1
-[ 1931.944295] Hardware name: ARM Juno development board (r2) (DT)
-[ 1931.950224] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1931.957205] pc : fuse_evict_inode
-(arch/arm64/include/asm/atomic_ll_sc.h:96 (discriminator 3)
-arch/arm64/include/asm/atomic.h:51 (discriminator 3)
-include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 3)
-include/linux/atomic/atomic-instrumented.h:401 (discriminator 3)
-include/linux/refcount.h:272 (discriminator 3)
-include/linux/refcount.h:315 (discriminator 3)
-include/linux/refcount.h:333 (discriminator 3) fs/fuse/inode.c:137
-(discriminator 3) fs/fuse/inode.c:166 (discriminator 3))
-[ 1931.961586] lr : fuse_evict_inode (fs/fuse/inode.c:162)
-[ 1931.965868] sp : ffff80008792ba90
-[ 1931.969189] x29: ffff80008792ba90 x28: ffff000800b58040 x27: 0000000000000000
-[ 1931.976358] x26: 0000000000000000 x25: ffff800080508f98 x24: ffff80008316a008
-[ 1931.983519] x23: ffff80008316a008 x22: ffff80008424a020 x21: ffff00082a514c00
-[ 1931.990679] x20: 5a5a5a5a5a5a5a5a x19: ffff000838828780 x18: 0000000000000000
-[ 1931.997840] x17: ffff80008050e610 x16: ffff80008050e5bc x15: ffff80008050e3e8
-[ 1932.005003] x14: ffff80008050df10 x13: ffff800080769c60 x12: ffff8000851f6388
-[ 1932.012165] x11: 0000000000000645 x10: 0000000000000645 x9 : ffff800081c0e0b4
-[ 1932.019332] x8 : ffff80008792b988 x7 : 0000000000000000 x6 : ffff800084a75fe8
-[ 1932.026495] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008424a968
-[ 1932.033659] x2 : 0000000000000002 x1 : ffff000800b58040 x0 : 0000000000000001
-[ 1932.040820] Call trace:
-[ 1932.043272] fuse_evict_inode
-(arch/arm64/include/asm/atomic_ll_sc.h:96 (discriminator 3)
-arch/arm64/include/asm/atomic.h:51 (discriminator 3)
-include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 3)
-include/linux/atomic/atomic-instrumented.h:401 (discriminator 3)
-include/linux/refcount.h:272 (discriminator 3)
-include/linux/refcount.h:315 (discriminator 3)
-include/linux/refcount.h:333 (discriminator 3) fs/fuse/inode.c:137
-(discriminator 3) fs/fuse/inode.c:166 (discriminator 3))
-[ 1932.047296] evict (fs/inode.c:669)
-[ 1932.050279] iput_final (fs/inode.c:1776)
-[ 1932.053694] iput.part.0 (fs/inode.c:1803)
-[ 1932.057280] iput (fs/inode.c:1803)
-[ 1932.060085] dentry_unlink_inode (fs/dcache.c:402)
-[ 1932.064281] __dentry_kill (arch/arm64/include/asm/current.h:19
-arch/arm64/include/asm/preempt.h:47 fs/dcache.c:610)
-[ 1932.067956] shrink_dentry_list (include/linux/list.h:373
-(discriminator 2) fs/dcache.c:1179 (discriminator 2))
-[ 1932.072067] shrink_dcache_parent (fs/dcache.c:1652)
-[ 1932.076433] shrink_dcache_for_umount (fs/dcache.c:1682 fs/dcache.c:1698)
-[ 1932.081062] generic_shutdown_super (fs/super.c:647)
-[ 1932.085518] kill_anon_super (fs/super.c:1254)
-[ 1932.089277] fuse_kill_sb_anon (fs/fuse/fuse_i.h:895 fs/fuse/inode.c:1912)
-[ 1932.093298] deactivate_locked_super (fs/super.c:489)
-[ 1932.097753] deactivate_super (fs/super.c:522)
-[ 1932.101599] cleanup_mnt (fs/namespace.c:139 fs/namespace.c:1257)
-[ 1932.105097] __cleanup_mnt (fs/namespace.c:1264)
-[ 1932.108680] task_work_run (kernel/task_work.c:182)
-[ 1932.112266] do_notify_resume (include/linux/resume_user_mode.h:49
-arch/arm64/kernel/signal.c:1305)
-[ 1932.116283] el0_svc (arch/arm64/kernel/entry-common.c:137
-arch/arm64/kernel/entry-common.c:144
-arch/arm64/kernel/entry-common.c:679)
-[ 1932.119345] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697)
-[ 1932.123710] el0t_64_sync (arch/arm64/kernel/entry.S:595)
-[ 1932.127383] Code: f9026a7f 17ffffd9 52800020 f9800291 (885f7e81)
-All code
-========
-   0: f9026a7f str xzr, [x19, #1232]
-   4: 17ffffd9 b 0xffffffffffffff68
-   8: 52800020 mov w0, #0x1                    // #1
-   c: f9800291 prfm pstl1strm, [x20]
-  10:* 885f7e81 ldxr w1, [x20] <-- trapping instruction
 
-Code starting with the faulting instruction
-===========================================
-   0: 885f7e81 ldxr w1, [x20]
-[ 1932.133486] ---[ end trace 0000000000000000 ]---
-[ 1932.138111] Kernel panic - not syncing: Oops: Fatal exception
-[ 1932.143867] SMP: stopping secondary CPUs
-[ 1932.148008] Kernel Offset: disabled
-[ 1932.151498] CPU features: 0x1,0000020c,3c020000,0100421b
-[ 1932.156820] Memory Limit: none
-[ 1932.159880] ---[ end Kernel panic - not syncing: Oops: Fatal exception ]---
+# timeout set to 45
+# selftests: exec: load_address_16777216
+[  238.405168] ------------[ cut here ]------------
+[  238.405244] WARNING: CPU: 6 PID: 474 at
+include/linux/maple_tree.h:712 mmap_region
+(include/linux/maple_tree.h:556 include/linux/maple_tree.h:731
+include/linux/maple_tree.h:747 include/linux/mm.h:1033 mm/mmap.c:2828)
+[  238.405432] Modules linked in: arm_spe_pmu crct10dif_ce
+panel_simple pl111_drm drm_dma_helper drm_kms_helper fuse drm
+backlight dm_mod ip_tables x_tables
+[  238.405932] CPU: 6 PID: 474 Comm: load_address_16 Not tainted
+6.6.0-next-20231109 #1
+[  238.406070] Hardware name: FVP Base RevC (DT)
+[  238.406151] pstate: 123402009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+[  238.406294] pc : mmap_region (include/linux/maple_tree.h:556
+include/linux/maple_tree.h:731 include/linux/maple_tree.h:747
+include/linux/mm.h:1033 mm/mmap.c:2828)
+[  238.406424] lr : mmap_region (mm/mmap.c:2836)
+[  238.406554] sp : ffff8000819639b0
+[  238.406629] x29: ffff8000819639c0 x28: ffff000806f79000 x27: 0000000002002000
+[  238.406829] x26: ffff000806f798f0 x25: ffff000806f790b0 x24: 0000000000000006
+[  238.407029] x23: 0000000000000ffc x22: ffff000805d6e100 x21: ffff0008016adf00
+[  238.407229] x20: 0000000000100073 x19: 0000000001ffc000 x18: ffffffffffffffff
+[  238.407425] x17: 0000000000000000 x16: ffffd7c64ceb7c10 x15: ffffffffffffffff
+[  238.407627] x14: 0000000000000000 x13: 1fffe001002bc9a1 x12: ffff0008015e4d0c
+[  238.407825] x11: ffff800081963a48 x10: ffff0008015e4d00 x9 : ffffd7c64b49c9f0
+[  238.408028] x8 : ffff800081963778 x7 : 0000000000000000 x6 : 0000000000000000
+[  238.408223] x5 : ffffd7c64e35f000 x4 : ffffd7c64e35f278 x3 : 0000000000000000
+[  238.408420] x2 : ffffd7c64e92fd78 x1 : 0000000002001fff x0 : 0000000000479fff
+[  238.408618] Call trace:
+[  238.408681] mmap_region (include/linux/maple_tree.h:556
+include/linux/maple_tree.h:731 include/linux/maple_tree.h:747
+include/linux/mm.h:1033 mm/mmap.c:2828)
+[  238.408812] do_mmap (arch/arm64/include/asm/mman.h:18
+include/linux/mman.h:147 mm/mmap.c:1274)
+[  238.408940] vm_mmap_pgoff (mm/util.c:546)
+[  238.409088] vm_mmap (mm/util.c:559)
+[  238.409229] elf_load (fs/binfmt_elf.c:385 fs/binfmt_elf.c:408)
+[  238.409337] load_elf_binary (fs/binfmt_elf.c:1134 (discriminator 1))
+[  238.409454] bprm_execve (fs/exec.c:1940)
+[  238.409598] do_execveat_common.isra.0 (fs/exec.c:1938)
+[  238.409757] __arm64_sys_execve (fs/exec.c:2106)
+[  238.409910] invoke_syscall (arch/arm64/kernel/syscall.c:46
+(discriminator 19))
+[  238.410058] el0_svc_common.constprop.0 (arch/arm64/kernel/syscall.c:136)
+[  238.410218] do_el0_svc (arch/arm64/kernel/syscall.c:155)
+[  238.410363] el0_svc (arch/arm64/include/asm/daifflags.h:75
+arch/arm64/kernel/entry-common.c:677)
+[  238.410508] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697)
+[  238.410623] el0t_64_sync (arch/arm64/kernel/entry.S:595)
+[  238.410735] ---[ end trace 0000000000000000 ]---
 
 
 Links:
-- https://lkft.validation.linaro.org/scheduler/job/7006578#L6164
-- https://lkft.validation.linaro.org/scheduler/job/7006482#L9235
-
-metadata:
-git_ref: master
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-git_sha: b622d91ca201bf97582e9b09ebbaab005ecee86f
-git_describe: next-20231109
-kernel_version: 6.6.0
-kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv92VPrzXNNmQil9l8bJV2RQHs/config
-artifact-location:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv92VPrzXNNmQil9l8bJV2RQHs/
-toolchain: gcc-13
-
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231109/testrun/21009598/suite/log-parser-test/test/check-kernel-exception/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231109/testrun/21009598/suite/log-parser-test/tests/
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2Xv9wca3SPRN4lh73fIuUxVRNHI
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv9vEpjybxlDA4IvgDBm4bjzVT/
 
 --
 Linaro LKFT
