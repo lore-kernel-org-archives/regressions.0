@@ -1,167 +1,187 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A862D374E1
-	for <regressions@lists.linux.dev>; Wed,  8 Nov 2023 23:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1DA1944C
+	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 13:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dZLZnIpl"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1cc28719cb0so497545ad.0
-        for <regressions@lists.linux.dev>; Wed, 08 Nov 2023 15:59:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GqqWo58K"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7bae0c07086so382528241.1
+        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 05:04:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1699487940; x=1700092740; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HTTNdjX6EtMSKakiEYfW6PgDYdTre6g6BEczOH+kZ1w=;
-        b=dZLZnIplAv3PcNXKzaTnM6zlhfZ1kODTUORayodzsEKIBHmZyPMZboWiMoL6mjEfab
-         3qHYS27tx7yc1ISfQsQeSlWkUkPsOS483M9T1ZSRS2f4SfmkoaATbz8ylNqmzgNyggAl
-         CbIrZJlxyB6uYh7yh339xMB4oUDkguQj/7F4u8Tt7d+lxIFJ5dj2TNUEedrhJCwnkJOJ
-         4RHwrsjP5M0NGrrKMcs+UE54ONFmwC+PXNpRW0oRtf0gWA/chNw1s44+IR591afSKpkq
-         ZXEwTsqs5XZB5OVDYmMSbpVPiOYXtAoSipJcGLeDgYA2mGNEevzsQJX37nr/TVTBQ1js
-         ETrg==
+        d=linaro.org; s=google; t=1699535076; x=1700139876; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rJHV5wjvEmu0+H0pswwKbUsYcGzXtjcRUmurBVcTMsY=;
+        b=GqqWo58KiCshJT0p2BViHVszAAgTyE6PaSBB6xzSA2H64DBFHouBf5idZoSpTS7vj9
+         zYJnIPpakPmaQrCHSfKAXmR8OzB1ybTW9ynnIaPeRvGJcZmycaP2nbqztM72+q7aFrBt
+         XtChV0iRz9S0b9MNVbmYebuEkSaOPk239z9ucrit1fWBu//lOPIeS9oq8KK15jafARhd
+         mMjrPHSCRj3w/wQiB4Qnw9k6yCBoEJhxlbbrFTEpgTJa4tcNBeDfxBQwY8KqS7A+a5HE
+         nmTQXuyWoLIAy38vertz+boJL+q26H69xuS6Mr/AqLQ59jLs0mc0lSfHeVISncYJVhOh
+         eGIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699487940; x=1700092740;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTTNdjX6EtMSKakiEYfW6PgDYdTre6g6BEczOH+kZ1w=;
-        b=bOjDk0rPEpII8fSwS18qnyR8qttHkWl/PZImX2/6+RT9y9hYyFEXorVTPTZLQTi3tO
-         V0ztAcKkA9aAqr4H2OEcbR0VfKv35/sh+gWERZZ2lHikdc2uhi23oZ0qqHNTkOJOpbPL
-         IL7QPnJQKavA6XFFhHNM+82jQ/0cSNM0qK0zbkX3/Vuj2xHwj8NDVcY87rkT0+12DyZa
-         WQPW7kLjEp+Y3fO4g971svcR3QWvAjGci7lWypJvpRAGTlEobq2MWnEGUKXascQmiRFM
-         dVq1yI9NABup/AtGaeekHusDc90SJ+u+HFMb+W5LtL7GUmOdgn4hWA8ucr7Krupp9AYZ
-         3jgQ==
-X-Gm-Message-State: AOJu0YyL2gIzdAff9X9KUAZC7049d02vlhKrEvXCxgb9114BVta+wVgR
-	+3MMyv0uVEYDSTObUVFpm8hY+d9MgWtu/k+2HRxjUQ==
-X-Google-Smtp-Source: AGHT+IH/MWKemw4UQDRBJXjezbSExHdKc+PaJ0uFLMMqohRAvfZxgoFjdJ+dq8bI7tqU4H9kuByRrQ==
-X-Received: by 2002:a17:902:dac6:b0:1c6:9312:187 with SMTP id q6-20020a170902dac600b001c693120187mr3735679plx.3.1699487939883;
-        Wed, 08 Nov 2023 15:58:59 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id h21-20020a170902eed500b001bf846dd2d0sm2244919plb.13.2023.11.08.15.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Nov 2023 15:58:59 -0800 (PST)
-Message-ID: <0672220d-1b3a-46b3-811d-0a691e380097@kernel.dk>
-Date: Wed, 8 Nov 2023 16:58:58 -0700
+        d=1e100.net; s=20230601; t=1699535076; x=1700139876;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rJHV5wjvEmu0+H0pswwKbUsYcGzXtjcRUmurBVcTMsY=;
+        b=Tyv/8TDLmLncDBDOrAHAu6qWNjaN0hnrTj4tvgP4sxc5yz2r0jGdyQW9gPwMlrsrnV
+         pT3lfjfwRn8A1nJW+0KwH2J3gPljQepcj9Kf3KAbc8mg64gx56kgaLTFjOIPSK9+vNST
+         Lc/hKMevcDjbhwP0Y8FffDLhq65lFohkUNm0Z5yxw2B5ReszymEpFJ1FGJvfuIPYos20
+         5kWEs2nfTIugUGrZu8B/Ecvi96nlTFq1I+AOYooqTNiIN/QAFMwV2Kukea6Bxty8aAdk
+         10HAyYsWgTT2j9mdR/ZxM8wR7w9+0XlHPHdvKrR5HMCbVzgs2LKHpJh5Swe40a91FQxn
+         mBXA==
+X-Gm-Message-State: AOJu0YzO8SkSRlHSgWpdLCO5g1yzxtznFE7l59gz5J04+DtBq0f+3Q+3
+	yuEnvA2cCouYRCwIhEiBssIBbOKto9qEdQumiUfTDQ==
+X-Google-Smtp-Source: AGHT+IG9nwtGQRIOzqK10AkgRk7c+flhGsr/w/ZJgOnvHz+uB1IeZ5JtclgUH4I84oq/WNIfY/7UjG0NLcht5wwj2yQ=
+X-Received: by 2002:a1f:6e4e:0:b0:49d:fab:fa37 with SMTP id
+ j75-20020a1f6e4e000000b0049d0fabfa37mr1381042vkc.4.1699535076016; Thu, 09 Nov
+ 2023 05:04:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression in io_uring, leading to data corruption
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: regressions <regressions@lists.linux.dev>,
- Pavel Begunkov <asml.silence@gmail.com>
-References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
- <716eb4a2-94c4-4da9-b1ed-b94858e3ee08@kernel.dk>
- <1449911021.45817655.1699465215683.JavaMail.zimbra@raptorengineeringinc.com>
- <74d15590-3af6-40ed-8d3b-5bf8cd3881a5@kernel.dk>
- <217080ad-adb4-4cbd-ae91-1287bb6a5400@kernel.dk>
- <410961969.45826785.1699468561883.JavaMail.zimbra@raptorengineeringinc.com>
- <2225dc79-37ec-4239-b13a-ac444bfa6a6b@kernel.dk>
- <3f2dcaba-d18e-4d1d-9b96-2a168f550881@kernel.dk>
- <262637196.45862863.1699481726721.JavaMail.zimbra@raptorengineeringinc.com>
- <b40fd4c2-ea0e-4260-87f6-a3d43dd06c9d@kernel.dk>
-In-Reply-To: <b40fd4c2-ea0e-4260-87f6-a3d43dd06c9d@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 9 Nov 2023 18:34:24 +0530
+Message-ID: <CA+G9fYue-dV7t-NrOhWwGshvyboXjb2B6HpCDVDe3bgG7fbnsg@mail.gmail.com>
+Subject: selftests: memfd: run_fuse_test.sh - fuse_evict_inode -
+ fs/fuse/inode.c:162 - panic
+To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, regressions@lists.linux.dev
+Cc: Miklos Szeredi <mszeredi@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/8/23 3:18 PM, Jens Axboe wrote:
-> OK, let me actually test this thing and see if I can make it solid
-> first...
+Following kernel panic noticed while running selftests: memfd: run_fuse_test.sh
+on arm64 Juno-r2 and x86 devices running Linux next-20231109.
 
-Here's a suitable hack - it just creates a new io worker for each item,
-ensuring that that worker is run on the same CPU.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
-index 522196dfb0ff..3a14bc35f9ba 100644
---- a/io_uring/io-wq.c
-+++ b/io_uring/io-wq.c
-@@ -921,6 +921,67 @@ static bool io_wq_work_match_item(struct io_wq_work *work, void *data)
- 	return work == data;
- }
- 
-+struct work_data {
-+	struct io_wq_work *work;
-+	struct io_wq *wq;
-+	int cpu;
-+};
-+
-+static int io_wq_single_worker(void *data)
-+{
-+	struct work_data *wd = data;
-+	struct io_wq_work *work = wd->work;
-+	struct io_wq *wq = wd->wq;
-+
-+	WARN_ON_ONCE(wd->cpu != raw_smp_processor_id());
-+	kfree(wd);
-+	do {
-+		if (test_bit(IO_WQ_BIT_EXIT, &wq->state))
-+			work->flags |= IO_WQ_WORK_CANCEL;
-+		wq->do_work(work);
-+		work = wq->free_work(work);
-+	} while (work);
-+
-+	do_exit(0);
-+	return 0;
-+}
-+
-+static int io_wq_create_single(struct io_wq *wq, struct io_wq_work *work)
-+{
-+	struct task_struct *tsk;
-+	struct work_data *wd;
-+	cpumask_var_t new_mask;
-+
-+	wd = kmalloc(sizeof(*wd), GFP_NOIO);
-+	if (!wd)
-+		return false;
-+
-+	if (!alloc_cpumask_var(&new_mask, GFP_NOIO)) {
-+		kfree(wd);
-+		return false;
-+	}
-+
-+	wd->work = work;
-+	wd->cpu = raw_smp_processor_id();
-+	wd->wq = wq,
-+
-+	cpumask_clear(new_mask);
-+	cpumask_set_cpu(wd->cpu, new_mask);
-+
-+	tsk = create_io_thread(io_wq_single_worker, wd, NUMA_NO_NODE);
-+	if (!IS_ERR(tsk)) {
-+		tsk->worker_private = tsk;
-+		set_cpus_allowed_ptr(tsk, new_mask);
-+		free_cpumask_var(new_mask);
-+		wake_up_new_task(tsk);
-+		return true;
-+	}
-+
-+	free_cpumask_var(new_mask);
-+	kfree(wd);
-+	return false;
-+}
-+
- void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work)
- {
- 	struct io_wq_acct *acct = io_work_get_acct(wq, work);
-@@ -938,6 +999,10 @@ void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work)
- 		return;
- 	}
- 
-+	if (io_wq_create_single(wq, work))
-+		return;
-+
-+	WARN_ON_ONCE(1);
- 	raw_spin_lock(&acct->lock);
- 	io_wq_insert_work(wq, work);
- 	clear_bit(IO_ACCT_STALLED_BIT, &acct->flags);
+log:
+---
+# timeout set to 45
+# selftests: memfd: run_fuse_test.sh
+# opening: ./mnt/memfd
+# fuse: DONE
+[ 1931.860330] Unable to handle kernel paging request at virtual
+address 005a5a5a5a5a5a5a
+[ 1931.868645] Mem abort info:
+[ 1931.871505]   ESR = 0x0000000096000021
+[ 1931.875311]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 1931.880805]   SET = 0, FnV = 0
+[ 1931.883924]   EA = 0, S1PTW = 0
+[ 1931.887563]   FSC = 0x21: alignment fault
+[ 1931.891618] Data abort info:
+[ 1931.894542]   ISV = 0, ISS = 0x00000021, ISS2 = 0x00000000
+[ 1931.900219]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 1931.905305]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 1931.910692] [005a5a5a5a5a5a5a] address between user and kernel address ranges
+[ 1931.918091] Internal error: Oops: 0000000096000021 [#1] PREEMPT SMP
+[ 1931.924375] Modules linked in: gpio_sim onboard_usb_hub tda998x
+hdlcd crct10dif_ce cec drm_dma_helper dm_mod [last unloaded:
+gpio_mockup]
+[ 1931.936789] CPU: 1 PID: 20739 Comm: fusermount Not tainted
+6.6.0-next-20231109 #1
+[ 1931.944295] Hardware name: ARM Juno development board (r2) (DT)
+[ 1931.950224] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 1931.957205] pc : fuse_evict_inode
+(arch/arm64/include/asm/atomic_ll_sc.h:96 (discriminator 3)
+arch/arm64/include/asm/atomic.h:51 (discriminator 3)
+include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 3)
+include/linux/atomic/atomic-instrumented.h:401 (discriminator 3)
+include/linux/refcount.h:272 (discriminator 3)
+include/linux/refcount.h:315 (discriminator 3)
+include/linux/refcount.h:333 (discriminator 3) fs/fuse/inode.c:137
+(discriminator 3) fs/fuse/inode.c:166 (discriminator 3))
+[ 1931.961586] lr : fuse_evict_inode (fs/fuse/inode.c:162)
+[ 1931.965868] sp : ffff80008792ba90
+[ 1931.969189] x29: ffff80008792ba90 x28: ffff000800b58040 x27: 0000000000000000
+[ 1931.976358] x26: 0000000000000000 x25: ffff800080508f98 x24: ffff80008316a008
+[ 1931.983519] x23: ffff80008316a008 x22: ffff80008424a020 x21: ffff00082a514c00
+[ 1931.990679] x20: 5a5a5a5a5a5a5a5a x19: ffff000838828780 x18: 0000000000000000
+[ 1931.997840] x17: ffff80008050e610 x16: ffff80008050e5bc x15: ffff80008050e3e8
+[ 1932.005003] x14: ffff80008050df10 x13: ffff800080769c60 x12: ffff8000851f6388
+[ 1932.012165] x11: 0000000000000645 x10: 0000000000000645 x9 : ffff800081c0e0b4
+[ 1932.019332] x8 : ffff80008792b988 x7 : 0000000000000000 x6 : ffff800084a75fe8
+[ 1932.026495] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff80008424a968
+[ 1932.033659] x2 : 0000000000000002 x1 : ffff000800b58040 x0 : 0000000000000001
+[ 1932.040820] Call trace:
+[ 1932.043272] fuse_evict_inode
+(arch/arm64/include/asm/atomic_ll_sc.h:96 (discriminator 3)
+arch/arm64/include/asm/atomic.h:51 (discriminator 3)
+include/linux/atomic/atomic-arch-fallback.h:944 (discriminator 3)
+include/linux/atomic/atomic-instrumented.h:401 (discriminator 3)
+include/linux/refcount.h:272 (discriminator 3)
+include/linux/refcount.h:315 (discriminator 3)
+include/linux/refcount.h:333 (discriminator 3) fs/fuse/inode.c:137
+(discriminator 3) fs/fuse/inode.c:166 (discriminator 3))
+[ 1932.047296] evict (fs/inode.c:669)
+[ 1932.050279] iput_final (fs/inode.c:1776)
+[ 1932.053694] iput.part.0 (fs/inode.c:1803)
+[ 1932.057280] iput (fs/inode.c:1803)
+[ 1932.060085] dentry_unlink_inode (fs/dcache.c:402)
+[ 1932.064281] __dentry_kill (arch/arm64/include/asm/current.h:19
+arch/arm64/include/asm/preempt.h:47 fs/dcache.c:610)
+[ 1932.067956] shrink_dentry_list (include/linux/list.h:373
+(discriminator 2) fs/dcache.c:1179 (discriminator 2))
+[ 1932.072067] shrink_dcache_parent (fs/dcache.c:1652)
+[ 1932.076433] shrink_dcache_for_umount (fs/dcache.c:1682 fs/dcache.c:1698)
+[ 1932.081062] generic_shutdown_super (fs/super.c:647)
+[ 1932.085518] kill_anon_super (fs/super.c:1254)
+[ 1932.089277] fuse_kill_sb_anon (fs/fuse/fuse_i.h:895 fs/fuse/inode.c:1912)
+[ 1932.093298] deactivate_locked_super (fs/super.c:489)
+[ 1932.097753] deactivate_super (fs/super.c:522)
+[ 1932.101599] cleanup_mnt (fs/namespace.c:139 fs/namespace.c:1257)
+[ 1932.105097] __cleanup_mnt (fs/namespace.c:1264)
+[ 1932.108680] task_work_run (kernel/task_work.c:182)
+[ 1932.112266] do_notify_resume (include/linux/resume_user_mode.h:49
+arch/arm64/kernel/signal.c:1305)
+[ 1932.116283] el0_svc (arch/arm64/kernel/entry-common.c:137
+arch/arm64/kernel/entry-common.c:144
+arch/arm64/kernel/entry-common.c:679)
+[ 1932.119345] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697)
+[ 1932.123710] el0t_64_sync (arch/arm64/kernel/entry.S:595)
+[ 1932.127383] Code: f9026a7f 17ffffd9 52800020 f9800291 (885f7e81)
+All code
+========
+   0: f9026a7f str xzr, [x19, #1232]
+   4: 17ffffd9 b 0xffffffffffffff68
+   8: 52800020 mov w0, #0x1                    // #1
+   c: f9800291 prfm pstl1strm, [x20]
+  10:* 885f7e81 ldxr w1, [x20] <-- trapping instruction
 
--- 
-Jens Axboe
+Code starting with the faulting instruction
+===========================================
+   0: 885f7e81 ldxr w1, [x20]
+[ 1932.133486] ---[ end trace 0000000000000000 ]---
+[ 1932.138111] Kernel panic - not syncing: Oops: Fatal exception
+[ 1932.143867] SMP: stopping secondary CPUs
+[ 1932.148008] Kernel Offset: disabled
+[ 1932.151498] CPU features: 0x1,0000020c,3c020000,0100421b
+[ 1932.156820] Memory Limit: none
+[ 1932.159880] ---[ end Kernel panic - not syncing: Oops: Fatal exception ]---
 
+
+Links:
+- https://lkft.validation.linaro.org/scheduler/job/7006578#L6164
+- https://lkft.validation.linaro.org/scheduler/job/7006482#L9235
+
+metadata:
+git_ref: master
+git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+git_sha: b622d91ca201bf97582e9b09ebbaab005ecee86f
+git_describe: next-20231109
+kernel_version: 6.6.0
+kernel-config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv92VPrzXNNmQil9l8bJV2RQHs/config
+artifact-location:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2Xv92VPrzXNNmQil9l8bJV2RQHs/
+toolchain: gcc-13
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
