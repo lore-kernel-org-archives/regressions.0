@@ -1,74 +1,219 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73B110790
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 09:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED2E18AEA
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 12:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="JIKW4mHT"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9dd3f4a0f5aso304529166b.1
-        for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 01:44:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1699609489; x=1700214289; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNNVKkYwl/rOA9GX9/SH18oSRKfcJIfb4LTGsk7JdWQ=;
-        b=JIKW4mHT+xlPK2iuRLjQHwAJ+5RzDmTa0kB4E2tQyckeKoFQen/bCBrGqDjpKTeCaK
-         q6Gxth+3KGnzaJ3HWMcOZULC8elW7H58TYZEM3Jc/+sZpbS1eGAHO4Sxo4nYzQSwM/tt
-         NafG55ib2/zrMQRh4/Ij5QHiyTJdckTnmzBGU=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TK4jnPEG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699618751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fZNPs/Uul8pbzP8wCMTLsg8p6INnBbpXPZnHGet45DI=;
+	b=TK4jnPEGw7HvvV67SAlOYMuDx6hnhffTrZLdD96h5TomSNq+LK65ii6etnhDBcY+Q2k9BG
+	yA8a9y/kCDaw14xMDucVjMG6OizVyodKAN89ZYcQ6rm33c+7brktBa+Fc19r04PJgDEAwC
+	zjklEONwamHsx8depwNaWESi+GLaskU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-214-QDtllK-wPy2rnQ2-aVaMPg-1; Fri, 10 Nov 2023 07:19:09 -0500
+X-MC-Unique: QDtllK-wPy2rnQ2-aVaMPg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9bea60bd1adso354246566b.0
+        for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 04:19:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699609489; x=1700214289;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uNNVKkYwl/rOA9GX9/SH18oSRKfcJIfb4LTGsk7JdWQ=;
-        b=psWUo+m3ps39detg6quN9ft1zeJ2A3rEHx//P9sFobO0u/AIurb7Yn88rkoSQ38Ah4
-         F/Bp+r7JH2bqpNTlL6vdag4kxDlQdq277MbRKsRcDae9Igi0BLiQbhhSdYZPgYept11r
-         grgizRWJUZi5EH1dQ42YdPTIqoC7PIYfPeUhYs3E0g2sqNmDM5ncls9d33qNEud78cNF
-         dgxXhVNp+QBkYJDhMKv24ZuMiq8qtasEh8jm3RsS8tIP/wb74ntF2GsJ6HfL/YKQ/jeh
-         T7CgYlC6j3YlJTuJd4hYRQqn4dBBAlX7C1S7Gn3nyzFegyQ9AFY0KXwdxRMQ6zclD4X2
-         MWDg==
-X-Gm-Message-State: AOJu0YzlYLfWU0q5NDWYjELuf9t7ZE31m2tNam9Kwl9BQr5QJdw0nRIK
-	GhnuBwBJSlweT7+BGwxzhEFbOlHdn6IRCS43zV213Q==
-X-Google-Smtp-Source: AGHT+IHEDrhaS3SWGbZqZuG8sNPuZIIpHaBGL3VI6Da90hnwL9tRuf2Y3uqzB5/P6YHOqBSOAeAfq99hTGSbttzq3wg=
-X-Received: by 2002:a17:906:8910:b0:9e4:121c:c292 with SMTP id
- fr16-20020a170906891000b009e4121cc292mr3096666ejc.77.1699609488646; Fri, 10
- Nov 2023 01:44:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699618749; x=1700223549;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=d1whh53T9s+HtqGbyLHv3NqyFPtaLB/zMBiip1Dm8eo=;
+        b=Y96GmXpgOXroMxLrc3n7SW9wdKbhItzK8i/obshsE3R0jidkuP0WbqI0tt8qSnKsF2
+         ji/rG3uiWo4MAAVIp0rPcI9o3JlysdsfasPfokLYfkRpwmy0Oe3dxK2lx0d5wlCvDl+g
+         j9fzWHgIxigQZ/e/pGy5ejLzFls7ImHIBeVFrxnIXbccjCf75Juqzx2RwXfPl5uWEm+9
+         59g3HgKZvB9jzEvh9isYHSxNZ8vwo9bb9FHfW2rz2ivxLDNZo1eUk7cML8N/QKuiFvCY
+         9KRfbu7dDHtHhrag8ykknkDugUC65u5HwE1I+A4UmteyVKlWzvoXVdy/AmNvmMd8qPb/
+         aucA==
+X-Gm-Message-State: AOJu0YyTpSefTCYUChmo8U76zKgMw688ScOAOa5e/SMhESqwPiyhNXKx
+	9MAPzaeNrGg91kFSSH7GEqFg7Lup3JxZ3Mb7iLVgsr7bjpS0moqx78YVs0PGEmRRZTAL6WcABYP
+	uKVLjB0jI61DgOFciTzdh8+Q=
+X-Received: by 2002:a17:906:348f:b0:9ad:e3fd:d46c with SMTP id g15-20020a170906348f00b009ade3fdd46cmr1983862ejb.10.1699618748788;
+        Fri, 10 Nov 2023 04:19:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFUJSuoTddDVUnMW1xL9VJXCGY/Zir1gl4CSrzPZps3UPSDo0azFQEhVUlzVS/F/HdESVfYg==
+X-Received: by 2002:a17:906:348f:b0:9ad:e3fd:d46c with SMTP id g15-20020a170906348f00b009ade3fdd46cmr1983844ejb.10.1699618748423;
+        Fri, 10 Nov 2023 04:19:08 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id e14-20020a1709061e8e00b00977cad140a8sm3867371ejj.218.2023.11.10.04.19.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Nov 2023 04:19:07 -0800 (PST)
+Message-ID: <a592ce0c-64f0-477d-80fa-8f5a52ba29ea@redhat.com>
+Date: Fri, 10 Nov 2023 13:19:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1699564053.git.kjlx@templeofstupid.com>
-In-Reply-To: <cover.1699564053.git.kjlx@templeofstupid.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 10 Nov 2023 10:44:37 +0100
-Message-ID: <CAJfpegtOKLDy-j=oi8BsT+xjFnO+Mk7=8VxSDuyi-bxhRSGMKQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fuse submount_lookup needs to be initialized
-To: Krister Johansen <kjlx@templeofstupid.com>
-Cc: linux-fsdevel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>, 
-	linux-kernel@vger.kernel.org, German Maglione <gmaglione@redhat.com>, 
-	Greg Kurz <groug@kaod.org>, Max Reitz <mreitz@redhat.com>, 
-	Bernd Schubert <bernd.schubert@fastmail.fm>, 
-	"Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>, "Saarinen, Jani" <jani.saarinen@intel.com>, 
-	lkft-triage@lists.linaro.org, linux-kselftest@vger.kernel.org, 
-	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION]: acpi/nouveau: Hardware unavailable upon resume or
+ suspend fails
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ "Owen T. Heisler" <writer@owenh.net>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown
+ <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org
+References: <9f36fb06-64c4-4264-aaeb-4e1289e764c4@owenh.net>
+ <CAAd53p7BSesx=a1igTohoSkxrW+Hq8O7ArONFCK7uoDi12-T4A@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAAd53p7BSesx=a1igTohoSkxrW+Hq8O7ArONFCK7uoDi12-T4A@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="------------iOgSsRA60Wlx910hYRXi01Ux"
+Content-Language: en-US, nl
 
-On Thu, 9 Nov 2023 at 23:37, Krister Johansen <kjlx@templeofstupid.com> wrote:
+This is a multi-part message in MIME format.
+--------------iOgSsRA60Wlx910hYRXi01Ux
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> Either should do, but I wasn't sure which approach was preferable.
+Hi All,
 
-An incremental is better in this situation.   Applied and pushed.
+On 11/10/23 07:09, Kai-Heng Feng wrote:
+> Hi Owen,
+> 
+> On Fri, Nov 10, 2023 at 5:55 AM Owen T. Heisler <writer@owenh.net> wrote:
+>>
+>> #regzbot introduced: 89c290ea758911e660878e26270e084d862c03b0
+>> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/273
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218124
+> 
+> Thanks for the bug report. Do you prefer to continue the discussion
+> here, on gitlab or on bugzilla?
 
-> Thanks, and my apologies for the inconvenience.
+Owen, as Kai-Heng said thank you for reporting this.
 
-Really no need to apologize, this happens and the best possible
-outcome is that it get fixed before being released.
+>> ## Reproducing
+>>
+>> 1. Boot system to framebuffer console.
+>> 2. Run `systemctl suspend`. If undocked without secondary display,
+>> suspend fails. If docked with secondary display, suspend succeeds.
+>> 3. Resume from suspend if applicable.
+>> 4. System is now in a broken state.
+> 
+> So I guess we need to put those devices to ACPI D3 for suspend. Let's
+> discuss this on your preferred platform.
 
-Thanks,
-Miklos
+Ok, so I was already sort of afraid we might see something like this
+happening because of:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=89c290ea758911e660878e26270e084d862c03b0
+
+As I mentioned during the review of that, it might be better to
+not touch the video-card ACPI power-state at all and instead
+only do acpi_device_fix_up_power() on the child devices.
+
+Owen, attached are 2 patches which implement only
+calling acpi_device_fix_up_power() on the child devices,
+can you build a v6.6 kernel with these 2 patches added
+on top please and see if that fixes things ?
+
+Kai-Heng can you test that the issue on the HP ZBook Fury 16 G10
+is still resolved after applying these patches ?
+
+Regards,
+
+Hans
+
+
+--------------iOgSsRA60Wlx910hYRXi01Ux
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-ACPI-PM-Add-acpi_device_fix_up_power_children-functi.patch"
+Content-Disposition: attachment;
+ filename*0="0001-ACPI-PM-Add-acpi_device_fix_up_power_children-functi.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA2OGE4MTkxMDFjNTgwYmI4OWYzNGEzMTE5NmFjZTgxMjQ0Y2E4ZWI1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgpE
+YXRlOiBGcmksIDEwIE5vdiAyMDIzIDEyOjUyOjM5ICswMTAwClN1YmplY3Q6IFtQQVRDSCAxLzJd
+IEFDUEk6IFBNOiBBZGQgYWNwaV9kZXZpY2VfZml4X3VwX3Bvd2VyX2NoaWxkcmVuKCkKIGZ1bmN0
+aW9uCgpJbiBzb21lIGNhc2VzIGl0IGlzIG5lY2Vzc2FyeSB0byBmaXgtdXAgdGhlIHBvd2VyLXN0
+YXRlIG9mIGFuIEFDUEkKZGV2aWNlJ3MgY2hpbGRyZW4gd2l0aG91dCB0b3VjaGluZyB0aGUgQUNQ
+SSBkZXZpY2UgaXRzZWxmIGFkZAphIG5ldyBhY3BpX2RldmljZV9maXhfdXBfcG93ZXJfY2hpbGRy
+ZW4oKSBmdW5jdGlvbiBmb3IgdGhpcy4KClNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhk
+ZWdvZWRlQHJlZGhhdC5jb20+Ci0tLQogZHJpdmVycy9hY3BpL2RldmljZV9wbS5jIHwgMTMgKysr
+KysrKysrKysrKwogaW5jbHVkZS9hY3BpL2FjcGlfYnVzLmggIHwgIDEgKwogMiBmaWxlcyBjaGFu
+Z2VkLCAxNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2RldmljZV9w
+bS5jIGIvZHJpdmVycy9hY3BpL2RldmljZV9wbS5jCmluZGV4IGYwMDcxMTZhODQyNy4uM2I0ZDA0
+OGM0OTQxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMKKysrIGIvZHJpdmVy
+cy9hY3BpL2RldmljZV9wbS5jCkBAIC0zOTcsNiArMzk3LDE5IEBAIHZvaWQgYWNwaV9kZXZpY2Vf
+Zml4X3VwX3Bvd2VyX2V4dGVuZGVkKHN0cnVjdCBhY3BpX2RldmljZSAqYWRldikKIH0KIEVYUE9S
+VF9TWU1CT0xfR1BMKGFjcGlfZGV2aWNlX2ZpeF91cF9wb3dlcl9leHRlbmRlZCk7CiAKKy8qKgor
+ICogYWNwaV9kZXZpY2VfZml4X3VwX3Bvd2VyX2NoaWxkcmVuIC0gRm9yY2UgYSBkZXZpY2UncyBj
+aGlsZHJlbiBpbnRvIEQwLgorICogQGFkZXY6IFBhcmVudCBkZXZpY2Ugb2JqZWN0IHdob3NlIGNo
+aWxkcmVuJ3MgcG93ZXIgc3RhdGUgaXMgdG8gYmUgZml4ZWQgdXAuCisgKgorICogQ2FsbCBhY3Bp
+X2RldmljZV9maXhfdXBfcG93ZXIoKSBmb3IgQGFkZXYncyBjaGlsZHJlbiBzbyBsb25nIGFzIHRo
+ZXkKKyAqIGFyZSByZXBvcnRlZCBhcyBwcmVzZW50IGFuZCBlbmFibGVkLgorICovCit2b2lkIGFj
+cGlfZGV2aWNlX2ZpeF91cF9wb3dlcl9jaGlsZHJlbihzdHJ1Y3QgYWNwaV9kZXZpY2UgKmFkZXYp
+Cit7CisJYWNwaV9kZXZfZm9yX2VhY2hfY2hpbGQoYWRldiwgZml4X3VwX3Bvd2VyX2lmX2FwcGxp
+Y2FibGUsIE5VTEwpOworfQorRVhQT1JUX1NZTUJPTF9HUEwoYWNwaV9kZXZpY2VfZml4X3VwX3Bv
+d2VyX2NoaWxkcmVuKTsKKwogaW50IGFjcGlfZGV2aWNlX3VwZGF0ZV9wb3dlcihzdHJ1Y3QgYWNw
+aV9kZXZpY2UgKmRldmljZSwgaW50ICpzdGF0ZV9wKQogewogCWludCBzdGF0ZTsKZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvYWNwaS9hY3BpX2J1cy5oIGIvaW5jbHVkZS9hY3BpL2FjcGlfYnVzLmgKaW5k
+ZXggMjU0Njg1MDg1YzgyLi4wYjdlYWIwZWY3ZDcgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvYWNwaS9h
+Y3BpX2J1cy5oCisrKyBiL2luY2x1ZGUvYWNwaS9hY3BpX2J1cy5oCkBAIC01MzksNiArNTM5LDcg
+QEAgaW50IGFjcGlfZGV2aWNlX3NldF9wb3dlcihzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldmljZSwg
+aW50IHN0YXRlKTsKIGludCBhY3BpX2J1c19pbml0X3Bvd2VyKHN0cnVjdCBhY3BpX2RldmljZSAq
+ZGV2aWNlKTsKIGludCBhY3BpX2RldmljZV9maXhfdXBfcG93ZXIoc3RydWN0IGFjcGlfZGV2aWNl
+ICpkZXZpY2UpOwogdm9pZCBhY3BpX2RldmljZV9maXhfdXBfcG93ZXJfZXh0ZW5kZWQoc3RydWN0
+IGFjcGlfZGV2aWNlICphZGV2KTsKK3ZvaWQgYWNwaV9kZXZpY2VfZml4X3VwX3Bvd2VyX2NoaWxk
+cmVuKHN0cnVjdCBhY3BpX2RldmljZSAqYWRldik7CiBpbnQgYWNwaV9idXNfdXBkYXRlX3Bvd2Vy
+KGFjcGlfaGFuZGxlIGhhbmRsZSwgaW50ICpzdGF0ZV9wKTsKIGludCBhY3BpX2RldmljZV91cGRh
+dGVfcG93ZXIoc3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UsIGludCAqc3RhdGVfcCk7CiBib29s
+IGFjcGlfYnVzX3Bvd2VyX21hbmFnZWFibGUoYWNwaV9oYW5kbGUgaGFuZGxlKTsKLS0gCjIuNDEu
+MAoK
+--------------iOgSsRA60Wlx910hYRXi01Ux
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0002-ACPI-video-Use-acpi_device_fix_up_power_children.patch"
+Content-Disposition: attachment;
+ filename*0="0002-ACPI-video-Use-acpi_device_fix_up_power_children.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAzM2UyZDU1OTE3YWM3MDgyZThkOThkYzJhNjc4YTg1NmY4ZDQ4MzUyIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgpE
+YXRlOiBGcmksIDEwIE5vdiAyMDIzIDEzOjEwOjAyICswMTAwClN1YmplY3Q6IFtQQVRDSCAyLzJd
+IEFDUEk6IHZpZGVvOiBVc2UgYWNwaV9kZXZpY2VfZml4X3VwX3Bvd2VyX2NoaWxkcmVuKCkKCkNv
+bW1pdCA4OWMyOTBlYTc1ODkgKCJBQ1BJOiB2aWRlbzogUHV0IEFDUEkgdmlkZW8gYW5kIGl0cyBj
+aGlsZCBkZXZpY2VzCmludG8gRDAgb24gYm9vdCIpIGludHJvZHVjZWQgY2FsbGluZyBhY3BpX2Rl
+dmljZV9maXhfdXBfcG93ZXJfZXh0ZW5kZWQoKQpvbiB0aGUgdmlkZW8gY2FyZCBmb3Igd2hpY2gg
+dGhlIEFDUEkgdmlkZW8gYnVzIGlzIHRoZSBjb21wYW5pb24gZGV2aWNlLgoKVGhpcyB1bm5lY2Vz
+c2FyaWx5IHRvdWNoZXMgdGhlIHBvd2VyLXN0YXRlIG9mIHRoZSBHUFUgaXRzZWxmLCB3aGlsZQp0
+aGUgaXNzdWUgaXQgdHJpZXMgdG8gYWRkcmVzcyBvbmx5IHJlcXVpcmVzIGNhbGxpbmcgX1BTMCBv
+biB0aGUgY2hpbGQKZGV2aWNlcy4KClRvdWNoaW5nIHRoZSBwb3dlci1zdGF0ZSBvZiB0aGUgR1BV
+IGl0c2VsZiBpcyBjYXVzaW5nIHN1c3BlbmQgLyByZXN1bWUKaXNzdWVzIG9uIGUuZy4gYSBMZW5v
+dm8gVGhpbmtQYWQgVzUzMC4KCkluc3RlYWQgdXNlIGFjcGlfZGV2aWNlX2ZpeF91cF9wb3dlcl9j
+aGlsZHJlbigpLCB3aGljaCBvbmx5IHRvdWNoZXMKdGhlIGNoaWxkIGRldmljZXMsIHRvIGZpeCB0
+aGlzLgoKRml4ZXM6IDg5YzI5MGVhNzU4OSAoIkFDUEk6IHZpZGVvOiBQdXQgQUNQSSB2aWRlbyBh
+bmQgaXRzIGNoaWxkIGRldmljZXMgaW50byBEMCBvbiBib290IikKUmVwb3J0ZWQtYnk6IE93ZW4g
+VC4gSGVpc2xlciA8d3JpdGVyQG93ZW5oLm5ldD4KQ2xvc2VzOiBodHRwczovL2dpdGxhYi5mcmVl
+ZGVza3RvcC5vcmcvZHJtL25vdXZlYXUvLS9pc3N1ZXMvMjczCkNsb3NlczogaHR0cHM6Ly9idWd6
+aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMTgxMjQKU2lnbmVkLW9mZi1ieTogSGFu
+cyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2FjcGkvYWNwaV92
+aWRlby5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
+KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2FjcGlfdmlkZW8uYyBiL2RyaXZlcnMvYWNw
+aS9hY3BpX3ZpZGVvLmMKaW5kZXggYjQxMTk0ODU5NGZmLi40ZTg2ODQ1NGIzOGQgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvYWNwaS9hY3BpX3ZpZGVvLmMKKysrIGIvZHJpdmVycy9hY3BpL2FjcGlfdmlk
+ZW8uYwpAQCAtMjAzMSw3ICsyMDMxLDcgQEAgc3RhdGljIGludCBhY3BpX3ZpZGVvX2J1c19hZGQo
+c3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UpCiAJICogSFAgWkJvb2sgRnVyeSAxNiBHMTAgcmVx
+dWlyZXMgQUNQSSB2aWRlbydzIGNoaWxkIGRldmljZXMgaGF2ZSBfUFMwCiAJICogZXZhbHVhdGVk
+IHRvIGhhdmUgZnVuY3Rpb25hbCBwYW5lbCBicmlnaHRuZXNzIGNvbnRyb2wuCiAJICovCi0JYWNw
+aV9kZXZpY2VfZml4X3VwX3Bvd2VyX2V4dGVuZGVkKGRldmljZSk7CisJYWNwaV9kZXZpY2VfZml4
+X3VwX3Bvd2VyX2NoaWxkcmVuKGRldmljZSk7CiAKIAlwcl9pbmZvKCIlcyBbJXNdIChtdWx0aS1o
+ZWFkOiAlcyAgcm9tOiAlcyAgcG9zdDogJXMpXG4iLAogCSAgICAgICBBQ1BJX1ZJREVPX0RFVklD
+RV9OQU1FLCBhY3BpX2RldmljZV9iaWQoZGV2aWNlKSwKLS0gCjIuNDEuMAoK
+--------------iOgSsRA60Wlx910hYRXi01Ux--
+
