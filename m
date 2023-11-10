@@ -1,90 +1,112 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE7D1841
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 04:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=owenh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=owenh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02581C3A
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 04:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=owenh.net header.i=@owenh.net header.b="qoHS2aXx"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4SRQ2S0zBvz9scN;
-	Fri, 10 Nov 2023 04:55:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=owenh.net; s=MBO0001;
-	t=1699588512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+mYWcVAli9GCc4vPf2eDB3X2wHHEc2PFC+6KilCNEcA=;
-	b=qoHS2aXxsUcpqJPKJdC4SI2fQWD6CvHKZd8rgtalJQ45BHmCBDsStfHNnHSu8PLqXeZKPX
-	3Wj+RmMzerw3iIO1vcSWmri07ckQ8LlA2IsEPbkkFSS4j4yyREWIxIyNfM5owqOUvmw8wJ
-	ycE8DKReVnsEcY/xBRqXHcDXOhshiUQJ3TGfWyzO8ihjGhcDpqLspeX5r53oHdDnjuzj7T
-	/kxYjemXrPEERerMX25HLj/Ck8uBBcRsq6f6cHz0vCCWsqVaHEcw/ZImjw+VKs1ENVMoAq
-	ykVk2v699lp4qBjo/vfan+boUAgxQO/dtXDSjnYlq2jYjZ3UxYlckAVe2HMM9Q==
-Message-ID: <9f36fb06-64c4-4264-aaeb-4e1289e764c4@owenh.net>
-Date: Thu, 9 Nov 2023 21:55:01 -0600
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="r0Us1hp/"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 166D882854A9;
+	Thu,  9 Nov 2023 22:35:12 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id Zvunt07DcreF; Thu,  9 Nov 2023 22:35:10 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id BFE8482854BC;
+	Thu,  9 Nov 2023 22:35:10 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com BFE8482854BC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1699590910; bh=Kr6ClNIve0X6u41iQWYOWy8F3vDjar+Q3cud5R+sqt0=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=r0Us1hp/cQdGNbz+X0PpDcL1OzGY9Rdqwcqqbu/kxjxUrOXH/lPQGtOAINZQefkzt
+	 FsZwJKsahz8y5+SneknEvvGjeT7uHrbBQQ8KvUmk1WGwQAEUcAL5hDIDKb7wwU0lZu
+	 QEGL9yp2P0jFtCn0t0X9C0GIZ2pAnqTXMdSlS7ng=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fr4G0qHq45qA; Thu,  9 Nov 2023 22:35:10 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 77F6F82854A9;
+	Thu,  9 Nov 2023 22:35:10 -0600 (CST)
+Date: Thu, 9 Nov 2023 22:35:08 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: regressions <regressions@lists.linux.dev>, 
+	Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <e3e1b31f-a9a0-4387-982e-aba6d9763c6b@kernel.dk> <1926532589.46050149.1699551411577.JavaMail.zimbra@raptorengineeringinc.com> <a262a91e-f2ec-402f-ba40-adacb76c72b9@kernel.dk> <871420600.46050861.1699551732591.JavaMail.zimbra@raptorengineeringinc.com> <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk> <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu> <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk>
+Subject: Re: Regression in io_uring, leading to data corruption
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, Kai-Heng Feng <kai.heng.feng@canonical.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown
- <lenb@kernel.org>, linux-acpi@vger.kernel.org,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org
-From: "Owen T. Heisler" <writer@owenh.net>
-Subject: [REGRESSION]: acpi/nouveau: Hardware unavailable upon resume or
- suspend fails
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4SRQ2S0zBvz9scN
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Topic: Regression in io_uring, leading to data corruption
+Thread-Index: 9biFCZe6aG2A7Wl/Csk9gvXK3P7LPg==
 
-#regzbot introduced: 89c290ea758911e660878e26270e084d862c03b0
-#regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/273
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218124
 
-## Reproducing
 
-1. Boot system to framebuffer console.
-2. Run `systemctl suspend`. If undocked without secondary display, 
-suspend fails. If docked with secondary display, suspend succeeds.
-3. Resume from suspend if applicable.
-4. System is now in a broken state.
+----- Original Message -----
+> From: "Jens Axboe" <axboe@kernel.dk>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
+> Sent: Thursday, November 9, 2023 9:51:09 PM
+> Subject: Re: Regression in io_uring, leading to data corruption
 
-## Testing
+> Just to go back to basics, can you try this one? It'll do the exact same
+> retry that io-wq is doing, just from the same task itself. If this
+> fails, then something core is wrong. I don't think it will, or we'd see
+> this on other platforms too of course. If this works, then it validates
+> that it's some oddity on ppc with punting this operation to a thread off
+> this main task.
+> 
+> diff --git a/io_uring/rw.c b/io_uring/rw.c
+> index 64390d4e20c1..1d760570df04 100644
+> --- a/io_uring/rw.c
+> +++ b/io_uring/rw.c
+> @@ -968,7 +968,7 @@ int io_read_mshot(struct io_kiocb *req, unsigned int
+> issue_flags)
+> 	return IOU_OK;
+> }
+> 
+> -int io_write(struct io_kiocb *req, unsigned int issue_flags)
+> +static int __io_write(struct io_kiocb *req, unsigned int issue_flags)
+> {
+> 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
+> 	struct io_rw_state __s, *s = &__s;
+> @@ -1092,6 +1092,19 @@ int io_write(struct io_kiocb *req, unsigned int
+> issue_flags)
+> 	return ret;
+> }
+> 
+> +int io_write(struct io_kiocb *req, unsigned int issue_flags)
+> +{
+> +	int ret;
+> +
+> +	ret = __io_write(req, issue_flags);
+> +	if (ret != -EAGAIN)
+> +		return ret;
+> +
+> +	ret = __io_write(req, issue_flags & ~IO_URING_F_NONBLOCK);
+> +	WARN_ON_ONCE(ret == -EAGAIN);
+> +	return ret;
+> +}
+> +
+> void io_rw_fail(struct io_kiocb *req)
+> {
+> 	int res;
+> 
 
-- culprit commit is 89c290ea758911e660878e26270e084d862c03b0
-- v6.6 fails
-- v6.6 with culprit commit reverted does not fail
-- Compiled with 
-<https://gitlab.freedesktop.org/drm/nouveau/uploads/788d7faf22ba2884dcc09d7be931e813/v6.6-config1>
+That does indeed "fix" the corruption issue.
 
-## Hardware
+Where is the punting actually taking place?  I can see at least one location but if it's a general issue with the punting process I should probably apply any test mitigations to all locations, and I'm not familiar enough with the codebase to be sure I've got them all...
 
-- ThinkPad W530 2438-52U
-- Dock with Nvidia-connected DVI ports
-- Secondary display connected via DVI
-- Nvidia Optimus GPU switching system
-
-```console
-$ lspci | grep -i vga
-00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core 
-processor Graphics Controller (rev 09)
-01:00.0 VGA compatible controller: NVIDIA Corporation GK107GLM [Quadro 
-K2000M] (rev a1)
-```
-
-## Decoded logs from v6.6
-
-- System is not docked and fails to suspend: 
-<https://gitlab.freedesktop.org/drm/nouveau/uploads/fb8fdf5a6bed1b1491d2544ab67fa257/undocked.log>
-- System is docked and fails after resume: 
-<https://gitlab.freedesktop.org/drm/nouveau/uploads/cb3d5ac55c01f663cd80fa000cd6a3b5/docked.log>
+Thanks!
