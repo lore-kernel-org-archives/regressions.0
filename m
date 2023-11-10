@@ -1,132 +1,118 @@
-Received: from butterfly.birch.relay.mailchannels.net (butterfly.birch.relay.mailchannels.net [23.83.209.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AB9ED0
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 02:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F82185A
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 03:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="iXdBe3Qq"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4C3B650117F
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 22:37:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a219.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E5C2D50113F
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 22:37:31 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1699569452; a=rsa-sha256;
-	cv=none;
-	b=JYWcF96rUuzwqoyn4UySdzp0nmmyarPx+XS7W3Jlf6aYxe30OZm2qJ09pPx6RDf71eBWyo
-	E+Jq7QSl45U3KH4AipJT4alxYwF5/WPuSEDB1HtBR0xJH0P9wg20G4gQAeMi2v31DybmSd
-	uz8J+MRg4bqYDdTUBdL31yHOJ6S6mb24p4kYGAvrpkzVT04DiG3PbUjVmJdwrFICogptUf
-	QzJtUHFiTVy+Ojif/5HxGYVYsj5rWR9cFu/nHDqz4Dlk7FT5vXyysxn0i6ad59Wzp5M+2e
-	xkcrH4W6lpcu3cBVrdyVIA+zwUq6Oi4QE+kHA/TPYQCJEbilZ8IY8+RFjU4PMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1699569452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 dkim-signature; bh=8YwB9PBpFMCaeiI6zpE8rWC2hSXeSpyA9B0exPLdmbY=;
-	b=Ok41G6Fuv7ouQgtTNrwYuXSxVK6FGrjLZKCB/BL2rq6dJAZOMfn9GN3WQzp6/S7oB3jvh0
-	JvYttw8ww4mIkvbh8QRCXP1HFx27IpNhH/QQ69LCpFtPS0kaKjyXPjTarJ8CKqgInkWhem
-	Teq04kfz0MfPlkbOoPBCMUsFP45O3FtaqFsEOHn3EA9ELRnDFw90RP5W3P550kmc2wc2g2
-	/+BEjm+GI10l0ikzyZ5FI8XgJlPBFPT0gKP+X3RZA5Cu5Prh5oJYofnOsoPrna9H6oxcDn
-	XbmfCf296iqs7/5PTfR+X+y13WvFeLWnKhfVUXKEezdCo14JKvm19fDZ9/6CbA==
-ARC-Authentication-Results: i=1;
-	rspamd-6f98f74948-hmzgl;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Decisive-Tangy: 67fff2743090ef7b_1699569452144_875317654
-X-MC-Loop-Signature: 1699569452144:2128282334
-X-MC-Ingress-Time: 1699569452143
-Received: from pdx1-sub0-mail-a219.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.0.148 (trex/6.9.2);
-	Thu, 09 Nov 2023 22:37:32 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-231-176-24.hsd1.ca.comcast.net [73.231.176.24])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a219.dreamhost.com (Postfix) with ESMTPSA id 4SRGzv2YdMzTP
-	for <regressions@lists.linux.dev>; Thu,  9 Nov 2023 14:37:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1699569451;
-	bh=8YwB9PBpFMCaeiI6zpE8rWC2hSXeSpyA9B0exPLdmbY=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=iXdBe3QqD7hYZNkR3gTX16NMfS0osjVYrWrrlW8DpMru9YBAnHLloxIKsO8SV603N
-	 MOIz6lOQprbztIl3bFRxvSl9ypsW7G7Gkr8dA2R94UNg+zcTr+bLNDcdJoYITKVL/w
-	 tq9BS9p/FqpsbsjtTbs/7b8aSRyNK1W977KkkOuaTUSaB1Qe2hvqbMjUv63N+yqhgT
-	 sgZwk0cVlbCuwyMF2NS9FTBmi/UeYF4/SLgdCgvd1L58tdp0DrTGGny+No6gJ0uaFD
-	 0xELaaZPVi72foXlwG+c4GacYIbH93Maub+Lg5+xXyy1Sbd1qOnHRwA25f79d18+bW
-	 Sn91mwHOfiGYQ==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e0044
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 09 Nov 2023 14:36:57 -0800
-Date: Thu, 9 Nov 2023 14:36:57 -0800
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org
-Cc: Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org,
-	German Maglione <gmaglione@redhat.com>, Greg Kurz <groug@kaod.org>,
-	Max Reitz <mreitz@redhat.com>,
-	Bernd Schubert <bernd.schubert@fastmail.fm>,
-	"Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
-	"Saarinen, Jani" <jani.saarinen@intel.com>,
-	lkft-triage@lists.linaro.org, linux-kselftest@vger.kernel.org,
-	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org
-Subject: [PATCH 0/2] Fuse submount_lookup needs to be initialized
-Message-ID: <cover.1699564053.git.kjlx@templeofstupid.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Ctg91Ftn"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5be09107145so28878a12.1
+        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 19:51:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1699588271; x=1700193071; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MHh7bkluawWKsjap1yDj+0nfP7N3z7lk0z3xAThudCo=;
+        b=Ctg91FtnVx51NQJg3lGvnscH9NH9m9lm3TSfaaxsIqDiv06NDzXCBzOv8ES5XHw1Uc
+         t6M4koTinDPOFECNKcjgVk6bMj0opLKOdTjANO/pVAIK44JQeYgSvmJgt3hEMBZ5QGji
+         4E6gaEcVoeNPgIlhvHB1Ec1lE4SAc2NPbOm2UGZ7blm4ZtHAJggY98Oec9bVFmrJsyJX
+         lO4J7TC3gtbvRVNdRCwmnOPlUjrGyhz40+2yQaom8hjRfKbOilEugp8G8tyirHXViuJ2
+         Ln/SU7QuigBGYHx4c6bHc50AtlLMbwjY1mYbD8KCXk3kPfaNIoH4p33TNtIF2LH7qckg
+         mU7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699588271; x=1700193071;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MHh7bkluawWKsjap1yDj+0nfP7N3z7lk0z3xAThudCo=;
+        b=wItYffbTtbgdXBWhvBvzo5ze6EbImEuwckM2e43P+w4AreRbmpeJET9aQjLtxpsNBh
+         KpD7y0PPmrxck15LT25VhOOaJcmQKOzAia+FqB3FXy4Nmj1St+gVUQjyu9yoQBrH5wc4
+         8e7fVapCIjAOg+wgswXJUK6SQLL2oDw2YZnMJ6q/F/UyhX7Xs6ngr2tvQKBpv9RqgGxg
+         hDTAYmy0h7Tasdkodg4XKex4gZEiOHX1StYl/snM2FZwmQeCJBDZ+hume5pwAAdGzrNN
+         Ipq/E0QdZ7cs1jtghSZYxr9mhQKOobdGWHPHoTFdBsdLexoNQyDFxOStFTnY44HOjSKh
+         OjNQ==
+X-Gm-Message-State: AOJu0YxZC/7pue207GqXWvQd8KzNSeCQviREqXg25g7TpQ5sKCOyD8cY
+	PAfZb0PRTzcLcUNGk7dDkOis/UpTOHfyVamEzvlVIA==
+X-Google-Smtp-Source: AGHT+IHicDVNuQPniCjE9iUBcmP7Bdq+RfmRDXJuwA1IowP/vgz0wPHlB2wDE+o3mNGfMIvHH/eeMg==
+X-Received: by 2002:a17:902:d4d2:b0:1cd:fbc7:270e with SMTP id o18-20020a170902d4d200b001cdfbc7270emr3783025plg.2.1699588271379;
+        Thu, 09 Nov 2023 19:51:11 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id q9-20020a170902dac900b001cc32f46757sm4298233plx.107.2023.11.09.19.51.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Nov 2023 19:51:10 -0800 (PST)
+Message-ID: <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk>
+Date: Thu, 9 Nov 2023 20:51:09 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression in io_uring, leading to data corruption
+Content-Language: en-US
+To: tpearson@raptorengineering.com
+Cc: regressions <regressions@lists.linux.dev>,
+ Pavel Begunkov <asml.silence@gmail.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
+ <9860f9b2-1d98-497c-9480-56852fda781b@kernel.dk>
+ <1557819821.46044536.1699549241816.JavaMail.zimbra@raptorengineeringinc.com>
+ <f4fffe29-7c95-4d22-918b-f2835fb76366@kernel.dk>
+ <597693097.46047776.1699550641104.JavaMail.zimbra@raptorengineeringinc.com>
+ <e3e1b31f-a9a0-4387-982e-aba6d9763c6b@kernel.dk>
+ <1926532589.46050149.1699551411577.JavaMail.zimbra@raptorengineeringinc.com>
+ <a262a91e-f2ec-402f-ba40-adacb76c72b9@kernel.dk>
+ <871420600.46050861.1699551732591.JavaMail.zimbra@raptorengineeringinc.com>
+ <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk>
+ <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Miklos,
-I got a couple of bug reports[1][2] this morning from teams that are
-tracking regresssions in linux-next.  My patch 513dfacefd71 ("fuse:
-share lookup state between submount and its parent") is causing panics
-in the fuse unmount path.  The reports came from users with SLUB_DEBUG
-enabled, and the additional debug sanitization catches the fact that the
-submount_lookup field isn't getting initialized which could lead to a
-subsequently bogus attempt to access the submount_lookup structure and
-adjust its refcount.
+Just to go back to basics, can you try this one? It'll do the exact same
+retry that io-wq is doing, just from the same task itself. If this
+fails, then something core is wrong. I don't think it will, or we'd see
+this on other platforms too of course. If this works, then it validates
+that it's some oddity on ppc with punting this operation to a thread off
+this main task.
 
-I've added SLUB_DEBUG to my testing kconfig, and have reproduced the
-problem using the memfd self-test that was triggering the problem for
-both reporters.  With the fix that follows this e-mail, I see no more
-erroneous accesses of poisoned slub memory.
+diff --git a/io_uring/rw.c b/io_uring/rw.c
+index 64390d4e20c1..1d760570df04 100644
+--- a/io_uring/rw.c
++++ b/io_uring/rw.c
+@@ -968,7 +968,7 @@ int io_read_mshot(struct io_kiocb *req, unsigned int issue_flags)
+ 	return IOU_OK;
+ }
+ 
+-int io_write(struct io_kiocb *req, unsigned int issue_flags)
++static int __io_write(struct io_kiocb *req, unsigned int issue_flags)
+ {
+ 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
+ 	struct io_rw_state __s, *s = &__s;
+@@ -1092,6 +1092,19 @@ int io_write(struct io_kiocb *req, unsigned int issue_flags)
+ 	return ret;
+ }
+ 
++int io_write(struct io_kiocb *req, unsigned int issue_flags)
++{
++	int ret;
++
++	ret = __io_write(req, issue_flags);
++	if (ret != -EAGAIN)
++		return ret;
++
++	ret = __io_write(req, issue_flags & ~IO_URING_F_NONBLOCK);
++	WARN_ON_ONCE(ret == -EAGAIN);
++	return ret;
++}
++
+ void io_rw_fail(struct io_kiocb *req)
+ {
+ 	int res;
 
-I'm a bit unsure of the desired approach for fixing these kinds of
-problems.  I'm also away from the office on Nov 10th and Nov 13th, but
-expect to be back on the console on the Nov 14th.  Given the gap, I've
-prepared a pair of patches, but we only need one.
+-- 
+Jens Axboe
 
-The first is simply a followup fix that addresses the problem in a
-subsequent one-line commit.
-
-If you'd rather revert the entire bad patch and go again, the second
-patch in the series is a v5 of the original with the submount_lookup
-initialization added.
-
-Either should do, but I wasn't sure which approach was preferable.
-
-Thanks, and my apologies for the inconvenience.
-
--K
-
-[1] https://lore.kernel.org/linux-fsdevel/CA+G9fYue-dV7t-NrOhWwGshvyboXjb2B6HpCDVDe3bgG7fbnsg@mail.gmail.com/T/#u
-[2] https://lore.kernel.org/intel-gfx/SJ1PR11MB6129508509896AD7D0E03114B9AFA@SJ1PR11MB6129.namprd11.prod.outlook.com/T/#u
