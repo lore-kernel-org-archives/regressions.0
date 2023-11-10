@@ -1,174 +1,74 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFA31875
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 06:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73B110790
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 09:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="osKnG6Ts"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id E28288285631;
-	Fri, 10 Nov 2023 00:48:10 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id cQ1wTs8OucQ0; Fri, 10 Nov 2023 00:48:09 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 8254882868E0;
-	Fri, 10 Nov 2023 00:48:09 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 8254882868E0
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="JIKW4mHT"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-9dd3f4a0f5aso304529166b.1
+        for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 01:44:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1699598889; bh=ajBIOVed/bMweQPOibjLKAPH90zeLE96AecIi0VTwJ0=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=osKnG6TsVChsGO/NBdzJNnnzoRixS1pjrW36EX1AJbaTSfBl2Riq303vc+avS2LvS
-	 A8v15KzqJx7Xd9taOTvVzchKyevaLqhE2Z2JrZXY7XNmgErrvzLy6baYmBEx9QVXdI
-	 svYbp2zZh29KXB5NCnakf8fgXLuW/sye2lQd5BOI=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id eEPJ-Ecsfda6; Fri, 10 Nov 2023 00:48:09 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 4CCE78285C15;
-	Fri, 10 Nov 2023 00:48:09 -0600 (CST)
-Date: Fri, 10 Nov 2023 00:48:07 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <776997436.46185793.1699598887190.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com>
-References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <1926532589.46050149.1699551411577.JavaMail.zimbra@raptorengineeringinc.com> <a262a91e-f2ec-402f-ba40-adacb76c72b9@kernel.dk> <871420600.46050861.1699551732591.JavaMail.zimbra@raptorengineeringinc.com> <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk> <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu> <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk> <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: Regression in io_uring, leading to data corruption
+        d=szeredi.hu; s=google; t=1699609489; x=1700214289; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uNNVKkYwl/rOA9GX9/SH18oSRKfcJIfb4LTGsk7JdWQ=;
+        b=JIKW4mHT+xlPK2iuRLjQHwAJ+5RzDmTa0kB4E2tQyckeKoFQen/bCBrGqDjpKTeCaK
+         q6Gxth+3KGnzaJ3HWMcOZULC8elW7H58TYZEM3Jc/+sZpbS1eGAHO4Sxo4nYzQSwM/tt
+         NafG55ib2/zrMQRh4/Ij5QHiyTJdckTnmzBGU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699609489; x=1700214289;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uNNVKkYwl/rOA9GX9/SH18oSRKfcJIfb4LTGsk7JdWQ=;
+        b=psWUo+m3ps39detg6quN9ft1zeJ2A3rEHx//P9sFobO0u/AIurb7Yn88rkoSQ38Ah4
+         F/Bp+r7JH2bqpNTlL6vdag4kxDlQdq277MbRKsRcDae9Igi0BLiQbhhSdYZPgYept11r
+         grgizRWJUZi5EH1dQ42YdPTIqoC7PIYfPeUhYs3E0g2sqNmDM5ncls9d33qNEud78cNF
+         dgxXhVNp+QBkYJDhMKv24ZuMiq8qtasEh8jm3RsS8tIP/wb74ntF2GsJ6HfL/YKQ/jeh
+         T7CgYlC6j3YlJTuJd4hYRQqn4dBBAlX7C1S7Gn3nyzFegyQ9AFY0KXwdxRMQ6zclD4X2
+         MWDg==
+X-Gm-Message-State: AOJu0YzlYLfWU0q5NDWYjELuf9t7ZE31m2tNam9Kwl9BQr5QJdw0nRIK
+	GhnuBwBJSlweT7+BGwxzhEFbOlHdn6IRCS43zV213Q==
+X-Google-Smtp-Source: AGHT+IHEDrhaS3SWGbZqZuG8sNPuZIIpHaBGL3VI6Da90hnwL9tRuf2Y3uqzB5/P6YHOqBSOAeAfq99hTGSbttzq3wg=
+X-Received: by 2002:a17:906:8910:b0:9e4:121c:c292 with SMTP id
+ fr16-20020a170906891000b009e4121cc292mr3096666ejc.77.1699609488646; Fri, 10
+ Nov 2023 01:44:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: Regression in io_uring, leading to data corruption
-Thread-Index: 9biFCZe6aG2A7Wl/Csk9gvXK3P7LPsHayv/q
+References: <cover.1699564053.git.kjlx@templeofstupid.com>
+In-Reply-To: <cover.1699564053.git.kjlx@templeofstupid.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Fri, 10 Nov 2023 10:44:37 +0100
+Message-ID: <CAJfpegtOKLDy-j=oi8BsT+xjFnO+Mk7=8VxSDuyi-bxhRSGMKQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Fuse submount_lookup needs to be initialized
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: linux-fsdevel@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>, 
+	linux-kernel@vger.kernel.org, German Maglione <gmaglione@redhat.com>, 
+	Greg Kurz <groug@kaod.org>, Max Reitz <mreitz@redhat.com>, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>, 
+	"Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>, "Saarinen, Jani" <jani.saarinen@intel.com>, 
+	lkft-triage@lists.linaro.org, linux-kselftest@vger.kernel.org, 
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 9 Nov 2023 at 23:37, Krister Johansen <kjlx@templeofstupid.com> wrote:
 
+> Either should do, but I wasn't sure which approach was preferable.
 
------ Original Message -----
-> From: "Timothy Pearson" <tpearson@raptorengineering.com>
-> To: "Jens Axboe" <axboe@kernel.dk>
-> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
-> Sent: Thursday, November 9, 2023 10:35:08 PM
-> Subject: Re: Regression in io_uring, leading to data corruption
+An incremental is better in this situation.   Applied and pushed.
 
-> ----- Original Message -----
->> From: "Jens Axboe" <axboe@kernel.dk>
->> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->> <asml.silence@gmail.com>
->> Sent: Thursday, November 9, 2023 9:51:09 PM
->> Subject: Re: Regression in io_uring, leading to data corruption
-> 
->> Just to go back to basics, can you try this one? It'll do the exact same
->> retry that io-wq is doing, just from the same task itself. If this
->> fails, then something core is wrong. I don't think it will, or we'd see
->> this on other platforms too of course. If this works, then it validates
->> that it's some oddity on ppc with punting this operation to a thread off
->> this main task.
->> 
->> diff --git a/io_uring/rw.c b/io_uring/rw.c
->> index 64390d4e20c1..1d760570df04 100644
->> --- a/io_uring/rw.c
->> +++ b/io_uring/rw.c
->> @@ -968,7 +968,7 @@ int io_read_mshot(struct io_kiocb *req, unsigned int
->> issue_flags)
->> 	return IOU_OK;
->> }
->> 
->> -int io_write(struct io_kiocb *req, unsigned int issue_flags)
->> +static int __io_write(struct io_kiocb *req, unsigned int issue_flags)
->> {
->> 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
->> 	struct io_rw_state __s, *s = &__s;
->> @@ -1092,6 +1092,19 @@ int io_write(struct io_kiocb *req, unsigned int
->> issue_flags)
->> 	return ret;
->> }
->> 
->> +int io_write(struct io_kiocb *req, unsigned int issue_flags)
->> +{
->> +	int ret;
->> +
->> +	ret = __io_write(req, issue_flags);
->> +	if (ret != -EAGAIN)
->> +		return ret;
->> +
->> +	ret = __io_write(req, issue_flags & ~IO_URING_F_NONBLOCK);
->> +	WARN_ON_ONCE(ret == -EAGAIN);
->> +	return ret;
->> +}
->> +
->> void io_rw_fail(struct io_kiocb *req)
->> {
->> 	int res;
->> 
-> 
-> That does indeed "fix" the corruption issue.
-> 
-> Where is the punting actually taking place?  I can see at least one location but
-> if it's a general issue with the punting process I should probably apply any
-> test mitigations to all locations, and I'm not familiar enough with the
-> codebase to be sure I've got them all...
-> 
-> Thanks!
+> Thanks, and my apologies for the inconvenience.
 
-I've been exploring a bunch of other possibilities, and one that has been slowly coalescing is whether we're triggering a bug somewhere else in the kernel.  Now that I know the io_write call is somehow related to this issue, I went back and went over some of the earlier logs, and might have found something.
+Really no need to apologize, this happens and the best possible
+outcome is that it get fixed before being released.
 
-When I enable KCSAN I sporadically see this type of race:
-
-[ 1549.152381] ==================================================================
-[ 1549.152515] BUG: KCSAN: data-race in dd_has_work / dd_insert_requests
-[ 1549.152609]
-[ 1549.152644] read (marked) to 0xc0000000080c2e98 of 8 bytes by task 3372 on cpu 27:
-[ 1549.153193]  dd_has_work+0x160/0x1b0
-[ 1549.153259]  __blk_mq_sched_dispatch_requests+0x42c/0xdf0
-[ 1549.153331]  blk_mq_sched_dispatch_requests+0xe4/0x120
-[ 1549.153403]  blk_mq_run_hw_queue+0x358/0x390
-[ 1549.153479]  blk_mq_flush_plug_list+0x8fc/0xea0
-[ 1549.153556]  __blk_flush_plug+0x2bc/0x360
-[ 1549.153622]  blk_finish_plug+0x60/0xa0
-[ 1549.153689]  __iomap_dio_rw+0xd28/0x1140
-[ 1549.153759]  iomap_dio_rw+0x80/0xf0
-[ 1549.153825]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
-[ 1549.154249]  io_write+0x4bc/0x900
-[ 1549.154309]  io_issue_sqe+0x12c/0x5f0
-[ 1549.154370]  io_submit_sqes+0xdd4/0x1050
-[ 1549.154429]  sys_io_uring_enter+0x344/0x15d0
-[ 1549.154499]  system_call_exception+0x354/0x400
-[ 1549.154569]  system_call_vectored_common+0x15c/0x2ec
-[ 1549.154651]
-[ 1549.154685] write to 0xc0000000080c2e98 of 8 bytes by task 3667 on cpu 32:
-[ 1549.154757]  dd_insert_requests+0x81c/0xac0
-[ 1549.154825]  blk_mq_flush_plug_list+0x8ec/0xea0
-[ 1549.154902]  __blk_flush_plug+0x2bc/0x360
-[ 1549.154968]  blk_finish_plug+0x60/0xa0
-[ 1549.155034]  __iomap_dio_rw+0xd28/0x1140
-[ 1549.155100]  iomap_dio_rw+0x80/0xf0
-[ 1549.155166]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
-[ 1549.155563]  io_write+0x4bc/0x900
-[ 1549.155606]  io_issue_sqe+0x12c/0x5f0
-[ 1549.155648]  io_wq_submit_work+0x2e4/0x490
-[ 1549.155692]  io_worker_handle_work+0xbac/0x1020
-[ 1549.155745]  io_wq_worker+0x224/0x7b0
-[ 1549.155792]  ret_from_kernel_user_thread+0x14/0x1c
-[ 1549.155841]
-[ 1549.155864] Reported by Kernel Concurrency Sanitizer on:
-[ 1549.155904] CPU: 32 PID: 3667 Comm: iou-wrk-3372 Not tainted 6.6.0+ #10
-[ 1549.155961] Hardware name: IBM pSeries (emulated by qemu) POWER9 (raw) 0x4e1202 0xf000005 of:SLOF,HEAD hv:linux,kvm pSeries
-[ 1549.156032] ==================================================================
-
-Notably, the io_write calls are in the chain, and there were exactly two of these races and two test failures in the this test run.
-
-io_write+0x4bc seems to be WRITE_ONCE(list->first, last->next) in wq_list_cut.
-
-Do yuo see similar races on x86 with this workload if you enable KCSAN?
+Thanks,
+Miklos
