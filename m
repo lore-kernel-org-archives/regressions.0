@@ -1,130 +1,174 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85DA538F
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 06:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFA31875
+	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 06:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="KZM9uTxe"
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8E84740C37
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 06:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1699596585;
-	bh=dbMwBXBmEotT6dk1rDXulRhL3RKiFgxFvFzDuEEcJx8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=KZM9uTxedJKiGXsELffIS/EpGGq5PCy6sEcg7yGMzuYDs7q2U3LhdT0a2xYjwo4Q0
-	 qysXrhOCgaDgXqyVAOM3oonLI5lCPq2Q/Zr6c5DLdHv15OnvFmEEmxTfGJlj3RVCt1
-	 UCeb7chPeGX4ugVH1xtOmr+sIfevvV4QOtsJjxcIAteoiEHZA8e1tPFUQwD2Bvd/Sg
-	 9QS5EE/NpPOY3jlf02EdiSNYk43mLJQJIwIaFACL9LOrjRVsiARyUurdPCo8nrvSdC
-	 LRozsIJGj16Ay1HdAr8eraT6N/v0Kv/d8dQPw6zsTRWmArDVOgHbVLfDf1iRLgZkj1
-	 WlOrssekXx8pA==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-27ffe79ec25so1686978a91.2
-        for <regressions@lists.linux.dev>; Thu, 09 Nov 2023 22:09:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699596584; x=1700201384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dbMwBXBmEotT6dk1rDXulRhL3RKiFgxFvFzDuEEcJx8=;
-        b=v3nzNIh4HRu1hos1ecc6vCJyYietfLKtPi8ndfEOzs7Qm6GP3ZOf8sOW9tAAmBflnH
-         KK555iL9Cs6gOIM4RIMIGdDWHFF1so2mWxPAWVDp+ESLXXAUPXakqmhAT4QYqJmdQ+w6
-         Efc3M7VfefXBmLnZGUjknlBghrMn4IBPqjjUBee6IaTklDPdAbwd8Qt1ybEBGnODO+DR
-         OZQbErr70zW70EQoPxuFo6zzWU5aq2HDfAKK0/NMmRLRGSPwIT//5NE26roZkKFuYipj
-         DOcEpQqj22Pfvs+dbYjcNh0uz4W2hZyRqkftwv2fvtpCytf7dLlWu+fkFGEWZUz0dRw/
-         YAjw==
-X-Gm-Message-State: AOJu0Ywmxejgkos17GZP5yjj7dcRl2SMM1JHv8tytICqy57gB5+PQK1p
-	hqeBGUUaUpGI+aqQ9hvTZADmTWdFhD4qkJjdaL+H+pcX3HSIEsyz8wvSXpx4WVGfFIP6BPlGSbe
-	LhGdkY6MPlTUHlD60s1ieKRO+4lPL3fCmZ1b07fNhZprXYhqJ4S31mBmW
-X-Received: by 2002:a17:90b:4c85:b0:280:6296:3d96 with SMTP id my5-20020a17090b4c8500b0028062963d96mr3622950pjb.41.1699596583959;
-        Thu, 09 Nov 2023 22:09:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1wROyFVtufgqw/ZeSGGAbm8xifOocKozGCKWAhapxnMtc++Zwn+hYm7Zub9ci/y6pKeOOqpv3+EKkV4NfDoY=
-X-Received: by 2002:a17:90b:4c85:b0:280:6296:3d96 with SMTP id
- my5-20020a17090b4c8500b0028062963d96mr3622942pjb.41.1699596583634; Thu, 09
- Nov 2023 22:09:43 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="osKnG6Ts"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id E28288285631;
+	Fri, 10 Nov 2023 00:48:10 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id cQ1wTs8OucQ0; Fri, 10 Nov 2023 00:48:09 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 8254882868E0;
+	Fri, 10 Nov 2023 00:48:09 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 8254882868E0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1699598889; bh=ajBIOVed/bMweQPOibjLKAPH90zeLE96AecIi0VTwJ0=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=osKnG6TsVChsGO/NBdzJNnnzoRixS1pjrW36EX1AJbaTSfBl2Riq303vc+avS2LvS
+	 A8v15KzqJx7Xd9taOTvVzchKyevaLqhE2Z2JrZXY7XNmgErrvzLy6baYmBEx9QVXdI
+	 svYbp2zZh29KXB5NCnakf8fgXLuW/sye2lQd5BOI=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id eEPJ-Ecsfda6; Fri, 10 Nov 2023 00:48:09 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 4CCE78285C15;
+	Fri, 10 Nov 2023 00:48:09 -0600 (CST)
+Date: Fri, 10 Nov 2023 00:48:07 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
+	Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <776997436.46185793.1699598887190.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <1926532589.46050149.1699551411577.JavaMail.zimbra@raptorengineeringinc.com> <a262a91e-f2ec-402f-ba40-adacb76c72b9@kernel.dk> <871420600.46050861.1699551732591.JavaMail.zimbra@raptorengineeringinc.com> <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk> <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu> <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk> <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: Re: Regression in io_uring, leading to data corruption
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <9f36fb06-64c4-4264-aaeb-4e1289e764c4@owenh.net>
-In-Reply-To: <9f36fb06-64c4-4264-aaeb-4e1289e764c4@owenh.net>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Fri, 10 Nov 2023 08:09:11 +0200
-Message-ID: <CAAd53p7BSesx=a1igTohoSkxrW+Hq8O7ArONFCK7uoDi12-T4A@mail.gmail.com>
-Subject: Re: [REGRESSION]: acpi/nouveau: Hardware unavailable upon resume or
- suspend fails
-To: "Owen T. Heisler" <writer@owenh.net>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Topic: Regression in io_uring, leading to data corruption
+Thread-Index: 9biFCZe6aG2A7Wl/Csk9gvXK3P7LPsHayv/q
 
-Hi Owen,
 
-On Fri, Nov 10, 2023 at 5:55=E2=80=AFAM Owen T. Heisler <writer@owenh.net> =
-wrote:
->
-> #regzbot introduced: 89c290ea758911e660878e26270e084d862c03b0
-> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/273
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218124
 
-Thanks for the bug report. Do you prefer to continue the discussion
-here, on gitlab or on bugzilla?
+----- Original Message -----
+> From: "Timothy Pearson" <tpearson@raptorengineering.com>
+> To: "Jens Axboe" <axboe@kernel.dk>
+> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
+> Sent: Thursday, November 9, 2023 10:35:08 PM
+> Subject: Re: Regression in io_uring, leading to data corruption
 
->
-> ## Reproducing
->
-> 1. Boot system to framebuffer console.
-> 2. Run `systemctl suspend`. If undocked without secondary display,
-> suspend fails. If docked with secondary display, suspend succeeds.
-> 3. Resume from suspend if applicable.
-> 4. System is now in a broken state.
+> ----- Original Message -----
+>> From: "Jens Axboe" <axboe@kernel.dk>
+>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
+>> <asml.silence@gmail.com>
+>> Sent: Thursday, November 9, 2023 9:51:09 PM
+>> Subject: Re: Regression in io_uring, leading to data corruption
+> 
+>> Just to go back to basics, can you try this one? It'll do the exact same
+>> retry that io-wq is doing, just from the same task itself. If this
+>> fails, then something core is wrong. I don't think it will, or we'd see
+>> this on other platforms too of course. If this works, then it validates
+>> that it's some oddity on ppc with punting this operation to a thread off
+>> this main task.
+>> 
+>> diff --git a/io_uring/rw.c b/io_uring/rw.c
+>> index 64390d4e20c1..1d760570df04 100644
+>> --- a/io_uring/rw.c
+>> +++ b/io_uring/rw.c
+>> @@ -968,7 +968,7 @@ int io_read_mshot(struct io_kiocb *req, unsigned int
+>> issue_flags)
+>> 	return IOU_OK;
+>> }
+>> 
+>> -int io_write(struct io_kiocb *req, unsigned int issue_flags)
+>> +static int __io_write(struct io_kiocb *req, unsigned int issue_flags)
+>> {
+>> 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
+>> 	struct io_rw_state __s, *s = &__s;
+>> @@ -1092,6 +1092,19 @@ int io_write(struct io_kiocb *req, unsigned int
+>> issue_flags)
+>> 	return ret;
+>> }
+>> 
+>> +int io_write(struct io_kiocb *req, unsigned int issue_flags)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = __io_write(req, issue_flags);
+>> +	if (ret != -EAGAIN)
+>> +		return ret;
+>> +
+>> +	ret = __io_write(req, issue_flags & ~IO_URING_F_NONBLOCK);
+>> +	WARN_ON_ONCE(ret == -EAGAIN);
+>> +	return ret;
+>> +}
+>> +
+>> void io_rw_fail(struct io_kiocb *req)
+>> {
+>> 	int res;
+>> 
+> 
+> That does indeed "fix" the corruption issue.
+> 
+> Where is the punting actually taking place?  I can see at least one location but
+> if it's a general issue with the punting process I should probably apply any
+> test mitigations to all locations, and I'm not familiar enough with the
+> codebase to be sure I've got them all...
+> 
+> Thanks!
 
-So I guess we need to put those devices to ACPI D3 for suspend. Let's
-discuss this on your preferred platform.
+I've been exploring a bunch of other possibilities, and one that has been slowly coalescing is whether we're triggering a bug somewhere else in the kernel.  Now that I know the io_write call is somehow related to this issue, I went back and went over some of the earlier logs, and might have found something.
 
-Kai-Heng
+When I enable KCSAN I sporadically see this type of race:
 
->
-> ## Testing
->
-> - culprit commit is 89c290ea758911e660878e26270e084d862c03b0
-> - v6.6 fails
-> - v6.6 with culprit commit reverted does not fail
-> - Compiled with
-> <https://gitlab.freedesktop.org/drm/nouveau/uploads/788d7faf22ba2884dcc09=
-d7be931e813/v6.6-config1>
->
-> ## Hardware
->
-> - ThinkPad W530 2438-52U
-> - Dock with Nvidia-connected DVI ports
-> - Secondary display connected via DVI
-> - Nvidia Optimus GPU switching system
->
-> ```console
-> $ lspci | grep -i vga
-> 00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core
-> processor Graphics Controller (rev 09)
-> 01:00.0 VGA compatible controller: NVIDIA Corporation GK107GLM [Quadro
-> K2000M] (rev a1)
-> ```
->
-> ## Decoded logs from v6.6
->
-> - System is not docked and fails to suspend:
-> <https://gitlab.freedesktop.org/drm/nouveau/uploads/fb8fdf5a6bed1b1491d25=
-44ab67fa257/undocked.log>
-> - System is docked and fails after resume:
-> <https://gitlab.freedesktop.org/drm/nouveau/uploads/cb3d5ac55c01f663cd80f=
-a000cd6a3b5/docked.log>
+[ 1549.152381] ==================================================================
+[ 1549.152515] BUG: KCSAN: data-race in dd_has_work / dd_insert_requests
+[ 1549.152609]
+[ 1549.152644] read (marked) to 0xc0000000080c2e98 of 8 bytes by task 3372 on cpu 27:
+[ 1549.153193]  dd_has_work+0x160/0x1b0
+[ 1549.153259]  __blk_mq_sched_dispatch_requests+0x42c/0xdf0
+[ 1549.153331]  blk_mq_sched_dispatch_requests+0xe4/0x120
+[ 1549.153403]  blk_mq_run_hw_queue+0x358/0x390
+[ 1549.153479]  blk_mq_flush_plug_list+0x8fc/0xea0
+[ 1549.153556]  __blk_flush_plug+0x2bc/0x360
+[ 1549.153622]  blk_finish_plug+0x60/0xa0
+[ 1549.153689]  __iomap_dio_rw+0xd28/0x1140
+[ 1549.153759]  iomap_dio_rw+0x80/0xf0
+[ 1549.153825]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
+[ 1549.154249]  io_write+0x4bc/0x900
+[ 1549.154309]  io_issue_sqe+0x12c/0x5f0
+[ 1549.154370]  io_submit_sqes+0xdd4/0x1050
+[ 1549.154429]  sys_io_uring_enter+0x344/0x15d0
+[ 1549.154499]  system_call_exception+0x354/0x400
+[ 1549.154569]  system_call_vectored_common+0x15c/0x2ec
+[ 1549.154651]
+[ 1549.154685] write to 0xc0000000080c2e98 of 8 bytes by task 3667 on cpu 32:
+[ 1549.154757]  dd_insert_requests+0x81c/0xac0
+[ 1549.154825]  blk_mq_flush_plug_list+0x8ec/0xea0
+[ 1549.154902]  __blk_flush_plug+0x2bc/0x360
+[ 1549.154968]  blk_finish_plug+0x60/0xa0
+[ 1549.155034]  __iomap_dio_rw+0xd28/0x1140
+[ 1549.155100]  iomap_dio_rw+0x80/0xf0
+[ 1549.155166]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
+[ 1549.155563]  io_write+0x4bc/0x900
+[ 1549.155606]  io_issue_sqe+0x12c/0x5f0
+[ 1549.155648]  io_wq_submit_work+0x2e4/0x490
+[ 1549.155692]  io_worker_handle_work+0xbac/0x1020
+[ 1549.155745]  io_wq_worker+0x224/0x7b0
+[ 1549.155792]  ret_from_kernel_user_thread+0x14/0x1c
+[ 1549.155841]
+[ 1549.155864] Reported by Kernel Concurrency Sanitizer on:
+[ 1549.155904] CPU: 32 PID: 3667 Comm: iou-wrk-3372 Not tainted 6.6.0+ #10
+[ 1549.155961] Hardware name: IBM pSeries (emulated by qemu) POWER9 (raw) 0x4e1202 0xf000005 of:SLOF,HEAD hv:linux,kvm pSeries
+[ 1549.156032] ==================================================================
+
+Notably, the io_write calls are in the chain, and there were exactly two of these races and two test failures in the this test run.
+
+io_write+0x4bc seems to be WRITE_ONCE(list->first, last->next) in wq_list_cut.
+
+Do yuo see similar races on x86 with this workload if you enable KCSAN?
