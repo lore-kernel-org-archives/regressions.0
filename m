@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E4513FFA
-	for <regressions@lists.linux.dev>; Sat, 11 Nov 2023 11:52:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF67913FFA
+	for <regressions@lists.linux.dev>; Sat, 11 Nov 2023 11:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r1mWt-0004G2-2z; Sat, 11 Nov 2023 12:51:59 +0100
-Message-ID: <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
-Date: Sat, 11 Nov 2023 12:51:58 +0100
+	id 1r1mdV-00053d-JP; Sat, 11 Nov 2023 12:58:49 +0100
+Message-ID: <36da0242-e9de-4d76-8ba0-fc7522096fad@leemhuis.info>
+Date: Sat, 11 Nov 2023 12:58:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,42 +18,66 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: paul.gortmaker@windriver.com
-Cc: bp@alien8.de, linux-kernel@vger.kernel.org, peterz@infradead.org,
- richard.purdie@linuxfoundation.org, tglx@linutronix.de, x86@kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <ZUEgAAGDVqXz2Seo@windriver.com>
-Subject: Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128
- x86/alternative: Rewrite optimize_nops() some]
+Subject: Re: [REGRESSION] dm_crypt essiv ciphers do not use async driver
+ mv-aes-cbc anymore
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZUEgAAGDVqXz2Seo@windriver.com>
+To: Mikulas Patocka <mpatocka@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Yureka <yuka@yuka.dev>, linux-crypto@vger.kernel.org,
+ dm-devel@redhat.com, Boris Brezillon <bbrezillon@kernel.org>,
+ Arnaud Ebalard <arno@natisbad.org>, Srujana Challa <schalla@marvell.com>,
+ Eric Biggers <ebiggers@kernel.org>, Herbert Xu
+ <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>
+References: <53f57de2-ef58-4855-bb3c-f0d54472dc4d@yuka.dev>
+ <20230929224327.GA11839@google.com>
+ <070dd167-9278-42fa-aef5-66621a602fd3@leemhuis.info>
+ <518e373e-673e-82a-24ff-b9e8b3927c85@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <518e373e-673e-82a-24ff-b9e8b3927c85@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1699703540;61df4798;
-X-HE-SMSGID: 1r1mWt-0004G2-2z
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1699703935;c72ad137;
+X-HE-SMSGID: 1r1mdV-00053d-JP
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-> [Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128 x86/alternative: Rewrite optimize_nops() some]] On 30/10/2023 (Mon 20:30) Thomas Gleixner wrote:
+On 01.11.23 13:47, Mikulas Patocka wrote:
+> On Wed, 1 Nov 2023, Linux regression tracking (Thorsten Leemhuis) wrote:
 > 
->> On Mon, Oct 30 2023 at 19:24, Thomas Gleixner wrote:
+>>> #regzbot introduced: b8aa7dc5c753
+>>
+>> BTW: Eric, thx for this.
+>>
+>> Boris, Arnaud, Srujana, and Mikulas, could you maybe comment on this? I
+>> understand that this is not some everyday regression due to deadlock
+>> risk, but it nevertheless would be good to get this resolved somehow to
+>> stay in line with our "no regressions" rule.
+>>
 > 
->> > Can you add "debug-alternative" to the kernel command line and log both
->> > a working and the non-working kernel output. It's noisy :)
->> >
->> > Also do you have a .config and the qemu command line handy?
->> 
->> Forgot to ask: Does the probkem persist with 6.6 ?
+> The driver drivers/crypto/marvell/cesa/cipher.c uses GFP_ATOMIC 
+> allocations (see mv_cesa_skcipher_dma_req_init). So, it is not really safe 
+> to use it for dm-crypt.
 > 
-> My bad, should have mentioned v6.6 and linux-next is impacted. Always a
-> conflict between burying the lead and boring people with details.
+> GFP_ATOMIC allocations may fail anytime (for example, they fill fail if 
+> the machine receives too many network packets in a short timeframe and 
+> runs temporarily out of memory). And when the GFP_ATOMIC allocation fails, 
+> you get a write I/O error and data corruption.
+> 
+> It could be possible to change it to use GFP_NOIO allocations, then we 
+> would risk deadlock instead of data corruption. The best thing would be to 
+> convert the driver to use mempools.
 
-Paul, was this regression ever solved? I wonder as I could not find
-anything with a "Fixes: 6c480f222128 [...]" tag on lore and this thread
-looks stalled.
+Thx, now I understand things better. I also had a small hope that my
+prodding here might motivate someone to look into this, but that didn't
+happen. Well, that's how it is.
 
-Ciao, Thorsten
+I'm not totally sure if this regression was handled like Linus would
+have want it to be handled. But I guess it's not worth bringing him in
+-- among others because it took so long for somebody to complain. I'll
+thus strop tracking this now.
+
+#regzbot resolve: tricky situation that remains unresolved for now
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
