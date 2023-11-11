@@ -1,124 +1,131 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CF51DFD8
-	for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 17:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=owenh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=owenh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5883D980
+	for <regressions@lists.linux.dev>; Sat, 11 Nov 2023 00:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=owenh.net header.i=@owenh.net header.b="0NFLEqpK"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4SRlQ95myqz9spj;
-	Fri, 10 Nov 2023 17:58:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=owenh.net; s=MBO0001;
-	t=1699635505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xv0RmDooG3JgDJHA2SqaAIpBFKQ0UuIqzPA46XswMys=;
-	b=0NFLEqpKQmJbLf7s0Gu6qlXSi//AhUQ95naoWkj4WMZu2Fq78Lrb32fYcpQCffzlf8RA0O
-	Hc8Zj/uR3VEYWUO52IUz6PEZxdwn7pKAlS4oyVSQODoUo+0e40cwxCe5wXcLS6cFFbZxZP
-	sRsYUfYj8b4g01I8bgO9sO+4pzx3+6W6oCBqwW7AaorjYgDhFRntPTKvKhvPvKveLBAMEf
-	3qEHo/6UMMtETriDJfJfR1488Y2IGRoZGmpc9fviXWw5XaxCxjZLB/EtvYXGw9/X59bO29
-	op1UQfJ+OV+1sNIKwHRbI5a/Y1UFO6bcyJbXhAcCgdpDAnZk1WUtjFLz0/CCeA==
-Message-ID: <d1ac9c1e-f3fe-4d06-ba2e-2c049841d19b@owenh.net>
-Date: Fri, 10 Nov 2023 10:58:07 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRKabC66"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-6b2018a11efso2685986b3a.0
+        for <regressions@lists.linux.dev>; Fri, 10 Nov 2023 16:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699660805; x=1700265605; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=o7kaP8T4h9GxAv1rdpZ3a0uPOemoQbn+rBlYSoxOFnU=;
+        b=CRKabC66K6NbGFCwK+WUuQ0sHnJMQE1hYymMpuWL21dMqYBZQzN+OLKsrHylwcbN5l
+         5zWDQm6dLUcNjoSJ5Djf1I6zI/QaKBrOccowquX1kx45IAFZT9pFj/yrtyh5LYKe4qXH
+         eTy5C36EJw83W2GPzgnlViyWlZEfnJzQOU4b7f6NRfUG9BYzlF1I39KOr/2FdJRypxVB
+         srElOKwmMAqTplwCF1N522hhD1RxME110tcnk3adlcrhWWr8Yq81h+aUP66Vx5TggPu3
+         us0DbpTiuqgC2hR1h7RlaanyXabiv7uIuVF+7cFKXrPzWneXDfBEdAYzBF4YLDjE5UB8
+         k/Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699660805; x=1700265605;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o7kaP8T4h9GxAv1rdpZ3a0uPOemoQbn+rBlYSoxOFnU=;
+        b=QF08zPNnDynQam0bO1XymSCDTfzKgishDfWrkFI2hpHOEL0bZL7G9gbvekikvBx3GF
+         u+NlhCbUmyBWWAoS3OokWFZThJ+zE/to0/9QagvsEGEGHN1d0fNcmjGPhsimDloL2L+7
+         QIjfTY71cgAxQgAIo4blPWw54zO2uuBZO3VYoi/+7njWu/hgHBaTI+3fdQ4IW5XZZ6Zl
+         y0iRmSpVbW2Eo2hY4iMKmuOUVX7HbIn7WDSNbt4P0PNt90H9c52aD/lEQF+4xqcbouOw
+         sdMMrceh02ikrg/AS8LJ9UJlQoWsaqi3/8AnDbhXdydUnJLmehmwJJgB3z+vQAi4iL3y
+         7t6Q==
+X-Gm-Message-State: AOJu0YzlM4Aaq1RKvOWHvKpE58y0DktVERmKaAD14DSSnL1951LH4MKi
+	7t1gjMvLBvS/I/13EaRknRc=
+X-Google-Smtp-Source: AGHT+IHTNf6aZkFIAKZmSoN2cQ0u+j/7iPyq9j1l9V5ExsYYUwjQeVzARU4kSOmI2y50Ss8N84omMQ==
+X-Received: by 2002:a05:6a20:1593:b0:17b:426f:829 with SMTP id h19-20020a056a20159300b0017b426f0829mr793932pzj.37.1699660804262;
+        Fri, 10 Nov 2023 16:00:04 -0800 (PST)
+Received: from bvd0 ([240b:252:381:6800:d42:63f5:5b67:37bd])
+        by smtp.gmail.com with ESMTPSA id x66-20020a626345000000b006933f85bc29sm284620pfb.111.2023.11.10.16.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 16:00:03 -0800 (PST)
+Sender: Bhanu Victor DiCara <00bvd0@gmail.com>
+From: Bhanu Victor DiCara <00bvd0+linux@gmail.com>
+To: linux-raid@vger.kernel.org
+Cc: regressions@lists.linux.dev, song@kernel.org, jiangguoqing@kylinos.cn,
+ jgq516@gmail.com
+Subject:
+ [REGRESSION] Data read from a degraded RAID 4/5/6 array could be silently
+ corrupted.
+Date: Sat, 11 Nov 2023 09:00:00 +0900
+Message-ID: <5727380.DvuYhMxLoT@bvd0>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: "Owen T. Heisler" <writer@owenh.net>
-Subject: Re: [REGRESSION]: acpi/nouveau: Hardware unavailable upon resume or
- suspend fails
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown
- <lenb@kernel.org>, linux-acpi@vger.kernel.org,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org
-References: <9f36fb06-64c4-4264-aaeb-4e1289e764c4@owenh.net>
- <CAAd53p7BSesx=a1igTohoSkxrW+Hq8O7ArONFCK7uoDi12-T4A@mail.gmail.com>
- <a592ce0c-64f0-477d-80fa-8f5a52ba29ea@redhat.com>
- <CAAd53p608qmC3pvz=F+y2UZ9O39f2aq-pE-1_He1j8PGQmM=tg@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAAd53p608qmC3pvz=F+y2UZ9O39f2aq-pE-1_He1j8PGQmM=tg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4SRlQ95myqz9spj
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi everyone,
+A degraded RAID 4/5/6 array can sometimes read 0s instead of the actual data.
 
-On 11/10/23 06:52, Kai-Heng Feng wrote:
-> On Fri, Nov 10, 2023 at 2:19 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 11/10/23 07:09, Kai-Heng Feng wrote:
->>> On Fri, Nov 10, 2023 at 5:55 AM Owen T. Heisler <writer@owenh.net> wrote:
->>>> #regzbot introduced: 89c290ea758911e660878e26270e084d862c03b0
->>>> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/273
->>>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218124
->>>
->>> Thanks for the bug report. Do you prefer to continue the discussion
->>> here, on gitlab or on bugzilla?
 
-Kai-Heng, you're welcome and thank you too. By email is fine with me.
+#regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
+(The problem does not occur in the previous commit.)
 
->> Owen, as Kai-Heng said thank you for reporting this.
+In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/raid5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (and the previous line) is removed, the problem does not occur.
 
-Hans, you're welcome, and thanks for your help too.
+Similarly, in commit ffc253263a1375a65fa6c9f62a893e9767fbebfa (v6.6), file drivers/md/raid5.c, when line 6200 is removed, the problem does not occur.
 
->>>> ## Reproducing
->>>>
->>>> 1. Boot system to framebuffer console.
->>>> 2. Run `systemctl suspend`. If undocked without secondary display,
->>>> suspend fails. If docked with secondary display, suspend succeeds.
->>>> 3. Resume from suspend if applicable.
->>>> 4. System is now in a broken state.
->>>
->>> So I guess we need to put those devices to ACPI D3 for suspend. Let's
->>> discuss this on your preferred platform.
->>
->> Ok, so I was already sort of afraid we might see something like this
->> happening because of:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=89c290ea758911e660878e26270e084d862c03b0
->>
->> As I mentioned during the review of that, it might be better to
->> not touch the video-card ACPI power-state at all and instead
->> only do acpi_device_fix_up_power() on the child devices.
-> 
-> Or the child devices need to be put to D3 during suspend.
-> 
->> Owen, attached are 2 patches which implement only
->> calling acpi_device_fix_up_power() on the child devices,
->> can you build a v6.6 kernel with these 2 patches added
->> on top please and see if that fixes things ?
 
-Yes, with those patches v6.6 suspend works normally. That's great, thanks!
+Steps to reproduce the problem (using bash or similar):
+1. Create a degraded RAID 4/5/6 array:
+fallocate -l 2056M test_array_part_1.img
+fallocate -l 2056M test_array_part_2.img
+lo1=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_array_part_1.img)
+lo2=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_array_part_2.img)
+# The RAID level must be 4 or 5 or 6 with at least 1 missing drive in any order. The following configuration seems to be the most effective:
+mdadm --create /dev/md/tmp_test_array --level=4 --raid-devices=3 --chunk=1M --size=2G  $lo1 missing $lo2
 
-I tested with v6.6 with the 2 patches at 
-<https://lore.kernel.org/regressions/a592ce0c-64f0-477d-80fa-8f5a52ba29ea@redhat.com/> 
-using 
-<https://gitlab.freedesktop.org/drm/nouveau/uploads/788d7faf22ba2884dcc09d7be931e813/v6.6-config1>. 
-I tested both docked and un-docked, just in case.
+2. Create the test file system and clone it to the degraded array:
+fallocate -l 4G test_fs.img
+mke2fs -t ext4 -b 4096 -i 65536 -m 0 -E stride=256,stripe_width=512 -L test_fs  test_fs.img
+lo3=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_fs.img)
+mount $lo3 /mnt/1
+python3 create_test_fs.py /mnt/1
+umount /mnt/1
+cat test_fs.img > /dev/md/tmp_test_array
+cmp -l test_fs.img /dev/md/tmp_test_array  # Optionally verify the clone
+mount --read-only $lo3 /mnt/1
 
-Tested-by: Owen T. Heisler <writer@owenh.net>
+3. Mount the degraded array:
+mount --read-only /dev/md/tmp_test_array /mnt/2
 
->> Kai-Heng can you test that the issue on the HP ZBook Fury 16 G10
->> is still resolved after applying these patches ?
-> 
-> Yes. Thanks for the patch.
-> 
-> If this patch also fixes Owen's issue, then
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com
+4. Compare the files:
+diff -q /mnt/1 /mnt/2
 
-Please let me know if anything else is needed from me.
+If no files are detected as different, do `umount /mnt/2` and `echo 2 > /proc/sys/vm/drop_caches`, and then go to step 3.
+(Doing `echo 3 > /proc/sys/vm/drop_caches` and then going to step 4 is less effective.)
+(Only doing `umount /mnt/2` and/or `echo 1 > /proc/sys/vm/drop_caches` is much less effective and the effectiveness wears off.)
 
-Many thanks,
-Owen
+
+create_test_fs.py:
+import errno
+import itertools
+import os
+import random
+import sys
+
+
+def main(test_fs_path):
+	rng = random.Random(0)
+	try:
+		for i in itertools.count():
+			size = int(2**rng.uniform(12, 24))
+			with open(os.path.join(test_fs_path, str(i).zfill(4) + '.bin'), 'xb') as f:
+				f.write(b'\xff' * size)
+			print(f'Created file {f.name!r} with size {size}')
+	except OSError as e:
+		if e.errno != errno.ENOSPC:
+			raise
+		print(f'Done: {e.strerror} (partially created file {f.name!r})')
+
+
+if __name__ == '__main__':
+	main(sys.argv[1])
+
+
+
