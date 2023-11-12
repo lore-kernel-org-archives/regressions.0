@@ -1,60 +1,62 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8040179C6
-	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 11:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA0479EE
+	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 11:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MC3Ul06p"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28014fed9efso2849240a91.0
-        for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 03:12:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNwZcZbB"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3b2f28caab9so2179884b6e.1
+        for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 03:18:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699787534; x=1700392334; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1699787920; x=1700392720; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+55ZTGhMjEEAdR3Q2pbonSohtI5yVDsnlk8FCcFkC4=;
-        b=MC3Ul06p530pd3gnJXe3YnZotcQ0/KXWDRe/cfwQX7fb2v9rXIKDyhEJ4W4g679h2v
-         DeVwR1cSc4pmQv8yz6lnqRSE+YwPZUsKa7Uo5FX4hfwcTFGW1YyqxxDm8fIw1UkiR4IO
-         /5FL8t+wt6dKOMMaUwwNadE1ns6228efqbYNKMDHvmmiBXqt1pHzDGCeLjAzB2dSEFP5
-         tCayQbGDfO5JBLWNSlYeiHF5HIE9RM49uUxl9PrCcaF/NxVpOxle/Pl9+TfdjACE7igL
-         1eejMxnkkSC8ja3FtNQWszyrzCHwNGW/lrq/V3JJI1XhQ4baIbZlldiFj3mtdiqDaTPk
-         25Mg==
+        bh=Tv8ACPVZgV0Pxa5en7zdw7RbJitiG8y+EBffkQkWb7Y=;
+        b=gNwZcZbBKS4kojRGQ3ntoVc3q6khsqFv+lGHER6dXzqiH9+XMLDNwcwKNGEURcEywN
+         dGYb8/oovz8B099ieNJyGFf5iTXC3bceH3ggv8f87nYEGmx2KaVPsQ07787nOgGgmC5Q
+         H0br8cZUGNqfmIxENfENg7SAfRP/s4D9wePAH9e9zajjEvm8LqeQ5xESqmjiRjv5mUts
+         OEnwNfskR2gmAh8KAruMJbulJrjs1SG+45Jgn8JVMFuRGtrcNFgDRFLH5aCX+B8ZWE00
+         lS73VUI7Mw7YCkmhMDInP0nceFt+5iMjPbFrgDy0iSg4HEo9rTAd1wKYoCEzoVQAO4QA
+         bljg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699787534; x=1700392334;
+        d=1e100.net; s=20230601; t=1699787920; x=1700392720;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G+55ZTGhMjEEAdR3Q2pbonSohtI5yVDsnlk8FCcFkC4=;
-        b=c5ZuvJzX1PJbzrpNhQefoNzH8s5l0ikzMJmjNkfkq01zQHl8Ee4QUr41GpZQ80C1jQ
-         hVY3O9w79V1NVTxbamjrP6JXPhuZkuUgsrioIF1ZzG/hVdEQN/3TbyVOnmwrrvYyhQiy
-         5ytfBRF98EVTMTPYQ2KVCWegr8UcwJQRysY2y3Wq1ig30tPhCEXtixfRN+EITeyk1VTA
-         hmiv/fVsnCq+kvSa/sFzhtUaDD1s5tHSUR5wk4gr1YOa8NsXE5ZxHInQw+iPhScSpY87
-         4HydajpJJZgB/GP/G14tg3khMDy+sXogp6fHPqDkOOud6nqFSN1K1/bd2x2AnSzyVT6o
-         lJeA==
-X-Gm-Message-State: AOJu0YztlKe64KFg4q+4+VwowziD1PCOKeLxjj4lVd5vkl0c7nov5Eb/
-	5lYZS2zLq0XNnAdJBvxKoRQH1urDW8Xgsg==
-X-Google-Smtp-Source: AGHT+IFvMkqibgudVNnMV3yhatFdkpPr3of/XWNfE4D0B2iM8UBxCbBVW1C1jAN+Dcv+M7MuwkXzxQ==
-X-Received: by 2002:a17:903:32c1:b0:1cc:453f:517b with SMTP id i1-20020a17090332c100b001cc453f517bmr3656953plr.0.1699787533628;
-        Sun, 12 Nov 2023 03:12:13 -0800 (PST)
+        bh=Tv8ACPVZgV0Pxa5en7zdw7RbJitiG8y+EBffkQkWb7Y=;
+        b=VJKNJic+B46eL/+RKOqQEzGPtwdGSVuEqGikJjbRV3AX2Pgl+S2MKKqS98ux/SnZ63
+         SMk7SFIsI1vLxfGcDyPVNiTJyiqjV+EOpWp3zdlHY6XCKS9IubODe4d8Jaj5nR5h8aMD
+         rG+Me5eYBbI2ioLYCRp62snw5tzoZneyCLMfBp36t6UgUlPQ5PWo7/1xtvCZrgD4Ogno
+         uo2k8/8FdVbUUW7tVmRTWHQIQEoM2NhGW52fzVwmnW3cdFgh4QYEpl+SlXJMJRmcA7ac
+         1zS4LMSVRm1GPhhyuLMJZJdRJ+IQ+PQA50jANvBfGHanDamRsXKfdYdABU2BjuGslhqt
+         NRSQ==
+X-Gm-Message-State: AOJu0YyYLRZSp8nzHaI3G36G8RmJgQQhQy1hVZCtdaWwMZwLbwlvWwuD
+	FHr8dgLOXfJmkMhir6dIwOc=
+X-Google-Smtp-Source: AGHT+IEPRPJW1QI/XCdMbL9xm1cmv0fOQqW/MYQ3+/W+n5yRUspIQECqB+RdWxnOXUpmRx22hLWDXg==
+X-Received: by 2002:a05:6808:164e:b0:3ab:5592:4704 with SMTP id az14-20020a056808164e00b003ab55924704mr5213025oib.2.1699787919776;
+        Sun, 12 Nov 2023 03:18:39 -0800 (PST)
 Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id w13-20020a170902d3cd00b001ca86a9caccsm2432043plb.228.2023.11.12.03.12.12
+        by smtp.gmail.com with ESMTPSA id q23-20020a62e117000000b006c0328b2440sm2390072pfh.150.2023.11.12.03.18.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Nov 2023 03:12:13 -0800 (PST)
+        Sun, 12 Nov 2023 03:18:38 -0800 (PST)
 Received: by archie.me (Postfix, from userid 1000)
-	id 76E781029976F; Sun, 12 Nov 2023 18:12:10 +0700 (WIB)
-Date: Sun, 12 Nov 2023 18:12:10 +0700
+	id B81D310299770; Sun, 12 Nov 2023 18:18:34 +0700 (WIB)
+Date: Sun, 12 Nov 2023 18:18:34 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Phillip Susi <phill@thesusis.net>, Luben Tuikov <luben.tuikov@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Linux DRI Development <dri-devel@lists.freedesktop.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: Radeon regression in 6.6 kernel
-Message-ID: <ZVCzCrkdRJy9AHd2@archie.me>
-References: <87edgv4x3i.fsf@vps.thesusis.net>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Wireless <linux-wireless@vger.kernel.org>,
+	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
+	Fabio Comolli <fabio.comolli@gmail.com>
+Cc: Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Subject: Re: Fwd: iwlmvm: Linux 6.7 pre-rc1 prints stack trace of
+ iwl_op_mode_mvm_start; caused by commit b6e3d1ba4fcf
+Message-ID: <ZVC0iq1FS02FjeTX@archie.me>
+References: <2fa930bb-54dd-4942-a88d-05a47c8e9731@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,149 +64,104 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1vHvAQQxV2JwhpFr"
+	protocol="application/pgp-signature"; boundary="w2PfOC9ZO3kyEIA4"
 Content-Disposition: inline
-In-Reply-To: <87edgv4x3i.fsf@vps.thesusis.net>
+In-Reply-To: <2fa930bb-54dd-4942-a88d-05a47c8e9731@gmail.com>
 
 
---1vHvAQQxV2JwhpFr
+--w2PfOC9ZO3kyEIA4
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 11, 2023 at 07:46:41PM -0500, Phillip Susi wrote:
-> I had been testing some things on a post 6.6-rc5 kernel for a week or
-> two and then when I pulled to a post 6.6 release kernel, I found that
-> system suspend was broken.  It seems that the radeon driver failed to
-> suspend, leaving the display dead, the wayland display server hung, and
-> the system still running.  I have been trying to bisect it for the last
-> few days and have only been able to narrow it down to the following 3
-> commits:
->=20
-> There are only 'skip'ped commits left to test.
-> The first bad commit could be any of:
-> 56e449603f0ac580700621a356d35d5716a62ce5
-> c07bf1636f0005f9eb7956404490672286ea59d3
-> b70438004a14f4d0f9890b3297cd66248728546c
-> We cannot bisect more!
+Hi Nikl=C4=81vs and Fabio,
 
-Please show the full bisect log, and also tell why these commits are
-skipped.
+On Fri, Nov 03, 2023 at 08:13:39PM +0700, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+> > When testing the branch that will become Linux 6.7-rc1, ever since comm=
+it b6e3d1ba4fcf02176846d03a930203d8133c0aaf I have observed the following a=
+bbreviated kernel stack trace (please see attachments for the full trace):
+> >=20
+> > ```
+> > [    6.733281]  ? __warn+0xc3/0x1d0
+> > [    6.733284]  ? iwl_op_mode_mvm_start+0x9c4/0x9d0 [iwlmvm]
+> > [    6.733299]  ? report_bug+0x167/0x220
+> > [    6.733301]  ? handle_bug+0x3d/0x90
+> > [    6.733304]  ? exc_invalid_op+0x1a/0x60
+> > [    6.733306]  ? asm_exc_invalid_op+0x1a/0x20
+> > [    6.733309]  ? iwl_op_mode_mvm_start+0x9c4/0x9d0 [iwlmvm]
+> > [    6.733325]  _iwl_op_mode_start+0x66/0xe0 [iwlwifi]
+> > [    6.733338]  iwl_opmode_register+0x87/0xd0 [iwlwifi]
+> > [    6.733350]  ? __cfi_init_module+0x10/0x10 [iwlmvm]
+> > [    6.733364]  init_module+0x22/0xff0 [iwlmvm]
+> > [    6.733378]  ? __cfi_init_module+0x10/0x10 [iwlmvm]
+> > [    6.733392]  do_one_initcall+0x129/0x380
+> > [    6.733395]  ? idr_alloc_cyclic+0x148/0x1e0
+> > [    6.733397]  ? security_kernfs_init_security+0x41/0x80
+> > [    6.733399]  ? __kernfs_new_node+0x1be/0x250
+> > [    6.733401]  ? preempt_count_add+0x55/0xb0
+> > [    6.733404]  ? up_write+0x4a/0xe0
+> > [    6.733406]  ? preempt_count_add+0x55/0xb0
+> > [    6.733408]  ? sysvec_call_function+0xa4/0xb0
+> > [    6.733410]  ? asm_sysvec_call_function+0x1a/0x20
+> > [    6.733411]  ? free_unref_page_prepare+0xf3/0x410
+> > [    6.733413]  ? preempt_count_add+0x62/0xb0
+> > [    6.733415]  ? _raw_spin_trylock+0x19/0x60
+> > [    6.733417]  ? _raw_spin_unlock+0x11/0x30
+> > [    6.733419]  ? __kmem_cache_free+0x29a/0x3c0
+> > [    6.733421]  ? vfree+0xd2/0x150
+> > [    6.733422]  ? slab_post_alloc_hook+0x76/0x3d0
+> > [    6.733425]  ? do_init_module+0x3f/0x230
+> > [    6.733427]  ? __kmem_cache_alloc_node+0x1fe/0x2f0
+> > [    6.733430]  do_init_module+0x7a/0x230
+> > [    6.733432]  __se_sys_init_module+0x1a0/0x220
+> > [    6.733435]  do_syscall_64+0x7a/0x100
+> > [    6.733438]  ? syscall_exit_to_user_mode+0x2d/0x1d0
+> > [    6.733440]  ? do_syscall_64+0x89/0x100
+> > [    6.733442]  ? do_user_addr_fault+0x4e7/0x680
+> > [    6.733444]  ? exc_page_fault+0x61/0x150
+> > [    6.733446]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+> > ```
+> >=20
+> > I did try reverting the offending commit but the result did not compile=
+ and I did not want to dig deeper to identify any subsequent commits what w=
+ould need reverting to fix compilation.
+> >=20
+> > If it's relevant, I'm building the kernel with Clang 17.0.4 toolchain b=
+y setting the LLVM=3D1 variable. CFI is enabled but I'm not sure if it's ac=
+tually functional.
+>=20
+> See Bugzilla for the full thread.
+>=20
+> Anyway, I'm adding this regression to regzbot:
+>=20
+> #regzbot introduced: b6e3d1ba4fcf02 https://bugzilla.kernel.org/show_bug.=
+cgi?id=3D218095
+> #regzbot title: new iwlwifi firmware statistics API triggers stack trace
+>=20
 
->=20
-> It appears that there was a late merge in the 6.6 window that originally
-> forked from the -rc2, as many of the later commits that I bisected had
-> that version number.
->=20
-> I couldn't get it more narrowed down because I had to skip the
-> surrounding commits because they wouldn't even boot up to a gui desktop,
-> let alone try to suspend.
->=20
-> When system suspend fails, I find the following in my syslog after I
-> have to magic-sysrq reboot because the the display is dead:
->=20
-> Nov 11 18:44:39 faldara kernel: PM: suspend entry (deep)
-> Nov 11 18:44:39 faldara kernel: Filesystems sync: 0.035 seconds
-> Nov 11 18:44:40 faldara kernel: Freezing user space processes
-> Nov 11 18:44:40 faldara kernel: Freezing user space processes completed (=
-elapsed 0.001 seconds)
-> Nov 11 18:44:40 faldara kernel: OOM killer disabled.
-> Nov 11 18:44:40 faldara kernel: Freezing remaining freezable tasks
-> Nov 11 18:44:40 faldara kernel: Freezing remaining freezable tasks comple=
-ted (elapsed 0.001 seconds)
-> Nov 11 18:44:40 faldara kernel: printk: Suspending console(s) (use no_con=
-sole_suspend to debug)
-> Nov 11 18:44:40 faldara kernel: serial 00:01: disabled
-> Nov 11 18:44:40 faldara kernel: e1000e: EEE TX LPI TIMER: 00000011
-> Nov 11 18:44:40 faldara kernel: sd 4:0:0:0: [sdb] Synchronizing SCSI cache
-> Nov 11 18:44:40 faldara kernel: sd 1:0:0:0: [sda] Synchronizing SCSI cache
-> Nov 11 18:44:40 faldara kernel: sd 5:0:0:0: [sdc] Synchronizing SCSI cache
-> Nov 11 18:44:40 faldara kernel: sd 4:0:0:0: [sdb] Stopping disk
-> Nov 11 18:44:40 faldara kernel: sd 1:0:0:0: [sda] Stopping disk
-> Nov 11 18:44:40 faldara kernel: sd 5:0:0:0: [sdc] Stopping disk
-> Nov 11 18:44:40 faldara kernel: amdgpu: Move buffer fallback to memcpy un=
-available
-> Nov 11 18:44:40 faldara kernel: [TTM] Buffer eviction failed
-> Nov 11 18:44:40 faldara kernel: [drm] evicting device resources failed
-> Nov 11 18:44:40 faldara kernel: amdgpu 0000:03:00.0: PM: pci_pm_suspend()=
-: amdgpu_pmops_suspend+0x0/0x80 [amdgpu] returns -19
-> Nov 11 18:44:40 faldara kernel: amdgpu 0000:03:00.0: PM: dpm_run_callback=
-(): pci_pm_suspend+0x0/0x170 returns -19
-> Nov 11 18:44:40 faldara kernel: amdgpu 0000:03:00.0: PM: failed to suspen=
-d async: error -19
-> Nov 11 18:44:40 faldara kernel: PM: Some devices failed to suspend, or ea=
-rly wake event detected
-> Nov 11 18:44:40 faldara kernel: xhci_hcd 0000:06:00.0: xHC error in resum=
-e, USBSTS 0x401, Reinit
-> Nov 11 18:44:40 faldara kernel: usb usb3: root hub lost power or was reset
-> Nov 11 18:44:40 faldara kernel: usb usb4: root hub lost power or was reset
-> Nov 11 18:44:40 faldara kernel: serial 00:01: activated
-> Nov 11 18:44:40 faldara kernel: nvme nvme0: 4/0/0 default/read/poll queues
-> Nov 11 18:44:40 faldara kernel: ata8: SATA link down (SStatus 0 SControl =
-300)
-> Nov 11 18:44:40 faldara kernel: ata7: SATA link down (SStatus 0 SControl =
-300)
-> Nov 11 18:44:40 faldara kernel: ata4: SATA link up 1.5 Gbps (SStatus 113 =
-SControl 300)
-> Nov 11 18:44:40 faldara kernel: ata1: SATA link down (SStatus 4 SControl =
-300)
-> Nov 11 18:44:40 faldara kernel: ata3: SATA link down (SStatus 4 SControl =
-300)
-> Nov 11 18:44:40 faldara kernel: ata4.00: configured for UDMA/133
-> Nov 11 18:44:40 faldara kernel: OOM killer enabled.
-> Nov 11 18:44:40 faldara kernel: Restarting tasks ... done.
-> Nov 11 18:44:40 faldara kernel: random: crng reseeded on system resumption
-> Nov 11 18:44:40 faldara kernel: PM: suspend exit
-> Nov 11 18:44:40 faldara kernel: PM: suspend entry (s2idle)
-> Nov 11 18:44:40 faldara systemd-networkd[384]: enp0s31f6: Gained IPv6LL
-> Nov 11 18:44:40 faldara avahi-daemon[668]: Joining mDNS multicast group o=
-n interface enp0s31f6.IPv6 with address fe80::3ad5:47ff:fe0f:488a.
->=20
-> My video card is this:
->=20
-> 03:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]=
- Navi 23 (rev c7) (prog-if 00 [VGA controller])
->         Subsystem: Gigabyte Technology Co., Ltd Navi 23
->         Flags: bus master, fast devsel, latency 0, IRQ 139
->         Memory at e0000000 (64-bit, prefetchable) [size=3D256M]
->         Memory at f0000000 (64-bit, prefetchable) [size=3D2M]
->         I/O ports at e000 [size=3D256]
->         Memory at f7900000 (32-bit, non-prefetchable) [size=3D1M]
->         Expansion ROM at 000c0000 [disabled] [size=3D128K]
->         Capabilities: [48] Vendor Specific Information: Len=3D08 <?>
->         Capabilities: [50] Power Management version 3
->         Capabilities: [64] Express Legacy Endpoint, MSI 00
->         Capabilities: [a0] MSI: Enable+ Count=3D1/1 Maskable- 64bit+
->         Capabilities: [100] Vendor Specific Information: ID=3D0001 Rev=3D=
-1 Len=3D010 <?>
->         Capabilities: [150] Advanced Error Reporting
->         Capabilities: [200] Physical Resizable BAR
->         Capabilities: [240] Power Budgeting <?>
->         Capabilities: [270] Secondary PCI Express
->         Capabilities: [2a0] Access Control Services
->         Capabilities: [2d0] Process Address Space ID (PASID)
->         Capabilities: [320] Latency Tolerance Reporting
->         Capabilities: [410] Physical Layer 16.0 GT/s <?>
->         Capabilities: [440] Lane Margining at the Receiver <?>
->         Kernel driver in use: amdgpu
->         Kernel modules: amdgpu
+Emmanuel had sent a proposed fix at [1]. Please test.
 
-Anyway, thanks for the regression report. I'm adding it to regzbot:
+Thanks.
 
-#regzbot ^introduced: 56e449603f0ac5..b70438004a14f4
+[1]: https://lore.kernel.org/regressions/20231112100944.21177-1-emmanuel.gr=
+umbach@intel.com/
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---1vHvAQQxV2JwhpFr
+--w2PfOC9ZO3kyEIA4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVCzBwAKCRD2uYlJVVFO
-o+DZAQCDDeaRfKfJ++74bg7JPWkbAXui9dTN7+gLunw8DVMBbQD+JnoHXEOPGE4a
-btucfJJN5hXnoyn84CKbM+m1tReawAA=
-=mJkJ
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVC0igAKCRD2uYlJVVFO
+o8GvAQCgaaMgHyMNOGRExrMf9mhXIKx0v160v/eAArXomvKctgD+PlXLMd1ClK5P
+yWIoOBL7x8/x0kWSMUWrhMPTm8UU4wg=
+=9xij
 -----END PGP SIGNATURE-----
 
---1vHvAQQxV2JwhpFr--
+--w2PfOC9ZO3kyEIA4--
