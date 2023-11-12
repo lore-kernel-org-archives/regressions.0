@@ -1,223 +1,130 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEFA1DFCE
-	for <regressions@lists.linux.dev>; Sat, 11 Nov 2023 21:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8970D6FA3
+	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 08:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="nGylHmuu"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 395BC82846BB;
-	Sat, 11 Nov 2023 15:57:27 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id DqGZi86SbIuJ; Sat, 11 Nov 2023 15:57:25 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id B65428285309;
-	Sat, 11 Nov 2023 15:57:25 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com B65428285309
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6chvqct"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6be0277c05bso3003673b3a.0
+        for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 00:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1699739845; bh=hAhMCKMfFI2Qx7ZMo9XkqA80vgrR0ThzyIiMQCQE7Xs=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=nGylHmuuFbOH4iVac0/gk0kuHMOnFNRcu2TLjNu4xmXP3rrptK9nF3lRa7mzbwOFq
-	 4KWiIfbNSGPGircn477Eveqz1wzJdsca120qY5QNB/hscr3jWbc6s1/yu01m7ZXkfa
-	 rmcjMJrtwZpJl8CZmRRDF8A6aNGoBqUBl4XRbTL0=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id f-uj50qequAB; Sat, 11 Nov 2023 15:57:25 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 7ED4C82846BB;
-	Sat, 11 Nov 2023 15:57:25 -0600 (CST)
-Date: Sat, 11 Nov 2023 15:57:23 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <634718570.46592899.1699739843363.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <414471427.46558741.1699728159797.JavaMail.zimbra@raptorengineeringinc.com>
-References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <99f43fc0-a500-41b5-9575-33a57d0795de@kernel.dk> <9867b2be9c0845f9f2e3a16f91f40574.squirrel@vali.starlink.edu> <a29fcb47-de03-46a7-b4d1-47a6c9a28879@kernel.dk> <1475520442.46161385.1699590908294.JavaMail.zimbra@raptorengineeringinc.com> <776997436.46185793.1699598887190.JavaMail.zimbra@raptorengineeringinc.com> <eee9b0ff-dae7-4613-8c63-fed1043e047c@kernel.dk> <414471427.46558741.1699728159797.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: Regression in io_uring, leading to data corruption
+        d=gmail.com; s=20230601; t=1699776300; x=1700381100; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MCPz+LLdNV+OMS0ITTC7ljEwfSKVRnmW3O4azfs6WcA=;
+        b=O6chvqctVTIre5zeSRZjP8jX/ca82Hwi0IROpMQgGmxi1aViGr9B4zPKhaeZ8EqSMa
+         UyEQrnM+ilWTsmhN5bSWJvd4yCO/4CWRMYMexS/pDbp4lLRvYtI7R+Vw/5pqVSUlVEfq
+         eSVDA3+ffAlvp2oKLYxyZ1Cg/tZaM115LMBKcK6Les3M4p4+gVrEWpgSZVXuSWVI+jJN
+         lF41qNKb8LMBeSBDwMglLB9IRC9Apg7gM264zzlnA6ysT4zTNa8boO0LOrmG/Vlhml2b
+         5YGgaJBqZ4RMsG1LIKNgGGqJz9lLX/8rxkrPq5cuX8s5FXkHShEYXcp+qI5d0IiY0Gi/
+         cG1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699776300; x=1700381100;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MCPz+LLdNV+OMS0ITTC7ljEwfSKVRnmW3O4azfs6WcA=;
+        b=iVvizrFuzPWUMDeykWhKxezoZq19Lq2sOGBqtR1r9rWZbIRLaaXJgWMCYXqNQkSR/f
+         Em0eLxuaI9mcxqYWP3YiglX8wsGYyzeBg+FUXiphcvupnUxQGoBTrT1Mc1PlZNLV3bfM
+         1BUaHx5Kjg6Rtm1gYlh40NzXc88UzoXACht+xR2TT1PmNbvzGM4KYzYCHRFMpx34AI0T
+         Vt9CyL1WMxLZLH39aE7j4Mv53kXGjagiWGDuE9UEqk2pqX+lnt9tYW/agFhJV+Z+gKeC
+         aPkBz8VTjV42xIK27npHD5bsLWPBI3sbgVSD6TZeJR9TpBYRBKC68WLoli4BbG58Evtq
+         LD9Q==
+X-Gm-Message-State: AOJu0Yy5r1FtUXluFn4ikvYjg/EjlBOwz6jaRL6AkSfKeLrHBROhL6H3
+	IdyWwvlmJaf6dU8NH+TZUjM=
+X-Google-Smtp-Source: AGHT+IF64oeMjwBto6kBHOKcV1zS4Ipo0hgg8xERT+w4dChYlfINGCvxeIFQCglyzpAXHqx5Orpjaw==
+X-Received: by 2002:a17:902:b94a:b0:1cd:fbc7:2737 with SMTP id h10-20020a170902b94a00b001cdfbc72737mr1996657pls.52.1699776299609;
+        Sun, 12 Nov 2023 00:04:59 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id l4-20020a170902eb0400b001c61901ed2esm2228034plb.219.2023.11.12.00.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Nov 2023 00:04:58 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id B7385101C1E07; Sun, 12 Nov 2023 15:04:56 +0700 (WIB)
+Date: Sun, 12 Nov 2023 15:04:56 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Kalle Valo <kvalo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Gregory Greenman <gregory.greenman@intel.com>,
+	Linux Wireless <linux-wireless@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>
+Subject: Re: New iwlwifi warning
+Message-ID: <ZVCHKCumfnY0AGBP@archie.me>
+References: <CAHk-=wix6kqQ5vHZXjOPpZBfM7mMm9bBZxi2Jh7XnaKCqVf94w@mail.gmail.com>
+ <87a5rja129.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s2I+/k1Zs5883t/R"
+Content-Disposition: inline
+In-Reply-To: <87a5rja129.fsf@kernel.org>
+
+
+--s2I+/k1Zs5883t/R
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: Regression in io_uring, leading to data corruption
-Thread-Index: lH12Y4tkn6udOQJGWYB7bHJI9rQbPEbEyAoG
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Nov 12, 2023 at 09:22:06AM +0200, Kalle Valo wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>=20
+> > I only noticed now, because it doesn't cause any issues, but that may
+> > be because this only happens on my desktop, and I don't actually use
+> > the wireless there...
+> >
+> > The WARN_ON in iwl_trans_configure() has started triggering as of this
+> > merge window:
+> >
+> >         WARN_ON(iwl_cmd_groups_verify_sorted(trans_cfg));
+> >
+> > and causes the appended warning at bootup.
+> >
+> > Comments? Anything in particular you need from me for debugging?
+> >
+> >                 Linus
+> >
+> > ---
+> >
+> >     WARNING: CPU: 3 PID: 2060 at
+> > drivers/net/wireless/intel/iwlwifi/mvm/../iwl-trans.h:1158
+> > iwl_op_mode_mvm_start+0x969/0x970 [iwlmvm]
+>=20
+> I investigated a bit and at least two other people have reported this
+> warning but I couldn't find any fix:
+>=20
+> https://lore.kernel.org/lkml/2fa930bb-54dd-4942-a88d-05a47c8e9731@gmail.c=
+om/T/
+>=20
+> Adding also Johannes and Miri.
+>=20
 
+It seems like the culprit authour from the above regression report
+(Anjaneyulu) missed the report (AFK?). Cc'ing him anyways. If there's
+no response from him, let's revert the culprit.
 
------ Original Message -----
-> From: "Timothy Pearson" <tpearson@raptorengineering.com>
-> To: "Jens Axboe" <axboe@kernel.dk>
-> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
-> Sent: Saturday, November 11, 2023 12:42:39 PM
-> Subject: Re: Regression in io_uring, leading to data corruption
+Thanks.
 
-> ----- Original Message -----
->> From: "Jens Axboe" <axboe@kernel.dk>
->> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->> <asml.silence@gmail.com>
->> Sent: Friday, November 10, 2023 8:52:05 AM
->> Subject: Re: Regression in io_uring, leading to data corruption
-> 
->> On 11/9/23 11:48 PM, Timothy Pearson wrote:
->>> 
->>> 
->>> ----- Original Message -----
->>>> From: "Timothy Pearson" <tpearson@raptorengineering.com>
->>>> To: "Jens Axboe" <axboe@kernel.dk>
->>>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->>>> <asml.silence@gmail.com>
->>>> Sent: Thursday, November 9, 2023 10:35:08 PM
->>>> Subject: Re: Regression in io_uring, leading to data corruption
->>> 
->>>> ----- Original Message -----
->>>>> From: "Jens Axboe" <axboe@kernel.dk>
->>>>> To: "Timothy Pearson" <tpearson@raptorengineering.com>
->>>>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov"
->>>>> <asml.silence@gmail.com>
->>>>> Sent: Thursday, November 9, 2023 9:51:09 PM
->>>>> Subject: Re: Regression in io_uring, leading to data corruption
->>>>
->>>>> Just to go back to basics, can you try this one? It'll do the exact same
->>>>> retry that io-wq is doing, just from the same task itself. If this
->>>>> fails, then something core is wrong. I don't think it will, or we'd see
->>>>> this on other platforms too of course. If this works, then it validates
->>>>> that it's some oddity on ppc with punting this operation to a thread off
->>>>> this main task.
->>>>>
->>>>> diff --git a/io_uring/rw.c b/io_uring/rw.c
->>>>> index 64390d4e20c1..1d760570df04 100644
->>>>> --- a/io_uring/rw.c
->>>>> +++ b/io_uring/rw.c
->>>>> @@ -968,7 +968,7 @@ int io_read_mshot(struct io_kiocb *req, unsigned int
->>>>> issue_flags)
->>>>> 	return IOU_OK;
->>>>> }
->>>>>
->>>>> -int io_write(struct io_kiocb *req, unsigned int issue_flags)
->>>>> +static int __io_write(struct io_kiocb *req, unsigned int issue_flags)
->>>>> {
->>>>> 	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
->>>>> 	struct io_rw_state __s, *s = &__s;
->>>>> @@ -1092,6 +1092,19 @@ int io_write(struct io_kiocb *req, unsigned int
->>>>> issue_flags)
->>>>> 	return ret;
->>>>> }
->>>>>
->>>>> +int io_write(struct io_kiocb *req, unsigned int issue_flags)
->>>>> +{
->>>>> +	int ret;
->>>>> +
->>>>> +	ret = __io_write(req, issue_flags);
->>>>> +	if (ret != -EAGAIN)
->>>>> +		return ret;
->>>>> +
->>>>> +	ret = __io_write(req, issue_flags & ~IO_URING_F_NONBLOCK);
->>>>> +	WARN_ON_ONCE(ret == -EAGAIN);
->>>>> +	return ret;
->>>>> +}
->>>>> +
->>>>> void io_rw_fail(struct io_kiocb *req)
->>>>> {
->>>>> 	int res;
->>>>>
->>>>
->>>> That does indeed "fix" the corruption issue.
->>>>
->>>> Where is the punting actually taking place?  I can see at least one location but
->>>> if it's a general issue with the punting process I should probably apply any
->>>> test mitigations to all locations, and I'm not familiar enough with the
->>>> codebase to be sure I've got them all...
->>>>
->>>> Thanks!
->>> 
->>> I've been exploring a bunch of other possibilities, and one that has
->>> been slowly coalescing is whether we're triggering a bug somewhere
->>> else in the kernel.  Now that I know the io_write call is somehow
->>> related to this issue, I went back and went over some of the earlier
->>> logs, and might have found something.
->>> 
->>> When I enable KCSAN I sporadically see this type of race:
->>> 
->>> [ 1549.152381]
->>> ==================================================================
->>> [ 1549.152515] BUG: KCSAN: data-race in dd_has_work / dd_insert_requests
->>> [ 1549.152609]
->>> [ 1549.152644] read (marked) to 0xc0000000080c2e98 of 8 bytes by task 3372 on
->>> cpu 27:
->>> [ 1549.153193]  dd_has_work+0x160/0x1b0
->>> [ 1549.153259]  __blk_mq_sched_dispatch_requests+0x42c/0xdf0
->>> [ 1549.153331]  blk_mq_sched_dispatch_requests+0xe4/0x120
->>> [ 1549.153403]  blk_mq_run_hw_queue+0x358/0x390
->>> [ 1549.153479]  blk_mq_flush_plug_list+0x8fc/0xea0
->>> [ 1549.153556]  __blk_flush_plug+0x2bc/0x360
->>> [ 1549.153622]  blk_finish_plug+0x60/0xa0
->>> [ 1549.153689]  __iomap_dio_rw+0xd28/0x1140
->>> [ 1549.153759]  iomap_dio_rw+0x80/0xf0
->>> [ 1549.153825]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
->>> [ 1549.154249]  io_write+0x4bc/0x900
->>> [ 1549.154309]  io_issue_sqe+0x12c/0x5f0
->>> [ 1549.154370]  io_submit_sqes+0xdd4/0x1050
->>> [ 1549.154429]  sys_io_uring_enter+0x344/0x15d0
->>> [ 1549.154499]  system_call_exception+0x354/0x400
->>> [ 1549.154569]  system_call_vectored_common+0x15c/0x2ec
->>> [ 1549.154651]
->>> [ 1549.154685] write to 0xc0000000080c2e98 of 8 bytes by task 3667 on cpu 32:
->>> [ 1549.154757]  dd_insert_requests+0x81c/0xac0
->>> [ 1549.154825]  blk_mq_flush_plug_list+0x8ec/0xea0
->>> [ 1549.154902]  __blk_flush_plug+0x2bc/0x360
->>> [ 1549.154968]  blk_finish_plug+0x60/0xa0
->>> [ 1549.155034]  __iomap_dio_rw+0xd28/0x1140
->>> [ 1549.155100]  iomap_dio_rw+0x80/0xf0
->>> [ 1549.155166]  ext4_file_write_iter+0x9f8/0xff0 [ext4]
->>> [ 1549.155563]  io_write+0x4bc/0x900
->>> [ 1549.155606]  io_issue_sqe+0x12c/0x5f0
->>> [ 1549.155648]  io_wq_submit_work+0x2e4/0x490
->>> [ 1549.155692]  io_worker_handle_work+0xbac/0x1020
->>> [ 1549.155745]  io_wq_worker+0x224/0x7b0
->>> [ 1549.155792]  ret_from_kernel_user_thread+0x14/0x1c
->>> [ 1549.155841]
->>> [ 1549.155864] Reported by Kernel Concurrency Sanitizer on:
->>> [ 1549.155904] CPU: 32 PID: 3667 Comm: iou-wrk-3372 Not tainted 6.6.0+ #10
->>> [ 1549.155961] Hardware name: IBM pSeries (emulated by qemu) POWER9 (raw)
->>> 0x4e1202 0xf000005 of:SLOF,HEAD hv:linux,kvm pSeries
->>> [ 1549.156032]
->>> ==================================================================
->>> 
->>> Notably, the io_write calls are in the chain, and there were exactly
->>> two of these races and two test failures in the this test run.
->>> 
->>> io_write+0x4bc seems to be WRITE_ONCE(list->first, last->next) in wq_list_cut.
->> 
->> The above race is would just cause hung IO in the IO scheduler, it would
->> not lead to corruption. The io_write() call would be call_write_iter(),
->> not sure where you get the other one from?
->> 
->> In any case, when I ran this test case last time, I just used /dev/shm/
->> as the backing store and it still hit. Not io scheduler would be
->> involved there.
-> 
-> Fair enough.  Was grasping at straws a bit that night.
-> 
-> Quick update on-list, it seems MariaDB uses io_uring for write then tries to go
-> back and do a standard synchronous read.  The data is valid on-disk at some
-> point after the read (i.e. after the process exits, the data is confirmed valid
-> on-disk), but the read itself returns corrupt / stale / garbage data.  MariaDB
-> is the only application I've seen that tries to mix io_uring and standard I/O
-> operations on the same file, and this may be playing into the issues observed.
-> 
-> Investigation continues...
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Unfortunately I got led down a rabbit hole here.  With the tests I was running, MariaDB writes the encrypted data separately from the normal un-encrypted page header and checksums, and the internal encrpyted data on disk was corrupt while the outer page checksum was still valid.
+--s2I+/k1Zs5883t/R
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I have since switched to the main.xa_prepared_binlog_off test, which shows the corruption more easily in the on-disk format.  We are still apparently dealing with a write path issue, which makes more sense given the nature of the corruption observed on production systems.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVCHIwAKCRD2uYlJVVFO
+o1C6AQDlKGAkcGaVxy0c5H1ovsqFXdHGTT4NVcwTJq2pqYUpSAEAt24YTIMusu1F
+WqCYebMxUlaIu8wUMf6V3MoVhArLlAc=
+=TbX2
+-----END PGP SIGNATURE-----
+
+--s2I+/k1Zs5883t/R--
