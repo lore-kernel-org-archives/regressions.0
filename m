@@ -1,98 +1,78 @@
-Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9BD749D
-	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 18:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thesusis.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thesusis.net
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by vps.thesusis.net (Postfix, from userid 1000)
-	id A1719148909; Sun, 12 Nov 2023 13:42:02 -0500 (EST)
-From: Phillip Susi <phill@thesusis.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Luben Tuikov
- <luben.tuikov@amd.com>, Alex Deucher <alexander.deucher@amd.com>,
- Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Linux DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux AMDGPU
- <amd-gfx@lists.freedesktop.org>, Linux Regressions
- <regressions@lists.linux.dev>
-Subject: Re: Radeon regression in 6.6 kernel
-In-Reply-To: <ZVCzCrkdRJy9AHd2@archie.me>
-References: <87edgv4x3i.fsf@vps.thesusis.net> <ZVCzCrkdRJy9AHd2@archie.me>
-Date: Sun, 12 Nov 2023 13:42:02 -0500
-Message-ID: <87fs1addad.fsf@vps.thesusis.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5A71641A
+	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 18:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="boDtVr/4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF821C433C7;
+	Sun, 12 Nov 2023 18:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699815272;
+	bh=PNhN219Fj+4DlAZyh19H0dvERmW5Z2p5dY8szFMpfb8=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=boDtVr/400yhic97q5aMnlM0U99c3H86Dd2OH54C1W/cA/2U6J+kPlCFjg1dMV+sz
+	 qWwLo4oz8Y7PKkuXMQ46xm+tiKIbPZ+zu5sIHc/vEg36NK5pbfuBrerH3gvk6yXE0v
+	 J3M1kgYV63gjrNQbteimy6ft4+8AWkPxYEldlbfj7jkxpr+ZQYLQ3sPyITCfMfpk03
+	 Uk7tQed4TV4nlL5gpJa5ja7KlvDtqDFFR770rGbbb28xVIbSCzl/nET5elBzW1Hn5Y
+	 WKg8SdzTxDF9WR17jGVwW5uzXSCBh2naFi/QKXu/k20BEVTtX94JeSpK+tmAZURiON
+	 A6J64Ojm3AQaA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,  Linux Wireless
+ <linux-wireless@vger.kernel.org>,  pagadala.yesu.anjaneyulu@intel.com,
+  gregory.greenman@intel.com,  Linux Regressions
+ <regressions@lists.linux.dev>,  Johannes Berg <johannes@sipsolutions.net>,
+  Bagas Sanjaya <bagasdotme@gmail.com>,  Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>,  =?utf-8?Q?Nikl=C4=81vs_Ko=C4=BCes?=
+ =?utf-8?Q?=C5=86ikovs?=
+ <pinkflames.linux@gmail.com>,  Damian Tometzki <damian@riscv-rocks.de>
+Subject: Re: [PATCH v4] wifi: iwlwifi: fix system commands group ordering
+References: <20231112095943.19353-1-emmanuel.grumbach@intel.com>
+	<20231112143620.36619-1-emmanuel.grumbach@intel.com>
+Date: Sun, 12 Nov 2023 20:54:27 +0200
+In-Reply-To: <20231112143620.36619-1-emmanuel.grumbach@intel.com> (Emmanuel
+	Grumbach's message of "Sun, 12 Nov 2023 16:36:20 +0200")
+Message-ID: <875y26ajks.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
---=-=-=
-Content-Type: text/plain
+Emmanuel Grumbach <emmanuel.grumbach@intel.com> writes:
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+> From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+>
+> The commands should be sorted inside the group definition.
+> Fix the ordering so we won't get following warning:
+> WARN_ON(iwl_cmd_groups_verify_sorted(trans_cfg))
+>
+> Link: https://lore.kernel.org/regressions/2fa930bb-54dd-4942-a88d-05a47c8=
+e9731@gmail.com/
+> Link: https://lore.kernel.org/linux-wireless/CAHk-=3Dwix6kqQ5vHZXjOPpZBfM=
+7mMm9bBZxi2Jh7XnaKCqVf94w@mail.gmail.com/
+> Fixes: b6e3d1ba4fcf ("wifi: iwlwifi: mvm: implement new firmware API for =
+statistics")
+> Tested-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@gmail.com>
+> Tested-by: Damian Tometzki <damian@riscv-rocks.de>
+> Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-> Please show the full bisect log, and also tell why these commits are
-> skipped.
+Linus, I suspect it will take a while before we make a new wireless pull
+request (there's currently just one commit in the wireless tree). So if
+you want to take this directly to your tree please go ahead, otherwise
+you get it via the normal route in a week or two. Just let us know what
+you prefer.
 
-Two of them would not compile and one would not boot.
+Acked-by: Kalle Valo <kvalo@kernel.org>
 
-Here's the log.
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-
---=-=-=
-Content-Type: text/plain
-Content-Disposition: inline; filename=BISECT_LOG
-Content-Description: BISECT_LOG
-
-# bad: [4bbdb725a36b0d235f3b832bd0c1e885f0442d9f] Merge tag 'iommu-updates-v6.7' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu
-# good: [94f6f0550c625fab1f373bb86a6669b45e9748b3] Linux 6.6-rc5
-git bisect start 'HEAD' 'v6.6-rc5'
-# good: [8bc9e6515183935fa0cccaf67455c439afe4982b] Merge tag 'devicetree-for-6.7' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
-git bisect good 8bc9e6515183935fa0cccaf67455c439afe4982b
-# bad: [431f1051884e38d2a5751e4731d69b2ff289ee56] Merge tag 'leds-next-6.7' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds
-git bisect bad 431f1051884e38d2a5751e4731d69b2ff289ee56
-# bad: [0364249d2073c32c5214f02866999ce940bc35a2] Merge tag 'for-6.7/dm-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm
-git bisect bad 0364249d2073c32c5214f02866999ce940bc35a2
-# good: [27442758e9b4e083bef3f164a1739475c01f3202] Merge tag 'amd-drm-next-6.7-2023-10-13' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
-git bisect good 27442758e9b4e083bef3f164a1739475c01f3202
-# bad: [631808095a82e6b6f8410a95f8b12b8d0d38b161] Merge tag 'amd-drm-next-6.7-2023-10-27' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
-git bisect bad 631808095a82e6b6f8410a95f8b12b8d0d38b161
-# skip: [0ecf4aa32b7896b9160688bdbd20153dc06a50fb] Merge tag 'amd-drm-next-6.7-2023-10-20' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
-git bisect skip 0ecf4aa32b7896b9160688bdbd20153dc06a50fb
-# good: [74ce0f3873821f12391bcf5469d81583d34f4c6c] accel/ivpu: Fix verbose version of REG_POLL macros
-git bisect good 74ce0f3873821f12391bcf5469d81583d34f4c6c
-# skip: [3f5ba636d6987ddffeaa056dea1c524da63912f3] Merge tag 'drm-msm-next-2023-10-17' of https://gitlab.freedesktop.org/drm/msm into drm-next
-git bisect skip 3f5ba636d6987ddffeaa056dea1c524da63912f3
-# good: [a3cd664e7f971b0f33acb3ba790c142669cd34e5] accel/ivpu: Print IPC type string instead of number
-git bisect good a3cd664e7f971b0f33acb3ba790c142669cd34e5
-# good: [b0b0d811eac6b4c52cb9ad632fa6384cf48869e7] drm/mediatek: Fix coverity issue with unintentional integer overflow
-git bisect good b0b0d811eac6b4c52cb9ad632fa6384cf48869e7
-# good: [808b43fa7e56e94563b86af2703ba88ee156e3c2] drm/i915/dp_mst: Set connector DSC capabilities and decompression AUX
-git bisect good 808b43fa7e56e94563b86af2703ba88ee156e3c2
-# skip: [11ae5eb516b656e8a0e4efbea90ea24c152a346d] Merge tag 'topic/vmemdup-user-array-2023-10-24-1' of git://anongit.freedesktop.org/drm/drm into drm-next
-git bisect skip 11ae5eb516b656e8a0e4efbea90ea24c152a346d
-# good: [a67f7a0b18c09d5b62eafb6d5c2f54e6f6ea6cf1] drm/amd/display: Update SDP VSC colorimetry from DP test automation request
-git bisect good a67f7a0b18c09d5b62eafb6d5c2f54e6f6ea6cf1
-# good: [dd3dd9829bf9a4ecd55482050745efdd9f7f97fc] drm/amdgpu: Remove unused variables from amdgpu_show_fdinfo
-git bisect good dd3dd9829bf9a4ecd55482050745efdd9f7f97fc
-# good: [b1abb484417ec8edd68df0c9bf8cb1c1fc035fd2] drm/ci: force-enable CONFIG_MSM_MMCC_8996 as built-in
-git bisect good b1abb484417ec8edd68df0c9bf8cb1c1fc035fd2
-# good: [5fa8f128462c5b3b20576b12286dca7fe95b3af1] drm/ci: increase i915 job timeout to 1h30m
-git bisect good 5fa8f128462c5b3b20576b12286dca7fe95b3af1
-# good: [3ddba96b0d7e714dee4db5aed4f7d413be43b4ba] MAINTAINERS: drm/ci: add entries for xfail files
-git bisect good 3ddba96b0d7e714dee4db5aed4f7d413be43b4ba
-# bad: [b70438004a14f4d0f9890b3297cd66248728546c] drm/amdgpu: move buffer funcs setting up a level
-git bisect bad b70438004a14f4d0f9890b3297cd66248728546c
-# skip: [56e449603f0ac580700621a356d35d5716a62ce5] drm/sched: Convert the GPU scheduler to variable number of run-queues
-git bisect skip 56e449603f0ac580700621a356d35d5716a62ce5
-# skip: [c07bf1636f0005f9eb7956404490672286ea59d3] MAINTAINERS: Update the GPU Scheduler email
-git bisect skip c07bf1636f0005f9eb7956404490672286ea59d3
-# only skipped commits left to test
-# possible first bad commit: [b70438004a14f4d0f9890b3297cd66248728546c] drm/amdgpu: move buffer funcs setting up a level
-# possible first bad commit: [c07bf1636f0005f9eb7956404490672286ea59d3] MAINTAINERS: Update the GPU Scheduler email
-# possible first bad commit: [56e449603f0ac580700621a356d35d5716a62ce5] drm/sched: Convert the GPU scheduler to variable number of run-queues
-
---=-=-=--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
