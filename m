@@ -1,115 +1,104 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFE018048
-	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 20:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD631775F
+	for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 20:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKhAgIa4"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-9e2838bcb5eso562592766b.0
-        for <regressions@lists.linux.dev>; Sun, 12 Nov 2023 12:02:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699819327; x=1700424127; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hHzinFDvhQfCEmbllZpgf+nGVEeFpAyDqoTWQyqM2UU=;
-        b=eKhAgIa4AFO+r14XYTPqmd1OcmE7mUe/SeNKXBRUjEU6h1PqxeqJLTxXl7GIHAczyu
-         U4mNqf6t8Oh8NYua8iihkQNbfBAN57cnhSrql5cHTB2uP5syHp5Goi9UjLLRoISOX09h
-         kGr1+6uBt+LUxyeuZ45rr/vbA8RqS3nNN7OEpqp83Jr8nuPATRDYDjyxcQZX8JBjeZJv
-         Yt4LpEcCARSkfvkxoErPcLmV7CAO54e/d49lGJfIer0LTQLU9Ewx6mpLrtWo5YXGdaJd
-         5un8gvHlp728lhFZTDVMyUKRuUpwxkSCJIe0dG0Jl3RLeUHUsO8pkuNwRlqT9w1PZNiA
-         J4dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699819327; x=1700424127;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hHzinFDvhQfCEmbllZpgf+nGVEeFpAyDqoTWQyqM2UU=;
-        b=OXqqs6nBmfRAj+vo4wdRomNMySZUQoemBiXm+2eYEhHdAb75L65KnmaOeZFVupIbxa
-         XdNceKsoWYc44zSUPoFXJefv4WKHk4LEpF8n7Zq1J+5tmAspAQEVyKQMxCefoBHACAvu
-         YCG9lt8FMG0lPkqTeg98nJA8ak0OO7g62cwG3w9RaSi4aH9BEbF+bg9obyAL17TSUhuB
-         3B0qa7tF+NPDs5IlB6RKg5v43L90PdrbZuGPQ5KxiUAr6ri7Pfbh6Guv8TruEU83iKmk
-         tCQDeIURWiGJMSO3ZKmOsI4Q2osNPY9kGwsQFzzPU4/pfOeuhwdlo+rAQZojV1O9XZUs
-         rn+A==
-X-Gm-Message-State: AOJu0YzK+LBA2Uepn0ALh4QroUbsaVwclbg08Mys/QVZ7oY+VUX2Us15
-	nN56ONBGxnbMMQxNBV40f19DHN5x182F6G3Dzak=
-X-Google-Smtp-Source: AGHT+IGu7e1kyFwejfvWrFdXehMYNQxqtHwD6vcn7TMv2clCGO8Vb1mOj9rGFsW8VnRyo6XRqLWIKyvtRt2ievk4s7U=
-X-Received: by 2002:a17:906:b817:b0:9e6:59d5:7aa6 with SMTP id
- dv23-20020a170906b81700b009e659d57aa6mr3430166ejb.64.1699819325900; Sun, 12
- Nov 2023 12:02:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U1GHCeTD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1699821392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XB27vvNlE5JoGUSZp+feCASAqXEyzXmaur0aYywviWM=;
+	b=U1GHCeTDIH4exKkPUU5eqjplsiNemU9ZZSUO46BJwjYBt43+emwpt7pAd3BGcssXOYJCeV
+	gGva8UTZABfZpYLGzRcoYhtN73WLN43Ad0EhExSUNIi3mWNLeYRQzDN1ak9kLYxJIiTZky
+	d5vsOqJi9esYr367ZEHgWWl2owxdOvU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-64-sOyc76nsMvOUfrp2PlvT0w-1; Sun, 12 Nov 2023 15:36:31 -0500
+X-MC-Unique: sOyc76nsMvOUfrp2PlvT0w-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C1314811E7E;
+	Sun, 12 Nov 2023 20:36:30 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.51])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C4D95492BE0;
+	Sun, 12 Nov 2023 20:36:29 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	"Owen T . Heisler" <writer@owenh.net>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	linux-acpi@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] ACPI: PM: Add acpi_device_fix_up_power_children() function
+Date: Sun, 12 Nov 2023 21:36:26 +0100
+Message-ID: <20231112203627.34059-2-hdegoede@redhat.com>
+In-Reply-To: <20231112203627.34059-1-hdegoede@redhat.com>
+References: <20231112203627.34059-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231112095943.19353-1-emmanuel.grumbach@intel.com>
- <20231112143620.36619-1-emmanuel.grumbach@intel.com> <875y26ajks.fsf@kernel.org>
- <CAHk-=wgyG-8ehCc4C4V-b-8rBtfyd9ApDeQSx-5BKRaHywhVpw@mail.gmail.com> <CANUX_P0kDV6PC5=+oxgnVetMR+kERqCMsVju22mBqcW5bED8sA@mail.gmail.com>
-In-Reply-To: <CANUX_P0kDV6PC5=+oxgnVetMR+kERqCMsVju22mBqcW5bED8sA@mail.gmail.com>
-From: Emmanuel Grumbach <egrumbach@gmail.com>
-Date: Sun, 12 Nov 2023 22:01:54 +0200
-Message-ID: <CANUX_P31JV2QDm=puUyNhJxArB5UGW2aBnwp-YMVnu_xfDjMHg@mail.gmail.com>
-Subject: Re: [PATCH v4] wifi: iwlwifi: fix system commands group ordering
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>, 
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
-	Gregory Greenman <gregory.greenman@intel.com>, 
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>, 
-	Linux Wireless <linux-wireless@vger.kernel.org>, pagadala.yesu.anjaneyulu@intel.com, 
-	Linux Regressions <regressions@lists.linux.dev>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	=?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>, 
-	Damian Tometzki <damian@riscv-rocks.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
->
-> >
-> > However, now that I don't have that big warning in there, I do note
-> > another iwlwifi issue that is new to this meger window:
-> >
-> >   debugfs: Directory 'iwlmvm' with parent 'netdev:wlo2' already present!
-> >   iwlwifi 0000:45:00.0: Failed to create debugfs directory under netdev:wlo2
-> >   debugfs: Directory 'iwlmvm' with parent 'netdev:wlo2' already present!
-> >   iwlwifi 0000:45:00.0: Failed to create debugfs directory under netdev:wlo2
-> >
-> > and looking at my system logs, this is new.
-> >
-> > It looks like it is probably due to
-> >
-> >   c36235acb34f ("wifi: iwlwifi: mvm: rework debugfs handling")
-> >   e9dd25550770 ("wifi: iwlwifi: mvm: add a per-link debugfs")
-> >
-> > but that's just from looking at the patches (ie no bisection or any
-> > real effort).
->
-> Don't bother, we'll take a look.
+In some cases it is necessary to fix-up the power-state of an ACPI
+device's children without touching the ACPI device itself add
+a new acpi_device_fix_up_power_children() function for this.
 
-Miri sent me fixes that we have in our internal tree that have not yet
-been published.
-The fixes were made during the merge window.
-I can send them here, but I think I'd prefer to let those patches go
-through the regular
-pipes. Also, I'd prefer the people who usually interact with the trees
-handle that. Gregory
-was OOO today and that's why I chimed in. Miri is still ramping up.
-If it's really urgent, I can send the fixes though.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/device_pm.c | 13 +++++++++++++
+ include/acpi/acpi_bus.h  |  1 +
+ 2 files changed, 14 insertions(+)
 
->
-> >
-> > This is after the system has come up, so I assume it's when
-> > networkmanager or whatever actually is setting that wireless thing up.
->
-> Most likely the network-manager brings the device up several times or something
-> like that, but let's not blame them before we check what happens internally.
->
-> >
-> > Again: I actually don't *use* the WiFi on this machine - but from a
-> > quick check it does seem to work. So this is just an annoyance and a
-> > sign that somebody didn't do all the details right (possibly triggered
-> > by odd user land behavior, of course, but still...)
-> >
->
-> Oh, we know the rules :)
->
-> >                 Linus
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index f007116a8427..3b4d048c4941 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -397,6 +397,19 @@ void acpi_device_fix_up_power_extended(struct acpi_device *adev)
+ }
+ EXPORT_SYMBOL_GPL(acpi_device_fix_up_power_extended);
+ 
++/**
++ * acpi_device_fix_up_power_children - Force a device's children into D0.
++ * @adev: Parent device object whose children's power state is to be fixed up.
++ *
++ * Call acpi_device_fix_up_power() for @adev's children so long as they
++ * are reported as present and enabled.
++ */
++void acpi_device_fix_up_power_children(struct acpi_device *adev)
++{
++	acpi_dev_for_each_child(adev, fix_up_power_if_applicable, NULL);
++}
++EXPORT_SYMBOL_GPL(acpi_device_fix_up_power_children);
++
+ int acpi_device_update_power(struct acpi_device *device, int *state_p)
+ {
+ 	int state;
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index 254685085c82..0b7eab0ef7d7 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -539,6 +539,7 @@ int acpi_device_set_power(struct acpi_device *device, int state);
+ int acpi_bus_init_power(struct acpi_device *device);
+ int acpi_device_fix_up_power(struct acpi_device *device);
+ void acpi_device_fix_up_power_extended(struct acpi_device *adev);
++void acpi_device_fix_up_power_children(struct acpi_device *adev);
+ int acpi_bus_update_power(acpi_handle handle, int *state_p);
+ int acpi_device_update_power(struct acpi_device *device, int *state_p);
+ bool acpi_bus_power_manageable(acpi_handle handle);
+-- 
+2.41.0
+
