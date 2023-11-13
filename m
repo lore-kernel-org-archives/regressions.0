@@ -1,125 +1,85 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED87DEECE
-	for <regressions@lists.linux.dev>; Mon, 13 Nov 2023 16:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEF321119
+	for <regressions@lists.linux.dev>; Mon, 13 Nov 2023 16:37:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="H3z8GcPd"
-Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
-	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 01B3B301BEA
-	for <regressions@lists.linux.dev>; Mon, 13 Nov 2023 16:11:12 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail2.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 78D5C9C0061;
-	Mon, 13 Nov 2023 16:11:01 +0000 (UTC)
-Received: from [192.168.1.115] (unknown [98.97.112.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id 4A04013C2B0;
-	Mon, 13 Nov 2023 08:10:51 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 4A04013C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1699891858;
-	bh=C7CapxtBMMZZdzsCXVqlwHkDLQnyVPV1jyGOMx+Q46Y=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-	b=H3z8GcPdWIVHyGUfnp50D7zIQoJbL1tKvU0vfGHdJnpX5Ygk4IwIOOFaBQurgxRYi
-	 MPw+Y3bsiiHI+WEkuvUr9GWyf+mqWLea+oOE/VaepkQ4jwvGyCzhMDtfGQb2Om8jmL
-	 RtY+HYT6kCLTS1VhyXElDola79NFdAW+LmkpyqwU=
-Subject: Re: [PATCH v4] wifi: iwlwifi: fix system commands group ordering
-To: Emmanuel Grumbach <egrumbach@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
- Miri Korenblit <miriam.rachel.korenblit@intel.com>,
- Gregory Greenman <gregory.greenman@intel.com>,
- Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
- Linux Wireless <linux-wireless@vger.kernel.org>,
- pagadala.yesu.anjaneyulu@intel.com,
- Linux Regressions <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Damian Tometzki <damian@riscv-rocks.de>
-References: <20231112095943.19353-1-emmanuel.grumbach@intel.com>
- <20231112143620.36619-1-emmanuel.grumbach@intel.com>
- <875y26ajks.fsf@kernel.org>
- <CAHk-=wgyG-8ehCc4C4V-b-8rBtfyd9ApDeQSx-5BKRaHywhVpw@mail.gmail.com>
- <CANUX_P0kDV6PC5=+oxgnVetMR+kERqCMsVju22mBqcW5bED8sA@mail.gmail.com>
-From: Ben Greear <greearb@candelatech.com>
-Organization: Candela Technologies
-Message-ID: <b2008f61-dd71-6a17-bea9-89ba51904a72@candelatech.com>
-Date: Mon, 13 Nov 2023 08:10:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuVtMTkK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C187DC433C8;
+	Mon, 13 Nov 2023 16:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699893447;
+	bh=MS6OK3Y9zr6NroPi54QBhTFjm/3rXWVuwNhqgxT80rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NuVtMTkKIcxY12QgKlUgvvEIdmu5R03mehE2D8ykODRAe6jpXB/Wbe7/QiWZQoJOS
+	 FcC6WqWPeyzM50wqIQHxoc+GlMx7wFRld2aIALSOQen2w2c9ggQP3dWt52apcaon0F
+	 Lnb4g+aU6CFOG+AUv7rCIxY1WlhzzZlSNahodRl+5rz9NzLAbdEbCPAN1TwXffnteP
+	 Pm+IWB3o3uuub9xYtN1tCfR9HkjtR6F6ZtIk3sEc8Q6HXp+ElDOV2LY9Hfs6phMSqP
+	 sNptxw2Fsxiv3j3fir6sqZnrCh2tVgAdLZ2S9UOejaG2rBtAabf/+Z26TLwgmHKbfB
+	 mxwAFobtfX8tg==
+Date: Mon, 13 Nov 2023 11:37:25 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Jocelyn Falempe <jfalempe@redhat.com>, Keno Fischer <keno@juliahub.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+	airlied@redhat.com, dri-devel@lists.freedesktop.org,
+	regressions@lists.linux.dev
+Subject: Re: Incomplete stable drm/ast backport - screen freeze on boot
+Message-ID: <ZVJQxS6h_K73fMfQ@sashalap>
+References: <CABV8kRwx=92ntPW155ef=72z6gtS_NPQ9bRD=R1q_hx1p7wy=g@mail.gmail.com>
+ <32a25774-440c-4de3-8836-01d46718b4f8@redhat.com>
+ <9dc39636-ff41-44d7-96cb-f954008bfc9d@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CANUX_P0kDV6PC5=+oxgnVetMR+kERqCMsVju22mBqcW5bED8sA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-MW
-Content-Transfer-Encoding: 8bit
-X-MDID: 1699891863-BrwEj1L2TOuR
-X-MDID-O:
- us5;at1;1699891863;BrwEj1L2TOuR;<greearb@candelatech.com>;3dd19b123b29985d5fd746a2b0eecbd6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <9dc39636-ff41-44d7-96cb-f954008bfc9d@suse.de>
 
-On 11/12/23 11:53 AM, Emmanuel Grumbach wrote:
-> On Sun, Nov 12, 2023 at 9:39 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> On Sun, 12 Nov 2023 at 10:54, Kalle Valo <kvalo@kernel.org> wrote:
+On Mon, Nov 13, 2023 at 10:49:01AM +0100, Thomas Zimmermann wrote:
+>(cc: gregkh)
+>
+>Hi Jocelyn
+>
+>Am 13.11.23 um 10:36 schrieb Jocelyn Falempe:
+>>On 13/11/2023 09:34, Keno Fischer wrote:
+>>>Greetings,
 >>>
->>> Linus, I suspect it will take a while before we make a new wireless pull
->>> request (there's currently just one commit in the wireless tree). So if
->>> you want to take this directly to your tree please go ahead, otherwise
->>> you get it via the normal route in a week or two. Just let us know what
->>> you prefer.
+>>>When connected to a remote machine via the BMC KVM functionality,
+>>>I am experiencing screen freezes on boot when using 6.5 stable,
+>>>but not master.
 >>>
->>> Acked-by: Kalle Valo <kvalo@kernel.org>
+>>>The BMC on the machine in question is an ASpeed AST2600.
+>>>A quick bisect shows the problematic commit to be 2fb9667
+>>>("drm/ast: report connection status on Display Port.").
+>>>This is commit f81bb0ac upstream.
+>>>
+>>>I believe the problem is that the previous commit in the series
+>>>e329cb5 ("drm/ast: Add BMC virtual connector")
+>>>was not backported to the stable branch.
+>>>As a consequence, it appears that the more accurate DP state detection
+>>>is causing the kernel to believe that no display is connected,
+>>>even when the BMC's virtual display is in fact in use.
+>>>A cherry-pick of e329cb5 onto the stable branch resolves the issue.
 >>
->> Ok, I just tested it in my private tree, and it fixes the WARN_ON() as
->> expected, so I'll apply it for real.
-> 
-> Good to know - thanks.
-> 
+>>Yes, you're right this two patches must be backported together.
 >>
->> However, now that I don't have that big warning in there, I do note
->> another iwlwifi issue that is new to this meger window:
+>>I'm sorry I didn't pay enough attention, that only one of the two 
+>>was picked up for the stable branch.
 >>
->>    debugfs: Directory 'iwlmvm' with parent 'netdev:wlo2' already present!
->>    iwlwifi 0000:45:00.0: Failed to create debugfs directory under netdev:wlo2
->>    debugfs: Directory 'iwlmvm' with parent 'netdev:wlo2' already present!
->>    iwlwifi 0000:45:00.0: Failed to create debugfs directory under netdev:wlo2
->>
->> and looking at my system logs, this is new.
->>
->> It looks like it is probably due to
->>
->>    c36235acb34f ("wifi: iwlwifi: mvm: rework debugfs handling")
->>    e9dd25550770 ("wifi: iwlwifi: mvm: add a per-link debugfs")
->>
->> but that's just from looking at the patches (ie no bisection or any
->> real effort).
-> 
-> Don't bother, we'll take a look.
-> 
->>
->> This is after the system has come up, so I assume it's when
->> networkmanager or whatever actually is setting that wireless thing up.
-> 
-> Most likely the network-manager brings the device up several times or something
-> like that, but let's not blame them before we check what happens internally.
+>>Is it possible to backport e329cb5 to the stable branch, or should I 
+>>push it to drm-misc-fixes ?
+>
+>I think stable, which is in cc, will pick up commit e329cb5 
+>semi-automatically now. Otherwise, maybe ping gregkh in a few days 
+>about it.
 
-The debugfs warnings are seen all of my systems, no network manager for me, but
-I am bringing stations up and down a lot.
-
-Thanks,
-Ben
-
-
+I thikn it would be more appropriate to revert 2fb9667, as e329cb5
+doesn't look like -stable material. I'll go ahead and do that.
 
 -- 
-Ben Greear <greearb@candelatech.com>
-Candela Technologies Inc  http://www.candelatech.com
+Thanks,
+Sasha
