@@ -1,68 +1,68 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9793FE48
-	for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 13:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78140405CE
+	for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 13:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r2tV1-0005lF-JY; Tue, 14 Nov 2023 14:30:39 +0100
-Message-ID: <0442b8d1-f01c-4ac4-97ca-d69d76eca25f@leemhuis.info>
-Date: Tue, 14 Nov 2023 14:30:38 +0100
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3090BC433C7;
+	Tue, 14 Nov 2023 13:55:30 +0000 (UTC)
+Date: Tue, 14 Nov 2023 08:55:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Milian
+ Wolff <milian.wolff@kdab.com>, akaher@vmware.com,
+ akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, mark.rutland@arm.com, mhiramat@kernel.org
+Subject: Re: NULL pointer dereference regression when running `chmod -R
+ root:tracing /sys/kernel/debug/tracing`
+Message-ID: <20231114085529.77099439@rorschach.local.home>
+In-Reply-To: <2053f011-3c85-41e2-8685-1f46a2bc5fb8@leemhuis.info>
+References: <20231105160139.660634360@goodmis.org>
+	<20231112104158.6638-1-milian.wolff@kdab.com>
+	<2053f011-3c85-41e2-8685-1f46a2bc5fb8@leemhuis.info>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL v2] Networking for 6.7
-Content-Language: en-US, de-DE
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231028011741.2400327-1-kuba@kernel.org>
- <20231031210948.2651866-1-kuba@kernel.org>
- <20231109154934.4saimljtqx625l3v@box.shutemov.name>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20231109154934.4saimljtqx625l3v@box.shutemov.name>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1699968647;beef9a57;
-X-HE-SMSGID: 1r2tV1-0005lF-JY
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+On Tue, 14 Nov 2023 14:38:57 +0100
+"Linux regression tracking #adding (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
 
-On 09.11.23 16:49, Kirill A. Shutemov wrote:
-> On Tue, Oct 31, 2023 at 02:09:48PM -0700, Jakub Kicinski wrote:
->>       bpf: Add support for non-fix-size percpu mem allocation
+> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> regressions; the text you find below is based on a few templates
+> paragraphs you might have encountered already in similar form.
+> See link in footer if these mails annoy you.]
 > 
-> Recent changes in BPF increased per-CPU memory consumption a lot.
+> On 12.11.23 11:41, Milian Wolff wrote:
+> > 
+> > this patch seems to have introduced a kernel bug causing
+> > a NULL pointer dereference when one runs:
+> > 
+> >     sudo chown -R root:tracing /sys/kernel/debug/tracing/
+> > 
+> > See the archlinux bug report I created initially for some more information:
+> > https://bugs.archlinux.org/task/80230
+> > 
+> > With 6.6.1 and 9aaee3eebc91dd9ccebf6b6bc8a5f59d04ef718b reverted,
+> > the above `chmod` command works. With a normal 6.6.1 build, or re-applying
+> > the patch again, the command fails and `dmesg` shows:  
 > 
-> On virtual machine with 288 CPUs, per-CPU consumtion increased from 111 MB
-> to 969 MB, or 8.7x.
-> 
-> I've bisected it to the commit 41a5db8d8161 ("bpf: Add support for
-> non-fix-size percpu mem allocation"), which part of the pull request.
+> Steven is already working on this, but to ensure the issue doesn't fall
+> through the cracks unnoticed, I'm adding it to regzbot, the Linux kernel
+> regression tracking bot (and from the context I assume it happens in
+> mainline as well)
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Note, the code in question was rewritten in 6.7 and the bug does not
+exist there. It only exists in 6.6 and I already sent Greg the patch,
+and he told me that it's in his queue.
 
-#regzbot ^introduced 41a5db8d8161
-#regzbot title bpf: recent changes in BPF increased per-CPU memory
-consumption a lot.
-#regzbot monitor:
-https://lore.kernel.org/all/20231110172050.2235758-1-yonghong.song@linux.dev/
-#regzbot fix: bpf: Do not allocate percpu memory at init stage
-#regzbot ignore-activity
+It's only a regression in 6.6 and not in mainline.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+-- Steve
+
