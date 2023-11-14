@@ -1,55 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F84C1FAF
-	for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 08:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069423FB34
+	for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 13:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P820N7b/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699952158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U2eptL0/hRZAJ5UVmQrsn8paC3yYwq6Vrl06QgAw1qU=;
-	b=P820N7b/ffULunS0DhYiwscCj6WdLma7Ma8bCfkBFqjA0kO5oTeVd0HXZeEq1J+D2lt/6v
-	gsUgmZ5Wgc4IZJ0MQ50uBDK6lcqHnMy7FfAA27UH/61b0e8T9Q27A9+ZflZSeSusAgYGRC
-	Ur70eDdMvCJ5EsvmFV+foLb7xxNXdDE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-XCDkv6zzO1KzweoPKbiB3Q-1; Tue, 14 Nov 2023 03:55:56 -0500
-X-MC-Unique: XCDkv6zzO1KzweoPKbiB3Q-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-408534c3ec7so35210435e9.1
-        for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 00:55:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="HGRRvyR9"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-41e1967550aso5126601cf.1
+        for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 05:17:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1699967844; x=1700572644; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WWf2LpjcFSXW72E4pOe5efNJznN6LtGXmi4Aaa/gvxg=;
+        b=HGRRvyR9UhBoEwtnzR218EbXd8oDHBhdsvk6E6vhs3ZVdmkVSazn6pdkqz4p+//Cj2
+         rfyQfZbDZLWUOko0fLAgwKRhSCZvm9HDdNOVop3GJ20U00we5NL0wTjXl5P28ZUswcyz
+         n+PHeJd2vyHRRDfRPlc9YSQYVS+wJ8/ZkV5Rr8yvCIzxn4EihgcFVW7cQrBIrRb0q0VM
+         hI87F5ouIYiO8ff0+qhDZkqG15z9IRtruW/mr6ZUJQyJs14SIrCCPVo5SJYqnCsmsx12
+         z37V/7BiyNGLPP8vrd0BfrJGmK8FPTaqWd6vYjD6bqXhhbn2eshGh1QJjq+xfkbNXWk1
+         ZSBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699952155; x=1700556955;
+        d=1e100.net; s=20230601; t=1699967844; x=1700572644;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2eptL0/hRZAJ5UVmQrsn8paC3yYwq6Vrl06QgAw1qU=;
-        b=i9fWJr33kGPPKTjGwwmlpqB4Q9hB6JbcfIYG/hWzK9Zk35sZ5u1RdxUEKEVlWGmVe6
-         KekjCYdbgKu4OKbNNNUaaU6ek7iH9A7QzOvU5lAv2NhkJEXiowL096lqn36CXrRa40jv
-         rrEIPHLICsJJJin0TubswSWBvWCrUS4QZT6qoD+3IGJ3Zr+dlFZErPlhoduDn67Ugpes
-         5GqMeVI56ZxYJlbQH6PCV7CcJlcYv6tY51quEoXXF9TCQs1r9iDEDVndk3H/lQQaWIqb
-         lVdK6j1tz8nhnx2zW6ApOsFe8bftpRxdTUdCMUxkMVcrlEsMXrwCkhxd8zJPqx+NI/W1
-         S/Kg==
-X-Gm-Message-State: AOJu0YyDu4+naI3OF/WaqoDund/7yfP0Xr/G/XZM25EgWiZ+WyD7ilQ0
-	a3MHYdApqNAYLUAYWY2EQ3LNlVKvilfKU4juT8g6mDrRiAapLwfg0K8MU6+drNSNkt5PETB9BaN
-	30kgj+GELXA2/HpmbeEfmLcc=
-X-Received: by 2002:a05:600c:4689:b0:406:53f1:d629 with SMTP id p9-20020a05600c468900b0040653f1d629mr7066889wmo.5.1699952155649;
-        Tue, 14 Nov 2023 00:55:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHwmxzArCE1yT7c6VWtUi4CeGvspYKMMRsTRuOyn603I9zaKES8gBzQS1aSNYvHBK4R3G7DMw==
-X-Received: by 2002:a05:600c:4689:b0:406:53f1:d629 with SMTP id p9-20020a05600c468900b0040653f1d629mr7066871wmo.5.1699952155285;
-        Tue, 14 Nov 2023 00:55:55 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id y7-20020a1c4b07000000b003fe1fe56202sm10557897wma.33.2023.11.14.00.55.54
+        bh=WWf2LpjcFSXW72E4pOe5efNJznN6LtGXmi4Aaa/gvxg=;
+        b=fEss4ryFHhPWo+AVw3G0JJWORWkBM2iLZ9rhU3e7EbzhXKveSSDz7cXbzcYlCTjOa3
+         6zFStJkKY2j/B2WsqjFvNukASdH7Z9AtoB7SwK7qXehjIRbV0VYSarT5DT/5VBVS9Bis
+         4Xb/6FdSwMliqPfJr7lAaLzeP5wpE2pG+2NtHWHOR+ubW65EcQNg7p46qYXHFEsN7BdF
+         KciMX4ydxj7NzeQ3GTYtPGyQbMh/4gya0gOoWa5aqZO1xTO+A484VnzODXJGALoY665P
+         GGQVQjonXQ8XATgcaJtThDPDrxsg5bCsKiKpw+Ht5MMJJNjIXVnnyEUAgi7Jvriiih2K
+         0rrQ==
+X-Gm-Message-State: AOJu0YyR7tVGqORzv6HZ80AtrKaodGqpJVfCVshUPcU2pzK7Zd6v+dQB
+	mewzDC9ba1OeKe345EHHLHt2mw==
+X-Google-Smtp-Source: AGHT+IF4ymTswcwGYewMFtzEDbVbGXAw3cj638JtjM3TFzTF+1jWHOnruaFltvQYqJfo8aBgKW9k/g==
+X-Received: by 2002:a05:620a:1a17:b0:775:8fab:8c6d with SMTP id bk23-20020a05620a1a1700b007758fab8c6dmr2474986qkb.1.1699967843680;
+        Tue, 14 Nov 2023 05:17:23 -0800 (PST)
+Received: from ?IPV6:2600:380:9158:8653:d646:d45e:2850:11a1? ([2600:380:9158:8653:d646:d45e:2850:11a1])
+        by smtp.gmail.com with ESMTPSA id k21-20020a05620a07f500b007759e9b0eb8sm2662062qkk.99.2023.11.14.05.17.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 00:55:54 -0800 (PST)
-Message-ID: <bafd23a9-81d4-4d3b-9fd3-10461cba6b89@redhat.com>
-Date: Tue, 14 Nov 2023 09:55:53 +0100
+        Tue, 14 Nov 2023 05:17:23 -0800 (PST)
+Message-ID: <72000dab-1d7e-464e-833b-0fe99574c742@kernel.dk>
+Date: Tue, 14 Nov 2023 06:17:22 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,70 +51,84 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Incomplete stable drm/ast backport - screen freeze on boot
-To: Sasha Levin <sashal@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Keno Fischer <keno@juliahub.com>, stable@vger.kernel.org,
- Greg KH <gregkh@linuxfoundation.org>, airlied@redhat.com,
- dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
-References: <CABV8kRwx=92ntPW155ef=72z6gtS_NPQ9bRD=R1q_hx1p7wy=g@mail.gmail.com>
- <32a25774-440c-4de3-8836-01d46718b4f8@redhat.com>
- <9dc39636-ff41-44d7-96cb-f954008bfc9d@suse.de> <ZVJQxS6h_K73fMfQ@sashalap>
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <ZVJQxS6h_K73fMfQ@sashalap>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: Regression in io_uring, leading to data corruption
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: regressions <regressions@lists.linux.dev>,
+ Pavel Begunkov <asml.silence@gmail.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com>
+ <1843925555.47083836.1699909110545.JavaMail.zimbra@raptorengineeringinc.com>
+ <483d8017-4d15-4367-bac4-0e420cb4eb54@kernel.dk>
+ <1205485505.47107959.1699917571021.JavaMail.zimbra@raptorengineeringinc.com>
+ <a42053ed-3a45-4dae-b953-00fb5aacb1de@kernel.dk>
+ <146986614.47116966.1699920294190.JavaMail.zimbra@raptorengineeringinc.com>
+ <7f74cf55-d1ca-482b-95c3-27b02996d999@kernel.dk>
+ <1270025902.47126081.1699923171139.JavaMail.zimbra@raptorengineeringinc.com>
+ <1357741503.47170425.1699938404661.JavaMail.zimbra@raptorengineeringinc.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <1357741503.47170425.1699938404661.JavaMail.zimbra@raptorengineeringinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/11/2023 17:37, Sasha Levin wrote:
-> On Mon, Nov 13, 2023 at 10:49:01AM +0100, Thomas Zimmermann wrote:
->> (cc: gregkh)
->>
->> Hi Jocelyn
->>
->> Am 13.11.23 um 10:36 schrieb Jocelyn Falempe:
->>> On 13/11/2023 09:34, Keno Fischer wrote:
->>>> Greetings,
->>>>
->>>> When connected to a remote machine via the BMC KVM functionality,
->>>> I am experiencing screen freezes on boot when using 6.5 stable,
->>>> but not master.
->>>>
->>>> The BMC on the machine in question is an ASpeed AST2600.
->>>> A quick bisect shows the problematic commit to be 2fb9667
->>>> ("drm/ast: report connection status on Display Port.").
->>>> This is commit f81bb0ac upstream.
->>>>
->>>> I believe the problem is that the previous commit in the series
->>>> e329cb5 ("drm/ast: Add BMC virtual connector")
->>>> was not backported to the stable branch.
->>>> As a consequence, it appears that the more accurate DP state detection
->>>> is causing the kernel to believe that no display is connected,
->>>> even when the BMC's virtual display is in fact in use.
->>>> A cherry-pick of e329cb5 onto the stable branch resolves the issue.
->>>
->>> Yes, you're right this two patches must be backported together.
->>>
->>> I'm sorry I didn't pay enough attention, that only one of the two was 
->>> picked up for the stable branch.
->>>
->>> Is it possible to backport e329cb5 to the stable branch, or should I 
->>> push it to drm-misc-fixes ?
->>
->> I think stable, which is in cc, will pick up commit e329cb5 
->> semi-automatically now. Otherwise, maybe ping gregkh in a few days 
->> about it.
+On 11/13/23 10:06 PM, Timothy Pearson wrote:
 > 
-> I thikn it would be more appropriate to revert 2fb9667, as e329cb5
-> doesn't look like -stable material. I'll go ahead and do that.
 > 
-Ok, that's the best thing to do, as Thomas also found that userspace can 
-be confused by the new BMC virtual connector, so it's safer to revert.
+> ----- Original Message -----
+>> From: "Timothy Pearson" <tpearson@raptorengineering.com>
+>> To: "Jens Axboe" <axboe@kernel.dk>
+>> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>
+>> Sent: Monday, November 13, 2023 6:52:51 PM
+>> Subject: Re: Regression in io_uring, leading to data corruption
+>>
+>> Seemed to do what I wanted, however corruption remains.  Was worth a try...
+>>
+>> I guess I'll proceed under the assumption that somehow the thread setup is
+>> stomping on userspace for now.
+> 
+> Finally found it!  Patch here:
+> 
+> https://lore.kernel.org/regressions/19221908.47168775.1699937769845.JavaMail.zimbra@raptorengineeringinc.com/T/#u
+> 
+> We were missing the appropriate barrier instruction inside the IPI
+> issued by the task_work_add() call, which was in turn issued during
+> queued io worker creation.  The explaination for how userspace was
+> getting corrupted boils down to an inconsistent view of main memory as
+> seen the two cores involved in the worker handoff and new worker
+> creation.
+> 
+> Who doesn't love a one line fix after a week and a half of pulling
+> one's hair out? ;)
 
-Thanks,
+Hate to be a debbie downer, but it still fails for me with that patch:
+
+debian@linux-kernel--io-uring:~/git/server/mysql-test$ ./mtr --mysqld=--innodb-flush-method=fsync --mysqld=--innodb-use-native-aio=1 --vardir=/dev/shm/mysql  --force encryption.innodb_encryption,innodb,undo0 --repeat=500
+[...]
+encryption.innodb_encryption 'innodb,undo0' [ 39 pass ]   3101
+encryption.innodb_encryption 'innodb,undo0' [ 40 fail ]
+        Test ended at 2023-11-14 13:02:52
+
+CURRENT_TEST: encryption.innodb_encryption
+mysqltest: At line 11: query 'SET @start_global_value = @@global.innodb_encryption_threads' failed: ER_UNKNOWN_SYSTEM_VARIABLE (1193): Unknown system variable 'innodb_encryption_threads'
+
+The result from queries just before the failure was:
+SET @start_global_value = @@global.innodb_encryption_threads;
+
+ - saving '/dev/shm/mysql/log/encryption.innodb_encryption-innodb,undo0/' to '/dev/shm/mysql/log/encryption.innodb_encryption-innodb,undo0/'
+***Warnings generated in error logs during shutdown after running tests: encryption.innodb_encryption
+
+2023-11-14 13:02:51 0 [Warning] Plugin 'example_key_management' is of maturity level experimental while the server is stable
+2023-11-14 13:02:51 0 [ERROR] InnoDB: Database page corruption on disk or a failed read of file './ibdata1' page [page id: space=0, page number=220]. You may have to recover from a backup.
+2023-11-14 13:02:51 0 [ERROR] InnoDB: File './ibdata1' is corrupted
+2023-11-14 13:02:51 0 [ERROR] InnoDB: Plugin initialization aborted with error Page read from tablespace is corrupted.
+2023-11-14 13:02:52 0 [ERROR] Plugin 'InnoDB' registration as a STORAGE ENGINE failed.
+
+after about 40 loops. How consistent is it on your end? I know I've
+suspected the signaling before and tried the NO_IPI variant, but that
+still hit it.
+
+If it makes a difference for you, it must be close. But don't think it's
+quite there yet, unfortunately :-(
 
 -- 
-
-Jocelyn
+Jens Axboe
 
