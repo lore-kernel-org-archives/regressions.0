@@ -1,117 +1,132 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D072FC2D
-	for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 23:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4B6639
+	for <regressions@lists.linux.dev>; Wed, 15 Nov 2023 00:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWwRtqCI"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1cc34c3420bso48975755ad.3
-        for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 15:59:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700006352; x=1700611152; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U28cHFzBVkR11z4RuPSvS1sL4RTNO+cnLUGQEPnb7SU=;
-        b=GWwRtqCIpcSS2JzN9kMt5m871bfv1Dv87lT7bcZ/jcwXJAOmoRtQ5TKK7k8SGA8eCs
-         eezdw2SWVMtjFnS+chPM5Eo1vjwQKkaSVRiNFjgT8C1LEh2wHIcXZYxLgVq5/bemX5RE
-         Po6n/rj0ip/LqsgeaX092f0rOnvEamwYEXQffazr73fDrmwUCwsJFr9V2Kyd6zxZIPTe
-         9U099XWLCa+aS3LmkZ/JX8yR6oF/MJY5QRL+JK6BU40T3WlsVjDzmczsrpTJ3tTxxxQh
-         H3gujhXI+DrGXnHIavF3fgEVKnTeqyJY+vwpY3m/ko4C2pWZRMHGGe3WN0DdN0HC53KY
-         NSrQ==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="TPHgo+Ly"
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com [209.85.161.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4C6BB40A1F
+	for <regressions@lists.linux.dev>; Wed, 15 Nov 2023 00:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1700009676;
+	bh=WDpC+/TU8OYxwd/ov/BIBH/XSQn/0HPjA18j9hJej6Q=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID;
+	b=TPHgo+LylhDCJ8i4MFjUMv/pvzb8ZhEiGPvRop6QHIWKT+lh/+hmwRLiMSVM/iUpB
+	 vzWWUylpPyJfaV7nt96tY5yLgYHVRoI5QRQ2UqZyGWjq1hvm+kzxSj5bG0ydFmKTEU
+	 s9ophOHZsOzArppr+yCSMksv5ufBB5jerCcuebGM2rTJgxwVEkkZocUCjdxm5yGdjQ
+	 oaaKvJN7Ee68ZO0w8oPKNQYqr8Xi6FPqn8r3ZYQ2tTNlJksQtu0VxGiINEii2jHuIn
+	 Pm0TNzZV5L6+0svzy6YafJ3D0Dxg3jhwt94UnOEtgauuPC4TrxIZD6Wpuboo/Vid4a
+	 G9vZWdrEpQiRw==
+Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-581da174501so5886620eaf.2
+        for <regressions@lists.linux.dev>; Tue, 14 Nov 2023 16:54:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700006352; x=1700611152;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U28cHFzBVkR11z4RuPSvS1sL4RTNO+cnLUGQEPnb7SU=;
-        b=m+jKlMn5busjeEfb9E5ivZDTyxM819SB9qH5WsP/4w8+hy7ouUVLWiJvFF0NIkTNXM
-         Ed8byjtA9/ld2O+hP+fn917VWk+va8oyXAzeFsbWKTSW/S1UZ6HFdsD3WNdKNWqoAnII
-         o11hoZuwIXmbLT8YnHsV8nQLDXjTD9WiAhUmsLw3o97NC3uQ+jGQY+oYZituwIH8HmQX
-         KrOS7pR1TvDsX4p1K5oGuk4Gia/mep5V6CqoZLkTbYzgb6jYVV5KFDVGbGalS3cNAAYw
-         TsxsW0DeK4zT7sfG5P9anN/qkxFEny9/gk8w8BRdz7KvXt7tCrLA2nA2wSwvOo8OG+PA
-         AvDQ==
-X-Gm-Message-State: AOJu0YycHQjWFNmfSMY1BXQnyuzUcO3dFIQtWO74WEv8hfOYveZcLmkj
-	FVoUGZLvo5MMmXc973E9RDc=
-X-Google-Smtp-Source: AGHT+IFMeftzfcV39U6BZ/StdmHwqGFz5CwiraE6RrTHkQW6l2CoWrog5MrXkcFrCsLrAiB8ZOrAjw==
-X-Received: by 2002:a17:902:6808:b0:1cc:3ac9:7189 with SMTP id h8-20020a170902680800b001cc3ac97189mr3780268plk.7.1700006352543;
-        Tue, 14 Nov 2023 15:59:12 -0800 (PST)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id b6-20020a170902d50600b001bc21222e34sm6190560plg.285.2023.11.14.15.59.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 15:59:12 -0800 (PST)
-Message-ID: <986716ed-f898-4a02-a8f6-94f85b355a05@gmail.com>
-Date: Wed, 15 Nov 2023 06:59:06 +0700
+        d=1e100.net; s=20230601; t=1700009675; x=1700614475;
+        h=message-id:date:content-transfer-encoding:content-id:mime-version
+         :comments:references:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WDpC+/TU8OYxwd/ov/BIBH/XSQn/0HPjA18j9hJej6Q=;
+        b=hGahn/0jBrMJP8A2/MIfiRItTcaP9oyGAIk3ltBiAEsQQnINSo7bTxjAfFeZ1eZxw1
+         iCUi48xr8Gc/53YlgBHvFizTwCeDRp+fHl9GeTbyB2OJjCvwy8+GkKNNXcYg/oMi/Br/
+         hUeBggNwixR5WTEDG8+Amr76072939zvjWz6KKMXE5imO3mzmITo7QBbBeE0zKxokZCo
+         VLW4CklG6404hMo3xasrXfTAIoEhBvmsBmKA/deAg9Ueo3xvdViIlXaacCQmbfSNLxF3
+         QGOhsJS0GniDjODR0+Ee9/AxmD19rR3hzAFNt6/7z6GGKmXC2zfcQIj3yWx1N+IYo6Is
+         Z7yg==
+X-Gm-Message-State: AOJu0Yzxg38kipUWYDJ0VL0gJ0UYKZnHEJO4koDbosSl4xxvPqvEe9RU
+	Bjp/EcNOY49TQ1ybYvgRLTUhD+zoAJOR7Zr9L7LgF05R3f/doXWDdbY3pC2aZWQBYng7MLhgw/z
+	WzcBjOt5erKCxsd74AGkVTSqQLzRsBHpE2OmyrfbC
+X-Received: by 2002:a05:6358:24a3:b0:16b:7049:e8f9 with SMTP id m35-20020a05635824a300b0016b7049e8f9mr4744199rwc.8.1700009675088;
+        Tue, 14 Nov 2023 16:54:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGjS1Eza3HfJ+1w5VNAFHLX0iHyrhrcjQz7hpZTmu4fpoC03xWrJ7Vip0QyJP/Ynp1eP/c67g==
+X-Received: by 2002:a05:6358:24a3:b0:16b:7049:e8f9 with SMTP id m35-20020a05635824a300b0016b7049e8f9mr4744177rwc.8.1700009674772;
+        Tue, 14 Nov 2023 16:54:34 -0800 (PST)
+Received: from famine.localdomain ([50.125.80.253])
+        by smtp.gmail.com with ESMTPSA id a20-20020a634d14000000b005b83bc255fbsm136600pgb.71.2023.11.14.16.54.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Nov 2023 16:54:34 -0800 (PST)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id 02DAE5FFF6; Tue, 14 Nov 2023 16:54:33 -0800 (PST)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id EFDF99F88E;
+	Tue, 14 Nov 2023 16:54:33 -0800 (PST)
+From: Jay Vosburgh <jay.vosburgh@canonical.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+    Linux Networking <netdev@vger.kernel.org>,
+    Thorsten Leemhuis <regressions@leemhuis.info>,
+    Linux Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
+    Linux Regressions <regressions@lists.linux.dev>,
+    Andy Gospodarek <andy@greyhouse.net>,
+    Ivan Vecera <ivecera@redhat.com>,
+    Jesse Brandeburg <jesse.brandeburg@intel.com>,
+    Tony Nguyen <anthony.l.nguyen@intel.com>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Anil Choudhary <anilchabba@gmail.com>
+Subject: Re: sr-iov related bonding regression (two regressions in one report)
+In-reply-to: <986716ed-f898-4a02-a8f6-94f85b355a05@gmail.com>
+References: <986716ed-f898-4a02-a8f6-94f85b355a05@gmail.com>
+Comments: In-reply-to Bagas Sanjaya <bagasdotme@gmail.com>
+   message dated "Wed, 15 Nov 2023 06:59:06 +0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; Emacs 29.0.50
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Linux Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek
- <andy@greyhouse.net>, Ivan Vecera <ivecera@redhat.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Anil Choudhary <anilchabba@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: sr-iov related bonding regression (two regressions in one report)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <32715.1700009673.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Nov 2023 16:54:33 -0800
+Message-ID: <32716.1700009673@famine>
 
-Hi Thorsten and all,
+Bagas Sanjaya <bagasdotme@gmail.com> wrote:
 
-I come across LACP bonding regression on Bugzilla [1]. The reporter
-(Cc'ed) has two regressions. The first is actual LACP bonding
-regression (but terse):
+>Hi Thorsten and all,
+>
+>I come across LACP bonding regression on Bugzilla [1]. The reporter
+>(Cc'ed) has two regressions. The first is actual LACP bonding
+>regression (but terse):
+>
+>> Till linkx kernel 6.5.7 it is working fine, but after upgrading to 6.6.=
+1 ping stop working with LACP bonding.
+>> When we disable SR-IOV from bios , everything working fine
+>
+>And the second is out-of-tree module FTBFS:
 
-> Till linkx kernel 6.5.7 it is working fine, but after upgrading to 6.6.1 ping stop working with LACP bonding.
-> When we disable SR-IOV from bios , everything working fine
+[... skip OOT stuff ...]
 
-And the second is out-of-tree module FTBFS:
+>
+>Should I add the first regression to regzbot (since the second one
+>is obviously out-of-tree problem), or should I asked detailed regression
+>info to the reporter?
 
-> Also we are not able to compile 
-> driver: ice
-> version: 1.12.6
-> We are getting following error.
-> 
-> 
-> 
-> With inter driver code(version 1.12.6) while complaining I am getting following error.
-> /root/1.12.6/build/src/ice_txrx.h:363:29: error: field ‘xdp_rxq’ has incomplete type
->   363 |         struct xdp_rxq_info xdp_rxq;
->       |                             ^~~~~~~
-> /root/1.12.6/build/src/ice_main.c: In function ‘ice_remove_recovery_mode’:
-> /root/1.12.6/build/src/ice_main.c:1540:9: error: implicit declaration of function ‘pci_disable_pcie_error_reporting’ [-Werror=implicit-function-declaration]
->  1540 |         pci_disable_pcie_error_reporting(pf->pdev);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> /root/1.12.6/build/src/ice_main.c: In function ‘ice_probe’:
-> /root/1.12.6/build/src/ice_main.c:7046:9: error: implicit declaration of function ‘pci_enable_pcie_error_reporting’ [-Werror=implicit-function-declaration]
->  7046 |         pci_enable_pcie_error_reporting(pdev);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> make[3]: *** [scripts/Makefile.build:243: /root/1.12.6/build/src/ice_main.o] Error 1
-> make[2]: *** [/usr/src/linux-headers-6.6.0-rc7-vdx/Makefile:1913: /root/1.12.6/build/src] Error 2
-> make[1]: *** [Makefile:234: __sub-make] Error 2
-> make[1]: Leaving directory '/usr/src/linux-headers-6.6.0-rc7-vdx'
-> make: *** [Makefile:174: all] Error 2
+	My vote is to get additional information.  Given the nature of
+the workaround ("When we disable SR-IOV from bios , everything working
+fine"), it's plausible that the underlying cause is something
+platform-specific.
 
-Should I add the first regression to regzbot (since the second one
-is obviously out-of-tree problem), or should I asked detailed regression
-info to the reporter?
+	Interestingly, we've been chasing internally an issue with
+bonding LACP mode on ice (E810-XXV, I think) when running on the Ubuntu
+kernel.  That manifests as occasional TX timeouts, and doesn't happen if
+the Intel OOT driver is used, so I wonder if that bugzilla reporter is
+also seeing TX timeouts that correlate with their ping failures.
 
-Thanks.
+	-J
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218139
+>Thanks.
+>
+>[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218139
+>
+>-- =
 
--- 
-An old man doll... just what I always wanted! - Clara
+>An old man doll... just what I always wanted! - Clara
+
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
