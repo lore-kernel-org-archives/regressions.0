@@ -1,133 +1,163 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C7F2CCBC
-	for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 10:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E462D33CEB
+	for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 16:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/On4PHz"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2802d218242so521207a91.1
-        for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 02:53:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700131997; x=1700736797; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J6wLYSXzg5tmYqidzmV/DNDn2+dFtQpnSIBReQdUv9g=;
-        b=J/On4PHzc+KqDIygPKNfwVGrCuT4G6mys1rB5BXsltnu74kZRUUfAhvT+F5VEOhKyy
-         AAT/o96zdXo01A8XeyFnvDn1dlbFJACLx1FabTPxeQZSzjtLM34FFimX9e+UywaIbEQz
-         k+xyDBICfH8tJ3N+jsBUUv+4K7bCrj7Jy4hiU6t4vVDst9fu616nknKdvR3ZdX6zwLuU
-         wdGgyMGp4ArAYbnUCKPLPkDxFhDlst8RhJkaVTZDRWbddkKwkumdNK/8M/4lB0wpWiat
-         mb995VfmSzS2Xgj7F+5fwtgSOb1U+LyR7yfzb0pkAyD4j0JUdudtd42a8C/uOIUjelVh
-         NUjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700131997; x=1700736797;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J6wLYSXzg5tmYqidzmV/DNDn2+dFtQpnSIBReQdUv9g=;
-        b=qD5zoIRqLxQRvt09ZGxJoAtW22zHet/c9PllPNwMsbQ5twiZxR4dQDmJWMuoGoFXKs
-         vVNIhruLBMcjxd7mZp/C16IkSzW68jWZriaVk7HuAt3oy4J9QXsl/6Wz/SRNxBRjarjx
-         s/uprNYrr8eFS1jxFP9NjZnSIDsGETx+ZKSCsjKpIj96VFnQd5ScxjvEUs+5RA4Thz8V
-         tXlHVynECBIr6KzqQ7lDHBork+lPKQ6jfX+r78fSPASxPSR+yNr6ys/QMu4i3WjRxdSI
-         sPkoa9yzxMeKRiztSQZcDMrwam9ZiYn4lAG+OaXfTsyDD3Kwhd4dMK30BjX7CFX4nCFK
-         NN4A==
-X-Gm-Message-State: AOJu0YxZJHP7GpRU3uKSkVZuyd8v9yhJGy+CjmtznmA7xonN+CPDn/A7
-	gpw4WqF8SlWXj1OgHbeVc20=
-X-Google-Smtp-Source: AGHT+IHviUA6wsN7WBJ0vdUlc5oRn54uPX/2SL1zM7nRFKveJPLaxBH16YaTE8jA32XcURweaSCFnA==
-X-Received: by 2002:a17:90b:1810:b0:280:2652:d42 with SMTP id lw16-20020a17090b181000b0028026520d42mr17763037pjb.23.1700131997392;
-        Thu, 16 Nov 2023 02:53:17 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id r6-20020a17090a560600b0026b3f76a063sm1300560pjf.44.2023.11.16.02.53.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 02:53:16 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 9876410206E62; Thu, 16 Nov 2023 17:53:11 +0700 (WIB)
-Date: Thu, 16 Nov 2023 17:53:11 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Anil Choudhary <anilchabba@gmail.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Jay Vosburgh <jay.vosburgh@canonical.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux Intel Wired LAN <intel-wired-lan@lists.osuosl.org>,
-	Andy Gospodarek <andy@greyhouse.net>,
-	Ivan Vecera <ivecera@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Sujai Buvaneswaran <sujai.buvaneswaran@intel.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: sr-iov related bonding regression (two regressions in one report)
-Message-ID: <ZVX0l0pTgbe0LKp7@archie.me>
-References: <986716ed-f898-4a02-a8f6-94f85b355a05@gmail.com>
- <32716.1700009673@famine>
- <0f97acf9-012d-4bb2-a766-0c2737e32b2c@leemhuis.info>
- <CC024511-980A-4508-8ABF-659A04367C2B@gmail.com>
- <7AC9E8F6-B229-47AA-84CE-1149F45D7E0F@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZJmVtSH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8C5C433C9
+	for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 16:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700151895;
+	bh=fHJOnX6EfnqlraT0kalO/OUaA5Xx+jQ//lsFenWOUlo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jZJmVtSH/kgJBlI3yL7Tw5CzxpHNJgoTXURFhhdjdYOkQ6LjA8o6LWIc+nZOwbXpd
+	 7Yi4q07jJOBHiyLhfMFqyVGOLwcKeAc2LDTbHnduCyzAIOWHua+EnniVYpEBL6sVc7
+	 fWVVrqf8LSBzcxvqPK/TFKj6xciRd7s7AoafMSx9QnrAd5ozI1x/w99JexL8POtVij
+	 nk3SguDEv6QPKLSMxLjSu9MFUCtAFAXnBIcSCZb3aAz8VDy9hgAqumo+Y04Ju5FHYL
+	 9NduSVY9Rz7CNMub33ZVtG69rnvqy+ah3ZgsKDCjvP9SV/kc4MEbJ6qgNB65srwlkn
+	 DnEsmiVp0g4vQ==
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1cc330e8f58so8332455ad.3
+        for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 08:24:55 -0800 (PST)
+X-Gm-Message-State: AOJu0YwHFwoIc4r8uxssKseNKA5BDxTxN168PN7cIEQ5P8Q0JYcrnv+X
+	EkZDIsi69wGNSdm5ZzaD/S+EdmGVUDNJsGkxBk8=
+X-Google-Smtp-Source: AGHT+IHc9mHKMnMq319rkQ2g6Hp3kh7yhrT6o8c2f94gF6JWHahDBoLfV7EU41fN+fzFYKVHvBN8L6dEzJnfQtLDa/o=
+X-Received: by 2002:a17:902:ce89:b0:1c6:3157:29f3 with SMTP id
+ f9-20020a170902ce8900b001c6315729f3mr10735491plg.36.1700151894950; Thu, 16
+ Nov 2023 08:24:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e1HJro3cB6s4ipwc"
-Content-Disposition: inline
-In-Reply-To: <7AC9E8F6-B229-47AA-84CE-1149F45D7E0F@gmail.com>
-
-
---e1HJro3cB6s4ipwc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <5727380.DvuYhMxLoT@bvd0>
+In-Reply-To: <5727380.DvuYhMxLoT@bvd0>
+From: Song Liu <song@kernel.org>
+Date: Thu, 16 Nov 2023 11:24:40 -0500
+X-Gmail-Original-Message-ID: <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+Message-ID: <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
+ silently corrupted.
+To: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>, 
+	Mateusz Grzonka <mateusz.grzonka@intel.com>
+Cc: linux-raid@vger.kernel.org, regressions@lists.linux.dev, 
+	jiangguoqing@kylinos.cn, jgq516@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 15, 2023 at 12:48:51PM -0800, Anil Choudhary wrote:
-> We are getting errorError subscribing to SWID 0x0000.
->  from following code
-> root@us-ash-r1-c2-m1:~/linux# grep -rn -e "subscribing to " .
-> grep: ./debian/linux-image/lib/modules/6.6.1-vdx/kernel/drivers/net/ether=
-net/intel/ice/ice.ko: binary file matches
-> ./samples/connector/ucon.c:149: ulog("subscribing to %u.%u\n", CN_TEST_ID=
-X, CN_TEST_VAL);
-> ./Documentation/driver-api/media/v4l2-event.rst:117:add      called when =
-a new listener gets added (subscribing to the same
-> ./Documentation/driver-api/media/v4l2-event.rst:130:Unsubscribing to an e=
-vent is via:
-> ./Documentation/maintainer/feature-and-driver-maintainers.rst:44:mailing =
-list. Either by subscribing to the whole list or using more
-> grep: ./drivers/net/ethernet/intel/ice/ice_lag.o: binary file matches
-> grep: ./drivers/net/ethernet/intel/ice/ice.o: binary file matches
-> grep: ./drivers/net/ethernet/intel/ice/ice.ko: binary file matches
-> ./drivers/net/ethernet/intel/ice/ice_lag.c:1007:                dev_err(i=
-ce_pf_to_dev(local_lag->pf), "Error subscribing to SWID 0x%04X\n",
-> root@us-ash-r1-c2-m1:~/linux#
->=20
++ more folks.
 
-Again, please don't top-post; reply inline with appropriate context instead.
-You may need to configure your email client to start reply below the quoted
-context.
+On Fri, Nov 10, 2023 at 7:00=E2=80=AFPM Bhanu Victor DiCara
+<00bvd0+linux@gmail.com> wrote:
+>
+> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actual d=
+ata.
+>
+>
+> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
+> (The problem does not occur in the previous commit.)
+>
+> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/raid5=
+.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (and =
+the previous line) is removed, the problem does not occur.
 
-OK, now on your Bugzilla ticket, please attach the full log (either from
-dmesg or from journalctl). And don't forget to perform bisection if
-you'd like to get this regression fixed.
+The patch below should fix it. Please give it more thorough tests and
+let me know whether it fixes everything. I will send patch later with
+more details.
 
-Thanks.
+Thanks,
+Song
 
---=20
-An old man doll... just what I always wanted! - Clara
+diff --git i/drivers/md/md.c w/drivers/md/md.c
+index 68f3bb6e89cb..d4fb1aa5c86f 100644
+--- i/drivers/md/md.c
++++ w/drivers/md/md.c
+@@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
+        struct bio *orig_bio =3D md_io_clone->orig_bio;
+        struct mddev *mddev =3D md_io_clone->mddev;
 
---e1HJro3cB6s4ipwc
-Content-Type: application/pgp-signature; name="signature.asc"
+-       orig_bio->bi_status =3D bio->bi_status;
++       if (bio->bi_status)
++               orig_bio->bi_status =3D bio->bi_status;
 
------BEGIN PGP SIGNATURE-----
+        if (md_io_clone->start_time)
+                bio_end_io_acct(orig_bio, md_io_clone->start_time);
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVX0kwAKCRD2uYlJVVFO
-o7fjAQC0MeTuZpur/LspKJ2Mx7S+c45gX313sk1uD4kt7ANNVwEA/ivKY/8tlYLK
-LIZuHFWvA3qMyHT4vgtG8fcqbuN8igc=
-=O+Fn
------END PGP SIGNATURE-----
 
---e1HJro3cB6s4ipwc--
+>
+> Similarly, in commit ffc253263a1375a65fa6c9f62a893e9767fbebfa (v6.6), fil=
+e drivers/md/raid5.c, when line 6200 is removed, the problem does not occur=
+.
+>
+>
+> Steps to reproduce the problem (using bash or similar):
+> 1. Create a degraded RAID 4/5/6 array:
+> fallocate -l 2056M test_array_part_1.img
+> fallocate -l 2056M test_array_part_2.img
+> lo1=3D$(losetup --sector-size 4096 --find --nooverlap --direct-io --show =
+ test_array_part_1.img)
+> lo2=3D$(losetup --sector-size 4096 --find --nooverlap --direct-io --show =
+ test_array_part_2.img)
+> # The RAID level must be 4 or 5 or 6 with at least 1 missing drive in any=
+ order. The following configuration seems to be the most effective:
+> mdadm --create /dev/md/tmp_test_array --level=3D4 --raid-devices=3D3 --ch=
+unk=3D1M --size=3D2G  $lo1 missing $lo2
+>
+> 2. Create the test file system and clone it to the degraded array:
+> fallocate -l 4G test_fs.img
+> mke2fs -t ext4 -b 4096 -i 65536 -m 0 -E stride=3D256,stripe_width=3D512 -=
+L test_fs  test_fs.img
+> lo3=3D$(losetup --sector-size 4096 --find --nooverlap --direct-io --show =
+ test_fs.img)
+> mount $lo3 /mnt/1
+> python3 create_test_fs.py /mnt/1
+> umount /mnt/1
+> cat test_fs.img > /dev/md/tmp_test_array
+> cmp -l test_fs.img /dev/md/tmp_test_array  # Optionally verify the clone
+> mount --read-only $lo3 /mnt/1
+>
+> 3. Mount the degraded array:
+> mount --read-only /dev/md/tmp_test_array /mnt/2
+>
+> 4. Compare the files:
+> diff -q /mnt/1 /mnt/2
+>
+> If no files are detected as different, do `umount /mnt/2` and `echo 2 > /=
+proc/sys/vm/drop_caches`, and then go to step 3.
+> (Doing `echo 3 > /proc/sys/vm/drop_caches` and then going to step 4 is le=
+ss effective.)
+> (Only doing `umount /mnt/2` and/or `echo 1 > /proc/sys/vm/drop_caches` is=
+ much less effective and the effectiveness wears off.)
+>
+>
+> create_test_fs.py:
+> import errno
+> import itertools
+> import os
+> import random
+> import sys
+>
+>
+> def main(test_fs_path):
+>         rng =3D random.Random(0)
+>         try:
+>                 for i in itertools.count():
+>                         size =3D int(2**rng.uniform(12, 24))
+>                         with open(os.path.join(test_fs_path, str(i).zfill=
+(4) + '.bin'), 'xb') as f:
+>                                 f.write(b'\xff' * size)
+>                         print(f'Created file {f.name!r} with size {size}'=
+)
+>         except OSError as e:
+>                 if e.errno !=3D errno.ENOSPC:
+>                         raise
+>                 print(f'Done: {e.strerror} (partially created file {f.nam=
+e!r})')
+>
+>
+> if __name__ =3D=3D '__main__':
+>         main(sys.argv[1])
+>
+>
+>
