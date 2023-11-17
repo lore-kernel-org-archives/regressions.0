@@ -1,84 +1,169 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAE5FC18
-	for <regressions@lists.linux.dev>; Thu, 16 Nov 2023 22:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=donatusmusic@gmx.de header.b="d5A5/5XQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1700174402; x=1700779202; i=donatusmusic@gmx.de;
-	bh=J8l9eaDyAHA3a36Csw+3n95hNrvIqGDpkFKWPMoFGCk=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=d5A5/5XQ79bBWND+GtYFYBpZPaeNfx+4ILikayLR7dHbtcLCkTzZv6DacX+B6iM2
-	 u8G9ciTpOfsrwpOy9D07Pg3zCTy2kAsQKqqKDeaxblvGcwZXeyCER/VYOMBto0SWQ
-	 xVdG/68yi0mPgjJbLh6no7iQb/1e6g3H/fc/Dv+f73LzDq0/npT9TgTUtTdqwwZIv
-	 gVhlFNxQ2Gv3RH4WMcLTyS0AsvcxwZsH+Ld6841o7B7I0tUSLN7P3Kq1ql9n/vSYX
-	 mngOGL68n7xITZHCeKjYkzgvi6cQuP7mLQfKu9yTZgL3kGByipKCU+37Ce9z/YQDf
-	 MoE5ibBhExaeTe0Ajw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.178.24] ([93.119.250.221]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVvL5-1quF2F29x7-00RpLy; Thu, 16
- Nov 2023 23:40:02 +0100
-Message-ID: <bd1a6eb1-a8af-4181-b9e4-c7b8d3af1eea@gmx.de>
-Date: Thu, 16 Nov 2023 23:41:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B151368
+	for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 01:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SWdxC2hT4z4f3lCv
+	for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 09:05:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 74E171A01A1
+	for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 09:05:23 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDnNw5RvFZlnWeFBA--.9623S3;
+	Fri, 17 Nov 2023 09:05:23 +0800 (CST)
+Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
+ silently corrupted.
+To: Song Liu <song@kernel.org>, Bhanu Victor DiCara <00bvd0+linux@gmail.com>,
+ Xiao Ni <xni@redhat.com>, Mateusz Grzonka <mateusz.grzonka@intel.com>
+Cc: linux-raid@vger.kernel.org, regressions@lists.linux.dev,
+ jiangguoqing@kylinos.cn, jgq516@gmail.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <5727380.DvuYhMxLoT@bvd0>
+ <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
+Date: Fri, 17 Nov 2023 09:05:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-From: =?UTF-8?Q?Andr=C3=A9_Kunz?= <donatusmusic@gmx.de>
-Subject: Found a bug with my gaming gear
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:diqmZkfT3UW/wdbSpx7OORG4bVC96dKVd+C8mVJeNk4TSowU263
- jwC6JcN+DtuObgqieHGg84GWgFJpiS7yfiBIniQ5vLZ8TkyTN1yFaQVWEB5jkh7nMinn53p
- epFEmMAcuPk+mRgp1RGZMSXn0ymiQryTy1GWZ6QZo87+0mg+LMUkf88Fpzge9kMwf/m7PzJ
- p1m7jIWtSkft9VNMnwqyw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FdAsOmKFEBs=;p6KpN6VWc58gZzlPMis4TKdmKZs
- haoxa+j2I+ezdUtt+h2pIMugWbp75iJxQO67DC7EZ0l/ca8tm2kkcWYAgA8ftUGKKj9VykAD5
- zMssEB321slSJTxxRLKLHkprQlSfiOWih35P3Nh9Z1huJ2wTpdU0W4lMhfGmeOilN11eAomM2
- WNSqplM9qyiqZ/DMfapwvV/g6eYAmeuMMl60+HuoUVhYqEEMZaDHR6A3w/XwNS+LkJemignlF
- dkfSaAJDr5UXZN26clIwwArbPnudcKbmN8/KEqNiXPcj5bQvQC5KI+XNGrLBbv19VmTyrRACp
- YLbmeUeOAdYmGGbkUNtTNV64T4NOS/M0Cltx31o687JSp073mC/bL+E+xAVkU3PU/BmgvhzXJ
- pyBbWtoKdQWvgG9tSNE503V8VQXcmAiT3PbGyn8a4aSuVc1JdjeKnu9a7/QM9oVD3zEJMXOTb
- 2ZKymOTy/LP8k2uRqVbcN1OJTHMlJzyyEboB0G15fgfWaswtdpkuXp4VC260yeaoN7FphxAxd
- ni6BGKcQtKBpX6GDzxTspEeQ3juCqSUtkPd33v3jDZjnY09pYoi/eGDHZ6v6dHajAeEwI+7U3
- MDZ5+emrhqgY1zx6UsMvKNKdkxkint7rObqJjpM2Np1zyBEEDCp3GJvHG0FzUZQLjFyXKHxoi
- EG9YULDWlGKkinxdDCljO5mx0++1NmSAj+bUUyUIT7foCMaQuLdP+YqDuOEvusgjTPOfp7qbD
- 1iVvbqZqroQjuiL0MegTWhSBDd0wB7WZ6syU1WR6Aeai5vca60uq2ilaIWaUgVbwV6QGgL/wn
- kHnsV6S0uwoxlbsVepBoERXBXV568mU7G+WocP5R7W+ZwiCBtuwImE1ATuLTEgsOCNMtAphvo
- i+9/WAFdNmo61E/bgeIorU/+MXv///iIauncYBmLZUf2E0fXNw3MjKXY2jZz3lEDmqur/zH2p
- m15YCrdNO8OG+2SSO+a0ElPEmBE=
+In-Reply-To: <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDnNw5RvFZlnWeFBA--.9623S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryUJF4rGw4DXryUAr4Utwb_yoWrXF17pa
+	y7AF1Y9rZ8JF45WryDC3W8W3WrKrZFvrWjgry8X34xAFn8Zr1avrZ7KrZ09F95Jr4fWw12
+	va15Xr9rWFWqkFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hey there guys,
+Hi,
 
-This is my first kernel "bug" report ever, so please bear with me if I
-didn't catch the precise right way to report this.
+在 2023/11/17 0:24, Song Liu 写道:
+> + more folks.
+> 
+> On Fri, Nov 10, 2023 at 7:00 PM Bhanu Victor DiCara
+> <00bvd0+linux@gmail.com> wrote:
+>>
+>> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actual data.
+>>
+>>
+>> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
+>> (The problem does not occur in the previous commit.)
+>>
+>> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/raid5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (and the previous line) is removed, the problem does not occur.
+> 
+> The patch below should fix it. Please give it more thorough tests and
+> let me know whether it fixes everything. I will send patch later with
+> more details.
+> 
+> Thanks,
+> Song
+> 
+> diff --git i/drivers/md/md.c w/drivers/md/md.c
+> index 68f3bb6e89cb..d4fb1aa5c86f 100644
+> --- i/drivers/md/md.c
+> +++ w/drivers/md/md.c
+> @@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
+>          struct bio *orig_bio = md_io_clone->orig_bio;
+>          struct mddev *mddev = md_io_clone->mddev;
+> 
+> -       orig_bio->bi_status = bio->bi_status;
+> +       if (bio->bi_status)
+> +               orig_bio->bi_status = bio->bi_status;
 
-The bug I've found:
+I'm confused, do you mean that orig_bio can have error while bio
+doesn't? If this is the case, can you explain more how this is
+possible?
 
-I'm running stable kernel 6.6.1-1 and as soon as I install it, many of
-my mouse's hardware buttons stop working. I have a Logitech G502 X Plus
-(it's a wireless mouse). As soon as I install 6.6.1 the mouse's hardware
-buttons won't work, i.e. only the two side-buttons would work, not the
-buttons (and/or my created profiles/macros) would. I have a few macros
-assigned to some buttons, which work perfectly fine under 6.5.11 (and
-earlier), but as soon as I'm on 6.6 they'd stop working.
+Thanks,
+Kuai
 
-Just wanted to report this and I hope there can be a fix.
-
-I hope this email was not too much out of the ordinary.
-
-Have a great evening guys!
-
-Best,
-Andr=C3=A9
+> 
+>          if (md_io_clone->start_time)
+>                  bio_end_io_acct(orig_bio, md_io_clone->start_time);
+> 
+> 
+>>
+>> Similarly, in commit ffc253263a1375a65fa6c9f62a893e9767fbebfa (v6.6), file drivers/md/raid5.c, when line 6200 is removed, the problem does not occur.
+>>
+>>
+>> Steps to reproduce the problem (using bash or similar):
+>> 1. Create a degraded RAID 4/5/6 array:
+>> fallocate -l 2056M test_array_part_1.img
+>> fallocate -l 2056M test_array_part_2.img
+>> lo1=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_array_part_1.img)
+>> lo2=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_array_part_2.img)
+>> # The RAID level must be 4 or 5 or 6 with at least 1 missing drive in any order. The following configuration seems to be the most effective:
+>> mdadm --create /dev/md/tmp_test_array --level=4 --raid-devices=3 --chunk=1M --size=2G  $lo1 missing $lo2
+>>
+>> 2. Create the test file system and clone it to the degraded array:
+>> fallocate -l 4G test_fs.img
+>> mke2fs -t ext4 -b 4096 -i 65536 -m 0 -E stride=256,stripe_width=512 -L test_fs  test_fs.img
+>> lo3=$(losetup --sector-size 4096 --find --nooverlap --direct-io --show  test_fs.img)
+>> mount $lo3 /mnt/1
+>> python3 create_test_fs.py /mnt/1
+>> umount /mnt/1
+>> cat test_fs.img > /dev/md/tmp_test_array
+>> cmp -l test_fs.img /dev/md/tmp_test_array  # Optionally verify the clone
+>> mount --read-only $lo3 /mnt/1
+>>
+>> 3. Mount the degraded array:
+>> mount --read-only /dev/md/tmp_test_array /mnt/2
+>>
+>> 4. Compare the files:
+>> diff -q /mnt/1 /mnt/2
+>>
+>> If no files are detected as different, do `umount /mnt/2` and `echo 2 > /proc/sys/vm/drop_caches`, and then go to step 3.
+>> (Doing `echo 3 > /proc/sys/vm/drop_caches` and then going to step 4 is less effective.)
+>> (Only doing `umount /mnt/2` and/or `echo 1 > /proc/sys/vm/drop_caches` is much less effective and the effectiveness wears off.)
+>>
+>>
+>> create_test_fs.py:
+>> import errno
+>> import itertools
+>> import os
+>> import random
+>> import sys
+>>
+>>
+>> def main(test_fs_path):
+>>          rng = random.Random(0)
+>>          try:
+>>                  for i in itertools.count():
+>>                          size = int(2**rng.uniform(12, 24))
+>>                          with open(os.path.join(test_fs_path, str(i).zfill(4) + '.bin'), 'xb') as f:
+>>                                  f.write(b'\xff' * size)
+>>                          print(f'Created file {f.name!r} with size {size}')
+>>          except OSError as e:
+>>                  if e.errno != errno.ENOSPC:
+>>                          raise
+>>                  print(f'Done: {e.strerror} (partially created file {f.name!r})')
+>>
+>>
+>> if __name__ == '__main__':
+>>          main(sys.argv[1])
+>>
+>>
+>>
+> .
+> 
 
