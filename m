@@ -1,115 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5396EDF46
-	for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 15:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91D5382
+	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 00:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VJPdPbLK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700233291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OZvKlexA4qE1IZw8Fj3LwrdUD9v+b3hIBxm3Oq8CuLk=;
-	b=VJPdPbLKJvkGT/XXBalxcyVHXX/g1pXSPgRDfsPfllbFnW2WmKXe7H+9W0yUNhxK505B9I
-	uiWLE/nAYXdjBKP+ovI+G+KYcbafLfP1QWVKUlq890S0xj7XsPDYAoHwuPWEPrbQFj2uCm
-	0Tg4t/SBSwZ94WUv2+IDQDRKPfEBZCw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-426-Ip1155YJP2WJW5vUSAc6mg-1; Fri, 17 Nov 2023 10:01:29 -0500
-X-MC-Unique: Ip1155YJP2WJW5vUSAc6mg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9e644d94d84so148171266b.1
-        for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 07:01:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700233288; x=1700838088;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OZvKlexA4qE1IZw8Fj3LwrdUD9v+b3hIBxm3Oq8CuLk=;
-        b=X8DyJarD4gIqiCERnNntGLj753/7DEJe3z6QBtYAAr4H5k6L2Y8SUiV4OLzZ+1foFw
-         O4iQJ6WBHLV52LoXh7AafewdzznluGM08z0gwJEgrkDJmUZBtqyaBeU5IfKD3K+6It2T
-         vhGr2NxHFz/B+543KJcg+6OffKp2pz2HOQse1GkExiSiv8HozT4vHqRNKYHend0gPk1T
-         KFH0+9NOOoQzkOqOPejYft+JuX3CEokWxIKJp9yN1HGJkKs9tClaq3SP3pn0sVnMiBQx
-         ooKwjSMyu2rM2iuK8iMklO1jpCFA3c241MjJsheRqbV6yNm4Y21FDrlWbjdT+o/15HUd
-         F91A==
-X-Gm-Message-State: AOJu0YyErnsi7Yz8l3ATRYVjCt7QiIxybgrSyHspD0Zr2Vs4Iu3Xo3zc
-	AXukp1Q9NyC8OOQ+RcaXOWvceB0NfxFOu1LdWCmn8HJL7XqOOH9MDgTkDr5wL/33WMor4vXUldx
-	pU4JMRvkLWYW9bRbfiOfbb0w=
-X-Received: by 2002:a17:907:94d4:b0:9d3:8d1e:ce8 with SMTP id dn20-20020a17090794d400b009d38d1e0ce8mr18085269ejc.20.1700233288193;
-        Fri, 17 Nov 2023 07:01:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH6V2pxM69SBsfb3ukO60+ra463B4IR7Z5LGGH8zA6n04xG7X1Arr+vrPlI13/oI2eMpU1Cfw==
-X-Received: by 2002:a17:907:94d4:b0:9d3:8d1e:ce8 with SMTP id dn20-20020a17090794d400b009d38d1e0ce8mr18085234ejc.20.1700233287836;
-        Fri, 17 Nov 2023 07:01:27 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lz10-20020a170906fb0a00b009737b8d47b6sm855577ejb.203.2023.11.17.07.01.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Nov 2023 07:01:27 -0800 (PST)
-Message-ID: <88a14de8-ceaf-4c1d-ba6c-6cfbbffa0e2a@redhat.com>
-Date: Fri, 17 Nov 2023 16:01:26 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqNNbBxq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D967C43397
+	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 00:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700267535;
+	bh=jXKeJgS2efdeMW4uax+hDxFhcDk5npNFT1+zFEUZb2M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fqNNbBxq/JhNPpmAX5TxM3CstlfJzx4HhbdBcNLdN3Q9/6jvFGVLZz6ODssvHXRll
+	 C1bN98O9T33eWp18PJ0RX4doINUh9cq/R8ZcEc20UwERb2FSFbL5Zov+m6eLOw5XO1
+	 U0G7ve4go2/U2AcRQBfyrcnDNhXxr73zNrB7z/DdLTs2A8gmjboeRkcxWLDePonZMd
+	 YHjaAYfb6skwPEoTTg/+IJvU8c2He+NExPPwWYWQ/APgYVtuWcArdciluMchWxdujz
+	 VMzqINiboCWbhkUf3kw3wZx8hdoQrUyUiSlDt8/iYqaZmT0ujOkI3o51GKdzc46Hz3
+	 fUHcxkHgPIZgQ==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5079f6efd64so3383079e87.2
+        for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 16:32:15 -0800 (PST)
+X-Gm-Message-State: AOJu0YxmG2RJqm94ofkYHcHcd6QbnWDhl/BGUk13RrPUom8V8qeftG6U
+	J57PD26WSASjgbXj7ptj6i3GZ4uMw+/rcON7xoI=
+X-Google-Smtp-Source: AGHT+IGzdR13CFoknC3hQoaKVSXX98FA5eFCg5mgyMyFqXD5N0rpGMQWBThfLNeAn8wHcGTVgGrk+FxYy6kZVWli7lI=
+X-Received: by 2002:ac2:4567:0:b0:50a:77e9:d07a with SMTP id
+ k7-20020ac24567000000b0050a77e9d07amr745858lfm.44.1700267533576; Fri, 17 Nov
+ 2023 16:32:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Found a bug with my gaming gear
-To: =?UTF-8?Q?Andr=C3=A9_Kunz?= <donatusmusic@gmx.de>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <bd1a6eb1-a8af-4181-b9e4-c7b8d3af1eea@gmx.de>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <bd1a6eb1-a8af-4181-b9e4-c7b8d3af1eea@gmx.de>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <5727380.DvuYhMxLoT@bvd0> <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+ <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
+In-Reply-To: <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
+From: Song Liu <song@kernel.org>
+Date: Fri, 17 Nov 2023 16:32:01 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
+Message-ID: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
+Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
+ silently corrupted.
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>, 
+	Mateusz Grzonka <mateusz.grzonka@intel.com>, linux-raid@vger.kernel.org, 
+	regressions@lists.linux.dev, jiangguoqing@kylinos.cn, jgq516@gmail.com, 
+	"yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi André,
+On Thu, Nov 16, 2023 at 5:05=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> Hi,
+>
+> =E5=9C=A8 2023/11/17 0:24, Song Liu =E5=86=99=E9=81=93:
+> > + more folks.
+> >
+> > On Fri, Nov 10, 2023 at 7:00=E2=80=AFPM Bhanu Victor DiCara
+> > <00bvd0+linux@gmail.com> wrote:
+> >>
+> >> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actua=
+l data.
+> >>
+> >>
+> >> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
+> >> (The problem does not occur in the previous commit.)
+> >>
+> >> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/ra=
+id5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (a=
+nd the previous line) is removed, the problem does not occur.
+> >
+> > The patch below should fix it. Please give it more thorough tests and
+> > let me know whether it fixes everything. I will send patch later with
+> > more details.
+> >
+> > Thanks,
+> > Song
+> >
+> > diff --git i/drivers/md/md.c w/drivers/md/md.c
+> > index 68f3bb6e89cb..d4fb1aa5c86f 100644
+> > --- i/drivers/md/md.c
+> > +++ w/drivers/md/md.c
+> > @@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
+> >          struct bio *orig_bio =3D md_io_clone->orig_bio;
+> >          struct mddev *mddev =3D md_io_clone->mddev;
+> >
+> > -       orig_bio->bi_status =3D bio->bi_status;
+> > +       if (bio->bi_status)
+> > +               orig_bio->bi_status =3D bio->bi_status;
+>
+> I'm confused, do you mean that orig_bio can have error while bio
+> doesn't? If this is the case, can you explain more how this is
+> possible?
 
-On 11/16/23 23:41, André Kunz wrote:
-> Hey there guys,
-> 
-> This is my first kernel "bug" report ever, so please bear with me if I
-> didn't catch the precise right way to report this.
-> 
-> The bug I've found:
-> 
-> I'm running stable kernel 6.6.1-1 and as soon as I install it, many of
-> my mouse's hardware buttons stop working. I have a Logitech G502 X Plus
-> (it's a wireless mouse). As soon as I install 6.6.1 the mouse's hardware
-> buttons won't work, i.e. only the two side-buttons would work, not the
-> buttons (and/or my created profiles/macros) would. I have a few macros
-> assigned to some buttons, which work perfectly fine under 6.5.11 (and
-> earlier), but as soon as I'm on 6.6 they'd stop working.
-> 
-> Just wanted to report this and I hope there can be a fix.
-> 
-> I hope this email was not too much out of the ordinary.
+Yes, this is possible.
 
-For starters lets collect some logs and see if that explains
-anything.
+Basically, a big bio is split by md_submit_bio =3D> bio_split_to_limits, so
+we will have two bio's into md_clone_bio(). Let's call them
+parent_orig_bio and split_orig_bio. Errors from split_orig_bio will be
+propagated to parent_orig_bio by __bio_chain_endio(). If
+parent_orig_bio succeeded, md_end_clone_io may overwrite the error
+reported by split_orig_bio. Does this make sense?
 
-Can you do the following:
-
-1. Boot the working 6.5.11, wiggle the mouse (so that it connects)
-and the run:
-
-dmesg > dmesg-6.5.11.txt
-
-2. Boot the non working 6.6.1, wiggle the mouse and run:
-
-dmesg > dmesg-6.6.1.txt
-
-And then attach both generated dmesg-...txt files to your next email ?
-
-Regards,
-
-Hans
-
-
-
+Thanks,
+Song
