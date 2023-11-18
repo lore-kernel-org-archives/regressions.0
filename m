@@ -1,106 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91D5382
-	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 00:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqNNbBxq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D967C43397
-	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 00:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700267535;
-	bh=jXKeJgS2efdeMW4uax+hDxFhcDk5npNFT1+zFEUZb2M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fqNNbBxq/JhNPpmAX5TxM3CstlfJzx4HhbdBcNLdN3Q9/6jvFGVLZz6ODssvHXRll
-	 C1bN98O9T33eWp18PJ0RX4doINUh9cq/R8ZcEc20UwERb2FSFbL5Zov+m6eLOw5XO1
-	 U0G7ve4go2/U2AcRQBfyrcnDNhXxr73zNrB7z/DdLTs2A8gmjboeRkcxWLDePonZMd
-	 YHjaAYfb6skwPEoTTg/+IJvU8c2He+NExPPwWYWQ/APgYVtuWcArdciluMchWxdujz
-	 VMzqINiboCWbhkUf3kw3wZx8hdoQrUyUiSlDt8/iYqaZmT0ujOkI3o51GKdzc46Hz3
-	 fUHcxkHgPIZgQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5079f6efd64so3383079e87.2
-        for <regressions@lists.linux.dev>; Fri, 17 Nov 2023 16:32:15 -0800 (PST)
-X-Gm-Message-State: AOJu0YxmG2RJqm94ofkYHcHcd6QbnWDhl/BGUk13RrPUom8V8qeftG6U
-	J57PD26WSASjgbXj7ptj6i3GZ4uMw+/rcON7xoI=
-X-Google-Smtp-Source: AGHT+IGzdR13CFoknC3hQoaKVSXX98FA5eFCg5mgyMyFqXD5N0rpGMQWBThfLNeAn8wHcGTVgGrk+FxYy6kZVWli7lI=
-X-Received: by 2002:ac2:4567:0:b0:50a:77e9:d07a with SMTP id
- k7-20020ac24567000000b0050a77e9d07amr745858lfm.44.1700267533576; Fri, 17 Nov
- 2023 16:32:13 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F057D107BB
+	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 13:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r4Lc4-0004jA-If; Sat, 18 Nov 2023 14:43:56 +0100
+Message-ID: <932a34b2-b1b8-43f9-8a1e-3707147a271a@leemhuis.info>
+Date: Sat, 18 Nov 2023 14:43:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <5727380.DvuYhMxLoT@bvd0> <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
- <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
-In-Reply-To: <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
-From: Song Liu <song@kernel.org>
-Date: Fri, 17 Nov 2023 16:32:01 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
-Message-ID: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
-Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
- silently corrupted.
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>, 
-	Mateusz Grzonka <mateusz.grzonka@intel.com>, linux-raid@vger.kernel.org, 
-	regressions@lists.linux.dev, jiangguoqing@kylinos.cn, jgq516@gmail.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: platform/x86/intel/pmc: regression found in commit
+ 804951203aa541ad6720c9726c173d18aeb3ab6b
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAD+OKUp=MA6VahvoM0cXgrM1uSwGtqaTV80-+x2VBLgN1RPzag@mail.gmail.com>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAD+OKUp=MA6VahvoM0cXgrM1uSwGtqaTV80-+x2VBLgN1RPzag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700315044;5339c740;
+X-HE-SMSGID: 1r4Lc4-0004jA-If
 
-On Thu, Nov 16, 2023 at 5:05=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi,
->
-> =E5=9C=A8 2023/11/17 0:24, Song Liu =E5=86=99=E9=81=93:
-> > + more folks.
-> >
-> > On Fri, Nov 10, 2023 at 7:00=E2=80=AFPM Bhanu Victor DiCara
-> > <00bvd0+linux@gmail.com> wrote:
-> >>
-> >> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actua=
-l data.
-> >>
-> >>
-> >> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
-> >> (The problem does not occur in the previous commit.)
-> >>
-> >> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/ra=
-id5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (a=
-nd the previous line) is removed, the problem does not occur.
-> >
-> > The patch below should fix it. Please give it more thorough tests and
-> > let me know whether it fixes everything. I will send patch later with
-> > more details.
-> >
-> > Thanks,
-> > Song
-> >
-> > diff --git i/drivers/md/md.c w/drivers/md/md.c
-> > index 68f3bb6e89cb..d4fb1aa5c86f 100644
-> > --- i/drivers/md/md.c
-> > +++ w/drivers/md/md.c
-> > @@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
-> >          struct bio *orig_bio =3D md_io_clone->orig_bio;
-> >          struct mddev *mddev =3D md_io_clone->mddev;
-> >
-> > -       orig_bio->bi_status =3D bio->bi_status;
-> > +       if (bio->bi_status)
-> > +               orig_bio->bi_status =3D bio->bi_status;
->
-> I'm confused, do you mean that orig_bio can have error while bio
-> doesn't? If this is the case, can you explain more how this is
-> possible?
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-Yes, this is possible.
+On 13.11.23 16:42, James Hutchinson wrote:
+> Running here on an Intel NUC 8i3BEH Coffee Lake machine under Arch Linux.
+> 
+> Connected to this machine I have 4x USB DVB Cards (2xDVBSky S960
+> DVB-S2 adapters & 2xGeniatech T230 DVB-T2 adapters), and I stream TV
+> Channels around the house via Tvheadend.
+> 
+> Since linux kernel v6.5 onwards I noticed a bad performance regression
+> whereby the streams are basically unstable. There are tons of
+> continuity errors in the Tvheadend logfile, and the picture and sound
+> are badly broken up as though the system is throttled or does not have
+> the bandwidth to cope with the streams.
+> 
+> Sometimes the stream will work for a minute or so after reboot, before
+> then becoming unstable, and then seems to remain unstable until the
+> next cold reboot.
+> 
+> I dropped back to v6.1 LTS (where everything is fine) and re-tested
+> following the release of v6.6...
+> ...the problem had not gone away so I performed a git bisect to
+> identify the culprit and found this to be:
+> 
+> 804951203aa541ad6720c9726c173d18aeb3ab6b: platform/x86:intel/pmc:
+> Combine core_init() and core_configure()
+> 
+> I can work around the issue by either reverting this commit or by
+> disabling CONFIG_INTEL_PMC_CORE and rebuilding the kernel manually,
+> either of which results in perfect DVB streaming once more.
+> 
+> Happy to test any potential patches or otherwise provide further
+> information as required.
 
-Basically, a big bio is split by md_submit_bio =3D> bio_split_to_limits, so
-we will have two bio's into md_clone_bio(). Let's call them
-parent_orig_bio and split_orig_bio. Errors from split_orig_bio will be
-propagated to parent_orig_bio by __bio_chain_endio(). If
-parent_orig_bio succeeded, md_end_clone_io may overwrite the error
-reported by split_orig_bio. Does this make sense?
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Thanks,
-Song
+#regzbot ^introduced 804951203aa541ad6720c9726
+https://bugzilla.kernel.org/show_bug.cgi?id=218143
+#regzbot title platform/x86/intel/pmc: bad performance regression
+whereby the TV streams are basically unstable
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
