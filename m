@@ -1,33 +1,45 @@
-Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [84.16.66.171])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AA77F4
-	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 18:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3478A6FA0
+	for <regressions@lists.linux.dev>; Sat, 18 Nov 2023 23:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bigler.io header.i=@bigler.io header.b="4nuwgCBO"
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SXhP732z6zMq1p3;
-	Sat, 18 Nov 2023 17:59:39 +0000 (UTC)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4SXhP62MGlzMpnPg;
-	Sat, 18 Nov 2023 18:59:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.io;
-	s=20200409; t=1700330379;
-	bh=4ft/Gs2FgEsC8ctTIzR/sKmm2sBGVKXbikEUXVTIiPc=;
-	h=Date:Subject:From:Reply-To:To:Cc:References:In-Reply-To:From;
-	b=4nuwgCBO/krp+w5+vZhS7K3aJCFpShbKMVnbJ0dbF+nuwHGPS0Waxj0k05ivxrkIk
-	 QyFRwfrwdICxFdc0LP/bFl2swlIXlshKIjcEU00vf7aW9ntcXqrF5yLCn4bfuKlFu2
-	 ggswq1sOw+UPyMDaHN3chcs6S1hiVK/H7JouMzkE=
-Message-ID: <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
-Date: Sat, 18 Nov 2023 18:59:38 +0100
-Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
- imx8mm
-From: linux@bigler.io
-Reply-To: linux@bigler.io
-To: Stefan Moring <stefan.moring@technolution.nl>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Mark Brown
- <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="eopRRE2Z"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id B135E8285568;
+	Sat, 18 Nov 2023 17:45:05 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id H4Q0NQaDXTyH; Sat, 18 Nov 2023 17:45:04 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 703038285587;
+	Sat, 18 Nov 2023 17:45:04 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 703038285587
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1700351104; bh=Jmv6ei8sDB7kyzZzuc4PI29DECp/OLu91TC7QmfYuS0=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=eopRRE2ZSMRNP7IPY5WhLOhHxCs8C42/CGO3DFjnbWS3HkkCgIattvl5XVYeA4TDR
+	 GVw78X/Iwr4DcXAKcY7yhQioDK/WNt8rmkKlgSlV1u8PRYqqWdurBVgb+1DE48F6Cl
+	 egVYk7Nu+XrEJu9g3foJrcoWkSolrirT1WmUEuPQ=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jGOo9hQpRgCd; Sat, 18 Nov 2023 17:45:04 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id F408F8285568;
+	Sat, 18 Nov 2023 17:45:03 -0600 (CST)
+Date: Sat, 18 Nov 2023 17:45:03 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
+	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec register
+  save
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,153 +47,126 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-WS-User-Origin: eyJpdiI6IjFaRW83ZGpKQWd6MDIwYWM0TWdRSVE9PSIsInZhbHVlIjoiY1NQbnN0Vm1CNmNXMEt0dWRvd3JQUT09IiwibWFjIjoiMGY4YThiNTdjYzNiMTIwNzllODc3YmFkZDgwNWNkNWQ0NTQ5NDdiMjQ5MmQxZDExZjNmYzBjZmY4ZTE5OWY0YSIsInRhZyI6IiJ9
-X-WS-User-Mbox: eyJpdiI6Ikk3WWg0QUlxaExzckl6ZFR4YWN6YWc9PSIsInZhbHVlIjoiT0NUUTM2WDZESG8rK2YyOFVEYjAzdz09IiwibWFjIjoiOGUxMDEwYmYxOWJjNjJkMWE5NTY3MDMxY2FhYTJiNDQyOTdmNTlmOTUwZWQ0MDgzZjE5ODA3ZWJiNGViNDRjOSIsInRhZyI6IiJ9
-X-WS-Location: eJxzKUpMKykGAAfpAmU-
-X-Mailer: Infomaniak Workspace (1.3.595)
-References: <8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com>
- <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
- <f4439fd1-7c2d-4a96-9116-1dbe04fceac0@leemhuis.info>
- <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
-In-Reply-To: <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Index: oeYNf1lW+cBhY7HPI4V34psIc5Meaw==
+Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
 
-Hi=20
+During floating point and vector save to thread data fr0/vs0 are clobbered
+by the FPSCR/VSCR store routine.  This leads to userspace register corruption
+and application data corruption / crash under the following rare condition:
 
-I checked the code an printed the used parameters, the =E2=80=98bits_per_wo=
-rd=E2=80=99 is set to 8.
+ * A userspace thread is executing with VSX/FP mode enabled
+ * The userspace thread is making active use of fr0 and/or vs0
+ * An IPI is taken in kernel mode, forcing the userspace thread to reschedule
+ * The userspace thread is interrupted by the IPI before accessing data it
+   previously stored in fr0/vs0
+ * The thread being switched in by the IPI has a pending signal
 
-Best Regards
-Stefan Bigler
+If these exact criteria are met, then the following sequence happens:
 
-Am 2023-11-18T17:54:26.000+01:00 hat Stefan Moring <stefan.moring@technolut=
-ion.nl> geschrieben:
->  Hi Thorsten,
->=20
-> Looking at the data of your test, it appears as if your =E2=80=98bits_per=
-_word=E2=80=99 are
-> set to 32, where you would want 8.
->=20
-> Can you verify this?
->=20
-> Kind regards,
->=20
-> Stefan Moring
->=20
-> Op za 18 nov. 2023 om 16:15 schreef Thorsten Leemhuis <
-> regressions@leemhuis.info>
->=20
->=20
-> >    On 18.11.23 16:13, Linux regression tracking (Thorsten Leemhuis) wro=
-te:
-> >=20
-> > >     [CCing people that worked on the relevant commits as well as the
-> > >   regression list, as it should be in the loop for regressions:
-> > >   https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> > =20
-> >  Sorry for the spam, hit "send" before actually adding Stefan and Mark,
-> >  which now are among the recipients.
-> >=20
-> >=20
-> > >     On 18.11.23 15:25, linux@bigler.io wrote:
-> > >=20
-> > > >     After upgrade from kernel 6.5.11 to 6.6.1 the spi-devices on my=
- hw
-> > > >   colibri-imx6dl and verdin-imx8mm are not working anymore (TPM2 an=
-d
-> > >   SPI-SRAM).
-> > >=20
-> > > > =20
-> > > > >   =20
-> > > > >   Analyzing the problem showed that the 2 commits introduced the =
-problem:
-> > > > > =20
-> > > > >   spi: Increase imx51 ecspi burst length based on transfer length
-> > > > >   15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
-> > > > > =20
-> > > > >   spi: imx: Take in account bits per word instead of assuming 8-b=
-its
-> > > > >   5f66db08cbd3ca471c66bacb0282902c79db9274
-> > > > > =20
-> > > > >   Reverting the commits solved the problem.
-> > > > > =20
-> > > > >   The analyse with the logic-analyser showed a wrong number of
-> > > >   transmitted
-> > > >=20
-> > > > > =20
-> > > > > >     bytes and wrong data.
-> > > > > >   When I try to send 127 Byte with a incrementing pattern
-> > > > >   (0x01,0x02,0x03,..),
-> > > > >=20
-> > > > > > =20
-> > > > > > >     504 Bytes are sent (0x00,0x00,0x01 0x00,0x00,0x00,0x02,
-> > > > > >   0x00,0x00,0x00,0x03).
-> > > > > >=20
-> > > > > > > =20
-> > > > > > > >     We tested with different sizes and patterns, all are no=
-t ok.
-> > > > > > > >   While analysing the configuration and code I was not able=
- to see any
-> > > > > > >   obvious
-> > > > > > >=20
-> > > > > > > > =20
-> > > > > > > > >     mistake.
-> > > > > > > > > =20
-> > > > > > > > >   Has someone else discovered such misbehaviour or has an=
-y idea what is
-> > > > > > > >   wrong?
-> > > > > > > >=20
-> > > > > > > > > =20
-> > > > > > > > > >     Best Regards
-> > > > > > > > >  =20
-> > > > > > > > >   Thx for the report!
-> > > > > > > > > =20
-> > > > > > > > >   [TLDR: I'm adding this report to the list of tracked Li=
-nux kernel
-> > > > > > > > >   regressions; the text you find below is based on a few =
-templates
-> > > > > > > > >   paragraphs you might have encountered already in simila=
-r form.
-> > > > > > > > >   See link in footer if these mails annoy you.]
-> > > > > > > > > =20
-> > > > > > > > >   To ensure the issue doesn't fall through the cracks unn=
-oticed, I'm
-> > > > > > > > >   adding it to regzbot, the Linux kernel regression track=
-ing bot:
-> > > > > > > > > =20
-> > > > > > > > >   #regzbot ^introduced 15a6af94a27
-> > > > > > > > >   #regzbot title spi: spi-devices on colibri-imx6dl and v=
-erdin-imx8mm are
-> > > > > > > > >   not working anymore
-> > > > > > > > >   #regzbot ignore-activity
-> > > > > > > > > =20
-> > > > > > > > >   This isn't a regression? This issue or a fix for it are=
- already
-> > > > > > > > >   discussed somewhere else? It was fixed already? You wan=
-t to clarify when
-> > > > > > > > >   the regression started to happen? Or point out I got th=
-e title or
-> > > > > > > > >   something else totally wrong? Then just reply and tell =
-me -- ideally
-> > > > > > > > >   while also telling regzbot about it, as explained by th=
-e page listed in
-> > > > > > > > >   the footer of this mail.
-> > > > > > > > > =20
-> > > > > > > > >   Developers: When fixing the issue, remember to add 'Lin=
-k:' tags pointing
-> > > > > > > > >   to the report (the parent of this mail). See page linke=
-d in footer for
-> > > > > > > > >   details.
-> > > > > > > > > =20
-> > > > > > > > >   Ciao, Thorsten (wearing his 'the Linux kernel's regress=
-ion tracker' hat)
-> > > > > > > > >   --
-> > > > > > > > >   Everything you wanna know about Linux kernel regression=
- tracking:
-> > > > > > > > >   https://linux-regtracking.leemhuis.info/about/#tldr
-> > > > > > > > >   That page also explains what to do if mails like this a=
-nnoy you.
-> > > > > > > > =20
-> > > > > > > >=20
-> > > > > > > >
+ * The existing thread FP storage is still valid before the IPI, due to a
+   prior call to save_fpu() or store_fp_state().  Note that the current
+   fr0/vs0 registers have been clobbered, so the FP/VSX state in registers
+   is now invalid pending a call to restore_fp()/restore_altivec().
+ * IPI -- FP/VSX register state remains invalid
+ * interrupt_exit_user_prepare_main() calls do_notify_resume(),
+   due to the pending signal
+ * do_notify_resume() eventually calls save_fpu() via giveup_fpu(), which
+   merrily reads and saves the invalid FP/VSX state to thread local storage.
+ * interrupt_exit_user_prepare_main() calls restore_math(), writing the invalid
+   FP/VSX state back to registers.
+ * Execution is released to userspace, and the application crashes or corrupts
+   data.
+
+Without the pending signal, do_notify_resume() is never called, therefore the
+invalid register state does't matter as it is overwritten nearly immeediately
+by interrupt_exit_user_prepare_main() calling restore_math() before return
+to userspace.
+
+The combination of MariaDB and io_uring is especially good at triggering data
+corruption using the above sequence, see MariaDB bug MDEV-30728.
+
+Restore fr0/vs0 after FPSCR/VSCR store has completed for both the fp and
+altivec register save paths.
+
+Tested under QEMU in kvm mode, running on a Talos II workstation with dual
+POWER9 DD2.2 CPUs.
+
+Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
+Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+---
+ arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
+ arch/powerpc/kernel/vector.S |  4 ++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
+index 6a9acfb690c9..2f8f3f93cbb6 100644
+--- a/arch/powerpc/kernel/fpu.S
++++ b/arch/powerpc/kernel/fpu.S
+@@ -23,6 +23,15 @@
+ #include <asm/feature-fixups.h>
+ 
+ #ifdef CONFIG_VSX
++#define __REST_1FPVSR(n,c,base)						\
++BEGIN_FTR_SECTION							\
++	b	2f;							\
++END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
++	REST_FPR(n,base);						\
++	b	3f;							\
++2:	REST_VSR(n,c,base);						\
++3:
++
+ #define __REST_32FPVSRS(n,c,base)					\
+ BEGIN_FTR_SECTION							\
+ 	b	2f;							\
+@@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+ 2:	SAVE_32VSRS(n,c,base);						\
+ 3:
+ #else
++#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
+ #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
+ #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
+ #endif
++#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
+ #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
+ #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
+ 
+@@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
+ 	SAVE_32FPVSRS(0, R4, R3)
+ 	mffs	fr0
+ 	stfd	fr0,FPSTATE_FPSCR(r3)
++	REST_1FPVSR(0, R4, R3)
+ 	blr
+ EXPORT_SYMBOL(store_fp_state)
+ 
+@@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
+ 2:	SAVE_32FPVSRS(0, R4, R6)
+ 	mffs	fr0
+ 	stfd	fr0,FPSTATE_FPSCR(r6)
++	REST_1FPVSR(0, R4, R6)
+ 	blr
+diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
+index 4094e4c4c77a..8c63b05b421e 100644
+--- a/arch/powerpc/kernel/vector.S
++++ b/arch/powerpc/kernel/vector.S
+@@ -33,6 +33,8 @@ _GLOBAL(store_vr_state)
+ 	mfvscr	v0
+ 	li	r4, VRSTATE_VSCR
+ 	stvx	v0, r4, r3
++	li	r4, 0
++	lvx	v0, r4, r3
+ 	blr
+ EXPORT_SYMBOL(store_vr_state)
+ 
+@@ -109,6 +111,8 @@ _GLOBAL(save_altivec)
+ 	mfvscr	v0
+ 	li	r4,VRSTATE_VSCR
+ 	stvx	v0,r4,r7
++	li	r4,0
++	lvx	v0,r4,r7
+ 	blr
+ 
+ #ifdef CONFIG_VSX
+-- 
+2.39.2
