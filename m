@@ -1,74 +1,71 @@
-Received: from mx07-006a4e02.pphosted.com (mx07-006a4e02.pphosted.com [143.55.146.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA54139E
-	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 07:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iram.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iram.es
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897DF11181
+	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 13:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iram.es header.i=@iram.es header.b="GKy79ubR"
-Received: from pps.filterd (m0316690.ppops.net [127.0.0.1])
-	by mx07-006a4e02.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3AJ6F3Cf027017;
-	Sun, 19 Nov 2023 08:02:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iram.es; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=dkim3; bh=2syj0J85x3HLZtg/JgjyLpKj4
-	XbCJajaqbPE+i64SiE=; b=GKy79ubRDKg3H1goL0XayK8JfvTucEo0v613lkhhY
-	imxsztTEz4/PdLJqogZ2atY4plLgCu54AFBgzwgV6NsmujQnzq6tkCfU4TqQ2Rh8
-	Fm41P7K96HWhVhEo5Tz+hYmXqNjPI75G+Zie97lOEfE1otO4BvxLkhOirJldYxFJ
-	QGW6C1FTgccmPp72+onK5HJupBd3KogtFhP1NYF1fbTS4cZO6h+eZ5GdgjzYzFdJ
-	odkxQvDSbc5lQWY6ywi5eG8cFm5wTCO3Wmj+7yZepJlhXi7nfoXS/LgGOHts+hJA
-	2kETf+0NM8Th2cS+BVj1llZprZx7gBjwACPyRhotPlHBQ==
-Received: from mta-out03.sim.rediris.es (mta-out03.sim.rediris.es [130.206.24.45])
-	by mx07-006a4e02.pphosted.com (PPS) with ESMTPS id 3uf7gq1xum-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 19 Nov 2023 08:02:28 +0100 (CET)
-Received: from mta-out03.sim.rediris.es (localhost.localdomain [127.0.0.1])
-	by mta-out03.sim.rediris.es (Postfix) with ESMTPS id 48CC41200C4;
-	Sun, 19 Nov 2023 08:02:27 +0100 (CET)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mta-out03.sim.rediris.es (Postfix) with ESMTP id 2C86E1200C7;
-	Sun, 19 Nov 2023 08:02:27 +0100 (CET)
-X-Amavis-Modified: Mail body modified (using disclaimer) -
- mta-out03.sim.rediris.es
-Received: from mta-out03.sim.rediris.es ([127.0.0.1])
- by localhost (mta-out03.sim.rediris.es [127.0.0.1]) (amavis, port 10026)
- with ESMTP id bD_ShB_V5ozk; Sun, 19 Nov 2023 08:02:27 +0100 (CET)
-Received: from gp-workstation.iram.es (haproxy02.sim.rediris.es [130.206.24.70])
-	by mta-out03.sim.rediris.es (Postfix) with ESMTPA id 7874D1200C4;
-	Sun, 19 Nov 2023 08:02:24 +0100 (CET)
-Date: Sun, 19 Nov 2023 08:02:23 +0100
-From: Gabriel Paubert <paubert@iram.es>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>,
-        christophe leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register save
-Message-ID: <20231119070223.GA62996@gp-workstation.iram.es>
-References: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Q42Il7gR"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5c1b6fc5426so179640a12.1
+        for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 05:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1700399692; x=1701004492; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Jnvh0uSqYJOA1ffl5+OCnqgORnNMLUa+bbdwsPJB8s=;
+        b=Q42Il7gRyMc5HTTup/ObhNfvCHp6r7BeEACRTInDPLofWH30ML4e/vl++5Srptd9DL
+         BM319OUTj8w4LQ9Cew8CW+twG1q5h8CuTzHD87xQkrqsMRu6Q2UbZxoodHqqTRq/gJlI
+         AJkxtDhyiaDvgA0AWuoNSB7F6aB6XFk7yE+Rlj+b0P+zpJCgYywQTje6eAvARfLHwC9i
+         lOpUSuzN9mvjlkS34CAxT8ENB8Qas6UPI8dwGGMKmGgfM3ZnlHKQYWV+VnbIzFDjqErR
+         q4SPT93lV3TrovX7IWFV2JvGBoCMZiJzwvg+hskCHY5zhUiDuaXCzvW8XCWxZvMB2gu6
+         U5CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700399692; x=1701004492;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Jnvh0uSqYJOA1ffl5+OCnqgORnNMLUa+bbdwsPJB8s=;
+        b=kPR9UEyEMk3a2vBMKUQxsRSRWEbjCYhG0deHVjJRii4BElPUH6XRJNkRGomHaELA4b
+         N+H7nXTgVXrZ3ckVeHPmSGYKj+JX7C9KygrOzvzVpmW6cpSClXM0kQOicdiiXDouNWLn
+         9NNmuHCstDWuBMcGPVYABUnipi/f7yPhC0JALM0LrHkqKvELt7BcSrnd8jddZJ6UqekJ
+         6DHI7g2LXW0K+V2IgNpv5tUbkMzDs4CeAmECyd+jjSQhDbjFTiYphsehfDTwI2EWdfYH
+         6YobNd/R9l2KFw8UzSdnw3slIKltGBsuS1bghJ/RrjS7rGl566fK75KMi1QK3jHaFh2u
+         ug2w==
+X-Gm-Message-State: AOJu0YxllRp3W7ezTAKid0Dz3bMY/LLFl/EADv503/kYirT25jeEKNjE
+	ITJPBN5v0Qenq0Prhg9S0DDT3w==
+X-Google-Smtp-Source: AGHT+IGqpRKFev/H7sZu2yvuRrfS/qugUAQdcwysXY76mok/kgcwo5VNtQhAUKhXkSeHKyoj1apkOA==
+X-Received: by 2002:a05:6a00:4215:b0:68f:c8b3:3077 with SMTP id cd21-20020a056a00421500b0068fc8b33077mr3375219pfb.1.1700399692289;
+        Sun, 19 Nov 2023 05:14:52 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id m12-20020a056a00080c00b006cb6fa32590sm1468349pfk.148.2023.11.19.05.14.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Nov 2023 05:14:51 -0800 (PST)
+Message-ID: <42b9fdd7-2939-4ffc-8e18-4996948b19f7@kernel.dk>
+Date: Sun, 19 Nov 2023 06:14:50 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec register
+ save
+Content-Language: en-US
+To: Timothy Pearson <tpearson@raptorengineering.com>,
+ regressions <regressions@lists.linux.dev>,
+ Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>,
+ christophe leroy <christophe.leroy@csgroup.eu>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
+From: Jens Axboe <axboe@kernel.dk>
 In-Reply-To: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
-X-Proofpoint-ORIG-GUID: sBTR22t3EMl8dOdSIEKalDoAHYW1X_oZ
-X-Proofpoint-GUID: sBTR22t3EMl8dOdSIEKalDoAHYW1X_oZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-19_04,2023-11-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=salida_notspam policy=salida score=0 mlxscore=0 mlxlogscore=690
- bulkscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 spamscore=0 malwarescore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311060001 definitions=main-2311190050
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Nov 18, 2023 at 05:45:03PM -0600, Timothy Pearson wrote:
+On 11/18/23 4:45 PM, Timothy Pearson wrote:
 > During floating point and vector save to thread data fr0/vs0 are clobbered
 > by the FPSCR/VSCR store routine.  This leads to userspace register corruption
 > and application data corruption / crash under the following rare condition:
@@ -95,110 +92,16 @@ On Sat, Nov 18, 2023 at 05:45:03PM -0600, Timothy Pearson wrote:
 >    FP/VSX state back to registers.
 >  * Execution is released to userspace, and the application crashes or corrupts
 >    data.
-> 
-> Without the pending signal, do_notify_resume() is never called, therefore the
-> invalid register state does't matter as it is overwritten nearly immeediately
-> by interrupt_exit_user_prepare_main() calling restore_math() before return
-> to userspace.
-> 
-> The combination of MariaDB and io_uring is especially good at triggering data
-> corruption using the above sequence, see MariaDB bug MDEV-30728.
-> 
-> Restore fr0/vs0 after FPSCR/VSCR store has completed for both the fp and
-> altivec register save paths.
-> 
-> Tested under QEMU in kvm mode, running on a Talos II workstation with dual
-> POWER9 DD2.2 CPUs.
-> 
-> Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-> ---
->  arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
->  arch/powerpc/kernel/vector.S |  4 ++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
-> index 6a9acfb690c9..2f8f3f93cbb6 100644
-> --- a/arch/powerpc/kernel/fpu.S
-> +++ b/arch/powerpc/kernel/fpu.S
-> @@ -23,6 +23,15 @@
->  #include <asm/feature-fixups.h>
->  
->  #ifdef CONFIG_VSX
-> +#define __REST_1FPVSR(n,c,base)						\
-> +BEGIN_FTR_SECTION							\
-> +	b	2f;							\
-> +END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
-> +	REST_FPR(n,base);						\
-> +	b	3f;							\
-> +2:	REST_VSR(n,c,base);						\
-> +3:
-> +
->  #define __REST_32FPVSRS(n,c,base)					\
->  BEGIN_FTR_SECTION							\
->  	b	2f;							\
-> @@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
->  2:	SAVE_32VSRS(n,c,base);						\
->  3:
->  #else
-> +#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
->  #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
->  #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
->  #endif
-> +#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
->  #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
->  #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
->  
-> @@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
->  	SAVE_32FPVSRS(0, R4, R3)
->  	mffs	fr0
->  	stfd	fr0,FPSTATE_FPSCR(r3)
-> +	REST_1FPVSR(0, R4, R3)
->  	blr
->  EXPORT_SYMBOL(store_fp_state)
->  
-> @@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
->  2:	SAVE_32FPVSRS(0, R4, R6)
->  	mffs	fr0
->  	stfd	fr0,FPSTATE_FPSCR(r6)
-> +	REST_1FPVSR(0, R4, R6)
->  	blr
-> diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
-> index 4094e4c4c77a..8c63b05b421e 100644
-> --- a/arch/powerpc/kernel/vector.S
-> +++ b/arch/powerpc/kernel/vector.S
-> @@ -33,6 +33,8 @@ _GLOBAL(store_vr_state)
->  	mfvscr	v0
->  	li	r4, VRSTATE_VSCR
->  	stvx	v0, r4, r3
-> +	li	r4, 0
-> +	lvx	v0, r4, r3
 
-Just a small nit, no need for clearing r4, "lvx v0,0,r3" will do, as all
-Power instructions using indexed addressing mode.
+What an epic bug hunt! Hats off to you for seeing it through and getting
+to the bottom of it. Particularly difficult as the commit that made it
+easier to trigger was in no way related to where the actual bug was.
 
->  	blr
->  EXPORT_SYMBOL(store_vr_state)
->  
-> @@ -109,6 +111,8 @@ _GLOBAL(save_altivec)
->  	mfvscr	v0
->  	li	r4,VRSTATE_VSCR
->  	stvx	v0,r4,r7
-> +	li	r4,0
-> +	lvx	v0,r4,r7
+I ran this on the vm I have access to, and it survived 2x500 iterations.
+Happy to call that good:
 
-Ditto.
+Tested-by: Jens Axboe <axboe@kernel.dk>
 
-And great bug hunt, by the way...
-
->  	blr
->  
->  #ifdef CONFIG_VSX
-> -- 
-> 2.39.2
-
-Cheers,
-Gabriel
-
- 
+-- 
+Jens Axboe
 
