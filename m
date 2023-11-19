@@ -1,48 +1,46 @@
 Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA7B365
-	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 00:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367CA365
+	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 00:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="iBu1dRse"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="LgY9S2eR"
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 397A58285466;
-	Sat, 18 Nov 2023 18:12:35 -0600 (CST)
+	by mail.rptsys.com (Postfix) with ESMTP id 344248284ECD;
+	Sat, 18 Nov 2023 18:16:57 -0600 (CST)
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id CHdZQiFBsuP7; Sat, 18 Nov 2023 18:12:33 -0600 (CST)
+	with ESMTP id 9vQhWzw2l5fX; Sat, 18 Nov 2023 18:16:56 -0600 (CST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id B406C8285668;
-	Sat, 18 Nov 2023 18:12:33 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com B406C8285668
+	by mail.rptsys.com (Postfix) with ESMTP id 29D6A8285281;
+	Sat, 18 Nov 2023 18:16:56 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 29D6A8285281
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1700352753; bh=cQhhjS6xNH6UKIJZzLuNMh7AkouB2WwPHhgpxJ3IXmA=;
+	t=1700353016; bh=F8cKf+ZvFEqNb+Wn9t+yn9XWSznOAUKGd+P1kqexYR4=;
 	h=Date:From:To:Message-ID:MIME-Version;
-	b=iBu1dRsevPzzKyt60iXj0T+08g/rRFvEqoqOBTIgQIB4gXvO7lJaKmHia0Q3mJfkH
-	 C+AqxP2QVYvM59HjrM08ankG1mouEEGqMzVcfi0fHqS7LjqPp88yUuLI9hod031tOX
-	 MkIVv3QQ0ezT2lsYTDpVbcDQeq3V6SZoJp4EXF6k=
+	b=LgY9S2eRH6B2vcGW+DaP1U+n2OyYv6TenELF8Vh9HHvSp5rLlsVtTMIvXrPpF2eVl
+	 UuhsnT7WVjZ6c/hTfq/C8yJ6YKpDNLVp+hS8L17KBmNButuJO6yyNPmzGh57+CcydK
+	 l/jH4n35QyhwXa+2GFJwkD8qEK+cWOvxG+VGRloM=
 X-Virus-Scanned: amavisd-new at rptsys.com
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id y3LmDgxkzOOs; Sat, 18 Nov 2023 18:12:33 -0600 (CST)
+	with ESMTP id vYVLkkRFpr9m; Sat, 18 Nov 2023 18:16:55 -0600 (CST)
 Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 64B9D8285466;
-	Sat, 18 Nov 2023 18:12:33 -0600 (CST)
-Date: Sat, 18 Nov 2023 18:12:31 -0600 (CST)
+	by mail.rptsys.com (Postfix) with ESMTP id DAE7D8284ECD;
+	Sat, 18 Nov 2023 18:16:55 -0600 (CST)
+Date: Sat, 18 Nov 2023 18:16:55 -0600 (CST)
 From: Timothy Pearson <tpearson@raptorengineering.com>
 To: Timothy Pearson <tpearson@raptorengineering.com>
 Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Message-ID: <2090370604.48379725.1700352751485.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
-References: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register  save
+	Pavel Begunkov <asml.silence@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>
+Message-ID: <636987821.48381355.1700353015684.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <368367067.47661779.1700106890793.JavaMail.zimbra@raptorengineeringinc.com>
+References: <480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com> <580f9fdb-475b-4b92-8e90-cab2100464ea@kernel.dk> <2046281833.47549655.1700067821653.JavaMail.zimbra@raptorengineeringinc.com> <4e171c09-bb9a-422f-b92c-230bb1238b22@kernel.dk> <bba85bd7-6f09-4d78-b33b-caa6a6dcb29c@kernel.dk> <230871836.47658490.1700105335407.JavaMail.zimbra@raptorengineeringinc.com> <5fb3fb19-cb9b-42d0-8949-7a9be8750682@kernel.dk> <368367067.47661779.1700106890793.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: Re: Regression in io_uring, leading to data corruption
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,138 +50,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
-Thread-Index: oeYNf1lW+cBhY7HPI4V34psIc5MeawXcHduz
+Thread-Topic: Regression in io_uring, leading to data corruption
+Thread-Index: pKBzWVMxEqmEf7vHVrMn/xZC3Gep1OmkSuWW
 
 
 
 ----- Original Message -----
 > From: "Timothy Pearson" <tpearson@raptorengineering.com>
-> To: "Jens Axboe" <axboe@kernel.dk>, "regressions" <regressions@lists.linux.dev>, "Michael Ellerman"
-> <mpe@ellerman.id.au>, "npiggin" <npiggin@gmail.com>, "christophe leroy" <christophe.leroy@csgroup.eu>, "linuxppc-dev"
-> <linuxppc-dev@lists.ozlabs.org>
-> Sent: Saturday, November 18, 2023 5:45:03 PM
-> Subject: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec register  save
+> To: "Jens Axboe" <axboe@kernel.dk>
+> Cc: "regressions" <regressions@lists.linux.dev>, "Pavel Begunkov" <asml.silence@gmail.com>, "Michael Ellerman"
+> <mpe@ellerman.id.au>, "npiggin" <npiggin@gmail.com>
+> Sent: Wednesday, November 15, 2023 9:54:50 PM
+> Subject: Re: Regression in io_uring, leading to data corruption
+> 
+> OK, fair enough, I've been at this long enough I forgot about the precreated
+> workers "fixing" things.  Let me step back a bit and meta-analyze all of what
+> we've learned, even though a lot of it doesn't make any sense maybe there's a
+> pattern somewhere in all the noise.
 
-> During floating point and vector save to thread data fr0/vs0 are clobbered
-> by the FPSCR/VSCR store routine.  This leads to userspace register corruption
-> and application data corruption / crash under the following rare condition:
-> 
-> * A userspace thread is executing with VSX/FP mode enabled
-> * The userspace thread is making active use of fr0 and/or vs0
-> * An IPI is taken in kernel mode, forcing the userspace thread to reschedule
-> * The userspace thread is interrupted by the IPI before accessing data it
->   previously stored in fr0/vs0
-> * The thread being switched in by the IPI has a pending signal
-> 
-> If these exact criteria are met, then the following sequence happens:
-> 
-> * The existing thread FP storage is still valid before the IPI, due to a
->   prior call to save_fpu() or store_fp_state().  Note that the current
->   fr0/vs0 registers have been clobbered, so the FP/VSX state in registers
->   is now invalid pending a call to restore_fp()/restore_altivec().
-> * IPI -- FP/VSX register state remains invalid
-> * interrupt_exit_user_prepare_main() calls do_notify_resume(),
->   due to the pending signal
-> * do_notify_resume() eventually calls save_fpu() via giveup_fpu(), which
->   merrily reads and saves the invalid FP/VSX state to thread local storage.
-> * interrupt_exit_user_prepare_main() calls restore_math(), writing the invalid
->   FP/VSX state back to registers.
-> * Execution is released to userspace, and the application crashes or corrupts
->   data.
-> 
-> Without the pending signal, do_notify_resume() is never called, therefore the
-> invalid register state does't matter as it is overwritten nearly immeediately
-> by interrupt_exit_user_prepare_main() calling restore_math() before return
-> to userspace.
-> 
-> The combination of MariaDB and io_uring is especially good at triggering data
-> corruption using the above sequence, see MariaDB bug MDEV-30728.
-> 
-> Restore fr0/vs0 after FPSCR/VSCR store has completed for both the fp and
-> altivec register save paths.
-> 
-> Tested under QEMU in kvm mode, running on a Talos II workstation with dual
-> POWER9 DD2.2 CPUs.
-> 
-> Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-> ---
-> arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
-> arch/powerpc/kernel/vector.S |  4 ++++
-> 2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
-> index 6a9acfb690c9..2f8f3f93cbb6 100644
-> --- a/arch/powerpc/kernel/fpu.S
-> +++ b/arch/powerpc/kernel/fpu.S
-> @@ -23,6 +23,15 @@
-> #include <asm/feature-fixups.h>
-> 
-> #ifdef CONFIG_VSX
-> +#define __REST_1FPVSR(n,c,base)						\
-> +BEGIN_FTR_SECTION							\
-> +	b	2f;							\
-> +END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
-> +	REST_FPR(n,base);						\
-> +	b	3f;							\
-> +2:	REST_VSR(n,c,base);						\
-> +3:
-> +
-> #define __REST_32FPVSRS(n,c,base)					\
-> BEGIN_FTR_SECTION							\
-> 	b	2f;							\
-> @@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
-> 2:	SAVE_32VSRS(n,c,base);						\
-> 3:
-> #else
-> +#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
-> #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
-> #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
-> #endif
-> +#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
-> #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
-> #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
-> 
-> @@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
-> 	SAVE_32FPVSRS(0, R4, R3)
-> 	mffs	fr0
-> 	stfd	fr0,FPSTATE_FPSCR(r3)
-> +	REST_1FPVSR(0, R4, R3)
-> 	blr
-> EXPORT_SYMBOL(store_fp_state)
-> 
-> @@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
-> 2:	SAVE_32FPVSRS(0, R4, R6)
-> 	mffs	fr0
-> 	stfd	fr0,FPSTATE_FPSCR(r6)
-> +	REST_1FPVSR(0, R4, R6)
-> 	blr
-> diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
-> index 4094e4c4c77a..8c63b05b421e 100644
-> --- a/arch/powerpc/kernel/vector.S
-> +++ b/arch/powerpc/kernel/vector.S
-> @@ -33,6 +33,8 @@ _GLOBAL(store_vr_state)
-> 	mfvscr	v0
-> 	li	r4, VRSTATE_VSCR
-> 	stvx	v0, r4, r3
-> +	li	r4, 0
-> +	lvx	v0, r4, r3
-> 	blr
-> EXPORT_SYMBOL(store_vr_state)
-> 
-> @@ -109,6 +111,8 @@ _GLOBAL(save_altivec)
-> 	mfvscr	v0
-> 	li	r4,VRSTATE_VSCR
-> 	stvx	v0,r4,r7
-> +	li	r4,0
-> +	lvx	v0,r4,r7
-> 	blr
-> 
-> #ifdef CONFIG_VSX
-> --
-> 2.39.2
+To close the loop on this long thread, I finally found the root cause and submitted a correct patch here:
 
-Once this (or an equivalent) is merged upstream, I'll take the stable backport task.
+https://lore.kernel.org/linuxppc-dev/1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com/T/#u
 
-Thanks!
+500+ loops and counting on this boot alone.  I think we're good now.  It was a ppc64 specific bug in the end, corruption of a specific FPU register. 
+ It was definitely provoked by specific signals being sent, but also had a somewhat wider scope than just that, which was making debug quite difficult.
