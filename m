@@ -1,170 +1,155 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C233125D2
-	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 15:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="McNppLYS"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 65CDF828587F;
-	Sun, 19 Nov 2023 09:18:07 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id QXAYfM6e-bG7; Sun, 19 Nov 2023 09:18:05 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 12160828596B;
-	Sun, 19 Nov 2023 09:18:05 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 12160828596B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1700407085; bh=DfNhpWq+uQUbDfnLh5nfXGSF7RhZhtThB0PFEVqSlRc=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=McNppLYSwyrfcwZD292FYWx1J8KnIyOOi9Z978sSpSzRCn0LnlqGLocmlCdknNl9C
-	 0yuC6gt3wxlbbVPB7JgsXLcFHpiLI0Xc3FXqELUzcqzLZCTMDGdtpDK+7dusDQLNZy
-	 ZMXEGS45AerS8lgBN0d3q1SN/3ay8L6kBHkivYDo=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qtnwUktYg1bG; Sun, 19 Nov 2023 09:18:04 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id D7F26828587F;
-	Sun, 19 Nov 2023 09:18:04 -0600 (CST)
-Date: Sun, 19 Nov 2023 09:18:02 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Message-ID: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register  save
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD43E14A85
+	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1r4krc-00034r-Jb; Sun, 19 Nov 2023 17:41:40 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2023-11-19]
+Date: Sun, 19 Nov 2023 16:41:39 +0000
+Message-Id: <170041205809.2648289.15922511203232588109@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Index: dVySrFh2MClWXpV/Kluttxze/2CBtQ==
-Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700412103;49eaf0f0;
+X-HE-SMSGID: 1r4krc-00034r-Jb
 
-During floating point and vector save to thread data fr0/vs0 are clobbered
-by the FPSCR/VSCR store routine.  This leads to userspace register corruption
-and application data corruption / crash under the following rare condition:
+Hi Linus. Nothing much to report wrt to regressions in 6.7 cycle. There
+is one drm issue that seems to annoy users of the Thinkpad T13s and some
+others that use the msm driver. A fix exists since Oct 25. Abhinav Kumar
+wanted to queue it "for -fixes rightaway" on Wednesday[1], but it
+nevertheless still hasn't even reached -next afaics. Not sure what
+happened there, but hope that things will clear up in the next few days.
 
- * A userspace thread is executing with VSX/FP mode enabled
- * The userspace thread is making active use of fr0 and/or vs0
- * An IPI is taken in kernel mode, forcing the userspace thread to reschedule
- * The userspace thread is interrupted by the IPI before accessing data it
-   previously stored in fr0/vs0
- * The thread being switched in by the IPI has a pending signal
+[1] https://lore.kernel.org/dri-devel/a35623df-6a8e-b398-a0b2-7f11b9ec4e5d@quicinc.com/
 
-If these exact criteria are met, then the following sequence happens:
+While at it let me use this opportunity to bring your attention to one
+other regressions from an earlier cycle that IMHO is not handled how you
+expect regressions to be handled:
 
- * The existing thread FP storage is still valid before the IPI, due to a
-   prior call to save_fpu() or store_fp_state().  Note that the current
-   fr0/vs0 registers have been clobbered, so the FP/VSX state in registers
-   is now invalid pending a call to restore_fp()/restore_altivec().
- * IPI -- FP/VSX register state remains invalid
- * interrupt_exit_user_prepare_main() calls do_notify_resume(),
-   due to the pending signal
- * do_notify_resume() eventually calls save_fpu() via giveup_fpu(), which
-   merrily reads and saves the invalid FP/VSX state to thread local storage.
- * interrupt_exit_user_prepare_main() calls restore_math(), writing the invalid
-   FP/VSX state back to registers.
- * Execution is released to userspace, and the application crashes or corrupts
-   data.
+Quite a few machines with Adaptec controllers seems to hang for a few
+tens of seconds to a few minutes before things start to work normally
+again for a while. That problem is known since late June
+(https://bugzilla.kernel.org/show_bug.cgi?id=217599 ) and apparently
+caused by 9dc704dcc09eae ("scsi: aacraid: Reply queue mapping to CPUs
+based on IRQ affinity") [v6.4-rc7]. Reverting the culprit seems to fix
+the problem, but I have no idea if that would be a wise move, at that
+commit fixes an I/O hang. Which might be why that commit despite a
+warning of mine[1] was picked up by the stable team and added to 6.1.53.
+That way it apparently reached Debian recently and caused more people to
+run into this and show up in the bugzilla ticket. Hannes Reinecke ~four
+weeks ago proposed a fix there, but that didn't work. Apart from it
+there was not much (if any?) involvement from the culprit's author (CCed
+to the ticket) or the scsi maintainers (which were pointed to that
+ticket at least twice mail, among others in [2]).
 
-Without the pending signal, do_notify_resume() is never called, therefore the
-invalid register state does't matter as it is overwritten nearly immediately
-by interrupt_exit_user_prepare_main() calling restore_math() before return
-to userspace.
+[2] https://lore.kernel.org/all/4a639fff-445e-455b-9a31-57368d6b7021@leemhuis.info/
 
-Restore fr0/vs0 after FPSCR/VSCR store has completed for both the fp and
-altivec register save paths.
+Sorry for not bringing this up earlier.
 
-Tested under QEMU in kvm mode, running on a Talos II workstation with dual
-POWER9 DD2.2 CPUs.
+Ciao, Thorsten
 
-Closes: https://lore.kernel.org/all/480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com/
-Closes: https://lore.kernel.org/linuxppc-dev/480221078.47953493.1700206777956.JavaMail.zimbra@raptorengineeringinc.com/
-Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
-Tested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
 ---
- arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
- arch/powerpc/kernel/vector.S |  2 ++
- 2 files changed, 15 insertions(+)
 
-diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
-index 6a9acfb690c9..2f8f3f93cbb6 100644
---- a/arch/powerpc/kernel/fpu.S
-+++ b/arch/powerpc/kernel/fpu.S
-@@ -23,6 +23,15 @@
- #include <asm/feature-fixups.h>
- 
- #ifdef CONFIG_VSX
-+#define __REST_1FPVSR(n,c,base)						\
-+BEGIN_FTR_SECTION							\
-+	b	2f;							\
-+END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
-+	REST_FPR(n,base);						\
-+	b	3f;							\
-+2:	REST_VSR(n,c,base);						\
-+3:
-+
- #define __REST_32FPVSRS(n,c,base)					\
- BEGIN_FTR_SECTION							\
- 	b	2f;							\
-@@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
- 2:	SAVE_32VSRS(n,c,base);						\
- 3:
- #else
-+#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
- #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
- #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
- #endif
-+#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
- #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
- #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
- 
-@@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
- 	SAVE_32FPVSRS(0, R4, R3)
- 	mffs	fr0
- 	stfd	fr0,FPSTATE_FPSCR(r3)
-+	REST_1FPVSR(0, R4, R3)
- 	blr
- EXPORT_SYMBOL(store_fp_state)
- 
-@@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
- 2:	SAVE_32FPVSRS(0, R4, R6)
- 	mffs	fr0
- 	stfd	fr0,FPSTATE_FPSCR(r6)
-+	REST_1FPVSR(0, R4, R6)
- 	blr
-diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
-index 4094e4c4c77a..80b3f6e476b6 100644
---- a/arch/powerpc/kernel/vector.S
-+++ b/arch/powerpc/kernel/vector.S
-@@ -33,6 +33,7 @@ _GLOBAL(store_vr_state)
- 	mfvscr	v0
- 	li	r4, VRSTATE_VSCR
- 	stvx	v0, r4, r3
-+	lvx	v0, 0, r3
- 	blr
- EXPORT_SYMBOL(store_vr_state)
- 
-@@ -109,6 +110,7 @@ _GLOBAL(save_altivec)
- 	mfvscr	v0
- 	li	r4,VRSTATE_VSCR
- 	stvx	v0,r4,r7
-+	lvx	v0,0,r7
- 	blr
- 
- #ifdef CONFIG_VSX
--- 
-2.39.2
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 3 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.6.. aka v6.7-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] drm/amd/display: horizontal flashing bar with a picture of the desktop background on white screen after login
+-----------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E%2B8p-4QO6FOWa6zp22_A@mail.gmail.com/
+
+By Mikhail Gavrilov; 5 days ago; 8 activities, latest 3 days ago.
+Introduced in ed6e2782e974 (v6.7-rc1)
+
+Recent activities from: Mikhail Gavrilov (5), Christian König (1), Lee,
+  Alvin (1), Hamza Mahfooz (1)
+
+
+[ *NEW* ] drm/msm/dp: boot broken on the Lenovo ThinkPad X13s and some other machines
+-------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZVR8Flrjxy-wgqgJ@hovoldconsulting.com/
+https://lore.kernel.org/dri-devel/ZVR8Flrjxy-wgqgJ@hovoldconsulting.com/
+
+By Johan Hovold; 4 days ago; 2 activities, latest 3 days ago.
+Introduced in bfcc3d8f94f4 (v6.7-rc1)
+
+Fix incoming:
+* drm/msm/dp: attach the DP subconnector property
+  https://lore.kernel.org/dri-devel/3aa32b39-ee2f-405e-b4fe-983e351c2e20@leemhuis.info/
+
+
+===================================================
+current cycle (v6.6.. aka v6.7-rc), unknown culprit
+===================================================
+
+
+[ *NEW* ] Radeon regression in 6.6 kernel
+-----------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87edgv4x3i.fsf@vps.thesusis.net/
+https://lore.kernel.org/lkml/87edgv4x3i.fsf@vps.thesusis.net/
+
+By Phillip Susi; 7 days ago; 7 activities, latest 0 days ago.
+Introduced in 56e449603f0a..b70438004a14 (v6.6-rc2..v6.7-rc1)
+
+Recent activities from: Bagas Sanjaya (3), Phillip Susi (2), Linux
+  regression tracking (Thorsten Leemhuis) (1), Dave Airlie (1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/169858752781.1095326.10615907253726224231@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
