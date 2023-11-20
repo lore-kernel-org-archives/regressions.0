@@ -1,204 +1,258 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A17A3C29
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 05:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r4x2U-00032f-FD; Mon, 20 Nov 2023 06:41:42 +0100
-Message-ID: <973830d2-e9db-4ffb-8862-ca08427e6ed9@leemhuis.info>
-Date: Mon, 20 Nov 2023 06:41:41 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AD55255
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 07:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="M0npMICO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1700464217;
+	bh=NqO1UU1D8tElDwfe1YSZdsclmYNmcaXXWIsZ2CYUcYk=;
+	h=From:To:Subject:In-Reply-To:References:Date:From;
+	b=M0npMICOltT3UP3Hc9V43hgz+68tulgo6LXGNSVLCleD5F3Bqea783kPtTFhwMJhJ
+	 G2ecR6TZy4dLiJ6MX3xp5QOs1+QA53vVWDB3+4SoWYCDhtQKtXIOJCqP3O0bt6BW/d
+	 sVqoQMPYwOw1yypCkAB6AzwjK3az9zShIr46Fwq7RieQ1HABbO+E9d5T3Hi8CrlI0n
+	 iwr/iHAft8bi7h3iCD5xCHK4i7Ygfdte5/5kDzseyc984nq3K9yR2TTbAXdGy+BTx2
+	 Hlhka0Xrm9epxGDT3RstjDHkJ8+UNXc3Dwjjrjzhc8KjO+TWrnGTJ+21WtuxLsBYl1
+	 n7Pj1dehE2G1g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SYdtt6vkJz4x5n;
+	Mon, 20 Nov 2023 18:10:13 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Timothy Pearson <tpearson@raptorengineering.com>, Jens Axboe
+ <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, npiggin
+ <npiggin@gmail.com>, christophe leroy <christophe.leroy@csgroup.eu>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
+In-Reply-To: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+Date: Mon, 20 Nov 2023 18:10:06 +1100
+Message-ID: <877cmc7ve9.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
-Content-Language: en-US, de-DE
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
- LKML <linux-kernel@vger.kernel.org>, aros@gmx.com, bagasdotme@gmail.com,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
- <20231107121756.GA168964@workstation.local>
- <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
- <20231108051638.GA194133@workstation.local>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20231108051638.GA194133@workstation.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700458905;cee7801a;
-X-HE-SMSGID: 1r4x2U-00032f-FD
+Content-Type: text/plain
 
-On 08.11.23 06:16, Takashi Sakamoto wrote:
-> On Tue, Nov 07, 2023 at 03:27:08PM -0600, Mario Limonciello wrote:
->> +linux-pci / Bjorn
->> On 11/7/2023 06:17, Takashi Sakamoto wrote:
->>>
->>> Thanks for the report.
->>>
->>> I apologize for the inconvenience you and your reporter facing, however
->>> I can not avoid to say that the problem appears to be specific to the AMD
->>> Ryzen machines.
+Hi Timothy,
 
-It nevertheless from the point of kernel development *afaics* is a
-kernel regression, as it doesn't matter much if the root of the problem
-is a hw problem; what matters primarily is that the problem apparently
-did not happen before the commit mentioned in the subject.
+Great work debugging this. I think your fix is good, but I want to understand it
+a bit more to make sure I can explain why we haven't seen it outside of io-uring.
+If this can be triggered outside of io-uring then I have even more backporting
+in my future :}
 
-Which bears the question: Can the culprit (and others commits that might
-be depending on it) still be reverted without causing regression itself?
+Typically save_fpu() is called from __giveup_fpu() which saves the FP regs and
+also *turns off FP* in the tasks MSR, meaning the kernel will reload the FP regs
+from the thread struct before letting the task use FP again. So in that case
+save_fpu() is free to clobber fr0 because the FP regs no longer hold live values
+for the task.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+There is another case though, which is the path via:
+  copy_process()
+    dup_task_struct()
+      arch_dup_task_struct()
+        flush_all_to_thread()
+          save_all()
 
->> Unfortunately I don't have this 1394 hardware myself.  I was just looking at
->> another completely unrelated issue on Bugzilla and noticed the report come
->> up in my search and wanted to ensure it's on your radar already as the
->> author as it's lingered a while.
-> 
-> It is your misfortune to face this kind of machine trouble.
-> 
-> In the report[1], Matthias Schrumpf and Mark Broadworth noted to use AMD
-> Ryzen 7 5800X on B550/X570 chipsets, and insert VT6307 in their PCIe bus.
-> I guess that the device attends PCI bridge (ASM1083) since VT6307 has PCI
-> interface only.
-> 
-> We can see MCE error in another report[2]. Unfortunately, the reporter,
-> Ian Donnelly, have less suspiction about machine architecture, and never
-> provides hardware information. But I believe that it comes from AMD Ryzen
-> machine. I transcribe the error here:
-> 
-> ```
-> [    0.860834] mce: [Hardware Error]: Machine check events logged
-> [    0.860834] microcode: CPU20: patch_level=0x0a201025
-> [    0.860835] microcode: CPU21: patch_level=0x0a201025
-> [    0.860836] microcode: CPU23: patch_level=0x0a201025
-> [    0.860836] microcode: CPU22: patch_level=0x0a201025
-> [    0.860837] mce: [Hardware Error]: CPU 17: Machine Check: 0 Bank 0: bc00080001010135
-> [    0.860845] fbcon: Taking over console
-> [    0.860847] mce: [Hardware Error]: TSC 0 ADDR fca000f0 MISC d012000000000000 IPID 1000b000000000 
-> [    0.860854] mce: [Hardware Error]: PROCESSOR 2:a20f10 TIME 1696955537 SOCKET 0 APIC b microcode a201025
-> [    0.860860] microcode: CPU0: patch_level=0x0a201025
-> [    0.861676] microcode: Microcode Update Driver: v2.2.
-> ```
-> 
-> Additionally, as I note in the PR[3], I observed cache-coherence failure
-> over memory dedicated for DMA transmission. The mapping is created by
-> `dmam_alloc_coherent()` and no need to have extra care such as streaming
-> API. However, the combination of ASM1083 and VT6307 provides me bogus
-> values from the memory in AMD Ryzen machine, and I can see no issue in
-> Intel machines.
-> 
-> Essentially, the host system reboots when firewire-ohci module in guest
-> system probes the PCI device for 1394 OHCI hardware provided by PCI
-> pass-though[4].
-> 
->>> I've already received the similar report[1], and have been
->>> investigating it in the last few weeks, then got the insight. Please take
->>> a look at my short report about it in PR to Linus for 6.7-rc1:
->>> https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
->>>
->>> I can confirm that I have been abe to reproduce the problem on AMD Ryzen
->>> machine. However, it's important to note that I have not observed the
->>> problem on the following systems:
->>
->> Any chance you (or anyone with the issue) has a serial output available?
->> I think it would be really good to look at the circumstances surrounding the
->> reboot.
->>
->>>
->>> * Intel machine (Sandy Bridge and Skylake generations)
->>> * AMD machines predating Ryzen (Sempron 145)
->>> * Machines using different 1394 OHCI hardware from other vendors such as
->>>    TI
->>> * VIA VT6307 connected directly to PCI slot (i.e. without the issued
->>>    PCIe/PCI bridge)
->>>
->>> Currently, I have not been able to obtain any useful debug output from
->>> the Linux system or any hardware error reports when the system reboots.
->>> It seems that the system reboots spontaneously. My assumption at this
->>> point is that AMD Ryzen machines detect a specific hardware error
->>> triggered by Ryzen machine quirk related to the combination of the Asmedia
->>> ASM1083/1085 and VIA VT6306/6307/6308, leading to power reset.
->>>
->>
->> Recent kernels have enabled PCI AER.  Could that be factoring in perhaps?
-> 
-> I ordered equipments for the workflow, and waiting for shipping, since
-> my motherboard has no interface for serial output.
-> 
-> (However, I predict that we can no helpful output via the interface.)
-> 
->>> I genuinely appreciate your assistance in debugging this elusive
->>> hardware issue. If any workaround specific to AMD Ryzen machine quirk is
->>> required in PCI driver for 1394 OHCI hardware, I'm willing to apply it.
->>> However, it is preferable to figure out the reboot mechanism at first,
->>> I think.
->>
->> Does the BIOS on these machines enable a watchdog timer?  If so, I'd suggest
->> disabling that for a starting point.
+That path saves the FP regs but leaves them live. That's meant as an
+optimisation for a process that's using FP/VSX and then calls fork(), leaving
+the regs live means the parent process doesn't have to take a fault after the
+fork to get its FP regs back.
+
+That path does clobber fr0, but fr0 is volatile across a syscall, and the only
+way to reach copy_process() from userspace is via a syscall. So in normal usage
+fr0 being clobbered across a syscall shouldn't cause data corruption.
+
+Even if we handle a signal on the return from the fork() syscall, the worst that
+happens is that the task's thread struct holds the clobbered fr0, but the task
+doesn't care (because fr0 is volatile across the syscall anyway).
+
+That path is something like:
+
+system_call_vectored_common()
+  system_call_exception()
+    sys_fork()
+      kernel_clone()
+        copy_process()
+          dup_task_struct()
+            arch_dup_task_struct()
+              flush_all_to_thread()
+                save_all()
+                  if (tsk->thread.regs->msr & MSR_FP)
+                    save_fpu()
+                    # does not clear MSR_FP from regs->msr
+  syscall_exit_prepare()
+    interrupt_exit_user_prepare_main()
+      do_notify_resume()
+        get_signal()
+        handle_rt_signal64()
+          prepare_setup_sigcontext()
+            flush_fp_to_thread()
+              if (tsk->thread.regs->msr & MSR_FP)
+                giveup_fpu()
+                  __giveup_fpu
+                    save_fpu()
+                    # clobbered fr0 is saved, but task considers it volatile
+                    # across syscall anyway
+
+
+But we now have a new path, because io-uring can call copy_process() via
+create_io_thread() from the signal handling path. That's OK if the signal is
+handled as we return from a syscall, but it's not OK if the signal is handled
+due to some other interrupt.
+
+Which is:
+
+interrupt_return_srr_user()
+  interrupt_exit_user_prepare()
+    interrupt_exit_user_prepare_main()
+      do_notify_resume()
+        get_signal()
+          task_work_run()
+            create_worker_cb()
+              create_io_worker()
+                copy_process()
+                  dup_task_struct()
+                    arch_dup_task_struct()
+                      flush_all_to_thread()
+                        save_all()
+                          if (tsk->thread.regs->msr & MSR_FP)
+                            save_fpu()
+                            # fr0 is clobbered and potentially live in userspace
+
+
+So tldr I think the corruption is only an issue since io-uring started doing
+the clone via signal, which I think matches the observed timeline of this bug
+appearing.
+
+Gotta run home, will have a closer look at the actual patch later on.
+
+cheers
+
+
+Timothy Pearson <tpearson@raptorengineering.com> writes:
+> During floating point and vector save to thread data fr0/vs0 are clobbered
+> by the FPSCR/VSCR store routine.  This leads to userspace register corruption
+> and application data corruption / crash under the following rare condition:
+>
+>  * A userspace thread is executing with VSX/FP mode enabled
+>  * The userspace thread is making active use of fr0 and/or vs0
+>  * An IPI is taken in kernel mode, forcing the userspace thread to reschedule
+>  * The userspace thread is interrupted by the IPI before accessing data it
+>    previously stored in fr0/vs0
+>  * The thread being switched in by the IPI has a pending signal
+>
+> If these exact criteria are met, then the following sequence happens:
+>
+>  * The existing thread FP storage is still valid before the IPI, due to a
+>    prior call to save_fpu() or store_fp_state().  Note that the current
+>    fr0/vs0 registers have been clobbered, so the FP/VSX state in registers
+>    is now invalid pending a call to restore_fp()/restore_altivec().
+>  * IPI -- FP/VSX register state remains invalid
+>  * interrupt_exit_user_prepare_main() calls do_notify_resume(),
+>    due to the pending signal
+>  * do_notify_resume() eventually calls save_fpu() via giveup_fpu(), which
+>    merrily reads and saves the invalid FP/VSX state to thread local storage.
+>  * interrupt_exit_user_prepare_main() calls restore_math(), writing the invalid
+>    FP/VSX state back to registers.
+>  * Execution is released to userspace, and the application crashes or corrupts
+>    data.
+>
+> Without the pending signal, do_notify_resume() is never called, therefore the
+> invalid register state does't matter as it is overwritten nearly immediately
+> by interrupt_exit_user_prepare_main() calling restore_math() before return
+> to userspace.
+>
+> Restore fr0/vs0 after FPSCR/VSCR store has completed for both the fp and
+> altivec register save paths.
+>
+> Tested under QEMU in kvm mode, running on a Talos II workstation with dual
+> POWER9 DD2.2 CPUs.
+>
+> Closes: https://lore.kernel.org/all/480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com/
+> Closes: https://lore.kernel.org/linuxppc-dev/480221078.47953493.1700206777956.JavaMail.zimbra@raptorengineeringinc.com/
+> Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+> ---
+>  arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
+>  arch/powerpc/kernel/vector.S |  2 ++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
+> index 6a9acfb690c9..2f8f3f93cbb6 100644
+> --- a/arch/powerpc/kernel/fpu.S
+> +++ b/arch/powerpc/kernel/fpu.S
+> @@ -23,6 +23,15 @@
+>  #include <asm/feature-fixups.h>
 >  
-> For consumer use, the machine has no such function, I think. For
-> your information, this is the machine information I used:
-> 
-> * Ryzen 5 2400G
-> * Gigabyte Technology Co., Ltd. AX370-Gaming 5/AX370-Gaming 5
->     * BIOS F51h 02/09/2023
-> 
->> How about if you compile as a module and then modprobe.blacklist the module
->> on kernel command line and load it later.  Can you trigger the fault/reboot
->> this way?  If so, it at least rules out some conditions that happen during a
->> race at boot.
-> 
-> Nowadays FireWire software stack is optional in the most of
-> distributions. I can encounter the same issue at deferred probing enough
-> after booting up, even if the load of system is very low.
-> 
->> Looking more closely at the change, I would guess the fault is specifically
->> in get_cycle_time().  I can see that the VIA devices do set
->> QUIRK_CYCLE_TIMER which will cause additional reads.
-> 
-> I've already tested with the driver compiled without these codes, but the
-> system reboots again.
-> 
->> Another guesses worth looking at is to see if iommu=pt or amd_iommu=off
->> help.
->>
->> If either of those help it could point at being a problem with
->> get_cycle_time() and IOMMU.  The older systems you mentioned working
->> probably didn't enable IOMMU by default but most AMD Ryzen systems do.
-> 
-> I already suspect platform IOMMU and kernel implementation, however it
-> is helpless to disable AMD SVM and IOMMU in BIOS settings. Of course, it
-> is helpless as well to provide any options to iommu in kernel command line.
-> 
-> If I had any opportunity to access to AMD machines for enterprise-grade
-> usage somehow, I would have done it. However, I am a private-time
-> contributor and what I can access to is the ones for consumer use
-> without any hardware support for RAS reporting.
-> 
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=217994
-> [3] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
-> [4] https://lore.kernel.org/lkml/20231016155657.GA7904@workstation.local/
-> 
-> Thanks
-> 
-> Takashi Sakamoto
-> 
-> 
+>  #ifdef CONFIG_VSX
+> +#define __REST_1FPVSR(n,c,base)						\
+> +BEGIN_FTR_SECTION							\
+> +	b	2f;							\
+> +END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+> +	REST_FPR(n,base);						\
+> +	b	3f;							\
+> +2:	REST_VSR(n,c,base);						\
+> +3:
+> +
+>  #define __REST_32FPVSRS(n,c,base)					\
+>  BEGIN_FTR_SECTION							\
+>  	b	2f;							\
+> @@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+>  2:	SAVE_32VSRS(n,c,base);						\
+>  3:
+>  #else
+> +#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
+>  #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
+>  #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
+>  #endif
+> +#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
+>  #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
+>  #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
+>  
+> @@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
+>  	SAVE_32FPVSRS(0, R4, R3)
+>  	mffs	fr0
+>  	stfd	fr0,FPSTATE_FPSCR(r3)
+> +	REST_1FPVSR(0, R4, R3)
+>  	blr
+>  EXPORT_SYMBOL(store_fp_state)
+>  
+> @@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
+>  2:	SAVE_32FPVSRS(0, R4, R6)
+>  	mffs	fr0
+>  	stfd	fr0,FPSTATE_FPSCR(r6)
+> +	REST_1FPVSR(0, R4, R6)
+>  	blr
+> diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
+> index 4094e4c4c77a..80b3f6e476b6 100644
+> --- a/arch/powerpc/kernel/vector.S
+> +++ b/arch/powerpc/kernel/vector.S
+> @@ -33,6 +33,7 @@ _GLOBAL(store_vr_state)
+>  	mfvscr	v0
+>  	li	r4, VRSTATE_VSCR
+>  	stvx	v0, r4, r3
+> +	lvx	v0, 0, r3
+>  	blr
+>  EXPORT_SYMBOL(store_vr_state)
+>  
+> @@ -109,6 +110,7 @@ _GLOBAL(save_altivec)
+>  	mfvscr	v0
+>  	li	r4,VRSTATE_VSCR
+>  	stvx	v0,r4,r7
+> +	lvx	v0,0,r7
+>  	blr
+>  
+>  #ifdef CONFIG_VSX
+> -- 
+> 2.39.2
+
