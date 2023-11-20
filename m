@@ -1,114 +1,126 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5471A5A8
-	for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 23:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsHy4lpR"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5c2066accc5so1197159a12.3
-        for <regressions@lists.linux.dev>; Sun, 19 Nov 2023 15:15:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700435709; x=1701040509; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G6/k5GA4Zu2CBZHKMjmxzODMRb4rQCOlqXBDpojsfK4=;
-        b=IsHy4lpRl6ObayFO976OZdcZoE4JiqIdxefUMnQwYZmt0G6Webk9BhcGIj5meYj39j
-         PRC9orby4Z2VH10VpFDNo6pRvbQ7NoSE38Hqy3rqaoFm0zsuJ35NsWblZqvKOJVs38aZ
-         mPUva3fo5HVAXgi9qSDnAHqejOcmi09HtTx4J9W8Tn+oFho8fhwb9XY9YmCHqWpSzOLf
-         AWwRZNong5VhXj4Mdq13ipa1aehxfpRyud6hyIzpVmi64FViHtj8+Hf07OToui3t1PIb
-         caiuFBazLJ5IVuUxkRqHHoT1kGV2k2wIndU1DxOYd3WnOsuvCWpKT6AdIetBt0Fcb7mi
-         IPOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700435709; x=1701040509;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G6/k5GA4Zu2CBZHKMjmxzODMRb4rQCOlqXBDpojsfK4=;
-        b=jXjGpZB/ggbSSXym32BFcD+FCJCYWjTdIo57bTjX2u9qTYA/ywqJxcUWSsDeF4ky96
-         dlQfxDNtkOKfSF0P8Q+ZHZiKhAglmGlyvxytguKZweJA2QksQufLJUOeTOQXujun/o6X
-         kVomxjChVqtHBz2eocxsTpxVPMVydmGJmkhood6SEe3mAIPiOCVAbGcZw2hNnWzApDHh
-         DHTkN+wcTsXD+0OIALzQpFIkL+Y0ApyUxCCVgilI8BEF37SuYZxqctOJhNY6D9it+ooe
-         1QjVN663lsNxrEJocPCSbLoSeZQZ0R3IPEup6/RvhFejSfHAJJ+/zH92DeA/hTa6/S8M
-         qN9w==
-X-Gm-Message-State: AOJu0YwjlEO5UsulPxbzzU7T6Z3vm2b+d9mRJctpFQjw5nQfL4lJwZXP
-	6SP/jHOWkt2UzrpHR4kAFbA052Pywfo1pw==
-X-Google-Smtp-Source: AGHT+IGZD+EOLCB2oniF4xIOMnu0nOKZnxU9Sb/a4aFuMwwTyHgjsXLjF0jrEAksNzjiyG0JL5bEQg==
-X-Received: by 2002:a05:6a21:9812:b0:187:72e7:6d8c with SMTP id ue18-20020a056a21981200b0018772e76d8cmr3714726pzb.31.1700435709219;
-        Sun, 19 Nov 2023 15:15:09 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id z10-20020a17090a1fca00b0028010142010sm7148064pjz.21.2023.11.19.15.15.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Nov 2023 15:15:08 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id AD6CE101D818B; Mon, 20 Nov 2023 06:15:05 +0700 (WIB)
-Date: Mon, 20 Nov 2023 06:15:05 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: =?utf-8?B?QW5kcsOp?= Kunz <donatusmusic@gmx.de>,
-	Linux Stable <stable@vger.kernel.org>,
-	Linux Input Devices <linux-input@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
-	Bastien Nocera <hadess@hadess.net>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: Found a bug with my gaming gear
-Message-ID: <ZVqW-Ux7NM2958MR@archie.me>
-References: <bd1a6eb1-a8af-4181-b9e4-c7b8d3af1eea@gmx.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C921849
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 01:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYTmX2wCYz4f3l7G
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 09:04:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id EF9F01A0176
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 09:04:13 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDX2hCMsFpl3LeZBQ--.59773S3;
+	Mon, 20 Nov 2023 09:04:13 +0800 (CST)
+Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
+ silently corrupted.
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>,
+ Mateusz Grzonka <mateusz.grzonka@intel.com>, linux-raid@vger.kernel.org,
+ regressions@lists.linux.dev, jiangguoqing@kylinos.cn, jgq516@gmail.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <5727380.DvuYhMxLoT@bvd0>
+ <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
+ <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
+ <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <0a2a8a7e-e3a6-6ff2-0df5-ab091f666206@huaweicloud.com>
+Date: Mon, 20 Nov 2023 09:04:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t4to0E1nKF26Mn34"
-Content-Disposition: inline
-In-Reply-To: <bd1a6eb1-a8af-4181-b9e4-c7b8d3af1eea@gmx.de>
+In-Reply-To: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDX2hCMsFpl3LeZBQ--.59773S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1DWr4fCw1xCF1UWr4Durg_yoW8uF17pr
+	y8XF45tr4DXFyF9rW7K3WUCFn5trsIgrWIqrykJa1fJr90qr9rWr18W34rWr98XryfCFy2
+	v3WDWF9xuF45taDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
---t4to0E1nKF26Mn34
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+在 2023/11/18 8:32, Song Liu 写道:
+> On Thu, Nov 16, 2023 at 5:05 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> Hi,
+>>
+>> 在 2023/11/17 0:24, Song Liu 写道:
+>>> + more folks.
+>>>
+>>> On Fri, Nov 10, 2023 at 7:00 PM Bhanu Victor DiCara
+>>> <00bvd0+linux@gmail.com> wrote:
+>>>>
+>>>> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actual data.
+>>>>
+>>>>
+>>>> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
+>>>> (The problem does not occur in the previous commit.)
+>>>>
+>>>> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/raid5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (and the previous line) is removed, the problem does not occur.
+>>>
+>>> The patch below should fix it. Please give it more thorough tests and
+>>> let me know whether it fixes everything. I will send patch later with
+>>> more details.
+>>>
+>>> Thanks,
+>>> Song
+>>>
+>>> diff --git i/drivers/md/md.c w/drivers/md/md.c
+>>> index 68f3bb6e89cb..d4fb1aa5c86f 100644
+>>> --- i/drivers/md/md.c
+>>> +++ w/drivers/md/md.c
+>>> @@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
+>>>           struct bio *orig_bio = md_io_clone->orig_bio;
+>>>           struct mddev *mddev = md_io_clone->mddev;
+>>>
+>>> -       orig_bio->bi_status = bio->bi_status;
+>>> +       if (bio->bi_status)
+>>> +               orig_bio->bi_status = bio->bi_status;
+>>
+>> I'm confused, do you mean that orig_bio can have error while bio
+>> doesn't? If this is the case, can you explain more how this is
+>> possible?
+> 
+> Yes, this is possible.
+> 
+> Basically, a big bio is split by md_submit_bio => bio_split_to_limits, so
+> we will have two bio's into md_clone_bio(). Let's call them
+> parent_orig_bio and split_orig_bio. Errors from split_orig_bio will be
+> propagated to parent_orig_bio by __bio_chain_endio(). If
+> parent_orig_bio succeeded, md_end_clone_io may overwrite the error
+> reported by split_orig_bio. Does this make sense?
 
-On Thu, Nov 16, 2023 at 11:41:34PM +0100, Andr=C3=A9 Kunz wrote:
-> Hey there guys,
->=20
-> This is my first kernel "bug" report ever, so please bear with me if I
-> didn't catch the precise right way to report this.
->=20
-> The bug I've found:
->=20
-> I'm running stable kernel 6.6.1-1 and as soon as I install it, many of
-> my mouse's hardware buttons stop working. I have a Logitech G502 X Plus
-> (it's a wireless mouse). As soon as I install 6.6.1 the mouse's hardware
-> buttons won't work, i.e. only the two side-buttons would work, not the
-> buttons (and/or my created profiles/macros) would. I have a few macros
-> assigned to some buttons, which work perfectly fine under 6.5.11 (and
-> earlier), but as soon as I'm on 6.6 they'd stop working.
->=20
-> Just wanted to report this and I hope there can be a fix.
->=20
+Yes, this is a good catch, there should be similiar conditions from
+__bio_chain_endio().
 
-Thanks for the regression report. I'm adding it to regzbot:
+Thanks,
+Kuai
 
-#regzbot ^introduced: v6.5..v6.6
-#regzbot title: only two side buttons of Logitech G502 X Plus works on kern=
-el 6.6.1
+> 
+> Thanks,
+> Song
+> .
+> 
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---t4to0E1nKF26Mn34
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVqW9QAKCRD2uYlJVVFO
-o8PPAQCq0F+cAeJ176ztPmrCMvN0ZhNToRKuvLv1ZWZyFDA1+AD+PRj9t7cEmyF5
-dFgpz6+r6olAybxIkgk5DXSb/31v9Aw=
-=Yfpq
------END PGP SIGNATURE-----
-
---t4to0E1nKF26Mn34--
