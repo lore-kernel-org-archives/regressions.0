@@ -1,126 +1,204 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C921849
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 01:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A17A3C29
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 05:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYTmX2wCYz4f3l7G
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 09:04:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id EF9F01A0176
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 09:04:13 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2hCMsFpl3LeZBQ--.59773S3;
-	Mon, 20 Nov 2023 09:04:13 +0800 (CST)
-Subject: Re: [REGRESSION] Data read from a degraded RAID 4/5/6 array could be
- silently corrupted.
-To: Song Liu <song@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>,
- Mateusz Grzonka <mateusz.grzonka@intel.com>, linux-raid@vger.kernel.org,
- regressions@lists.linux.dev, jiangguoqing@kylinos.cn, jgq516@gmail.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <5727380.DvuYhMxLoT@bvd0>
- <CAPhsuW4+Ktd7mzTQ6M4n9-=8vgyMDJUi8Xkcv50JXTf_2yqTFA@mail.gmail.com>
- <1956a189-107b-4445-9e53-336f1533c4b9@huaweicloud.com>
- <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <0a2a8a7e-e3a6-6ff2-0df5-ab091f666206@huaweicloud.com>
-Date: Mon, 20 Nov 2023 09:04:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r4x2U-00032f-FD; Mon, 20 Nov 2023 06:41:42 +0100
+Message-ID: <973830d2-e9db-4ffb-8862-ca08427e6ed9@leemhuis.info>
+Date: Mon, 20 Nov 2023 06:41:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAPhsuW6v+acp9jrwt-19fF7BUpLtDTRvVG4FNimpww4ztODHrg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDX2hCMsFpl3LeZBQ--.59773S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1DWr4fCw1xCF1UWr4Durg_yoW8uF17pr
-	y8XF45tr4DXFyF9rW7K3WUCFn5trsIgrWIqrykJa1fJr90qr9rWr18W34rWr98XryfCFy2
-	v3WDWF9xuF45taDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
-	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
+Content-Language: en-US, de-DE
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ a.mark.broadworth@gmail.com, matthias.schrumpf@freenet.de,
+ LKML <linux-kernel@vger.kernel.org>, aros@gmx.com, bagasdotme@gmail.com,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
+ <20231107121756.GA168964@workstation.local>
+ <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
+ <20231108051638.GA194133@workstation.local>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20231108051638.GA194133@workstation.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700458905;cee7801a;
+X-HE-SMSGID: 1r4x2U-00032f-FD
 
-Hi,
+On 08.11.23 06:16, Takashi Sakamoto wrote:
+> On Tue, Nov 07, 2023 at 03:27:08PM -0600, Mario Limonciello wrote:
+>> +linux-pci / Bjorn
+>> On 11/7/2023 06:17, Takashi Sakamoto wrote:
+>>>
+>>> Thanks for the report.
+>>>
+>>> I apologize for the inconvenience you and your reporter facing, however
+>>> I can not avoid to say that the problem appears to be specific to the AMD
+>>> Ryzen machines.
 
-在 2023/11/18 8:32, Song Liu 写道:
-> On Thu, Nov 16, 2023 at 5:05 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+It nevertheless from the point of kernel development *afaics* is a
+kernel regression, as it doesn't matter much if the root of the problem
+is a hw problem; what matters primarily is that the problem apparently
+did not happen before the commit mentioned in the subject.
+
+Which bears the question: Can the culprit (and others commits that might
+be depending on it) still be reverted without causing regression itself?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+>> Unfortunately I don't have this 1394 hardware myself.  I was just looking at
+>> another completely unrelated issue on Bugzilla and noticed the report come
+>> up in my search and wanted to ensure it's on your radar already as the
+>> author as it's lingered a while.
+> 
+> It is your misfortune to face this kind of machine trouble.
+> 
+> In the report[1], Matthias Schrumpf and Mark Broadworth noted to use AMD
+> Ryzen 7 5800X on B550/X570 chipsets, and insert VT6307 in their PCIe bus.
+> I guess that the device attends PCI bridge (ASM1083) since VT6307 has PCI
+> interface only.
+> 
+> We can see MCE error in another report[2]. Unfortunately, the reporter,
+> Ian Donnelly, have less suspiction about machine architecture, and never
+> provides hardware information. But I believe that it comes from AMD Ryzen
+> machine. I transcribe the error here:
+> 
+> ```
+> [    0.860834] mce: [Hardware Error]: Machine check events logged
+> [    0.860834] microcode: CPU20: patch_level=0x0a201025
+> [    0.860835] microcode: CPU21: patch_level=0x0a201025
+> [    0.860836] microcode: CPU23: patch_level=0x0a201025
+> [    0.860836] microcode: CPU22: patch_level=0x0a201025
+> [    0.860837] mce: [Hardware Error]: CPU 17: Machine Check: 0 Bank 0: bc00080001010135
+> [    0.860845] fbcon: Taking over console
+> [    0.860847] mce: [Hardware Error]: TSC 0 ADDR fca000f0 MISC d012000000000000 IPID 1000b000000000 
+> [    0.860854] mce: [Hardware Error]: PROCESSOR 2:a20f10 TIME 1696955537 SOCKET 0 APIC b microcode a201025
+> [    0.860860] microcode: CPU0: patch_level=0x0a201025
+> [    0.861676] microcode: Microcode Update Driver: v2.2.
+> ```
+> 
+> Additionally, as I note in the PR[3], I observed cache-coherence failure
+> over memory dedicated for DMA transmission. The mapping is created by
+> `dmam_alloc_coherent()` and no need to have extra care such as streaming
+> API. However, the combination of ASM1083 and VT6307 provides me bogus
+> values from the memory in AMD Ryzen machine, and I can see no issue in
+> Intel machines.
+> 
+> Essentially, the host system reboots when firewire-ohci module in guest
+> system probes the PCI device for 1394 OHCI hardware provided by PCI
+> pass-though[4].
+> 
+>>> I've already received the similar report[1], and have been
+>>> investigating it in the last few weeks, then got the insight. Please take
+>>> a look at my short report about it in PR to Linus for 6.7-rc1:
+>>> https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+>>>
+>>> I can confirm that I have been abe to reproduce the problem on AMD Ryzen
+>>> machine. However, it's important to note that I have not observed the
+>>> problem on the following systems:
 >>
->> Hi,
+>> Any chance you (or anyone with the issue) has a serial output available?
+>> I think it would be really good to look at the circumstances surrounding the
+>> reboot.
 >>
->> 在 2023/11/17 0:24, Song Liu 写道:
->>> + more folks.
 >>>
->>> On Fri, Nov 10, 2023 at 7:00 PM Bhanu Victor DiCara
->>> <00bvd0+linux@gmail.com> wrote:
->>>>
->>>> A degraded RAID 4/5/6 array can sometimes read 0s instead of the actual data.
->>>>
->>>>
->>>> #regzbot introduced: 10764815ff4728d2c57da677cd5d3dd6f446cf5f
->>>> (The problem does not occur in the previous commit.)
->>>>
->>>> In commit 10764815ff4728d2c57da677cd5d3dd6f446cf5f, file drivers/md/raid5.c, line 5808, there is `md_account_bio(mddev, &bi);`. When this line (and the previous line) is removed, the problem does not occur.
+>>> * Intel machine (Sandy Bridge and Skylake generations)
+>>> * AMD machines predating Ryzen (Sempron 145)
+>>> * Machines using different 1394 OHCI hardware from other vendors such as
+>>>    TI
+>>> * VIA VT6307 connected directly to PCI slot (i.e. without the issued
+>>>    PCIe/PCI bridge)
 >>>
->>> The patch below should fix it. Please give it more thorough tests and
->>> let me know whether it fixes everything. I will send patch later with
->>> more details.
+>>> Currently, I have not been able to obtain any useful debug output from
+>>> the Linux system or any hardware error reports when the system reboots.
+>>> It seems that the system reboots spontaneously. My assumption at this
+>>> point is that AMD Ryzen machines detect a specific hardware error
+>>> triggered by Ryzen machine quirk related to the combination of the Asmedia
+>>> ASM1083/1085 and VIA VT6306/6307/6308, leading to power reset.
 >>>
->>> Thanks,
->>> Song
->>>
->>> diff --git i/drivers/md/md.c w/drivers/md/md.c
->>> index 68f3bb6e89cb..d4fb1aa5c86f 100644
->>> --- i/drivers/md/md.c
->>> +++ w/drivers/md/md.c
->>> @@ -8674,7 +8674,8 @@ static void md_end_clone_io(struct bio *bio)
->>>           struct bio *orig_bio = md_io_clone->orig_bio;
->>>           struct mddev *mddev = md_io_clone->mddev;
->>>
->>> -       orig_bio->bi_status = bio->bi_status;
->>> +       if (bio->bi_status)
->>> +               orig_bio->bi_status = bio->bi_status;
 >>
->> I'm confused, do you mean that orig_bio can have error while bio
->> doesn't? If this is the case, can you explain more how this is
->> possible?
+>> Recent kernels have enabled PCI AER.  Could that be factoring in perhaps?
 > 
-> Yes, this is possible.
+> I ordered equipments for the workflow, and waiting for shipping, since
+> my motherboard has no interface for serial output.
 > 
-> Basically, a big bio is split by md_submit_bio => bio_split_to_limits, so
-> we will have two bio's into md_clone_bio(). Let's call them
-> parent_orig_bio and split_orig_bio. Errors from split_orig_bio will be
-> propagated to parent_orig_bio by __bio_chain_endio(). If
-> parent_orig_bio succeeded, md_end_clone_io may overwrite the error
-> reported by split_orig_bio. Does this make sense?
-
-Yes, this is a good catch, there should be similiar conditions from
-__bio_chain_endio().
-
-Thanks,
-Kuai
-
+> (However, I predict that we can no helpful output via the interface.)
 > 
-> Thanks,
-> Song
-> .
+>>> I genuinely appreciate your assistance in debugging this elusive
+>>> hardware issue. If any workaround specific to AMD Ryzen machine quirk is
+>>> required in PCI driver for 1394 OHCI hardware, I'm willing to apply it.
+>>> However, it is preferable to figure out the reboot mechanism at first,
+>>> I think.
+>>
+>> Does the BIOS on these machines enable a watchdog timer?  If so, I'd suggest
+>> disabling that for a starting point.
+>  
+> For consumer use, the machine has no such function, I think. For
+> your information, this is the machine information I used:
 > 
-
+> * Ryzen 5 2400G
+> * Gigabyte Technology Co., Ltd. AX370-Gaming 5/AX370-Gaming 5
+>     * BIOS F51h 02/09/2023
+> 
+>> How about if you compile as a module and then modprobe.blacklist the module
+>> on kernel command line and load it later.  Can you trigger the fault/reboot
+>> this way?  If so, it at least rules out some conditions that happen during a
+>> race at boot.
+> 
+> Nowadays FireWire software stack is optional in the most of
+> distributions. I can encounter the same issue at deferred probing enough
+> after booting up, even if the load of system is very low.
+> 
+>> Looking more closely at the change, I would guess the fault is specifically
+>> in get_cycle_time().  I can see that the VIA devices do set
+>> QUIRK_CYCLE_TIMER which will cause additional reads.
+> 
+> I've already tested with the driver compiled without these codes, but the
+> system reboots again.
+> 
+>> Another guesses worth looking at is to see if iommu=pt or amd_iommu=off
+>> help.
+>>
+>> If either of those help it could point at being a problem with
+>> get_cycle_time() and IOMMU.  The older systems you mentioned working
+>> probably didn't enable IOMMU by default but most AMD Ryzen systems do.
+> 
+> I already suspect platform IOMMU and kernel implementation, however it
+> is helpless to disable AMD SVM and IOMMU in BIOS settings. Of course, it
+> is helpless as well to provide any options to iommu in kernel command line.
+> 
+> If I had any opportunity to access to AMD machines for enterprise-grade
+> usage somehow, I would have done it. However, I am a private-time
+> contributor and what I can access to is the ones for consumer use
+> without any hardware support for RAS reporting.
+> 
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=217993
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=217994
+> [3] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+> [4] https://lore.kernel.org/lkml/20231016155657.GA7904@workstation.local/
+> 
+> Thanks
+> 
+> Takashi Sakamoto
+> 
+> 
