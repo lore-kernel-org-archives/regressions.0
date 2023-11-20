@@ -1,48 +1,34 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6C91CA9E
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 16:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF1519475
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 17:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="VUYpWH3+"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 817958285162;
-	Mon, 20 Nov 2023 10:45:47 -0600 (CST)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id cfgjffGtSyHg; Mon, 20 Nov 2023 10:45:46 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 33E1C828516D;
-	Mon, 20 Nov 2023 10:45:46 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 33E1C828516D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1700498746; bh=E9LVuQ9xMrWlxuivtOEla3p+fsRdVQ42Yim8JIvJpPU=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=VUYpWH3+5HWSSQ2ONHPi/p4TJfuF2QulvYGrdhJGdcxvQAZzvNBmV2PHGKDXcMux+
-	 jWjmQTsPkuRkU9ZMV7/GJD85V4n++wrpKUj12Mvv82YR1JIjhSn4MEyqvtWKC52zVm
-	 FHRtZvUhRM/nGSodC7bAQ3cHCiDcb+LrGqajc2D4=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kbBG8KuwkeRb; Mon, 20 Nov 2023 10:45:46 -0600 (CST)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id F368F8285162;
-	Mon, 20 Nov 2023 10:45:45 -0600 (CST)
-Date: Mon, 20 Nov 2023 10:45:43 -0600 (CST)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
-	npiggin <npiggin@gmail.com>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Message-ID: <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <877cmc7ve9.fsf@mail.lhotse>
-References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com> <877cmc7ve9.fsf@mail.lhotse>
-Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register  save
+	dkim=pass (1024-bit key) header.d=bigler.io header.i=@bigler.io header.b="cSi02sYz"
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SYtff0MFrzMq6hk;
+	Mon, 20 Nov 2023 16:45:30 +0000 (UTC)
+Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4SYtfd44ZgzMpnPh;
+	Mon, 20 Nov 2023 17:45:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.io;
+	s=20200409; t=1700498729;
+	bh=7FT4vey4M0IFQTQ3VKqZdUegCZYs+l920IgntzrCIDw=;
+	h=Date:Subject:From:Reply-To:To:Cc:References:In-Reply-To:From;
+	b=cSi02sYz4HKFvWUzw/BC1YhAQHM2EP0g18WJC9gnMpY3dJ5NojWBR5KISQMJ0s/Pe
+	 zVoEznPQiNFsN3x9bCgFN2h4goeFxLw5+rqzqQFLqDetEEtZ7JvdkvkeYgIWqjVhc2
+	 ojvY8UK2m8FV35mLF7zM7gaV/JotU1GoENf0JQhg=
+Message-ID: <314e596f4f7b7e7f8742c47dfeeb7d93@mail.infomaniak.com>
+Date: Mon, 20 Nov 2023 17:45:29 +0100
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+From: linux@bigler.io
+Reply-To: linux@bigler.io
+To: Stefan Moring <stefan.moring@technolution.nl>
+Cc: Francesco Dolcini <francesco@dolcini.it>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,131 +36,111 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
-Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
-Thread-Index: G5/9GcCQX3rPVvgf0RpaijJXf2mDxQ==
+Content-Transfer-Encoding: quoted-printable
+X-WS-User-Origin: eyJpdiI6ImtDMngxZlYwKzA3QlIvTXM1bGtYQnc9PSIsInZhbHVlIjoiWDhCLzRCZTFHRE4zZmVFbFRZNS9FUT09IiwibWFjIjoiYzZjY2Q1YTY0MGQzNzYxYTM2ODljNmExY2VlNjlhMTg3MWFiYTEyOWRmMzcwMTQ1NjA5YjdmOGVhMzIzZDZkYiIsInRhZyI6IiJ9
+X-WS-User-Mbox: eyJpdiI6ImwrN2RvVlBNdDZzZmdlMUx1STNPenc9PSIsInZhbHVlIjoia21ydXZ3RWpUWElPZlF1RmM1YSs4Zz09IiwibWFjIjoiYWEwYzU3MDk3YzA1MDMyZDhiYjBjMmM2M2UxMTM4OGM5NjAxMzI3ZDkwYjVjMGE1MmQ4ZjdkMzlhMjNiNmUyOSIsInRhZyI6IiJ9
+X-WS-Location: eJxzKUpMKykGAAfpAmU-
+X-Mailer: Infomaniak Workspace (1.3.596)
+References: <8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com>
+ <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
+ <f4439fd1-7c2d-4a96-9116-1dbe04fceac0@leemhuis.info>
+ <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
+ <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
+ <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
+ <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
+ <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
+ <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
+ <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
+ <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
+In-Reply-To: <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
+X-Infomaniak-Routing: alpha
+
+Hi Stefan
+
+I added my printing=20
+@@ -655,12 +658,25 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx=
+_data *spi_imx,
+=20
+        /* Clear BL field and set the right value */
+        ctrl &=3D ~MX51_ECSPI_CTRL_BL_MASK;
++       dev_info(spi_imx->dev, "%s: count=3D%d, bits_per_word=3D%d\n",
++            __FUNCTION__, spi_imx->count, spi_imx->bits_per_word);
++
+        if (spi_imx->target_mode && is_imx53_ecspi(spi_imx))
+                ctrl |=3D (spi_imx->target_burst * 8 - 1)
+                        << MX51_ECSPI_CTRL_BL_OFFSET;
+
+and run the test with the burst enabled=20
+/var/volatile/tmp# spidev_test --device /dev/spidev1.0 --speed 20000000 --b=
+pw 8 -i 127bytes-spi-test-data.bin -o 127bytes-spi-test-result.bin
+[  802.729824] spi_imx 30830000.spi: mx51_ecspi_prepare_transfer: count=3D1=
+27, bits_per_word=3D8
+-> transmitted 504 Bytes on the line
+
+then I run it with burst disabled
+spidev_test --device /dev/spidev1.0 --speed 20000000 --bpw 8 -i 127bytes-sp=
+i-test-data.bin -o 127bytes-spi-test-result.bin
+[  316.683807] spi_imx 30830000.spi: mx51_ecspi_prepare_transfer: count=3D0=
+, bits_per_word=3D8
+-> transmitted 127 Bytes on the line
+
+The count is different=20
+- for burst-enabled  127
+- for burst-disable 0
+
+concerning the sdma-firmware I checked on=20
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git=
+/tree/imx/sdma
+but the latest I found was 4.5
+
+Regards
+Stefan
 
 
-
------ Original Message -----
-> From: "Michael Ellerman" <mpe@ellerman.id.au>
-> To: "Timothy Pearson" <tpearson@raptorengineering.com>, "Jens Axboe" <axboe@kernel.dk>, "regressions"
-> <regressions@lists.linux.dev>, "npiggin" <npiggin@gmail.com>, "christophe leroy" <christophe.leroy@csgroup.eu>,
-> "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>
-> Sent: Monday, November 20, 2023 1:10:06 AM
-> Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec register  save
-
-> Hi Timothy,
-> 
-> Great work debugging this. I think your fix is good, but I want to understand it
-> a bit more to make sure I can explain why we haven't seen it outside of
-> io-uring.
-> If this can be triggered outside of io-uring then I have even more backporting
-> in my future :}
-> 
-> Typically save_fpu() is called from __giveup_fpu() which saves the FP regs and
-> also *turns off FP* in the tasks MSR, meaning the kernel will reload the FP regs
-> from the thread struct before letting the task use FP again. So in that case
-> save_fpu() is free to clobber fr0 because the FP regs no longer hold live values
-> for the task.
-> 
-> There is another case though, which is the path via:
->  copy_process()
->    dup_task_struct()
->      arch_dup_task_struct()
->        flush_all_to_thread()
->          save_all()
-> 
-> That path saves the FP regs but leaves them live. That's meant as an
-> optimisation for a process that's using FP/VSX and then calls fork(), leaving
-> the regs live means the parent process doesn't have to take a fault after the
-> fork to get its FP regs back.
-> 
-> That path does clobber fr0, but fr0 is volatile across a syscall, and the only
-> way to reach copy_process() from userspace is via a syscall. So in normal usage
-> fr0 being clobbered across a syscall shouldn't cause data corruption.
-> 
-> Even if we handle a signal on the return from the fork() syscall, the worst that
-> happens is that the task's thread struct holds the clobbered fr0, but the task
-> doesn't care (because fr0 is volatile across the syscall anyway).
-> 
-> That path is something like:
-> 
-> system_call_vectored_common()
->  system_call_exception()
->    sys_fork()
->      kernel_clone()
->        copy_process()
->          dup_task_struct()
->            arch_dup_task_struct()
->              flush_all_to_thread()
->                save_all()
->                  if (tsk->thread.regs->msr & MSR_FP)
->                    save_fpu()
->                    # does not clear MSR_FP from regs->msr
->  syscall_exit_prepare()
->    interrupt_exit_user_prepare_main()
->      do_notify_resume()
->        get_signal()
->        handle_rt_signal64()
->          prepare_setup_sigcontext()
->            flush_fp_to_thread()
->              if (tsk->thread.regs->msr & MSR_FP)
->                giveup_fpu()
->                  __giveup_fpu
->                    save_fpu()
->                    # clobbered fr0 is saved, but task considers it volatile
->                    # across syscall anyway
-> 
-> 
-> But we now have a new path, because io-uring can call copy_process() via
-> create_io_thread() from the signal handling path. That's OK if the signal is
-> handled as we return from a syscall, but it's not OK if the signal is handled
-> due to some other interrupt.
-> 
-> Which is:
-> 
-> interrupt_return_srr_user()
->  interrupt_exit_user_prepare()
->    interrupt_exit_user_prepare_main()
->      do_notify_resume()
->        get_signal()
->          task_work_run()
->            create_worker_cb()
->              create_io_worker()
->                copy_process()
->                  dup_task_struct()
->                    arch_dup_task_struct()
->                      flush_all_to_thread()
->                        save_all()
->                          if (tsk->thread.regs->msr & MSR_FP)
->                            save_fpu()
->                            # fr0 is clobbered and potentially live in userspace
-> 
-> 
-> So tldr I think the corruption is only an issue since io-uring started doing
-> the clone via signal, which I think matches the observed timeline of this bug
-> appearing.
-
-I agree the corruption really only started showing up in earnest on io_uring clone-via-signal, as this was confirmed several times in the course of debugging.  Bear in mind however that we have seen very, very rare crashes over several years in other tasks, and I am starting to think this bug might be the root cause (see below).
-
-Note as well that I may very well have a wrong call order in the commit message, since I was relying on a couple of WARN_ON() macros I inserted to check for a similar (but not identical) condition and didn't spend much time getting new traces after identifying the root cause.
-
-I went back and grabbed some real world system-wide stack traces, since I now know what to trigger on.  A typical example is:
-
-interrupt_return_srr_user()
- interrupt_exit_user_prepare()
-  interrupt_exit_user_prepare_main()
-   schedule()
-    __schedule()
-     __switch_to()
-      giveup_all()
-       # tsk->thread.regs->msr MSR_FP is still set here
-       __giveup_fpu()
-        save_fpu()
-        # fr0 is clobbered and potentially live in userspace
-
-This indicates that the pending signal is not actually required, it simply makes triggering much more likely.  Both the pending signal and the _TIF_NEED_RESCHED paths give up control and end up in the same overall position of trigging down-call routines that assume the FPU state is valid.
-
-perl and bash seem to be affected to some degree, though current builds don't use enough VSX instructions rapidly enough to cause crashes with any significant probability.  That said, over many years of running POWER at datacenter scale I have seen enough random bash/perl crashes in the logs to recognize the pattern; I think this has been a low-grade issue for a long time, but with an infantismally small chance of happening it was seen as random noise / hardware issues / other rare bugs in various programs.
+Am 2023-11-20T16:30:15.000+01:00 hat Stefan Moring <stefan.moring@technolut=
+ion.nl> geschrieben:
+>  Hi Stefan,
+>=20
+> I have been trying to reproduce your error on my iMX8M, scoping the SPI
+> lines, but everything works as expected. I don't have the exact same boar=
+d,
+> but I don't think that should be a problem. One difference I noticed is
+> that my imx-sdma firmware is version 4.6.
+>=20
+> Can you verify the values used for the transfer,  spi_imx->count and
+> spi_imx->bits_per_word inside the mx51_ecpsi_prepare_transfer() method?
+> Those are the only two things that changed in the commits. Maybe compare
+> them to the working version?
+>=20
+> Kind regards,
+>=20
+> Stefan Moring
+>=20
+> Op ma 20 nov 2023 om 11:18 schreef Francesco Dolcini <francesco@dolcini.i=
+t>:
+>=20
+>=20
+> >    On Mon, Nov 20, 2023 at 10:33:38AM +0100, linux@bigler.io wrote:
+> >=20
+> > >     I run the test and it worked fine. The transmitted data matches w=
+ith
+> > >   the recived data, no diff.
+> >   ok, thanks for confirming. At least we are on the same page.
+> >=20
+> >=20
+> > >     BUT!!! on the MDIO it is completly different !!!
+> > >   When I request to send 4kB Data I measure on the line 16384Byte.
+> > > =20
+> > >   The data is again   3Dummy Bytes followed by the databyte.
+> > >   So the error symetic on send and recive
+> > =20
+> >  ok, that's annoying. I wonder if the loopback test could be improved t=
+o
+> >  spot such kind of issues, maybe we could verify if the execution time
+> >  is reasonable given the SPI clock frequency and the payload size ...
+> >=20
+> >  Francesco
+> >=20
+>=20
+>=20
+>
