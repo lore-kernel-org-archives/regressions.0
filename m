@@ -1,70 +1,180 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0012200C9
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 16:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6cba45eeaf6so280353b3a.1
-        for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 08:32:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700497970; x=1701102770;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tzvBTPYKPNLAAYJofhHBHs2zDNnqaax2JRpt9QsB7iM=;
-        b=uqy2TwLBOq3xG7bNk2zf6fyhRL7IAFjB0EFbMzjiH1jCyXq97eBLKOShXwas5l2Zwx
-         1d0K/bPT4hOAV/+Ecxktv7OdnV+uDbiYg/DsAaZlvriWFux/ZSPUnyMO1yJSkWjA/1NB
-         QrXON6Saoow0KRS3nkvuxwS9tx2rYRw9299LQsWcPARuZy+ZJnYCc36wPBhm++trWrhF
-         WQnOeLjvSIhz5LX0d4u23Hh7v288GO+8azx9LUNUbq/D8gc5Cgw44YFz8ayxf6TkeWN6
-         vuslMXovoap/S+S6AZM7R2hPhKG1SvoVGRuFSALnsCyuh9gaeVy/k2nl966+9OIq7Qha
-         GEKQ==
-X-Gm-Message-State: AOJu0YxsZnhDIML29SFrlez6hruHZvGHRcpbyrJCQ3XxpRH47Yc4BtpP
-	hSw23hGHEbniCsct5LlWofxi2e7rPeOsP7buMC4=
-X-Google-Smtp-Source: AGHT+IG2GolmAdfAAuerHd0wALYMQdXf2/E3bw0YDO4MyZrjW1wcH0BbupD91hhw+nZdxBAYZ+YEzNE4jRh1rw7GIz0=
-X-Received: by 2002:aa7:93b0:0:b0:6cb:8347:c8b1 with SMTP id
- x16-20020aa793b0000000b006cb8347c8b1mr5083391pff.1.1700497969892; Mon, 20 Nov
- 2023 08:32:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6C91CA9E
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 16:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="VUYpWH3+"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 817958285162;
+	Mon, 20 Nov 2023 10:45:47 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id cfgjffGtSyHg; Mon, 20 Nov 2023 10:45:46 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 33E1C828516D;
+	Mon, 20 Nov 2023 10:45:46 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 33E1C828516D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1700498746; bh=E9LVuQ9xMrWlxuivtOEla3p+fsRdVQ42Yim8JIvJpPU=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=VUYpWH3+5HWSSQ2ONHPi/p4TJfuF2QulvYGrdhJGdcxvQAZzvNBmV2PHGKDXcMux+
+	 jWjmQTsPkuRkU9ZMV7/GJD85V4n++wrpKUj12Mvv82YR1JIjhSn4MEyqvtWKC52zVm
+	 FHRtZvUhRM/nGSodC7bAQ3cHCiDcb+LrGqajc2D4=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kbBG8KuwkeRb; Mon, 20 Nov 2023 10:45:46 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id F368F8285162;
+	Mon, 20 Nov 2023 10:45:45 -0600 (CST)
+Date: Mon, 20 Nov 2023 10:45:43 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
+	npiggin <npiggin@gmail.com>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <877cmc7ve9.fsf@mail.lhotse>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com> <877cmc7ve9.fsf@mail.lhotse>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231112203627.34059-1-hdegoede@redhat.com>
-In-Reply-To: <20231112203627.34059-1-hdegoede@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 20 Nov 2023 17:32:37 +0100
-Message-ID: <CAJZ5v0g6AHiGCB4vNLAXvH4TJRxMYpnD8LyNNnX0qEaTqr9o+Q@mail.gmail.com>
-Subject: Re: [PATCH 0/2] ACPI: video: Use acpi_device_fix_up_power_children()
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, "Owen T . Heisler" <writer@owenh.net>, 
-	Kai-Heng Feng <kai.heng.feng@canonical.com>, linux-acpi@vger.kernel.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+Thread-Index: G5/9GcCQX3rPVvgf0RpaijJXf2mDxQ==
 
-Hi Hans,
 
-On Sun, Nov 12, 2023 at 9:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Hi Rafael,
->
-> This series fixes a regression reported in 6.6:
->
-> https://lore.kernel.org/regressions/9f36fb06-64c4-4264-aaeb-4e1289e764c4@=
-owenh.net/
-> https://gitlab.freedesktop.org/drm/nouveau/-/issues/273
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218124
->
-> The reporter has confirmed that this series fixes things and
-> Kai-Heng has confirmed that backlight control still works on
-> the HP ZBook Fury 16 G10 for which the original
-> acpi_device_fix_up_power_extended() call this replaces was added.
->
-> Assuming you agree with this series, can you get it on its way
-> to Linus so that it can be backported to 6.6 please ?
 
-Both patches applied as 6.7-rc material, thanks!
+----- Original Message -----
+> From: "Michael Ellerman" <mpe@ellerman.id.au>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>, "Jens Axboe" <axboe@kernel.dk>, "regressions"
+> <regressions@lists.linux.dev>, "npiggin" <npiggin@gmail.com>, "christophe leroy" <christophe.leroy@csgroup.eu>,
+> "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>
+> Sent: Monday, November 20, 2023 1:10:06 AM
+> Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec register  save
+
+> Hi Timothy,
+> 
+> Great work debugging this. I think your fix is good, but I want to understand it
+> a bit more to make sure I can explain why we haven't seen it outside of
+> io-uring.
+> If this can be triggered outside of io-uring then I have even more backporting
+> in my future :}
+> 
+> Typically save_fpu() is called from __giveup_fpu() which saves the FP regs and
+> also *turns off FP* in the tasks MSR, meaning the kernel will reload the FP regs
+> from the thread struct before letting the task use FP again. So in that case
+> save_fpu() is free to clobber fr0 because the FP regs no longer hold live values
+> for the task.
+> 
+> There is another case though, which is the path via:
+>  copy_process()
+>    dup_task_struct()
+>      arch_dup_task_struct()
+>        flush_all_to_thread()
+>          save_all()
+> 
+> That path saves the FP regs but leaves them live. That's meant as an
+> optimisation for a process that's using FP/VSX and then calls fork(), leaving
+> the regs live means the parent process doesn't have to take a fault after the
+> fork to get its FP regs back.
+> 
+> That path does clobber fr0, but fr0 is volatile across a syscall, and the only
+> way to reach copy_process() from userspace is via a syscall. So in normal usage
+> fr0 being clobbered across a syscall shouldn't cause data corruption.
+> 
+> Even if we handle a signal on the return from the fork() syscall, the worst that
+> happens is that the task's thread struct holds the clobbered fr0, but the task
+> doesn't care (because fr0 is volatile across the syscall anyway).
+> 
+> That path is something like:
+> 
+> system_call_vectored_common()
+>  system_call_exception()
+>    sys_fork()
+>      kernel_clone()
+>        copy_process()
+>          dup_task_struct()
+>            arch_dup_task_struct()
+>              flush_all_to_thread()
+>                save_all()
+>                  if (tsk->thread.regs->msr & MSR_FP)
+>                    save_fpu()
+>                    # does not clear MSR_FP from regs->msr
+>  syscall_exit_prepare()
+>    interrupt_exit_user_prepare_main()
+>      do_notify_resume()
+>        get_signal()
+>        handle_rt_signal64()
+>          prepare_setup_sigcontext()
+>            flush_fp_to_thread()
+>              if (tsk->thread.regs->msr & MSR_FP)
+>                giveup_fpu()
+>                  __giveup_fpu
+>                    save_fpu()
+>                    # clobbered fr0 is saved, but task considers it volatile
+>                    # across syscall anyway
+> 
+> 
+> But we now have a new path, because io-uring can call copy_process() via
+> create_io_thread() from the signal handling path. That's OK if the signal is
+> handled as we return from a syscall, but it's not OK if the signal is handled
+> due to some other interrupt.
+> 
+> Which is:
+> 
+> interrupt_return_srr_user()
+>  interrupt_exit_user_prepare()
+>    interrupt_exit_user_prepare_main()
+>      do_notify_resume()
+>        get_signal()
+>          task_work_run()
+>            create_worker_cb()
+>              create_io_worker()
+>                copy_process()
+>                  dup_task_struct()
+>                    arch_dup_task_struct()
+>                      flush_all_to_thread()
+>                        save_all()
+>                          if (tsk->thread.regs->msr & MSR_FP)
+>                            save_fpu()
+>                            # fr0 is clobbered and potentially live in userspace
+> 
+> 
+> So tldr I think the corruption is only an issue since io-uring started doing
+> the clone via signal, which I think matches the observed timeline of this bug
+> appearing.
+
+I agree the corruption really only started showing up in earnest on io_uring clone-via-signal, as this was confirmed several times in the course of debugging.  Bear in mind however that we have seen very, very rare crashes over several years in other tasks, and I am starting to think this bug might be the root cause (see below).
+
+Note as well that I may very well have a wrong call order in the commit message, since I was relying on a couple of WARN_ON() macros I inserted to check for a similar (but not identical) condition and didn't spend much time getting new traces after identifying the root cause.
+
+I went back and grabbed some real world system-wide stack traces, since I now know what to trigger on.  A typical example is:
+
+interrupt_return_srr_user()
+ interrupt_exit_user_prepare()
+  interrupt_exit_user_prepare_main()
+   schedule()
+    __schedule()
+     __switch_to()
+      giveup_all()
+       # tsk->thread.regs->msr MSR_FP is still set here
+       __giveup_fpu()
+        save_fpu()
+        # fr0 is clobbered and potentially live in userspace
+
+This indicates that the pending signal is not actually required, it simply makes triggering much more likely.  Both the pending signal and the _TIF_NEED_RESCHED paths give up control and end up in the same overall position of trigging down-call routines that assume the FPU state is valid.
+
+perl and bash seem to be affected to some degree, though current builds don't use enough VSX instructions rapidly enough to cause crashes with any significant probability.  That said, over many years of running POWER at datacenter scale I have seen enough random bash/perl crashes in the logs to recognize the pattern; I think this has been a low-grade issue for a long time, but with an infantismally small chance of happening it was seen as random noise / hardware issues / other rare bugs in various programs.
