@@ -1,24 +1,25 @@
 Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6473DDD0
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 08:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307CF125B0
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 10:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id CCF61207B8;
-	Mon, 20 Nov 2023 09:47:52 +0100 (CET)
-Date: Mon, 20 Nov 2023 09:47:48 +0100
+	by mail11.truemail.it (Postfix) with ESMTPA id 2B1E4207FD;
+	Mon, 20 Nov 2023 11:18:00 +0100 (CET)
+Date: Mon, 20 Nov 2023 11:17:56 +0100
 From: Francesco Dolcini <francesco@dolcini.it>
 To: linux@bigler.io
-Cc: Stefan Moring <stefan.moring@technolution.nl>,
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Stefan Moring <stefan.moring@technolution.nl>,
 	Linux regressions mailing list <regressions@lists.linux.dev>,
 	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-spi@vger.kernel.org
 Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
  imx8mm
-Message-ID: <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
+Message-ID: <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
 References: <8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com>
  <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
  <f4439fd1-7c2d-4a96-9116-1dbe04fceac0@leemhuis.info>
@@ -26,6 +27,8 @@ References: <8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com>
  <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
  <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
  <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
+ <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
+ <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -34,55 +37,22 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
+In-Reply-To: <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
 
-On Mon, Nov 20, 2023 at 09:27:10AM +0100, linux@bigler.io wrote:
-> Load the spi-dma (imx-sdma 302c0000.dma-controller: loaded firmware
-> 4.5), run the spi_imx and the spidev as kenelmodule.
+On Mon, Nov 20, 2023 at 10:33:38AM +0100, linux@bigler.io wrote:
+> I run the test and it worked fine. The transmitted data matches with
+> the recived data, no diff.
+ok, thanks for confirming. At least we are on the same page.
+
+> BUT!!! on the MDIO it is completly different !!!
+> When I request to send 4kB Data I measure on the line 16384Byte.
 > 
-> I run the code on a Toradex Verdin Development Board and use the
-> imx8mm-verdin-nonwifi-dev.dts
-> 
-> To add the spidev I patched imx8mm-verdin.dtsi
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> index 6f0811587142..262500940adc 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> @@ -209,6 +209,15 @@ &ecspi2 {
->         cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_ecspi2>;
-> +
-> +       spidev@0{
-> +               compatible = "micron,spi-authenta";
-> +               reg = <0>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               spi-max-frequency = <20000000>;
-> +               status = "okay";
-> +       };
->  };
-> 
-> as a spidev test program I used 
-> https://raw.githubusercontent.com/raspberrypi/linux/rpi-3.10.y/Documentation/spi/spidev_test.c
+> The data is again   3Dummy Bytes followed by the databyte.
+> So the error symetic on send and recive
 
-Would you mind doing the following tests looping the SPI interface MISO/MOSI?
-
-```
-cd /tmp
-
-dd if=/dev/urandom of=4k-spi-test-data.bin bs=1 count=4k
-spidev_test -D "$device" -s 4000000 -i 4k-spi-test-data.bin -o 4k-spi-test-result.bin
-
-dd if=/dev/urandom of=16bytes-spi-test-data.bin bs=1 count=16
-spidev_test -D "$device" -s 16000 -i 16bytes-spi-test-data.bin -o 16bytes-spi-test-result.bin
-```
-
-with "$device" being your actual spidev device?
-
-Those tests are passing on 6.7.0-rc2 for me.
+ok, that's annoying. I wonder if the loopback test could be improved to
+spot such kind of issues, maybe we could verify if the execution time
+is reasonable given the SPI clock frequency and the payload size ...
 
 Francesco
-
-
 
