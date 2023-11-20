@@ -1,146 +1,149 @@
-Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF1519475
-	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 17:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3862E208BE
+	for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 17:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bigler.io header.i=@bigler.io header.b="cSi02sYz"
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SYtff0MFrzMq6hk;
-	Mon, 20 Nov 2023 16:45:30 +0000 (UTC)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4SYtfd44ZgzMpnPh;
-	Mon, 20 Nov 2023 17:45:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.io;
-	s=20200409; t=1700498729;
-	bh=7FT4vey4M0IFQTQ3VKqZdUegCZYs+l920IgntzrCIDw=;
-	h=Date:Subject:From:Reply-To:To:Cc:References:In-Reply-To:From;
-	b=cSi02sYz4HKFvWUzw/BC1YhAQHM2EP0g18WJC9gnMpY3dJ5NojWBR5KISQMJ0s/Pe
-	 zVoEznPQiNFsN3x9bCgFN2h4goeFxLw5+rqzqQFLqDetEEtZ7JvdkvkeYgIWqjVhc2
-	 ojvY8UK2m8FV35mLF7zM7gaV/JotU1GoENf0JQhg=
-Message-ID: <314e596f4f7b7e7f8742c47dfeeb7d93@mail.infomaniak.com>
-Date: Mon, 20 Nov 2023 17:45:29 +0100
-Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
- imx8mm
-From: linux@bigler.io
-Reply-To: linux@bigler.io
-To: Stefan Moring <stefan.moring@technolution.nl>
-Cc: Francesco Dolcini <francesco@dolcini.it>, Linux regressions mailing list
- <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>,
- linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWd+XqtL"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1ef370c2e12so2712103fac.1
+        for <regressions@lists.linux.dev>; Mon, 20 Nov 2023 09:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700501509; x=1701106309; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WAF1U/lCbnAz9mXeRmxCPX739RNT9Ki2al6h9FhAbIA=;
+        b=GWd+XqtL3Y7sbPj5AvRIdcOBIyQivT/SJKeuKKt4wHU6f9mc0MXdsldEN0uQguZKEx
+         kxMuC8sYamVfgbKQvoMBoY2IM58C0/Xcw0UdrKyivtrCh0yC9Ag0CZc9Lmc38TU3wDUT
+         7x3+wXoT1nMfCk5HUSlRxtpr6i5delEciJ5jXtfZFLlR0Q2QisvRN7SYnq9/DWzCNxbq
+         tUhGreNGicadSsxBLYVMVnBr2xTc9L6MpizV2yLLJUYhIvIkv43K7ncAH0UIgC2MP2zd
+         cVJxGUJmICrzLdiV+YOAMQSaZq9eGhbgyd3/BPrX5jh05O6j8LqLKT1yMos3zVrThGlc
+         VLfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700501509; x=1701106309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WAF1U/lCbnAz9mXeRmxCPX739RNT9Ki2al6h9FhAbIA=;
+        b=YmA1h7PB7vX8EMCmoqThbniBM4oSINCMfjPxKDO3nANffodDoA1IfwYsRti1glivCE
+         P3WDzY8O5bDxwckH3xlQKXa/cDUj3XiSmF3gJSXBm4JME/ZGHx1Bg/8xvY1z8e8e8qAy
+         9bSteECd6KtLWwFTZ+G2uB5Quf74gbJr6A8BEEyWmPTMkwoJ0gL6iv0zG7MdZa3Gricg
+         v9UVG+N6ZYKO6mIwh/hVe2OXOR+jab2GLncygeODbie5ETdnxv+4g1s6MV96qVZbXqDC
+         GHHOQCy5REOXyz8u+gIy/87WxWz9zI2etfl/it+iXkifO7EeGFA5uWDLXgnTsvvf4yJR
+         IgNw==
+X-Gm-Message-State: AOJu0YxMWYB80LkeagsNM8lW4ZhrqfQX154yma45cqKEQRmdtkrXz4nt
+	nGPiedm+BK3nS5kDCIM2p9KWG64nufUKNp0xLaU=
+X-Google-Smtp-Source: AGHT+IHXGPskkZjPASHv5zjmBj8vTC+m/HXkKut1/0s33s6XPps0+a5t8sGmtHhxRowQsRtHWKhR/1Ty6hqrzEufKKE=
+X-Received: by 2002:a05:6870:d3cc:b0:1f0:c29:d75c with SMTP id
+ l12-20020a056870d3cc00b001f00c29d75cmr9798494oag.47.1700501509193; Mon, 20
+ Nov 2023 09:31:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <87edgv4x3i.fsf@vps.thesusis.net> <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
+ <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
+ <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com> <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
+ <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
+In-Reply-To: <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 20 Nov 2023 12:31:38 -0500
+Message-ID: <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
+Subject: Re: Radeon regression in 6.6 kernel
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Dave Airlie <airlied@gmail.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-kernel@vger.kernel.org, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Luben Tuikov <luben.tuikov@amd.com>, 
+	dri-devel@lists.freedesktop.org, Phillip Susi <phill@thesusis.net>, 
+	Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-WS-User-Origin: eyJpdiI6ImtDMngxZlYwKzA3QlIvTXM1bGtYQnc9PSIsInZhbHVlIjoiWDhCLzRCZTFHRE4zZmVFbFRZNS9FUT09IiwibWFjIjoiYzZjY2Q1YTY0MGQzNzYxYTM2ODljNmExY2VlNjlhMTg3MWFiYTEyOWRmMzcwMTQ1NjA5YjdmOGVhMzIzZDZkYiIsInRhZyI6IiJ9
-X-WS-User-Mbox: eyJpdiI6ImwrN2RvVlBNdDZzZmdlMUx1STNPenc9PSIsInZhbHVlIjoia21ydXZ3RWpUWElPZlF1RmM1YSs4Zz09IiwibWFjIjoiYWEwYzU3MDk3YzA1MDMyZDhiYjBjMmM2M2UxMTM4OGM5NjAxMzI3ZDkwYjVjMGE1MmQ4ZjdkMzlhMjNiNmUyOSIsInRhZyI6IiJ9
-X-WS-Location: eJxzKUpMKykGAAfpAmU-
-X-Mailer: Infomaniak Workspace (1.3.596)
-References: <8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com>
- <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
- <f4439fd1-7c2d-4a96-9116-1dbe04fceac0@leemhuis.info>
- <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
- <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
- <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
- <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
- <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
- <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
- <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
- <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
-In-Reply-To: <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
-X-Infomaniak-Routing: alpha
 
-Hi Stefan
+On Mon, Nov 20, 2023 at 11:24=E2=80=AFAM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 20.11.23 um 17:08 schrieb Alex Deucher:
+> > On Mon, Nov 20, 2023 at 10:57=E2=80=AFAM Christian K=C3=B6nig
+> > <ckoenig.leichtzumerken@gmail.com> wrote:
+> >> Am 19.11.23 um 07:47 schrieb Dave Airlie:
+> >>>> On 12.11.23 01:46, Phillip Susi wrote:
+> >>>>> I had been testing some things on a post 6.6-rc5 kernel for a week =
+or
+> >>>>> two and then when I pulled to a post 6.6 release kernel, I found th=
+at
+> >>>>> system suspend was broken.  It seems that the radeon driver failed =
+to
+> >>>>> suspend, leaving the display dead, the wayland display server hung,=
+ and
+> >>>>> the system still running.  I have been trying to bisect it for the =
+last
+> >>>>> few days and have only been able to narrow it down to the following=
+ 3
+> >>>>> commits:
+> >>>>>
+> >>>>> There are only 'skip'ped commits left to test.
+> >>>>> The first bad commit could be any of:
+> >>>>> 56e449603f0ac580700621a356d35d5716a62ce5
+> >>>>> c07bf1636f0005f9eb7956404490672286ea59d3
+> >>>>> b70438004a14f4d0f9890b3297cd66248728546c
+> >>>>> We cannot bisect more!
+> >>>> Hmm, not a single reply from the amdgpu folks. Wondering how we can
+> >>>> encourage them to look into this.
+> >>>>
+> >>>> Phillip, reporting issues by mail should still work, but you might h=
+ave
+> >>>> more luck here, as that's where the amdgpu afaics prefer to track bu=
+gs:
+> >>>> https://gitlab.freedesktop.org/drm/amd/-/issues
+> >>>>
+> >>>> When you file an issue there, please mention it here.
+> >>>>
+> >>>> Furthermore it might help if you could verify if 6.7-rc1 (or rc2, wh=
+ich
+> >>>> comes out later today) or 6.6.2-rc1 improve things.
+> >>> It would also be good to test if reverting any of these is possible o=
+r not.
+> >> Well none of the commits mentioned can affect radeon in any way. Radeo=
+n
+> >> simply doesn't use the scheduler.
+> >>
+> >> My suspicion is that the user is actually using amdgpu instead of
+> >> radeon. The switch potentially occurred accidentally, for example by
+> >> compiling amdgpu support for SI/CIK.
+> >>
+> >> Those amdgpu problems for older ASIC have already been worked on and
+> >> should be fixed by now.
+> > In this case it's a navi23 (so radeon in the marketing sense).
+>
+> Thanks, couldn't find that in the mail thread.
+>
+> In that case those are the already known problems with the scheduler
+> changes, aren't they?
 
-I added my printing=20
-@@ -655,12 +658,25 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx=
-_data *spi_imx,
-=20
-        /* Clear BL field and set the right value */
-        ctrl &=3D ~MX51_ECSPI_CTRL_BL_MASK;
-+       dev_info(spi_imx->dev, "%s: count=3D%d, bits_per_word=3D%d\n",
-+            __FUNCTION__, spi_imx->count, spi_imx->bits_per_word);
-+
-        if (spi_imx->target_mode && is_imx53_ecspi(spi_imx))
-                ctrl |=3D (spi_imx->target_burst * 8 - 1)
-                        << MX51_ECSPI_CTRL_BL_OFFSET;
+Yes.  Those changes went into 6.7 though, not 6.6 AFAIK.  Maybe I'm
+misunderstanding what the original report was actually testing.  If it
+was 6.7, then try reverting:
+56e449603f0ac580700621a356d35d5716a62ce5
+b70438004a14f4d0f9890b3297cd66248728546c
 
-and run the test with the burst enabled=20
-/var/volatile/tmp# spidev_test --device /dev/spidev1.0 --speed 20000000 --b=
-pw 8 -i 127bytes-spi-test-data.bin -o 127bytes-spi-test-result.bin
-[  802.729824] spi_imx 30830000.spi: mx51_ecspi_prepare_transfer: count=3D1=
-27, bits_per_word=3D8
--> transmitted 504 Bytes on the line
+Alex
 
-then I run it with burst disabled
-spidev_test --device /dev/spidev1.0 --speed 20000000 --bpw 8 -i 127bytes-sp=
-i-test-data.bin -o 127bytes-spi-test-result.bin
-[  316.683807] spi_imx 30830000.spi: mx51_ecspi_prepare_transfer: count=3D0=
-, bits_per_word=3D8
--> transmitted 127 Bytes on the line
-
-The count is different=20
-- for burst-enabled  127
-- for burst-disable 0
-
-concerning the sdma-firmware I checked on=20
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git=
-/tree/imx/sdma
-but the latest I found was 4.5
-
-Regards
-Stefan
-
-
-Am 2023-11-20T16:30:15.000+01:00 hat Stefan Moring <stefan.moring@technolut=
-ion.nl> geschrieben:
->  Hi Stefan,
->=20
-> I have been trying to reproduce your error on my iMX8M, scoping the SPI
-> lines, but everything works as expected. I don't have the exact same boar=
-d,
-> but I don't think that should be a problem. One difference I noticed is
-> that my imx-sdma firmware is version 4.6.
->=20
-> Can you verify the values used for the transfer,  spi_imx->count and
-> spi_imx->bits_per_word inside the mx51_ecpsi_prepare_transfer() method?
-> Those are the only two things that changed in the commits. Maybe compare
-> them to the working version?
->=20
-> Kind regards,
->=20
-> Stefan Moring
->=20
-> Op ma 20 nov 2023 om 11:18 schreef Francesco Dolcini <francesco@dolcini.i=
-t>:
->=20
->=20
-> >    On Mon, Nov 20, 2023 at 10:33:38AM +0100, linux@bigler.io wrote:
-> >=20
-> > >     I run the test and it worked fine. The transmitted data matches w=
-ith
-> > >   the recived data, no diff.
-> >   ok, thanks for confirming. At least we are on the same page.
-> >=20
-> >=20
-> > >     BUT!!! on the MDIO it is completly different !!!
-> > >   When I request to send 4kB Data I measure on the line 16384Byte.
-> > > =20
-> > >   The data is again   3Dummy Bytes followed by the databyte.
-> > >   So the error symetic on send and recive
-> > =20
-> >  ok, that's annoying. I wonder if the loopback test could be improved t=
-o
-> >  spot such kind of issues, maybe we could verify if the execution time
-> >  is reasonable given the SPI clock frequency and the payload size ...
-> >=20
-> >  Francesco
-> >=20
->=20
->=20
+>
+> Christian.
+>
+> >
+> > Alex
+> >
+> >> Regards,
+> >> Christian.
+> >>
+> >>> File the gitlab issue and we should poke amd a but more to take a loo=
+k.
+> >>>
+> >>> Dave.
 >
