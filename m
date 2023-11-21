@@ -1,82 +1,178 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDDE3B7A0
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5NPG-0006SW-SS; Tue, 21 Nov 2023 10:50:58 +0100
-Message-ID: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-Date: Tue, 21 Nov 2023 10:50:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EE23C077
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PkWgvPCq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Eu+xmuWb"
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 539B31F8B4;
+	Tue, 21 Nov 2023 09:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1700560373; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JXka18BPdCCLvHm1emjsKVsvj/REJd2IDYNWDBp0VE=;
+	b=PkWgvPCqkEnWMDK7z4Ks/WGGDlqAoWdSZMZMqAkf4Bb+02WFZA3FbaIg0yp+UeoDHNJZLt
+	i2DRsK2TT59P7rYeYWjEt7DP2kFKZ9cOWn+WOjyIbhtbM72pKTVDaEfiPHdBghQeCutpFa
+	ug2Bcud+FbQZohe78X1/cZUxo0vHHXY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1700560373;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0JXka18BPdCCLvHm1emjsKVsvj/REJd2IDYNWDBp0VE=;
+	b=Eu+xmuWbVHUzHSLKb9GBj6CiEwp6s7E3ptCkrpDSITeI5HHnTxklPCBYHP5QmGLiHdCKmN
+	m/kjQVbDpgmWtlCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0E35E138E3;
+	Tue, 21 Nov 2023 09:52:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id WM2bAvV9XGXyNgAAMHmgww
+	(envelope-from <tiwai@suse.de>); Tue, 21 Nov 2023 09:52:53 +0000
+Date: Tue, 21 Nov 2023 10:52:52 +0100
+Message-ID: <87edgjo2kr.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Takashi Iwai <tiwai@suse.de>,	Jean-Jacques Hiblot
+ <jjhiblot@traphandler.com>,	Bagas Sanjaya <bagasdotme@gmail.com>,	Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>,	Linux Regressions
+ <regressions@lists.linux.dev>,	Linux LEDs <linux-leds@vger.kernel.org>,	Tim
+ Crawford <tcrawford@system76.com>,	Jeremy Soller <jeremy@system76.com>,
+	System76 Product Development <productdev@system76.com>,	Lee Jones
+ <lee@kernel.org>,	Pavel Machek <pavel@ucw.cz>,	Johannes =?ISO-8859-1?Q?Pe?=
+ =?ISO-8859-1?Q?n=DFel?= <johannes.penssel@gmail.com>
+Subject: Re: Fwd: sysfs: cannot create duplicate filename .../system76_acpi::kbd_backlight/color
+In-Reply-To: <b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
+	<ZT25-gUmLl8MPk93@debian.me>
+	<dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+	<ZUjnzB2RL2iLzIQG@debian.me>
+	<87sf50pm34.wl-tiwai@suse.de>
+	<b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: scsi regression that after months is still not addressed and now
- bothering 6.1.y users, too
-To: Greg KH <gregkh@linuxfoundation.org>,
- Sagar Biradar <sagar.biradar@microchip.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
- Gilbert Wu <gilbert.wu@microchip.com>, John Garry <john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700560266;84fe9605;
-X-HE-SMSGID: 1r5NPG-0006SW-SS
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -5.80
+X-Spamd-Result: default: False [-5.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLY(-4.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[suse.de,traphandler.com,gmail.com,vger.kernel.org,lists.linux.dev,system76.com,kernel.org,ucw.cz];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-* @SCSI maintainers: could you please look into below please?
+On Tue, 21 Nov 2023 10:19:03 +0100,
+Thorsten Leemhuis wrote:
+> 
+> Takashi, Jean-Jacques Hiblot, Lee,
+> 
+> On 20.11.23 14:53, Takashi Iwai wrote:
+> > On Mon, 06 Nov 2023 14:19:08 +0100,
+> > Bagas Sanjaya wrote:
+> >> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
+> >>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
+> >>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
+> >>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
+> >>>>
+> >>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
+> >>>> since you authored the culprit?
+> >
+> >>> The offending commit stores the color in struct led_classdev and exposes it
+> >>> via sysfs. It was part of a series that create a RGB leds from multiple
+> >>> single-color LEDs. for this series, we need the color information but we
+> >>> don't really need to expose it it via sysfs. In order to fix the issue, we
+> >>> can remove the 'color' attribute from the sysfs.
+> >>
+> >> OK, see you in the patch!
+> > 
+> > Is there a patch available?
+> 
+> Not that I know of. Could not find anything on lore either.
+> 
+> > This bug hits for a few Logitech keyboard models, too, and it makes
+> > 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
+> > this bug:
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=218155
+> > 
+> > We need a quick fix for 6.6.x.
+> 
+> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
+> committed it and sent it to Linus) know about this for a while already
+> without doing anything about it, I wonder if someone should just send a
+> revert to Linus (unless of course that is likely to introduce a
+> regression on its own).
+> 
+> Takashi, could you maybe do this, unless a fix shows up real soon?
 
-* @Stable team: you might want to take a look as well and consider a
-revert in 6.1.y (yes, I know, those are normally avoided, but here it
-might make sense).
+I can, but we need to decide which way to go.
+There are several options:
 
-Hi everyone!
+1. Revert the commit c7d80059b086;
+   this drops led class color sysfs entries.  Also the store of
+   led_cdev->color from fwnode is dropped, too.
 
-TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
-hangs for a while) that was reported months ago already but is still not
-fixed. Not only that, it apparently more and more users run into this
-recently, as the culprit was recently integrated into 6.1.y; I wonder if
-it would be best to revert it there, unless a fix for mainline comes
-into reach soon.
+2. Drop only led class color sysfs entries;
+   a partial revert of c7d80059b086 above
 
-Details:
+3. Rename conflicting sysfs entries in drivers;
+   e.g. color -> kb_color for hid-lg-g15 and system76_acpi
 
-Quite a few machines with Adaptec controllers seems to hang for a few
-tens of seconds to a few minutes before things start to work normally
-again for a while:
-https://bugzilla.kernel.org/show_bug.cgi?id=217599
+In either way, we'd break user-space (sysfs).
 
-That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
-Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
-commit despite a warning of mine to Sasha recently made it into 6.1.53
--- and that way apparently recently reached more users recently, as
-quite a few joined that ticket.
+IMO, 2 would be the least harm, as the class sysfs entry was
+introduced since 6.6.  I guess this is what Jean-Jacques suggested.
+But I'm not sure how important this new class sysfs entry is; it has
+to be clarified from leds people who actually use / wanted the
+feature.
 
-The culprit is authored by Sagar Biradar who unless I missed something
-never replied even once to the ticket or earlier mails about it. Lore
-has no messages from him since early June.
+3 was already confirmed to work on both bug reports.  OTOH, it's not
+clear whether we can neglect (potentially) already existing users.
 
-Hannes Reinecke at least tried to fix it a few weeks ago (many thx), but
-that didn't work out (see the ticket for details). Since then things
-look stalled again, which is, ehh, unfortunate when it comes to
-regressions.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Takashi
+
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: /me should have followed up on this earlier... :-/
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
