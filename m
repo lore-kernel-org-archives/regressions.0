@@ -1,67 +1,91 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CD51EA8A
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4F3218C
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 3A3791F83F;
-	Tue, 21 Nov 2023 10:17:01 +0100 (CET)
-Date: Tue, 21 Nov 2023 10:16:57 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, linux@bigler.io
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Stefan Moring <stefan.moring@technolution.nl>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
- imx8mm
-Message-ID: <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
-References: <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
- <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
- <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
- <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
- <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
- <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
- <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
- <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
- <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
- <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r5MuO-0008PA-QI; Tue, 21 Nov 2023 10:19:04 +0100
+Message-ID: <b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+Date: Tue, 21 Nov 2023 10:19:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: sysfs: cannot create duplicate filename
+ .../system76_acpi::kbd_backlight/color
+Content-Language: en-US, de-DE
+To: Takashi Iwai <tiwai@suse.de>,
+ Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux LEDs <linux-leds@vger.kernel.org>,
+ Tim Crawford <tcrawford@system76.com>, Jeremy Soller <jeremy@system76.com>,
+ System76 Product Development <productdev@system76.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ =?UTF-8?Q?Johannes_Pen=C3=9Fel?= <johannes.penssel@gmail.com>
+References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
+ <ZT25-gUmLl8MPk93@debian.me>
+ <dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+ <ZUjnzB2RL2iLzIQG@debian.me> <87sf50pm34.wl-tiwai@suse.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87sf50pm34.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700558348;aae926d5;
+X-HE-SMSGID: 1r5MuO-0008PA-QI
 
-On Tue, Nov 21, 2023 at 10:06:51AM +0100, Thorsten Leemhuis wrote:
-> On 20.11.23 18:48, Francesco Dolcini wrote:
-> > On Mon, Nov 20, 2023 at 04:30:15PM +0100, Stefan Moring wrote:
-> >> Can you verify the values used for the transfer,  spi_imx->count and spi_imx->
-> >> bits_per_word inside the mx51_ecpsi_prepare_transfer() method? Those are the
-> >> only two things that changed in the commits. Maybe compare them to the working
-> >> version?
-> > 
-> > I would suggest to bisect the issue to the actual commit that
-> > introduced the regression, I do not think this was done yet.
+Takashi, Jean-Jacques Hiblot, Lee,
+
+On 20.11.23 14:53, Takashi Iwai wrote:
+> On Mon, 06 Nov 2023 14:19:08 +0100,
+> Bagas Sanjaya wrote:
+>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
+>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
+>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
+>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
+>>>>
+>>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
+>>>> since you authored the culprit?
+>
+>>> The offending commit stores the color in struct led_classdev and exposes it
+>>> via sysfs. It was part of a series that create a RGB leds from multiple
+>>> single-color LEDs. for this series, we need the color information but we
+>>> don't really need to expose it it via sysfs. In order to fix the issue, we
+>>> can remove the 'color' attribute from the sysfs.
+>>
+>> OK, see you in the patch!
 > 
-> I think it was. To quote
-Whoops, you are right.
+> Is there a patch available?
 
-> spi: Increase imx51 ecspi burst length based on transfer length
-> 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
+Not that I know of. Could not find anything on lore either.
+
+> This bug hits for a few Logitech keyboard models, too, and it makes
+> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
+> this bug:
+>   https://bugzilla.kernel.org/show_bug.cgi?id=218155
 > 
-> spi: imx: Take in account bits per word instead of assuming 8-bits
-> 5f66db08cbd3ca471c66bacb0282902c79db9274
+> We need a quick fix for 6.6.x.
 
-Do we know which one of those two commits introduces this regression?
+Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
+committed it and sent it to Linus) know about this for a while already
+without doing anything about it, I wonder if someone should just send a
+revert to Linus (unless of course that is likely to introduce a
+regression on its own).
 
-Francesco
+Takashi, could you maybe do this, unless a fix shows up real soon?
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: /me should have followed up on this earlier... :-/
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
