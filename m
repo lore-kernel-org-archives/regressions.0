@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6C853803
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 15:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE1A5676A
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 15:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5Sd0-00060V-Ud; Tue, 21 Nov 2023 16:25:30 +0100
-Message-ID: <f7d315b1-f43d-4573-81f0-a4014f3ac0bb@leemhuis.info>
-Date: Tue, 21 Nov 2023 16:25:30 +0100
+	id 1r5SsI-0003vD-Qs; Tue, 21 Nov 2023 16:41:18 +0100
+Message-ID: <0a594a11-d345-48c3-a651-08ea80ab76a1@leemhuis.info>
+Date: Tue, 21 Nov 2023 16:41:17 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,77 +18,59 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: dwc3: regression in USB DWC3 driver in kernel 5.15 branch
+Subject: Re: Fwd: inet6_sock_destruct->inet_sock_destruct trigger Call Trace
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Tomasz Rostanski <tomasz.rostanski@thalesgroup.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Stable <stable@vger.kernel.org>, Linux USB
- <linux-usb@vger.kernel.org>, Linux ARM
- <linux-arm-kernel@lists.infradead.org>, Bagas Sanjaya
- <bagasdotme@gmail.com>, Alexander Stein <alexander.stein@ew.tq-group.com>,
- Sasha Levin <sashal@kernel.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Linux Networking <netdev@vger.kernel.org>, Linux BPF
+ <bpf@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <8bfaee54-3117-65d3-d723-6408edf93961@gmail.com>
+ <c3a5d08e-9c7c-4888-916a-ba4bd22a3319@collabora.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
- <635eb180-0dea-4dc7-a092-be453bf80023@leemhuis.info>
-In-Reply-To: <635eb180-0dea-4dc7-a092-be453bf80023@leemhuis.info>
+In-Reply-To: <c3a5d08e-9c7c-4888-916a-ba4bd22a3319@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700580333;9f2a6808;
-X-HE-SMSGID: 1r5Sd0-00060V-Ud
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700581284;a56574af;
+X-HE-SMSGID: 1r5SsI-0003vD-Qs
 
-Hi. Top-posting for once, to make this easily accessible to everyone.
+On 29.08.23 15:07, Muhammad Usama Anjum wrote:
+> On 6/16/23 5:43 PM, Bagas Sanjaya wrote:
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+> [...]
+>>> When the IPv6 address or NIC configuration changes, the following kernel warnings may be triggered:
+> [...]
+>>> Thu Jun 15 09:02:31 2023 daemon.info : 09[KNL] interface utun deleted
+> [...]
+>> #regzbot introduced: v6.1.27..v6.1.32 https://bugzilla.kernel.org/show_bug.cgi?id=217555
+>> #regzbot title: kernel warning (oops) at inet_sock_destruct
+> The same warning has been seen on 4.14, 5.15, 6.1 and latest mainline.
+>
+> This WARN_ON is present from 2008.
 
-To Greg and everyone that might care: apparently Tomasz lost interest in
-fixing this 5.15.y regression. Kinda sad, as the patches are mostly
-there, but lack a S-o-b tag -- which means we are stuck here, unless
-somebody else attempts a backport.
+Hmmm, the commit that according to syzkaller's bisection caused this is
+not in those series. So I assume the bisection went sideways.
 
-https://lore.kernel.org/all/20230904071432.32309-1-tomasz.rostanski@thalesgroup.com/
+And the reporter of the bugzilla ticket never bisected this either.
+Wondering if it started to show up there due to small unrelated timing
+changes.
 
-I'll thus stop tracking this regression.
+Not totally sure, but it seems like this in the end is not a real
+regression or one we can't do anything about. Thus removing this from
+the tracking; if anyone disagrees, please holler.
 
-#regzbot inconclusive: unfixed afaic, as patches to fix this got stuck
+#regzbot inconclusive: likely an older problem
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
 
-On 01.11.23 19:59, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 15.07.23 13:03, Bagas Sanjaya wrote:
->> I notice a stable-specific regression on Bugzilla [1]. Quoting from it:
->>> The backport commit to 5.15 branch:
->>> 9d4f84a15f9c9727bc07f59d9dafc89e65aadb34 "arm64: dts: imx8mp: Add snps,gfladj-refclk-lpm-sel quirk to USB nodes"  (from upstream commit 5c3d5ecf48ab06c709c012bf1e8f0c91e1fcd7ad)
->>> switched from "snps,dis-u2-freeclk-exists-quirk" to "snps,gfladj-refclk-lpm-sel-quirk".
->>> [...]
->>> When the commit is reverted the USB 3.x drives works fine.
->>
->> See Bugzilla for the full thread and attach dmesgs.
->>
->> Anyway, I'm adding it to regzbot:
->>
->> #regzbot introduced: 9d4f84a15f9c97 https://bugzilla.kernel.org/show_bug.cgi?id=217670
->> #regzbot title: regression in USB DWC3 driver due to missing gfladj-refclk-lpm-sel-quirk quirk
->>
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217670
-> 
-> Tomasz, it looks like you were really close at resolving this regression
-> when you submitted the required patches for the 5.15.y branch a few
-> weeks ago:
-> https://lore.kernel.org/all/2023090417-silk-parting-36d8@gregkh/
-> 
-> What happened? Did you loose interest? Did you not understand what Greg
-> asked for? Do you need help?
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
