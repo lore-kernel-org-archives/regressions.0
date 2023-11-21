@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE1A5676A
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 15:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597AF20DE7
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 17:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5SsI-0003vD-Qs; Tue, 21 Nov 2023 16:41:18 +0100
-Message-ID: <0a594a11-d345-48c3-a651-08ea80ab76a1@leemhuis.info>
-Date: Tue, 21 Nov 2023 16:41:17 +0100
+	id 1r5V0K-0006Bk-Gx; Tue, 21 Nov 2023 18:57:44 +0100
+Message-ID: <c1b0bc05-41ee-403c-a0c7-0a2fc0e6b0a8@leemhuis.info>
+Date: Tue, 21 Nov 2023 18:57:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,59 +18,134 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: inet6_sock_destruct->inet_sock_destruct trigger Call Trace
-Content-Language: en-US, de-DE
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Linux Networking <netdev@vger.kernel.org>, Linux BPF
- <bpf@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-References: <8bfaee54-3117-65d3-d723-6408edf93961@gmail.com>
- <c3a5d08e-9c7c-4888-916a-ba4bd22a3319@collabora.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c3a5d08e-9c7c-4888-916a-ba4bd22a3319@collabora.com>
+Subject: Re: [PATCH v2 2/2] drm/msm/dp: attach the DP subconnector property
+Content-Language: en-US, de-DE
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Johan Hovold
+ <johan@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: freedreno@lists.freedesktop.org, Bjorn Andersson <andersson@kernel.org>,
+ dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>,
+ linux-arm-msm@vger.kernel.org, Marijn Suijten
+ <marijn.suijten@somainline.org>, Abel Vesa <abel.vesa@linaro.org>,
+ Sean Paul <sean@poorly.run>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20231025092711.851168-1-dmitry.baryshkov@linaro.org>
+ <20231025092711.851168-3-dmitry.baryshkov@linaro.org>
+ <ZVR8Flrjxy-wgqgJ@hovoldconsulting.com>
+ <a35623df-6a8e-b398-a0b2-7f11b9ec4e5d@quicinc.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <a35623df-6a8e-b398-a0b2-7f11b9ec4e5d@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700581284;a56574af;
-X-HE-SMSGID: 1r5SsI-0003vD-Qs
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700589472;0caa36dc;
+X-HE-SMSGID: 1r5V0K-0006Bk-Gx
 
-On 29.08.23 15:07, Muhammad Usama Anjum wrote:
-> On 6/16/23 5:43 PM, Bagas Sanjaya wrote:
->> I notice a regression report on Bugzilla [1]. Quoting from it:
-> [...]
->>> When the IPv6 address or NIC configuration changes, the following kernel warnings may be triggered:
-> [...]
->>> Thu Jun 15 09:02:31 2023 daemon.info : 09[KNL] interface utun deleted
-> [...]
->> #regzbot introduced: v6.1.27..v6.1.32 https://bugzilla.kernel.org/show_bug.cgi?id=217555
->> #regzbot title: kernel warning (oops) at inet_sock_destruct
-> The same warning has been seen on 4.14, 5.15, 6.1 and latest mainline.
->
-> This WARN_ON is present from 2008.
+On 15.11.23 19:06, Abhinav Kumar wrote:
+> On 11/15/2023 12:06 AM, Johan Hovold wrote:
+>> On Wed, Oct 25, 2023 at 12:23:10PM +0300, Dmitry Baryshkov wrote:
+>>> While developing and testing the commit bfcc3d8f94f4 ("drm/msm/dp:
+>>> support setting the DP subconnector type") I had the patch [1] in my
+>>> tree. I haven't noticed that it was a dependency for the commit in
+>>> question. Mea culpa.
+>>
+>> This also broke boot on the Lenovo ThinkPad X13s.
+>>
+>> Would be nice to get this fixed ASAP so that further people don't have
+>> to debug this known regression.
+> 
+> I will queue this patch for -fixes rightaway.
 
-Hmmm, the commit that according to syzkaller's bisection caused this is
-not in those series. So I assume the bisection went sideways.
+Thx. I noticed that this fix is still not in -next. I then investigated
+and I found it was applied on Thursday last week here:
+https://gitlab.freedesktop.org/drm/msm/-/commits/msm-fixes?ref_type=heads
 
-And the reporter of the bugzilla ticket never bisected this either.
-Wondering if it started to show up there due to small unrelated timing
-changes.
-
-Not totally sure, but it seems like this in the end is not a real
-regression or one we can't do anything about. Thus removing this from
-the tracking; if anyone disagrees, please holler.
-
-#regzbot inconclusive: likely an older problem
-#regzbot ignore-activity
+Makes me wonder: when will that patch go to a branch that is included in
+-next? And when will it move on towards mainline?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
 
+>>> Since the patch has not landed yet (and even was not reviewed)
+>>> and since one of the bridges erroneously uses USB connector type instead
+>>> of DP, attach the property directly from the MSM DP driver.
+>>>
+>>> This fixes the following oops on DP HPD event:
+>>>
+>>>   drm_object_property_set_value (drivers/gpu/drm/drm_mode_object.c:288)
+>>>   dp_display_process_hpd_high (drivers/gpu/drm/msm/dp/dp_display.c:402)
+>>>   dp_hpd_plug_handle.isra.0 (drivers/gpu/drm/msm/dp/dp_display.c:604)
+>>>   hpd_event_thread (drivers/gpu/drm/msm/dp/dp_display.c:1110)
+>>>   kthread (kernel/kthread.c:388)
+>>>   ret_from_fork (arch/arm64/kernel/entry.S:858)
+>>
+>> This only says where the oops happened, it doesn't necessarily in itself
+>> indicate an oops at all or that in this case it's a NULL pointer
+>> dereference.
+>>
+>> On the X13s I'm seeing the NULL deref in a different path during boot,
+>> and when this happens after a deferred probe (due to the panel lookup
+>> mess) it hangs the machine, which makes it a bit of a pain to debug:
+>>
+>>     Unable to handle kernel NULL pointer dereference at virtual
+>> address 0000000000000060
+>>     ...
+>>     CPU: 4 PID: 57 Comm: kworker/u16:1 Not tainted 6.7.0-rc1 #4
+>>     Hardware name: Qualcomm QRD, BIOS
+>> 6.0.220110.BOOT.MXF.1.1-00470-MAKENA-1 01/10/2022
+>>     ...
+>>     Call trace:
+>>      drm_object_property_set_value+0x0/0x88 [drm]
+>>      dp_display_process_hpd_high+0xa0/0x14c [msm]
+>>      dp_hpd_plug_handle.constprop.0.isra.0+0x90/0x110 [msm]
+>>      dp_bridge_atomic_enable+0x184/0x21c [msm]
+>>      edp_bridge_atomic_enable+0x60/0x94 [msm]
+>>      drm_atomic_bridge_chain_enable+0x54/0xc8 [drm]
+>>      drm_atomic_helper_commit_modeset_enables+0x194/0x26c
+>> [drm_kms_helper]
+>>      msm_atomic_commit_tail+0x204/0x804 [msm]
+>>      commit_tail+0xa4/0x18c [drm_kms_helper]
+>>      drm_atomic_helper_commit+0x19c/0x1b0 [drm_kms_helper]
+>>      drm_atomic_commit+0xa4/0x104 [drm]
+>>      drm_client_modeset_commit_atomic+0x22c/0x298 [drm]
+>>      drm_client_modeset_commit_locked+0x60/0x1c0 [drm]
+>>      drm_client_modeset_commit+0x30/0x58 [drm]
+>>      __drm_fb_helper_restore_fbdev_mode_unlocked+0xbc/0xfc
+>> [drm_kms_helper]
+>>      drm_fb_helper_set_par+0x30/0x4c [drm_kms_helper]
+>>      fbcon_init+0x224/0x49c
+>>      visual_init+0xb0/0x108
+>>      do_bind_con_driver.isra.0+0x19c/0x38c
+>>      do_take_over_console+0x140/0x1ec
+>>      do_fbcon_takeover+0x6c/0xe4
+>>      fbcon_fb_registered+0x180/0x1f0
+>>      register_framebuffer+0x19c/0x228
+>>      __drm_fb_helper_initial_config_and_unlock+0x2e8/0x4e8
+>> [drm_kms_helper]
+>>      drm_fb_helper_initial_config+0x3c/0x4c [drm_kms_helper]
+>>      msm_fbdev_client_hotplug+0x84/0xcc [msm]
+>>      drm_client_register+0x5c/0xa0 [drm]
+>>      msm_fbdev_setup+0x94/0x148 [msm]
+>>      msm_drm_bind+0x3d0/0x42c [msm]
+>>      try_to_bring_up_aggregate_device+0x1ec/0x2f4
+>>      __component_add+0xa8/0x194
+>>      component_add+0x14/0x20
+>>      dp_display_probe+0x278/0x41c [msm]
+>>
+>>> [1] https://patchwork.freedesktop.org/patch/555530/
+>>>
+>>> Fixes: bfcc3d8f94f4 ("drm/msm/dp: support setting the DP subconnector
+>>> type")
+>>> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>
+>> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+>> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+>>
+> 
+> Thanks !
+> 
+>> Johan
