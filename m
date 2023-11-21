@@ -1,166 +1,193 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A30954F9F
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B25754FAF
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tB1j8Rrb"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dae0ab8ac3eso5152861276.0
-        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 06:25:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700576739; x=1701181539; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dCTl+by/8OgzPkqiTTy1mu7iUQvkaM00OdF6QByqCRc=;
-        b=tB1j8Rrbf5vJpFC9GTrmhBbrM7ubfqEQzVGQF8ZXTa+6lU8hkZBnLvNBPNNB9DTkJz
-         GO0fYcBevaD9EUKrNXXlWygWl/aZZJBB59JTGWqPDFUCDgMIx4J6dnaMj3bi8sYb+Ziq
-         SkFCxin5NPBg2pyVBSrZnqFEhFgagY+alI8ParMq03PQQvjkWsWOXaSQ+4Arf3En70vJ
-         xjc6YBTwaJ97jMXIpsYIHRNmdd/T2+vKV38ATah2zU/sj0MtKCgkMfwg6/auq4TrFDOa
-         qHtVCENU7mXC0igT8CcRLCHqKpXL/1iLI3/ZuZCNyi3TS6RvI9wQRdZ1z4qGp5YD7kgu
-         kX0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700576739; x=1701181539;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dCTl+by/8OgzPkqiTTy1mu7iUQvkaM00OdF6QByqCRc=;
-        b=jjsIw2LvA3AlDsHUcOutk7FhD+Vd52tOMNnm68EKvtgYUgMXJjaJzsETncjWRIYybz
-         hJd7XoRshdPN/R2XKZgI6RD5kJem37f+PEgQQcmCgznapYZs3q9VA8/ZN8ea0DPoqJur
-         WkwTfEVrsKIUHKWKHwtMZDB2VbJHIK5sEhcOuq4kIkCX2Qmizus9Ui/QNZJh18SuDPng
-         kPEkPpDZCaQNEbFQLarpyfQuCBBhwSxefqMwkbbYU+GBCoB6tv1Oy8O0VdVeYkX5Ke1S
-         mvWZyXj2nDXEjGixwVjwPE98wmFDyfh+VtKJENEdu7g/hIiifKvUV5n7l74Lbvk15WER
-         lRCw==
-X-Gm-Message-State: AOJu0Yxn+yEKNBohI/D5wgidB04wOdvf7tTgjX8B0ya/id6obo7z1f6m
-	V2sg7JOnaArPFoU7jF2zbDNczJfwSNEg0Rv5OP5xDA==
-X-Google-Smtp-Source: AGHT+IFzC/P9VBpC/SW7HcjRqPIjGI6/u3317qHHutxgt4On71zUFgu360yHalbn7IBXSLbaUggzuHxl91TG21rj54k=
-X-Received: by 2002:a81:6588:0:b0:59a:d42c:5d50 with SMTP id
- z130-20020a816588000000b0059ad42c5d50mr9563819ywb.52.1700576739223; Tue, 21
- Nov 2023 06:25:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ow3glYIt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D1An8Eju"
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0D1AF1F8BF;
+	Tue, 21 Nov 2023 14:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1700576782; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rEuossM4JQY9JZ11rmGjFmuYHEzbTy8cDDjv1mfs8ps=;
+	b=Ow3glYItRxjzgdERrVcWs2t1URa3x43jhS++pNSWgBQj8Qki8lxkgIRw1tg43fqiz0hFCM
+	WMDmBBqE9WoqMddg0GOcY92geB10jOzP32k9+NW2qgvT3cY0T4qT6IjJEEyVLPhY7bGQQa
+	WtWGAPDisyzCpfNpPj0ChJHE7uEruMc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1700576782;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rEuossM4JQY9JZ11rmGjFmuYHEzbTy8cDDjv1mfs8ps=;
+	b=D1An8EjuY83yk7KfZIv+/C3MztaF9sHChe2a+wLweUqwV5R2lcYDWQ7mlL4vpzlvy2z/mO
+	LwsvEZv0i1szmNBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BABCC138E3;
+	Tue, 21 Nov 2023 14:26:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 9J+4LA2+XGUXUgAAMHmgww
+	(envelope-from <tiwai@suse.de>); Tue, 21 Nov 2023 14:26:21 +0000
+Date: Tue, 21 Nov 2023 15:26:21 +0100
+Message-ID: <87fs0zmbci.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Takashi Iwai <tiwai@suse.de>,	Thorsten Leemhuis
+ <regressions@leemhuis.info>,	Jean-Jacques Hiblot
+ <jjhiblot@traphandler.com>,	Bagas Sanjaya <bagasdotme@gmail.com>,	Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>,	Linux Regressions
+ <regressions@lists.linux.dev>,	Linux LEDs <linux-leds@vger.kernel.org>,	Tim
+ Crawford <tcrawford@system76.com>,	Jeremy Soller <jeremy@system76.com>,
+	System76 Product Development <productdev@system76.com>,	Lee Jones
+ <lee@kernel.org>,	Pavel Machek <pavel@ucw.cz>,	Johannes =?ISO-8859-1?Q?Pe?=
+ =?ISO-8859-1?Q?n=DFel?= <johannes.penssel@gmail.com>
+Subject: Re: Fwd: sysfs: cannot create duplicate filename .../system76_acpi::kbd_backlight/color
+In-Reply-To: <37f6aa8e-8cab-4194-8493-8e39819ed608@redhat.com>
+References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
+	<ZT25-gUmLl8MPk93@debian.me>
+	<dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+	<ZUjnzB2RL2iLzIQG@debian.me>
+	<87sf50pm34.wl-tiwai@suse.de>
+	<b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+	<87edgjo2kr.wl-tiwai@suse.de>
+	<ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
+	<874jhfo0oc.wl-tiwai@suse.de>
+	<37f6aa8e-8cab-4194-8493-8e39819ed608@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 21 Nov 2023 19:55:27 +0530
-Message-ID: <CA+G9fYvcaozQvas-h55FPjXk+uomF2CyeYbWGCsXM8yGo4SZgA@mail.gmail.com>
-Subject: SuperH: fs/namespace.c: In function '__se_sys_listmount':
- syscalls.h:258:9: internal compiler error: in change_address_1, at emit-rtl.c:2275
-To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	Linux-sh list <linux-sh@vger.kernel.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>, Ian Kent <raven@themaw.net>, 
-	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, dalias@libc.org, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -5.80
+X-Spamd-Result: default: False [-5.80 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLY(-4.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[suse.de,leemhuis.info,traphandler.com,gmail.com,vger.kernel.org,lists.linux.dev,system76.com,kernel.org,ucw.cz];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-The SuperH tinyconfig and allnoconfig builds started failing from 20231120 tag
-Please find the following builds warnings / errors.
+On Tue, 21 Nov 2023 13:23:20 +0100,
+Hans de Goede wrote:
+> 
+> Hi,
+> 
+> On 11/21/23 11:33, Takashi Iwai wrote:
+> > On Tue, 21 Nov 2023 11:21:53 +0100,
+> > Hans de Goede wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 11/21/23 10:52, Takashi Iwai wrote:
+> >>> On Tue, 21 Nov 2023 10:19:03 +0100,
+> >>> Thorsten Leemhuis wrote:
+> >>>>
+> >>>> Takashi, Jean-Jacques Hiblot, Lee,
+> >>>>
+> >>>> On 20.11.23 14:53, Takashi Iwai wrote:
+> >>>>> On Mon, 06 Nov 2023 14:19:08 +0100,
+> >>>>> Bagas Sanjaya wrote:
+> >>>>>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
+> >>>>>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
+> >>>>>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
+> >>>>>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
+> >>>>>>>>
+> >>>>>>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
+> >>>>>>>> since you authored the culprit?
+> >>>>>
+> >>>>>>> The offending commit stores the color in struct led_classdev and exposes it
+> >>>>>>> via sysfs. It was part of a series that create a RGB leds from multiple
+> >>>>>>> single-color LEDs. for this series, we need the color information but we
+> >>>>>>> don't really need to expose it it via sysfs. In order to fix the issue, we
+> >>>>>>> can remove the 'color' attribute from the sysfs.
+> >>>>>>
+> >>>>>> OK, see you in the patch!
+> >>>>>
+> >>>>> Is there a patch available?
+> >>>>
+> >>>> Not that I know of. Could not find anything on lore either.
+> >>>>
+> >>>>> This bug hits for a few Logitech keyboard models, too, and it makes
+> >>>>> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
+> >>>>> this bug:
+> >>>>>   https://bugzilla.kernel.org/show_bug.cgi?id=218155
+> >>>>>
+> >>>>> We need a quick fix for 6.6.x.
+> >>>>
+> >>>> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
+> >>>> committed it and sent it to Linus) know about this for a while already
+> >>>> without doing anything about it, I wonder if someone should just send a
+> >>>> revert to Linus (unless of course that is likely to introduce a
+> >>>> regression on its own).
+> >>>>
+> >>>> Takashi, could you maybe do this, unless a fix shows up real soon?
+> >>>
+> >>> I can, but we need to decide which way to go.
+> >>> There are several options:
+> >>>
+> >>> 1. Revert the commit c7d80059b086;
+> >>>    this drops led class color sysfs entries.  Also the store of
+> >>>    led_cdev->color from fwnode is dropped, too.
+> >>>
+> >>> 2. Drop only led class color sysfs entries;
+> >>>    a partial revert of c7d80059b086 above
+> >>
+> >> AFAIK further up in the thread (or a related thread) there
+> >> already was consensus to do this. Someone just needs to
+> >> write the patch.
+> > 
+> > Well, is there any user of this new led_classdev.color field?
+> > The value read from fwnode is stored there, but as far as I see, there
+> > seems no real user, so far.  If it's still unused, we can do the whole
+> > revert -- which is cleaner.
+> 
+> I honestly don't know. I've mostly just been reading along. I think
+> there may be some future in kernel use planned (not sure at all though).
+> 
+> If there are no current in kernel users then I agree we should just
+> go with a full revert now to fix the regression. If some later
+> in kernel users do come along then they can always re-introduce
+> the change minus the sysfs attr addition.
 
-sh:
-  build:
-    * gcc-11-tinyconfig
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build errors:
-----------
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=sh
-CROSS_COMPILE=sh4-linux-gnu- 'CC=sccache sh4-linux-gnu-gcc'
-'HOSTCC=sccache gcc'
-  Generating include/generated/machtypes.h
-<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-during RTL pass: final
-In file included from /builds/linux/fs/namespace.c:11:
-/builds/linux/fs/namespace.c: In function '__se_sys_listmount':
-/builds/linux/include/linux/syscalls.h:258:9: internal compiler error:
-in change_address_1, at emit-rtl.c:2275
-  258 |         }
-         \
-      |         ^
-/builds/linux/include/linux/syscalls.h:233:9: note: in expansion of
-macro '__SYSCALL_DEFINEx'
-  233 |         __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
-      |         ^~~~~~~~~~~~~~~~~
-/builds/linux/include/linux/syscalls.h:225:36: note: in expansion of
-macro 'SYSCALL_DEFINEx'
-  225 | #define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name,
-__VA_ARGS__)
-      |                                    ^~~~~~~~~~~~~~~
-/builds/linux/fs/namespace.c:5019:1: note: in expansion of macro
-'SYSCALL_DEFINE4'
- 5019 | SYSCALL_DEFINE4(listmount, const struct mnt_id_req __user *, req,
-      | ^~~~~~~~~~~~~~~
-0x129d9d7 internal_error(char const*, ...)
-???:0
-0x5dbc4d fancy_abort(char const*, int, char const*)
-???:0
-0x7ddd3e adjust_address_1(rtx_def*, machine_mode, poly_int<1u, long>,
-int, int, int, poly_int<1u, long>)
-???:0
-0x81dd91 output_operand(rtx_def*, int)
-???:0
-0x81e5a4 output_asm_insn(char const*, rtx_def**)
-???:0
-0x8226a8 final_scan_insn(rtx_insn*, _IO_FILE*, int, int, int*)
-???:0
-Please submit a full bug report,
-with preprocessed source if appropriate.
-Please include the complete backtrace with any bug report.
-See <file:///usr/share/doc/gcc-11/README.Bugs> for instructions.
-{standard input}: Assembler messages:
-{standard input}:11800: Warning: end of file not at end of a line;
-newline inserted
-{standard input}:11856: Error: missing operand
-{standard input}:11856: Error: invalid operands for opcode
-{standard input}:11837: Error: displacement to undefined symbol .L2699
-overflows 8-bit field
-{standard input}:11690: Error: pcrel too far
-{standard input}:11705: Error: pcrel too far
-{standard input}:11707: Error: pcrel too far
-{standard input}:11712: Error: pcrel too far
-{standard input}:11719: Error: pcrel too far
-{standard input}:11732: Error: pcrel too far
-{standard input}:11737: Error: pcrel too far
-{standard input}:11760: Error: pcrel too far
-{standard input}:11772: Error: pcrel too far
-{standard input}:11777: Error: pcrel too far
-{standard input}:11778: Error: pcrel too far
-{standard input}:11788: Error: pcrel too far
-{standard input}:11791: Error: pcrel too far
-{standard input}:11807: Error: pcrel too far
-{standard input}:11809: Error: pcrel too far
-{standard input}:11844: Error: pcrel too far
-make[4]: *** [/builds/linux/scripts/Makefile.build:243: fs/namespace.o] Error 1
-
-
-kernel: 6.7.0-rc2
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-git_ref: master
-git_sha: 07b677953b9dca02928be323e2db853511305fa9
-git_describe: next-20231121
-Test details: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121
-
-Regressions (compared to build next-20231117)
-------------------------------------------------------------------------
-
-sh:
-  build:
-    * gcc-8-allnoconfig
-    * gcc-11-tinyconfig
-    * gcc-11-allnoconfig
-    * gcc-8-tinyconfig
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121/testrun/21199202/suite/build/test/gcc-11-tinyconfig/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121/testrun/21199202/suite/build/test/gcc-11-tinyconfig/log
+Sounds reasonable.
+OK, let me pitch the revert patch.
 
 
---
-Linaro LKFT
-https://lkft.linaro.org
+thanks,
+
+Takashi
