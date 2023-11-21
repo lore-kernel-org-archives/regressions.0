@@ -1,124 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD532168CB;
-	Tue, 21 Nov 2023 13:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CC04642F
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 13:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sR3ePWLZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746AAC433C9;
-	Tue, 21 Nov 2023 13:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700573877;
-	bh=dM931tHIvx5PgNza4hqCxEgSnaT/GM+RuhzruNQGcQs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=sR3ePWLZlRHca+ae7IPYtfSGqAr0/bHVAEqyfaDO2CzV+1wt9BrIgYtWnTv0+Kx/r
-	 N341b6KrUP6Vmukg2st+9QUzrJefvybEWb8tD4G50EXn2shObI+eXkvp4525Gbm0fs
-	 cmSgYPw9EM/WrUUeiWhn384sL2hLAb4tqZOu3fZE03IAYi/PKtKkJEgNXMK7Tc61nh
-	 zt3Kaag7f/XOZhN20FSBRD3ainOgbo1Qgka96I26IeyV8B6Y91nny6F+orzA04dzL+
-	 CmqCyKlwzCuavAC8afoYMjJUTXO+qCacucfx8M2QZb8JzFjru3+XKuVm3GSNQsp+Lh
-	 jERuwSl9YY8+Q==
-Date: Tue, 21 Nov 2023 14:37:52 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Regressions <regressions@lists.linux.dev>, 
-    Linux Input Devices <linux-input@vger.kernel.org>, 
-    Thorsten Leemhuis <regressions@leemhuis.info>, 
-    Mavroudis Chatzilazaridis <mavchatz@protonmail.com>, 
-    =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@riseup.net>, 
-    Bastien Nocera <hadess@hadess.net>, LinuxCat <masch77.linuxcat@gmail.com>, 
-    Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Linus Torvalds <torvalds@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGh4ZiK5"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6cb749044a2so2644812b3a.0
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 05:59:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700575147; x=1701179947; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PsIFDbkq3IQrnabPVFzja7nATUUvNefVFfGOvv4NrZM=;
+        b=hGh4ZiK53h6SK0YQWt5QJMdaI+3LWKtDh97GLrE+AII6r5CgGL0rQC09rFEYwVVvMY
+         vzBs2aJ21sF+xFD0oQO1K7YFk8q3TtdDWcVqroMUfEvAzKMW8d1PWQWMJRAyrYiW4R7d
+         dn8KNjtvhL4ILr9lLsWdPoRNBwYkrKshcZB3mo3hL4lNWwQdVV3c5incqeQWc5EXJ2YN
+         aWTS85pnfXg5vD1Qk9UBuZLYcc78pwDrBkPGlQHQP/U8hE4u5rPGDPONUWYqGj6K4Y64
+         8J0Aae43e4v93pi/jT+RuYRtXwqbzAYrqsAgBqeVmzm899ZcRkN78AeorDol16vxnQIp
+         WwlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700575147; x=1701179947;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PsIFDbkq3IQrnabPVFzja7nATUUvNefVFfGOvv4NrZM=;
+        b=napAqBDMp4WKK96vzTVun+s+gp69cn9haXGcgBH/MNWZo5vM/oI/2zpkDEpcRDemLL
+         M5vJR1XsdU/scXyA7l99Z/o5cqG2ww5EyGg/GhHvqcQUNE+Z7JTzR5B6jb7Z1vdj2Vlu
+         VkB/JqC3RgHOcN9IjJd256Jo3mVgVtzDtMPORuubd8AYx7kdLtRJHDmTLvYl8O/gVEYl
+         QvBM64VQOa6LMzjgHJyl/Gg9trgEx9BWw4AILhwhnLPJFE2rWzyrZn528fOAPZSV8cpn
+         qZ4D87GUhgMyTzJI2yQS/cOdGu1GNA8+sFFf/M3uo7dzsjrw1diZeDuWSZJ8+IWUTw0j
+         DQ6g==
+X-Gm-Message-State: AOJu0YyjyXfLvE3CTIetdF5hu+rchaGCxeBh0pjmwTZeChbe6xtnehmm
+	DanCou3HmaqI1qtakdmkIAs=
+X-Google-Smtp-Source: AGHT+IEz/HdgXgzT0A3WPEOgDPLCKejKgnhzpEZ4iI1Bb+mN9GJZ/8LvzCRD0T9hv81gJnp38UbgHQ==
+X-Received: by 2002:aa7:8885:0:b0:6cb:a2f7:83d with SMTP id z5-20020aa78885000000b006cba2f7083dmr6605030pfe.19.1700575146957;
+        Tue, 21 Nov 2023 05:59:06 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id p11-20020a056a000a0b00b0068fb8e18971sm7905605pfh.130.2023.11.21.05.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 05:59:06 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6535110207143; Tue, 21 Nov 2023 20:58:59 +0700 (WIB)
+Date: Tue, 21 Nov 2023 20:58:59 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Input Devices <linux-input@vger.kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
+	Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
+	Bastien Nocera <hadess@hadess.net>,
+	LinuxCat <masch77.linuxcat@gmail.com>,
+	Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
-In-Reply-To: <ZVyr-of1X4RudpWG@archie.me>
-Message-ID: <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
-References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com> <ZVyr-of1X4RudpWG@archie.me>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+Message-ID: <ZVy3o99Q2UEN-pCa@archie.me>
+References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
+ <ZVyr-of1X4RudpWG@archie.me>
+ <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XsWrEpNz9+GQI+SZ"
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
+
+
+--XsWrEpNz9+GQI+SZ
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 Nov 2023, Bagas Sanjaya wrote:
+On Tue, Nov 21, 2023 at 02:37:52PM +0100, Jiri Kosina wrote:
+> On Tue, 21 Nov 2023, Bagas Sanjaya wrote:
+>=20
+> > Hi Thorsten and all,
+> >=20
+> > <snip>...
+> > There's no reply from culprit author nor linux-input people (did they m=
+iss
+> > this regression?). And on Bugzilla, other reporters replied that revert=
+ing
+> > the culprit fixed the regression.
+> >=20
+> > FYI, there's similar Bugzilla report on [1].
+>=20
+> As there was no reaction from Mavroudis in order to figure out why he is=
+=20
+> not observing the issues the other reporters do and what to do to fix=20
+> those, I already do have revert in my queue for -rc3.
+>=20
+> My first guess would be that the extra buttons in the extended report are=
+=20
+> not properly reflected in the emulated report descriptor, but that=20
+> wouldn't explain why it worked for the author of the commit.
+>=20
+> So revert it is, and once Marvoudis resurfaces, we can try again for some=
+=20
+> of later releases.
+>=20
 
-> Hi Thorsten and all,
-> 
-> On Thu, Nov 02, 2023 at 09:11:42PM +0700, Bagas Sanjaya wrote:
-> > Hi,
-> > 
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > 
-> > > Hello,
-> > > After upgrading from 6.5.9 to 6.6.0, my keyboard started acting really weird in its wireless mode, key actions sent are completely wrong, see video attached. 
-> > > 
-> > > Most keys are perceived as either E, 3 or F7, with F8 and <, as well. 
-> > > 
-> > > Modifier keys (CTRL, ALT, ALT GR, Shift and Super) are working normally, as well as media control keys (pause/play, previous, next, mute and sound up/down).
-> > > 
-> > > The keyboard works as expected if it's wired.
-> > 
-> > Another reporter bisected the regression:
-> > 
-> > > Bisected to 
-> > > 
-> > > 9d1bd9346241cd6963b58da7ffb7ed303285f684 is the first bad commit
-> > > commit 9d1bd9346241cd6963b58da7ffb7ed303285f684
-> > > Author: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
-> > > Date: Sun Jul 16 18:23:44 2023 +0000
-> > > 
-> > > HID: logitech-dj: Add support for a new lightspeed receiver iteration
-> > > 
-> > > The lightspeed receiver for the Pro X Superlight uses 13 byte mouse reports
-> > > without a report id. The workaround for such cases has been adjusted to
-> > > handle these larger packets.
-> > > 
-> > > The device now reports the status of its battery in wireless mode and
-> > > libratbag now recognizes the device and it can be configured with Piper.
-> > > 
-> > > https://github.com/libratbag/libratbag/pull/1122
-> > > 
-> > > Co-developed-by: Filipe Laíns <lains@riseup.net>
-> > > Signed-off-by: Filipe Laíns <lains@riseup.net>
-> > > Signed-off-by: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
-> > > Reviewed-by: Bastien Nocera <hadess@hadess.net>
-> > > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-> > > 
-> > > drivers/hid/hid-ids.h | 1 +
-> > > drivers/hid/hid-logitech-dj.c | 11 ++++++++---
-> > > 2 files changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > See Bugzilla for the full thread.
-> > 
-> > Anyway, I'm adding this regression to regzbot:
-> > 
-> > #regzbot introduced: 9d1bd9346241cd https://bugzilla.kernel.org/show_bug.cgi?id=218094
-> > #regzbot title: Logitech G915 Wireless Keyboard key event only detects few key codes
-> > #regzbot link: https://streamable.com/ac6l8u
-> > 
-> 
-> There's no reply from culprit author nor linux-input people (did they miss
-> this regression?). And on Bugzilla, other reporters replied that reverting
-> the culprit fixed the regression.
-> 
-> FYI, there's similar Bugzilla report on [1].
+Thanks for letting us know!
 
-As there was no reaction from Mavroudis in order to figure out why he is 
-not observing the issues the other reporters do and what to do to fix 
-those, I already do have revert in my queue for -rc3.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-My first guess would be that the extra buttons in the extended report are 
-not properly reflected in the emulated report descriptor, but that 
-wouldn't explain why it worked for the author of the commit.
+--XsWrEpNz9+GQI+SZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So revert it is, and once Marvoudis resurfaces, we can try again for some 
-of later releases.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Jiri Kosina
-SUSE Labs
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVy3owAKCRD2uYlJVVFO
+o4YwAP496ZbAfetrOX9nDZcCIHlwT53CUmvi8B2NQfkkVKIwtgD8DrAw8lE9SaOm
+XQDAYeme07KJMLvNgKaz8nXTVNGQegE=
+=73dj
+-----END PGP SIGNATURE-----
 
+--XsWrEpNz9+GQI+SZ--
