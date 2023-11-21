@@ -1,67 +1,67 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CC04642F
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 13:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BE75225
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGh4ZiK5"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6cb749044a2so2644812b3a.0
-        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 05:59:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbOB6bmt"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ce5e65ba37so29424925ad.1
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 06:00:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700575147; x=1701179947; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1700575248; x=1701180048; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PsIFDbkq3IQrnabPVFzja7nATUUvNefVFfGOvv4NrZM=;
-        b=hGh4ZiK53h6SK0YQWt5QJMdaI+3LWKtDh97GLrE+AII6r5CgGL0rQC09rFEYwVVvMY
-         vzBs2aJ21sF+xFD0oQO1K7YFk8q3TtdDWcVqroMUfEvAzKMW8d1PWQWMJRAyrYiW4R7d
-         dn8KNjtvhL4ILr9lLsWdPoRNBwYkrKshcZB3mo3hL4lNWwQdVV3c5incqeQWc5EXJ2YN
-         aWTS85pnfXg5vD1Qk9UBuZLYcc78pwDrBkPGlQHQP/U8hE4u5rPGDPONUWYqGj6K4Y64
-         8J0Aae43e4v93pi/jT+RuYRtXwqbzAYrqsAgBqeVmzm899ZcRkN78AeorDol16vxnQIp
-         WwlQ==
+        bh=/2dGcwu67FKQ/Ka/5ZkDOtzfjiNTfRATRxkZ5/mYoKE=;
+        b=NbOB6bmtqzPbny5aTQpyqq/s5kYetSBfrUJFW7I7jcyh3eHPO5M0CIyGbW0fL6Fd63
+         D+N810pRibpZtvsp5olPoHEzw4/N43NAEFthcCRFQN5LL9JSUASPZmy6TGtLSvjzqu67
+         S+qbHb8kvBTDXec6NM3WLkRB7dpZhFEgR3vFr7aZK1dpNoNBfGyxj8WgY00yGb0co9RP
+         c2A6lRIs9cevK8RTkPZeNrpXC34bRWz22J8+/jtXnguExAjtVsN8bILJZRJMbSHHHEVp
+         QlS/YVuJGUDTvp7b5yffPayxp+yr/oFBgexuTpi84bsEnBVPR1Zk78Xcd6vEcc6JI3tG
+         C8vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700575147; x=1701179947;
+        d=1e100.net; s=20230601; t=1700575248; x=1701180048;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PsIFDbkq3IQrnabPVFzja7nATUUvNefVFfGOvv4NrZM=;
-        b=napAqBDMp4WKK96vzTVun+s+gp69cn9haXGcgBH/MNWZo5vM/oI/2zpkDEpcRDemLL
-         M5vJR1XsdU/scXyA7l99Z/o5cqG2ww5EyGg/GhHvqcQUNE+Z7JTzR5B6jb7Z1vdj2Vlu
-         VkB/JqC3RgHOcN9IjJd256Jo3mVgVtzDtMPORuubd8AYx7kdLtRJHDmTLvYl8O/gVEYl
-         QvBM64VQOa6LMzjgHJyl/Gg9trgEx9BWw4AILhwhnLPJFE2rWzyrZn528fOAPZSV8cpn
-         qZ4D87GUhgMyTzJI2yQS/cOdGu1GNA8+sFFf/M3uo7dzsjrw1diZeDuWSZJ8+IWUTw0j
-         DQ6g==
-X-Gm-Message-State: AOJu0YyjyXfLvE3CTIetdF5hu+rchaGCxeBh0pjmwTZeChbe6xtnehmm
-	DanCou3HmaqI1qtakdmkIAs=
-X-Google-Smtp-Source: AGHT+IEz/HdgXgzT0A3WPEOgDPLCKejKgnhzpEZ4iI1Bb+mN9GJZ/8LvzCRD0T9hv81gJnp38UbgHQ==
-X-Received: by 2002:aa7:8885:0:b0:6cb:a2f7:83d with SMTP id z5-20020aa78885000000b006cba2f7083dmr6605030pfe.19.1700575146957;
-        Tue, 21 Nov 2023 05:59:06 -0800 (PST)
+        bh=/2dGcwu67FKQ/Ka/5ZkDOtzfjiNTfRATRxkZ5/mYoKE=;
+        b=xJvVQgueX1ISxD4x33jJFVH6kLpvxD5HIdG+L+7AWCa4tj7wnDuBE+w8TmgI8vz+hG
+         7+IvWh+DuuBqJcoOrfxAZpEEll+7inNZVY2zeJxjeW6+af8ijjac4fNmlUheGP8Lo9Px
+         SbW3R6uThDrHPQuOqOSQ7ObIgn3wGAnpkNDRFH4GyCiwRMElcT1/VaP0bsi8xC0tlqvp
+         5eNUFh09sX1saMFWl6Td7/0/C2HqDadvBZLZuurqhJdieLndLfldVahdsYFgc1wdzK7M
+         9QTdKCE4I2+U5/pJK9jpsUDEMQVCTNv4mjuLvvHPwkbVabK16pWo73VVvNVqUaG3jCiZ
+         RvnA==
+X-Gm-Message-State: AOJu0YxI42XlBKOOLXIYLJXgD+m+E7j31MUIv7E9cvPLwbsRC6ey5ruF
+	HJG1THYldSYFKjgRxfQV9zk=
+X-Google-Smtp-Source: AGHT+IHJMBPSeuQVESg2RPRg3hnTS57SbAq141fBC+lbUG4MZoynluX2BB8P548ssmsvmMnhRUqtsQ==
+X-Received: by 2002:a17:902:edc7:b0:1cf:58dc:9c83 with SMTP id q7-20020a170902edc700b001cf58dc9c83mr2943569plk.31.1700575247737;
+        Tue, 21 Nov 2023 06:00:47 -0800 (PST)
 Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id p11-20020a056a000a0b00b0068fb8e18971sm7905605pfh.130.2023.11.21.05.59.05
+        by smtp.gmail.com with ESMTPSA id w13-20020a170902e88d00b001ce5b9ce4fesm7967136plg.50.2023.11.21.06.00.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 05:59:06 -0800 (PST)
+        Tue, 21 Nov 2023 06:00:47 -0800 (PST)
 Received: by archie.me (Postfix, from userid 1000)
-	id 6535110207143; Tue, 21 Nov 2023 20:58:59 +0700 (WIB)
-Date: Tue, 21 Nov 2023 20:58:59 +0700
+	id 230C910207143; Tue, 21 Nov 2023 21:00:44 +0700 (WIB)
+Date: Tue, 21 Nov 2023 21:00:43 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Input Devices <linux-input@vger.kernel.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
+	Linux Input Devices <linux-input@vger.kernel.org>
+Cc: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
 	Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
-	Bastien Nocera <hadess@hadess.net>,
+	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>,
 	LinuxCat <masch77.linuxcat@gmail.com>,
 	Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Subject: Re: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
-Message-ID: <ZVy3o99Q2UEN-pCa@archie.me>
+Message-ID: <ZVy4C9z99DbwEBBu@archie.me>
 References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
  <ZVyr-of1X4RudpWG@archie.me>
- <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
+ <0e10112a-7560-4dd8-8a03-5fdfc838168f@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -69,59 +69,73 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XsWrEpNz9+GQI+SZ"
+	protocol="application/pgp-signature"; boundary="H3NzUQqbCh1SScdV"
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
+In-Reply-To: <0e10112a-7560-4dd8-8a03-5fdfc838168f@leemhuis.info>
 
 
---XsWrEpNz9+GQI+SZ
+--H3NzUQqbCh1SScdV
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 21, 2023 at 02:37:52PM +0100, Jiri Kosina wrote:
-> On Tue, 21 Nov 2023, Bagas Sanjaya wrote:
->=20
-> > Hi Thorsten and all,
-> >=20
+On Tue, Nov 21, 2023 at 02:53:17PM +0100, Linux regression tracking (Thorst=
+en Leemhuis) wrote:
+> On 21.11.23 14:09, Bagas Sanjaya wrote:
+> > On Thu, Nov 02, 2023 at 09:11:42PM +0700, Bagas Sanjaya wrote:
 > > <snip>...
-> > There's no reply from culprit author nor linux-input people (did they m=
-iss
-> > this regression?). And on Bugzilla, other reporters replied that revert=
-ing
-> > the culprit fixed the regression.
-> >=20
+> > There's no reply from culprit author nor linux-input people (did they
+> > miss this regression?).
+>=20
+> I guess part of the problem is that Bastien got reassigned and might not
+> care about the kernel anymore.
+>=20
+> Another part of it is that Jiri was CCed, but Benjamin was not.
+>=20
+> Ideally of course Mavroudis Chatzilazaridis, the culprit's author would
+> look into this, but from a quick search on lore it looks like Mavroudis
+> is not a regular kernel contributor and thus might not even know how we
+> expect situations like this to be handled.
+>=20
+> > And on Bugzilla, other reporters replied that
+> > reverting the culprit fixed the regression.
+>=20
+> From Takashi's comments like
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D218094#c33 it sounds like
+> this can be fixed by resolving another regression as discussed earlier
+> today here:
+> https://lore.kernel.org/all/87edgjo2kr.wl-tiwai@suse.de/
+>=20
+> I think that might be the better solution, but Takashi, Hans, or the
+> input people will know best.
+>=20
 > > FYI, there's similar Bugzilla report on [1].
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218172
 >=20
-> As there was no reaction from Mavroudis in order to figure out why he is=
-=20
-> not observing the issues the other reporters do and what to do to fix=20
-> those, I already do have revert in my queue for -rc3.
+> Not sure, that might be a different problem, guess Hans is the best to
+> judge.
 >=20
-> My first guess would be that the extra buttons in the extended report are=
-=20
-> not properly reflected in the emulated report descriptor, but that=20
-> wouldn't explain why it worked for the author of the commit.
+> > Also Cc'ed Linus.
 >=20
-> So revert it is, and once Marvoudis resurfaces, we can try again for some=
-=20
-> of later releases.
->=20
+> Linus can speak for himself, but I guess he gets enough mail already.
+> I'd say in a situation like this it thus might best to not CC him;
+> instead poke me when things apparently are not handled well, then we
+> together can decide if it's worth bringing Linus in.
 
-Thanks for letting us know!
+Thanks for the pro tip!
 
 --=20
 An old man doll... just what I always wanted! - Clara
 
---XsWrEpNz9+GQI+SZ
+--H3NzUQqbCh1SScdV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVy3owAKCRD2uYlJVVFO
-o4YwAP496ZbAfetrOX9nDZcCIHlwT53CUmvi8B2NQfkkVKIwtgD8DrAw8lE9SaOm
-XQDAYeme07KJMLvNgKaz8nXTVNGQegE=
-=73dj
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVy4CwAKCRD2uYlJVVFO
+o6hwAQDJwHW1nvf9+9kCcFRLJXSQ035uhng/tqDMeN57360x4gEA6NvguDVyHdk6
+F83qBtIantqdUnoyFGSPPq5jZj1f5gc=
+=QE4O
 -----END PGP SIGNATURE-----
 
---XsWrEpNz9+GQI+SZ--
+--H3NzUQqbCh1SScdV--
