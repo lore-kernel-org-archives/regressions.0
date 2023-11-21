@@ -1,147 +1,166 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D3954F8D
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A30954F9F
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ylDvzFC7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1700576138; x=1700835338;
-	bh=w6t3q7QiWYrDWual5a1/k9jSpxXTVHrIAMwIDut4tJ8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=ylDvzFC7K1X2DMe57S7NqIa9Pn+wuA3+9DagRAm8S15QY8XKyJQDM2bbNSvxZnQwW
-	 5vtCk9ACjQT1uYSByu104tw9pN6pb6KejP3JnRDH81TE1yfAm514FyOrkeX0Z0JplE
-	 0BDsAz2xDyquXRomdmc9zs78QlXvHxK2gs/X0oaQaNWevTvsK97gfxnuqDIDpy9OS9
-	 y2fTBOmeXvs3fNMRQW/zkY39GBNK/Sa9wZr2e671N4hNQYmTKBLFfQ+gLP6K+J+h/i
-	 iH0pEilx8NJEV+MxlwEA+l+t9O3rYf9ilKvSCxUFEgfficB0lpzBpK1CSK+VwU2RIr
-	 konvICt6dTGwA==
-Date: Tue, 21 Nov 2023 14:15:31 +0000
-To: Jiri Kosina <jikos@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-From: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Regressions <regressions@lists.linux.dev>, Linux Input Devices <linux-input@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, =?utf-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, Bastien Nocera <hadess@hadess.net>, LinuxCat <masch77.linuxcat@gmail.com>, Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>, Hans de Goede <hdegoede@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
-Message-ID: <4071999d-77ca-4a75-a9e0-d8ccac0dada1@protonmail.com>
-In-Reply-To: <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
-References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com> <ZVyr-of1X4RudpWG@archie.me> <nycvar.YFH.7.76.2311211435050.29220@cbobk.fhfr.pm>
-Feedback-ID: 20039310:user:proton
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tB1j8Rrb"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dae0ab8ac3eso5152861276.0
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 06:25:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700576739; x=1701181539; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dCTl+by/8OgzPkqiTTy1mu7iUQvkaM00OdF6QByqCRc=;
+        b=tB1j8Rrbf5vJpFC9GTrmhBbrM7ubfqEQzVGQF8ZXTa+6lU8hkZBnLvNBPNNB9DTkJz
+         GO0fYcBevaD9EUKrNXXlWygWl/aZZJBB59JTGWqPDFUCDgMIx4J6dnaMj3bi8sYb+Ziq
+         SkFCxin5NPBg2pyVBSrZnqFEhFgagY+alI8ParMq03PQQvjkWsWOXaSQ+4Arf3En70vJ
+         xjc6YBTwaJ97jMXIpsYIHRNmdd/T2+vKV38ATah2zU/sj0MtKCgkMfwg6/auq4TrFDOa
+         qHtVCENU7mXC0igT8CcRLCHqKpXL/1iLI3/ZuZCNyi3TS6RvI9wQRdZ1z4qGp5YD7kgu
+         kX0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700576739; x=1701181539;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dCTl+by/8OgzPkqiTTy1mu7iUQvkaM00OdF6QByqCRc=;
+        b=jjsIw2LvA3AlDsHUcOutk7FhD+Vd52tOMNnm68EKvtgYUgMXJjaJzsETncjWRIYybz
+         hJd7XoRshdPN/R2XKZgI6RD5kJem37f+PEgQQcmCgznapYZs3q9VA8/ZN8ea0DPoqJur
+         WkwTfEVrsKIUHKWKHwtMZDB2VbJHIK5sEhcOuq4kIkCX2Qmizus9Ui/QNZJh18SuDPng
+         kPEkPpDZCaQNEbFQLarpyfQuCBBhwSxefqMwkbbYU+GBCoB6tv1Oy8O0VdVeYkX5Ke1S
+         mvWZyXj2nDXEjGixwVjwPE98wmFDyfh+VtKJENEdu7g/hIiifKvUV5n7l74Lbvk15WER
+         lRCw==
+X-Gm-Message-State: AOJu0Yxn+yEKNBohI/D5wgidB04wOdvf7tTgjX8B0ya/id6obo7z1f6m
+	V2sg7JOnaArPFoU7jF2zbDNczJfwSNEg0Rv5OP5xDA==
+X-Google-Smtp-Source: AGHT+IFzC/P9VBpC/SW7HcjRqPIjGI6/u3317qHHutxgt4On71zUFgu360yHalbn7IBXSLbaUggzuHxl91TG21rj54k=
+X-Received: by 2002:a81:6588:0:b0:59a:d42c:5d50 with SMTP id
+ z130-20020a816588000000b0059ad42c5d50mr9563819ywb.52.1700576739223; Tue, 21
+ Nov 2023 06:25:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 21 Nov 2023 19:55:27 +0530
+Message-ID: <CA+G9fYvcaozQvas-h55FPjXk+uomF2CyeYbWGCsXM8yGo4SZgA@mail.gmail.com>
+Subject: SuperH: fs/namespace.c: In function '__se_sys_listmount':
+ syscalls.h:258:9: internal compiler error: in change_address_1, at emit-rtl.c:2275
+To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux-sh list <linux-sh@vger.kernel.org>
+Cc: Miklos Szeredi <mszeredi@redhat.com>, Ian Kent <raven@themaw.net>, 
+	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, dalias@libc.org, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2023-11-21 15:37, Jiri Kosina wrote:
-> On Tue, 21 Nov 2023, Bagas Sanjaya wrote:
->=20
->> Hi Thorsten and all,
->>
->> On Thu, Nov 02, 2023 at 09:11:42PM +0700, Bagas Sanjaya wrote:
->>> Hi,
->>>
->>> I notice a regression report on Bugzilla [1]. Quoting from it:
->>>
->>>> Hello,
->>>> After upgrading from 6.5.9 to 6.6.0, my keyboard started acting really=
- weird in its wireless mode, key actions sent are completely wrong, see vid=
-eo attached.
->>>>
->>>> Most keys are perceived as either E, 3 or F7, with F8 and <, as well.
->>>>
->>>> Modifier keys (CTRL, ALT, ALT GR, Shift and Super) are working normall=
-y, as well as media control keys (pause/play, previous, next, mute and soun=
-d up/down).
->>>>
->>>> The keyboard works as expected if it's wired.
->>>
->>> Another reporter bisected the regression:
->>>
->>>> Bisected to
->>>>
->>>> 9d1bd9346241cd6963b58da7ffb7ed303285f684 is the first bad commit
->>>> commit 9d1bd9346241cd6963b58da7ffb7ed303285f684
->>>> Author: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
->>>> Date: Sun Jul 16 18:23:44 2023 +0000
->>>>
->>>> HID: logitech-dj: Add support for a new lightspeed receiver iteration
->>>>
->>>> The lightspeed receiver for the Pro X Superlight uses 13 byte mouse re=
-ports
->>>> without a report id. The workaround for such cases has been adjusted t=
-o
->>>> handle these larger packets.
->>>>
->>>> The device now reports the status of its battery in wireless mode and
->>>> libratbag now recognizes the device and it can be configured with Pipe=
-r.
->>>>
->>>> https://github.com/libratbag/libratbag/pull/1122
->>>>
->>>> Co-developed-by: Filipe La=C3=ADns <lains@riseup.net>
->>>> Signed-off-by: Filipe La=C3=ADns <lains@riseup.net>
->>>> Signed-off-by: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
->>>> Reviewed-by: Bastien Nocera <hadess@hadess.net>
->>>> Signed-off-by: Jiri Kosina <jkosina@suse.cz>
->>>>
->>>> drivers/hid/hid-ids.h | 1 +
->>>> drivers/hid/hid-logitech-dj.c | 11 ++++++++---
->>>> 2 files changed, 9 insertions(+), 3 deletions(-)
->>>
->>> See Bugzilla for the full thread.
->>>
->>> Anyway, I'm adding this regression to regzbot:
->>>
->>> #regzbot introduced: 9d1bd9346241cd https://bugzilla.kernel.org/show_bu=
-g.cgi?id=3D218094
->>> #regzbot title: Logitech G915 Wireless Keyboard key event only detects =
-few key codes
->>> #regzbot link: https://streamable.com/ac6l8u
->>>
->>
->> There's no reply from culprit author nor linux-input people (did they mi=
-ss
->> this regression?). And on Bugzilla, other reporters replied that reverti=
-ng
->> the culprit fixed the regression.
->>
->> FYI, there's similar Bugzilla report on [1].
->=20
-> As there was no reaction from Mavroudis in order to figure out why he is
-> not observing the issues the other reporters do and what to do to fix
-> those, I already do have revert in my queue for -rc3.
->=20
-> My first guess would be that the extra buttons in the extended report are
-> not properly reflected in the emulated report descriptor, but that
-> wouldn't explain why it worked for the author of the commit.
->=20
-> So revert it is, and once Marvoudis resurfaces, we can try again for some
-> of later releases.
->=20
-> --
-> Jiri Kosina
-> SUSE Labs
->=20
+The SuperH tinyconfig and allnoconfig builds started failing from 20231120 tag
+Please find the following builds warnings / errors.
 
-Apologies for not requesting a revert earlier, I was away on vacation=20
-and didn't realize it would take me this long to get to it.
+sh:
+  build:
+    * gcc-11-tinyconfig
 
-As I mentioned in this bugzilla report [0], I think the extra buttons=20
-are handled by vendor defined bytes at the end of the descriptor, so it=20
-boils down to the emulated descriptor not being updated.
-This patch worked for me as the Superlight X that I own only has two=20
-side buttons. In addition, I was unaware of how many devices this would=20
-affect.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-For now let's make sure this commit is reverted so that people have=20
-working devices and I will get to fixing the issues that showed up.
+Build errors:
+----------
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=sh
+CROSS_COMPILE=sh4-linux-gnu- 'CC=sccache sh4-linux-gnu-gcc'
+'HOSTCC=sccache gcc'
+  Generating include/generated/machtypes.h
+<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+during RTL pass: final
+In file included from /builds/linux/fs/namespace.c:11:
+/builds/linux/fs/namespace.c: In function '__se_sys_listmount':
+/builds/linux/include/linux/syscalls.h:258:9: internal compiler error:
+in change_address_1, at emit-rtl.c:2275
+  258 |         }
+         \
+      |         ^
+/builds/linux/include/linux/syscalls.h:233:9: note: in expansion of
+macro '__SYSCALL_DEFINEx'
+  233 |         __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~
+/builds/linux/include/linux/syscalls.h:225:36: note: in expansion of
+macro 'SYSCALL_DEFINEx'
+  225 | #define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name,
+__VA_ARGS__)
+      |                                    ^~~~~~~~~~~~~~~
+/builds/linux/fs/namespace.c:5019:1: note: in expansion of macro
+'SYSCALL_DEFINE4'
+ 5019 | SYSCALL_DEFINE4(listmount, const struct mnt_id_req __user *, req,
+      | ^~~~~~~~~~~~~~~
+0x129d9d7 internal_error(char const*, ...)
+???:0
+0x5dbc4d fancy_abort(char const*, int, char const*)
+???:0
+0x7ddd3e adjust_address_1(rtx_def*, machine_mode, poly_int<1u, long>,
+int, int, int, poly_int<1u, long>)
+???:0
+0x81dd91 output_operand(rtx_def*, int)
+???:0
+0x81e5a4 output_asm_insn(char const*, rtx_def**)
+???:0
+0x8226a8 final_scan_insn(rtx_insn*, _IO_FILE*, int, int, int*)
+???:0
+Please submit a full bug report,
+with preprocessed source if appropriate.
+Please include the complete backtrace with any bug report.
+See <file:///usr/share/doc/gcc-11/README.Bugs> for instructions.
+{standard input}: Assembler messages:
+{standard input}:11800: Warning: end of file not at end of a line;
+newline inserted
+{standard input}:11856: Error: missing operand
+{standard input}:11856: Error: invalid operands for opcode
+{standard input}:11837: Error: displacement to undefined symbol .L2699
+overflows 8-bit field
+{standard input}:11690: Error: pcrel too far
+{standard input}:11705: Error: pcrel too far
+{standard input}:11707: Error: pcrel too far
+{standard input}:11712: Error: pcrel too far
+{standard input}:11719: Error: pcrel too far
+{standard input}:11732: Error: pcrel too far
+{standard input}:11737: Error: pcrel too far
+{standard input}:11760: Error: pcrel too far
+{standard input}:11772: Error: pcrel too far
+{standard input}:11777: Error: pcrel too far
+{standard input}:11778: Error: pcrel too far
+{standard input}:11788: Error: pcrel too far
+{standard input}:11791: Error: pcrel too far
+{standard input}:11807: Error: pcrel too far
+{standard input}:11809: Error: pcrel too far
+{standard input}:11844: Error: pcrel too far
+make[4]: *** [/builds/linux/scripts/Makefile.build:243: fs/namespace.o] Error 1
 
-Once again, apologies for this.
 
-[0] https://bugzilla.kernel.org/show_bug.cgi?id=3D218172#c9
+kernel: 6.7.0-rc2
+git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+git_ref: master
+git_sha: 07b677953b9dca02928be323e2db853511305fa9
+git_describe: next-20231121
+Test details: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121
 
+Regressions (compared to build next-20231117)
+------------------------------------------------------------------------
+
+sh:
+  build:
+    * gcc-8-allnoconfig
+    * gcc-11-tinyconfig
+    * gcc-11-allnoconfig
+    * gcc-8-tinyconfig
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121/testrun/21199202/suite/build/test/gcc-11-tinyconfig/history/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231121/testrun/21199202/suite/build/test/gcc-11-tinyconfig/log
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
