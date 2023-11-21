@@ -1,96 +1,57 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16943B7A0
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65053C6B2
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 10:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5NV7-0007lq-KD; Tue, 21 Nov 2023 10:57:01 +0100
-Message-ID: <06eada44-166d-4ab4-acfd-f9cd65176460@leemhuis.info>
-Date: Tue, 21 Nov 2023 10:57:00 +0100
+Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0E5732065C;
+	Tue, 21 Nov 2023 11:10:22 +0100 (CET)
+Date: Tue, 21 Nov 2023 11:10:20 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux@bigler.io,
+	Stefan Moring <stefan.moring@technolution.nl>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+Message-ID: <ZVyCDGWhOSYFQADe@francesco-nb.int.toradex.com>
+References: <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
+ <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
+ <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
+ <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
+ <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
+ <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
+ <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
+ <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
+ <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
+ <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: scsi regression that after months is still not addressed and now
- bothering 6.1.y users, too
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Greg KH <gregkh@linuxfoundation.org>,
- Sagar Biradar <sagar.biradar@microchip.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Gilbert Wu <gilbert.wu@microchip.com>,
- John Garry <john.g.garry@oracle.com>
-References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-In-Reply-To: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700560629;27b2f048;
-X-HE-SMSGID: 1r5NV7-0007lq-KD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
 
-On 21.11.23 10:50, Thorsten Leemhuis wrote:
-> * @SCSI maintainers: could you please look into below please?
+On Tue, Nov 21, 2023 at 10:16:57AM +0100, Francesco Dolcini wrote:
+> On Tue, Nov 21, 2023 at 10:06:51AM +0100, Thorsten Leemhuis wrote:
+> > spi: Increase imx51 ecspi burst length based on transfer length
+> > 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
+> > 
+> > spi: imx: Take in account bits per word instead of assuming 8-bits
+> > 5f66db08cbd3ca471c66bacb0282902c79db9274
 > 
-> * @Stable team: you might want to take a look as well and consider a
-> revert in 6.1.y (yes, I know, those are normally avoided, but here it
-> might make sense).
-> 
-> TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
-> hangs for a while) that was reported months ago already but is still not
-> fixed. Not only that, it apparently more and more users run into this
-> recently, as the culprit was recently integrated into 6.1.y; I wonder if
-> it would be best to revert it there, unless a fix for mainline comes
-> into reach soon.
->
-> Details:
-> 
-> Quite a few machines with Adaptec controllers seems to hang for a few
-> tens of seconds to a few minutes before things start to work normally
-> again for a while:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217599
+> Do we know which one of those two commits introduces this regression?
 
-Quick follow up, only saw this now while posting something to the
-ticket: according to one reporter the problem even causes data damage.
-To quote:
+Whoops again. The second one is a fix for the first one, so my question
+does not make any sense, forget about this, sorry.
 
-'''
-if you run fsck.ext4 on ext4 file system with buggy kernel it will
-damage file system and its data
+Francesco
 
-using buggy kernel BTRFS scrub also says that checksums are wrong
-'''
-
-Ciao, Thorsten
-
-> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
-> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
-> commit despite a warning of mine to Sasha recently made it into 6.1.53
-> -- and that way apparently recently reached more users recently, as
-> quite a few joined that ticket.
-> 
-> The culprit is authored by Sagar Biradar who unless I missed something
-> never replied even once to the ticket or earlier mails about it. Lore
-> has no messages from him since early June.
-> 
-> Hannes Reinecke at least tried to fix it a few weeks ago (many thx), but
-> that didn't work out (see the ticket for details). Since then things
-> look stalled again, which is, ehh, unfortunate when it comes to
-> regressions.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
