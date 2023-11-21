@@ -1,88 +1,168 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2D630D1E
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 13:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D377E3E494
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 13:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XggO7yx+";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="XggO7yx+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1700571923;
-	bh=K+dMD9pzG7pfSfwhqVDQhTYAlTAD4kHlw3iJP29adek=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=XggO7yx+ZnJs1lPcj0xCaMrwi7mHSsFNC6kUtJ6wH24BAR61oENBlQ96BGsEdJ3DM
-	 lmcaA5JFidL9bwohV4UkL8w5fyyhzZVzk1drErszQJNUKVXehu1M/nUfDMNip1zlrv
-	 GQbI4jeQdPZDqqwRlxSH5yg+C4/EFWuXFECrAtWo=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id BE7691286B94;
-	Tue, 21 Nov 2023 08:05:23 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id U7UB_cKOoiwM; Tue, 21 Nov 2023 08:05:23 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1700571923;
-	bh=K+dMD9pzG7pfSfwhqVDQhTYAlTAD4kHlw3iJP29adek=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=XggO7yx+ZnJs1lPcj0xCaMrwi7mHSsFNC6kUtJ6wH24BAR61oENBlQ96BGsEdJ3DM
-	 lmcaA5JFidL9bwohV4UkL8w5fyyhzZVzk1drErszQJNUKVXehu1M/nUfDMNip1zlrv
-	 GQbI4jeQdPZDqqwRlxSH5yg+C4/EFWuXFECrAtWo=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6B3921286B89;
-	Tue, 21 Nov 2023 08:05:22 -0500 (EST)
-Message-ID: <18b3745d3e5de2ffd9b74f9cc826c2c3235dc6ca.camel@HansenPartnership.com>
-Subject: Re: scsi regression that after months is still not addressed and
- now bothering 6.1.y users, too
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, John Garry
- <john.g.garry@oracle.com>, Greg KH <gregkh@linuxfoundation.org>, Sagar
- Biradar <sagar.biradar@microchip.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>,  Adaptec OEM Raid Solutions
- <aacraid@microsemi.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, Sasha Levin
- <sashal@kernel.org>, Hannes Reinecke <hare@suse.de>, scsi
- <linux-scsi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Gilbert
- Wu <gilbert.wu@microchip.com>
-Date: Tue, 21 Nov 2023 08:05:20 -0500
-In-Reply-To: <a3ddbd03-7a94-4b6a-9be1-b268ce883551@leemhuis.info>
-References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-	 <47e8fd80-3f87-4b87-a875-035e69961392@oracle.com>
-	 <a3ddbd03-7a94-4b6a-9be1-b268ce883551@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIf6KhyD"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1cf74ad87e0so1074845ad.3
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 05:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700572159; x=1701176959; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NRonvrrZshq+dDW21ZOXNCiG05dY/dcLFuvkusN6s5c=;
+        b=UIf6KhyD6dAspbH33mULbIgPwjLL/tLz2cmrV7NSeFWppIogq8mhXiBpLPMMsBjh58
+         GnCUurAQz32SGhW1D3qQ/S5SkC8Zs0mRcE/fRXbJNeJtPyoOEbDuiQ8AWbv48Bd5mhuz
+         WWo2SvXrs+pcdRUBiy1ArwNCswkO6A/jtDCMm1ov+WSgR+69BUFxRaH8FfVvpN995rfO
+         E8x75rT3vFLpqRQdXpGMCuV28q1PTOQ/GGjOajgM0dzq9m9a+2hQPwpUOATos/wduZ89
+         vyKo/TKSDvDCim63DxHYZ1hNzb4v3KRihRy4+eJydSD8Ra5i0QKOX5N0MXIlKFqWY1Ua
+         vifg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700572159; x=1701176959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NRonvrrZshq+dDW21ZOXNCiG05dY/dcLFuvkusN6s5c=;
+        b=DiQtl+3x4IrXgzgVXHwc5n85j/hrkIFan1DgPdeh3OUy5taNem6pWf7DRgLuiRsbuG
+         xrh8NWyO/M3KMbZrdC86nm4ZhqGqjwKb8x1imoEovvFLvylfejVR0tE2T/taOqESzXld
+         uTeHmR0aefrEcqkf1KdZVeUIiiJQyBHwzzx83PbKeo/6m32QWp5p5vKxK+i1fHEJMw6h
+         U/suoN4Au+f9UEv2mPgVqKhrnYUI/4/6IrM4mXp0Pvu0Vhj+M9fch6ZxV2ksppYiup/X
+         zTDz1uTLOrDZ+hS6+ut5e0I776BJbhig4ywSGhnOM4951DuWJXypT6/EpiJgo8LoHfUn
+         gVpg==
+X-Gm-Message-State: AOJu0YxuaYqeQGog7GJCJ0y0sSOma7Rzg3uWxNkI1Jp3O+cMlhdemITE
+	YC66h4opAPXS5smPt2QJz6g=
+X-Google-Smtp-Source: AGHT+IEujS85pCBDH1UZ5g499eRM4PJrMP5yuw+mXaV6wQyBAnHSimi8om6o0CRvw7ZiZOoSPQIJYw==
+X-Received: by 2002:a17:902:dace:b0:1cc:50ea:d5db with SMTP id q14-20020a170902dace00b001cc50ead5dbmr13859038plx.4.1700572158777;
+        Tue, 21 Nov 2023 05:09:18 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170903235000b001c625acfed0sm7847696plh.44.2023.11.21.05.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 05:09:17 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id CCE6310DA7619; Tue, 21 Nov 2023 20:09:14 +0700 (WIB)
+Date: Tue, 21 Nov 2023 20:09:14 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Input Devices <linux-input@vger.kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>,
+	Filipe =?utf-8?B?TGHDrW5z?= <lains@riseup.net>,
+	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>,
+	LinuxCat <masch77.linuxcat@gmail.com>,
+	Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
+Message-ID: <ZVyr-of1X4RudpWG@archie.me>
+References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PkRtFTNZI60zkr4T"
+Content-Disposition: inline
+In-Reply-To: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com>
 
-On Tue, 2023-11-21 at 13:24 +0100, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> On 21.11.23 12:30, John Garry wrote:
-[...]
-> > Is there a full kernel log for this hanging system?
-> > 
-> > I can only see snippets in the ticket.
-> > 
-> > And what does /sys/class/scsi_host/host*/nr_hw_queues show?
-> 
-> Sorry, I'm just the man-in-the-middle: you need to ask in the ticket,
-> as  the privacy policy for bugzilla.kernel.org does not allow to CC
-> the reporters from the ticket here without their consent.
 
-How did you arrive at that conclusion?  Tickets for linux-scsi are
-vectored to the list:
+--PkRtFTNZI60zkr4T
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://lore.kernel.org/linux-scsi/bug-217599-11613@https.bugzilla.kernel.org%2F/
+Hi Thorsten and all,
 
-So all the email addresses in the bugzilla are already archived on our
-list.
+On Thu, Nov 02, 2023 at 09:11:42PM +0700, Bagas Sanjaya wrote:
+> Hi,
+>=20
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+>=20
+> > Hello,
+> > After upgrading from 6.5.9 to 6.6.0, my keyboard started acting really =
+weird in its wireless mode, key actions sent are completely wrong, see vide=
+o attached.=20
+> >=20
+> > Most keys are perceived as either E, 3 or F7, with F8 and <, as well.=
+=20
+> >=20
+> > Modifier keys (CTRL, ALT, ALT GR, Shift and Super) are working normally=
+, as well as media control keys (pause/play, previous, next, mute and sound=
+ up/down).
+> >=20
+> > The keyboard works as expected if it's wired.
+>=20
+> Another reporter bisected the regression:
+>=20
+> > Bisected to=20
+> >=20
+> > 9d1bd9346241cd6963b58da7ffb7ed303285f684 is the first bad commit
+> > commit 9d1bd9346241cd6963b58da7ffb7ed303285f684
+> > Author: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
+> > Date: Sun Jul 16 18:23:44 2023 +0000
+> >=20
+> > HID: logitech-dj: Add support for a new lightspeed receiver iteration
+> >=20
+> > The lightspeed receiver for the Pro X Superlight uses 13 byte mouse rep=
+orts
+> > without a report id. The workaround for such cases has been adjusted to
+> > handle these larger packets.
+> >=20
+> > The device now reports the status of its battery in wireless mode and
+> > libratbag now recognizes the device and it can be configured with Piper.
+> >=20
+> > https://github.com/libratbag/libratbag/pull/1122
+> >=20
+> > Co-developed-by: Filipe La=C3=ADns <lains@riseup.net>
+> > Signed-off-by: Filipe La=C3=ADns <lains@riseup.net>
+> > Signed-off-by: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
+> > Reviewed-by: Bastien Nocera <hadess@hadess.net>
+> > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+> >=20
+> > drivers/hid/hid-ids.h | 1 +
+> > drivers/hid/hid-logitech-dj.c | 11 ++++++++---
+> > 2 files changed, 9 insertions(+), 3 deletions(-)
+>=20
+> See Bugzilla for the full thread.
+>=20
+> Anyway, I'm adding this regression to regzbot:
+>=20
+> #regzbot introduced: 9d1bd9346241cd https://bugzilla.kernel.org/show_bug.=
+cgi?id=3D218094
+> #regzbot title: Logitech G915 Wireless Keyboard key event only detects fe=
+w key codes
+> #regzbot link: https://streamable.com/ac6l8u
+>=20
 
-James
+There's no reply from culprit author nor linux-input people (did they miss
+this regression?). And on Bugzilla, other reporters replied that reverting
+the culprit fixed the regression.
 
+FYI, there's similar Bugzilla report on [1].
+
+Also Cc'ed Linus.
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218172
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--PkRtFTNZI60zkr4T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVyr9wAKCRD2uYlJVVFO
+oxGlAQCojjy1tLoM65BFLE3n8cQxebxqvL3Bg/FqfAHAUlLWNgD9EcDhn5h7Akxe
+fX+GsQutxubddAt3tS4xMsnhdWWi3Q0=
+=ySw3
+-----END PGP SIGNATURE-----
+
+--PkRtFTNZI60zkr4T--
