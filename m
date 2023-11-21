@@ -1,163 +1,95 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB6216405
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 20:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5X5C-0000ep-KQ; Tue, 21 Nov 2023 21:10:54 +0100
-Message-ID: <a7c209e6-08c2-494a-9c73-5edcf37a21b9@leemhuis.info>
-Date: Tue, 21 Nov 2023 21:10:53 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4818754663
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 20:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=owenh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=owenh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=owenh.net header.i=@owenh.net header.b="emxrJ952"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4SZbSC6VPLz9srX;
+	Tue, 21 Nov 2023 21:23:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=owenh.net; s=MBO0001;
+	t=1700598235;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rR3OoAj67pn5n8eC6jWnNK3ENrbMOlGxtnXJr8qwgwA=;
+	b=emxrJ952MQl+TffV29mZT1PCKncsS6Pi8B1o1lZrkBx99YDqpLW+GrIThDoNJwpHPT9Dq6
+	gDki+IEskEc0k6vGK3JZRrQIVJa4cKSelGwZ4Qi0yAROpcfBkkdwylp8YireWHyptqSPNp
+	imRK8H6mEGCboJQ641Pv6j6ZjYd011lRtPfsK8eX1NemGNpqh87dM80IUCG6UEzAAJRBnk
+	57+OPgrD8pw+N12Zg0F8C1bwIR8yrP2ayE/UicQ+t1uVRdfADNqLRItvUwckjzjqAUHY72
+	CgJ/pXJ0grH5bigaUmE82gdqeU7VsGX28zbPu4hbUxFFvN6+Wb5CSfcqHsVLHg==
+Message-ID: <9bce5d00-8db6-4c8b-9817-06502492b44a@owenh.net>
+Date: Tue, 21 Nov 2023 14:23:42 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] drm/msm/dp: attach the DP subconnector property
-Content-Language: en-US, de-DE
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Johan Hovold <johan@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: freedreno@lists.freedesktop.org, Bjorn Andersson <andersson@kernel.org>,
- dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>,
- linux-arm-msm@vger.kernel.org, Marijn Suijten
- <marijn.suijten@somainline.org>, Abel Vesa <abel.vesa@linaro.org>,
- Sean Paul <sean@poorly.run>
-References: <20231025092711.851168-1-dmitry.baryshkov@linaro.org>
- <20231025092711.851168-3-dmitry.baryshkov@linaro.org>
- <ZVR8Flrjxy-wgqgJ@hovoldconsulting.com>
- <a35623df-6a8e-b398-a0b2-7f11b9ec4e5d@quicinc.com>
- <c1b0bc05-41ee-403c-a0c7-0a2fc0e6b0a8@leemhuis.info>
- <a8a6c9e3-b933-161c-1f29-9818b59dc771@quicinc.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <a8a6c9e3-b933-161c-1f29-9818b59dc771@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [REGRESSION]: nouveau: Asynchronous wait on fence
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+Cc: nouveau@lists.freedesktop.org, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
+ Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org
+References: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
+ <5ecf0eac-a089-4da9-b76e-b45272c98393@leemhuis.info>
+ <6b7a71b4-c8a2-46f4-a995-0c63e7745ca3@owenh.net>
+ <c72ca99e-8657-4ed8-9999-5702ebeb5b8c@leemhuis.info>
+Content-Language: en-US
+From: "Owen T. Heisler" <writer@owenh.net>
+In-Reply-To: <c72ca99e-8657-4ed8-9999-5702ebeb5b8c@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700597458;fe26ac4a;
-X-HE-SMSGID: 1r5X5C-0000ep-KQ
+X-Rspamd-Queue-Id: 4SZbSC6VPLz9srX
 
-On 21.11.23 19:50, Abhinav Kumar wrote:
-> On 11/21/2023 9:57 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 15.11.23 19:06, Abhinav Kumar wrote:
->>> On 11/15/2023 12:06 AM, Johan Hovold wrote:
->>>> On Wed, Oct 25, 2023 at 12:23:10PM +0300, Dmitry Baryshkov wrote:
->>>>> While developing and testing the commit bfcc3d8f94f4 ("drm/msm/dp:
->>>>> support setting the DP subconnector type") I had the patch [1] in my
->>>>> tree. I haven't noticed that it was a dependency for the commit in
->>>>> question. Mea culpa.
+On 11/21/23 09:16, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 15.11.23 07:19, Owen T. Heisler wrote:
+>> On 10/31/23 04:18, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 28.10.23 04:46, Owen T. Heisler wrote:
+>>>> #regzbot introduced: d386a4b54607cf6f76e23815c2c9a3abc1d66882
+>>>> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/180
 >>>>
->>>> This also broke boot on the Lenovo ThinkPad X13s.
+>>>> ## Problem
 >>>>
->>>> Would be nice to get this fixed ASAP so that further people don't have
->>>> to debug this known regression.
->>>
->>> I will queue this patch for -fixes rightaway.
+>>>> 1. Connect external display to DVI port on dock and run X with both
+>>>>      displays in use.
+>>>> 2. Wait hours or days.
+>>>> 3. Suddenly the secondary Nvidia-connected display turns off and X stops
+>>>>      responding to keyboard/mouse input. In *some* cases it is
+>>>> possible to
+>>>>      switch to a virtual TTY with Ctrl+Alt+Fn and log in there.
+
+>> Here is a decoded kernel log from an
+>> untainted kernel:
 >>
->> Thx. I noticed that this fix is still not in -next. I then investigated
->> and I found it was applied on Thursday last week here:
->> https://gitlab.freedesktop.org/drm/msm/-/commits/msm-fixes?ref_type=heads
->>
->> Makes me wonder: when will that patch go to a branch that is included in
->> -next? And when will it move on towards mainline?
-> 
-> This has been included in a pull request for 6.7-rc3 to the DRM tree and
-> shall make it to -next from there.
+>> https://gitlab.freedesktop.org/drm/nouveau/uploads/c120faf09da46f9c74006df9f1d14442/async-wait-on-fence-180.log
 
-Ahh, great, thx, I was slowly getting worried.
+> Maybe one of the nouveau developer can take a quick look at
+> d386a4b54607cf and suggest a simple way to revert it in latest mainline.
+> Maybe just removing the main chunk of code that is added is all that it
+> takes.
 
-Ciao, Thorsten
+I was able to resolve the revert conflict; it was indeed trivial though 
+I did not realize it initially. I am currently testing v6.6 with the 
+culprit commit reverted. I need to test for at least a full week (ending 
+11-23) before I can assume it fixes the problem.
 
->>>>> Since the patch has not landed yet (and even was not reviewed)
->>>>> and since one of the bridges erroneously uses USB connector type
->>>>> instead
->>>>> of DP, attach the property directly from the MSM DP driver.
->>>>>
->>>>> This fixes the following oops on DP HPD event:
->>>>>
->>>>>    drm_object_property_set_value
->>>>> (drivers/gpu/drm/drm_mode_object.c:288)
->>>>>    dp_display_process_hpd_high
->>>>> (drivers/gpu/drm/msm/dp/dp_display.c:402)
->>>>>    dp_hpd_plug_handle.isra.0 (drivers/gpu/drm/msm/dp/dp_display.c:604)
->>>>>    hpd_event_thread (drivers/gpu/drm/msm/dp/dp_display.c:1110)
->>>>>    kthread (kernel/kthread.c:388)
->>>>>    ret_from_fork (arch/arm64/kernel/entry.S:858)
->>>>
->>>> This only says where the oops happened, it doesn't necessarily in
->>>> itself
->>>> indicate an oops at all or that in this case it's a NULL pointer
->>>> dereference.
->>>>
->>>> On the X13s I'm seeing the NULL deref in a different path during boot,
->>>> and when this happens after a deferred probe (due to the panel lookup
->>>> mess) it hangs the machine, which makes it a bit of a pain to debug:
->>>>
->>>>      Unable to handle kernel NULL pointer dereference at virtual
->>>> address 0000000000000060
->>>>      ...
->>>>      CPU: 4 PID: 57 Comm: kworker/u16:1 Not tainted 6.7.0-rc1 #4
->>>>      Hardware name: Qualcomm QRD, BIOS
->>>> 6.0.220110.BOOT.MXF.1.1-00470-MAKENA-1 01/10/2022
->>>>      ...
->>>>      Call trace:
->>>>       drm_object_property_set_value+0x0/0x88 [drm]
->>>>       dp_display_process_hpd_high+0xa0/0x14c [msm]
->>>>       dp_hpd_plug_handle.constprop.0.isra.0+0x90/0x110 [msm]
->>>>       dp_bridge_atomic_enable+0x184/0x21c [msm]
->>>>       edp_bridge_atomic_enable+0x60/0x94 [msm]
->>>>       drm_atomic_bridge_chain_enable+0x54/0xc8 [drm]
->>>>       drm_atomic_helper_commit_modeset_enables+0x194/0x26c
->>>> [drm_kms_helper]
->>>>       msm_atomic_commit_tail+0x204/0x804 [msm]
->>>>       commit_tail+0xa4/0x18c [drm_kms_helper]
->>>>       drm_atomic_helper_commit+0x19c/0x1b0 [drm_kms_helper]
->>>>       drm_atomic_commit+0xa4/0x104 [drm]
->>>>       drm_client_modeset_commit_atomic+0x22c/0x298 [drm]
->>>>       drm_client_modeset_commit_locked+0x60/0x1c0 [drm]
->>>>       drm_client_modeset_commit+0x30/0x58 [drm]
->>>>       __drm_fb_helper_restore_fbdev_mode_unlocked+0xbc/0xfc
->>>> [drm_kms_helper]
->>>>       drm_fb_helper_set_par+0x30/0x4c [drm_kms_helper]
->>>>       fbcon_init+0x224/0x49c
->>>>       visual_init+0xb0/0x108
->>>>       do_bind_con_driver.isra.0+0x19c/0x38c
->>>>       do_take_over_console+0x140/0x1ec
->>>>       do_fbcon_takeover+0x6c/0xe4
->>>>       fbcon_fb_registered+0x180/0x1f0
->>>>       register_framebuffer+0x19c/0x228
->>>>       __drm_fb_helper_initial_config_and_unlock+0x2e8/0x4e8
->>>> [drm_kms_helper]
->>>>       drm_fb_helper_initial_config+0x3c/0x4c [drm_kms_helper]
->>>>       msm_fbdev_client_hotplug+0x84/0xcc [msm]
->>>>       drm_client_register+0x5c/0xa0 [drm]
->>>>       msm_fbdev_setup+0x94/0x148 [msm]
->>>>       msm_drm_bind+0x3d0/0x42c [msm]
->>>>       try_to_bring_up_aggregate_device+0x1ec/0x2f4
->>>>       __component_add+0xa8/0x194
->>>>       component_add+0x14/0x20
->>>>       dp_display_probe+0x278/0x41c [msm]
->>>>
->>>>> [1] https://patchwork.freedesktop.org/patch/555530/
->>>>>
->>>>> Fixes: bfcc3d8f94f4 ("drm/msm/dp: support setting the DP subconnector
->>>>> type")
->>>>> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
->>>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>
->>>> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
->>>> Tested-by: Johan Hovold <johan+linaro@kernel.org>
->>>>
->>>
->>> Thanks !
->>>
->>>> Johan
-> 
-> 
+After that I can try the latest v6.7-rc as you suggested.
+
+I have updated the bug description at
+<https://gitlab.freedesktop.org/drm/nouveau/-/issues/180>.
+
+Thanks again,
+Owen
+
+--
+Owen T. Heisler
+<https://owenh.net>
