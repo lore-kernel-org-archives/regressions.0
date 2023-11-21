@@ -1,44 +1,44 @@
 Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D73663C0
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 01:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD17179BD
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 04:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="WOqx1RsR"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="kxIFGTyc"
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 42E178285669;
-	Mon, 20 Nov 2023 19:23:59 -0600 (CST)
+	by mail.rptsys.com (Postfix) with ESMTP id 04E94828553E;
+	Mon, 20 Nov 2023 22:10:36 -0600 (CST)
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id sW56W62J5lEC; Mon, 20 Nov 2023 19:23:58 -0600 (CST)
+	with ESMTP id TMQxgZm2pacY; Mon, 20 Nov 2023 22:10:34 -0600 (CST)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 13EC982857F6;
-	Mon, 20 Nov 2023 19:23:58 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 13EC982857F6
+	by mail.rptsys.com (Postfix) with ESMTP id 7A05E828563C;
+	Mon, 20 Nov 2023 22:10:34 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 7A05E828563C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1700529838; bh=6wgLgNL21hmd4mvVX7kKnn+P3JT1JuCUdVe5076o16I=;
+	t=1700539834; bh=aqzx0DahKb8SMxTRToTE5YMBXmsN1vgtMdvoXV7YDbI=;
 	h=Date:From:To:Message-ID:MIME-Version;
-	b=WOqx1RsRd2eSdqDmGhk/ipkOXilfUh9vP1yuskDKOv19yiE2aZP03UU/20EbsIoEL
-	 hZS6xgNhs4/wUw4+Jth5b/kn+BcdGFttMk7EEYiKAqQOQNnz7PocLK64kMX6ltmKf8
-	 z5mjw/AId8qyZFgWMpn7zI+9Y9VuMfoCdZJWclIU=
+	b=kxIFGTyc1kxa/6vWJcPXK1DwlZ0bf/cCdKXZ+x03DGbj+9foUcIGpGamWOZZezpUD
+	 Bf4qGxS3E1ul4rPoE6PbhiOUOFDKN6BiuiXxDWefnSvm8eUWpeXLKgjm7mDzOWX6FW
+	 Q5cIm/8evbpvNs9eaIqIzvwA87fKB3bjYp53+khQ=
 X-Virus-Scanned: amavisd-new at rptsys.com
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id yShHFOYeSis1; Mon, 20 Nov 2023 19:23:57 -0600 (CST)
+	with ESMTP id hszizUyM8FUU; Mon, 20 Nov 2023 22:10:34 -0600 (CST)
 Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id D083A8285669;
-	Mon, 20 Nov 2023 19:23:57 -0600 (CST)
-Date: Mon, 20 Nov 2023 19:23:57 -0600 (CST)
+	by mail.rptsys.com (Postfix) with ESMTP id 523A1828553E;
+	Mon, 20 Nov 2023 22:10:34 -0600 (CST)
+Date: Mon, 20 Nov 2023 22:10:32 -0600 (CST)
 From: Timothy Pearson <tpearson@raptorengineering.com>
 To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
 	npiggin <npiggin@gmail.com>, 
 	christophe leroy <christophe.leroy@csgroup.eu>, 
 	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Message-ID: <608737213.48890358.1700529837699.JavaMail.zimbra@raptorengineeringinc.com>
+Message-ID: <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
 In-Reply-To: <874jhg6lkn.fsf@mail.lhotse>
 References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com> <877cmc7ve9.fsf@mail.lhotse> <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com> <874jhg6lkn.fsf@mail.lhotse>
 Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
@@ -53,9 +53,7 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
 Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
-Thread-Index: 3JPZhG7uJ/dvg8ONaRi3ytoX/GuIYg==
-
-
+Thread-Index: o5SeDrCF+sPiXk0vknbS77i3C3t7PA==
 
 ----- Original Message -----
 > From: "Michael Ellerman" <mpe@ellerman.id.au>
@@ -129,25 +127,24 @@ Thread-Index: 3JPZhG7uJ/dvg8ONaRi3ytoX/GuIYg==
 >>         # fr0 is clobbered and potentially live in userspace
 > 
 > fr0 is not live there.
-> 
-> __giveup_fpu() does roughly:
-> 
->	msr = tsk->thread.regs->msr;
->	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
->        msr &= ~MSR_VSX;
->	tsk->thread.regs = msr;
-> 
+<snip> 
 > ie. it clears the FP etc. bits from the task's MSR. That means the FP
 > state will be reloaded from the thread struct before the task is run again.
-> 
-> Also on that path we're switching to another task, so we'll be reloading
-> the other task's FP state before returning to userspace.
-> 
-> So I don't see any bug there.
 
-Yeah, you're right.  I was trying to get traces while doing something else, and didn't think that all the way through, sorry. :)  It's not going to be super easy to get a real trace (I was triggering the WARN_ON() from of fr0 getting set to to FPSCR), so let's just assume it's mainly the path you manually found above and update the commit message accordingly.
+So a little more detail on this, just to put it to rest properly vs. assuming hand analysis caught every possible pathway. :)
 
-> There's only two places that call save_fpu() and skip the giveup logic,
-> which is save_all() and kvmppc_save_user_regs().
+The debugging that generates this stack trace also verifies the following in __giveup_fpu():
 
-Now that's interesting as well, since it might explain some issues I've seen for years on a specific QEMU workload.  Once this is backported to stable I'll need to get the kernels updated on those boxes and see if the issues disappear...
+1.) tsk->thread.fp_state.fpr doesn't contain the FPSCR contents prior to calling save_fpu()
+2.) tsk->thread.fp_state.fpr contains the FPSCR contents directly after calling save_fpu()
+3.) MSR_FP is set both in the task struct and in the live MSR.
+
+Only if all three conditions are met will it generate the trace.  This is a generalization of the hack I used to find the problem in the first place.
+
+If the state will subsequently be reloaded from the thread struct, that means we're reloading the registers from the thread struct that we just verified was corrupted by the earlier save_fpu() call.  There are only two ways I can see for that to be true -- one is if the registers were already clobbered when giveup_all() was entered, and the other is if save_fpu() went ahead and clobbered them right here inside giveup_all().
+
+To see which scenario we were dealing with, I added a bit more instrumentation to dump the current register state if MSR_FP bit was already set in registers (i.e. not dumping data from task struct, but using the live FPU registers instead), and sure enough the registers are corrupt on entry, so something else has already called save_fpu() before we even hit giveup_all() in this call chain.
+
+Unless I'm missing something, doesn't this effectively mean that anything interrupting a task can hit this bug?  Or, put another way, I'm seeing several processes hit this exact call chain with the corrupt register going back out to userspace without io_uring even in the mix, so there seems to be another pathway in play.  These traces are from a qemu guest, in case it matters given the kvm path is possibly susceptible.
+
+Just a few things to think about.  The FPU patch itself definitely resolves the problems; I used a sledgehammer approach *specifically* so that there is no place for a rare call sequence we didn't consider to hit it again down the line. :)
