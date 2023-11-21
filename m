@@ -1,35 +1,26 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACEC3FF4
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CD51EA8A
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 09:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5Mia-0005fz-Ne; Tue, 21 Nov 2023 10:06:52 +0100
-Message-ID: <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
-Date: Tue, 21 Nov 2023 10:06:51 +0100
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 3A3791F83F;
+	Tue, 21 Nov 2023 10:17:01 +0100 (CET)
+Date: Tue, 21 Nov 2023 10:16:57 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, linux@bigler.io
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Stefan Moring <stefan.moring@technolution.nl>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org
 Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
  imx8mm
-Content-Language: en-US, de-DE
-To: Francesco Dolcini <francesco@dolcini.it>,
- Stefan Moring <stefan.moring@technolution.nl>
-Cc: linux@bigler.io,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
- linux-spi@vger.kernel.org
-References: <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
- <f4439fd1-7c2d-4a96-9116-1dbe04fceac0@leemhuis.info>
- <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
+Message-ID: <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
+References: <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
  <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
  <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
  <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
@@ -38,47 +29,39 @@ References: <e4f12422-1c47-4877-88b3-dfa9917331a2@leemhuis.info>
  <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
  <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
  <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
-Content-Type: text/plain; charset=UTF-8
+ <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700557621;99dce46f;
-X-HE-SMSGID: 1r5Mia-0005fz-Ne
+In-Reply-To: <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
 
-On 20.11.23 18:48, Francesco Dolcini wrote:
-> On Mon, Nov 20, 2023 at 04:30:15PM +0100, Stefan Moring wrote:
->> Can you verify the values used for the transfer,Â  spi_imx->count and spi_imx->
->> bits_per_word inside the mx51_ecpsi_prepare_transfer() method? Those are the
->> only two things that changed in the commits. Maybe compare them to the working
->> version?
+On Tue, Nov 21, 2023 at 10:06:51AM +0100, Thorsten Leemhuis wrote:
+> On 20.11.23 18:48, Francesco Dolcini wrote:
+> > On Mon, Nov 20, 2023 at 04:30:15PM +0100, Stefan Moring wrote:
+> >> Can you verify the values used for the transfer,  spi_imx->count and spi_imx->
+> >> bits_per_word inside the mx51_ecpsi_prepare_transfer() method? Those are the
+> >> only two things that changed in the commits. Maybe compare them to the working
+> >> version?
+> > 
+> > I would suggest to bisect the issue to the actual commit that
+> > introduced the regression, I do not think this was done yet.
 > 
-> I would suggest to bisect the issue to the actual commit that
-> introduced the regression, I do not think this was done yet.
+> I think it was. To quote
+Whoops, you are right.
 
-I think it was. To quote
+> spi: Increase imx51 ecspi burst length based on transfer length
+> 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
+> 
+> spi: imx: Take in account bits per word instead of assuming 8-bits
+> 5f66db08cbd3ca471c66bacb0282902c79db9274
 
-https://lore.kernel.org/all/8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com/
+Do we know which one of those two commits introduces this regression?
 
-"'"
-After upgrade from kernel 6.5.11 to 6.6.1 the spi-devices on my hw
-colibri-imx6dl and verdin-imx8mm are not working anymore (TPM2 and
-SPI-SRAM).
+Francesco
 
-Analyzing the problem showed that the 2 commits introduced the problem:
-
-spi: Increase imx51 ecspi burst length based on transfer length
-15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
-
-spi: imx: Take in account bits per word instead of assuming 8-bits
-5f66db08cbd3ca471c66bacb0282902c79db9274
-
-Reverting the commits solved the problem.
-"'"
-
-Or am I missing something here?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
