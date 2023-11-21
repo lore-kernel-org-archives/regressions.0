@@ -1,207 +1,118 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194147765
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 10:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5DE47779
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 10:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="G6VdE/2q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9gZavoQG"
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 688351F8B4;
-	Tue, 21 Nov 2023 10:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1700562836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DRXMVyH/y3b4hFFPzmfyVfWx5aJ1GDZyh8nJuaGF9+4=;
-	b=G6VdE/2q+KsECht3rwLLDBPs9AVcQYUcdGsFCVoeF9+/LiFsBs4EXLQs//hRJMIzhu33mr
-	2u4p9MrHztVU9KVX7wY10zHs0xFpJlVGUUHcv3GQ4QCjSR6FH4roBrWhI9y6LvNtBN03qE
-	/h6e9ZyK8WklBdEhdbzm1/1XQ1AE8nA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1700562836;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DRXMVyH/y3b4hFFPzmfyVfWx5aJ1GDZyh8nJuaGF9+4=;
-	b=9gZavoQGAx8D94qdo93SqcRdngZ5Ouz1rYYW+iPiu/p9dfkii6gaCTpJrc07oZXgOktgJW
-	zgHwCSTS9K+mTxAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1F626139FD;
-	Tue, 21 Nov 2023 10:33:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id A7C9BpSHXGUOTQAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 21 Nov 2023 10:33:56 +0000
-Date: Tue, 21 Nov 2023 11:33:55 +0100
-Message-ID: <874jhfo0oc.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Thorsten Leemhuis
- <regressions@leemhuis.info>,	Jean-Jacques Hiblot
- <jjhiblot@traphandler.com>,	Bagas Sanjaya <bagasdotme@gmail.com>,	Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>,	Linux Regressions
- <regressions@lists.linux.dev>,	Linux LEDs <linux-leds@vger.kernel.org>,	Tim
- Crawford <tcrawford@system76.com>,	Jeremy Soller <jeremy@system76.com>,
-	System76 Product Development <productdev@system76.com>,	Lee Jones
- <lee@kernel.org>,	Pavel Machek <pavel@ucw.cz>,	Johannes =?ISO-8859-1?Q?Pe?=
- =?ISO-8859-1?Q?n=DFel?= <johannes.penssel@gmail.com>
-Subject: Re: Fwd: sysfs: cannot create duplicate filename .../system76_acpi::kbd_backlight/color
-In-Reply-To: <ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
-References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
-	<ZT25-gUmLl8MPk93@debian.me>
-	<dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
-	<ZUjnzB2RL2iLzIQG@debian.me>
-	<87sf50pm34.wl-tiwai@suse.de>
-	<b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
-	<87edgjo2kr.wl-tiwai@suse.de>
-	<ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=bigler.io header.i=@bigler.io header.b="dJ/kdXHu"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SZLN334lqzMq5Gb;
+	Tue, 21 Nov 2023 10:34:27 +0000 (UTC)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4SZLN24kbjzsB;
+	Tue, 21 Nov 2023 11:34:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.io;
+	s=20200409; t=1700562867;
+	bh=Ue3HqBrGZjKNKmEwdQ/OlJMkl8TdBMvCZuihXhj55ws=;
+	h=Date:Subject:From:Reply-To:To:Cc:References:In-Reply-To:From;
+	b=dJ/kdXHut6B1ZSq3eh76siQ2FeZ9Ef2vfjpQA45qywQQD46YWhcP1RPdZgW6zpZDz
+	 yC0iA2RMP7S06BAUhGdAnrAHMdDtZSXm9ZOOlDfjd0AlW4UhGaIZ0e1lL37cDTF7vG
+	 uFl9XZ//HW4hZXfddP211QeUi4e2MBeD3lVQU06U=
+Message-ID: <44e61a3385f84aa417a208ca348e4b8c@mail.infomaniak.com>
+Date: Tue, 21 Nov 2023 11:34:26 +0100
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+From: linux@bigler.io
+Reply-To: linux@bigler.io
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Stefan Moring
+ <stefan.moring@technolution.nl>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, Mark Brown <broonie@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -5.80
-X-Spamd-Result: default: False [-5.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 TO_DN_ALL(0.00)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[suse.de,leemhuis.info,traphandler.com,gmail.com,vger.kernel.org,lists.linux.dev,system76.com,kernel.org,ucw.cz];
-	 RCVD_COUNT_TWO(0.00)[2];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-WS-User-Origin: eyJpdiI6Imt1UmVCa1pJOTE2Z2JOQmZHNndxN1E9PSIsInZhbHVlIjoiQWUzbThTRjNuL2xVaFBzcGVLdmVSUT09IiwibWFjIjoiNjJhZmNiYjZlNTYyMDUyOGM2ZTZmZjYwMjQ4MDg2Y2YyYzZhNGVhYzVmMDFhYzI3MWE4NjliODg3ZjE4ZWE0NCIsInRhZyI6IiJ9
+X-WS-User-Mbox: eyJpdiI6IkNjOWhSU3dzandJOWYzdmFna1BrVnc9PSIsInZhbHVlIjoiTy9WQVJsUFRqMGlyaEx2ZEJUZVhSUT09IiwibWFjIjoiNjFhNjQwOWY1NTQyMzc0ZTAwYzE1NjNjMDQ0YjhlODhiNWNmODQ0MzFjYzc5NWUwODQ2ZTdlZTU0Yzk5NzJhMiIsInRhZyI6IiJ9
+X-WS-Location: eJxzKUpMKykGAAfpAmU-
+X-Mailer: Infomaniak Workspace (1.3.597)
+References: <CAB3BuKA+qOY+UhWR-9Ov3qsz3wQr8q8n38MrEMf3FMCthr04yA@mail.gmail.com>
+ <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
+ <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
+ <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
+ <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
+ <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
+ <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
+ <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
+ <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
+ <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
+ <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
+In-Reply-To: <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
+X-Infomaniak-Routing: alpha
 
-On Tue, 21 Nov 2023 11:21:53 +0100,
-Hans de Goede wrote:
-> 
-> Hi,
-> 
-> On 11/21/23 10:52, Takashi Iwai wrote:
-> > On Tue, 21 Nov 2023 10:19:03 +0100,
-> > Thorsten Leemhuis wrote:
-> >>
-> >> Takashi, Jean-Jacques Hiblot, Lee,
-> >>
-> >> On 20.11.23 14:53, Takashi Iwai wrote:
-> >>> On Mon, 06 Nov 2023 14:19:08 +0100,
-> >>> Bagas Sanjaya wrote:
-> >>>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
-> >>>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
-> >>>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
-> >>>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
-> >>>>>>
-> >>>>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
-> >>>>>> since you authored the culprit?
-> >>>
-> >>>>> The offending commit stores the color in struct led_classdev and exposes it
-> >>>>> via sysfs. It was part of a series that create a RGB leds from multiple
-> >>>>> single-color LEDs. for this series, we need the color information but we
-> >>>>> don't really need to expose it it via sysfs. In order to fix the issue, we
-> >>>>> can remove the 'color' attribute from the sysfs.
-> >>>>
-> >>>> OK, see you in the patch!
-> >>>
-> >>> Is there a patch available?
-> >>
-> >> Not that I know of. Could not find anything on lore either.
-> >>
-> >>> This bug hits for a few Logitech keyboard models, too, and it makes
-> >>> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
-> >>> this bug:
-> >>>   https://bugzilla.kernel.org/show_bug.cgi?id=218155
-> >>>
-> >>> We need a quick fix for 6.6.x.
-> >>
-> >> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
-> >> committed it and sent it to Linus) know about this for a while already
-> >> without doing anything about it, I wonder if someone should just send a
-> >> revert to Linus (unless of course that is likely to introduce a
-> >> regression on its own).
-> >>
-> >> Takashi, could you maybe do this, unless a fix shows up real soon?
-> > 
-> > I can, but we need to decide which way to go.
-> > There are several options:
-> > 
-> > 1. Revert the commit c7d80059b086;
-> >    this drops led class color sysfs entries.  Also the store of
-> >    led_cdev->color from fwnode is dropped, too.
-> > 
-> > 2. Drop only led class color sysfs entries;
-> >    a partial revert of c7d80059b086 above
-> 
-> AFAIK further up in the thread (or a related thread) there
-> already was consensus to do this. Someone just needs to
-> write the patch.
+Hi
 
-Well, is there any user of this new led_classdev.color field?
-The value read from fwnode is stored there, but as far as I see, there
-seems no real user, so far.  If it's still unused, we can do the whole
-revert -- which is cleaner.
+At least in my test-case the  commit is NOT introducing this regression, be=
+cause the bits_per_word is 8, so the result is the same
+spi: imx: Take in account bits per word instead of assuming 8-bits
+5f66db08cbd3ca471c66bacb0282902c79db9274
 
+I do not have the latest  mx-sdma firmware can you tell me where I get it. =
+On=20
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git=
+/tree/imx/sdma
+the latest I found was 4.5
 
-Takashi
+I tried to debug the code but it's hard vor me to understand where the prob=
+lem could be.
+I saw then I disable the dma with set
 
-> > 3. Rename conflicting sysfs entries in drivers;
-> >    e.g. color -> kb_color for hid-lg-g15 and system76_acpi
-> > 
-> > In either way, we'd break user-space (sysfs).
-> 
-> The new color attribute causing the conflict has only
-> been in 6.6 so there likely aren't any users of it yet
-> and since dropping it would be backported to 6.6.y
-> there shouldn't be any future users of it either, since
-> any 6.6 users presumably will use 6.6.y and not 6.6.0
-> 
-> > IMO, 2 would be the least harm, as the class sysfs entry was
-> > introduced since 6.6.
-> 
-> Ack.
-> 
-> > I guess this is what Jean-Jacques suggested.
-> 
-> Right.
-> 
-> > But I'm not sure how important this new class sysfs entry is; it has
-> > to be clarified from leds people who actually use / wanted the
-> > feature.
-> 
-> If I have read the thread correctly it is not important the value
-> it represents is used internally in the LED subsystem and userspace
-> does not really need it.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
+imx51_ecspi_devtype_data {
+.has_dmamode =3D false,
+}
+the SPI is working fine.
+
+Should I do some more tests, do some loggings..=20
+Please let me know
+
+Regards=20
+Stefan Bigler
+
+Am 2023-11-21T10:16:57.000+01:00 hat Francesco Dolcini <francesco@dolcini.i=
+t> geschrieben:
+>  On Tue, Nov 21, 2023 at 10:06:51AM +0100, Thorsten Leemhuis wrote:
+>=20
+> >    On 20.11.23 18:48, Francesco Dolcini wrote:
+> >=20
+> > >     On Mon, Nov 20, 2023 at 04:30:15PM +0100, Stefan Moring wrote:
+> > >=20
+> > > >     Can you verify the values used for the transfer,  spi_imx->coun=
+t and spi_imx->
+> > > >   bits_per_word inside the mx51_ecpsi_prepare_transfer() method? Th=
+ose are the
+> > > >   only two things that changed in the commits. Maybe compare them t=
+o the working
+> > > >   version?
+> > >   =20
+> > >   I would suggest to bisect the issue to the actual commit that
+> > >   introduced the regression, I do not think this was done yet.
+> >  =20
+> >  I think it was. To quote
+>  Whoops, you are right.
+>=20
+>=20
+> >    spi: Increase imx51 ecspi burst length based on transfer length
+> >  15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
+> > =20
+> >  spi: imx: Take in account bits per word instead of assuming 8-bits
+> >  5f66db08cbd3ca471c66bacb0282902c79db9274
+> =20
+> Do we know which one of those two commits introduces this regression?
+>=20
+Francesco
