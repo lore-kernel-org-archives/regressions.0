@@ -1,57 +1,180 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65053C6B2
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 10:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 0E5732065C;
-	Tue, 21 Nov 2023 11:10:22 +0100 (CET)
-Date: Tue, 21 Nov 2023 11:10:20 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux@bigler.io,
-	Stefan Moring <stefan.moring@technolution.nl>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
- imx8mm
-Message-ID: <ZVyCDGWhOSYFQADe@francesco-nb.int.toradex.com>
-References: <2fcdd99eee9ee4f5d34fa1abab2f51bb@mail.infomaniak.com>
- <CAB3BuKARgJhaVNFsP1FQ+2yLe18QU9H17fHKjc-Sf3izE+MZ1Q@mail.gmail.com>
- <86566391db9c5044f1a082bc8ec697a2@mail.infomaniak.com>
- <ZVsdNGyVrTJ/Kv3n@francesco-nb.int.toradex.com>
- <6322fd4c1967a518310140c35ab34f65@mail.infomaniak.com>
- <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
- <CAB3BuKDb6uucujD7ac-w4pa1GVNLSQUA4OGE7i074mQSU==WaA@mail.gmail.com>
- <ZVucAc2Nq0JwJ+N4@francesco-nb.int.toradex.com>
- <90abbd7a-e3e3-42c9-9be9-28e475f0fc9a@leemhuis.info>
- <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905B836B0F
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 10:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WhexbCvX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700562117;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cfNnWg07vc4dtfhe3jy2IEWts0b85w4zN19C29eJ7XI=;
+	b=WhexbCvX1v3/0nJb/93UuUE9DBcgIltj0iTEHITtABjEZuHrd4c5fCfPQE7fz1Xa/cebtp
+	yBMY81iNjK/VCEU46GDIy2aHl25e3QklecQK3TWnaQZPeWT7+/F72G0MQ/H7icmADG+aCM
+	wlRA+TUkspvZkhKODdlEPEQvNKStXKg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-ZBXysGtSMwux6_k4fOohrA-1; Tue, 21 Nov 2023 05:21:55 -0500
+X-MC-Unique: ZBXysGtSMwux6_k4fOohrA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a01783d1ab7so49105866b.0
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 02:21:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700562114; x=1701166914;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cfNnWg07vc4dtfhe3jy2IEWts0b85w4zN19C29eJ7XI=;
+        b=qPMl6vaYJrWYq+Xx9UWo3NQQO+xs5QNTq8vofDxYPvIkI0W+kMo0Tg2JKBa4bH2KEB
+         01iL+mh8Nn25X30/LarBI9ni2uBjKHVnoE7VV2xt3rWLVBVeU00KrX36/ZXfpstN+vBM
+         u2nyX2+pjMJ3kaNl0fW5lhc0oLdA6LlWMxZLjDtW+YKLX2dmQTHPv/HZwjEIREv8luqU
+         kd9UR9xsCMgZn6733WxJPPy8oX1CofPTOdz8iIXQEFId0NBWzBAELvcCpW5CfW5nKzR5
+         hTy2qUKhBUbL8J06GMnd6z0SkXFYfvgChoSky9DaP1YCXinwbCtci97CSaTH5Na1ob2x
+         vq+Q==
+X-Gm-Message-State: AOJu0Yx7LeMxyPpB6z/NaO3wqnsmGY4tUe7RU1NezI54QJSXD1TtVY8h
+	i86rMy3Q4IuWx2RAMmdZz9FILBiNdSKWIUxb36RhrmvecSOoAZXzcuWtYWir5gY+NhZo1KLn/wN
+	ugkCQCZo1Kjy3Ng7k96erumQ=
+X-Received: by 2002:a17:907:1ca8:b0:9e0:dcf:17d5 with SMTP id nb40-20020a1709071ca800b009e00dcf17d5mr7731226ejc.43.1700562114693;
+        Tue, 21 Nov 2023 02:21:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEnHTpYS1U3kUu2OxwPrgQY0GNCk/I3WSIYHNlFXhVd6SF9XinJx3fI1AP0AiDEyfy1o76dMw==
+X-Received: by 2002:a17:907:1ca8:b0:9e0:dcf:17d5 with SMTP id nb40-20020a1709071ca800b009e00dcf17d5mr7731209ejc.43.1700562114388;
+        Tue, 21 Nov 2023 02:21:54 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id g9-20020a170906520900b009faca59cf38sm3718947ejm.182.2023.11.21.02.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Nov 2023 02:21:53 -0800 (PST)
+Message-ID: <ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
+Date: Tue, 21 Nov 2023 11:21:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZVx1ic9/vxDDStoE@francesco-nb.int.toradex.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: sysfs: cannot create duplicate filename
+ .../system76_acpi::kbd_backlight/color
+To: Takashi Iwai <tiwai@suse.de>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux LEDs <linux-leds@vger.kernel.org>,
+ Tim Crawford <tcrawford@system76.com>, Jeremy Soller <jeremy@system76.com>,
+ System76 Product Development <productdev@system76.com>,
+ Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ =?UTF-8?Q?Johannes_Pen=C3=9Fel?= <johannes.penssel@gmail.com>
+References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
+ <ZT25-gUmLl8MPk93@debian.me>
+ <dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+ <ZUjnzB2RL2iLzIQG@debian.me> <87sf50pm34.wl-tiwai@suse.de>
+ <b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+ <87edgjo2kr.wl-tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <87edgjo2kr.wl-tiwai@suse.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 21, 2023 at 10:16:57AM +0100, Francesco Dolcini wrote:
-> On Tue, Nov 21, 2023 at 10:06:51AM +0100, Thorsten Leemhuis wrote:
-> > spi: Increase imx51 ecspi burst length based on transfer length
-> > 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
-> > 
-> > spi: imx: Take in account bits per word instead of assuming 8-bits
-> > 5f66db08cbd3ca471c66bacb0282902c79db9274
+Hi,
+
+On 11/21/23 10:52, Takashi Iwai wrote:
+> On Tue, 21 Nov 2023 10:19:03 +0100,
+> Thorsten Leemhuis wrote:
+>>
+>> Takashi, Jean-Jacques Hiblot, Lee,
+>>
+>> On 20.11.23 14:53, Takashi Iwai wrote:
+>>> On Mon, 06 Nov 2023 14:19:08 +0100,
+>>> Bagas Sanjaya wrote:
+>>>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
+>>>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
+>>>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
+>>>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
+>>>>>>
+>>>>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
+>>>>>> since you authored the culprit?
+>>>
+>>>>> The offending commit stores the color in struct led_classdev and exposes it
+>>>>> via sysfs. It was part of a series that create a RGB leds from multiple
+>>>>> single-color LEDs. for this series, we need the color information but we
+>>>>> don't really need to expose it it via sysfs. In order to fix the issue, we
+>>>>> can remove the 'color' attribute from the sysfs.
+>>>>
+>>>> OK, see you in the patch!
+>>>
+>>> Is there a patch available?
+>>
+>> Not that I know of. Could not find anything on lore either.
+>>
+>>> This bug hits for a few Logitech keyboard models, too, and it makes
+>>> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
+>>> this bug:
+>>>   https://bugzilla.kernel.org/show_bug.cgi?id=218155
+>>>
+>>> We need a quick fix for 6.6.x.
+>>
+>> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
+>> committed it and sent it to Linus) know about this for a while already
+>> without doing anything about it, I wonder if someone should just send a
+>> revert to Linus (unless of course that is likely to introduce a
+>> regression on its own).
+>>
+>> Takashi, could you maybe do this, unless a fix shows up real soon?
 > 
-> Do we know which one of those two commits introduces this regression?
+> I can, but we need to decide which way to go.
+> There are several options:
+> 
+> 1. Revert the commit c7d80059b086;
+>    this drops led class color sysfs entries.  Also the store of
+>    led_cdev->color from fwnode is dropped, too.
+> 
+> 2. Drop only led class color sysfs entries;
+>    a partial revert of c7d80059b086 above
 
-Whoops again. The second one is a fix for the first one, so my question
-does not make any sense, forget about this, sorry.
+AFAIK further up in the thread (or a related thread) there
+already was consensus to do this. Someone just needs to
+write the patch.
 
-Francesco
+> 3. Rename conflicting sysfs entries in drivers;
+>    e.g. color -> kb_color for hid-lg-g15 and system76_acpi
+> 
+> In either way, we'd break user-space (sysfs).
+
+The new color attribute causing the conflict has only
+been in 6.6 so there likely aren't any users of it yet
+and since dropping it would be backported to 6.6.y
+there shouldn't be any future users of it either, since
+any 6.6 users presumably will use 6.6.y and not 6.6.0
+
+> IMO, 2 would be the least harm, as the class sysfs entry was
+> introduced since 6.6.
+
+Ack.
+
+> I guess this is what Jean-Jacques suggested.
+
+Right.
+
+> But I'm not sure how important this new class sysfs entry is; it has
+> to be clarified from leds people who actually use / wanted the
+> feature.
+
+If I have read the thread correctly it is not important the value
+it represents is used internally in the LED subsystem and userspace
+does not really need it.
+
+Regards,
+
+Hans
+
+
 
