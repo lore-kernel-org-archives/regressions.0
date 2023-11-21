@@ -1,208 +1,191 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25E516410
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 11:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB2DF4EC
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 11:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="msEjNvKU";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nQnF2txD"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALB9omS032151;
-	Tue, 21 Nov 2023 11:31:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=wBEXCSIf+PTXF3Jmbs0xUj4Xtu0nvei3kKdqszcmHrE=;
- b=msEjNvKU3teikpgYYd7JEr7xVVDAbTWNfmpHkJz/jgIWu+kQhB52ecbva+YcdOJG8NJI
- 3/OH3hCngcfnpooKtOepHYLYki9zyNxZQCYD8PNfgM34sbiPtjsElcvf1sDv+5k4f7S8
- cALjEHSk8ZSZljW56iz+5J3udbiRTnojD2thiGRj79rX6Omg4tVKxFvsd3lqV9tdy794
- 0l28tq9rruzrFljFDeBvVMHVEzYKngCLnXOJLfBKkaHDH4lRBF6DjSS4PPEyKG9uLaD9
- s6DRM+9qvVlroEufOdnIxMw6f/nNGAOd33dwzhaQ613VQvmtMEDCoJu9+s99VRJZ2B12 Pw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3uentvcu7j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Nov 2023 11:30:59 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3ALBD1pE031239;
-	Tue, 21 Nov 2023 11:30:58 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2041.outbound.protection.outlook.com [104.47.74.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uekq6ws4d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Nov 2023 11:30:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X+8G5CJLAHt4h3tjt/eo01/zm9cMb798FjifsI5q4kGvAi/NRofuCHVJTdvx7DGxLqRMLjOg+YON3NbShcgBhvIPz3lXm7YogR1lVcBVAGlfud5chGq+bHSHVwMTtHfy4xpxKNhOCYspWXlGSwsIleM1PrEWTTTRRBZzW7S7ePMMbWdxvoxYpZLKEpFN+fKvL+MOikDG/mz1JIaUENiAnMd82SZJ7SvDX05y+loHDU+Hi/FKCS6jFDSAnstAyAUQR4LIN7KDPeE//SM3t6eBvBESNUNq0UunBB4mKLAF9dBKPaj1V1cCwcwW11oVsc4IUKgdCoZs3YF2IKpDeBUI8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wBEXCSIf+PTXF3Jmbs0xUj4Xtu0nvei3kKdqszcmHrE=;
- b=KT3dTwYF9a0jtzakPaY9kqjSXnFkFM1i62Tc3Cz8kbcJRbtTeKfx68pruInkOtckkEbChX9NSUnNfJPSDFzDY4FA9O0hNduFt+XsLIHMSS8MDMX0++4/c1O1WjWLdP6THYikVBoaNHpc1iTpVn/+3GenKD7cf0a4qvGWOxKPLbQeXuT3pUQrhME4k5Y97c9CHg27psOtZvV48/VL4kI8B29h/jypBXaZamhEgOnaf6/AeNKCXyJ1VWZn5s9pHcz8rk9164P7nPLyVeegj4/cyA6WxxNEXe4A+Y2lsC1/NXP2odfL2oQoRaBaR7B/FVlFOv8t9e+z9y2snDn9Ak2NyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8Dir+N7"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-359c22c44d6so21277705ab.2
+        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 03:45:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wBEXCSIf+PTXF3Jmbs0xUj4Xtu0nvei3kKdqszcmHrE=;
- b=nQnF2txDZPyVm5Qq5kF6U+pap70075p50zTcVXpk8vOXKjjSx9Zh8wEYLEt4k6F4lTKfZMWJl86MRo3nXbDQs2bsUBkd4t38i8yT8uxJpU44AgF4miuz8WXcpo8bZqxydBCbVSXV8zhrxBveoqy1SviHX8jA/Noy690T0aHSBeQ=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by PH7PR10MB7033.namprd10.prod.outlook.com (2603:10b6:510:276::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26; Tue, 21 Nov
- 2023 11:30:56 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::102a:f31:30c6:3187]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::102a:f31:30c6:3187%4]) with mapi id 15.20.7002.028; Tue, 21 Nov 2023
- 11:30:55 +0000
-Message-ID: <47e8fd80-3f87-4b87-a875-035e69961392@oracle.com>
-Date: Tue, 21 Nov 2023 11:30:51 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: scsi regression that after months is still not addressed and now
- bothering 6.1.y users, too
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sagar Biradar <sagar.biradar@microchip.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux kernel regressions list <regressions@lists.linux.dev>,
-        Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Gilbert Wu <gilbert.wu@microchip.com>
-References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR04CA0021.eurprd04.prod.outlook.com
- (2603:10a6:208:122::34) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=gmail.com; s=20230601; t=1700567128; x=1701171928; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5TsncJnkHHhH5aFZnD34nAuzJ0Am/ijvmcDHG7xzyko=;
+        b=h8Dir+N74Zdkmj//iYkVyTR7Xzpq5eurLs2wB7CpUNKeJmcNoq8QxcZ3pYqW9DSw1e
+         F6fcPELUg8drNTtnHfg76IAT62m+K+pCgZ6EZorOxqlomv2Vb2cD+JDIpas2e9hzrzHZ
+         CLMYZiek+V8cXAuCerAyW5xeugkLY6lLlPRvV4leLvxaF1GCsl4SOqsnzEdCtYrL5NbY
+         dj5/FT3sp9ZKGyW6NyhdX4OI+O5G3bseV5Hmhgfrg8enNs/3kL0z7tk4FLFMOnIl/lns
+         VSQMFUp6jJKVIn7m6uSKR4R/LowvzJRO4BSKSF2Nnu6JEEmU9URLHLSa4bg3VPwUQ6a0
+         6gMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700567128; x=1701171928;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5TsncJnkHHhH5aFZnD34nAuzJ0Am/ijvmcDHG7xzyko=;
+        b=kq6xh+VEcnCHrCQUxAKG2WSFMbEeqkZTcnpZVxGfH55/pARZ6BiZEVdZFv2/U4fNhv
+         NSUK0i4uYf19o3bnsVV+IVsnC4818jniT3SsWxmegCvC466dczY3f4ujrs9/u5vttdHn
+         l7p0bmigAe4zmvWxQtSyWo1ttYjDEADaEimCQM0VBLJgUrFlDKsZYySZ1RVZ2akh7CMM
+         Is5VemA0dpAdmbVMEiS2ZlSuasO+GVDH/+tpjEcsDNipyViYnYO+KGoQd+1dnCuQEkpf
+         akuj82p0wC9dXnuHYxKljVTqW73OZGQcoOVmSyTSCKSBOvX3bA8fptYjTn9ExbCRe2cH
+         tpOw==
+X-Gm-Message-State: AOJu0YxD8lJwVKQSgyLxZD40KPUCkE/UqfpyEbP8TVYj7nEGDWoi3kSF
+	roCy05gjOIBxu8RZmjfzVJ0=
+X-Google-Smtp-Source: AGHT+IHh6WF5sUIVPSxYQng6yUeCz/frSIZ9ZH+napgzf9fV7M9fughcq0JwTN6BGi9YZaXbzZco0g==
+X-Received: by 2002:a05:6e02:13ee:b0:35b:2f7:514f with SMTP id w14-20020a056e0213ee00b0035b02f7514fmr5981800ilj.32.1700567128408;
+        Tue, 21 Nov 2023 03:45:28 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id h7-20020a056a00170700b006cb574445efsm5722770pfc.88.2023.11.21.03.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 03:45:27 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0CE3F102106CB; Tue, 21 Nov 2023 18:45:20 +0700 (WIB)
+Date: Tue, 21 Nov 2023 18:45:20 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Takashi Iwai <tiwai@suse.de>, Hans de Goede <hdegoede@redhat.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Jean-Jacques Hiblot <jjhiblot@traphandler.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux LEDs <linux-leds@vger.kernel.org>,
+	Tim Crawford <tcrawford@system76.com>,
+	Jeremy Soller <jeremy@system76.com>,
+	System76 Product Development <productdev@system76.com>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Johannes =?utf-8?Q?Pen=C3=9Fel?= <johannes.penssel@gmail.com>
+Subject: Re: Fwd: sysfs: cannot create duplicate filename
+ .../system76_acpi::kbd_backlight/color
+Message-ID: <ZVyYUPei6_YP-g94@archie.me>
+References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
+ <ZT25-gUmLl8MPk93@debian.me>
+ <dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
+ <ZUjnzB2RL2iLzIQG@debian.me>
+ <87sf50pm34.wl-tiwai@suse.de>
+ <b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
+ <87edgjo2kr.wl-tiwai@suse.de>
+ <ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
+ <874jhfo0oc.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB7033:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62587270-bca2-434e-fde4-08dbea855395
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	DWdZbMc/L0rtDw5eivREpABl5YQVi3LBYN/zmrk/gdEk7YFGjAPb0mdpgXVyZn/Xi9R4USe9pwQQztsrnpwcNQRz65ACHfxoKLe8KQlPd4zxHCgHmuFJ5B1NmpBNcbZhIIpN8NPFHzQDQmTjRVYv/A6GTtwCPiiH6FDQ6XKxhHRc4T0ZhPPgl0dUFzOB17b+SRPRhDOCvCr/mbnQ4wE1TrVoUPPMnnbzQYFhkj1MvmqGiW/j5wPxxyLpr34DjhrhyepvvEmYXjvuC7bsct6NLt8KLZGUbNOGOsDrvr5wPGWmLVmRTFQpaGcyyg1Tj84pE7TKSeY0ZE2GvkdAbOoQRGi59aSyb+RC8JYLudc+yiPsgz1/O5fffJX35eGHijDzyjafhwFcVzAfKdDkaXJFSo4f1bs+vAt+9TtKTd2mz4QQOyjYYimyWDQv/gA7qVCQKbQlI5EeebtLem5hIVcOr87p23awDIjwZyqcojaCs5Q6oQz1vnzlCFbm1ooxK/So7LAcJKDTbWPagMTmyewo7TFPgaoqkmHZE7CDKVbKncM0BMW3uO9UjmWE4qT0VQkTli1jTSyUTfhkD8GbsmwEwS9VZBde7qF3XMX0yUKxAFdpfDUGbTc/gQRiACB/M0PmdT/wYFZj0g9tnkSMhGPHosEo1KZO5BhBQaYfPAY0Ctg=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(366004)(136003)(376002)(230273577357003)(230173577357003)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(6486002)(966005)(478600001)(26005)(53546011)(2616005)(31686004)(6512007)(6506007)(36916002)(83380400001)(6666004)(38100700002)(54906003)(66556008)(66946007)(66476007)(316002)(110136005)(5660300002)(86362001)(31696002)(4744005)(2906002)(7416002)(41300700001)(8676002)(8936002)(4326008)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?N0t3ald4ZTNMQjNCSjYzd2xINFoxTm11MGJWdi9OWVRZU3d0ZGJYZVdTcGVn?=
- =?utf-8?B?Q3gzYzZJdm9qcURzT0IwUHIxQmpVZEx5MzJERU5oMGhaWTV0L2xCUmIxK2lR?=
- =?utf-8?B?dUFlV3JsMXo2R2d3Q3Mya2lGYkdpbDhCMjhMTGQwczBwN1M1Zk1qZWtXUUpP?=
- =?utf-8?B?MzFMU2FGUkFINzRvN3EzZHhCZzlwaTgwYTdwRDlVZ0Vxb0ZRS1lDczdrcWNM?=
- =?utf-8?B?TmxmbVVRSG9iSzFQQUcvWFRhNkdvbVJVZ3FjL0hLNHRkakpaVUoxeFpleGJI?=
- =?utf-8?B?d1JGaHhKUmJ6aS8rNzE3Q0Nhc1JvT2hKVlp4QTNLL1lCNEhoM0NUUHlIQjNT?=
- =?utf-8?B?cThSOVpKcmtuWnhqQU5oOGd6K1YwQ3c3cjAyLzBsSXBpTkZDTEpPb2NLMWVE?=
- =?utf-8?B?OFdRMVIyU1UzVWR6VUhiV284c1hKZE5EYkVYWTVDaDJHNGpLT1Y0THJQeldI?=
- =?utf-8?B?RkVkZVEyeGpxQzhDcmpaOFRmSHhLNjFORzRnS3hsbGhMOHZ0czZCU1ZpTjN0?=
- =?utf-8?B?Qi9NM29rT2NhNGtlVU1mQ3NVd3JxZGJGa0wrekZXNytMMXlab2U3VmpBMmJW?=
- =?utf-8?B?VUxBZFN3MFZSRXhSOXZpZGVvUUx5NzFOa2VLQ3FXS0dIN1dqYW5BeWlBNStz?=
- =?utf-8?B?THd1ZHhyRDhwMWFGWGJaeWlwUnd1WDJ3TzBmYXd1dk5xdyt0OGdFWnllZi9x?=
- =?utf-8?B?Q1h1NUVyT1dBdmF1MnliUGpNMlpJTThyU1R2bjQ5VnJtRGZwRGxscm1uSFBm?=
- =?utf-8?B?MnR2N09BK29iS1ZiMCtpOWN2aHpISFo2aDlPSlJWR1NOSzhLbWJQL3hwY3JC?=
- =?utf-8?B?U3kwbUFTU2g1a2I0a0hxeWcyQm1SS1Rqa2M0eGpQTmtYaUlxamtFcXBnNGVK?=
- =?utf-8?B?ejRlWDdSRjBvU0tpYnNybVJoaysyTzNEMkdjanUxSGFISjNIdDNHNFV4V1B0?=
- =?utf-8?B?SVNTZjdyYjlReWpRcDRNYnlrWmtkdkc4Tkpaei9QSmQwbzh2RTg5ZTJvdlR6?=
- =?utf-8?B?eGtSWkdtdFY5VG9vV2xhdllRYUpXTXhwS081TFBCemVuVUdVdDUySTY0OFlj?=
- =?utf-8?B?SWxsaDdTVC8zakppNVQyMFNDcFlQUktzcGEvUGRNYVpBeVEvZ01sRkIvV0g4?=
- =?utf-8?B?M0ZndXhZUC8xT2ZpVVcyNWFWSkZZY05iRGF3WDFmZ1Rsa3RsZ3pvY0V0ZUtp?=
- =?utf-8?B?OVYzQ2UrRUNnZittckh3Ui9pNWR1TzlWRDYwMWpySXp1NHFqQ0h5OEZsZjZo?=
- =?utf-8?B?TE5OYVd1aDNCVFQzVU15SVhpcm9jRnZCb3dUTDE3WmhLK2Fxc1g1Rzdmekwv?=
- =?utf-8?B?ZmZycTdqeEtZQmgwNE1FWGFEV0pQeC8wT25jSk1EbzAya0FJVzFuRWozeXNN?=
- =?utf-8?B?eUlEU2lOR0RXdDMxZzlCdWV6MmhPSVNhaktTNlNZZGtOakNUL3JLdE5vMUxh?=
- =?utf-8?B?clZkKzFuWlV3alk4VDBwYjI2ZTJYV2FVYXlBdjY2bHNTdTNadXVKM01iMEwr?=
- =?utf-8?B?RHlTREhpREduYUQ5bW42Tm1Qa0w1SWd3Q1R0dzVPNHNSVnNycmtBNnJnMVVJ?=
- =?utf-8?B?T3puU3FKZzRiNW9Md3ZYdkk1THZYUy9BcDk1YzU0K3J5eUc0KzV0d1hLK0FM?=
- =?utf-8?B?c2xSdHd1OVQ3K2toaGxYU09Kdm5NOFh5S1RUSFF3MWZGV056MXl4UkV4cWFk?=
- =?utf-8?B?eHkyejZUaTRYQ0ViQkxiOHQ3ZG0weFh4MGxndURIVEkrV3QxSHZITjdtRFcx?=
- =?utf-8?B?U3VLb1BXdllLc3Y0Tm5LQ1lyR21yWVJzMXM5R3JzSnRwemd0SVdaY3ZXOGk2?=
- =?utf-8?B?NFVoakVmM0FTaUVIWGNwLzVjdDFGUWJxaEZEY3pESGZ6VXZFcVVmVnFYdVMw?=
- =?utf-8?B?VDlwbTkyekU5MnUxcGllQkpETjZkMHUyWmVSV0h4ZzF3dXJsWmJqYjBZcE9i?=
- =?utf-8?B?eWRBbFEzR1VQV0dlMEs1SXVWMmJNOVZuS1VCMXVpUzFKZnI4Q05hM0RYdVhv?=
- =?utf-8?B?YXhVQ2crU1RiOG5kejU1STlGemV6d0kxcjRjY3puaGF0aEVBMXpTSmFXcnBZ?=
- =?utf-8?B?Z2hYbDVrVzJrOERsSE5EVm9nQkFnUHY5S0hRNHJNVlRuWjVLRzk3WUlVYkJx?=
- =?utf-8?Q?qG4wTA7wnqxsmOiPiuV3sFc3F?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?utf-8?B?YmNna1h3STZHZEhtWXhiSEUwTlZEaG52OEoxZnRkMEIzeWJWU1Y5bEpPWkY5?=
- =?utf-8?B?T1FtZDJJeStxNVhrWnFPaGFCNkdLSUFXeGRLb25PekdLYldnUWwvdDlSdTRh?=
- =?utf-8?B?SmRodWlWbGY5MG5YUDNoQ3pQczJEYjVHRlVFOFZaVVBhSnNZQ0pxcjgwc3Ns?=
- =?utf-8?B?UHhyWG1kYXg3QXVQMForTmFPci9SdHo2WmZqeGRaLzZCd3IxRWhjUXpDVzBh?=
- =?utf-8?B?bEl1RnZ2RkFJWExBU2lUNWgzWlVpdEkyc0p1QW1jNlhTU0JKWjJSRXRUdUxD?=
- =?utf-8?B?TmF3WjdKR1NvcUJqM1RGTTUwTUJ1Q3U2SmVlQlZMUS9qSnpLQmRVZGlOTzlL?=
- =?utf-8?B?NGNERjZxNVdsS0MyaHA4MVlIRmpIeUV0RGxDdzhMNWVTOGQ4LzBzbnQ2YVA1?=
- =?utf-8?B?Nmh5c0g0T2ZDa3h1NFdDczZFK1N1cEd4L2dERWd5Z3BFU2lXdUdFMzc4ZU5z?=
- =?utf-8?B?NCtZd3BBTllIVkZDSHBCMHlKODA1Lzk1OEM0QUpHcDVWUzkrcjZXOERCd3lS?=
- =?utf-8?B?T29PZy9VR1RRQy9ScUVqOE8zdDVNZWRVcU9GWFBiRTNqRzI5S3l1d2FObnRh?=
- =?utf-8?B?UnIzNFVmbW8zdUZtZ0JUUC9WUGVTTGtSUEFWRkpYRDhlV01zZkxnbEovVyt1?=
- =?utf-8?B?ZTdrejNCb3RROCtUNTNUbEdZWGZKZFdHUGp2bWN3Vk1icEVsSEJmT2h5U0ti?=
- =?utf-8?B?VmZHSnNVc3ZpY1RmbGdZVEdHWDVNVDFXZERFZVlJdVkyOG8vVDFqNDJTT1RV?=
- =?utf-8?B?QjdKWGNaWjRkN1JuaUczMXRtZERUaE56Q29ScnJmV3hrZHdtcXJ0SWxkbVJo?=
- =?utf-8?B?cDRXakdMV2RTVDFDZ1lRQ0hKcUM3ZFZZQjd3ZEZZT3NUL1RWZUtFeGtDdTJx?=
- =?utf-8?B?M0FhUmZKNitnVlJHMk9lS0VRNklSRlQyc3lpMkhsbnY0U21pWFFCVjE1dWVz?=
- =?utf-8?B?Und5a1dONmZnOHBnZk5jWER4Zk1CTDFMNmE4cUp1bDdFMWEveGdtRlppR2cz?=
- =?utf-8?B?Z0o5UjFaV094Ylpmblh1Y01BcGpmTUlMcURFYkZFL3hPSll4ZlZ6UENXcGpz?=
- =?utf-8?B?bUFEZ24yT2FXSVFCeHhFM1c1bkNvaDdGMWtOT0hmWTBQZmthcDZCYjZTWkZQ?=
- =?utf-8?B?T2pFeXJsWU5HcUxQUlpaMlhlUGFibG1LS2g5QzdrOS9KRDNQa0xQNE4wdG9T?=
- =?utf-8?B?bFhTSUhlWWN3NFdFQjRuS2xUZjN0N3J1aDZVd3BYM25XaHZ6QWNCVlIwMFV3?=
- =?utf-8?B?UXRrclhPUWQ1eTVZMmgrU2hvSHVQTU9FSG93RmN2Vm9LVzlBQUpOck5peHZw?=
- =?utf-8?B?QjJyY1FjV3pobzE3UlVIbVFqbm15V28vcHNjVGRUcHAzdzQySWhSa2dDRnhh?=
- =?utf-8?B?Um5nbUJaNUkrVDdnOFZpMndEM0I3NXUvUWxGZmMzWkx6ZGJLcmNKcUxLRUpi?=
- =?utf-8?B?TGlvNTJTbnQrVzkyVjVWZGRseUt6MzdVSnJXSVZ3PT0=?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62587270-bca2-434e-fde4-08dbea855395
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2023 11:30:55.9225
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a8PQWIG3LngGK8QgXxPojhTrSaXd2sA2Rmv+dSXj8Emz4A03QDHdeWt4XVA0A0f5JAUpKTVFMblxNqrTSDkjQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7033
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-21_04,2023-11-21_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311210089
-X-Proofpoint-ORIG-GUID: lK0W2RvZ41XI8Xe4herB55PVeey7uJFB
-X-Proofpoint-GUID: lK0W2RvZ41XI8Xe4herB55PVeey7uJFB
-
-On 21/11/2023 09:50, Thorsten Leemhuis wrote:
-> Quite a few machines with Adaptec controllers seems to hang for a few
-> tens of seconds to a few minutes before things start to work normally
-> again for a while:
-> https://urldefense.com/v3/__https://bugzilla.kernel.org/show_bug.cgi?id=217599__;!!ACWV5N9M2RV99hQ!L26RD0hu99l3f709EFnXU_V7OaB1jG4Hi7BjKvxRuhDWKFmjrgfksLuXA6eBrBCRtOT8JcRRUvzRsHbyEm41r7tL_pbDfw$  
-> 
-> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
-> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
-> commit despite a warning of mine to Sasha recently made it into 6.1.53
-> -- and that way apparently recently reached more users recently, as
-> quite a few joined that ticket.
-
-Is there a full kernel log for this hanging system?
-
-I can only see snippets in the ticket.
-
-And what does /sys/class/scsi_host/host*/nr_hw_queues show?
-
-Thanks,
-John
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="avoRCUQPSyjgJdcP"
+Content-Disposition: inline
+In-Reply-To: <874jhfo0oc.wl-tiwai@suse.de>
 
 
+--avoRCUQPSyjgJdcP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 21, 2023 at 11:33:55AM +0100, Takashi Iwai wrote:
+> On Tue, 21 Nov 2023 11:21:53 +0100,
+> Hans de Goede wrote:
+> >=20
+> > Hi,
+> >=20
+> > On 11/21/23 10:52, Takashi Iwai wrote:
+> > > On Tue, 21 Nov 2023 10:19:03 +0100,
+> > > Thorsten Leemhuis wrote:
+> > >>
+> > >> Takashi, Jean-Jacques Hiblot, Lee,
+> > >>
+> > >> On 20.11.23 14:53, Takashi Iwai wrote:
+> > >>> On Mon, 06 Nov 2023 14:19:08 +0100,
+> > >>> Bagas Sanjaya wrote:
+> > >>>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrot=
+e:
+> > >>>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
+> > >>>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
+> > >>>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5=
+d75f8eea, which introduces a new 'color' attribute for led sysfs class devi=
+ces. The problem is that the system76-acpi platform driver tries to create =
+the exact same sysfs attribute itself for the system76_acpi::kbd_backlight =
+device, leading to the conflict. For testing purposes, I've just rebuilt th=
+e kernel with the system76-apci color attribute renamed to kb_color, and th=
+at fixes the issue.
+> > >>>>>>
+> > >>>>>> Jean-Jacques Hiblot, would you like to take a look on this regre=
+ssion,
+> > >>>>>> since you authored the culprit?
+> > >>>
+> > >>>>> The offending commit stores the color in struct led_classdev and =
+exposes it
+> > >>>>> via sysfs. It was part of a series that create a RGB leds from mu=
+ltiple
+> > >>>>> single-color LEDs. for this series, we need the color information=
+ but we
+> > >>>>> don't really need to expose it it via sysfs. In order to fix the =
+issue, we
+> > >>>>> can remove the 'color' attribute from the sysfs.
+> > >>>>
+> > >>>> OK, see you in the patch!
+> > >>>
+> > >>> Is there a patch available?
+> > >>
+> > >> Not that I know of. Could not find anything on lore either.
+> > >>
+> > >>> This bug hits for a few Logitech keyboard models, too, and it makes
+> > >>> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
+> > >>> this bug:
+> > >>>   https://bugzilla.kernel.org/show_bug.cgi?id=3D218155
+> > >>>
+> > >>> We need a quick fix for 6.6.x.
+> > >>
+> > >> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (=
+who
+> > >> committed it and sent it to Linus) know about this for a while alrea=
+dy
+> > >> without doing anything about it, I wonder if someone should just sen=
+d a
+> > >> revert to Linus (unless of course that is likely to introduce a
+> > >> regression on its own).
+> > >>
+> > >> Takashi, could you maybe do this, unless a fix shows up real soon?
+> > >=20
+> > > I can, but we need to decide which way to go.
+> > > There are several options:
+> > >=20
+> > > 1. Revert the commit c7d80059b086;
+> > >    this drops led class color sysfs entries.  Also the store of
+> > >    led_cdev->color from fwnode is dropped, too.
+> > >=20
+> > > 2. Drop only led class color sysfs entries;
+> > >    a partial revert of c7d80059b086 above
+> >=20
+> > AFAIK further up in the thread (or a related thread) there
+> > already was consensus to do this. Someone just needs to
+> > write the patch.
+>=20
+> Well, is there any user of this new led_classdev.color field?
+> The value read from fwnode is stored there, but as far as I see, there
+> seems no real user, so far.  If it's still unused, we can do the whole
+> revert -- which is cleaner.
+
+ACK for the revert. The original commit should have been designed to
+not have sysfs conflict like this, though.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--avoRCUQPSyjgJdcP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVyYUAAKCRD2uYlJVVFO
+o5mNAP4u3Wc1/hr5E+vWPaq6O28ZmZ+BHGpDfTiZ4BWEye6Q4AD9G0LmUN2jwGtd
+k30vUK6fk2DQWsvCfuimjR905DD7GQo=
+=sj55
+-----END PGP SIGNATURE-----
+
+--avoRCUQPSyjgJdcP--
