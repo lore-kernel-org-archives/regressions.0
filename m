@@ -1,193 +1,131 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B25754FAF
-	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 14:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680C056750
+	for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 15:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ow3glYIt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D1An8Eju"
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0D1AF1F8BF;
-	Tue, 21 Nov 2023 14:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1700576782; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rEuossM4JQY9JZ11rmGjFmuYHEzbTy8cDDjv1mfs8ps=;
-	b=Ow3glYItRxjzgdERrVcWs2t1URa3x43jhS++pNSWgBQj8Qki8lxkgIRw1tg43fqiz0hFCM
-	WMDmBBqE9WoqMddg0GOcY92geB10jOzP32k9+NW2qgvT3cY0T4qT6IjJEEyVLPhY7bGQQa
-	WtWGAPDisyzCpfNpPj0ChJHE7uEruMc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1700576782;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rEuossM4JQY9JZ11rmGjFmuYHEzbTy8cDDjv1mfs8ps=;
-	b=D1An8EjuY83yk7KfZIv+/C3MztaF9sHChe2a+wLweUqwV5R2lcYDWQ7mlL4vpzlvy2z/mO
-	LwsvEZv0i1szmNBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BABCC138E3;
-	Tue, 21 Nov 2023 14:26:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id 9J+4LA2+XGUXUgAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 21 Nov 2023 14:26:21 +0000
-Date: Tue, 21 Nov 2023 15:26:21 +0100
-Message-ID: <87fs0zmbci.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Thorsten Leemhuis
- <regressions@leemhuis.info>,	Jean-Jacques Hiblot
- <jjhiblot@traphandler.com>,	Bagas Sanjaya <bagasdotme@gmail.com>,	Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>,	Linux Regressions
- <regressions@lists.linux.dev>,	Linux LEDs <linux-leds@vger.kernel.org>,	Tim
- Crawford <tcrawford@system76.com>,	Jeremy Soller <jeremy@system76.com>,
-	System76 Product Development <productdev@system76.com>,	Lee Jones
- <lee@kernel.org>,	Pavel Machek <pavel@ucw.cz>,	Johannes =?ISO-8859-1?Q?Pe?=
- =?ISO-8859-1?Q?n=DFel?= <johannes.penssel@gmail.com>
-Subject: Re: Fwd: sysfs: cannot create duplicate filename .../system76_acpi::kbd_backlight/color
-In-Reply-To: <37f6aa8e-8cab-4194-8493-8e39819ed608@redhat.com>
-References: <b5646db3-acff-45aa-baef-df3f660486fb@gmail.com>
-	<ZT25-gUmLl8MPk93@debian.me>
-	<dc6264c4-d551-4913-a51b-72c22217f15a@traphandler.com>
-	<ZUjnzB2RL2iLzIQG@debian.me>
-	<87sf50pm34.wl-tiwai@suse.de>
-	<b9d4ab02-fe49-48ab-bf74-0c7a578e891a@leemhuis.info>
-	<87edgjo2kr.wl-tiwai@suse.de>
-	<ae77198c-ae7b-4988-8b5b-824260b28e84@redhat.com>
-	<874jhfo0oc.wl-tiwai@suse.de>
-	<37f6aa8e-8cab-4194-8493-8e39819ed608@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hgdqeObS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cLNVVaek"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 2B7105815D2;
+	Tue, 21 Nov 2023 10:05:39 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 21 Nov 2023 10:05:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1700579139; x=1700586339; bh=kU
+	zhY3aPA9uxQWEn4jiRHeQXcTUR9GIV1qaAWo562aw=; b=hgdqeObSLjCXCERey/
+	lhYeOe+4VGySwlXIiettstQFnTjTEjxu6tdt2flSUKkVEZ/8KvkKO/UGRnWa3PP9
+	6hcyusHXrWr9RwM6CbMTnoMWXbGBZPyanj//33swIsn4CvR7Ynv0VN26+SCBKymR
+	n2GgEKaZUo/JZT5OTIAIoZuWnZPoqE3VclbBkG+fLaojVD5U8AKQkIZoIj8i6spE
+	4UCFNSKM6xRWR7JqmjuwH+W5yyCi90AkORZ4gIa5kHP4qczmObtLaoZN/oMu7Dj4
+	ZwrGaLn6035M00bWIJwrQFHrUApywkRY2m15Ak0anscVepuEi/IBuM2/otX8JOW1
+	bZsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1700579139; x=1700586339; bh=kUzhY3aPA9uxQ
+	WEn4jiRHeQXcTUR9GIV1qaAWo562aw=; b=cLNVVaekcEje0hKqj5BSAf0WltS6+
+	6At0E9xuZHlFuISR3cBCWfhb2BVFXksnV4sp4Jj5gOnv9Rjda9s2lGbdAA/1q8Z3
+	OLswZANcMl16M2EGu0JhLRG16ZIPCfPQBE0mBEKoYHF5bWXNwmadY/JXGQqzcMEZ
+	Hzpv6hz+vbUC6QF7KO9ZnXWArgr2mcroyD2vSz8wY/91uJOVPQ7vvsGvnnMCCwPU
+	UVd3eJPUnj0/UPQAVVZkp+KjyB5uEKYr38FjAHhMd3Tzs0x7/escjTuL4W5RRBqc
+	UtjzbjSxH5BTHJ1ee907FxmTQWARZ4BkBt8AbbOEty3U7TUzUI0w1lIng==
+X-ME-Sender: <xms:QcdcZaY19pQeUxvRaxOF_JYNyRwwxYro6C2QYa127G0LFDiYlK9pcg>
+    <xme:QcdcZdYXBlJId5GsbX5WdwfrxNBqVPIOGPvZ_EcafznBzIOyJ9qRvIsdVWJR6SXVl
+    Wm1jSkJEGyS6UzXXkY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudegledgieehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:QcdcZU_Cquqtktz26f1F6Pj-3yE5wzdiL7UfD3vCv9cObuzs-mrdrQ>
+    <xmx:QcdcZcoh_zzCzJz8ZWSX1eAekoj-QQmEFCy32ntsgIKWn50E4Jursw>
+    <xmx:QcdcZVqjeL8az68VSD4BZgSiiW2pP0-KF4N-_AbeI7f61Cc7EGt_LQ>
+    <xmx:Q8dcZWTJsZcFozmSH9puz359823LiOBk5E5Tlm15Z4k7b_z5Y-ULNg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 5A704B60089; Tue, 21 Nov 2023 10:05:37 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -5.80
-X-Spamd-Result: default: False [-5.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 TO_DN_ALL(0.00)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[suse.de,leemhuis.info,traphandler.com,gmail.com,vger.kernel.org,lists.linux.dev,system76.com,kernel.org,ucw.cz];
-	 RCVD_COUNT_TWO(0.00)[2];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Message-Id: <b78e0487-d9e7-4584-8d6b-7de119ee7769@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYvcaozQvas-h55FPjXk+uomF2CyeYbWGCsXM8yGo4SZgA@mail.gmail.com>
+References: 
+ <CA+G9fYvcaozQvas-h55FPjXk+uomF2CyeYbWGCsXM8yGo4SZgA@mail.gmail.com>
+Date: Tue, 21 Nov 2023 16:05:17 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ linux-fsdevel@vger.kernel.org, "open list" <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
+ "Linux-sh list" <linux-sh@vger.kernel.org>
+Cc: "Miklos Szeredi" <mszeredi@redhat.com>, "Ian Kent" <raven@themaw.net>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Rich Felker" <dalias@libc.org>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>
+Subject: Re: SuperH: fs/namespace.c: In function '__se_sys_listmount':
+ syscalls.h:258:9: internal compiler error: in change_address_1, at
+ emit-rtl.c:2275
+Content-Type: text/plain
 
-On Tue, 21 Nov 2023 13:23:20 +0100,
-Hans de Goede wrote:
-> 
-> Hi,
-> 
-> On 11/21/23 11:33, Takashi Iwai wrote:
-> > On Tue, 21 Nov 2023 11:21:53 +0100,
-> > Hans de Goede wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 11/21/23 10:52, Takashi Iwai wrote:
-> >>> On Tue, 21 Nov 2023 10:19:03 +0100,
-> >>> Thorsten Leemhuis wrote:
-> >>>>
-> >>>> Takashi, Jean-Jacques Hiblot, Lee,
-> >>>>
-> >>>> On 20.11.23 14:53, Takashi Iwai wrote:
-> >>>>> On Mon, 06 Nov 2023 14:19:08 +0100,
-> >>>>> Bagas Sanjaya wrote:
-> >>>>>> On Sat, Nov 04, 2023 at 01:01:56PM +0100, Jean-Jacques Hiblot wrote:
-> >>>>>>> On 29/10/2023 02:48, Bagas Sanjaya wrote:
-> >>>>>>>> On Thu, Oct 26, 2023 at 02:55:06PM +0700, Bagas Sanjaya wrote:
-> >>>>>>>>> The culprit seems to be commit c7d80059b086c4986cd994a1973ec7a5d75f8eea, which introduces a new 'color' attribute for led sysfs class devices. The problem is that the system76-acpi platform driver tries to create the exact same sysfs attribute itself for the system76_acpi::kbd_backlight device, leading to the conflict. For testing purposes, I've just rebuilt the kernel with the system76-apci color attribute renamed to kb_color, and that fixes the issue.
-> >>>>>>>>
-> >>>>>>>> Jean-Jacques Hiblot, would you like to take a look on this regression,
-> >>>>>>>> since you authored the culprit?
-> >>>>>
-> >>>>>>> The offending commit stores the color in struct led_classdev and exposes it
-> >>>>>>> via sysfs. It was part of a series that create a RGB leds from multiple
-> >>>>>>> single-color LEDs. for this series, we need the color information but we
-> >>>>>>> don't really need to expose it it via sysfs. In order to fix the issue, we
-> >>>>>>> can remove the 'color' attribute from the sysfs.
-> >>>>>>
-> >>>>>> OK, see you in the patch!
-> >>>>>
-> >>>>> Is there a patch available?
-> >>>>
-> >>>> Not that I know of. Could not find anything on lore either.
-> >>>>
-> >>>>> This bug hits for a few Logitech keyboard models, too, and it makes
-> >>>>> 6.6 kernel unsable for them, as hid-lg-g15 driver probe fails due to
-> >>>>> this bug:
-> >>>>>   https://bugzilla.kernel.org/show_bug.cgi?id=218155
-> >>>>>
-> >>>>> We need a quick fix for 6.6.x.
-> >>>>
-> >>>> Given that Jean-Jacques Hiblot (the author of the culprit) and Lee (who
-> >>>> committed it and sent it to Linus) know about this for a while already
-> >>>> without doing anything about it, I wonder if someone should just send a
-> >>>> revert to Linus (unless of course that is likely to introduce a
-> >>>> regression on its own).
-> >>>>
-> >>>> Takashi, could you maybe do this, unless a fix shows up real soon?
-> >>>
-> >>> I can, but we need to decide which way to go.
-> >>> There are several options:
-> >>>
-> >>> 1. Revert the commit c7d80059b086;
-> >>>    this drops led class color sysfs entries.  Also the store of
-> >>>    led_cdev->color from fwnode is dropped, too.
-> >>>
-> >>> 2. Drop only led class color sysfs entries;
-> >>>    a partial revert of c7d80059b086 above
-> >>
-> >> AFAIK further up in the thread (or a related thread) there
-> >> already was consensus to do this. Someone just needs to
-> >> write the patch.
-> > 
-> > Well, is there any user of this new led_classdev.color field?
-> > The value read from fwnode is stored there, but as far as I see, there
-> > seems no real user, so far.  If it's still unused, we can do the whole
-> > revert -- which is cleaner.
-> 
-> I honestly don't know. I've mostly just been reading along. I think
-> there may be some future in kernel use planned (not sure at all though).
-> 
-> If there are no current in kernel users then I agree we should just
-> go with a full revert now to fix the regression. If some later
-> in kernel users do come along then they can always re-introduce
-> the change minus the sysfs attr addition.
+On Tue, Nov 21, 2023, at 15:25, Naresh Kamboju wrote:
+> The SuperH tinyconfig and allnoconfig builds started failing from 20231120 tag
+> Please find the following builds warnings / errors.
+>
+> /builds/linux/include/linux/syscalls.h:233:9: note: in expansion of
+> macro '__SYSCALL_DEFINEx'
+>   233 |         __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+>       |         ^~~~~~~~~~~~~~~~~
+> /builds/linux/include/linux/syscalls.h:225:36: note: in expansion of
+> macro 'SYSCALL_DEFINEx'
+>   225 | #define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name,
+> __VA_ARGS__)
+>       |                                    ^~~~~~~~~~~~~~~
+> /builds/linux/fs/namespace.c:5019:1: note: in expansion of macro
+> 'SYSCALL_DEFINE4'
+>  5019 | SYSCALL_DEFINE4(listmount, const struct mnt_id_req __user *, req,
+>       | ^~~~~~~~~~~~~~~
+> 0x129d9d7 internal_error(char const*, ...)
+> ???:0
+> 0x5dbc4d fancy_abort(char const*, int, char const*)
+> ???:0
+> 0x7ddd3e adjust_address_1(rtx_def*, machine_mode, poly_int<1u, long>,
+> int, int, int, poly_int<1u, long>)
+> ???:0
+> 0x81dd91 output_operand(rtx_def*, int)
+> ???:0
+> 0x81e5a4 output_asm_insn(char const*, rtx_def**)
+> ???:0
+> 0x8226a8 final_scan_insn(rtx_insn*, _IO_FILE*, int, int, int*)
+> ???:0
+> Please submit a full bug report,
+> with preprocessed source if appropriate.
+> Please include the complete backtrace with any bug report.
+> See <file:///usr/share/doc/gcc-11/README.Bugs> for instructions.
 
-Sounds reasonable.
-OK, let me pitch the revert patch.
+It's clearly a compiler bug, and I get the same thing with
+all sh4 compilers I have on my machine, I tried with gcc-7.5
+through gcc-13.
 
+I also see that the defconfigs work fine, so it's probably
+just hitting some weird corner case. You could try opening
+a bug report against gcc, but I'm not sure it's worth it.
 
-thanks,
-
-Takashi
+      Arnd
