@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7821BDCB
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 08:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5686D2BAE6
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 08:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5iO2-0004YL-Kn; Wed, 22 Nov 2023 09:15:06 +0100
-Message-ID: <5884527d-a4a2-44e2-96bc-4b300c9e2fb8@leemhuis.info>
-Date: Wed, 22 Nov 2023 09:15:06 +0100
+	id 1r5j1E-0004hl-4x; Wed, 22 Nov 2023 09:55:36 +0100
+Message-ID: <d002ad6f-d908-4cf6-afcf-bf0989418e72@leemhuis.info>
+Date: Wed, 22 Nov 2023 09:55:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,60 +18,54 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] ext2, quota, and udf fixes for 6.6-rc1
+Subject: Re: Regression apparently caused by commit
+ 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
+ for acp pci driver"
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: syed saba kareem <ssabakar@amd.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Marian Postevca <posteuca@mutex.one>,
+ Syed Saba Kareem <Syed.SabaKareem@amd.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
+ Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
+ Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Yang Yingliang <yangyingliang@huawei.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
+ ye xingchen <ye.xingchen@zte.com.cn>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
+ <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230830102434.xnlh66omhs6ninet@quack3>
- <ZS5hhpG97QSvgYPf@smile.fi.intel.com>
- <9ba95b5e-72cb-445a-99b7-54dad4dab148@leemhuis.info>
-In-Reply-To: <9ba95b5e-72cb-445a-99b7-54dad4dab148@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700640910;80de5d5d;
-X-HE-SMSGID: 1r5iO2-0004YL-Kn
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700643345;a0004608;
+X-HE-SMSGID: 1r5j1E-0004hl-4x
 
-On 22.10.23 15:46, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 17.10.23 12:27, Andy Shevchenko wrote:
->> On Wed, Aug 30, 2023 at 12:24:34PM +0200, Jan Kara wrote:
->>>   Hello Linus,
->>>
->>>   could you please pull from
->>>
->>> git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git for_v6.6-rc1
+On 03.11.23 14:30, syed saba kareem wrote:
+> On 11/3/23 04:41, Bagas Sanjaya wrote:
+>> On Thu, Aug 03, 2023 at 10:22:07PM +0300, Marian Postevca wrote:
+> [...]
+>>> Some help here would be welcome. Is there something missing in my
+>>> machine driver code, or
+>>> is the runtime pm handling in acp pci driver wrong?
 >>
->> This merge commit (?) broke boot on Intel Merrifield.
->> It has earlycon enabled and only what I got is watchdog
->> trigger without a bit of information printed out.
->>
->> I tried to give a two bisects with the same result.
+> We were working on some other priority tasks, will upstream the changes
 > 
-> #regzbot ^introduced 024128477809f8
-> #regzbot title quota: boot on Intel Merrifield after merge commit
-> 1500e7e0726e
-> #regzbot ignore-activity
+> by next week.
 
-Removing this from the tracking. To quote Linus from
-https://lore.kernel.org/all/CAHk-=wgEHNFHpcvnp2X6-fjBngrhPYO=oHAR905Q_qk-njV31A@mail.gmail.com/
-
-"""
-The quota thing remains unexplained, and honestly seems like a timing
-issue that just happens to hit Andy. Very strange, but I suspect that
-without more reports (that may or may not ever happen), we're stuck.
-"""
-
-No other reports showed up afaik.
-
-#regzbot inconclusive: individual and strange timing issue that got stuck
-#regzbot ignore-activity
+Hi syed saba kareem! Did that happen? From here it looks like it did
+not, so I assume the regression was not yet addressed. But it's easy to
+miss something, hence this mail.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
