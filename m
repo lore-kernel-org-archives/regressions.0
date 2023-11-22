@@ -1,116 +1,140 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD24E1A27D
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 21:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47881C2AC
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 21:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gIRPrKTH"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a00cbb83c80so28074666b.0
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 13:09:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1700687340; x=1701292140; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjZ3A9RnpMc/0GPOf8DzrpfaMDka4vJ8RxujHh4ePRw=;
-        b=gIRPrKTHgYSQNWeA2r3JfEKv98VFPZ5N6FUQOaxiLK4WTTxT0YP6cXXY5Chb8NCJGm
-         J6gL/wm6UgiPMNFuj/QTAFFzrXHekQ0JfadjDpAU8sBKoufgW5OB/GUKfOqfC6ysSAns
-         EUtSN25C7KtRugTv0uMJ5uTsIp2RB0sD8mx1k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700687340; x=1701292140;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DjZ3A9RnpMc/0GPOf8DzrpfaMDka4vJ8RxujHh4ePRw=;
-        b=nEJy47JutaIeWREv69ml8RO06r2uTKX/Il9ZfkGbw/zD2FfBgU0zUA9gqSR6WTh2Om
-         bW9V6DZRUaJGqPapvUNpMYEUtr3Y2ue41DMgD6oQ55ziejUaERD89GUwZkR+hAZVU764
-         w+tBKZPKI0wMOiqhFoIQLHKaYBNukh6pEAEc4kPh75HNxBe+EIXG/pI9vgIrZUFXfXvD
-         yTi4XcW1U93Bq1ZHw/TVGvUeoZCm0UF7Vi++3l3Sdm0y44lvrkmh3AvhKvl0vWugU1WO
-         24s95xcK/iq+JN9yp7/6NuBiyjKz7mg7XpTBETTQ2Gn+VB6c6S97DTeKZaul0tc++OlI
-         VICA==
-X-Gm-Message-State: AOJu0YwxPt6ys5twVFTJ33NhEya+qDZ5MfrAIlaZceqPwsW2nlzrbW5B
-	S3FFhqf65S23TyKao+l4AOfuoyOKvrc2p6njCVcSheSk
-X-Google-Smtp-Source: AGHT+IHzA1SLxn1PmL0MFAsXZBUwS44SPnXikgjIJbzIHc+N5ehgVa3J/z/2hgozmPpc8dRHSPNeFA==
-X-Received: by 2002:a17:906:1019:b0:a04:cc0e:ff3b with SMTP id 25-20020a170906101900b00a04cc0eff3bmr2092711ejm.27.1700687339693;
-        Wed, 22 Nov 2023 13:08:59 -0800 (PST)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id y12-20020a170906470c00b009fd50aa6984sm217430ejq.83.2023.11.22.13.08.59
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 13:08:59 -0800 (PST)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5437d60fb7aso279801a12.3
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 13:08:59 -0800 (PST)
-X-Received: by 2002:aa7:d050:0:b0:53e:1825:be81 with SMTP id
- n16-20020aa7d050000000b0053e1825be81mr2626539edo.21.1700687338666; Wed, 22
- Nov 2023 13:08:58 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KRv4Cs7Y"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7A13340E024E;
+	Wed, 22 Nov 2023 21:35:40 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id cQA6Yt3kkE3Q; Wed, 22 Nov 2023 21:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1700688937; bh=z94RA74bNsUX4SJmAqCyVFYkvEgangMOaCkKCrTng50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KRv4Cs7YZsoQdhd42XU1ujPPrGTwfG3gwG7XSj9zizVrvlHx98vye+NGI3jeXK3MV
+	 OXFMBdqyNPIat04QWi1Y5DlU+xBXChWu8KGEhuO7k5gEw+6Q4MsW4Cn9zmxfrbo3CM
+	 5KjyQEtUydmvsf0KcioK8TUj4122KhKlQAFEG5i0c+c9Ww1RjoJ6kHIEOg2LN2hdYl
+	 flGMoT4w37rAACz1DZY+hm+P4ANjKHT1S6AYouK9wWqcmkNbcK1qcbQr+D5rZEO637
+	 +7EnlqGvu8ela1EmgB9ZRE1e0fadd0+sFNXJ5Qml94Ik2F1en5MEGXgMyHFXZVkUD0
+	 pikkZ1Gn2wRIZF8iF7zm6lga8V0VxnMHGkNWumezBOGdyO/J1bXXrfEUVgjGszydHR
+	 WJxz05QOJIK2owCQVCYCa+Q2DVbTYfLc89sKSCP77cOHPQIhgRHHP0M7gfIrDuicLI
+	 YcQB9Q6Ilka5ztyQyG8KdiyVy8y2cH4aR84+JeNGSDeNDIivHEeKcY97c1Z41rg3xI
+	 Nwvghf7H6TDofpLb4LXmeD/Sti+oyfYRNWC1lZJJpvcseWK/kZ9XO5MGJDXOBt4os4
+	 bTF0nsc9DSSng8gslCPY04473lRudPlAJ63cLLeS7zBYHa5rh1Ti0tztjFJxa72Zjh
+	 erNoxtm6ii1ZTBH9LEoQ1l+w=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9300340E014B;
+	Wed, 22 Nov 2023 21:35:26 +0000 (UTC)
+Date: Wed, 22 Nov 2023 22:35:22 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+	initramfs@vger.kernel.org
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Message-ID: <20231122213522.GHZV50GqXHU35R+tkK@fat_crate.local>
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
+ <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+ <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info>
+ <20231122155758.GEZV4lBgtZyzsP5Z4V@fat_crate.local>
+ <CAHk-=wiV+NM+jLKbSj_Ej9RaXpu4akWV03G_wXyTSHZhArq1tg@mail.gmail.com>
+ <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
+ <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
- <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info> <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
- <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info> <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
- <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info> <20231122155758.GEZV4lBgtZyzsP5Z4V@fat_crate.local>
- <CAHk-=wiV+NM+jLKbSj_Ej9RaXpu4akWV03G_wXyTSHZhArq1tg@mail.gmail.com> <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
-In-Reply-To: <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 22 Nov 2023 13:08:41 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
-Message-ID: <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
-Subject: Re: [regression] microcode files missing in initramfs imgages from
- dracut (was Re: [PATCH] x86: Clean up remaining references to CONFIG_MICROCODE_AMD)
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, lukas.bulwahn@gmail.com, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
 
-On Wed, 22 Nov 2023 at 12:51, Borislav Petkov <bp@alien8.de> wrote:
->
-> My only worry here is that we're making a precedent and basically saying
-> that it is ok for tools to grep .config to figure out what is supported
-> by the kernel. And then other tools might follow.
+Lemme add initramfs@vger.kernel.org to Cc again. I hope that's the
+correct ML dracut folks use.
 
-Yes, I agree that it's not optimal, but I would hate to have some odd
-"let's add another ELF note" churn too, for (presumably) increasingly
-obscure reasons.
+On Wed, Nov 22, 2023 at 01:08:41PM -0800, Linus Torvalds wrote:
+> Yes, I agree that it's not optimal, but I would hate to have some odd
+> "let's add another ELF note" churn too, for (presumably) increasingly
+> obscure reasons.
 
-It looks like dracut has been doing this forever, and in fact back in
-2015 apparently had the exact same issue (that never made it to kernel
-developers, or at least not to me), when the kernel
-CONFIG_MICROCODE_xyz_EARLY config went away, and became just
-CONFIG_MICROCODE_xyz.
+Right, my angle with the ELF note is that it is at least something well
+establshed and other things use it too (Xen, BUILD_SALT, other arches
+too).
 
-The whole "check kernel config" in dracut seems to go back to 2014, so
-it's been that way for almost a decade by now.
+> It looks like dracut has been doing this forever, and in fact back in
+> 2015 apparently had the exact same issue (that never made it to kernel
+> developers, or at least not to me), when the kernel
+> CONFIG_MICROCODE_xyz_EARLY config went away, and became just
+> CONFIG_MICROCODE_xyz.
 
-Honestly, I think the right approach may be to just remove the check
-again from dracut entirely - the intent seems to be to make the initrd
-smaller when people don't support microcode updates, but does that
-ever actually *happen*?
+Yap, that was me. I merged the early loader because it didn't make any
+sense to have a separate thing.
 
-There are dracut command lines, like "--early-microcode" and
-"--no-early-microcode", so people who really want to save space could
-just force it that way. Doing the CONFIG_xyz check seems broken.
+> The whole "check kernel config" in dracut seems to go back to 2014, so
+> it's been that way for almost a decade by now.
+> 
+> Honestly, I think the right approach may be to just remove the check
+> again from dracut entirely - the intent seems to be to make the initrd
+> smaller when people don't support microcode updates, but does that
+> ever actually *happen*?
 
-But that's for the dracut people to worry about.
+That thought also crossed my mind. With the mitigations sh*te, you
+basically must build in microcode. Lemme cook up a dracut patch for this
+tomorrow and see what happens.
 
-I guess we on the kernel side could help with "make install" etc, but
-we've (intentionally) tried to insulate us from distros having
-distro-specific installkernel scripts, so we don't really haev a good
-way to pass information down to the installkernel side.
+> There are dracut command lines, like "--early-microcode" and
+> "--no-early-microcode", so people who really want to save space could
+> just force it that way. Doing the CONFIG_xyz check seems broken.
 
-It *would* make sense if we just had some actual arguments we might
-pass down. Right now we just do
+Yap, exactly.
 
-        exec "${file}" "${KERNELRELEASE}" "${KBUILD_IMAGE}" System.map
-"${INSTALL_PATH}"
+> I guess we on the kernel side could help with "make install" etc, but
+> we've (intentionally) tried to insulate us from distros having
+> distro-specific installkernel scripts, so we don't really haev a good
+> way to pass information down to the installkernel side.
+> 
+> It *would* make sense if we just had some actual arguments we might
+> pass down. Right now we just do
+> 
+>         exec "${file}" "${KERNELRELEASE}" "${KBUILD_IMAGE}" System.map
+> "${INSTALL_PATH}"
+> 
+> so basically the only argument we pass down is that INSTALL_PATH
+> (which is just "/boot" by default).
 
-so basically the only argument we pass down is that INSTALL_PATH
-(which is just "/boot" by default).
+Right, and on debian they run initramfs-tools as part of
+a post-installation step at the end of /sbin/installkernel which could
+then pass in more configuration info.
 
-            Linus
+Yap, that could be one way to do it. We could document it in
+scripts/install.sh or somewhere more prominent so that tools can look it
+up.
+
+Yap, all better ideas than parsing .config.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
