@@ -1,85 +1,89 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9727F4B5A7
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 10:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r5kRm-0005zh-7d; Wed, 22 Nov 2023 11:27:06 +0100
-Message-ID: <5124589d-81b9-42ae-a4af-d16590477b66@leemhuis.info>
-Date: Wed, 22 Nov 2023 11:27:05 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27725741
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 11:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="U5M+vWXI"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D5F9F40E024B;
+	Wed, 22 Nov 2023 11:58:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9vIvwcA4Hjr5; Wed, 22 Nov 2023 11:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1700654320; bh=bUGVHjUPksg/8UpmwAaAcEYvojtJjumiv8pZ1+4lVqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U5M+vWXIZp7eojrASnpsDv1LeCHjQVagHx2EEwQLOTC4KLQDZXENy7uZbjJME7zCj
+	 5QgqPtWvPisRTKX+xleEWDnPNuwOoifB7hEXRp1hpAcA3xolGGfnE9TklEt0HnLbS7
+	 Xn8lp/RG98dHBWj4T5gzgDNcsN68gh+zXKeD1QApI4113kj+evXLcZRP91vBUYdjtQ
+	 mcsO9J8Ol8uhuGIEZeUsZXt7ogfFGl7zTBsQKtaPC4tx8001HXAmkC9FshKQrbPFOr
+	 j5tQrnOnvVqilF3+Y2hoMRPyd4SLRmRPHlwNo2sAifMqLW4I1LfIDGFll38w0qaBUj
+	 1xTlE/ErqrLFHKMZ1LA5T0dXwyp0vFQEjaEbfG27v/wpu8nSXGWWShAsJadHwcmDaC
+	 HhGm/6KSnKLRbyQnmyVM/M8rmXO3M+KwSxqLdTbJ05N8qNGtlLDnd5B9D1ccISDOyK
+	 oRPq7dZNmwAGiWukPNbLpV43bvk6o3QGVLa6j0rCxdPzd8agRZ9CgSALVENunOPI58
+	 mnlv8OVbsPV9AVh/JIi6+f6005UGjz+rjIyOrKhX9SVOXh1BrIpw5D7MXKAR35vlCg
+	 knLbdLzcEKPmDx9WQ+ief/QZTPg519eU+xgmtWEDr5WbUtUJvBw+Qtq/jjF0z/7o1i
+	 l1dCd4fpT83L2kToZwkUHDxU=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC67A40E0032;
+	Wed, 22 Nov 2023 11:58:30 +0000 (UTC)
+Date: Wed, 22 Nov 2023 12:58:26 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Message-ID: <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression apparently caused by commit
- 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
- for acp pci driver"
-To: syed saba kareem <ssabakar@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Marian Postevca <posteuca@mutex.one>,
- Syed Saba Kareem <Syed.SabaKareem@amd.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
- Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
- Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Yang Yingliang <yangyingliang@huawei.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
- ye xingchen <ye.xingchen@zte.com.cn>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
- <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
- <d002ad6f-d908-4cf6-afcf-bf0989418e72@leemhuis.info>
- <6085d2e3-f28e-4d1d-9863-8275931430e6@amd.com>
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <6085d2e3-f28e-4d1d-9863-8275931430e6@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700648834;6b32cee3;
-X-HE-SMSGID: 1r5kRm-0005zh-7d
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
 
-On 22.11.23 10:32, syed saba kareem wrote:
-> On 11/22/23 14:25, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 03.11.23 14:30, syed saba kareem wrote:
->>> On 11/3/23 04:41, Bagas Sanjaya wrote:
->>>> On Thu, Aug 03, 2023 at 10:22:07PM +0300, Marian Postevca wrote:
->>> [...]
->>>>> Some help here would be welcome. Is there something missing in my
->>>>> machine driver code, or
->>>>> is the runtime pm handling in acp pci driver wrong?
->>> We were working on some other priority tasks, will upstream the changes
->>>
->>> by next week.
->> Hi syed saba kareem! Did that happen? From here it looks like it did
->> not, so I assume the regression was not yet addressed. But it's easy to
->> miss something, hence this mail.
-> 
-> Hi , We have up streamed the patch it is in review.
-> Please find the below link for the patch details.
-> https://patchwork.kernel.org/project/alsa-devel/patch/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
+On Wed, Nov 22, 2023 at 10:15:42AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [1] unless you fiddle with things obviously internal; not sure if this
+> case would qualify for him, but somehow I doubt it -- but I might be
+> wrong there.
 
-Ahh, great. Has to Fixes: tag and no Link:/Closes: tag to this thread,
-otherwise I would have noticed that change myself, but whatever.
+Well, think about it - by that logic, if CONFIG_* items are an ABI, we
+will never ever be able to change any of them. Now that would be awful.
 
-Thx!
+> Any progress on this?
 
-#regzbot monitor:
-https://lore.kernel.org/all/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
-#regzbot fix: ASoC: amd: acp: add pm ops support for renoir platform
-#regzbot ignore-activity
+We're thinking...
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+We might need an official scheme of stating what any given kernel image
+supports for use by external tools which need it.
+
+> BTW: I see that this could help preventing problems like the current one
+> to happen in the far future. But how would that help the current
+> situation (e.g. users that have an old dracut and updated the kernel
+> without updating dracut)?
+
+Update dracut too?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
