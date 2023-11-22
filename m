@@ -1,160 +1,168 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5360F2574F
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 13:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3DE4BAA8
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 13:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUPrIcXq"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso5148689a12.3
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 05:21:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700659267; x=1701264067; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8KuAtq2wuwd7uRsWWYBZ0mULd3F8IzS2XEFfePOf2ZA=;
-        b=cUPrIcXqSTZOKv5wGqSc84okP/Yil21yHruxBJXerXRzqIMZrhi5fgCNBVqETIAJl6
-         dzK/qxlhSAIZxsdyurtz7gY/PmJx11reXWTvO8sFOfvNvAk7OKYf+oLy/8DvMpj7aGhS
-         x0tmE5+eUwQ0YGvcM0Hr95p7WDGXh2DNtbZRjtIJrk8Kl4mFVK36K1KPgstfsPP8HtvF
-         A+oWMyo1hKEXDSJa9wGJqzO4yya3ru9L24uMt4njBbBr4l34LVrayTWtByt/0WXd8MXB
-         DHoTzddLRGhjLKGWJ3/sf11mkLd/MVCQIUIC43gXK2Zs19EveqSUBSzqVJhhnxfD9mP1
-         6YVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700659267; x=1701264067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8KuAtq2wuwd7uRsWWYBZ0mULd3F8IzS2XEFfePOf2ZA=;
-        b=o+IBZeeOKFikl/MBydvGmRedk7QBEIFN/d4n0ZkyN4NXxYIAGmsHPQiWn7rkmzeyyt
-         DI4SZRqyCSHzcr0eE1zKGzYf8ekztsY/s4le7Lq6II6PF9j5mwIloLHLkGlsfLN/3H+Q
-         w6WyGUMhuLUP5zUhjxAv/34nNKHGzaMTUsgd0EP6Km/oYXexpd7YyQY4S1ifzx7QOQJ/
-         4E0F0Qxp/ufOTftTc81k5g6TI2PmbfHG9I34rHThwcWeKlvGzE3gCDyLezJ5HReSHCUz
-         c2VrUZLFH4ALTTVJuMp7MLucMFm55+D+FT30An/G9LcaQbKs8mvsjEoYaKk8p216+C5r
-         rWdw==
-X-Gm-Message-State: AOJu0YxbLjw5dQmmbdBaB1T3WtnFu5PVqkJaYv/sIP1F6tlDGdTWn4OI
-	6jG09Us6d3uSbKoNaXT5ZZbbm9tH6IB1NWGG
-X-Google-Smtp-Source: AGHT+IHMJmWJO62QizpKqXBJpkRvDmAKFCnqM9s6SVoAVqZ+23esDzGNsZhTZ+8ts5QHY0nOg2jcBQ==
-X-Received: by 2002:a05:6a21:3288:b0:186:736f:7798 with SMTP id yt8-20020a056a21328800b00186736f7798mr2447858pzb.11.1700659267413;
-        Wed, 22 Nov 2023 05:21:07 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id w14-20020aa7858e000000b006cbb71186f7sm4008491pfn.29.2023.11.22.05.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 05:21:06 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1EB3210207134; Wed, 22 Nov 2023 20:21:04 +0700 (WIB)
-Date: Wed, 22 Nov 2023 20:21:03 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Arnas <arnasz616@gmail.com>
-Subject: Re: Fwd: [Regression] S3 Sleep Mode failures since Linux 6.x on Dell
- Inspiron 15 5593
-Message-ID: <ZV4AP1GY3fHAxmtx@archie.me>
-References: <585dcc9e-7e72-473a-98ec-4f06018d542f@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FIkm2BEk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1994B40E0258;
+	Wed, 22 Nov 2023 13:25:01 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0ArRJ98NsNWj; Wed, 22 Nov 2023 13:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1700659498; bh=tfmB5kIO1KjZIKpASvFX87u56VKgZHav99DyvY9sqVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FIkm2BEkpLgPj5wpM1geMfClp93ikKBJoNFZjuSANkN8X7QaX7raZTR0GBVKM8jte
+	 pwvnSPf4iQkvXgFQK4H3EkaeI367oCM6+qAjxNMGVEVlaw0yf17XQ+MXcBp3dARkec
+	 pgVCtwTorFnS7NFvcbzoHTNLoNaQQuPhI/HWBfW2RECz/95xoEyM+39zZW86q2aw7m
+	 WpzIvO/I/XmbPJWqL2bg1a/FFP8+Utnw4x5NwMKu0UWEPfcLtXmxVxeRLU9OuzVj7D
+	 lOiyiChmkcUb6g1NHMBX7WmnQKeJmwyQhkJkCGp63ee9wpjOsQ23N2zoD0e8T7LUnX
+	 dpHqE2GDJ/SKkEpykLrUZ05KNQPEfR//boi5hp7TqmCeJItc5DsE80EUxUQzXhB2lq
+	 LEYS7wXsy4vkCLbW9hZEkWv9IpNtUL6iKesNgV09ybHl71HNG46tSy2BNysqaHw+U3
+	 lIKbU/xlQFYyeBCJ9IUT1o8DEm+SPHQZroQu5Zlf6qitQSIFtk78grkuBbbvfzwS74
+	 nnP8UGB2xhn/Agj90HI3Cw4h+ocx49Z7sDt1RHHOG9MsWByJhPt+Oq+CKLOc0O+Tu3
+	 Q+sQJ9ZU/bMeC8qv2TTQ6TrTmijzlFqOm2xhukhQnYN5pLg+Ujt1SNP9MzFPgM53Ee
+	 m5dDBsHNXa65wZFpv3g0Wt5U=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4A78840E0257;
+	Wed, 22 Nov 2023 13:24:48 +0000 (UTC)
+Date: Wed, 22 Nov 2023 14:24:43 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+	initramfs@vger.kernel.org
+Subject: [PATCH] x86: Add a "x86" ELF note namespace
+Message-ID: <20231122132419.GBZV4BA399sG2JRFAJ@fat_crate.local>
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
+ <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LKCzLPBSKEZk9tIu"
-Content-Disposition: inline
-In-Reply-To: <585dcc9e-7e72-473a-98ec-4f06018d542f@gmail.com>
-
-
---LKCzLPBSKEZk9tIu
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
 
-On Tue, Sep 26, 2023 at 07:25:48AM +0700, Bagas Sanjaya wrote:
-> Hi,
->=20
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> > I'm having some weird issues with sleep mode on any 6.x Linux kernel ve=
-rsion - it's a toss-up when I close the lid as to whether it will sleep pro=
-perly or not - when it fails, the screen will lock, but it will not actuall=
-y enter S3 sleep - it just blanks the screen, but the laptop stays on (and =
-fan does too).
-> >=20
-> > Opening the lid after a failed sleep attempt turns on the screen instan=
-taneously, and it doesn't even need to reconnect to WiFi - this doesn't hap=
-pen when actually resuming from sleep, it takes a couple seconds for the sc=
-reen to come on, and it then needs to reconnect the network.
-> >=20
-> > Following the failed attempt to enter sleep mode (closing the lid), the=
- following entries appear in the system log -
-> >=20
-> > arkiron kernel: ACPI Error: Thread 3233415168 cannot release Mutex [ECM=
-X] acquired by thread 3268191936 (20221020/exmutex-378)
-> > arkiron kernel: ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 du=
-e to previous error (AE_AML_NOT_OWNER) (20221020/psparse-529)
-> > arkiron kernel: Non-boot CPUs are not disabled
-> >=20
-> > Now, the "Non-boot CPUs are not disabled" line stands out the most to m=
-e here, because successful sleep attempts won't have this line in the log.
-> >=20
-> > After the failed attempt above to sleep, I now close the lid again, and=
- it seemingly goes to sleep successfully. After checking the log following =
-this, I find two new error lines in the log -
-> >=20
-> > arkiron kernel: ACPI Error: Thread 3233415168 cannot release Mutex [ECM=
-X] acquired by thread 3268191936 (20221020/exmutex-378)
-> > arkiron kernel: ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 du=
-e to previous error (AE_AML_NOT_OWNER) (20221020/psparse-529)
-> >=20
-> > Note that this time the CPU line is missing, as expected for a successf=
-ul sleep attempt.
-> >=20
-> > This happens on both latest stable Linux kernel 6.5 as well as the late=
-st Linux LTS 6.1 kernel. The last kernel that this didn't happen on was Lin=
-ux LTS 5.15 (any version), which is what I was running up until the Linux L=
-TS 6.1 upgrade. At that point I tried switching back to mainline (6.5) to s=
-ee if it would fix sleep issues, but it didn't help. Downgrading to Linux L=
-TS 5.15 did fix the sleep issues and the laptop seems to sleep reliably now=
-=2E Running LTS 5.15.131-1 without issue as I am making this report.
-> >=20
-> > I'm on a Dell Inspiron 15 5593 using BIOS ver 1.27.0 (latest as of now)=
-, running Arch Linux x86_64
->=20
-> See Bugzilla for the full thread.
->=20
-> Anyway, I'm adding it to regzbot:
->=20
-> #regzbot introduced: v5.15..v6.1 https://bugzilla.kernel.org/show_bug.cgi=
-?id=3D217950
->=20
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217950
->=20
+On Wed, Nov 22, 2023 at 12:58:26PM +0100, Borislav Petkov wrote:
+> On Wed, Nov 22, 2023 at 10:15:42AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > [1] unless you fiddle with things obviously internal; not sure if this
+> > case would qualify for him, but somehow I doubt it -- but I might be
+> > wrong there.
+> 
+> Well, think about it - by that logic, if CONFIG_* items are an ABI, we
+> will never ever be able to change any of them. Now that would be awful.
+> 
+> > Any progress on this?
+> 
+> We're thinking...
 
-Hi Thorsten and all,
+Turns out this is easier than I think and people have solved this
+problem already - all I need to do is use it. Wonderful.
 
-It seems like the BZ reporter is really busy with his college life; IOW
-he can only bisect in the winter break [1]. Should I mark this regression
-as inconclusive for now?
+Lemme Cc initramfs@vger.kernel.org as an FYI and see whether dracut
+folks would have any comments about this.
 
-Thanks.
+---
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
+Date: Wed, 22 Nov 2023 13:59:40 +0100
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217950#c5
+Add a "x86" ELF note namespace to put ELF note structures with which to
+communicate in a ABI-compliant manner what a kernel image supports.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Also, add the first note type of this - X86_ELFNOTE_MICROCODE - which
+denotes that microcode support is built into the kernel image and thus
+initrd-generating tools like dracut can parse the ELF .notes section for
+this.
 
---LKCzLPBSKEZk9tIu
-Content-Type: application/pgp-signature; name="signature.asc"
+$ readelf -n vmlinux
 
------BEGIN PGP SIGNATURE-----
+Displaying notes found in: .notes
+  Owner                Data size        Description
+  ...
+  x86                  0x00000004       Unknown note type: (0x00000000)
+  description data: 01 00 00 00
+  ^^^^^^^^^^^^^^
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZV4APwAKCRD2uYlJVVFO
-o2AAAQDTwCOQWHhQjO5u0rqiRHxr5UzfJelTwcYdlfrqvbmiUgD/Zsh+FP3jNO3S
-gRMaJaeLR5+9J9TbWbtkSOkrGF4AUAw=
-=vXvH
------END PGP SIGNATURE-----
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/include/uapi/elfnote.h      | 18 ++++++++++++++++++
+ arch/x86/kernel/cpu/microcode/core.c |  5 +++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 arch/x86/include/uapi/elfnote.h
 
---LKCzLPBSKEZk9tIu--
+diff --git a/arch/x86/include/uapi/elfnote.h b/arch/x86/include/uapi/elfnote.h
+new file mode 100644
+index 000000000000..bef26c4944e8
+--- /dev/null
++++ b/arch/x86/include/uapi/elfnote.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _X86_UAPI_ELFNOTE_H_
++#define _X86_UAPI_ELFNOTE_H_
++
++/*
++ * "x86" namespaced ELF note structures to communicate features
++ * supported by the kernel binary to external utilities which need that
++ * info in order to do additional preparatory work based on the target
++ * kernel image.
++ */
++
++/*
++ * Used by the microcode loader to communicate support to external
++ * initrd generators like dracut.
++ */
++#define X86_ELFNOTE_MICROCODE	0
++
++#endif /* _X86_UAPI_ELFNOTE_H_ */
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 232026a239a6..f35444bafbbc 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -24,6 +24,7 @@
+ #include <linux/capability.h>
+ #include <linux/firmware.h>
+ #include <linux/cpumask.h>
++#include <linux/elfnote.h>
+ #include <linux/kernel.h>
+ #include <linux/delay.h>
+ #include <linux/mutex.h>
+@@ -32,6 +33,8 @@
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ 
++#include <uapi/elfnote.h>
++
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/perf_event.h>
+@@ -859,3 +862,5 @@ static int __init microcode_init(void)
+ 
+ }
+ late_initcall(microcode_init);
++
++ELFNOTE32("x86", X86_ELFNOTE_MICROCODE, CONFIG_MICROCODE);
+-- 
+2.42.0.rc0.25.ga82fb66fed25
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
