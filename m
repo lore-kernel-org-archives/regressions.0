@@ -1,96 +1,84 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5422163
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 00:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DFFC155
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 05:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzcqFI2s"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6b7f0170d7bso5851861b3a.2
-        for <regressions@lists.linux.dev>; Tue, 21 Nov 2023 16:06:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700611616; x=1701216416; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/xKwgkeAtzmkKnSz03T4DxgRKcvAVmHnZ/2Ynp93sTY=;
-        b=kzcqFI2sq1apGfVbvcEEsUn/VIE8BdPIeshLwjOmQE21B8hV7OGmBI1KGdkuXITLv8
-         13PtdjyafRBmRZ3saEQe+WCO1OfPdnV4fPh5L3g+2B5utKv+lfPnFZ1Qve0aYXAVuQy5
-         W14Wf1RMzzXWPiBIS8uFXlOCMeAPaNcCaaVEfawkS+0gPRHAGspvIunEGhJzK/cl3mWX
-         xZKXUI5bUDOhQmZ9dMBxI68S29gT3NmMbCMa9vxMb8NzRnEfMEZbpSV6muhDandObfx1
-         57fPcs7oe6U+E+vtN2+OMz6BrDCDYeSWHq6Sdlppj+j1mDdgF/FoBIBUjtaLzXijE46k
-         nK+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700611616; x=1701216416;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/xKwgkeAtzmkKnSz03T4DxgRKcvAVmHnZ/2Ynp93sTY=;
-        b=A0HRLXbYcnaCephMRfU+QuqwtJpvICKf1U2wTCGg+76dzXYq8veFmXlPi9zC/1soFk
-         ru408pHTInPB0zrfYXx8UxgsJVB4adJ1Mg7eXAcocEnSUXy1iyJ+WW1vcpckzo070ad8
-         yrMq0r3E3OGhvoWlaNa0tTDInQ9f5TuFRd08hPChqEiJ8geZc3TFL2GfD0iQNUmLkd62
-         GyzXi2uNCT4qoRIPSLdNkb/sIJhVVFYEBfhaQ8uYlKoi/tGrCL90FHvI7HfLo1tA6tjH
-         JOSDMApqAgB5tQFlubEcjazmEujahal/7ITv0L5fk9M6A+yfbNti0uJmjMfc9hgioRY6
-         HeCg==
-X-Gm-Message-State: AOJu0YxuRy5m7LqH/6MvP60iZ1UULnECOumGgphhyOH8Va2PWLEFun9p
-	2K774y1E2gokv9gR4hK1DNI=
-X-Google-Smtp-Source: AGHT+IGFvSNUofC0ROKmiE0mKp1xMZ8d51fhDYVhtQKX8ZN/1XWxm8S+k3uuwHWRUMjbRvHDmBVm9g==
-X-Received: by 2002:a05:6a20:431d:b0:188:f3d:ea35 with SMTP id h29-20020a056a20431d00b001880f3dea35mr764739pzk.50.1700611615823;
-        Tue, 21 Nov 2023 16:06:55 -0800 (PST)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id z14-20020aa7888e000000b006cb95c0fff4sm4424630pfe.71.2023.11.21.16.06.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Nov 2023 16:06:55 -0800 (PST)
-Message-ID: <9057d7de-f2e0-44ba-bec7-8b0861b2a850@gmail.com>
-Date: Wed, 22 Nov 2023 07:06:50 +0700
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YogX3JWO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1700629314;
+	bh=cnv4HPjqzpENgSwb6uKQtFMG29qppfeUnvFNRoTLgL0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=YogX3JWOhSw5uZggo5VoYNmRhvjL8UEBdsqPezIoy7PJ+trAgLaMfMJs8byrttGCR
+	 taH/aP/aqTwAsrEhaMUx7N+eG51Ves5Mz12AtHGR8kGJ3+jQ2eV9K5RpF/lFQIAgWx
+	 XwlXSVNwBejFErkFRBYnW/zxGfE48on1DDTfDMXdeMlhuiswDvqpTDRqQt0iANRZ8M
+	 zU5aTHtRkC6S4A1UHdKohYl1b6sIXunJ6ZvricfU8x2pNex6H1vd2LEtjm6WbXOjK5
+	 rX4upN14k9Nt8TwL9fMBYdQJIt/Uxy2anQtmpEV6O/HNz+w+nKIw40CwvAoFaWtOyB
+	 oEMqJMXhDzGGg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SZpxr3Ynvz4xNG;
+	Wed, 22 Nov 2023 16:01:51 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>,
+ npiggin <npiggin@gmail.com>, christophe leroy
+ <christophe.leroy@csgroup.eu>, linuxppc-dev
+ <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
+In-Reply-To: <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+ <877cmc7ve9.fsf@mail.lhotse>
+ <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
+ <874jhg6lkn.fsf@mail.lhotse>
+ <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
+Date: Wed, 22 Nov 2023 16:01:50 +1100
+Message-ID: <87leaqjs8x.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Nouveau <nouveau@lists.freedesktop.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- Christian Brauner <brauner@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@redhat.com>, River <shibedrill1@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Kernel 6.6.1 hangs on "loading initial ramdisk"
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi,
+Timothy Pearson <tpearson@raptorengineering.com> writes:
+>
+...
+>
+> So a little more detail on this, just to put it to rest properly vs.
+> assuming hand analysis caught every possible pathway. :)
+>
+> The debugging that generates this stack trace also verifies the following in __giveup_fpu():
+>
+> 1.) tsk->thread.fp_state.fpr doesn't contain the FPSCR contents prior to calling save_fpu()
+> 2.) tsk->thread.fp_state.fpr contains the FPSCR contents directly after calling save_fpu()
+> 3.) MSR_FP is set both in the task struct and in the live MSR.
+>
+> Only if all three conditions are met will it generate the trace.  This
+> is a generalization of the hack I used to find the problem in the
+> first place.
+>
+> If the state will subsequently be reloaded from the thread struct,
+> that means we're reloading the registers from the thread struct that
+> we just verified was corrupted by the earlier save_fpu() call.  There
+> are only two ways I can see for that to be true -- one is if the
+> registers were already clobbered when giveup_all() was entered, and
+> the other is if save_fpu() went ahead and clobbered them right here
+> inside giveup_all().
+>
+> To see which scenario we were dealing with, I added a bit more
+> instrumentation to dump the current register state if MSR_FP bit was
+> already set in registers (i.e. not dumping data from task struct, but
+> using the live FPU registers instead), and sure enough the registers
+> are corrupt on entry, so something else has already called save_fpu()
+> before we even hit giveup_all() in this call chain.
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Can you share the debug patch you're using?
 
-> After upgrading from 6.5.9 to 6.6.1 on my Dell Latitude E6420 (Intel i5-2520M) with EndeavourOS, the boot process would hang at "loading initial ramdisk". The issue is present on the 6.6.1 release of both Linux and Linux-zen, but not the 6.5.9 release, which makes me think this is somehow upstream in the kernel, rather than to do with packaging. My current workaround is using the Linux LTS kernel.
-> 
-> I have been unable to consistently reproduce this bug. Between 50 and 30 percent of the time, the "loading initial ramdisk" will display, the disk activity indicator will turn off briefly and then resume blinking, and then the kernel boots as expected. The other 50 to 70 percent of the time, the boot stops at "loading initial ramdisk" and the disk activity indicator turns off, and does not resume blinking. The disk activity light is constantly flashing during normal system operation, so I know it's not secretly booting but not updating the display. I haven't been able to replicate this issue in QEMU. I have seen similar bugs that have been solved by disabling IOMMU, but this has not had any effect. Neither has disabling graphics drivers and modesetting. I have been able to reproduce it while using Nouveau, so I don't believe it has to do with Nvidia's proprietary drivers.
-> 
-> Examining dmesg and journalctl, there doesn't appear to be ANY logs from the failed boots. I don't believe the kernel even is started on these failed boots. Enabling GRUB debug messages (linux,loader,init,fs,device,disk,partition) shows that the hang occurs after GRUB attempts to start the loaded image- it's able to load the image into memory, but the boot stalls after "Starting image" with a hex address (presumably the start addr of the kernel).  
-> 
-> I've been trying to compile the kernel myself to see if I can solve the issue, or at least aid in reproduceability, but this is not easy or fast to do on a 2012 i5 processor. I'll update if I can successfully recompile the kernel and if it yields any information.  
-> 
-> Please let me know if I should provide any additional information. This is my first time filing a bug here.
-
-See Bugzilla for the full thread and attached grub output.
-
-Anyway, I'm adding this regression to regzbot:
-
-#regzbot introduced: v6.5..v6.6 https://bugzilla.kernel.org/show_bug.cgi?id=218173
-#regzbot title: initramfs loading hang on nouveau system (Dell Latitude E6420)
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218173
-
--- 
-An old man doll... just what I always wanted! - Clara
+cheers
