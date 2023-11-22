@@ -1,95 +1,119 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7EB4E630
-	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 14:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Cj3esaAZ"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-32daeed7771so4150668f8f.3
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 06:11:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1700662288; x=1701267088; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=j6oC8Fs3BZRJguyt5O6618kkpqiUsB6zuCr+BFV9ojc=;
-        b=Cj3esaAZA05pMTVXMaHOOkP+MRs2+WT7Uc3T/Kyxtpq13vzUwom30wANXJnbWyw5Qk
-         eKe5AM677+kmSMszRkWrl4bPbeMGqF6JBqt7fN1hxoUTLDU8KzFnXdg0v500nYDxUrjr
-         89snRgO0dQPlmtg94xC8dnns+W9tLGTaKlpHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700662288; x=1701267088;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j6oC8Fs3BZRJguyt5O6618kkpqiUsB6zuCr+BFV9ojc=;
-        b=If1zEGx0PJf4Up+TIb44RvMx9OfeLOseAXfjxVuZSyqKhPP4+6Uq/TkC+f+IVLIk8H
-         3TtVmd5R3oqzz5PC5WcfDS+3khVUwZAjFYv2XGiwlzw3zlBiduF/XfOn2ylzrnDyjR1p
-         Q5EjefJkEgoBgFPaUnwnUX7ymjNdGBXkNeHVxQnpromM7jr/qOAVudFqVn30N9EWRNyB
-         Xj8Tg2IlyeKu/I3Uq9zNRVqOgLAMJlEL/qn4KjLj9dbZOY3yRGy6+EfNe2XV6naAXLju
-         suacL/5C7H23vMYUKwW8W1klASvRO4RKzlSHOWlgQkNZZvJgAucqesEUAtxrYUk1n81s
-         hqEQ==
-X-Gm-Message-State: AOJu0YxheRDjVzVys89KUSzMRlNNoRX8PoZZcuYmITyWuzVsuPZLuhvF
-	z8WXSw97eGJwhm2RnILPOf7cjQioZLxJ2HBwHQ0=
-X-Google-Smtp-Source: AGHT+IHvST9DtUHsKkmwgZf6S3xVst9F2NM1FhB0lgKbcdN9HZ4sV8auN2hvsgW/BtionlZ4Z4ov+A==
-X-Received: by 2002:a05:6000:156f:b0:332:ce72:d589 with SMTP id 15-20020a056000156f00b00332ce72d589mr2511576wrz.3.1700662287943;
-        Wed, 22 Nov 2023 06:11:27 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:1718:e534:44cc:c75e? ([2001:8b0:aba:5f3c:1718:e534:44cc:c75e])
-        by smtp.gmail.com with ESMTPSA id az30-20020adfe19e000000b00332c36b6563sm11363831wrb.101.2023.11.22.06.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 06:11:27 -0800 (PST)
-Message-ID: <e49abe2b336ce7534e9a7c82e21df9644f00f3a2.camel@linuxfoundation.org>
-Subject: Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128
- x86/alternative: Rewrite optimize_nops() some]
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	paul.gortmaker@windriver.com
-Cc: bp@alien8.de, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	tglx@linutronix.de, x86@kernel.org
-Date: Wed, 22 Nov 2023 14:11:26 +0000
-In-Reply-To: <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
-References: <ZUEgAAGDVqXz2Seo@windriver.com>
-	 <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1-0ubuntu1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DA14CDEA
+	for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 15:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r5pEq-00068f-Ii; Wed, 22 Nov 2023 16:34:04 +0100
+Message-ID: <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info>
+Date: Wed, 22 Nov 2023 16:34:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Content-Language: en-US, de-DE
+To: Borislav Petkov <bp@alien8.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mingo@redhat.com, tglx@linutronix.de, x86@kernel.org
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
+ <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700667250;5cc0432b;
+X-HE-SMSGID: 1r5pEq-00068f-Ii
 
-On Sat, 2023-11-11 at 12:51 +0100, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> [CCing the regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->=20
-> > [Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128 x86/altern=
-ative: Rewrite optimize_nops() some]] On 30/10/2023 (Mon 20:30) Thomas Glei=
-xner wrote:
-> >=20
-> > > On Mon, Oct 30 2023 at 19:24, Thomas Gleixner wrote:
-> >=20
-> > > > Can you add "debug-alternative" to the kernel command line and log =
-both
-> > > > a working and the non-working kernel output. It's noisy :)
-> > > >=20
-> > > > Also do you have a .config and the qemu command line handy?
-> > >=20
-> > > Forgot to ask: Does the probkem persist with 6.6 ?
-> >=20
-> > My bad, should have mentioned v6.6 and linux-next is impacted. Always a
-> > conflict between burying the lead and boring people with details.
->=20
-> Paul, was this regression ever solved? I wonder as I could not find
-> anything with a "Fixes: 6c480f222128 [...]" tag on lore and this thread
-> looks stalled.
+Preface: considered CCing Linus here, as it's quite possible that I'm
+wrong, as every situation is somewhat different. If anybody disagrees
+with what I bring up below to hopefully clarify things thus please do me
+a favor an CC Linus so he can clarify things.
 
-I didn't see a reply to this. I can confirm the issue is still present
-and we're not aware of any fix yet.
+Ohh, and sorry for being a PITA. I hate that, but when it comes to
+regressions disagreements often happen, as all those discussions linked
+at the end of https://docs.kernel.org/process/handling-regressions.html
+illustrate.
 
-Cheers,
+On 22.11.23 12:58, Borislav Petkov wrote:
+> On Wed, Nov 22, 2023 at 10:15:42AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [1] unless you fiddle with things obviously internal; not sure if this
+>> case would qualify for him, but somehow I doubt it -- but I might be
+>> wrong there.
+> 
+> Well, think about it - by that logic, if CONFIG_* items are an ABI, we
+> will never ever be able to change any of them. [...]
 
-Richard
+Can't follow your logic (or the one from Lukas in the other reply), as
+what's an ABI (or an API) is afaik not the important factor when it
+comes to the "no regressions" rule: you can change things (including
+ABIs or APIs) all you want, as long as nothing breaks. To quote Linus from
+https://lore.kernel.org/all/CAHk-=wiVi7mSrsMP=fLXQrXK_UimybW=ziLOwSzFTtoXUacWVQ@mail.gmail.com/
+
+```
+The rules about regressions have never been about any kind of
+documented behavior, or where the code lives.
+
+The rules about regressions are always about "breaks user workflow".
+
+The other side of the coin is that people who talk about "API
+stability" are entirely wrong. API's don't matter either. You can make
+any changes to an API you like - as long as nobody notices.
+
+Again, the regression rule is not about documentation, not about
+API's, and not about the phase of the moon.
+
+It's entirely about "we caused problems for user space that used to work".
+```
+
+>> BTW: I see that this could help preventing problems like the current one
+>> to happen in the far future. But how would that help the current
+>> situation (e.g. users that have an old dracut and updated the kernel
+>> without updating dracut)?
+> Update dracut too?
+
+To quote Linus again, this time from
+https://lore.kernel.org/lkml/CA+55aFxW7NMAMvYhkvz1UPbUTUJewRt6Yb51QAx5RtrWOwjebg@mail.gmail.com/
+
+```
+People should basically always feel like they can update their kernel
+and simply not have to worry about it.
+
+I refuse to introduce "you can only update the kernel if you also
+update that other program" kind of limitations. If the kernel used to
+work for you, the rule is that it continues to work for you.
+
+There have been exceptions, but they are few and far between,
+[...]
+But if something actually breaks, then the change must get fixed or
+reverted. And it gets fixed in the *kernel*. Not by saying "well, fix
+your user space then".
+```
+
+Are those quotes fitting to the situation at hand? Not totally sure.
+Initramfs generators might be special and we have done exceptions for
+them in the past if no other solution could be found to prevent a
+regression[1]. We'd need Linus to clarify.
+
+Ciao, Thorsten
+
+[1] maybe it's a naive idea, but can't we just avoid the problem at hand
+by adding CONFIG_MICROCODE_AMD and CONFIG_MICROCODE_INTEL back as a
+hidden config stub and remove those in ~3 years? Yeah, ugly, but we have
+done things way more ugly than that to prevent regressions.
