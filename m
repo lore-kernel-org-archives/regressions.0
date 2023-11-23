@@ -1,139 +1,160 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C62D17D1
-	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 05:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.196])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5D02232B
+	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 10:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAg6+A0v"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5c27ee9c36bso355475a12.1
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 21:07:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700716065; x=1701320865; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yY1sQyyb1uhz9MfrFnoGi87QF1jG7op21D45vYKRwfA=;
-        b=GAg6+A0vrHg9ccuGEHN1jlxO5CkDDZCeeTfq6fx7bUDdH9HRq4so5cM0tR17/NLPhe
-         uMSUeLhD9YLyroETg+eC9DdoVxMFTVmMeiqzDrXq5RSupDm4/Cz2NAIQ2mVGf9VmDoaG
-         2kntPQ1jXlMCURRHGwuiYHfGdGihS8q1xIs7TaOAiYp/Du1mYKMBJwBm7SsmUXeElnCQ
-         OvBrQqypi+BFk4G/i9GCKyqqVsquVlKqBObEyIloRfWpcS+MmeeSqFc5Cba/gWILcwIQ
-         fiu+QVn5OmHf8mTG/UX/ywOGrIJ93vW095RL5vhBYKnWxY+/5u+pcJ1kEvWA1Smi7tU3
-         Wilw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700716065; x=1701320865;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yY1sQyyb1uhz9MfrFnoGi87QF1jG7op21D45vYKRwfA=;
-        b=DOVixHCYTsFeVdXXijQZfu2Ep32NTFOP8xo7VsEb9CWW4vDNY3uMpYSN+lLC7nBTSn
-         X7yQNO/aQSCrQAJ07EJFUzYZcMVIWaV5nKW6d++wKys+DEd+YgiC2Y5tXjCubZUVdW1d
-         wADfFXcBFcCHXDuMH2xMY1uiuNuSm3giO8gCsbI/Niz/MCtQYIHBBtkccJ/lyNK+r+Nk
-         /OcS1sEKY865JZ0tAS5I1nNde4RGiqrs6AX7g0IeglCiBK1EQ8DRYlbGh54zFlFWo5/w
-         DBi9PS1PllpYSxuBCrTrIAkxC7SFFQgowkrer4fQiDpfs2JwjQfst05A9AD9Gyc9XmQn
-         /Q/w==
-X-Gm-Message-State: AOJu0YwaXafO5lg52mwkRIfT+lm1g9VCdGEg3c3dpMVb32T86kHez+T8
-	P4TFxM7HLgG10pyQKBoR2zU=
-X-Google-Smtp-Source: AGHT+IFz/3lXGWiwZTSBkr7qB201/vdd5nMWHrqRynwT5rXxDA/xIdUgmfyt7Xq43WHYUvn3g18qgA==
-X-Received: by 2002:a05:6a21:3008:b0:187:a119:908f with SMTP id yd8-20020a056a21300800b00187a119908fmr4115371pzb.3.1700716064558;
-        Wed, 22 Nov 2023 21:07:44 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id i15-20020a17090a2acf00b002839679c23dsm432002pjg.13.2023.11.22.21.07.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 21:07:44 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id CE5B010207143; Thu, 23 Nov 2023 12:07:40 +0700 (WIB)
-Date: Thu, 23 Nov 2023 12:07:40 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Chun Ng <chunn@nvidia.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Ankita Garg <ankitag@nvidia.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iOMo9PMT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Fi8mN
+	7QMYiBwweZOW1oXVVDDhUDGPiwsrOjb3qPSKF0=; b=iOMo9PMTicx5T8xFVbipW
+	8QYzJVn76Ca03a3rvV58WJTDNOV1J6ETDvrIuVmQdKxgCIbc03mCgVg1d0dglMd5
+	ZmVAxUBG6dZnOCDzwpuQCPPZkXkJJu9ipl8xhA0Pmora22e8+e1bhn9nbDoCHAje
+	ebNT0ksOxfESUT9zcdBF4Q=
+Received: from localhost.localdomain (unknown [111.35.185.43])
+	by zwqz-smtp-mta-g3-4 (Coremail) with SMTP id _____wDnD9V1DV9lPSBCAw--.15745S4;
+	Thu, 23 Nov 2023 16:29:51 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: bagasdotme@gmail.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	ankitag@nvidia.com,
+	chunn@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	regressions@lists.linux.dev
 Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Message-ID: <ZV7eHE2Fxb75oRpG@archie.me>
-References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
+Date: Thu, 23 Nov 2023 16:29:41 +0800
+Message-Id: <20231123082941.21122-1-00107082@163.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <ZV7eHE2Fxb75oRpG@archie.me>
+References: <ZV7eHE2Fxb75oRpG@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KIdW2yF7ZM5mmI7P"
-Content-Disposition: inline
-In-Reply-To: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnD9V1DV9lPSBCAw--.15745S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZF45Xw4kXrWfXFW7Cry7GFg_yoW5tF4UpF
+	WjqasYkFW0qrnIvFn5Zw4jg3WrZws3Jw13G3s7KanFvF98Zw1aya1xtFWDKry2g3yIgw4x
+	Xw4DA3WfXrn8Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5xhJUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEB8xql8YMsEAkwAAsz
+
+Hi, 
+
+Just contribute some information I recently collected for this thread:
+
+I run some profiler, and it shows fundamental difference between 6.0 and 6.1:
 
 
---KIdW2yF7ZM5mmI7P
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v6.0:
+```
+__x64_sys_munmap(60.544% 6474/10693)
+    __vm_munmap(98.749% 6393/6474)
+        __do_munmap(97.982% 6264/6393)
+            __split_vma(53.975% 3381/6264)
+                vm_area_dup(59.036% 1996/3381)
+                __vma_adjust(32.121% 1086/3381)
+                anon_vma_clone(5.915% 200/3381)
+                vma_dup_policy(0.769% 26/3381)
+            unmap_region(16.699% 1046/6264)
+            find_vma(10.361% 649/6264)
+            remove_vma(7.822% 490/6264)
+            percpu_counter_add_batch(2.011% 126/6264)
+            __vma_rb_erase(1.405% 88/6264)
+            userfaultfd_unmap_prep(0.798% 50/6264)
+            downgrade_write(0.511% 32/6264)
+```
 
-On Wed, Nov 22, 2023 at 08:03:19PM +0000, Chun Ng wrote:
-> Hi,
->=20
-> Recently I observed there is performance regression on system call mmap(.=
-=2E). I tried both vanilla kernels and Raspberry Pi kernels on a Raspberry =
-Pi 4 box and the results are pretty consistent among them.
->=20
-> Bisection showed that the regression starts from k-6.1, and the latest va=
-nilla k-6.7 is still showing the same regression.
->=20
-> The test program calls mmap/munmap for a 4K page with MAP_ANON and MAP_PR=
-IVATE flags, and ftrace is used to measure the time spent on the do_mmap(..=
-) call.=C2=A0 Measured time of a sample run with different vanilla kernel v=
-ersions are:
-> k-5.10 and k-6.0: ~157us
-> k-6.1: ~194us
-> k-6.7: ~214us
-> Results are pretty consistent across multiple runs with a small percentag=
-e variance.=C2=A0 Ftrace shows that latency of mmap_region(...) has increas=
-ed since k-6.1.=C2=A0=C2=A0An application that makes frequent mmap(..) call=
-s the accumulated extra latency is very noticeable.=20
->=20
-> Please find the ftrace results and kernel config files in this folder:
-> https://drive.google.com/drive/folders/1qy8YTBqxu8Gdbs7IigYbSd4FXldId5sd?=
-usp=3Ddrive_link
->=20
-> The test program can be found in here:
-> https://drive.google.com/file/d/1tG6_BbQMCHwfKebvAIAg_xqbM_lpPcuM/view?us=
-p=3Dsharing
->=20
-> Info on the testing environment:
-> cpufreq_governor: performance
-> Test machine: Raspberry Pi 4, 8GB DDR
-> SCHED_FIFO with priority 99 for running the test program
->=20
-> Vanilla kernels are not tainted. However on k-6.0 and k-6.7, I have to pa=
-tch the drivers/clk/bcm/clk-raspberrypi.c file with the version in Raspberr=
-y Pi kernel tree for the CPU frequency governor to work.
->=20
+v6.1:
+```
+__x64_sys_munmap(68.024% 24741/36371)
+    __vm_munmap(99.681% 24662/24741)
+        do_mas_munmap(99.015% 24419/24662)
+            do_mas_align_munmap(98.243% 23990/24419)
+                __split_vma(58.966% 14146/23990)
+                    __vma_adjust(83.755% 11848/14146)
+                    vm_area_dup(13.191% 1866/14146)
+                    anon_vma_clone(2.050% 290/14146)
+                    vma_dup_policy(0.254% 36/14146)
+                mas_store_prealloc(11.709% 2809/23990)
+                mas_preallocate(9.579% 2298/23990)
+                unmap_region(5.523% 1325/23990)
+```
 
-The next step is to find the commit that introduces your regression with
-`git bisect`. If you haven't done so, see
-Documentation/admin-guide/bug-bisect.rst for instructions.
+v6.1 introduce the maple tree data structure, and mmap/munmap performance started to degrade since.
+Base on the observation, I tested two commit:
+9832fb87834e2bd925d30020962c81b05948fa7b GOOD (Same as v6.0, about 20seonds) (This is before "Patch series "Introducing the Maple Tree")
+11f9a21ab65542189372b7d64bb2d2937dfdc9dc BAD  (about 51seconds) (This one is somewhere middle in the path series for maple tree.)
+While with v6.1, the test run about 56 seconds
 
-Anyway, I'm adding this regression to regzbot:
+For v6.7, profiler show further fundimental changes, some vmi stuff, and preformance is worse (~70 seconds).
+```
+__x64_sys_munmap(63.873% 30725/48103)
+    __vm_munmap(99.456% 30558/30725)
+        do_vmi_munmap(97.670% 29846/30558)
+            do_vmi_align_munmap(97.196% 29009/29846)
+                __split_vma(63.701% 18479/29009)
+                    vma_complete(34.417% 6360/18479)
+                    vm_area_dup(33.681% 6224/18479)
+                    mas_preallocate(11.835% 2187/18479)
+                    down_write(5.173% 956/18479)
+                    up_write(3.815% 705/18479)
+                    asm_sysvec_apic_timer_interrupt(1.153% 213/18479)
+                    anon_vma_clone(0.974% 180/18479)
+                    vma_adjust_trans_huge(0.622% 115/18479)
+                    mas_next_slot(0.498% 92/18479)
+                    vma_dup_policy(0.465% 86/18479)
+                    vma_prepare(0.357% 66/18479)
+                    srso_return_thunk(0.336% 62/18479)
+                    mas_find(0.114% 21/18479)
+                unmap_region.constprop.0(12.196% 3538/29009)
+                mas_store_gfp(10.548% 3060/29009)
+                __call_rcu_common.constprop.0(1.992% 578/29009)
+```
 
-#regzbot ^introduced: v6.0..v6.1
+I use following test code, and timed it
+```
+#define MAXN 1024
+struct { void* addr; size_t n; } maps[MAXN];
+int main() {
+	int i, n, k, r;
+	void *p;
+	for (i=0; i<MAXN; i++) {
+		n = 1024*((rand()%32)+1);
+		p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+		if (p == MAP_FAILED) {
+			perror("fail to mmap");
+			return -1;
+		}
+		maps[i].addr = p; 
+		maps[i].n = n;
 
-Thanks.
+	}
+	for (i=0; i<10000000; i++) {
+		k = rand()%MAXN;
+		r = munmap(maps[k].addr, maps[k].n);
+		if (r) {
+			perror("fail to munmap");
+			return -1;
+		}
+		n = 1024*((rand()%32)+1);
+		p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+		if (p == MAP_FAILED) {
+			perror("fail to mmap");
+			return -1;
+		}
+		maps[k].addr = p; 
+		maps[k].n = n;
+	}
+	for (i=0; i<MAXN; i++) munmap(maps[i].addr, maps[i].n);
+	return 0;
+}
+```
 
---=20
-An old man doll... just what I always wanted! - Clara
+Thanks
+David Wang
 
---KIdW2yF7ZM5mmI7P
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZV7eGAAKCRD2uYlJVVFO
-o72FAQCK5rdafR/mKJWt3KzyR6K08xDUXWyyIuqjKnddfzjV1gD/RNJ2SAAIHKWN
-re/3qbV0011KdIQjaBsiuk0g/iTkaAA=
-=/6zc
------END PGP SIGNATURE-----
-
---KIdW2yF7ZM5mmI7P--
