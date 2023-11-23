@@ -1,115 +1,178 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AF61382
-	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 01:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A0C440B
+	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 01:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUJlk2OD"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-280260db156so349738a91.2
-        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 17:18:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StM/kz+q"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-77d66c7af31so94832385a.1
+        for <regressions@lists.linux.dev>; Wed, 22 Nov 2023 17:34:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700702311; x=1701307111; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HRDfm5lmN9oWHrfQ6RGbONVD1D7o4JaIn9KZ+LQPA/I=;
-        b=bUJlk2ODFbJHknoFFanXYKTbIla7RigSQH0Jkp17wt68S9Pbj5RA21atJkkZWPzeF3
-         BAlniIv/onuZ6H2i4Z/6xufc13x0Gi8SqNXEClLvrQt5vFgumJTQJXRelKA0NfLaNVCq
-         4366Z5QikNJY78wAqMOTf/3c9R59cjJBdmxSEdZgnIFR5Ku9HH5eXK36NJdSh5JW4cb8
-         ULLi/4FlGodLNyXpbu2TURit41uBiekOKfAfw6kHsrhR2lLs4FOcpgzrzkmy4zVKJop+
-         qc9PaO+RW59nM663Bbw9UeoXESZLVeBWwjlN7qy4+kaYpj33WreJpT3eQUYh30Sl4zoE
-         qT2A==
+        d=gmail.com; s=20230601; t=1700703278; x=1701308078; darn=lists.linux.dev;
+        h=in-reply-to:autocrypt:from:references:cc:to:content-language
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FVvQm7dNdcrEw+By/HnAz+p8UyFgjuaek7oRs10lPJY=;
+        b=StM/kz+qfbvVvSStDMgJRN78eeh/WDRIoaRtGnDqvHrwM8A+ZEFA/eeeFY4tlyTNQb
+         rQfp+0GQm/kjZB71CBpMw8WCi+8wpNmF2qMCbL1hTLwF5Ze01YUVYQKPXFlmTWtT5DzJ
+         T3d8oJnS448pD+erkFr04s/ChPt1Y8Fdx1vMKnaf37aQ7b10Os+CnneSnL7D32ptlHxO
+         ek4PnqJ2OOua8ZPyG8Q6OBUtTcI2nGh/uSqjQm/w09/b9Is6c9uXUYlvBK839dOK6/uW
+         vAb/ofWLTAuGC1i3BLwHJBajgT9l8ii8P1CkBOttP67P+baf/ok4dzKKL95N7Dt7+YlA
+         zvjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700702311; x=1701307111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRDfm5lmN9oWHrfQ6RGbONVD1D7o4JaIn9KZ+LQPA/I=;
-        b=udYSebwcfcdGju7cQ/Zu3Ra01PW5d5h5w+BCBIa2pCMBFtzhkGEXfwyKOx4zWQHcpi
-         fQ+L3EiJ8PzGhLHjR47Dl5Igk8px87jMPsGIwQBPjolVLUx4AMWneAfy/cGEPScz1BAc
-         z26FMF1Ulu+RBm83YTPi5nWuwGVkjaxJ82zXbkL3SNIOpS0FXGNlliioTfuIOixh6i6k
-         1R2FS98Sqsv179cjbiPDecqIUMar6A+DtxAU07D8Yw23n37gNoNfPb0ZJGsav0LqGzHK
-         wRPAhIwjpD4pXUrVGd1K+4XDevbapbWobSDrfhw2KQfV189fMkvLKkv8RI5O/B23OB+3
-         ODlA==
-X-Gm-Message-State: AOJu0Yylp9YK4sHml38p4AZPow67mkLAXTHJNaU/fKFoEvEemgMUsnXN
-	6Ttc3lDZkWJ3/nAp4z40nF8=
-X-Google-Smtp-Source: AGHT+IGiPmnbiCr8qnLgZAg5BZ3NCj3W2Rf9JG7Dmc59vfKQewrzihV4UcH7z/Y6mGAULjLnD3YGLQ==
-X-Received: by 2002:a17:90b:390e:b0:285:24bd:d8bb with SMTP id ob14-20020a17090b390e00b0028524bdd8bbmr4493019pjb.36.1700702311225;
-        Wed, 22 Nov 2023 17:18:31 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id a16-20020a170902ecd000b001cf5d59c739sm44126plh.271.2023.11.22.17.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 17:18:30 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 4BED510207143; Thu, 23 Nov 2023 08:18:26 +0700 (WIB)
-Date: Thu, 23 Nov 2023 08:18:26 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Chun Ng <chunn@nvidia.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Ankita Garg <ankitag@nvidia.com>
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Message-ID: <ZV6oYmVYsyYizvgg@archie.me>
-References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1700703278; x=1701308078;
+        h=in-reply-to:autocrypt:from:references:cc:to:content-language
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FVvQm7dNdcrEw+By/HnAz+p8UyFgjuaek7oRs10lPJY=;
+        b=hxAfrH7+K+fVIzMel0cnjePEY429iXTmqBoAL/DCblkNFq5quuzuU53xj5kHrWGF0o
+         +yLWp3h23bSUw8A0iSm1j17ESvZAlSM4UTLAHf3dC7BxeMJPtRy8IN7l9SpJAgIVpof8
+         RQ304+fQ2S9s8ETofAG3ZH5P++7tj5N2uGrF0Kb2GAin2eXWq+48ceLbTzFqndknW2Pe
+         J+HEJqfRm9uPxAPkwcZ8JujMRg3etNYYDFt70me3lZ0IUFCqVXtpHkyAINO1Jd58RR0b
+         LxStNXZLblji/ihBRQqmpO7KC3LyNDjSJO2blHCUge9qymi7d1Esyag/50TahOsR4yGX
+         IF2Q==
+X-Gm-Message-State: AOJu0YxAylJIrRii0hfC5dPFMdFiW+l1l/Y6ZlOMQzRV0ADrqTL3YwkS
+	x3jS88aHCHhybRSrLXop/ls=
+X-Google-Smtp-Source: AGHT+IHx11EczPrIFISk6oINBDdC+aE6H1v5VzuBWLY0gV6CordtkXc/Q14nS5mEopntoBTUpp8S8w==
+X-Received: by 2002:a05:620a:1712:b0:773:fa62:39fe with SMTP id az18-20020a05620a171200b00773fa6239femr2160568qkb.1.1700703277644;
+        Wed, 22 Nov 2023 17:34:37 -0800 (PST)
+Received: from [192.168.2.14] ([76.65.20.140])
+        by smtp.gmail.com with ESMTPSA id vz18-20020a05620a495200b0077d5c5af0c1sm62097qkn.6.2023.11.22.17.34.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Nov 2023 17:34:36 -0800 (PST)
+Message-ID: <019eb41e-6052-414f-90d4-cd192fa3fe04@gmail.com>
+Date: Wed, 22 Nov 2023 20:34:27 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oBSe3tCHKA7p0yt4"
-Content-Disposition: inline
-In-Reply-To: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101
+ Thunderbird/115.5.0
+Subject: Re: Radeon regression in 6.6 kernel
+Content-Language: en-CA, en-US
+To: Phillip Susi <phill@thesusis.net>, Alex Deucher <alexdeucher@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <87edgv4x3i.fsf@vps.thesusis.net>
+ <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
+ <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
+ <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com>
+ <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
+ <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
+ <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
+ <87bkbodp51.fsf@vps.thesusis.net>
+ <CADnq5_Nh4wCFY10Ha9dTGWvehPCdY2zxfERtFuoeF5_xA+P=QA@mail.gmail.com>
+ <87r0kircdo.fsf@vps.thesusis.net>
+From: Luben Tuikov <ltuikov89@gmail.com>
+Autocrypt: addr=ltuikov89@gmail.com; keydata=
+ xjMEZTohOhYJKwYBBAHaRw8BAQdAWSq76k+GsENjDTMVCy9Vr4fAO9Rb57/bPT1APnbnnRHN
+ Ikx1YmVuIFR1aWtvdiA8bHR1aWtvdjg5QGdtYWlsLmNvbT7CmQQTFgoAQRYhBJkj7+VmFO9b
+ eaAl10wVR5QxozSvBQJlOiE6AhsDBQkJZgGABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheA
+ AAoJEEwVR5QxozSvSm4BAOwCpX53DTQhE20FBGlTMqKCOQyJqlMcIQ9SO1qPWX1iAQCv3vfy
+ JwktF7REl1yt7IU2Sye1qmQMfJxdt9JMbMNNBs44BGU6IToSCisGAQQBl1UBBQEBB0BT9wSP
+ cCE8uGe7FWo8C+nTSyWPXKTx9F0gpEnlqReRBwMBCAfCfgQYFgoAJhYhBJkj7+VmFO9beaAl
+ 10wVR5QxozSvBQJlOiE6AhsMBQkJZgGAAAoJEEwVR5QxozSvSsYA/2LIFjbxQ2ikbU5S0pKo
+ aMDzO9eGz69uNhNWJcvIKJK6AQC9228Mqc1JeZMIyjYWr2HKYHi8S2q2/zHrSZwAWYYwDA==
+In-Reply-To: <87r0kircdo.fsf@vps.thesusis.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------27nbuB0IZ3H2JpCGJkZb2mlG"
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------27nbuB0IZ3H2JpCGJkZb2mlG
+Content-Type: multipart/mixed; boundary="------------JaUbo0Dk7JfrrXuVg05JtlSM";
+ protected-headers="v1"
+From: Luben Tuikov <ltuikov89@gmail.com>
+To: Phillip Susi <phill@thesusis.net>, Alex Deucher <alexdeucher@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Message-ID: <019eb41e-6052-414f-90d4-cd192fa3fe04@gmail.com>
+Subject: Re: Radeon regression in 6.6 kernel
+References: <87edgv4x3i.fsf@vps.thesusis.net>
+ <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
+ <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
+ <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com>
+ <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
+ <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
+ <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
+ <87bkbodp51.fsf@vps.thesusis.net>
+ <CADnq5_Nh4wCFY10Ha9dTGWvehPCdY2zxfERtFuoeF5_xA+P=QA@mail.gmail.com>
+ <87r0kircdo.fsf@vps.thesusis.net>
+In-Reply-To: <87r0kircdo.fsf@vps.thesusis.net>
 
---oBSe3tCHKA7p0yt4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+--------------JaUbo0Dk7JfrrXuVg05JtlSM
+Content-Type: multipart/mixed; boundary="------------0UWsNpAWAXtLgwX61eP4ohzW"
+
+--------------0UWsNpAWAXtLgwX61eP4ohzW
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 22, 2023 at 08:03:19PM +0000, Chun Ng wrote:
-> Hi,
+On 2023-11-21 17:05, Phillip Susi wrote:
+> Alex Deucher <alexdeucher@gmail.com> writes:
 >=20
-> Recently I observed there is performance regression on system call mmap(.=
-=2E). I tried both vanilla kernels and Raspberry Pi kernels on a Raspberry =
-Pi 4 box and the results are pretty consistent among them.
+>> Does reverting 56e449603f0ac580700621a356d35d5716a62ce5 alone fix it?
+>> Can you also attach your full dmesg log for the failed suspend?
 >=20
-> Bisection showed that the regression starts from k-6.1, and the latest va=
-nilla k-6.7 is still showing the same regression.
+> No, it doesn't.  Here is the full syslog from the boot with only that
+> revert:
 >=20
-> The test program calls mmap/munmap for a 4K page with MAP_ANON and MAP_PR=
-IVATE flags, and ftrace is used to measure the time spent on the do_mmap(..=
-) call.=C2=A0 Measured time of a sample run with different vanilla kernel v=
-ersions are:
-> k-5.10 and k-6.0: ~157us
-> k-6.1: ~194us
-> k-6.7: ~214us
-> Results are pretty consistent across multiple runs with a small percentag=
-e variance.=C2=A0 Ftrace shows that latency of mmap_region(...) has increas=
-ed since k-6.1.=C2=A0=C2=A0An application that makes frequent mmap(..) call=
-s the accumulated extra latency is very noticeable.=20
 
-Did you mean that v6.0 doesn't have this regression?
+Thank you Phillip for verifying this.
 
-Confused...
-
+BTW, luben.tuikov@amd.com should absolutely bounce for everyone sending e=
+mails to it. Not sure why it is still active.
+My new email is the one this email is coming from.
 --=20
-An old man doll... just what I always wanted! - Clara
+Regards,
+Luben
 
---oBSe3tCHKA7p0yt4
-Content-Type: application/pgp-signature; name="signature.asc"
+--------------0UWsNpAWAXtLgwX61eP4ohzW
+Content-Type: application/pgp-keys; name="OpenPGP_0x4C15479431A334AF.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x4C15479431A334AF.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZTohOhYJKwYBBAHaRw8BAQdAWSq76k+GsENjDTMVCy9Vr4fAO9Rb57/bPT1A
+PnbnnRHNIkx1YmVuIFR1aWtvdiA8bHR1aWtvdjg5QGdtYWlsLmNvbT7CmQQTFgoA
+QRYhBJkj7+VmFO9beaAl10wVR5QxozSvBQJlOiE6AhsDBQkJZgGABQsJCAcCAiIC
+BhUKCQgLAgQWAgMBAh4HAheAAAoJEEwVR5QxozSvSm4BAOwCpX53DTQhE20FBGlT
+MqKCOQyJqlMcIQ9SO1qPWX1iAQCv3vfyJwktF7REl1yt7IU2Sye1qmQMfJxdt9JM
+bMNNBs44BGU6IToSCisGAQQBl1UBBQEBB0BT9wSPcCE8uGe7FWo8C+nTSyWPXKTx
+9F0gpEnlqReRBwMBCAfCfgQYFgoAJhYhBJkj7+VmFO9beaAl10wVR5QxozSvBQJl
+OiE6AhsMBQkJZgGAAAoJEEwVR5QxozSvSsYA/2LIFjbxQ2ikbU5S0pKoaMDzO9eG
+z69uNhNWJcvIKJK6AQC9228Mqc1JeZMIyjYWr2HKYHi8S2q2/zHrSZwAWYYwDA=3D=3D
+=3DqCaZ
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------0UWsNpAWAXtLgwX61eP4ohzW--
+
+--------------JaUbo0Dk7JfrrXuVg05JtlSM--
+
+--------------27nbuB0IZ3H2JpCGJkZb2mlG
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZV6oXwAKCRD2uYlJVVFO
-o3C7AP4snmZptoM1ihlFeB/5xpLDHZSoqPN2u/eqYYB2SY8R2gEAi5WXVXAcjnzt
-x6LuHUALRKh0Ndw9CLixARM1Duf1hws=
-=zXF1
+wnsEABYIACMWIQSZI+/lZhTvW3mgJddMFUeUMaM0rwUCZV6sIwUDAAAAAAAKCRBMFUeUMaM0r0PV
+AP0WuXBGxTcRLZ2DRrGpYBHu4m7v0WRi1i3elruWFZVUtAEAsqEfv7eS3EOHFkUAGpjnAdrE4sQB
+BVYPLJdOYTd4pA0=
+=2dlN
 -----END PGP SIGNATURE-----
 
---oBSe3tCHKA7p0yt4--
+--------------27nbuB0IZ3H2JpCGJkZb2mlG--
