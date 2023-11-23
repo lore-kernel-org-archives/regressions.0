@@ -1,129 +1,169 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30AD23753
-	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 12:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2B024B51
+	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 13:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+usmnn3"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6cb66f23eddso741002b3a.0
-        for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 04:51:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700743889; x=1701348689; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lua/407sLR7U5g7Ynk/F+LhzLi2h/XJEhubjfBRyzWM=;
-        b=P+usmnn3lADDP1hpTUARrKls2k3EvixACW1e63Mtmgk8DmV5yKHUKN46mHkZLIXhov
-         D771xr/RdOVsjCz+FtBz0AV9nPZWr0gg3cjjW3V5WvNGzWFCTEwdNA0puTmSGTTHQRoc
-         1+XeMzkHUOCRW3Rk6nwC9hh/kZuEQM+i6u0JuiUDQiJub46EZLU77ln3gmiZhgAVh5Ua
-         hRnUwJN0fPQb6peWIXrffWTMnbsAvwbvkO8s4oIBDV70pKqvdjrE5xH3MW03avVj1wf+
-         gfV/TbUNvPdIxE/2FH++YXCx5a/P7ZgPjFu5OCrqbYiBZOtcUKGyIpIM2d0KK4DahN6F
-         ABvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700743889; x=1701348689;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lua/407sLR7U5g7Ynk/F+LhzLi2h/XJEhubjfBRyzWM=;
-        b=fcaSNBIRU9bZrgr9t6jlcWqSjH+AfINyFaAzd56LB0yZpugLuHRPM7nvzCsz692cJ1
-         nR2mnkFSxmCfUoD0XEa875/uQaqNTMNXTulx4AWdw8MPrSQYsIqWxgDPA0pK4k1p5WQ+
-         62iqk0XrNJhuSskl2QxLrjFGPfmxyxpGtKdmC+LeVXRpqHr/qucW1vv1hQDff15Rec4U
-         ax6TGPj+Z6ZXfBEcEWOVtUJpUgNi6j5OsyH/ZHXDJWrn3YUMzRY9aGz1gFS3VLUDgZYL
-         C7BBZp5j+LutwUarhVyHxQREI8XJ6BKZ+pNlv/o4mCUvAqPBsPnjXYEZHI6fn9HXgiQw
-         vx8Q==
-X-Gm-Message-State: AOJu0Yw672HC15/tEGgdHg+l45nx2l2cAPNZctLW73AwA+Jqy+XmkrnY
-	DOAPiW1VS+AlP8lMdfdcJQ9MY06eHRrxjQ==
-X-Google-Smtp-Source: AGHT+IHPjfg2D7ucdRYYUKQc6MDSWRv+kQYYT7mIt1RvV6aQz7kIkjD5Y2nMDmRJHpUcwd6d13d8bw==
-X-Received: by 2002:a05:6a00:180e:b0:6cb:8c91:682 with SMTP id y14-20020a056a00180e00b006cb8c910682mr6205845pfa.29.1700743888923;
-        Thu, 23 Nov 2023 04:51:28 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id p126-20020a634284000000b005b9288d51f0sm1285107pga.48.2023.11.23.04.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 04:51:28 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 46F561015D896; Thu, 23 Nov 2023 19:51:24 +0700 (WIB)
-Date: Thu, 23 Nov 2023 19:51:24 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Linux regression tracking #update (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Arnas <arnasz616@gmail.com>
-Subject: Re: Fwd: [Regression] S3 Sleep Mode failures since Linux 6.x on Dell
- Inspiron 15 5593
-Message-ID: <ZV9KzFGSqFsJl4YA@archie.me>
-References: <585dcc9e-7e72-473a-98ec-4f06018d542f@gmail.com>
- <ZV4AP1GY3fHAxmtx@archie.me>
- <bbeb662d-78d0-4157-b062-b061eab66088@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EX9/vTfh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h+J05tgt9SRBiIUHQqJ+s2C3uaz3Orr2/DPXnUVD+jazpaCBI7KDVD2sI4yVx/MMqZCnZkbgydVpIbg8hmuvaAB/2cN26SuSK4OBQTFEw9I2ziqXINdp82Njt346IL81QfYvQ16O+tGofxYNzStE1DsCpOD+W8adyHBJ2gs51aK0wBbpez8guhyskon4SZdPalpE/DG9/OOWVsuzhMeZO4h2T0DfQmtP1MH4SNmRh8fwK9yEIEDGUYsezg1txzpJ1EcBmfVYTMfoilxHLTkW6rKKk1E6AfIGLMS3Ne7m2AiYmy4PGSFlgXH2dC9eH3lDnSYfD4/asg1IGDCZX84bjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qE+dDhi3KcrAhtsJyuq2xfWswqmmhHG2eLlsQz7xLHE=;
+ b=Pe97bIQQ3gBDLxr9Q9kM01+cvBn9Esds/xyDVPpxX+GB1Lbl6x9U7Zg5AFV3vzalqRMXOc9THf5XtYz0AlVVleVrwkF6earsHQm0CIIRwpraVW6jmMvGr//+kPMymFOpMEfBdo+WZr10aPTJxfXYR1TW9Vv8yjbQ2NweouOj6WTHB9C1DGFSqLZS3Se+k55cya+4gcLS7DJRu42Dj/hHscqi5TSv0sXGkl7k+OTxaMvbeGSBwCfD11LSv9bRVIoWUbAZo5GrAO2LnvuGyNFZbC+hc9fwVWg44sW3WrReD5WEwh9OvpFM54w5u93E8LzUSPtyxIlI5fuDb0ZL06tpwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qE+dDhi3KcrAhtsJyuq2xfWswqmmhHG2eLlsQz7xLHE=;
+ b=EX9/vTfhnT0RiWNyFhajDSx36F2WzHIG4T2iJ4rnsiy2oPvn66d///0RkpuAq4BFhTrjKj9+eiJ0e6eDsT2MQYnajiHYy2hoPnELfMxvRaNRjsc+LnDRKDAuWzlR3mjt17lZ4DtUGhmN1B82yG+6sf2O7lBlz3NbKWO6q33migk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3661.namprd12.prod.outlook.com (2603:10b6:208:169::31)
+ by PH0PR12MB8774.namprd12.prod.outlook.com (2603:10b6:510:28e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.20; Thu, 23 Nov
+ 2023 13:58:16 +0000
+Received: from MN2PR12MB3661.namprd12.prod.outlook.com
+ ([fe80::6d62:cc7:cf1d:86eb]) by MN2PR12MB3661.namprd12.prod.outlook.com
+ ([fe80::6d62:cc7:cf1d:86eb%7]) with mapi id 15.20.7025.020; Thu, 23 Nov 2023
+ 13:58:16 +0000
+Message-ID: <ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com>
+Date: Thu, 23 Nov 2023 19:28:06 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression apparently caused by commit
+ 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
+ for acp pci driver"
+Content-Language: en-US
+To: Marian Postevca <posteuca@mutex.one>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Syed Saba Kareem <Syed.SabaKareem@amd.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
+ Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
+ Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Yang Yingliang <yangyingliang@huawei.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
+ ye xingchen <ye.xingchen@zte.com.cn>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
+ <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
+ <d002ad6f-d908-4cf6-afcf-bf0989418e72@leemhuis.info>
+ <6085d2e3-f28e-4d1d-9863-8275931430e6@amd.com> <87fs0x4fn7.fsf@mutex.one>
+From: syed saba kareem <ssabakar@amd.com>
+In-Reply-To: <87fs0x4fn7.fsf@mutex.one>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0213.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::7) To MN2PR12MB3661.namprd12.prod.outlook.com
+ (2603:10b6:208:169::31)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0roWu1Dj6Rps07pF"
-Content-Disposition: inline
-In-Reply-To: <bbeb662d-78d0-4157-b062-b061eab66088@leemhuis.info>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3661:EE_|PH0PR12MB8774:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b3c6daa-405a-400d-d299-08dbec2c3dcd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Pw90a6Uv9ny0TndwizQLTj87eWFSJXFHdRjkZWFEYsav7XXLfa97xIXNkUVIjc4ZmvmBKi2tALkDg5ZKSOgww1JCt+Wj1hn1F2uK/8MYAPw1Jv9QpIqxxGKiINsCEOf74KVL7sp3KaAOdxnNBcNUV5rnBVL2rFaCLzjdNw+TARf8aejSV43JuHFkpNYzZivMZJIq3pkF1Pegv+ntrFvCUHwWIg0H4tgLGe/iGoDOaTzo8+WTU62uXqq/hKJxIcWBxZflDPmPAUGGhGmUuz6N6vtE8DKpvTUNHr+WWGEZZ3bas0wkSq0Ocwv0MESrzO75CY9lNw9HA0mF9Rv1Hnzpt4iUGFR5ndosoCS5ekW5ZmnSa1ucnceFB3JYj7ZWiSI4r/0DdDjY495UU1pc8EIhZvxHpVFHi94F/FrAis8bykIKLUAvRd4kogphxIgFplK1aeKAeQeirHhXvBkvuwK3rh/1IuvzYKLaHDh0pYmAnT08vcuzjoOFUUTa3dCMQrAERU/ss5HbCamObU1g4Bo5g+bEGgW2dRQf8kjWwLr4bB3duWuHStO59Q8SqmFVHmimgbHGrsM7/m8u5Lus33NG72fvFO0daiWqYyQ+OuExWZPd5BfJDlx+Ym8P4deJdksUnc7lD9llbEB9M4g9434Iqsk5M+AKEqCXgHe85yxfSehkWxra56JWcFELZLDh3nEn
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3661.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(366004)(39860400002)(136003)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(5660300002)(7416002)(2906002)(4326008)(8936002)(8676002)(41300700001)(66556008)(316002)(66476007)(6636002)(54906003)(66946007)(110136005)(6666004)(478600001)(6506007)(6486002)(966005)(53546011)(31686004)(26005)(2616005)(6512007)(38100700002)(36756003)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NTFTQVhKc3ZIdTlSQVR2N2lFZktHWnh3ZmFVNVk5Rit2WXJYRXdFVWVhSnBU?=
+ =?utf-8?B?ZTFBM0pkbElWODB2VVpVN2wvK1EvdUJsTk83T1FlL2FRRG1MYUtiQWVxeGxZ?=
+ =?utf-8?B?UkdxQnhCd3NaTzRiNXBQRTV1VytvR1Q5K3pSNnJQdDQ4Z1BNN2NQV2Z5V1gz?=
+ =?utf-8?B?ZGRRcVliRUN5NjZWdEpYd0pXT2xhRFVEdzdGSzZwei90WXBJbEwzc3JpdU1r?=
+ =?utf-8?B?SUhTZW5jVTBabnJ2OGpJL1BiYWFRS1lmV0RycmlibU04NmNqaGNLRE9qOSs0?=
+ =?utf-8?B?OThnY0R3R1NrOXJmUERraGdTOHlEd1dyUW40T2gxSHlwb3NwbGcyeDg4Z1hz?=
+ =?utf-8?B?QkMwZDRTazR5S0EzSSt3K3pjcTNmNElsYUFSUytTdCt0YnFCUUZwZW5OOUJo?=
+ =?utf-8?B?ZlZaWEF3WE1PSjZOZmRMUTZOV1RyUUVzUXpGeHJheHNsUnMycTl6dmpuMXRo?=
+ =?utf-8?B?UFJVTmhMU2NaRTc1SGVVRHkxOHVFMzd1ckVpWWlLK3pucURtTXMwelg2YzRB?=
+ =?utf-8?B?ajVOU0NGRDNXS3d4Rm1aTklSVU1DdzB3VmQ3Yzc4d1NuZEcxRE9jYjZqbjRB?=
+ =?utf-8?B?c0JJaDZ3Ri9la0c0TmN5UmtTamhsWUhYNCtGWktlUGVFWEo3dVFWRWpaSzAw?=
+ =?utf-8?B?TlNsN2d2ajNzS3pmNW5xaFYyVEhkTDVISmpPSWNTRWF3clJQZWdPdnMyNnJ2?=
+ =?utf-8?B?TkZXWTd4bGxpa0VWL3EzcnZkYnQ2WW9EcjloelpZQlFwdGQ4UTFSTS9WMDFv?=
+ =?utf-8?B?NlVDaEFiT1E3a1hxcHhmeDdQRnBUa1FzeEw5bkVram9DSzgwT1BiTE1aUnRu?=
+ =?utf-8?B?SnVUNS95aXh2V2ZtWWhvRjcvcDlNTnIyWlE4OHdSUGhES0ozTG5jb09ZLzVI?=
+ =?utf-8?B?K2RzMmoxaHNBR1hFeTBjT2l6SVlFZk9BbXBKZVpLRTBlLzFxeWxjS253K3RL?=
+ =?utf-8?B?ejVTTUJORWxSc0V5WUUyV1FvbzgyMkY1T3hZaXd4R1VuNWRUN29yVWpNcTU1?=
+ =?utf-8?B?U3FzcEJDaFN5bGRURGpaZlU0em0yWS9ISWVtQXpGYXozZEk4cHhvYW5WNGps?=
+ =?utf-8?B?Q0JrbFEweXh1N2RtbktRMTZ6eFEvNXN5MDlpTzlQMFBYdkZNYy9EN1BkU21Y?=
+ =?utf-8?B?dEVmYXg3eDloZ1I0eHRBRk9kNmpRcStWVGNrcEtlUGE5REM0bm8wMVJGbk0z?=
+ =?utf-8?B?RG1DazlEOFl5UUE2dGJvT0ljUXRTZzB4YzJZQVRPZVg1d1lVUzRROWVJckVB?=
+ =?utf-8?B?V09GaE9JNWNrRkJPKzVkcElEQWRvdmZWc1lzN2VDZDB1ekUvQlYyME1FL050?=
+ =?utf-8?B?ZzZ6cFRhb1E2KzUzRERuREJXRVpFTkNFY2dyYWptNDM0NE9neGxIUWVEVXJW?=
+ =?utf-8?B?UkpXU3Jmazc3ZUQ4YTMvVTMrczJzQ0owQWJZTXV2YnV5UTRmZ3FtZXozanBw?=
+ =?utf-8?B?RmtPWkxjZXZhcVo5bFVvTHlvbEF0MXdPV1o4T09jc2N2eUxxL3lxc2dWNHBY?=
+ =?utf-8?B?Ty90NGZVZzAzcDdSaHFPT0t1WkM2QXFzYXAzQ1VmT29xdDZ4ZThxZFhyK0Z5?=
+ =?utf-8?B?ZG90ZGZOTmorb3FmNjdZaDcvcURUR2RzVkZHV0JiZWhDSm5qTmFWOVVPYUNZ?=
+ =?utf-8?B?TmFYUU1yUkd2ZGZrRXVIMkNLZTJqZnhWcmxLUXE1OWQ0Vy9QV1J0c29JYTY4?=
+ =?utf-8?B?K0lRd20xWi9tWHdkd3Vsck9DNDZIcElWeHVLVkQ2cCtDTGFtNFFTSHVWUVdL?=
+ =?utf-8?B?b2YybDRCdGJ0d1dINkxTZ2kwUmkydi90UnFCM1BRb3NmV3Y0V2NCaWtXbW9o?=
+ =?utf-8?B?Rks2TWwxWWVpRUNDTnNGYlp2WTZzVWtNTGhpeE1BNmpwTHhicHMzQU9vZ0FZ?=
+ =?utf-8?B?Rit4Vm1BMHZlQ2xMaUlvTGhmR2VGbDBoMURGZko1OEttdjBURDFNbG5KQ2hD?=
+ =?utf-8?B?cm80M0ZoVXJIUTNqVEdlVHYreGUrWWZvZXIrK09WcVhyZ3FpSmdwNEtEOWpP?=
+ =?utf-8?B?N0NIQUZBV3FTT05FTnVZZUJYUW1lNmZraWx6ZDczTGVUYmpJZU5vNWdVSjhQ?=
+ =?utf-8?B?L2t2MFpxMmppZkRwbzkvVElIczNoRnpXN25XZGdYVFFtUmV6dDZUOHZtY0Fi?=
+ =?utf-8?Q?JRE60jJsJjjGQQgb8nedEb8Dt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b3c6daa-405a-400d-d299-08dbec2c3dcd
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3661.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2023 13:58:16.6299
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DEMeBAjEuiVd2FBS/LDsdGRCRKP1QYu8dXV3GlhzVHzDpwnD/tIlSMwzlNQnISxkJ/Anm9FExCLpnjPzhHUDkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8774
 
 
---0roWu1Dj6Rps07pF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/23/23 03:25, Marian Postevca wrote:
+> syed saba kareem <ssabakar@amd.com> writes:
+>
+>> Hi , We have up streamed the patch it is in review.
+>>
+>> Please find the below link for the patch details.
+>>
+>> https://patchwork.kernel.org/project/alsa-devel/patch/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
+>>
+> Sorry maybe I'm not understanding here something, when you are saying
+> that the patch is in review, where is this review being done?
+>
+> As far as I can tell Mark Brown only pulled the first patch from your
+> series:
 
-On Wed, Nov 22, 2023 at 05:55:20PM +0100, Linux regression tracking #update=
- (Thorsten Leemhuis) wrote:
-> On 22.11.23 14:21, Bagas Sanjaya wrote:
-> > On Tue, Sep 26, 2023 at 07:25:48AM +0700, Bagas Sanjaya wrote:
-> >> I notice a regression report on Bugzilla [1]. Quoting from it:
-> >>> I'm having some weird issues with sleep mode on any 6.x Linux kernel =
-version - it's a toss-up when I close the lid as to whether it will sleep p=
-roperly or not - when it fails, the screen will lock, but it will not actua=
-lly enter S3 sleep - it just blanks the screen, but the laptop stays on (an=
-d fan does too).
-> > [...]
-> >> #regzbot introduced: v5.15..v6.1 https://bugzilla.kernel.org/show_bug.=
-cgi?id=3D217950
-> >>
-> >> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D217950
-> >=20
-> > Hi Thorsten and all,
->=20
-> Bagas, please ask me things like this in private. Developers get enough
-> mail already, we should try our best to not increase the amount too much
-> with stuff that is just there for regression tracking stuff.
+We got comments for the second patch and we addressed them.
 
-Thanks for the pro tip.
+It seems it may be stuck at review stage as one patch got merged.
 
->=20
-> > It seems like the BZ reporter is really busy with his college life; IOW
-> > he can only bisect in the winter break [1]. Should I mark this regressi=
-on
-> > as inconclusive for now?
->=20
-> Let's put it on regzbot's back-burner.
->=20
-> #regzbot backburner: will take a while until this is bisected
-> #regzbot ignore-activity
->=20
+Will resend the patch again.
 
-Thanks for the handling!
+You can find the received review comments for the patch in the below link.
 
---=20
-An old man doll... just what I always wanted! - Clara
+https://patchwork.kernel.org/project/alsa-devel/patch/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
 
---0roWu1Dj6Rps07pF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZV9KwwAKCRD2uYlJVVFO
-o35oAQDoFPGsSeS0PpX/PIJJXi1UPNnPCUCfsAgPSjHS5ehV8QD/ezxLrWj+jpxC
-r3pi76SjlUG3gRAWA6s84IJVjT9oPgA=
-=mjAB
------END PGP SIGNATURE-----
-
---0roWu1Dj6Rps07pF--
+>> Applied to
+>>
+>>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+>>
+>> Thanks!
+>>
+>> [1/2] ASoC: amd: acp: add Kconfig options for acp7.0 based platform driver
+>>        commit: d3534684ada99ef8c0899eb28c62b4462483ee19
+>> [2/2] ASoC: amd: acp: add pm ops support for renoir platform
+>>        (no commit info)
+>>
+> I don't see the second patch in for-next.
