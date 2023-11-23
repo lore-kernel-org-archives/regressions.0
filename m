@@ -1,160 +1,129 @@
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.196])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5D02232B
-	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 10:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A64D22EFC
+	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 11:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iOMo9PMT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Fi8mN
-	7QMYiBwweZOW1oXVVDDhUDGPiwsrOjb3qPSKF0=; b=iOMo9PMTicx5T8xFVbipW
-	8QYzJVn76Ca03a3rvV58WJTDNOV1J6ETDvrIuVmQdKxgCIbc03mCgVg1d0dglMd5
-	ZmVAxUBG6dZnOCDzwpuQCPPZkXkJJu9ipl8xhA0Pmora22e8+e1bhn9nbDoCHAje
-	ebNT0ksOxfESUT9zcdBF4Q=
-Received: from localhost.localdomain (unknown [111.35.185.43])
-	by zwqz-smtp-mta-g3-4 (Coremail) with SMTP id _____wDnD9V1DV9lPSBCAw--.15745S4;
-	Thu, 23 Nov 2023 16:29:51 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: bagasdotme@gmail.com
-Cc: Liam.Howlett@oracle.com,
-	akpm@linux-foundation.org,
-	ankitag@nvidia.com,
-	chunn@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Date: Thu, 23 Nov 2023 16:29:41 +0800
-Message-Id: <20231123082941.21122-1-00107082@163.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <ZV7eHE2Fxb75oRpG@archie.me>
-References: <ZV7eHE2Fxb75oRpG@archie.me>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V5AhGmOZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4966F40E0258;
+	Thu, 23 Nov 2023 11:20:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 4s49rXaUabG4; Thu, 23 Nov 2023 11:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1700738429; bh=lhIEeBpw7QtrxS/ZHvsdGRgwiXLx1WSEEuHReDweeEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V5AhGmOZ/lTXYVKRydg6dEJGUZD2vjCX1NRvrNqMdOJCU/0rKBtBj/NG59qDzd9GI
+	 9/Z0K/ZQE13Bodi3CsRxuFquYP28pQr1sxszcI76+SLFZJX16tOpPT9AB44wmJNkk+
+	 zRi6muT36Hdq6VWg7xjXpvhqzOg1bQoJEAtFGeDL2VpkpS6hVwPaTpEMep/o5X3joe
+	 1MANBpjtKG9o/MIJBfgOxR3RI7g/9ITC7grnaObagwgkw37BQvMxf70IIBcxwvE8Hk
+	 nkuFXv9OpON+AOrPKa4MNJDAtPKjbj/KUP7/hKJ1J1sJfzDo+f00vqGXHAgLmv5Vrp
+	 +3rihlW9neJYoZF6YFGp53Flm4zKS6VPJMUEGUhvBeRDrdhiP/UjVJXmuuXAk31LUr
+	 VE+ymsypj8eqpAN/Tllv6Ro7DRLF3UR+AhW3ZuKy4nE95xsYASIl456a3yn3wvwwf3
+	 Y4PWT/5+SJRjic84ZL81LkmEnmNrpNjwJzBgliHfSczRwGfQrYiiAERbuq3Hm/fD2z
+	 ENvEq+VhFvuXttZg4N4W54GqzZv5MNnViW9OA24ojNNy2kycZLWHugsFfQ0st6I8MA
+	 rtYdV0R2H+mVTr03DnW7YU1t/aQq3xZI4Vcv/ECzpafjQp7qJeyKamx+OrEMzetV0U
+	 LRHB/oargmhWqWWJprOKRdSI=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7C06F40E0257;
+	Thu, 23 Nov 2023 11:20:18 +0000 (UTC)
+Date: Thu, 23 Nov 2023 12:20:13 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Antonio Alvarez Feijoo <antonio.feijoo@suse.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Message-ID: <20231123112013.GAZV81bezsrS6sdJQR@fat_crate.local>
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
+ <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+ <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info>
+ <20231122155758.GEZV4lBgtZyzsP5Z4V@fat_crate.local>
+ <CAHk-=wiV+NM+jLKbSj_Ej9RaXpu4akWV03G_wXyTSHZhArq1tg@mail.gmail.com>
+ <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
+ <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnD9V1DV9lPSBCAw--.15745S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZF45Xw4kXrWfXFW7Cry7GFg_yoW5tF4UpF
-	WjqasYkFW0qrnIvFn5Zw4jg3WrZws3Jw13G3s7KanFvF98Zw1aya1xtFWDKry2g3yIgw4x
-	Xw4DA3WfXrn8Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5xhJUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiEB8xql8YMsEAkwAAsz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
 
-Hi, 
+Adding Antonio who did that last fix to dracut:
 
-Just contribute some information I recently collected for this thread:
+6c80408c8644 ("fix(dracut.sh): remove microcode check based on CONFIG_MICROCODE_[AMD|INTEL]")
 
-I run some profiler, and it shows fundamental difference between 6.0 and 6.1:
+On Wed, Nov 22, 2023 at 01:08:41PM -0800, Linus Torvalds wrote:
+> There are dracut command lines, like "--early-microcode" and
+> "--no-early-microcode", so people who really want to save space could
+> just force it that way. Doing the CONFIG_xyz check seems broken.
+> 
+> But that's for the dracut people to worry about.
 
+Yeah, I guess something like this below.
 
-v6.0:
-```
-__x64_sys_munmap(60.544% 6474/10693)
-    __vm_munmap(98.749% 6393/6474)
-        __do_munmap(97.982% 6264/6393)
-            __split_vma(53.975% 3381/6264)
-                vm_area_dup(59.036% 1996/3381)
-                __vma_adjust(32.121% 1086/3381)
-                anon_vma_clone(5.915% 200/3381)
-                vma_dup_policy(0.769% 26/3381)
-            unmap_region(16.699% 1046/6264)
-            find_vma(10.361% 649/6264)
-            remove_vma(7.822% 490/6264)
-            percpu_counter_add_batch(2.011% 126/6264)
-            __vma_rb_erase(1.405% 88/6264)
-            userfaultfd_unmap_prep(0.798% 50/6264)
-            downgrade_write(0.511% 32/6264)
-```
+Antonio, how about something like the totally untested thing below?
 
-v6.1:
-```
-__x64_sys_munmap(68.024% 24741/36371)
-    __vm_munmap(99.681% 24662/24741)
-        do_mas_munmap(99.015% 24419/24662)
-            do_mas_align_munmap(98.243% 23990/24419)
-                __split_vma(58.966% 14146/23990)
-                    __vma_adjust(83.755% 11848/14146)
-                    vm_area_dup(13.191% 1866/14146)
-                    anon_vma_clone(2.050% 290/14146)
-                    vma_dup_policy(0.254% 36/14146)
-                mas_store_prealloc(11.709% 2809/23990)
-                mas_preallocate(9.579% 2298/23990)
-                unmap_region(5.523% 1325/23990)
-```
+dracut would simply always build in microcode - this is the majority of
+the setups anyway - and people who want to save space, do:
 
-v6.1 introduce the maple tree data structure, and mmap/munmap performance started to degrade since.
-Base on the observation, I tested two commit:
-9832fb87834e2bd925d30020962c81b05948fa7b GOOD (Same as v6.0, about 20seonds) (This is before "Patch series "Introducing the Maple Tree")
-11f9a21ab65542189372b7d64bb2d2937dfdc9dc BAD  (about 51seconds) (This one is somewhere middle in the path series for maple tree.)
-While with v6.1, the test run about 56 seconds
+--no-early-microcode
 
-For v6.7, profiler show further fundimental changes, some vmi stuff, and preformance is worse (~70 seconds).
-```
-__x64_sys_munmap(63.873% 30725/48103)
-    __vm_munmap(99.456% 30558/30725)
-        do_vmi_munmap(97.670% 29846/30558)
-            do_vmi_align_munmap(97.196% 29009/29846)
-                __split_vma(63.701% 18479/29009)
-                    vma_complete(34.417% 6360/18479)
-                    vm_area_dup(33.681% 6224/18479)
-                    mas_preallocate(11.835% 2187/18479)
-                    down_write(5.173% 956/18479)
-                    up_write(3.815% 705/18479)
-                    asm_sysvec_apic_timer_interrupt(1.153% 213/18479)
-                    anon_vma_clone(0.974% 180/18479)
-                    vma_adjust_trans_huge(0.622% 115/18479)
-                    mas_next_slot(0.498% 92/18479)
-                    vma_dup_policy(0.465% 86/18479)
-                    vma_prepare(0.357% 66/18479)
-                    srso_return_thunk(0.336% 62/18479)
-                    mas_find(0.114% 21/18479)
-                unmap_region.constprop.0(12.196% 3538/29009)
-                mas_store_gfp(10.548% 3060/29009)
-                __call_rcu_common.constprop.0(1.992% 578/29009)
-```
+?
 
-I use following test code, and timed it
-```
-#define MAXN 1024
-struct { void* addr; size_t n; } maps[MAXN];
-int main() {
-	int i, n, k, r;
-	void *p;
-	for (i=0; i<MAXN; i++) {
-		n = 1024*((rand()%32)+1);
-		p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-		if (p == MAP_FAILED) {
-			perror("fail to mmap");
-			return -1;
-		}
-		maps[i].addr = p; 
-		maps[i].n = n;
+---
+diff --git a/dracut.sh b/dracut.sh
+index 3b292910f324..c0a88b083f8e 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -1561,20 +1561,16 @@ fi
+ 
+ if [[ $early_microcode == yes ]]; then
+     if [[ $hostonly ]]; then
+-        if [[ $(get_cpu_vendor) == "AMD" || $(get_cpu_vendor) == "Intel" ]]; then
+-            check_kernel_config CONFIG_MICROCODE || unset early_microcode
+-        else
++        if [[ $(get_cpu_vendor) != "AMD" && $(get_cpu_vendor) != "Intel" ]]; then
+             unset early_microcode
+         fi
+-    else
+-        ! check_kernel_config CONFIG_MICROCODE \
+-            && unset early_microcode
+     fi
++
+     # Do not complain on non-x86 architectures as it makes no sense
+     case "${DRACUT_ARCH:-$(uname -m)}" in
+         x86_64 | i?86)
+             [[ $early_microcode != yes ]] \
+-                && dwarn "Disabling early microcode, because kernel does not support it. CONFIG_MICROCODE!=y"
++                && dwarn "Disabling early microcode, unsupported configuration"
+             ;;
+         *) ;;
+     esac
 
-	}
-	for (i=0; i<10000000; i++) {
-		k = rand()%MAXN;
-		r = munmap(maps[k].addr, maps[k].n);
-		if (r) {
-			perror("fail to munmap");
-			return -1;
-		}
-		n = 1024*((rand()%32)+1);
-		p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-		if (p == MAP_FAILED) {
-			perror("fail to mmap");
-			return -1;
-		}
-		maps[k].addr = p; 
-		maps[k].n = n;
-	}
-	for (i=0; i<MAXN; i++) munmap(maps[i].addr, maps[i].n);
-	return 0;
-}
-```
+Thx.
 
-Thanks
-David Wang
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
