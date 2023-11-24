@@ -1,56 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F63B2E844
-	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 15:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r6Y7u-0004OG-JX; Fri, 24 Nov 2023 16:29:54 +0100
-Message-ID: <33b55166-00a3-4947-ad4f-387ddfa2c7a4@leemhuis.info>
-Date: Fri, 24 Nov 2023 16:29:53 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B2D33CE2;
+	Fri, 24 Nov 2023 16:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qDt22oQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD71C433C8;
+	Fri, 24 Nov 2023 16:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700842741;
+	bh=CEV7NAR5P1IEKIo7VE/OV4UHEH/9vFQ5XlpsJWnIDAI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qDt22oQ4NnvkfTOMZwj19/fd/1D3bToLigf3b0JIOQlqPwpexWA/Ctdlzj9xXiQVr
+	 U4YM5Iv9kdKkdQzNeeHIVdPM/xFpr1G7ls5pDovwGOjQvqV8WuAgAw6j1e2RIGOvFU
+	 oZylt9SmZRcuo548M/AdQoDWJsdd3GLFv7M8Hubg=
+Date: Fri, 24 Nov 2023 16:18:59 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Tomasz Rostanski <tomasz.rostanski@thalesgroup.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Stable <stable@vger.kernel.org>,
+	Linux USB <linux-usb@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: Fwd: dwc3: regression in USB DWC3 driver in kernel 5.15 branch
+Message-ID: <2023112424-escalate-saga-2b01@gregkh>
+References: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
+ <635eb180-0dea-4dc7-a092-be453bf80023@leemhuis.info>
+ <f7d315b1-f43d-4573-81f0-a4014f3ac0bb@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Content-Language: en-US, de-DE
-To: Matthew Wilcox <willy@infradead.org>, Greg KH <gregkh@linuxfoundation.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Chun Ng <chunn@nvidia.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Ankita Garg <ankitag@nvidia.com>
-References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
- <ZV7eHE2Fxb75oRpG@archie.me> <ZV9x6qZ5z8YTvTC4@casper.infradead.org>
- <ZV_rJtxdn1dU9ip0@archie.me> <ZV/2nPBs5r1nIaW4@casper.infradead.org>
- <2023112402-posing-dress-4bf2@gregkh> <ZWC8BOtPW2bWBFqh@casper.infradead.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZWC8BOtPW2bWBFqh@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700839802;65fea13b;
-X-HE-SMSGID: 1r6Y7u-0004OG-JX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7d315b1-f43d-4573-81f0-a4014f3ac0bb@leemhuis.info>
 
-On 24.11.23 16:06, Matthew Wilcox wrote:
->  Mostly I ignore him now, but when he's instructing a bot
-> to harass me, that crosses a line.
+On Tue, Nov 21, 2023 at 04:25:30PM +0100, Thorsten Leemhuis wrote:
+> Hi. Top-posting for once, to make this easily accessible to everyone.
+> 
+> To Greg and everyone that might care: apparently Tomasz lost interest in
+> fixing this 5.15.y regression. Kinda sad, as the patches are mostly
+> there, but lack a S-o-b tag -- which means we are stuck here, unless
+> somebody else attempts a backport.
+> 
+> https://lore.kernel.org/all/20230904071432.32309-1-tomasz.rostanski@thalesgroup.com/
+> 
+> I'll thus stop tracking this regression.
 
-I'm curious: How is regzbot able to harass you? It as of now and likely
-for at least another year is not able to send mails on its own -- by
-design, as I wanted to ensure it doesn't harass anyone.
+Thanks, I'll wait for a working backport for those using the 5.15.y tree
+and this driver as it's not anything that I am capable of doing at this
+point in time.
 
-Sure, I might manually send a mail if something looks stalled in
-regzbot. But before I do that I always do a sanity check to avoid
-annoying people. Do I sometimes make mistakes or miss something in that
-process? Sure. But that happens to all of us.
-
-Ciao, Thorsten
+greg k-h
