@@ -1,340 +1,258 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2082.outbound.protection.outlook.com [40.107.7.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251615247
-	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 06:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r6PW4-0004wO-KA; Fri, 24 Nov 2023 07:18:16 +0100
-Message-ID: <be371028-efeb-44af-90ea-5c307f27d4c6@leemhuis.info>
-Date: Fri, 24 Nov 2023 07:18:15 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96AC4685
+	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 08:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="hgE4evxo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bQNWCpq3u+ghccmwBFGcfh5iXJlMZXe9wakeS4Qa9mM3S60S2VLQOXMVBb7sGgXImc/GFs7xS0fwls/dZUcflFSe0Ws3nzTPAlNOr5QCx+5ST8d88hjGuvgcs8dDRLxfHTw3xwrFvtXrvNGW7J49VQCjBXS/Zkiyfef/RRi1uniW9T6IWjuJOenQJb9afCix50Pk3aLvln4mT5fz2RY0YcqUeFwdXnaPyRrbgtswYn0dlgX4eGVXw1LMa9GOX8XQsH/wIVx1W0CAewuxAk/xN42wFs6/whPWx0XCfuE58IILEKZ2J6Fw5Sqk0ghyk5aiw/S3D0Lh5e7tRo8+hWbVPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OJ2kSvNUND8O3iANmUc8FZtLZmkTNo5nv9dd8E8hYKc=;
+ b=DIedhUNHlVPAE9aFP9tW1/zIXLpoxJOCLnpR4N/+WIY3nA43JfpHV6AveQAsGupcIHuar2b6YOU8D5fNIt8I595FBCew3Eg5ddtuSkDwKfAiemmvpu9eL20DiybQdrhFXz1I5zSEnKwbgK0vFxrJvnk7yVS3djNzH3LFLIeF5PhLzZre3oDhq84ijT/cO7IY74Ao0Hu4KRQhW2ygth7NdD5A/mN/PkmucFH3OcjXfTZxUJwmhEkWmCGwG9XRYc6H04QuLrIb3NZaigW8vhTG4atl4OuRt+L7D6ke9CTXLathZksTq5xvwWxnIDo29/r7360tO61qq9Oz9fDc7kPnyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OJ2kSvNUND8O3iANmUc8FZtLZmkTNo5nv9dd8E8hYKc=;
+ b=hgE4evxoY0o/9Kqf3mfPtwbbtt8EC5ODXBfHojhpO0pD7FjmjkjhgBij0GkeKN3pgX3bUhBFfd2bIrS5yHYtSZWMIwIG3hiRmvaMsA++Dh9QW8inAnil4slYzihqdGPW7njEurbE2b3xlfB7CcdH/5S+giO19YTyx3fad2tmUgV0Pa9b1nfcVwT4PvIEmDq4sFT6U5MGd1qwRDCX27attCX2TwpPdgJI2n2e1LiUtOC5BGCbR1g2Z9s2dyXEVn0IDu2yrg/YozO2faMtSxpTNxZOE8GYJ+ZrVMsJSfhM3WqZ3UeAz40pNkeLJe+r2cyuJeeZLrLtUxlzc638GLpZYA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from VI1PR04MB3168.eurprd04.prod.outlook.com (2603:10a6:802:6::10)
+ by DB8PR04MB7083.eurprd04.prod.outlook.com (2603:10a6:10:121::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.14; Fri, 24 Nov
+ 2023 08:49:30 +0000
+Received: from VI1PR04MB3168.eurprd04.prod.outlook.com
+ ([fe80::86f0:1f91:8cf1:8049]) by VI1PR04MB3168.eurprd04.prod.outlook.com
+ ([fe80::86f0:1f91:8cf1:8049%3]) with mapi id 15.20.7025.019; Fri, 24 Nov 2023
+ 08:49:30 +0000
+Message-ID: <66f077cf-ff85-44dc-a76a-05d8995ea261@suse.com>
+Date: Fri, 24 Nov 2023 09:49:27 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mingo@redhat.com, tglx@linutronix.de, x86@kernel.org
+References: <20230825141226.13566-1-lukas.bulwahn@gmail.com>
+ <c67bd324-cec0-4fe4-b3b1-fc1d1e4f2967@leemhuis.info>
+ <20231112181036.GBZVEVHIIj/Oos1cx4@fat_crate.local>
+ <0e9cbe6f-ac6c-47f2-b663-a22568799eca@leemhuis.info>
+ <20231122115826.GAZV3s4krKXI002KQ0@fat_crate.local>
+ <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info>
+ <20231122155758.GEZV4lBgtZyzsP5Z4V@fat_crate.local>
+ <CAHk-=wiV+NM+jLKbSj_Ej9RaXpu4akWV03G_wXyTSHZhArq1tg@mail.gmail.com>
+ <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
+ <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
+ <20231123112013.GAZV81bezsrS6sdJQR@fat_crate.local>
+From: Antonio Feijoo <antonio.feijoo@suse.com>
+Autocrypt: addr=antonio.feijoo@suse.com; keydata=
+ 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
+ pXW1EqveeQ==
+In-Reply-To: <20231123112013.GAZV81bezsrS6sdJQR@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MR1P264CA0145.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:54::10) To VI1PR04MB3168.eurprd04.prod.outlook.com
+ (2603:10a6:802:6::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: bcache: kernel NULL pointer dereference since 6.1.39
-Content-Language: en-US, de-DE
-To: Zheng Wang <zyytlz.wz@163.com>, Coly Li <colyli@suse.de>
-References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Stefan_F=C3=B6rster?=
- <cite@incertum.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Zheng Wang <zyytlz.wz@163.com>, Jens Axboe <axboe@kernel.dk>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-bcache@vger.kernel.org
-In-Reply-To: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700806703;6979148c;
-X-HE-SMSGID: 1r6PW4-0004wO-KA
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR04MB3168:EE_|DB8PR04MB7083:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8942737a-5961-4d07-cb98-08dbecca4599
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	J2j95d/B+/9zcbL+QmGWQWIRo0gdSzEdQS5eKOVKijr45cWgU2C6SkVKYpygGdLwY3ZjG2O/cUsKdjaSyu9c5xZ1nHi22jyrEvd6Y/ersHPu6602wFaEHHhfLeKP3ykWTboYooqYVrIGHRei3+8uGahkwFyBms13cJEBsrsE78lSus+lt2kniqhMlpmTephfJcCb/D/nmIystSRLtV4/OKszPYFks0/rMjwYD0em8N0Lbqi/8RwTQssUvCXtY4q3c3Xpa7T+s7xL3skOp9I9Bf1UYqa0oUHdTsUFf/W48QX1VNh9kbtEBD7lBXwhVocYOhIveQl9ppO5qTs34YVZrKPw4zE+t4g3+hlDxuWL0knmKx0tszdtTp5B8/qYUBWMcn9HjWuixyhrL87Ms48E37Wd9ORTwwKPdZ3f5SLWOKaCx6/yChbXzvmgZreIv2bvqtLlnUfQjhiGB8zCC9KWjUYJVvuQuxG4Qecmc4eUGzok6lJGbABxk5kTu/6x9qQTzqUfH85sNp5utLouH5oMZBHvzM7E9qIaFuOu9kkTY/UHWiYXqQKLwk1aWfDvMCzf4WKX+cnxyRgp+CtV5Pl2Kh2kv1guR+SDcf3td1IyaSCUc4D9UXtmagXP23r+WvT++eRaq5kUugV2p0q+//n+og==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB3168.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(346002)(136003)(366004)(376002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(2906002)(7416002)(5660300002)(44832011)(36756003)(31696002)(86362001)(41300700001)(38100700002)(66946007)(26005)(66476007)(66556008)(6512007)(2616005)(110136005)(316002)(6666004)(478600001)(6486002)(31686004)(966005)(6506007)(4326008)(66574015)(8676002)(8936002)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NU5sUy9aenZYWGVJSjdpeGJWY2xOL1pCZURSbTVVbHNmWE5pV3FTaE10RWdm?=
+ =?utf-8?B?eTFBSXM0UTlwaU1BWVVZTERqMi9VVld6VTRPWUs0SU83M0RzTkZrRE5YTlpS?=
+ =?utf-8?B?cGIvMFhnZno2RnF5Wi9rWVJsY3pHZGFrVjNPYTQwcWtuYVVxODJibHpOR3Bp?=
+ =?utf-8?B?Z1k3NGhURkh2Ni9yTGNVRDcrUzlXZ3cxTERFU1pZZXhVVUFScmQ0TCtqZ0px?=
+ =?utf-8?B?TzkrNmJkaU1yMVh5cUliSWVlWEJQNElXNW9rQ3YyTG92SWg3dlBNTkxWemx0?=
+ =?utf-8?B?MmdyTkZPUnRpMEozRlRIUG5FdkVwWXRMcGFydFJUanVjQ21RRkRsbktUM1M2?=
+ =?utf-8?B?MTdCOTRsalRLd3VuUVcvN1FCOW15MDl4OUNuTGcxWDU0QnRncFVFSEN1UzZU?=
+ =?utf-8?B?eXd0eGkra1d2VkYwOUNCM3d3Z1owTXE0RWVCWGczY0ZBRzB3Mmc3aXFTM295?=
+ =?utf-8?B?QnpRM1MweDZiRzkzeUFYMVNabjVZUVZtTWJpMlUxLzRCZnRzMlhSeEhKVTFy?=
+ =?utf-8?B?WnFQT0lTQzh2YlJ2SDlIanhVNmJBNGRpR0ZTclNlNks4clJMRGN4VE9ia1Va?=
+ =?utf-8?B?TTF1YThUb2lRZ2o2OFZIM3l5cUxIbFRFbjF4VEtGV0RIVnI2VkZmSThGcWYy?=
+ =?utf-8?B?M0prSjYzanVNOGxncHJZNTBkWlhaTVhDU1FpU3JMclhVYXBRMnR0TDR4LzFQ?=
+ =?utf-8?B?M01PVWlPR2swTy9nN1pCTDlRbVUrbjcrRStNY2x0ZUxFcEtlUVlPL3NBVVhj?=
+ =?utf-8?B?QmpYb3VYOVJyZm1GMHRYOWd6WVBocWZQdlRlaVlOU3BPOFVWbFpkaUFybGdW?=
+ =?utf-8?B?alUrdXlCZGQ4WDBtcGZZNUExUEZacCtGeDl4VjNVcEp4SXcxUDYxZWY0Q2tY?=
+ =?utf-8?B?MisvV0M3WmRYZ0JKRitRZld6aW13aERJM2JVOVoweTdtdVhFa0d4NnF5b25l?=
+ =?utf-8?B?OGQreEc1aXozcTNCUzcwOS9MelUwaU1CYU9oTUE2WEpjQ2Z5RCtWZ3Z2aDB6?=
+ =?utf-8?B?bkkyYTlVb2MvRnI4MUhrL1kvSGhqM2g0Y3JFUVRQYzBEVytaN1dxNkQyWVlW?=
+ =?utf-8?B?a2FBQ3ltQ0tsN3FEUjBQVEw1ODFKTU43TkZEcEhkV2lTVytEUXo5ZlNhdmFk?=
+ =?utf-8?B?K3owaEdmZlQ4K0FXMzlRSkpDQjRQMkdodG11ODBvQ1VMamt0akNuSzhsRzZs?=
+ =?utf-8?B?R0hrRXBZVUNIMFh2Ry9UM3VXYjc0b3Y0SDd4S2dFY09ubGJ3L0pkbVQydzhx?=
+ =?utf-8?B?RTNkSjRpM0l2bThhVVRydWJ4MGxWWG5RWUdrRzZZclRqeDcwN2pDdjFZd3pZ?=
+ =?utf-8?B?OUtNR1dybjdlME1LeXUzbURWR3NmNWlNQmovbUJHVDNHOTZqS0wwS2IwNlhp?=
+ =?utf-8?B?dllORHRCdXJXWmJzZHovcXNLQktuMEdTMVdTK1NvMnRCMmtTaTZxN09MSDVC?=
+ =?utf-8?B?U2xDNFRlcCt2YXI1SXd6OEFhb3QyaVVuVWxIWGV4QXc0TGFHSDlmRlZud3U0?=
+ =?utf-8?B?OWU1MC84bVIzankvZWxDWWI5UFpBdmxuUUF3ajJSUXVnNFZqU2xtUTZIdWVI?=
+ =?utf-8?B?bkdmSmxHNnRsR1hQVmQ4OVMrcFRDNlNHQmFVZmVldndEeTB2OEM1NUcwOFpR?=
+ =?utf-8?B?cEVFQlFhWnNmZkRSSVl6aU11N0U0ZGNPdHhEUTRUc0tYc05mR1RxSGtyNnJi?=
+ =?utf-8?B?TzFUUThWaDhFTnFpS0ZFOS9DSkFnYU5aSlFlZnFBd203clNacVZnOFY0RC9a?=
+ =?utf-8?B?UUNQYktLc2xlSFp1Mk5kZ2JpWmorMzFjQms2UlBGYW96NEJ4V1Rmenp5WVRx?=
+ =?utf-8?B?c1NTQXRQUzRmOVRCN0xUODNxRzlXTnVHaW0yd0FZTFU3VXNCd0JDV2JMRVpK?=
+ =?utf-8?B?SmNheC9JODF5dVY4NWJWWHRwRjYvMEVHSmpMMXhJSVRTbFpaeXdJcDJKcHhi?=
+ =?utf-8?B?eHRpL1AraWpHMXVta2FOTjFDV3RidHJmVXRIZTZZcXJ0Y09aaE0xYzF3U3Ju?=
+ =?utf-8?B?bmZWYTdZRTJRSE1hTWdtbmtFK1FQK0JQQ0w1NndRd3AyYWszR1BiMmtXZ2Nh?=
+ =?utf-8?B?b1lCNkloS3pzRGg4cGZ2d2wrREJMeEkzZnVvcEVWamIzRkx2Yzl4YjNYUThP?=
+ =?utf-8?B?S0NFSGFrb3VuK3pTVlhHV2JmNkU5dXRScmN2UDRjbHgzWnVJVzBaWE96SUd1?=
+ =?utf-8?B?WkE9PQ==?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8942737a-5961-4d07-cb98-08dbecca4599
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB3168.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2023 08:49:30.2480
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BGQYJThi8mkX4ECm/X0tHSVCjO1Ts9s4TO1D2kgHAuDaD5IO/pspZEAP41/uo69QTwOatItDvDAoxg1wsIjy2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7083
 
-On 23.11.23 14:53, Stefan Förster wrote:
-> 
-> starting with kernel 6.1.39, we see the following error message with
-> heavy I/O loads. We needed to revert
+As a side note, complaints about this issue reached the kernel because most
+distros out there didn't do their homework, as this patch has been merged
+upstream since 6.6-rc1 was released. Fortunately, this problem does not break
+the system boot.
 
-Thx for the report. I assume that problem still occurs with the latest
-6.1.y kernel?
+As Linus said, the `check_kernel_config` stuff was implemented in 2014 and this
+is not the only kernel config option that it's being checked by dracut
+(CONFIG_ACPI_TABLE_UPGRADE, CONFIG_ACPI_INITRD_TABLE_OVERRIDE, CONFIG_RD_ZSTD),
+although I agree that it's fragile if something changes. But adding in CC the
+initramfs list (like you did), would be enough to prepare a simple fix in time.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.39&id=68118c339c6e1e16ae017bef160dbe28a27ae9c8
+On 23/11/2023 12.20, Borislav Petkov wrote:
+> Adding Antonio who did that last fix to dracut:
+> 
+> 6c80408c8644 ("fix(dracut.sh): remove microcode check based on CONFIG_MICROCODE_[AMD|INTEL]")
+> 
+> On Wed, Nov 22, 2023 at 01:08:41PM -0800, Linus Torvalds wrote:
+>> There are dracut command lines, like "--early-microcode" and
+>> "--no-early-microcode", so people who really want to save space could
+>> just force it that way. Doing the CONFIG_xyz check seems broken.
+>>
+>> But that's for the dracut people to worry about.
+> 
+> Yeah, I guess something like this below.
+> 
+> Antonio, how about something like the totally untested thing below?
+> 
+> dracut would simply always build in microcode - this is the majority of
+> the setups anyway - and people who want to save space, do:
+> 
+> --no-early-microcode
+> 
+> ?
 
-FWIW, that is mainline commit 028ddcac477b69 ("bcache: Remove
-unnecessary NULL point check in node allocations") [v6.5-rc1].
+The only problem I see in your patch is that we should also remove the
+`--early-microcode` option, and dracut will fail if someone pass an option
+available since 2013 (5f2c30d9bcd614d546d5c55c6897e33f88b9ab90) that would not
+be recognized now (and by failing, I mean it will not build an initramfs if an
+unrecognized option is passed).
 
-Did a quick check and noticed a fix for that change was recently
-mainlined as f72f4312d43883 ("bcache: replace a mistaken IS_ERR() by
-IS_ERR_OR_NULL() in btree_gc_coalesce()") [v6.7-rc2-post]:
-https://lore.kernel.org/all/20231118163852.9692-1-colyli@suse.de/
+Please, submit it to https://github.com/dracutdevs/dracut, so more people can
+see it and discuss it. Thank you.
 
-It is expected to soon be interegrated into a 6.1.y kernel.
+> ---
+> diff --git a/dracut.sh b/dracut.sh
+> index 3b292910f324..c0a88b083f8e 100755
+> --- a/dracut.sh
+> +++ b/dracut.sh
+> @@ -1561,20 +1561,16 @@ fi
+>  
+>  if [[ $early_microcode == yes ]]; then
+>      if [[ $hostonly ]]; then
+> -        if [[ $(get_cpu_vendor) == "AMD" || $(get_cpu_vendor) == "Intel" ]]; then
+> -            check_kernel_config CONFIG_MICROCODE || unset early_microcode
+> -        else
+> +        if [[ $(get_cpu_vendor) != "AMD" && $(get_cpu_vendor) != "Intel" ]]; then
+>              unset early_microcode
+>          fi
+> -    else
+> -        ! check_kernel_config CONFIG_MICROCODE \
+> -            && unset early_microcode
+>      fi
+> +
+>      # Do not complain on non-x86 architectures as it makes no sense
+>      case "${DRACUT_ARCH:-$(uname -m)}" in
+>          x86_64 | i?86)
+>              [[ $early_microcode != yes ]] \
+> -                && dwarn "Disabling early microcode, because kernel does not support it. CONFIG_MICROCODE!=y"
+> +                && dwarn "Disabling early microcode, unsupported configuration"
+>              ;;
+>          *) ;;
+>      esac
+> 
+> Thx.
+> 
 
-But maybe it's something else. I CCed the involved people, they might know.
+Best regards,
 
-Ciao, Thorsten
-
-> to make sure the systems don't suddenly get stuck.
-> 
-> 1. Kernel 6.6.2-arch1-1 on Dell Latitude:
-> 
-> [16816.214942] BUG: kernel NULL pointer dereference, address:
-> 0000000000000080
-> [16816.214948] #PF: supervisor read access in kernel mode
-> [16816.214951] #PF: error_code(0x0000) - not-present page
-> [16816.214953] PGD 0 P4D 0 [16816.214956] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [16816.214960] CPU: 7 PID: 83416 Comm: bcache_gc Tainted: P          
-> OE      6.6.2-arch1-1 #1 11215f9ba7ddfb51644674a5b2ced71612c62fe9
-> [16816.214964] Hardware name: Dell Inc. Latitude 5431/06F77M, BIOS
-> 1.17.0 09/21/2023
-> [16816.214965] RIP: 0010:btree_node_free+0xf/0x160 [bcache]
-> [16816.214999] Code: 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90
-> 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 55 53 48 89 fb 0f 1f 44 00
-> 00 <48> 8b 83 80 00 00 00 48 8d ab 90 00 00 00 48 39 98 60 c3 00 00 75
-> [16816.215001] RSP: 0018:ffffc90021777af8 EFLAGS: 00010207
-> [16816.215004] RAX: 0000000000000001 RBX: 0000000000000000 RCX:
-> ffff888515ce0670
-> [16816.215006] RDX: 0000000000000000 RSI: ffff888515ce0680 RDI:
-> 0000000000000000
-> [16816.215007] RBP: ffffc90021777bf0 R08: ffff88819476d9e0 R09:
-> 00000000013ffde8
-> [16816.215009] R10: 0000000000000000 R11: ffffc9000061b000 R12:
-> ffffc90021777e40
-> [16816.215010] R13: ffffc90021777bf0 R14: ffffc90021777bd8 R15:
-> ffff88819476c000
-> [16816.215011] FS:  0000000000000000(0000) GS:ffff88886fdc0000(0000)
-> knlGS:0000000000000000
-> [16816.215013] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [16816.215015] CR2: 0000000000000080 CR3: 0000000294a20000 CR4:
-> 0000000000f50ee0
-> [16816.215017] PKRU: 55555554
-> [16816.215018] Call Trace:
-> [16816.215021]  <TASK>
-> [16816.215024]  ? __die+0x23/0x70
-> [16816.215030]  ? page_fault_oops+0x171/0x4e0
-> [16816.215035]  ? __pfx_bch_ptr_bad+0x10/0x10 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215059]  ? exc_page_fault+0x7f/0x180
-> [16816.215065]  ? asm_exc_page_fault+0x26/0x30
-> [16816.215070]  ? btree_node_free+0xf/0x160 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215095]  ? btree_node_free+0xa3/0x160 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215118]  btree_gc_coalesce+0x2a7/0x890 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215144]  ? bch_extent_bad+0x81/0x190 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215172]  btree_gc_recurse+0x130/0x390 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215197]  ? btree_gc_mark_node+0x72/0x240 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215221]  bch_btree_gc+0x4b6/0x620 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215246]  ? __pfx_autoremove_wake_function+0x10/0x10
-> [16816.215250]  ? __pfx_bch_gc_thread+0x10/0x10 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215272]  bch_gc_thread+0x139/0x190 [bcache
-> 33eebe64448bb81d5f2a10179a48eb0a5bdb25a6]
-> [16816.215295]  ? __pfx_autoremove_wake_function+0x10/0x10
-> [16816.215298]  kthread+0xe5/0x120
-> [16816.215302]  ? __pfx_kthread+0x10/0x10
-> [16816.215306]  ret_from_fork+0x31/0x50
-> [16816.215309]  ? __pfx_kthread+0x10/0x10
-> [16816.215312]  ret_from_fork_asm+0x1b/0x30
-> [16816.215318]  </TASK>
-> [16816.215319] Modules linked in: bcache tun ccm rfcomm snd_seq_dummy
-> snd_hrtimer snd_seq nvidia(POE) typec_displayport cmac algif_hash
-> algif_skcipher af_alg bnep hid_sensor_custom hid_sensor_hub
-> intel_ishtp_hid snd_hda_codec_hdmi snd_sof_pci_intel_tgl
-> snd_sof_intel_hda_common soundwire_intel snd_sof_intel_hda_mlink
-> soundwire_cadence snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp
-> snd_sof snd_sof_utils intel_uncore_frequency
-> intel_uncore_frequency_common snd_ctl_led snd_soc_hdac_hda r8153_ecm
-> snd_hda_ext_core iwlmvm cdc_ether snd_soc_acpi_intel_match usbnet
-> snd_soc_acpi soundwire_generic_allocation soundwire_bus snd_soc_core
-> x86_pkg_temp_thermal snd_compress snd_hda_codec_realtek intel_powerclamp
-> ac97_bus snd_hda_codec_generic dell_rbtn coretemp btusb
-> snd_pcm_dmaengine snd_usb_audio mac80211 btrtl snd_hda_intel kvm_intel
-> btintel snd_intel_dspcfg snd_intel_sdw_acpi snd_usbmidi_lib btbcm
-> dell_laptop snd_ump btmtk libarc4 snd_hda_codec uvcvideo kvm snd_rawmidi
-> bluetooth snd_hda_core videobuf2_vmalloc hid_multitouch iwlwifi
-> [16816.215367]  dell_wmi snd_hwdep iTCO_wdt snd_seq_device uvc
-> nls_iso8859_1 videobuf2_memops dell_smbios intel_pmc_bxt mei_hdcp
-> mei_pxp spi_nor snd_pcm processor_thermal_device_pci r8152
-> videobuf2_v4l2 dell_wmi_sysman irqbypass intel_rapl_msr dcdbas vfat
-> iTCO_vendor_support fat rapl intel_cstate intel_uncore psmouse pcspkr
-> dell_wmi_ddv firmware_attributes_class ledtrig_audio videobuf2_common
-> ucsi_acpi dell_wmi_descriptor processor_thermal_device mousedev
-> ecdh_generic snd_timer mii joydev mtd wmi_bmof e1000e cfg80211
-> processor_thermal_rfim mei_me intel_lpss_pci i2c_i801 snd
-> processor_thermal_mbox typec_ucsi intel_ish_ipc intel_lpss mei soundcore
-> i2c_smbus processor_thermal_rapl rfkill thunderbolt typec idma64
-> intel_ishtp roles intel_rapl_common igen6_edac i2c_hid_acpi
-> int3403_thermal i2c_hid int340x_thermal_zone intel_hid int3400_thermal
-> acpi_thermal_rel sparse_keymap acpi_tad acpi_pad mac_hid vboxnetflt(OE)
-> vboxnetadp(OE) vboxdrv(OE) v4l2loopback(OE) videodev mc i2c_dev
-> crypto_user fuse loop ip_tables x_tables ext4
-> [16816.215420]  crc32c_generic crc16 mbcache jbd2 dm_crypt cbc
-> encrypted_keys trusted asn1_encoder tee usbhid i915 dm_mod
-> crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni i2c_algo_bit
-> polyval_generic serio_raw rtsx_pci_sdmmc drm_buddy gf128mul atkbd
-> ghash_clmulni_intel ttm mmc_core sha512_ssse3 libps2 vivaldi_fmap
-> intel_gtt aesni_intel nvme crypto_simd drm_display_helper video
-> nvme_core cryptd spi_intel_pci rtsx_pci spi_intel i8042 xhci_pci cec
-> nvme_common xhci_pci_renesas serio wmi
-> [16816.215451] CR2: 0000000000000080
-> [16816.215453] ---[ end trace 0000000000000000 ]---
-> [16816.215455] RIP: 0010:btree_node_free+0xf/0x160 [bcache]
-> [16816.215478] Code: 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90
-> 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 55 53 48 89 fb 0f 1f 44 00
-> 00 <48> 8b 83 80 00 00 00 48 8d ab 90 00 00 00 48 39 98 60 c3 00 00 75
-> [16816.215480] RSP: 0018:ffffc90021777af8 EFLAGS: 00010207
-> [16816.215481] RAX: 0000000000000001 RBX: 0000000000000000 RCX:
-> ffff888515ce0670
-> [16816.215483] RDX: 0000000000000000 RSI: ffff888515ce0680 RDI:
-> 0000000000000000
-> [16816.215484] RBP: ffffc90021777bf0 R08: ffff88819476d9e0 R09:
-> 00000000013ffde8
-> [16816.215486] R10: 0000000000000000 R11: ffffc9000061b000 R12:
-> ffffc90021777e40
-> [16816.215487] R13: ffffc90021777bf0 R14: ffffc90021777bd8 R15:
-> ffff88819476c000
-> [16816.215488] FS:  0000000000000000(0000) GS:ffff88886fdc0000(0000)
-> knlGS:0000000000000000
-> [16816.215490] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [16816.215492] CR2: 0000000000000080 CR3: 0000000294a20000 CR4:
-> 0000000000f50ee0
-> [16816.215493] PKRU: 55555554
-> [16816.215494] note: bcache_gc[83416] exited with irqs disabled
-> 
-> 2. Kernel 6.1.55 (Debian 6.1.0-13) on HPE Gen11:
-> 
-> [60654.670443] BUG: kernel NULL pointer dereference, address:
-> 0000000000000080
-> [60654.677474] #PF: supervisor read access in kernel mode
-> [60654.682651] #PF: error_code(0x0000) - not-present page
-> [60654.687825] PGD 0 [60654.689852] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [60654.694240] CPU: 16 PID: 146330 Comm: bcache_gc Tainted: G       
-> W          6.1.0-13-amd64 #1  Debian 6.1.55-1
-> [60654.704399] Hardware name: HPE ProLiant DL380 Gen11/ProLiant DL380
-> Gen11, BIOS 1.48 10/19/2023
-> [60654.713071] RIP: 0010:btree_node_free+0xf/0x160 [bcache]
-> [60654.718437] Code: ff 48 89 d8 5b 5d 41 5c 41 5d c3 cc cc cc cc 66 66
-> 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 55 53 48 89 fb 0f 1f 44 00
-> 00 <48> 8b 83 80 00 00 00 48 39 98 70 c3 00 00 0f 84 34 01 00 00 48 8d
-> [60654.737342] RSP: 0018:ff77daed34cc3b18 EFLAGS: 00010207
-> [60654.742604] RAX: 0000000080000000 RBX: 0000000000000000 RCX:
-> 0000000000000000
-> [60654.749790] RDX: 0000000000000001 RSI: ff2971b8de800690 RDI:
-> 0000000000000000
-> [60654.756975] RBP: ff77daed34cc3c10 R08: ff2971d852dc65e0 R09:
-> ff2971b8de800000
-> [60654.764536] R10: 0000000000000000 R11: ff77daed34a4d000 R12:
-> ff77daed34cc3e60
-> [60654.771987] R13: ff77daed34cc3c10 R14: ff77daed34cc3c00 R15:
-> ff2971d851096400
-> [60654.779410] FS:  0000000000000000(0000) GS:ff2971f7bf400000(0000)
-> knlGS:0000000000000000
-> [60654.787784] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [60654.793794] CR2: 0000000000000080 CR3: 0000000150610002 CR4:
-> 0000000000771ee0
-> [60654.801203] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [60654.808609] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7:
-> 0000000000000400
-> [60654.816009] PKRU: 55555554
-> [60654.818949] Call Trace:
-> [60654.821623]  <TASK>
-> [60654.823950]  ? __die_body.cold+0x1a/0x1f
-> [60654.828110]  ? page_fault_oops+0xd2/0x2b0
-> [60654.832352]  ? exc_page_fault+0x70/0x170
-> [60654.836505]  ? asm_exc_page_fault+0x22/0x30
-> [60654.840922]  ? btree_node_free+0xf/0x160 [bcache]
-> [60654.845863]  ? up_write+0x32/0x60
-> [60654.849396]  btree_gc_coalesce+0x2aa/0x890 [bcache]
-> [60654.854512]  ? bch_extent_bad+0x70/0x170 [bcache]
-> [60654.859452]  btree_gc_recurse+0x130/0x390 [bcache]
-> [60654.864475]  ? btree_gc_mark_node+0x72/0x230 [bcache]
-> [60654.869758]  bch_btree_gc+0x5da/0x600 [bcache]
-> [60654.874428]  ? cpuusage_read+0x10/0x10
-> [60654.878390]  ? bch_btree_gc+0x600/0x600 [bcache]
-> [60654.883232]  bch_gc_thread+0x135/0x180 [bcache]
-> [60654.887986]  ? cpuusage_read+0x10/0x10
-> [60654.891944]  kthread+0xe6/0x110
-> [60654.895290]  ? kthread_complete_and_exit+0x20/0x20
-> [60654.900296]  ret_from_fork+0x1f/0x30
-> [60654.904079]  </TASK>
-> [60654.906455] Modules linked in: bonding tls cfg80211 rfkill
-> intel_rapl_msr intel_rapl_common intel_uncore_frequency
-> intel_uncore_frequency_common i10nm_edac nfit binfmt_misc libnvdimm
-> x86_pkg_temp_thermal intel_powerclamp ipt_REJECT nf_reject_ipv4 coretemp
-> xt_comment nft_compat nf_tables nfnetlink nls_ascii nls_cp437 kvm_intel
-> vfat ipmi_ssif fat kvm irqbypass ghash_clmulni_intel sha512_ssse3
-> sha512_generic aesni_intel crypto_simd cryptd mgag200 drm_shmem_helper
-> pmt_telemetry pmt_crashlog rapl intel_cstate acpi_ipmi evdev intel_sdsi
-> pmt_class idxd hpwdt mei_me isst_if_mbox_pci isst_if_mmio drm_kms_helper
-> intel_uncore pcspkr isst_if_common mei watchdog hpilo i2c_algo_bit
-> ipmi_si idxd_bus acpi_tad intel_vsec sg acpi_power_meter button
-> ipmi_devintf ipmi_msghandler loop fuse efi_pstore drm configfs efivarfs
-> ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 btrfs blake2b_generic
-> xor raid6_pq zstd_compress libcrc32c crc32c_generic ses enclosure bcache
-> sd_mod scsi_transport_sas dm_mod nvme
-> [60654.906508]  nvme_core xhci_pci t10_pi megaraid_sas ehci_pci xhci_hcd
-> ehci_hcd crc64_rocksoft crc64 tg3 crc_t10dif scsi_mod usbcore
-> crct10dif_generic crc32_pclmul crc32c_intel crct10dif_pclmul libphy
-> scsi_common usb_common crct10dif_common wmi
-> [60655.017712] CR2: 0000000000000080
-> [60655.021262] ---[ end trace 0000000000000000 ]---
-> [60655.173744] RIP: 0010:btree_node_free+0xf/0x160 [bcache]
-> [60655.179337] Code: ff 48 89 d8 5b 5d 41 5c 41 5d c3 cc cc cc cc 66 66
-> 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 55 53 48 89 fb 0f 1f 44 00
-> 00 <48> 8b 83 80 00 00 00 48 39 98 70 c3 00 00 0f 84 34 01 00 00 48 8d
-> [60655.198649] RSP: 0018:ff77daed34cc3b18 EFLAGS: 00010207
-> [60655.204121] RAX: 0000000080000000 RBX: 0000000000000000 RCX:
-> 0000000000000000
-> [60655.211515] RDX: 0000000000000001 RSI: ff2971b8de800690 RDI:
-> 0000000000000000
-> [60655.218908] RBP: ff77daed34cc3c10 R08: ff2971d852dc65e0 R09:
-> ff2971b8de800000
-> [60655.226302] R10: 0000000000000000 R11: ff77daed34a4d000 R12:
-> ff77daed34cc3e60
-> [60655.233696] R13: ff77daed34cc3c10 R14: ff77daed34cc3c00 R15:
-> ff2971d851096400
-> [60655.241086] FS:  0000000000000000(0000) GS:ff2971f7bf400000(0000)
-> knlGS:0000000000000000
-> [60655.249438] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [60655.255432] CR2: 0000000000000080 CR3: 0000000150610002 CR4:
-> 0000000000771ee0
-> [60655.262825] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [60655.270218] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7:
-> 0000000000000400
-> [60655.277607] PKRU: 55555554
-> [60655.280543] note: bcache_gc[146330] exited with irqs disabled
-> 
-> Reproducer for us:
-> 
-> dd if=/dev/zero of=loop0 bs=1M count=1024
-> dd if=/dev/zero of=loop1 bs=1M count=10240
-> losetup loop0 loop0
-> losetup loop1 loop1
-> make-bcache -C /dev/loop0 -B /dev/loop1 --writeback
-> mkfs.ext4 /dev/bcache0
-> mount /dev/bcache0 /mnt
-> 
-> Then run fio with:
-> 
-> [global]
-> bs=4k
-> ioengine=libaio
-> iodepth=4
-> size=8g
-> direct=1
-> runtime=60
-> directory=/mnt
-> filename=ssd.test.file
-> 
-> [seq-write]
-> rw=write
-> stonewall
-> 
-> [rand-write]
-> rw=randwrite
-> stonewall
-> 
-> [seq-read]
-> rw=read
-> stonewall
-> 
-> [rand-read]
-> rw=randread
-> stonewall
-> 
-> 
-> Cheers,
-> Stefan
+-- 
+Antonio Álvarez Feijoo
+System Boot and Init
+SUSE
