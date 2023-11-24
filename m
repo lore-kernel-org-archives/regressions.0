@@ -1,83 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vsrv.gekmihesg.de (vsrv.gekmihesg.de [88.99.126.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE8C2E646
-	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 15:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709F92E646
+	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 15:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gekmihesg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gekmihesg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m4SR6wXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB495C433CA;
-	Fri, 24 Nov 2023 15:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700838876;
-	bh=KdKTZsOg24qTQaP8tfzt2EsYKLZONlOAY7qgWOfXOR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m4SR6wXmqA3ry2hBHj6Nr8FGO6D84hmFAqMr3U6rU1757OTWePqNumGCcg9OI2tiv
-	 HrHehyiS22O4Ik90ZIsqze6I6zY3bpNstncesaf1WxRfQUT0lwnp8bvsEjSewAo0cJ
-	 IouNEO1ZJckO7ABuswYLCiXF5pnSNIdEIm3zfKLg=
-Date: Fri, 24 Nov 2023 15:13:58 +0000
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Chun Ng <chunn@nvidia.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Ankita Garg <ankitag@nvidia.com>
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Message-ID: <2023112421-many-jaybird-6200@gregkh>
-References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
- <ZV7eHE2Fxb75oRpG@archie.me>
- <ZV9x6qZ5z8YTvTC4@casper.infradead.org>
- <ZV_rJtxdn1dU9ip0@archie.me>
- <ZV/2nPBs5r1nIaW4@casper.infradead.org>
- <2023112402-posing-dress-4bf2@gregkh>
- <ZWC8BOtPW2bWBFqh@casper.infradead.org>
+	dkim=pass (1024-bit key) header.d=gekmihesg.de header.i=@gekmihesg.de header.b="i0aTYYjO"
+Message-ID: <c47d3540ece151a2fb30e1c7b5881cb8922db915.camel@gekmihesg.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gekmihesg.de;
+	s=201901; t=1700838878; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zM6/fUk0rJdOH5EFD8vEbULY8RybL+qMHsTdcrITXSg=;
+	b=i0aTYYjO2rovw4TCdihadQUQyTdJv1/OKn6WurEMPqhuSjRBeIWKj0bM9Df0gjCAMSOLUR
+	4uP7YSt0SS/j4bycc03OVfBVs5VEls9l+08MmwQPMG96ir1b1m3xYmOxWqrsqKPIc9Ih6b
+	eXveoQs5DFbko80Af2hu7gZz3xoLApw=
+Subject: [PATCH] bcache: revert replacing IS_ERR_OR_NULL with IS_ERR
+From: Markus Weippert <markus@gekmihesg.de>
+To: Bcache Linux <linux-bcache@vger.kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Zheng Wang
+	 <zyytlz.wz@163.com>, linux-kernel@vger.kernel.org, Stefan
+	=?ISO-8859-1?Q?F=F6rster?=
+	 <cite@incertum.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"stable@vger.kernel.org"
+	 <stable@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>, Linux kernel
+	regressions list <regressions@lists.linux.dev>, Coly Li <colyli@suse.de>
+Date: Fri, 24 Nov 2023 16:14:37 +0100
+In-Reply-To: <3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de>
+References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
+	 <be371028-efeb-44af-90ea-5c307f27d4c6@leemhuis.info>
+	 <71576a9ff7398bfa4b8c0a1a1a2523383b056168.camel@gekmihesg.de>
+	 <989C39B9-A05D-4E4F-A842-A4943A29FFD6@suse.de>
+	 <1c2a1f362d667d36d83a5ba43218bad199855b11.camel@gekmihesg.de>
+	 <3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWC8BOtPW2bWBFqh@casper.infradead.org>
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=markus smtp.mailfrom=markus@gekmihesg.de
 
-On Fri, Nov 24, 2023 at 03:06:44PM +0000, Matthew Wilcox wrote:
-> On Fri, Nov 24, 2023 at 11:52:06AM +0000, Greg KH wrote:
-> > On Fri, Nov 24, 2023 at 01:04:28AM +0000, Matthew Wilcox wrote:
-> > > On Fri, Nov 24, 2023 at 07:15:34AM +0700, Bagas Sanjaya wrote:
-> > > > On Thu, Nov 23, 2023 at 03:38:18PM +0000, Matthew Wilcox wrote:
-> > > > > On Thu, Nov 23, 2023 at 12:07:40PM +0700, Bagas Sanjaya wrote:
-> > > > > > Anyway, I'm adding this regression to regzbot:
-> > > > > > 
-> > > > > > #regzbot ^introduced: v6.0..v6.1
-> > > > > 
-> > > > > this is not a regression.  close it, you idiot.
-> > > > > 
-> > > > > 
-> > > > 
-> > > > why?
-> > > > 
-> > > > Confused...
-> > > 
-> > > yes.  you're perpetually confused.  stop trying to help, you only make
-> > > things worse.  learn about the things you work on, or give up.
-> > 
-> > Um, is this really called for?  Bagas is trying to help track
-> > regressions, and if something isn't a regression like you say here, a
-> > simple "This is not a regression, it's already resolved in newer
-> > kernels" is fine.
-> 
-> Bagas has a long history of inappropriately attempting to "help" and due
-> to a lack of understanding wasting peoples time.  He's not too dissimilar
-> to the various wrongbots we've had over the years, including Richard B
-> Johnson, Markus Elfring, etc.  I've tried to help guide him towards being
-> a more productive contributor, but'have failed.  Mostly I ignore him now,
-> but when he's instructing a bot to harass me, that crosses a line.
+Commit 028ddcac477b ("bcache: Remove unnecessary NULL point check in
+node allocations") replaced IS_ERR_OR_NULL by IS_ERR. This leads to a
+NULL pointer dereference.
 
-Nope, still not justification to lash out at an individual, sorry.
+BUG: kernel NULL pointer dereference, address: 0000000000000080
+Call Trace:
+ ? __die_body.cold+0x1a/0x1f
+ ? page_fault_oops+0xd2/0x2b0
+ ? exc_page_fault+0x70/0x170
+ ? asm_exc_page_fault+0x22/0x30
+ ? btree_node_free+0xf/0x160 [bcache]
+ ? up_write+0x32/0x60
+ btree_gc_coalesce+0x2aa/0x890 [bcache]
+ ? bch_extent_bad+0x70/0x170 [bcache]
+ btree_gc_recurse+0x130/0x390 [bcache]
+ ? btree_gc_mark_node+0x72/0x230 [bcache]
+ bch_btree_gc+0x5da/0x600 [bcache]
+ ? cpuusage_read+0x10/0x10
+ ? bch_btree_gc+0x600/0x600 [bcache]
+ bch_gc_thread+0x135/0x180 [bcache]
 
-Please be more careful, and kind, in the future.
+The relevant code starts with:
 
-greg k-h
+    new_nodes[0] =3D NULL;
+
+    for (i =3D 0; i < nodes; i++) {
+        if (__bch_keylist_realloc(&keylist, bkey_u64s(&r[i].b->key)))
+            goto out_nocoalesce;
+    // ...
+out_nocoalesce:
+    // ...
+    for (i =3D 0; i < nodes; i++)
+        if (!IS_ERR(new_nodes[i])) {  // IS_ERR_OR_NULL before
+028ddcac477b
+            btree_node_free(new_nodes[i]);  // new_nodes[0] is NULL
+            rw_unlock(true, new_nodes[i]);
+        }
+
+This patch replaces IS_ERR() by IS_ERR_OR_NULL() to fix this.
+
+Fixes: 028ddcac477b ("bcache: Remove unnecessary NULL point check in
+node allocations")
+Link:
+https://lore.kernel.org/all/3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de/
+Cc: stable@vger.kernel.org
+Cc: Zheng Wang <zyytlz.wz@163.com>
+Cc: Coly Li <colyli@suse.de>
+Signed-off-by: Markus Weippert <markus@gekmihesg.de>
+
+---
+ drivers/md/bcache/btree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index de3019972..261596791 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -1522,7 +1522,7 @@ static int btree_gc_coalesce(struct btree *b,
+struct btree_op *op,
+        bch_keylist_free(&keylist);
+=20
+        for (i =3D 0; i < nodes; i++)
+-               if (!IS_ERR(new_nodes[i])) {
++               if (!IS_ERR_OR_NULL(new_nodes[i])) {
+                        btree_node_free(new_nodes[i]);
+                        rw_unlock(true, new_nodes[i]);
+                }
+--
