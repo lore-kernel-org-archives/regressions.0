@@ -1,70 +1,67 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF182E62D
-	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 16:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1100364B3
+	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 16:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CBUsUsEh";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qz/eHiR/"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EA59A21E75;
-	Fri, 24 Nov 2023 16:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1700843373; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RnLFi4GJJHGz6wMxhsSIgbgHlypgMQFR88Q3hpHSyhI=;
-	b=CBUsUsEhSLNPRluRHLjiLQNp3FuaH7bSL2Yw7oBDKWuXr9T6NO1uBzpoPojoANDTbG70vP
-	v8TgonhYdajtraqNPVfFNBhcvFNNos9qWYpsn0gnthArTyPM6wWzWtKsOXtHl4X8D76Tfr
-	gtzq+hqsbTtxF/IWC3RZfHLGezvJcx4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1700843373;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RnLFi4GJJHGz6wMxhsSIgbgHlypgMQFR88Q3hpHSyhI=;
-	b=qz/eHiR/VC4sSjLEeDqvic4tGZ/r9n/nwps/OZxPd/EBK1Wa0dYhL0rdputcWRFubZPzab
-	0QPu6Nbq/xWFmtDw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 5A29D132E2;
-	Fri, 24 Nov 2023 16:29:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id oGAbA2rPYGX9RQAAn2gu4w
-	(envelope-from <colyli@suse.de>); Fri, 24 Nov 2023 16:29:30 +0000
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="b6JlTkkg"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1cf974e87d9so2685595ad.1
+        for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 08:35:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1700843747; x=1701448547; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=umaTYGfWT75d/2LbUos91FPz5jE7hHq6AI8iIDAt57w=;
+        b=b6JlTkkgAWjAomNv+37z09Ns6FnSZAlOWeeL8ApDYCC/qZCSCezdN5l/GrkMvjHTUA
+         rqCwtJOgt7rDkmCy3W4EjOTLj2ekZiiI8PK82aRluoyMuiOQBmBY+nE1hmROANlijNJ2
+         yqzHP8szBBp2LDkQnrp7refE7yS1Y1blJn+C7Ovlh/DLMiTCJzboeUwdlgb7ApCbH2hV
+         mKDYiey6Pp2fXrTPlvs4sN2M8hXLzzzyOk7KIcDJdEJYmUcA9VANxjtuuaPE8MpT0F7f
+         477pSeskLYU5rgxe4/h5thuxfJl4dQodezldoOXcPaOOlKr+jTi32efowbC1tU6RlJQ3
+         KlzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700843747; x=1701448547;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=umaTYGfWT75d/2LbUos91FPz5jE7hHq6AI8iIDAt57w=;
+        b=t1zSSJEAtMt2KB1SCJLtiQ4IJsEqcATYMUK1GTR+FM3dUvezP+zFqipH0m6xkjajZI
+         8gLtYbvDEEv+0yCtpyNuKxkbBU1XzDJac0C9HvYhK6b69uSSeghQnj18SZI67aSD+Qu8
+         E+vnOXtSU9jL0zkrXxA45glocuhTCkmSxPDdOJ8VkzBHmfAzbeUzGYDCIhnZqMZqcdxR
+         VBc+aC1E0FxsFX185yh7iK/bQjlYzUXZ2EmqP4N5YaNPteqzT7yKkEC0MFqyYVUxrS/7
+         xzxWMD0JNKkC4xSqt7DYY0WrjEhvBScLKCEKVTl96m1ltBThekFtv+Foq2lnzaV2i1jl
+         Kxvg==
+X-Gm-Message-State: AOJu0YwazR8P9kFQqZrYAZulBRnYKF7FjVQ7FvtYIUdywaaqNtMHCPc1
+	2HKt1Up5sWNQBCkilSUswebmQQ==
+X-Google-Smtp-Source: AGHT+IF4OxYiK6UIPy07lB8oGULkD1T35JFCzcc1vTX/Rscsd9lOnMQqTSfCRewL5umAqo+qCwX2nA==
+X-Received: by 2002:a17:903:181:b0:1cf:5806:5634 with SMTP id z1-20020a170903018100b001cf58065634mr3688152plg.1.1700843738508;
+        Fri, 24 Nov 2023 08:35:38 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id g8-20020a1709029f8800b001cf83962743sm1803081plq.250.2023.11.24.08.35.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Nov 2023 08:35:37 -0800 (PST)
+Message-ID: <11a7d768-c6e7-4a6e-875d-87858bf023a5@kernel.dk>
+Date: Fri, 24 Nov 2023 09:35:36 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] bcache: revert replacing IS_ERR_OR_NULL with IS_ERR
-From: Coly Li <colyli@suse.de>
-In-Reply-To: <c47d3540ece151a2fb30e1c7b5881cb8922db915.camel@gekmihesg.de>
-Date: Sat, 25 Nov 2023 00:29:12 +0800
-Cc: Bcache Linux <linux-bcache@vger.kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Zheng Wang <zyytlz.wz@163.com>,
- linux-kernel@vger.kernel.org,
- =?utf-8?Q?Stefan_F=C3=B6rster?= <cite@incertum.net>,
+Content-Language: en-US
+To: Coly Li <colyli@suse.de>
+Cc: Markus Weippert <markus@gekmihesg.de>,
+ Bcache Linux <linux-bcache@vger.kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, Zheng Wang
+ <zyytlz.wz@163.com>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Stefan_F=C3=B6rster?= <cite@incertum.net>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Jens Axboe <axboe@kernel.dk>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B68E455A-D6EB-4BB9-BD60-F2F8C3C8C21A@suse.de>
 References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
  <be371028-efeb-44af-90ea-5c307f27d4c6@leemhuis.info>
  <71576a9ff7398bfa4b8c0a1a1a2523383b056168.camel@gekmihesg.de>
@@ -72,116 +69,86 @@ References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
  <1c2a1f362d667d36d83a5ba43218bad199855b11.camel@gekmihesg.de>
  <3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de>
  <c47d3540ece151a2fb30e1c7b5881cb8922db915.camel@gekmihesg.de>
-To: Markus Weippert <markus@gekmihesg.de>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: *
-X-Spam-Score: 1.53
-X-Spamd-Result: default: False [1.53 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 MV_CASE(0.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 FREEMAIL_ENVRCPT(0.00)[163.com];
-	 REPLY(-4.00)[];
-	 BAYES_HAM(-1.18)[88.95%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_SPAM_LONG(3.49)[0.997];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,gekmihesg.de:email];
-	 NEURAL_SPAM_SHORT(2.81)[0.937];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[vger.kernel.org,leemhuis.info,163.com,incertum.net,linuxfoundation.org,kernel.dk,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Flag: NO
+ <B68E455A-D6EB-4BB9-BD60-F2F8C3C8C21A@suse.de>
+ <54706535-208b-43b5-814f-570ffa7b29bb@kernel.dk>
+ <910112B4-168D-4ECC-B374-7E6668B778F9@suse.de>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <910112B4-168D-4ECC-B374-7E6668B778F9@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 11/24/23 9:34 AM, Coly Li wrote:
+> 
+> 
+>> 2023?11?25? 00:31?Jens Axboe <axboe@kernel.dk> ???
+>>
+>> On 11/24/23 9:29 AM, Coly Li wrote:
+>>>
+>>>
+>>>> 2023?11?24? 23:14?Markus Weippert <markus@gekmihesg.de> ???
+>>>>
+>>>> Commit 028ddcac477b ("bcache: Remove unnecessary NULL point check in
+>>>> node allocations") replaced IS_ERR_OR_NULL by IS_ERR. This leads to a
+>>>> NULL pointer dereference.
+>>>>
+>>>> BUG: kernel NULL pointer dereference, address: 0000000000000080
+>>>> Call Trace:
+>>>> ? __die_body.cold+0x1a/0x1f
+>>>> ? page_fault_oops+0xd2/0x2b0
+>>>> ? exc_page_fault+0x70/0x170
+>>>> ? asm_exc_page_fault+0x22/0x30
+>>>> ? btree_node_free+0xf/0x160 [bcache]
+>>>> ? up_write+0x32/0x60
+>>>> btree_gc_coalesce+0x2aa/0x890 [bcache]
+>>>> ? bch_extent_bad+0x70/0x170 [bcache]
+>>>> btree_gc_recurse+0x130/0x390 [bcache]
+>>>> ? btree_gc_mark_node+0x72/0x230 [bcache]
+>>>> bch_btree_gc+0x5da/0x600 [bcache]
+>>>> ? cpuusage_read+0x10/0x10
+>>>> ? bch_btree_gc+0x600/0x600 [bcache]
+>>>> bch_gc_thread+0x135/0x180 [bcache]
+>>>>
+>>>> The relevant code starts with:
+>>>>
+>>>>   new_nodes[0] = NULL;
+>>>>
+>>>>   for (i = 0; i < nodes; i++) {
+>>>>       if (__bch_keylist_realloc(&keylist, bkey_u64s(&r[i].b->key)))
+>>>>           goto out_nocoalesce;
+>>>>   // ...
+>>>> out_nocoalesce:
+>>>>   // ...
+>>>>   for (i = 0; i < nodes; i++)
+>>>>       if (!IS_ERR(new_nodes[i])) {  // IS_ERR_OR_NULL before
+>>>> 028ddcac477b
+>>>>           btree_node_free(new_nodes[i]);  // new_nodes[0] is NULL
+>>>>           rw_unlock(true, new_nodes[i]);
+>>>>       }
+>>>>
+>>>> This patch replaces IS_ERR() by IS_ERR_OR_NULL() to fix this.
+>>>>
+>>>> Fixes: 028ddcac477b ("bcache: Remove unnecessary NULL point check in
+>>>> node allocations")
+>>>> Link:
+>>>> https://lore.kernel.org/all/3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de/
+>>>> Cc: stable@vger.kernel.org
+>>>> Cc: Zheng Wang <zyytlz.wz@163.com>
+>>>> Cc: Coly Li <colyli@suse.de>
+>>>> Signed-off-by: Markus Weippert <markus@gekmihesg.de>
+>>>
+>>> Added into my for-next.  Thanks for patching up.
+>>
+>> We should probably get this into the current release, rather than punt
+>> it to 6.8.
+> 
+> Yes, copied. So far I don?t have other bcache patches for 6.7, I feel
+> I might be redundant if I send you another for -rc4 series with this
+> single patch.
+> 
+> Could you please directly take it into -rc4?
 
+Sure, I'll just grab it as-is.
 
-> 2023=E5=B9=B411=E6=9C=8824=E6=97=A5 23:14=EF=BC=8CMarkus Weippert =
-<markus@gekmihesg.de> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Commit 028ddcac477b ("bcache: Remove unnecessary NULL point check in
-> node allocations") replaced IS_ERR_OR_NULL by IS_ERR. This leads to a
-> NULL pointer dereference.
->=20
-> BUG: kernel NULL pointer dereference, address: 0000000000000080
-> Call Trace:
-> ? __die_body.cold+0x1a/0x1f
-> ? page_fault_oops+0xd2/0x2b0
-> ? exc_page_fault+0x70/0x170
-> ? asm_exc_page_fault+0x22/0x30
-> ? btree_node_free+0xf/0x160 [bcache]
-> ? up_write+0x32/0x60
-> btree_gc_coalesce+0x2aa/0x890 [bcache]
-> ? bch_extent_bad+0x70/0x170 [bcache]
-> btree_gc_recurse+0x130/0x390 [bcache]
-> ? btree_gc_mark_node+0x72/0x230 [bcache]
-> bch_btree_gc+0x5da/0x600 [bcache]
-> ? cpuusage_read+0x10/0x10
-> ? bch_btree_gc+0x600/0x600 [bcache]
-> bch_gc_thread+0x135/0x180 [bcache]
->=20
-> The relevant code starts with:
->=20
->    new_nodes[0] =3D NULL;
->=20
->    for (i =3D 0; i < nodes; i++) {
->        if (__bch_keylist_realloc(&keylist, bkey_u64s(&r[i].b->key)))
->            goto out_nocoalesce;
->    // ...
-> out_nocoalesce:
->    // ...
->    for (i =3D 0; i < nodes; i++)
->        if (!IS_ERR(new_nodes[i])) {  // IS_ERR_OR_NULL before
-> 028ddcac477b
->            btree_node_free(new_nodes[i]);  // new_nodes[0] is NULL
->            rw_unlock(true, new_nodes[i]);
->        }
->=20
-> This patch replaces IS_ERR() by IS_ERR_OR_NULL() to fix this.
->=20
-> Fixes: 028ddcac477b ("bcache: Remove unnecessary NULL point check in
-> node allocations")
-> Link:
-> =
-https://lore.kernel.org/all/3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de/
-> Cc: stable@vger.kernel.org
-> Cc: Zheng Wang <zyytlz.wz@163.com>
-> Cc: Coly Li <colyli@suse.de>
-> Signed-off-by: Markus Weippert <markus@gekmihesg.de>
-
-Added into my for-next.  Thanks for patching up.
-
-Coly Li
-
-
->=20
-> ---
-> drivers/md/bcache/btree.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-> index de3019972..261596791 100644
-> --- a/drivers/md/bcache/btree.c
-> +++ b/drivers/md/bcache/btree.c
-> @@ -1522,7 +1522,7 @@ static int btree_gc_coalesce(struct btree *b,
-> struct btree_op *op,
->        bch_keylist_free(&keylist);
->=20
->        for (i =3D 0; i < nodes; i++)
-> -               if (!IS_ERR(new_nodes[i])) {
-> +               if (!IS_ERR_OR_NULL(new_nodes[i])) {
->                        btree_node_free(new_nodes[i]);
->                        rw_unlock(true, new_nodes[i]);
->                }
-> --
+-- 
+Jens Axboe
 
