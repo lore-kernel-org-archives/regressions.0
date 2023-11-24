@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B2D33CE2;
-	Fri, 24 Nov 2023 16:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3022931720;
+	Fri, 24 Nov 2023 16:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qDt22oQ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD71C433C8;
-	Fri, 24 Nov 2023 16:19:01 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L60ux02M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C7AC433C7;
+	Fri, 24 Nov 2023 16:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700842741;
-	bh=CEV7NAR5P1IEKIo7VE/OV4UHEH/9vFQ5XlpsJWnIDAI=;
+	s=korg; t=1700843109;
+	bh=vz2zgekRERvzIcolWYRkH/DuOG/ehsYPRdrpMBVZqGU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDt22oQ4NnvkfTOMZwj19/fd/1D3bToLigf3b0JIOQlqPwpexWA/Ctdlzj9xXiQVr
-	 U4YM5Iv9kdKkdQzNeeHIVdPM/xFpr1G7ls5pDovwGOjQvqV8WuAgAw6j1e2RIGOvFU
-	 oZylt9SmZRcuo548M/AdQoDWJsdd3GLFv7M8Hubg=
-Date: Fri, 24 Nov 2023 16:18:59 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tomasz Rostanski <tomasz.rostanski@thalesgroup.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Stable <stable@vger.kernel.org>,
-	Linux USB <linux-usb@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: Fwd: dwc3: regression in USB DWC3 driver in kernel 5.15 branch
-Message-ID: <2023112424-escalate-saga-2b01@gregkh>
-References: <bfee63a3-16ee-0061-94c0-9c9af5318634@gmail.com>
- <635eb180-0dea-4dc7-a092-be453bf80023@leemhuis.info>
- <f7d315b1-f43d-4573-81f0-a4014f3ac0bb@leemhuis.info>
+	b=L60ux02MLoOnGxe6YwcEu4PG8a0uszd+POyFNJ/n+jWatpAWs+qeF/KMAs8G/03qV
+	 Ui5AX4KzUYubOs5C/3t3158rF6o54rTUjiAZ3f8zIPZWcL8Za90PW4tfRFKwIuABSj
+	 xX4S1O7J3lulZQo/lstDnD5IfJ0gdzrs6E7J7vak=
+Date: Fri, 24 Nov 2023 16:25:07 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sagar Biradar <sagar.biradar@microchip.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Gilbert Wu <gilbert.wu@microchip.com>,
+	John Garry <john.g.garry@oracle.com>
+Subject: Re: scsi regression that after months is still not addressed and now
+ bothering 6.1.y users, too
+Message-ID: <2023112456-disinfect-undoing-b5ef@gregkh>
+References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,22 +40,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f7d315b1-f43d-4573-81f0-a4014f3ac0bb@leemhuis.info>
+In-Reply-To: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
 
-On Tue, Nov 21, 2023 at 04:25:30PM +0100, Thorsten Leemhuis wrote:
-> Hi. Top-posting for once, to make this easily accessible to everyone.
+On Tue, Nov 21, 2023 at 10:50:57AM +0100, Thorsten Leemhuis wrote:
+> * @SCSI maintainers: could you please look into below please?
 > 
-> To Greg and everyone that might care: apparently Tomasz lost interest in
-> fixing this 5.15.y regression. Kinda sad, as the patches are mostly
-> there, but lack a S-o-b tag -- which means we are stuck here, unless
-> somebody else attempts a backport.
+> * @Stable team: you might want to take a look as well and consider a
+> revert in 6.1.y (yes, I know, those are normally avoided, but here it
+> might make sense).
 > 
-> https://lore.kernel.org/all/20230904071432.32309-1-tomasz.rostanski@thalesgroup.com/
+> Hi everyone!
 > 
-> I'll thus stop tracking this regression.
+> TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
+> hangs for a while) that was reported months ago already but is still not
+> fixed. Not only that, it apparently more and more users run into this
+> recently, as the culprit was recently integrated into 6.1.y; I wonder if
+> it would be best to revert it there, unless a fix for mainline comes
+> into reach soon.
+> 
+> Details:
+> 
+> Quite a few machines with Adaptec controllers seems to hang for a few
+> tens of seconds to a few minutes before things start to work normally
+> again for a while:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217599
+> 
+> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
+> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
+> commit despite a warning of mine to Sasha recently made it into 6.1.53
+> -- and that way apparently recently reached more users recently, as
+> quite a few joined that ticket.
+> 
+> The culprit is authored by Sagar Biradar who unless I missed something
+> never replied even once to the ticket or earlier mails about it. Lore
+> has no messages from him since early June.
+> 
+> Hannes Reinecke at least tried to fix it a few weeks ago (many thx), but
+> that didn't work out (see the ticket for details). Since then things
+> look stalled again, which is, ehh, unfortunate when it comes to
+> regressions.
 
-Thanks, I'll wait for a working backport for those using the 5.15.y tree
-and this driver as it's not anything that I am capable of doing at this
-point in time.
+I am loath to revert a stable patch that has been there for so long as
+any upgrade will just cause the same bug to show back up.  Why can't we
+just revert it in Linus's tree now and I'll take that revert in the
+stable trees as well?
+
+thanks,
 
 greg k-h
