@@ -1,156 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5376D18041
-	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 14:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6E0E01FE7D;
-	Fri, 24 Nov 2023 14:18:04 +0000 (UTC)
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id BCFCE139E8;
-	Fri, 24 Nov 2023 14:18:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id l0A5GpiwYGXWIAAAn2gu4w
-	(envelope-from <colyli@suse.de>); Fri, 24 Nov 2023 14:18:00 +0000
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977142D781
+	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 15:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YRXAk877"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Q78WGe4buDmFTY2CNafH/GdHZsiQ6etEmfh4tkpfnOU=; b=YRXAk877eHcw4jEKun+aoPzTE9
+	CYfF/sgXjTuK19iWbf8NmsYKTNmGxDQ+fmIfQhvErcUre8w0XhdASts6xux6L7d5Fx5ump381csYl
+	QgWniTOVATOJ6P4u2tPOX9zm+0wx1AccWYL5p8kHFlL2ZzOZl8NPaqhOWBOoSI1zwDPoPwR971/Jm
+	UEdsW0CZ+iQj+jCPP2Tz0eWhcCg3NESrtD//5s7brjqXRZy+ra4D8vEUYr+wv3HaEt5NuL9XvQXtW
+	mPE5Fw0pPoL46h0I98kVI9Gbob1m7tXrlS0oMCGztNVYuAq1ELNYnJgwT7YI11SLSTUSM8C093xcU
+	5rExqhRA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r6XlU-008ggk-2W; Fri, 24 Nov 2023 15:06:44 +0000
+Date: Fri, 24 Nov 2023 15:06:44 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Chun Ng <chunn@nvidia.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Ankita Garg <ankitag@nvidia.com>
+Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
+Message-ID: <ZWC8BOtPW2bWBFqh@casper.infradead.org>
+References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
+ <ZV7eHE2Fxb75oRpG@archie.me>
+ <ZV9x6qZ5z8YTvTC4@casper.infradead.org>
+ <ZV_rJtxdn1dU9ip0@archie.me>
+ <ZV/2nPBs5r1nIaW4@casper.infradead.org>
+ <2023112402-posing-dress-4bf2@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
-Subject: Re: bcache: kernel NULL pointer dereference since 6.1.39
-From: Coly Li <colyli@suse.de>
-In-Reply-To: <1c2a1f362d667d36d83a5ba43218bad199855b11.camel@gekmihesg.de>
-Date: Fri, 24 Nov 2023 22:17:46 +0800
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Zheng Wang <zyytlz.wz@163.com>,
- linux-kernel@vger.kernel.org,
- =?utf-8?Q?Stefan_F=C3=B6rster?= <cite@incertum.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Jens Axboe <axboe@kernel.dk>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Bcache Linux <linux-bcache@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de>
-References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
- <be371028-efeb-44af-90ea-5c307f27d4c6@leemhuis.info>
- <71576a9ff7398bfa4b8c0a1a1a2523383b056168.camel@gekmihesg.de>
- <989C39B9-A05D-4E4F-A842-A4943A29FFD6@suse.de>
- <1c2a1f362d667d36d83a5ba43218bad199855b11.camel@gekmihesg.de>
-To: Markus Weippert <markus@gekmihesg.de>
-X-Mailer: Apple Mail (2.3774.200.91.1.1)
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Rspamd-Server: rspamd2
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 6E0E01FE7D
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023112402-posing-dress-4bf2@gregkh>
 
+On Fri, Nov 24, 2023 at 11:52:06AM +0000, Greg KH wrote:
+> On Fri, Nov 24, 2023 at 01:04:28AM +0000, Matthew Wilcox wrote:
+> > On Fri, Nov 24, 2023 at 07:15:34AM +0700, Bagas Sanjaya wrote:
+> > > On Thu, Nov 23, 2023 at 03:38:18PM +0000, Matthew Wilcox wrote:
+> > > > On Thu, Nov 23, 2023 at 12:07:40PM +0700, Bagas Sanjaya wrote:
+> > > > > Anyway, I'm adding this regression to regzbot:
+> > > > > 
+> > > > > #regzbot ^introduced: v6.0..v6.1
+> > > > 
+> > > > this is not a regression.  close it, you idiot.
+> > > > 
+> > > > 
+> > > 
+> > > why?
+> > > 
+> > > Confused...
+> > 
+> > yes.  you're perpetually confused.  stop trying to help, you only make
+> > things worse.  learn about the things you work on, or give up.
+> 
+> Um, is this really called for?  Bagas is trying to help track
+> regressions, and if something isn't a regression like you say here, a
+> simple "This is not a regression, it's already resolved in newer
+> kernels" is fine.
 
-
-> 2023=E5=B9=B411=E6=9C=8824=E6=97=A5 21:55=EF=BC=8CMarkus Weippert =
-<markus@gekmihesg.de> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Fri, 2023-11-24 at 21:46 +0800, Coly Li wrote:
->>=20
->>=20
->>> 2023=E5=B9=B411=E6=9C=8824=E6=97=A5 21:29=EF=BC=8CMarkus Weippert =
-<markus@gekmihesg.de> =E5=86=99=E9=81=93=EF=BC=9A
->>>=20
->>>> On 23.11.23 14:53, Stefan F=C3=B6rster wrote:
->>>>>=20
->>>>> starting with kernel 6.1.39, we see the following error message
->>>>> with
->>>>> heavy I/O loads. We needed to revert
->>>>=20
->>>> Thx for the report. I assume that problem still occurs with the
->>>> latest
->>>> 6.1.y kernel?
->>>>=20
->>>>> =
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dv6.1.39&id=3D68118c339c6e1e16ae017bef160dbe28a27ae9c8
->>>>=20
->>>> FWIW, that is mainline commit 028ddcac477b69 ("bcache: Remove
->>>> unnecessary NULL point check in node allocations") [v6.5-rc1].
->>>>=20
->>>> Did a quick check and noticed a fix for that change was recently
->>>> mainlined as f72f4312d43883 ("bcache: replace a mistaken IS_ERR()
->>>> by
->>>> IS_ERR_OR_NULL() in btree_gc_coalesce()") [v6.7-rc2-post]:
->>>> https://lore.kernel.org/all/20231118163852.9692-1-colyli@suse.de/
->>>>=20
->>>> It is expected to soon be interegrated into a 6.1.y kernel.
->>>>=20
->>>> But maybe it's something else. I CCed the involved people, they
->>>> might
->>>> know.
->>>=20
->>> We applied f72f4312d43883 to the current Debian kernel (based on
->>> 6.1.55) but it didn't help, same stack trace.
->>> Looking at the description, __bch_btree_node_alloc() should never
->>> be
->>> able to return NULL anyway after
->>> =
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dv6.1.39&id=3D7ecea5ce3dc17339c280c75b58ac93d8c8620d9f
->>> But I didn't verify all callers, so this might still be correct, if
->>> it's not always initialized with the return value of
->>> __bch_btree_node_alloc().
->>>=20
->>> Anyway, I think we fixed it by applying this:
->>>=20
->>> diff -Naurp a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
->>> --- a/drivers/md/bcache/btree.c 2023-09-23 11:11:13.000000000 +0200
->>> +++ b/drivers/md/bcache/btree.c 2023-11-24 13:13:09.840013759 +0100
->>> @@ -1489,7 +1489,7 @@ out_nocoalesce:
->>> bch_keylist_free(&keylist);
->>>=20
->>> for (i =3D 0; i < nodes; i++)
->>> - if (!IS_ERR(new_nodes[i])) {
->>> + if (!IS_ERR_OR_NULL(new_nodes[i])) {
->>> btree_node_free(new_nodes[i]);
->>> rw_unlock(true, new_nodes[i]);
->>> }
->>>=20
->>=20
->> The above change is what commit f72f4312d43883 ("bcache: replace a
->> mistaken IS_ERR() by IS_ERR_OR_NULL() in btree_gc_coalesce()=E2=80=9D =
-does.
->=20
-> But f72f4312d43883 reverts @@ -1340,7 +1340,7 @@, while the patch we
-> applied reverts @@ -1487,7 +1487,7 @@ instead.
-> Applying f72f4312d43883 didn't help for us.
->=20
-
-OK, I know what you mean.  Yes, your fix is necessary too.
-
-Would you like to post patch for your fix?
-
-Thanks.
-
-Coly Li
-
-
->>=20
->> Although the above patch is suggested to go into 6.5+ kernel, for
->> this condition it should go into all stable kernels where commit
->> 028ddcac477b69 ("bcache: Remove unnecessary NULL point check in node
->> allocations=E2=80=9D) were merged into.
-[snipped]=
+Bagas has a long history of inappropriately attempting to "help" and due
+to a lack of understanding wasting peoples time.  He's not too dissimilar
+to the various wrongbots we've had over the years, including Richard B
+Johnson, Markus Elfring, etc.  I've tried to help guide him towards being
+a more productive contributor, but'have failed.  Mostly I ignore him now,
+but when he's instructing a bot to harass me, that crosses a line.
