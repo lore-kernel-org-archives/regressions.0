@@ -1,53 +1,162 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B932935F11
-	for <regressions@lists.linux.dev>; Thu, 23 Nov 2023 15:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0462933CA
+	for <regressions@lists.linux.dev>; Fri, 24 Nov 2023 00:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L/HubkwK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=s7ekhSuoXxWlw3uFMenhrsDmT0xI7DRa/z1sU8Z+EW4=; b=L/HubkwKeFULvuKpdH+LQqMTRj
-	e8DkQyvYc9norxdz5rus6WwdDaASMKeKSWAi7uP6vG3pbZr32kgA5AoZVQdeA2Jti4KHWSVd2LTYa
-	+IBv2B9FqQ1xgGlwzRFOoa4Vqy5OG7uOkzuhqnOkuAMEUjJ1tQ6Dp4jqtQz6XyQ0fOv9k9xNXQJyG
-	GJtD1L3S37xtaAagdZIDmO7t+ah4bg7tVgTFUmxbAiWnRnVp58bE4fkvKVTUD5CR/TL4nouVog+R9
-	PNK5JT9pic/gBOT/LNYY2DdQpD2Gn+q9cDWOEad1/zTsSqBDPOsA1NLNnWkfHdU9XG4K6AtebfDbm
-	2zJgIgxA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r6BmU-007ftN-2B; Thu, 23 Nov 2023 15:38:18 +0000
-Date: Thu, 23 Nov 2023 15:38:18 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Chun Ng <chunn@nvidia.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Ankita Garg <ankitag@nvidia.com>
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Message-ID: <ZV9x6qZ5z8YTvTC4@casper.infradead.org>
-References: <PH7PR12MB7937B0DF19E7E8539703D0E3D6BAA@PH7PR12MB7937.namprd12.prod.outlook.com>
- <ZV7eHE2Fxb75oRpG@archie.me>
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="EXoSXWK6"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 94F218285966;
+	Thu, 23 Nov 2023 18:02:01 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id kqmcTUHYpmAi; Thu, 23 Nov 2023 18:02:00 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id DD04D82858B9;
+	Thu, 23 Nov 2023 18:01:59 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com DD04D82858B9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1700784119; bh=/K0ePnwT7psehnvpRKRvGH9Y4HoskzplRLF3gGUpSm0=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=EXoSXWK6iK2gwCKGFdnGd9tcgSIxBGrxzGS06yervCph79PJ04K9AK+QL6Y/ib8vT
+	 l/ilJaeCB2dt0CY4yBw4Kqgx2qN3lH73QFDq+iQD6Gx6I/qSt+/qtTo7vDEmzxBcW9
+	 EwHeB5kgeCbjIWQqfzHOcuPpapi6DkMaHvd5Q9JU=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id e81alOH2KJ3J; Thu, 23 Nov 2023 18:01:59 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 9D9F082858A9;
+	Thu, 23 Nov 2023 18:01:59 -0600 (CST)
+Date: Thu, 23 Nov 2023 18:01:59 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
+	npiggin <npiggin@gmail.com>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <87leaqjs8x.fsf@mail.lhotse>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com> <877cmc7ve9.fsf@mail.lhotse> <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com> <874jhg6lkn.fsf@mail.lhotse> <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com> <87leaqjs8x.fsf@mail.lhotse>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZV7eHE2Fxb75oRpG@archie.me>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+Thread-Index: OkyGhBWE6ESNaH7+hHk9xkTdc0AVjQ==
 
-On Thu, Nov 23, 2023 at 12:07:40PM +0700, Bagas Sanjaya wrote:
-> Anyway, I'm adding this regression to regzbot:
+
+
+----- Original Message -----
+> From: "Michael Ellerman" <mpe@ellerman.id.au>
+> To: "Timothy Pearson" <tpearson@raptorengineering.com>
+> Cc: "Jens Axboe" <axboe@kernel.dk>, "regressions" <regressions@lists.linux.dev>, "npiggin" <npiggin@gmail.com>,
+> "christophe leroy" <christophe.leroy@csgroup.eu>, "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>
+> Sent: Tuesday, November 21, 2023 11:01:50 PM
+> Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec register  save
+
+> Timothy Pearson <tpearson@raptorengineering.com> writes:
+>>
+> ...
+>>
+>> So a little more detail on this, just to put it to rest properly vs.
+>> assuming hand analysis caught every possible pathway. :)
+>>
+>> The debugging that generates this stack trace also verifies the following in
+>> __giveup_fpu():
+>>
+>> 1.) tsk->thread.fp_state.fpr doesn't contain the FPSCR contents prior to calling
+>> save_fpu()
+>> 2.) tsk->thread.fp_state.fpr contains the FPSCR contents directly after calling
+>> save_fpu()
+>> 3.) MSR_FP is set both in the task struct and in the live MSR.
+>>
+>> Only if all three conditions are met will it generate the trace.  This
+>> is a generalization of the hack I used to find the problem in the
+>> first place.
+>>
+>> If the state will subsequently be reloaded from the thread struct,
+>> that means we're reloading the registers from the thread struct that
+>> we just verified was corrupted by the earlier save_fpu() call.  There
+>> are only two ways I can see for that to be true -- one is if the
+>> registers were already clobbered when giveup_all() was entered, and
+>> the other is if save_fpu() went ahead and clobbered them right here
+>> inside giveup_all().
+>>
+>> To see which scenario we were dealing with, I added a bit more
+>> instrumentation to dump the current register state if MSR_FP bit was
+>> already set in registers (i.e. not dumping data from task struct, but
+>> using the live FPU registers instead), and sure enough the registers
+>> are corrupt on entry, so something else has already called save_fpu()
+>> before we even hit giveup_all() in this call chain.
 > 
-> #regzbot ^introduced: v6.0..v6.1
+> Can you share the debug patch you're using?
+> 
+> cheers
 
-this is not a regression.  close it, you idiot.
+Sure, here you go.  Note that with my FPU patch there is no WARN_ON hit, at least in my testing, so it isn't userspace purposefully loading the fr0/vs0 register with the FPSCR.
 
-
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 392404688cec..bde57dc3262a 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -154,7 +154,49 @@ static void __giveup_fpu(struct task_struct *tsk)
+ {
+ 	unsigned long msr;
+ 
++	// DEBUGGING
++	uint64_t prev_fpr0 = *(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+0);
++	uint64_t prev_fpr1 = *(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+1);
++	struct thread_fp_state debug_fp_state;
++	unsigned long currentmsr = mfmsr();
++
++	if (currentmsr & MSR_FP) {
++		store_fp_state(&debug_fp_state);
++		load_fp_state(&debug_fp_state);
++	}
++
+ 	save_fpu(tsk);
++
++	// DEBUGGING
++	if (tsk->thread.regs->msr & MSR_FP) {
++		if (((*(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+0) == 0x82004000) && (prev_fpr0 != 0x82004000))
++		 || ((*(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+1) == 0x82004000) && (prev_fpr1 != 0x82004000)))
++		{
++			WARN_ON(1);
++
++			printk("[TS %lld] In __giveup_fpu() for process [comm: '%s'  pid %d tid %d], before save current "
++			"fp0: 0x%016llx/%016llx fp1: 0x%016llx/%016llx fp8: 0x%016llx/%016llx fp9: 0x%016llx/%016llx"
++			" msr: 0x%016lx (FP %d VSX %d EE %d) on core %d\n",
++			ktime_get_boottime_ns(), current->comm, current->pid, current->tgid,
++			*(((uint64_t*)(&debug_fp_state.fpr[0]))+0), *(((uint64_t*)(&debug_fp_state.fpr[0]))+1),
++			*(((uint64_t*)(&debug_fp_state.fpr[1]))+0), *(((uint64_t*)(&debug_fp_state.fpr[1]))+1),
++			*(((uint64_t*)(&debug_fp_state.fpr[8]))+0), *(((uint64_t*)(&debug_fp_state.fpr[8]))+1),
++			*(((uint64_t*)(&tsk->thread.fp_state.fpr[9]))+0), *(((uint64_t*)(&tsk->thread.fp_state.fpr[9]))+1),
++			currentmsr, !!(currentmsr & MSR_FP), !!(currentmsr & MSR_VSX), !!(currentmsr & MSR_EE), raw_smp_processor_id());
++
++			printk("[TS %lld] In __giveup_fpu() for process [comm: '%s'  pid %d tid %d], after save saved "
++			"fp0: 0x%016llx/%016llx fp1: 0x%016llx/%016llx fp8: 0x%016llx/%016llx fp9: 0x%016llx/%016llx"
++			" msr: 0x%016lx (FP %d VSX %d EE %d) on core %d\n",
++			ktime_get_boottime_ns(), current->comm, current->pid, current->tgid,
++			*(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+0), *(((uint64_t*)(&tsk->thread.fp_state.fpr[0]))+1),
++			*(((uint64_t*)(&tsk->thread.fp_state.fpr[1]))+0), *(((uint64_t*)(&tsk->thread.fp_state.fpr[1]))+1),
++			*(((uint64_t*)(&tsk->thread.fp_state.fpr[8]))+0), *(((uint64_t*)(&tsk->thread.fp_state.fpr[8]))+1),
++			*(((uint64_t*)(&tsk->thread.fp_state.fpr[9]))+0), *(((uint64_t*)(&tsk->thread.fp_state.fpr[9]))+1),
++			tsk->thread.regs->msr, !!(tsk->thread.regs->msr & MSR_FP), !!(tsk->thread.regs->msr & MSR_VSX), !!(tsk->thread.regs->msr & MSR_EE), raw_smp_processor_id());
++		}
++	}
++
++
+ 	msr = tsk->thread.regs->msr;
+ 	msr &= ~(MSR_FP|MSR_FE0|MSR_FE1);
+ 	if (cpu_has_feature(CPU_FTR_VSX))
