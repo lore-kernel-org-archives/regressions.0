@@ -1,92 +1,96 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2038763C2
-	for <regressions@lists.linux.dev>; Sat, 25 Nov 2023 07:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r6moG-000216-3U; Sat, 25 Nov 2023 08:10:36 +0100
-Message-ID: <34c5b291-b69e-4592-bc9f-fc1b2ef5c5d7@leemhuis.info>
-Date: Sat, 25 Nov 2023 08:10:35 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C56B27705
+	for <regressions@lists.linux.dev>; Sat, 25 Nov 2023 22:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.one
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bigler.one header.i=@bigler.one header.b="hKOLvl5w"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4Sd6Nk3mMTz5yvD;
+	Sat, 25 Nov 2023 23:44:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.one; s=key2;
+	t=1700952278; bh=FZNJP3nxNUKEIuONIbATOwCDJtkvy7ja6YZOXoIHlqI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:From;
+	b=hKOLvl5w8rs3sYDDko7hym+l9R1XT11TFAf1Vl+hbgrEJkcFQoTVRSHAPDXJ3QOQf
+	 Hedbm47b+0oESJEnawSEzTA3XCoGlsO/nJ3z0elqlTK+KEAvZOXGai3XXhQIQaK0aP
+	 SCdQYE2csjVATGJgRnSDhRjCt22jTjgJTp30vN4boNRMxkhXXlHipYVpmPocun58Sd
+	 wBra2CxGVpxz2hTVFxzGJIu1S7KzXYPxGA6XlcLcfHxGhT+CFiixp4+pU46UlJ+M8/
+	 f/o+XYcIPzpSGG9Pib6Etq20elfJ4iW/aTFPTZmu6m5Zgh3wOdWzbDZp3EKr++RTXG
+	 T+Cy2DR2UE5Dw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4Sd6Nk32dxz4w70;
+	Sat, 25 Nov 2023 23:44:38 +0100 (CET)
+Received: from mx2fc6.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4Sd6Nj585yz8scr;
+	Sat, 25 Nov 2023 23:44:37 +0100 (CET)
+Received: from [192.168.1.24] (xdsl-188-155-37-14.adslplus.ch [188.155.37.14])
+	by mx2fc6.netcup.net (Postfix) with ESMTPSA id C3FDA45338;
+	Sat, 25 Nov 2023 23:44:32 +0100 (CET)
+Authentication-Results: mx2fc6;
+        spf=pass (sender IP is 188.155.37.14) smtp.mailfrom=benjamin@bigler.one smtp.helo=[192.168.1.24]
+Received-SPF: pass (mx2fc6: connection is authenticated)
+Message-ID: <d795999676663a576f12f07a7013bee758fb781c.camel@bigler.one>
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+From: Benjamin Bigler <benjamin@bigler.one>
+To: francesco@dolcini.it
+Cc: broonie@kernel.org, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org,  linux@bigler.io, regressions@lists.linux.dev,
+ stefan.moring@technolution.nl
+Date: Sat, 25 Nov 2023 23:44:32 +0100
+In-Reply-To: <ZVsyVAapXTWnznFd@francesco-nb.int.toradex.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: scsi regression that after months is still not addressed and now
- bothering 6.1.y users, too
-Content-Language: en-US, de-DE
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Sagar Biradar <sagar.biradar@microchip.com>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Gilbert Wu <gilbert.wu@microchip.com>,
- John Garry <john.g.garry@oracle.com>
-References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
- <2023112456-disinfect-undoing-b5ef@gregkh>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <2023112456-disinfect-undoing-b5ef@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1700896248;f6835888;
-X-HE-SMSGID: 1r6moG-000216-3U
+X-PPP-Message-ID: <170095227324.806.8324255313749551391@mx2fc6.netcup.net>
+X-Rspamd-Queue-Id: C3FDA45338
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: 2ksQ9lJvOoisjgPJEMFMloG8LvydxyFtO4QBLzOvLWrCGO0=
 
-On 24.11.23 17:25, Greg KH wrote:
-> On Tue, Nov 21, 2023 at 10:50:57AM +0100, Thorsten Leemhuis wrote:
->> * @SCSI maintainers: could you please look into below please?
->>
->> * @Stable team: you might want to take a look as well and consider a
->> revert in 6.1.y (yes, I know, those are normally avoided, but here it
->> might make sense).
->>
->> Hi everyone!
->>
->> TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
->> hangs for a while) that was reported months ago already but is still not
->> fixed. Not only that, it apparently more and more users run into this
->> recently, as the culprit was recently integrated into 6.1.y; I wonder if
->> it would be best to revert it there, unless a fix for mainline comes
->> into reach soon.
->>
->> Details:
->>
->> Quite a few machines with Adaptec controllers seems to hang for a few
->> tens of seconds to a few minutes before things start to work normally
->> again for a while:
->> https://bugzilla.kernel.org/show_bug.cgi?id=217599
->>
->> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
->> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
->> commit despite a warning of mine to Sasha recently made it into 6.1.53
->> -- and that way apparently recently reached more users recently, as
->> quite a few joined that ticket.
->[...]
-> I am loath to revert a stable patch that has been there for so long as
-> any upgrade will just cause the same bug to show back up. Why can't we
-> just revert it in Linus's tree now and I'll take that revert in the
-> stable trees as well?
+Hello,
 
-FWIW, I know and in general agree with that strategy, that's why I
-normally wouldn't have brought a stable-only revert up for
-consideration. But this issue to me looked somewhat special and urgent
-for two and a half reasons: (1) that backport apparently made a lot more
-people suddenly hit the issue (2) there was also this data corruption
-aspect one of the reporters mentioned (not sure if that is real and/or
-if this might be just a 6.1.y thing). Furthermore for 6.1.y it was
-recently confirmed that reverting the change fixes things, while we iirc
-had no such confirmation for recent mainline kernels at that point. So
-it looked like it would take a while to get this sorted out in mainline.
-But it seems we finally might get closer to that now, so yeah, maybe
-it's not worth a stable revert.
+I'm uncertain whether this is the appropriate place to respond, but I
+am encountering a similar issue on a phyboard-polis-rdk (imx8mm) with
+Linux 6.7-rc2. My system uses the imx-sdma firmware version 4.6.
 
-Ciao, Thorsten
+The problem is with the TPM, which fails to function correctly,
+displaying the error message:
+"tpm tpm0: TPM in field failure mode, requires firmware upgrade."
+
+The issue is identical to the one reported by Stefan. It can be
+resolved by reverting commits 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f
+and 5f66db08cbd3ca471c66bacb0282902c79db9274, after which the TPM works
+again.
+
+Additionally, I've conducted the tests which Francesco mentioned:
+
+> ```
+> cd /tmp
+>=20
+> dd if=3D/dev/urandom of=3D4k-spi-test-data.bin bs=3D1 count=3D4k
+> spidev_test -D "$device" -s 4000000 -i 4k-spi-test-data.bin -o 4k-
+spi-test-result.bin
+>=20
+> dd if=3D/dev/urandom of=3D16bytes-spi-test-data.bin bs=3D1 count=3D16
+> spidev_test -D "$device" -s 16000 -i 16bytes-spi-test-data.bin -o
+16bytes-spi-test-result.bin
+> ```
+
+The readback data is correct but on MOSI/MISO there are 16384 bytes.
+
+Please let me know if I can do some more tests.
+
+Best regards,
+
+Benjamin Bigler
