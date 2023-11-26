@@ -1,110 +1,88 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE69538A
-	for <regressions@lists.linux.dev>; Sun, 26 Nov 2023 13:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.one
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.one
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA05FD26E
+	for <regressions@lists.linux.dev>; Sun, 26 Nov 2023 13:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bigler.one header.i=@bigler.one header.b="Qsz8/KJW"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4SdTpp1VJkz7yTy;
-	Sun, 26 Nov 2023 14:20:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.one; s=key2;
-	t=1701004802; bh=uVRzzBCF4paLxzieeLLtTwlIaakwDhPEHY3e2Bh7tG4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:From;
-	b=Qsz8/KJWo3SBW7W1lXOhGiTa9bO/X1Ps9BA1+df9oYyX+g96m2liuR3QHDXwe85oF
-	 6ur5SoRZX5Sz1tLtrZCr58lCaFhV4AhE6TtJyhvaix1l3DjFJxNrnUSV+u+TZ7Fh4v
-	 4AmYrOcJJj9WejrVSF2V7/zDTIXcR3LTCHALLoLZeVXvXZkhtLAjP43fXO2JGhdVpl
-	 Vo5IyvASDOn7lzjzz9G2bD0Y9NMJ4lOBeQkUGpsBTegUPDwwnkwJV9gTvlGf2S6OJz
-	 xwzj2Cvv+/+eFmbRrLkBIJvxVFhRHK2CEhmwS2voLTjUgLZp3wFj9xZ/h2LI0BaxuO
-	 TinMd5A3KO79w==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4SdTpp16Rnz7yTr;
-	Sun, 26 Nov 2023 14:20:02 +0100 (CET)
-Received: from mx2fc6.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4SdTpn51W7z8sb3;
-	Sun, 26 Nov 2023 14:20:01 +0100 (CET)
-Received: from [192.168.1.24] (xdsl-188-155-37-14.adslplus.ch [188.155.37.14])
-	by mx2fc6.netcup.net (Postfix) with ESMTPSA id 527D045332;
-	Sun, 26 Nov 2023 14:19:56 +0100 (CET)
-Authentication-Results: mx2fc6;
-        spf=pass (sender IP is 188.155.37.14) smtp.mailfrom=benjamin@bigler.one smtp.helo=[192.168.1.24]
-Received-SPF: pass (mx2fc6: connection is authenticated)
-Message-ID: <c7a38307ac74a973e26ac820a0b98773262720bd.camel@bigler.one>
-Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
- imx8mm
-From: Benjamin Bigler <benjamin@bigler.one>
-To: benjamin@bigler.one
-Cc: broonie@kernel.org, francesco@dolcini.it, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux@bigler.io, regressions@lists.linux.dev,
-	stefan.moring@technolution.nl
-Date: Sun, 26 Nov 2023 14:19:56 +0100
-In-Reply-To: <d795999676663a576f12f07a7013bee758fb781c.camel@bigler.one>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lw5y9c1r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9VJ0rA3r7NTPoB0XFwR/Lf+pF2vP6kSME4kg3g2wpTc=; b=lw5y9c1ry4n30Bn0J1WuMtPLdN
+	11Ow8mx7FVsIXslY6+Nje0sBgLNOFldGpOB6Z9G5TRknB/CtaLXS1LU1r7manFVX+4vCPi8NNhSaX
+	JDWN8mtj+9HUMAlxf26MaBxJdfEVQKSjF4D8qiVXs8Z8QyDXLl4zPxqJ/26h9+I0UCGS7pz45jWqZ
+	Kh7ZjCJL1o9lv7J3cUd59b+AXTSjccl/RnpdTcdLcTm325dohDfiXQk/xOiEIKi2PsgQoTkxXK4+W
+	4d//hEHj7WkAGJp4LsWkaw/2P+tJjyMhUFZtdd26GBeivCCd7d6vDpGoQAogwLAHhs/KdAiwApk3M
+	iUj1iTYw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r7FTi-00AYix-IB; Sun, 26 Nov 2023 13:47:18 +0000
+Date: Sun, 26 Nov 2023 13:47:18 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: David Wang <00107082@163.com>
+Cc: liam.howlett@oracle.com, akpm@linux-foundation.org, ankitag@nvidia.com,
+	bagasdotme@gmail.com, chunn@nvidia.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	regressions@lists.linux.dev, surenb@google.com
+Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
+Message-ID: <ZWNMZr9QMSBDc0gd@casper.infradead.org>
+References: <20231123143452.erzar3sqhg37hjxz@revolver>
+ <20231126071854.19490-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-PPP-Message-ID: <170100479677.15558.18148883779792436293@mx2fc6.netcup.net>
-X-Rspamd-Queue-Id: 527D045332
-X-Rspamd-Server: rspamd-worker-8404
-X-NC-CID: kYRkZ2AOFCC+H9Oy2v18BeW7JhyV9AINPEWKK4erKCUhXdA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231126071854.19490-1-00107082@163.com>
 
-Hi
+On Sun, Nov 26, 2023 at 03:18:54PM +0800, David Wang wrote:
+> I add memory access between mmap and munmap to the simple stress, and timeit.
 
-I did some debugging and I think the problem is that in this case bits_per_=
-word is 8. So in
-spi_imx_dma_configure the buswidth is set to DMA_SLAVE_BUSWIDTH_1_BYTE. But=
- in
-mx51_ecspi_prepare_transfer the BURST_LENGTH is now set to (spi_imx->count =
-* spi_imx->bits_per_word
-- 1)
-before 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f it was (spi_imx->bits_per_w=
-ord - 1). Now the spi
-transmits 4 byte per byte except for the first word. I added the following =
-patch and it worked again
+It's still not a very good benchmark ...
 
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 498e35c8db2c..f514966e2ada 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -659,11 +659,22 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx=
-_data *spi_imx,
- 		ctrl |=3D (spi_imx->target_burst * 8 - 1)
- 			<< MX51_ECSPI_CTRL_BL_OFFSET;
- 	else {
--		if (spi_imx->count >=3D 512)
--			ctrl |=3D 0xFFF << MX51_ECSPI_CTRL_BL_OFFSET;
--		else
--			ctrl |=3D (spi_imx->count * spi_imx->bits_per_word - 1)
-+		if (spi_imx->usedma)
-+			ctrl |=3D (spi_imx->bits_per_word *
-+					 spi_imx_bytes_per_word(
-+						 spi_imx->bits_per_word) -
-+				 1)
- 				<< MX51_ECSPI_CTRL_BL_OFFSET;
-+		else {
-+			if (spi_imx->count >=3D MX51_ECSPI_CTRL_MAX_BURST)
-+				ctrl |=3D (MX51_ECSPI_CTRL_MAX_BURST - 1)
-+					<< MX51_ECSPI_CTRL_BL_OFFSET;
-+			else
-+				ctrl |=3D (spi_imx->count *
-+						 spi_imx->bits_per_word -
-+					 1)
-+					<< MX51_ECSPI_CTRL_BL_OFFSET;
-+		}
- 	}
-=20
- 	/* set clock speed */
+> My test code now is:
+> 
+> 	#define MAXN 1024
+> 	struct { void* addr; size_t n; } maps[MAXN];
+> 	void accessit(char *addr, size_t n) {
+> 		for (int i=0; i<n; i+=128) addr[i]=i;
+> 	}
+> 	int main() {
+> 		int i, n, k, r;
+> 		void *p;
+> 		for (i=0; i<MAXN; i++) {
+> 			n = 1024*((rand()%32)+1);
+> 			p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 
-Best regards,
-Benjamin Bigler
+So 'n' is now a number between 1kB and 32kB.  That's not terribly
+realistic; I'd say you want to be more like
+
+			n = 4096 * ((rand() % 512) + 1));
+
+> 		for (i=0; i<10000000; i++) {
+> 			k = rand()%MAXN;
+> 	#ifdef PAGE_FAULT
+> 			accessit((char*)maps[k].addr, maps[k].n);
+> 	#endif
+> 			r = munmap(maps[k].addr, maps[k].n);
+> 			if (r) {
+> 				perror("fail to munmap");
+> 				return -1;
+> 			}
+> 			n = 1024*((rand()%32)+1);
+> 			p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+
+Are you simulating something a real application actually does?
+Because this all seems very weird and micro-benchmark to me.  The real
+applications we've benchmarked see a speedup so I'm not thrilled about
+chasing down something that no real application does.
+
+In terms of what's going on in the kernel, for each loop, you're calling
+munmap(), taking between 1 and 8 page faults, then calling mmap().
+That may just be too few page faults to see the benefit of the maple tree.
 
