@@ -1,117 +1,110 @@
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8918F46B1
-	for <regressions@lists.linux.dev>; Sun, 26 Nov 2023 07:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE69538A
+	for <regressions@lists.linux.dev>; Sun, 26 Nov 2023 13:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.one
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="E6NpBQwO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=sz6pg
-	8K8GFP6G+qtpnGDhTkf/u68i8wZ+eAOQw1z30Y=; b=E6NpBQwOV0lra/yPTGN+r
-	9hqDtNACo7BqnKPbxpYxXOG4TsdMgDuyZ5cLzsyqjndn3mS3YHPVjX+80Myvw643
-	lTuUHE5ret8pGhoadQ19C65Zlwx58qdYAa1JK+8aiPrNA2CX+KBJKsCewi3hY8+h
-	IoKufxj1AeNBuZwmG9WjGc=
-Received: from localhost.localdomain (unknown [111.35.185.43])
-	by zwqz-smtp-mta-g4-4 (Coremail) with SMTP id _____wAXLpde8WJle_b3Dw--.42741S4;
-	Sun, 26 Nov 2023 15:19:03 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: liam.howlett@oracle.com
-Cc: akpm@linux-foundation.org,
-	ankitag@nvidia.com,
-	bagasdotme@gmail.com,
-	chunn@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	regressions@lists.linux.dev,
-	surenb@google.com,
-	willy@infradead.org
-Subject: Re: [REGRESSION]: mmap performance regression starting with k-6.1
-Date: Sun, 26 Nov 2023 15:18:54 +0800
-Message-Id: <20231126071854.19490-1-00107082@163.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20231123143452.erzar3sqhg37hjxz@revolver>
-References: <20231123143452.erzar3sqhg37hjxz@revolver>
+	dkim=pass (2048-bit key) header.d=bigler.one header.i=@bigler.one header.b="Qsz8/KJW"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4SdTpp1VJkz7yTy;
+	Sun, 26 Nov 2023 14:20:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.one; s=key2;
+	t=1701004802; bh=uVRzzBCF4paLxzieeLLtTwlIaakwDhPEHY3e2Bh7tG4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:From;
+	b=Qsz8/KJWo3SBW7W1lXOhGiTa9bO/X1Ps9BA1+df9oYyX+g96m2liuR3QHDXwe85oF
+	 6ur5SoRZX5Sz1tLtrZCr58lCaFhV4AhE6TtJyhvaix1l3DjFJxNrnUSV+u+TZ7Fh4v
+	 4AmYrOcJJj9WejrVSF2V7/zDTIXcR3LTCHALLoLZeVXvXZkhtLAjP43fXO2JGhdVpl
+	 Vo5IyvASDOn7lzjzz9G2bD0Y9NMJ4lOBeQkUGpsBTegUPDwwnkwJV9gTvlGf2S6OJz
+	 xwzj2Cvv+/+eFmbRrLkBIJvxVFhRHK2CEhmwS2voLTjUgLZp3wFj9xZ/h2LI0BaxuO
+	 TinMd5A3KO79w==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4SdTpp16Rnz7yTr;
+	Sun, 26 Nov 2023 14:20:02 +0100 (CET)
+Received: from mx2fc6.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4SdTpn51W7z8sb3;
+	Sun, 26 Nov 2023 14:20:01 +0100 (CET)
+Received: from [192.168.1.24] (xdsl-188-155-37-14.adslplus.ch [188.155.37.14])
+	by mx2fc6.netcup.net (Postfix) with ESMTPSA id 527D045332;
+	Sun, 26 Nov 2023 14:19:56 +0100 (CET)
+Authentication-Results: mx2fc6;
+        spf=pass (sender IP is 188.155.37.14) smtp.mailfrom=benjamin@bigler.one smtp.helo=[192.168.1.24]
+Received-SPF: pass (mx2fc6: connection is authenticated)
+Message-ID: <c7a38307ac74a973e26ac820a0b98773262720bd.camel@bigler.one>
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+From: Benjamin Bigler <benjamin@bigler.one>
+To: benjamin@bigler.one
+Cc: broonie@kernel.org, francesco@dolcini.it, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux@bigler.io, regressions@lists.linux.dev,
+	stefan.moring@technolution.nl
+Date: Sun, 26 Nov 2023 14:19:56 +0100
+In-Reply-To: <d795999676663a576f12f07a7013bee758fb781c.camel@bigler.one>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXLpde8WJle_b3Dw--.42741S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KryfurWUWry5KFy3Xw1fWFg_yoW8uF13pw
-	43KFnFyF4fJr15Xr1UCw1UtF1UJw4rtw1DJw17Kry0vF4DZFyUJ3W8tF40qry7JryIgr18
-	JF4UJw1rXr1kXw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5sqAUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBnBE0qlghlnqv7QAAsE
+X-PPP-Message-ID: <170100479677.15558.18148883779792436293@mx2fc6.netcup.net>
+X-Rspamd-Queue-Id: 527D045332
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: kYRkZ2AOFCC+H9Oy2v18BeW7JhyV9AINPEWKK4erKCUhXdA=
 
+Hi
 
-> What this gains us is the ability to remove contention on the mmap lock
-> during page faults.  If you were to test contention around that lock,
-> you will see a slowdown until you reach v6.4, where per-vma locking
-> started to show up.  More benchmarking will show different types of
-> fault handling outside of the mmap lock until (I believe) 6.6, where
-> most (or all?) types are supported.
+I did some debugging and I think the problem is that in this case bits_per_=
+word is 8. So in
+spi_imx_dma_configure the buswidth is set to DMA_SLAVE_BUSWIDTH_1_BYTE. But=
+ in
+mx51_ecspi_prepare_transfer the BURST_LENGTH is now set to (spi_imx->count =
+* spi_imx->bits_per_word
+- 1)
+before 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f it was (spi_imx->bits_per_w=
+ord - 1). Now the spi
+transmits 4 byte per byte except for the first word. I added the following =
+patch and it worked again
 
-I add memory access between mmap and munmap to the simple stress, and timeit.
-Following are the numbers measuring total system time for 10,000,000 rounds, it is not very good for 6.7.0-rc2
-(The delta column is just "page fault" - "no page fault", roughly the extra time
-needed in kernel to deal with page fault, I guess.)
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index 498e35c8db2c..f514966e2ada 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -659,11 +659,22 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx=
+_data *spi_imx,
+ 		ctrl |=3D (spi_imx->target_burst * 8 - 1)
+ 			<< MX51_ECSPI_CTRL_BL_OFFSET;
+ 	else {
+-		if (spi_imx->count >=3D 512)
+-			ctrl |=3D 0xFFF << MX51_ECSPI_CTRL_BL_OFFSET;
+-		else
+-			ctrl |=3D (spi_imx->count * spi_imx->bits_per_word - 1)
++		if (spi_imx->usedma)
++			ctrl |=3D (spi_imx->bits_per_word *
++					 spi_imx_bytes_per_word(
++						 spi_imx->bits_per_word) -
++				 1)
+ 				<< MX51_ECSPI_CTRL_BL_OFFSET;
++		else {
++			if (spi_imx->count >=3D MX51_ECSPI_CTRL_MAX_BURST)
++				ctrl |=3D (MX51_ECSPI_CTRL_MAX_BURST - 1)
++					<< MX51_ECSPI_CTRL_BL_OFFSET;
++			else
++				ctrl |=3D (spi_imx->count *
++						 spi_imx->bits_per_word -
++					 1)
++					<< MX51_ECSPI_CTRL_BL_OFFSET;
++		}
+ 	}
+=20
+ 	/* set clock speed */
 
-+-----------+------------+---------------+------------------------------------+
-|           | page fault | no page fault | delta(kernel time for page fault?) |
-+-----------+------------+---------------+------------------------------------+
-|   6.0.0   |    64s     |      13s      |                51s                 |
-|   6.1.0   |    104s    |      49s      |                55s                 |
-| 6.7.0-rc2 |   ~210s    |      67s      |                143s                |
-+-----------+------------+---------------+------------------------------------+
-
-Maybe there is something here needed to be tracked.
-
-My test code now is:
-
-	#define MAXN 1024
-	struct { void* addr; size_t n; } maps[MAXN];
-	void accessit(char *addr, size_t n) {
-		for (int i=0; i<n; i+=128) addr[i]=i;
-	}
-	int main() {
-		int i, n, k, r;
-		void *p;
-		for (i=0; i<MAXN; i++) {
-			n = 1024*((rand()%32)+1);
-			p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-			if (p == MAP_FAILED) {
-				perror("fail to mmap");
-				return -1;
-			}
-			maps[i].addr = p; 
-			maps[i].n = n;
-
-		}
-		for (i=0; i<10000000; i++) {
-			k = rand()%MAXN;
-	#ifdef PAGE_FAULT
-			accessit((char*)maps[k].addr, maps[k].n);
-	#endif
-			r = munmap(maps[k].addr, maps[k].n);
-			if (r) {
-				perror("fail to munmap");
-				return -1;
-			}
-			n = 1024*((rand()%32)+1);
-			p = mmap(NULL, n, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-			if (p == MAP_FAILED) {
-				perror("fail to mmap");
-				return -1;
-			}
-			maps[k].addr = p; 
-			maps[k].n = n;
-		}
-		for (i=0; i<MAXN; i++) munmap(maps[i].addr, maps[i].n);
-		return 0;
-	}
-
-Thanks
-David Wang
+Best regards,
+Benjamin Bigler
 
