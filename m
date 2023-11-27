@@ -1,91 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FBA358BA;
-	Mon, 27 Nov 2023 16:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192A72DF91
+	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 18:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Df/pEzrS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41BA3C433C7;
-	Mon, 27 Nov 2023 16:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701102564;
-	bh=c7UXKhyCEJLe4p8fNvCpJdR2nuw6fvls3719IBlx6wc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Df/pEzrS8cN4nviesAg8zjNi8LYuVLMtLlNKvDRQJLZNnxkhSzdk+19covWXKAwPw
-	 fi2NXKt+6eN3Z1N+FiB98tLcpblr0xkW8wIiw4E+mFh6PNnMez4ehd8YuuSXSvdFmv
-	 k58mGQzZd7TVkMAhA3TTjKoPCnnf3hYS4Oi2LhSAfXGTght1RqGqPD53ozyX9BLIxh
-	 vHzZUW43Oy35oO2otlJqQ5s1iWr6ZHcQpHnXpmcniieUeMZOWqjjcqe+kAPMl0vy50
-	 L+uLDC0xR/YDt5xJ6Abj1d37IbYpQNX/RbFoTL/zJL7naBDAJ3Nk2IBodmaSBCXFxo
-	 IPsNf4TKQjoOQ==
-Date: Mon, 27 Nov 2023 16:28:40 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Malcolm Hart <malcolm@5harts.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Sven Frotscher <sven.frotscher@gmail.com>, git@augustwikerfors.se,
-	alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: ASoC: amd: yc: Fix non-functional mic on ASUS E1504FA
-Message-ID: <ZWTDuKDj3v9ZSlFX@finisterre.sirena.org.uk>
-References: <b9dd23931ee8709a63d884e4bd012723c9563f39.camel@5harts.com>
- <ZWSckMPyqJl4Ebib@finisterre.sirena.org.uk>
- <87leajgqz1.fsf@5harts.com>
- <08590a87-e10c-4d05-9c4f-39d170a17832@amd.com>
- <87h6l72o8f.fsf@5harts.com>
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="Hc56b9w4"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id B5D9182853F9;
+	Mon, 27 Nov 2023 12:39:17 -0600 (CST)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id HtmLQvd4iRqn; Mon, 27 Nov 2023 12:39:17 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id DEC328285877;
+	Mon, 27 Nov 2023 12:39:16 -0600 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com DEC328285877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1701110356; bh=xzRtKEXNSZXRxueeraHHFnjhN1dbr0ogCssrNQclvqo=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=Hc56b9w4Txk34dZBAnTXub8aqBoaEbB1TRcKoKAEXfV4gLtGv0Swab12d/6RAhK1H
+	 cCGuxVDe930FNnYBdZ0Pw3CiN7F9FYD6dDeFfpHu5EYzYnFj4CAG3uVs24iS1w0mbz
+	 FqR15phex2Ok1QAN7UQQ4/uQQJpjaYER0LEKp7wQ=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Sl2aoHRTI7dG; Mon, 27 Nov 2023 12:39:16 -0600 (CST)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id ABAB282853F9;
+	Mon, 27 Nov 2023 12:39:16 -0600 (CST)
+Date: Mon, 27 Nov 2023 12:39:14 -0600 (CST)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, 
+	npiggin <npiggin@gmail.com>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <1276384468.50536225.1701110354677.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com> <877cmc7ve9.fsf@mail.lhotse> <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com> <874jhg6lkn.fsf@mail.lhotse> <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com> <87leaqjs8x.fsf@mail.lhotse> <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jZEA8hOLgvi+THE/"
-Content-Disposition: inline
-In-Reply-To: <87h6l72o8f.fsf@5harts.com>
-X-Cookie: Slow day.  Practice crawling.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC119 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+Thread-Index: OkyGhBWE6ESNaH7+hHk9xkTdc0AVjZlU0+oQ
 
+Just wanted to check back and see if this patch was going to be queued up soon?  We're still having to work around / advertise the data destruction issues the underlying bug is causing on e.g. Debian Stable.
 
---jZEA8hOLgvi+THE/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Nov 27, 2023 at 03:44:37PM +0000, Malcolm Hart wrote:
->=20
->=20
-> From da1e023a39987c1bc2d5b27ecf659d61d9a4724c Mon Sep 17 00:00:00 2001
-> From: foolishhart <62256078+foolishhart@users.noreply.github.com>
-> Date: Mon, 27 Nov 2023 11:51:04 +0000
-> Subject: [PATCH] Update acp6x-mach.c
->=20
-> Added 	ASUSTeK COMPUTER INC  "E1504FA" to quirks file to enable microphon=
-e array on ASUS Vivobook GO 15.
-> ---
->  sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-
-You've not provided a Signed-off-by for this so I can't do anything with
-it, please see Documentation/process/submitting-patches.rst for details
-on what this is and why it's important.
-
-Please don't send new patches in reply to old patches or serieses, this
-makes it harder for both people and tools to understand what is going
-on - it can bury things in mailboxes and make it difficult to keep track
-of what current patches are, both for the new patches and the old ones.
-
---jZEA8hOLgvi+THE/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVkw7cACgkQJNaLcl1U
-h9BWSwf/bRWKgTTQMcjabBit1tuhBSBYvUALjvjAsJF9DJtrCMduzgvOBBM+De7d
-ozxI4XNRZBnFfng00zan1sFrWTrSl7lpbydNW/GFySZtDhmodMk8C1sGnbeg/lE8
-i+LroPK/tJOo0zJRF/5O8MExUgVuf7ZoMRCjUPhPAos22EDbtzntbEeudxpZzKGM
-s7F0zrTriemx4w1pvSRGLv42ykDiujQXx0BxkLzE/31v668ULeOyMwXBBC+FLR/n
-o9DaKXB/HODATBzpPPuwwAU1ubfI8gQlsE5Ha7utw1n2OpjYhL2zDPH5YmGKmbKD
-gmGWY82OdFtKdgO7mZbTdTQCexiuww==
-=6B4G
------END PGP SIGNATURE-----
-
---jZEA8hOLgvi+THE/--
+Thanks!
