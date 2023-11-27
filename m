@@ -1,140 +1,110 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F8C2E406
-	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 15:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF2B2D623
+	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 16:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KhEEuz8v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KYCziQKj"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E23C55C028B;
-	Mon, 27 Nov 2023 10:53:56 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 27 Nov 2023 10:53:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1701100436; x=1701186836; bh=RV
-	PtMXqwnKRTq3/SvOKl47wsrx36gr/hOLiwd56gh60=; b=KhEEuz8vhFWoA0MJJu
-	dAS3GZuTJ+ESGv49306E5ktsWGTK9IBiNfnzhcXLCjbZI+UtMqXSvppI+BLaPHU1
-	1rkpoXx7kw+ghKbljjytUC/+LOB2RQPoxi+ivGMQRCeIXDOrOmzRvv7cHjx7iBAq
-	7VHyMK7Vaf1cumhfQ48+pXCXr+tYSLFmI7NOl74DJrI2B8dCo5bLdB6akxiPqFZ7
-	F8dKukpeGLCL4qs5CX9vybeE2ZC1Wngsc1P0t+zplcxcigkT7INrPpAI+7PH9hI8
-	OayP1a+8YKF+EJ6DYEMQ9Gb8IMso9/d0CoefIgMK5l1SwRglSoK35edrtsAD8WL+
-	6a4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701100436; x=1701186836; bh=RVPtMXqwnKRTq
-	3/SvOKl47wsrx36gr/hOLiwd56gh60=; b=KYCziQKjew1WHTQXoN5Dw1l47XC6K
-	RJA4fVgWLdTLw9Ax0ekWpIDYPvsUKNo6DpwBtJsX1Lj19mR1/FIcNeiNxMZal0Ow
-	5a+HaPJsG15/2RsQ9Z3UXOW9QhrHyJE17Eg677/+yL5kRS8Jxa7AWdQ8Kbbd8gv0
-	dcjz3vdAxuW4T4OVMe/nNpeayz0uKxwHeZ5sheNXkUsfIH6uQO7p4zdxTU7msOFg
-	0yPa3iFnp00ILvfKxavllf8bWRUBjaZPab7U5X9+bTfNXKtjBkhXP9KvUvCX+KEE
-	eIXC/sNx/JJ6r4Wy00gSM6RGVXow4UI5kyltrKidcW15AWv6AaT/m53HA==
-X-ME-Sender: <xms:lLtkZTxds9KCaErDq52aGewAXPSSkarwlHN4mkYj1Vz8pa-ZP8Yuug>
-    <xme:lLtkZbS2aB9N9stzT7b-kr7-FUU2LanNb48JnYej_jqbt8-zYpZMhq0SZ6Pq97lBV
-    d9VNERH_tg85A>
-X-ME-Received: <xmr:lLtkZdXaC_F1R47aPUY33k10NLTJDt4GfxjgQQCh_tq6m6dr3pV_32sNN9AcjmEbOOmRKAJ8yypShaZgcRhHYkboHLm74WK-9xq0N3Obc8I9y0_MFm5Pmzk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiuddgkeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
-    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
-    hhrdgtohhm
-X-ME-Proxy: <xmx:lLtkZdj25v_LkDMMFpqpAKM_mmF9bLJc61a0wLtLKrnajN7J_3dVow>
-    <xmx:lLtkZVDugJLsohqrUIybYkDBpdq-V2i1ticf1kaf0LQb-TqqI3Ku8Q>
-    <xmx:lLtkZWL0p8mEvHyuwFYxHMs6tbVtOGFQ0Ri-yuxu4cD4_7m7j1QyEA>
-    <xmx:lLtkZd5b_xdTP4l7dS0pHxJjR1AmT0H0CwJGJDE9GhwX58qPneU7rQ>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Nov 2023 10:53:55 -0500 (EST)
-Date: Mon, 27 Nov 2023 15:53:54 +0000
-From: Greg KH <greg@kroah.com>
-To: Malcolm Hart <malcolm@5harts.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sven Frotscher <sven.frotscher@gmail.com>, git@augustwikerfors.se,
-	alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: ASoC: amd: yc: Fix non-functional mic on ASUS E1504FA
-Message-ID: <2023112720-foam-epileptic-1f30@gregkh>
-References: <b9dd23931ee8709a63d884e4bd012723c9563f39.camel@5harts.com>
- <ZWSckMPyqJl4Ebib@finisterre.sirena.org.uk>
- <87leajgqz1.fsf@5harts.com>
- <08590a87-e10c-4d05-9c4f-39d170a17832@amd.com>
- <87h6l72o8f.fsf@5harts.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="tLFarzCs"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7b38ff8a517so15966539f.1
+        for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 08:12:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1701101550; x=1701706350; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bvB7rbddcLGLArA7MqLyKH3GIdpZuBsbhH9RHUl0sM8=;
+        b=tLFarzCs0ia2+S+82lqtKQC+CmmMe5a2gHNXAwSPFoR8ywMeiiVSgGBeqBqYnyvYku
+         +Ao61TdgCetzD24tbv7dvpnUdDyvMMCvMRvx+cZtzqlJzb8ffTZW77x8Oub9MPuUtNGe
+         x100Twis06x59kzCPd0Jt8D6QfF4JCQlMMcnxD2xLWGMkZWQV56CGUEcp6NpC5cFSHwB
+         L1HBnI26VmBravcln6fa/ZsTRNC4WCx709sDdjga+TlJL1bNY+Qn+yNIRKuM6AMUUmfX
+         ApZkfLlTUm7KeMBMI3iUgAoB8yV4z4+Xj5NedBzaNuLSNykqXU6y0PMeCD7igq7N+H7f
+         U2+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701101550; x=1701706350;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bvB7rbddcLGLArA7MqLyKH3GIdpZuBsbhH9RHUl0sM8=;
+        b=Zw0ZQ3sHUM4F9M5R1047X9OgawDDQl1MIo50PYhnnxw6HWkRb5rf5SsyuPCnPYP8/Z
+         j4iysJaFfqchFacuuBWbAYiuN9Qd2WW32TFY7CR9dBaMIVn3NESWbbkqJlQkyf0xWqTc
+         rZJ39VHbdgaTnpKxecjKGu8ohbJ8J4uceJjI/A/b2/w8gZw7eVTNZ5bRxAf6f5yBZrLZ
+         /SfPWTx3szoLknwYewYHLrqKoe+yYBjcGzL8LAkmo2UrtBK6aKxjS6TLWyTVVIE4ZbGC
+         wzMAyYBJtxthja0sbz7bEqUEQlF9XmGsl1VptTxIgK5L91Xyyb1XIIJ1ubdga5bp9BmS
+         vwig==
+X-Gm-Message-State: AOJu0YxZeMZkKKqcp60WsmXYtTTs6HyiqJAIsiht5/EcjeFx9vMn7bGu
+	8z915LIOEPdASSn/K3kbFYP8Yg==
+X-Google-Smtp-Source: AGHT+IG04eTzzicBywjmAxWaoEJU61uSxMw471TKINu23Lw+T9NqHOZNLbrFo4J4Xa2OGDDQItWp0g==
+X-Received: by 2002:a92:503:0:b0:35c:acbd:3d3e with SMTP id q3-20020a920503000000b0035cacbd3d3emr5168491ile.3.1701101550317;
+        Mon, 27 Nov 2023 08:12:30 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id r15-20020a92c5af000000b0035ca20fc741sm1338589ilt.70.2023.11.27.08.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 08:12:29 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Bcache Linux <linux-bcache@vger.kernel.org>, 
+ Markus Weippert <markus@gekmihesg.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+ Zheng Wang <zyytlz.wz@163.com>, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Stefan_F=C3=B6rster?= <cite@incertum.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+ Linux kernel regressions list <regressions@lists.linux.dev>, 
+ Coly Li <colyli@suse.de>
+In-Reply-To: <c47d3540ece151a2fb30e1c7b5881cb8922db915.camel@gekmihesg.de>
+References: <ZV9ZSyDLNDlzutgQ@pharmakeia.incertum.net>
+ <be371028-efeb-44af-90ea-5c307f27d4c6@leemhuis.info>
+ <71576a9ff7398bfa4b8c0a1a1a2523383b056168.camel@gekmihesg.de>
+ <989C39B9-A05D-4E4F-A842-A4943A29FFD6@suse.de>
+ <1c2a1f362d667d36d83a5ba43218bad199855b11.camel@gekmihesg.de>
+ <3DF4A87A-2AC1-4893-AE5F-E921478419A9@suse.de>
+ <c47d3540ece151a2fb30e1c7b5881cb8922db915.camel@gekmihesg.de>
+Subject: Re: [PATCH] bcache: revert replacing IS_ERR_OR_NULL with IS_ERR
+Message-Id: <170110154924.44993.12405607589120929041.b4-ty@kernel.dk>
+Date: Mon, 27 Nov 2023 09:12:29 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h6l72o8f.fsf@5harts.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-26615
 
-On Mon, Nov 27, 2023 at 03:44:37PM +0000, Malcolm Hart wrote:
+
+On Fri, 24 Nov 2023 16:14:37 +0100, Markus Weippert wrote:
+> Commit 028ddcac477b ("bcache: Remove unnecessary NULL point check in
+> node allocations") replaced IS_ERR_OR_NULL by IS_ERR. This leads to a
+> NULL pointer dereference.
 > 
+> BUG: kernel NULL pointer dereference, address: 0000000000000080
+> Call Trace:
+>  ? __die_body.cold+0x1a/0x1f
+>  ? page_fault_oops+0xd2/0x2b0
+>  ? exc_page_fault+0x70/0x170
+>  ? asm_exc_page_fault+0x22/0x30
+>  ? btree_node_free+0xf/0x160 [bcache]
+>  ? up_write+0x32/0x60
+>  btree_gc_coalesce+0x2aa/0x890 [bcache]
+>  ? bch_extent_bad+0x70/0x170 [bcache]
+>  btree_gc_recurse+0x130/0x390 [bcache]
+>  ? btree_gc_mark_node+0x72/0x230 [bcache]
+>  bch_btree_gc+0x5da/0x600 [bcache]
+>  ? cpuusage_read+0x10/0x10
+>  ? bch_btree_gc+0x600/0x600 [bcache]
+>  bch_gc_thread+0x135/0x180 [bcache]
 > 
-> >From da1e023a39987c1bc2d5b27ecf659d61d9a4724c Mon Sep 17 00:00:00 2001
-> From: foolishhart <62256078+foolishhart@users.noreply.github.com>
-> Date: Mon, 27 Nov 2023 11:51:04 +0000
-> Subject: [PATCH] Update acp6x-mach.c
-> 
-> Added 	ASUSTeK COMPUTER INC  "E1504FA" to quirks file to enable microphone array on ASUS Vivobook GO 15.
-> ---
->  sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+> [...]
+
+Applied, thanks!
+
+[1/1] bcache: revert replacing IS_ERR_OR_NULL with IS_ERR
+      (no commit info)
+
+Best regards,
+-- 
+Jens Axboe
 
 
-Hi,
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch was attached, please place it inline so that it can be
-  applied directly from the email message itself.
-
-- Your patch does not have a Signed-off-by: line.  Please read the
-  kernel file, Documentation/process/submitting-patches.rst and resend
-  it after adding that line.  Note, the line needs to be in the body of
-  the email, before the patch, not at the bottom of the patch or in the
-  email signature.
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what is needed in
-  order to properly describe the change.
-
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what a proper
-  Subject: line should look like.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
