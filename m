@@ -1,16 +1,16 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9C1657
-	for <regressions@lists.linux.dev>; Sun, 26 Nov 2023 14:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7411D1879;
+	Mon, 27 Nov 2023 06:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r7GJ4-0001v2-7I; Sun, 26 Nov 2023 15:40:22 +0100
-Message-ID: <a1d74498-9c71-4e46-9db3-58baac89dc36@leemhuis.info>
-Date: Sun, 26 Nov 2023 15:40:21 +0100
+	id 1r7UxG-0005MA-0Z; Mon, 27 Nov 2023 07:18:50 +0100
+Message-ID: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
+Date: Mon, 27 Nov 2023 07:18:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,58 +18,75 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: regression/bisected/6.7rc1: Instead of desktop I see a horizontal
- flashing bar with a picture of the desktop background on white screen
 Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Lee, Alvin" <Alvin.Lee2@amd.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- "Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Wu, Hersen"
- <hersenxs.wu@amd.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com>
- <CABXGCsOqbLRHSkiz79NkVQ-wUtR7y-ZFHvhMw0+JJ_cY2AZmSw@mail.gmail.com>
- <CABXGCsPE9=Qp3Jg5hkRsTQoNgODnS_cXFU1d+hg3Baob40AaAA@mail.gmail.com>
- <edc5b75b-c08d-4c62-ae5e-089ffac27772@amd.com>
- <CABXGCsO=pdxorK9pO7qBPJM-xvgPPtpZqxLvQO4t2AK5qW3vcA@mail.gmail.com>
- <DM8PR12MB5400EAB81E5FA10F4309A732D1B1A@DM8PR12MB5400.namprd12.prod.outlook.com>
- <CABXGCsNpEh7GjFPvx=rz6ZeB7Kx4iqV-e8HyFKyhNau2S5gENw@mail.gmail.com>
- <99ef9596-d4f8-49e2-acbe-ed7486310f84@amd.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <99ef9596-d4f8-49e2-acbe-ed7486310f84@amd.com>
+Subject: [regressions] ntfs3: empty file on update without forced cache drop
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701009631;ca9395ba;
-X-HE-SMSGID: 1r7GJ4-0001v2-7I
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701065932;e3db66cb;
+X-HE-SMSGID: 1r7UxG-0005MA-0Z
 
-On 16.11.23 11:46, Christian König wrote:
-> Am 15.11.23 um 21:08 schrieb Mikhail Gavrilov:
->> On Wed, Nov 15, 2023 at 11:39 PM Lee, Alvin <Alvin.Lee2@amd.com> wrote:
->>> This change has a DMCUB dependency - are you able to update your
->>> DMCUB version as well?
->>>
->> I can confirm this issue was gone after updating firmware.
->>
->> ❯ dmesg | grep DMUB
->> [   11.496679] [drm] Loading DMUB firmware via PSP: version=0x07002300
->> [   12.000314] [drm] DMUB hardware initialized: version=0x07002300
-> 
-> Mhm, that's a quite ugly problem.
-> 
-> The driver is supposed to work with older firmware as well or at least
-> issue a warning and provide a reasonable fallback.
-> 
-> How are we going to handle this?
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-What happened to this regression? This thread looks stalled and from a
-quick search on lore and the amdgpu issue tracker it seems the issue
-wasn't discussed anywhere else during the last 10 days, but I might have
-missed something.
+Konstantin, I noticed a regression report in bugzilla.kernel.org.
+Apparently it's cause by a change of yours.
+
+As many (most?) kernel developers don't keep an eye on bugzilla, I
+decided to forward it by mail. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
+
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218180 :
+
+> The problem I am facing is the following:
+> 1. I mount an NTFS partition via NTFS3
+> 2. I create a file
+> 3. I write to the file
+> 4. The file is empty
+> 5. I remount the partition
+> 6. The file has the changes I made before the remount
+> 
+> I can avoid the remount by doing:
+> sudo sysctl vm.drop_caches=3
+
+See the ticket for more details. It according to the report happens
+still happens with 6.7-rc2, but not with 6.1.y. The reporter bisected
+the problem to ad26a9c84510af ("fs/ntfs3: Fixing wrong logic in
+attr_set_size and ntfs_fallocate") [v6.2-rc1].
+
+Side note: while briefly checking lore for existing problems caused by
+that change I noticed two syzbot reports about it that apparently nobody
+looked into:
+
+https://lore.kernel.org/all/000000000000bdf37505f1a7fc09@google.com/
+https://lore.kernel.org/all/00000000000062174006016bc386@google.com/
+
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: ad26a9c84510af
+https://bugzilla.kernel.org/show_bug.cgi?id=218180
+#regzbot title: ntfs3: empty file on update without forced cache drop
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -77,4 +94,5 @@ Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
-#regzbot poke
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
