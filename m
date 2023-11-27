@@ -1,84 +1,106 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9862820F9
-	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 08:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527C1D292
+	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 09:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bigler.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bigler.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q5iNwI+r"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4af5ea40b7bso1133598e0c.2
-        for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 00:57:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701075471; x=1701680271; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q3a/gp0k8Xr24VWAVkFjnZAQbXQVNc8sm8eV5Fej3d0=;
-        b=q5iNwI+rLNYZJYXKkRauFjE9+f43P6JvX2U7M1mYFxKhbZBSS8zs3dN3bOQxiaMJC/
-         oUuETdlfTDF0jzzwJ3hmcbA3C/hWz31EKMUhJqYwkiJ+BxOfraDiODRryUHZL2aFNOE8
-         +iBB4Obp/xAykN8cCUSF9iW4IY0/f3jO5Kzthwo5donxajAyHAFXQmT0Py3Rwb9c1BhN
-         HtgGvienXQt6IGN21deyt7CksQihYG1a5ZxxJYgBrMvoqv2b5EdX8fDx+HXjI1jLRoU5
-         HQScmUBLAf6Jawawe7NyWTbSamc2J6vNjrSa66v3L1CrcgJIB5JBqK0bcLhDkSEJTe8b
-         NYgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701075471; x=1701680271;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3a/gp0k8Xr24VWAVkFjnZAQbXQVNc8sm8eV5Fej3d0=;
-        b=kayhwM0jmsYuehMbAsqy4j5NVaSpp5r8wGgCqQ/QlhVYUAnh7OhYXuTPq0nslUNniu
-         8S1BJGTGiiIWFR5zL52boK3PDLnzyH6N6WRWJzpH55XOVDCFTNBPf8Q18xC78Go30cZ1
-         Ww1nXH/Fd4hpw5rYkiBEM8kZgqCF3RHETePnEb5l8nFmrTOamceqKF5PC9gcnXmQ8Fs6
-         hfx7eU3qk6hqPCYrQtsrsqQuLlNzhe5oz3ZJDmfi5ieilYiL0YTzUYOphUwZPafCmGyW
-         BzVhU4tQfoccxdCnXc/+sXG2GSWmzD0nuO+05P50f3XEr4FmcC/JOf4Aabr4C2BvOtC0
-         Nbhw==
-X-Gm-Message-State: AOJu0YwtXNfxf4q8Y6QDDmfjrziwXhpU6c2RtovWhTu271PXvZAr5rcc
-	0r0leKJz1C9aCuYsUoMkLX7ufYoGj9JiDhexDlo7xg==
-X-Google-Smtp-Source: AGHT+IFv95af33s1Ivrbna3UuLQx1RVxE1lA8CxAKNGR1f+9OlWM5+Mw0oXtBMJb+qYB4sJZRWgnDMtvK5EbVnJyJ9Q=
-X-Received: by 2002:a05:6122:3106:b0:496:2e22:29e3 with SMTP id
- cg6-20020a056122310600b004962e2229e3mr11176649vkb.1.1701075471346; Mon, 27
- Nov 2023 00:57:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=bigler.io header.i=@bigler.io header.b="LrK2S2Zw"
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Sf0CD5cSKzMpykB;
+	Mon, 27 Nov 2023 09:09:28 +0000 (UTC)
+Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Sf0CC6WJMzMppcc;
+	Mon, 27 Nov 2023 10:09:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bigler.io;
+	s=20200409; t=1701076168;
+	bh=AZrND3sqXyH2z226vTZZ/SZJmPQAxaZthdQvK8/rTIU=;
+	h=Date:Subject:From:Reply-To:To:Cc:References:In-Reply-To:From;
+	b=LrK2S2ZwZPhI2cRxTyHf4zQw7MhDewwmuXH2lGGSp6uHAiw5HfkVaACDKogWqhrcQ
+	 2Cmbrg7xprk30xHIQjsgLd29+JcVxLWHyJ9TQJSS1Fu/ql+WxwM8YXL9F+/3ozDeJF
+	 5Dv2voqChOcRpuJH8kby1OwO6j6ki1jLElIXHXLk=
+Message-ID: <89209fbb46c4ce650141ecb6fdf06476@mail.infomaniak.com>
+Date: Mon, 27 Nov 2023 10:09:27 +0100
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
+From: linux@bigler.io
+Reply-To: linux@bigler.io
+To: Benjamin Bigler <benjamin@bigler.one>
+Cc: broonie@kernel.org, francesco@dolcini.it, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, regressions@lists.linux.dev,
+ stefan.moring@technolution.nl
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 27 Nov 2023 14:27:40 +0530
-Message-ID: <CA+G9fYsM4Aa1smp2Xahf=z2WOGpXsAC3GzUW06HJN9pucm837Q@mail.gmail.com>
-Subject: parisc: bug.h:71:17: error: invalid 'asm': operand number out of range
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	linux-parisc <linux-parisc@vger.kernel.org>, regressions@lists.linux.dev
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Helge Deller <deller@gmx.de>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	John David Anglin <dave.anglin@bell.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-WS-User-Origin: eyJpdiI6IjhubE1QemJPdVI4amxlWHlvcy9Tdnc9PSIsInZhbHVlIjoiVlNieTNiZXQ0cFAwMFZGS1M3ZDhSQT09IiwibWFjIjoiMTk1YTQwMGE0NDc0YzE0NjEyOWJmM2YyMGMyYzhlZTVjYjQxODhlOWU3NTgwNTA1MDkwYzJmOGM4MmM3NjJiNiIsInRhZyI6IiJ9
+X-WS-User-Mbox: eyJpdiI6ImR5Tm5EQytBZHUyeXc5d3I3SkFzZnc9PSIsInZhbHVlIjoidkVUbnQzeFRMV0hwbkhGNGlWcWhBQT09IiwibWFjIjoiZTJkOWFiMjEyZDg2ZGM2OGYwMjc3ODgxYzZiZWQ5MjE2ZjBkOTZhMDNjYjliODBmMWY5NWY2ZTVhOGYxOWI2OSIsInRhZyI6IiJ9
+X-WS-Location: eJxzKUpMKykGAAfpAmU-
+X-Mailer: Infomaniak Workspace (1.3.601)
+References: <c7a38307ac74a973e26ac820a0b98773262720bd.camel@bigler.one>
+In-Reply-To: <c7a38307ac74a973e26ac820a0b98773262720bd.camel@bigler.one>
+X-Infomaniak-Routing: alpha
 
-The parisc tinyconfig built with gcc-11 failed on mainline v6.7-rc3.
+Hi=20
 
-git_describe: v6.7-rc3
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
+Thank you Benjamin for the patch.
+I have tested the patch and is works fine.
 
-parisc:
-  build:
-    * gcc-11-tinyconfig
+Best regards
+Stefan Bigler
 
-In file included from lib/math/int_log.c:14:
-lib/math/int_log.c: In function 'intlog2':
-arch/parisc/include/asm/bug.h:71:17: error: invalid 'asm': operand
-number out of range
-   71 |                 asm volatile("\n"
-         \
-      |                 ^~~
-
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.7-rc3/testrun/21323529/suite/build/test/gcc-11-tinyconfig/log
- - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.7-rc3/testrun/21323529/suite/build/test/gcc-11-tinyconfig/history/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Yk9c7RsS6V5pdDdOYzHSrlpZQk/
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Am 2023-11-26T14:19:56.000+01:00 hat Benjamin Bigler <benjamin@bigler.one> =
+geschrieben:
+>  Hi
+>=20
+> I did some debugging and I think the problem is that in this case bits_pe=
+r_word is 8. So in
+> spi_imx_dma_configure the buswidth is set to DMA_SLAVE_BUSWIDTH_1_BYTE. B=
+ut in
+> mx51_ecspi_prepare_transfer the BURST_LENGTH is now set to (spi_imx->coun=
+t * spi_imx->bits_per_word
+> - 1)
+> before 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f it was (spi_imx->bits_per=
+_word - 1). Now the spi
+> transmits 4 byte per byte except for the first word. I added the followin=
+g patch and it worked again
+>=20
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index 498e35c8db2c..f514966e2ada 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -659,11 +659,22 @@ static int mx51_ecspi_prepare_transfer(struct spi_i=
+mx_data *spi_imx,
+>  =09=09ctrl |=3D (spi_imx->target_burst * 8 - 1)
+>  =09=09=09<< MX51_ECSPI_CTRL_BL_OFFSET;
+>  =09else {
+> -=09=09if (spi_imx->count &gt;=3D 512)
+> -=09=09=09ctrl |=3D 0xFFF << MX51_ECSPI_CTRL_BL_OFFSET;
+> -=09=09else
+> -=09=09=09ctrl |=3D (spi_imx->count * spi_imx->bits_per_word - 1)
+> +=09=09if (spi_imx->usedma)
+> +=09=09=09ctrl |=3D (spi_imx->bits_per_word *
+> +=09=09=09=09=09 spi_imx_bytes_per_word(
+> +=09=09=09=09=09=09 spi_imx->bits_per_word) -
+> +=09=09=09=09 1)
+>  =09=09=09=09<< MX51_ECSPI_CTRL_BL_OFFSET;
+> +=09=09else {
+> +=09=09=09if (spi_imx->count &gt;=3D MX51_ECSPI_CTRL_MAX_BURST)
+> +=09=09=09=09ctrl |=3D (MX51_ECSPI_CTRL_MAX_BURST - 1)
+> +=09=09=09=09=09<< MX51_ECSPI_CTRL_BL_OFFSET;
+> +=09=09=09else
+> +=09=09=09=09ctrl |=3D (spi_imx->count *
+> +=09=09=09=09=09=09 spi_imx->bits_per_word -
+> +=09=09=09=09=09 1)
+> +=09=09=09=09=09<< MX51_ECSPI_CTRL_BL_OFFSET;
+> +=09=09}
+>  =09}
+> =20
+>  =09/* set clock speed */
+>=20
+> Best regards,
+Benjamin Bigler
