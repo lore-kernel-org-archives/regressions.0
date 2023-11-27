@@ -1,90 +1,90 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.livemail.co.uk (smtp-out-60.livemail.co.uk [213.171.216.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8683064A
-	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 15:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EHGw5W5X"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5cd0af4a7d3so44045707b3.0
-        for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 07:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1701097393; x=1701702193; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uGECS7hQ9z7O8g2r5L0bNaVk88br4ZWd2DQT3SC6LRo=;
-        b=EHGw5W5XMOH2rCmyPnjEw9fgiZOVdBaQ2fRW9jHduXOeAhxqKA+LtO+JENEve8+1Mj
-         BWbGPTbnSQ1pIFr69KFvZx1oRKGtcZNsyxB0faSH2Z0ecpdQv0l/FiXuQIYUO/4PIL2N
-         0I05N0ioHZOh3agAzQC2An8EKTqW7W5ZJ7Sx02OG98Htj6Ku7q1cgjDQuZmlOV5NQLJx
-         LLpGWy/Madg3F7Oa70OA+pmyrET/xBaptSobwzU4qHjULKYj3TJgr8bJ6N0yxe2pTQLF
-         j6R6EvrgT/ZvWU1yMfjzoKHFezFB9kvdf1c/Uq7SwV3vTPTszGxJBIvH47puSSNJKk4S
-         IZPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701097393; x=1701702193;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uGECS7hQ9z7O8g2r5L0bNaVk88br4ZWd2DQT3SC6LRo=;
-        b=eCRrtH1Krlgar4sk2t3svoE69+/6dShCnFqYiJUM4XplTodbPH1il13cwfngxPUNwM
-         TO+/EuQPQbZAdzFaW5X7Ii3rkD5xHtqcMinc7meRIQIxGKf1TILBSlrwYDLa5Z26GWL0
-         zasqEVTVTuD0zgf585JuLIs/Styr9dci2p7YR5U5sFkHMty2D22au9GnO4G2tK0lbZqF
-         h96N+6OVm7u5Bx6lqNejlGHjuxrdSDbfIcQFtlpLcxSRqVlXYWj7qPsVHZC9qvBXBDvI
-         b+0pEaIE1B7HSfUiDl/rFmMm8VL2Y5V9v+SlH1TnTKydRxDy5m9q8YupHvS4MTB/pxzA
-         xFkw==
-X-Gm-Message-State: AOJu0YzIFfErnuoy5Q0AnajjkmfN2bD0cRWIyZefveXo2JtTCT0/JCTk
-	OVKa6jrD0BxJB62IKcGOCCjSy8xF+cUeSFfj4zkj
-X-Google-Smtp-Source: AGHT+IGWFWX4nZPEY4/r2GM+zJBz8aBYpVp3/NycgX3NsxoWQhG2nQBJqmmnxJUC/Y8LXiDmxbnvm64m3VvefvSfC3s=
-X-Received: by 2002:a25:6987:0:b0:db4:158:b9d9 with SMTP id
- e129-20020a256987000000b00db40158b9d9mr12095112ybc.1.1701097392639; Mon, 27
- Nov 2023 07:03:12 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436DE31A8E
+	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 15:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5harts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=5harts.com
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from laptop (host-78-146-56-151.as13285.net [78.146.56.151])
+	(Authenticated sender: malcolm@5harts.com)
+	by smtp.livemail.co.uk (Postfix) with ESMTPSA id C6E1BC5A22;
+	Mon, 27 Nov 2023 15:23:30 +0000 (GMT)
+References: <b9dd23931ee8709a63d884e4bd012723c9563f39.camel@5harts.com>
+ <ZWSckMPyqJl4Ebib@finisterre.sirena.org.uk>
+User-agent: mu4e 1.8.15; emacs 29.1
+From: Malcolm Hart <malcolm@5harts.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Sven Frotscher <sven.frotscher@gmail.com>, git@augustwikerfors.se,
+ alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+ linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: ASoC: amd: yc: Fix non-functional mic on ASUS E1504FA
+Date: Mon, 27 Nov 2023 15:23:08 +0000
+In-reply-to: <ZWSckMPyqJl4Ebib@finisterre.sirena.org.uk>
+Message-ID: <87leajgqz1.fsf@5harts.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYs6WafDBtSbcLpoyWehQyBPNeX37PvsP6HzSotXr3dYLg@mail.gmail.com>
-In-Reply-To: <CA+G9fYs6WafDBtSbcLpoyWehQyBPNeX37PvsP6HzSotXr3dYLg@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 27 Nov 2023 10:03:01 -0500
-Message-ID: <CAHC9VhRrxX=LcXmLxyMwF6_rZEEYO+5DG_3EaeWsAoVY9CuSXA@mail.gmail.com>
-Subject: Re: lsm_list_modules_test.c:104:22: error: 'LSM_ID_IMA' undeclared
- (first use in this function); did you mean 'LSM_ID_YAMA'?
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Casey Schaufler <casey@schaufler-ca.com>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, Shuah Khan <shuah@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Mon, Nov 27, 2023 at 5:43=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
+
+From da1e023a39987c1bc2d5b27ecf659d61d9a4724c Mon Sep 17 00:00:00 2001
+From: foolishhart <62256078+foolishhart@users.noreply.github.com>
+Date: Mon, 27 Nov 2023 11:51:04 +0000
+Subject: [PATCH] Update acp6x-mach.c
+
+Added 	ASUSTeK COMPUTER INC  "E1504FA" to quirks file to enable microphone array on ASUS Vivobook GO 15.
+---
+ sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
+index 15a864dcd7bd3a..3babb17a56bb55 100644
+--- a/sound/soc/amd/yc/acp6x-mach.c
++++ b/sound/soc/amd/yc/acp6x-mach.c
+@@ -283,6 +283,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "M6500RC"),
+ 		}
+ 	},
++	{
++		.driver_data = &acp6x_card,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "E1504FA"),
++		}
++	},
+ 	{
+ 		.driver_data = &acp6x_card,
+ 		.matches = {
+
+
+
+
+
+Mark Brown <broonie@kernel.org> writes:
+
+> [[PGP Signed Part:Undecided]]
+> On Mon, Nov 27, 2023 at 12:24:59PM +0000, Malcolm Hart wrote:
+>> Like other ASUS models the Asus Vivobook E1504FA requires an entry in
+>> the quirk list to enable the internal microphone.
+>> 
+>> Showing
+>> with 7 additions and 0 deletions.
+>> 7 changes: 7 additions & 0 deletions 7
+>> sound/soc/amd/yc/acp6x-mach.c
+>> @@ -283,6 +283,13 @@ static const struct dmi_system_id
+>> yc_acp_quirk_table[] = {
 >
-> Following build errors noticed while building selftests lsm tests for x86
-> with gcc-13 toolchain on Linux next-20231127 tag.
+> The patch appears to have been unusably corrupted by your e-mail
+> software and is also missing a Signed-off-by.  See email-cleints.rst for
+> some suggestions on configuring things, or it might be worth looking
+> into b4 and it's web submission endpoint:
 >
-> Build log:
-> ------
-> selftest/lsm/lsm_list_modules_test
-> lsm_list_modules_test.c: In function 'correct_lsm_list_modules':
-> lsm_list_modules_test.c:104:22: error: 'LSM_ID_IMA' undeclared (first
-> use in this function); did you mean 'LSM_ID_YAMA'?
->   104 |                 case LSM_ID_IMA:
->       |                      ^~~~~~~~~~
->       |                      LSM_ID_YAMA
-> lsm_list_modules_test.c:104:22: note: each undeclared identifier is
-> reported only once for each function it appears in
+>    https://b4.docs.kernel.org/en/latest/
 >
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> [[End of PGP Signed Part]]
 
-A fix was posted last week and should be merged this week, lore link below:
-
-https://lore.kernel.org/linux-security-module/20231122160742.109270-2-paul@=
-paul-moore.com/
-
---=20
-paul-moore.com
