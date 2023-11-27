@@ -1,47 +1,34 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from vps.thesusis.net (vps.thesusis.net [34.202.238.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B859B3E490
-	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 22:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="r0o1JnHb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1701125624;
-	bh=rOsMOelm9KRpuNWnGEzLQU2rWACE4VTemWp1UmvKWw0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=r0o1JnHbuwfMu52tsXpn+LH+mtP1FzON3AeXD30koUwocp09UXnyO2Rr+mwQBfblh
-	 48VH4EUW2fiB4zoG9MssajfgR97t51aDTy24ymuAhfAc0Pau9MJBhbqEmGQ0RdiLZl
-	 OoD5vKY40aRJIi6vCtyzQEPWnWlaELAl1ioKgyQHZCcUyLg3kHqB1p+yet5/X0XRl0
-	 5d0RyXj5HXKmQUCkSdB1H8YdodoMZgZKoCMKUTWeabP6upi8C9W7VdmYXUUj1cBedz
-	 VgfAYoEcNikhFeEh9qPzo3LyNcspozcpDh2B+v/NtlmTMuEzEkOVS5oK6OdJzT0XDD
-	 i0ZoPG5DQtp2Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SfLVH3W5Tz4wbp;
-	Tue, 28 Nov 2023 09:53:43 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>,
- npiggin <npiggin@gmail.com>, christophe leroy
- <christophe.leroy@csgroup.eu>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register  save
-In-Reply-To: <1276384468.50536225.1701110354677.JavaMail.zimbra@raptorengineeringinc.com>
-References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
- <877cmc7ve9.fsf@mail.lhotse>
- <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
- <874jhg6lkn.fsf@mail.lhotse>
- <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
- <87leaqjs8x.fsf@mail.lhotse>
- <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
- <1276384468.50536225.1701110354677.JavaMail.zimbra@raptorengineeringinc.com>
-Date: Tue, 28 Nov 2023 09:53:36 +1100
-Message-ID: <874jh64xlb.fsf@mail.lhotse>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B152DF91
+	for <regressions@lists.linux.dev>; Mon, 27 Nov 2023 23:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thesusis.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thesusis.net
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by vps.thesusis.net (Postfix, from userid 1000)
+	id 64FAA14ACC1; Mon, 27 Nov 2023 18:24:53 -0500 (EST)
+From: Phillip Susi <phill@thesusis.net>
+To: Alex Deucher <alexdeucher@gmail.com>, Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>
+Cc: Christian =?utf-8?Q?K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Dave Airlie
+ <airlied@gmail.com>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, linux-kernel@vger.kernel.org,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Luben
+ Tuikov <luben.tuikov@amd.com>, dri-devel@lists.freedesktop.org, Alex
+ Deucher <alexander.deucher@amd.com>
+Subject: Re: Radeon regression in 6.6 kernel
+In-Reply-To: <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
+References: <87edgv4x3i.fsf@vps.thesusis.net>
+ <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
+ <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
+ <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com>
+ <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
+ <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
+ <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
+Date: Mon, 27 Nov 2023 18:24:53 -0500
+Message-ID: <87jzq2ixtm.fsf@vps.thesusis.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,16 +37,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Timothy Pearson <tpearson@raptorengineering.com> writes:
+Alex Deucher <alexdeucher@gmail.com> writes:
 
-> Just wanted to check back and see if this patch was going to be queued
-> up soon?  We're still having to work around / advertise the data
-> destruction issues the underlying bug is causing on e.g. Debian
-> Stable.
+>> In that case those are the already known problems with the scheduler
+>> changes, aren't they?
+>
+> Yes.  Those changes went into 6.7 though, not 6.6 AFAIK.  Maybe I'm
+> misunderstanding what the original report was actually testing.  If it
+> was 6.7, then try reverting:
+> 56e449603f0ac580700621a356d35d5716a62ce5
+> b70438004a14f4d0f9890b3297cd66248728546c
 
-Yeah I'll apply it this week, so it will be in rc4.
+At some point it was suggested that I file a gitlab issue, but I took
+this to mean it was already known and being worked on.  -rc3 came out
+today and still has the problem.  Is there a known issue I could track?
 
-I wanted to be more certain the corruption only happens in practice with
-io-uring before applying it.
-
-cheers
