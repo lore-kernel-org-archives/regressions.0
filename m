@@ -1,80 +1,96 @@
-Received: from w4.tutanota.de (w4.tutanota.de [81.3.6.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFA7A51
-	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 23:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=well-founded.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=well-founded.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B463FA51
+	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 23:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=well-founded.dev header.i=@well-founded.dev header.b="DuiXrfui"
-Received: from tutadb.w10.tutanota.de (unknown [192.168.1.10])
-	by w4.tutanota.de (Postfix) with ESMTP id 3B8311060171;
-	Tue, 28 Nov 2023 23:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1701213467;
-	s=s1; d=well-founded.dev;
-	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
-	bh=JqVKyMAMt9Bj6vMHPBXGDNf4LP6ToGp593DuEmyVmVg=;
-	b=DuiXrfuiZatvQK8SRbBUX5h4qnitFshGTibmQ7My96Ji3pbzkj31MwcfRW5yozFF
-	uDBBJIz0cWqEOVfxDIFPzxzzV0xDs4Nc2eqG0gLeyQrjYwO05NKHmzPnzV2QFHTM+rh
-	cKQgd8g3wxhtyDo7abslOqpRazaosNLz75lyydlP65iGOfgWigxMNlJLBN9GAGsUUTv
-	ZcRbRkCk6tL36cjxU9Y2BFeXmIHHr1zw/cWE5j7oqXHIVLb9ADUMYnnJ207eNPc3f4Z
-	yg/hRXpEJ+zUdn+ySfiHtsqFGh6E7injjcbURlpkQl8vO19gyQ/QNcIQ+L7mMG9atBF
-	Ff70xakhLw==
-Date: Wed, 29 Nov 2023 00:17:47 +0100 (CET)
-From: Ramses <ramses@well-founded.dev>
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBojAyoP"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6cda22140f2so1350649b3a.1
+        for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 15:18:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701213532; x=1701818332; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WJfb8Ev4FQngJNMWt60qDvQUzvZyIitYBuhtl7HB7ms=;
+        b=LBojAyoPXZstmv/IP9epyT+nHUgvD24Bwsffd1sHPCThMOyGfBjpglw6+kSNakHe+/
+         KtYs9YOd6QopoYtm+W1OvTXe39agR132BCMx32Ucs8ftXBPtlYPqdZCIJ09g6SW6uiy3
+         w13S/6uBDV3N6463cyTpZcZK9C9uV1W9Ddf8I0nDgz3PX9F1wR5PhKQF3QPXxHouu/uk
+         jOBolVjrPDcp4A1zr4jrr3tUZStjg2pR7nugoRf0kvCytTpZlhxtdezypUuDuSnYxZRY
+         u+mddjappP5O1gIVk8RD/mHSzTmAfuW+xfYDCwFEdsNorkeYnTWrTcfk9uYYHXzkoyuk
+         IElg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701213532; x=1701818332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WJfb8Ev4FQngJNMWt60qDvQUzvZyIitYBuhtl7HB7ms=;
+        b=nTibTHrthjBniU+WDb873ejkmn4PCF9IAP+3WB3u3dHE0/ZDcR2SFQo7yfPM6vSfXx
+         CWCiSqsokyMYvA01u7ND9uKgsva59FUw20itBCOcbG3PMlgpy70znnQ3dAcjjeCBegGP
+         /V4/tbXX52j/fv+CzBRoVlUUBCx/tpRGiJ8Ise9vz86s1TmZF8T5szMltp1RIa6DIUSk
+         GrTtuOsAhEelEqdDZZrCDWNtMCth4Ggn2YIJrfafRn3idKcEks1bCc7aQIh9URw4bZhy
+         4ZcdOSe5pdMVDIzeZke4tqTahsvj1VpYzL9t+Xfg3xuZCgk+qIq5sGod8VY43Bh4y9v+
+         w51g==
+X-Gm-Message-State: AOJu0Yyhw6k2Qmjr8xfyDuJFPPBO5WwihlOCU4uYri/c4f3I4mG9JmIy
+	KPTnqDYLGmKTzsQmr0nMtP4BtoxG2lYJ/w==
+X-Google-Smtp-Source: AGHT+IF/plHB5gXIJkREqoI4DCoI+v2816GheXyYF8KwECvmk0TEo2cNkYm3UK5WRVa3n6ChbtP0Tg==
+X-Received: by 2002:a05:6a20:42a3:b0:187:ce5a:2a90 with SMTP id o35-20020a056a2042a300b00187ce5a2a90mr24569662pzj.51.1701213531926;
+        Tue, 28 Nov 2023 15:18:51 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id y3-20020aa78043000000b006933f85bc29sm9404108pfm.111.2023.11.28.15.18.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 15:18:51 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 789751025EE67; Wed, 29 Nov 2023 06:18:49 +0700 (WIB)
+Date: Wed, 29 Nov 2023 06:18:49 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Power Management <linux-pm@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Yu Chen <yu.c.chen@intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Message-ID: <NkNDM2v--B-9@well-founded.dev>
-In-Reply-To: <c2a9ceb3d7b1f384ad94d10b7058bb1cebea3d07.camel@linux.intel.com>
-References: <01df8329-06d7-4fd1-9c7a-05296f33231e@gmail.com> <b2b9121c6d2003b45f7fde6a97bb479a1ed634c7.camel@linux.intel.com> <NkN3JYx--3-9@well-founded.dev> <c2a9ceb3d7b1f384ad94d10b7058bb1cebea3d07.camel@linux.intel.com>
-Subject: Re: Fwd: Intel hybrid CPU scheduler always prefers E cores
+	Linux Wireless <linux-wireless@vger.kernel.org>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Pawel <pawel.veselov@gmail.com>
+Subject: Re: Fwd: 6.5.5 hardware access timeout / HW error / GPF in iwlwifi
+Message-ID: <ZWZ1WYWp-vigRNN7@archie.me>
+References: <9fa3c04b-bd98-4fde-9bfd-27d83132e766@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CjzFAuf1OzzSKykF"
+Content-Disposition: inline
+In-Reply-To: <9fa3c04b-bd98-4fde-9bfd-27d83132e766@gmail.com>
 
-Nov 29, 2023, 00:10 by tim.c.chen@linux.intel.com:
 
-> On Tue, 2023-11-28 at 23:33 +0100, Ramses wrote:
->
->> I applied the patch on top of 6.6.2, but unfortunately I see more or less the same behaviour as before, with single-threaded CPU-bound tasks running almost exclusively on E cores.
->>
->> Ramses
->>
->
-> I suspect that you may have other issues. I wonder if CPU priorities are getting
-> assigned properly on your system.
->
-> Saw in the original bugzilla 
-> https://bugzilla.kernel.org/show_bug.cgi?id=218195
-> that you don't see /proc/sys/kernel/sched_itmt_enabled which
-> may be a symptom of such a problem.
->
-> +Srinivas, is there something Ramses can do to help
-> find out if there are issues with cppc?
->
-> Tim
->
-Yeah I'm getting the impression that something is going wrong on my system. AFAIU, itmt is supposed to be auto-detected and doesn't require additional config?
+--CjzFAuf1OzzSKykF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have the intel ME disabled on my CPU (it came like that from the OEM), I don't know if that can have an effect?
+On Thu, Oct 05, 2023 at 06:11:35PM +0700, Bagas Sanjaya wrote:
+> #regzbot introduced: v6.4..v6.5 https://bugzilla.kernel.org/show_bug.cgi?=
+id=3D217963
+>=20
 
-Let me know if there's any additional info that I can provide.
+#regzbot resolve: fixed by distro (Fedora) upgrade
 
-Ramses
+--=20
+An old man doll... just what I always wanted! - Clara
 
+--CjzFAuf1OzzSKykF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZWZ1VQAKCRD2uYlJVVFO
+o8CAAP0XlrWdIRMofAZO/oiL8cPLqdo5cDTJ3OYGXpM4zZuKmAEAuld1gxhIiTjs
+LCOPaRJ+LB6+n21SNyaGaYzuWk90twI=
+=3HvI
+-----END PGP SIGNATURE-----
+
+--CjzFAuf1OzzSKykF--
