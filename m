@@ -1,86 +1,232 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E911D511
-	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 12:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103804F5E0
+	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 12:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6uEUGJV"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-45d94e7759eso1588139137.1
-        for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 04:26:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701174362; x=1701779162; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zWjEZ/SUQrSUmyqfWuq2eTx6HkHasTKwK0H9S4JJ4Io=;
-        b=p6uEUGJVAFwaGuX4MAHMmPy9ib5dPYGwuUM6GAgBPmDAmkcWQpcZ58h2KUhgvXEWqC
-         JmCFiYBD2C2nxONcoEYozbZG20IFFmpup2oFm9iBxhj1blKjKn1VE5KAMgxGhJdtSq36
-         S/oQVVIFZYr3qG1WblheJuZpUYe7F472uR0fyI3um/X2wx4cjQqG/5lkiMDbxA7sRF0i
-         YMFPHt2DjgIOdb2pgXVeFDYxh3Pkr1ZdHQQHZsPzRR0CEwPuPq5y43/SSs40Bxag30cl
-         q4PBCzOZr1JqbGIDQTVEjNsqbMh0c8nzQB09k1VmgB0r54MiBf65XS1PfSE5ycYzdRss
-         i+5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701174362; x=1701779162;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zWjEZ/SUQrSUmyqfWuq2eTx6HkHasTKwK0H9S4JJ4Io=;
-        b=oFxISm8WVdeOjTux4hxX4Glr61AMi33h5yixIBT9cQ2bzFwlVCp4qnhoabOKgup0SK
-         zmP2GLynEaN59aZsp+o/SlQniOFSzASltqwqsTTAOqpAaL1xdJqEri284Yq5x8Fl1AFl
-         GdwTKMtPEk6I+GEWYIdm6T8QwWGi+1V/poEzfpQ753eSYYtdjCsRv18QOLrKRIvMrzmL
-         PmPP0i3N5cvijUY5yR/8jrbP8ltHvroaWTW14IsHXAKxigfscZX26N0CLiHVl0yVstUt
-         tOuzDV3d/2LIRJ6kmBStEFACHpLpzEuXrPRv9gSF34n1E//5olpfGyEznQi7A/hvENSx
-         4FzQ==
-X-Gm-Message-State: AOJu0YyoeAn48j1zfRHzXJCn1kAOK9blh1F+huSBvGPh7J0F3LJliS0/
-	pIJVj1fRqyGcIzGIcs+c22IT1ZQ7H3lRRyjPltQv8Q==
-X-Google-Smtp-Source: AGHT+IExkbIGK+yxz9Y8kDkIjRByaumTYqTMVx/OaGjw1A52Cq9j2XTHa5tlKE7tPXxeoL5sSv1H+Ge/FeZLf+VtD3c=
-X-Received: by 2002:a67:efcf:0:b0:462:a31c:78c3 with SMTP id
- s15-20020a67efcf000000b00462a31c78c3mr13888950vsp.20.1701174362355; Tue, 28
- Nov 2023 04:26:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nEmWAsL5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1701176228;
+	bh=er6Oh6offgcNAY51EXJxZpsGEuXH3YL1hPp6+sR+LG0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=nEmWAsL5yZbjkfPft+8OXOvPcLVqQZSOJFIGQQTVG0x0nu3EjaLgnGiIYi6A65X32
+	 hjGxOGh/JIC8nkuyX8Caru8lsMa9SimPKCY/qvbSuKiFoGIaLYx8y8ZrhH0jqgT6ai
+	 CmYQA690WV+wIGRAaLdNWG5Kq3qy+gwtl0auBJP5NAnaLVj3mcQhdkKaw7cziv9s0c
+	 YpTkBAbUDoUdOZP2hKfJ7Go5CR6mCFEbJWNmO3mw4WgcSq+U6lkApOTIIHA4oQkArs
+	 bslGLuAvResdfgMaE6GqqgK+VTZ8ezTWRUHgaGXMyKka6N4bTLQsEJojYX9fZsDgl6
+	 6Q4ZIXCwPBvHw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SfjCP0QjVz4wbh;
+	Tue, 28 Nov 2023 23:57:04 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>,
+ npiggin <npiggin@gmail.com>, christophe leroy
+ <christophe.leroy@csgroup.eu>, linuxppc-dev
+ <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register  save
+In-Reply-To: <874jh64xlb.fsf@mail.lhotse>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+ <877cmc7ve9.fsf@mail.lhotse>
+ <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
+ <874jhg6lkn.fsf@mail.lhotse>
+ <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
+ <87leaqjs8x.fsf@mail.lhotse>
+ <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
+ <1276384468.50536225.1701110354677.JavaMail.zimbra@raptorengineeringinc.com>
+ <874jh64xlb.fsf@mail.lhotse>
+Date: Tue, 28 Nov 2023 23:57:01 +1100
+Message-ID: <87v89m2fz6.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 28 Nov 2023 17:55:51 +0530
-Message-ID: <CA+G9fYvbCBUCkt-NdJ7HCETCFrzMWGnjnRBjCsw39Z_aUOaTDQ@mail.gmail.com>
-Subject: btrfs: super.c:416:25: error: 'ret' undeclared (first use in this
- function); did you mean 'net'?
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, linux-btrfs@vger.kernel.org, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, 
-	Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Following x86 and i386 build regressions noticed on Linux next-20231128 tag.
+Michael Ellerman <mpe@ellerman.id.au> writes:
+> Timothy Pearson <tpearson@raptorengineering.com> writes:
+>
+>> Just wanted to check back and see if this patch was going to be queued
+>> up soon?  We're still having to work around / advertise the data
+>> destruction issues the underlying bug is causing on e.g. Debian
+>> Stable.
+>
+> Yeah I'll apply it this week, so it will be in rc4.
 
-Build log:
------------
-fs/btrfs/super.c: In function 'btrfs_parse_param':
-fs/btrfs/super.c:416:25: error: 'ret' undeclared (first use in this
-function); did you mean 'net'?
-  416 |                         ret = -EINVAL;
-      |                         ^~~
-      |                         net
-fs/btrfs/super.c:416:25: note: each undeclared identifier is reported
-only once for each function it appears in
-fs/btrfs/super.c:417:25: error: label 'out' used but not defined
-  417 |                         goto out;
-      |                         ^~~~
-make[5]: *** [scripts/Makefile.build:243: fs/btrfs/super.o] Error 1
+I reworked the change log to include the exact call path I identified
+instead of the more high level description you had. And tweaked a few
+other bits of wording and so on, apparently fr0 is a kernelism, the ABI
+and binutils calls it f0.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I'm not sure how wedded you were to your change log, so if you dislike
+my edits let me know and we can come up with a joint one.
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231128/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/log
+The actual patch is unchanged.
 
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231128/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/details/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54ID51BFjRBS06YQ3U/
-- https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54ID51BFjRBS06YQ3U/config
+cheers
 
---
-Linaro LKFT
-https://lkft.linaro.org
+
+From 5e1d824f9a283cbf90f25241b66d1f69adb3835b Mon Sep 17 00:00:00 2001
+From: Timothy Pearson <tpearson@raptorengineering.com>
+Date: Sun, 19 Nov 2023 09:18:02 -0600
+Subject: [PATCH] powerpc: Don't clobber f0/vs0 during fp|altivec register save
+
+During floating point and vector save to thread data f0/vs0 are
+clobbered by the FPSCR/VSCR store routine. This has been obvserved to
+lead to userspace register corruption and application data corruption
+with io-uring.
+
+Fix it by restoring f0/vs0 after FPSCR/VSCR store has completed for
+all the FP, altivec, VMX register save paths.
+
+Tested under QEMU in kvm mode, running on a Talos II workstation with
+dual POWER9 DD2.2 CPUs.
+
+Additional detail (mpe):
+
+Typically save_fpu() is called from __giveup_fpu() which saves the FP
+regs and also *turns off FP* in the tasks MSR, meaning the kernel will
+reload the FP regs from the thread struct before letting the task use FP
+again. So in that case save_fpu() is free to clobber f0 because the FP
+regs no longer hold live values for the task.
+
+There is another case though, which is the path via:
+  sys_clone()
+    ...
+    copy_process()
+      dup_task_struct()
+        arch_dup_task_struct()
+          flush_all_to_thread()
+            save_all()
+
+That path saves the FP regs but leaves them live. That's meant as an
+optimisation for a process that's using FP/VSX and then calls fork(),
+leaving the regs live means the parent process doesn't have to take a
+fault after the fork to get its FP regs back. The optimisation was added
+in commit 8792468da5e1 ("powerpc: Add the ability to save FPU without
+giving it up").
+
+That path does clobber f0, but f0 is volatile across function calls,
+and typically programs reach copy_process() from userspace via a syscall
+wrapper function. So in normal usage f0 being clobbered across a
+syscall doesn't cause visible data corruption.
+
+But there is now a new path, because io-uring can call copy_process()
+via create_io_thread() from the signal handling path. That's OK if the
+signal is handled as part of syscall return, but it's not OK if the
+signal is handled due to some other interrupt.
+
+That path is:
+
+interrupt_return_srr_user()
+  interrupt_exit_user_prepare()
+    interrupt_exit_user_prepare_main()
+      do_notify_resume()
+        get_signal()
+          task_work_run()
+            create_worker_cb()
+              create_io_worker()
+                copy_process()
+                  dup_task_struct()
+                    arch_dup_task_struct()
+                      flush_all_to_thread()
+                        save_all()
+                          if (tsk->thread.regs->msr & MSR_FP)
+                            save_fpu()
+                            # f0 is clobbered and potentially live in userspace
+
+Note the above discussion applies equally to save_altivec().
+
+Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
+Cc: stable@vger.kernel.org # v4.6+
+Closes: https://lore.kernel.org/all/480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com/
+Closes: https://lore.kernel.org/linuxppc-dev/480221078.47953493.1700206777956.JavaMail.zimbra@raptorengineeringinc.com/
+Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
+Tested-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+[mpe: Reword change log to describe exact path of corruption & other minor tweaks]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://msgid.link/1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com
+---
+ arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
+ arch/powerpc/kernel/vector.S |  2 ++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
+index 6a9acfb690c9..2f8f3f93cbb6 100644
+--- a/arch/powerpc/kernel/fpu.S
++++ b/arch/powerpc/kernel/fpu.S
+@@ -23,6 +23,15 @@
+ #include <asm/feature-fixups.h>
+ 
+ #ifdef CONFIG_VSX
++#define __REST_1FPVSR(n,c,base)						\
++BEGIN_FTR_SECTION							\
++	b	2f;							\
++END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
++	REST_FPR(n,base);						\
++	b	3f;							\
++2:	REST_VSR(n,c,base);						\
++3:
++
+ #define __REST_32FPVSRS(n,c,base)					\
+ BEGIN_FTR_SECTION							\
+ 	b	2f;							\
+@@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
+ 2:	SAVE_32VSRS(n,c,base);						\
+ 3:
+ #else
++#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
+ #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
+ #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
+ #endif
++#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
+ #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
+ #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
+ 
+@@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
+ 	SAVE_32FPVSRS(0, R4, R3)
+ 	mffs	fr0
+ 	stfd	fr0,FPSTATE_FPSCR(r3)
++	REST_1FPVSR(0, R4, R3)
+ 	blr
+ EXPORT_SYMBOL(store_fp_state)
+ 
+@@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
+ 2:	SAVE_32FPVSRS(0, R4, R6)
+ 	mffs	fr0
+ 	stfd	fr0,FPSTATE_FPSCR(r6)
++	REST_1FPVSR(0, R4, R6)
+ 	blr
+diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
+index 4094e4c4c77a..80b3f6e476b6 100644
+--- a/arch/powerpc/kernel/vector.S
++++ b/arch/powerpc/kernel/vector.S
+@@ -33,6 +33,7 @@ _GLOBAL(store_vr_state)
+ 	mfvscr	v0
+ 	li	r4, VRSTATE_VSCR
+ 	stvx	v0, r4, r3
++	lvx	v0, 0, r3
+ 	blr
+ EXPORT_SYMBOL(store_vr_state)
+ 
+@@ -109,6 +110,7 @@ _GLOBAL(save_altivec)
+ 	mfvscr	v0
+ 	li	r4,VRSTATE_VSCR
+ 	stvx	v0,r4,r7
++	lvx	v0,0,r7
+ 	blr
+ 
+ #ifdef CONFIG_VSX
+-- 
+2.41.0
+
+
