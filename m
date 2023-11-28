@@ -1,195 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BABF39AC3
-	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 17:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C0946BA1
+	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 19:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXwS6BiV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701193161; x=1732729161;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=E+As1VEvubpOiVH0Ou+RDAjr7+3D05qZrxWeULMmbqU=;
-  b=mXwS6BiVP+OwkSGUrmBEub3KNYwyDBKAJlzrzrdbd6FKUKAhacOdLIYV
-   1i9v3uDEq+KKqpzU+vEDp2wTq3DHVMjwWtgcCgyMH2DW1uY2V4hDO+4A6
-   UnF8RxoHrPOQudHge2XP9HxPjjIOi1v50FAqCJrRazvEZ+sjvrgbaxG3h
-   3wjDIFHlNKQbxDXAeZbQmwFhSr8UUVdLQWL/H4CZQIqOcn5CTf0OCsGZW
-   LL0rPf48m7tPgB3Iusw/En0M1tHJfNqGHVMWGeaIoA2IrdVN7KhP+Buoh
-   IKClQ0kW2pGA9zVzywnzciLpTl4+/tk4UD3uHh7T1pFiw6GFdtojF3fUe
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="378001819"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="378001819"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 09:39:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="859514426"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="859514426"
-Received: from bmnolan-mobl.amr.corp.intel.com (HELO [10.209.106.201]) ([10.209.106.201])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 09:33:25 -0800
-Message-ID: <b2b9121c6d2003b45f7fde6a97bb479a1ed634c7.camel@linux.intel.com>
-Subject: Re: Fwd: Intel hybrid CPU scheduler always prefers E cores
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Regressions
- <regressions@lists.linux.dev>,  Linux Power Management
- <linux-pm@vger.kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar
- <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Ramses VdP <ramses@well-founded.dev>, Yu Chen
- <yu.c.chen@intel.com>
-Date: Tue, 28 Nov 2023 09:33:24 -0800
-In-Reply-To: <01df8329-06d7-4fd1-9c7a-05296f33231e@gmail.com>
-References: <01df8329-06d7-4fd1-9c7a-05296f33231e@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="IZRTfrfU";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="WNaQ/oks"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.prv.sapience.com (srv8.prv.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 44364480AAD;
+	Tue, 28 Nov 2023 14:56:38 -0500 (EST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1701201398;
+ h=message-id : date : mime-version : subject : from : to : cc :
+ references : in-reply-to : content-type : content-transfer-encoding :
+ from; bh=lvM7CD1aGwZ6qshcUNO7zZN11rYmgCaJQ5Sq7osdZss=;
+ b=IZRTfrfUjKwUlBRh8e41JparbdbZbo/6pBbJFb3ZQr2St+s6trY7EA5hWDK3qOEVvDU5y
+ FZ9yjIwQn1URbS+AA==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1701201398;
+	cv=none; b=NybB63NQIXnbqFHjpq6kvsgL8G1eZLBXq49hlUNoByOOSAIbvNhiIymu6vcEmGhVM8kSYmcbSWRbjyznnd1zioRTuIcysPxwaV4D985pQ2isTXmAlzxuH7tp3PdphfZ5RQD0iGb7bRlODZR4wEDUDDKVxROyIJxTEzmtJc9vdYV/uVLYgwX3D5MsNHDf5AIOcQ3jG2rgNgjV/W4KXMb3VFOboqaTFlUYRy6YazWeJEmWBt/uqryoAbHBfbrVnXpNixsZaJyjVhGGcgtdiYa1klk/TXWUCBF9qalCKE+goDFDCHANeH0/FpS9f+tcZaneySaEoQhTx8JvKZagNsqC5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1701201398; c=relaxed/simple;
+	bh=Kn+tnaE511rc7i46SK6IJUPRfkEyfvTf2ILD0jr1oJ0=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:Content-Language:From:To:Cc:References:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=GrHqwVzC6nFW1g0+DekoMrXY1Grrp+Ue7SUXw2UsWCesZZa3s6VVcc0utdGQwekaw4knr7u0WA346q06fv+dgF1bkEdAsHOch0qTKGU2/iXV+YcWo9azazxiOFgm+s62kU6PvY+uw67uypsCu4stmnOfeklUesTn0YVrijuz5ulR6b9zi2mkVoORnyVEBMVTp5so9XEas4JoXluS8HLi+lUtCuD3SvWwADpFeG75iAIw0vtNELq8Jjulo6h2m51RP2LfP7uu9Vk+cYVAPePV2NxxMEvH5GJHRNHKwhZSWAq3WV9zwsdVt9G6ZojBo+z9o8t2YNgSTqmbDGQ54+GQLA==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1701201398;
+ h=message-id : date : mime-version : subject : from : to : cc :
+ references : in-reply-to : content-type : content-transfer-encoding :
+ from; bh=lvM7CD1aGwZ6qshcUNO7zZN11rYmgCaJQ5Sq7osdZss=;
+ b=WNaQ/oksUMcpTrdlsLiTsCpjMWm6WGTlYXB4uga2kc59FNJgOvGqARdrUZSSZzvA27Hg7
+ eIfAzrG1/HEqzaaGwy7C4PBqO/BOuCU9MOs1S/mj7aSGH6mDl1U3WDcD95tDjG+sZ/maiwb
+ sFRyjNjVN2oPkf47PPzJ82zgFME1PVnsS2VerA6q2oUaaFqvQBjh+gRy5jMqqdIi65a7KqT
+ 4UyMmJtUcrOMvaNOulYrBwJCHtQRXihC0rHCt1tqhYoaJHHI22xJDSREPGocCcsZFaPFeD7
+ i474uGU/0jde1peTIEIAoWyvLmKa+MidUbTbK+Gh9Zq4HTP8JnparjswExEw==
+Message-ID: <022c67aa-b90a-4756-8725-5f7fba7dc780@sapience.com>
+Date: Tue, 28 Nov 2023 14:56:37 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: crash with 6.7 rc2 and rc3
+Content-Language: en-US
+From: Genes Lists <lists@sapience.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, tglx@linutronix.de,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ gregory.greenman@intel.com, kvalo@kernel.org,
+ Linux Wireless <linux-wireless@vger.kernel.org>
+Cc: Linux Regressions <regressions@lists.linux.dev>
+References: <c46a6462-8263-455c-a6ea-1860020f5fab@sapience.com>
+ <ZWV7JworMrjHJHsO@archie.me>
+ <cf2dcc97-845d-4860-be4d-5822d2ebbfca@sapience.com>
+In-Reply-To: <cf2dcc97-845d-4860-be4d-5822d2ebbfca@sapience.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2023-11-28 at 20:22 +0700, Bagas Sanjaya wrote:
-> Hi,
->=20
-> I come across an interesting bug report on Bugzilla [1]. The reporter
-> wrote:
->=20
-> > I am running an intel alder lake system (Core i7-1260P), with a mix of =
-P and E cores.
-> >=20
-> > Since Linux 6.6, and also on the current 6.7 RC, the scheduler seems to=
- have a strong preference for the E cores, and single threaded workloads ar=
-e consistently scheduled on one of the E cores.
-> >=20
-> > With Linux 6.4 and before, when I ran a single threaded CPU-bound proce=
-ss, it was scheduled on a P core. With 6.5, it seems that the choice of P o=
-r E seemed rather random.
-> >=20
-> > I tested these by running "stress" with different amounts of threads. W=
-ith a single thread on Linux 6.6 and 6.7, I always have an E core at 100% a=
-nd no load on the P cores. Starting from 3 threads I get some load on the P=
- cores as well, but the E cores stay more heavily loaded.
-> > With "taskset" I can force a process to run on a P core, but clearly it=
-'s not very practical to have to do CPU scheduling manually.
-> >=20
-> > This severely affects single-threaded performance of my CPU since the E=
- cores are considerably slower. Several of my workflows are now a lot slowe=
-r due to them being single-threaded and heavily CPU-bound and being schedul=
-ed on E cores whereas they would run on P cores before.
-> >=20
-> > I am not sure what the exact desired behaviour is here, to balance powe=
-r consumption and performance, but currently my P cores are barely used for=
- single-threaded workloads.
-> >=20
-> > Is this intended behaviour or is this indeed a regression? Or is there =
-perhaps any configuration that I should have done from my side? Is there an=
-y further info that I can provide to help you figure out what's going on?
->=20
-> PM and scheduler people, is this a regression or works as intended?
->=20
-> Thanks.
->=20
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218195
->=20
+On 11/28/23 05:39, Genes Lists wrote:
+> On 11/28/23 00:31, Bagas Sanjaya wrote:
+>> On Mon, Nov 27, 2023 at 03:55:37PM -0500, Genes Lists wrote:
+>>>
+>>> lenovo laptop boots fine under 6.7rc1 and older including 6.6.2 stable.
+>>> but not for 6.7 rc2 or rc3.
+>>>
+>>> It has a intel 7260 (rev 3) wireless and :
+>>>
+>>> cpu family    : 6
+>>> model        : 60
+>>> model name    : Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
+>>> stepping    : 3
+>>> microcode    : 0x28
+>>>
+>>>
+>>> As of 6.7 rc2 / rc3 it crashes towards the end of boot bringing up 
+>>> services
+>>> -  some parts of crash scrolled off the screen so I apologize if this
+>>> (manually transcribed) trace didn't catch the first part.
+>>>
+>>> I did a git bisect between rc1 and rc2 but was unable to reproduce 
+>>> the crash
+>>> for some reason. (I did not do make clean between each bisects).
+>>>
+>>> During the bisect it booted every time, but networking was not 
+>>> functional
+>>> for any of the bisects.
+>>>
+>>> Hope it's okay to report even though git bisect didn't get anywhere.
+>>>
+>>> Gene
+>>>
+>>> This is the what I got from screen :
+>>>
+>>> CS: 0010 DS: 000 ES: 0000 CR0: 0000000080050033
+>>> CR2: 00007f30cf49ba38 CR3: 000000025b620004 CR4: 00000000001706f0
+>>> Call Trace:
+>>>   <IRQ>
+>>>   ? die_addr+0x36/0x90
+>>>   ? exc_general_protection+0x1c5/0x430
+>>>   ? asm_exc_gemeral_protection+0x26/0x30
+>>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
+>>>   ? __kmem_cache_alloc_node+0x1d5/0x2b0
+>>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
+>>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
+>>>   __kmalloc_node_track_caller+0x51/0x160
+>>>   kmemdup+0x20/0x50
+>>>   iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
+>>>   iwl_wait_phy_db_entry+0x2f/0x40 [iwlmvm]
+>>>   iwl_notification_wait+0xb0/0xf0 [iwlwifi]
+>>>   iwl_mvm_rx_common+0x8e/0x320 [iwlwifi]
+>>>   iwl_pcie_napi_poll+0x2d/0x150 [iwlwifi]
+>>>   __napi_poll+0x2b/0x1c0
+>>>   net_rx_action+0x2b4/0x320
+>>>   __do_softirq+0xff/0x339
+>>>   net_rx_action+0x2b4/0x320
+>>>   __do_softirq.part.0+0x88/0xa0
+>>> </IRQ>
+>>> <TASK>
+>>> __local_bh_enable_ip+0x91/0xa0
+>>> iwl_pcie_irq_handler+0x58d/0xc40 [iwlwifi]
+>>> ? __pfx_irq_thread_fn+0x10/0x10
+>>> irq_thread_fn+0x23/0x60
+>>> irq_thread+0xfe/0x60
+>>> ? __pfx_irq_thread_dtor+0x10/0x10
+>>> ? __pfx_irq_thread+0x10/0x10
+>>> kthread+0xfa/0x130
+>>> ? pff_kthread+0x10/0x10
+>>> ret_from_fork+0x34/0x50
+>>> ? __pfx_kthread+0x10/0x10
+>>> ret_from_fork_asm+0x1b/0x30
+>>
+>> Do you have any full system logs that can be attached?
+>>
+>> Anyway, thanks for the regression report. I'm adding it to regzbot:
+>>
+>> #regzbot ^introduced: v6.7-rc1..v6.7-rc2
+>>
+> 
+> journalctl -k for 6.6.2 and the last bisect
+> 
+> gene
+> 
 
-I have noticed that the current code sometimes is quite trigger happy
-moving tasks off P-core, whenever there are more than 2 tasks on a core.
-Sometimes, Short running house keeping tasks
-could disturb the running task on P-core as a result.
+6.6.3 crashes for me same way - also an intel NUC also crashes with 
+6.6.3 buty works on 6.6.2. Will take a while before I get additional 
+info on the latter box.
 
-Can you try the following patch?  On my Alder Lake system, I see as I add s=
-ingle
-threaded tasks, they first run on P-cores, then followed by E-cores with th=
-is
-patch on 6.6.
+gene
 
-Tim
 
-From 68a15ef01803c252261ebb47d86dfc1f2c68ae1e Mon Sep 17 00:00:00 2001
-From: Tim Chen <tim.c.chen@linux.intel.com>
-Date: Fri, 6 Oct 2023 15:58:56 -0700
-Subject: [PATCH] sched/fair: Don't force smt balancing when CPU has spare
- capacity
-
-Currently group_smt_balance is picked whenever there are more
-than two tasks on a core with two SMT.  However, the utilization
-of those tasks may be low and do not warrant a task
-migration to a CPU of lower priority.
-
-Adjust sched group clssification and sibling_imbalance()
-to reflect this consideration.  Use sibling_imbalance() to
-compute imbalance in calculate_imbalance() for the group_smt_balance
-case.
-
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-
----
- kernel/sched/fair.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ef7490c4b8b4..7dd7c2d2367a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9460,14 +9460,15 @@ group_type group_classify(unsigned int imbalance_pc=
-t,
- 	if (sgs->group_asym_packing)
- 		return group_asym_packing;
-=20
--	if (sgs->group_smt_balance)
--		return group_smt_balance;
--
- 	if (sgs->group_misfit_task_load)
- 		return group_misfit_task;
-=20
--	if (!group_has_capacity(imbalance_pct, sgs))
--		return group_fully_busy;
-+	if (!group_has_capacity(imbalance_pct, sgs)) {
-+		if (sgs->group_smt_balance)
-+			return group_smt_balance;
-+		else
-+			return group_fully_busy;
-+	}
-=20
- 	return group_has_spare;
- }
-@@ -9573,6 +9574,11 @@ static inline long sibling_imbalance(struct lb_env *=
-env,
- 	if (env->idle =3D=3D CPU_NOT_IDLE || !busiest->sum_nr_running)
- 		return 0;
-=20
-+	/* Do not pull tasks off preferred group with spare capacity */
-+	if (busiest->group_type =3D=3D group_has_spare &&
-+	    sched_asym_prefer(sds->busiest->asym_prefer_cpu, env->dst_cpu))
-+		return 0;
-+
- 	ncores_busiest =3D sds->busiest->cores;
- 	ncores_local =3D sds->local->cores;
-=20
-@@ -10411,13 +10417,6 @@ static inline void calculate_imbalance(struct lb_e=
-nv *env, struct sd_lb_stats *s
- 		return;
- 	}
-=20
--	if (busiest->group_type =3D=3D group_smt_balance) {
--		/* Reduce number of tasks sharing CPU capacity */
--		env->migration_type =3D migrate_task;
--		env->imbalance =3D 1;
--		return;
--	}
--
- 	if (busiest->group_type =3D=3D group_imbalanced) {
- 		/*
- 		 * In the group_imb case we cannot rely on group-wide averages
---=20
-2.32.0
 
 
