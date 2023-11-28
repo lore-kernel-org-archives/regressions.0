@@ -1,145 +1,84 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEE83457D;
-	Tue, 28 Nov 2023 13:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB13E56B75
+	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 13:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bh+kyIvR"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6c115026985so5305741b3a.1;
-        Tue, 28 Nov 2023 05:09:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701176971; x=1701781771; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A8wlpDIqNbi5vLnzI15P5Lxtzc5A7rbfuNGTA7aBUUY=;
-        b=Bh+kyIvR3RR3FnyAVN4RibQ28YQo2KDojNuDU4FLIhnTOtf0eYE6f6t+MglSUm4eYW
-         k6yoLJdDxqwkuKXiwVxotCtwM1Oqa9jbSItowlTgeWsvCrvw2qm7SrirRVXNDKAHOGKK
-         zQ0U/u8Q+F1f59mOhBjZK3wexZ3thfPrHU8Rqkf2ExvrAJ+0Mcnt+/EtvMfBPJvTxH/P
-         akE7nVnUKDbar/1cWuvpUKVxqwoHkxk4VRXAjQgy06kCGIF6GwfsXKcxxiGGyDugVIR1
-         vlAEptdVHLA3K+DFFEOXYULjYOJEdk8HY6wzb6Isn/vMT4x2jjFj/tQg8pSk2wfvgViX
-         mK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701176971; x=1701781771;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A8wlpDIqNbi5vLnzI15P5Lxtzc5A7rbfuNGTA7aBUUY=;
-        b=gjlasLQ6hsJl23v45p4JsNrGoRE0nANMD8NCoG0vchNglObf404KgAANyRMIX+HNrA
-         MX6cD8GdhaiWjtD5HB3O6jnT26Y9MRB8tkDc96fukA8ImweRulmzjl2wQBLKgtptvrSQ
-         5O7kZrE7IOr884d2mIVrfrQ723mBkXhb4It0pFIeD1edhYmd9HUosJ07xT6Lc/fMfUEw
-         6MMCKggQj+AgDqzRl4tj+CODNiV1FuLcsx87ufrWHnCVCuIwE1f+D1qp4x9sw807Z7Fl
-         eLXodh/PgYri7CxhoiE4JyV2CJOW7lkU56zGe6G4FKYMJm4cI/iYF0Qhm8wQ8lghcn5b
-         4Dvg==
-X-Gm-Message-State: AOJu0Yzi7hFRDXOczX/TEQ31ONoj2Lj7Tn51z4llmzEp3Dm3FWUppRTK
-	a09OEVh6lz3OrKfufdrygko=
-X-Google-Smtp-Source: AGHT+IFPqMtwLgpXsxzmkLwbwnT2E+yfl9IJPiQNoF7hcNQN73mIlZ/wQyvyYleB711N0rjXyFYIxQ==
-X-Received: by 2002:a05:6a00:3909:b0:6be:130a:22a0 with SMTP id fh9-20020a056a00390900b006be130a22a0mr16638210pfb.14.1701176971167;
-        Tue, 28 Nov 2023 05:09:31 -0800 (PST)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id s6-20020aa78d46000000b006cbb5f2cbe0sm8768749pfe.102.2023.11.28.05.09.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Nov 2023 05:09:30 -0800 (PST)
-Message-ID: <4b3c624a-f114-4e39-9e1c-0df18f307e8c@gmail.com>
-Date: Tue, 28 Nov 2023 20:09:24 +0700
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="XfNeJ4RX"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E2CBC40E01A5;
+	Tue, 28 Nov 2023 13:17:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Tf39sVEJdPK8; Tue, 28 Nov 2023 13:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1701177443; bh=rjyEdVBSHIuNTzwadRt68ipKM5ALgcb+iNjTJnT4+fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XfNeJ4RXZHIXCt79RDyIAsY0SnzW+SdKE7Cp8+qnrJY5WnrEDIi43PbZzvV2Xw1c9
+	 QPG4XsdkHVm0NQ6n50FZHbEPr7F7ukT/TjHUbLlr/Lgev4DsHCseY1G3Bhi6YncrRW
+	 XG2bXFcKS5Mbw+epvlqripXJkJ3rjzOUdSwDYeh+fx1SWhk93gGHmv8ueH4tXMOTBg
+	 TFFt2wECmp7voiNVedBYl08qmY0O8l6Zc+zYcxIslQ9VLHDz7HVPOhIwmaRSe0nrG6
+	 V8Co3Q+KfckYevA4w1zHeLdAEeqGgs1fwcCdDe2wSk9ZcZZeO1ZtZcWmVJIr10Wj6I
+	 ghrTwKgSrbuk/99BLMLqs1t9Ef3Cd4ybO3e8KaoLD2o6ffM2cxRIElPw8/dwi9eCJ7
+	 E4fYGHZ7aDCrciLSvpi2fCnuO3hBCWGn+E/fPvQ1CtC2O2pMnxJa27V8o9PZDqnKm2
+	 qCfXvtAajkZaetBvkN7P6dtSfhTHU9DXDf6zMbRZUJ2/MbyLcJl8dATcUzmdzDGQ9v
+	 1j14SkWcE9Rv/zqzUKlk3ujuvGfwYwHQm4Bti3A9ORg6mTZ9QmRZ9rIdSVzo0FZAVL
+	 WMBIA04GRJmlr+bn4lZNSL/bQGmVr0dalLu5PN1uvI/nOCMC4wfSEj+Ywm67HJmpXM
+	 6p/I4S+s7qdZ36zs31XKTh94=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED24E40E01B1;
+	Tue, 28 Nov 2023 13:17:11 +0000 (UTC)
+Date: Tue, 28 Nov 2023 14:17:07 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Antonio Feijoo <antonio.feijoo@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	lukas.bulwahn@gmail.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org
+Subject: Re: [regression] microcode files missing in initramfs imgages from
+ dracut (was Re: [PATCH] x86: Clean up remaining references to
+ CONFIG_MICROCODE_AMD)
+Message-ID: <20231128131707.GAZWXoU9GpoeXB8dVv@fat_crate.local>
+References: <e1ca042c-de1d-4fe3-ad69-51d147b1fe0b@leemhuis.info>
+ <20231122155758.GEZV4lBgtZyzsP5Z4V@fat_crate.local>
+ <CAHk-=wiV+NM+jLKbSj_Ej9RaXpu4akWV03G_wXyTSHZhArq1tg@mail.gmail.com>
+ <20231122205135.GGZV5p157mBi6RYUNs@fat_crate.local>
+ <CAHk-=wh03jMZRAxHFTkv0h9dZ6TmiqukzcHd4RTx7ijia_prsg@mail.gmail.com>
+ <20231123112013.GAZV81bezsrS6sdJQR@fat_crate.local>
+ <66f077cf-ff85-44dc-a76a-05d8995ea261@suse.com>
+ <20231124121500.GAZWCTxML94BSYaQf3@fat_crate.local>
+ <081ddbc7-8e3a-41c2-b361-3a03dfb3af12@suse.com>
+ <20231124133303.GBZWCmD71R5dunBLQ3@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux IOMMU <iommu@lists.linux.dev>,
- Linux Power Management <linux-pm@vger.kernel.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Lu Baolu
- <baolu.lu@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- kbugreports@proton.me
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Kernels v6.5 and v6.6 break resume from standby (s3) on some
- Intel systems if VT-d is enabled
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231124133303.GBZWCmD71R5dunBLQ3@fat_crate.local>
 
-Hi,
+On Fri, Nov 24, 2023 at 02:33:03PM +0100, Borislav Petkov wrote:
+> Thx, lemme get cracking on fancy github workflows. :-P
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Uff:
 
-> Note:
-> 
-> I'm just a Linux user, I don't work in IT or even write code, so, I'm probably using terms to describe the issue that are not the ones someone who knows code and what the system does under the hood would use.
-> 
-> Affected system:
-> 
-> Thinkpad, Intel Kaby Lake (i7-7600U) chipset / cpu and onboard gpu (Intel HD 620), no separate graphics card, current bios firmware; running Void Linux, xfce / lightdm
-> 
-> Symptom / problem:
-> 
-> Since the upgrade to kernel v6.5.5 (from v6.3.13) my system doesn't wake up from standby, i.e. resume from s3 fails 100% of the time.
-> When pressing a key or the power button nothing happens. The LED that indicates different states of the system, keeps indicating standby mode.
-> The only way to use the system again is hard reset by pressing the power button for a few seconds.
-> 
-> So, there is no crashing on resume or incomplete resume or only sometimes failing to resume or failing to go into standby in the first place.
-> 
-> Granted, this issue was present with kernels before v6.5, but only occasionally and it would not re-appear for many many boot cycles. So, I never had any lead as to why it would happen.
-> 
-> I installed kernel v6.4.16 to test for the bug - it's not in there.
-> 
-> For further testing I also installed kernel v6.5.2, as this was the first kernel of the 6.5 series available on void linux, (and because the kernel logs mention VT-d for kernel v6.5.5 and v6.5.3, see below). Result: The bug is already in v6.5.2, too.
-> 
-> There's only one thing I noticed from comparing logs between kernels v6.5/6.6 vs v6.1/6.3/6.4. In the moment the system goes into standby, if running one of the latter three kernel versions the system would print the following messages:
-> 
-> [elogind-daemon] Entering sleep state 'suspend'...
-> [kernel] PM: suspend entry (deep)
-> 
-> 
-> But with kernels v6.5/6.6, the kernel message is missing, only the elogind-daemon message shows up in the logs. As if the kernel didn't get the memo and thus didn't prepare and didn't listen for the wake-up call to resume.
-> 
-> 
-> To see, if this is a bug that might be tight to a certain chipset / cpu generation, I tested kernel v6.5 on my old Thinkpad (Intel Sandy Bridge chipset / cpu, and also onboard graphics only). Its BIOS also has VT-d enabled. Interestingly, on that system, resume from standby with kernel v6.5 is no problem, even though its system is set up the same as the current Thinkpad.
-> 
-> So, this bug seems to be limited to certain set of chipset / cpu. Which seems feasible, as I couldn't find a bug report on this - not too many seem to be affected.
-> 
-> 
-> 
-> There's an older bug report on similar symptoms, but the cure doesn't work on my system:
-> 
-> "intel_iommu=on breaks resume from suspend on several Thinkpad models"
-> https://bugzilla.kernel.org/show_bug.cgi?id=197029
-> 
-> 
-> Although it sounds just like what my system is experiencing - apart from the fact that term suspend being sometimes also used to describe hibernation and it is not specified which one is meant in the bug report.
-> 
-> So, I was hopeful on the one hand that the (workaround) fix (adding intel_iommu=off to the kernel parameters) would work on my system, too - on the other hand, this bug report was for kernel v4.13, so it's probably not necessarily relevant to similar symptoms with kernel v6.5 and v6.6, respectively.
-> 
-> Anyway, adding intel_iommu=off to the kernel parameters didn't change anything on my system. I made, of course, sure once the system was running, that intel_iommu=off was in indeed used as one of the kernel parameters.
-> 
-> 
-> With this information in mind I did a regular internet search and found some information that in case intel_iommu=off in the kernel parameters doesn't help, disabling VT-d in BIOS might.
-> And in my case it does indeed help avoiding the bug - for both kernel versions, v6.5 and v6.6.
-> 
-> Reading some other bug reports and some changelogs, I noticed that iommu and vt-s are connected, to I posted this bug report in drivers/iommu. If it is misplaced here, please feel free to move it to the correct category.
-> 
-> 
-> I attached a file with the output of some commands I found being used in several other bug reports on here, just in case they might be needed / helpful.
-> 
-> 
-> Thank you very much for your help in advance!
+https://github.com/dracutdevs/dracut/pull/2572
 
-See Bugzilla for the full thread.
-
-Anyway, I'm adding this regression to regzbot:
-
-#regzbot introduced: v6.3..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=218191
-#regzbot title: resume from standby fails on Thinkpad with Kaby Lake CPU
-
-Thanks.
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218191
+What a pain it is to do a pull request with github. :-\
 
 -- 
-An old man doll... just what I always wanted! - Clara
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
