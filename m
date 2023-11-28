@@ -1,232 +1,145 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103804F5E0
-	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 12:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEE83457D;
+	Tue, 28 Nov 2023 13:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nEmWAsL5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1701176228;
-	bh=er6Oh6offgcNAY51EXJxZpsGEuXH3YL1hPp6+sR+LG0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nEmWAsL5yZbjkfPft+8OXOvPcLVqQZSOJFIGQQTVG0x0nu3EjaLgnGiIYi6A65X32
-	 hjGxOGh/JIC8nkuyX8Caru8lsMa9SimPKCY/qvbSuKiFoGIaLYx8y8ZrhH0jqgT6ai
-	 CmYQA690WV+wIGRAaLdNWG5Kq3qy+gwtl0auBJP5NAnaLVj3mcQhdkKaw7cziv9s0c
-	 YpTkBAbUDoUdOZP2hKfJ7Go5CR6mCFEbJWNmO3mw4WgcSq+U6lkApOTIIHA4oQkArs
-	 bslGLuAvResdfgMaE6GqqgK+VTZ8ezTWRUHgaGXMyKka6N4bTLQsEJojYX9fZsDgl6
-	 6Q4ZIXCwPBvHw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SfjCP0QjVz4wbh;
-	Tue, 28 Nov 2023 23:57:04 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>,
- npiggin <npiggin@gmail.com>, christophe leroy
- <christophe.leroy@csgroup.eu>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec
- register  save
-In-Reply-To: <874jh64xlb.fsf@mail.lhotse>
-References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
- <877cmc7ve9.fsf@mail.lhotse>
- <439072392.48800901.1700498743840.JavaMail.zimbra@raptorengineeringinc.com>
- <874jhg6lkn.fsf@mail.lhotse>
- <1294229534.48922001.1700539832331.JavaMail.zimbra@raptorengineeringinc.com>
- <87leaqjs8x.fsf@mail.lhotse>
- <1340817182.49635143.1700784119445.JavaMail.zimbra@raptorengineeringinc.com>
- <1276384468.50536225.1701110354677.JavaMail.zimbra@raptorengineeringinc.com>
- <874jh64xlb.fsf@mail.lhotse>
-Date: Tue, 28 Nov 2023 23:57:01 +1100
-Message-ID: <87v89m2fz6.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bh+kyIvR"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6c115026985so5305741b3a.1;
+        Tue, 28 Nov 2023 05:09:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701176971; x=1701781771; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A8wlpDIqNbi5vLnzI15P5Lxtzc5A7rbfuNGTA7aBUUY=;
+        b=Bh+kyIvR3RR3FnyAVN4RibQ28YQo2KDojNuDU4FLIhnTOtf0eYE6f6t+MglSUm4eYW
+         k6yoLJdDxqwkuKXiwVxotCtwM1Oqa9jbSItowlTgeWsvCrvw2qm7SrirRVXNDKAHOGKK
+         zQ0U/u8Q+F1f59mOhBjZK3wexZ3thfPrHU8Rqkf2ExvrAJ+0Mcnt+/EtvMfBPJvTxH/P
+         akE7nVnUKDbar/1cWuvpUKVxqwoHkxk4VRXAjQgy06kCGIF6GwfsXKcxxiGGyDugVIR1
+         vlAEptdVHLA3K+DFFEOXYULjYOJEdk8HY6wzb6Isn/vMT4x2jjFj/tQg8pSk2wfvgViX
+         mK1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701176971; x=1701781771;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A8wlpDIqNbi5vLnzI15P5Lxtzc5A7rbfuNGTA7aBUUY=;
+        b=gjlasLQ6hsJl23v45p4JsNrGoRE0nANMD8NCoG0vchNglObf404KgAANyRMIX+HNrA
+         MX6cD8GdhaiWjtD5HB3O6jnT26Y9MRB8tkDc96fukA8ImweRulmzjl2wQBLKgtptvrSQ
+         5O7kZrE7IOr884d2mIVrfrQ723mBkXhb4It0pFIeD1edhYmd9HUosJ07xT6Lc/fMfUEw
+         6MMCKggQj+AgDqzRl4tj+CODNiV1FuLcsx87ufrWHnCVCuIwE1f+D1qp4x9sw807Z7Fl
+         eLXodh/PgYri7CxhoiE4JyV2CJOW7lkU56zGe6G4FKYMJm4cI/iYF0Qhm8wQ8lghcn5b
+         4Dvg==
+X-Gm-Message-State: AOJu0Yzi7hFRDXOczX/TEQ31ONoj2Lj7Tn51z4llmzEp3Dm3FWUppRTK
+	a09OEVh6lz3OrKfufdrygko=
+X-Google-Smtp-Source: AGHT+IFPqMtwLgpXsxzmkLwbwnT2E+yfl9IJPiQNoF7hcNQN73mIlZ/wQyvyYleB711N0rjXyFYIxQ==
+X-Received: by 2002:a05:6a00:3909:b0:6be:130a:22a0 with SMTP id fh9-20020a056a00390900b006be130a22a0mr16638210pfb.14.1701176971167;
+        Tue, 28 Nov 2023 05:09:31 -0800 (PST)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id s6-20020aa78d46000000b006cbb5f2cbe0sm8768749pfe.102.2023.11.28.05.09.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Nov 2023 05:09:30 -0800 (PST)
+Message-ID: <4b3c624a-f114-4e39-9e1c-0df18f307e8c@gmail.com>
+Date: Tue, 28 Nov 2023 20:09:24 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux IOMMU <iommu@lists.linux.dev>,
+ Linux Power Management <linux-pm@vger.kernel.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Lu Baolu
+ <baolu.lu@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ kbugreports@proton.me
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Kernels v6.5 and v6.6 break resume from standby (s3) on some
+ Intel systems if VT-d is enabled
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
-> Timothy Pearson <tpearson@raptorengineering.com> writes:
->
->> Just wanted to check back and see if this patch was going to be queued
->> up soon?  We're still having to work around / advertise the data
->> destruction issues the underlying bug is causing on e.g. Debian
->> Stable.
->
-> Yeah I'll apply it this week, so it will be in rc4.
+Hi,
 
-I reworked the change log to include the exact call path I identified
-instead of the more high level description you had. And tweaked a few
-other bits of wording and so on, apparently fr0 is a kernelism, the ABI
-and binutils calls it f0.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-I'm not sure how wedded you were to your change log, so if you dislike
-my edits let me know and we can come up with a joint one.
+> Note:
+> 
+> I'm just a Linux user, I don't work in IT or even write code, so, I'm probably using terms to describe the issue that are not the ones someone who knows code and what the system does under the hood would use.
+> 
+> Affected system:
+> 
+> Thinkpad, Intel Kaby Lake (i7-7600U) chipset / cpu and onboard gpu (Intel HD 620), no separate graphics card, current bios firmware; running Void Linux, xfce / lightdm
+> 
+> Symptom / problem:
+> 
+> Since the upgrade to kernel v6.5.5 (from v6.3.13) my system doesn't wake up from standby, i.e. resume from s3 fails 100% of the time.
+> When pressing a key or the power button nothing happens. The LED that indicates different states of the system, keeps indicating standby mode.
+> The only way to use the system again is hard reset by pressing the power button for a few seconds.
+> 
+> So, there is no crashing on resume or incomplete resume or only sometimes failing to resume or failing to go into standby in the first place.
+> 
+> Granted, this issue was present with kernels before v6.5, but only occasionally and it would not re-appear for many many boot cycles. So, I never had any lead as to why it would happen.
+> 
+> I installed kernel v6.4.16 to test for the bug - it's not in there.
+> 
+> For further testing I also installed kernel v6.5.2, as this was the first kernel of the 6.5 series available on void linux, (and because the kernel logs mention VT-d for kernel v6.5.5 and v6.5.3, see below). Result: The bug is already in v6.5.2, too.
+> 
+> There's only one thing I noticed from comparing logs between kernels v6.5/6.6 vs v6.1/6.3/6.4. In the moment the system goes into standby, if running one of the latter three kernel versions the system would print the following messages:
+> 
+> [elogind-daemon] Entering sleep state 'suspend'...
+> [kernel] PM: suspend entry (deep)
+> 
+> 
+> But with kernels v6.5/6.6, the kernel message is missing, only the elogind-daemon message shows up in the logs. As if the kernel didn't get the memo and thus didn't prepare and didn't listen for the wake-up call to resume.
+> 
+> 
+> To see, if this is a bug that might be tight to a certain chipset / cpu generation, I tested kernel v6.5 on my old Thinkpad (Intel Sandy Bridge chipset / cpu, and also onboard graphics only). Its BIOS also has VT-d enabled. Interestingly, on that system, resume from standby with kernel v6.5 is no problem, even though its system is set up the same as the current Thinkpad.
+> 
+> So, this bug seems to be limited to certain set of chipset / cpu. Which seems feasible, as I couldn't find a bug report on this - not too many seem to be affected.
+> 
+> 
+> 
+> There's an older bug report on similar symptoms, but the cure doesn't work on my system:
+> 
+> "intel_iommu=on breaks resume from suspend on several Thinkpad models"
+> https://bugzilla.kernel.org/show_bug.cgi?id=197029
+> 
+> 
+> Although it sounds just like what my system is experiencing - apart from the fact that term suspend being sometimes also used to describe hibernation and it is not specified which one is meant in the bug report.
+> 
+> So, I was hopeful on the one hand that the (workaround) fix (adding intel_iommu=off to the kernel parameters) would work on my system, too - on the other hand, this bug report was for kernel v4.13, so it's probably not necessarily relevant to similar symptoms with kernel v6.5 and v6.6, respectively.
+> 
+> Anyway, adding intel_iommu=off to the kernel parameters didn't change anything on my system. I made, of course, sure once the system was running, that intel_iommu=off was in indeed used as one of the kernel parameters.
+> 
+> 
+> With this information in mind I did a regular internet search and found some information that in case intel_iommu=off in the kernel parameters doesn't help, disabling VT-d in BIOS might.
+> And in my case it does indeed help avoiding the bug - for both kernel versions, v6.5 and v6.6.
+> 
+> Reading some other bug reports and some changelogs, I noticed that iommu and vt-s are connected, to I posted this bug report in drivers/iommu. If it is misplaced here, please feel free to move it to the correct category.
+> 
+> 
+> I attached a file with the output of some commands I found being used in several other bug reports on here, just in case they might be needed / helpful.
+> 
+> 
+> Thank you very much for your help in advance!
 
-The actual patch is unchanged.
+See Bugzilla for the full thread.
 
-cheers
+Anyway, I'm adding this regression to regzbot:
 
+#regzbot introduced: v6.3..v6.5 https://bugzilla.kernel.org/show_bug.cgi?id=218191
+#regzbot title: resume from standby fails on Thinkpad with Kaby Lake CPU
 
-From 5e1d824f9a283cbf90f25241b66d1f69adb3835b Mon Sep 17 00:00:00 2001
-From: Timothy Pearson <tpearson@raptorengineering.com>
-Date: Sun, 19 Nov 2023 09:18:02 -0600
-Subject: [PATCH] powerpc: Don't clobber f0/vs0 during fp|altivec register save
+Thanks.
 
-During floating point and vector save to thread data f0/vs0 are
-clobbered by the FPSCR/VSCR store routine. This has been obvserved to
-lead to userspace register corruption and application data corruption
-with io-uring.
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218191
 
-Fix it by restoring f0/vs0 after FPSCR/VSCR store has completed for
-all the FP, altivec, VMX register save paths.
-
-Tested under QEMU in kvm mode, running on a Talos II workstation with
-dual POWER9 DD2.2 CPUs.
-
-Additional detail (mpe):
-
-Typically save_fpu() is called from __giveup_fpu() which saves the FP
-regs and also *turns off FP* in the tasks MSR, meaning the kernel will
-reload the FP regs from the thread struct before letting the task use FP
-again. So in that case save_fpu() is free to clobber f0 because the FP
-regs no longer hold live values for the task.
-
-There is another case though, which is the path via:
-  sys_clone()
-    ...
-    copy_process()
-      dup_task_struct()
-        arch_dup_task_struct()
-          flush_all_to_thread()
-            save_all()
-
-That path saves the FP regs but leaves them live. That's meant as an
-optimisation for a process that's using FP/VSX and then calls fork(),
-leaving the regs live means the parent process doesn't have to take a
-fault after the fork to get its FP regs back. The optimisation was added
-in commit 8792468da5e1 ("powerpc: Add the ability to save FPU without
-giving it up").
-
-That path does clobber f0, but f0 is volatile across function calls,
-and typically programs reach copy_process() from userspace via a syscall
-wrapper function. So in normal usage f0 being clobbered across a
-syscall doesn't cause visible data corruption.
-
-But there is now a new path, because io-uring can call copy_process()
-via create_io_thread() from the signal handling path. That's OK if the
-signal is handled as part of syscall return, but it's not OK if the
-signal is handled due to some other interrupt.
-
-That path is:
-
-interrupt_return_srr_user()
-  interrupt_exit_user_prepare()
-    interrupt_exit_user_prepare_main()
-      do_notify_resume()
-        get_signal()
-          task_work_run()
-            create_worker_cb()
-              create_io_worker()
-                copy_process()
-                  dup_task_struct()
-                    arch_dup_task_struct()
-                      flush_all_to_thread()
-                        save_all()
-                          if (tsk->thread.regs->msr & MSR_FP)
-                            save_fpu()
-                            # f0 is clobbered and potentially live in userspace
-
-Note the above discussion applies equally to save_altivec().
-
-Fixes: 8792468da5e1 ("powerpc: Add the ability to save FPU without giving it up")
-Cc: stable@vger.kernel.org # v4.6+
-Closes: https://lore.kernel.org/all/480932026.45576726.1699374859845.JavaMail.zimbra@raptorengineeringinc.com/
-Closes: https://lore.kernel.org/linuxppc-dev/480221078.47953493.1700206777956.JavaMail.zimbra@raptorengineeringinc.com/
-Tested-by: Timothy Pearson <tpearson@raptorengineering.com>
-Tested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-[mpe: Reword change log to describe exact path of corruption & other minor tweaks]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://msgid.link/1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com
----
- arch/powerpc/kernel/fpu.S    | 13 +++++++++++++
- arch/powerpc/kernel/vector.S |  2 ++
- 2 files changed, 15 insertions(+)
-
-diff --git a/arch/powerpc/kernel/fpu.S b/arch/powerpc/kernel/fpu.S
-index 6a9acfb690c9..2f8f3f93cbb6 100644
---- a/arch/powerpc/kernel/fpu.S
-+++ b/arch/powerpc/kernel/fpu.S
-@@ -23,6 +23,15 @@
- #include <asm/feature-fixups.h>
- 
- #ifdef CONFIG_VSX
-+#define __REST_1FPVSR(n,c,base)						\
-+BEGIN_FTR_SECTION							\
-+	b	2f;							\
-+END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
-+	REST_FPR(n,base);						\
-+	b	3f;							\
-+2:	REST_VSR(n,c,base);						\
-+3:
-+
- #define __REST_32FPVSRS(n,c,base)					\
- BEGIN_FTR_SECTION							\
- 	b	2f;							\
-@@ -41,9 +50,11 @@ END_FTR_SECTION_IFSET(CPU_FTR_VSX);					\
- 2:	SAVE_32VSRS(n,c,base);						\
- 3:
- #else
-+#define __REST_1FPVSR(n,b,base)		REST_FPR(n, base)
- #define __REST_32FPVSRS(n,b,base)	REST_32FPRS(n, base)
- #define __SAVE_32FPVSRS(n,b,base)	SAVE_32FPRS(n, base)
- #endif
-+#define REST_1FPVSR(n,c,base)   __REST_1FPVSR(n,__REG_##c,__REG_##base)
- #define REST_32FPVSRS(n,c,base) __REST_32FPVSRS(n,__REG_##c,__REG_##base)
- #define SAVE_32FPVSRS(n,c,base) __SAVE_32FPVSRS(n,__REG_##c,__REG_##base)
- 
-@@ -67,6 +78,7 @@ _GLOBAL(store_fp_state)
- 	SAVE_32FPVSRS(0, R4, R3)
- 	mffs	fr0
- 	stfd	fr0,FPSTATE_FPSCR(r3)
-+	REST_1FPVSR(0, R4, R3)
- 	blr
- EXPORT_SYMBOL(store_fp_state)
- 
-@@ -138,4 +150,5 @@ _GLOBAL(save_fpu)
- 2:	SAVE_32FPVSRS(0, R4, R6)
- 	mffs	fr0
- 	stfd	fr0,FPSTATE_FPSCR(r6)
-+	REST_1FPVSR(0, R4, R6)
- 	blr
-diff --git a/arch/powerpc/kernel/vector.S b/arch/powerpc/kernel/vector.S
-index 4094e4c4c77a..80b3f6e476b6 100644
---- a/arch/powerpc/kernel/vector.S
-+++ b/arch/powerpc/kernel/vector.S
-@@ -33,6 +33,7 @@ _GLOBAL(store_vr_state)
- 	mfvscr	v0
- 	li	r4, VRSTATE_VSCR
- 	stvx	v0, r4, r3
-+	lvx	v0, 0, r3
- 	blr
- EXPORT_SYMBOL(store_vr_state)
- 
-@@ -109,6 +110,7 @@ _GLOBAL(save_altivec)
- 	mfvscr	v0
- 	li	r4,VRSTATE_VSCR
- 	stvx	v0,r4,r7
-+	lvx	v0,0,r7
- 	blr
- 
- #ifdef CONFIG_VSX
 -- 
-2.41.0
-
-
+An old man doll... just what I always wanted! - Clara
