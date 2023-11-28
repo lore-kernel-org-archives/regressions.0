@@ -1,51 +1,20 @@
-Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C0946BA1
-	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 19:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="IZRTfrfU";
-	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="WNaQ/oks"
-Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
-   signature) header.d=sapience.com header.i=@sapience.com 
-   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
-   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
-Received: from srv8.prv.sapience.com (srv8.prv.sapience.com [x.x.x.x])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A812944386
+	for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 21:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from [192.168.0.183] (ip5f5af0c0.dynamic.kabel-deutschland.de [95.90.240.192])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by s1.sapience.com (Postfix) with ESMTPS id 44364480AAD;
-	Tue, 28 Nov 2023 14:56:38 -0500 (EST)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1701201398;
- h=message-id : date : mime-version : subject : from : to : cc :
- references : in-reply-to : content-type : content-transfer-encoding :
- from; bh=lvM7CD1aGwZ6qshcUNO7zZN11rYmgCaJQ5Sq7osdZss=;
- b=IZRTfrfUjKwUlBRh8e41JparbdbZbo/6pBbJFb3ZQr2St+s6trY7EA5hWDK3qOEVvDU5y
- FZ9yjIwQn1URbS+AA==
-ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1701201398;
-	cv=none; b=NybB63NQIXnbqFHjpq6kvsgL8G1eZLBXq49hlUNoByOOSAIbvNhiIymu6vcEmGhVM8kSYmcbSWRbjyznnd1zioRTuIcysPxwaV4D985pQ2isTXmAlzxuH7tp3PdphfZ5RQD0iGb7bRlODZR4wEDUDDKVxROyIJxTEzmtJc9vdYV/uVLYgwX3D5MsNHDf5AIOcQ3jG2rgNgjV/W4KXMb3VFOboqaTFlUYRy6YazWeJEmWBt/uqryoAbHBfbrVnXpNixsZaJyjVhGGcgtdiYa1klk/TXWUCBF9qalCKE+goDFDCHANeH0/FpS9f+tcZaneySaEoQhTx8JvKZagNsqC5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
-	t=1701201398; c=relaxed/simple;
-	bh=Kn+tnaE511rc7i46SK6IJUPRfkEyfvTf2ILD0jr1oJ0=;
-	h=DKIM-Signature:DKIM-Signature:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:Content-Language:From:To:Cc:References:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=GrHqwVzC6nFW1g0+DekoMrXY1Grrp+Ue7SUXw2UsWCesZZa3s6VVcc0utdGQwekaw4knr7u0WA346q06fv+dgF1bkEdAsHOch0qTKGU2/iXV+YcWo9azazxiOFgm+s62kU6PvY+uw67uypsCu4stmnOfeklUesTn0YVrijuz5ulR6b9zi2mkVoORnyVEBMVTp5so9XEas4JoXluS8HLi+lUtCuD3SvWwADpFeG75iAIw0vtNELq8Jjulo6h2m51RP2LfP7uu9Vk+cYVAPePV2NxxMEvH5GJHRNHKwhZSWAq3WV9zwsdVt9G6ZojBo+z9o8t2YNgSTqmbDGQ54+GQLA==
-ARC-Authentication-Results: i=1; arc-srv8.sapience.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
- i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1701201398;
- h=message-id : date : mime-version : subject : from : to : cc :
- references : in-reply-to : content-type : content-transfer-encoding :
- from; bh=lvM7CD1aGwZ6qshcUNO7zZN11rYmgCaJQ5Sq7osdZss=;
- b=WNaQ/oksUMcpTrdlsLiTsCpjMWm6WGTlYXB4uga2kc59FNJgOvGqARdrUZSSZzvA27Hg7
- eIfAzrG1/HEqzaaGwy7C4PBqO/BOuCU9MOs1S/mj7aSGH6mDl1U3WDcD95tDjG+sZ/maiwb
- sFRyjNjVN2oPkf47PPzJ82zgFME1PVnsS2VerA6q2oUaaFqvQBjh+gRy5jMqqdIi65a7KqT
- 4UyMmJtUcrOMvaNOulYrBwJCHtQRXihC0rHCt1tqhYoaJHHI22xJDSREPGocCcsZFaPFeD7
- i474uGU/0jde1peTIEIAoWyvLmKa+MidUbTbK+Gh9Zq4HTP8JnparjswExEw==
-Message-ID: <022c67aa-b90a-4756-8725-5f7fba7dc780@sapience.com>
-Date: Tue, 28 Nov 2023 14:56:37 -0500
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1790761E5FE01;
+	Tue, 28 Nov 2023 22:34:54 +0100 (CET)
+Message-ID: <695f07b2-cc49-4637-a783-38b0f7457c1b@molgen.mpg.de>
+Date: Tue, 28 Nov 2023 22:34:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,112 +22,114 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: crash with 6.7 rc2 and rc3
+Subject: Re: [Intel-wired-lan] The difference between linux kernel driver and
+ FreeBSD's with Intel X533
+To: =?UTF-8?Q?Skyler_M=C3=A4ntysaari?= <sm+lists@skym.fi>
+References: <ee7f6320-0742-65d4-7411-400d55daebf8@skym.fi>
+ <994cebfe-c97a-4e11-8dad-b3c589e9f094@intel.com>
+ <c526d946-2779-434b-b8ec-423a48f71e36@skym.fi>
+ <6e48c3ba-8d17-41db-ca8d-0a7881d122c9@intel.com>
+ <4330a47e-aa31-4248-9d9d-95c54f74cdd9@app.fastmail.com>
+ <10804893-d035-4ac9-86f0-161257922be7@app.fastmail.com>
+ <03c9e8a4-5adc-4293-a720-fe4342ed723b@app.fastmail.com>
+ <20231128021958.GA93203@dev-dsk-ipman-2a-ee5dfd20.us-west-2.amazon.com>
 Content-Language: en-US
-From: Genes Lists <lists@sapience.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, tglx@linutronix.de,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- gregory.greenman@intel.com, kvalo@kernel.org,
- Linux Wireless <linux-wireless@vger.kernel.org>
-Cc: Linux Regressions <regressions@lists.linux.dev>
-References: <c46a6462-8263-455c-a6ea-1860020f5fab@sapience.com>
- <ZWV7JworMrjHJHsO@archie.me>
- <cf2dcc97-845d-4860-be4d-5822d2ebbfca@sapience.com>
-In-Reply-To: <cf2dcc97-845d-4860-be4d-5822d2ebbfca@sapience.com>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, Jordan Crouse <jorcrous@amazon.com>,
+ Jeff Daly <jeffd@silicom-usa.com>, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20231128021958.GA93203@dev-dsk-ipman-2a-ee5dfd20.us-west-2.amazon.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11/28/23 05:39, Genes Lists wrote:
-> On 11/28/23 00:31, Bagas Sanjaya wrote:
->> On Mon, Nov 27, 2023 at 03:55:37PM -0500, Genes Lists wrote:
+[Cc: +<jeffd@silicom-usa.com>, +regressions@lists.linux.dev]
+
+#regzbot ^introduced: 565736048bd5f9888990569993c6b6bfdf6dcb6d
+
+Dear Ivan,
+
+
+Am 28.11.23 um 03:20 schrieb Ivan Pang:
+> On Wed, Oct 18, 2023 at 09:50:35PM +0300, Skyler Mäntysaari wrote:
+>> On Tue, Oct 10, 2023, at 03:39, Skyler Mäntysaari wrote:
+>>> On Tue, Oct 10, 2023, at 02:50, Skyler Mäntysaari wrote:
+>>>> On Mon, Oct 9, 2023, at 18:33, Jesse Brandeburg wrote:
+>>>>> On 10/4/2023 10:08 AM, Skyler Mäntysaari wrote:
+>>>>>>>> Hi there,
+>>>>>>>>
+>>>>>>>> It seems that for reasons unknown to me, my Intel X533 based 10G SFP+
+>>>>>>>> doesn't want to work with kernel 6.1.55 in VyOS 1.4 nor Debian 12 but
+>>>>>>>> it does in OPNsense which is based on FreeBSD 13.2.
+>>>>>>>>
+>>>>>>>> How would I go about debugging this properly? Both sides see light,
+>>>>>>>> but no link unless I'm using FreeBSD.
+>>>>>> https://forum.vyos.io/t/10g-sfp-trouble-with-linking-intel-x553/12253/11?u=samip537
+
+>>>>> Response from Intel team:
+>>>>>
+>>>>> In the ethtool -m output pasted I see TX and RX optical power is fine.
+>>>>> Could you request fault status on both sides? Just want to check if link
+>>>>> is down because we are at local-fault or link partner is at local-fault.
+>>>>>
+>>>>> rmmod ixgbe
+>>>>> modprobe ixgbe
+>>>>> ethtool -S eth0 | grep fault
+>>>>>
+>>>>> Since it is 10G, if our side TX is ON (power level says it is) then we
+>>>>> should expect link partner RX to be locked so cannot be at Local Fault.
+>>>>>
+>>>>> Skyler, please gather that ethtool -S data for us.
+
+>>>> As the other side of the link is an Juniper, I'm not quite sure how I
+>>>> would gather the same data from it as it doesn't have ethtool?
+>>>>
+>>>> I have also somewhat given up hope on it working on VyOS and instead I
+>>>> am using OPNsense for the moment but I still have VyOS installed as
+>>>> well.
+
+>>> I did verify that the grep doesn't yield any results on the VyOS box
+>>> and all of the data returned has an value of 0. Paste of which is here:
+>>> https://p.kapsi.fi/?4a82cedb4f4801ec#DcEgFMFK7cH13EqypsY4ZaHS5taeA1zXevmmTSVW3P9x
 >>>
->>> lenovo laptop boots fine under 6.7rc1 and older including 6.6.2 stable.
->>> but not for 6.7 rc2 or rc3.
->>>
->>> It has a intel 7260 (rev 3) wireless and :
->>>
->>> cpu family    : 6
->>> model        : 60
->>> model name    : Intel(R) Core(TM) i7-4800MQ CPU @ 2.70GHz
->>> stepping    : 3
->>> microcode    : 0x28
->>>
->>>
->>> As of 6.7 rc2 / rc3 it crashes towards the end of boot bringing up 
->>> services
->>> -  some parts of crash scrolled off the screen so I apologize if this
->>> (manually transcribed) trace didn't catch the first part.
->>>
->>> I did a git bisect between rc1 and rc2 but was unable to reproduce 
->>> the crash
->>> for some reason. (I did not do make clean between each bisects).
->>>
->>> During the bisect it booted every time, but networking was not 
->>> functional
->>> for any of the bisects.
->>>
->>> Hope it's okay to report even though git bisect didn't get anywhere.
->>>
->>> Gene
->>>
->>> This is the what I got from screen :
->>>
->>> CS: 0010 DS: 000 ES: 0000 CR0: 0000000080050033
->>> CR2: 00007f30cf49ba38 CR3: 000000025b620004 CR4: 00000000001706f0
->>> Call Trace:
->>>   <IRQ>
->>>   ? die_addr+0x36/0x90
->>>   ? exc_general_protection+0x1c5/0x430
->>>   ? asm_exc_gemeral_protection+0x26/0x30
->>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
->>>   ? __kmem_cache_alloc_node+0x1d5/0x2b0
->>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
->>>   ? iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
->>>   __kmalloc_node_track_caller+0x51/0x160
->>>   kmemdup+0x20/0x50
->>>   iwl_phy_db_set_section+0xd6/0x1f0 [iwlwifi]
->>>   iwl_wait_phy_db_entry+0x2f/0x40 [iwlmvm]
->>>   iwl_notification_wait+0xb0/0xf0 [iwlwifi]
->>>   iwl_mvm_rx_common+0x8e/0x320 [iwlwifi]
->>>   iwl_pcie_napi_poll+0x2d/0x150 [iwlwifi]
->>>   __napi_poll+0x2b/0x1c0
->>>   net_rx_action+0x2b4/0x320
->>>   __do_softirq+0xff/0x339
->>>   net_rx_action+0x2b4/0x320
->>>   __do_softirq.part.0+0x88/0xa0
->>> </IRQ>
->>> <TASK>
->>> __local_bh_enable_ip+0x91/0xa0
->>> iwl_pcie_irq_handler+0x58d/0xc40 [iwlwifi]
->>> ? __pfx_irq_thread_fn+0x10/0x10
->>> irq_thread_fn+0x23/0x60
->>> irq_thread+0xfe/0x60
->>> ? __pfx_irq_thread_dtor+0x10/0x10
->>> ? __pfx_irq_thread+0x10/0x10
->>> kthread+0xfa/0x130
->>> ? pff_kthread+0x10/0x10
->>> ret_from_fork+0x34/0x50
->>> ? __pfx_kthread+0x10/0x10
->>> ret_from_fork_asm+0x1b/0x30
->>
->> Do you have any full system logs that can be attached?
->>
->> Anyway, thanks for the regression report. I'm adding it to regzbot:
->>
->> #regzbot ^introduced: v6.7-rc1..v6.7-rc2
->>
+>>> I really think something weird is going on with the driver in Linux as
+>>> otherwise the same exact config on Juniper wouldn't work there either.
+>>> The VyOS box also says that it's unable to modify autoneg settings, or
+>>> speed/duplex of the interface.
+
+>> It has been  verified that the driver in kernel version 5.4.255
+>> seems to work aka 1.3 VyOS.  Post from another user in the same
+>> thread about it:
+>> https://forum.vyos.io/t/10g-sfp-trouble-with-linking-intel-x553/12253/46
+>> 
+>> I have also verified that the out-of-tree ixgbe driver does work,
+>> but in-kernel doesn't in kernel 6.1.58.
+>> 
+>> Please share these findings with the correct Intel team so that
+>> this could be fixed.
+
+> I came across this very similar issue when upgrading our networking gear
+> from kernel 5.15 to 6.1. Our 10G link fails with the in-tree 6.1 ixgbe
+> driver but works with the out-of-tree 5.x versions. I found that my link
+> issues were related to this commit:
 > 
-> journalctl -k for 6.6.2 and the last bisect
+> ixgbe: Manual AN-37 for troublesome link partners for X550 SFI
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.63&id=565736048bd5f9888990569993c6b6bfdf6dcb6d
 > 
-> gene
+> Specifically, our 10G link works when both sides of the fiber are
+> running the in-tree 6.1 ixgbe driver with this autonegotiation change.
+> Our link also works when both sides are running the 5.x ixgbe drivers
+> without this commit. It fails, however, when only one side has this
+> commit. Our current setup compiles the in-tree 6.1 ixgbe driver with
+> this commit reverted, for compatibility with our varying hardware.
 > 
+> I would appreciate it if anyone can cross-check my claim with their
+> hardware as well. Also, would anyone be able to help explain what some
+> of those registers and reg_val being written are doing?
 
-6.6.3 crashes for me same way - also an intel NUC also crashes with 
-6.6.3 buty works on 6.6.2. Will take a while before I get additional 
-info on the latter box.
-
-gene
-
-
+Thank you for mentioning the culprit. That commit is present since 
+v6.1-rc1. I am adding the regression folks.
 
 
+Kind regards,
+
+Paul
