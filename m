@@ -1,130 +1,162 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505E17460
-	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 07:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA52101F0
+	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 08:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhI6j9s5"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1ce28faa92dso49609375ad.2
-        for <regressions@lists.linux.dev>; Tue, 28 Nov 2023 23:08:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701241699; x=1701846499; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zGeQs6K6JZs7HzSAt9g8E46vii3UWtn7mk9WYlHcgCc=;
-        b=XhI6j9s5RoXrJalKobu72NuVLeauU3ynFeF6KoHpPEM5vj0TqvKsbD3NKqZk2ij/Ny
-         xgt6sEjZDJv6RdHCVD+BSYwf8s+Ouc0/kF9mEZ4cwqJjmH4yfrOEVSqiJimWyQIqV8pT
-         G/7swTg9f+6+3CSwG0VwOmEjmZclaBer2u1qKkjXlfLt0Icav5sGr/mTDZKSLnQbr8s9
-         SzPrIguwMvDRL7+ZS6xt2mY7onhFkzn8xSNSQRlaqtWmO18fjbsRPwyL3rVWmcTEKUMY
-         mzcjhqHxZv5RFT0zkaManwS79McxWdziccdPuMyB6HY24UzjBOyz2EzKCUaC7+gRw7aL
-         TPHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701241699; x=1701846499;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zGeQs6K6JZs7HzSAt9g8E46vii3UWtn7mk9WYlHcgCc=;
-        b=d2BpczI+oy0wY6maQhv7cUhoqztQPCa17Vj2lrn1x4e25N0fCIFWvveYP1uvvUq+dM
-         6JXH1uwE8/P2DBpHsp+ObFARocP0wovSBpgJn3eHR1j1rYpK76OjuURbZMN94XT5qahU
-         VIpXIXSTNIfsR/4+Fm2Os1H3cbB533mHuPqAEopMAJrs5UDXy8vye1ZwRsXdiqVSsepV
-         G1HCm5XMIJK+7cJQtwHKEfzsi54SXjMQs0aMw8RInMZLOdT/SOpD1dUtxZkrYBhctB/i
-         h1SO+H5R0cMscTDm3Ng+VtOIN/WpEDwT7/DFBSfv/ZJacUmrBF7J7W6+5csXi4SfICU+
-         Ag0A==
-X-Gm-Message-State: AOJu0Yz8dkyDvFTMX9tHqI5O8tHWw9iM2tMUKVvuyYErEVHD366pRzvQ
-	di3LYORU42T00Y+itlE4La/+HydwIrcYuA==
-X-Google-Smtp-Source: AGHT+IEmtE4d2YHUZP8MvCwwcIJmwTKIdukzqmgpzHn2Y8zqkaylHrbzGhsPwsdGJsq45PisO4mpEA==
-X-Received: by 2002:a17:902:c1cb:b0:1cc:6a09:a489 with SMTP id c11-20020a170902c1cb00b001cc6a09a489mr15604676plc.33.1701241699281;
-        Tue, 28 Nov 2023 23:08:19 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170902c14200b001c755810f89sm11423722plj.181.2023.11.28.23.08.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 23:08:17 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 2040C10205C74; Wed, 29 Nov 2023 14:08:13 +0700 (WIB)
-Date: Wed, 29 Nov 2023 14:08:13 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Chris Mason <clm@fb.com>, Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: btrfs: super.c:416:25: error: 'ret' undeclared (first use in
- this function); did you mean 'net'?
-Message-ID: <ZWbjXV85zDXen_YH@archie.me>
-References: <CA+G9fYvbCBUCkt-NdJ7HCETCFrzMWGnjnRBjCsw39Z_aUOaTDQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NOfwYpFJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Fajihkt2"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1B7172191E;
+	Wed, 29 Nov 2023 08:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1701245331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ff6pAJpcX3l7MPwnKq6UwMRVAXT7uHWdW8qXvtQnSOM=;
+	b=NOfwYpFJNcsLFFNezw3nE+validjAfo58PcPGDSRV0buD137yKHXFJ7G92GDcPWj4szyoz
+	dtLZMMYPXoXbO9yVEL4dekjRADnKnq7YvzHQ0I+GI0CEakOC5fxWOFjq0TW7+k6VEeBAe5
+	ES/3+v9IiMm+o8KAvr3OVolM8LexlxA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1701245331;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ff6pAJpcX3l7MPwnKq6UwMRVAXT7uHWdW8qXvtQnSOM=;
+	b=Fajihkt29yGkLJ/h1MKUkmz5ITB1D575FcaVndQTfOxzbg06bVbgWVGTeDxiW161xs897u
+	PF+jaL1D0JtY53Ag==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E6E561377E;
+	Wed, 29 Nov 2023 08:08:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id b1IhJY7xZmWkNwAAn2gu4w
+	(envelope-from <colyli@suse.de>); Wed, 29 Nov 2023 08:08:46 +0000
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IDRMR4pqBVuyAaoB"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvbCBUCkt-NdJ7HCETCFrzMWGnjnRBjCsw39Z_aUOaTDQ@mail.gmail.com>
-
-
---IDRMR4pqBVuyAaoB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.200.91.1.1\))
+Subject: Re: block/badblocks.c warning in 6.7-rc2
+From: Coly Li <colyli@suse.de>
+In-Reply-To: <562a2442-d098-4972-baa1-5a843e06b180@gmail.com>
+Date: Wed, 29 Nov 2023 16:08:25 +0800
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Block Devices <linux-block@vger.kernel.org>,
+ Linux RAID <linux-raid@vger.kernel.org>,
+ Linux bcachefs <linux-bcachefs@vger.kernel.org>,
+ Xiao Ni <xni@redhat.com>,
+ Geliang Tang <geliang.tang@suse.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ Song Liu <song@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Janpieter Sollie <janpieter.sollie@edpnet.be>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <C8305655-3749-411B-A696-E07E95882215@suse.de>
+References: <562a2442-d098-4972-baa1-5a843e06b180@gmail.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+X-Mailer: Apple Mail (2.3774.200.91.1.1)
+X-Spam-Flag: NO
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.15 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-1.35)[90.51%];
+	 FROM_HAS_DN(0.00)[];
+	 MV_CASE(0.50)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-0.989];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Score: -2.15
 
-On Tue, Nov 28, 2023 at 05:55:51PM +0530, Naresh Kamboju wrote:
-> Following x86 and i386 build regressions noticed on Linux next-20231128 t=
-ag.
->=20
-> Build log:
-> -----------
-> fs/btrfs/super.c: In function 'btrfs_parse_param':
-> fs/btrfs/super.c:416:25: error: 'ret' undeclared (first use in this
-> function); did you mean 'net'?
->   416 |                         ret =3D -EINVAL;
->       |                         ^~~
->       |                         net
-> fs/btrfs/super.c:416:25: note: each undeclared identifier is reported
-> only once for each function it appears in
-> fs/btrfs/super.c:417:25: error: label 'out' used but not defined
->   417 |                         goto out;
->       |                         ^~~~
-> make[5]: *** [scripts/Makefile.build:243: fs/btrfs/super.o] Error 1
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202311=
-28/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/log
->=20
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202311=
-28/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/details/
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54ID51=
-BFjRBS06YQ3U/
-> - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54ID51B=
-FjRBS06YQ3U/config
->=20
 
-Is it W=3D1 build? I can't reproduce on btrfs tree with
-CONFIG_BTRFS_FS_POSIX_ACL=3Dy and without W=3D1.
+
+> 2023=E5=B9=B411=E6=9C=8829=E6=97=A5 07:47=EF=BC=8CBagas Sanjaya =
+<bagasdotme@gmail.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> Hi,
+>=20
+> I notice a regression report that is rather well-handled on Bugzilla =
+[1].
+> Quoting from it:
+>=20
+>>=20
+>> when booting from 6.7-rc2, compiled with clang, I get this warning on =
+one of my 3 bcachefs volumes:
+>> WARNING: CPU: 3 PID: 712 at block/badblocks.c:1284 badblocks_check =
+(block/badblocks.c:1284)=20
+>> The reason why isn't clear, but the stack trace points to an error in =
+md error handling.
+>> This bug didn't happen in 6.6
+>> there are 3 commits in 6.7-rc2 which may cause them,
+>> in attachment:
+>> - decoded stacktrace of dmesg
+>> - kernel .config
+>=20
+> The culprit author then replied:
+>=20
+>> The warning is from this line of code in _badblocks_check(),
+>> 1284         WARN_ON(bb->shift < 0 || sectors =3D=3D 0);
+>>=20
+>> It means the caller sent an invalid range to check. =46rom the oops =
+information,
+>> "RDX: 0000000000000000" means parameter 'sectors' is 0.
+>>=20
+>> So the question is, why does md raid code send a 0-length range for =
+badblocks check? Is this behavior on purpose, or improper?
+>> ...
+>> IMHO, it doesn't make sense for caller to check a zero-length LBA =
+range. The warning works as expect to detect improper call to =
+badblocks_check().
+>=20
+> See Bugzilla for the full thread and attached decoded dmesg and kernel =
+config.
+>=20
+> Anyway, I'm adding this regression to regzbot:
+>=20
+> #regzbot introduced: 3ea3354cb9f03e =
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218184
+> #regzbot title: badblocks_check regression (md error handling) on =
+bcachefs volume
+>=20
+> Thanks.
+>=20
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218184
+
+It seems the improved bad blocks code caught a zero-size bio request =
+from upper layer, this improper behavior was silently neglected before. =
+It might be too early or simple to decide this is a regression, =
+especially Janpieter closes the report for now.
 
 Thanks.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Coly Li
 
---IDRMR4pqBVuyAaoB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZWbjWQAKCRD2uYlJVVFO
-o/9PAQCExT+hJHio+2zC8X6ghL5ooF1kKAJVuc2D/2Vtwh3/hgEA45wQKlrh9VU2
-WWNUC4riNE+70XRP2h8xpQoiRBv84Qs=
-=fwJk
------END PGP SIGNATURE-----
-
---IDRMR4pqBVuyAaoB--
