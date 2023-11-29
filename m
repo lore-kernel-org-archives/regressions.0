@@ -1,262 +1,92 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716B23B2B1
-	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 16:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FB85B5DE
+	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 17:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZxLNavA"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-41cc537ed54so37726251cf.2
-        for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 08:41:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701276111; x=1701880911; darn=lists.linux.dev;
-        h=in-reply-to:autocrypt:from:references:cc:to:content-language
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Fjs3Okyq9EWbreP6AOnF4Rr0g4Cepv9m/ouV8NW/+O4=;
-        b=KZxLNavA/WRxRXf20yU6suXDPD8SMHzqz2SrlrDUXTgzGdWjSM1c8FDr+mGHyy2ucN
-         ZnxHUwmrTNaP+rCn6lkmXpQ577zAJP+/+xhgLX02WhFHZD6DYBL/OZIdtFVqakFgPJ6f
-         J1JJG40HKxLYKz9+glAl91ShlqMVQhAkTAFr1loiiVFCp1qEqy10Vs7kYy+RF+g5fa2C
-         oXi9a+rAcdNdmRqly5h3+i7tSyrPcnJwlnfkLZ8cc3m24tQiKNLvv+JNuSDe+BRCdA/0
-         CnjsSua0+LeQJXZ9wJwjcyL3neN2QUTEK0dDnumnlx4/KUiuHCRsH/z4q5aGu8T8Ef4W
-         pV3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701276111; x=1701880911;
-        h=in-reply-to:autocrypt:from:references:cc:to:content-language
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fjs3Okyq9EWbreP6AOnF4Rr0g4Cepv9m/ouV8NW/+O4=;
-        b=SYJ+shFRYB/yi+Mq6gw2RluwX8VCrXEMzhRWP0kidPOoPNNUAaPLz4JTaoQ6pL2Gxe
-         RHxlBpvHIyXkOvr3NNXzA/uAzylZpGoaY8fHDDh/jw9/nSelT/G5aJhCcY31z2QoYLQU
-         6r4QIQPuTUrV3xvG8OcEVeb+xGwYVm/uibnzw2gDKeE8wTsmaYrxoukH4Fx1ShiR2Pis
-         N+IqdU6I+ZDEhsFPOCFqDTymB4LaY9ZgUMYUH6j06GD5noWIhYAk6/Za3WHtyIqiXtPl
-         c/+ZxcPvUJkzgF0bWAKUPPO+60FT6zEikkiLsdIHJqqPoZ0LwL7/sThe+kTkgo8uozM1
-         xANA==
-X-Gm-Message-State: AOJu0YxC6ZDvduQQ65kyD+P67RplaGiySzwovu22u6eXtUQLt5UN5DWB
-	sTWDtfEmYTJBZQf57pJFW88=
-X-Google-Smtp-Source: AGHT+IHJLt6t2SBXVcMOy+x4u9k4HCGdsvez9v81S9XkJIrlzx7UuYuSel6DeNSKzD86cKYjhVoQ+Q==
-X-Received: by 2002:a05:622a:4c0e:b0:423:d75b:2b62 with SMTP id ey14-20020a05622a4c0e00b00423d75b2b62mr8468314qtb.51.1701276111101;
-        Wed, 29 Nov 2023 08:41:51 -0800 (PST)
-Received: from [192.168.2.14] ([76.65.20.140])
-        by smtp.gmail.com with ESMTPSA id fc21-20020a05622a489500b00423e6885152sm909995qtb.75.2023.11.29.08.41.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 08:41:50 -0800 (PST)
-Message-ID: <9595b8bf-e64d-4926-9263-97e18bcd7d05@gmail.com>
-Date: Wed, 29 Nov 2023 11:41:40 -0500
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="QMINgx4Y";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="IQeYAn+O"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.prv.sapience.com (srv8.prv.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id 554F8480A86;
+	Wed, 29 Nov 2023 12:53:29 -0500 (EST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1701280409;
+ h=message-id : date : mime-version : subject : from : to : cc :
+ references : in-reply-to : content-type : content-transfer-encoding :
+ from; bh=6+Ojpcb+Wse384xeZGnnHJV8BbY5iiqktcSBQCCmkBQ=;
+ b=QMINgx4YuStDwIUwKAGB1eNdY3BiPLPMrXnhCLkR3b3+/lAbNuD+ePoNdCGMShFySkYm/
+ TbHHteD51Anw5SWDA==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1701280409;
+	cv=none; b=cvrKAL/1EzuglKy41A0UsjZ//eTlZ6EBgR944Cs3Ez2YKxhfTxDf3K/xJP0ODL/0RWOVo4XBqEUgR7+qqPTTzj5ds9P22ueigiB4H5R3fvj50JAOpp1zl544qfunr2vZNLmmRWSzSX10QfdYhN0SoIaE2SDSwL7HaIRBRLztS4+EDSEXS+2Zz/9amu/aN6fMeOjAtTM+BuLVUxxF+GqCd94NotWsOeOUBgLy3Crrz4Hv/3DM3/wcUgCdK+B07R6oKFFJ7M5Xwe/qfs70BeeLWfoKjxNeO9TJ9DrL3NZdU3BJwqkBmnqQGPYEpo0MKA7IUvrezUgyO1usTnqqMnoJaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1701280409; c=relaxed/simple;
+	bh=90HoYer8zpjhGw2nVpjHPxToGqj12SWVsujnAUANBKE=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:Content-Language:From:To:Cc:References:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=wL7fzyIdCzw1DElUOTdwON/1F7FwG96pBd3qIaMBdxSzZGxZyciQpUqllx6Bp3Tjuyt3S0bDoEqX7B1qz23XU/thKapzzy85qmucMXu/nCV1LYoE8dIxMT9RklGT5v8R43d8VDe+54fdvkf9aEaZxsFGKz5LNTqPLM/EqqyKpIwrLgS26XJ3VILS5GW8DugvGJyOaYjiODI/OFqbhof9I8OjBJow1RTDp3+eQsk9EI6iHb1IBjNev64rSkE5pH18+iPwatBQk7ooOyaoQVpisRO+S5gYAPMx+N9J1YZNK8SG06b33bGBMjr/NCuKCZ43n6Z+mfbvMCSK6H+oVK2oig==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1701280409;
+ h=message-id : date : mime-version : subject : from : to : cc :
+ references : in-reply-to : content-type : content-transfer-encoding :
+ from; bh=6+Ojpcb+Wse384xeZGnnHJV8BbY5iiqktcSBQCCmkBQ=;
+ b=IQeYAn+O9BNhmRfBf+F6t5ROSgM76eKB7kUnG4XWuiVdEZAs30gpmRQ6peaAZaHtkDBhs
+ bnBRnQ2OtPpjYq4qkqBakeI1F3jFY82JUFB+MYt/a9E/uQ9oN+tsFo3t9yZiwPTbL3rCRmW
+ 2fr3YbEYbGyRsvDqW5v+j4gKgoRKaHAHkBGwa3IUyPRoKE5gpiTgTHd95XsRToIEgii8lXP
+ WUjJxb9UE3nTgfNcehI9EsB3wbMnmcnlU4PVFluHf8AcWHgbcy+om8YkdLp6/5ezaX1Cj3+
+ 3tv0ZuyJ8bom1v6wJ+8BZCzMJh/M9BPAYErqOapDtLISy7n2yFoG3bsNhzDA==
+Message-ID: <2ce6a24f-fc9b-45d2-8a11-73a3e69ffa13@sapience.com>
+Date: Wed, 29 Nov 2023 12:53:28 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101
- Thunderbird/115.5.1
-Subject: Re: Radeon regression in 6.6 kernel
-Content-Language: en-CA, en-US
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Phillip Susi <phill@thesusis.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- linux-kernel@vger.kernel.org,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Danilo Krummrich <dakr@redhat.com>
-References: <87edgv4x3i.fsf@vps.thesusis.net>
- <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
- <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
- <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com>
- <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
- <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
- <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
- <87jzq2ixtm.fsf@vps.thesusis.net>
- <CADnq5_Ou-MVVm0rdWDmDnJNLkWUayXzO26uCEtz3ucNa4Ghy2w@mail.gmail.com>
- <95fe9b5b-05ce-4462-9973-9aca306bc44f@gmail.com>
- <CADnq5_MYEWx=e1LBLeVs0UbR5_xEScjDyw_-75mLe8RAMnqh6g@mail.gmail.com>
- <CADnq5_OC=JFpGcN0oGbTF5xYEt4X3r0=jEY6hJ12W8CzYq1+cA@mail.gmail.com>
-From: Luben Tuikov <ltuikov89@gmail.com>
-Autocrypt: addr=ltuikov89@gmail.com; keydata=
- xjMEZTohOhYJKwYBBAHaRw8BAQdAWSq76k+GsENjDTMVCy9Vr4fAO9Rb57/bPT1APnbnnRHN
- Ikx1YmVuIFR1aWtvdiA8bHR1aWtvdjg5QGdtYWlsLmNvbT7CmQQTFgoAQRYhBJkj7+VmFO9b
- eaAl10wVR5QxozSvBQJlOiE6AhsDBQkJZgGABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheA
- AAoJEEwVR5QxozSvSm4BAOwCpX53DTQhE20FBGlTMqKCOQyJqlMcIQ9SO1qPWX1iAQCv3vfy
- JwktF7REl1yt7IU2Sye1qmQMfJxdt9JMbMNNBs44BGU6IToSCisGAQQBl1UBBQEBB0BT9wSP
- cCE8uGe7FWo8C+nTSyWPXKTx9F0gpEnlqReRBwMBCAfCfgQYFgoAJhYhBJkj7+VmFO9beaAl
- 10wVR5QxozSvBQJlOiE6AhsMBQkJZgGAAAoJEEwVR5QxozSvSsYA/2LIFjbxQ2ikbU5S0pKo
- aMDzO9eGz69uNhNWJcvIKJK6AQC9228Mqc1JeZMIyjYWr2HKYHi8S2q2/zHrSZwAWYYwDA==
-In-Reply-To: <CADnq5_OC=JFpGcN0oGbTF5xYEt4X3r0=jEY6hJ12W8CzYq1+cA@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------UyehoVd0FbltVXpXzUgljOtM"
+User-Agent: Mozilla Thunderbird
+Subject: Re: crash with 6.7 rc2 and rc3
+Content-Language: en-US
+From: Genes Lists <lists@sapience.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, tglx@linutronix.de,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ gregory.greenman@intel.com, kvalo@kernel.org,
+ Linux Wireless <linux-wireless@vger.kernel.org>
+Cc: Linux Regressions <regressions@lists.linux.dev>
+References: <c46a6462-8263-455c-a6ea-1860020f5fab@sapience.com>
+ <ZWV7JworMrjHJHsO@archie.me>
+ <cf2dcc97-845d-4860-be4d-5822d2ebbfca@sapience.com>
+ <022c67aa-b90a-4756-8725-5f7fba7dc780@sapience.com>
+In-Reply-To: <022c67aa-b90a-4756-8725-5f7fba7dc780@sapience.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------UyehoVd0FbltVXpXzUgljOtM
-Content-Type: multipart/mixed; boundary="------------0XZomOJokaOIq0ur7sjc7Zhs";
- protected-headers="v1"
-From: Luben Tuikov <ltuikov89@gmail.com>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Phillip Susi <phill@thesusis.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- linux-kernel@vger.kernel.org,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- dri-devel@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Danilo Krummrich <dakr@redhat.com>
-Message-ID: <9595b8bf-e64d-4926-9263-97e18bcd7d05@gmail.com>
-Subject: Re: Radeon regression in 6.6 kernel
-References: <87edgv4x3i.fsf@vps.thesusis.net>
- <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
- <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
- <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com>
- <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
- <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com>
- <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
- <87jzq2ixtm.fsf@vps.thesusis.net>
- <CADnq5_Ou-MVVm0rdWDmDnJNLkWUayXzO26uCEtz3ucNa4Ghy2w@mail.gmail.com>
- <95fe9b5b-05ce-4462-9973-9aca306bc44f@gmail.com>
- <CADnq5_MYEWx=e1LBLeVs0UbR5_xEScjDyw_-75mLe8RAMnqh6g@mail.gmail.com>
- <CADnq5_OC=JFpGcN0oGbTF5xYEt4X3r0=jEY6hJ12W8CzYq1+cA@mail.gmail.com>
-In-Reply-To: <CADnq5_OC=JFpGcN0oGbTF5xYEt4X3r0=jEY6hJ12W8CzYq1+cA@mail.gmail.com>
-
---------------0XZomOJokaOIq0ur7sjc7Zhs
-Content-Type: multipart/mixed; boundary="------------X4lhUOpMG3SysAtmJ6e16SnL"
-
---------------X4lhUOpMG3SysAtmJ6e16SnL
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 2023-11-29 10:22, Alex Deucher wrote:
-> On Wed, Nov 29, 2023 at 8:50=E2=80=AFAM Alex Deucher <alexdeucher@gmail=
-=2Ecom> wrote:
->>
->> On Tue, Nov 28, 2023 at 11:45=E2=80=AFPM Luben Tuikov <ltuikov89@gmail=
-=2Ecom> wrote:
->>>
->>> On 2023-11-28 17:13, Alex Deucher wrote:
->>>> On Mon, Nov 27, 2023 at 6:24=E2=80=AFPM Phillip Susi <phill@thesusis=
-=2Enet> wrote:
->>>>>
->>>>> Alex Deucher <alexdeucher@gmail.com> writes:
->>>>>
->>>>>>> In that case those are the already known problems with the schedu=
-ler
->>>>>>> changes, aren't they?
->>>>>>
->>>>>> Yes.  Those changes went into 6.7 though, not 6.6 AFAIK.  Maybe I'=
-m
->>>>>> misunderstanding what the original report was actually testing.  I=
-f it
->>>>>> was 6.7, then try reverting:
->>>>>> 56e449603f0ac580700621a356d35d5716a62ce5
->>>>>> b70438004a14f4d0f9890b3297cd66248728546c
->>>>>
->>>>> At some point it was suggested that I file a gitlab issue, but I to=
-ok
->>>>> this to mean it was already known and being worked on.  -rc3 came o=
-ut
->>>>> today and still has the problem.  Is there a known issue I could tr=
-ack?
->>>>>
+On 11/28/23 14:56, Genes Lists wrote:
+> On 11/28/23 05:39, Genes Lists wrote:
+>> On 11/28/23 00:31, Bagas Sanjaya wrote:
+>>> On Mon, Nov 27, 2023 at 03:55:37PM -0500, Genes Lists wrote:
 >>>>
->>>> At this point, unless there are any objections, I think we should ju=
-st
->>>> revert the two patches
->>> Uhm, no.
->>>
->>> Why "the two" patches?
->>>
->>> This email, part of this thread,
->>>
->>> https://lore.kernel.org/all/87r0kircdo.fsf@vps.thesusis.net/
->>>
->>> clearly states that reverting *only* this commit,
->>> 56e449603f0ac5 drm/sched: Convert the GPU scheduler to variable numbe=
-r of run-queues
->>> *does not* mitigate the failed suspend. (Furthermore, this commit doe=
-sn't really change
->>> anything operational, other than using an allocated array, instead of=
- a static one, in DRM,
->>> while the 2nd patch is solely contained within the amdgpu driver code=
-=2E)
->>>
->>> Leaving us with only this change,
->>> b70438004a14f4 drm/amdgpu: move buffer funcs setting up a level
->>> to be at fault, as the kernel log attached in the linked email above =
-shows.
->>>
->>> The conclusion is that only b70438004a14f4 needs reverting.
->>
->> b70438004a14f4 was a fix for 56e449603f0ac5.  Without b70438004a14f4,
->> 56e449603f0ac5 breaks amdgpu.
->=20
-> We can try and re-enable it in the next kernel.  I'm just not sure
-> we'll be able to fix this in time for 6.7 with the holidays and all
-> and I don't want to cause a lot of scheduler churn at the end of the
-> 6.7 cycle if we hold off and try and fix it.  Reverting seems like the
-> best short term solution.
+>>>> lenovo laptop boots fine under 6.7rc1 and older including 6.6.2 stable.
+>>>> but not for 6.7 rc2 or rc3.
+>>>>
+>>>> ...
+> 
+> 
 
-A lot of subsequent code has come in since commit 56e449603f0ac5, as it o=
-pened
-the opportunity for a 1-to-1 relationship between an entity and a schedul=
-er.
-(Should've always been the case, from the outset. Not sure why it was cod=
-ed as
-a fixed-size array.)
+This appears to be build related. Starting from scratch with builds and 
+they are now working fine.
 
-Given that commit 56e449603f0ac5 has nothing to do with amdgpu, and the p=
-roblem
-is wholly contained in amdgpu, and no other driver has this problem, ther=
-e is
-no reason to have to "churn", i.e. go back and forth in DRM, only to cove=
-r up
-an init bug in amdgpu. See the response I just sent in @this thread:
-https://lore.kernel.org/r/05007cb0-871e-4dc7-af58-1351f4ba43e2@gmail.com
+My sincere apologies - please ignore/close this as (silly) user error.
 
-And it's not like this issue is unknown. I first posted about it on 2023-=
-10-16.=20
+thanks
 
-Ideally, amdgpu would just fix their init code.
---=20
-Regards,
-Luben
+gene
 
---------------X4lhUOpMG3SysAtmJ6e16SnL
-Content-Type: application/pgp-keys; name="OpenPGP_0x4C15479431A334AF.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x4C15479431A334AF.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEZTohOhYJKwYBBAHaRw8BAQdAWSq76k+GsENjDTMVCy9Vr4fAO9Rb57/bPT1A
-PnbnnRHNIkx1YmVuIFR1aWtvdiA8bHR1aWtvdjg5QGdtYWlsLmNvbT7CmQQTFgoA
-QRYhBJkj7+VmFO9beaAl10wVR5QxozSvBQJlOiE6AhsDBQkJZgGABQsJCAcCAiIC
-BhUKCQgLAgQWAgMBAh4HAheAAAoJEEwVR5QxozSvSm4BAOwCpX53DTQhE20FBGlT
-MqKCOQyJqlMcIQ9SO1qPWX1iAQCv3vfyJwktF7REl1yt7IU2Sye1qmQMfJxdt9JM
-bMNNBs44BGU6IToSCisGAQQBl1UBBQEBB0BT9wSPcCE8uGe7FWo8C+nTSyWPXKTx
-9F0gpEnlqReRBwMBCAfCfgQYFgoAJhYhBJkj7+VmFO9beaAl10wVR5QxozSvBQJl
-OiE6AhsMBQkJZgGAAAoJEEwVR5QxozSvSsYA/2LIFjbxQ2ikbU5S0pKoaMDzO9eG
-z69uNhNWJcvIKJK6AQC9228Mqc1JeZMIyjYWr2HKYHi8S2q2/zHrSZwAWYYwDA=3D=3D
-=3DqCaZ
------END PGP PUBLIC KEY BLOCK-----
-
---------------X4lhUOpMG3SysAtmJ6e16SnL--
-
---------------0XZomOJokaOIq0ur7sjc7Zhs--
-
---------------UyehoVd0FbltVXpXzUgljOtM
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSZI+/lZhTvW3mgJddMFUeUMaM0rwUCZWdpxAUDAAAAAAAKCRBMFUeUMaM0rxMG
-AP0VKIwpMtTXzjbkhP+YlAOkqgomRWdt1ImVdFZwC6ss/AEA1HV4kiVP2+VGwRtGUUImxMuRwOGE
-gH5ERcUPC6tIlA0=
-=9LNu
------END PGP SIGNATURE-----
-
---------------UyehoVd0FbltVXpXzUgljOtM--
