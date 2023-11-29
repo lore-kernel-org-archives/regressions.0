@@ -1,153 +1,118 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C4418E13
-	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 10:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E698E1B287
+	for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 10:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EO72/gxT"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1cfb4d28c43so34556655ad.1
-        for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 02:05:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyU3Db5X"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-549070a04baso8765586a12.3
+        for <regressions@lists.linux.dev>; Wed, 29 Nov 2023 02:31:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701252328; x=1701857128; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1701253859; x=1701858659; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MpQndnRiODx+tos8fdE4dhL+06RTmhorpUhO5hT0DMc=;
-        b=EO72/gxTCT8SJU/dEYHYxsZ1Q7r51i8slzc+vquXbAEdEBlSEshK+sZmiCdcbu/pqr
-         CrbGwY296Luwoab2/LG1wtIpGrfB0tCK6ceIk7w4kgj8J+h4xDVgj9AxoFYN9DNkpSBP
-         l05ehd7qjpAe7EmbnRbHNylvRSzB/V3E+VTQrMaYyb3qm9Uje6UFsuiIkNMePRb2hPsg
-         XpKj7alkU6ezs0ZNmCEBvQzxR9V8vxjLzyI/j7ioXIdi03y1lxC2dOd5IQkhHZKweXhC
-         Ehm6J4DZ8N7sARv++7bapQCOjg1DJ2E4pZvEKGCMQMHC1wvjIS8a5qE7XA/X69IQPfwr
-         40yw==
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3lAncjJSOOjZiNADXqbSSNgxD1Kx8XP10IMElfbL+LY=;
+        b=WyU3Db5XUzYpGjA039h5WhGAg5WzcNrVEn2so/zheFGVDe9bs8dgbAKRONbuTE9j3T
+         IzcrnpiLmBtesb3+onK8ogWpodd7LLfjJnWmyBQ3at9L8Vpo9Qq8fdNuZVROePrigGBq
+         u+dOFI+QgTIPBPmR+v2wrn07fONdK8JhnUUZ4xqnphR0+g2hpvD1vyoI5nTi21p/QT+Z
+         ZwkaneB3b28DO/AqsaTYv9qABjT5F7ZT6a6QCduAipa8aHFqz305xr+s6jcXztsefVLE
+         wB9nLSkRE9z8ZqbkZ+gYRTA+yx8Ig2dgmr5iGIp1kGmiF7g5Nlwj3L6NJHj0zJP+YMRT
+         53cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701252328; x=1701857128;
+        d=1e100.net; s=20230601; t=1701253859; x=1701858659;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MpQndnRiODx+tos8fdE4dhL+06RTmhorpUhO5hT0DMc=;
-        b=PaVUjUJ5OeKWYtMete79w+kbK17dWltzN5/aPavonb2P4pORwVY4325nzK5/3xXBxK
-         fPaf4KGugpbgWHVXxEDG4ku+m8mVYYLzaZhxHuoJOLP+FEAL+SzV7D8+gGkINiCiynpB
-         OvloyxH6r4kKVZnjRO97aU5SKjXFVxZrH+pfIQFddxHUi3lLUFSWeZVhpbxqvcqP2YfD
-         QBosiRkZZPJpJlesDj5iBasUd8Z/JnPwLgBcous2vYUrY/4Y9eqbFxuGRvKsK75+xpNH
-         wOcw/i/fwvDbmed8YjWRwf9RqaC+JYz+SJwZoDc8fGli/CZVqHSdIoT+jYKQUIYalC5H
-         +pxw==
-X-Gm-Message-State: AOJu0YwJ/2oS0EdqzS3PWZ32xrEjL6/XgO1NRol8s5SO3EsP+mhw8jAv
-	u/suL0GPvbWmqvhFSlhonsU=
-X-Google-Smtp-Source: AGHT+IFHz1EOBr29DpBEQyHQO01oqfVMNvqkP1ezQq262jWCjWECYCTqM2o+9jGXSDx+XO+Xey/PSw==
-X-Received: by 2002:a17:902:f687:b0:1d0:e37:8c14 with SMTP id l7-20020a170902f68700b001d00e378c14mr3871818plg.34.1701252328212;
-        Wed, 29 Nov 2023 02:05:28 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id t8-20020a170902bc4800b001cc131c65besm11862520plz.168.2023.11.29.02.05.26
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3lAncjJSOOjZiNADXqbSSNgxD1Kx8XP10IMElfbL+LY=;
+        b=nrMzVJRa9+u7CMzN92q1MDwRhf8jGIZ3v0zhV9RM7VjQUFwL4KWxtfpJ2HZxS80KRt
+         7UVgaXDzHlTkVOZ2k5OggK5lP/0cN6grG76T+YBssu53pxvKr/ECPH/I7valgBCdKOSo
+         hvCR3FYeJHDx/Zl4g3ycBBGUeNJZe2KE784QNAq1X/HlURR0epi710VhC/bZdi/sQ1I2
+         Ha4/4B7/HY4m4b9BfNVzEeU7JyTpy6DKDPhiixnuIP+83oNV06o3H+4j50lQJCQHYqir
+         gQ3RpqkwhN8vykpLTggAZ0FtTGNXJo1mR/q89VxmxXBFRwdtqE4oT/n6UXGfVuJzWvKk
+         mfBQ==
+X-Gm-Message-State: AOJu0Yzl0VFdeBq8BJcfEVN6s5xvef7pKIES8q2cHPJhN4XF8JHrBPmt
+	1t5Tk9Fq8ljtrCaSToIbM4U=
+X-Google-Smtp-Source: AGHT+IGptUIWmZYcaDGodMJ/aJUrATc3/axoxHWWr7FC5K0fVtF61tB+rOJdv9N5WVOF8xPpsKYW6A==
+X-Received: by 2002:a05:6402:220d:b0:54a:f8d9:8023 with SMTP id cq13-20020a056402220d00b0054af8d98023mr11645670edb.37.1701253859154;
+        Wed, 29 Nov 2023 02:30:59 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id h14-20020aa7c94e000000b00548a57d4f7bsm7241144edt.36.2023.11.29.02.30.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 02:05:27 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id C6DF71140D81A; Wed, 29 Nov 2023 16:58:36 +0700 (WIB)
-Date: Wed, 29 Nov 2023 16:58:36 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Chris Mason <clm@fb.com>, Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: btrfs: super.c:416:25: error: 'ret' undeclared (first use in
- this function); did you mean 'net'?
-Message-ID: <ZWcLTJB8wrLUwuVf@archie.me>
-References: <CA+G9fYvbCBUCkt-NdJ7HCETCFrzMWGnjnRBjCsw39Z_aUOaTDQ@mail.gmail.com>
- <ZWbjXV85zDXen_YH@archie.me>
- <CA+G9fYtByCCzrbM-a4du2b5rJVn_UaCz1HaMZMcBAcfyUBXPSA@mail.gmail.com>
+        Wed, 29 Nov 2023 02:30:58 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 1BE49BE2DE0; Wed, 29 Nov 2023 11:30:58 +0100 (CET)
+Date: Wed, 29 Nov 2023 11:30:58 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Timothy Pearson <tpearson@raptorengineering.com>,
+	regressions <regressions@lists.linux.dev>,
+	Michael Ellerman <mpe@ellerman.id.au>, npiggin <npiggin@gmail.com>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Don't clobber fr0/vs0 during fp|altivec
+ register save
+Message-ID: <ZWcS4uBOUefxZAQY@eldamar.lan>
+References: <1105090647.48374193.1700351103830.JavaMail.zimbra@raptorengineeringinc.com>
+ <42b9fdd7-2939-4ffc-8e18-4996948b19f7@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8g5cYfr1bA2m8oZD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYtByCCzrbM-a4du2b5rJVn_UaCz1HaMZMcBAcfyUBXPSA@mail.gmail.com>
+In-Reply-To: <42b9fdd7-2939-4ffc-8e18-4996948b19f7@kernel.dk>
 
+Hi,
 
---8g5cYfr1bA2m8oZD
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Nov 19, 2023 at 06:14:50AM -0700, Jens Axboe wrote:
+> On 11/18/23 4:45 PM, Timothy Pearson wrote:
+> > During floating point and vector save to thread data fr0/vs0 are clobbered
+> > by the FPSCR/VSCR store routine.  This leads to userspace register corruption
+> > and application data corruption / crash under the following rare condition:
+> > 
+> >  * A userspace thread is executing with VSX/FP mode enabled
+> >  * The userspace thread is making active use of fr0 and/or vs0
+> >  * An IPI is taken in kernel mode, forcing the userspace thread to reschedule
+> >  * The userspace thread is interrupted by the IPI before accessing data it
+> >    previously stored in fr0/vs0
+> >  * The thread being switched in by the IPI has a pending signal
+> > 
+> > If these exact criteria are met, then the following sequence happens:
+> > 
+> >  * The existing thread FP storage is still valid before the IPI, due to a
+> >    prior call to save_fpu() or store_fp_state().  Note that the current
+> >    fr0/vs0 registers have been clobbered, so the FP/VSX state in registers
+> >    is now invalid pending a call to restore_fp()/restore_altivec().
+> >  * IPI -- FP/VSX register state remains invalid
+> >  * interrupt_exit_user_prepare_main() calls do_notify_resume(),
+> >    due to the pending signal
+> >  * do_notify_resume() eventually calls save_fpu() via giveup_fpu(), which
+> >    merrily reads and saves the invalid FP/VSX state to thread local storage.
+> >  * interrupt_exit_user_prepare_main() calls restore_math(), writing the invalid
+> >    FP/VSX state back to registers.
+> >  * Execution is released to userspace, and the application crashes or corrupts
+> >    data.
+> 
+> What an epic bug hunt! Hats off to you for seeing it through and getting
+> to the bottom of it. Particularly difficult as the commit that made it
+> easier to trigger was in no way related to where the actual bug was.
+> 
+> I ran this on the vm I have access to, and it survived 2x500 iterations.
+> Happy to call that good:
+> 
+> Tested-by: Jens Axboe <axboe@kernel.dk>
 
-On Wed, Nov 29, 2023 at 02:29:42PM +0530, Naresh Kamboju wrote:
-> On Wed, 29 Nov 2023 at 12:38, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> >
-> > On Tue, Nov 28, 2023 at 05:55:51PM +0530, Naresh Kamboju wrote:
-> > > Following x86 and i386 build regressions noticed on Linux next-202311=
-28 tag.
-> > >
-> > > Build log:
-> > > -----------
-> > > fs/btrfs/super.c: In function 'btrfs_parse_param':
-> > > fs/btrfs/super.c:416:25: error: 'ret' undeclared (first use in this
-> > > function); did you mean 'net'?
-> > >   416 |                         ret =3D -EINVAL;
-> > >       |                         ^~~
-> > >       |                         net
-> > > fs/btrfs/super.c:416:25: note: each undeclared identifier is reported
-> > > only once for each function it appears in
-> > > fs/btrfs/super.c:417:25: error: label 'out' used but not defined
-> > >   417 |                         goto out;
-> > >       |                         ^~~~
-> > > make[5]: *** [scripts/Makefile.build:243: fs/btrfs/super.o] Error 1
-> > >
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > >
-> > > Links:
-> > >  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20=
-231128/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/log
-> > >
-> > >  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20=
-231128/testrun/21349057/suite/build/test/gcc-13-lkftconfig-kselftest/detail=
-s/
-> > >  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54=
-ID51BFjRBS06YQ3U/
-> > > - https://storage.tuxsuite.com/public/linaro/lkft/builds/2Ymoxor9n54I=
-D51BFjRBS06YQ3U/config
-> > >
-> >
-> > Is it W=3D1 build? I can't reproduce on btrfs tree with
-> > CONFIG_BTRFS_FS_POSIX_ACL=3Dy and without W=3D1.
->=20
-> My config did not set this
-> # CONFIG_BTRFS_FS_POSIX_ACL is not set
+Thanks to all involved!
 
-OK.
+Is this going to land soon in mainline so it can be picked as well for
+the affected stable trees?
 
->=20
-> Do you think the system should auto select the above config as default wh=
-en
-> following config gets enabled ?
->=20
-> CONFIG_BTRFS_FS=3Dm
-> (or)
-> CONFIG_BTRFS_FS=3Dy
->=20
-
-Nope, leave it as is.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---8g5cYfr1bA2m8oZD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZWcLQQAKCRD2uYlJVVFO
-oz05AQDW4tcs+qseWAL5BBtuPRoexDBDprBofv0Ia95ssWcdqgD/Y3FQpjWSjs8q
-d7X5Lsdki4Ydbwkio5K/IdQJQ6O8qAE=
-=xISu
------END PGP SIGNATURE-----
-
---8g5cYfr1bA2m8oZD--
+Regards,
+Salvatore
