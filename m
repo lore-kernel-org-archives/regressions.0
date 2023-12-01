@@ -1,15 +1,19 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AEC156E8
-	for <regressions@lists.linux.dev>; Fri,  1 Dec 2023 08:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r8ypT-0006bQ-TX; Fri, 01 Dec 2023 09:24:56 +0100
-Message-ID: <898f9837-e446-4c2c-affc-333df2486706@leemhuis.info>
-Date: Fri, 1 Dec 2023 09:24:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831641C2A2
+	for <regressions@lists.linux.dev>; Fri,  1 Dec 2023 08:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.183] (ip5f5af6e9.dynamic.kabel-deutschland.de [95.90.246.233])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7DC3461E5FE01;
+	Fri,  1 Dec 2023 09:27:48 +0100 (CET)
+Message-ID: <d095bcbe-af0c-4eb3-99c8-32371136dd2c@molgen.mpg.de>
+Date: Fri, 1 Dec 2023 09:27:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,66 +21,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Requesting your attention and expertise regarding a Tablet/Kernel
- issue
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Jiri Kosina <jkosina@suse.cz>, David Revoy <davidrevoy@protonmail.com>
-Cc: "jason.gerecke@wacom.com" <jason.gerecke@wacom.com>,
- "jose.exposito89@gmail.com" <jose.exposito89@gmail.com>,
- "ilya.ostapyshyn@gmail.com" <ilya.ostapyshyn@gmail.com>,
- Nils Fuhler <nils@nilsfuhler.de>, Ping Cheng <ping.cheng@wacom.com>,
- Peter Hutterer <peter.hutterer@who-t.net>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <kRKTNDYigUSblpNgSuZ2H4dX03Of1yD4j_L9GgbyKXcDqZ67yh5HOQfcd7_83U3jZuQzxpKT3L6FXcRkkZIGdl_-PQF14oIB0QmRSfvpc2k=@protonmail.com>
- <nycvar.YFH.7.76.2311012033290.29220@cbobk.fhfr.pm>
- <877c9bed-181a-4fc0-a876-e17de65c9e4d@leemhuis.info>
-In-Reply-To: <877c9bed-181a-4fc0-a876-e17de65c9e4d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701419102;dacda08a;
-X-HE-SMSGID: 1r8ypT-0006bQ-TX
+Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline kernel
+ 6.6.2+
+Content-Language: en-US
+To: "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, linux-bluetooth@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Zach <zacheryvig@outlook.com>
+References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
+ <ZWl82n695TIC7nUO@archie.me>
+ <115e819b-0271-403c-b034-ef3aebbb85cd@moonlit-rail.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <115e819b-0271-403c-b034-ef3aebbb85cd@moonlit-rail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Dear Kris,
 
-On 02.11.23 08:44, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 01.11.23 20:37, Jiri Kosina wrote:
->> On Wed, 1 Nov 2023, David Revoy wrote:
+
+Am 01.12.23 um 09:19 schrieb Kris Karas (Bug Reporting):
+> Bagas Sanjaya wrote:
+>> Kris Karas (Bug Reporting) wrote:
+>>> I have a regression going from mainline kernel 6.1.62 to 6.1.63, and 
+>>> also
+>>> from kernel 6.6.1 to 6.6.2; I can bisect if patch authors can't 
+>>> locate the
+>>> relevant commit.  In the most recent kernels mentioned, bluetooth won't
+>>> function.
 >>
->>> I am emailing to draw your attention and expertise to a problem I had 
->>> earlier this week with my Xp-Pen Artist 24 Pro display tablet under 
->>> Fedora Linux 38 KDE after a kernel update.
->>>
->>> The second button on my stylus changed from a right-click (which I could 
->>> customise with xsetwacom or any GUI like kcm-tablet) to a button that 
->>> feels 'hardcoded' and now switches the whole device to an eraser mode. 
->>> This makes my main tool unusable.
-> [...]
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
+>> Then please do bisection; without it, nobody will look into this 
+>> properly.
 > 
-> #regzbot ^introduced 276e14e6c3
-> https://www.davidrevoy.com/article995/how-a-kernel-update-broke-my-stylus-need-help
+> As only a few people are reporting this, it must be pretty 
+> hardware-specific (or perhaps Kconfig/firmware specific).  I'll do a 
+> bisect.  A bit too late here in Boston (03:00), and kiddo's birthday 
+> "later today", so will probably get to this on the weekend.
+> 
+>> You may also want to check current mainline (v6.7-rc3) to see if this
+>> regression have already been fixed.
+> 
+> Just tried 6.7.0-rc3, and it is also affected.
+> 
+> I hadn't git-pulled my linux-stable since May, so that gave me a good 
+> chance to test the very latest.  :-)  And conveniently I'm now set for 
+> the bisect.
 
-This thread got long, but from briefly skimming it, it seems like the
-regressions was dealt with somehow and everybody is happy. Please holler
-if I got it wrong, as I hereby remove this from the tracking:
+Nice, that is often the fastest way to fix something.
 
-#regzbot resolve: solution found
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+To avoid the time rebooting the system, you could try to expose the 
+drive to a virtual machine [1].
 
 
+Kind regards,
+
+Paul
+
+
+[1]: 
+https://lore.kernel.org/all/331ae35c-7d48-46fc-c4ae-1e60cb0f3378@molgen.mpg.de/
+      (The failure in the VM was due to another regression in the Linux 
+kernel, so the how-to actually worked for me.)
