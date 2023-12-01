@@ -1,36 +1,15 @@
-Received: from hua.moonlit-rail.com (hua.moonlit-rail.com [45.79.167.250])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABD61A5A1
-	for <regressions@lists.linux.dev>; Fri,  1 Dec 2023 08:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonlit-rail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonlit-rail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="QrKoYOyM";
-	dkim=permerror (0-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="XA/4VWr4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=moonlit-rail.com; s=rsa2021a; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8X/rG85tFwBMLr8RWEkzExxUAraV8iuIXZPdEh5RREQ=; t=1701418745; x=1704010745; 
-	b=QrKoYOyMpRlepv6O2Py0ELH2KVRnfkJha88ct1e68MnNmlAwwevSJ6rmVKSQonYLDXs9HVIEciF
-	EIMVGQAhgdLuK60lvkKWyaqSPfcuWvccTwWYI2rdvu4O68jIgijQJErUQilpgAx/0u2jtAZLZDvKw
-	p3yR/ZZ18A+onAPmajdrWf+of+8X7Mt/Tq6pxRLqrKobQrFxooBXgtf1AXCUAYiC9EKXPh1bvgxuv
-	m2jMEnumQzPITbI6UayknQ5paULaIREuOB7QEhYMKs7giCmOqvm5j0K3+c8BWvf2MXwh7SN78hGOh
-	VOcTzpL48DA/Me3Cl4NvlWNX96p8y426l3Mw==;
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=moonlit-rail.com; s=edd2021a; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8X/rG85tFwBMLr8RWEkzExxUAraV8iuIXZPdEh5RREQ=; t=1701418745; x=1704010745; 
-	b=XA/4VWr4M+GTJRKJX6gBmbxTeyMTLHVp+ASoSfl8upmAdNARAsGWlIA6QNtKdfGp1C5eXxV2rEZ
-	fC2g4PR0IAQ==;
-Message-ID: <115e819b-0271-403c-b034-ef3aebbb85cd@moonlit-rail.com>
-Date: Fri, 1 Dec 2023 03:19:04 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6659A79F0
+	for <regressions@lists.linux.dev>; Fri,  1 Dec 2023 11:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r91pU-0007HQ-To; Fri, 01 Dec 2023 12:37:08 +0100
+Message-ID: <da0efb19-c883-40c8-b284-7eb7f4d3640b@leemhuis.info>
+Date: Fri, 1 Dec 2023 12:37:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,44 +17,63 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline kernel
- 6.6.2+
+Subject: Re: Fwd: Thinkpad X13 AMD: Problems with external monitor wake up
+ after suspend
+Content-Language: en-US, de-DE
 To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Bluetooth <linux-bluetooth@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  Linux Regressions <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Zach <zacheryvig@outlook.com>
-References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
- <ZWl82n695TIC7nUO@archie.me>
-Content-Language: en-US, en-GB
-From: "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
-In-Reply-To: <ZWl82n695TIC7nUO@archie.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Linux AMDGPU <amd-gfx@lists.freedesktop.org>
+Cc: Wayne Lin <wayne.lin@amd.com>, Stylon Wang <stylon.wang@amd.com>,
+ Daniel Wheeler <daniel.wheeler@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>, Oliver Schmidt <oliver@luced.de>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <8da256ea-b069-44f0-9cc2-93482c2f5eec@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <8da256ea-b069-44f0-9cc2-93482c2f5eec@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701430631;4fcffbb3;
+X-HE-SMSGID: 1r91pU-0007HQ-To
 
-Bagas Sanjaya wrote:
-> Kris Karas (Bug Reporting) wrote:
->> I have a regression going from mainline kernel 6.1.62 to 6.1.63, and also
->> from kernel 6.6.1 to 6.6.2; I can bisect if patch authors can't locate the
->> relevant commit.  In the most recent kernels mentioned, bluetooth won't
->> function.
+[CCing stable list and Mario, who submitted this to 6.1.y]
+
+On 01.12.23 01:30, Bagas Sanjaya wrote:
 > 
-> Then please do bisection; without it, nobody will look into this properly.
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> Since kernel version 6.1.57 I have problems with external monitor
+>> wakeup after suspend on Thinkpad X13 AMD Gen2 Notebook.
+>> 
+>> Notebook is in docking station with closed lid. Suspend & Resume.
+>> The external monitor gets no signal. After randomly typing
+>> Ctrl+Alt+Fn for switchung consoles, the monitor at some point gets
+>> signal and is usable again.
+>> 
+>> It worked with kernel 6.1.56.
+>> 
+>> I managed to compile a 6.1.57 kernel and also a 6.1.64 kernel by
+>> reverting the changes from commit ec5fa9 "drm/amd/display: Adjust
+>> the MST resume flow"
+>> (https://github.com/torvalds/linux/commit/ec5fa9fcdeca69edf7dab5ca3b2e0ceb1c08fe9a?diff=split&w=1?diff=split&w=1)
+>> and with this suspend & resume worked like before without any
+>> problems.
+> [...]
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218211
 
-As only a few people are reporting this, it must be pretty 
-hardware-specific (or perhaps Kconfig/firmware specific).  I'll do a 
-bisect.  A bit too late here in Boston (03:00), and kiddo's birthday 
-"later today", so will probably get to this on the weekend.
+We have a small problem here: that error might happen because
+ec5fa9fcdeca69 ("drm/amd/display: Adjust the MST resume flow")
+[v6.6-rc2] contains a bug or because something it needs was not
+backported to 6.1.y.
 
-> You may also want to check current mainline (v6.7-rc3) to see if this
-> regression have already been fixed.
+Maybe one of the developers among the recipients has a idea. Oliver, but
+if none of them replies any time soon, it would be best if you'd check
+if 6.6 (and/or 6.7-rc) is affected as well; and if reverting it there
+fixes it, too.
 
-Just tried 6.7.0-rc3, and it is also affected.
-
-I hadn't git-pulled my linux-stable since May, so that gave me a good 
-chance to test the very latest.  :-)  And conveniently I'm now set for 
-the bisect.
-
-Kris
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
