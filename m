@@ -1,57 +1,41 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDD62F44
-	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 08:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r9LQo-0005Sa-VN; Sat, 02 Dec 2023 09:32:59 +0100
-Message-ID: <b228d624-41b3-417c-b25d-aa9c3818b500@leemhuis.info>
-Date: Sat, 2 Dec 2023 09:32:58 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E79A4418
+	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 23:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SjQSZ12GLz4x5j;
+	Sun,  3 Dec 2023 10:02:54 +1100 (AEDT)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, npiggin <npiggin@gmail.com>, christophe leroy <christophe.leroy@csgroup.eu>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Timothy Pearson <tpearson@raptorengineering.com>
+In-Reply-To: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+Message-Id: <170155803785.146803.11553342425486262629.b4-ty@ellerman.id.au>
+Date: Sun, 03 Dec 2023 10:00:37 +1100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [GIT PULL] firewire fixes for v6.7-rc4
-Content-Language: en-US, de-DE
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
- torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20231202080648.GA34377@workstation.local>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <20231202080648.GA34377@workstation.local>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701505983;f1bd96c3;
-X-HE-SMSGID: 1r9LQo-0005Sa-VN
 
-On 02.12.23 09:06, Takashi Sakamoto wrote:
+On Sun, 19 Nov 2023 09:18:02 -0600, Timothy Pearson wrote:
+> During floating point and vector save to thread data fr0/vs0 are clobbered
+> by the FPSCR/VSCR store routine.
 > 
-> As I noted in pull request for v6.7[1], Linux FireWire subsystem still
-> has an issue of unexpected system reboot in AMD Ryzen machine with a
-> kind of PCI card. Recently I got a help of AMD developer[2] and got some
-> advices to investigate the mechanism of system reboot, but never catch
-> its tail yet... I wish to fix it within the development period for v6.8
-> kernel.
->
-> 
-> [1] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
-> [2] https://lore.kernel.org/lkml/20231128052429.GA25379@workstation.local/
+> [...]
 
-Thx for your efforts on this, much appreciated. It seems more than just
-one or two users are hitting this crash and a fix despite all your
-tremendous efforts it not yet in sight. Hence please allow me to ask:
-would it cause a significant regression for users of 6.5 and later, if
-we'd temporarily revert the culprit and anything depending on it until
-this is solved? Because if not I wonder if we should go down that route,
-even if it's a drastic measure; but then Greg could fix this in soon in
-6.6.y as well.
+Applied to powerpc/fixes.
 
-Ciao, Thorsten
+[1/1] powerpc: Don't clobber fr0/vs0 during fp|altivec register save
+      https://git.kernel.org/powerpc/c/5e1d824f9a283cbf90f25241b66d1f69adb3835b
+
+cheers
