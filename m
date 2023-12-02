@@ -1,15 +1,36 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from hua.moonlit-rail.com (hua.moonlit-rail.com [45.79.167.250])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84693BE5D
-	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 06:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1r9JAL-0004CP-41; Sat, 02 Dec 2023 07:07:49 +0100
-Message-ID: <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
-Date: Sat, 2 Dec 2023 07:07:48 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA50BA53
+	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 06:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonlit-rail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonlit-rail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="DPfoABis";
+	dkim=permerror (0-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="RIPmwQbH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=moonlit-rail.com; s=rsa2021a; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lJ6CLBPmn1Z2D81iRRarPRH80dMiJ6ru3Jjv1I7wNzc=; t=1701499406; x=1704091406; 
+	b=DPfoABisNRE3n26aa7zZssyFWugSjMc6/7/FGKYXNU/8ABhFjX57YTq8BInatWYpVZV++yT7sbh
+	aaj6wiPOuKxbptussw4BCje/4oNVpf/UcHiGfK61HYvkKF1mPrDBvPBFI1ede+q2tAiBPcadTPxoy
+	GxNFN2kI2FABHEWIToTSsZ9bT4VFbTHSwfN3CGzPZgzKaN+FUt7QmS1VBx0aut5AsgVk8c4mix3m1
+	O1y19s9hLwyBxDI2455C3aIXjyl8Ua9VQr8E6QVR33onW6XUDjBd1bR3OPlZJYKIgbmG8uKzmuS2h
+	e0/O8ILVCcO5nFnFXUbgpLWpCWczZF9wfCCA==;
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=moonlit-rail.com; s=edd2021a; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lJ6CLBPmn1Z2D81iRRarPRH80dMiJ6ru3Jjv1I7wNzc=; t=1701499406; x=1704091406; 
+	b=RIPmwQbHp1jIwXjrGbXjcwqlxzk8tljpr/ZQNLNoPIhERBr1VaxcnOdjtaun7K+jfBVWLEb5PwZ
+	vAtvnsbtJCg==;
+Message-ID: <6a710423-e76c-437e-ba59-b9cefbda3194@moonlit-rail.com>
+Date: Sat, 2 Dec 2023 01:43:16 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,62 +38,80 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Fwd: iwlwifi: rfkill locking up kernel 6.5.12, 6.6.2
-Content-Language: en-US, de-DE
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Eliad Peller <eliad@wizery.com>, "John W. Linville"
- <linville@tuxdriver.com>, Gregory Greenman <gregory.greenman@intel.com>,
- Linus Lotz <register+kernelbugzilla@lotz.li>,
- Darrell Enns <darrell@darrellenns.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>
-References: <5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline kernel
+ 6.6.2+
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-bluetooth@vger.kernel.org,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
+ <8d6070c8-3f82-4a12-8c60-7f1862fef9d9@leemhuis.info>
+ <2023120119-bonus-judgingly-bf57@gregkh>
+Content-Language: en-US, en-GB
+From: "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
+In-Reply-To: <2023120119-bonus-judgingly-bf57@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701497282;c61e3182;
-X-HE-SMSGID: 1r9JAL-0004CP-41
 
-Hi!
-
-On 30.11.23 09:23, Bagas Sanjaya wrote:
+Greg KH wrote:
+> On Fri, Dec 01, 2023 at 07:33:03AM +0100, Thorsten Leemhuis wrote:
+>> CCing a few lists and people. Greg is among them, who might know if this
+>> is a known issue that 6.6.4-rc1 et. al. might already fix.
 > 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+> Not known to me, bisection is needed so we can track down the problem
+> please.
+
+And the winner is...
+
+> commit 14a51fa544225deb9ac2f1f9f3c10dedb29f5d2f
+> Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> Date:   Thu Oct 19 13:29:19 2023 +0300
 > 
->> Rfkilling the iwlwifi can lock up my machine, rfkill will not
->> respond and other networking related things (e.g. ip a or ip r) I
->> see this on 6.5.12 and 6.6.2 (fedora kernel). On 6.5.11 it does not
->> lockup AFAICT, but also shows kernel oops. WiFi Hardware: AC 8265
-> 
-> [...]
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218206
-
-TWIMC: More people that seem to be affected by the same problem joined
-the report. And one user performed a bisection on 6.6.y. According to
-that the problem is caused by a 6.6.y-backport of 37fb29bd1f90f1 ("wifi:
-iwlwifi: pcie: synchronize IRQs before NAPI") [v6.7-rc1] from Johannes.
-
-Another reported user also stated that the same problem happens on
-6.7-rc3 as well. No confirmation yet that 37fb29bd1f90f1 causes it
-there, but it seems likely.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-P.S.: Due to the above I'll wrt to regression tracking for now assume
-that 37fb29bd1f90f1 causes the problem.
-
-#regzbot introduced: 37fb29bd1f90f1
+>     xhci: Loosen RPM as default policy to cover for AMD xHC 1.1
+>     
+>     [ Upstream commit 4baf1218150985ee3ab0a27220456a1f027ea0ac ]
+>     
+>     The AMD USB host controller (1022:43f7) isn't going into PCI D3 by default
+>     without anything connected. This is because the policy that was introduced
+>     by commit a611bf473d1f ("xhci-pci: Set runtime PM as default policy on all
+>     xHC 1.2 or later devices") only covered 1.2 or later.
+>     
+> [ snip ]
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index b9ae5c2a2527..bde43cef8846 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -535,6 +535,8 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>         /* xHC spec requires PCI devices to support D3hot and D3cold */
+>         if (xhci->hci_version >= 0x120)
+>                 xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
+> +       else if (pdev->vendor == PCI_VENDOR_ID_AMD && xhci->hci_version >= 0x110)
+> +               xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
+>  
+>         if (xhci->quirks & XHCI_RESET_ON_RESUME)
+>                 xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
 
 
+Huh, OK, I was expecting this to be a patch made to the bluetooth code, 
+as it caused bluetoothd to bomb with "opcode 0x0c03 failed".  But I just 
+verified I did the bisect correctly by backing this two-liner out of 
+vanilla 6.6.3, and bluetooth returned to normal operation.  Huzzah!
 
+Just a brief recap:
 
+This bug appears to be rather hardware-specific, as only a few folks 
+have reported it.  In my case, the hardware is an ASrock "X470 Taichi" 
+motherboard, and its on-board bluetooth hardware, reporting itself as:
+lspci: 0f:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] 
+Zeppelin USB 3.0 xHCI Compliant Host Controller
+lsusb: ID 8087:0aa7 Intel Corp. Wireless-AC 3168 Bluetooth
+
+When Basavaraj's patch is applied (in mainline 6.6.2+), bluetooth stops 
+functioning on my motherboard.
+
+Originally from bugzilla #218142
+
+-- 
+Kris
