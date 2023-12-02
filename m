@@ -1,73 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C3B619B7;
-	Sat,  2 Dec 2023 08:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Mc/5K3pp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BF8C433C7;
-	Sat,  2 Dec 2023 08:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1701504910;
-	bh=jq83GxZf9uvvQ4nhoCC1k6tKxzxInmqnxKl5OtXKEL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mc/5K3ppCatptQLE0W2Rvm+62ek/fHepV1AXqEmy9mwHe41NwTBDdth7yr9KLMzgW
-	 jujRubb4A+e19jBiREbXiG4FacJrp28F4FFzfhnQT0Z/woYZnJ4oC/fvLR6XCGwU9O
-	 jfKl8uRjKAC+e6hBbUcjNQa6E1hmFcp+mltUdXEY=
-Date: Sat, 2 Dec 2023 09:15:07 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	stable@vger.kernel.org,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, linux-bluetooth@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org
-Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline
- kernel 6.6.2+
-Message-ID: <2023120259-subject-lubricant-579f@gregkh>
-References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
- <8d6070c8-3f82-4a12-8c60-7f1862fef9d9@leemhuis.info>
- <2023120119-bonus-judgingly-bf57@gregkh>
- <6a710423-e76c-437e-ba59-b9cefbda3194@moonlit-rail.com>
- <55c50bf5-bffb-454e-906e-4408c591cb63@molgen.mpg.de>
- <2023120213-octagon-clarity-5be3@gregkh>
- <f1e0a872-cd9a-4ef4-9ac9-cd13cf2d6ea4@moonlit-rail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDD62F44
+	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 08:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r9LQo-0005Sa-VN; Sat, 02 Dec 2023 09:32:59 +0100
+Message-ID: <b228d624-41b3-417c-b25d-aa9c3818b500@leemhuis.info>
+Date: Sat, 2 Dec 2023 09:32:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1e0a872-cd9a-4ef4-9ac9-cd13cf2d6ea4@moonlit-rail.com>
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [GIT PULL] firewire fixes for v6.7-rc4
+Content-Language: en-US, de-DE
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20231202080648.GA34377@workstation.local>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+In-Reply-To: <20231202080648.GA34377@workstation.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701505983;f1bd96c3;
+X-HE-SMSGID: 1r9LQo-0005Sa-VN
 
-On Sat, Dec 02, 2023 at 02:58:32AM -0500, Kris Karas (Bug Reporting) wrote:
-> Greg KH wrote:
-> > > Am 02.12.23 um 07:43 schrieb Kris Karas (Bug Reporting):
-> > > > When Basavaraj's patch is applied (in mainline 6.6.2+), bluetooth stops
-> > > > functioning on my motherboard.
-> > > > 
-> > > > Originally from bugzilla #218142 [1]
-> > > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218142
-> > 
-> > Should already be fixed in the 6.6.3 release, can you please verify that
-> > this is broken there?
+On 02.12.23 09:06, Takashi Sakamoto wrote:
 > 
-> Double-checked and confirmed.  6.6.3 shows the bug (hci0: Opcode 0x0c03
-> failed: -110) and my currently-running system (6.6.3 with
-> 14a51fa544225deb9ac2f1f9f3c10dedb29f5d2f backed out) is running fine (with
-> its MX Master 3S bluetooth mouse).
+> As I noted in pull request for v6.7[1], Linux FireWire subsystem still
+> has an issue of unexpected system reboot in AMD Ryzen machine with a
+> kind of PCI card. Recently I got a help of AMD developer[2] and got some
+> advices to investigate the mechanism of system reboot, but never catch
+> its tail yet... I wish to fix it within the development period for v6.8
+> kernel.
+>
+> 
+> [1] https://lore.kernel.org/lkml/20231105144852.GA165906@workstation.local/
+> [2] https://lore.kernel.org/lkml/20231128052429.GA25379@workstation.local/
 
-Thanks for testing, any chance you can try 6.6.4-rc1?  Or wait a few
-hours for me to release 6.6.4 if you don't want to mess with a -rc
-release.
+Thx for your efforts on this, much appreciated. It seems more than just
+one or two users are hitting this crash and a fix despite all your
+tremendous efforts it not yet in sight. Hence please allow me to ask:
+would it cause a significant regression for users of 6.5 and later, if
+we'd temporarily revert the culprit and anything depending on it until
+this is solved? Because if not I wonder if we should go down that route,
+even if it's a drastic measure; but then Greg could fix this in soon in
+6.6.y as well.
 
-Also, is this showing up in 6.7-rc3?  If so, that would be a big help in
-tracking this down.
-
-thanks,
-
-greg k-h
+Ciao, Thorsten
