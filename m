@@ -1,74 +1,78 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BA43B79D
-	for <regressions@lists.linux.dev>; Fri,  1 Dec 2023 19:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luced.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luced.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="BXSOtP87"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout3.routing.net (Postfix) with ESMTP id 20FA860476;
-	Fri,  1 Dec 2023 19:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1701457554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k1KGPYRvYIOKuqyRIUAMSTTl/RZtGgGj2cX3gmi3st0=;
-	b=BXSOtP87w0sNXDfd1BKrhZ0Hu9DzSraAdttZSa5r69wfWBSQ48L8FmzDdyDP0q5WEf5aMr
-	pOjLdc294/cw8DeKNBTR8HyXMgta9srVE0airsEOGrvlSoQfTaq7xS3+lwM8cgdcVB/qEv
-	vTgM1OQ8HETN66b+cDRF/HmxMU/0Fx4=
-Received: from [192.168.178.75] (dynamic-095-116-189-134.95.116.pool.telefonica.de [95.116.189.134])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 4AF95360200;
-	Fri,  1 Dec 2023 19:05:53 +0000 (UTC)
-Subject: Re: Fwd: Thinkpad X13 AMD: Problems with external monitor wake up
- after suspend
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux AMDGPU <amd-gfx@lists.freedesktop.org>
-Cc: Wayne Lin <wayne.lin@amd.com>, Stylon Wang <stylon.wang@amd.com>,
- Daniel Wheeler <daniel.wheeler@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <8da256ea-b069-44f0-9cc2-93482c2f5eec@gmail.com>
- <da0efb19-c883-40c8-b284-7eb7f4d3640b@leemhuis.info>
-From: Oliver Schmidt <oliver@luced.de>
-Message-ID: <12db0c2e-a1b7-f8f9-278e-8aefe5619c1f@luced.de>
-Date: Fri, 1 Dec 2023 20:05:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84693BE5D
+	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 06:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1r9JAL-0004CP-41; Sat, 02 Dec 2023 07:07:49 +0100
+Message-ID: <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
+Date: Sat, 2 Dec 2023 07:07:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <da0efb19-c883-40c8-b284-7eb7f4d3640b@leemhuis.info>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: iwlwifi: rfkill locking up kernel 6.5.12, 6.6.2
+Content-Language: en-US, de-DE
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Eliad Peller <eliad@wizery.com>, "John W. Linville"
+ <linville@tuxdriver.com>, Gregory Greenman <gregory.greenman@intel.com>,
+ Linus Lotz <register+kernelbugzilla@lotz.li>,
+ Darrell Enns <darrell@darrellenns.com>, Bagas Sanjaya
+ <bagasdotme@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Wireless <linux-wireless@vger.kernel.org>
+References: <5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mail-ID: 20b245b1-f3ff-4754-a7e8-c1632906f36e
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701497282;c61e3182;
+X-HE-SMSGID: 1r9JAL-0004CP-41
+
+Hi!
+
+On 30.11.23 09:23, Bagas Sanjaya wrote:
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> Rfkilling the iwlwifi can lock up my machine, rfkill will not
+>> respond and other networking related things (e.g. ip a or ip r) I
+>> see this on 6.5.12 and 6.6.2 (fedora kernel). On 6.5.11 it does not
+>> lockup AFAICT, but also shows kernel oops. WiFi Hardware: AC 8265
+> 
+> [...]
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218206
+
+TWIMC: More people that seem to be affected by the same problem joined
+the report. And one user performed a bisection on 6.6.y. According to
+that the problem is caused by a 6.6.y-backport of 37fb29bd1f90f1 ("wifi:
+iwlwifi: pcie: synchronize IRQs before NAPI") [v6.7-rc1] from Johannes.
+
+Another reported user also stated that the same problem happens on
+6.7-rc3 as well. No confirmation yet that 37fb29bd1f90f1 causes it
+there, but it seems likely.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+P.S.: Due to the above I'll wrt to regression tracking for now assume
+that 37fb29bd1f90f1 causes the problem.
+
+#regzbot introduced: 37fb29bd1f90f1
 
 
-On 01.12.23 12:37, Thorsten Leemhuis wrote:
-> Maybe one of the developers among the recipients has a idea. Oliver, but
-> if none of them replies any time soon, it would be best if you'd check
-> if 6.6 (and/or 6.7-rc) is affected as well; and if reverting it there
-> fixes it, too.
-
-OK, I checked it: compiled a 6.6.3 kernel and got the same suspend-resume
-problem as with the 6.1.57 and 6.1.64 kernels. I also was able to revert the
-changes of commit ec5fa9 "drm/amd/display: Adjust the MST resume flow" in the
-6.6.3 kernel and the problem was solved as in the 6.1.x kernels (however it
-seems that resuming with the 6.6 kernel needs a little more time until the
-monitor gets signal).
-
-Best regards,
-Oliver
 
 
