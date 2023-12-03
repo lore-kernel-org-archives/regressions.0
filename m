@@ -1,41 +1,86 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from hua.moonlit-rail.com (hua.moonlit-rail.com [45.79.167.250])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E79A4418
-	for <regressions@lists.linux.dev>; Sat,  2 Dec 2023 23:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SjQSZ12GLz4x5j;
-	Sun,  3 Dec 2023 10:02:54 +1100 (AEDT)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Jens Axboe <axboe@kernel.dk>, regressions <regressions@lists.linux.dev>, npiggin <npiggin@gmail.com>, christophe leroy <christophe.leroy@csgroup.eu>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Timothy Pearson <tpearson@raptorengineering.com>
-In-Reply-To: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
-References: <1921539696.48534988.1700407082933.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: Re: [PATCH v2] powerpc: Don't clobber fr0/vs0 during fp|altivec register save
-Message-Id: <170155803785.146803.11553342425486262629.b4-ty@ellerman.id.au>
-Date: Sun, 03 Dec 2023 10:00:37 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299FB138C
+	for <regressions@lists.linux.dev>; Sun,  3 Dec 2023 08:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonlit-rail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonlit-rail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="QzjeqsxG";
+	dkim=permerror (0-bit key) header.d=moonlit-rail.com header.i=@moonlit-rail.com header.b="nLA56QDl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=moonlit-rail.com; s=rsa2021a; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XKLc7nsSut7asYOvPOSBF3sFLon6YMwbrrbjTMI2vZI=; t=1701592373; x=1704184373; 
+	b=QzjeqsxGm814if/mVNeJKXbUfXNIRBWy5uProtThQbOlun0xfcJI/q+Hkt1I4/8ucY+KTAcsAdY
+	K0qkglSWFiKuzhDKAz8flfFqHW8HKBM7gDTH3m8aEcyzYwyDVxv6c6pWHX3VU5WxUD/pYacMpBQ+k
+	atH9Wbe4m/KZkocJnPMFmH/oDztFRFlGRz30RZamrzCcroRFWt7/hLbKbMBWh3aUzf9YHHOIhvHkL
+	iHzprcdirSJLE9nqvGYU+ew/yLPgPDj45/ee+gY8f1NBYydiq45Fvmdt1YboMwXhre/nXyoJbaYiK
+	EeFWWEir2fbUrxu/zELbTK1Oeg/CaWP34l8A==;
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=moonlit-rail.com; s=edd2021a; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XKLc7nsSut7asYOvPOSBF3sFLon6YMwbrrbjTMI2vZI=; t=1701592373; x=1704184373; 
+	b=nLA56QDlWBSDtOFmACYQf2vsfPAOeymFkVc2XEKzmc39/EHoRyAcBuoMq+MInKaKwUNLwPKh+/7
+	gtNONFBGWDg==;
+Message-ID: <ef575387-4a52-49bd-9c26-3a03ac816b61@moonlit-rail.com>
+Date: Sun, 3 Dec 2023 03:32:52 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline kernel
+ 6.6.2+
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>, stable@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ linux-bluetooth@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org
+References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
+ <8d6070c8-3f82-4a12-8c60-7f1862fef9d9@leemhuis.info>
+ <2023120119-bonus-judgingly-bf57@gregkh>
+ <6a710423-e76c-437e-ba59-b9cefbda3194@moonlit-rail.com>
+ <55c50bf5-bffb-454e-906e-4408c591cb63@molgen.mpg.de>
+ <2023120213-octagon-clarity-5be3@gregkh>
+ <f1e0a872-cd9a-4ef4-9ac9-cd13cf2d6ea4@moonlit-rail.com>
+ <2023120259-subject-lubricant-579f@gregkh>
+Content-Language: en-US, en-GB
+From: "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
+In-Reply-To: <2023120259-subject-lubricant-579f@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Sun, 19 Nov 2023 09:18:02 -0600, Timothy Pearson wrote:
-> During floating point and vector save to thread data fr0/vs0 are clobbered
-> by the FPSCR/VSCR store routine.
-> 
-> [...]
+Greg KH wrote:
+> Thanks for testing, any chance you can try 6.6.4-rc1?  Or wait a few
+> hours for me to release 6.6.4 if you don't want to mess with a -rc
+> release.
 
-Applied to powerpc/fixes.
+As I mentioned to Greg off-list (to save wasting other peoples' 
+bandwidth), I couldn't find 6.6.4-rc1.  Looking in wrong git tree?  But 
+6.6.4 is now out, which I have tested and am running at the moment, 
+albeit with the problem commit from 6.6.2 backed out.
 
-[1/1] powerpc: Don't clobber fr0/vs0 during fp|altivec register save
-      https://git.kernel.org/powerpc/c/5e1d824f9a283cbf90f25241b66d1f69adb3835b
+There is no change with respect to this bug.  The problematic patch 
+introduced in 6.6.2 was neither reverted nor amended.  The "opcode 
+0x0c03 failed" lines to the kernel log continue to be present.
 
-cheers
+> Also, is this showing up in 6.7-rc3?  If so, that would be a big help in
+> tracking this down.
+
+The bug shows up in 6.7-rc3 as well, exactly as it does here in 6.6.2+ 
+and in 6.1.63+.  The problematic patch bisected earlier appears 
+identically (and seems to have been introduced simultaneously) in these 
+recent releases.
+
+Kris
