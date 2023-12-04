@@ -1,115 +1,102 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AE128DD7
-	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 15:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22812511F
+	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 15:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nWBU38NG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rITqltm8"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 1405F5C009F;
-	Mon,  4 Dec 2023 10:11:34 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 04 Dec 2023 10:11:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1701702694; x=1701789094; bh=EX
-	CwC2QO1UvSxQX0tDRiqh9sUcZIzv34aR65e3WonXg=; b=nWBU38NGX0jmRlEgMU
-	nJ5L2yOjTVln9/4gN9a1EhCFkY2yXZPbf+ispfUlXLSAwXqKofPteRHJlmOVCmxj
-	2JfXkyzjNtUOPRvzx18xNbpFgdWRjaIQXhioKV9nx8TEI5Ok7R/wQPCXANzCUGej
-	5/v//zFjG5GtsYSRzmh31yF+bYXdn2Bt288AYV4X7KRxgsRvVofrY3TsnNCmSe3Y
-	nVilt4OnJIckD2In9QAlAprPtmJCeo+CBna7pI8FWymtKZTMPp8BVYzdPX+4jAn4
-	ntLWoCVw/PvR2FoShYuWMnveCjj6MsEq0giIIL+TX+tp7/emh3fg9cXsVy8er1eb
-	6GhA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701702694; x=1701789094; bh=EXCwC2QO1UvSx
-	QX0tDRiqh9sUcZIzv34aR65e3WonXg=; b=rITqltm8gzItjnKwd450G09/lyWvs
-	9H26qZDmz3u6QoUJYPDIhksn8sh25F+ttyx4jpS/L322xxWp8TMd7hlLNolYjeWZ
-	EHwzK8PrmOeZkd7z2QYA3WS7849PH0ISCyPoGqNTH3GfBXd9pGg9gW+TACfDam4N
-	adbpm55UI8x5zU7ggrhoJH3GRE6svm4YpAgwzi6cCQ2U+NNPUOoxtZzXnwCk/iQl
-	vdQ5df8GNSZacKQ8RRP7Hkb5SCxUvVA7HjGiQIjEP4OxZlb7OKOMOnzGfA3CBvVB
-	WjJuNpPgcVT8Syz9KM/pUYAZASgPjMvWZ6JB2tdomuhycaUoZEcJXcLcg==
-X-ME-Sender: <xms:JextZe6Hx2lXS0g19VPPjgsWqx8gFJZQybZ0ai58qqlfgaOm5dngJA>
-    <xme:JextZX7QcknLCl0Ydt1YjFJGQghhSpIlZw1lg4iSsTxFnlZbumCioGrOlVmB3XQY9
-    0JY9oMUCb2SLdWBnmo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejiedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:JextZddRvNyWGthTpjDj3iDLQbRg5A8oX3xbukrRdReUWwuxp4oSnw>
-    <xmx:JextZbJuzVbMyZ3bjXwI1GogKPLvGrLhqsyN6evl-acU0XobtLtjAA>
-    <xmx:JextZSLSRytw9mi494nYmFAJ-52FKES-kctrY1HLKLvBxkKWQRQ6Jg>
-    <xmx:JuxtZR9ej3Fua_SZnvMVBsXXIm_d-U6mw4xo2yr6Z_ZR_ydGpfhucQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 046DBB60089; Mon,  4 Dec 2023 10:11:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lF86GTOG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701703242; x=1733239242;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qEhcxASuizJtM7lcwqFFlnnisGnpfIA8jp4KVzQJVnU=;
+  b=lF86GTOGkiTvCTRtAqviyTn5nGFFQjYZ/M4k9P7cAOqavjQ9DocPRX3b
+   ZoWAmxHnmMy7evr6leX39JMaYa9wTovdfb3UOHQvj318Rg/yhOm/P4U9v
+   L8lDLX1M+ZyUBmUqVVcx/zGCbFvyud87OFQHniz47xDUqy3/TQFoU2pYv
+   rLBDFTcgy3Lab/wliFwfDxR77FMfRLC6sN5zDqbkHErYchVb8p6kTHTES
+   9dV3Fagt5K92Z9xPIKwAgDqqrh/eY7hxGZ1m5gW6WAo/y14edRV5zaGMS
+   7796bKHrNof5H37JiyCMseKIz8AEf7NyXIwjxso7A2R7JJ+Hjcx4JH3me
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="15293968"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="15293968"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:20:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="841086629"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="841086629"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 07:20:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rAAkK-00000001muJ-2OQO;
+	Mon, 04 Dec 2023 17:20:32 +0200
+Date: Mon, 4 Dec 2023 17:20:32 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	"moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>, sean.wang@kernel.org,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: arm: gcc-8: drivers/pinctrl/mediatek/../core.h:211:21: error:
+ initializer element is not constant (struct group_desc)
+Message-ID: <ZW3uQFWeogUhwuA9@smile.fi.intel.com>
+References: <CA+G9fYs1g2Pt=DQeaJC+3ZJTeMwKAs9GuGJ9k6BcwKwEXcn5kQ@mail.gmail.com>
+ <ad6afb94-e221-4adb-a942-af59f5d7b92f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <ad6afb94-e221-4adb-a942-af59f5d7b92f@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYs1g2Pt=DQeaJC+3ZJTeMwKAs9GuGJ9k6BcwKwEXcn5kQ@mail.gmail.com>
-References: 
- <CA+G9fYs1g2Pt=DQeaJC+3ZJTeMwKAs9GuGJ9k6BcwKwEXcn5kQ@mail.gmail.com>
-Date: Mon, 04 Dec 2023 16:11:11 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, sean.wang@kernel.org,
- "Russell King" <linux@armlinux.org.uk>
-Subject: Re: arm: gcc-8: drivers/pinctrl/mediatek/../core.h:211:21: error: initializer
- element is not constant (struct group_desc)
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad6afb94-e221-4adb-a942-af59f5d7b92f@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Dec 4, 2023, at 13:08, Naresh Kamboju wrote:
-> Following build errors noticed on Linux next-20231204 tag with gcc-8 toolchain
-> for arm and arm64.
->
-> ## Test Regressions (compared to next-20231201)
-> * arm, build
->   - gcc-8-defconfig
->
-> * arm64, build
->   - gcc-8-defconfig
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log arm and arm64:
-> ------------
-> In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
->                  from drivers/pinctrl/mediatek/pinctrl-mt7623.c:11:
-> drivers/pinctrl/mediatek/../core.h:211:21: error: initializer element
-> is not constant
->  (struct group_desc) {      \
+On Mon, Dec 04, 2023 at 04:11:11PM +0100, Arnd Bergmann wrote:
+> On Mon, Dec 4, 2023, at 13:08, Naresh Kamboju wrote:
+> > Following build errors noticed on Linux next-20231204 tag with gcc-8 toolchain
+> > for arm and arm64.
+> >
+> > ## Test Regressions (compared to next-20231201)
+> > * arm, build
+> >   - gcc-8-defconfig
+> >
+> > * arm64, build
+> >   - gcc-8-defconfig
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Build log arm and arm64:
+> > ------------
+> > In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
+> >                  from drivers/pinctrl/mediatek/pinctrl-mt7623.c:11:
+> > drivers/pinctrl/mediatek/../core.h:211:21: error: initializer element
+> > is not constant
+> >  (struct group_desc) {      \
+> 
+> This apparently comes from c0c8dd0a7773 ("pinctrl: core: Add a
+> convenient define PINCTRL_GROUP_DESC()") and following patches
+> from Andy Shevchenko (added to Cc).
+> 
+> I also checked different compiler versions and found that the
+> new code works fine with gcc-13.2.0, but not with gcc-12 or
+> older.
+
+Thank you, Linus already dropped problematic changes.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-This apparently comes from c0c8dd0a7773 ("pinctrl: core: Add a
-convenient define PINCTRL_GROUP_DESC()") and following patches
-from Andy Shevchenko (added to Cc).
-
-I also checked different compiler versions and found that the
-new code works fine with gcc-13.2.0, but not with gcc-12 or
-older.
-
-      Arnd
