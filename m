@@ -1,91 +1,273 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D0D25757
-	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 14:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9BP6mJb"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3b8bb35cbc3so840553b6e.3
-        for <regressions@lists.linux.dev>; Mon, 04 Dec 2023 06:14:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701699258; x=1702304058; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0I6C4lHtAjdDOgBRB1tna7Hi6HkljA5Ej+x6ZNqkNO8=;
-        b=N9BP6mJbY50bmHnSN/RX2KuyJk0YdA0tdEGgBmbKxRALUqOjJCEHmDgFnJuoJ/rV2i
-         2TpbRnEXa1sSsPjwMZVOQIx5jJkfSCZCZ/IryFU2a+UM2GSrqx1ntif8FIM/oj6EA29X
-         ftA3jJNDGpisT+buBX5L9rDrqqCEf71q72wOcvx6zlBOHBlBU5I3wNY9ypjLN6Jqfx8i
-         AP+xZprPqAepRP7EAQzvPm4OFcJKOcO55fiYFrHZ6AIzcWYNcrcTty8MwPesGtMXl/+E
-         Qe0XxrD43fzF4VGwIUnU7z0L1p1Wenvh2i9BemeeJvPQeq7mTZG5wYJpN3FbEr4bYI84
-         jH2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701699258; x=1702304058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0I6C4lHtAjdDOgBRB1tna7Hi6HkljA5Ej+x6ZNqkNO8=;
-        b=ktpdK6CAZ6V+CFGkMsIQudHLlplsM/ESO8LW0JYrNaWFs2wArGNLhGjB4VM0gdrJyO
-         vHGJ++Dav3XYpGeNC7MNbAnAm6ADZOudYkJ55ICAqrElWlUChVcOAnz5mXqvSWTV4RsA
-         ww9s+JjFhd0WnuZ1wteWyyQ5xgahhGw31kF69h4goavudnTQVjXh8wDla+pe538e/m+4
-         QPJtsMbyBotj707eoBNOUsbUW9z2JXa/+Xb3NycpvV4u8zpeZz6iCpMhZDSH4JF1I7fa
-         APFYqYZn08XSyYF+IeQSCy3fXisFTa7cWIfvDib4RghGvwY2UxHmThKn27U/8J2H2G/C
-         zRgA==
-X-Gm-Message-State: AOJu0YzVhtQoyxVZS/iDhwzswVyulqtkEs3n+ukRGm7U17siEHVKxjCh
-	mq+8M5YagbnTzxSD2DIWbjN6e8CkgB+qrh+m6Bc=
-X-Google-Smtp-Source: AGHT+IFEu8TprTdadCbPaDT3i4fWi2XekDqfyNrrQK6RXnb0qoLqCmgcb28e4hgbpi0Bnkuu5MH6XObjr5/U/0yDe2g=
-X-Received: by 2002:a05:6870:d3cd:b0:1f9:fa57:f72a with SMTP id
- l13-20020a056870d3cd00b001f9fa57f72amr7540705oag.38.1701699256359; Mon, 04
- Dec 2023 06:14:16 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADA0249ED
+	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 14:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rA9oV-0001NC-Iz; Mon, 04 Dec 2023 15:20:47 +0100
+Message-ID: <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
+Date: Mon, 4 Dec 2023 15:20:44 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <87edgv4x3i.fsf@vps.thesusis.net> <559d0fa5-953a-4a97-b03b-5eb1287c83d8@leemhuis.info>
- <CAPM=9tw-8pQWFso0zuLqpsqd5BSHWtc4As9ttdjY-DDr70EMqQ@mail.gmail.com>
- <bdb238b6-60c7-4f26-81d0-9e62cd5dd326@gmail.com> <CADnq5_NVGS1XykxGxpcu_bpPbzboCUJQkcCF3r+0N9a23KUgiQ@mail.gmail.com>
- <96e2e13c-f01c-4baf-a9a3-cbaa48fb10c7@amd.com> <CADnq5_NBfeAXEyQw0gnSd67=tR-bUKg8w=10+4z9pGGuRnP9uw@mail.gmail.com>
- <87jzq2ixtm.fsf@vps.thesusis.net> <CADnq5_Ou-MVVm0rdWDmDnJNLkWUayXzO26uCEtz3ucNa4Ghy2w@mail.gmail.com>
- <95fe9b5b-05ce-4462-9973-9aca306bc44f@gmail.com> <CADnq5_MYEWx=e1LBLeVs0UbR5_xEScjDyw_-75mLe8RAMnqh6g@mail.gmail.com>
- <CADnq5_OC=JFpGcN0oGbTF5xYEt4X3r0=jEY6hJ12W8CzYq1+cA@mail.gmail.com>
- <9595b8bf-e64d-4926-9263-97e18bcd7d05@gmail.com> <CADnq5_N6DF-huOzgaVygvS5N_j_oNUEC1aa4zRsZTzx8GOD_aw@mail.gmail.com>
- <CADnq5_PgMxoW=4iabtgeHydwye-6DvwvCyETdfBToEpuYWocmA@mail.gmail.com>
- <CADnq5_P0S7Jem0e4K6mG2+bboG8P56nELaGC1p4Pfx-8eV-BjQ@mail.gmail.com>
- <CADnq5_Oy6RMyJ52TbsxVjZ=0p=wYJHduE4X8B3DiYnqHYJUAvw@mail.gmail.com> <87edg3koka.fsf@vps.thesusis.net>
-In-Reply-To: <87edg3koka.fsf@vps.thesusis.net>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 4 Dec 2023 09:14:04 -0500
-Message-ID: <CADnq5_PtSV1C6Up78XX8ejExqaiM-wzHVFhCRtxboS1Y4cF-Ow@mail.gmail.com>
-Subject: Re: Radeon regression in 6.6 kernel
-To: Phillip Susi <phill@thesusis.net>
-Cc: Luben Tuikov <ltuikov89@gmail.com>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	linux-kernel@vger.kernel.org, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, dri-devel@lists.freedesktop.org, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Danilo Krummrich <dakr@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
+To: John Johansen <john.johansen@canonical.com>,
+ =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@stgraber.org>
+Cc: Christian Brauner <brauner@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ Aleksa Sarai <cyphar@cyphar.com>,
+ Alexander Mihalicyn <alexander@mihalicyn.com>, regressions@lists.linux.dev
+References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
+ <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
+ <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
+ <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701699650;1942a472;
+X-HE-SMSGID: 1rA9oV-0001NC-Iz
 
-On Sun, Dec 3, 2023 at 3:40=E2=80=AFPM Phillip Susi <phill@thesusis.net> wr=
-ote:
->
-> Alex Deucher <alexdeucher@gmail.com> writes:
->
-> > Phillip,
-> >
-> > Can you test this patch?  I was not able to repro the issue on the
-> > navi2x card I had handy, but I think it should fix it.
->
-> I pulled -rc4 and it still had the problem.  I applied this patch, and
-> yes, it fixed it!
->
+On 04.12.23 14:14, John Johansen wrote:
+> On 12/3/23 17:34, Stéphane Graber wrote:
 
-Great!  I'll include it this week.
+Side note: Stéphane, thx for CCing the regressions list.
 
-Alex
+>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
+>> <john.johansen@canonical.com> wrote:
+>>> On 12/2/23 17:20, Stéphane Graber wrote:
+>>>>
+>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
+>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
+>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
+>>>> distributions using the newer version of util-linux.
+>>>>
+>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
+>>>> the new mount command now performs:
+>>>> ```
+>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
+>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
+>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
+>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
+>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
+>>>> stx_size=40, ...}) = 0
+>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
+>>>> ```
+>>>>
+>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
+>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
+>>>> being created, this therefore results in:
+>>>> ```
+>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
+>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
+>>>> class="mount" info="failed perms check" error=-13
+>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
+>>>> srcname="/" flags="rw, move"
+>>>> ```
+>>>>
+>>>> Note that the flags here show "move", the fstype isn't even set and
+>>>> the source path at srcname incorrectly shows "/".
+>>>>
+>>>> This operation therefore trips any container manager which has an
+>>>> apparmor security policy preventing arbitrary move-mount (as those
+>>>> could be used to bypass other apparmor path based policies).
+>>>>
+>>>>
+>>>> The way I see it, the current mediation support effectively breaks any
+>>>> attempt at mediating mounts in a useful way in apparmor as it's now
+>>>> impossible to mediate new mounts based on their fstype or even
+>>>> distinguish them from a move-mount operation.
+>>>>
+>>> Indeed it is a far from good solution. It is a stop gap.
+>>>>
+>>>> I don't know if this warrants pulling the mediation patch out of
+>>>> stable (and out of linus' tree), obviously doing that would
+>>>> reintroduce that hole in mount coverage, but at the same time, the
+>>>> current coverage is broken enough that our only alternative is to
+>>>> effectively allow all mounts, making the current mediation useless.
+>>>
+>>> pulling it effectively means ALL applications by-pass mediation, the
+>>> alternative is to block all applications from using the move_mount
+>>> system call as part of mediation. Which might have been acceptable
+>>> as a stop gap when the syscall first landed but not now.
+>>
+>> Pulling it from the stable branch may still make sense, you now have
+>> folks who are updating to get actual bugfixes and end up with broken
+>> containers, that doesn't exactly seem like a good outcome...
+> 
+> I will defer such a decision to the maintainers the stable trees. I
+> can see arguments either way.
+
+FWIW, Greg usually does not revert a backported change if the change
+causes the same problem to happen with mainline, as then it should be
+fixed there as well. Which is normally the right thing to do, as Linus
+wants people to be able to upgrade to new kernels without having them to
+upgrade anything else (firmware, anything in userland incl. apparmor
+policies).
+
+So normally this whole issue afaics would be "157a3537d6bc28 needs to be
+fixed in mainline (if nothing else helps with a revert), and that fix
+then needs to be backported to the various stable trees".
+
+It obviously is more complicated because that commit apparently fixes a
+security vulnerability. But even under such circumstances Linus afaik
+wants us to do everything possible to avoid breaking peoples workflows.
+Which is why I wonder if there is a more elegant solution here
+somewhere. I doubt that the answer is yes, but I'll ask the following
+anyway: Would a kernel config option that distros could set when they
+updated their Apparmor policies help here? Or something in sysfs?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+> But I will note that even if we had been able perfectly match the
+> new interface mediation to the old breakage is still possible because
+> containers could have been using new interface to do things not
+> covered by the old interface rules.
+> 
+> Not that it matters to the upstream kernel maintainers but a CVE
+> is coming for this and that having this unmediated in the tree isn't
+> good either.
+> 
+>>> The situation can be broken down like this
+>>> unconfined applications have no restrictions, this doesn't affect
+>>> hem.
+>>>
+>>> confined applications using the old mount interface continue to
+>>> work as expected.
+>>>
+>>> confined applications using the new mount interface now are blocked
+>>> unless there is, admittedly, a very broad mount rule granted. This
+>>> is however better than the old situation in which confined
+>>> applications where not mediated at all.
+>>
+>> It depends from your point of view. If you are using apparmor around a
+>> single application and have tailored rules for exactly what it is
+>> doing, then yes, I agree.
+>> But for all cases where apparmor is used as a safety net to block
+>> potentially dangerous/problematic actions, this is causing the kind of
+>> breakage which will cause people to just plain turn off apparmor.
+>>
+> 
+> Only in the sense that closing a security regression causes breakage.
+> 
+> Lets cover the cases.
+> Policy is not updated, and application uses the old mount interface:
+> this continues to work.
+> 
+> *Policy is not updated, and application uses the new mount interface:
+> the access is likely blocked (the security hole has been closed)
+> unless the policy already allowed a generic
+>   allow mount,
+> 
+> +Policy is updated with generic
+>   allow mount,
+> and application uses the old mount interface:
+> this continues to work, security restrictions are reduced on the
+> old interface, but policy reflects what can actually be enforced
+> around mount, because if the application is compromised and uses
+> the new mount interface this is what can be mediated.
+> 
+> Policy is updated with generic
+>   allow mount,
+> and application uses the new mount interface:
+> The application continues to work.
+> 
+> * The breakage case is where the application was using the new
+> interface and not being mediated. While being able to mediate
+> the new interface to the same level of the old would help, it
+> does not guarantee this case won't break, as the application
+> could be using to do things that are not restricted by current
+> policy.
+> 
+> + The regressed mediation case, is only sort of reduced mediation.
+> The policy can maintain all existing mount rules so that info
+> is not lost going forward.
+> The mediation on the old mount interface is reduced by the new
+> mount rule, but at the same time it now possible to turn of
+> the new mount interface, if mount is not being used by the
+> application.
+> 
+>>> The regression is in the policy, where an application like LXD/Incus
+>>> are specify mount rules and loading policy based on it. Those
+>>> restrictions continue to work on the old mount interface, they
+>>> however do not work as one would expect when the new mount interface
+>>> is used. To allow applications to use the new mount interface
+>>> a broad mount rule is needed, which basically makes the other
+>>> mount restrictions useless.
+>>>
+>>> This situation is however still better than without the patch
+>>> because, applications trying to use the new mount interface
+>>> were not restricted at all. The only regression is in mediation
+>>> of applications that are using the old mount interface. But
+>>> again those application, without the patch, can just use the
+>>> new interface and by-pass the restrictions from those rules. In
+>>> this case the broad rule is not good, but better than the by-pass.
+>>>
+>>> I am working on a patch that will improve the situation, over the
+>>> current patch using the existing move_mount hook. I wanted to
+>>> be able to get more testing in place, before we did more, and
+>>> just didn't have the time.
+>>
+>> So just to understand, this change went upstream while it was known
+>> that effectively no sane mount policy would work with it?
+>>
+> 
+> having a toggle to turn off mount is sane. It actually is a little
+> better than that in that you can do more with some cases. It still
+> allows full mediation under the old interface, it just can't match
+> how fine the mediation is with the old interface.
+> 
+>> That seems very odd, at that point, why not instead upstream a patch
+>> that disables the new mount API when apparmor is in use with mount
+>> rules?
+> 
+> It breaks applications, some will fallback, some don't. Here you
+> get a policy controllable toggle. Admittedly it returns -EACCES
+> instead of a different error code but that could be adjusted.
+> 
+>> That feels like it would have had the same theoretical benefits
+>> without the breakage that this change caused.
+>>
+> I am willing to experiment with this more but it can break
+> applications.
+> 
+>>> But the reality is, apparmor won't be able to achieve equivalent
+>>> mediation without new hooks or at least more mount context passed
+>>> into the existing hook. That to is being looked at but won't be
+>>> is even further out.
+>>
+>> That doesn't sound encouraging as far as getting a suitable fix to our
+>> users...
+>>
+> If by suitable fix you mean equivalence of mediation between the
+> old and new interface, not in the short term.
+> 
+>>
+>> Is there even a way in apparmor policies to cleanly prevent the use of
+>> the new mount API (return ENOSYS back to userspace)?
+> 
+> Its possible, it will take another patch or two kernel side for this
+> case. We could even add a boolean and make it so you can apply mount
+> rules specifically only to the old or new interface.
+> 
+>> We can obviously do this through a separate seccomp filter, but not
+>> everyone is using seccomp...
+>>
+>> Stéphane
+> 
+> 
+> 
