@@ -1,74 +1,114 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF1DDF44
-	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 08:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rA44G-0007MD-Am; Mon, 04 Dec 2023 09:12:40 +0100
-Message-ID: <b5063044-e82d-4f73-a1fa-db6eeacd0498@leemhuis.info>
-Date: Mon, 4 Dec 2023 09:12:39 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA2DC8F9
+	for <regressions@lists.linux.dev>; Mon,  4 Dec 2023 09:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4bOH0QP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701681062; x=1733217062;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=HF7PazhEJaUGDhVtrd2okSZVq55CFcLcBkpdxxWUXIo=;
+  b=f4bOH0QPV64OldHGwH+Tc5dtE/PnCv4iyK2fLqiEBn46QP+XIbzda5v0
+   fib1wy8qAD3/FFbktT3ZYPEJhLwhmGE2F9FA6Xv4mIPkh35nnMBBgFPlP
+   Ry0270p/QV5GOJMGWxtOSA4EGHFwbklUio7lSQymGXptHU4n/8v0iVlvw
+   nls1F7KFDecs2aDDxa//mi0i5fZmNPloexv+c075c+7xFcpoAt21bxcFc
+   bFkkV+X55aOGD6756I/jT/omVw9Jj5F5EDFFfVXPakSg0F8ozB8LRog5+
+   VReemyB/g2OMs1l8xdByo5g0gq996M01mcU6ev8u5xEjjY818ASjxzZme
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="7027007"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="7027007"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 01:11:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="861314906"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="861314906"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Dec 2023 01:10:57 -0800
+Message-ID: <3d3b8fd3-a1b9-9793-b709-eda447ebd1ab@linux.intel.com>
+Date: Mon, 4 Dec 2023 11:12:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: iwlwifi: rfkill locking up kernel 6.5.12, 6.6.2
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Eliad Peller <eliad@wizery.com>, "John W. Linville"
- <linville@tuxdriver.com>, Gregory Greenman <gregory.greenman@intel.com>,
- Linus Lotz <register+kernelbugzilla@lotz.li>,
- Darrell Enns <darrell@darrellenns.com>, Bagas Sanjaya
- <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Wireless <linux-wireless@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com>
- <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
-In-Reply-To: <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>,
+ "Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>, stable@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ linux-bluetooth@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org
+References: <ee109942-ef8e-45b9-8cb9-a98a787fe094@moonlit-rail.com>
+ <8d6070c8-3f82-4a12-8c60-7f1862fef9d9@leemhuis.info>
+ <2023120119-bonus-judgingly-bf57@gregkh>
+ <6a710423-e76c-437e-ba59-b9cefbda3194@moonlit-rail.com>
+ <55c50bf5-bffb-454e-906e-4408c591cb63@molgen.mpg.de>
+ <2023120213-octagon-clarity-5be3@gregkh>
+ <f1e0a872-cd9a-4ef4-9ac9-cd13cf2d6ea4@moonlit-rail.com>
+ <2023120259-subject-lubricant-579f@gregkh>
+ <ef575387-4a52-49bd-9c26-3a03ac816b61@moonlit-rail.com>
+ <2023120329-length-strum-9ee1@gregkh>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: Regression: Inoperative bluetooth, Intel chipset, mainline kernel
+ 6.6.2+
+In-Reply-To: <2023120329-length-strum-9ee1@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701677574;7e19aa36;
-X-HE-SMSGID: 1rA44G-0007MD-Am
 
-On 02.12.23 07:07, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 30.11.23 09:23, Bagas Sanjaya wrote:
+On 3.12.2023 10.38, Greg KH wrote:
+> On Sun, Dec 03, 2023 at 03:32:52AM -0500, Kris Karas (Bug Reporting) wrote:
+>> Greg KH wrote:
+>>> Thanks for testing, any chance you can try 6.6.4-rc1?  Or wait a few
+>>> hours for me to release 6.6.4 if you don't want to mess with a -rc
+>>> release.
 >>
->> I notice a regression report on Bugzilla [1]. Quoting from it:
+>> As I mentioned to Greg off-list (to save wasting other peoples' bandwidth),
+>> I couldn't find 6.6.4-rc1.  Looking in wrong git tree?  But 6.6.4 is now
+>> out, which I have tested and am running at the moment, albeit with the
+>> problem commit from 6.6.2 backed out.
 >>
->>> Rfkilling the iwlwifi can lock up my machine, rfkill will not
->>> respond and other networking related things (e.g. ip a or ip r) I
->>> see this on 6.5.12 and 6.6.2 (fedora kernel). On 6.5.11 it does not
->>> lockup AFAICT, but also shows kernel oops. WiFi Hardware: AC 8265
+>> There is no change with respect to this bug.  The problematic patch
+>> introduced in 6.6.2 was neither reverted nor amended.  The "opcode 0x0c03
+>> failed" lines to the kernel log continue to be present.
 >>
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218206
+>>> Also, is this showing up in 6.7-rc3?  If so, that would be a big help in
+>>> tracking this down.
+>>
+>> The bug shows up in 6.7-rc3 as well, exactly as it does here in 6.6.2+ and
+>> in 6.1.63+.  The problematic patch bisected earlier appears identically (and
+>> seems to have been introduced simultaneously) in these recent releases.
 > 
-> TWIMC: More people that seem to be affected by the same problem joined
-> the report. And one user performed a bisection on 6.6.y. According to
-> that the problem is caused by a 6.6.y-backport of 37fb29bd1f90f1 ("wifi:
-> iwlwifi: pcie: synchronize IRQs before NAPI") [v6.7-rc1] from Johannes.
+> Ok, in a way, this is good as that means I haven't missed a fix, but bad
+> in that this does affect everyone more.
 > 
-> Another reported user also stated that the same problem happens on
-> 6.7-rc3 as well. No confirmation yet that 37fb29bd1f90f1 causes it
-> there, but it seems likely.
+> So let's start over, you found the offending commit, and nothing has
+> fixed it, so what do we do?  xhci/amd developers, any ideas?
+> thanks,
+> 
+> greg k-h
+> 
 
-TWIMC, it was now confirmed that reverting 37fb29bd1f90f1 in 6.7-rc
-fixes the problem.
+I suggest reverting these two patches from everywhere (all stable):
+a5d6264b638e xhci: Enable RPM on controllers that support low-power states
+4baf12181509 xhci: Loosen RPM as default policy to cover for AMD xHC 1.1
 
-The bugzilla ticket has the details; it's sadly all a bit mess (it was
-afaics actually a gentoo user that confirmed the above in a downstream
-bug tracker [https://bugs.gentoo.org/918128#c21] and a gentoo kernel dev
-forwarded the result to our bugzilla...).
+Then write a new well tested patch that adds default runtime pm to those AMD
+hosts that support it. And only add that to usb-next
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+-Mathias
+
+
+
+
