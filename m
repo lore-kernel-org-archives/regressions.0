@@ -1,106 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED09E393;
-	Mon,  4 Dec 2023 23:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70634D50C
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 06:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v5/Ey+r9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D17C433C7;
-	Mon,  4 Dec 2023 23:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1701734143;
-	bh=uVTUmGDOmFsVPIS9YpIyI/1ETQQbLq2C9vA3aKMy1Os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v5/Ey+r9ILVqU0CicEZ1hN+IwF46I0t8FDhjD99cPAqJXUQOjaiVzh2PfuT7H9DVR
-	 qIkjvFIqdnmi0NoX+7B8h+hELO7SvuwM9vjsxyalwd5H1kGgWRaM9EznqZmfwS+rmt
-	 xQ7CnZde4VE/8/5GKNsGgjkAvIyDseV9FDVE/AyY=
-Date: Tue, 5 Dec 2023 08:55:39 +0900
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Basavaraj Natikar <bnatikar@amd.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>,
-	linux-usb@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	mario.limonciello@amd.com, regressions@lists.linux.dev,
-	regressions@leemhuis.info, Basavaraj.Natikar@amd.com,
-	pmenzel@molgen.mpg.de, bugs-a21@moonlit-rail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] Revert "xhci: Enable RPM on controllers that support
- low-power states"
-Message-ID: <2023120521-dusk-handwrite-cea3@gregkh>
-References: <3d3b8fd3-a1b9-9793-b709-eda447ebd1ab@linux.intel.com>
- <20231204100859.1332772-1-mathias.nyman@linux.intel.com>
- <070b3ce1-815c-4f3d-af09-e02cda8f9bf0@amd.com>
- <db579656-5700-d99b-f1eb-c1e27749eb7b@linux.intel.com>
- <f28b4e98-dd9b-458e-8a72-a9da3c0727cd@amd.com>
- <273a8811-f34e-dbe7-c301-bb796ddcced1@linux.intel.com>
- <e0781c30-a22e-40b5-a387-bae92672c2cd@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hyHccleC"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-464a3734e49so192415137.0
+        for <regressions@lists.linux.dev>; Mon, 04 Dec 2023 22:02:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701756127; x=1702360927; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MbGfZIumAG8MWScd3jekKM1BGoJdVx+w4q+lDBLye5g=;
+        b=hyHccleCtzE3EzWPcnsOgYtfC6DudeNBimDrYt+RxxjqE6IcfuqDYxF3/RztC9m7wW
+         rJQjBK/rtU7y2T6baWiXhiEPjA6YMjkz5mrHdPPHjH34Vv70mpaef+AXMsHHok1omHMW
+         rwovwtyJgNHkIBZ65FP2DyJOO08X3gESsyQaO7qTCg8tHYUh5W0wS3kE4h0JRMnA+9pn
+         yElb92YR1eHXo6poNSw4+1sQws3eBd2M4y1BDqrM6TD63IuQaGSptcZtPPwxGAiFeucD
+         Ktj7m/9kiKiESftUJ5eMuleerZN2TyiFWvDU9KzLZvQMjfBC8ednf/15jUNJjVyIukGN
+         gWOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701756127; x=1702360927;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MbGfZIumAG8MWScd3jekKM1BGoJdVx+w4q+lDBLye5g=;
+        b=qbfkeQ9X/EMH9/1Lt4NeSiCUrMrwEVJSj8E9QyHfMRBlU+Wpb45DtoRY6PrOPvcfk5
+         +BVs0TpQP67wYxYDcQvq6ylNMQXl6u7WStiRJsfH1YWV7sOIRTEoLfi+UbThEdDT17QY
+         x4NQYCW/PurC0IIRZasQZMi8Zdde7aA1ZYhJQZHhcE0PeMl667EVBVAfekAaYjHXhIE5
+         ZJS0Zfq3fqsGho9mTwRpckASlgyUjIUuoHShCvpnK1DQ2iBixgrNnIvXxGbuxaD05QPS
+         pkIqHM9qmqBZnCmi3Ju6WoFYIyvPpqzbRKdmv7eAebP3qeSVmILME9XNcNkQj/JrYnlL
+         AFlQ==
+X-Gm-Message-State: AOJu0Yx2MXR0X6+tnalx507L2Cz4EaSh2Ak8SldgtTlXraOZWY8s4PeE
+	b/yqxWopfgM1UFhEauXi6/o1PX4oa+STYEWaE7W4nQ==
+X-Google-Smtp-Source: AGHT+IHvKqnSwS1BLyzX1vMS4LTuVHrCtdDTFnS9dO+gsy1r9yKxz3zYlHv4rNjFqNOjx1gZc4Nxs2/fOzhwS4SJDXA=
+X-Received: by 2002:a67:af18:0:b0:464:3c0a:fdd4 with SMTP id
+ v24-20020a67af18000000b004643c0afdd4mr3333612vsl.2.1701756127145; Mon, 04 Dec
+ 2023 22:02:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0781c30-a22e-40b5-a387-bae92672c2cd@amd.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 5 Dec 2023 11:31:55 +0530
+Message-ID: <CA+G9fYvAUt8GyeGrb5UK8HZDVru6Ucu3BJyMQv0vkO3jYwOHHQ@mail.gmail.com>
+Subject: mips-linux-gnu-ld: arch/mips/mm/cache.o: in function
+ `cpu_cache_init': cache.c:(.text+0x4f8): undefined reference to `octeon_cache_init'
+To: linux-mips@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
+	linux-mm <linux-mm@kvack.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Dec 04, 2023 at 08:59:35PM +0530, Basavaraj Natikar wrote:
-> 
-> On 12/4/2023 8:36 PM, Mathias Nyman wrote:
-> > On 4.12.2023 16.49, Basavaraj Natikar wrote:
-> >>
-> >> On 12/4/2023 7:52 PM, Mathias Nyman wrote:
-> >>> On 4.12.2023 12.49, Basavaraj Natikar wrote:
-> >>>>
-> >>>> On 12/4/2023 3:38 PM, Mathias Nyman wrote:
-> >>>>> This reverts commit a5d6264b638efeca35eff72177fd28d149e0764b.
-> >>>>>
-> >>>>> This patch was an attempt to solve issues seen when enabling
-> >>>>> runtime PM
-> >>>>> as default for all AMD 1.1 xHC hosts. see commit 4baf12181509
-> >>>>> ("xhci: Loosen RPM as default policy to cover for AMD xHC 1.1")
-> >>>>
-> >>>> AFAK, only 4baf12181509 commit has regression on AMD xHc 1.1 below is
-> >>>> not regression
-> >>>> patch and its unrelated to AMD xHC 1.1.
-> >>>>
-> >>>> Only [PATCH 2/2] Revert "xhci: Loosen RPM as default policy to cover
-> >>>> for AMD xHC 1.1"
-> >>>> alone in this series solves regression issues.
-> >>>>
-> >>>
-> >>> Patch a5d6264b638e ("xhci: Enable RPM on controllers that support
-> >>> low-power states")
-> >>> was originally not supposed to go to stable. It was added later as it
-> >>> solved some
-> >>> cases triggered by 4baf12181509 ("xhci: Loosen RPM as default policy
-> >>> to cover for AMD xHC 1.1")
-> >>> see:
-> >>> https://lore.kernel.org/linux-usb/5993222.lOV4Wx5bFT@natalenko.name/
-> >>>
-> >>> Turns out it wasn't enough.
-> >>>
-> >>> If we now revert 4baf12181509 "xhci: Loosen RPM as default policy to
-> >>> cover for AMD xHC 1.1"
-> >>> I still think it makes sense to also revert a5d6264b638e.
-> >>> Especially from the stable kernels.
-> >>
-> >> Yes , a5d6264b638e still solves other issues if underlying hardware
-> >> doesn't support RPM
-> >> if we revert a5d6264b638e on stable releases then new issues (not
-> >> related to regression)
-> >> other than AMD xHC 1.1 controllers including xHC 1.2 will still exist
-> >> on stable releases.
-> >
-> > Ok, got it, so a5d6264b638e also solves other issues than those
-> > exposed by 4baf12181509.
-> > And that one (a5d6264b638) should originally have been marked for stable.
-> >
-> > So only revert 4baf12181509, PATCH 2/2 in this series
-> 
-> Thank you, that is correct.
+Following build errors reported on MIPS with gcc-8 while building
+Linux next-20231205 tag.
+But gcc-12 builds pass.
 
-So just take patch 2/2 here, or will someone be sending me a new patch?
+mips-linux-gnu-ld: arch/mips/mm/cache.o: in function `cpu_cache_init':
+cache.c:(.text+0x4f8): undefined reference to `octeon_cache_init'
 
-thanks,
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-greg k-h
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231205/testrun/21486880/suite/build/test/gcc-8-malta_defconfig/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231205/testrun/21486880/suite/build/test/gcc-8-malta_defconfig/details/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
