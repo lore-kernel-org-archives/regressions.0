@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1200224DC;
-	Tue,  5 Dec 2023 12:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E585C90C
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 13:32:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rAUs0-0006bO-Oa; Tue, 05 Dec 2023 13:49:48 +0100
-Message-ID: <24aa7a8b-40ed-449b-a722-df4abf65f114@leemhuis.info>
-Date: Tue, 5 Dec 2023 13:49:48 +0100
+	id 1rAVXK-0005dK-0Y; Tue, 05 Dec 2023 14:32:30 +0100
+Message-ID: <670a7310-8098-4083-9f30-96987cc5d0aa@leemhuis.info>
+Date: Tue, 5 Dec 2023 14:32:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,45 +17,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [regressions] ntfs3: empty file on update without forced cache
- drop
+Subject: Re: Regression apparently caused by commit
+ 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
+ for acp pci driver"
 Content-Language: en-US, de-DE
+To: syed saba kareem <ssabakar@amd.com>, Marian Postevca
+ <posteuca@mutex.one>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Syed Saba Kareem <Syed.SabaKareem@amd.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
+ Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
+ Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Yang Yingliang <yangyingliang@huawei.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+ V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
+ ye xingchen <ye.xingchen@zte.com.cn>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
+ <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
+ <d002ad6f-d908-4cf6-afcf-bf0989418e72@leemhuis.info>
+ <6085d2e3-f28e-4d1d-9863-8275931430e6@amd.com> <87fs0x4fn7.fsf@mutex.one>
+ <ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc: ntfs3@lists.linux.dev,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Kari Argillander <kari.argillander@stargateuniverse.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
+In-Reply-To: <ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701780591;17cf3df8;
-X-HE-SMSGID: 1rAUs0-0006bO-Oa
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701783154;62a499c1;
+X-HE-SMSGID: 1rAVXK-0005dK-0Y
 
-[adding a bunch of people and two lists to the recipients, as Konstantin
-apparently hasn't sent any mail to any lists archived on lore for ~six
-weeks; maybe someone knows what's up or is willing to help out]
+On 23.11.23 14:58, syed saba kareem wrote:
+> 
+> On 11/23/23 03:25, Marian Postevca wrote:
+>> syed saba kareem <ssabakar@amd.com> writes:
+>>
+>>> Hi , We have up streamed the patch it is in review.
+>>>
+>>> Please find the below link for the patch details.
+>>>
+>>> https://patchwork.kernel.org/project/alsa-devel/patch/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
+>>>
+>> Sorry maybe I'm not understanding here something, when you are saying
+>> that the patch is in review, where is this review being done?
+>>
+>> As far as I can tell Mark Brown only pulled the first patch from your
+>> series:
+> 
+> We got comments for the second patch and we addressed them.
+> 
+> It seems it may be stuck at review stage as one patch got merged.
+> 
+> Will resend the patch again.
+> 
+> You can find the received review comments for the patch in the below link.
 
-On 27.11.23 07:18, Thorsten Leemhuis wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> Konstantin, I noticed a regression report in bugzilla.kernel.org.
-> Apparently it's cause by a change of yours.
-> 
-> As many (most?) kernel developers don't keep an eye on bugzilla, I
-> decided to forward it by mail. Note, you have to use bugzilla to reach
-> the reporter, as I sadly[1] can not CCed them in mails like this.
-> 
-> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218180 :
-
-Konstantin, are you still around? Would be great if you could look into
-this regression, as this sounds somewhat worrying.
+Any news? From a quick look it seems this didn't make any progress at
+all, but I might be missing something.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -65,60 +85,19 @@ If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
 
->> The problem I am facing is the following:
->> 1. I mount an NTFS partition via NTFS3
->> 2. I create a file
->> 3. I write to the file
->> 4. The file is empty
->> 5. I remount the partition
->> 6. The file has the changes I made before the remount
->>
->> I can avoid the remount by doing:
->> sudo sysctl vm.drop_caches=3
-> 
-> See the ticket for more details. It according to the report happens
-> still happens with 6.7-rc2, but not with 6.1.y. The reporter bisected
-> the problem to ad26a9c84510af ("fs/ntfs3: Fixing wrong logic in
-> attr_set_size and ntfs_fallocate") [v6.2-rc1].
-> 
-> Side note: while briefly checking lore for existing problems caused by
-> that change I noticed two syzbot reports about it that apparently nobody
-> looked into:
-> 
-> https://lore.kernel.org/all/000000000000bdf37505f1a7fc09@google.com/
-> https://lore.kernel.org/all/00000000000062174006016bc386@google.com/
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: ad26a9c84510af
-> https://bugzilla.kernel.org/show_bug.cgi?id=218180
-> #regzbot title: ntfs3: empty file on update without forced cache drop
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-> this thread sees some discussion). See page linked in footer for details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> [1] because bugzilla.kernel.org tells users upon registration their
-> "email address will never be displayed to logged out users"
+>>> Applied to
+>>>
+>>>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
+>>> for-next
+>>>
+>>> Thanks!
+>>>
+>>> [1/2] ASoC: amd: acp: add Kconfig options for acp7.0 based platform
+>>> driver
+>>>        commit: d3534684ada99ef8c0899eb28c62b4462483ee19
+>>> [2/2] ASoC: amd: acp: add pm ops support for renoir platform
+>>>        (no commit info)
+>>>
+>> I don't see the second patch in for-next.
 > 
 > 
