@@ -1,153 +1,156 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6FF67E92;
-	Tue,  5 Dec 2023 15:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6C369293;
+	Tue,  5 Dec 2023 17:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="i9IbFRJr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Reply-To:Content-ID:Content-Description;
-	bh=Puy8nVRKh+PHtxSSvph4owiQxGDEu81haJo6iP0fqOg=; b=i9IbFRJrrd6Gw1wNSb/IhRTRk9
-	6zIBpoPQZNj+kKdpA5C2USS283miQo+vg75caIvXCpeS5qDqlkrXwU+XhjMfKuJTl1t1fpJ5pYOUg
-	o7qidBGzlRAXiEUoSnSfXhKHq9UCQe06DwQc72p7A9uRg5AaRRO9ZSidavu4GOf/xb3S/TmhpZE8Q
-	hUkF9CUkTCDR/pav7vRlHiJvDF07mpMagHttGsYMlt6xRFF5mG5uVHBKzIaKERIMXuGjsG6RKKkA+
-	vJx7wwFDkrUWXiVPO6zG2vMwVJ3w4dq5hvtyB0Hh0Ff3hAQoMLu0M6ie4VwJqfUzFSvlJEOtYLGo4
-	fqtzxG+g==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	(Exim 4.94.2)
-	(envelope-from <sylvestre@debian.org>)
-	id 1rAX77-00HOIb-SE; Tue, 05 Dec 2023 15:13:34 +0000
-Message-ID: <3523ca62-be8b-4b08-8d0c-5b97ece9aad8@debian.org>
-Date: Tue, 5 Dec 2023 16:13:29 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSxvksBP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15837C433C8;
+	Tue,  5 Dec 2023 17:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701796099;
+	bh=4fuUgK13Odh1roGVc/5JGsT0M+PyZLN3gldlT+6e6Y0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qSxvksBPbjM9VRaAsEaziQnKdr4LXV5kiC0SYNLCLul4KpNnuaWoeXw0pR3kO8rQj
+	 I6Bfd19Al1HZblyc5dNnrhuDLjMVarfhw6cdDuQKPeTCk0vBdirjoo/636ordHqDug
+	 WU3tORjm6m6R3MlKhr2SWEsi9htV1CUkCERs8byk5jwqeK4RwWu5AWy05+qt6j6M8X
+	 evlyPYPP1ok3I71hQP9KwNFD2PheTBFDflybBcFEXJHbP55QlG5Tdw/7Pr6BKbXJsl
+	 3HEicNjzmvY8dHzHpKwz1wiZYkcVZsduzDTNFr4uJWI6u9+cpJsPDD1RcCtstKU0rK
+	 TdhL3+uzLfUog==
+Date: Tue, 5 Dec 2023 18:08:13 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@stgraber.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+	Alexander Mihalicyn <alexander@mihalicyn.com>,
+	"paul@paul-moore.com" <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+	linux-security-module@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
+Message-ID: <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
+References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
+ <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
+ <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
+ <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
+ <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
+ <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
+ <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: clang-nightly: vdso/compat_gettimeofday.h:152:15: error:
- instruction variant requires ARMv6 or later
-Content-Language: en-US
-To: Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- clang-built-linux <llvm@lists.linux.dev>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- lkft-triage@lists.linaro.org, Russell King <linux@armlinux.org.uk>,
- Nick Desaulniers <ndesaulniers@google.com>, Matthias Klose <doko@debian.org>
-References: <CA+G9fYvD72Vpfs2g8R+OJ6L8w9p_uaWbXpWMvnGAx_AOLabatw@mail.gmail.com>
- <20231204181304.GA2043538@dev-arch.thelio-3990X>
- <20231204223317.GA2053629@dev-arch.thelio-3990X>
- <36a25113-731c-4b28-a695-f3fbb0996d6e@app.fastmail.com>
- <20231205150417.GA349053@dev-arch.thelio-3990X>
-From: Sylvestre Ledru <sylvestre@debian.org>
-In-Reply-To: <20231205150417.GA349053@dev-arch.thelio-3990X>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Debian-User: sylvestre
+In-Reply-To: <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
 
-Le 05/12/2023 à 16:04, Nathan Chancellor a écrit :
-> On Tue, Dec 05, 2023 at 07:34:40AM +0100, Arnd Bergmann wrote:
->> On Mon, Dec 4, 2023, at 23:33, Nathan Chancellor wrote:
->>> On Mon, Dec 04, 2023 at 11:13:04AM -0700, Nathan Chancellor wrote:
->>>
->>>> I am still investigating into what (if anything) can be done to resolve
->>>> this on the kernel side. We could potentially revert commit
->>>> ddc72c9659b5 ("kbuild: clang: do not use CROSS_COMPILE for target
->>>> triple") but I am not sure that will save us from that change, as
->>>> tuxmake's CROSS_COMPILE=arm-linux-gnueabihf will cause us to have an
->>>> armv7 CPU even though we may not be building for armv7.
->>>
->>> Okay, this is a pretty awful situation the more I look into it :(
->>>
->>> The arm64 compat vDSO build is easy enough to fix because we require use
->>> of the integrated assembler, which means we can add '-mcpu=generic' (the
->>> default in LLVM for those files based on my debugging) to those files
->>> and be done with it:
->>>
->>> diff --git a/arch/arm64/kernel/vdso32/Makefile
->>> b/arch/arm64/kernel/vdso32/Makefile
->>> index 1f911a76c5af..5f5cb722cfc2 100644
->>> --- a/arch/arm64/kernel/vdso32/Makefile
->>> +++ b/arch/arm64/kernel/vdso32/Makefile
->>> @@ -9,6 +9,10 @@ include $(srctree)/lib/vdso/Makefile
->>>   ifeq ($(CONFIG_CC_IS_CLANG), y)
->>>   CC_COMPAT ?= $(CC)
->>>   CC_COMPAT += --target=arm-linux-gnueabi
->>> +# Some distributions (such as Debian) change the default CPU for the
->>> +# arm-linux-gnueabi target triple, which can break the build.
->>> Explicitly set
->>> +# the CPU to generic, which is the default for Linux in LLVM.
->>> +CC_COMPAT += -mcpu=generic
->>>   else
->>>   CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
->>>   endif
->>
->> I'm still trying to follow what is actually going on. I
->> see that we pass
->>
->> VDSO_CAFLAGS += -march=armv8-a
->>
->> which is meant to tell the compiler that we want it to
->> use ARMv8 compatible instructions. Is the problem that
->> clang ignores this flag, or do we not pass it correctly?
->>
->> I would have expected -march=armv8-a to be better than
->> -mcpu=generic here, as it allows the compiler to use
->> a wider set of instructions that is still guaranteed to
->> be available on everything it will run on.
+On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [CCing Linus]
 > 
-> I should have made it clearer in that message that adding
-> '-mcpu=generic' was only to avoid the logic added by that Debian LLVM
-> change, not because I believe the kernel is doing something incorrectly
-> now. From what I could tell following through LLVM's code, '-march='
-> determines the default CPU, which is then used to further inform the
-> full target triple and by overriding the CPU where that patch did, it
-> was just blowing away the user's request. By providing an '-mcpu='
-> option explicitly, it would avoid the default selection logic and we
-> would get what we asked for.
+> Hi, top-posting for once, to make this easily accessible to everyone.
 > 
->>> Sylvestre, I strongly believe you should consider reverting that change
->>> or give us some compiler flag that allows us to fallback to upstream
->>> LLVM's default CPU selection logic. I think that hardcoding Debian's
->>> architecture defintions based on the target triple into the compiler
->>> could cause issues for other projects as well. For example,
->>> '--target=arm-linux-gnueabi -march=armv7-a' won't actually target ARMv7:
->>>
->>>    $ echo 'int main(void) { asm("dsb"); return 0; }' | \
->>>          clang --target=arm-linux-gnueabi -march=armv7-a \
->>>          -x c -c -o /dev/null -v -
->>>    ...
->>>     "/usr/bin/clang-17" -cc1 -triple armv7-unknown-linux-gnueabi ...
->>>    ...
->>>
->>> vs.
->>>
->>>    $ echo 'int main(void) { asm("dsb"); return 0; }' | \
->>>          clang --target=arm-linux-gnueabi -march=armv7-a \
->>>          -x c -c -o /dev/null -v -
->>>    ...
->>>    "<prefix>/bin/clang-18" -cc1 -triple armv5e-unknown-linux-gnueabi ...
->>>    ...
->>
->> Right, the kernel definitely relies on -march= taking
->> precedence over the default CPU, the same way that we
->> tell the compiler to pick a non-default endianess or ABI.
+> Stéphane, many thx for your insights.
 > 
-> Agreed, I have yet to test the new version of the patch but I see you
-> and Ard have given input on it, so hopefully it does not have any
-> problems like this.
+> I'm CCing Linus on this, as I guess he wants to be aware of this.
+> 
+> Normally I try to sum up things somewhat when doing so, but this here
+> likely won't end well. So all I'm saying is: commit 157a3537d6bc28
+> ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
+> included in v6.6.3 broke containers in some setups. John described that
+> commit with the words "it is a far from good solution. It is a stop
+> gap." and later mentioned that "a CVE is coming for this and that having
+> this unmediated in the tree isn't good either."
+> 
+> For more details please check out the thread that on lore started with
+> this message:
+> 
+> https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> On 05.12.23 07:57, Stéphane Graber wrote:
+> > On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
+> > Leemhuis) <regressions@leemhuis.info> wrote:
+> >>
+> >> On 04.12.23 14:14, John Johansen wrote:
+> >>> On 12/3/23 17:34, Stéphane Graber wrote:
+> >>
+> >> Side note: Stéphane, thx for CCing the regressions list.
+> >>
+> >>>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
+> >>>> <john.johansen@canonical.com> wrote:
+> >>>>> On 12/2/23 17:20, Stéphane Graber wrote:
+> >>>>>>
+> >>>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
+> >>>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
+> >>>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
+> >>>>>> distributions using the newer version of util-linux.
+> >>>>>>
+> >>>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
+> >>>>>> the new mount command now performs:
+> >>>>>> ```
+> >>>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
+> >>>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+> >>>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
+> >>>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
+> >>>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
+> >>>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
+> >>>>>> stx_size=40, ...}) = 0
+> >>>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
+> >>>>>> ```
+> >>>>>>
+> >>>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
+> >>>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
+> >>>>>> being created, this therefore results in:
+> >>>>>> ```
+> >>>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
+> >>>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
+> >>>>>> class="mount" info="failed perms check" error=-13
+> >>>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
+> >>>>>> srcname="/" flags="rw, move"
+> >>>>>> ```
 
-Matthias, as cc, pushed a potential fix for debian/ubuntu packages!
-https://salsa.debian.org/pkg-llvm-team/llvm-toolchain/-/commit/01a06b481e5a2610c7387149b58978c3ec281f2c
+move_mount() doesn't create a new mount it just moves an already
+existing mount around in the tree. Either that mount is moved
+(fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
+was a detached mount to begin with.
 
-Cheers,
-Sylvestre
+The new mount api splits mounting across multiple system calls. And the
+state it keeps for itself is gone once you create a mount via fsmount().
+Because then the fs_context will be destroyed and you're only dealing
+with a superblock and mount(s) for it.
 
+You shouldn't care about move_mount() moving a detached mount because
+really it is not a move from some other filesystem location. The
+creation of that mount will have already happened in
+open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
+move_mount() is the wrong place to do this.
+
+If the only thing that would be broken here is that you want to block
+moving mounts from a given source location then you need to pass down
+that this is an actual move to the LSM hook. Because I'm really not keen
+on giving LSMs access to is_anon_ns() or similar helpers. They're just
+too easy to misuse.
+
+> > Overall, this still feels very rushed and broken to me. I understand
+> > that being able to trivially bypass AppArmor mount rules isn't great,
+> > but shipping code that makes the vast majority of said rules useless
+> > doesn't really feel like such an improvement. It's effectively turning
+> > what was a reasonably flexible policy engine around mount calls, into
+> > a binary switch to either allow everything or block everything.
+
+For a 1:1 mapping of AppArmor LSM rules from the old to the new mount
+api I expect that one will have to effectively redo everything
+internally and keep state across multiple system calls. IMO, this is
+really not the way to go. Instead it's probably wise to have a new mount
+mediation policy for the new mount api with different semantics. Because
+I have my doubts that a 1:1 mapping will even work and won't just cause
+you CVEs.
