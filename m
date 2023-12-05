@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E585C90C
-	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 13:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4842B5D8FC
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 13:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rAVXK-0005dK-0Y; Tue, 05 Dec 2023 14:32:30 +0100
-Message-ID: <670a7310-8098-4083-9f30-96987cc5d0aa@leemhuis.info>
-Date: Tue, 5 Dec 2023 14:32:28 +0100
+	id 1rAVbG-0006du-4s; Tue, 05 Dec 2023 14:36:34 +0100
+Message-ID: <6c97a39b-4ba6-4d79-985e-a69f8e0c76a4@leemhuis.info>
+Date: Tue, 5 Dec 2023 14:36:33 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,65 +17,34 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression apparently caused by commit
- 088a40980efbc2c449b72f0f2c7ebd82f71d08e2 "ASoC: amd: acp: add pm ops support
- for acp pci driver"
+Subject: Re: spi: imx: Increase imx51 ecspi burst length fails on imx6dl and
+ imx8mm
 Content-Language: en-US, de-DE
-To: syed saba kareem <ssabakar@amd.com>, Marian Postevca
- <posteuca@mutex.one>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Syed Saba Kareem <Syed.SabaKareem@amd.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
- Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
- Sunil-kumar.Dommati@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Yang Yingliang <yangyingliang@huawei.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- V sujith kumar Reddy <Vsujithkumar.Reddy@amd.com>,
- ye xingchen <ye.xingchen@zte.com.cn>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <87a5v8szhc.fsf@mutex.one> <ZUQssoD2rUHSYQ2v@debian.me>
- <610d562f-0bbc-485c-ad63-9534fa4ba937@amd.com>
- <d002ad6f-d908-4cf6-afcf-bf0989418e72@leemhuis.info>
- <6085d2e3-f28e-4d1d-9863-8275931430e6@amd.com> <87fs0x4fn7.fsf@mutex.one>
- <ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com>
+To: linux@bigler.io, Benjamin Bigler <benjamin@bigler.one>
+Cc: broonie@kernel.org, francesco@dolcini.it, linux-kernel@vger.kernel.org,
+ linux-spi@vger.kernel.org, regressions@lists.linux.dev,
+ stefan.moring@technolution.nl
+References: <c7a38307ac74a973e26ac820a0b98773262720bd.camel@bigler.one>
+ <89209fbb46c4ce650141ecb6fdf06476@mail.infomaniak.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com>
+In-Reply-To: <89209fbb46c4ce650141ecb6fdf06476@mail.infomaniak.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701783154;62a499c1;
-X-HE-SMSGID: 1rAVXK-0005dK-0Y
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701783398;b051a44b;
+X-HE-SMSGID: 1rAVbG-0006du-4s
 
-On 23.11.23 14:58, syed saba kareem wrote:
+On 27.11.23 10:09, linux@bigler.io wrote:
 > 
-> On 11/23/23 03:25, Marian Postevca wrote:
->> syed saba kareem <ssabakar@amd.com> writes:
->>
->>> Hi , We have up streamed the patch it is in review.
->>>
->>> Please find the below link for the patch details.
->>>
->>> https://patchwork.kernel.org/project/alsa-devel/patch/20231113123345.2196504-2-Syed.SabaKareem@amd.com/
->>>
->> Sorry maybe I'm not understanding here something, when you are saying
->> that the patch is in review, where is this review being done?
->>
->> As far as I can tell Mark Brown only pulled the first patch from your
->> series:
-> 
-> We got comments for the second patch and we addressed them.
-> 
-> It seems it may be stuck at review stage as one patch got merged.
-> 
-> Will resend the patch again.
-> 
-> You can find the received review comments for the patch in the below link.
+> Thank you Benjamin for the patch.
+> I have tested the patch and is works fine.
 
-Any news? From a quick look it seems this didn't make any progress at
-all, but I might be missing something.
+That's great.
+
+Benjamin, what's the status of the fix for this regression? I tried to
+find a proper submission for review, but didn't find one. Am I missing
+something or did that fall through the cracks?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -85,19 +54,49 @@ If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
 
->>> Applied to
->>>
->>>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
->>> for-next
->>>
->>> Thanks!
->>>
->>> [1/2] ASoC: amd: acp: add Kconfig options for acp7.0 based platform
->>> driver
->>>        commit: d3534684ada99ef8c0899eb28c62b4462483ee19
->>> [2/2] ASoC: amd: acp: add pm ops support for renoir platform
->>>        (no commit info)
->>>
->> I don't see the second patch in for-next.
+> Am 2023-11-26T14:19:56.000+01:00 hat Benjamin Bigler <benjamin@bigler.one> geschrieben:
+>>  Hi
+>>
+>> I did some debugging and I think the problem is that in this case bits_per_word is 8. So in
+>> spi_imx_dma_configure the buswidth is set to DMA_SLAVE_BUSWIDTH_1_BYTE. But in
+>> mx51_ecspi_prepare_transfer the BURST_LENGTH is now set to (spi_imx->count * spi_imx->bits_per_word
+>> - 1)
+>> before 15a6af94a2779d5dfb42ee4bfac858ea8e964a3f it was (spi_imx->bits_per_word - 1). Now the spi
+>> transmits 4 byte per byte except for the first word. I added the following patch and it worked again
+>>
+>> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+>> index 498e35c8db2c..f514966e2ada 100644
+>> --- a/drivers/spi/spi-imx.c
+>> +++ b/drivers/spi/spi-imx.c
+>> @@ -659,11 +659,22 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>>  		ctrl |= (spi_imx->target_burst * 8 - 1)
+>>  			<< MX51_ECSPI_CTRL_BL_OFFSET;
+>>  	else {
+>> -		if (spi_imx->count &gt;= 512)
+>> -			ctrl |= 0xFFF << MX51_ECSPI_CTRL_BL_OFFSET;
+>> -		else
+>> -			ctrl |= (spi_imx->count * spi_imx->bits_per_word - 1)
+>> +		if (spi_imx->usedma)
+>> +			ctrl |= (spi_imx->bits_per_word *
+>> +					 spi_imx_bytes_per_word(
+>> +						 spi_imx->bits_per_word) -
+>> +				 1)
+>>  				<< MX51_ECSPI_CTRL_BL_OFFSET;
+>> +		else {
+>> +			if (spi_imx->count &gt;= MX51_ECSPI_CTRL_MAX_BURST)
+>> +				ctrl |= (MX51_ECSPI_CTRL_MAX_BURST - 1)
+>> +					<< MX51_ECSPI_CTRL_BL_OFFSET;
+>> +			else
+>> +				ctrl |= (spi_imx->count *
+>> +						 spi_imx->bits_per_word -
+>> +					 1)
+>> +					<< MX51_ECSPI_CTRL_BL_OFFSET;
+>> +		}
+>>  	}
+>>  
+>>  	/* set clock speed */
+>>
+>> Best regards,
+> Benjamin Bigler
 > 
 > 
