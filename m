@@ -1,88 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB61067E64;
-	Tue,  5 Dec 2023 14:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rAWrq-0005mA-Tn; Tue, 05 Dec 2023 15:57:46 +0100
-Message-ID: <01210f0e-9340-41bb-bb41-e3ca0774faa9@leemhuis.info>
-Date: Tue, 5 Dec 2023 15:57:46 +0100
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B1467E63
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 14:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id EB0F972C8F5;
+	Tue,  5 Dec 2023 17:48:31 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+	by imap.altlinux.org (Postfix) with ESMTPSA id E525A36D0174;
+	Tue,  5 Dec 2023 17:48:31 +0300 (MSK)
+Date: Tue, 5 Dec 2023 17:48:31 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: regressions@lists.linux.dev, Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Broken link to lore post
+Message-ID: <20231205144831.hgqya5os4ajn3hxa@altlinux.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Fwd: Kernels v6.5 and v6.6 break resume from standby (s3) on some
- Intel systems if VT-d is enabled
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Michael Kelley <mikelley@microsoft.com>,
- Oleksandr Natalenko <oleksandr@natalenko.name>, Helge Deller
- <deller@gmx.de>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- kbugreports@proton.me, Linux IOMMU <iommu@lists.linux.dev>,
- Linux Power Management <linux-pm@vger.kernel.org>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- David Woodhouse <dwmw2@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <4b3c624a-f114-4e39-9e1c-0df18f307e8c@gmail.com>
- <ZWx1IHBE9KCk6rWj@archie.me>
-Content-Language: en-US, de-DE
-In-Reply-To: <ZWx1IHBE9KCk6rWj@archie.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701788276;bc0ff3a3;
-X-HE-SMSGID: 1rAWrq-0005mA-Tn
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
 
-[CCing Mario, as he might be interested]
+Hi,
 
-On 03.12.23 13:31, Bagas Sanjaya wrote:
-> On Tue, Nov 28, 2023 at 08:09:24PM +0700, Bagas Sanjaya wrote:
->> I notice a regression report on Bugzilla [1]. Quoting from it:
->>> 
->>> Affected system:
->>> 
->>> Thinkpad, Intel Kaby Lake (i7-7600U) chipset / cpu and onboard
->>> gpu (Intel HD 620), no separate graphics card, current bios
->>> firmware; running Void Linux, xfce / lightdm
->>> 
->>> Symptom / problem:
->>> 
->>> Since the upgrade to kernel v6.5.5 (from v6.3.13) my system
->>> doesn't wake up from standby, i.e. resume from s3 fails 100% of
->>> the time.
->
->> https://bugzilla.kernel.org/show_bug.cgi?id=218191 
-> 
-> The reporter had done bisection (see Bugzilla for details),
+JFYI. On the page
 
-Turns out the kernel used by the reporter is not vanilla, as zfs is
-involved -- and due to that the reporter is not even able to check if
-mainline is still affected. I'll thus remove this from the tracking.
-Sorry for the noise.
+  https://linux-regtracking.leemhuis.info/regzbot/mainline/
 
-In case anyone nevertheless cares: The bisection result from the report
-was 0c7ffa32dbd6b0 ("x86/smpboot/64: Implement
-arch_cpuhp_init_parallel_bringup() and enable it") [v6.5-rc1].
-This time on a Intel machine. Mario's "Fixes for s3 with parallel
-bootup" patch-series[1] (the one were abandoned because things turned
-out to be a BIOS bug affecting some AMD systems) apparently resolved the
-problem for the reporter.
+In the text:
 
-[1]
-https://lore.kernel.org/all/20231026170330.4657-1-mario.limonciello@amd.com/
+|  When fixing, add this to the commit message to make regzbot notice patch
+|  postings and commits to resolve the issue:
+|
+|  Fixes: 9dc704dcc09e ("scsi: aacraid: Reply queue mapping to CPUs based on IRQ affinity")
+|  Reported-by: bugzilla-daemon@kernel.org <bugzilla-daemon@kernel.org>
+|  Link: https://lore.kernel.org/r/bug-217599-11613@https.bugzilla.kernel.org%2F/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+The link does not work with 'Not Found' message.
 
-#regzbot inconclusive: kernel used by the reporter is not vanilla
+Thanks,
+
