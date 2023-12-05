@@ -1,150 +1,245 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D685168B64
-	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 17:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757E26A005
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 18:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="osWCiv1K"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5Gj2N5002956;
-	Tue, 5 Dec 2023 17:33:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=Lg9rk2bBS3KEXt7PHC7hgvUmJGgcsxPJ/w2bepRjO7o=;
- b=osWCiv1KE1vnkovnGsKIylVtfwRdEppBifgnP5S38LPhvYAfBH7jGid3NpBvMA/NCWFm
- LCEmnNCHJ4LVKLE5W5eSGuCpYWgWHkgsompiOQVTf7HF7NoKMmChLQdllHJRwF+/uSQX
- LvNscZzjTIA17FgXJTIyT0hcIfTuOt9mC/kUffQ7RmR2PLtbIn+z8ySbBGCNCVF8NcjV
- wNsYG0WF48pPvKogY9mkGswXfyVjjeAkTRdzP4g58PBy6ZV7PCB/LZz9qtUNDYqTnTtT
- XvuKWW75cDq++0nJjr5xSTjcMd4P6ZkPtz8WGZ2YrG+Mc85apL/SDeV1HttsG+W2VuCZ vA== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3usmw02faf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 17:33:33 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B5HXWLg003747
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Dec 2023 17:33:32 GMT
-Received: from [10.71.109.77] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Dec
- 2023 09:33:29 -0800
-Message-ID: <f59c5d45-a689-8a94-a2ae-d2ffa835eedf@quicinc.com>
-Date: Tue, 5 Dec 2023 09:33:28 -0800
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LAFpHu/z"
+Received: from [192.168.192.84] (unknown [50.39.103.33])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id BDF4D3F16E;
+	Tue,  5 Dec 2023 18:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1701801282;
+	bh=ZO9sPX/fnz5Ahak0iB7eNQ+MezI1C4eNsv6ghCWx330=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=LAFpHu/z8cLCYZjfAyGUD1wWmCOnNan/Tg5gJmWfmRBPwGiioXXeFfHKpZXl7Al+q
+	 dhB+Gs0kqQJ5/N51HAZtvZyAuxbV2fYVc+AVtIQ6452u2ZNxfQj11g7wtDo4/JW+Lm
+	 BN+g5ZIKJgUmy7xzUhvAmWZ7/LOGOLuwgTIn61dgXbiIrkzmGD6MMSrr/BaHvn5k4Z
+	 tXz/GBWkbjLzjqnmvfg2d0hC6fcuupghwTlQkunHwf4fancT/i3m/a2mgfHckIzMHw
+	 yjCBucw5YlWPT28+CObGG3acymwty3OmyGPFxLYcWIj5DrwxL44X1rayEvzU0ICloW
+	 TpXUq/YwSKQWw==
+Message-ID: <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
+Date: Tue, 5 Dec 2023 10:34:33 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: Kunit drm_test_check_plane_state: EXPECTATION FAILED at
- drivers/gpu/drm/tests/drm_plane_helper_test.c:123
+User-Agent: Mozilla Thunderbird
+Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
 Content-Language: en-US
-To: Maxime Ripard <mripard@kernel.org>,
-        Dan Carpenter
-	<dan.carpenter@linaro.org>
-CC: Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Naresh Kamboju
-	<naresh.kamboju@linaro.org>,
-        <kunit-dev@googlegroups.com>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <lkft-triage@lists.linaro.org>,
-        <regressions@lists.linux.dev>, <davidgow@google.com>,
-        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>,
-        "Linux Kernel
- Functional Testing" <lkft@linaro.org>
-References: <20231204173536.51003-1-naresh.kamboju@linaro.org>
- <rxv7jlfuwjib443pzdepbtgu454gdzemd3ojmmhbnhr4syneve@6me3bduyx2ee>
- <42d85b15-9ffd-4a08-b51e-a3367e57d128@suswa.mountain>
- <fgajgc7vp626nzeeqetkfbyadh53iti3mvoq4uck3zz3ysmvno@b3f7kxnwrwsd>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <fgajgc7vp626nzeeqetkfbyadh53iti3mvoq4uck3zz3ysmvno@b3f7kxnwrwsd>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: D3PiGiOvbJnrwgPVR-o3XXv7mkveCrFd
-X-Proofpoint-GUID: D3PiGiOvbJnrwgPVR-o3XXv7mkveCrFd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-05_12,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=847 impostorscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2312050138
+To: Christian Brauner <brauner@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@stgraber.org>,
+ Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+ Alexander Mihalicyn <alexander@mihalicyn.com>,
+ "paul@paul-moore.com" <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+ linux-security-module@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
+ <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
+ <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
+ <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
+ <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
+ <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
+ <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
+ <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ xsFNBE5mrPoBEADAk19PsgVgBKkImmR2isPQ6o7KJhTTKjJdwVbkWSnNn+o6Up5knKP1f49E
+ BQlceWg1yp/NwbR8ad+eSEO/uma/K+PqWvBptKC9SWD97FG4uB4/caomLEU97sLQMtnvGWdx
+ rxVRGM4anzWYMgzz5TZmIiVTZ43Ou5VpaS1Vz1ZSxP3h/xKNZr/TcW5WQai8u3PWVnbkjhSZ
+ PHv1BghN69qxEPomrJBm1gmtx3ZiVmFXluwTmTgJOkpFol7nbJ0ilnYHrA7SX3CtR1upeUpM
+ a/WIanVO96WdTjHHIa43fbhmQube4txS3FcQLOJVqQsx6lE9B7qAppm9hQ10qPWwdfPy/+0W
+ 6AWtNu5ASiGVCInWzl2HBqYd/Zll93zUq+NIoCn8sDAM9iH+wtaGDcJywIGIn+edKNtK72AM
+ gChTg/j1ZoWH6ZeWPjuUfubVzZto1FMoGJ/SF4MmdQG1iQNtf4sFZbEgXuy9cGi2bomF0zvy
+ BJSANpxlKNBDYKzN6Kz09HUAkjlFMNgomL/cjqgABtAx59L+dVIZfaF281pIcUZzwvh5+JoG
+ eOW5uBSMbE7L38nszooykIJ5XrAchkJxNfz7k+FnQeKEkNzEd2LWc3QF4BQZYRT6PHHga3Rg
+ ykW5+1wTMqJILdmtaPbXrF3FvnV0LRPcv4xKx7B3fGm7ygdoowARAQABzStKb2huIEpvaGFu
+ c2VuIDxqb2huLmpvaGFuc2VuQGNhbm9uaWNhbC5jb20+wsF3BBMBCgAhBQJOjRdaAhsDBQsJ
+ CAcDBRUKCQgLBRYCAwEAAh4BAheAAAoJEAUvNnAY1cPYi0wP/2PJtzzt0zi4AeTrI0w3Rj8E
+ Waa1NZWw4GGo6ehviLfwGsM7YLWFAI8JB7gsuzX/im16i9C3wHYXKs9WPCDuNlMc0rvivqUI
+ JXHHfK7UHtT0+jhVORyyVVvX+qZa7HxdZw3jK+ROqUv4bGnImf31ll99clzo6HpOY59soa8y
+ 66/lqtIgDckcUt/1ou9m0DWKwlSvulL1qmD25NQZSnvB9XRZPpPd4bea1RTa6nklXjznQvTm
+ MdLq5aJ79j7J8k5uLKvE3/pmpbkaieEsGr+azNxXm8FPcENV7dG8Xpd0z06E+fX5jzXHnj69
+ DXXc3yIvAXsYZrXhnIhUA1kPQjQeNG9raT9GohFPMrK48fmmSVwodU8QUyY7MxP4U6jE2O9L
+ 7v7AbYowNgSYc+vU8kFlJl4fMrX219qU8ymkXGL6zJgtqA3SYHskdDBjtytS44OHJyrrRhXP
+ W1oTKC7di/bb8jUQIYe8ocbrBz3SjjcL96UcQJecSHu0qmUNykgL44KYzEoeFHjr5dxm+DDg
+ OBvtxrzd5BHcIbz0u9ClbYssoQQEOPuFmGQtuSQ9FmbfDwljjhrDxW2DFZ2dIQwIvEsg42Hq
+ 5nv/8NhW1whowliR5tpm0Z0KnQiBRlvbj9V29kJhs7rYeT/dWjWdfAdQSzfoP+/VtPRFkWLr
+ 0uCwJw5zHiBgzsFNBE5mrPoBEACirDqSQGFbIzV++BqYBWN5nqcoR+dFZuQL3gvUSwku6ndZ
+ vZfQAE04dKRtIPikC4La0oX8QYG3kI/tB1UpEZxDMB3pvZzUh3L1EvDrDiCL6ef93U+bWSRi
+ GRKLnNZoiDSblFBST4SXzOR/m1wT/U3Rnk4rYmGPAW7ltfRrSXhwUZZVARyJUwMpG3EyMS2T
+ dLEVqWbpl1DamnbzbZyWerjNn2Za7V3bBrGLP5vkhrjB4NhrufjVRFwERRskCCeJwmQm0JPD
+ IjEhbYqdXI6uO+RDMgG9o/QV0/a+9mg8x2UIjM6UiQ8uDETQha55Nd4EmE2zTWlvxsuqZMgy
+ W7gu8EQsD+96JqOPmzzLnjYf9oex8F/gxBSEfE78FlXuHTopJR8hpjs6ACAq4Y0HdSJohRLn
+ 5r2CcQ5AsPEpHL9rtDW/1L42/H7uPyIfeORAmHFPpkGFkZHHSCQfdP4XSc0Obk1olSxqzCAm
+ uoVmRQZ3YyubWqcrBeIC3xIhwQ12rfdHQoopELzReDCPwmffS9ctIb407UYfRQxwDEzDL+m+
+ TotTkkaNlHvcnlQtWEfgwtsOCAPeY9qIbz5+i1OslQ+qqGD2HJQQ+lgbuyq3vhefv34IRlyM
+ sfPKXq8AUTZbSTGUu1C1RlQc7fpp8W/yoak7dmo++MFS5q1cXq29RALB/cfpcwARAQABwsFf
+ BBgBCgAJBQJOZqz6AhsMAAoJEAUvNnAY1cPYP9cP/R10z/hqLVv5OXWPOcpqNfeQb4x4Rh4j
+ h/jS9yjes4uudEYU5xvLJ9UXr0wp6mJ7g7CgjWNxNTQAN5ydtacM0emvRJzPEEyujduesuGy
+ a+O6dNgi+ywFm0HhpUmO4sgs9SWeEWprt9tWrRlCNuJX+u3aMEQ12b2lslnoaOelghwBs8IJ
+ r998vj9JBFJgdeiEaKJLjLmMFOYrmW197As7DTZ+R7Ef4gkWusYFcNKDqfZKDGef740Xfh9d
+ yb2mJrDeYqwgKb7SF02Hhp8ZnohZXw8ba16ihUOnh1iKH77Ff9dLzMEJzU73DifOU/aArOWp
+ JZuGJamJ9EkEVrha0B4lN1dh3fuP8EjhFZaGfLDtoA80aPffK0Yc1R/pGjb+O2Pi0XXL9AVe
+ qMkb/AaOl21F9u1SOosciy98800mr/3nynvid0AKJ2VZIfOP46nboqlsWebA07SmyJSyeG8c
+ XA87+8BuXdGxHn7RGj6G+zZwSZC6/2v9sOUJ+nOna3dwr6uHFSqKw7HwNl/PUGeRqgJEVu++
+ +T7sv9+iY+e0Y+SolyJgTxMYeRnDWE6S77g6gzYYHmcQOWP7ZMX+MtD4SKlf0+Q8li/F9GUL
+ p0rw8op9f0p1+YAhyAd+dXWNKf7zIfZ2ME+0qKpbQnr1oizLHuJX/Telo8KMmHter28DPJ03 lT9Q
+Organization: Canonical
+In-Reply-To: <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 12/5/2023 3:46 AM, Maxime Ripard wrote:
-> On Tue, Dec 05, 2023 at 12:05:02PM +0300, Dan Carpenter wrote:
->> On Tue, Dec 05, 2023 at 09:37:05AM +0100, Maxime Ripard wrote:
->>> Hi Naresh,
->>>
->>> Thanks for the report
->>>
->>> On Mon, Dec 04, 2023 at 11:05:36PM +0530, Naresh Kamboju wrote:
->>>> The Kunit drm_plane_helper failed on all devices running Linux next-20231204
+On 12/5/23 09:08, Christian Brauner wrote:
+> On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing Linus]
+>>
+>> Hi, top-posting for once, to make this easily accessible to everyone.
+>>
+>> Stéphane, many thx for your insights.
+>>
+>> I'm CCing Linus on this, as I guess he wants to be aware of this.
+>>
+>> Normally I try to sum up things somewhat when doing so, but this here
+>> likely won't end well. So all I'm saying is: commit 157a3537d6bc28
+>> ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
+>> included in v6.6.3 broke containers in some setups. John described that
+>> commit with the words "it is a far from good solution. It is a stop
+>> gap." and later mentioned that "a CVE is coming for this and that having
+>> this unmediated in the tree isn't good either."
+>>
+>> For more details please check out the thread that on lore started with
+>> this message:
+>>
+>> https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> On 05.12.23 07:57, Stéphane Graber wrote:
+>>> On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
+>>> Leemhuis) <regressions@leemhuis.info> wrote:
 >>>>
->>>> ## Test Regressions (compared to next-20231201)
->>>> * qemu-armv7, kunit and
->>>> * x86, kunit
->>>>    - drm_test_check_invalid_plane_state_downscaling_invalid
->>>>    - drm_test_check_invalid_plane_state_drm_plane_helper
->>>>    - drm_test_check_invalid_plane_state_drm_test_check_invalid_plane_state
->>>>    - drm_test_check_invalid_plane_state_positioning_invalid
->>>>    - drm_test_check_invalid_plane_state_upscaling_invalid
->>>>    - drm_test_check_plane_state_clipping_rotate_reflect
->>>>    - drm_test_check_plane_state_clipping_simple
->>>>    - drm_test_check_plane_state_downscaling
->>>>    - drm_test_check_plane_state_drm_test_check_plane_state
->>>>    - drm_test_check_plane_state_positioning_simple
->>>>    - drm_test_check_plane_state_rounding1
->>>>    - drm_test_check_plane_state_rounding2
->>>>    - drm_test_check_plane_state_rounding3
->>>>    - drm_test_check_plane_state_rounding4
->>>>    - drm_test_check_plane_state_upscaling
->>>
->>> I found the source of failure to be f1e75da5364e ("drm/atomic: Loosen FB
->>> atomic checks").
->>>
->>> Fortunately for us, it's already been reverted yesterday for some
->>> unrelated reason, so it should be fixed in next-20231205 onward.
->>
->> Sorry, that's a bummer that these patches were reverted.  :(  The whole
->> episode was a bit unfortunate...
->>
->> Qualcom has been working on those patches for a year.  They must not be
->> using kunit testing as part of their QC...  It's some kind of
->> communication failure on our part.
+>>>> On 04.12.23 14:14, John Johansen wrote:
+>>>>> On 12/3/23 17:34, Stéphane Graber wrote:
+>>>>
+>>>> Side note: Stéphane, thx for CCing the regressions list.
+>>>>
+>>>>>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
+>>>>>> <john.johansen@canonical.com> wrote:
+>>>>>>> On 12/2/23 17:20, Stéphane Graber wrote:
+>>>>>>>>
+>>>>>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
+>>>>>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
+>>>>>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
+>>>>>>>> distributions using the newer version of util-linux.
+>>>>>>>>
+>>>>>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
+>>>>>>>> the new mount command now performs:
+>>>>>>>> ```
+>>>>>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
+>>>>>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+>>>>>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
+>>>>>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
+>>>>>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
+>>>>>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
+>>>>>>>> stx_size=40, ...}) = 0
+>>>>>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
+>>>>>>>> ```
+>>>>>>>>
+>>>>>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
+>>>>>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
+>>>>>>>> being created, this therefore results in:
+>>>>>>>> ```
+>>>>>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
+>>>>>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
+>>>>>>>> class="mount" info="failed perms check" error=-13
+>>>>>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
+>>>>>>>> srcname="/" flags="rw, move"
+>>>>>>>> ```
 > 
-> That's definitely a communication failure, but that's mostly on us :)
+> move_mount() doesn't create a new mount it just moves an already
+> existing mount around in the tree. Either that mount is moved
+> (fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
+> was a detached mount to begin with.
 > 
-> The reason these patches were reverted was completely unrelated to the
-> kunit failures here: it failed the basic requirement we have on
-> intel-gpu-tools tests and open-source userspace examples for new uAPIs.
+yes, all to aware of this
+
+> The new mount api splits mounting across multiple system calls. And the
+> state it keeps for itself is gone once you create a mount via fsmount().
+
+yep
+
+> Because then the fs_context will be destroyed and you're only dealing
+> with a superblock and mount(s) for it.
 > 
-> So whether or not kunit tests would have passed, these patches were
-> applied due to inattention and would have been reverted anyway
+yep
+
+> You shouldn't care about move_mount() moving a detached mount because
+> really it is not a move from some other filesystem location. The
+> creation of that mount will have already happened in
+> open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
+> move_mount() is the wrong place to do this.
 > 
-> Maxime
+yes and no. What we are specifically dong is mediating existing attached
+mounts as always and blocking move_mount from attaching the detached
+mount via move_mount. Which is very much something move_mount mediation
+should be able to do.
 
-The patches were reverted because the corresponding IGT/compositor 
-changes were not posted yet. We will re-try applying once those are 
-accepted.
+It works as a stop gap for the new mount api bypassing the LSM at a very
+course level. This is why it requires a very general mount rule for
+apparmor to allow move_mount of the detached mount. A conditional that
+improves control around this is coming, but we can't make move_mount()
+mediation provide the full set of apparmor old mount mediation.
 
-Regarding KUnit tests, no we did not run this test and yes you are 
-right, we were not running KUnit testing as the DRM CI mainly validates IGT.
+Providing something close to what we were doing before is going to
+require new hooks, and likely specialized states tailored to the
+new mount api. Until that does happen it does mean a reduction in
+what apparmor policy can mediate. Today instead of being able to
+specify details about the mount you need a generic mount rule that
+just allows the application to do pretty much anything with mounts,
+soon you will be able to have an addition conditional that allows
+better control of move mount, and better logging of what is going on.
 
-We will certainly help to fix this failure. Most likely the KUnit tests 
-need to be fixed to allow for a NULL FB.
+> If the only thing that would be broken here is that you want to block
+> moving mounts from a given source location then you need to pass down
+> that this is an actual move to the LSM hook. Because I'm really not keen
+> on giving LSMs access to is_anon_ns() or similar helpers. They're just
+> too easy to misuse.
+> 
 
-If this is documented somewhere as a requirement, please share it and we 
-should add KUnit testing to our DRM CI as well so that atleast this kind 
-of failure will not repeat.
+indeed the LSM hook here needs to have some more info passed in.
+
+>>> Overall, this still feels very rushed and broken to me. I understand
+>>> that being able to trivially bypass AppArmor mount rules isn't great,
+>>> but shipping code that makes the vast majority of said rules useless
+>>> doesn't really feel like such an improvement. It's effectively turning
+>>> what was a reasonably flexible policy engine around mount calls, into
+>>> a binary switch to either allow everything or block everything.
+> 
+> For a 1:1 mapping of AppArmor LSM rules from the old to the new mount
+> api I expect that one will have to effectively redo everything
+> internally and keep state across multiple system calls. IMO, this is
+> really not the way to go. Instead it's probably wise to have a new mount
+> mediation policy for the new mount api with different semantics. Because
+> I have my doubts that a 1:1 mapping will even work and won't just cause
+> you CVEs.
+
+yes the mount policy will have to be extended to support the new api.
+Getting that right will take time.
+
+
+
