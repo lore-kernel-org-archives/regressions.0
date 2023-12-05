@@ -1,245 +1,166 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757E26A005
-	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 18:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233BC6A017
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 18:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LAFpHu/z"
-Received: from [192.168.192.84] (unknown [50.39.103.33])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id BDF4D3F16E;
-	Tue,  5 Dec 2023 18:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1701801282;
-	bh=ZO9sPX/fnz5Ahak0iB7eNQ+MezI1C4eNsv6ghCWx330=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=LAFpHu/z8cLCYZjfAyGUD1wWmCOnNan/Tg5gJmWfmRBPwGiioXXeFfHKpZXl7Al+q
-	 dhB+Gs0kqQJ5/N51HAZtvZyAuxbV2fYVc+AVtIQ6452u2ZNxfQj11g7wtDo4/JW+Lm
-	 BN+g5ZIKJgUmy7xzUhvAmWZ7/LOGOLuwgTIn61dgXbiIrkzmGD6MMSrr/BaHvn5k4Z
-	 tXz/GBWkbjLzjqnmvfg2d0hC6fcuupghwTlQkunHwf4fancT/i3m/a2mgfHckIzMHw
-	 yjCBucw5YlWPT28+CObGG3acymwty3OmyGPFxLYcWIj5DrwxL44X1rayEvzU0ICloW
-	 TpXUq/YwSKQWw==
-Message-ID: <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
-Date: Tue, 5 Dec 2023 10:34:33 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="48raQKNb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B2lKjuEwbHY+YkXcNDVPExd4tdBdi/QuZl7nDpzt3KhCDePdazK4JtnBAZKPOZzSkLYqsiwRIiMPbwqUPtxji3DsgI/yOfxh5ccekVIZke9IP/uGvKsz/dbCEEDqNd2zpWJMsS6Ktv+orHKer6X1rqEodxRHOxL4ePxsyCAL3WQwPyoq0gEsteTp5QiNHiq2Z8uCD6QTi1+55EuN5fDzCIjsO4VkjTiP8jDvCC3RP5Dpk+iyRUuCKEZrMBhhDcNsmEWkhi+PWRmaSXuwr2ktUFWULejarSpIJx1LdlKwUIIiYWp0ndYaSACZGsghWCy+1m2M/N2Kivp2iQGWk3a2jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1AL/aFOXPGYv+Tr9umGpIKzHUj9JIXwoO/1e0Wu6aE8=;
+ b=U/XPJmhcMWbcquHhWKlh9/EsuBGw7H2IqQQL94sWYEcGI46y2EwG5HQjoIuwUcVjKWoIZX8cauDGESUezD6l1R8cEV1MUptz7FNOWtAt4Aqcx/pD+xmyx94kccI7pecYG7aRy/1UzPLTZA6K/E8FnZA6NfjwJhPUX1IuBoZLBn98Fhxdn0ihDFB5gTXmSKK5ecT7htzB5l7ENtjjyuhHiFZi7NgncxMm4cbQ2KnWpvN94Sa5F47bRIlq/Wlb0c7Zv6uA12t2nbZ/hHbPgsb7JEKJYEot9DlxSIg6lb4CkNnGJ7ckzqkAfD/6banDqJGjSKSXsyvGVrZuW0nIviqrpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AL/aFOXPGYv+Tr9umGpIKzHUj9JIXwoO/1e0Wu6aE8=;
+ b=48raQKNbF5JH9UEJYyjWCpYkB9IZ1KPHeKBeyIlaGQVD8KJzne+HfOyfSm/TBrxGZdz+/GyPhkrPPxc/UFpDqdFoqL2sPysvDCobkTWaoCazIPdUmJqR2BYRinyj4zY/7nEjrzJtcJ2qWjpARyK94lx5qcDhNN4elHy7Bh/P6+8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH0PR12MB8462.namprd12.prod.outlook.com (2603:10b6:610:190::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Tue, 5 Dec
+ 2023 18:36:29 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7046.034; Tue, 5 Dec 2023
+ 18:36:29 +0000
+Message-ID: <49673f11-ba22-40f0-b3c2-75b3e621de96@amd.com>
+Date: Tue, 5 Dec 2023 12:36:27 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Revert "xhci: Loosen RPM as default policy to cover
+ for AMD xHC 1.1"
+Content-Language: en-US
+To: Mathias Nyman <mathias.nyman@linux.intel.com>, gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ regressions@lists.linux.dev, regressions@leemhuis.info,
+ Basavaraj.Natikar@amd.com, pmenzel@molgen.mpg.de, bugs-a21@moonlit-rail.com,
+ stable@vger.kernel.org
+References: <2023120521-dusk-handwrite-cea3@gregkh>
+ <20231205090548.1377667-1-mathias.nyman@linux.intel.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20231205090548.1377667-1-mathias.nyman@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DS0PR17CA0005.namprd17.prod.outlook.com
+ (2603:10b6:8:191::6) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@stgraber.org>,
- Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
- Alexander Mihalicyn <alexander@mihalicyn.com>,
- "paul@paul-moore.com" <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
- linux-security-module@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
- <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
- <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
- <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
- <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
- <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
- <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
- <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH0PR12MB8462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8bb8b927-dbdf-48ae-d6a5-08dbf5c118c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ptFhR8QQ4Ffw+yD0KIc76usXhilWYFFqEVsnwVH2Y8HWMUTP6w3ByUnJL7DWx+TDmwl0ggQjt1ax+QnEtjyO90XwRmFLtr+61HCfipnefyuLmUNw1V/NOeyRP734RXyFridGZiVU52+ELOnsez5zNuhG7nPo+5jrT17vG0tR0VWiyNiWa1b7tyKzESl25g9PZ07hUGqhGqR0+GayODlXjiJBN18f7kPH9oMProC0H80AYmiNJvZh+ckHrGUT/9xgGCOYdnb8f2JFdwal6rVe4nPvGlY1lWeoDDC+P1yuv7g7X6G099iOJSI9ZNI9A5xiXAA2lHv4cJHWZ9tVR/wDtb6t6q/KaOC/os/JObrI5khFFnfvjf8P5P+Dv+8gHQYHYrpyzQ3wgi7qFzIz8/Mhh3V9irW+nOdnNvHe91ql9SLdrQ4owckmC6gAC6Jzv8h+AiNJWB/VUKKFGmSU/LiWNm7biqIid+1Ive4s+yoY6d+u7Vz50BYzKRmCht01YbEmdw6pUElCSdu9hV0OAIzKt1fSMlplRDevP0Q15GWMR5jPkJqYdYVb/Kkxji6akjy8708pvJ6WW98E/DDGOMfc6RtKk/PmPCwywWM0eyTJSrKB6DTYaFX5za4FyeOuJjgJ8xGRleK2/eF7PBnkfdZC5A==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(136003)(366004)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(83380400001)(26005)(2616005)(6506007)(31686004)(53546011)(6512007)(38100700002)(478600001)(6486002)(966005)(66946007)(66556008)(66476007)(316002)(8936002)(8676002)(4326008)(2906002)(41300700001)(36756003)(44832011)(86362001)(31696002)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d0h0L21ZU0QwS0hXU09WWVFSWlhsTFhVMkVlWDNDem9hUzQ3dmZyd0Nya2pz?=
+ =?utf-8?B?VXJKeFBrbnRsTG5ydTJGRmtyNVZ4MVFJcGpFVDRETGNpNVd2MEp6SEU2MUtm?=
+ =?utf-8?B?Y2xuZER4ZnZNLzMydkZab1JrMzBnczVXMFVFNGVkc0RlOXpDekpkczUrSGdj?=
+ =?utf-8?B?OGxkaS92MFRZakFVK0NjWi9OMFBaTnhTQ1hTVG91cEFOV1FHdmdGK3pKajRK?=
+ =?utf-8?B?TDRPVmdLbWtPZVoxRlVkeDBFdVNMWUJheW55VmFMWlpzcEN2ZE1Kc3F5L080?=
+ =?utf-8?B?NUZJWnRJYXRFbVV5WlhNS1hHL2M0NGN5ZnhNZ0ZsamhBdWh5T2k5eHFXa0pT?=
+ =?utf-8?B?czRCMnlhYk1USFYwek9sRWx4Qm91dzJDUXN3TWpFV214YjZzMW9hL1hnWk1o?=
+ =?utf-8?B?Z2QxSkh3QlpCZjIvdXdxMTBjN1BGeHU0RUdpdTJ5SVcwc3E3ZlQ2SXNneEVk?=
+ =?utf-8?B?SlV6dmJWSERUU1VNTEpIRTc2RW9DdzR2OVVWVVIyNWpzOFk2UVRhWW5CTndG?=
+ =?utf-8?B?dEZSNHF6R2N1SSszM1NLRnZjUnd6M2drU0J6d3Ird3A0RTJROXlDMnpBWXVE?=
+ =?utf-8?B?SW9ESkVmR1Ywek1VWGE1RG14bXZId2IvOFdRRGxqSFdCaTlJdW9ZYzBsT3p0?=
+ =?utf-8?B?L0VnYlV6TVVmbzFRa05tRkdqcmhYYXBDS3g3UGoraFR3NGZhdVc4Kzk2MFdD?=
+ =?utf-8?B?eGltN3hvQzFiNTcvc2E3NncybnJUV0hnL0lNYkVNVmZhdXVyUjdDb1pCZGpt?=
+ =?utf-8?B?QzQ1OFJvMUxreHdaYWNqdEY1S3RHTWlJWDJkTWYrNmR5dmdWVURWbUxKLzlN?=
+ =?utf-8?B?b1ZMYlVudjlBenJwRm81QTNnUW5BS0JURHF5WXZXWGZsNEN5YUtjREM1ZjZC?=
+ =?utf-8?B?S1VhbFZtejlzcS9OLzM2emdwNjl3MWdQNitZbVMwU0dETThJQ0NjZHo1dFF2?=
+ =?utf-8?B?UUx6MHhSc3lDNnJjQURiS0NQOFA4NEFpQWRyNHRSa3d1cnlEc2l1T0ZsS1Yr?=
+ =?utf-8?B?VWJjaGFOUlZhOWlLb2hRRUt2aVpCOHBaS1JQY1BBcUhQSUZUTmk1YXV6a3Fi?=
+ =?utf-8?B?Ni9pK0MxUFRZeUpIaWlON0U4Q0xXak0wRmYvN3pXWGsweXJidDZ0aXQyRnZh?=
+ =?utf-8?B?RXlZOU5CMWxNTjZRUTRsQmtxQzJGM2NveGhkWkpDYWJUUEs1QmdOQjRuZTlZ?=
+ =?utf-8?B?YUZ6RUkzR0lzWmpyZlRuUHdXbFJVangwN1NtQURhT3IxcmsxU0cxOUNZdEh6?=
+ =?utf-8?B?dWRCb3VpUENXeDEzZUNKc2JjSTdWQVI1NnpoYk8yNmtwN2tKZVNhVTVRYmts?=
+ =?utf-8?B?eFNiZktIZmlPNXhhdXBJbWp3a3Nzb0x5UVBkSDArNmdRazEwWWZ4cFl4YWhu?=
+ =?utf-8?B?Z2xZMjRJbkxnZVNUdDlpU214eURYQm1PeFpydTRieWsyU3M4S0FIanozamdZ?=
+ =?utf-8?B?OE1vWU0xMlh3L1F4c1dVRWFHSVdDMHhOU04xMjZwRW0yNVRRVXpiaUtGb2t2?=
+ =?utf-8?B?QXJEYmhtNFFxSjVGUjFWeVlZTXNtSVdOOWtQS0ZQaTZrdkNUMXI4NmNjZ2Zh?=
+ =?utf-8?B?TzFYSlZOZ1dYelI3MzBKS1JYcWNZcVBROGhndmlSY2RqaTFEZkVqR1hJeVgv?=
+ =?utf-8?B?Y2R3ek02b09Ybzg0Z2tDdERNZ29OWWNOcWcyU1VvUWloTjBkMG9NaWQ2YXZv?=
+ =?utf-8?B?QittekxDUGVwTjRJSlR3YW5haXo3K2g3cHlNWEdGcFB1UGFFWXd0Wk5XM2dx?=
+ =?utf-8?B?Z1U3RDIxU21FaEY4WTk0UVZzZTFQeVdMMkpWODYrTVRiWWhBaDhpQlM4YTM5?=
+ =?utf-8?B?azU3Um4rVnBMZXBXQjhIVjNlc1hHUDk4Uk4rZ3l3Qld5T1FoSDJYY3RISnhl?=
+ =?utf-8?B?bTNoM2t1RnpRYVg1SlpCVEJ0cHpzU0JiZ2ZJb0E4WXdORDJ1QlhPNGRUYTM5?=
+ =?utf-8?B?VlM3ejJ4OXpHdzRWV01qVCtQQWtpczYzU2RjWGlDOFdZSmlNT1RQMkx3M1pO?=
+ =?utf-8?B?K04wbEh5aHRvMTlYaTJvMzNzVUN6TXdlOFpNQUxnNFlqUTVzMTFlcDJSSXRK?=
+ =?utf-8?B?a0tPZzBiYlhNUzRYSkJRdmFPSWx2YVk1OXVycUFZdUNJem1DWkFiL2ZVM3N6?=
+ =?utf-8?Q?DF/bsJUhHF6UG55NCdktdwCjB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bb8b927-dbdf-48ae-d6a5-08dbf5c118c5
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 18:36:29.7986
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JsK6hjbkQ9AOvpxgmfk9MFb+yTImjbJ8Mws5p3ImifWsHHJgLpGyf2a7wQDVfmFu4/8rMEyZiINBFMRtsx0W6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8462
 
-On 12/5/23 09:08, Christian Brauner wrote:
-> On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
->> [CCing Linus]
->>
->> Hi, top-posting for once, to make this easily accessible to everyone.
->>
->> Stéphane, many thx for your insights.
->>
->> I'm CCing Linus on this, as I guess he wants to be aware of this.
->>
->> Normally I try to sum up things somewhat when doing so, but this here
->> likely won't end well. So all I'm saying is: commit 157a3537d6bc28
->> ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
->> included in v6.6.3 broke containers in some setups. John described that
->> commit with the words "it is a far from good solution. It is a stop
->> gap." and later mentioned that "a CVE is coming for this and that having
->> this unmediated in the tree isn't good either."
->>
->> For more details please check out the thread that on lore started with
->> this message:
->>
->> https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->> On 05.12.23 07:57, Stéphane Graber wrote:
->>> On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>
->>>> On 04.12.23 14:14, John Johansen wrote:
->>>>> On 12/3/23 17:34, Stéphane Graber wrote:
->>>>
->>>> Side note: Stéphane, thx for CCing the regressions list.
->>>>
->>>>>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
->>>>>> <john.johansen@canonical.com> wrote:
->>>>>>> On 12/2/23 17:20, Stéphane Graber wrote:
->>>>>>>>
->>>>>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
->>>>>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
->>>>>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
->>>>>>>> distributions using the newer version of util-linux.
->>>>>>>>
->>>>>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
->>>>>>>> the new mount command now performs:
->>>>>>>> ```
->>>>>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
->>>>>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
->>>>>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
->>>>>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
->>>>>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
->>>>>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
->>>>>>>> stx_size=40, ...}) = 0
->>>>>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
->>>>>>>> ```
->>>>>>>>
->>>>>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
->>>>>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
->>>>>>>> being created, this therefore results in:
->>>>>>>> ```
->>>>>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
->>>>>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
->>>>>>>> class="mount" info="failed perms check" error=-13
->>>>>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
->>>>>>>> srcname="/" flags="rw, move"
->>>>>>>> ```
+On 12/5/2023 03:05, Mathias Nyman wrote:
+> This reverts commit 4baf1218150985ee3ab0a27220456a1f027ea0ac.
 > 
-> move_mount() doesn't create a new mount it just moves an already
-> existing mount around in the tree. Either that mount is moved
-> (fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
-> was a detached mount to begin with.
+> Enabling runtime pm as default for all AMD xHC 1.1 controllers caused
+> regression. An initial attempt to fix those was done in commit a5d6264b638e
+> ("xhci: Enable RPM on controllers that support low-power states") but new
+> issues are still seen.
 > 
-yes, all to aware of this
-
-> The new mount api splits mounting across multiple system calls. And the
-> state it keeps for itself is gone once you create a mount via fsmount().
-
-yep
-
-> Because then the fs_context will be destroyed and you're only dealing
-> with a superblock and mount(s) for it.
+> Revert this to get those AMD xHC 1.1 systems working
 > 
-yep
-
-> You shouldn't care about move_mount() moving a detached mount because
-> really it is not a move from some other filesystem location. The
-> creation of that mount will have already happened in
-> open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
-> move_mount() is the wrong place to do this.
+> This patch went to stable an needs to be reverted from there as well.
 > 
-yes and no. What we are specifically dong is mediating existing attached
-mounts as always and blocking move_mount from attaching the detached
-mount via move_mount. Which is very much something move_mount mediation
-should be able to do.
+> Fixes: 4baf12181509 ("xhci: Loosen RPM as default policy to cover for AMD xHC 1.1")
+> Link: https://lore.kernel.org/linux-usb/55c50bf5-bffb-454e-906e-4408c591cb63@molgen.mpg.de
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-It works as a stop gap for the new mount api bypassing the LSM at a very
-course level. This is why it requires a very general mount rule for
-apparmor to allow move_mount of the detached mount. A conditional that
-improves control around this is coming, but we can't make move_mount()
-mediation provide the full set of apparmor old mount mediation.
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Providing something close to what we were doing before is going to
-require new hooks, and likely specialized states tailored to the
-new mount api. Until that does happen it does mean a reduction in
-what apparmor policy can mediate. Today instead of being able to
-specify details about the mount you need a generic mount rule that
-just allows the application to do pretty much anything with mounts,
-soon you will be able to have an addition conditional that allows
-better control of move mount, and better logging of what is going on.
+This presumes that Basavaraj is going to send up another patch for the 
+ID it for sure improves, works and is needed.
 
-> If the only thing that would be broken here is that you want to block
-> moving mounts from a given source location then you need to pass down
-> that this is an actual move to the LSM hook. Because I'm really not keen
-> on giving LSMs access to is_anon_ns() or similar helpers. They're just
-> too easy to misuse.
+> ---
+> v1 -> v2
+> Revert only one patch, keep commit a5d6264b638
+> Minor commit message changes
 > 
-
-indeed the LSM hook here needs to have some more info passed in.
-
->>> Overall, this still feels very rushed and broken to me. I understand
->>> that being able to trivially bypass AppArmor mount rules isn't great,
->>> but shipping code that makes the vast majority of said rules useless
->>> doesn't really feel like such an improvement. It's effectively turning
->>> what was a reasonably flexible policy engine around mount calls, into
->>> a binary switch to either allow everything or block everything.
+>   drivers/usb/host/xhci-pci.c | 2 --
+>   1 file changed, 2 deletions(-)
 > 
-> For a 1:1 mapping of AppArmor LSM rules from the old to the new mount
-> api I expect that one will have to effectively redo everything
-> internally and keep state across multiple system calls. IMO, this is
-> really not the way to go. Instead it's probably wise to have a new mount
-> mediation policy for the new mount api with different semantics. Because
-> I have my doubts that a 1:1 mapping will even work and won't just cause
-> you CVEs.
-
-yes the mount policy will have to be extended to support the new api.
-Getting that right will take time.
-
-
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index 95ed9404f6f8..d6fc08e5db8f 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -535,8 +535,6 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>   	/* xHC spec requires PCI devices to support D3hot and D3cold */
+>   	if (xhci->hci_version >= 0x120)
+>   		xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
+> -	else if (pdev->vendor == PCI_VENDOR_ID_AMD && xhci->hci_version >= 0x110)
+> -		xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
+>   
+>   	if (xhci->quirks & XHCI_RESET_ON_RESUME)
+>   		xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
 
