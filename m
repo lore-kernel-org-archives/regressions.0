@@ -1,154 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8868692B9;
-	Tue,  5 Dec 2023 17:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D685168B64
+	for <regressions@lists.linux.dev>; Tue,  5 Dec 2023 17:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVvOED5T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9187CC433C8;
-	Tue,  5 Dec 2023 17:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701796896;
-	bh=qQhFD5km7iam6ql60v2yvQ1cEjm2HjSDpoeTEUpsrRk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SVvOED5TQV7w6aix5CSUmAgTtyEnO62rBkggKujtvoSWaIHBF/KbD6e14Hk2JPqz6
-	 3jXmvJUZek6eE5B+WZSrqApTnf1DIlnTzGjhSMK2NoICzENS/IKes8mJEFE1Wxoha8
-	 qR+IyfxpQ1Faqi/sTdJ2HjSERHq0z1khOYRmfF8y/go/CicJFNQrVVx8vTzPsfDurZ
-	 2lWey7UGuMC2z1W9gPskSHANViFPfSn8Dd/DWwCQIRZc0AYMthmCCwGeREnKHRcVgp
-	 nlIIWKz6cR+Tc2xLEuqggbwBVW7MLF1jZm0aBfqAfPSPj7M9cRhbPBuUIV2Uw4xwO5
-	 4KG2CE7WvT/ww==
-Date: Tue, 5 Dec 2023 10:21:33 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Sylvestre Ledru <sylvestre@debian.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	lkft-triage@lists.linaro.org, Russell King <linux@armlinux.org.uk>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Matthias Klose <doko@debian.org>
-Subject: Re: clang-nightly: vdso/compat_gettimeofday.h:152:15: error:
- instruction variant requires ARMv6 or later
-Message-ID: <20231205172133.GA462711@dev-arch.thelio-3990X>
-References: <CA+G9fYvD72Vpfs2g8R+OJ6L8w9p_uaWbXpWMvnGAx_AOLabatw@mail.gmail.com>
- <20231204181304.GA2043538@dev-arch.thelio-3990X>
- <20231204223317.GA2053629@dev-arch.thelio-3990X>
- <36a25113-731c-4b28-a695-f3fbb0996d6e@app.fastmail.com>
- <20231205150417.GA349053@dev-arch.thelio-3990X>
- <3523ca62-be8b-4b08-8d0c-5b97ece9aad8@debian.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="osWCiv1K"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5Gj2N5002956;
+	Tue, 5 Dec 2023 17:33:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Lg9rk2bBS3KEXt7PHC7hgvUmJGgcsxPJ/w2bepRjO7o=;
+ b=osWCiv1KE1vnkovnGsKIylVtfwRdEppBifgnP5S38LPhvYAfBH7jGid3NpBvMA/NCWFm
+ LCEmnNCHJ4LVKLE5W5eSGuCpYWgWHkgsompiOQVTf7HF7NoKMmChLQdllHJRwF+/uSQX
+ LvNscZzjTIA17FgXJTIyT0hcIfTuOt9mC/kUffQ7RmR2PLtbIn+z8ySbBGCNCVF8NcjV
+ wNsYG0WF48pPvKogY9mkGswXfyVjjeAkTRdzP4g58PBy6ZV7PCB/LZz9qtUNDYqTnTtT
+ XvuKWW75cDq++0nJjr5xSTjcMd4P6ZkPtz8WGZ2YrG+Mc85apL/SDeV1HttsG+W2VuCZ vA== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3usmw02faf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Dec 2023 17:33:33 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B5HXWLg003747
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Dec 2023 17:33:32 GMT
+Received: from [10.71.109.77] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Dec
+ 2023 09:33:29 -0800
+Message-ID: <f59c5d45-a689-8a94-a2ae-d2ffa835eedf@quicinc.com>
+Date: Tue, 5 Dec 2023 09:33:28 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3523ca62-be8b-4b08-8d0c-5b97ece9aad8@debian.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Kunit drm_test_check_plane_state: EXPECTATION FAILED at
+ drivers/gpu/drm/tests/drm_plane_helper_test.c:123
+Content-Language: en-US
+To: Maxime Ripard <mripard@kernel.org>,
+        Dan Carpenter
+	<dan.carpenter@linaro.org>
+CC: Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Naresh Kamboju
+	<naresh.kamboju@linaro.org>,
+        <kunit-dev@googlegroups.com>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <lkft-triage@lists.linaro.org>,
+        <regressions@lists.linux.dev>, <davidgow@google.com>,
+        <maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>,
+        "Linux Kernel
+ Functional Testing" <lkft@linaro.org>
+References: <20231204173536.51003-1-naresh.kamboju@linaro.org>
+ <rxv7jlfuwjib443pzdepbtgu454gdzemd3ojmmhbnhr4syneve@6me3bduyx2ee>
+ <42d85b15-9ffd-4a08-b51e-a3367e57d128@suswa.mountain>
+ <fgajgc7vp626nzeeqetkfbyadh53iti3mvoq4uck3zz3ysmvno@b3f7kxnwrwsd>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <fgajgc7vp626nzeeqetkfbyadh53iti3mvoq4uck3zz3ysmvno@b3f7kxnwrwsd>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: D3PiGiOvbJnrwgPVR-o3XXv7mkveCrFd
+X-Proofpoint-GUID: D3PiGiOvbJnrwgPVR-o3XXv7mkveCrFd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-05_12,2023-12-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=847 impostorscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2312050138
 
-On Tue, Dec 05, 2023 at 04:13:29PM +0100, Sylvestre Ledru wrote:
-> Le 05/12/2023 à 16:04, Nathan Chancellor a écrit :
-> > On Tue, Dec 05, 2023 at 07:34:40AM +0100, Arnd Bergmann wrote:
-> > > On Mon, Dec 4, 2023, at 23:33, Nathan Chancellor wrote:
-> > > > On Mon, Dec 04, 2023 at 11:13:04AM -0700, Nathan Chancellor wrote:
-> > > > 
-> > > > > I am still investigating into what (if anything) can be done to resolve
-> > > > > this on the kernel side. We could potentially revert commit
-> > > > > ddc72c9659b5 ("kbuild: clang: do not use CROSS_COMPILE for target
-> > > > > triple") but I am not sure that will save us from that change, as
-> > > > > tuxmake's CROSS_COMPILE=arm-linux-gnueabihf will cause us to have an
-> > > > > armv7 CPU even though we may not be building for armv7.
-> > > > 
-> > > > Okay, this is a pretty awful situation the more I look into it :(
-> > > > 
-> > > > The arm64 compat vDSO build is easy enough to fix because we require use
-> > > > of the integrated assembler, which means we can add '-mcpu=generic' (the
-> > > > default in LLVM for those files based on my debugging) to those files
-> > > > and be done with it:
-> > > > 
-> > > > diff --git a/arch/arm64/kernel/vdso32/Makefile
-> > > > b/arch/arm64/kernel/vdso32/Makefile
-> > > > index 1f911a76c5af..5f5cb722cfc2 100644
-> > > > --- a/arch/arm64/kernel/vdso32/Makefile
-> > > > +++ b/arch/arm64/kernel/vdso32/Makefile
-> > > > @@ -9,6 +9,10 @@ include $(srctree)/lib/vdso/Makefile
-> > > >   ifeq ($(CONFIG_CC_IS_CLANG), y)
-> > > >   CC_COMPAT ?= $(CC)
-> > > >   CC_COMPAT += --target=arm-linux-gnueabi
-> > > > +# Some distributions (such as Debian) change the default CPU for the
-> > > > +# arm-linux-gnueabi target triple, which can break the build.
-> > > > Explicitly set
-> > > > +# the CPU to generic, which is the default for Linux in LLVM.
-> > > > +CC_COMPAT += -mcpu=generic
-> > > >   else
-> > > >   CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
-> > > >   endif
-> > > 
-> > > I'm still trying to follow what is actually going on. I
-> > > see that we pass
-> > > 
-> > > VDSO_CAFLAGS += -march=armv8-a
-> > > 
-> > > which is meant to tell the compiler that we want it to
-> > > use ARMv8 compatible instructions. Is the problem that
-> > > clang ignores this flag, or do we not pass it correctly?
-> > > 
-> > > I would have expected -march=armv8-a to be better than
-> > > -mcpu=generic here, as it allows the compiler to use
-> > > a wider set of instructions that is still guaranteed to
-> > > be available on everything it will run on.
-> > 
-> > I should have made it clearer in that message that adding
-> > '-mcpu=generic' was only to avoid the logic added by that Debian LLVM
-> > change, not because I believe the kernel is doing something incorrectly
-> > now. From what I could tell following through LLVM's code, '-march='
-> > determines the default CPU, which is then used to further inform the
-> > full target triple and by overriding the CPU where that patch did, it
-> > was just blowing away the user's request. By providing an '-mcpu='
-> > option explicitly, it would avoid the default selection logic and we
-> > would get what we asked for.
-> > 
-> > > > Sylvestre, I strongly believe you should consider reverting that change
-> > > > or give us some compiler flag that allows us to fallback to upstream
-> > > > LLVM's default CPU selection logic. I think that hardcoding Debian's
-> > > > architecture defintions based on the target triple into the compiler
-> > > > could cause issues for other projects as well. For example,
-> > > > '--target=arm-linux-gnueabi -march=armv7-a' won't actually target ARMv7:
-> > > > 
-> > > >    $ echo 'int main(void) { asm("dsb"); return 0; }' | \
-> > > >          clang --target=arm-linux-gnueabi -march=armv7-a \
-> > > >          -x c -c -o /dev/null -v -
-> > > >    ...
-> > > >     "/usr/bin/clang-17" -cc1 -triple armv7-unknown-linux-gnueabi ...
-> > > >    ...
-> > > > 
-> > > > vs.
-> > > > 
-> > > >    $ echo 'int main(void) { asm("dsb"); return 0; }' | \
-> > > >          clang --target=arm-linux-gnueabi -march=armv7-a \
-> > > >          -x c -c -o /dev/null -v -
-> > > >    ...
-> > > >    "<prefix>/bin/clang-18" -cc1 -triple armv5e-unknown-linux-gnueabi ...
-> > > >    ...
-> > > 
-> > > Right, the kernel definitely relies on -march= taking
-> > > precedence over the default CPU, the same way that we
-> > > tell the compiler to pick a non-default endianess or ABI.
-> > 
-> > Agreed, I have yet to test the new version of the patch but I see you
-> > and Ard have given input on it, so hopefully it does not have any
-> > problems like this.
+
+
+On 12/5/2023 3:46 AM, Maxime Ripard wrote:
+> On Tue, Dec 05, 2023 at 12:05:02PM +0300, Dan Carpenter wrote:
+>> On Tue, Dec 05, 2023 at 09:37:05AM +0100, Maxime Ripard wrote:
+>>> Hi Naresh,
+>>>
+>>> Thanks for the report
+>>>
+>>> On Mon, Dec 04, 2023 at 11:05:36PM +0530, Naresh Kamboju wrote:
+>>>> The Kunit drm_plane_helper failed on all devices running Linux next-20231204
+>>>>
+>>>> ## Test Regressions (compared to next-20231201)
+>>>> * qemu-armv7, kunit and
+>>>> * x86, kunit
+>>>>    - drm_test_check_invalid_plane_state_downscaling_invalid
+>>>>    - drm_test_check_invalid_plane_state_drm_plane_helper
+>>>>    - drm_test_check_invalid_plane_state_drm_test_check_invalid_plane_state
+>>>>    - drm_test_check_invalid_plane_state_positioning_invalid
+>>>>    - drm_test_check_invalid_plane_state_upscaling_invalid
+>>>>    - drm_test_check_plane_state_clipping_rotate_reflect
+>>>>    - drm_test_check_plane_state_clipping_simple
+>>>>    - drm_test_check_plane_state_downscaling
+>>>>    - drm_test_check_plane_state_drm_test_check_plane_state
+>>>>    - drm_test_check_plane_state_positioning_simple
+>>>>    - drm_test_check_plane_state_rounding1
+>>>>    - drm_test_check_plane_state_rounding2
+>>>>    - drm_test_check_plane_state_rounding3
+>>>>    - drm_test_check_plane_state_rounding4
+>>>>    - drm_test_check_plane_state_upscaling
+>>>
+>>> I found the source of failure to be f1e75da5364e ("drm/atomic: Loosen FB
+>>> atomic checks").
+>>>
+>>> Fortunately for us, it's already been reverted yesterday for some
+>>> unrelated reason, so it should be fixed in next-20231205 onward.
+>>
+>> Sorry, that's a bummer that these patches were reverted.  :(  The whole
+>> episode was a bit unfortunate...
+>>
+>> Qualcom has been working on those patches for a year.  They must not be
+>> using kunit testing as part of their QC...  It's some kind of
+>> communication failure on our part.
 > 
-> Matthias, as cc, pushed a potential fix for debian/ubuntu packages!
-> https://salsa.debian.org/pkg-llvm-team/llvm-toolchain/-/commit/01a06b481e5a2610c7387149b58978c3ec281f2c
+> That's definitely a communication failure, but that's mostly on us :)
+> 
+> The reason these patches were reverted was completely unrelated to the
+> kunit failures here: it failed the basic requirement we have on
+> intel-gpu-tools tests and open-source userspace examples for new uAPIs.
+> 
+> So whether or not kunit tests would have passed, these patches were
+> applied due to inattention and would have been reverted anyway
+> 
+> Maxime
 
-Thanks, that version survives my basic testing of both ARCH=arm and
-ARCH=arm64 defconfig. I'll holler if our full matrix explodes later (we
-have another regression in LLVM right now so we are not testing the
-snapshots daily at the moment).
+The patches were reverted because the corresponding IGT/compositor 
+changes were not posted yet. We will re-try applying once those are 
+accepted.
 
-Cheers,
-Nathan
+Regarding KUnit tests, no we did not run this test and yes you are 
+right, we were not running KUnit testing as the DRM CI mainly validates IGT.
+
+We will certainly help to fix this failure. Most likely the KUnit tests 
+need to be fixed to allow for a NULL FB.
+
+If this is documented somewhere as a requirement, please share it and we 
+should add KUnit testing to our DRM CI as well so that atleast this kind 
+of failure will not repeat.
