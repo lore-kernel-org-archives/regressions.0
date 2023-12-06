@@ -1,162 +1,262 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB646454
-	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 16:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D54644B
+	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 19:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="pw2y91M7"
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3B67PWEK018017;
-	Wed, 6 Dec 2023 07:47:05 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=PPS06212021; bh=fX5SHfxTiLBevpMRFz7
-	3Mqt0GwNmbMltLktu4gZoxDY=; b=pw2y91M7r75VMO/9C4NLh47qzH00MhTxIeS
-	hY+erS1iy27lDBqtzTvOalFfV7cjiSKPjF8g7Q1V91tNXyNWG2bOUb4t7iDJo4hP
-	0FVaVkPNy6VouqhAEUyZKBruo0AyqqGLjpwhUVY8RLiNS8L0XwfSIpR1Zc/epJ/i
-	1vKGTQ7hurH2z8o45xFdqoHtAfFY8sXEMTjREWwyRP0SEunch6eJVQKnY+t2LN82
-	TV0dgN7REZq5U6eM9oa89Jem2V3eQDVwBVLK8i5SLtheR8XPfT+O2YNAaEVHBc4v
-	4gimBslpLUayCzOPHGZc4dAiP44moX41UZYtXMLh0BL6BtJbp7w==
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3utd2rrpep-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Dec 2023 07:47:05 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i+2fOVXn+bE4SctXQXrmZNrtOicCojM5X9zvWT2gI0CbQAsQFHUpCRUHgBZSw0tTCbSlMiDjNck0of2Ut9l1LAtRvhZgPnTBEDcn1Dll7BaxYHfyuZ8Nw6eBgrUbFdwDnrcinMrMVIUWmBW7PZ+MYUd3Oc59XbuLqUBY6R7OWkmM1xWuc9Bmga3U1sQGxi3XEh13a1a7m5MLDEXHamKAbKIL0IFaoPguT6ijJcTA1RGs74mJfLFCkDIVnhLHRgc79OZR5puaijj8H7m1iil4CgzsI36CR9f+vEOBknR1ogvyD+Des3rWRDnyWShnGNXSDgoboJ+KBr3MEDqMhYPrpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fX5SHfxTiLBevpMRFz73Mqt0GwNmbMltLktu4gZoxDY=;
- b=X8CczJoFTthP+G6qIG0Yhi1nKAwVAVo/w7/bIx5Bl9w2yWbsOi9f8jCNaqIm6Eu1jwmWplkfL2uh3+CKmm+u8lf8z2NOMBOWwCpbznhhqCsySA+wIkNgQusboKscUjwfISmXn6CbhI+TJtwgWvbEWOn2/OS27xtq7nFmsZ7oYwB9BepYAQ6LCHkr0dr78zecqaGISK/+x112KEzKQfmTVolheYsNagaRT7F9OoniSUd540I9ecVd8V+N3zP1vmZBpRQ1VPwIdewI0iIFLDhU8RUOOJPX51kWOINj99Y1+x4ekhE8VXfNFJ7kPjZxMWYFMzuDIaX7xfHAKtPfs7ygrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from IA0PR11MB7378.namprd11.prod.outlook.com (2603:10b6:208:432::8)
- by CY5PR11MB6233.namprd11.prod.outlook.com (2603:10b6:930:26::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Wed, 6 Dec
- 2023 15:47:02 +0000
-Received: from IA0PR11MB7378.namprd11.prod.outlook.com
- ([fe80::5548:b43c:f9ac:7b95]) by IA0PR11MB7378.namprd11.prod.outlook.com
- ([fe80::5548:b43c:f9ac:7b95%4]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
- 15:47:02 +0000
-Date: Wed, 6 Dec 2023 10:46:59 -0500
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-        bp@alien8.de, linux-kernel@vger.kernel.org, peterz@infradead.org,
-        richard.purdie@linuxfoundation.org, x86@kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128
- x86/alternative: Rewrite optimize_nops() some]
-Message-ID: <ZXCXc+BtnLzqMbFv@windriver.com>
-References: <ZUEgAAGDVqXz2Seo@windriver.com>
- <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
- <87r0k9ym0y.ffs@tglx>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r0k9ym0y.ffs@tglx>
-X-ClientProxiedBy: YT4PR01CA0300.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10e::25) To IA0PR11MB7378.namprd11.prod.outlook.com
- (2603:10b6:208:432::8)
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="AJ6Nh4yV"
+Received: from [192.168.192.84] (unknown [50.39.103.33])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id DF14E42FEA;
+	Wed,  6 Dec 2023 19:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1701890485;
+	bh=K/tdXr6jVzr1/VM41uImJAnVMWVvg+HQMRTEountDS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=AJ6Nh4yV5e1MTUHlpRUO2goNNFTxxCn1k+Z75K2kd8VpqJnnOq7T3NubxLIB+1Nxo
+	 zFdbQxnR6DjzuXe4CezRQoySWzr3B+NrH/wdThcBctnzioO13+p/uAp/YLfbsBRekl
+	 yUNnwb0QJT5EiuHD8Hbe/naNH9bEA7Q3zxMFp0BhLCSapNw7Z0UQSYp0HSfVZ4xDWK
+	 vw+qMAxhoSax7+o3oqxIlVYEyPGtFMGFcVwaZd0jBGJwwD9vZes09ACKyQ0U0i2I1F
+	 fDH7ygm7eQ9nYjmL3oyw1RtIl4c4o5XylO1l7ln+hXsxwIR5+SyO+AUPzKhQuXXdIq
+	 ZPP+Kskxb6OyA==
+Message-ID: <dea3be0e-3a52-4561-b4ea-a6b25db48601@canonical.com>
+Date: Wed, 6 Dec 2023 11:21:12 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR11MB7378:EE_|CY5PR11MB6233:EE_
-X-MS-Office365-Filtering-Correlation-Id: addf37e8-2bf8-4c42-83de-08dbf67296e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	Vo3cxD1b5zHu/NZh7WUbYghPwThsQSmQ4o9wmb9kCw8E4t8tg48EgcZgrXb44iSXLUccgpVJOKRDunPZHdQdoY93I6EhnMtidykjXNvZHUgI32ytQdZHqQCNjRykNnsQi7DGYW1D5IEqytOkLrZnxTitfSM/W7+WzSEeNnHtLtHl9OVzTPei4n+Xp2gfEiRSvwCkwr1khaStAleKJrj1Kf+1W8qfyFfhewEf095PX/Q9n6wAny59o0OvCjorTlAxprS9/a/XCtL79xeiLMfL/5ojwrEgO20ADgbhGwiVTepn8FhMz7LTB18o5I+4joa3/RCmwpq57f4jq1C5giL+6C+Y17wPHTCZUKmVTNhvT8qwuaG5x8btw6behw6O8Oz4FWh6vADPg13GaKVBKNSYB/sf9YZM3up+dLRCyLnYEoPZMTeUyl5XOOhIi+olIMW+4GAnPH7QtqJAS0usVcc/Y7DSsPJEyd9CEQDLVjnp7DIPEEZCLLfpJCiCw1uD4bTnuarUzbxFiEzPepBpzpZmoUJ66iTO8eoIE9mdP+r5Y2CawpB+uOSoiHin41Ad1QbJZq9F4+GY7VpwkIyC5yRXfgcQClXT+070P27J+Uae8Ds=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7378.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39850400004)(376002)(396003)(136003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(478600001)(8676002)(6486002)(966005)(2616005)(6506007)(6666004)(26005)(54906003)(4326008)(66476007)(66556008)(66946007)(6916009)(316002)(8936002)(38100700002)(6512007)(44832011)(41300700001)(36756003)(2906002)(5660300002)(86362001)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?AoJK37anaV1u1vvRnRQoA9Uynt97QLchh4GBRtsswtA01UjzIaYTFiuC3u/2?=
- =?us-ascii?Q?iBb8oRIL95NS2M4RlybfXerTDzg8j+p8kh8xN0UmnZGRyF2mZAhLMdj+dDmW?=
- =?us-ascii?Q?IUzcfFugfClUCMEG/xcasC907lnunOMBjnhjQpMbydzgLCHCYBHQF0LOU/Zq?=
- =?us-ascii?Q?qvEAxnIE9KG9PcfMotbdq2ouQ2P5BFyqtWTCdpsGQW9gD6/6WGMdI3nHCgSZ?=
- =?us-ascii?Q?tOvlDNUgu3hcl3P0BiE7kAzWsax/A6C0lO7ruzldGfDPEP2igLpcWW0NhVXN?=
- =?us-ascii?Q?6Z9++ue1GoRQ1GAb6dWQN6viLh065Ewij8bGca38CFtafAS/a0d7ncdPFFPp?=
- =?us-ascii?Q?qL8Fot2nM84Ep3CgiwGFTI0hROOSioKa/MHEm+vzqMrZlLyIjWp2HhIO9clV?=
- =?us-ascii?Q?Bzc1ugu8ibc6E1EqMk2lWsrx72+Yz3LuzqRXyGH0QRTvJmvI2DrkaJzikapD?=
- =?us-ascii?Q?2JARtjG18ZSzDZdJDN716t682PoUd7ijvfl2k0UpRU/CPQSYBoBYU/Eph5K1?=
- =?us-ascii?Q?TO4AKhAtFpwShNd+SkRFOVU3vDYf4eqQpo9Tp8EzDSQh0oRHLpuuA66iUY+g?=
- =?us-ascii?Q?unDCwvNa9qIqIEMT8K5Pg8dVSGTfNhKTMgEuX33pqdQLrVtmryMrnn9uZcqw?=
- =?us-ascii?Q?B46veDYllzC2Ip/jiAzIoZHtvWpC2ymn/BkykQ6FdsBp5u2DNyOSSdB65sm0?=
- =?us-ascii?Q?VMsKl0yaEpEJmQM7ppoaabCh3WpKuyPsAaEbw8OPS76hWzteN50dIsq60h66?=
- =?us-ascii?Q?bn/Bj5MCLWIx2F45EQir9CNIX6SvDOq7PpQQjRjnXeYOq1gWrZ88TP4t8fQP?=
- =?us-ascii?Q?I36B1pnpoFHhYgxaFWxAf4HedEotxAVQvFch1vHrCuuZ7pMbY9wYAC0dSzP8?=
- =?us-ascii?Q?FyWCv2sEZ5dimdLB1Uiu87WnHQcHEYCG5Ro4KqNZoCMZMPT8AiIc9vNBDkAV?=
- =?us-ascii?Q?gtBqmTJheyed6yC2fRJYUAg8qMAeO6JFuTuajXHjqTS4XekVoDkPQjVkIyGC?=
- =?us-ascii?Q?EDgRMasv06LA0a//9RVtq87JgGkFwfJOQ8kLEGP2a7KmasgzaTUN7eU/nv2Q?=
- =?us-ascii?Q?kC++LvH1UbhYm8I1d5s3A2631Hq4JYbfqOy/pQObZPx+PaNtOrjndyp8r9Cl?=
- =?us-ascii?Q?MZuQkVsWBZTvU+nj5DyL3wgZ9+sTyKFcqNKtlwjrZBmBygKAFrWiPiK42MoL?=
- =?us-ascii?Q?JzIKffwWm/kqqIlB4nGf9jujAc7fk3tMSbU0e7QjKnCoYR9D4xgVbpF26i+a?=
- =?us-ascii?Q?yjA+7vQ1jdvw3DAeiNRnFP7+x/dnxKfM0OHaiELvQRd4ZsxNXSzuhhBWRLSj?=
- =?us-ascii?Q?xhiplbBt5tHZbgV4VAAvGsf1dZV9dNGq4g2i+Hx5VtfThwM5ksmkEbrHLZOo?=
- =?us-ascii?Q?SpcjScfs89fIZGFvkX++ecB2+mrMlWcXEkWTuiex4MfVVML97x3RH17BSEVa?=
- =?us-ascii?Q?9Ahr5FhpP42idgI86JrY0twQBOaGuB4iVWQZWyXbpeIwgbW1DRkmW1LdWPNa?=
- =?us-ascii?Q?2DMwPFYC3oILJZVY7qXvCjy9vn9CM0xFGIVZJhBiqXgQw4nZsDzNurQMYoFg?=
- =?us-ascii?Q?nvyjVBRqnUGEbRyy/b8lCbGI6Kogeh7G8O/UKNJPfvTUymERpuWWRdevHJYh?=
- =?us-ascii?Q?ZQ=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: addf37e8-2bf8-4c42-83de-08dbf67296e7
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7378.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 15:47:02.4257
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h1RUcodBX4LcelTm9N5bjVCVPj73Bo3Qp0jfYlwf3nBB/WrFliT8kndvt0cokixQIfg8kRwyJNThsxBqMtcR8jkhheoj6XEVWdUPfhLwyHc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6233
-X-Proofpoint-GUID: 6ErXZOrAhz3GaNztaXPjpnyCvyhzzfEZ
-X-Proofpoint-ORIG-GUID: 6ErXZOrAhz3GaNztaXPjpnyCvyhzzfEZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1011
- lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=733
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312060128
+User-Agent: Mozilla Thunderbird
+Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
+Content-Language: en-US
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@stgraber.org>,
+ Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
+ Alexander Mihalicyn <alexander@mihalicyn.com>,
+ "paul@paul-moore.com" <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
+ linux-security-module@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
+ <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
+ <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
+ <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
+ <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
+ <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
+ <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
+ <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
+ <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
+ <20231206-umgang-kaution-00dac707e334@brauner>
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20231206-umgang-kaution-00dac707e334@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128 x86/alternative: Rewrite optimize_nops() some]] On 29/11/2023 (Wed 09:57) Thomas Gleixner wrote:
-
-[...]
-
-> > Paul, was this regression ever solved? I wonder as I could not find
-> > anything with a "Fixes: 6c480f222128 [...]" tag on lore and this thread
-> > looks stalled.
+On 12/6/23 06:12, Christian Brauner wrote:
+> On Tue, Dec 05, 2023 at 10:34:33AM -0800, John Johansen wrote:
+>> On 12/5/23 09:08, Christian Brauner wrote:
+>>> On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> [CCing Linus]
+>>>>
+>>>> Hi, top-posting for once, to make this easily accessible to everyone.
+>>>>
+>>>> Stéphane, many thx for your insights.
+>>>>
+>>>> I'm CCing Linus on this, as I guess he wants to be aware of this.
+>>>>
+>>>> Normally I try to sum up things somewhat when doing so, but this here
+>>>> likely won't end well. So all I'm saying is: commit 157a3537d6bc28
+>>>> ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
+>>>> included in v6.6.3 broke containers in some setups. John described that
+>>>> commit with the words "it is a far from good solution. It is a stop
+>>>> gap." and later mentioned that "a CVE is coming for this and that having
+>>>> this unmediated in the tree isn't good either."
+>>>>
+>>>> For more details please check out the thread that on lore started with
+>>>> this message:
+>>>>
+>>>> https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
+>>>>
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>> --
+>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>> If I did something stupid, please tell me, as explained on that page.
+>>>>
+>>>> On 05.12.23 07:57, Stéphane Graber wrote:
+>>>>> On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
+>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>
+>>>>>> On 04.12.23 14:14, John Johansen wrote:
+>>>>>>> On 12/3/23 17:34, Stéphane Graber wrote:
+>>>>>>
+>>>>>> Side note: Stéphane, thx for CCing the regressions list.
+>>>>>>
+>>>>>>>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
+>>>>>>>> <john.johansen@canonical.com> wrote:
+>>>>>>>>> On 12/2/23 17:20, Stéphane Graber wrote:
+>>>>>>>>>>
+>>>>>>>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
+>>>>>>>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
+>>>>>>>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
+>>>>>>>>>> distributions using the newer version of util-linux.
+>>>>>>>>>>
+>>>>>>>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
+>>>>>>>>>> the new mount command now performs:
+>>>>>>>>>> ```
+>>>>>>>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
+>>>>>>>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+>>>>>>>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
+>>>>>>>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
+>>>>>>>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
+>>>>>>>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
+>>>>>>>>>> stx_size=40, ...}) = 0
+>>>>>>>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
+>>>>>>>>>> ```
+>>>>>>>>>>
+>>>>>>>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
+>>>>>>>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
+>>>>>>>>>> being created, this therefore results in:
+>>>>>>>>>> ```
+>>>>>>>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
+>>>>>>>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
+>>>>>>>>>> class="mount" info="failed perms check" error=-13
+>>>>>>>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
+>>>>>>>>>> srcname="/" flags="rw, move"
+>>>>>>>>>> ```
+>>>
+>>> move_mount() doesn't create a new mount it just moves an already
+>>> existing mount around in the tree. Either that mount is moved
+>>> (fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
+>>> was a detached mount to begin with.
+>>>
+>> yes, all to aware of this
+>>
+>>> The new mount api splits mounting across multiple system calls. And the
+>>> state it keeps for itself is gone once you create a mount via fsmount().
+>>
+>> yep
+>>
+>>> Because then the fs_context will be destroyed and you're only dealing
+>>> with a superblock and mount(s) for it.
+>>>
+>> yep
+>>
+>>> You shouldn't care about move_mount() moving a detached mount because
+>>> really it is not a move from some other filesystem location. The
+>>> creation of that mount will have already happened in
+>>> open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
+>>> move_mount() is the wrong place to do this.
+>>>
+>> yes and no. What we are specifically dong is mediating existing attached
+>> mounts as always and blocking move_mount from attaching the detached
+>> mount via move_mount. Which is very much something move_mount mediation
+>> should be able to do.
 > 
-> Hmm. I was waiting for the .config file to materialize and for an
-> eventual analysis of the alternatives debug output....
+> Yes, but my point is that it's often at the wrong point in time. You
+> can mediate this earlier as well - see my open_tree() comment below.
+> 
 
-Sorry - was off for a week vacation, and was playing catch-up on my
-return and 32 bit non-KVM qemu wasn't top on my priority list.
+yes, there needs to be mediation happening earlier as well. The goal
+here wasn't complete new mount api mediation, which is something that
+we have been meaning to address but haven't been able to yet.
 
-Then I did a batch of runs to get a fail, but without also booting with
-"ignore-loglevel" - since the lines are debug and don't show on the
-crashed console by default - start over!  :(
+This was specifically about addressing move_mount() which can also
+be used to move existing mounts in the system. While fixing that the
+question is do we care about detached mounts, yes, and should we
+address them to the point that we can within the current mediation,
+that is to gate them on very course is mount mediation allowed, and from
+a security perspective that is a yes too.
 
-The config file and both "good" and "bad" files are there now:
+Under the new mount api, even if we are mediating at the other points
+brought up below, we still want to be mediating the move_mount
+because apparmor very much cares where these mounts end up in
+the mount tree.
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=15230
 
-There are a lot more debug lines in the good/working output!
+>>
+>> It works as a stop gap for the new mount api bypassing the LSM at a very
+>> course level. This is why it requires a very general mount rule for
+>> apparmor to allow move_mount of the detached mount. A conditional that
+>> improves control around this is coming, but we can't make move_mount()
+>> mediation provide the full set of apparmor old mount mediation.
+>>
+>> Providing something close to what we were doing before is going to
+>> require new hooks, and likely specialized states tailored to the
+>> new mount api. Until that does happen it does mean a reduction in
+>> what apparmor policy can mediate. Today instead of being able to
+>> specify details about the mount you need a generic mount rule that
+>> just allows the application to do pretty much anything with mounts,
+>> soon you will be able to have an addition conditional that allows
+>> better control of move mount, and better logging of what is going on.
+> 
+> If you want to start doing full mediation for the new mount api you're
+> likely missing quite a few pieces.
+> 
+> I expect you need a hook in at least fsmount() as this always creates a
+> detached mount for a new filesystem context (You touched on that in an
+> earlier mail.).
+> 
+yes
 
-$ grep alternatives: dmesg-debug-alt-good.txt | wc -l
-4868
-$ grep alternatives: dmesg-debug-alt.txt | wc -l
-19
+> But you also need a new hook in open_tree() but _only_ in the
+> OPEN_TREE_CLONE path because that creates detached mounts as well.
+> 
+yes
 
-Paul
---
+> And you will also very likely want a new hook in mount_setattr() because
+> that allows you to change mount properties as well and the creation of
+> idmapped mounts and so on.
+
+agreed.
+
