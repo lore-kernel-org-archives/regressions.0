@@ -1,184 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B9C3FF5;
-	Wed,  6 Dec 2023 14:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fC08/D75"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49927C433C7;
-	Wed,  6 Dec 2023 14:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701871979;
-	bh=vRZJltfG/9jxYlO20NP4li4eCOel1OH5sVB3weAUVPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fC08/D75eXfLMJq6hPN9P7mHN7Se8PkCAi0mEbTzb4YZXk9aeYIqZADelnxK50qO7
-	 v9ixQ7LyO5rn8OCXOS/3L5ASrMoJfCGgRywLiVXRgRTPMHHUI60RWMC28UqlUJh0aE
-	 Rsg9mXaALLmV2keFyO6eo6UTc4XYWNmHgUksOEHohRwIqzKqbEWLPA+MrLGA0SrfDE
-	 qV6PaGkp2EgjNKoINYkg+QYAK3p0JdzmlLquQPxSFR2zC1ZPw6hm2qGubQRGupGB08
-	 /XOTGcX2kRuNhGz0CLXIDrqnSRwI4dVmOWuRjRqgZNlkGxJKPONvF6a1/u944p14xY
-	 ExMW6k90ctJAQ==
-Date: Wed, 6 Dec 2023 15:12:53 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: John Johansen <john.johansen@canonical.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	=?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@stgraber.org>,
-	Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
-	Alexander Mihalicyn <alexander@mihalicyn.com>,
-	"paul@paul-moore.com" <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
-	linux-security-module@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
-Message-ID: <20231206-umgang-kaution-00dac707e334@brauner>
-References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
- <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
- <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
- <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
- <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
- <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
- <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
- <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
- <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AB73DBBE
+	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 14:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rAsn5-0002Jb-Pp; Wed, 06 Dec 2023 15:22:19 +0100
+Message-ID: <149bf20e-538b-4051-9ee3-a9d98e09c3bd@leemhuis.info>
+Date: Wed, 6 Dec 2023 15:22:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Wang Yugui <wangyugui@e16-tech.com>, Chris Mason <clm@meta.com>
+Cc: Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
+ Chris Mason <clm@fb.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230811222321.2AD2.409509F4@e16-tech.com>
+ <20ab0be0-e7d0-632b-b94c-89d76911f1ed@meta.com>
+ <20230813175032.AA17.409509F4@e16-tech.com>
+ <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
+In-Reply-To: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701872544;bdbf068d;
+X-HE-SMSGID: 1rAsn5-0002Jb-Pp
 
-On Tue, Dec 05, 2023 at 10:34:33AM -0800, John Johansen wrote:
-> On 12/5/23 09:08, Christian Brauner wrote:
-> > On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > [CCing Linus]
-> > > 
-> > > Hi, top-posting for once, to make this easily accessible to everyone.
-> > > 
-> > > Stéphane, many thx for your insights.
-> > > 
-> > > I'm CCing Linus on this, as I guess he wants to be aware of this.
-> > > 
-> > > Normally I try to sum up things somewhat when doing so, but this here
-> > > likely won't end well. So all I'm saying is: commit 157a3537d6bc28
-> > > ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
-> > > included in v6.6.3 broke containers in some setups. John described that
-> > > commit with the words "it is a far from good solution. It is a stop
-> > > gap." and later mentioned that "a CVE is coming for this and that having
-> > > this unmediated in the tree isn't good either."
-> > > 
-> > > For more details please check out the thread that on lore started with
-> > > this message:
-> > > 
-> > > https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-> > > 
-> > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > > --
-> > > Everything you wanna know about Linux kernel regression tracking:
-> > > https://linux-regtracking.leemhuis.info/about/#tldr
-> > > If I did something stupid, please tell me, as explained on that page.
-> > > 
-> > > On 05.12.23 07:57, Stéphane Graber wrote:
-> > > > On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
-> > > > Leemhuis) <regressions@leemhuis.info> wrote:
-> > > > > 
-> > > > > On 04.12.23 14:14, John Johansen wrote:
-> > > > > > On 12/3/23 17:34, Stéphane Graber wrote:
-> > > > > 
-> > > > > Side note: Stéphane, thx for CCing the regressions list.
-> > > > > 
-> > > > > > > On Sun, Dec 3, 2023 at 8:21 PM John Johansen
-> > > > > > > <john.johansen@canonical.com> wrote:
-> > > > > > > > On 12/2/23 17:20, Stéphane Graber wrote:
-> > > > > > > > > 
-> > > > > > > > > Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
-> > > > > > > > > landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
-> > > > > > > > > blocking new mounts for all LXC, LXD and Incus users (at least) on
-> > > > > > > > > distributions using the newer version of util-linux.
-> > > > > > > > > 
-> > > > > > > > > That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
-> > > > > > > > > the new mount command now performs:
-> > > > > > > > > ```
-> > > > > > > > > fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
-> > > > > > > > > fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
-> > > > > > > > > fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
-> > > > > > > > > statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
-> > > > > > > > > {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
-> > > > > > > > > stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
-> > > > > > > > > stx_size=40, ...}) = 0
-> > > > > > > > > move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
-> > > > > > > > > ```
-> > > > > > > > > 
-> > > > > > > > > That last call to "move_mount" is incorrectly interpreted by AppArmor
-> > > > > > > > > as an attempt to move-mount "/" to "/mnt" rather than as a new mount
-> > > > > > > > > being created, this therefore results in:
-> > > > > > > > > ```
-> > > > > > > > > Dec 03 01:05:03 kernel-test kernel: audit: type=1400
-> > > > > > > > > audit(1701565503.599:34): apparmor="DENIED" operation="mount"
-> > > > > > > > > class="mount" info="failed perms check" error=-13
-> > > > > > > > > profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
-> > > > > > > > > srcname="/" flags="rw, move"
-> > > > > > > > > ```
-> > 
-> > move_mount() doesn't create a new mount it just moves an already
-> > existing mount around in the tree. Either that mount is moved
-> > (fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
-> > was a detached mount to begin with.
-> > 
-> yes, all to aware of this
-> 
-> > The new mount api splits mounting across multiple system calls. And the
-> > state it keeps for itself is gone once you create a mount via fsmount().
-> 
-> yep
-> 
-> > Because then the fs_context will be destroyed and you're only dealing
-> > with a superblock and mount(s) for it.
-> > 
-> yep
-> 
-> > You shouldn't care about move_mount() moving a detached mount because
-> > really it is not a move from some other filesystem location. The
-> > creation of that mount will have already happened in
-> > open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
-> > move_mount() is the wrong place to do this.
-> > 
-> yes and no. What we are specifically dong is mediating existing attached
-> mounts as always and blocking move_mount from attaching the detached
-> mount via move_mount. Which is very much something move_mount mediation
-> should be able to do.
+On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 13.08.23 11:50, Wang Yugui wrote:
+>>> On 8/11/23 10:23 AM, Wang Yugui wrote:
+>>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
+>>>>>>> And with only a revert of
+>>>>>>>
+>>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
+>>>>>> checksum implementations") 
+>>>>> Ok, so you have a case where the offload for the checksumming generation
+>>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
+>>>>> involved with this.
+>>>>>
+>>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
+>>>>>>>>                 return false;
+>>>>>>> This disables synchronous checksum calculation entirely for data I/O.
+>>>>>> without this fix, data I/O checksum is always synchronous?
+>>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
+>>>>> It is never with the above patch.
+>>>>>
+>>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
+>>>>>>> single profile) workload.
+>>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
+>>>>>> case.
+>>>>> How does it compare with and without the revert?  Can you add the numbers?
+>>>
+>>> Looking through the thread, you're comparing -m single -d single, but
+>>> btrfs is still doing the raid.
+>>>
+>>> Sorry to keep asking for more runs, but these numbers are a surprise,
+>>> and I probably won't have time today to reproduce before vacation next
+>>> week (sadly, Christoph and I aren't going together).
 
-Yes, but my point is that it's often at the wrong point in time. You
-can mediate this earlier as well - see my open_tree() comment below.
+FWIW, seems this thread died down and the underlying reason for the
+regression despite quite a bit of effort from the developers wasn't
+found. Haven't noticed any similar reports either. Reverting apparently
+is not a option. So in the end this afaics remains unfixed. In an ideal
+"no regressions" world this shouldn't happen, but well, we sadly don't
+live in one. So I'll stop tracking this issue, it's not worth the effort:
 
-> 
-> It works as a stop gap for the new mount api bypassing the LSM at a very
-> course level. This is why it requires a very general mount rule for
-> apparmor to allow move_mount of the detached mount. A conditional that
-> improves control around this is coming, but we can't make move_mount()
-> mediation provide the full set of apparmor old mount mediation.
-> 
-> Providing something close to what we were doing before is going to
-> require new hooks, and likely specialized states tailored to the
-> new mount api. Until that does happen it does mean a reduction in
-> what apparmor policy can mediate. Today instead of being able to
-> specify details about the mount you need a generic mount rule that
-> just allows the application to do pretty much anything with mounts,
-> soon you will be able to have an addition conditional that allows
-> better control of move mount, and better logging of what is going on.
+#regzbot inconclusive: despite some efforts from the developers could
+not be fixed
+#regzbot ignore-activity
 
-If you want to start doing full mediation for the new mount api you're
-likely missing quite a few pieces. 
-
-I expect you need a hook in at least fsmount() as this always creates a
-detached mount for a new filesystem context (You touched on that in an
-earlier mail.).
-
-But you also need a new hook in open_tree() but _only_ in the
-OPEN_TREE_CLONE path because that creates detached mounts as well.
-
-And you will also very likely want a new hook in mount_setattr() because
-that allows you to change mount properties as well and the creation of
-idmapped mounts and so on.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
