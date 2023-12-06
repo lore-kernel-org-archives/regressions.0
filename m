@@ -1,89 +1,162 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AB73DBBE
-	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 14:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rAsn5-0002Jb-Pp; Wed, 06 Dec 2023 15:22:19 +0100
-Message-ID: <149bf20e-538b-4051-9ee3-a9d98e09c3bd@leemhuis.info>
-Date: Wed, 6 Dec 2023 15:22:19 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BB646454
+	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 16:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="pw2y91M7"
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3B67PWEK018017;
+	Wed, 6 Dec 2023 07:47:05 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=date:from:to:cc:subject:message-id:references:content-type
+	:in-reply-to:mime-version; s=PPS06212021; bh=fX5SHfxTiLBevpMRFz7
+	3Mqt0GwNmbMltLktu4gZoxDY=; b=pw2y91M7r75VMO/9C4NLh47qzH00MhTxIeS
+	hY+erS1iy27lDBqtzTvOalFfV7cjiSKPjF8g7Q1V91tNXyNWG2bOUb4t7iDJo4hP
+	0FVaVkPNy6VouqhAEUyZKBruo0AyqqGLjpwhUVY8RLiNS8L0XwfSIpR1Zc/epJ/i
+	1vKGTQ7hurH2z8o45xFdqoHtAfFY8sXEMTjREWwyRP0SEunch6eJVQKnY+t2LN82
+	TV0dgN7REZq5U6eM9oa89Jem2V3eQDVwBVLK8i5SLtheR8XPfT+O2YNAaEVHBc4v
+	4gimBslpLUayCzOPHGZc4dAiP44moX41UZYtXMLh0BL6BtJbp7w==
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3utd2rrpep-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Dec 2023 07:47:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i+2fOVXn+bE4SctXQXrmZNrtOicCojM5X9zvWT2gI0CbQAsQFHUpCRUHgBZSw0tTCbSlMiDjNck0of2Ut9l1LAtRvhZgPnTBEDcn1Dll7BaxYHfyuZ8Nw6eBgrUbFdwDnrcinMrMVIUWmBW7PZ+MYUd3Oc59XbuLqUBY6R7OWkmM1xWuc9Bmga3U1sQGxi3XEh13a1a7m5MLDEXHamKAbKIL0IFaoPguT6ijJcTA1RGs74mJfLFCkDIVnhLHRgc79OZR5puaijj8H7m1iil4CgzsI36CR9f+vEOBknR1ogvyD+Des3rWRDnyWShnGNXSDgoboJ+KBr3MEDqMhYPrpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fX5SHfxTiLBevpMRFz73Mqt0GwNmbMltLktu4gZoxDY=;
+ b=X8CczJoFTthP+G6qIG0Yhi1nKAwVAVo/w7/bIx5Bl9w2yWbsOi9f8jCNaqIm6Eu1jwmWplkfL2uh3+CKmm+u8lf8z2NOMBOWwCpbznhhqCsySA+wIkNgQusboKscUjwfISmXn6CbhI+TJtwgWvbEWOn2/OS27xtq7nFmsZ7oYwB9BepYAQ6LCHkr0dr78zecqaGISK/+x112KEzKQfmTVolheYsNagaRT7F9OoniSUd540I9ecVd8V+N3zP1vmZBpRQ1VPwIdewI0iIFLDhU8RUOOJPX51kWOINj99Y1+x4ekhE8VXfNFJ7kPjZxMWYFMzuDIaX7xfHAKtPfs7ygrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from IA0PR11MB7378.namprd11.prod.outlook.com (2603:10b6:208:432::8)
+ by CY5PR11MB6233.namprd11.prod.outlook.com (2603:10b6:930:26::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Wed, 6 Dec
+ 2023 15:47:02 +0000
+Received: from IA0PR11MB7378.namprd11.prod.outlook.com
+ ([fe80::5548:b43c:f9ac:7b95]) by IA0PR11MB7378.namprd11.prod.outlook.com
+ ([fe80::5548:b43c:f9ac:7b95%4]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
+ 15:47:02 +0000
+Date: Wed, 6 Dec 2023 10:46:59 -0500
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+        bp@alien8.de, linux-kernel@vger.kernel.org, peterz@infradead.org,
+        richard.purdie@linuxfoundation.org, x86@kernel.org,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128
+ x86/alternative: Rewrite optimize_nops() some]
+Message-ID: <ZXCXc+BtnLzqMbFv@windriver.com>
+References: <ZUEgAAGDVqXz2Seo@windriver.com>
+ <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
+ <87r0k9ym0y.ffs@tglx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0k9ym0y.ffs@tglx>
+X-ClientProxiedBy: YT4PR01CA0300.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10e::25) To IA0PR11MB7378.namprd11.prod.outlook.com
+ (2603:10b6:208:432::8)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: btrfs write-bandwidth performance regression of 6.5-rc4/rc3
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Wang Yugui <wangyugui@e16-tech.com>, Chris Mason <clm@meta.com>
-Cc: Christoph Hellwig <hch@lst.de>, linux-btrfs@vger.kernel.org,
- Chris Mason <clm@fb.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230811222321.2AD2.409509F4@e16-tech.com>
- <20ab0be0-e7d0-632b-b94c-89d76911f1ed@meta.com>
- <20230813175032.AA17.409509F4@e16-tech.com>
- <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
-In-Reply-To: <4108c514-77ff-a247-d6e1-2c12a5dea295@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701872544;bdbf068d;
-X-HE-SMSGID: 1rAsn5-0002Jb-Pp
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR11MB7378:EE_|CY5PR11MB6233:EE_
+X-MS-Office365-Filtering-Correlation-Id: addf37e8-2bf8-4c42-83de-08dbf67296e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Vo3cxD1b5zHu/NZh7WUbYghPwThsQSmQ4o9wmb9kCw8E4t8tg48EgcZgrXb44iSXLUccgpVJOKRDunPZHdQdoY93I6EhnMtidykjXNvZHUgI32ytQdZHqQCNjRykNnsQi7DGYW1D5IEqytOkLrZnxTitfSM/W7+WzSEeNnHtLtHl9OVzTPei4n+Xp2gfEiRSvwCkwr1khaStAleKJrj1Kf+1W8qfyFfhewEf095PX/Q9n6wAny59o0OvCjorTlAxprS9/a/XCtL79xeiLMfL/5ojwrEgO20ADgbhGwiVTepn8FhMz7LTB18o5I+4joa3/RCmwpq57f4jq1C5giL+6C+Y17wPHTCZUKmVTNhvT8qwuaG5x8btw6behw6O8Oz4FWh6vADPg13GaKVBKNSYB/sf9YZM3up+dLRCyLnYEoPZMTeUyl5XOOhIi+olIMW+4GAnPH7QtqJAS0usVcc/Y7DSsPJEyd9CEQDLVjnp7DIPEEZCLLfpJCiCw1uD4bTnuarUzbxFiEzPepBpzpZmoUJ66iTO8eoIE9mdP+r5Y2CawpB+uOSoiHin41Ad1QbJZq9F4+GY7VpwkIyC5yRXfgcQClXT+070P27J+Uae8Ds=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7378.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39850400004)(376002)(396003)(136003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(478600001)(8676002)(6486002)(966005)(2616005)(6506007)(6666004)(26005)(54906003)(4326008)(66476007)(66556008)(66946007)(6916009)(316002)(8936002)(38100700002)(6512007)(44832011)(41300700001)(36756003)(2906002)(5660300002)(86362001)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?AoJK37anaV1u1vvRnRQoA9Uynt97QLchh4GBRtsswtA01UjzIaYTFiuC3u/2?=
+ =?us-ascii?Q?iBb8oRIL95NS2M4RlybfXerTDzg8j+p8kh8xN0UmnZGRyF2mZAhLMdj+dDmW?=
+ =?us-ascii?Q?IUzcfFugfClUCMEG/xcasC907lnunOMBjnhjQpMbydzgLCHCYBHQF0LOU/Zq?=
+ =?us-ascii?Q?qvEAxnIE9KG9PcfMotbdq2ouQ2P5BFyqtWTCdpsGQW9gD6/6WGMdI3nHCgSZ?=
+ =?us-ascii?Q?tOvlDNUgu3hcl3P0BiE7kAzWsax/A6C0lO7ruzldGfDPEP2igLpcWW0NhVXN?=
+ =?us-ascii?Q?6Z9++ue1GoRQ1GAb6dWQN6viLh065Ewij8bGca38CFtafAS/a0d7ncdPFFPp?=
+ =?us-ascii?Q?qL8Fot2nM84Ep3CgiwGFTI0hROOSioKa/MHEm+vzqMrZlLyIjWp2HhIO9clV?=
+ =?us-ascii?Q?Bzc1ugu8ibc6E1EqMk2lWsrx72+Yz3LuzqRXyGH0QRTvJmvI2DrkaJzikapD?=
+ =?us-ascii?Q?2JARtjG18ZSzDZdJDN716t682PoUd7ijvfl2k0UpRU/CPQSYBoBYU/Eph5K1?=
+ =?us-ascii?Q?TO4AKhAtFpwShNd+SkRFOVU3vDYf4eqQpo9Tp8EzDSQh0oRHLpuuA66iUY+g?=
+ =?us-ascii?Q?unDCwvNa9qIqIEMT8K5Pg8dVSGTfNhKTMgEuX33pqdQLrVtmryMrnn9uZcqw?=
+ =?us-ascii?Q?B46veDYllzC2Ip/jiAzIoZHtvWpC2ymn/BkykQ6FdsBp5u2DNyOSSdB65sm0?=
+ =?us-ascii?Q?VMsKl0yaEpEJmQM7ppoaabCh3WpKuyPsAaEbw8OPS76hWzteN50dIsq60h66?=
+ =?us-ascii?Q?bn/Bj5MCLWIx2F45EQir9CNIX6SvDOq7PpQQjRjnXeYOq1gWrZ88TP4t8fQP?=
+ =?us-ascii?Q?I36B1pnpoFHhYgxaFWxAf4HedEotxAVQvFch1vHrCuuZ7pMbY9wYAC0dSzP8?=
+ =?us-ascii?Q?FyWCv2sEZ5dimdLB1Uiu87WnHQcHEYCG5Ro4KqNZoCMZMPT8AiIc9vNBDkAV?=
+ =?us-ascii?Q?gtBqmTJheyed6yC2fRJYUAg8qMAeO6JFuTuajXHjqTS4XekVoDkPQjVkIyGC?=
+ =?us-ascii?Q?EDgRMasv06LA0a//9RVtq87JgGkFwfJOQ8kLEGP2a7KmasgzaTUN7eU/nv2Q?=
+ =?us-ascii?Q?kC++LvH1UbhYm8I1d5s3A2631Hq4JYbfqOy/pQObZPx+PaNtOrjndyp8r9Cl?=
+ =?us-ascii?Q?MZuQkVsWBZTvU+nj5DyL3wgZ9+sTyKFcqNKtlwjrZBmBygKAFrWiPiK42MoL?=
+ =?us-ascii?Q?JzIKffwWm/kqqIlB4nGf9jujAc7fk3tMSbU0e7QjKnCoYR9D4xgVbpF26i+a?=
+ =?us-ascii?Q?yjA+7vQ1jdvw3DAeiNRnFP7+x/dnxKfM0OHaiELvQRd4ZsxNXSzuhhBWRLSj?=
+ =?us-ascii?Q?xhiplbBt5tHZbgV4VAAvGsf1dZV9dNGq4g2i+Hx5VtfThwM5ksmkEbrHLZOo?=
+ =?us-ascii?Q?SpcjScfs89fIZGFvkX++ecB2+mrMlWcXEkWTuiex4MfVVML97x3RH17BSEVa?=
+ =?us-ascii?Q?9Ahr5FhpP42idgI86JrY0twQBOaGuB4iVWQZWyXbpeIwgbW1DRkmW1LdWPNa?=
+ =?us-ascii?Q?2DMwPFYC3oILJZVY7qXvCjy9vn9CM0xFGIVZJhBiqXgQw4nZsDzNurQMYoFg?=
+ =?us-ascii?Q?nvyjVBRqnUGEbRyy/b8lCbGI6Kogeh7G8O/UKNJPfvTUymERpuWWRdevHJYh?=
+ =?us-ascii?Q?ZQ=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: addf37e8-2bf8-4c42-83de-08dbf67296e7
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7378.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 15:47:02.4257
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h1RUcodBX4LcelTm9N5bjVCVPj73Bo3Qp0jfYlwf3nBB/WrFliT8kndvt0cokixQIfg8kRwyJNThsxBqMtcR8jkhheoj6XEVWdUPfhLwyHc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6233
+X-Proofpoint-GUID: 6ErXZOrAhz3GaNztaXPjpnyCvyhzzfEZ
+X-Proofpoint-ORIG-GUID: 6ErXZOrAhz3GaNztaXPjpnyCvyhzzfEZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=733
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312060128
 
-On 29.08.23 11:45, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 13.08.23 11:50, Wang Yugui wrote:
->>> On 8/11/23 10:23 AM, Wang Yugui wrote:
->>>>> On Wed, Aug 02, 2023 at 08:04:57AM +0800, Wang Yugui wrote:
->>>>>>> And with only a revert of
->>>>>>>
->>>>>>> "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>>> GOOD performance when only (Revert "btrfs: submit IO synchronously for fast
->>>>>> checksum implementations") 
->>>>> Ok, so you have a case where the offload for the checksumming generation
->>>>> actually helps (by a lot).  Adding Chris to the Cc list as he was
->>>>> involved with this.
->>>>>
->>>>>>>> -       if (test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>> +       if ((bbio->bio.bi_opf & REQ_META) && test_bit(BTRFS_FS_CSUM_IMPL_FAST, &bbio->fs_info->flags))
->>>>>>>>                 return false;
->>>>>>> This disables synchronous checksum calculation entirely for data I/O.
->>>>>> without this fix, data I/O checksum is always synchronous?
->>>>>> this is a feature change of "btrfs: submit IO synchronously for fast checksum implementations"?
->>>>> It is never with the above patch.
->>>>>
->>>>>>> Also I'm curious if you see any differents for a non-RAID0 (i.e.
->>>>>>> single profile) workload.
->>>>>> '-m single -d single' is about 10% slow that '-m raid1 -d raid0' in this test
->>>>>> case.
->>>>> How does it compare with and without the revert?  Can you add the numbers?
->>>
->>> Looking through the thread, you're comparing -m single -d single, but
->>> btrfs is still doing the raid.
->>>
->>> Sorry to keep asking for more runs, but these numbers are a surprise,
->>> and I probably won't have time today to reproduce before vacation next
->>> week (sadly, Christoph and I aren't going together).
+[Re: 32 bit qemu regression from v6.5 tip pull [6c480f222128 x86/alternative: Rewrite optimize_nops() some]] On 29/11/2023 (Wed 09:57) Thomas Gleixner wrote:
 
-FWIW, seems this thread died down and the underlying reason for the
-regression despite quite a bit of effort from the developers wasn't
-found. Haven't noticed any similar reports either. Reverting apparently
-is not a option. So in the end this afaics remains unfixed. In an ideal
-"no regressions" world this shouldn't happen, but well, we sadly don't
-live in one. So I'll stop tracking this issue, it's not worth the effort:
+[...]
 
-#regzbot inconclusive: despite some efforts from the developers could
-not be fixed
-#regzbot ignore-activity
+> > Paul, was this regression ever solved? I wonder as I could not find
+> > anything with a "Fixes: 6c480f222128 [...]" tag on lore and this thread
+> > looks stalled.
+> 
+> Hmm. I was waiting for the .config file to materialize and for an
+> eventual analysis of the alternatives debug output....
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Sorry - was off for a week vacation, and was playing catch-up on my
+return and 32 bit non-KVM qemu wasn't top on my priority list.
+
+Then I did a batch of runs to get a fail, but without also booting with
+"ignore-loglevel" - since the lines are debug and don't show on the
+crashed console by default - start over!  :(
+
+The config file and both "good" and "bad" files are there now:
+
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=15230
+
+There are a lot more debug lines in the good/working output!
+
+$ grep alternatives: dmesg-debug-alt-good.txt | wc -l
+4868
+$ grep alternatives: dmesg-debug-alt.txt | wc -l
+19
+
+Paul
 --
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
