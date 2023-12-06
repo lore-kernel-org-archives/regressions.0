@@ -1,106 +1,121 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FF9DDC3
-	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 04:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=owenh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=owenh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=owenh.net header.i=@owenh.net header.b="wT3khbfO"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4SlP5y3W6mz9sbC;
-	Wed,  6 Dec 2023 05:08:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=owenh.net; s=MBO0001;
-	t=1701835718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tHKdQ0J5iT5fwEMnNKTPB4w/ZnjVg983tzlHAk/F6g=;
-	b=wT3khbfO9H/TaacQ5aL+cvBIYjl+eR+b35Ai0l7Vrntg74jMOx4LGb/IWaJFQPT2kLEHA4
-	ToVaqsC32nBEj57aDgY04oGHzvuqkH3aKMg0NvLqXD1XjpECgvyNOp92dlRZZcK4oACUJp
-	oUJwV5Pg3NsxILQaynj+Hl/UqvIEWlQttRsI7FcaNcvzw5wTLEORM/kaUZurdzIzIn11bE
-	VMEyPKH/UFA7UMXdsiA7VXuepG3VU8a0ZFYS20WZikNjCWpPWS2J2cVDdENMUYtEaYKgB5
-	tARo3aSKnOCfr4pWGwVHnyEBmrb1KSGxZdECdCAZvHZkS3TMHI43eWvuxTefsA==
-Message-ID: <652eec09-1942-4d29-bf90-2911d4223894@owenh.net>
-Date: Tue, 5 Dec 2023 22:08:28 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7661BDDC
+	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 09:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rAoe1-0001Jn-NU; Wed, 06 Dec 2023 10:56:41 +0100
+Message-ID: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+Date: Wed, 6 Dec 2023 10:56:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION]: nouveau: Asynchronous wait on fence
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-Cc: nouveau@lists.freedesktop.org, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
- Danilo Krummrich <dakr@redhat.com>, dri-devel@lists.freedesktop.org
-References: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
- <5ecf0eac-a089-4da9-b76e-b45272c98393@leemhuis.info>
- <6b7a71b4-c8a2-46f4-a995-0c63e7745ca3@owenh.net>
- <c72ca99e-8657-4ed8-9999-5702ebeb5b8c@leemhuis.info>
- <9bce5d00-8db6-4c8b-9817-06502492b44a@owenh.net>
- <c1dd675d-cb3e-4c4c-8dc4-dd561ef4950b@owenh.net>
- <66bf26bf-250e-43dd-ae70-e88bb709e272@leemhuis.info>
-Content-Language: en-US
-From: "Owen T. Heisler" <writer@owenh.net>
-In-Reply-To: <66bf26bf-250e-43dd-ae70-e88bb709e272@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1054514: linux-image-6.1.0-13-amd64: Debian VM with qxl
+ graphics freezes frequently
+Content-Language: en-US, de-DE
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: 1054514@bugs.debian.org, Dave Airlie <airlied@redhat.com>,
+ Daniel Vetter <daniel@ffwll.ch>, virtualization@lists.linux-foundation.org,
+ spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ Timo Lindfors <timo.lindfors@iki.fi>,
+ Salvatore Bonaccorso <carnil@debian.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>
+References: <alpine.DEB.2.20.2310242308150.28457@mail.home>
+ <ZTgydqRlK6WX_b29@eldamar.lan>
+ <alpine.DEB.2.20.2310250027230.28685@mail.home>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <alpine.DEB.2.20.2310250027230.28685@mail.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1701856619;284d912c;
+X-HE-SMSGID: 1rAoe1-0001Jn-NU
 
-Hi Thorsten and others,
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-On 12/5/23 06:33, Thorsten Leemhuis wrote:
-> On 29.11.23 01:37, Owen T. Heisler wrote:
->> On 11/21/23 14:23, Owen T. Heisler wrote:
->>> On 11/21/23 09:16, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 15.11.23 07:19, Owen T. Heisler wrote:
->>>>> On 10/31/23 04:18, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>> On 28.10.23 04:46, Owen T. Heisler wrote:
->>>>>>> #regzbot introduced: d386a4b54607cf6f76e23815c2c9a3abc1d66882
->>>>>>> #regzbot link:
->>>>>>> https://gitlab.freedesktop.org/drm/nouveau/-/issues/180
->>>>>>>
->>>>>>> 3. Suddenly the secondary Nvidia-connected display turns off and X
->>>>>>> stops responding to keyboard/mouse input.
->>
->>> I am currently testing v6.6 with the culprit commit reverted.
->>
->> - v6.6: fails
->> - v6.6 with the culprit commit reverted: works
->>
->> See <https://gitlab.freedesktop.org/drm/nouveau/-/issues/180> for full
->> details including a decoded kernel log.
-> 
-> Not sure about the others, but it's kind of confusing that you update
-> the issue descriptions all the time and never add a comment to that ticket.
+Gerd, it seems this regression[1] fell through the cracks. Could you
+please take a look? Or is there a good reason why this can't be
+addressed? Or was it dealt with and I just missed it?
 
-Thank you for the feedback; I will use comments more for future updates 
-there. I didn't know anyone was following that issue (I haven't received 
-any reply from nouveau developers on the nouveau list [1] or on gitlab 
-[2]) so I have tried to keep that issue description succinct and 
-up-to-date for anyone reading it for the first time.
+[1] apparently caused by 5a838e5d5825c8 ("drm/qxl: simplify
+qxl_fence_wait") [v5.13-rc1] from Gerd; for details see
+https://lore.kernel.org/regressions/ZTgydqRlK6WX_b29@eldamar.lan/
 
-[1]: 
-<https://lists.freedesktop.org/archives/nouveau/2022-September/041001.html>
-[2]: But Karol Herbst did add the "regression" label.
-
-> Anyway: Nouveau maintainers, could any of you at least comment on this?
-> Sure, it's the regression is caused by an old commit (6eaa1f3c59a707 was
-> merged for v5.14-rc7) and reverting it likely is not a option, but it
-> nevertheless it would be great if this could be solved somehow.
-
-Also if anyone has any ideas about any stress-tests or anything else 
-that I might be able to trigger the crash with, please share.
-
-Thanks,
-Owen
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Owen T. Heisler
-<https://owenh.net>
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+On 24.10.23 23:39, Timo Lindfors wrote:
+> Hi,
+> 
+> On Tue, 24 Oct 2023, Salvatore Bonaccorso wrote:
+>> Thanks for the excelent constructed report! I think it's best to
+>> forward this directly to upstream including the people for the
+>> bisected commit to get some idea.
+> 
+> Thanks for the quick reply!
+> 
+>> Can you reproduce the issue with 6.5.8-1 in unstable as well?
+> 
+> Unfortunately yes:
+> 
+> ansible@target:~$ uname -r
+> 6.5.0-3-amd64
+> ansible@target:~$ time sudo ./reproduce.bash
+> Wed 25 Oct 2023 12:27:00 AM EEST starting round 1
+> Wed 25 Oct 2023 12:27:24 AM EEST starting round 2
+> Wed 25 Oct 2023 12:27:48 AM EEST starting round 3
+> bug was reproduced after 3 tries
+> 
+> real    0m48.838s
+> user    0m1.115s
+> sys     0m45.530s
+> 
+> I also tested upstream tag v6.6-rc6:
+> 
+> ...
+> + detected_version=6.6.0-rc6
+> + '[' 6.6.0-rc6 '!=' 6.6.0-rc6 ']'
+> + exec ssh target sudo ./reproduce.bash
+> Wed 25 Oct 2023 12:37:16 AM EEST starting round 1
+> Wed 25 Oct 2023 12:37:42 AM EEST starting round 2
+> Wed 25 Oct 2023 12:38:10 AM EEST starting round 3
+> Wed 25 Oct 2023 12:38:36 AM EEST starting round 4
+> Wed 25 Oct 2023 12:39:01 AM EEST starting round 5
+> Wed 25 Oct 2023 12:39:27 AM EEST starting round 6
+> bug was reproduced after 6 tries
+> 
+> 
+> For completeness, here is also the grub_set_default_version.bash script
+> that I had to write to automate this (maybe these could be in debian
+> wiki?):
+> 
+> #!/bin/bash
+> set -x
+> 
+> version="$1"
+> 
+> idx=$(expr $(grep "menuentry " /boot/grub/grub.cfg | sed 1d |grep -n
+> "'Debian GNU/Linux, with Linux $version'"|cut -d: -f1) - 1)
+> exec sudo grub-set-default "1>$idx"
+> 
+> 
+> 
+> -Timo
+> 
+> 
+> 
