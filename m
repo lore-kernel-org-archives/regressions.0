@@ -1,262 +1,202 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D54644B
-	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 19:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43EA405FB
+	for <regressions@lists.linux.dev>; Wed,  6 Dec 2023 20:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="AJ6Nh4yV"
-Received: from [192.168.192.84] (unknown [50.39.103.33])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id DF14E42FEA;
-	Wed,  6 Dec 2023 19:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1701890485;
-	bh=K/tdXr6jVzr1/VM41uImJAnVMWVvg+HQMRTEountDS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=AJ6Nh4yV5e1MTUHlpRUO2goNNFTxxCn1k+Z75K2kd8VpqJnnOq7T3NubxLIB+1Nxo
-	 zFdbQxnR6DjzuXe4CezRQoySWzr3B+NrH/wdThcBctnzioO13+p/uAp/YLfbsBRekl
-	 yUNnwb0QJT5EiuHD8Hbe/naNH9bEA7Q3zxMFp0BhLCSapNw7Z0UQSYp0HSfVZ4xDWK
-	 vw+qMAxhoSax7+o3oqxIlVYEyPGtFMGFcVwaZd0jBGJwwD9vZes09ACKyQ0U0i2I1F
-	 fDH7ygm7eQ9nYjmL3oyw1RtIl4c4o5XylO1l7ln+hXsxwIR5+SyO+AUPzKhQuXXdIq
-	 ZPP+Kskxb6OyA==
-Message-ID: <dea3be0e-3a52-4561-b4ea-a6b25db48601@canonical.com>
-Date: Wed, 6 Dec 2023 11:21:12 -0800
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Hx2bR82C"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=WceqjfMGEMiBB3nOBuWFcIs8l2PO3jnf+DRjfRyxayk=;
+	t=1701895954; x=1703105554; b=Hx2bR82CWqYPRSnR2vjzjTr6vWTl6MUDQrz+L4FgcXBTqmD
+	7jsLX8f5UM7d3vRiqBR282wAf0JAcrXpyouaBBwFtvYDVY5ic6g/7XsoW6SxsrsnqwaGPYgJIRn6K
+	09FzTkT8EHmkp1TsnwL8x0XBVPeM5Ky7EeoGppu4sM51VsKdiFapiuWRmb+eImLvZC/XI/SVzshIo
+	NcYan0qffR9Dfbc96EukE0sD6iXTaX8edYcmqyIfWXpH3XUNn1OM9bpgZ491WBJo5kruYRG8wgaSg
+	yro/jKmH/Xp08Z9sBNcH/OOR+6AWdvMRSVYbzJzx0/LAWxSSp+nYlq8ZOV1LHJ2A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rAysa-00000000HmL-39Bq;
+	Wed, 06 Dec 2023 21:52:24 +0100
+From: Johannes Berg <johannes@sipsolutions.net>
+To: linux-wireless@vger.kernel.org
+Cc: regressions@lists.linux.dev,
+	Linus Lotz <register+kernelbugzilla@lotz.li>,
+	Darrell Enns <darrell@darrellenns.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Subject: [RFC PATCH] wifi: iwlwifi: pcie: don't synchronize IRQs from IRQ
+Date: Wed,  6 Dec 2023 21:52:07 +0100
+Message-ID: <20231206215211.95907305c9b2.Iadfe154d6248e7f9dfd69522e5429dbbd72925d7@changeid>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
+References: <af62295b-b757-49ec-83ce-9d3ef93e24af@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@stgraber.org>,
- Sasha Levin <sashal@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
- Alexander Mihalicyn <alexander@mihalicyn.com>,
- "paul@paul-moore.com" <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, Serge Hallyn <serge@hallyn.com>,
- linux-security-module@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
- <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
- <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
- <fa2124b9-18c1-49b0-b390-398c2dde3fcf@canonical.com>
- <68c166b8-5b4d-4612-8042-1dee3334385b@leemhuis.info>
- <CA+enf=u5RhfTXR-xSGXeGZ+NcV7iu4NughBZRFq-kwRuV3A5eA@mail.gmail.com>
- <d9a402cc-9f47-40c7-9c1b-76c318fd91c4@leemhuis.info>
- <20231205-goldwaage-faszination-97b57cbc24b9@brauner>
- <862e8daa-e586-4627-8698-0416a4eba155@canonical.com>
- <20231206-umgang-kaution-00dac707e334@brauner>
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <20231206-umgang-kaution-00dac707e334@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 12/6/23 06:12, Christian Brauner wrote:
-> On Tue, Dec 05, 2023 at 10:34:33AM -0800, John Johansen wrote:
->> On 12/5/23 09:08, Christian Brauner wrote:
->>> On Tue, Dec 05, 2023 at 09:45:35AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> [CCing Linus]
->>>>
->>>> Hi, top-posting for once, to make this easily accessible to everyone.
->>>>
->>>> Stéphane, many thx for your insights.
->>>>
->>>> I'm CCing Linus on this, as I guess he wants to be aware of this.
->>>>
->>>> Normally I try to sum up things somewhat when doing so, but this here
->>>> likely won't end well. So all I'm saying is: commit 157a3537d6bc28
->>>> ("apparmor: Fix regression in mount mediation") [v6.7-rc1] that was also
->>>> included in v6.6.3 broke containers in some setups. John described that
->>>> commit with the words "it is a far from good solution. It is a stop
->>>> gap." and later mentioned that "a CVE is coming for this and that having
->>>> this unmediated in the tree isn't good either."
->>>>
->>>> For more details please check out the thread that on lore started with
->>>> this message:
->>>>
->>>> https://lore.kernel.org/all/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>>
->>>> On 05.12.23 07:57, Stéphane Graber wrote:
->>>>> On Mon, Dec 4, 2023 at 9:20 AM Linux regression tracking (Thorsten
->>>>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>>>
->>>>>> On 04.12.23 14:14, John Johansen wrote:
->>>>>>> On 12/3/23 17:34, Stéphane Graber wrote:
->>>>>>
->>>>>> Side note: Stéphane, thx for CCing the regressions list.
->>>>>>
->>>>>>>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
->>>>>>>> <john.johansen@canonical.com> wrote:
->>>>>>>>> On 12/2/23 17:20, Stéphane Graber wrote:
->>>>>>>>>>
->>>>>>>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
->>>>>>>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
->>>>>>>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
->>>>>>>>>> distributions using the newer version of util-linux.
->>>>>>>>>>
->>>>>>>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
->>>>>>>>>> the new mount command now performs:
->>>>>>>>>> ```
->>>>>>>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
->>>>>>>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
->>>>>>>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
->>>>>>>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
->>>>>>>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
->>>>>>>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
->>>>>>>>>> stx_size=40, ...}) = 0
->>>>>>>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
->>>>>>>>>> ```
->>>>>>>>>>
->>>>>>>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
->>>>>>>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
->>>>>>>>>> being created, this therefore results in:
->>>>>>>>>> ```
->>>>>>>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
->>>>>>>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
->>>>>>>>>> class="mount" info="failed perms check" error=-13
->>>>>>>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
->>>>>>>>>> srcname="/" flags="rw, move"
->>>>>>>>>> ```
->>>
->>> move_mount() doesn't create a new mount it just moves an already
->>> existing mount around in the tree. Either that mount is moved
->>> (fsmount(), open_tree(OPEN_TREE_CLONE)) from it's source location or it
->>> was a detached mount to begin with.
->>>
->> yes, all to aware of this
->>
->>> The new mount api splits mounting across multiple system calls. And the
->>> state it keeps for itself is gone once you create a mount via fsmount().
->>
->> yep
->>
->>> Because then the fs_context will be destroyed and you're only dealing
->>> with a superblock and mount(s) for it.
->>>
->> yep
->>
->>> You shouldn't care about move_mount() moving a detached mount because
->>> really it is not a move from some other filesystem location. The
->>> creation of that mount will have already happened in
->>> open_tree(OPEN_TREE_CLONE) or in fsmount(). So that ship has sailed and
->>> move_mount() is the wrong place to do this.
->>>
->> yes and no. What we are specifically dong is mediating existing attached
->> mounts as always and blocking move_mount from attaching the detached
->> mount via move_mount. Which is very much something move_mount mediation
->> should be able to do.
-> 
-> Yes, but my point is that it's often at the wrong point in time. You
-> can mediate this earlier as well - see my open_tree() comment below.
-> 
+From: Johannes Berg <johannes.berg@intel.com>
 
-yes, there needs to be mediation happening earlier as well. The goal
-here wasn't complete new mount api mediation, which is something that
-we have been meaning to address but haven't been able to yet.
+On older devices (before unified image!) we can end up calling
+stop_device from an rfkill interrupt. However, in stop_device
+we attempt to synchronize IRQs, which then of course deadlocks.
 
-This was specifically about addressing move_mount() which can also
-be used to move existing mounts in the system. While fixing that the
-question is do we care about detached mounts, yes, and should we
-address them to the point that we can within the current mediation,
-that is to gate them on very course is mount mediation allowed, and from
-a security perspective that is a yes too.
+Avoid this by checking the context, if running from the IRQ
+thread then don't synchronize. This wouldn't be correct on a
+new device since RSS is supported, but older devices only have
+a single interrupt/queue.
 
-Under the new mount api, even if we are mediating at the other points
-brought up below, we still want to be mediating the move_mount
-because apparmor very much cares where these mounts end up in
-the mount tree.
+Fixes: 37fb29bd1f90 ("wifi: iwlwifi: pcie: synchronize IRQs before NAPI")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+---
+ .../net/wireless/intel/iwlwifi/pcie/internal.h  |  4 ++--
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c    |  8 ++++----
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 17 +++++++++--------
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
-
->>
->> It works as a stop gap for the new mount api bypassing the LSM at a very
->> course level. This is why it requires a very general mount rule for
->> apparmor to allow move_mount of the detached mount. A conditional that
->> improves control around this is coming, but we can't make move_mount()
->> mediation provide the full set of apparmor old mount mediation.
->>
->> Providing something close to what we were doing before is going to
->> require new hooks, and likely specialized states tailored to the
->> new mount api. Until that does happen it does mean a reduction in
->> what apparmor policy can mediate. Today instead of being able to
->> specify details about the mount you need a generic mount rule that
->> just allows the application to do pretty much anything with mounts,
->> soon you will be able to have an addition conditional that allows
->> better control of move mount, and better logging of what is going on.
-> 
-> If you want to start doing full mediation for the new mount api you're
-> likely missing quite a few pieces.
-> 
-> I expect you need a hook in at least fsmount() as this always creates a
-> detached mount for a new filesystem context (You touched on that in an
-> earlier mail.).
-> 
-yes
-
-> But you also need a new hook in open_tree() but _only_ in the
-> OPEN_TREE_CLONE path because that creates detached mounts as well.
-> 
-yes
-
-> And you will also very likely want a new hook in mount_setattr() because
-> that allows you to change mount properties as well and the creation of
-> idmapped mounts and so on.
-
-agreed.
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 56def20374f3..7805a42948af 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -770,7 +770,7 @@ static inline void iwl_enable_rfkill_int(struct iwl_trans *trans)
+ 	}
+ }
+ 
+-void iwl_pcie_handle_rfkill_irq(struct iwl_trans *trans);
++void iwl_pcie_handle_rfkill_irq(struct iwl_trans *trans, bool from_irq);
+ 
+ static inline bool iwl_is_rfkill_set(struct iwl_trans *trans)
+ {
+@@ -817,7 +817,7 @@ static inline bool iwl_pcie_dbg_on(struct iwl_trans *trans)
+ 	return (trans->dbg.dest_tlv || iwl_trans_dbg_ini_valid(trans));
+ }
+ 
+-void iwl_trans_pcie_rf_kill(struct iwl_trans *trans, bool state);
++void iwl_trans_pcie_rf_kill(struct iwl_trans *trans, bool state, bool from_irq);
+ void iwl_trans_pcie_dump_regs(struct iwl_trans *trans);
+ 
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 146bc7bd14fb..a0d10df0c11a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1783,7 +1783,7 @@ static u32 iwl_pcie_int_cause_ict(struct iwl_trans *trans)
+ 	return inta;
+ }
+ 
+-void iwl_pcie_handle_rfkill_irq(struct iwl_trans *trans)
++void iwl_pcie_handle_rfkill_irq(struct iwl_trans *trans, bool from_irq)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct isr_statistics *isr_stats = &trans_pcie->isr_stats;
+@@ -1807,7 +1807,7 @@ void iwl_pcie_handle_rfkill_irq(struct iwl_trans *trans)
+ 	isr_stats->rfkill++;
+ 
+ 	if (prev != report)
+-		iwl_trans_pcie_rf_kill(trans, report);
++		iwl_trans_pcie_rf_kill(trans, report, from_irq);
+ 	mutex_unlock(&trans_pcie->mutex);
+ 
+ 	if (hw_rfkill) {
+@@ -1947,7 +1947,7 @@ irqreturn_t iwl_pcie_irq_handler(int irq, void *dev_id)
+ 
+ 	/* HW RF KILL switch toggled */
+ 	if (inta & CSR_INT_BIT_RF_KILL) {
+-		iwl_pcie_handle_rfkill_irq(trans);
++		iwl_pcie_handle_rfkill_irq(trans, true);
+ 		handled |= CSR_INT_BIT_RF_KILL;
+ 	}
+ 
+@@ -2370,7 +2370,7 @@ irqreturn_t iwl_pcie_irq_msix_handler(int irq, void *dev_id)
+ 
+ 	/* HW RF KILL switch toggled */
+ 	if (inta_hw & MSIX_HW_INT_CAUSES_REG_RF_KILL)
+-		iwl_pcie_handle_rfkill_irq(trans);
++		iwl_pcie_handle_rfkill_irq(trans, true);
+ 
+ 	if (inta_hw & MSIX_HW_INT_CAUSES_REG_HW_ERR) {
+ 		IWL_ERR(trans,
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index a468e5efeecd..f43a8923af9e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -1082,7 +1082,7 @@ bool iwl_pcie_check_hw_rf_kill(struct iwl_trans *trans)
+ 	report = test_bit(STATUS_RFKILL_OPMODE, &trans->status);
+ 
+ 	if (prev != report)
+-		iwl_trans_pcie_rf_kill(trans, report);
++		iwl_trans_pcie_rf_kill(trans, report, false);
+ 
+ 	return hw_rfkill;
+ }
+@@ -1237,7 +1237,7 @@ static void iwl_pcie_init_msix(struct iwl_trans_pcie *trans_pcie)
+ 	trans_pcie->hw_mask = trans_pcie->hw_init_mask;
+ }
+ 
+-static void _iwl_trans_pcie_stop_device(struct iwl_trans *trans)
++static void _iwl_trans_pcie_stop_device(struct iwl_trans *trans, bool from_irq)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 
+@@ -1264,7 +1264,8 @@ static void _iwl_trans_pcie_stop_device(struct iwl_trans *trans)
+ 	if (test_and_clear_bit(STATUS_DEVICE_ENABLED, &trans->status)) {
+ 		IWL_DEBUG_INFO(trans,
+ 			       "DEVICE_ENABLED bit was set and is now cleared\n");
+-		iwl_pcie_synchronize_irqs(trans);
++		if (!from_irq)
++			iwl_pcie_synchronize_irqs(trans);
+ 		iwl_pcie_rx_napi_sync(trans);
+ 		iwl_pcie_tx_stop(trans);
+ 		iwl_pcie_rx_stop(trans);
+@@ -1454,7 +1455,7 @@ void iwl_trans_pcie_handle_stop_rfkill(struct iwl_trans *trans,
+ 		clear_bit(STATUS_RFKILL_OPMODE, &trans->status);
+ 	}
+ 	if (hw_rfkill != was_in_rfkill)
+-		iwl_trans_pcie_rf_kill(trans, hw_rfkill);
++		iwl_trans_pcie_rf_kill(trans, hw_rfkill, false);
+ }
+ 
+ static void iwl_trans_pcie_stop_device(struct iwl_trans *trans)
+@@ -1469,12 +1470,12 @@ static void iwl_trans_pcie_stop_device(struct iwl_trans *trans)
+ 	mutex_lock(&trans_pcie->mutex);
+ 	trans_pcie->opmode_down = true;
+ 	was_in_rfkill = test_bit(STATUS_RFKILL_OPMODE, &trans->status);
+-	_iwl_trans_pcie_stop_device(trans);
++	_iwl_trans_pcie_stop_device(trans, false);
+ 	iwl_trans_pcie_handle_stop_rfkill(trans, was_in_rfkill);
+ 	mutex_unlock(&trans_pcie->mutex);
+ }
+ 
+-void iwl_trans_pcie_rf_kill(struct iwl_trans *trans, bool state)
++void iwl_trans_pcie_rf_kill(struct iwl_trans *trans, bool state, bool from_irq)
+ {
+ 	struct iwl_trans_pcie __maybe_unused *trans_pcie =
+ 		IWL_TRANS_GET_PCIE_TRANS(trans);
+@@ -1487,7 +1488,7 @@ void iwl_trans_pcie_rf_kill(struct iwl_trans *trans, bool state)
+ 		if (trans->trans_cfg->gen2)
+ 			_iwl_trans_pcie_gen2_stop_device(trans);
+ 		else
+-			_iwl_trans_pcie_stop_device(trans);
++			_iwl_trans_pcie_stop_device(trans, from_irq);
+ 	}
+ }
+ 
+@@ -2887,7 +2888,7 @@ static ssize_t iwl_dbgfs_rfkill_write(struct file *file,
+ 	IWL_WARN(trans, "changing debug rfkill %d->%d\n",
+ 		 trans_pcie->debug_rfkill, new_value);
+ 	trans_pcie->debug_rfkill = new_value;
+-	iwl_pcie_handle_rfkill_irq(trans);
++	iwl_pcie_handle_rfkill_irq(trans, false);
+ 
+ 	return count;
+ }
+-- 
+2.43.0
 
