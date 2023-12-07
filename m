@@ -1,49 +1,109 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857343D0A9;
-	Thu,  7 Dec 2023 12:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SmDVt5l8Cz4xS0;
-	Thu,  7 Dec 2023 23:44:38 +1100 (AEDT)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Palmer Dabbelt <palmer@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Nathan Lynch <nathanl@linux.ibm.com>
-Cc: lkft-triage@lists.linaro.org, Benjamin Gray <bgray@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, clang-built-linux <llvm@lists.linux.dev>, regressions@lists.linux.dev, Linux Kernel Functional Testing <lkft@linaro.org>
-In-Reply-To: <20231127-rtas-pci-rw-config-v1-1-385d29ace3df@linux.ibm.com>
-References: <20231127-rtas-pci-rw-config-v1-1-385d29ace3df@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/rtas_pci: rename and properly expose config access APIs
-Message-Id: <170195271166.2310221.13174919656650959020.b4-ty@ellerman.id.au>
-Date: Thu, 07 Dec 2023 23:38:31 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3184C3DB99
+	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 13:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbaB176V"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d048d38881so6481585ad.2
+        for <regressions@lists.linux.dev>; Thu, 07 Dec 2023 05:31:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701955865; x=1702560665; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aev9J6mN2EY8+FG61FYKOaENAqi2oXGAi8qvYOhlJAU=;
+        b=HbaB176VFcWk5KTmr/TYnRpSSIouat3AkKE4k2YVae3wXIRHIXhBbiEtsSh67ClYbQ
+         UqebylmV1tR2uldPrbSJO/dKGRwNnFdP7SkQ8UU/9tuLB7efdW4bSNlgpbK6tGOLTHBp
+         FZcsD8jU5QVf2ErK/7j0WUp6W9KNlc9aH5UDY+5mY7s4PM22FfupBVJIs7e258aP+6Wj
+         s3Ol2c+8BebUoO5SNzOxj9aGoNTTM5cWfFfphIbg/t35GHdq3TbuMnWvQEu/HtutBLCK
+         l/QADQ9sKQh3anARsVweA7UcZAP02lVe254jondsnrLAlpFo6pTETOyNXdkNYOjy8Tu4
+         3y3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701955865; x=1702560665;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aev9J6mN2EY8+FG61FYKOaENAqi2oXGAi8qvYOhlJAU=;
+        b=DvDF7x2wuQjbyEDLptgOVL7eUz3/7NPFn3o/PkETxIi3ySRqbAyrbt5b0asFRmkuBG
+         z0Di7HyfE1stE3CzAEuj0rVddc9omequcqX3rC+lXNyGU6sWEy1ohBOsuihfxjfc/INQ
+         Wi0eUBbfnC7H5h5oXJtHLtqdDoxtOEsA98l7GLPliZ12GsoaLRddFJcP+835PjHyw/e5
+         TN3Ti++HzWKpUsDLypNAcJ/0r9NK+acyQmrnKzZFNxziGGB3IfCDPDOTQxrZTyM5RG2D
+         3d4iiWg+N3SLBuFL4vSgaDr0VvGfUW1aYOFABVextllbgXPV+IoGiUkaugpZIs2GrxKU
+         /pBA==
+X-Gm-Message-State: AOJu0YyvSXiFdd0Gaz6fGXP+Ghhx+ZV7liobhLT+isB05NIsdH9bHEyN
+	vKialKEHwvXwx4z246D/6LA=
+X-Google-Smtp-Source: AGHT+IEwD/bOrKkf+MTY2Jfymyu7xY1uDt3c1uWVfPutZE2vbgmS7Lw9dpGDotzR6/1+XHwx0ZZpDw==
+X-Received: by 2002:a17:902:9a42:b0:1d0:d196:2658 with SMTP id x2-20020a1709029a4200b001d0d1962658mr1790745plv.19.1701955865287;
+        Thu, 07 Dec 2023 05:31:05 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id hi16-20020a17090b30d000b00286bd821426sm1345976pjb.26.2023.12.07.05.31.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Dec 2023 05:31:04 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 2653E119A3A33; Thu,  7 Dec 2023 20:30:58 +0700 (WIB)
+Date: Thu, 7 Dec 2023 20:30:58 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Genes Lists <lists@sapience.com>, snitzer@kernel.org, song@kernel.org,
+	yukuai3@huawei.com, axboe@kernel.dk, mpatocka@redhat.com,
+	heinzm@redhat.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux RAID <linux-raid@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>,
+	Guoqing Jiang <guoqing.jiang@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: md raid6 oops in 6.6.4 stable
+Message-ID: <ZXHJEkwIJ5zKTMjV@archie.me>
+References: <6e6816dd-2ec5-4bca-9558-60cfde46ef8c@sapience.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jhpqYfwBnN+2BHNb"
+Content-Disposition: inline
+In-Reply-To: <6e6816dd-2ec5-4bca-9558-60cfde46ef8c@sapience.com>
 
-On Mon, 27 Nov 2023 18:40:09 -0600, Nathan Lynch wrote:
-> The rtas_read_config() and rtas_write_config() functions in
-> kernel/rtas_pci.c have external linkage and two users in arch/powerpc:
-> the rtas_pci code itself and the pseries platform's "enhanced error
-> handling" (EEH) support code.
-> 
-> The prototypes for these functions in asm/ppc-pci.h have until now
-> been guarded by CONFIG_EEH since the only external caller is the
-> pseries EEH code. However, this presumably has always generated
-> warnings when built with !CONFIG_EEH and -Wmissing-prototypes:
-> 
-> [...]
 
-Applied to powerpc/next.
+--jhpqYfwBnN+2BHNb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] powerpc/rtas_pci: rename and properly expose config access APIs
-      https://git.kernel.org/powerpc/c/9be4feb768b86c25da336a6c0f3e3caefd16f1e4
+On Thu, Dec 07, 2023 at 08:10:04AM -0500, Genes Lists wrote:
+> I have not had chance to git bisect this but since it happened in stable I
+> thought it was important to share sooner than later.
+>=20
+> One possibly relevant commit between 6.6.3 and 6.6.4 could be:
+>=20
+>   commit 2c975b0b8b11f1ffb1ed538609e2c89d8abf800e
+>   Author: Song Liu <song@kernel.org>
+>   Date:   Fri Nov 17 15:56:30 2023 -0800
+>=20
+>     md: fix bi_status reporting in md_end_clone_io
+>=20
+> log attached shows page_fault_oops.
+> Machine was up for 3 days before crash happened.
+>=20
 
-cheers
+Can you confirm that culprit by bisection?
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--jhpqYfwBnN+2BHNb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZXHJDwAKCRD2uYlJVVFO
+o2gqAP0RyiWVKDs1YHLmQEmMkdQ/Vg+D+akWMv/vR0dA4KyRhwEAlUX/G5NLLPjg
+iAaaSETn92ArdnUKGhw2wCNijuF20Q8=
+=utvD
+-----END PGP SIGNATURE-----
+
+--jhpqYfwBnN+2BHNb--
