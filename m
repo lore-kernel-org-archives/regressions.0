@@ -1,75 +1,66 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from mail-4327.protonmail.ch (mail-4327.protonmail.ch [185.70.43.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF872D7A4
-	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 14:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAEC446D6
+	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 15:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lh5r4BEV"
-Message-ID: <714b22c7-b8dd-008d-a1ea-a184dc8ec1cf@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1701960173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s/2/v98zCH6WS665133CT6K6dAqH+DX1nLJ4ZplpHfw=;
-	b=lh5r4BEVv7vlSDvG6ZEJDFQSBwbg6AxLY7e9++STN6YAua4iOZiFZtMhiaY11QjrrjqXZ5
-	AdRmWBRnTd5he/Qq4jPG+XckKWU37F1VMqTJfhmtiLSziTxvDv+Qnyi4DxuHXSkiV5a3ZB
-	vg5GmLS3QsP1o4GKTr3jDadFyRJqQRY=
-Date: Thu, 7 Dec 2023 22:42:44 +0800
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="DbZpTd+R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1701961476; x=1702220676;
+	bh=NYodcFpX/b1E1VWmahb0cxH1HMeWexFPLm+/MO5VZa0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=DbZpTd+RCw007BN+kHHXkzxf1r7t3UmejqtgjZsqAFR6syJ5YlSWm1y+o5lM0FC7M
+	 /MpM8ne4aOhcZksrQjz3k801fEe7NjGlbkcIv225Qwxs+PD5PTPH4sLgtP9LhJQqgZ
+	 dz3pYMZoL5wIVfA175KG/ebiBkow+WA9w8dkaB5ZCJ9mnfpcrvEYY+v6woHeuWlCl3
+	 FuMOjhd4ynAn9CMIA2YbQG9Qx3BnmEwnjUzn95MFtTi6VOywOOkQR8T2DB0uMxLE+m
+	 a9fAl/xGO8IJnRPm2mZN1BcCSlaXt5KHYyKMtv5jMHh/JD2ku4z7Z35NZ45CEBUsW5
+	 zf7FNVnTbTYWQ==
+Date: Thu, 07 Dec 2023 15:04:19 +0000
+To: Jiri Kosina <jikos@kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>
+From: Mavroudis Chatzilazaridis <mavchatz@protonmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Input Devices <linux-input@vger.kernel.org>, =?utf-8?Q?Filipe_La=C3=ADns?= <lains@riseup.net>, Bastien Nocera <hadess@hadess.net>, LinuxCat <masch77.linuxcat@gmail.com>, Marcelo <mmbossoni@gmail.com>, Takashi Iwai <tiwai@suse.de>, Hans de Goede <hdegoede@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: Fwd: Logitech G915 Wireless Keyboard acts weird on 6.6.0
+Message-ID: <1358c8e3-8495-461c-a8d8-a551cc4a0d11@protonmail.com>
+In-Reply-To: <nycvar.YFH.7.76.2311211458030.29220@cbobk.fhfr.pm>
+References: <6929ebbf-f2e0-4cd4-addc-1e33ecf3277f@gmail.com> <ZVyr-of1X4RudpWG@archie.me> <0e10112a-7560-4dd8-8a03-5fdfc838168f@leemhuis.info> <nycvar.YFH.7.76.2311211458030.29220@cbobk.fhfr.pm>
+Feedback-ID: 20039310:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: md raid6 oops in 6.6.4 stable
-To: Genes Lists <lists@sapience.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
- snitzer@kernel.org, song@kernel.org, yukuai3@huawei.com, axboe@kernel.dk,
- mpatocka@redhat.com, heinzm@redhat.com,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux RAID <linux-raid@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <6e6816dd-2ec5-4bca-9558-60cfde46ef8c@sapience.com>
- <ZXHJEkwIJ5zKTMjV@archie.me>
- <be56b5df-fef8-4dbe-bb98-f6370a692d6e@sapience.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Guoqing Jiang <guoqing.jiang@linux.dev>
-In-Reply-To: <be56b5df-fef8-4dbe-bb98-f6370a692d6e@sapience.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2023-11-21 16:00, Jiri Kosina wrote:> A comment from Mavroudis just=20
+appeared in
+>=20
+> =09https://bugzilla.kernel.org/show_bug.cgi?id=3D218172
+>=20
+> pointing out that indeed the report descriptor of the device he is workin=
+g
+> on is different than the ones from the reporter.
+>=20
+> Until this mess gets figured out, I am now pretty sure revert is the way
+> to go for 6.7.
+>=20
+> --
+> Jiri Kosina
+> SUSE Labs
+>=20
 
-On 12/7/23 21:55, Genes Lists wrote:
-> On 12/7/23 08:30, Bagas Sanjaya wrote:
->> On Thu, Dec 07, 2023 at 08:10:04AM -0500, Genes Lists wrote:
->>> I have not had chance to git bisect this but since it happened in 
->>> stable I
->>> thought it was important to share sooner than later.
->>>
->>> One possibly relevant commit between 6.6.3 and 6.6.4 could be:
->>>
->>>    commit 2c975b0b8b11f1ffb1ed538609e2c89d8abf800e
->>>    Author: Song Liu <song@kernel.org>
->>>    Date:   Fri Nov 17 15:56:30 2023 -0800
->>>
->>>      md: fix bi_status reporting in md_end_clone_io
->>>
->>> log attached shows page_fault_oops.
->>> Machine was up for 3 days before crash happened.
+Greetings everyone,
 
-Could you decode the oops (I can't find it in lore for some reason) 
-([1])? And
-can it be reproduced reliably? If so, pls share the reproduce step.
+I have recently made a new patch [0] aimed at addressing the issues that=20
+have been identified.
 
-[1]. https://lwn.net/Articles/592724/
+I would appreciate it if you could test it and provide any feedback on it.
 
-Thanks,
-Guoqing
+
+[0] https://bugzilla.kernel.org/show_bug.cgi?id=3D218172#c14
+
