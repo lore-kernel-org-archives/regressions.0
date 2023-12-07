@@ -1,61 +1,39 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BAA1841
-	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 02:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2511234CE0
+	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 09:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGCxotPf"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1cfb30ce241so3951995ad.0
-        for <regressions@lists.linux.dev>; Wed, 06 Dec 2023 18:39:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701916766; x=1702521566; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=elG8GlXQstrh+7SbheHvlM9Wbdhuu5GKD5vjQyxAHjA=;
-        b=CGCxotPfd6BSAzX2m1k2Vvl7SOptv2ca95FT12/AitQMA4kBAAEpgIN2Di75WVH//x
-         0Kfa2cpXLIp7m7KdWPmCeSjmYQS0cryrHl2Kx4Zt1vAGlgAXOtjWAm92DTO7dnUoM+bl
-         DRxK27wntseeGqMO95vJSebz5MfDsdXnLruaZQBXE6SvovqoUINTE/XTkuto/DhfI8PB
-         zDsY5BATcjSclaCpxaNeTpiND3tjvTpEsFFpy8O5IoB4BtktTxpXqSau72MaALVZH6XP
-         0nFB88w8TOv2+mA8+CnKBklz2+jXfdRi1NdGJQnfml5beuGqJ+k+yvwPh1SNyR4se9ct
-         XZUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701916766; x=1702521566;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=elG8GlXQstrh+7SbheHvlM9Wbdhuu5GKD5vjQyxAHjA=;
-        b=ch0IQkTu/I08204UzDX/8XCEx7YUL8syvemzXgydM9dAPyzgd+z3C3qstLC27jkRq8
-         so2XzcS4kEXVok06n4PDyROSpAxxyF08StFTowCZxMaq1w7EaCzxsOaDCb8E7TLVzYLu
-         XV2i28fjDXeVP1fwsbfLdRdz1WJXHfFq4SplF4CJsJVqy+f9VtiIIlaXvErI5SQzX3az
-         Qbd8/qNP3kW/0MNGmTzHEm7jxhON15AdzX/Mu661xiR2leoxLQhBUJ4NkHdOBCb5BxzI
-         Zeu4DM+mHoDIuLgi8TpH6gQX8VCIX/Vm7nrkLajFhsVuUUYiFyPEIA2q50jELo09Iz1a
-         ALSQ==
-X-Gm-Message-State: AOJu0Yx+o6fHB0ofB0kWop3ljD7LYpGXMJdNoMPH1VdJ1iiPET5uo3UM
-	Rz0zZW5tSjFcLzZDC/PkQC4=
-X-Google-Smtp-Source: AGHT+IEK+qI5y2AHtPi9fYvkLjo2GmFVrcscUkg3UWuixiW/+HC2JdXhLqGPHnNbolOnqpMcPBpTHA==
-X-Received: by 2002:a17:902:dacf:b0:1cf:c42c:cfbd with SMTP id q15-20020a170902dacf00b001cfc42ccfbdmr2468303plx.0.1701916765692;
-        Wed, 06 Dec 2023 18:39:25 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902768200b001cc3fae06a6sm149846pll.159.2023.12.06.18.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 18:39:25 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id E1D9B1143CC84; Thu,  7 Dec 2023 09:39:19 +0700 (WIB)
-Date: Thu, 7 Dec 2023 09:39:19 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Dianne Skoll <dianne@skoll.ca>, Linux Stable <stable@vger.kernel.org>
-Cc: Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Pan@archie.me, Xinhui <Xinhui.Pan@amd.com>
-Subject: Re: Regression: Radeon video card does not work with 6.6.4; works
- fine with 6.6.3
-Message-ID: <ZXEwV_BRROeu84Zh@archie.me>
-References: <20231206172220.37ff4df9@gato.skoll.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eA62Pagh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFC9C433C7;
+	Thu,  7 Dec 2023 09:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701942172;
+	bh=RQ/yT7UHQaMM19x3eCi4Xe6CooZCw22QbB03I9HiZME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eA62PaghxUAe/vbJzjN51mMQUy96RPgMz38pPfpGglvkkos+dAh4/om6cyp0J0tsd
+	 YaTSsBkbGiIoMpMDpcs0CR2RTZbkVXNFtGBQZYzNe2tG9wFc5zxAiQ0tn4XA2NGV8p
+	 atWkAPDUaXOjFJW5d5jJKIn+bvml/bzSSa7dC+3tyuwMJCWCLuiqRLFBuYJG95YMCk
+	 zQ5neZLHUTRnUvCCJ2UV2TZFijRx20nQzXQDIRjaf/ROUlYRLXigWBrX5UHmawH8ha
+	 MfxH917s+QQRxjaHx3rHwuUvwmfPv0+Idi2FM3w8Xk3ZqI/up3t78e3xwMiDTs+obR
+	 g25gct1EXbi8A==
+Date: Thu, 7 Dec 2023 10:42:49 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, davidgow@google.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: Kunit drm_test_check_plane_state: EXPECTATION FAILED at
+ drivers/gpu/drm/tests/drm_plane_helper_test.c:123
+Message-ID: <xqydjcs4tnjcm7wn2dfah27xj7j2soggsc5se2inz2s4azxvvv@cf3wn4up5hg6>
+References: <20231204173536.51003-1-naresh.kamboju@linaro.org>
+ <rxv7jlfuwjib443pzdepbtgu454gdzemd3ojmmhbnhr4syneve@6me3bduyx2ee>
+ <42d85b15-9ffd-4a08-b51e-a3367e57d128@suswa.mountain>
+ <fgajgc7vp626nzeeqetkfbyadh53iti3mvoq4uck3zz3ysmvno@b3f7kxnwrwsd>
+ <f59c5d45-a689-8a94-a2ae-d2ffa835eedf@quicinc.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,51 +41,106 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="9mKsw2ilVY5K14MK"
+	protocol="application/pgp-signature"; boundary="hnkt3fuafjt46lbw"
 Content-Disposition: inline
-In-Reply-To: <20231206172220.37ff4df9@gato.skoll.ca>
+In-Reply-To: <f59c5d45-a689-8a94-a2ae-d2ffa835eedf@quicinc.com>
 
 
---9mKsw2ilVY5K14MK
-Content-Type: text/plain; charset=utf-8
+--hnkt3fuafjt46lbw
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-[Cc'ing also amdgpu people]
-
-On Wed, Dec 06, 2023 at 05:22:20PM -0500, Dianne Skoll wrote:
-> Hi,
+On Tue, Dec 05, 2023 at 09:33:28AM -0800, Abhinav Kumar wrote:
 >=20
-> I had to go back to 6.6.3 because 6.6.4 seems to have broken my Radeon
-> video setup.  The full bug report:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218238
 >=20
+> On 12/5/2023 3:46 AM, Maxime Ripard wrote:
+> > On Tue, Dec 05, 2023 at 12:05:02PM +0300, Dan Carpenter wrote:
+> > > On Tue, Dec 05, 2023 at 09:37:05AM +0100, Maxime Ripard wrote:
+> > > > Hi Naresh,
+> > > >=20
+> > > > Thanks for the report
+> > > >=20
+> > > > On Mon, Dec 04, 2023 at 11:05:36PM +0530, Naresh Kamboju wrote:
+> > > > > The Kunit drm_plane_helper failed on all devices running Linux ne=
+xt-20231204
+> > > > >=20
+> > > > > ## Test Regressions (compared to next-20231201)
+> > > > > * qemu-armv7, kunit and
+> > > > > * x86, kunit
+> > > > >    - drm_test_check_invalid_plane_state_downscaling_invalid
+> > > > >    - drm_test_check_invalid_plane_state_drm_plane_helper
+> > > > >    - drm_test_check_invalid_plane_state_drm_test_check_invalid_pl=
+ane_state
+> > > > >    - drm_test_check_invalid_plane_state_positioning_invalid
+> > > > >    - drm_test_check_invalid_plane_state_upscaling_invalid
+> > > > >    - drm_test_check_plane_state_clipping_rotate_reflect
+> > > > >    - drm_test_check_plane_state_clipping_simple
+> > > > >    - drm_test_check_plane_state_downscaling
+> > > > >    - drm_test_check_plane_state_drm_test_check_plane_state
+> > > > >    - drm_test_check_plane_state_positioning_simple
+> > > > >    - drm_test_check_plane_state_rounding1
+> > > > >    - drm_test_check_plane_state_rounding2
+> > > > >    - drm_test_check_plane_state_rounding3
+> > > > >    - drm_test_check_plane_state_rounding4
+> > > > >    - drm_test_check_plane_state_upscaling
+> > > >=20
+> > > > I found the source of failure to be f1e75da5364e ("drm/atomic: Loos=
+en FB
+> > > > atomic checks").
+> > > >=20
+> > > > Fortunately for us, it's already been reverted yesterday for some
+> > > > unrelated reason, so it should be fixed in next-20231205 onward.
+> > >=20
+> > > Sorry, that's a bummer that these patches were reverted.  :(  The who=
+le
+> > > episode was a bit unfortunate...
+> > >=20
+> > > Qualcom has been working on those patches for a year.  They must not =
+be
+> > > using kunit testing as part of their QC...  It's some kind of
+> > > communication failure on our part.
+> >=20
+> > That's definitely a communication failure, but that's mostly on us :)
+> >=20
+> > The reason these patches were reverted was completely unrelated to the
+> > kunit failures here: it failed the basic requirement we have on
+> > intel-gpu-tools tests and open-source userspace examples for new uAPIs.
+> >=20
+> > So whether or not kunit tests would have passed, these patches were
+> > applied due to inattention and would have been reverted anyway
+>
+> The patches were reverted because the corresponding IGT/compositor changes
+> were not posted yet. We will re-try applying once those are accepted.
+>=20
+> Regarding KUnit tests, no we did not run this test and yes you are right,=
+ we
+> were not running KUnit testing as the DRM CI mainly validates IGT.
+>=20
+> We will certainly help to fix this failure. Most likely the KUnit tests n=
+eed
+> to be fixed to allow for a NULL FB.
+>=20
+> If this is documented somewhere as a requirement, please share it and we
+> should add KUnit testing to our DRM CI as well so that atleast this kind =
+of
+> failure will not repeat.
 
-Can you bisect to find the culprit commit? See
-Documentation/admin-guide/bug-bisect.rst in the kernel sources for reference
-if you have never done bisection.
+Yeah, the expectation is that all tests pass all the time. If some
+change affects how tests should be written, then it should update the
+tests as well.
 
-Also, can you check if latest mainline (currently v6.7-rc4) still have this
-regression?
+Maxime
 
-Regardless, please also report on freedesktop tracker [1].
-
-Thanks.
-
-[1]: https://gitlab.freedesktop.org/drm/amd/-/issues
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---9mKsw2ilVY5K14MK
+--hnkt3fuafjt46lbw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZXEwUgAKCRD2uYlJVVFO
-o26uAP4pJSbOfEfKR0cpWObUfKDiW5fKckPa8tUO8ExaxMRvWgEAjV139d+uzj2c
-9OyU7VsBGW31gkolGGzUhLp5YIce2QI=
-=isDS
+iHQEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZXGTmQAKCRDj7w1vZxhR
+xVrqAPICYw4use79tIO3c5T9xojmy55gENs9FntfRnmdJclxAP9yhtInNdWWnmWv
+5MWm44qBvgog8AzSmnMIorkWlaNHCA==
+=02hC
 -----END PGP SIGNATURE-----
 
---9mKsw2ilVY5K14MK--
+--hnkt3fuafjt46lbw--
