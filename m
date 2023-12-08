@@ -1,160 +1,99 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFBA111A1
-	for <regressions@lists.linux.dev>; Fri,  8 Dec 2023 08:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6DF1C6B5
+	for <regressions@lists.linux.dev>; Fri,  8 Dec 2023 13:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="qYSUk+S6"
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3B84PALO016297;
-	Fri, 8 Dec 2023 08:35:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=date:from:to:cc:subject:message-id:references:content-type
-	:in-reply-to:mime-version; s=PPS06212021; bh=0PS1qsjAyi7LAUUUwdL
-	7u90c8gVHA7BVFt0QFU/t1Hc=; b=qYSUk+S6xMvo5uZOKv3lWznkex0GDeP3ree
-	CU0+LJuGreUJ1S9mEjj5z1HSLgO5p4OuuzdwgMZgrKi8e+lRat0Kw48Uwz04/cMQ
-	Q8T754gLI0l0xbFdLprUzmbSZhjsREsc4M1SCRxbB9LYHHA9n4CqpVj/X9dn/Z4w
-	37ezUwixG84CsVW7/iGXYR7ZPofRxIzZB1H/lFjBWeXnt9Az8jHqRe13nabkuX72
-	dp2mpM+snE3ywnjHT4MOzx+0A8Svb/cpVGnpoWAZyOFAmF50/506TCTCUZJXqSza
-	YvbarWRk37SXy+1f1Bndr1gwvx74wB5stUCpNLCDuroD111UBJA==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3utd53tn6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Dec 2023 08:35:11 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ev51ARw+G7yoRHPLiqjPXj1g2GZrn5W425TE216IYOlGsxcESr7b/Sn6lE7AisQBf1pElgaFsDCK8SRy9/vQYazGXGy9OJyOZaELbb2LnPE29tmqMNAsgoIJoC7wA4O5gapPcQpfUvMbXsqU7L5uvabECumQSQSL5OGIgfGcBOdfC4OLvIFyN7+McBucpXvXckxcXOzy0fnNiN1s3XjqUi76Y5q4HeuADc8oKDWbzuKlh5VriYlwHCjrqqF2mk0gg7yOOCtGAgLbAUq7duD2sSQBcC+z4KDo4faZjX1Ghwafg/J6kDPSmdH8zOZQljqS0cNlqjXfP43FFBCGauV/ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0PS1qsjAyi7LAUUUwdL7u90c8gVHA7BVFt0QFU/t1Hc=;
- b=ZET3yriHt1W9kaxulN7fN9ewdbuZeFaVYGypkk+Kajx8rr5Pm2UQbJE+aw+6x4Y225Drw7eOQycP/TI3wsbMqTxUvDpcxBUiRh63gU/oe1ivgJEdgMjlr8znLo1AiN9gRov3QyE+TV4I4PSlA1FU2i7QOQkgzfs5+8FOu61Aa28sGnDlVQdmkNoQ2ioJnw13fMVbBHvQmngQaSXNyYxvUVaS36gvPrhZ+jwtkWbL2CYNIlkQaqwbmUqHlzRPZTm6i7Lde6mVaZBA3JZ5gmrWK2f8M5LsEetm0whCEJBbeq7oqjynHaSOQ3GTLk16oiAL+IYJ8wzevSxxh1dSfLkjDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from IA0PR11MB7378.namprd11.prod.outlook.com (2603:10b6:208:432::8)
- by SJ2PR11MB7599.namprd11.prod.outlook.com (2603:10b6:a03:4c6::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Fri, 8 Dec
- 2023 08:35:05 +0000
-Received: from IA0PR11MB7378.namprd11.prod.outlook.com
- ([fe80::5548:b43c:f9ac:7b95]) by IA0PR11MB7378.namprd11.prod.outlook.com
- ([fe80::5548:b43c:f9ac:7b95%4]) with mapi id 15.20.7068.027; Fri, 8 Dec 2023
- 08:35:04 +0000
-Date: Fri, 8 Dec 2023 03:35:01 -0500
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HEYEUt2D"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9312540E00C7;
+	Fri,  8 Dec 2023 13:22:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id KjiTfKNC84O3; Fri,  8 Dec 2023 13:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1702041736; bh=9VW5Pgm57o7BPhMBIqaXDaAJ8T8rEibYNmP1Y+5hnGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HEYEUt2D30FNHiWLxtHu5+9n7JDmVOtFZSaW2SpOoTlh/YzRcZ33yNrKtnNjrkd2w
+	 m7IdCPS729hKtVjzH4wbMGomdon4FSp5GxltvBeuf/46DfVfH3MovvHo1nI9/JkN5/
+	 u/a9sX5lZsynJCxhm/cIOCq0mny2QKs8Dpn/4m7CGwslLA2W2sDcnmzAEmrDcHI9GZ
+	 VzZ5vesyQ0LIiuDC00kVUfttuP0r2tqkKjHPU7EmdjkFm+MvFX7unahR0vxA87fXRN
+	 0X/TsxUQE7yz2zV/4Nfq2YX+uEswsD2u+Lwf6+5myWpjm1PSBrGy8BWKVlk3SP2K29
+	 Px22VlzfkG7jWehvBvtRnJv8lbaiM1aM2rrMvxYoNhNqVDh1+DjoWrVZob5+3sLSm+
+	 Um5ugztGTzl8ROVXP+0vckXlzm2jUtwZeTSyoe282E3/Ys652OazCNi04y4JvHrru+
+	 XxectzUlv8rOzL3Wz6/KfyE2KSwK07xEpyF7U3OSpf326cV/Ih2oSrkD+3Zox83kNL
+	 hd7PF+ty5qQVClgkyaEsJmR+3Mg0BhKTrolr4Bg8BGKphPpUlBBPXHvPTFb0HuXNXI
+	 5yptuwBOVYrNfKW5QFhDoojE9FGXISj0s+9e6tWO2nVqv2ouuO+aV4eksWwvJtMZkv
+	 c0poCUNT3dK8mcqNSRWy3MPo=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A265140E00C6;
+	Fri,  8 Dec 2023 13:22:09 +0000 (UTC)
+Date: Fri, 8 Dec 2023 14:22:04 +0100
+From: Borislav Petkov <bp@alien8.de>
 To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        regressions@leemhuis.info, richard.purdie@linuxfoundation.org,
-        regressions@lists.linux.dev
-Subject: Re: [patch 0/2] x86/alternatives: Prevent crash in NOP optimizer
-Message-ID: <ZXLVNeWBOWiauOjT@windriver.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, paul.gortmaker@windriver.com,
+	x86@kernel.org, regressions@leemhuis.info,
+	richard.purdie@linuxfoundation.org, regressions@lists.linux.dev
+Subject: Re: [patch 2/2] x86/alternatives: Disable interrupts and sync when
+ optimizing NOPs in place
+Message-ID: <20231208132204.GBZXMYfLSaIbn3BvN3@fat_crate.local>
 References: <ZXCXc+BtnLzqMbFv@windriver.com>
  <ZUEgAAGDVqXz2Seo@windriver.com>
  <0adb772c-e8d2-4444-92b0-00cbfdaf1fac@leemhuis.info>
  <87r0k9ym0y.ffs@tglx>
  <20231207193859.961361261@linutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231207193859.961361261@linutronix.de>
-X-ClientProxiedBy: YT4PR01CA0095.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ff::18) To IA0PR11MB7378.namprd11.prod.outlook.com
- (2603:10b6:208:432::8)
+ <20231207194518.401797191@linutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR11MB7378:EE_|SJ2PR11MB7599:EE_
-X-MS-Office365-Filtering-Correlation-Id: 816522d2-6513-4a39-1fc1-08dbf7c893c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	F7rcS7Ec9oBbiRseiAND+e/c2TkBBMWSQB2VU58ZCiLfYm8MaDYv1d+lfIK9DBGgasZ/3oZcdsUlBl5NwcJvU4t6y5zDpyj13cl88oo/sG1U7DBDkFZX3gcf1eRlJl0b6WEvMiOZadLjYRZLSnR/O2GAvQukqc0Vw+U+794jonggxf1uOU0dknPWYvYjNlINfnplfeyXT/6itA0FNVZAcwMXYnuj2s8/p+cfrEm0XTKaTigOj109/aIRWdTjPDDpvVhnscyQF7FGFOgLTt86lsGILBmH0R+WZE3zBxYnQuOx4/Bwl3tcFuwa4hBYKc7Ec/9wYkj8UAfa0PwmIVFtNt3bbykI6u9s/i76fZpcl3EOVm9n9IkNHL9qoEjhxcQqlTxzv+T1fOI/fRdyDFWpgFeATo3UmRgbbjyPsz5NWsWfwWaIKR1r+gIu2ebNJz0XwRf2ocs1cGe95vULLcgMcahoiFhiUzGoEjhc8fTQrl5q71Rdtcuhq/mWq20eQY82yvKKJNfS1yT6Wr64JiNaYUp0/1VU9S6tX18I+CUN44P7Dq3UjUDYcWMvs3IznJYS
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7378.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39850400004)(376002)(346002)(366004)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(66946007)(38100700002)(86362001)(66556008)(66476007)(6916009)(6506007)(2616005)(26005)(83380400001)(36756003)(6666004)(41300700001)(6512007)(478600001)(6486002)(316002)(44832011)(4326008)(8936002)(8676002)(4744005)(2906002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?wnvtNRUMIuSe5B+FvzFKX2kEkkW/c2k8xLwEzZfIpIE/nsgRVVHTUGYLCUb1?=
- =?us-ascii?Q?CS4OhyaN7wya6e261/vI2b9x/IX/MaQa+Q7gfTb89+sTbB+yRXkcJxcVfMci?=
- =?us-ascii?Q?X5hEzHCWbORwrlwb9Ygh+qOHgP1LcWoyH3geciqj1Dum5Wrb2ZyCTCDGaYfr?=
- =?us-ascii?Q?dozqHTDwqkWWnifA15hb9RSe4H0qr2Aotqd/pIQB78wrEdHa3U2EVD/0rnV4?=
- =?us-ascii?Q?kdPKWlYdD+IQCEePM/uueQNjrGtL+uj0VstqyKFAHwglKx0E4IdmpI78Ss4m?=
- =?us-ascii?Q?6nF1ShyPhvk5tbSGrsmkAasdgmWaTg1X+TGz5eb2DGjArp+G7ZKzVTr/MeFI?=
- =?us-ascii?Q?CUOzep4eOM5ObN2DweI5aApfQisA+gO3J7fkhIbJYz62KZq6rK8uSTWxVnv3?=
- =?us-ascii?Q?dur54nVXyuKpePuc11D9BuCkNEYiHl6AXWWiaGK19PUa5uALSaXk8KmM2OiQ?=
- =?us-ascii?Q?LYAQMrROFmyI7RHsch2Dh1W/cshPjR0c4NM47kvhM3WfZutYUQm6dIfr1b6h?=
- =?us-ascii?Q?b3n0xqcOmI0CUR/cSXuOIGhJ3kwqRJbb9hSmhrrXw9B9mikDLUU9w4DDC5W8?=
- =?us-ascii?Q?gH6CPD4M9O3jb3uEZ+9OKFA094VT6zAmD62KUdangwHOteDQ+py3n+lYNaa9?=
- =?us-ascii?Q?zcfyWpxsqetCavr1To/Y+rcaueN/wLsRAMeKt7fw7Cq2UdUw/jtxJ/7kb6kd?=
- =?us-ascii?Q?TCNnG7h8iasIQcYBLgTGV7h9SjpM+crQx1HBQdWdjW2xrfXGO8aBN7fm4F5r?=
- =?us-ascii?Q?NZ9iKux6vN7pSVukW968gl0Z5kSRSuTtn8WS5rCNztnxCYb4T28xcvxwsw/C?=
- =?us-ascii?Q?xEd8SLoJcNzD2KcBfX4MivNPzchTLnXHAcx2Sewl8F/LN1yJzyM9Ler4rQCk?=
- =?us-ascii?Q?ta0JCTt6sxqn9YEX8kumlr7aFsmBrxtAP/eGZSde8DvGXD9zJssn5TWHZ8QH?=
- =?us-ascii?Q?CKteLWDwNGNGjNTfjiVpAxMRM5OneZwhtSAP3FMmIoVdP5z4DEZz1ysLQQpO?=
- =?us-ascii?Q?ewE5lJivLMxHxoO1qeLRGUJj3F2Qp07sl8+BCvxP1j8nrVxZgIFYUTMPrMXQ?=
- =?us-ascii?Q?NfhlY3mKejuzMCKMzuANYiAfkqzkwEH6a10EnbQKDWrkHfl/vSatGJdMm8nK?=
- =?us-ascii?Q?yJYV+zPTD9ERIpKV3Lb6c53ISeIvlGA1zRAqX9684humOXBrzl1kQhXlr3WY?=
- =?us-ascii?Q?57Ppj3lpO5a1tmZ06E958A4c1mwJjSU8YfpFsoWfSmsoMCwlATgQ3+YIEZ74?=
- =?us-ascii?Q?S910G9W36iVjlvFkXrQaLvHGC5R+kGbSyZhFHjU7HOIFBa5joENGY1z6x0RG?=
- =?us-ascii?Q?HeWHeW4qv0J1bf5tzyf42pEj+ZUfUuGffMrHI7xoyEAF9f2u23ffqEKuKO/D?=
- =?us-ascii?Q?BKRkiZbsENjF67l//pIrATF9z/tQDgDm8CpL6cBXD7ZsfBXulkthDhMDdXqk?=
- =?us-ascii?Q?x+HS7iZ1ACZ0qzaIGsPrEFOWbKIhlH9WGOXpfuuAKk9w1H7oMG7dubHu9wGG?=
- =?us-ascii?Q?8t7RdAu1zKDiK3hf3wLsdEUl0VxoplqdBJ7DUf7KJdVjXD6CQmqcRCgWIFNL?=
- =?us-ascii?Q?Dvy9zl2HM3/eGUtzX3k5xVEuE86bM+SVzrAv/gQyvVMPNqBuCLqXcmbKutxm?=
- =?us-ascii?Q?Zw=3D=3D?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 816522d2-6513-4a39-1fc1-08dbf7c893c1
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7378.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 08:35:04.8455
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hsIPFYoHVTxp8ZaKqE4mBxa1IvkIeUMyH7s9WyJsVQd0l23AJEAB3ymB6qVO2GPi74bywODM1pOwlbrQmrDyoXXDAVtLNWrTcS8vyBC66lo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7599
-X-Proofpoint-GUID: SMh1aTmjfmDFYJvZ6dy4Dgcrg2iJcK1r
-X-Proofpoint-ORIG-GUID: SMh1aTmjfmDFYJvZ6dy4Dgcrg2iJcK1r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- adultscore=0 mlxlogscore=594 malwarescore=0 suspectscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312080070
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231207194518.401797191@linutronix.de>
 
-[[patch 0/2] x86/alternatives: Prevent crash in NOP optimizer] On 07/12/2023 (Thu 20:49) Thomas Gleixner wrote:
+On Thu, Dec 07, 2023 at 08:49:26PM +0100, Thomas Gleixner wrote:
+> +static void __init_or_module noinline optimize_nops_inplace(u8 *instr, size_t len)
+> +{
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +	optimize_nops(instr, len);
+> +	sync_core();
+> +	local_irq_restore(flags);
+> +}
+> +
+>  /*
+>   * In this context, "source" is where the instructions are placed in the
+>   * section .altinstr_replacement, for example during kernel build by the
+> @@ -438,7 +448,7 @@ void __init_or_module noinline apply_alt
+>  		 *   patch if feature is *NOT* present.
+>  		 */
+>  		if (!boot_cpu_has(a->cpuid) == !(a->flags & ALT_FLAG_NOT)) {
+> -			optimize_nops(instr, a->instrlen);
+> +			optimize_nops_inplace(instr, a->instrlen);
+>  			continue;
+>  		}
 
-> The following series addresses the regression report from Paul on behalf of
-> the yocto project. It turns out that the recent changes to alternatives
-> opened a race window where interrupts are enabled and NOPs are optimized in
-> place. An interrupt hitting into the modification will observe inconsistent
-> text and crash and burn.
-> 
-> A 32bit QEMU crashes w/o these fixes reliably within about 50 boot
-> attempts. With the fix applied it survived close to 600 attempts by
-> now.
+Arguably, the proper thing to do here would be to convert the NOP
+optimizing to the same 2-stage process as normal patching: write insns
+into a buffer and text_poke* it.
 
-I can confirm that - since I was already set up for it, I let it run
-overnight for about 1250 attempts.  With an average of one in 200 that I
-was seeing before, I should have had around six fails.  Didn't see one.
+VS what we currently do: operating straight on kernel memory.
 
-> Thanks to Paul for providing all the information!
+Lemme put it on the TODO and see how ugly it becomes.
 
-On behalf of Richard and myself, thanks for the complex fix.
+-- 
+Regards/Gruss,
+    Boris.
 
-Paul.
---
-
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
