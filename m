@@ -1,192 +1,108 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C247450259
-	for <regressions@lists.linux.dev>; Thu,  7 Dec 2023 21:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444DF1865
+	for <regressions@lists.linux.dev>; Fri,  8 Dec 2023 02:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cEU7AclD"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-286c01bff06so1194824a91.1
-        for <regressions@lists.linux.dev>; Thu, 07 Dec 2023 13:04:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKpkOf3l"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5bdb0be3591so1335102a12.2
+        for <regressions@lists.linux.dev>; Thu, 07 Dec 2023 18:05:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701983081; x=1702587881; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P1df2F2aMLldf9qn7FPBt3am2yl+mT6QC0UrRj9+Dnw=;
-        b=cEU7AclDsoMpEKM3TpzcdkuxKbjpZ5QjsdOkB0ATPteKM4bgDE3OXzyGHzgZHMaBGB
-         bfC/LV5ahdMHncelHuIHMOkNASKfpmlYjhF5QQkyeDNgpfZdh/VzK00VV4xWyYTGbRL1
-         o9Ew+r+SD2t5mfTiMSrQwbiNV6zs7FZwgD05k=
+        d=gmail.com; s=20230601; t=1702001140; x=1702605940; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5p96aV1jD/kmwOXUo+oTVCU+80IQN61LG9xj68A9h98=;
+        b=DKpkOf3lzCLiuSC/fIh/cEj4FOYUTJbnGHh4CYr1mWrdrdD+oosDucYgAePN8lcr7Y
+         MV7ItbvPIrXprhBfScpfjRptg2DpRgQpqRJ1B69wxfMH0171UPoYq0GLn9Lb/gQ1xXBS
+         2Xt36owrKUjP2l/akgE59w4xyTK4yneuUuqLHMfpPkemdaduIyyRyi8/6QZRzU0zIPGZ
+         zivi4NzV1+J5ZSWqPQtgWZxZF0MUO3LBKwN+4UMf7FHldzKCc6Poxg72XB3M/+O0m6IY
+         VHa/XMbpr+JP4KUNH8mYFCP1i0e3WLPhaTCRcAc+WebkZCXN/LnOE2bV4C2M3ZeSywXD
+         BAOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701983081; x=1702587881;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P1df2F2aMLldf9qn7FPBt3am2yl+mT6QC0UrRj9+Dnw=;
-        b=LzGzMrXGJjSwFnl0AszBSORlwzoXPR/1ldcDTEgO052WNwHcp8Qx09Jjqg2/BYQCMK
-         3zXKzyk90nFgm72Zb363C+z6qUXuhDi95CHgaz+pzX9oKxRhosbZkUXOPt0RWcC8OP+k
-         rrEsK/kFgZhyIBOdrVY4lTT1FTRUKTyN1mHiW71g7kvqmplCCyn2IDBDOtAEVuPLTVCh
-         oWzLLRtpU9+swInL4IQwjrgb3A8LgqfWWDQB4yiUXnLicGDxqWLPno5LfI5mS11apjKt
-         SUutZPEW4IVvC062n0v0lQdGIJ5AWNSJX1JC/Vey9p+EL5qwTzZd7kI5bGJu4wlDpiTC
-         YBhg==
-X-Gm-Message-State: AOJu0Yz+UGvK39cZK3e/tx9P08hQS6f3VxSIdQhvfHkGxZikeBBj5FxF
-	JnAEiYTyd9EGC5/sVJNNAJoeag==
-X-Google-Smtp-Source: AGHT+IF4dR+ozEHEoTeZ5KlcYJqBauEZDgcWSu4X4MZ186gCsrYPLTr0XOCn3gkc/RW+9rLwjr8oiw==
-X-Received: by 2002:a17:90b:350a:b0:285:b3a8:40ac with SMTP id ls10-20020a17090b350a00b00285b3a840acmr2717736pjb.19.1701983080991;
-        Thu, 07 Dec 2023 13:04:40 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sc4-20020a17090b510400b002868d090c27sm354680pjb.25.2023.12.07.13.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Dec 2023 13:04:40 -0800 (PST)
-Date: Thu, 7 Dec 2023 13:04:39 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	maple-tree@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	linux-kselftest@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	kft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Eric Biederman <ebiederm@xmission.com>, linux-next@vger.kernel.org
-Subject: Re: [PATCH] maple_tree: Fix mas_prev() state separation code
-Message-ID: <202312071302.99D5B1BB76@keescook>
-References: <20231207014104.n6vul2ylgqjnsfia@revolve>
- <20231207193319.4025462-1-Liam.Howlett@oracle.com>
+        d=1e100.net; s=20230601; t=1702001140; x=1702605940;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5p96aV1jD/kmwOXUo+oTVCU+80IQN61LG9xj68A9h98=;
+        b=vkc4gHrrhR7Suz+k/hZ6GHJw5IV4cG6Iay5QU6xSb3UJxmT2k5C7otnXsc3pWGywi2
+         2IWnZnigDWVs8rMPt5pTHaC5y4TGTfWwustwSPf3JuKF1bSfzJDKPlmXfxyuVdcPLADm
+         8D40v6JO4UySZJwJw1Bm01lUHqc9mUjyf9os1curv5RWUPdXT38wTJs8XQKpfcwV1SR5
+         7S6S10E2M987lHUeY+/uTbJql3GSNQnbESys89HJMWbrPsMPzPc/Ej9Ur1ckvU2i/qEP
+         xjFr+erSQZSn0KnxzIH9NrTgf/PKcWetVcpjM6dOogpU50F+AIRNqdjyXJcbc9wWwNQ2
+         HEkw==
+X-Gm-Message-State: AOJu0YyClPC4Nk0KaOO+sjNXu8+EEgh+kWL+ASthhJLKf3Q5VC/pq9Lh
+	r52hqkAFqZZyRebGM/wgj1I=
+X-Google-Smtp-Source: AGHT+IFMmgiD674YTc4A3jEartJ8gR3NDksSfuREBAIVu8xW2/AiH4VD9wzfTunJJW0wRT/TRMKLJQ==
+X-Received: by 2002:a05:6a20:cea7:b0:187:5a4d:7061 with SMTP id if39-20020a056a20cea700b001875a4d7061mr3543631pzb.44.1702001140334;
+        Thu, 07 Dec 2023 18:05:40 -0800 (PST)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id bv190-20020a632ec7000000b005c2967852c5sm448219pgb.30.2023.12.07.18.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Dec 2023 18:05:39 -0800 (PST)
+Message-ID: <f6fc246f-4f57-4340-a967-396047e2924d@gmail.com>
+Date: Fri, 8 Dec 2023 09:05:33 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231207193319.4025462-1-Liam.Howlett@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: md raid6 oops in 6.6.4 stable
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Genes Lists <lists@sapience.com>, snitzer@kernel.org, song@kernel.org,
+ yukuai3@huawei.com, axboe@kernel.dk, mpatocka@redhat.com, heinzm@redhat.com,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux RAID <linux-raid@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Bhanu Victor DiCara <00bvd0+linux@gmail.com>, Xiao Ni <xni@redhat.com>,
+ Guoqing Jiang <guoqing.jiang@linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <6e6816dd-2ec5-4bca-9558-60cfde46ef8c@sapience.com>
+ <ZXHJEkwIJ5zKTMjV@archie.me>
+ <e2d47b6c-3420-4785-8e04-e5f217d09a46@leemhuis.info>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <e2d47b6c-3420-4785-8e04-e5f217d09a46@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 07, 2023 at 02:33:19PM -0500, Liam R. Howlett wrote:
-> mas_prev() was setting the ma_underflow condition when the limit was
-> reached and not when the limit was attempting to go lower.  This
-> resulted in the incorrect behaviour on subsequent actions.
+On 12/7/23 20:58, Thorsten Leemhuis wrote:
+> On 07.12.23 14:30, Bagas Sanjaya wrote:
+>> On Thu, Dec 07, 2023 at 08:10:04AM -0500, Genes Lists wrote:
+>>> I have not had chance to git bisect this but since it happened in stable I
+>>> thought it was important to share sooner than later.
+>>>
+>>> One possibly relevant commit between 6.6.3 and 6.6.4 could be:
+>>>
+>>>   commit 2c975b0b8b11f1ffb1ed538609e2c89d8abf800e
+>>>   Author: Song Liu <song@kernel.org>
+>>>   Date:   Fri Nov 17 15:56:30 2023 -0800
+>>>
+>>>     md: fix bi_status reporting in md_end_clone_io
+>>>
+>>> log attached shows page_fault_oops.
+>>> Machine was up for 3 days before crash happened.
+>>
+>> Can you confirm that culprit by bisection?
 > 
-> This commit fixes the status setting to only set ma_underflow when the
-> lower limit is attempted to be decremented, and modifies the testing to
-> ensure that's the case.
+> Bagas, I know you are trying to help, but sorry, I'd say this is not
+> helpful at all -- any maybe even harmful.
 > 
-> Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+> From the quoted texts it's pretty clear that the reporter knows that a
+> bisection would be helpful, but currently is unable to perform one --
+> and even states reasons for reporting it without having it bisected. So
+> your message afaics doesn't bring anything new to the table; and I might
+> be wrong with that, but I fear some people in a situation like this
+> might even be offended by a reply like that, as it states something
+> already obvious.
+> 
 
-Is this is related to the report[1] I forwarded? If so, please add these tags
-too:
-
- Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
- Closes: https://lore.kernel.org/all/CA+G9fYs-j2FYZSFSVZj48mgoM9gQd4-7M2mu2Ez3D1DqDdW2bQ@mail.gmail.com/ [1]
-
-Thanks either way!
-
--Kees
-
-> ---
-> 
-> Andrew,
-> 
-> This should be clean to squash into 7f79fdb1d94d7 ("maple_tree: separate
-> ma_state node from status.") which is currently in your mm-unstable
-> branch.
-> 
-> Thanks,
-> Liam
-> 
-> 
->  lib/maple_tree.c      | 16 ++++++++++++----
->  lib/test_maple_tree.c |  9 +++++++--
->  2 files changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/maple_tree.c b/lib/maple_tree.c
-> index 89f8d21602774..47f2a7a973852 100644
-> --- a/lib/maple_tree.c
-> +++ b/lib/maple_tree.c
-> @@ -4432,6 +4432,9 @@ static void *mas_prev_slot(struct ma_state *mas, unsigned long min, bool empty)
->  		mas->last = mas->index - 1;
->  		mas->index = mas_safe_min(mas, pivots, mas->offset);
->  	} else  {
-> +		if (mas->index <= min)
-> +			goto underflow;
-> +
->  		if (mas_prev_node(mas, min)) {
->  			mas_rewalk(mas, save_point);
->  			goto retry;
-> @@ -4452,15 +4455,15 @@ static void *mas_prev_slot(struct ma_state *mas, unsigned long min, bool empty)
->  	if (unlikely(mas_rewalk_if_dead(mas, node, save_point)))
->  		goto retry;
->  
-> -	if (mas->index <= min)
-> -		mas->status = ma_underflow;
->  
->  	if (likely(entry))
->  		return entry;
->  
->  	if (!empty) {
-> -		if (mas_is_underflow(mas))
-> +		if (mas->index <= min) {
-> +			mas->status = ma_underflow;
->  			return NULL;
-> +		}
->  
->  		goto again;
->  	}
-> @@ -4596,7 +4599,7 @@ static void *mas_next_slot(struct ma_state *mas, unsigned long max, bool empty)
->  		if (unlikely(mas_rewalk_if_dead(mas, node, save_point)))
->  			goto retry;
->  
-> -		if (pivot >= max) {
-> +		if (pivot >= max) { /* Was at the limit, next will extend beyond */
->  			mas->status = ma_overflow;
->  			return NULL;
->  		}
-> @@ -4611,6 +4614,11 @@ static void *mas_next_slot(struct ma_state *mas, unsigned long max, bool empty)
->  		else
->  			mas->last = mas->max;
->  	} else  {
-> +		if (mas->last >= max) {
-> +			mas->status = ma_overflow;
-> +			return NULL;
-> +		}
-> +
->  		if (mas_next_node(mas, node, max)) {
->  			mas_rewalk(mas, save_point);
->  			goto retry;
-> diff --git a/lib/test_maple_tree.c b/lib/test_maple_tree.c
-> index 15fbeb788f3ac..29185ac5c727f 100644
-> --- a/lib/test_maple_tree.c
-> +++ b/lib/test_maple_tree.c
-> @@ -3294,8 +3294,8 @@ static noinline void __init check_state_handling(struct maple_tree *mt)
->  	MT_BUG_ON(mt, mas.last != 0x1500);
->  	MT_BUG_ON(mt, !mas_is_active(&mas));
->  
-> -	/* next:active ->active */
-> -	entry = mas_next(&mas, ULONG_MAX);
-> +	/* next:active ->active (spanning limit) */
-> +	entry = mas_next(&mas, 0x2100);
->  	MT_BUG_ON(mt, entry != ptr2);
->  	MT_BUG_ON(mt, mas.index != 0x2000);
->  	MT_BUG_ON(mt, mas.last != 0x2500);
-> @@ -3360,6 +3360,11 @@ static noinline void __init check_state_handling(struct maple_tree *mt)
->  	MT_BUG_ON(mt, entry != ptr);
->  	MT_BUG_ON(mt, mas.index != 0x1000);
->  	MT_BUG_ON(mt, mas.last != 0x1500);
-> +	MT_BUG_ON(mt, !mas_is_active(&mas)); /* spanning limit */
-> +	entry = mas_prev(&mas, 0x1200); /* underflow */
-> +	MT_BUG_ON(mt, entry != NULL);
-> +	MT_BUG_ON(mt, mas.index != 0x1000);
-> +	MT_BUG_ON(mt, mas.last != 0x1500);
->  	MT_BUG_ON(mt, !mas_is_underflow(&mas));
->  
->  	/* prev:underflow -> underflow (lower limit) spanning end range */
-> -- 
-> 2.40.1
-> 
+Oops, I didn't fully understand the context. Thanks anyway.
 
 -- 
-Kees Cook
+An old man doll... just what I always wanted! - Clara
+
