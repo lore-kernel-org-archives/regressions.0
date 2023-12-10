@@ -1,192 +1,78 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CAB28E3
-	for <regressions@lists.linux.dev>; Sun, 10 Dec 2023 17:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rCNCh-0007h2-0D; Sun, 10 Dec 2023 18:02:55 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-12-10]
-Date: Sun, 10 Dec 2023 17:02:54 +0000
-Message-Id: <170222766284.86103.11020060769330721008@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8891CA8A;
+	Sun, 10 Dec 2023 21:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="psVGIfGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1A29C433C8;
+	Sun, 10 Dec 2023 21:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702242665;
+	bh=sZzRKked3xzptSRcvGavSHnu3Ea2iAGznJRk26/aisA=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=psVGIfGKE7xcK5fz2EYbnxEbzRLbw27mCwwYYD8VHyMEVImoE+VK9fBCa4IHx96Fn
+	 iirLi5y+9aoX5he6RwF7HxipvkkbNPb6VeSFaVrec1aTY9SShRkyECd13uXslHbNLE
+	 dzk83nSDz/+Rzx2nigbcQncdQkLxs0fn6GNsj2LHDH8TVOropyNJXLMFoVAX4E7vEF
+	 5fE2NOD4badSy9lElwBE8Oh7ZbCpg6l/EZ/g+T21WSOiqW6QW5K8nFzcEqL0k7/WcA
+	 WrghPA7N8iR1KHOsG/FO6zqS2O6BLBefRZDGTLufPEjFzF3uy3sacqBbyTaK5zi0sa
+	 hLHU/VZLM1qUA==
+From: Mark Brown <broonie@kernel.org>
+To: linux@bigler.io, francesco@dolcini.it, linux-kernel@vger.kernel.org, 
+ linux-spi@vger.kernel.org, regressions@lists.linux.dev, 
+ stefan.moring@technolution.nl, regressions@leemhuis.info, 
+ Benjamin Bigler <benjamin@bigler.one>
+In-Reply-To: <20231209222338.5564-1-benjamin@bigler.one>
+References: <20231209222338.5564-1-benjamin@bigler.one>
+Subject: Re: [PATCH] spi: spi-imx: correctly configure burst length when
+ using dma
+Message-Id: <170224266337.2977325.7724283128894856611.b4-ty@kernel.org>
+Date: Sun, 10 Dec 2023 21:11:03 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702227777;3576d11e;
-X-HE-SMSGID: 1rCNCh-0007h2-0D
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
-Hi Linus. Find below the list of regressions by bot currently tracks.
-But first let let me mention a few things manually:
+On Sat, 09 Dec 2023 23:23:26 +0100, Benjamin Bigler wrote:
+> If DMA is used, burst length should be set to the bus width of the DMA.
+> Otherwise, the SPI hardware will transmit/receive one word per DMA
+> request.
+> Since this issue affects both transmission and reception, it cannot be
+> detected with a loopback test.
+> Replace magic numbers 512 and 0xfff with MX51_ECSPI_CTRL_MAX_BURST.
+> 
+> [...]
 
-* Remember the "Blank screen on boot of Linux 6.5 and later on Lenovo
-ThinkPad L570" regression?[1]. Shortly before releasing 6.6 you wrote
-"But if this is not fixed by -rc1, we'll just revert it." [2]. I might
-have missed something, but it afaics is still not fixed; there was an
-attempt to fix this, but maintainers were not happy and then nothing
-happened anymore -- at least unless I missed something [3].
+Applied to
 
-[1] https://lore.kernel.org/dri-devel/7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee/
-[2] https://lore.kernel.org/all/CAHk-=wiX0j=8DB0EbCheAAfcx2z99QUZMTeJUxSBGpb0J5pjVg@mail.gmail.com/
-[3] https://lore.kernel.org/all/20231108024613.2898921-1-chenhuacai@loongson.cn/
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-* The Apparmor stuff from Stéphane I CCed you on a few days ago is in
-below list of tracked 6.7 regressions; just mentioning this slightly
-complicated regression (one we might have to live with due to the
-security aspect, but that's your call, I didn't even look closer) in case the CC fall through the crack due to you traveling:
-https://lore.kernel.org/regressions/CA%2Benf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
+Thanks!
 
-* Most of the other 6.7 issues I track are being dealt with afaics,
-except for one: it seems a amggpu change broke something for users that
-haven't updated their firmware. A amd dev acked the problem mid Nov, but
-since then it seems nothing has happened to address this; I'll prod the
-devs again tomorrow:
-https://lore.kernel.org/lkml/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E%2B8p-4QO6FOWa6zp22_A@mail.gmail.com/
+[1/1] spi: spi-imx: correctly configure burst length when using dma
+      commit: e9b220aeacf109684cce36a94fc24ed37be92b05
 
-Ciao, Thorsten
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Currently I'm aware of 6 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+Thanks,
+Mark
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.6.. aka v6.7-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] Re: [PATCH v2 0/9] Support light color temperature and chromaticity
------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de/
-https://lore.kernel.org/linux-input/4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de/
-https://bugzilla.kernel.org/show_bug.cgi?id!8223
-
-By Thomas Weißschuh; 3 days ago; 2 activities, latest 0 days ago.
-Introduced in 5f05285df691 (v6.7-rc1)
-
-Recent activities from: Jonathan Cameron (1), Thomas Weißschuh (1)
-
-
-[ *NEW* ] iwlwifi: rfkill locking up kernel 6.5.12, 6.6.2
----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218206/
-https://bugzilla.kernel.org/show_bug.cgi?id=218206
-https://lore.kernel.org/lkml/5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com/
-
-By Linus Lotz and Linus Lotz; 11 days ago; 13 activities, latest 2 days ago.
-Introduced in 37fb29bd1f90 (v6.7-rc1)
-
-Recent activities from: Mike Pagano (6), Johannes Berg (2), The Linux
-  kernel's regression tracker (Thorsten Leemhuis) (2), Darrell Enns (1),
-  Bagas Sanjaya (1), Linus Lotz (1)
-
-One patch associated with this regression:
-* bugzilla.kernel.org bug 218206: new comment(#11)
-  https://bugzilla.kernel.org/show_bug.cgi?id=218206#c11
-  3 days ago, by Johannes Berg
-
-
-[ *NEW* ] system after successful resuming the CPU won't enter lower Package Sates below pc2
---------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218198/
-https://bugzilla.kernel.org/show_bug.cgi?id=218198
-https://lore.kernel.org/regressions/4cbd1ad9-d343-421a-b9de-30dc8e2d02c1@leemhuis.info/
-
-By Dieter Mummenschanz and Dieter Mummenschanz; 12 days ago; 17 activities, latest 3 days ago.
-Introduced in d035e4eb38b3 (v6.7-rc1)
-
-Recent activities from: Dieter Mummenschanz (10), Phillip Susi (4),
-  Niklas.Cassel (2), dlemoal (1)
-
-
-[ *NEW* ] Re: [PATCH v2 0/6] PCI: Fix deadlocks when enabling ASPM
-------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZXHHrCDKKQbGIxli@hovoldconsulting.com/
-https://lore.kernel.org/lkml/ZXHHrCDKKQbGIxli@hovoldconsulting.com/
-
-By Johan Hovold; 3 days ago; 1 activities, latest 3 days ago.
-Introduced in 9f4f3dfad8cf (v6.7-rc1)
-
-Fix incoming:
-* https://lore.kernel.org/lkml/daa0c12e-49be-4047-933f-26823117b3db@leemhuis.info/
-
-
-[ *NEW* ] apparmor: move_mount mediation breaks mount tool in containers
-------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-https://lore.kernel.org/regressions/CA%2Benf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-
-By Stéphane Graber; 6 days ago; 14 activities, latest 3 days ago.
-Introduced in 157a3537d6bc (v6.7-rc1)
-
-Recent activities from: John Johansen (6), Stéphane Graber (3),
-  Christian Brauner (2), Linux regression tracking (Thorsten
-  Leemhuis) (2), Sasha Levin (1)
-
-One patch associated with this regression:
-* Re: Apparmor move_mount mediation breaks mount tool in containers
-  https://lore.kernel.org/regressions/3d17c8c3-6558-4847-b123-4dbe1a1b0763@canonical.com/
-  4 days ago, by John Johansen
-
-
-drm/amd/display: horizontal flashing bar with a picture of the desktop background on white screen after login
--------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E%2B8p-4QO6FOWa6zp22_A@mail.gmail.com/
-
-By Mikhail Gavrilov; 26 days ago; 9 activities, latest 12 days ago; poked 5 days ago.
-Introduced in ed6e2782e974 (v6.7-rc1)
-
-Recent activities from: Alex Deucher (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170041205809.2648289.15922511203232588109@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
