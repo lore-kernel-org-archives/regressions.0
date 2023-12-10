@@ -1,78 +1,115 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F706ABC
-	for <regressions@lists.linux.dev>; Sun, 10 Dec 2023 11:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE03847B;
+	Sun, 10 Dec 2023 11:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jJVyuM3b"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C1C8140E00CB;
-	Sun, 10 Dec 2023 11:05:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id uK7Ep6hwe_-O; Sun, 10 Dec 2023 11:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1702206328; bh=7l269ABKGvld3vh3H19A5zWWvuhVOYhQh2qZD/ePAr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jJVyuM3b2w9Z/E8sTRG9hUN63106Jp4Nea7iGy04HrbYzqSLrAn+4gYk4q1bsTZob
-	 1+nRZLjTYymWrQJfUI/XSL8tOK1nsyH8wsG5d8Im1Jho4I0o8b3R/bZPtRSKQBrJLN
-	 962ysWQqll1Loc7nXZ9ToCZ/aOQgqMltuqMzsMbasv9XVk/ZcbthHxkiiDDZ3ib8RE
-	 mjMLCWAjtzNTxV5fysDl6umnV8LeNuZBVZRBH7xq2gDmcIBPKVk2fzEyysv10w1kNN
-	 OwluBoUktcaQOR5zooHbnfYrPEZXA4iA1dJRjeqZZfu2ePc31BWBH1lTi7dSXvYiO9
-	 UxYfupnr1pfHtxXXMnrLZg48vjKEvTTc/RjyOz9P39t/0zi+hhmzm4QvSVAzW5DIJt
-	 48bsh/0KK3vmeIH28uUU4pFJISjZnBgIiaNxkCarArVtqovpI2Qii0doSdEpm/bQTR
-	 Gx3sPm+4tlDBxLj3xsNGLEthT4sNmswGW1Rw9+bzOK0AI0jcK/y8IBrS/a5wO51fdq
-	 26nEWmw9GkaFaCS3k/v37hXySxdkuSBhihzBpK5tmhMNPDNDioTQbIo+8e+YXB2WgO
-	 CBS2skJnlsPs2OYuvLqKqBSiIEUoXdArav3FMyppDFs+HBrR2ZxAYfsAvy/tcC5xCI
-	 +HVSbs3YVDS0i/Pibg8S2kyw=
-Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C3D9340E00A9;
-	Sun, 10 Dec 2023 11:05:19 +0000 (UTC)
-Date: Sun, 10 Dec 2023 12:05:18 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Chris Lindee <chris.lindee@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, regressions@lists.linux.dev,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [REGRESSION] x86/smpboot/64: System will not boot on v6.5,
- v6.7-rc4
-Message-ID: <20231210110518.GAZXWbbn9+ZNF5kwQV@fat_crate.local>
-References: <CA+2tU59853R49EaU_tyvOZuOTDdcU0RshGyydccp9R1NX9bEeQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGvy92dm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2018AC433C7;
+	Sun, 10 Dec 2023 11:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702206462;
+	bh=PeJBnbIr24URC9PS3TjlV1fHTQHII9IDKtiWrdqGxwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GGvy92dmG5LQzR0PADNW4wr8XNuwwNpRWfBt20lvm54yRjTVnIYpIUG8EoRtul/sN
+	 IuQK90QQr9Rc8o4dBU9RTvG/3/kVJMs6jeESXvaIGG386BWNTDXiMWlP/qC9kVSA/n
+	 NPmAkU5WTDVAOsYrph0yXVP7BwHk+E2f5f8C/3oz5brrnx3XHyVhomwxQFIButCfXY
+	 2oNSaG+PuOGVVG69zs49kHiZKZ7CGNPZbpkct6SGqJeyitC3OJR+JF317mfk3aoIzd
+	 IT/N9GgdiVisxZAE4lDmnURvmL6dJwv7wNcp02RmVfGk/VQWBRIe53dLsz9UQcdrjA
+	 8uugbcg9Vxt0Q==
+Date: Sun, 10 Dec 2023 11:07:35 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org,
+ benjamin.tissoires@redhat.com, lars@metafoo.de,
+ srinivas.pandruvada@linux.intel.com, linux-input@vger.kernel.org,
+ linux-iio@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 0/9] Support light color temperature and chromaticity
+Message-ID: <20231210110735.52f8dc53@jic23-huawei>
+In-Reply-To: <4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de>
+References: <20230919081054.2050714-1-Basavaraj.Natikar@amd.com>
+	<4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+2tU59853R49EaU_tyvOZuOTDdcU0RshGyydccp9R1NX9bEeQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 09, 2023 at 09:31:48PM -0600, Chris Lindee wrote:
-> My Dell-EMC PowerEdge T340 server worked with v6.4.15, but it will not
-> start with v6.5.x - it won't even display dmesg events during boot.  I
-> reproduced the issue on v6.7-rc4 and bisected the first problematic commit
-> to:
-> 
-> 0c7ffa32dbd6 x86/smpboot/64: Implement arch_cpuhp_init_parallel_bringup()
-> and enable it
+On Thu, 7 Dec 2023 00:39:28 +0100
+Thomas Wei=C3=9Fschuh <thomas@t-8ch.de> wrote:
 
-I presume booting with "cpuhp.parallel=0" on the kernel cmdline fixes
-it?
+> Hi everybody,
+>=20
+> On 2023-09-19 13:40:45+0530, Basavaraj Natikar wrote:
+> > This series adds support for light color temperature and chromaticity.
+> >=20
+> > v1->v2:
+> > *Rename the series.
+> > *Rename als_illum to als channel as it supports other channels.
+> > *Update patch description to include same reading for the two existing
+> >  channels to use channel index to support more hub attributes.
+> > *Keep line length under 80chars in hid-sensor-als.
+> > *Add new channel type IIO_COLORTEMP.
+> > *Update patch description and its subject to add channel type for=20
+> >  chromaticity.=20
+> >=20
+> > Basavaraj Natikar (9):
+> >   iio: hid-sensor-als: Use channel index to support more hub attributes
+> >   iio: Add channel type light color temperature
+> >   iio: hid-sensor-als: Add light color temperature support
+> >   HID: amd_sfh: Add support for light color temperature
+> >   HID: amd_sfh: Add support for SFH1.1 light color temperature
+> >   iio: Add channel type for chromaticity
+> >   iio: hid-sensor-als: Add light chromaticity support
+> >   HID: amd_sfh: Add light chromaticity support
+> >   HID: amd_sfh: Add light chromaticity for SFH1.1 =20
+>=20
+> This series is breaking probing of hid-sensor-als on Framework 13 AMD
+> laptops [0].
+> The problem is that the patches require hid-sensors-als sensors to also
+> report chromaticity and color temparature which they don't.
+Gah.  Missed that in review.  Sorry about that and thanks for digging into
+this.
+>=20
+> When I remove the 'if (ret < 0) return ret;' checks in
+> als_parse_report() probing works and the illuminance/intensity channels
+> that show up behave as expected.
+> Unfortunately this still leaves behind a bunch of unusable channels.
+> A nice fix would be to have something like sysfs/hwmon .is_visible()
+> callback but that's not supported by IIO.
 
--- 
-Regards/Gruss,
-    Boris.
+It's tricky to do because there is no simple association between
+what is registered as channels and the resulting attribute.  We could proba=
+bly
+make it work, but not a simple thing to do.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+>=20
+> One aproach would be to detect the usable channels in als_parse_report()
+> and then adapt the indio_dev->channels based on that information.
+>=20
+> [0] https://bugzilla.kernel.org/show_bug.cgi?id=3D218223
+
+Agreed that adapting the channels is the way to go.
+Easiest option probably to set the relevant masks to 0 if the chromacity and
+temp channels aren't there + set their scan index values to -1.
+That 'should' suppress any attributes being created.
+Having a gap in scan indexes is common anyway so any userspace should cope
+with the timestamp being after a gap.
+
+Alternatives would be to rebuild the chan_spec array to not have the entrie=
+s,
+or pass in and fill in two copies of the array, picking the relevant one on=
+ly
+on discovering if the temp and chromacity channels are present.
+
+Jonathan
+
+>=20
+> #regzbot introduced: 5f05285df691b1e82108eead7165feae238c95ef
+> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=3D218223
+>=20
+
