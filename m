@@ -1,151 +1,108 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E65522B
-	for <regressions@lists.linux.dev>; Sun, 10 Dec 2023 06:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKEG8gGi"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7b373d61694so151147039f.2
-        for <regressions@lists.linux.dev>; Sat, 09 Dec 2023 22:40:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702190441; x=1702795241; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zwGRPrCoVtYtP/8YMKF8dl0aRzTIJ031wO80hG9EGz4=;
-        b=YKEG8gGiDWz2II6eeV0gD+puqJbhcE+uHCUyz+VHl3FiAsnqbECoGski7jhHoBTec3
-         5unUv2LzQWq92iNTeC7sXmz6OYcLPvRidY68CqHhEgT3wn1Pj+6bIAjhBRVJTdVLk4nR
-         eYFATJ3g7RmNtUpJ8ecPqnKWbTAg/k/xd59KGENZmK0FR/7gdFqw1D6ro+nfIRfdfR7G
-         0R1DsQcPa518RHRXw4fnasNWzk2vdK3xBEp6u10YnWNIZ7U7xh9O2eELkWLb9RQvxeYv
-         xBKhD7NBGDiFfFCR9XM4l/Uay2WJDKh6S4yilMF+SSNPsN7jD3ODPP92ZbcUXMu1AI1x
-         1utQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702190441; x=1702795241;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zwGRPrCoVtYtP/8YMKF8dl0aRzTIJ031wO80hG9EGz4=;
-        b=ihrtdJczQ8awezLtpNLwXG7O2n6jWZKNr42rkS0JPfHHe/AA+4V/2t6Hu5zlzOfzXG
-         EgIF04xMnroNrh3JXxD5QZNPqk084w8JNY8S3zq5pJ/Yf4B+Tu3DYHVeUONjM1I83wK6
-         q4I+8uAAvDvi2GTcHXQpOoRtfjkoF4hAA5XiSx8m/JOJOxfpHX2kAQogCBlYfpXMdSih
-         Pz4wyrhvL5jvAsdhEF5DssHj69mYfhkuQL7vG+xrrQcWqmWLZ8fBaABwOQTd1FyPJYWL
-         VPHPDunfRZKJbP9MBdk0kibZxOP4WDzcbdwsfa9l0LezVigegBLYuPN1Ey+4JJ7114zj
-         PLUQ==
-X-Gm-Message-State: AOJu0YwZeRnEFguDeZV92soyI+0IJzpyEw2DJqS833YYfmx4rkglENqc
-	SrI+aqQxH1mYoZoXGibGGZI=
-X-Google-Smtp-Source: AGHT+IEifI7MN9YJEI6ra1cirsdo98LCVrV8vcB+XW9ZnTq3rQ1rfTw/up67VZJZuVnTYrJKhUmycg==
-X-Received: by 2002:a05:6e02:1809:b0:35d:59a2:68f8 with SMTP id a9-20020a056e02180900b0035d59a268f8mr4041390ilv.37.1702190440961;
-        Sat, 09 Dec 2023 22:40:40 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id r12-20020a6560cc000000b005bdd8dcfe19sm3522368pgv.10.2023.12.09.22.40.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Dec 2023 22:40:39 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 6581B1021255E; Sun, 10 Dec 2023 13:40:36 +0700 (WIB)
-Date: Sun, 10 Dec 2023 13:40:36 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Linux DRI Development <dri-devel@lists.freedesktop.org>,
-	Linux Nouveau <nouveau@lists.freedesktop.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	River <shibedrill1@gmail.com>, bwg <whirl@mniotilta.ca>
-Subject: Re: Fwd: Kernel 6.6.1 hangs on "loading initial ramdisk"
-Message-ID: <ZXVdZE3D-KFBqPnj@archie.me>
-References: <9057d7de-f2e0-44ba-bec7-8b0861b2a850@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B07C46AA
+	for <regressions@lists.linux.dev>; Sun, 10 Dec 2023 07:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rCE2O-0007XZ-HN; Sun, 10 Dec 2023 08:15:40 +0100
+Message-ID: <fe7a2b72-9418-42dc-b6fb-2aa93bc4eabc@leemhuis.info>
+Date: Sun, 10 Dec 2023 08:15:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gXx8QI5a8w8OQ7EJ"
-Content-Disposition: inline
-In-Reply-To: <9057d7de-f2e0-44ba-bec7-8b0861b2a850@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.6.1 hangs on "loading initial ramdisk"
+Content-Language: en-US, de-DE
+To: Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, bwg <whirl@mniotilta.ca>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ linux-efi <linux-efi@vger.kernel.org>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, shibedrill1@gmail.com
+References: <9057d7de-f2e0-44ba-bec7-8b0861b2a850@gmail.com>
+ <ZXVdZE3D-KFBqPnj@archie.me>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZXVdZE3D-KFBqPnj@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702192559;4e7b1dff;
+X-HE-SMSGID: 1rCE2O-0007XZ-HN
 
+[Moved a lot of people CCed in the previous mail to BCC, as I'm pretty
+sure they do not care about this regression; at the same time add the
+x86 maintainers and the efi list.]
 
---gXx8QI5a8w8OQ7EJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[Top posting for once to make this easier accessible for everyone.]
 
-On Wed, Nov 22, 2023 at 07:06:50AM +0700, Bagas Sanjaya wrote:
-> Hi,
->=20
-> I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> > After upgrading from 6.5.9 to 6.6.1 on my Dell Latitude E6420 (Intel i5=
--2520M) with EndeavourOS, the boot process would hang at "loading initial r=
-amdisk". The issue is present on the 6.6.1 release of both Linux and Linux-=
-zen, but not the 6.5.9 release, which makes me think this is somehow upstre=
-am in the kernel, rather than to do with packaging. My current workaround i=
-s using the Linux LTS kernel.
-> >=20
-> > I have been unable to consistently reproduce this bug. Between 50 and 3=
-0 percent of the time, the "loading initial ramdisk" will display, the disk=
- activity indicator will turn off briefly and then resume blinking, and the=
-n the kernel boots as expected. The other 50 to 70 percent of the time, the=
- boot stops at "loading initial ramdisk" and the disk activity indicator tu=
-rns off, and does not resume blinking. The disk activity light is constantl=
-y flashing during normal system operation, so I know it's not secretly boot=
-ing but not updating the display. I haven't been able to replicate this iss=
-ue in QEMU. I have seen similar bugs that have been solved by disabling IOM=
-MU, but this has not had any effect. Neither has disabling graphics drivers=
- and modesetting. I have been able to reproduce it while using Nouveau, so =
-I don't believe it has to do with Nvidia's proprietary drivers.
-> >=20
-> > Examining dmesg and journalctl, there doesn't appear to be ANY logs fro=
-m the failed boots. I don't believe the kernel even is started on these fai=
-led boots. Enabling GRUB debug messages (linux,loader,init,fs,device,disk,p=
-artition) shows that the hang occurs after GRUB attempts to start the loade=
-d image- it's able to load the image into memory, but the boot stalls after=
- "Starting image" with a hex address (presumably the start addr of the kern=
-el). =20
-> >=20
-> > I've been trying to compile the kernel myself to see if I can solve the=
- issue, or at least aid in reproduceability, but this is not easy or fast t=
-o do on a 2012 i5 processor. I'll update if I can successfully recompile th=
-e kernel and if it yields any information. =20
-> >=20
-> > Please let me know if I should provide any additional information. This=
- is my first time filing a bug here.
->=20
-> See Bugzilla for the full thread and attached grub output.
->=20
-> Anyway, I'm adding this regression to regzbot:
->=20
-> #regzbot introduced: v6.5..v6.6 https://bugzilla.kernel.org/show_bug.cgi?=
-id=3D218173
-> #regzbot title: initramfs loading hang on nouveau system (Dell Latitude E=
-6420)
->=20
+Ard, Boris, just to make it obvious: the regression report quoted below
+ was bisected to a1b87d54f4e45f ("x86/efistub: Avoid legacy decompressor
+when doing EFI boot") [v6.6-rc1] from Ard which committed by Boris.
+There are two users that seem to be affected by this. Both seem to run
+Arch. For details see:
+https://bugzilla.kernel.org/show_bug.cgi?id=218173
 
-Another reporter on Bugzilla had bisected the regression, so:
+Bagas, FWIW, I know you want to help, but your previous mail is not
+helpful at all -- on the contrary, as it is yet another one that is
+likely hurting my regression tracking efforts[1]. Please stop and just
+tell me about things like this in a private mail, as we agreed on earlier.
 
-#regzbot introduced: a1b87d54f4e45f
+Ciao, Thorsten
 
-Thanks.
+[1] This is why: You just added Ard and Boris to the CC, but did not
+make it obvious *why* they should care about that mail. They (and all
+the other recipients) for sure will have no idea what a1b87d54f4e45f
+exactly is, so you should have mentioned the commit summary. And doing
+that after a big quote makes it worse, as many people now need to scroll
+down to see if that mails contains something that might be relevant for
+them -- and just a waste of time if not.
 
---=20
-An old man doll... just what I always wanted! - Clara
+Furthermore, sending the first mail of the thread to all those people
+and lists was likely not very wise, as nobody is likely to care in a
+case like this. And not removing all those people and lists in the
+second mail of the thread make it a lot worse, as it became clear that
+many people and list do not care about it now that the regression was
+bisected. Hence it's best to remove them, we all get enough mail already.
 
---gXx8QI5a8w8OQ7EJ
-Content-Type: application/pgp-signature; name="signature.asc"
+All that makes people ignore mails from you -- and maybe about
+regression tracking in general. :-(
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZXVdYAAKCRD2uYlJVVFO
-o7pFAP9pEeG9YYfrU018mAj4G3ZZwP4KRlBl3jIY8I/6/oQCSgEAoSNNgg6UoN4V
-UwYNKa6CBSB8/Ylo9b3GxsN9zH+kjQ0=
-=g92L
------END PGP SIGNATURE-----
-
---gXx8QI5a8w8OQ7EJ--
+On 10.12.23 07:40, Bagas Sanjaya wrote:
+> On Wed, Nov 22, 2023 at 07:06:50AM +0700, Bagas Sanjaya wrote:
+>> Hi,
+>>
+>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>
+>>> After upgrading from 6.5.9 to 6.6.1 on my Dell Latitude E6420 (Intel i5-2520M) with EndeavourOS, the boot process would hang at "loading initial ramdisk". The issue is present on the 6.6.1 release of both Linux and Linux-zen, but not the 6.5.9 release, which makes me think this is somehow upstream in the kernel, rather than to do with packaging. My current workaround is using the Linux LTS kernel.
+>>>
+>>> I have been unable to consistently reproduce this bug. Between 50 and 30 percent of the time, the "loading initial ramdisk" will display, the disk activity indicator will turn off briefly and then resume blinking, and then the kernel boots as expected. The other 50 to 70 percent of the time, the boot stops at "loading initial ramdisk" and the disk activity indicator turns off, and does not resume blinking. The disk activity light is constantly flashing during normal system operation, so I know it's not secretly booting but not updating the display. I haven't been able to replicate this issue in QEMU. I have seen similar bugs that have been solved by disabling IOMMU, but this has not had any effect. Neither has disabling graphics drivers and modesetting. I have been able to reproduce it while using Nouveau, so I don't believe it has to do with Nvidia's proprietary drivers.
+>>>
+>>> Examining dmesg and journalctl, there doesn't appear to be ANY logs from the failed boots. I don't believe the kernel even is started on these failed boots. Enabling GRUB debug messages (linux,loader,init,fs,device,disk,partition) shows that the hang occurs after GRUB attempts to start the loaded image- it's able to load the image into memory, but the boot stalls after "Starting image" with a hex address (presumably the start addr of the kernel).  
+>>>
+>>> I've been trying to compile the kernel myself to see if I can solve the issue, or at least aid in reproduceability, but this is not easy or fast to do on a 2012 i5 processor. I'll update if I can successfully recompile the kernel and if it yields any information.  
+>>>
+>>> Please let me know if I should provide any additional information. This is my first time filing a bug here.
+>>
+>> See Bugzilla for the full thread and attached grub output.
+>>
+>> Anyway, I'm adding this regression to regzbot:
+>>
+>> #regzbot introduced: v6.5..v6.6 https://bugzilla.kernel.org/show_bug.cgi?id=218173
+>> #regzbot title: initramfs loading hang on nouveau system (Dell Latitude E6420)
+>>
+> 
+> Another reporter on Bugzilla had bisected the regression, so:
+> 
+> #regzbot introduced: a1b87d54f4e45f
+> 
+> Thanks.
+> 
