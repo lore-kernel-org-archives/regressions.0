@@ -1,83 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CC17468;
-	Sun, 10 Dec 2023 08:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="id7Mif+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76281C433C8;
-	Sun, 10 Dec 2023 08:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1702196224;
-	bh=4MP+IiZQyTgAhgvxwWK9fTe8S5nqlJbp9EPDPLsqyds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=id7Mif+ETkUg+AUNse9Dqu2A10VFzTNzArnoZoaxMSbOC7h5t/k6lDLydmqAfAD/N
-	 QbdjWGuMcJA8s79ckAw9B4IiXJxM/ZRjmW9c48qSVsXhHej/WIQwipXW0LdN0kXuec
-	 JBlSCZ+wTC1D98CwYK56EPHTtYzmUK6izmRh2Kx0=
-Date: Sun, 10 Dec 2023 09:17:01 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Benjamin Bigler <benjamin@bigler.one>
-Cc: broonie@kernel.org, linux@bigler.io, francesco@dolcini.it,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-	regressions@lists.linux.dev, stefan.moring@technolution.nl,
-	regressions@leemhuis.info
-Subject: Re: [PATCH] spi: spi-imx: correctly configure burst length when
- using dma
-Message-ID: <2023121047-unnamable-magma-2b6d@gregkh>
-References: <20231209222338.5564-1-benjamin@bigler.one>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A7F6AA2
+	for <regressions@lists.linux.dev>; Sun, 10 Dec 2023 10:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rCGs9-0003ab-LH; Sun, 10 Dec 2023 11:17:17 +0100
+Message-ID: <01fe1a4d-a346-4ddd-bd1c-22182ed0e60a@leemhuis.info>
+Date: Sun, 10 Dec 2023 11:17:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231209222338.5564-1-benjamin@bigler.one>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Kernel 6.6.1 hangs on "loading initial ramdisk"
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc: bwg <whirl@mniotilta.ca>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-efi <linux-efi@vger.kernel.org>,
+ the arch/x86 maintainers <x86@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, shibedrill1@gmail.com
+References: <9057d7de-f2e0-44ba-bec7-8b0861b2a850@gmail.com>
+ <ZXVdZE3D-KFBqPnj@archie.me>
+ <fe7a2b72-9418-42dc-b6fb-2aa93bc4eabc@leemhuis.info>
+ <7cf21703-391a-4123-b862-14a1af62aeaa@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <7cf21703-391a-4123-b862-14a1af62aeaa@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702203440;d9db1acd;
+X-HE-SMSGID: 1rCGs9-0003ab-LH
 
-On Sat, Dec 09, 2023 at 11:23:26PM +0100, Benjamin Bigler wrote:
-> If DMA is used, burst length should be set to the bus width of the DMA.
-> Otherwise, the SPI hardware will transmit/receive one word per DMA
-> request.
-> Since this issue affects both transmission and reception, it cannot be
-> detected with a loopback test.
-> Replace magic numbers 512 and 0xfff with MX51_ECSPI_CTRL_MAX_BURST.
+On 10.12.23 08:30, Bagas Sanjaya wrote:
+> On 12/10/23 14:15, Linux regression tracking (Thorsten Leemhuis) wrote:
+[...]
+>> [1] This is why: You just added Ard and Boris to the CC, but did not
+>> make it obvious *why* they should care about that mail. They (and all
+>> the other recipients) for sure will have no idea what a1b87d54f4e45f
+>> exactly is, so you should have mentioned the commit summary. And doing
+>> that after a big quote makes it worse, as many people now need to scroll
+>> down to see if that mails contains something that might be relevant for
+>> them -- and just a waste of time if not.
+>>
+>> Furthermore, sending the first mail of the thread to all those people
+>> and lists was likely not very wise, as nobody is likely to care in a
+>> case like this. And not removing all those people and lists in the
+>> second mail of the thread make it a lot worse, as it became clear that
+>> many people and list do not care about it now that the regression was
+>> bisected. Hence it's best to remove them, we all get enough mail already.
+>>
+>> All that makes people ignore mails from you -- and maybe about
+>> regression tracking in general. :-(
 > 
-> Signed-off-by: Benjamin Bigler <benjamin@bigler.one>
-> Reported-by Stefan Bigler <linux@bigler.io>
-> Fixes: 15a6af94a277 ("spi: Increase imx51 ecspi burst length based on transfer length")
-> Link: https://lore.kernel.org/r/8a415902c751cdbb4b20ce76569216ed@mail.infomaniak.com
-> ---
->  drivers/spi/spi-imx.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
+> Oops, I didn't greet additional Cc's as you mentioned (that's my
+> tendency when handling regressions).
 
-Hi,
+Well, yes, but as mentioned  that is just one of several things that
+were slightly off.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+> So maybe we continue tracking this on Bugzilla or keeping on ML or
+> both?
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Not sure what you mean. I'll reply in private, no need to bother the
+others with even more mail.
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+BTW: Ard, I noticed you got involved in the ticket. Thx for that!
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Ciao, Thorsten
