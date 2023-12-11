@@ -1,65 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE2A1D69A;
-	Mon, 11 Dec 2023 06:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oIWYsJhF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3723C433C8;
-	Mon, 11 Dec 2023 06:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1702277175;
-	bh=kHnEszmD14gAE0yGcIoS2wtHuhi2+yTazSYkElaFc64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oIWYsJhFRtc3rznu98ThG9D4IUodSsPJLVR05l1lNjoBnXFiodm4CLeNRzFwUTd6t
-	 pSLWnN6uSyY7t8k0yNeggaTa4Klfnl35h/XVn4gjU4kbh4kZONSs1PzdEZgLv0ifQz
-	 QH6hzW703/HeTf/GCZV9+Ue56WAhKglL3s5cI4gw=
-Date: Mon, 11 Dec 2023 07:46:12 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Simon Kaegi <simon.kaegi@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	Bobby Eshleman <bobby.eshleman@bytedance.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Sasha Levin <sashal@kernel.org>, jpiotrowski@linux.microsoft.com
-Subject: Re: [REGRESSION] vsocket timeout with kata containers agent 3.2.0
- and kernel 6.1.63
-Message-ID: <2023121156-giblet-thumb-037f@gregkh>
-References: <CACW2H-4FpZAizkp+U1aS94V_ODn8NUd1ta27BAz_zh0wo63_rQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B221F60A
+	for <regressions@lists.linux.dev>; Mon, 11 Dec 2023 07:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rCajw-0001nr-NJ; Mon, 11 Dec 2023 08:30:08 +0100
+Message-ID: <6df45523-d5e2-44b6-9a77-ff7155a1222c@leemhuis.info>
+Date: Mon, 11 Dec 2023 08:30:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACW2H-4FpZAizkp+U1aS94V_ODn8NUd1ta27BAz_zh0wo63_rQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: regression/bisected/6.7rc1: Instead of desktop I see a horizontal
+ flashing bar with a picture of the desktop background on white screen
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ amd-gfx list <amd-gfx@lists.freedesktop.org>,
+ "Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Wu, Hersen"
+ <hersenxs.wu@amd.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ "Lee, Alvin" <Alvin.Lee2@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Alex Deucher <alexdeucher@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>
+References: <CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com>
+ <CABXGCsOqbLRHSkiz79NkVQ-wUtR7y-ZFHvhMw0+JJ_cY2AZmSw@mail.gmail.com>
+ <CABXGCsPE9=Qp3Jg5hkRsTQoNgODnS_cXFU1d+hg3Baob40AaAA@mail.gmail.com>
+ <edc5b75b-c08d-4c62-ae5e-089ffac27772@amd.com>
+ <CABXGCsO=pdxorK9pO7qBPJM-xvgPPtpZqxLvQO4t2AK5qW3vcA@mail.gmail.com>
+ <DM8PR12MB5400EAB81E5FA10F4309A732D1B1A@DM8PR12MB5400.namprd12.prod.outlook.com>
+ <CADnq5_P8aRkj340FtBJKsZDnV8iOCmdmCHDWKHGca+4UtfNy1A@mail.gmail.com>
+ <d6849d4b-5b47-46e6-8cb3-a4a01f99f95c@leemhuis.info>
+In-Reply-To: <d6849d4b-5b47-46e6-8cb3-a4a01f99f95c@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702279817;a68b0693;
+X-HE-SMSGID: 1rCajw-0001nr-NJ
 
-On Sun, Dec 10, 2023 at 11:05:37PM -0500, Simon Kaegi wrote:
-> #regzbot introduced v6.1.62..v6.1.63
-> #regzbot introduced: baddcc2c71572968cdaeee1c4ab3dc0ad90fa765
+On 05.12.23 14:23, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 27.11.23 19:11, Alex Deucher wrote:
+>> On Wed, Nov 15, 2023 at 1:52 PM Lee, Alvin <Alvin.Lee2@amd.com> wrote:
+>>>
+>>> This change has a DMCUB dependency - are you able to update your DMCUB version as well?
+>>>
+>>> This version mismatch issue is something I'll need to fix in driver for Linux.
+>>
+>> @Mahfooz, Hamza @Alvin Lee any update on a fix for this?
 > 
-> We hit this regression when updating our guest vm kernel from 6.1.62 to
-> 6.1.63 -- bisecting, this problem was introduced
-> in baddcc2c71572968cdaeee1c4ab3dc0ad90fa765 -- virtio/vsock: replace
-> virtio_vsock_pkt with sk_buff --
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.63&id=baddcc2c71572968cdaeee1c4ab3dc0ad90fa765
-> 
-> We're getting a timeout when trying to connect to the vsocket in the
-> guest VM when launching a kata containers 3.2.0 agent. We haven't done
-> much more to understand the problem at this point.
-> 
-> We can reproduce 100% of the time but don't currently have a simple
-> reproducer as the problem was found in our build service which uses
-> kata-containers (with cloud-hypervisor).
-> 
-> We have not checked the mainline as we currently are tied to 6.1.x.
+> Still no news afaics. Or was there any progress I missed?
 
-What is "tieing" you to the old 6.1.y tree?
+Alex, Christian, Xinhui, what's up here?
 
-Also, can you try 6.1.66?  Numerous fixes have gone into there as well.
+In an earlier message from Christian it sounded like you considered this
+problem something that should be fixed. But it looks like nothing much
+happened since then. Or am I missing something?
 
-thanks,
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-greg k-h
+#regzbot poke
+
+>>> -----Original Message-----
+>>> From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+>>> Sent: Wednesday, November 15, 2023 1:22 PM
+>>> To: Mahfooz, Hamza <Hamza.Mahfooz@amd.com>
+>>> Cc: Lee, Alvin <Alvin.Lee2@amd.com>; Wu, Hersen <hersenxs.wu@amd.com>; Wheeler, Daniel <Daniel.Wheeler@amd.com>; Deucher, Alexander <Alexander.Deucher@amd.com>; Linux List Kernel Mailing <linux-kernel@vger.kernel.org>; amd-gfx list <amd-gfx@lists.freedesktop.org>
+>>> Subject: Re: regression/bisected/6.7rc1: Instead of desktop I see a horizontal flashing bar with a picture of the desktop background on white screen
+>>>
+>>> On Wed, Nov 15, 2023 at 11:14 PM Hamza Mahfooz <hamza.mahfooz@amd.com> wrote:
+>>>>
+>>>> What version of DMUB firmware are you on?
+>>>> The easiest way to find out would be using the following:
+>>>>
+>>>> # dmesg | grep DMUB
+>>>>
+>>>
+>>> Sapphire AMD Radeon RX 7900 XTX PULSE OC:
+>>> ❯ dmesg | grep DMUB
+>>> [   14.341362] [drm] Loading DMUB firmware via PSP: version=0x07002100
+>>> [   14.725547] [drm] DMUB hardware initialized: version=0x07002100
+>>>
+>>> Reference GIGABYTE Radeon RX 7900 XTX 24G:
+>>> ❯ dmesg | grep DMUB
+>>> [   11.405115] [drm] Loading DMUB firmware via PSP: version=0x07002100
+>>> [   11.773395] [drm] DMUB hardware initialized: version=0x07002100
+>>>
+>>>
+>>> --
+>>> Best Regards,
+>>> Mike Gavrilov.
