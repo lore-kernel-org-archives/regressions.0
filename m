@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B221F60A
-	for <regressions@lists.linux.dev>; Mon, 11 Dec 2023 07:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C2E20B19
+	for <regressions@lists.linux.dev>; Mon, 11 Dec 2023 08:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rCajw-0001nr-NJ; Mon, 11 Dec 2023 08:30:08 +0100
-Message-ID: <6df45523-d5e2-44b6-9a77-ff7155a1222c@leemhuis.info>
-Date: Mon, 11 Dec 2023 08:30:07 +0100
+	id 1rCbVa-0003vM-TW; Mon, 11 Dec 2023 09:19:22 +0100
+Message-ID: <e27cb00e-ee44-4c1a-b738-17c3b15fb99f@leemhuis.info>
+Date: Mon, 11 Dec 2023 09:19:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,89 +17,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: regression/bisected/6.7rc1: Instead of desktop I see a horizontal
- flashing bar with a picture of the desktop background on white screen
+Subject: Re: [REGRESSION]: nouveau: Asynchronous wait on fence
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- "Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Wu, Hersen"
- <hersenxs.wu@amd.com>, "Mahfooz, Hamza" <Hamza.Mahfooz@amd.com>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- "Lee, Alvin" <Alvin.Lee2@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Alex Deucher <alexdeucher@gmail.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>
-References: <CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com>
- <CABXGCsOqbLRHSkiz79NkVQ-wUtR7y-ZFHvhMw0+JJ_cY2AZmSw@mail.gmail.com>
- <CABXGCsPE9=Qp3Jg5hkRsTQoNgODnS_cXFU1d+hg3Baob40AaAA@mail.gmail.com>
- <edc5b75b-c08d-4c62-ae5e-089ffac27772@amd.com>
- <CABXGCsO=pdxorK9pO7qBPJM-xvgPPtpZqxLvQO4t2AK5qW3vcA@mail.gmail.com>
- <DM8PR12MB5400EAB81E5FA10F4309A732D1B1A@DM8PR12MB5400.namprd12.prod.outlook.com>
- <CADnq5_P8aRkj340FtBJKsZDnV8iOCmdmCHDWKHGca+4UtfNy1A@mail.gmail.com>
- <d6849d4b-5b47-46e6-8cb3-a4a01f99f95c@leemhuis.info>
-In-Reply-To: <d6849d4b-5b47-46e6-8cb3-a4a01f99f95c@leemhuis.info>
+Cc: regressions@lists.linux.dev, nouveau@lists.freedesktop.org
+References: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6f027566-c841-4415-bc85-ce11a5832b14@owenh.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702279817;a68b0693;
-X-HE-SMSGID: 1rCajw-0001nr-NJ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702282764;95228306;
+X-HE-SMSGID: 1rCbVa-0003vM-TW
 
-On 05.12.23 14:23, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.11.23 19:11, Alex Deucher wrote:
->> On Wed, Nov 15, 2023 at 1:52 PM Lee, Alvin <Alvin.Lee2@amd.com> wrote:
->>>
->>> This change has a DMCUB dependency - are you able to update your DMCUB version as well?
->>>
->>> This version mismatch issue is something I'll need to fix in driver for Linux.
->>
->> @Mahfooz, Hamza @Alvin Lee any update on a fix for this?
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
+
+On 28.10.23 04:46, Owen T. Heisler wrote:
+> #regzbot introduced: d386a4b54607cf6f76e23815c2c9a3abc1d66882
+> #regzbot link: https://gitlab.freedesktop.org/drm/nouveau/-/issues/180
 > 
-> Still no news afaics. Or was there any progress I missed?
+> ## Problem
+> 
+> 1. Connect external display to DVI port on dock and run X with both
+>    displays in use.
+> 2. Wait hours or days.
+> 3. Suddenly the secondary Nvidia-connected display turns off and X stops
+>    responding to keyboard/mouse input. In *some* cases it is possible to
+>    switch to a virtual TTY with Ctrl+Alt+Fn and log in there. In any
+>    case, shutdown/reboot after this happens is *usually* not successful
+>    (forced power-off is required).
+> [...]
 
-Alex, Christian, Xinhui, what's up here?
+It turned out to be a problem that also happens in mainline, so update
+the tracking:
 
-In an earlier message from Christian it sounded like you considered this
-problem something that should be fixed. But it looks like nothing much
-happened since then. Or am I missing something?
+#regzbot introduced: 6eaa1f3c59a707332e921e32782ffcad49915c5e
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->>> -----Original Message-----
->>> From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
->>> Sent: Wednesday, November 15, 2023 1:22 PM
->>> To: Mahfooz, Hamza <Hamza.Mahfooz@amd.com>
->>> Cc: Lee, Alvin <Alvin.Lee2@amd.com>; Wu, Hersen <hersenxs.wu@amd.com>; Wheeler, Daniel <Daniel.Wheeler@amd.com>; Deucher, Alexander <Alexander.Deucher@amd.com>; Linux List Kernel Mailing <linux-kernel@vger.kernel.org>; amd-gfx list <amd-gfx@lists.freedesktop.org>
->>> Subject: Re: regression/bisected/6.7rc1: Instead of desktop I see a horizontal flashing bar with a picture of the desktop background on white screen
->>>
->>> On Wed, Nov 15, 2023 at 11:14 PM Hamza Mahfooz <hamza.mahfooz@amd.com> wrote:
->>>>
->>>> What version of DMUB firmware are you on?
->>>> The easiest way to find out would be using the following:
->>>>
->>>> # dmesg | grep DMUB
->>>>
->>>
->>> Sapphire AMD Radeon RX 7900 XTX PULSE OC:
->>> ❯ dmesg | grep DMUB
->>> [   14.341362] [drm] Loading DMUB firmware via PSP: version=0x07002100
->>> [   14.725547] [drm] DMUB hardware initialized: version=0x07002100
->>>
->>> Reference GIGABYTE Radeon RX 7900 XTX 24G:
->>> ❯ dmesg | grep DMUB
->>> [   11.405115] [drm] Loading DMUB firmware via PSP: version=0x07002100
->>> [   11.773395] [drm] DMUB hardware initialized: version=0x07002100
->>>
->>>
->>> --
->>> Best Regards,
->>> Mike Gavrilov.
+That page also explains what to do if mails like this annoy you.
