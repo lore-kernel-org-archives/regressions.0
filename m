@@ -1,157 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5880482EC8
-	for <regressions@lists.linux.dev>; Fri, 15 Dec 2023 17:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25FD2C6A3
+	for <regressions@lists.linux.dev>; Fri, 15 Dec 2023 18:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AzUwk+aL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702661598; x=1734197598;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=NwKPs1sHl/0sAHhRL2vq6ph7EZTS+u5I2ScffWuwONg=;
-  b=AzUwk+aLsJkSvh0fL6nLxoIFa8YRwvQPGrb2gEnSxZrpeGK1kMaKlcyb
-   BTcrueu+E6P5DmNOQ1LBFkNw3f/PWXkoORTp04K0jS9LO+BbyA/qzWwRP
-   xKnQ59dbzCHS9I4QHPhrUBEn6yQbsSevbYs2kPgLmR6Mv4kNSyOF5C/v7
-   13S/Pe7JAby2y+Q5+6AiESa88IRE/pH9kAHakb0yflKMzcs+mloXiS/9R
-   1JrtM8ddOAc2xttSwyhtSgAmib+gNz0ID8eSCryXOu2vkZDuUXeIu1mvk
-   ooeJ7X/0yFxMjQK+xld5knISzGfSxMeynxOm+MSILKtYOjrQAY6mvY6DX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="461766239"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="461766239"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:33:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="751003690"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="751003690"
-Received: from skiddyam-mobl.amr.corp.intel.com (HELO [10.212.94.203]) ([10.212.94.203])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:33:15 -0800
-Message-ID: <0500bfe6e16fe01d34363f46ca7bbef79c5e8939.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/9] Support light color temperature and chromaticity
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Jonathan
- Cameron <jic23@kernel.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
- <thomas@t-8ch.de>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org, 
- benjamin.tissoires@redhat.com, lars@metafoo.de,
- linux-input@vger.kernel.org,  linux-iio@vger.kernel.org
-Date: Fri, 15 Dec 2023 12:33:15 -0500
-In-Reply-To: <d3d6fe7a-d6e1-4ea6-a8f6-2430731691b2@leemhuis.info>
-References: <20230919081054.2050714-1-Basavaraj.Natikar@amd.com>
-	 <4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de>
-	 <20231210110735.52f8dc53@jic23-huawei>
-	 <d3d6fe7a-d6e1-4ea6-a8f6-2430731691b2@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JGLDH07/"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 00F4540E014B;
+	Fri, 15 Dec 2023 18:35:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mFzpOCpG6yy0; Fri, 15 Dec 2023 18:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1702665351; bh=esMWiu+2+HvCyFKD/K0fUoXEyPCj6cIIHqBvquBUcQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JGLDH07/qWkECg8rc4YZQlTnQexGcvRYwk5akgL3vZ/KL7UhOvadun0bQGdjcRYCg
+	 edLlseyDCldhidoVF0UF2gDJp7NgGpuQGIKxO7OBIVP9TOGdv015JiB3ut6UBX1z74
+	 4mqXRpptWvr+d17RDpBH/cpuMYz1kzWVDWw33K3IFCI/3ez43Mi5sbOSsaVyOkYqmF
+	 YTcXFjIALt38NO7ErdCfJcYs0i+Sy53D6/mdUGZT3G/J0YHSsXqVeeBC+oDvGGzdiE
+	 LbC5f16tiQqPxoqBrQRKfCV4siYxPxjGKQDEgrN2+mFrp+jHzgkpD4n8/Ri42KrTWK
+	 f1A9Vs4VnimPsK4Je0EfTAWD4+mhoQz4UDf4TlPvIyp+1NQRCy3its5Xh0qQvY/IZS
+	 cQByyNEoF6lSy3wpm0eK0pJslTVdsbphi5qHFF5L3sEDbSfnYA1FherN42AKS+JW5L
+	 KwoMdFrAvIeTCjHFBrw3cpp3zHyoMFN8wb55HxGA0S6HTUWo7hh2DILO5uJFdWL6xm
+	 DeBQEYU5UFf2XhyMZHxnk/z++VODaS0L/JhsNi+uyPyPG4hVVIlmysda4p6FetI5PH
+	 i6NLG1Q9eANd/TpWbAsDrOBy0D9SW3IlOa8K1o3KjGpM+PzO+GcEhFA6AjpdV7g64S
+	 MDG0WYGdOcdMZozSjxisXZxU=
+Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 791AE40E00C6;
+	Fri, 15 Dec 2023 18:35:42 +0000 (UTC)
+Date: Fri, 15 Dec 2023 19:35:37 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Chris Lindee <chris.lindee@gmail.com>
+Cc: Ashok Raj <ashok.raj@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	regressions@lists.linux.dev, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH] x86/smpboot/64: Handle X2APIC BIOS inconsistency
+ gracefully
+Message-ID: <20231215183537.GDZXyceaXr33Vc/DaK@fat_crate.local>
+References: <87bkavqykk.ffs@tglx>
+ <CA+2tU5_TzDQO2U8SGDYhsVPR8iYh8Q8vTqv9+HUc7LN3cV=2Sg@mail.gmail.com>
+ <87bkaup3w2.ffs@tglx>
+ <CA+2tU5-RoR8qCGRdsMH0wo5n8v4fV8A_H5yT+mZadsF7E+QkWg@mail.gmail.com>
+ <CA+2tU5-18YQSpFzgUKyeZdJXe0Rs0GxtYY2s5QjznzTucJKCiQ@mail.gmail.com>
+ <87ttolnu36.ffs@tglx>
+ <CA+2tU596G+auWJ2MzYFJ3bv=Y4zP2NSrdtak7SdF9SH6Ht_dzg@mail.gmail.com>
+ <87cyv7on8t.ffs@tglx>
+ <ZXxzs7j3Ag2hBaoP@araj-dh-work.jf.intel.com>
+ <CA+2tU5_hD-atkp9UcCJnL6TMneSOBxL87=ppvrQ1ugUn_0-7NA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+2tU5_hD-atkp9UcCJnL6TMneSOBxL87=ppvrQ1ugUn_0-7NA@mail.gmail.com>
 
-On Fri, 2023-12-15 at 11:04 +0100, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
->=20
-> Thomas, Jonathan, was any progress made to resolve below regression?
+On Fri, Dec 15, 2023 at 12:18:43PM -0600, Chris Lindee wrote:
+> I think there is a typo in the code comment: s/mignt/might/
 
-A patch is posted
-https://patchwork.kernel.org/project/linux-iio/patch/20231215160159.648963-=
-1-srinivas.pandruvada@linux.intel.com/
+Fixed, thx.
 
-Thanks,
-Srinivas
+-- 
+Regards/Gruss,
+    Boris.
 
->=20
-> Side note: vormally I would not prod you at this time of the cycle,
-> but
-> with the festive season coming up I thought it would be wise to ask a
-> bit earlier for a status update.
->=20
-> Ciao, Thorsten
->=20
-> On 10.12.23 12:07, Jonathan Cameron wrote:
-> > On Thu, 7 Dec 2023 00:39:28 +0100
-> > Thomas Wei=C3=9Fschuh <thomas@t-8ch.de> wrote:
-> > > On 2023-09-19 13:40:45+0530, Basavaraj Natikar wrote:
-> > > > This series adds support for light color temperature and
-> > > > chromaticity.
-> > [...]
-> > > > Basavaraj Natikar (9):
-> > > > =C2=A0 iio: hid-sensor-als: Use channel index to support more hub
-> > > > attributes
-> > > > =C2=A0 iio: Add channel type light color temperature
-> > > > =C2=A0 iio: hid-sensor-als: Add light color temperature support
-> > > > =C2=A0 HID: amd_sfh: Add support for light color temperature
-> > > > =C2=A0 HID: amd_sfh: Add support for SFH1.1 light color temperature
-> > > > =C2=A0 iio: Add channel type for chromaticity
-> > > > =C2=A0 iio: hid-sensor-als: Add light chromaticity support
-> > > > =C2=A0 HID: amd_sfh: Add light chromaticity support
-> > > > =C2=A0 HID: amd_sfh: Add light chromaticity for SFH1.1=C2=A0=20
-> > >=20
-> > > This series is breaking probing of hid-sensor-als on Framework 13
-> > > AMD
-> > > laptops [0].
-> > > The problem is that the patches require hid-sensors-als sensors
-> > > to also
-> > > report chromaticity and color temparature which they don't.
-> > Gah.=C2=A0 Missed that in review.=C2=A0 Sorry about that and thanks for
-> > digging into
-> > this.
-> > >=20
-> > > When I remove the 'if (ret < 0) return ret;' checks in
-> > > als_parse_report() probing works and the illuminance/intensity
-> > > channels
-> > > that show up behave as expected.
-> > > Unfortunately this still leaves behind a bunch of unusable
-> > > channels.
-> > > A nice fix would be to have something like sysfs/hwmon
-> > > .is_visible()
-> > > callback but that's not supported by IIO.
-> >=20
-> > It's tricky to do because there is no simple association between
-> > what is registered as channels and the resulting attribute.=C2=A0 We
-> > could probably
-> > make it work, but not a simple thing to do.
-> >=20
-> > >=20
-> > > One aproach would be to detect the usable channels in
-> > > als_parse_report()
-> > > and then adapt the indio_dev->channels based on that information.
-> > >=20
-> > > [0] https://bugzilla.kernel.org/show_bug.cgi?id=3D218223
-> >=20
-> > Agreed that adapting the channels is the way to go.
-> > Easiest option probably to set the relevant masks to 0 if the
-> > chromacity and
-> > temp channels aren't there + set their scan index values to -1.
-> > That 'should' suppress any attributes being created.
-> > Having a gap in scan indexes is common anyway so any userspace
-> > should cope
-> > with the timestamp being after a gap.
-> >=20
-> > Alternatives would be to rebuild the chan_spec array to not have
-> > the entries,
-> > or pass in and fill in two copies of the array, picking the
-> > relevant one only
-> > on discovering if the temp and chromacity channels are present.
-> >=20
-> > Jonathan
-> >=20
-> > >=20
-> > > #regzbot introduced: 5f05285df691b1e82108eead7165feae238c95ef
-> > > #regzbot monitor:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D218223
-> > >=20
-> >=20
-> >=20
-> >=20
-
+https://people.kernel.org/tglx/notes-about-netiquette
