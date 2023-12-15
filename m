@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AE5182CC;
-	Fri, 15 Dec 2023 10:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95232C681;
+	Fri, 15 Dec 2023 11:14:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rE53I-0005EG-VC; Fri, 15 Dec 2023 11:04:17 +0100
-Message-ID: <d3d6fe7a-d6e1-4ea6-a8f6-2430731691b2@leemhuis.info>
-Date: Fri, 15 Dec 2023 11:04:19 +0100
+	id 1rE68w-0002u5-G6; Fri, 15 Dec 2023 12:14:10 +0100
+Message-ID: <b8a905a7-8fae-4482-9a6d-d9ed2f5dafbc@leemhuis.info>
+Date: Fri, 15 Dec 2023 12:14:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,95 +17,119 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] Support light color temperature and chromaticity
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH V2 2/2] ASoC: amd: acp: add pm ops support for renoir
+ platform
 Content-Language: en-US, de-DE
-To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <thomas@t-8ch.de>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org,
- benjamin.tissoires@redhat.com, lars@metafoo.de,
- srinivas.pandruvada@linux.intel.com, linux-input@vger.kernel.org,
- linux-iio@vger.kernel.org, regressions@lists.linux.dev
-References: <20230919081054.2050714-1-Basavaraj.Natikar@amd.com>
- <4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de>
- <20231210110735.52f8dc53@jic23-huawei>
+To: Syed Saba Kareem <Syed.SabaKareem@amd.com>, broonie@kernel.org,
+ alsa-devel@alsa-project.org
+Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com,
+ Sunil-kumar.Dommati@amd.com, mario.limonciello@amd.com, richgong@amd.com,
+ posteuca@mutex.one, Liam Girdwood <lgirdwood@gmail.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20231113123345.2196504-1-Syed.SabaKareem@amd.com>
+ <20231113123345.2196504-2-Syed.SabaKareem@amd.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20231210110735.52f8dc53@jic23-huawei>
+In-Reply-To: <20231113123345.2196504-2-Syed.SabaKareem@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702634661;71de4177;
-X-HE-SMSGID: 1rE53I-0005EG-VC
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702638860;284e795e;
+X-HE-SMSGID: 1rE68w-0002u5-G6
 
 Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
 for once, to make this easily accessible to everyone.
 
-Thomas, Jonathan, was any progress made to resolve below regression?
+Does anyone know what happened to below patch? It afaics was meant to
+fix a regression that made it into 6.6. For details see:
 
-Side note: vormally I would not prod you at this time of the cycle, but
-with the festive season coming up I thought it would be wise to ask a
-bit earlier for a status update.
+https://lore.kernel.org/lkml/87a5v8szhc.fsf@mutex.one/
+https://lore.kernel.org/lkml/ac9d4f7b-c7af-4d21-b0b8-d0f188b94b0f@amd.com/
 
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-On 10.12.23 12:07, Jonathan Cameron wrote:
-> On Thu, 7 Dec 2023 00:39:28 +0100
-> Thomas Weißschuh <thomas@t-8ch.de> wrote:
->> On 2023-09-19 13:40:45+0530, Basavaraj Natikar wrote:
->>> This series adds support for light color temperature and chromaticity.
->[...]
->>> Basavaraj Natikar (9):
->>>   iio: hid-sensor-als: Use channel index to support more hub attributes
->>>   iio: Add channel type light color temperature
->>>   iio: hid-sensor-als: Add light color temperature support
->>>   HID: amd_sfh: Add support for light color temperature
->>>   HID: amd_sfh: Add support for SFH1.1 light color temperature
->>>   iio: Add channel type for chromaticity
->>>   iio: hid-sensor-als: Add light chromaticity support
->>>   HID: amd_sfh: Add light chromaticity support
->>>   HID: amd_sfh: Add light chromaticity for SFH1.1  
->>
->> This series is breaking probing of hid-sensor-als on Framework 13 AMD
->> laptops [0].
->> The problem is that the patches require hid-sensors-als sensors to also
->> report chromaticity and color temparature which they don't.
-> Gah.  Missed that in review.  Sorry about that and thanks for digging into
-> this.
->>
->> When I remove the 'if (ret < 0) return ret;' checks in
->> als_parse_report() probing works and the illuminance/intensity channels
->> that show up behave as expected.
->> Unfortunately this still leaves behind a bunch of unusable channels.
->> A nice fix would be to have something like sysfs/hwmon .is_visible()
->> callback but that's not supported by IIO.
+On 13.11.23 13:33, Syed Saba Kareem wrote:
+> Add pm ops for renoir platform.
 > 
-> It's tricky to do because there is no simple association between
-> what is registered as channels and the resulting attribute.  We could probably
-> make it work, but not a simple thing to do.
+> Signed-off-by: Syed Saba Kareem <Syed.SabaKareem@amd.com>
+> ---
+>  sound/soc/amd/acp/acp-renoir.c | 38 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
 > 
->>
->> One aproach would be to detect the usable channels in als_parse_report()
->> and then adapt the indio_dev->channels based on that information.
->>
->> [0] https://bugzilla.kernel.org/show_bug.cgi?id=218223
-> 
-> Agreed that adapting the channels is the way to go.
-> Easiest option probably to set the relevant masks to 0 if the chromacity and
-> temp channels aren't there + set their scan index values to -1.
-> That 'should' suppress any attributes being created.
-> Having a gap in scan indexes is common anyway so any userspace should cope
-> with the timestamp being after a gap.
-> 
-> Alternatives would be to rebuild the chan_spec array to not have the entries,
-> or pass in and fill in two copies of the array, picking the relevant one only
-> on discovering if the temp and chromacity channels are present.
-> 
-> Jonathan
-> 
->>
->> #regzbot introduced: 5f05285df691b1e82108eead7165feae238c95ef
->> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=218223
->>
-> 
-> 
-> 
+> diff --git a/sound/soc/amd/acp/acp-renoir.c b/sound/soc/amd/acp/acp-renoir.c
+> index a591482a0726..8539fbacdf4c 100644
+> --- a/sound/soc/amd/acp/acp-renoir.c
+> +++ b/sound/soc/amd/acp/acp-renoir.c
+> @@ -20,6 +20,7 @@
+>  #include <sound/soc.h>
+>  #include <sound/soc-dai.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #include "amd.h"
+>  #include "acp-mach.h"
+> @@ -195,7 +196,11 @@ static int renoir_audio_probe(struct platform_device *pdev)
+>  	dev_set_drvdata(dev, adata);
+>  	acp_enable_interrupts(adata);
+>  	acp_platform_register(dev);
+> -
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev, ACP_SUSPEND_DELAY_MS);
+> +	pm_runtime_use_autosuspend(&pdev->dev);
+> +	pm_runtime_mark_last_busy(&pdev->dev);
+> +	pm_runtime_set_active(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+>  	return 0;
+>  }
+>  
+> @@ -208,11 +213,42 @@ static void renoir_audio_remove(struct platform_device *pdev)
+>  	acp_platform_unregister(dev);
+>  }
+>  
+> +static int __maybe_unused rn_pcm_resume(struct device *dev)
+> +{
+> +	struct acp_dev_data *adata = dev_get_drvdata(dev);
+> +	struct acp_stream *stream;
+> +	struct snd_pcm_substream *substream;
+> +	snd_pcm_uframes_t buf_in_frames;
+> +	u64 buf_size;
+> +
+> +	spin_lock(&adata->acp_lock);
+> +	list_for_each_entry(stream, &adata->stream_list, list) {
+> +		substream = stream->substream;
+> +		if (substream && substream->runtime) {
+> +			buf_in_frames = (substream->runtime->buffer_size);
+> +			buf_size = frames_to_bytes(substream->runtime, buf_in_frames);
+> +			config_pte_for_stream(adata, stream);
+> +			config_acp_dma(adata, stream, buf_size);
+> +			if (stream->dai_id)
+> +				restore_acp_i2s_params(substream, adata, stream);
+> +			else
+> +				restore_acp_pdm_params(substream, adata);
+> +		}
+> +	}
+> +	spin_unlock(&adata->acp_lock);
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops rn_dma_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, rn_pcm_resume)
+> +};
+> +
+>  static struct platform_driver renoir_driver = {
+>  	.probe = renoir_audio_probe,
+>  	.remove_new = renoir_audio_remove,
+>  	.driver = {
+>  		.name = "acp_asoc_renoir",
+> +		.pm = &rn_dma_pm_ops,
+>  	},
+>  };
+>  
