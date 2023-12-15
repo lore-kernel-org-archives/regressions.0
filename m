@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4796F18AE1;
-	Fri, 15 Dec 2023 09:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AE5182CC;
+	Fri, 15 Dec 2023 10:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rE4ec-0006LH-4f; Fri, 15 Dec 2023 10:38:46 +0100
-Message-ID: <7766d1f5-103a-4a46-b95b-2e27dc63644f@leemhuis.info>
-Date: Fri, 15 Dec 2023 10:38:48 +0100
+	id 1rE53I-0005EG-VC; Fri, 15 Dec 2023 11:04:17 +0100
+Message-ID: <d3d6fe7a-d6e1-4ea6-a8f6-2430731691b2@leemhuis.info>
+Date: Fri, 15 Dec 2023 11:04:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,89 +17,94 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] vsocket timeout with kata containers agent 3.2.0 and
- kernel 6.1.63
+Subject: Re: [PATCH v2 0/9] Support light color temperature and chromaticity
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: stable@vger.kernel.org
-References: <CACW2H-4FpZAizkp+U1aS94V_ODn8NUd1ta27BAz_zh0wo63_rQ@mail.gmail.com>
- <CAGxU2F6C8oUY4B38y17Ti9u9QdYqQKamM+S2nofjYe5b9L1tBQ@mail.gmail.com>
- <CACW2H-7xr8-kDWJ9xqzx7c1Ud3QhqL2w+BGYpjOEdnkj9_Kzhg@mail.gmail.com>
- <CAGxU2F5=fTNQVf7gkmLGTeRe825H6tw_vi_uuUiX-hXyRR=1nQ@mail.gmail.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
+To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <thomas@t-8ch.de>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, jikos@kernel.org,
+ benjamin.tissoires@redhat.com, lars@metafoo.de,
+ srinivas.pandruvada@linux.intel.com, linux-input@vger.kernel.org,
+ linux-iio@vger.kernel.org, regressions@lists.linux.dev
+References: <20230919081054.2050714-1-Basavaraj.Natikar@amd.com>
+ <4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de>
+ <20231210110735.52f8dc53@jic23-huawei>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAGxU2F5=fTNQVf7gkmLGTeRe825H6tw_vi_uuUiX-hXyRR=1nQ@mail.gmail.com>
+In-Reply-To: <20231210110735.52f8dc53@jic23-huawei>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702633128;56993870;
-X-HE-SMSGID: 1rE4ec-0006LH-4f
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702634661;71de4177;
+X-HE-SMSGID: 1rE53I-0005EG-VC
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-On 11.12.23 16:23, Stefano Garzarella wrote:
-> On Mon, Dec 11, 2023 at 3:20 PM Simon Kaegi <simon.kaegi@gmail.com> wrote:
->> Thanks Greg, Stefano,
+Thomas, Jonathan, was any progress made to resolve below regression?
+
+Side note: vormally I would not prod you at this time of the cycle, but
+with the festive season coming up I thought it would be wise to ask a
+bit earlier for a status update.
+
+Ciao, Thorsten
+
+On 10.12.23 12:07, Jonathan Cameron wrote:
+> On Thu, 7 Dec 2023 00:39:28 +0100
+> Thomas Weißschuh <thomas@t-8ch.de> wrote:
+>> On 2023-09-19 13:40:45+0530, Basavaraj Natikar wrote:
+>>> This series adds support for light color temperature and chromaticity.
+>[...]
+>>> Basavaraj Natikar (9):
+>>>   iio: hid-sensor-als: Use channel index to support more hub attributes
+>>>   iio: Add channel type light color temperature
+>>>   iio: hid-sensor-als: Add light color temperature support
+>>>   HID: amd_sfh: Add support for light color temperature
+>>>   HID: amd_sfh: Add support for SFH1.1 light color temperature
+>>>   iio: Add channel type for chromaticity
+>>>   iio: hid-sensor-als: Add light chromaticity support
+>>>   HID: amd_sfh: Add light chromaticity support
+>>>   HID: amd_sfh: Add light chromaticity for SFH1.1  
 >>
->> tldr; withdrawing the regression -- rust-vmm vsock mistake
-
-In that case:
-
-#regzbot resolve: reporter withdrawed the report
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
-
->> Thanks all... nothing to see.
->> - Simon
+>> This series is breaking probing of hid-sensor-als on Framework 13 AMD
+>> laptops [0].
+>> The problem is that the patches require hid-sensors-als sensors to also
+>> report chromaticity and color temparature which they don't.
+> Gah.  Missed that in review.  Sorry about that and thanks for digging into
+> this.
 >>
->> On Mon, Dec 11, 2023 at 3:39 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->>>
->>> On Mon, Dec 11, 2023 at 5:05 AM Simon Kaegi <simon.kaegi@gmail.com> wrote:
->>>>
->>>> #regzbot introduced v6.1.62..v6.1.63
->>>> #regzbot introduced: baddcc2c71572968cdaeee1c4ab3dc0ad90fa765
->>>>
->>>> We hit this regression when updating our guest vm kernel from 6.1.62 to
->>>> 6.1.63 -- bisecting, this problem was introduced
->>>> in baddcc2c71572968cdaeee1c4ab3dc0ad90fa765 -- virtio/vsock: replace
->>>> virtio_vsock_pkt with sk_buff --
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.63&id=baddcc2c71572968cdaeee1c4ab3dc0ad90fa765
->>>>
->>>> We're getting a timeout when trying to connect to the vsocket in the
->>>> guest VM when launching a kata containers 3.2.0 agent. We haven't done
->>>> much more to understand the problem at this point.
->>>
->>> It looks like the same issue described here:
->>> https://github.com/rust-vmm/vm-virtio/issues/204
->>>
->>> In summary that patch also contains a performance improvement, because
->>> by switching to sk_buffs, we can use only one descriptor for the whole
->>> packet (header + payload), whereas before we used two for each packet.
->>> Some devices (e.g. rust-vmm's vsock) mistakenly always expect 2
->>> descriptors, but this is a violation of the VIRTIO specification.
->>>
->>> Which device are you using?
->>>
->>> Can you confirm that your device conforms to the specification?
->>>
->>> Stefano
->>>
->>>>
->>>> We can reproduce 100% of the time but don't currently have a simple
->>>> reproducer as the problem was found in our build service which uses
->>>> kata-containers (with cloud-hypervisor).
->>>>
->>>> We have not checked the mainline as we currently are tied to 6.1.x.
->>>>
->>>> -Simon
->>>>
->>>
+>> When I remove the 'if (ret < 0) return ret;' checks in
+>> als_parse_report() probing works and the illuminance/intensity channels
+>> that show up behave as expected.
+>> Unfortunately this still leaves behind a bunch of unusable channels.
+>> A nice fix would be to have something like sysfs/hwmon .is_visible()
+>> callback but that's not supported by IIO.
+> 
+> It's tricky to do because there is no simple association between
+> what is registered as channels and the resulting attribute.  We could probably
+> make it work, but not a simple thing to do.
+> 
+>>
+>> One aproach would be to detect the usable channels in als_parse_report()
+>> and then adapt the indio_dev->channels based on that information.
+>>
+>> [0] https://bugzilla.kernel.org/show_bug.cgi?id=218223
+> 
+> Agreed that adapting the channels is the way to go.
+> Easiest option probably to set the relevant masks to 0 if the chromacity and
+> temp channels aren't there + set their scan index values to -1.
+> That 'should' suppress any attributes being created.
+> Having a gap in scan indexes is common anyway so any userspace should cope
+> with the timestamp being after a gap.
+> 
+> Alternatives would be to rebuild the chan_spec array to not have the entries,
+> or pass in and fill in two copies of the array, picking the relevant one only
+> on discovering if the temp and chromacity channels are present.
+> 
+> Jonathan
+> 
+>>
+>> #regzbot introduced: 5f05285df691b1e82108eead7165feae238c95ef
+>> #regzbot monitor: https://bugzilla.kernel.org/show_bug.cgi?id=218223
 >>
 > 
 > 
