@@ -1,186 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26C84437F;
-	Sun, 17 Dec 2023 13:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rEr2n-0003sq-HM; Sun, 17 Dec 2023 14:18:57 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-12-17]
-Date: Sun, 17 Dec 2023 13:18:56 +0000
-Message-Id: <170281908496.715347.5933124289020637019@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA6731A74
+	for <regressions@lists.linux.dev>; Mon, 18 Dec 2023 11:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="IwN1vhis";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tcWIsBkE"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id CEB9C5C0138;
+	Mon, 18 Dec 2023 06:57:22 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 18 Dec 2023 06:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1702900642; x=1702987042; bh=oNCXpmzOnp
+	v/ZMs2C1LVLkDAobWIT06Q4NQom04jsYA=; b=IwN1vhisXOGaPhVE4Dhn4TW9/Z
+	5glTuEG1jsmAFC+YjD9LvXEi1LDjGfnlMjxWk4t8/cjqOXJDyyORyxc8WYrujZjn
+	OIqLqiTd5aCie8Z50qdn/V1ToML/hcaWbikjBTBM81kYwXlXCPF7fszOUz0d6xCZ
+	NhNpXR3OT/rYQyANwbF0McbQBhG5Z/BKEZSDa3Y8u/MzeEYr2CfznZ9+Blbic9Yz
+	ytbVEuirHn8fcSJfUlvObvjy7KxmRlR7yNTC2VNl73PhJUS4dMAq86u/sBLIAyoJ
+	x+BTotSQsQLcjaAsNLGPm9MrxAoGWMEljm8vaiCOdHive/XFX/wPfDIeP6/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1702900642; x=1702987042; bh=oNCXpmzOnpv/ZMs2C1LVLkDAobWI
+	T06Q4NQom04jsYA=; b=tcWIsBkE1buhqz932G1poGIONjJimqHG6++Mq379BdXX
+	yEvsJs959+wwt++eYpHxB9FFYgh4NHGtiYKzxmB6PZ5daLwVSogkK5Allkche08n
+	V6FiY/ahTSTIsUU8CAMWVk0SwMWOi7ylP3LIfF3NFb8Z7ZVC4qXsFyazpOkEXXjP
+	CwViIE3L8NkiGc2vxLS0NZ8mBnCjZzooYSYWjJFlA2vLyglfq9PGFEubpquz6wic
+	1QN8H617XMtJz9VJslMhOogvvANcvGNpJkiNCn5c3iIL2iqFQzAI5LtdeJbixzca
+	r6rzPSP4Ajpw/ROd1i6xLDYHbp8OeI5jBPpbI3Z61Q==
+X-ME-Sender: <xms:ojOAZfXVmBp1zkMxYhB9NDV6HZeeCnRCxR33iLcXIBCzMItcvCKMEQ>
+    <xme:ojOAZXlTH5-weNS81GPlMmGeyrrMqG69Y0jmlgpfbAHcPUJ_6KuaXc6LCni4kV9Dd
+    mJ20vvhOPAARA>
+X-ME-Received: <xmr:ojOAZbaYQb74aA8hIV6hsUEBt9XpXdupHkUwCOza3qHE857tvy2qOmg1B6ML_SV7nPKPzJtY0SuMyMwugJ3D6QxYdVlr6OgUew>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvddtkedgfedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
+    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
+    hhrdgtohhm
+X-ME-Proxy: <xmx:ojOAZaX1zNH3DvKdgODOHnegGaHd_BxP5hANWs2XEovTdsKCo2QIPQ>
+    <xmx:ojOAZZmZVj-MSdx432L2sWfNAxUjTrQ7r9ihBLNQdt-Ivfr6tgeg8Q>
+    <xmx:ojOAZXd40Y0fEWxvMzfhTq1IcFMv2jlLI7kQVOQu63A55iuTnLP6fg>
+    <xmx:ojOAZe8iSNtDRJyC9-NRZlp0279tkdGr55hyAiaIIDF8owUfu26NZw>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 18 Dec 2023 06:57:22 -0500 (EST)
+Date: Mon, 18 Dec 2023 12:57:20 +0100
+From: Greg KH <greg@kroah.com>
+To: Robert Kolchmeyer <rkolchmeyer@google.com>
+Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	linux-integrity@vger.kernel.org, regressions@lists.linux.dev,
+	eric.snowberg@oracle.com, zohar@linux.ibm.com, jlayton@kernel.org
+Subject: Re: IMA performance regression in 5.10.194 when using overlayfs
+Message-ID: <2023121848-filter-pacifier-c457@gregkh>
+References: <000000000000b505f3060c454a49@google.com>
+ <ZXfBmiTHnm_SsM-n@sashalap>
+ <CAJc0_fz4LEyNT2rB7KAsAZuym8TT3DZLEfFqSoBigs-316LNKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702819144;743fbb25;
-X-HE-SMSGID: 1rEr2n-0003sq-HM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJc0_fz4LEyNT2rB7KAsAZuym8TT3DZLEfFqSoBigs-316LNKQ@mail.gmail.com>
 
-Hi Linus. Find below the list of regressions by bot currently tracks wrt
-to 6.7. There is nothing to worry about afaics: I guess fixes for most
-of the tracked issues will be heading your way in the next few days.
-https://bugzilla.kernel.org/show_bug.cgi?id=218198 might be the exception.
-
-But let me follow up on two things from last week:
-
-> * The Apparmor stuff from Stéphane I CCed you on a few days ago is in
-> below list of tracked 6.7 regressions; just mentioning this slightly
-> complicated regression (one we might have to live with due to the
-> security aspect, but that's your call, I didn't even look closer> in case the CC fall through the crack due to you traveling: 
-> https://lore.kernel.org/regressions/CA%2Benf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-Nothing happened there, so I assume you consider the state of things to
-be okay and will remove this from my tracking soon.
-
-> * Remember the "Blank screen on boot of Linux 6.5 and later on Lenovo
-> ThinkPad L570" regression?[1]. Shortly before releasing 6.6 you wrote
-> "But if this is not fixed by -rc1, we'll just revert it." [2]. I might
-> have missed something, but it afaics is still not fixed; there was an
-> attempt to fix this, but maintainers were not happy and then nothing
-> happened anymore -- at least unless I missed something [3].
+On Tue, Dec 12, 2023 at 04:37:31PM -0800, Robert Kolchmeyer wrote:
+> > Looking at the dependencies you've identified, it probably makes sense
+> > to just take them as is (as it's something we would have done if these
+> > dependencies were identified explicitly).
+> >
+> > I'll plan to queue them up after the current round of releases is out.
 > 
-> [1] https://lore.kernel.org/dri-devel/7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee/
-> [2] https://lore.kernel.org/all/CAHk-=wiX0j=8DB0EbCheAAfcx2z99QUZMTeJUxSBGpb0J5pjVg@mail.gmail.com/
-> [3] https://lore.kernel.org/all/20231108024613.2898921-1-chenhuacai@loongson.cn/
-FWIW, that lead to some activity on Monday, but since then nothing
-happened afaics -- which might be mainly due to silence from the
-reporter which was asked to test something:
-https://lore.kernel.org/all/CAAhV-H52y902nP6nPeghLqs+K8gNzCc3DHTU1C0AQcD0TXHMAQ@mail.gmail.com/
-https://lore.kernel.org/all/CAAhV-H5eXM7FNzuRCMthAziG_jg75XwQV3grpw=sdyJ-9GXgvA@mail.gmail.com/
+> Sounds great, thank you!
 
-Ciao, Thorsten
+I've dropped them now as there are some reported bug fixes with just
+that commit that do not seem to apply properly at all, and we can't add
+new problems when we know we are doing so :)
 
+So can you provide a working set of full backports for the relevant
+kernels that include all fixes (specifically stuff like 8a924db2d7b5
+("fs: Pass AT_GETATTR_NOSEC flag to getattr interface function")) so
+that we can properly queue them up then?
 
----
+Or, conversely, we can revert the other commits if you think that would
+be better?
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+thanks,
 
-Currently I'm aware of 5 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.6.. aka v6.7-rc), culprit identified
-======================================================
-
-
-drm/amd/display: horizontal flashing bar with a picture of the desktop background on white screen after login
--------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E+8p-4QO6FOWa6zp22_A@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsNRb0QbF2pKLJMDhVOKxyGD6-E%2B8p-4QO6FOWa6zp22_A@mail.gmail.com/
-
-By Mikhail Gavrilov; 33 days ago; 13 activities, latest 1 days ago.
-Introduced in ed6e2782e974 (v6.7-rc1)
-
-Recent activities from: Hamza Mahfooz (2), Mario Limonciello (1), Harry
-  Wentland (1)
-
-Noteworthy links:
-* [PATCH] drm/amd/display: disable FPO and SubVP for older DMUB versions on DCN32x
-  https://lore.kernel.org/stable/20231215160116.17012-1-hamza.mahfooz@amd.com/
-  1 days ago, by Hamza Mahfooz; thread monitored.
-
-
-Re: [PATCH v2 0/9] Support light color temperature and chromaticity
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de/
-https://lore.kernel.org/linux-input/4441bd6b-01cd-4f26-bf85-bde2e1bf404e@t-8ch.de/
-
-By Thomas Weißschuh; 10 days ago; 4 activities, latest 1 days ago.
-Introduced in 5f05285df691 (v6.7-rc1)
-
-Recent activities from: srinivas pandruvada (1), Linux regression
-  tracking (Thorsten Leemhuis) (1)
-
-
-system after successful resuming the CPU won't enter lower Package Sates below pc2
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218198/
-https://bugzilla.kernel.org/show_bug.cgi?id=218198
-https://lore.kernel.org/regressions/4cbd1ad9-d343-421a-b9de-30dc8e2d02c1@leemhuis.info/
-
-By Dieter Mummenschanz and Dieter Mummenschanz; 19 days ago; 21 activities, latest 1 days ago.
-Introduced in d035e4eb38b3 (v6.7-rc1)
-
-Recent activities from: bugzilla-daemon@kernel.org (2),
-  Niklas.Cassel (1), The Linux kernel's regression tracker (Thorsten
-  Leemhuis) (1)
-
-
-iwlwifi: rfkill locking up kernel 6.5.12, 6.6.2
------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218206/
-https://bugzilla.kernel.org/show_bug.cgi?id=218206
-https://lore.kernel.org/lkml/5ef14fe7-84a5-407f-b514-1527f7279ecd@gmail.com/
-
-By Linus Lotz and Linus Lotz; 18 days ago; 14 activities, latest 2 days ago.
-Introduced in 37fb29bd1f90 (v6.7-rc1)
-
-Recent activities from: The Linux kernel's regression tracker (Thorsten
-  Leemhuis) (1)
-
-One patch associated with this regression:
-* bugzilla.kernel.org bug 218206: new comment(#11)
-  https://bugzilla.kernel.org/show_bug.cgi?id=218206#c11
-  10 days ago, by Johannes Berg
-
-
-apparmor: move_mount mediation breaks mount tool in containers
---------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-https://lore.kernel.org/regressions/CA%2Benf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com/
-
-By Stéphane Graber; 13 days ago; 14 activities, latest 10 days ago.
-Introduced in 157a3537d6bc (v6.7-rc1)
-
-One patch associated with this regression:
-* Re: Apparmor move_mount mediation breaks mount tool in containers
-  https://lore.kernel.org/regressions/3d17c8c3-6558-4847-b123-4dbe1a1b0763@canonical.com/
-  11 days ago, by John Johansen
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170222766284.86103.11020060769330721008@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+greg k-h
