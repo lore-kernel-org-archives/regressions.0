@@ -1,103 +1,88 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EBF49899
-	for <regressions@lists.linux.dev>; Mon, 18 Dec 2023 19:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FE11C296
+	for <regressions@lists.linux.dev>; Tue, 19 Dec 2023 15:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDEV72qU"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so2208a12.1
-        for <regressions@lists.linux.dev>; Mon, 18 Dec 2023 11:39:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ss5ymMez"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4b6c3a37ddeso490767e0c.0
+        for <regressions@lists.linux.dev>; Tue, 19 Dec 2023 07:02:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702928357; x=1703533157; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5umlgnbsnFZiZVJ0cVpQu5AC72Lnsh+rnvB7uAFTfiY=;
-        b=GDEV72qUwJLnTVCewtncwmDaeJ4OhQygCUbV1sSApwntVq5h9dPm9gegn3zIrbWuhr
-         WxLjprfoiUeFQOI/eyWc0/DSiYZpYImyO92sTWGOd4A6EPq5S3DrGW0cwep7+FFFF3pn
-         w2PhzgjQhUx8f7//qpc1nPgjHfPZdWl2H2S+tEpbRNbQjHBcFnko7eo0/Ckldw5M3C+s
-         jChx02QDQDS68Knj0whs3H49xqqn3yHgjJSSsyop5/8uNUbTQ44VbebKiju+SITeBxjT
-         XQw+B3QfzEr+Zetq4CyFg+8obmkjPsz9Iy7jTIoxeNVKCZQBNrRbd1TetIJWO9cVCIdM
-         3VJA==
+        d=linaro.org; s=google; t=1702998175; x=1703602975; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ux8sE7fHthR2voG70KnB7oZ6Al+8xU+cq54AC46rn+E=;
+        b=ss5ymMezHd5UPchi9X1Vbc+vMFlq5ESr/lSJDjWD1Jm58JKFDfEotFTLBhH7WXjnrP
+         YZskzMNEfkDUlpOz/JflRsbdM+F06KyiP90Cirs+q3eIYlBIF1OOk7VY8NQXvqiKKobm
+         aJYtLF3iNVCxGL502GP78TXH+ni+xF7kdWckvYb6GfC65x8saaQ/mkwtYv9cHMklTHA9
+         wjFAFCf9iRfFG318K3IIk8FCcOwBQ8YDhpXNFiU7Lwbgwt9nK+YiiKrOTNaONQYqvQpt
+         oKLzuqO4/eW/HGAY3l2MkBlmQpzfQ6nvahG316J74GygO/EA6YwTqPLLYwfJxCLIa5gA
+         1x4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702928357; x=1703533157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5umlgnbsnFZiZVJ0cVpQu5AC72Lnsh+rnvB7uAFTfiY=;
-        b=T607f69cvB34pvAvlI4M929iLeaCdw057tqfI+6iOtokrdP7hf+PlV1nk3Ny7ZA4qj
-         Omdfav+xKitqSDiYrrdglNnLQnva/cNZ3h8CVbuG68T8gMd+jjdKoKWojXvDdwKsKfAs
-         mNX2LOdH4kyIqLO7Xp9hGwqfSfxys/DLSd2Q5Li4iEsOjThA62o1Ll3evUxkKnuRc0EV
-         3gXcQKPqT0GD6wkQuii5m7w2rEwC3+X85X+4erXPE0GGpvkDxeCWE+E97Z/ZBE2Q5c7a
-         ISYpUQsZr443QJn6JlE5BU4B0X4ym1yraJXXJP959lo0/rViixdjOO/36FtefAiXt5pa
-         tIEw==
-X-Gm-Message-State: AOJu0YzqtLVYGBPea8a8COjeARyA353LfG7MDOx594jKK8/9RdwUXG2P
-	VXhz0mp/Gesqz2Kxd8+ZfOHTfratheD3xS1NOK/njmLf8FM=
-X-Google-Smtp-Source: AGHT+IG2zTOcLT/slo8Xy1NCbxTjx8uZ3GB00uyChCN28rM0o4JcEyf70j7nxUJQlMxzM1AFksLtvXT6JGsj12dWHxE=
-X-Received: by 2002:a50:d0cd:0:b0:553:7ff4:5885 with SMTP id
- g13-20020a50d0cd000000b005537ff45885mr34380edf.2.1702928357402; Mon, 18 Dec
- 2023 11:39:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702998175; x=1703602975;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ux8sE7fHthR2voG70KnB7oZ6Al+8xU+cq54AC46rn+E=;
+        b=k3t6AupQbTYIzG7ilMaa6zDHz9uhV5mCmykvNaYHog+tTatn5Z5/tLCYpHt9L4tjT3
+         LGekVrx5akgTt6wJ1zz2EoKEgtSDXCl/AyWbnyr2D012Skl9KfEhCLlQklG4GczFrCAv
+         HmfmuY/huUZzoRV5i8W24TfbZAXPjpUqnQbfSTnbGLLc41ivt99SjTucbTv5zTj8IkxA
+         NKI4czbBVlI6O2BFQcrINPx9NfrgEZu2IPYL5Hft6Crm25zJRbLefh3lcS2CAbt4theo
+         ISv6pFtL23LJnNsbOZqOktO3iEXSEzTa+J6FIw/cY+9EhPYWEojw6wVC9YCtKGnh8fck
+         V15A==
+X-Gm-Message-State: AOJu0Yy8roNaw9HlK7olS9hxI6S/YJfjx1UeGGz+UPk7ktLi1rMRAh+q
+	HPl0UZ1OxzlkziEZ6krrhyK9qaiMstilosc8AsmmHA==
+X-Google-Smtp-Source: AGHT+IG6e+HOmJxSwcUNT8DhH+LV9pJe4Lfz8mAYCBraGDKFr0Sdv68iV56I17MY7FbjZFs19wdqPnFaFyVyj8ww5z4=
+X-Received: by 2002:ac5:ca0a:0:b0:4b6:b829:7d14 with SMTP id
+ c10-20020ac5ca0a000000b004b6b8297d14mr1300298vkm.11.1702998174099; Tue, 19
+ Dec 2023 07:02:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <000000000000b505f3060c454a49@google.com> <ZXfBmiTHnm_SsM-n@sashalap>
- <CAJc0_fz4LEyNT2rB7KAsAZuym8TT3DZLEfFqSoBigs-316LNKQ@mail.gmail.com>
- <2023121848-filter-pacifier-c457@gregkh> <2023121834-abiding-armory-e468@gregkh>
-In-Reply-To: <2023121834-abiding-armory-e468@gregkh>
-From: Robert Kolchmeyer <rkolchmeyer@google.com>
-Date: Mon, 18 Dec 2023 11:39:04 -0800
-Message-ID: <CAJc0_fzhWtHJJ+7j6vKoSxppVS0TpbqGZ398JwLs=dkUjUTzhQ@mail.gmail.com>
-Subject: Re: IMA performance regression in 5.10.194 when using overlayfs
-To: Greg KH <greg@kroah.com>
-Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, regressions@lists.linux.dev, 
-	eric.snowberg@oracle.com, zohar@linux.ibm.com, jlayton@kernel.org
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 19 Dec 2023 20:32:42 +0530
+Message-ID: <CA+G9fYvq+wdDhTjR2YkULF-_-nQNPGzCeOON-08EbVyidj-J6w@mail.gmail.com>
+Subject: arch/parisc/mm/init.c:534:29: error: invalid application of 'sizeof'
+ to incomplete type 'struct shmid64_ds'
+To: Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-parisc <linux-parisc@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 3:58=E2=80=AFAM Greg KH <greg@kroah.com> wrote:
->
-> On Mon, Dec 18, 2023 at 12:57:20PM +0100, Greg KH wrote:
-> > On Tue, Dec 12, 2023 at 04:37:31PM -0800, Robert Kolchmeyer wrote:
-> > > > Looking at the dependencies you've identified, it probably makes se=
-nse
-> > > > to just take them as is (as it's something we would have done if th=
-ese
-> > > > dependencies were identified explicitly).
-> > > >
-> > > > I'll plan to queue them up after the current round of releases is o=
-ut.
-> > >
-> > > Sounds great, thank you!
-> >
-> > I've dropped them now as there are some reported bug fixes with just
-> > that commit that do not seem to apply properly at all, and we can't add
-> > new problems when we know we are doing so :)
-> >
-> > So can you provide a working set of full backports for the relevant
-> > kernels that include all fixes (specifically stuff like 8a924db2d7b5
-> > ("fs: Pass AT_GETATTR_NOSEC flag to getattr interface function")) so
-> > that we can properly queue them up then?
->
-> Also don't forget 18b44bc5a672 ("ovl: Always reevaluate the file
-> signature for IMA") either.  There might be more...
->
-> thanks,
->
-> greg k-h
+Following build failures noticed on parisc on Linux next-20231219 tag.
 
-Thanks - from what I can tell with `git log --grep`, 8a924db2d7b5
-("fs: Pass AT_GETATTR_NOSEC flag to getattr interface function") is
-the only such fix we need to backport (18b44bc5a672 ("ovl: Always
-reevaluate the file signature for IMA") is already in stable trees and
-introduced the regression that motivated this investigation).
+parisc:
+  build:
+    * gcc-11-defconfig - Failed
+    * gcc-11-allnoconfig - Failed
+    * gcc-11-tinyconfig - Failed
 
-I'll prepare these backports and send them to the list.
+Build error:
+arch/parisc/mm/init.c: In function 'mem_init':
+arch/parisc/mm/init.c:534:29: error: invalid application of 'sizeof'
+to incomplete type 'struct shmid64_ds'
+  534 |         BUILD_BUG_ON(sizeof(struct shmid64_ds) != 104);
+      |                             ^~~~~~
 
-Thanks,
--Robert
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Steps to reproduce:
+
+ tuxmake --runtime podman --target-arch parisc --toolchain gcc-11
+--kconfig defconfig
+
+
+
+Links:
+- https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231219/testrun/21768759/suite/build/test/gcc-11-defconfig/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20231219/testrun/21768759/suite/build/tests/
+
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
