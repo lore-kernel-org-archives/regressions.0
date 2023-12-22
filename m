@@ -1,77 +1,142 @@
-Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D523765
-	for <regressions@lists.linux.dev>; Fri, 22 Dec 2023 15:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9001735EE3
+	for <regressions@lists.linux.dev>; Fri, 22 Dec 2023 23:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="gNsPl0V6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1703259459; bh=W75HZle+KPuF3ARFyLYmGgDl0isjRggq7C/WnAUD0k0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gNsPl0V6bHDLrc7jMl31yBHa4uzbJROjkl5kZIPMZM3jx0WPliPgcyoJBm1sNy7j3
-	 nroAp1a7vFtav334P2i4fFGr1xSa1wVmnh4ldrWr2mLqvT9jFVfDVsnLl/E5OeMTQg
-	 hRudQoNSOvE2FB5btsOqJd9iOESMkp+1my1yq8HxvRrpVN3CwdhP6bMzRXEdS/7uF3
-	 tD/bu12BPWfhIq7NfVGlxZFvkyPdMI+1YZrjyyjP/TNZ5Ojh8HeKwUjj2sEAb6THL8
-	 QgLQfoZdT5JLVqnAgTHjYn3A01lcEGroh3zkKQT7RClomYINEi7SYRUQVkV1ZN9Hhn
-	 31PLfh4wiE7gQ==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id C565A27941E3;
-	Fri, 22 Dec 2023 15:37:31 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: bagasdotme@gmail.com
-Cc: alexhenrie24@gmail.com,
-	dan@danm.net,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHPOWJ/b"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3ba2dc0f6b7so1761614b6e.2
+        for <regressions@lists.linux.dev>; Fri, 22 Dec 2023 15:44:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703288641; x=1703893441; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u9uJAXYaWWEwDD2fcwcXO74cohGnyjB8jlMg/uP61/M=;
+        b=LHPOWJ/bt8/g5wPWuyc3aIvdvKC3QdEvRQyV6zq5Jqc1yGFlPfulVNbcGypFiUpU9p
+         gcc0FscMYV9O0FqRekVQ+SKoW14QZdsXT3+0WohOYVZtooijjBzwQrW3keqodI1HEr0H
+         kN2BVrgS69ri5eVoNV2NaIui/5xqVTMFEtpxA8X6MyJICgqwNbha4e9H8/LinN3yRL0a
+         Pj3HNahp9A1rlsz5HmSwa21/2FYquzkzvjWF5NUIZqZkqFgWyazABg/izXw33EiI13DV
+         BadxsLtoA6uFKVd/thBY0iJ04q4erJ+URjgYScmDXgRhFWAt01aYLxLHyYvPPbW5qU01
+         t5zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703288641; x=1703893441;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u9uJAXYaWWEwDD2fcwcXO74cohGnyjB8jlMg/uP61/M=;
+        b=cdJoJjUWKtCt3aBhXl/xdFttTDIUP0aAlpnrCE0M2lbOd8iu1BerPEfCiGcWaKeYUs
+         qEDwCvrEf+FQv9aWW1USAkWApGUBjKfDFRuhdv3REZBDydByCK4KZd56JZFHZMHaiJFP
+         Kze1OPHpSYFAJ9LG4Sz/wVolxOyC89qRe48aj6RdisNXaRaP4GvXWpP661hdrOiIkuZQ
+         KHEAPCTBjL552w0COra87IQLm8QAyiuDDj+tfdbzWFuqBjZ1Haz/vmvZSIVrwcKfFeYV
+         qnzcV4EkjiGEVbW+KMMBHD58Pp6iYcrYm9nfbexI+gbDjSuF6kD/CFWF1X3JJRJ0Y7Qt
+         6MWw==
+X-Gm-Message-State: AOJu0Yx2xJZSY3b9QpdWRgcR/H35KcRH9b1VsMKdLKhDBptn2NEuYK+T
+	oznD3KwI87bcADiz8lkbc/Q=
+X-Google-Smtp-Source: AGHT+IEBcMAdxLDV76HXmc3OCUvAfcCQtbzCX5BinmvoHbmUgdEY1mZjWmlPxQP4eyZbz6cYaXOUmw==
+X-Received: by 2002:a05:6808:1247:b0:3ba:e56:4778 with SMTP id o7-20020a056808124700b003ba0e564778mr2514960oiv.100.1703288641539;
+        Fri, 22 Dec 2023 15:44:01 -0800 (PST)
+Received: from xavier.lan ([2607:fa18:92fe:b835:c8f0:af87:712f:cf12])
+        by smtp.gmail.com with ESMTPSA id a21-20020a62e215000000b006d98222b74esm2326427pfi.46.2023.12.22.15.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 15:44:01 -0800 (PST)
+From: Alex Henrie <alexhenrie24@gmail.com>
+To: dan@danm.net,
 	davem@davemloft.net,
 	dsahern@kernel.org,
 	edumazet@google.com,
 	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
 	pabeni@redhat.com,
+	bagasdotme@gmail.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	regressions@lists.linux.dev
+Cc: Alex Henrie <alexhenrie24@gmail.com>
 Subject: Re: [REGRESSION] net/ipv6/addrconf: Temporary addresses with short lifetimes generating when they shouldn't, causing applications to fail
-Date: Fri, 22 Dec 2023 08:37:03 -0700
-Message-ID: <20231222153703.11268-1-dan@danm.net>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <ZYWNr_4P-je2uVDe@archie.me>
-References: <ZYWNr_4P-je2uVDe@archie.me>
+Date: Fri, 22 Dec 2023 16:42:27 -0700
+Message-ID: <20231222234237.44823-1-alexhenrie24@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231221231115.12402-1-dan@danm.net>
+References: <20231221231115.12402-1-dan@danm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 4H-3eGBeWOOgncmUP221yFMYypoSXwZO
-X-Proofpoint-ORIG-GUID: 4H-3eGBeWOOgncmUP221yFMYypoSXwZO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-22_10,2023-12-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 spamscore=0
- phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 mlxlogscore=630
- clxscore=1030 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2312220115
 
-> > I bisected it to commit 629df6701c8a ("net: ipv6/addrconf: clamp
-> > preferred_lft to the minimum required"). Upon reviewing that change, I
-> > see that it has changed when generation of temporary addresses will be
-> > allowed. I believe that change might have inadvertently caused the
-> > kernel to violate RFC 4941 and might need to be reverted.
+On Thu, Dec 21, 2023 at 4:12 PM Dan Moulding <dan@danm.net> wrote:
 >
-> Can you verify that by actually reverting 629df6701c8a91 on top of net
-> tree?
+> I started running v6.7-rc5 on a desktop and began having problems
+> where Chromium would frequently fail to load pages and give an
+> "ERR_NETWORK_CHANGED" message instead. I also noticed instability in
+> avahi-daemon (it would stop resolving local names and/or consume 100%
+> CPU). Eventually I discovered that what is happening is that new
+> temporary IPv6 addresses for a ULA address are being generated once
+> every second, with very short preferred lifetimes (and I had an
+> interface with thousands of such temporary addresses). I also found
+> that it seems to be triggered when one of the devices on the network
+> sends a router advertisement with a prefix that has a preferred
+> lifetime of 0 (presumably it's sending that because it wants to
+> deprecate that prefix).
+>
+> I bisected it to commit 629df6701c8a ("net: ipv6/addrconf: clamp
+> preferred_lft to the minimum required"). Upon reviewing that change, I
+> see that it has changed when generation of temporary addresses will be
+> allowed. I believe that change might have inadvertently caused the
+> kernel to violate RFC 4941 and might need to be reverted.
+>
+> In particular RFC 4941 specifies that the preferred lifetime of a
+> temporary address must not be greater than the preferred lifetime of
+> the public address it is derived from. However, this change allows a
+> temporary address to be generated with a preferred lifetime greater
+> than the public address' preferred lifetime.
+>
+> From RFC 4941:
+>
+>     4.  When creating a temporary address, the lifetime values MUST be
+>         derived from the corresponding prefix as follows:
+>
+>         *  Its Valid Lifetime is the lower of the Valid Lifetime of the
+>            public address or TEMP_VALID_LIFETIME.
+>
+>         *  Its Preferred Lifetime is the lower of the Preferred Lifetime
+>            of the public address or TEMP_PREFERRED_LIFETIME -
+>            DESYNC_FACTOR.
+>
+> Previously temporary addresses would not be generated for an interface
+> if the administratively configured preferred lifetime on that
+> interface was too short. This change tries to avoid that, and allow
+> generating temporary addresses even on interfaces with very short
+> configured lifetimes, by simply increasing the preferred lifetime of
+> the generated address. However, doing so runs afoul of the above
+> requirement. It allows the preferred lifetime of the temporary address
+> to be increased to a value that is larger than the public address'
+> preferred lifetime. For example, in my case where the router
+> advertisement causes the public address' preferred lifetime to be set
+> to 0, the current code allows a temporary address to be generated with
+> a preferred lifetime of (regen_advance + age + 1), which is obviously
+> greater than 0. It also, in my case, leads to new temporary addresses
+> with very short lifetimes being generated, about once every second,
+> leading to the application-level issues I described above.
 
-Yes, after bisecting it to that commit, I did revert it on top of
-v6.7-rc6 and verified that the problem goes away. It doesn't start
-accumulating addresses once every second. Instead the single temporary
-address that was generated for the deprecated prefix is still there,
-with a preferred lifetime of 0, like I'd expect, and no new addresses
-get generated. The application-level problems are also gone (Chromium
-loads pages without issue, and avahi-daemon hasn't jumped to 100%
-CPU).
+Sorry for the unintended consequences, and thank you for the detailed
+explanation. Does this patch fix the problem for you?
 
-I'm now running it this way on several machines and everything is
-looking good again.
+-Alex
 
--- Dan
+
+Alex Henrie (1):
+  net: ipv6/addrconf: clamp prefered_lft to the public address preferred
+    lifetime
+
+ net/ipv6/addrconf.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+-- 
+2.43.0
+
