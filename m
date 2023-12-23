@@ -1,153 +1,193 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D2A35EE4
-	for <regressions@lists.linux.dev>; Fri, 22 Dec 2023 23:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK6P6Pz2"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28c179bf45cso591801a91.1
-        for <regressions@lists.linux.dev>; Fri, 22 Dec 2023 15:44:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703288643; x=1703893443; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2FndYqF4JacU8fr/QFMFiLxqaWYLpyTNAQDkJcL8Ws=;
-        b=UK6P6Pz2VAN6baOTt/joIYcIHkIPm4565JjJVkZI7wk8SYaLxIY9cXBAZ+dgATjFmP
-         yab0KJjBSU4UFyp42IP4QhfrIjhl7YUVZlmhSQG7MWAex7ROaQ/S5U53kxpVdK2Bky8B
-         iZe/i+ngw6FaB7PW3/7BvofIvuESumECODRedpYCriIEvgoL/c1WPC3ed2F/tGh0zXo3
-         ramBuzn8cm+UCB8eqY7lQhWzTMnAAmfo6mBXa0fnHdRANcT7c5sIQVxgF8deFWpwPmLi
-         mBmMAOCpRGoQp/LV2PNk1S9Ao4cj0OCsky/00e+0ZwRV75LyCG5nsSshGpNZS4QsqTCP
-         tbXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703288643; x=1703893443;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2FndYqF4JacU8fr/QFMFiLxqaWYLpyTNAQDkJcL8Ws=;
-        b=vai76BaUxL9lY3MHUM93A/wAnss8x9iV/M7xpK8rnmFpD8lSY9iXx8Do497zAu3v80
-         6rFCrt50zR2gkL6hws6XaJ3HFAWgVZ0gAkSxvYq/PrnF51icHge4iMmvR8xS9TU3Ck2z
-         I8phx2G5tD8I/XxbhSUbTrlVLJTNZvnTVhPCZItWBMg8y5Hp10y7xUn9ixbY8HCoic6F
-         x3865NqWz+DfIAKeHZZFJVbFM0ZGm4+sjlXbEKwZAF4VmOo4EZMT4oEc/ARbDffsUANw
-         E2LYIvQ0CYJc8pYWGfiOw9qTFbxYjmx+DDAH2+sWO1cqPFMKO3Gh/gTDlbozVSW5SrWs
-         B6eQ==
-X-Gm-Message-State: AOJu0Ywt8k00qCzY3qxiYAsAwVrQL3hQsQyHPeqS7Jjz3zQUuKCjXl5n
-	bbdwgjDntT88+OEhdqYEIJE=
-X-Google-Smtp-Source: AGHT+IHeR2KoMp2csOplwLZQeHOaF3yN1rH3e6Rhb3xbBEnPD2hZ8nqLPPqguA64P4E77fLaMA9gFQ==
-X-Received: by 2002:a05:6a20:8407:b0:18f:97c:8a2d with SMTP id c7-20020a056a20840700b0018f097c8a2dmr2161275pzd.88.1703288642952;
-        Fri, 22 Dec 2023 15:44:02 -0800 (PST)
-Received: from xavier.lan ([2607:fa18:92fe:b835:c8f0:af87:712f:cf12])
-        by smtp.gmail.com with ESMTPSA id a21-20020a62e215000000b006d98222b74esm2326427pfi.46.2023.12.22.15.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 15:44:02 -0800 (PST)
-From: Alex Henrie <alexhenrie24@gmail.com>
-To: dan@danm.net,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	bagasdotme@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Cc: Alex Henrie <alexhenrie24@gmail.com>
-Subject: [PATCH net] net: ipv6/addrconf: clamp temporary address's preferred lifetime to public address's
-Date: Fri, 22 Dec 2023 16:42:28 -0700
-Message-ID: <20231222234237.44823-2-alexhenrie24@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231222234237.44823-1-alexhenrie24@gmail.com>
-References: <20231221231115.12402-1-dan@danm.net>
- <20231222234237.44823-1-alexhenrie24@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85308BE5
+	for <regressions@lists.linux.dev>; Sat, 23 Dec 2023 08:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rGxCO-0005iw-T1; Sat, 23 Dec 2023 09:17:32 +0100
+Message-ID: <8ca88473-0b94-4bce-a264-87afd9517439@leemhuis.info>
+Date: Sat, 23 Dec 2023 09:17:44 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Apparmor move_mount mediation breaks mount tool in containers
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: regressions@lists.linux.dev
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CA+enf=sWQ+-YP+uj9XfN_ykDsK=CYFFa35aPpeuS9B6qyLkjtg@mail.gmail.com>
+ <582eb2e9-ce80-4f96-a4bc-bef1a508e0ab@canonical.com>
+ <CA+enf=u0UmgjKrd98EYkxFu7FYV8dR1SBYJn_1b0Naq=3twbbQ@mail.gmail.com>
+ <a5efccec-9017-44db-924a-3c78e0337b76@leemhuis.info>
+In-Reply-To: <a5efccec-9017-44db-924a-3c78e0337b76@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1703319455;a52c22f0;
+X-HE-SMSGID: 1rGxCO-0005iw-T1
 
-Fixes: 629df6701c8a ("net: ipv6/addrconf: clamp preferred_lft to the minimum required")
-Reported-by: Dan Moulding <dan@danm.net>
-Closes: https://lore.kernel.org/netdev/20231221231115.12402-1-dan@danm.net/
-Signed-off-by: Alex Henrie <alexhenrie24@gmail.com>
----
- net/ipv6/addrconf.c | 36 ++++++++++++++++++++++++++----------
- 1 file changed, 26 insertions(+), 10 deletions(-)
+On 05.12.23 13:24, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> [TLDR: This mail in primarily relevant for Linux kernel regression
+> tracking. See link in footer if these mails annoy you.]
+> 
+> Below issue is already discussed, but to ensure it does not fall through
+> the cracks let me add this to the tracking:
+> 
+> #regzbot ^introduced 157a3537d6bc28ceb9a11fc8cb67f2152d
+> #regzbot title apparmor: move_mount mediation breaks mount tool in
+> containers
+> #regzbot ignore-activity
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 2692a7b24c40..37141d3417fe 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -1337,7 +1337,7 @@ static int ipv6_create_tempaddr(struct inet6_ifaddr *ifp, bool block)
- 	unsigned long tmp_tstamp, age;
- 	unsigned long regen_advance;
- 	unsigned long now = jiffies;
--	s32 cnf_temp_preferred_lft;
-+	s32 cnf_temp_preferred_lft, if_public_preferred_lft;
- 	struct inet6_ifaddr *ift;
- 	struct ifa6_config cfg;
- 	long max_desync_factor;
-@@ -1394,11 +1394,13 @@ static int ipv6_create_tempaddr(struct inet6_ifaddr *ifp, bool block)
- 		}
- 	}
- 
-+	if_public_preferred_lft = ifp->prefered_lft;
-+
- 	memset(&cfg, 0, sizeof(cfg));
- 	cfg.valid_lft = min_t(__u32, ifp->valid_lft,
- 			      idev->cnf.temp_valid_lft + age);
- 	cfg.preferred_lft = cnf_temp_preferred_lft + age - idev->desync_factor;
--	cfg.preferred_lft = min_t(__u32, ifp->prefered_lft, cfg.preferred_lft);
-+	cfg.preferred_lft = min_t(__u32, if_public_preferred_lft, cfg.preferred_lft);
- 	cfg.preferred_lft = min_t(__u32, cfg.valid_lft, cfg.preferred_lft);
- 
- 	cfg.plen = ifp->prefix_len;
-@@ -1414,20 +1416,34 @@ static int ipv6_create_tempaddr(struct inet6_ifaddr *ifp, bool block)
- 	 *     particular, an implementation must not create a temporary address
- 	 *     with a zero Preferred Lifetime.
- 	 *
--	 * Clamp the preferred lifetime to a minimum of regen_advance, unless
--	 * that would exceed valid_lft.
-+	 *     ...
-+	 *
-+	 *     When creating a temporary address, the lifetime values MUST be
-+	 *     derived from the corresponding prefix as follows:
-+	 *
-+	 *     ...
-+	 *
-+	 *     *  Its Preferred Lifetime is the lower of the Preferred Lifetime
-+	 *        of the public address or TEMP_PREFERRED_LIFETIME -
-+	 *        DESYNC_FACTOR.
-+	 *
-+	 * To comply with the RFC's requirements, clamp the preferred lifetime
-+	 * to a minimum of regen_advance, unless that would exceed valid_lft or
-+	 * ifp->prefered_lft.
- 	 *
- 	 * Use age calculation as in addrconf_verify to avoid unnecessary
- 	 * temporary addresses being generated.
- 	 */
- 	age = (now - tmp_tstamp + ADDRCONF_TIMER_FUZZ_MINUS) / HZ;
--	if (cfg.preferred_lft <= regen_advance + age)
-+	if (cfg.preferred_lft <= regen_advance + age) {
- 		cfg.preferred_lft = regen_advance + age + 1;
--	if (cfg.preferred_lft > cfg.valid_lft) {
--		in6_ifa_put(ifp);
--		in6_dev_put(idev);
--		ret = -1;
--		goto out;
-+		if (cfg.preferred_lft > cfg.valid_lft ||
-+		    cfg.preferred_lft > if_public_preferred_lft) {
-+			in6_ifa_put(ifp);
-+			in6_dev_put(idev);
-+			ret = -1;
-+			goto out;
-+		}
- 	}
- 
- 	cfg.ifa_flags = IFA_F_TEMPORARY;
--- 
-2.43.0
+FWIW, I pointed Linus to this thread in two regression reports and he
+didn't react publicly. So I for now assume things are fine from his
+point of view:
 
+#regzbot resolve: looks like things are fine for Linus as they are
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+> On 04.12.23 02:34, Stéphane Graber wrote:
+>> On Sun, Dec 3, 2023 at 8:21 PM John Johansen
+>> <john.johansen@canonical.com> wrote:
+>>>
+>>> On 12/2/23 17:20, Stéphane Graber wrote:
+>>>> Hey John,
+>>>>
+>>>> Upstream commit 157a3537d6bc28ceb9a11fc8cb67f2152d860146 which just
+>>>> landed in 6.6.3 stable as 96af45154a0be30485ad07f70f852b1456cb13d7 is
+>>>> blocking new mounts for all LXC, LXD and Incus users (at least) on
+>>>> distributions using the newer version of util-linux.
+>>>>
+>>>> That's because for a simple mount like "mount -t tmpfs tmpfs /tmp",
+>>>> the new mount command now performs:
+>>>> ```
+>>>> fsconfig(3, FSCONFIG_SET_STRING, "source", "tmpfs", 0) = 0
+>>>> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+>>>> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 4
+>>>> statx(4, "", AT_STATX_SYNC_AS_STAT|AT_EMPTY_PATH, STATX_MNT_ID,
+>>>> {stx_mask=STATX_BASIC_STATS|STATX_MNT_ID,
+>>>> stx_attributes=STATX_ATTR_MOUNT_ROOT, stx_mode=S_IFDIR|S_ISVTX|0777,
+>>>> stx_size=40, ...}) = 0
+>>>> move_mount(4, "", AT_FDCWD, "/tmp", MOVE_MOUNT_F_EMPTY_PATH) = 0
+>>>> ```
+>>>>
+>>>> That last call to "move_mount" is incorrectly interpreted by AppArmor
+>>>> as an attempt to move-mount "/" to "/mnt" rather than as a new mount
+>>>> being created, this therefore results in:
+>>>> ```
+>>>> Dec 03 01:05:03 kernel-test kernel: audit: type=1400
+>>>> audit(1701565503.599:34): apparmor="DENIED" operation="mount"
+>>>> class="mount" info="failed perms check" error=-13
+>>>> profile="incus-a_</var/lib/incus>" name="/tmp/" pid=2190 comm="mount"
+>>>> srcname="/" flags="rw, move"
+>>>> ```
+>>>>
+>>>> Note that the flags here show "move", the fstype isn't even set and
+>>>> the source path at srcname incorrectly shows "/".
+>>>>
+>>>> This operation therefore trips any container manager which has an
+>>>> apparmor security policy preventing arbitrary move-mount (as those
+>>>> could be used to bypass other apparmor path based policies).
+>>>>
+>>>>
+>>>> The way I see it, the current mediation support effectively breaks any
+>>>> attempt at mediating mounts in a useful way in apparmor as it's now
+>>>> impossible to mediate new mounts based on their fstype or even
+>>>> distinguish them from a move-mount operation.
+>>>>
+>>> Indeed it is a far from good solution. It is a stop gap.
+>>>>
+>>>> I don't know if this warrants pulling the mediation patch out of
+>>>> stable (and out of linus' tree), obviously doing that would
+>>>> reintroduce that hole in mount coverage, but at the same time, the
+>>>> current coverage is broken enough that our only alternative is to
+>>>> effectively allow all mounts, making the current mediation useless.
+>>>
+>>> pulling it effectively means ALL applications by-pass mediation, the
+>>> alternative is to block all applications from using the move_mount
+>>> system call as part of mediation. Which might have been acceptable
+>>> as a stop gap when the syscall first landed but not now.
+>>
+>> Pulling it from the stable branch may still make sense, you now have
+>> folks who are updating to get actual bugfixes and end up with broken
+>> containers, that doesn't exactly seem like a good outcome...
+>>
+>>> The situation can be broken down like this
+>>> unconfined applications have no restrictions, this doesn't affect
+>>> hem.
+>>>
+>>> confined applications using the old mount interface continue to
+>>> work as expected.
+>>>
+>>> confined applications using the new mount interface now are blocked
+>>> unless there is, admittedly, a very broad mount rule granted. This
+>>> is however better than the old situation in which confined
+>>> applications where not mediated at all.
+>>
+>> It depends from your point of view. If you are using apparmor around a
+>> single application and have tailored rules for exactly what it is
+>> doing, then yes, I agree.
+>> But for all cases where apparmor is used as a safety net to block
+>> potentially dangerous/problematic actions, this is causing the kind of
+>> breakage which will cause people to just plain turn off apparmor.
+>>
+>>> The regression is in the policy, where an application like LXD/Incus
+>>> are specify mount rules and loading policy based on it. Those
+>>> restrictions continue to work on the old mount interface, they
+>>> however do not work as one would expect when the new mount interface
+>>> is used. To allow applications to use the new mount interface
+>>> a broad mount rule is needed, which basically makes the other
+>>> mount restrictions useless.
+>>>
+>>> This situation is however still better than without the patch
+>>> because, applications trying to use the new mount interface
+>>> were not restricted at all. The only regression is in mediation
+>>> of applications that are using the old mount interface. But
+>>> again those application, without the patch, can just use the
+>>> new interface and by-pass the restrictions from those rules. In
+>>> this case the broad rule is not good, but better than the by-pass.
+>>>
+>>> I am working on a patch that will improve the situation, over the
+>>> current patch using the existing move_mount hook. I wanted to
+>>> be able to get more testing in place, before we did more, and
+>>> just didn't have the time.
+>>
+>> So just to understand, this change went upstream while it was known
+>> that effectively no sane mount policy would work with it?
+>>
+>> That seems very odd, at that point, why not instead upstream a patch
+>> that disables the new mount API when apparmor is in use with mount
+>> rules?
+>> That feels like it would have had the same theoretical benefits
+>> without the breakage that this change caused.
+>>
+>>> But the reality is, apparmor won't be able to achieve equivalent
+>>> mediation without new hooks or at least more mount context passed
+>>> into the existing hook. That to is being looked at but won't be
+>>> is even further out.
+>>
+>> That doesn't sound encouraging as far as getting a suitable fix to our users...
+>>
+>>
+>> Is there even a way in apparmor policies to cleanly prevent the use of
+>> the new mount API (return ENOSYS back to userspace)?
+>> We can obviously do this through a separate seccomp filter, but not
+>> everyone is using seccomp...
+>>
+>> Stéphane
+>>
+>>
