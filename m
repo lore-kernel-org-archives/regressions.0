@@ -1,87 +1,196 @@
-Received: from mr85p00im-ztdg06021201.me.com (mr85p00im-ztdg06021201.me.com [17.58.23.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAC812B69
-	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 16:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB40812B61
+	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 17:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="UeGlzbGQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1703867622; bh=mdHoqF4DBozjc5AZdCsy35qAGohL7+5V9GIyKGF0W98=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=UeGlzbGQ9DI+Z0AI49toYh8BED1yiu6kUd6XzJPfiynDICAgvJY1c65EJ9GhETVxx
-	 VXftzlAS/g3gz038LMlo/7PQhIiURZ0P07kLKCSIX/iWuxtJqNNuLoDFKd5KUr3R3c
-	 wrPQy7V/8K+3G1OcoRWmPoDNLHcOn9rr3XKWcLdYH1JNJiL71d3o2K21h5AIc2ZgWk
-	 DYr7oLAs4m9Jkqzch6NkEEibCD7tag2xrdBTw4zRHTovorWYYlHoDCevD1UOdvFUD9
-	 6Q7sadSRKZm6qJLswMQ2pXmci78/w/D/3Cs9yvYftj8qX9s7Pc2VnfWJpc6OugRlak
-	 afms62LOfOYSg==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-ztdg06021201.me.com (Postfix) with ESMTPSA id 146253201A3;
-	Fri, 29 Dec 2023 16:33:40 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: alexhenrie24@gmail.com
-Cc: bagasdotme@gmail.com,
-	dan@danm.net,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S/eGzVmA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rD9XuYYr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S/eGzVmA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rD9XuYYr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B323821CF2;
+	Fri, 29 Dec 2023 17:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1703869904; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
+	b=S/eGzVmAA6Ap3PuXn45nqNlTdrP2TIxrszu9GDoIwfM/hIItuegORKSbqkl4g7x9vrZyWg
+	6vojizgLs7Ep0wNvKj6ITcUGUsGovOJGRM+zd3Jlw82s4BlM8BO5vwnJZbvpFYvPFtS2+6
+	YX6Xns0fJC3ftU54pV11SuW8bM5UZls=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1703869904;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
+	b=rD9XuYYrGWY+QjCpAVprJTrwz2N7yEqzQxaPnNIWB/zCeDtfIY7h13wWZsT+SjIdzu4hQ2
+	meSBlXwAe3zLE+CQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1703869904; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
+	b=S/eGzVmAA6Ap3PuXn45nqNlTdrP2TIxrszu9GDoIwfM/hIItuegORKSbqkl4g7x9vrZyWg
+	6vojizgLs7Ep0wNvKj6ITcUGUsGovOJGRM+zd3Jlw82s4BlM8BO5vwnJZbvpFYvPFtS2+6
+	YX6Xns0fJC3ftU54pV11SuW8bM5UZls=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1703869904;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
+	b=rD9XuYYrGWY+QjCpAVprJTrwz2N7yEqzQxaPnNIWB/zCeDtfIY7h13wWZsT+SjIdzu4hQ2
+	meSBlXwAe3zLE+CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 42738133E5;
+	Fri, 29 Dec 2023 17:11:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MIFiDtD9jmVDFwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 29 Dec 2023 17:11:44 +0000
+Date: Fri, 29 Dec 2023 18:11:43 +0100
+Message-ID: <874jg1x7ao.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: peter.ujfalusi@linux.intel.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
 	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] net/ipv6/addrconf: Temporary addresses with short lifetimes generating when they shouldn't, causing applications to fail
-Date: Fri, 29 Dec 2023 09:33:39 -0700
-Message-ID: <20231229163339.2716-1-dan@danm.net>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
-References: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
+Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
+In-Reply-To: <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
+References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
+	<87sf3lxiet.wl-tiwai@suse.de>
+	<ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: oFRRsbiheUkH9f2_QvM7LSR0PZXkau7h
-X-Proofpoint-ORIG-GUID: oFRRsbiheUkH9f2_QvM7LSR0PZXkau7h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-29_06,2023-12-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1030 mlxlogscore=696
- spamscore=0 phishscore=0 adultscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2312290132
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,kernel.org,perex.cz,suse.com,alsa-project.org,vger.kernel.org,lists.linux.dev];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Score: -2.10
+X-Spam-Flag: NO
 
-I think a maintainer will probably need to make a call here and decide
-how to proceed.
+On Fri, 29 Dec 2023 16:24:18 +0100,
+Dominik Brodowski wrote:
+> 
+> Hi Takashi,
+> 
+> many thanks for your response. Your patch helps half-way: the oops goes
+> away, but so does the sound... With your patch, the decisive lines in dmesg
+> are:
+> 
+> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> 	platform sof_sdw: deferred probe pending
+> 
+> With a revert of the a0575b4add21, it is:
+> 
+> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
+> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
+> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
+> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
+> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
+> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
+> 
+> Maybe this helps a bit further?
 
-> TEMP_PREFERRED_LIFETIME is an administratively set variable: The user
-> can change it to whatever they want whenever they want, and the
-> operating system can adjust it automatically too.
+Thanks for quick testing.
+It shows at least that my guess wasn't wrong.
 
-Agreed. And the behavior it seems you really want is to prevent the
-user from administratively setting it to a value that is lower than
-REGEN_ADVANCE, so that it won't stop generating new temporary
-addresses altogether.
+The problem could be the initialization order in the caller side.
+Can the patch below work instead?
 
-But preventing the user from configuring it to a value that is too low
-is different from generating new temporary addresses with preferred
-lifetimes that are greater than the currently configured value of
-TEMP_PREFERRED_LIFETIME. I still believe it would be better, and would
-be in conformance with the RFC, to simply not allow the user to
-configure a too-short TEMP_PREFERRED_LIFETIME instead of tinkering
-with the lifetimes of generated temporary addresses.
 
-> It's fine to revert the commit for version 6.7 (after all, I think
-> everyone wants a break for the holidays). Hopefully by version 6.8 we
-> can agree on a way to support users who want to randomize their IPv6
-> address as frequently as the network allows.
+Takashi
 
-FWIW, I think the desired effect you are seeking makes sense and is
-the right thing to do. I'm just not convinced this is the correct way
-to do it. But I'm not a maintainer and also not an expert in IPv6, so
-I'm definitely not the right person to make that call.
-
--- Dan
+-- 8< --
+--- a/sound/soc/sof/intel/hda-codec.c
++++ b/sound/soc/sof/intel/hda-codec.c
+@@ -113,7 +113,9 @@ EXPORT_SYMBOL_NS_GPL(hda_codec_jack_check, SND_SOC_SOF_HDA_AUDIO_CODEC);
+ #define is_generic_config(x)	0
+ #endif
+ 
+-static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr, int type)
++static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr,
++					       int type,
++					       struct hdac_hda_priv *hda_priv)
+ {
+ 	struct hda_codec *codec;
+ 	int ret;
+@@ -126,6 +128,10 @@ static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr, i
+ 
+ 	codec->core.type = type;
+ 
++	hda_priv->codec = codec;
++	hda_priv->dev_index = addr;
++	dev_set_drvdata(&codec->core.dev, hda_priv);
++
+ 	ret = snd_hdac_device_register(&codec->core);
+ 	if (ret) {
+ 		dev_err(bus->dev, "failed to register hdac device\n");
+@@ -163,15 +169,12 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
+ 	if (!hda_priv)
+ 		return -ENOMEM;
+ 
+-	codec = hda_codec_device_init(&hbus->core, address, HDA_DEV_LEGACY);
++	codec = hda_codec_device_init(&hbus->core, address, HDA_DEV_LEGACY,
++				      hda_priv);
+ 	ret = PTR_ERR_OR_ZERO(codec);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	hda_priv->codec = codec;
+-	hda_priv->dev_index = address;
+-	dev_set_drvdata(&codec->core.dev, hda_priv);
+-
+ 	if ((resp & 0xFFFF0000) == IDISP_VID_INTEL) {
+ 		if (!hbus->core.audio_component) {
+ 			dev_dbg(sdev->dev,
