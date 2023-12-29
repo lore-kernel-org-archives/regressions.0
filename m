@@ -1,188 +1,87 @@
-Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
+Received: from mr85p00im-ztdg06021201.me.com (mr85p00im-ztdg06021201.me.com [17.58.23.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2616125A4
-	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 15:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
-	by isilmar-4.linta.de (Postfix) with ESMTPSA id 987D82002B9;
-	Fri, 29 Dec 2023 15:24:46 +0000 (UTC)
-Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
-	id 0AAFAA0083; Fri, 29 Dec 2023 16:24:19 +0100 (CET)
-Date: Fri, 29 Dec 2023 16:24:18 +0100
-From: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: peter.ujfalusi@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org,
-	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
-	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-Message-ID: <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
- <87sf3lxiet.wl-tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAC812B69
+	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 16:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="UeGlzbGQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
+	t=1703867622; bh=mdHoqF4DBozjc5AZdCsy35qAGohL7+5V9GIyKGF0W98=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=UeGlzbGQ9DI+Z0AI49toYh8BED1yiu6kUd6XzJPfiynDICAgvJY1c65EJ9GhETVxx
+	 VXftzlAS/g3gz038LMlo/7PQhIiURZ0P07kLKCSIX/iWuxtJqNNuLoDFKd5KUr3R3c
+	 wrPQy7V/8K+3G1OcoRWmPoDNLHcOn9rr3XKWcLdYH1JNJiL71d3o2K21h5AIc2ZgWk
+	 DYr7oLAs4m9Jkqzch6NkEEibCD7tag2xrdBTw4zRHTovorWYYlHoDCevD1UOdvFUD9
+	 6Q7sadSRKZm6qJLswMQ2pXmci78/w/D/3Cs9yvYftj8qX9s7Pc2VnfWJpc6OugRlak
+	 afms62LOfOYSg==
+Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-ztdg06021201.me.com (Postfix) with ESMTPSA id 146253201A3;
+	Fri, 29 Dec 2023 16:33:40 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: alexhenrie24@gmail.com
+Cc: bagasdotme@gmail.com,
+	dan@danm.net,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] net/ipv6/addrconf: Temporary addresses with short lifetimes generating when they shouldn't, causing applications to fail
+Date: Fri, 29 Dec 2023 09:33:39 -0700
+Message-ID: <20231229163339.2716-1-dan@danm.net>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
+References: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sf3lxiet.wl-tiwai@suse.de>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: oFRRsbiheUkH9f2_QvM7LSR0PZXkau7h
+X-Proofpoint-ORIG-GUID: oFRRsbiheUkH9f2_QvM7LSR0PZXkau7h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-29_06,2023-12-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1030 mlxlogscore=696
+ spamscore=0 phishscore=0 adultscore=0 mlxscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2312290132
 
-Hi Takashi,
+I think a maintainer will probably need to make a call here and decide
+how to proceed.
 
-many thanks for your response. Your patch helps half-way: the oops goes
-away, but so does the sound... With your patch, the decisive lines in dmesg
-are:
+> TEMP_PREFERRED_LIFETIME is an administratively set variable: The user
+> can change it to whatever they want whenever they want, and the
+> operating system can adjust it automatically too.
 
-	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-	sof_sdw sof_sdw: snd_soc_register_card failed -517
-	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-	sof_sdw sof_sdw: snd_soc_register_card failed -517
-	platform sof_sdw: deferred probe pending
+Agreed. And the behavior it seems you really want is to prevent the
+user from administratively setting it to a value that is lower than
+REGEN_ADVANCE, so that it won't stop generating new temporary
+addresses altogether.
 
-With a revert of the a0575b4add21, it is:
+But preventing the user from configuring it to a value that is too low
+is different from generating new temporary addresses with preferred
+lifetimes that are greater than the currently configured value of
+TEMP_PREFERRED_LIFETIME. I still believe it would be better, and would
+be in conformance with the RFC, to simply not allow the user to
+configure a too-short TEMP_PREFERRED_LIFETIME instead of tinkering
+with the lifetimes of generated temporary addresses.
 
-	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
-	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
-	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
-	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
-	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
-	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
+> It's fine to revert the commit for version 6.7 (after all, I think
+> everyone wants a break for the holidays). Hopefully by version 6.8 we
+> can agree on a way to support users who want to randomize their IPv6
+> address as frequently as the network allows.
 
-Maybe this helps a bit further?
+FWIW, I think the desired effect you are seeking makes sense and is
+the right thing to do. I'm just not convinced this is the correct way
+to do it. But I'm not a maintainer and also not an expert in IPv6, so
+I'm definitely not the right person to make that call.
 
-Best,
-	Dominik
-
-Am Fri, Dec 29, 2023 at 02:11:38PM +0100 schrieb Takashi Iwai:
-> On Wed, 27 Dec 2023 08:37:07 +0100,
-> Dominik Brodowski wrote:
-> > 
-> > Hi,
-> > 
-> > unfortunately, the latest 6.7.0-rc7 and the two previous rc kernels cause an
-> > oops in hdac_hda_dev_probe(); sound and resume-from-suspend subsequently do
-> > not work:
-> > 
-> > 
-> > BUG: kernel NULL pointer dereference, address: 0000000000000078
-> > #PF: supervisor read access in kernel mode
-> > #PF: error_code(0x0000) - not-present page
-> > PGD 0
-> > P4D 0
-> > Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.1.3 05/11/2022
-> > Workqueue: events sof_probe_work
-> > 
-> > RIP: 0010:hdac_hda_dev_probe+0x42/0xf0
-> > Code: 48 8b 37 48 8b bb c8 04 00 00 e8 09 9b 0a 00 48 85 c0 48 89 c5 0f 84 a6 00 00 00 48 8b bb c8 04 00 00 48 89 c6 e8 1e 9a 0a 00 <41> 80 7c 24 78 00 75 46 b9 03 00 00 00 48 c7 c2 c0 b2 a1 ac 48 c7
-> > RSP: 0000:ffffc90000207b50 EFLAGS: 00010246
-> > 
-> > RAX: 0000000000000000 RBX: ffff88811495d000 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > RBP: ffff888108691600 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88811400b028
-> > FS:  0000000000000000(0000) GS:ffff88886f500000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000078 CR3: 00000002b7a5a000 CR4: 0000000000f50ef0
-> > PKRU: 55555554
-> > Call Trace:
-> >  <TASK>
-> >  ? __die+0x1e/0x70
-> >  ? page_fault_oops+0x17c/0x4b0
-> >  ? snd_hdac_ext_bus_link_get+0x24/0xc0
-> >  ? exc_page_fault+0x462/0x8e0
-> >  ? asm_exc_page_fault+0x26/0x30
-> >  ? hdac_hda_dev_probe+0x42/0xf0
-> >  really_probe+0x166/0x300
-> >  ? __pfx___device_attach_driver+0x10/0x10
-> >  __driver_probe_device+0x6e/0x120
-> >  driver_probe_device+0x1a/0x90
-> >  __device_attach_driver+0x8e/0xd0
-> >  bus_for_each_drv+0x90/0xf0
-> >  __device_attach+0xac/0x1a0
-> >  bus_probe_device+0x93/0xb0
-> >  device_add+0x669/0x860
-> >  snd_hdac_device_register+0x10/0x60
-> >  hda_codec_probe_bus+0x189/0x290
-> >  hda_dsp_probe+0x211/0x550
-> >  sof_probe_work+0x2c/0x430
-> >  ? process_one_work+0x19c/0x500
-> >  process_one_work+0x205/0x500
-> >  worker_thread+0x1dc/0x3e0
-> > 
-> >  ? __pfx_worker_thread+0x10/0x10
-> >  kthread+0xea/0x120
-> >  ? __pfx_kthread+0x10/0x10
-> >  ret_from_fork+0x2c/0x50
-> >  ? __pfx_kthread+0x10/0x10
-> >  ret_from_fork_asm+0x1b/0x30
-> >  </TASK>
-> > Modules linked in:
-> > CR2: 0000000000000078
-> > ---[ end trace 0000000000000000 ]---
-> > RIP: 0010:hdac_hda_dev_probe+0x42/0xf0
-> > Code: 48 8b 37 48 8b bb c8 04 00 00 e8 09 9b 0a 00 48 85 c0 48 89 c5 0f 84 a6 00 00 00 48 8b bb c8 04 00 00 48 89 c6 e8 1e 9a 0a 00 <41> 80 7c 24 78 00 75 46 b9 03 00 00 00 48 c7 c2 c0 b2 a1 ac 48 c7
-> > RSP: 0000:ffffc90000207b50 EFLAGS: 00010246
-> > RAX: 0000000000000000 RBX: ffff88811495d000 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> > RBP: ffff888108691600 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > R13: 0000000000000000 R14: 0000000000000000 R15: ffff88811400b028
-> > FS:  0000000000000000(0000) GS:ffff88886f500000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000078 CR3: 00000002b7a5a000 CR4: 0000000000f50ef0
-> > PKRU: 55555554
-> > note: kworker/2:0[24] exited with irqs disabled
-> > 
-> > 
-> > I was able to bisect the issue to commit a0575b4add21 ("ASoC: hdac_hda:
-> > Conditionally register dais for HDMI and Analog"). Reverting that patch on
-> > top of mainline fixes it.
-> 
-> As I've been (and still am) off, I had too little time for taking a
-> deeper look now, unfortunately.  But my wild guess is that it's a NULL
-> dereference of the hdac_hda_priv referred via hdac dev.  If it's
-> correct, a oneliner like below should work around the crash.
-> Could you give it a try?
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> -- 8< --
-> --- a/sound/soc/codecs/hdac_hda.c
-> +++ b/sound/soc/codecs/hdac_hda.c
-> @@ -630,7 +630,7 @@ static int hdac_hda_dev_probe(struct hdac_device *hdev)
->  	snd_hdac_ext_bus_link_get(hdev->bus, hlink);
->  
->  	/* ASoC specific initialization */
-> -	if (hda_pvt->need_display_power)
-> +	if (hda_pvt && hda_pvt->need_display_power)
->  		ret = devm_snd_soc_register_component(&hdev->dev,
->  						&hdac_hda_hdmi_codec, hdac_hda_hdmi_dais,
->  						ARRAY_SIZE(hdac_hda_hdmi_dais));
-> 
+-- Dan
