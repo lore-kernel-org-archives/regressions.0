@@ -1,196 +1,146 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB40812B61
-	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 17:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3613AE0
+	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 20:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S/eGzVmA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rD9XuYYr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="S/eGzVmA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rD9XuYYr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B323821CF2;
-	Fri, 29 Dec 2023 17:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703869904; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
-	b=S/eGzVmAA6Ap3PuXn45nqNlTdrP2TIxrszu9GDoIwfM/hIItuegORKSbqkl4g7x9vrZyWg
-	6vojizgLs7Ep0wNvKj6ITcUGUsGovOJGRM+zd3Jlw82s4BlM8BO5vwnJZbvpFYvPFtS2+6
-	YX6Xns0fJC3ftU54pV11SuW8bM5UZls=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703869904;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
-	b=rD9XuYYrGWY+QjCpAVprJTrwz2N7yEqzQxaPnNIWB/zCeDtfIY7h13wWZsT+SjIdzu4hQ2
-	meSBlXwAe3zLE+CQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703869904; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
-	b=S/eGzVmAA6Ap3PuXn45nqNlTdrP2TIxrszu9GDoIwfM/hIItuegORKSbqkl4g7x9vrZyWg
-	6vojizgLs7Ep0wNvKj6ITcUGUsGovOJGRM+zd3Jlw82s4BlM8BO5vwnJZbvpFYvPFtS2+6
-	YX6Xns0fJC3ftU54pV11SuW8bM5UZls=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703869904;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tZehKtOidM/ksrl2T81jqfsSZp7GZn6XIl7nNRgrGng=;
-	b=rD9XuYYrGWY+QjCpAVprJTrwz2N7yEqzQxaPnNIWB/zCeDtfIY7h13wWZsT+SjIdzu4hQ2
-	meSBlXwAe3zLE+CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 42738133E5;
-	Fri, 29 Dec 2023 17:11:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MIFiDtD9jmVDFwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 29 Dec 2023 17:11:44 +0000
-Date: Fri, 29 Dec 2023 18:11:43 +0100
-Message-ID: <874jg1x7ao.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: peter.ujfalusi@linux.intel.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-In-Reply-To: <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
-	<87sf3lxiet.wl-tiwai@suse.de>
-	<ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxYk4StE"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40b5155e154so93766115e9.3
+        for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 12:13:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703880799; x=1704485599; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BuoxDF1r2nXQAbQcgBHqu0ZaVi4hq5gTpR1NRgy3bRk=;
+        b=fxYk4StEJ197MriKM9BRUeHMkpwqED2PuBB6kXQ/oxWp/6XacneiohsshmRPv+Uh6P
+         v/3ymG7ZYguTmsIJDUwSkl3RGEMxZ1gLJ4ZyFXkgbziuUQfejy4T6XBYhYeMV30Qs4Dl
+         RGz6clkTzzaYZQTFCd26rtcZJwdlDsJUH8GQxMKDiuiNEMiqiIfNIuLojIxvddoxdNGc
+         dM2XfUM2rLZ/Bt0/oUgGKuAitRXQX+WC1Nfa+v48M51s/8hz2xK8rC4WrzGcw4O2z8Sr
+         MYIj13Ekv+mYp/nhAoN1/KJ7NJ8whxUEJdPzjGYn2zyAzfP3NSLxYzXfFvtuMs8PFK+T
+         Kiyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703880799; x=1704485599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BuoxDF1r2nXQAbQcgBHqu0ZaVi4hq5gTpR1NRgy3bRk=;
+        b=hmghlsEBh5Wc5Gri9U+qNKg0/y+JFQM+2eVT9gf4WdnGJCW6kfSyvY1jWS88BzHRXZ
+         3Tx3Bh2yt1FEmbPaYnvViIecHtRr804um1F7iwb7YexIytybsPIa373AhzcpMLYIlZa3
+         w9Z/UtdgBZnlgVS6czdtqwvBZVjg+zewSgBFr3lZgUN1TkL5s0fbJxdzqZBX9+qqZm6+
+         DegQkmdiEleU2HX1cJVR9Gyvwo5CskTy5ckUfUgvax2/L4JH9mC/GHuIfLfbr6I44zVP
+         vAcxLZb+64v6CFr8nzC3zh7Mea6FkpCTII4Ooetm+dxz1gvEVAFc6K9uimVKMq17envK
+         3X/g==
+X-Gm-Message-State: AOJu0YwO1RYqwuNeLriIIz+yO40/bVkfk7OQ+UeI8TxepU+pAg4pU3S5
+	MIfjVMTeIhbd9WXGDMDUcAc=
+X-Google-Smtp-Source: AGHT+IGhZT3SpzaCP8PrEkt+zUiBWyWsLmIoMRdnakQbSPt+aGbmY3zJo+NRfT4mf+9pOFet90mBlQ==
+X-Received: by 2002:a05:600c:1f12:b0:40d:7fd2:3bed with SMTP id bd18-20020a05600c1f1200b0040d7fd23bedmr346352wmb.104.1703880799433;
+        Fri, 29 Dec 2023 12:13:19 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id k9-20020a05600c1c8900b0040d79907acasm2947493wms.26.2023.12.29.12.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Dec 2023 12:13:18 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 19308BE2DE0; Fri, 29 Dec 2023 21:13:18 +0100 (CET)
+Date: Fri, 29 Dec 2023 21:13:18 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	Sagar Biradar <sagar.biradar@microchip.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Gilbert Wu <gilbert.wu@microchip.com>,
+	John Garry <john.g.garry@oracle.com>
+Subject: Re: scsi regression that after months is still not addressed and now
+ bothering 6.1.y users, too
+Message-ID: <ZY8oXge0QKYUkO1b@eldamar.lan>
+References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
+ <2023112456-disinfect-undoing-b5ef@gregkh>
+ <34c5b291-b69e-4592-bc9f-fc1b2ef5c5d7@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,kernel.org,perex.cz,suse.com,alsa-project.org,vger.kernel.org,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Score: -2.10
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34c5b291-b69e-4592-bc9f-fc1b2ef5c5d7@leemhuis.info>
 
-On Fri, 29 Dec 2023 16:24:18 +0100,
-Dominik Brodowski wrote:
-> 
-> Hi Takashi,
-> 
-> many thanks for your response. Your patch helps half-way: the oops goes
-> away, but so does the sound... With your patch, the decisive lines in dmesg
-> are:
-> 
-> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> 	platform sof_sdw: deferred probe pending
-> 
-> With a revert of the a0575b4add21, it is:
-> 
-> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
-> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
-> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
-> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
-> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
-> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
-> 
-> Maybe this helps a bit further?
+Hi all,
 
-Thanks for quick testing.
-It shows at least that my guess wasn't wrong.
+On Sat, Nov 25, 2023 at 08:10:35AM +0100, Thorsten Leemhuis wrote:
+> On 24.11.23 17:25, Greg KH wrote:
+> > On Tue, Nov 21, 2023 at 10:50:57AM +0100, Thorsten Leemhuis wrote:
+> >> * @SCSI maintainers: could you please look into below please?
+> >>
+> >> * @Stable team: you might want to take a look as well and consider a
+> >> revert in 6.1.y (yes, I know, those are normally avoided, but here it
+> >> might make sense).
+> >>
+> >> Hi everyone!
+> >>
+> >> TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
+> >> hangs for a while) that was reported months ago already but is still not
+> >> fixed. Not only that, it apparently more and more users run into this
+> >> recently, as the culprit was recently integrated into 6.1.y; I wonder if
+> >> it would be best to revert it there, unless a fix for mainline comes
+> >> into reach soon.
+> >>
+> >> Details:
+> >>
+> >> Quite a few machines with Adaptec controllers seems to hang for a few
+> >> tens of seconds to a few minutes before things start to work normally
+> >> again for a while:
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=217599
+> >>
+> >> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
+> >> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
+> >> commit despite a warning of mine to Sasha recently made it into 6.1.53
+> >> -- and that way apparently recently reached more users recently, as
+> >> quite a few joined that ticket.
+> >[...]
+> > I am loath to revert a stable patch that has been there for so long as
+> > any upgrade will just cause the same bug to show back up. Why can't we
+> > just revert it in Linus's tree now and I'll take that revert in the
+> > stable trees as well?
+> 
+> FWIW, I know and in general agree with that strategy, that's why I
+> normally wouldn't have brought a stable-only revert up for
+> consideration. But this issue to me looked somewhat special and urgent
+> for two and a half reasons: (1) that backport apparently made a lot more
+> people suddenly hit the issue (2) there was also this data corruption
+> aspect one of the reporters mentioned (not sure if that is real and/or
+> if this might be just a 6.1.y thing). Furthermore for 6.1.y it was
+> recently confirmed that reverting the change fixes things, while we iirc
+> had no such confirmation for recent mainline kernels at that point. So
+> it looked like it would take a while to get this sorted out in mainline.
+> But it seems we finally might get closer to that now, so yeah, maybe
+> it's not worth a stable revert.
 
-The problem could be the initialization order in the caller side.
-Can the patch below work instead?
+If I'm not completely wrong, finally indeed the commit has been
+reverted in mainline, with c5becf57dd56 ("Revert "scsi: aacraid: Reply
+queue mapping to CPUs based on IRQ affinity"") .
 
+This is what was mentioned here:
+https://bugzilla.kernel.org/show_bug.cgi?id=217599#c52
 
-Takashi
+So should/can it be reverted it now as well on the 6.1.y stable series
+(and the others up as needed?)
 
--- 8< --
---- a/sound/soc/sof/intel/hda-codec.c
-+++ b/sound/soc/sof/intel/hda-codec.c
-@@ -113,7 +113,9 @@ EXPORT_SYMBOL_NS_GPL(hda_codec_jack_check, SND_SOC_SOF_HDA_AUDIO_CODEC);
- #define is_generic_config(x)	0
- #endif
- 
--static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr, int type)
-+static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr,
-+					       int type,
-+					       struct hdac_hda_priv *hda_priv)
- {
- 	struct hda_codec *codec;
- 	int ret;
-@@ -126,6 +128,10 @@ static struct hda_codec *hda_codec_device_init(struct hdac_bus *bus, int addr, i
- 
- 	codec->core.type = type;
- 
-+	hda_priv->codec = codec;
-+	hda_priv->dev_index = addr;
-+	dev_set_drvdata(&codec->core.dev, hda_priv);
-+
- 	ret = snd_hdac_device_register(&codec->core);
- 	if (ret) {
- 		dev_err(bus->dev, "failed to register hdac device\n");
-@@ -163,15 +169,12 @@ static int hda_codec_probe(struct snd_sof_dev *sdev, int address)
- 	if (!hda_priv)
- 		return -ENOMEM;
- 
--	codec = hda_codec_device_init(&hbus->core, address, HDA_DEV_LEGACY);
-+	codec = hda_codec_device_init(&hbus->core, address, HDA_DEV_LEGACY,
-+				      hda_priv);
- 	ret = PTR_ERR_OR_ZERO(codec);
- 	if (ret < 0)
- 		return ret;
- 
--	hda_priv->codec = codec;
--	hda_priv->dev_index = address;
--	dev_set_drvdata(&codec->core.dev, hda_priv);
--
- 	if ((resp & 0xFFFF0000) == IDISP_VID_INTEL) {
- 		if (!hbus->core.audio_component) {
- 			dev_dbg(sdev->dev,
+#regzbot link: https://bugs.debian.org/1059624
+#regzbot fixed-by: c5becf57dd56
+
+Thorsten, hope I got the above right.
+
+Regards,
+Salvatore
