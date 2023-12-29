@@ -1,146 +1,77 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3613AE0
-	for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 20:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1314A9E;
+	Fri, 29 Dec 2023 22:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxYk4StE"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40b5155e154so93766115e9.3
-        for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 12:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703880799; x=1704485599; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BuoxDF1r2nXQAbQcgBHqu0ZaVi4hq5gTpR1NRgy3bRk=;
-        b=fxYk4StEJ197MriKM9BRUeHMkpwqED2PuBB6kXQ/oxWp/6XacneiohsshmRPv+Uh6P
-         v/3ymG7ZYguTmsIJDUwSkl3RGEMxZ1gLJ4ZyFXkgbziuUQfejy4T6XBYhYeMV30Qs4Dl
-         RGz6clkTzzaYZQTFCd26rtcZJwdlDsJUH8GQxMKDiuiNEMiqiIfNIuLojIxvddoxdNGc
-         dM2XfUM2rLZ/Bt0/oUgGKuAitRXQX+WC1Nfa+v48M51s/8hz2xK8rC4WrzGcw4O2z8Sr
-         MYIj13Ekv+mYp/nhAoN1/KJ7NJ8whxUEJdPzjGYn2zyAzfP3NSLxYzXfFvtuMs8PFK+T
-         Kiyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703880799; x=1704485599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BuoxDF1r2nXQAbQcgBHqu0ZaVi4hq5gTpR1NRgy3bRk=;
-        b=hmghlsEBh5Wc5Gri9U+qNKg0/y+JFQM+2eVT9gf4WdnGJCW6kfSyvY1jWS88BzHRXZ
-         3Tx3Bh2yt1FEmbPaYnvViIecHtRr804um1F7iwb7YexIytybsPIa373AhzcpMLYIlZa3
-         w9Z/UtdgBZnlgVS6czdtqwvBZVjg+zewSgBFr3lZgUN1TkL5s0fbJxdzqZBX9+qqZm6+
-         DegQkmdiEleU2HX1cJVR9Gyvwo5CskTy5ckUfUgvax2/L4JH9mC/GHuIfLfbr6I44zVP
-         vAcxLZb+64v6CFr8nzC3zh7Mea6FkpCTII4Ooetm+dxz1gvEVAFc6K9uimVKMq17envK
-         3X/g==
-X-Gm-Message-State: AOJu0YwO1RYqwuNeLriIIz+yO40/bVkfk7OQ+UeI8TxepU+pAg4pU3S5
-	MIfjVMTeIhbd9WXGDMDUcAc=
-X-Google-Smtp-Source: AGHT+IGhZT3SpzaCP8PrEkt+zUiBWyWsLmIoMRdnakQbSPt+aGbmY3zJo+NRfT4mf+9pOFet90mBlQ==
-X-Received: by 2002:a05:600c:1f12:b0:40d:7fd2:3bed with SMTP id bd18-20020a05600c1f1200b0040d7fd23bedmr346352wmb.104.1703880799433;
-        Fri, 29 Dec 2023 12:13:19 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id k9-20020a05600c1c8900b0040d79907acasm2947493wms.26.2023.12.29.12.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Dec 2023 12:13:18 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 19308BE2DE0; Fri, 29 Dec 2023 21:13:18 +0100 (CET)
-Date: Fri, 29 Dec 2023 21:13:18 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Sagar Biradar <sagar.biradar@microchip.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Hannes Reinecke <hare@suse.de>, scsi <linux-scsi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Gilbert Wu <gilbert.wu@microchip.com>,
-	John Garry <john.g.garry@oracle.com>
-Subject: Re: scsi regression that after months is still not addressed and now
- bothering 6.1.y users, too
-Message-ID: <ZY8oXge0QKYUkO1b@eldamar.lan>
-References: <c6ff53dc-a001-48ee-8559-b69be8e4db81@leemhuis.info>
- <2023112456-disinfect-undoing-b5ef@gregkh>
- <34c5b291-b69e-4592-bc9f-fc1b2ef5c5d7@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOCJwh5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19148C433C8;
+	Fri, 29 Dec 2023 22:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703890321;
+	bh=jA/D7U42zKQCqXGdQ5da1seauDiv5W9RuorKy8W1/so=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZOCJwh5o6HR+HCr+YuMGg+gS4qa45h71d12lE/zKoOAQN6ani7mwX25H+ngrUhRES
+	 EEja2TCvKHhvrpECJ62Fr7eJhIvord+LB82dP9ECjr6aDl4uRWZuyIVo3GuCpXxc1X
+	 tycmVD6oA3PMMfyRO6LJH4BZ71oybLoq59t432xjie7ZAIZcIZZ5Sc4StPAURDcp2l
+	 E+aty5vedrFBoSHDEes8+YMeX/XTvjouXKTZAjL+s6NKqKx1n/mfjjlba1zApRUItp
+	 xl1RMi/7YBvQOPYUw02tfudL9P1N5tRJH16YBwAOhmqMlTfA/Em943Gl+E3zpCOJzN
+	 KPy1VXnztYhHg==
+Message-ID: <d2f328c6-b5b4-46d0-b087-c70e2460d28a@kernel.org>
+Date: Fri, 29 Dec 2023 15:52:00 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34c5b291-b69e-4592-bc9f-fc1b2ef5c5d7@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] net/ipv6/addrconf: Temporary addresses with short
+ lifetimes generating when they shouldn't, causing applications to fail
+Content-Language: en-US
+To: Dan Moulding <dan@danm.net>, alexhenrie24@gmail.com
+Cc: bagasdotme@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ pabeni@redhat.com, regressions@lists.linux.dev
+References: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
+ <20231229163339.2716-1-dan@danm.net>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20231229163339.2716-1-dan@danm.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi all,
-
-On Sat, Nov 25, 2023 at 08:10:35AM +0100, Thorsten Leemhuis wrote:
-> On 24.11.23 17:25, Greg KH wrote:
-> > On Tue, Nov 21, 2023 at 10:50:57AM +0100, Thorsten Leemhuis wrote:
-> >> * @SCSI maintainers: could you please look into below please?
-> >>
-> >> * @Stable team: you might want to take a look as well and consider a
-> >> revert in 6.1.y (yes, I know, those are normally avoided, but here it
-> >> might make sense).
-> >>
-> >> Hi everyone!
-> >>
-> >> TLDR: I noticed a regression (Adaptec 71605z with aacraid sometimes
-> >> hangs for a while) that was reported months ago already but is still not
-> >> fixed. Not only that, it apparently more and more users run into this
-> >> recently, as the culprit was recently integrated into 6.1.y; I wonder if
-> >> it would be best to revert it there, unless a fix for mainline comes
-> >> into reach soon.
-> >>
-> >> Details:
-> >>
-> >> Quite a few machines with Adaptec controllers seems to hang for a few
-> >> tens of seconds to a few minutes before things start to work normally
-> >> again for a while:
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=217599
-> >>
-> >> That problem is apparently caused by 9dc704dcc09eae ("scsi: aacraid:
-> >> Reply queue mapping to CPUs based on IRQ affinity") [v6.4-rc7]. That
-> >> commit despite a warning of mine to Sasha recently made it into 6.1.53
-> >> -- and that way apparently recently reached more users recently, as
-> >> quite a few joined that ticket.
-> >[...]
-> > I am loath to revert a stable patch that has been there for so long as
-> > any upgrade will just cause the same bug to show back up. Why can't we
-> > just revert it in Linus's tree now and I'll take that revert in the
-> > stable trees as well?
+On 12/29/23 11:33 AM, Dan Moulding wrote:
+> I think a maintainer will probably need to make a call here and decide
+> how to proceed.
 > 
-> FWIW, I know and in general agree with that strategy, that's why I
-> normally wouldn't have brought a stable-only revert up for
-> consideration. But this issue to me looked somewhat special and urgent
-> for two and a half reasons: (1) that backport apparently made a lot more
-> people suddenly hit the issue (2) there was also this data corruption
-> aspect one of the reporters mentioned (not sure if that is real and/or
-> if this might be just a 6.1.y thing). Furthermore for 6.1.y it was
-> recently confirmed that reverting the change fixes things, while we iirc
-> had no such confirmation for recent mainline kernels at that point. So
-> it looked like it would take a while to get this sorted out in mainline.
-> But it seems we finally might get closer to that now, so yeah, maybe
-> it's not worth a stable revert.
+>> TEMP_PREFERRED_LIFETIME is an administratively set variable: The user
+>> can change it to whatever they want whenever they want, and the
+>> operating system can adjust it automatically too.
+> 
+> Agreed. And the behavior it seems you really want is to prevent the
+> user from administratively setting it to a value that is lower than
+> REGEN_ADVANCE, so that it won't stop generating new temporary
+> addresses altogether.
+> 
+> But preventing the user from configuring it to a value that is too low
+> is different from generating new temporary addresses with preferred
+> lifetimes that are greater than the currently configured value of
+> TEMP_PREFERRED_LIFETIME. I still believe it would be better, and would
+> be in conformance with the RFC, to simply not allow the user to
+> configure a too-short TEMP_PREFERRED_LIFETIME instead of tinkering
+> with the lifetimes of generated temporary addresses.
+> 
+>> It's fine to revert the commit for version 6.7 (after all, I think
+>> everyone wants a break for the holidays). Hopefully by version 6.8 we
+>> can agree on a way to support users who want to randomize their IPv6
+>> address as frequently as the network allows.
+> 
+> FWIW, I think the desired effect you are seeking makes sense and is
+> the right thing to do. I'm just not convinced this is the correct way
+> to do it. But I'm not a maintainer and also not an expert in IPv6, so
+> I'm definitely not the right person to make that call.
+> 
 
-If I'm not completely wrong, finally indeed the commit has been
-reverted in mainline, with c5becf57dd56 ("Revert "scsi: aacraid: Reply
-queue mapping to CPUs based on IRQ affinity"") .
+Send a revert before 6.7 is released which will most likely be this
+weekend.
 
-This is what was mentioned here:
-https://bugzilla.kernel.org/show_bug.cgi?id=217599#c52
-
-So should/can it be reverted it now as well on the 6.1.y stable series
-(and the others up as needed?)
-
-#regzbot link: https://bugs.debian.org/1059624
-#regzbot fixed-by: c5becf57dd56
-
-Thorsten, hope I got the above right.
-
-Regards,
-Salvatore
