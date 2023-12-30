@@ -1,98 +1,105 @@
-Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB2B63C4
-	for <regressions@lists.linux.dev>; Sat, 30 Dec 2023 07:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
-	by isilmar-4.linta.de (Postfix) with ESMTPSA id 5CD412002DB;
-	Sat, 30 Dec 2023 07:27:53 +0000 (UTC)
-Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
-	id 1B011A0083; Sat, 30 Dec 2023 08:27:43 +0100 (CET)
-Date: Sat, 30 Dec 2023 08:27:43 +0100
-From: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: peter.ujfalusi@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org,
-	perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
-	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-Message-ID: <ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
- <87sf3lxiet.wl-tiwai@suse.de>
- <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
- <874jg1x7ao.wl-tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F67020EA
+	for <regressions@lists.linux.dev>; Sat, 30 Dec 2023 09:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QIlnA7Mi"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E049D40E01A1;
+	Sat, 30 Dec 2023 09:48:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id SS_dBzpDZhG7; Sat, 30 Dec 2023 09:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1703929725; bh=Fu4L2zCSkbiKR4dJzwtG+70wDGkGO3J3afoXz7NoQGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QIlnA7Mia13VIuONdHSN9CdNMroe4KDWZMTnGwDCaZGZVc3mwQaxoJfEaI0Wr0dKo
+	 fSc6cWypxa/sCEMQuc6UeLepRpAH8lyXC3wL6edPpNcPuQAAgpT+2DjyZ7UJwv6/1u
+	 AMF1KTKAiNPxUbKz/urhk+P2KvIjmNPkM+uelfyXZGFkQ3Qh0YM/dXv6isakjhFqyk
+	 xFSnjaPmOPwCxb4EA6vCKVAY0h0fO7qAcUmMyzn67rL/OrViPW5TUK2CrIAlZX66Fi
+	 vtuViNMpTOdUsiRnIKoTV0hWEx2H2/oXPR2S6XRVDIgiO/5OGNat7EUqFUwWFGshdt
+	 lgTklXrDVq2ILZ3YQ9qfxYVB6oeCGVV8hdmNRtJXzGgkwbg7zbWOSnLVRq1S1TYKoS
+	 ffjAc5OKu0nj9ZGauIaeN9W1san5OfgIioxXNAIIkADrWFdQkhLU8hjyQymigxh9AZ
+	 iZixSKN7qfF2kzdrkQVsmXyjDcMH2pGZy6Z3m4MmqDAYi2XSS8sP3jUKpyvvWo6rFU
+	 mdAGKtUt58xMB7q8TOx9QQkmURoC0/16Bp4m+dFhgLKyBpdQpIwpXQ6FueM11ERpb+
+	 hUCsRnFISlLL9Bl7u2L6UHnk0I0V4YZ6krSJebueaS6SqIk5EuKqbOMM2Ne3unjwZA
+	 hkTCK/1/KKoftbIexc04ooYY=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EB15340E00C9;
+	Sat, 30 Dec 2023 09:48:34 +0000 (UTC)
+Date: Sat, 30 Dec 2023 10:48:28 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ashok Raj <ashok.raj@intel.com>,
+	Song Shuai <songshuaishuai@tinylab.org>,
+	Mike Rapoport <rppt@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	LKML Mailing List <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>,
+	regressions@lists.linux.dev, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [REGRESSION] Platforms supporting SGX fail to kexec due to
+ 96c6b8f212a ("memblock: report failures when memblock_can_resize is not
+ set")
+Message-ID: <20231230094828.GAZY/nbBwBCP58RuxX@fat_crate.local>
+References: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <874jg1x7ao.wl-tiwai@suse.de>
+In-Reply-To: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
 
-Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
-> On Fri, 29 Dec 2023 16:24:18 +0100,
-> Dominik Brodowski wrote:
-> > 
-> > Hi Takashi,
-> > 
-> > many thanks for your response. Your patch helps half-way: the oops goes
-> > away, but so does the sound... With your patch, the decisive lines in dmesg
-> > are:
-> > 
-> > 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> > 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> > 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> > 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> > 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> > 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> > 	platform sof_sdw: deferred probe pending
-> > 
-> > With a revert of the a0575b4add21, it is:
-> > 
-> > 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> > 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> > 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
-> > 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
-> > 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
-> > 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
-> > 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
-> > 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
-> > 
-> > Maybe this helps a bit further?
+On Thu, Dec 28, 2023 at 04:33:49PM -0800, Ashok Raj wrote:
+> Hi 
 > 
-> Thanks for quick testing.
-> It shows at least that my guess wasn't wrong.
+> 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
 > 
-> The problem could be the initialization order in the caller side.
-> Can the patch below work instead?
+> Causes kexec failure. Backing out this change, kexec succeeds. Symptom is
+> it appears to hang, possibly hung at the panic. Although I have the
+> earlyprintk enabled, I don't see any console messages when new kernel
+> boots. 
+> 
+> Also tested turning off CONFIG_X86_SGX, the kernel with this commit
+> included also kexec's fine.
+> 
+> Booting from warm/cold reset has no issues. Only kexec to new kernel with
+> this change included and CONFIG_X86_SGX=y causes the kexec failure.
+> 
+> #regzbot introduced: 96c6b8f212a
 
-Unfortunately, no:
+Leaving in the whole mail for the people who you should have CCed. Lemme
+CC them.
 
-sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-sof_sdw sof_sdw: snd_soc_register_card failed -517
-sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-sof_sdw sof_sdw: snd_soc_register_card failed -517
-platform sof_sdw: deferred probe pending
+$ git show 96c6b8f212a
+fatal: ambiguous argument '96c6b8f212a': unknown revision or path not in the working tree.
 
-Thanks,	
-	Dominik
+/me greps a bit.
+
+Ah, you've dropped the first char of the sha1 - an 'e':
+
+$ git show e96c6b8f212a
+commit e96c6b8f212a510c9b22362de519f6e1d7920de5
+Author: Song Shuai <songshuaishuai@tinylab.org>
+Date:   Sat Jun 24 11:26:07 2023 +0800
+
+    memblock: report failures when memblock_can_resize is not set
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
