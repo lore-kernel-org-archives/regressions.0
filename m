@@ -1,129 +1,133 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E761385
-	for <regressions@lists.linux.dev>; Sat, 30 Dec 2023 04:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACD7B647
+	for <regressions@lists.linux.dev>; Sat, 30 Dec 2023 04:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFhbrao7"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58dd3528497so4439821eaf.3
-        for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 20:12:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DztHfLFJ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d3e6c86868so57156105ad.1
+        for <regressions@lists.linux.dev>; Fri, 29 Dec 2023 20:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703909577; x=1704514377; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1703910870; x=1704515670; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ejfueo89WFs/oFJaApIa/W2r85V6qCPW0jGnmXIzsAU=;
-        b=lFhbrao7PvPWgzDtMjNb1UnQwOLSo/WATc9o3MkYG2/9YGRA17nkjDd+NmwBFjG9rN
-         alfK6oXrC++Zu97ijU0lIxqCKUIDITtaEVmNnVh8LKFj0AN4emvr3zlbWUPsteREaPsk
-         3FeVYWwBQU7TGryB35YhatbJu+pJuCtkDow0lW4+qnDu0xcbE+kF7v/hJxLYCGwnYvxV
-         QGb47OdBy7x7j877yBs+is/5Tl0St1l6Upv3cyGYhaGcKPONCORTlZ4sFJ0PfrlWb2xL
-         JYbRKDGJcazrkggkVHZGKUWTebUPr+p+ezvJSviiNiWAUSDyGPEHiBCx6iyOBFvS0Pry
-         8qLg==
+        bh=+ZiDP3ACvLtUqSs7Pgb3eo8FrHgRUMknvmQ1/AAsrmw=;
+        b=DztHfLFJgIkFBicTAhteyBbAS/D5PbUil90T2972UfBGs48aibJNwApngJsOsPvrz+
+         FfKK/gY5FkiRrHC2bf6CIM17gKPIRW6scj1hWofVWa/otHIViGauuZfmXNFrQF+HFZvx
+         HrHTZjFUVmrb+4/9ACG07JExHlsPsaiFi9gpKuG2Z8e9fBPFgDbxCBt0Q1gM8dxxOG+8
+         5te505z8s/69r/MZp01Gzzhe0oX++GtMLWQFtNVItOB0WRAxlaf6eHeWS2zs0KLT9yXb
+         vdgskrO4UbBi/WLaO63QXHODyGCwU/xzjeUHYz5jNVAbZBJ2IMwyThaPHJA4h9qgqTFg
+         R1Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703909577; x=1704514377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1703910870; x=1704515670;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ejfueo89WFs/oFJaApIa/W2r85V6qCPW0jGnmXIzsAU=;
-        b=XYQoatDJwkGq8uYp8G72zOb+40a5k/O8bpvyj+RwQNvZsEdapIcV6WgIIs7obOZSQL
-         KAxoEECFSO34tKPy9Dp8CvaU5WF0kJX//HtzG97G56zriGQXYbliXlpYoE8NtDFOo3FD
-         JIquZbTetzpn7qmqMNnjPfNPKtDxeTecsR+g2YEt3hebRl9kDW6tz6+Fy4zTREigchvO
-         m9md/0kNEVBru1X4SxN+0geT7ZXLs0KT/Bk4iGY0i0b+xEN88Iazb9Jfi9SJwkNbyA6M
-         +4MVDV86rlqsLYXTsedp1mT413m0/LbHkV8LgeO5zhc4MsEcMXGZvMCPb90JvXEY+t2W
-         qpMg==
-X-Gm-Message-State: AOJu0YzA+cMejG18Os7hWIvJ7v7NJT6kWrkF37ZL/kGWtt3883GAy57f
-	5tY2f1GIbcTFKXqLURrY1QDcolUq8ddaIZZnKMo=
-X-Google-Smtp-Source: AGHT+IGs/93N6pvlZGycPQsHoufKzGa1iXlpHFU278prPiJa7vjr78QNNTc2J+L53QPoGAmP3vVaNU+gjcPX/5H9hMY=
-X-Received: by 2002:a05:6820:2221:b0:591:a34c:f064 with SMTP id
- cj33-20020a056820222100b00591a34cf064mr7898267oob.6.1703909577411; Fri, 29
- Dec 2023 20:12:57 -0800 (PST)
+        bh=+ZiDP3ACvLtUqSs7Pgb3eo8FrHgRUMknvmQ1/AAsrmw=;
+        b=FSiLUGgoG3rVZ48gtrbWD2TYDseFjbGCL2vepJH6xNJYIDYH9W5rcq09L+OqbzXW3K
+         1mbWYrJ2Itw972IZc2VRjRn7gNXeD/dt1nadeJDtHePFnMrxy9iQ1bpa7F4kL3qwiPS9
+         sv4aJkl5jA7uNkzMTU+lF0B+HLUmlpXbOTlpv6yWhukTFDB0IZyQAL+FGpEC/w3s0lRt
+         T8IFaK1m1PTJkAfbsvhiDVb4pIiRmNyzFch11/tQ75XgtKYFB2S8mu1iY02ZMCtGjkso
+         P9n8aUnazcBSUIED9dHu5olgQzaQRQqQiQwyYBFcRqIZOvQRS4e7bcXM1ef9x37jmNpH
+         UKCg==
+X-Gm-Message-State: AOJu0YwJ7dcwBh0F0kgZJzhU9dLnHDYoafdeHr8UHxe8QOGYlF2jrmnB
+	DWQSPa5SuiXmK0ByEeeZ4ZU=
+X-Google-Smtp-Source: AGHT+IGuavAbJwLeIzYAkuNbnPKrmlmWGepSfVDpwQ5zcqyAVuBjCcKaHrWUS0uRdkYiDHxjhkNYLQ==
+X-Received: by 2002:a17:902:e541:b0:1d3:ac23:b511 with SMTP id n1-20020a170902e54100b001d3ac23b511mr16723590plf.54.1703910870306;
+        Fri, 29 Dec 2023 20:34:30 -0800 (PST)
+Received: from xavier.lan ([2607:fa18:9ffd:1:7a77:c7ef:1ba:cce8])
+        by smtp.gmail.com with ESMTPSA id j1-20020a170902da8100b001cfc68aca48sm16374856plx.135.2023.12.29.20.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Dec 2023 20:34:29 -0800 (PST)
+From: Alex Henrie <alexhenrie24@gmail.com>
+To: netdev@vger.kernel.org,
+	kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	dan@danm.net,
+	bagasdotme@gmail.com,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	linux-pabeni@redhat.com,
+	jikos@kernel.org
+Cc: Alex Henrie <alexhenrie24@gmail.com>
+Subject: [PATCH] Revert "net: ipv6/addrconf: clamp preferred_lft to the minimum required"
+Date: Fri, 29 Dec 2023 21:32:44 -0700
+Message-ID: <20231230043252.10530-1-alexhenrie24@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <d2f328c6-b5b4-46d0-b087-c70e2460d28a@kernel.org>
+References: <d2f328c6-b5b4-46d0-b087-c70e2460d28a@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAMMLpeTCZDakqdkxm+jvQHxbRXhCYd4_PK+VVqMAmZHjSPuPRw@mail.gmail.com>
- <20231229163339.2716-1-dan@danm.net>
-In-Reply-To: <20231229163339.2716-1-dan@danm.net>
-From: Alex Henrie <alexhenrie24@gmail.com>
-Date: Fri, 29 Dec 2023 21:12:21 -0700
-Message-ID: <CAMMLpeTdYhd=7hhPi2Y7pwdPCgnnW5JYh-bu3hSc7im39uxnEA@mail.gmail.com>
-Subject: Re: [REGRESSION] net/ipv6/addrconf: Temporary addresses with short
- lifetimes generating when they shouldn't, causing applications to fail
-To: Dan Moulding <dan@danm.net>
-Cc: bagasdotme@gmail.com, davem@davemloft.net, dsahern@kernel.org, 
-	edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, regressions@lists.linux.dev, 
-	Jiri Kosina <jikos@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 29, 2023 at 9:33=E2=80=AFAM Dan Moulding <dan@danm.net> wrote:
->
-> I think a maintainer will probably need to make a call here and decide
-> how to proceed.
->
-> > TEMP_PREFERRED_LIFETIME is an administratively set variable: The user
-> > can change it to whatever they want whenever they want, and the
-> > operating system can adjust it automatically too.
->
-> Agreed. And the behavior it seems you really want is to prevent the
-> user from administratively setting it to a value that is lower than
-> REGEN_ADVANCE, so that it won't stop generating new temporary
-> addresses altogether.
->
-> But preventing the user from configuring it to a value that is too low
-> is different from generating new temporary addresses with preferred
-> lifetimes that are greater than the currently configured value of
-> TEMP_PREFERRED_LIFETIME. I still believe it would be better, and would
-> be in conformance with the RFC, to simply not allow the user to
-> configure a too-short TEMP_PREFERRED_LIFETIME instead of tinkering
-> with the lifetimes of generated temporary addresses.
+The commit had a bug and might not have been the right approach anyway.
 
-In RFC 4941, REGEN_ADVANCE is a constant value of 5 seconds.[1]
-However, Linux uses a variable regen_advance that depends on the
-Retrans Timer value in the router advertisement.[2][3][4] Let's
-imagine that when the user tries to set
-/proc/sys/net/ipv6/conf/*/temp_prefered_lft to 3 seconds, they get an
-error message that says "Sorry, the network requires at least 4
-seconds." After a few minutes, network conditions change, and now 5
-seconds is the minimum. Should the kernel just give up on using
-private addresses? Or, the minimum might drop to 3 seconds, which is
-what the user really wanted. Should the operating system tell the user
-to change the value?
+Fixes: 629df6701c8a ("net: ipv6/addrconf: clamp preferred_lft to the minimum required")
+Fixes: ec575f885e3e ("Documentation: networking: explain what happens if temp_prefered_lft is too small or too large")
+Reported-by: Dan Moulding <dan@danm.net>
+Closes: https://lore.kernel.org/netdev/20231221231115.12402-1-dan@danm.net/
+Link: https://lore.kernel.org/netdev/CAMMLpeTdYhd=7hhPi2Y7pwdPCgnnW5JYh-bu3hSc7im39uxnEA@mail.gmail.com/
+Signed-off-by: Alex Henrie <alexhenrie24@gmail.com>
+---
+ Documentation/networking/ip-sysctl.rst |  2 +-
+ net/ipv6/addrconf.c                    | 18 +++++-------------
+ 2 files changed, 6 insertions(+), 14 deletions(-)
 
-What I think you're getting at is that Linux might be violating the
-spec by allowing TEMP_PREFERRED_LIFETIME to be less than 5 seconds.
-The RFC says: [5]
+diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
+index 4dfe0d9a57bb..7afff42612e9 100644
+--- a/Documentation/networking/ip-sysctl.rst
++++ b/Documentation/networking/ip-sysctl.rst
+@@ -2511,7 +2511,7 @@ temp_valid_lft - INTEGER
+ temp_prefered_lft - INTEGER
+ 	Preferred lifetime (in seconds) for temporary addresses. If
+ 	temp_prefered_lft is less than the minimum required lifetime (typically
+-	5 seconds), the preferred lifetime is the minimum required. If
++	5 seconds), temporary addresses will not be created. If
+ 	temp_prefered_lft is greater than temp_valid_lft, the preferred lifetime
+ 	is temp_valid_lft.
+ 
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index 2692a7b24c40..733ace18806c 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -1407,23 +1407,15 @@ static int ipv6_create_tempaddr(struct inet6_ifaddr *ifp, bool block)
+ 
+ 	write_unlock_bh(&idev->lock);
+ 
+-	/* From RFC 4941:
+-	 *
+-	 *     A temporary address is created only if this calculated Preferred
+-	 *     Lifetime is greater than REGEN_ADVANCE time units.  In
+-	 *     particular, an implementation must not create a temporary address
+-	 *     with a zero Preferred Lifetime.
+-	 *
+-	 * Clamp the preferred lifetime to a minimum of regen_advance, unless
+-	 * that would exceed valid_lft.
+-	 *
++	/* A temporary address is created only if this calculated Preferred
++	 * Lifetime is greater than REGEN_ADVANCE time units.  In particular,
++	 * an implementation must not create a temporary address with a zero
++	 * Preferred Lifetime.
+ 	 * Use age calculation as in addrconf_verify to avoid unnecessary
+ 	 * temporary addresses being generated.
+ 	 */
+ 	age = (now - tmp_tstamp + ADDRCONF_TIMER_FUZZ_MINUS) / HZ;
+-	if (cfg.preferred_lft <= regen_advance + age)
+-		cfg.preferred_lft = regen_advance + age + 1;
+-	if (cfg.preferred_lft > cfg.valid_lft) {
++	if (cfg.preferred_lft <= regen_advance + age) {
+ 		in6_ifa_put(ifp);
+ 		in6_dev_put(idev);
+ 		ret = -1;
+-- 
+2.43.0
 
-> When processing a Router Advertisement with a Prefix
-> Information option carrying a global scope prefix for the purposes of
-> address autoconfiguration (i.e., the A bit is set), the node MUST
-> perform the following steps:
-
-> 5.  A temporary address is created only if this calculated Preferred
->     Lifetime is greater than REGEN_ADVANCE time units.
-
-The right solution might be to make Linux use a constant value for
-REGEN_ADVANCE instead of a variable. I think that's how it used to
-work before commit 76506a986dc3 (IPv6: fix DESYNC_FACTOR,
-2016-10-13).[6] If regen_advance can't change depending on network
-conditions then it can't cause private address generation to randomly
-stop working. I don't understand why the protocol would require
-REGEN_ADVANCE to be a constant, but interpreting the RFC literally, it
-would seem that Linux is technically non-compliant.
-
--Alex
-
-[1] https://datatracker.ietf.org/doc/html/rfc4941#section-5
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/net/ipv6/addrconf.c?h=3Dv6.7-rc7#n1377
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/net/ipv6/ndisc.c?h=3Dv6.7-rc7#n1438
-[4] https://datatracker.ietf.org/doc/html/rfc4861#section-4.2
-[5] https://datatracker.ietf.org/doc/html/rfc4941#section-3.3
-[6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3D76506a986dc31394fd1f2741db037d29c7e57843
