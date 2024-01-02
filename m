@@ -1,80 +1,121 @@
-Received: from sender3-of-o59.zoho.com (sender3-of-o59.zoho.com [136.143.184.59])
+Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A158FBFC
-	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 13:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=5challer.de
-ARC-Seal: i=1; a=rsa-sha256; t=1704203447; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mubb/eRwU0wPUE41heNujwRhOmtGWf+yG3KKpNFH/qoNDd0P972osLWKKVjqatYQ7HSm+XCXhbqwpl988WYx2cXI1txpZXTjNxnKspsqfr/uFa9PwsmEQ1kc2L5TVIPDwO5jylKxwQWPS5/IDidu+mM8qmGF2g4CEUNUS6rizzs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1704203447; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cMclV7qdxAnRcBuYL1BKBnwM/zFyg469LYV6HFanklc=; 
-	b=VnM8Gw7pSkNLd7zyOkFa4G3CKgEP/KHCqFOfjsbeAE5iGl7haKL6aMUd7t3jRZDi4iQaaQWE33dq205fJbxtd2hGxF8ORC4lxXJyJFJBBRihGjNj4F2hT7tfWAHgdfKN4rHhMt2xQSRXIMY839JHRMHHkbLUIAk+/3r2cPOGj8I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	spf=pass  smtp.mailfrom=michael@5challer.de;
-	dmarc=pass header.from=<michael@5challer.de>
-Received: from [192.168.144.187] (ipbcc11913.dynamic.kabel-deutschland.de [188.193.25.19]) by mx.zohomail.com
-	with SMTPS id 1704203444855745.8563886052651; Tue, 2 Jan 2024 05:50:44 -0800 (PST)
-Message-ID: <5598b690-12da-4237-b2bf-c9c691c4647c@5challer.de>
-Date: Tue, 2 Jan 2024 14:50:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A4E154AC
+	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 17:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
+	by isilmar-4.linta.de (Postfix) with ESMTPSA id 2AAD42002EC;
+	Tue,  2 Jan 2024 17:38:32 +0000 (UTC)
+Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
+	id E6FCBA0083; Tue,  2 Jan 2024 18:37:45 +0100 (CET)
+Date: Tue, 2 Jan 2024 18:37:45 +0100
+From: Dominik Brodowski <linux@dominikbrodowski.net>
+To: =?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com, kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
+Message-ID: <ZZRJ6VNJlQ97bnjF@shine.dominikbrodowski.net>
+References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
+ <87sf3lxiet.wl-tiwai@suse.de>
+ <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
+ <874jg1x7ao.wl-tiwai@suse.de>
+ <ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
+ <87plyovwg7.wl-tiwai@suse.de>
+ <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, macro@orcam.me.uk, ajayagarwal@google.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
- hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
- johan+linaro@kernel.org
-References: <20240101221554.GA1693060@bhelgaas>
-Content-Language: en-US
-From: Michael Schaller <michael@5challer.de>
-In-Reply-To: <20240101221554.GA1693060@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
 
-
-On 01.01.24 23:15, Bjorn Helgaas wrote:
-> On Mon, Jan 01, 2024 at 07:57:40PM +0100, Michael Schaller wrote:
->> On 01.01.24 19:13, Bjorn Helgaas wrote:
->>> On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
->>> ...
+Am Tue, Jan 02, 2024 at 11:08:47AM +0200 schrieb Péter Ujfalusi:
 > 
->>> So unless somebody has a counter-argument, I plan to queue a revert of
->>> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
->>> v6.7.
->>
->> If it helps I could also try if a partial revert of 08d0cc5f3426 would be
->> sufficient. This might also narrow down the issue and give more insight
->> where the issue originates from.
 > 
-> We're so close to the v6.7 final release that I doubt we can figure
-> out the problem and test a fix before v6.7.  I'm sure Kai-Heng would
-> appreciate any additional data, but I don't think it's urgent at this
-> point.
+> On 30/12/2023 12:03, Takashi Iwai wrote:
+> > On Sat, 30 Dec 2023 08:27:43 +0100,
+> > Dominik Brodowski wrote:
+> >>
+> >> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
+> >>> On Fri, 29 Dec 2023 16:24:18 +0100,
+> >>> Dominik Brodowski wrote:
+> >>>>
+> >>>> Hi Takashi,
+> >>>>
+> >>>> many thanks for your response. Your patch helps half-way: the oops goes
+> >>>> away, but so does the sound... With your patch, the decisive lines in dmesg
+> >>>> are:
+> >>>>
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >>>> 	platform sof_sdw: deferred probe pending
+> >>>>
+> >>>> With a revert of the a0575b4add21, it is:
+> >>>>
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
+> >>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
+> >>>>
+> >>>> Maybe this helps a bit further?
+> >>>
+> >>> Thanks for quick testing.
+> >>> It shows at least that my guess wasn't wrong.
+> >>>
+> >>> The problem could be the initialization order in the caller side.
+> >>> Can the patch below work instead?
+> >>
+> >> Unfortunately, no:
+> >>
+> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >> platform sof_sdw: deferred probe pending
+> > 
+> > Hm, then it might be the logical failure of that commit.
+> > Peter?
+> > 
+> > Without a fix in the next few days, we'll have to revert it before
+> > 6.7.
 > 
-> Bjorn
+> The fix for this was sent early December:
+> https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
 
-We're indeed close to the final v6.7 release, which in turn means that a 
-last minute revert of a 16 month old commit might cause even more 
-regressions as there have been quite a few ASPM changes afterwards and 
-there won't be much testing anymore before the final release.
+Yes, that patch fixes the issue (all built-in here).
 
-Furthermore, given the age of the commit and that it has been backported 
-to kernel 5.15, the question is also if the revert would be backported 
-to the affected LTS kernels?
-
-If this regression risk is acceptable then I'm all for reverting the 
-commit now and then working on a fix.
-
-Michael
+Thanks,
+	Dominik
