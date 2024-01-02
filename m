@@ -1,204 +1,145 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D13563D8
-	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 09:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B857470
+	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 09:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 903A61FCED;
-	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
-	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
-	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704187501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
-	2h+vvg7JI6azhcCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
-	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
-	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704187501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
-	2h+vvg7JI6azhcCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 336B213AC6;
-	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rZVDC23Wk2XpCgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 02 Jan 2024 09:25:01 +0000
-Date: Tue, 02 Jan 2024 10:25:00 +0100
-Message-ID: <87y1d8ulxv.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: =?ISO-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>,
-	Mark Brown <broonie@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-In-Reply-To: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
-	<87sf3lxiet.wl-tiwai@suse.de>
-	<ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
-	<874jg1x7ao.wl-tiwai@suse.de>
-	<ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
-	<87plyovwg7.wl-tiwai@suse.de>
-	<3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sM4+eUTY"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-466fa42a2afso1090870137.3
+        for <regressions@lists.linux.dev>; Tue, 02 Jan 2024 01:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704188912; x=1704793712; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8BwdK6YAGL0fyC0pzJgp2omqYHIyDz0pIenuqiZfUq8=;
+        b=sM4+eUTYRxeo+JoETXKDGmDqocC6dsZoNU+Z3ACk1ocNj3n/6vY9wMjpg9xgbNQlnc
+         UoZG8+eRuQ9T0pqnCUyyU4Lzr25wU1qO2mXUNNvL1x83rj2p/WvQI4gV6sY227QsEhq1
+         mGQ5VikYNAUwleph89FX3mtGllciqjV4GVggYQDQ6lG1PwdFv8H1QFK5sZHyImk+vVdd
+         TNmNjjLDrLdVBn90q5IbnNIeq4cAip2UIM0THyCLaoLiox06UYOkzSQAM5b5m/SF5E9z
+         46OUyZh095LfNv3P9d781Dp9tPq5zhTx9e0xxuqws1CztePqgs43SwYdvoLl94P/ghDy
+         euBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704188912; x=1704793712;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8BwdK6YAGL0fyC0pzJgp2omqYHIyDz0pIenuqiZfUq8=;
+        b=VLV/O862dLOD7k5GbHObWTRj9270/iQxAmWPocIbKpno4VfdSifoadmbE+Whwh+XLE
+         ivElfV8x3EhlUFPPX8CFKQ42gQPYoPZNpiKMGmdmlLtalYV6jrs7weg/8LGi2uZ7+MeE
+         cOJ1WRTarqH+ess51mLSWHQdCJ6/VvLgO1LTuKqHacMztnGiIsl85pG67Q5mKYXhVbMy
+         jLLDP2z4ah33gbQ5p3Howc13cVn6HEgmRtlykwIyrVeWnImn8GFXIH7Cr+/j5j1SLZdO
+         142VqCjvN4j5kulDK+dsGcZ4OyK9PvBTDIAmLWiuku5gHDGE86JxW+l8NmVPHkZS//Gd
+         e+nQ==
+X-Gm-Message-State: AOJu0YzrIl8yCQqh0ZDrRg6Q/oQLB+naDBY5kmzcMSzWm5+ayex/CzbX
+	qGrO4nRZ2F0PlWePqFi+7JG/6RAAX1w47gvxNcE8mnZUtpzXqA==
+X-Google-Smtp-Source: AGHT+IFqJ3kfP7gJIvjcMWI/WCjonpd/SdBfDjDRDLdxHJDmUEziWZ3Ly+i9RK1H1NCK7B1+eRzjTLt1Q10pf9eZY6k=
+X-Received: by 2002:a05:6102:304a:b0:467:920a:c249 with SMTP id
+ w10-20020a056102304a00b00467920ac249mr91022vsa.12.1704188912393; Tue, 02 Jan
+ 2024 01:48:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[dominikbrodowski.net,kernel.org,gmail.com,perex.cz,suse.com,alsa-project.org,vger.kernel.org,linux.intel.com,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: -2.10
-X-Spam-Flag: NO
+MIME-Version: 1.0
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 2 Jan 2024 15:18:21 +0530
+Message-ID: <CA+G9fYvu_estw19VvZDXVXGmuXg87FZHk3x7ZNLM-KTGOmXRLQ@mail.gmail.com>
+Subject: selftests: net/mptcp: mptcp_connect.sh - Internal error: Oops:
+ qdisc_block_add_dev (net/sched/sch_api.c:1191)
+To: open list <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>, Linux Regressions <regressions@lists.linux.dev>, 
+	lkft-triage@lists.linaro.org
+Cc: Victor Nogueira <victor@mojatatu.com>, "David S. Miller" <davem@davemloft.net>, 
+	Hangyu Hua <hbh25y@gmail.com>, Matthieu Baerts <matthieu.baerts@tessares.net>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 02 Jan 2024 10:08:47 +0100,
-Péter Ujfalusi wrote:
-> 
-> 
-> 
-> On 30/12/2023 12:03, Takashi Iwai wrote:
-> > On Sat, 30 Dec 2023 08:27:43 +0100,
-> > Dominik Brodowski wrote:
-> >>
-> >> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
-> >>> On Fri, 29 Dec 2023 16:24:18 +0100,
-> >>> Dominik Brodowski wrote:
-> >>>>
-> >>>> Hi Takashi,
-> >>>>
-> >>>> many thanks for your response. Your patch helps half-way: the oops goes
-> >>>> away, but so does the sound... With your patch, the decisive lines in dmesg
-> >>>> are:
-> >>>>
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >>>> 	platform sof_sdw: deferred probe pending
-> >>>>
-> >>>> With a revert of the a0575b4add21, it is:
-> >>>>
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
-> >>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
-> >>>>
-> >>>> Maybe this helps a bit further?
-> >>>
-> >>> Thanks for quick testing.
-> >>> It shows at least that my guess wasn't wrong.
-> >>>
-> >>> The problem could be the initialization order in the caller side.
-> >>> Can the patch below work instead?
-> >>
-> >> Unfortunately, no:
-> >>
-> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >> platform sof_sdw: deferred probe pending
-> > 
-> > Hm, then it might be the logical failure of that commit.
-> > Peter?
-> > 
-> > Without a fix in the next few days, we'll have to revert it before
-> > 6.7.
-> 
-> The fix for this was sent early December:
-> https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
-> 
-> It had the correct Fixes tag but it did not made it to 6.7-rc while
-> a0575b4add21 did made it.
-> 
-> Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
-> might have time for it to land?
+Following kernel oops noticed on qemu-arm64 while running
+selftests: net/mptcp: mptcp_connect.sh test cases on Linux next-20240102
 
-Oh that landed to Mark's for-next branch, i.e. only for 6.8.
-Mark, please cherry-pick and send a PR before 6.7 final.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Meanwhile, Peter, please update the bugzilla entry to let people try
-the patch.
+Test log:
+---
+# selftests: net/mptcp: mptcp_connect.sh
+# INFO: set ns3-6593b550-fBKovo dev ns3eth2: ethtool -K  gso off
+# INFO: set ns4-6593b550-fBKovo dev ns4eth3: ethtool -K  gro off
+# Created /tmp/tmp.vFrp4xubYR (size 219663 /tmp/tmp.vFrp4xubYR)
+containing data sent by client
+# Created /tmp/tmp.FrEUtOwsBN (size 5630063 /tmp/tmp.FrEUtOwsBN)
+containing data sent by server
+# New MPTCP socket can be blocked via sysctl [ OK ]
+# INFO: validating network environment with pings
+<6>[   32.891365] netem: version 1.3
+<1>[   32.901072] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
+<1>[   32.901926] Mem abort info:
+<1>[   32.903342]   ESR = 0x0000000086000004
+<1>[   32.903768]   EC = 0x21: IABT (current EL), IL = 32 bits
+<1>[   32.904589]   SET = 0, FnV = 0
+<1>[   32.905415]   EA = 0, S1PTW = 0
+<1>[   32.905914]   FSC = 0x04: level 0 translation fault
+<1>[   32.909254] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000103097000
+<1>[   32.909914] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+<0>[   32.913724] Internal error: Oops: 0000000086000004 [#1] PREEMPT SMP
+<4>[   32.914739] Modules linked in: sch_netem crct10dif_ce sm3_ce sm3
+sha3_ce sha512_ce sha512_arm64 fuse drm backlight dm_mod ip_tables
+x_tables
+<4>[   32.916764] CPU: 0 PID: 438 Comm: tc Not tainted
+6.7.0-rc8-next-20240102 #1
+<4>[   32.917555] Hardware name: linux,dummy-virt (DT)
+<4>[   32.918608] pstate: 63400809 (nZCv daif +PAN -UAO +TCO +DIT
+-SSBS BTYPE=-c)
+<4>[   32.919392] pc : 0x0
+<4>[ 32.920396] lr : qdisc_block_add_dev (net/sched/sch_api.c:1191)
+
+<trim>
+
+<4>[   32.931258] Call trace:
+<4>[   32.932088]  0x0
+<4>[ 32.932626] qdisc_create (net/sched/sch_api.c:1390)
+<4>[ 32.933207] tc_modify_qdisc (net/sched/sch_api.c:1792)
+<4>[ 32.933791] rtnetlink_rcv_msg (net/core/rtnetlink.c:6615)
+<4>[ 32.934280] netlink_rcv_skb (net/netlink/af_netlink.c:2544)
+<4>[ 32.934859] rtnetlink_rcv (net/core/rtnetlink.c:6634)
+<4>[ 32.935411] netlink_unicast (net/netlink/af_netlink.c:0
+net/netlink/af_netlink.c:1367)
+<4>[ 32.935981] netlink_sendmsg (net/netlink/af_netlink.c:1908)
+<4>[ 32.936544] ____sys_sendmsg (net/socket.c:733 net/socket.c:745
+net/socket.c:2582)
+<4>[ 32.937121] __sys_sendmsg (net/socket.c:2638 net/socket.c:2665)
+<4>[ 32.937677] __arm64_sys_sendmsg (net/socket.c:2672)
+<4>[ 32.938283] invoke_syscall (arch/arm64/kernel/syscall.c:0
+arch/arm64/kernel/syscall.c:51)
+<4>[ 32.938852] el0_svc_common (include/linux/thread_info.h:127
+arch/arm64/kernel/syscall.c:144)
+<4>[ 32.939395] do_el0_svc (arch/arm64/kernel/syscall.c:156)
+<4>[ 32.939913] el0_svc (arch/arm64/kernel/entry-common.c:133
+arch/arm64/kernel/entry-common.c:144
+arch/arm64/kernel/entry-common.c:679)
+<4>[ 32.940388] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:0)
+<4>[ 32.940968] el0t_64_sync (arch/arm64/kernel/entry.S:595)
+
+<trim>
+
+<4>[   32.943570] ---[ end trace 0000000000000000 ]---
+# ./mptcp_connect.sh: line 856:   438 Segmentation fault      tc -net
+"$ns2" qdisc add dev ns2eth3 root netem loss random $tc_loss delay
+${tc_delay}ms
+# INFO: Using loss of 0.84% delay 16 ms reorder 99% 26% with delay 4ms
+on ns3eth4
+
+Steps to reproduce:
+---
+https://storage.tuxsuite.com/public/linaro/lkft/tests/2aO5JSOqobe3WwSEQP81LncHQ7c/tuxrun_reproducer.sh
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240102/testrun/21857563/suite/log-parser-test/tests/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240102/testrun/21857563/suite/log-parser-test/test/check-kernel-oops/log
 
 
-thanks,
-
-Takashi
+--
+Linaro LKFT
+https://lkft.linaro.org
