@@ -1,131 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0EECA66
-	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 09:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D13563D8
+	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 09:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VxvC1E0L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704186479; x=1735722479;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ilO5IzhQ3Hwvx3JB2WQjM6kgLpNd1YFCiNdkM3lmNDU=;
-  b=VxvC1E0LDFpmnAAo975IjzJ+4JWxPweMKF1a5zAKP8nY/vBjFAR78/dz
-   hYxYo59mNqz4mtPUmo5Te4wBaReUmAlD5Rh4iYbyGRvSPUen5kt2lffnG
-   5tYCgxfq3AXAJlCcSDgYqoZpmFcMfWBErGeg21DvlfpeaoX+sTWtXYrps
-   6z+ExnV0JOos/ykCbA4AD6LoyQ9jpxqGmHF/X9RrHI7aSmb4/Wdf2O6Gl
-   1b5izKSUfbxhu35YZcQPpN2q9/ni/mKBMMr1aWzGD4whfXU1o/xaALCHk
-   0GBYuIMboarg4sGlDZBPquqfrLWzDYe7jSHPw6HgxX+0KVnftVoGI8xr+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="4192265"
-X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
-   d="scan'208";a="4192265"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 01:07:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="772784129"
-X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
-   d="scan'208";a="772784129"
-Received: from jomolloy-mobl.ger.corp.intel.com (HELO [10.252.51.93]) ([10.252.51.93])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 01:07:54 -0800
-Message-ID: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
-Date: Tue, 2 Jan 2024 11:08:47 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 903A61FCED;
+	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
+	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
+	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
+	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704187501;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
+	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
+	2h+vvg7JI6azhcCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
+	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
+	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
+	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704187501;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
+	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
+	2h+vvg7JI6azhcCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 336B213AC6;
+	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rZVDC23Wk2XpCgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 02 Jan 2024 09:25:01 +0000
+Date: Tue, 02 Jan 2024 10:25:00 +0100
+Message-ID: <87y1d8ulxv.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: =?ISO-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>,
+	Mark Brown <broonie@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
+In-Reply-To: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
+References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
+	<87sf3lxiet.wl-tiwai@suse.de>
+	<ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
+	<874jg1x7ao.wl-tiwai@suse.de>
+	<ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
+	<87plyovwg7.wl-tiwai@suse.de>
+	<3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>,
- Dominik Brodowski <linux@dominikbrodowski.net>,
- Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- pierre-louis.bossart@linux.intel.com, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
- <87sf3lxiet.wl-tiwai@suse.de> <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
- <874jg1x7ao.wl-tiwai@suse.de> <ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
- <87plyovwg7.wl-tiwai@suse.de>
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <87plyovwg7.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[dominikbrodowski.net,kernel.org,gmail.com,perex.cz,suse.com,alsa-project.org,vger.kernel.org,linux.intel.com,lists.linux.dev];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Score: -2.10
+X-Spam-Flag: NO
 
-
-
-On 30/12/2023 12:03, Takashi Iwai wrote:
-> On Sat, 30 Dec 2023 08:27:43 +0100,
-> Dominik Brodowski wrote:
->>
->> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
->>> On Fri, 29 Dec 2023 16:24:18 +0100,
->>> Dominik Brodowski wrote:
->>>>
->>>> Hi Takashi,
->>>>
->>>> many thanks for your response. Your patch helps half-way: the oops goes
->>>> away, but so does the sound... With your patch, the decisive lines in dmesg
->>>> are:
->>>>
->>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
->>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
->>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
->>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
->>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
->>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
->>>> 	platform sof_sdw: deferred probe pending
->>>>
->>>> With a revert of the a0575b4add21, it is:
->>>>
->>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
->>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
->>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
->>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
->>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
->>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
->>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
->>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
->>>>
->>>> Maybe this helps a bit further?
->>>
->>> Thanks for quick testing.
->>> It shows at least that my guess wasn't wrong.
->>>
->>> The problem could be the initialization order in the caller side.
->>> Can the patch below work instead?
->>
->> Unfortunately, no:
->>
->> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
->> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
->> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
->> sof_sdw sof_sdw: snd_soc_register_card failed -517
->> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
->> sof_sdw sof_sdw: snd_soc_register_card failed -517
->> platform sof_sdw: deferred probe pending
+On Tue, 02 Jan 2024 10:08:47 +0100,
+Péter Ujfalusi wrote:
 > 
-> Hm, then it might be the logical failure of that commit.
-> Peter?
 > 
-> Without a fix in the next few days, we'll have to revert it before
-> 6.7.
+> 
+> On 30/12/2023 12:03, Takashi Iwai wrote:
+> > On Sat, 30 Dec 2023 08:27:43 +0100,
+> > Dominik Brodowski wrote:
+> >>
+> >> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
+> >>> On Fri, 29 Dec 2023 16:24:18 +0100,
+> >>> Dominik Brodowski wrote:
+> >>>>
+> >>>> Hi Takashi,
+> >>>>
+> >>>> many thanks for your response. Your patch helps half-way: the oops goes
+> >>>> away, but so does the sound... With your patch, the decisive lines in dmesg
+> >>>> are:
+> >>>>
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >>>> 	platform sof_sdw: deferred probe pending
+> >>>>
+> >>>> With a revert of the a0575b4add21, it is:
+> >>>>
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
+> >>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
+> >>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
+> >>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
+> >>>>
+> >>>> Maybe this helps a bit further?
+> >>>
+> >>> Thanks for quick testing.
+> >>> It shows at least that my guess wasn't wrong.
+> >>>
+> >>> The problem could be the initialization order in the caller side.
+> >>> Can the patch below work instead?
+> >>
+> >> Unfortunately, no:
+> >>
+> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
+> >> platform sof_sdw: deferred probe pending
+> > 
+> > Hm, then it might be the logical failure of that commit.
+> > Peter?
+> > 
+> > Without a fix in the next few days, we'll have to revert it before
+> > 6.7.
+> 
+> The fix for this was sent early December:
+> https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
+> 
+> It had the correct Fixes tag but it did not made it to 6.7-rc while
+> a0575b4add21 did made it.
+> 
+> Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
+> might have time for it to land?
 
-The fix for this was sent early December:
-https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
+Oh that landed to Mark's for-next branch, i.e. only for 6.8.
+Mark, please cherry-pick and send a PR before 6.7 final.
 
-It had the correct Fixes tag but it did not made it to 6.7-rc while
-a0575b4add21 did made it.
+Meanwhile, Peter, please update the bugzilla entry to let people try
+the patch.
 
-Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
-might have time for it to land?
 
--- 
-PÃ©ter
+thanks,
+
+Takashi
