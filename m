@@ -1,60 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFB6FBE1;
-	Mon,  1 Jan 2024 22:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0EECA66
+	for <regressions@lists.linux.dev>; Tue,  2 Jan 2024 09:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4KseXHX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F61C433C8;
-	Mon,  1 Jan 2024 22:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704147359;
-	bh=vaYP09n7NQRCkMOIIM0dBoEGJ1KUL9tEiUtSqhELX54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m4KseXHX5wx9q+NQWukSufL8Ons5NIm6HUAxspt2Me2WIKQipZ9Qowhs7quVQr10r
-	 8jAFoZMMYgEEPZ82kdzVkgzCmYnJ5SHN04u8ud42C65GbLqbxjQDuJyiaiwLtt69cR
-	 H/Nil9ta+37qrsLjFCq00dxafC7WQv5M4EppNgPJTe0fI7fcszB4zjTy64DeU3LUMz
-	 qqAQ+mWPYEOqEn9SAiUL7V+P/bc4HRnul80OcdVxW+ljf7eJ1NuakXbr8F8AAwqSj2
-	 wdi9gt/2ovYjHyUxbf7MCYxFHI2MPqlqDUJLOlAjbw9ZG43AGbDJh44jiE7/oP2bWX
-	 gvZ5IKHMux54Q==
-Date: Mon, 1 Jan 2024 16:15:54 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Michael Schaller <michael@5challer.de>
-Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, macro@orcam.me.uk,
-	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	gregkh@linuxfoundation.org, hkallweit1@gmail.com,
-	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-Message-ID: <20240101221554.GA1693060@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VxvC1E0L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704186479; x=1735722479;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ilO5IzhQ3Hwvx3JB2WQjM6kgLpNd1YFCiNdkM3lmNDU=;
+  b=VxvC1E0LDFpmnAAo975IjzJ+4JWxPweMKF1a5zAKP8nY/vBjFAR78/dz
+   hYxYo59mNqz4mtPUmo5Te4wBaReUmAlD5Rh4iYbyGRvSPUen5kt2lffnG
+   5tYCgxfq3AXAJlCcSDgYqoZpmFcMfWBErGeg21DvlfpeaoX+sTWtXYrps
+   6z+ExnV0JOos/ykCbA4AD6LoyQ9jpxqGmHF/X9RrHI7aSmb4/Wdf2O6Gl
+   1b5izKSUfbxhu35YZcQPpN2q9/ni/mKBMMr1aWzGD4whfXU1o/xaALCHk
+   0GBYuIMboarg4sGlDZBPquqfrLWzDYe7jSHPw6HgxX+0KVnftVoGI8xr+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="4192265"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="4192265"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 01:07:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="772784129"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="772784129"
+Received: from jomolloy-mobl.ger.corp.intel.com (HELO [10.252.51.93]) ([10.252.51.93])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 01:07:54 -0800
+Message-ID: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
+Date: Tue, 2 Jan 2024 11:08:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f121140-e5dc-4c1a-b510-a9d791004a27@5challer.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
+Content-Language: en-US
+To: Takashi Iwai <tiwai@suse.de>,
+ Dominik Brodowski <linux@dominikbrodowski.net>,
+ Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ pierre-louis.bossart@linux.intel.com, kai.vehmanen@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
+ <87sf3lxiet.wl-tiwai@suse.de> <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
+ <874jg1x7ao.wl-tiwai@suse.de> <ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
+ <87plyovwg7.wl-tiwai@suse.de>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <87plyovwg7.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 01, 2024 at 07:57:40PM +0100, Michael Schaller wrote:
-> On 01.01.24 19:13, Bjorn Helgaas wrote:
-> > On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
-> > ...
 
-> > So unless somebody has a counter-argument, I plan to queue a revert of
-> > 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
-> > v6.7.
+
+On 30/12/2023 12:03, Takashi Iwai wrote:
+> On Sat, 30 Dec 2023 08:27:43 +0100,
+> Dominik Brodowski wrote:
+>>
+>> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
+>>> On Fri, 29 Dec 2023 16:24:18 +0100,
+>>> Dominik Brodowski wrote:
+>>>>
+>>>> Hi Takashi,
+>>>>
+>>>> many thanks for your response. Your patch helps half-way: the oops goes
+>>>> away, but so does the sound... With your patch, the decisive lines in dmesg
+>>>> are:
+>>>>
+>>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+>>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+>>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+>>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+>>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+>>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
+>>>> 	platform sof_sdw: deferred probe pending
+>>>>
+>>>> With a revert of the a0575b4add21, it is:
+>>>>
+>>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+>>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+>>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
+>>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
+>>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
+>>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
+>>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
+>>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
+>>>>
+>>>> Maybe this helps a bit further?
+>>>
+>>> Thanks for quick testing.
+>>> It shows at least that my guess wasn't wrong.
+>>>
+>>> The problem could be the initialization order in the caller side.
+>>> Can the patch below work instead?
+>>
+>> Unfortunately, no:
+>>
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+>> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
+>> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+>> sof_sdw sof_sdw: snd_soc_register_card failed -517
+>> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
+>> sof_sdw sof_sdw: snd_soc_register_card failed -517
+>> platform sof_sdw: deferred probe pending
 > 
-> If it helps I could also try if a partial revert of 08d0cc5f3426 would be
-> sufficient. This might also narrow down the issue and give more insight
-> where the issue originates from.
+> Hm, then it might be the logical failure of that commit.
+> Peter?
+> 
+> Without a fix in the next few days, we'll have to revert it before
+> 6.7.
 
-We're so close to the v6.7 final release that I doubt we can figure
-out the problem and test a fix before v6.7.  I'm sure Kai-Heng would
-appreciate any additional data, but I don't think it's urgent at this
-point.
+The fix for this was sent early December:
+https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
 
-Bjorn
+It had the correct Fixes tag but it did not made it to 6.7-rc while
+a0575b4add21 did made it.
+
+Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
+might have time for it to land?
+
+-- 
+Péter
