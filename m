@@ -1,15 +1,15 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F344318636;
-	Wed,  3 Jan 2024 08:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4F518EA0;
+	Wed,  3 Jan 2024 11:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rKwVf-00042W-Un; Wed, 03 Jan 2024 09:21:55 +0100
-Message-ID: <1c65dc20-774b-4271-aa5e-3ad2c1db5b1e@leemhuis.info>
-Date: Wed, 3 Jan 2024 09:21:55 +0100
+	id 1rKz59-00048H-RT; Wed, 03 Jan 2024 12:06:43 +0100
+Message-ID: <5c8eb9ed-8029-4e31-b957-083255b6616c@leemhuis.info>
+Date: Wed, 3 Jan 2024 12:06:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,76 +17,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
+Subject: Re: [REGRESSION] Platforms supporting SGX fail to kexec due to
+ 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
+To: LKML Mailing List <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
 Content-Language: en-US, de-DE
-To: Michael Schaller <michael@5challer.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, macro@orcam.me.uk, ajayagarwal@google.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
- hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
- johan+linaro@kernel.org
-References: <20240101221554.GA1693060@bhelgaas>
- <5598b690-12da-4237-b2bf-c9c691c4647c@5challer.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5598b690-12da-4237-b2bf-c9c691c4647c@5challer.de>
+In-Reply-To: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704271343;69f8e9d3;
-X-HE-SMSGID: 1rKwVf-00042W-Un
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704280006;a8c67909;
+X-HE-SMSGID: 1rKz59-00048H-RT
 
-On 02.01.24 14:50, Michael Schaller wrote:
-> On 01.01.24 23:15, Bjorn Helgaas wrote:
->> On Mon, Jan 01, 2024 at 07:57:40PM +0100, Michael Schaller wrote:
->>> On 01.01.24 19:13, Bjorn Helgaas wrote:
->>>> On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
->>>> ...
->>
->>>> So unless somebody has a counter-argument, I plan to queue a revert of
->>>> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
->>>> v6.7.
->>>
->>> If it helps I could also try if a partial revert of 08d0cc5f3426
->>> would be
->>> sufficient. This might also narrow down the issue and give more insight
->>> where the issue originates from.
->>
->> We're so close to the v6.7 final release that I doubt we can figure
->> out the problem and test a fix before v6.7.  I'm sure Kai-Heng would
->> appreciate any additional data, but I don't think it's urgent at this
->> point.
+On 29.12.23 01:33, Ashok Raj wrote:
 > 
-> We're indeed close to the final v6.7 release, which in turn means that a
-> last minute revert of a 16 month old commit might cause even more
-> regressions as there have been quite a few ASPM changes afterwards and
-> there won't be much testing anymore before the final release.
+> 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
 > 
-> Furthermore, given the age of the commit and that it has been backported
-> to kernel 5.15, the question is also if the revert would be backported
-> to the affected LTS kernels?
+> Causes kexec failure. Backing out this change, kexec succeeds. Symptom is
+> it appears to hang, possibly hung at the panic. Although I have the
+> earlyprintk enabled, I don't see any console messages when new kernel
+> boots. 
 > 
-> If this regression risk is acceptable then I'm all for reverting the
-> commit now and then working on a fix.
+> Also tested turning off CONFIG_X86_SGX, the kernel with this commit
+> included also kexec's fine.
+> 
+> Booting from warm/cold reset has no issues. Only kexec to new kernel with
+> this change included and CONFIG_X86_SGX=y causes the kexec failure.
+> 
+> #regzbot introduced: 96c6b8f212a
 
-FWIW (just in case some of you might not be aware of this): Linus not
-that long ago said this about regressions that are somewhat older:
+Fix a typo and do a few other things while at it:
 
-"""
-There's obviously a time limit: if that "regression in an earlier
-release" was a year or more ago, and just took forever for people to
-notice, and it had semantic changes that now mean that fixing the
-regression could cause a _new_ regression, then that can cause me to
-go "Oh, now the new semantics are what we have to live with".
-"""
-
-For full context see:
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+#regzbot introduced: e96c6b8f212a
+#regzbot title: memblock: platforms supporting SGX fail to kexec
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
