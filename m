@@ -1,193 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from sender4-of-o50.zoho.com (sender4-of-o50.zoho.com [136.143.188.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2D828E12
-	for <regressions@lists.linux.dev>; Fri,  5 Jan 2024 10:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CkLXjhbT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704450582; x=1735986582;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZbDiA9+wtSmBogm1dpjQZeHZZEjhT/6ersxx8tYBwEg=;
-  b=CkLXjhbTVfhkIKjyy2Tb941qUIrFhBt8wM0k5mWkO2NIjAwaUbsBG7Ky
-   BWmJpJjwZEMLP8ySA0pjio5ALqoZ28dgGOtgvhLAkmAjNEQ9icjBo02AT
-   gJkNYKh6/ncUKfLfG9gHKExD5gX0X4VE+oxHaFc9df1jlmy1lDht7mhXF
-   bsHZRZVQletMrJ24dtg3m6HmDo14aS4eBfRHVGv4xYLlODkbaTyMCNdgc
-   IE3XSJgNpqo4yw/XNMqQ9RECBDcpkOzUWeP0vkmbN+UrzzqQfdb7ffAUY
-   hCHDJkvJIXle+lE91qwIrCig9d5DRDt3vkw6OFW8P6UagSKois+neYYgr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="394653498"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="394653498"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 02:29:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="730438345"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="730438345"
-Received: from gchung-mobl.gar.corp.intel.com ([10.252.52.104])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 02:29:36 -0800
-Date: Fri, 5 Jan 2024 12:29:33 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, Michael Schaller <michael@5challer.de>, 
-    bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
-    macro@orcam.me.uk, ajayagarwal@google.com, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hkallweit1@gmail.com, 
-    michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-In-Reply-To: <CAAd53p7yASMMcRTUR6ybJzj8KUP_+7h4nvE7wQ7cm0eQR6nEBQ@mail.gmail.com>
-Message-ID: <55df7563-7f1b-f26d-ce73-251d51a36f5@linux.intel.com>
-References: <20240101181348.GA1684058@bhelgaas> <d7e7b133-d373-e850-1f5f-deee8aa86958@linux.intel.com> <CAAd53p7yASMMcRTUR6ybJzj8KUP_+7h4nvE7wQ7cm0eQR6nEBQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AA82C688
+	for <regressions@lists.linux.dev>; Fri,  5 Jan 2024 11:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=5challer.de
+ARC-Seal: i=1; a=rsa-sha256; t=1704453519; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OAUYRv8ummtZnrKvgTyuAn/hhoBschp+Bf68ZSIy5E6vkmychTnx3TF8sn/z+lhXiLXvohXUbdXHkIIZRViYEIzFU5YquVYVE/PKqJ0Jhh6d6LeiQupHQc5HtSN06/nwSxl2c2U/Ybii4B8f/6ENxwqmSSeWpm9a0ZfpYNbOlVo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1704453519; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ELt2tHE1UHdycIos3QxPv8eeTVqNRslY1KGPQDBFfaM=; 
+	b=bUIsVKY3hVTm+yzx89ii3nDECyIpC6tfjmVG113ps4dzOL+KtnI/Rw3Q1oyhfPLTg1pOlCOokd2SUwK9CBcjms9zPPA9GgAg0JF62FtQqX+Wg6SPGU3yFNbuuPw9JCYA76OWM6ayiuMg20dTl5NAW241wmB0Y+d11ax9DU9sMTQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	spf=pass  smtp.mailfrom=michael@5challer.de;
+	dmarc=pass header.from=<michael@5challer.de>
+Received: from [192.168.144.187] (ipbcc11913.dynamic.kabel-deutschland.de [188.193.25.19]) by mx.zohomail.com
+	with SMTPS id 1704453517374826.2462021350894; Fri, 5 Jan 2024 03:18:37 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------MXEyRYGPW1cdofYJe8hy5vJr"
+Message-ID: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de>
+Date: Fri, 5 Jan 2024 12:18:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-778041395-1704450580=:1746"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+Content-Language: en-US
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, macro@orcam.me.uk, ajayagarwal@google.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
+ hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
+ johan+linaro@kernel.org
+References: <20240101181348.GA1684058@bhelgaas>
+ <0f121140-e5dc-4c1a-b510-a9d791004a27@5challer.de>
+ <CAAd53p69oLBGYEc2A4PNBP9KVmQkH=EaNh2_zuFDbwWJNLmtXg@mail.gmail.com>
+From: Michael Schaller <michael@5challer.de>
+In-Reply-To: <CAAd53p69oLBGYEc2A4PNBP9KVmQkH=EaNh2_zuFDbwWJNLmtXg@mail.gmail.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.1.0/204.377.37
+X-ZohoMailClient: External
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This is a multi-part message in MIME format.
+--------------MXEyRYGPW1cdofYJe8hy5vJr
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---8323329-778041395-1704450580=:1746
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On 05.01.24 04:25, Kai-Heng Feng wrote:
+> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
 
-On Fri, 5 Jan 2024, Kai-Heng Feng wrote:
+Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result in 
+a working resume. I've tested this on kernel 6.6.9 (which still has 
+commit 08d0cc5f3426). I've also attached the relevant dmesg output of 
+the suspend/resume cycle in case this helps.
 
-> On Wed, Jan 3, 2024 at 11:41 PM Ilpo Järvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Mon, 1 Jan 2024, Bjorn Helgaas wrote:
-> >
-> > > On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
-> > > > Issue:
-> > > > On resume from suspend to RAM there is no output for about 12 seconds, then
-> > > > shortly a blinking cursor is visible in the upper left corner on an
-> > > > otherwise black screen which is followed by a reboot.
-> > > >
-> > > > Setup:
-> > > > * Machine: ASUS mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1)
-> > > > * Firmware: 0508 (latest; also tested previous 0505)
-> > > > * OS: Ubuntu 23.10 (except kernel)
-> > > > * Kernel: 6.6.8 (also tested 6.7-rc7; config attached)
-> > > >
-> > > > Debugging summary:
-> > > > * Kernel 5.10.205 isn’t affected.
-> > > > * Bisect identified commit 08d0cc5f34265d1a1e3031f319f594bd1970976c as
-> > > > cause.
-> > > > * PCI device 0000:03:00.0 (Intel 8265 Wifi) causes resume issues as long as
-> > > > ASPM is enabled (default).
-> > > > * The commit message indicates that a quirk could be written to mitigate the
-> > > > issue but I don’t know how to write such a quirk.
-> > > >
-> > > > Confirmed workarounds:
-> > > > * Connect a USB flash drive (no clue why; maybe this causes a delay that
-> > > > lets the resume succeed)
-> > > > * Revert commit 08d0cc5f34265d1a1e3031f319f594bd1970976c (commit seemed
-> > > > intentional; a quirk seems to be the preferred solution)
-> > > > * pcie_aspm=off
-> > > > * pcie_aspm.policy=performance
-> > > > * echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm
-> > > >
-> > > > Debugging details:
-> > > > * The resume trigger (power button, keyboard, mouse) doesn’t seem to make
-> > > > any difference.
-> > > > * Double checked that the kernel is configured to *not* reboot on panic.
-> > > > * Double checked that there still isn't any kernel output without quiet and
-> > > > splash.
-> > > > * The issue doesn’t happen if a USB flash drive is connected. The content of
-> > > > the flash drive doesn’t appear to matter. The USB port doesn’t appear to
-> > > > matter.
-> > > > * No information in any logs after the reboot. I suspect the resume from
-> > > > suspend to RAM isn’t getting far enough as that logs could be written.
-> > > > * Kernel 5.10.205 isn’t affected. Kernel 5.15.145, 6.6.8 and 6.7-rc7 are
-> > > > affected.
-> > > > * A kernel bisect has revealed the following commit as cause:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=08d0cc5f34265d1a1e3031f319f594bd1970976c
-> > > > * The commit was part of kernel 5.20 and has been backported to 5.15.
-> > > > * The commit mentions that a device-specific quirk could be added in case of
-> > > > new issues.
-> > > > * According to sysfs and lspci only device 0000:03:00.0 (Intel 8265 Wifi)
-> > > > has ASPM enabled by default.
-> > > > * Disabling ASPM for device 0000:03:00.0 lets the resume from suspend to RAM
-> > > > succeed.
-> > > > * Enabling ASPM for all devices except 0000:03:00.0 lets the resume from
-> > > > suspend to RAM succeed.
-> > > > * This would indicate that a quirk is missing for the device 0000:03:00.0
-> > > > (Intel 8265 Wifi) but I have no clue how to write such a quirk or how to get
-> > > > the specifics for such a quirk.
-> > > > * I still have no clue how a USB flash drive plays into all this. Maybe some
-> > > > kind of a timing issue where the connected USB flash drive delays something
-> > > > long enough so that the resume succeeds. Maybe the code removed by commit
-> > > > 08d0cc5f34265d1a1e3031f319f594bd1970976c caused a similar delay. ¯\_(ツ)_/¯
-> > >
-> > > Hmmm.  08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> > > appeared in v6.0, released Oct 2, 2022, so it's been there a while.
-> > >
-> > > But I think the best option is to revert it until this issue is
-> > > resolved.  Per the commit log, 08d0cc5f3426 solved two problems:
-> > >
-> > >   1) ASPM config changes done via sysfs are lost if the device power
-> > >      state is changed, e.g., typically set to D3hot in .suspend() and
-> > >      D0 in .resume().
-> > >
-> > >   2) If L1SS is restored during system resume, that restored state
-> > >      would be overwritten.
-> > >
-> > > Problem 2) relates to a patch that is currently reverted (a7152be79b62
-> > > ("Revert "PCI/ASPM: Save L1 PM Substates Capability for
-> > > suspend/resume""), so I don't think reverting 08d0cc5f3426 will make
-> > > this problem worse.
-> > >
-> > > Reverting 08d0cc5f3426 will make 1) a problem again.  But my guess is
-> > > ASPM changes via sysfs are fairly unusual and the device probably
-> > > remains functional even though it may use more power because the ASPM
-> > > configuration was lost.
-> > >
-> > > So unless somebody has a counter-argument, I plan to queue a revert of
-> > > 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
-> > > v6.7.
-> >
-> > Hi,
-> >
-> > I cannot understand how 1) even occurs. AFAICT, nothing
-> > pcie_aspm_pm_state_change() calls into overwrites link->aspm_disable that
-> > is the variable storing user inputs via sysfs. So how the changes via
-> > sysfs are lost?
-> 
-> Because it's states being enabled via sysfs get overwritten, not the
-> disabled ones.
+Furthermore does this mean that commit 08d0cc5f3426 isn't at fault but 
+rather that we are dealing with a timing issue?
 
-This leaves me even less sure what you're even talking about here. Are we
-talking about aspm_attr_store_common() which "enables" states by changing 
-link->aspm_disable? (But aspm_attr_store_common() just as much "disables" 
-states by altering link->aspm_disable so I don't see how there's 
-difference between enabled/disabled ones).
+Michael
+--------------MXEyRYGPW1cdofYJe8hy5vJr
+Content-Type: text/plain; charset=UTF-8;
+ name="dmesg-with-pm-async-disabled.txt"
+Content-Disposition: attachment; filename="dmesg-with-pm-async-disabled.txt"
+Content-Transfer-Encoding: base64
 
-During pcie_aspm_pm_state_change(), pcie_config_aspm_link() then uses 
-link->aspm_capable and link->aspm_disable as input but it won't change 
-link->aspm_disable (= it won't overwrite the user's input).
+W0ZyIEphbiAgNSAxMTo0NTo0NyAyMDI0XSB3bHAzczA6IGRlYXV0aGVudGljYXRpbmcgZnJv
+bSBiMDplNDpkNTo3ZTpkYzpkNSBieSBsb2NhbCBjaG9pY2UgKFJlYXNvbjogMz1ERUFVVEhf
+TEVBVklORykKW0ZyIEphbiAgNSAxMTo0NTo0NyAyMDI0XSBQTTogc3VzcGVuZCBlbnRyeSAo
+ZGVlcCkKW0ZyIEphbiAgNSAxMTo0NTo0NyAyMDI0XSBGaWxlc3lzdGVtcyBzeW5jOiAwLjAw
+MyBzZWNvbmRzCltGciBKYW4gIDUgMTE6NDU6NDcgMjAyNF0gRnJlZXppbmcgdXNlciBzcGFj
+ZSBwcm9jZXNzZXMKW0ZyIEphbiAgNSAxMTo0NTo0NyAyMDI0XSBGcmVlemluZyB1c2VyIHNw
+YWNlIHByb2Nlc3NlcyBjb21wbGV0ZWQgKGVsYXBzZWQgMC4wMDEgc2Vjb25kcykKW0ZyIEph
+biAgNSAxMTo0NTo0NyAyMDI0XSBPT00ga2lsbGVyIGRpc2FibGVkLgpbRnIgSmFuICA1IDEx
+OjQ1OjQ3IDIwMjRdIEZyZWV6aW5nIHJlbWFpbmluZyBmcmVlemFibGUgdGFza3MKW0ZyIEph
+biAgNSAxMTo0NTo0NyAyMDI0XSBGcmVlemluZyByZW1haW5pbmcgZnJlZXphYmxlIHRhc2tz
+IGNvbXBsZXRlZCAoZWxhcHNlZCAwLjAwMSBzZWNvbmRzKQpbRnIgSmFuICA1IDExOjQ1OjQ3
+IDIwMjRdIHByaW50azogU3VzcGVuZGluZyBjb25zb2xlKHMpICh1c2Ugbm9fY29uc29sZV9z
+dXNwZW5kIHRvIGRlYnVnKQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIEFDUEk6IEVDOiBp
+bnRlcnJ1cHQgYmxvY2tlZApbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIEFDUEk6IFBNOiBQ
+cmVwYXJpbmcgdG8gZW50ZXIgc3lzdGVtIHNsZWVwIHN0YXRlIFMzCltGciBKYW4gIDUgMTE6
+NDU6NDggMjAyNF0gQUNQSTogRUM6IGV2ZW50IGJsb2NrZWQKW0ZyIEphbiAgNSAxMTo0NTo0
+OCAyMDI0XSBBQ1BJOiBFQzogRUMgc3RvcHBlZApbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRd
+IEFDUEk6IFBNOiBTYXZpbmcgcGxhdGZvcm0gTlZTIG1lbW9yeQpbRnIgSmFuICA1IDExOjQ1
+OjQ4IDIwMjRdIERpc2FibGluZyBub24tYm9vdCBDUFVzIC4uLgpbRnIgSmFuICA1IDExOjQ1
+OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAxIGlzIG5vdyBvZmZsaW5lCltGciBKYW4gIDUgMTE6
+NDU6NDggMjAyNF0gc21wYm9vdDogQ1BVIDIgaXMgbm93IG9mZmxpbmUKW0ZyIEphbiAgNSAx
+MTo0NTo0OCAyMDI0XSBzbXBib290OiBDUFUgMyBpcyBub3cgb2ZmbGluZQpbRnIgSmFuICA1
+IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSA0IGlzIG5vdyBvZmZsaW5lCltGciBKYW4g
+IDUgMTE6NDU6NDggMjAyNF0gc21wYm9vdDogQ1BVIDUgaXMgbm93IG9mZmxpbmUKW0ZyIEph
+biAgNSAxMTo0NTo0OCAyMDI0XSBzbXBib290OiBDUFUgNiBpcyBub3cgb2ZmbGluZQpbRnIg
+SmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSA3IGlzIG5vdyBvZmZsaW5lCltG
+ciBKYW4gIDUgMTE6NDU6NDggMjAyNF0gc21wYm9vdDogQ1BVIDggaXMgbm93IG9mZmxpbmUK
+W0ZyIEphbiAgNSAxMTo0NTo0OCAyMDI0XSBzbXBib290OiBDUFUgOSBpcyBub3cgb2ZmbGlu
+ZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAxMCBpcyBub3cgb2Zm
+bGluZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAxMSBpcyBub3cg
+b2ZmbGluZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAxMiBpcyBu
+b3cgb2ZmbGluZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAxMyBp
+cyBub3cgb2ZmbGluZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIHNtcGJvb3Q6IENQVSAx
+NCBpcyBub3cgb2ZmbGluZQpbRnIgSmFuICA1IDExOjQ1OjQ4IDIwMjRdIFNwZWN0cmUgVjIg
+OiBVcGRhdGUgdXNlciBzcGFjZSBTTVQgbWl0aWdhdGlvbjogU1RJQlAgb2ZmCltGciBKYW4g
+IDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQ1BVIDE1IGlzIG5vdyBvZmZsaW5lCltGciBK
+YW4gIDUgMTE6NDU6NDkgMjAyNF0gQUNQSTogUE06IExvdy1sZXZlbCByZXN1bWUgY29tcGxl
+dGUKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBFQzogRUMgc3RhcnRlZApbRnIg
+SmFuICA1IDExOjQ1OjQ5IDIwMjRdIEFDUEk6IFBNOiBSZXN0b3JpbmcgcGxhdGZvcm0gTlZT
+IG1lbW9yeQpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIEFNRC1WaTogVmlydHVhbCBBUElD
+IGVuYWJsZWQKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBTUQtVmk6IFZpcnR1YWwgQVBJ
+QyBlbmFibGVkCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gTFZUIG9mZnNldCAwIGFzc2ln
+bmVkIGZvciB2ZWN0b3IgMHg0MDAKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBFbmFibGlu
+ZyBub24tYm9vdCBDUFVzIC4uLgpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIHNtcGJvb3Q6
+IEJvb3RpbmcgTm9kZSAwIFByb2Nlc3NvciAxIEFQSUMgMHgxCltGciBKYW4gIDUgMTE6NDU6
+NDkgMjAyNF0gQUNQSTogXF9TQl8uUExURi5QMDAxOiBGb3VuZCAzIGlkbGUgc3RhdGVzCltG
+ciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gU3BlY3RyZSBWMiA6IFVwZGF0ZSB1c2VyIHNwYWNl
+IFNNVCBtaXRpZ2F0aW9uOiBTVElCUCBhbHdheXMtb24KW0ZyIEphbiAgNSAxMTo0NTo0OSAy
+MDI0XSBDUFUxIGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQm9v
+dGluZyBOb2RlIDAgUHJvY2Vzc29yIDIgQVBJQyAweDIKW0ZyIEphbiAgNSAxMTo0NTo0OSAy
+MDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMDI6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEph
+biAgNSAxMTo0NTo0OSAyMDI0XSBDUFUyIGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAy
+NF0gc21wYm9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDMgQVBJQyAweDMKW0ZyIEph
+biAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMDM6IEZvdW5kIDMgaWRs
+ZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFUzIGlzIHVwCltGciBKYW4g
+IDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDQg
+QVBJQyAweDQKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAw
+MDQ6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFU0
+IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQm9vdGluZyBOb2Rl
+IDAgUHJvY2Vzc29yIDUgQVBJQyAweDUKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJ
+OiBcX1NCXy5QTFRGLlAwMDU6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0
+NTo0OSAyMDI0XSBDUFU1IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21wYm9v
+dDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDYgQVBJQyAweDYKW0ZyIEphbiAgNSAxMTo0
+NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMDY6IEZvdW5kIDMgaWRsZSBzdGF0ZXMK
+W0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFU2IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6
+NDkgMjAyNF0gc21wYm9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDcgQVBJQyAweDcK
+W0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMDc6IEZvdW5k
+IDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFU3IGlzIHVwCltG
+ciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vz
+c29yIDggQVBJQyAweDgKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5Q
+TFRGLlAwMDg6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0
+XSBDUFU4IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21wYm9vdDogQm9vdGlu
+ZyBOb2RlIDAgUHJvY2Vzc29yIDkgQVBJQyAweDkKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0
+XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMDk6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAg
+NSAxMTo0NTo0OSAyMDI0XSBDUFU5IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0g
+c21wYm9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDEwIEFQSUMgMHhhCltGciBKYW4g
+IDUgMTE6NDU6NDkgMjAyNF0gQUNQSTogXF9TQl8uUExURi5QMDBBOiBGb3VuZCAzIGlkbGUg
+c3RhdGVzCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gQ1BVMTAgaXMgdXAKW0ZyIEphbiAg
+NSAxMTo0NTo0OSAyMDI0XSBzbXBib290OiBCb290aW5nIE5vZGUgMCBQcm9jZXNzb3IgMTEg
+QVBJQyAweGIKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAw
+MEI6IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFUx
+MSBpcyB1cApbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIHNtcGJvb3Q6IEJvb3RpbmcgTm9k
+ZSAwIFByb2Nlc3NvciAxMiBBUElDIDB4YwpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIEFD
+UEk6IFxfU0JfLlBMVEYuUDAwQzogRm91bmQgMyBpZGxlIHN0YXRlcwpbRnIgSmFuICA1IDEx
+OjQ1OjQ5IDIwMjRdIENQVTEyIGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gc21w
+Ym9vdDogQm9vdGluZyBOb2RlIDAgUHJvY2Vzc29yIDEzIEFQSUMgMHhkCltGciBKYW4gIDUg
+MTE6NDU6NDkgMjAyNF0gQUNQSTogXF9TQl8uUExURi5QMDBEOiBGb3VuZCAzIGlkbGUgc3Rh
+dGVzCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gQ1BVMTMgaXMgdXAKW0ZyIEphbiAgNSAx
+MTo0NTo0OSAyMDI0XSBzbXBib290OiBCb290aW5nIE5vZGUgMCBQcm9jZXNzb3IgMTQgQVBJ
+QyAweGUKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBBQ1BJOiBcX1NCXy5QTFRGLlAwMEU6
+IEZvdW5kIDMgaWRsZSBzdGF0ZXMKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBDUFUxNCBp
+cyB1cApbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIHNtcGJvb3Q6IEJvb3RpbmcgTm9kZSAw
+IFByb2Nlc3NvciAxNSBBUElDIDB4ZgpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIEFDUEk6
+IFxfU0JfLlBMVEYuUDAwRjogRm91bmQgMyBpZGxlIHN0YXRlcwpbRnIgSmFuICA1IDExOjQ1
+OjQ5IDIwMjRdIENQVTE1IGlzIHVwCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gQUNQSTog
+UE06IFdha2luZyB1cCBmcm9tIHN5c3RlbSBzbGVlcCBzdGF0ZSBTMwpbRnIgSmFuICA1IDEx
+OjQ1OjQ5IDIwMjRdIEFDUEk6IEVDOiBpbnRlcnJ1cHQgdW5ibG9ja2VkCltGciBKYW4gIDUg
+MTE6NDU6NDkgMjAyNF0gQUNQSTogRUM6IGV2ZW50IHVuYmxvY2tlZApbRnIgSmFuICA1IDEx
+OjQ1OjQ5IDIwMjRdIHBjaSAwMDAwOjAwOjAwLjI6IGNhbid0IGRlcml2ZSByb3V0aW5nIGZv
+ciBQQ0kgSU5UIEEKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSBwY2kgMDAwMDowMDowMC4y
+OiBQQ0kgSU5UIEE6IG5vIEdTSQpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIHhoY2lfaGNk
+IDAwMDA6MDE6MDAuMDogeEhDIGVycm9yIGluIHJlc3VtZSwgVVNCU1RTIDB4NDAxLCBSZWlu
+aXQKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSB1c2IgdXNiMTogcm9vdCBodWIgbG9zdCBw
+b3dlciBvciB3YXMgcmVzZXQKW0ZyIEphbiAgNSAxMTo0NTo0OSAyMDI0XSB1c2IgdXNiMjog
+cm9vdCBodWIgbG9zdCBwb3dlciBvciB3YXMgcmVzZXQKW0ZyIEphbiAgNSAxMTo0NTo0OSAy
+MDI0XSBbZHJtXSBQQ0lFIEdBUlQgb2YgMTAyNE0gZW5hYmxlZC4KW0ZyIEphbiAgNSAxMTo0
+NTo0OSAyMDI0XSBbZHJtXSBQVEIgbG9jYXRlZCBhdCAweDAwMDAwMEY0MUZDMDAwMDAKW0Zy
+IEphbiAgNSAxMTo0NTo0OSAyMDI0XSBbZHJtXSBQU1AgaXMgcmVzdW1pbmcuLi4KW0ZyIEph
+biAgNSAxMTo0NTo0OSAyMDI0XSBudm1lIG52bWUwOiAxNS8wLzAgZGVmYXVsdC9yZWFkL3Bv
+bGwgcXVldWVzCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gW2RybV0gcmVzZXJ2ZSAweDQw
+MDAwMCBmcm9tIDB4ZjQxZjgwMDAwMCBmb3IgUFNQIFRNUgpbRnIgSmFuICA1IDExOjQ1OjQ5
+IDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6IGFtZGdwdTogUkFTOiBvcHRpb25hbCByYXMg
+dGEgdWNvZGUgaXMgbm90IGF2YWlsYWJsZQpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIGFt
+ZGdwdSAwMDAwOjA1OjAwLjA6IGFtZGdwdTogUkFQOiBvcHRpb25hbCByYXAgdGEgdWNvZGUg
+aXMgbm90IGF2YWlsYWJsZQpbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIGFtZGdwdSAwMDAw
+OjA1OjAwLjA6IGFtZGdwdTogU0VDVVJFRElTUExBWTogc2VjdXJlZGlzcGxheSB0YSB1Y29k
+ZSBpcyBub3QgYXZhaWxhYmxlCltGciBKYW4gIDUgMTE6NDU6NDkgMjAyNF0gYW1kZ3B1IDAw
+MDA6MDU6MDAuMDogYW1kZ3B1OiBTTVUgaXMgcmVzdW1pbmcuLi4KW0ZyIEphbiAgNSAxMTo0
+NTo0OSAyMDI0XSBhbWRncHUgMDAwMDowNTowMC4wOiBhbWRncHU6IGRwbSBoYXMgYmVlbiBk
+aXNhYmxlZApbRnIgSmFuICA1IDExOjQ1OjQ5IDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6
+IGFtZGdwdTogU01VIGlzIHJlc3VtZWQgc3VjY2Vzc2Z1bGx5IQpbRnIgSmFuICA1IDExOjQ1
+OjQ5IDIwMjRdIFtkcm1dIERNVUIgaGFyZHdhcmUgaW5pdGlhbGl6ZWQ6IHZlcnNpb249MHgw
+MTAxMDAyNwpbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIFtkcm1dIGtpcSByaW5nIG1lYyAy
+IHBpcGUgMSBxIDAKW0ZyIEphbiAgNSAxMTo0NTo1MCAyMDI0XSBbZHJtXSBWQ04gZGVjb2Rl
+IGFuZCBlbmNvZGUgaW5pdGlhbGl6ZWQgc3VjY2Vzc2Z1bGx5KHVuZGVyIERQRyBNb2RlKS4K
+W0ZyIEphbiAgNSAxMTo0NTo1MCAyMDI0XSBbZHJtXSBKUEVHIGRlY29kZSBpbml0aWFsaXpl
+ZCBzdWNjZXNzZnVsbHkuCltGciBKYW4gIDUgMTE6NDU6NTAgMjAyNF0gYW1kZ3B1IDAwMDA6
+MDU6MDAuMDogYW1kZ3B1OiByaW5nIGdmeCB1c2VzIFZNIGludiBlbmcgMCBvbiBodWIgMApb
+RnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6IGFtZGdwdTog
+cmluZyBnZnhfbG93IHVzZXMgVk0gaW52IGVuZyAxIG9uIGh1YiAwCltGciBKYW4gIDUgMTE6
+NDU6NTAgMjAyNF0gYW1kZ3B1IDAwMDA6MDU6MDAuMDogYW1kZ3B1OiByaW5nIGdmeF9oaWdo
+IHVzZXMgVk0gaW52IGVuZyA0IG9uIGh1YiAwCltGciBKYW4gIDUgMTE6NDU6NTAgMjAyNF0g
+YW1kZ3B1IDAwMDA6MDU6MDAuMDogYW1kZ3B1OiByaW5nIGNvbXBfMS4wLjAgdXNlcyBWTSBp
+bnYgZW5nIDUgb24gaHViIDAKW0ZyIEphbiAgNSAxMTo0NTo1MCAyMDI0XSBhbWRncHUgMDAw
+MDowNTowMC4wOiBhbWRncHU6IHJpbmcgY29tcF8xLjEuMCB1c2VzIFZNIGludiBlbmcgNiBv
+biBodWIgMApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6
+IGFtZGdwdTogcmluZyBjb21wXzEuMi4wIHVzZXMgVk0gaW52IGVuZyA3IG9uIGh1YiAwCltG
+ciBKYW4gIDUgMTE6NDU6NTAgMjAyNF0gYW1kZ3B1IDAwMDA6MDU6MDAuMDogYW1kZ3B1OiBy
+aW5nIGNvbXBfMS4zLjAgdXNlcyBWTSBpbnYgZW5nIDggb24gaHViIDAKW0ZyIEphbiAgNSAx
+MTo0NTo1MCAyMDI0XSBhbWRncHUgMDAwMDowNTowMC4wOiBhbWRncHU6IHJpbmcgY29tcF8x
+LjAuMSB1c2VzIFZNIGludiBlbmcgOSBvbiBodWIgMApbRnIgSmFuICA1IDExOjQ1OjUwIDIw
+MjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6IGFtZGdwdTogcmluZyBjb21wXzEuMS4xIHVzZXMg
+Vk0gaW52IGVuZyAxMCBvbiBodWIgMApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdw
+dSAwMDAwOjA1OjAwLjA6IGFtZGdwdTogcmluZyBjb21wXzEuMi4xIHVzZXMgVk0gaW52IGVu
+ZyAxMSBvbiBodWIgMApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1
+OjAwLjA6IGFtZGdwdTogcmluZyBjb21wXzEuMy4xIHVzZXMgVk0gaW52IGVuZyAxMiBvbiBo
+dWIgMApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6IGFt
+ZGdwdTogcmluZyBraXFfMC4yLjEuMCB1c2VzIFZNIGludiBlbmcgMTMgb24gaHViIDAKW0Zy
+IEphbiAgNSAxMTo0NTo1MCAyMDI0XSBhbWRncHUgMDAwMDowNTowMC4wOiBhbWRncHU6IHJp
+bmcgc2RtYTAgdXNlcyBWTSBpbnYgZW5nIDAgb24gaHViIDgKW0ZyIEphbiAgNSAxMTo0NTo1
+MCAyMDI0XSBhbWRncHUgMDAwMDowNTowMC4wOiBhbWRncHU6IHJpbmcgdmNuX2RlYyB1c2Vz
+IFZNIGludiBlbmcgMSBvbiBodWIgOApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdw
+dSAwMDAwOjA1OjAwLjA6IGFtZGdwdTogcmluZyB2Y25fZW5jMCB1c2VzIFZNIGludiBlbmcg
+NCBvbiBodWIgOApbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAw
+LjA6IGFtZGdwdTogcmluZyB2Y25fZW5jMSB1c2VzIFZNIGludiBlbmcgNSBvbiBodWIgOApb
+RnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGFtZGdwdSAwMDAwOjA1OjAwLjA6IGFtZGdwdTog
+cmluZyBqcGVnX2RlYyB1c2VzIFZNIGludiBlbmcgNiBvbiBodWIgOApbRnIgSmFuICA1IDEx
+OjQ1OjUwIDIwMjRdIGF0YTI6IFNBVEEgbGluayBkb3duIChTU3RhdHVzIDAgU0NvbnRyb2wg
+MzAwKQpbRnIgSmFuICA1IDExOjQ1OjUwIDIwMjRdIGF0YTE6IFNBVEEgbGluayBkb3duIChT
+U3RhdHVzIDAgU0NvbnRyb2wgMzAwKQpbRnIgSmFuICA1IDExOjQ1OjUxIDIwMjRdIE9PTSBr
+aWxsZXIgZW5hYmxlZC4KW0ZyIEphbiAgNSAxMTo0NTo1MSAyMDI0XSBSZXN0YXJ0aW5nIHRh
+c2tzIC4uLiBkb25lLgpbRnIgSmFuICA1IDExOjQ1OjUxIDIwMjRdIHJhbmRvbTogY3JuZyBy
+ZXNlZWRlZCBvbiBzeXN0ZW0gcmVzdW1wdGlvbgpbRnIgSmFuICA1IDExOjQ1OjUxIDIwMjRd
+IHRoZXJtYWwgdGhlcm1hbF96b25lMDogZmFpbGVkIHRvIHJlYWQgb3V0IHRoZXJtYWwgem9u
+ZSAoLTYxKQpbRnIgSmFuICA1IDExOjQ1OjUxIDIwMjRdIFBNOiBzdXNwZW5kIGV4aXQKW0Zy
+IEphbiAgNSAxMTo0NTo1MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RT
+TSBiZjAyMTJmMi03ODhmLWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEph
+biAgNSAxMTo0NTo1MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBi
+ZjAyMTJmMi03ODhmLWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAg
+NSAxMTo0NTo1MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBiZjAy
+MTJmMi03ODhmLWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAgNSAx
+MTo0NTo1MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBiZjAyMTJm
+Mi03ODhmLWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAgNSAxMTo0
+NTo1MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBiZjAyMTJmMi03
+ODhmLWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAgNSAxMTo0NTo1
+MSAyMDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBiZjAyMTJmMi03ODhm
+LWM2NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAgNSAxMTo0NTo1MSAy
+MDI0XSBBQ1BJOiBcOiBmYWlsZWQgdG8gZXZhbHVhdGUgX0RTTSBiZjAyMTJmMi03ODhmLWM2
+NGQtYTViMy0xZjczOGUyODVhZGUgKDB4MTAwMSkKW0ZyIEphbiAgNSAxMTo0NTo1NCAyMDI0
+XSB3bHAzczA6IGF1dGhlbnRpY2F0ZSB3aXRoIGIwOmU0OmQ1OjdlOmRjOmQ1CltGciBKYW4g
+IDUgMTE6NDU6NTQgMjAyNF0gd2xwM3MwOiBzZW5kIGF1dGggdG8gYjA6ZTQ6ZDU6N2U6ZGM6
+ZDUgKHRyeSAxLzMpCltGciBKYW4gIDUgMTE6NDU6NTQgMjAyNF0gd2xwM3MwOiBhdXRoZW50
+aWNhdGVkCltGciBKYW4gIDUgMTE6NDU6NTQgMjAyNF0gd2xwM3MwOiBhc3NvY2lhdGUgd2l0
+aCBiMDplNDpkNTo3ZTpkYzpkNSAodHJ5IDEvMykKW0ZyIEphbiAgNSAxMTo0NTo1NCAyMDI0
+XSB3bHAzczA6IFJYIEFzc29jUmVzcCBmcm9tIGIwOmU0OmQ1OjdlOmRjOmQ1IChjYXBhYj0w
+eDEwMTEgc3RhdHVzPTAgYWlkPTUpCltGciBKYW4gIDUgMTE6NDU6NTQgMjAyNF0gd2xwM3Mw
+OiBhc3NvY2lhdGVkCltGciBKYW4gIDUgMTE6NDU6NTUgMjAyNF0gd2xwM3MwOiBMaW1pdGlu
+ZyBUWCBwb3dlciB0byAyMyAoMjMgLSAwKSBkQm0gYXMgYWR2ZXJ0aXNlZCBieSBiMDplNDpk
+NTo3ZTpkYzpkNQoK
 
-pcie_update_aspm_capable() done before calling pcie_config_aspm_path() can 
-alter link->aspm_capable (looks very much intentional) which can lead into 
-some state not being available any more for pcie_config_aspm_link().
-Is this what you are trying to say, that some state gets removed from 
-link->aspm_capable and the effective result is that a state user enabled
-via sysfs can no longer be enabled?
-
-I even looked into aspm.c from 08d0cc5f3426 but cannot see significant 
-differences on how link->aspm_disable is being handled vs current code.
-
--- 
- i.
-
---8323329-778041395-1704450580=:1746--
+--------------MXEyRYGPW1cdofYJe8hy5vJr--
