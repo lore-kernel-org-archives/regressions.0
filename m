@@ -1,89 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7063251C34;
-	Mon,  8 Jan 2024 15:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FB451C37
+	for <regressions@lists.linux.dev>; Mon,  8 Jan 2024 15:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zW8o0y5O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3325C433AB;
-	Mon,  8 Jan 2024 15:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704727073;
-	bh=QBBvzPy3PIfE0zsc4vMISvmpZvyovM+ooqBsR697utQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zW8o0y5Op5fYvE37RukX5xGNZ9ZrN/GvmE4MWLcI7Wfg1nRJ6r/JObycldPriqwy0
-	 U+6j2Ru+ihWteO/kCXv1XGzpTpseDMNmWuPL73+lQWvS+kj8/Keun3q8gSNq/PzAa6
-	 p/z5ARvEav/yfH2PAbOXcrmxld+oguaEcB1N6Ia0=
-Date: Mon, 8 Jan 2024 16:11:09 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Paulo Alcantara <pc@manguebit.com>
-Cc: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>,
-	Leonardo Brondani Schenkel <leonardo@schenkel.net>,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	Mathias =?iso-8859-1?Q?Wei=DFbach?= <m.weissbach@info-gate.de>
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="OwA1GDQt"
+Message-ID: <88a9efbd0718039e6214fd23978250d1@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1704729533;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eITOrU7IqmoWhpytvEyQabfj5gns6LHywe5FDzXfE3I=;
+	b=OwA1GDQte2vVJv4t2oEXmyULIMZroyX++8uuhOiq+2vKnQaxlMMxKPzhTEGU7DtucW5Dnd
+	RxtGI3f951dUkpvBoQ5DL9mPjVaTRVPSTBMg1ijyBCvE9AOc318hTiHbS+PoiHBAC/Xubh
+	/Ahga3oDK2wzRBKzv4FMDo9xCeHOJbQqOZNUSc6scOBzPYpSXLsYXhkVqZzuHMfl/deLg+
+	7OVcVz7w2/AJwQb1WuO8GNPZeHobwTZ8t51v/UhgCwZCautNFHaANQteYuPOajA9EyDgVG
+	USfYElfJ0KZeSXX1sT7njzmhn/DNAezoPwV9q0pOATTLKVLfdUe1lF7e6t+Bww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1704729533; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eITOrU7IqmoWhpytvEyQabfj5gns6LHywe5FDzXfE3I=;
+	b=Rn2nQt5bbJlxsfSwqjECOK7V7iOe5xBSgyFQzqmddIIHDC/BD4wIZ5JA+ycAYVESjA60Lg
+	ppdPG3EfuwTkaWJcFpeDdTtr6U6idBEmsUhFnDA6rhb8WhTJh7pYfdxX5LHpTE4jyxVLky
+	661uwbwWE9rnlodkiMnFFssNhtLDuHnHxvZC1wRXYXT8cdwU8P/OjGZO0ryYj0BS2GQe3q
+	/ERnS3SNJ0FhMEiPZ8wSG4FxTfG1VYYUAAduhysIabGEmELr/KymTYIEECoTLiUkrhxnlz
+	JnnIdRaoSxsz2s1zWAJDzQ1N+69ns5vdnLAAPYHaYBoCl+aSiYM/YPiprymEZA==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1704729533; a=rsa-sha256;
+	cv=none;
+	b=FD19sst25bnkqFJXf+jHnwLV2Blhsmi3ur8qASu/5tfZAReRUmcbBuvn04D/331Q2K8LlU
+	oISzkU1iKCLOqcwJNhV/Q9VRbgpDvQB1tM30W8vy6OC3ElNXxjERNUGiegphBkZFk7V7Ij
+	Zo/sVnTBd04aU3oYtNdvvq03ke81gdeT57nQQpYBtCtUdpAt/GqN/ofJ6iuIIKXVjJF9+9
+	iKeJ69GOSkLmSuP8078/HbTgmIw5VRUOMv3ICjt/Wmc6kUfRICdso5uNJfkvGZTsBwmDL9
+	5Npw7C1u7kuAQyJL4OAOIIN674GsUgXXgcyAZtUK6C8S5f6+wAHAowx2BdMKpw==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>, Leonardo Brondani
+ Schenkel
+ <leonardo@schenkel.net>, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-cifs@vger.kernel.org, Mathias
+ =?utf-8?Q?Wei=C3=9Fbach?=
+ <m.weissbach@info-gate.de>
 Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
  "Resource temporarily unavailable"
-Message-ID: <2024010846-hefty-program-09c0@gregkh>
+In-Reply-To: <2024010846-hefty-program-09c0@gregkh>
 References: <8ad7c20e-0645-40f3-96e6-75257b4bd31a@schenkel.net>
  <7425b05a-d9a1-4c06-89a2-575504e132c3@sairon.cz>
  <446860c571d0699ed664175262a9e84b@manguebit.com>
+ <2024010846-hefty-program-09c0@gregkh>
+Date: Mon, 08 Jan 2024 12:58:49 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <446860c571d0699ed664175262a9e84b@manguebit.com>
+Content-Type: text/plain
 
-On Mon, Jan 08, 2024 at 11:52:45AM -0300, Paulo Alcantara wrote:
-> Hi Jan,
-> 
-> Thanks for the report.
-> 
-> So this bug is related to an off-by-one in smb2_set_next_command() when
-> the client attempts to pad SMB2_QUERY_INFO request -- since it isn't 8 byte
-> aligned -- even though smb2_query_info_compound() doesn't provide an extra
-> iov for such padding.
-> 
-> v6.1.y doesn't have
-> 
->         eb3e28c1e89b ("smb3: Replace smb2pdu 1-element arrays with flex-arrays")
-> 
-> and the commit does
-> 
-> 	+	if (unlikely(check_add_overflow(input_len, sizeof(*req), &len) ||
-> 	+		     len > CIFSMaxBufSize))
-> 	+		return -EINVAL;
-> 	+
-> 
-> so sizeof(*req) will wrongly include the extra byte from
-> smb2_query_info_req::Buffer making @len unaligned and therefore causing
-> OOB in smb2_set_next_command().
-> 
-> A simple fix for that would be
-> 
-> 	diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-> 	index 05ff8a457a3d..aed5067661de 100644
-> 	--- a/fs/smb/client/smb2pdu.c
-> 	+++ b/fs/smb/client/smb2pdu.c
-> 	@@ -3556,7 +3556,7 @@ SMB2_query_info_init(struct cifs_tcon *tcon, struct TCP_Server_Info *server,
-> 	 
-> 	 	iov[0].iov_base = (char *)req;
-> 	 	/* 1 for Buffer */
-> 	-	iov[0].iov_len = len;
-> 	+	iov[0].iov_len = len - 1;
-> 	 	return 0;
-> 	 }
-> 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Why can't we just include eb3e28c1e89b ("smb3: Replace smb2pdu 1-element
-arrays with flex-arrays") to resolve this?
+> Why can't we just include eb3e28c1e89b ("smb3: Replace smb2pdu 1-element
+> arrays with flex-arrays") to resolve this?
 
-I've queued it up now.
+Yep, this is the right way to go.
 
-thanks,
+> I've queued it up now.
 
-greg k-h
+Thanks!
