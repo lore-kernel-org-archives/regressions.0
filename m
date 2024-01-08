@@ -1,130 +1,165 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF8B134A4;
-	Sun,  7 Jan 2024 12:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rMSdy-0003t6-9M; Sun, 07 Jan 2024 13:52:46 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-01-07]
-Date: Sun,  7 Jan 2024 12:52:45 +0000
-Message-Id: <170463193667.1966610.7165124970993807605@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF42DBA4B;
+	Mon,  8 Jan 2024 08:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPLZNJ5P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A65C433C7;
+	Mon,  8 Jan 2024 08:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704703152;
+	bh=S/rMSRKH43CMn1oKC9RlDlUXo73YSColFYC3uuFnl3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPLZNJ5PRF1mtG1hcmuc32q7U58QIjFbxLhcGygkk+1FJUGi6hTJ7K6aYej03tYKx
+	 niO2yLUwph3gPHlv376rzVKbGdDQ1JFaULhsW+sO8f19WjTe9M99QM4hZd66kWtu57
+	 Ultytm0lH8GLNhBRn/ycnrQi2GVS2TBRZOnqb5qCGehDKeKIAtG8HkRhN6jMUsY473
+	 AY9YzXpQXkJ4dY/nZb4rqt5DvZl4QGBDDSIeZmrMeGUoQaZlsg3u/Ba2mvCMmEThSA
+	 nQk2GkkKeaZzIRO+8w9lOejkiqve5tRTHcjvJod/6KhOxFOaZQNkNu3myvZ4hU/d1B
+	 fglnISG44KHCw==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rMlA3-0008Cl-2I;
+	Mon, 08 Jan 2024 09:39:07 +0100
+Date: Mon, 8 Jan 2024 09:39:07 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Schaller <michael@5challer.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
+Message-ID: <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
+ <20240102232550.1751655-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704631973;193a4d4b;
-X-HE-SMSGID: 1rMSdy-0003t6-9M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102232550.1751655-1-helgaas@kernel.org>
 
-Hi Linus. I noticed a handful of regression reports coming in over the
-festive days, but fixes for most of those found their way into mainline
-in the past few days. So from here it looks like the -rc8 was definitely
-a wise move.
+Hi Bjorn,
 
-In the end I'm down to three regressions now (as usual: there are likely
-more, but I can't have my eyes everywhere).
+On Tue, Jan 02, 2024 at 05:25:50PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
+> 
+> Michael reported that when attempting to resume from suspend to RAM on ASUS
+> mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
+> ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
+> with no output, followed by a reboot.
+> 
+> Workarounds include:
+> 
+>   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+>   - Booting with "pcie_aspm=off"
+>   - Booting with "pcie_aspm.policy=performance"
+>   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
+>     before suspending
+>   - Connecting a USB flash drive
+> 
+> Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+> Reported-by: Michael Schaller <michael@5challer.de>
+> Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+ 
+> +/* @pdev: the root port or switch downstream port */
+> +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+> +{
+> +	struct pcie_link_state *link = pdev->link_state;
+> +
+> +	if (aspm_disabled || !link)
+> +		return;
+> +	/*
+> +	 * Devices changed PM state, we should recheck if latency
+> +	 * meets all functions' requirement
+> +	 */
+> +	down_read(&pci_bus_sem);
+> +	mutex_lock(&aspm_lock);
+> +	pcie_update_aspm_capable(link->root);
+> +	pcie_config_aspm_path(link);
+> +	mutex_unlock(&aspm_lock);
+> +	up_read(&pci_bus_sem);
+> +}
 
-One regression[1] seems to have stalled due to lack of activity from the
-reporter. It's similar with another that came in ~10 days ago[2]. The
-third[3] came in before Christmas with a simple patch to fix it, but
-sadly that afaics was not reviewed.
+This function is now restored in 6.7 final and is called in paths which
+already hold the pci_bus_sem as reported by lockdep (see splat below).
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=218198
-[2] https://lore.kernel.org/lkml/ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com/
-[3] https://lore.kernel.org/lkml/20231218164532.411125-2-mailingradian@gmail.com/
+This can potentially lead to a deadlock and specifically prevents using
+lockdep on Qualcomm platforms.
 
-Ciao, Thorsten
----
+Not sure if you want to propagate whether the bus semaphore is held to
+pcie_aspm_pm_state_change() or if there was some alternative to
+restoring this function which should be explored instead.
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 3 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.6.. aka v6.7-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] memblock: platforms supporting SGX fail to kexec
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com/
-https://lore.kernel.org/lkml/ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com/
-
-By Ashok Raj; 9 days ago; 3 activities, latest 7 days ago.
-Introduced in e96c6b8f212a (v6.7-rc1)
-
-Recent activities from: Mike Rapoport (1), Borislav Petkov (1), Ashok
-  Raj (1)
-
-
-[ *NEW* ] usb: gadget: u_ether: network gadgets don't work
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20231218164532.411125-2-mailingradian@gmail.com/
-https://lore.kernel.org/lkml/20231218164532.411125-2-mailingradian@gmail.com/
-
-By Richard Acayan; 19 days ago; 4 activities, latest 9 days ago.
-Introduced in f49449fbc21e (v6.7-rc1)
-
-Fix incoming:
-* usb: gadget: u_ether: Re-attach netif device to mirror detachment
-  https://lore.kernel.org/lkml/9e7cb70d-1eff-4240-841f-e08a91ca995c@leemhuis.info/
-
-
-system after successful resuming the CPU won't enter lower Package Sates below pc2
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218198/
-https://bugzilla.kernel.org/show_bug.cgi?id=218198
-https://lore.kernel.org/regressions/4cbd1ad9-d343-421a-b9de-30dc8e2d02c1@leemhuis.info/
-
-By Dieter Mummenschanz and Dieter Mummenschanz; 40 days ago; 37 activities, latest 20 days ago.
-Introduced in d035e4eb38b3 (v6.7-rc1)
+Johan
 
 
-=============
-End of report
-=============
+   ============================================
+   WARNING: possible recursive locking detected
+   6.7.0 #40 Not tainted
+   --------------------------------------------
+   kworker/u16:5/90 is trying to acquire lock:
+   ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pcie_aspm_pm_state_change+0x58/0xdc
+   pcieport 0002:00:00.0: PME: Signaling with IRQ 197
+   
+               but task is already holding lock:
+   ffffacfa78ced000
+   pcieport 0002:00:00.0: AER: enabled with IRQ 197
+    (pci_bus_sem
+   nvme nvme0: pci function 0002:01:00.0
+   ){++++}-{3:3}
+   nvme 0002:01:00.0: enabling device (0000 -> 0002)
+   , at: pci_walk_bus+0x34/0xbc
+   
+               other info that might help us debug this:
+    Possible unsafe locking scenario:
 
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170335196500.1276302.7317913928045121362@leemhuis.info
+          CPU0
+          ----
+     lock(pci_bus_sem);
+     lock(pci_bus_sem);
+   
+                *** DEADLOCK ***
 
-Thanks for your attention, have a nice day!
+    May be due to missing lock nesting notation
 
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+   4 locks held by kworker/u16:5/90:
+    #0: ffff06c5c0008d38 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
+    #1: ffff800081c0bdd0 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
+    #2: ffff06c5c0b7d0f8 (&dev->mutex){....}-{3:3}, at: __driver_attach_async_helper+0x3c/0xf4
+    #3: ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
+   
+               stack backtrace:
+   CPU: 1 PID: 90 Comm: kworker/u16:5 Not tainted 6.7.0 #40
+   Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET53W (1.25 ) 10/12/2022
+   Workqueue: events_unbound async_run_entry_fn
+   Call trace:
+    dump_backtrace+0x9c/0x11c
+    show_stack+0x18/0x24
+    dump_stack_lvl+0x60/0xac
+    dump_stack+0x18/0x24
+    print_deadlock_bug+0x25c/0x348
+    __lock_acquire+0x10a4/0x2064
+    lock_acquire+0x1e8/0x318
+    down_read+0x60/0x184
+    pcie_aspm_pm_state_change+0x58/0xdc
+    pci_set_full_power_state+0xa8/0x114
+    pci_set_power_state+0xc4/0x120
+    qcom_pcie_enable_aspm+0x1c/0x3c [pcie_qcom]
+    pci_walk_bus+0x64/0xbc
+    qcom_pcie_host_post_init_2_7_0+0x28/0x34 [pcie_qcom]
