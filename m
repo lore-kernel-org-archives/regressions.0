@@ -1,45 +1,24 @@
-Received: from dsmtpq4-prd-nl1-vmo.edge.unified.services (dsmtpq4-prd-nl1-vmo.edge.unified.services [84.116.6.101])
+Received: from sender3-of-o59.zoho.com (sender3-of-o59.zoho.com [136.143.184.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEB83FB18
-	for <regressions@lists.linux.dev>; Wed, 10 Jan 2024 12:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ntlworld.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ntlworld.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ntlworld.com header.i=@ntlworld.com header.b="NMTgxFaQ"
-Received: from csmtpq4-prd-nl1-vmo.edge.unified.services ([84.116.50.41])
-	by dsmtpq4-prd-nl1-vmo.edge.unified.services with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <shaky.start@ntlworld.com>)
-	id 1rNXCS-00DJEw-2p
-	for regressions@lists.linux.dev; Wed, 10 Jan 2024 12:56:48 +0100
-Received: from csmtp2-prd-nl1-vmo.nl1.unified.services ([100.107.82.134] helo=csmtp2-prd-nl1-vmo.edge.unified.services)
-	by csmtpq4-prd-nl1-vmo.edge.unified.services with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <shaky.start@ntlworld.com>)
-	id 1rNXCJ-00CdqH-RW
-	for regressions@lists.linux.dev; Wed, 10 Jan 2024 12:56:39 +0100
-Received: from [192.168.0.37] ([82.26.39.196])
-	by csmtp2-prd-nl1-vmo.edge.unified.services with ESMTPA
-	id NXCJrfPss6YCcNXCJr9qZr; Wed, 10 Jan 2024 12:56:39 +0100
-X-SourceIP: 82.26.39.196
-X-Authenticated-Sender: shaky.start@ntlworld.com
-X-Spam: 0
-X-Authority: v=2.4 cv=auO0CzZV c=1 sm=1 tr=0 ts=659e85f7 cx=a_exe
- a=PQm/cASMPoKUPy80G5uqbg==:117 a=PQm/cASMPoKUPy80G5uqbg==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=z-n8faunNKXTG8fyN2AA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ntlworld.com;
-	s=meg.feb2017; t=1704887799;
-	bh=A2i7qTM5U2xEfvOQmcs9KDcoXLgiS9N+Az2nzguhkGI=;
-	h=Date:To:Cc:From:Subject;
-	b=NMTgxFaQbaFIVPb0N4D496JrZ/+p5SXOzlbWsltGA45fn4v2zAwgN7PmpflWwOyTE
-	 qASc7KNG10LMJGJvdnYoJfxwfo8lkqKLw1LH3O5W/RMPYBATTxd5HorZZBx3mvbX4f
-	 CA1GyV5Bl+BMkSaRbs/XRWcFk/ZN4vtrbXovV+2zwPqcrCtaW1NIKHa3MqK9AmWa9P
-	 ubWv5JwX0dMyc2NPFfRsCH+IaZZnuJJv1V84NqTMwib3bmoU8XLJ1O6Da8U3IStIDv
-	 XYkbezj+t/OaOHUp7ICcxxQ0r9B561BnYnfgUo+v1EPSVNVMkj71p8GZHkQWIN36C+
-	 bI+HQfFxMzdrA==
-Message-ID: <7fb16281-e94f-46d0-808b-81f892c287ec@ntlworld.com>
-Date: Wed, 10 Jan 2024 11:56:39 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39265360BF
+	for <regressions@lists.linux.dev>; Wed, 10 Jan 2024 12:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=5challer.de
+ARC-Seal: i=1; a=rsa-sha256; t=1704890402; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mG81irjWHD2GNpjXHI6NXTaBaUt6KnE8HU9ckk8n1HZnSkyNIKLDqS6iCCPn7vnSuHAnu6bsX1+q571wM1phLbwMWntNqdhLY4twSFPBxXiwgFA7Zp1AAejeV16lIbv5S6jlcmsix+ZPl46/n6DBtd6LLX8PBfeBfC4ySiUWmpQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1704890402; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kQJVZ8eFzAvmE5pkA462bXLU4g6YIbvStnFGD7XPwXo=; 
+	b=inlhKa9pYKX77SPbldFG2ZiTLavAEaJrVAr6oJkwxxd2uMDVDBjPpOypEx2mrFNeb6Bzs4gsPyU4GU1bDoZCnWH4RTStwXX850cnqM3etMQpsEf8kVT4xsHiAWJzxUhAFqwCMc8Doxmi3PxShCRtNK7ibvpgWCNuqp93eO806/E=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	spf=pass  smtp.mailfrom=michael@5challer.de;
+	dmarc=pass header.from=<michael@5challer.de>
+Received: from [192.168.144.187] (ipbcc11913.dynamic.kabel-deutschland.de [188.193.25.19]) by mx.zohomail.com
+	with SMTPS id 1704890400279286.1034435570938; Wed, 10 Jan 2024 04:40:00 -0800 (PST)
+Message-ID: <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de>
+Date: Wed, 10 Jan 2024 13:39:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,39 +26,69 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-From: tony Hamilton <shaky.start@ntlworld.com>
-Subject: Advice on where to seek advice
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ macro@orcam.me.uk, ajayagarwal@google.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
+ hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
+ johan+linaro@kernel.org
+References: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de>
+ <20240105155100.GA1861423@bhelgaas>
+ <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+Content-Language: en-US
+From: Michael Schaller <michael@5challer.de>
+In-Reply-To: <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfGLkDK3qeY1rVF/EZuuPqXg9Bh4MidOHnexp8wwq1Qnhrp38334PWzYkAr/y1ENs3nNE75C27RSlx2ATTpbZ0fdq2jy4/q75uSBemGxnYwfe5QnfvVJp
- UeOD7EVGBxM2k312fNkCtEjAPtEdbEjDh/X9888DIwV7tMrnyB1kz8cQ24qoEUWmcHFktxk8BPbaEOxUEpDQb2/+hiZiKdW7IzBpxxPITOgQkjnpfrLCXXMD
- togJBMeo/NMhEEgABXU6pw==
+X-ZohoMailClient: External
 
-This is a request for guidance on where is the most appropriate I should ask
-for advice on how to do problem source identification on a problem with a
-Linux PC which looks like it might be kernel-related. I an providing the
-minimal amount of problem symptom information here that will help responders.
 
-Simple problem statement: My PC (Gigabyte GA-H81M-S2H based) will not start
-the OS (Linux MX 23.2, Debian 12, Kernel 6.2) if my PCIE GPU card (ZOTAC
-nVidia GTX-1050) is installed. The start-up process hangs after Grub is
-processed but before the Login screen is presented. Start-up completes
-normally when the PCIE card is not installed.
+On 10.01.24 04:43, Kai-Heng Feng wrote:
+> On Fri, Jan 5, 2024 at 11:51 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
+>>> On 05.01.24 04:25, Kai-Heng Feng wrote:
+>>>> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
+>>>
+>>> Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result in a
+>>> working resume. I've tested this on kernel 6.6.9 (which still has commit
+>>> 08d0cc5f3426). I've also attached the relevant dmesg output of the
+>>> suspend/resume cycle in case this helps.
+>>
+>> Thanks for testing that!
+>>
+>>> Furthermore does this mean that commit 08d0cc5f3426 isn't at fault but
+>>> rather that we are dealing with a timing issue?
+>>
+>> PCI does have a few software timing requirements, mostly related to
+>> reset and power state (D0/D3cold).  ASPM has some timing parameters,
+>> too, but I think they're all requirements on the hardware, not on
+>> software.
+>>
+>> Adding an arbitrary delay anywhere shouldn't break anything, and other
+>> than those few required situations, it shouldn't fix anything either.
+> 
+> At least it means 8d0cc5f3426 isn't the culprit?
+> 
+> Michael, does the issue happen when iwlwifi module is not loaded? It
+> can be related to iwlwifi firmware.
+> 
+> Kai-Heng
+>
+The issue still happens if the iwlwifi module has been blacklisted and 
+after a reboot. This was again with vanilla kernel 6.6.9 and I've 
+confirmed via dmesg that iwlwifi wasn't loaded.
 
-Further detail:
-The ZOTAC card works without issue in another PC with a different brand
-motherboard.
+I've also checked if there is a newer firmware but Ubuntu 23.10 is 
+already using the newest firmware available from 
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/log/iwlwifi-8265-36.ucode 
+(version 36.ca7b901d.0 according to dmesg).
 
-This PC works without issue, with the ZOTAC card installed, with a different
-kernel/distribution (e.g. Mint 21.2, Ubuntu 22.04, Kernel 5.15/5.19 or Windows
-10).
+Michael
 
-With any Linux version installed in this PC, which uses a Via chip, operation
-is subject to the issue which prevents USB 3 operation on back plane ports,
-unless ‘iommu=off’ is set in grub. This might be an entirely different problem
-to that associated with the presence of the PCIE card.
-
-Who should I be seeking help/advice problem resolution from ?
+>>
+>> Bjorn
