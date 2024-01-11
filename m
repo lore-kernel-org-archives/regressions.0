@@ -1,155 +1,135 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E374EB28
-	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 15:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375A650250;
+	Thu, 11 Jan 2024 16:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSkMrgsD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHZZ3Adc";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSkMrgsD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHZZ3Adc"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1F6551FBAD;
-	Thu, 11 Jan 2024 15:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704988272;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
-	b=NSkMrgsDX7EFKr/+gIAf2t9qOk+4ZUhng52yeaAX718zL2LQLlDxVBH6w54QAD17KVWld5
-	vntTVSXxWB+HS7W1ORztIiuYM03STgLc0+zF8ATIe+ZDMb2RFx4uaHKMDynYR1ANyKKTTZ
-	FZTlpKzdMwqmjqIIkw8jdnEoXZDYIj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704988272;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
-	b=IHZZ3AdcRHNQNoPDCZmlSTmGoul7uWFhhD8Sj1lLJmEwHs/fQeDk83h5xSVvNVgZj+xFgX
-	E7At9SGs+IK8meAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704988272;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
-	b=NSkMrgsDX7EFKr/+gIAf2t9qOk+4ZUhng52yeaAX718zL2LQLlDxVBH6w54QAD17KVWld5
-	vntTVSXxWB+HS7W1ORztIiuYM03STgLc0+zF8ATIe+ZDMb2RFx4uaHKMDynYR1ANyKKTTZ
-	FZTlpKzdMwqmjqIIkw8jdnEoXZDYIj0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704988272;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
-	b=IHZZ3AdcRHNQNoPDCZmlSTmGoul7uWFhhD8Sj1lLJmEwHs/fQeDk83h5xSVvNVgZj+xFgX
-	E7At9SGs+IK8meAw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DB9F5138E5;
-	Thu, 11 Jan 2024 15:51:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 7f2qNG8OoGXZeQAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Thu, 11 Jan 2024 15:51:11 +0000
-Date: Thu, 11 Jan 2024 16:50:56 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Anand Jain <anand.jain@oracle.com>,
-	linux-btrfs <linux-btrfs@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	linux-kernel@vger.kernel.org, Alex Romosan <aromosan@gmail.com>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
- update-grub
-Message-ID: <20240111155056.GG31555@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
- <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="pIoaubWI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mlHrRsJ9"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 9FC743200A0F;
+	Thu, 11 Jan 2024 11:37:33 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 11 Jan 2024 11:37:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1704991053; x=1705077453; bh=LSf0SiijIV
+	zkqraaNl7VZeYKE9TrQNnQYNEHNGLb4m8=; b=pIoaubWIow5E/9yD4EaILySIjh
+	GpbArRXiopDzKgj/x5OSJP1/XrLuOiFYpW2OCZrAxPlGEEDEnMaQspUVvdGYNBeZ
+	9eqSS6uRBInNQjp0mSFBeMRycMepS2IZ/LumKkG2hovNWwHSfnNwg0V/cT1TiPKm
+	OY99U7plvUSsrXJF2u8wITKGJ4ybLeKw5PtBGzi8j4ry4SCDC6b0NP+EPr+8Z61l
+	C81i8xYvoW5uLVnjSzOSawclt2UYMTQKgHgi274QAuKVYsPYN2YLZCZrzUpjHyHB
+	sbd7NZEkdctr+xwi6R6vTMxc6rWcxKHsdmsM68DKRwi14iDGbyEtey+UqdQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704991053; x=1705077453; bh=LSf0SiijIVzkqraaNl7VZeYKE9Tr
+	QNnQYNEHNGLb4m8=; b=mlHrRsJ9xxJZ9UagtFXuT/OJT5doT6uscqzyrs+n0D4Y
+	Pyg0iG1906ueZkDsppl4UAurbfyC3HKQNOjlZSZlcZEHrtbZO2+cgQC83edJ6T8Z
+	NFWyfkJwRaNGRD149FEE7YAdAMxJjupM8dNCDvrWRLlQuHUS9XNaD32Y6xPIxiQ5
+	TtubAhgrRmuHjBbClF4HGf3MT+BZj21t/Wg5XrEFzwz3+Yitjyz2zoPQFnP7fh4T
+	2hVTWhD+Jn91CKM8U03V1S2P+STQq+ODDAMzRmybN/CllIr8SPcsFbkzGoJI3Y7Q
+	9mZeahCRYW00ajKxKM9ijfioL7FN04QX74eg5RGsnQ==
+X-ME-Sender: <xms:TBmgZU229WBGtd_QXI9TXSe2-4gRumcA3JyJ-44zqCTcHXy7Shg4bw>
+    <xme:TBmgZfHoWScO662orEBhvNW6DT1eb6mQnRq4PmYyBtLTc31Y5QxHAz7mNwChOPO7H
+    tj-0msC_ic9l30ZK14>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeifedgkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
+    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:TBmgZc4MHTy5-w9E7CFl6SQFvCiemLxW0lZhVSStFo-FBXYolIEu8w>
+    <xmx:TBmgZd3zqmj_j6cZVMftC_8YVk7uWgmoaLjtztaPthkuXd2yxW0Xig>
+    <xmx:TBmgZXEn4tnFkThHXyWwySxBN6U76OIeB-V2Or0mf985HK2yGWN0QQ>
+    <xmx:TRmgZc5IIbD0bZI_q2xGVAEOfKenrHdn_PdlPA_kAS68eWmjFC0eug>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C0B46B6008D; Thu, 11 Jan 2024 11:37:32 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.00
-X-Spamd-Result: default: False [-1.00 / 50.00];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[42.10%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[oracle.com,vger.kernel.org,lists.linux.dev,gmail.com,fb.com,toxicpanda.com,suse.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Message-Id: <bb175a67-462b-41a7-804a-ec990291a00e@app.fastmail.com>
+In-Reply-To: <908325ed-08af-4b0c-926e-da9afba25772@app.fastmail.com>
+References: 
+ <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
+ <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
+ <908325ed-08af-4b0c-926e-da9afba25772@app.fastmail.com>
+Date: Thu, 11 Jan 2024 17:37:12 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "Uladzislau Rezki" <urezki@gmail.com>
+Cc: linux-next <linux-next@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ clang-built-linux <llvm@lists.linux.dev>, lkft-triage@lists.linaro.org,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Subject: Re: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when used
+ here [-Werror,-Wuninitialized]
+Content-Type: text/plain
 
-On Thu, Jan 11, 2024 at 12:45:50PM +0100, Thorsten Leemhuis wrote:
-> [Adding Anand Jain, the author of the culprit to the list of recipients;
-> furthermore CCing the the Btrfs maintainers and the btrfs list; also
-> CCing regression list, as it should be in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> 
-> On 08.01.24 15:11, Alex Romosan wrote:
-> > Please Cc me as I am not subscribed to the list.
-> > 
-> > Running my own compiled kernel without initramfs on a lenovo thinkpad
-> > x1 carbon gen 7.
-> > 
-> > Since version 6.7-rc1 i haven't been able to to a grub-update,
-> >
-> > instead i get this error:
-> > 
-> > grub-probe: error: cannot find a device for / (is /dev mounted?) solid
-> > state drive
-> > 
-> > 6.6 was the last version that worked.
-> > 
-> > Today I did a git-bisect between these two versions which identified
-> > commit bc27d6f0aa0e4de184b617aceeaf25818cc646de btrfs: scan but don't
-> > register device on single device filesystem as the culprit. reverting
-> > this commit from 6.7 final allowed me to run update-grub again.
-> > 
-> > not sure if this is the intended behavior or if i'm missing some other
-> > kernel options. any help/fixes would be appreciated.
-> > 
-> > thank you.
-> 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced bc27d6f0aa0e4de184b617aceeaf25818cc646de
-> #regzbot title btrfs: update-grub broken (cannot find a device for / (is
-> /dev mounted?))
-> #regzbot ignore-activity
+On Thu, Jan 11, 2024, at 13:55, Arnd Bergmann wrote:
+> On Thu, Jan 11, 2024, at 12:16, Dan Carpenter wrote:
+>> On Thu, Jan 11, 2024 at 04:23:09PM +0530, Naresh Kamboju wrote:
+>>> Following build failures noticed on i386 and x86 with clang builds on the
+>>> Linux next-20240111 tag.
+>>> 
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>> 
+>>> Build error:
+>>> ----------
+>>> mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
+>>> used here [-Werror,-Wuninitialized]
+>>>  4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
+>>>       |                                       ^~~~
+>>> mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
+>>> this warning
+>>>  4684 |         unsigned long addr;
+>>>       |                           ^
+>>>       |                            = 0
+>>> 1 error generated.
+>>
+>> We turned off uninitialized variable warnings for GCC a long time ago...
+>> :/ I don't know if we'll be able to re-enable it in a -Werror world
+>> although Clang seems to be managing alright so perhaps there is hope.
+>
+> The problem with gcc's warning is that it is non-deterministic and
+> in recent versions actually got more false-positives even without
+> -Os or -fsanitize=. Clang does not catch all that gcc does because
+> it doesn't track state across inline functions, but at least its
+> output is always the same regardless of optimization and other
+> options.
+>
+> At least this particular one is an obvious bug and easily gets
+> caught by lkft and lkp even if gcc's -Wuninitilized doesn't
+> flag it.
 
-The bug is also tracked at https://bugzilla.kernel.org/show_bug.cgi?id=218353 .
+As it turns out, gcc did find this one in the default -Wuninitialized
+regardless of -Wmaybe-uninitialized:
+
+mm/vmalloc.c: In function 'vmalloc_dump_obj':
+mm/vmalloc.c:4691:22: error: 'addr' is used uninitialized [-Werror=uninitialized]
+ 4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mm/vmalloc.c:4684:23: note: 'addr' was declared here
+ 4684 |         unsigned long addr;
+      |                       ^~~~
+
+and I see that Uladzislau Rezki already sent a fix, which
+is the same that I tried out in my randconfig tree:
+https://lore.kernel.org/lkml/ZaARXdbigD1hWuOS@pc638.lan/
+
+    Arnd
