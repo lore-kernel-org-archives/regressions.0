@@ -1,81 +1,85 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95B214F61
-	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 10:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7502E156D9;
+	Thu, 11 Jan 2024 11:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iWR9lzRR"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4b71e8790efso1179599e0c.3
-        for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 02:53:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704970400; x=1705575200; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2BxDnRoz+tciUL07Ky2uFARoSUgYzDQPvPnOjHTato0=;
-        b=iWR9lzRRinqd1FLbBNQCEl8Cin7kfjuWM0Bu6fIK1dW1ppb3/qmEK7bcgIWDEWW3+H
-         V780ppteHpm4zSENutQEDRdWt3LlHnm9ytJ4G9oghZrbG4K5HIc6HjHqUCR6/G67DWVs
-         h2UX1L2ShyHDzk2puucODoCuK7RdxOo6rMUxsMbhAKhDSaQo9CZKDYwNqrHJQM6EAp6f
-         TuQIxrpLnPJKbqGk2POlGKi5/xyC8aKV8pBjR5WJaeW5ODNYNodLmIBrcyDKKHJTerrD
-         vcRTD1OQ8LIiM87nwN5sb0H4eaX5r2wbrhQWnbgaW1F7sljq0CN4NvkLCuZMcmXSyQUI
-         2FuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704970400; x=1705575200;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2BxDnRoz+tciUL07Ky2uFARoSUgYzDQPvPnOjHTato0=;
-        b=aq1ijoc1elppPrYm6SOd1aVamh4I+6PZGxFRYtRIlvN3dI0Di0z0d8bv0JYbskFYEP
-         yIjEAnyEWHReNSAsBW02nXQkzxWhHxTB+DAOK6JlIIIP7IhxYy4yzJpvmI5rufq6i3Y0
-         syw4n4NoEBdLMk07uMb80vzwNFAFuGayvJMq9AAthaHNH+D+kGY5x4h10WTGH0wWzc6U
-         SaPa8NXdZO+p6DaQp8suRXfGt0au5V3zs2KwildgIEWUpCpW9Mg4b+kNYbC5WIM+KegZ
-         zf0YunhCCND2hjrsZp7zBMrcgJ/QcQld6WjvVGNeJAm3Ar6BDBX7McGVDCd0V2WO7VLX
-         Ju3g==
-X-Gm-Message-State: AOJu0Yxdj34dIxHEBo91aTNDWIexNXrBCZMGIKc9LuBKyNrdYpbxQkmn
-	xRokf5gGfqBTjLf/LgFrs1A1j0hNTc4vBKkRx36iAbYynBbglg==
-X-Google-Smtp-Source: AGHT+IGgSmqv9Y1WJTe266dMtLWoOwKf822h2X6Qyg98fN6FvdHnX82UlDzXJD8BpoL+3lFdSku871Xabj7RMWn9Q/Q=
-X-Received: by 2002:a05:6122:1499:b0:4b7:8d7c:3483 with SMTP id
- z25-20020a056122149900b004b78d7c3483mr254720vkp.19.1704970400539; Thu, 11 Jan
- 2024 02:53:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aRPK84yB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74AD1C433C7;
+	Thu, 11 Jan 2024 11:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704971028;
+	bh=u7aQsAvFFh84UWTaGJCadbYnk2NDh3rc/Iqx9qIzySw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aRPK84yBfss5X+RCFMGn35A2jIg3qZwhsRelp1dtAN0QcXVReft1/wKjh3Wk79NkF
+	 huQdHoNcPOlQutn9fM0Ofhx6NF3+Tv0Q2QWnMbQNLGXQXVOQZAXAqE4v1VSCMb7wzx
+	 THgfS03Vb8LH4Sy4x265+PM0IkA/mhWX2J8hl2NY=
+Date: Thu, 11 Jan 2024 12:03:45 +0100
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <nspmangalore@gmail.com>,
+	Rohith Surabattula <rohiths.msft@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Steve French <stfrench@microsoft.com>,
+	"Jitindar Singh, Suraj" <surajjs@amazon.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>,
+	stable@vger.kernel.org, linux-cifs@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and
+ file size with copy_file_range()"
+Message-ID: <2024011115-neatly-trout-5532@gregkh>
+References: <2023121124-trifle-uncharted-2622@gregkh>
+ <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com>
+ <ZZhrpNJ3zxMR8wcU@eldamar.lan>
+ <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info>
+ <ZZk6qA54A-KfzmSz@eldamar.lan>
+ <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
+ <ZZ7Dy69ZJCEyKhhS@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 11 Jan 2024 16:23:09 +0530
-Message-ID: <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
-Subject: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
- used here [-Werror,-Wuninitialized]
-To: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
-	lkft-triage@lists.linaro.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZ7Dy69ZJCEyKhhS@eldamar.lan>
 
-Following build failures noticed on i386 and x86 with clang builds on the
-Linux next-20240111 tag.
+On Wed, Jan 10, 2024 at 05:20:27PM +0100, Salvatore Bonaccorso wrote:
+> Hi
+> 
+> Sorry if this is to prematurely to ask already again.
+> 
+> On Sat, Jan 06, 2024 at 01:02:16PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 06.01.24 12:34, Salvatore Bonaccorso wrote:
+> > > On Sat, Jan 06, 2024 at 11:40:58AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > >>
+> > >> Does this problem also happen in mainline, e.g. with 6.7-rc8?
+> > > 
+> > > Thanks a lot for replying back. So far I can tell, the regression is
+> > > in 6.1.y only 
+> > 
+> > Ahh, good to know, thx!
+> > 
+> > > For this reason I added to regzbot only "regzbot ^introduced
+> > > 18b02e4343e8f5be6a2f44c7ad9899b385a92730" which is the commit in
+> > > v6.1.68.
+> > 
+> > Which was the totally right thing to do, thx. Guess I sooner or later
+> > will add something like "#regzbot tag notinmainline" to avoid the
+> > ambiguity we just cleared up, but maybe that's overkill.
+> 
+> Do we have already a picture on the best move forward? Should the
+> patch and the what depends on it be reverted or was someone already
+> able to isolate where the problem comes from specifically for the
+> 6.1.y series? 
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I guess I can just revert the single commit here?  Can someone send me
+the revert that I need to do so as I get it right?
 
-Build error:
-----------
-mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
-used here [-Werror,-Wuninitialized]
- 4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
-      |                                       ^~~~
-mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
-this warning
- 4684 |         unsigned long addr;
-      |                           ^
-      |                            = 0
-1 error generated.
+thanks,
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240111/testrun/22036090/suite/build/test/clang-lkftconfig/details/
-
---
-Linaro LKFT
-https://lkft.linaro.org
+greg k-h
