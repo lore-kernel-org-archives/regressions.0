@@ -1,86 +1,155 @@
-Received: from mta-64-228.siemens.flowmailer.net (mta-64-228.siemens.flowmailer.net [185.136.64.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CED3C47D
-	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 14:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E374EB28
+	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 15:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="iGT8QY7r"
-Received: by mta-64-228.siemens.flowmailer.net with ESMTPSA id 202401111413412b26643e5cd3d672ee
-        for <regressions@lists.linux.dev>;
-        Thu, 11 Jan 2024 15:13:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=d8P5SF5niklck9uG6u8e0iLUYDzwhhYqU5LhoJl31Ws=;
- b=iGT8QY7rW2ewIQSYYXQwZwhs3xejTEGZKgyOHU0CF2n0zQth5OiZS9aRsuVfNsV9wzViKh
- ewJ+DYgDzwBgowFFoLnCeJ34qkh2YAkQtlbi3k4DkBNCe0GhxQ/Ukb+8voumQC5AbJ5j7j+V
- BlAc7SvPkzvRwFXp9pRVJBTWvVBmg=;
-From: Diogo Ivo <diogo.ivo@siemens.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	linux-phy@lists.infradead.org,
-	tjoseph@cadence.com,
-	linux-pci@vger.kernel.org,
-	ylal@codeaurora.org,
-	gregkh@linuxfoundation.org,
-	regressions@lists.linux.dev
-Cc: diogo.ivo@siemens.com,
-	jan.kiszka@siemens.com
-Subject: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
-Date: Thu, 11 Jan 2024 14:13:30 +0000
-Message-ID: <20240111141331.3715265-1-diogo.ivo@siemens.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSkMrgsD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHZZ3Adc";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NSkMrgsD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IHZZ3Adc"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1F6551FBAD;
+	Thu, 11 Jan 2024 15:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704988272;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
+	b=NSkMrgsDX7EFKr/+gIAf2t9qOk+4ZUhng52yeaAX718zL2LQLlDxVBH6w54QAD17KVWld5
+	vntTVSXxWB+HS7W1ORztIiuYM03STgLc0+zF8ATIe+ZDMb2RFx4uaHKMDynYR1ANyKKTTZ
+	FZTlpKzdMwqmjqIIkw8jdnEoXZDYIj0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704988272;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
+	b=IHZZ3AdcRHNQNoPDCZmlSTmGoul7uWFhhD8Sj1lLJmEwHs/fQeDk83h5xSVvNVgZj+xFgX
+	E7At9SGs+IK8meAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704988272;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
+	b=NSkMrgsDX7EFKr/+gIAf2t9qOk+4ZUhng52yeaAX718zL2LQLlDxVBH6w54QAD17KVWld5
+	vntTVSXxWB+HS7W1ORztIiuYM03STgLc0+zF8ATIe+ZDMb2RFx4uaHKMDynYR1ANyKKTTZ
+	FZTlpKzdMwqmjqIIkw8jdnEoXZDYIj0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704988272;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vSehzTtKQsvkbUUPD8zzvmB+qLGM6QNeLjYsgnJ08M=;
+	b=IHZZ3AdcRHNQNoPDCZmlSTmGoul7uWFhhD8Sj1lLJmEwHs/fQeDk83h5xSVvNVgZj+xFgX
+	E7At9SGs+IK8meAw==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DB9F5138E5;
+	Thu, 11 Jan 2024 15:51:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 7f2qNG8OoGXZeQAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Thu, 11 Jan 2024 15:51:11 +0000
+Date: Thu, 11 Jan 2024 16:50:56 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Anand Jain <anand.jain@oracle.com>,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	linux-kernel@vger.kernel.org, Alex Romosan <aromosan@gmail.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
+ update-grub
+Message-ID: <20240111155056.GG31555@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+ <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1320519:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.00
+X-Spamd-Result: default: False [-1.00 / 50.00];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-0.00)[42.10%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[oracle.com,vger.kernel.org,lists.linux.dev,gmail.com,fb.com,toxicpanda.com,suse.com];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
 
-Hello,
+On Thu, Jan 11, 2024 at 12:45:50PM +0100, Thorsten Leemhuis wrote:
+> [Adding Anand Jain, the author of the culprit to the list of recipients;
+> furthermore CCing the the Btrfs maintainers and the btrfs list; also
+> CCing regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> 
+> On 08.01.24 15:11, Alex Romosan wrote:
+> > Please Cc me as I am not subscribed to the list.
+> > 
+> > Running my own compiled kernel without initramfs on a lenovo thinkpad
+> > x1 carbon gen 7.
+> > 
+> > Since version 6.7-rc1 i haven't been able to to a grub-update,
+> >
+> > instead i get this error:
+> > 
+> > grub-probe: error: cannot find a device for / (is /dev mounted?) solid
+> > state drive
+> > 
+> > 6.6 was the last version that worked.
+> > 
+> > Today I did a git-bisect between these two versions which identified
+> > commit bc27d6f0aa0e4de184b617aceeaf25818cc646de btrfs: scan but don't
+> > register device on single device filesystem as the culprit. reverting
+> > this commit from 6.7 final allowed me to run update-grub again.
+> > 
+> > not sure if this is the intended behavior or if i'm missing some other
+> > kernel options. any help/fixes would be appreciated.
+> > 
+> > thank you.
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced bc27d6f0aa0e4de184b617aceeaf25818cc646de
+> #regzbot title btrfs: update-grub broken (cannot find a device for / (is
+> /dev mounted?))
+> #regzbot ignore-activity
 
-When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
-we came across a breakage in the probing of the Keystone PCI driver
-(drivers/phy/ti/pci-keystone.c). This probing was working correctly
-in the previous version we were using, v5.10.
-
-In order to debug this we changed over to mainline Linux and bissecting
-lead us to find that commit e611f8cd8717 is the culprit, and with it applied
-we get the following messages:
-
-[   10.954597] phy-am654 910000.serdes: Failed to enable PLL
-[   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
-[   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
-[   10.973560] keystone-pcie: probe of 5500000.pcie failed with error -110
-
-This timeout is occuring in serdes_am654_enable_pll(), called from the 
-phy_ops .power_on() hook.
-
-Due to the nature of the error messages and the contents of the commit we
-believe that this is due to an unidentified race condition in the probing of
-the Keystone PCI driver when enabling the PHY PLLs, since changes in the
-workqueue the deferred probing runs on should not affect if probing works
-or not. To further support the existence of a race condition, commit
-86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely unintentionally
-meaning that the problem may arise in the future again.
-
-One possible explanation is that there are pre-requisites for enabling the PLL
-that are not being met when e611f8cd8717 is applied; to see if this is the case
-help from people more familiar with the hardware details would be useful.
-
-As official support specifically for the IOT2050 Advanced M.2 platform was
-introduced in Linux v6.3 (so in the middle of the commits mentioned above)
-all of our testing was done with the latest mainline DeviceTree with [1]
-applied on top.
-
-This is being reported as a regression even though technically things are
-working with the current state of mainline since we believe the current fix
-to be an unintended by-product of other work.
-
-#regzbot introduced: e611f8cd8717
-
-[1]: https://lore.kernel.org/all/cover.1699087938.git.jan.kiszka@siemens.com/
+The bug is also tracked at https://bugzilla.kernel.org/show_bug.cgi?id=218353 .
