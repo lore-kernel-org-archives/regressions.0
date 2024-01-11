@@ -1,116 +1,173 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from sonic313-15.consmr.mail.bf2.yahoo.com (sonic313-15.consmr.mail.bf2.yahoo.com [74.6.133.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442CA48785
-	for <regressions@lists.linux.dev>; Wed, 10 Jan 2024 16:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C41B11194
+	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 08:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wxix72ij"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5587af6ae5cso280949a12.3
-        for <regressions@lists.linux.dev>; Wed, 10 Jan 2024 08:20:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704903630; x=1705508430; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GiGQ3HzqRw9BhGq2ukZfu7U4Ux6Gx0fec0Z0CywCxtU=;
-        b=Wxix72ijz9HHx59P/CamFM4e/136ehhNzqAHLBVPMup6QkuOZTijvUopW+8AqQp8FP
-         QS+65HKY1qss747IzvjtDizj7wBZ2wtcCvBnBIiEfJXK2WDguHsh1di6QejA38wLS4HY
-         tOUW8f02xZb0jgNqYm5e3w5p+IFrPn+C7BkJwcUJK65BQ/Hp0FkElPKzlWdj67zw0H9k
-         t9mi/y1jEqg1RwAKADY55YYBVJA4/3r8jz1a7CjTaSdVmJ3A8X8o5FrhhhWh5a2F/DKl
-         zxPxg4H/BnalhjS1GpIEr2MLcU5HIriwy6oqZPfCSZDsMOpvqKkh8aPEAW8uDJficL8l
-         zMAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704903630; x=1705508430;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GiGQ3HzqRw9BhGq2ukZfu7U4Ux6Gx0fec0Z0CywCxtU=;
-        b=oKP9NWgO4yL9bG3tacDklHzkfvHGwKyIr9wXJCIPE7NeYe1wzUDnzA6Gc/u/4f9YuM
-         dVuP/7hpx14Kkz3FxTRtTE6OF+j8Jzihif/xYxw2jvwO3DgvZYqtHv1XTOTHuy5UxB/t
-         S+YaEAWKlOu+nUrOOtvUPZo84ZmjFaf4nglsF29vceHAgA2w3hjUpdTUPKY+uCd41zS3
-         Sq97/DNSUn+/yNKfq+3bHBpf2pohzXnZKl7B85pCi8VmmNJXBH8VdlVbQ23PGd8v8rCk
-         1liDMymTyJug4reIBfRriPvoYRX+PgUmQIpD2aCoVK6YwAFttW8MXbKLP2ju/ySjKIQe
-         +VmQ==
-X-Gm-Message-State: AOJu0Yx/vnU3SvoZUi2pHs6rX3eDLHzLBivAeAngmp1NzQRZQOU3ElXk
-	3qxNXD0PN1N4Q9T80g5/Pa4=
-X-Google-Smtp-Source: AGHT+IHIX8ycHGd0EqT2+MdwAY36uRF5Dgt9eDaeEe5o8UpwwsXB+tUmydMpiBcVjI8SP8rgJa9KIw==
-X-Received: by 2002:a50:9e87:0:b0:557:ba20:839 with SMTP id a7-20020a509e87000000b00557ba200839mr643069edf.41.1704903630339;
-        Wed, 10 Jan 2024 08:20:30 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id ig15-20020a056402458f00b0055871ed18f9sm390720edb.89.2024.01.10.08.20.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 08:20:28 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 0525EBE2DE0; Wed, 10 Jan 2024 17:20:28 +0100 (CET)
-Date: Wed, 10 Jan 2024 17:20:27 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <nspmangalore@gmail.com>,
-	Rohith Surabattula <rohiths.msft@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Steve French <stfrench@microsoft.com>
-Cc: "Jitindar Singh, Suraj" <surajjs@amazon.com>,
-	"rohiths.msft@gmail.com" <rohiths.msft@gmail.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"stfrench@microsoft.com" <stfrench@microsoft.com>,
-	"pc@manguebit.com" <pc@manguebit.com>,
-	"jlayton@kernel.org" <jlayton@kernel.org>,
-	"nspmangalore@gmail.com" <nspmangalore@gmail.com>,
-	"willy@infradead.org" <willy@infradead.org>,
-	"stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>,
-	stable@vger.kernel.org, linux-cifs@vger.kernel.org,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and
- file size with copy_file_range()"
-Message-ID: <ZZ7Dy69ZJCEyKhhS@eldamar.lan>
-References: <2023121124-trifle-uncharted-2622@gregkh>
- <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com>
- <ZZhrpNJ3zxMR8wcU@eldamar.lan>
- <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info>
- <ZZk6qA54A-KfzmSz@eldamar.lan>
- <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="TUVNsday"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704961212; bh=Ufx5rIOzslZrIE1fgKAMS0hK+TCR3JnfrICcjOFNjVk=; h=Date:From:To:Cc:Subject:References:From:Subject:Reply-To; b=TUVNsdayAuoDhEgqvg7os5sC0z0cph1Y475NQPK9Oz8ygkH7ACE5JDBIzjYItuIn27B5lbxuuBpeG2/HeNhRpwD5Ua/uD7Ey16EkbE98+7SKKlpM39XW6a+CUHeGPjISmTqj4YK1vEJqopoC6z4LZYkbsLFCjxhCeChEEpMk9jrEa2zJ1RbTzawiC/dkcowBH8WSuq2IMhrcV1HpfmTheqcilk+gHJ97kc/8GKQzekC1jZVcm0yTZOjS8v9n1sQbxWevc3siZOnECwgP9Vu72Fdx8AwpY4YVNBSObu1Ig036In8a33lzBVt7DilHwAVMuzH86l5T2chylDMB/XFCUg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704961212; bh=6Y5m5V7txkMjX0dEsVYtbLYVgEOdGt5unrlXuYnF67a=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=YKHME696I7HFHbfaiLgm+SFzu8PuTGKixgmId8zm1tnJcqubbr9K1mvmSqIPgc0vyp3YKsHa3SM3tNpaQydj7w0PlkHUB4o9icM79pRPwjK3gfo3NOECGb2Guo+uqerm0v8/P3XmTrd4qyeqQchynbQZ5ryJm9eCeiAfohoG1XAF2lJnRSVTj7dHhP+LEkrM9YAKJIag45l6AmgZPF1IFeLZPO+bCIuxqwdsOIyMemVMmatVIvS4Xfq6BqUx7SdVOShmXrcCOcnR7UR65Kw3hM99wLXUPHsoytYG61E+fgmfDHtk5SFbYtuOTR3jMp5jesOTumgjiRpvDuXBrIVycw==
+X-YMail-OSG: iekjkz8VM1nx2vHQ2wd_XfQkRf1RvfEN6jswCBVV0XIOzqu51m09vCkhI_kJdkX
+ CNijaJ0VvyxyUB3rKrFuBoXyotw7Crw1MN9at9yUmxFBWFdTknPWaD_GjPVymXMvWFjTYw9z5lgX
+ JlMaNvze4e1JLkgJsWTBp3_ezVqa9VqWhEJNrgtoBQfJM0Upi8EshkmCeC7MbE01PNqHpTs.IgX_
+ M.d8R72UiXhxLn_JcqAmTT2fL__ucT85K2XGHsJ1ws8PGy5tPdGt50MonKOxRfRCcyekjWSS.JrO
+ iQ03ebKBc3CxpGGIoSUn4kYXEqbIjdwQyWjF7RDcJLmi3aIs_h1VslNhDzO50As6q2cYdhdAmrmD
+ p8PJ2C9yK.8ITTNC9Nm66ALtnki0IFmgOu.BZzcbKzC6s0zeylMG8yUeEaf1uEg4vl6nHYdudGEQ
+ 8peveM5zwWZwTA7R7X3zxAzEo.lerJZ_TNq28oxYgoVO_q4ZmhkOCS.QHvMHA.9B72mBih1n.pZ.
+ ijwOVKi2nUQbPc4LWKGrTYak3Nzu0CbM7A4YPKyEGR4mNldwI66dVUGNvmM1oyNSG0pgPMHcVfRD
+ mMjmIOoC060ljF9yRr2ZMKqdn505GDmLC0m11kni0FUKbEcZxwRLvVXNhVaZjMU7_.81_nlq26K1
+ kqOQR_OLBPTCeL.8SbqryWrnuyy4iCSyPBNV9wU60bYnI5Sq5B1J1Cj2bEltZovLZE6BGl5hwfqf
+ EcxZBoUOIADdIE09LC43GRGOQtUAgrb4LbtRwDjTtmc5LluUFEsnFZPkD.7k1rAbUagGqsMdOYU9
+ vFtHp7VgRypZ_ISZ0OFgVeLycWfQUJi4LpP4FAl.xWb_Fn93RyvsjmaxcA8HjDR5q6ycMkHx96ro
+ xumUHs7e0pJCulj3bfRmpt5JRl.c41y6FVggDWNcU0AN4Q3TVZ1TwWQ5yGAMsowP07DGJ2.0yKLt
+ 1Ai2K_e0KRVPQJMxisZ0CoFG92zvsdPx5pEqcDpuRMOHx3knwix0klYTMqoa91beVJ00YTP97MGm
+ rFFCOKIeJCugPWDhHe7d5rLlQEA4XeUzwO5wpOdG9dotwGn1C187WyVpFb34fvhkER0tFB4Iba51
+ 0Aeo5iEZ0Pvna8MPk8lS1S4q91DkndgoRx4cS0Kz_Rj3zhzT7LaHAcOUXBVQ.dKVg80nCBOtn2ve
+ cQePaXAcA5nVtjzcwjFgohgu45fge10A2XVuJmmjRFfZfzs.oeljJVwAqMCDE5g1SCeB6tmKQnGd
+ XiVs4ddM4OINRs.JgYEiIHEnybOyB70eWmbxAjlxgiwtyuJOLtFH5qNWY0gE8DhfdhF2Ce72ax73
+ .fHjliWUw.grlvGnifRW02MahI1UI6WBvQru_y1waVMWIjV4ftNQzJ.mLELCUj03rQs9dvOU5GVC
+ XQ_t5ZagR.rY5Hh6snUNpKo0tw1f2dwyQjT4lQ7e8rAzo_LwLULBIn9A20tRwEpHuFh6nPXHWF_X
+ QJngtykdkZdV6fvoX2w0eRSp4luzcM499LWcJ.sjhzT_KijMZl8kBVC05v_96alT1UaXWeFzSfu4
+ weNh.emKuAYVJ6.83y.teGB3tDbmXEaKL2sxny05Mn5HZ.jP14XbImjHx6OHJ7sn2.3GmyXA_XQ6
+ mBEMoxGsySbuS80rVMoCjt7ZA8pwG05SJ.35E9ssx6CSOfCglME7iyd_fnL7PPM9ipcyY.Z57jrd
+ 3puCfAjUO40_cHVKBHmB0oh2CrYDa8AYPgvhLuLjf8V4EoC_xid_bnEQEJcKcK6EEp_CdIH_OVIw
+ tSeNVoJDKKVori.GHUGOBa.EAtWGayLK.e6YcDCB04YPjPaq3QDiEZR2YFWKzOQ_cgAaw_iRsH8h
+ D3VE16V4mbcjJoRheoO6r4ELVFw0XBkrbkly7ENx2oMhzAnQfneiDsPCyLoBuqaNRbxDUxcMCOP4
+ w6enPGKQnnQ_o9xiFcIdvwiqXeveiCuCjZHh.l96Gx47sLO9QPDy0tF_gYK5yZmT.8CcX.25B8nX
+ jMBY.bgwJZ9b.X1o6ES3Mux6NYeRHo_ui.0po7Y9YNLlNkiL1iHYYA5f0cZSC0RbuYyE63rVBKl5
+ crFumxRBq_JU9O7IV_CAb_IyzItFo4nd9cJplyFJH7aUAJSO3wNBnOvbtUDjC9Hsin0jfo470Brf
+ DPseilnWA2sPYEsXVeLf4F0MLAR8JPdBTFDjiIvUVMmgjp4bftUOwjpo3czYlOeWlZLjg0g2e8hO
+ 1FwezlK.cICJ0mfYspHJmYJxJ7Z467Ulcx_U3pufVxOcG2wNX_Bc-
+X-Sonic-MF: <email200202@yahoo.com>
+X-Sonic-ID: 4450a33c-aef9-49e1-b3fc-345f56f6adb5
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.bf2.yahoo.com with HTTP; Thu, 11 Jan 2024 08:20:12 +0000
+Received: by hermes--production-gq1-78d49cd6df-t49qq (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 97d1b92ffe0fdce95aeca671c72f318c;
+          Thu, 11 Jan 2024 08:20:06 +0000 (UTC)
+Message-ID: <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+Date: Thu, 11 Jan 2024 19:20:02 +1100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+From: email200202 <email200202@yahoo.com>
+Content-Language: en-US
+To: regressions@lists.linux.dev
+Cc: kernel@gentoo.org, stable@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+X-Mailer: WebService/1.1.22010 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Hi
 
-Sorry if this is to prematurely to ask already again.
+#regzbot introduced: v6.1.70..v6.1.71
 
-On Sat, Jan 06, 2024 at 01:02:16PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 06.01.24 12:34, Salvatore Bonaccorso wrote:
-> > On Sat, Jan 06, 2024 at 11:40:58AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >>
-> >> Does this problem also happen in mainline, e.g. with 6.7-rc8?
-> > 
-> > Thanks a lot for replying back. So far I can tell, the regression is
-> > in 6.1.y only 
-> 
-> Ahh, good to know, thx!
-> 
-> > For this reason I added to regzbot only "regzbot ^introduced
-> > 18b02e4343e8f5be6a2f44c7ad9899b385a92730" which is the commit in
-> > v6.1.68.
-> 
-> Which was the totally right thing to do, thx. Guess I sooner or later
-> will add something like "#regzbot tag notinmainline" to avoid the
-> ambiguity we just cleared up, but maybe that's overkill.
 
-Do we have already a picture on the best move forward? Should the
-patch and the what depends on it be reverted or was someone already
-able to isolate where the problem comes from specifically for the
-6.1.y series? 
+After kernel upgrade 6.1.70 to 6.1.71, the computer hangs during shutdown.
 
-Regards,
-Salvatore
+The problem is related to NFS service. Stopping NFS service hangs:
+
+# /etc/init.d/nfs  stop
+  * Caching service dependencies ... [ ok ]
+  * Stopping NFS mountd ... [ ok ]
+  * Stopping NFS daemon ... [ ok ]
+
+then it hangs
+
+
+Shutdown does not hang when NFS service is removed.
+
+# rc-update  del  nfs
+
+I had this kernel error in the log:
+
+Jan 10 17:32:25 [rpc.mountd] Caught signal 15, un-registering and exiting.
+Jan 10 17:32:25 [kernel] [ 2005.560991] ------------[ cut here ]------------
+Jan 10 17:32:25 [kernel] [ 2005.560996] kernel BUG at net/sunrpc/svc.c:576!
+Jan 10 17:32:25 [kernel] [ 2005.561004] invalid opcode: 0000 [#1] 
+PREEMPT SMP PTI
+Jan 10 17:32:25 [kernel] [ 2005.561012] CPU: 0 PID: 8079 Comm: nfsd 
+Tainted: P           O       6.1.71-gentoo #1
+Jan 10 17:32:25 [kernel] [ 2005.561017] Hardware name: Gigabyte 
+Technology Co., Ltd. X58A-UD3R/X58A-UD3R, BIOS FB 08/24/2010
+Jan 10 17:32:25 [kernel] [ 2005.561020] RIP: 0010:svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561033] Code: 5b 5d 41 5c 41 5d c3 cc cc 
+cc cc 55 48 8d 6f ec 53 48 89 fb 48 83 c7 44 e8 b6 6c 5f ff 48 8b 53 1c 
+48 8d 43 1c 48 39 c2 74 02 <0f> 0b 48 8b 53 2c 48 8d 43 2c 48 39 c2 74 
+02 0f 0b 48 89 ef e8 6b
+Jan 10 17:32:25 [kernel] [ 2005.561038] RSP: 0018:ffffc90001edbee8 
+EFLAGS: 00010287
+Jan 10 17:32:25 [kernel] [ 2005.561043] RAX: ffff88816c1a1c30 RBX: 
+ffff88816c1a1c14 RCX: 0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561047] RDX: ffff88813dfcc018 RSI: 
+0000000000000286 RDI: ffff88890bc9b9c0
+Jan 10 17:32:25 [kernel] [ 2005.561051] RBP: ffff88816c1a1c00 R08: 
+ffff88810310b600 R09: 0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561055] R10: ffff8881bc3b4000 R11: 
+ffff8881bc3b4000 R12: ffffffff82e061c0
+Jan 10 17:32:25 [kernel] [ 2005.561058] R13: ffff8881bc0e8000 R14: 
+ffff88810310b600 R15: ffffc90002323c80
+Jan 10 17:32:25 [kernel] [ 2005.561062] FS:  0000000000000000(0000) 
+GS:ffff88890bc00000(0000) knlGS:0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561067] CS:  0010 DS: 0000 ES: 0000 CR0: 
+0000000080050033
+Jan 10 17:32:25 [kernel] [ 2005.561071] CR2: 000055e971e376f8 CR3: 
+000000000260a000 CR4: 00000000000006f0
+Jan 10 17:32:25 [kernel] [ 2005.561075] Call Trace:
+Jan 10 17:32:25 [kernel] [ 2005.561079]  <TASK>
+Jan 10 17:32:25 [kernel] [ 2005.561082]  ? __die_body+0x15/0x57
+Jan 10 17:32:25 [kernel] [ 2005.561091]  ? die+0x2b/0x44
+Jan 10 17:32:25 [kernel] [ 2005.561097]  ? do_trap+0x76/0xf9
+Jan 10 17:32:25 [kernel] [ 2005.561102]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561108]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561114]  ? do_error_trap+0x69/0x93
+Jan 10 17:32:25 [kernel] [ 2005.561119]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561126]  ? exc_invalid_op+0x49/0x5d
+Jan 10 17:32:25 [kernel] [ 2005.561133]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561139]  ? asm_exc_invalid_op+0x16/0x20
+Jan 10 17:32:25 [kernel] [ 2005.561148]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561155]  ? svc_destroy+0x12/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561161]  nfsd+0x13d/0x162
+Jan 10 17:32:25 [kernel] [ 2005.561170]  ? svc_put+0x2f/0x2f
+Jan 10 17:32:25 [kernel] [ 2005.561176]  kthread+0xd0/0xd8
+Jan 10 17:32:25 [kernel] [ 2005.561183]  ? 
+kthread_complete_and_exit+0x16/0x16
+Jan 10 17:32:25 [kernel] [ 2005.561189]  ret_from_fork+0x22/0x30
+Jan 10 17:32:25 [kernel] [ 2005.561196]  </TASK>
+Jan 10 17:32:25 [kernel] [ 2005.561198] Modules linked in: snd_seq_dummy 
+snd_seq snd_seq_device nvidia_uvm(PO) bluetooth ecdh_generic ecc bridge 
+stp llc ipv6 crc_ccitt ch341 usbserial nvidia_drm(PO) nvidia_modeset(PO) 
+nvidia(PO) tda10048 tda8290 iTCO_wdt iTCO_vendor_support tda18271 it87 
+hwmon_vid dm_crypt coretemp dm_multipath dm_mod kvm_intel dax video 
+snd_hda_codec_realtek snd_hda_codec_generic kvm drm_kms_helper irqbypass 
+ledtrig_audio i2c_i801 pcspkr serio_raw drm i2c_smbus snd_hda_intel 
+i2c_core snd_intel_dspcfg fb_sys_fops syscopyarea snd_hda_codec 
+sysfillrect lpc_ich snd_hda_core sysimgblt mfd_core snd_hwdep uhci_hcd 
+rtc_cmos wmi
+Jan 10 17:32:25 [kernel] [ 2005.561274] ---[ end trace 0000000000000000 ]---
+Jan 10 17:32:25 [kernel] [ 2005.561277] RIP: 0010:svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561284] Code: 5b 5d 41 5c 41 5d c3 cc cc 
+cc cc 55 48 8d 6f ec 53 48 89 fb 48 83 c7 44 e8 b6 6c 5f ff 48 8b 53 1c 
+48 8d 43 1c 48 39 c2 74 02 <0f> 0b 48 8b 53 2c 48 8d 43 2c 48 39 c2 74 
+02 0f 0b 48 89 ef e8 6b
+
+The problem is always reproducible. Steps to reproduce:
+1. Update to kernel 6.1.71
+2. Start nfs service
+3. Try to shutdown
+4. The computer hangs
+
+Reverting the following 3 commits fixed the problem in kernel 6.1.71:
+
+f9a01938e07910224d4a2fd00583725d686c3f38
+bb4f791cb2de1140d0fbcedfe9e791ff364021d7
+03d68ffc48b94cc1e15bbf3b4f16f1e1e4fa286a
+
+
+
