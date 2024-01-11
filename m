@@ -1,118 +1,121 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic317-26.consmr.mail.bf2.yahoo.com (sonic317-26.consmr.mail.bf2.yahoo.com [74.6.129.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB0D15AEF;
-	Thu, 11 Jan 2024 12:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED6B3B187
+	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 13:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BMV4yOHv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nrUdzr6x"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id F2A543200258;
-	Thu, 11 Jan 2024 07:55:47 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Jan 2024 07:55:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1704977747; x=1705064147; bh=n7Flv4sDP2
-	we1RAcMNYutGo+Ms3cmgPKVxBB6NzlfbI=; b=BMV4yOHvD6RNJ4gKwjz8eJiho5
-	MuZnwjbYPMPctC3x5+8khcxrp10wy43dm0CuDs41cIlUu1itHZpeur4ThCGOpH5Q
-	R/PAKoF4uJsOX0MEAnGqPwYGrnWO/p/+j95ZAZ+QDHBUq4tJmU7oKoKgsLrD6kO8
-	iEctsAHd4R903F/Xwo8lb5OS5qB4dLUOi8kYU4qEsdY0Uwcv+7JOkjxJZ2MEVfUG
-	YbkpODU5INMHIbc5FoF9BBrOn/RvuYPryRLHuudMvQ5ZmjfPLczg+vVFgj1Jg1UJ
-	Wj8SrRapaSTz/aQkcPW6qo37nPlfqjQmK3PQptDu2j/IjRNAX6B2yr5+cggw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1704977747; x=1705064147; bh=n7Flv4sDP2we1RAcMNYutGo+Ms3c
-	mgPKVxBB6NzlfbI=; b=nrUdzr6x4aT4f4aJSErB7UJYRsMkiISvZnY5PXbhtgpb
-	EfBhv9SmKahvHIaV88z+Of1ai0prhzzuGiVJs4rB2qkZWdI7nFwoZ+J9xqORqhpi
-	q71KiRfmqJW6Wqn3TjQg54RZBrf7eALnwotOd1wW7baIjdpwRinDtkt/Yn0Th5ik
-	3STJ5Q5Gk4sLmlbyXfZAGxdRErWdtzIElfFVCzQpCnNu1/SDftDdLxbOvfuyaQT7
-	5Recd5pmgvGuJsAUyeo3OgFRQgYO0Oa4BixRO0eMUPzByzyTD9Y3lMZ4zmCeeHVj
-	R84jonajBxTqt2W2eiQzAOlQ4pCDKgOOkwh5dZ6yfA==
-X-ME-Sender: <xms:U-WfZUkRqQAutNFK73pQAn7MN559CMu1_vFdfU49PTOKXBRatGLlEA>
-    <xme:U-WfZT0OxrL_6yIlikHv9O7Im9GiUAccdFCDTSpVTE620IimfHTKZJHWPyf-4CSds
-    YgTU5j6WvBSU6ghLcE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeifedggeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:U-WfZSo2uwxG5HPRm8WLuHIXFz4D6xNqec1BKzgyXsAxM8qiBWVikg>
-    <xmx:U-WfZQk4-z096u_Db9SFTtSs4VkclUiZ19G40qwhZvtO_mr237SLbw>
-    <xmx:U-WfZS223sqdo6C1OMDpB0yg51BEwUzP2uKLxgqd4RGCiJ5fsUHMgw>
-    <xmx:U-WfZcpakV0xlJAzGCgiWztRhmxp5WRLdfsSsTaGZQ9f6qInK9BX-w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 1A00CB6008D; Thu, 11 Jan 2024 07:55:47 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="GsfvUzwN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704981549; bh=N5C78wTmGtKzFfg9bjpzKH65dW1Z2OeHHp4d7rYGgKc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=GsfvUzwN0DwdKPK9jfmuU1PytXJyFlUBNGVMMux2YYTs5ktip7PO+iP3FaMK6Ar/ErE/Qiu2dUsV34KGJRmzPNJIbIVeSrKkUbE1CJaEL60pkOV379jteSAI0sw7m/371o1fk0GmpGeWyMjBK3Sbi7llFDvabVJLkggtQ/KxvqGJBQ9TY1283BGON/VMIX1PY5vfketVkiNJGR2W0ErIuY4Nq6N2D/WKgGgvQ9UqYPcS8+lP/tAGIHXMKAT2E2T/V69VNtzAr1peCxDIcyvYAmtnvaw6e7I48yEsNjVwF2JemvAS7Kx9jbr/7K7Lt8yH1Vart2YHyPztcpb2ZKBg0w==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704981549; bh=SVDSQhIdLhGgE7+MnCR8tio+IyunA+shp8eVxFds9zc=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=gQneLFz3qcjjqN4Pwdiq46I5c5vzg8W3VAu1ZuZELmF9TwReZotoW1yJZDyMdzgcZYKwjz2y/saIbu6dsIf2DI9JjQbhA4XYq9R40EQdbeR431OWdmXWNUxB48nTt1tHIVLiCFoMDeV6BcCjyyYtL9DUzX6A11y1ZfWg+uoAQGTD1SQ5KlE47uPavBban8j4xWjJilSIYyeM/WpgQbdfCJPDARF85QCbcV6PVjracr39J7DiSs1cs7ucTe0vLo71mgKJMBQS6fKpV10htQtgFeHmnonQ3v7hwwuF2/fjyvO6hFr1VfSf35piWG93DWS/zkz+cIYnCu9Sd2jXIj7JNA==
+X-YMail-OSG: VqZ6pIAVM1lsPmuOtHg_bb5o7NPz5U8OGIgKHuwB.ViUF6Qb8KG8b4XlWtttk9D
+ VbcmsbH26FN7pV0iR6JnzakFhhNC5Qgutrnt3ihTyG8aaM3x5NDWZVumgP6FzsH_YYJT3NuTlNuG
+ 6etuusRv6GVGFAF3at6DpXCZO2X47gEwmDkVxNQq0Sq2o1_ca.VxCn.W0rbEb_V2z.7SWIXyIm7_
+ 61F5q2z5hvzRSXk0o3Fwq5Wm9w0H.Mx.DikjHf_2twEWx9K6Bkn6hgOfKZJkxn.D0Hl7nn3anOQD
+ n2lQF_Gs3raYJ2LUSDvqS32ndnQeAHm3YgJXYdq53pHD8UIRhI_tnq6gQJXDAuOnMYw.A1Kk6PCw
+ 2k54ks71dVYOd7NsO48Tzdrz0bYK3dhMtQgfxEqLjLUef31OgHyJF8SP8E6f5QgLc5sJ42njsLY6
+ 61eAt8AHXJ0WpHBsmXEXYBcqWnx5AGIX3AWsR1etM_AowrJUR1_9HKP_m9XCD4YSo7cxPAr_JdGH
+ xmKG56Cmtm7zeak5VqCEGxQ5fXHueygA0tQuzxmXLoXhyfShwjkcbK8d5GrHrISySa6s_gyq0OVw
+ ryy_Mpvz9ZbJa90AanHc8yJJv.SXNTinSyu2xXyl32b1Fcew1eDWXJPKbgf6u9_iwF1oJeROkYm2
+ o1HJQaMTF2An84qxG5T0HE4b9YqESNVv7i9s85xHsFdIouWA3lD4fAqdIuyaXTymzeU0Se_PxpJP
+ tLh_sNICuWR62AGMlErtIlzw1aUuWZi64RBXALz7pz_NiQFecqR46h0PyFHfZ6fdzNG4Ylgnoftr
+ ZX6RzL_OBOjsJzvb3HgL5_ZikfwF.f.PXQ_JmyayWLApyD6ybY5NLPk7p3jffbuW_KoDVfqcHhqJ
+ xGSneVP8EmK6xlZBusX2B3OFFNhcOI_KIcYs9PqSunh1KQ.M0.tb4cLo8E6FENr2zwsj4MenTzAj
+ OhQ_3nj8F1HRF_XPneWFm.Hi5mThFHKIyzmYAVJfGz3Mk5czM74EjLQSxHtNqV_8IF0qknImZTV7
+ X9xbMRQCJHgV_A_8gnWN2mcCGimcCYyeAXzXmke5WZRxHGPenRn3CeUf9wqPbw7yey1IDan7TAMB
+ kVQ5.WkWAiZ02w_7dcNqw.ScjNqe7njvDjC.ZO.RH098lCxn5rRJATuNb0i8KEX.a.7.C6NjSD_q
+ UEQVL0MYET9VP11b4KHlM0vU4phRkVavNlMMKJ7hCntnwtWKxHWmiQYnMdmYOQ5uud9watARSn2L
+ Z57l0npWP_vcUiYHCxmfUJkB6NyFgVdKLMP4tv0QfJZ8j8yIZ9CKVKDYXLhrlWGO3wFDzyY_y7sr
+ eXavc5WT1_adzLsKdN5opXRv.ezwdjMb3j9.GhpgrUvQZArl6ZHLzWCO8kqnqSdIQwOKM1YF4JcL
+ Ji9RtCeaGtvviXvNmllNw4vm9OOA8EngHBTj0uHvkWwBdy6dXBBvG35FsBFK4fRDmZng1YnTEaoa
+ WNF7Vtn_pjV3KCztTo9XqS_p96Aw94dOQowImIIceQeAKgBZoYBN.dVdK30hM4g1WiBq8U7nCvlJ
+ p_ZzvYlxaaVO9Zc8JWxM1DdRIlof7sdKg7k8GJWSH8RFuX05pC2eg9h0phSH68LAQTvsNzjVBkTD
+ sdO3Ty0WXFKmRdOavHlYF3Yvp1Flufaq8AwDtoJ1nq1z6EQdp0vUWIPMon0QUy3dcRa3L4BBvP.G
+ Isyh_qRDe.gtnTL5K2AjfWBGCEAXVssfdU3kPd4TaIeca4uj5CQu.rivHm.QrRqDK758Gi0JCBCn
+ zWMBn6Tc0c9tmT_PT1HjwiiTFEpv17V5Gw39vTh2VMs3tggdqyDfwtpOBAgt9qUErDV6XRl4HPkQ
+ kW.hLbKhqtxkhGgvLJgBsUm_UcMDzwNmKYYS29Eir8SQ.Acg0HYNoGTwQVhO06I3EZ3rJRdDo5JI
+ EZ8sY5vFWJW.nsEx9_sd4TUEGZIEmPYRrpPn96nX68LxxAAcHj6QrnTpCSWY_dReOkZnZkzI31Xz
+ IKuYPiHZFrM5gOnbJWDGfIXJNgFJ7jVYGbfgBM.q0uXd_Lrj3WdoXIhhSflIt0gx9mBG0U6rDG4L
+ PKIz2uo4JMw5R0d7Z5M8GFJD2M8vC45KATvzFwKNHsZsWZb2cZQGyGhY8xE.qLf.MiqlWIST2yd7
+ kP6ZoYwJQotJuNIdl6zT.xzzImJ.R5c4VoHPCOpORT1P8bcMUvKq2Xo6FyEzL__b6rN8Vo7ltM90
+ yt0SzRI10JkYeEYcp__sFiQcwcyW6MC622nZRYg5HZj0iyXpHYkc8FA--
+X-Sonic-MF: <email200202@yahoo.com>
+X-Sonic-ID: d96dba1f-f098-4ede-8a35-cd92d86e2513
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Thu, 11 Jan 2024 13:59:09 +0000
+Received: by hermes--production-gq1-78d49cd6df-k96gh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID be72881b0d821ee080898b675639d3c6;
+          Thu, 11 Jan 2024 13:59:03 +0000 (UTC)
+Message-ID: <bbfe6944-a7f0-46f5-8a30-79eccf84664d@yahoo.com>
+Date: Fri, 12 Jan 2024 00:58:59 +1100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <908325ed-08af-4b0c-926e-da9afba25772@app.fastmail.com>
-In-Reply-To: <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
-References: 
- <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
- <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
-Date: Thu, 11 Jan 2024 13:55:15 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Uladzislau Rezki" <urezki@gmail.com>
-Cc: linux-next <linux-next@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "Linux Regressions" <regressions@lists.linux.dev>,
- clang-built-linux <llvm@lists.linux.dev>, lkft-triage@lists.linaro.org,
- "Andrew Morton" <akpm@linux-foundation.org>
-Subject: Re: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when used
- here [-Werror,-Wuninitialized]
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: regressions@lists.linux.dev, kernel@gentoo.org, stable@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+ <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+ <2024011127-excluding-bodacious-1950@gregkh>
+ <3b8250ac-79e4-46d1-a508-5773e6330fb4@yahoo.com>
+ <2024011114-attribute-semisweet-788c@gregkh>
+Content-Language: en-US
+From: email200202 <email200202@yahoo.com>
+In-Reply-To: <2024011114-attribute-semisweet-788c@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.22010 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Thu, Jan 11, 2024, at 12:16, Dan Carpenter wrote:
-> On Thu, Jan 11, 2024 at 04:23:09PM +0530, Naresh Kamboju wrote:
->> Following build failures noticed on i386 and x86 with clang builds on the
->> Linux next-20240111 tag.
->> 
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->> 
->> Build error:
->> ----------
->> mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
->> used here [-Werror,-Wuninitialized]
->>  4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
->>       |                                       ^~~~
->> mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
->> this warning
->>  4684 |         unsigned long addr;
->>       |                           ^
->>       |                            = 0
->> 1 error generated.
+Hi Greg
+
+Here is the test results for the latest versions of 6.6.x and 6.7.x 
+available in Gentoo portage
+
+1- Stopping NFS service failed but, unlike 6.1.x, it did NOT hang.
+
+# uname -r
+6.6.11-gentoo
+# /etc/init.d/nfs stop
+  * Stopping NFS mountd ... [ ok ]
+  * Stopping NFS daemon ...
+  * start-stop-daemon: 8 process(es) refused to stop [ !! ]
+  * Unexporting NFS directories ... [ ok ]
+  * ERROR: nfs failed to stop
+# /etc/init.d/nfs start
+  * WARNING: nfs has already been started
+
+
+# uname -r
+6.7.0-gentoo
+# /etc/init.d/nfs stop
+  * Stopping NFS mountd ... [ ok ]
+  * Stopping NFS daemon ...
+  * start-stop-daemon: 8 process(es) refused to stop [ !! ]
+  * Unexporting NFS directories ... [ ok ]
+  * ERROR: nfs failed to stop
+# /etc/init.d/nfs start
+  * WARNING: nfs has already been started
+
+2- Shutdown didn't hang in both of them
+
+Best regards
+John G
+
+On 11/1/24 21:21, Greg KH wrote:
+> On Thu, Jan 11, 2024 at 09:10:39PM +1100, email200202 wrote:
+>> Hi Greg
+>>
+>> I'm sorry. This my first kernel report.
+>>
+>> I didn't test 6.6.x and 6.7.x.  I use only 6.1.x.
+> Can you do so?
 >
-> We turned off uninitialized variable warnings for GCC a long time ago...
-> :/ I don't know if we'll be able to re-enable it in a -Werror world
-> although Clang seems to be managing alright so perhaps there is hope.
+> thanks,
+>
+> greg k-h
 
-The problem with gcc's warning is that it is non-deterministic and
-in recent versions actually got more false-positives even without
--Os or -fsanitize=. Clang does not catch all that gcc does because
-it doesn't track state across inline functions, but at least its
-output is always the same regardless of optimization and other
-options.
-
-At least this particular one is an obvious bug and easily gets
-caught by lkft and lkp even if gcc's -Wuninitilized doesn't
-flag it.
-
-    Arnd
