@@ -1,51 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2653914A82;
-	Thu, 11 Jan 2024 10:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95B214F61
+	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 10:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XFqss9mO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51498C433C7;
-	Thu, 11 Jan 2024 10:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704968487;
-	bh=KRTB7szqaD5RceYIxOt+TvmkK1Zx1Nsc+xAoCZt+oUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XFqss9mO9oKNzkWMNZ+BJS34Doud/qENsXY3oz/9w2oF7nRFnjjsgTQCXNQYYA4qL
-	 OTIvz7mCLZWZ3lLb140muWFexjPzuCt0RGwrxCxgOAsWZRfWzaZhDLjDIlfiJA3YoZ
-	 DrkcVSLLZkm7wGRmbHYn/XYWdcmdvvAh5haDT1D4=
-Date: Thu, 11 Jan 2024 11:21:25 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: email200202 <email200202@yahoo.com>
-Cc: regressions@lists.linux.dev, kernel@gentoo.org, stable@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
- hangs during shutdown
-Message-ID: <2024011114-attribute-semisweet-788c@gregkh>
-References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
- <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
- <2024011127-excluding-bodacious-1950@gregkh>
- <3b8250ac-79e4-46d1-a508-5773e6330fb4@yahoo.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iWR9lzRR"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4b71e8790efso1179599e0c.3
+        for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 02:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704970400; x=1705575200; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2BxDnRoz+tciUL07Ky2uFARoSUgYzDQPvPnOjHTato0=;
+        b=iWR9lzRRinqd1FLbBNQCEl8Cin7kfjuWM0Bu6fIK1dW1ppb3/qmEK7bcgIWDEWW3+H
+         V780ppteHpm4zSENutQEDRdWt3LlHnm9ytJ4G9oghZrbG4K5HIc6HjHqUCR6/G67DWVs
+         h2UX1L2ShyHDzk2puucODoCuK7RdxOo6rMUxsMbhAKhDSaQo9CZKDYwNqrHJQM6EAp6f
+         TuQIxrpLnPJKbqGk2POlGKi5/xyC8aKV8pBjR5WJaeW5ODNYNodLmIBrcyDKKHJTerrD
+         vcRTD1OQ8LIiM87nwN5sb0H4eaX5r2wbrhQWnbgaW1F7sljq0CN4NvkLCuZMcmXSyQUI
+         2FuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704970400; x=1705575200;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2BxDnRoz+tciUL07Ky2uFARoSUgYzDQPvPnOjHTato0=;
+        b=aq1ijoc1elppPrYm6SOd1aVamh4I+6PZGxFRYtRIlvN3dI0Di0z0d8bv0JYbskFYEP
+         yIjEAnyEWHReNSAsBW02nXQkzxWhHxTB+DAOK6JlIIIP7IhxYy4yzJpvmI5rufq6i3Y0
+         syw4n4NoEBdLMk07uMb80vzwNFAFuGayvJMq9AAthaHNH+D+kGY5x4h10WTGH0wWzc6U
+         SaPa8NXdZO+p6DaQp8suRXfGt0au5V3zs2KwildgIEWUpCpW9Mg4b+kNYbC5WIM+KegZ
+         zf0YunhCCND2hjrsZp7zBMrcgJ/QcQld6WjvVGNeJAm3Ar6BDBX7McGVDCd0V2WO7VLX
+         Ju3g==
+X-Gm-Message-State: AOJu0Yxdj34dIxHEBo91aTNDWIexNXrBCZMGIKc9LuBKyNrdYpbxQkmn
+	xRokf5gGfqBTjLf/LgFrs1A1j0hNTc4vBKkRx36iAbYynBbglg==
+X-Google-Smtp-Source: AGHT+IGgSmqv9Y1WJTe266dMtLWoOwKf822h2X6Qyg98fN6FvdHnX82UlDzXJD8BpoL+3lFdSku871Xabj7RMWn9Q/Q=
+X-Received: by 2002:a05:6122:1499:b0:4b7:8d7c:3483 with SMTP id
+ z25-20020a056122149900b004b78d7c3483mr254720vkp.19.1704970400539; Thu, 11 Jan
+ 2024 02:53:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3b8250ac-79e4-46d1-a508-5773e6330fb4@yahoo.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 11 Jan 2024 16:23:09 +0530
+Message-ID: <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
+Subject: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
+ used here [-Werror,-Wuninitialized]
+To: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
+	lkft-triage@lists.linaro.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 11, 2024 at 09:10:39PM +1100, email200202 wrote:
-> Hi Greg
-> 
-> I'm sorry. This my first kernel report.
-> 
-> I didn't test 6.6.x and 6.7.x.  I use only 6.1.x.
+Following build failures noticed on i386 and x86 with clang builds on the
+Linux next-20240111 tag.
 
-Can you do so?
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-thanks,
+Build error:
+----------
+mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
+used here [-Werror,-Wuninitialized]
+ 4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
+      |                                       ^~~~
+mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
+this warning
+ 4684 |         unsigned long addr;
+      |                           ^
+      |                            = 0
+1 error generated.
 
-greg k-h
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240111/testrun/22036090/suite/build/test/clang-lkftconfig/details/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
