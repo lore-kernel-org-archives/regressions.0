@@ -1,175 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB3B154AC;
-	Thu, 11 Jan 2024 11:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB0D15AEF;
+	Thu, 11 Jan 2024 12:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PbixFO9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEED8C43394;
-	Thu, 11 Jan 2024 11:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704973888;
-	bh=eur3+uCQkJRvTvIYjNHVxvd9Ld4JIv8SwItCymE3X/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PbixFO9RV/zxZ/W2yzPs+G/WKIbFVnCtZnCDJRbbbUsBuiWR5WLMUM1IgwjUDQQsu
-	 se3sSmCHa1YhBq2XFujRvstXdbVxbxzRK+MBXqpXvQ9h/kuVdlG9AJodky8XRg7Ber
-	 aUDChDsu91yUwJL4SgH6WvvJ7rMy4nlwNYPLwS6u7YSHMPbY+x6FHMB6euaU4sxYjA
-	 BoeOiEZA/LHgA58tiairsMMxpNzshEPBIzqmaucVu1XMz7UQ0gajZ/yhqb2dRDFD6e
-	 pep2W0rY9dY3flP0R/Yb3thpZEVtvEv9H7bIRfmFJUwA3dCMbwGxoDsMxB77/GBIo7
-	 e7x9SnTIC+uzQ==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-ide@vger.kernel.org,
-	Niklas Cassel <cassel@kernel.org>
-Cc: Dieter Mummenschanz <dmummenschanz@web.de>,
-	Wang Zhihao <wangzhihao9@hotmail.com>,
-	linux-regressions <regressions@lists.linux.dev>
-Subject: [PATCH 2/2] ata: libata-core: Revert "ata: libata-core: Fix ata_pci_shutdown_one()"
-Date: Thu, 11 Jan 2024 20:51:23 +0900
-Message-ID: <20240111115123.1258422-3-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240111115123.1258422-1-dlemoal@kernel.org>
-References: <20240111115123.1258422-1-dlemoal@kernel.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BMV4yOHv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nrUdzr6x"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id F2A543200258;
+	Thu, 11 Jan 2024 07:55:47 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 11 Jan 2024 07:55:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1704977747; x=1705064147; bh=n7Flv4sDP2
+	we1RAcMNYutGo+Ms3cmgPKVxBB6NzlfbI=; b=BMV4yOHvD6RNJ4gKwjz8eJiho5
+	MuZnwjbYPMPctC3x5+8khcxrp10wy43dm0CuDs41cIlUu1itHZpeur4ThCGOpH5Q
+	R/PAKoF4uJsOX0MEAnGqPwYGrnWO/p/+j95ZAZ+QDHBUq4tJmU7oKoKgsLrD6kO8
+	iEctsAHd4R903F/Xwo8lb5OS5qB4dLUOi8kYU4qEsdY0Uwcv+7JOkjxJZ2MEVfUG
+	YbkpODU5INMHIbc5FoF9BBrOn/RvuYPryRLHuudMvQ5ZmjfPLczg+vVFgj1Jg1UJ
+	Wj8SrRapaSTz/aQkcPW6qo37nPlfqjQmK3PQptDu2j/IjRNAX6B2yr5+cggw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704977747; x=1705064147; bh=n7Flv4sDP2we1RAcMNYutGo+Ms3c
+	mgPKVxBB6NzlfbI=; b=nrUdzr6x4aT4f4aJSErB7UJYRsMkiISvZnY5PXbhtgpb
+	EfBhv9SmKahvHIaV88z+Of1ai0prhzzuGiVJs4rB2qkZWdI7nFwoZ+J9xqORqhpi
+	q71KiRfmqJW6Wqn3TjQg54RZBrf7eALnwotOd1wW7baIjdpwRinDtkt/Yn0Th5ik
+	3STJ5Q5Gk4sLmlbyXfZAGxdRErWdtzIElfFVCzQpCnNu1/SDftDdLxbOvfuyaQT7
+	5Recd5pmgvGuJsAUyeo3OgFRQgYO0Oa4BixRO0eMUPzByzyTD9Y3lMZ4zmCeeHVj
+	R84jonajBxTqt2W2eiQzAOlQ4pCDKgOOkwh5dZ6yfA==
+X-ME-Sender: <xms:U-WfZUkRqQAutNFK73pQAn7MN559CMu1_vFdfU49PTOKXBRatGLlEA>
+    <xme:U-WfZT0OxrL_6yIlikHv9O7Im9GiUAccdFCDTSpVTE620IimfHTKZJHWPyf-4CSds
+    YgTU5j6WvBSU6ghLcE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeifedggeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:U-WfZSo2uwxG5HPRm8WLuHIXFz4D6xNqec1BKzgyXsAxM8qiBWVikg>
+    <xmx:U-WfZQk4-z096u_Db9SFTtSs4VkclUiZ19G40qwhZvtO_mr237SLbw>
+    <xmx:U-WfZS223sqdo6C1OMDpB0yg51BEwUzP2uKLxgqd4RGCiJ5fsUHMgw>
+    <xmx:U-WfZcpakV0xlJAzGCgiWztRhmxp5WRLdfsSsTaGZQ9f6qInK9BX-w>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 1A00CB6008D; Thu, 11 Jan 2024 07:55:47 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1374-gc37f3abe3d-fm-20240102.001-gc37f3abe
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <908325ed-08af-4b0c-926e-da9afba25772@app.fastmail.com>
+In-Reply-To: <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
+References: 
+ <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
+ <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
+Date: Thu, 11 Jan 2024 13:55:15 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "Uladzislau Rezki" <urezki@gmail.com>
+Cc: linux-next <linux-next@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ clang-built-linux <llvm@lists.linux.dev>, lkft-triage@lists.linaro.org,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Subject: Re: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when used
+ here [-Werror,-Wuninitialized]
+Content-Type: text/plain
 
-This reverts commit fd3a6837d8e18cb7be80dcca1283276290336a7a.
+On Thu, Jan 11, 2024, at 12:16, Dan Carpenter wrote:
+> On Thu, Jan 11, 2024 at 04:23:09PM +0530, Naresh Kamboju wrote:
+>> Following build failures noticed on i386 and x86 with clang builds on the
+>> Linux next-20240111 tag.
+>> 
+>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>> 
+>> Build error:
+>> ----------
+>> mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
+>> used here [-Werror,-Wuninitialized]
+>>  4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
+>>       |                                       ^~~~
+>> mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
+>> this warning
+>>  4684 |         unsigned long addr;
+>>       |                           ^
+>>       |                            = 0
+>> 1 error generated.
+>
+> We turned off uninitialized variable warnings for GCC a long time ago...
+> :/ I don't know if we'll be able to re-enable it in a -Werror world
+> although Clang seems to be managing alright so perhaps there is hope.
 
-Several users have signaled issues with commit fd3a6837d8e1 ("ata:
-libata-core: Fix ata_pci_shutdown_one()") which causes failure of the
-system SoC to go to a low power state. The reason for this problem
-is not well understood but given that this patch is harmless with the
-improvements to ata_dev_power_set_standby(), restore it to allow system
-lower power state transitions.
+The problem with gcc's warning is that it is non-deterministic and
+in recent versions actually got more false-positives even without
+-Os or -fsanitize=. Clang does not catch all that gcc does because
+it doesn't track state across inline functions, but at least its
+output is always the same regardless of optimization and other
+options.
 
-For regular system shutdown, ata_dev_power_set_standby() will be
-executed twice: once the scsi device is removed and another when
-ata_pci_shutdown_one() executes and EH completes unloading the devices.
-Make the second call to ata_dev_power_set_standby() do nothing by using
-ata_dev_power_is_active() and return if the device is already in
-standby.
+At least this particular one is an obvious bug and easily gets
+caught by lkft and lkp even if gcc's -Wuninitilized doesn't
+flag it.
 
-Fixes: fd3a6837d8e1 ("ata: libata-core: Fix ata_pci_shutdown_one()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- drivers/ata/libata-core.c | 75 +++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index d9f80f4f70f5..20a366942626 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -2001,6 +2001,33 @@ bool ata_dev_power_init_tf(struct ata_device *dev, struct ata_taskfile *tf,
- 	return true;
- }
- 
-+static bool ata_dev_power_is_active(struct ata_device *dev)
-+{
-+	struct ata_taskfile tf;
-+	unsigned int err_mask;
-+
-+	ata_tf_init(dev, &tf);
-+	tf.flags |= ATA_TFLAG_DEVICE | ATA_TFLAG_ISADDR;
-+	tf.protocol = ATA_PROT_NODATA;
-+	tf.command = ATA_CMD_CHK_POWER;
-+
-+	err_mask = ata_exec_internal(dev, &tf, NULL, DMA_NONE, NULL, 0, 0);
-+	if (err_mask) {
-+		ata_dev_err(dev, "Check power mode failed (err_mask=0x%x)\n",
-+			    err_mask);
-+		/*
-+		 * Assume we are in standby mode so that we always force a
-+		 * spinup in ata_dev_power_set_active().
-+		 */
-+		return false;
-+	}
-+
-+	ata_dev_dbg(dev, "Power mode: 0x%02x\n", tf.nsect);
-+
-+	/* Active or idle */
-+	return tf.nsect == 0xff;
-+}
-+
- /**
-  *	ata_dev_power_set_standby - Set a device power mode to standby
-  *	@dev: target device
-@@ -2017,8 +2044,9 @@ void ata_dev_power_set_standby(struct ata_device *dev)
- 	struct ata_taskfile tf;
- 	unsigned int err_mask;
- 
--	/* If the device is already sleeping, do nothing. */
--	if (dev->flags & ATA_DFLAG_SLEEPING)
-+	/* If the device is already sleeping or in standby, do nothing. */
-+	if ((dev->flags & ATA_DFLAG_SLEEPING) ||
-+	    !ata_dev_power_is_active(dev))
- 		return;
- 
- 	/*
-@@ -2046,33 +2074,6 @@ void ata_dev_power_set_standby(struct ata_device *dev)
- 			    err_mask);
- }
- 
--static bool ata_dev_power_is_active(struct ata_device *dev)
--{
--	struct ata_taskfile tf;
--	unsigned int err_mask;
--
--	ata_tf_init(dev, &tf);
--	tf.flags |= ATA_TFLAG_DEVICE | ATA_TFLAG_ISADDR;
--	tf.protocol = ATA_PROT_NODATA;
--	tf.command = ATA_CMD_CHK_POWER;
--
--	err_mask = ata_exec_internal(dev, &tf, NULL, DMA_NONE, NULL, 0, 0);
--	if (err_mask) {
--		ata_dev_err(dev, "Check power mode failed (err_mask=0x%x)\n",
--			    err_mask);
--		/*
--		 * Assume we are in standby mode so that we always force a
--		 * spinup in ata_dev_power_set_active().
--		 */
--		return false;
--	}
--
--	ata_dev_dbg(dev, "Power mode: 0x%02x\n", tf.nsect);
--
--	/* Active or idle */
--	return tf.nsect == 0xff;
--}
--
- /**
-  *	ata_dev_power_set_active -  Set a device power mode to active
-  *	@dev: target device
-@@ -6184,10 +6185,24 @@ EXPORT_SYMBOL_GPL(ata_pci_remove_one);
- void ata_pci_shutdown_one(struct pci_dev *pdev)
- {
- 	struct ata_host *host = pci_get_drvdata(pdev);
-+	struct ata_port *ap;
-+	unsigned long flags;
- 	int i;
- 
-+	/* Tell EH to disable all devices */
- 	for (i = 0; i < host->n_ports; i++) {
--		struct ata_port *ap = host->ports[i];
-+		ap = host->ports[i];
-+		spin_lock_irqsave(ap->lock, flags);
-+		ap->pflags |= ATA_PFLAG_UNLOADING;
-+		ata_port_schedule_eh(ap);
-+		spin_unlock_irqrestore(ap->lock, flags);
-+	}
-+
-+	for (i = 0; i < host->n_ports; i++) {
-+		ap = host->ports[i];
-+
-+		/* Wait for EH to complete before freezing the port */
-+		ata_port_wait_eh(ap);
- 
- 		ap->pflags |= ATA_PFLAG_FROZEN;
- 
--- 
-2.43.0
-
+    Arnd
