@@ -1,94 +1,91 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF5515482
-	for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 11:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SirfIEJb"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3368abe1093so4138918f8f.2
-        for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 03:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704971795; x=1705576595; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lMrj071u8QxSrpPG+XgJOGjzHRcUM7yJCNZgbHu8j4E=;
-        b=SirfIEJbnmj7KfWKB9dwcWzjaMkGihywvvtUTL3DEI6smlJE7vmzmWssppkKRnbvtg
-         gc0JVyUjlffRa6Zqz4twsWm75KkF03wN6b9uepPsHX/D7QgA+bs7BINcfCOLYZQ5Xaip
-         ZtC6KV+TFeuPpRoHOLP+MRk55kRoddxvCdIveb+Bi+lgmPopW75gFL3XitGMY3WfbiFg
-         5pPDBQa+UgKCPMXV9bzqa0tukvHaXUV5jqHunGmK0gwLZwsxb/zbXrvDudozqh73CEGj
-         ZOGwqNBwB+4qOW2bpem/clTiMi0s7hrF4Ivhj36aL1gN7NXU0Gz6VoU3jib4NG//wcuF
-         HPIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704971795; x=1705576595;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lMrj071u8QxSrpPG+XgJOGjzHRcUM7yJCNZgbHu8j4E=;
-        b=Fo+iBDVV2bzfH3i0S4FaFO9Z3zV7hGdISpE08LY4DoOGcrafPjXtXYStAWvEjmQb9P
-         LHmXanDM/RdT1OrdjRmtFu94BF4LDmrGg3+6iUZOB9d2lyzWsEtVfjZ+O0wFQGKtJSOd
-         HYaN+YUTdlNiyaPs+iipIP2Sk7Amlc0tVh7tMan04ezENrY2v0YaluGCYscG8WVmIC5F
-         EKdQoM1jRCtFTBY4DfsmE/zF/WiILo7Ugk7REx2eFnjvRfer07wJDzJ13CgknOT0qZQv
-         XZzWVKugGyYzE+/Cddw/8CdEBU3FBwezVPz504T24hv/XXMb3ejbk1BFR1FPdmkyUQEp
-         gTxQ==
-X-Gm-Message-State: AOJu0YxT+3CC5WvcQBSjd3TBqwoR5yUxNkIWtaacaCiQYEogGqWoNoLO
-	4esfOn8X/8vK+2y1OCA7eFiOwqpO3KInTLnAKcbNJQEUhv0=
-X-Google-Smtp-Source: AGHT+IEPPNVvbO5ZAGHaJIqpc3i4tc1NLOXiXRpJBAk/R+nqSaMM7qnZtN104k+NMK5aCMx5D6B0oA==
-X-Received: by 2002:a05:6000:11c9:b0:336:76dc:9b48 with SMTP id i9-20020a05600011c900b0033676dc9b48mr488079wrx.91.1704971794944;
-        Thu, 11 Jan 2024 03:16:34 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id p19-20020adf9d93000000b003378ea9a7desm157130wre.33.2024.01.11.03.16.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 03:16:34 -0800 (PST)
-Date: Thu, 11 Jan 2024 14:16:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Uladzislau Rezki <urezki@gmail.com>
-Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	clang-built-linux <llvm@lists.linux.dev>,
-	lkft-triage@lists.linaro.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized
- when used here [-Werror,-Wuninitialized]
-Message-ID: <628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
-References: <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADDC14F9D;
+	Thu, 11 Jan 2024 11:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rNtVP-0007Bi-K4; Thu, 11 Jan 2024 12:45:51 +0100
+Message-ID: <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
+Date: Thu, 11 Jan 2024 12:45:50 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
+ update-grub
+Content-Language: en-US, de-DE
+To: Anand Jain <anand.jain@oracle.com>
+References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-btrfs <linux-btrfs@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-kernel@vger.kernel.org, Alex Romosan <aromosan@gmail.com>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>
+In-Reply-To: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704973561;f3cf3eb7;
+X-HE-SMSGID: 1rNtVP-0007Bi-K4
 
-On Thu, Jan 11, 2024 at 04:23:09PM +0530, Naresh Kamboju wrote:
-> Following build failures noticed on i386 and x86 with clang builds on the
-> Linux next-20240111 tag.
+[Adding Anand Jain, the author of the culprit to the list of recipients;
+furthermore CCing the the Btrfs maintainers and the btrfs list; also
+CCing regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 08.01.24 15:11, Alex Romosan wrote:
+> Please Cc me as I am not subscribed to the list.
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Running my own compiled kernel without initramfs on a lenovo thinkpad
+> x1 carbon gen 7.
 > 
-> Build error:
-> ----------
-> mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
-> used here [-Werror,-Wuninitialized]
->  4691 |                 va = __find_vmap_area(addr, &vn->busy.root);
->       |                                       ^~~~
-> mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
-> this warning
->  4684 |         unsigned long addr;
->       |                           ^
->       |                            = 0
-> 1 error generated.
+> Since version 6.7-rc1 i haven't been able to to a grub-update,
+>
+> instead i get this error:
+> 
+> grub-probe: error: cannot find a device for / (is /dev mounted?) solid
+> state drive
+> 
+> 6.6 was the last version that worked.
+> 
+> Today I did a git-bisect between these two versions which identified
+> commit bc27d6f0aa0e4de184b617aceeaf25818cc646de btrfs: scan but don't
+> register device on single device filesystem as the culprit. reverting
+> this commit from 6.7 final allowed me to run update-grub again.
+> 
+> not sure if this is the intended behavior or if i'm missing some other
+> kernel options. any help/fixes would be appreciated.
+> 
+> thank you.
 
-We turned off uninitialized variable warnings for GCC a long time ago...
-:/ I don't know if we'll be able to re-enable it in a -Werror world
-although Clang seems to be managing alright so perhaps there is hope.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-regards,
-dan carpenter
+#regzbot ^introduced bc27d6f0aa0e4de184b617aceeaf25818cc646de
+#regzbot title btrfs: update-grub broken (cannot find a device for / (is
+/dev mounted?))
+#regzbot ignore-activity
 
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
