@@ -1,58 +1,78 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D866DD09
-	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 15:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rOJ55-0003LD-Vt; Fri, 12 Jan 2024 16:04:24 +0100
-Message-ID: <1a7e822c-84ac-4c84-8054-11ec4aa6a018@leemhuis.info>
-Date: Fri, 12 Jan 2024 16:04:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C444217C8D
+	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 18:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PJkUMNPG"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so193a12.1
+        for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 10:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705082486; x=1705687286; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XxcXCQP3+9Bv+ZGDo4IurQCR5mkoBqs8qSMmpsQJKCY=;
+        b=PJkUMNPGRJ8MufbCLhXnB3YQidzPBCWuh+EmIpoVBtZx14QhBp/SijMST4z1WDIuHg
+         xn9KjRMn469AdI7nPzDbgsJLfw7X28IYNu1TYmbggN4ccmOhdRkQGGW5XaX8utC4/wzG
+         Pnk4/KrcfhhCgMAI7FPNjBjaD3p6J214Gi+ozYXmM+TOKrw4xYLHPrS828TEPQWT5hzD
+         yZG21U+Z3VciilXo1L7DlyvjrSudwDeZKFNXOJ8Ble43ZgpsQDUM+luShuQ3v+atVeGR
+         IZvgSytIIHe0BdXPAaSMQy9EZc6y8RQxe+TOpINMerKmi8zyFMwngfgmNC0FEgoDS1+H
+         W1/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705082486; x=1705687286;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XxcXCQP3+9Bv+ZGDo4IurQCR5mkoBqs8qSMmpsQJKCY=;
+        b=ogKLlgs3IybhAt4976+l+KLGHdqlNFZ6UKV4C1zAkbzEh3kFKtrG7jmtp4tDEmIktR
+         bQo0tOtcrZmB1UQJMVHV/oOKU7Oon39rn6uCiEtbtIA67EH9JSznra2cciCqNsfqv+Gu
+         0ChGDzPmNyooqAf8IQsaKvmYGJzKaI04UyK6l9eitePLVxhwLafKYfYutA6CkR92ewhG
+         2K+RK74oQGd4UhLJcQU+cIoyde+H1YSxKA1w8H5syGxZm324+695ziruJr9ebA89Frrm
+         M7klPptwB3lBwJx4uOgnGrjuC9v6hwR0cn3Tuc1Adw/oG8GrB7KseExoDFFwdgvw7yeb
+         gHOw==
+X-Gm-Message-State: AOJu0YzxKy4EjlmzBb1nKD0y7ryUlBA8z0XGeI8b9S2rYEXuWASPqz/o
+	6q13vplntcV4nJqNwf4EGKlpktnrwHZYkgTBXbTDXHuhIDXj
+X-Google-Smtp-Source: AGHT+IF37WrheBgs7vZkD4LAZbqDI+dAMM/O+eQ2FkKngINtsaFMvdv46HN03Hdih6jdNpEuUF5/JOa1qC5ybtJoa2w=
+X-Received: by 2002:a05:6402:40d1:b0:558:7f0f:aa70 with SMTP id
+ z17-20020a05640240d100b005587f0faa70mr384479edb.5.1705082485852; Fri, 12 Jan
+ 2024 10:01:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug 218198 - system after successful resuming the CPU won't enter
- lower Package Sates below pc2
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <4cbd1ad9-d343-421a-b9de-30dc8e2d02c1@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <4cbd1ad9-d343-421a-b9de-30dc8e2d02c1@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705071866;ce9f1105;
-X-HE-SMSGID: 1rOJ55-0003LD-Vt
+From: Jeffery Miller <jefferymiller@google.com>
+Date: Fri, 12 Jan 2024 12:01:14 -0600
+Message-ID: <CAAzPG9MU2PfTk2Yn+spJqH6mLVsG1p6L6vhJ4LFG+aiojnN6HQ@mail.gmail.com>
+Subject: [REGRESSION] In v5.15.146 an ax88179_178a USB ethernet adapter causes crashes
+To: stable@vger.kernel.org
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>, justinpopo6@gmail.com, kuba@kernel.org, 
+	linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10.12.23 12:40, Thorsten Leemhuis wrote:
-> [TLDR: Just adding a regression reported to bko to the tracking]
-> 
-> Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
-> regression reported in bugzilla.kernel.org that seems to be handled
-> there already, nevertheless I'd like to add to the tracking to ensure
-> it's doesn't fall through the cracks in the end:
-> 
-> #regzbot introduced: d035e4eb38b3ea5ae9
-> https://bugzilla.kernel.org/show_bug.cgi?id=218198
-> #regzbot title: system after successful resuming the CPU won't enter
-> lower Package Sates below pc2
-> #regzbot ignore-activity
+For 5.15 attempting to use an ax88179_178a adapter "0b95:1790 ASIX
+Electronics Corp. AX88179 Gigabit Ethernet"
+started causing crashes.
+This did not reproduce in the 6.6 kernel.
 
-#regzbot monitor:
-https://lore.kernel.org/all/20240111115123.1258422-1-dlemoal@kernel.org/
-#regzbot fix: ata: libata-core: Revert "ata: libata-core: Fix
-ata_pci_shutdown_one()"
-#regzbot ignore-activity
+The crashes were narrowed down to the following two commits brought
+into v5.15.146:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+commit d63fafd6cc28 ("net: usb: ax88179_178a: avoid failed operations
+when device is disconnected")
+commit f860413aa00c ("net: usb: ax88179_178a: wol optimizations")
+
+Those two use an uninitialized pointer `dev->driver_priv`.
+
+In later kernels this pointer is initialized in commit 2bcbd3d8a7b4
+("net: usb: ax88179_178a: move priv to driver_priv").
+
+Picking in the two following commits fixed the issue for me on 5.15:
+commit 9718f9ce5b86 ("net: usb: ax88179_178a: remove redundant init code")
+commit 2bcbd3d8a7b4 ("net: usb: ax88179_178a: move priv to driver_priv")
+
+The commit 9718f9ce5b86 ("net: usb: ax88179_178a: remove redundant
+init code") was required for
+the fix to apply cleanly.
