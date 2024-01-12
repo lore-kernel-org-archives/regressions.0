@@ -1,89 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802B35D734;
-	Fri, 12 Jan 2024 07:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A2uvgJlm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87218C433F1;
-	Fri, 12 Jan 2024 07:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705046283;
-	bh=bWqyRoGbqZkUMpB07zA4RdTIaZK8BiWqqZtsb6JvOmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A2uvgJlm6fJHwsAGrCgwXIHiRztTcnL/4mogwAWZdzjjJVj1i/bMXHljMqs3dh4wF
-	 JcJaL1kgYTz280FgKrHHFyREGCKo5pNpHbfaqKkVHFBpi10NXuHzsttZ7XQ2oPvUH0
-	 zVGCGEbe4A4YIVsKbAVEx1XKcbwjKzHMtErgvZ9w=
-Date: Fri, 12 Jan 2024 08:57:59 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Diogo Ivo <diogo.ivo@siemens.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, linux-phy@lists.infradead.org,
-	tjoseph@cadence.com, linux-pci@vger.kernel.org, ylal@codeaurora.org,
-	regressions@lists.linux.dev, jan.kiszka@siemens.com
-Subject: Re: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
-Message-ID: <2024011246-corned-disregard-7123@gregkh>
-References: <20240111141331.3715265-1-diogo.ivo@siemens.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002165D8E0;
+	Fri, 12 Jan 2024 08:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rOCe7-0002nH-6T; Fri, 12 Jan 2024 09:12:07 +0100
+Message-ID: <9144bdc5-36ea-498c-8ff6-1be9fc2d3d2a@leemhuis.info>
+Date: Fri, 12 Jan 2024 09:12:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111141331.3715265-1-diogo.ivo@siemens.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and
+ file size with copy_file_range()"
+To: Steve French <stfrench@microsoft.com>
+Cc: David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.com>,
+ Shyam Prasad N <nspmangalore@gmail.com>,
+ Rohith Surabattula <rohiths.msft@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>,
+ "Jitindar Singh, Suraj" <surajjs@amazon.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>,
+ stable@vger.kernel.org, linux-cifs@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ Salvatore Bonaccorso <carnil@debian.org>
+References: <2023121124-trifle-uncharted-2622@gregkh>
+ <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com>
+ <ZZhrpNJ3zxMR8wcU@eldamar.lan>
+ <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info>
+ <ZZk6qA54A-KfzmSz@eldamar.lan>
+ <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
+ <ZZ7Dy69ZJCEyKhhS@eldamar.lan> <2024011115-neatly-trout-5532@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024011115-neatly-trout-5532@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705047139;a5ce67ef;
+X-HE-SMSGID: 1rOCe7-0002nH-6T
 
-On Thu, Jan 11, 2024 at 02:13:30PM +0000, Diogo Ivo wrote:
-> Hello,
-> 
-> When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
-> we came across a breakage in the probing of the Keystone PCI driver
-> (drivers/phy/ti/pci-keystone.c). This probing was working correctly
-> in the previous version we were using, v5.10.
-> 
-> In order to debug this we changed over to mainline Linux and bissecting
-> lead us to find that commit e611f8cd8717 is the culprit, and with it applied
-> we get the following messages:
-> 
-> [   10.954597] phy-am654 910000.serdes: Failed to enable PLL
-> [   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
-> [   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
-> [   10.973560] keystone-pcie: probe of 5500000.pcie failed with error -110
-> 
-> This timeout is occuring in serdes_am654_enable_pll(), called from the 
-> phy_ops .power_on() hook.
-> 
-> Due to the nature of the error messages and the contents of the commit we
-> believe that this is due to an unidentified race condition in the probing of
-> the Keystone PCI driver when enabling the PHY PLLs, since changes in the
-> workqueue the deferred probing runs on should not affect if probing works
-> or not. To further support the existence of a race condition, commit
-> 86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely unintentionally
-> meaning that the problem may arise in the future again.
-> 
-> One possible explanation is that there are pre-requisites for enabling the PLL
-> that are not being met when e611f8cd8717 is applied; to see if this is the case
-> help from people more familiar with the hardware details would be useful.
-> 
-> As official support specifically for the IOT2050 Advanced M.2 platform was
-> introduced in Linux v6.3 (so in the middle of the commits mentioned above)
-> all of our testing was done with the latest mainline DeviceTree with [1]
-> applied on top.
-> 
-> This is being reported as a regression even though technically things are
-> working with the current state of mainline since we believe the current fix
-> to be an unintended by-product of other work.
-> 
-> #regzbot introduced: e611f8cd8717
+On 11.01.24 12:03, gregkh@linuxfoundation.org wrote:
+> On Wed, Jan 10, 2024 at 05:20:27PM +0100, Salvatore Bonaccorso wrote:
+>> On Sat, Jan 06, 2024 at 01:02:16PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 06.01.24 12:34, Salvatore Bonaccorso wrote:
+>>>> On Sat, Jan 06, 2024 at 11:40:58AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>>
+>>>>> Does this problem also happen in mainline, e.g. with 6.7-rc8?
+>>>> Thanks a lot for replying back. So far I can tell, the regression is
+>>>> in 6.1.y only 
+>>> Ahh, good to know, thx!
+>>>
+>>>> For this reason I added to regzbot only "regzbot ^introduced
+>>>> 18b02e4343e8f5be6a2f44c7ad9899b385a92730" which is the commit in
+>>>> v6.1.68.
+>>> Which was the totally right thing to do, thx. Guess I sooner or later
+>>> will add something like "#regzbot tag notinmainline" to avoid the
+>>> ambiguity we just cleared up, but maybe that's overkill.
+>> Do we have already a picture on the best move forward? Should the
+>> patch and the what depends on it be reverted or was someone already
+>> able to isolate where the problem comes from specifically for the
+>> 6.1.y series? 
+> I guess I can just revert the single commit here?  Can someone send me
+> the revert that I need to do so as I get it right?
 
-A "regression" for a commit that was in 5.13, i.e. almost 2 years ago,
-is a bit tough, and not something I would consider really a "regression"
-as it is core code that everyone runs.  Given you point at scheduler
-changes also fixing the issue, this seems like a hint as to what is
-wrong with your driver/platform, but is not the root cause of it and
-needs to be resolved.  Please look at fixing it in your drivers?  Are
-they all in Linus's tree?
+Steve what's you opinion on reverting this? From
+https://lore.kernel.org/all/CAH2r5mu7e5-ORZbUyutteWVx2Nk6FPHfx7mMGCWSCEBAO6tdqg@mail.gmail.com/
+it looks like you added the stable tag to the culprit on purpose.
 
-thanks,
+FWIW, this thread stared there (just in case you missed earlier msgs):
+https://lore.kernel.org/all/a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com/
 
-greg k-h
+Ciao, Thorsten
