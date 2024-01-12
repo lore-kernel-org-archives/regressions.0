@@ -1,137 +1,153 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0358E111A;
-	Fri, 12 Jan 2024 02:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084F45B5BE
+	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 05:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NkZHiGgo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1705027585;
-	bh=KzTy9q41J+Iz61mM8YvhQ8+Vz6G42mnYqSFsJShOuN4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NkZHiGgoSR7guJRAt+YOwPSHIZ6rN3xqHulVZsTyRy8nZ3H40yLiLGe11v8Mygxh4
-	 M3XGFuiUnVMS1wfQDxwKwAUEbDlOEcYxjhu90Uhw3EgX7oZa6e7CBTwBHsVN3VveoA
-	 j3yU6Qf83WLGKlKgyr1NKVRf88Jh/a+K8U44kamy1vNOWHx070EzTmZ6ogeJYZSRKK
-	 sQIzIrSczY8TPzPBL91uojbOilesRU7fig98xyuybIeAUUpib0qWkWHjqmC5LLZP3a
-	 2OuSEb3cXIxhr+TQ0eMr2GhhwHPGv6phMDY2DWRhxX1Ks/YTv1rKLXSR3EKSj0l4zf
-	 Zv+pa5qgAjqiA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TB5X04LnGz4x5h;
-	Fri, 12 Jan 2024 13:46:24 +1100 (AEDT)
-Date: Fri, 12 Jan 2024 13:46:22 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Dan Carpenter" <dan.carpenter@linaro.org>, "Naresh Kamboju"
- <naresh.kamboju@linaro.org>, "Uladzislau Rezki" <urezki@gmail.com>,
- linux-next <linux-next@vger.kernel.org>, "open list"
- <linux-kernel@vger.kernel.org>, "Linux Regressions"
- <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>,
- lkft-triage@lists.linaro.org, "Andrew Morton" <akpm@linux-foundation.org>
-Subject: Re: mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized
- when used here [-Werror,-Wuninitialized]
-Message-ID: <20240112134556.1c73c072@oak>
-In-Reply-To: <bb175a67-462b-41a7-804a-ec990291a00e@app.fastmail.com>
-References: <CA+G9fYvDNksfKNvtfERaBa9t2MJNucfD_s3LgKGw_z2otW+nyw@mail.gmail.com>
-	<628bf675-77fc-4ccc-be2f-9c3ec8a7b0b8@moroto.mountain>
-	<908325ed-08af-4b0c-926e-da9afba25772@app.fastmail.com>
-	<bb175a67-462b-41a7-804a-ec990291a00e@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tkEYF4hp"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4b77948f7deso1887070e0c.0
+        for <regressions@lists.linux.dev>; Thu, 11 Jan 2024 21:15:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705036519; x=1705641319; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IgIz5Jw3xaCiRypp9t/7nFofZKzAWe2AVuDOEAahvJw=;
+        b=tkEYF4hpQdtRrCaRL328SBPd7R7MXgEi6xNF/jeAPIPz0huNxKbcL1ZKe6e4hJWT9/
+         RBWeG289o4ARTDoTK+/FIc2CouxfXGwqvFBQJ3FOB4QWb9XzMKSY7BdRY+FfxbgZyftp
+         p8fw57fgJB6eqfMu3UXaRJncF8HGzDSRGRtN11vCwm4eQ2MD7N0ybxw0wNYeeh53qlz/
+         YlQNhsr+75oOVDhZhxRzIuTDKm2DZq+2zNy0psbh62d63dF8B3SXIFgpZDrc1sqDLhzF
+         at5q0vUWgY7oLAgeY8bvm3FTv/VfSwhB8sNFs2pOkVjfoX+aFFJjBsy/xxHVK9WXg9JO
+         z59g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705036519; x=1705641319;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IgIz5Jw3xaCiRypp9t/7nFofZKzAWe2AVuDOEAahvJw=;
+        b=uFYst0IZ5UDNGwEN2jRF6JCvzGYR3k5LlK/BzqZRehUr9hzH3ENz+61HZx121Tuy03
+         CRyh5RVgkEv4C2oHtjZypPUg5DupbWUqWrs9JdBtnC4wIGw0ql+kis++NcZaVhNxEesy
+         kytAPqlzSnw4CteGXYknKl2ScPwLLJfLGKnE8+sWbGKLAriQ7Dgcg5akFdZgdHcI4Agd
+         RYcg5TL37Kb8MV3WxNSRJnHvy0LSNSnMKsQTQ6+csbC/vnU57xtUe05/uPKfHQyQTNZs
+         5iu3l7OpAnB4w4+F8DEVLERiECW8HmBfohnJcR4pPkIobbLuAtUrY7YBpTX95ikxyAO0
+         jriA==
+X-Gm-Message-State: AOJu0YxitOeuHxchKwNPdSAKxNSCsdwF78WMjzC26KppfYVdLnYCP0Ap
+	aIpDVw/xiE9vOC5yFH3fjDMFkkOgaCHYGu8jmBNVeALWmjzrWQ==
+X-Google-Smtp-Source: AGHT+IHPLvPAb+MT+s200UzDgvlLJVHSQjmJYTb0cHfWBa5Vn8ew9C7G9AwMneG0HO+in1yTFy80+h7ZYa1cXDFsG/w=
+X-Received: by 2002:a05:6122:4d0e:b0:4b7:a95b:7b3 with SMTP id
+ fi14-20020a0561224d0e00b004b7a95b07b3mr706190vkb.26.1705036518758; Thu, 11
+ Jan 2024 21:15:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FXcs1LWAtjjuljVrt8TKt6X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 12 Jan 2024 10:45:08 +0530
+Message-ID: <CA+G9fYu1hB2OMf0EFrt_86OE=0Ug3y6nQd3=OZeEeM1jp3P92g@mail.gmail.com>
+Subject: Re: scsi: block: ioprio: Clean up interface definition -
+ ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
+To: linux-block <linux-block@vger.kernel.org>, LTP List <ltp@lists.linux.it>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
+	open list <linux-kernel@vger.kernel.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>, Damien Le Moal <dlemoal@kernel.org>, 
+	Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>, Niklas Cassel <niklas.cassel@wdc.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/FXcs1LWAtjjuljVrt8TKt6X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The LTP test 'iopri_set03' fails on all the devices.
+It fails on linux kernel >= v6.5. ( on Debian rootfs ).
+Test fail confirmed on LTP release 20230929 and 20230516.
 
-Hi all,
+Test failed log:
+------------
+tst_test.c:1690: TINFO: LTP version: 20230929
+tst_test.c:1574: TINFO: Timeout per run is 0h 05m 00s
+ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
+ioprio_set03.c:48: TINFO: tested illegal priority with class NONE
+ioprio_set03.c:51: TPASS: returned correct error for wrong prio: EINVAL (22)
 
-On Thu, 11 Jan 2024 17:37:12 +0100 "Arnd Bergmann" <arnd@arndb.de> wrote:
->
-> On Thu, Jan 11, 2024, at 13:55, Arnd Bergmann wrote:
-> > On Thu, Jan 11, 2024, at 12:16, Dan Carpenter wrote: =20
-> >> On Thu, Jan 11, 2024 at 04:23:09PM +0530, Naresh Kamboju wrote: =20
-> >>> Following build failures noticed on i386 and x86 with clang builds on=
- the
-> >>> Linux next-20240111 tag.
-> >>>=20
-> >>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >>>=20
-> >>> Build error:
-> >>> ----------
-> >>> mm/vmalloc.c:4691:25: error: variable 'addr' is uninitialized when
-> >>> used here [-Werror,-Wuninitialized]
-> >>>  4691 |                 va =3D __find_vmap_area(addr, &vn->busy.root);
-> >>>       |                                       ^~~~
-> >>> mm/vmalloc.c:4684:20: note: initialize the variable 'addr' to silence
-> >>> this warning
-> >>>  4684 |         unsigned long addr;
-> >>>       |                           ^
-> >>>       |                            =3D 0
-> >>> 1 error generated. =20
-> >>
-> >> We turned off uninitialized variable warnings for GCC a long time ago.=
-..
-> >> :/ I don't know if we'll be able to re-enable it in a -Werror world
-> >> although Clang seems to be managing alright so perhaps there is hope. =
-=20
-> >
-> > The problem with gcc's warning is that it is non-deterministic and
-> > in recent versions actually got more false-positives even without
-> > -Os or -fsanitize=3D. Clang does not catch all that gcc does because
-> > it doesn't track state across inline functions, but at least its
-> > output is always the same regardless of optimization and other
-> > options.
-> >
-> > At least this particular one is an obvious bug and easily gets
-> > caught by lkft and lkp even if gcc's -Wuninitilized doesn't
-> > flag it. =20
->=20
-> As it turns out, gcc did find this one in the default -Wuninitialized
-> regardless of -Wmaybe-uninitialized:
->=20
-> mm/vmalloc.c: In function 'vmalloc_dump_obj':
-> mm/vmalloc.c:4691:22: error: 'addr' is used uninitialized [-Werror=3Dunin=
-itialized]
->  4691 |                 va =3D __find_vmap_area(addr, &vn->busy.root);
->       |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> mm/vmalloc.c:4684:23: note: 'addr' was declared here
->  4684 |         unsigned long addr;
->       |                       ^~~~
->=20
-> and I see that Uladzislau Rezki already sent a fix, which
-> is the same that I tried out in my randconfig tree:
-> https://lore.kernel.org/lkml/ZaARXdbigD1hWuOS@pc638.lan/
+Investigation:
+----------
+Bisecting this test between kernel v6.4 and v6.5 shows patch
+eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
+as the first faulty commit.
 
-I have applied that to linux-next today.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
---=20
-Cheers,
-Stephen Rothwell
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240109/testrun/22021120/suite/ltp-syscalls/test/ioprio_set03/details/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240110/testrun/22034175/suite/ltp-syscalls/test/ioprio_set03/history/
 
---Sig_/FXcs1LWAtjjuljVrt8TKt6X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Steps to reproduce:
+---------------
+This is how you can reproduce it easily:
+Install podman or docker, tuxmake and tuxrun, if docker please change
+the --runtime below to docker.
+cd into the kernel you want to build:
+$ tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig defconfig --results-hook 'tuxrun --runtime podman --device
+qemu-arm64 --boot-args rw --tuxmake ./ --rootfs
+https://storage.tuxboot.com/debian/bookworm/arm64/rootfs.ext4.xz
+--parameters SKIPFILE=skipfile-lkft.yaml --timeouts boot=30 --overlay
+https://storage.tuxboot.com/overlays/debian/bookworm/arm64/ltp/20230929/ltp.tar.xz
+/ --save-outputs --log-file - -- "cd /opt/ltp && ./runltp -s
+ioprio_set03"'
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWgp/4ACgkQAVBC80lX
-0GyUgQf7BqMWgH6cRs1tGNAs4BKWtftlLyJyZxCjYclzY9kjUIECSS6YKmZqH13Q
-XPy97i7GodFZJWaOwgf0RGtGB45wBjK/odZHpxLGmPVddDW3Lw4b+hoz/VnPzUyx
-3UcHxWZrX2sjM7MHASXOmNlRvTr7BYVDTUFIojzdOFpELAaDHgIp+25i3NT/s7b9
-xuE4cywwHA7i49iKZHBCPahxT9wcIaREwKMcClWM824G0oTEZ9hFjkTlOUy7EGfV
-vxgUIvc4KBRGUXq+ghdfru/SDnFXSjVxQzBF/Y/+u6CbLJpXsl4/zAmHH01c39q4
-Tf4CfWS8RbJHiEfFwPeSAw5ayu+f/w==
-=YCNG
------END PGP SIGNATURE-----
+Bisection log:
+------------
+# bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
+# good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
+git bisect start 'v6.5' 'v6.4'
+# good: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag
+'mips_6.5' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+git bisect good b775d6c5859affe00527cbe74263de05cfe6b9f9
+# bad: [56cbceab928d7ac3702de172ff8dcc1da2a6aaeb] Merge tag
+'usb-6.5-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+git bisect bad 56cbceab928d7ac3702de172ff8dcc1da2a6aaeb
+# good: [b30d7a77c53ec04a6d94683d7680ec406b7f3ac8] Merge tag
+'perf-tools-for-v6.5-1-2023-06-28' of
+git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next
+git bisect good b30d7a77c53ec04a6d94683d7680ec406b7f3ac8
+# bad: [dfab92f27c600fea3cadc6e2cb39f092024e1fef] Merge tag
+'nfs-for-6.5-1' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
+git bisect bad dfab92f27c600fea3cadc6e2cb39f092024e1fef
+# bad: [28968f384be3c064d66954aac4c534a5e76bf973] Merge tag
+'pinctrl-v6.5-1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
+git bisect bad 28968f384be3c064d66954aac4c534a5e76bf973
+# bad: [af92c02fb2090692f4920ea4b74870940260cf49] Merge patch series
+"scsi: fixes for targets with many LUNs, and scsi_target_block rework"
+git bisect bad af92c02fb2090692f4920ea4b74870940260cf49
+# bad: [2e2fe5ac695a00ab03cab4db1f4d6be07168ed9d] scsi: 3w-xxxx: Add
+error handling for initialization failure in tw_probe()
+git bisect bad 2e2fe5ac695a00ab03cab4db1f4d6be07168ed9d
+# good: [8759924ddb93498bd5777f0b05b6bc9cacf4ffe3] Merge patch series
+"scsi: hisi_sas: Some misc changes"
+git bisect good 8759924ddb93498bd5777f0b05b6bc9cacf4ffe3
+# good: [7907ad748bdba8ac9ca47f0a650cc2e5d2ad6e24] Merge patch series
+"Use block pr_ops in LIO"
+git bisect good 7907ad748bdba8ac9ca47f0a650cc2e5d2ad6e24
+# bad: [390e2d1a587405a522dc6b433d45648f895a352c] scsi: sd: Handle
+read/write CDL timeout failures
+git bisect bad 390e2d1a587405a522dc6b433d45648f895a352c
+# bad: [734326937b65cec7ffd00bfbbce0f791ac4aac84] scsi: core: Rename
+and move get_scsi_ml_byte()
+git bisect bad 734326937b65cec7ffd00bfbbce0f791ac4aac84
+# bad: [6c913257226a25879bfd6226e0ee265e98904ce6] scsi: block:
+Introduce ioprio hints
+git bisect bad 6c913257226a25879bfd6226e0ee265e98904ce6
+# bad: [eca2040972b411ec27483bf75dc8b84e730e88ff] scsi: block: ioprio:
+Clean up interface definition
+git bisect bad eca2040972b411ec27483bf75dc8b84e730e88ff
+# first bad commit: [eca2040972b411ec27483bf75dc8b84e730e88ff] scsi:
+block: ioprio: Clean up interface definition
 
---Sig_/FXcs1LWAtjjuljVrt8TKt6X--
+
+--
+Linaro LKFT
+https://lkft.linaro.org
