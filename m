@@ -1,24 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C709B5B5BA;
-	Fri, 12 Jan 2024 05:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CBDBE42
+	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 06:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxIQ8c9s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D295C433F1;
-	Fri, 12 Jan 2024 05:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705036756;
-	bh=Pd4gyH5LIN6cZTdxd3SISOtfu26rxcTjII+lVxB8zN4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TxIQ8c9sNq44aFJiIRjNZkWMabTYhEb8dS937HF8pK9AcN91mUr1vVOnC6qY8x7CK
-	 5+udxb5iabttgdx/DJiz1ALzyj1k1GH9PSE1q8gNdvfIdT1aqljoEXHd90uYiPhzsS
-	 Lxy/Aq1W9403gwoTsR7S8aODYNBFm0RhBO4Mqkwqb/I0A9nSOOFAY/e4Ap8BEInBBy
-	 MCN88JTnAq0f0biGf+UmZN+r8cOldMaZ5/PvcnOltuFP9gF8uIMeODCK3l77HkATsv
-	 zaEjnCZ9Lmhogo6cK6/UbMmo/MxR66QiN9HlYlSIw3EQlOvRDnjyiuI/ZTgKPZ3VJt
-	 06n6lzfKCME0g==
-Message-ID: <11a31e09-2e11-43a4-8995-ae70c5bef8bf@kernel.org>
-Date: Fri, 12 Jan 2024 14:19:11 +0900
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5QK0yV41"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705040191;
+	bh=r92f2aG9W1o5RGaWeOcmFA+zp/Tat8uerpfmCdUCBJs=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=5QK0yV4166uJ+Fb1SPpMaesp9BvEfqbwcqkcRfUEtfeSO4+xtzxIOG96soOBQcyJe
+	 k3Exs5xwA67KBbM4daBw2nMBlT8YVMMCLWutZR3D6YjjGKO4A+9GAyGc1hIW0/nNVf
+	 MNXZq+Z2Kz3ziUh9p7WXjrUQ44WQDqAxGy46rzZnYaz2azZy1hoX3O/sp4TPuM4mDZ
+	 bYurIdwdabygRHPKFNQDqfdq51FzJyp9Gj06ObkhypyvJO+ldGjV1IiEaXdEMyB0B0
+	 Vy0NWNXMhCkzDZUL94TUoINlCq3H9c2N4fYoLsXs+OVjF4cDnEHOBuUKHLbZ8mdtH9
+	 7x6ZMNuLM8p6w==
+Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 70F6D3781FE5;
+	Fri, 12 Jan 2024 06:16:26 +0000 (UTC)
+Message-ID: <772a2c59-7616-4ec7-9050-17d3abf0b6eb@collabora.com>
+Date: Fri, 12 Jan 2024 11:16:32 +0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,126 +33,133 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: scsi: block: ioprio: Clean up interface definition -
- ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, linmiaohe@huawei.com,
+ mike.kravetz@oracle.com, naoya.horiguchi@nec.com, akpm@linux-foundation.org,
+ songmuchun@bytedance.com, shy828301@gmail.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, jthoughton@google.com,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH v4 4/4] selftests/mm: add tests for HWPOISON hugetlbfs
+ read
 Content-Language: en-US
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- linux-block <linux-block@vger.kernel.org>, LTP List <ltp@lists.linux.it>,
- Linux Regressions <regressions@lists.linux.dev>,
- lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, chrubis <chrubis@suse.cz>,
- Petr Vorel <pvorel@suse.cz>, Hannes Reinecke <hare@suse.de>,
- Christoph Hellwig <hch@lst.de>, Niklas Cassel <niklas.cassel@wdc.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Jens Axboe <axboe@kernel.dk>
-References: <CA+G9fYu1hB2OMf0EFrt_86OE=0Ug3y6nQd3=OZeEeM1jp3P92g@mail.gmail.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <CA+G9fYu1hB2OMf0EFrt_86OE=0Ug3y6nQd3=OZeEeM1jp3P92g@mail.gmail.com>
+To: Jiaqi Yan <jiaqiyan@google.com>,
+ Sidhartha Kumar <sidhartha.kumar@oracle.com>
+References: <20230713001833.3778937-1-jiaqiyan@google.com>
+ <20230713001833.3778937-5-jiaqiyan@google.com>
+ <be3976b5-0a9c-41c6-8160-88e6c1e5d63e@collabora.com>
+ <CACw3F51WvZDVCpVg9j4j8WmnmAFOsnK+FZDDoVqhgLqVwhPTCA@mail.gmail.com>
+ <e68488e4-764e-4b25-8a47-05bf8976bd19@collabora.com>
+ <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/12/24 14:15, Naresh Kamboju wrote:
-> The LTP test 'iopri_set03' fails on all the devices.
-> It fails on linux kernel >= v6.5. ( on Debian rootfs ).
-> Test fail confirmed on LTP release 20230929 and 20230516.
+On 1/10/24 3:15 PM, Muhammad Usama Anjum wrote:
+> On 1/10/24 11:49 AM, Muhammad Usama Anjum wrote:
+>> On 1/6/24 2:13 AM, Jiaqi Yan wrote:
+>>> On Thu, Jan 4, 2024 at 10:27 PM Muhammad Usama Anjum
+>>> <usama.anjum@collabora.com> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> I'm trying to convert this test to TAP as I think the failures sometimes go
+>>>> unnoticed on CI systems if we only depend on the return value of the
+>>>> application. I've enabled the following configurations which aren't already
+>>>> present in tools/testing/selftests/mm/config:
+>>>> CONFIG_MEMORY_FAILURE=y
+>>>> CONFIG_HWPOISON_INJECT=m
+>>>>
+>>>> I'll send a patch to add these configs later. Right now I'm trying to
+>>>> investigate the failure when we are trying to inject the poison page by
+>>>> madvise(MADV_HWPOISON). I'm getting device busy every single time. The test
+>>>> fails as it doesn't expect any business for the hugetlb memory. I'm not
+>>>> sure if the poison handling code has issues or test isn't robust enough.
+>>>>
+>>>> ./hugetlb-read-hwpoison
+>>>> Write/read chunk size=0x800
+>>>>  ... HugeTLB read regression test...
+>>>>  ...  ... expect to read 0x200000 bytes of data in total
+>>>>  ...  ... actually read 0x200000 bytes of data in total
+>>>>  ... HugeTLB read regression test...TEST_PASSED
+>>>>  ... HugeTLB read HWPOISON test...
+>>>> [    9.280854] Injecting memory failure for pfn 0x102f01 at process virtual
+>>>> address 0x7f28ec101000
+>>>> [    9.282029] Memory failure: 0x102f01: huge page still referenced by 511
+>>>> users
+>>>> [    9.282987] Memory failure: 0x102f01: recovery action for huge page: Failed
+>>>>  ...  !!! MADV_HWPOISON failed: Device or resource busy
+>>>>  ... HugeTLB read HWPOISON test...TEST_FAILED
+>>>>
+>>>> I'm testing on v6.7-rc8. Not sure if this was working previously or not.
+>>>
+>>> Thanks for reporting this, Usama!
+>>>
+>>> I am also able to repro MADV_HWPOISON failure at "501a06fe8e4c
+>>> (akpm/mm-stable, mm-stable) zswap: memcontrol: implement zswap
+>>> writeback disabling."
+>>>
+>>> Then I checked out the earliest commit "ba91e7e5d15a (HEAD -> Base)
+>>> selftests/mm: add tests for HWPOISON hugetlbfs read". The
+>>> MADV_HWPOISON injection works and and the test passes:
+>>>
+>>>  ... HugeTLB read HWPOISON test...
+>>>  ...  ... expect to read 0x101000 bytes of data in total
+>>>  ...  !!! read failed: Input/output error
+>>>  ...  ... actually read 0x101000 bytes of data in total
+>>>  ... HugeTLB read HWPOISON test...TEST_PASSED
+>>>  ... HugeTLB seek then read HWPOISON test...
+>>>  ...  ... init val=4 with offset=0x102000
+>>>  ...  ... expect to read 0xfe000 bytes of data in total
+>>>  ...  ... actually read 0xfe000 bytes of data in total
+>>>  ... HugeTLB seek then read HWPOISON test...TEST_PASSED
+>>>  ...
+>>>
+>>> [ 2109.209225] Injecting memory failure for pfn 0x3190d01 at process
+>>> virtual address 0x7f75e3101000
+>>> [ 2109.209438] Memory failure: 0x3190d01: recovery action for huge
+>>> page: Recovered
+>>> ...
+>>>
+>>> I think something in between broken MADV_HWPOISON on hugetlbfs, and we
+>>> should be able to figure it out via bisection (and of course by
+>>> reading delta commits between them, probably related to page
+>>> refcount).
+>> Thank you for this information.
+>>
+>>>
+>>> That being said, I will be on vacation from tomorrow until the end of
+>>> next week. So I will get back to this after next weekend. Meanwhile if
+>>> you want to go ahead and bisect the problematic commit, that will be
+>>> very much appreciated.
+>> I'll try to bisect and post here if I find something.
+> Found the culprit commit by bisection:
 > 
-> Test failed log:
-> ------------
-> tst_test.c:1690: TINFO: LTP version: 20230929
-> tst_test.c:1574: TINFO: Timeout per run is 0h 05m 00s
-> ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
-> ioprio_set03.c:48: TINFO: tested illegal priority with class NONE
-> ioprio_set03.c:51: TPASS: returned correct error for wrong prio: EINVAL (22)
-> 
-> Investigation:
-> ----------
-> Bisecting this test between kernel v6.4 and v6.5 shows patch
-> eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
-> as the first faulty commit.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> a08c7193e4f18dc8508f2d07d0de2c5b94cb39a3
+> mm/filemap: remove hugetlb special casing in filemap.c
 
-This is fixed in LTP. Please update your LTP setup to avoid this issue.
+#regzbot title: hugetlbfs hwpoison handling
+#regzbot introduced: a08c7193e4f1
+#regzbot monitor:
+https://lore.kernel.org/all/20240111191655.295530-1-sidhartha.kumar@oracle.com
 
 > 
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240109/testrun/22021120/suite/ltp-syscalls/test/ioprio_set03/details/
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240110/testrun/22034175/suite/ltp-syscalls/test/ioprio_set03/history/
+> hugetlb-read-hwpoison started failing from this patch. I've added the
+> author of this patch to this bug report.
 > 
-> Steps to reproduce:
-> ---------------
-> This is how you can reproduce it easily:
-> Install podman or docker, tuxmake and tuxrun, if docker please change
-> the --runtime below to docker.
-> cd into the kernel you want to build:
-> $ tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
-> --kconfig defconfig --results-hook 'tuxrun --runtime podman --device
-> qemu-arm64 --boot-args rw --tuxmake ./ --rootfs
-> https://storage.tuxboot.com/debian/bookworm/arm64/rootfs.ext4.xz
-> --parameters SKIPFILE=skipfile-lkft.yaml --timeouts boot=30 --overlay
-> https://storage.tuxboot.com/overlays/debian/bookworm/arm64/ltp/20230929/ltp.tar.xz
-> / --save-outputs --log-file - -- "cd /opt/ltp && ./runltp -s
-> ioprio_set03"'
+>>
+>>>
+>>> Thanks,
+>>> Jiaqi
+>>>
+>>>
+>>>>
+>>>> Regards,
+>>>> Usama
+>>>>
 > 
-> 
-> Bisection log:
-> ------------
-> # bad: [2dde18cd1d8fac735875f2e4987f11817cc0bc2c] Linux 6.5
-> # good: [6995e2de6891c724bfeb2db33d7b87775f913ad1] Linux 6.4
-> git bisect start 'v6.5' 'v6.4'
-> # good: [b775d6c5859affe00527cbe74263de05cfe6b9f9] Merge tag
-> 'mips_6.5' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
-> git bisect good b775d6c5859affe00527cbe74263de05cfe6b9f9
-> # bad: [56cbceab928d7ac3702de172ff8dcc1da2a6aaeb] Merge tag
-> 'usb-6.5-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> git bisect bad 56cbceab928d7ac3702de172ff8dcc1da2a6aaeb
-> # good: [b30d7a77c53ec04a6d94683d7680ec406b7f3ac8] Merge tag
-> 'perf-tools-for-v6.5-1-2023-06-28' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next
-> git bisect good b30d7a77c53ec04a6d94683d7680ec406b7f3ac8
-> # bad: [dfab92f27c600fea3cadc6e2cb39f092024e1fef] Merge tag
-> 'nfs-for-6.5-1' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
-> git bisect bad dfab92f27c600fea3cadc6e2cb39f092024e1fef
-> # bad: [28968f384be3c064d66954aac4c534a5e76bf973] Merge tag
-> 'pinctrl-v6.5-1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl
-> git bisect bad 28968f384be3c064d66954aac4c534a5e76bf973
-> # bad: [af92c02fb2090692f4920ea4b74870940260cf49] Merge patch series
-> "scsi: fixes for targets with many LUNs, and scsi_target_block rework"
-> git bisect bad af92c02fb2090692f4920ea4b74870940260cf49
-> # bad: [2e2fe5ac695a00ab03cab4db1f4d6be07168ed9d] scsi: 3w-xxxx: Add
-> error handling for initialization failure in tw_probe()
-> git bisect bad 2e2fe5ac695a00ab03cab4db1f4d6be07168ed9d
-> # good: [8759924ddb93498bd5777f0b05b6bc9cacf4ffe3] Merge patch series
-> "scsi: hisi_sas: Some misc changes"
-> git bisect good 8759924ddb93498bd5777f0b05b6bc9cacf4ffe3
-> # good: [7907ad748bdba8ac9ca47f0a650cc2e5d2ad6e24] Merge patch series
-> "Use block pr_ops in LIO"
-> git bisect good 7907ad748bdba8ac9ca47f0a650cc2e5d2ad6e24
-> # bad: [390e2d1a587405a522dc6b433d45648f895a352c] scsi: sd: Handle
-> read/write CDL timeout failures
-> git bisect bad 390e2d1a587405a522dc6b433d45648f895a352c
-> # bad: [734326937b65cec7ffd00bfbbce0f791ac4aac84] scsi: core: Rename
-> and move get_scsi_ml_byte()
-> git bisect bad 734326937b65cec7ffd00bfbbce0f791ac4aac84
-> # bad: [6c913257226a25879bfd6226e0ee265e98904ce6] scsi: block:
-> Introduce ioprio hints
-> git bisect bad 6c913257226a25879bfd6226e0ee265e98904ce6
-> # bad: [eca2040972b411ec27483bf75dc8b84e730e88ff] scsi: block: ioprio:
-> Clean up interface definition
-> git bisect bad eca2040972b411ec27483bf75dc8b84e730e88ff
-> # first bad commit: [eca2040972b411ec27483bf75dc8b84e730e88ff] scsi:
-> block: ioprio: Clean up interface definition
-> 
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+BR,
+Muhammad Usama Anjum
