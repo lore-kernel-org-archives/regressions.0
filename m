@@ -1,165 +1,89 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CBDBE42
-	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 06:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802B35D734;
+	Fri, 12 Jan 2024 07:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5QK0yV41"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705040191;
-	bh=r92f2aG9W1o5RGaWeOcmFA+zp/Tat8uerpfmCdUCBJs=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=5QK0yV4166uJ+Fb1SPpMaesp9BvEfqbwcqkcRfUEtfeSO4+xtzxIOG96soOBQcyJe
-	 k3Exs5xwA67KBbM4daBw2nMBlT8YVMMCLWutZR3D6YjjGKO4A+9GAyGc1hIW0/nNVf
-	 MNXZq+Z2Kz3ziUh9p7WXjrUQ44WQDqAxGy46rzZnYaz2azZy1hoX3O/sp4TPuM4mDZ
-	 bYurIdwdabygRHPKFNQDqfdq51FzJyp9Gj06ObkhypyvJO+ldGjV1IiEaXdEMyB0B0
-	 Vy0NWNXMhCkzDZUL94TUoINlCq3H9c2N4fYoLsXs+OVjF4cDnEHOBuUKHLbZ8mdtH9
-	 7x6ZMNuLM8p6w==
-Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 70F6D3781FE5;
-	Fri, 12 Jan 2024 06:16:26 +0000 (UTC)
-Message-ID: <772a2c59-7616-4ec7-9050-17d3abf0b6eb@collabora.com>
-Date: Fri, 12 Jan 2024 11:16:32 +0500
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A2uvgJlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87218C433F1;
+	Fri, 12 Jan 2024 07:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705046283;
+	bh=bWqyRoGbqZkUMpB07zA4RdTIaZK8BiWqqZtsb6JvOmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A2uvgJlm6fJHwsAGrCgwXIHiRztTcnL/4mogwAWZdzjjJVj1i/bMXHljMqs3dh4wF
+	 JcJaL1kgYTz280FgKrHHFyREGCKo5pNpHbfaqKkVHFBpi10NXuHzsttZ7XQ2oPvUH0
+	 zVGCGEbe4A4YIVsKbAVEx1XKcbwjKzHMtErgvZ9w=
+Date: Fri, 12 Jan 2024 08:57:59 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Diogo Ivo <diogo.ivo@siemens.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, linux-phy@lists.infradead.org,
+	tjoseph@cadence.com, linux-pci@vger.kernel.org, ylal@codeaurora.org,
+	regressions@lists.linux.dev, jan.kiszka@siemens.com
+Subject: Re: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
+Message-ID: <2024011246-corned-disregard-7123@gregkh>
+References: <20240111141331.3715265-1-diogo.ivo@siemens.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, linmiaohe@huawei.com,
- mike.kravetz@oracle.com, naoya.horiguchi@nec.com, akpm@linux-foundation.org,
- songmuchun@bytedance.com, shy828301@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, jthoughton@google.com,
- "kernel@collabora.com" <kernel@collabora.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH v4 4/4] selftests/mm: add tests for HWPOISON hugetlbfs
- read
-Content-Language: en-US
-To: Jiaqi Yan <jiaqiyan@google.com>,
- Sidhartha Kumar <sidhartha.kumar@oracle.com>
-References: <20230713001833.3778937-1-jiaqiyan@google.com>
- <20230713001833.3778937-5-jiaqiyan@google.com>
- <be3976b5-0a9c-41c6-8160-88e6c1e5d63e@collabora.com>
- <CACw3F51WvZDVCpVg9j4j8WmnmAFOsnK+FZDDoVqhgLqVwhPTCA@mail.gmail.com>
- <e68488e4-764e-4b25-8a47-05bf8976bd19@collabora.com>
- <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111141331.3715265-1-diogo.ivo@siemens.com>
 
-On 1/10/24 3:15 PM, Muhammad Usama Anjum wrote:
-> On 1/10/24 11:49 AM, Muhammad Usama Anjum wrote:
->> On 1/6/24 2:13 AM, Jiaqi Yan wrote:
->>> On Thu, Jan 4, 2024 at 10:27 PM Muhammad Usama Anjum
->>> <usama.anjum@collabora.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> I'm trying to convert this test to TAP as I think the failures sometimes go
->>>> unnoticed on CI systems if we only depend on the return value of the
->>>> application. I've enabled the following configurations which aren't already
->>>> present in tools/testing/selftests/mm/config:
->>>> CONFIG_MEMORY_FAILURE=y
->>>> CONFIG_HWPOISON_INJECT=m
->>>>
->>>> I'll send a patch to add these configs later. Right now I'm trying to
->>>> investigate the failure when we are trying to inject the poison page by
->>>> madvise(MADV_HWPOISON). I'm getting device busy every single time. The test
->>>> fails as it doesn't expect any business for the hugetlb memory. I'm not
->>>> sure if the poison handling code has issues or test isn't robust enough.
->>>>
->>>> ./hugetlb-read-hwpoison
->>>> Write/read chunk size=0x800
->>>>  ... HugeTLB read regression test...
->>>>  ...  ... expect to read 0x200000 bytes of data in total
->>>>  ...  ... actually read 0x200000 bytes of data in total
->>>>  ... HugeTLB read regression test...TEST_PASSED
->>>>  ... HugeTLB read HWPOISON test...
->>>> [    9.280854] Injecting memory failure for pfn 0x102f01 at process virtual
->>>> address 0x7f28ec101000
->>>> [    9.282029] Memory failure: 0x102f01: huge page still referenced by 511
->>>> users
->>>> [    9.282987] Memory failure: 0x102f01: recovery action for huge page: Failed
->>>>  ...  !!! MADV_HWPOISON failed: Device or resource busy
->>>>  ... HugeTLB read HWPOISON test...TEST_FAILED
->>>>
->>>> I'm testing on v6.7-rc8. Not sure if this was working previously or not.
->>>
->>> Thanks for reporting this, Usama!
->>>
->>> I am also able to repro MADV_HWPOISON failure at "501a06fe8e4c
->>> (akpm/mm-stable, mm-stable) zswap: memcontrol: implement zswap
->>> writeback disabling."
->>>
->>> Then I checked out the earliest commit "ba91e7e5d15a (HEAD -> Base)
->>> selftests/mm: add tests for HWPOISON hugetlbfs read". The
->>> MADV_HWPOISON injection works and and the test passes:
->>>
->>>  ... HugeTLB read HWPOISON test...
->>>  ...  ... expect to read 0x101000 bytes of data in total
->>>  ...  !!! read failed: Input/output error
->>>  ...  ... actually read 0x101000 bytes of data in total
->>>  ... HugeTLB read HWPOISON test...TEST_PASSED
->>>  ... HugeTLB seek then read HWPOISON test...
->>>  ...  ... init val=4 with offset=0x102000
->>>  ...  ... expect to read 0xfe000 bytes of data in total
->>>  ...  ... actually read 0xfe000 bytes of data in total
->>>  ... HugeTLB seek then read HWPOISON test...TEST_PASSED
->>>  ...
->>>
->>> [ 2109.209225] Injecting memory failure for pfn 0x3190d01 at process
->>> virtual address 0x7f75e3101000
->>> [ 2109.209438] Memory failure: 0x3190d01: recovery action for huge
->>> page: Recovered
->>> ...
->>>
->>> I think something in between broken MADV_HWPOISON on hugetlbfs, and we
->>> should be able to figure it out via bisection (and of course by
->>> reading delta commits between them, probably related to page
->>> refcount).
->> Thank you for this information.
->>
->>>
->>> That being said, I will be on vacation from tomorrow until the end of
->>> next week. So I will get back to this after next weekend. Meanwhile if
->>> you want to go ahead and bisect the problematic commit, that will be
->>> very much appreciated.
->> I'll try to bisect and post here if I find something.
-> Found the culprit commit by bisection:
+On Thu, Jan 11, 2024 at 02:13:30PM +0000, Diogo Ivo wrote:
+> Hello,
 > 
-> a08c7193e4f18dc8508f2d07d0de2c5b94cb39a3
-> mm/filemap: remove hugetlb special casing in filemap.c
+> When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
+> we came across a breakage in the probing of the Keystone PCI driver
+> (drivers/phy/ti/pci-keystone.c). This probing was working correctly
+> in the previous version we were using, v5.10.
+> 
+> In order to debug this we changed over to mainline Linux and bissecting
+> lead us to find that commit e611f8cd8717 is the culprit, and with it applied
+> we get the following messages:
+> 
+> [   10.954597] phy-am654 910000.serdes: Failed to enable PLL
+> [   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
+> [   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
+> [   10.973560] keystone-pcie: probe of 5500000.pcie failed with error -110
+> 
+> This timeout is occuring in serdes_am654_enable_pll(), called from the 
+> phy_ops .power_on() hook.
+> 
+> Due to the nature of the error messages and the contents of the commit we
+> believe that this is due to an unidentified race condition in the probing of
+> the Keystone PCI driver when enabling the PHY PLLs, since changes in the
+> workqueue the deferred probing runs on should not affect if probing works
+> or not. To further support the existence of a race condition, commit
+> 86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely unintentionally
+> meaning that the problem may arise in the future again.
+> 
+> One possible explanation is that there are pre-requisites for enabling the PLL
+> that are not being met when e611f8cd8717 is applied; to see if this is the case
+> help from people more familiar with the hardware details would be useful.
+> 
+> As official support specifically for the IOT2050 Advanced M.2 platform was
+> introduced in Linux v6.3 (so in the middle of the commits mentioned above)
+> all of our testing was done with the latest mainline DeviceTree with [1]
+> applied on top.
+> 
+> This is being reported as a regression even though technically things are
+> working with the current state of mainline since we believe the current fix
+> to be an unintended by-product of other work.
+> 
+> #regzbot introduced: e611f8cd8717
 
-#regzbot title: hugetlbfs hwpoison handling
-#regzbot introduced: a08c7193e4f1
-#regzbot monitor:
-https://lore.kernel.org/all/20240111191655.295530-1-sidhartha.kumar@oracle.com
+A "regression" for a commit that was in 5.13, i.e. almost 2 years ago,
+is a bit tough, and not something I would consider really a "regression"
+as it is core code that everyone runs.  Given you point at scheduler
+changes also fixing the issue, this seems like a hint as to what is
+wrong with your driver/platform, but is not the root cause of it and
+needs to be resolved.  Please look at fixing it in your drivers?  Are
+they all in Linus's tree?
 
-> 
-> hugetlb-read-hwpoison started failing from this patch. I've added the
-> author of this patch to this bug report.
-> 
->>
->>>
->>> Thanks,
->>> Jiaqi
->>>
->>>
->>>>
->>>> Regards,
->>>> Usama
->>>>
-> 
+thanks,
 
--- 
-BR,
-Muhammad Usama Anjum
+greg k-h
