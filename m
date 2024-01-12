@@ -1,128 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4250D6BB22;
-	Fri, 12 Jan 2024 12:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rOH02-0000Pz-QE; Fri, 12 Jan 2024 13:51:02 +0100
-Message-ID: <0cae38cd-5d3d-4cb8-b5eb-680afd977e0d@leemhuis.info>
-Date: Fri, 12 Jan 2024 13:51:02 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7174E6E2AB
+	for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 14:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3zbnuOl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705069558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i8oXZEZKEorjVlrtMjOiU7uBSULn8aeLTkx9aKasfX0=;
+	b=b3zbnuOlFIDnttwTtgUikpFgAno6+bEr/lbi9wS0f56O206IZh2XRA6Mg8ohLbwuUW3UDE
+	AD/oqDsESAATC2N6zWGCI2Nejo0ZAZ33/eMfVuPDiyAuMJiFk9TGTqyof28FeABg7pxMmM
+	lM1fSJS/LdN8W16grDfp82pf+I3s6hE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-558-KxdKTlU2M1KGn0h9hQ4K_A-1; Fri,
+ 12 Jan 2024 09:25:55 -0500
+X-MC-Unique: KxdKTlU2M1KGn0h9hQ4K_A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 396043C00097;
+	Fri, 12 Jan 2024 14:25:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 791CA2166B31;
+	Fri, 12 Jan 2024 14:25:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <2024011115-neatly-trout-5532@gregkh>
+References: <2024011115-neatly-trout-5532@gregkh> <2023121124-trifle-uncharted-2622@gregkh> <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com> <ZZhrpNJ3zxMR8wcU@eldamar.lan> <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info> <ZZk6qA54A-KfzmSz@eldamar.lan> <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info> <ZZ7Dy69ZJCEyKhhS@eldamar.lan>
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: dhowells@redhat.com, Salvatore Bonaccorso <carnil@debian.org>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <nspmangalore@gmail.com>,
+    Rohith Surabattula <rohiths.msft@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Jeff Layton <jlayton@kernel.org>,
+    Steve French <stfrench@microsoft.com>,
+    "Jitindar Singh,
+ Suraj" <surajjs@amazon.com>,
+    "linux-mm@kvack.org" <linux-mm@kvack.org>,
+    "stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>,
+    stable@vger.kernel.org, linux-cifs@vger.kernel.org,
+    Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and file size with copy_file_range()"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
-Content-Language: en-US, de-DE
-To: Diogo Ivo <diogo.ivo@siemens.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: vkoul@kernel.org, kishon@kernel.org, linux-phy@lists.infradead.org,
- tjoseph@cadence.com, linux-pci@vger.kernel.org, ylal@codeaurora.org,
- regressions@lists.linux.dev, jan.kiszka@siemens.com
-References: <20240111141331.3715265-1-diogo.ivo@siemens.com>
- <2024011246-corned-disregard-7123@gregkh>
- <1cce86b1-b309-40e0-afff-45baeb013e1f@siemens.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <1cce86b1-b309-40e0-afff-45baeb013e1f@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705063879;4e16f47d;
-X-HE-SMSGID: 1rOH02-0000Pz-QE
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2162048.1705069551.1@warthog.procyon.org.uk>
+Date: Fri, 12 Jan 2024 14:25:51 +0000
+Message-ID: <2162049.1705069551@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On 12.01.24 12:46, Diogo Ivo wrote:
-> On 1/12/24 07:57, Greg KH wrote:
->> On Thu, Jan 11, 2024 at 02:13:30PM +0000, Diogo Ivo wrote:
->>>
->>> When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
->>> we came across a breakage in the probing of the Keystone PCI driver
->>> (drivers/phy/ti/pci-keystone.c). This probing was working correctly
->>> in the previous version we were using, v5.10.
->>>
->>> In order to debug this we changed over to mainline Linux and bissecting
->>> lead us to find that commit e611f8cd8717 is the culprit, and with it
->>> applied
->>> we get the following messages:
->>>
->>> [   10.954597] phy-am654 910000.serdes: Failed to enable PLL
->>> [   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
->>> [   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
->>> [   10.973560] keystone-pcie: probe of 5500000.pcie failed with error
->>> -110
->>>
->>> This timeout is occuring in serdes_am654_enable_pll(), called from the
->>> phy_ops .power_on() hook.
->>>
->>> Due to the nature of the error messages and the contents of the
->>> commit we
->>> believe that this is due to an unidentified race condition in the
->>> probing of
->>> the Keystone PCI driver when enabling the PHY PLLs, since changes in the
->>> workqueue the deferred probing runs on should not affect if probing
->>> works
->>> or not. To further support the existence of a race condition, commit
->>> 86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely
->>> unintentionally
->>> meaning that the problem may arise in the future again.
->>>
->>> One possible explanation is that there are pre-requisites for
->>> enabling the PLL
->>> that are not being met when e611f8cd8717 is applied; to see if this
->>> is the case
->>> help from people more familiar with the hardware details would be
->>> useful.
->>>
->>> As official support specifically for the IOT2050 Advanced M.2
->>> platform was
->>> introduced in Linux v6.3 (so in the middle of the commits mentioned
->>> above)
->>> all of our testing was done with the latest mainline DeviceTree with [1]
->>> applied on top.
->>>
->>> This is being reported as a regression even though technically things
->>> are
->>> working with the current state of mainline since we believe the
->>> current fix
->>> to be an unintended by-product of other work.
->>>
->>> #regzbot introduced: e611f8cd8717
->> A "regression" for a commit that was in 5.13, i.e. almost 2 years ago,
->> is a bit tough, and not something I would consider really a "regression"
->> as it is core code that everyone runs.
+gregkh@linuxfoundation.org <gregkh@linuxfoundation.org> wrote:
 
-In case anyone cares: I'd call it a regression, but not one where the
-"no regressions" rule applies. Primarily because the regression does not
- happen anymore in mainline (even if that was by chance). Furthermore I
-think Linus once said that regressions become just bugs when they are
-reported only after quite some time. Not sure if that is the case here,
-but whatever, due to the previous point discussing this is moot. That's
-why I'll drop it from the tracking:
+> I guess I can just revert the single commit here?  Can someone send me
+> the revert that I need to do so as I get it right?
 
-#regzbot inconclusive: fixed in mainline (maybe accidentally), but not
-in stable
+In cifs_flush_folio() the error check for filemap_get_folio() just needs
+changing to check !folio instead of IS_ERR(folio).
 
-> I see the point that this code has been living in the kernel for a
-> long time now and that it becomes more difficult to justify it as
-> a regression; I reported it as such based on the supposition that
-> the current fix is not the proper one and that technically this
-> support was broken between the identified commits.
+David
 
-True, but it apparently also doesn't happen anymore in mainline. To
-technically nobody is afaics obliged to look into this afaics.
-
-Of course it still would be nice to resolve this in the affected
-longterm series. And hey, with a bit of luck this thread might lead to a
-fix one way or another. I hope that will be the case!
-
-> [...]
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
