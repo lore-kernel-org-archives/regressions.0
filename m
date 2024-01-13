@@ -1,101 +1,65 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59D012E4B
-	for <regressions@lists.linux.dev>; Sat, 13 Jan 2024 07:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA15E36F;
+	Sat, 13 Jan 2024 08:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZSFSGXoX"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-680b1956ca4so45174506d6.3
-        for <regressions@lists.linux.dev>; Fri, 12 Jan 2024 23:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705129519; x=1705734319; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GqUVJ8s7EGwnf8VW2qN30KaMR9GjPb0OJdm4xU8DVmE=;
-        b=ZSFSGXoXRUFlzcQHvg7wJFpmwjqZqMwPVSg6IuaNJFI4UaLHBieJKBfVkHIoaeIXxi
-         PzVzZxi6XUs1auihT6IYS0bdcCTt58VfzS3G0KyzXdFDNpMb97POxOiJOssezYImRq15
-         exr7yRfp8ezfd26yLUNXsz4naE0qL8bZsR7dPnZmCZX2R9g8TZNEjJJ9EBOLtNucegIM
-         2uk08UZM4HbIm7th9MOeej9M35gE1hIDUymAKxXwaBfFLYfvyNY2mHdUO++eXJjmsg9i
-         /VobrASh5bFrKBRrVLChz22+ruzrOlQiXsyuGSWHTuiYsNK0FCWHBM8meZgmj3w6v+BO
-         aMfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705129519; x=1705734319;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GqUVJ8s7EGwnf8VW2qN30KaMR9GjPb0OJdm4xU8DVmE=;
-        b=Gi3YNWR1cV3nWWrdOan/qHX7uC30FWQh7Ay0Sdb8l6MCKG4yiNEe0Ly/hpq3WZc9tG
-         Y4do0A5TvrvvnHRw+8anB2GHATkj6QFp8mW2zl2iyH5uSkO3USqQJ6/0LUmtT01ab37Z
-         BELs74YawGVlKV9EVoEX93xAtFq2rHPCODgEkANV14Hi1aRxQDrmh0KYl8kSoC4TFA07
-         Oe9UAQSM9xyjD/E9ewWtKi+9hMKXGNLWgXykb3fNUwxRmcFefGNFldpDw4FaPmdteam0
-         K+uvE0exha0pvwgtfTvf7ljxYV1x9ME8p16Fs4G2ONpbF6I3rcQnGmJqxYc0djYwloLt
-         c1OQ==
-X-Gm-Message-State: AOJu0YzpAer3KvA+HDyZOaBi3hz7CeX15F1jREgvWixBAB+wXG2tBvBe
-	XMbLRWHYp2Bk455kp4utrOuJHXFDNN2DUqOezxyWkk0PjyFC1g==
-X-Google-Smtp-Source: AGHT+IFc0y2uSmt7xB6X4CM/6iYzv7XLzqDXm1OMDLNeYk0eIgGxUlMEo1QaTfdT2BHiqR6aEvzb2Y8BVfmQGNWecLs=
-X-Received: by 2002:ad4:5be2:0:b0:681:3b95:cedd with SMTP id
- k2-20020ad45be2000000b006813b95ceddmr2122750qvc.59.1705129519531; Fri, 12 Jan
- 2024 23:05:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xn4+q1vH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7154C433C7;
+	Sat, 13 Jan 2024 08:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705135635;
+	bh=KdwxMYv7o6pw1GOXq0l7vgitfs+43uc1Npe8Z2Rl8oM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xn4+q1vHMeOlxECUgBICafgoMdYugGECJ4PwI1kPXG8CqKUoCeReujvgY9BGaoOcf
+	 YwpCXl8Hu/osgZgQetYTPwkcC8Xhut4ms6NQ3I5ZKU8ATxnfgNinPCHKxblFL19ZlI
+	 OanmmVNvDRgVSCrBP/mA7O8zp3cHA1DbTPbcdhZU=
+Date: Sat, 13 Jan 2024 09:47:12 +0100
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Steve French <smfrench@gmail.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <nspmangalore@gmail.com>,
+	Rohith Surabattula <rohiths.msft@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Steve French <stfrench@microsoft.com>,
+	"Jitindar Singh, Suraj" <surajjs@amazon.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>,
+	stable@vger.kernel.org, linux-cifs@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and
+ file size with copy_file_range()"
+Message-ID: <2024011302-nail-uncombed-932a@gregkh>
+References: <2023121124-trifle-uncharted-2622@gregkh>
+ <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com>
+ <ZZhrpNJ3zxMR8wcU@eldamar.lan>
+ <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info>
+ <ZZk6qA54A-KfzmSz@eldamar.lan>
+ <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
+ <ZZ7Dy69ZJCEyKhhS@eldamar.lan>
+ <2024011115-neatly-trout-5532@gregkh>
+ <2162049.1705069551@warthog.procyon.org.uk>
+ <CAH2r5mtBSvp9D8s3bX7KNWjXdTuOHPx5Z005jp8F5kuJgU3Z-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYu1hB2OMf0EFrt_86OE=0Ug3y6nQd3=OZeEeM1jp3P92g@mail.gmail.com>
- <11a31e09-2e11-43a4-8995-ae70c5bef8bf@kernel.org>
-In-Reply-To: <11a31e09-2e11-43a4-8995-ae70c5bef8bf@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sat, 13 Jan 2024 12:35:08 +0530
-Message-ID: <CA+G9fYthC3qsH8ey=j3RvCr4-0zp1S3Ysr5QvY6SptorHpju1g@mail.gmail.com>
-Subject: Re: scsi: block: ioprio: Clean up interface definition -
- ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-block <linux-block@vger.kernel.org>, LTP List <ltp@lists.linux.it>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	open list <linux-kernel@vger.kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>, 
-	Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>, Niklas Cassel <niklas.cassel@wdc.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH2r5mtBSvp9D8s3bX7KNWjXdTuOHPx5Z005jp8F5kuJgU3Z-g@mail.gmail.com>
 
-On Fri, 12 Jan 2024 at 10:49, Damien Le Moal <dlemoal@kernel.org> wrote:
->
-> On 1/12/24 14:15, Naresh Kamboju wrote:
-> > The LTP test 'iopri_set03' fails on all the devices.
-> > It fails on linux kernel >= v6.5. ( on Debian rootfs ).
-> > Test fail confirmed on LTP release 20230929 and 20230516.
-> >
-> > Test failed log:
-> > ------------
-> > tst_test.c:1690: TINFO: LTP version: 20230929
-> > tst_test.c:1574: TINFO: Timeout per run is 0h 05m 00s
-> > ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
-> > ioprio_set03.c:48: TINFO: tested illegal priority with class NONE
-> > ioprio_set03.c:51: TPASS: returned correct error for wrong prio: EINVAL (22)
-> >
-> > Investigation:
-> > ----------
-> > Bisecting this test between kernel v6.4 and v6.5 shows patch
-> > eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
-> > as the first faulty commit.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> This is fixed in LTP. Please update your LTP setup to avoid this issue.
+On Fri, Jan 12, 2024 at 11:20:53PM -0600, Steve French wrote:
+> Here is a patch similar to what David suggested.  Seems
+> straightforward fix.  See attached.
+> I did limited testing on it tonight with 6.1 (will do more tomorrow,
+> but feedback welcome) but it did fix the regression in xfstest
+> generic/001 mentioned in this thread.
 
-Please point me to the fixed commit id.
+Thanks, now queued up!
 
-I have the latest LTP release test results as ioprio_set03 has failed.
-
-ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
-LTP Version: 20230929-258-gec0a8f18b
-on Debian rootfs.
-
-Links:
- - https://qa-reports.linaro.org/lkft/ltp-master/build/v6.6.10_20230929-258-gec0a8f18b/testrun/22035919/suite/ltp-syscalls/test/ioprio_set03/history/
- - https://qa-reports.linaro.org/lkft/ltp-master/build/v6.6.10_20230929-258-gec0a8f18b/testrun/22035919/suite/ltp-syscalls/test/ioprio_set03/details/
-
-- Naresh
+greg k-h
