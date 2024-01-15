@@ -1,162 +1,88 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42251845
-	for <regressions@lists.linux.dev>; Sun, 14 Jan 2024 03:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C5E15A5;
+	Mon, 15 Jan 2024 00:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3Y8Zghg"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cd703e9014so63508381fa.1
-        for <regressions@lists.linux.dev>; Sat, 13 Jan 2024 19:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705202635; x=1705807435; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gfta0bZFvjFZJvC0F4xMIC685zJ7SAda9ZzxTagHvw4=;
-        b=B3Y8ZghgiqyOnQDo4nwQz8t/Sbe4BrXSwMu/3/FgzEFHNNJ2/omC/znNVr+Km2MyKi
-         LdiRhAu8Xj3leORGlkFpVwxtE5+mHsTZYoPUeQxP/fjJE/wfj5M+3TxBK39NIvNk0S+0
-         drAHu8fjvE0U8UUIxTJwexdCKH0KKzsGjTKP/T1fMBgqLzH+NfHoeASxP6MKW3JMtJsa
-         8ZWu1vRyrGAFI+ldJumUvyHd6HOW9XyQHpllYuCIR5a+BEcvkNJe8lUHcw75X0zghQj1
-         k4IZ25CrLCjuM5H+aWvXGNEwCsnclEn4b6F/rD8RboweAMEQ7714S2jX6ytzn3J91Ydw
-         taXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705202635; x=1705807435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gfta0bZFvjFZJvC0F4xMIC685zJ7SAda9ZzxTagHvw4=;
-        b=MsHsNhdy0pVwu5/zPSDctTV0gvPj95eXBNr9ZRxoBRClTmbZHk4QBgxshFK73D5y/i
-         FH/e5fhC7VrGXS17wZA4NY8m8jeP3WHrtsWDmFihMeP8u3y4NSOslJyduefJk76tqlzg
-         RAEGHtDp23EDBVXM/pe7dadc3F5l2EWv+y7L4zhWqxX0fubK85FpEKXEMtS8v/thjXbL
-         8YsD7c8k4VZ0BB1HkioMdRoaHwOFIkIks2OjsseXpO7omVAyKiTTIS6kc6NCNrVMQi77
-         rYQSP9bTLM7hpIJpwDvwwuM1YVn7olpiPTBmX4CKMgNxH7z75KdOQPz81m8QFaFQB5IO
-         vB5g==
-X-Gm-Message-State: AOJu0YwtiP3GYXDitxlPIz+hfQNXF9V8R/mo5oBuNDBUCfE5h5cflgtp
-	/cRVG4BK7qwAzIpzCBbMSwqasvFQt/RDih9XbdQ=
-X-Google-Smtp-Source: AGHT+IHp2Jx9EpAWnyz05z7ZSv6ATR2OJO4m7nQlWoPvbzSMzQn2WZ/mqDTyJ/wGxu1LoMGKhW1HWVA6N84aJAq1mZQ=
-X-Received: by 2002:a2e:a409:0:b0:2cc:5e44:a8ee with SMTP id
- p9-20020a2ea409000000b002cc5e44a8eemr1815150ljn.105.1705202634498; Sat, 13
- Jan 2024 19:23:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hlwrgbtr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520D1C433F1;
+	Mon, 15 Jan 2024 00:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705277595;
+	bh=9d8JNOymYGZ3/p+9qqiDWzbARwPOR0ThFsLa+omTDVE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HlwrgbtrQaMjHk6Rl1IBwvE+2sWuIYEn5he/RDz7dSWZhfu/UENTUW929466EuROU
+	 ior5hw4k52TxL8Vd87EW5a2iJgmNEZyPJjUeJDXTntdTbsmyE7/SdwiV9EIAoWldtM
+	 joQIkSN5rhwPYMbpNAK3l2gctjvZ8darjJfrPCu6ArKul1KdEfX0EljfJHR0GcDq8I
+	 uJ5sgUQkwp4kyuYVEfe5WbAbcBCxmlvvQ8OjSovamjWsXmvTtmOD1lEoXGgTETRAHf
+	 JWgsmDt9yubJJ1Y8LE/OL8dmm5WIdxR8Lpz2+GgASw13adcD8MlMMS4Jgj7HCSAQDl
+	 MmaVWl/5A75dQ==
+Message-ID: <b5c9a4d9-894c-4812-8dbf-e623cb1baad2@kernel.org>
+Date: Mon, 15 Jan 2024 09:13:11 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a76b370f93cb928c049b94e1fde0d2da506dfcb2.camel@amazon.com>
- <ZZhrpNJ3zxMR8wcU@eldamar.lan> <8e59220d-b0f3-4dae-afc3-36acfa6873e4@leemhuis.info>
- <ZZk6qA54A-KfzmSz@eldamar.lan> <13a70cc5-78fc-49a4-8d78-41e5479e3023@leemhuis.info>
- <ZZ7Dy69ZJCEyKhhS@eldamar.lan> <2024011115-neatly-trout-5532@gregkh>
- <2162049.1705069551@warthog.procyon.org.uk> <CAH2r5mtBSvp9D8s3bX7KNWjXdTuOHPx5Z005jp8F5kuJgU3Z-g@mail.gmail.com>
- <ZaJYgkI9o5J1U3TX@eldamar.lan> <2024011316-cathouse-relearn-df14@gregkh>
-In-Reply-To: <2024011316-cathouse-relearn-df14@gregkh>
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 13 Jan 2024 21:23:43 -0600
-Message-ID: <CAH2r5msjAwRmQNOvkDm5NZD0zh141iNV87urxOK04n-6FQ5wbQ@mail.gmail.com>
-Subject: Re: [Regression 6.1.y] From "cifs: Fix flushing, invalidation and
- file size with copy_file_range()"
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, David Howells <dhowells@redhat.com>, 
-	Paulo Alcantara <pc@manguebit.com>, Shyam Prasad N <nspmangalore@gmail.com>, 
-	Rohith Surabattula <rohiths.msft@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Steve French <stfrench@microsoft.com>, 
-	"Jitindar Singh, Suraj" <surajjs@amazon.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"stable-commits@vger.kernel.org" <stable-commits@vger.kernel.org>, stable@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: scsi: block: ioprio: Clean up interface definition -
+ ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
+Content-Language: en-US
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: linux-block <linux-block@vger.kernel.org>, LTP List <ltp@lists.linux.it>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, chrubis <chrubis@suse.cz>,
+ Petr Vorel <pvorel@suse.cz>, Hannes Reinecke <hare@suse.de>,
+ Christoph Hellwig <hch@lst.de>, Niklas Cassel <niklas.cassel@wdc.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Jens Axboe <axboe@kernel.dk>
+References: <CA+G9fYu1hB2OMf0EFrt_86OE=0Ug3y6nQd3=OZeEeM1jp3P92g@mail.gmail.com>
+ <11a31e09-2e11-43a4-8995-ae70c5bef8bf@kernel.org>
+ <CA+G9fYthC3qsH8ey=j3RvCr4-0zp1S3Ysr5QvY6SptorHpju1g@mail.gmail.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <CA+G9fYthC3qsH8ey=j3RvCr4-0zp1S3Ysr5QvY6SptorHpju1g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tested out fine so far
+On 1/13/24 16:05, Naresh Kamboju wrote:
+> On Fri, 12 Jan 2024 at 10:49, Damien Le Moal <dlemoal@kernel.org> wrote:
+>>
+>> On 1/12/24 14:15, Naresh Kamboju wrote:
+>>> The LTP test 'iopri_set03' fails on all the devices.
+>>> It fails on linux kernel >= v6.5. ( on Debian rootfs ).
+>>> Test fail confirmed on LTP release 20230929 and 20230516.
+>>>
+>>> Test failed log:
+>>> ------------
+>>> tst_test.c:1690: TINFO: LTP version: 20230929
+>>> tst_test.c:1574: TINFO: Timeout per run is 0h 05m 00s
+>>> ioprio_set03.c:40: TFAIL: ioprio_set IOPRIO_CLASS_BE prio 8 should not work
+>>> ioprio_set03.c:48: TINFO: tested illegal priority with class NONE
+>>> ioprio_set03.c:51: TPASS: returned correct error for wrong prio: EINVAL (22)
+>>>
+>>> Investigation:
+>>> ----------
+>>> Bisecting this test between kernel v6.4 and v6.5 shows patch
+>>> eca2040972b4 ("scsi: block: ioprio: Clean up interface definition")
+>>> as the first faulty commit.
+>>>
+>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>>
+>> This is fixed in LTP. Please update your LTP setup to avoid this issue.
+> 
+> Please point me to the fixed commit id.
 
-On Sat, Jan 13, 2024 at 3:41=E2=80=AFAM gregkh@linuxfoundation.org
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Jan 13, 2024 at 10:31:46AM +0100, Salvatore Bonaccorso wrote:
-> > Hi,
-> >
-> > On Fri, Jan 12, 2024 at 11:20:53PM -0600, Steve French wrote:
-> > > Here is a patch similar to what David suggested.  Seems
-> > > straightforward fix.  See attached.
-> > > I did limited testing on it tonight with 6.1 (will do more tomorrow,
-> > > but feedback welcome) but it did fix the regression in xfstest
-> > > generic/001 mentioned in this thread.
-> > >
-> > >
-> > >
-> > >
-> > > On Fri, Jan 12, 2024 at 8:26=E2=80=AFAM David Howells <dhowells@redha=
-t.com> wrote:
-> > > >
-> > > > gregkh@linuxfoundation.org <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > > I guess I can just revert the single commit here?  Can someone se=
-nd me
-> > > > > the revert that I need to do so as I get it right?
-> > > >
-> > > > In cifs_flush_folio() the error check for filemap_get_folio() just =
-needs
-> > > > changing to check !folio instead of IS_ERR(folio).
-> > > >
-> > > > David
-> > > >
-> > > >
-> > >
-> > >
-> > > --
-> > > Thanks,
-> > >
-> > > Steve
-> >
-> > > From ba288a873fb8ac3d1bf5563366558a905620c071 Mon Sep 17 00:00:00 200=
-1
-> > > From: Steve French <stfrench@microsoft.com>
-> > > Date: Fri, 12 Jan 2024 23:08:51 -0600
-> > > Subject: [PATCH] cifs: fix flushing folio regression for 6.1 backport
-> > >
-> > > filemap_get_folio works differenty in 6.1 vs. later kernels
-> > > (returning NULL in 6.1 instead of an error).  Add
-> > > this minor correction which addresses the regression in the patch:
-> > >   cifs: Fix flushing, invalidation and file size with copy_file_range=
-()
-> > >
-> > > Suggested-by: David Howells <dhowells@redhat.com>
-> > > Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-> > > Signed-off-by: Steve French <stfrench@microsoft.com>
-> > > ---
-> > >  fs/smb/client/cifsfs.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
-> > > index 2e15b182e59f..ac0b7f229a23 100644
-> > > --- a/fs/smb/client/cifsfs.c
-> > > +++ b/fs/smb/client/cifsfs.c
-> > > @@ -1240,7 +1240,7 @@ static int cifs_flush_folio(struct inode *inode=
-, loff_t pos, loff_t *_fstart, lo
-> > >     int rc =3D 0;
-> > >
-> > >     folio =3D filemap_get_folio(inode->i_mapping, index);
-> > > -   if (IS_ERR(folio))
-> > > +   if ((!folio) || (IS_ERR(folio)))
-> > >             return 0;
-> > >
-> > >     size =3D folio_size(folio);
-> >
-> > I was able to test the patch with the case from the Debian bugreport
-> > and seems to resolve the issue. Even if late, as Greg just queued up
-> > already:
-> >
-> > Tested-by: Salvatore Bonaccorso <carnil@debian.org>
->
-> Thanks, I've added your tested-by to the patch now.
->
-> greg k-h
+git log --author="Damien Le Moal"
+
+And of course you need to make sure that you are compiling LTP against the
+kernel headers of the target test kernel.
 
 
+-- 
+Damien Le Moal
+Western Digital Research
 
---=20
-Thanks,
-
-Steve
