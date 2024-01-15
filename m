@@ -1,99 +1,102 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3F117594
-	for <regressions@lists.linux.dev>; Mon, 15 Jan 2024 14:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADC317996
+	for <regressions@lists.linux.dev>; Mon, 15 Jan 2024 14:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sNLiRA5q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qq9sDBlz"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-557e76e1bd6so8416496a12.1
+        for <regressions@lists.linux.dev>; Mon, 15 Jan 2024 06:39:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705328932; x=1736864932;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=xQGPj3byAT3xg6HXEqj6hk569ABSLScKNqtUQXksmrM=;
-  b=sNLiRA5qbNqo115OH8sbWSg/zwK8g5z9O8WaNYc73pO/flvE2Ss08yjH
-   R4EK8LirwpChvbX9Y/X02sASzBsTgXfyFsaZ3qGc120rWb1uOQYNmYP48
-   dB7bd2HXAItgMDm689UzqvAnXAmpMqpY44vTCjUErPK0LLHH03/0UsalS
-   o=;
-X-IronPort-AV: E=Sophos;i="6.04,196,1695686400"; 
-   d="scan'208";a="627714016"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-3554bfcf.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 14:28:49 +0000
-Received: from smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1e-m6i4x-3554bfcf.us-east-1.amazon.com (Postfix) with ESMTPS id D4C2080745;
-	Mon, 15 Jan 2024 14:28:47 +0000 (UTC)
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:63692]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.29.188:2525] with esmtp (Farcaster)
- id 301d6222-fbf0-458d-8c25-f5fc5317250b; Mon, 15 Jan 2024 14:28:46 +0000 (UTC)
-X-Farcaster-Flow-ID: 301d6222-fbf0-458d-8c25-f5fc5317250b
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 15 Jan 2024 14:28:46 +0000
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19D018EUA004.ant.amazon.com (10.252.50.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 15 Jan 2024 14:28:46 +0000
-Received: from EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d]) by
- EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d%3]) with mapi id
- 15.02.1118.040; Mon, 15 Jan 2024 14:28:46 +0000
-From: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-To: "pc@manguebit.com" <pc@manguebit.com>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"leonardo@schenkel.net" <leonardo@schenkel.net>, "linux-cifs@vger.kernel.org"
-	<linux-cifs@vger.kernel.org>, "m.weissbach@info-gate.de"
-	<m.weissbach@info-gate.de>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "sairon@sairon.cz" <sairon@sairon.cz>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
- "Resource temporarily unavailable"
-Thread-Topic: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
- "Resource temporarily unavailable"
-Thread-Index: AQHaR75LM7i+fdSIyUGAeQeGznKGwbDa7s2A
-Date: Mon, 15 Jan 2024 14:28:45 +0000
-Message-ID: <9B20AAD6-2C27-4791-8CA9-D7DB912EDC86@amazon.com>
-References: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
-In-Reply-To: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <75A5AEE301C0BB4982CC698F97CE44DE@amazon.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1705329571; x=1705934371; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rUt6qUSC7rZj+/61nIeLHFSyBQOSIsG662zkAFFLuco=;
+        b=Qq9sDBlzFlu/ZLSAQP+rrgoiGNep4XcsFya1md84KXDwOavs07ILg63Z9Gm3ipxqdp
+         rlAavpQxdINqNLho5BFOCMEPkOz5oCz9NH6leKVYh1TLlevS4j3vwHUIo3q2gP+lnUhB
+         EIBMKkrIgqFx+iu5+BxOL2Aiiz1gzYZFAYjDYxuD0bL5NdTD1TqpK3W8TLXhwcI1DT6H
+         zkwP2C5CCvXNQrpSyfvwR0ahXpcooStkkKOAkQXjfsFKHqntO8zsgN06TDYyXiaVbhWu
+         piBqSQInJcxYoOpr+dxBXu8kd2ysZ+GUGnK3p7r1H1l/112czCDUxC03meH+rn4oprAy
+         4PPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705329571; x=1705934371;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rUt6qUSC7rZj+/61nIeLHFSyBQOSIsG662zkAFFLuco=;
+        b=fKmdq55Mf/DQwlDGIfLDtIH+5r9uI43mz6zkOfTgNW2cncvGSi+jbB/kBpSGBB/tXF
+         JovWnihhft+//E0pXzP3yFFF859nWT3ik0nwfkb16FS+ol1GL3TSzk7XDJ+N/Y5BU7y3
+         yJiLVX7LVPgt6Z4ZQeYwSgrDs7n1H5IQiDHWbgrMO0ghkm2VSxhqko62WPrbsF1Zb+Oa
+         XAukFPaHVUJwhHRUZFaAPyDesv6dE+aBVS+HYejJuSq7OYPqDefA7Cp9mf5XMdpb6uJm
+         WLi7qNHCt+aHcRyFsWdTvNmaTlZXB8Dlb4NKEu+Ky6jlBD0ZqfS3zF9f2zdtTKt8hAyy
+         OWRw==
+X-Gm-Message-State: AOJu0YzQwSwhupUQdGkhjbhqdA8YmS1QfS4+bogcFQ+1C645dPIvIH1I
+	Pi2u8TbmlaotwE+GaDM9pbgNoNkhBGCqi/PX6s8lrspbKYewbQ==
+X-Google-Smtp-Source: AGHT+IHMWuPKY2gsrGW21Hb+Dr9sHBaRGoxtP+zhdj4/kr9soYMxCpRKk+OpNBcEp/vokTtmcGGLu+qGxd2G73jn0qc=
+X-Received: by 2002:a17:906:da85:b0:a2c:8649:67e1 with SMTP id
+ xh5-20020a170906da8500b00a2c864967e1mr3536459ejb.87.1705329570960; Mon, 15
+ Jan 2024 06:39:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+From: coldolt <andypalmadi@gmail.com>
+Date: Mon, 15 Jan 2024 16:39:23 +0200
+Message-ID: <CAJvGw+DQhBk_mHXeu6RTOds5iramMW2FbMB01VbKRA4YbHHDTA@mail.gmail.com>
+Subject: [REGRESSION] 6.7 broke wifi "AP is in CSA process, reject auth"
+To: ayala.beker@intel.com, gregory.greenman@intel.com, johannes.berg@intel.com, 
+	linux-wireless@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-VG8gYmUgY2xlYXIgaGVyZSB3ZSBoYXZlIGFscmVhZHkgdGVzdGVkIDUuMTAuMjA2IGFuZCA1LjE1
-LjE0NiB3aXRoIHRoZSBwcm9wb3NlZCBmaXggDQphbmQgd2Ugbm8gbG9uZ2VyIHNlZSB0aGUgcmVw
-b3J0ZWQgQ0lGUyBtb3VudGluZyBmYWlsdXJlLg0KDQpIYXplbQ0KDQrvu79PbiAxNS8wMS8yMDI0
-LCAxNDoyMywgIk1vaGFtZWQgQWJ1ZWxmb3RvaCwgSGF6ZW0iIDxhYnVlaGF6ZUBhbWF6b24uY29t
-IDxtYWlsdG86YWJ1ZWhhemVAYW1hem9uLmNvbT4+IHdyb3RlOg0KDQoNCkl0IGxvb2tzIGxpa2Ug
-Ym90aCA1LjE1LjE0NiBhbmQgNS4xMC4yMDYgYXJlIGltcGFjdGVkIGJ5IHRoaXMgcmVncmVzc2lv
-biBhcyB0aGV5IGJvdGggaGF2ZSB0aGUNCmJhZCBjb21taXQgMzNlYWU2NWM2ZiAoc21iOiBjbGll
-bnQ6IGZpeCBPT0IgaW4gU01CMl9xdWVyeV9pbmZvX2luaXQoKSkuIFdlIHRyaWVkIHRvDQphcHBs
-eSB0aGUgcHJvcG9zZWQgZml4IGViM2UyOGMxZTg5YiAoInNtYjM6IFJlcGxhY2Ugc21iMnBkdSAx
-LWVsZW1lbnQgDQphcnJheXMgd2l0aCBmbGV4LWFycmF5c+KAnSkgYnV0IHRoZXJlIGFyZSBhIGxv
-dCBvZiBkZXBlbmRlbmNpZXMgcmVxdWlyZWQgdG8gZG8gdGhlIGJhY2twb3J0Lg0KSXMgaXQgcG9z
-c2libGUgdG8gY29uc2lkZXIgdGhlIHNpbXBsZSBmaXggdGhhdCBQYXVsbyBwcm9wb3NlZCBhcyBh
-IHNvbHV0aW9uIGZvciA1LjEwIGFuZCA1LjE1Lg0KV2Ugd2VyZSBsdWNreSB3aXRoIDUuNCBhcyBp
-dCBkb2VzbuKAmXQgaGF2ZSB0aGUgYmFkIGNvbW1pdCBiZWNhdXNlIG9mIG1lcmdlIGNvbmZsaWN0
-IHJlcG9ydGVkDQppbiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyMzEyMjg1Ny1kb3Vi
-bGluZy1jcmF6ZWQtMjdmNEBncmVna2gvVC8jbTNhYTAwOWMzMzI5OTkyNjhmNzEzNjEyMzdhY2U2
-ZGVkOTExMGYwZDAgPGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDIzMTIyODU3LWRvdWJs
-aW5nLWNyYXplZC0yN2Y0QGdyZWdraC9ULyNtM2FhMDA5YzMzMjk5OTI2OGY3MTM2MTIzN2FjZTZk
-ZWQ5MTEwZjBkMD4NCg0KDQpkaWZmIC0tZ2l0IGEvZnMvc21iL2NsaWVudC9zbWIycGR1LmMgYi9m
-cy9zbWIvY2xpZW50L3NtYjJwZHUuYw0KaW5kZXggMDVmZjhhNDU3YTNkLi5hZWQ1MDY3NjYxZGUg
-MTAwNjQ0DQotLS0gYS9mcy9zbWIvY2xpZW50L3NtYjJwZHUuYw0KKysrIGIvZnMvc21iL2NsaWVu
-dC9zbWIycGR1LmMNCkBAIC0zNTU2LDcgKzM1NTYsNyBAQCBTTUIyX3F1ZXJ5X2luZm9faW5pdChz
-dHJ1Y3QgY2lmc190Y29uICp0Y29uLCBzdHJ1Y3QgVENQX1NlcnZlcl9JbmZvICpzZXJ2ZXIsDQoN
-Cg0KaW92WzBdLmlvdl9iYXNlID0gKGNoYXIgKilyZXE7DQovKiAxIGZvciBCdWZmZXIgKi8NCi0g
-aW92WzBdLmlvdl9sZW4gPSBsZW47DQorIGlvdlswXS5pb3ZfbGVuID0gbGVuIC0gMTsNCnJldHVy
-biAwOw0KfQ0KDQoNCkhhemVtDQoNCg==
+I'm on Arch linux, updated the kernel from 6.6.10 -> 6.7.
+
+Now it doesn't connect to my 5GHz wifi, to 2.4GHz it still connects.
+Also the earlier kernel version still works. Output from "sudo dmesg |
+grep -i wlp2s0":
+
+> [    6.049600] iwlwifi 0000:02:00.0 wlp2s0: renamed from wlan0
+> [  131.095861] wlp2s0: AP is in CSA process, reject auth
+> [  132.143170] wlp2s0: AP is in CSA process, reject auth
+> [  133.599906] wlp2s0: AP is in CSA process, reject auth
+> [  135.549325] wlp2s0: AP is in CSA process, reject auth
+> [  145.510438] wlp2s0: AP is in CSA process, reject auth
+
+I notice that the commit c09c4f31998bac, which was added to kernel
+6.7, introduced rejecting a connection with that error message "AP is
+in CSA process, reject auth".
+
+My guess is that commit is the cause of the regression.
+
+I have a Dell E5550 laptop, lspci -k shows:
+
+> 02:00.0 Network controller: Intel Corporation Wireless 7265 (rev 59)
+>        Subsystem: Intel Corporation Dual Band Wireless-AC 7265 [Stone Peak 2 AC]
+>        Kernel driver in use: iwlwifi
+>        Kernel modules: iwlwifi
+
+Output from "sudo dmesg | grep -i wifi":
+
+> [    5.198655] Intel(R) Wireless WiFi driver for Linux
+> [    5.221823] iwlwifi 0000:02:00.0: enabling device (0000 -> 0002)
+> [    5.230357] iwlwifi 0000:02:00.0: Detected crf-id 0x0, cnv-id 0x0 wfpm id 0x0
+> [    5.230513] iwlwifi 0000:02:00.0: PCI dev 095a/5410, rev=0x210, rfid=0xd55555d5
+> [    5.272339] iwlwifi 0000:02:00.0: Found debug destination: EXTERNAL_DRAM
+> [    5.272344] iwlwifi 0000:02:00.0: Found debug configuration: 0
+> [    5.273573] iwlwifi 0000:02:00.0: loaded firmware version 29.4063824552.0 7265D-29.ucode op_mode iwlmvm
+> [    5.551806] iwlwifi 0000:02:00.0: Detected Intel(R) Dual Band Wireless AC 7265, REV=0x210
+> [    5.565689] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
+> [    5.566606] iwlwifi 0000:02:00.0: Allocated 0x00400000 bytes for firmware monitor.
+> [    5.577802] iwlwifi 0000:02:00.0: base HW address: 34:02:86:17:53:27, OTP minor version: 0x0
+> [    6.049600] iwlwifi 0000:02:00.0 wlp2s0: renamed from wlan0
+> [    6.559212] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
+> [    6.638617] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
+> [    6.640695] iwlwifi 0000:02:00.0: FW already configured (0) - re-configuring
+> [    6.657163] iwlwifi 0000:02:00.0: Registered PHC clock: iwlwifi-PTP, with index: 1
+> [    6.710776] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
+> [    6.790826] iwlwifi 0000:02:00.0: Applying debug destination EXTERNAL_DRAM
+> [    6.792667] iwlwifi 0000:02:00.0: FW already configured (0) - re-configuring
+
+#regzbot introduced: c09c4f31998bac
