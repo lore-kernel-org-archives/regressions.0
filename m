@@ -1,76 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C468134D5;
-	Tue, 16 Jan 2024 10:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rPh1A-0001CR-Cv; Tue, 16 Jan 2024 11:50:04 +0100
-Message-ID: <e3f1d31a-1e53-4a4e-bc5e-529b9205c72c@leemhuis.info>
-Date: Tue, 16 Jan 2024 11:50:03 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270791BC20;
+	Tue, 16 Jan 2024 11:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Btb2fs00"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=0OCZPW6BtUdee4wcdmdcNhZkbu6nqvpWo+Hiv6o8ilQ=;
+	t=1705405447; x=1706615047; b=Btb2fs00mYKLl4zp+7z7mvXrfVVlJ+cegj5+sWweRYmJzOc
+	JlldMwwUeMofcxeW9Awr2qt8/ylt9BXcuqNFtNp/tb+Q+ZsGzYHl4DIYiDB0DNTE0wUY2b9SLwxaI
+	hqBHJNwf6dcTB5SWj/L0edWPAz0JIH3Krb5arY+pZ72YW2eFUKXcSCw47JoTzUu0bzDCVfXtWfSbd
+	As/4qieHUV7jv6X8qwDqAqy1Wkc9RSDYWDAox1HeVTPqIRzdvNH5rzHmc0VgPoDlGyU80nVXezPn+
+	s+Fq+wEusJfmzH2OFEEuQb2Hv2h0DuODQUL/6Yo/jsLd7pOzzIMNWLe0oCGLUkVg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1rPhrJ-00000004vh7-46DK;
+	Tue, 16 Jan 2024 12:43:58 +0100
+Message-ID: <d14d6b4c02282d6ef48a936b1ac8be71c80a8835.camel@sipsolutions.net>
+Subject: Re: [REGRESSION] 6.7 broke wifi "AP is in CSA process, reject auth"
+From: Johannes Berg <johannes@sipsolutions.net>
+To: coldolt <andypalmadi@gmail.com>
+Cc: ayala.beker@intel.com, linux-wireless@vger.kernel.org, 
+	regressions@lists.linux.dev
+Date: Tue, 16 Jan 2024 12:43:56 +0100
+In-Reply-To: <CAJvGw+ATM3B09KbuLM0VsmU9GZRSO-ZP6ffwvvOa75xVHR3-kw@mail.gmail.com>
+References: 
+	<CAJvGw+DQhBk_mHXeu6RTOds5iramMW2FbMB01VbKRA4YbHHDTA@mail.gmail.com>
+	 <dae4bb032ad8b0c9fa6547de5e869e51f9f6e766.camel@sipsolutions.net>
+	 <CAJvGw+ATM3B09KbuLM0VsmU9GZRSO-ZP6ffwvvOa75xVHR3-kw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] fs/ntfs3: Use kvfree to free memory allocated by kvmalloc
-Content-Language: en-US, de-DE
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- ntfs3@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Giovanni Santini <giovannisantini93@yahoo.it>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705402212;60d95378;
-X-HE-SMSGID: 1rPh1A-0001CR-Cv
+X-malware-bazaar: not-scanned
 
-[/me jumps in here with something unrelated after unsuccessfully trying
-to contact Konstantin in the past weeks]
+On Tue, 2024-01-16 at 01:56 +0200, coldolt wrote:
+> I can try to keep connecting for over 5 minutes, it never connects,
+> keeps outputting the same dmesg message. The kernel before 6.7
+> connects immediately.
 
-On 16.01.24 09:26, Konstantin Komarov wrote:
-> 
-> Signed-off-by: Konstantin Komarov
-> <almaz.alexandrovich@paragon-software.com>
-> ---
->  fs/ntfs3/attrlist.c | 4 ++--
->  fs/ntfs3/bitmap.c   | 4 ++--
->  fs/ntfs3/frecord.c  | 4 ++--
->  fs/ntfs3/super.c    | 2 +-
->  4 files changed, 7 insertions(+), 7 deletions(-)> [...]
 
-Hi Konstantin, glad you are still around. If you have a minute, could
-you please take a look at the following bisected regression report? It
-sounds there is something really wrong here:
+>         DS Parameter set: channel 36
+>         Unknown IE (60): 01 16 24 09
+>=20
 
-https://bugzilla.kernel.org/show_bug.cgi?id=218180
+So it is indeed - as expected of course - advertising that it's about to
+switch channel and even saying everyone else needs to be *quiet*. This
+is
 
-In short:
+struct ieee80211_ext_chansw_ie {
+        u8 mode;
+        u8 new_operating_class;
+        u8 new_ch_num;
+        u8 count;
+} __packed;
 
-"""
-> The problem I am facing is the following:
-> 1. I mount an NTFS partition via NTFS3
-> 2. I create a file
-> 3. I write to the file
-> 4. The file is empty
-> 5. I remount the partition
-> 6. The file has the changes I made before the remount
->
-> I can avoid the remount by doing:
-> sudo sysctl vm.drop_caches=3
-"""
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+so mode=3D=3D1 indicates quiet, new_operating_class/new_ch_num are actually
+the channel it's currently on, and count is 9.
+
+Can you say if it actually changes the count? Maybe capture on channel
+36 using the NIC as a sniffer what it does over time:
+https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi/debugging#air_sni=
+ffing
+
+
+Initially I'd say though that if this situation persists, then your AP
+is having some problems and we'd not have stayed connected without the
+patch in question either. If you want, maybe revert and see what the
+symptom is then?
+
+johannes
