@@ -1,111 +1,90 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871951F939;
-	Tue, 16 Jan 2024 21:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B957465;
+	Wed, 17 Jan 2024 05:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705439332; cv=none; b=ZpiEBKUr7m0LxCALS0UdpRVq55KP0D3rgvwa0OdV/JtKrxvLQdTZnuMuJ8QzyylzVGpXSfcXW+rDzqPDcfa/pF8mkODjcJ0GpPMQ3JBjvfNUZx6qM7naT//SYjB8KSjfz8g43RpfgVRx+FaQh6bKGDtGJMC7Py+5Wlosp0UTLI4=
+	t=1705469940; cv=none; b=LlJt2O2jjLhQIqczzW2N04znEexafvW7VGJuc3jilvbIakVOFvP+4AayR+N8FXR6APSr7UH3X2VvJ5IaaZZuNjggPax0CdKWHt98QLdEwRIg+4WSnEa42s1QnfApN/Pj18Y1yMZG/FsKJ7LxgFYPT5YCyz8dpno7FSJLZVlRZY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705439332; c=relaxed/simple;
-	bh=0iK44sT+JH6btkONVaDDfvQMivb0ALaKOLPT0/zAEbs=;
-	h=DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:Date:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
-	 User-Agent:MIME-Version:X-malware-bazaar; b=gqScOWQ+9fSbXLTjDGxogpqugWTmW9RFLiKg2WqMJ6YyPcKkR3yg2qn0a8AVxAKsBFCdC0cAamnOJn+tlpstYloZjeaS16EnoBNUydJIDoRvcNLJUVxzn1KUdVsrazsh+m3FOtWfHJt5TO9vuZNieI1E215hFprR9BLVsYTtmZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=OVCCx7UX; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1705469940; c=relaxed/simple;
+	bh=VmBEzt7GK0GHLsuyZ5vjXQma5EN6cK975TMTB3zN0hk=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To; b=g4cKiNTgun1H4ICel9lXye+3TgfFlB0udm3ydFajCx3rVfsBafZh7b/llKBxG9zecahQp8U83NMJpSpG8zE+eDymxLXS+7oCrzWFuV15XZpK+7F+Ut/8svsDvWTHNmObqwsap0BXv3JGZa3CjxlulyJw+y92U9LV+WUTxwwwQ94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=liv4cjmy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="OVCCx7UX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=0iK44sT+JH6btkONVaDDfvQMivb0ALaKOLPT0/zAEbs=;
-	t=1705439329; x=1706648929; b=OVCCx7UX8+WR6D4MT23f+se5pC23jW4iC6LPsRjd1RYJMNa
-	92+NwRKLsu+0UQZjY+Z7c4Oo70qbdsAHznJaJAQPIj9163pXn8RoU1VoaJfrpbUP++qdGPZQr5q9R
-	Z8g8bLCU3x+BxkG+W0rBskkebWE8LDUh+XCZTWr4qW6EWnuOlwB/E7TwZxY/eMARsa4Klb+MlhhQ9
-	7t5pvq3kL5gOs5Cgb+XF6mwXMWH2YtUlg4l5vkbXdyRd+4KWTPt/2P6NbLTjlZhDc6HeingLR4eU3
-	4XNv5JJQvf4k6YoSbYU3FYbjeE+kk4DGtOIujzKKymbSKgTOWxYltglqsaSgKdIg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rPqfu-00000005III-0oaT;
-	Tue, 16 Jan 2024 22:08:46 +0100
-Message-ID: <f7b6c875dd41e792795ee3a7cea542b98c949a7d.camel@sipsolutions.net>
-Subject: Re: [REGRESSION] 6.7 broke wifi "AP is in CSA process, reject auth"
-From: Johannes Berg <johannes@sipsolutions.net>
-To: coldolt <andypalmadi@gmail.com>
-Cc: ayala.beker@intel.com, linux-wireless@vger.kernel.org, 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="liv4cjmy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8DCC433F1;
+	Wed, 17 Jan 2024 05:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705469940;
+	bh=VmBEzt7GK0GHLsuyZ5vjXQma5EN6cK975TMTB3zN0hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=liv4cjmyUMhpl/xoLpB84lL4KdyuoiJhA2+1LXSrdYJJSYOHZtnLup+6eiC62oKxc
+	 p3apNm5jCpUDsYcWpb63FB/o4TrUPNycXMyV3IqkOWuVRdreXfEfGQEPayi/AvLIX8
+	 U2ZgBkg49eKyrgA44G12MgyCqAiSUYp6haFZ68vY=
+Date: Wed, 17 Jan 2024 06:38:57 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Serge SIMON <serge.simon@gmail.com>
+Cc: linux-sound@vger.kernel.org, stable@vger.kernel.org,
 	regressions@lists.linux.dev
-Date: Tue, 16 Jan 2024 22:08:45 +0100
-In-Reply-To: <CAJvGw+BF+LWAzOKa8aJvGcdORWWjRDZObXupkCF5VAgSEm21nA@mail.gmail.com>
-References: 
-	<CAJvGw+DQhBk_mHXeu6RTOds5iramMW2FbMB01VbKRA4YbHHDTA@mail.gmail.com>
-	 <dae4bb032ad8b0c9fa6547de5e869e51f9f6e766.camel@sipsolutions.net>
-	 <CAJvGw+ATM3B09KbuLM0VsmU9GZRSO-ZP6ffwvvOa75xVHR3-kw@mail.gmail.com>
-	 <d14d6b4c02282d6ef48a936b1ac8be71c80a8835.camel@sipsolutions.net>
-	 <CAJvGw+BF+LWAzOKa8aJvGcdORWWjRDZObXupkCF5VAgSEm21nA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+Subject: Re: S/PDIF not detected anymore / regression on recent kernel 6.7 ?
+Message-ID: <2024011723-freeness-caviar-774c@gregkh>
+References: <CAMBK1_QFuLQBp1apHD7=FnJo=RWE532=jMwfo=nkkGFSzJaD-A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMBK1_QFuLQBp1apHD7=FnJo=RWE532=jMwfo=nkkGFSzJaD-A@mail.gmail.com>
 
-On Tue, 2024-01-16 at 22:37 +0200, coldolt wrote:
-> On Tue, Jan 16, 2024 at 1:43=E2=80=AFPM Johannes Berg <johannes@sipsoluti=
-ons.net> wrote:
-> > so mode=3D=3D1 indicates quiet, new_operating_class/new_ch_num are actu=
-ally
-> > the channel it's currently on, and count is 9.
-> >=20
-> > Can you say if it actually changes the count? Maybe capture on channel
-> > 36 using the NIC as a sniffer what it does over time:
-> > https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi/debugging#air=
-_sniffing
->=20
-> If I keep checking it the line "Unknown IE (60): 01 16 24 09" seems to
-> always stay the same, the 09 doesn't change, it's the same today as it
-> was yesterday.
+On Tue, Jan 16, 2024 at 09:49:59PM +0100, Serge SIMON wrote:
+> Dear Kernel maintainers,
+> 
+> I think i'm encountering (for the first time in years !) a regression
+> with the "6.7.arch3-1" kernel (whereas no issues with
+> "6.6.10.arch1-1", on which i reverted).
+> 
+> I'm running a (up-to-date, and non-LTS) ARCHLINUX desktop, on a ASUS
+> B560-I motherboard, with 3 monitors (attached to a 4-HDMI outputs
+> card), plus an audio S/PDIF optic output at motherboard level.
+> 
+> With the latest kernel, the S/PIDF optic output of the motherboard is
+> NOT detected anymore (and i haven't been able to see / find anything
+> in the logs at quick glance, neither journalctl -xe nor dmesg).
+> 
+> Once reverted to 6.6.10, everything is fine again.
+> 
+> For example, in a working situation (6.6.10), i have :
+> 
+> cat /proc/asound/pcm
+> 00-00: ALC1220 Analog : ALC1220 Analog : playback 1 : capture 1
+> 00-01: ALC1220 Digital : ALC1220 Digital : playback 1
+> 00-02: ALC1220 Alt Analog : ALC1220 Alt Analog : capture 1
+> 01-03: HDMI 0 : HDMI 0 : playback 1
+> 01-07: HDMI 1 : HDMI 1 : playback 1
+> 01-08: HDMI 2 : HDMI 2 : playback 1
+> 01-09: HDMI 3 : HDMI 3 : playback 1
+> 
+> Whereas while on the latest 6.7 kernel, i only had the 4 HDMI lines
+> (linked to a NVIDIA T600 card, with 4 HDMI outputs) and not the three
+> first ones (attached to the motherboard).
+> 
+> (of course i did several tests with 6.7, reboot, ... without any changes)
+> 
+> Any idea ?
 
-Interesting.
+As this is a sound issue, perhaps send this to the
+linux-sound@vger.kernel.org mailing list (now added).
 
-> I captured the channel 36 for 15 mins, here is the 34MB file in
-> gdrive: https://drive.google.com/file/d/1yqDb3g3Cfttm4W-Jb5AA51nLQ7OglWhl=
-/view?usp=3Dsharing
+Any chance you can do a 'git bisect' between 6.6 and 6.7 to track down
+the issue?  Or maybe the sound developers have some things to ask about
+as there are loads of debugging knobs in sound...
 
-Thanks! I got it, feel free to delete.
+thanks,
 
-It's interesting, the AP is not including the element in the beacon, but
-is unconditionally and always including it in the probe responses.
-
-> > Initially I'd say though that if this situation persists, then your AP
-> > is having some problems and we'd not have stayed connected without the
-> > patch in question either. If you want, maybe revert and see what the
-> > symptom is then?
->=20
-> I now compiled and installed commit c09c4f3 and its parent 2bf57b0.
-> The 2bf57b0 works great, connects immediately and I used it for 30+
-> mins, also tried to connect/disconnect 5+ times smoothly, no symptoms.
-> The c09c4f3 has the problem described originally, never connects even
-> if trying 10+ times in 5+ minutes, keeps outputting the same dmesg
-> message "AP is in CSA process, reject auth".
-
-Yes, I didn't think of it being broken enough to include it in probe
-responses but not beacons ... So it makes sense that w/o that we could
-connect and not even disconnect, because while connected we ignore
-(E)CSA in probe responses...
-
-I'll think about it for a bit and ask some folks, but I guess we'll just
-remove the check for probe responses from this ... there's little
-guarantee anyway that this works well. Or maybe if we find it in probe
-response check if we have a recent beacon? But that's tricky, we may
-not, if we got a probe response on the channel but no beacon.
-
-johannes
-
+greg k-h
