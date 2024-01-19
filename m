@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3905333CE9;
-	Fri, 19 Jan 2024 10:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6313CF4B;
+	Fri, 19 Jan 2024 10:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705659062; cv=none; b=TjcFj+FFaKaQP/P64g6bPyZlw4jGdsmc/mmdiXwdmMIJby80aa8Enwxxz3saHhMaBty7y4sb5GwAbPXr/YwS2wqEabS5mxxP45BgWJZ6aSFoTOZ+g4W6DWsMRpoZAVoF9zlN3qzFNwZZ0gGt+fahG3eQ+i0zCFMUkFoMaVGv2As=
+	t=1705659226; cv=none; b=OQpsBmZrMHr983c9ZhyqxdAPm+RQuVF42Ppg4yJHVCwv6Y6QncOrk98giowHE2aezxOnFso1JF8jFiF9bZ1sqF3fSkRl5k1bWNHKFy43Q2uLgDqUjeYBOdBBlDk29ivQuIW6ELS/Hn4uSrvuTqOWrGFRW180ScY/b5jBPTUqxEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705659062; c=relaxed/simple;
-	bh=xKEw9678oSQ6tKsP7zZqBVKIhlRFGOiGErV4yWGJiXE=;
+	s=arc-20240116; t=1705659226; c=relaxed/simple;
+	bh=fyaI7QjyqAD2QONVkKww5YnWgFmNlPSIUVF2RxNi8Ho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bAaIsBPiWwnQL4c4dBx2NFejSys5Ai6zO0w9WaTNO3o/B6oDq17Rrq08R32N+4E8YoaOHkeKtWqa4lZS5cUxOFdOCITCmhtL40Zpt1Kze+W7TVfBUQEqid5BQlQVYxD7Yhhmh0Osp/t2EA5KroGdzkpmipX89vZyjUSP0fkH6gQ=
+	 In-Reply-To:Content-Type; b=pt5O4CDxOp0F2i4ygPJZXI/84z/+DCdgOBUgrWSQKPtMnB5Y9sDMefRJFiMBwK+oNe6kIYfGIvMkPFPkiRl/ObGbCQQ2PwO5hsD+xf7ed9L/Pc6rX4dWZsdxu4v/NAzklxT1/n8bIIVqP1ZzuhqlRZK2EFbEQTPYauKIJHyNIV8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rQlpx-0002e0-QA; Fri, 19 Jan 2024 11:10:57 +0100
-Message-ID: <4aa18f12-4fd8-4c26-bf4f-96f934e5d3bc@leemhuis.info>
-Date: Fri, 19 Jan 2024 11:10:57 +0100
+	id 1rQlsc-0003OF-BQ; Fri, 19 Jan 2024 11:13:42 +0100
+Message-ID: <7b8841eb-eb5e-4518-b5a8-d94e163fd203@leemhuis.info>
+Date: Fri, 19 Jan 2024 11:13:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,48 +26,38 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v4 4/4] selftests/mm: add tests for HWPOISON hugetlbfs
- read
+Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
 Content-Language: en-US, de-DE
-To: Linux Regressions <regressions@lists.linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20230713001833.3778937-1-jiaqiyan@google.com>
- <20230713001833.3778937-5-jiaqiyan@google.com>
- <be3976b5-0a9c-41c6-8160-88e6c1e5d63e@collabora.com>
- <CACw3F51WvZDVCpVg9j4j8WmnmAFOsnK+FZDDoVqhgLqVwhPTCA@mail.gmail.com>
- <e68488e4-764e-4b25-8a47-05bf8976bd19@collabora.com>
- <079335ab-190f-41f7-b832-6ffe7528fd8b@collabora.com>
- <772a2c59-7616-4ec7-9050-17d3abf0b6eb@collabora.com>
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+ <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
 From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <772a2c59-7616-4ec7-9050-17d3abf0b6eb@collabora.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705659060;8f826fe6;
-X-HE-SMSGID: 1rQlpx-0002e0-QA
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705659224;35e35129;
+X-HE-SMSGID: 1rQlsc-0003OF-BQ
 
-On 12.01.24 07:16, Muhammad Usama Anjum wrote:
-> On 1/10/24 3:15 PM, Muhammad Usama Anjum wrote:
->> On 1/10/24 11:49 AM, Muhammad Usama Anjum wrote:
->>> On 1/6/24 2:13 AM, Jiaqi Yan wrote:
->>>> On Thu, Jan 4, 2024 at 10:27 PM Muhammad Usama Anjum
->>>> <usama.anjum@collabora.com> wrote:
->>>>>
->>>>> I'm trying to convert this test to TAP as I think the failures sometimes go
->>>>> unnoticed on CI systems if we only depend on the return value of the
->>>>> application. I've enabled the following configurations which aren't already
->>>>> present in tools/testing/selftests/mm/config:
->>>>> CONFIG_MEMORY_FAILURE=y
->>>>> CONFIG_HWPOISON_INJECT=m
+On 11.01.24 09:20, email200202 wrote:
+> 
+> #regzbot introduced: v6.1.70..v6.1.71
+> 
+> 
+> After kernel upgrade 6.1.70 to 6.1.71, the computer hangs during shutdown.
+> 
+> The problem is related to NFS service. Stopping NFS service hangs:
+> 
+> # /etc/init.d/nfs  stop
+>  * Caching service dependencies ... [ ok ]
+>  * Stopping NFS mountd ... [ ok ]
+>  * Stopping NFS daemon ... [ ok ]
+> [...]
 
-> #regzbot title: hugetlbfs hwpoison handling
-> #regzbot introduced: a08c7193e4f1
-> #regzbot monitor:
-> https://lore.kernel.org/all/20240111191655.295530-1-sidhartha.kumar@oracle.com
-
-#regzbot fix: fs/hugetlbfs/inode.c: mm/memory-failure.c: fix hugetlbfs
-hwpoison handling
+#regzbot fix: b2c545c39877408a2fe2
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -75,4 +65,3 @@ Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
-
