@@ -1,57 +1,38 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE7556465
-	for <regressions@lists.linux.dev>; Fri, 19 Jan 2024 18:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C4B1DFCB;
+	Fri, 19 Jan 2024 20:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705689565; cv=none; b=vEojlQcVS9nDwWQFGByQO20ZlA/OZZnnT61I4jj3lGC5huPalWzYqRVgobylEg6Nz70q5I61/qn8D8NRGlzonxOHd3e1JkqS8s6g1Ja0vhOcIRyk2kYuZQddK3S3/rWa7+Tzhx2b0QEL4zMb+rSFNZ1uv7FM0ukwzD54e92vBQA=
+	t=1705697750; cv=none; b=XgJatF2DFK1Fe/pYubLVi64jdgY7dyd+6pAF9zm3Ac/W/Zicqbh0z1M35SLZfJvE8U98X1lzhvoVw/akW9+0lIKNhLcnr3gyhG7mKgu7og3KC1sdxmL/+Mfo9v92Lx/+P59PPui5A4m7Pe7DrHpt1uU5cAPqAsrcWADwlzGtNxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705689565; c=relaxed/simple;
-	bh=KPBYnvXs+bRh8VQUcF3cGEvDOy/UxtfQJY6XAedGMkE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=DsvPy6zhRujwlfhnsjuHe3/pHeAkktoBt7qo1PF7JieOeCaErtha50aalZA/8xDbHOt9E7Z44f/sJaILFlm+hsombkc64YKqAkF8oICesnMJ/vevhCM+hDXz7fl+IdJrnG3kPDCRhwUSXAoLZJL3ZLjdkcuRRqW/bt1gZYoC81s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3Y6S6578; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1705697750; c=relaxed/simple;
+	bh=yiyaYnWRIuAJVuP5d0hq1Vm608wfgBc/+asxYVtVaiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dIy2A1U/5yYqcqmaqck0yrl135u77dw1CaB1bp2lLHp5KXPg2TvOdT6TP8/pmzyzf6PTcQ2L3twpYzV2UvGNCBkGtRq7t6BXfsfPyEH6Oeg/ke6e8apmTdHpw0qrfnzk1RpINUnNmRjI0nxrLBgBnMLSBsblwbyHCuDRcFGNY3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=TbxmXlvm; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3Y6S6578"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7bee9f626caso15518339f.0
-        for <regressions@lists.linux.dev>; Fri, 19 Jan 2024 10:39:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705689562; x=1706294362; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3YqF9VDWGaS4VlQNR7o2au0lZg/1V8nOrIBJo7jDbbk=;
-        b=3Y6S6578Dk+xrPmE3WZkKX/Bfkotn1S49mviEgCQyHyweKIBer1uh4gFXJlehqoMZe
-         fzcecSYYdzREMc4dvc3U1ce+VakvekQsYo74LsB+vFSiN9fCPz1vpPcDAe0LAtGxg6pR
-         jH7IvYwCheZ7zB12AldkYUuscUaXtUxzkrTURBVwk97K5UGt/Gnqn1jISQLN2+T8G/vZ
-         kUFwJBdg/RC3xXOKvRAES9ZG6chFEXvX0HJB5NL12kUBGRN6mzOKdIOpKD+j91H4jEdv
-         gjnRBQMb98vPaetClUN8Uu3M2TUR/2LY13X6UFPYID2LQ7C7QDS1UD4z+7w+vNpQCajV
-         G/nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705689562; x=1706294362;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3YqF9VDWGaS4VlQNR7o2au0lZg/1V8nOrIBJo7jDbbk=;
-        b=Hhs7n4t+Dt5foV/sbCVHfOfH+JbQsmTaLdnqZuf1FYVt7R7XmL0dfSX4oVioVjqN2X
-         PdnVS+Ap/gR/6zi2GCVKKsqE9j224PSp4ZnHOy24Y7YodM0af9kk7KfYWIYYdsTmndqc
-         si09SdAqUr/XakjvAm2nAyIL3xSp/s/atYZlzGPS+4dtGQBIvylg48ONUvA70tLT0Adi
-         jjKBcyaajMoaIuRLCUb5pcCPLYtjONU2slbXPILNM2H46WzoF55BKp7kfeVGz4Y6OcmP
-         L+9H8odXxouK8oh/CubWDmttbEx6yPpalUmoxO3SeNT/DO7tUvnh1FMpa/1Ioi3YMt2W
-         aqnA==
-X-Gm-Message-State: AOJu0YzKwzd9lcWyzLdHTfjCRwwqdPFebleIQVjK8MkHf/uyjqQWEkfW
-	ttIndRlHBlfkfwd4zedVcGKGCBXXys7VfJp5IxrJhSYnd8vNLjjOmwpT1AONQ/E=
-X-Google-Smtp-Source: AGHT+IG/wN6lTQv3q2R53igCCDQ0O7n9t9yzniyNiXLbO+u1nKR+CX6nGMNXevdX7msmrrgcagZdzQ==
-X-Received: by 2002:a92:c549:0:b0:360:7937:6f7 with SMTP id a9-20020a92c549000000b00360793706f7mr570951ilj.3.1705689562493;
-        Fri, 19 Jan 2024 10:39:22 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id bf7-20020a056e02308700b0035fabab7985sm5669677ilb.21.2024.01.19.10.39.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jan 2024 10:39:21 -0800 (PST)
-Message-ID: <05ea3233-20dd-4af7-86cc-de11ad2efe84@kernel.dk>
-Date: Fri, 19 Jan 2024 11:39:20 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="TbxmXlvm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1705697733; x=1706302533; i=deller@gmx.de;
+	bh=yiyaYnWRIuAJVuP5d0hq1Vm608wfgBc/+asxYVtVaiI=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=TbxmXlvm3rE7QOQOh4cbM2NQxiKpTAXLemwKMo/FVr5T7JeZOt8qHuCU2SsEnNy+
+	 hFiA57ddfhZb+vSB0Y+gZtMsMASlllXGWykvrrHpmI+JgmudxrIsYZoP018dHJ63h
+	 ST9l8nRvhmq6jdPJOP/QyufQxtgZ0Wt+Q37HLjppY1IQHM++p67AF4TAIWLJZIEhL
+	 KCC42dAY0bGQpfcVqNq4k9eBmJipHVu+1g4nRdAupvd/yzD/6Doa0uKifZ7wIYT1c
+	 SX8R2vtI0x4ZJx1lDtM9x8kiHNTkkxHlnDZp5XrYlkngivlXmGy4IpSOuwL8TDOu9
+	 V92ci9kN9fDCWTUNVg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.146.202]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLzFr-1rijjQ1iRF-00HviA; Fri, 19
+ Jan 2024 21:55:33 +0100
+Message-ID: <0293b14b-6188-4229-9fb6-29fbbdb8dc83@gmx.de>
+Date: Fri, 19 Jan 2024 21:55:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,47 +40,123 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION: no console on current -git
 Content-Language: en-US
-To: LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
- avier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>
-From: Jens Axboe <axboe@kernel.dk>
-Subject: REGRESSION: no console on current -git
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: avier Martinez Canillas <javierm@redhat.com>,
+ Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+References: <05ea3233-20dd-4af7-86cc-de11ad2efe84@kernel.dk>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <05ea3233-20dd-4af7-86cc-de11ad2efe84@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TXMxecq5B8z4yhyXYaxKHVfKYJk1nHTR6ojUy0qKuDu4dyl9JHQ
+ Y+W19o7vK4cWx0PRtOl+3ftJAFWxYEu8aTrab8sQuFDpo8DpZpexX/TRuu9bUX1vTDs0aJH
+ n46Qhqg719vyku3VfedvWNY90Pgat1pwtz0xr4eGxDLJq5Z3Wdbq/F8pn0rm+uamVyUy6Qb
+ MaPlaHH2T2ry3MoJJnaRw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Cu7OFdiOwGU=;mmr7J1y84JwXPPypeqkeft6THJW
+ NTwogCrwOuFFHvj/DGzcGFstlVIbTgp6jVtZm44ApgH4THkU8uvH/KXYtLfzBdbW6vTI96VwV
+ MGA9DX5A5sEpu5j2/17LKuKhCoj+rb2SLoFM8Lg+EwZojzhdzezkIYPff9cpoavbs1MLJ/ub4
+ sfsDZNS09jnf3JWDyx+etgiL9bFDW2KdfJ6t+ppAnunL/SeIpRSnpgSjDabrJk121Ot2t4emN
+ 9TXi7uWMvt7B6Vj57OuI+goVGkOp8cAZtbRYJK6UgtdE/7vYlQxCycCX/10G10qVZ2enFA+Ek
+ lg4l2+HR8VXyiarazUfo+z1FrGd+FdytbFSK0TMUgWVxteyIDMh9tO2vUKRjS8P6GCT5tWp7Q
+ Zd5wFCwyJipv+xyXdgkQ1eDEA4YlTzccaCcQWMTxPjdtmkpBbgnoasbo6Cakt2un/Mkm7N5cT
+ Epj4Tpw/EExStKw+YX0pDoZ1ygUDqVYbcQXDljbHoIZ5+7hNYm+qJYWGwfweHP5zuE5r7DT6S
+ c3Sxjhejo8CzAiLqCR4fGt1taRIdPxHA4KDpU19xMGN+YToPHQ94kDI9+uRBS9i6hSUfF33q1
+ MhlpkBh12eSjmnQUX688cbhlvtbNrRtSBbVfzGwTiek+5Fz2HrJ4rioCu14+w6P8gpwf6HnQs
+ tqm3QcxVHw7RGOl6trbTvtxuLh4rDbwt3pXUoVA3QPUtANKG+IZXVfsGw3SycMzBB/JFgNjd9
+ 0oU/Mu4LDJhNgqgvn0gwmRChhMH+HxhyS46mEVOJaEBNyEEotB9NzhAvHtENvGxTIF8UU8Vss
+ 6/m9cFWzyg/ZQ/IhE2MvC941efv/kngDTaR1INEzHosSMheJI3OQWkMYF6jfXz8lz1bIQStia
+ 98bGnMQGflSZ2Dv/MYcAk/KeYbjW4hofwkn1oWdWJZE32fNk1YGDcURFE/qfQ58R2xrAsdckG
+ J62TbrlO9HRxQk8i1UJEHWqEt00=
 
-Hi,
+Adding Mirsad Todorovac (who reported a similar issue).
 
-My trusty R7525 test box is failing to show a console, or in fact anything,
-on current -git. There's no output after:
+On 1/19/24 19:39, Jens Axboe wrote:
+> My trusty R7525 test box is failing to show a console, or in fact anythi=
+ng,
+> on current -git. There's no output after:
+>
+> Loading Linux 6.7.0+ ...
+> Loading initial ramdisk ...
+>
+> and I don't get a console up. I went through the bisection pain and
+> found this was the culprit:
+>
+> commit df67699c9cb0ceb70f6cc60630ca938c06773eda
+> Author: Thomas Zimmermann <tzimmermann@suse.de>
+> Date:   Wed Jan 3 11:15:11 2024 +0100
+>
+>      firmware/sysfb: Clear screen_info state after consuming it
+>
+> Reverting this commit, and everything is fine. Looking at dmesg with a
+> buggy kernel, I get no frame or fb messages. On a good kernel, it looks
+> ilke this:
+>
+> [    1.416486] efifb: probing for efifb
+> [    1.416602] efifb: framebuffer at 0xde000000, using 3072k, total 3072=
+k
+> [    1.416605] efifb: mode is 1024x768x32, linelength=3D4096, pages=3D1
+> [    1.416607] efifb: scrolling: redraw
+> [    1.416608] efifb: Truecolor: size=3D8:8:8:8, shift=3D24:16:8:0
+> [    1.449746] fb0: EFI VGA frame buffer device
+>
+> Happy to test a fix, or barring that, can someone just revert this
+> commit please?
 
-Loading Linux 6.7.0+ ...
-Loading initial ramdisk ...
+I've temporarily added a revert patch into the fbdev for-next tree for now=
+,
+so people should not face the issue in the for-next series:
+https://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git/com=
+mit/?h=3Dfor-next
+I'd like to wait for Thomas to return on monday to check the issue
+as there are some other upcoming patches in this area from him.
 
-and I don't get a console up. I went through the bisection pain and
-found this was the culprit:
-
-commit df67699c9cb0ceb70f6cc60630ca938c06773eda
-Author: Thomas Zimmermann <tzimmermann@suse.de>
-Date:   Wed Jan 3 11:15:11 2024 +0100
-
-    firmware/sysfb: Clear screen_info state after consuming it
-
-Reverting this commit, and everything is fine. Looking at dmesg with a
-buggy kernel, I get no frame or fb messages. On a good kernel, it looks
-ilke this:
-
-[    1.416486] efifb: probing for efifb
-[    1.416602] efifb: framebuffer at 0xde000000, using 3072k, total 3072k
-[    1.416605] efifb: mode is 1024x768x32, linelength=4096, pages=1
-[    1.416607] efifb: scrolling: redraw
-[    1.416608] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
-[    1.449746] fb0: EFI VGA frame buffer device
-
-Happy to test a fix, or barring that, can someone just revert this
-commit please?
-
--- 
-Jens Axboe
-
+Helge
