@@ -1,118 +1,77 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C6F4A3C
-	for <regressions@lists.linux.dev>; Fri, 19 Jan 2024 06:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF18D51A;
+	Fri, 19 Jan 2024 07:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705647542; cv=none; b=rph+yZN+30qLLfiMNvva5ws23cXsxedXDdxng+q7t9gOISDbpXOphtXsPlRj8wS0A57fYB3t6ORYHNkmdmJatbXb8Waab7ydWCEncvHjjUNsCI3shpPbENDEhm3HbC+Y/9k8szZE5Ktk2OldKeyLuNNkZ7hrNilR31i3MOKUZP4=
+	t=1705650614; cv=none; b=AeKMvUhTT0V12YAelUWTCB1Nfi15Cm1bv4ZF/H5QZlxZjARUsiiH5gHX5MqphmBH7vh0bO6d4bsSM2vhlkHYH4b7IFDZbGycZaNHADHxDRl0ETlGSKYfn81Bdz7YXkTEXdVcg8hvIVpTO05mx/gMuB00R05hrZcksKOOj+k/CVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705647542; c=relaxed/simple;
-	bh=hogej2Hq/Ar9DF2BDUWIkWyiEHi3+d77JUjEQDh5/MU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVPpLAjTKzCUhIrg0LbRNuAWZkiE70HTjTNsgFIcS7nINwEkQjRPHzy2+tx2zTgvOHqNJ64r8SH7upiV5eParke46asB+k4mz3DUmyjM3ntTGAWt6a7ckHj2S5DVJN32j1lGlWcMkfzXw4hcu8Qb4XcFLrILOflasbR3KfXCrrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0SVJ2Ga; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705650614; c=relaxed/simple;
+	bh=JjuzPeeDJusOndPJB5nHYlqCcuovsdd3mDnUPIieTso=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=UlVKE//uNynsi+pDDQR1NWoa/w8hNuck5JpBZqbLniGz45KRpX10jGMR6ZY1wreQwhyiPkqBG0LaG0dM1aua2O4c8s8xCb9IQnr4zR2+TRnzvZN7jX21d/qgr5rG0v1fKeTiw8HFcKwyZXqWszp/KkS7fQTKS9AuDb7WIPi4EL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2ANVHJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0SVJ2Ga"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d5f1e0e32eso2811985ad.3
-        for <regressions@lists.linux.dev>; Thu, 18 Jan 2024 22:59:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705647540; x=1706252340; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hogej2Hq/Ar9DF2BDUWIkWyiEHi3+d77JUjEQDh5/MU=;
-        b=T0SVJ2GawcccKRZY+QaxHYR5RHzSVW/lcmsQUJcE9UJ6J31TxUKpHqzbppF2U9SPvs
-         gG00yBtQVyaS/thYYO6HjncdKtkE01e1FBeHPBnQAEdshtku8NOYDl0GAj/r/sGOeNtV
-         N4tB6Z5uWCA9MYkQM25AG4R9DhEWDmaCfN7yiAFa82LrQYXUCH/XWSWxqVmUQNfjyCIs
-         WUS+CqHQ0uvU+89+PW5nIT5uHjYtlMg+MFUDwSt0fPQIV6n0kwbI6QbUIN2NEybp39Qh
-         f9/TRBLA4ms/N8EY3vEjUcYcSkkfSEQrkvCSfZYK6kZc7i7dnOyE/GnfyIKl81ML8VKT
-         LOjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705647540; x=1706252340;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hogej2Hq/Ar9DF2BDUWIkWyiEHi3+d77JUjEQDh5/MU=;
-        b=u1BLeoB6p2UcgW23pVeqM8xwJoHq7TjFfVriLFLrPQSyv9sjCsODiSrQtU1/olq2cZ
-         b8AHQgNH6PEu8qndO85hz+a/+lKPSfJyuldwa7EoAn76Ds7aBM7bVWtqaHFzFq6Tnq9x
-         FBs10/xl33dVyayUblWRK55fFp42NIBgvQNTIbyVdy0Hi0ylsSo3/8lPHkCDmJ8PhMrz
-         9o2zGEMV5Z4Yne6vw8WAxu7FsacouC20ambGNrpexX9ZYmNx5FPSF09dDGtVOPwthvaT
-         UAhe2AdnXgBboc27Bw6mX4wqlW9FjpnXNA9rBamJYGgqUSt9lQcy/aXG0dE9PTd2hpg9
-         QwPw==
-X-Gm-Message-State: AOJu0Yz4raKEu5TnQ0mXukbE6q25rxqXGAtS6tfzt5ipfPwTXbHm6016
-	/xh0ANmdzvpRqD0y1Cric+gE7EB8tJX73S5BnHqDI0+p2eIe98ZD
-X-Google-Smtp-Source: AGHT+IHJixHYo3krLzziz+R41+iMji7GYGWIRRNcbflClYK6OAWpT5zGOMdo53Qx2VNmbGi2ULd9tw==
-X-Received: by 2002:a17:902:7c94:b0:1d4:3d04:cdd with SMTP id y20-20020a1709027c9400b001d43d040cddmr1795857pll.32.1705647540466;
-        Thu, 18 Jan 2024 22:59:00 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id kq11-20020a170903284b00b001d6efcefadfsm2370127plb.202.2024.01.18.22.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 22:58:59 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id D0B251854A1A0; Fri, 19 Jan 2024 13:58:52 +0700 (WIB)
-Date: Fri, 19 Jan 2024 13:58:52 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Gowtham <trgowtham123@gmail.com>,
-	Linux btrfs <linux-btrfs@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Subject: Re: Disk write deterioration in 5.x kernel
-Message-ID: <ZaodrO8QjCqSXPHe@archie.me>
-References: <CA+XNQ=j6re4bhRDUebzPLDvMtZecqtx+GRRPgpd9apss+vOaBg@mail.gmail.com>
- <CA+XNQ=hGxYsMAo6Gc+Up5QctbWjkER17uK97YXWc9uyx_7+3uw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2ANVHJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2968CC433F1;
+	Fri, 19 Jan 2024 07:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705650614;
+	bh=JjuzPeeDJusOndPJB5nHYlqCcuovsdd3mDnUPIieTso=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=G2ANVHJ9/HMJ5xTii2nljbOfR+rfKawyMCAb+cXe9DonKUtBP/bCqfgeNU9QcUlMV
+	 2iJZWSGCE6Vpvif82eHfvVMUXAY8xgjIw9AEtoi+eih2Vsg4rSUccklAk2Sz9mBZJC
+	 FqgOQfGWfJGVXEGPP3HnseUuTSosoFE7S0w0QY7pjMi23JJIUVVtanvRLVYm2iMaEk
+	 NaZRFwZY1XKe13djBvFz+lxPvmXkQ3XaUKcpUR9VqVxGU5X0zkbCuLz03vTtdWm5hx
+	 70rd5aUCUafnU82KxDzSyomoWwpDAx07U7CUVTzVebfSZDzKOCoLfwz0dbpussCcEd
+	 BTwi5laHAFRNw==
+From: Kalle Valo <kvalo@kernel.org>
+To: ath11k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,
+  linux-kernel@vger.kernel.org
+Subject: Re: [regression] ath11k broken in v6.7
+References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
+Date: Fri, 19 Jan 2024 09:50:11 +0200
+In-Reply-To: <87frytg7b8.fsf@kernel.org> (Kalle Valo's message of "Fri, 19 Jan
+	2024 08:34:35 +0200")
+Message-ID: <878r4lg3t8.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="W9V2F+uscCUe8eop"
-Content-Disposition: inline
-In-Reply-To: <CA+XNQ=hGxYsMAo6Gc+Up5QctbWjkER17uK97YXWc9uyx_7+3uw@mail.gmail.com>
+Content-Type: text/plain
 
+Kalle Valo <kvalo@kernel.org> writes:
 
---W9V2F+uscCUe8eop
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Kalle Valo <kvalo@kernel.org> writes:
+>
+>> Just trying to make everyone aware because I suspect this will affect
+>> quite a few people: ath11k is crashing during suspend on v6.7 due to a
+>> mac80211 patch, more info:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218364
+>>
+>> Proposed fix:
+>>
+>> https://patchwork.kernel.org/project/linux-wireless/patch/20240111170629.1257217-1-benjamin@sipsolutions.net/
+>
+> The fix is now applied:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
+>
+> I'll try to use regzbot for the first time, let's see how it goes:
+>
+> #regzbot introduced: 0a3d898ee9a8 ^
 
-[also Cc: btrfs maintainers]
+Forgot to include the bug report:
 
-On Fri, Jan 19, 2024 at 09:37:50AM +0530, Gowtham wrote:
-> Hi
->=20
-> Is there anything I can collect to debug what is the problem in the new k=
-ernel?
->=20
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218364
 
-Please don't top-post, reply inline with appropriate context instead.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Since you have regression w.r.t. old LTS kernel (v5.4.y), can you check
-current mainline (v6.7) to confirm or deny the regression? If the
-regression still happens there, can you perform bisection (see
-Documentation/admin-guide/bug-bisect.rst in the kernel sources for details)?
-
-Also, it is also helpful to list SSD devices that you've tested.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---W9V2F+uscCUe8eop
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZaodqAAKCRD2uYlJVVFO
-oznlAPsGd2k4lotRybEZil8Cr95NHCC5FGqwT4eW7L0FIBO0fwEAq6D/v+fULtZx
-aM0klFefbcFQsJK+aywrUR+bbsgMVwM=
-=RXeF
------END PGP SIGNATURE-----
-
---W9V2F+uscCUe8eop--
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
