@@ -1,77 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF18D51A;
-	Fri, 19 Jan 2024 07:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9901DDC3;
+	Fri, 19 Jan 2024 08:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705650614; cv=none; b=AeKMvUhTT0V12YAelUWTCB1Nfi15Cm1bv4ZF/H5QZlxZjARUsiiH5gHX5MqphmBH7vh0bO6d4bsSM2vhlkHYH4b7IFDZbGycZaNHADHxDRl0ETlGSKYfn81Bdz7YXkTEXdVcg8hvIVpTO05mx/gMuB00R05hrZcksKOOj+k/CVc=
+	t=1705654520; cv=none; b=pAwB1C0WDJ0gO19WFgSsIbt2RLbP/aJkI3zClR9YsLWrPCmVn7PqVm0CbHVWMA16yBNq2Pn2CLm2nCHHLHOYKfhsIJ7uvv1H9UFyyFzFICN+nl2ASijedXuet/Qhv5K3EOSdS7DGcDhddypNar73GH41dYPRlBjWlWoZnkEYwzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705650614; c=relaxed/simple;
-	bh=JjuzPeeDJusOndPJB5nHYlqCcuovsdd3mDnUPIieTso=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=UlVKE//uNynsi+pDDQR1NWoa/w8hNuck5JpBZqbLniGz45KRpX10jGMR6ZY1wreQwhyiPkqBG0LaG0dM1aua2O4c8s8xCb9IQnr4zR2+TRnzvZN7jX21d/qgr5rG0v1fKeTiw8HFcKwyZXqWszp/KkS7fQTKS9AuDb7WIPi4EL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2ANVHJ9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2ANVHJ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2968CC433F1;
-	Fri, 19 Jan 2024 07:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705650614;
-	bh=JjuzPeeDJusOndPJB5nHYlqCcuovsdd3mDnUPIieTso=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=G2ANVHJ9/HMJ5xTii2nljbOfR+rfKawyMCAb+cXe9DonKUtBP/bCqfgeNU9QcUlMV
-	 2iJZWSGCE6Vpvif82eHfvVMUXAY8xgjIw9AEtoi+eih2Vsg4rSUccklAk2Sz9mBZJC
-	 FqgOQfGWfJGVXEGPP3HnseUuTSosoFE7S0w0QY7pjMi23JJIUVVtanvRLVYm2iMaEk
-	 NaZRFwZY1XKe13djBvFz+lxPvmXkQ3XaUKcpUR9VqVxGU5X0zkbCuLz03vTtdWm5hx
-	 70rd5aUCUafnU82KxDzSyomoWwpDAx07U7CUVTzVebfSZDzKOCoLfwz0dbpussCcEd
-	 BTwi5laHAFRNw==
-From: Kalle Valo <kvalo@kernel.org>
-To: ath11k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,
-  linux-kernel@vger.kernel.org
-Subject: Re: [regression] ath11k broken in v6.7
-References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
-Date: Fri, 19 Jan 2024 09:50:11 +0200
-In-Reply-To: <87frytg7b8.fsf@kernel.org> (Kalle Valo's message of "Fri, 19 Jan
-	2024 08:34:35 +0200")
-Message-ID: <878r4lg3t8.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1705654520; c=relaxed/simple;
+	bh=+R/lQMLSXdFLtudwYkMQlXMERsykxGaEK7YzpgFiN4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=reg6CtCUINQLLHgbpxEw0Bkx//NWYwVgmFqHoPxL8WnSda4ob1EoZVXnyA+Bii2iSxXvlIO1Op+6DbV0cVXTmn87I3Xr2IZgX8QwOVPlDyWN2CI3/9BPyMLvp6wbWso5yiikHlnLZz5WDY41Ub7enHGdJHj56p2M4EUBpU0hq58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rQkec-0001GU-Um; Fri, 19 Jan 2024 09:55:11 +0100
+Message-ID: <02c0a0c9-91b7-4766-9c15-8059b8e7c09d@leemhuis.info>
+Date: Fri, 19 Jan 2024 09:55:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Disk write deterioration in 5.x kernel
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Gowtham <trgowtham123@gmail.com>,
+ Linux btrfs <linux-btrfs@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>
+References: <CA+XNQ=j6re4bhRDUebzPLDvMtZecqtx+GRRPgpd9apss+vOaBg@mail.gmail.com>
+ <CA+XNQ=hGxYsMAo6Gc+Up5QctbWjkER17uK97YXWc9uyx_7+3uw@mail.gmail.com>
+ <ZaodrO8QjCqSXPHe@archie.me>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZaodrO8QjCqSXPHe@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705654518;90d12ab1;
+X-HE-SMSGID: 1rQkec-0001GU-Um
 
-Kalle Valo <kvalo@kernel.org> writes:
-
-> Kalle Valo <kvalo@kernel.org> writes:
->
->> Just trying to make everyone aware because I suspect this will affect
->> quite a few people: ath11k is crashing during suspend on v6.7 due to a
->> mac80211 patch, more info:
+On 19.01.24 07:58, Bagas Sanjaya wrote:
+> [also Cc: btrfs maintainers]
+> 
+> On Fri, Jan 19, 2024 at 09:37:50AM +0530, Gowtham wrote:
 >>
->> https://bugzilla.kernel.org/show_bug.cgi?id=218364
->>
->> Proposed fix:
->>
->> https://patchwork.kernel.org/project/linux-wireless/patch/20240111170629.1257217-1-benjamin@sipsolutions.net/
->
-> The fix is now applied:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
->
-> I'll try to use regzbot for the first time, let's see how it goes:
->
-> #regzbot introduced: 0a3d898ee9a8 ^
+>> Is there anything I can collect to debug what is the problem in the new kernel?
 
-Forgot to include the bug report:
+From the version numbers you provided it seems you are using vendor
+kernels containing patches. You thus might want to ask the vendor for
+support. Most upstream developers are unlikely to help and some even
+complete ignore reports using such kernels.
 
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218364
+You also need to try latest mainline and bisect, as Bagas already
+pointed out, as that problem might be solved already and might have
+nothing to do with Btrfs at all.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+> Please don't top-post, reply inline with appropriate context instead.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Bagas, FWIW, I think telling users this is not helpful at all and maybe
+counter productive; please consider to stop doing this.
+
+Yes, kernel development uses inline replies -- hence it's a good idea to
+point that out *to developers* that submit patches et. al.
+
+But most people in the world uses top-posting; you and I might not like
+that, but that's how it is. Telling non-developers to adjust their
+behavior to our habits will often just come over as rude. It might
+nevertheless be worth it. But it's best to leave that decision to the
+developers that handle the report, as they have to interact way more
+with the reporter that you or I will have to.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
