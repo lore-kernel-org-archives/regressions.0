@@ -1,143 +1,71 @@
-Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3C02C1AD
-	for <regressions@lists.linux.dev>; Thu, 18 Jan 2024 21:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD9B8F4E;
+	Fri, 19 Jan 2024 06:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705613852; cv=none; b=HDZ/uuZJH4OkONuFlFJi+ShCnv6CbYoe0rdpSWMc3vfzxPBuInS9noFUFE1P5/Ev7RqumOHy6sUFxBXOy6RPx8XfTovxWeGx5f0ZMvGs4j9XfslKhT2eNAXcNj8isLLl062Kq3tmPH3/nN3Z6MrgudQ8avTsE0wEX31PesayfNw=
+	t=1705646079; cv=none; b=kX5pPMRU+rCm2iXBBZRH5Rk6tb4Jf9jr6N0fDerBgyRV9eek6DFL8vyJ/9nM8dLP9LQvsZjJaHi5Y6uvf8aJ8Fy/rzpgcZDwvvrdCNA6uHcE7oE8cvXTBg/27IxvHyVYHkRyo4vk1CXmyXF4JFtqATvz06vJToBZHKR0yWu51Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705613852; c=relaxed/simple;
-	bh=CnEI21X70mU5g6+Ac0zxeWTlzVejTJYNKLurbo2aEig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AIzfUqXGCMJE6UgRcAYkc2GuFB39o7fp5wcEwpiz3NsIRiFIGQTDqJIl20488BfxCLbbKq1qjFkkLYzuWYpXwBr3pNlsKoiZ+tCz7XulshNxc/+IdqmFrfpHmDc2n1UgQa7neOvzV6gS1xQlCF3ixtk5aYEwWj9Riz5rUU66HhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
-Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id AE5E8140132; Thu, 18 Jan 2024 22:37:20 +0100 (CET)
-Date: Thu, 18 Jan 2024 22:37:20 +0100
-From: "Christian A. Ehrhardt" <lk@c--e.de>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-	Dell.Client.Kernel@dell.com, regressions@lists.linux.dev
-Subject: Re: PS/2 keyboard of laptop Dell XPS 13 9360 goes missing after S3
-Message-ID: <ZamaEBy+wyWcf8Ec@cae.in-ulm.de>
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
+	s=arc-20240116; t=1705646079; c=relaxed/simple;
+	bh=ybA7Oc8IdtrO7eV7Gbv0lepTuXv8HmJ31IowmvsVq8w=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=m63WZ2ZSNyJ1Wd9vmeXrMbVBvwe9zLkWPTVNQkdtGBI2A/dofbxUb7/VRluV9m4lQUMnKo2bwjj48FGyPR3W5G/fNTBlr+8zWLK/t3OrvxmHBLthMUKZuhF1RPVNqFaITEwcUz3M6UDOVXw7fo6C8h9pNfgJH3WwYqHOqD2pKI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGAzh/4Y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGAzh/4Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFE6C433F1;
+	Fri, 19 Jan 2024 06:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705646078;
+	bh=ybA7Oc8IdtrO7eV7Gbv0lepTuXv8HmJ31IowmvsVq8w=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=PGAzh/4YmVT5S4OS9eQk1mS4lN+09SjCWQE/JyAgmagMRQz0wNuhoSlnMlF/0FY5x
+	 /Ij/Gt1u0ioX1CjhSasQTC5mSgkYcKOtyMJgptXWkUM/RpVpgYHku/cyC2m9Q6mVJ5
+	 RkE2DP+0ODENZESZATD8M6uMMXYhuSEQVGtc9LP1soaBY8Oh7HE5YY9qoy2aaRk/am
+	 UgyZgUKGC4Uwg2QFHNsL7QVId0nBxXu3O2TJhHkiBsMYTEyHPLTlq45GgLNr/9mb4i
+	 u743CyBKjfqm+It734T8hi4T7yWXmPlI8rolnK2IksV6rBscxQ+B1wNrYR8vblXK7S
+	 AyqlpJGW1p8vw==
+From: Kalle Valo <kvalo@kernel.org>
+To: ath11k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,
+  linux-kernel@vger.kernel.org
+Subject: Re: [regression] ath11k broken in v6.7
+References: <874jfjiolh.fsf@kernel.org>
+Date: Fri, 19 Jan 2024 08:34:35 +0200
+In-Reply-To: <874jfjiolh.fsf@kernel.org> (Kalle Valo's message of "Thu, 11 Jan
+	2024 22:47:54 +0200")
+Message-ID: <87frytg7b8.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
+Content-Type: text/plain
 
+Kalle Valo <kvalo@kernel.org> writes:
 
-Hi Paul,
+> Just trying to make everyone aware because I suspect this will affect
+> quite a few people: ath11k is crashing during suspend on v6.7 due to a
+> mac80211 patch, more info:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=218364
+>
+> Proposed fix:
+>
+> https://patchwork.kernel.org/project/linux-wireless/patch/20240111170629.1257217-1-benjamin@sipsolutions.net/
 
-On Thu, Jan 18, 2024 at 01:57:50PM +0100, Paul Menzel wrote:
-> [ 7487.040106] ------------[ cut here ]------------
-> [ 7487.040108] refcount_t: underflow; use-after-free.
-> [ 7487.040117] WARNING: CPU: 2 PID: 54815 at lib/refcount.c:28 refcount_w=
-arn_saturate+0xbe/0x110
-> [ 7487.040123] Modules linked in: sctp libcrc32c typec_displayport r8153_=
-ecm cdc_ether usbnet sd_mod r8152 sg mii uas usb_storage scsi_mod scsi_comm=
-on l2tp_ppp xfrm_interface l2tp_netlink xfrm6_tunnel l2tp_core tunnel6 tunn=
-el4 ip6_udp_tunnel xfrm_user udp_tunnel xfrm_algo pppox ppp_generic slhc ct=
-r ccm snd_seq_dummy snd_hrtimer snd_seq snd_seq_device qrtr snd_sof_pci_int=
-el_skl snd_sof_intel_hda_common soundwire_intel soundwire_generic_allocatio=
-n snd_hda_codec_hdmi snd_sof_intel_hda_mlink soundwire_cadence snd_sof_inte=
-l_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils soundwire_bus sn=
-d_ctl_led snd_soc_avs snd_soc_hda_codec snd_soc_skl snd_hda_codec_realtek s=
-nd_soc_hdac_hda ath10k_pci snd_hda_ext_core binfmt_misc snd_hda_codec_gener=
-ic ath10k_core btusb snd_soc_sst_ipc btrtl snd_soc_sst_dsp snd_soc_acpi_int=
-el_match btintel nls_ascii btbcm nls_cp437 ath snd_soc_acpi btmtk mac80211 =
-vfat bluetooth snd_soc_core x86_pkg_temp_thermal fat intel_powerclamp coret=
-emp kvm_intel snd_compress snd_pcm_dmaengine dell_laptop
-> [ 7487.040173]  snd_hda_intel mei_pxp mei_hdcp mei_wdt i915 ledtrig_audio=
- snd_intel_dspcfg libarc4 snd_intel_sdw_acpi kvm intel_rapl_msr snd_hda_cod=
-ec sha3_generic joydev jitterentropy_rng dell_smm_hwmon uvcvideo snd_hda_co=
-re cfg80211 videobuf2_vmalloc drbg uvc irqbypass snd_hwdep rapl snd_pcm vid=
-eobuf2_memops videobuf2_v4l2 dell_wmi intel_cstate ansi_cprng dell_smbios v=
-ideodev snd_timer dcdbas intel_uncore ucsi_acpi ecdh_generic mei_me typec_u=
-csi iTCO_wdt intel_pmc_bxt snd iTCO_vendor_support wmi_bmof intel_wmi_thund=
-erbolt watchdog dell_wmi_descriptor pcspkr mei videobuf2_common soundcore r=
-fkill drm_buddy typec ecc mc intel_pch_thermal drm_display_helper cec intel=
-_vbtn soc_button_array rc_core processor_thermal_device_pci_legacy processo=
-r_thermal_device ttm processor_thermal_wt_hint processor_thermal_rfim proce=
-ssor_thermal_rapl int3400_thermal drm_kms_helper int3403_thermal intel_rapl=
-_common acpi_thermal_rel intel_pmc_core intel_hid intel_xhci_usb_role_switc=
-h processor_thermal_wt_req button processor_thermal_power_floor
-> [ 7487.040218]  processor_thermal_mbox sparse_keymap evdev acpi_pad int34=
-0x_thermal_zone ac intel_soc_dts_iosf i2c_algo_bit roles hid_multitouch ser=
-io_raw msr parport_pc ppdev lp parport loop efi_pstore configfs nfnetlink e=
-fivarfs ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 crc32c_generic d=
-m_crypt dm_mod usbhid nvme crc32_pclmul crc32c_intel nvme_core t10_pi hid_g=
-eneric ghash_clmulni_intel crc64_rocksoft_generic sha512_ssse3 crc64_rockso=
-ft i2c_hid_acpi crc_t10dif i2c_hid crct10dif_generic xhci_pci sha512_generi=
-c drm xhci_hcd sha256_ssse3 intel_lpss_pci crct10dif_pclmul i2c_i801 crc64 =
-usbcore sha1_ssse3 crct10dif_common i2c_smbus hid battery intel_lpss idma64=
- usb_common video wmi aesni_intel crypto_simd cryptd
-> [ 7487.040256] CPU: 2 PID: 54815 Comm: kworker/u8:61 Not tainted 6.7-amd6=
-4 #1  Debian 6.7-1~exp1
-> [ 7487.040258] Hardware name: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 0=
-6/02/2022
-> [ 7487.040260] Workqueue: USBC000:00-con1 ucsi_poll_worker [typec_ucsi]
-> [ 7487.040269] RIP: 0010:refcount_warn_saturate+0xbe/0x110
-> [ 7487.040272] Code: 01 01 e8 f5 22 a9 ff 0f 0b c3 cc cc cc cc 80 3d e1 6=
-2 7e 01 00 75 85 48 c7 c7 38 ca 8f 89 c6 05 d1 62 7e 01 01 e8 d2 22 a9 ff <=
-0f> 0b c3 cc cc cc cc 80 3d bf 62 7e 01 00 0f 85 5e ff ff ff 48 c7
-> [ 7487.040274] RSP: 0000:ffffb653c149fd90 EFLAGS: 00010282
-> [ 7487.040276] RAX: 0000000000000000 RBX: ffffa07c8687ac08 RCX: 000000000=
-0000027
-> [ 7487.040278] RDX: ffffa07ff1521408 RSI: 0000000000000001 RDI: ffffa07ff=
-1521400
-> [ 7487.040279] RBP: ffffa07c8687ac00 R08: 0000000000000000 R09: 65646e752=
-03a745f
-> [ 7487.040280] R10: 75203b776f6c6672 R11: 72657466612d6573 R12: 000000000=
-0000000
-> [ 7487.040281] R13: ffffa07c8484fc40 R14: ffffffff8951ffa0 R15: ffffa07ee=
-4b06b48
-> [ 7487.040282] FS:  0000000000000000(0000) GS:ffffa07ff1500000(0000) knlG=
-S:0000000000000000
-> [ 7487.040283] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 7487.040285] CR2: 0000000000000000 CR3: 0000000246820001 CR4: 000000000=
-03706f0
-> [ 7487.040286] Call Trace:
-> [ 7487.040288]  <TASK>
-> [ 7487.040289]  ? refcount_warn_saturate+0xbe/0x110
-> [ 7487.040292]  ? __warn+0x81/0x130
-> [ 7487.040298]  ? refcount_warn_saturate+0xbe/0x110
-> [ 7487.040300]  ? report_bug+0x171/0x1a0
-> [ 7487.040304]  ? console_unlock+0xcb/0x120
-> [ 7487.040307]  ? handle_bug+0x3c/0x80
-> [ 7487.040309]  ? exc_invalid_op+0x17/0x70
-> [ 7487.040311]  ? asm_exc_invalid_op+0x1a/0x20
-> [ 7487.040315]  ? refcount_warn_saturate+0xbe/0x110
-> [ 7487.040319]  typec_altmode_release+0x49/0xc0 [typec]
-> [ 7487.040334]  device_release+0x34/0x90
-> [ 7487.040339]  kobject_put+0x78/0x190
-> [ 7487.040341]  ucsi_unregister_altmodes+0x41/0xa0 [typec_ucsi]
-> [ 7487.040347]  ucsi_unregister_partner.part.0+0x77/0xa0 [typec_ucsi]
-> [ 7487.040353]  ucsi_check_connection+0x73/0xc0 [typec_ucsi]
-> [ 7487.040359]  ucsi_poll_worker+0x3a/0x110 [typec_ucsi]
-> [ 7487.040365]  process_one_work+0x171/0x340
-> [ 7487.040369]  worker_thread+0x27b/0x3a0
-> [ 7487.040372]  ? __pfx_worker_thread+0x10/0x10
-> [ 7487.040374]  kthread+0xe5/0x120
-> [ 7487.040376]  ? __pfx_kthread+0x10/0x10
-> [ 7487.040378]  ret_from_fork+0x31/0x50
-> [ 7487.040381]  ? __pfx_kthread+0x10/0x10
-> [ 7487.040382]  ret_from_fork_asm+0x1b/0x30
-> [ 7487.040388]  </TASK>
-> [ 7487.040388] ---[ end trace 0000000000000000 ]---
+The fix is now applied:
 
-It is probably unrelated but there is the above warning in your logs
-during resume. The warning is related to USB-C and can be avoided if
-you do not connect anything to the USB-C ports for the duration of the
-test. The real fix for this warning made it into Linus's tree today.
+https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
 
-    regards  Christian
+I'll try to use regzbot for the first time, let's see how it goes:
 
+#regzbot introduced: 0a3d898ee9a8 ^
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
