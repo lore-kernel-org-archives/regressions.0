@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC143D2F3;
-	Sat, 20 Jan 2024 13:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9A8FBEB;
+	Sat, 20 Jan 2024 14:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705758212; cv=none; b=Wah23tFOtafropAFbCe3n9/8dUzngRgE6vkxilyliEt/eSxhArc7uF4AfqOGfPDfRMx/1zZu+9sFK/O2zJfAWL1y7glIOF4yvUsf/AZbar6GUjApoX5mndR+YlzgpmF/xwlwcXXNEgbeAcKWSEBguEd/RH6b2MLiQPwuX0iKyKI=
+	t=1705761980; cv=none; b=tTMP0PYwqYVFUZ4GPBFPUZHvr0bGBmbrQVW32Msyac3BZit5AjfZkdpXfGmqyV7/2TpKaAbb1caO1+nh9e5TafDVK93wu8RVbzgy0bz+7A8wiROEARnFeheSQXhkElCDfr2NLkoRYUhSKcG2JJh4SgHoSP7dkr1JFunD7uWH4yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705758212; c=relaxed/simple;
-	bh=yGToMj6xL5+OFD6gPjwQuDaD9+PnrjiyrotRyA00P68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LnIuP6ONPyZP8EwbQ3GHl3esCLj80CQ+wcuJl/8Gj2+CDw045w696KpMld10acoUX98Ierk9dSNaQIEPbvsZxnQ/2J6QKB+ZeN1YsBp6MrqMDqRAUgLdp6ACj6pJRrbxiin2/j71MuiCyNU0zSlRt5pBSTvx+V0KtLEY8+UzJVo=
+	s=arc-20240116; t=1705761980; c=relaxed/simple;
+	bh=QU3FgwJ/0Ld1Hp6t3egT5lYDEqBT49cETqdT5eeFNXU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oSQIWODCknyS5DRk8pBybKQv2ijADTCnwm3aZn4eLxkmAdhg0BFWQsPRvL97B9VXPmixgT7vJertGWd3XyNGKmDV97XdzHnjP5yWbI79ZY4/T8pq7khrZizXlPePl0GkLi5xsDHCqFNHW97vdnE41GBZoDLYGLrGcCYYc6h6xAU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rRBd3-00033K-Ov; Sat, 20 Jan 2024 14:43:21 +0100
-Message-ID: <4b26d509-f104-44a9-830c-e00b8496a64a@leemhuis.info>
-Date: Sat, 20 Jan 2024 14:43:21 +0100
+	id 1rRCbv-00079k-WC; Sat, 20 Jan 2024 15:46:16 +0100
+Message-ID: <ae81abbb-3a7b-46a4-851e-455c0dfee078@leemhuis.info>
+Date: Sat, 20 Jan 2024 15:46:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,46 +26,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
+Subject: Re: [6.7 regression] [BISECTED] 28270e25c69a causes overallocation of
+ metadata space
 Content-Language: en-US, de-DE
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20220809142457.4751229f@imladris.surriel.com>
- <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
+To: linux-btrfs@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <9cdbf0ca9cdda1b4c84e15e548af7d7f9f926382.camel@intelfx.name>
 From: "Linux regression tracking #adding (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
+In-Reply-To: <9cdbf0ca9cdda1b4c84e15e548af7d7f9f926382.camel@intelfx.name>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705758210;122eecd4;
-X-HE-SMSGID: 1rRBd3-00033K-Ov
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705761978;8e1b9815;
+X-HE-SMSGID: 1rRCbv-00079k-WC
 
-On 16.01.24 12:53, Jiri Slaby wrote:
+On 17.01.24 07:04, Ivan Shapovalov wrote:
+> Hi all,
+> 
+> Starting from v6.7 I've noticed severe overallocation of metadata space
+> on both of my btrfs root filesystems (both NVMe SSDs, both use
+> snapshots):
+> 
+> ```
+> # mount | grep -w /
+> rw,noatime,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=<...>
+> 
+> # btrfs fi usage /
+> <...>
+> 
+> Data,single: Size:550.00GiB, Used:497.12GiB (90.39%)
+>    /dev/mapper/root      550.00GiB
+> 
+> Metadata,DUP: Size:72.00GiB, Used:8.38GiB (11.64%)
+>    /dev/mapper/root      144.00GiB
+> 
+> <...>
+> ```
+> 
+> Running a full metadata balance (`btrfs balance start -m /`) or a
+> "staged" balance
+> (e. g. `for u in {0..90..5}; do btrfs balance start -musage=$u /`)
+> does not help / makes the overallocation worse.
 
-> On 09. 08. 22, 20:24, Rik van Riel wrote:
->> Align larger anonymous memory mappings on THP boundaries by
->> going through thp_get_unmapped_area if THPs are enabled for
->> the current process.
->>
->> With this patch, larger anonymous mappings are now THP aligned.
->> When a malloc library allocates a 2MB or larger arena, that
->> arena can now be mapped with THPs right from the start, which
->> can result in better TLB hit rates and execution time.
-> 
-> This appears to break 32bit processes on x86_64 (at least). In
-> particular, 32bit kernel or firefox builds in our build system.
-> 
-> Reverting this on top of 6.7 makes it work again.
-> 
-> Downstream report:
->  https://bugzilla.suse.com/show_bug.cgi?id=1218841
-> [...]
-#regzbot ^introduced efa7df3e3bb5
-#regzbot title mm: huge_memory: 32 bit systems or compat
-userspace broke
-#regzbot link: https://bugzilla.suse.com/show_bug.cgi?id=1218841
-#regzbot fix: mm: huge_memory: don't force huge page alignment on 32 bit
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced 28270e25c69a
+#regzbot title btrfs: severe overallocation of metadata space
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
