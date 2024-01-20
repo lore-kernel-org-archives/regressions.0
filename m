@@ -1,24 +1,52 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E2510940;
-	Sat, 20 Jan 2024 15:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FD510A08
+	for <regressions@lists.linux.dev>; Sat, 20 Jan 2024 18:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.235.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705765669; cv=none; b=DsTmUEhHlD3u2GY0gDbtyqlzTrXlZfy/OWYrjn70BR/V3Twinv6BRJqZ0J5R4XFy+/ncqKEp8FOnI6Qv6alrT5A9P9M2iWu7IRfEyX+lqCLPDQH9cKBu3vcG6sM6BWlCXzqAdlFF2xxr3mMcvdx11AMFOH+rnyB/NK41ygdvW+4=
+	t=1705774307; cv=none; b=povXPK3x+u5kAfnHBuYRYdkcIwD37viftq4RYMfiiOHKyTtS/JhqyFez8izlN6jXEelhfTIuRc+dUOBtvBlBCelBzXy10iIcNea4+PC9rEOUEYEJAlKV+DmxVcPCvRtrlChPgVn8MFmiUSlhoVwKrxU2OXQ4ge5Kt4u012AHJPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705765669; c=relaxed/simple;
-	bh=RnvXs7bo/rdTIXPT7lSd2VKAht41wNfcvQHpSdhnJvI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gfhS8I+TKnd5Zu4Xg1C4Xusc/GQaGuKUDG/Ir2WY6Tv6rmk1/ZmzUgxqco4hvX0Hl+wKPlUVdKPTao3Rv1AoEhuEqioRe+s1895RwJ6+hLK6elEY/f0VcZhg9R+mvOiUZjhMcMqs+7Gy+D9Xk4qP5vweg14QuU8JGRhBNBtp/G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rRDZQ-0004DJ-V9; Sat, 20 Jan 2024 16:47:45 +0100
-Message-ID: <836bec0b-16f9-4a18-9299-a3ae0783bf9a@leemhuis.info>
-Date: Sat, 20 Jan 2024 16:47:44 +0100
+	s=arc-20240116; t=1705774307; c=relaxed/simple;
+	bh=UDQxnF9gAi7edn/iXdQ7N5cXzaU1zwgdYP9H4YGRPh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cPNMakqavwcPgV606lzD3wpNGhcZjZZtalWzQzS1rMcPCrE5MiWxJVDl07cftEH4qll4gEe5xHi2X9o1v4C+LqF12IzJB5IwcYzGWpM5arlgTzp4RQkqTosohAyHTKJIsCuTAUTWGOWIy6r4WaazEcUfQjx75InLhHsChXIm4mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr; spf=pass smtp.mailfrom=alu.unizg.hr; dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b=kOqNv5Q2; dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b=m056Idew; arc=none smtp.client-ip=161.53.235.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="kOqNv5Q2";
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="m056Idew"
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id C814560187;
+	Sat, 20 Jan 2024 19:11:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1705774294; bh=UDQxnF9gAi7edn/iXdQ7N5cXzaU1zwgdYP9H4YGRPh0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kOqNv5Q2tnVcEvdEA1llLWEQyOW+RiJ0/Jazg/J25xEGGtaBb36OdiW9OxoJYrj+0
+	 Ey/v0FrgKqqwqejd6a0BCiQboVocxhLa5N01gujUPtom9uWmntUUB12g+LLMGqIlj7
+	 oaTVwH0xYBJW4MFmvKxdOHbJauGRdO6bYlrmRH0oe/f6oiSh1OnMmjYNjfp839NX8+
+	 xEGT8BJHatQFe2/rDVuiHD8XWm8mLdDSSf95xq1zzoGApYeZ2aAJ7dDc3Zmn0ZG8kN
+	 lwGS4P4Q4RfXSLYyUyHwFQNxenM4DjfdmDMDnn/bXhrWAcFG636jo3EUvo5uDFSqxJ
+	 e7H9r8Dbl+n/Q==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id bEm2dFtW1FYK; Sat, 20 Jan 2024 19:11:32 +0100 (CET)
+Received: from [192.168.178.20] (dh207-42-16.xnet.hr [88.207.42.16])
+	by domac.alu.hr (Postfix) with ESMTPSA id C0BB660182;
+	Sat, 20 Jan 2024 19:11:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1705774292; bh=UDQxnF9gAi7edn/iXdQ7N5cXzaU1zwgdYP9H4YGRPh0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m056IdewvB9Cjed+b3KvzLs3+YQbhqvjtMP0fzmX63v9RP7qj4HC4K7XS7mvuP34/
+	 1rbEk0n2Plf3QxW5dwDou1U5OavsMMBuBcGu4zQDBJ9GeYiEv/B3DMkPSKyxS51rhF
+	 VwSeHC4zRb0CjrEqkblns9n1A8H4ohGstMxcYsBloDhiDzwmMK6ltlHCncwPW2Z/tE
+	 bX4ggz5wYsMU7+1hjGGakqX2WEB/ayNzlYijcEoKf4ehm6yyiG/GGrfAbFpY5lg+LB
+	 d84JEoYj8RiYroETBpP6vGF/SuoyJ8e4kwjjaWnrduxLNTKSealFW57B7/fe1N593y
+	 GFvgb9PTmC9cg==
+Message-ID: <bd7b7158-2c38-4d90-acfb-dd5437a0710f@alu.unizg.hr>
+Date: Sat, 20 Jan 2024 19:11:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,53 +54,108 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20220809142457.4751229f@imladris.surriel.com>
- <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
-Content-Language: en-US, de-DE
-In-Reply-To: <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705765667;5b990cef;
-X-HE-SMSGID: 1rRDZQ-0004DJ-V9
+Subject: Re: REGRESSION: no console on current -git
+Content-Language: en-US
+To: Jens Axboe <axboe@kernel.dk>, Helge Deller <deller@gmx.de>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: avier Martinez Canillas <javierm@redhat.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <05ea3233-20dd-4af7-86cc-de11ad2efe84@kernel.dk>
+ <0293b14b-6188-4229-9fb6-29fbbdb8dc83@gmx.de>
+ <9e09464a-d58c-4f17-9318-26f0813a3023@kernel.dk>
+ <b6350dac-0be6-45f9-9309-d196ea455dea@gmx.de>
+ <017a1df5-e08b-44c5-9e4e-f61a9ce49e8d@kernel.dk>
+ <2c267aef-f1a7-4277-aac6-75d9ea22ec03@gmx.de>
+ <93ffd2ee-fa83-4469-96fb-fb263c26bb3c@kernel.dk>
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <93ffd2ee-fa83-4469-96fb-fb263c26bb3c@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 16.01.24 12:53, Jiri Slaby wrote:
-
-> On 09. 08. 22, 20:24, Rik van Riel wrote:
->> Align larger anonymous memory mappings on THP boundaries by
->> going through thp_get_unmapped_area if THPs are enabled for
->> the current process.
+On 1/20/24 01:32, Jens Axboe wrote:
+> On 1/19/24 5:27 PM, Helge Deller wrote:
+>> On 1/19/24 22:22, Jens Axboe wrote:
+>>> On 1/19/24 2:14 PM, Helge Deller wrote:
+>>>> On 1/19/24 22:01, Jens Axboe wrote:
+>>>>> On 1/19/24 1:55 PM, Helge Deller wrote:
+>>>>>> Adding Mirsad Todorovac (who reported a similar issue).
+>>>>>>
+>>>>>> On 1/19/24 19:39, Jens Axboe wrote:
+>>>>>>> My trusty R7525 test box is failing to show a console, or in fact anything,
+>>>>>>> on current -git. There's no output after:
+>>>>>>>
+>>>>>>> Loading Linux 6.7.0+ ...
+>>>>>>> Loading initial ramdisk ...
+>>>>>>>
+>>>>>>> and I don't get a console up. I went through the bisection pain and
+>>>>>>> found this was the culprit:
+>>>>>>>
+>>>>>>> commit df67699c9cb0ceb70f6cc60630ca938c06773eda
+>>>>>>> Author: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>>>> Date:   Wed Jan 3 11:15:11 2024 +0100
+>>>>>>>
+>>>>>>>         firmware/sysfb: Clear screen_info state after consuming it
+>>>>>>>
+>>>>>>> Reverting this commit, and everything is fine. Looking at dmesg with a
+>>>>>>> buggy kernel, I get no frame or fb messages. On a good kernel, it looks
+>>>>>>> ilke this:
+>>>>>>>
+>>>>>>> [    1.416486] efifb: probing for efifb
+>>>>>>> [    1.416602] efifb: framebuffer at 0xde000000, using 3072k, total 3072k
+>>>>>>> [    1.416605] efifb: mode is 1024x768x32, linelength=4096, pages=1
+>>>>>>> [    1.416607] efifb: scrolling: redraw
+>>>>>>> [    1.416608] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+>>>>>>> [    1.449746] fb0: EFI VGA frame buffer device
+>>>>>>>
+>>>>>>> Happy to test a fix, or barring that, can someone just revert this
+>>>>>>> commit please?
+>>>>>>
+>>>>>> I've temporarily added a revert patch into the fbdev for-next tree for now,
+>>>>>> so people should not face the issue in the for-next series:
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.git/commit/?h=for-next
+>>>>>> I'd like to wait for Thomas to return on monday to check the issue
+>>>>>> as there are some other upcoming patches in this area from him.
+>>>>>
+>>>>> Given the issue (and that I'm not the only one reporting it), can we
+>>>>> please just get that pushed so it'll make -rc1? It can always get
+>>>>> re-introduced in a fixed fashion. I don't run -next here, I rely on
+>>>>> mainline working for my testing.
+>>>>
+>>>> I agree, it would be good to get it fixed for -rc1.
+>>>> So, it's ok for me, but I won't be able to test the revert short time right now.
+>>>> If you can assure that the revert fixes it, and builds in git-head,
+>>>> I can now prepare the pull request for Linus now (or he just reverts
+>>>> commit df67699c9cb0 manually).
+>>>
+>>> I already tested a revert on top of the current tree, and it builds just
+>>> fine and boots with a working console. So reverting it does work and
+>>> solves the issue.
 >>
->> With this patch, larger anonymous mappings are now THP aligned.
->> When a malloc library allocates a 2MB or larger arena, that
->> arena can now be mapped with THPs right from the start, which
->> can result in better TLB hit rates and execution time.
+>> I sent a pull request with the revert.
 > 
-> This appears to break 32bit processes on x86_64 (at least). In
-> particular, 32bit kernel or firefox builds in our build system.
-> 
-> Reverting this on top of 6.7 makes it work again.
-> 
-> Downstream report:
->  https://bugzilla.suse.com/show_bug.cgi?id=1218841
-> [...]
+> Thanks! You forgot the Reported-by, but no big deal.
 
-Trying this again, sorry for the noise:
+Hi,
 
-#regzbot ^introduced efa7df3e3bb5
-#regzbot title mm: huge_memory: 32 bit systems or compat userspace broke
-#regzbot link: https://bugzilla.suse.com/show_bug.cgi?id=1218841
-#regzbot fix: mm: huge_memory: don't force huge page alignment on 32 bit
-#regzbot ignore-activity
+I confirm that this revert df67699c9cb0ce also solved the original initrd boot problem
+here:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+  1991  git checkout d97a78423c33
+  1992  git revert df67699c9cb0ce
+  1993  make clean; make olddefconfig
+  1994  time nice make -j 36 bindeb-pkg |& tee ../err-6.8-mrg-1.log; date
+  1995  sudo apt-get -s install ../linux-image-6.7.0-bagas-vanilla-rvt-09751-g6b082430adc8_6.7.0-09751-g6b082430adc8-26_amd64.deb
+  1996  sudo apt-get -y install ../linux-image-6.7.0-bagas-vanilla-rvt-09751-g6b082430adc8_6.7.0-09751-g6b082430adc8-26_amd64.deb
+
+You might add:
+
+	Tested-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+
+at your convenience.
+
+Best regards,
+Mirsad
