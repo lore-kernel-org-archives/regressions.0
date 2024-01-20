@@ -1,222 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7133F54BDA;
-	Fri, 19 Jan 2024 22:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CB9A3C;
+	Sat, 20 Jan 2024 00:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705702774; cv=none; b=Yc2mOaQu0eWYaSdnBWchZBcj00erXOyFRP8MVCQUV6vMLQfcbLUYkmacll/WIUxxoQfoPA0jrCpTzW6xxWOhz/qjOPLr6/h8ddf7vZ4+O5sEAc5r1XCXE3hdqw+va6C90yMN/tF8l62302nrx2jQmzK6a8ZqCQyalcXzkWhlJLY=
+	t=1705710486; cv=none; b=s5jDER2wvg1fjB8DPwx8W48ZWGmQGEFu+xUdJqjpzwkfSCy5IQZ803eIsBwyJ2Qt2+0cFKbbjsNcUt4z53Yiv+kaYF1amBfj3ueryhxVGmf4rYy354y9zajIEWneh2NCs+rU2ECJyQY5EPYdpGO3j9NQkk/rHU4iGhm3mmhMfZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705702774; c=relaxed/simple;
-	bh=UA6/IOt2jYNWP1zjtJ/vtkAP1eXv9x92BeR6Bjs4g+s=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=abEmxheeKRW+rNW3H3Zl4vwZD1/K3/Fp3/nWFrYVv3FfBqApOsyAC8vAnlhyE1k3vN3Jo8s+1CLWiKyOeyXsSJaBvC7jL0gKAHS43BsfGY+Om8ao/TLrOEUrna3QIEQBILIaTpH4dvZ9MXpfq6fo7L/g3+hGTziC9DYD1mGV6hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHLcp68+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705710486; c=relaxed/simple;
+	bh=EBQrlDiuz9EgZmLfeAeEmDY6zzej7dk/4u6PJ/BrtDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mtfRimyfvWtOOei+ZZplJI2Kz1T15rIZSerHSsc/+PVVxfAmiJs/owRsC48GTw+68e0O9e9ez5231m6ee5fX2/xZWPQiLNlLOElO0vNdClAGMrphR9Zeecs1M7WI7Vxd4Y/3GyJfMvFp6YWabN92emDs3CloUhsCjwg6AvtGM/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=eI01Ecai; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHLcp68+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F7CC433F1;
-	Fri, 19 Jan 2024 22:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705702774;
-	bh=UA6/IOt2jYNWP1zjtJ/vtkAP1eXv9x92BeR6Bjs4g+s=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=iHLcp68+MK5iibr8rj8DWNHu+2yr/ddJBuS0AG060eSIBMxOQ+1No9owOdfOqupZj
-	 83AIQ+9MCHYok2qkZRnVtSYKWgZWB02kZ4jI1b0/PP/hJ+6208348nOH7G4nsHvqdl
-	 HDGkhmndJBQ7/X0B/QkQiGMclSNVgJlcDKFloWvcRtUeBYvQladI4Os/pqYZEENPsd
-	 ooyPUx2jg/u2r4xEBEEWmqGJaG+6O7TJ6WhXA9g8q8ayQn5S3GPvEcwVIRUYtNGZs+
-	 txNM0U3zcsCIcA7/kEF9HqDITRIfo54SvUmd8rL6RCxJLzAUpwIivQL35KFl9vqs3d
-	 0GdhP1Jhx6Sxw==
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="eI01Ecai"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1705710461; x=1706315261; i=deller@gmx.de;
+	bh=EBQrlDiuz9EgZmLfeAeEmDY6zzej7dk/4u6PJ/BrtDo=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=eI01Ecai5ZOiSGvW4QmvM03/MKY7v6ic7AtooEloZLaRH2agYDH+SLPREtoNEQh6
+	 naiBQwsQONwHNQUfsw33eQojLtH/XeNyDM9qUhMaoYt8FjKu6XAOLHEiSfvCO+00n
+	 Mb+psU8pjBdvil6lmbirG6fHwY/WMTWArJ23FOVPKDfKmuccvALVok1ksqskE6sxN
+	 8ZmL/JtN0eJBhY0Ld7+xW/VY3lDGrC/YEPdssz2PpL4Cxxhw0t3w4RP7+g1F3wVDl
+	 WDPsrrs/47J9ndxNWdQQkpXzIIkhKusrfskN2ouOPe7ocatsKGF/V8jHl0x6UGqOt
+	 sBQJDk6WPFmns1/llg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.55] ([94.134.146.202]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mlf0U-1qibpn1FlC-00ilMS; Sat, 20
+ Jan 2024 01:27:41 +0100
+Message-ID: <2c267aef-f1a7-4277-aac6-75d9ea22ec03@gmx.de>
+Date: Sat, 20 Jan 2024 01:27:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION: no console on current -git
+Content-Language: en-US
+To: Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: avier Martinez Canillas <javierm@redhat.com>,
+ Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+References: <05ea3233-20dd-4af7-86cc-de11ad2efe84@kernel.dk>
+ <0293b14b-6188-4229-9fb6-29fbbdb8dc83@gmx.de>
+ <9e09464a-d58c-4f17-9318-26f0813a3023@kernel.dk>
+ <b6350dac-0be6-45f9-9309-d196ea455dea@gmx.de>
+ <017a1df5-e08b-44c5-9e4e-f61a9ce49e8d@kernel.dk>
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <017a1df5-e08b-44c5-9e4e-f61a9ce49e8d@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 19 Jan 2024 22:19:31 +0000
-Message-Id: <CYJ163J3I09U.2XMVZ0BLWV1Y1@seitikki>
-Subject: Re: tpm_tis_remove: `WARNING: CPU: 6 PID: 265 at
- kernel/workqueue.c:3397 __flush_work.isra.0+0x29f/0x2c0`
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Paul Menzel" <pmenzel@molgen.mpg.de>, "Peter Huewe" <peterhuewe@gmx.de>
-Cc: <linux-integrity@vger.kernel.org>, <regressions@lists.linux.dev>
-X-Mailer: aerc 0.15.2
-References: <e2e17227-9e8f-430b-80fc-9ca9eac1f69a@molgen.mpg.de>
-In-Reply-To: <e2e17227-9e8f-430b-80fc-9ca9eac1f69a@molgen.mpg.de>
+X-Provags-ID: V03:K1:NjkEqKEyNYJwFpO79gmq/uemm7g60TO0PeqVm2qRazYinxcvMc0
+ ijvNWtW5XbtuAsdVMBSGG/d6RWEDB0ZQ2IiGuUGVQCTGhzAXvsqzgpVGDDegSnT5suvyBw1
+ 4NTGGsH/mujrMVWY6a0+N5lJ2BwODWHUSc3KuKx9/invpPXyBJpMF9GuloDcs2JqMVZw5CT
+ aHcksb3JRVdw/qK/4halw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JmG9h4bE3M8=;tPiDxcM8l3PAHdgckmotq5CHERO
+ 1Vkws5JGoi1dksGtIbvGmMRYQr4OSMP80ifZ7wjdIZg7XCXm8dBOXTDR/BZZ7vuzIK7+K/ku8
+ n9R0SU3zZvFOQx7ofpGeEOdxrtuC3ILfO8b6e44WQmaaJKZuljBIc7U8EF8e4Efctlz/lcqNF
+ 4dnmaIpI1gwpg5Z+b4xUuyiu6u/amMy9W/gidBQlAmLyYbuhPGpp2uOb4Miq1mbcp/1VABiLI
+ IY9l7QH4I+GiN3gn024wtxEyY5772/tLIwDf2qbaC7CnosL3Vls3KVzIG4H2TYEGtmxOet4mQ
+ 3iCKcQikzZhiF/ZKEHjZzg4ydaQHm6paFW8r6EhZ20DDvotyZrDJSiZfHCV+/6J16r67w9Axq
+ cbc5ho+Y7KsIHBrVrM80QRSUUJRt4w4bfWaXUMRriqcKpYfbV3PXstv1YHJxk2h1EJSSNrYEA
+ UUHkG1muV4fGw4DLkWnPzX90vZ1a+kX3YjkOcSs9XWE2ZyBgpVbKT9fGidLqbkvM1pQy7Y1bO
+ i7LvKitGpjxns67E+vwbYOF99VbVGbEC82JieSyjE6o7sXQufCy7mR2Fe6vF1x9cDzkSWsQxP
+ AbzhQlwH9jwmrlEqwo3gyHhAGyh9+n+Is2qJ3SUDrv82pvBEicZHGer7RfVqvSO4twKjdRdzm
+ uUYIG3HMq4zH0JFEoojxPICjg/EhKJ/YgsEVwuTrZd/cD2J0ihcAM3IRpXWcGgNHjNSpzaPGd
+ eUkKMipg8B95v2T6QMfB6x7SgCIiwa1gtgwSViRM9TFUtuj5Qak/WTq8xoAFwRkel5NtZTDV/
+ xQRgFsqx3BANeTMnFTJB5cAlTqac+A+XmV81yq0IhndTnQaOJxJe/d2ojfeGWkujJTJ/8yOm1
+ fq0BHssRQdEPHVGmIVIgtVw2KpIAbdD/A3JWVwAmNH9VJfgQO9LAR/L4ZSQlIkudki7po7RBG
+ 8P18Nmd5Gt2NU8LIhFHapIZjQZA=
 
-On Tue Jan 16, 2024 at 2:44 PM UTC, Paul Menzel wrote:
-> #regzbot introduced: v5.15.131..v6.6.11
+On 1/19/24 22:22, Jens Axboe wrote:
+> On 1/19/24 2:14 PM, Helge Deller wrote:
+>> On 1/19/24 22:01, Jens Axboe wrote:
+>>> On 1/19/24 1:55 PM, Helge Deller wrote:
+>>>> Adding Mirsad Todorovac (who reported a similar issue).
+>>>>
+>>>> On 1/19/24 19:39, Jens Axboe wrote:
+>>>>> My trusty R7525 test box is failing to show a console, or in fact an=
+ything,
+>>>>> on current -git. There's no output after:
+>>>>>
+>>>>> Loading Linux 6.7.0+ ...
+>>>>> Loading initial ramdisk ...
+>>>>>
+>>>>> and I don't get a console up. I went through the bisection pain and
+>>>>> found this was the culprit:
+>>>>>
+>>>>> commit df67699c9cb0ceb70f6cc60630ca938c06773eda
+>>>>> Author: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>> Date:   Wed Jan 3 11:15:11 2024 +0100
+>>>>>
+>>>>>        firmware/sysfb: Clear screen_info state after consuming it
+>>>>>
+>>>>> Reverting this commit, and everything is fine. Looking at dmesg with=
+ a
+>>>>> buggy kernel, I get no frame or fb messages. On a good kernel, it lo=
+oks
+>>>>> ilke this:
+>>>>>
+>>>>> [    1.416486] efifb: probing for efifb
+>>>>> [    1.416602] efifb: framebuffer at 0xde000000, using 3072k, total =
+3072k
+>>>>> [    1.416605] efifb: mode is 1024x768x32, linelength=3D4096, pages=
+=3D1
+>>>>> [    1.416607] efifb: scrolling: redraw
+>>>>> [    1.416608] efifb: Truecolor: size=3D8:8:8:8, shift=3D24:16:8:0
+>>>>> [    1.449746] fb0: EFI VGA frame buffer device
+>>>>>
+>>>>> Happy to test a fix, or barring that, can someone just revert this
+>>>>> commit please?
+>>>>
+>>>> I've temporarily added a revert patch into the fbdev for-next tree fo=
+r now,
+>>>> so people should not face the issue in the for-next series:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev.gi=
+t/commit/?h=3Dfor-next
+>>>> I'd like to wait for Thomas to return on monday to check the issue
+>>>> as there are some other upcoming patches in this area from him.
+>>>
+>>> Given the issue (and that I'm not the only one reporting it), can we
+>>> please just get that pushed so it'll make -rc1? It can always get
+>>> re-introduced in a fixed fashion. I don't run -next here, I rely on
+>>> mainline working for my testing.
+>>
+>> I agree, it would be good to get it fixed for -rc1.
+>> So, it's ok for me, but I won't be able to test the revert short time r=
+ight now.
+>> If you can assure that the revert fixes it, and builds in git-head,
+>> I can now prepare the pull request for Linus now (or he just reverts
+>> commit df67699c9cb0 manually).
 >
->
-> Dear Linux folks,
->
->
-> On a Dell OptiPlex 5055 with an AMD Ryzen, Linux always logged the error
->
->      tpm_tis: probe of MSFT0101:00 failed with error -1
->
-> but upgrading from 5.15.131 to 6.6.11, the warning below is also logged:
->
-> ```
-> [    0.000000] Linux version 6.6.11.mx64.460=20
-> (root@theinternet.molgen.mpg.de) (gcc (GCC) 12.2.0, GNU ld (GNU=20
-> Binutils) 2.41) #1 SMP PREEMPT_DYNAMIC Thu Jan 11 16:15:43 CET 2024
-> [    0.000000] Command line: BOOT_IMAGE=3D/boot/bzImage-6.6.11.mx64.460=
-=20
-> root=3DLABEL=3Droot ro crashkernel=3D64G-:256M console=3DttyS0,115200n8=
-=20
-> console=3Dtty0 init=3D/bin/systemd audit=3D0 random.trust_cpu=3Don=20
-> systemd.unified_cgroup_hierarchy
-> [=E2=80=A6]
-> [    0.000000] DMI: Dell Inc. OptiPlex 5055 Ryzen CPU/0P03DX, BIOS=20
-> 1.1.20 05/31/2019
-> [=E2=80=A6]
-> [   12.092264] WARNING: CPU: 6 PID: 265 at kernel/workqueue.c:3397=20
-> __flush_work.isra.0+0x29f/0x2c0
-> [   12.103259] Modules linked in: snd_hda_intel(+) tg3(+) kvm(+)=20
-> snd_intel_dspcfg snd_hda_codec snd_hda_core snd_pcm snd_timer libphy=20
-> drm_ttm_helper ttm snd video k10temp soundcore i2c_piix4 irqbypass=20
-> tpm_tis(+) tpm_tis_core efi_pstore tpm wmi_bmof rng_core wmi=20
-> crc32c_intel pstore acpi_cpufreq nfsd auth_rpcgss oid_registry nfs_acl=20
-> lockd grace sunrpc efivarfs ip_tables x_tables ipv6 autofs4
-> [   12.143539] CPU: 6 PID: 265 Comm: systemd-udevd Not tainted=20
-> 6.6.11.mx64.460 #1
-> [   12.152698] Hardware name: Dell Inc. OptiPlex 5055 Ryzen CPU/0P03DX,=
-=20
-> BIOS 1.1.20 05/31/2019
-> [   12.162512] RIP: 0010:__flush_work.isra.0+0x29f/0x2c0
-> [   12.168674] Code: 8b 04 25 80 cf 02 00 48 89 44 24 40 48 8b 53 40 8b=
-=20
-> 43 30 e9 b3 fe ff ff 40 30 f6 4c 8b 36 e9 f2 fd ff ff 0f 0b e9 3b ff ff=
-=20
-> ff <0f> 0b e9 34 ff ff ff 0f 0b e9 d8 fe ff ff 0f 0b e9 a9 fe ff ff e8
-> [   12.188375] RSP: 0018:ffffc90000ab7a10 EFLAGS: 00010246
-> [   12.194699] RAX: 0000000000000000 RBX: ffff888108f79b28 RCX:=20
-> 0000000000000000
-> [   12.202894] RDX: ffffc90000ab7a10 RSI: ffffc90000b10008 RDI:=20
-> ffffc90000ab7a58
-> [   12.211107] RBP: ffff888108f79b68 R08: 0000000000000002 R09:=20
-> 0000000000000000
-> [   12.219305] R10: 0000000000000001 R11: 0000000000000000 R12:=20
-> 0000000000000001
-> [   12.227499] R13: ffff888108f79b38 R14: 00000000ffffffff R15:=20
-> 0000000000fe1050
-> [   12.235706] FS:  00007f2cf22c2800(0000) GS:ffff88840eb80000(0000)=20
-> knlGS:0000000000000000
-> [   12.244871] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   12.251670] CR2: 00000000006878e8 CR3: 000000010ca66000 CR4:=20
-> 00000000003506e0
-> [   12.259901] Call Trace:
-> [   12.263395]  <TASK>
-> [   12.266521]  ? __warn+0x81/0x140
-> [   12.270776]  ? __flush_work.isra.0+0x29f/0x2c0
-> [   12.276235]  ? report_bug+0x171/0x1a0
-> [   12.280803]  ? handle_bug+0x3c/0x70
-> [   12.285352]  ? exc_invalid_op+0x17/0x70
-> [   12.290203]  ? asm_exc_invalid_op+0x1a/0x20
-> [   12.295397]  ? __flush_work.isra.0+0x29f/0x2c0
-> [   12.300807]  tpm_tis_remove+0xaa/0x100 [tpm_tis_core]
-> [   12.306872]  tpm_tis_core_init+0x234/0xfa0 [tpm_tis_core]
-> [   12.313280]  tpm_tis_plat_probe+0xd0/0x110 [tpm_tis]
-> [   12.319139]  platform_probe+0x44/0xa0
-> [   12.323796]  really_probe+0xd0/0x3e0
-> [   12.328384]  ? __pfx___driver_attach+0x10/0x10
-> [   12.334129]  __driver_probe_device+0x80/0x160
-> [   12.339803]  driver_probe_device+0x1f/0x90
-> [   12.344831]  __driver_attach+0xf8/0x1c0
-> [   12.349568]  bus_for_each_dev+0x88/0xd0
-> [   12.354298]  bus_add_driver+0xf9/0x220
-> [   12.358919]  driver_register+0x59/0x100
-> [   12.363623]  ? __pfx_init_tis+0x10/0x10 [tpm_tis]
-> [   12.369198]  init_tis+0x39/0xff0 [tpm_tis]
-> [   12.374172]  ? srso_return_thunk+0x5/0x10
-> [   12.379044]  do_one_initcall+0x66/0x240
-> [   12.383751]  do_init_module+0x60/0x230
-> [   12.388357]  init_module_from_file+0x86/0xc0
-> [   12.393483]  idempotent_init_module+0x120/0x2b0
-> [   12.398869]  __x64_sys_finit_module+0x65/0xc0
-> [   12.404082]  do_syscall_64+0x46/0x90
-> [   12.408506]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [   12.414411] RIP: 0033:0x7f2cf1d1ed09
-> [   12.418831] Code: 08 44 89 e0 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00=
-=20
-> 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f=
-=20
-> 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c7 20 0d 00 f7 d8 64 89 01 48
-> [   12.438506] RSP: 002b:00007ffc335d02f8 EFLAGS: 00000246 ORIG_RAX:=20
-> 0000000000000139
-> [   12.446965] RAX: ffffffffffffffda RBX: 0000000000674390 RCX:=20
-> 00007f2cf1d1ed09
-> [   12.454993] RDX: 0000000000000000 RSI: 00007f2cf1a0f54b RDI:=20
-> 0000000000000010
-> [   12.463013] RBP: 00007f2cf1a0f54b R08: 0000000000000000 R09:=20
-> 0000000000000002
-> [   12.471025] R10: 0000000000000010 R11: 0000000000000246 R12:=20
-> 0000000000000000
-> [   12.479059] R13: 00000000007700f0 R14: 0000000000020000 R15:=20
-> 0000000000679d90
-> [   12.487092]  </TASK>
-> [   12.490162] ---[ end trace 0000000000000000 ]---
-> [   12.498048] tpm_tis: probe of MSFT0101:00 failed with error -1
-> ```
->
-> ```
-> $ scripts/decodecode < /scratch/tmp/linux-6.6.11-schokokeks.txt
-> [ 12.418831] Code: 08 44 89 e0 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 48=
-=20
-> 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05=
-=20
-> <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c7 20 0d 00 f7 d8 64 89 01 48
-> All code
-> =3D=3D=3D=3D=3D=3D=3D=3D
->     0:	08 44 89 e0          	or     %al,-0x20(%rcx,%rcx,4)
->     4:	5b                   	pop    %rbx
->     5:	41 5c                	pop    %r12
->     7:	c3                   	ret
->     8:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
->     f:	00 00
->    11:	48 89 f8             	mov    %rdi,%rax
->    14:	48 89 f7             	mov    %rsi,%rdi
->    17:	48 89 d6             	mov    %rdx,%rsi
->    1a:	48 89 ca             	mov    %rcx,%rdx
->    1d:	4d 89 c2             	mov    %r8,%r10
->    20:	4d 89 c8             	mov    %r9,%r8
->    23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
->    28:	0f 05                	syscall
->    2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<--=20
-> trapping instruction
->    30:	73 01                	jae    0x33
->    32:	c3                   	ret
->    33:	48 8b 0d c7 20 0d 00 	mov    0xd20c7(%rip),%rcx        # 0xd2101
->    3a:	f7 d8                	neg    %eax
->    3c:	64 89 01             	mov    %eax,%fs:(%rcx)
->    3f:	48                   	rex.W
->
-> Code starting with the faulting instruction
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->     0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
->     6:	73 01                	jae    0x9
->     8:	c3                   	ret
->     9:	48 8b 0d c7 20 0d 00 	mov    0xd20c7(%rip),%rcx        # 0xd20d7
->    10:	f7 d8                	neg    %eax
->    12:	64 89 01             	mov    %eax,%fs:(%rcx)
->    15:	48                   	rex.W
-> ```
->
-> Please find all the Linux messages attached. Bisecting is unfortunately=
-=20
-> not easily doable.
+> I already tested a revert on top of the current tree, and it builds just
+> fine and boots with a working console. So reverting it does work and
+> solves the issue.
 
-Thanks for the logs. I'll need to reflect this to the code in
-aforementioned versions next week (just encountered the email).
+I sent a pull request with the revert.
 
->
->
-> Kind regards,
->
-> Paul
-
-BR, Jarkko
+Thanks!
+Helge
 
