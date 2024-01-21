@@ -1,198 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB2536AF8
-	for <regressions@lists.linux.dev>; Sun, 21 Jan 2024 14:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2153770B;
+	Sun, 21 Jan 2024 15:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705847974; cv=none; b=XDwM1gAddduidpGcech5tlp2spUrPlugd9AwxVlHzaCwQlIbNue3C1Ae2rxzpBzJQwNRLFNUh8ApSiaOT19uAlSATgaJSU4064+4wxqVQ5m/Dj6vlM47BnrfrcFXpe50fs4s/oHLKX9Q/GpVcRYkFPV2BKlbSmked1Ta+snPtbA=
+	t=1705850631; cv=none; b=q7nBmnUZbbFt8AVQI7VuMuPemWW4dz/ZLi8jnEYQE8295ssypAg2CwTTlsFnPWMcRGTSE/Dkjo+QXBgAOj+DPEQsE9lnfuo9C4L1f13ujIM3yuv9zh94EJqu+xXtgRqUREe1qNIOVFOhYhLeVtWo0mvKR3KaxELW4Lc8L68XuD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705847974; c=relaxed/simple;
-	bh=WPNSMifYsEXOyV0y7N1voCjLcd8T8PE8xewtQnv81gY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P+H+455+nfOSMMJWbfkoT49KvEaEVhQ09WU4YhSgw1fzFLl4kbnvFbEWWaOYj7vGiCSzEe1vL5fOusjVqRGMY8NfM2EIxWp9wciKefZ4Prh4nbUbsasVoNrv/qzjXr0SIbXM8UVHvrbJElK22UAYFYTBy9lYi3B6D+uB0iiIMiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGh8wUsG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGh8wUsG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705847971;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zGuA+kzxGPPLBUwgOuRhdYnF6wAZDujDr4dgpXU2wo0=;
-	b=PGh8wUsGVE/5KfbnqwteK8ECny59iMJp3jmb5s7tH1S7hyH8Qz5ZTqG1TMUAVyIWpdW6Nf
-	zUdLwkNc3MXE186539Fd/GLW+5+qeJza8bI82ohoke5e1DQLq5TPPoetn5l+qKyogf5zws
-	nJueIAdke67uLj+ABtaRIIGlDb/GvTQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-408-sAHleLMoPh21uNYvBBIcyg-1; Sun, 21 Jan 2024 09:39:29 -0500
-X-MC-Unique: sAHleLMoPh21uNYvBBIcyg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2ecf1de44fso72073166b.2
-        for <regressions@lists.linux.dev>; Sun, 21 Jan 2024 06:39:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705847968; x=1706452768;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zGuA+kzxGPPLBUwgOuRhdYnF6wAZDujDr4dgpXU2wo0=;
-        b=HeKnvRXIzmw3BaqY9UnghxmOG2OGUYfMwHizKO1l8zU6HNdKbBVnttjtG9aMAACRPn
-         qwIZcZNhVHQMbvx8PIAQTSzgapsL9a95Uu17xfp7gAdtibPmJC9cr8fN0XIRgqdjX0OF
-         Zba1cxXyToKkxLgumZofi/cd6PY77i8Hn4sZ84F/UxA+0tD3t9ONB2o2JbYCjg0aKsdc
-         u1begQjnoHrW9T9pNdGIBStprpRn2WY5g7erKm1XEWwbur82BwprfjaWaThxj6PxBrsF
-         DvdKhWk24TpicCDWJrxWXnKnBwf1exYsoHksz14GNh4JrBambXQ9vApkeJFsM6q1+xyB
-         h74A==
-X-Gm-Message-State: AOJu0Yxdl1jYvPZd9S5PADSLjelKYdTAlA5RyOZvQ0R/bnx3VvH7vwF9
-	yODFFWJ8I8ZQHsl9ghuV0KuFeFD4InXvDiY/+La3+6g2IevvbrdWioDAVMZm+MAbNcLhlbRKfax
-	NdNiPuR5Fr0oH35FiD0uMoe2JpxF9aFHVl+f30UuKsh3nauBucfW8AvCz5Kiy
-X-Received: by 2002:a17:906:7b82:b0:a2f:e18:fae3 with SMTP id s2-20020a1709067b8200b00a2f0e18fae3mr1421563ejo.41.1705847968066;
-        Sun, 21 Jan 2024 06:39:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEiDioSRGlpSzhS69cHuRvvDoJ/IoumA6Cmd6yusgVq3OSrViqDkb1/9mJIOh0K19HfIJJSqA==
-X-Received: by 2002:a17:906:7b82:b0:a2f:e18:fae3 with SMTP id s2-20020a1709067b8200b00a2f0e18fae3mr1421561ejo.41.1705847967678;
-        Sun, 21 Jan 2024 06:39:27 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id vk6-20020a170907cbc600b00a2ecec00a88sm5414771ejc.99.2024.01.21.06.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jan 2024 06:39:27 -0800 (PST)
-Message-ID: <55f73df1-c735-4cd5-8516-48cd18b23619@redhat.com>
-Date: Sun, 21 Jan 2024 15:39:26 +0100
+	s=arc-20240116; t=1705850631; c=relaxed/simple;
+	bh=56tz8bvaCmYn3Xfn9l70uN7AWV2MgAN02cVg6axlrsY=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=vFgcLyemMnfOfaQG7T1d1yGJr37lHOm5qtw8AcS1KbskZje780j9a6GVnIR3i4goiPYZ4qiDCPOccGvq+onkZIq59siFzFwwH77eYSmOTbhXhGoiupuX6oveG2lRH6my+OIHJGvwdNvB+QhIz3YPj55IKYFboGcb2tnwQqSyjJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rRZfh-0001tI-7B; Sun, 21 Jan 2024 16:23:41 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-01-21]
+Date: Sun, 21 Jan 2024 15:23:40 +0000
+Message-Id: <170585059505.2778011.9564698506290962184@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PS/2 keyboard of laptop Dell XPS 13 9360 goes missing after S3
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
- Dell.Client.Kernel@dell.com, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
- <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
- <0b30c88a-6f0c-447f-a08e-29a2a0256c1b@molgen.mpg.de>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0b30c88a-6f0c-447f-a08e-29a2a0256c1b@molgen.mpg.de>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705850628;1002774c;
+X-HE-SMSGID: 1rRZfh-0001tI-7B
 
-Hi Paul,
+Hi Linus. I kept a loose eye on a handful of regressions introduced
+during the merge window, but all except a build problem Guenter reported
+already got resolved (and Guenter's will likely soon be addressed as
+well). I wish we'd be as fast when it comes to regressions that are only
+noticed once a proper mainline release is out. Speaking of which:
 
-On 1/21/24 15:26, Paul Menzel wrote:
-> Dear Hans,
-> 
-> 
-> As always thank you very much for taking the time to reply.
-> 
-> 
-> Am 20.01.24 um 21:26 schrieb Hans de Goede:
-> 
->> On 1/18/24 13:57, Paul Menzel wrote:
->>> #regzbot introduced v6.6.11..v6.7
-> 
->>> There seems to be a regression in Linux 6.7 on the Dell XPS 13 9360 (Intel i7-7500U).
->>>
->>>      [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
->>>
->>> The PS/2 keyboard goes missing after S3 resume¹. The problem does not happen with Linux 6.6.11.
->>
->> Thank you for reporting this.
->>
->> Can you try adding "i8042.dumbkbd=1" to your kernel commandline?
->>
->> This should at least lead to the device not disappearing from
->>
->> "sudo libinput list-devices"
->>
->> The next question is if the keyboard will still actually
->> work after suspend/resume with "i8042.dumbkbd=1". If it
->> stays in the list, but no longer works then there is
->> a problem with the i8042 controller; or interrupt
->> delivery to the i8042 controller.
->>
->> If "i8042.dumbkbd=1" somehow fully fixes things, then I guess
->> my atkbd driver fix for other laptop keyboards is somehow
->> causing issues for yours.
-> 
-> Just a quick feedback, that booting with `i8042.dumbkbd=1` seems to fix the issue.
-> 
->> If "i8042.dumbkbd=1" fully fixes things, can you try building
->> your own 6.7.0 kernel with commit 936e4d49ecbc:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=936e4d49ecbc8c404790504386e1422b599dec39
->>
->> reverted?
-> 
-> I am going to try that as soon as possible.
+* Quite a few people reported problems due to a mm change that made it
+into 6.7 three days before its release: efa7df3e3bb5 ("mm: align larger
+anonymous mappings on THP boundaries"). It among others "breaks 32bit
+processes on x86_64 (at least). In particular, 32bit kernel or firefox
+builds in our build system." as Jiri noted. For details and other
+problems reported see:
 
-Ok, thank you.
+  https://lore.kernel.org/linux-mm/d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org/
+  https://lore.kernel.org/linux-mm/CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com/
+  https://lore.kernel.org/all/1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com/
+  https://lore.kernel.org/all/a914c7f2-cf9f-44a8-99d4-c25a66d39f1c@arm.com/
 
-I'm a bit surprised that my fix which skips sending
-the getid command to the kbd during init would actually
-cause this issue.
+  A patch that fixes at least Jiri's problem is up for review:
+https://lore.kernel.org/all/20240118180505.2914778-1-shy828301@gmail.com/
 
-Can you retest with an unmodified 6.7.0 to make sure
-that this was not some onetime glitch ?
+  Hope that fix reaches you soon.
 
-Regards,
+* BTW a quick TWIMC: ath11k is crashing during suspend on v6.7; a fix
+exists and hopefully will reach mainline next week:
 
-Hans
+  https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
+
+  Sadly lacks a stable tag. I sometimes wish they were mandatory in
+cases like this to ensure this the fix makes it to the latest latest
+stable series. But whatever, under the current circumstances this it's
+not that bad as 6.6.y is a longterm branch.
+
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 1 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
 
+========================================================
+current cycle (v6.7.. aka v6.7-post), culprit identified
+========================================================
 
 
+[ *NEW* ] spi: qemu emulations quanta-q71l-bmc and almetto-bmc fail to boot
+---------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net/
+https://lore.kernel.org/lkml/3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net/
 
->>>      [    1.435071] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f13:PS2M] at 0x60,0x64 irq 1,12
->>>      [    1.435409] i8042: Warning: Keylock active
->>>      [    1.437624] serio: i8042 KBD port at 0x60,0x64 irq 1
->>>      [    1.437631] serio: i8042 AUX port at 0x60,0x64 irq 12
->>>      […]
->>>      [    1.439743] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
->>>
->>>      $ sudo libinput list-devices
->>>      […]
->>>      Device:           AT Translated Set 2 keyboard
->>>      Kernel:           /dev/input/event0
->>>      Group:            15
->>>      Seat:             seat0, default
->>>      Capabilities:     keyboard
->>>      Tap-to-click:     n/a
->>>      Tap-and-drag:     n/a
->>>      Tap drag lock:    n/a
->>>      Left-handed:      n/a
->>>      Nat.scrolling:    n/a
->>>      Middle emulation: n/a
->>>      Calibration:      n/a
->>>      Scroll methods:   none
->>>      Click methods:    none
->>>      Disable-w-typing: n/a
->>>      Disable-w-trackpointing: n/a
->>>      Accel profiles:   n/a
->>>      Rotation:         0.0
->>>
->>> `libinput list-devices` does not list the device after resuming
->>> from S3. Some of the function keys, like brightness and airplane
->>> mode keys, still work, as the events are probably transmitted over
->>> the embedded controller or some other mechanism. An external USB
->>> keyboard also still works.
->>>
->>> I haven’t had time to further analyze this, but wanted to report
->>> it. No idea
->>>
->>>
->>> Kind regards,
->>>
->>> Paul
->>>
->>>
->>> ¹ s2idle is not working correctly on the device, in the sense, that
->>> energy usage is very high in that state, and the full battery is at
->>> 20 % after leaving it for eight hours.
-> 
+By Guenter Roeck; 8 days ago; 5 activities, latest 0 days ago.
+Introduced in 4d8ff6b0991d
 
+Recent activities from: Guenter Roeck (3), Mark Brown (2)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/170463193667.1966610.7165124970993807605@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
