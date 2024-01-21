@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BC515D0;
-	Sun, 21 Jan 2024 09:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC3DD2FA;
+	Sun, 21 Jan 2024 10:04:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705828458; cv=none; b=uca73XhRSoOpHMxZ+u2/v8b3+jSwOsz4KQztAS8MaUIHgZmPifRBp2ofcxsxy0WyWVlkWsOZ2ePqi2lq38dZIoSOZYXAqF7JUQ1jYHDEqQw7uNb9NKN2+o/q7F0fE0x2qolESFHIJF0CbbQGm73sqMj2m8vYzoOEMhQBzpp2jPs=
+	t=1705831476; cv=none; b=RKmMCWuTcFVXbKebThPPWs6vkjeDxrxjGCHLoCQ6mrNjkFYvE8fshUnyiQr6rEChgADJVU1fsVgpoihMZMUMvZf7DjOvhWUNWo7h9tXn9XSlGKI/dRn8zmvnNCqTksAdBvqvqs/2ymch8QLzr+X3teeerIN+ZudgKvJrRfAZ0Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705828458; c=relaxed/simple;
-	bh=Td9d+m0xjC4n2y33X8sOx/4ELwGjnlLdP6EozkGhBb0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DyMRZ0fN+mdE7WhT2ZadjB9uFF6qKN7qh1oyfXI0JqGEcI3b6kX/b3uAvRyKmBDQ4w+0xrr7P018ho3VCYRlH9JP6n4LOGxtoRLIIULBJx4DiRv1yemPyXio/T4WpxdYvJ6UAyDS1Fu8Kq2TSzsxTgGtH7L5XEq+WyRs7wnZCjw=
+	s=arc-20240116; t=1705831476; c=relaxed/simple;
+	bh=qxngiyQFq9H5C3J4+lP+xO5xyCkCDua9O6RXGkP9Zsg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=dmTZuYtIFVPMUPk8qZ3Xx89oHBwE0raH4js8HYeivn0LGYKd7CLA1j7hQChbIQn80yrhkGuDBaiwQnZaKya/XZGBeLzJUo5T82hFjsAR8kMQZ2n6w3zzw3xco6RKrysVVdgS2zBXq65gehA01m6sBADyoTfiB+nMcihiDuVUmy8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rRTu9-0000Or-CK; Sun, 21 Jan 2024 10:14:13 +0100
-Message-ID: <d5f4c2d7-0a98-4ff8-9848-a34133199450@leemhuis.info>
-Date: Sun, 21 Jan 2024 10:14:12 +0100
+	id 1rRUgq-00069v-Rp; Sun, 21 Jan 2024 11:04:32 +0100
+Message-ID: <a901f6d2-2c82-409a-a83c-b338470d9ac5@leemhuis.info>
+Date: Sun, 21 Jan 2024 11:04:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,93 +26,61 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [regressions] ntfs3: empty file on update without forced cache
- drop
+Subject: Re: [GIT PULL] firewire updates for 6.5-rc1
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>
-Cc: ntfs3@lists.linux.dev,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Kari Argillander <kari.argillander@stargateuniverse.net>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- Anton Altaparmakov <anton@tuxera.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
- <24aa7a8b-40ed-449b-a722-df4abf65f114@leemhuis.info>
-In-Reply-To: <24aa7a8b-40ed-449b-a722-df4abf65f114@leemhuis.info>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230704121847.GA26576@workstation.local>
+ <f3d8c72b-cd30-490c-833f-5807bd74511f@kernel.org>
+ <ac5091d9-0484-4c63-822d-fe61009b9970@leemhuis.info>
+In-Reply-To: <ac5091d9-0484-4c63-822d-fe61009b9970@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705828456;17b06d09;
-X-HE-SMSGID: 1rRTu9-0000Or-CK
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705831475;d1200097;
+X-HE-SMSGID: 1rRUgq-00069v-Rp
 
-On 05.12.23 13:49, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [adding a bunch of people and two lists to the recipients, as Konstantin
-> apparently hasn't sent any mail to any lists archived on lore for ~six
-> weeks; maybe someone knows what's up or is willing to help out]
+On 27.09.23 15:15, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 26.09.23 11:11, Jiri Slaby wrote:
+>>
+>> On 04. 07. 23, 14:18, Takashi Sakamoto wrote:
+>>> Please pull firewire updates for v6.5-rc1.
+>>>
+>>> The following changes since commit
+>>> 44c026a73be8038f03dbdeef028b642880cf1511:
+>>>
+>>>    Linux 6.4-rc3 (2023-05-21 14:05:48 -0700)
+>>
+>> Likely some of the below commits causes an instant reboot during boot as
+>> was reported in:
+>>   https://bugzilla.suse.com/show_bug.cgi?id=1215436
+>>
+>> 6.4.* was fine, 6.5.4 or 6.6-rc1 fails.
+>>
+>> module_blacklist=firewire_ohci fixes the issue on 6.5.4.
+>>
+>> Any ideas what can cause this? I fail to see an issue in the commits...
+>> [...]
+> 
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced v6.4..v6.5.3
+> https://bugzilla.suse.com/show_bug.cgi?id=1215436
+> #regzbot title firewire: instant reboot during boot
+> #regzbot ignore-activity
 
-[CCing Linus now as well]
-
-JFYI for the VFS maintainers and everyone else who might care:
-
-Konstantin afaics still did not look into below regression. Neither did
-anyone else afaics.
-
-But Konstantin is still around, as he recently showed up to post a patch
-for review:
-https://lore.kernel.org/all/667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com/
-
-I replied to it in the hope of catch his attention and make him look at
-this regression, but that did not work out.
-
-So it seems we sadly are kinda stuck here. :-/
+#regzbot fix: ac9184fbb8478dab4a0724b279f94956b69be827
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-> On 27.11.23 07:18, Thorsten Leemhuis wrote:
->> Hi, Thorsten here, the Linux kernel's regression tracker.
->>
->> Konstantin, I noticed a regression report in bugzilla.kernel.org.
->> Apparently it's cause by a change of yours.
->>
->> As many (most?) kernel developers don't keep an eye on bugzilla, I
->> decided to forward it by mail. Note, you have to use bugzilla to reach
->> the reporter, as I sadly[1] can not CCed them in mails like this.
->>
->> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218180 :
-> 
-> Konstantin, are you still around? Would be great if you could look into
-> this regression, as this sounds somewhat worrying.
-> 
->>> The problem I am facing is the following:
->>> 1. I mount an NTFS partition via NTFS3
->>> 2. I create a file
->>> 3. I write to the file
->>> 4. The file is empty
->>> 5. I remount the partition
->>> 6. The file has the changes I made before the remount
->>>
->>> I can avoid the remount by doing:
->>> sudo sysctl vm.drop_caches=3
->>
->> See the ticket for more details. It according to the report happens
->> still happens with 6.7-rc2, but not with 6.1.y. The reporter bisected
->> the problem to ad26a9c84510af ("fs/ntfs3: Fixing wrong logic in
->> attr_set_size and ntfs_fallocate") [v6.2-rc1].
->>
->> Side note: while briefly checking lore for existing problems caused by
->> that change I noticed two syzbot reports about it that apparently nobody
->> looked into:
->>
->> https://lore.kernel.org/all/000000000000bdf37505f1a7fc09@google.com/
->> https://lore.kernel.org/all/00000000000062174006016bc386@google.com/
->> [...]
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+That page also explains what to do if mails like this annoy you.
