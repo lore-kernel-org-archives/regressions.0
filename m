@@ -1,154 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BADB47A47;
-	Mon, 22 Jan 2024 15:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4838146456
+	for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 16:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705937692; cv=none; b=L8bVFcc9rfRQqUlz9MSt3llx5LxBwIylDiG8ZbaguVu8pbHYFQ1BiSlY1+gBoroIZ4yXwL4wASbeV/Mf8Fn5CLGhB7QzBwaPgKg0MOoSSnm2xP6EcLTERkO6LpFeH5Kdp4feWQLXNt3lTwEPv/jG/MM1gWlrZvtGZFy4xn70XhY=
+	t=1705942521; cv=none; b=X0XmOjiL5tCk9lb0gEmy+f3FCDzoXXPvlK/IC6a9PQFE9xb8e+i3su0qJs723RO0aD9Dn3GIfkoD7N+Sy9Snt7FmDNGG3jvtC7Sh3L4oeQ+uOoE2uX6q5Vaq2mD1Zw8LqUFLGHtB0h7sUD4EocxwLw1Ana4k4J+uLalA4cAuDqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705937692; c=relaxed/simple;
-	bh=Jks5sf/UfPE0bYDwUpkmUHjITugaPt2CLUuUwk0Ne4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qiQfDLNRG8vA90XamcSaCrjN/h+Y8bnPQFtiWFlAHAR4sFD1wZyiOh4vHJtoHwuUoOVHY8xs1xTj31Cu/wDXusXGoK9LTX2nSGxhOWPZyUY5p6uT7hOfmNsgP6A5IBb2aey+oREqoNPQoQI2Y2n2TYVHAQJke9TTc+QELcpCStA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huiK570m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705942521; c=relaxed/simple;
+	bh=8CXEZAI9p+rNkSoJMtDxmMwVqX0l1AUSjTzoof5EcMQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=O1Cqf38DGdQNHMMO5G27vKyIu/pYZ9TcBUHVjnXxaOyBzCENw1sC473Duo/O9akOLsKvUbCWrxWLa3KD4dz38u/AJr2M6iiWb5fzzkzXUT/QBSQPpIV07+wEpdJyVWnB+KbwEmdkJ1GGEVB51v/XFsAdeD4lsnOdf0TR8iJtjKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=redwUopk; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huiK570m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D6BC433C7;
-	Mon, 22 Jan 2024 15:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705937691;
-	bh=Jks5sf/UfPE0bYDwUpkmUHjITugaPt2CLUuUwk0Ne4A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=huiK570mOH2h2AcKfWF6+I6+iHy0eqELtLOlXfgkqbUkalmjp7gTjSYRQFhl+8UqA
-	 JKYICN4RyC4VmfB4jqSZwICt5JgZplL+s2uFDm71LSLgwyBxRpXGMrLPJw5p6tVWy5
-	 TSGJyPWHenFW3ya/5L9CPlIIV+ThDVVB+E/s7eqnQVyyPjkMm8thaQuYHIYjgtHN9e
-	 Rpy7AI1yVpPxgxWXPMlKU6WSJ/cLOfCHxAg9YEsIQzWnNdw28wWXtKUwFQILGST+DK
-	 jS6iyx18Ul+l8I78SQSLkbpqCwKmVlFbodVTgiMmFAqq8lGuzleWufjpFvoGlfscoo
-	 9H775j0OtARKA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	regressions@lists.linux.dev,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	asahi@lists.linux.dev,
-	Sven Peter <sven@svenpeter.dev>,
-	Michael Walle <michael@walle.cc>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: include bit index in cell sysfs file name
-Date: Mon, 22 Jan 2024 16:34:10 +0100
-Message-Id: <20240122153442.7250-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="redwUopk"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a28da6285c1so598023266b.0
+        for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 08:55:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705942518; x=1706547318; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eviaarrHpSZeGPBJGMW5DVT05MBy6NrnL0kFpqfkPXM=;
+        b=redwUopk6y5NNOCpvkc+PVFOcqTRE5EZm5SjO4W6Lgj5roFvBYvMoIXETQPmhfT12K
+         L8WQ3wq+9QKiOgulP6E2kPbssJJjvyuByEFp/hSrBIzFK16EwVIOH/QgQtDvoPiHAcVz
+         ONgBpkxgd+BCigxtUuMtlfz5yoBIYn5+sjPrYyQEmHHF6/Mx+G1EE5LFrZ122XmWX7Wf
+         GEPmBk+0GlAFRwP1GMR/sckL6GnDIvmHvgdW+bH8G6u4O0CZ9iGMiugfdd6NU/tuQ6xE
+         tWFOVOQsZ/8MUzp48aAy1uJe+jyR7T0oQK98r+fpumwmtxwark1VnzFPdulyNJvfVJiR
+         9Hdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705942518; x=1706547318;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eviaarrHpSZeGPBJGMW5DVT05MBy6NrnL0kFpqfkPXM=;
+        b=UHTW080TtMQlXEPQ/3+HS63DMWO9iKdfXNG47EC5QlsFPOwWtA4VFv/mnttLEAdyeK
+         gaSk4yaAc+U5/j4RL6arS1vNKwLYW2t2w16IgymuCP3x+rI512S5W2OAf0NF/1qw8QuU
+         N1z3TKvRX4CDg38zhnEHfykD7R/3ZGK46ZcLTRk2LRweMFunv/vNgRT7QTTH06TYukNE
+         QI8Rc2tpJ5WQcM34+Byl6pFoRfYdBUxH7fj9v5h0Jkdclrxhe08h8jKKWxtKjZOS17zl
+         uIuM+Pr9/RLzE5vH41+EI9D1h3c45AFeZLBciiWp3MuJHSVUvHP2YvrKkfsKdcnAdOLY
+         O4/A==
+X-Gm-Message-State: AOJu0Yx0Evgh123RtFm54uF1S77BLryLJ2QN9gz/dJ/JnM0TkDXN3/r1
+	8wRzExKHBGwaWuR1lJ1HAs5fXbIUoVvZb4f8VzHeDXeOfv2jE1IdJEBLBSfMCnA=
+X-Google-Smtp-Source: AGHT+IFOG8Du3dt/lDW1J4M+ULamdNrT6bybVDkUdNDMHDaJXtSRu6jRB4UlD4OtxBYTEA6yaVPF9A==
+X-Received: by 2002:a17:906:3044:b0:a2f:ebb:f200 with SMTP id d4-20020a170906304400b00a2f0ebbf200mr6058747ejd.9.1705942518382;
+        Mon, 22 Jan 2024 08:55:18 -0800 (PST)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id g11-20020a170906538b00b00a26aa8f3372sm13401726ejo.27.2024.01.22.08.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 08:55:17 -0800 (PST)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Chen-Yu Tsai <wenst@chromium.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev, 
+ Sven Peter <sven@svenpeter.dev>, Michael Walle <michael@walle.cc>, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240122153442.7250-1-arnd@kernel.org>
+References: <20240122153442.7250-1-arnd@kernel.org>
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Message-Id: <170594251756.17335.7078970144473561827.b4-ty@linaro.org>
+Date: Mon, 22 Jan 2024 16:55:17 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc1 on
-Apple M1, which (in downstream dts files) has multiple nvmem cells that use the
-same byte address. This causes the device probe to fail with
+On Mon, 22 Jan 2024 16:34:10 +0100, Arnd Bergmann wrote:
+> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc1 on
+> Apple M1, which (in downstream dts files) has multiple nvmem cells that use the
+> same byte address. This causes the device probe to fail with
+> 
+> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
+> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                 6.8.0-rc1-arnd-5+ #133
+> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
+> [    0.605362] Call trace:
+> [    0.605365]  show_stack+0x18/0x2c
+> [    0.605374]  dump_stack_lvl+0x60/0x80
+> [    0.605383]  dump_stack+0x18/0x24
+> [    0.605388]  sysfs_warn_dup+0x64/0x80
+> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
+> [    0.605402]  internal_create_group+0x268/0x404
+> [    0.605409]  sysfs_create_groups+0x38/0x94
+> [    0.605415]  devm_device_add_groups+0x50/0x94
+> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
+> [    0.605682]  nvmem_register+0x38c/0x470
+> [    0.605789]  devm_nvmem_register+0x1c/0x6c
+> [    0.605895]  apple_efuses_probe+0xe4/0x120
+> [    0.606000]  platform_probe+0xa8/0xd0
+> 
+> [...]
 
-[    0.605336] sysfs: cannot create duplicate filename '/devices/platform/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
-[    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                 6.8.0-rc1-arnd-5+ #133
-[    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
-[    0.605362] Call trace:
-[    0.605365]  show_stack+0x18/0x2c
-[    0.605374]  dump_stack_lvl+0x60/0x80
-[    0.605383]  dump_stack+0x18/0x24
-[    0.605388]  sysfs_warn_dup+0x64/0x80
-[    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
-[    0.605402]  internal_create_group+0x268/0x404
-[    0.605409]  sysfs_create_groups+0x38/0x94
-[    0.605415]  devm_device_add_groups+0x50/0x94
-[    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
-[    0.605682]  nvmem_register+0x38c/0x470
-[    0.605789]  devm_nvmem_register+0x1c/0x6c
-[    0.605895]  apple_efuses_probe+0xe4/0x120
-[    0.606000]  platform_probe+0xa8/0xd0
+Applied, thanks!
 
-As far as I can tell, this is a problem for any device with multiple cells on
-different bits of the same address. Avoid the issue by changing the file name
-to include the first bit number.
+[1/1] nvmem: include bit index in cell sysfs file name
+      commit: b40fed13870045731e374e6bb48800cde0feb4e2
 
-Fixes: 0088cbc19276 ("nvmem: core: Expose cells through sysfs")
-Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/dts/apple/t600x-dieX.dtsi#L156
-Cc: regressions@lists.linux.dev
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Rafał Miłecki <rafal@milecki.pl>
-Cc: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: asahi@lists.linux.dev
-Cc: Sven Peter <sven@svenpeter.dev>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-This might not be the fix we want upstream, but it illustrates the issue and
-I have successfully tested that this lets me boot v6.8-rc1 on my workstation
-again.
-
-Feel free to just treat this as a bug report and suggest a different fix.
-As the ABI was only introduced in 6.8-rc1, it can still be changed without
-causing other regressions for users, but time is running out for that.
----
- Documentation/ABI/testing/sysfs-nvmem-cells | 16 ++++++++--------
- drivers/nvmem/core.c                        |  5 +++--
- 2 files changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-nvmem-cells b/Documentation/ABI/testing/sysfs-nvmem-cells
-index 7af70adf3690..c7c9444f92a8 100644
---- a/Documentation/ABI/testing/sysfs-nvmem-cells
-+++ b/Documentation/ABI/testing/sysfs-nvmem-cells
-@@ -4,18 +4,18 @@ KernelVersion:	6.5
- Contact:	Miquel Raynal <miquel.raynal@bootlin.com>
- Description:
- 		The "cells" folder contains one file per cell exposed by the
--		NVMEM device. The name of the file is: <name>@<where>, with
--		<name> being the cell name and <where> its location in the NVMEM
--		device, in hexadecimal (without the '0x' prefix, to mimic device
--		tree node names). The length of the file is the size of the cell
--		(when known). The content of the file is the binary content of
--		the cell (may sometimes be ASCII, likely without trailing
--		character).
-+		NVMEM device. The name of the file is: "<name>@<byte>,<bit>",
-+		with <name> being the cell name and <where> its location in
-+		the NVMEM device, in hexadecimal bytes and bits (without the
-+		'0x' prefix, to mimic device tree node names). The length of
-+		the file is the size of the cell (when known). The content of
-+		the file is the binary content of the cell (may sometimes be
-+		ASCII, likely without trailing character).
- 		Note: This file is only present if CONFIG_NVMEM_SYSFS
- 		is enabled.
- 
- 		Example::
- 
--		  hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product-name@d
-+		  hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product-name@d,0
- 		  00000000  54 4e 34 38 4d 2d 50 2d  44 4e         |TN48M-P-DN|
- 		  0000000a
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 1d77724f367d..9616c6001b3c 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -460,8 +460,9 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
- 	list_for_each_entry(entry, &nvmem->cells, node) {
- 		sysfs_bin_attr_init(&attrs[i]);
- 		attrs[i].attr.name = devm_kasprintf(&nvmem->dev, GFP_KERNEL,
--						    "%s@%x", entry->name,
--						    entry->offset);
-+						    "%s@%x,%x", entry->name,
-+						    entry->offset,
-+						    entry->bit_offset);
- 		attrs[i].attr.mode = 0444;
- 		attrs[i].size = entry->bytes;
- 		attrs[i].read = &nvmem_cell_attr_read;
+Best regards,
 -- 
-2.39.2
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
