@@ -1,131 +1,176 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2153770B;
-	Sun, 21 Jan 2024 15:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB640161
+	for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 00:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705850631; cv=none; b=q7nBmnUZbbFt8AVQI7VuMuPemWW4dz/ZLi8jnEYQE8295ssypAg2CwTTlsFnPWMcRGTSE/Dkjo+QXBgAOj+DPEQsE9lnfuo9C4L1f13ujIM3yuv9zh94EJqu+xXtgRqUREe1qNIOVFOhYhLeVtWo0mvKR3KaxELW4Lc8L68XuD0=
+	t=1705882034; cv=none; b=p0+AGytUulwqjtuA5EO6fe5Nl79mTva3N0tdkkl/LSBoZH2bHMwU3a/c2dJduequaz184Mkft8Yg4TOHXhJ1XVkOdSALLRcdnNJuz4AG9vilAQPQLFUC3HSrsTLsf2gBeamf/puXfYZvxzizG8OUlJBEudtuBQoSmWOfKWZACDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705850631; c=relaxed/simple;
-	bh=56tz8bvaCmYn3Xfn9l70uN7AWV2MgAN02cVg6axlrsY=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=vFgcLyemMnfOfaQG7T1d1yGJr37lHOm5qtw8AcS1KbskZje780j9a6GVnIR3i4goiPYZ4qiDCPOccGvq+onkZIq59siFzFwwH77eYSmOTbhXhGoiupuX6oveG2lRH6my+OIHJGvwdNvB+QhIz3YPj55IKYFboGcb2tnwQqSyjJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rRZfh-0001tI-7B; Sun, 21 Jan 2024 16:23:41 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-01-21]
-Date: Sun, 21 Jan 2024 15:23:40 +0000
-Message-Id: <170585059505.2778011.9564698506290962184@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1705882034; c=relaxed/simple;
+	bh=v0w0LJ3uf4foFHSK8n0QTLvlcutBJjyEkJg91UgDdkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ak/JiOzrTkjjQOW0eSU+4gUSRFQ+5X2a5nBpqELRYFJr1NQMAkqg7nt1FYzFm0oOyPCf5yPkNv4aDcKC6HFG2XK/M/lzH0sakqzYHrFE4TVSMnmVoZGlkmrEYWSD+mwcmuNqkHtRuKOo569sDaQk51qG/QhZQXHDHoupOrLkn9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXczUuPU; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXczUuPU"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc261316b0dso1792337276.3
+        for <regressions@lists.linux.dev>; Sun, 21 Jan 2024 16:07:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705882032; x=1706486832; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZXaDrO6PrF2cmqEQPuS3YomJWnmAlkY/6Wq6iuyjQCw=;
+        b=gXczUuPUyhops31DV+c/xSNo56owL5OLjWSmRTYFIJLdh+HShDiWNqYviV4RHJCKE+
+         gNspGRnVHCVSmsNbAdD97KsW5WHmzuv0euqeI2qLPInVUA+XwWmkuZ7Dygg37eZQpx5H
+         uXWapmpAl+3ueN0JbH5gdUhEpm6oGUZ3yrP0DDxbVYhBzIZO0qrb/M1GKR0lrP+qj0ms
+         efLalK88DZCrtMYjEcl5fyL83G8jyM+mCQKK5QYTstZ6msilGVB+hh8NpctiKFgriY40
+         PwlFIBas9ixI5wVkMj9ziVzmcqwkyhHt/86aFZCaV/GAiDfRPqXwIJjS8T8M06U1XATh
+         jrjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705882032; x=1706486832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZXaDrO6PrF2cmqEQPuS3YomJWnmAlkY/6Wq6iuyjQCw=;
+        b=tnenVGKXWJzRKtQJ/hFCNtFBt5Jfl321LI60tqAVr4sRv9v7CyNKMgwgmA4rkTQ9g7
+         3iHkOvr9Jd7uRLymgK6LYX8cYSLKY2xFPGh23F4fOYsEJKyBPXU4bLDeOPBz1Ys4dKeE
+         vL4pIXrgiw4MPYfHOHX/f5LILqaSWXY1Bd9epsXVkLU42z1uZD9mhKq/ubVZJF3ypMWa
+         bq23kMcdvmrxSzOZD/JmYbI+SWlcjp4/e2K14KATcnNlWJ+6MMRGJt3LzrTzEXtSV6CN
+         qfVEwyrOOj5f4eLw64AUigs+tf9XVTc55snOsmNIstO/1AG5OWSijkzrksRxBG6oyoGH
+         cKyQ==
+X-Gm-Message-State: AOJu0YyprAUuOHUlFZQgbTKZy49JTXXhQxcs45KFDLS47qa7K+i/qXjv
+	IIT+35ls+vZmcesrT5mjOEWcS33guYwmPmw1sEsViy6S0KUYFrZVWvysw0ULKECB+bIFblenI6M
+	8jZmoFH7Zfd/F8KMSQnD4YEPFy3E=
+X-Google-Smtp-Source: AGHT+IGfIyZs2JIgn0r3Ml/E3UHsh7sPDcPhsDbKTC7E6gcGm2WrFhJcxFItNZ+lNdG5XLiux+DMqyIIdu1HWiJUbcg=
+X-Received: by 2002:a25:ea11:0:b0:dbe:6596:4813 with SMTP id
+ p17-20020a25ea11000000b00dbe65964813mr1304993ybd.24.1705882031736; Sun, 21
+ Jan 2024 16:07:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705850628;1002774c;
-X-HE-SMSGID: 1rRZfh-0001tI-7B
+References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+ <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info> <20240111155056.GG31555@twin.jikos.cz>
+ <20240111170644.GK31555@twin.jikos.cz> <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
+In-Reply-To: <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
+From: Alex Romosan <aromosan@gmail.com>
+Date: Mon, 22 Jan 2024 01:07:01 +0100
+Message-ID: <CAKLYge+x9kxLBaJGyk_gTMK2kQ=+Lhg00jgXe=P=jmBUq=cmfA@mail.gmail.com>
+Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks update-grub
+To: Anand Jain <anand.jain@oracle.com>
+Cc: CHECK_1234543212345@protonmail.com, brauner@kernel.org, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, linux-btrfs <linux-btrfs@vger.kernel.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, linux-kernel@vger.kernel.org, 
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, dsterba@suse.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus. I kept a loose eye on a handful of regressions introduced
-during the merge window, but all except a build problem Guenter reported
-already got resolved (and Guenter's will likely soon be addressed as
-well). I wish we'd be as fast when it comes to regressions that are only
-noticed once a proper mainline release is out. Speaking of which:
+update-grub still doesn't work 6.8-rc1
 
-* Quite a few people reported problems due to a mm change that made it
-into 6.7 three days before its release: efa7df3e3bb5 ("mm: align larger
-anonymous mappings on THP boundaries"). It among others "breaks 32bit
-processes on x86_64 (at least). In particular, 32bit kernel or firefox
-builds in our build system." as Jiri noted. For details and other
-problems reported see:
+so i did:
 
-  https://lore.kernel.org/linux-mm/d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org/
-  https://lore.kernel.org/linux-mm/CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com/
-  https://lore.kernel.org/all/1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com/
-  https://lore.kernel.org/all/a914c7f2-cf9f-44a8-99d4-c25a66d39f1c@arm.com/
+# cat /proc/self/mountinfo | grep btrfs
+21 1 0:19 / / rw,relatime shared:1 - btrfs /dev/root
+rw,ssd,discard=3Dasync,space_cache,subvolid=3D5,subvol=3D/
 
-  A patch that fixes at least Jiri's problem is up for review:
-https://lore.kernel.org/all/20240118180505.2914778-1-shy828301@gmail.com/
+the difference from your test case is that it doesn't reference
+the disk device but /dev/root which on my system doesn't exist. could this
+be the problem?
 
-  Hope that fix reaches you soon.
-
-* BTW a quick TWIMC: ath11k is crashing during suspend on v6.7; a fix
-exists and hopefully will reach mainline next week:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
-
-  Sadly lacks a stable tag. I sometimes wish they were mandatory in
-cases like this to ensure this the fix makes it to the latest latest
-stable series. But whatever, under the current circumstances this it's
-not that bad as 6.6.y is a longterm branch.
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 1 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+--alex--
 
 
-========================================================
-current cycle (v6.7.. aka v6.7-post), culprit identified
-========================================================
-
-
-[ *NEW* ] spi: qemu emulations quanta-q71l-bmc and almetto-bmc fail to boot
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net/
-https://lore.kernel.org/lkml/3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net/
-
-By Guenter Roeck; 8 days ago; 5 activities, latest 0 days ago.
-Introduced in 4d8ff6b0991d
-
-Recent activities from: Guenter Roeck (3), Mark Brown (2)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170463193667.1966610.7165124970993807605@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+On Fri, Jan 12, 2024 at 12:24=E2=80=AFAM Anand Jain <anand.jain@oracle.com>=
+ wrote:
+>
+>
+>
+> On 11/01/2024 22:36, David Sterba wrote:
+> > On Thu, Jan 11, 2024 at 04:50:56PM +0100, David Sterba wrote:
+> >> On Thu, Jan 11, 2024 at 12:45:50PM +0100, Thorsten Leemhuis wrote:
+> >>> [Adding Anand Jain, the author of the culprit to the list of recipien=
+ts;
+> >>> furthermore CCing the the Btrfs maintainers and the btrfs list; also
+> >>> CCing regression list, as it should be in the loop for regressions:
+> >>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> >>>
+> >>> On 08.01.24 15:11, Alex Romosan wrote:
+> >>>> Please Cc me as I am not subscribed to the list.
+> >>>>
+> >>>> Running my own compiled kernel without initramfs on a lenovo thinkpa=
+d
+> >>>> x1 carbon gen 7.
+> >>>>
+> >>>> Since version 6.7-rc1 i haven't been able to to a grub-update,
+> >>>>
+> >>>> instead i get this error:
+> >>>>
+> >>>> grub-probe: error: cannot find a device for / (is /dev mounted?) sol=
+id
+> >>>> state drive
+> >>>>
+> >>>> 6.6 was the last version that worked.
+> >>>>
+> >>>> Today I did a git-bisect between these two versions which identified
+> >>>> commit bc27d6f0aa0e4de184b617aceeaf25818cc646de btrfs: scan but don'=
+t
+> >>>> register device on single device filesystem as the culprit. revertin=
+g
+> >>>> this commit from 6.7 final allowed me to run update-grub again.
+> >>>>
+> >>>> not sure if this is the intended behavior or if i'm missing some oth=
+er
+> >>>> kernel options. any help/fixes would be appreciated.
+> >>>>
+> >>>> thank you.
+> >>>
+> >>> Thanks for the report. To be sure the issue doesn't fall through the
+> >>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regressi=
+on
+> >>> tracking bot:
+> >>>
+> >>> #regzbot ^introduced bc27d6f0aa0e4de184b617aceeaf25818cc646de
+> >>> #regzbot title btrfs: update-grub broken (cannot find a device for / =
+(is
+> >>> /dev mounted?))
+> >>> #regzbot ignore-activity
+> >>
+> >> The bug is also tracked at https://bugzilla.kernel.org/show_bug.cgi?id=
+=3D218353 .
+> >
+> > About the fix: we can't simply revert the patch because the temp_fsid
+> > depends on that. A workaround could be to check if the device path is
+> > "/dev/root" and still register the device. But I'm not sure if this doe=
+s
+> > not break the use case that Steamdeck needs, as it's for the root
+> > partition.
+>
+>
+> Thank you for the report.
+>
+> The issue seems more complex than a simple scenario, as the following
+> test-case works well:
+>
+>    $ mount /dev/sdb1 /btrfs
+>    $ cat /proc/self/mountinfo | grep btrfs
+> 345 63 0:34 / /btrfs rw,relatime shared:179 - btrfs /dev/sdb1
+> rw,space_cache=3Dv2,subvolid=3D5,subvol=3D/
+>
+> However, the relevant part of the commit
+> bc27d6f0aa0e4de184b617aceeaf25818cc646de that may be failing could
+> be in identifying a device, whether it is the same or different
+> For this, we use:
+>
+>       lookup_bdev(path, &path_devt);
+>
+> and match with the devt(MAJ:MIN) saved in the btrfs_device;
+> would this work during initrd? I need to dig more. Trying
+> to figure out how can I reproduce this.
+>
+> Thanks, Anand
