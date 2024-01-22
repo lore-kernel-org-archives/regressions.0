@@ -1,193 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2061.outbound.protection.outlook.com [40.107.223.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EE24D10E;
-	Mon, 22 Jan 2024 18:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947977; cv=none; b=m04GXNAyYGtrC+z93+dE6i2lm9nM8txf3aByv7nwd+ZbPTtupdfX1zU//SGHxgAVPeMO8dBDkGIr4or+50peMJZHqzP2mCnRLu7RsOZLTcif/sgejgmBac6rgeEFZxQts6soaL0HAWOZgTEBsDVtv2futT4qqzHorP/nAJSe/TY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947977; c=relaxed/simple;
-	bh=xqaElstZ6Be2KexYuJuX9vmqnmJZ8Y7gmDJsiNOQ56Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Wo/96XAL3APwKThy/wSaTZmAjibcnyquk1LWdobjDYwgPU4sCmVaCwsBOgK9XE2U2QL0NcOuTYtw0NmmNwpAjD++qSaJZxatxH6AVMhwoYq1xUAGqtzFctdh2onVX4zF/YcatYXWpZ81oBEGxYa4pkCKrvBHHAQtTQNo8X1n3rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbF57wLp; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C93F8F9
+	for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 19:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705953335; cv=fail; b=aQh9vlI+kZkULNwzwbOPqKfDrRnl6o0jBC8S/0L5EfwGFM4g4+CtLDu1vgorGIP+RVBfcfTTL2H5ESAQtv64I3QV9SWQVxxUpd1kM2fkraGrwNt6DmEllUmgy/uzrDWjnO46/2e4/S9eqsV/HE2Q60ifggPkDQxfJePgrlVujhM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705953335; c=relaxed/simple;
+	bh=ld9bqwJk/N04APp7zj8w8G40MY2R49maaQYTXHve+Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Q5+hoM/3/SaZnuCtwRPLy9uIfM1Z5zld4XZBQujfb1G62r0L8pYMf+YiBsykg8YSJ0djaxK4Z98JSOrAp3VkxJId8kG9+ZYX7RMf/UJyS+5MGNUBRwMJ0w8r+dMNHORbbdpJ9n4e32iO4s5+kw1dyreP1+1H03mlhByWPF3TEIM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hKHAzZl4; arc=fail smtp.client-ip=40.107.223.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbF57wLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1769C433C7;
-	Mon, 22 Jan 2024 18:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705947977;
-	bh=xqaElstZ6Be2KexYuJuX9vmqnmJZ8Y7gmDJsiNOQ56Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sbF57wLpzO4Po/5GpjgYQjSECzQjLbxSiNv/RKB8wRHfNNYDrfybv1BM0T+rwpu13
-	 WXBW4KZf0YWrt1XaNQpp3Hl67mdkmKjBMm10UrSe1YtlB/jlWvemQbqfZuLtOPugV7
-	 w7zmscDHsgJyt9pCLUdy4K+WKwdOJJpQ3FOQmgSkL2jGVV98ELA1IJyO15yK9on5jV
-	 VC9xEDPpXQjYMabsXM2bkSsDb+HZW462zvO1CPzN+F7m0wmEkizHIv1x1NG7IONcso
-	 8MTlsPoksu0gnKedabN5/EDAjZJhLwQE5iKmSugXt0ALOpa2XjuZhtiIBNbXTIbBTi
-	 EA0XaD5Y4jSgA==
-Date: Mon, 22 Jan 2024 12:26:15 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	regressions@leemhuis.info
-Subject: Re: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH]
- Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-Message-ID: <20240122182615.GA277100@bhelgaas>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hKHAzZl4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ESOabslct4petnJJIg/RLB0PDpb/0STxyl0uO4dZoEEyCSF2e63wJKMmOB/UIf2Q1oqKoFJJEpqPmaWwqWm2clzA8d/NmxOOolI5mfBeAhGeFpUU5SSxqF/5JFhDF78KW43YxyMEQQJgFmtAw8aAqZIBwntCQWfexHaz0na4LEn/LIxIRmLvfOs7nIA9GbhaBe5Z7IRlyOASbfIsk5ua6sy4MWTEjDm5IsCVppxrprrIruDeyLChE7dyz+zTNiRDoMq9QR/jBXhVX3jRv2ZEuCWwFSYNhTDOAud/e49DkyCY/4XekB2wggDfdHx3yU8XKHF/tGayN/Vwu/WJsgOm3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=21NGy35j+OPZC/y9Ha/+ZqWVQC1dAoXJObkYnbpuQTQ=;
+ b=TjE4G0XXQRrdPt7hZ+g0ZN8Vb6kVLblhAYVDiUCvoP3F6Izaclk5FjE+VYaeOQC3G/DkCYwbF5Eg9S9dMISw7aq5KkWhrj6BMvdzsUDUIT+IxEIwIMES5eLpg0aORm55okc+VRtm8CW7cKNdZc/DhBVp9ibUo+95NN4NwfjGvkcgI12uumn4HV+uJmZ5UOoSwHfOg6OUb1NCToqRJQwYOWpsusgxAvFnz5TS5awVzRDcWhunwhDzP69WBdNKXsOtRUGE+9JJXPWSRhz+TcglgOtSNVwywpiTt81EjkHB0/HvVVuJ84ug4zFIqmFu+DtS2ubocOrRyWXUXneKV62L7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=21NGy35j+OPZC/y9Ha/+ZqWVQC1dAoXJObkYnbpuQTQ=;
+ b=hKHAzZl49McvOlF22lwIUdNCSa+dSHuHIZvBq95tzzSeYZeWgVwZ9UJGuEdQCI+SH4qHshHxpVh196tbMyxBmbvZsZKgN8HtrnoOkQ7in58v85ANBzfhhotZltkcHN+KkOB8mqFBAc1G8gTjht2buu9n+CvLQ3ZzulUEdZx+GvjfoYyJ+FAXI72nxGwfyX6colPo0sJqzepTiQtlW8frGoeOtHLwmKF3IkFgC+q+BxMayRI/ii7zMLkpBZUrBA/5mJSqYofvZol2LLEWarNrXBYL828iuPsf0fbz6TdR5A1pS6GKDG6jyaXqSfV93e1qeQ35s7GgpSYSG3vyQuvx+Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9134.namprd12.prod.outlook.com (2603:10b6:408:180::21)
+ by SJ1PR12MB6244.namprd12.prod.outlook.com (2603:10b6:a03:455::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
+ 2024 19:55:31 +0000
+Received: from LV8PR12MB9134.namprd12.prod.outlook.com
+ ([fe80::21a9:5188:e977:2bc6]) by LV8PR12MB9134.namprd12.prod.outlook.com
+ ([fe80::21a9:5188:e977:2bc6%7]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
+ 19:55:31 +0000
+Date: Mon, 22 Jan 2024 11:55:29 -0800
+From: Saeed Mahameed <saeedm@nvidia.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-rdma <linux-rdma@vger.kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>
+Subject: Re: mlx5: Regression VFs fail to probe on v6.8-rc1
+Message-ID: <Za7IMcstTALcSnPG@x130>
+References: <dd98c1417b0c5027da8e712154eea99807fc4286.camel@linux.ibm.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <dd98c1417b0c5027da8e712154eea99807fc4286.camel@linux.ibm.com>
+X-ClientProxiedBy: SJ0PR03CA0081.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::26) To LV8PR12MB9134.namprd12.prod.outlook.com
+ (2603:10b6:408:180::21)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9134:EE_|SJ1PR12MB6244:EE_
+X-MS-Office365-Filtering-Correlation-Id: 838e1235-a4e7-429d-0bb3-08dc1b8416c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4MmmLbgDlZlv4X16fGOonuzpC6V8KXVEOEStkhXmOSnJff5soPtJz84s/7GNVqKm29CAqi8Rhepe9F26816mRa5jQUKLmSotZx1Nd1QKUYwXkzS/6ItlriqrWaC58pc1FCWZRcOFMVK/PwCgdM+fNWYgWsieqLoYTxaNsk2K1qWJXqDCuqtKyL1+e3lm3GwJ3pUdPMVaB3YEw5cEaBnp9q0Ct4jdRBWAjbyXERoYtzUnYgd+dSc2Jevvji2XOkVr/NhE+IXQSOL08K/vWWglYVjdMTWFuQWDxHEapk326JVshEesVdeBF3YpTBdtIQ3Ey3aoBTIIO/4pC1a+xjt3couZFJENvlcwcCglJQLouIgpvKl1rj2uK/yMbZ65acbu991zqwp7pP1xQVT3qhe3Yzjo+TxXykBkEj9nG5cVAHrHM+wuEhlcGmq1nm/K3J3Plr1GUszhTtXbJRS8t3YNvfZNi4evQ1xFDN/tHvuyVdmeoPyllPIk/m30tfWxwNHc/jqa6xMCm3ouCHJ5LW/Q7XpLopfBjGKDV/2Q1fl1Ef1bGa9QaAq7jh10DEbw/cWoOo6/K9LTcvJljcDNFj9Km+ZjBf4WSso8DSEx05noxjeIUTWKZ3Jd5U47GAJSyTDmfFnyE9j/wgGIe4s2hqsvyw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9134.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(39860400002)(346002)(366004)(376002)(396003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(41300700001)(33716001)(38100700002)(86362001)(83380400001)(316002)(6916009)(6486002)(966005)(54906003)(66476007)(66556008)(66946007)(5660300002)(2906002)(4326008)(8936002)(8676002)(26005)(6512007)(6506007)(9686003)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JwczVa3C6o/nsEkWqZ3mVz1osExkiYHRuHt93e3tBoFxnf9jDWWqwsZxDV00?=
+ =?us-ascii?Q?2rX+zYNI3jwj40361iRtBc2XoFqh8vtDZwccKBtUd6zWG/JsreXI6C76DpOD?=
+ =?us-ascii?Q?+sXJZLfkn5U4JvOp95BWkuYNH63Z32xHc+glIMHM+sLn8JLANG5gCk2hAHTx?=
+ =?us-ascii?Q?oYzHHpWuYYHhoKnunhg0oo2lUT8LCglG5W4K0lw1G3krEW0yD7ZaYDmkBS5o?=
+ =?us-ascii?Q?s0xOactstWkRi6rfRi8G0a952f4kqZS/NX5vMy5NL19J7xzhK+PjohDSat5W?=
+ =?us-ascii?Q?ckY5h/ymhrKkck87e/E3dYIYndXuEWOOqEPC93ZmPY76cA7+PBN4X94hIu1g?=
+ =?us-ascii?Q?DlGQSd0tAtUeKI/tksG4FcgH9N1xnLZ3NKpxC1VYpMR6bb36tUmNpz/1+nyQ?=
+ =?us-ascii?Q?ZtnlG4CGHnmWqZaUyWdZ/QFe0OqQx3oGJ10kuPyhPYReptltw1zbXGK8CuMO?=
+ =?us-ascii?Q?9CV1h9UkXUHTkuh1/YNOILmYbmMvaTDCBPgHcAsSvCyVArkMQtdT4NKHFLNm?=
+ =?us-ascii?Q?PsoXvugomuWqm0UkQfRIq05X6i4muwru7k90WEidhQue5f4rYwtaTOieHBcS?=
+ =?us-ascii?Q?dc2v0b01SGVLwhHg1WZtewUfi8B/BhoSGMGNQAOaaVwYJH/WhxjRORsWJvC0?=
+ =?us-ascii?Q?SVUL1peHvNy1oVNfK3ZyZ3Wa1S0+rDJxmpbDiQc11qd9MrujlWtWpGZATe3t?=
+ =?us-ascii?Q?diF1gZrM6+VwDjnQ7ZoU3Bkq7VRbXGoH6BHvZFsbLBCDCytXF7QBEnblCd23?=
+ =?us-ascii?Q?rnk4n6eVVV2CkiHdIpLl+NVs38YyqYW1+KB76AY8E6EHOTUgq/bNAL55+PJc?=
+ =?us-ascii?Q?qGzxQRNCYUhrcZrTmKCb0cii+ofJHBSm8y1oLZx1kYGITAoJtSLBZJZ79O2U?=
+ =?us-ascii?Q?7+gHrbJqRAfrDdtE71z1kEA01bPySv6ajYQRuWsOVqRRexGeDrtuHmJK49Os?=
+ =?us-ascii?Q?p+2+oBJn7cWp8FwpTyaUly5ESQOIrZqzQm8Pt/qIWxsouTQKZcjAEMg0HOJR?=
+ =?us-ascii?Q?jjI8QZb7xQEqfuIIpeuaxsVvYDeIfIaXFaNqLSLx9dud+wBcBi6/jy4Il/aY?=
+ =?us-ascii?Q?tQsI4EVxajIkbOJtnCOqY5/mIexdSJh4sYPHN9kf4J3eQgxCqYUFDYgb/reo?=
+ =?us-ascii?Q?+0Lt9ODWqG6kN5R443xg9IMbdCl5SuyM69itGYdaAbyCuzf9WVtv4XkLloul?=
+ =?us-ascii?Q?SUXv2Ms/m9wVKSMu7/inqVEnuNYzPaY8QPXOnVqcL8Yy1UILcWgJCBokfJoL?=
+ =?us-ascii?Q?Q58nBGZmlGs/Ll3dGNfemi9O4/XqCejlKW1wfPVA0Vn4fj8piA84eebl3p0f?=
+ =?us-ascii?Q?QNeSLzuvclFtLQI0Si6dDJ4o3pC1UDy39vh3paU5uIsHtQV2XiGUUCEChVFw?=
+ =?us-ascii?Q?9woJoG1awx2rRWwKnUDlmj8ZDsR1IacrhhpWBfWQHNskS5DInwp7ywPOslpW?=
+ =?us-ascii?Q?6zHlPa51f/opujuFOB5Ch4/ceOzUt+TXQmKgbz5z12jcpAk4j5GAELlTvwG6?=
+ =?us-ascii?Q?AR1b86x7AGpAKkYC1aRMmAdZ0scmD4nuPitYRKtVj9cPGscYit5V0795iwaD?=
+ =?us-ascii?Q?ndIC6zD2OxW2MpGxAQybaly9vudyDW0VoVbzA3pa?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 838e1235-a4e7-429d-0bb3-08dc1b8416c3
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9134.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 19:55:31.1950
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6d3uV2GHOJWB8Ve1DxdPJj0SX53BbAx0+QViMWFf5NcvcpEa/HyotBTkbLTZxTF1xK0zQ0HUgTxmfJsj0DCeFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6244
 
-On Mon, Jan 22, 2024 at 11:53:35AM +0100, Johan Hovold wrote:
-> Hi Bjorn,
-> 
-> I never got a reply to this one so resending with updated Subject in
-> case it got buried in your inbox.
+On 22 Jan 12:10, Niklas Schnelle wrote:
+>Hi Saeed, Hi Leon,
+>
+>On current v6.8-rc1 on both s390x and on an Intel x86_64 test system
+>with a ConnectX-6 DX the mlx5 driver fails to probe for VFs (On x86
+>"echo 1 > /sys/bus/pci/devices/<dev>/sriov_numvfs" after a fresh boot
+>is enough and is 100% reproducible).
+>
+>In dmesg I see the following messages (from the Intel server but it's
+>basically the same on s390x):
+>
+>[  110.443950] mlx5_core 0000:6f:00.1: E-Switch: Enable: mode(LEGACY), nvfs(1), necvfs(0), active vports(2)
+>[  110.546248] pci 0000:6f:08.2: [15b3:101e] type 00 class 0x020000 PCIe Endpoint
+>[  110.546340] pci 0000:6f:08.2: enabling Extended Tags
+>[  110.547626] pci 0000:6f:08.2: Adding to iommu group 115
+>[  110.553328] mlx5_core 0000:6f:08.2: enabling device (0000 -> 0002)
+>[  110.553478] mlx5_core 0000:6f:08.2: firmware version: 22.36.1010
+>[  110.718748] mlx5_core 0000:6f:08.2: Rate limit: 127 rates are supported, range: 0Mbps to 97656Mbps
+>[  110.730136] mlx5_core 0000:6f:08.2: Assigned random MAC address ce:a6:ec:9e:70:49
+>[  110.734351] mlx5_core 0000:6f:08.2: mlx5_cmd_out_err:808:(pid 650): CREATE_TIS(0x912) op_mod(0x0) failed, status bad parameter(0x3), syndrome (0x595b5d), err(-22)
+>[  110.735776] mlx5_core 0000:6f:08.2: mlx5e_create_mdev_resources:174:(pid 650): alloc tises failed, -22
+>[  110.736819] mlx5_core 0000:6f:08.2: _mlx5e_probe:6076:(pid 650): mlx5e_resume failed, -22
+>[  110.749146] mlx5_core.eth: probe of mlx5_core.eth.2 failed with error -22
 
-I did see it but decided it was better to fix the problem with resume
-causing an unintended reboot, even though fixing that meant breaking
-lockdep again, since I don't think we have user reports of the
-potential deadlock lockdep finds.
 
-08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") was a
-start at fixing other problems and also improving the ASPM style, so I
-hope somebody steps up to fix both it and the lockdep issue.  I
-haven't looked at it enough to have a preference for *how* to fix it.
 
-Bjorn
+Hi Niklas,
 
-> On Mon, Jan 08, 2024 at 09:39:07AM +0100, Johan Hovold wrote:
->  
-> > On Tue, Jan 02, 2024 at 05:25:50PM -0600, Bjorn Helgaas wrote:
-> > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
-> > > 
-> > > Michael reported that when attempting to resume from suspend to RAM on ASUS
-> > > mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
-> > > ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
-> > > with no output, followed by a reboot.
-> > > 
-> > > Workarounds include:
-> > > 
-> > >   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> > >   - Booting with "pcie_aspm=off"
-> > >   - Booting with "pcie_aspm.policy=performance"
-> > >   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
-> > >     before suspending
-> > >   - Connecting a USB flash drive
-> > > 
-> > > Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> > > Reported-by: Michael Schaller <michael@5challer.de>
-> > > Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
-> > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: <stable@vger.kernel.org>
-> > > ---
-> >  
-> > > +/* @pdev: the root port or switch downstream port */
-> > > +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-> > > +{
-> > > +	struct pcie_link_state *link = pdev->link_state;
-> > > +
-> > > +	if (aspm_disabled || !link)
-> > > +		return;
-> > > +	/*
-> > > +	 * Devices changed PM state, we should recheck if latency
-> > > +	 * meets all functions' requirement
-> > > +	 */
-> > > +	down_read(&pci_bus_sem);
-> > > +	mutex_lock(&aspm_lock);
-> > > +	pcie_update_aspm_capable(link->root);
-> > > +	pcie_config_aspm_path(link);
-> > > +	mutex_unlock(&aspm_lock);
-> > > +	up_read(&pci_bus_sem);
-> > > +}
-> > 
-> > This function is now restored in 6.7 final and is called in paths which
-> > already hold the pci_bus_sem as reported by lockdep (see splat below).
-> > 
-> > This can potentially lead to a deadlock and specifically prevents using
-> > lockdep on Qualcomm platforms.
-> > 
-> > Not sure if you want to propagate whether the bus semaphore is held to
-> > pcie_aspm_pm_state_change() or if there was some alternative to
-> > restoring this function which should be explored instead.
-> 
-> So to summarise, this patch, which is now commit
-> 
-> 	f93e71aea6c6 ("Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"")
-> 
-> introduced a regression in 6.7-final for Qualcomm platforms (and some
-> Intel platforms) similar to the one recently fixed by commit
-> 
-> 	f352ce999260 ("PCI: qcom: Fix potential deadlock when enabling ASPM").
-> 
-> Johan
-> 
-> 
-> #regzbot introduced: f93e71aea6c6
-> 
-> >    ============================================
-> >    WARNING: possible recursive locking detected
-> >    6.7.0 #40 Not tainted
-> >    --------------------------------------------
-> >    kworker/u16:5/90 is trying to acquire lock:
-> >    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pcie_aspm_pm_state_change+0x58/0xdc
-> >    pcieport 0002:00:00.0: PME: Signaling with IRQ 197
-> >    
-> >                but task is already holding lock:
-> >    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
-> >    
-> >                other info that might help us debug this:
-> >     Possible unsafe locking scenario:
-> > 
-> >           CPU0
-> >           ----
-> >      lock(pci_bus_sem);
-> >      lock(pci_bus_sem);
-> >    
-> >                 *** DEADLOCK ***
-> > 
-> >     May be due to missing lock nesting notation
-> > 
-> >    4 locks held by kworker/u16:5/90:
-> >     #0: ffff06c5c0008d38 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
-> >     #1: ffff800081c0bdd0 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
-> >     #2: ffff06c5c0b7d0f8 (&dev->mutex){....}-{3:3}, at: __driver_attach_async_helper+0x3c/0xf4
-> >     #3: ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
-> >    
-> >                stack backtrace:
-> >    CPU: 1 PID: 90 Comm: kworker/u16:5 Not tainted 6.7.0 #40
-> >    Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET53W (1.25 ) 10/12/2022
-> >    Workqueue: events_unbound async_run_entry_fn
-> >    Call trace:
-> >     dump_backtrace+0x9c/0x11c
-> >     show_stack+0x18/0x24
-> >     dump_stack_lvl+0x60/0xac
-> >     dump_stack+0x18/0x24
-> >     print_deadlock_bug+0x25c/0x348
-> >     __lock_acquire+0x10a4/0x2064
-> >     lock_acquire+0x1e8/0x318
-> >     down_read+0x60/0x184
-> >     pcie_aspm_pm_state_change+0x58/0xdc
-> >     pci_set_full_power_state+0xa8/0x114
-> >     pci_set_power_state+0xc4/0x120
-> >     qcom_pcie_enable_aspm+0x1c/0x3c [pcie_qcom]
-> >     pci_walk_bus+0x64/0xbc
-> >     qcom_pcie_host_post_init_2_7_0+0x28/0x34 [pcie_qcom]
+The following two commits got reverted from net-next, so they are missing
+in the current kernel release.
+
+I will resend them as fixes to net branch, hopefully they will make
+it to RC2 soon 
+
+https://lore.kernel.org/netdev/20231221005721.186607-2-saeed@kernel.org/
+https://lore.kernel.org/netdev/20231221005721.186607-3-saeed@kernel.org/
+
