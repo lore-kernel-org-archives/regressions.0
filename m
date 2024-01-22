@@ -1,187 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6353A8C6;
-	Mon, 22 Jan 2024 10:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033473DB8B
+	for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 11:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920806; cv=none; b=cZVMhHKRe6PkFQtCp/SucLcCDjQQjyH8ZYFTrp8hwempsZlUseUr3rwt1tUp46iLtQQ+EELyO0oBSzldGh22JsfaFXCVl/QV9sSuMnDFRUTGXDjGnCtlJZtx5cWjYGuE3PP7Cf+Hb55zupoQsHQ+Jne7v0ZyBMBP3PUcBfDyaaI=
+	t=1705921837; cv=none; b=cwJVm6IE0nnNYbV0O4iU9VyyavZhTNKMP/glS+5B8awKATDyi2Ng5MyE2R+OqJKe+rfPf5xMxYy4vwhwy1NqhbIu4mQm92joV24JFdjudu28/vm125a+7f7thidPdREijWfduV1goj78Y1/0ktn5DopX0Wfui7AsGNL/3xuA8lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920806; c=relaxed/simple;
-	bh=Mv/eIsF4cLBVJCplW6zKFPzyppMCYU3H18HJx+nE56g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZwn7EkET5hW6fjn3spvbpGUa3f/HAsZSIi3nZSrHm5O3fI0WaT+eP582DColb4XmVNzCVXEjKsDOg6JsrF+MpZ04JGVatx3iYiCGk0VXZoowT9qaaw9LlXLssImT8FN3K3X3w8ow7xFcRXGb2L1ogkwQqnNYymvaQvk7wEIUtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0uU6dC/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705921837; c=relaxed/simple;
+	bh=I+II2NOELeL8JKty2eydxGvSC8QMcuLFVOi+lUnLt8o=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=n2G3QNETR5BNJM7VL9v+SiNG1+xTaDpvi8QcuHJQFiLuH4roGWRu2DFE4TLD/1ICyeP76+JKl+I7lRy6Q36MpIJCA8fI9gAtzdrKYS89HMKkBLI/YECBKvmZoN6YhwIqXGlxhQyJD6hD78f+GphsgVOGYx6f1gQOcituj23cNm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tnAx/nuT; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0uU6dC/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C55C43394;
-	Mon, 22 Jan 2024 10:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705920805;
-	bh=Mv/eIsF4cLBVJCplW6zKFPzyppMCYU3H18HJx+nE56g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D0uU6dC/KV/ygNWsBOXmuRkS0ZTgQ4EIO/qOPHGKTn91hN9t82/Zci8gvPikvww/Y
-	 9h5mZtDXIBoTuF7y8TFSCvBaY/Im0kugIQrwJn/wtgLNpB94s1enWwg/ASF0joLwno
-	 +TiyD4dVPTE13d0xQLUvlegXkYwothIhOM8vzINL2AuXtxha1Po/n1Rd++QeDibWvk
-	 ZyAAnCHxB6fZ01cRC5anq28UN/tnPQsq1+FgXqEAN+R5PCQ9MN8Aws04NavnFMFp7F
-	 gu9dTGs6aVF2iJWyw9BS5pZvGF5MNitihUImN8Bto9kMeT6zhw3NebN234dYb++NXp
-	 T+mX+WOYxVJqw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rRrvr-000000007a8-3dba;
-	Mon, 22 Jan 2024 11:53:36 +0100
-Date: Mon, 22 Jan 2024 11:53:35 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	regressions@leemhuis.info
-Subject: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH] Revert
- "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-Message-ID: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
-References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
- <20240102232550.1751655-1-helgaas@kernel.org>
- <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tnAx/nuT"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40MB3OZX015553;
+	Mon, 22 Jan 2024 11:10:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : content-type : content-transfer-encoding :
+ mime-version; s=pp1; bh=mmZWuHir6HZ9KQFmQfkVB6C1y1VAd4jm8uJvr5/6zz8=;
+ b=tnAx/nuTTrWyiXDIUrDK7j6Etjh9Lm/jKcetcIlEzxK29nY+dYd6m6FUcP0wJCMHZP7b
+ P7M0zdI3o7LZaA5fUeuWNBsjkJvYzsRSD1/zODioJA3jg+TCfuPsuVmkIJAUAmahbip3
+ 14bdTlBA9kO5RM5+lXnnt3xQ1DEaYtakC9xTMeA9olc6lCNfEq0mT3kqI827mAQEVStH
+ dHmtNNvbc8sDfSlP1JtukImV5sw2THGw7uommvdOL6M3dSImHP6r7e5hEO7qOEMYIIfO
+ IhAFaUo9Xt790OnlfdIeoy9Z4MMhHCN5t43T3Fk9So+1txmI92N9k6K2FF5WtuV0Nw0t gg== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vsq558569-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 11:10:30 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40M9Rm1S025253;
+	Mon, 22 Jan 2024 11:10:29 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vrtqjyhnt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 11:10:29 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40MBAObO42074700
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Jan 2024 11:10:25 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 20ED920043;
+	Mon, 22 Jan 2024 11:10:24 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 92C6A20040;
+	Mon, 22 Jan 2024 11:10:23 +0000 (GMT)
+Received: from [9.171.65.106] (unknown [9.171.65.106])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 22 Jan 2024 11:10:23 +0000 (GMT)
+Message-ID: <dd98c1417b0c5027da8e712154eea99807fc4286.camel@linux.ibm.com>
+Subject: mlx5: Regression VFs fail to probe on v6.8-rc1
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+        netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>
+Date: Mon, 22 Jan 2024 12:10:23 +0100
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fPqbHx-f5M0e8gMAXFlNrI5ONpB3WEJc
+X-Proofpoint-ORIG-GUID: fPqbHx-f5M0e8gMAXFlNrI5ONpB3WEJc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_01,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ clxscore=1011 suspectscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=456
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401220079
 
-Hi Bjorn,
+Hi Saeed, Hi Leon,
 
-I never got a reply to this one so resending with updated Subject in
-case it got buried in your inbox.
+On current v6.8-rc1 on both s390x and on an Intel x86_64 test system
+with a ConnectX-6 DX the mlx5 driver fails to probe for VFs (On x86
+"echo 1 > /sys/bus/pci/devices/<dev>/sriov_numvfs" after a fresh boot
+is enough and is 100% reproducible).
 
-On Mon, Jan 08, 2024 at 09:39:07AM +0100, Johan Hovold wrote:
- 
-> On Tue, Jan 02, 2024 at 05:25:50PM -0600, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
-> > 
-> > Michael reported that when attempting to resume from suspend to RAM on ASUS
-> > mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
-> > ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
-> > with no output, followed by a reboot.
-> > 
-> > Workarounds include:
-> > 
-> >   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> >   - Booting with "pcie_aspm=off"
-> >   - Booting with "pcie_aspm.policy=performance"
-> >   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
-> >     before suspending
-> >   - Connecting a USB flash drive
-> > 
-> > Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> > Reported-by: Michael Schaller <michael@5challer.de>
-> > Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: <stable@vger.kernel.org>
-> > ---
->  
-> > +/* @pdev: the root port or switch downstream port */
-> > +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-> > +{
-> > +	struct pcie_link_state *link = pdev->link_state;
-> > +
-> > +	if (aspm_disabled || !link)
-> > +		return;
-> > +	/*
-> > +	 * Devices changed PM state, we should recheck if latency
-> > +	 * meets all functions' requirement
-> > +	 */
-> > +	down_read(&pci_bus_sem);
-> > +	mutex_lock(&aspm_lock);
-> > +	pcie_update_aspm_capable(link->root);
-> > +	pcie_config_aspm_path(link);
-> > +	mutex_unlock(&aspm_lock);
-> > +	up_read(&pci_bus_sem);
-> > +}
-> 
-> This function is now restored in 6.7 final and is called in paths which
-> already hold the pci_bus_sem as reported by lockdep (see splat below).
-> 
-> This can potentially lead to a deadlock and specifically prevents using
-> lockdep on Qualcomm platforms.
-> 
-> Not sure if you want to propagate whether the bus semaphore is held to
-> pcie_aspm_pm_state_change() or if there was some alternative to
-> restoring this function which should be explored instead.
+In dmesg I see the following messages (from the Intel server but it's
+basically the same on s390x):
 
-So to summarise, this patch, which is now commit
+[  110.443950] mlx5_core 0000:6f:00.1: E-Switch: Enable: mode(LEGACY), nvfs=
+(1), necvfs(0), active vports(2)
+[  110.546248] pci 0000:6f:08.2: [15b3:101e] type 00 class 0x020000 PCIe En=
+dpoint
+[  110.546340] pci 0000:6f:08.2: enabling Extended Tags
+[  110.547626] pci 0000:6f:08.2: Adding to iommu group 115
+[  110.553328] mlx5_core 0000:6f:08.2: enabling device (0000 -> 0002)
+[  110.553478] mlx5_core 0000:6f:08.2: firmware version: 22.36.1010
+[  110.718748] mlx5_core 0000:6f:08.2: Rate limit: 127 rates are supported,=
+ range: 0Mbps to 97656Mbps
+[  110.730136] mlx5_core 0000:6f:08.2: Assigned random MAC address ce:a6:ec=
+:9e:70:49
+[  110.734351] mlx5_core 0000:6f:08.2: mlx5_cmd_out_err:808:(pid 650): CREA=
+TE_TIS(0x912) op_mod(0x0) failed, status bad parameter(0x3), syndrome (0x59=
+5b5d), err(-22)
+[  110.735776] mlx5_core 0000:6f:08.2: mlx5e_create_mdev_resources:174:(pid=
+ 650): alloc tises failed, -22
+[  110.736819] mlx5_core 0000:6f:08.2: _mlx5e_probe:6076:(pid 650): mlx5e_r=
+esume failed, -22
+[  110.749146] mlx5_core.eth: probe of mlx5_core.eth.2 failed with error -2=
+2
+[  110.776533] mlx5_core 0000:6f:08.2: is_dpll_supported:213:(pid 650): Mis=
+sing SyncE capability
 
-	f93e71aea6c6 ("Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"")
+I've actually encountered this problem before on December 21 on linux-
+next but then didn't investigate further as the holidays were coming up
+and it was affecting x86 as well. It was gone after the holidays on
+next-20240104. Somehow it's now back on both linux-next and v6.8-rc1.
+This same configuration of course works fine on v6.7.=C2=A0On s390x at leas=
+t
+this also affects ConnectX-4 and ConnectX-5 as well and also occurs
+when the VF is passed-through to a different logical partition from the
+one controlling the PF.
 
-introduced a regression in 6.7-final for Qualcomm platforms (and some
-Intel platforms) similar to the one recently fixed by commit
+One point of difference to other common setups may be that this Intel
+Sapphire Rapids server as well as s390x are running with IOMMU enabled
+and no pass-through for kernel code i.e. on the Intel server my kernel
+command line includes "iommu=3Dnopt intel_iommu=3Don".
 
-	f352ce999260 ("PCI: qcom: Fix potential deadlock when enabling ASPM").
-
-Johan
-
-
-#regzbot introduced: f93e71aea6c6
-
->    ============================================
->    WARNING: possible recursive locking detected
->    6.7.0 #40 Not tainted
->    --------------------------------------------
->    kworker/u16:5/90 is trying to acquire lock:
->    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pcie_aspm_pm_state_change+0x58/0xdc
->    pcieport 0002:00:00.0: PME: Signaling with IRQ 197
->    
->                but task is already holding lock:
->    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
->    
->                other info that might help us debug this:
->     Possible unsafe locking scenario:
-> 
->           CPU0
->           ----
->      lock(pci_bus_sem);
->      lock(pci_bus_sem);
->    
->                 *** DEADLOCK ***
-> 
->     May be due to missing lock nesting notation
-> 
->    4 locks held by kworker/u16:5/90:
->     #0: ffff06c5c0008d38 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
->     #1: ffff800081c0bdd0 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
->     #2: ffff06c5c0b7d0f8 (&dev->mutex){....}-{3:3}, at: __driver_attach_async_helper+0x3c/0xf4
->     #3: ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
->    
->                stack backtrace:
->    CPU: 1 PID: 90 Comm: kworker/u16:5 Not tainted 6.7.0 #40
->    Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET53W (1.25 ) 10/12/2022
->    Workqueue: events_unbound async_run_entry_fn
->    Call trace:
->     dump_backtrace+0x9c/0x11c
->     show_stack+0x18/0x24
->     dump_stack_lvl+0x60/0xac
->     dump_stack+0x18/0x24
->     print_deadlock_bug+0x25c/0x348
->     __lock_acquire+0x10a4/0x2064
->     lock_acquire+0x1e8/0x318
->     down_read+0x60/0x184
->     pcie_aspm_pm_state_change+0x58/0xdc
->     pci_set_full_power_state+0xa8/0x114
->     pci_set_power_state+0xc4/0x120
->     qcom_pcie_enable_aspm+0x1c/0x3c [pcie_qcom]
->     pci_walk_bus+0x64/0xbc
->     qcom_pcie_host_post_init_2_7_0+0x28/0x34 [pcie_qcom]
+Thanks,
+Niklas
