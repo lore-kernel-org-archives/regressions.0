@@ -1,87 +1,96 @@
-Received: from mr85p00im-zteg06021601.me.com (mr85p00im-zteg06021601.me.com [17.58.23.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF67524C9
-	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 01:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C94A38
+	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 04:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705973722; cv=none; b=hfW/0g/vpfIfoN3v3kwlrn1NslZ1E8/1/TiLrfYeJlA1HjPMQW/Tefi9zSD9tbkIpdeM/7tcJDwY4BP9CtU3IRbEdFtaZbZKKeHXODG+trNY1hhTXN02axC7KOMOl9DEY6AYhLMrPpCYaFY6kVMUczhmcqp1Xj4duR/y5i5qwOA=
+	t=1705984854; cv=none; b=KwMYLbcShPLeynhRqe1LQHuCX4b0Vfx+VT1HdmFkS+HA2gsAQqdXzu/pJXiG36HE7eiPgE7eAXBfqxbk+yeZkHahU8ajX/c7lf7Eb6XcCCIATbET2N618wLl9S7Psq5jT4IT5yxLaNoB3wS1+05TsHk4i68SR3IDcHS+aXBzM2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705973722; c=relaxed/simple;
-	bh=sah6Xek+srS2p2Pn7bvG4UHevwcL+grb3CBbgjQc+TM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gJbjX3fx6SLK0cEJfHvBocQVaFStFEzbetMzUAx/e6QNPD2TiCh/c5T9S/wr1+jQCH0RlA0888Z8fZPLo9eU7UxhZahJyNIcVbhzTiTLBD4l5IciHROdR+ZYnXQwg3dVRFhxLsuKGsHtVbguzbh+Y5sH5URSgJn6nqrqMPXVwA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=ICP+XLrb; arc=none smtp.client-ip=17.58.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	s=arc-20240116; t=1705984854; c=relaxed/simple;
+	bh=YOd0Xz8HUfT5xlx1WP8hP+JKoFmjh5aoSI7j96oW8i4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eeBdQwlbmYNgge0o3a+eTKosQNacIBh1vPRMNHezBdjWXcscILCDs9BLvtWGmTBDGckHeAqAcXeKFMfbO5zYO0hTxdcDcSrsfq6eOm+2555N2PZLeGuQM+g2sd+WhTB0JMuyBJnC5Z4f/77LxE/W+B7RHxmKqaoBDBW/RyOVrPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Li8sbvYq; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="ICP+XLrb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1705973718; bh=sah6Xek+srS2p2Pn7bvG4UHevwcL+grb3CBbgjQc+TM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ICP+XLrbZU0KXMwBwZpH5hiAFN2S7t2Fw83glczYxYp9I29CbcY+AOrkZnu93bHOp
-	 vbXFoq6YWmijrFcFwZN+yQaFK++EPJ1HPXZ6a38Ixzho2vNGd3Xvgqjx4+oeyz2Nb7
-	 aNxEqGxsuZQBSQou1SSrxgZpZiNrllgQxhQsItJ1KhbH1lAJ08c8WCFDQygmedLxGf
-	 aM2CDeZSySH4UYj5pxDno3y3Tpjb3OizNahkPVxBcYVOxu//iJ8jIRlIXwXcoxpZSt
-	 QAikfMgOhwadFhiuexozuiABAVcu0LKc7sE/8cWL55Id8m68UlHw3oSbFDLEnqnvUf
-	 BzqOYtUaP0dBQ==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021601.me.com (Postfix) with ESMTPSA id 42B9830585CD;
-	Tue, 23 Jan 2024 01:35:17 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: dan@danm.net
-Cc: gregkh@linuxfoundation.org,
-	junxiao.bi@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	regressions@lists.linux.dev,
-	song@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system; successfully bisected
-Date: Mon, 22 Jan 2024 18:35:14 -0700
-Message-ID: <20240123013514.7366-1-dan@danm.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123005700.9302-1-dan@danm.net>
-References: <20240123005700.9302-1-dan@danm.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li8sbvYq"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6860ff3951aso14673766d6.1
+        for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 20:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705984851; x=1706589651; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mJL/+SwQwpiuMOYdxWq9BpZVB2GgCdaKykGe+EXHzSw=;
+        b=Li8sbvYqp/Ld5/Cnzx88qNuUs0WmJEVhkOLChrZCKu+EKECYCBYDwe5KbgG8937TD+
+         LWEho59f09b0TvaijK2asVMy5+yo/qFOpdsPCNzmGE1y/qZItk6sQe8xzLsMKd8ga5jK
+         LG7TSk2AotoAqtgjJAtM1rPM7isWZ8RfFj0jChypNLlIhJYime6nxktKkA+9wRm6lQZn
+         iSeamShtKagq9tjEB6t29mw5gPXiFU9Z0pJhyC57fJK7aWnhb/F5h8DnrgPZ6GQC//8J
+         chXmaKS5IM9nui3OCqoVJRuTHU1kcun+wr5Uh7fYCk5VBQqExIYE9WPy2WpiC7CclUcz
+         s4FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705984851; x=1706589651;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJL/+SwQwpiuMOYdxWq9BpZVB2GgCdaKykGe+EXHzSw=;
+        b=XpmkiOULceinRFG8DAuzDXHNFeWHMLzN+Od50YkF/Dt+xjYDn0ciXuZT4aVP7PQi70
+         +z/GdG0qPmIruHANj0dAWaK0OIDBg8k3mGdkcLtEVPhdwEMtBPgiDQ/6946fbEwgq0D2
+         O2sFCUJP6q6W5B7M8d/VivtXJeoF5C2P6KRkgPVQ5dJRTuT2GsHPKsG/06+OZ1MynaNI
+         xAMRH5rxogF/b/4BZ4ry77sGhJHGicpOtstQZvDS25YG6CBSka5hDdiu1CSe774I/ZfH
+         aaWFWu+3EqvytgeZneomoGY6+uZgMvQXHmsftVdf4EIikTJDVRXgPTpi1MpOkKwgOC01
+         FMQg==
+X-Gm-Message-State: AOJu0Yx8LY0ZJXBDc/jlodZf5ZoMNia9t4n35JA8eW8YoGelgZzBE+JI
+	NXmNHxr5VVAdHc+AaPwz2PMEkp4eA/TDLUVC0Wkk2arSlPP9Dy6ZQdOcpKQB
+X-Google-Smtp-Source: AGHT+IEccH9VvezrwqXv7iLjDCw+wdz+tSaIyaTqAV2PO5Gsb/7wZJZDqCZB3+UapLVR3YEFRxkBzg==
+X-Received: by 2002:a05:6214:c8b:b0:685:f795:dfc2 with SMTP id r11-20020a0562140c8b00b00685f795dfc2mr421040qvr.86.1705984851150;
+        Mon, 22 Jan 2024 20:40:51 -0800 (PST)
+Received: from squish.no-ip.biz ([181.214.166.113])
+        by smtp.gmail.com with ESMTPSA id h4-20020a0cf8c4000000b0068189522cd3sm3048642qvo.67.2024.01.22.20.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 20:40:50 -0800 (PST)
+Received: by squish.no-ip.biz (Postfix, from userid 1000)
+	id 2F730AA0B8; Mon, 22 Jan 2024 23:40:49 -0500 (EST)
+Date: Mon, 22 Jan 2024 23:40:49 -0500
+From: Paul Thompson <set48035@gmail.com>
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org
+Subject: [REGRESSION] 6.6.10+ and 6.7+ kernels lock up early in init.
+Message-ID: <Za9DUZoJbV0PYGN2@squish.home.loc>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: CGjGPmDYwSrLW_CGDW0snxWtJ2ZFhDoJ
-X-Proofpoint-GUID: CGjGPmDYwSrLW_CGDW0snxWtJ2ZFhDoJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_12,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=595
- suspectscore=0 malwarescore=0 clxscore=1030 adultscore=0 mlxscore=0
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2401230009
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Some additional new information: I realized after filing this report
-that on the mainline there is a second commit, part of a pair, that
-was supposed to go with commit 0de40f76d567. That second commit
-upstream is d6e035aad6c0 ("md: bypass block throttle for superblock
-update"). That commit probably also was supposed to have been
-backported to stable along with the first, but was not, since it
-provides what is supposed to be a replacement for the fix that has
-been reverted.
+	Hi;
 
-So I rebuilt my kernel with the missed commit also backported instead
-of just reverting the first commit (i.e. I have now built 6.7.1 with
-just commit d6e035aad6c0 on top). Unfortunately, I can still reproduce
-the hang after applying this second commit. So it looks
-like even with that fix applied the regression is still present.
+	With my longstanding configuration, kernels upto 6.6.9 work fine.
+Kernels 6.6.1[0123] and 6.7.[01] all lock up in early (open-rc) init,
+before even the virtual filesystems are mounted.
 
-Coincidentally, I see it seems this second commit was picked up for
-inclusion in 6.7.2 just today. I think that needs to NOT be
-done. Instead the stable series should probably revert 0de40f76d567
-until the regression is successfully dealt with on master. Probably no
-further changes related to this patch series should be backported
-until then.
+	The last thing visible on the console is the nfsclient service
+being started and:
 
-Cheers,
+Call to flock failed: Funtion not implemented. (twice)
 
--- Dan
+	Then the machine is unresponsive, numlock doesnt toggle the keyboard led,
+and the alt-sysrq chords appear to do nothing.
+
+	The problem is solved by changing my 6.6.9 config option:
+
+# CONFIG_FILE_LOCKING is not set
+to
+CONFIG_FILE_LOCKING=y
+
+(This option is under File Systems > Enable POSIX file locking API)
+
+	I do not recall why I unset that, but it was working for I think the
+entire 6.6 series until 6.6.10. Anyway thought I would mention it in case
+anyone else hits it.
+
+Paul
+
