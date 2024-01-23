@@ -1,98 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp2.tecnico.ulisboa.pt (smtp2.tecnico.ulisboa.pt [193.136.128.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CCF7FBB7;
-	Tue, 23 Jan 2024 17:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC8E7FBB5;
+	Tue, 23 Jan 2024 18:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706030740; cv=none; b=koILiff/dGsVsvCgpeelak+Qt054br/bDXu26m/VawdV2Q9fmGKju1/8TOnTk2dqcVbmfpQjMCO8fdwF+xlCitZP2jIv590rdETsG1J5ltIdn4jq6clqpYlJjd9FKRHAGF3TZ9VnJqsuzin1/lVvJ2rqbGY/t3FzSJtOCd1WvB8=
+	t=1706035492; cv=none; b=AXfwBfCT+MmEko6kaJ0iJsgqlNYYrMlg8ui9xHf/MM1lTFVJ3LE9XLm0YfeLgX5EzK9T+/izsrOv60I9OGpz9DczXJXfefjCNmNg/Te9LPCnMQlQIOwW5iouiM8zftCIZeEHItrCeSFajnGNoleYXUg/AVXxWnaJGHLfVuosxX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706030740; c=relaxed/simple;
-	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QzuO/UnXyFOrC+o3AiOlntRsdzotIq3IKfLUsVKWx7j9tEV/NXA+Q0m/sMKc4M1ibyypGJwkv3jDbD/JRUj0ChdsG7LqO9AXo9vsAy3dlkIxwRJ0hkC1Xm8WDwr9paiMqukr+8Hy/tU8Hn4fQyXn64Otx3Wre+JnUie0yGyBVKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVeaiKmt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706035492; c=relaxed/simple;
+	bh=1GQUsvqnD7ki3+q+Mte4ST6dHAMYoyOeCXJ4KSZA/IA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s2UQcQL+dHgEo779NDzYdlNafGTZ/eQ6fCU7YdhNJxGZNz18xWsEWN5schzgYzD5HL9Qdf50/f8yj3JYQQmXxGBd15s+1UWgkAc8XoOuUVIenmqSkN2KzJp2ro+CMUa0CytR6PB/LUoETuN9MRhE0OQsyC+e58F/W/ZbMeUtF+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=IcvNrLTf; arc=none smtp.client-ip=193.136.128.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVeaiKmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9132C433F1;
-	Tue, 23 Jan 2024 17:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706030739;
-	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gVeaiKmtcDgGgLP2BYukxjpQuCpS7FHhAOVvGmITyqQmxJjHmQAmJSho2kK9qbYys
-	 N7hnRBqP593yishGnCQ2Xz1+0IgedKNu5UsjM99Bedc+EvL1a5PEnJ7kuyAiBSfMgO
-	 IYrpWRJ3AStrid4TzT4QGOB9RSFiuEKjVn5sYjWp4of9NnGTw+540q6CvXzkD2ijJx
-	 uHvfmY/+viLzh5Sl+SFyT6C9r5AAozbEuIk5ix/4UhqCSaLSZvWLzmjfdv1PklNkJG
-	 vpM4YbB3kQkJC2ZBc9XKQakq+HPWXOBOZLI6ttq2KRhQp9W7pneReTea9xsPNzHWfz
-	 CzMX1q7Rt+pGg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rSKX2-0000000007X-1K2C;
-	Tue, 23 Jan 2024 18:25:53 +0100
-Date: Tue, 23 Jan 2024 18:25:52 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	regressions@leemhuis.info
-Subject: Re: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH]
- Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-Message-ID: <Za_2oKTUksw8Di5E@hovoldconsulting.com>
-References: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
- <20240122182615.GA277100@bhelgaas>
+	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="IcvNrLTf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTP id 27B5B2454AD;
+	Tue, 23 Jan 2024 18:44:47 +0000 (WET)
+X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
+Received: from smtp2.tecnico.ulisboa.pt ([127.0.0.1])
+ by localhost (smtp2.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
+ with LMTP id KaZPH6XeHymn; Tue, 23 Jan 2024 18:44:44 +0000 (WET)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
+	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTPS id 44DC024546D;
+	Tue, 23 Jan 2024 18:44:44 +0000 (WET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
+	s=mail; t=1706035484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=av4xgo/FzhL82OIN/3Jo0uMARulxHMhiAFEqBnLnyD8=;
+	b=IcvNrLTfYzTStmDeWDPj6nrwFeNkBKfqyqOR/fZH9PL97AB62mImdHGw/f6WKSSxThN7tf
+	WghnsRbOvMcfy+vN24BSBspHo99k3OuTdijaK6TXlMEAfQrio2fjcQBAN6KuDJ7rphRpUq
+	/XvxDxpzZG1KtFQqTmnb3eRcmb5pZ7M=
+Received: from [IPV6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7] (unknown [IPv6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id D917136007B;
+	Tue, 23 Jan 2024 18:44:42 +0000 (WET)
+Message-ID: <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
+Date: Tue, 23 Jan 2024 18:44:42 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122182615.GA277100@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
+ will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
+ baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
+ linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
+ regressions@lists.linux.dev
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+ <20240123151508.GR50608@ziepe.ca>
+Content-Language: en-US
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+In-Reply-To: <20240123151508.GR50608@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 22, 2024 at 12:26:15PM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 22, 2024 at 11:53:35AM +0100, Johan Hovold wrote:
 
-> > I never got a reply to this one so resending with updated Subject in
-> > case it got buried in your inbox.
-> 
-> I did see it but decided it was better to fix the problem with resume
-> causing an unintended reboot, even though fixing that meant breaking
-> lockdep again, since I don't think we have user reports of the
-> potential deadlock lockdep finds.
+On 1/23/24 15:15, Jason Gunthorpe wrote:
+> On Tue, Jan 23, 2024 at 02:33:15PM +0000, diogo.ivo@tecnico.ulisboa.pt wrote:
+>> Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
+>> at least on the Pixel C with the following error message reporting
+>> a failed buffer allocation:
+>>
+>> [    1.857660] drm drm: failed to allocate buffer of size 18432000
+>>
+>> This error message is printed from tegra_bo_alloc() which is called by
+>> tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
+>> allocations would fail as well, not just the framebuffer.
+> Presumably this is because iommu_map_sgtable() under
+> tegra_bo_iommu_map() fails?
+>
+> Which I suspect is because of the logic in
+> host1x_client_iommu_attach().
+>
+> After c8cc2655cc6c iommu_get_domain_for_dev() will never return NULL.
+>
+> So this:
+>
+> 	if (domain && domain != tegra->domain)
+> 		return 0;
+>
+> Will happen and the domain will be left at IDENTITY, while I suppose
+> the tegra_bo_iommu_map() assumes the domain was switched to tegra->domain.
+>
+> Does this solve your issue?
+>
+> diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+> index ff36171c8fb700..15c7910b2e1c76 100644
+> --- a/drivers/gpu/drm/tegra/drm.c
+> +++ b/drivers/gpu/drm/tegra/drm.c
+> @@ -960,7 +960,7 @@ int host1x_client_iommu_attach(struct host1x_client *client)
+>           * not the shared IOMMU domain, don't try to attach it to a different
+>           * domain. This allows using the IOMMU-backed DMA API.
+>           */
+> -       if (domain && domain != tegra->domain)
+> +       if (domain && domain->type != IOMMU_DOMAIN_IDENTITY && domain != tegra->domain)
+>                  return 0;
+>   
+>          if (tegra->domain) {
+>
+>> This may be connected with an error in of_iommu_configure() that
+>> became visible after commit 6ff6e184f1f4d:
+>>
+>> [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
+> Hmmm
+>
+> This is a new logging, so it doesn't necessarily mean something has
+> changed in the code flow.
+>
+> It seems the issue is something in there is returning ENOENT when it
+> probably should be ENODEV, but I haven't been able to guess where it
+> comes from.
+>
+> Can you do some tracing and figure out where under
+> of_iommu_configure() this ENOENT return code is from?
+>
+> Jason
 
-That may be because I fixed the previous regression in 6.7-rc1 before
-any users had a chance to hit the deadlock on Qualcomm platforms.
+Yes, this does fix the issue!
 
-I can easily trigger a deadlock on the X13s by instrumenting 6.7-final
-with a delay to increase the race window.
+As for the -ENOENT I will do the tracing and get back with the results.
 
-And any user hitting this occasionally is likely not going to be able to
-track it down to this lock inversion (unless they have lockdep enabled).
- 
-> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") was a
-> start at fixing other problems and also improving the ASPM style, so I
-> hope somebody steps up to fix both it and the lockdep issue.  I
-> haven't looked at it enough to have a preference for *how* to fix it.
 
-Ok, but since you were the one introducing the locking regression in
-6.7-final shouldn't you look into fixing it?
+Thank you for your time,
 
-Especially if there were alternatives to restoring the offending commit
-which would solve the underlying issue for the resume failure without
-breaking other platforms.
+Diogo
 
-I don't want to spend more time on this if the offending commit could
-simply be reverted.
-
-Johan
