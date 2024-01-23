@@ -1,138 +1,90 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949725FEFD
-	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 15:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E73760B8B;
+	Tue, 23 Jan 2024 15:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706022914; cv=none; b=SPZcRqoE51lx9jkuUSzidnZ8KTHrudhvJ/O+0qMqCmNFwBYQuaof4N3rCSuPNZEBG2OWQ2OBfdC8armGYaXdzNKZo8671tCpTZ3l00M+jGjNL4EPa7VcgbEPBEvRefDQpP7PHCGjCR74Jk9srzWX3xPdiGUxw0UkDorIAoRUfQ4=
+	t=1706024721; cv=none; b=JdNY95eN5p6a/5s425Ebooa5A+uJQOZiUvOoa0/O5SwinwZ8i3EmE941GJgSB/VcT/pX4RlUgC/sQPg1Utx58U2ug07CGHwIYpwrFBfu73oiV+3iRFr5LZWAcI+iC6+qj2H5TrRBo+0yOc7zX5CSXl+UBQzV43Eyto36QzOdTRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706022914; c=relaxed/simple;
-	bh=n4aKyCFKJuExlOWApUvz7Zfciv1d3oX2QNBwJUO9e+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Zc5g7wxlF7CrAQUfUt1IQWhcZoszoSD2h6HBoBMEZOcImGnhGQDuR6Y6jalCi2esPqRJ5pwGuq66xfVLmdMFtrdhpunJXEzyJ1307CULNs85JKdJ80fpFk9aqordZsxsNvT3/LOfEoBcm1TTdX/lzP8Bb4DgfLC3Ftq6DsZ1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=P0S+H4KU; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P0S+H4KU"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5999ec531dcso555967eaf.3
-        for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 07:15:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1706022910; x=1706627710; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MHNoRtSB2f+BsOY5sugFL7ytw4mgbMzlvlkFVSEzn+8=;
-        b=P0S+H4KUTY3OFcq194UMlFRPfAWg+rBqcBXg9vwTk6mhVyjkF4DDI7TF8QwQka8vDY
-         RyP79NwzB1RfKX9wr1B5y+aJhuWUm0xbGK0zV1Wrzrap3xWNujZBIz6SCPj6cRTYSBpG
-         aW7r0Fem3oWhRdk/fmzQyjVojchT9gkACODq8vai/mCsptvypx94uaO56MMcHGDEY7FM
-         GX8OY/Kf77H7yFvkEcP+NLNitCBlv2+BquuSnjjdEUiJ21P3O7p5U7mTqQtS0vQUbGMj
-         PkkmGCVNJ8h7WJKv0o/WV3UFxMKhomS5edjgZ0po5CNZ4XfeeVtPkmd+h5kIjnzy/bo0
-         4LQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706022910; x=1706627710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MHNoRtSB2f+BsOY5sugFL7ytw4mgbMzlvlkFVSEzn+8=;
-        b=PCauJsPfKV0kv2XY+FW7LGYyQA5djEwEFMQID5aBqDzCJh9NvcBtFXlFNQKm8Xht1+
-         vXFqoUQh91da/QeIFA/UT3z5D7/iP11TQvJLeS5RahFa9vN+Q+3ahmDlhMSrpJRUf135
-         QiI24yMjNQlycnRRPbvXMh79ECihYVJSNWCLbLX0eNK55cVMYciUvITLUyTWqFIaGItU
-         Kpwa1bgDhURiiqS5Ylx8MEzQ3fNrSn3nygtw9jOLeMpbVKRuiRAxKFVGhPol4TJ6+XaD
-         gV3GF/cDlKUlr0WLdPIgm4/t5qWmEBfMl7/u07bidNBWEbg8cJGnTTAbxyZZHYJ95cTS
-         e0gg==
-X-Gm-Message-State: AOJu0YxG8lkLqQU5L7VuHbM/4Goea+8deSHLOvCmQCvb4fBb1smoGbIZ
-	cjsM9Eqh24qP+U+XxeSskJ2rJu4Ezsoy/ufgOIRQDM1z3lpKL5QyLOs0HEBvBEc=
-X-Google-Smtp-Source: AGHT+IFs6VWoElP9yTX8xaCrJxiGrvFQ3gsVb40KP5N9dQYO9uIjpSryFNmks3qJnHBtzHCdqNr6Hg==
-X-Received: by 2002:a4a:e652:0:b0:593:f906:614f with SMTP id q18-20020a4ae652000000b00593f906614fmr31438oot.4.1706022910259;
-        Tue, 23 Jan 2024 07:15:10 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id g13-20020a4adc8d000000b0059984e8d5c0sm974274oou.44.2024.01.23.07.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:15:09 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rSIUW-008JEi-DG;
-	Tue, 23 Jan 2024 11:15:08 -0400
-Date: Tue, 23 Jan 2024 11:15:08 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: diogo.ivo@tecnico.ulisboa.pt
-Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
-	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
-	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <20240123151508.GR50608@ziepe.ca>
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+	s=arc-20240116; t=1706024721; c=relaxed/simple;
+	bh=FEgIO/MXi0/Ry2LcyALUJDlsd8mzcNT3svcs7B5JZdk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n40JyPzeAN65fF2cOfc+5e9UdYzIy7naPrjLoyaTWj/kFfMFveZGWCZT3HWeN7ucrzNhXheXUzdZEVhXfPCQ6xzyeb8qXcRLFv5dE0WxyMHcRf9xTAkG4zG/0vSGhmQvvJ4OnVa2/zSDvS1/dl8wfs/3iBPIe6DeWRhH1pgYZeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rSIxc-0008Go-EM; Tue, 23 Jan 2024 16:45:12 +0100
+Message-ID: <7d16f013-7fdc-41f3-a966-973e8f5ccfdb@leemhuis.info>
+Date: Tue, 23 Jan 2024 16:45:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 03/10] spi: Add multi-cs memories support in SPI core
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20231125092137.2948-1-amit.kumar-mahapatra@amd.com>
+ <20231125092137.2948-4-amit.kumar-mahapatra@amd.com>
+ <3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net>
+ <4c69cb61-1a43-4bfe-b01a-8118967ddbaf@leemhuis.info>
+In-Reply-To: <4c69cb61-1a43-4bfe-b01a-8118967ddbaf@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706024719;12dfcb09;
+X-HE-SMSGID: 1rSIxc-0008Go-EM
 
-On Tue, Jan 23, 2024 at 02:33:15PM +0000, diogo.ivo@tecnico.ulisboa.pt wrote:
-> Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
-> at least on the Pixel C with the following error message reporting
-> a failed buffer allocation:
+
+
+On 21.01.24 10:42, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 12.01.24 20:11, Guenter Roeck wrote:
+>>
+>> On Sat, Nov 25, 2023 at 02:51:30PM +0530, Amit Kumar Mahapatra wrote:
+>>> AMD-Xilinx GQSPI controller has two advanced mode that allows the
+>>> controller to consider two flashes as one single device.
+>>>
+>>> One of these two mode is the parallel mode in which each byte of data is
+>>> stored in both devices, the even bits in the lower flash & the odd bits in
+>>> the upper flash. The byte split is automatically handled by the QSPI
+>>> controller.
+>> [...]
+>> With this patch in the mainline kernel, two of my qemu emulations
+>> (quanta-q71l-bmc and almetto-bmc) fail to instantiate the first SPI
+>> controller and thus fail to boot from SPI. The error message is
+>>
+>> [    3.006458] spi_master spi0: No. of CS is more than max. no. of supported CS
+>> [    3.006775] spi_master spi0: Failed to create SPI device for /ahb/spi@1e620000/flash@0
+>>
+>> The problem is no longer seen after reverting this patch.
+>> [...]
+>> # first bad commit: [4d8ff6b0991d5e86b17b235fc46ec62e9195cb9b] spi: Add multi-cs memories support in SPI core
 > 
-> [    1.857660] drm drm: failed to allocate buffer of size 18432000
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
 > 
-> This error message is printed from tegra_bo_alloc() which is called by
-> tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
-> allocations would fail as well, not just the framebuffer.
+> #regzbot ^introduced 4d8ff6b0991d5e86b17b235fc46ec62e9195cb9
+> #regzbot title spi: qemu emulations quanta-q71l-bmc and almetto-bmc fail
+> to boot
+> #regzbot ignore-activity
 
-Presumably this is because iommu_map_sgtable() under
-tegra_bo_iommu_map() fails?
+#regzbot fix: spi: Raise limit on number of chip selects
+#regzbot ignore-activity
 
-Which I suspect is because of the logic in
-host1x_client_iommu_attach().
-
-After c8cc2655cc6c iommu_get_domain_for_dev() will never return NULL.
-
-So this:
-
-	if (domain && domain != tegra->domain)
-		return 0;
-
-Will happen and the domain will be left at IDENTITY, while I suppose
-the tegra_bo_iommu_map() assumes the domain was switched to tegra->domain.
-
-Does this solve your issue?
-
-diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
-index ff36171c8fb700..15c7910b2e1c76 100644
---- a/drivers/gpu/drm/tegra/drm.c
-+++ b/drivers/gpu/drm/tegra/drm.c
-@@ -960,7 +960,7 @@ int host1x_client_iommu_attach(struct host1x_client *client)
-         * not the shared IOMMU domain, don't try to attach it to a different
-         * domain. This allows using the IOMMU-backed DMA API.
-         */
--       if (domain && domain != tegra->domain)
-+       if (domain && domain->type != IOMMU_DOMAIN_IDENTITY && domain != tegra->domain)
-                return 0;
- 
-        if (tegra->domain) {
-
-> This may be connected with an error in of_iommu_configure() that
-> became visible after commit 6ff6e184f1f4d:
-> 
-> [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
-
-Hmmm
-
-This is a new logging, so it doesn't necessarily mean something has
-changed in the code flow.
-
-It seems the issue is something in there is returning ENOENT when it
-probably should be ENODEV, but I haven't been able to guess where it
-comes from.
-
-Can you do some tracing and figure out where under
-of_iommu_configure() this ENOENT return code is from?
-
-Jason
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
