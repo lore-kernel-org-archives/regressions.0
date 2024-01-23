@@ -1,77 +1,95 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D856B522C
-	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 05:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3B7FBFA
+	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 06:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705988940; cv=none; b=CIFg9e0XFwTLJ9SC0labp4vQPSimIT9swwXzRVE+8cF6gbNpQ27iD33x7fsgW47DehgGLeBcJTBbr4pAtWZ7aFju81KZf6jDxzdomVF8dLyoWBjdwe90eJTKxc58Q2EybwEXY3cwe8TRjtnXDt+z7g27oK5FpT9lhlY32Kc//tE=
+	t=1705991760; cv=none; b=l7sfNtBspBdkw67JLvmbcebmcSdi/ORgM3riuj6AQeY8w2DHvVJWrYJMkT9nlEf3HCKj+AMGcAA6G+84x4hGNHYGAo8DEUHY83M92R2BGsDRNyWKbyBUs27Dybmz8LGZPjIaXQ0Wp2ijz0rFD68DOR0ZWbrPUk1E0h0yq7JkXyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705988940; c=relaxed/simple;
-	bh=gLx3F7uRySGSTVVmcT3q6Jip2M/d1Wv4mYeuPB+hl5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ko+/3lqLpl6t+PpEpBeBNMviMrpGOlng0/gMgObGIQgyVUem66J4SAh6L7PZxvUqkADSfmZyVTB68kJknevdnUUwPYrhdJfGNytHTysBWojlbGERYjk7Vsn99G/EEIPQkvotqc3wicK0PscojVretawo9dUSpEMXz+TqyH+JVu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UMlWKxQp; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705991760; c=relaxed/simple;
+	bh=Cp9ShYD3/g1NkziTguOY/YTVXL1V4HipzP3G0kiKiJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tFvT0Sr4yUvUA+vuJB8IZ7PusQNbEQS2qHsfxcWWSA7mFhhaw5gNdUfGv/ZKwfM8vcin1xfHZWDjYdaD7KtWwgpK7eoWU5/Y7HofELvZWUv4D+3cGhqnACmLVH+v1WJijck2J7c/iOsv+Zj9C572cX3kP6PpXJsJWo5YMCpK+pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O08CoUY2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMlWKxQp"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42a4516ec5dso7314611cf.3
-        for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 21:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705988936; x=1706593736; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9JmnrA3mt9VqgxnwpT1hiIsZlc/X5kVa0LSfpaoPtx4=;
-        b=UMlWKxQpLy8aR7FsAy3DMJYSmdiS+9K+W7h0HhVQi1DvrXaS1w055Q7kdz9Ta0rqvY
-         eMVOVcBiWkuMq6jXWoVnVtOgLsweTKYKgH3+xnv0S388OV+O87ufi2Xy07zC0W7MrzPj
-         SJvfYRHNb8GMYAXRGw55UmFPerldJwYVpsYgvOQl/Kh6LSQKPFAHBYt3h24oKCLpwn7E
-         PsGsMFTS3Z8xTqXmfLXLvsZGCgXrfkdG5Z3XmlloS6KV8uQorfpRpZhgBc8dclbXnUVa
-         n0cRv+T7cWw9PvDqWoR7jxucmMhoJuguBeuaBmj7W/w+SF/zW51R3MDDQaNeq4EUbtLp
-         yOyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705988936; x=1706593736;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9JmnrA3mt9VqgxnwpT1hiIsZlc/X5kVa0LSfpaoPtx4=;
-        b=MvMgJKXnfniNYyyWLbrtW4WNt64pFeBy2pt/qPl3p1ExoiFT3R26Uy6UMhE/uwCP+V
-         HgiJ6tv8hj0H4rH9HJ1HJx/N8bm+KJDYZxGAzJcRrgff+5kEHRv1otSzeOOWSIyhkiRb
-         MJ2qr7rhazfumfON8PHbEnp791LxOt3LsF4g1gN+W9MV78JXLhIET/UOKurZPNgbfU20
-         WEDUU9XKNnk+OjxlMx76EcDEIi8Xx3NdYcor7HqaEXRljhR5C94VmXu0ha75ccLyrUWv
-         AwffPe6D3LYRolERGPSquCo/kgOQXr/2CIidRkdgPu4Vy7oV/i9NpNO/wkh2oWWhQki3
-         vs3A==
-X-Gm-Message-State: AOJu0YxT97eQHM3BcbVDHrxubqvXnpgmlkvw86kTnkxrwryrnvjHH0+P
-	iSGJQ8fejatvDIPXGIJQIStpvgNVnTTCOT7F8b4cQxFKsYHrp7dx+TaVpfZg
-X-Google-Smtp-Source: AGHT+IHgjRwVcSNNzoM/9EfhwjpfNiwtOZF6z8k+TNHzp8RGfMJn6DRHN46BMPSHE+SisvbKp7JNSQ==
-X-Received: by 2002:ad4:5bac:0:b0:686:8ffe:1278 with SMTP id 12-20020ad45bac000000b006868ffe1278mr455995qvq.4.1705988936564;
-        Mon, 22 Jan 2024 21:48:56 -0800 (PST)
-Received: from squish.no-ip.biz ([181.214.165.16])
-        by smtp.gmail.com with ESMTPSA id mu6-20020a056214328600b0068602f8966esm2728921qvb.111.2024.01.22.21.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 21:48:56 -0800 (PST)
-Received: by squish.no-ip.biz (Postfix, from userid 1000)
-	id BF2EFAA0B8; Tue, 23 Jan 2024 00:48:54 -0500 (EST)
-Date: Tue, 23 Jan 2024 00:48:54 -0500
-From: Paul Thompson <set48035@gmail.com>
-To: regressions@lists.linux.dev
-Cc: stable@vger.kernel.org
-Subject: Re: [REGRESSION] 6.6.10+ and 6.7+ kernels lock up early in init.
-Message-ID: <Za9TRtSjubbX0bVu@squish.home.loc>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O08CoUY2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9209AC433F1
+	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 06:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705991759;
+	bh=Cp9ShYD3/g1NkziTguOY/YTVXL1V4HipzP3G0kiKiJo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O08CoUY2JqTphDaXUkfRc9cIKdBT3Lzmt42DnKubKB23ZpTed7ovpNgbEs4qpPjE4
+	 30skrBvNa7ljXBiXhCXAp2fao1/TrtZSdr7UYffHnze8K1U93DpTs72XCvQTzZ+Y7j
+	 Bo00T5/YPVW3hmXIJhfP5blTPaGmteThFMDaIKzY+j7ZZ/FF0OAAPf8VQmBCIm+ypI
+	 LOQdLCY3R3RawdqM5PJ7Z/d9MnSIZ7Ec4x3EZT0ig2pQesur/iaEDidtMC/JuidwC5
+	 yUcbYm1+MewXBwWdaESDrl8iy/xwso4kK4NWrqz4h5ZwXnqM4ib+SZW2/PKkmW7YS6
+	 mGsSzW+84a5Tw==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cd0f4797aaso38819021fa.0
+        for <regressions@lists.linux.dev>; Mon, 22 Jan 2024 22:35:59 -0800 (PST)
+X-Gm-Message-State: AOJu0YyNF48v00DaVwq7qBp+4MNSNI6cemysB3PfOQLhwWPYElEeK/6w
+	51ZY9GXky2wQlBqerGEBJT+eJsh7Zus+Jw8y/6GG+i6zzMclZeQBmizK/9SuPDpAxz+nRZF0J2t
+	8O1z2aInAtA1D6GcHF5E+40vTxSA=
+X-Google-Smtp-Source: AGHT+IEFMyJYGoD/zw1ra4iPupSfes2/6WWvBigxgQK3ozT24qyaAc2/3AKYbZ/kQ1eX47RFfrU4NzDzNn1hhpx+Vgo=
+X-Received: by 2002:a2e:7d13:0:b0:2cd:2acc:e9ff with SMTP id
+ y19-20020a2e7d13000000b002cd2acce9ffmr2106757ljc.26.1705991757758; Mon, 22
+ Jan 2024 22:35:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240123005700.9302-1-dan@danm.net> <20240123013514.7366-1-dan@danm.net>
+In-Reply-To: <20240123013514.7366-1-dan@danm.net>
+From: Song Liu <song@kernel.org>
+Date: Mon, 22 Jan 2024 22:35:46 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7-r=UAO8f7Ok08vCx2kdVx6mZADyZ-LknNE8csnX+L8g@mail.gmail.com>
+Message-ID: <CAPhsuW7-r=UAO8f7Ok08vCx2kdVx6mZADyZ-LknNE8csnX+L8g@mail.gmail.com>
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: Dan Moulding <dan@danm.net>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: gregkh@linuxfoundation.org, junxiao.bi@oracle.com, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	Now I feel stupid or like Im losing it, but I went back and grepped
-for the CONFIG_FILE_LOCKING in my old Configs, and it was turned on in all
-but 6.6.9. So, somehow I turned that off *after I built 6.6.9? Argh. I just
-built 6.6.4 with it unset and that locked up too.
-	Sorry if this is just noise, though one would have hoped the failure
-was less severe...
+Hi Dan,
 
-Paul
+On Mon, Jan 22, 2024 at 5:35=E2=80=AFPM Dan Moulding <dan@danm.net> wrote:
+>
+> Some additional new information: I realized after filing this report
+> that on the mainline there is a second commit, part of a pair, that
+> was supposed to go with commit 0de40f76d567. That second commit
+> upstream is d6e035aad6c0 ("md: bypass block throttle for superblock
+> update"). That commit probably also was supposed to have been
+> backported to stable along with the first, but was not, since it
+> provides what is supposed to be a replacement for the fix that has
+> been reverted.
+>
+> So I rebuilt my kernel with the missed commit also backported instead
+> of just reverting the first commit (i.e. I have now built 6.7.1 with
+> just commit d6e035aad6c0 on top). Unfortunately, I can still reproduce
+> the hang after applying this second commit. So it looks
+> like even with that fix applied the regression is still present.
+>
+> Coincidentally, I see it seems this second commit was picked up for
+> inclusion in 6.7.2 just today. I think that needs to NOT be
+> done. Instead the stable series should probably revert 0de40f76d567
+> until the regression is successfully dealt with on master. Probably no
+> further changes related to this patch series should be backported
+> until then.
 
+I think we still want d6e035aad6c0 in 6.7.2. We may need to revert
+0de40f76d567 on top of that. Could you please test it out? (6.7.1 +
+d6e035aad6c0 + revert 0de40f76d567.
+
+OTOH, I am not able to reproduce the issue. Could you please help
+get more information:
+  cat /proc/mdstat
+  profile (perf, etc.) of the md thread
+
+Thanks,
+Song
