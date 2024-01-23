@@ -1,137 +1,107 @@
-Received: from smtp2.tecnico.ulisboa.pt (smtp2.tecnico.ulisboa.pt [193.136.128.22])
+Received: from mr85p00im-zteg06022001.me.com (mr85p00im-zteg06022001.me.com [17.58.23.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC8E7FBB5;
-	Tue, 23 Jan 2024 18:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D924D5BF
+	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 21:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035492; cv=none; b=AXfwBfCT+MmEko6kaJ0iJsgqlNYYrMlg8ui9xHf/MM1lTFVJ3LE9XLm0YfeLgX5EzK9T+/izsrOv60I9OGpz9DczXJXfefjCNmNg/Te9LPCnMQlQIOwW5iouiM8zftCIZeEHItrCeSFajnGNoleYXUg/AVXxWnaJGHLfVuosxX8=
+	t=1706046792; cv=none; b=TzgcHr6gu8Ihec2/vtojh+eW48xH5E+5NS4g9INbRpEehfyi5JceZo7cw0YdUE5rmtFoJqnH5f340Of8WRkflWAAd/BWNa15eph6+EuX8w5AqmG3I4dKqiLSIJu8vUDzcvukS20kB814flETaje5HcEUWMpR9eLFDcKCeIJKjsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035492; c=relaxed/simple;
-	bh=1GQUsvqnD7ki3+q+Mte4ST6dHAMYoyOeCXJ4KSZA/IA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s2UQcQL+dHgEo779NDzYdlNafGTZ/eQ6fCU7YdhNJxGZNz18xWsEWN5schzgYzD5HL9Qdf50/f8yj3JYQQmXxGBd15s+1UWgkAc8XoOuUVIenmqSkN2KzJp2ro+CMUa0CytR6PB/LUoETuN9MRhE0OQsyC+e58F/W/ZbMeUtF+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=IcvNrLTf; arc=none smtp.client-ip=193.136.128.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1706046792; c=relaxed/simple;
+	bh=nezbIq/D3ENhfCPuWNhv3F47gynsXBfOjGxNVePJ7fE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nW2259nhfe5AM2min0HWz2ImQWYGo6olDO23hshG5GmM2SO12f10+hIhxIVZIRZDiDsHTBpkTc7jTPsdKr+dfgONJGtgAFmko/w+q+jF13T8kU94SWyh4b2O0TdWbMWSGvf+AyPktBfhvMgaxf/ukxfToeU5Hb1RUpvBeGIyFQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=AFuFreAq; arc=none smtp.client-ip=17.58.23.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="IcvNrLTf"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTP id 27B5B2454AD;
-	Tue, 23 Jan 2024 18:44:47 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp2.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp2.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id KaZPH6XeHymn; Tue, 23 Jan 2024 18:44:44 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTPS id 44DC024546D;
-	Tue, 23 Jan 2024 18:44:44 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1706035484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=av4xgo/FzhL82OIN/3Jo0uMARulxHMhiAFEqBnLnyD8=;
-	b=IcvNrLTfYzTStmDeWDPj6nrwFeNkBKfqyqOR/fZH9PL97AB62mImdHGw/f6WKSSxThN7tf
-	WghnsRbOvMcfy+vN24BSBspHo99k3OuTdijaK6TXlMEAfQrio2fjcQBAN6KuDJ7rphRpUq
-	/XvxDxpzZG1KtFQqTmnb3eRcmb5pZ7M=
-Received: from [IPV6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7] (unknown [IPv6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id D917136007B;
-	Tue, 23 Jan 2024 18:44:42 +0000 (WET)
-Message-ID: <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
-Date: Tue, 23 Jan 2024 18:44:42 +0000
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="AFuFreAq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
+	t=1706046790; bh=wNJHkz8AkFLOOTSoO2V4Be1p2DmOhk/MoD05yij4/20=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=AFuFreAqntFxUNMn6XQf/yaVdt6ae2KPtCS6gGRRRsUM8FOqeq9RNAiS4yANqrzZr
+	 SBmkUdPpJ8MyHjekq40rMKc64a0zguzumjIVsuM7eJorJvcYyfeqbrXuc7X/Mp5q7K
+	 /xnmfO0NRaVUro4W07pOz27CP0l1PfoVDbrHAqq64nMSoIXHr5Oj0yHR4BoPtN9Z9u
+	 Ony6bYOEY/NoGKJy0Q7lypOQYppI9j6fnr6NF5fEJ1WwTuckKrOx8zOaqnJAYwVqGf
+	 M+r8D3UGA1XfZ63bkOltZFWemzwWQbWHRWaMswONZiPFNtocL9/lRwLatNEZyE6Drn
+	 R+V2IG0qe76rA==
+Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-zteg06022001.me.com (Postfix) with ESMTPSA id CE79C8002B6;
+	Tue, 23 Jan 2024 21:53:08 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: song@kernel.org
+Cc: dan@danm.net,
+	gregkh@linuxfoundation.org,
+	junxiao.bi@oracle.com,
+	linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	yukuai1@huaweicloud.com
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system; successfully bisected
+Date: Tue, 23 Jan 2024 14:53:07 -0700
+Message-ID: <20240123215307.8083-1-dan@danm.net>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAPhsuW7-r=UAO8f7Ok08vCx2kdVx6mZADyZ-LknNE8csnX+L8g@mail.gmail.com>
+References: <CAPhsuW7-r=UAO8f7Ok08vCx2kdVx6mZADyZ-LknNE8csnX+L8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
- will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
- baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
- linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
- regressions@lists.linux.dev
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
- <20240123151508.GR50608@ziepe.ca>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <20240123151508.GR50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: kXPpc39gOyrjU3mX9CFKgWRDEzE30LnH
+X-Proofpoint-GUID: kXPpc39gOyrjU3mX9CFKgWRDEzE30LnH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_13,2024-01-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=917 bulkscore=0
+ adultscore=0 mlxscore=0 phishscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 clxscore=1030 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2401230162
 
+> I think we still want d6e035aad6c0 in 6.7.2. We may need to revert
+> 0de40f76d567 on top of that. Could you please test it out? (6.7.1 +
+> d6e035aad6c0 + revert 0de40f76d567.
 
-On 1/23/24 15:15, Jason Gunthorpe wrote:
-> On Tue, Jan 23, 2024 at 02:33:15PM +0000, diogo.ivo@tecnico.ulisboa.pt wrote:
->> Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
->> at least on the Pixel C with the following error message reporting
->> a failed buffer allocation:
->>
->> [    1.857660] drm drm: failed to allocate buffer of size 18432000
->>
->> This error message is printed from tegra_bo_alloc() which is called by
->> tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
->> allocations would fail as well, not just the framebuffer.
-> Presumably this is because iommu_map_sgtable() under
-> tegra_bo_iommu_map() fails?
->
-> Which I suspect is because of the logic in
-> host1x_client_iommu_attach().
->
-> After c8cc2655cc6c iommu_get_domain_for_dev() will never return NULL.
->
-> So this:
->
-> 	if (domain && domain != tegra->domain)
-> 		return 0;
->
-> Will happen and the domain will be left at IDENTITY, while I suppose
-> the tegra_bo_iommu_map() assumes the domain was switched to tegra->domain.
->
-> Does this solve your issue?
->
-> diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
-> index ff36171c8fb700..15c7910b2e1c76 100644
-> --- a/drivers/gpu/drm/tegra/drm.c
-> +++ b/drivers/gpu/drm/tegra/drm.c
-> @@ -960,7 +960,7 @@ int host1x_client_iommu_attach(struct host1x_client *client)
->           * not the shared IOMMU domain, don't try to attach it to a different
->           * domain. This allows using the IOMMU-backed DMA API.
->           */
-> -       if (domain && domain != tegra->domain)
-> +       if (domain && domain->type != IOMMU_DOMAIN_IDENTITY && domain != tegra->domain)
->                  return 0;
->   
->          if (tegra->domain) {
->
->> This may be connected with an error in of_iommu_configure() that
->> became visible after commit 6ff6e184f1f4d:
->>
->> [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
-> Hmmm
->
-> This is a new logging, so it doesn't necessarily mean something has
-> changed in the code flow.
->
-> It seems the issue is something in there is returning ENOENT when it
-> probably should be ENODEV, but I haven't been able to guess where it
-> comes from.
->
-> Can you do some tracing and figure out where under
-> of_iommu_configure() this ENOENT return code is from?
->
-> Jason
+I was operating under the assumption that the two commits were
+intended to exist as a pair (the one reverts the old fix, because the
+next commit has what is supposed to be a better fix). But since the
+regression still exists, even with both patches applied, the old fix
+must be reapplied to resolve the current regression.
 
-Yes, this does fix the issue!
+But, as you've requested, I have tested 6.7.1 + d6e035aad6c0 + revert
+0de40f76d567 and it seems fine. So I have no issue if you think it
+makes sense to accept d6e035aad6c0 on its own, even though it would
+break up the pair of commits.
 
-As for the -ENOENT I will do the tracing and get back with the results.
+> OTOH, I am not able to reproduce the issue. Could you please help
+> get more information:
+>   cat /proc/mdstat
 
+Here is /proc/mdstat from one of the systems where I can reproduce it:
 
-Thank you for your time,
+    $ cat /proc/mdstat
+    Personalities : [raid6] [raid5] [raid4]
+    md0 : active raid5 dm-0[4](J) sdc[3] sda[0] sdb[1]
+          3906764800 blocks super 1.2 level 5, 512k chunk, algorithm 2 [3/3] [UUU]
 
-Diogo
+    unused devices: <none>
 
+dm-0 is an LVM logical volume which is backed by an NVMe SSD. The
+others are run-of-the-mill SATA SSDs.
+
+>  profile (perf, etc.) of the md thread
+
+I might need a little more pointing in the direction of what exactly
+to look for and under what conditions (i.e. should I run perf while
+the thread is stuck in the 100% CPU loop? what kind of report should I
+ask perf for?). Also, are there any debug options I could enable in
+the kernel configuration that might help gather more information?
+Maybe something in debugfs? I currently get absolutely no warnings or
+errors in dmesg when the problem occurs.
+
+Cheers,
+
+-- Dan
