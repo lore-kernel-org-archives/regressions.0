@@ -1,90 +1,98 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E73760B8B;
-	Tue, 23 Jan 2024 15:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CCF7FBB7;
+	Tue, 23 Jan 2024 17:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024721; cv=none; b=JdNY95eN5p6a/5s425Ebooa5A+uJQOZiUvOoa0/O5SwinwZ8i3EmE941GJgSB/VcT/pX4RlUgC/sQPg1Utx58U2ug07CGHwIYpwrFBfu73oiV+3iRFr5LZWAcI+iC6+qj2H5TrRBo+0yOc7zX5CSXl+UBQzV43Eyto36QzOdTRw=
+	t=1706030740; cv=none; b=koILiff/dGsVsvCgpeelak+Qt054br/bDXu26m/VawdV2Q9fmGKju1/8TOnTk2dqcVbmfpQjMCO8fdwF+xlCitZP2jIv590rdETsG1J5ltIdn4jq6clqpYlJjd9FKRHAGF3TZ9VnJqsuzin1/lVvJ2rqbGY/t3FzSJtOCd1WvB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024721; c=relaxed/simple;
-	bh=FEgIO/MXi0/Ry2LcyALUJDlsd8mzcNT3svcs7B5JZdk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=n40JyPzeAN65fF2cOfc+5e9UdYzIy7naPrjLoyaTWj/kFfMFveZGWCZT3HWeN7ucrzNhXheXUzdZEVhXfPCQ6xzyeb8qXcRLFv5dE0WxyMHcRf9xTAkG4zG/0vSGhmQvvJ4OnVa2/zSDvS1/dl8wfs/3iBPIe6DeWRhH1pgYZeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rSIxc-0008Go-EM; Tue, 23 Jan 2024 16:45:12 +0100
-Message-ID: <7d16f013-7fdc-41f3-a966-973e8f5ccfdb@leemhuis.info>
-Date: Tue, 23 Jan 2024 16:45:11 +0100
+	s=arc-20240116; t=1706030740; c=relaxed/simple;
+	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QzuO/UnXyFOrC+o3AiOlntRsdzotIq3IKfLUsVKWx7j9tEV/NXA+Q0m/sMKc4M1ibyypGJwkv3jDbD/JRUj0ChdsG7LqO9AXo9vsAy3dlkIxwRJ0hkC1Xm8WDwr9paiMqukr+8Hy/tU8Hn4fQyXn64Otx3Wre+JnUie0yGyBVKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVeaiKmt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVeaiKmt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9132C433F1;
+	Tue, 23 Jan 2024 17:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706030739;
+	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gVeaiKmtcDgGgLP2BYukxjpQuCpS7FHhAOVvGmITyqQmxJjHmQAmJSho2kK9qbYys
+	 N7hnRBqP593yishGnCQ2Xz1+0IgedKNu5UsjM99Bedc+EvL1a5PEnJ7kuyAiBSfMgO
+	 IYrpWRJ3AStrid4TzT4QGOB9RSFiuEKjVn5sYjWp4of9NnGTw+540q6CvXzkD2ijJx
+	 uHvfmY/+viLzh5Sl+SFyT6C9r5AAozbEuIk5ix/4UhqCSaLSZvWLzmjfdv1PklNkJG
+	 vpM4YbB3kQkJC2ZBc9XKQakq+HPWXOBOZLI6ttq2KRhQp9W7pneReTea9xsPNzHWfz
+	 CzMX1q7Rt+pGg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rSKX2-0000000007X-1K2C;
+	Tue, 23 Jan 2024 18:25:53 +0100
+Date: Tue, 23 Jan 2024 18:25:52 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Schaller <michael@5challer.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+	regressions@leemhuis.info
+Subject: Re: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH]
+ Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+Message-ID: <Za_2oKTUksw8Di5E@hovoldconsulting.com>
+References: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
+ <20240122182615.GA277100@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 03/10] spi: Add multi-cs memories support in SPI core
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20231125092137.2948-1-amit.kumar-mahapatra@amd.com>
- <20231125092137.2948-4-amit.kumar-mahapatra@amd.com>
- <3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net>
- <4c69cb61-1a43-4bfe-b01a-8118967ddbaf@leemhuis.info>
-In-Reply-To: <4c69cb61-1a43-4bfe-b01a-8118967ddbaf@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706024719;12dfcb09;
-X-HE-SMSGID: 1rSIxc-0008Go-EM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122182615.GA277100@bhelgaas>
 
+On Mon, Jan 22, 2024 at 12:26:15PM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 22, 2024 at 11:53:35AM +0100, Johan Hovold wrote:
 
-
-On 21.01.24 10:42, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 12.01.24 20:11, Guenter Roeck wrote:
->>
->> On Sat, Nov 25, 2023 at 02:51:30PM +0530, Amit Kumar Mahapatra wrote:
->>> AMD-Xilinx GQSPI controller has two advanced mode that allows the
->>> controller to consider two flashes as one single device.
->>>
->>> One of these two mode is the parallel mode in which each byte of data is
->>> stored in both devices, the even bits in the lower flash & the odd bits in
->>> the upper flash. The byte split is automatically handled by the QSPI
->>> controller.
->> [...]
->> With this patch in the mainline kernel, two of my qemu emulations
->> (quanta-q71l-bmc and almetto-bmc) fail to instantiate the first SPI
->> controller and thus fail to boot from SPI. The error message is
->>
->> [    3.006458] spi_master spi0: No. of CS is more than max. no. of supported CS
->> [    3.006775] spi_master spi0: Failed to create SPI device for /ahb/spi@1e620000/flash@0
->>
->> The problem is no longer seen after reverting this patch.
->> [...]
->> # first bad commit: [4d8ff6b0991d5e86b17b235fc46ec62e9195cb9b] spi: Add multi-cs memories support in SPI core
+> > I never got a reply to this one so resending with updated Subject in
+> > case it got buried in your inbox.
 > 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 4d8ff6b0991d5e86b17b235fc46ec62e9195cb9
-> #regzbot title spi: qemu emulations quanta-q71l-bmc and almetto-bmc fail
-> to boot
-> #regzbot ignore-activity
+> I did see it but decided it was better to fix the problem with resume
+> causing an unintended reboot, even though fixing that meant breaking
+> lockdep again, since I don't think we have user reports of the
+> potential deadlock lockdep finds.
 
-#regzbot fix: spi: Raise limit on number of chip selects
-#regzbot ignore-activity
+That may be because I fixed the previous regression in 6.7-rc1 before
+any users had a chance to hit the deadlock on Qualcomm platforms.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+I can easily trigger a deadlock on the X13s by instrumenting 6.7-final
+with a delay to increase the race window.
+
+And any user hitting this occasionally is likely not going to be able to
+track it down to this lock inversion (unless they have lockdep enabled).
+ 
+> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") was a
+> start at fixing other problems and also improving the ASPM style, so I
+> hope somebody steps up to fix both it and the lockdep issue.  I
+> haven't looked at it enough to have a preference for *how* to fix it.
+
+Ok, but since you were the one introducing the locking regression in
+6.7-final shouldn't you look into fixing it?
+
+Especially if there were alternatives to restoring the offending commit
+which would solve the underlying issue for the resume failure without
+breaking other platforms.
+
+I don't want to spend more time on this if the offending commit could
+simply be reverted.
+
+Johan
