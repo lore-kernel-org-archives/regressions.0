@@ -1,52 +1,70 @@
-Received: from smtp2.tecnico.ulisboa.pt (smtp2.tecnico.ulisboa.pt [193.136.128.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD9A487B5;
-	Tue, 23 Jan 2024 14:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949725FEFD
+	for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 15:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706020805; cv=none; b=JjdJVXo6N6Y4/SWKtmJmLu49tMycuamecS0oXIa2BbO8WtMi+EA/GCEBVj2NmGF2iTLBCyi0x2WrRx6UojQtbh5x+XqacYWvxLgOMfshIGhYoZFHV9qG4vQn2qz2XshBfIVgzL2t6dKsNqAIZy/KZu3KQcEn1NpkEukarV5brSk=
+	t=1706022914; cv=none; b=SPZcRqoE51lx9jkuUSzidnZ8KTHrudhvJ/O+0qMqCmNFwBYQuaof4N3rCSuPNZEBG2OWQ2OBfdC8armGYaXdzNKZo8671tCpTZ3l00M+jGjNL4EPa7VcgbEPBEvRefDQpP7PHCGjCR74Jk9srzWX3xPdiGUxw0UkDorIAoRUfQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706020805; c=relaxed/simple;
-	bh=geXUTKN6WxvkrQwIGjvwQvSWbrj9fA3lQKc68o2nOPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eadnukNXGlb14LnjhB541/+Loy5vOea5I5Q3ppdzIw9jDkvkRrZQEsN1CO6tMT4qovRSnAenjYtQMiLjYhNPz2QlzB+iUjModCvn24kwZWaqmWeeDCbMB+gm8VGaHtCjByU35x67fYicBLBKtNCRWR7YV17GM0KbNVRkjC9R8Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=BOIztV26; arc=none smtp.client-ip=193.136.128.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1706022914; c=relaxed/simple;
+	bh=n4aKyCFKJuExlOWApUvz7Zfciv1d3oX2QNBwJUO9e+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8Zc5g7wxlF7CrAQUfUt1IQWhcZoszoSD2h6HBoBMEZOcImGnhGQDuR6Y6jalCi2esPqRJ5pwGuq66xfVLmdMFtrdhpunJXEzyJ1307CULNs85JKdJ80fpFk9aqordZsxsNvT3/LOfEoBcm1TTdX/lzP8Bb4DgfLC3Ftq6DsZ1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=P0S+H4KU; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="BOIztV26"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTP id EBD882454EA;
-	Tue, 23 Jan 2024 14:33:29 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp2.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp2.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id n3MKfo8jXhza; Tue, 23 Jan 2024 14:33:27 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTPS id BA775245560;
-	Tue, 23 Jan 2024 14:33:27 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1706020407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=/kGm+VtOF1KrX9lmF1tN1QPzLAtucWUIbb06niKSR4g=;
-	b=BOIztV26q3HLrunz2dWjmir21AxATLAH481eF458N1Uj6YKiQZpTgrmTDFP+rQ0nlUCA0t
-	shmvhsUg+DLfUNmLNzOXAaz0+kR96lL8+HqbQ9fw35OIGetOM+FUB8nyR8Vkeknek4CKg6
-	loxEoBq2cvSWlpCq6OFvxnm4wKhqLdw=
-Received: from diogo-gram (unknown [IPv6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 8316C36007F;
-	Tue, 23 Jan 2024 14:33:26 +0000 (WET)
-Date: Tue, 23 Jan 2024 14:33:15 +0000
-From: diogo.ivo@tecnico.ulisboa.pt
-To: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org, 
-	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com, jgg@ziepe.ca, 
-	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev, regressions@lists.linux.dev
-Cc: diogo.ivo@tecnico.ulisboa.pt
-Subject: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P0S+H4KU"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5999ec531dcso555967eaf.3
+        for <regressions@lists.linux.dev>; Tue, 23 Jan 2024 07:15:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1706022910; x=1706627710; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MHNoRtSB2f+BsOY5sugFL7ytw4mgbMzlvlkFVSEzn+8=;
+        b=P0S+H4KUTY3OFcq194UMlFRPfAWg+rBqcBXg9vwTk6mhVyjkF4DDI7TF8QwQka8vDY
+         RyP79NwzB1RfKX9wr1B5y+aJhuWUm0xbGK0zV1Wrzrap3xWNujZBIz6SCPj6cRTYSBpG
+         aW7r0Fem3oWhRdk/fmzQyjVojchT9gkACODq8vai/mCsptvypx94uaO56MMcHGDEY7FM
+         GX8OY/Kf77H7yFvkEcP+NLNitCBlv2+BquuSnjjdEUiJ21P3O7p5U7mTqQtS0vQUbGMj
+         PkkmGCVNJ8h7WJKv0o/WV3UFxMKhomS5edjgZ0po5CNZ4XfeeVtPkmd+h5kIjnzy/bo0
+         4LQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706022910; x=1706627710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MHNoRtSB2f+BsOY5sugFL7ytw4mgbMzlvlkFVSEzn+8=;
+        b=PCauJsPfKV0kv2XY+FW7LGYyQA5djEwEFMQID5aBqDzCJh9NvcBtFXlFNQKm8Xht1+
+         vXFqoUQh91da/QeIFA/UT3z5D7/iP11TQvJLeS5RahFa9vN+Q+3ahmDlhMSrpJRUf135
+         QiI24yMjNQlycnRRPbvXMh79ECihYVJSNWCLbLX0eNK55cVMYciUvITLUyTWqFIaGItU
+         Kpwa1bgDhURiiqS5Ylx8MEzQ3fNrSn3nygtw9jOLeMpbVKRuiRAxKFVGhPol4TJ6+XaD
+         gV3GF/cDlKUlr0WLdPIgm4/t5qWmEBfMl7/u07bidNBWEbg8cJGnTTAbxyZZHYJ95cTS
+         e0gg==
+X-Gm-Message-State: AOJu0YxG8lkLqQU5L7VuHbM/4Goea+8deSHLOvCmQCvb4fBb1smoGbIZ
+	cjsM9Eqh24qP+U+XxeSskJ2rJu4Ezsoy/ufgOIRQDM1z3lpKL5QyLOs0HEBvBEc=
+X-Google-Smtp-Source: AGHT+IFs6VWoElP9yTX8xaCrJxiGrvFQ3gsVb40KP5N9dQYO9uIjpSryFNmks3qJnHBtzHCdqNr6Hg==
+X-Received: by 2002:a4a:e652:0:b0:593:f906:614f with SMTP id q18-20020a4ae652000000b00593f906614fmr31438oot.4.1706022910259;
+        Tue, 23 Jan 2024 07:15:10 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id g13-20020a4adc8d000000b0059984e8d5c0sm974274oou.44.2024.01.23.07.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 07:15:09 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rSIUW-008JEi-DG;
+	Tue, 23 Jan 2024 11:15:08 -0400
+Date: Tue, 23 Jan 2024 11:15:08 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: diogo.ivo@tecnico.ulisboa.pt
+Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
+	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
+	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
+	linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+Message-ID: <20240123151508.GR50608@ziepe.ca>
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -55,24 +73,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
 
-Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
-at least on the Pixel C with the following error message reporting
-a failed buffer allocation:
+On Tue, Jan 23, 2024 at 02:33:15PM +0000, diogo.ivo@tecnico.ulisboa.pt wrote:
+> Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
+> at least on the Pixel C with the following error message reporting
+> a failed buffer allocation:
+> 
+> [    1.857660] drm drm: failed to allocate buffer of size 18432000
+> 
+> This error message is printed from tegra_bo_alloc() which is called by
+> tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
+> allocations would fail as well, not just the framebuffer.
 
-[    1.857660] drm drm: failed to allocate buffer of size 18432000
+Presumably this is because iommu_map_sgtable() under
+tegra_bo_iommu_map() fails?
 
-This error message is printed from tegra_bo_alloc() which is called by
-tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
-allocations would fail as well, not just the framebuffer.
+Which I suspect is because of the logic in
+host1x_client_iommu_attach().
 
-This may be connected with an error in of_iommu_configure() that
-became visible after commit 6ff6e184f1f4d:
+After c8cc2655cc6c iommu_get_domain_for_dev() will never return NULL.
 
-[    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
+So this:
 
-Best regards,
+	if (domain && domain != tegra->domain)
+		return 0;
 
-Diogo
+Will happen and the domain will be left at IDENTITY, while I suppose
+the tegra_bo_iommu_map() assumes the domain was switched to tegra->domain.
 
-#regzbot introduced: c8cc2655cc6c 
+Does this solve your issue?
+
+diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+index ff36171c8fb700..15c7910b2e1c76 100644
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -960,7 +960,7 @@ int host1x_client_iommu_attach(struct host1x_client *client)
+         * not the shared IOMMU domain, don't try to attach it to a different
+         * domain. This allows using the IOMMU-backed DMA API.
+         */
+-       if (domain && domain != tegra->domain)
++       if (domain && domain->type != IOMMU_DOMAIN_IDENTITY && domain != tegra->domain)
+                return 0;
+ 
+        if (tegra->domain) {
+
+> This may be connected with an error in of_iommu_configure() that
+> became visible after commit 6ff6e184f1f4d:
+> 
+> [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
+
+Hmmm
+
+This is a new logging, so it doesn't necessarily mean something has
+changed in the code flow.
+
+It seems the issue is something in there is returning ENOENT when it
+probably should be ENODEV, but I haven't been able to guess where it
+comes from.
+
+Can you do some tracing and figure out where under
+of_iommu_configure() this ENOENT return code is from?
+
+Jason
