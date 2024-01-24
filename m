@@ -1,150 +1,135 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF577647;
-	Wed, 24 Jan 2024 13:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12177C08D;
+	Wed, 24 Jan 2024 14:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706101462; cv=none; b=r2vwuhj6Oqh/EVvOxRsFgRw+iXQdlO4Xu8UjZfDjWQDOlydoLAFX7fUCqL37jiy8tQQDonWSqM7M/QllrW+ZzHzfelLoT4/FpMiL/S50wwM85fIQZg07Z3UxVRn6w3BF2zx050VtPzaFBoNcrw8WLJ7hJ4m7KGvdTQViR5WsCII=
+	t=1706106593; cv=none; b=GhzQ6Fctnw2UT9C08hNj+792E7hyUw0LVqu7pZcCGF9DUYqiJ26I/urqosigR3a2aTx+3Q8IZ6KPmhit+x6AalEScZKPglDa1WwQejqe+H6xyHFdWpzC4sU6GfY8y/k9QKIH1TIlvquvCtSDYuUs69PU9V388sPhHJxHmG49lBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706101462; c=relaxed/simple;
-	bh=GZkJ+QeMKJNqZBgYX+y1qwEAQJjghDN2AgFfR74bdH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MHJPLDgiSRdAHOYfsgEhZn2/eSutrgQYUbwoJTuQUpnFfese0/+q6YshqHZCSLc9PmzUt8fItgBT6edefs8ubNCHiYnDIGkrE1NFfmtV2YJq/1j7Xu5hDXhf5hJw/oEzuQGTCWN3FQU0PlscmkXTQdNYbw3/AHytznXu6kMXA/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=BUH732Ef; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1706106593; c=relaxed/simple;
+	bh=KkWbxEOL9fYn082VaDJyA7NHt5SNW51VNBbBhRcci8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XfYUCbNQL0xOMsbdQFW4/IzssoRIZXxG+PU/UiU9LoYaW/dC/d/yJtR5DcqKTzvfB9eBgr9rwmsQzmDvwymrvKawtSS4xDFCNzkfy9gzgyGWoQ7V/5qKX5Hn9Q4zcM7XE4k/HP/y7hSJHnmzE9oEPW4s2R9AhSqWAQnx49NiPrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PvU/KE12; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="BUH732Ef"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id B20B060022F7;
-	Wed, 24 Jan 2024 12:56:55 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id ajMDtZ95vwAa; Wed, 24 Jan 2024 12:56:53 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 646A660022F2;
-	Wed, 24 Jan 2024 12:56:53 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1706101013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9eOQRiZQC0U4e8V4bKlkhm5RMXXl+uFAIdIpnZe1j2E=;
-	b=BUH732EfZ07SrO0LtlTr+fTBGTq+bE88F8Oz0riOwX/xxJNWOHQs9pqnWHcTMAZQHxkljc
-	aZC94hmRzp6+s2Lb2h6ItxQdvgaTXm3Gu5BozKdJ6pcDU48XfdO+zFVc5CYY1vMzECHLGh
-	IDwSVUvQdj4/V3PgivHmc6EscQAOPkU=
-Received: from diogo-gram (unknown [IPv6:2001:8a0:7ae3:e700:a921:1147:531c:b1e7])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 1EABE36008F;
-	Wed, 24 Jan 2024 12:56:52 +0000 (WET)
-Date: Wed, 24 Jan 2024 12:56:48 +0000
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, thierry.reding@gmail.com, 
-	vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org, jonathanh@nvidia.com, 
-	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev, regressions@lists.linux.dev, 
-	diogo.ivo@tecnico.ulisboa.pt
-Subject: Re: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <r46zhd52g3w3kpu4jjca3vihmv5ahp3jcwge3rvg42dupxf2g4@p2u5mbdyypw3>
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
- <20240123151508.GR50608@ziepe.ca>
- <pgund4coabp5pdlmwze5o2d7ogrdncktqz267yzukjcvmikudc@7svrwdci7ujl>
- <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PvU/KE12"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40OEMd1L019770;
+	Wed, 24 Jan 2024 14:29:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=id03GCOMuuz9E+q8wpa1mZrFPdzbBKrJ0mBS2dIBSSo=;
+ b=PvU/KE12Bt4bH/E2Y0YdSC27EbEBMgwG+Le0UEm5f63nDQAHXobz1vIi1+KvIMnEMYOU
+ o9xF9xPsqnJ+pRfUTcfiZI2qnBHYntVVD9a3YFz3oiR/TqeHY8cJ5Y9al+7NKhIkD2i/
+ ehW3KlOxOJsLD4C49+CbYXINTml14eB3AZfcr3XFXzOKZkKyhOg/RKeX1JC7VD+++568
+ OD2BW/SE8lJmzSYojQp1uafpKixTd5dg2NNF92BENSkftFbCEHkJgGg70iEb10GCjwRe
+ i6eIGF8L3c8k53sMi9lxvzoKhni92l7ZNv+Olm9Ygd4pr9LNg9e7dJ7n/4+dJzg6u2TD cQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vu0ta5tfx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 14:29:41 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40OETCh7001571;
+	Wed, 24 Jan 2024 14:29:38 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vu0ta5tce-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 14:29:38 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40OBuS8a025268;
+	Wed, 24 Jan 2024 14:29:30 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vrtqkdxdg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 14:29:30 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40OETRKM44565084
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Jan 2024 14:29:27 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3372F20043;
+	Wed, 24 Jan 2024 14:29:27 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D249420040;
+	Wed, 24 Jan 2024 14:29:26 +0000 (GMT)
+Received: from [9.152.224.38] (unknown [9.152.224.38])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 24 Jan 2024 14:29:26 +0000 (GMT)
+Message-ID: <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
+Date: Wed, 24 Jan 2024 15:29:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: [REGRESSION] v6.8 SMC-D issues
+To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        jaka@linux.ibm.com, Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        raspl@linux.ibm.com, schnelle@linux.ibm.com,
+        guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>
+References: <20231219142616.80697-1-guwen@linux.alibaba.com>
+ <20231219142616.80697-8-guwen@linux.alibaba.com>
+Content-Language: en-US
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <20231219142616.80697-8-guwen@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Qt1EOrmfVf_sdqbTImWI7_I6a3wI5IV9
+X-Proofpoint-GUID: Q2MCPmrpkI3XR9Uka3rzJtqmHUwMkJkA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_06,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 clxscore=1011 mlxlogscore=911
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401240105
 
-On Wed, Jan 24, 2024 at 11:46:59AM +0000, Robin Murphy wrote:
-> On 2024-01-24 9:13 am, Diogo Ivo wrote:
-> > On Tue, Jan 23, 2024 at 11:15:08AM -0400, Jason Gunthorpe wrote:
-> > > On Tue, Jan 23, 2024 at 02:33:15PM +0000, diogo.ivo@tecnico.ulisboa.pt wrote:
-> > > > Commit c8cc2655cc6c in the recent IOMMU changes breaks Tegra fbdev
-> > > > at least on the Pixel C with the following error message reporting
-> > > > a failed buffer allocation:
-> > > > 
-> > > > [    1.857660] drm drm: failed to allocate buffer of size 18432000
-> > > > 
-> > > > This error message is printed from tegra_bo_alloc() which is called by
-> > > > tegra_bo_create() in tegra_fbdev_probe(), which may indicate that other
-> > > > allocations would fail as well, not just the framebuffer.
-> > > 
-> > > Presumably this is because iommu_map_sgtable() under
-> > > tegra_bo_iommu_map() fails?
-> > > 
-> > > Which I suspect is because of the logic in
-> > > host1x_client_iommu_attach().
-> > > 
-> > > After c8cc2655cc6c iommu_get_domain_for_dev() will never return NULL.
-> > > 
-> > > So this:
-> > > 
-> > > 	if (domain && domain != tegra->domain)
-> > > 		return 0;
-> > > 
-> > > Will happen and the domain will be left at IDENTITY, while I suppose
-> > > the tegra_bo_iommu_map() assumes the domain was switched to tegra->domain.
-> > > 
-> > > Does this solve your issue?
-> > > 
-> > > diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
-> > > index ff36171c8fb700..15c7910b2e1c76 100644
-> > > --- a/drivers/gpu/drm/tegra/drm.c
-> > > +++ b/drivers/gpu/drm/tegra/drm.c
-> > > @@ -960,7 +960,7 @@ int host1x_client_iommu_attach(struct host1x_client *client)
-> > >           * not the shared IOMMU domain, don't try to attach it to a different
-> > >           * domain. This allows using the IOMMU-backed DMA API.
-> > >           */
-> > > -       if (domain && domain != tegra->domain)
-> > > +       if (domain && domain->type != IOMMU_DOMAIN_IDENTITY && domain != tegra->domain)
-> > >                  return 0;
-> > >          if (tegra->domain) {
-> > > 
-> > > > This may be connected with an error in of_iommu_configure() that
-> > > > became visible after commit 6ff6e184f1f4d:
-> > > > 
-> > > > [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
-> > > 
-> > > Hmmm
-> > > 
-> > > This is a new logging, so it doesn't necessarily mean something has
-> > > changed in the code flow.
-> > > 
-> > > It seems the issue is something in there is returning ENOENT when it
-> > > probably should be ENODEV, but I haven't been able to guess where it
-> > > comes from.
-> > > 
-> > > Can you do some tracing and figure out where under
-> > > of_iommu_configure() this ENOENT return code is from?
-> > > 
-> > > Jason
-> > 
-> > I did the tracing and found that the ENOENT is coming from
-> > sysfs_do_create_link_sd() in the following function call chain:
-> > 
-> > of_iommu_configure() -> iommu_probe_device() -> __iommu_probe_device() ->
-> 
-> What's the call path leading up to that? If it's the one from
-> host1x_device_add() then it's expected and benign - for fiddly reasons,
-> iommu_probe_device() ends up being called too early, but will soon be run
-> again in the correct circumstances once we proceed into
-> host1x_subdev_register()->device_add(). That will have been happening for
-> years, we just never reported errors in that spot before (and frankly I'm
-> not convinced it's valuable to have added it now).
-> 
-> Thanks,
-> Robin.
+Hello Wen Gu,
 
-Yes, it is the one called from host1x_device_add(), so this
-is solved and only the patch sent above needs to be merged.
+our colleague Matthew reported that SMC-D is failing in certain scenarios on
+kernel v6.8 (thx Matt!). He bisected it to 
+b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")
+I think the root cause could also be somewhere else in the SMC-Dv2.1 patchset.
 
-Thanks,
-Diogo
+I was able to reproduce the issue on a 6.8.0-rc1 kernel.
+I tested iperf over smc-d with:
+smc_run iperf3 -s
+smc_run iperf3 -c <IP@>
+
+1) Doing an iperf in a single system using 127.0.0.1 as IP@
+(System A=iperf client=iperf server)
+2) Doing iperf to a remote system (System A=client; System B=iperf server)
+
+The second iperf fails with an error message like:
+"iperf3: error - unable to receive cookie at server: Bad file descriptor" on the server"
+
+If I do first 2) (iperf to remote) and then 1) (iperf to local), then the
+iperf to local fails.
+
+I can do multiple iperf to the first server without problems.
+
+I ran it on a debug server with KASAN, but got no reports in the Logfile.
+
+I will try to debug further, but wanted to let you all know.
+
+Kind regards
+Alexandra
+
+Reported-by: Matthew Rosato <mjrosato@linux.ibm.com>
+
+
