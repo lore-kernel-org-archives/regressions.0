@@ -1,95 +1,184 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DB517C67
-	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 15:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E217E56C
+	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706110435; cv=none; b=tUZUmHT6AIpzpx+VRVn4dhkInah98rJDgQb/kWW/Pfyps7CsEjMjSCnhEjdc70zLE3MK99cGbfFjO0AGJBHgBdBtS5hsJBNkGSiU6zKegt8AzaG4IJ8kaVZwiyOtHUDfvnlrJErzb8vXxcIVMCvAEz3Xiz5GnxK9Uq91rR9lvAE=
+	t=1706113472; cv=none; b=jjYUnRE5D4aCSb2G+J1Pzl0avpM4FaX4mNIMhsns9UanRpheSVmOS7NmOqs7uTmFYQF/qCAX+bYWfPPq3OuSkbU8BHhMpEbcsySf2eDztkXpEdbCq/fUQhzgVK5TszoUSJQUFXzqL61KAyN30rIM7qahEHHEvN+YbtGDPQt1pwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706110435; c=relaxed/simple;
-	bh=TCNxtB333piEg8FONxiPrbu3zbb+RD/WcvnF5gMRDbU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=blBjCTStK2XoB0kF2Aj4sOaRfZvo+UGnj+FIchLMoyg196bmKRfmJzr6+q/Oz6tHg05FDKrza4Ea7yQ4lxB+v/fVcHOvv48FtkHH35Pd3m+YW5mO+wmn/80On2WKV9rjngCq+duNYvZhh5R/oSzCk8czHi704HOc0R9i8cPI8aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hpup6NUt; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706113472; c=relaxed/simple;
+	bh=NhyGnk5+4LpAEqT9beyKM4qdA1eh6aZy9msl/hOzSVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKJ1g5+NxnaZ9dsZpSwzQqBuppQrbb9ZX11B5BYwq4yGPUdX/Lsa5XmsluCG5V7M6uMnEzBTb0io24JJ32iHA3LaBgVqM6XSMalN4EZ2yeruZ9MT+HzmW3HiIbAOc9Y3SREpg+dYCTa4/NTy/SaJA2v38oEMyME8i65Dt8OrHQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=en8tMvml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L1NRr150; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bbyHOYSW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SJOfBy2X; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hpup6NUt"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5ff7ec8772dso48737837b3.0
-        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 07:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706110433; x=1706715233; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sF+OHxguRNODCvdH55DenpgBbXkSJhRqehOviUia52g=;
-        b=Hpup6NUtOa0FdHBbDSXODzP9P0FMnxyln1dr/xocFpCpwazSaL4TPENp3a56Vi8Ifb
-         oKtWMke+2H10a1RIJ+FLnIGH0Qy2/Wm31QSFSILmJ2mKvuV4K45+OqrGIW+6OoEallGD
-         Ep/G+2jD6GO+KjkAbEcWWA5ZeE2qJLK6AapOX27+jvAucIemBLPz4wVPBxhW+XE2HJAw
-         PXCvvCX7bZwR0/OGP04clzbauVuQklFB/TyXKuG7ipaYeN25cp4GQpTML2Kzyyn098dX
-         3xhIExXcaVFhohQpPvDbJHOFXyRbWRB5Gxn4xuyBOInTvO8QS9IXNytOzYg190PBrGsB
-         2j3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706110433; x=1706715233;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sF+OHxguRNODCvdH55DenpgBbXkSJhRqehOviUia52g=;
-        b=ILgOn5SXWObKcxqbZS/NnOaZDGY2jVKnAmikA5f268AYBTu8bXzs1R5P4fu4izEfx1
-         4m/QKbd/4aPBTCCqcvd6fJgap2HIN3h4dUBGPlzwbxbODjd0KzJz/dAm7DveWaFzJMAT
-         edjXu0T3n82ngBqfCcUax1X4QIyniz8N+U4nO2MYwkdw7OgO+GVrKkNaKSN7Zw7Se9c2
-         qQDX/WgL41Zil/SSxu4GmP2+4T70XUQBu7GVt1wlixD5CXK1AFFz4PRsrtqDPYDWVdLt
-         W3G/sYy+jgABk/gypw4r3ruuoQnXKRf2laLUShAPrEMGvjIztdYQAchbzsnDAIjbyt+9
-         /9MQ==
-X-Gm-Message-State: AOJu0YwlUXOqZmDBjgFelGsWXgg3mNI3sn8Z//dxW+UA5UNIHn1r5Odm
-	SFBS4jnW6CwtUYY8YU9cqgDEPIOCEcyHwc9WXnZVL/KBgaJsz/78MO6YqC0p36uwFjBWmbb79ay
-	76BDtfOa9YvBGVR4iFdaXzjVdxT0=
-X-Google-Smtp-Source: AGHT+IGUS9tuxVIMX25dmxiV7fTiY5eFrs8jLOCRBDlqb/bOIj6etzQYJ1BCdRIcGim1usEdGT+9uK42wTpI2OLXkW4=
-X-Received: by 2002:a81:9c47:0:b0:5e8:75e2:9345 with SMTP id
- n7-20020a819c47000000b005e875e29345mr911645ywa.60.1706110433055; Wed, 24 Jan
- 2024 07:33:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="en8tMvml";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L1NRr150";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bbyHOYSW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SJOfBy2X"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C4FCB1F7FC;
+	Wed, 24 Jan 2024 16:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706113469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
+	b=en8tMvml0f49x8ahJeG6iB17vOCs4frJhU1hA/HlrV93jXxohfZuWs8codW97ukrJQX57o
+	0hbB5Jx0TtoVrfxa1VRUJEbfigsPM5iInQkcXr+sezrfC5Y1gD19iclQLjzOMrKeZ/C6da
+	xjRS8iYywekP7Z3wEpAei5quwuubWqg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706113469;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
+	b=L1NRr150zQzCUuqoTYtbcDRPU3mYvMWZ96gFXKRqtM+SimlxKU9XnwH5aptoH972hyPFml
+	hBZrPkdLfSPClxAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706113468; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
+	b=bbyHOYSWYGCbSAqfNTlr7wyGKz78XSWDtMQBdODxvOywT6ygOpGuwVHKc16QbSFpVDE4BJ
+	+tlmo+nfDM/UwPP/tCmnyh4U8KeaAztMfjwX5DzgC4b1DCNU0jdY04XJHA4jQL3by+q4AG
+	sGZUZGYUKFJERzNkuzE4JxQDPF9VeLE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706113468;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
+	b=SJOfBy2XrgVuGLcWvMg76y/BhbVpgmjQQoMTzRsWbJw9/qZCaRo1auFmYt1UVBopqnBbKW
+	x83pFiDicuvvFkBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A2C401333E;
+	Wed, 24 Jan 2024 16:24:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id o7Y8J7w5sWVtIgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 24 Jan 2024 16:24:28 +0000
+Message-ID: <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
+Date: Wed, 24 Jan 2024 17:24:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
- <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz> <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
-In-Reply-To: <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
-From: Donald Carr <sirspudd@gmail.com>
-Date: Wed, 24 Jan 2024 07:33:42 -0800
-Message-ID: <CAOVeLGSczkyhj61T8SZc2cK1Cjy2izV6URVa2422kcfy8ONYFw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [git pull] drm for 6.8
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dave Airlie <airlied@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Donald Carr <sirspudd@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Dave Airlie <airlied@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+ <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
+ <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bbyHOYSW;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=SJOfBy2X
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.00 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 TO_DN_ALL(0.00)[];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_TO(0.00)[gmail.com,amd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,ffwll.ch,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,leemhuis.info];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: -3.00
+X-Rspamd-Queue-Id: C4FCB1F7FC
+X-Spam-Flag: NO
 
-On Wed, Jan 24, 2024 at 7:31=E2=80=AFAM Donald Carr <sirspudd@gmail.com> wr=
-ote:
+On 1/24/24 16:31, Donald Carr wrote:
+> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
+>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are that
+>> everything freezes including mouse cursor. After a while it either resolves,
+>> or e.g. firefox crashes (if it was actively used when it froze) or it's
+>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen I can
+>> still ssh to the machine, and there's nothing happening in dmesg.
+>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+>>
+>> I've bisected the merge commits so far and now will try to dig into this
+>> one. I've noticed there was also a drm fixes PR later in the merge window but
+>> since it was also merged into rc1 and thus didn't prevent the issue for me,
+>> I guess it's not relevant here?
+>>
+>> Because the reproduction wasn't very deterministic I considered a commit bad
+>> even if it didn't lead to completely frozen desktop and a forced reboot.
+>> Even the multi-second hangs that resolved were a regression compared to 6.7
+>> anyway.
+>>
+>> If there are known issues and perhaps candidate fixes already, please do tell.
+> 
 > I am experiencing the exact same symptoms; sddm (on weston) starts
 > perfectly, launching a KDE wayland session freezes at various points
 > (leading to plenty of premature celebration), but normally on the
 > handoff from sddm to kde (replete with terminal cursor on screen)
->
-> Working perfectly as of the end of 6.7 final release, broken as of 6.8 rc=
-1.
+> 
+> Working perfectly as of the end of 6.7 final release, broken as of 6.8 rc1.
 > Sometimes sddm can be successfully restarted via ssh, other times
 > restarting sddm is slow and fails to complete.
 
-This is against the Renoir GPU on the 7950x, but also reproduces
-consistently on my 7900 xtx.
+Big thanks to Thorsten who suggested I look at the following:
 
-Yours sincerely,
-Donald
+https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
 
---=20
--------------------------------
- =C2=B0v=C2=B0  Donald Carr
-/(_)\ Chaos Reins
-^ ^   http://chaos-reins.com/
+https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
+
+Instead of further bisection I've applied Mario's revert from the first link
+on top of 6.8-rc1 and the issue seems gone for me now.
+
+Vlastimil
+
+> Yours sincerely,
+> Donald
+
