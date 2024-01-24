@@ -1,154 +1,117 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A777E79A
-	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 17:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AD612AAFC;
+	Wed, 24 Jan 2024 17:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706115785; cv=none; b=PdjwtBpjgEpYUuEV6vM37SpGT/DtL6Zxv/IL5ptl2JhdKNR5Fn13Ia+kPS28SAozQrLxsRg7+zFYYau97Lyeb+7rsx8Y8KAywjDUhWXJPZa0rQNtwlDqdDnuiuIbMMmZ+VgDEFu/0QZ1iKu85VrzwJaFQ5eGJJDMhE9aOElFC0U=
+	t=1706116983; cv=none; b=g2AabDBpg6KhLuZE3kdQNRSGlMR+q77wxl7qOeEe0Hz7v3MTpCiihC4vq8gbpDWcNmhVp6pWQbtIE8Tn5qHiLDejWNkgXIHwJQSDCWhCu8rVzFq03fpSAjshQsAgAwdiLTK80RkV1Gz+EmR3KFesCU+y5NLRfsKxrRRcm2OGb/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706115785; c=relaxed/simple;
-	bh=OckWe4XG0ixqeMakKtCo9WUR9ythXnbH2cRxgj0L6AY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tqTUuWHBqQc4itoSsJEMMyHCgsD5SUfgww3DCKhh3tAon00oyjbGqF5XZ5rQpoKcAcUHfAeeUy8YsvGTR8l+ECX96eTfoNgyF/+5wwcey8z+8JYXqT8prrOPzOTVpI6uX8Yf8bhUD9eSHjkVZqKbMlp8QHcFs4Ey1l5z5tTMyFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=JggpQALN; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1706116983; c=relaxed/simple;
+	bh=1qsiuKA8J/U5HtTK7VX7ozeNvAKnJpMbUXqVOveYMK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rSKM2MQnK5w9xOTaC2/a1kVpPBSort/cbRwE9Bmk5MBv3Qn8xSsiDK+mblHHUa7sqsP4XXsR74yBEbvYLXAf9b6XoNO7kX//1vWAZ8N2IE5CMDAMEAEyLYcHW9jgilv4jM/Qk9ZQZ0U0QFNGaKew+TRwOImQqMHJB+D0HRy2PMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A9AwBggs; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JggpQALN"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2142ef4a7feso2299074fac.0
-        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 09:03:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1706115782; x=1706720582; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=46DW82ZGTZFbq/v3xqfovKBaw5pAkplLqD4lqGmbUT4=;
-        b=JggpQALNLHa0IEwQ0Tp1V41R8wbNxJ4Y6vYj6F3R5Pdy7Q79r7tHibfgdGBUzpn/3B
-         V1GEIsfEqQMug353iM66MBxgGgxqQLFhaH6AGkGr0DSW6HC4eN0Lk4AI2vvDp2Yvap2t
-         lRR9TDJRAyh0zsby9Ftb8GxGC826FkAZRETDgDo6v9xz5ExxmyW3CJmpHNZ0+3shdWku
-         yUm/TOxYwznV9o7v5za0oPO6NtP7sOKFNVKTK11eidss3b+ylVoY8+nK4WuGcwYuzhr+
-         6STNUV9tKoYf/2NJ+vbT2PZMX8OmidzorLXiOrkHexhN902G5zQW8Vx/K+Y2rzolvqVN
-         mesw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706115782; x=1706720582;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=46DW82ZGTZFbq/v3xqfovKBaw5pAkplLqD4lqGmbUT4=;
-        b=ifVSyB6am7cjr+zcAEp3GLBRjKS1Z8OobM7MECVhH+Bg7iwatdnkKWokQ+Noolv5f9
-         GHKPdaRq25hpMr9ep/XLHE3Sq7UcGrdAvrtjq/awMotfDOBwcWkLEuveDCOQ7mGjgv0r
-         oulcv+xUabr9xm6U43FiATtJT6j0c4BdK24tp+7vOd0BqdWt8/WTXZxloJVrWXnkt09D
-         8ipLYiGnMYcQwCrRGuGHjQg1nbNfDlvh7l9zXPA6pUS4m4TuFjBW5Dn8sC5qFXa0Joiv
-         aHxRYI3YXj7SBO2mFdAsnrkjusf/doxSI9IgIQEg1aEflc9UHVOpkQiojqrtDfxGOR9n
-         dtjw==
-X-Gm-Message-State: AOJu0YyCn7481zjVop2lJaFgFutcEyI3XSZjiYgs1oyUN4inRD2tsEho
-	t0Zcg99sI7FSiToj8WBq4HtRYjMkLB+h7f3L49EiUpi+7l1hpvXalCYUBDhwnt8=
-X-Google-Smtp-Source: AGHT+IEFELpRVBGWhMjKivd//Up4NeyH4XQb924O+IsJi62S9Y4yx3cDs6tr3yd1JgyFgpvf+uHklw==
-X-Received: by 2002:a05:6870:7d16:b0:214:24ca:1cd6 with SMTP id os22-20020a0568707d1600b0021424ca1cd6mr3852737oab.18.1706115782357;
-        Wed, 24 Jan 2024 09:03:02 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id qa12-20020a056871e70c00b00210d2c251cbsm2878811oac.39.2024.01.24.09.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 09:03:01 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rSgeS-008q7W-2p;
-	Wed, 24 Jan 2024 13:03:00 -0400
-Date: Wed, 24 Jan 2024 13:03:00 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org,
-	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com,
-	jroedel@suse.de, linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <20240124170300.GU50608@ziepe.ca>
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
- <20240123151508.GR50608@ziepe.ca>
- <pgund4coabp5pdlmwze5o2d7ogrdncktqz267yzukjcvmikudc@7svrwdci7ujl>
- <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A9AwBggs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F8F040003;
+	Wed, 24 Jan 2024 17:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706116979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NR9X+f8hzi6LukUwFvLmWHpES6M8Hue32FNHn1qEfC8=;
+	b=A9AwBggsTrv9qKpv6izgrNets4YClPaiv+ZV53LkzmNlflbQYEvLMKLE1SKOr5qUOF5uQn
+	PRlSFVqNDppd2AyZmp3b5p0MEpw5b/3zahbcChm0Xe9JXLZ/E6EhuVN+4Aiej1kWHY+iif
+	iP8YfZOGANGosY1RZJWV/6YyMYE4z6GeecvRyZOY8087BCntZNl+nzDyKcQ1Wzw3zOSe3c
+	vr8uSTczAaTzRZephI0zvW1/z44Q08mlLywAagwm3BgmN9v9kiNXLhz2orkgIeKMyjoHNY
+	ZXW+TSj0lWjoZ8WcPncTAd/lKaF7Fd5x+zVRyIhqYrUoBExodg1RlFQ2BxJALw==
+Date: Wed, 24 Jan 2024 18:22:56 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, regressions@lists.linux.dev, =?UTF-8?B?UmFmYcWCIE1pxYJl?=
+ =?UTF-8?B?Y2tp?= <rafal@milecki.pl>, Chen-Yu Tsai <wenst@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev,
+ Sven Peter <sven@svenpeter.dev>, Michael Walle <michael@walle.cc>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Message-ID: <20240124182256.776c164b@xps-13>
+In-Reply-To: <20240122153442.7250-1-arnd@kernel.org>
+References: <20240122153442.7250-1-arnd@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, Jan 24, 2024 at 11:46:59AM +0000, Robin Murphy wrote:
-> > > > This may be connected with an error in of_iommu_configure() that
-> > > > became visible after commit 6ff6e184f1f4d:
-> > > > 
-> > > > [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
-> > > 
-> > > Hmmm
-> > > 
-> > > This is a new logging, so it doesn't necessarily mean something has
-> > > changed in the code flow.
-> > > 
-> > > It seems the issue is something in there is returning ENOENT when it
-> > > probably should be ENODEV, but I haven't been able to guess where it
-> > > comes from.
-> > > 
-> > > Can you do some tracing and figure out where under
-> > > of_iommu_configure() this ENOENT return code is from?
-> > 
-> > I did the tracing and found that the ENOENT is coming from
-> > sysfs_do_create_link_sd() in the following function call chain:
-> > 
-> > of_iommu_configure() -> iommu_probe_device() -> __iommu_probe_device() ->
-> 
-> What's the call path leading up to that? If it's the one from
-> host1x_device_add() then it's expected and benign - for fiddly reasons,
-> iommu_probe_device() ends up being called too early, but will soon be run
-> again in the correct circumstances once we proceed into
-> host1x_subdev_register()->device_add(). That will have been happening for
-> years, we just never reported errors in that spot before (and frankly I'm
-> not convinced it's valuable to have added it now).
+Hi Arnd,
 
-Hmm. Prior to
+arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
 
-commit 14891af3799e ("iommu: Move the iommu driver sysfs setup into
-iommu_init/deinit_device()")
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc=
+1 on
+> Apple M1, which (in downstream dts files) has multiple nvmem cells that u=
+se the
+> same byte address. This causes the device probe to fail with
 
-The error from iommu_device_link() was ignored. It seems like for most
-of the years the probe actually succeeded, just with a mangled sysfs?
+o_O	I didn't even know this was allowed...
 
-Though that host1x_device_add() ignored the return code does make me
-wonder..
+> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform=
+/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
+> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                =
+ 6.8.0-rc1-arnd-5+ #133
+> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
+> [    0.605362] Call trace:
+> [    0.605365]  show_stack+0x18/0x2c
+> [    0.605374]  dump_stack_lvl+0x60/0x80
+> [    0.605383]  dump_stack+0x18/0x24
+> [    0.605388]  sysfs_warn_dup+0x64/0x80
+> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
+> [    0.605402]  internal_create_group+0x268/0x404
+> [    0.605409]  sysfs_create_groups+0x38/0x94
+> [    0.605415]  devm_device_add_groups+0x50/0x94
+> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
+> [    0.605682]  nvmem_register+0x38c/0x470
+> [    0.605789]  devm_nvmem_register+0x1c/0x6c
+> [    0.605895]  apple_efuses_probe+0xe4/0x120
+> [    0.606000]  platform_probe+0xa8/0xd0
+>=20
+> As far as I can tell, this is a problem for any device with multiple cell=
+s on
+> different bits of the same address. Avoid the issue by changing the file =
+name
+> to include the first bit number.
 
-This is the only clue I see:
+There is only one bit number right? We are talking about byte offsets
+so this value can only range from 0 to 7? If we understand each other
+correctly then why not, I'm fine with the extra ",0" thing.
 
-commit c95469aa5a188384ccf8ac520ece931c66caf8aa
-Author: Alexandre Courbot <acourbot@nvidia.com>
-Date:   Fri Feb 26 18:06:53 2016 +0900
+> Fixes: 0088cbc19276 ("nvmem: core: Expose cells through sysfs")
+> Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/=
+dts/apple/t600x-dieX.dtsi#L156
+> Cc: regressions@lists.linux.dev
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> Cc: Chen-Yu Tsai <wenst@chromium.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: asahi@lists.linux.dev
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-    gpu: host1x: Set DMA ops on device creation
-    
-    Currently host1x-instanciated devices have their dma_ops left to NULL,
-    which makes any DMA operation (like buffer import) on ARM64 fallback
-    to the dummy_dma_ops and fail with an error.
-    
-    This patch calls of_dma_configure() with the host1x node when creating
-    such a device, so the proper DMA operations are set.
-    
-    Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-    Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-    Signed-off-by: Thierry Reding <treding@nvidia.com>
-
-Which is no longer happening anymore as failure of
-iommu_probe_device() will not cause the dma ops to be setup.
-
-So, if everything still works and something else is calling
-of_dma_configure() prior to using the struct device for any DMA
-operations (eg because a driver is always probed?) then we should just
-delete this call.
-
-Robin do you know more? Specifically where is the "soon be run again"?
-Was the above issue fixed in commit 07397df29e57 ("dma-mapping: move
-dma configuration to bus infrastructure") ?
-
-Jason
+Thanks,
+Miqu=C3=A8l
