@@ -1,189 +1,154 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366F77E565
-	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706114516; cv=fail; b=WY6Dl/tgIi5926uW0KSvptQY/YAdxIw/uQlIo6GqnkPFGdM/7oCROujRawpD1l/YTjalpa74XbXcDcGZEZIQrfK4H3FTDK9Kpw8txFPiNKzF/e0iH89V8L5Y4A6PtwT/a3LPLIERqOHH/DOLT/bUJ+cqLnbdEvzo6GE2e9SNyJU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706114516; c=relaxed/simple;
-	bh=STgxnsEg1XaCTCMflo2pEgtriW8KJM5aM/z3RreCF9w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lgiPB5fJ0XkSpmZGcyASjSn7KPaTmnrkpI3rO6fiDzvUN6cp1z3vxdFXvq9mvOsAM6a6YAibRpjNOhoJ0Py1aYGFr+fHV06gsODtI4E4iXFNfl9ee+HqsWTNKTPpymUkKVPMs5FNTQHhMAKmpVpjoHi6f7kRuvbPJi35nsyCCK4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jveuhRfD; arc=fail smtp.client-ip=40.107.220.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A777E79A
+	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 17:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706115785; cv=none; b=PdjwtBpjgEpYUuEV6vM37SpGT/DtL6Zxv/IL5ptl2JhdKNR5Fn13Ia+kPS28SAozQrLxsRg7+zFYYau97Lyeb+7rsx8Y8KAywjDUhWXJPZa0rQNtwlDqdDnuiuIbMMmZ+VgDEFu/0QZ1iKu85VrzwJaFQ5eGJJDMhE9aOElFC0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706115785; c=relaxed/simple;
+	bh=OckWe4XG0ixqeMakKtCo9WUR9ythXnbH2cRxgj0L6AY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tqTUuWHBqQc4itoSsJEMMyHCgsD5SUfgww3DCKhh3tAon00oyjbGqF5XZ5rQpoKcAcUHfAeeUy8YsvGTR8l+ECX96eTfoNgyF/+5wwcey8z+8JYXqT8prrOPzOTVpI6uX8Yf8bhUD9eSHjkVZqKbMlp8QHcFs4Ey1l5z5tTMyFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=JggpQALN; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jveuhRfD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LnW7f80NoREBCpomjkXKHXnJ9eHU2aAzH1PhUbBNDFrovHvGvaCHGUtUMZ4MFukOUUHPROrbVl1/5lca5F3Yu45jvIM4lr+1mv6eSN+LHC6c8KM8XWj9zoWTAv4AyXibB2DTl3SiawTJbufpLGJHt9jdk+uRhEgeh89ODhQiDf3enydeiDPBRjiVWrEjgg1Gr3Ai5ViWhUsDjmSfSLvltWB3vlIwECjb1AuytWFdXHtKqI/oN8+fKBwaaFY/FtpG/jiqN9DZV/py3L8SCpTevUWu2M7nUbS9XqDsqjU1+/32meJL4hVeaErfYoP2vfY406AMCcoJTcf6GNqD3sp+Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HELMzti4bf/InIKMGl8gqwoqy6vIg9/XkedshmNc4mE=;
- b=GQVAm1qcSzoetWI6H+ub9CnQNVPlKPRWPn4ywNwVeAzeCllRcOmPU8cGiNeC8EPZ9nIfrGCM6yUUHa2zHSFVPO6uyorT7cDpqkOprGRdQaxseAveijBTS89eY5gVqd2oSS23zjR/adNlJYWiKA8n9ZvnTbvaix/+vp8CIRuM2XMIYDw9/dOfYcCaBWaqjZF5pzyID3pPZAyImmrM8PGf5Am1Lqgp1wQvjCbiZisAek7fe49lYSks1nTg4NsIaDFE4zHC9MSM988Tcu7W6JeI9NnD2lxoKj2vxGi+HKotfNDYWttE5gx64FaYfWC9pv4F3ieBNpzchdJGZceGrWjMvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HELMzti4bf/InIKMGl8gqwoqy6vIg9/XkedshmNc4mE=;
- b=jveuhRfDayVAZrPa+1XD7VRJ4g3EhyBd/himMbV20uGOoZXLiQ7UoJrWCw/D9ArHdGxVVZR5YKj10uH7/8GFdjEsLHyMJckX6hNcfOsHgwZElg97auoyv67LjXt6a79DHZsHq2xdhUaHlNcJinJf/odU+FQjnQ3y6LURcvsTzmQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA1PR12MB7441.namprd12.prod.outlook.com (2603:10b6:806:2b9::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
- 2024 16:41:52 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba%4]) with mapi id 15.20.7202.039; Wed, 24 Jan 2024
- 16:41:52 +0000
-Message-ID: <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
-Date: Wed, 24 Jan 2024 10:41:49 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [git pull] drm for 6.8
-Content-Language: en-US
-To: Vlastimil Babka <vbabka@suse.cz>, Donald Carr <sirspudd@gmail.com>
-Cc: Dave Airlie <airlied@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Daniel Vetter <daniel.vetter@ffwll.ch>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
- <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
- <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
- <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0200.namprd04.prod.outlook.com
- (2603:10b6:806:126::25) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JggpQALN"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2142ef4a7feso2299074fac.0
+        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 09:03:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1706115782; x=1706720582; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=46DW82ZGTZFbq/v3xqfovKBaw5pAkplLqD4lqGmbUT4=;
+        b=JggpQALNLHa0IEwQ0Tp1V41R8wbNxJ4Y6vYj6F3R5Pdy7Q79r7tHibfgdGBUzpn/3B
+         V1GEIsfEqQMug353iM66MBxgGgxqQLFhaH6AGkGr0DSW6HC4eN0Lk4AI2vvDp2Yvap2t
+         lRR9TDJRAyh0zsby9Ftb8GxGC826FkAZRETDgDo6v9xz5ExxmyW3CJmpHNZ0+3shdWku
+         yUm/TOxYwznV9o7v5za0oPO6NtP7sOKFNVKTK11eidss3b+ylVoY8+nK4WuGcwYuzhr+
+         6STNUV9tKoYf/2NJ+vbT2PZMX8OmidzorLXiOrkHexhN902G5zQW8Vx/K+Y2rzolvqVN
+         mesw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706115782; x=1706720582;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=46DW82ZGTZFbq/v3xqfovKBaw5pAkplLqD4lqGmbUT4=;
+        b=ifVSyB6am7cjr+zcAEp3GLBRjKS1Z8OobM7MECVhH+Bg7iwatdnkKWokQ+Noolv5f9
+         GHKPdaRq25hpMr9ep/XLHE3Sq7UcGrdAvrtjq/awMotfDOBwcWkLEuveDCOQ7mGjgv0r
+         oulcv+xUabr9xm6U43FiATtJT6j0c4BdK24tp+7vOd0BqdWt8/WTXZxloJVrWXnkt09D
+         8ipLYiGnMYcQwCrRGuGHjQg1nbNfDlvh7l9zXPA6pUS4m4TuFjBW5Dn8sC5qFXa0Joiv
+         aHxRYI3YXj7SBO2mFdAsnrkjusf/doxSI9IgIQEg1aEflc9UHVOpkQiojqrtDfxGOR9n
+         dtjw==
+X-Gm-Message-State: AOJu0YyCn7481zjVop2lJaFgFutcEyI3XSZjiYgs1oyUN4inRD2tsEho
+	t0Zcg99sI7FSiToj8WBq4HtRYjMkLB+h7f3L49EiUpi+7l1hpvXalCYUBDhwnt8=
+X-Google-Smtp-Source: AGHT+IEFELpRVBGWhMjKivd//Up4NeyH4XQb924O+IsJi62S9Y4yx3cDs6tr3yd1JgyFgpvf+uHklw==
+X-Received: by 2002:a05:6870:7d16:b0:214:24ca:1cd6 with SMTP id os22-20020a0568707d1600b0021424ca1cd6mr3852737oab.18.1706115782357;
+        Wed, 24 Jan 2024 09:03:02 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id qa12-20020a056871e70c00b00210d2c251cbsm2878811oac.39.2024.01.24.09.03.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 09:03:01 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rSgeS-008q7W-2p;
+	Wed, 24 Jan 2024 13:03:00 -0400
+Date: Wed, 24 Jan 2024 13:03:00 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org,
+	jonathanh@nvidia.com, baolu.lu@linux.intel.com, jsnitsel@redhat.com,
+	jroedel@suse.de, linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+Message-ID: <20240124170300.GU50608@ziepe.ca>
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+ <20240123151508.GR50608@ziepe.ca>
+ <pgund4coabp5pdlmwze5o2d7ogrdncktqz267yzukjcvmikudc@7svrwdci7ujl>
+ <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB7441:EE_
-X-MS-Office365-Filtering-Correlation-Id: 476861ab-f9b6-408f-eeeb-08dc1cfb5e09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Dp76r3AzCKSt37xNGtv8tiLJToit5rg00GlZbJb/JP8C37pi5dZzej0KfiP8r0sywaRQebf89iz4k8i17gg3UGEjJ/E19HsWMwAIKkJeyRg7JDAdIzryWrFD+dEnYOLUhz1+3qKx4CF++w+WLTMRkpqoHBHNtWuAe4oKkS4jeMWDPgxqX/sfG/zNDYBhxmnLRJoIFReaVUAW9ZQSKbR5vH2aU7J6Sik9Ji4KnU7dc9rFx+zP/kaM6Yba7afqUq+HUhziz1EcfZbw98bAfd9m0lBk/+jypgm2k776HnTBOrbSyIQbSqwP9dxVJhjU7dYadUSAhcvgei2aF1UMM+vgibmdEXJohK3PV5NLSrw0srceqOCV8K/GOx9samVuFX5imm4/iLZwvla7c2qvkw8BcDU3vxYVHV9bg6ytcn94xyGNdEHCh6te/b/JIbr6hWRJCzFmZge6MFDzZ3od6KpfvQ9xF0t0F2RJR//At3+qI79/NUTn5rtpBBbpL4euMX8wKFHWNTAiw80MBLx4r2QVZHgMrZWZdVs77sEECyHSQ1r1ahY2vKJEmysR8rB2TM8ZotUyttH68iXpEytTUErdRrOb9IrzyngzsiNa1SPr+2bBy1vV4FFcpUfAVHAdN7srNg6Gs6OzQnsD67pT6mFgMNfYqe/KzCoJK8P/JCBx53mnanBeCkPTjdltv56LzLVZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(366004)(396003)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(4326008)(7416002)(44832011)(8676002)(2906002)(5660300002)(110136005)(66946007)(2616005)(83380400001)(66476007)(26005)(66556008)(316002)(36756003)(31696002)(54906003)(53546011)(478600001)(6666004)(966005)(6506007)(86362001)(6512007)(6486002)(31686004)(41300700001)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R2VraE9OaFp5M1NwRWp0R2FJSnRremZmbjhvUG5Najkrc3YvZ0NaYlpoWXJ5?=
- =?utf-8?B?b0Rnei9QRUtyVi8wbGQ1MFR2QXpkYXFuOWpFbktlVkpYLzlxdXkrWlZBeWhk?=
- =?utf-8?B?NnVyTElqQ1pFN3hGQ0JQZ3AraE5yd29ZRWZaQnhzeFJaaWcyRFV4bVJ0Z1h2?=
- =?utf-8?B?MTBYcmZRYWUzV2owVDBwTnJCdDFQeDZOcm9hdGx2b05IUC9wV1h4STU4U0pm?=
- =?utf-8?B?aDkyS3dwUG1CaWdwYTRzMXlDY1BLNkZEOWtseXVCZXhYVmlpZE5yVmczbGpT?=
- =?utf-8?B?Q2psOVlGc2d1eUptd1JvZlZoZXF6M0dIQWdjNCtIOUIyQ2VTYXQxYVdYM2JJ?=
- =?utf-8?B?RFpSbUxCeHRrV1J5bXNyMUR3aHZsTHlCN1NNWGlLRUF0bEV2V0FPYWpJQnBL?=
- =?utf-8?B?Qis0alBzdVRLSmRxYUtrUlc0Y2JCSnc3bFZseWJQclB0RUxIK25ITU80T0Q2?=
- =?utf-8?B?S1Rib0FHYk1GM3B2WndEcnZaS3kyVnBMWmZEQ2NCUDlNRWxnVG9SaSs0OXND?=
- =?utf-8?B?UjFNT1YxRGdmOGowcFZBdnlZbko1Mkp0NWphZzdEQ29IMGRYUGNEODdoVU5I?=
- =?utf-8?B?VHIxOGtacWUyL2E4Tk0vMG9Qdm5udEplcUsvdVdpaFNqd0k4WW9DWXlxc3lk?=
- =?utf-8?B?Y0lLM0MydnEvVVBjNk4vK09Cb1VCY1YrTXp3Q01lVDZjMVNXYUN3bFhLZHpJ?=
- =?utf-8?B?NkhuaGJBSVhxbUVmWVJPaVhKN2xOWTlad2hKemFHMUZnNllHVytXNzI3TTZB?=
- =?utf-8?B?SXk3TS9RbXBUVGVwSjNnb2dsSTZHbGdGV0FCTzJaUVdQUmt3dFVCRWJLQ0lJ?=
- =?utf-8?B?TlVSbXpGN1FqOHdPVStaTU92YVQ0V3ZtQSs3TXhOOVBubElmNDk2LzJZak9W?=
- =?utf-8?B?OG5lODh3VTdHTTRMenpXQUxmQlFLTGZXWEJKRWFrSHpONGJ3Q2JwSFdTT0JX?=
- =?utf-8?B?RkZhZUVqbEtzTm1JY0RqcVJ6ZVBJVTFORGdZdE93OVRXdld2UXVlU25EMTUv?=
- =?utf-8?B?dVpyQyszUDBkRGd6UkFCaGlodWpjMHRlZ0hZdXRIdGVobGNITkluKzM4TTcr?=
- =?utf-8?B?cjdFeEhsbWVmYldHY0tHYWhFclNqRDFUWDJUK05hZTBjSnc3NUNYSjRIZERY?=
- =?utf-8?B?VDdBQ1htdlJNMU1tN1dsUndab0cza0ZkaTRleitlSk50WnpOTE00REUzNTMv?=
- =?utf-8?B?dDdPZ2tTM0F4R3dvOFFEUlpPa0QrMnp2TmVWTU8yWEE0d09ycnRIclFxemJN?=
- =?utf-8?B?bUxnZmRIdlU1SnZYajIxbk9sRzViY3NWdi9mVkdpcFl0R1A4OXhYUHc4bThI?=
- =?utf-8?B?RkRDSFFpSGF3ZDBNa1hwak1qSWtBZmJTME13YkNlTmU1WmhlRXNEc3BQcklR?=
- =?utf-8?B?eFNGdGd3RUVZRThGTlJqcUh3ZDR0anZYSS9tRmt0bEFKZEg2aG1qckFoTlQ5?=
- =?utf-8?B?M0dFLzFkYlV1aXhBQUFQZnBKcFdQeDhuUzlCdWorMXg1Q1lQUUdxd0RSayt4?=
- =?utf-8?B?eFVpUVltT1pXaWVHQXh1eTRROTdra0cxYU9oRWkvUmZXQ1RWbHByNUY3a0VE?=
- =?utf-8?B?Y1BGZzkwZHpERVlXQmdpM3hRUDFMNk4vYnFlZFlFWjJBOVF3ZWFlNGlGc0cz?=
- =?utf-8?B?Ry9WQVZUTUwxcDVoNkZiQzBhcm5tLzlvbk1KVEFvbStmQW1BR005SVRmck9U?=
- =?utf-8?B?TE9lZlROd2s0UXpJa0JnQ2lQRlU2cXVFSEYwWm96NFJLR0s2U2VHZ2xSQm1C?=
- =?utf-8?B?VGRXTEhzeXJZcFI0eDFnVk55U3lETmpIdVZlMDU4UzVlNitJb2ZuUnJsaWZV?=
- =?utf-8?B?ZkpGS3l0c1AyY0VwbWUyamlyeFNSNGdMU3ZWbS9OMHUyRmJmM0U0MWhxRjFJ?=
- =?utf-8?B?T20wYXhEZW1RUXZMcXhXdEFSRTBDcFhFSEloTkFWOXhWVlFWMk1CaldubGgy?=
- =?utf-8?B?elV4U2lnZkF0TjVwcWFyVDdJMHFPSE1GUVFtemhVaDc5bkxIelZBQnhDUFJM?=
- =?utf-8?B?emRRbGFzSWVkeityank1TlNDbkhHSmpmSkFWaC92V0o3WWNnOEZxMWpHWjRI?=
- =?utf-8?B?S3dTL3dGdzlSellodkZLZFkzYmRPTG9aOTY5QXR1YmZoRHhlb0h0QzExUFZP?=
- =?utf-8?Q?YpTy+Ji2Ws3zbsYmVmEts/Ig4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 476861ab-f9b6-408f-eeeb-08dc1cfb5e09
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 16:41:52.0929
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: veIcETW1jjVlB3hhcldlN90+zQqrxu6sSPH7ym8grU78NGoZvHop7Bh4qNmrTC887KvSQOh63ZQUSWwvg9152Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7441
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
 
-On 1/24/2024 10:24, Vlastimil Babka wrote:
-> On 1/24/24 16:31, Donald Carr wrote:
->> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
->>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are that
->>> everything freezes including mouse cursor. After a while it either resolves,
->>> or e.g. firefox crashes (if it was actively used when it froze) or it's
->>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen I can
->>> still ssh to the machine, and there's nothing happening in dmesg.
->>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
->>>
->>> I've bisected the merge commits so far and now will try to dig into this
->>> one. I've noticed there was also a drm fixes PR later in the merge window but
->>> since it was also merged into rc1 and thus didn't prevent the issue for me,
->>> I guess it's not relevant here?
->>>
->>> Because the reproduction wasn't very deterministic I considered a commit bad
->>> even if it didn't lead to completely frozen desktop and a forced reboot.
->>> Even the multi-second hangs that resolved were a regression compared to 6.7
->>> anyway.
->>>
->>> If there are known issues and perhaps candidate fixes already, please do tell.
->>
->> I am experiencing the exact same symptoms; sddm (on weston) starts
->> perfectly, launching a KDE wayland session freezes at various points
->> (leading to plenty of premature celebration), but normally on the
->> handoff from sddm to kde (replete with terminal cursor on screen)
->>
->> Working perfectly as of the end of 6.7 final release, broken as of 6.8 rc1.
->> Sometimes sddm can be successfully restarted via ssh, other times
->> restarting sddm is slow and fails to complete.
+On Wed, Jan 24, 2024 at 11:46:59AM +0000, Robin Murphy wrote:
+> > > > This may be connected with an error in of_iommu_configure() that
+> > > > became visible after commit 6ff6e184f1f4d:
+> > > > 
+> > > > [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
+> > > 
+> > > Hmmm
+> > > 
+> > > This is a new logging, so it doesn't necessarily mean something has
+> > > changed in the code flow.
+> > > 
+> > > It seems the issue is something in there is returning ENOENT when it
+> > > probably should be ENODEV, but I haven't been able to guess where it
+> > > comes from.
+> > > 
+> > > Can you do some tracing and figure out where under
+> > > of_iommu_configure() this ENOENT return code is from?
+> > 
+> > I did the tracing and found that the ENOENT is coming from
+> > sysfs_do_create_link_sd() in the following function call chain:
+> > 
+> > of_iommu_configure() -> iommu_probe_device() -> __iommu_probe_device() ->
 > 
-> Big thanks to Thorsten who suggested I look at the following:
-> 
-> https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
-> 
-> https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
-> 
-> Instead of further bisection I've applied Mario's revert from the first link
-> on top of 6.8-rc1 and the issue seems gone for me now.
+> What's the call path leading up to that? If it's the one from
+> host1x_device_add() then it's expected and benign - for fiddly reasons,
+> iommu_probe_device() ends up being called too early, but will soon be run
+> again in the correct circumstances once we proceed into
+> host1x_subdev_register()->device_add(). That will have been happening for
+> years, we just never reported errors in that spot before (and frankly I'm
+> not convinced it's valuable to have added it now).
 
-Thanks for confirming.  I don't think we should jump right to the revert 
-right now.  I posted it in case that is the direction we need to go 
-(simple git revert didn't work due to contextual changes).
+Hmm. Prior to
 
-Let's give the folks who work on GPU scheduler some time to understand 
-the failure and see if they can fix it.
+commit 14891af3799e ("iommu: Move the iommu driver sysfs setup into
+iommu_init/deinit_device()")
 
-> 
-> Vlastimil
-> 
->> Yours sincerely,
->> Donald
-> 
+The error from iommu_device_link() was ignored. It seems like for most
+of the years the probe actually succeeded, just with a mangled sysfs?
 
+Though that host1x_device_add() ignored the return code does make me
+wonder..
+
+This is the only clue I see:
+
+commit c95469aa5a188384ccf8ac520ece931c66caf8aa
+Author: Alexandre Courbot <acourbot@nvidia.com>
+Date:   Fri Feb 26 18:06:53 2016 +0900
+
+    gpu: host1x: Set DMA ops on device creation
+    
+    Currently host1x-instanciated devices have their dma_ops left to NULL,
+    which makes any DMA operation (like buffer import) on ARM64 fallback
+    to the dummy_dma_ops and fail with an error.
+    
+    This patch calls of_dma_configure() with the host1x node when creating
+    such a device, so the proper DMA operations are set.
+    
+    Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+    Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+    Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+Which is no longer happening anymore as failure of
+iommu_probe_device() will not cause the dma ops to be setup.
+
+So, if everything still works and something else is calling
+of_dma_configure() prior to using the struct device for any DMA
+operations (eg because a driver is always probed?) then we should just
+delete this call.
+
+Robin do you know more? Specifically where is the "soon be run again"?
+Was the above issue fixed in commit 07397df29e57 ("dma-mapping: move
+dma configuration to bus infrastructure") ?
+
+Jason
