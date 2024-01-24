@@ -1,182 +1,111 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE38915BE
-	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 15:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080177F12
+	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 15:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706108504; cv=none; b=luDDvvLT7Kg3GbxnnwfQDVF5PEJrV+wbEe43p//8aSUEsiaM5ii/O90Xd+3WD4pBzl2LWi9jlxIku7NI2CtdUx7XhcWWGe8bncFwc0LEWNteKzG5kefKwGSd86jSpBEMnFRmSf5sOCM6d6C4eIco57MhZllB7CQeLV1oIlfiObE=
+	t=1706110285; cv=none; b=gbFwtWjmeXvb753Y+EZmmP5uQceoy1A6RKA9woBIjfMRrbdRzQ2k/fH3nGvsUAzohwHlnHIuckEDUqlsZeiKBaCRGmKK8TR5zH1/p5sV1AorclQSDPEtfzO0fmnoRfTCLldkQbE/x/1pZ6bBPpGThJpq4hROLklg1bHq5xWim1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706108504; c=relaxed/simple;
-	bh=1GUIdRqBnwjIbprBMhEYmiQmVeW6ibg6LAGTfTN3sdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OCvihFT9SvJ0GJtmKrVEIw3l9YYLZ7M8dlLeqqSuRt7xC8qkziVGh1VSn4+qUCBxL8Vh8b1S0VJ/8Sx9fLhlKRRhVyx3aaPyLnH7vz6VHKezvpaiUsgyVgc2JlhjnpYVM8YheZNvJSGEajIqlGS0+0aY1b+J8bewbBKUtAkufdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=osrFdeJe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1zn3uQlo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=osrFdeJe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1zn3uQlo; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1706110285; c=relaxed/simple;
+	bh=GpDYrGFUEKKunXNg/UYXj4fE8ADfmJRlUhj5IzkEgCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FjKFUT/FiUAsn2Nq+/kKwlQoVaNH08eC6UEBbuNkEAgesqS2ln/8Cuni+IX2UwtvSMMZIjeCtwremgXHUwGJGWI8CgtcWE4HFbOi2AMj64fSYBCPS+GQrob7Oc1jriojhWrXeEirJmqk6Bc6Jn6nCuw/BeqmnFptHlEHg8eFZWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzbzVcaQ; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="osrFdeJe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1zn3uQlo";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="osrFdeJe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1zn3uQlo"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FB6F2230C;
-	Wed, 24 Jan 2024 15:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706108501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DajeaSEzTnB3arsXBMutuR8UGsQIe50M5bLSZDHRxaE=;
-	b=osrFdeJe+V6nUTIDy8yaKQkD/1OyHRoFPIrq5mH+nFwR3NPWP87uEhJxWITLIarWKRjscI
-	vOJNb4uTZTLyaelqM2HzekkgMbmgipIQlJOuXVy6b3pzJwMyHWS4Ez/EIC0tPwi0G/wUtp
-	Bs33w+ShJDAV+ClFEN0XVInOrNS3/C0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706108501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DajeaSEzTnB3arsXBMutuR8UGsQIe50M5bLSZDHRxaE=;
-	b=1zn3uQloqriIk5Ye9paPiS8PDE/zNsCqDYI5Ok7l4OKEcC/C1Ug/OGu+0ztnu3FYdMhBTC
-	XUfp843i6MaM7UDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706108501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DajeaSEzTnB3arsXBMutuR8UGsQIe50M5bLSZDHRxaE=;
-	b=osrFdeJe+V6nUTIDy8yaKQkD/1OyHRoFPIrq5mH+nFwR3NPWP87uEhJxWITLIarWKRjscI
-	vOJNb4uTZTLyaelqM2HzekkgMbmgipIQlJOuXVy6b3pzJwMyHWS4Ez/EIC0tPwi0G/wUtp
-	Bs33w+ShJDAV+ClFEN0XVInOrNS3/C0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706108501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DajeaSEzTnB3arsXBMutuR8UGsQIe50M5bLSZDHRxaE=;
-	b=1zn3uQloqriIk5Ye9paPiS8PDE/zNsCqDYI5Ok7l4OKEcC/C1Ug/OGu+0ztnu3FYdMhBTC
-	XUfp843i6MaM7UDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3BBD513786;
-	Wed, 24 Jan 2024 15:01:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Zwv7DVUmsWXwBgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 24 Jan 2024 15:01:41 +0000
-Message-ID: <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
-Date: Wed, 24 Jan 2024 16:01:40 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzbzVcaQ"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7ba903342c2so319624439f.3
+        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 07:31:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706110283; x=1706715083; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GpDYrGFUEKKunXNg/UYXj4fE8ADfmJRlUhj5IzkEgCY=;
+        b=UzbzVcaQXz3J0iGzKa3H2igFnQ5UenZFbb8/ViJW9BhD5Tp8pPloXSDi4fHtF5cnLX
+         x4pGUTc/EK3ljprrooRiYCNqd4mJaz3awo2rW1REATf+HYr+aitrCGU1iDFSAi1/3HFS
+         PSzeEZ8uQYG1GOiI17qn2CwICsQDzqEqt88JpXBK0Tuz99dB+6+tTWN+ci0pchqARnLW
+         V0Nsjw8pkItRIKjYFc13UqMhR1XoLeegcFeA0RGAJ5R0F4aan+bCdsAO06uZeXP/6KWh
+         Q00jzh86copFFyjCrZOFVi5uX/+qKjxcoSx6+V6msU1lz4Q08ky4aqZkiTMt6bD5wCk8
+         D0FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706110283; x=1706715083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GpDYrGFUEKKunXNg/UYXj4fE8ADfmJRlUhj5IzkEgCY=;
+        b=l91CnWYQbITpjJmHGN8M1K997TQGXyaGW5almanXIBjbNlSodr6bExma4zS/QBQGfG
+         Lu0zjMmFXqJo1KaI6OJMqMgcNiAobGOl4VtFQLBgUaR3JDEmEAPUSCLGf1Lvt79zt9JK
+         zzEEdl66RJH5eSVaL+ZY/6IQ2VicpanC8ZUrKvJ75q/IqU072B3B2POqHC0QrMouDdwu
+         o/snSELS1hIVMix2T5p/Jy9EPi+Y0NPUtm4RhKg2QkfsKOyq67xQWDJ1EqjWReKhnGel
+         ksYBmo84GZLXC7zk54EEw/6APKtY+YDztuDRFAOjioTFK3VDFb2r8HkQ6oKzCRFWN9b1
+         3+Ug==
+X-Gm-Message-State: AOJu0YyPyhLxMDAT7XTxR/9SU00WlUN12LPFKp5Y9oReWM5c9liuDeh3
+	qYbZSLjJ8hCztwHGGlGBigbSC/VULvLPrePJTZCEHhz8a2xhfNXCcFK3RazLb9uHRu8fF3nBIB/
+	XRvxT4+6lAxfkoQxabSY77U0BY3w=
+X-Google-Smtp-Source: AGHT+IFmbG26lQ7rCOD6Ezf4LEillA3aq/WsGuNbM4NSyvksQSzDbi+OEeFCinMox0HyF9tz6wiv6wOw2C1N29vgjBc=
+X-Received: by 2002:a92:c268:0:b0:35f:eb24:bb54 with SMTP id
+ h8-20020a92c268000000b0035feb24bb54mr2260604ild.99.1706110282995; Wed, 24 Jan
+ 2024 07:31:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [git pull] drm for 6.8
-To: Dave Airlie <airlied@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
 References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-3.09 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 TO_DN_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FREEMAIL_TO(0.00)[gmail.com,linux-foundation.org,ffwll.ch];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.09
+ <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
+In-Reply-To: <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
+From: Donald Carr <sirspudd@gmail.com>
+Date: Wed, 24 Jan 2024 07:31:10 -0800
+Message-ID: <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+Subject: Re: [git pull] drm for 6.8
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dave Airlie <airlied@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/10/24 20:49, Dave Airlie wrote:
-> Hi Linus,
-> 
-> This is the main drm pull request for 6.8.
+On Wed, Jan 24, 2024 at 7:06=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
+> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are that
+> everything freezes including mouse cursor. After a while it either resolv=
+es,
+> or e.g. firefox crashes (if it was actively used when it froze) or it's
+> frozen for too long and I reboot with alt-sysrq-b. When it's frozen I can
+> still ssh to the machine, and there's nothing happening in dmesg.
+> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+>
+> I've bisected the merge commits so far and now will try to dig into this
+> one. I've noticed there was also a drm fixes PR later in the merge window=
+ but
+> since it was also merged into rc1 and thus didn't prevent the issue for m=
+e,
+> I guess it's not relevant here?
+>
+> Because the reproduction wasn't very deterministic I considered a commit =
+bad
+> even if it didn't lead to completely frozen desktop and a forced reboot.
+> Even the multi-second hangs that resolved were a regression compared to 6=
+.7
+> anyway.
+>
+> If there are known issues and perhaps candidate fixes already, please do =
+tell.
 
-When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
-experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are that
-everything freezes including mouse cursor. After a while it either resolves,
-or e.g. firefox crashes (if it was actively used when it froze) or it's
-frozen for too long and I reboot with alt-sysrq-b. When it's frozen I can
-still ssh to the machine, and there's nothing happening in dmesg.
-The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+I am experiencing the exact same symptoms; sddm (on weston) starts
+perfectly, launching a KDE wayland session freezes at various points
+(leading to plenty of premature celebration), but normally on the
+handoff from sddm to kde (replete with terminal cursor on screen)
 
-I've bisected the merge commits so far and now will try to dig into this
-one. I've noticed there was also a drm fixes PR later in the merge window but
-since it was also merged into rc1 and thus didn't prevent the issue for me,
-I guess it's not relevant here?
+Working perfectly as of the end of 6.7 final release, broken as of 6.8 rc1.
+Sometimes sddm can be successfully restarted via ssh, other times
+restarting sddm is slow and fails to complete.
 
-Because the reproduction wasn't very deterministic I considered a commit bad
-even if it didn't lead to completely frozen desktop and a forced reboot.
-Even the multi-second hangs that resolved were a regression compared to 6.7
-anyway.
-
-If there are known issues and perhaps candidate fixes already, please do tell.
-
-Thanks,
-Vlastimil
-
-git bisect start '--first-parent'
-# status: waiting for both good and bad commits
-# bad: [6613476e225e090cc9aad49be7fa504e290dd33d] Linux 6.8-rc1
-git bisect bad 6613476e225e090cc9aad49be7fa504e290dd33d
-# status: waiting for good commit(s), bad commit known
-# good: [0dd3ee31125508cd67f7e7172247f05b7fd1753a] Linux 6.7
-git bisect good 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-# bad: [b4442cadca2f97239c8b80f64af7937897b867b1] Merge tag 'x86_tdx_for_6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad b4442cadca2f97239c8b80f64af7937897b867b1
-# bad: [c4c6044d35f06a93115e691e79436839962c203e] Merge tag 'for-linus' of git://git.armlinux.org.uk/~rmk/linux-arm
-git bisect bad c4c6044d35f06a93115e691e79436839962c203e
-# bad: [42bff4d0f9b9c8b669c5cef25c5116f41eb45c6b] Merge tag 'pwm/for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm
-git bisect bad 42bff4d0f9b9c8b669c5cef25c5116f41eb45c6b
-# good: [32720aca900b226653c843bb4e06b8125312f214] Merge tag 'fsnotify_for_v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs
-git bisect good 32720aca900b226653c843bb4e06b8125312f214
-# good: [5bad490858c3ebdbb47e622e8f9049f828d2abba] Merge tag 'soc-defconfig-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect good 5bad490858c3ebdbb47e622e8f9049f828d2abba
-# good: [70d201a40823acba23899342d62bc2644051ad2e] Merge tag 'f2fs-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
-git bisect good 70d201a40823acba23899342d62bc2644051ad2e
-# bad: [141d9c6e003b806d8faeddeec7053ee2691ea61a] Merge tag 'firewire-updates-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394
-git bisect bad 141d9c6e003b806d8faeddeec7053ee2691ea61a
-# bad: [61f4c3e6711477b8a347ca5fe89e5e6613e0a147] Merge tag 'linux-watchdog-6.8-rc1' of git://www.linux-watchdog.org/linux-watchdog
-git bisect bad 61f4c3e6711477b8a347ca5fe89e5e6613e0a147
-# bad: [7912a6391f3ee7eb9f9a69227a209d502679bc0c] Merge tag 'sound-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-git bisect bad 7912a6391f3ee7eb9f9a69227a209d502679bc0c
-# bad: [cf65598d5909acf5e7b7dc9e21786e386356bc81] Merge tag 'drm-next-2024-01-10' of git://anongit.freedesktop.org/drm/drm
-git bisect bad cf65598d5909acf5e7b7dc9e21786e386356bc81
-# first bad commit: [cf65598d5909acf5e7b7dc9e21786e386356bc81] Merge tag 'drm-next-2024-01-10' of git://anongit.freedesktop.org/drm/drm
-
-
-
-
-
-
+Yours sincerely,
+Donald
