@@ -1,78 +1,28 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E217E56C
-	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F0E3D8E
+	for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706113472; cv=none; b=jjYUnRE5D4aCSb2G+J1Pzl0avpM4FaX4mNIMhsns9UanRpheSVmOS7NmOqs7uTmFYQF/qCAX+bYWfPPq3OuSkbU8BHhMpEbcsySf2eDztkXpEdbCq/fUQhzgVK5TszoUSJQUFXzqL61KAyN30rIM7qahEHHEvN+YbtGDPQt1pwo=
+	t=1706113870; cv=none; b=SWJG+2RgJZXKVpxPOhHNixe303jvwfqirSxwrVHHxEvJsMiDeVlVkzHWsRt/pqKHR6rxdlj7rT1h95TodLf+kYEsieGgWUid+ZM8JqgNWOHGxzY0rYe3PpqiD2ay1SNMVxvj47TrSip6Kwly91mihYbsErncTL2lTsGbJyZX6nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706113472; c=relaxed/simple;
-	bh=NhyGnk5+4LpAEqT9beyKM4qdA1eh6aZy9msl/hOzSVc=;
+	s=arc-20240116; t=1706113870; c=relaxed/simple;
+	bh=TSzJVE54z4L3hijJL6NiySD+bGQ0iPShT2QPL/xwQ5U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKJ1g5+NxnaZ9dsZpSwzQqBuppQrbb9ZX11B5BYwq4yGPUdX/Lsa5XmsluCG5V7M6uMnEzBTb0io24JJ32iHA3LaBgVqM6XSMalN4EZ2yeruZ9MT+HzmW3HiIbAOc9Y3SREpg+dYCTa4/NTy/SaJA2v38oEMyME8i65Dt8OrHQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=en8tMvml; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L1NRr150; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bbyHOYSW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SJOfBy2X; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="en8tMvml";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L1NRr150";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bbyHOYSW";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SJOfBy2X"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 In-Reply-To:Content-Type; b=Rdbtl0wdxuSqC7Sz9ExTt4nWwk0p3s2F2anQNeI1bVF62kyST/v90gWyk1tXikQp+qCWiGCCXpzk0wtha55ZwhOUijA+ZzvdEzuSjSIFtVQyGXokfCBH4d2Dksru4o3hkdD0+vz/Kj2ujXJf+CxPq17Majutg5IB0D3NS2IPYQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C4FCB1F7FC;
-	Wed, 24 Jan 2024 16:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706113469; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
-	b=en8tMvml0f49x8ahJeG6iB17vOCs4frJhU1hA/HlrV93jXxohfZuWs8codW97ukrJQX57o
-	0hbB5Jx0TtoVrfxa1VRUJEbfigsPM5iInQkcXr+sezrfC5Y1gD19iclQLjzOMrKeZ/C6da
-	xjRS8iYywekP7Z3wEpAei5quwuubWqg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706113469;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
-	b=L1NRr150zQzCUuqoTYtbcDRPU3mYvMWZ96gFXKRqtM+SimlxKU9XnwH5aptoH972hyPFml
-	hBZrPkdLfSPClxAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706113468; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
-	b=bbyHOYSWYGCbSAqfNTlr7wyGKz78XSWDtMQBdODxvOywT6ygOpGuwVHKc16QbSFpVDE4BJ
-	+tlmo+nfDM/UwPP/tCmnyh4U8KeaAztMfjwX5DzgC4b1DCNU0jdY04XJHA4jQL3by+q4AG
-	sGZUZGYUKFJERzNkuzE4JxQDPF9VeLE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706113468;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UsSpy/Y0Bf9swqzrSKXgT+4WoTa/jaJXCkrOsFP8epA=;
-	b=SJOfBy2XrgVuGLcWvMg76y/BhbVpgmjQQoMTzRsWbJw9/qZCaRo1auFmYt1UVBopqnBbKW
-	x83pFiDicuvvFkBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A2C401333E;
-	Wed, 24 Jan 2024 16:24:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id o7Y8J7w5sWVtIgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 24 Jan 2024 16:24:28 +0000
-Message-ID: <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
-Date: Wed, 24 Jan 2024 17:24:28 +0100
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AD38C61E5FE03;
+	Wed, 24 Jan 2024 17:30:37 +0100 (CET)
+Message-ID: <7b63aaff-821f-47d9-9b02-c1de9d9c5866@molgen.mpg.de>
+Date: Wed, 24 Jan 2024 17:30:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -80,105 +30,180 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [git pull] drm for 6.8
-To: Donald Carr <sirspudd@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Dave Airlie <airlied@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Daniel Vetter <daniel.vetter@ffwll.ch>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
- <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
- <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
+ >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
+ and continuous swapping
 Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ regressions@lists.linux.dev, Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
+ Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org,
+ Dave Ertman <david.m.ertman@intel.com>
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+ <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
+ <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+ <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=bbyHOYSW;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=SJOfBy2X
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.00 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_DN_ALL(0.00)[];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FREEMAIL_TO(0.00)[gmail.com,amd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[gmail.com,linux-foundation.org,ffwll.ch,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,leemhuis.info];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -3.00
-X-Rspamd-Queue-Id: C4FCB1F7FC
-X-Spam-Flag: NO
 
-On 1/24/24 16:31, Donald Carr wrote:
-> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
->> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are that
->> everything freezes including mouse cursor. After a while it either resolves,
->> or e.g. firefox crashes (if it was actively used when it froze) or it's
->> frozen for too long and I reboot with alt-sysrq-b. When it's frozen I can
->> still ssh to the machine, and there's nothing happening in dmesg.
->> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+Dear Jaroslav,
+
+
+Am 24.01.24 um 15:29 schrieb Linux regression tracking (Thorsten Leemhuis):
+
+> On 11.01.24 09:26, Jaroslav Pulchart wrote:
+>>> On 1/8/2024 2:49 AM, Jaroslav Pulchart wrote:
+>>> First, thank you for your work trying to chase this!
+>>>> I would like to report a regression triggered by recent change in
+>>>> Intel ICE Ethernet driver in the 6.6.9 linux kernel. The problem was
+>>>> bisected and the regression is triggered by
+>>>> fc4d6d136d42fab207b3ce20a8ebfd61a13f931f "ice: alter feature support
+>>>> check for SRIOV and LAG" commit and originally reported as part of
+>>>> https://lore.kernel.org/linux-mm/CAK8fFZ4DY+GtBA40Pm7Nn5xCHy+51w3sfxPqkqpqakSXYyX+Wg@mail.gmail.com/T/#m5217c62beb03b3bc75d7dd4b1d9bab64a3e68826
+>>>> thread.
+>>>
+>>> I think that's a bad bisect. There is no reason I could understand for
+>>> that change to cause a continuous or large leak, it really doesn't make
+>>> any sense. Reverting it consistently helps? You're not just rewinding
+>>> the tree back to that point, right? just running 6.6.9 without that
+>>> patch? (sorry for being pedantic, just trying to be certain)
 >>
->> I've bisected the merge commits so far and now will try to dig into this
->> one. I've noticed there was also a drm fixes PR later in the merge window but
->> since it was also merged into rc1 and thus didn't prevent the issue for me,
->> I guess it's not relevant here?
->>
->> Because the reproduction wasn't very deterministic I considered a commit bad
->> even if it didn't lead to completely frozen desktop and a forced reboot.
->> Even the multi-second hangs that resolved were a regression compared to 6.7
->> anyway.
->>
->> If there are known issues and perhaps candidate fixes already, please do tell.
+>> Reverting just the single bisected commit continuously helps for >=
+>> 6.6.9 and as well for current 6.7.
+>> We cannot use any new linux kernel without reverting it due to this
+>> extra memory utilization.
 > 
-> I am experiencing the exact same symptoms; sddm (on weston) starts
-> perfectly, launching a KDE wayland session freezes at various points
-> (leading to plenty of premature celebration), but normally on the
-> handoff from sddm to kde (replete with terminal cursor on screen)
+> Quick query: what's the status wrt to this regression? Looks like
+> nothing happened in the past week.
 > 
-> Working perfectly as of the end of 6.7 final release, broken as of 6.8 rc1.
-> Sometimes sddm can be successfully restarted via ssh, other times
-> restarting sddm is slow and fails to complete.
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
 
-Big thanks to Thorsten who suggested I look at the following:
+According to Linux’ “no regression rule” [1], I recommend to send in a 
+revert for the bisected commit.
 
-https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
 
-https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
+Kind regards,
 
-Instead of further bisection I've applied Mario's revert from the first link
-on top of 6.8-rc1 and the issue seems gone for me now.
+Paul
 
-Vlastimil
 
-> Yours sincerely,
-> Donald
+[1]: 
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions.html
 
+>>>>> However, after the following patch we see that more NUMA nodes have
+>>>>> such a low amount of memory and  that is causing constant reclaiming
+>>>>> of memory because it looks like something inside of the kernel ate all
+>>>>> the memory. This is right after the start of the system as well.
+>>>>
+>>>>   I'm reporting it here as it is a different problem than the original
+>>>> thread. The commit introduces a low memory problem per each numa node
+>>>> of the first socket (node0 .. node3 in our case) and cause constant
+>>>> kswapd* 100% CPU usage. See attached 6.6.9-kswapd_usage.png. The low
+>>>> memory issue is nicely visible in "numastat -m", see attached files:
+>>>> * numastat_m-6.6.10_28GB_HP_ice_revert.txt   >= 6.6.9 with reverted ice commit
+>>>> * numastat_m-6.6.10_28GB_HP_no_revert.txt    >= 6.6.9 vanilla
+>>>> the server "is fresh" (after reboot), without running any application load.
+>>>
+>>> OK, so the initial allocations of your system is running your system out
+>>> of memory.
+>>>
+>>> Are you running jumbo frames on your ethernet interfaces?
+>>
+>> Yes, we are (MTU 9000).
+>>
+>>> Do you have /proc/slabinfo output from working/non-working boot?
+>>
+>> Yes, I have a complete sos report so I can pick-up files from there.
+>> See attached
+>> slabinfo.vanila (non-working)
+>> slabinfo.reverted (working)
+>>
+>>>> $ grep MemFree numastat_m-6.6.10_28GB_HP_ice_revert.txt
+>>>> numastat_m-6.6.10_28GB_HP_no_revert.txt
+>>>> numastat_m-6.6.10_28GB_HP_ice_revert.txt:MemFree
+>>>> 2756.89         2754.86          100.39         2278.43         < ice
+>>>> fix is reverted, we have ~2GB free per numa, except one, like before
+>>>> == no issue
+>>>> numastat_m-6.6.10_28GB_HP_ice_revert.txt:MemFree
+>>>> 3551.29         1530.52         2212.04         3488.09
+>>>> ...
+>>>> numastat_m-6.6.10_28GB_HP_no_revert.txt:MemFree
+>>>> 127.52           66.49          120.23          263.47               <
+>>>
+>>>
+>>>> ice fix is present, we see just few MB free per each node, this will
+>>>> cause kswapd utilization!
+>>>> numastat_m-6.6.10_28GB_HP_no_revert.txt:MemFree
+>>>> 3322.18         3134.47          195.55          879.17
+>>>> ...
+>>>>
+>>>> If you have some hints on how to debug what is actually occupying all
+>>>> that memory and some fix of the problem will be nice. We can provide
+>>>> testing and more reports if needed to analyze the issue. We reverted
+>>>> the commit fc4d6d136d42fab207b3ce20a8ebfd61a13f931f as a workaround
+>>>> till we know a proper fix.
+>>>
+>>> My first suspicion is that we're contributing to the problem by running
+>>> out of receive descriptors memory.
+>>>
+>>> Can we see the ethtool -S stats from the freshly booted system that's
+>>> running out of memory or doing OOM? Also, all the standard debugging
+>>> info (at least once please), devlink dev info, any other configuration
+>>> specifics? What networking config (bonding? anything else?)
+>>
+>> The system is not in OOM, it starts to continuously utilize four
+>> kswapd0-4 of each numa node from the first CPU socket processes (each
+>> at 100% and all doing swap in/out) after the system start to be used
+>> by application due to "low memory".
+>>
+>> We have two 25G 2P E810-XXV Adapters. The first port of each (em1 +
+>> p3p1) is connected and they're bonded in LACP. Second ports (em2 and
+>> p3p2) are unused.
+>>
+>> See attached file for working:
+>> ethtool_-S_em1.reverted
+>> ethtool_-S_em2.reverted
+>> ethtool_-S_p3p1.reverted
+>> ethtool_-S_p3p2.reverted
+>>
+>> See attached file for non-working:
+>> ethtool_-S_em1.vanila
+>> ethtool_-S_em2.vanila
+>> ethtool_-S_p3p1.vanila
+>> ethtool_-S_p3p2.vanila
+>>
+>>> Do you have a bugzilla.kernel.org bug yet where you can upload larger
+>>> files like dmesg and others?
+>>
+>> I do not have yet, I will create a new one and ping you then.
+>>
+>>> Also, I'm curious if your problem goes away if you change / reduce the
+>>> number of queues per port. use ethtool -L eth0 combined 4 ?
+>>
+>> I will try and give you feedback soon.
+>>
+>>> You also said something about reproducing when launching / destroying
+>>> virtual machines with VF passthrough?
+>>
+>> The memory usage is there from boot without running any VMs. The issue
+>> is that the host has low memory for self and it starts to use kswapd
+>> when we start to use it by starting vms.
+>>
+>>>
+>>> Can you reproduce the issue without starting qemu (just doing bare-metal
+>>> SR-IOV instance creation/destruction via
+>>> /sys/class/net/eth0/device/sriov_numvfs ?)
+>>>
+>>
+>> Yes we can reproduce it without qemu running, the extra memory usage
+>> is from the beginning after boot, not depending on any running VM.
+>>
+>> We do not use SR-IOV.
