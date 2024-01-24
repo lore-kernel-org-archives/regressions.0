@@ -1,117 +1,112 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AD612AAFC;
-	Wed, 24 Jan 2024 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D9812BF05;
+	Wed, 24 Jan 2024 17:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706116983; cv=none; b=g2AabDBpg6KhLuZE3kdQNRSGlMR+q77wxl7qOeEe0Hz7v3MTpCiihC4vq8gbpDWcNmhVp6pWQbtIE8Tn5qHiLDejWNkgXIHwJQSDCWhCu8rVzFq03fpSAjshQsAgAwdiLTK80RkV1Gz+EmR3KFesCU+y5NLRfsKxrRRcm2OGb/I=
+	t=1706118696; cv=none; b=BMcpH14/fjpBEgsjPuNdNaEo0wCm2eoAMim9wJoV6VBXvtcgvdiLVANZUXXtMm1OSq+lxR9vh0N1ZmBQE8VJluGtcWGxufWZFmygx/bs6kw8XA+hnCH+jUauw2l2/W7IP5drtQKWogp6MWvf0cnr0JMTg+SGnGaiGrWht/LEKEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706116983; c=relaxed/simple;
-	bh=1qsiuKA8J/U5HtTK7VX7ozeNvAKnJpMbUXqVOveYMK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rSKM2MQnK5w9xOTaC2/a1kVpPBSort/cbRwE9Bmk5MBv3Qn8xSsiDK+mblHHUa7sqsP4XXsR74yBEbvYLXAf9b6XoNO7kX//1vWAZ8N2IE5CMDAMEAEyLYcHW9jgilv4jM/Qk9ZQZ0U0QFNGaKew+TRwOImQqMHJB+D0HRy2PMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A9AwBggs; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A9AwBggs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F8F040003;
-	Wed, 24 Jan 2024 17:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706116979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NR9X+f8hzi6LukUwFvLmWHpES6M8Hue32FNHn1qEfC8=;
-	b=A9AwBggsTrv9qKpv6izgrNets4YClPaiv+ZV53LkzmNlflbQYEvLMKLE1SKOr5qUOF5uQn
-	PRlSFVqNDppd2AyZmp3b5p0MEpw5b/3zahbcChm0Xe9JXLZ/E6EhuVN+4Aiej1kWHY+iif
-	iP8YfZOGANGosY1RZJWV/6YyMYE4z6GeecvRyZOY8087BCntZNl+nzDyKcQ1Wzw3zOSe3c
-	vr8uSTczAaTzRZephI0zvW1/z44Q08mlLywAagwm3BgmN9v9kiNXLhz2orkgIeKMyjoHNY
-	ZXW+TSj0lWjoZ8WcPncTAd/lKaF7Fd5x+zVRyIhqYrUoBExodg1RlFQ2BxJALw==
-Date: Wed, 24 Jan 2024 18:22:56 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Arnd Bergmann
- <arnd@arndb.de>, regressions@lists.linux.dev, =?UTF-8?B?UmFmYcWCIE1pxYJl?=
- =?UTF-8?B?Y2tp?= <rafal@milecki.pl>, Chen-Yu Tsai <wenst@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev,
- Sven Peter <sven@svenpeter.dev>, Michael Walle <michael@walle.cc>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
-Message-ID: <20240124182256.776c164b@xps-13>
-In-Reply-To: <20240122153442.7250-1-arnd@kernel.org>
-References: <20240122153442.7250-1-arnd@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706118696; c=relaxed/simple;
+	bh=yKIM21Iww3LTk3QxAjQzqREIegASwkkai/qDvoZNrkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B8du6fAuCP7bqpg37wynjpBZBm59LGpM9zkoqZHzqy6kocL+QzVjQ58xmD4yQB+iXwZUTNB8TkHSI3RXFMpuyWFQhhQYp3Ml3xYDczTFQKGXTRVbeDjTYYypDzCLeBxim22K3typ8kZj5Y2TbA172ucQp2QmeEDUx4Ob96K7kzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rShPP-0004yI-KF; Wed, 24 Jan 2024 18:51:31 +0100
+Message-ID: <e7eb12a9-67ed-45b1-aaf6-e1df52a247bd@leemhuis.info>
+Date: Wed, 24 Jan 2024 18:51:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [git pull] drm for 6.8
+Content-Language: en-US, de-DE
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Donald Carr <sirspudd@gmail.com>
+References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+ <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
+ <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+ <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
+ <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706118694;3934329c;
+X-HE-SMSGID: 1rShPP-0004yI-KF
 
-Hi Arnd,
+Linus, if you have a minute, I'd really like to know...
 
-arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
+On 24.01.24 17:41, Mario Limonciello wrote:
+> On 1/24/2024 10:24, Vlastimil Babka wrote:
+>> On 1/24/24 16:31, Donald Carr wrote:
+>>> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>>>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
+>>>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are
+>>>> that
+>>>> everything freezes including mouse cursor. After a while it either
+>>>> resolves,
+>>>> or e.g. firefox crashes (if it was actively used when it froze) or it's
+>>>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen
+>>>> I can
+>>>> still ssh to the machine, and there's nothing happening in dmesg.
+>>>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+>>> [...]
+>>> I am experiencing the exact same symptoms;
+>>
+>> Big thanks to Thorsten who suggested I look at the following:
+>>
+>> https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
+>> https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
+>>
+>> Instead of further bisection I've applied Mario's revert from the
+>> first link
+>> on top of 6.8-rc1 and the issue seems gone for me now.
+> 
+> Thanks for confirming.  I don't think we should jump right to the revert
+> right now.
+>
+>  I posted it in case that is the direction we need to go
+> (simple git revert didn't work due to contextual changes).
+> 
+> Let's give the folks who work on GPU scheduler some time to understand
+> the failure and see if they can fix it.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc=
-1 on
-> Apple M1, which (in downstream dts files) has multiple nvmem cells that u=
-se the
-> same byte address. This causes the device probe to fail with
+...how you think about this and other situations like this. Given that
+we have
 
-o_O	I didn't even know this was allowed...
+* two affected people in this thread
+* one earlier thread about it
+* the machine that made Mario write the patch
+* and I have someone in #fedora-kernel that likely is affected as well
 
-> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform=
-/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
-> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                =
- 6.8.0-rc1-arnd-5+ #133
-> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
-> [    0.605362] Call trace:
-> [    0.605365]  show_stack+0x18/0x2c
-> [    0.605374]  dump_stack_lvl+0x60/0x80
-> [    0.605383]  dump_stack+0x18/0x24
-> [    0.605388]  sysfs_warn_dup+0x64/0x80
-> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
-> [    0.605402]  internal_create_group+0x268/0x404
-> [    0.605409]  sysfs_create_groups+0x38/0x94
-> [    0.605415]  devm_device_add_groups+0x50/0x94
-> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
-> [    0.605682]  nvmem_register+0x38c/0x470
-> [    0.605789]  devm_nvmem_register+0x1c/0x6c
-> [    0.605895]  apple_efuses_probe+0xe4/0x120
-> [    0.606000]  platform_probe+0xa8/0xd0
->=20
-> As far as I can tell, this is a problem for any device with multiple cell=
-s on
-> different bits of the same address. Avoid the issue by changing the file =
-name
-> to include the first bit number.
+it seems that this is not some corner case very few people run into.
+Hence I tend to say that this should be dealt with rather sooner than
+later. Maybe before rc2? Or is this asking too much?
 
-There is only one bit number right? We are talking about byte offsets
-so this value can only range from 0 to 7? If we understand each other
-correctly then why not, I'm fine with the extra ",0" thing.
+The thing from my point of view is, that each such problem might
+discourage testers from testing again or lead to thoughts like "I only
+start testing after -rc4". Not to mention that other people will try to
+bisect the problem like Vlastimil did, which will cost them quite some
+time and effort -- only to find out that we known about the problem
+already and did not quickly fix it. That is discouraging for them as
+well and thus bad for field testing I'd assume.
 
-> Fixes: 0088cbc19276 ("nvmem: core: Expose cells through sysfs")
-> Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/=
-dts/apple/t600x-dieX.dtsi#L156
-> Cc: regressions@lists.linux.dev
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> Cc: Chen-Yu Tsai <wenst@chromium.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: asahi@lists.linux.dev
-> Cc: Sven Peter <sven@svenpeter.dev>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-
-Thanks,
-Miqu=C3=A8l
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
