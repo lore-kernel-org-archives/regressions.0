@@ -1,209 +1,162 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FB81C6B5;
-	Thu, 25 Jan 2024 10:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5B846447;
+	Thu, 25 Jan 2024 12:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706178525; cv=none; b=g7RkdFaBb0R0aVx15NsLjBK4kEzT2ZC5y5L7q8isTI+bgLb7ggYJDO3IZJ/zOwa/Ziq6l80J+kxWU6ebji9gdS3FUqJJIWUKiMFyN6/5bePvdATrSOu5RPfM+SrggsN+qjtmSrZ4kx/Qrlx4xlr652O6a/yp5hWIJYBlfacgqT8=
+	t=1706184951; cv=none; b=XQW3syqZz6PnkMrZR7uWZiyUntMJ9bx6h2TJw3BG1M2ryXk3FDjL47/hI6DnKVND/wmIP5ZxEygmeoysL4wUeaYsza7EwjLiUHuIvq7FwDQY54ceHp3zX870cMDKtf+4FlXhL72cfBKn4ZptUynBu3v4UUqf8/raIb2iOz9G1Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706178525; c=relaxed/simple;
-	bh=CenqYOd1xt/Ush7B45mfMjIcgvqgSyN512XFCJsBrvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lseSpfYiqIZHnq1+8HNNZTZ6Sfk90vm8+UicRjSUJzUptXpIVQMBVVoH4AZ+mu8xfUVZNwTgLwPTCITLaOgehxsuTQDUNm74plbgfB4dLI9fw32BBevqiaiUeQFayDfXrB6Lge61ehdNzX44H3vPA/FXvWgLi4jL+KsQb5EYBMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rSwyF-000713-JQ; Thu, 25 Jan 2024 11:28:31 +0100
-Message-ID: <5cfc34c7-8298-4639-bb81-8b95392279ba@leemhuis.info>
-Date: Thu, 25 Jan 2024 11:28:30 +0100
+	s=arc-20240116; t=1706184951; c=relaxed/simple;
+	bh=iYIlmuM4aHoSjitHdo1GiG11F3ybyCgC/rvqDkKgIZM=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=sWzDofgLFFhVym9BGWs7p3gHFkzkSYz+ixHW3onIK6A/zSet+yt/lbpo90BjBty2n2/AmiSKyA+Tv0fiYK8onRHd4TZyHsjyUFeLRhzIcQ2/u8wsd75lWVkdWcEvh/PjcqjAAmN4fCJJJDrcz3mt8QfDZDnSNDzK+ZlaUCunUnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eotN5GNP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=swr4TGwP; arc=none smtp.client-ip=64.147.123.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eotN5GNP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="swr4TGwP"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 327C53200BA0;
+	Thu, 25 Jan 2024 07:15:48 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 25 Jan 2024 07:15:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706184947; x=1706271347; bh=iWY278RAES
+	I9tXIJCbcah9hv93rUNqzySmMLK+KnP2E=; b=eotN5GNPRege9OZu5gZt+nSZbV
+	i3Qyl2Lpe1ik7aHDnhMnbvIPchaQRplhdcZ+jIYIQEGvcKBsMND/snpFpzzKbVcJ
+	yEDuBtF2XyQ84cY/s9XiM/BnryFAcVBIBEJv3HujGMqHq8VcTPSExXxHOzOAqP1o
+	9NtWlDOwNup4b4hsWHzkZ2OH4hs26Rr4l7Q0S8OhMJfODUisnsAWCZKST+2djDoR
+	K459Yt4ZD2c4yHF0AMZJZZdRVokI0e7Gm2guSlDqpOLRz1AQMPeYZW85zvG0j0/6
+	OzBLOdqkXmX0i5qIj285W+Q3nf1Ehc3U8d322PE2QGxqJ16KJIb7ra4kUQ0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706184947; x=1706271347; bh=iWY278RAESI9tXIJCbcah9hv93rU
+	NqzySmMLK+KnP2E=; b=swr4TGwPEh4Ve+gNquCawDIXWqoV/LWsV7s4LuKZCpcq
+	DoK5l/LpCqq27upa8Pa0Ii+yh1qgLwLWnDdtykJM04++kGJdgvc+Gl4GvJ0qe7YS
+	eynXOGKhnb1pa04gNWuep+Sg7FHpqoSHwVg6HgfbzDOqQdKJpJqOmJ9IDEZEdJPx
+	KcS8pYw9HYMW3Qb8GwepZtoeMadhOHwl0Ysy9I+7V5CCCJtoRLqqZ+FjrpQERxNj
+	Gv+vHos/UZBSu/8iyJS2sPk6NK2Xu56soKoFMjNKvdLe11TnVt/qljPvQiJqOmn1
+	hXVGcx0zRV7njGBAejubxjuSOGnY2mPuQTiTHRl5/w==
+X-ME-Sender: <xms:81CyZSeHa6hjc6lSJ0i0irdpuoK5742j03XDw6GSslZWYrHk-mJ5Eg>
+    <xme:81CyZcOxHwMJj1_K2QdryDUUdsb6Q1A24QRQcVyq2qyAiUvF69P64N2XDPjLA8GHf
+    gf6gt-_uf3Ff_WYHqk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelgedgudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:81CyZTg6WL_QJSyTimAIqxSrpxSW6-RlaJb8czz6kn2pIzW_CnFm-w>
+    <xmx:81CyZf-FYj2kkwPBnIwyIRY33d-5IXFJXnp86OiIDcX1gWpIVQEQ8Q>
+    <xmx:81CyZevrrYxtL3AUZvpNAMJnnG-hrbAPrGNlVuGMjaIzlWgjv2_68Q>
+    <xmx:81CyZcAg6t56_AKQrh-ZhU_0g1uXbUNAuRVjYklfN2QahsqT3dSoGg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 49604B6008D; Thu, 25 Jan 2024 07:15:47 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: More detailed text about bisecting Linux kernel regression --
- request for comments and help
-Content-Language: en-US, de-DE
-To: Jani Nikula <jani.nikula@linux.intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-References: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
- <87fryllpp5.fsf@intel.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <87fryllpp5.fsf@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1706178523;5c576dff;
-X-HE-SMSGID: 1rSwyF-000713-JQ
+Message-Id: <911c4a6b-83af-46a8-8f7e-250da4f0f1ad@app.fastmail.com>
+In-Reply-To: <20240124231120.562f06f3@xps-13>
+References: <20240122153442.7250-1-arnd@kernel.org>
+ <20240124182256.776c164b@xps-13>
+ <1d13250c-e48b-4e31-b449-5b54837a0d40@app.fastmail.com>
+ <20240124231120.562f06f3@xps-13>
+Date: Thu, 25 Jan 2024 13:15:26 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc: "Arnd Bergmann" <arnd@kernel.org>,
+ "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+ regressions@lists.linux.dev,
+ =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>,
+ "Chen-Yu Tsai" <wenst@chromium.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, asahi@lists.linux.dev,
+ "Sven Peter" <sven@svenpeter.dev>, "Michael Walle" <michael@walle.cc>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Content-Type: text/plain
 
-On 25.01.24 10:36, Jani Nikula wrote:
-> On Wed, 24 Jan 2024, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->> Hi! Find below a WIP text on bisecting Linux kernel regressions I plan
->> to submit for inclusion in the Linux kernel documentation in a month or
->> two. I could do so now, but chose to write this mail instead, as the
->> text would really benefit from a few people actually testing the given
->> instructions. Hence if you notice somebody that faces a regression that
->> needs bisecting, consider poiting them them to this text, asking them to
->> play through this and provide feedback to me.
->>
->> Ideally point users to the following rendered version:
->> https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
->>
->> It is (a) a lot easier to read (b) has no odd or broken line breaks,
->> like the text below has a few (sorry!) (c) is updated when I improve
->> something.
->>
->> Anyone who might be willing to provide feedback can do so in a reply
->> here
-> 
-> Hi Thorsten, first of all, thanks for doing this. I think it'll be good
-> to have a document on kernel bisection to point people at.
+On Wed, Jan 24, 2024, at 23:11, Miquel Raynal wrote:
+> Hi Arnd,
+>
+> arnd@arndb.de wrote on Wed, 24 Jan 2024 20:49:53 +0100:
+>
+>> On Wed, Jan 24, 2024, at 18:22, Miquel Raynal wrote:
+>> > arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
+>> >  
+>> >> From: Arnd Bergmann <arnd@arndb.de>
+>> >> 
+>> >> 
+>> >> As far as I can tell, this is a problem for any device with multiple cells on
+>> >> different bits of the same address. Avoid the issue by changing the file name
+>> >> to include the first bit number.  
+>> >
+>> > There is only one bit number right? We are talking about byte offsets
+>> > so this value can only range from 0 to 7? If we understand each other
+>> > correctly then why not, I'm fine with the extra ",0" thing.  
+>> 
+>> On the Apple M1, the nvmem registers are 32 bit wide, so the
+>> bit numbers can go up to 31. I can imagine some system using
+>> 64-bit registers, but it's unlikely to be higher than that.
+>
+> In this case we will soon or later have a problem again. Can we include
+> the full offset of the bit and not just the first digit?
 
-Thx for saying that and also thx for taking a look and providing feedback!
+I thought that is what my patch does, maybe I don't
+undestand the problem you are referring to. This is what
+I see on my system with the patch applied:
 
-> The one thing I find problematic is the use of shallow clones by default
+$ cd /sys/devices/platform/soc@200000000/2922bc000.efuse
+$ find . -name efuse\*
+./apple_efuses_nvmem0/cells/efuse@a24,11
+./apple_efuses_nvmem0/cells/efuse@a24,9
+./apple_efuses_nvmem0/cells/efuse@a1c,f
+./apple_efuses_nvmem0/cells/efuse@a20,17
+./apple_efuses_nvmem0/cells/efuse@a20,1e
+./apple_efuses_nvmem0/cells/efuse@a18,0
+./apple_efuses_nvmem0/cells/efuse@a14,b
+./apple_efuses_nvmem0/cells/efuse@a1c,1f
+./apple_efuses_nvmem0/cells/efuse@a1c,d
+./apple_efuses_nvmem0/cells/efuse@a20,1c
+./apple_efuses_nvmem0/cells/efuse@a18,15
+./apple_efuses_nvmem0/cells/efuse@a14,0
+./apple_efuses_nvmem0/cells/efuse@a1c,14
+./apple_efuses_nvmem0/cells/efuse@a24,3
+./apple_efuses_nvmem0/cells/efuse@a20,7
+./apple_efuses_nvmem0/cells/efuse@a18,5
+./apple_efuses_nvmem0/cells/efuse@a10,16
+./apple_efuses_nvmem0/cells/efuse@a1c,12
+./apple_efuses_nvmem0/cells/efuse@a20,5
+./apple_efuses_nvmem0/cells/efuse@a18,3
+./apple_efuses_nvmem0/cells/efuse@a18,a
+./apple_efuses_nvmem0/cells/efuse@a10,1b
+./apple_efuses_nvmem0/cells/efuse@a14,5
+./apple_efuses_nvmem0/cells/efuse@a1c,19
+./apple_efuses_nvmem0/cells/efuse@a24,f
+./apple_efuses_nvmem0/cells/efuse@a18,1d
+./apple_efuses_nvmem0/cells/efuse@a14,13
+./apple_efuses_nvmem0/cells/efuse@a18,8
+./apple_efuses_nvmem0/cells/efuse@a18,f
+./apple_efuses_nvmem0/cells/efuse@a20,14
+./apple_efuses_nvmem0/cells/efuse@a10,19
+./apple_efuses_nvmem0/cells/efuse@a18,1b
+./apple_efuses_nvmem0/cells/efuse@a14,11
+./apple_efuses_nvmem0/cells/efuse@a1c,a
+./apple_efuses_nvmem0/cells/efuse@a10,1e
+./apple_efuses_nvmem0/cells/efuse@a20,19
 
-FWIW, some of what is in that text is a result of similar discussion
-that happened when
-Documentation/admin-guide/quickly-build-trimmed-linux.rst was submitted
-about a year ago, which also uses shallow clones by default.
-
-Further a quick reminder, as it's easy to forget: most of us live in
-areas where downloading a lot of data is not something that bothers us
-or will take a lot of time. But it is different for some people that
-will need this document.
-
-Out of curiosity I just gave it a rough try with my 100 MBit (aka
-neither-slow-nor-fast) connection.
-
-Shallow clone:
- 246.67 MiB, 0m48,015s
-
-Deepening the shallow clone to v5.18 while adding linux-6.1.y:
- 171.79 MiB, 1m47,510s
-
-Full torvalds clone (just for completeness):
- 2.77 GiB, 7m36,892s
-
-Full stable clone:
- 4.82 GiB, 12m12,093s
-
-(reminder, those are just rough numbers, nothing else that was using the
-connection much was going on, but this was not a lab setup!)
-
-> and, well, the use of git in ways that I myself can't figure out without
-> resorting to the man pages. I think it's a lot of dark corners of git
-> that's overwhelming and really unrelated to the bisection itself.
-> 
-> If I point people at that, and they have problems, I'm just going to
-> tell them to:
-> 
->   git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   cd linux
->   git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
->   git fetch stable
-
-This could be simplified, as linux-stable.git includes mainline, it's
-just sometimes a few hours behind.
-
-> And I can tell them to 'git checkout v<GOOD>' and 'git checkout v<BAD>'
-> and proceed from there.
-> 
-> To me, that's the TL;DR.
-
-FWIW, I earlier today considered changing this myself. But then I
-noticed the bundle clone instructions (more on that below) are complex
-as well. :-/
-
-Hmmm. Maybe switching to "do a full clone of linus' repo (without using
-bundles) and just telling users to add the stable branches they might
-need" by default would be a good middle ground for this document. Guess
-then I'd switch quickly-build-trimmed-linux.rst over myself.
-
-> And then you can have a section on "what if I
-> really can't do full clones" and various options to save bandwidth.
-> 
->> Downloading the sources using a full git clone
->> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>
->> If downloading and storing a lot of data (~4,4 Gigabyte as of early
->> 2023) is nothing that bothers you, instead of a shallow clone perform a
->> full git clone instead. You then will avoid the specialties mentioned
->> above and will have all versions and individual commits at hand at any
->> time::
->>
->>   curl -L \
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle
->> \
->>     -o linux-stable.git.bundle
->>   git clone linux-stable.git.bundle ~/linux/
->>   rm linux-stable.git.bundle
->>   cd ~/linux/
->>   git remote set-url origin \
->>     https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
->>   git fetch origin
->>   git checkout --detach origin/master
-> 
-> I mean seriously, even the full clone instructions use curl, without
-> rationale. Why?
-
-That was the result of the discussion back then, can't remember all the
-details and all the places where that happened. Part of it was reducing
-the server load, but that IIRC is mainly a concern for CI systems and
-something this document can ignore. Unstable internet connection might
-have been the main reason -- in combination with the redirection thing
-kernel.org does, which *IIRC* prevents us from using "git clone
---bundle-uri=".
-
-Ciao, Thorsten
+      Arnd
