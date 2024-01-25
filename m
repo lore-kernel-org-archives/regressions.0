@@ -1,144 +1,136 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166E11BF27
-	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 09:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971CC23C9
+	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 09:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706174931; cv=none; b=rxIYzAsYFkucL5qBZ2sZQ848hvD1saWQtMA9yE231yRXBfdp73SHwMlmpEZX+irsunVC52BRvT/mbisRB55sDVS2/M9wUt38Xlc3pLLOiNmB1Qx162ra+2rFNL0Wl+OtXPpKSJv6hJ7ttSRCdc2Dx9wJBZIgxXOLg1tRaW+rRe4=
+	t=1706175408; cv=none; b=HI6RGOv962KoxPueXia3nZ0sip8C6tEoT74SZqgcMwgUyGDvLiqkorIxx/bBv7cjUBtrXfud6S1OxS9gQAjBla9SoNnRdEakcB+fkYAHqdh0QnUgmVKdNF5gt72kqbtCvFUQVkPHO7RH7m2RqUxm4JzFCVyQEU3WEt/MAbxh+DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706174931; c=relaxed/simple;
-	bh=4oi/mDvJ66W3EHJcJkd6l/BObOrE9wC8bVqVRycPZXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RnM+74/lD3y5zP2BW5b3ZMszxrKzx0S2lh5u+cdvBwjVjKwR4qlOSfCmE9QLtmhiHFNPRP+ajgHk0T5iw7UpujGhInGTjNBTaRW+sLFCSueI0Dc1bkDSk67epqiFekettwbOGTIoSUeICBbHV6z8WkEaXopM50BuV097GM4Y/5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0W.JurKr_1706174923;
-Received: from 30.221.129.223(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W.JurKr_1706174923)
-          by smtp.aliyun-inc.com;
-          Thu, 25 Jan 2024 17:28:44 +0800
-Message-ID: <d93bdf89-d724-4f2a-a3fc-f3a46e54202c@linux.alibaba.com>
-Date: Thu, 25 Jan 2024 17:28:43 +0800
+	s=arc-20240116; t=1706175408; c=relaxed/simple;
+	bh=5IdCGjxog+NAv/y7J+sZhb8XlMuQAvpB+GisSh4S9x8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=iaWxKadtYfS5YlhZyKIkZjWnWA4FD9q8cGn/HIjpyHfacq6Z8eSU5sydYbPxQzfOewNM/zrOBvgyAO7QfCkQJqYdNmo7p6JiUoEkQQbTs0KESE9RsAPGDtZvayNvLXL61UYZ0LNpMXrjnzifj5nUkesE0D+pBn6fUulE/HJ8TiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7YPlVBx; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7YPlVBx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706175405; x=1737711405;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=5IdCGjxog+NAv/y7J+sZhb8XlMuQAvpB+GisSh4S9x8=;
+  b=E7YPlVBx8zXrhMw6ObNedND5t3fgAfpL9zLncRJy+6OyXRrlT0GIGfE3
+   fMqjrh0EZ/5codKBWOs9qCjtVe+ja3HjRC1C7VuUt/zVSNm6WVBsnBmuh
+   ozFGNid3Qvb1Jj8NhzJnQz0ZR2TleyZ6BIi2R6TYmjDt4U12qhCOtai2V
+   1r6WiGEDNlSkfA70MsZ7diTsETAAf2+UL/yw4EGwMOcE2Ej6AA6sudyW2
+   A3b8HDPxTt6S4QPpouS4E2qAG3wFrEqLJPdo9NyRLz/5wv696pyWsFeFS
+   fDU1PDjxnAAPHe9QUPUEAGaKXkKiWT6OlSD77IQt1OKgkDOR300s5M5bw
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="8767132"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="8767132"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:36:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2303503"
+Received: from cyrillet-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.252])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:36:42 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, Linux Doc Mailing List
+ <linux-doc@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: More detailed text about bisecting Linux kernel regression --
+ request for comments and help
+In-Reply-To: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
+Date: Thu, 25 Jan 2024 11:36:38 +0200
+Message-ID: <87fryllpp5.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] v6.8 SMC-D issues
-To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jaka@linux.ibm.com,
- Matthew Rosato <mjrosato@linux.ibm.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
- tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
- guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Halil Pasic <pasic@linux.ibm.com>
-References: <20231219142616.80697-1-guwen@linux.alibaba.com>
- <20231219142616.80697-8-guwen@linux.alibaba.com>
- <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
- <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
- <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+
+On Wed, 24 Jan 2024, Thorsten Leemhuis <linux@leemhuis.info> wrote:
+> Hi! Find below a WIP text on bisecting Linux kernel regressions I plan
+> to submit for inclusion in the Linux kernel documentation in a month or
+> two. I could do so now, but chose to write this mail instead, as the
+> text would really benefit from a few people actually testing the given
+> instructions. Hence if you notice somebody that faces a regression that
+> needs bisecting, consider poiting them them to this text, asking them to
+> play through this and provide feedback to me.
+>
+> Ideally point users to the following rendered version:
+> https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
+>
+>
+> It is (a) a lot easier to read (b) has no odd or broken line breaks,
+> like the text below has a few (sorry!) (c) is updated when I improve
+> something.
+>
+> Anyone who might be willing to provide feedback can do so in a reply
+> here
+
+Hi Thorsten, first of all, thanks for doing this. I think it'll be good
+to have a document on kernel bisection to point people at.
+
+The one thing I find problematic is the use of shallow clones by default
+and, well, the use of git in ways that I myself can't figure out without
+resorting to the man pages. I think it's a lot of dark corners of git
+that's overwhelming and really unrelated to the bisection itself.
+
+If I point people at that, and they have problems, I'm just going to
+tell them to:
+
+  git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  cd linux
+  git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+  git fetch stable
+
+And I can tell them to 'git checkout v<GOOD>' and 'git checkout v<BAD>'
+and proceed from there.
+
+To me, that's the TL;DR. And then you can have a section on "what if I
+really can't do full clones" and various options to save bandwidth.
+
+> Downloading the sources using a full git clone
+> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> If downloading and storing a lot of data (~4,4 Gigabyte as of early
+> 2023) is nothing that bothers you, instead of a shallow clone perform a
+> full git clone instead. You then will avoid the specialties mentioned
+> above and will have all versions and individual commits at hand at any
+> time::
+>
+>   curl -L \
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle
+> \
+>     -o linux-stable.git.bundle
+>   git clone linux-stable.git.bundle ~/linux/
+>   rm linux-stable.git.bundle
+>   cd ~/linux/
+>   git remote set-url origin \
+>     https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+>   git fetch origin
+>   git checkout --detach origin/master
+
+I mean seriously, even the full clone instructions use curl, without
+rationale. Why?
 
 
+BR,
+Jani.
 
-On 2024/1/25 16:26, Alexandra Winter wrote:
-> 
-> 
-> On 25.01.24 05:59, Wen Gu wrote:
->> After a while debug I found an elementary mistake of mine in
->> b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")..
->>
->> The operator order in smcd_lgr_match() is not as expected. It will always return
->> 'true' in remote-system case.
->>
->>   static bool smcd_lgr_match(struct smc_link_group *lgr,
->> -                          struct smcd_dev *smcismdev, u64 peer_gid)
->> +                          struct smcd_dev *smcismdev,
->> +                          struct smcd_gid *peer_gid)
->>   {
->> -       return lgr->peer_gid == peer_gid && lgr->smcd == smcismdev;
->> +       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
->> +               smc_ism_is_virtual(smcismdev) ?
->> +               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
->>   }
->>
->> Could you please try again with this patch? to see if this is the root cause.
->> Really sorry for the inconvenience.
->>
->> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
->> index da6a8d9c81ea..c6a6ba56c9e3 100644
->> --- a/net/smc/smc_core.c
->> +++ b/net/smc/smc_core.c
->> @@ -1896,8 +1896,8 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
->>                             struct smcd_gid *peer_gid)
->>   {
->>          return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
->> -               smc_ism_is_virtual(smcismdev) ?
->> -               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
->> +               (smc_ism_is_virtual(smcismdev) ?
->> +                (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1);
->>   }
->>
->>
->> Thanks,
->> Wen Gu
-> 
-> Hello Wen Gu,
-> 
-> thank you for the quick resposne and for finding this nasty bug.
-> I can confirm that with your patch I do not see the issue anymore.
 
-Thank you very much for your confirmation, Alexandra.
-
-> Please send a fix to the mailing lists. See
-> https://docs.kernel.org/process/handling-regressions.html
-> for some tips.
-> 
-
-Thank you. Will do.
-
-> May I propose that instead of adding the brackets, you change this function
-> to an if-then-else sequence for readability and maintainability?
-> I would still mention the missing brackets in the commit message, so
-> readers can quickly understand the issue.
-
-I agree. if-then-else will make it clearer. I will fix it like this:
-
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index da6a8d9c81ea..1d5bce82d4d8 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -1895,9 +1895,15 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
-                            struct smcd_dev *smcismdev,
-                            struct smcd_gid *peer_gid)
-  {
--       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
--               smc_ism_is_virtual(smcismdev) ?
--               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
-+       if (lgr->peer_gid.gid != peer_gid->gid ||
-+           lgr->smcd != smcismdev)
-+               return false;
-+
-+       if (smc_ism_is_virtual(smcismdev) &&
-+           lgr->peer_gid.gid_ext != peer_gid->gid_ext)
-+               return false;
-+
-+       return true;
-  }
-
-Thanks again,
-Wen Gu
-
-> 
-> Thanks again for the quick response.
-> Sandy
+-- 
+Jani Nikula, Intel
