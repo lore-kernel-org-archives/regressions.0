@@ -1,132 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905B9196
-	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 00:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D1210A01
+	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 04:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706140921; cv=none; b=Xl/eXftoASzGoQlgzfE3bcpQjJGYQIVJY6MlEVNsyr6BFQfLWkt420HaMZ0532oHETvkkubDUtZAUx+QpJ10KGFAXV6Wf58gb3o7gEjRtZVs1uclTkhlww7Kkv0mkkimYy9zgqD8N2QQnXAxZZKe0bBElwtVBMSS/DWxBXmG5Gc=
+	t=1706158790; cv=none; b=aO6td/ZJb/fLiticRByheyOGSdNs/Q6ZjCs2j2DHDS4/MLOC0e6Y42BjCmQzjo+IzMc1SRlPjiXRP8n+Ef0tcqdgCjfUIHcilxVKQSCeefxhPkp2qhzhkID/NMsSJ0PKgSLv9pTMyhTA6+3TcY0lhsWPZFIWHDqRPzNqtL0CQ+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706140921; c=relaxed/simple;
-	bh=5mwY570DfNBBwhuUW2/t3DHz1by/BgnhUlLMFufm0+c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0H/C/8X+ykLj5PAarohcLkP3bxvfB7cuEBPLtziX6+6vUK30UadOvkY80rMq0XpY1IewfdCP3bFns9nwCXyKi/Qo69P8Wp0CA+SzySz3W5b3KLA57WrxsYEl00stzxWIRPsnKQhljW1/k4zjVsucH47mtAU4kJUW0qTwY3jR6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAVJ1yGg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAVJ1yGg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DE8C433A6
-	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 00:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706140921;
-	bh=5mwY570DfNBBwhuUW2/t3DHz1by/BgnhUlLMFufm0+c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sAVJ1yGg1Hx8GOa4pX8oNHh6i6qqNofcmWg+KNI8kogmUaYu4sZ5Cq0vmU7AT5kwX
-	 qvjsp6BsOTdGa/BD2OA9yDJDobUhrxyo7KPGlPua6VqafmCPm4Gdsh6zHQXklK3dSB
-	 Zbde20MmT33LnKromEZbhe4z9A2erIY4n8JC/Ujj4CbMcDZ8+wMNtvp5MFagoK3VsY
-	 WWx+dOnt6jCi0JZWB08CQxZsTXYQt6gs2gr7BEgEsOz6Q9tFMpu8LEaj1UrjDGFgQC
-	 HpqtU60KJCk5o9nIzIDwd6BiFxgQ0HXVCIPLF5Zr42wiZ4VDxpGYh4lLTZBacf5ydg
-	 KF77tNBO4h78A==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cf2adac1ccso12333301fa.3
-        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:02:01 -0800 (PST)
-X-Gm-Message-State: AOJu0Yzfzq/9qsqlnZyHzbC7rTQO67WsTXQZvtL9RkYYhzzs4aWCgKjM
-	xhs38s32lm2Q3zlUUkpNzr6fyJB+Bw3wuuc7LmRme9fJTy7we/2kgihrho5KXHUDi3Gxf/bm5sl
-	I9Ia4r19UQr3PhfjkriMQZzJEzoU=
-X-Google-Smtp-Source: AGHT+IFCXb46Pzw2PPc2gtLorR23QXWS78uxb9N4YsNdsOk4803nUo90BTz/XVPNryE+v48kycxwftjhso1Cfm5+d58=
-X-Received: by 2002:a2e:9b49:0:b0:2cc:c794:57c7 with SMTP id
- o9-20020a2e9b49000000b002ccc79457c7mr66379ljj.43.1706140919297; Wed, 24 Jan
- 2024 16:01:59 -0800 (PST)
+	s=arc-20240116; t=1706158790; c=relaxed/simple;
+	bh=MW15k4O5v9QsoPaQ81Bq5JTbJg1u8U4lt6OlGTG94sc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qo+PveHCBg20lZTNvqBDUajIxlsRk9AMcoLVcm7rvJf7k7a63v6DXMdp22bmjh5puAAQWt1GHlGVbFqaXQW7cmmcK9W8bNhKxxpfYihOuuLF70uWWXmYd+z6lCuIslWNHi5g0fessqnyUQmAVc2wzFQtOPSHJWuoFw4Wx4k2NhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0W.J8HiD_1706158781;
+Received: from 30.221.129.223(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W.J8HiD_1706158781)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jan 2024 12:59:43 +0800
+Message-ID: <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
+Date: Thu, 25 Jan 2024 12:59:41 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPhsuW7KMLHHrcyZhKS_m_fwWSKM66VFXaLj9fmY+ab5Mu3pvA@mail.gmail.com>
- <20240123235803.8298-1-dan@danm.net>
-In-Reply-To: <20240123235803.8298-1-dan@danm.net>
-From: Song Liu <song@kernel.org>
-Date: Wed, 24 Jan 2024 16:01:47 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW49L8B9K8QFg68v=zG9ywMehUTD18DaG4PexEt-3mzQqQ@mail.gmail.com>
-Message-ID: <CAPhsuW49L8B9K8QFg68v=zG9ywMehUTD18DaG4PexEt-3mzQqQ@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Dan Moulding <dan@danm.net>, junxiao.bi@oracle.com
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, yukuai1@huaweicloud.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] v6.8 SMC-D issues
+To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com,
+ Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+ tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
+ guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Halil Pasic <pasic@linux.ibm.com>
+References: <20231219142616.80697-1-guwen@linux.alibaba.com>
+ <20231219142616.80697-8-guwen@linux.alibaba.com>
+ <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks for the information!
 
 
-On Tue, Jan 23, 2024 at 3:58=E2=80=AFPM Dan Moulding <dan@danm.net> wrote:
->
-> > This appears the md thread hit some infinite loop, so I would like to
-> > know what it is doing. We can probably get the information with the
-> > perf tool, something like:
-> >
-> > perf record -a
-> > perf report
->
-> Here you go!
->
-> # Total Lost Samples: 0
-> #
-> # Samples: 78K of event 'cycles'
-> # Event count (approx.): 83127675745
-> #
-> # Overhead  Command          Shared Object                   Symbol
-> # ........  ...............  ..............................  ............=
-.......................................
-> #
->     49.31%  md0_raid5        [kernel.kallsyms]               [k] handle_s=
-tripe
->     18.63%  md0_raid5        [kernel.kallsyms]               [k] ops_run_=
-io
->      6.07%  md0_raid5        [kernel.kallsyms]               [k] handle_a=
-ctive_stripes.isra.0
->      5.50%  md0_raid5        [kernel.kallsyms]               [k] do_relea=
-se_stripe
->      3.09%  md0_raid5        [kernel.kallsyms]               [k] _raw_spi=
-n_lock_irqsave
->      2.48%  md0_raid5        [kernel.kallsyms]               [k] r5l_writ=
-e_stripe
->      1.89%  md0_raid5        [kernel.kallsyms]               [k] md_wakeu=
-p_thread
->      1.45%  ksmd             [kernel.kallsyms]               [k] ksm_scan=
-_thread
->      1.37%  md0_raid5        [kernel.kallsyms]               [k] stripe_i=
-s_lowprio
->      0.87%  ksmd             [kernel.kallsyms]               [k] memcmp
->      0.68%  ksmd             [kernel.kallsyms]               [k] xxh64
->      0.56%  md0_raid5        [kernel.kallsyms]               [k] __wake_u=
-p_common
->      0.52%  md0_raid5        [kernel.kallsyms]               [k] __wake_u=
-p
->      0.46%  ksmd             [kernel.kallsyms]               [k] mtree_lo=
-ad
->      0.44%  ksmd             [kernel.kallsyms]               [k] try_grab=
-_page
->      0.40%  ksmd             [kernel.kallsyms]               [k] follow_p=
-4d_mask.constprop.0
->      0.39%  md0_raid5        [kernel.kallsyms]               [k] r5l_log_=
-disk_error
->      0.37%  md0_raid5        [kernel.kallsyms]               [k] _raw_spi=
-n_lock_irq
->      0.33%  md0_raid5        [kernel.kallsyms]               [k] release_=
-stripe_list
->      0.31%  md0_raid5        [kernel.kallsyms]               [k] release_=
-inactive_stripe_list
+On 2024/1/24 22:29, Alexandra Winter wrote:
+> Hello Wen Gu,
+> 
+> our colleague Matthew reported that SMC-D is failing in certain scenarios on
+> kernel v6.8 (thx Matt!). He bisected it to
+> b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")
+> I think the root cause could also be somewhere else in the SMC-Dv2.1 patchset.
+> 
+> I was able to reproduce the issue on a 6.8.0-rc1 kernel.
+> I tested iperf over smc-d with:
+> smc_run iperf3 -s
+> smc_run iperf3 -c <IP@>
+> 
+> 1) Doing an iperf in a single system using 127.0.0.1 as IP@
+> (System A=iperf client=iperf server)
+> 2) Doing iperf to a remote system (System A=client; System B=iperf server)
+> 
+> The second iperf fails with an error message like:
+> "iperf3: error - unable to receive cookie at server: Bad file descriptor" on the server"
+> 
+> If I do first 2) (iperf to remote) and then 1) (iperf to local), then the
+> iperf to local fails.
+> 
+> I can do multiple iperf to the first server without problems.
+> 
+> I ran it on a debug server with KASAN, but got no reports in the Logfile.
+> 
+> I will try to debug further, but wanted to let you all know.
+> 
+> Kind regards
+> Alexandra
+> 
+> Reported-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> 
 
-It appears the thread is indeed doing something. I haven't got luck to
-reproduce this on my hosts. Could you please try whether the following
-change fixes the issue (without reverting 0de40f76d567)? I will try to
-reproduce the issue on my side.
+Hi Alexandra and Matthew,
 
-Junxiao,
+Thank you very much for detailed description.
 
-Please also help look into this.
+I tried to reproduce this with loopback-ism, cut some checks so that the remote-system
+handshake can be done. After a while debug I found an elementary mistake of mine in
+b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")..
+
+The operator order in smcd_lgr_match() is not as expected. It will always return
+'true' in remote-system case.
+
+  static bool smcd_lgr_match(struct smc_link_group *lgr,
+-                          struct smcd_dev *smcismdev, u64 peer_gid)
++                          struct smcd_dev *smcismdev,
++                          struct smcd_gid *peer_gid)
+  {
+-       return lgr->peer_gid == peer_gid && lgr->smcd == smcismdev;
++       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
++               smc_ism_is_virtual(smcismdev) ?
++               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
+  }
+
+Could you please try again with this patch? to see if this is the root cause.
+Really sorry for the inconvenience.
+
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index da6a8d9c81ea..c6a6ba56c9e3 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -1896,8 +1896,8 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
+                            struct smcd_gid *peer_gid)
+  {
+         return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+-               smc_ism_is_virtual(smcismdev) ?
+-               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
++               (smc_ism_is_virtual(smcismdev) ?
++                (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1);
+  }
+
 
 Thanks,
-Song
+Wen Gu
