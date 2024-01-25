@@ -1,177 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E4E1BC46
-	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 12:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF705916A;
+	Thu, 25 Jan 2024 13:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706187255; cv=none; b=ax8jZGtTks2DfUy7H1sJYw5lKWcdZIF8DdI1hSHte6+uCmuOY0Lz/1uEHOY/K0Y2gfFlpTkwmitX6u9aJ+TugajAzRBRlN8e9kXhmmijPPrESpKhBSE22F4OaxQkS3SHUMCFe/BHv90BQnZt1uqKKbnwfFr8sGXkKipjg1w8sWo=
+	t=1706188024; cv=none; b=OtE98Ldx4Y5xq5xJa1CvFn15zjo/zPcIB0cD+ZqPdLJiKBt1/Ka0mv09XS9XURzBlJTC9AOFywDM5ZnrbgXihTxM2ygMRrOQUQjpzxw/BGPPkVinRm6WGDq24Nnz0F8jMH9om5PXfsf7qg/1PZCDPzeiODRAiY9iaOdqak1CEa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706187255; c=relaxed/simple;
-	bh=aDy+zxrBvLGBTnY5ULjZGxPIAzRHjhbDUT0L0vBGqd8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GAxXmV4rzLawNuH98PbPJ0ljtOtWPpDlb7Vm0acNlwxfkk8rt2YZm+vZrNzVwwq7Gy5BGY9wDgkOUiLTMJBLjNEdBW5252RE4uJl1cRnxB5ElWyzEDYyqZIOdoUc7p+HdQJxaDSiSaYq/0s/zsKe1km+L/2NCxK2i96ZjVvFXqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jRYeAJoB; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706188024; c=relaxed/simple;
+	bh=4tD1G/Ca5v+ls1TNb0SRTW2WCwsF3A3UVdT684WBzZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IEYAy06SKef/w+tH5ld5lrpHoBcXQ4Lij1wMFS0iydUkMrKeGepvgKmVknaJQ0I1WaJl0VXdgplOdgbyVLupS0TZRH7nZftDc3SyVZoMBuNbsOteA8FEIVZNQhodvpC0KycUnPbx8nyG6jRKo0py6FtdL530XUiBml0uUyhkYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jKf/t//U; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jRYeAJoB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706187254; x=1737723254;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=aDy+zxrBvLGBTnY5ULjZGxPIAzRHjhbDUT0L0vBGqd8=;
-  b=jRYeAJoB7cpi+bhu61jCCApbXxTaDzoK4CS1BkR7woahFwpT7zF3qA8d
-   UUc/3ZAw7+Q70fhbGRM5tp8YMauoUNldNMrtlb+WZrcq/hP8CJr5regbF
-   Mq3pwydpLshH4frRxxtcCMGc2lJjHnI+KmGgPRJLpy630lObfhf/F8gWt
-   RpMUWDgPe6iGZHhx6PDFl+LNsVL0vFUQD//zRJS3x1yQ9YrHyKnzM+m9H
-   Cc3mtRKUO3xNZsNLE/Cf24jujnC9uEWaCO+8ag/uVsL4KMm6yFNLmN0Vv
-   pJBst6y9K4IQeiV9Dk8rSTmBKTP5nzVoAkmutfDCr+nkKdj9eemzha48L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15684164"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15684164"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 04:54:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="959846151"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="959846151"
-Received: from unknown (HELO localhost) ([10.237.66.162])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 04:54:09 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>, Linux kernel regressions list
- <regressions@lists.linux.dev>, Linux Doc Mailing List
- <linux-doc@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: More detailed text about bisecting Linux kernel regression --
- request for comments and help
-In-Reply-To: <5cfc34c7-8298-4639-bb81-8b95392279ba@leemhuis.info>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
- <87fryllpp5.fsf@intel.com>
- <5cfc34c7-8298-4639-bb81-8b95392279ba@leemhuis.info>
-Date: Thu, 25 Jan 2024 14:54:06 +0200
-Message-ID: <874jf1lgk1.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jKf/t//U"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 46857FF813;
+	Thu, 25 Jan 2024 13:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706188007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n7Q6OTUTtuT1kEA4hYWIhFboomzzNbDeo6fWM/l/3aI=;
+	b=jKf/t//UerWLWfg6Vqq9e7kwmRYFXkYJBpEsiTgHZmzXhw24mrMg5Aa5YJfaDnhi8hlkrU
+	jhu9eg+TpTjcmZ9EKC+1PRQ1GYPe3YaiciZL32VWZdR8oiJsxtZuZ+HDns9hVOTyFPgOLV
+	/fAQU9pduD1N+cx4qSqqUBauxTZ4X8/PC7gRhIpvJOc2jaKpiPnXmVWwRtzuphh/mNMkYD
+	3IfC2c0rSGfThTdzgO3mx5SIFEREsrn4APlNVgSPSwsDS+ypBVYcY1Uf3JXBZjm5yCWHmS
+	7fjVNPNXUlFy3NCUolyyu+QkMfM/dJKcl1wYAbFynMKewrbKX614h517YPDulg==
+Date: Thu, 25 Jan 2024 14:06:45 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, "Srinivas Kandagatla"
+ <srinivas.kandagatla@linaro.org>, regressions@lists.linux.dev,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "Chen-Yu Tsai"
+ <wenst@chromium.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ asahi@lists.linux.dev, "Sven Peter" <sven@svenpeter.dev>, "Michael Walle"
+ <michael@walle.cc>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Message-ID: <20240125140645.0c629760@xps-13>
+In-Reply-To: <911c4a6b-83af-46a8-8f7e-250da4f0f1ad@app.fastmail.com>
+References: <20240122153442.7250-1-arnd@kernel.org>
+	<20240124182256.776c164b@xps-13>
+	<1d13250c-e48b-4e31-b449-5b54837a0d40@app.fastmail.com>
+	<20240124231120.562f06f3@xps-13>
+	<911c4a6b-83af-46a8-8f7e-250da4f0f1ad@app.fastmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, 25 Jan 2024, Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> On 25.01.24 10:36, Jani Nikula wrote:
->> The one thing I find problematic is the use of shallow clones by default
->
-> FWIW, some of what is in that text is a result of similar discussion
-> that happened when
-> Documentation/admin-guide/quickly-build-trimmed-linux.rst was submitted
-> about a year ago, which also uses shallow clones by default.
->
-> Further a quick reminder, as it's easy to forget: most of us live in
-> areas where downloading a lot of data is not something that bothers us
-> or will take a lot of time. But it is different for some people that
-> will need this document.
+Hi Arnd,
 
-I'm not suggesting to ignore or forget the people for whom full clones
-might be slow or costly. I'm suggesting to first describe the basic
-principles in as simple ways as possible, and then expand on pitfalls
-and corner cases in separate sections.
+arnd@arndb.de wrote on Thu, 25 Jan 2024 13:15:26 +0100:
 
-I think even the simplest and most basic kernel bisect can be
-intimidating for anyone doing it for the first time - and that's the
-target audience here - so I'd like to not scare people with all the
-difficulties with shallow clones right off the bat. Lure them in first!
-;)
+> On Wed, Jan 24, 2024, at 23:11, Miquel Raynal wrote:
+> > Hi Arnd,
+> >
+> > arnd@arndb.de wrote on Wed, 24 Jan 2024 20:49:53 +0100:
+> > =20
+> >> On Wed, Jan 24, 2024, at 18:22, Miquel Raynal wrote: =20
+> >> > arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
+> >> >   =20
+> >> >> From: Arnd Bergmann <arnd@arndb.de>
+> >> >>=20
+> >> >>=20
+> >> >> As far as I can tell, this is a problem for any device with multipl=
+e cells on
+> >> >> different bits of the same address. Avoid the issue by changing the=
+ file name
+> >> >> to include the first bit number.   =20
+> >> >
+> >> > There is only one bit number right? We are talking about byte offsets
+> >> > so this value can only range from 0 to 7? If we understand each other
+> >> > correctly then why not, I'm fine with the extra ",0" thing.   =20
+> >>=20
+> >> On the Apple M1, the nvmem registers are 32 bit wide, so the
+> >> bit numbers can go up to 31. I can imagine some system using
+> >> 64-bit registers, but it's unlikely to be higher than that. =20
+> >
+> > In this case we will soon or later have a problem again. Can we include
+> > the full offset of the bit and not just the first digit? =20
+>=20
+> I thought that is what my patch does, maybe I don't
+> undestand the problem you are referring to. This is what
+> I see on my system with the patch applied:
+>=20
+> $ cd /sys/devices/platform/soc@200000000/2922bc000.efuse
+> $ find . -name efuse\*
+> ./apple_efuses_nvmem0/cells/efuse@a24,11
 
-Also not suggesting to throw out all the things you've written, just to
-structure it different.
+Sorry for the misunderstanding, I thought the above situation would
+be:
 
->> and, well, the use of git in ways that I myself can't figure out without
->> resorting to the man pages. I think it's a lot of dark corners of git
->> that's overwhelming and really unrelated to the bisection itself.
->> 
->> If I point people at that, and they have problems, I'm just going to
->> tell them to:
->> 
->>   git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>   cd linux
->>   git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
->>   git fetch stable
->
-> This could be simplified, as linux-stable.git includes mainline, it's
-> just sometimes a few hours behind.
+  ./apple_efuses_nvmem0/cells/efuse@a24,1
 
-It's perhaps a personal preference more than anything to have origin
-always point at Linus' tree, and all the other repos as additional
-remotes. Then I can ask people to add remotes e.g. for drm subsystem to
-try out new stuff. YMMV.
+But the below output is actually fine.
 
->> And I can tell them to 'git checkout v<GOOD>' and 'git checkout v<BAD>'
->> and proceed from there.
->> 
->> To me, that's the TL;DR.
->
-> FWIW, I earlier today considered changing this myself. But then I
-> noticed the bundle clone instructions (more on that below) are complex
-> as well. :-/
->
-> Hmmm. Maybe switching to "do a full clone of linus' repo (without using
-> bundles) and just telling users to add the stable branches they might
-> need" by default would be a good middle ground for this document. Guess
-> then I'd switch quickly-build-trimmed-linux.rst over myself.
->
->> And then you can have a section on "what if I
->> really can't do full clones" and various options to save bandwidth.
->> 
->>> Downloading the sources using a full git clone
->>> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>
->>> If downloading and storing a lot of data (~4,4 Gigabyte as of early
->>> 2023) is nothing that bothers you, instead of a shallow clone perform a
->>> full git clone instead. You then will avoid the specialties mentioned
->>> above and will have all versions and individual commits at hand at any
->>> time::
->>>
->>>   curl -L \
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/clone.bundle
->>> \
->>>     -o linux-stable.git.bundle
->>>   git clone linux-stable.git.bundle ~/linux/
->>>   rm linux-stable.git.bundle
->>>   cd ~/linux/
->>>   git remote set-url origin \
->>>     https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
->>>   git fetch origin
->>>   git checkout --detach origin/master
->> 
->> I mean seriously, even the full clone instructions use curl, without
->> rationale. Why?
->
-> That was the result of the discussion back then, can't remember all the
-> details and all the places where that happened. Part of it was reducing
-> the server load, but that IIRC is mainly a concern for CI systems and
-> something this document can ignore. Unstable internet connection might
-> have been the main reason -- in combination with the redirection thing
-> kernel.org does, which *IIRC* prevents us from using "git clone
-> --bundle-uri=".
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Perhaps server load should not be a consideration in *this* particular
-case?
-
-To me, all of this is just saying "git is difficult", and that's kind of
-the wrong message here. :/
+> ./apple_efuses_nvmem0/cells/efuse@a24,9
+> ./apple_efuses_nvmem0/cells/efuse@a1c,f
+> ./apple_efuses_nvmem0/cells/efuse@a20,17
+> ./apple_efuses_nvmem0/cells/efuse@a20,1e
+> ./apple_efuses_nvmem0/cells/efuse@a18,0
+> ./apple_efuses_nvmem0/cells/efuse@a14,b
+> ./apple_efuses_nvmem0/cells/efuse@a1c,1f
+> ./apple_efuses_nvmem0/cells/efuse@a1c,d
+> ./apple_efuses_nvmem0/cells/efuse@a20,1c
+> ./apple_efuses_nvmem0/cells/efuse@a18,15
+> ./apple_efuses_nvmem0/cells/efuse@a14,0
+> ./apple_efuses_nvmem0/cells/efuse@a1c,14
+> ./apple_efuses_nvmem0/cells/efuse@a24,3
+> ./apple_efuses_nvmem0/cells/efuse@a20,7
+> ./apple_efuses_nvmem0/cells/efuse@a18,5
+> ./apple_efuses_nvmem0/cells/efuse@a10,16
+> ./apple_efuses_nvmem0/cells/efuse@a1c,12
+> ./apple_efuses_nvmem0/cells/efuse@a20,5
+> ./apple_efuses_nvmem0/cells/efuse@a18,3
+> ./apple_efuses_nvmem0/cells/efuse@a18,a
+> ./apple_efuses_nvmem0/cells/efuse@a10,1b
+> ./apple_efuses_nvmem0/cells/efuse@a14,5
+> ./apple_efuses_nvmem0/cells/efuse@a1c,19
+> ./apple_efuses_nvmem0/cells/efuse@a24,f
+> ./apple_efuses_nvmem0/cells/efuse@a18,1d
+> ./apple_efuses_nvmem0/cells/efuse@a14,13
+> ./apple_efuses_nvmem0/cells/efuse@a18,8
+> ./apple_efuses_nvmem0/cells/efuse@a18,f
+> ./apple_efuses_nvmem0/cells/efuse@a20,14
+> ./apple_efuses_nvmem0/cells/efuse@a10,19
+> ./apple_efuses_nvmem0/cells/efuse@a18,1b
+> ./apple_efuses_nvmem0/cells/efuse@a14,11
+> ./apple_efuses_nvmem0/cells/efuse@a1c,a
+> ./apple_efuses_nvmem0/cells/efuse@a10,1e
+> ./apple_efuses_nvmem0/cells/efuse@a20,19
+>=20
+>       Arnd
 
 
-BR,
-Jani.
-
-
-
--- 
-Jani Nikula, Intel
+Thanks,
+Miqu=C3=A8l
