@@ -1,88 +1,132 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA20135A40;
-	Wed, 24 Jan 2024 22:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905B9196
+	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 00:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706134286; cv=none; b=g6NA4wLSuQc655utyCAoZstdy18mJYeJ5u6nysEb03AjFo3Dd6RHUdUnrUYMEOXdLQnXtdNVZkRorNoUx2JmLReR1t5w9026YppraFFqcX/mkkeNzutaPfaqiz7IsLPxXhEOK3ESni+NwcaBXLRQxyik8yS1ERTpJxK82lWrRTk=
+	t=1706140921; cv=none; b=Xl/eXftoASzGoQlgzfE3bcpQjJGYQIVJY6MlEVNsyr6BFQfLWkt420HaMZ0532oHETvkkubDUtZAUx+QpJ10KGFAXV6Wf58gb3o7gEjRtZVs1uclTkhlww7Kkv0mkkimYy9zgqD8N2QQnXAxZZKe0bBElwtVBMSS/DWxBXmG5Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706134286; c=relaxed/simple;
-	bh=snqluUj8YXe23n5Y2Bps+oBqaBBXlWni7cujNtHcNQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u5SDiJ/ETK0M8yfHqiBnUvywxa/JBf+1nBu/5thplNrgD1w7aOgDVs17nYtf9lkt3lXFPfMJOWBZOdKJAtP8u0x9PDkJzNTClIPxLpS5sdnRik/UU0ZYrk2y3cccYYBeQ0q6iT90Fp3zn5utSW060gIMaYRN85b9b2fCRbCSuDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hVQ8yHbJ; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1706140921; c=relaxed/simple;
+	bh=5mwY570DfNBBwhuUW2/t3DHz1by/BgnhUlLMFufm0+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j0H/C/8X+ykLj5PAarohcLkP3bxvfB7cuEBPLtziX6+6vUK30UadOvkY80rMq0XpY1IewfdCP3bFns9nwCXyKi/Qo69P8Wp0CA+SzySz3W5b3KLA57WrxsYEl00stzxWIRPsnKQhljW1/k4zjVsucH47mtAU4kJUW0qTwY3jR6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAVJ1yGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hVQ8yHbJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 99E1B40002;
-	Wed, 24 Jan 2024 22:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706134283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=snqluUj8YXe23n5Y2Bps+oBqaBBXlWni7cujNtHcNQk=;
-	b=hVQ8yHbJQMOoWV/QXsWrhrKOpEp7VHXGeWww4Y4+q217L3mfMDc8Gp5FmdePqAwQ5HDwP4
-	zghkCy0qctP0EdVP48tXWDUizvlsb/aeRQ/bMSqRof5L0tyBaIirqUSLxAhkP/WinTH4XY
-	KENWw1sHbjmgMSARqalQLDmjx1xCfvkeblb3WUbZAqNhbcINlnndIO7aaeEsVFDgna3i88
-	wYIjx0cdy7sLVpRPZ+oRnVCKG/f7SoMOOyhc8x7v8VIQheMJ0pm4FdlvAA0ptJ4T9LZeGz
-	iz9RTBH/H8x+nQpM9klnFlPyGM77wL6JqJ3FtXrgz37Bx+JKIOQQx46IQexYFw==
-Date: Wed, 24 Jan 2024 23:11:20 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, "Srinivas Kandagatla"
- <srinivas.kandagatla@linaro.org>, regressions@lists.linux.dev,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "Chen-Yu Tsai"
- <wenst@chromium.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- asahi@lists.linux.dev, "Sven Peter" <sven@svenpeter.dev>, "Michael Walle"
- <michael@walle.cc>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
-Message-ID: <20240124231120.562f06f3@xps-13>
-In-Reply-To: <1d13250c-e48b-4e31-b449-5b54837a0d40@app.fastmail.com>
-References: <20240122153442.7250-1-arnd@kernel.org>
-	<20240124182256.776c164b@xps-13>
-	<1d13250c-e48b-4e31-b449-5b54837a0d40@app.fastmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAVJ1yGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DE8C433A6
+	for <regressions@lists.linux.dev>; Thu, 25 Jan 2024 00:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706140921;
+	bh=5mwY570DfNBBwhuUW2/t3DHz1by/BgnhUlLMFufm0+c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sAVJ1yGg1Hx8GOa4pX8oNHh6i6qqNofcmWg+KNI8kogmUaYu4sZ5Cq0vmU7AT5kwX
+	 qvjsp6BsOTdGa/BD2OA9yDJDobUhrxyo7KPGlPua6VqafmCPm4Gdsh6zHQXklK3dSB
+	 Zbde20MmT33LnKromEZbhe4z9A2erIY4n8JC/Ujj4CbMcDZ8+wMNtvp5MFagoK3VsY
+	 WWx+dOnt6jCi0JZWB08CQxZsTXYQt6gs2gr7BEgEsOz6Q9tFMpu8LEaj1UrjDGFgQC
+	 HpqtU60KJCk5o9nIzIDwd6BiFxgQ0HXVCIPLF5Zr42wiZ4VDxpGYh4lLTZBacf5ydg
+	 KF77tNBO4h78A==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cf2adac1ccso12333301fa.3
+        for <regressions@lists.linux.dev>; Wed, 24 Jan 2024 16:02:01 -0800 (PST)
+X-Gm-Message-State: AOJu0Yzfzq/9qsqlnZyHzbC7rTQO67WsTXQZvtL9RkYYhzzs4aWCgKjM
+	xhs38s32lm2Q3zlUUkpNzr6fyJB+Bw3wuuc7LmRme9fJTy7we/2kgihrho5KXHUDi3Gxf/bm5sl
+	I9Ia4r19UQr3PhfjkriMQZzJEzoU=
+X-Google-Smtp-Source: AGHT+IFCXb46Pzw2PPc2gtLorR23QXWS78uxb9N4YsNdsOk4803nUo90BTz/XVPNryE+v48kycxwftjhso1Cfm5+d58=
+X-Received: by 2002:a2e:9b49:0:b0:2cc:c794:57c7 with SMTP id
+ o9-20020a2e9b49000000b002ccc79457c7mr66379ljj.43.1706140919297; Wed, 24 Jan
+ 2024 16:01:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <CAPhsuW7KMLHHrcyZhKS_m_fwWSKM66VFXaLj9fmY+ab5Mu3pvA@mail.gmail.com>
+ <20240123235803.8298-1-dan@danm.net>
+In-Reply-To: <20240123235803.8298-1-dan@danm.net>
+From: Song Liu <song@kernel.org>
+Date: Wed, 24 Jan 2024 16:01:47 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW49L8B9K8QFg68v=zG9ywMehUTD18DaG4PexEt-3mzQqQ@mail.gmail.com>
+Message-ID: <CAPhsuW49L8B9K8QFg68v=zG9ywMehUTD18DaG4PexEt-3mzQqQ@mail.gmail.com>
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: Dan Moulding <dan@danm.net>, junxiao.bi@oracle.com
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, yukuai1@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Arnd,
+Thanks for the information!
 
-arnd@arndb.de wrote on Wed, 24 Jan 2024 20:49:53 +0100:
 
-> On Wed, Jan 24, 2024, at 18:22, Miquel Raynal wrote:
-> > arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
-> > =20
-> >> From: Arnd Bergmann <arnd@arndb.de>
-> >>=20
-> >>=20
-> >> As far as I can tell, this is a problem for any device with multiple c=
-ells on
-> >> different bits of the same address. Avoid the issue by changing the fi=
-le name
-> >> to include the first bit number. =20
+On Tue, Jan 23, 2024 at 3:58=E2=80=AFPM Dan Moulding <dan@danm.net> wrote:
+>
+> > This appears the md thread hit some infinite loop, so I would like to
+> > know what it is doing. We can probably get the information with the
+> > perf tool, something like:
 > >
-> > There is only one bit number right? We are talking about byte offsets
-> > so this value can only range from 0 to 7? If we understand each other
-> > correctly then why not, I'm fine with the extra ",0" thing. =20
->=20
-> On the Apple M1, the nvmem registers are 32 bit wide, so the
-> bit numbers can go up to 31. I can imagine some system using
-> 64-bit registers, but it's unlikely to be higher than that.
+> > perf record -a
+> > perf report
+>
+> Here you go!
+>
+> # Total Lost Samples: 0
+> #
+> # Samples: 78K of event 'cycles'
+> # Event count (approx.): 83127675745
+> #
+> # Overhead  Command          Shared Object                   Symbol
+> # ........  ...............  ..............................  ............=
+.......................................
+> #
+>     49.31%  md0_raid5        [kernel.kallsyms]               [k] handle_s=
+tripe
+>     18.63%  md0_raid5        [kernel.kallsyms]               [k] ops_run_=
+io
+>      6.07%  md0_raid5        [kernel.kallsyms]               [k] handle_a=
+ctive_stripes.isra.0
+>      5.50%  md0_raid5        [kernel.kallsyms]               [k] do_relea=
+se_stripe
+>      3.09%  md0_raid5        [kernel.kallsyms]               [k] _raw_spi=
+n_lock_irqsave
+>      2.48%  md0_raid5        [kernel.kallsyms]               [k] r5l_writ=
+e_stripe
+>      1.89%  md0_raid5        [kernel.kallsyms]               [k] md_wakeu=
+p_thread
+>      1.45%  ksmd             [kernel.kallsyms]               [k] ksm_scan=
+_thread
+>      1.37%  md0_raid5        [kernel.kallsyms]               [k] stripe_i=
+s_lowprio
+>      0.87%  ksmd             [kernel.kallsyms]               [k] memcmp
+>      0.68%  ksmd             [kernel.kallsyms]               [k] xxh64
+>      0.56%  md0_raid5        [kernel.kallsyms]               [k] __wake_u=
+p_common
+>      0.52%  md0_raid5        [kernel.kallsyms]               [k] __wake_u=
+p
+>      0.46%  ksmd             [kernel.kallsyms]               [k] mtree_lo=
+ad
+>      0.44%  ksmd             [kernel.kallsyms]               [k] try_grab=
+_page
+>      0.40%  ksmd             [kernel.kallsyms]               [k] follow_p=
+4d_mask.constprop.0
+>      0.39%  md0_raid5        [kernel.kallsyms]               [k] r5l_log_=
+disk_error
+>      0.37%  md0_raid5        [kernel.kallsyms]               [k] _raw_spi=
+n_lock_irq
+>      0.33%  md0_raid5        [kernel.kallsyms]               [k] release_=
+stripe_list
+>      0.31%  md0_raid5        [kernel.kallsyms]               [k] release_=
+inactive_stripe_list
 
-In this case we will soon or later have a problem again. Can we include
-the full offset of the bit and not just the first digit?
+It appears the thread is indeed doing something. I haven't got luck to
+reproduce this on my hosts. Could you please try whether the following
+change fixes the issue (without reverting 0de40f76d567)? I will try to
+reproduce the issue on my side.
+
+Junxiao,
+
+Please also help look into this.
 
 Thanks,
-Miqu=C3=A8l
+Song
