@@ -1,79 +1,135 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A331B5AC
-	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 12:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9961B7F1;
+	Fri, 26 Jan 2024 13:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706273912; cv=none; b=sUvWX+PHReL8/gUKZ1kAKxlnkf4y+EWCatS73SxmjF1UeDa7X+DA29USWR9KYon3KYIp1WPf3XeCet+xUBpvGiFhR5AF2ZOadzFfwR0qh4m+kfwrpcednxgGRRdRGn/vc3AnnYdy9d2yvIAXUbCiaM3yUy0AuO8g6Bn0g70+I8o=
+	t=1706274292; cv=none; b=psccPu/0FrfVhwgKcR+Ov6oXAiu5f9pINLdKJIiqqnOgDYbXVyv81OPNlo1YzBLKfx3/tK+n6pNEEiTRxK0CztS/eQtPGD4RETcXpHQm7pnKo/e7ahank34ywSjoJviA5mlDJq8LGKy5pk4hUYJciWcB00Z+ENy4yi4dBsyEw7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706273912; c=relaxed/simple;
-	bh=eiX/XU3X7izRhpQ8i5uryQdr0UqEctOorWGygOsy5UI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HEGcu9gMIVkmycLRZ60Zg+7XovAThmg/vT91L3eG8F9NohFLsNobxG77rmziOQ3xkU6DkND/QOM7+eVSPuktouV5ccV3JI+epdtx50AYik1bc6kfhSE+2LO/G2WtqEp3oS5OGeQLLUHtr+CILmXAm2l7+swcFE7G0nePcu6Mi/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=D4WfYUJx; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1706274292; c=relaxed/simple;
+	bh=gCq4g1b3O8Oeg4N8ujXRTfw/tL+4gbF4FTm8029MUrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kBhtQlsJnzDEZ8oQE0WjvOyBsw3cttjh1jMs1WJYOx3dBAgtt17vsggQq7gFwcNRow9HBPYpUIx5h1gEEA+jc0taagfA3FKjHJIuhEu8CPEA2gtKyGEerXAnlD84GRyZN1gHYvxqP57tRfD9y1Lx4ghrtfbzkFbTfoWZCpug6vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=j/67QaIG; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="D4WfYUJx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1706273902;
-	bh=eiX/XU3X7izRhpQ8i5uryQdr0UqEctOorWGygOsy5UI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=D4WfYUJxkj8nZVD4yhBt2yM509Q7H7i3L4lt2HkzVsFXGjr7Ym6NyVpBpxWbUIzUc
-	 Lf9+rphGsCNs2TLwLbd4L9qrK9iYA/ywuvShsS1ljItoMjcaRslcj6h6v0SVE4i3AL
-	 Ne8o4mxQzY0WmlS1J9gC3nuoiVBONKUzUufqgg0I=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7C67F6690B;
-	Fri, 26 Jan 2024 07:58:18 -0500 (EST)
-Message-ID: <1e1ec730efc58f17ecf008a4600321e3d200ebda.camel@xry111.site>
-Subject: Re: Strange EFAULT on mips64el returned by syscall when another
- thread is forking
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, "linux-mips@vger.kernel.org"
-	 <linux-mips@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Bogendoerfer
-	 <tsbogend@alpha.franken.de>, libc-alpha@sourceware.org, 
-	regressions@lists.linux.dev
-Date: Fri, 26 Jan 2024 20:58:16 +0800
-In-Reply-To: <4b715c9f-6a9e-4496-8810-670080cb715a@app.fastmail.com>
-References: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
-	 <4b715c9f-6a9e-4496-8810-670080cb715a@app.fastmail.com>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="j/67QaIG"
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id C7CAC1DA1;
+	Fri, 26 Jan 2024 12:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1706273447;
+	bh=9EfuMGzeWNG4VV/qzBMKHVckt4mYsHngjUttdA846ZA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=j/67QaIGKRoxhLEOdLCQfd7Q7ZvtuN+BJhpzpy7NVZFbr27ajjfS2OIviyErZWDEU
+	 G+99jEC7OP9wVCjSO9Q4SbjRXkDayos1TOgk4DZjwvHe8UrKQ5fKFkrD2NvOnG990Y
+	 cm/c0w8vIflwmAiosbQIhfTXfpkTYOFqRgg0NvqA=
+Received: from [192.168.211.144] (192.168.211.144) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 26 Jan 2024 15:57:36 +0300
+Message-ID: <97660d80-fbea-4eb8-83af-78f59a6302c7@paragon-software.com>
+Date: Fri, 26 Jan 2024 15:57:35 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regressions] ntfs3: empty file on update without forced cache
+ drop
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+CC: <ntfs3@lists.linux.dev>, Kari Argillander
+	<kari.argillander@stargateuniverse.net>, Linux-fsdevel
+	<linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Anton
+ Altaparmakov <anton@tuxera.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>
+References: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
+ <24aa7a8b-40ed-449b-a722-df4abf65f114@leemhuis.info>
+ <d5f4c2d7-0a98-4ff8-9848-a34133199450@leemhuis.info>
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+In-Reply-To: <d5f4c2d7-0a98-4ff8-9848-a34133199450@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: vobn-exch-01.paragon-software.com (172.30.72.13) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-On Fri, 2024-01-26 at 12:33 +0000, Jiaxun Yang wrote:
->=20
->=20
-> =E5=9C=A82024=E5=B9=B41=E6=9C=8824=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=
-=E5=8D=8810:42=EF=BC=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi,
-> >=20
-> > When I'm testing Glibc master branch for upcoming 2.39 release, I
-> > noticed an alarming test failure on mips64el:
->=20
-> So apparently it should be tracked as a regression.
->=20
-> #regzbot ^introduced 4bce37a68ff884e821a02a731897a8119e0c37b7
->=20
-> Should we revert it for now?
+On 21.01.2024 12:14, Thorsten Leemhuis wrote:
+> On 05.12.23 13:49, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [adding a bunch of people and two lists to the recipients, as Konstantin
+>> apparently hasn't sent any mail to any lists archived on lore for ~six
+>> weeks; maybe someone knows what's up or is willing to help out]
+> [CCing Linus now as well]
+>
+> JFYI for the VFS maintainers and everyone else who might care:
+>
+> Konstantin afaics still did not look into below regression. Neither did
+> anyone else afaics.
+>
+> But Konstantin is still around, as he recently showed up to post a patch
+> for review:
+> https://lore.kernel.org/all/667a5bc4-8cb5-47ce-a7f1-749479b25bec@paragon-software.com/
+>
+> I replied to it in the hope of catch his attention and make him look at
+> this regression, but that did not work out.
+>
+> So it seems we sadly are kinda stuck here. :-/
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+>> On 27.11.23 07:18, Thorsten Leemhuis wrote:
+>>> Hi, Thorsten here, the Linux kernel's regression tracker.
+>>>
+>>> Konstantin, I noticed a regression report in bugzilla.kernel.org.
+>>> Apparently it's cause by a change of yours.
+>>>
+>>> As many (most?) kernel developers don't keep an eye on bugzilla, I
+>>> decided to forward it by mail. Note, you have to use bugzilla to reach
+>>> the reporter, as I sadly[1] can not CCed them in mails like this.
+>>>
+>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218180 :
+>> Konstantin, are you still around? Would be great if you could look into
+>> this regression, as this sounds somewhat worrying.
+>>
+>>>> The problem I am facing is the following:
+>>>> 1. I mount an NTFS partition via NTFS3
+>>>> 2. I create a file
+>>>> 3. I write to the file
+>>>> 4. The file is empty
+>>>> 5. I remount the partition
+>>>> 6. The file has the changes I made before the remount
+>>>>
+>>>> I can avoid the remount by doing:
+>>>> sudo sysctl vm.drop_caches=3
+>>> See the ticket for more details. It according to the report happens
+>>> still happens with 6.7-rc2, but not with 6.1.y. The reporter bisected
+>>> the problem to ad26a9c84510af ("fs/ntfs3: Fixing wrong logic in
+>>> attr_set_size and ntfs_fallocate") [v6.2-rc1].
+>>>
+>>> Side note: while briefly checking lore for existing problems caused by
+>>> that change I noticed two syzbot reports about it that apparently nobody
+>>> looked into:
+>>>
+>>> https://lore.kernel.org/all/000000000000bdf37505f1a7fc09@google.com/
+>>> https://lore.kernel.org/all/00000000000062174006016bc386@google.com/
+>>> [...]
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+Hello Thorsten,
 
-I'd say "yes" if we cannot easily patch instruction_pointer() to handle
-delay slot.  Anyway the reversion will be a MIPS-only change.
+I apologize for the horrible delay in responding to the bug. I was able 
+to reproduce it in a scenario involving a compressed file. The patch 
+will be ready within the next few days (the response in Bugzilla will 
+also follow).
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Best regards,
+Konstantin
