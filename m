@@ -1,97 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3DF1D542
-	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 16:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087F31CFB6;
+	Fri, 26 Jan 2024 16:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706285270; cv=none; b=m3gnAsoqT10motEkQtZuHf1j2Bes3wxT5uGRObHGm0L3RKTuDDZ6fSqzWizeB5i7Jb0X5qOCyYRW56K4jfLO6lUho2ZySzqG1SCK341ZlDsZxJFWVddW/qbXz7RkgXOkpv6uYOpHNGUe60ETXux9KK00ZgQ29+57ePrDB/QCxDY=
+	t=1706285956; cv=none; b=SSBlLKXpa9Bthj9GuIL88nu5R/4VgrLlmXrHIPri0JyITS/2WGB4yoFNigpzAnLW/ZWZiNHT2PUV2fUrl3cGKsr/vXZe+mj+nYQePndDFJdwIpMNReyjTOSbBEDSP2l/T9nLOOyGIy6OSm89/nDWOC+ehppLpBRzO/FaJM3hle8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706285270; c=relaxed/simple;
-	bh=QLzE2hpRyW8DoByE/9wbYQ4lv7nm7j+d3RY4gAx49vY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=goNzZwN0WDz7DoPNNV4UMRCdhABAU45qN6B5CHgxJAmDgrYZYmr/R+NADcO+fLa7nLrUoKx2FzmpDB90lQi7DHVYaE4hz/V6sZuhLKAqDgvPIIJih0xDKrHkXF0JWkgr959ngKvUr/Vae5rjhdB3lUYNvd5LaFOKOGMuJWuLPhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dUSv6nxD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dUSv6nxD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706285268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NPy0I/VjRhhghgFbZW3b/ggnxs9qBb/RGRTO++KBrsQ=;
-	b=dUSv6nxDa75FvZrkOgdLDYUIkJzwVW8byRGiH8sIHU59OxQUuQQHDxqagEIxcZHIyWW4K4
-	kkLiY7R0cNwmQMIu4iEfeq/KpHy/KBmgX5zKXev0tD+7HlEjhVEgANQGWEdzP8xqdbAbLL
-	ihT6JQ9m5/tBzsq4ihs8Oh8kpS6XnNY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-612-Sz-dz4OEO9m5b0JD4JmAYw-1; Fri,
- 26 Jan 2024 11:07:44 -0500
-X-MC-Unique: Sz-dz4OEO9m5b0JD4JmAYw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 147A43C1E9D4;
-	Fri, 26 Jan 2024 16:07:44 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.96])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F05E91121306;
-	Fri, 26 Jan 2024 16:07:36 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-input@vger.kernel.org
-Subject: [PATCH regression fix 0/2] Input: atkbd - Fix Dell XPS 13 line suspend/resume regression
-Date: Fri, 26 Jan 2024 17:07:22 +0100
-Message-ID: <20240126160724.13278-1-hdegoede@redhat.com>
+	s=arc-20240116; t=1706285956; c=relaxed/simple;
+	bh=cMrZ22JKhN5As6X/c/pxqBYrRoRyHlZ4SenKY2BEadk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmusW7AQu616cv6KrQrrWlW2fMAEYqEo7AbPIp2IbwCB5pJIWnhqr6Mnqvwx/KGy1EYd5upICtSaT5b6OYaP128i3Hlz5gTVtWRcji12iMYOgFiiVCK1K2mCMN0PtwWR5AsLMMI5FkeFrMBooK25D9hGARgbXjGIKR5fmC9uOmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rTOv9-0007sh-2w; Fri, 26 Jan 2024 17:19:11 +0100
+Message-ID: <0fd03c79-5e86-4cf8-99ae-944d73d5515a@leemhuis.info>
+Date: Fri, 26 Jan 2024 17:19:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+Content-Language: en-US, de-DE
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Christian Heusel <christian@heusel.eu>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240123180818.3994-1-mario.limonciello@amd.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20240123180818.3994-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706285954;49fa5952;
+X-HE-SMSGID: 1rTOv9-0007sh-2w
 
-Hi Dmitry,
+On 23.01.24 19:08, Mario Limonciello wrote:
+> On some systems the interrupt is shared between GPIO controller
+> and ACPI SCI. When the interrupt is shared with the ACPI SCI the
+> flags need to be identical.
+> 
+> This should fix the GPIO controller failing to work after commit
+> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
+> ```
+> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
+> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
+> ```
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Reported-by: Christian Heusel <christian@heusel.eu>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
+> Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
 
-There have been multiple reports that the keyboard on
-Dell XPS 13 9350 / 9360 / 9370 models has stopped working after
-a suspend/resume after the merging of commit 936e4d49ecbc ("Input:
-atkbd - skip ATKBD_CMD_GETID in translated mode").
+I'm affected by this regression myself on my Thinkpad T14s Gen1 AMD
+(power button does not work, but I guess there might be more). Haven't
+tested this patch yet, seemed like this was pretty clear case and
+Christian already tested it. But if it makes anyone happy I can do that.
 
-See the 4 closes tags in the first patch for 4 reports of this.
+> Link: https://lore.kernel.org/linux-acpi/CAJZ5v0iRqUXeuKmC_+dAJtDBLWQ3x15n4gRH48y7MEaLoXF+UA@mail.gmail.com/T/#mc5506014141b61e472b24e095889535a04458083
 
-I have been working with the first reporter on resolving this
-and testing on his Dell XPS 13 9360 confirms that these patches
-fix things.
+Side note: might be wise to change that to something slightly shorter:
 
-Unfortunately the commit causing the issue has also been picked
-up by multiple stable kernel series now. Can you please send
-these fixes to Linus ASAP, so that they can also be backported
-to the stable series ASAP ?
+Link:
+https://lore.kernel.org/linux-acpi/kvoclxvyhmdmrfpfgwfjr33bdltej3upw5qcnazc4xakwdgg2b@krewjw2uk42k/
 
-Alternatively we could revert the commit causing this, but that
-commit is know to fix issues on a whole bunch of other laptops
-so I would rather not revert it.
+Ciao, Thorsten
 
-Regards,
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pinctrl/pinctrl-amd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+> index ca4a247c2cd1..6a33b584976c 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -1162,7 +1162,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	ret = devm_request_irq(&pdev->dev, gpio_dev->irq, amd_gpio_irq_handler,
+> -			       IRQF_SHARED, KBUILD_MODNAME, gpio_dev);
+> +			       IRQF_SHARED | IRQF_ONESHOT, KBUILD_MODNAME, gpio_dev);
+>  	if (ret)
+>  		goto out2;
+>  
 
-Hans
+P.S.: Let me add this to the tracking while at it:
 
-
-Hans de Goede (2):
-  Input: atkbd - Skip ATKBD_CMD_SETLEDS when skipping ATKBD_CMD_GETID
-  Input: atkbd - Do not skip atkbd_deactivate() when skipping
-    ATKBD_CMD_GETID
-
- drivers/input/keyboard/atkbd.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
--- 
-2.43.0
-
+#regzbot introduced 7a36b901a6eb ^
+https://bugzilla.kernel.org/show_bug.cgi?id=218407
+#regzbot title ACPI: OSL:/pinctrl: GPIO controller failing to work
+#regzbot fix pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+#regzbot ignore-activity
