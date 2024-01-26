@@ -1,60 +1,56 @@
-Received: from hoggar.fisica.ufpr.br (hoggar.fisica.ufpr.br [200.238.171.242])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A9EAD2C
-	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 03:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.238.171.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B478FC128;
+	Fri, 26 Jan 2024 06:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706240424; cv=none; b=kd5FjaraJbu0KHH1yqdCp0H204IpPLbLk1IY0Ej7wzdWdD421Lv7oXgA9H2jTsmHbASNrCa90TpyEM8U2N6kJ1RQi2h70XHFnChLJNk7Gl33GDqUkhSKPyJ+u0IpTkM7lKrCCb+eBFn9Hury2Fj9fIys7UQ2DHWVReq7w+sOhtY=
+	t=1706248969; cv=none; b=g3CmNa8KBLqFQFZ/NBxxyUaKgmQd+aFwo2VN5ycOcFQJADM5MPFU6L/jnz3abxStR9OF3OHN405B6Wh8OfGMSIwIfwPu/QL0EttSveUeHfS4SiPvWvtOI5FcOp+MO0IpCCS2LZXgyfHfsf4k9IfqPtRhk8S/A+gokK4THCNVS+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706240424; c=relaxed/simple;
-	bh=dHyfVG6TbOGkccm1sKx4Jajh2CRdhy3ae2G7u64QOdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMK9bHqiQmMUcI0AevU8ZI4bBsY2gWXJiiWs47ExQG9qUOuB6DSS9hZRLoYlL9p8Oeqg06S0Xk4KoAElpoNxQuyPavRkrJIUI4zElQnogRX8l7SNpE8sV6iNJH4+GocuF1cHRSz7XU0+8AdXYOTvDJZqJ7MtdkbC/0zEzJwoUZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br; spf=pass smtp.mailfrom=fisica.ufpr.br; dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b=XJgU9qQR; arc=none smtp.client-ip=200.238.171.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fisica.ufpr.br
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b="XJgU9qQR"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=fisica.ufpr.br;
-	s=201705; t=1706239847;
-	bh=dHyfVG6TbOGkccm1sKx4Jajh2CRdhy3ae2G7u64QOdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJgU9qQRu5n9FGjXoZbOtNDHtRGNNEHCc+/qwq0OSLgAkAKQu2JYYIsKoS4lSVEEo
-	 Vps9bkmtz03MtGWCD2zkuB2ey9/IWVNnzhpR+k1XIx70mVD8U8CCuzr9bOpnrHzrS8
-	 QSqSArVhXcYA76ezYcFbWnt1doigKynIUwPXUBGibrwS9zXT8yB8plvObbNXgYJDag
-	 G31e7JUJYUwimSXPfheTrzUzndoOUGkY5KbgbxQV1anKCmLEt+1Jr+GonU7Yf815pP
-	 e5yirFTOlAuPW7nMc23uDpx3SIrl0klUxXbYs8uYTYFZBD47XMQElvrM8LMQgoTgUj
-	 1ThVsEcd4knjQ==
-Received: by hoggar.fisica.ufpr.br (Postfix, from userid 577)
-	id 0778F9A0B4A40; Fri, 26 Jan 2024 00:30:46 -0300 (-03)
-Date: Fri, 26 Jan 2024 00:30:46 -0300
-From: Carlos Carvalho <carlos@fisica.ufpr.br>
-To: Dan Moulding <dan@danm.net>
-Cc: junxiao.bi@oracle.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-	regressions@lists.linux.dev, song@kernel.org,
-	stable@vger.kernel.org, yukuai1@huaweicloud.com
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-Message-ID: <ZbMnZnvyIyoWeIro@fisica.ufpr.br>
-References: <2ef7d741-3df8-402a-967f-53ec77c73e2c@oracle.com>
- <20240125203130.28187-1-dan@danm.net>
+	s=arc-20240116; t=1706248969; c=relaxed/simple;
+	bh=IL9oMDaClY0uotAhvsBw9ZIFBnxI1w+GXSWMxgTnCS4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=BUUAkkzkcC4I8ISzLMc8Ixia3JSXfCWD+9IgEhlYAT9wlLzqkflDvqEpZ9azHWCOhDfvwRl/GSnxN2pVijKe+ictepyUhzVWqsedI/IEL4HdSX4gXSi/aavRfYZX83buCyMz962uDnbAvuJwmgDndQGm3zqbfed44qY3AmxZYkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rTFIZ-0007tI-Uv; Fri, 26 Jan 2024 07:02:44 +0100
+Message-ID: <3bfb5c07-664e-49cd-a470-635a36bcf806@leemhuis.info>
+Date: Fri, 26 Jan 2024 07:02:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240125203130.28187-1-dan@danm.net>
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Consider picking up "tpm: Enable hwrng only for Pluton on AMD CPUs"
+ rather sooner than later
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+ Kalle Valo <kvalo@kernel.org>, Benjamin Berg <benjamin.berg@intel.com>
+Content-Language: en-US, de-DE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706248966;a7456984;
+X-HE-SMSGID: 1rTFIZ-0007tI-Uv
 
-Dan Moulding (dan@danm.net) wrote on Thu, Jan 25, 2024 at 05:31:30PM -03:
-> I then created an ext4 file system on the "data" volume, mounted it, and used
-> "dd" to copy 1MiB blocks from /dev/urandom to a file on the "data" file
-> system, and just let it run. Eventually "dd" hangs and top shows that
-> md0_raid5 is using 100% CPU.
+Hi stable team, JFYI, yesterdays mainline commit 556857aa1d0855 ("wifi:
+ath11k: rely on mac80211 debugfs handling for vif") from Benjamin
+contains no stable tag, but a Fixes: tag for a 6.7 commit. So it guess
+you will pick it up anyway. Might be worth picking up rather sooner than
+later, as it fixes a regression that according to Kalle causes ath11k to
+crash during suspend:
+https://lore.kernel.org/all/874jfjiolh.fsf@kernel.org/
+https://bugzilla.kernel.org/show_bug.cgi?id=218364
 
-It's known that ext4 has these symptoms with parity raid. To make sure it's a
-raid problem you should try another filesystem or remount it with stripe=0.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
