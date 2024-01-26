@@ -1,72 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFEA1DFE4;
-	Fri, 26 Jan 2024 19:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBBD224EC
+	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 19:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706296434; cv=none; b=nVZ3FbYI23g5Opfy9s1rGQHAj9/zWXkh3Xk4uUqwjiZ8N+QWkxOiTZuFRGUcDZA6VP9GFAUDVBpPvkJseVG2ndbgJxelLMdIn5aE1IpRDNtT2T5oGGqSKspCm52g4KXwLGTxEMVeAuuZU8ZfWuIyMDV9uaJOzusDkadvMf34Asg=
+	t=1706298707; cv=none; b=J9lAmo4oMMZnjOkP7pzKhrFEYY8pLsOP/NTfj6izqh8CTgWcna8hgEiUDXkySPUFamvYe/UUVo3aLahVdsZrxi2/7GaUqPTif5mVO4hjAnqhzcxf3enxZUx8XRkJ7Pjh/BhWoCAQ6aNEx8PjUXOLxWJz7ZhEOK6THTTHpvo18dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706296434; c=relaxed/simple;
-	bh=auOG/6WTlLMP42/ZwkTSWVSQm5vUsuTst6mpxgMIz24=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EKDgnBPMp6G26km/+vDSWHMMMBhmsyadmpPq3MimdycPsKLXaoAYl2BlN2eKXIU/Wmn5Qk3N5/cFaPmKnkS/kLgPdzh3p/QvsDADLYBSCW1yg0d/ZSZcUDDGBNowtRqCFGVQxuNwmcq3ruOJ6e65oujvsosm2GLqpfmHZGf96ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYiauapo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706298707; c=relaxed/simple;
+	bh=UM9NHqrhFW/qXab9JXefHaDvEQZR/UkcaOA0AKHOLys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHXf75zY7TCytj91oanZ9dlCBfLtYChLwmyC2ofQtWU8ApWXpQedkbKB/SJLnL234DurwK1jMXGxjjRTEURFo369B4I37ewIjJ/j4vPflaYjD59H4ys6EEvlAt20O9Rbu1bZdqkW6Wi4xnrlndHbXZOTIBl9b8ia3fCYd/wurcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=e+GRm1sd; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYiauapo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C8E8C433C7;
-	Fri, 26 Jan 2024 19:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706296433;
-	bh=auOG/6WTlLMP42/ZwkTSWVSQm5vUsuTst6mpxgMIz24=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sYiauapoWVGAe94yJ/y2zleJiqh8/VxTWLJf5qUxzbo9u9LvKVNSPluSJsGP29+Jm
-	 SA46IgmcZFXsE61puOybnv4X4yuQBlWO20K0Mg9Qg/Ev+PgcYYZtHbtdgZyZoxNhTQ
-	 EBNiTeHVIxvRO/R6BDMJPfePZTH22J+vxelMYbUwGkdBOnWwmX8M5IRIhNAkIpKVDV
-	 NCtjtrsc9GrmnMRvBtOd6ssprkTqcFFAL1QxWzbX8mrvFwjZJuWnquT2dHxbLNPoky
-	 O15F0Sc53QxcmnPbyoml86VtdL01Z4I2kW3YOmzqS8nDZrduteA75g6QmzZCgkgpkV
-	 CM1nUizZMqyTg==
-From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>,
-	"pc@manguebit.com" <pc@manguebit.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"leonardo@schenkel.net" <leonardo@schenkel.net>,
-	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-	"m.weissbach@info-gate.de" <m.weissbach@info-gate.de>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"sairon@sairon.cz" <sairon@sairon.cz>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with "Resource temporarily unavailable"
-Date: Fri, 26 Jan 2024 11:13:51 -0800
-Message-Id: <20240126191351.56183-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
-References: 
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="e+GRm1sd"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e0a89b98e4so585243a34.1
+        for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 11:51:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1706298704; x=1706903504; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p7t/Jfk6r6ijlM1clfxfASnElihaegtuTeqvVJDZ0W4=;
+        b=e+GRm1sdzUloPM4SzuV5AcSHmXHb21SxPCz95vZaYjr2oaUsaoTAYatC9YK5MTBCUi
+         +rqPhzKHe7ue6HBYC29C4hriuzRNeG7IDvE8g4bQbndfZRmKCX+kwjrZsTlUDl9VbOKr
+         1sD02kYym851wBSbo4qSVUal4zU5kRqb7ug4qBX/ZlQf5i3Cp6R9Vv6tWLAG8rIA/qRj
+         JO0Bfg7X8NVskG+TVWhpdDBI1oUo5z04Kcc6rqKba73t7JIp2NJQxDnMsdzm4N0PcdA4
+         L0tQ06pJl1+fDXtTODxHZ7arRYLXMOGJuIOBpiQs4qD6nSjrp3H5P60k2lg7xm64+rFB
+         OSwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706298704; x=1706903504;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p7t/Jfk6r6ijlM1clfxfASnElihaegtuTeqvVJDZ0W4=;
+        b=fHVGRmSPGdeQw9+vA3xZO9U9eAHilBkhYY5kqiKrN/P/nQYDy4QkUiupjgW0Pj2sto
+         /rPuXSS3HFsI5GNk1NsP7vjYtX9PzRu7Ld+hHnnxIoD4dvRFdRX1SGw8sjQgcpkQbYkX
+         2OHrBw+l/Gsps+9OLzjNUWm+bHeK98el8ZfW/2RUU7hCJ4G3/D9Vvk/iWoF5TNZqAOCE
+         XaaVsQzWfw5sbdi2mNXHyp/J+Sol6+F5S2ITuz9e4Mb1oVfguHLHPM+npCTDC62Uqy3o
+         iRK0+Y8s3YF6kbX9egFwoUFrZJ9G0H1Fmt/EcGywxtGBUy5PLMEWKWBHe128l43guP3/
+         2KMA==
+X-Gm-Message-State: AOJu0Ywy/gBZ2CmV/1CPd1jwNzCEdSiXhdjNpbPiTuaOKqbjQdLhRBEM
+	tKGipAyl6HWTlAPlj//F634Y2WrWY7+DYSfepcW7rw+KO3Lww9UgzTbNb/+mtSQ=
+X-Google-Smtp-Source: AGHT+IG8No9TGeuDaqJJWT31lKXoJHAtaVdjCbPNccV/GnexH2LwAmZYe5309O0/wi7ytsY7bDXiFQ==
+X-Received: by 2002:a9d:61cd:0:b0:6dd:e6d3:d393 with SMTP id h13-20020a9d61cd000000b006dde6d3d393mr233513otk.55.1706298704640;
+        Fri, 26 Jan 2024 11:51:44 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id p26-20020a9d695a000000b006dc87c016e4sm386606oto.60.2024.01.26.11.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 11:51:44 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rTSEo-009eo3-TV;
+	Fri, 26 Jan 2024 15:51:42 -0400
+Date: Fri, 26 Jan 2024 15:51:42 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
+	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
+	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
+	linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+Message-ID: <20240126195142.GC50608@ziepe.ca>
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+ <20240123151508.GR50608@ziepe.ca>
+ <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
 
-On Mon, 15 Jan 2024 14:22:39 +0000 "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com> wrote:
+On Tue, Jan 23, 2024 at 06:44:42PM +0000, Diogo Ivo wrote:
 
-> It looks like both 5.15.146 and 5.10.206 are impacted by this regression as
-> they both have the bad commit 33eae65c6f (smb: client: fix OOB in
-> SMB2_query_info_init()).
+> Yes, this does fix the issue!
 
-Let me try to tell this to the regression tracking bot, following the doc[1].
-This is my first time using #regzbot, so please feel free to correct me if I'm
-doing something wrong.
+Thanks, just trying to pin down how the fix should be..
 
-#regzbot introduced: 33eae65c6f
+What kind of kernel are you running, 
 
-[1] https://docs.kernel.org/admin-guide/reporting-regressions.html#how-do-i-report-a-regression
+Is this 32 bit?
 
+Is CONFIG_ARM_DMA_USE_IOMMU set?
 
-Thanks,
-SJ
+Is CONFIG_IOMMU_DMA set?
 
-[...]
+I'm guessing yes/yes/no?
+
+Jason
