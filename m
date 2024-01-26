@@ -1,224 +1,175 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940B6111BA
-	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 07:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460EF1A723
+	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 12:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706252730; cv=none; b=LNlbCxgHzJu4lL6mjD6M8ycsUoYzZegzrNUbwsHr6Ijo1kFVUUx2e23BU5lGsjkt1V+t/EI3870n2+HYjtvSLyM2XuCJaCdfI2lDaYm6AGtZs3yXSfpBEIpZ7M1XTfzfx4xfPryMbYAKzkyYsO5PFNC/bwnxJr969loDco+uLvM=
+	t=1706272443; cv=none; b=heJMWgx4kWAk+tGTFcbeWPOcCWFSqsV/0TFaOpncMoQ4/XMPFvD44vcEHRMxMMh2YuGoGaq8BH7VJNiBB18dbfBLR6VRYUEaRZ4W3ytRNm8sOfrsYnuofwZxf50y40KtTv6EimvXrpy7FGxkJva/Js2HNtFBVdDPlwpyH/kK36Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706252730; c=relaxed/simple;
-	bh=pcsil5fXr8+VHV+eVDviFFwwRsocY/oapa4amn5QRYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iHqw6qGgzgVL/wwCLzqwZmw+shl8sOwmiI3BUNJEq/yd9n8WvJdtE0XFPqzESD9LPkang8yYokvKjBgRCJTFimuGgvkxB8XzSf5CTe3jM4q8N7pGp2xYbTWSUaX7c+SCQMMGxnoy52IFRKUJUKv7d3yM7ikGquChaPAGbT70PYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aec07.dynamic.kabel-deutschland.de [95.90.236.7])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0DFC161E5FE03;
-	Fri, 26 Jan 2024 08:03:18 +0100 (CET)
-Message-ID: <f07333d2-ebb0-4531-a396-8fb3d1daa2c3@molgen.mpg.de>
-Date: Fri, 26 Jan 2024 08:03:17 +0100
+	s=arc-20240116; t=1706272443; c=relaxed/simple;
+	bh=eFCWO1k8iWqR03mo4ZOrZ2bxtb9pRwS+IvtSVw+zg4o=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=nzhOA+zPHQNiOVoXFf6pFpGoqy07tQ9qxnRM6I3E5Yu3f+0JZcj3xoIHliZi8A9BtQgqLXv6bkSovIDnTfE8E/JSU6klPW8KuLNgeC+yrONeEaYsEC47Ob8HViFLqh9gBmWlMiPyr9T2Tka90CDQf3mtDBMhB4Ko6N+aANFLypA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=bQ41PCyR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Vg+MLw/n; arc=none smtp.client-ip=64.147.123.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bQ41PCyR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Vg+MLw/n"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id D91663200B35;
+	Fri, 26 Jan 2024 07:33:59 -0500 (EST)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Fri, 26 Jan 2024 07:34:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1706272439;
+	 x=1706358839; bh=tBqGlsEjn/kPiobf5SqqLqz5w2BRrTChAdCUzax6B/E=; b=
+	bQ41PCyRqkTGfAY3EcGz/E4+tr5J5nJYZVOYbWZvdqVmy2vPyGrY02Q9K3pLeLUW
+	T4vI6n9ZC5ZZH2182wRzHoGH1DeZnWkmODohOMjnub5KDWfXiB4hv18qm+timODL
+	7xYN2FJtsJL9sc/Y6B2b8G8rLqBvQsY1aRWvgpsP6aMcHw2tIWC1rpVPa26QZ4qR
+	GGISiUJlUEltf1mGiL7RjvvHpSFSLGadQKjHaxSMLzTsOkGXqrgVVjcPyr3FGmST
+	xLRGZGRF/gbXcfJUdY4D6tN0RehqT9ZYtlX3L9kpUpDKnisFutWSw2ykcyeZVpQX
+	GIpQXOxIi7jrClXsb2S03A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706272439; x=
+	1706358839; bh=tBqGlsEjn/kPiobf5SqqLqz5w2BRrTChAdCUzax6B/E=; b=V
+	g+MLw/nPlLUnBcqi1A/jOsI9bXUZptHc+C3yWTx4RJ9N0ueSTvvQrgiM52AUuNIf
+	Rb6q/sSg5bcfpSCxFN2KlEEM0FRcnzUOtoDnLfKjdQbvf7WpusKKwLsiF00aBenC
+	hftxxF8Up878nl8Abw2JizzSb3GGeTrtUpDkEchklIwf/CJ9o1E0WENdpLbZux8D
+	paVzl956Hq4EC5uidnJlH0H5ERI4xTnYGqi+uGwCTCVSi0MPnMLOlkj0OGKELnNf
+	Hq2xM9KlMOyrvg3419cwaRSEICs9kgTnS7LSAPQB5HSqkUpS+3ufsAbRXb4+JdLh
+	ZVTaKXGabwSax0Py+GmCQ==
+X-ME-Sender: <xms:tqazZawoqJ7sd46qCMdPCiQUsBiA_0v77gNev0WoAs-5EcuN6fgXJw>
+    <xme:tqazZWT1qZB0l2q5vIacrCH_-mkWoAH5ot6Hbh4m54IpkzJsR-uoZz_WmQTGDDDnd
+    enQ-q0HNr8iJzzn4Zo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeljedggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
+    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpeelteevjeekfedvgedvleeuueeukeegleelledujeek
+    ffekvefhueffffefkedvueenucffohhmrghinhepshhouhhrtggvfigrrhgvrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepjhhirgig
+    uhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:t6azZcWrZTKaV6JYHorN_hIoNFbjKo24-7BBP_81rmLLcQgu4-NSoQ>
+    <xmx:t6azZQiNHEJHMZTX1r0RXLAIm0AqTTY-gFGErRM43MbONIy5gU5FYQ>
+    <xmx:t6azZcAAgfwaZ0DDwk5-iTtgfpdsc5r9Q-ExBFSA1YVRDW_l9RG3MQ>
+    <xmx:t6azZfPDLUyG_7IMAMviv3FibMCgX46cBlD7Sw6CKof5uJ3Go1sCCg>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id DA8D536A0076; Fri, 26 Jan 2024 07:33:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PS/2 keyboard of laptop Dell XPS 13 9360 goes missing after S3
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
- Dell.Client.Kernel@dell.com, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
- <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
- <0b30c88a-6f0c-447f-a08e-29a2a0256c1b@molgen.mpg.de>
- <dde1bdfe-7877-41bd-b233-03bcdba0e2de@redhat.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <dde1bdfe-7877-41bd-b233-03bcdba0e2de@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Hans,
+Message-Id: <4b715c9f-6a9e-4496-8810-670080cb715a@app.fastmail.com>
+In-Reply-To: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
+References: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
+Date: Fri, 26 Jan 2024 12:33:38 +0000
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Xi Ruoyao" <xry111@xry111.site>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, libc-alpha@sourceware.org,
+ regressions@lists.linux.dev
+Subject: Re: Strange EFAULT on mips64el returned by syscall when another thread is
+ forking
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-Thank you for your reply, and sorry for the delay on my side. I needed 
-to set up an environment to easily build the Linux kernel.
 
+=E5=9C=A82024=E5=B9=B41=E6=9C=8824=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=E5=
+=8D=8810:42=EF=BC=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
+> Hi,
+>
+> When I'm testing Glibc master branch for upcoming 2.39 release, I
+> noticed an alarming test failure on mips64el:
 
-Am 22.01.24 um 14:43 schrieb Hans de Goede:
+So apparently it should be tracked as a regression.
 
-> On 1/21/24 15:26, Paul Menzel wrote:
+#regzbot ^introduced 4bce37a68ff884e821a02a731897a8119e0c37b7
 
-[…]
+Should we revert it for now?
 
->> Am 20.01.24 um 21:26 schrieb Hans de Goede:
->>
->>> On 1/18/24 13:57, Paul Menzel wrote:
->>>> #regzbot introduced v6.6.11..v6.7
->>
->>>> There seems to be a regression in Linux 6.7 on the Dell XPS 13 9360 (Intel i7-7500U).
->>>>
->>>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
->>>>
->>>> The PS/2 keyboard goes missing after S3 resume¹. The problem does not happen with Linux 6.6.11.
->>>
->>> Thank you for reporting this.
->>>
->>> Can you try adding "i8042.dumbkbd=1" to your kernel commandline?
->>>
->>> This should at least lead to the device not disappearing from
->>>
->>> "sudo libinput list-devices"
->>>
->>> The next question is if the keyboard will still actually
->>> work after suspend/resume with "i8042.dumbkbd=1". If it
->>> stays in the list, but no longer works then there is
->>> a problem with the i8042 controller; or interrupt
->>> delivery to the i8042 controller.
->>>
->>> If "i8042.dumbkbd=1" somehow fully fixes things, then I guess
->>> my atkbd driver fix for other laptop keyboards is somehow
->>> causing issues for yours.
->>
->> Just a quick feedback, that booting with `i8042.dumbkbd=1` seems to fix the issue.
->>
->>> If "i8042.dumbkbd=1" fully fixes things, can you try building
->>> your own 6.7.0 kernel with commit 936e4d49ecbc:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=936e4d49ecbc8c404790504386e1422b599dec39
->>>
->>> reverted?
->>
->> I am going to try that as soon as possible.
-> 
-> Assuming this was not some one time glitch with 6.7.0,
-> I have prepared a patch hopefully fixing this (1) as well
-> as a follow up fix to address another potential issue which
-> I have noticed.
+Thanks
+- Jiaxun
 
-Unfortunately, it wasn’t just a glitch.
+>
+> FAIL: stdlib/tst-arc4random-thread
+>
+> I've gathered some info about it and pasted my findings into
+> https://sourceware.org/glibc/wiki/Testing/Tests/stdlib/tst-arc4random-=
+thread.
+>
+> Finally I was able to reduce the test case into:
+>
+> #include <stdlib.h>
+> #include <errno.h>
+> #include <pthread.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+>
+> void *
+> test_thread (void *)
+> {
+>   char buf[16] =3D {};
+>   int fd =3D open("/dev/zero", O_RDONLY);
+>   while (1)
+>     {
+>       ssize_t ret =3D read (fd, buf, 7);
+>       if (ret =3D=3D -1 && errno =3D=3D EFAULT)
+> 	abort ();
+>     }
+> }
+>
+> void *
+> fork_thread (void *)
+> {
+>   while (1)
+>     {
+>       if (!fork ())
+> 	_exit (0);
+>     }
+> }
+>
+> int
+> main (void)
+> {
+>   pthread_t test_th;
+>   pthread_t fork_th;
+>
+>   pthread_create (&test_th, NULL, test_thread, NULL);
+>   pthread_create (&fork_th, NULL, fork_thread, NULL);
+>   pthread_join (test_th, NULL);
+>   pthread_join (fork_th, NULL);
+> }
+>
+> When running this on the mainline kernel (revision 6.8.0-rc1+-
+> g7ed2632ec7d72e926b9e8bcc9ad1bb0cd37274bf) it fails in milliseconds.=20
+> Some "interesting" aspects:
+>
+> 1. This is related to the size parameter passed to read ().  When it's
+> less than 8 it fails, but when it's 8 or greater there is no failure.
+> 2. This is not related to if "buf" is initialized or not.
+>
+> Now I'm suspecting this might be a kernel bug.  Any pointer to further
+> triage?
+>
+> --=20
+> Xi Ruoyao <xry111@xry111.site>
+> School of Aerospace Science and Technology, Xidian University
 
-> Can you please give a 6.7.0 (2) kernel with the 2 attached
-> patches added a try ?
-> 
-> I know building kernels can be a bit of work / takes time,
-> sorry. If you are short on time I would prefer testing these 2
-> patches and see if they fix things over trying a plain revert.
-
-Applying both patches on v6.7.1
-
-     $ git log --oneline -3
-     053fa44c0de1 (HEAD -> v6.7.1) Input: atkbd - Do not skip 
-atkbd_deactivate() when skipping ATKBD_CMD_GETID
-     0e0fa0113c7a Input: atkbd - Skip ATKBD_CMD_SETLEDS when skipping 
-ATKBD_CMD_GETID
-     a91fdae50a6d (tag: v6.7.1, stable/linux-6.7.y, origin/linux-6.7.y) 
-Linux 6.7.1
-
-I am unable to reproduce the problem in eight ACPI S3 suspend/resume 
-cycles. The DMAR errors [3] are also gone:
-
-     $ sudo dmesg --level alert,crit,err,warn
-     [    0.065292] MDS CPU bug present and SMT on, data leak possible. 
-See https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html 
-for more details.
-     [    0.065292] MMIO Stale Data CPU bug present and SMT on, data 
-leak possible. See 
-https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/processor_mmio_stale_data.html 
-for more details.
-     [    0.092064] ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
-     [    0.294522] hpet_acpi_add: no address or irqs in _CRS
-     [    0.345003] i8042: Warning: Keylock active
-     [    1.063807] usb: port power management may be unreliable
-     [    1.178339] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is 
-disabled. Duplicate IMA measurements will not be recorded in the IMA log.
-     [   37.712916] wmi_bus wmi_bus-PNP0C14:01: WQBC data block query 
-control method not found
-     [   67.307070] warning: `atop' uses wireless extensions which will 
-stop working for Wi-Fi 7 hardware; use nl80211
-     [  141.861803] ACPI Error: AE_BAD_PARAMETER, Returned by Handler 
-for [EmbeddedControl] (20230628/evregion-300)
-     [  141.861808] ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV.ECR1 
-due to previous error (AE_BAD_PARAMETER) (20230628/psparse-529)
-     [  141.861814] ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV.ECR2 
-due to previous error (AE_BAD_PARAMETER) (20230628/psparse-529)
-     [  141.861818] ACPI Error: Aborting method \ECRW due to previous 
-error (AE_BAD_PARAMETER) (20230628/psparse-529)
-     [  141.861821] ACPI Error: Aborting method \ECG1 due to previous 
-error (AE_BAD_PARAMETER) (20230628/psparse-529)
-     [  141.861824] ACPI Error: Aborting method \NEVT due to previous 
-error (AE_BAD_PARAMETER) (20230628/psparse-529)
-     [  141.861827] ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 
-due to previous error (AE_BAD_PARAMETER) (20230628/psparse-529)
-
-Please tell me, if I can do anything else.
-
-
-Kind regards,
-
-Paul
-
-
-> 1) Assuming it is caused by this commit in the first place,
-> which seems likely
-> 
-> 2) 6.8-rc1 has a follow up patch which is squashed into the
-> first patch here, so these patches will only apply cleanly
-> to 6.7.0 .
-
-[3]: 
-https://lore.kernel.org/all/9a24c335-8ec5-48c9-9bdd-b0dac5ecbca8@molgen.mpg.de/
-
->>>>       [    1.435071] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f13:PS2M] at 0x60,0x64 irq 1,12
->>>>       [    1.435409] i8042: Warning: Keylock active
->>>>       [    1.437624] serio: i8042 KBD port at 0x60,0x64 irq 1
->>>>       [    1.437631] serio: i8042 AUX port at 0x60,0x64 irq 12
->>>>       […]
->>>>       [    1.439743] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
->>>>
->>>>       $ sudo libinput list-devices
->>>>       […]
->>>>       Device:           AT Translated Set 2 keyboard
->>>>       Kernel:           /dev/input/event0
->>>>       Group:            15
->>>>       Seat:             seat0, default
->>>>       Capabilities:     keyboard
->>>>       Tap-to-click:     n/a
->>>>       Tap-and-drag:     n/a
->>>>       Tap drag lock:    n/a
->>>>       Left-handed:      n/a
->>>>       Nat.scrolling:    n/a
->>>>       Middle emulation: n/a
->>>>       Calibration:      n/a
->>>>       Scroll methods:   none
->>>>       Click methods:    none
->>>>       Disable-w-typing: n/a
->>>>       Disable-w-trackpointing: n/a
->>>>       Accel profiles:   n/a
->>>>       Rotation:         0.0
->>>>
->>>> `libinput list-devices` does not list the device after resuming
->>>> from S3. Some of the function keys, like brightness and airplane
->>>> mode keys, still work, as the events are probably transmitted over
->>>> the embedded controller or some other mechanism. An external USB
->>>> keyboard also still works.
->>>>
->>>> I haven’t had time to further analyze this, but wanted to report
->>>> it. No idea
->>>>
->>>>
->>>> Kind regards,
->>>>
->>>> Paul
->>>>
->>>>
->>>> ¹ s2idle is not working correctly on the device, in the sense, that
->>>> energy usage is very high in that state, and the full battery is at
->>>> 20 % after leaving it for eight hours.
+--=20
+- Jiaxun
