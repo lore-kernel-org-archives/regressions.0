@@ -1,72 +1,41 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBBD224EC
-	for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 19:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02772573;
+	Sat, 27 Jan 2024 00:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706298707; cv=none; b=J9lAmo4oMMZnjOkP7pzKhrFEYY8pLsOP/NTfj6izqh8CTgWcna8hgEiUDXkySPUFamvYe/UUVo3aLahVdsZrxi2/7GaUqPTif5mVO4hjAnqhzcxf3enxZUx8XRkJ7Pjh/BhWoCAQ6aNEx8PjUXOLxWJz7ZhEOK6THTTHpvo18dQ=
+	t=1706316288; cv=none; b=VUIInI1eK3zYEj6DxGIBbsvyVl88lB5lxBEMOpcgLUQkcJinxB3qsB6aDbJoFudVKzvWKdDvoOLhNdNu3aF4souXz0e0WAGlFrBouQBBTn0n3o+Uz7XfC1F2T4r5u4t2mAHr5kyjta2NeG6ONZKsDvG0VyBMZKZFLeBqPsvFI3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706298707; c=relaxed/simple;
-	bh=UM9NHqrhFW/qXab9JXefHaDvEQZR/UkcaOA0AKHOLys=;
+	s=arc-20240116; t=1706316288; c=relaxed/simple;
+	bh=4lYVIs/+rZG4bNmhU3BPuzDZIthKg9gmdo2bombYMp4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHXf75zY7TCytj91oanZ9dlCBfLtYChLwmyC2ofQtWU8ApWXpQedkbKB/SJLnL234DurwK1jMXGxjjRTEURFo369B4I37ewIjJ/j4vPflaYjD59H4ys6EEvlAt20O9Rbu1bZdqkW6Wi4xnrlndHbXZOTIBl9b8ia3fCYd/wurcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=e+GRm1sd; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fv/S7rKJ/JnDB7LoHhMvDdirtzF0CHKMyu1n/vdorkefIjfCqpXkPBb2K7y/DaVJ7AphVGKI/dtOk2uveOEuMNSB90PeDvFXgUtKaQB91mBuJgIj4ILkpVwW2MVGEHQ/Zme45dLzcEp4eJEwEeIZxmPMw7RsMj3H6pz92udz9Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kLInt7AC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="e+GRm1sd"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e0a89b98e4so585243a34.1
-        for <regressions@lists.linux.dev>; Fri, 26 Jan 2024 11:51:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1706298704; x=1706903504; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p7t/Jfk6r6ijlM1clfxfASnElihaegtuTeqvVJDZ0W4=;
-        b=e+GRm1sdzUloPM4SzuV5AcSHmXHb21SxPCz95vZaYjr2oaUsaoTAYatC9YK5MTBCUi
-         +rqPhzKHe7ue6HBYC29C4hriuzRNeG7IDvE8g4bQbndfZRmKCX+kwjrZsTlUDl9VbOKr
-         1sD02kYym851wBSbo4qSVUal4zU5kRqb7ug4qBX/ZlQf5i3Cp6R9Vv6tWLAG8rIA/qRj
-         JO0Bfg7X8NVskG+TVWhpdDBI1oUo5z04Kcc6rqKba73t7JIp2NJQxDnMsdzm4N0PcdA4
-         L0tQ06pJl1+fDXtTODxHZ7arRYLXMOGJuIOBpiQs4qD6nSjrp3H5P60k2lg7xm64+rFB
-         OSwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706298704; x=1706903504;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p7t/Jfk6r6ijlM1clfxfASnElihaegtuTeqvVJDZ0W4=;
-        b=fHVGRmSPGdeQw9+vA3xZO9U9eAHilBkhYY5kqiKrN/P/nQYDy4QkUiupjgW0Pj2sto
-         /rPuXSS3HFsI5GNk1NsP7vjYtX9PzRu7Ld+hHnnxIoD4dvRFdRX1SGw8sjQgcpkQbYkX
-         2OHrBw+l/Gsps+9OLzjNUWm+bHeK98el8ZfW/2RUU7hCJ4G3/D9Vvk/iWoF5TNZqAOCE
-         XaaVsQzWfw5sbdi2mNXHyp/J+Sol6+F5S2ITuz9e4Mb1oVfguHLHPM+npCTDC62Uqy3o
-         iRK0+Y8s3YF6kbX9egFwoUFrZJ9G0H1Fmt/EcGywxtGBUy5PLMEWKWBHe128l43guP3/
-         2KMA==
-X-Gm-Message-State: AOJu0Ywy/gBZ2CmV/1CPd1jwNzCEdSiXhdjNpbPiTuaOKqbjQdLhRBEM
-	tKGipAyl6HWTlAPlj//F634Y2WrWY7+DYSfepcW7rw+KO3Lww9UgzTbNb/+mtSQ=
-X-Google-Smtp-Source: AGHT+IG8No9TGeuDaqJJWT31lKXoJHAtaVdjCbPNccV/GnexH2LwAmZYe5309O0/wi7ytsY7bDXiFQ==
-X-Received: by 2002:a9d:61cd:0:b0:6dd:e6d3:d393 with SMTP id h13-20020a9d61cd000000b006dde6d3d393mr233513otk.55.1706298704640;
-        Fri, 26 Jan 2024 11:51:44 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id p26-20020a9d695a000000b006dc87c016e4sm386606oto.60.2024.01.26.11.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 11:51:44 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rTSEo-009eo3-TV;
-	Fri, 26 Jan 2024 15:51:42 -0400
-Date: Fri, 26 Jan 2024 15:51:42 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org,
-	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com,
-	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <20240126195142.GC50608@ziepe.ca>
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
- <20240123151508.GR50608@ziepe.ca>
- <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kLInt7AC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48491C433F1;
+	Sat, 27 Jan 2024 00:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706316288;
+	bh=4lYVIs/+rZG4bNmhU3BPuzDZIthKg9gmdo2bombYMp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kLInt7ACX/WHFNjvUKxWJKFKxAlttFK/2Sm93N5hBZjII0Rzv0ktN0cR69whsgb9c
+	 dquZgWf6sicIY1AOfVo+4UAFF4jEQhRMY6rd2foFo/RtFZOBcZIoIrLIdTqVHJE1pi
+	 4f8YBYlt0UPJA24JiRQluU2wN/aydol6e9IF2ZOo=
+Date: Fri, 26 Jan 2024 16:44:47 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	netdev <netdev@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Benjamin Berg <benjamin.berg@intel.com>
+Subject: Re: Consider picking up "tpm: Enable hwrng only for Pluton on AMD
+ CPUs" rather sooner than later
+Message-ID: <2024012639-trekker-fraction-367c@gregkh>
+References: <3bfb5c07-664e-49cd-a470-635a36bcf806@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -75,22 +44,25 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
+In-Reply-To: <3bfb5c07-664e-49cd-a470-635a36bcf806@leemhuis.info>
 
-On Tue, Jan 23, 2024 at 06:44:42PM +0000, Diogo Ivo wrote:
+On Fri, Jan 26, 2024 at 07:02:43AM +0100, Thorsten Leemhuis wrote:
+> Hi stable team, JFYI, yesterdays mainline commit 556857aa1d0855 ("wifi:
+> ath11k: rely on mac80211 debugfs handling for vif") from Benjamin
+> contains no stable tag, but a Fixes: tag for a 6.7 commit. So it guess
+> you will pick it up anyway. Might be worth picking up rather sooner than
+> later, as it fixes a regression that according to Kalle causes ath11k to
+> crash during suspend:
+> https://lore.kernel.org/all/874jfjiolh.fsf@kernel.org/
+> https://bugzilla.kernel.org/show_bug.cgi?id=218364
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
+> 
 
-> Yes, this does fix the issue!
+Now queued up, thanks.
 
-Thanks, just trying to pin down how the fix should be..
-
-What kind of kernel are you running, 
-
-Is this 32 bit?
-
-Is CONFIG_ARM_DMA_USE_IOMMU set?
-
-Is CONFIG_IOMMU_DMA set?
-
-I'm guessing yes/yes/no?
-
-Jason
+greg k-h
