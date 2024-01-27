@@ -1,68 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02772573;
-	Sat, 27 Jan 2024 00:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85AA7F
+	for <regressions@lists.linux.dev>; Sat, 27 Jan 2024 06:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706316288; cv=none; b=VUIInI1eK3zYEj6DxGIBbsvyVl88lB5lxBEMOpcgLUQkcJinxB3qsB6aDbJoFudVKzvWKdDvoOLhNdNu3aF4souXz0e0WAGlFrBouQBBTn0n3o+Uz7XfC1F2T4r5u4t2mAHr5kyjta2NeG6ONZKsDvG0VyBMZKZFLeBqPsvFI3g=
+	t=1706338295; cv=none; b=mWk2IUZbAceX206KkZ5Biklv014bpQvdIn8cYVJj1vfMgem1C2BQnOfXr1p5K8KJ/crFwE3v21gcp5UUiBCXoLmZfHjCSTwuC5Eusar+h2fhTGU+Wi1tUF5+AEACVrm4i9KpsMB0nu9J/u22Gr2c0VQHiGuUBkM4ShYqVwIVVEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706316288; c=relaxed/simple;
-	bh=4lYVIs/+rZG4bNmhU3BPuzDZIthKg9gmdo2bombYMp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv/S7rKJ/JnDB7LoHhMvDdirtzF0CHKMyu1n/vdorkefIjfCqpXkPBb2K7y/DaVJ7AphVGKI/dtOk2uveOEuMNSB90PeDvFXgUtKaQB91mBuJgIj4ILkpVwW2MVGEHQ/Zme45dLzcEp4eJEwEeIZxmPMw7RsMj3H6pz92udz9Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kLInt7AC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kLInt7AC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48491C433F1;
-	Sat, 27 Jan 2024 00:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706316288;
-	bh=4lYVIs/+rZG4bNmhU3BPuzDZIthKg9gmdo2bombYMp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kLInt7ACX/WHFNjvUKxWJKFKxAlttFK/2Sm93N5hBZjII0Rzv0ktN0cR69whsgb9c
-	 dquZgWf6sicIY1AOfVo+4UAFF4jEQhRMY6rd2foFo/RtFZOBcZIoIrLIdTqVHJE1pi
-	 4f8YBYlt0UPJA24JiRQluU2wN/aydol6e9IF2ZOo=
-Date: Fri, 26 Jan 2024 16:44:47 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	netdev <netdev@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
-	Benjamin Berg <benjamin.berg@intel.com>
-Subject: Re: Consider picking up "tpm: Enable hwrng only for Pluton on AMD
- CPUs" rather sooner than later
-Message-ID: <2024012639-trekker-fraction-367c@gregkh>
-References: <3bfb5c07-664e-49cd-a470-635a36bcf806@leemhuis.info>
+	s=arc-20240116; t=1706338295; c=relaxed/simple;
+	bh=hOmG7YU/nUY+E8qtqky8agixj550tE2Yn09iK7HLWoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hWeJnNdf6CF8zf2rG+zgZlPmnpwcs8z33JAMrDiPYYttXg6N5VAOeoyTW3I+L1e2FpOMcdPw5X7skBxiWs2dsYF8qk1hyRyRoO3vrJSiekaDy/W8bD4ALErWqXAIPbADB1/6JvmdoxEppppCyyLJFYeXJqrFnI6T6LeMt+mhl4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rTcXL-0006p5-DT; Sat, 27 Jan 2024 07:51:31 +0100
+Message-ID: <753e71de-9e0b-4335-baba-dfe8e2ce7f6d@leemhuis.info>
+Date: Sat, 27 Jan 2024 07:51:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bfb5c07-664e-49cd-a470-635a36bcf806@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/7] cpufreq/schedutil: Use a fixed reference frequency
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20231211104855.558096-1-vincent.guittot@linaro.org>
+ <20231211104855.558096-4-vincent.guittot@linaro.org>
+ <Za8cjQXptttuyb6c@finisterre.sirena.org.uk>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Za8cjQXptttuyb6c@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706338293;901cbf1d;
+X-HE-SMSGID: 1rTcXL-0006p5-DT
 
-On Fri, Jan 26, 2024 at 07:02:43AM +0100, Thorsten Leemhuis wrote:
-> Hi stable team, JFYI, yesterdays mainline commit 556857aa1d0855 ("wifi:
-> ath11k: rely on mac80211 debugfs handling for vif") from Benjamin
-> contains no stable tag, but a Fixes: tag for a 6.7 commit. So it guess
-> you will pick it up anyway. Might be worth picking up rather sooner than
-> later, as it fixes a regression that according to Kalle causes ath11k to
-> crash during suspend:
-> https://lore.kernel.org/all/874jfjiolh.fsf@kernel.org/
-> https://bugzilla.kernel.org/show_bug.cgi?id=218364
+On 23.01.24 02:55, Mark Brown wrote:
+> On Mon, Dec 11, 2023 at 11:48:51AM +0100, Vincent Guittot wrote:
+>> cpuinfo.max_freq can change at runtime because of boost as an example. This
+>> implies that the value could be different than the one that has been
+>> used when computing the capacity of a CPU.
 > 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
-> 
+> So, this seems very weird but I just finished a bisection of a failure
+> that showed up during the merge window with the DT kselftests on
+> meson-gxl-s905x-libretech-cc (Libretech Le Potato) running an arm64
+> defconfig.  Looking at the commit this seems like a very surprising
+> false result but I verified that the commit before this one runs fine
+> and reproduced the failure, the bisect does seem to converge well also
+> so it appears like there's something going on.  Does this ring any bells
+> for anyone?
+> [...]
+> # first bad commit: [b3edde44e5d4504c23a176819865cd603fd16d6c] cpufreq/schedutil: Use a fixed reference frequency
 
-Now queued up, thanks.
+#regzbot ^introduced b3edde44e5d4504c23a176819865cd603fd16d6c
+#regzbot title sched: DT kselftests on meson-gxl-s905x-libretech-cc fail
+#regzbot monitor
+https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
+#regzbot fix topology: Set capacity_freq_ref in all cases
+#regzbot ignore-activity
 
-greg k-h
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
