@@ -1,139 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBCE5C5E0;
-	Mon, 29 Jan 2024 11:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049A5605B1;
+	Mon, 29 Jan 2024 12:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706528029; cv=none; b=tz4k1GTxRRxF0IkYf/84Rxn3KkhkqDyFdS6oxr4DWCJBlHQX5y7LzQnHkWuzUjtF9liIfzSKtfif85NK99oYxe9U0AFNgMTgBwk7MioA8DOSMfdTFKvCfHnjtc91WNpjPSqgjGH0FkNmLe76haQBoH5JTKKrlh7Dq4grtcFtePQ=
+	t=1706530089; cv=none; b=hFSx1fo1tdnBQz4sBOJL9XV3I9KCoWicZ/gQ7m6wJMez+8ftKlKzAexzSZfI5iruh7C5ZwKNp+Aa0zN02YF3z/9iC6mDx/B8DW4E2T392N4vtLlMJpn0GS9DuEx54aheptlqzNu0Uhw+V3mvxXU8KBsG6YLawA1AdxJdeSpSbjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706528029; c=relaxed/simple;
-	bh=9Im3//+edoEovvD3z3/DbAAPUqCpZJ6xFDEEDLE/cAc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=tdXdCg5IFu5TzwysYNolx2LWw+LiZhBr522Z8C+HbK4Dg+g+MU7Vz8LId5u8l3FHsjF8XaCW2rlvi8wscJHCMXmQqCV+DAObeu/Mr0m0W4RdMz8aJctHWlanKgWENilEmH8Y9+VlLlX6tGCPQWx/pU4VNZ7bsbUiqT2xIgCgkOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW5N78mj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706530089; c=relaxed/simple;
+	bh=ZSgQnY9x+TGPud1UGSLreEOuvi81q1Su0LFZw4pMw10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYMxkq+3c6b4I8ghhoDtGsE3DR0RV7HmyjfDOyuufvysRKqUBU6ulPS4FVAEOGEBFE2HM19AgIdTJWeg/3jED8qMN2qG7kPynR6eLjNYL0T1zUtPUJKEioWikojwiV+W5CH6CNZlKR7kvTHqYym0VVE2nwXlAYO7SJUcLwMO3a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=lVBXrR3H; arc=none smtp.client-ip=193.136.128.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW5N78mj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92439C433C7;
-	Mon, 29 Jan 2024 11:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706528028;
-	bh=9Im3//+edoEovvD3z3/DbAAPUqCpZJ6xFDEEDLE/cAc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=UW5N78mjfQDgW+vaQbyiiO6D8tkCP8cRM7tAqn84SoSFF5x1fAdF8D4B+gIFK4vDO
-	 VYl1odPjW8p1bXYpB7W9oZuUgfpjL07elXav6uAhpSje5ZTYrtOINTjFi1d+ELUtUd
-	 iWswgaclE6f2MmGV7VVNxhxVN/QT59vkYhENAdJ+VFWx+Sq5QyPYNSh1Lbddg3eV8x
-	 96/MKtnee1NQB4Pd/KFwJ+1QSc+k6RnOQxYc0G/3wGL3q1PhW9YLTJ/oMxS1/TrkJW
-	 oEyt73bIvsGO6jgNjiywmBVm2sW1+rhCc0YsrDQ7FSWGokeXVSMyRLTopm6blQXUkw
-	 MsyaAf+fxBKhw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: ath11k@lists.infradead.org,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  linux-wireless@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [regression] ath11k broken in v6.7
-References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
-	<878r4lg3t8.fsf@kernel.org> <87jzo13jmf.fsf@kernel.org>
-	<94150b26-bdd9-49c2-82a1-26ff46c9d32a@leemhuis.info>
-	<87fryp3he0.fsf@kernel.org>
-	<0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info>
-Date: Mon, 29 Jan 2024 13:33:45 +0200
-In-Reply-To: <0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info> (Thorsten
-	Leemhuis's message of "Mon, 22 Jan 2024 11:24:06 +0100")
-Message-ID: <871qa0xtk6.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="lVBXrR3H"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 54B6E600023E;
+	Mon, 29 Jan 2024 12:07:58 +0000 (WET)
+X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
+Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
+ by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
+ with LMTP id ztBAk7UiNGkb; Mon, 29 Jan 2024 12:07:56 +0000 (WET)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 0C93E600140A;
+	Mon, 29 Jan 2024 12:07:56 +0000 (WET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
+	s=mail; t=1706530076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XIZnwvHWrs2uKG8rpNN8P8JARGZ80yJYLIetzHJw+Zg=;
+	b=lVBXrR3H6iICavTeTmDVrYPMSmc6K45SAGHoMCxz1l6cEswtFHuY63BVMfwAOvL/YPvZ8X
+	XVQe2Wnh2N6UpFoj0w4m12VPqdkmyNwkIFyWWXEZImcbD6ijm5kblfh8fdtvthBOcVSLvQ
+	xqkeYARM8j5CRY6wmfvVskcKl0YynXc=
+Received: from diogo-gram (unknown [IPv6:2001:8a0:7ae3:e700:6be7:1f41:6784:a78])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 63AFD36007E;
+	Mon, 29 Jan 2024 12:07:54 +0000 (WET)
+Date: Mon, 29 Jan 2024 12:07:43 +0000
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org, 
+	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com, 
+	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
+	linux-tegra@vger.kernel.org, iommu@lists.linux.dev, regressions@lists.linux.dev, 
+	diogo.ivo@tecnico.ulisboa.pt
+Subject: Re: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+Message-ID: <h3sokjn23q2xco2aje36ypz6ffcmmcz24qdyjj5madq4xeqbln@sjooz3ale3k6>
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+ <20240123151508.GR50608@ziepe.ca>
+ <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
+ <20240126195142.GC50608@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126195142.GC50608@ziepe.ca>
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
+On Fri, Jan 26, 2024 at 03:51:42PM -0400, Jason Gunthorpe wrote:
+> On Tue, Jan 23, 2024 at 06:44:42PM +0000, Diogo Ivo wrote:
+> 
+> > Yes, this does fix the issue!
+> 
+> Thanks, just trying to pin down how the fix should be..
+> 
+> What kind of kernel are you running, 
+> 
+> Is this 32 bit?
+> 
+> Is CONFIG_ARM_DMA_USE_IOMMU set?
+> 
+> Is CONFIG_IOMMU_DMA set?
+> 
+> I'm guessing yes/yes/no?
 
-> On 22.01.24 09:24, Kalle Valo wrote:
->> "Linux regression tracking (Thorsten Leemhuis)"
->> <regressions@leemhuis.info> writes:
->>
->>> FWIW, that usage was slightly off and not how it's supposed to be done.
->>> But whatever, let's ignore that. I'm reworking things currently
->>> slightly, as you are not the first one that slightly got mislead -- and
->>> the newer commands will hopefully be mire intuitive.
->> 
->> Just to educate myself, how should I have done it? (But feel free to
->> skip the question if you are busy)
->
-> I think that's not worth it, as I hope to introduce the new commands in
-> the near future (but you know how it is with the last 5 to 10
-> percent...).
+It is a 64-bit kernel, CONFIG_ARM_DMA_USE_IOMMU=n and
+CONFIG_IOMMU_DMA=y.
 
-I sure do know :) I assume you will announce in the regressions list
-once the new interface is available, I'll then take a look at it in
-detail and update my notes.
-
-> But let me show you how it's then supposed to be done in this
-> situation, that way you can give early feedback:
->
->   #regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218364
->   #regzbot introduced: 0a3d898ee9a8
->
-> That "#regzbot report" will be new and make it more obvious to users
-> what regzbot should consider to be the report (e.g. what Link:/Closes:
-> tags later in commits fixing the issue will link to).
-
-Thanks, this looks very intuitive to me.
-
-> You used "#regzbot introduced: 0a3d898ee9a8 ^" and due to the "^" it
-> assumed the start of this thread would be the report
-
-Actually I did that on purpose as I wanted to test how including a mail
-to a regression report works :)
-
-> (side note: mixing that aspect into the "introduced" command was a
-> stupid idea anyway.).
->
-> That "#regzbot link:" will vanish as well (at least from the docs, it
-> will remain to be supported), as people use it wrong in various
-> different ways: for duplicates, reports (like your did), patch
-> submissions fixing the issue (then 'regzbot monitor' should have been
-> used) among others. Which is totally understandable now that I look at
-> it. That's why it will be replaced by "#regzbot related: <url>" to avoid
-> any connection with the Link: tag used in commits; for duplicates
-> "#regzbot dup:" will stay around.
-
-So, in the new interface, how should I handle a situation that a
-regression is first reported on the mailing list, added to regzbot and
-later there's also a bug report opened for the issue?
-
->> I wish there would be a person who could follow stable
->> releases from wireless perspective and make sure everything is ok there.
->
-> Maybe at some point regression tracking can help somewhat with that. But
-> I still have to fix a few things to make people use it and scale it up.
-
-I just feel it should be more than that, I'm worried that randomly
-taking wireless commits to stable releases is risky. There really should
-be someone looking after wireless (read: reviewing patches) in stable
-releases. This would be a good role for someone who is interested to
-learn how kernel.org development works and helping the community. Do we
-have a way to announce these kind volunteer vacancies somewhere? :)
-
-> Side note: some people seem to have gotten the impression that I care a
-> lot about *all* stable/longterm kernels. Let me use this opportunity to
-> say that it's not really the case. I fully understand and respect that
-> those series are a somewhat separate thing some developers don't want to
-> be involved in (especially the older trees). But the thing is: the
-> latest stable tree is what we tell users to use -- and something quite a
-> few important distros ship as their regular kernel these days. That's
-> why I take special care of regression that found there.
-
-Yeah, I understand that a lot of users use stable kernel releases. But
-the reality is that we in wireless really don't have the bandwidth to
-manage stable kernels, it is enough of a challenge to manage Linus'
-releases. So help here is very much needed.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Diogo
