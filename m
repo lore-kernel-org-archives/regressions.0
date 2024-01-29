@@ -1,212 +1,139 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5A928E03;
-	Sun, 28 Jan 2024 17:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBCE5C5E0;
+	Mon, 29 Jan 2024 11:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706461399; cv=none; b=hNQ8pB0mZHSbJS5V1xsdsIpqasF8047ylrmSEYvkY12sW4CtirTpdGHT7rStqrkDlybn0qkHhsvNdNzfRhxIyy0/L0G6p/LUpP4YDY05gC3ulCdftzxzWesG2u1MVoRpVyU3n+MIjXhN8yIp8cenpsrKBPD/H+uxKFwZhzOvKJA=
+	t=1706528029; cv=none; b=tz4k1GTxRRxF0IkYf/84Rxn3KkhkqDyFdS6oxr4DWCJBlHQX5y7LzQnHkWuzUjtF9liIfzSKtfif85NK99oYxe9U0AFNgMTgBwk7MioA8DOSMfdTFKvCfHnjtc91WNpjPSqgjGH0FkNmLe76haQBoH5JTKKrlh7Dq4grtcFtePQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706461399; c=relaxed/simple;
-	bh=hoGLeTx931dYTROijJ6Yud2063fpjpNZ3M75yTo2dgo=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bowDaySr6p/228Wsi9FXSA7sANm7d7fS5+s0uFlgra6gJXVZ4xTOgZmgixetDaAS7QM/2nOSEA2BgeT/vqGVfnbbnSePSuH6ax/qIajywSjnM2rHX4JXYz8UBYKYAytYDoIa6Y5ugH73pCsKl9wG+qnDm4fCbDXRbrFGZXfuQ0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rU8Ys-0002QN-UN; Sun, 28 Jan 2024 18:03:15 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-01-28]
-Date: Sun, 28 Jan 2024 17:03:13 +0000
-Message-Id: <170646134151.3426506.9467210052600500703@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1706528029; c=relaxed/simple;
+	bh=9Im3//+edoEovvD3z3/DbAAPUqCpZJ6xFDEEDLE/cAc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=tdXdCg5IFu5TzwysYNolx2LWw+LiZhBr522Z8C+HbK4Dg+g+MU7Vz8LId5u8l3FHsjF8XaCW2rlvi8wscJHCMXmQqCV+DAObeu/Mr0m0W4RdMz8aJctHWlanKgWENilEmH8Y9+VlLlX6tGCPQWx/pU4VNZ7bsbUiqT2xIgCgkOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW5N78mj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW5N78mj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92439C433C7;
+	Mon, 29 Jan 2024 11:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706528028;
+	bh=9Im3//+edoEovvD3z3/DbAAPUqCpZJ6xFDEEDLE/cAc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=UW5N78mjfQDgW+vaQbyiiO6D8tkCP8cRM7tAqn84SoSFF5x1fAdF8D4B+gIFK4vDO
+	 VYl1odPjW8p1bXYpB7W9oZuUgfpjL07elXav6uAhpSje5ZTYrtOINTjFi1d+ELUtUd
+	 iWswgaclE6f2MmGV7VVNxhxVN/QT59vkYhENAdJ+VFWx+Sq5QyPYNSh1Lbddg3eV8x
+	 96/MKtnee1NQB4Pd/KFwJ+1QSc+k6RnOQxYc0G/3wGL3q1PhW9YLTJ/oMxS1/TrkJW
+	 oEyt73bIvsGO6jgNjiywmBVm2sW1+rhCc0YsrDQ7FSWGokeXVSMyRLTopm6blQXUkw
+	 MsyaAf+fxBKhw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: ath11k@lists.infradead.org,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  linux-wireless@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [regression] ath11k broken in v6.7
+References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
+	<878r4lg3t8.fsf@kernel.org> <87jzo13jmf.fsf@kernel.org>
+	<94150b26-bdd9-49c2-82a1-26ff46c9d32a@leemhuis.info>
+	<87fryp3he0.fsf@kernel.org>
+	<0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info>
+Date: Mon, 29 Jan 2024 13:33:45 +0200
+In-Reply-To: <0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info> (Thorsten
+	Leemhuis's message of "Mon, 22 Jan 2024 11:24:06 +0100")
+Message-ID: <871qa0xtk6.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706461397;4dfb79b2;
-X-HE-SMSGID: 1rU8Ys-0002QN-UN
+Content-Type: text/plain
 
-Hi Linus. Nothing much to report from my side. Here are a few things I
-nevertheless want to point out wrt. to regression from this or the
-previous cycle:
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
-* As already mentioned last week: quite a few people reported problems
-that among others "break 32bit processes on x86_64 (at least). In
-particular, 32bit kernel or firefox builds in our build system" (quote
-from Jiri). The mm fix for that is in -next since Tuesday (currently as
-0d0498b139768f ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE")), but sadly
-not yet on the way to you (at least afaics):
-https://lore.kernel.org/all/20240126075612.87780C433F1@smtp.kernel.org/
+> On 22.01.24 09:24, Kalle Valo wrote:
+>> "Linux regression tracking (Thorsten Leemhuis)"
+>> <regressions@leemhuis.info> writes:
+>>
+>>> FWIW, that usage was slightly off and not how it's supposed to be done.
+>>> But whatever, let's ignore that. I'm reworking things currently
+>>> slightly, as you are not the first one that slightly got mislead -- and
+>>> the newer commands will hopefully be mire intuitive.
+>> 
+>> Just to educate myself, how should I have done it? (But feel free to
+>> skip the question if you are busy)
+>
+> I think that's not worth it, as I hope to introduce the new commands in
+> the near future (but you know how it is with the last 5 to 10
+> percent...).
 
- For details and problems reports see:
+I sure do know :) I assume you will announce in the regressions list
+once the new interface is available, I'll then take a look at it in
+detail and update my notes.
 
-  https://lore.kernel.org/linux-mm/d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org/
-  https://lore.kernel.org/linux-mm/CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com/
-  https://lore.kernel.org/all/1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com/
-  https://lore.kernel.org/all/a914c7f2-cf9f-44a8-99d4-c25a66d39f1c@arm.com/
+> But let me show you how it's then supposed to be done in this
+> situation, that way you can give early feedback:
+>
+>   #regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218364
+>   #regzbot introduced: 0a3d898ee9a8
+>
+> That "#regzbot report" will be new and make it more obvious to users
+> what regzbot should consider to be the report (e.g. what Link:/Closes:
+> tags later in commits fixing the issue will link to).
 
+Thanks, this looks very intuitive to me.
 
-* There have been multiple reports that the keyboard on the popular
-Dell XPS 13 9350 / 9360 / 9370 models on 6.7 has stopped working after
-suspend/resume -- and the culprit that causes it recently sadly was
-backported to a few stable/longterm series. Hans posted a fix on Friday
-and asked sending them your way "ASAP", but that afaics has not happened
-yet (no wonder given the timing):
+> You used "#regzbot introduced: 0a3d898ee9a8 ^" and due to the "^" it
+> assumed the start of this thread would be the report
 
-  https://lore.kernel.org/all/20240126160724.13278-1-hdegoede@redhat.com/
+Actually I did that on purpose as I wanted to test how including a mail
+to a regression report works :)
 
+> (side note: mixing that aspect into the "introduced" command was a
+> stupid idea anyway.).
+>
+> That "#regzbot link:" will vanish as well (at least from the docs, it
+> will remain to be supported), as people use it wrong in various
+> different ways: for duplicates, reports (like your did), patch
+> submissions fixing the issue (then 'regzbot monitor' should have been
+> used) among others. Which is totally understandable now that I look at
+> it. That's why it will be replaced by "#regzbot related: <url>" to avoid
+> any connection with the Link: tag used in commits; for duplicates
+> "#regzbot dup:" will stay around.
 
-* Speaking of popular Linus laptops, in case anyone cares: GPIO is
-broken on the Thinkpad T14s Gen1 AMD, a fix for it was posted on
-Tuesday, sadly was not yet picked up afaics:
+So, in the new interface, how should I handle a situation that a
+regression is first reported on the mailing list, added to regzbot and
+later there's also a bug report opened for the issue?
 
-  https://lore.kernel.org/lkml/20240123180818.3994-1-mario.limonciello@amd.com/
+>> I wish there would be a person who could follow stable
+>> releases from wireless perspective and make sure everything is ok there.
+>
+> Maybe at some point regression tracking can help somewhat with that. But
+> I still have to fix a few things to make people use it and scale it up.
 
+I just feel it should be more than that, I'm worried that randomly
+taking wireless commits to stable releases is risky. There really should
+be someone looking after wireless (read: reviewing patches) in stable
+releases. This would be a good role for someone who is interested to
+learn how kernel.org development works and helping the community. Do we
+have a way to announce these kind volunteer vacancies somewhere? :)
 
-* Ohh, and the Apple M1 is plagued by boot failures, a fix for it is in
-next as b40fed13870045 ("nvmem: include bit index in cell sysfs file
-name") and also found here:
+> Side note: some people seem to have gotten the impression that I care a
+> lot about *all* stable/longterm kernels. Let me use this opportunity to
+> say that it's not really the case. I fully understand and respect that
+> those series are a somewhat separate thing some developers don't want to
+> be involved in (especially the older trees). But the thing is: the
+> latest stable tree is what we tell users to use -- and something quite a
+> few important distros ship as their regular kernel these days. That's
+> why I take special care of regression that found there.
 
-  https://lore.kernel.org/all/20240122153442.7250-1-arnd@kernel.org/
+Yeah, I understand that a lot of users use stable kernel releases. But
+the reality is that we in wireless really don't have the bandwidth to
+manage stable kernels, it is enough of a challenge to manage Linus'
+releases. So help here is very much needed.
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 6 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.7.. aka v6.8-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
-------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZbUB0YWxEET3Y0xA@eldamar.lan/
-https://lore.kernel.org/lkml/ZbUB0YWxEET3Y0xA@eldamar.lan/
-
-By Salvatore Bonaccorso; 1 days ago; 3 activities, latest 0 days ago.
-Introduced in b17ef04bf3a4 (v6.8-rc1)
-
-Recent activities from: Debian Bug Tracking System (1), Linux regression
-  tracking (Thorsten Leemhuis) (1), Salvatore Bonaccorso (1)
-
-Noteworthy links:
-* https://bugs.debian.org/1061449
-
-
-[ *NEW* ] nvmem: boot failure for linux-6.8-rc1 on Apple M1
------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240122153442.7250-1-arnd@kernel.org/
-https://lore.kernel.org/lkml/20240122153442.7250-1-arnd@kernel.org/
-
-By Arnd Bergmann; 6 days ago; 8 activities, latest 1 days ago.
-Introduced in 0331c611949f (v6.8-rc1)
-
-Fix incoming:
-* nvmem: include bit index in cell sysfs file name
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=b40fed13870045731e374e6bb48800cde0feb4e2
-
-
-[ *NEW* ] md/raid5: issue with raid5 with journal device
---------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240123005700.9302-1-dan@danm.net/
-https://lore.kernel.org/lkml/20240123005700.9302-1-dan@danm.net/
-
-By Dan Moulding; 5 days ago; 24 activities, latest 2 days ago.
-Introduced in bed9e27baf52 (v6.8-rc1)
-
-Fix incoming:
-* Revert "Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d""
-  https://lore.kernel.org/regressions/a68c06ec-b303-4caf-ac39-882a1acb75b1@leemhuis.info/
-
-
-[ *NEW* ] mm: multiple 30-38% regressions in vm-scalability, will-it-scale-tlb_flush2, and will-it-scale-fallocate1
--------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/202401221624.cb53a8ca-oliver.sang@intel.com/
-https://lore.kernel.org/lkml/202401221624.cb53a8ca-oliver.sang@intel.com/
-
-By kernel test robot; 6 days ago; 10 activities, latest 2 days ago.
-Introduced in 8d59d2214c23 (v6.8-rc1)
-
-Fix incoming:
-* mm: memcg: optimize parent iteration in memcg_rstat_updated()
-  https://lore.kernel.org/regressions/ddf5f638-1854-47e0-9527-2549034005dd@leemhuis.info/
-
-
-[ *NEW* ] ACPI: OSL:/pinctrl: GPIO controller failing to work
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240123180818.3994-1-mario.limonciello@amd.com/
-https://lore.kernel.org/lkml/20240123180818.3994-1-mario.limonciello@amd.com/
-https://bugzilla.kernel.org/show_bug.cgi?id=218407
-
-By Mario Limonciello and Christian Heusel; 4 days ago; 3 activities, latest 4 days ago.
-Introduced in 7a36b901a6eb (v6.8-rc1)
-
-Fix incoming:
-* pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-  https://lore.kernel.org/lkml/0fd03c79-5e86-4cf8-99ae-944d73d5515a@leemhuis.info/
-
-
-[ *NEW* ] sched: DT kselftests on meson-gxl-s905x-libretech-cc fail
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Za8cjQXptttuyb6c@finisterre.sirena.org.uk/
-https://lore.kernel.org/lkml/Za8cjQXptttuyb6c@finisterre.sirena.org.uk/
-
-By Mark Brown; 5 days ago; 9 activities, latest 5 days ago.
-Introduced in b3edde44e5d4 (v6.8-rc1)
-
-Fix incoming:
-* topology: Set capacity_freq_ref in all cases
-  https://lore.kernel.org/regressions/753e71de-9e0b-4335-baba-dfe8e2ce7f6d@leemhuis.info/
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170585059505.2778011.9564698506290962184@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
