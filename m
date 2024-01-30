@@ -1,78 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B552F6D
-	for <regressions@lists.linux.dev>; Tue, 30 Jan 2024 07:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BCC60869;
+	Tue, 30 Jan 2024 10:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706598193; cv=none; b=Bndd8Da7lH4B8coxjW2htOueG+ymPpxkdxfDpQL0n9/Z6Z1mO2MJ+UW+z+nwVSfxiFVNs2vtqtARU08lygV2cJHQa7lKeRcij8RwdxH7n95HWKfBodIuHUszdcAuA06ImtqJCB7WqNh3KZnHmhP3VM5l+8Z98koiymnYO1A39s4=
+	t=1706609271; cv=none; b=ScLQTSvX3hDJJ7l8sX/W8IhZ0YjnVw5Vg+TsmU/3yOREB+z0IMzfyt7oTu01Oe8l5CDj6Gku0HfP8VqRErbgnb3DouiNt5dWNPD72CAj+t0HeZIkLyX2bQ0rtF0NdZVXVlZx7MmqMvAHkg7L8G/e4qSyC8ca4Oq+9v8vj67N7/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706598193; c=relaxed/simple;
-	bh=Td4wMLwtaAM1BcTb9dHxlFHMFlK9bEegT/g6so9iTTM=;
+	s=arc-20240116; t=1706609271; c=relaxed/simple;
+	bh=8CKJrkkGZM/Di0WcrrdDLyXgOONeUOLpOJVPXsgvDfc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvWVpjkBfNnOHz872VZwQ4b1MyWAN7KsdvFOdMexptCYGbsb8bEV1ItWeGpeQ1S+347OeWNmOJNUcAnrf/Y5tU76f76+2IXOCSl7n9FoNIT2dh7UNEgSwOxo+ngRZ7TOq0BxJ1qflZ9190MQi+zYNmh9c3s+ZolMRAVTGVZVCSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl30iuCJ; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gHuYMJoh8CaV/ZfSDlaiVZ23rAc3ek/kxbQBaShDvmqjCg6lbEIGQV7h4P9dci5dZsLECvfJ2PCeTUiIGaNgvS4wrHBg6PycCgXuNH6QkMi5PfWHfnvFS27hR9Bn1UKTMSzd1n8zfT+x7j8+ljFmE/c79hNpKvIvPV7oQYFldGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXjU7ZJV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl30iuCJ"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e80046246so19227955e9.1
-        for <regressions@lists.linux.dev>; Mon, 29 Jan 2024 23:03:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706598190; x=1707202990; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pTUETpTJenxWl+VtgzWBaNr9s4KsWn5wef5pbRbJgpM=;
-        b=kl30iuCJ9+jht1pwZKCGFymISB/ab9Xd/dpV4IYRmQ+PcUQ9N98VkTX9yd/MqbgtlU
-         rp6m0oCa2qlwPAcNI/6lW06vbrfCeHmT9hpBkJBUhjMNtehA+FmwozTWkQAeFcoZ/b/P
-         M+C/KaVoPEIz2bDEN4FEDBPox1bXHZxCYGi1Fvx/o6ow8Cqzw5GD0BHFcs+1tJ1FdNuy
-         8kaoanzY9Kk/dvcfMZwlrtNUsOw0tsApadw0wiK7b5KZnm/R+VWtaTzbIGyxOjq1wRQW
-         wE7wkRFurpPFje+ceSVjEFxPxCdNrWHFOiSdRqrZpR6zzQY6CZTKEq1SjqqFt3FIUNZu
-         9+wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706598190; x=1707202990;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pTUETpTJenxWl+VtgzWBaNr9s4KsWn5wef5pbRbJgpM=;
-        b=UAk5F7DObrqxvnVKrtFGjdq5mmMTYX1xf91UIH6sPi7WEdwc4daAMh3MbTNevqZD2C
-         v+Aqo/TBK5JhMs9nydCZjZgvlyYupjvyd7tEdUkxPZwGJPV3i52wddKzX7Rg5wvqsixX
-         VjZt8FEWwdIIlbTJoDg7eVz1k3Ll4uibrGMWc0eZgFK1pey1FTthxHAvCVOvV0+Qx2rv
-         mBg80NgZtkU5my5tuggJj8VqEvcag6WzRrdbA0590I1Ect5nurxQK2Xp7SxBaJFmTwtx
-         zkQQQCOzrWxxSqnZGR2SS4iQH1UPlBjxu9Xngu7nnDLXcASqk4GFn4vfDvQUgqdDHJWO
-         4BhQ==
-X-Gm-Message-State: AOJu0YytY2ai73VkJq1weuwLWqwxCM1HeIxQVAFCVufGuB7nLmtrGvSv
-	d1aYqyFQkoV2mudVQZ352YsXXJoNTcW+AQKMOrvUFboMmo4DsVy6
-X-Google-Smtp-Source: AGHT+IHbCCX5DQ9Y2Dy7lH1GSPWxYoUn+4UQGO+6fgTIAYSzXOlfPa6yFbgtqHrSBqsTJXSwy4N8oQ==
-X-Received: by 2002:a05:600c:4fd0:b0:40e:f972:9901 with SMTP id o16-20020a05600c4fd000b0040ef9729901mr643965wmq.4.1706598189546;
-        Mon, 29 Jan 2024 23:03:09 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b0040eee852a3dsm8839236wms.10.2024.01.29.23.03.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 23:03:08 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 09541BE2DE0; Tue, 30 Jan 2024 08:03:08 +0100 (CET)
-Date: Tue, 30 Jan 2024 08:03:07 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Patrice Duroux <patrice.duroux@gmail.com>,
-	Lewis Huang <lewis.huang@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Phil Hsieh <phil.hsieh@amd.com>,
-	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Bug#1061449: linux-image-6.7-amd64: a boot message from amdgpu
-Message-ID: <ZbifK8M99hTDIsD4@eldamar.lan>
-References: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
- <ZbUB0YWxEET3Y0xA@eldamar.lan>
- <acf203a8-b612-437c-a464-228f45e1c694@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXjU7ZJV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A63C43394;
+	Tue, 30 Jan 2024 10:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706609270;
+	bh=8CKJrkkGZM/Di0WcrrdDLyXgOONeUOLpOJVPXsgvDfc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oXjU7ZJVNQetTKK+iu7bcpvfWtFQHKDYE888Y16U4NH5V/n7E9rrIu1Ei+fhqxJ1C
+	 aTJ/Hl/ukgxMj9wx17vqA7bZiJvKh131t5jj5sRt/z5PFd41VoUVWGO6YColmMbyMh
+	 GBPJ3XabbpiUYPRbKUPm5eh/XYRMpDk6JSGHWcZRpOYSA9pXVf8Yp1a7JPCoJKK9tc
+	 j011Q3TokZY8sC5v0t+K0Y3vc204C5daTI/DJ+S0FMqtS2yhNr6f2/ba4Rk9gBruif
+	 jxzuBfQ2wkaSrugKhbz0XIhldCgUmbqRTF6UzbTO0rjUaHZahAB6kg3FsMd5qnrp+T
+	 rSSlSOaf6POow==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rUl1u-000000002uC-18CJ;
+	Tue, 30 Jan 2024 11:07:46 +0100
+Date: Tue, 30 Jan 2024 11:07:46 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Schaller <michael@5challer.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+	regressions@leemhuis.info
+Subject: Re: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH]
+ Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+Message-ID: <ZbjKci6GuWVrpbri@hovoldconsulting.com>
+References: <Za_2oKTUksw8Di5E@hovoldconsulting.com>
+ <20240123223648.GA331671@bhelgaas>
+ <ZbDHZtR8Tg1hWAzc@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -81,39 +59,28 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <acf203a8-b612-437c-a464-228f45e1c694@leemhuis.info>
+In-Reply-To: <ZbDHZtR8Tg1hWAzc@hovoldconsulting.com>
 
-Hi,
+On Wed, Jan 24, 2024 at 09:16:38AM +0100, Johan Hovold wrote:
+> On Tue, Jan 23, 2024 at 04:36:48PM -0600, Bjorn Helgaas wrote:
 
-[for this reply dropping the Debian bugreport to avoid later followups
-sending the ack to the mailinglist and adding noise]
-
-On Sun, Jan 28, 2024 at 11:44:59AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.01.24 14:14, Salvatore Bonaccorso wrote:
-> >
-> > In Debian (https://bugs.debian.org/1061449) we got the following
-> > quotred report:
-> > 
-> > On Wed, Jan 24, 2024 at 07:38:16PM +0100, Patrice Duroux wrote:
-> >>
-> >> Giving a try to 6.7, here is a message extracted from dmesg:
-> >> [    4.177226] ------------[ cut here ]------------
-> >> [    4.177227] WARNING: CPU: 6 PID: 248 at
-> >> drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_factory.c:387
-> >> construct_phy+0xb26/0xd60 [amdgpu]
-> > [...]
+> > I don't quite follow.  By simply reverting, do you mean to revert
+> > f93e71aea6c6 ("Revert "PCI/ASPM: Remove
+> > pcie_aspm_pm_state_change()"")?  IIUC that would break Michael's
+> > machine again.
 > 
-> Not my area of expertise, but looks a lot like a duplicate of
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3122#note_2252835
+> Right, at least until that issue is fully understood and alternative
+> fixes have been considered.
 > 
-> Mario (now CCed) already prepared a patch for that issue that seems to work.
+> If that's not an option, we need to rework core to pass a flag through
+> more than one layer to indicate whether pcie_aspm_pm_state_change()
+> should take the bus semaphore or not. I'd rather not do that if it can
+> be avoided.
 
-#regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/3122
+As a revert appears unlikely to happen, let's fix the regression by
+adding a new helper pci_set_power_state_locked() that can be called
+with the bus lock held:
 
-Thanks. Indeed the reporter confirmed in
-https://bugs.debian.org/1061449#55 that the patch fixes the issue.
+	https://lore.kernel.org/lkml/20240130100243.11011-1-johan+linaro@kernel.org/
 
-So a duplicate of the above.
-
-Regards,
-Salvatore
+Johan
