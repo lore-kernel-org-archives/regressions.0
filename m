@@ -1,58 +1,78 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049A5605B1;
-	Mon, 29 Jan 2024 12:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B552F6D
+	for <regressions@lists.linux.dev>; Tue, 30 Jan 2024 07:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706530089; cv=none; b=hFSx1fo1tdnBQz4sBOJL9XV3I9KCoWicZ/gQ7m6wJMez+8ftKlKzAexzSZfI5iruh7C5ZwKNp+Aa0zN02YF3z/9iC6mDx/B8DW4E2T392N4vtLlMJpn0GS9DuEx54aheptlqzNu0Uhw+V3mvxXU8KBsG6YLawA1AdxJdeSpSbjM=
+	t=1706598193; cv=none; b=Bndd8Da7lH4B8coxjW2htOueG+ymPpxkdxfDpQL0n9/Z6Z1mO2MJ+UW+z+nwVSfxiFVNs2vtqtARU08lygV2cJHQa7lKeRcij8RwdxH7n95HWKfBodIuHUszdcAuA06ImtqJCB7WqNh3KZnHmhP3VM5l+8Z98koiymnYO1A39s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706530089; c=relaxed/simple;
-	bh=ZSgQnY9x+TGPud1UGSLreEOuvi81q1Su0LFZw4pMw10=;
+	s=arc-20240116; t=1706598193; c=relaxed/simple;
+	bh=Td4wMLwtaAM1BcTb9dHxlFHMFlK9bEegT/g6so9iTTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYMxkq+3c6b4I8ghhoDtGsE3DR0RV7HmyjfDOyuufvysRKqUBU6ulPS4FVAEOGEBFE2HM19AgIdTJWeg/3jED8qMN2qG7kPynR6eLjNYL0T1zUtPUJKEioWikojwiV+W5CH6CNZlKR7kvTHqYym0VVE2nwXlAYO7SJUcLwMO3a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=lVBXrR3H; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	 Content-Type:Content-Disposition:In-Reply-To; b=SvWVpjkBfNnOHz872VZwQ4b1MyWAN7KsdvFOdMexptCYGbsb8bEV1ItWeGpeQ1S+347OeWNmOJNUcAnrf/Y5tU76f76+2IXOCSl7n9FoNIT2dh7UNEgSwOxo+ngRZ7TOq0BxJ1qflZ9190MQi+zYNmh9c3s+ZolMRAVTGVZVCSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kl30iuCJ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="lVBXrR3H"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 54B6E600023E;
-	Mon, 29 Jan 2024 12:07:58 +0000 (WET)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id ztBAk7UiNGkb; Mon, 29 Jan 2024 12:07:56 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 0C93E600140A;
-	Mon, 29 Jan 2024 12:07:56 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1706530076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XIZnwvHWrs2uKG8rpNN8P8JARGZ80yJYLIetzHJw+Zg=;
-	b=lVBXrR3H6iICavTeTmDVrYPMSmc6K45SAGHoMCxz1l6cEswtFHuY63BVMfwAOvL/YPvZ8X
-	XVQe2Wnh2N6UpFoj0w4m12VPqdkmyNwkIFyWWXEZImcbD6ijm5kblfh8fdtvthBOcVSLvQ
-	xqkeYARM8j5CRY6wmfvVskcKl0YynXc=
-Received: from diogo-gram (unknown [IPv6:2001:8a0:7ae3:e700:6be7:1f41:6784:a78])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 63AFD36007E;
-	Mon, 29 Jan 2024 12:07:54 +0000 (WET)
-Date: Mon, 29 Jan 2024 12:07:43 +0000
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: thierry.reding@gmail.com, vdumpa@nvidia.com, joro@8bytes.org, 
-	will@kernel.org, robin.murphy@arm.com, jonathanh@nvidia.com, 
-	baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de, 
-	linux-tegra@vger.kernel.org, iommu@lists.linux.dev, regressions@lists.linux.dev, 
-	diogo.ivo@tecnico.ulisboa.pt
-Subject: Re: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
-Message-ID: <h3sokjn23q2xco2aje36ypz6ffcmmcz24qdyjj5madq4xeqbln@sjooz3ale3k6>
-References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
- <20240123151508.GR50608@ziepe.ca>
- <1754c86c-704e-4c80-93c3-1b75a9a247df@tecnico.ulisboa.pt>
- <20240126195142.GC50608@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kl30iuCJ"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e80046246so19227955e9.1
+        for <regressions@lists.linux.dev>; Mon, 29 Jan 2024 23:03:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706598190; x=1707202990; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pTUETpTJenxWl+VtgzWBaNr9s4KsWn5wef5pbRbJgpM=;
+        b=kl30iuCJ9+jht1pwZKCGFymISB/ab9Xd/dpV4IYRmQ+PcUQ9N98VkTX9yd/MqbgtlU
+         rp6m0oCa2qlwPAcNI/6lW06vbrfCeHmT9hpBkJBUhjMNtehA+FmwozTWkQAeFcoZ/b/P
+         M+C/KaVoPEIz2bDEN4FEDBPox1bXHZxCYGi1Fvx/o6ow8Cqzw5GD0BHFcs+1tJ1FdNuy
+         8kaoanzY9Kk/dvcfMZwlrtNUsOw0tsApadw0wiK7b5KZnm/R+VWtaTzbIGyxOjq1wRQW
+         wE7wkRFurpPFje+ceSVjEFxPxCdNrWHFOiSdRqrZpR6zzQY6CZTKEq1SjqqFt3FIUNZu
+         9+wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706598190; x=1707202990;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pTUETpTJenxWl+VtgzWBaNr9s4KsWn5wef5pbRbJgpM=;
+        b=UAk5F7DObrqxvnVKrtFGjdq5mmMTYX1xf91UIH6sPi7WEdwc4daAMh3MbTNevqZD2C
+         v+Aqo/TBK5JhMs9nydCZjZgvlyYupjvyd7tEdUkxPZwGJPV3i52wddKzX7Rg5wvqsixX
+         VjZt8FEWwdIIlbTJoDg7eVz1k3Ll4uibrGMWc0eZgFK1pey1FTthxHAvCVOvV0+Qx2rv
+         mBg80NgZtkU5my5tuggJj8VqEvcag6WzRrdbA0590I1Ect5nurxQK2Xp7SxBaJFmTwtx
+         zkQQQCOzrWxxSqnZGR2SS4iQH1UPlBjxu9Xngu7nnDLXcASqk4GFn4vfDvQUgqdDHJWO
+         4BhQ==
+X-Gm-Message-State: AOJu0YytY2ai73VkJq1weuwLWqwxCM1HeIxQVAFCVufGuB7nLmtrGvSv
+	d1aYqyFQkoV2mudVQZ352YsXXJoNTcW+AQKMOrvUFboMmo4DsVy6
+X-Google-Smtp-Source: AGHT+IHbCCX5DQ9Y2Dy7lH1GSPWxYoUn+4UQGO+6fgTIAYSzXOlfPa6yFbgtqHrSBqsTJXSwy4N8oQ==
+X-Received: by 2002:a05:600c:4fd0:b0:40e:f972:9901 with SMTP id o16-20020a05600c4fd000b0040ef9729901mr643965wmq.4.1706598189546;
+        Mon, 29 Jan 2024 23:03:09 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id n20-20020a05600c3b9400b0040eee852a3dsm8839236wms.10.2024.01.29.23.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 23:03:08 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 09541BE2DE0; Tue, 30 Jan 2024 08:03:08 +0100 (CET)
+Date: Tue, 30 Jan 2024 08:03:07 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Patrice Duroux <patrice.duroux@gmail.com>,
+	Lewis Huang <lewis.huang@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Phil Hsieh <phil.hsieh@amd.com>,
+	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Bug#1061449: linux-image-6.7-amd64: a boot message from amdgpu
+Message-ID: <ZbifK8M99hTDIsD4@eldamar.lan>
+References: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
+ <ZbUB0YWxEET3Y0xA@eldamar.lan>
+ <acf203a8-b612-437c-a464-228f45e1c694@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,26 +81,39 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240126195142.GC50608@ziepe.ca>
+In-Reply-To: <acf203a8-b612-437c-a464-228f45e1c694@leemhuis.info>
 
-On Fri, Jan 26, 2024 at 03:51:42PM -0400, Jason Gunthorpe wrote:
-> On Tue, Jan 23, 2024 at 06:44:42PM +0000, Diogo Ivo wrote:
-> 
-> > Yes, this does fix the issue!
-> 
-> Thanks, just trying to pin down how the fix should be..
-> 
-> What kind of kernel are you running, 
-> 
-> Is this 32 bit?
-> 
-> Is CONFIG_ARM_DMA_USE_IOMMU set?
-> 
-> Is CONFIG_IOMMU_DMA set?
-> 
-> I'm guessing yes/yes/no?
+Hi,
 
-It is a 64-bit kernel, CONFIG_ARM_DMA_USE_IOMMU=n and
-CONFIG_IOMMU_DMA=y.
+[for this reply dropping the Debian bugreport to avoid later followups
+sending the ack to the mailinglist and adding noise]
 
-Diogo
+On Sun, Jan 28, 2024 at 11:44:59AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 27.01.24 14:14, Salvatore Bonaccorso wrote:
+> >
+> > In Debian (https://bugs.debian.org/1061449) we got the following
+> > quotred report:
+> > 
+> > On Wed, Jan 24, 2024 at 07:38:16PM +0100, Patrice Duroux wrote:
+> >>
+> >> Giving a try to 6.7, here is a message extracted from dmesg:
+> >> [    4.177226] ------------[ cut here ]------------
+> >> [    4.177227] WARNING: CPU: 6 PID: 248 at
+> >> drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_factory.c:387
+> >> construct_phy+0xb26/0xd60 [amdgpu]
+> > [...]
+> 
+> Not my area of expertise, but looks a lot like a duplicate of
+> https://gitlab.freedesktop.org/drm/amd/-/issues/3122#note_2252835
+> 
+> Mario (now CCed) already prepared a patch for that issue that seems to work.
+
+#regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/3122
+
+Thanks. Indeed the reporter confirmed in
+https://bugs.debian.org/1061449#55 that the patch fixes the issue.
+
+So a duplicate of the above.
+
+Regards,
+Salvatore
