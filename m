@@ -1,133 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FB13CF7D
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 04:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD6D481B8
+	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 06:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706676953; cv=none; b=Di8VDHwv6p7kJwy7imJvfVUwfTRABvD7L3njrXJrfeKXjjAu1Oovkx+ud25VE32VyW/WcaMuW3aLLQyuAiTeYbZaVJMOknTSjJ3ydThf7groSno5LM6X57dzCuYIA6Kat01U1w8cDAxHxhwzqcrAfBPgk6wS3yRwfgaarcvOi2U=
+	t=1706682645; cv=none; b=CjTRkFLjdg0em5s29thF/VcKSB2G+d2O2c5H0fZMsESbk42sFqpdQU3Y9bWFVBH0ZOzDMqOjkVeJvV2rRb/oha18d1jnMv8GNvZGjWLfM4q76c9yqzJEQiQcrv5i6OLBYep86kL8Vx1aS/r45qix3TItRuIvMGjcejR5dFpLg10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706676953; c=relaxed/simple;
-	bh=UAcaG1XK5qRhb1eEHIUDL8EenSrO063sixI2jRRZVqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dr32f47V2FMit7Va1YfzXnIVN7BXb1WDUoxPj8ct+a32IoW9YCv5OMC0vkwFqHOJynrIGqR4Gys0flwsOkmCDlMf0LwowoTKg8uSD7mo/cHNMjEor+2dHHzaekzipx60hE9E3BejRdg1RfAEeiTOaUAjrYQ9W60TQh8ZKZ0kdp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qifMW2hE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706682645; c=relaxed/simple;
+	bh=HDBr9vOZxFay+edDsZgAptwCJ/oKKwkEzYfcKNkxY3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IEFCBvjHlWbkL41+930YlJ2Ti+9SiAQtxe76pZ+4wK1hkLLeeG3nbDsPs+wutcsxonC8E0hc37nb3lOWgQid6Nh14L9K6Ijt5n5zkElrjpQCFh6alFg0vHQc1sO6Ut2v2DV3bBqFkh2iY2ViT0ar+fzvT2BWn0nhdMJ7IayYcBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I1lPvss+; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qifMW2hE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD66C433A6
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 04:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706676952;
-	bh=UAcaG1XK5qRhb1eEHIUDL8EenSrO063sixI2jRRZVqg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qifMW2hExigqDc9NNIfpRl3LgWBwoXismg+Zf4JIj0mWtWM6/4/jOi9m1y4LG0+IV
-	 98+JGAytF44SDjGpfvQnk4f5AnjwqjAlugoWEzjwrqhuSyZa/FgHosLfTXp7QT5cmS
-	 kbUwjDSsrpzZIjTmFYK1cgm4CGxbWrtoNsCHOI1R6gcX/GuWSkQICpabKwqBOAUs1m
-	 D28cpiVZjJ1vTH9uaDhZh59tHLFl8IIeO2BPYFft5v/o+C+jnUOMseMvoikPXr+5eU
-	 e+QZVT00u+FP1pQz4U3Hs3JUNyJaSEn65JPnQKDMZGpKK3D7e+ohO9IqZ4Jt7Ror+d
-	 One20Hed4NEiA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51120e285f6so1134811e87.2
-        for <regressions@lists.linux.dev>; Tue, 30 Jan 2024 20:55:52 -0800 (PST)
-X-Gm-Message-State: AOJu0YxluBVSA7ON4PuyNA+IEKhR02oAWaEWvfotlKC4W6jsgIGAL5Gc
-	TDsiP4r1NT0idN/oHc7E+z7tFblKk01gUZ9OYIVmk8ewpbx+3x9/2S2Vgztg+vRktdrwP+yhNw+
-	QQ1g27n62UsEfUyjTTw4RTLxkAtg=
-X-Google-Smtp-Source: AGHT+IG2pk+OgJ/SA4zOiQYsteh2+uWiGgm5RzgPyiaXhKOriI6X38evAsmx1xw+J07cYAoMgGbF6x2vH5KfZbzfAKE=
-X-Received: by 2002:a05:6512:3ec:b0:510:1a32:6298 with SMTP id
- n12-20020a05651203ec00b005101a326298mr398529lfq.56.1706676950941; Tue, 30 Jan
- 2024 20:55:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1lPvss+"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so6222315a12.2
+        for <regressions@lists.linux.dev>; Tue, 30 Jan 2024 22:30:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706682641; x=1707287441; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IEwg9afw4u1sOTeb8Gs+nYWC/t/ruyXWb+PKAxK3AR0=;
+        b=I1lPvss+Mbnt3J69tiS8GbQkUzFPg9v+bpnWhxqJHFfRXwt89Ur3N47oy+O8hMnKae
+         JPhNYLAmXV7hS1NcAqT8P3/gmkVYrmLwBBTi4o2hLjRt2kELmJW1LgCpL2R+jWW3u6Qi
+         hMaDhi5dHyx2lZEWWHxQwhqXJakBz/zhOYCL++sbRih2jPp9ls/V0Fpb3JwufbOKZn0y
+         hddBokewV9iq4+DpwiF78+24I+VDOuCtEe/x7EgvJiKZecuH/sB2tyHkYx2RXrgpkIsL
+         A7u3mvA61awsGJkAZOFI+N3U934tv0REDuFJZuPSMJWwYli5Pt+kVafy8Jr25ZXJUX6O
+         OffA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706682641; x=1707287441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IEwg9afw4u1sOTeb8Gs+nYWC/t/ruyXWb+PKAxK3AR0=;
+        b=nTVNICis5M7UGmQJPlNoADL2ttL0ow5QF/qM0t5+8/QrZAHRgyByUV8h2NXxNVozP0
+         Qt7KpYFtMEkMKdG3L80aUx+q1UNc1LhlEpI6xz2nO871R0+1qv8NXzViulonHwcMqjeS
+         Y9/qPG6NCAu/nSkD6j8DONN6hk1OPd8pW9z7us7hKnUIGLzmQWLirtU0DVvyDy2xLTTl
+         Mi2x86/seUvVa3m40VXn9xF0gFzrwmCvpaty2HpiKYMjTFtxelJc/C1oAtrAGIWGqC2C
+         4Q7mKtvqwcSdfcpTn7BL44CEfokUjnZ6NJxkGbRe9PmcWc6HrO/dBzXmB9kZhZZW2vvM
+         hUkQ==
+X-Gm-Message-State: AOJu0YyoYDG4r3uFbWxAOhQZ+z8kWZ0gjOHXGioGET0rpAcnu/mHzfd1
+	Rq6TqFj13gDoq56eVvQvzIRwOJRMJdx89NzGqw4lYZbzGSQeYWDZ
+X-Google-Smtp-Source: AGHT+IFk1qhBrpfQXnqfbsB1jZHkXsEX9haNcgmHftxJjglWVgEW9wTSF+vKlynagor381APN8AosQ==
+X-Received: by 2002:a17:906:d0c9:b0:a36:6c96:3161 with SMTP id bq9-20020a170906d0c900b00a366c963161mr417340ejb.32.1706682641212;
+        Tue, 30 Jan 2024 22:30:41 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id ig8-20020a1709072e0800b00a366406772dsm491691ejc.29.2024.01.30.22.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 22:30:38 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id B0105BE2DE0; Wed, 31 Jan 2024 07:30:37 +0100 (CET)
+Date: Wed, 31 Jan 2024 07:30:37 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"pc@manguebit.com" <pc@manguebit.com>,
+	"leonardo@schenkel.net" <leonardo@schenkel.net>,
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+	"m.weissbach@info-gate.de" <m.weissbach@info-gate.de>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"sairon@sairon.cz" <sairon@sairon.cz>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
+ "Resource temporarily unavailable"
+Message-ID: <ZbnpDbgV7ZCRy3TT@eldamar.lan>
+References: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
+ <9B20AAD6-2C27-4791-8CA9-D7DB912EDC86@amazon.com>
+ <2024011521-feed-vanish-5626@gregkh>
+ <716A5E86-9D25-4729-BF65-90AC2A335301@amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZbMnZnvyIyoWeIro@fisica.ufpr.br> <20240126154610.24755-1-dan@danm.net>
- <20240130172524.0000417b@linux.intel.com> <95f2e08e-2daf-e298-e696-42ebfa7b9bbf@huaweicloud.com>
-In-Reply-To: <95f2e08e-2daf-e298-e696-42ebfa7b9bbf@huaweicloud.com>
-From: Song Liu <song@kernel.org>
-Date: Tue, 30 Jan 2024 20:55:39 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW7QHq4e+cHvZcw8c=ePpeSM69UKTEi8P40=-jOZn+YyyA@mail.gmail.com>
-Message-ID: <CAPhsuW7QHq4e+cHvZcw8c=ePpeSM69UKTEi8P40=-jOZn+YyyA@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Blazej Kucman <blazej.kucman@linux.intel.com>, Dan Moulding <dan@danm.net>, carlos@fisica.ufpr.br, 
-	gregkh@linuxfoundation.org, junxiao.bi@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <716A5E86-9D25-4729-BF65-90AC2A335301@amazon.com>
 
-On Tue, Jan 30, 2024 at 6:41=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi, Blazej!
->
-> =E5=9C=A8 2024/01/31 0:26, Blazej Kucman =E5=86=99=E9=81=93:
-> > Hi,
-> >
-> > On Fri, 26 Jan 2024 08:46:10 -0700
-> > Dan Moulding <dan@danm.net> wrote:
-> >>
-> >> That's a good suggestion, so I switched it to use XFS. It can still
-> >> reproduce the hang. Sounds like this is probably a different problem
-> >> than the known ext4 one.
-> >>
-> >
-> > Our daily tests directed at mdadm/md also detected a problem with
-> > identical symptoms as described in the thread.
-> >
-> > Issue detected with IMSM metadata but it also reproduces with native
-> > metadata.
-> > NVMe disks under VMD controller were used.
-> >
-> > Scenario:
-> > 1. Create raid10:
-> > mdadm --create /dev/md/r10d4s128-15_A --level=3D10 --chunk=3D128
-> > --raid-devices=3D4 /dev/nvme6n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme0n1
-> > --size=3D7864320 --run
-> > 2. Create FS
-> > mkfs.ext4 /dev/md/r10d4s128-15_A
-> > 3. Set faulty one raid member:
-> > mdadm --set-faulty /dev/md/r10d4s128-15_A /dev/nvme3n1
-> > 4. Stop raid devies:
-> > mdadm -Ss
-> >
-> > Expected result:
-> > The raid stops without kernel hangs and errors.
-> >
-> > Actual result:
-> > command "mdadm -Ss" hangs,
-> > hung_task occurs in OS.
->
-> Can you test the following patch?
->
-> Thanks!
-> Kuai
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index e3a56a958b47..a8db84c200fe 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -578,8 +578,12 @@ static void submit_flushes(struct work_struct *ws)
->                          rcu_read_lock();
->                  }
->          rcu_read_unlock();
-> -       if (atomic_dec_and_test(&mddev->flush_pending))
-> +       if (atomic_dec_and_test(&mddev->flush_pending)) {
-> +               /* The pair is percpu_ref_get() from md_flush_request() *=
-/
-> +               percpu_ref_put(&mddev->active_io);
-> +
->                  queue_work(md_wq, &mddev->flush_work);
-> +       }
->   }
->
->   static void md_submit_flush_data(struct work_struct *ws)
+Hi,
 
-This fixes the issue in my tests. Please submit the official patch.
-Also, we should add a test in mdadm/tests to cover this case.
+On Mon, Jan 15, 2024 at 03:30:46PM +0000, Mohamed Abuelfotoh, Hazem wrote:
+> Thanks Greg, I will submit separate patch inclusion requests for 
+> fixing this on 5.15 and 5.10.
 
-Thanks,
-Song
+Note, my reply in the secondary thread:
+https://lore.kernel.org/stable/Zbl881W5S-nL7iof@eldamar.lan/T/#mb9a9a012adde1c5c6e9d3daa1d8dce2c9b5cc78f
+
+Now
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+was applied, but equally the backport
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=06aa6eff7b243891c631b40852a0c453e274955d
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=ef8316e0e29e98d9cf7e0689ddffa37e79d33736
+
+So I guess
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+should be dropped again.
+
+Regards,
+Salvatore
