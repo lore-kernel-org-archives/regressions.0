@@ -1,104 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEFEEBB
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 01:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD081522A
+	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 02:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706664419; cv=none; b=U0bnTmlOte0PDyz81KwIoVXXv8mIrudWiJX5eT/C21WXzQ4bGhOa6BYf3ySfowt5uoeWW8s3Z5ItT4XgaRDQtYZQS3HIWrrirBxynBxDYV61FLYz2gs0pOm4t2WA4HE3SmBikOgImTQEckHRHXYkncbYfN1tvSFwPtKXAEehBTo=
+	t=1706667218; cv=none; b=Pf9pKqhJncGSs0c6kLBTXzyZjDZFpsH0Nm2M1iC8LRTXpK8HfowFWw/bWFmmS6ntS9JlRBPAjwYApoTjOE7Jx+M1TKCOs02xoGljLnqiij7maJkAm0jSp+MtqDsGmIuxQSG3WdZaAJyDIaGLKOAugL4RKmypFDpOD8HH4ZQ4jss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706664419; c=relaxed/simple;
-	bh=jETDXb67b9fXT9d1zEIke0A7APUk2FwU3Q90DBkleP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NJ/m/33GvG/adWBVvE743nwbtK9nThWeKtTnd2DYUWH7dQDQYecTrSIsHKRURiOEevM/cKBbm3no7D5+i2tjTsN6EuWJHuOLU0mTEc5Hgzx6XT550RutUfKRigC1p/TMCRt0TNExlt9J3fXueun7pL7rXpxY1D2R27Qb3loGRJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rP3u6tZI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rP3u6tZI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77132C433A6
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 01:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706664419;
-	bh=jETDXb67b9fXT9d1zEIke0A7APUk2FwU3Q90DBkleP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rP3u6tZIDEYzidQ4WX+aeqHhYiotA0VKTq3WBD9MMFOXUd9Y0FlRokOCBGJKEradu
-	 Q5PIKrMdz7crm5h20KYwirSXfQe2ZnkgahNHsn75QLU5pUG//T5xqGL9LUsH98Er8N
-	 N9Af12Fp/xiV0acbJXb77WGkjpoAlF3FxlokcahRVaq150KXhZ804VID9+W66KYogx
-	 6YTZ/QqP8SQ70kIr9YE0qUaShXRG8j+s27rFYRWow8NGHXUFdoJeCtwN5iU79gWZhh
-	 JS81PViUW5FkRPiueTR9SoZn9lU6dJnRr/HVryriJ1fjr/R87EEo9zH9bazx2nG32Z
-	 887qOPAbLx/Lg==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cf5917f049so36515951fa.2
-        for <regressions@lists.linux.dev>; Tue, 30 Jan 2024 17:26:59 -0800 (PST)
-X-Gm-Message-State: AOJu0YxvZmuRktBph9OseNY20S/mkQ1UQPLMoMIgmVNeHjssSVPhuYE1
-	vMNmZ/EqwlWVrwdF2oz/0y8taP3cAkv2mzhEa+fh7ap7J+22+hvp6ZBx+508V+morBv8PcOellI
-	mFVxF1QF6ObnNw+OSJZJ/hWcrAms=
-X-Google-Smtp-Source: AGHT+IG+5ZcVUPSIuoD++nF0u0CCm+eVM+wlnavJV596sCcwTQkB3Ou7hw9YpnqV5nR9T+9q9VC+1pBNJsn5G/eIwNA=
-X-Received: by 2002:a2e:b058:0:b0:2d0:5f2e:5b3d with SMTP id
- d24-20020a2eb058000000b002d05f2e5b3dmr123274ljl.11.1706664417626; Tue, 30 Jan
- 2024 17:26:57 -0800 (PST)
+	s=arc-20240116; t=1706667218; c=relaxed/simple;
+	bh=Jqb6stvltBCpUMye9AFTj1l51864WjZbIVuEqovK1zY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qHh+EMtpoNXnVUdlsN4rwQrtd7G56J0QquDi6kCLwXBNXAS2Ux528yRInbNbcUCVSuPcs1ZS5u7DMuZj/h0n2A0fhD+0069JpBUsD9/8bMsv2RPwSRN+mrNICWt4d5rZO92VLO4Eil9HBbH/qgDRIOb9KFNu2/U1yJxenvnz9qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TPlvC5nYZz4f3kjC
+	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 10:13:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id EF6FF1A0272
+	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 10:13:31 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxDJrLll9_IECg--.62077S3;
+	Wed, 31 Jan 2024 10:13:31 +0800 (CST)
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: Song Liu <song@kernel.org>, Blazej Kucman
+ <blazej.kucman@linux.intel.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Dan Moulding <dan@danm.net>, carlos@fisica.ufpr.br,
+ gregkh@linuxfoundation.org, junxiao.bi@oracle.com,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <ZbMnZnvyIyoWeIro@fisica.ufpr.br>
+ <20240126154610.24755-1-dan@danm.net>
+ <20240130172524.0000417b@linux.intel.com>
+ <CAPhsuW5S7H-P9NiBxk=EVrzYSC6esBxiEg-pR=QMeASWh_S5GA@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <cb0e6b82-1a09-4539-2d72-f0f1b07e8ea8@huaweicloud.com>
+Date: Wed, 31 Jan 2024 10:13:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ZbMnZnvyIyoWeIro@fisica.ufpr.br> <20240126154610.24755-1-dan@danm.net>
- <20240130172524.0000417b@linux.intel.com>
-In-Reply-To: <20240130172524.0000417b@linux.intel.com>
-From: Song Liu <song@kernel.org>
-Date: Tue, 30 Jan 2024 17:26:45 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5S7H-P9NiBxk=EVrzYSC6esBxiEg-pR=QMeASWh_S5GA@mail.gmail.com>
-Message-ID: <CAPhsuW5S7H-P9NiBxk=EVrzYSC6esBxiEg-pR=QMeASWh_S5GA@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Blazej Kucman <blazej.kucman@linux.intel.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Dan Moulding <dan@danm.net>, carlos@fisica.ufpr.br, gregkh@linuxfoundation.org, 
-	junxiao.bi@oracle.com, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAPhsuW5S7H-P9NiBxk=EVrzYSC6esBxiEg-pR=QMeASWh_S5GA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxDJrLll9_IECg--.62077S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1rAw4DXFyxZw4Dur48JFb_yoWktFc_ZF
+	W5Cr98Wa1Fyw1xXa1DJr4Yvrs2yrs8ua4jqrZ5ZrW2y34ruan29FZFkw1rA3W5uryUKF1a
+	y34Uu343XrZ7WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUba8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
+	Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Update my findings so far.
+Hi,
 
-On Tue, Jan 30, 2024 at 8:27=E2=80=AFAM Blazej Kucman
-<blazej.kucman@linux.intel.com> wrote:
-[...]
-> Our daily tests directed at mdadm/md also detected a problem with
-> identical symptoms as described in the thread.
->
-> Issue detected with IMSM metadata but it also reproduces with native
-> metadata.
-> NVMe disks under VMD controller were used.
->
-> Scenario:
-> 1. Create raid10:
-> mdadm --create /dev/md/r10d4s128-15_A --level=3D10 --chunk=3D128
-> --raid-devices=3D4 /dev/nvme6n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme0n1
-> --size=3D7864320 --run
-> 2. Create FS
-> mkfs.ext4 /dev/md/r10d4s128-15_A
-> 3. Set faulty one raid member:
-> mdadm --set-faulty /dev/md/r10d4s128-15_A /dev/nvme3n1
+在 2024/01/31 9:26, Song Liu 写道:
+>> Scenario:
+>> 1. Create raid10:
+>> mdadm --create /dev/md/r10d4s128-15_A --level=10 --chunk=128
+>> --raid-devices=4 /dev/nvme6n1 /dev/nvme2n1 /dev/nvme3n1 /dev/nvme0n1
+>> --size=7864320 --run
+>> 2. Create FS
+>> mkfs.ext4 /dev/md/r10d4s128-15_A
+>> 3. Set faulty one raid member:
+>> mdadm --set-faulty /dev/md/r10d4s128-15_A /dev/nvme3n1
+> With a failed drive, md_thread calls md_check_recovery() and kicks
+> off mddev->sync_work, which is ﻿﻿md_start_sync().
+> md_check_recovery() also sets MD_RECOVERY_RUNNING.
+> 
+> md_start_sync() calls mddev_suspend() and waits for
+> mddev->active_io to become zero.
+> 
+>> 4. Stop raid devies:
+>> mdadm -Ss
+> This command calls stop_sync_thread() and waits for
+> MD_RECOVERY_RUNNING to be cleared.
+> 
+> Given we need a working file system to reproduce the issue, I
+> suspect the problem comes from active_io.
 
-With a failed drive, md_thread calls md_check_recovery() and kicks
-off mddev->sync_work, which is =EF=BB=BF=EF=BB=BFmd_start_sync().
-md_check_recovery() also sets MD_RECOVERY_RUNNING.
-
-md_start_sync() calls mddev_suspend() and waits for
-mddev->active_io to become zero.
-
-> 4. Stop raid devies:
-> mdadm -Ss
-
-This command calls stop_sync_thread() and waits for
-MD_RECOVERY_RUNNING to be cleared.
-
-Given we need a working file system to reproduce the issue, I
-suspect the problem comes from active_io.
-
-Yu Kuai, I guess we missed this case in the recent refactoring.
-I don't have a good idea to fix this. Please also take a look into
-this.
+I'll look into this. But I don't understand the root cause yet.
+Who grab the 'active_io' and why doesn't release it?
 
 Thanks,
-Song
+Kuai
+
+> 
+> Yu Kuai, I guess we missed this case in the recent refactoring.
+> I don't have a good idea to fix this. Please also take a look into
+> this.
+
