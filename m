@@ -1,238 +1,108 @@
-Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.ad.secure-endpoints.com [208.125.0.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAA112C525
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 17:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.125.0.235
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706720428; cv=none; b=gmjD0qy7XAOHDCUr7heR1vNq4S1D43p8iLvvN+iwZk9BYjexYLWQD4/S3TbaeUYHLRObV7IBdY/q36pdzQgln87+BH4XM+gdEtbr0n+oP+b4T7rwQF0XHpq743uj+XlSz5pzjaUuxvYrUqWhPGMo5Aj4NREylfpSqlU+gmOqIDk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706720428; c=relaxed/simple;
-	bh=wCdAyiY4SCB/jR2Jl31XZiUCj02PYoN/FRUYoGRbF7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l6tCe62walPbYpokrclU581Yn9ZwA/HbiE3HeaULv3i7M17u4UDAqEKabuo+hh6X+OAcn4AR2BKNfDM+LbYiYlKWF0u56hfCMRpABxuBf3p+TYNVoFA8V8TyhzYLPHF5MTqQm8vk5DluDH22eyct0Og73J088ta3MKGOj9vUQ3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=auristor.com; dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b=P7Qrgl+L; arc=none smtp.client-ip=208.125.0.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auristor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158B7D282
+	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 17:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706722152; cv=pass; b=PXTS48kUptey8YtnuIYbNvht4GfdAKB7lFcJIU3ZoacxnR6YhvtQ7oNcarSRXho7w6HPSgrnLKs2aWBoGA1tNm+V1mzwn+zaPM8aiFvG363H9VXvrNtUthuK4pwcABuVr8VUEK0HEYu0SdgzJ/Tayh+qPWcbLIHtmHXD18zg5Bo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706722152; c=relaxed/simple;
+	bh=IaFEG33hBcEgNUsHITOicSErxjWnrxGesGXGIozJavk=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=QeqPgW3ZCQAy9+u/hYB4bOAS0u9qZKSGXWmqaU+6+G6suQEcgD76gpZgY6frHIlNBOWramP7Yw9UoQM/+BwaoVH3c4xj9cQ9uHY5DhSMs9SoCD0R77oGgP8+bVPj4lcMsIxZVdxK5sgET5MA214nzrb/oue/R3fUJTazqMctJ6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=R9XLS+nF; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="P7Qrgl+L"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
-	d=auristor.com; s=MDaemon; r=y; t=1706720104; x=1707324904;
-	i=jaltman@auristor.com; q=dns/txt; h=Message-ID:Date:
-	MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
-	References:From:Organization:In-Reply-To:Content-Type; bh=JgIM2K
-	KrNFXvlpqtE5gmSh3dmvueAMiTxhvlZzfk3Ow=; b=P7Qrgl+LGDe5nVL2NhMiae
-	+yjZEFD4e8QKQlpFKjUZX315rkTKpRghCDNvv04/qdrDPQRZoSPIggDx3pWCwWDT
-	KStbpsxsxjd+AEBYlxXqK5dDIYtvRivBS9QK77cq/Xs5vh2ZKbVRWWTs1fTfQ6r7
-	AYvzKocMkrbwUzxaT1atk=
-X-MDAV-Result: clean
-X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 31 Jan 2024 11:55:03 -0500
-Received: from [IPV6:2603:7000:73c:bb00:397f:6a58:774:1aa1] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v23.5.2) 
-	with ESMTPSA id md5001003791420.msg; Wed, 31 Jan 2024 11:55:02 -0500
-X-Spam-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 31 Jan 2024 11:55:02 -0500
-	(not processed: message from trusted or authenticated source)
-X-MDRemoteIP: 2603:7000:73c:bb00:397f:6a58:774:1aa1
-X-MDHelo: [IPV6:2603:7000:73c:bb00:397f:6a58:774:1aa1]
-X-MDArrival-Date: Wed, 31 Jan 2024 11:55:02 -0500
-X-MDOrigin-Country: US, NA
-X-Authenticated-Sender: jaltman@auristor.com
-X-Return-Path: prvs=1760a2d97e=jaltman@auristor.com
-X-Envelope-From: jaltman@auristor.com
-X-MDaemon-Deliver-To: regressions@lists.linux.dev
-Message-ID: <dcd9223a-debe-4942-bb22-1e4e0f1ae22a@auristor.com>
-Date: Wed, 31 Jan 2024 11:54:56 -0500
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="R9XLS+nF"
+Message-ID: <848c0723a10638fcf293514fab8cfa2e@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1706721552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g9nP9Ud88BouQsVgMsrOba+H6PVYBrp7eIRfMuU8hBI=;
+	b=R9XLS+nF1XxALuaU8TKoUrd6J06WkI6q6nnzDeoVhKQ7qtsvWA6DpXQExNpn5D9A2c6vCI
+	itg/ReNgJd3dB/aQs85OcwOE76zrIRDaE9a0Rku3m1/iKM5VI+VCM0Ovti3BHWWxh//rn+
+	4He5UVbzTccG9ekMabFQsuTDC5QxY7QC+KQuAniNyrMghY0/NDy7NnjtM3T+9jZukAzfyg
+	M8SzGfIZVVe60AzTteVVnhsa9BwofYnJNDLDqXWWu16ny9Qu5GMxkVgqevRjvZ1bJSkgRf
+	++/4+stihEsmd0Bv53XrCbILWjGRNKp3vYm5o1UqQxI/xmIIfd+823NNfltpcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1706721552; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g9nP9Ud88BouQsVgMsrOba+H6PVYBrp7eIRfMuU8hBI=;
+	b=hFEpyKaWGj7ekhhr/6Wowfhs3EgLW+r3QPAoExl8vF6CCCJj/H6uEkyWSV+lrRfwx0xsKd
+	Cd86+TY5Nj/rLEI18lSUQvqyO6dvCSiv9XaVZTTeCLWnWABOi0gxX4SkkksGlpIjS5Eynz
+	YHZKIWpqNbcBvQKF3/W7my+VEIsVKzxCBn1yIPCMHsa0xOt7JKHW9Os9cNY9lcvUJ1peS4
+	X2U33mBcroufdnQIMIskLhRdAvWlLVkj2afUJt1Gbjk5hTjI4NKuNe5Q+DFI0m4LKl2gCk
+	y86MnnFFUO2tUtLZ+usId7qy5xbhCvYLhwyNsQZEl3ZRVgnxDGVCJJ27OZHtcw==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1706721552; a=rsa-sha256;
+	cv=none;
+	b=qOtMiiPb3OA1I58drlFXTWIt82eDyDA0U9NT7o1nVTgEs/9YZC9Wdc5yhQ8hxmnBH65pAp
+	jon6apKP3IOIY4OnMR+PkYgoKkJcmgB/6O7WoQtt5xSVY4GKrFUWdroWHveQ0w6OEzabGU
+	bwXb7xSlu9WiHdg7z7egxfYfc+1TFz9sBLwOVTqOqonN8Z4Tb+S5Gq6oxFsLT9hNueXSBJ
+	7wd66dkjS9hWOoIec5jSMLJCrHuv3SGBF9qNH462dbyi1fbvHdfzY1U1awgLXet9GHnTWk
+	uUuv5eb9yZGY9mkuFu36okQYS4CQRQgrY4EY7H574flS7DsHMvsB26pAjkpoXQ==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Salvatore Bonaccorso <carnil@debian.org>, "Mohamed Abuelfotoh, Hazem"
+ <abuehaze@amazon.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "leonardo@schenkel.net" <leonardo@schenkel.net>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "m.weissbach@info-gate.de" <m.weissbach@info-gate.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sairon@sairon.cz" <sairon@sairon.cz>, "stable@vger.kernel.org"
+ <stable@vger.kernel.org>
+Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
+ "Resource temporarily unavailable"
+In-Reply-To: <ZbnpDbgV7ZCRy3TT@eldamar.lan>
+References: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
+ <9B20AAD6-2C27-4791-8CA9-D7DB912EDC86@amazon.com>
+ <2024011521-feed-vanish-5626@gregkh>
+ <716A5E86-9D25-4729-BF65-90AC2A335301@amazon.com>
+ <ZbnpDbgV7ZCRy3TT@eldamar.lan>
+Date: Wed, 31 Jan 2024 14:19:08 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: Fix from address in memcpy_to_iter_csum()
-Content-Language: en-US
-To: Michael Lass <bevan@bi-co.net>, netdev@vger.kernel.org
-Cc: David Howells <dhowells@redhat.com>, regressions@lists.linux.dev
-References: <20240131155220.82641-1-bevan@bi-co.net>
-From: Jeffrey E Altman <jaltman@auristor.com>
-Organization: AuriStor, Inc.
-In-Reply-To: <20240131155220.82641-1-bevan@bi-co.net>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070504010805020307040909"
-X-MDCFSigsAdded: auristor.com
+Content-Type: text/plain
 
-This is a cryptographically signed message in MIME format.
+Salvatore Bonaccorso <carnil@debian.org> writes:
 
---------------ms070504010805020307040909
-Content-Type: multipart/alternative;
- boundary="------------MGpWWD3EwwdZUqEOGVHrkK7e"
-
---------------MGpWWD3EwwdZUqEOGVHrkK7e
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 1/31/2024 10:52 AM, Michael Lass wrote:
-> While inlining csum_and_memcpy() into memcpy_to_iter_csum(), the from
-> address passed to csum_partial_copy_nocheck() was accidentally changed.
-> This causes a regression in applications using UDP, as for example
-> OpenAFS, causing loss of datagrams.
+> Hi,
 >
-> Fixes: dc32bff195b4 ("iov_iter, net: Fold in csum_and_memcpy()")
-> Cc: David Howells<dhowells@redhat.com>
-> Cc:stable@vger.kernel.org
-> Cc:regressions@lists.linux.dev
-> Signed-off-by: Michael Lass<bevan@bi-co.net>
-> ---
->   net/core/datagram.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, Jan 15, 2024 at 03:30:46PM +0000, Mohamed Abuelfotoh, Hazem wrote:
+>> Thanks Greg, I will submit separate patch inclusion requests for 
+>> fixing this on 5.15 and 5.10.
 >
-> diff --git a/net/core/datagram.c b/net/core/datagram.c
-> index 103d46fa0eeb..a8b625abe242 100644
-> --- a/net/core/datagram.c
-> +++ b/net/core/datagram.c
-> @@ -751,7 +751,7 @@ size_t memcpy_to_iter_csum(void *iter_to, size_t progress,
->   			   size_t len, void *from, void *priv2)
->   {
->   	__wsum *csum = priv2;
-> -	__wsum next = csum_partial_copy_nocheck(from, iter_to, len);
-> +	__wsum next = csum_partial_copy_nocheck(from + progress, iter_to, len);
->   
->   	*csum = csum_block_add(*csum, next, progress);
->   	return 0;
+> Note, my reply in the secondary thread:
+> https://lore.kernel.org/stable/Zbl881W5S-nL7iof@eldamar.lan/T/#mb9a9a012adde1c5c6e9d3daa1d8dce2c9b5cc78f
+>
+> Now
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+> was applied, but equally the backport
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=06aa6eff7b243891c631b40852a0c453e274955d
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=ef8316e0e29e98d9cf7e0689ddffa37e79d33736
+>
+> So I guess
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+> should be dropped again.
 
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Agreed.
 
---------------MGpWWD3EwwdZUqEOGVHrkK7e
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Greg, could you please drop
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <div class="moz-cite-prefix">On 1/31/2024 10:52 AM, Michael Lass
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20240131155220.82641-1-bevan@bi-co.net">
-      <pre class="moz-quote-pre" wrap="">While inlining csum_and_memcpy() into memcpy_to_iter_csum(), the from
-address passed to csum_partial_copy_nocheck() was accidentally changed.
-This causes a regression in applications using UDP, as for example
-OpenAFS, causing loss of datagrams.
+        b3632baa5045 ("cifs: fix off-by-one in SMB2_query_info_init()")
 
-Fixes: dc32bff195b4 ("iov_iter, net: Fold in csum_and_memcpy()")
-Cc: David Howells <a class="moz-txt-link-rfc2396E" href="mailto:dhowells@redhat.com">&lt;dhowells@redhat.com&gt;</a>
-Cc: <a class="moz-txt-link-abbreviated" href="mailto:stable@vger.kernel.org">stable@vger.kernel.org</a>
-Cc: <a class="moz-txt-link-abbreviated" href="mailto:regressions@lists.linux.dev">regressions@lists.linux.dev</a>
-Signed-off-by: Michael Lass <a class="moz-txt-link-rfc2396E" href="mailto:bevan@bi-co.net">&lt;bevan@bi-co.net&gt;</a>
----
- net/core/datagram.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+from v5.10.y as suggested by Salvatore?
 
-diff --git a/net/core/datagram.c b/net/core/datagram.c
-index 103d46fa0eeb..a8b625abe242 100644
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -751,7 +751,7 @@ size_t memcpy_to_iter_csum(void *iter_to, size_t progress,
- 			   size_t len, void *from, void *priv2)
- {
- 	__wsum *csum = priv2;
--	__wsum next = csum_partial_copy_nocheck(from, iter_to, len);
-+	__wsum next = csum_partial_copy_nocheck(from + progress, iter_to, len);
- 
- 	*csum = csum_block_add(*csum, next, progress);
- 	return 0;</pre>
-    </blockquote>
-    <p><span style="white-space: pre-wrap">
-</span></p>
-    <p><span style="white-space: pre-wrap">Reviewed-by: Jeffrey Altman <a class="moz-txt-link-rfc2396E" href="mailto:jaltman@auristor.com">&lt;jaltman@auristor.com&gt;</a></span></p>
-    <p><span style="white-space: pre-wrap">
-</span></p>
-  </body>
-</html>
-
---------------MGpWWD3EwwdZUqEOGVHrkK7e--
-
---------------ms070504010805020307040909
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-DHEwggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJ
-BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEz
-MB4XDTIyMDgwNDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0Ew
-MTQxMEQwMDAwMDE4MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
-YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQCkC7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3
-xHZRtv179LHKAOcsY2jIctzieMxf82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyN
-fO/wJ0rX7G+ges22Dd7goZul8rPaTJBIxbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kI
-EEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg
-9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjG
-IcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
-BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
-BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
-My5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYDVR0TBAIwADCCASsG
-A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
-L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
-bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
-aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
-YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
-ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
-dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQY
-MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2s
-gjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwV
-eycprp8Ox1npiTyfwc5QaVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4c
-WLeQfaMrnyNeEuvHx/2CT44cdLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYq
-utYF4Chkxu4KzIpq90eDMw5ajkexw+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJo
-Qle4wDxrdXdnIhCP7g87InXKefWgZBF4VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXt
-a8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRkgIGb319a7FjslV8wggaXMIIEf6ADAgECAhBA
-AXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBDb21tZXJjaWFsIFJvb3QgQ0EgMTAe
-Fw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIBIjANBgkqhkiG9w0BAQEF
-AAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6ixaNP0JKSjTd+SG5L
-wqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6iqgB63OdHxBN/
-15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxlg+m1Vjgn
-o1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi2un0
-3bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
-VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkG
-CCsGAQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
-dHJ1c3QuY29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29t
-L3Jvb3RzL2NvbW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C
-5yZUyI42djCCASQGA1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0
-dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
-eC5odG1sMIG6BggrBgEFBQcCAjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMg
-YmVlbiBpc3N1ZWQgaW4gYWNjb3JkYW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2Vy
-dGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20v
-Y2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0
-dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20vY3JsL2NvbW1lcmNpYWxyb290Y2ExLmNy
-bDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
-CCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX6Nl4a03cDHt7TLdPxCzFvDF2
-bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN95jUXLdLPRToNxyaoB5s
-0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24GBqqVudvPRLyMJ7u
-6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azNBkfnbRq+0e88
-QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8HvgnLCBFK2s4
-Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXFC9bu
-db9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
-rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4d
-UsZyTk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJn
-p/BscizYdNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eA
-MDGCAxQwggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUG
-A1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCg
-ggGXMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDEzMTE2
-NTQ1NlowLwYJKoZIhvcNAQkEMSIEIPBB0ZozWki6jEOZQFm+P2FMYE1HpKtAGXQIVb1pZ6QI
-MF0GCSsGAQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEX
-MBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQ
-AgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRy
-dXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzMMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZI
-AWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZI
-hvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAFPpx
-5Ewkfis4fN4y9mLAkDUsD8Li3J1ITKjSmXwvy9uJ7xFI7rlAUJLatAOoDz0yaKAQ82maduaF
-9JHI3hYCrpVMNf5lA82+JNGSyM8z3pqQnlAgfQAI9mRmH0jEricIQRILyLg2YCUW3Rgg0Uoz
-inXPhFe0H3LMfat7Q7PniuxBCbCDLrb1CNBRBJu/AwCMJPqorJDaAjyD9pSk6P2ZY/nOtN11
-0oAJ3SyvmH/lsfpeTFsab3kPXNSRfFlARSCe8wC00qlk98Dy8ttCiUirIKUO3ZInNtIY5KSY
-izB+nRKVx39iQOqkeV3DsSmqNtVakzfR2PgoHu+52aFiWGYBNgAAAAAAAA==
---------------ms070504010805020307040909--
-
+Thanks.
