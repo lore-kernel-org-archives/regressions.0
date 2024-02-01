@@ -1,101 +1,74 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113848663B
-	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 12:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6032F5F470
+	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 14:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706792320; cv=none; b=QiiQ61zsdVscBO7bH7+9Q7z+Pl/LUCiT+wAZC+cJZ1xH4VxM3Fs6VjtBzFEmesjdK/0gEJmhar9VQNBMsVNaBxdP71voU3Izsq8lGOot95Xek17CmLSch+GRqvZtH7k8H2of7RwW6VYMpPmjKUq9lmIC4KiM1Ft7LU/ORxWgWFg=
+	t=1706799448; cv=none; b=n0Bz2jQrj1dr7PWXT6JgSaErJa5iI7gc5YLQAr6SmeSbZ0QLz+15bHgnvgJAGdlJcDGm6Vus+/V9GMvyQnGXeX3yoC5V20JdEsyvD3crpdrlDK2FdMY6uAygcw1349CA+KwPhTTO5GQ3uD91joPb+Cjz7OB3AW27wreyfRtxLqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706792320; c=relaxed/simple;
-	bh=MHDfNdMw12sIWRU7RfM/N1sTc3Fx1OjZKgjklgYHhcE=;
-	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ycg8M5W6BNRz6QYDnH+4nxl8wFmgieBN0o+vN7zM002/QNgJoX1q5n1hpwOIUwlRR7U1eQrwDNn3nI8mWPKzvKBtB6q9i/frcrBQ545QauEea5qjBHNAbvvHwoKo10ZhGC//DMKI3ScwCT0wv16wfQqUh7vCED5ATD8L+nlB0Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=q88rvNhv; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1706799448; c=relaxed/simple;
+	bh=vOnNLgQvFZT/mX3ECw6fr4mBPUYw8qLvXjsyK/by+NQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUwIOkPj1mQO4Dvv4pXl7SUj4VJMTdw3doo+t8RXTYdoi1apCfRK74Yydan/dE7qYEF6k68Sw1OFvqM8jvgm5gqlHLGR/S5T5VnDxdhL/AZAwVNY/End4g5cDE/1LAqrHxdiScu+6KvppnPcCcxsGWEXKzWagRu1gy4iy7OqyPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMhqFRP1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="q88rvNhv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1706792319; x=1738328319;
-  h=message-id:date:mime-version:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=waFRF+K7gEDtO0MzxpQ/w+uoFORktzAU96B8ZA3JvFs=;
-  b=q88rvNhvS4MoTgje1wHxIokNCfIkfzgzb252WDU70XxgYuE/lQPiQxd6
-   Fr4kV44tsWtJHrEuTJMWylaQG2qZuXW/CEkf883mZKTfX3KgJ34+TdeZ4
-   36+0BBAdfBEemQ4jylUylHqOwjtqlx/62soVTdUMIP1RfybSctl98T6xw
-   4=;
-X-IronPort-AV: E=Sophos;i="6.05,234,1701129600"; 
-   d="scan'208";a="631327036"
-Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with "Resource
- temporarily unavailable"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 12:58:37 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:53331]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.233:2525] with esmtp (Farcaster)
- id c4031593-8aa9-42fd-b6fc-de37a98e7084; Thu, 1 Feb 2024 12:58:35 +0000 (UTC)
-X-Farcaster-Flow-ID: c4031593-8aa9-42fd-b6fc-de37a98e7084
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 1 Feb 2024 12:58:35 +0000
-Received: from [192.168.7.223] (10.106.82.33) by EX19D018EUA004.ant.amazon.com
- (10.252.50.85) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 1 Feb
- 2024 12:58:32 +0000
-Message-ID: <3bfc7bc4-05cd-4353-8fca-a391d6cb9bf4@amazon.com>
-Date: Thu, 1 Feb 2024 12:58:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMhqFRP1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A83C433C7;
+	Thu,  1 Feb 2024 14:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706799447;
+	bh=vOnNLgQvFZT/mX3ECw6fr4mBPUYw8qLvXjsyK/by+NQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qMhqFRP17RDQlAlhumDhCYoyMRgklZKoleBAEsBEEQXq0jxy3nKeIi31XAihLZu5S
+	 e5kUoQATJ9bidl5A0gMB6N+IEqzRSS8DFBa5y5eEB+bXTN+/70wnQVidaHeAs7EJyp
+	 DEBP6JlFBC3zoT7Cdpk9RZorLeOItHDC2Gj0bDQ3VFoVoAg7XShDX+UZMflkriPGuR
+	 P1AeN492hm+5b7xj9SP0OzgyfcuelVp+L6RYAnaE//PP0+3KsJqNpBeAv5C+jcjR2o
+	 rJDimDgRIZUJ6HfbYkfa0zuBWCvbqA5RN6kRpYz9jFldzSLdczy8LYzFv7lGhmMz5m
+	 SigGdmyUkLHGQ==
+Date: Thu, 1 Feb 2024 06:57:26 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Dave Ertman
+ <david.m.ertman@intel.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, Jaroslav Pulchart
+ <jaroslav.pulchart@gooddata.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Igor Raits <igor@gooddata.com>, Daniel Secik <daniel.secik@gooddata.com>,
+ intel-wired-lan@lists.osuosl.org
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in
+ linux >= 6.6.9 triggers extra memory consumption and cause continous
+ kswapd* usage and continuous swapping
+Message-ID: <20240201065726.50a0b1f2@kernel.org>
+In-Reply-To: <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+	<bce78734-d359-499b-9693-05549e6a73a4@intel.com>
+	<CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+	<898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Paulo Alcantara <pc@manguebit.com>, Salvatore Bonaccorso
-	<carnil@debian.org>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"leonardo@schenkel.net" <leonardo@schenkel.net>, "linux-cifs@vger.kernel.org"
-	<linux-cifs@vger.kernel.org>, "m.weissbach@info-gate.de"
-	<m.weissbach@info-gate.de>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "sairon@sairon.cz" <sairon@sairon.cz>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <53F11617-D406-47C6-8CA7-5BE26EB042BE@amazon.com>
- <9B20AAD6-2C27-4791-8CA9-D7DB912EDC86@amazon.com>
- <2024011521-feed-vanish-5626@gregkh>
- <716A5E86-9D25-4729-BF65-90AC2A335301@amazon.com>
- <ZbnpDbgV7ZCRy3TT@eldamar.lan>
- <848c0723a10638fcf293514fab8cfa2e@manguebit.com>
-Content-Language: en-US
-From: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-In-Reply-To: <848c0723a10638fcf293514fab8cfa2e@manguebit.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D042UWB004.ant.amazon.com (10.13.139.150) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-
-On 31/01/2024 17:19, Paulo Alcantara wrote:
-> Greg, could you please drop
+On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
+Leemhuis) wrote:
+> >> I think that's a bad bisect. There is no reason I could understand for
+> >> that change to cause a continuous or large leak, it really doesn't make
+> >> any sense. Reverting it consistently helps? You're not just rewinding
+> >> the tree back to that point, right? just running 6.6.9 without that
+> >> patch? (sorry for being pedantic, just trying to be certain)  
+> > 
+> > Reverting just the single bisected commit continuously helps for >=
+> > 6.6.9 and as well for current 6.7.
+> > We cannot use any new linux kernel without reverting it due to this
+> > extra memory utilization.  
 > 
->          b3632baa5045 ("cifs: fix off-by-one in SMB2_query_info_init()")
-> 
-> from v5.10.y as suggested by Salvatore?
-> 
-> Thanks.
+> Quick query: what's the status wrt to this regression? Looks like
+> nothing happened in the past week.
 
-Are we dropping b3632baa5045 ("cifs: fix off-by-one in 
-SMB2_query_info_init()") from v5.10.y while keeping it on v5.15.y? if we 
-are dropping it from v5.15.y as well then we should backport 06aa6eff7b 
-smb3: Replace smb2pdu 1-element arrays with flex-arrays to v5.15.y I 
-remember trying to backport this patch on v5.15.y but there were some 
-merge conflicts there.
-
-06aa6eff7b smb3: Replace smb2pdu 1-element arrays with flex-arrays
-
-
-Thank you.
-
-Hazem
-
+Is someone working on this? Indeed the commit in question looks
+harmless but can't argue with the revert helping :S
