@@ -1,79 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381EB3B189
-	for <regressions@lists.linux.dev>; Wed, 31 Jan 2024 19:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF5D4403
+	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 01:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730633; cv=none; b=XF21YvuC6SbFyhoYPBWvoQ717fJTVgRRyd3RPL7QdonUc9dE7y7H1qdD2r3eAZ38veq7Tg/tUbyBqWffUknxnv79ZonOKWhMcXUxR72MEN53q7RnwuHNxp0oszarsNBmOaWThV92x80v4MxdmAcDA2EXC2avGZgGVqyWGikdXP8=
+	t=1706751585; cv=none; b=jh09mba7gGpooLfIdHuJbPAfKVcagsNpkAGyNy8x4oKFDKWFjO29n1gKkyYIC0708HZ6NNGEw7f8IBxImc6Fbp5SKjzBzU39rYIMcUX/0yWZmjZ/j0VpCAs/G3iEU/mfM2LuBHH7ZFNfUTEPiHN0ZNGxxKwZOd7lkUk/nETokMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730633; c=relaxed/simple;
-	bh=vm1VvPWS8u/0sVVO0sq2qAm/X+8Dw5pmdJyX/qXhvX8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=KZXmGHJV48wKczd5Mv0sZDZGfYEtbB77t658k5FBMJX8LcL3Ei/fwfKOMSQaWJsq7maW38/a0Hcfb87USsNdJ5UqFc1OACkLaEs5n/zlbfXAuDq7NSBFtJF6EChSFFxZ07ka5paW1Z1j/OEVDATlYSqQqpHzNBnJRczWly8RcsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JVBk3yAX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JVBk3yAX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706730630;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rF0QFeVS0b/AoQ7bIaAq+Ck/8ND4nETi8q3EifYpCJ4=;
-	b=JVBk3yAXjat2ww+J3Syl9hVaWZQmFDDxRttUtpVj31qjD5EnoK6aI/qIECafjZlZPvj65X
-	qa9wRGKuy+bsfZZAiLa3xN8dIC6X+KV25/NIqEdEfie0hN/m0+xDt62SCCQ/MN4dEzT+Gn
-	MniHn+2mdhX0x94QJPJObLXIFQ1nhkI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-601-7D72DHpwNK2O5iHGjDusPg-1; Wed, 31 Jan 2024 14:50:26 -0500
-X-MC-Unique: 7D72DHpwNK2O5iHGjDusPg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 048FD84A291;
-	Wed, 31 Jan 2024 19:50:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.245])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 56130C259DD;
-	Wed, 31 Jan 2024 19:50:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240131155220.82641-1-bevan@bi-co.net>
-References: <20240131155220.82641-1-bevan@bi-co.net>
-To: Michael Lass <bevan@bi-co.net>
-Cc: dhowells@redhat.com, netdev@vger.kernel.org,
-    regressions@lists.linux.dev
-Subject: Re: [PATCH] net: Fix from address in memcpy_to_iter_csum()
+	s=arc-20240116; t=1706751585; c=relaxed/simple;
+	bh=ghdzfng99LU1BtZDxRGUwLz3Ab6srNFDwYMsumD7pac=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RuippEhuA4UzL0HZQPfu48qtOss3waJV65/IpnY2FfUH7zB2qQm6aJMyxEnzuVtYS4gVj+C7oWiJds4ft902p6ealvn4LjAzyNeJywk9TD/KC/VFSqFT5nTYiWWIVAiWAOC0EmkcJ8S8/2oxJWhSTgLlWsCza+v2nMi5lj/oUoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TQM5c5s83z4f3lWG
+	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 09:39:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 582321A016E
+	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 09:39:39 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBFa9rplS99oCg--.9111S3;
+	Thu, 01 Feb 2024 09:39:39 +0800 (CST)
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: Blazej Kucman <blazej.kucman@linux.intel.com>, Song Liu <song@kernel.org>
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, Dan Moulding <dan@danm.net>,
+ carlos@fisica.ufpr.br, gregkh@linuxfoundation.org, junxiao.bi@oracle.com,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <ZbMnZnvyIyoWeIro@fisica.ufpr.br>
+ <20240126154610.24755-1-dan@danm.net>
+ <20240130172524.0000417b@linux.intel.com>
+ <95f2e08e-2daf-e298-e696-42ebfa7b9bbf@huaweicloud.com>
+ <CAPhsuW7QHq4e+cHvZcw8c=ePpeSM69UKTEi8P40=-jOZn+YyyA@mail.gmail.com>
+ <20240131143640.00003296@linux.intel.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <3613d015-6664-88d2-4598-bce8f306371a@huaweicloud.com>
+Date: Thu, 1 Feb 2024 09:39:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2259906.1706730624.1@warthog.procyon.org.uk>
-Date: Wed, 31 Jan 2024 19:50:24 +0000
-Message-ID: <2259907.1706730624@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <20240131143640.00003296@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBFa9rplS99oCg--.9111S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYg7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1a9aPUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Michael Lass <bevan@bi-co.net> wrote:
+Hi!
 
-> While inlining csum_and_memcpy() into memcpy_to_iter_csum(), the from
-> address passed to csum_partial_copy_nocheck() was accidentally changed.
-> This causes a regression in applications using UDP, as for example
-> OpenAFS, causing loss of datagrams.
+在 2024/01/31 21:36, Blazej Kucman 写道:
+> Hi Kuai,
 > 
-> Fixes: dc32bff195b4 ("iov_iter, net: Fold in csum_and_memcpy()")
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: stable@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Signed-off-by: Michael Lass <bevan@bi-co.net>
+> On my hardware issue also stopped reproducing with this fix.
+> 
+> I applied the fix on current HEAD of master
+> branch in kernel/git/torvalds/linux.git repo.
 
-Acked-by: David Howells <dhowells@redhat.com>
+That is great, thanks for testing!
+
+Hi, Dan, can you try this patch as well. I feel this is a different
+problem that the one you reported first. Because revert 0de40f76d567
+shouldn't make any difference.
+
+Thanks,
+Kuai
 
