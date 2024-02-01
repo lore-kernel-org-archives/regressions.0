@@ -1,192 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C7E5A4E0
-	for <regressions@lists.linux.dev>; Thu,  1 Feb 2024 18:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706812643; cv=fail; b=ud4Ye9Za+tWk9MD5+sI3kEwlCfoqwIucfn9dBdc5EacJcJXJ/5HLKrFO1/+uIEcztjLjOQzlqte66BszTUngFA5dcfmHGQ4JFtQqHuRZ/Y/3Ksd3QRNtyCdYvpO7F3Z9apeYwqSzlqNRLkaTgeZ6zI1yT65EPlvKYop7fwLniBk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706812643; c=relaxed/simple;
-	bh=Qlk8WqqWaOr09B4uClI0KPIYvBv9Xf5ItAeCjilUpGc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nVUo5bB5D98gosgcuWPjxUDBp5qP9QOVAgFtj1YleVUTCTA4N40diV8BEx33hdZjgVibuoZPJaI4JHWwDkZhZHCxLaBXegOJ5TGLnUaDqA8QaWBhYC4u8/7GsPIOt99kK7NZWNGQZGIPK04xtinXvjlKdjBqaUJNbVEjN0sg3zw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F837VsJT; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B2A47A6A;
+	Thu,  1 Feb 2024 23:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706828546; cv=none; b=ozZf0JjfI0PZyNQNFJtO5PltwQan/TeSDUa0v95vpAfk9WOupZtauBd8Tq2OKwa7czKV7gqxVDlluhPcesDXVHPp34pbv1oy69N9JW5/QUpI3IbqtUGK2h+I5oHALIRM2QxmSXnKi7wHD9PzoVt6sExErFVYDHq7eTPRPBGKorM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706828546; c=relaxed/simple;
+	bh=pUPh0p91Naj9mHmBTskOp9dizRb32NXh/WSNDoa9W+o=;
+	h=Mime-Version:Content-Type:Date:Cc:Subject:From:To:Message-Id:
+	 References:In-Reply-To; b=En0gCcSQ2PUNzyozNNOoXZO+6uQjM4jYPg9iguwb4aAMh69xZI0s5V4y/s+NiwvbwgzGwGl/3xf5D1/N9bsQfDQVHGwjFzwWQ6o9wKKTuRQRAMHevXvC3Z7y4P8OHfYNx50U/jzrs3Uhd99/1mAtUxesI3WjecZRdy1qQ8D+eno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dj5HBRhm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F837VsJT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706812641; x=1738348641;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Qlk8WqqWaOr09B4uClI0KPIYvBv9Xf5ItAeCjilUpGc=;
-  b=F837VsJTpZ8p7fD12F1YUVFz2kiK8THdjV0vUQnkggB9oKu4ExmHUzwh
-   sMai+8lxBAa7/+cMl8j2ZWKAiywRPDf9bBVblsShXb0fStjheblBTSirb
-   ENFL5cljVZQFKHYsqF0Xfw5RXKZtg8QVHqutl28mO/2Ia3k19hfExj+I0
-   qVas4Ziep9FIZdKM/BhGwuJVNdo3KacidZT5D/RECo5D5HAaE0librt7e
-   Zv/6uiaruZo75TQKokpACXWqx7c/RTUQvmTv1o9F9LfW808MTfwKqsyY6
-   N5JRszByEK6Yo+mbIztEy+aUlv6y3v8S16hiqch7pkfwRL1i5ME5Y5znv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="11339590"
-X-IronPort-AV: E=Sophos;i="6.05,235,1701158400"; 
-   d="scan'208";a="11339590"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 10:36:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="789016165"
-X-IronPort-AV: E=Sophos;i="6.05,235,1701158400"; 
-   d="scan'208";a="789016165"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Feb 2024 10:36:47 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 1 Feb 2024 10:36:47 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 1 Feb 2024 10:36:46 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 1 Feb 2024 10:36:46 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 1 Feb 2024 10:36:45 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jEE0UFwPLRDChvBTAoBlbK/0YZ5r4RCuHNQiYWj5xvk6wpW9wwILv/1vaHZWxMAL7gm3LtBh++J9WOMX+o3lM/YxmgdRMF/tQ3bRDlxRA0OnUOk5fJpKythoNg6F0lhZttbr8bYv9ETQo50psnAU6Ndg84aaUeRw+gQ2SwPrVOQfH41+Q0TD2Odawq4ITzOJYd5db3/nXWybVJFT/2aPboqxa4FqEVtljtJtA2OvZg9MQHGYZOozycS0rw5Qle1lBEWYW/df+L+YBsag//dff/pvXdCF0f1Zg+mQfuZjcf2dEayujsMN407jf8aw+3GP+qORxHMBuV8Gyk2cZi3ZWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/cS0wo2Ws/z2XBgKEXheEnARmgW5sFt7+VG+zxZyxCM=;
- b=cviLKxIKqm5g7BDhOd2T3U3UM6GSckXehoHF1YkODfxacPnZPGacuYVHxSN0BG2tntV+s/e/oHg7fl2yxVudhSK6F0CoFJ1h25xTTs2V/wwK7g+3/jAshdRw5cBErRTZrOKOsxj8++mU8X38L73qPDayFwPXVTJLt3zusCppuz3rks6tMtS7/8ef4I1yJQzORMuBOqnj4Zz37EFbs13l/x4esOWUMW3nX5r2ki/a6Fd1EXDQ+oDd4JuSCzplXy0G51KLI4/hV0tnQThSdM9gPTArxyLMLzCAppw602EyX6GhGg71crDgOaN+gj3sg4K4V73koq2wW8bLmZuOi02QKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com (2603:10b6:a03:45c::14)
- by PH7PR11MB8009.namprd11.prod.outlook.com (2603:10b6:510:248::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
- 2024 18:36:42 +0000
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563]) by SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563%3]) with mapi id 15.20.7228.036; Thu, 1 Feb 2024
- 18:36:41 +0000
-Date: Thu, 1 Feb 2024 10:36:37 -0800
-From: Ashok Raj <ashok.raj@intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-CC: Mike Rapoport <rppt@kernel.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>, LKML Mailing List
-	<linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>, "Ingo
- Molnar" <mingo@kernel.org>, Song Shuai <songshuaishuai@tinylab.org>, "Ashok
- Raj" <ashok.raj@intel.com>
-Subject: Re: [REGRESSION] Platforms supporting SGX fail to kexec due to
- 96c6b8f212a ("memblock: report failures when memblock_can_resize is not
- set")
-Message-ID: <ZbvktYF7Oi53qpjx@a4bf019067fa.jf.intel.com>
-References: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
- <ZZEXnl3w0K6avYR3@kernel.org>
- <07f1cb33-e908-48cb-85f9-83a040b2ca5a@leemhuis.info>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <07f1cb33-e908-48cb-85f9-83a040b2ca5a@leemhuis.info>
-X-ClientProxiedBy: MW4PR03CA0030.namprd03.prod.outlook.com
- (2603:10b6:303:8f::35) To SJ1PR11MB6201.namprd11.prod.outlook.com
- (2603:10b6:a03:45c::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dj5HBRhm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05335C433C7;
+	Thu,  1 Feb 2024 23:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706828546;
+	bh=pUPh0p91Naj9mHmBTskOp9dizRb32NXh/WSNDoa9W+o=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Dj5HBRhmFTxLF9asucQZyoz87t3y62bvhKwkF58N32FC1+FOJLf6cyBAglH0M0PNb
+	 WPEfeXiNKIupSnfbhiaLKCZkG1y3kgENtwa4nZksn4uutKT1DvY92kTPiNYTciV6gz
+	 MQrNsd47SyPhLAYP0Js7F0O0YCsyAhKqNoEDslOYPFpxHVSzVoh3759fDenojLU129
+	 VzEYF9unMspVfLvt1bVMfoEVHLATva0NM3ukq2GGTwoxjl35g8jc7qYObHHNG3tXZR
+	 UdASb2ErOm7NDwmqPtZXhK+DppO+thlDkhZcit/akhReFe5wxyV/TOxYNG12ZNvbOT
+	 HGvOTSOO6wRwA==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR11MB6201:EE_|PH7PR11MB8009:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ff1245a-5be1-4fdf-727c-08dc2354bb7f
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +IQ/lwqA6tU4eicQBejAyr8iRuZC1XsUZe1RPfoUIu5FVx2xmD1E8xcGppZm/Kr2Pw0aBEetxSRWqDuM6p9eZk1B4zBcVyndQ2HyLD+qKH1n0HWcqOQMK4SMX/JuHuQNBcGhHjj3sBtCwYlhhdRHMLOvePqTdEDF3HSEPeWtO30VleXGhfIG09X+HTktFxvLNf0Pig4aBkJ4qd1i2XPlX4F8JEIFKToIMova5Ma/PUcdbJiDbQU7+skTIMemOs2v40P4lTJ7fAIVeLZaSrjYByi7b6HCd5eDB/LL5tZ5EESELZ4OaWwxiH2Ql2zcDlFbpKyQTJ1Ov1JrAdo8ZmdC4fbWJOwroHTmbqclazqDwRNSlcSfgQoxJQDbeNYRjGa3nTQpM+DbVPPTHoR37cgYk4xoo/oGejKpPLI/3lxe+glPB2cPlORZbDzZ0RA2bxzzHEY22ucisxpY/byNrFx799Oe8DbtBdCAylf1l9pHniNjJ9q+LyjncYSd4Jv/yaZ1XviDfW+S/X+mf0Z8OgFF6SdPVkLb+I0S0nsTfDjxeohqeISdtre7uYA5q+9MHa5R
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6201.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(366004)(396003)(39860400002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(107886003)(41300700001)(8676002)(44832011)(2906002)(4326008)(5660300002)(86362001)(8936002)(54906003)(66476007)(66556008)(66946007)(83380400001)(38100700002)(6916009)(316002)(82960400001)(53546011)(6506007)(478600001)(6486002)(6512007)(6666004)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WyzRNQVVhnZoCSK6eC/C19UkYi2wzmq0BUVxtsAkJmjh7ptVINdTV28pNedx?=
- =?us-ascii?Q?ZDsSoo6cUwfCVeAcgjJANiQriAXuHeFQO6yGQ0cA8SB2d7ecdjAz0Ftg8bti?=
- =?us-ascii?Q?O7ztFP8ISbcwNDds304S6dkHAt4njBkqncNgXwh4yVG+JUgYf8musle/FjO9?=
- =?us-ascii?Q?UlhkXCjQZarYnKX4tTjoGesNPUfQzXQdbvTjGGSodFAq2v4BIBqI9msiiJQr?=
- =?us-ascii?Q?Vy/SBTrONBm3fWawBw4deCQLh0dKD6pcKIT8/4QMmXYVAebn/p/J6OfzSHqy?=
- =?us-ascii?Q?l+ffXSu+jEYxagNaQNlZNJPk32ytNYYgzHSI+52E7k8h0yv2C4AiHsySPhWs?=
- =?us-ascii?Q?51q+BXJswOhz6MQSVm+LxEpCjutQIeSBshNh5fUIt7zxoo374dKCvBmVUU23?=
- =?us-ascii?Q?OvOcL7MHn3K9VPY23UXkMaZrW5DH2dbuCeuvi6tHJYqN5K7VN4sPt2cCz60O?=
- =?us-ascii?Q?VSvm0zWEm755JpJUUe4MMAhS83gab0ZTynsjBXi7TQ5RJDJAnKgk2ABVXyo1?=
- =?us-ascii?Q?KDfUoM70i70cvoeWaRgqFlzWRJQ7INEgC0aoFnXnm8du+sLHQJqK+oH+VEtN?=
- =?us-ascii?Q?B2SGJuz/SQdJaIAfuNEHWF3QjOJOmHtUfqNKMHpPVcBBL3ddeuA26lQeHMgR?=
- =?us-ascii?Q?lQqw5GOXAQrAdq/nwtmC1JGbkyqpAXrRdZKdgiiD3LOM0WmrZ9htiYa7YOGM?=
- =?us-ascii?Q?fEvC7wkvoaaO3Ltz4bgCtSuPeeZ7TXn/DbemqZvOVrGytba5utfwuaD+vA2P?=
- =?us-ascii?Q?EAcbV2epIQA/OC75GPcT46rXWBRvkxm0azKShOfNKRgbcuydf9uO5oNRL4AO?=
- =?us-ascii?Q?JKp3vxuLUYQe1s8rxQYriqAmDTwwvS2lafWWIc8flU93tkvijeExuCXnLfWN?=
- =?us-ascii?Q?VKYelolJCgktcQXUAj4UYeNWy6wBGL99xkyrpKOZVsCGc9riSwPEvm2X1Vg7?=
- =?us-ascii?Q?CtCZyQTf29/TZM8gzLLpSG2H/ePp1Scq3Pg1BYhLWz9xyctqfTTo6KMOaC2k?=
- =?us-ascii?Q?L7HUwYCKGGC3wK5JSoNN3F6vckRndJGhWjifjnZfVEipYGajqN29YZ6Wi2wS?=
- =?us-ascii?Q?rVleEnBW0SfkcNviTrmXC0FaTlDo2or9IlPIowINf7sLDiJoRk4EJ5qXRMfQ?=
- =?us-ascii?Q?L1YjMhNMjiwYnv26IGGHHkRwm/bp16AVmvXozRFokVul8pZnZ1Jante2CM5P?=
- =?us-ascii?Q?Jli/22e6Lmli4Vz4sdcFkM3NjXp6aR+PwuM9YjYWJkM6vMZLMQvCY9vlqCkw?=
- =?us-ascii?Q?xHsE3hkv6ULx0e71PCaInuhvQSr4z6HpI6IdHdWdAuPcCMi56XCJlDvrNAci?=
- =?us-ascii?Q?rRANUmaAFHNeCoHjxchCRmSEONzzUTiMrLS9JiKuk8H8mX4s0pYsgOIKe6JE?=
- =?us-ascii?Q?lAMnwkplCGWBD9rRGJlx3MiWhJzIS/UMY8U0j8Ib2yeTG1bj7PFOS1yAOlyt?=
- =?us-ascii?Q?kWuXgxnW0Wzrh2Koq05tE63WSCQhRUmY5acrtT/uZdMWpOa1paImE5YPsysP?=
- =?us-ascii?Q?xgO1E47HoMR0yfm8GWfUxVXiyKoEkON07fZ7ifW5wrqbRxqmz1V4dryJUeIu?=
- =?us-ascii?Q?GkW30P/BF8qf5CLPHEAr4ru4foO4e9+lX9md939FHaJ5j/hv5kY0MLWfaD8o?=
- =?us-ascii?Q?FQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ff1245a-5be1-4fdf-727c-08dc2354bb7f
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6201.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 18:36:41.2604
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 32f8PoAtVnk23aPyt/AtQ35NLkY/I/z2F8jKTaRZO6WbpImVRKoZY4RdUu8FuIMcGQS4xWCq8iXs83QIuuPRaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8009
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 02 Feb 2024 01:02:23 +0200
+Cc: <linux-integrity@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: tpm_tis_remove: `WARNING: CPU: 6 PID: 265 at
+ kernel/workqueue.c:3397 __flush_work.isra.0+0x29f/0x2c0`
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Paul Menzel" <pmenzel@molgen.mpg.de>, "Peter Huewe"
+ <peterhuewe@gmx.de>, "Lino Sanfilippo" <l.sanfilippo@kunbus.com>
+Message-Id: <CYU446SNXUK4.23H8L9VRKXEFV@suppilovahvero>
+X-Mailer: aerc 0.15.2
+References: <e2e17227-9e8f-430b-80fc-9ca9eac1f69a@molgen.mpg.de>
+In-Reply-To: <e2e17227-9e8f-430b-80fc-9ca9eac1f69a@molgen.mpg.de>
 
-Hi Mike,
+On Tue Jan 16, 2024 at 4:44 PM EET, Paul Menzel wrote:
+> #regzbot introduced: v5.15.131..v6.6.11
+>
+>
+> Dear Linux folks,
+>
+>
+> On a Dell OptiPlex 5055 with an AMD Ryzen, Linux always logged the error
+>      tpm_tis: probe of MSFT0101:00 failed with error -1
+>
+> but upgrading from 5.15.131 to 6.6.11, the warning below is also logged:
+>
+> ```
+> [    0.000000] Linux version 6.6.11.mx64.460=20
+> (root@theinternet.molgen.mpg.de) (gcc (GCC) 12.2.0, GNU ld (GNU=20
+> Binutils) 2.41) #1 SMP PREEMPT_DYNAMIC Thu Jan 11 16:15:43 CET 2024
+> [    0.000000] Command line: BOOT_IMAGE=3D/boot/bzImage-6.6.11.mx64.460=
+=20
+> root=3DLABEL=3Droot ro crashkernel=3D64G-:256M console=3DttyS0,115200n8=
+=20
+> console=3Dtty0 init=3D/bin/systemd audit=3D0 random.trust_cpu=3Don=20
+> systemd.unified_cgroup_hierarchy
+> [=E2=80=A6]
+> [    0.000000] DMI: Dell Inc. OptiPlex 5055 Ryzen CPU/0P03DX, BIOS=20
+> 1.1.20 05/31/2019
+> [=E2=80=A6]
+> [   12.092264] WARNING: CPU: 6 PID: 265 at kernel/workqueue.c:3397=20
+> __flush_work.isra.0+0x29f/0x2c0
+> [   12.103259] Modules linked in: snd_hda_intel(+) tg3(+) kvm(+)=20
+> snd_intel_dspcfg snd_hda_codec snd_hda_core snd_pcm snd_timer libphy=20
+> drm_ttm_helper ttm snd video k10temp soundcore i2c_piix4 irqbypass=20
+> tpm_tis(+) tpm_tis_core efi_pstore tpm wmi_bmof rng_core wmi=20
+> crc32c_intel pstore acpi_cpufreq nfsd auth_rpcgss oid_registry nfs_acl=20
+> lockd grace sunrpc efivarfs ip_tables x_tables ipv6 autofs4
+> [   12.143539] CPU: 6 PID: 265 Comm: systemd-udevd Not tainted=20
+> 6.6.11.mx64.460 #1
+> [   12.152698] Hardware name: Dell Inc. OptiPlex 5055 Ryzen CPU/0P03DX,=
+=20
+> BIOS 1.1.20 05/31/2019
+> [   12.162512] RIP: 0010:__flush_work.isra.0+0x29f/0x2c0
+> [   12.168674] Code: 8b 04 25 80 cf 02 00 48 89 44 24 40 48 8b 53 40 8b=
+=20
+> 43 30 e9 b3 fe ff ff 40 30 f6 4c 8b 36 e9 f2 fd ff ff 0f 0b e9 3b ff ff=
+=20
+> ff <0f> 0b e9 34 ff ff ff 0f 0b e9 d8 fe ff ff 0f 0b e9 a9 fe ff ff e8
+> [   12.188375] RSP: 0018:ffffc90000ab7a10 EFLAGS: 00010246
+> [   12.194699] RAX: 0000000000000000 RBX: ffff888108f79b28 RCX:=20
+> 0000000000000000
+> [   12.202894] RDX: ffffc90000ab7a10 RSI: ffffc90000b10008 RDI:=20
+> ffffc90000ab7a58
+> [   12.211107] RBP: ffff888108f79b68 R08: 0000000000000002 R09:=20
+> 0000000000000000
+> [   12.219305] R10: 0000000000000001 R11: 0000000000000000 R12:=20
+> 0000000000000001
+> [   12.227499] R13: ffff888108f79b38 R14: 00000000ffffffff R15:=20
+> 0000000000fe1050
+> [   12.235706] FS:  00007f2cf22c2800(0000) GS:ffff88840eb80000(0000)=20
+> knlGS:0000000000000000
+> [   12.244871] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   12.251670] CR2: 00000000006878e8 CR3: 000000010ca66000 CR4:=20
+> 00000000003506e0
+> [   12.259901] Call Trace:
+> [   12.263395]  <TASK>
+> [   12.266521]  ? __warn+0x81/0x140
+> [   12.270776]  ? __flush_work.isra.0+0x29f/0x2c0
+> [   12.276235]  ? report_bug+0x171/0x1a0
+> [   12.280803]  ? handle_bug+0x3c/0x70
+> [   12.285352]  ? exc_invalid_op+0x17/0x70
+> [   12.290203]  ? asm_exc_invalid_op+0x1a/0x20
+> [   12.295397]  ? __flush_work.isra.0+0x29f/0x2c0
+> [   12.300807]  tpm_tis_remove+0xaa/0x100 [tpm_tis_core]
+> [   12.306872]  tpm_tis_core_init+0x234/0xfa0 [tpm_tis_core]
+> [   12.313280]  tpm_tis_plat_probe+0xd0/0x110 [tpm_tis]
+> [   12.319139]  platform_probe+0x44/0xa0
+> [   12.323796]  really_probe+0xd0/0x3e0
+> [   12.328384]  ? __pfx___driver_attach+0x10/0x10
+> [   12.334129]  __driver_probe_device+0x80/0x160
+> [   12.339803]  driver_probe_device+0x1f/0x90
+> [   12.344831]  __driver_attach+0xf8/0x1c0
+> [   12.349568]  bus_for_each_dev+0x88/0xd0
+> [   12.354298]  bus_add_driver+0xf9/0x220
+> [   12.358919]  driver_register+0x59/0x100
+> [   12.363623]  ? __pfx_init_tis+0x10/0x10 [tpm_tis]
+> [   12.369198]  init_tis+0x39/0xff0 [tpm_tis]
+> [   12.374172]  ? srso_return_thunk+0x5/0x10
+> [   12.379044]  do_one_initcall+0x66/0x240
+> [   12.383751]  do_init_module+0x60/0x230
+> [   12.388357]  init_module_from_file+0x86/0xc0
+> [   12.393483]  idempotent_init_module+0x120/0x2b0
+> [   12.398869]  __x64_sys_finit_module+0x65/0xc0
+> [   12.404082]  do_syscall_64+0x46/0x90
+> [   12.408506]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> [   12.414411] RIP: 0033:0x7f2cf1d1ed09
+> [   12.418831] Code: 08 44 89 e0 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00=
+=20
+> 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f=
+=20
+> 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c7 20 0d 00 f7 d8 64 89 01 48
+> [   12.438506] RSP: 002b:00007ffc335d02f8 EFLAGS: 00000246 ORIG_RAX:=20
+> 0000000000000139
+> [   12.446965] RAX: ffffffffffffffda RBX: 0000000000674390 RCX:=20
+> 00007f2cf1d1ed09
+> [   12.454993] RDX: 0000000000000000 RSI: 00007f2cf1a0f54b RDI:=20
+> 0000000000000010
+> [   12.463013] RBP: 00007f2cf1a0f54b R08: 0000000000000000 R09:=20
+> 0000000000000002
+> [   12.471025] R10: 0000000000000010 R11: 0000000000000246 R12:=20
+> 0000000000000000
+> [   12.479059] R13: 00000000007700f0 R14: 0000000000020000 R15:=20
+> 0000000000679d90
+> [   12.487092]  </TASK>
+> [   12.490162] ---[ end trace 0000000000000000 ]---
+> [   12.498048] tpm_tis: probe of MSFT0101:00 failed with error -1
+> ```
+>
+> ```
+> $ scripts/decodecode < /scratch/tmp/linux-6.6.11-schokokeks.txt
+> [ 12.418831] Code: 08 44 89 e0 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 48=
+=20
+> 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05=
+=20
+> <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c7 20 0d 00 f7 d8 64 89 01 48
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>     0:	08 44 89 e0          	or     %al,-0x20(%rcx,%rcx,4)
+>     4:	5b                   	pop    %rbx
+>     5:	41 5c                	pop    %r12
+>     7:	c3                   	ret
+>     8:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+>     f:	00 00
+>    11:	48 89 f8             	mov    %rdi,%rax
+>    14:	48 89 f7             	mov    %rsi,%rdi
+>    17:	48 89 d6             	mov    %rdx,%rsi
+>    1a:	48 89 ca             	mov    %rcx,%rdx
+>    1d:	4d 89 c2             	mov    %r8,%r10
+>    20:	4d 89 c8             	mov    %r9,%r8
+>    23:	4c 8b 4c 24 08       	mov    0x8(%rsp),%r9
+>    28:	0f 05                	syscall
+>    2a:*	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax		<--=20
+> trapping instruction
 
-On Thu, Feb 01, 2024 at 11:38:38AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 31.12.23 08:26, Mike Rapoport wrote:
-> > On Thu, Dec 28, 2023 at 04:33:49PM -0800, Ashok Raj wrote:
-> >> 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
-> >>
-> >> Causes kexec failure. Backing out this change, kexec succeeds. Symptom is
-> >> it appears to hang, possibly hung at the panic. Although I have the
-> >> earlyprintk enabled, I don't see any console messages when new kernel
-> >> boots. 
-> >>
-> >> Also tested turning off CONFIG_X86_SGX, the kernel with this commit
-> >> included also kexec's fine.
-> >>
-> >> Booting from warm/cold reset has no issues. Only kexec to new kernel with
-> >> this change included and CONFIG_X86_SGX=y causes the kexec failure.
-> > 
-> > Can you add memblock=debug to the kernel command line and send logs for
-> > normal boot and kexec with CONFIG_X86_SGX=y and e96c6b8f212a reverted?
-> 
-> Ashok, you afaics never replied. Did you forget about it? Or was the
-> issue resolved later or never a regression in the first place? I for now
-> assume it's one of the latter and stop tracking this:
+There's something odd in this disassembly given the "syscall" opcode.
 
-Sorry I went AWOL on this.. I did try the newer kernel's (6.8-rc1) and its not
-happening any more, and kexec seems to work well. 
+>    30:	73 01                	jae    0x33
+>    32:	c3                   	ret
+>    33:	48 8b 0d c7 20 0d 00 	mov    0xd20c7(%rip),%rcx        # 0xd2101
+>    3a:	f7 d8                	neg    %eax
+>    3c:	64 89 01             	mov    %eax,%fs:(%rcx)
+>    3f:	48                   	rex.W
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>     0:	48 3d 01 f0 ff ff    	cmp    $0xfffffffffffff001,%rax
+>     6:	73 01                	jae    0x9
+>     8:	c3                   	ret
+>     9:	48 8b 0d c7 20 0d 00 	mov    0xd20c7(%rip),%rcx        # 0xd20d7
+>    10:	f7 d8                	neg    %eax
+>    12:	64 89 01             	mov    %eax,%fs:(%rcx)
+>    15:	48                   	rex.W
+> ```
+>
+> Please find all the Linux messages attached. Bisecting is unfortunately=
+=20
+> not easily doable.
+>
+>
+> Kind regards,
+>
+> Paul
 
-On the same problem kernel adding memblock=debug make it dissappear, and
-even adding some code to that suspect area changed behavior.
+I reported a workqueue flush issue while ago but had forgotten it:
 
-I'm not able to reproduce it again. Sorry for the delay.
+https://lore.kernel.org/all/CX32RFOMJUQ0.3R4YCL9MDCB96@kernel.org/f
 
-Cheers,
-Ashok
+However, Lino sent a fix for it:
+
+https://lore.kernel.org/linux-integrity/20240201113646.31734-1-l.sanfilippo=
+@kunbus.com/
+
+Would be useful to know if that is the same wq issue also here.
+
+BR, Jarkko
