@@ -1,153 +1,111 @@
-Received: from mx1.135e2.dev (unknown [192.227.193.244])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA92BE69
-	for <regressions@lists.linux.dev>; Fri,  2 Feb 2024 03:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.227.193.244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B887F9C7
+	for <regressions@lists.linux.dev>; Fri,  2 Feb 2024 04:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706844472; cv=none; b=WBKHLo54IhCsOISgqo5qr6USpVQuSsWxDR0jJ5zIV7cdEVNtCqdEHRKy4n5VCDfbInDMKQTuQ++AkrSfHzmmXhnW4r+6zpdPbO22ww9300cypTxDXF7BhBRLEnwwQCovWfc0lb8csxUJdbNXJZA/uOZM0ThQ4TrdW36J0PwGb40=
+	t=1706849737; cv=none; b=p8Xrq7fbTm/ZIW7PkP5XHOmKueTMwBUlZGjmR43TGeDBv6JXALl4CQioHX3BpgDUSQcl6VwyTjYMF1ZA/3iI4AXKXEKv7/4v3kr10WrX1yaUCougFIBRTPAhSZ4pW+xYXMADG3uyhJme0AHGGepTBTZMWugWF+6bzYSsmFOzCS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706844472; c=relaxed/simple;
-	bh=Si4Fpi4Zt3/wkiQXc7LEba2uEw20yGovMPeMTq4B4jc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Idu4JczeFr+PpT1ykk24Fxj8YGtNNFhhaAvVlHbkN+VFb8hB2DNXkLeMbmtLZzI14a/bJTitlyLuB2t5cZ8MMR7vN4mCNJSX9lrkEsdiDwFqpwItsYwvs7zChmDrCqyS9vjaYiTxC58yK8typR1DuZaoQ10GJeGu8+wtln7/al8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev; spf=pass smtp.mailfrom=135e2.dev; dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b=BxlicnwD; arc=none smtp.client-ip=192.227.193.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=135e2.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=135e2.dev
+	s=arc-20240116; t=1706849737; c=relaxed/simple;
+	bh=2kYlvhPgJrOA5JXv0UROVLU7nz5GY8Jsi12RfI9OR8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHxtFIPvFior87ptAYGbqXxf1TDbwDF0pG/5asV2RnDONQipmLUfFI/vs6MZb7Spyq4xPwjzhKSsQgLF9easdfNIKNTti3V+t77MvtMzSvH6YePAVAmr/BQzsL8/yPYRx5E8x10ganuQDLyNul2xGTAsLLlNlOm7wptp2u+CSkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lb4NN57P; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=135e2.dev header.i=@135e2.dev header.b="BxlicnwD"
-DKIM-Signature: a=rsa-sha256; bh=iK915+z9S4n8pu5RcTV8cEzXvYlmbw06d1vH3FCQZbQ=;
- c=relaxed/relaxed; d=135e2.dev;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
- i=@135e2.dev; s=default; t=1706843543; v=1; x=1707275543;
- b=BxlicnwDy8+jnrrSQIEg6N98s+HdFzwAF4G5/OxrDhQAgCoIojy8GmPLzEo1O836zunQfqjD
- ddOu3etzgisZ9PoUxwgAZZt18/th19+Nclxp6a6y6Sw+axonhzb9q6A+/gaBAH2z1bE6AWGWjdL
- uCAP//VRJTVIQWqHnetcbdDVmcRtV6Xm5jHFPJzK8QjJfkIDeHdGVqSptH71FWAvpv9DLskUBYe
- odFEwSF4GeBGbXmrfBSuKcI2hcYmKFP7lhp46EZ2svwjbxG3I2kvvTdXOiRY4NIMoStfjUMpfGx
- XMFu9MFUUs2ES7c+m7fSwcJD5QIZtnoevacwiVxlpnLRA==
-Received: by mx1.135e2.dev (envelope-sender <135e2@135e2.dev>) with ESMTPS
- id bbaa66b6; Fri, 02 Feb 2024 11:12:23 +0800
-From: Mole Shang <135e2@135e2.dev>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- pierre-louis.bossart@linux.intel.com, peter.ujfalusi@linux.intel.com,
- ranjani.sridharan@linux.intel.com, sound-open-firmware@alsa-project.org
-Subject:
- [REGRESSION] 6.7.0: ASoC: SOF: refactoring breaks sof-rt5682 audio on
- chromebook; successfully bisected
-Date: Fri, 02 Feb 2024 11:12:18 +0800
-Message-ID: <6013930.lOV4Wx5bFT@ayana>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lb4NN57P"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d928a8dee8so19650955ad.1
+        for <regressions@lists.linux.dev>; Thu, 01 Feb 2024 20:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706849735; x=1707454535; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x4F54oWj9ECEcH1NBGn7lQh9aozrsidT6aq0Ua0NYqg=;
+        b=Lb4NN57PU1K9GzYeEPZrqadSIBWPx3CXKfo9WA8jRLsn6yBarFFtAXyCdJT//SMj46
+         q1nUNM0OyUQZXkwJz6LCS867IIpU+7YGmWq9jG/rtpTPJY5e7wfc5gIUfuqjdh2XDlHh
+         3ivC3KPYjnC6a2ARADu/fTzWLZK76uhLA+ytD3Xn/Jjwo3xWWoCPOJADh3GObJ8SiEpR
+         +dNewVlR8P1F35qZfVEyGiTkhDAqChIzmChyESc8iANZpOY/rv5iPQ4emSuBY/jjDiiN
+         eUW5drhZ7Gevm2WFK0OmNwUTXNITLX8VwcrXK7lhIRkmjNmcEIcnW8Om5T7ajI+tOZb7
+         72Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706849735; x=1707454535;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x4F54oWj9ECEcH1NBGn7lQh9aozrsidT6aq0Ua0NYqg=;
+        b=ieiF7TlJugFboNtSPCpaUg7DL2zAwtbbCICH+zAVG7Zj7kfZxEOlFR6O7i264qSSzM
+         QpCPd15BqLT4rum5K/8RHUHRt/Imz38aEVMZ77mky/rgtejuY4L4aC7nhoYecxrSA9M3
+         gXTKnULBO72z3hGeoZYKJq44EGTqETNBFElEHVdof7X23VblV7f5Eg5ivVe19oXY8FW6
+         MQQzhcX6Va9CTLNBAly/M5Bhn6kfSl3uP03REI9tiFBS09Sn02gwFtciiwUVn2o6MYGy
+         CrvCzMA3p0TxMtd4IA5LptFfqIcT7C/ZY3O7mbQKeikl/O5sVFc9WhD48FGV7GWgwSJq
+         j6eQ==
+X-Gm-Message-State: AOJu0Yz6ATqI36RAKvCNSYKsSqK94iOsvkBeW/9P7Pobsybf3T5cBWuY
+	cnp0HSBHmiYmbvr34EMFBnN9/5m0NP6m4bE9/XaPDuABTumnXqWx
+X-Google-Smtp-Source: AGHT+IFxTKQC2MJ/rQeUs8h6zf1wW5trleLfX/5jZSaf9XUEEDCY6HJ4yvvPM+IKBzY2imgzqKCTEA==
+X-Received: by 2002:a17:902:f9cb:b0:1d5:8cbc:863c with SMTP id kz11-20020a170902f9cb00b001d58cbc863cmr1435468plb.27.1706849735443;
+        Thu, 01 Feb 2024 20:55:35 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUuzGWXEriJLeKQmmTDmUTB7aZmUbOXiU2mC2rYxMsQ1toxMQW42aabv+jnoeuV3WboTI06ja14Lf5LXWKL2MP/qUlFg6NSF3VNQcbJVQ6SFX5/XQix/EDMWmmmKPkPFxN8YNsCU6chrqSUyQXyEJE/gHDUBO8n3hpqvN32qbMmK510/cx1nSbQX6EnBHbiT7Smi1Dk7lctprqdtQ==
+Received: from google.com ([2620:15c:9d:2:c30c:2f35:dc97:44fc])
+        by smtp.gmail.com with ESMTPSA id i133-20020a636d8b000000b005d0796e779bsm652708pgc.12.2024.02.01.20.55.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 20:55:35 -0800 (PST)
+Date: Thu, 1 Feb 2024 20:55:32 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-input@vger.kernel.org
+Subject: Re: [PATCH regression fix 0/2] Input: atkbd - Fix Dell XPS 13 line
+ suspend/resume regression
+Message-ID: <Zbx1xA5FK_c8EEmm@google.com>
+References: <20240126160724.13278-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126160724.13278-1-hdegoede@redhat.com>
 
-I'm relatively new here, first time reporting a regression, so apologies in 
-advance if I'm doing something wrong.
+On Fri, Jan 26, 2024 at 05:07:22PM +0100, Hans de Goede wrote:
+> Hi Dmitry,
+> 
+> There have been multiple reports that the keyboard on
+> Dell XPS 13 9350 / 9360 / 9370 models has stopped working after
+> a suspend/resume after the merging of commit 936e4d49ecbc ("Input:
+> atkbd - skip ATKBD_CMD_GETID in translated mode").
+> 
+> See the 4 closes tags in the first patch for 4 reports of this.
+> 
+> I have been working with the first reporter on resolving this
+> and testing on his Dell XPS 13 9360 confirms that these patches
+> fix things.
+> 
+> Unfortunately the commit causing the issue has also been picked
+> up by multiple stable kernel series now. Can you please send
+> these fixes to Linus ASAP, so that they can also be backported
+> to the stable series ASAP ?
+> 
+> Alternatively we could revert the commit causing this, but that
+> commit is know to fix issues on a whole bunch of other laptops
+> so I would rather not revert it.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Hans de Goede (2):
+>   Input: atkbd - Skip ATKBD_CMD_SETLEDS when skipping ATKBD_CMD_GETID
+>   Input: atkbd - Do not skip atkbd_deactivate() when skipping
+>     ATKBD_CMD_GETID
 
-I'm using Arch Linux (linux-mainline kernel) on my chromebook Acer Spin 713-2W 
-(Voxel), and after upgrading linux-mainline from 6.7-rc4 to 6.7-rc5 the audio 
-setup isn't working anymore. Firstly I suspected its some changes in the sof-
-firmware, yet got no luck in upgrading sof-firmware (2023.09.2 -> 2023.12). 
+Applied the lot to 'for-linus' branch, I will get it into the next push.
 
-On certain chromebooks, audio setup needs custom ALSA ucm confs [1], but after 
-contacting the chromebook-linux-audio developer [2], I think it's not a conf 
-problem, but rather a kernel regression.
+Thanks.
 
-After hours of bisecting, the first bad commit 31ed8da (ASoC: SOF: sof-audio: 
-Modify logic for enabling/disabling topology cores) ensures the regression. 
-demsg log pasted below:
-
-// before 31ed8da, working
-[   61.572587] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.572593] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.572594] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.573247] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.573250] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.573251] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.573888] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.573892] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.573893] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-[   61.574570] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x60010000 (msg/reply size: 108/20): -22
-[   61.574572] sof-audio-pci-intel-tgl 0000:00:1f.3: HW params ipc failed for 
-stream 1
-[   61.574573] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_hw_params on 0000:00:1f.3: -22
-
-
-// after 31ed8da, broken
-[   48.930740] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x30020000 (msg/reply size: 12/0): -13
-[   48.930762] sof-audio-pci-intel-tgl 0000:00:1f.3: failed to free widget 
-DMIC0.IN
-[   57.235697] sof-audio-pci-intel-tgl 0000:00:1f.3: ipc tx error for 
-0x30030000 (msg/reply size: 16/0): -22
-[   57.235701] sof-audio-pci-intel-tgl 0000:00:1f.3: sof_ipc3_route_setup: 
-route DMIC0.IN -> BUF4.0 failed
-[   57.235703] sof-audio-pci-intel-tgl 0000:00:1f.3: 
-sof_ipc3_set_up_all_pipelines: route set up failed
-[   57.235704] sof-audio-pci-intel-tgl 0000:00:1f.3: Failed to restore 
-pipeline after resume -22
-[   57.235706] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.235926] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.235966] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236006] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236041] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236074] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236107] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236141] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236173] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236205] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-[   57.236239] sof-audio-pci-intel-tgl 0000:00:1f.3: ASoC: error at 
-snd_soc_pcm_component_pm_runtime_get on 0000:00:1f.3: -22
-
-Steps to reproduce:
-
-- Run chromebook-linux-audio script [2] (this would install custom sof-rt5682 
-ucm confs [1] into /usr/share/alsa/ucm2/conf.d/sof-rt5682 and write a line 
-`options snd-intel-dspcfg dsp_driver=3` to /etc/modprobe.d/snd-sof.conf)
-- Reboot, gets audio working on kernels before 31ed8da
-- Install latest stable kernel (6.7.3), audio broken
-- Install latest git kernel (6.8-rc2), audio broken
-- Revert 31ed8da, build upon latest linux-git (6.8-rc2), audio working
-
-Apologies for my busyiness that I should have reported it long before the 
-regression enters stable and lts, but sadly linux-lts (6.6.13) seems to be 
-affected too [3].
-
-Please let me know if there's any other thing that I can help debugging.
-
--- Mole Shang
-
-[1]: https://github.com/WeirdTreeThing/chromebook-ucm-conf/tree/main/sof-rt5682
-[2]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/70
-[3]: https://github.com/WeirdTreeThing/chromebook-linux-audio/issues/
-70#issuecomment-1911048309
-
-
-#regzbot introduced: 31ed8da1c8e5e504710bb36863700e3389f8fc81
-
-
+-- 
+Dmitry
