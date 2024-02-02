@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D27717C60;
-	Fri,  2 Feb 2024 08:05:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D745B48CD2;
+	Fri,  2 Feb 2024 08:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706861126; cv=none; b=R+TDCMS+ERVJXdQiXvBIJbFzEL6WrmIarwdtn6iW+jy74iwgp3ZmwM2Zf0aPxkSg1sLda7EGs7udGPrWPeE642b43NS3c/rmzZDCPP+eVNT+nOgb/FrZ96aFGyt20drA8EeUnekevA1hQo+eE1ggBh6FTtECCAhxQqRxaznIRa8=
+	t=1706861705; cv=none; b=hI2nYd+FKw8mIv0/63v88Inz/wUYPzniE7jnMRi9yzm1qa1dkFKCebLl6ZvnUClQtdjZNow2BTKuhhNvauzqvcQ822UBUS1d1SlCRtijs/sV05aGFUKbY1Iuph6+G0pIjox+rKm3OQxmWZYwpuLQh2sZZkG5ldZPFhc/7YKXsWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706861126; c=relaxed/simple;
-	bh=Vg1XxSqmJwWWwd4PvpyxRuBAnDABWmuMzUuRFetuMFY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MLUsNbtg6m7nUj8MsxZdbmx5pOFJhV6+Jtga342xTNJnHTeFsqp2EjoNRODD7+Rwkf2Rau7gPVz8s1frmadjmVZS947vJRiABGAdLKBOi7PfdpgyG+0h4K4fGzwqqbEYgjTJoZV0umv7svRR562MXTn3A4057T+8HMgtHeKTZkA=
+	s=arc-20240116; t=1706861705; c=relaxed/simple;
+	bh=i4db+4fXLLc4iBdxESAdEOMW07qa5OKHK6f1hxgRkck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hW1k+nktr2iG5BGR8opwKXWGFWqRelyUcbD9vYs3g2j7MTailjtUHh0nqtu60HwE50m3yVHU96A8r37QYsZG1g+D603cYbYe8Uxh5R/CZ+IRFzn2tA+b7DI0lhLbMHMk2m/0HPhro8Tq+yEZE6gqBB53aLVwoS0dWjHyvYtcrtw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rVoY5-0000LL-NL; Fri, 02 Feb 2024 09:05:21 +0100
-Message-ID: <4cb64e29-4b17-45cc-86bd-dcbbef14848f@leemhuis.info>
-Date: Fri, 2 Feb 2024 09:05:21 +0100
+	id 1rVohL-0002ck-Sz; Fri, 02 Feb 2024 09:14:55 +0100
+Message-ID: <ccbb3aeb-daa1-49ba-b729-964bd97748bc@leemhuis.info>
+Date: Fri, 2 Feb 2024 09:14:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,38 +26,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: PS/2 keyboard of laptop Dell XPS 13 9360 goes missing after S3
+Subject: Re: [regression] ath11k broken in v6.7
 Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
- regressions@lists.linux.dev
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
- <4eaf27ed-66a2-4aeb-a6b9-21e2b0455676@leemhuis.info>
-In-Reply-To: <4eaf27ed-66a2-4aeb-a6b9-21e2b0455676@leemhuis.info>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: ath11k@lists.infradead.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
+ <878r4lg3t8.fsf@kernel.org> <87jzo13jmf.fsf@kernel.org>
+ <94150b26-bdd9-49c2-82a1-26ff46c9d32a@leemhuis.info>
+ <87fryp3he0.fsf@kernel.org>
+ <0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info>
+ <871qa0xtk6.fsf@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <871qa0xtk6.fsf@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706861124;0a3b6850;
-X-HE-SMSGID: 1rVoY5-0000LL-NL
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706861703;a1282543;
+X-HE-SMSGID: 1rVohL-0002ck-Sz
 
-On 27.01.24 09:12, Linux regression tracking #update (Thorsten Leemhuis)
-wrote:
-> On 18.01.24 13:57, Paul Menzel wrote:
->> #regzbot introduced v6.6.11..v6.7
+On 29.01.24 12:33, Kalle Valo wrote:
+> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+>> On 22.01.24 09:24, Kalle Valo wrote:
+>>> "Linux regression tracking (Thorsten Leemhuis)"
+>>> <regressions@leemhuis.info> writes:
+>>
+>> That "#regzbot link:" will vanish as well (at least from the docs, it
+>> will remain to be supported), as people use it wrong in various
+>> different ways: for duplicates, reports (like your did), patch
+>> submissions fixing the issue (then 'regzbot monitor' should have been
+>> used) among others. Which is totally understandable now that I look at
+>> it. That's why it will be replaced by "#regzbot related: <url>" to avoid
+>> any connection with the Link: tag used in commits; for duplicates
+>> "#regzbot dup:" will stay around.
 > 
-> #regzbot introduced 936e4d49ecbc
-> #regzbot ignore-activity
+> So, in the new interface, how should I handle a situation that a
+> regression is first reported on the mailing list, added to regzbot and
+> later there's also a bug report opened for the issue?
 
-#regzbot monitor:
-https://lore.kernel.org/all/20240126160724.13278-1-hdegoede@redhat.com/
-#regzbot fix: 683cd8259a9b883a51
-#regzbot ignore-activity
+You will have to options: reply to the first report with a "#regzbot
+duplicate https://bugzilla.kernel.org/show_bug.cgi?id=325423423423542"
+or add a comment to the bugzilla ticket pointing to a report already
+tracked by regzbot, e.g. "#regzbot duplicate
+https://lore.kernel.org/not_relevant/msgid-423423423423423423/"
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+>>> I wish there would be a person who could follow stable
+>>> releases from wireless perspective and make sure everything is ok there.
+>> Maybe at some point regression tracking can help somewhat with that. But
+>> I still have to fix a few things to make people use it and scale it up.
+> I just feel it should be more than that, I'm worried that randomly
+> taking wireless commits to stable releases is risky. There really should
+> be someone looking after wireless (read: reviewing patches) in stable
+> releases. This would be a good role for someone who is interested to
+> learn how kernel.org development works and helping the community. Do we
+> have a way to announce these kind volunteer vacancies somewhere? :)
+
+Not that I know of. Guess kernelnewbies might be the best place for that
+(and maybe they have something like that already...).
+
+Ciao, Thorsten
