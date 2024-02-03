@@ -1,70 +1,172 @@
-Received: from mail.r2rien.org (srv.r2rien.org [92.243.11.103])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591DE5EE8A
-	for <regressions@lists.linux.dev>; Sat,  3 Feb 2024 16:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.243.11.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A396134D1
+	for <regressions@lists.linux.dev>; Sat,  3 Feb 2024 22:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706979016; cv=none; b=irfBvMOq8ihVnky7yS0PwlLBo88Rnb/w7VemagPKOsJ3D/+QeFcbIQujflNNT1lhibobtc9+SaQLBa5gYDSSWJHsSHfYL5eS8uorwTPmCZt4sL7auCYpJp16faJ7pnSimgWZHsvNNH6fsjDRNLbHDXCG2hj3gTTU4BKPZG0BO0g=
+	t=1706997858; cv=none; b=hQx6//El+POsSfrkNFceOrHbkXbRv9+2EpZU00ZfiAek/xPR+nVSCCh5ETn1ABLQ7vGodKSaEShWUpG8SlJAJl3kteddTpKxSi2kMdC1KtWIZGmRpSjya5ST/idq8x2kaVgWOK9+Z+IeMBYKK81PMet48H4mtzibx72zbbS/PJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706979016; c=relaxed/simple;
-	bh=Y86ictid7gY0ft+rClKcRFxQAdXWDQup5I+qVZWiij0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=Pz2kPUxmdodU4fD2HNEBqUWKC5T0FwIptQx0C6FKFkqS2RnTtpuqBAasA5D6YhXBummGijd52PgQCuSMeJmA2AERJINxs/VefS3rexgOC4jE0XmmrKCPc+MZ3ra0QNEODgeRckniu/4V47lnKxl+KC055IDz1o2d4nV9dCOX2Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=r2rien.net; spf=pass smtp.mailfrom=r2rien.net; arc=none smtp.client-ip=92.243.11.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=r2rien.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r2rien.net
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=178.132.106.162; helo=[10.8.3.5]; envelope-from=debian@r2rien.net; receiver=hdegoede@redhat.com 
-Received: from [10.8.3.5] (unknown [178.132.106.162])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
+	s=arc-20240116; t=1706997858; c=relaxed/simple;
+	bh=4oNJDfxh60asCYceTHnZ+3VxEbkaJ68cGNVxuKB1nZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRTjeNQ62432W8L3cq4vkzvyZj2HJXJ4aPEipcfy0Nk6zvfJ0lq8IX2OY5YZU4zmFD2/B3AGVY9Z6POAr4V9Hjxv6Rc1VKxXgk1/YYGmLAzhVhaR1t6Syv2Og4vVaYXREqsAkuaX8lRJTv0yWcSZIbA9TgJ8yBGy9NyCo7BV54w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMxiCfNB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kQOGILAR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMxiCfNB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kQOGILAR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMxiCfNB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kQOGILAR";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMxiCfNB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kQOGILAR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.r2rien.org (Postfix) with ESMTP id 6B0AB31F9F;
-	Sat,  3 Feb 2024 17:13:36 +0100 (CET)
-Message-ID: <bc166c19-8da3-cd42-b749-e35eaebe7822@r2rien.net>
-Date: Sat, 3 Feb 2024 17:16:50 +0100
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 75FE621D58;
+	Sat,  3 Feb 2024 22:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706997854;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
+	b=KMxiCfNBGDQ0KFkkd/hPqGhVI6AwK+pOSGKG0BPm2HjuBl/mPwviLKdEVQoP7cyRSs1VEH
+	RKJtLdkdfaXNEJ07C89U8wdkRKSm+MCC+Pjh6DgfUA95n0J/Nehn1iIAVlZfsNFOleZkHp
+	FaG78tS4ms5SUe198XxdUHXp4fPZ3UU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706997854;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
+	b=kQOGILAR7b0NkZBOyQO7+HgAGAELb7WFLHpWhDNq4/ZH1TG1jfu4ITcOVjs+StPutHVNrd
+	dcBwvsd1A0grT5BA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706997854;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
+	b=KMxiCfNBGDQ0KFkkd/hPqGhVI6AwK+pOSGKG0BPm2HjuBl/mPwviLKdEVQoP7cyRSs1VEH
+	RKJtLdkdfaXNEJ07C89U8wdkRKSm+MCC+Pjh6DgfUA95n0J/Nehn1iIAVlZfsNFOleZkHp
+	FaG78tS4ms5SUe198XxdUHXp4fPZ3UU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706997854;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
+	b=kQOGILAR7b0NkZBOyQO7+HgAGAELb7WFLHpWhDNq4/ZH1TG1jfu4ITcOVjs+StPutHVNrd
+	dcBwvsd1A0grT5BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4ECF1137FD;
+	Sat,  3 Feb 2024 22:04:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2zEHE164vmXLCQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Sat, 03 Feb 2024 22:04:14 +0000
+Date: Sat, 3 Feb 2024 23:03:46 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Anand Jain <anand.jain@oracle.com>, Alex Romosan <aromosan@gmail.com>,
+	CHECK_1234543212345@protonmail.com, brauner@kernel.org,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	dsterba@suse.cz
+Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
+ update-grub
+Message-ID: <20240203220346.GA355@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+ <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
+ <20240111155056.GG31555@twin.jikos.cz>
+ <20240111170644.GK31555@twin.jikos.cz>
+ <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
+ <7d3cee75-ee74-4348-947a-7e4bce5484b2@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.15.1
-Subject: + XPS 13 9343
-Content-Language: en-US
-To: hdegoede@redhat.com
-References: <0aa4a61f-c939-46fe-a572-08022e8931c7@molgen.mpg.de>
- <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
-From: Antoine <debian@r2rien.net>
-Cc: Dell.Client.Kernel@dell.com, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- pmenzel@molgen.mpg.de, regressions@lists.linux.dev, 1061521@bugs.debian.org
-In-Reply-To: <f27b491c-2f1c-4e68-804c-24eeaa8d10de@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d3cee75-ee74-4348-947a-7e4bce5484b2@leemhuis.info>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.00
+X-Spamd-Result: default: False [-1.00 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[oracle.com,gmail.com,protonmail.com,kernel.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com,suse.cz];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[19.53%]
+X-Spam-Flag: NO
 
-On 1/20/24 21:26, Hans de Goede wrote:
-> Can you try adding "i8042.dumbkbd=1" to your kernel commandline?
+On Thu, Feb 01, 2024 at 11:25:28AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
 > 
-> The next question is if the keyboard will still actually
-> work after suspend/resume with "i8042.dumbkbd=1". If it
-> stays in the list, but no longer works
+> Anand, what's the status wrt to below issue (which afaics seems to
+> affect quite a few people)? Things look stalled, but I might be missing
+> something, that's why I ask for a quick update.
 
-Hi, thanks a lot for taking into account our hardware,
-just a supplementary feedback:
+Yeah it's affecting people and not stalled but we ran out of ideas.
 
-In my case (Dell XPS 13 9343/i5-5200U):
-- Dell Inc. XPS 13 9343/0TM99H, BIOS A19 12/24/2018
-- Linux version 6.6.13-1 (2024-01-20)
+I'll present the latest fix that works for me (similar setup as the
+reporter), though not everybody may like it:
 
-commandline with `i8042.dumbkbd=1` fixes the issue,
-with capslock functional but without led
-+ as a side note, hibernate doesn't trigger any issue
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2360,6 +2360,7 @@ static int btrfs_unfreeze(struct super_block *sb)
+ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
+ {
+        struct btrfs_fs_info *fs_info = btrfs_sb(root->d_sb);
++       char real[4096] = { "/dev/" };
+ 
+        /*
+         * There should be always a valid pointer in latest_dev, it may be stale
+@@ -2367,7 +2368,8 @@ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
+         * the end of RCU grace period.
+         */
+        rcu_read_lock();
+-       seq_escape(m, btrfs_dev_name(fs_info->fs_devices->latest_dev), " \t\n\\");
++       scnprintf(real + 5, sizeof(real) - 5, "%pg", fs_info->fs_devices->latest_dev->bdev);
++       seq_puts(m, real);
+        rcu_read_unlock();
+ 
+        return 0;
+---
 
-(before getting informed of and testing `i8042.dumbkbd=1`)
-I had attached logs before/after suspend against 6.6.11 and 6.6.13 :
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1061521#30
+The problem that was reported was a discrepancy in what show_devname
+returned (/proc/self/mountinfo) and what eg. mount showed. Both resolve
+the device name in a different way. The problem is that mountinfo relies
+on what btrfs remembers as the device path that was passed during
+scanning && at the mount time. Since then it's not updated due to
+changes done in 6.7 for temp_fsid (single devices don't have any cached
+representation of the device, so the new path is basically forgotten).
 
-I remain at your disposal for any further infos/testing
-best regards,
-Antoine
+What the fix does: print the path of the same block device but not the
+cached (possibly stale) value.
