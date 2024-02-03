@@ -1,78 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E782F14461A;
-	Fri,  2 Feb 2024 12:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5415D728;
+	Sat,  3 Feb 2024 09:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706877028; cv=none; b=NaOaucKwYVPCpnqyVh2E0+pElLDJU5WdyOx45jJUYajOuKDdWbi7AHX+j/7tFxRsZWa3rhZjpOB5XPA8CNH5OI8LsZvrkFWcn/4jvMNtfSp9tfdNl9Pt0VGRsnR7zECuSl85FYAjTkwm1nVxHbRb3+IGncEEww1u5JXlQPvSdH8=
+	t=1706952275; cv=none; b=JhlmUpFtKmM8lIBnEu0WjiO8Uj+jKY52xD0gCs/SZv0ZBhi9n9tOl32m74wvr47Dk+os2TUHDxCjaqsIa5eGs6P/ELOCzWJzvP0xKFchxVvXQhDRzSbOhWO3pKNGNQLzLUBWEDBcvvREqJzjTWud2Az+IKpIBAbU82uTGMPOou4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706877028; c=relaxed/simple;
-	bh=plRVnWo3cLidU9FUKqA9yG6+oyyfjWE049KtPhHgMTQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qsr7oIZgq94xWLCBoKAd1BEcBs1A9syCo9NwZSH+uKFOWA8mtIlLny7esEXqtc7fy4pBdNC14rfSyCuwAHVvmmGobFUTNz/iSwdmus7n0hGocD8y9+9xVDHUZUcQGQRtA8nxdFiyKof8wgXPtb3WFxBSB8b0PtfAgozK91M8G0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHc5UpRM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHc5UpRM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C56C8C433B1;
-	Fri,  2 Feb 2024 12:30:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706877025;
-	bh=plRVnWo3cLidU9FUKqA9yG6+oyyfjWE049KtPhHgMTQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nHc5UpRMP4Cq6w5REz4SkG8TpD1WuQ5Mo3ISEtPyU+FCah3X28UJrKzySXKsbQ4Ht
-	 ILjZaA+mbzAZMYoo6STEeKstfqhyKFQGDUh2sYpQWqpGnE8jJOlUt5chShxFZgVgHR
-	 tgZqZSK1TrW41JW1USOzlarPCYzAAEXov7GqL0NUFVmFQuI7TcDcGO4D6JQHmDY2it
-	 BmgxCTfH0tH2Y6U1qP4YhKIrUCfgZKzOnJtQswwLprAabdbVjqTxoOQUk9xyMITMAx
-	 ubq4moxVmO+TEpJd0hRWSvoLyG6F1dBwHGW8miCtOOvbCeAnJxhhVW4wR3JsofILc0
-	 ZceOGTz09Hb/A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A76B8C04E32;
-	Fri,  2 Feb 2024 12:30:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1706952275; c=relaxed/simple;
+	bh=uH4mJz4z0y+IyQgvblzylCvq8UBc92LMdZ5tmXgKbLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BwF2zMg09Uc6LZdSZO7fxEeDFwPx2YzMAM1avnnBYmiUBsNqNYP0FHgYqcd2A/RsGuTZFUmn++a03HexJH70qJiwRXd5EjgGCDwqpJ8NeFOQ904r5fvQDzQRGcBtDTSv1c7qmmJ+rtvNAwNeDR5yhAWFzLjCyV0lT9elpFq6vUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rWCG4-0001ZP-Tq; Sat, 03 Feb 2024 10:24:21 +0100
+Message-ID: <ad920491-9d73-4512-8996-badace520699@leemhuis.info>
+Date: Sat, 3 Feb 2024 10:24:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: Fix from address in memcpy_to_iter_csum()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170687702567.1471.17975786299632818065.git-patchwork-notify@kernel.org>
-Date: Fri, 02 Feb 2024 12:30:25 +0000
-References: <20240131155220.82641-1-bevan@bi-co.net>
-In-Reply-To: <20240131155220.82641-1-bevan@bi-co.net>
-To: Michael Lass <bevan@bi-co.net>
-Cc: netdev@vger.kernel.org, dhowells@redhat.com, regressions@lists.linux.dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: huge_memory: don't force huge page alignment on 32
+ bit
+Content-Language: en-US, de-DE
+To: Yang Shi <shy828301@gmail.com>, jirislaby@kernel.org, surenb@google.com,
+ riel@surriel.com, willy@infradead.org, cl@linux.com,
+ akpm@linux-foundation.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: yang@os.amperecomputing.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240118133504.2910955-1-shy828301@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20240118133504.2910955-1-shy828301@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706952274;0485d69a;
+X-HE-SMSGID: 1rWCG4-0001ZP-Tq
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Wed, 31 Jan 2024 16:52:20 +0100 you wrote:
-> While inlining csum_and_memcpy() into memcpy_to_iter_csum(), the from
-> address passed to csum_partial_copy_nocheck() was accidentally changed.
-> This causes a regression in applications using UDP, as for example
-> OpenAFS, causing loss of datagrams.
+On 18.01.24 14:35, Yang Shi wrote:
+> From: Yang Shi <yang@os.amperecomputing.com>
 > 
-> Fixes: dc32bff195b4 ("iov_iter, net: Fold in csum_and_memcpy()")
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: stable@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Signed-off-by: Michael Lass <bevan@bi-co.net>
+> The commit efa7df3e3bb5 ("mm: align larger anonymous mappings on THP
+> boundaries") caused two issues [1] [2] reported on 32 bit system or compat
+> userspace.
 > 
-> [...]
+> It doesn't make too much sense to force huge page alignment on 32 bit
+> system due to the constrained virtual address space.
+> 
+> [1] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#mf211643a0427f8d6495b5b53f8132f453d60ab95
+> [2] https://lore.kernel.org/linux-mm/CAHbLzkqa1SCBA10yjWTtA2mKCsoK5+M1BthSDL8ROvUq2XxZMw@mail.gmail.com/T/#me93dff2ccbd9902c3e395e1c022fb454e48ecb1d
 
-Here is the summary with links:
-  - net: Fix from address in memcpy_to_iter_csum()
-    https://git.kernel.org/netdev/net/c/fe92f874f091
+[FWIW, this is now 4ef9ad19e17676 ("mm: huge_memory: don't force huge
+page alignment on 32 bit") in mainline]
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Quick question: it it okay to ask Greg to pick this up for linux-6.7.y
+series?
 
+I'm wondering because Jiri's report ([1] in above quote) sounded like
+this is something that will affect and annoy quite a few people with the
+linux-6.7.y.
 
+Ciao, Thorsten
+
+> Fixes: efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries")
+> Reported-by: Jiri Slaby <jirislaby@kernel.org>
+> Reported-by: Suren Baghdasaryan <surenb@google.com>
+> Tested-by: Jiri Slaby <jirislaby@kernel.org>
+> Tested-by: Suren Baghdasaryan <surenb@google.com>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Christopher Lameter <cl@linux.com>
+> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+> ---
+>  mm/huge_memory.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 94ef5c02b459..e9fbaccbe0c0 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -37,6 +37,7 @@
+>  #include <linux/page_owner.h>
+>  #include <linux/sched/sysctl.h>
+>  #include <linux/memory-tiers.h>
+> +#include <linux/compat.h>
+>  
+>  #include <asm/tlb.h>
+>  #include <asm/pgalloc.h>
+> @@ -811,6 +812,14 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
+>  	loff_t off_align = round_up(off, size);
+>  	unsigned long len_pad, ret;
+>  
+> +	/*
+> +	 * It doesn't make too much sense to froce huge page alignment on
+> +	 * 32 bit system or compat userspace due to the contrained virtual
+> +	 * address space and address entropy.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_32BIT) || in_compat_syscall())
+> +		return 0;
+> +
+>  	if (off_end <= off_align || (off_end - off_align) < size)
+>  		return 0;
+>  
