@@ -1,172 +1,135 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A396134D1
-	for <regressions@lists.linux.dev>; Sat,  3 Feb 2024 22:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C287B79D9;
+	Sun,  4 Feb 2024 07:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706997858; cv=none; b=hQx6//El+POsSfrkNFceOrHbkXbRv9+2EpZU00ZfiAek/xPR+nVSCCh5ETn1ABLQ7vGodKSaEShWUpG8SlJAJl3kteddTpKxSi2kMdC1KtWIZGmRpSjya5ST/idq8x2kaVgWOK9+Z+IeMBYKK81PMet48H4mtzibx72zbbS/PJ8=
+	t=1707030020; cv=none; b=i1vHew0WMyhzh2RjVPYR7QNVa75Vyp+rGopWvCy6q5n4B08mbWbIcRJQEgwER/7PTklQYrOG/NyKqSOjM/fDmOOo+JnEVZjah9kvyz0VJ/YdBRF4aOBv9wd75wfFbckPme/73PFUAqvcL7ThVASfUPRaOdT/Jnww8qymxCvyAis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706997858; c=relaxed/simple;
-	bh=4oNJDfxh60asCYceTHnZ+3VxEbkaJ68cGNVxuKB1nZk=;
+	s=arc-20240116; t=1707030020; c=relaxed/simple;
+	bh=8661Y0/Nx7RuVYumZYoG7drVF0R/l5u7s+/FglujsaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRTjeNQ62432W8L3cq4vkzvyZj2HJXJ4aPEipcfy0Nk6zvfJ0lq8IX2OY5YZU4zmFD2/B3AGVY9Z6POAr4V9Hjxv6Rc1VKxXgk1/YYGmLAzhVhaR1t6Syv2Og4vVaYXREqsAkuaX8lRJTv0yWcSZIbA9TgJ8yBGy9NyCo7BV54w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMxiCfNB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kQOGILAR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMxiCfNB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kQOGILAR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtKYfxfqff/vTyB+FXmVSrJcoEIZk9VxyGhYTAuhulxP/xLA66tHkJ/zyO/Ldk/LYW2ftqDDsts+DaW6ALnf3p+5hAbthRZjwxplBnKZDXYr5qB36DdU1DQfrEP34U7gwtsBm55Si5gSs7OuxYiv9qpY3gg1EcysITV7eZw4sO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SFtJ0CDe; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMxiCfNB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kQOGILAR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMxiCfNB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kQOGILAR"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 75FE621D58;
-	Sat,  3 Feb 2024 22:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706997854;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
-	b=KMxiCfNBGDQ0KFkkd/hPqGhVI6AwK+pOSGKG0BPm2HjuBl/mPwviLKdEVQoP7cyRSs1VEH
-	RKJtLdkdfaXNEJ07C89U8wdkRKSm+MCC+Pjh6DgfUA95n0J/Nehn1iIAVlZfsNFOleZkHp
-	FaG78tS4ms5SUe198XxdUHXp4fPZ3UU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706997854;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
-	b=kQOGILAR7b0NkZBOyQO7+HgAGAELb7WFLHpWhDNq4/ZH1TG1jfu4ITcOVjs+StPutHVNrd
-	dcBwvsd1A0grT5BA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706997854;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
-	b=KMxiCfNBGDQ0KFkkd/hPqGhVI6AwK+pOSGKG0BPm2HjuBl/mPwviLKdEVQoP7cyRSs1VEH
-	RKJtLdkdfaXNEJ07C89U8wdkRKSm+MCC+Pjh6DgfUA95n0J/Nehn1iIAVlZfsNFOleZkHp
-	FaG78tS4ms5SUe198XxdUHXp4fPZ3UU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706997854;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CBP6rxsvCRGoqNDs3If3+DWyofv58n0zrUDxNRyJ2QA=;
-	b=kQOGILAR7b0NkZBOyQO7+HgAGAELb7WFLHpWhDNq4/ZH1TG1jfu4ITcOVjs+StPutHVNrd
-	dcBwvsd1A0grT5BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4ECF1137FD;
-	Sat,  3 Feb 2024 22:04:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2zEHE164vmXLCQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Sat, 03 Feb 2024 22:04:14 +0000
-Date: Sat, 3 Feb 2024 23:03:46 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Anand Jain <anand.jain@oracle.com>, Alex Romosan <aromosan@gmail.com>,
-	CHECK_1234543212345@protonmail.com, brauner@kernel.org,
-	linux-btrfs <linux-btrfs@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	dsterba@suse.cz
-Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
- update-grub
-Message-ID: <20240203220346.GA355@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
- <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
- <20240111155056.GG31555@twin.jikos.cz>
- <20240111170644.GK31555@twin.jikos.cz>
- <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
- <7d3cee75-ee74-4348-947a-7e4bce5484b2@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFtJ0CDe"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-295ecd6a198so2985685a91.0;
+        Sat, 03 Feb 2024 23:00:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707030018; x=1707634818; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ls6Mi40yNUbNNpO5+Qb+1ZFV4tqKPYuOaltTFV8czDk=;
+        b=SFtJ0CDeXiNBZthO2IRWQR1f1rRjYbE2sFUnX2JVA9E6/yOrrWG+dH4L/bvFImKTGu
+         QVUObProQPSC8UgCZe/JoZPeQF0/sV7y/cUDoPBmXYPl/BImzBS9v8yBfpjIGVPNygAE
+         Yf/iK/Hiuk+5raUzap2t+7iT31nunFbRQMgfLYSIzZexIFA3jMUgLKah6dmY1kbEqfwq
+         oyjJGAAd4sNVve3lSRhJiA7i8fpSH4HaoNkix1pyPDAPEFBh/GSyN7DxnUttol5NGusI
+         Oq4VQ+Lr9JgVYDrmJA0+sYqpCXgJlN2M1izpxuN7bzHx9lbhgOV22izfyvI3rZhJJgXJ
+         CEYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707030018; x=1707634818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ls6Mi40yNUbNNpO5+Qb+1ZFV4tqKPYuOaltTFV8czDk=;
+        b=tAywyyRlKmmLYDzeNTu6KsqiofSbMa0xv1TtHluSGLqSC66zBfDmXuwAM37enEHidm
+         tLI+Si5kr31vw/4v+SPlViFeLA9o1xIJCZQj8Nk7TuCllSRY/0inXxLlM81lwFI9O9af
+         mWujV4+m5BKZ+IkIoHL+2WJGPaGI7VgbdLZrJ4o38On8w+UbClBBn8gaynyOyuZb+uDD
+         KIrtDB+81b0zZhP+u3viQKL09w8bUNJ64GHH1nt3d1J9zAlDGuF6fASQEKuoS1my5zys
+         8psUrYKcwaksPfCkVAGmUR2r2RC+UBhRSKHR7kaBxPY/RWq9VAQRLOwUwyg8P36vH7g3
+         1lUg==
+X-Gm-Message-State: AOJu0Yxp7lxpNUe85eGZph3FM70g8MbJ74tVpaltlHBhOvOXpdW1vG5X
+	7Bkz/I6akz3Gw4DgVhBmSnxRQFosQeKpRFFn5HVYsZZutld8kCEF
+X-Google-Smtp-Source: AGHT+IGumx77O+mD7S0IJk8bTE/rcgFHuK13SpzHA2E2ZfF9WzS+fqNP+YLJp2x3QcB6wa9jFfxaYA==
+X-Received: by 2002:a17:90b:118:b0:296:66a4:2e6c with SMTP id p24-20020a17090b011800b0029666a42e6cmr4209357pjz.23.1707030017181;
+        Sat, 03 Feb 2024 23:00:17 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCW6bAJUuy0WFBeag/Wv1txPVhF6TSKN7feT1iyJljFgrJynow2lAlw2/C7Oy4hITWstghiGrm08V7/z/lm4elbJ+ScSldEoHvi7PQqgVchDymeJyA2aOIqFHNonqxmO9Ae1CzRF4NKnCvMvro9TByv23W0V+U9TMcAGr4pEkfVjDUu99q8h00Wd/A9JuLN+ED7eVMGlWsu7LcwIctJjftIritOT+Wxz/YG4JBrO2iTGzm2MsME/ttVe1Gqw2Y1iautGgK+T1TRUhG+ltZwGgF1Y3TJUXYta6XB7svSYbg2SfeiyFg==
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id pc4-20020a17090b3b8400b002966d60854asm1810725pjb.52.2024.02.03.23.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Feb 2024 23:00:16 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E83631846855D; Sun,  4 Feb 2024 14:00:12 +0700 (WIB)
+Date: Sun, 4 Feb 2024 14:00:12 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, Ale Crismani <ale.crismani@automattic.com>,
+	David Wang <00107082@163.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Sasha Levin <sashal@kernel.org>,
+	=?utf-8?B?0KHRgtCw0YEg0J3QuNGH0LjQv9C+0YDQvtCy0LjRhw==?= <stasn77@gmail.com>,
+	Linux Regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH 6.6 295/322] netfilter: ipset: fix performance regression
+ in swap operation
+Message-ID: <Zb81_PFP54xFYQSd@archie.me>
+References: <20240203035359.041730947@linuxfoundation.org>
+ <20240203035408.592513874@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7MNbQI9FVEC8e4H/"
 Content-Disposition: inline
-In-Reply-To: <7d3cee75-ee74-4348-947a-7e4bce5484b2@leemhuis.info>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.00
-X-Spamd-Result: default: False [-1.00 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[oracle.com,gmail.com,protonmail.com,kernel.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com,suse.cz];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[19.53%]
-X-Spam-Flag: NO
+In-Reply-To: <20240203035408.592513874@linuxfoundation.org>
 
-On Thu, Feb 01, 2024 at 11:25:28AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> for once, to make this easily accessible to everyone.
-> 
-> Anand, what's the status wrt to below issue (which afaics seems to
-> affect quite a few people)? Things look stalled, but I might be missing
-> something, that's why I ask for a quick update.
 
-Yeah it's affecting people and not stalled but we ran out of ideas.
+--7MNbQI9FVEC8e4H/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll present the latest fix that works for me (similar setup as the
-reporter), though not everybody may like it:
+On Fri, Feb 02, 2024 at 08:06:32PM -0800, Greg Kroah-Hartman wrote:
+> 6.6-stable review patch.  If anyone has any objections, please let me kno=
+w.
+>=20
+> ------------------
+>=20
+> From: Jozsef Kadlecsik <kadlec@netfilter.org>
+>=20
+> [ Upstream commit 97f7cf1cd80eeed3b7c808b7c12463295c751001 ]
+>=20
+> The patch "netfilter: ipset: fix race condition between swap/destroy
+> and kernel side add/del/test", commit 28628fa9 fixes a race condition.
+> But the synchronize_rcu() added to the swap function unnecessarily slows
+> it down: it can safely be moved to destroy and use call_rcu() instead.
+>=20
+> Eric Dumazet pointed out that simply calling the destroy functions as
+> rcu callback does not work: sets with timeout use garbage collectors
+> which need cancelling at destroy which can wait. Therefore the destroy
+> functions are split into two: cancelling garbage collectors safely at
+> executing the command received by netlink and moving the remaining
+> part only into the rcu callback.
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -2360,6 +2360,7 @@ static int btrfs_unfreeze(struct super_block *sb)
- static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
- {
-        struct btrfs_fs_info *fs_info = btrfs_sb(root->d_sb);
-+       char real[4096] = { "/dev/" };
- 
-        /*
-         * There should be always a valid pointer in latest_dev, it may be stale
-@@ -2367,7 +2368,8 @@ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
-         * the end of RCU grace period.
-         */
-        rcu_read_lock();
--       seq_escape(m, btrfs_dev_name(fs_info->fs_devices->latest_dev), " \t\n\\");
-+       scnprintf(real + 5, sizeof(real) - 5, "%pg", fs_info->fs_devices->latest_dev->bdev);
-+       seq_puts(m, real);
-        rcu_read_unlock();
- 
-        return 0;
----
+Hi,
 
-The problem that was reported was a discrepancy in what show_devname
-returned (/proc/self/mountinfo) and what eg. mount showed. Both resolve
-the device name in a different way. The problem is that mountinfo relies
-on what btrfs remembers as the device path that was passed during
-scanning && at the mount time. Since then it's not updated due to
-changes done in 6.7 for temp_fsid (single devices don't have any cached
-representation of the device, so the new path is basically forgotten).
+=D0=A1=D1=82=D0=B0=D1=81 =D0=9D=D0=B8=D1=87=D0=B8=D0=BF=D0=BE=D1=80=D0=BE=
+=D0=B2=D0=B8=D1=87 <stasn77@gmail.com> reported ipset kernel panic with this
+patch [1]. He noted that reverting it fixed the regression.
 
-What the fix does: print the path of the same block device but not the
-cached (possibly stale) value.
+Thanks.
+
+[1]: https://lore.kernel.org/stable/CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-=
+ddMYHSw4wK0Q@mail.gmail.com/
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--7MNbQI9FVEC8e4H/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZb81/AAKCRD2uYlJVVFO
+o6yMAQD+XIfg2ZnUmevc4CxPU6FzWaEm65ZEJsavQBjlnb1qYAD+M2/ludbMe4FC
+raLjLPmYz5/r3XpCmIGRkkQ67dSZ7AM=
+=NAm+
+-----END PGP SIGNATURE-----
+
+--7MNbQI9FVEC8e4H/--
