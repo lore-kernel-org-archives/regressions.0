@@ -1,106 +1,132 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-kfki.kfki.hu (smtp2-kfki.kfki.hu [148.6.0.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418EB225A8;
-	Sun,  4 Feb 2024 13:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25EF225CD;
+	Sun,  4 Feb 2024 15:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.6.0.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707054501; cv=none; b=stZhgkugR7ZSkSHVy4vixI44gq1UxshT2/BW52FXJcvamymXypk5sOK7ADUXdkWULuAXL4u4YS/qAQitOPdpwAHxmLjkdeUkMxCKJsG/F8ll6oEjYP345o19stNbqreLL2ROWFdqyWzbfxU7CicFLTK7vH0zjq1r3EyBVfI/9qY=
+	t=1707060416; cv=none; b=uE3nO3RQdv/O8R3p3wHESwL9YSuIlT5c9ADRiqvPCeAZTdUR9dl/glNpoI6zewWeE1jB9Y3qaH4wBmwC+hUtaFw8PVONxf7K3DtUFJs/phCskgQQVMSToc0tJFf1st4CJTp4+XgGC8/txfyf4jlzYLDseFblNS2XPqbBWZBCUg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707054501; c=relaxed/simple;
-	bh=dommXLpkhW5rWBJGGIywT82Ro1CkiMhNVTxvfzq4Bzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s429ASvc1AsgiqdCWja3OC9+x9x0V8Pe2DOAy6Ow1dkGp0s0UXOH9X8FpZbsm1CfyKpi1Hz2R9ZOhNP1h7lCYsOKcetr99u8waol6CsXM6Pdt8j6Pe6wkmwAcKITwVoZSwPviLV8UJourdLn4XropLic3xqZMpGZAFtKGV0D+8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=USvJ1FzP; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707060416; c=relaxed/simple;
+	bh=7iPYp14ttKDRzg0Rn0ksDKD70GCmLEtxCJIrniNkEI8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=QeU45a7s3klep38GVrLZGd98m9xJsLRE/zxJAkm/mVeKS0gMC7ECbWokPC/twckCAjunAhIrJViHJi4ePJbvvixdsfX8cYecdN5vTQA+MITkxc6I2hSDbiIk0XgV3Zwv4yDe/uI7RcGenfyMRtFFB5mqxHBn0hpOQVluYgOyt48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=blackhole.kfki.hu; dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b=ZoPfDVJJ; arc=none smtp.client-ip=148.6.0.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blackhole.kfki.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USvJ1FzP"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e0432f1a17so50514b3a.0;
-        Sun, 04 Feb 2024 05:48:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707054499; x=1707659299; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YBqZEhMQayOVKwBOR8eZbUcOV1plLyIzz/XGKnc3OzU=;
-        b=USvJ1FzPyEuLCHqgKLNCNRMqWUXoAZrLmrYAfz0R5wVVMF3VYbYnfqhclo6Dg5dUFE
-         JzoOqrPxDYNG3rOpwnbaM4Zu7ZrdcQJEYT7U8jzuf12yksWfYt5H6Ohq3I5ed4l9fqX8
-         f7GIn2Kb++L+FuPOzsKkMgXV4I/hob6UMlqbz5zd1C4jkXf9j2w2sxt2GnlvDmCpsTHK
-         juUVFYS+klLwqTYPfZaRi25iytJ0W+CxoBBtEjVcugCPDKVcVsrQVNjhaaV8b32koHnC
-         +pE0a2+AZ6qJhVDXVxciQFHQfd9yXBAxw3ZYralBEJB27rDxdu5hAzzAxyqXA0naXXlK
-         oZrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707054499; x=1707659299;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YBqZEhMQayOVKwBOR8eZbUcOV1plLyIzz/XGKnc3OzU=;
-        b=ctdRFEuP9arL6A/fb0StmIvNJ+bur8Cqz8hFoRFFE86Eb+dGNfjWdB+oi/maGrJ5Uj
-         JiCobIFj2LD5F+54+EyEz819DXp8iaypOOZaePn49BE60c4UUudHlj4Xs5e59BQtv7aC
-         S74u4pect1hbzs2vd94F3scc6mfiyPppDsubAWJ7B21HO9wN7Gqo6VIAUAhkjLOlAI2j
-         7PWfrLMqtK48pefEmKCWVmAF2MBUEWeVjlw6p9QMTyb1Us9mheqaYszBhpS/VtyTBKDn
-         RB82u7AvN0HNokxeooXu2tIatup2pa9v0UIRFifWeXWPgIz+/EGpgpz+J0cneU5lTe8e
-         tmOg==
-X-Gm-Message-State: AOJu0YxovRn7vSmYVx/apsb6USPSkNXtVFsc0gJj1LZmQYcPld9fQScw
-	ew3zo2aMfrCsiuIgeqRtoRr7Oder0iDTbdRrL1lSOg+hRFwUrpCd
-X-Google-Smtp-Source: AGHT+IFTCFMJch9TPz7Alp9rH6qAqDDW6cjpUQrxMx2kzs6jj3hAx+mfiIAE9XxwF4J+dhwSlbwl3A==
-X-Received: by 2002:a05:6a00:812:b0:6e0:3d87:813e with SMTP id m18-20020a056a00081200b006e03d87813emr1610387pfk.25.1707054499623;
-        Sun, 04 Feb 2024 05:48:19 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV/I8YSEZUfabADaGdBAyr5bzh5da3zh8r0xhfgipYrtEnqHDU1WQ8sLK9jcu4HompjrH6/0Lg6GVS1GcUaSAnjWpd1rkRZA05AiIUFQ+a6H2pyhEluOV2c1qZBXaSXagfcyzIkODBediKwzPGEC4LYG3WRreQjVZGprndSFdR93sC4b8ohib7zlpach68aBihtVdMviXi7JIt24hR8hUU62LwTyU02z6Eu5tn/6z3ICI0zprZIPqbPgDmPMgR3hoaxHvbd0GLRt/7xC2u/vTIhUWaCZhul5hNfNbEviagjtOEz8z4=
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id d9-20020a056a0010c900b006ddb77d443asm4780453pfu.209.2024.02.04.05.48.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Feb 2024 05:48:19 -0800 (PST)
-Message-ID: <741fdb22-4570-4432-bc9b-8ac7221aa0fd@gmail.com>
-Date: Sun, 4 Feb 2024 20:48:12 +0700
+	dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b="ZoPfDVJJ"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp2.kfki.hu (Postfix) with ESMTP id D5D3ECC0113;
+	Sun,  4 Feb 2024 16:26:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	blackhole.kfki.hu; h=mime-version:x-mailer:message-id:date:date
+	:from:from:received:received:received; s=20151130; t=1707060403;
+	 x=1708874804; bh=dsbYFCiaYghNSFHIu28oyYblodX8NXu4ECAa9ru7zn0=; b=
+	ZoPfDVJJWsPYx8JsBO7K9tEmPUarM1x4vawYQfsPD8pVXQh85vRJO1YPw//ugQxN
+	JDhwj+t58ojEzmSWf+Wt8/lXTFJbvP1B5t9v+V9JfV7hypF0wO5zR/nA84H5qgRQ
+	vDi8jCjM+T66gxo698G8NHp87O9XHE2VJbZMftRiUhM=
+X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
+Received: from smtp2.kfki.hu ([127.0.0.1])
+	by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP; Sun,  4 Feb 2024 16:26:43 +0100 (CET)
+Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [148.6.240.2])
+	by smtp2.kfki.hu (Postfix) with ESMTP id 5A683CC0110;
+	Sun,  4 Feb 2024 16:26:42 +0100 (CET)
+Received: by blackhole.kfki.hu (Postfix, from userid 1000)
+	id 53066343169; Sun,  4 Feb 2024 16:26:42 +0100 (CET)
+From: Jozsef Kadlecsik <kadlec@netfilter.org>
+To: netfilter-devel@vger.kernel.org
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	stable@vger.kernel.org,
+	patches@lists.linux.dev,
+	Ale Crismani <ale.crismani@automattic.com>,
+	David Wang <00107082@163.com>,
+	Sasha Levin <sashal@kernel.org>,
+	=?UTF-8?q?=D0=A1=D1=82=D0=B0=D1=81=20=D0=9D=D0=B8=D1=87=D0=B8=D0=BF=D0=BE=D1=80=D0=BE=D0=B2=D0=B8=D1=87?= <stasn77@gmail.com>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 1/1] netfilter: ipset: Missing gc cancellations fixed
+Date: Sun,  4 Feb 2024 16:26:42 +0100
+Message-Id: <20240204152642.1394588-1-kadlec@netfilter.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 295/322] netfilter: ipset: fix performance regression
- in swap operation
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
- Ale Crismani <ale.crismani@automattic.com>, David Wang <00107082@163.com>,
- Jozsef Kadlecsik <kadlec@netfilter.org>,
- Pablo Neira Ayuso <pablo@netfilter.org>, Sasha Levin <sashal@kernel.org>,
- =?UTF-8?B?0KHRgtCw0YEg0J3QuNGH0LjQv9C+0YDQvtCy0LjRhw==?=
- <stasn77@gmail.com>, Linux Regressions <regressions@lists.linux.dev>
-References: <20240203035359.041730947@linuxfoundation.org>
- <20240203035408.592513874@linuxfoundation.org> <Zb81_PFP54xFYQSd@archie.me>
- <2024020441-grumpily-crumb-03c3@gregkh>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <2024020441-grumpily-crumb-03c3@gregkh>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-On 2/4/24 19:48, Greg Kroah-Hartman wrote:
-> On Sun, Feb 04, 2024 at 02:00:12PM +0700, Bagas Sanjaya wrote:
->> Hi,
->>
->> Стас Ничипорович <stasn77@gmail.com> reported ipset kernel panic with this
->> patch [1]. He noted that reverting it fixed the regression.
->>
->> Thanks.
->>
->> [1]: https://lore.kernel.org/stable/CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com/
-> 
-> Is this also an issue in Linus's tree?
-> 
+The patch fdb8e12cc2cc ("netfilter: ipset: fix performance regression
+in swap operation") missed to add the calls to gc cancellations
+at the error path of create operations and at module unload. Also,
+because the half of the destroy operations now executed by a
+function registered by call_rcu(), neither NFNL_SUBSYS_IPSET mutex
+or rcu read lock is held and therefore the checking of them results
+false warnings.
 
-Hi Greg,
+Reported-by: syzbot+52bbc0ad036f6f0d4a25@syzkaller.appspotmail.com
+Reported-by: Brad Spengler <spender@grsecurity.net>
+Reported-by: =D0=A1=D1=82=D0=B0=D1=81 =D0=9D=D0=B8=D1=87=D0=B8=D0=BF=D0=BE=
+=D1=80=D0=BE=D0=B2=D0=B8=D1=87 <stasn77@gmail.com>
+Fixes: fdb8e12cc2cc ("netfilter: ipset: fix performance regression in swa=
+p operation")
+Tested-by: Brad Spengler <spender@grsecurity.net>
+Tested-by: =D0=A1=D1=82=D0=B0=D1=81 =D0=9D=D0=B8=D1=87=D0=B8=D0=BF=D0=BE=D1=
+=80=D0=BE=D0=B2=D0=B8=D1=87 <stasn77@gmail.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+---
+ net/netfilter/ipset/ip_set_core.c     | 2 ++
+ net/netfilter/ipset/ip_set_hash_gen.h | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-The reporter had confirmed [1] the issue on mainline.
-
-Thanks.
-
-[1]: https://lore.kernel.org/stable/CAH37n11rbpaxzmt03FXQpC0Ue=_J4W4eG12PxvF3ung+uLv8Qg@mail.gmail.com/
-
--- 
-An old man doll... just what I always wanted! - Clara
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_s=
+et_core.c
+index bcaad9c009fe..3184cc6be4c9 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1154,6 +1154,7 @@ static int ip_set_create(struct sk_buff *skb, const=
+ struct nfnl_info *info,
+ 	return ret;
+=20
+ cleanup:
++	set->variant->cancel_gc(set);
+ 	set->variant->destroy(set);
+ put_out:
+ 	module_put(set->type->me);
+@@ -2378,6 +2379,7 @@ ip_set_net_exit(struct net *net)
+ 		set =3D ip_set(inst, i);
+ 		if (set) {
+ 			ip_set(inst, i) =3D NULL;
++			set->variant->cancel_gc(set);
+ 			ip_set_destroy_set(set);
+ 		}
+ 	}
+diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/=
+ip_set_hash_gen.h
+index c62998b46f00..7f362cad8e68 100644
+--- a/net/netfilter/ipset/ip_set_hash_gen.h
++++ b/net/netfilter/ipset/ip_set_hash_gen.h
+@@ -431,7 +431,7 @@ mtype_ahash_destroy(struct ip_set *set, struct htable=
+ *t, bool ext_destroy)
+ 	u32 i;
+=20
+ 	for (i =3D 0; i < jhash_size(t->htable_bits); i++) {
+-		n =3D __ipset_dereference(hbucket(t, i));
++		n =3D hbucket(t, i);
+ 		if (!n)
+ 			continue;
+ 		if (set->extensions & IPSET_EXT_DESTROY && ext_destroy)
+@@ -451,7 +451,7 @@ mtype_destroy(struct ip_set *set)
+ 	struct htype *h =3D set->data;
+ 	struct list_head *l, *lt;
+=20
+-	mtype_ahash_destroy(set, ipset_dereference_nfnl(h->table), true);
++	mtype_ahash_destroy(set, h->table, true);
+ 	list_for_each_safe(l, lt, &h->ad) {
+ 		list_del(l);
+ 		kfree(l);
+--=20
+2.39.2
 
