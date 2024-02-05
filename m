@@ -1,89 +1,146 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F60111A0;
-	Mon,  5 Feb 2024 08:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D1718E1A
+	for <regressions@lists.linux.dev>; Mon,  5 Feb 2024 11:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707121965; cv=none; b=F/JmmkbEnT0LU9rvlIYZAbrKY+AwU8IzZgnwcjT0IFBVF8ZUsOileq8X5RsuMhfvgbA9vBxdkPekq4bQyY16leLqXJP3dCBJKhzNJor9Tq/uGkQ2lYKldiAEwZZpypJsx1N8KRf5i5mgq4ZS0vvkcsX7zdf/Q/PDrxRVKRbv7Y4=
+	t=1707132413; cv=none; b=euSQu032BojyuKkU6v+q09yMHdPXe2JYvjbft5acwYvxwbP5iQzt61/LmQ86r2uXUiGbW6tzwz3heTS4/xMU4YLIBrbkSeMut9VGK/8JSoa1ygV1djJ+yQCaOT0+gaIbup3yrMPOXk+KgO739QIAHVCtH/ZFC4OZxjDYagaXpcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707121965; c=relaxed/simple;
-	bh=cGi0edXAms+gLfEuC09SdCR3GDmLrpY/mp4Jfcdl4RY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=duGW6yix4LPP9Ea3DR07IivCEp24AxyFwlZyZT/4EidXRV1vcCWTg/dwASG4rl8BzUu1w9QubK/6R4uAtJrpPr/2NfPPfiQUO6HcYMagReh8WIEUMOIqb017mmXLz7hgZ59YUp0gaO5sOSIkPn1/FO3gAccBrXlNqi55dvdZxD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rWuP5-0000WV-IQ; Mon, 05 Feb 2024 09:32:35 +0100
-Message-ID: <680ab492-8ffb-46a6-ab76-06605954308d@leemhuis.info>
-Date: Mon, 5 Feb 2024 09:32:34 +0100
+	s=arc-20240116; t=1707132413; c=relaxed/simple;
+	bh=ybivmONZX65EOsfSi7RsxbgZyaxo2g1bO2vvi/l94VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=or4ENuO3jcYskuCOwirttt+MiOtXO143v07NrkDIrkFYAbEW/Yysw/7CzDmu7p6ERcm4pI3PH1s5CY74LhBqC9N3roGWL+VC/wduJB57vkBLj/Z74Uud70M5UeyuNhjkZOUc8CpCMvYhBvyyKEYxOsS60Z9P2wGB0mDgUYx1E6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1Ahb1pxm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/Ejd9csA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1Ahb1pxm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/Ejd9csA; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1Ahb1pxm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/Ejd9csA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1Ahb1pxm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/Ejd9csA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 789D522277;
+	Mon,  5 Feb 2024 11:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707132408;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybivmONZX65EOsfSi7RsxbgZyaxo2g1bO2vvi/l94VE=;
+	b=1Ahb1pxmTN+R6L8y/ozKrZ4/vT7kT3QMrc+r/M/l0WIQADO9GMV01yVUxdYTfKBL1pnAwr
+	7rTVLQwYzIixhTS+30z/knNCgwOhudufEDdwLXBIZ7beJaYSBmChvbiy6FP86u9CYRiGon
+	wHV2EHNlnxLwcSlou+gHtPhadHaq/fI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707132408;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybivmONZX65EOsfSi7RsxbgZyaxo2g1bO2vvi/l94VE=;
+	b=/Ejd9csA5Z0I93oCa7LPkd3i8ZicW6zmBssTB+tupksD9ZBkslYCdW6TDCVvHrOzVxZBjO
+	pIXh3u/qMvBHXcCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707132408;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybivmONZX65EOsfSi7RsxbgZyaxo2g1bO2vvi/l94VE=;
+	b=1Ahb1pxmTN+R6L8y/ozKrZ4/vT7kT3QMrc+r/M/l0WIQADO9GMV01yVUxdYTfKBL1pnAwr
+	7rTVLQwYzIixhTS+30z/knNCgwOhudufEDdwLXBIZ7beJaYSBmChvbiy6FP86u9CYRiGon
+	wHV2EHNlnxLwcSlou+gHtPhadHaq/fI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707132408;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybivmONZX65EOsfSi7RsxbgZyaxo2g1bO2vvi/l94VE=;
+	b=/Ejd9csA5Z0I93oCa7LPkd3i8ZicW6zmBssTB+tupksD9ZBkslYCdW6TDCVvHrOzVxZBjO
+	pIXh3u/qMvBHXcCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 58BAE136F5;
+	Mon,  5 Feb 2024 11:26:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 295mFfjFwGV0QAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 05 Feb 2024 11:26:48 +0000
+Date: Mon, 5 Feb 2024 12:26:19 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Alex Romosan <aromosan@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Anand Jain <anand.jain@oracle.com>,
+	CHECK_1234543212345@protonmail.com, brauner@kernel.org,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	dsterba@suse.cz
+Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks
+ update-grub
+Message-ID: <20240205112619.GC355@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
+ <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info>
+ <20240111155056.GG31555@twin.jikos.cz>
+ <20240111170644.GK31555@twin.jikos.cz>
+ <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
+ <7d3cee75-ee74-4348-947a-7e4bce5484b2@leemhuis.info>
+ <CAKLYgeLhcE5+Td9eGKAi0xeXSsom381RxuJgKiQ0+oHDNS_DJA@mail.gmail.com>
+ <CAKLYgeKCuDmnuGHuQYPdZZA1_H3s9_9oh+vT_FMpFZqxKSvjzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: More detailed text about bisecting Linux kernel regression --
- request for comments and help
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bagas Sanjaya <bagasdotme@gmail.com>, Greg KH <gregkh@linuxfoundation.org>,
- Jani Nikula <jani.nikula@linux.intel.com>
-References: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c763e15e-e82e-49f8-a540-d211d18768a3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707121963;a9f84ed4;
-X-HE-SMSGID: 1rWuP5-0000WV-IQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKLYgeKCuDmnuGHuQYPdZZA1_H3s9_9oh+vT_FMpFZqxKSvjzw@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1Ahb1pxm;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/Ejd9csA"
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.21 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[lists.linux.dev,oracle.com,protonmail.com,kernel.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com,suse.cz];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[38.99%]
+X-Spam-Score: -1.21
+X-Rspamd-Queue-Id: 789D522277
+X-Spam-Flag: NO
 
-On 24.01.24 13:19, Thorsten Leemhuis wrote:
-> Hi! Find below a WIP text on bisecting Linux kernel regressions I plan
-> to submit for inclusion in the Linux kernel documentation in a month or
-> two. I could do so now, but chose to write this mail instead, as the
-> text would really benefit from a few people actually testing the given
-> instructions. Hence if you notice somebody that faces a regression that
-> needs bisecting, consider poiting them them to this text, asking them to
-> play through this and provide feedback to me.
-> 
-> Ideally point users to the following rendered version:
-> https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
-> 
-> It is (a) a lot easier to read (b) has no odd or broken line breaks,
-> like the text below has a few (sorry!) (c) is updated when I improve
-> something.
-> 
-> Anyone who might be willing to provide feedback can do so in a reply
-> here or by modifying the following document (which for copyright reasons
-> is just a copy of the document I use to prepared the text for the actual
-> submission):
-> https://docs.google.com/document/d/1Im7SPK0j6PUGQTSGZyCTSQv8h3S51EYsZuRRdyhfzto/edit?usp=sharing
+On Sun, Feb 04, 2024 at 07:29:29PM +0100, Alex Romosan wrote:
+> sorry about the html post (in case somebody actually got it). as i was
+> saying, just for the record it's still not fixed in 6.8-rc3. thanks.
 
-TWIMC, I changed a few important things since I wrote above mail. The
-most important parts:
+I've updated the bug with link to fix
 
-* I switched the default flow from "use a shallow clone of linux-stable"
- to "use a full clone of linux-mainline with stable added as remote";
-the instructions for shallow clones are now in the reference section, as
-it seems that was was some people prefer. Not really happy with that, as
-I think the shallow clone stuff was worth it and not that much more
-complicated. But whatever, not really unhappy either (maybe I like it a
-bit better myself that way, not sure yet). :-D
+https://github.com/kdave/btrfs-devel/commit/b80f3ec6592c69f88ebc74a4e16676af161e2759
 
-* I changed a few aspects to make the text properly cover the "verify a
-bug is present in mainline" aspect as well, as that's basically the
-preparation and segment 1 of the whole process anyway. Not totally sure
-if that was a good idea. Maybe having that in a separate copy might have
-been better (basically a copy with the segment 2 and 3 removed and a few
-small changes), not sure. But that should be easy to realize later.
-
-See above links for details.
-
-Ciao, Thorsten
+but would like to ask for testing.
