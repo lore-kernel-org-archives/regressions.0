@@ -1,93 +1,152 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9412E1ED
-	for <regressions@lists.linux.dev>; Tue,  6 Feb 2024 10:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FD4134CEB
+	for <regressions@lists.linux.dev>; Tue,  6 Feb 2024 12:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707215028; cv=none; b=VMftxCXRm0NN0ohcJGJqI6xeIPpkOmNWqJ4nQCg1V/nTmSwN8A6tbP8OtF58o8A3lsu0mmv8R8BRxcChBUDQ0ttR87tLawC1xkRV0ttPRFM2W7mAyCm13TBpD1CkpSIDED3a7XOk0jVn+GXV9pM/MfxPHVrE+MsMrHwecp/F2Qk=
+	t=1707222541; cv=none; b=e/ZnRvzDP54TNP/YbQDIrQGpXcvZwZXnEGt1dnAnRciWVJXX5vD98CK0+u/GLpx/H5/tbOpCzYmBJ76aChS71es1gCu1n48ljnmhsFaexujh7cYPdubRjhW4gLgcUYvQuOpOW7HU0NcTu7QiW45h2uCvrMBXhHPtaRwXxXFNw0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707215028; c=relaxed/simple;
-	bh=JQc7I9dtacgIh6dzApcTtL71VyIWn4aWCD9+Rsus/uU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OIqSoo4tjjX9Mow8PZmwEV9QbDx93TDg8r6IfuhOdW7odKiuag7cgCDAUxXDoAt/BEf3gypT+luDeJlzWN/RPOdEvdNPJMtLrggLTDDPOqzZPijqZ3E3LqoHDaydNoO1J/YcnEPDQ2a1s2IEmfySrAuwOtjPjneL0YCyheFecJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dgZn0sZm; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707222541; c=relaxed/simple;
+	bh=VBjZ4iAnpOC5YshUblel7Q7ms9brJlgx8tDTc5vjioo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKwm9CDiAO64Xamfuwa16abTBMGIGSWCYqeDBtLwJTPOXa04wpYmwN0OZDFgiU5qWr/wzViKdzycc6pirnYbL226dMATSZ6ft/ntlHBTRT5cERIQW0DYtOr3tl5YSF3ziCuH5oidL/LFnZfQ6KJM6MWf68kM+RHPJeLBPZFA/7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xVwxyley; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gmpDayKH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jkYDM+nz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=30hSAi4b; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dgZn0sZm"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4c033928deaso299009e0c.0
-        for <regressions@lists.linux.dev>; Tue, 06 Feb 2024 02:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707215026; x=1707819826; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DvZiY9ihexG/Lq+UzYShBWDLaHBQcaLwobbBS4o9zoI=;
-        b=dgZn0sZm6Gwi0ttMgdbmmE/Gkd8LJDrsN+8iEdRj7nlzm8/cFqyu46P04wywXOw6cb
-         Z1G4Q0Cpz9al84KyYuMbU/AUk4H16KGVy1fWA12VDMwn+HY+f28TmuG5r3O3gbPeAshZ
-         Ry7tQLaO5q4jNRY0XIT06mQYrTTWePVk69sZUwCwtdvasxZiktogd/e0SWgNtUMeYWz/
-         PBFLpAB7e2bT5Ekm9aVryeWMZzxxGf0P2qgbvTW2GfAzW/2iAwIzAVPI+7pC6TGJUPwQ
-         dXq96SG3FYsfzDGmaY0AR/qg0/GmNbvVdyyBQiaqs6obeu9sz4DRuSRtRrqyeBMxiasI
-         CyDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707215026; x=1707819826;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DvZiY9ihexG/Lq+UzYShBWDLaHBQcaLwobbBS4o9zoI=;
-        b=FDdmNour8DP6elEuEtKM2ckptNkkubbmweDqET1t7fMFzpUdHeko9FWIzX93y43QKL
-         lkyibPG4TjRXOPvCl5FTY0DaXsCYp1ExUZUdEHEusJekY0fjWqJE23tlXkxjEwEA/jTP
-         pK/R/axg3Fxs8u2BImhWwjvPo1MEya/GLpun6WnoWT2ggiCiHJQnsX+zfReviRHRq3fx
-         OQUvftzkZpqAm6I14XC2wXdjFml8zrhuQPecrnGuNVBYFp2T2xMk8KLw/7xaFqeLNZ4U
-         KgjN1X/WBk2aj3LP5rPHxYzC4pWevsPJmTooQn9xf2R8VHwyx5RRQcoqSvqr9wVSywHd
-         RWdw==
-X-Gm-Message-State: AOJu0YzjNuJiMffoXhqVPCuu5XKVPbZRg+mbIudPC2xZV7kEhEttoyWh
-	cXHflzSi62gZk5BMvBhnFuYEeIHJIymhRzc5XNuc9KZevKcbE7ZkYNHPrKno/7eZOlUNdIYqkQi
-	CTVvnpvmKiGy+pGJrHRSFKrnTtbVUt2r9IDF5gg==
-X-Google-Smtp-Source: AGHT+IGfDOnd2EhP4TWByrQOkcid9KL+1EpEAi8LxcA+nJejScdKhoTZckC004/fc+VBarRks/cvEIzLg7CHcNC2TZ8=
-X-Received: by 2002:a05:6122:17a8:b0:4b9:e8bd:3b2 with SMTP id
- o40-20020a05612217a800b004b9e8bd03b2mr1876525vkf.2.1707215025681; Tue, 06 Feb
- 2024 02:23:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xVwxyley";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gmpDayKH";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jkYDM+nz";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="30hSAi4b"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D9E2521FF4;
+	Tue,  6 Feb 2024 12:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707222538; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=97XujLeKB/pzSnxqeV5jx2ZlV1MqcFgYnkGqFctpKng=;
+	b=xVwxyleyVo1Yr5goTDT5pTdCj7Fch+5PsTkM6MeYIoCGtkdZzZHUOBDFEMmK9E718SQmYC
+	ptOO0FLXjhbrIMvT6A2W/ZxhKccQ70pkYAummk5hjfiAcM4XSGuTy3X+lEzPqlvPL8uxEU
+	0yFvzOlTJyEu/ZspQEffR8G/BXpr0to=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707222538;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=97XujLeKB/pzSnxqeV5jx2ZlV1MqcFgYnkGqFctpKng=;
+	b=gmpDayKH/P05ZNAs6pYJ/W7/Ez+gHadWsOIQaGMIdngQwGRR90eDvRSAlqmz4wDXZqB8PQ
+	Tl78H5UF8BYj+DCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1707222537; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=97XujLeKB/pzSnxqeV5jx2ZlV1MqcFgYnkGqFctpKng=;
+	b=jkYDM+nzzguoj/27Jwngnu7L5Oa5WG7vQ3ETb8RKiCBza5CiMvw/u3+kpx1QVb734dJwyP
+	eQsSbiqHmneO9SNLmY0YjAXzZ69OENzUp7Rwkb1mT5emxyfWekeJH/NV0O8BXVyEDpm6rR
+	48gd4WCNV2pQVLxucVhvhHNI45/en6M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1707222537;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=97XujLeKB/pzSnxqeV5jx2ZlV1MqcFgYnkGqFctpKng=;
+	b=30hSAi4bhWv7QWAy6tnPo3DAVBDkUPStsrRiyu3OIJXGRL3FproexVoXpVWKOhF5mOVvfg
+	NUzUAWdeOi84vPDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C343D139D8;
+	Tue,  6 Feb 2024 12:28:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nMepLwkmwmXnKAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 06 Feb 2024 12:28:57 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5886AA0809; Tue,  6 Feb 2024 13:28:57 +0100 (CET)
+Date: Tue, 6 Feb 2024 13:28:57 +0100
+From: Jan Kara <jack@suse.cz>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Jan Kara <jack@suse.cz>, linux-block <linux-block@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: next: /dev/root: Can't open blockdev
+Message-ID: <20240206122857.svm2ptz2hsvk4sco@quack3>
+References: <CA+G9fYttTwsbFuVq10igbSvP5xC6bf_XijM=mpUqrJV=uvUirQ@mail.gmail.com>
+ <20240206101529.orwe3ofwwcaghqvz@quack3>
+ <CA+G9fYup=QzTAhV2Bh_p8tujUGYNzGYKBHXkcW7jhhG6QFUo_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYttTwsbFuVq10igbSvP5xC6bf_XijM=mpUqrJV=uvUirQ@mail.gmail.com>
- <20240206101529.orwe3ofwwcaghqvz@quack3>
-In-Reply-To: <20240206101529.orwe3ofwwcaghqvz@quack3>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 6 Feb 2024 15:53:34 +0530
-Message-ID: <CA+G9fYup=QzTAhV2Bh_p8tujUGYNzGYKBHXkcW7jhhG6QFUo_g@mail.gmail.com>
-Subject: Re: next: /dev/root: Can't open blockdev
-To: Jan Kara <jack@suse.cz>
-Cc: linux-block <linux-block@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
-	lkft-triage@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYup=QzTAhV2Bh_p8tujUGYNzGYKBHXkcW7jhhG6QFUo_g@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [0.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[36.26%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.40
 
-On Tue, 6 Feb 2024 at 15:45, Jan Kara <jack@suse.cz> wrote:
->
-> On Tue 06-02-24 14:41:17, Naresh Kamboju wrote:
-> > All qemu's mount rootfs failed on Linux next-20230206 tag due to the following
-> > kernel crash.
+On Tue 06-02-24 15:53:34, Naresh Kamboju wrote:
+> On Tue, 6 Feb 2024 at 15:45, Jan Kara <jack@suse.cz> wrote:
 > >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > On Tue 06-02-24 14:41:17, Naresh Kamboju wrote:
+> > > All qemu's mount rootfs failed on Linux next-20230206 tag due to the following
+> > > kernel crash.
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > Crash log:
+> > > ---------
+> > > <3>[    3.257960] /dev/root: Can't open blockdev
+> > > <4>[    3.258940] VFS: Cannot open root device "/dev/sda" or
+> > > unknown-block(8,0): error -16
 > >
-> > Crash log:
-> > ---------
-> > <3>[    3.257960] /dev/root: Can't open blockdev
-> > <4>[    3.258940] VFS: Cannot open root device "/dev/sda" or
-> > unknown-block(8,0): error -16
->
-> Uhuh, -16 is EBUSY so it seems Christian's block device opening changes are
-> suspect? Do you have some sample kconfig available somewhere?
+> > Uhuh, -16 is EBUSY so it seems Christian's block device opening changes are
+> > suspect? Do you have some sample kconfig available somewhere?
+> 
+> All build information is in this url,
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2byqguFVp7MYAEjKo6nJGba2FcP/
 
-All build information is in this url,
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2byqguFVp7MYAEjKo6nJGba2FcP/
+Thanks! So for record the config has:
 
-- Naresh
+CONFIG_BLK_DEV_WRITE_MOUNTED=y
+
+So we are not hitting any weird corner case with blocking writes to mounted
+filesystems. It must be something else.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
