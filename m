@@ -1,179 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ED212AAC9
-	for <regressions@lists.linux.dev>; Tue,  6 Feb 2024 08:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4333512B177
+	for <regressions@lists.linux.dev>; Tue,  6 Feb 2024 09:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707206870; cv=none; b=eqXfYhRP6qrBM8XvxifVocSYaJFDQXdjCSY6xnwuCppfT1ncaOhzPxSG4do/4hYn6PG8FqlwuLuaM25Wj167KtiCgTxzqPejXotNb7dmGUbeWO8nRZvgku+3JHmQ5wQeY9oYl0TjGo9xf1drQdG5AvH5A2U13KklkObEM/BdZek=
+	t=1707210691; cv=none; b=r1wftvLzOSxwCQNGdQYRrmCb8rvi2DG/X5YbAq1A5NZg7S0ZcN3rwqgb0Ikw+bFQxOJ7J//UEe5ze1cr/ttcMw10IzE7VxIb2kZGLFg4gm2PGbIPLT84uxUck9N5APrziZHZ58CJvKoFZRDJxNu9JsO6Gys7LY7CJTv/P+Gffg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707206870; c=relaxed/simple;
-	bh=0KdOyQP5YNXhdX6GF4oEK/J8Apn0951e5RTs3Ez0SZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p+To6pPTOV6eTAbPC4owhme7vvqmkQISqGx1xRSjLO/xAbnJ9+og7XclL+AFNEL/hV15rerzE0ZGPK0tQdxor0RglXJrZyFnxE23MDYKEsg6jVMREuAa6rSivAjZuCt6cTJROuHwiVaEWv1DNCZzRGIC9h06tXUJjYcvRy1QE8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgcR4LAG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707210691; c=relaxed/simple;
+	bh=rfF/2hEZvke0SrtkyH4eMd943eOFLhj786txrpm8IRc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tTKTvBRiBVZ6pFCE+t2qENUZojH7pyS8O5tXIPiS1irkNF7hpY1MDfOfhHOUau1czHg5RVhnOFvm7WYrzmtuoaeS/fTz50iDdzH9qFxGR+6Ja8gXeXmYLH5ADOKDrjNtqwEgOZXbl6bR/tO5bj7/s1LTJ0NEmRhwrbdDCyPEJHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zc5/Ul4P; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgcR4LAG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D407C433F1
-	for <regressions@lists.linux.dev>; Tue,  6 Feb 2024 08:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707206870;
-	bh=0KdOyQP5YNXhdX6GF4oEK/J8Apn0951e5RTs3Ez0SZU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RgcR4LAGY9tP1cmySGDRHutvU403efWJGrfe9/P9Ioc1r98kKKZOgK9LItwJPv1+l
-	 mzSxq90Pxain9Jvax8nseuAxkQXmkl0IBnn3GsLpkf/W6Pw/2dNZirUlfRGc2BC1d6
-	 MQGFnRaCnn9eVhE4BNRm1Ktn+J5jDlICHi2+BPU8zEvcc71cTPznjC+DTOZ1gGKrDO
-	 Vxyz2fZbVWPJAWUVeTQOr/3P5mCIiezY+cEGZn/wEwmr4jfjYO9KMoKBu1Rvajh45k
-	 tDwGUoUcO5h4wwjfcivN3OcgFUz8yYdMf4R/yxLrmdtbi04ZSMpUqKkoacLG0JdZ87
-	 E8rjJ/1zTJK9g==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d0a6b9c9bcso26922631fa.1
-        for <regressions@lists.linux.dev>; Tue, 06 Feb 2024 00:07:50 -0800 (PST)
-X-Gm-Message-State: AOJu0Yw9lc3mo1EgKGw3/eGKlEI+DMRrrMBvWcLYJ4vJ8O7UwXmEqGEL
-	yE6WJLxz6d30FWCnhw2xNTaZ+tr/FlE270DFFtzCuvoGaw1wK29ZMFxfTvzqYU9WcGyzcOo1uO0
-	3MnUDOiMHJEjI2aWDUmOx6GOk8E8=
-X-Google-Smtp-Source: AGHT+IEqr/RMoaw1+tLSssWxsN2Qob/acBlyig1+T6sPks7geIvWPgti7f1gkRQQ2iVVMnUo8Tiw87wjfb6729oO38M=
-X-Received: by 2002:a2e:3c16:0:b0:2d0:aca4:b955 with SMTP id
- j22-20020a2e3c16000000b002d0aca4b955mr1320750lja.48.1707206868601; Tue, 06
- Feb 2024 00:07:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zc5/Ul4P"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4c01ac04569so1190384e0c.1
+        for <regressions@lists.linux.dev>; Tue, 06 Feb 2024 01:11:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707210689; x=1707815489; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Dt8kqDOU/E24oKSolewG5gpnabtVYYG3lPQtya8JjLk=;
+        b=Zc5/Ul4P5BWnteJ6L2bnVgbdmUB3A7hNCsL4Mk6PRu7QZpFtrO3IC8kZimIQxgLFvk
+         HpMNq40kmCpyOrk3VmXELG7UK0K6UdrtsxUQ2eIVGBm2ayCotjgsYCBaa99XUMj0IVfd
+         Ul9j+jj/UGJkcYNZwoNdB6l57pEy7uUdUrV0NoU6C5vEB4EwBb/Xwr96sCwCBYPZs/7k
+         vlw/izEHIIYY7cFFAbHilpkFJLHfyNWtGcy8vi4SvTSLJwuzGoyOAArYgx9PUYpbElEk
+         a5V/rVeHvQweudxBf2psSKjpaL9CgSBwDKOwPp9rTzdYOE8z0uxPSrggwOy4zP260Qlh
+         1QIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707210689; x=1707815489;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Dt8kqDOU/E24oKSolewG5gpnabtVYYG3lPQtya8JjLk=;
+        b=DhDVGzFS82+e6no4y/w0BmUge08NZB8ZN6atRDr8MjEZ+BzbG/gU18V+Yy5XMPdzVJ
+         UeI2hkXF2EJ5dDZFcz1F6ubp6auHz8VdQO+xrW8dja81MAUZt0W0dI81m+mJtP1JQqvF
+         t4YdEr1sy3Y8zuDfkOZmXjKdjsbWdnwNfRE7hniwicKbhlwQXKw5I54uBDik/Vwc5Z2r
+         o5J65Ry8tAMszTRHBUMnKH/2AQoIOYwVhz7DvCo2ZZBfPSJuaRLLoJFF9ufXbrAKYRAm
+         QKw2DvmiAJ2osCyca9/LKNdYKugMbidGKsQHwfs9fIFGJ7GR2oBF0ixUsyEQ1KOJAyfS
+         ZsUw==
+X-Gm-Message-State: AOJu0Yw9jx3jQR3m8JNMlCtiBO7fYV4LtdcZza6P/2lDAijfufjI6sU2
+	DpW0Mm8bQtzfTppFgTKZWwXtjXNNvBnpoCJ2AMBhTtmVYrZGEDspdVHtESuDx2HaDnIlabZRNM+
+	wMlemUx5es8agsFeF7BuzsJZT3bf2NiOUyFv6RA==
+X-Google-Smtp-Source: AGHT+IF6WWYrlBchEW0hvYZVNUtoLNY60FaTDcfmV9bCAdemD+s2jyOnG/4mz1rNqY28ZHvSjRzTK9XeDR3BEloMUHA=
+X-Received: by 2002:ac5:c64f:0:b0:4c0:1a5c:9185 with SMTP id
+ j15-20020ac5c64f000000b004c01a5c9185mr1828685vkl.4.1707210689106; Tue, 06 Feb
+ 2024 01:11:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2ef7d741-3df8-402a-967f-53ec77c73e2c@oracle.com> <20240125203130.28187-1-dan@danm.net>
-In-Reply-To: <20240125203130.28187-1-dan@danm.net>
-From: Song Liu <song@kernel.org>
-Date: Tue, 6 Feb 2024 00:07:36 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW58VdmZwigxP6t_fstkSDb34GB9+gTM0Sziet=n17HzQg@mail.gmail.com>
-Message-ID: <CAPhsuW58VdmZwigxP6t_fstkSDb34GB9+gTM0Sziet=n17HzQg@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Dan Moulding <dan@danm.net>
-Cc: junxiao.bi@oracle.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, yukuai1@huaweicloud.com
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 6 Feb 2024 14:41:17 +0530
+Message-ID: <CA+G9fYttTwsbFuVq10igbSvP5xC6bf_XijM=mpUqrJV=uvUirQ@mail.gmail.com>
+Subject: next: /dev/root: Can't open blockdev
+To: linux-block <linux-block@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, linux-fsdevel@vger.kernel.org, 
+	lkft-triage@lists.linaro.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 12:31=E2=80=AFPM Dan Moulding <dan@danm.net> wrote:
->
-> Hi Junxiao,
->
-> I first noticed this problem the next day after I had upgraded some
-> machines to the 6.7.1 kernel. One of the machines is a backup server.
-> Just a few hours after the upgrade to 6.7.1, it started running its
-> overnight backup jobs. Those backup jobs hung part way through. When I
-> tried to check on the backups in the morning, I found the server
-> mostly unresponsive. I could SSH in but most shell commands would just
-> hang. I was able to run top and see that the md0_raid5 kernel thread
-> was using 100% CPU. I tried to reboot the server, but it wasn't able
-> to successfully shutdown and eventually I had to hard reset it.
->
-> The next day, the same sequence of events occurred on that server
-> again when it tried to run its backup jobs. Then the following day, I
-> experienced another hang on a different machine, with a similar RAID-5
-> configuration. That time I was scp'ing a large file to a virtual
-> machine whose image was stored on the RAID-5 array. Part way through
-> the transfer scp reported that the transfer had stalled. I checked top
-> on that machine and found once again that the md0_raid5 kernel thread
-> was using 100% CPU.
->
-> Yesterday I created a fresh Fedora 39 VM for the purposes of
-> reproducing this problem in a different environment (the other two
-> machines are both Gentoo servers running v6.7 kernels straight from
-> the stable trees with a custom kernel configuration). I am able to
-> reproduce the problem on Fedora 39 running both the v6.6.13 stable
-> tree kernel code and the Fedora 39 6.6.13 distribution kernel.
->
-> On this Fedora 39 VM, I created a 1GiB LVM volume to use as the RAID-5
-> journal from space on the "boot" disk. Then I attached 3 additional
-> 100 GiB virtual disks and created the RAID-5 from those 3 disks and
-> the write-journal device. I then created a new LVM volume group from
-> the md0 array and created one LVM logical volume named "data", using
-> all but 64GiB of the available VG space. I then created an ext4 file
-> system on the "data" volume, mounted it, and used "dd" to copy 1MiB
-> blocks from /dev/urandom to a file on the "data" file system, and just
-> let it run. Eventually "dd" hangs and top shows that md0_raid5 is
-> using 100% CPU.
->
-> Here is an example command I just ran, which has hung after writing
-> 4.1 GiB of random data to the array:
->
-> test@localhost:~$ dd if=3D/dev/urandom bs=3D1M of=3D/data/random.dat stat=
-us=3Dprogress
-> 4410310656 bytes (4.4 GB, 4.1 GiB) copied, 324 s, 13.6 MB/s
+All qemu's mount rootfs failed on Linux next-20230206 tag due to the following
+kernel crash.
 
-Update on this..
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I haven't been testing the following config md-6.9 branch [1].
-The array works fine afaict.
-
-Dan, could you please run the test on this branch
-(83cbdaf61b1ab9cdaa0321eeea734bc70ca069c8)?
-
-Thanks,
-Song
+Crash log:
+---------
+<3>[    3.257960] /dev/root: Can't open blockdev
+<4>[    3.258940] VFS: Cannot open root device "/dev/sda" or
+unknown-block(8,0): error -16
+<4>[    3.259704] Please append a correct "root=" boot option; here
+are the available partitions:
+<4>[    3.261088] 0800         2500336 sda
+<4>[    3.261186]  driver: sd
+<4>[    3.262260] 0b00         1048575 sr0
+<4>[    3.262409]  driver: sr
+<3>[    3.263022] List of all bdev filesystems:
+<3>[    3.263553]  ext3
+<3>[    3.263708]  ext2
+<3>[    3.263994]  ext4
+<3>[    3.264160]  vfat
+<3>[    3.264419]  msdos
+<3>[    3.264589]  iso9660
+<3>[    3.264773]
+<0>[    3.265665] Kernel panic - not syncing: VFS: Unable to mount
+root fs on unknown-block(8,0)
+<4>[    3.266991] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+6.8.0-rc3-next-20240206 #1
+<4>[    3.267593] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[    3.268937] Call Trace:
+<4>[    3.269316]  <TASK>
+<4>[    3.270113]  dump_stack_lvl+0x71/0xb0
+<4>[    3.271837]  dump_stack+0x14/0x20
+<4>[    3.272128]  panic+0x12f/0x2f0
+<4>[    3.272812]  ? _printk+0x5d/0x80
+<4>[    3.273097]  mount_root_generic+0x26e/0x2b0
+<4>[    3.273941]  mount_block_root+0x3f/0x50
+<4>[    3.274212]  mount_root+0x60/0x80
+<4>[    3.274610]  prepare_namespace+0x7a/0xb0
+<4>[    3.276008]  kernel_init_freeable+0x137/0x180
+<4>[    3.276285]  ? __pfx_kernel_init+0x10/0x10
+<4>[    3.276563]  kernel_init+0x1e/0x1a0
+<4>[    3.276837]  ret_from_fork+0x45/0x50
+<4>[    3.277319]  ? __pfx_kernel_init+0x10/0x10
+<4>[    3.278176]  ret_from_fork_asm+0x1a/0x30
+<4>[    3.278560]  </TASK>
+<0>[    3.280750] Kernel Offset: 0x1a800000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[    3.281985] ---[ end Kernel panic - not syncing: VFS: Unable to
+mount root fs on unknown-block(8,0) ]---
 
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git/log/?h=3Dmd=
--6.9
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240206/testrun/22547673/suite/log-parser-test/test/check-kernel-panic/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240206/testrun/22547673/suite/log-parser-test/tests/
 
-[root@eth50-1 ~]# lsblk
-NAME                             MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-sr0                               11:0    1 1024M  0 rom
-vda                              253:0    0   32G  0 disk
-=E2=94=9C=E2=94=80vda1                           253:1    0    2G  0 part  =
-/boot
-=E2=94=94=E2=94=80vda2                           253:2    0   30G  0 part  =
-/
-nvme2n1                          259:0    0   50G  0 disk
-=E2=94=94=E2=94=80md0                              9:0    0  100G  0 raid5
-  =E2=94=9C=E2=94=80vg--md--data-md--data-real   250:2    0   50G  0 lvm
-  =E2=94=82 =E2=94=9C=E2=94=80vg--md--data-md--data      250:1    0   50G  =
-0 lvm   /mnt/2
-  =E2=94=82 =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  =
-0 lvm
-  =E2=94=94=E2=94=80vg--md--data-snap-cow        250:3    0   49G  0 lvm
-    =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  0 lvm
-nvme0n1                          259:1    0   50G  0 disk
-=E2=94=94=E2=94=80md0                              9:0    0  100G  0 raid5
-  =E2=94=9C=E2=94=80vg--md--data-md--data-real   250:2    0   50G  0 lvm
-  =E2=94=82 =E2=94=9C=E2=94=80vg--md--data-md--data      250:1    0   50G  =
-0 lvm   /mnt/2
-  =E2=94=82 =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  =
-0 lvm
-  =E2=94=94=E2=94=80vg--md--data-snap-cow        250:3    0   49G  0 lvm
-    =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  0 lvm
-nvme1n1                          259:2    0   50G  0 disk
-=E2=94=94=E2=94=80md0                              9:0    0  100G  0 raid5
-  =E2=94=9C=E2=94=80vg--md--data-md--data-real   250:2    0   50G  0 lvm
-  =E2=94=82 =E2=94=9C=E2=94=80vg--md--data-md--data      250:1    0   50G  =
-0 lvm   /mnt/2
-  =E2=94=82 =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  =
-0 lvm
-  =E2=94=94=E2=94=80vg--md--data-snap-cow        250:3    0   49G  0 lvm
-    =E2=94=94=E2=94=80vg--md--data-snap          250:4    0   50G  0 lvm
-nvme4n1                          259:3    0    2G  0 disk
-nvme3n1                          259:4    0   50G  0 disk
-=E2=94=94=E2=94=80vg--data-lv--journal           250:0    0  512M  0 lvm
-  =E2=94=94=E2=94=80md0                            9:0    0  100G  0 raid5
-    =E2=94=9C=E2=94=80vg--md--data-md--data-real 250:2    0   50G  0 lvm
-    =E2=94=82 =E2=94=9C=E2=94=80vg--md--data-md--data    250:1    0   50G  =
-0 lvm   /mnt/2
-    =E2=94=82 =E2=94=94=E2=94=80vg--md--data-snap        250:4    0   50G  =
-0 lvm
-    =E2=94=94=E2=94=80vg--md--data-snap-cow      250:3    0   49G  0 lvm
-      =E2=94=94=E2=94=80vg--md--data-snap        250:4    0   50G  0 lvm
-nvme5n1                          259:5    0    2G  0 disk
-nvme6n1                          259:6    0    4G  0 disk
-[root@eth50-1 ~]# cat /proc/mdstat
-Personalities : [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
-md0 : active raid5 nvme2n1[4] dm-0[3](J) nvme1n1[1] nvme0n1[0]
-      104790016 blocks super 1.2 level 5, 512k chunk, algorithm 2 [3/3] [UU=
-U]
-
-unused devices: <none>
-[root@eth50-1 ~]# mount | grep /mnt/2
-/dev/mapper/vg--md--data-md--data on /mnt/2 type ext4 (rw,relatime,stripe=
-=3D256)
+--
+Linaro LKFT
+https://lkft.linaro.org
