@@ -1,78 +1,66 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCCA21106;
-	Wed,  7 Feb 2024 09:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25FB24B2F;
+	Wed,  7 Feb 2024 10:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707297135; cv=none; b=Ik2iYYKfLS0FSR2feLdDyBub2ZcfsCtYcdqZrhvEKJTlO2IqJ5ayEoiyjaR/DVOk828Inmwtsa8tnB29IAg731WdYU30fGbGp0+fv8vAFTt4h9GYcBqzo0mlBI41oh7eas6UhN4OinZaaq5gfyy2ZiskpTYlPF8DjHQFn/nwSdU=
+	t=1707300578; cv=none; b=KSjJrVX/xWsOpdP0hnfvuluVFHOvKIAqHVuLO8mXm/uwAeiDaJczgb3VlwlBJ6t5jko+BKn3AaQ33DMP+Qz1/+29xYYnz9Yk8ffPdavm2Tw82lY6lmrXl//Nnar7XyzYpM9UwLzxas23zV8pgoDAuvfKaWLwbqUzp+FLp+0+zXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707297135; c=relaxed/simple;
-	bh=U4yqjF9Qkz7xKWRLQercCjsXrQsl0I3MKjhXB65d8ao=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aSkWTPVjSWdFw1qNo+JGQ2t0hMlv0xp54xgm+99bkoByKK6Hl8ZYifVFCNkHZ8Ps1z3m5YpD65VN1PBevVOVZX1wBQ/D51U5NLa/h62kON1839sUsnYIDd0kIsa8BVKBVyvJ7tUu0apuIqojc7CJWCa2hIk3/ZBOb0eJEgWnzqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rXdyS-0001x7-Ih; Wed, 07 Feb 2024 10:12:08 +0100
-Message-ID: <b0388b9e-5ec2-422d-94ce-192b33fef16d@leemhuis.info>
-Date: Wed, 7 Feb 2024 10:12:07 +0100
+	s=arc-20240116; t=1707300578; c=relaxed/simple;
+	bh=GX4Tfyd35kpVX8P4fYXsUxs2ee//i7TBi6iywu14vhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=As6ymhVCb6f8vXqlGTAZ85AzfxmP7oBIUTsgzjOJaPUb9w8v9a1e5CPtbxoM6jxTgafWyGwkjOS+BZdnYzvp3UPtM8bL1CrX5L17cA9A6IYnRZ2oWEYi2RucETPaapDo5K+U/2laLhotY4gXn9uePx0Of2ZtbOUx/IW9igUGtFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bWH0Yv0T; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bWH0Yv0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C3CC433C7;
+	Wed,  7 Feb 2024 10:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707300577;
+	bh=GX4Tfyd35kpVX8P4fYXsUxs2ee//i7TBi6iywu14vhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bWH0Yv0Tblenbca/VGH4PxVWoFpeeSgv6rTl+q0Dkd4Jkbt3pkXEgjkjSF6z88i+w
+	 /VjFIwd5KkfyHsOSLOrZpKnx3K3vN8uKVGSWh7Bi9Wb0t1NHAonkhTr6PBLeOxK8Jp
+	 qeGJciwEEecftClv8LNTyjNRxUEbTUx2RmKxisYI=
+Date: Wed, 7 Feb 2024 10:09:34 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.6 000/326] 6.6.16-rc2 review
+Message-ID: <2024020758-judo-stardom-80f5@gregkh>
+References: <CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com>
+ <e4305f3d-ede8-44fc-8bd4-eae899284f56@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: kernel NULL pointer dereference on hotplug
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Olliver Schinagl <oliver@schinagl.nl>
-Cc: Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>,
- linux-usb <linux-usb@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl>
- <20240204064049.GD8454@black.fi.intel.com>
- <705fd33a-18af-44b2-b6ee-57e3169b7032@leemhuis.info>
-In-Reply-To: <705fd33a-18af-44b2-b6ee-57e3169b7032@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707297133;5c7c1cde;
-X-HE-SMSGID: 1rXdyS-0001x7-Ih
+In-Reply-To: <e4305f3d-ede8-44fc-8bd4-eae899284f56@leemhuis.info>
 
-On 07.02.24 07:13, Linux regression tracking (Thorsten Leemhuis) wrote:
+On Wed, Feb 07, 2024 at 08:04:49AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 04.02.24 05:43, Стас Ничипорович wrote:
+> > After trying again to create the ipset with timeout option I get a kernel panic
+> > # ipset create throttled-ips hash:ip family inet hashsize 1024 maxelem
+> > 100000 timeout 600 bucketsize 12 initval 0x22b96e3a
+> > ipset v7.20: Set cannot be created: set with the same name already exists
 > 
-> On 04.02.24 07:40, Mika Westerberg wrote:
->> On Fri, Feb 02, 2024 at 05:47:01PM +0100, Olliver Schinagl wrote:
->>>
->>> I noticed this nasty kernel NULL pointer dereference yesterday on
->>> 6.7.2-arch1-1 (haven't done this in a while) but also today, after updating
->>> to 6.7.3-arch1-1 it's still there, so dumping the panic here. Hopefully
->>> it'll be resolved by 6.7.4-arch1-1.
->>
->> Thanks for the report.
->>
->>> The thunderbolt gbit adapter always worked in the past, so this seems like a
->>> regression. Anyway, here's the log.
+> To be sure the issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, the Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced fdb8e12cc2cc
+> #regzbot title netfilter: WARNING when using ipset with timeout option
+> #regzbot fix: netfilter: ipset: Missing gc cancellations fixed
+> #regzbot ignore-activity
 
-FWIW, Leon Weiß (BCCed) just posted another NULL pointer deference issue
-in 6.7 and found the culprit; for details see:
-https://lore.kernel.org/all/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
+Note, this did not get applied to the stable kernels, so it's an issue
+in Linus's tree only, with a proposed fix already posted (and might be
+in linux-next already, haven't checked...)
 
-Sadly Leon's report lacks a backtrace we had in this thread (
-https://lore.kernel.org/all/c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl/
-), so it might be something totally different. Leon's problem afaics
-also happens on unplug while this one on hotplug. But well, I thought I
-better quickly mention it here anyway so everyone is aware of it.
+thanks,
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+greg k-h
