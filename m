@@ -1,92 +1,71 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out2.mail.ruhr-uni-bochum.de (out2.mail.ruhr-uni-bochum.de [134.147.42.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0D0200D1;
-	Wed,  7 Feb 2024 08:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66A20DCF
+	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 08:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.147.42.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707293237; cv=none; b=ewFP561VCtdUnAnl+SFBAg4hN/4EOE+ug/EQJuSEI2YXtvDqJzck2yTEJKxT6+e/iIMs74YbxX6SLj5fV48zr+XSIvemwrgjbgxNs/glVUROw95Q6CEOwZI1bZup6tzLysmVc2JqzXCf6QtgugRrVD9HKsytVdlTpupE051/v2g=
+	t=1707295991; cv=none; b=Gi+eV5ddfR92+4ooPal9EtyKjW+tFfCN4FqU9PeOUO9MgLi3U6tNtU5625oE2542Z2M+Qln0LkoDqAPym+EhqC3CS3Rjo1lRMyUg8ugkEv0zxbMw5x7Bp0mqPm4XY6wT60Z8HvGEOirmu5KOdCZ2968EkVR5UEzKjhMyz/W0qOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707293237; c=relaxed/simple;
-	bh=VSFXVUDt9KdC/Osnmmt5+KR0XBJec4bQdzZfkYDwffU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5juu1eYmMPcdwrufKCR4cA2+iFuRfSxo0zl1tfFhVQD+d/8PFS0gJ3QQjqCvFafobwtzsymNi8Vu/w43A1i20S7AtypcY3Jn/qY23V9wOaP10rO4xREaovrIH7wMPT/doQmZm3yUJkh5B8/uzwjdtM/DhpucDWsyZiJAu4K1ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rXcxa-00022T-Dd; Wed, 07 Feb 2024 09:07:10 +0100
-Message-ID: <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
-Date: Wed, 7 Feb 2024 09:07:09 +0100
+	s=arc-20240116; t=1707295991; c=relaxed/simple;
+	bh=Nqjae/cWetQpcf/giuDlO3b4XDHpmSWiARP+pn2lJdQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=qDj3UL8EYOi2/QADXDw0FAILlZZ1g3HpRg7eunm8PqEZTZ9LtezLwPuGy07BHKXN4eT8Lh7vp2VUfTVoqOKzruAwMZuKxUvSObVjzAT8uLyN0IdwqTL91aPvcE7A7PeeZ7okwS+cLukOObLwZUNxI69QD2AinKd9YPQlGB8D3ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de; spf=pass smtp.mailfrom=ruhr-uni-bochum.de; dkim=pass (1024-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b=wnziShKl; arc=none smtp.client-ip=134.147.42.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ruhr-uni-bochum.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b="wnziShKl"
+Received: from mx2.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
+	by out2.mail.ruhr-uni-bochum.de (Postfix mo-ext) with ESMTP id 4TVDGs1580z8ST2;
+	Wed,  7 Feb 2024 09:45:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ruhr-uni-bochum.de;
+	s=mail-2017; t=1707295557;
+	bh=Nqjae/cWetQpcf/giuDlO3b4XDHpmSWiARP+pn2lJdQ=;
+	h=Subject:From:To:Cc:Date:From;
+	b=wnziShKlFaXMGOFxAeE9x+HqoccviX4Tr6WgxmSquE0xvyRiPJJJdQlj2BWkF3cNL
+	 U/g/yJUm6gIYMy8987+U7eOgcGlO4KJAX4PdMzXT133ZCZfdXMj0Bm6PBLUraooyqa
+	 rs5U4G5eqUmu5Ls5s/mxnsJrOb+GdX4VddkZHZTw=
+Received: from out2.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
+	by mx2.mail.ruhr-uni-bochum.de (Postfix idis) with ESMTP id 4TVDGs0VYfz8SSB;
+	Wed,  7 Feb 2024 09:45:57 +0100 (CET)
+X-RUB-Notes: Internal origin=IPv6:2a05:3e00:c:1001::8693:2aec
+X-Envelope-Sender: <leon.weiss@ruhr-uni-bochum.de>
+Received: from mail2.mail.ruhr-uni-bochum.de (mail2.mail.ruhr-uni-bochum.de [IPv6:2a05:3e00:c:1001::8693:2aec])
+	by out2.mail.ruhr-uni-bochum.de (Postfix mi-int) with ESMTPS id 4TVDGr55zrz8SSN;
+	Wed,  7 Feb 2024 09:45:56 +0100 (CET)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 1.0.4 at mx2.mail.ruhr-uni-bochum.de
+Received: from [10.150.38.32] (unknown [10.150.38.32])
+	by mail2.mail.ruhr-uni-bochum.de (Postfix) with ESMTPSA id 4TVDGr0cXVzDh0t;
+	Wed,  7 Feb 2024 09:45:56 +0100 (CET)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 1.2.1 at mail2.mail.ruhr-uni-bochum.de
+Message-ID: <38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de>
+Subject: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
+From: Leon =?ISO-8859-1?Q?Wei=DF?= <leon.weiss@ruhr-uni-bochum.de>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, Wayne.Lin@amd.com, lyude@redhat.com
+Date: Wed, 07 Feb 2024 09:45:56 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Content-Language: en-US, de-DE
-To: Linus Walleij <linus.walleij@linaro.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Christian Heusel <christian@heusel.eu>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
- <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707293235;2a1c4c85;
-X-HE-SMSGID: 1rXcxa-00022T-Dd
 
-On 31.01.24 10:06, Linus Walleij wrote:
-> On Tue, Jan 23, 2024 at 7:08 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> 
->> On some systems the interrupt is shared between GPIO controller
->> and ACPI SCI. When the interrupt is shared with the ACPI SCI the
->> flags need to be identical.
->>
->> This should fix the GPIO controller failing to work after commit
->> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
->> ```
->> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
->> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
->> ```
->>
->> Cc: Rafael J. Wysocki <rafael@kernel.org>
->> Reported-by: Christian Heusel <christian@heusel.eu>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
->> Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
->> Link: https://lore.kernel.org/linux-acpi/CAJZ5v0iRqUXeuKmC_+dAJtDBLWQ3x15n4gRH48y7MEaLoXF+UA@mail.gmail.com/T/#mc5506014141b61e472b24e095889535a04458083
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> Patch applied for fixes!
+Hello,
 
-Hmm, Linus, that was a week ago and I still can't spot the fix in -next
-or
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-; am I missing something or did something come up?
+54d217406afe250d7a768783baaa79a035f21d38 fixed an issue in
+drm_dp_add_payload_part2 that lead to a NULL pointer dereference in
+case state is NULL.
 
-Furthermore Christian seems to grow impatient -- and I do as well, as I
-recently couldn't wake up my laptop due to this while on the road. :-/
-As at least one of the affected machines is quite popular in Linux
-community, I'd prefer if we can fix this rather sooner than later.
-Linus, if you are busy, I could ask the other Linus to pick this up
-straight from the list if that's okay for you.
+The change was (accidentally?) reverted in
+5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49 and the problem reappeared.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+The issue is rather spurious, but I've had it appear when unplugging a
+thunderbolt dock.
+
+#regzbot introduced 5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49
