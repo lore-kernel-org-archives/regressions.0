@@ -1,122 +1,101 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B34214281;
-	Wed,  7 Feb 2024 10:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30317BC5
+	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 10:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707302369; cv=none; b=jk0gk3nqncFKb895/BKAKOhv5OWHADFWOBUCzUd1t6JjLZTN5g5+EUH2HnGSpsiPk/0dooYolxBjfMscwALjE7cNHjvWuq/DfdHPYpDqPbgAHobgmm3qLGoQNLYXAAh9R6kAbFTXcI9Cab1ylthX6u8gWM9RlfiJxoyXBkVMIeg=
+	t=1707302437; cv=none; b=Wq9dj7nxsvDVfQ+iA+0V89byl7R7jCbUBIoj0cx4OnPrKt3HCSM62PcA+8H0LSlkmEYankHOfZYIl8Wj6PNX0S73D1nT1trnarmRHjxFHq5t6NfREOhfFfUEDo+8V0CKXEng+LKUGGVrg+Uxa/YmdeEj+amJ9V9fG7wOKJgtQrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707302369; c=relaxed/simple;
-	bh=JoEyE+MfjTvyZcsiLGlm3U7JAnN2n6Yzc654NE4ZF38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t7qcVVzouS7EjOx76ckjFCubWPvzRHUUkYhe3UaTzYx5h564kAFBDW0CqH6GjcOUEeX3iktUgQDwQT8iMT3QxYd6XS75VjFImNRu6qGZX9vnO4i6s6RV6Lkx69Vq6duYFzHySII6wJpyq64tksORr8qxivT1508m+n+ltzKeOrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=OWSjFK/X; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1707302437; c=relaxed/simple;
+	bh=SBYaeaIuRnUC3w0K5e3nyt12xvcEJ6H6M2CDDRVw8Nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OFEX7ZDC9HFP6EA9NRYd/CoPV9aajIhEiamx/Pfkml3V45wDn+xz203vmqex8js4lih4F9ja+zgNvKQgHB14WpFXfi53qM9IJRTkLpCf7cq+EWn9+G3DYhciolvQjk+joJMExKXvgqxwOl83snjVC3ZQqMZo8AFYve0kTlexyLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jceNEcnB; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="OWSjFK/X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HWAwF2YdOQMEfTUHZf37BFCb5r8J7CTQWb/66Vahoho=; b=OWSjFK/XyCTaih7CRpbZkN5x8y
-	TFUtUVOkD4C21QQK7uStobCqlkfBQqgxjZJpmnEu7qBXDYCgcHJQ1eSfBDSx9le4Vf/LAzz5B3OEy
-	VUtfHraWAG+oTIL9XEil9VjXORDxUVwAZioUZXYutEeURetJk+FRY6lIJFqRvlAcqeo5Dug99e87H
-	wA5Cx7ss3r1lG4MCGQqtDa4kBGW/cH3HFCWVtjqDKFHLlXeewCv6RZ1MPPVU2RZHwX9OyXAjgVtdF
-	5CFxcz8++gxS/rS6K5xvRqeNCp8AJBBGnIcrMoctgyN7G7OrOX3+ou8TnCbYQtQUN/X6t/xHRS2of
-	gjxowczw==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1rXfKn-00D8bo-QO; Wed, 07 Feb 2024 10:39:18 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id E68E6BE2EE8; Wed,  7 Feb 2024 11:39:09 +0100 (CET)
-Date: Wed, 7 Feb 2024 11:39:09 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Valentin Kleibel <valentin@vrvis.at>, Jordan Rife <jrife@google.com>,
-	David Teigland <teigland@redhat.com>,
-	Alexander Aring <aahringo@redhat.com>
-Cc: 1063338@bugs.debian.org, gfs2@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev
-Subject: [regression 6.1.67] dlm: cannot start dlm midcomms -97 after
- backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
-Message-ID: <ZcNdzZVPD76uSbps@eldamar.lan>
-References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jceNEcnB"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc6e0fe3195so441800276.0
+        for <regressions@lists.linux.dev>; Wed, 07 Feb 2024 02:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707302435; x=1707907235; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SBYaeaIuRnUC3w0K5e3nyt12xvcEJ6H6M2CDDRVw8Nk=;
+        b=jceNEcnB4BeJTn8i5hKcHvcevqrcswJAaWOrdDG6Iedd5xISKMt0rEGpjcmOOR07hD
+         v33Mx1AZy/c0JkgqOU0M0K3wzbeaIk0fKzsmvNCnZzA7A+R9Jy227FgEq58YJQr3oBI2
+         ZftYGiBev+Gp2/xtQjDC9vhG1o53/CGQ7IcJedZNXAHR+Txbb8/1dXm9/e/FHBPLVTkt
+         kQo6uXP3qW1cHJMXNGk/tYojxGHRgx6tQvnSLc9nTjOcyLvWJNdKmTFBQKWUyUgOZ0iC
+         MmquFIhzXUOmEtPdkybn75scSd6busBwCJepzdcAtVAH1NZ4xNkcdvu54zaU/mXY4vp4
+         ac4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707302435; x=1707907235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SBYaeaIuRnUC3w0K5e3nyt12xvcEJ6H6M2CDDRVw8Nk=;
+        b=FGxDJA5lioaGbjbIuayweviYX53wd7RcNylA9iS5iBPzHiu9PMJf+zE1qldI2bMuzN
+         Sc0ghQ34HCdS/B0kVdfl1hyvJ+7xy92Y50G4H7ROK+8R2oDWizIrE5k5msx1tGNm/3GR
+         ToTY99CALtbOVDuISJHxffHQrjYIfVAzja8HBxlDqbH7NIiQbhTPG3vg+i93wjarbXEq
+         FvmIlPqSa9IgkNEsNSh4CtYqthRMDctRubreJ0SRqv9iz1YhoNIwEWdQytVSCFqny01N
+         QgF54SrSqzuXP07HeCSMf6j2YXAjIbH0xrT+uN4ZtGj+KUDItUc4y2VJSbk7fQ2zgVwB
+         2hLA==
+X-Gm-Message-State: AOJu0YzndUtQo81t1SEQSvg6RqZVokssdSvLibRhi6uTwZJLTakA71AX
+	zeR6dhWUBnGspxxbJD8TGaOm1XqVLkW9w8r0gJyH4aPt/bbpnRmDjxfHlh4W8RBYGh7GHa2ib8r
+	bfIMfCuaXsco0vxrtIfavGXTMBM/rNNc71KXOMWFV2i9UuQd84Pc=
+X-Google-Smtp-Source: AGHT+IEz7LQWmT6JbJREKGnbwdfQXPNZ58Y4gBzTwXRC1OvL+RlYu/fuYoEdElXzdsKyWagQjMcXUqHmCDDHbwhFeCE=
+X-Received: by 2002:a5b:b87:0:b0:dc2:2608:af74 with SMTP id
+ l7-20020a5b0b87000000b00dc22608af74mr4439839ybq.26.1707302435177; Wed, 07 Feb
+ 2024 02:40:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
-X-Debian-User: carnil
+References: <20240123180818.3994-1-mario.limonciello@amd.com>
+ <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com> <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
+In-Reply-To: <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 7 Feb 2024 11:40:48 +0100
+Message-ID: <CACRpkdZ4pyFh50imdgL6ZxgAyRYCxsuz0DbmssELZ0mAxVcRcA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, 
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Christian Heusel <christian@heusel.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Valentin, hi all
+On Wed, Feb 7, 2024 at 9:07=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
 
-[This is about a regression reported in Debian for 6.1.67]
+> [me]
+> > Patch applied for fixes!
+>
+> Hmm, Linus, that was a week ago and I still can't spot the fix in -next
+> or
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+> ; am I missing something or did something come up?
 
-On Tue, Feb 06, 2024 at 01:00:11PM +0100, Valentin Kleibel wrote:
-> Package: linux-image-amd64
-> Version: 6.1.76+1
-> Source: linux
-> Source-Version: 6.1.76+1
-> Severity: important
-> Control: notfound -1 6.6.15-2
-> 
-> Dear Maintainers,
-> 
-> We discovered a bug affecting dlm that prevents any tcp communications by
-> dlm when booted with debian kernel 6.1.76-1.
-> 
-> Dlm startup works (corosync-cpgtool shows the dlm:controld group with all
-> expected nodes) but as soon as we try to add a lockspace dmesg shows:
-> ```
-> dlm: Using TCP for communications
-> dlm: cannot start dlm midcomms -97
-> ```
-> 
-> It seems that commit "dlm: use kernel_connect() and kernel_bind()"
-> (e9cdebbe) was merged to 6.1.
-> 
-> Checking the code it seems that the changed function dlm_tcp_listen_bind()
-> fails with exit code 97 (EAFNOSUPPORT)
-> It is called from
-> 
-> dlm/lockspace.c: threads_start() -> dlm_midcomms_start()
-> dlm/midcomms.c: dlm_midcomms_start() -> dlm_lowcomms_start()
-> dlm/lowcomms.c: dlm_lowcomms_start() -> dlm_listen_for_all() ->
-> dlm_proto_ops->listen_bind() = dlm_tcp_listen_bind()
-> 
-> The error code is returned all the way to threads_start() where the error
-> message is emmitted.
-> 
-> Booting with the unsigned kernel from testing (6.6.15-2), which also
-> contains this commit, works without issues.
-> 
-> I'm not sure what additional changes are required to get this working or if
-> rolling back this change is an option.
-> 
-> We'd be happy to test patches that might fix this issue.
+Something came up but it's just illnesses travels and other such
+excuses.
 
-Thanks for your report. So we have a 6.1.76 specific regression for
-the backport of e9cdebbe23f1 ("dlm: use kernel_connect() and
-kernel_bind()") .
+I have merged down fixed to for-next and the patch should appear
+in linux-next and after that I can send it to Torvalds.
 
-Let's loop in the upstream regression list for tracking and people
-involved for the subsystem to see if the issue can be identified. As
-it is working for 6.6.15 which includes the commit backport as well it
-might be very well that a prerequisite is missing.
+> Furthermore Christian seems to grow impatient -- and I do as well, as I
+> recently couldn't wake up my laptop due to this while on the road. :-/
 
-# annotate regression with 6.1.y specific commit
-#regzbot ^introduced e11dea8f503341507018b60906c4a9e7332f3663
-#regzbot link: https://bugs.debian.org/1063338
+Sorry, my fault :(
 
-Any ideas?
+I will try to get this upstream as quick as possible.
 
-Regards,
-Salvatore
+Thanks for chasing me!
+
+Yours,
+Linus Walleij
