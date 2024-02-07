@@ -1,103 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1849359B76
-	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 13:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA47639856
+	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 18:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707313042; cv=none; b=eJv1rSv8j7wgCt7/gM8oVgADtdVKHxuioEpbyNVk6VpLa6M8r1Sbuonu4LJ3onOMb2haCHwDo2p/LphT7fdzQQQ8ErWfvziibRqUgGB8a2CQVsHq1ZmbioiZ2MlfNne4CihaS/6fPFRMEtVh5xHl4MB/6Ndma97V5u34v1CMQIs=
+	t=1707330796; cv=none; b=ERFiqSKnKD+6KBMs1mNn+l7jp3uRK0lV8WZrb58ZUDM+TvMW0dp/zF5TYWYzrjg4PAzl///Gh0Jdv5OV/mk1VxtNoPL7wV83osKU3w4vGWP6Vi4o4CINV4vCmrU197W9ZKZjZknzmISmvJfGEBvKnZEFiO9FypHr6GHMkX4xVXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707313042; c=relaxed/simple;
-	bh=+DujwZlr/1wDPIjgj9ybKGjheEDuRA+H2YGe6MkI++o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/48e/N3oVLprW0tF1pwMkGnilkFbvKeqdUKUSB0OkJtzmDCgVI2h/5H0bwTmfHCyRpr3EUKA0r6AICAax6K9yHaoDGVwQoiNdirkGbUuQYEeOLUf46gkjRb811c8GXPnITm/2dKFWQzEdG8yjX5S6DwLgN7i/uxgtFMigmFMGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8W0wRux; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707330796; c=relaxed/simple;
+	bh=vcbjnt5RH4cAV2tJXYgIsVQe1Lf+xy5epqYic0XC5Hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QdLS5GW/eCLwTgyWNYyd5XwcYEqaqQSMBEMrjjGMZM8tOJWkxmrpiktLyt0/wC1MVcIB5nG03Pjng+vQtAWhlJVjpQZ/Q7OIE99tiSleb7ajlw7KhGikXdlZZiD9iFVwoVukQCpONNFmrjAZ92OuBWgQcbm00QlY3Ky2UnR+qrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QOhvmaZs; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8W0wRux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707313041; x=1738849041;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=+DujwZlr/1wDPIjgj9ybKGjheEDuRA+H2YGe6MkI++o=;
-  b=B8W0wRuxksZjkv1gOx2Gat6vE5Re8aqh50i0yXUTbv08s+4lKHGQ0xf5
-   linY49lS1HZHk94p9GAX9shpHa76sF679wS5Z9zTk5f3096bOnfzXfdbZ
-   n0cr+5LQED2rCaVuBIyHuwJvxqcdOmSwV/xcRtNOUUu01ktd5m3IQXkph
-   77hwOhNNazPdrjzrFvMiPOqwQy2c4qz6nMD/IToD5IeiyvMn5YZ4Swccl
-   kNhjl86OEKen40HMZjJs2ilaQzaibcMplEc7c9S7RkBvzwOFCBw5+vPqm
-   pAK3ravKcPlxXtlx3s3a+Nem0d51bAXQyrqef7u+2A0k168zQL5mb/iut
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="12345531"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="12345531"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 05:37:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="909996006"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="909996006"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2024 05:37:18 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id EBF194C4; Wed,  7 Feb 2024 11:21:52 +0200 (EET)
-Date: Wed, 7 Feb 2024 11:21:52 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Olliver Schinagl <oliver@schinagl.nl>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	linux-usb <linux-usb@vger.kernel.org>
-Subject: Re: kernel NULL pointer dereference on hotplug
-Message-ID: <20240207092152.GQ8454@black.fi.intel.com>
-References: <c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl>
- <20240204064049.GD8454@black.fi.intel.com>
- <705fd33a-18af-44b2-b6ee-57e3169b7032@leemhuis.info>
- <b0388b9e-5ec2-422d-94ce-192b33fef16d@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOhvmaZs"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a381df83113so95601666b.3
+        for <regressions@lists.linux.dev>; Wed, 07 Feb 2024 10:33:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707330793; x=1707935593; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DPN6YHmWuLd5MWUOmF+xJhqXptNUFEEGocEdREYkoUg=;
+        b=QOhvmaZsPXWiokHf3rAc3+gLgH9k3VhuasYtA2dnIGQRrLHu7BCdsey7yWzRWkmyom
+         wJcYW0I/2ku3RkOlNLPUUpz9rD8nF+0euJPNnFIGAT/BSi25WnRKjmiqKJ1va8mQDPBo
+         1kPgsAC7z8AHwaEPe7J7wUeFlXEF2AKKkk91aJr72RkE7DAUzcCpFZbYlrZvUP8Xe0EU
+         4TeTipbV3TqHBwx9ycfrzQ/NklnS1rq4BEQhTa5bJ41wAafrp6X6ReBgIECuPEecQdKL
+         4OS7ILzmUubUtLgsPMljHi6KyRLfKFAUFZMq0kdiIvZMTRCuf56nqOszH3OHSLCK9hAb
+         M2Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707330793; x=1707935593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DPN6YHmWuLd5MWUOmF+xJhqXptNUFEEGocEdREYkoUg=;
+        b=TIjqJNO9d4dVIRkM/Oan5Xb5OTgKEmdR+oiGReJ00t9Jxjw7j8m789iB8FyofMgARr
+         Bioi8W1hcIrmTSUVusLWibopWAI0i2EZvbwYWwde7ymQSH36idD72In+OSj0I27YtxRN
+         efqQa41gd+kXg+uixtJnEZeiqNJ1O4DtLkEVy3Fhmaw397aVyRP+FN3lhIOxhhqCfHwc
+         beEXCh9JB/UujOwqssnapI0orRJosGKDmGesBq18keysyvAwMaq08auR9cI9JmfUyLXC
+         1CwCAJlWHbo4kGed0y6StHBSyPWovUe4LfklxYAJULXBLf6t3wgIDVgjB0BKyg5wemxT
+         CnCg==
+X-Gm-Message-State: AOJu0YyfkF19t7lUJ7JlvShHXJ6YE4NEPUfz68kbSV9C+sfKcVlC7zzP
+	fUI5ZB/SndLULnRbgxXBJ9FMibWvIfACN9YjMv6EU8fh7X3dAvqdkDRsqJgwu+HLFIVKHsr7tj6
+	5L5MhBgXry71wAnnEs1LiI4wcAqB7csF/wuX4
+X-Google-Smtp-Source: AGHT+IEmincd4Fm+vxfFykn5vYT7vHDEMm4sKWDOLRSn5dY2DxhjYcMa066xPr14AMS0mJHD4AbsNPK3mEUonbBdGTM=
+X-Received: by 2002:a17:906:4bd2:b0:a37:9c44:c5cf with SMTP id
+ x18-20020a1709064bd200b00a379c44c5cfmr4748046ejv.24.1707330792878; Wed, 07
+ Feb 2024 10:33:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0388b9e-5ec2-422d-94ce-192b33fef16d@leemhuis.info>
+References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at> <ZcNdzZVPD76uSbps@eldamar.lan>
+In-Reply-To: <ZcNdzZVPD76uSbps@eldamar.lan>
+From: Jordan Rife <jrife@google.com>
+Date: Wed, 7 Feb 2024 10:33:00 -0800
+Message-ID: <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
+Subject: Re: [regression 6.1.67] dlm: cannot start dlm midcomms -97 after
+ backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Valentin Kleibel <valentin@vrvis.at>, David Teigland <teigland@redhat.com>, 
+	Alexander Aring <aahringo@redhat.com>, 1063338@bugs.debian.org, gfs2@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	gregkh@linuxfoundation.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Feb 07, 2024 at 10:12:07AM +0100, Thorsten Leemhuis wrote:
-> On 07.02.24 07:13, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > 
-> > On 04.02.24 07:40, Mika Westerberg wrote:
-> >> On Fri, Feb 02, 2024 at 05:47:01PM +0100, Olliver Schinagl wrote:
-> >>>
-> >>> I noticed this nasty kernel NULL pointer dereference yesterday on
-> >>> 6.7.2-arch1-1 (haven't done this in a while) but also today, after updating
-> >>> to 6.7.3-arch1-1 it's still there, so dumping the panic here. Hopefully
-> >>> it'll be resolved by 6.7.4-arch1-1.
-> >>
-> >> Thanks for the report.
-> >>
-> >>> The thunderbolt gbit adapter always worked in the past, so this seems like a
-> >>> regression. Anyway, here's the log.
-> 
-> FWIW, Leon Weiß (BCCed) just posted another NULL pointer deference issue
-> in 6.7 and found the culprit; for details see:
-> https://lore.kernel.org/all/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
+On Wed, Feb 7, 2024 at 2:39=E2=80=AFAM Salvatore Bonaccorso <carnil@debian.=
+org> wrote:
 >
-> Sadly Leon's report lacks a backtrace we had in this thread (
-> https://lore.kernel.org/all/c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl/
-> ), so it might be something totally different. Leon's problem afaics
-> also happens on unplug while this one on hotplug. But well, I thought I
-> better quickly mention it here anyway so everyone is aware of it.
+> Hi Valentin, hi all
+>
+> [This is about a regression reported in Debian for 6.1.67]
+>
+> On Tue, Feb 06, 2024 at 01:00:11PM +0100, Valentin Kleibel wrote:
+> > Package: linux-image-amd64
+> > Version: 6.1.76+1
+> > Source: linux
+> > Source-Version: 6.1.76+1
+> > Severity: important
+> > Control: notfound -1 6.6.15-2
+> >
+> > Dear Maintainers,
+> >
+> > We discovered a bug affecting dlm that prevents any tcp communications =
+by
+> > dlm when booted with debian kernel 6.1.76-1.
+> >
+> > Dlm startup works (corosync-cpgtool shows the dlm:controld group with a=
+ll
+> > expected nodes) but as soon as we try to add a lockspace dmesg shows:
+> > ```
+> > dlm: Using TCP for communications
+> > dlm: cannot start dlm midcomms -97
+> > ```
+> >
+> > It seems that commit "dlm: use kernel_connect() and kernel_bind()"
+> > (e9cdebbe) was merged to 6.1.
+> >
+> > Checking the code it seems that the changed function dlm_tcp_listen_bin=
+d()
+> > fails with exit code 97 (EAFNOSUPPORT)
+> > It is called from
+> >
+> > dlm/lockspace.c: threads_start() -> dlm_midcomms_start()
+> > dlm/midcomms.c: dlm_midcomms_start() -> dlm_lowcomms_start()
+> > dlm/lowcomms.c: dlm_lowcomms_start() -> dlm_listen_for_all() ->
+> > dlm_proto_ops->listen_bind() =3D dlm_tcp_listen_bind()
+> >
+> > The error code is returned all the way to threads_start() where the err=
+or
+> > message is emmitted.
+> >
+> > Booting with the unsigned kernel from testing (6.6.15-2), which also
+> > contains this commit, works without issues.
+> >
+> > I'm not sure what additional changes are required to get this working o=
+r if
+> > rolling back this change is an option.
+> >
+> > We'd be happy to test patches that might fix this issue.
+>
+> Thanks for your report. So we have a 6.1.76 specific regression for
+> the backport of e9cdebbe23f1 ("dlm: use kernel_connect() and
+> kernel_bind()") .
+>
+> Let's loop in the upstream regression list for tracking and people
+> involved for the subsystem to see if the issue can be identified. As
+> it is working for 6.6.15 which includes the commit backport as well it
+> might be very well that a prerequisite is missing.
+>
+> # annotate regression with 6.1.y specific commit
+> #regzbot ^introduced e11dea8f503341507018b60906c4a9e7332f3663
+> #regzbot link: https://bugs.debian.org/1063338
+>
+> Any ideas?
+>
+> Regards,
+> Salvatore
 
-Thanks for the information. 
 
-As you mention, this seems to be unrelated. The one above is about DRM
-and graphics, the one Olliver reported is about Thunderbolt (okay there
-is Thunderbolt device involved in both but this one seems to be purely
-DP thing).
+Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
+and 6.6 stable branches,
+it looks like there is a mismatch here with the dlm_local_addr[0] parameter=
+.
+
+6.1
+----
+
+static int dlm_tcp_listen_bind(struct socket *sock)
+{
+int addr_len;
+
+/* Bind to our port */
+make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
+return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
+   addr_len);
+}
+
+6.6
+----
+static int dlm_tcp_listen_bind(struct socket *sock)
+{
+int addr_len;
+
+/* Bind to our port */
+make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
+return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
+   addr_len);
+}
+
+6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on heap) w=
+hich
+changed
+
+static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
+
+to
+
+static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
+
+It looks like kernel_bind() in 6.1 needs to be modified to match.
+
+
+-Jordan
