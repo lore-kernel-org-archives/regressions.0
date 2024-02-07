@@ -1,71 +1,78 @@
-Received: from out2.mail.ruhr-uni-bochum.de (out2.mail.ruhr-uni-bochum.de [134.147.42.229])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66A20DCF
-	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 08:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.147.42.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCCA21106;
+	Wed,  7 Feb 2024 09:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707295991; cv=none; b=Gi+eV5ddfR92+4ooPal9EtyKjW+tFfCN4FqU9PeOUO9MgLi3U6tNtU5625oE2542Z2M+Qln0LkoDqAPym+EhqC3CS3Rjo1lRMyUg8ugkEv0zxbMw5x7Bp0mqPm4XY6wT60Z8HvGEOirmu5KOdCZ2968EkVR5UEzKjhMyz/W0qOM=
+	t=1707297135; cv=none; b=Ik2iYYKfLS0FSR2feLdDyBub2ZcfsCtYcdqZrhvEKJTlO2IqJ5ayEoiyjaR/DVOk828Inmwtsa8tnB29IAg731WdYU30fGbGp0+fv8vAFTt4h9GYcBqzo0mlBI41oh7eas6UhN4OinZaaq5gfyy2ZiskpTYlPF8DjHQFn/nwSdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707295991; c=relaxed/simple;
-	bh=Nqjae/cWetQpcf/giuDlO3b4XDHpmSWiARP+pn2lJdQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=qDj3UL8EYOi2/QADXDw0FAILlZZ1g3HpRg7eunm8PqEZTZ9LtezLwPuGy07BHKXN4eT8Lh7vp2VUfTVoqOKzruAwMZuKxUvSObVjzAT8uLyN0IdwqTL91aPvcE7A7PeeZ7okwS+cLukOObLwZUNxI69QD2AinKd9YPQlGB8D3ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de; spf=pass smtp.mailfrom=ruhr-uni-bochum.de; dkim=pass (1024-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b=wnziShKl; arc=none smtp.client-ip=134.147.42.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ruhr-uni-bochum.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b="wnziShKl"
-Received: from mx2.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by out2.mail.ruhr-uni-bochum.de (Postfix mo-ext) with ESMTP id 4TVDGs1580z8ST2;
-	Wed,  7 Feb 2024 09:45:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ruhr-uni-bochum.de;
-	s=mail-2017; t=1707295557;
-	bh=Nqjae/cWetQpcf/giuDlO3b4XDHpmSWiARP+pn2lJdQ=;
-	h=Subject:From:To:Cc:Date:From;
-	b=wnziShKlFaXMGOFxAeE9x+HqoccviX4Tr6WgxmSquE0xvyRiPJJJdQlj2BWkF3cNL
-	 U/g/yJUm6gIYMy8987+U7eOgcGlO4KJAX4PdMzXT133ZCZfdXMj0Bm6PBLUraooyqa
-	 rs5U4G5eqUmu5Ls5s/mxnsJrOb+GdX4VddkZHZTw=
-Received: from out2.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by mx2.mail.ruhr-uni-bochum.de (Postfix idis) with ESMTP id 4TVDGs0VYfz8SSB;
-	Wed,  7 Feb 2024 09:45:57 +0100 (CET)
-X-RUB-Notes: Internal origin=IPv6:2a05:3e00:c:1001::8693:2aec
-X-Envelope-Sender: <leon.weiss@ruhr-uni-bochum.de>
-Received: from mail2.mail.ruhr-uni-bochum.de (mail2.mail.ruhr-uni-bochum.de [IPv6:2a05:3e00:c:1001::8693:2aec])
-	by out2.mail.ruhr-uni-bochum.de (Postfix mi-int) with ESMTPS id 4TVDGr55zrz8SSN;
-	Wed,  7 Feb 2024 09:45:56 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.4 at mx2.mail.ruhr-uni-bochum.de
-Received: from [10.150.38.32] (unknown [10.150.38.32])
-	by mail2.mail.ruhr-uni-bochum.de (Postfix) with ESMTPSA id 4TVDGr0cXVzDh0t;
-	Wed,  7 Feb 2024 09:45:56 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.2.1 at mail2.mail.ruhr-uni-bochum.de
-Message-ID: <38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de>
-Subject: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
-From: Leon =?ISO-8859-1?Q?Wei=DF?= <leon.weiss@ruhr-uni-bochum.de>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, Wayne.Lin@amd.com, lyude@redhat.com
-Date: Wed, 07 Feb 2024 09:45:56 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1707297135; c=relaxed/simple;
+	bh=U4yqjF9Qkz7xKWRLQercCjsXrQsl0I3MKjhXB65d8ao=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=aSkWTPVjSWdFw1qNo+JGQ2t0hMlv0xp54xgm+99bkoByKK6Hl8ZYifVFCNkHZ8Ps1z3m5YpD65VN1PBevVOVZX1wBQ/D51U5NLa/h62kON1839sUsnYIDd0kIsa8BVKBVyvJ7tUu0apuIqojc7CJWCa2hIk3/ZBOb0eJEgWnzqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rXdyS-0001x7-Ih; Wed, 07 Feb 2024 10:12:08 +0100
+Message-ID: <b0388b9e-5ec2-422d-94ce-192b33fef16d@leemhuis.info>
+Date: Wed, 7 Feb 2024 10:12:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: kernel NULL pointer dereference on hotplug
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Olliver Schinagl <oliver@schinagl.nl>
+Cc: Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ linux-usb <linux-usb@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl>
+ <20240204064049.GD8454@black.fi.intel.com>
+ <705fd33a-18af-44b2-b6ee-57e3169b7032@leemhuis.info>
+In-Reply-To: <705fd33a-18af-44b2-b6ee-57e3169b7032@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707297133;5c7c1cde;
+X-HE-SMSGID: 1rXdyS-0001x7-Ih
 
-Hello,
+On 07.02.24 07:13, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+> On 04.02.24 07:40, Mika Westerberg wrote:
+>> On Fri, Feb 02, 2024 at 05:47:01PM +0100, Olliver Schinagl wrote:
+>>>
+>>> I noticed this nasty kernel NULL pointer dereference yesterday on
+>>> 6.7.2-arch1-1 (haven't done this in a while) but also today, after updating
+>>> to 6.7.3-arch1-1 it's still there, so dumping the panic here. Hopefully
+>>> it'll be resolved by 6.7.4-arch1-1.
+>>
+>> Thanks for the report.
+>>
+>>> The thunderbolt gbit adapter always worked in the past, so this seems like a
+>>> regression. Anyway, here's the log.
 
-54d217406afe250d7a768783baaa79a035f21d38 fixed an issue in
-drm_dp_add_payload_part2 that lead to a NULL pointer dereference in
-case state is NULL.
+FWIW, Leon Weiß (BCCed) just posted another NULL pointer deference issue
+in 6.7 and found the culprit; for details see:
+https://lore.kernel.org/all/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
 
-The change was (accidentally?) reverted in
-5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49 and the problem reappeared.
+Sadly Leon's report lacks a backtrace we had in this thread (
+https://lore.kernel.org/all/c24c7882-6254-4e68-8f22-f3e8f65dc84f@schinagl.nl/
+), so it might be something totally different. Leon's problem afaics
+also happens on unplug while this one on hotplug. But well, I thought I
+better quickly mention it here anyway so everyone is aware of it.
 
-The issue is rather spurious, but I've had it appear when unplugging a
-thunderbolt dock.
-
-#regzbot introduced 5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
