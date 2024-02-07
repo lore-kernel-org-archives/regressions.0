@@ -1,23 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F111CF91
-	for <regressions@lists.linux.dev>; Wed,  7 Feb 2024 07:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6262A1F933;
+	Wed,  7 Feb 2024 07:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707289239; cv=none; b=O1GHXpyG9vKfGfN8CegxOyFU84zQGdz354G3Gd0vMpohEhGJ2BZHYsopGTiGt5v6MBIzCKTBNWPhQALez+6axCBF5UeXGCsVMUdsesphtR7YauWDDZhFS3Zq9mVMGowiQPJd5BIKK1wIswcomuamuvNUiXkjW6+aVtZ5qDGAQHU=
+	t=1707289493; cv=none; b=ZPN+cTd+1Q2uGAS3gYh5hkPfYIq52ZmsLjFPdp6HvSnKd1/5Ay3sAhTFn+09qE16Lg1MqcmIPkWMyY8bSMVriGwQb40cPEoR4Ogdbg9jhQbDKMmZsMastmmHgxgut88cALQAZZ3ufLW/VKUbbCXEg0GtIpEGHIMWkz6vTN2NUqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707289239; c=relaxed/simple;
-	bh=5cFOOXQjQCM7uEtASQQFa592KIxMQJFwSa0bdxzeI14=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=pdM9Ta7wuqPjmWoL+m3WoJwNyn3Wc0fBj5Q1UiJ8l3Cj+SVQHpCmwz8uWQUO6+sqtb8gBnJDIUB1uBSV+MOZIw58xhhkDZvaRqaLNGqHlEePi1eOKXo/NIIyY3r4opYyPNEcN+xBMWbr5AhDpgl5WATY4VXQcq0t1+J1v/kfr6A=
+	s=arc-20240116; t=1707289493; c=relaxed/simple;
+	bh=kRiuQOdL4BBOsZpUQoHkM684kud96KtUHWvGbmmCe8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cjTDzc0SBO+Nf/iW2/PkLvZwolwmBt0+K8Wa2D3+Qu558GWy0XpFgrWHoj8TkXUaHdKqWtZQQoEkUWL6Gjr59gpcaPAWk+DqzSZf0CYwAbj1MwkaTDrhpzEohI/kEm/Nu915PBnZ6fA7mtsn6edNbcIV8+1raoBIoqlIPHYA6E0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rXbv9-0002B6-02; Wed, 07 Feb 2024 08:00:35 +0100
-Message-ID: <733ee8ec-ed6a-4f75-8818-454b9cb668f6@leemhuis.info>
-Date: Wed, 7 Feb 2024 08:00:34 +0100
+	id 1rXbzF-0005db-P2; Wed, 07 Feb 2024 08:04:49 +0100
+Message-ID: <e4305f3d-ede8-44fc-8bd4-eae899284f56@leemhuis.info>
+Date: Wed, 7 Feb 2024 08:04:49 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -25,30 +26,33 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 6.6 000/326] 6.6.16-rc2 review
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [regression] MD RAID1 hangs during boot (when starting MD arrays)
+Cc: linux-kernel@vger.kernel.org
+References: <CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <CAH37n11s_8qjBaDrao3PKct4FriCWNXHWBBHe-ddMYHSw4wK0Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707289237;fba306fb;
-X-HE-SMSGID: 1rXbv9-0002B6-02
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707289491;864c9d9f;
+X-HE-SMSGID: 1rXbzF-0005db-P2
 
-[TLDR: Just adding a regression reported to bko to the tracking]
+On 04.02.24 05:43, Стас Ничипорович wrote:
+> After trying again to create the ipset with timeout option I get a kernel panic
+> # ipset create throttled-ips hash:ip family inet hashsize 1024 maxelem
+> 100000 timeout 600 bucketsize 12 initval 0x22b96e3a
+> ipset v7.20: Set cannot be created: set with the same name already exists
 
-Hi, Thorsten here, the Linux kernel's regression tracker. I noticed a
-regression reported in bugzilla.kernel.org that seems to be handled
-there already, nevertheless I'd like to add to the tracking to ensure
-it's doesn't fall through the cracks in the end:
+To be sure the issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot:
 
-#regzbot introduced: 1b0a2d950ee2a54a
-https://bugzilla.kernel.org/show_bug.cgi?id=218459
-#regzbot title: md: RAID1 hangs during boot when starting arrays
-#regzbot monitor:
-https://lore.kernel.org/all/a92ca042-b981-4f35-beec-ebf416e4239b@leemhuis.info/
+#regzbot ^introduced fdb8e12cc2cc
+#regzbot title netfilter: WARNING when using ipset with timeout option
+#regzbot fix: netfilter: ipset: Missing gc cancellations fixed
 #regzbot ignore-activity
-
-See the ticket for details, there were a few replies already.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
