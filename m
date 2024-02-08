@@ -1,319 +1,148 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2048.outbound.protection.outlook.com [40.107.237.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849837B3FC
-	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 15:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707406112; cv=fail; b=ttQrZab+Pxt4lzTBv+wzzCNspJTYonrXpAksRNoIwmbsN6Y0a1Ki58z3Sn1IC9AsBOqa97ONkZX9W3h8itiLiGozVXFMpG/czRp4droO9vIgDs9crB5iL/kikkVJacyCjEDhf5MQNVLfEXdqyIDxc1sFGHmIleMRarQlMhp2YYk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707406112; c=relaxed/simple;
-	bh=yrMS5aSKswsr2dHmcKmPZhyeh5ZME2X5j4p7LA6fva8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=B495gA1SyMlkx4A97PHLKdeSx/sTGbJNv+TT2a//9caP/wwbHt0EyawJemeLpUr7dTvW8SRmgX2+mL+Peu1TXkXUAQxBw+tLwL/3IhuduiyJawAqlNL2QhrVfVPkbvWWY3zQ9hIkbhgFTJpCLXbkSsVWK8o0FjaRcqsBLRT5AHQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zyNSJGHS; arc=fail smtp.client-ip=40.107.237.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE5B83CCA
+	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 17:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707414160; cv=none; b=WHkHqrEqYtz7bANEe5vorie7gIoJ581DYaOnF6MAxcqS2h2qK2D+K6M9Hzz2XI7/pvnk1BJXvkuTgoqLR18Rrve1YQsVsFcZVEY4iv4Jx/2N2BLZ9j6cj4OIn1ooBFrHVCulUpJrPJZzQDpefWANv3BGxiEeD+RcTExVVwmzX6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707414160; c=relaxed/simple;
+	bh=jTyqq1McBzhXuBGoQDTNsRl0bVoBKu3QPqRS+ZSe964=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G8ofc3azzWKwSKgpg8hnUwfSb5z+JWQKB+qL0WejbePoYqjqAqgK698XYsmcsIIig45A5gd83EJL+SP2is7O+KkYNKQY2RMrvInnQlhzrlTpOhHuTL49C7zj1kg3UZKqVy/mVmC3jJMantXd2PKYSKTd8IQTlQu7iTgla/G71jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Snc9xgSK; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zyNSJGHS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kM3CQABHHVKwxPLk1BjEKDDUPoneSPMD3RHBFEzPzr/T7ALbxCwn1apDjj06Om1xB73l4G+Eacdfbt+M5T/DIZYZm2rdW5wF4nh8OeV35gzOKppra0+zvSnhnDX2Zvic5+alOL1I7BN101VFouQSVRv8yuC1T4azpEPDhAMz7Ad7kKkqHjHqEk38S3u+m/kTvmGVr5GRQ3+XCsq9zGEQHPJni/yEJwbbgC/7WAFFN0Iqp/6t6Ti55tA2+ZDaEjY6Ic7CXxPLQ01j9B756UEFlrT4UzO6UH2EXHYWevNm1RjiJ0sLRgABijAcDiHiryXlkZXALDnuWIVDL3wSqaLk3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DozVR33bEqbn1ug4g69Ss42Ef3aDeClTcLFMCobSrVQ=;
- b=MC7FDwqc7qbSlCKAZXrj4/oRKdjZLgG2TbeyVVloNqenaoP0lR9SYl5uP2mAyssn4UmsZPLdZmfgqKlIX8GMu61hL4QxNRQHnnOVSTv2WysosO9QU7hQ1ldFEl1MUDY65PAMEUcoK7I8XW2s6zrRcttajQmX0ky9VYATlTT3/OUqd+UqMqZ50Pun0dnJFhv2EMmR1TYIimy87NF9vxaUW+dwFeqvWeCy+cbPQsst6dT2pHsnyk+NocFrse3dronBKEpdo+8wN0yKSyOyEE+cBNtGLigOyGB7YpMwrnon4DaSbLZbZ9yHEDwmjpuRApWAOnxrEOkSv1SZ4v9D8WWZwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DozVR33bEqbn1ug4g69Ss42Ef3aDeClTcLFMCobSrVQ=;
- b=zyNSJGHS1CcTjNfQtVE5YFaT4oSzW/KO/vwxQHNB7DvxOockFsCnKpQRzhYKfwsf4fJTr5W9BmobCEfWBoHGwPiyaKn6F441AetnwN78UdsX0/weqg4u11KdmY++PsvNJ42DSnagNeTsI6G5Rp0Tv7oEzwCJTUqZ5VCoC1vH7xM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by PH8PR12MB6770.namprd12.prod.outlook.com (2603:10b6:510:1c5::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Thu, 8 Feb
- 2024 15:28:24 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856%7]) with mapi id 15.20.7270.012; Thu, 8 Feb 2024
- 15:28:24 +0000
-Message-ID: <11baa678-8cbe-4a9a-af09-381d649d648c@amd.com>
-Date: Thu, 8 Feb 2024 20:58:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next20240208: tg3 driver nw interfaces not getting
- configured
-Content-Language: en-US
-To: Heiner Kallweit <hkallweit1@gmail.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, andrew@lunn.ch,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240208155740.24c6ada7@canb.auug.org.au>
- <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
- <fd72544a-f3ed-44bb-86e3-bdfa4fca720e@gmail.com>
- <8a59f072-4a71-4662-bfde-308b81e4ce88@amd.com>
- <47987433-7d56-483e-a0fc-38140cc17448@gmail.com>
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <47987433-7d56-483e-a0fc-38140cc17448@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0018.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::8) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Snc9xgSK"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-68c820a25a0so339146d6.2
+        for <regressions@lists.linux.dev>; Thu, 08 Feb 2024 09:42:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707414158; x=1708018958; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
+        b=Snc9xgSKS9o7e7uBFXj7SDoPZiSw3SYaZUEaf6RTLf34rcNvVkEjYoAuc+mnEGUrLo
+         5m9RJufK49RiLeVDsLGRu7d59Wu6eFAc5f2mOvkJGNTRw9KTyKF2Yix5MsNAWZQaOtW1
+         bXbsftY0A2ejhUfHCYe7y4T0cc8qsgp6gulaiaOG0Yw3MWc/aeqHSZ1p4Aa0YWkbzAZ6
+         Xjk9HIQvNq4HW1W7j2FAtZ/rjpFSi6u7TVk5p6BMTDKWJMUKEZVC0lWy1qWoxqoFelEf
+         PEePtypXrX/YZ/7BqzvDbeCSGYGiDQ7VUkuHm/2EXBgpUK8/UPsGhhwQ72+mu3CNKLLi
+         0WYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707414158; x=1708018958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
+        b=ImtHdck/PzZe5HYH64yYUWB8BVPDN8NsKZN3tHVgXyrD/37W76bnXwPc6bdGHh68WY
+         U8I2+x7ajfQq8fr+lr5Q7xJOrhA4HYxD5NyxjhpFiklmqraYFqdncUiOBS1jtvZ0yvz1
+         mASLzjI0z7SbPZvTOrTmceRHYD4l7cFlsmKrhtLfFy7FfEkC3UkQgRPgRLg8mYzl6wWU
+         af0j6WPdJz9Do+TQ0wQZFOXG4uIdiQGVXYmvH0+8DG+6rAZSPNU6/OkQNginuC8tZMLD
+         BGa8Jy5ApEIwvtLFKHWzL2dKAgpPPQVKD4hDZJYtmIXROoHHJPkhHah8MAn2bceVbZe8
+         3y7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVFDhjM6QnvvlDot4EZckRj7DJZrCl+lfnxzlyt7q+jnXWwsITqzCXsVCH5PW4jMtuwfaj34v9V0juYeYCudAed8SpGoXLQHOU/76E=
+X-Gm-Message-State: AOJu0Ywv17XcTcAXyPrW9HLu9FBMu+iE4jwAWp9oPZwtxhsXRsHvammd
+	qIwjZ7L1jQpE65x2HOx7kn967QjtuzhJORD7z2CleTPCHJVkWbXLsLovhj3LZ4Nsc3o2OU5lu7W
+	uT1eNwAbm5nwOwk2CZn1OM58cY2Uoiwg84vpM
+X-Google-Smtp-Source: AGHT+IHisO4YeJ4HMjJTJ7Pa6g2UoWbHmyDF6/F8nMdBmOGtjRmAF7AXJRfz3Lb4ftoWcIr8EGxQVdi4TlQ13SQyHQk=
+X-Received: by 2002:a05:6214:258b:b0:681:78cf:3920 with SMTP id
+ fq11-20020a056214258b00b0068178cf3920mr12087645qvb.25.1707414157664; Thu, 08
+ Feb 2024 09:42:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|PH8PR12MB6770:EE_
-X-MS-Office365-Filtering-Correlation-Id: bff4544d-0b9f-4c45-018f-08dc28ba96aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qkBu6ttPH6W+GCuNqZKchftfV/glroiAb/D7KNogUP+/EWhmtLHTUsargvVH9DDWG5LpY82fhR60vzOYe5qkleTE7Dc4qySqsXz4LcKXZl6myfxx8jYBzyCqf9rvlYMAxbyxStkORft5ZpFQxqPYe+jaRjZ3OoGxTVRQqz+l6nBwDGcy+4u9uzBPvTJS7Wv7FJDjwouFlaIMdBDwgyuII1I2FGX/Ajv0ISWaw/co2maD1Xjrp79WMYP4lb1QaXVnler/kb6Af7v7d43qwghtvr3jL7bRiHOD5TWFJ8KrS512nV4ATbf1FTJUW5X7R2bhRDtJFOJ/OIMSM7IEP93y+RfvG2Gn1JeOrFLRuml6me0GOium2TGQV6cJ1noEL6Yw+fD89gmBMA1OP+lxJHeFOx/eRBkV0ATUfM4Ei4ZI2Vqfd9PxCpmYAtXNODlj2LSDQugnm0IPTCWjdBq6S1MWIqKqvWdx2Jn6Ea7xxqxW3z6Pd5tsiJNpKCUM5sKYJOuxZneJ0FgHuB+iXLkB+WcXC3riRZ5yn+2bn2YKSri2eNw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(366004)(136003)(396003)(376002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(31696002)(31686004)(83380400001)(26005)(38100700002)(478600001)(6506007)(966005)(6666004)(66946007)(6512007)(6486002)(53546011)(2616005)(36756003)(41300700001)(2906002)(5660300002)(66556008)(8936002)(316002)(54906003)(110136005)(66476007)(4326008)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R081TldZMmNWYTZUWFBuMVlERzBsRkN5aE0wWVNZK0tSTmhFMHRjc2RrbUl2?=
- =?utf-8?B?bjdVTUUydGovUW5aKy8xOXBvZkpzcW9LOHdqbWpQNUJSNmNFU1FmUnNIa3Nt?=
- =?utf-8?B?SEl6cmI1RXdxNFlVUG5jOUhwWXh1TndQbS84ZlNFc1QrazIyUzJzVGtMQUJs?=
- =?utf-8?B?L3lkWGMvNGdZNkc2cmlPQzdJN2NNbEVxMlg5K3dCT1MyS0Y1VXBUbStSUEp2?=
- =?utf-8?B?eDJhSmg1YzVlYnR1K3l6UUxiQlJ3d0R0QWNWYkc4d2EvdFBwWGZmeWtJdXJr?=
- =?utf-8?B?UHBJcHA3VzJqSUZOUDdwQ1UwYmVpS0tTeTg5dVo1MnlUZWlWbWVmRVcyTEt5?=
- =?utf-8?B?VE9DWG1Dem9wNzNaN3Q5UENWc09OQ1pOOW9pTGtaVEFMSmR5eVE2eHBVTStr?=
- =?utf-8?B?UStuanMwcGpONjNFbldGdWJMd3FUNFBPVytLOGUzTGtOUm9FOUtsZHN6WUgx?=
- =?utf-8?B?Mno1WFFrMW1JZ1NJWmszME1ydmtWMGtkWGtoM2oyQ0huM2lpeGREMDJjZGtl?=
- =?utf-8?B?KzdsWWYwYVduYlVCN3FwTU51d2xaOXhNWVUybEdyRjNjK2NMN2tFQUpVbUls?=
- =?utf-8?B?UTFkTmJVTVJNUUVRREhxWERwb3E2cEMwT1FhbWxOeTNPZU5zcXdqYlZsTXJS?=
- =?utf-8?B?SUN3RXQ5cVkycDdoUkRsTkgzQmI2YmFYckNIamoxUFdhNWQwdHVQa1VibGUx?=
- =?utf-8?B?YVM5aXBpRGtGRUZCU1BveEUxNE9jdjJCeTNZazd1RTZhbUdjNEVLRXAvZGx6?=
- =?utf-8?B?YW4xMjhuVENvSDNLelVoRzZTQU4wUHFsb21iUUUyK1ZmdU1MdHcrYXpDc1Jo?=
- =?utf-8?B?UEptQ2x6dHk4dG96dzZtcnIwNlQ2U2FxcjRrcVM5MkU1WHRwNnJncjMvcTZu?=
- =?utf-8?B?VEpFTklqd0h6amRJWkRVTy80M0gyNkV6UVNaLytKTXpUVWVPSjMyVDRaZkFY?=
- =?utf-8?B?djJ5eXQ0T1h3NGFpKzBVUVpVczBuWitBV1ZpeTFmTWFocHdZUWRyWkZkU0E3?=
- =?utf-8?B?dFhLZjZ2dk0zWmFJRk9xcGErQStaVXdGTks2N08yQmZ6dXphWEFqbjRKMmJp?=
- =?utf-8?B?MERNVTNaNCtnMS9XNnRuaTV1b2h3NmdjSVkrcHVtY0NOL2NzcTV4SFpuS2d1?=
- =?utf-8?B?UlZReG1qUG1GU0gxTXg1YlFsV1pnT05qZjM1NlE5bC81YVV0UWtaSis1dC9T?=
- =?utf-8?B?emxWU2o4NDhJVjRrUHNTSW5qcnphMUtZYWMrU2R2TTZJOEIxSCttRkdQTGRi?=
- =?utf-8?B?ZXZ1cm80cHpMZ056d1JOeXVKdzVWQjJkR3dwTWNXR3NRWC9PTld5T1E4SVdL?=
- =?utf-8?B?SXQwSWRtWWxWZHo4dENxUjBBckJLRjFYUERkdWovY3d1V0lLOHk4SVdmcC9O?=
- =?utf-8?B?Qi9nR0dDU0QxbVZrMTBSOExjM01EZmNZTC9GYjdYejRCQzY4L3E1TFQrbXRC?=
- =?utf-8?B?REpJTGF2MXRjRG8rbnpyaUNiYWF0OTFxMzc0U0pTM2crREJtUlM0MlNNdzY5?=
- =?utf-8?B?NW9xbmRsMERpNENGb2N1dzdoQXJERWk0UWJuTHRvYlJsR2c1dElmWVRZbldn?=
- =?utf-8?B?TGFwUndMSE5Eamt4Vmd0dXFwS0Nsc3hlTWR4cjdUT1NiVGY4N2VDWkpFZkNL?=
- =?utf-8?B?WWFQZEdpWFZDSEN4eVI3c2t1bTBEaWVLMk50Vkh6bUUzNlhJcFJFUDBNU0cv?=
- =?utf-8?B?aHpXS0IvZTZ6SHhLMmdURHQraWl5bDBvRG9mSUtZaXB4ZGNKRUc2d2NHcXJJ?=
- =?utf-8?B?cVc2a2VVSjZNRVR4Q2M3YjlNeVRKQkFWdXN1R05tODdNMEVHRjRRUGIxNyta?=
- =?utf-8?B?bmVYVDdMeE5laHd4Vm9PNGJNSTB0M1N3SUNxSHYvSUJZa1FZZUxsaVFMVGRB?=
- =?utf-8?B?cHJkY1M2U3l3dkNIWCtidWp1YjVTdStFNS82UW4yU3BGeW5CV1dOQldYQXZF?=
- =?utf-8?B?cG5FbUxQc29HT0pwTzdaekpSZWpuSDJmT2xBcCtIT0ZQVjJhTWdNNUp5YkU2?=
- =?utf-8?B?U1V5N25POFUrL045d2Q4NktFU2p4NU1vdnNoZnlrclozOGF3Tzd6NWpmU2Ir?=
- =?utf-8?B?RUl6SThiL3VrSTBwUSs5UmFwd2xpbXU0TWZQNitHd2QvYmhEZXlVUUxidk85?=
- =?utf-8?Q?ke8IhiR0MsPBwcKlk22VbWquO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bff4544d-0b9f-4c45-018f-08dc28ba96aa
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 15:28:23.9356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kxwqivh17QaWM5LOll6M8qylnXMxOrxfl/Xay58ImKmsUe2PGcw92xEDaUgs+cLRpmGyAzZZHeGp+yjLUSNhjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6770
+References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
+ <ZcNdzZVPD76uSbps@eldamar.lan> <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
+ <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
+In-Reply-To: <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
+From: Jordan Rife <jrife@google.com>
+Date: Thu, 8 Feb 2024 09:42:24 -0800
+Message-ID: <CADKFtnQUQt=M32tYhcutP0q6exOgk9R6xgxddDdewbms+7xwTQ@mail.gmail.com>
+Subject: Re: [regression 6.1.76] dlm: cannot start dlm midcomms -97 after
+ backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
+To: Valentin Kleibel <valentin@vrvis.at>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, David Teigland <teigland@redhat.com>, 
+	Alexander Aring <aahringo@redhat.com>, 1063338@bugs.debian.org, gfs2@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	gregkh@linuxfoundation.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/8/2024 7:32 PM, Heiner Kallweit wrote:
-> On 08.02.2024 12:05, Aithal, Srikanth wrote:
->> On 2/8/2024 4:16 PM, Heiner Kallweit wrote:
->>> On 08.02.2024 09:30, Aithal, Srikanth wrote:
->>>> Hi,
->>>>
->>>> On 6.8.0-rc3-next-20240208, the network interfaces are not getting configured.
->>>>
->>> Thanks for the report. Could you please elaborate on what "not getting
->>> configured" means in detail?
->>> - Any error in any log?
->>> - Any other error message?
->>> - Interface doesn't come up or which specific configuration are you missing?
->>>
->> I am not seeing any errors in the dmesg,
->>
->> [    4.019383] tg3 0000:c1:00.0 eth0: Tigon3 [partno(BCM95720) rev 5720000] (PCI Express) MAC address d0:8e:79:bb:95:90
->> [    4.019391] tg3 0000:c1:00.0 eth0: attached PHY is 5720C (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[1])
->> [    4.019394] tg3 0000:c1:00.0 eth0: RXcsums[1] LinkChgREG[0] MIirq[0] ASF[1] TSOcap[1]
->> [    4.019397] tg3 0000:c1:00.0 eth0: dma_rwctrl[00000001] dma_mask[64-bit]
->> [    4.041082] tg3 0000:c1:00.1 eth1: Tigon3 [partno(BCM95720) rev 5720000] (PCI Express) MAC address d0:8e:79:bb:95:91
->> [    4.041087] tg3 0000:c1:00.1 eth1: attached PHY is 5720C (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[1])
->> [    4.041090] tg3 0000:c1:00.1 eth1: RXcsums[1] LinkChgREG[0] MIirq[0] ASF[1] TSOcap[1]
->> [    4.041092] tg3 0000:c1:00.1 eth1: dma_rwctrl[00000001] dma_mask[64-bit]
->> [    4.077483] tg3 0000:c1:00.1 eno8403: renamed from eth1
->> [    4.124657] tg3 0000:c1:00.0 eno8303: renamed from eth0
->>
->> nmcli says interfaces are disconnected:
->>
->> [root@localhost ~]# nmcli
->> eno8303: disconnected
->>          "Broadcom and subsidiaries NetXtreme BCM5720"
->>          ethernet (tg3), D0:8E:79:BB:95:90, hw, mtu 1500
->>
->> eno8403: disconnected
->>          "Broadcom and subsidiaries NetXtreme BCM5720"
->>          ethernet (tg3), D0:8E:79:BB:95:91, hw, mtu 1500
->>
->> I am attaching host dmesg.
->>
-> 
-> Thanks. dmesg lists no error. Please send output from the following commands.
-> 
-> ip link
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode 
-DEFAULT group default qlen 1000
-     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: eno8303: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state 
-DOWN mode DEFAULT group default qlen 1000
-     link/ether d0:8e:79:bb:95:90 brd ff:ff:ff:ff:ff:ff
-     altname enp193s0f0
-3: eno8403: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state 
-DOWN mode DEFAULT group default qlen 1000
-     link/ether d0:8e:79:bb:95:91 brd ff:ff:ff:ff:ff:ff
-     altname enp193s0f1
+On Thu, Feb 8, 2024 at 3:37=E2=80=AFAM Valentin Kleibel <valentin@vrvis.at>=
+ wrote:
+>
+> Hi Jordan, hi all
+>
+> > Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
+> > and 6.6 stable branches,
+> > it looks like there is a mismatch here with the dlm_local_addr[0] param=
+eter.
+> >
+> > 6.1
+> > ----
+> >
+> > static int dlm_tcp_listen_bind(struct socket *sock)
+> > {
+> > int addr_len;
+> >
+> > /* Bind to our port */
+> > make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
+> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
+> >     addr_len);
+> > }
+> >
+> > 6.6
+> > ----
+> > static int dlm_tcp_listen_bind(struct socket *sock)
+> > {
+> > int addr_len;
+> >
+> > /* Bind to our port */
+> > make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
+> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
+> >     addr_len);
+> > }
+> >
+> > 6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on hea=
+p) which
+> > changed
+> >
+> > static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
+> >
+> > to
+> >
+> > static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
+> >
+> > It looks like kernel_bind() in 6.1 needs to be modified to match.
+>
+> We tried to apply commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on
+> heap) to the debian kernel 6.1.76 and came up with the attached patch.
+> Besides the different offsets there is a slight change dlm_tcp_bind()
+> where in 6.1.76 kernel_bind() is used instead of sock->ops->bind() in
+> the original commit.
+>
+> This patch solves the issue we experienced.
+>
+> Thanks for your help,
+> Valentin
 
-> ethtool <if>
-Settings for eno8303:
-         Supported ports: [ TP ]
-         Supported link modes:   10baseT/Half 10baseT/Full
-                                 100baseT/Half 100baseT/Full
-                                 1000baseT/Half 1000baseT/Full
-         Supported pause frame use: No
-         Supports auto-negotiation: Yes
-         Supported FEC modes: Not reported
-         Advertised link modes:  10baseT/Half 10baseT/Full
-                                 100baseT/Half 100baseT/Full
-                                 1000baseT/Half 1000baseT/Full
-         Advertised pause frame use: No
-         Advertised auto-negotiation: Yes
-         Advertised FEC modes: Not reported
-         Speed: Unknown!
-         Duplex: Unknown! (255)
-         Auto-negotiation: on
-         Port: Twisted Pair
-         PHYAD: 1
-         Transceiver: internal
-         MDI-X: Unknown
-         Supports Wake-on: g
-         Wake-on: d
-         Current message level: 0x000000ff (255)
-                                drv probe link timer ifdown ifup rx_err 
-tx_err
-         Link detected: no
+Good to hear that works for you! We should fix this in the 6.1 stable
+kernel as well.
 
-Settings for eno8403:
-         Supported ports: [ TP ]
-         Supported link modes:   10baseT/Half 10baseT/Full
-                                 100baseT/Half 100baseT/Full
-                                 1000baseT/Half 1000baseT/Full
-         Supported pause frame use: No
-         Supports auto-negotiation: Yes
-         Supported FEC modes: Not reported
-         Advertised link modes:  10baseT/Half 10baseT/Full
-                                 100baseT/Half 100baseT/Full
-                                 1000baseT/Half 1000baseT/Full
-         Advertised pause frame use: No
-         Advertised auto-negotiation: Yes
-         Advertised FEC modes: Not reported
-         Speed: Unknown!
-         Duplex: Unknown! (255)
-         Auto-negotiation: on
-         Port: Twisted Pair
-         PHYAD: 2
-         Transceiver: internal
-         MDI-X: Unknown
-         Supports Wake-on: g
-         Wake-on: d
-         Current message level: 0x000000ff (255)
-                                drv probe link timer ifdown ifup rx_err 
-tx_err
-         Link detected: no
+IMO it may be less risky and simpler to fix the backport of my patch
+e9cdebbe23f1 ("dlm: use kernel_connect() and
+kernel_bind()") and just switch (struct sockaddr *)&dlm_local_addr[0]
+to (struct sockaddr *)dlm_local_addr[0]
+in the call to kernel_bind() rather than backporting c51c9cd8 (fs:
+dlm: don't put dlm_local_addrs on
+heap) to 6.1.
 
-> ethtool --show-eee <if>
-EEE settings for eno8403:
-         EEE status: enabled - inactive
-         Tx LPI: 2047 (us)
-         Supported EEE link modes:  100baseT/Full
-                                    1000baseT/Full
-         Advertised EEE link modes:  100baseT/Full
-                                     1000baseT/Full
-         Link partner advertised EEE link modes:  Not reported
+I will have some time soon to fix the 6.1 backport, but it may make
+sense just to revert in the meantime.
 
-EEE settings for eno8303:
-         EEE status: enabled - inactive
-         Tx LPI: 2047 (us)
-         Supported EEE link modes:  100baseT/Full
-                                    1000baseT/Full
-         Advertised EEE link modes:  100baseT/Full
-                                     1000baseT/Full
-         Link partner advertised EEE link modes:  Not reported
-
-> 
-> If the interfaces aren't up, please try to bring them up manually and see what happens.
-> ip link set <if> up
-Nothing happens.
-[root@localhost ~]# ip link set eno8303 up
-[root@localhost ~]# ip link set eno8403 up
-[root@localhost ~]# ip link
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode 
-DEFAULT group default qlen 1000
-     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: eno8303: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state 
-DOWN mode DEFAULT group default qlen 1000
-     link/ether d0:8e:79:bb:95:90 brd ff:ff:ff:ff:ff:ff
-     altname enp193s0f0
-3: eno8403: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state 
-DOWN mode DEFAULT group default qlen 1000
-     link/ether d0:8e:79:bb:95:91 brd ff:ff:ff:ff:ff:ff
-     altname enp193s0f1
-
-> 
-> 
->>>> I have 'NetXtreme BCM5720 Gigabit Ethernet PCIe'
->>>>          configuration: autonegotiation=on broadcast=yes driver=tg3
->>>>
->>>> If I revert below commit I am able to get back the interfaces mentioned.
->>>>
->>>> commit 9bc791341bc9a5c22b94889aa37993bb69faa317
->>>> Author: Heiner Kallweit <hkallweit1@gmail.com>
->>>> Date:   Sat Feb 3 22:12:50 2024 +0100
->>>>
->>>>       tg3: convert EEE handling to use linkmode bitmaps
->>>>
->>>>       Convert EEE handling to use linkmode bitmaps. This prepares for
->>>>       removing the legacy bitmaps from struct ethtool_keee.
->>>>       No functional change intended.
->>>>
->>>>       Note: The change to mii_eee_cap1_mod_linkmode_t(tp->eee.advertised, val)
->>>>       in tg3_phy_autoneg_cfg() isn't completely obvious, but it doesn't change
->>>>       the current functionality.
->>>>
->>>>       Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>>       Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->>>>       Link: https://lore.kernel.org/r/0652b910-6bcc-421f-8769-38f7dae5037e@gmail.com
->>>>       Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->>>>
->>>>
->>>> The same works fine on 6.8.0-rc3-next-20240207.
->>>>
->>>> Thanks,
->>>> Srikanth Aithal
->>>> sraithal@amd.com
->>> Heiner
-> 
-
+-Jordan
