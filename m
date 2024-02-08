@@ -1,207 +1,89 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B387640A
-	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 14:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5465E6A347;
+	Thu,  8 Feb 2024 14:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707400958; cv=none; b=DcaS3J0BmPmuAyBE3TGfFcmxG1zWTjntdBAr4iruchrtsdxBBbzeVk1qnvcE9Mb+Kbi7lmFcOK2eo75IjLb45i/+FBouQM7OT2J3wKQ1k1PZHwRm8mxnLBYhrl/8iPtYG5BlG6tyNkDYAqeNTeqnETNgpfclgFq66qIkbIzEeec=
+	t=1707402874; cv=none; b=MX9uakV+Hn7ZId5g13SKJgqOqbBElGvHUmh4guJuPLhI0Vvjb/y7Ttc2LRzEgRx8fGQo2TCuMtKaaW9d3VAEEhYWqcx5Yd9dHAfJO0G7eOYCXL92VK61iEisZEKTflnzf//yvwFROrrYUfE6J9Zflc+1MVbtNiMLzAhUyPKq6eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707400958; c=relaxed/simple;
-	bh=umeZgszej+9+nlhawL9gGz8MqAnrmt2tAS0zlXcFnA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cpwF0w0wpvd5QKdswoYf6tzfRFanXClWonRWItuDDjr6BiWu1MdKbEmPoPrqZVxbEyB2rTRy+ggumcRbHk2agIVgu1ghEAV7Yw+odMqvVgv6A+4+/Da70y/jQxoIPIex5WdP81zWbwfy4gvZAUjp27vgmwhZ1md52fcERLdhehc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wel/lOJD; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707402874; c=relaxed/simple;
+	bh=cjeBQF+H60qIRCN8KiTSL9BpFV9avuvy09H2SemvsUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmVVMHW0ZjfNfHjuWJW4wt1I/sSYKboocwwbxMIM6ZGP8uq0B97EkzscEGW+kE8BMLGaaebp/xeN1BFq83OynBsvw6/p1ojgSinWWlF0ZRfWhvC3s9/fDu+q6XGXi+9ogn2akTFtzxnxBstR0rGH1Kq8LNhviPffSbLrLUxIO9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyVEfMyG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wel/lOJD"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a381df83113so186919966b.3
-        for <regressions@lists.linux.dev>; Thu, 08 Feb 2024 06:02:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707400955; x=1708005755; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xfZFtQ2+pP05qvZsJg/nXDMvuPggRgolLgTJFuLApQA=;
-        b=Wel/lOJDh8Aa8LA9DazfB7fbDkNDvYTKwOnLkotK+WwwUSzsMqoKWRAYObCySExUbA
-         F0caHA0IlaS20KIL5+bUNwEMkKI0d/u/GWbYp0p9Bu8p+WvGYMOupWhaEgMbW/U1kKRl
-         7Or8tEtMyJ3FFX1eek+BW0Zui8fgn24yNiaHKu9DyFQO6ahNO8vvQMnkHlXpbKqFmfqT
-         ilUQ1Su7kIrpKnN3tMETzZmKHzrRrh5DRDN++pw7++QJ5LrwOs5kZvY3/bYTOlYoOBIx
-         linQgfOSddVTSqYsSZS7IVQuAWkaL8h+c+IB95a4chSxj6Stt6TDOO8mcNzuAAMdf/y+
-         D20g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707400955; x=1708005755;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xfZFtQ2+pP05qvZsJg/nXDMvuPggRgolLgTJFuLApQA=;
-        b=cKg1xC8ELV+PYq/bvDD7GaykxeF83LZ5lykPUFqN4Rbcd3cu3FYVXLokCs0/nbYWwa
-         aaFLX7JNlKfk6JsC1vP1F/FxBzmtKC3vxhM8TDK27xZLKmOE+vjVLJtpVyaTN5X903cy
-         3wDFQQRJp6e1P7uUwm3XfseJvZYcg56801/u/72nRj/3kOulZZx/agUjfJoMx/8eVAG8
-         5E1MnCgqmF8t1IeJZ9qbYekG/OxlV59ZVCzcJcyUxYsPq1RDH2fbbneobfapY9vsp0Gz
-         WfQ9PoRtzLvEk6dztq8zgAJCmkj+F4I+14/9nGD6DYTXYJl5lidz7S+ORQ7xZtmwSg/T
-         lKmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkhjc11lWcwdImYpCHa8Aq+HZ0qt3CQx5Ws/HUj4eiBbXypU1iAkWK6rGw3Fg50dSiDka1+qsIS7AHKzVutT2IZ4ULZykZV9jbOow=
-X-Gm-Message-State: AOJu0Yy+3TUvTGKwMAdVq2WCc76ED1CAn49k6kcLZhd4POm7/t0CsS9I
-	kg52rixobI9mpQxTuz+wgjYLyVd8YUgZ+kZeGevhlIBDUB11+leZ
-X-Google-Smtp-Source: AGHT+IE01pa/eOm3afiZ/mr8l5gzBO4XU0w/bCpy1rIIXp4mBM84j/Rolju1WUzHhxtt1PMe9Uas8g==
-X-Received: by 2002:a17:906:895:b0:a37:9bae:ee09 with SMTP id n21-20020a170906089500b00a379baeee09mr6557718eje.11.1707400954432;
-        Thu, 08 Feb 2024 06:02:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX4akIVlp+d4aB2HOCHqSRQTZ8VNDszLOvo16qdyMC8Urz8EzdZQfE0ANlRcaAJ8x7U+C49IikNr1gmZDDxok63dP14NA9V8m2vm5RLsC1bfQHTyXfWVVPYoDABLAmfJX27YHEalbzUXVu2indORih/SyR1YzIMgw2XKAhTNW0RVECQWObR352bantG5Rp+MocWSurn8oUnaUHIG7bn6XUx
-Received: from ?IPV6:2a01:c23:c599:8500:99e8:d59b:f0fa:1092? (dynamic-2a01-0c23-c599-8500-99e8-d59b-f0fa-1092.c23.pool.telefonica.de. [2a01:c23:c599:8500:99e8:d59b:f0fa:1092])
-        by smtp.googlemail.com with ESMTPSA id r5-20020a170906350500b00a3bb41034adsm74602eja.81.2024.02.08.06.02.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 06:02:34 -0800 (PST)
-Message-ID: <47987433-7d56-483e-a0fc-38140cc17448@gmail.com>
-Date: Thu, 8 Feb 2024 15:02:34 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyVEfMyG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7192BC433F1;
+	Thu,  8 Feb 2024 14:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707402873;
+	bh=cjeBQF+H60qIRCN8KiTSL9BpFV9avuvy09H2SemvsUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IyVEfMyGfOFoou2K8QzU1KqpicVeCZb0GO870IEZ2BfvNSHL+O763XVE+6Co4+NZi
+	 733hgpRETljSCdt8xfp0EeZ0Ti2awUJ+oSIfAe2XVz0WeEFkijI5S0dlBUU6k5E7fk
+	 MI2E9xYe/qQLfJFnJi8575kBzTPmSu9RxFYfBri6fxgQfpBn0sgSsrHqyWoIKr/Ham
+	 oybP3+loI6ITuzFtC7IZhx2u12zG4jg2IIaZivD3c+UzSxoBMRr7lknnlahSSIMFK0
+	 9Tut197zeX0mk5ycsGQHn1FJjfkpu+FEiu2j+9zF/Yhw4aHwJw9V+vkN1SfQbDCl+0
+	 hDm7nsxrys/3Q==
+Date: Thu, 8 Feb 2024 14:34:30 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced
+ disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
+Message-ID: <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
+References: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next20240208: tg3 driver nw interfaces not getting
- configured
-Content-Language: en-US
-To: "Aithal, Srikanth" <sraithal@amd.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, andrew@lunn.ch,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240208155740.24c6ada7@canb.auug.org.au>
- <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
- <fd72544a-f3ed-44bb-86e3-bdfa4fca720e@gmail.com>
- <8a59f072-4a71-4662-bfde-308b81e4ce88@amd.com>
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <8a59f072-4a71-4662-bfde-308b81e4ce88@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-On 08.02.2024 12:05, Aithal, Srikanth wrote:
-> On 2/8/2024 4:16 PM, Heiner Kallweit wrote:
->> On 08.02.2024 09:30, Aithal, Srikanth wrote:
->>> Hi,
->>>
->>> On 6.8.0-rc3-next-20240208, the network interfaces are not getting configured.
->>>
->> Thanks for the report. Could you please elaborate on what "not getting
->> configured" means in detail?
->> - Any error in any log?
->> - Any other error message?
->> - Interface doesn't come up or which specific configuration are you missing?
->>
-> I am not seeing any errors in the dmesg,
-> 
-> [    4.019383] tg3 0000:c1:00.0 eth0: Tigon3 [partno(BCM95720) rev 5720000] (PCI Express) MAC address d0:8e:79:bb:95:90
-> [    4.019391] tg3 0000:c1:00.0 eth0: attached PHY is 5720C (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[1])
-> [    4.019394] tg3 0000:c1:00.0 eth0: RXcsums[1] LinkChgREG[0] MIirq[0] ASF[1] TSOcap[1]
-> [    4.019397] tg3 0000:c1:00.0 eth0: dma_rwctrl[00000001] dma_mask[64-bit]
-> [    4.041082] tg3 0000:c1:00.1 eth1: Tigon3 [partno(BCM95720) rev 5720000] (PCI Express) MAC address d0:8e:79:bb:95:91
-> [    4.041087] tg3 0000:c1:00.1 eth1: attached PHY is 5720C (10/100/1000Base-T Ethernet) (WireSpeed[1], EEE[1])
-> [    4.041090] tg3 0000:c1:00.1 eth1: RXcsums[1] LinkChgREG[0] MIirq[0] ASF[1] TSOcap[1]
-> [    4.041092] tg3 0000:c1:00.1 eth1: dma_rwctrl[00000001] dma_mask[64-bit]
-> [    4.077483] tg3 0000:c1:00.1 eno8403: renamed from eth1
-> [    4.124657] tg3 0000:c1:00.0 eno8303: renamed from eth0
-> 
-> nmcli says interfaces are disconnected:
-> 
-> [root@localhost ~]# nmcli
-> eno8303: disconnected
->         "Broadcom and subsidiaries NetXtreme BCM5720"
->         ethernet (tg3), D0:8E:79:BB:95:90, hw, mtu 1500
-> 
-> eno8403: disconnected
->         "Broadcom and subsidiaries NetXtreme BCM5720"
->         ethernet (tg3), D0:8E:79:BB:95:91, hw, mtu 1500
-> 
-> I am attaching host dmesg.
-> 
-
-Thanks. dmesg lists no error. Please send output from the following commands.
-
-ip link
-ethtool <if>
-ethtool --show-eee <if>
-
-If the interfaces aren't up, please try to bring them up manually and see what happens.
-ip link set <if> up
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WpfLvOBs6QH8Jk+0"
+Content-Disposition: inline
+In-Reply-To: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
+X-Cookie: You might have mail.
 
 
->>> I have 'NetXtreme BCM5720 Gigabit Ethernet PCIe'
->>>         configuration: autonegotiation=on broadcast=yes driver=tg3
->>>
->>> If I revert below commit I am able to get back the interfaces mentioned.
->>>
->>> commit 9bc791341bc9a5c22b94889aa37993bb69faa317
->>> Author: Heiner Kallweit <hkallweit1@gmail.com>
->>> Date:   Sat Feb 3 22:12:50 2024 +0100
->>>
->>>      tg3: convert EEE handling to use linkmode bitmaps
->>>
->>>      Convert EEE handling to use linkmode bitmaps. This prepares for
->>>      removing the legacy bitmaps from struct ethtool_keee.
->>>      No functional change intended.
->>>
->>>      Note: The change to mii_eee_cap1_mod_linkmode_t(tp->eee.advertised, val)
->>>      in tg3_phy_autoneg_cfg() isn't completely obvious, but it doesn't change
->>>      the current functionality.
->>>
->>>      Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>      Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->>>      Link: https://lore.kernel.org/r/0652b910-6bcc-421f-8769-38f7dae5037e@gmail.com
->>>      Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->>>
->>>
->>> The same works fine on 6.8.0-rc3-next-20240207.
->>>
->>> Thanks,
->>> Srikanth Aithal
->>> sraithal@amd.com
->> Heiner
+--WpfLvOBs6QH8Jk+0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Feb 02, 2024 at 12:38:04PM +0100, Paul Menzel wrote:
+
+> Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 759=
+0)
+> [1], it=E2=80=99s very likely this commit, it turns out, that Linux logs =
+the warning
+> below during ACPI S3 suspend:
+
+The driver is just buggy here AFAICT, it's powering off the device in
+both runtime suspend and runtime resume so if the device is runtime
+suspended when system suspend happens then it'll power off the device
+again.  The runtime suspend and system suspend need to talk to each
+other here.
+
+--WpfLvOBs6QH8Jk+0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXE5nYACgkQJNaLcl1U
+h9D2FQf/aIy1W/ZQfqQl38qjH+AxWm2uBJTRKtUWbZlYKX75+sYgnz+SSeSNs5Uf
+tQ1fFae7U27jP4eqD10dVVx9iInwPHg7MZMSr5eEoZHKxpTDBZzDFNbYFXeuwZNi
+cR7lGKdqV2zBhKeGip+h+JzwPZk5kSzM96lUFe1QJZwCKvr9ocj6fqIedTrtbkCC
+Mn37SnlSTz9H3/0+uk3xMyop1EePKJSmpgGORA6t6TfPzPhqhjBkyFDc5XpqmDtK
+v3p6QH0xRTLQbvzo2fAEXgYGPdOifKXk6jqDWZ/l3aOSzMu6+Zmcf3hVt/zIcsWT
+ft9AUmNoVO3FiPNqqcaqCpMC4oZWnQ==
+=MLow
+-----END PGP SIGNATURE-----
+
+--WpfLvOBs6QH8Jk+0--
