@@ -1,165 +1,165 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75746BB29
-	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 08:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707381067; cv=fail; b=Pr7XCMSLDpCOid85FIQh4dA2zynTM+fi44Y+FYX3WZJphfUt3dvCzp6wJiDRFPJlOMvChenTwcO8qD0m2BwPfA8WxqVuGt3XLtTK5KJQD6IOTgR9fW4YQ+JfXh+N71HwOvP8Ztmi69TnTRd4oh6anKZW77Jr/MZNsDbqAPrfzgY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707381067; c=relaxed/simple;
-	bh=zS/0q78ibp7k2aPZKI8Wz8vX51KHjb4LmNTZFGJ0r+E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=svXBisSMGKfhY4JVCgfpS1XGNZdnTrpW1uMe7EHv7HbMsb1wNdjYcOV7GEqEZ3L8ASVWKMe/HDu5nKr7Andv2cfIqabZpejJdSGpgDrbSrrq1zKcKjdVGESc+FpODQiayI72rc4xVj2QvmmgyzhpdLHzqQ4umZUCna+IsjmrZgs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cLyh53zB; arc=fail smtp.client-ip=40.107.220.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD636BB3E
+	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 10:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707389211; cv=none; b=MRsXQNcAHrYhEMar6J+yh6Ypq7Y5ImAKFNer0f4scEA3ZpD7EUhL00oysiUrzI3iPh4vrx/jr10TXO7W5e6Jb5MzL2C2D4L4yna8NeW6Xr49GCO5OmIqnokY0FdjkcAHlLjIy39cOvUdanQti/CbM6D8Kd9BYbj55A7qv486h60=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707389211; c=relaxed/simple;
+	bh=+6JGq4Q4i/2rxQ/hd551UDrluUPrXlEMEsqWEVqLbok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AWvPasSujcM7FppWmKqwNFQ2v4Xaey4el5C5DUN8DDw12hCsLUXUUDsHy9IMtOOkyUFBal2kgkMNQ3TLmivM/os5gaiuaIplxklcapjhJBRVijw6sEUw9/5YwvQ+Wq3nV9ddWoxmhcGtnuFxbvAjdyXBRd3GzMLjrUPXxAddq2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8QRgzBa; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cLyh53zB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TAY1D0PbWOn8RTsXhDnb/HwY//VliG1zuibnM55IECgpptiO6uZq9cruTX//UKrn395gtZ1d5tAkjgpZ1BOtz/wfjvl0jOHz9GjfSE+1tkKgKP6FyvidOtsY46RK1SAyLgZ2xaebUMkLMVGEo/bsCS7pEfX2i+bY35Gni8fonxFXOYsijgfpKHV3CmfCD+sMLh53zYWJ0jWmgGla2CPV9wmuz2Tm8/7rFp66xCYxUhhqBNE0KeQSaXTButWY1PCGhaqSoKfasNIvjyB1T0re/NcCIx+SvAfsmWNpIVvLvzc5UJmPeFYt/qAAGjcYtu9Dp4zmGXVuJBV6QcGjIsg/Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JDApHOrdskyAPIovvPjibk9EHl72RmLXXhtWnnMho+Q=;
- b=QcGKsn7lFyvvFDGWoCCUFRiYk4kpbIQtVC0NgG0sKBVUSaNH986OkiPSNJpIFKDkSLAIgfqrYEwhdJH6tQKk0+cnA35oJ4UJ4Non9OXOegPoZmi7RfllVGVMps2Op011QEIvdXY4lp8om7UvSL7R8IExa0nCi5RVwQvaILX6o1K9BXHoSAyptcVcfNnVzt/VzkuzyT83wFteUO7cOk3RE1EyKdVUNw1zFVti8zFW9bqYY0lRQppDQHQ1vJT65/7QP10En/Mlpt6xMMErrFbaFQdAMoll70R5Q2kT7Ss8bYd09TYaa0hNd/PQMN1gyAi7LXpdgBHNG/oez62A87hkMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JDApHOrdskyAPIovvPjibk9EHl72RmLXXhtWnnMho+Q=;
- b=cLyh53zBKfrUF78LRlAgYrsHcyXvx3UZ8Il47UARMiddexxdCljtjqbEHQ5WaLcEXpMva310AXjSE7oV/oVHFGrzf1CzfeuV2coA/QIFdKdH5TQwPo8QfHH5pq6AQPmlex9M5ZD/3OLnuRHhJuh24YusThhzh6rt9RPybgnVTUc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by PH7PR12MB7210.namprd12.prod.outlook.com (2603:10b6:510:205::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Thu, 8 Feb
- 2024 08:31:00 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::f16c:d6e8:91e8:f856%7]) with mapi id 15.20.7270.012; Thu, 8 Feb 2024
- 08:31:00 +0000
-Message-ID: <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
-Date: Thu, 8 Feb 2024 14:00:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: linux-next20240208: tg3 driver nw interfaces not getting configured
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>, hkallweit1@gmail.com,
- andrew@lunn.ch, Jakub Kicinski <kuba@kernel.org>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240208155740.24c6ada7@canb.auug.org.au>
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <20240208155740.24c6ada7@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0158.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::28) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8QRgzBa"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3bbb8a0cf6so25861366b.3
+        for <regressions@lists.linux.dev>; Thu, 08 Feb 2024 02:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707389207; x=1707994007; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hVfj0mGKenh7sh/LQJJnzIaJzg4BySJc+5osuuIf1hI=;
+        b=d8QRgzBaZ6e+S/qccNz2sfFeOpMCz+d5CDe9QzO8ufctrs3yzkQbCA6+e/HbSC4oKG
+         jSkSVdwiXo1d3d+H4aG8hC4eJp01YTNam8JmoqvG1HtXnwXJbySX7RiwkoHPXoRfhGtv
+         0m1/gQYHb1M43av60bsh+vUkHVjbxco5wFllWkWUU4Gz6VJPKw53XQTPI4lKSObnMwgQ
+         tjBETTixelgi/u0bg21sCLCJCZY50YPY2sX1R+BrTl86Y7FMEDoEMw1THjQgA0r9/PxY
+         DIA1Ob+Zb4gxlAsxEaXt+NRa9CATkrCS+00xDAEmer6AvqwGJwFqyMNJGsWbnjpPfL65
+         2G2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707389207; x=1707994007;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hVfj0mGKenh7sh/LQJJnzIaJzg4BySJc+5osuuIf1hI=;
+        b=kv4oeNs14sLdxy0fdFAuRwpK0zZCjMlQf9wTKljD92YpuiVWZMocC6kRNkC9Ttzjyb
+         YOer4f3aGu63sLWyFuBgU2A7M2kMKuCyo6qN9efsaYMG/8zYfqjK49YW16x9JGom948N
+         s64pgebhent+ycubngB6KT+u8zDyXWXBcUBfGVv2bnY9qLqb2V4771r1WlVpYq+AgdFo
+         V8dGRrdBRFry/2bvav2/zDduIZY6gmttV/T0g7c9t2EWbVk5G7YGGUzInIm195ptKcAZ
+         vJMQTGnhr2mvpQS28lp2UH6Wz7BlqEFyPLE8e0S+XIgaSh9U/cRv9EgNJFMzKxZzTIIO
+         ltqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbhdAR8VihITouM77G6+4f9g7bfMesHlXPd7tVJ24cKwvy3+1idnyTI/n0EyruYsN+VD88OXTBd0tHKCtMvzL2nRUiKwzZFTQS36s=
+X-Gm-Message-State: AOJu0Yyv+hWKvws+8wfOzz8x4hFr2r/6E14pS+2ANxhZ+8IAJZAm3mrS
+	1xmDjnomM5I1t5ewqWUf5DG8b29PoiZ/6vnRZ2lNuCWdQmL0AXsj
+X-Google-Smtp-Source: AGHT+IGIaj6CrTWwyEFBKJxFfesEa71doCCs1CJxOO0hSVEwedhVAatadiRlx3PIGWeyIOVhMUfPyA==
+X-Received: by 2002:a17:906:168e:b0:a38:41bf:f6f6 with SMTP id s14-20020a170906168e00b00a3841bff6f6mr4592476ejd.77.1707389207260;
+        Thu, 08 Feb 2024 02:46:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXhicQLMa9wX39q+zgzpiEMQIY7KjFh9x7rfu2Spd06biFbR/CRKYX6FSWZ8mpCymQlCcjPzuYNKKIQ9AeFpn+Ei5//pC2x7GZAI2PgjLpEC2cj+3jnTTVqAhXYyaMU8iKtbAw26jpM2nWHmMveq9tbzHKcC9Pp5Lj08VpHvR0n+vlbtf4eiLndUFaJ/ZvHErPMfvfG6aiWwGkTIhWv1tHZ
+Received: from ?IPV6:2a01:c23:c599:8500:b9b1:3254:a1ac:4417? (dynamic-2a01-0c23-c599-8500-b9b1-3254-a1ac-4417.c23.pool.telefonica.de. [2a01:c23:c599:8500:b9b1:3254:a1ac:4417])
+        by smtp.googlemail.com with ESMTPSA id vg11-20020a170907d30b00b00a37210f1e92sm1788038ejc.205.2024.02.08.02.46.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 02:46:46 -0800 (PST)
+Message-ID: <fd72544a-f3ed-44bb-86e3-bdfa4fca720e@gmail.com>
+Date: Thu, 8 Feb 2024 11:46:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|PH7PR12MB7210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 679115ae-64c3-4a94-3ad9-08dc28804775
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kytwXs3gEdRssRQ6XWTdwHYyQ1mDsolq3sUTy18NkvwjbisWaZ9jI3fJ3kz+uJlpru5Nv+a4SKXalrrXv5EO8u+Upd9zSmPF3GWLj6bAYeD7AJKN1/fng0AWJdJx8WzAyZo7cgTeIdJExQnKAyTz8nXl2H4DII0jmNX0D+OhUJZtgMbr3ZST4+XHBbGDRUrkTQKgCFGi5jR1lxD+CgoKDaCA8yf65so+/yyC2gTm8Jir7a026HU+pdW8J/LMNSEau74D+E+Cod6ane+Ka8tah/tiKlhUZU50kXnydH4TDGMQBPpiDv86iGtiTDcI67K3foYoXP5CjIss1Qcid1M2x5kn+Q20Hp8pDQZvqh4Sjown0kbob3M3lwCJTXwN69Cb7ADxU0ozjVrO6J3vf5xonrvHDHqrbPbbQkdN9OfAxZ7eUeWZPA4JYb09YMnZ9541r3MRFeCX/2qD2gwLjtMDKEQKZiN6mHl5JsPxtp0pVMZVrY1Gl4kmwIcL2Jw3TP3gR3bLnZVeYFMj+jSnXNSWIb1cV5E+QeB47MNDSbUy3AA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(39860400002)(346002)(396003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(6486002)(41300700001)(4326008)(478600001)(6506007)(2616005)(26005)(66946007)(966005)(54906003)(6666004)(38100700002)(31696002)(6512007)(8676002)(110136005)(316002)(2906002)(66556008)(31686004)(5660300002)(66476007)(36756003)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TEZadDgvMGNHQzNXOEdtTGxqU1liN1Y0NjM4cFBycHlpb2lENCsyNFFWRGtt?=
- =?utf-8?B?Vm9BSFlUNXZQYS83cSthY1d3b1gwd0tkaDBRb29XVFA2YkMrbktQMms0SG9a?=
- =?utf-8?B?eW5sVlNEWW1JSlI0dm9JSXErS25SRlVIdDA4ZEVNbXE1TDQyVUh0T3BLenJs?=
- =?utf-8?B?ZUMzY1hGeThNc1l1aGJOY1dPOFphL1BNUHlraHliSTcwZjVlQ0NiVWdlbGVt?=
- =?utf-8?B?UFpIclJRS3NTc1huMTZDek9xV0tJYldJYmFuVmU5NURxRUs4bE5sSjI4aWhY?=
- =?utf-8?B?eUlpTjM5KzZzNWVOUDJLeE5mbW8xdUsyaUJEb2tSUldUbjkzSnhWMzlncWI1?=
- =?utf-8?B?RG5ENy85YVB6R3ZxYTRyb2FSUncwbnNoWHd3eXMwdmVwSjNOaTdsZVhNUlNR?=
- =?utf-8?B?MUQ1WFlNZXRQY0tLRkgveEVVRjgwNnVOWm5ZMHB1eWZUaVVHMzFwSm95am00?=
- =?utf-8?B?eHp2dTBES3doTlNNeVptSGgyTElsRHVvVGZBMi9TVG5Qa3V2NDREMktxRGtv?=
- =?utf-8?B?aHFhSVcvZ3puSUVtS2hmUExPZGp2R3cxUTBQUjJ4V2N5aXZma3phYXpaejdV?=
- =?utf-8?B?YUNROU5PbEtUT245eGRRL1drbkVMcmhNMkZIVWxQdm9kYzBPMis2WjFXWTNY?=
- =?utf-8?B?M1lyK2FKeThvNksrQksvY0hpK0RCY2U1WmdPbGxFTzJhZ1hnUElWSmhpczJX?=
- =?utf-8?B?Z3poQ2I3NWxBc29iMTlQa0VwN1N0dTZlK2FxM3dMV3FGVzlheFROb2E5UHU2?=
- =?utf-8?B?MndaZ2lXRkxyNUJjKytFSCtpWVBacEpQRGxVYXQzSG81VTgyUHFsWG5Wdjhv?=
- =?utf-8?B?c24wNFdOTDhETWNaMldBbVQ5bmkvUWVlbjZ0TUVUSG9aelhnN0hMbFBxSEJk?=
- =?utf-8?B?NkdDaGFuTCtiZDV0dkpNaVNlQ1gvSDFGMTBZclEzREJSSXg2YXQ5L2loVGxn?=
- =?utf-8?B?VXJUWi9Bbm80MVorcXowWFQ5QzltZm1RMDNzQ2IwTU45eENuY2h1SXp4YmZn?=
- =?utf-8?B?NTBvbDJIZTdhTkdneXBLcVpzV2ZobmlaeTREcU0vc29NRHZxK1R4eFhNYTVz?=
- =?utf-8?B?RVNmYmlHWWtQSHVFMmtyRExKSjNoWW1lWnFPTG1qS2xINjhieDZ2MnJnejc1?=
- =?utf-8?B?LzJOb1FnQXArTXZxbDY2a1pWTUF6UmVncHFhSkdiY2gxd2lOMUVaTGVuN1hK?=
- =?utf-8?B?Q3ZEUXR1dzBacCtIRzZPa0x6d1dEKzllVENtcmNrOFRJUXQ4R29BYWFORFJ5?=
- =?utf-8?B?MDlpNTlEM1NKR0RWcU92QklUTitsMGNWRkNvUUtFeEJLanlxMGV3Sms1WThy?=
- =?utf-8?B?bEJDMVVRRGdxZnRIeFZtTFBlb0hKV2d3eXNOdDJ2MGJxVFlRN1k0RCt5R2xW?=
- =?utf-8?B?RTJ0eGt4Y0xOcjZ2cUhtTVBvclo3RHE2eTVleUFFTE04VzRmZDJ2bVJtOUhp?=
- =?utf-8?B?T1h1L1JmdG0zNy9oZXlLL2FzcXV1RzF6dW5yNXExQ05uYkg4Z1VCNFBHN0Ix?=
- =?utf-8?B?eXpiTlQ5dU5oWVVnL0pGM0lhUGNuZU1RNG1qR0lCb0ZXNU5KUEZSb2dCOVYz?=
- =?utf-8?B?bUovd1M1ZEF2ZWhIYXB0TExJZzZSMUdnWjVHKzI2RGJsQlBSSE9heXp4OFhn?=
- =?utf-8?B?OWN4Y2IzdTQydVlSOFROUlJyZXVwSUptbWJPMVZvRmxIMEpZQWpSbUU5eVpr?=
- =?utf-8?B?OTcyMWxPNjRkSFF5MXQ2cVd3VFlWRW43c2t5T1A4RmVxVDB4YlNlbWZZSmxU?=
- =?utf-8?B?cHFQOW9wZWNnTzUyRFhhZXBKSkJudUFaTWw1Zkl3eE9uV2pkTThWYUNIMllV?=
- =?utf-8?B?UFZLdGMxS0JXN3BmUm9vMjd3ZjFCSm82eFlxdXk0Nk1pL3NPZGUzVmFXdkNw?=
- =?utf-8?B?Zk1wU3A1aW85ekJ2MGNHSE9aWkE1NWxONzRBR2p0TW1wRGQ0NG9CdHJwN09C?=
- =?utf-8?B?UVpRRFplS2plOGtwaFpzQm9SdkxSUXBzc0RKcHQvTmswTTVldlRzY2FwUExW?=
- =?utf-8?B?RFZvY2NZN2VtKzl0MEVJMnJMdXkvbFQvckNGajB0ZXFEbWx5RVJNd1EzQW04?=
- =?utf-8?B?U0NnNW81bjJiU2Q2ZC9iejlyNURnZVdaZmVWK3c3cUVnL3B2bnRxTWNkaTZW?=
- =?utf-8?Q?cueYvLd3dA9QXxvEKYiula3yL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 679115ae-64c3-4a94-3ad9-08dc28804775
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 08:31:00.2327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Xs1c9mx/V2C5THhY9PJ8rwP4cJQQE8J2B3eX8ruHZk/t7gc8pYoYt2PAA5C/RIjS3BWN9DLqma5RYziqTCZFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7210
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next20240208: tg3 driver nw interfaces not getting
+ configured
+Content-Language: en-US
+To: "Aithal, Srikanth" <sraithal@amd.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, andrew@lunn.ch,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240208155740.24c6ada7@canb.auug.org.au>
+ <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
+ sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
+ MVE4yNwdS+UsPeCF/6CQQTzHc+n7DomE7fjJD5J1hOJjqz2XWe71fTvYXzxCFLwXXbBiqDC9
+ dNqOe5odPsa4TsWZ09T33g5n2nzTJs4Zw8fCy8rLqix/raVsqr8fw5qM66MVtdmEljFaJ9N8
+ /W56qGCp+H8Igk/F7CjlbWXiOlKHA25mPTmbVp7VlFsvsmMokr/imQr+0nXtmvYVaKEUwY2g
+ 86IU6RAOuA8E0J5bD/BeyZdMyVEtX1kT404UJZekFytJZrDZetwxM/cAH+1fMx4z751WJmxQ
+ J7mIXSPuDfeJhRDt9sGM6aRVfXbZt+wBogxyXepmnlv9K4A13z9DVLdKLrYUiu9/5QEl6fgI
+ kPaXlAZmJsQfoKbmPqCHVRYj1lpQtDM/2/BO6gHASflWUHzwmBVZbS/XRs64uJO8CB3+V3fa
+ cIivllReueGCMsHh6/8wgPAyopXOWOxbLsZ291fmZqIR0L5Y6b2HvdFN1Xhc+YrQ8TKK+Z4R
+ mJRDh0wNQ8Gm89g92/YkHji4jIWlp2fwzCcx5+lZCQ1XdqAiHQARAQABzSZIZWluZXIgS2Fs
+ bHdlaXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPsLBjgQTAQgAOBYhBGxfqY/yOyXjyjJehXLe
+ ig9U8DoMBQJf9GRVAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHLeig9U8DoMSycQ
+ AJbfg8HZEK0ljV4M8nvdaiNixWAufrcZ+SD8zhbxl8GispK4F3Yo+20Y3UoZ7FcIidJWUUJL
+ axAOkpI/70YNhlqAPMsuudlAieeYZKjIv1WV5ucNZ3VJ7dC+dlVqQdAr1iD869FZXvy91KhJ
+ wYulyCf+s4T9YgmLC6jLMBZghKIf1uhSd0NzjyCqYWbk2ZxByZHgunEShOhHPHswu3Am0ftt
+ ePaYIHgZs+Vzwfjs8I7EuW/5/f5G9w1vibXxtGY/GXwgGGHRDjFM7RSprGOv4F5eMGh+NFUJ
+ TU9N96PQYMwXVxnQfRXl8O6ffSVmFx4H9rovxWPKobLmqQL0WKLLVvA/aOHCcMKgfyKRcLah
+ 57vGC50Ga8oT2K1g0AhKGkyJo7lGXkMu5yEs0m9O+btqAB261/E3DRxfI1P/tvDZpLJKtq35
+ dXsj6sjvhgX7VxXhY1wE54uqLLHY3UZQlmH3QF5t80MS7/KhxB1pO1Cpcmkt9hgyzH8+5org
+ +9wWxGUtJWNP7CppY+qvv3SZtKJMKsxqk5coBGwNkMms56z4qfJm2PUtJQGjA65XWdzQACib
+ 2iaDQoBqGZfXRdPT0tC1H5kUJuOX4ll1hI/HBMEFCcO8++Bl2wcrUsAxLzGvhINVJX2DAQaF
+ aNetToazkCnzubKfBOyiTqFJ0b63c5dqziAgzsFNBF/0ZFUBEADF8UEZmKDl1w/UxvjeyAeX
+ kghYkY3bkK6gcIYXdLRfJw12GbvMioSguvVzASVHG8h7NbNjk1yur6AONfbUpXKSNZ0skV8V
+ fG+ppbaY+zQofsSMoj5gP0amwbwvPzVqZCYJai81VobefTX2MZM2Mg/ThBVtGyzV3NeCpnBa
+ 8AX3s9rrX2XUoCibYotbbxx9afZYUFyflOc7kEpc9uJXIdaxS2Z6MnYLHsyVjiU6tzKCiVOU
+ KJevqvzPXJmy0xaOVf7mhFSNQyJTrZpLa+tvB1DQRS08CqYtIMxRrVtC0t0LFeQGly6bOngr
+ ircurWJiJKbSXVstLHgWYiq3/GmCSx/82ObeLO3PftklpRj8d+kFbrvrqBgjWtMH4WtK5uN5
+ 1WJ71hWJfNchKRlaJ3GWy8KolCAoGsQMovn/ZEXxrGs1ndafu47yXOpuDAozoHTBGvuSXSZo
+ ythk/0EAuz5IkwkhYBT1MGIAvNSn9ivE5aRnBazugy0rTRkVggHvt3/7flFHlGVGpBHxFUwb
+ /a4UjJBPtIwa4tWR8B1Ma36S8Jk456k2n1id7M0LQ+eqstmp6Y+UB+pt9NX6t0Slw1NCdYTW
+ gJezWTVKF7pmTdXszXGxlc9kTrVUz04PqPjnYbv5UWuDd2eyzGjrrFOsJEi8OK2d2j4FfF++
+ AzOMdW09JVqejQARAQABwsF2BBgBCAAgFiEEbF+pj/I7JePKMl6Fct6KD1TwOgwFAl/0ZFUC
+ GwwACgkQct6KD1TwOgxUfg//eAoYc0Vm4NrxymfcY30UjHVD0LgSvU8kUmXxil3qhFPS7KA+
+ y7tgcKLHOkZkXMX5MLFcS9+SmrAjSBBV8omKoHNo+kfFx/dUAtz0lot8wNGmWb+NcHeKM1eb
+ nwUMOEa1uDdfZeKef/U/2uHBceY7Gc6zPZPWgXghEyQMTH2UhLgeam8yglyO+A6RXCh+s6ak
+ Wje7Vo1wGK4eYxp6pwMPJXLMsI0ii/2k3YPEJPv+yJf90MbYyQSbkTwZhrsokjQEaIfjrIk3
+ rQRjTve/J62WIO28IbY/mENuGgWehRlTAbhC4BLTZ5uYS0YMQCR7v9UGMWdNWXFyrOB6PjSu
+ Trn9MsPoUc8qI72mVpxEXQDLlrd2ijEWm7Nrf52YMD7hL6rXXuis7R6zY8WnnBhW0uCfhajx
+ q+KuARXC0sDLztcjaS3ayXonpoCPZep2Bd5xqE4Ln8/COCslP7E92W1uf1EcdXXIrx1acg21
+ H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
+ lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
+ OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
+In-Reply-To: <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 08.02.2024 09:30, Aithal, Srikanth wrote:
+> Hi,
+> 
+> On 6.8.0-rc3-next-20240208, the network interfaces are not getting configured.
+> 
+Thanks for the report. Could you please elaborate on what "not getting
+configured" means in detail?
+- Any error in any log?
+- Any other error message?
+- Interface doesn't come up or which specific configuration are you missing?
 
-On 6.8.0-rc3-next-20240208, the network interfaces are not getting 
-configured.
-
-I have 'NetXtreme BCM5720 Gigabit Ethernet PCIe'
-        configuration: autonegotiation=on broadcast=yes driver=tg3
-
-If I revert below commit I am able to get back the interfaces mentioned.
-
-commit 9bc791341bc9a5c22b94889aa37993bb69faa317
-Author: Heiner Kallweit <hkallweit1@gmail.com>
-Date:   Sat Feb 3 22:12:50 2024 +0100
-
-     tg3: convert EEE handling to use linkmode bitmaps
-
-     Convert EEE handling to use linkmode bitmaps. This prepares for
-     removing the legacy bitmaps from struct ethtool_keee.
-     No functional change intended.
-
-     Note: The change to mii_eee_cap1_mod_linkmode_t(tp->eee.advertised, 
-val)
-     in tg3_phy_autoneg_cfg() isn't completely obvious, but it doesn't 
-change
-     the current functionality.
-
-     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-     Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-     Link: 
-https://lore.kernel.org/r/0652b910-6bcc-421f-8769-38f7dae5037e@gmail.com
-     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-
-
-The same works fine on 6.8.0-rc3-next-20240207.
-
-Thanks,
-Srikanth Aithal
-sraithal@amd.com
+> I have 'NetXtreme BCM5720 Gigabit Ethernet PCIe'
+>        configuration: autonegotiation=on broadcast=yes driver=tg3
+> 
+> If I revert below commit I am able to get back the interfaces mentioned.
+> 
+> commit 9bc791341bc9a5c22b94889aa37993bb69faa317
+> Author: Heiner Kallweit <hkallweit1@gmail.com>
+> Date:   Sat Feb 3 22:12:50 2024 +0100
+> 
+>     tg3: convert EEE handling to use linkmode bitmaps
+> 
+>     Convert EEE handling to use linkmode bitmaps. This prepares for
+>     removing the legacy bitmaps from struct ethtool_keee.
+>     No functional change intended.
+> 
+>     Note: The change to mii_eee_cap1_mod_linkmode_t(tp->eee.advertised, val)
+>     in tg3_phy_autoneg_cfg() isn't completely obvious, but it doesn't change
+>     the current functionality.
+> 
+>     Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>     Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>     Link: https://lore.kernel.org/r/0652b910-6bcc-421f-8769-38f7dae5037e@gmail.com
+>     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> 
+> 
+> The same works fine on 6.8.0-rc3-next-20240207.
+> 
+> Thanks,
+> Srikanth Aithal
+> sraithal@amd.com
+Heiner
