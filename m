@@ -1,114 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4227E594;
-	Thu,  8 Feb 2024 17:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B01738FB0;
+	Thu,  8 Feb 2024 20:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414336; cv=none; b=bTCqezp1qGKWIAaMdZPruRqHqF5Xdpq1k0dCFN9hcnz2tkAUhHXzEf966/M3Oik6AeN9eojWCkg5cej4WSYu7TBQChdtksDAKQmnkBm/YQVGMyvZg6QDgAAz60czsRCwHFAiYdEX/Q04zif36fVeZPmJEQM+Z5uVusZNuFLLF34=
+	t=1707423586; cv=none; b=JdDdVNW9OqdaCL+TB0hOCVIdc5bgoHQzIiau6BzHW2aJn2RouaoAeabhpkyNUQcQERBnjTgC1GPF0TIfrYIqEECjeX+K4HAJyAoFNrAR7qBEbr5J+vi6vI/C+jMmZFP1KQRKipnC1qGTrLpH7Y9DrpWgBnzyv8U8/xzgh6UTnqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414336; c=relaxed/simple;
-	bh=fLK3EM9FBsX7/u1ZfLjYDkw/Ej8y9+BShiUHu0d4Vc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PwW/VlSm3zla2ki8YGsb6VhxAFumFV0K6BPdv0vjVHp3eZeips5hEng2U6V/AVWxFntOUVcNcubjeKHlHEcxoeBo66LeY4A7GfaE0dKew334bmDY9NkGwagT0KOqR1YKejWG73EAG7Z04RtvUa47/d1KycmEtXePVgE2roFOTQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rY8Sj-0006Nc-Gl; Thu, 08 Feb 2024 18:45:25 +0100
-Message-ID: <62822d22-0e0a-4a72-85d0-583d3e0e49c3@leemhuis.info>
-Date: Thu, 8 Feb 2024 18:45:24 +0100
+	s=arc-20240116; t=1707423586; c=relaxed/simple;
+	bh=VPJkilQY0W3dQlN30OMPUbSBlEE8uurTighbY2OUl1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EghCy4lLinfc0ucpYmBtRRo6CgdmC4ZWsdITTm3tvWwiSCTVytiRYHaIfX5D9Ze8FTsqq609UzOZwF9Re/5Hch/Sff7uWNZQdAjE0QQGcm63mGMx2CXdh6hy8/Fg6Y2YaQHt5cVwyIt0N+0MELwTLC5qd4PXv4Gh+PGlEwOmR/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=d/wxYcqx; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="d/wxYcqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wu6GEbBipFa7DUcQHgPx5bUPL1eORflnOdQP6J6GMg4=; b=d/wxYcqxezRwk3oH0dGbh/hO2D
+	rb8pj4e8ja3ALbkbJ0Bc3wgt2O935lC4S0FMlxGTALODWyTTxhOozi+GsKqhgLl+/FxEl7Rh9Ktym
+	6CS0Yj7nqZQNdAL6VLSeQpM+gn7vNNT9PO4YoPmkHdDSNoSI7FmtK8VpU9XoRpz20B7b0eN486Gw5
+	yZQms++TtzxFNlWJKJCKRZO9ALebp0bkFXWrrlbR1U2vfJQBos6DVioYHZ+vn14PE9Nd8SgkqieiS
+	Gfzl66uKn78MwwzlgyLwdAauK9zW7pYd1vieqIe1JuwxhLohL9HS/P+5l3wVoNOrJYKwbrcEyg+nH
+	zNcsVAhA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1rYArs-00EMbv-RP; Thu, 08 Feb 2024 20:19:33 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 0FFEDBE2EE8; Thu,  8 Feb 2024 21:19:32 +0100 (CET)
+Date: Thu, 8 Feb 2024 21:19:32 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Dhya <dhya@picorealm.net>, 1063422@bugs.debian.org,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: [regression 6.1.y] f2fs: invalid zstd compress level: 6
+Message-ID: <ZcU3VCrt9VOpuFUq@eldamar.lan>
+References: <170736382774.1975.1861975122613668970.reportbug@tsuga.picorealm.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Content-Language: en-US, de-DE
-To: Linus Walleij <linus.walleij@linaro.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Christian Heusel <christian@heusel.eu>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
- <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
- <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
- <CACRpkdZ4pyFh50imdgL6ZxgAyRYCxsuz0DbmssELZ0mAxVcRcA@mail.gmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <CACRpkdZ4pyFh50imdgL6ZxgAyRYCxsuz0DbmssELZ0mAxVcRcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1707414333;bd4ef1c2;
-X-HE-SMSGID: 1rY8Sj-0006Nc-Gl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170736382774.1975.1861975122613668970.reportbug@tsuga.picorealm.net>
+X-Debian-User: carnil
 
-On 07.02.24 11:40, Linus Walleij wrote:
-> On Wed, Feb 7, 2024 at 9:07 AM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>> Patch applied for fixes!
->> Hmm, Linus, that was a week ago and I still can't spot the fix in -next
->> or
->> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
->> ; am I missing something or did something come up?
+Hi Jaegeuk Kim, Chao Yu,
+
+In Debian the following regression was reported after a Dhya updated
+to 6.1.76:
+
+On Wed, Feb 07, 2024 at 10:43:47PM -0500, Dhya wrote:
+> Package: src:linux
+> Version: 6.1.76-1
+> Severity: critical
+> Justification: breaks the whole system
 > 
-> Something came up but it's just illnesses travels and other such
-> excuses.
+> Dear Maintainer,
+> 
+> After upgrade to linux-image-6.1.0-18-amd64 6.1.76-1 F2FS filesystem
+> fails to mount rw.  Message in the boot journal:
+> 
+>   kernel: F2FS-fs (nvme0n1p6): invalid zstd compress level: 6
+> 
+> There was recently an f2fs patch to the 6.1 kernel tree which might be
+> related: https://www.spinics.net/lists/stable-commits/msg329957.html
+> 
+> Was able to recover the system by doing:
+> 
+> sudo mount -o remount,rw,relatime,lazytime,background_gc=on,discard,no_heap,user_xattr,inline_xattr,acl,inline_data,inline_dentry,extent_cache,mode=adaptive,active_logs=6,alloc_mode=default,checkpoint_merge,fsync_mode=posix,compress_algorithm=lz4,compress_log_size=2,compress_mode=fs,atgc,discard_unit=block,memory=normal /dev/nvme0n1p6 /
+> 
+> under the running bad 6.1.0-18-amd64 kernel, then editing
+> /etc/default/grub:
+> 
+>   GRUB_DEFAULT="Advanced options for Debian GNU/Linux>Debian GNU/Linux, with Linux 6.1.0-17-amd64"
+> 
+> and running 'update-grub' and rebooting to boot the 6.1.0-17-amd64
+> kernel.
 
-Happens, no worries.
+The issue is easily reproducible by:
 
-> I have merged down fixed to for-next and the patch should appear
-> in linux-next and after that I can send it to Torvalds.
+# dd if=/dev/zero of=test.img count=100 bs=1M
+# mkfs.f2fs -f -O compression,extra_attr ./test.img
+# mount -t f2fs -o compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime ./test.img /mnt
 
-Great, thx! Saw the pull request, so should land soon.
+resulting in
 
-Ciao, Thorsten
+[   60.789982] F2FS-fs (loop0): invalid zstd compress level: 6
+
+A bugzilla report has been submitted in
+https://bugzilla.kernel.org/show_bug.cgi?id=218471
+
+#regzbot introduced: v6.1.69..v6.1.76
+#regzbot link: https://bugs.debian.org/1063422
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218471
+
+Regards,
+Salvatore
