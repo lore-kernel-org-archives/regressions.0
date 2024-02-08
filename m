@@ -1,148 +1,114 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE5B83CCA
-	for <regressions@lists.linux.dev>; Thu,  8 Feb 2024 17:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4227E594;
+	Thu,  8 Feb 2024 17:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707414160; cv=none; b=WHkHqrEqYtz7bANEe5vorie7gIoJ581DYaOnF6MAxcqS2h2qK2D+K6M9Hzz2XI7/pvnk1BJXvkuTgoqLR18Rrve1YQsVsFcZVEY4iv4Jx/2N2BLZ9j6cj4OIn1ooBFrHVCulUpJrPJZzQDpefWANv3BGxiEeD+RcTExVVwmzX6A=
+	t=1707414336; cv=none; b=bTCqezp1qGKWIAaMdZPruRqHqF5Xdpq1k0dCFN9hcnz2tkAUhHXzEf966/M3Oik6AeN9eojWCkg5cej4WSYu7TBQChdtksDAKQmnkBm/YQVGMyvZg6QDgAAz60czsRCwHFAiYdEX/Q04zif36fVeZPmJEQM+Z5uVusZNuFLLF34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707414160; c=relaxed/simple;
-	bh=jTyqq1McBzhXuBGoQDTNsRl0bVoBKu3QPqRS+ZSe964=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G8ofc3azzWKwSKgpg8hnUwfSb5z+JWQKB+qL0WejbePoYqjqAqgK698XYsmcsIIig45A5gd83EJL+SP2is7O+KkYNKQY2RMrvInnQlhzrlTpOhHuTL49C7zj1kg3UZKqVy/mVmC3jJMantXd2PKYSKTd8IQTlQu7iTgla/G71jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Snc9xgSK; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Snc9xgSK"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-68c820a25a0so339146d6.2
-        for <regressions@lists.linux.dev>; Thu, 08 Feb 2024 09:42:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707414158; x=1708018958; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
-        b=Snc9xgSKS9o7e7uBFXj7SDoPZiSw3SYaZUEaf6RTLf34rcNvVkEjYoAuc+mnEGUrLo
-         5m9RJufK49RiLeVDsLGRu7d59Wu6eFAc5f2mOvkJGNTRw9KTyKF2Yix5MsNAWZQaOtW1
-         bXbsftY0A2ejhUfHCYe7y4T0cc8qsgp6gulaiaOG0Yw3MWc/aeqHSZ1p4Aa0YWkbzAZ6
-         Xjk9HIQvNq4HW1W7j2FAtZ/rjpFSi6u7TVk5p6BMTDKWJMUKEZVC0lWy1qWoxqoFelEf
-         PEePtypXrX/YZ/7BqzvDbeCSGYGiDQ7VUkuHm/2EXBgpUK8/UPsGhhwQ72+mu3CNKLLi
-         0WYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707414158; x=1708018958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qE9yJofYcIrp+q8fl2NtOvzDEIFhiUUc4detkUYKRUo=;
-        b=ImtHdck/PzZe5HYH64yYUWB8BVPDN8NsKZN3tHVgXyrD/37W76bnXwPc6bdGHh68WY
-         U8I2+x7ajfQq8fr+lr5Q7xJOrhA4HYxD5NyxjhpFiklmqraYFqdncUiOBS1jtvZ0yvz1
-         mASLzjI0z7SbPZvTOrTmceRHYD4l7cFlsmKrhtLfFy7FfEkC3UkQgRPgRLg8mYzl6wWU
-         af0j6WPdJz9Do+TQ0wQZFOXG4uIdiQGVXYmvH0+8DG+6rAZSPNU6/OkQNginuC8tZMLD
-         BGa8Jy5ApEIwvtLFKHWzL2dKAgpPPQVKD4hDZJYtmIXROoHHJPkhHah8MAn2bceVbZe8
-         3y7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVFDhjM6QnvvlDot4EZckRj7DJZrCl+lfnxzlyt7q+jnXWwsITqzCXsVCH5PW4jMtuwfaj34v9V0juYeYCudAed8SpGoXLQHOU/76E=
-X-Gm-Message-State: AOJu0Ywv17XcTcAXyPrW9HLu9FBMu+iE4jwAWp9oPZwtxhsXRsHvammd
-	qIwjZ7L1jQpE65x2HOx7kn967QjtuzhJORD7z2CleTPCHJVkWbXLsLovhj3LZ4Nsc3o2OU5lu7W
-	uT1eNwAbm5nwOwk2CZn1OM58cY2Uoiwg84vpM
-X-Google-Smtp-Source: AGHT+IHisO4YeJ4HMjJTJ7Pa6g2UoWbHmyDF6/F8nMdBmOGtjRmAF7AXJRfz3Lb4ftoWcIr8EGxQVdi4TlQ13SQyHQk=
-X-Received: by 2002:a05:6214:258b:b0:681:78cf:3920 with SMTP id
- fq11-20020a056214258b00b0068178cf3920mr12087645qvb.25.1707414157664; Thu, 08
- Feb 2024 09:42:37 -0800 (PST)
+	s=arc-20240116; t=1707414336; c=relaxed/simple;
+	bh=fLK3EM9FBsX7/u1ZfLjYDkw/Ej8y9+BShiUHu0d4Vc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PwW/VlSm3zla2ki8YGsb6VhxAFumFV0K6BPdv0vjVHp3eZeips5hEng2U6V/AVWxFntOUVcNcubjeKHlHEcxoeBo66LeY4A7GfaE0dKew334bmDY9NkGwagT0KOqR1YKejWG73EAG7Z04RtvUa47/d1KycmEtXePVgE2roFOTQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rY8Sj-0006Nc-Gl; Thu, 08 Feb 2024 18:45:25 +0100
+Message-ID: <62822d22-0e0a-4a72-85d0-583d3e0e49c3@leemhuis.info>
+Date: Thu, 8 Feb 2024 18:45:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
- <ZcNdzZVPD76uSbps@eldamar.lan> <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
- <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
-In-Reply-To: <1d4c7d06-0c02-4adb-a2a3-ec85fd802ddb@vrvis.at>
-From: Jordan Rife <jrife@google.com>
-Date: Thu, 8 Feb 2024 09:42:24 -0800
-Message-ID: <CADKFtnQUQt=M32tYhcutP0q6exOgk9R6xgxddDdewbms+7xwTQ@mail.gmail.com>
-Subject: Re: [regression 6.1.76] dlm: cannot start dlm midcomms -97 after
- backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
-To: Valentin Kleibel <valentin@vrvis.at>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, David Teigland <teigland@redhat.com>, 
-	Alexander Aring <aahringo@redhat.com>, 1063338@bugs.debian.org, gfs2@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+Content-Language: en-US, de-DE
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Christian Heusel <christian@heusel.eu>
+References: <20240123180818.3994-1-mario.limonciello@amd.com>
+ <CACRpkdZxOovTOF0rOjyU1WwaRLZqML41hfYcC7z=HsAQjY8BsA@mail.gmail.com>
+ <4e9e5ec1-e040-49e0-84a4-9f86c0fcec1b@leemhuis.info>
+ <CACRpkdZ4pyFh50imdgL6ZxgAyRYCxsuz0DbmssELZ0mAxVcRcA@mail.gmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <CACRpkdZ4pyFh50imdgL6ZxgAyRYCxsuz0DbmssELZ0mAxVcRcA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1707414333;bd4ef1c2;
+X-HE-SMSGID: 1rY8Sj-0006Nc-Gl
 
-On Thu, Feb 8, 2024 at 3:37=E2=80=AFAM Valentin Kleibel <valentin@vrvis.at>=
- wrote:
->
-> Hi Jordan, hi all
->
-> > Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
-> > and 6.6 stable branches,
-> > it looks like there is a mismatch here with the dlm_local_addr[0] param=
-eter.
-> >
-> > 6.1
-> > ----
-> >
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >     addr_len);
-> > }
-> >
-> > 6.6
-> > ----
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >     addr_len);
-> > }
-> >
-> > 6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on hea=
-p) which
-> > changed
-> >
-> > static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > to
-> >
-> > static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > It looks like kernel_bind() in 6.1 needs to be modified to match.
->
-> We tried to apply commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on
-> heap) to the debian kernel 6.1.76 and came up with the attached patch.
-> Besides the different offsets there is a slight change dlm_tcp_bind()
-> where in 6.1.76 kernel_bind() is used instead of sock->ops->bind() in
-> the original commit.
->
-> This patch solves the issue we experienced.
->
-> Thanks for your help,
-> Valentin
+On 07.02.24 11:40, Linus Walleij wrote:
+> On Wed, Feb 7, 2024 at 9:07 AM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>> Patch applied for fixes!
+>> Hmm, Linus, that was a week ago and I still can't spot the fix in -next
+>> or
+>> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+>> ; am I missing something or did something come up?
+> 
+> Something came up but it's just illnesses travels and other such
+> excuses.
 
-Good to hear that works for you! We should fix this in the 6.1 stable
-kernel as well.
+Happens, no worries.
 
-IMO it may be less risky and simpler to fix the backport of my patch
-e9cdebbe23f1 ("dlm: use kernel_connect() and
-kernel_bind()") and just switch (struct sockaddr *)&dlm_local_addr[0]
-to (struct sockaddr *)dlm_local_addr[0]
-in the call to kernel_bind() rather than backporting c51c9cd8 (fs:
-dlm: don't put dlm_local_addrs on
-heap) to 6.1.
+> I have merged down fixed to for-next and the patch should appear
+> in linux-next and after that I can send it to Torvalds.
 
-I will have some time soon to fix the 6.1 backport, but it may make
-sense just to revert in the meantime.
+Great, thx! Saw the pull request, so should land soon.
 
--Jordan
+Ciao, Thorsten
