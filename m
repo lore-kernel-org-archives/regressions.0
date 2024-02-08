@@ -1,225 +1,181 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F2112D752;
-	Wed,  7 Feb 2024 21:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0DA91D55F;
+	Thu,  8 Feb 2024 01:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707341955; cv=none; b=Ph3S7LuFY+uCgbdo4R/K7kYOADOLn6DKmro3XfR7YOkdYvrUq339BAmh2CivYra4BfEBxdwgPl+xz1AbLbVw8UVfFuRWyjCg5+Vwi1gyEAwbxtMEJJN4p7gmHQioEd8TlD4jqARbXxT27H5TVyjXbYUkxRbYYV/Zfcwbv6lU3Us=
+	t=1707355374; cv=none; b=Uv7jGco7pASDEVU3mYdeD7mBvXfXDm8QB3q6+tqG4bC/cY5Y4yQvr5Zffz0D24tglyBt+R0+W1LayaEWcvv249+5Naw7I5rmznm8pAAkL7//N+uyOVrPbFSbg7pNHGc/n7WeGwZ33QFQtceMOf+muKBfPdkvDW6xBL7TESRjqS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707341955; c=relaxed/simple;
-	bh=6ZWqFx3ca1jpgWlsqAfIR5Ati7mNHH87BZaKOn9KJ9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CK3vEndJSIGDZcDixzvKiN3DKdAO1M87zWTIYoS2QdkH3O31dH7uiw8QxojYBq1L5XAfVfuCmEql7zCX5BRzcW/RUnqLGOKa9uqLKvOvOoEJB55AgCmigHoVBpCxBIQSNkUYUR83mIOedsI9m42st53qBnAHVzRptYlF4tHrmMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OIhkwCZG; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIhkwCZG"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55fcceb5f34so1185859a12.3;
-        Wed, 07 Feb 2024 13:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707341951; x=1707946751; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tHrWrs6xdhZ+695CZ3GqYRaPvXyFlxSiTcqYfb21vc0=;
-        b=OIhkwCZG4QDq4rMtxaGlPXeRHyVhmLQInCHZyzbMJfCiU4rOmWCmdA4xtThu3yjXQc
-         iLc2onhy3/hcB1NlcVuxdXJPGfQE9jV+NEaXllBcSrUXrWmvLUQFCzjxagNjZrbB2lVU
-         VhIolFxoGmy8DEI6zca97fpZCaWZnYZSgMxyKKSbeIeC9r6Z0OmD/0Ra/DmdDoilMEi0
-         S2GFPp0iTkF3XYMh0Mex2UlkFv50zj9Fd98SrkZh32k5P6C2FZusKnBrUd8dvQfvyidk
-         Ohs4L45+m8CYTH/IXJJo5n8ZSsdBsAS9FATXEqkxH+zQn05ic6EVqL6wowjj3GarH4YX
-         3w0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707341951; x=1707946751;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tHrWrs6xdhZ+695CZ3GqYRaPvXyFlxSiTcqYfb21vc0=;
-        b=VTgtPxIS5iu2NtdrEyyMmJFq9jLlWUHHS9Vu52YGUlXCa4HBu/13lV448/W3fCk+lk
-         +oDSklj60UWfklP80J99MDFXWHSnbG6lLmTlV/+unxoeVbW4uyseUrYF6VF2HsOWH+BI
-         cnruXEI3590rUnDQDaM22yUNE1G027sWAeSnfgJrvbZK3dwsUs1XvE21vXMmBjK9fUBg
-         7vvewwK9gNEYyHTVSo21bDsg7OBSwed3JC68XAZ3VK38eqNXRuZvL5fNIZf7VQXGyl/J
-         b+YxU7kn458LzG4zYGXMBvHx6FSixjLIYgeoWnnOJOC3VuLwl+VsfdApWQMr3HS/wVOC
-         KM9g==
-X-Gm-Message-State: AOJu0Yy7fuAHs/N4+UHzAmvQksM1J1AJMwJQeGU+jpq9ZD7wbBDAVONm
-	Pa0SmJNzDBY9F76btx95Nrk9kSrYx1Y+pCRk+9Ea3wMezCD3/ujd
-X-Google-Smtp-Source: AGHT+IH31AJIGaV5jSnbTxJFqgSEJhPOZR2SHDszJJRSiECJXp6pPaxQhhYbrQ2TFfU4Zn6lsuv1HQ==
-X-Received: by 2002:aa7:d391:0:b0:560:c6a8:e7d3 with SMTP id x17-20020aa7d391000000b00560c6a8e7d3mr3034780edq.1.1707341951102;
-        Wed, 07 Feb 2024 13:39:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXBIIJ98wcDQML8JTumvwwlEMas1YdRlwRZ9VPj2YErTrfZA0ITOze9hMyXD5njhtPGQDcMIbzZO8miUxa7gmUPQ+n2VUnNbB1kVVMF1VJ8+P4EcwyHsJ4+GMEhRSSnZHxk/e1LE1fgLcALZT6cnXGGVSWs4lackno8YBhI38F3byEcaVgvtM/qrA/DfK+KXXBBjwsjib/gZQfPvVgExxtmb8LbLXtVq2CyZ3Ei5H/mZzwtpFlRL9ajxZcpMn7WsjnK625IxW74f9jzuy4/GKJa8yOF3QM0O6E+xTG0VMIMGnXLpXmZf8M6zb9fFOatMPKgmEep
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id df21-20020a05640230b500b00557aa8d72c9sm120400edb.25.2024.02.07.13.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 13:39:10 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 7EF0EBE2EE8; Wed,  7 Feb 2024 22:39:09 +0100 (CET)
-Date: Wed, 7 Feb 2024 22:39:09 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Alexander Aring <aahringo@redhat.com>
-Cc: Jordan Rife <jrife@google.com>, Valentin Kleibel <valentin@vrvis.at>,
-	David Teigland <teigland@redhat.com>, 1063338@bugs.debian.org,
-	gfs2@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, gregkh@linuxfoundation.org,
-	regressions@lists.linux.dev
-Subject: Re: [regression 6.1.76] dlm: cannot start dlm midcomms -97 after
- backport of e9cdebbe23f1 ("dlm: use kernel_connect() and kernel_bind()")
-Message-ID: <ZcP4fXEllcCDHyE6@eldamar.lan>
-References: <38f51dbb-65aa-4ec2-bed2-e914aef27d25@vrvis.at>
- <ZcNdzZVPD76uSbps@eldamar.lan>
- <CADKFtnRfqi-A_Ak_S-YC52jPn604+ekcmCmNoTA_yEpAcW4JJg@mail.gmail.com>
- <CAK-6q+hza9yXb5KpBS2VJMNHJa805nXqiYPTovnf9G-JFadBsg@mail.gmail.com>
+	s=arc-20240116; t=1707355374; c=relaxed/simple;
+	bh=uJkl8rQIIVzke3d5r1OPVklBSLEAlrL8ULekb9pG0xc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kMFzGScfb13wNSvp8BYh8dzWYAdi5WGl3ckgQBxck5Y6P8TshvMSXoaHLVjENGO4EIvJUaUwITrFL+K9Gna8TK6zoks3wIHz5lQ15Yjtuax9514BSSIkyfIakdPoSDRY72lp8iZJwDyDpJ/nX/kl3hDhGk0uJi08JB0xNUDY6As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F17871FB;
+	Wed,  7 Feb 2024 17:23:32 -0800 (PST)
+Received: from [10.57.49.110] (unknown [10.57.49.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E628A3F762;
+	Wed,  7 Feb 2024 17:22:48 -0800 (PST)
+Message-ID: <d5074c11-b03a-4a24-9e3a-dfa5743d80bb@arm.com>
+Date: Thu, 8 Feb 2024 01:22:47 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK-6q+hza9yXb5KpBS2VJMNHJa805nXqiYPTovnf9G-JFadBsg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [REGRESSION] Failed buffer allocation in Tegra fbdev
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, thierry.reding@gmail.com,
+ vdumpa@nvidia.com, joro@8bytes.org, will@kernel.org, jonathanh@nvidia.com,
+ baolu.lu@linux.intel.com, jsnitsel@redhat.com, jroedel@suse.de,
+ linux-tegra@vger.kernel.org, iommu@lists.linux.dev,
+ regressions@lists.linux.dev
+References: <bbmhcoghrprmbdibnjum6lefix2eoquxrde7wyqeulm4xabmlm@b6jy32saugqh>
+ <20240123151508.GR50608@ziepe.ca>
+ <pgund4coabp5pdlmwze5o2d7ogrdncktqz267yzukjcvmikudc@7svrwdci7ujl>
+ <55cab5e0-0abf-47d0-becc-05cdf1d22fac@arm.com>
+ <20240124170300.GU50608@ziepe.ca>
+Content-Language: en-GB
+In-Reply-To: <20240124170300.GU50608@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Alexander,
-
-On Wed, Feb 07, 2024 at 04:27:48PM -0500, Alexander Aring wrote:
-> Hi,
+On 24/01/2024 5:03 pm, Jason Gunthorpe wrote:
+> On Wed, Jan 24, 2024 at 11:46:59AM +0000, Robin Murphy wrote:
+>>>>> This may be connected with an error in of_iommu_configure() that
+>>>>> became visible after commit 6ff6e184f1f4d:
+>>>>>
+>>>>> [    1.200004] host1x drm: iommu configuration for device failed with -ENOENT
+>>>>
+>>>> Hmmm
+>>>>
+>>>> This is a new logging, so it doesn't necessarily mean something has
+>>>> changed in the code flow.
+>>>>
+>>>> It seems the issue is something in there is returning ENOENT when it
+>>>> probably should be ENODEV, but I haven't been able to guess where it
+>>>> comes from.
+>>>>
+>>>> Can you do some tracing and figure out where under
+>>>> of_iommu_configure() this ENOENT return code is from?
+>>>
+>>> I did the tracing and found that the ENOENT is coming from
+>>> sysfs_do_create_link_sd() in the following function call chain:
+>>>
+>>> of_iommu_configure() -> iommu_probe_device() -> __iommu_probe_device() ->
+>>
+>> What's the call path leading up to that? If it's the one from
+>> host1x_device_add() then it's expected and benign - for fiddly reasons,
+>> iommu_probe_device() ends up being called too early, but will soon be run
+>> again in the correct circumstances once we proceed into
+>> host1x_subdev_register()->device_add(). That will have been happening for
+>> years, we just never reported errors in that spot before (and frankly I'm
+>> not convinced it's valuable to have added it now).
 > 
-> On Wed, Feb 7, 2024 at 1:33 PM Jordan Rife <jrife@google.com> wrote:
-> >
-> > On Wed, Feb 7, 2024 at 2:39 AM Salvatore Bonaccorso <carnil@debian.org> wrote:
-> > >
-> > > Hi Valentin, hi all
-> > >
-> > > [This is about a regression reported in Debian for 6.1.67]
-> > >
-> > > On Tue, Feb 06, 2024 at 01:00:11PM +0100, Valentin Kleibel wrote:
-> > > > Package: linux-image-amd64
-> > > > Version: 6.1.76+1
-> > > > Source: linux
-> > > > Source-Version: 6.1.76+1
-> > > > Severity: important
-> > > > Control: notfound -1 6.6.15-2
-> > > >
-> > > > Dear Maintainers,
-> > > >
-> > > > We discovered a bug affecting dlm that prevents any tcp communications by
-> > > > dlm when booted with debian kernel 6.1.76-1.
-> > > >
-> > > > Dlm startup works (corosync-cpgtool shows the dlm:controld group with all
-> > > > expected nodes) but as soon as we try to add a lockspace dmesg shows:
-> > > > ```
-> > > > dlm: Using TCP for communications
-> > > > dlm: cannot start dlm midcomms -97
-> > > > ```
-> > > >
-> > > > It seems that commit "dlm: use kernel_connect() and kernel_bind()"
-> > > > (e9cdebbe) was merged to 6.1.
-> > > >
-> > > > Checking the code it seems that the changed function dlm_tcp_listen_bind()
-> > > > fails with exit code 97 (EAFNOSUPPORT)
-> > > > It is called from
-> > > >
-> > > > dlm/lockspace.c: threads_start() -> dlm_midcomms_start()
-> > > > dlm/midcomms.c: dlm_midcomms_start() -> dlm_lowcomms_start()
-> > > > dlm/lowcomms.c: dlm_lowcomms_start() -> dlm_listen_for_all() ->
-> > > > dlm_proto_ops->listen_bind() = dlm_tcp_listen_bind()
-> > > >
-> > > > The error code is returned all the way to threads_start() where the error
-> > > > message is emmitted.
-> > > >
-> > > > Booting with the unsigned kernel from testing (6.6.15-2), which also
-> > > > contains this commit, works without issues.
-> > > >
-> > > > I'm not sure what additional changes are required to get this working or if
-> > > > rolling back this change is an option.
-> > > >
-> > > > We'd be happy to test patches that might fix this issue.
-> > >
-> > > Thanks for your report. So we have a 6.1.76 specific regression for
-> > > the backport of e9cdebbe23f1 ("dlm: use kernel_connect() and
-> > > kernel_bind()") .
-> > >
-> > > Let's loop in the upstream regression list for tracking and people
-> > > involved for the subsystem to see if the issue can be identified. As
-> > > it is working for 6.6.15 which includes the commit backport as well it
-> > > might be very well that a prerequisite is missing.
-> > >
-> > > # annotate regression with 6.1.y specific commit
-> > > #regzbot ^introduced e11dea8f503341507018b60906c4a9e7332f3663
-> > > #regzbot link: https://bugs.debian.org/1063338
-> > >
-> > > Any ideas?
-> > >
-> > > Regards,
-> > > Salvatore
-> >
-> >
-> > Just a quick look comparing dlm_tcp_listen_bind between the latest 6.1
-> > and 6.6 stable branches,
-> > it looks like there is a mismatch here with the dlm_local_addr[0] parameter.
-> >
-> > 6.1
-> > ----
-> >
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >    addr_len);
-> > }
-> >
-> > 6.6
-> > ----
-> > static int dlm_tcp_listen_bind(struct socket *sock)
-> > {
-> > int addr_len;
-> >
-> > /* Bind to our port */
-> > make_sockaddr(&dlm_local_addr[0], dlm_config.ci_tcp_port, &addr_len);
-> > return kernel_bind(sock, (struct sockaddr *)&dlm_local_addr[0],
-> >    addr_len);
-> > }
-> >
-> > 6.6 contains commit c51c9cd8 (fs: dlm: don't put dlm_local_addrs on heap) which
-> > changed
-> >
-> > static struct sockaddr_storage *dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > to
-> >
-> > static struct sockaddr_storage dlm_local_addr[DLM_MAX_ADDR_COUNT];
-> >
-> > It looks like kernel_bind() in 6.1 needs to be modified to match.
-> >
+> Hmm. Prior to
 > 
-> makes sense. I tried to cherry-pick e9cdebbe23f1 ("dlm: use
-> kernel_connect() and kernel_bind()") on v6.1.67 as I don't see it
-> there. It failed and does not apply cleanly.
+> commit 14891af3799e ("iommu: Move the iommu driver sysfs setup into
+> iommu_init/deinit_device()")
 > 
-> Are we talking here about a debian kernel specific backport? If so,
-> maybe somebody missed to modify those parts you mentioned.
+> The error from iommu_device_link() was ignored. It seems like for most
+> of the years the probe actually succeeded, just with a mangled sysfs?
 
-Thanks all for looking into it.
+Hmm, yeah, I suppose the iommu_group/<n>/devices/ dir just didn't get 
+populated and nobody noticed or cared (which TBH doesn't really surprise 
+me for a case where a kernel driver is expected to manage the IOMMU 
+anyway such that it's pretty much irrelevant to userspace).
 
-No it's not a Debian specific backport, e9cdebbe23f1 ("dlm: use
-kernel_connect() and kernel_bind()") got in fact backported upstream
-in 6.1.76, 6.6.15 and 6.7.3. The respective commits are:
+> Though that host1x_device_add() ignored the return code does make me
+> wonder..
+> 
+> This is the only clue I see:
+> 
+> commit c95469aa5a188384ccf8ac520ece931c66caf8aa
+> Author: Alexandre Courbot <acourbot@nvidia.com>
+> Date:   Fri Feb 26 18:06:53 2016 +0900
+> 
+>      gpu: host1x: Set DMA ops on device creation
+>      
+>      Currently host1x-instanciated devices have their dma_ops left to NULL,
+>      which makes any DMA operation (like buffer import) on ARM64 fallback
+>      to the dummy_dma_ops and fail with an error.
+>      
+>      This patch calls of_dma_configure() with the host1x node when creating
+>      such a device, so the proper DMA operations are set.
+>      
+>      Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+>      Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>      Signed-off-by: Thierry Reding <treding@nvidia.com>
+> 
+> Which is no longer happening anymore as failure of
+> iommu_probe_device() will not cause the dma ops to be setup.
+> 
+> So, if everything still works and something else is calling
+> of_dma_configure() prior to using the struct device for any DMA
+> operations (eg because a driver is always probed?) then we should just
+> delete this call.
 
-v6.1.76: e11dea8f503341507018b60906c4a9e7332f3663 dlm: use kernel_connect() and kernel_bind()
-v6.6.15: c018ab3e31b16ff97b9b95b69904104c9fcca95b dlm: use kernel_connect() and kernel_bind()
-v6.7.3: 4ecf1864f2076872b7aea29d463e785ef6fc9909 dlm: use kernel_connect() and kernel_bind()
-v6.8-rc1: e9cdebbe23f1aa9a1caea169862f479ab3fa2773 dlm: use kernel_connect() and kernel_bind()
+I've considered that before - arguably it could have been removed when 
+Mikko implemented the full bus model, but now I kind of don't want to 
+since it's one of the remaining few that *is* still in the right place 
+where it's always meant to be. The correct fix to meet the original 
+expectations *should* be simply:
 
-But for the 6.1.76 case there is the above regression (while it works
-for 6.6.15 as confirmed by the reporter).
+----->8-----
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index 84d042796d2e..6cab950690a0 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -455,11 +455,11 @@ static int host1x_device_add(struct host1x *host1x,
+  	device->dev.dma_mask = &device->dev.coherent_dma_mask;
+  	dev_set_name(&device->dev, "%s", driver->driver.name);
+  	device->dev.release = host1x_device_release;
+-	device->dev.bus = &host1x_bus_type;
+  	device->dev.parent = host1x->dev;
 
-I'm very sorry I see where I have caused you confusion: The regression
-is in 6.1.*76* not 6.1.*67* and I misstyped the version in two places.
+  	of_dma_configure(&device->dev, host1x->dev->of_node, true);
 
-Regards,
-Salvatore
++	device->dev.bus = &host1x_bus_type;
+  	device->dev.dma_parms = &device->dma_parms;
+  	dma_set_max_seg_size(&device->dev, UINT_MAX);
+
+-----8<-----
+
+...except you've now also broken that at the same time by removing the 
+dev->bus check from of_iommu_configure() :(
+
+> Robin do you know more? Specifically where is the "soon be run again"?
+
+I can't say why it's done in quite such a roundabout manner by 
+host1x_subdev_register(), but as I called out, we quickly get to the 
+actual device_add() call, wherein things proceed as normal. The only 
+thing going wrong here is that we "replay" the iommu_probe_device() call 
+*before* it ever could have happened normally.
+
+Frankly, for all you protest whenever I call you out for demonstrating a 
+lack of understanding of this tangled mess, I sure do seem to spend a 
+lot of time explaining it to you... :/
+
+I've never claimed it's *not* a horrible mess, but at the risk of 
+repeating myself, it *is* fragile, and the consequences of mucking about 
+with it are tricky to reason about even when one does understand all the 
+history of how it's intended to work vs. what actually happens. To coin 
+a phrase I find enjoyable, this is definitely "F around and find out" 
+code; as this and other threads show, now you're well into the finding 
+out part.
+
+> Was the above issue fixed in commit 07397df29e57 ("dma-mapping: move
+> dma configuration to bus infrastructure") ?
+
+Um, no. That commit was no more than code movement essentially 
+separating PCI from non-PCI configuration; merely host1x didn't need to 
+share the full path which ended up as platform_dma_configure() since 
+host1x doesn't support ACPI. Once again the fact that I've had to 
+explain that drives me to utter despair...
+
+Robin.
