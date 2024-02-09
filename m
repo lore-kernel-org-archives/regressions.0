@@ -1,68 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453002E652;
-	Fri,  9 Feb 2024 12:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE231D542;
+	Fri,  9 Feb 2024 13:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707482758; cv=none; b=U6VXfU3LBsAoy91I4yxuel7/yygBuTIvxM2zYiDR4YZCRwcwF91rX+5UhbAYylkIxK7y2FrRFrxn10L+lYD8KYavxgEOPedRvCGOFEJZrjb7exlFtIoR+PUccqvUaNRM7DGej1YhvCnrftUaQRyoT5AUhokQ4xSDehbwQaqAYZA=
+	t=1707486002; cv=none; b=V8Gbtejl+n7sF7G7R7pwlYl/vPoNWpFFVjK7wyf14H0LucWzsyOK2lcCNPf7LfxSCKdz4lCuijs3Mf92QGw7paBAgMhbtlq6AZPUhYBmJuPwGAo9ohshxGajtt+cYo5PdhFyRXmwtaMn3KPwmvM49yqua8JYuPv3F9J8X/iMQBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707482758; c=relaxed/simple;
-	bh=qKBRPL7yrrIg5Y4ptXY2iWkD34ZgZJBHr1MKLFuQ17A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=L0aUPCpbbAg8K3hthv14uIPYBC6CI93NWvC095BskAAQaA7FZeCqdRe4zX50pCMWUBqL7PYvcCWpcSdJtvILza9zhx7nUK77bZggKZEMwqge0H0/J4xr7sv0yOiiPWQfBs5hU/GOLxpKJYVmf00LG8I/1FftNsVo8sb7LrSdUDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rYQGQ-0007It-0F; Fri, 09 Feb 2024 13:45:54 +0100
-Message-ID: <45f23ab9-2086-419e-a23c-b689cd25a6f1@leemhuis.info>
-Date: Fri, 9 Feb 2024 13:45:53 +0100
+	s=arc-20240116; t=1707486002; c=relaxed/simple;
+	bh=tDPQHf4pY/G3y5AncB7SBbCfkckRM6n70LvBuj11kvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sk9y/FvXRBbwEYYgZctYMXU0vCJEjWKpenj5HJyrwCfU2xArkqeEY3/gm8NVFbDPOYvV+7eXg105ZmHOccIpGBEOrqnvRGB/szMzOyy000V1mMW0cAa7YlAafMFlN02yvgWK7LZsWzTNGCa6eD5vKZZu6qfzzfHvRX3zQCTX8xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=egkhDIst; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="egkhDIst"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=EEwBZTSq5tZ2xlb3nc2TPXbIcX1LOC4zPU9/QASdY90=; b=egkhDIst07yrhaMiVgf3dGfVlY
+	0PiQf0FzNxlMtZESIRZVa6W078hgZSr9Y4d0D0lCJGrMVY9kc2aa8J0mTm/qwGsKuqBn76+5x8c8p
+	wii4c6P50d7UX6JjgjFMkt9u9QgoX5YTDALT25/E3Vg6Bb+DviKREDkHVeJQHs0/tA70=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rYR6e-007O3u-T1; Fri, 09 Feb 2024 14:39:52 +0100
+Date: Fri, 9 Feb 2024 14:39:52 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: "Aithal, Srikanth" <sraithal@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next20240208: tg3 driver nw interfaces not getting
+ configured
+Message-ID: <6aa4c396-00f2-4479-8ea9-fa67253ee662@lunn.ch>
+References: <20240208155740.24c6ada7@canb.auug.org.au>
+ <ce7150b7-b6f1-4635-ba5f-fdfda84a6e2f@amd.com>
+ <fd72544a-f3ed-44bb-86e3-bdfa4fca720e@gmail.com>
+ <8a59f072-4a71-4662-bfde-308b81e4ce88@amd.com>
+ <47987433-7d56-483e-a0fc-38140cc17448@gmail.com>
+ <11baa678-8cbe-4a9a-af09-381d649d648c@amd.com>
+ <aa9a3495-22fd-4fac-abb0-afedf1b4d8ec@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCI/ASPM locking regression in 6.7-final
-Content-Language: en-US, de-DE
-To: Linux PCI <linux-pci@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
- <20240102232550.1751655-1-helgaas@kernel.org>
- <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
- <Za5JLxRC-K20sIfG@hovoldconsulting.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707482756;4cf2fa77;
-X-HE-SMSGID: 1rYQGQ-0007It-0F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa9a3495-22fd-4fac-abb0-afedf1b4d8ec@gmail.com>
 
-On 22.01.24 11:53, Johan Hovold wrote:
+> Could you please test whether the following fixes the issue for you?
 > 
-> So to summarise, this patch, which is now commit
+> The uninitialized struct ethtool_keee causes the bug because
+> mii_eee_cap1_mod_linkmode_t() leaves unknown bits as-is.
 > 
-> 	f93e71aea6c6 ("Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"")
+> ---
+>  drivers/net/ethernet/broadcom/tg3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> introduced a regression in 6.7-final for Qualcomm platforms (and some
-> Intel platforms) similar to the one recently fixed by commit
-> 
-> 	f352ce999260 ("PCI: qcom: Fix potential deadlock when enabling ASPM").
-> 
-> #regzbot introduced: f93e71aea6c6
+> diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+> index 50f674031..7d0a2f5f3 100644
+> --- a/drivers/net/ethernet/broadcom/tg3.c
+> +++ b/drivers/net/ethernet/broadcom/tg3.c
+> @@ -4616,7 +4616,7 @@ static int tg3_init_5401phy_dsp(struct tg3 *tp)
+>  
+>  static bool tg3_phy_eee_config_ok(struct tg3 *tp)
+>  {
+> -	struct ethtool_keee eee;
+> +	struct ethtool_keee eee = {};
 
-#regzbot fix: 1e560864159d00
-#regzbot ignore-activity
+Nice catch.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Please add my Reviewed-by, if you have not already sent the real
+patch.
 
+	Andrew
