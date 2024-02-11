@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241B95B200;
-	Sun, 11 Feb 2024 12:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F392E851;
+	Sun, 11 Feb 2024 12:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707654674; cv=none; b=lE9w7LZQPIk+IVIbCuv1Ay/WDVSMDm7IhCcIEdyEztcs2lqzf/mr7nhLxwpifULuTyKS85Bl+BAQL8VNusIM2NDroTCF2InEowAMz0d4HKx7rs351LnVXMtaaktv5M9hmtE0IWAFZ28FdvKQSoAuD+bn01UUvre+LBHc3gFl3u8=
+	t=1707655622; cv=none; b=Ijo8pOaV1WvVpli0ycqSU1/XfcVevzYUVZvXS66rS2udR+6NEt1Tqnx1FPfMIhdJsJ2JzKZ4P6+9JyyCXqxubYMW2WTY7P2LPvr97KCV3mfEq/pNtLZkFr+fHdifh2HR/rHl0tNNA4nyxB8MKqjW35xJvu+i2iK3emulWISlQm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707654674; c=relaxed/simple;
-	bh=d+Kuqw4yFYGmeMYBAOquzrrEZIHFiAcHSdD0ITJCwtE=;
+	s=arc-20240116; t=1707655622; c=relaxed/simple;
+	bh=g01oYKENux7WU+WmZJ3B6XY2TJekh2CQzkEEp1gxiqo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XuUdB5zSI8StkxNxsmHN9Qt/P5TdoQnOIGjdsa34ITMQEiPlMy/EJmgy2HFO+Jcem1sMFSrj8RS8bK5c5q35QzvJqOgMa3jyqKb/T8gjkrGGnB9Bs82Zfvsv2G4WW4dFAharkV8alve7YUSr0z6EJW76bVojybiSXHrH1LD779g=
+	 In-Reply-To:Content-Type; b=HULrNf/RfdIgFJVw6aIYHWM3MiZuYhYgkipwHECPcRk41pzWqZEmLiUNH5ocwRy5NaON6dfhZroIrofuM2BAGWgyTZ74FG5m2s5R1GcJwKq6PV/RySnIhzByB0w/qwoBwbHcS6T5eBUvlsdIDwKU44/bNdTCD7rkuxO2lgMcVcM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rZ8zF-0002V8-KE; Sun, 11 Feb 2024 13:31:09 +0100
-Message-ID: <bdea4053-b978-489d-a4a2-927685eee4a8@leemhuis.info>
-Date: Sun, 11 Feb 2024 13:31:09 +0100
+	id 1rZ9EW-0005Hj-Sy; Sun, 11 Feb 2024 13:46:56 +0100
+Message-ID: <afb2124c-84dd-4273-8a91-ca0e16f417d1@leemhuis.info>
+Date: Sun, 11 Feb 2024 13:46:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,50 +26,54 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 0/5] fs/ntfs3: Bugfix
+Subject: Re: [REGRESSION] 6.7.0: ASoC: SOF: refactoring breaks sof-rt5682
+ audio on chromebook; successfully bisected
 Content-Language: en-US, de-DE
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- ntfs3@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <dedce962-d48d-41d6-bbbf-e95c66daba80@paragon-software.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: Mole Shang <135e2@135e2.dev>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ pierre-louis.bossart@linux.intel.com, peter.ujfalusi@linux.intel.com,
+ ranjani.sridharan@linux.intel.com, sound-open-firmware@alsa-project.org
+References: <6013930.lOV4Wx5bFT@ayana>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <dedce962-d48d-41d6-bbbf-e95c66daba80@paragon-software.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6013930.lOV4Wx5bFT@ayana>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707654672;89208475;
-X-HE-SMSGID: 1rZ8zF-0002V8-KE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707655620;fe1cf99f;
+X-HE-SMSGID: 1rZ9EW-0005Hj-Sy
 
-On 29.01.24 09:06, Konstantin Komarov wrote:
+On 02.02.24 04:12, Mole Shang wrote:
+> I'm relatively new here, first time reporting a regression, so apologies in 
+> advance if I'm doing something wrong.
 > 
-> This series contains various fixes for ntfs3.
+> I'm using Arch Linux (linux-mainline kernel) on my chromebook Acer Spin 713-2W 
+> (Voxel), and after upgrading linux-mainline from 6.7-rc4 to 6.7-rc5 the audio 
+> setup isn't working anymore. Firstly I suspected its some changes in the sof-
+> firmware, yet got no luck in upgrading sof-firmware (2023.09.2 -> 2023.12). 
 > 
-> Konstantin Komarov (5):
->   fs/ntfs3: Prevent generic message "attempt to access beyond end of
->     device"
->   fs/ntfs3: Use i_size_read and i_size_write
->   fs/ntfs3: Correct function is_rst_area_valid
->   fs/ntfs3: Fixed overflow check in mi_enum_attr()
->   fs/ntfs3: Update inode->i_size after success write into compressed
->     file
+> On certain chromebooks, audio setup needs custom ALSA ucm confs [1], but after 
+> contacting the chromebook-linux-audio developer [2], I think it's not a conf 
+> problem, but rather a kernel regression.
+> 
+> After hours of bisecting, the first bad commit 31ed8da (ASoC: SOF: sof-audio: 
+> Modify logic for enabling/disabling topology cores) ensures the regression. 
+> demsg log pasted below:
 
-Thx for working on these patches that recently hit mainline.
+Thx for reporting this.
 
-The last patch listed above afaics (I might be wrong there!) is a fix
-for https://bugzilla.kernel.org/show_bug.cgi?id=218180 (~"data added to
-a newly created file that uses compression only becomes visible after a
-remount or a forced cache drop"). That regression from the 6.2 days
-sounds somewhat concerning, hence allow me to ask: do you plan to submit
-this fix for backporting to the 6.7.y and 6.6.y series? If not: do you
-think it should be save to include those there?
+For the record, in case anyone lands here and wonders if nothing
+happened. The discussion moved elsewhere and a fix is heading towards
+mainline currently:
 
-Side not, while at it: are any of the other patches maybe also worth
-backporting?
+#regzbot link: https://github.com/thesofproject/linux/issues/4807
+#regzbot monitor:
+https://lore.kernel.org/all/20240208133432.1688-1-peter.ujfalusi@linux.intel.com/
+#regzbot fix: ASoC: SOF: ipc3-topology: Fix pipeline tear down logic
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
