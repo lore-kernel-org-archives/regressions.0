@@ -1,56 +1,83 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D73A5B684
-	for <regressions@lists.linux.dev>; Sun, 11 Feb 2024 16:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9FF8814
+	for <regressions@lists.linux.dev>; Sun, 11 Feb 2024 17:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707667362; cv=none; b=YYaFe91RMfYsNnNRki/bkR3syNaz5xmEEgChRqBg5oJciN0CJOecaMg0kdnUDBgKQoasVhtxVAOKlaiYLOoZSdh1GrIg0OtI94FHxokeYHO0IO+WbPzGwFHOPrlR8dlnFgpSOXxo7DTy6NUhVfmkLOt6XGQJ19L/kdyduM22xFQ=
+	t=1707671194; cv=none; b=hUhtdiaoEH3xhG8utufZ2s6kvXvxv0UzfqXksHXzke2FndFesyvAGv3sS81D9JTUZowohEb+i2xVbxNILCcxiTcEDpKcutY/0MprsVj8+3m/Mh6AU0PvUApKUiesPIzl4y6Ybgazuli3tYmrn7Qi8TmU5+wOkWdLCfcpJVzwPPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707667362; c=relaxed/simple;
-	bh=b/FTp5wr7CP8Mhnbmc++m9Krji2RO/vpS0OpJ7CX8NE=;
-	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=IH4YOhhh/EJ82tA/xRnreOAjSaJnyRb7hEi7lHHatYAqQzH3VzyPZY/g101qh6pcywEZwhvDnvFprgr3w2KCm4i9lM33jZacE5vLpFkUP7rGKHcVLHrhnZaRGWCFDtj46rtz0O1fGg8421R3GjlorPjTs70uAjCVhzWnFj+YyNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5ddd7ec8.dip0.t-ipconnect.de [93.221.126.200])
-	by mail.itouring.de (Postfix) with ESMTPSA id 86AAF103702;
-	Sun, 11 Feb 2024 17:02:29 +0100 (CET)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 31DCBF01605;
-	Sun, 11 Feb 2024 17:02:29 +0100 (CET)
+	s=arc-20240116; t=1707671194; c=relaxed/simple;
+	bh=agbLLuXWinunZf7A63lNVCvzSH9sGZsptDOcytkuGxQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=utiHp7wA/WQ3JK3Bdqcfljar9HBttnWDscFMazmJ5chL8uIMgfeqq64esS17rUv0tQ4zAwJZ2DY1bSdnL/kJmFLiVxnnjwQ0KM4ggLxboW1WXq/AUFN7yaMCC2/RXlJAPEXjO8sduUU5gPc+V3LjWt2KKuUdi0CJWnnZJWR17JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id B39E78964C2;
+	Sun, 11 Feb 2024 18:06:27 +0100 (CET)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: stable@vger.kernel.org, regressions@lists.linux.dev,
+ linux-usb@vger.kernel.org,
+ Holger =?ISO-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+ linux-bcachefs@vger.kernel.org
 Subject: Re: I/O errors while writing to external Transcend XS-2000 4TB SSD
-To: Martin Steigerwald <martin@lichtvoll.de>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-usb@vger.kernel.org
-References: <1854085.atdPhlSkOF@lichtvoll.de>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <5264d425-fc13-6a77-2dbf-6853479051a0@applied-asynchrony.com>
-Date: Sun, 11 Feb 2024 17:02:29 +0100
+Date: Sun, 11 Feb 2024 18:06:27 +0100
+Message-ID: <5444405.Sb9uPGUboI@lichtvoll.de>
+In-Reply-To: <5264d425-fc13-6a77-2dbf-6853479051a0@applied-asynchrony.com>
+References:
+ <1854085.atdPhlSkOF@lichtvoll.de>
+ <5264d425-fc13-6a77-2dbf-6853479051a0@applied-asynchrony.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <1854085.atdPhlSkOF@lichtvoll.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On 2024-02-11 16:42, Martin Steigerwald wrote:
-> Hi!
-> I am trying to put data on an external Kingston XS-2000 4 TB SSD using
-> self-compiled Linux 6.7.4 kernel and encrypted BCacheFS. I do not think
-> BCacheFS has any part in the errors I see, but if you disagree feel free
-> to CC the BCacheFS mailing list as you reply.
+Hi Holger!
 
-This is indeed a known bug with bcachefs on USB-connected devices.
-Apply the following commit:
+CC'ing BCacheFS mailing list.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/bcachefs?id=3e44f325f6f75078cdcd44cd337f517ba3650d05
+My original mail is here:
 
-This and some other commits are already scheduled for -stable.
+https://lore.kernel.org/linux-usb/5264d425-fc13-6a77-2dbf-6853479051a0@appl=
+ied-asynchrony.com/T/
+#m5ec9ecad1240edfbf41ad63c7aeeb6aa6ea38a5e
 
-Holger
+Holger Hoffst=E4tte - 11.02.24, 17:02:29 CET:
+> On 2024-02-11 16:42, Martin Steigerwald wrote:
+> > Hi!
+> > I am trying to put data on an external Kingston XS-2000 4 TB SSD using
+> > self-compiled Linux 6.7.4 kernel and encrypted BCacheFS. I do not
+> > think BCacheFS has any part in the errors I see, but if you disagree=20
+> > feel free to CC the BCacheFS mailing list as you reply.
+>=20
+> This is indeed a known bug with bcachefs on USB-connected devices.
+> Apply the following commit:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi
+> t/fs/bcachefs?id=3D3e44f325f6f75078cdcd44cd337f517ba3650d05
+>=20
+> This and some other commits are already scheduled for -stable.
+
+Thanks!
+
+Oh my. I was aware of some bug fixes coming for stable. I briefly looked=20
+through them, but now I did not make a connection.
+
+I will wait for 6.7.5 and retry then I bet.
+
+Best,
+=2D-=20
+Martin
+
+
