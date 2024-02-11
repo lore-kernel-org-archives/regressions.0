@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1401B7472;
-	Sat, 10 Feb 2024 07:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D6044C7C;
+	Sun, 11 Feb 2024 07:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707550747; cv=none; b=aQ0hpwVXtF/iGx11X27tclNpndkeyjz5UFInpg4KiVjZzEWedT+2cbKBrdS7OC/5xK59d+yF3V2uqaltYn8RwLc0D1C4ptsWygef/2YxSvWdA002ofuDbhRWXYcz8arY1UenOiGBcsmgLStWFfb+fCqXBgaqd+9Xh8JI0aMLIMI=
+	t=1707636503; cv=none; b=D74yySbcImPnxwetcq0Lu4tdq69FF4oRbDGN+aWimo7L/AUmG7dDweSXhUCMG/2YxXPtMMbYE66kwMbpiO0phVVj6g0OZHvoyXuq2rSawKgzygX7PMCkzPOv+kwAZIDVdmp4446Yy6rJcZsSBmap49EhRkmg6BRXqsU3fn1nhQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707550747; c=relaxed/simple;
-	bh=46eoq7MhMARovYT7U9qx122WZ4h+fYnnHqT6CRXyX8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oksI0OHQ9kC1DnH38h0uRyc1pWsIDPfQj0/5vZduM5AxZED+MYpeDz9LuF2bgDW2VFBgk6UAW61HIC2mzMumJHRTbTKiX3NOJ0bL2G0MgBdhRSXB3P1cWc7nLhKcg53irKXZMjHq3+sfXTqhgGjbydIf3/V0XvmSchKpvjIDdEQ=
+	s=arc-20240116; t=1707636503; c=relaxed/simple;
+	bh=6flaA0HBM0nfxu8OycT7I+8Yx1fIzIh2mHVEu2mMEOY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RfxfVX1m4yiZjnWiFOdym2OPANJZ5DAYhvJEKvSLtxO/LlJancA5RPPzhhTPV0TNzKgdOPb/Ns4H5FF9YmkgNwjqfx1q1AnfP2U8Z+wNwKnh3J7oUHSdnf+MIFbNXfluKVP74QFrdn0oJAVkjRSSi6MbzzLJ4rw7r17qYtNF0P0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rYhwu-0000EU-UZ; Sat, 10 Feb 2024 08:38:56 +0100
-Message-ID: <04fc959a-4a50-4c84-88a5-fa0d79c008b3@leemhuis.info>
-Date: Sat, 10 Feb 2024 08:38:56 +0100
+	id 1rZ4GA-0004Ow-Ps; Sun, 11 Feb 2024 08:28:18 +0100
+Message-ID: <64261685-1f82-4ba5-98f5-6d76178db53a@leemhuis.info>
+Date: Sun, 11 Feb 2024 08:28:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,40 +26,31 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Revert "usb: typec: tcpm: fix cc role at port reset"
+Subject: Re: [regressions] ntfs3: empty file on update without forced cache
+ drop
 Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240117114742.2587779-1-badhri@google.com>
- <ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk>
+Cc: ntfs3@lists.linux.dev
+References: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
+In-Reply-To: <138ed123-0f84-4d7a-8a17-67fe2418cf29@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707550745;17f83627;
-X-HE-SMSGID: 1rYhwu-0000EU-UZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707636501;54858668;
+X-HE-SMSGID: 1rZ4GA-0004Ow-Ps
 
-On 08.02.24 23:01, Mark Brown wrote:
-> On Wed, Jan 17, 2024 at 11:47:42AM +0000, Badhri Jagan Sridharan wrote:
->> This reverts commit 1e35f074399dece73d5df11847d4a0d7a6f49434.
->>
->> Given that ERROR_RECOVERY calls into PORT_RESET for Hi-Zing
->> the CC pins, setting CC pins to default state during PORT_RESET
->> breaks error recovery.
+On 27.11.23 07:18, Thorsten Leemhuis wrote:
 > 
-> Between -rc2 and -rc3 I started seeing boot issues in mainline on
-> rk3399-roc-pc running arm64 defconfig, a bisection identified this patch
-> as having broken things.  The issues manifest as a hang while loading
-> modules from the initd, you can see a full boot log at:
+> Konstantin, I noticed a regression report in bugzilla.kernel.org.
+> Apparently it's cause by a change of yours.
+> 
+> As many (most?) kernel developers don't keep an eye on bugzilla, I
+> decided to forward it by mail. Note, you have to use bugzilla to reach
+> the reporter, as I sadly[1] can not CCed them in mails like this.
+> 
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218180 :
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced b717dfbf73e842d15174699fe2c6ee4fdde8a
-#regzbot title usb: typec: boot issues on rk3399-roc-pc due to revert
+#regzbot fix: d68968440b1a75dee0
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
