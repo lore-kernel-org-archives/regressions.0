@@ -1,98 +1,93 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A833D0B6;
-	Mon, 12 Feb 2024 16:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919C64596F
+	for <regressions@lists.linux.dev>; Mon, 12 Feb 2024 17:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707754623; cv=none; b=XFpIcMo+wADh4TZIX5BQBpfK3DkkuGswYjIpcgGDFEyr2uqINJnCcg7e5y5hKQY7B4aZCNuZmZHpFhxGv474jBj1Yja9J1ySdj1iu/+ThsNfXsyhlNNvSpLSVmvM6rZ/Yh27DQmWicsUsErrW2uvfiHk0l4OFb/Pyz6YitFtYIA=
+	t=1707760512; cv=none; b=pERcdNpqIQybUhbTM2XWTXqq41ndTfC+nkgIUAwjm3IGhmFb9zP0+P49ORjLEfggPy6YBAusmlX7fp7kd9X7LMsmMqNSt+5bT57IEQSs9Atp8R5C++9s0UqES/KgbA4Fbw4DEtOw7b+/g001vt4O3S8uAwjwoNkWOdlm6IFDzcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707754623; c=relaxed/simple;
-	bh=XiSCSWQLPVABFex+zdas6pNksSgMX3x6uGMmE8PYqjo=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=V9E/lX84xJNNQFbj5xmwEjHgEF8DQshE11Z/FAa15L8vhtPKiKaKp4OEbMB0BKmcG1F3fBuIBWHZ2ZoHBHBwWEy8zZnjhzpgHBnstSwo11oIkQhMENvZfggrpul8OWvl6Fn6WYqS/hGMP+xoqTVpXNrqWSONy4KHohHVWDb1S10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rZYzK-0002Kc-Tp; Mon, 12 Feb 2024 17:16:58 +0100
-Message-ID: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
-Date: Mon, 12 Feb 2024 17:16:58 +0100
+	s=arc-20240116; t=1707760512; c=relaxed/simple;
+	bh=Og8NnqP02pab6hxhGswPot4+uZWlv3wF0Kx/7BPs+og=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fTIhNK4C6Vo8V6nRWdZQvAFkxE0jRObcLAytY1LlfEE6Gz9s/kAeAyGnlkdNaG4dGVbZh2R8V7YxN/li8ZHHIb+wbp5vAuYY+f+NUTsDh2P3kSu4BK2/cO4V3L5xxBQF55Fh/MTbJ0iruX+SeFozSvYWE2z2eVHwYH2UBu0tgqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YK8b+J6Q; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YK8b+J6Q"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7cedcea89a0so37974241.1
+        for <regressions@lists.linux.dev>; Mon, 12 Feb 2024 09:55:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707760509; x=1708365309; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3t18idpy1yL8hjQMjo5EA0cSeouRX8+0f9MTy1s1S9E=;
+        b=YK8b+J6QOVIyq67it64VvXbMPi4UTRpwDoqhT8F1iDHaHItdxW5GQQZKc/KWvA8Q98
+         +/f2Tq/7+2gerFnVV9GzoS7sOWCj7/erWYGFeKW+cTxW3pBkkD/UhFnt318Lm7ukdMR1
+         Up2FJKPKChrki+Z1gnVwgz3+Fm7lGjhsTdxi9Upa4bWbnLHaV0bx4GTsG2jeNlcHgyFy
+         ADE/2KBtSzuUlXfDfsWFliTujXpvKwS5F/8QUFxfkpmkbQ1hUUspb9u0Nrg8ubK/b1W9
+         EUv4572Cqz3aK1Dhewo0i/eczIOiGzPiBKJwZn19x1Bdr8xdl6c5FjlsPFCstI7I3cjh
+         Sebg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707760509; x=1708365309;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3t18idpy1yL8hjQMjo5EA0cSeouRX8+0f9MTy1s1S9E=;
+        b=PMk0uEA8QLMb6ftO26IK5Pf3blBJUzNaDJt3JlyXmldsjSqQAU2fi9s7qXkr+umlUY
+         em2tIpcBM7JcHH2rZ+YvADcf37ZcY/1B9cVJjaG8gNnXp3RW7pehmNXdqgOEehsw0+4W
+         Z6XqLV9SXXDenhfX9KQsj66CujwhS7q17nLCrgrmhZO39xCybusbG53p5PBs26M0nTIk
+         NfhYGDuv7WTug7CGEKunGi/X10XiBZfZJj8VB9bbpokHJ2hpKWMqmfUTpE3/2Oc+ck7B
+         zz1lMC5Bq7PfloloRiWTCA0iQm+R1O5Sagc0BS2JTjUJbQfRXOlPCbsGD2hRywtObG66
+         kc0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXcBy/eEm6IgyAOzdtSujBNfzX5tNY32czX3uViFGdrrVy5mX4OWe0oMNQCxl6+j03pTV+8Rhi/pt+5AHjVeOMkKiLBXr9kL/RVif8=
+X-Gm-Message-State: AOJu0YyfEQOzcJEdXfpZGuo3HXyLfzfViT1MwoPn2+bkcKWlBmF6P5w7
+	AnIp9cZuqqOYTIhIUmGZAgTbNOeAWqhbcyeVlzRlobyLJgsvc/5fxtSyU2DaJJ8e9KKYYRETmBc
+	YMr3qcNCuKbJw3NsVyHMtCeRjou0vOSaej2Y0Ww==
+X-Google-Smtp-Source: AGHT+IE+fTlUlm6S5i/bXd/mDL8so/lGTPpD+/HFFykbPEgOk5IuqJAenCRnR7NuEVF9ZDb1qbAIbtcT+Jirb2/ibvk=
+X-Received: by 2002:a1f:e0c3:0:b0:4c0:51da:bb6d with SMTP id
+ x186-20020a1fe0c3000000b004c051dabb6dmr3908276vkg.8.1707760509453; Mon, 12
+ Feb 2024 09:55:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
- David Laight <David.Laight@ACULAB.COM>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: [regression] linux-6.6.y, minmax: virtual memory exhausted in i586
- chroot during kernel compilation
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707754621;0deb7cf8;
-X-HE-SMSGID: 1rZYzK-0002Kc-Tp
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 12 Feb 2024 23:24:58 +0530
+Message-ID: <CA+G9fYsY7Uz_CnyqgyhAr6QsS9dJzC-9wMoDwq0=9=Rzmz5S5Q@mail.gmail.com>
+Subject: next: fs/quota/quota_tree.c:674:8: error: variable 'blk' is
+ uninitialized when used here [-Werror,-Wuninitialized]
+To: linux-fsdevel@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Jan Kara <jack@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Greg, Sasha, and David,
+I encountered the following build warnings/errors while compiling the x86_64
+kernel on Linux next-20240212 tag with clang toolchain.
 
-I noticed a regression report in bugzilla.kernel.org that seems to be
-specific to the linux-6.6.y series:
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218484 :
+fs/quota/quota_tree.c:674:8: error: variable 'blk' is uninitialized
+when used here [-Werror,-Wuninitialized]
+  674 |               blk);
+      |                             ^~~
+include/linux/quotaops .h:34:41: note: expanded from macro 'quota_error'
+   34 |         __quota_error((sb), __func__, fmt , ## args)
+      |                                                ^~~~
+fs/quota/quota_tree.c:666:10: note: initialize the variable 'blk' to
+silence this warning
+  666 |         uint blk;
+      |                 ^
+      |                  = 0
+1 error generated.
 
-> After upgrading to version 6.6.16, the kernel compilation on a i586
-> arch (on a 32bit chroot in a 64bit host) fails with a message:
-> 
-> virtual memory exhausted: Cannot allocate memory
-> 
-> this happens even lowering the number of parallel compilation
-> threads. On a x86_64 arch the same problem doesn't occur. It's not
-> clear whether some weird recursion is triggered that exhausts the
-> memory, but it seems that the problem is caused by the patchset
-> 'minmax' added to the 6.6.16 version, in particular it seems caused
-> by these patches:
-> 
-> - minmax-allow-min-max-clamp-if-the-arguments-have-the-same-signedness.patch
-> - minmax-fix-indentation-of-__cmp_once-and-__clamp_once.patch
-> - minmax-allow-comparisons-of-int-against-unsigned-char-short.patch
-> - minmax-relax-check-to-allow-comparison-between-unsigned-arguments-and-signed-constants.patch
-> 
-> Reverting those patches fixes the memory exhaustion problem during compilation.
+Links:
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2cFjnmDh1oofs8YfpPEBSMDvU9R/
 
-The reporter later added:
+As per the other reports, this has been fixed in Jan's tree.
+https://lore.kernel.org/all/20240212131615.6jvnwweivkydv3j7@quack3/
 
-> From a quick test the same problem doesn't occur in 6.8-rc4.
-See the ticket for more details.
-
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CCed them in mails like this.
-
-[TLDR for the rest of this mail: I'm adding this report to the list of
-tracked Linux kernel regressions; the text you find below is based on a
-few templates paragraphs you might have encountered already in similar
-form.]
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 204c653d5d0c79940..9487d93f172acef
-https://bugzilla.kernel.org/show_bug.cgi?id=218484
-#regzbot title: minmax: virtual memory exhausted in 6.6.16 with i586 chroot
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+Linaro LKFT
+https://lkft.linaro.org
