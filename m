@@ -1,122 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1FC6087A;
-	Tue, 13 Feb 2024 19:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081F360885;
+	Tue, 13 Feb 2024 19:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707851932; cv=none; b=m3Zcq7OSVRDNJwU7CVCWDu/6XcGGGae8DHZu1J+mWhrIibylhD7OI81BNdcItfZJRVIo0yMjskPi7X7vwplwG3KGrBOYuOlBINTVXrIr8Q4tM9oSpniR7Wlm+fe167jYGqivSrpWIowokYCD8GXEp87He+ka4FEWMI9BS3SGts8=
+	t=1707852059; cv=none; b=iDXO1NEJ1Q/CMMnRjlxMZ6zfoS9Wsy7l5xp8QRakAP4xE7c2+gqgbdEBYoo9/c3zVZLhuEmWP7Nb9arfeY5wln0YCSyq30fbsjuxS2OQRcVm41z0ztv3beSU1+XBtoxzPq6/7/JQBww2L3tDlU9B1HO39W4TTNRPAwg+dwIXvmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707851932; c=relaxed/simple;
-	bh=LNkRcqZzqWUlcmMLEyiRGpW2jfqARCsrz7SFPIcor6U=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qo1N3o1OJdn3kAbtZzz/5BLncJDf419ZGNcjEMom0T3iyBRppy6t7/KMoT4u47lqAX4+Rmtp7x82D51uVTdmzN6oXaqyKhmb4mLqQglr9cQlHovj2+sSTuwuUP3mWS8XAabINIGEXHp6yrzAC3A4pB3biicOB42rYcmhqZyBZTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFaBL40j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707852059; c=relaxed/simple;
+	bh=7dXfSRYBwhsTCt6sxxpGuOjndcv/iGeQtLLQrn0l66Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uIunxWBmfZVtAun9fATidfWu0XEwBxm7zWurkgAwh2GZ44sJHADrkQoH+ETKHO9Ud1feqw7nO6BXmX92LjPzPLLX/dfnvOl89uT5rXqaYe7ie5hnpjEKrXSNrtYLiJ8dUQWQKZokGpNrG/O1V4hMRsD75Wh2AhYG01vz47mo0bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mTM4F7hQ; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFaBL40j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8728BC433F1;
-	Tue, 13 Feb 2024 19:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707851932;
-	bh=LNkRcqZzqWUlcmMLEyiRGpW2jfqARCsrz7SFPIcor6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fFaBL40jCaGdcY8hxkqXjlB/TY1qX0NYZwb34PBBvfzZ0qe528UtCZzRxjHQtqALJ
-	 pmyR4WGnEzzHjAta4GM1jXK7CeS2jvARKpIG9Gs0BxDSF64uQ1Rjb8cxZIXy3e+A2O
-	 uEpycNEw3g0rUk6O++Af/C6/Tox2204+5rU/E2BCUsKYIKrU3/Ljhy+jgPhp6m1Mjw
-	 V/NI054dDLBNuhJIAAM3iYNAqUnp1ft+ImmNi7chu3vGmnDCnnqVJxVL1VkC501x3Z
-	 KwU4f/yP7SZ7LZSB+dun394MJiRD/teSNZJQ23mfEEngOI6qA1aIqPldy7DcJKywm/
-	 5/gkpdyyceW2Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rZyIq-002tFi-HZ;
-	Tue, 13 Feb 2024 19:18:50 +0000
-Date: Tue, 13 Feb 2024 19:18:48 +0000
-Message-ID: <87il2sw4tj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: WARNING: arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap
-In-Reply-To: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
-References: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mTM4F7hQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A28A960002;
+	Tue, 13 Feb 2024 19:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707852053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3mN8xA0cTxrfZTtwyelonCfpSj29sYDVq5G0MAoHaHg=;
+	b=mTM4F7hQA4rbQGgy7sC3p/Yv7/5UjDCvUgPm6/bAWUy0+uMa+aibebP9bxlzXdgUYqX9yi
+	mil0ph6jS4jOu2kIq/+o6MRGFLxNaCxBaIOdKBeh9wjGhGlWX5sikiGc8krqb3BcrvWN0+
+	dX9mtKLCV3hUdRjCKgivbP90sRUVc+idvcfAgawP8+cgpQGLeBstLxLgtk44s57DdsStkh
+	GHnZ6TZONle3bG1I7H4plHnLMC5LFAtoq5hWFCHzzVwAJEMqaQl4ym2GgAHe65RML7KmH1
+	5o9EYyOs0pXa8bRL3ATNSbCj9HKC69SrlMvFSa344EoXEH3oIamnN8vMvyXnJw==
+Date: Tue, 13 Feb 2024 20:20:45 +0100
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Eric Curtin <ecurtin@redhat.com>
+Cc: srinivas.kandagatla@linaro.org, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ regressions@lists.linux.dev, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Chen-Yu Tsai <wenst@chromium.org>,
+ asahi@lists.linux.dev, Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Message-ID: <20240213202045.1e823a6c@xps-13>
+In-Reply-To: <CAOgh=FwFMaYvTwmqeOQrqHq2XANxghZbTuY3+SgFx_ozpysBOg@mail.gmail.com>
+References: <20240209163454.98051-1-srinivas.kandagatla@linaro.org>
+	<CAOgh=FwFMaYvTwmqeOQrqHq2XANxghZbTuY3+SgFx_ozpysBOg@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: naresh.kamboju@linaro.org, linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, suzuki.poulose@arm.com, m.szyprowski@samsung.com, catalin.marinas@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, 13 Feb 2024 18:21:23 +0000,
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> 
-> Following kernel warning notices on all arm64 devices on today's Linux
-> next-20240213 tag.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Hi,
 
-What is the sense of this tag, and even of this email, for an issue
-that has already been reported, as outlined below?
+ecurtin@redhat.com wrote on Fri, 9 Feb 2024 16:49:22 +0000:
 
-> 
-> [    0.038524] SMP: Total of 6 processors activated.
-> [    0.038539] CPU: All CPU(s) started at EL2
-> [    0.038588] CPU features: detected: 32-bit EL0 Support
-> [    0.038602] CPU features: detected: 32-bit EL1 Support
-> [    0.038620] CPU features: detected: CRC32 instructions
-> [    0.038650] ------------[ cut here ]------------
-> [    0.038656] WARNING: CPU: 0 PID: 1 at
-> arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap+0x1c/0x70
-> [    0.038691] Modules linked in:
-> [    0.038707] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 6.8.0-rc4-next-20240213 #1
-> [    0.038721] Hardware name: Radxa ROCK Pi 4B (DT)
-> [    0.038729] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    0.038744] pc : this_cpu_has_cap+0x1c/0x70
-> [    0.038761] lr : has_nv1+0x28/0xe8
-> ..
-> [    0.039008] Call trace:
-> [    0.039014]  this_cpu_has_cap+0x1c/0x70
-> [    0.039031]  update_cpu_capabilities+0xd4/0x138
-> [    0.039048]  setup_system_features+0x38/0x130
-> [    0.039075]  smp_cpus_done+0x50/0xc8
-> [    0.039094]  smp_init+0x84/0xa0
-> [    0.039109]  kernel_init_freeable+0x11c/0x400
-> [    0.039126]  kernel_init+0x28/0x1f0
-> [    0.039148]  ret_from_fork+0x10/0x20
-> [    0.039167] ---[ end trace 0000000000000000 ]---
-> 
-> 
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/test/check-kernel-exception/log
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/tests/
-> 
-> This issue has been addressed in the relevant email thread,
-> https://lore.kernel.org/all/0593516b-2419-49b7-83aa-fe189ffad0c2@arm.com/
+> On Fri, 9 Feb 2024 at 16:43, <srinivas.kandagatla@linaro.org> wrote:
+> >
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Creating sysfs files for all Cells caused a boot failure for linux-6.8-=
+rc1 on
+> > Apple M1, which (in downstream dts files) has multiple nvmem cells that=
+ use the
+> > same byte address. This causes the device probe to fail with
+> >
+> > [    0.605336] sysfs: cannot create duplicate filename '/devices/platfo=
+rm/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
+> > [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S              =
+   6.8.0-rc1-arnd-5+ #133
+> > [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
+> > [    0.605362] Call trace:
+> > [    0.605365]  show_stack+0x18/0x2c
+> > [    0.605374]  dump_stack_lvl+0x60/0x80
+> > [    0.605383]  dump_stack+0x18/0x24
+> > [    0.605388]  sysfs_warn_dup+0x64/0x80
+> > [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
+> > [    0.605402]  internal_create_group+0x268/0x404
+> > [    0.605409]  sysfs_create_groups+0x38/0x94
+> > [    0.605415]  devm_device_add_groups+0x50/0x94
+> > [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
+> > [    0.605682]  nvmem_register+0x38c/0x470
+> > [    0.605789]  devm_nvmem_register+0x1c/0x6c
+> > [    0.605895]  apple_efuses_probe+0xe4/0x120
+> > [    0.606000]  platform_probe+0xa8/0xd0
+> >
+> > As far as I can tell, this is a problem for any device with multiple ce=
+lls on
+> > different bits of the same address. Avoid the issue by changing the fil=
+e name
+> > to include the first bit number.
+> >
+> > Fixes: 0331c611949f ("nvmem: core: Expose cells through sysfs")
+> > Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boo=
+t/dts/apple/t600x-dieX.dtsi#L156
+> > Cc: regressions@lists.linux.dev
+> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Cc: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> > Cc: Chen-Yu Tsai <wenst@chromium.org>
+> > Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: asahi@lists.linux.dev
+> > Cc: Sven Peter <sven@svenpeter.dev>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> =20
+>=20
 
-Correct link:
+My R-by must have been lost, here it is again:
 
-https://lore.kernel.org/all/86bk8k5ts3.wl-maz@kernel.org/
-
-> I will test the corresponding fix patch and get back to you.
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Miqu=C3=A8l
