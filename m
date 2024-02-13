@@ -1,90 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C158C57885;
-	Tue, 13 Feb 2024 17:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9DB5FEEC
+	for <regressions@lists.linux.dev>; Tue, 13 Feb 2024 18:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707846055; cv=none; b=PxCfa3LTr0DKR9nivBRJfMsHdR9gsy4NpW65pRLYYk1XvweVNzaP/nSWtLmqhDmJ3XkPNfqg+kpGvPxPtJvzhC8Vy3DP+/pDPlHEBWbe/yjBEsDQ+8mjmlWQylDZcN5YR8M1MI7R7wgIyhmmO9gFpedvOK6GBYh9BcD3I0SmQb4=
+	t=1707847231; cv=none; b=DMr/mKc1FF7rfJSGMLBp0i6PgBWLxnWuGNq33RKVCdtFheXKzHjvQ1QcijKxH9Z6ZAefj83XgZ9Z7FkRY49q8JEXV36Mf/KfqUWyzlyEyvXtTiynksrsWZshu7DtnsBmMndMZRQLsmnKlZnDey6DBc3eWsbDETs49XTT2acnisw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707846055; c=relaxed/simple;
-	bh=Sd9CLlPoRS75YYDQ+Y747ljqjeQmBo+XdoXXJqwonrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jG4VEFCGtt0GnfRqfHXo71aq2Km3gYjkMVseLhe5VB+dMJJnALrWue90X/MLeaP5Nyt+ba7ldWT6NV39Fk3S+S3oeOvto2UAf7AHgeTeE+WnFIZ+oejdv1TvFmHg5k4vme/WyoxwvhSBSsBbAfxSx0aw0faRwmhzC67abncng6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IhOU/cN5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707847231; c=relaxed/simple;
+	bh=rkUZTdLpAhXFhh41eEds83V0BfyHReOoNOl3qPszZvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hT5O3XGHex6x91vnBwuAih9J1qP4ukrp/NS6TB6AwbMI0IswGPaXbnto8ZtYc5SNADn9wqqJsWiz4ovfVukwZkofLBHjjRQMNdr4LzvsZ54K/3dotPhByrw5PBAaPLa9WaA7OSfYfYCvlG9NXqPBmsjjIV8I+xFZqGynGHm/lqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GZWk6ttF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IhOU/cN5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31656C433F1;
-	Tue, 13 Feb 2024 17:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707846055;
-	bh=Sd9CLlPoRS75YYDQ+Y747ljqjeQmBo+XdoXXJqwonrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IhOU/cN5s+lhkANmKp/2CmClDeke87ahgsIWegYJIjjoB5Q9i1Y770avMPAi40+K3
-	 SGvhhP7nwAYXQNvZQcoWz/7iA1aCbPL4TByQDoPfwjZMUzczykTgTbkNdnRV1OIDL1
-	 9TIAqWyV63cWnkZmEjORRuhjM85TgpflMDOrdwss=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	David Howells <dhowells@redhat.com>,
-	regressions@lists.linux.dev,
-	Michael Lass <bevan@bi-co.net>,
-	Jeffrey Altman <jaltman@auristor.com>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 6.7 124/124] net: Fix from address in memcpy_to_iter_csum()
-Date: Tue, 13 Feb 2024 18:22:26 +0100
-Message-ID: <20240213171857.348322363@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.1
-In-Reply-To: <20240213171853.722912593@linuxfoundation.org>
-References: <20240213171853.722912593@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GZWk6ttF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41DDAvjj029424;
+	Tue, 13 Feb 2024 18:00:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=uHSjEZZv5LhPxGfb2xIn9VtOM3pAfHSS36rJfvlkgS8=; b=GZ
+	Wk6ttFRJOi+4P/1ZuZpUj3dwKvYyFk/DQTvsbaNGAgpPaokcw//qqYysedh4jDtj
+	9vT1WZ/CQhFzIhAyhZ2I6QBQLq8fVG1Wy7gMdVZ4PxASbjhjZwPxyxqq2xb3f/mc
+	mHe/9MX1uEv02GBt93Ie2F7rWWhN1EqY+ZneAolpIRiwBohmag/JPLQYOzeArBkP
+	1JGqVI4+BDY0NUQRwlUPPeZ9XgtLTV7LlNayDqneoFZOT4mmk5bV4V9IJcm3yfLQ
+	OuvA07H8NtT+hZFH6rBR/Zt0Hdi7TVsTeE9yylUZF7pwU2xgaDcgpja6Ef4HJsuh
+	bA6DChb6Bhpwk5IT+2dA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w7q2y2q65-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 18:00:16 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41DI0FWC015189
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 18:00:15 GMT
+Received: from [10.110.23.109] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 13 Feb
+ 2024 10:00:14 -0800
+Message-ID: <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+Date: Tue, 13 Feb 2024 10:00:13 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: drm/msm: DisplayPort regressions in 6.8-rc1
+Content-Language: en-US
+To: Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Kuogee Hsieh
+	<quic_khsieh@quicinc.com>
+CC: Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        <quic_jesszhan@quicinc.com>, <quic_sbillaka@quicinc.com>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-arm-msm@vger.kernel.org>, <regressions@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>
+References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IDbmomjLwl_cvJs5QxFrpwNYt3hwSqIG
+X-Proofpoint-ORIG-GUID: IDbmomjLwl_cvJs5QxFrpwNYt3hwSqIG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_10,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1011
+ adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402130141
 
-6.7-stable review patch.  If anyone has any objections, please let me know.
+Hi Johan
 
-------------------
+Thanks for the report.
 
-From: Michael Lass <bevan@bi-co.net>
+I do agree that pm runtime eDP driver got merged that time but I think 
+the issue is either a combination of that along with DRM aux bridge 
+https://patchwork.freedesktop.org/series/122584/ OR just the latter as 
+even that went in around the same time.
 
-commit fe92f874f09145a6951deacaa4961390238bbe0d upstream.
+Thats why perhaps this issue was not seen with the chromebooks we tested 
+on as they do not use pmic_glink (aux bridge).
 
-While inlining csum_and_memcpy() into memcpy_to_iter_csum(), the from
-address passed to csum_partial_copy_nocheck() was accidentally changed.
-This causes a regression in applications using UDP, as for example
-OpenAFS, causing loss of datagrams.
+So we will need to debug this on sc8280xp specifically or an equivalent 
+device which uses aux bridge.
 
-Fixes: dc32bff195b4 ("iov_iter, net: Fold in csum_and_memcpy()")
-Cc: David Howells <dhowells@redhat.com>
-Cc: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Signed-off-by: Michael Lass <bevan@bi-co.net>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/datagram.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -751,7 +751,7 @@ size_t memcpy_to_iter_csum(void *iter_to
- 			   size_t len, void *from, void *priv2)
- {
- 	__wsum *csum = priv2;
--	__wsum next = csum_partial_copy_nocheck(from, iter_to, len);
-+	__wsum next = csum_partial_copy_nocheck(from + progress, iter_to, len);
- 
- 	*csum = csum_block_add(*csum, next, progress);
- 	return 0;
+Abhinav
 
-
+On 2/13/2024 3:42 AM, Johan Hovold wrote:
+> Hi,
+> 
+> Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
+> not always show up on boot.
+> 
+> The logs indicate problems with the runtime PM and eDP rework that went
+> into 6.8-rc1:
+> 
+> 	[    6.006236] Console: switching to colour dummy device 80x25
+> 	[    6.007542] [drm:dpu_kms_hw_init:1048] dpu hardware revision:0x80000000
+> 	[    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
+> 	[    6.007934] [drm:dp_bridge_init [msm]] *ERROR* failed to attach panel bridge: -16
+> 	[    6.007983] msm_dpu ae01000.display-controller: [drm:msm_dp_modeset_init [msm]] *ERROR* failed to create dp bridge: -16
+> 	[    6.008030] [drm:_dpu_kms_initialize_displayport:588] [dpu error]modeset_init failed for DP, rc = -16
+> 	[    6.008050] [drm:_dpu_kms_setup_displays:681] [dpu error]initialize_DP failed, rc = -16
+> 	[    6.008068] [drm:dpu_kms_hw_init:1153] [dpu error]modeset init failed: -16
+> 	[    6.008388] msm_dpu ae01000.display-controller: [drm:msm_drm_kms_init [msm]] *ERROR* kms hw init failed: -16
+> 	
+> and this can also manifest itself as a NULL-pointer dereference:
+> 
+> 	[    7.339447] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> 	
+> 	[    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
+> 	[    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+> 	
+> 	[    7.769039] Call trace:
+> 	[    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
+> 	[    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
+> 	[    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
+> 	[    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
+> 	[    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
+> 	[    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
+> 	[    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
+> 	[    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
+> 	[    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
+> 	[    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
+> 	[    7.819747]  __component_add+0xa4/0x18c
+> 	[    7.823703]  component_add+0x14/0x20
+> 	[    7.827389]  dp_display_probe+0x47c/0x568 [msm]
+> 	[    7.832052]  platform_probe+0x68/0xd8
+> 
+> Users have also reported random crashes at boot since 6.8-rc1, and I've
+> been able to trigger hard crashes twice when testing an external display
+> (USB-C/DP), which may also be related to the DP regressions.
+> 
+> I've opened an issue here:
+> 
+> 	https://gitlab.freedesktop.org/drm/msm/-/issues/51
+> 
+> but I also want Thorsten's help to track this so that it gets fixed
+> before 6.8 is released.
+> 
+> #regzbot introduced: v6.7..v6.8-rc1
+> 
+> The following series is likely the culprit:
+> 
+> 	https://lore.kernel.org/all/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
+> 
+> Johan
