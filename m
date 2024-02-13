@@ -1,69 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B53D3B290;
-	Tue, 13 Feb 2024 12:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAC95EE65;
+	Tue, 13 Feb 2024 14:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707826848; cv=none; b=dHnpsX3jSEc/fo2LF9NwvD/9xPoqlmI3rqvznvLwoF/74igbXObHrUpQT3j9VpAO1j9PLS6cvlFJvyMkbqN3VokUfq4MdTC1vVsCeOj7Pgg+N1J6x6Z17IGPwy7YQPEm3/dpuUy9n/nyzQnwnunHkO32l5cgUOhuQ6utRU5rJeE=
+	t=1707835623; cv=none; b=A62ur7tlANma/n2g9lIxL0Ksr/CDVpqqTQEqOmvJmASloV6YqdvFx00ZowOSsJZwgL72iTTPD0xpOeAARfCy9snS4A3xG+REyijvvYPP3l4nLvNXw07rmvZUMllYl2M0BgE7Cy1WbgPFk8SENyTk/haGzNM6ngR2kzMVrHpjz9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707826848; c=relaxed/simple;
-	bh=OiY1tg+rp5p4VnA6O+alBRjPUgonckFtmecDW5BLEQ4=;
+	s=arc-20240116; t=1707835623; c=relaxed/simple;
+	bh=y41JaSKfeWVzFEq+5e6C1oXttwhw87cx5j4UR/t5CEQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n2Z2P+D0o0oaYMiCQR30WEwjqYS9FdvFFvFn/kYZqqIb70vPlrnqHaFSL6fIMs1ESvZOrIYOXqIYNuc44eow4+1LwgM5PZgktEp4V8ViTG1H7GiFUoyL3yhsFIxmIEX1LBbW0MB0ahRV8nZSi4jVN/u3WJqGN1qDuvzA6l8LsCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXXs+IoJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZcBH/OUlM7A4HK1bo+ategRkp3EoupNhSeN6j+wbIbuXWdWZ0AFOG2rMCkci2h3lOQtBaX2oSRg1nBip1GM/BslUwtQ4QWsJ5fK65Hh+NuoIkeL5C/Hptv22zJBrEcwk2KOO3xdeqB0bEWmTFOMl8nG1d1Ighzu69yMO6hwOLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xolAhlOy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXXs+IoJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF99C433C7;
-	Tue, 13 Feb 2024 12:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707826847;
-	bh=OiY1tg+rp5p4VnA6O+alBRjPUgonckFtmecDW5BLEQ4=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xolAhlOy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17313C433C7;
+	Tue, 13 Feb 2024 14:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707835622;
+	bh=y41JaSKfeWVzFEq+5e6C1oXttwhw87cx5j4UR/t5CEQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JXXs+IoJuH54pdmfur/LwUJFjsdG2nkQCHkHV6be9I/wFaE5J6gUnILJ+o01NmE2n
-	 K3GEs1CAwy8R6EONenYJCk5PZ+8xOkbGgYVwo9IH6RqASnT68Cr3Ge5jL/vudD17lL
-	 DtohObBRb8yl9NjrgJuPj3nylD58nwLvEmh3TIn42kgHw1ehxGr9N3wvIrb0aYGiiW
-	 htAePP7ILTce1aVMKUDu+Wq+ukiJpL52VVNgcLrVto0HDa1F6+kXbXvoJ8SaM8kPsm
-	 o2cCDCMB+7zbG+tpzoXVYbb2Js8l+s1n7VSey9dWXcMxvP7gjkn+z3wvKytU9tHdxy
-	 JocNMs+/qGI8w==
-Date: Tue, 13 Feb 2024 07:20:45 -0500
-From: Sasha Levin <sashal@kernel.org>
-To: Leo M <lmartinho03l@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: af_iucv kernel module fails to load on bootup / manual start via
- modprobe
-Message-ID: <ZctenWfjE_rpQxAX@sashalap>
-References: <CAJbWX8JREQs7wFtFOfkhXTNhP1wPg2qTUQAJVnUMDkMDFmNBFg@mail.gmail.com>
+	b=xolAhlOyVyuVZiyTDvGcKEtXr91VbRn3NP78HOEfVuOkMh+wvKqU4weNl61OENra5
+	 IxxbbSXJx9PMEBajc4PuoKVJVt1atEh3kJBNEfy9J/TeOa30svjeMS1kzQIXlXn1d9
+	 WLiZIyv76SL0gDQgCB4g09P7JnF2bsKhydBDnXvU=
+Date: Tue, 13 Feb 2024 15:46:59 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Ted Chang <tedchang2010@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, venkataprasad.potturu@amd.com,
+	"perex@perex.cz" <perex@perex.cz>, alsa-devel@alsa-project.org,
+	broonie@kernel.org, linux@leemhuis.info,
+	linux-sound@vger.kernel.org
+Subject: Re: [REGRESSION] Acp5x probing regression introduced between kernel
+ 6.7.2 -> 6.7.4
+Message-ID: <2024021342-overshoot-percent-a329@gregkh>
+References: <CAD_nV8BG0t7US=+C28kQOR==712MPfZ9m-fuKksgoZCgrEByCw@mail.gmail.com>
+ <CAD_nV8B=KSyOrASsbth=RmDV9ZUCipxhdJY3jY02C2jQ6Y34iA@mail.gmail.com>
+ <87bk8kkcbg.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJbWX8JREQs7wFtFOfkhXTNhP1wPg2qTUQAJVnUMDkMDFmNBFg@mail.gmail.com>
+In-Reply-To: <87bk8kkcbg.wl-tiwai@suse.de>
 
-On Mon, Feb 12, 2024 at 04:28:02PM +0100, Leo M wrote:
->Hello,
->
->* update to 5.10.197 included upstream changes from 6.x kernel.
->* in particular this:
->  * https://lore.kernel.org/all/20230917191101.257176910@linuxfoundation.org/
->  * this isn't an issue with the upstream state in the 6.x kernel as
->the problems this change might cause are alleviated by this commit
->that altered the way the iucv_if symbol was loaded:
->     * https://github.com/torvalds/linux/commit/4eb9eda6ba64114d98827e2870e024d5ab7cd35b
->
->In the current state the symbol is not loaded correctly and the
->feature is not working properly.
->
->This issue hasn't been resolved still and is in a broken state up to
->the current 5.10.x version. Is it possible to include this fix in the
->next 5.10.x version?
+On Tue, Feb 13, 2024 at 09:17:39AM +0100, Takashi Iwai wrote:
+> On Mon, 12 Feb 2024 15:32:45 +0100,
+> Ted Chang wrote:
+> > 
+> > 
+> > Hi everyone,
+> > Takashi Iwai suggested that I test OBS home:tiwai:bsc1219789 repo. His comment
+> > suggest he reverted commit
+> > c3ab23a10771bbe06300e5374efa809789c65455 ASoC: amd: Add new dmi entries for
+> > acp5x platform. My audio seems to work again
+> > 
+> > [    7.420289] acpi_cpufreq: overriding BIOS provided _PSD data
+> > [    7.439331] snd_pci_acp5x 0000:04:00.5: enabling device (0000 -> 0002)
+> > [    7.574796] snd_hda_intel 0000:04:00.1: enabling device (0000 -> 0002)
+> > [    7.574980] snd_hda_intel 0000:04:00.1: Handle vga_switcheroo audio client
+> > [    7.577788] kvm_amd: TSC scaling supported
+> > [    7.577794] kvm_amd: Nested Virtualization enabled
+> > [    7.577796] kvm_amd: Nested Paging enabled
+> > [    7.577799] kvm_amd: SEV enabled (ASIDs 1 - 14)
+> > [    7.577802] kvm_amd: SEV-ES disabled (ASIDs 0 - 0)
+> > [    7.577824] kvm_amd: Virtual VMLOAD VMSAVE supported
+> > [    7.577825] kvm_amd: Virtual GIF supported
+> > [    7.577827] kvm_amd: LBR virtualization supported
+> > [    7.589223] MCE: In-kernel MCE decoding enabled.
+> > [    7.590386] snd_hda_intel 0000:04:00.1: bound 0000:04:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
+> > [    7.591577] cs35l41 spi-VLV1776:00: supply VA not found, using dummy regulator
+> > [    7.591644] cs35l41 spi-VLV1776:00: supply VP not found, using dummy regulator
+> > [    7.595880] input: HD-Audio Generic HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input17
+> > [    7.596790] input: HD-Audio Generic HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input18
+> > 
+> > https://build.opensuse.org/project/show/home:tiwai:bsc1219789
+> > 
+> > Now I'm building a test kernel with the revert of the suspected backport patch.
+> > It's being built in OBS home:tiwai:bsc1219789 repo.  Please give it a try later once after the build finishes (takes an hour or so).
+> > 
+> > So the culprit was the stable commit 4b6986b170f2f23e390bbd2d50784caa9cb67093, which is the upstream commit c3ab23a10771bbe06300e5374efa809789c65455
+> >     ASoC: amd: Add new dmi entries for acp5x platform
+> 
+> Greg, could you revert the commit
+> 4b6986b170f2f23e390bbd2d50784caa9cb67093 on 6.7.y?
+> 
+> Apparently it caused the regression on Steam Deck, the driver probe
+> failed with that backport alone.
 
-I'll queue it up, thanks!
+Now reverted, as well as on 6.6.y and 6.1.y.
 
--- 
-Thanks,
-Sasha
+thanks,
+
+greg k-h
