@@ -1,111 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7817D58105;
-	Tue, 13 Feb 2024 14:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66A05F54C;
+	Tue, 13 Feb 2024 15:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835803; cv=none; b=Bnc0QRdNNNsLrxE/Dq+1P7MnQfkDHYaYIqZt6PPiuWAdyrf5hki7vY2qld4wlSp3hAW27Im9k6NlCWNgjdMdia5m+cbotQXCmA12kRHQ/hVNzHv3CIttcjXLtr7K/XBHp0QhjRurvTVaoNwMYr2AjRR4deIEdiG8NMx+YHxE65Q=
+	t=1707836495; cv=none; b=V4oI+gqvcxjOCOJZyhs6h2elpmA+n0Zf6iGpumDlNB3gJoYDA5uwxj8ids+T1G9t24HqjktFvxMGjBdp7szHgwbNv2DNoMC7G0S8LA/IdxqpTWLRNuoIsCnJ6NOpO4TqnwVw6LmVrWgaemD6g8AXkzcoKVoBqWtofF3ZHgpyrg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835803; c=relaxed/simple;
-	bh=AfXNvoDPfGxO4Tl8E8xiaQRy/lU+RIhza61C8gLWqgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tU8I8nUbyIyf14Zc9RU6xhyiIiIlVRxlI6ykoGpZvBkYKktfvwnyPZd7tECjX+gFhta4hT+J32mV68mSSVKR2aMKxDL1x78dgaMbpFFLy4TnKJZT0zs8XkGij35uS8nmLJHMEsQ79BZyLMljftUdnjeLGLSv53Cx3HO052YBWuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w8bAWb1u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w8bAWb1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B44C43390;
-	Tue, 13 Feb 2024 14:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707835803;
-	bh=AfXNvoDPfGxO4Tl8E8xiaQRy/lU+RIhza61C8gLWqgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=w8bAWb1ukEFNJfV6I2vn9aEwQWg/6XlUcLZXRxIfEHyaq/vDunwdWzBzqwvRy2JZC
-	 5YZNHPpJJMmkwg/F54tsVm13wCIJAwJPBcZYFLnyle0g6oRhilqmDU6qfC5DAda5Tz
-	 GmSKMn1lNhq5em/cXN5EWFt7A+5ctRgLZtbzHI7g=
-Date: Tue, 13 Feb 2024 15:50:00 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Sasha Levin <sashal@kernel.org>, David Laight <David.Laight@aculab.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] linux-6.6.y, minmax: virtual memory exhausted in
- i586 chroot during kernel compilation
-Message-ID: <2024021318-shifty-daybed-fca8@gregkh>
-References: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
+	s=arc-20240116; t=1707836495; c=relaxed/simple;
+	bh=80vLXOiXoOCTx/vCIvNl7N6ccNiqxnQSQ6P0aZ2qKGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P1Tpjgu2RUyLeUzmFbDWcQQIPFZj8Z4o1wQxqUgp9HM1DHA6GNasJXye3I2HwBW8Abtv8p+Vnp9sh11qQeMN39PsRDJSQtIPjahuOXkiLhkCR2igpjjJRnm3fGmz9Q1I3lTrms5P6Wx3ymwlilhocWBFJ5p8jSApIhiaRtbIHcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rZuHl-0006qk-4S; Tue, 13 Feb 2024 16:01:25 +0100
+Message-ID: <699726f6-8f5d-4482-8c27-8ea47a483f8a@leemhuis.info>
+Date: Tue, 13 Feb 2024 16:01:23 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] linux-6.6.y, minmax: virtual memory exhausted in
+ i586 chroot during kernel compilation
+Content-Language: en-US, de-DE
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Sasha Levin <sashal@kernel.org>, David Laight <David.Laight@aculab.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
+ <2024021318-shifty-daybed-fca8@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024021318-shifty-daybed-fca8@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707836493;cb9dcd70;
+X-HE-SMSGID: 1rZuHl-0006qk-4S
 
-On Mon, Feb 12, 2024 at 05:16:58PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi Greg, Sasha, and David,
-> 
-> I noticed a regression report in bugzilla.kernel.org that seems to be
-> specific to the linux-6.6.y series:
-> 
-> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218484 :
-> 
-> > After upgrading to version 6.6.16, the kernel compilation on a i586
-> > arch (on a 32bit chroot in a 64bit host) fails with a message:
-> > 
-> > virtual memory exhausted: Cannot allocate memory
-> > 
-> > this happens even lowering the number of parallel compilation
-> > threads. On a x86_64 arch the same problem doesn't occur. It's not
-> > clear whether some weird recursion is triggered that exhausts the
-> > memory, but it seems that the problem is caused by the patchset
-> > 'minmax' added to the 6.6.16 version, in particular it seems caused
-> > by these patches:
-> > 
-> > - minmax-allow-min-max-clamp-if-the-arguments-have-the-same-signedness.patch
-> > - minmax-fix-indentation-of-__cmp_once-and-__clamp_once.patch
-> > - minmax-allow-comparisons-of-int-against-unsigned-char-short.patch
-> > - minmax-relax-check-to-allow-comparison-between-unsigned-arguments-and-signed-constants.patch
-> > 
-> > Reverting those patches fixes the memory exhaustion problem during compilation.
-> 
-> The reporter later added:
-> 
-> > From a quick test the same problem doesn't occur in 6.8-rc4.
-> See the ticket for more details.
-> 
-> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-> not CCed them in mails like this.
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: 204c653d5d0c79940..9487d93f172acef
-> https://bugzilla.kernel.org/show_bug.cgi?id=218484
-> #regzbot title: minmax: virtual memory exhausted in 6.6.16 with i586 chroot
-> #regzbot ignore-activity
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> [1] because bugzilla.kernel.org tells users upon registration their
-> "email address will never be displayed to logged out users"
+On 13.02.24 15:50, Greg KH wrote:
+> On Mon, Feb 12, 2024 at 05:16:58PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> I noticed a regression report in bugzilla.kernel.org that seems to be
+>> specific to the linux-6.6.y series:
+>>
+>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218484 :
+>>
+>>> After upgrading to version 6.6.16, the kernel compilation on a i586
+>>> arch (on a 32bit chroot in a 64bit host) fails with a message:
+>>>
+>>> virtual memory exhausted: Cannot allocate memory
+>>>
+>>> this happens even lowering the number of parallel compilation
+>>> threads. On a x86_64 arch the same problem doesn't occur. It's not
+>>> clear whether some weird recursion is triggered that exhausts the
+>>> memory, but it seems that the problem is caused by the patchset
+>>> 'minmax' added to the 6.6.16 version, in particular it seems caused
+>>> by these patches:
+>>>
+>>> - minmax-allow-min-max-clamp-if-the-arguments-have-the-same-signedness.patch
+>>> - minmax-fix-indentation-of-__cmp_once-and-__clamp_once.patch
+>>> - minmax-allow-comparisons-of-int-against-unsigned-char-short.patch
+>>> - minmax-relax-check-to-allow-comparison-between-unsigned-arguments-and-signed-constants.patch
+>>>
+>>> Reverting those patches fixes the memory exhaustion problem during compilation.
+>>
+>> The reporter later added:
+>>
+>>> From a quick test the same problem doesn't occur in 6.8-rc4.
+>> See the ticket for more details.
+>
+> I think this was already fixed in 6.7 or Linus's tree, but I can't seem
+> to find the commit at the moment.
 
-I think this was already fixed in 6.7 or Linus's tree, but I can't seem
-to find the commit at the moment.
+I thought so as well, but was in the same situation. But your comment
+made me look again and now I found it: that was 31e97d7c9ae3de ("media:
+solo6x10: replace max(a, min(b, c)) by clamp(b, a, c)"), which indeed is
+not yet in 6.6.y.
 
-What file is causing the compiler to crash?  Is it some video or media
-driver?
+> What file is causing the compiler to crash?  Is it some video or media
+> driver?
 
-thanks,
-
-greg k-h
+HTH, Ciao, Thorsten
