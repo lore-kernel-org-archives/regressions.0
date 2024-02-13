@@ -1,156 +1,78 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EE6381D0
-	for <regressions@lists.linux.dev>; Tue, 13 Feb 2024 09:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF47838DD9
+	for <regressions@lists.linux.dev>; Tue, 13 Feb 2024 11:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707817861; cv=none; b=dnGNaDKnNKBF1nUR6sllm7e0lkughvjAG+8Yu19oyofPnHJXToQMb7jFlYy3HaGWv6UCq/BK5yCyiJmYHwUoYW/beXjvH3h8aGSA/HpYh1B16gGao3+pyJPgQ/h1MbUVS2dO2n7M1pseb67/KN26Y61kTrYbWb8/T40DyLIVTUs=
+	t=1707823316; cv=none; b=bzwASqMXMj7bB+iBiL8F2/Di+FHz+RtwcAvEbgklpl/npX4asFSgWouA1yc0Cmtto6B3JcNOfVzIc6QCCGj+2VgR8UPVQbxFfJ52ToA23LPrjo3HFHT51eavJa+lSXZFzuWPZzdLijIXFjIdkJqbQK1o+lccRDhvYLWbYqm6UaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707817861; c=relaxed/simple;
-	bh=du5IWnetsbefdXGP7RTt9oa3EydqVOtEqT7mUA/DKPM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ntGvhX7np1OQhrRu8LPejVD8hIBUUHVVJBIQPFAsJR3vQkF3EZtmBZWbTlgJDTBlGdsriLLK/ASYqqFtXr1chKkaqGoOAbaMp3ys6BzTXVQohVmh4Leb30UTWpfA/0sNj389qtBriXVjoztQJegUmHBOSlEA8bdlxKmz1QeLhto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CQiIePV5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ImQV3ToI; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1707823316; c=relaxed/simple;
+	bh=ePi7b1L8+8ZVCVaSbDzz3it0zkxtnGBp2AkmJlONslA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j3ONPnwgXeRLMvJjgbQgeYX/gEPlsUuAZnzthM3UPP1214TGKL+6pQScgbdv/WZM3+nHh/vf0BqYg+7wRtRhlnPV4sHjBevNSRCUPOJXBULVjeedDxHFA0iz4L3SCycghOmF2A2d4U0Gxgl9ZMrzhggoTYdDpOXPYmzH0Vcan9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=VzqN+8Yr; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CQiIePV5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ImQV3ToI"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id CD29E1800092;
-	Tue, 13 Feb 2024 04:50:56 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 13 Feb 2024 04:50:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1707817856; x=1707904256; bh=lHYsTK1bfv
-	xaz8ZLnxtMiOszwDEbZ3X5lHEYDDbn/s4=; b=CQiIePV5jYKolbhb+hZq6ezei6
-	Wtv+RrejZ+2KBZJy8yq2wk1h/pKErRHX/0afATPyG8zEIuqVvH9xMzssrPftbTri
-	4P/cU32EASZA4yUv/4HOUQXkxfl5tjyJH2SzluKJ/RHCgzIt4JTOLYO4L0UdXjft
-	V0ztrpdwdQXyGvGArBPS71XPPYRcHMoE3V+jpzpixBVZA+3qN+aGasQrhW4eeD5p
-	oqOIvFyKpDC+kBOd45QmnOnqZw2oRpsZbAtX1QA1QOujVs/TJKhy57itdo1r2EwR
-	knQXmQ0CV+PlVcgUPzySY5pIL1mwUqWff6ioVUP0+/d4JEdOtnx79ci35EGg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1707817856; x=1707904256; bh=lHYsTK1bfvxaz8ZLnxtMiOszwDEb
-	Z3X5lHEYDDbn/s4=; b=ImQV3ToIG2iFqj7LvNzhWlLy0JJpcQkwHH8CPhHvPF5M
-	fcGH6tgJDeM7mdornTeX3N/rp2b5+IiQrDku4RKRz4eibn98+wIbH95xgHOYhUhP
-	KRFXplMeo6lmUMEhxttLPiKIw38XzeOvdhDup6drNVtf597M1NzwUA5gKRUlDCkr
-	qNVPENfarayqRCd7xfPZFs0ZDHKsyHxEGWZllgpSGqgcloLNb0WexWxnkSzNNnSu
-	CR6Sjo5tjhX4KM9YlzTJRRBICQWPh76iOok3n6w51prR+0qx8iDZp/VS2PWmzaZR
-	BMG8EfBslDyJB7EPKvHhRbq3Z8bwZeGDgHobwJWF1A==
-X-ME-Sender: <xms:gDvLZfHHHEVOk9EVqJDdwZqjypKSMXu9MV_5mkY0WkB9kufUQ705YQ>
-    <xme:gDvLZcXDBeElJo3nFjgPksrliMVjZBMpXeJLcJuqKAWcu7nRNkZV8VJNTd7nTolTe
-    pLUeSVR2_KW5de04J4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:gDvLZRKxU0SaVK-LVEq_Aihz8OxEqONY9ITHaoAiKT5BTqsPiY4wtQ>
-    <xmx:gDvLZdH8M2Z93jqDfmKi8QDO-FyZk_FbrJWJw8op6zgsZzF2Py4LXw>
-    <xmx:gDvLZVUvNsTvd9l76WHdGPV-aKNFdj4BTkqcK_9Uqm0wnjIxdzLH_w>
-    <xmx:gDvLZafzJYs9f85v-Xjcw_OAiHiVON9oOLpKGDs687AFRn7oe_C44YxTmoQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id F075FB6008D; Tue, 13 Feb 2024 04:50:55 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="VzqN+8Yr"
+Received: from francesco-nb (unknown [5.170.16.17])
+	by mail11.truemail.it (Postfix) with ESMTPA id 1BAE620FCD;
+	Tue, 13 Feb 2024 12:21:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1707823311;
+	bh=ePi7b1L8+8ZVCVaSbDzz3it0zkxtnGBp2AkmJlONslA=; h=From:To:Subject;
+	b=VzqN+8YrhaAH5gFOKOiKHNv5ot8N4b+dQmpn+TsRdwQGqy6O1k5ZUsoSKz3UMjTHd
+	 QqqIJfLJEuzkYWXjuz2n9Z66RzE/7dfkbD6ceGdl9rOkTAJ6NtevIfzQDgzvpbacrE
+	 PrwZ0DY+V2cezvwDxhUyYfFD3XToC7llcOYXQZFOBcMWA2wYRezDTHBAl08Dv1mVGQ
+	 Ym0xDPQdScBccV/LX/96IftYdMGlfeyWOuq/OWSfbEkJ1CMnUszGZRA6SZUA137h0t
+	 b9XEFTeofAMWBAKsbpYeYrhDyvG1DtUnVqJSNlSkjP/Ntp0H3kXLha9yvNfPhNvk+Y
+	 633QCgKlW2Ziw==
+Date: Tue, 13 Feb 2024 12:21:46 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev,
+	Max Krummenacher <max.krummenacher@toradex.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Regression, i.MX7 boot failure, Linux v6.1.77
+Message-ID: <20240213112146.GA5874@francesco-nb>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <7723c9f1-fda7-4dc9-bb5a-e12d4908becf@app.fastmail.com>
-In-Reply-To: <1707024641-22460-9-git-send-email-quic_taozha@quicinc.com>
-References: <1707024641-22460-1-git-send-email-quic_taozha@quicinc.com>
- <1707024641-22460-9-git-send-email-quic_taozha@quicinc.com>
-Date: Tue, 13 Feb 2024 10:50:35 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Tao Zhang" <quic_taozha@quicinc.com>,
- "Mathieu Poirier" <mathieu.poirier@linaro.org>,
- "Suzuki K Poulose" <suzuki.poulose@arm.com>,
- "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
- "Konrad Dybcio" <konradybcio@gmail.com>,
- "Mike Leach" <mike.leach@linaro.org>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- regressions@lists.linux.dev
-Cc: "Mao Jinlong" <quic_jinlmao@quicinc.com>, "Leo Yan" <leo.yan@linaro.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- "Tingwei Zhang" <quic_tingweiz@quicinc.com>,
- "Yuanfang Zhang" <quic_yuanfang@quicinc.com>,
- "Trilok Soni" <quic_tsoni@quicinc.com>,
- "Song Chai" <quic_songchai@quicinc.com>, linux-arm-msm@vger.kernel.org,
- "Bjorn Andersson" <andersson@kernel.org>
-Subject: Re: [PATCH v7 08/10] coresight-tpdm: Add timestamp control register support
- for the CMB
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sun, Feb 4, 2024, at 06:30, Tao Zhang wrote:
+Hello Sasha,
+kernel v6.1.77 introduces a regression, with a boot failure, on i.MX7,
+with commit db30f469ae8b ("ARM: dts: imx7s: Fix nand-controller #size-cells").
 
-> @@ -910,7 +1014,7 @@ static struct attribute *tpdm_dsb_patt_attrs[] = {
->  	DSB_PATT_MASK_ATTR(5),
->  	DSB_PATT_MASK_ATTR(6),
->  	DSB_PATT_MASK_ATTR(7),
-> -	&dev_attr_enable_ts.attr,
-> +	DSB_PATT_ENABLE_TS,
->  	&dev_attr_set_type.attr,
->  	NULL,
->  };
-> @@ -964,6 +1068,7 @@ static struct attribute *tpdm_cmb_patt_attrs[] = {
->  	CMB_PATT_ATTR(1),
->  	CMB_PATT_MASK_ATTR(0),
->  	CMB_PATT_MASK_ATTR(1),
-> +	CMB_PATT_ENABLE_TS,
->  	NULL,
->  };
-> 
-> @@ -158,6 +175,10 @@
->  		tpdm_simple_dataset_rw(tpmr##nr,		\
->  		DSB_PATT_MASK, nr)
-> 
-> +#define DSB_PATT_ENABLE_TS					\
-> +		tpdm_patt_enable_ts(enable_ts,			\
-> +		DSB_PATT)
-> +
->  #define DSB_MSR_ATTR(nr)					\
->  		tpdm_simple_dataset_rw(msr##nr,			\
->  		DSB_MSR, nr)
+The issue is known [1][2], changing `#size-cells = <0>` is formally
+correct, but do not play well with the firmware that are deployed on
+those embedded devices, leading to a boot failure.
 
-This is causing build failures in linux-next now:
+A mitigation was implemented in the Linux kernel,
+commit 84549c816dc3 ("mtd: parsers: ofpart: add workaround for #size-cells 0")
+that was merged into v6.3, the firmware was also fixed, however existing
+device using old firmware will not boot anymore if updating to a newer
+kernel.
 
-drivers/hwtracing/coresight/coresight-tpdm.c:1055:2: error: missing field 'idx' initializer [-Werror,-Wmissing-field-initializers]
- 1055 |         DSB_PATT_ENABLE_TS,
-      |         ^
-drivers/hwtracing/coresight/coresight-tpdm.h:184:3: note: expanded from macro 'DSB_PATT_ENABLE_TS'
-  184 |                 tpdm_patt_enable_ts(enable_ts,                  \
-      |                 ^
-drivers/hwtracing/coresight/coresight-tpdm.h:156:5: note: expanded from macro 'tpdm_patt_enable_ts'
-  156 |            }                                                    \
-      |            ^
-drivers/hwtracing/coresight/coresight-tpdm.c:1109:2: error: missing field 'idx' initializer [-Werror,-Wmissing-field-initializers]
- 1109 |         CMB_PATT_ENABLE_TS,
-      |         ^
-drivers/hwtracing/coresight/coresight-tpdm.h:208:3: note: expanded from macro 'CMB_PATT_ENABLE_TS'
-  208 |                 tpdm_patt_enable_ts(enable_ts,                  \
-      |                 ^
-drivers/hwtracing/coresight/coresight-tpdm.h:156:5: note: expanded from macro 'tpdm_patt_enable_ts'
-  156 |            }                                                    \
-      |            ^
+I would ask you to drop such a patch from any stable patches queue and
+not backport it to any older kernel.
 
-Not sure what is going on, so I reverted your patch locally
-for my test setup.
-Can you send a fix to make it build again?
+To fix v6.1.y I see two options:
+ - backport 84549c816dc3
+ - revert db30f469ae8b
 
-      Arnd
+What do you prefer? Should I send myself a patch?
+
+[1] https://lore.kernel.org/all/Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com/
+[2] https://lore.kernel.org/all/20221202071900.1143950-1-francesco@dolcini.it/
+
+Francesco
+
