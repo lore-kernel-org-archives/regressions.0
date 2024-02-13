@@ -1,111 +1,122 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A87B605BF
-	for <regressions@lists.linux.dev>; Tue, 13 Feb 2024 18:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1FC6087A;
+	Tue, 13 Feb 2024 19:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707848497; cv=none; b=Tvzbrj4of2vBiptssf6To4rhtnYp8aZCAu9vwVDkBudizD73WIAPVqJ6VjlF75ZuUGZLnU2FOHkupDYXRBUagsQUXS6SBVRs8+fb6CtSH6RZ55yGEypE6IogzXoDhU64q5kjwwrlPEzG4BhJCXR2+cFFXXRK52smfo54KKNkg28=
+	t=1707851932; cv=none; b=m3Zcq7OSVRDNJwU7CVCWDu/6XcGGGae8DHZu1J+mWhrIibylhD7OI81BNdcItfZJRVIo0yMjskPi7X7vwplwG3KGrBOYuOlBINTVXrIr8Q4tM9oSpniR7Wlm+fe167jYGqivSrpWIowokYCD8GXEp87He+ka4FEWMI9BS3SGts8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707848497; c=relaxed/simple;
-	bh=hwajgSbZypT3uCqwUd9BeVCG81p8AYheELlUfLV4ojA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=atmROc6PZmESeEc6nMWTAzu3BFd78HnA86o/m5MQ1ei7Rj1C9Q7dJkD+8NH15QjutCbf8ztEK3++TTNOlMEtLS7G5WAWFoK+QjT1cdAM0VBs0oG9BcHtlzd0yAw1il9foxh/mHc/LTvjoWP8yZzkvmUk+TJ/xz1v9GCyAi7Y5eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q3Y3kGLZ; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1707851932; c=relaxed/simple;
+	bh=LNkRcqZzqWUlcmMLEyiRGpW2jfqARCsrz7SFPIcor6U=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qo1N3o1OJdn3kAbtZzz/5BLncJDf419ZGNcjEMom0T3iyBRppy6t7/KMoT4u47lqAX4+Rmtp7x82D51uVTdmzN6oXaqyKhmb4mLqQglr9cQlHovj2+sSTuwuUP3mWS8XAabINIGEXHp6yrzAC3A4pB3biicOB42rYcmhqZyBZTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFaBL40j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q3Y3kGLZ"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7d5fce59261so2585252241.3
-        for <regressions@lists.linux.dev>; Tue, 13 Feb 2024 10:21:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707848494; x=1708453294; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=p0gWEJ+hXgQI6y33M/nb2B6h4Ud8BJXSfxP0ajpNo3E=;
-        b=Q3Y3kGLZcYGwW2aY4sNsTMEiRUcPEpaPKGJBzAnAWZxsuJWzAsVTBwF7MFlxExrAmw
-         JKELsDcnVzuMm6uz97RZKWPsXlGXhnc+Y/mP+/Q2t96wNl6k1xZi2xzg9CVYFGr3uBAF
-         NVcpJyY5B1J+Q45G8UgBsFeMWZzBKawpoyDpxm8RCSU7OG1COUJN2ZUQziho7RNIWdux
-         jroG/PJk38oCxBZKCCOVwbTDaorKUU0P9pFQKF0GAqptK2E5nLuh1Vc1vYvlyhnqwjrC
-         5Y7Zoa1tdoOxz05kWWzixoRkrYXtZ/5bNXAEQV7RxPmiWqZuXmfOEmVD1cvVp1nTJ5nK
-         MOOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707848494; x=1708453294;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p0gWEJ+hXgQI6y33M/nb2B6h4Ud8BJXSfxP0ajpNo3E=;
-        b=GNIbw0kbWVBbq2PLMJ9tSEmZPRo9VjEU2W1n/QYlk4M6mjxdL7Gk0RvCU+10B9gEaM
-         GinrxOa45FvJ7xI7Xa9dlqvOQA1sbNUkQqq03at1lWfdG5BeoQ19uRq5yv1O33UEa3ow
-         LU0VEMg2L5mVCnLv3nobS6/8jMnOCR3EFJLQMX5PHWDijtj8i3sUt7AF0/nP9h5j+7uy
-         Etlh+a04RGfYVuOuoZ8ffkxXRcHZAkeXOFb4xhYVHPW/ouW765y2XHRVPlrhWc36K9kA
-         FoNGMNt4YUcANFb++IUVQF69u/zGusLcSHmtb+WA4Pisy933fAUILNzRfpAjgNCkCpSn
-         aSxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUBWkt2UNuhlnUEVcEAch9GaKpp2hJ9dUdL7+EAcgt1AVLnpGI4uwzcz17hgouZnhNYcMP4cREPfo0zy474xWmNEtd5ERFAWSKuDA=
-X-Gm-Message-State: AOJu0YzPWMuwbFo9Q2tem3bpWdtouDLm6+9mQVaB9rVJ08Fkc+pezSZG
-	0+W+idkTi3O2s53IgBpu/bvlSaHxnZGdMz9yJyWlcrMaV7PNZ5ZbEp0g7B5bOaGvtis8tWeQIt3
-	q9qzQp1NWfLzr2MbzRTtvmNxVAfV/MxCsmHb11g==
-X-Google-Smtp-Source: AGHT+IGmhU25oRCBMvi87vQXz5j+wxayC1GfXzxhpbI42FH/k5Xpj0vwSotgSlTsoBlE3Xvyg5Zd6UYFCnMRjdGj1Fs=
-X-Received: by 2002:a1f:df03:0:b0:4c0:34e8:d55d with SMTP id
- w3-20020a1fdf03000000b004c034e8d55dmr356808vkg.11.1707848494292; Tue, 13 Feb
- 2024 10:21:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFaBL40j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8728BC433F1;
+	Tue, 13 Feb 2024 19:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707851932;
+	bh=LNkRcqZzqWUlcmMLEyiRGpW2jfqARCsrz7SFPIcor6U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fFaBL40jCaGdcY8hxkqXjlB/TY1qX0NYZwb34PBBvfzZ0qe528UtCZzRxjHQtqALJ
+	 pmyR4WGnEzzHjAta4GM1jXK7CeS2jvARKpIG9Gs0BxDSF64uQ1Rjb8cxZIXy3e+A2O
+	 uEpycNEw3g0rUk6O++Af/C6/Tox2204+5rU/E2BCUsKYIKrU3/Ljhy+jgPhp6m1Mjw
+	 V/NI054dDLBNuhJIAAM3iYNAqUnp1ft+ImmNi7chu3vGmnDCnnqVJxVL1VkC501x3Z
+	 KwU4f/yP7SZ7LZSB+dun394MJiRD/teSNZJQ23mfEEngOI6qA1aIqPldy7DcJKywm/
+	 5/gkpdyyceW2Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rZyIq-002tFi-HZ;
+	Tue, 13 Feb 2024 19:18:50 +0000
+Date: Tue, 13 Feb 2024 19:18:48 +0000
+Message-ID: <87il2sw4tj.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: WARNING: arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap
+In-Reply-To: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
+References: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 13 Feb 2024 23:51:23 +0530
-Message-ID: <CA+G9fYuVJ3DfmOR2GxbVmLqh_d=3y_wTXX-vQOUgp86uX-3oGg@mail.gmail.com>
-Subject: WARNING: arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Marc Zyngier <maz@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: naresh.kamboju@linaro.org, linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, suzuki.poulose@arm.com, m.szyprowski@samsung.com, catalin.marinas@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Following kernel warning notices on all arm64 devices on today's Linux
-next-20240213 tag.
+On Tue, 13 Feb 2024 18:21:23 +0000,
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> 
+> Following kernel warning notices on all arm64 devices on today's Linux
+> next-20240213 tag.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+What is the sense of this tag, and even of this email, for an issue
+that has already been reported, as outlined below?
 
-[    0.038524] SMP: Total of 6 processors activated.
-[    0.038539] CPU: All CPU(s) started at EL2
-[    0.038588] CPU features: detected: 32-bit EL0 Support
-[    0.038602] CPU features: detected: 32-bit EL1 Support
-[    0.038620] CPU features: detected: CRC32 instructions
-[    0.038650] ------------[ cut here ]------------
-[    0.038656] WARNING: CPU: 0 PID: 1 at
-arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap+0x1c/0x70
-[    0.038691] Modules linked in:
-[    0.038707] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-6.8.0-rc4-next-20240213 #1
-[    0.038721] Hardware name: Radxa ROCK Pi 4B (DT)
-[    0.038729] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.038744] pc : this_cpu_has_cap+0x1c/0x70
-[    0.038761] lr : has_nv1+0x28/0xe8
-..
-[    0.039008] Call trace:
-[    0.039014]  this_cpu_has_cap+0x1c/0x70
-[    0.039031]  update_cpu_capabilities+0xd4/0x138
-[    0.039048]  setup_system_features+0x38/0x130
-[    0.039075]  smp_cpus_done+0x50/0xc8
-[    0.039094]  smp_init+0x84/0xa0
-[    0.039109]  kernel_init_freeable+0x11c/0x400
-[    0.039126]  kernel_init+0x28/0x1f0
-[    0.039148]  ret_from_fork+0x10/0x20
-[    0.039167] ---[ end trace 0000000000000000 ]---
+> 
+> [    0.038524] SMP: Total of 6 processors activated.
+> [    0.038539] CPU: All CPU(s) started at EL2
+> [    0.038588] CPU features: detected: 32-bit EL0 Support
+> [    0.038602] CPU features: detected: 32-bit EL1 Support
+> [    0.038620] CPU features: detected: CRC32 instructions
+> [    0.038650] ------------[ cut here ]------------
+> [    0.038656] WARNING: CPU: 0 PID: 1 at
+> arch/arm64/kernel/cpufeature.c:3369 this_cpu_has_cap+0x1c/0x70
+> [    0.038691] Modules linked in:
+> [    0.038707] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 6.8.0-rc4-next-20240213 #1
+> [    0.038721] Hardware name: Radxa ROCK Pi 4B (DT)
+> [    0.038729] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    0.038744] pc : this_cpu_has_cap+0x1c/0x70
+> [    0.038761] lr : has_nv1+0x28/0xe8
+> ..
+> [    0.039008] Call trace:
+> [    0.039014]  this_cpu_has_cap+0x1c/0x70
+> [    0.039031]  update_cpu_capabilities+0xd4/0x138
+> [    0.039048]  setup_system_features+0x38/0x130
+> [    0.039075]  smp_cpus_done+0x50/0xc8
+> [    0.039094]  smp_init+0x84/0xa0
+> [    0.039109]  kernel_init_freeable+0x11c/0x400
+> [    0.039126]  kernel_init+0x28/0x1f0
+> [    0.039148]  ret_from_fork+0x10/0x20
+> [    0.039167] ---[ end trace 0000000000000000 ]---
+> 
+> 
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/test/check-kernel-exception/log
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/tests/
+> 
+> This issue has been addressed in the relevant email thread,
+> https://lore.kernel.org/all/0593516b-2419-49b7-83aa-fe189ffad0c2@arm.com/
 
+Correct link:
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/test/check-kernel-exception/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240213/testrun/22596318/suite/log-parser-boot/tests/
+https://lore.kernel.org/all/86bk8k5ts3.wl-maz@kernel.org/
 
-This issue has been addressed in the relevant email thread,
-https://lore.kernel.org/all/0593516b-2419-49b7-83aa-fe189ffad0c2@arm.com/
+> I will test the corresponding fix patch and get back to you.
 
-I will test the corresponding fix patch and get back to you.
+Thanks,
 
---
-Linaro LKFT
-https://lkft.linaro.org
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
