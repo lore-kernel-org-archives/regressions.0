@@ -1,42 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAC95EE65;
-	Tue, 13 Feb 2024 14:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7817D58105;
+	Tue, 13 Feb 2024 14:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835623; cv=none; b=A62ur7tlANma/n2g9lIxL0Ksr/CDVpqqTQEqOmvJmASloV6YqdvFx00ZowOSsJZwgL72iTTPD0xpOeAARfCy9snS4A3xG+REyijvvYPP3l4nLvNXw07rmvZUMllYl2M0BgE7Cy1WbgPFk8SENyTk/haGzNM6ngR2kzMVrHpjz9w=
+	t=1707835803; cv=none; b=Bnc0QRdNNNsLrxE/Dq+1P7MnQfkDHYaYIqZt6PPiuWAdyrf5hki7vY2qld4wlSp3hAW27Im9k6NlCWNgjdMdia5m+cbotQXCmA12kRHQ/hVNzHv3CIttcjXLtr7K/XBHp0QhjRurvTVaoNwMYr2AjRR4deIEdiG8NMx+YHxE65Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835623; c=relaxed/simple;
-	bh=y41JaSKfeWVzFEq+5e6C1oXttwhw87cx5j4UR/t5CEQ=;
+	s=arc-20240116; t=1707835803; c=relaxed/simple;
+	bh=AfXNvoDPfGxO4Tl8E8xiaQRy/lU+RIhza61C8gLWqgw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZcBH/OUlM7A4HK1bo+ategRkp3EoupNhSeN6j+wbIbuXWdWZ0AFOG2rMCkci2h3lOQtBaX2oSRg1nBip1GM/BslUwtQ4QWsJ5fK65Hh+NuoIkeL5C/Hptv22zJBrEcwk2KOO3xdeqB0bEWmTFOMl8nG1d1Ighzu69yMO6hwOLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xolAhlOy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tU8I8nUbyIyf14Zc9RU6xhyiIiIlVRxlI6ykoGpZvBkYKktfvwnyPZd7tECjX+gFhta4hT+J32mV68mSSVKR2aMKxDL1x78dgaMbpFFLy4TnKJZT0zs8XkGij35uS8nmLJHMEsQ79BZyLMljftUdnjeLGLSv53Cx3HO052YBWuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=w8bAWb1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xolAhlOy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17313C433C7;
-	Tue, 13 Feb 2024 14:47:01 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="w8bAWb1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B44C43390;
+	Tue, 13 Feb 2024 14:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707835622;
-	bh=y41JaSKfeWVzFEq+5e6C1oXttwhw87cx5j4UR/t5CEQ=;
+	s=korg; t=1707835803;
+	bh=AfXNvoDPfGxO4Tl8E8xiaQRy/lU+RIhza61C8gLWqgw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xolAhlOyVyuVZiyTDvGcKEtXr91VbRn3NP78HOEfVuOkMh+wvKqU4weNl61OENra5
-	 IxxbbSXJx9PMEBajc4PuoKVJVt1atEh3kJBNEfy9J/TeOa30svjeMS1kzQIXlXn1d9
-	 WLiZIyv76SL0gDQgCB4g09P7JnF2bsKhydBDnXvU=
-Date: Tue, 13 Feb 2024 15:46:59 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Ted Chang <tedchang2010@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, venkataprasad.potturu@amd.com,
-	"perex@perex.cz" <perex@perex.cz>, alsa-devel@alsa-project.org,
-	broonie@kernel.org, linux@leemhuis.info,
-	linux-sound@vger.kernel.org
-Subject: Re: [REGRESSION] Acp5x probing regression introduced between kernel
- 6.7.2 -> 6.7.4
-Message-ID: <2024021342-overshoot-percent-a329@gregkh>
-References: <CAD_nV8BG0t7US=+C28kQOR==712MPfZ9m-fuKksgoZCgrEByCw@mail.gmail.com>
- <CAD_nV8B=KSyOrASsbth=RmDV9ZUCipxhdJY3jY02C2jQ6Y34iA@mail.gmail.com>
- <87bk8kkcbg.wl-tiwai@suse.de>
+	b=w8bAWb1ukEFNJfV6I2vn9aEwQWg/6XlUcLZXRxIfEHyaq/vDunwdWzBzqwvRy2JZC
+	 5YZNHPpJJMmkwg/F54tsVm13wCIJAwJPBcZYFLnyle0g6oRhilqmDU6qfC5DAda5Tz
+	 GmSKMn1lNhq5em/cXN5EWFt7A+5ctRgLZtbzHI7g=
+Date: Tue, 13 Feb 2024 15:50:00 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Sasha Levin <sashal@kernel.org>, David Laight <David.Laight@aculab.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] linux-6.6.y, minmax: virtual memory exhausted in
+ i586 chroot during kernel compilation
+Message-ID: <2024021318-shifty-daybed-fca8@gregkh>
+References: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,53 +41,70 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87bk8kkcbg.wl-tiwai@suse.de>
+In-Reply-To: <f9f89284-0f48-4971-ad8d-86938a82fafc@leemhuis.info>
 
-On Tue, Feb 13, 2024 at 09:17:39AM +0100, Takashi Iwai wrote:
-> On Mon, 12 Feb 2024 15:32:45 +0100,
-> Ted Chang wrote:
-> > 
-> > 
-> > Hi everyone,
-> > Takashi Iwai suggested that I test OBS home:tiwai:bsc1219789 repo. His comment
-> > suggest he reverted commit
-> > c3ab23a10771bbe06300e5374efa809789c65455 ASoC: amd: Add new dmi entries for
-> > acp5x platform. My audio seems to work again
-> > 
-> > [    7.420289] acpi_cpufreq: overriding BIOS provided _PSD data
-> > [    7.439331] snd_pci_acp5x 0000:04:00.5: enabling device (0000 -> 0002)
-> > [    7.574796] snd_hda_intel 0000:04:00.1: enabling device (0000 -> 0002)
-> > [    7.574980] snd_hda_intel 0000:04:00.1: Handle vga_switcheroo audio client
-> > [    7.577788] kvm_amd: TSC scaling supported
-> > [    7.577794] kvm_amd: Nested Virtualization enabled
-> > [    7.577796] kvm_amd: Nested Paging enabled
-> > [    7.577799] kvm_amd: SEV enabled (ASIDs 1 - 14)
-> > [    7.577802] kvm_amd: SEV-ES disabled (ASIDs 0 - 0)
-> > [    7.577824] kvm_amd: Virtual VMLOAD VMSAVE supported
-> > [    7.577825] kvm_amd: Virtual GIF supported
-> > [    7.577827] kvm_amd: LBR virtualization supported
-> > [    7.589223] MCE: In-kernel MCE decoding enabled.
-> > [    7.590386] snd_hda_intel 0000:04:00.1: bound 0000:04:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
-> > [    7.591577] cs35l41 spi-VLV1776:00: supply VA not found, using dummy regulator
-> > [    7.591644] cs35l41 spi-VLV1776:00: supply VP not found, using dummy regulator
-> > [    7.595880] input: HD-Audio Generic HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input17
-> > [    7.596790] input: HD-Audio Generic HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input18
-> > 
-> > https://build.opensuse.org/project/show/home:tiwai:bsc1219789
-> > 
-> > Now I'm building a test kernel with the revert of the suspected backport patch.
-> > It's being built in OBS home:tiwai:bsc1219789 repo.  Please give it a try later once after the build finishes (takes an hour or so).
-> > 
-> > So the culprit was the stable commit 4b6986b170f2f23e390bbd2d50784caa9cb67093, which is the upstream commit c3ab23a10771bbe06300e5374efa809789c65455
-> >     ASoC: amd: Add new dmi entries for acp5x platform
+On Mon, Feb 12, 2024 at 05:16:58PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi Greg, Sasha, and David,
 > 
-> Greg, could you revert the commit
-> 4b6986b170f2f23e390bbd2d50784caa9cb67093 on 6.7.y?
+> I noticed a regression report in bugzilla.kernel.org that seems to be
+> specific to the linux-6.6.y series:
 > 
-> Apparently it caused the regression on Steam Deck, the driver probe
-> failed with that backport alone.
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218484 :
+> 
+> > After upgrading to version 6.6.16, the kernel compilation on a i586
+> > arch (on a 32bit chroot in a 64bit host) fails with a message:
+> > 
+> > virtual memory exhausted: Cannot allocate memory
+> > 
+> > this happens even lowering the number of parallel compilation
+> > threads. On a x86_64 arch the same problem doesn't occur. It's not
+> > clear whether some weird recursion is triggered that exhausts the
+> > memory, but it seems that the problem is caused by the patchset
+> > 'minmax' added to the 6.6.16 version, in particular it seems caused
+> > by these patches:
+> > 
+> > - minmax-allow-min-max-clamp-if-the-arguments-have-the-same-signedness.patch
+> > - minmax-fix-indentation-of-__cmp_once-and-__clamp_once.patch
+> > - minmax-allow-comparisons-of-int-against-unsigned-char-short.patch
+> > - minmax-relax-check-to-allow-comparison-between-unsigned-arguments-and-signed-constants.patch
+> > 
+> > Reverting those patches fixes the memory exhaustion problem during compilation.
+> 
+> The reporter later added:
+> 
+> > From a quick test the same problem doesn't occur in 6.8-rc4.
+> See the ticket for more details.
+> 
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CCed them in mails like this.
+> 
+> [TLDR for the rest of this mail: I'm adding this report to the list of
+> tracked Linux kernel regressions; the text you find below is based on a
+> few templates paragraphs you might have encountered already in similar
+> form.]
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: 204c653d5d0c79940..9487d93f172acef
+> https://bugzilla.kernel.org/show_bug.cgi?id=218484
+> #regzbot title: minmax: virtual memory exhausted in 6.6.16 with i586 chroot
+> #regzbot ignore-activity
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> [1] because bugzilla.kernel.org tells users upon registration their
+> "email address will never be displayed to logged out users"
 
-Now reverted, as well as on 6.6.y and 6.1.y.
+I think this was already fixed in 6.7 or Linus's tree, but I can't seem
+to find the commit at the moment.
+
+What file is causing the compiler to crash?  Is it some video or media
+driver?
 
 thanks,
 
