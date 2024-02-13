@@ -1,64 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D193F5D91C;
-	Tue, 13 Feb 2024 16:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C158C57885;
+	Tue, 13 Feb 2024 17:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707840990; cv=none; b=Iqf6FhKvwXm0VdsQCIpntuDDHS1SjmalOpt6rt6seM0KipadFVfcTNpRi53w1Yz4V79OBh/A/A3EPFy4iRHY8PBriQtxeCuAO8ktSO6YhsCWzxgEXAP7D6WLG5RCDaF7SeCwq9NEb4/Ox1BS4V7wXUa2D9p2FltIDpYU/bQAvek=
+	t=1707846055; cv=none; b=PxCfa3LTr0DKR9nivBRJfMsHdR9gsy4NpW65pRLYYk1XvweVNzaP/nSWtLmqhDmJ3XkPNfqg+kpGvPxPtJvzhC8Vy3DP+/pDPlHEBWbe/yjBEsDQ+8mjmlWQylDZcN5YR8M1MI7R7wgIyhmmO9gFpedvOK6GBYh9BcD3I0SmQb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707840990; c=relaxed/simple;
-	bh=aDfcC0c2fEwxFlZz3qnQvW4FWiuHFhhXOXHq2n0HXYQ=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=Tzb+iqm49jYl9qA/ukFhlw+6bYpUb7gOXYWc62fXq3w4Bx4jcS8E0U4K3uqEXW7hAfLDH1K5gHdKhp+xeBKUJCsQcYCmUGFIFavh3uOemJQjsuj+MwnrQ5KgbjkPbleMOWn/+fnbHXHSy5nMpn2uc81iw936GFVbtpDW44ZnIEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZSa2QvKm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707846055; c=relaxed/simple;
+	bh=Sd9CLlPoRS75YYDQ+Y747ljqjeQmBo+XdoXXJqwonrU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jG4VEFCGtt0GnfRqfHXo71aq2Km3gYjkMVseLhe5VB+dMJJnALrWue90X/MLeaP5Nyt+ba7ldWT6NV39Fk3S+S3oeOvto2UAf7AHgeTeE+WnFIZ+oejdv1TvFmHg5k4vme/WyoxwvhSBSsBbAfxSx0aw0faRwmhzC67abncng6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IhOU/cN5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZSa2QvKm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1031C433F1;
-	Tue, 13 Feb 2024 16:16:29 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IhOU/cN5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31656C433F1;
+	Tue, 13 Feb 2024 17:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707840990;
-	bh=aDfcC0c2fEwxFlZz3qnQvW4FWiuHFhhXOXHq2n0HXYQ=;
-	h=Subject:To:Cc:From:Date:From;
-	b=ZSa2QvKmikzYCyWi6j4Bqg2H06kXNfU1ta+5oAXVrCi0AM8fzeTUUhaNA3m30lI1z
-	 EEDo2941MvOQOm3nIBSm0fP1FKKpkhlZzC7ZFnI28yF7yohH4Yy518CRCvRH1GpGei
-	 NP4RDKpkFYzv7jG1XQdSxHf0yYn5ZFr3LXPiwU+M=
-Subject: Patch "net: Fix from address in memcpy_to_iter_csum()" has been added to the 6.7-stable tree
-To: bevan@bi-co.net,davem@davemloft.net,dhowells@redhat.com,gregkh@linuxfoundation.org,jaltman@auristor.com,regressions@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Tue, 13 Feb 2024 17:16:27 +0100
-Message-ID: <2024021327-contrite-skimmer-f95c@gregkh>
+	s=korg; t=1707846055;
+	bh=Sd9CLlPoRS75YYDQ+Y747ljqjeQmBo+XdoXXJqwonrU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IhOU/cN5s+lhkANmKp/2CmClDeke87ahgsIWegYJIjjoB5Q9i1Y770avMPAi40+K3
+	 SGvhhP7nwAYXQNvZQcoWz/7iA1aCbPL4TByQDoPfwjZMUzczykTgTbkNdnRV1OIDL1
+	 9TIAqWyV63cWnkZmEjORRuhjM85TgpflMDOrdwss=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	David Howells <dhowells@redhat.com>,
+	regressions@lists.linux.dev,
+	Michael Lass <bevan@bi-co.net>,
+	Jeffrey Altman <jaltman@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 6.7 124/124] net: Fix from address in memcpy_to_iter_csum()
+Date: Tue, 13 Feb 2024 18:22:26 +0100
+Message-ID: <20240213171857.348322363@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.1
+In-Reply-To: <20240213171853.722912593@linuxfoundation.org>
+References: <20240213171853.722912593@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
 
+6.7-stable review patch.  If anyone has any objections, please let me know.
 
-This is a note to let you know that I've just added the patch titled
-
-    net: Fix from address in memcpy_to_iter_csum()
-
-to the 6.7-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     net-fix-from-address-in-memcpy_to_iter_csum.patch
-and it can be found in the queue-6.7 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From fe92f874f09145a6951deacaa4961390238bbe0d Mon Sep 17 00:00:00 2001
-From: Michael Lass <bevan@bi-co.net>
-Date: Wed, 31 Jan 2024 16:52:20 +0100
-Subject: net: Fix from address in memcpy_to_iter_csum()
+------------------
 
 From: Michael Lass <bevan@bi-co.net>
 
@@ -95,6 +88,3 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	return 0;
 
 
-Patches currently in stable-queue which might be from bevan@bi-co.net are
-
-queue-6.7/net-fix-from-address-in-memcpy_to_iter_csum.patch
