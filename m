@@ -1,132 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5295A4FD;
-	Wed, 14 Feb 2024 14:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1DC5CDC9
+	for <regressions@lists.linux.dev>; Wed, 14 Feb 2024 15:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707921887; cv=none; b=AMgtsnMz1SvKWIztpEhczSIFbMH/FKM8rq3DvEpUGWAmLbA5tEcGKZ6JTwwiaCSBRxBSEmUjdWfpqy8TyzNet6XJxHkPPEse3fzucI9tvKUpFtoi0+C+7+xOHnTpCnnR05/p4y5AhUg5ooycyUX/L3DeqvjLqZVi73x7xAoSgXM=
+	t=1707924274; cv=none; b=E0Hb+k2l2G3SJCrtWzFYqiD0z4kGNrnAhxGU51PKY9KsF8JLtRApALcER2EeaW3mv1p8Qs7bldXbXZOlBGRxIT2eiJbjBNT+uHonlfBXYL/07JBpGmq6MMYra4MSQYP0xVb+2Nv7rDL+xC9ejd+Ii2PC2BnDrwc08z1KCPmWFWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707921887; c=relaxed/simple;
-	bh=Q9eBesZ5QD6ZC02ZVDqG4p5BGWCeCIzNlp1bEssnMFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IDLu0DGmjclzm9uuxi4lUUbs3MtzQJDpMZR+5F8zS4PN03HRAFEbsiQzMZxa5d7vrMx6FdWC+RGz1s2vaD51LbW1n1B0TDGVwGqlt38M/m3mWukjc4XZSPvbpbqaKiL2FyAFgQnnV/0S39uViBsBsdEo//nzpxkZ1XUWbe9uAXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816B7C433F1;
-	Wed, 14 Feb 2024 14:44:46 +0000 (UTC)
-Date: Wed, 14 Feb 2024 09:46:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jeff Johnson
- <quic_jjohnson@quicinc.com>
-Subject: Re: [regression] tracing: kmemleak warning in
- allocate_cmdlines_buffer()
-Message-ID: <20240214094617.1e6ec684@gandalf.local.home>
-In-Reply-To: <87r0hfnr9r.fsf@kernel.org>
-References: <87r0hfnr9r.fsf@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707924274; c=relaxed/simple;
+	bh=1YQo64D1oz09XMbdqUefryZO0yVS6EoeHUwBc5W+P5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=eskUhc8tjwAK+FCCeSTlgrcCR0PB/mK3TFN1qEghQnZ4zokS9AcRZZejVNNXVxnb/AykVAoq6Kg8tSKtdnErGvRGyL0cOZKQdcG3xs3BE4Occ70sMf+ja7Gzc01vaQav+FoKOrrr9A3wY5EmeZOEU8AMrDetyPQrukXx39peHP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raH7Y-0008GS-HY; Wed, 14 Feb 2024 16:24:24 +0100
+Message-ID: <a8d4250a-857e-40db-bcbc-8082013cdf05@leemhuis.info>
+Date: Wed, 14 Feb 2024 16:24:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING
+ in raid5d""
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240125082131.788600-1-song@kernel.org>
+ <a68c06ec-b303-4caf-ac39-882a1acb75b1@leemhuis.info>
+In-Reply-To: <a68c06ec-b303-4caf-ac39-882a1acb75b1@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707924272;99ef6659;
+X-HE-SMSGID: 1raH7Y-0008GS-HY
 
-On Wed, 14 Feb 2024 14:50:56 +0200
-Kalle Valo <kvalo@kernel.org> wrote:
-
-> Hi Steven,
+On 27.01.24 09:25, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 25.01.24 09:21, Song Liu wrote:
+>> This reverts commit bed9e27baf52a09b7ba2a3714f1e24e17ced386d.
+>>
+>> The original set [1][2] was expected to undo a suboptimal fix in [2], and
+>> replace it with a better fix [1]. However, as reported by Dan Moulding [2]
+>> causes an issue with raid5 with journal device.
+>>
+>> Revert [2] for now to close the issue. We will follow up on another issue
+>> reported by Juxiao Bi, as [2] is expected to fix it. We believe this is a
+>> good trade-off, because the latter issue happens less freqently.
+>>
+>> In the meanwhile, we will NOT revert [1], as it contains the right logic.
+>>
+>> Reported-by: Dan Moulding <dan@danm.net>
+>> Closes: https://lore.kernel.org/linux-raid/20240123005700.9302-1-dan@danm.net/
+>> Fixes: bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d"")
+>> Cc: stable@vger.kernel.org # v5.19+
 > 
-> I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
-> warning in the log:
+> #regzbot ^introduced bed9e27baf52a09b7ba2a3714f1
+> #regzbot title md/raid5: issue with raid5 with journal device
+> #regzbot fix Revert "Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in
+> raid5d""
+> #regzbot ignore-activity
 
-Thanks for the report.
+I mixed something up here, let me fix this:
 
-> 
-> unreferenced object 0xffff8881010c8000 (size 32760):
->   comm "swapper", pid 0, jiffies 4294667296
->   hex dump (first 32 bytes):
->     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
->     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
->   backtrace (crc ae6ec1b9):
->     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
->     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
->     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
->     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
->     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
->     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
->     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
->     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
->     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
->     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
-> 
-> I don't see this warning in v6.8-rc3 and also reverting commit
-> 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
-> makes the warning go away. Let me know if you need more info or help
-> with testing, I see the warning every time so it's easy to reproduce.
-> 
+#regzbot introduced 0de40f76d56
+#regzbot fix 87165c64fe1a98bbab
+#regzbot ignore-activity
 
-Hmm, I changed the code a bit and I wonder if this is a false positive?
-
-Instead of allocating the structure via kmalloc() I now use it as part of a
-page.
-
-That is, the old code had:
-
-        s = kmalloc(sizeof(*s), GFP_KERNEL);
-	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
-
-Where as the new code has:
-
-	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-	order = get_order(orig_size);
-	size = 1 << (order + PAGE_SHIFT);
-	page = alloc_pages(GFP_KERNEL, order);
-	if (!page)
-		return NULL;
-
-	s = page_address(page);
-	memset(s, 0, sizeof(*s));
-
-	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
-
-
-Does kmemleak handle structures that are assigned to alloc_pages()
-allocations? I don't think it does.
-
-I think we need to inform kmemleak about this. Does the following patch fix
-this for you?
-
--- Steve
-
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index e4fbcc3bede5..de4182224ea2 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -9,6 +9,7 @@
- #include <linux/kallsyms.h>
- #include <linux/uaccess.h>
- #include <linux/ftrace.h>
-+#include <linux/kmemleak.h>
- #include <trace/events/sched.h>
- 
- #include "trace.h"
-@@ -190,6 +191,7 @@ static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
- 	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
- 
- 	kfree(s->map_cmdline_to_pid);
-+	kmemleak_free(s);
- 	free_pages((unsigned long)s, order);
- }
- 
-@@ -210,6 +212,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- 
- 	s = page_address(page);
- 	memset(s, 0, sizeof(*s));
-+	kmemleak_alloc(s, size, 1, GFP_KERNEL);
- 
- 	/* Round up to actual allocation */
- 	val = (size - sizeof(*s)) / TASK_COMM_LEN;
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
