@@ -1,71 +1,132 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1751654F83;
-	Wed, 14 Feb 2024 14:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5295A4FD;
+	Wed, 14 Feb 2024 14:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707920093; cv=none; b=JdlnixCoD9i4yjHvNRFqgEyPZqGFTR1T7J4j7dlVlEMSmO2S11JO/Xdi+fFSMgI8xiXAJDlOHjmncp3sumULT/aVpDp0TUQfnfUgmNMWQUN944xGvf3m/9T3k7KkJzMXr81HHwZ3jKXrAbiTgF9OLAY8yfC3gHQkkQVtbAqCI5A=
+	t=1707921887; cv=none; b=AMgtsnMz1SvKWIztpEhczSIFbMH/FKM8rq3DvEpUGWAmLbA5tEcGKZ6JTwwiaCSBRxBSEmUjdWfpqy8TyzNet6XJxHkPPEse3fzucI9tvKUpFtoi0+C+7+xOHnTpCnnR05/p4y5AhUg5ooycyUX/L3DeqvjLqZVi73x7xAoSgXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707920093; c=relaxed/simple;
-	bh=WU5ye4sqffY/jrxVREVpJxv9BvbepfNs+ZpzUGDfugI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Klpnyjov039l7179VafVAvjJjCI5DZtIpvERys2FxmCPHQFTFJzB1sVHs2kmBPn5Zw7MFZxmSzmgGPoChRXFbG4HZGmBY1JIgWsN9anju3+0kLxbY/nDZWwppycrztmpPjyMDR6Fza/hdsrg7WE5XGmWVj5NnhRKmPJHaLYskI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raG2D-0003d5-0J; Wed, 14 Feb 2024 15:14:49 +0100
-Message-ID: <1c36c706-a2ae-4b9a-979d-2b75e8bb0440@leemhuis.info>
-Date: Wed, 14 Feb 2024 15:14:48 +0100
+	s=arc-20240116; t=1707921887; c=relaxed/simple;
+	bh=Q9eBesZ5QD6ZC02ZVDqG4p5BGWCeCIzNlp1bEssnMFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IDLu0DGmjclzm9uuxi4lUUbs3MtzQJDpMZR+5F8zS4PN03HRAFEbsiQzMZxa5d7vrMx6FdWC+RGz1s2vaD51LbW1n1B0TDGVwGqlt38M/m3mWukjc4XZSPvbpbqaKiL2FyAFgQnnV/0S39uViBsBsdEo//nzpxkZ1XUWbe9uAXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816B7C433F1;
+	Wed, 14 Feb 2024 14:44:46 +0000 (UTC)
+Date: Wed, 14 Feb 2024 09:46:17 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] tracing: kmemleak warning in
+ allocate_cmdlines_buffer()
+Message-ID: <20240214094617.1e6ec684@gandalf.local.home>
+In-Reply-To: <87r0hfnr9r.fsf@kernel.org>
+References: <87r0hfnr9r.fsf@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Acp5x probing regression introduced between kernel
- 6.7.2 -> 6.7.4
-Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: stable@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org
-References: <CAD_nV8BG0t7US=+C28kQOR==712MPfZ9m-fuKksgoZCgrEByCw@mail.gmail.com>
- <CAD_nV8B=KSyOrASsbth=RmDV9ZUCipxhdJY3jY02C2jQ6Y34iA@mail.gmail.com>
- <87bk8kkcbg.wl-tiwai@suse.de> <2024021342-overshoot-percent-a329@gregkh>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2024021342-overshoot-percent-a329@gregkh>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707920091;d4548704;
-X-HE-SMSGID: 1raG2D-0003d5-0J
 
-On 13.02.24 15:46, Greg Kroah-Hartman wrote:
-> On Tue, Feb 13, 2024 at 09:17:39AM +0100, Takashi Iwai wrote:
->> On Mon, 12 Feb 2024 15:32:45 +0100,
->> Ted Chang wrote:
+On Wed, 14 Feb 2024 14:50:56 +0200
+Kalle Valo <kvalo@kernel.org> wrote:
 
->>> So the culprit was the stable commit 4b6986b170f2f23e390bbd2d50784caa9cb67093, which is the upstream commit c3ab23a10771bbe06300e5374efa809789c65455
->>>     ASoC: amd: Add new dmi entries for acp5x platform
->>
->> Greg, could you revert the commit
->> 4b6986b170f2f23e390bbd2d50784caa9cb67093 on 6.7.y?
->>
->> Apparently it caused the regression on Steam Deck, the driver probe
->> failed with that backport alone.
+> Hi Steven,
 > 
-> Now reverted, as well as on 6.6.y and 6.1.y.
+> I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
+> warning in the log:
 
-#regzbot introduced: 4b6986b170f2f23e390bbd2d50784caa9cb67093
-#regzbot fix: Revert "ASoC: amd: Add new dmi entries for acp5x platform"
-#regzbot ignore-activity
+Thanks for the report.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> 
+> unreferenced object 0xffff8881010c8000 (size 32760):
+>   comm "swapper", pid 0, jiffies 4294667296
+>   hex dump (first 32 bytes):
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>   backtrace (crc ae6ec1b9):
+>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+> 
+> I don't see this warning in v6.8-rc3 and also reverting commit
+> 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+> makes the warning go away. Let me know if you need more info or help
+> with testing, I see the warning every time so it's easy to reproduce.
+> 
+
+Hmm, I changed the code a bit and I wonder if this is a false positive?
+
+Instead of allocating the structure via kmalloc() I now use it as part of a
+page.
+
+That is, the old code had:
+
+        s = kmalloc(sizeof(*s), GFP_KERNEL);
+	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+
+Where as the new code has:
+
+	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+	order = get_order(orig_size);
+	size = 1 << (order + PAGE_SHIFT);
+	page = alloc_pages(GFP_KERNEL, order);
+	if (!page)
+		return NULL;
+
+	s = page_address(page);
+	memset(s, 0, sizeof(*s));
+
+	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+
+
+Does kmemleak handle structures that are assigned to alloc_pages()
+allocations? I don't think it does.
+
+I think we need to inform kmemleak about this. Does the following patch fix
+this for you?
+
+-- Steve
+
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index e4fbcc3bede5..de4182224ea2 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -9,6 +9,7 @@
+ #include <linux/kallsyms.h>
+ #include <linux/uaccess.h>
+ #include <linux/ftrace.h>
++#include <linux/kmemleak.h>
+ #include <trace/events/sched.h>
+ 
+ #include "trace.h"
+@@ -190,6 +191,7 @@ static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+ 	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
+ 
+ 	kfree(s->map_cmdline_to_pid);
++	kmemleak_free(s);
+ 	free_pages((unsigned long)s, order);
+ }
+ 
+@@ -210,6 +212,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 
+ 	s = page_address(page);
+ 	memset(s, 0, sizeof(*s));
++	kmemleak_alloc(s, size, 1, GFP_KERNEL);
+ 
+ 	/* Round up to actual allocation */
+ 	val = (size - sizeof(*s)) / TASK_COMM_LEN;
