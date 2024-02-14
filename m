@@ -1,162 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C68604BB;
-	Wed, 14 Feb 2024 15:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAD95A785;
+	Wed, 14 Feb 2024 15:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924563; cv=none; b=HF6nfDtkbSrszu5/jJWo62OrXoFuaYXtp3lC3rXls4E7yxZXb3ECcVySxCsrk+R1iPZM6tDlMJr9vbioXMR8Ly+V8PuG8YJE2+6coEulzugKV92KC+ZuLtKptHHHTo1sFtTaG5eV/NwTFNUN/ld7f1xzEhP/YTeT+xo2rn5Oc3w=
+	t=1707924644; cv=none; b=IuL5cZJoYnb22dx6/93CuBKalCa1KTvs5qtgdvGg5vks2HL1QLAf25WKLaQCjuF60lC8Td8KnY08pGb/4z4OBU+Cnhmoo3LdhERxCzVH8oKMo7ge2ylybDcN5IK2nkLcSHbBd40S0hQwGZ2uTzpEwi1K4H0w+RaQqIJwHS2+Rp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924563; c=relaxed/simple;
-	bh=WSVW0/yRq/loi7RjpiNIEx5uLj/WloPZ3vFmrSyly+0=;
-	h=Subject:To:From:Date:Message-ID:MIME-Version:Content-Type; b=PbErwq1bHTu/jsA78NyaGXUMbs7l6zmdmCLvQJkDSKkw2K1Y+OOlsmYqgcczorm2fXf2wEjS5UOUK1WDgb0Yjr7TNYRAi62E6oSFJlTtOmO4cCrTpoeO3zhglUDFr+R42HOgsYHYgNQcZ1l3jWu7BHO3Yjd8pOzTQlvfgpXzxxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tNvRMyjG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707924644; c=relaxed/simple;
+	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=eHzqt6HWsKW+7xMqNII7hXKlDopntBTMgFsxREagnCRvcLVQSA69gz1FJ4FXibOlMlHTbUq4F2a3FFv8vWzcBtBQYAESnMxkN7q85SBekI/l4EGqsRtkEWca4RuYjXxKs7yIGCrtXnOT2JFBIypYu1oVesWYUV5G2/inFuEde1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYt6Wjdc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tNvRMyjG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D41EC433F1;
-	Wed, 14 Feb 2024 15:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707924561;
-	bh=WSVW0/yRq/loi7RjpiNIEx5uLj/WloPZ3vFmrSyly+0=;
-	h=Subject:To:From:Date:From;
-	b=tNvRMyjGCEvwlkTYypLNN+WA7/RbF4OkERMRblDFP4vuH9HqMokpWrtj5ZFT7hxjP
-	 iPFQqU2kp64zEtkH/tQU38ts4KxGpLVnXZrHiTAwTQLfb9U6VnBX7JnrP5frC/Owg4
-	 8gBDuiEorrq1ySrDa0o4X1XhpOQosGhCbNACk/gU=
-Subject: patch "nvmem: include bit index in cell sysfs file name" added to char-misc-linus
-To: arnd@arndb.de,asahi@lists.linux.dev,ecurtin@redhat.com,gregkh@linuxfoundation.org,miquel.raynal@bootlin.com,rafal@milecki.pl,regressions@lists.linux.dev,srinivas.kandagatla@linaro.org,sven@svenpeter.dev,wenst@chromium.org
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 14 Feb 2024 16:29:18 +0100
-Message-ID: <2024021418-humvee-scotch-5836@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYt6Wjdc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934B4C433C7;
+	Wed, 14 Feb 2024 15:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707924643;
+	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=eYt6WjdcPNZTMI0OJKu8MjI+o57ukyuk9v7ZzrfkyFXNZvyWopZVtrBKiiLFW4jMO
+	 DyjiMgGuDqV12pcm+4+EDRV2K6Lq/SMDyb8cMGeYuC59M7Sj3zURLaQ2yLf4J0E4Fu
+	 dexHynPaWg2PKdd56qdfTtRNJnBV7/GEWvefIRP1KSxz7L6V/Po1GY0mgkhA1a3bGU
+	 rbDjvyWmxej9Yr6b+QE4EmUm9y5BVMoPmxIclKB3m2qCYMCZikN8+EEsCQ0yF1aO1o
+	 0BNu5IAHrP31+b8r/MKiiP4ZcjrzWUqW2/hWoZ0wSJHy7SeL2h+jZOFBi2U8wUKsU/
+	 3IE83WTtolsJA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: regressions@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org,  Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] tracing: kmemleak warning in
+ allocate_cmdlines_buffer()
+References: <87r0hfnr9r.fsf@kernel.org>
+	<20240214094617.1e6ec684@gandalf.local.home>
+Date: Wed, 14 Feb 2024 17:30:40 +0200
+In-Reply-To: <20240214094617.1e6ec684@gandalf.local.home> (Steven Rostedt's
+	message of "Wed, 14 Feb 2024 09:46:17 -0500")
+Message-ID: <87mss3njvj.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-This is a note to let you know that I've just added the patch titled
+> On Wed, 14 Feb 2024 14:50:56 +0200
+> Kalle Valo <kvalo@kernel.org> wrote:
+>
+>> Hi Steven,
+>> 
+>> I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
+>> warning in the log:
+>
+> Thanks for the report.
+>
+>> 
+>> unreferenced object 0xffff8881010c8000 (size 32760):
+>>   comm "swapper", pid 0, jiffies 4294667296
+>>   hex dump (first 32 bytes):
+>>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>>   backtrace (crc ae6ec1b9):
+>>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+>>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+>>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+>>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+>>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+>>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+>>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+>>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+>>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+>>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+>> 
+>> I don't see this warning in v6.8-rc3 and also reverting commit
+>> 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+>> makes the warning go away. Let me know if you need more info or help
+>> with testing, I see the warning every time so it's easy to reproduce.
+>> 
+>
+> Hmm, I changed the code a bit and I wonder if this is a false positive?
+>
+> Instead of allocating the structure via kmalloc() I now use it as part of a
+> page.
+>
+> That is, the old code had:
+>
+>         s = kmalloc(sizeof(*s), GFP_KERNEL);
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+> Where as the new code has:
+>
+> 	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+> 	order = get_order(orig_size);
+> 	size = 1 << (order + PAGE_SHIFT);
+> 	page = alloc_pages(GFP_KERNEL, order);
+> 	if (!page)
+> 		return NULL;
+>
+> 	s = page_address(page);
+> 	memset(s, 0, sizeof(*s));
+>
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+>
+> Does kmemleak handle structures that are assigned to alloc_pages()
+> allocations? I don't think it does.
+>
+> I think we need to inform kmemleak about this. Does the following patch fix
+> this for you?
 
-    nvmem: include bit index in cell sysfs file name
+It does, thank you!
 
-to my char-misc git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-in the char-misc-linus branch.
+Tested-by: Kalle Valo <kvalo@kernel.org>
 
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
+> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+> index e4fbcc3bede5..de4182224ea2 100644
+> --- a/kernel/trace/trace_sched_switch.c
+> +++ b/kernel/trace/trace_sched_switch.c
 
-The patch will hopefully also be merged in Linus's tree for the
-next -rc kernel release.
+Although the patch didn't apply for me as in my tree the functions are
+in kernel/trace/trace.c. I don't know what happened so as a quick hack I
+just manually added the three lines to my version of trace.c. Let me
+know if there's a git tree or branch you would like me to test, I can do
+that easily.
 
-If you have any questions about this process, please let me know.
-
-
-From e20f378d993b1034eebe3ae78e67f3ed10e75356 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Fri, 9 Feb 2024 16:34:54 +0000
-Subject: nvmem: include bit index in cell sysfs file name
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc1 on
-Apple M1, which (in downstream dts files) has multiple nvmem cells that use the
-same byte address. This causes the device probe to fail with
-
-[    0.605336] sysfs: cannot create duplicate filename '/devices/platform/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
-[    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                 6.8.0-rc1-arnd-5+ #133
-[    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
-[    0.605362] Call trace:
-[    0.605365]  show_stack+0x18/0x2c
-[    0.605374]  dump_stack_lvl+0x60/0x80
-[    0.605383]  dump_stack+0x18/0x24
-[    0.605388]  sysfs_warn_dup+0x64/0x80
-[    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
-[    0.605402]  internal_create_group+0x268/0x404
-[    0.605409]  sysfs_create_groups+0x38/0x94
-[    0.605415]  devm_device_add_groups+0x50/0x94
-[    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
-[    0.605682]  nvmem_register+0x38c/0x470
-[    0.605789]  devm_nvmem_register+0x1c/0x6c
-[    0.605895]  apple_efuses_probe+0xe4/0x120
-[    0.606000]  platform_probe+0xa8/0xd0
-
-As far as I can tell, this is a problem for any device with multiple cells on
-different bits of the same address. Avoid the issue by changing the file name
-to include the first bit number.
-
-Fixes: 0331c611949f ("nvmem: core: Expose cells through sysfs")
-Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/dts/apple/t600x-dieX.dtsi#L156
-Cc:  <regressions@lists.linux.dev>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Rafał Miłecki <rafal@milecki.pl>
-Cc: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:  <asahi@lists.linux.dev>
-Cc: Sven Peter <sven@svenpeter.dev>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Eric Curtin <ecurtin@redhat.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20240209163454.98051-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/ABI/testing/sysfs-nvmem-cells | 16 ++++++++--------
- drivers/nvmem/core.c                        |  5 +++--
- 2 files changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-nvmem-cells b/Documentation/ABI/testing/sysfs-nvmem-cells
-index 7af70adf3690..c7c9444f92a8 100644
---- a/Documentation/ABI/testing/sysfs-nvmem-cells
-+++ b/Documentation/ABI/testing/sysfs-nvmem-cells
-@@ -4,18 +4,18 @@ KernelVersion:	6.5
- Contact:	Miquel Raynal <miquel.raynal@bootlin.com>
- Description:
- 		The "cells" folder contains one file per cell exposed by the
--		NVMEM device. The name of the file is: <name>@<where>, with
--		<name> being the cell name and <where> its location in the NVMEM
--		device, in hexadecimal (without the '0x' prefix, to mimic device
--		tree node names). The length of the file is the size of the cell
--		(when known). The content of the file is the binary content of
--		the cell (may sometimes be ASCII, likely without trailing
--		character).
-+		NVMEM device. The name of the file is: "<name>@<byte>,<bit>",
-+		with <name> being the cell name and <where> its location in
-+		the NVMEM device, in hexadecimal bytes and bits (without the
-+		'0x' prefix, to mimic device tree node names). The length of
-+		the file is the size of the cell (when known). The content of
-+		the file is the binary content of the cell (may sometimes be
-+		ASCII, likely without trailing character).
- 		Note: This file is only present if CONFIG_NVMEM_SYSFS
- 		is enabled.
- 
- 		Example::
- 
--		  hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product-name@d
-+		  hexdump -C /sys/bus/nvmem/devices/1-00563/cells/product-name@d,0
- 		  00000000  54 4e 34 38 4d 2d 50 2d  44 4e         |TN48M-P-DN|
- 		  0000000a
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 980123fb4dde..eb357ac2e54a 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -460,8 +460,9 @@ static int nvmem_populate_sysfs_cells(struct nvmem_device *nvmem)
- 	list_for_each_entry(entry, &nvmem->cells, node) {
- 		sysfs_bin_attr_init(&attrs[i]);
- 		attrs[i].attr.name = devm_kasprintf(&nvmem->dev, GFP_KERNEL,
--						    "%s@%x", entry->name,
--						    entry->offset);
-+						    "%s@%x,%x", entry->name,
-+						    entry->offset,
-+						    entry->bit_offset);
- 		attrs[i].attr.mode = 0444;
- 		attrs[i].size = entry->bytes;
- 		attrs[i].read = &nvmem_cell_attr_read;
 -- 
-2.43.1
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
