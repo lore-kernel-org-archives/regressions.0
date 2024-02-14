@@ -1,81 +1,100 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1DC5CDC9
-	for <regressions@lists.linux.dev>; Wed, 14 Feb 2024 15:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D85A0FB;
+	Wed, 14 Feb 2024 15:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924274; cv=none; b=E0Hb+k2l2G3SJCrtWzFYqiD0z4kGNrnAhxGU51PKY9KsF8JLtRApALcER2EeaW3mv1p8Qs7bldXbXZOlBGRxIT2eiJbjBNT+uHonlfBXYL/07JBpGmq6MMYra4MSQYP0xVb+2Nv7rDL+xC9ejd+Ii2PC2BnDrwc08z1KCPmWFWY=
+	t=1707924533; cv=none; b=GCLrjxj+yw8pLuP+wCSwI1Pwy18DDy4f7ev60oNAikKQ0w+Et67z1AEmab/PYwWvHgur38CEHUzuvrWmNmftEeJbloVH7jcpPR3QuQ1Jh492Aw6I2AUbKQzQnPVLVzwp4UJSKEgAj04YDwD5TA+IVglgg9qhon+1qVhxuvsghQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924274; c=relaxed/simple;
-	bh=1YQo64D1oz09XMbdqUefryZO0yVS6EoeHUwBc5W+P5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=eskUhc8tjwAK+FCCeSTlgrcCR0PB/mK3TFN1qEghQnZ4zokS9AcRZZejVNNXVxnb/AykVAoq6Kg8tSKtdnErGvRGyL0cOZKQdcG3xs3BE4Occ70sMf+ja7Gzc01vaQav+FoKOrrr9A3wY5EmeZOEU8AMrDetyPQrukXx39peHP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raH7Y-0008GS-HY; Wed, 14 Feb 2024 16:24:24 +0100
-Message-ID: <a8d4250a-857e-40db-bcbc-8082013cdf05@leemhuis.info>
-Date: Wed, 14 Feb 2024 16:24:24 +0100
+	s=arc-20240116; t=1707924533; c=relaxed/simple;
+	bh=/5re9uwAhjRh/Dvs/PjZcKYRVJX4Mawl39c28gZZtzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rwvMvJ/drZlXRrOXhzJdV0tseW1T9QeGcJKA6dYIm0mqCtOminof8xEzY2CK7eHoKitZ1yEQ3mQ3PmWbG/n/1GBVemrmLg8oTGMPBmFlAax9mzpqpI2DSIAMka4qN/uEhM6JR6SdmJQ3pqdpFZeCr1yAqdDx7J8eM8tw2g7dbKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gQC8f84J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gQC8f84J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC46C433C7;
+	Wed, 14 Feb 2024 15:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707924533;
+	bh=/5re9uwAhjRh/Dvs/PjZcKYRVJX4Mawl39c28gZZtzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gQC8f84JIBRyEAhPojBIqtxXOFd127/eeGx6LffRh0u5RioYRpV0jYsQsjq1ma3hM
+	 6Bu5SoKvh8eJYVDFMJeOZwUGG3PgiHHPyjEWchFnJZbPRvAeJ5bCF8ER8b3sPHF2K5
+	 33I2OO4PV4VofZ6DUnBe6Nx1/lAjjoN4uOmyaMWs=
+Date: Wed, 14 Feb 2024 16:28:49 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: srinivas.kandagatla@linaro.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	regressions@lists.linux.dev,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Chen-Yu Tsai <wenst@chromium.org>, asahi@lists.linux.dev,
+	Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
+Message-ID: <2024021438-rental-pretzel-4969@gregkh>
+References: <20240209163454.98051-1-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING
- in raid5d""
-Content-Language: en-US, de-DE
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240125082131.788600-1-song@kernel.org>
- <a68c06ec-b303-4caf-ac39-882a1acb75b1@leemhuis.info>
-In-Reply-To: <a68c06ec-b303-4caf-ac39-882a1acb75b1@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707924272;99ef6659;
-X-HE-SMSGID: 1raH7Y-0008GS-HY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240209163454.98051-1-srinivas.kandagatla@linaro.org>
 
-On 27.01.24 09:25, Linux regression tracking #adding (Thorsten Leemhuis)
-wrote:
-> On 25.01.24 09:21, Song Liu wrote:
->> This reverts commit bed9e27baf52a09b7ba2a3714f1e24e17ced386d.
->>
->> The original set [1][2] was expected to undo a suboptimal fix in [2], and
->> replace it with a better fix [1]. However, as reported by Dan Moulding [2]
->> causes an issue with raid5 with journal device.
->>
->> Revert [2] for now to close the issue. We will follow up on another issue
->> reported by Juxiao Bi, as [2] is expected to fix it. We believe this is a
->> good trade-off, because the latter issue happens less freqently.
->>
->> In the meanwhile, we will NOT revert [1], as it contains the right logic.
->>
->> Reported-by: Dan Moulding <dan@danm.net>
->> Closes: https://lore.kernel.org/linux-raid/20240123005700.9302-1-dan@danm.net/
->> Fixes: bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d"")
->> Cc: stable@vger.kernel.org # v5.19+
+On Fri, Feb 09, 2024 at 04:34:54PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> #regzbot ^introduced bed9e27baf52a09b7ba2a3714f1
-> #regzbot title md/raid5: issue with raid5 with journal device
-> #regzbot fix Revert "Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in
-> raid5d""
-> #regzbot ignore-activity
+> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc1 on
+> Apple M1, which (in downstream dts files) has multiple nvmem cells that use the
+> same byte address. This causes the device probe to fail with
+> 
+> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
+> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                 6.8.0-rc1-arnd-5+ #133
+> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
+> [    0.605362] Call trace:
+> [    0.605365]  show_stack+0x18/0x2c
+> [    0.605374]  dump_stack_lvl+0x60/0x80
+> [    0.605383]  dump_stack+0x18/0x24
+> [    0.605388]  sysfs_warn_dup+0x64/0x80
+> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
+> [    0.605402]  internal_create_group+0x268/0x404
+> [    0.605409]  sysfs_create_groups+0x38/0x94
+> [    0.605415]  devm_device_add_groups+0x50/0x94
+> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
+> [    0.605682]  nvmem_register+0x38c/0x470
+> [    0.605789]  devm_nvmem_register+0x1c/0x6c
+> [    0.605895]  apple_efuses_probe+0xe4/0x120
+> [    0.606000]  platform_probe+0xa8/0xd0
+> 
+> As far as I can tell, this is a problem for any device with multiple cells on
+> different bits of the same address. Avoid the issue by changing the file name
+> to include the first bit number.
+> 
+> Fixes: 0331c611949f ("nvmem: core: Expose cells through sysfs")
+> Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/dts/apple/t600x-dieX.dtsi#L156
+> Cc: regressions@lists.linux.dev
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Rafał Miłecki <rafal@milecki.pl>
+> Cc: Chen-Yu Tsai <wenst@chromium.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: asahi@lists.linux.dev
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Hi Greg, 
+> 
+> Here is a fix in nvmem for 6.8, could you queue these for next possible rc.
+> 
+> Did not cc Stable as this is only targeted for 6.8 and no backporting is
+> required.
 
-I mixed something up here, let me fix this:
+Sorry for the delay, now queued up.
 
-#regzbot introduced 0de40f76d56
-#regzbot fix 87165c64fe1a98bbab
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+greg k-h
