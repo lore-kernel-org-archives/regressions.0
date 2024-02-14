@@ -1,127 +1,72 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAFA79F4
-	for <regressions@lists.linux.dev>; Wed, 14 Feb 2024 11:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9702552F6D;
+	Wed, 14 Feb 2024 12:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707911516; cv=none; b=YUgzt46tfJDgdh0Z47jdS9wfX/IHTcCSPah2rgjzmogPEiNQjFoZaGLgYGDdNbOnzvusCA2Qn4u6xn+Ed1+7lmGNJCRAHtitYjY+CSEsmhotpCgvdjMpQJfvxFb/vEhpAm+oQ7Cnz8+0Kc8OijIIs+EZVE6HGfJVSU5T5Umb+QM=
+	t=1707915060; cv=none; b=JBe/3R4IZ97wG1dYfRs4idAYsAk2K1KhGt9EMWJ5ngJ0mYbUYWs33+2+lnLXDGBulMHt/fNNov518buOmIReebmnbHud4z4YWTcCdoJp/ObF9xZikPj16KpgAx1K/RCd73h0tBYo4O2RfRYtx+5uQujwr7g0PPRllpHMP9/v/1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707911516; c=relaxed/simple;
-	bh=Or2GPqytwU+Zewrk8JWKgiSLAr3eQDtgJFOhMN8XROI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYrVs68WB6saKqvMrv7rO8+J/XK5C4NrRXQ4giaPY1wzRagUM5crMBBPgf3Gm7SmIc27GT1/M8MicexNX5tiVGaqarQ818smnmwCehI9ImQ/WPLWy+rRaswYuiaswZR4oW+6jheMMM2+aO42bIXVQeeApZRKRV3CnHn+cA9t+Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=EJCVcw+S; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1707915060; c=relaxed/simple;
+	bh=RWvrLf1KdKNmNFeac58ILq9M4ZuHDUel2ED6opH/yF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TLj5G5r4NHifJ6cYqx4Gmjv+F0vfRxVz51mFrZ2kWM0NOvvgI0s+/MrDybch3sP8FZrtnRJvayTFNVCHe8Lz9AGV+nfUf/HrjGbafnIbXeOippc9q87DzXsIcgj5Hm41V9fyzvsf3w/MVljjeARmKS0bTXSfhgnOdPWSnrpGXh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbHHB5YM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="EJCVcw+S"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id B94F620A66
-	for <regressions@lists.linux.dev>; Wed, 14 Feb 2024 12:51:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1707911511;
-	bh=UKrz+HQUdzEtpwfdfugiFFexnnYi2nKtg/L0NiZ0Xms=; h=From:To:Subject;
-	b=EJCVcw+ScTjWtCYalGyCSZ0N4P1cRtZs9zYDDvQFISSeqDaPFlboTLVS2GrVzNDVa
-	 A6dxd7zLnqTstoQ7Ynt5DwmwRB/s3Ot0T/QSVYYBEfUYD4mmWEfCq3j2CmXGxbvzK6
-	 YZ+eaf1sHxRyxAzs7XIn2uhl27jizknKa/xQl83Ewu9tgHlDwtyUNSZOcmYNzjhXFX
-	 loJJoveckMrpZMdGoTD04eVg53D8pKMQ3O18x31ZE0dxQYCXjw4WFztMjwXvUQJOtj
-	 VHMRVHNp08My2sVI5XsQM2vDPPUFYV4g5vs5iyBOaV90jpG+TZwGDHW8+vMdS3Smyg
-	 GKHFU4/mHYQyA==
-Date: Wed, 14 Feb 2024 12:51:47 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: regressions@lists.linux.dev
-Subject: Re: MXSFB error: -ENODEV: Cannot connect bridge
-Message-ID: <20240214115147.GA95390@francesco-nb>
-References: <34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbHHB5YM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DFDC433F1;
+	Wed, 14 Feb 2024 12:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707915060;
+	bh=RWvrLf1KdKNmNFeac58ILq9M4ZuHDUel2ED6opH/yF0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GbHHB5YMLk9ThdE3OtsWaRdn22I5l5bLwWAedWKevCHc5W8yZd6L6/SWY4GkFQE++
+	 U+O2SIC/j63NEbYi5s1B03pgX6wanqWt6CHuTCP1RF47hGs0zDb01R7FeB/ej1r1Hr
+	 OTMs+FfCPJZl0MmyuiKEflyaFLgGxWipLa1S46wBFm7n9an5HleDce8BT1We13WJdB
+	 VKRjNyXPHfmqwZ2Ndv+TGv1BHVfug1ukdClnKVkrdZZ8zUeSdAs+JBNazv9CztW1rL
+	 LOQgPbZiKBLX1oB0F+bcNEs4roCyQp0sPYIiRGNvQkWfJqd2TpdwELVEhM3r7S3cm9
+	 Ulm2Os9SwpbVQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: [regression] tracing: kmemleak warning in allocate_cmdlines_buffer()
+Date: Wed, 14 Feb 2024 14:50:56 +0200
+Message-ID: <87r0hfnr9r.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia>
+Content-Type: text/plain
 
-#regzbot ^introduced: edbbae7fba495284f72f05768696572691231558
+Hi Steven,
 
-On Thu, Feb 08, 2024 at 12:58:02PM -0300, Hiago De Franco wrote:
-> Hello all,
-> 
-> while doing some tests with kernel v6.8-rc3 and Colibri iMX7D, we
-> noticed the following error:
-> 
-> [    0.432547] mxsfb 30730000.lcdif: error -ENODEV: Cannot connect bridge
-> 
-> This was introduced by commit edbbae7fba495284f72f05768696572691231558
-> ("ARM: dts: imx7: add MIPI-DSI support"). This patch is routing the
-> lcdif to the mipi_dsi_in_lcdif endpoint, however we do not have the DSI
-> pins available in our edge connector. Instead, we use the parallel RGB
-> LCD interface directly with, as example, an external LVDS transmitter:
-> 
-> &lcdif {
-> ...
-> 	status = "disabled";
-> 
-> 	port {
-> 		lcdif_out: endpoint {
-> 			remote-endpoint = <&lcd_panel_in>;
-> 		};
-> 	};
-> };
-> 
-> By applying the following patch, the issue is gone and the LVDS works
-> again:
-> 
-> diff --git a/arch/arm/boot/dts/nxp/imx/imx7s.dtsi b/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
-> index ebf7befcc11e..9c81c6baa2d3 100644
-> --- a/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
-> @@ -834,16 +834,6 @@ lcdif: lcdif@30730000 {
->  					<&clks IMX7D_LCDIF_PIXEL_ROOT_CLK>;
->  				clock-names = "pix", "axi";
->  				status = "disabled";
-> -
-> -				port {
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					lcdif_out_mipi_dsi: endpoint@0 {
-> -						reg = <0>;
-> -						remote-endpoint = <&mipi_dsi_in_lcdif>;
-> -					};
-> -				};
->  			};
->  
->  			mipi_csi: mipi-csi@30750000 {
-> @@ -895,22 +885,6 @@ mipi_dsi: dsi@30760000 {
->  				samsung,esc-clock-frequency = <20000000>;
->  				samsung,pll-clock-frequency = <24000000>;
->  				status = "disabled";
-> -
-> -				ports {
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					port@0 {
-> -						reg = <0>;
-> -						#address-cells = <1>;
-> -						#size-cells = <0>;
-> -
-> -						mipi_dsi_in_lcdif: endpoint@0 {
-> -							reg = <0>;
-> -							remote-endpoint = <&lcdif_out_mipi_dsi>;
-> -						};
-> -					};
-> -				};
->  			};
->  		};
-> 
-> I would like to know your opinion about this patch before sending it,
-> does it makes sense for you? I understand that routing to endpoint
-> should be done in the SoM device tree, so we are free to rout other
-> endpoint without issues.
-> 
-> Regards,
-> Hiago.
+I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
+warning in the log:
+
+unreferenced object 0xffff8881010c8000 (size 32760):
+  comm "swapper", pid 0, jiffies 4294667296
+  hex dump (first 32 bytes):
+    ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+    ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+  backtrace (crc ae6ec1b9):
+    [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+    [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+    [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+    [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+    [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+    [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+    [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+    [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+    [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+    [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+
+I don't see this warning in v6.8-rc3 and also reverting commit
+44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+makes the warning go away. Let me know if you need more info or help
+with testing, I see the warning every time so it's easy to reproduce.
+
+Kalle
