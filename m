@@ -1,77 +1,56 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A485B210;
-	Wed, 14 Feb 2024 15:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B848B5DF05;
+	Wed, 14 Feb 2024 15:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924874; cv=none; b=Mjd7fQUROU6S+x60fRtPOgYJ+qsDHeAtT8hSvJvuIAIUQdtI8Tn8IUFZvU/RN9DuSDeNSr257LMwKaBOX4Dknq9YJtt9nXM8d+ykQaodDbQ4PpVFaxftCynTP+KRtagPtSWKD4v61oFjuN6KwRDhfKetsl+thVvp4OCIKCDqPVA=
+	t=1707925319; cv=none; b=gPC1t2AdIwhEs6ymuEWdP8ShUjU1fPzGYokAWJSD+Nh2qJkoHQuRV9KSk5UOanjGmpMpwjWJihu5LfuGWxbKFEj2rErK23ZzhhyruSEgBpAJdDP3PVTS66A+qc2Y7dRnkq9itxi3IjtwPGO/tn29gLheDiWypfHlI+0CwOzAiro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924874; c=relaxed/simple;
-	bh=z6CvO0y3Hhjv+q9Wa5CPsASVDU6hsXyXmEuDXE5FZws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ty9HTiKtWew8Vh7OIG6GYLhSkurHCqBcYd63AW+hV53gTqqgAnsQ8TZ37bwcEIZeO1gO7NB8uRPsbJxM3cNvNGF6OIahOKS975kJSG+Yr8bxF4XjyNLR1j1P72TBaJFQm88qE24CY1CLAg8g5uX6utfzOwiddaW/ZDLlLqNeZ3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raHHK-00022Q-E6; Wed, 14 Feb 2024 16:34:30 +0100
-Message-ID: <6e20e772-e50e-4600-8325-1878badbbdc8@leemhuis.info>
-Date: Wed, 14 Feb 2024 16:34:29 +0100
+	s=arc-20240116; t=1707925319; c=relaxed/simple;
+	bh=EQJqgCbsIzF1hi7yDHjrJ52K4ATuJYMSNA7gnDd1vY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sPaPLS6nXUwlW+tjkZKqIqIaqDcJzVrVBrKWKQobxZHRwHI8FbryhezhAY53DargEGK2lSKF1Kez0BYinZ+MUu7TH1U43ctKGwavJxAOLP9EhkhJRRlKixpAqs+nvIwbBztFzEoaDM6fFn5E721Ik7T0XWzkLAvjvA0aRfGf9aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBB0C433F1;
+	Wed, 14 Feb 2024 15:41:58 +0000 (UTC)
+Date: Wed, 14 Feb 2024 10:43:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jeff Johnson
+ <quic_jjohnson@quicinc.com>
+Subject: Re: [regression] tracing: kmemleak warning in
+ allocate_cmdlines_buffer()
+Message-ID: <20240214104329.56a19586@gandalf.local.home>
+In-Reply-To: <87mss3njvj.fsf@kernel.org>
+References: <87r0hfnr9r.fsf@kernel.org>
+	<20240214094617.1e6ec684@gandalf.local.home>
+	<87mss3njvj.fsf@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced
- disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
-Content-Language: en-US, de-DE
-To: Mark Brown <broonie@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev
-References: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
- <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707924872;7ee0f297;
-X-HE-SMSGID: 1raHHK-00022Q-E6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 08.02.24 15:34, Mark Brown wrote:
-> On Fri, Feb 02, 2024 at 12:38:04PM +0100, Paul Menzel wrote:
+On Wed, 14 Feb 2024 17:30:40 +0200
+Kalle Valo <kvalo@kernel.org> wrote:
+
+> Although the patch didn't apply for me as in my tree the functions are
+> in kernel/trace/trace.c. I don't know what happened so as a quick hack I
+> just manually added the three lines to my version of trace.c. Let me
+> know if there's a git tree or branch you would like me to test, I can do
+> that easily.
 > 
->> Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 7590)
->> [1], it’s very likely this commit, it turns out, that Linux logs the warning
->> below during ACPI S3 suspend:
 
-Mark, many thx for your reply:
+Oops, I was in a middle of rebasing a patch series I was reviewing and
+forgot there was some changes to the code around it. Anyway, that should be
+the fix. I'll add your tested-by.
 
-> The driver is just buggy here AFAICT,
+Thanks!
 
-/me reads that as "buggy even before 2f189493ae32, that commit just
-exposed the problem"
-
-> it's powering off the device in
-> both runtime suspend and runtime resume so if the device is runtime
-> suspended when system suspend happens then it'll power off the device
-> again.  The runtime suspend and system suspend need to talk to each
-> other here.
-
-Well, that was 6 days ago and nothing further happened. Makes me wonder:
-Who will look into this? And when? If not any time soon I guess we
-sooner or later should consider revert this. Yes, the problem is "just"
-a warning, but well, it's not "just" a warning for people using
-panic_on_warn...
-
-Paul, just to be sure: I assume reverting 2f189493ae32 fixes the problem?
-
-Ciao, Thorsten
+-- Steve
