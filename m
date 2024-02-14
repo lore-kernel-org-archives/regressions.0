@@ -1,136 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAD95A785;
-	Wed, 14 Feb 2024 15:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A485B210;
+	Wed, 14 Feb 2024 15:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924644; cv=none; b=IuL5cZJoYnb22dx6/93CuBKalCa1KTvs5qtgdvGg5vks2HL1QLAf25WKLaQCjuF60lC8Td8KnY08pGb/4z4OBU+Cnhmoo3LdhERxCzVH8oKMo7ge2ylybDcN5IK2nkLcSHbBd40S0hQwGZ2uTzpEwi1K4H0w+RaQqIJwHS2+Rp0=
+	t=1707924874; cv=none; b=Mjd7fQUROU6S+x60fRtPOgYJ+qsDHeAtT8hSvJvuIAIUQdtI8Tn8IUFZvU/RN9DuSDeNSr257LMwKaBOX4Dknq9YJtt9nXM8d+ykQaodDbQ4PpVFaxftCynTP+KRtagPtSWKD4v61oFjuN6KwRDhfKetsl+thVvp4OCIKCDqPVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924644; c=relaxed/simple;
-	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=eHzqt6HWsKW+7xMqNII7hXKlDopntBTMgFsxREagnCRvcLVQSA69gz1FJ4FXibOlMlHTbUq4F2a3FFv8vWzcBtBQYAESnMxkN7q85SBekI/l4EGqsRtkEWca4RuYjXxKs7yIGCrtXnOT2JFBIypYu1oVesWYUV5G2/inFuEde1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYt6Wjdc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYt6Wjdc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934B4C433C7;
-	Wed, 14 Feb 2024 15:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707924643;
-	bh=oaDfMgX7jA4rJYpXSLq7LkCkF/VhsccfGzmr4lYdP5o=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=eYt6WjdcPNZTMI0OJKu8MjI+o57ukyuk9v7ZzrfkyFXNZvyWopZVtrBKiiLFW4jMO
-	 DyjiMgGuDqV12pcm+4+EDRV2K6Lq/SMDyb8cMGeYuC59M7Sj3zURLaQ2yLf4J0E4Fu
-	 dexHynPaWg2PKdd56qdfTtRNJnBV7/GEWvefIRP1KSxz7L6V/Po1GY0mgkhA1a3bGU
-	 rbDjvyWmxej9Yr6b+QE4EmUm9y5BVMoPmxIclKB3m2qCYMCZikN8+EEsCQ0yF1aO1o
-	 0BNu5IAHrP31+b8r/MKiiP4ZcjrzWUqW2/hWoZ0wSJHy7SeL2h+jZOFBi2U8wUKsU/
-	 3IE83WTtolsJA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: regressions@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  linux-trace-kernel@vger.kernel.org,  Jeff Johnson
- <quic_jjohnson@quicinc.com>
-Subject: Re: [regression] tracing: kmemleak warning in
- allocate_cmdlines_buffer()
-References: <87r0hfnr9r.fsf@kernel.org>
-	<20240214094617.1e6ec684@gandalf.local.home>
-Date: Wed, 14 Feb 2024 17:30:40 +0200
-In-Reply-To: <20240214094617.1e6ec684@gandalf.local.home> (Steven Rostedt's
-	message of "Wed, 14 Feb 2024 09:46:17 -0500")
-Message-ID: <87mss3njvj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1707924874; c=relaxed/simple;
+	bh=z6CvO0y3Hhjv+q9Wa5CPsASVDU6hsXyXmEuDXE5FZws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ty9HTiKtWew8Vh7OIG6GYLhSkurHCqBcYd63AW+hV53gTqqgAnsQ8TZ37bwcEIZeO1gO7NB8uRPsbJxM3cNvNGF6OIahOKS975kJSG+Yr8bxF4XjyNLR1j1P72TBaJFQm88qE24CY1CLAg8g5uX6utfzOwiddaW/ZDLlLqNeZ3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raHHK-00022Q-E6; Wed, 14 Feb 2024 16:34:30 +0100
+Message-ID: <6e20e772-e50e-4600-8325-1878badbbdc8@leemhuis.info>
+Date: Wed, 14 Feb 2024 16:34:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced
+ disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
+Content-Language: en-US, de-DE
+To: Mark Brown <broonie@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+ Liam Girdwood <lgirdwood@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev
+References: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
+ <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZcTmdg2qTq0bP0ul@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707924872;7ee0f297;
+X-HE-SMSGID: 1raHHK-00022Q-E6
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On 08.02.24 15:34, Mark Brown wrote:
+> On Fri, Feb 02, 2024 at 12:38:04PM +0100, Paul Menzel wrote:
+> 
+>> Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 7590)
+>> [1], it’s very likely this commit, it turns out, that Linux logs the warning
+>> below during ACPI S3 suspend:
 
-> On Wed, 14 Feb 2024 14:50:56 +0200
-> Kalle Valo <kvalo@kernel.org> wrote:
->
->> Hi Steven,
->> 
->> I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
->> warning in the log:
->
-> Thanks for the report.
->
->> 
->> unreferenced object 0xffff8881010c8000 (size 32760):
->>   comm "swapper", pid 0, jiffies 4294667296
->>   hex dump (first 32 bytes):
->>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
->>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
->>   backtrace (crc ae6ec1b9):
->>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
->>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
->>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
->>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
->>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
->>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
->>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
->>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
->>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
->>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
->> 
->> I don't see this warning in v6.8-rc3 and also reverting commit
->> 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
->> makes the warning go away. Let me know if you need more info or help
->> with testing, I see the warning every time so it's easy to reproduce.
->> 
->
-> Hmm, I changed the code a bit and I wonder if this is a false positive?
->
-> Instead of allocating the structure via kmalloc() I now use it as part of a
-> page.
->
-> That is, the old code had:
->
->         s = kmalloc(sizeof(*s), GFP_KERNEL);
-> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
->
-> Where as the new code has:
->
-> 	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-> 	order = get_order(orig_size);
-> 	size = 1 << (order + PAGE_SHIFT);
-> 	page = alloc_pages(GFP_KERNEL, order);
-> 	if (!page)
-> 		return NULL;
->
-> 	s = page_address(page);
-> 	memset(s, 0, sizeof(*s));
->
-> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
->
->
-> Does kmemleak handle structures that are assigned to alloc_pages()
-> allocations? I don't think it does.
->
-> I think we need to inform kmemleak about this. Does the following patch fix
-> this for you?
+Mark, many thx for your reply:
 
-It does, thank you!
+> The driver is just buggy here AFAICT,
 
-Tested-by: Kalle Valo <kvalo@kernel.org>
+/me reads that as "buggy even before 2f189493ae32, that commit just
+exposed the problem"
 
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-> index e4fbcc3bede5..de4182224ea2 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
+> it's powering off the device in
+> both runtime suspend and runtime resume so if the device is runtime
+> suspended when system suspend happens then it'll power off the device
+> again.  The runtime suspend and system suspend need to talk to each
+> other here.
 
-Although the patch didn't apply for me as in my tree the functions are
-in kernel/trace/trace.c. I don't know what happened so as a quick hack I
-just manually added the three lines to my version of trace.c. Let me
-know if there's a git tree or branch you would like me to test, I can do
-that easily.
+Well, that was 6 days ago and nothing further happened. Makes me wonder:
+Who will look into this? And when? If not any time soon I guess we
+sooner or later should consider revert this. Yes, the problem is "just"
+a warning, but well, it's not "just" a warning for people using
+panic_on_warn...
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Paul, just to be sure: I assume reverting 2f189493ae32 fixes the problem?
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Ciao, Thorsten
