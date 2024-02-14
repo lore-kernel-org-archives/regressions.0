@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB157304;
-	Wed, 14 Feb 2024 14:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1751654F83;
+	Wed, 14 Feb 2024 14:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707919256; cv=none; b=XnzIPkmKKdFHASLOzt4yFZASQwrjwF2zOA7nvVgU3I8o22831IXinYOJ1H8c4tv8I3pxWQuCjk4rBoMIna6T9UlD0uD0Cmbql0dQ3O39oqfXjuXUy70GneZ16IwzApsjnnlZ2xdapYPH5pwQMufR/Fzpc17kzN/OYC2oRc/xg3k=
+	t=1707920093; cv=none; b=JdlnixCoD9i4yjHvNRFqgEyPZqGFTR1T7J4j7dlVlEMSmO2S11JO/Xdi+fFSMgI8xiXAJDlOHjmncp3sumULT/aVpDp0TUQfnfUgmNMWQUN944xGvf3m/9T3k7KkJzMXr81HHwZ3jKXrAbiTgF9OLAY8yfC3gHQkkQVtbAqCI5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707919256; c=relaxed/simple;
-	bh=NmYsbagODPMJoiLF+Ib06mloJNrwkK9PuGDNa6gDdcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=FzcanK2EzcCWW86Zo1A/R+VQJGyQm4MFWmhrZrB6+T1Qo+L0TtSaWhJF39k/qUkjwhGay9sg3+GHH22c0r5pUM+/rWG1VQIOiltN+4KbXkd0xm+l1/mlpAjhEHhWsnRDCjx6yLcLOsXu1AeyKP0E0YIjMlEdzo5XiuYJX874n0w=
+	s=arc-20240116; t=1707920093; c=relaxed/simple;
+	bh=WU5ye4sqffY/jrxVREVpJxv9BvbepfNs+ZpzUGDfugI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Klpnyjov039l7179VafVAvjJjCI5DZtIpvERys2FxmCPHQFTFJzB1sVHs2kmBPn5Zw7MFZxmSzmgGPoChRXFbG4HZGmBY1JIgWsN9anju3+0kLxbY/nDZWwppycrztmpPjyMDR6Fza/hdsrg7WE5XGmWVj5NnhRKmPJHaLYskI0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raFoe-0000RG-IY; Wed, 14 Feb 2024 15:00:48 +0100
-Message-ID: <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
-Date: Wed, 14 Feb 2024 15:00:47 +0100
+	id 1raG2D-0003d5-0J; Wed, 14 Feb 2024 15:14:49 +0100
+Message-ID: <1c36c706-a2ae-4b9a-979d-2b75e8bb0440@leemhuis.info>
+Date: Wed, 14 Feb 2024 15:14:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,74 +26,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Subject: Re: [REGRESSION] Acp5x probing regression introduced between kernel
+ 6.7.2 -> 6.7.4
 Content-Language: en-US, de-DE
-To: Andreas Schwab <schwab@suse.de>, linux-arm-kernel@lists.infradead.org
-References: <mvmcyt13idm.fsf@suse.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+References: <CAD_nV8BG0t7US=+C28kQOR==712MPfZ9m-fuKksgoZCgrEByCw@mail.gmail.com>
+ <CAD_nV8B=KSyOrASsbth=RmDV9ZUCipxhdJY3jY02C2jQ6Y34iA@mail.gmail.com>
+ <87bk8kkcbg.wl-tiwai@suse.de> <2024021342-overshoot-percent-a329@gregkh>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
- Linux-OMAP <linux-omap@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <mvmcyt13idm.fsf@suse.de>
+In-Reply-To: <2024021342-overshoot-percent-a329@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707919254;b0b03551;
-X-HE-SMSGID: 1raFoe-0000RG-IY
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707920091;d4548704;
+X-HE-SMSGID: 1raG2D-0003d5-0J
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 13.02.24 15:46, Greg Kroah-Hartman wrote:
+> On Tue, Feb 13, 2024 at 09:17:39AM +0100, Takashi Iwai wrote:
+>> On Mon, 12 Feb 2024 15:32:45 +0100,
+>> Ted Chang wrote:
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Thanks for the report.Added the omap list and the omap mmc maintainer;
-the root of the problem might be somewhere else, but maybe we get some
-help from there.
-
-On 12.02.24 14:46, Andreas Schwab wrote:
-> I'm getting these messages on the PandaBoard since 6.7:
+>>> So the culprit was the stable commit 4b6986b170f2f23e390bbd2d50784caa9cb67093, which is the upstream commit c3ab23a10771bbe06300e5374efa809789c65455
+>>>     ASoC: amd: Add new dmi entries for acp5x platform
+>>
+>> Greg, could you revert the commit
+>> 4b6986b170f2f23e390bbd2d50784caa9cb67093 on 6.7.y?
+>>
+>> Apparently it caused the regression on Steam Deck, the driver probe
+>> failed with that backport alone.
 > 
-> [   29.285522][  T156] platform 4809c000.mmc: deferred probe pending
-> [   29.291748][  T156] platform 4a0ab000.usb_otg_hs: deferred probe pending
-> [   29.298522][  T156] platform 58005000.encoder: deferred probe pending
-> [   29.305053][  T156] platform 58006000.encoder: deferred probe pending
-> [   29.305145][  T156] i2c 0-004b: deferred probe pending
-> [   29.316772][  T156] platform 40132000.target-module: deferred probe pending
-> [   37.382110][  T156] pbias_mmc_omap4: disabling
-> 
-> As a result, the SD card is not found.
-> Any idea what's going on here?
+> Now reverted, as well as on 6.6.y and 6.1.y.
 
-Haven't heard of anything like that. Unless some developer replies with
-some idea in a day or two I guess you will have to bisect the problem.
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-Anyway, to be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
-
-#regzbot ^introduced v6.6..v6.7
-#regzbot title arm: omap: platform 4809c000.mmc: deferred probe pending
+#regzbot introduced: 4b6986b170f2f23e390bbd2d50784caa9cb67093
+#regzbot fix: Revert "ASoC: amd: Add new dmi entries for acp5x platform"
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 That page also explains what to do if mails like this annoy you.
-
