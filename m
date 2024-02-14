@@ -1,121 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753ED1CABA;
-	Wed, 14 Feb 2024 13:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB157304;
+	Wed, 14 Feb 2024 14:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707918707; cv=none; b=h+Yo1DRkcuCIptGZu+MhkwjXSuo2s/3ctEiDuR+fHFjlUifktHOjclxro0Wk4aYochd0cuPREkrszIkhh99FmGSstqdtboNl9nSnC7SsqbAUkc5huyksK13u0PtNV4sk19eBWkd7M+MNvgj0V1wlQYZ0OYcN709EmL/iK5erRBM=
+	t=1707919256; cv=none; b=XnzIPkmKKdFHASLOzt4yFZASQwrjwF2zOA7nvVgU3I8o22831IXinYOJ1H8c4tv8I3pxWQuCjk4rBoMIna6T9UlD0uD0Cmbql0dQ3O39oqfXjuXUy70GneZ16IwzApsjnnlZ2xdapYPH5pwQMufR/Fzpc17kzN/OYC2oRc/xg3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707918707; c=relaxed/simple;
-	bh=Qq4RI3/eNvGIvnkvbEhKzEkeUXbVPZq7+5c0G9BM++I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA93RMMLJwUrJ9peN0K4SSJ5/9Tp6Jnse0x7sVG+iABrQjbhOUGKJJ5SRUGWi8T5IHkrY7PoRExlNh1XU+Fhq9U/57LiiI90bLUvPsL5N6ojXFHjcuU+2QtpK5X+UWeGxvM9Szpw7H61DuOpDq5af8DmHeqesxJGht46SjbNgjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rO2Y0P/r; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rO2Y0P/r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A38C433F1;
-	Wed, 14 Feb 2024 13:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707918706;
-	bh=Qq4RI3/eNvGIvnkvbEhKzEkeUXbVPZq7+5c0G9BM++I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rO2Y0P/rIMwckSI4l41akdMEhZtEl+Kno80nEh/FOlEu7LHwVqzr0gHSGb4rxy46h
-	 wbIn8eX2z8YkjpATs0FKPYzqCLGxqDHTm8cq8aFD6cJcrHNFv38mSRCd6GK3LEcSaU
-	 iR6e45a8NtmMSeCggrS/dEcwl/FPrhMXzzm4LfIzJ3FRVh/ANgrmWP/c8fJr3sawIp
-	 u7gI3lmObcKNatscXsV6qohUPs/nwil/IKwjHFjnszp10/MitkFSNiZEwf0c465CDs
-	 wX+BNxgYVQfwmiCR7EhqC9Ij0lDBz3uRo3SirfmLB1C7ZPp1QbOyeoXwe3k5LGZsKV
-	 oL0mcq15CVDTQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1raFgD-000000005BW-1E73;
-	Wed, 14 Feb 2024 14:52:06 +0100
-Date: Wed, 14 Feb 2024 14:52:05 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>, Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: drm/msm: DisplayPort regressions in 6.8-rc1
-Message-ID: <ZczFhVjHIm55JTfO@hovoldconsulting.com>
-References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
- <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+	s=arc-20240116; t=1707919256; c=relaxed/simple;
+	bh=NmYsbagODPMJoiLF+Ib06mloJNrwkK9PuGDNa6gDdcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=FzcanK2EzcCWW86Zo1A/R+VQJGyQm4MFWmhrZrB6+T1Qo+L0TtSaWhJF39k/qUkjwhGay9sg3+GHH22c0r5pUM+/rWG1VQIOiltN+4KbXkd0xm+l1/mlpAjhEHhWsnRDCjx6yLcLOsXu1AeyKP0E0YIjMlEdzo5XiuYJX874n0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raFoe-0000RG-IY; Wed, 14 Feb 2024 15:00:48 +0100
+Message-ID: <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
+Date: Wed, 14 Feb 2024 15:00:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Content-Language: en-US, de-DE
+To: Andreas Schwab <schwab@suse.de>, linux-arm-kernel@lists.infradead.org
+References: <mvmcyt13idm.fsf@suse.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Linux-OMAP <linux-omap@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+In-Reply-To: <mvmcyt13idm.fsf@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707919254;b0b03551;
+X-HE-SMSGID: 1raFoe-0000RG-IY
 
-On Tue, Feb 13, 2024 at 10:00:13AM -0800, Abhinav Kumar wrote:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-> I do agree that pm runtime eDP driver got merged that time but I think 
-> the issue is either a combination of that along with DRM aux bridge 
-> https://patchwork.freedesktop.org/series/122584/ OR just the latter as 
-> even that went in around the same time.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Yes, indeed there was a lot of changes that went into the MSM drm driver
-in 6.8-rc1 and since I have not tried to debug this myself I can't say
-for sure which change or changes that triggered this regression (or
-possibly regressions).
+Thanks for the report.Added the omap list and the omap mmc maintainer;
+the root of the problem might be somewhere else, but maybe we get some
+help from there.
 
-The fact that the USB-C/DP PHY appears to be involved
-(/soc@0/phy@88eb000) could indeed point to the series you mentioned.
-
-> Thats why perhaps this issue was not seen with the chromebooks we tested 
-> on as they do not use pmic_glink (aux bridge).
+On 12.02.24 14:46, Andreas Schwab wrote:
+> I'm getting these messages on the PandaBoard since 6.7:
 > 
-> So we will need to debug this on sc8280xp specifically or an equivalent 
-> device which uses aux bridge.
+> [   29.285522][  T156] platform 4809c000.mmc: deferred probe pending
+> [   29.291748][  T156] platform 4a0ab000.usb_otg_hs: deferred probe pending
+> [   29.298522][  T156] platform 58005000.encoder: deferred probe pending
+> [   29.305053][  T156] platform 58006000.encoder: deferred probe pending
+> [   29.305145][  T156] i2c 0-004b: deferred probe pending
+> [   29.316772][  T156] platform 40132000.target-module: deferred probe pending
+> [   37.382110][  T156] pbias_mmc_omap4: disabling
+> 
+> As a result, the SD card is not found.
+> Any idea what's going on here?
 
-I've hit the NULL-pointer deference three times now in the last few days
-on the sc8280xp CRD. But since it doesn't trigger on every boot it seems
-you need to go back to the series that could potentially have caused
-this regression and review them again. There's clearly something quite
-broken here.
+Haven't heard of anything like that. Unless some developer replies with
+some idea in a day or two I guess you will have to bisect the problem.
 
-> On 2/13/2024 3:42 AM, Johan Hovold wrote:
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-> > Since 6.8-rc1 the internal eDP display on the Lenovo ThinkPad X13s does
-> > not always show up on boot.
+Anyway, to be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
 
-> > 	[    6.007872] [drm:drm_bridge_attach [drm]] *ERROR* failed to attach bridge /soc@0/phy@88eb000 to encoder TMDS-31: -16
-	
-> > and this can also manifest itself as a NULL-pointer dereference:
-> > 
-> > 	[    7.339447] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> > 	
-> > 	[    7.643705] pc : drm_bridge_attach+0x70/0x1a8 [drm]
-> > 	[    7.686415] lr : drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
-> > 	
-> > 	[    7.769039] Call trace:
-> > 	[    7.771564]  drm_bridge_attach+0x70/0x1a8 [drm]
-> > 	[    7.776234]  drm_aux_bridge_attach+0x24/0x38 [aux_bridge]
-> > 	[    7.781782]  drm_bridge_attach+0x80/0x1a8 [drm]
-> > 	[    7.786454]  dp_bridge_init+0xa8/0x15c [msm]
-> > 	[    7.790856]  msm_dp_modeset_init+0x28/0xc4 [msm]
-> > 	[    7.795617]  _dpu_kms_drm_obj_init+0x19c/0x680 [msm]
-> > 	[    7.800731]  dpu_kms_hw_init+0x348/0x4c4 [msm]
-> > 	[    7.805306]  msm_drm_kms_init+0x84/0x324 [msm]
-> > 	[    7.809891]  msm_drm_bind+0x1d8/0x3a8 [msm]
-> > 	[    7.814196]  try_to_bring_up_aggregate_device+0x1f0/0x2f8
-> > 	[    7.819747]  __component_add+0xa4/0x18c
-> > 	[    7.823703]  component_add+0x14/0x20
-> > 	[    7.827389]  dp_display_probe+0x47c/0x568 [msm]
-> > 	[    7.832052]  platform_probe+0x68/0xd8
-> > 
-> > Users have also reported random crashes at boot since 6.8-rc1, and I've
-> > been able to trigger hard crashes twice when testing an external display
-> > (USB-C/DP), which may also be related to the DP regressions.
+#regzbot ^introduced v6.6..v6.7
+#regzbot title arm: omap: platform 4809c000.mmc: deferred probe pending
+#regzbot ignore-activity
 
-Johan
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
