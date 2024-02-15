@@ -1,91 +1,108 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69912F36F
-	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 11:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F4812BEB5
+	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 11:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707995023; cv=none; b=aygYuNdFOtZ7Wa8IDz2wmNoeHQvEDGpiZKvQTox/V2F/d/2sH/WwBbUy6Nwg7WhJBNViuQVPFeL7eI90raFpTMVlUoBTib+vKqoRmrYJ0b9W49yrscyHMSZvAK82V4qTu8tn8yVPOZB3E8V4oEolnZPUsZsprW26YFmP3+CBZkY=
+	t=1707995372; cv=none; b=NPSglT9Tv88+cDwq+NJ/cCpHUaOrs+WsZHvCsTTTdplO3hQ/r5UFUrE0MvzYZoZnXI8rGaVtNSJe3KLJNzxqVPS7ycThBXWU5bS0vw45c7NeiDzUDLaX3U/UsMJrfo7Nsq7y9pnAFchWAE1XzkuoYFQIPRvVZKK2MzxFScfk18c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707995023; c=relaxed/simple;
-	bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=unhgcFVGP+805UuO2au1o4FCEdXpl5VQ63TEYF8lDzs5pyaeC/Z3Z4JGs3KzlUx5wBUFPQTW7HlskxIROjg4k4Z4Gfgth27DYeNtUCSLYt1GP48d+xb9UTAw1AHYNSeaati7Blc35b7zJwpCdeEeN3OiB3f8BjSgPA/JW68rNRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hm+OlInf; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hm+OlInf"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4affeacaff9so179921e0c.3
-        for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 03:03:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707995020; x=1708599820; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
-        b=hm+OlInfMcinyAVUJA1txicZLkTngW/xgUFzJ0qMaQoC0ZdvfvudLI7Dc6ABDt4XoY
-         ZJBbjPK0BASWGQmruKmbQ0kTtUXPFIqK1Vj2p+QZeHyRdhK+UbACGo1bYTtgJ5Lb+O+K
-         HNw8H8lsp8AddkYPV4LAgTmjtwHynnE4ognaFIocpII8bLGGlxU1Df67gHdzIUVI9Tbh
-         lMUqmy7MsHAugt68gjCmtaATASq3H/QPr8m16t3ySgwCebAGNFCyK5fTw8sFZEsXLQFw
-         Hc5/b5bNlSrz7Ab5VYqhzbTIWVQaaM/OHSF9dizx7mv+efFjz+jMFKr6EaT2dpVLjTZW
-         4Tpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707995020; x=1708599820;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
-        b=GFFM7/zQ7f8g/0xMbCHXGWb5CSZwIwyQgj6rLJRiZ9d4P9ui8DhpX8er9N5Xn/oZDQ
-         +ilBOHri3qZj3DrftVhrX1UH+P6KRYN3G7Zv1k6tt6T0Lv0PoL2rsPDLM8S00q2bMvGW
-         V07JNuQ7YXy2GqVPlC6zvLZAGMLDj8vXxqK0vYM5g0Mj8o3RJsOPbTSyISUzxF0ffuQo
-         K9YCDd5I/DQ2Dpjo0g4uPcoMqJS8eRmNjWDeYS0hwyPIqbxUrcUV0wgl6w8+2ziiiz/r
-         QW/rqN4ZPXHyW7vC3Xt49+V4yafi9dNKl2DNZgXPKUyuBADHZcsaVIUntEX0d2tSkfqJ
-         mgng==
-X-Forwarded-Encrypted: i=1; AJvYcCVrHE/2P3u/m3HQtTKsKzKnoevkf1OijvZTjxfS9APtqqATRk9+RzGefDF2Y+/SEiScJDRS/OUQC489Lu9AwZ7wwjl0rHn8CLvN8SA=
-X-Gm-Message-State: AOJu0YyF0+smFVtpDQKtNNwiEVrZlQ29UNNMCYSD//00EkEZABJPmdtc
-	hBaY8OWjvcM+iKnSJLo7SPc9PP+EBjeoWmblmHKlJ9O4SrspKXAy6KQr+kwly2larQs2R9+AcyV
-	u9ckX5tpdungPTTG+/fBu2sS7tDqtS3yhaMlwAA==
-X-Google-Smtp-Source: AGHT+IEYRlBkhUM8iWKwiW+yr8eYjy4B779TPoJKTltHiC2zBtjSq3OeyP9rmxZ3uB2kTMQTsVbCA3nxH7Tk/iDNTWQ=
-X-Received: by 2002:a1f:dd82:0:b0:4c0:2802:a1d8 with SMTP id
- u124-20020a1fdd82000000b004c02802a1d8mr969343vkg.15.1707995020685; Thu, 15
- Feb 2024 03:03:40 -0800 (PST)
+	s=arc-20240116; t=1707995372; c=relaxed/simple;
+	bh=Y2pGpvd23nSIXN6OktBS6/0YBWljbrMTHz18LGF/8m8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Maa+PXmriJ22Xsyaa3nZmUa/LTAZN4Q7vW0nCtOWQxHgleuWvaixjBZYqV++XH4CdWhA+MtG3usckR4fEac4MW6I/9h7Iv7Uc3SgjFSopue/hjGdGgg7459kZTHp9YU0Jf5PuS74nNZ+rRbIZtkp7MaW5/YyhKu5RA3919ugpQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id BF16C89B671;
+	Thu, 15 Feb 2024 12:09:20 +0100 (CET)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ linux-usb@vger.kernel.org,
+ Holger =?ISO-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+ linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: I/O errors while writing to external Transcend XS-2000 4TB SSD
+Date: Thu, 15 Feb 2024 12:09:20 +0100
+Message-ID: <1979818.usQuhbGJ8B@lichtvoll.de>
+In-Reply-To: <ypeck262h6ccdnsxzo46vydzygh2y6coe3d4mvgermaaeo5ygg@4nvailbg7ay3>
+References:
+ <1854085.atdPhlSkOF@lichtvoll.de> <6599603.G0QQBjFxQf@lichtvoll.de>
+ <ypeck262h6ccdnsxzo46vydzygh2y6coe3d4mvgermaaeo5ygg@4nvailbg7ay3>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
-In-Reply-To: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 15 Feb 2024 16:33:28 +0530
-Message-ID: <CA+G9fYu1sEsMRJg-f5e-y9PQ1hyNDWJhnWo21w6BB78Y9-9yhQ@mail.gmail.com>
-Subject: Re: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Anders Roxell <anders.roxell@linaro.org>
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 Feb 2024 at 15:41, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On today's Linux next-20240215 tinyconfig builds failed on arm, arm64, powerpc,
-> s390 and riscv with gcc-13 and clang.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> build error:
-> -------
-> aarch64-linux-gnu-ld: kernel/workqueue.o: in function `kick_pool':
-> workqueue.c:(.text+0x9e4): undefined reference to `irq_work_queue_on'
-> workqueue.c:(.text+0x9e4): relocation truncated to fit:
-> R_AARCH64_CALL26 against undefined symbol `irq_work_queue_on'
+Kent Overstreet - 12.02.24, 21:42:26 CET:
 
-Anders bisect this build regression and found first bad commit,
+[thoughts about whether a cache flush / FUA request with write caches=20
+disabled would be a no-op anyway]
 
-# first bad commit: [3bc1e711c26bff01d41ad71145ecb8dcb4412576]
-workqueue: Don't implicitly make UNBOUND workqueues w/ @max_active==1
-ordered
+> > I may test the Transcend XS2000 with BTRFS to see whether it makes a
+> > difference, however I really like to use it with BCacheFS and I do not
+> > really like to use LUKS for external devices. According to the kernel
+> > log I still don't really think those errors at the block layer were
+> > about anything filesystem specific, but what  do I know?
+>=20
+> It's definitely not unheard of for one specific filesystem to be
+> tickling driver/device bugs and not others.
+>=20
+> I wonder what it would take to dump the outstanding requests on device
+> timeout.
 
-- Naresh
+I got some reply back from Transcend support.
+
+They brought up two possible issues:
+
+1) Copied to many files at once. I am not going to accept that one. An=20
+external 4 TB SSD should handle writing 1,4 TB in about 215000 files,=20
+coming from a slower Toshiba Canvio Basics external HD, just fine. About=20
+90000 files was larger files like sound and video files or installation=20
+archives. The rest is from a Linux system backup, so smaller files. I=20
+likely move those elsewhere before I try again as I do not need these on=20
+flash anyway. However if the amount of files or data matters I could never=
+=20
+know what amount of data I could write safely in one go. That is not=20
+acceptable to me.
+
+2) Power management related to USB port. Cause I am using a laptop. It may=
+=20
+have been that the Linux kernel decided to put the USB port the SSD was=20
+connected to into some kind of sleep state. However it was a constant=20
+rsync based copy workload. Yes, the kernel buffers data and the reads from=
+=20
+Toshiba HD should be quite a bit slower than the Transcend SSD could=20
+handle the writes. I saw now more than 80-90 MiB/s coming from the hard=20
+disk. However I would doubt this lead to pauses of write activity of more=20
+than 30 seconds. Still it could be a thing.
+
+Regarding further testing I am unsure whether to first test with BTRFS on=20
+top of LUKS =E2=80=93 I do not like to store clear text data on the SSD =E2=
+=80=93 or with=20
+BCacheFS plus fixes which are 6.7.5 or 6.8-rc4 in just in the case the flus=
+h=20
+handling fixes would still have an influence on the issue at hand.
+
+=46irst I will have a look on how to see what USB power management options=
+=20
+may be in place and how to tell Linux to keep the USB port the SSD is=20
+connected to at all times.
+
+Let's see how this story unfolds. At least I am in no hurry about it.
+
+Best,
+=2D-=20
+Martin
+
+
