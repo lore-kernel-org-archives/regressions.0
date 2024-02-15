@@ -1,56 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01395FF03;
-	Wed, 14 Feb 2024 16:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C394A12;
+	Thu, 15 Feb 2024 05:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707927655; cv=none; b=BTITpPxAkqGfwD2lg9S3nvtxWPovPwF8iJWfZxFIJ2I90T4eGNxDQDMtZdk9jLT7LwmEMdmEKahplagJOZd7JHuTNiaVIwKXbDRT92RSaAUUeM8RpOGfv2xB6Ko8GM9Z/xEF9sdVXV5Cq0vUdG3/fQ3sxxFO8m++4fN2UC7sINU=
+	t=1707976791; cv=none; b=XlBXA2PbuBmzDtsDNHh/9UUH9EO2/a3t3mrXQXIbQ80M2mQC8tdqfYLCLYUCcfLZF3vkLjNYEAw4VFYCpqSkN59k0lcpbQKsoMnkIO3B9HA5NHXaUPpn87+yVn/lgDbgM4d8is4r8d2es/6gZ26N7vC9VVZLtZ2xLsBu5YLCDbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707927655; c=relaxed/simple;
-	bh=UYB+HoT6dXR3Q4alz/s7RxFLW6sCTSYU0ADxHCZfdsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AeFoqRhWwIVkectvoks089USgU81wtzebWXap0eU0nxo1+jG13MQVKryeMaArN1cQuoqyIXPOyHqawQbMrylFJBnFqxOMxr6QUi90XTF2OKGvYPJFeKk1+4ic2NzVmnFGj0eDL+RFCNlkZRJiyZHskJkzOIRA1Ws/8NSkc6i9ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0D7C433C7;
-	Wed, 14 Feb 2024 16:20:54 +0000 (UTC)
-Date: Wed, 14 Feb 2024 11:22:25 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jeff Johnson
- <quic_jjohnson@quicinc.com>
-Subject: Re: [regression] tracing: kmemleak warning in
- allocate_cmdlines_buffer()
-Message-ID: <20240214112225.088484da@gandalf.local.home>
-In-Reply-To: <87mss3njvj.fsf@kernel.org>
-References: <87r0hfnr9r.fsf@kernel.org>
-	<20240214094617.1e6ec684@gandalf.local.home>
-	<87mss3njvj.fsf@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707976791; c=relaxed/simple;
+	bh=8g7W4dZOG39FnSpecZxtEgLFJI5RUtz/Zzqt/HjtKYM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KtaRxEBsnNxigZTeBvqQiUcopdsXOAQrRFBm6efneNVeGGCKzVXaMqHXwrBgPNbbIcEZuA8waqjaErzu61IvwoWqJYwRAcXbq499YQelmmic+YAlspvYzb4WFMVFIeBOqQvMB4VTk+5Rl39cp3jw2coEpEbQAea97C4JWFoRqBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raUmg-0001pd-LG; Thu, 15 Feb 2024 06:59:46 +0100
+Message-ID: <e65c6dc4-9b43-4c97-bb4c-d9c14655835d@leemhuis.info>
+Date: Thu, 15 Feb 2024 06:59:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1061449: linux-image-6.7-amd64: a boot message from amdgpu
+Content-Language: en-US, de-DE
+To: regressions@lists.linux.dev
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
+ <ZbUB0YWxEET3Y0xA@eldamar.lan>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZbUB0YWxEET3Y0xA@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707976789;a1ba730d;
+X-HE-SMSGID: 1raUmg-0001pd-LG
 
-On Wed, 14 Feb 2024 17:30:40 +0200
-Kalle Valo <kvalo@kernel.org> wrote:
+On 27.01.24 14:14, Salvatore Bonaccorso wrote:
+> 
+> In Debian (https://bugs.debian.org/1061449) we got the following
+> quotred report:
+> 
+> On Wed, Jan 24, 2024 at 07:38:16PM +0100, Patrice Duroux wrote:
+>> Package: src:linux
+>> Version: 6.7.1-1~exp1
+>> Severity: normal
+>>
+>> Giving a try to 6.7, here is a message extracted from dmesg:
+>>
+>> [    4.177226] ------------[ cut here ]------------
+>> [    4.177227] WARNING: CPU: 6 PID: 248 at
+>> drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_factory.c:387
+>> construct_phy+0xb26/0xd60 [amdgpu]
+> 
+> Analysis showed that this appears to be a regression from b17ef04bf3a4
+> ("drm/amd/display: Pass pwrseq inst for backlight and ABM"). Does that
+> ring some bells?
+> 
+> See: https://bugs.debian.org/1061449#27
+> 
+> #regzbot introduced: b17ef04bf3a4
+> #regzbot link: https://bugs.debian.org/1061449
+> #regzbot title: Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
 
-> Although the patch didn't apply for me as in my tree the functions are
-> in kernel/trace/trace.c. I don't know what happened so as a quick hack I
-> just manually added the three lines to my version of trace.c. Let me
-> know if there's a git tree or branch you would like me to test, I can do
-> that easily.
+#regzbot monitor:
+https://lore.kernel.org/amd-gfx/20240214184006.1356137-8-Rodrigo.Siqueira@amd.com/
+#regzbot fix: drm/amd/display: Only allow dig mapping to pwrseq in new asic
+#regzbot ignore-activity
 
-I sent out a v2 that should apply and I added your Tested-by tag. But you
-may want to verify that it does indeed still work, as I decided to swap the
-order of adding kmemleak_alloc() with the memset(), so it's not exactly the
-same.
-
-Thanks,
-
--- Steve
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
