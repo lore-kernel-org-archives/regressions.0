@@ -1,108 +1,71 @@
-Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F4812BEB5
-	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 11:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AF924B26;
+	Thu, 15 Feb 2024 11:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707995372; cv=none; b=NPSglT9Tv88+cDwq+NJ/cCpHUaOrs+WsZHvCsTTTdplO3hQ/r5UFUrE0MvzYZoZnXI8rGaVtNSJe3KLJNzxqVPS7ycThBXWU5bS0vw45c7NeiDzUDLaX3U/UsMJrfo7Nsq7y9pnAFchWAE1XzkuoYFQIPRvVZKK2MzxFScfk18c=
+	t=1707995798; cv=none; b=GwEcI/1OWCXUjIL1MAlgp1khVVMtUiQahAezN1dN0zXMP+302lyVi1/msez7KahqGVP91STwA+FvcIX1jGEcpfAos4l1U9PhGJlrA7vtNhu4vh7mVj3IOPqfkGDfY1v23OFNFtnwqmRCpWF89JiDlW+tEf6+T3MJmG7HsK+9MJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707995372; c=relaxed/simple;
-	bh=Y2pGpvd23nSIXN6OktBS6/0YBWljbrMTHz18LGF/8m8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Maa+PXmriJ22Xsyaa3nZmUa/LTAZN4Q7vW0nCtOWQxHgleuWvaixjBZYqV++XH4CdWhA+MtG3usckR4fEac4MW6I/9h7Iv7Uc3SgjFSopue/hjGdGgg7459kZTHp9YU0Jf5PuS74nNZ+rRbIZtkp7MaW5/YyhKu5RA3919ugpQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id BF16C89B671;
-	Thu, 15 Feb 2024 12:09:20 +0100 (CET)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-usb@vger.kernel.org,
- Holger =?ISO-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
- linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: I/O errors while writing to external Transcend XS-2000 4TB SSD
-Date: Thu, 15 Feb 2024 12:09:20 +0100
-Message-ID: <1979818.usQuhbGJ8B@lichtvoll.de>
-In-Reply-To: <ypeck262h6ccdnsxzo46vydzygh2y6coe3d4mvgermaaeo5ygg@4nvailbg7ay3>
-References:
- <1854085.atdPhlSkOF@lichtvoll.de> <6599603.G0QQBjFxQf@lichtvoll.de>
- <ypeck262h6ccdnsxzo46vydzygh2y6coe3d4mvgermaaeo5ygg@4nvailbg7ay3>
+	s=arc-20240116; t=1707995798; c=relaxed/simple;
+	bh=6xdyrChR0wvTNah2WnJ9/7BbmJe93P+B2CIToWbynNo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqdnEhsE1Ub2Vbbb7bGk2AHEiBKq5XV7N6t8ah/HZ3fBffiTYJ6zjC/i0PqaUSDMBnuBIIeJFEqz4eBCTBkCRZV2dh9BI/ChFSZntjdbuy6F4vTMZ767pkTZ5MeNhGOQBYBGxUx9yFWUWyb5HRknqmlbWjoyAfPYgw3c8QRTlpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aeF8PZrM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aeF8PZrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D95C433F1;
+	Thu, 15 Feb 2024 11:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707995797;
+	bh=6xdyrChR0wvTNah2WnJ9/7BbmJe93P+B2CIToWbynNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aeF8PZrMQyFAWqhbg1iGM/zPzrFBl63CLpv55n58dO5t3cpc4TxW9Rtij0pqzTWel
+	 wVBZ/XfBOiAqzww4BAk/svd1VNMUfmYKS9kV+Z50+qruA0IzcwpPzvhesoVfqKD8SX
+	 OdR6dtHm/lO82swjiP4Lla3x5iYJmDuxru4tEuwI=
+Date: Thu, 15 Feb 2024 12:16:34 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Andreas Schwab <schwab@suse.de>
+Cc: Tony Lindgren <tony@atomide.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Message-ID: <2024021516-stricken-bubble-bf8d@gregkh>
+References: <mvmcyt13idm.fsf@suse.de>
+ <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
+ <20240215094640.GS52537@atomide.com>
+ <mvmeddeyqb8.fsf@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mvmeddeyqb8.fsf@suse.de>
 
-Kent Overstreet - 12.02.24, 21:42:26 CET:
+On Thu, Feb 15, 2024 at 11:28:27AM +0100, Andreas Schwab wrote:
+> On Feb 15 2024, Tony Lindgren wrote:
+> 
+> > There was a regression recently with the PMIC which would cause NFSroot
+> > on devices to keep working but may have affected MMC. Please check that
+> > commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
+> > is applied.
+> 
+> That commit hasn't hit stable yet.  Maybe it's because it references a
+> non-existant commit id (1e0c866887f4 instead of 830fafce06e6).
 
-[thoughts about whether a cache flush / FUA request with write caches=20
-disabled would be a no-op anyway]
+Yeah, our tools can't do about a commit that does not have a cc: stable@
+tag in it AND the only commit it does reference is not one actually in
+the tree at all.
 
-> > I may test the Transcend XS2000 with BTRFS to see whether it makes a
-> > difference, however I really like to use it with BCacheFS and I do not
-> > really like to use LUKS for external devices. According to the kernel
-> > log I still don't really think those errors at the block layer were
-> > about anything filesystem specific, but what  do I know?
->=20
-> It's definitely not unheard of for one specific filesystem to be
-> tickling driver/device bugs and not others.
->=20
-> I wonder what it would take to dump the outstanding requests on device
-> timeout.
+An impossible task for us here, please ask stable@vger.kernel.org to
+take the commit if this is needed, and let us know how far back it
+should go.
 
-I got some reply back from Transcend support.
+thanks,
 
-They brought up two possible issues:
-
-1) Copied to many files at once. I am not going to accept that one. An=20
-external 4 TB SSD should handle writing 1,4 TB in about 215000 files,=20
-coming from a slower Toshiba Canvio Basics external HD, just fine. About=20
-90000 files was larger files like sound and video files or installation=20
-archives. The rest is from a Linux system backup, so smaller files. I=20
-likely move those elsewhere before I try again as I do not need these on=20
-flash anyway. However if the amount of files or data matters I could never=
-=20
-know what amount of data I could write safely in one go. That is not=20
-acceptable to me.
-
-2) Power management related to USB port. Cause I am using a laptop. It may=
-=20
-have been that the Linux kernel decided to put the USB port the SSD was=20
-connected to into some kind of sleep state. However it was a constant=20
-rsync based copy workload. Yes, the kernel buffers data and the reads from=
-=20
-Toshiba HD should be quite a bit slower than the Transcend SSD could=20
-handle the writes. I saw now more than 80-90 MiB/s coming from the hard=20
-disk. However I would doubt this lead to pauses of write activity of more=20
-than 30 seconds. Still it could be a thing.
-
-Regarding further testing I am unsure whether to first test with BTRFS on=20
-top of LUKS =E2=80=93 I do not like to store clear text data on the SSD =E2=
-=80=93 or with=20
-BCacheFS plus fixes which are 6.7.5 or 6.8-rc4 in just in the case the flus=
-h=20
-handling fixes would still have an influence on the issue at hand.
-
-=46irst I will have a look on how to see what USB power management options=
-=20
-may be in place and how to tell Linux to keep the USB port the SSD is=20
-connected to at all times.
-
-Let's see how this story unfolds. At least I am in no hurry about it.
-
-Best,
-=2D-=20
-Martin
-
-
+greg k-h
