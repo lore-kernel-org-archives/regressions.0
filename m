@@ -1,115 +1,91 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2559769300
-	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 10:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69912F36F
+	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 11:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707992910; cv=none; b=taenvzs6UUFAu4LSkn4PeQ+UeI2DB/c0RsNi40nPVGNBjK1+bYWU2WgOVXvo6nyZPIdVL/QpZztjL/fpZn2gqwa/U21FUis7dLRUt0BIPwqG9EyEXPLm+oUiBY70MOwPWAsZ5Xm9mfN/msWPY1RPXvhZJgmb/hB7Bs5YFGuF2H4=
+	t=1707995023; cv=none; b=aygYuNdFOtZ7Wa8IDz2wmNoeHQvEDGpiZKvQTox/V2F/d/2sH/WwBbUy6Nwg7WhJBNViuQVPFeL7eI90raFpTMVlUoBTib+vKqoRmrYJ0b9W49yrscyHMSZvAK82V4qTu8tn8yVPOZB3E8V4oEolnZPUsZsprW26YFmP3+CBZkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707992910; c=relaxed/simple;
-	bh=IWGtQN3o+8yGE/lqzOEpET9KMgvOxbcdTvs0UGPNWlY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H6F52Pbv8gx9XH1Yd6AK1DK6t0PC2e8fnOjwiSYpg6RvtUtXuIJCZX+V32vG87JlvfL12AhHyNlKcK001plm7tAoHkh97i3flhohw5hDcfosCtAfFUtQ47be4NbOQJn6ktCMWeisQB8wmSSIW0YaHr9/Ocy/SNpaFy2RsV80mg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gRW8qAj3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cqTT/FKX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gRW8qAj3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cqTT/FKX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707995023; c=relaxed/simple;
+	bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=unhgcFVGP+805UuO2au1o4FCEdXpl5VQ63TEYF8lDzs5pyaeC/Z3Z4JGs3KzlUx5wBUFPQTW7HlskxIROjg4k4Z4Gfgth27DYeNtUCSLYt1GP48d+xb9UTAw1AHYNSeaati7Blc35b7zJwpCdeEeN3OiB3f8BjSgPA/JW68rNRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hm+OlInf; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gRW8qAj3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cqTT/FKX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gRW8qAj3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cqTT/FKX"
-Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 70FB821D9A;
-	Thu, 15 Feb 2024 10:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707992907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MKKW7UFhlhPdogcyNp83HsYSJa5cH3/SIQawY+8tphY=;
-	b=gRW8qAj3AudbZgyFTDv4dLSzQkJ7EdDvwnCcctyBZ79D9v+kMYRKCJ9sPOsFHReeyjxye4
-	SlCkNl6qWF37qWCEzbqpZ67M0ovxyoKLvDfhC5/sVzW3SEdGrexrfz4Sv6zqF+xbpGiInN
-	s7C264wHYdEXw8qByRarjwv/vv8NN8E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707992907;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MKKW7UFhlhPdogcyNp83HsYSJa5cH3/SIQawY+8tphY=;
-	b=cqTT/FKXp5RXj/Qmgn/Z/KaK/ySsbZlSWuNoD/J7PlMt0WFsedZjINLHQLbq0/lcvkLkoZ
-	FQV/oW3BX0qMiKCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707992907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MKKW7UFhlhPdogcyNp83HsYSJa5cH3/SIQawY+8tphY=;
-	b=gRW8qAj3AudbZgyFTDv4dLSzQkJ7EdDvwnCcctyBZ79D9v+kMYRKCJ9sPOsFHReeyjxye4
-	SlCkNl6qWF37qWCEzbqpZ67M0ovxyoKLvDfhC5/sVzW3SEdGrexrfz4Sv6zqF+xbpGiInN
-	s7C264wHYdEXw8qByRarjwv/vv8NN8E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707992907;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MKKW7UFhlhPdogcyNp83HsYSJa5cH3/SIQawY+8tphY=;
-	b=cqTT/FKXp5RXj/Qmgn/Z/KaK/ySsbZlSWuNoD/J7PlMt0WFsedZjINLHQLbq0/lcvkLkoZ
-	FQV/oW3BX0qMiKCA==
-Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
-	id 5FA7F4A04EC; Thu, 15 Feb 2024 11:28:27 +0100 (CET)
-From: Andreas Schwab <schwab@suse.de>
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-  linux-arm-kernel@lists.infradead.org,  Aaro Koskinen
- <aaro.koskinen@iki.fi>,  Linux-OMAP <linux-omap@vger.kernel.org>
-Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
-In-Reply-To: <20240215094640.GS52537@atomide.com> (Tony Lindgren's message of
-	"Thu, 15 Feb 2024 11:46:40 +0200")
-References: <mvmcyt13idm.fsf@suse.de>
-	<c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
-	<20240215094640.GS52537@atomide.com>
-X-Yow: My haircut is totally traditional!
-Date: Thu, 15 Feb 2024 11:28:27 +0100
-Message-ID: <mvmeddeyqb8.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hm+OlInf"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4affeacaff9so179921e0c.3
+        for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 03:03:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707995020; x=1708599820; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+        b=hm+OlInfMcinyAVUJA1txicZLkTngW/xgUFzJ0qMaQoC0ZdvfvudLI7Dc6ABDt4XoY
+         ZJBbjPK0BASWGQmruKmbQ0kTtUXPFIqK1Vj2p+QZeHyRdhK+UbACGo1bYTtgJ5Lb+O+K
+         HNw8H8lsp8AddkYPV4LAgTmjtwHynnE4ognaFIocpII8bLGGlxU1Df67gHdzIUVI9Tbh
+         lMUqmy7MsHAugt68gjCmtaATASq3H/QPr8m16t3ySgwCebAGNFCyK5fTw8sFZEsXLQFw
+         Hc5/b5bNlSrz7Ab5VYqhzbTIWVQaaM/OHSF9dizx7mv+efFjz+jMFKr6EaT2dpVLjTZW
+         4Tpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707995020; x=1708599820;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OBvnn+vLzA5myTGqwxaRCsbH/Eb4JV3XiuBr+hyLuMo=;
+        b=GFFM7/zQ7f8g/0xMbCHXGWb5CSZwIwyQgj6rLJRiZ9d4P9ui8DhpX8er9N5Xn/oZDQ
+         +ilBOHri3qZj3DrftVhrX1UH+P6KRYN3G7Zv1k6tt6T0Lv0PoL2rsPDLM8S00q2bMvGW
+         V07JNuQ7YXy2GqVPlC6zvLZAGMLDj8vXxqK0vYM5g0Mj8o3RJsOPbTSyISUzxF0ffuQo
+         K9YCDd5I/DQ2Dpjo0g4uPcoMqJS8eRmNjWDeYS0hwyPIqbxUrcUV0wgl6w8+2ziiiz/r
+         QW/rqN4ZPXHyW7vC3Xt49+V4yafi9dNKl2DNZgXPKUyuBADHZcsaVIUntEX0d2tSkfqJ
+         mgng==
+X-Forwarded-Encrypted: i=1; AJvYcCVrHE/2P3u/m3HQtTKsKzKnoevkf1OijvZTjxfS9APtqqATRk9+RzGefDF2Y+/SEiScJDRS/OUQC489Lu9AwZ7wwjl0rHn8CLvN8SA=
+X-Gm-Message-State: AOJu0YyF0+smFVtpDQKtNNwiEVrZlQ29UNNMCYSD//00EkEZABJPmdtc
+	hBaY8OWjvcM+iKnSJLo7SPc9PP+EBjeoWmblmHKlJ9O4SrspKXAy6KQr+kwly2larQs2R9+AcyV
+	u9ckX5tpdungPTTG+/fBu2sS7tDqtS3yhaMlwAA==
+X-Google-Smtp-Source: AGHT+IEYRlBkhUM8iWKwiW+yr8eYjy4B779TPoJKTltHiC2zBtjSq3OeyP9rmxZ3uB2kTMQTsVbCA3nxH7Tk/iDNTWQ=
+X-Received: by 2002:a1f:dd82:0:b0:4c0:2802:a1d8 with SMTP id
+ u124-20020a1fdd82000000b004c02802a1d8mr969343vkg.15.1707995020685; Thu, 15
+ Feb 2024 03:03:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-1.37 / 50.00];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-1.27)[89.77%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.37
+References: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+In-Reply-To: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 15 Feb 2024 16:33:28 +0530
+Message-ID: <CA+G9fYu1sEsMRJg-f5e-y9PQ1hyNDWJhnWo21w6BB78Y9-9yhQ@mail.gmail.com>
+Subject: Re: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Feb 15 2024, Tony Lindgren wrote:
+On Thu, 15 Feb 2024 at 15:41, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On today's Linux next-20240215 tinyconfig builds failed on arm, arm64, powerpc,
+> s390 and riscv with gcc-13 and clang.
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> build error:
+> -------
+> aarch64-linux-gnu-ld: kernel/workqueue.o: in function `kick_pool':
+> workqueue.c:(.text+0x9e4): undefined reference to `irq_work_queue_on'
+> workqueue.c:(.text+0x9e4): relocation truncated to fit:
+> R_AARCH64_CALL26 against undefined symbol `irq_work_queue_on'
 
-> There was a regression recently with the PMIC which would cause NFSroot
-> on devices to keep working but may have affected MMC. Please check that
-> commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
-> is applied.
+Anders bisect this build regression and found first bad commit,
 
-That commit hasn't hit stable yet.  Maybe it's because it references a
-non-existant commit id (1e0c866887f4 instead of 830fafce06e6).
+# first bad commit: [3bc1e711c26bff01d41ad71145ecb8dcb4412576]
+workqueue: Don't implicitly make UNBOUND workqueues w/ @max_active==1
+ordered
 
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+- Naresh
