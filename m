@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C394A12;
-	Thu, 15 Feb 2024 05:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C64B13FE0;
+	Thu, 15 Feb 2024 08:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707976791; cv=none; b=XlBXA2PbuBmzDtsDNHh/9UUH9EO2/a3t3mrXQXIbQ80M2mQC8tdqfYLCLYUCcfLZF3vkLjNYEAw4VFYCpqSkN59k0lcpbQKsoMnkIO3B9HA5NHXaUPpn87+yVn/lgDbgM4d8is4r8d2es/6gZ26N7vC9VVZLtZ2xLsBu5YLCDbY=
+	t=1707986715; cv=none; b=p0RPvk0truk8u6mEYEvcy6PaeaGdPzP6XZTAu5bm/d+EuIEmBcXI2vrcaUKJbh7+JSgwt+xI0zXwsCMjBFo1c7eoCKcwdJ4xuzsBhcwIbaetg05gGU11h1IDg/l3UpL9Y5D9wTgqDdoh6xNVaHSRPmJQMDXSfwiZk1EBk+lCNWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707976791; c=relaxed/simple;
-	bh=8g7W4dZOG39FnSpecZxtEgLFJI5RUtz/Zzqt/HjtKYM=;
+	s=arc-20240116; t=1707986715; c=relaxed/simple;
+	bh=P30eQt85pILS+8iYd/I7kRbfNwa0y6eSKTutvbbpLqc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KtaRxEBsnNxigZTeBvqQiUcopdsXOAQrRFBm6efneNVeGGCKzVXaMqHXwrBgPNbbIcEZuA8waqjaErzu61IvwoWqJYwRAcXbq499YQelmmic+YAlspvYzb4WFMVFIeBOqQvMB4VTk+5Rl39cp3jw2coEpEbQAea97C4JWFoRqBk=
+	 In-Reply-To:Content-Type; b=jGRNQtpRlWa+9MZBJFevwIR6FRsXu1qLrOQ28dO523Uyp5IvOG1dXK5xqobxZUKsQy7vpznnGdX1qba75DzmvCCvlTui+nJZ4yUP4tq0eEMqKvUFD2vEa0kVyil55G/mkRY1LcQf6tUTjMiliQbDm/1WDMyegvnXoNTTZqwbRug=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raUmg-0001pd-LG; Thu, 15 Feb 2024 06:59:46 +0100
-Message-ID: <e65c6dc4-9b43-4c97-bb4c-d9c14655835d@leemhuis.info>
-Date: Thu, 15 Feb 2024 06:59:46 +0100
+	id 1raXMd-0007RI-1i; Thu, 15 Feb 2024 09:45:03 +0100
+Message-ID: <42052f23-d582-4533-a09d-a1de437836b7@leemhuis.info>
+Date: Thu, 15 Feb 2024 09:45:01 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,56 +26,63 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1061449: linux-image-6.7-amd64: a boot message from amdgpu
+Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant
+ case
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <170612149675.7169.757906919183146487.reportbug@kos-moceratops.home>
- <ZbUB0YWxEET3Y0xA@eldamar.lan>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZbUB0YWxEET3Y0xA@eldamar.lan>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ bristot@redhat.com, vschneid@redhat.com, wkarny@gmail.com,
+ qyousef@layalina.io, tglx@linutronix.de, rafael@kernel.org,
+ viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+ Thierry Reding <treding@nvidia.com>, Sasha Levin <sashal@nvidia.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>,
+ Shardar Mohammed <smohammed@nvidia.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240114183600.135316-1-vincent.guittot@linaro.org>
+ <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com>
+ <CAHk-=wgjiVanO4ZS1hy2sfAFTN_pYtQqVQb_g+dbrP34M6xTDw@mail.gmail.com>
+ <CAKfTPtA8W+SijB9D3GtNbC7o_XHUV-umcL6chJQbMDxWeX7exg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAKfTPtA8W+SijB9D3GtNbC7o_XHUV-umcL6chJQbMDxWeX7exg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707976789;a1ba730d;
-X-HE-SMSGID: 1raUmg-0001pd-LG
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707986713;be9aface;
+X-HE-SMSGID: 1raXMd-0007RI-1i
 
-On 27.01.24 14:14, Salvatore Bonaccorso wrote:
-> 
-> In Debian (https://bugs.debian.org/1061449) we got the following
-> quotred report:
-> 
-> On Wed, Jan 24, 2024 at 07:38:16PM +0100, Patrice Duroux wrote:
->> Package: src:linux
->> Version: 6.7.1-1~exp1
->> Severity: normal
+Linus, what...
+
+On 14.02.24 18:22, Vincent Guittot wrote:
+> On Wed, 14 Feb 2024 at 18:20, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> On Wed, 14 Feb 2024 at 09:12, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>> We have also observed a performance degradation on our Tegra platforms
+>>> with v6.8-rc1. Unfortunately, the above change does not fix the problem
+>>> for us and we are still seeing a performance issue with v6.8-rc4. For
+>>> example, running Dhrystone on Tegra234 I am seeing the following ...
+>>> [...]
+>>> If I revert this change and the following ...
+>>>   b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
+>>>   f12560779f9d ("sched/cpufreq: Rework iowait boost")
+>>>   9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
+>>> ... then the perf is similar to where it was ...
 >>
->> Giving a try to 6.7, here is a message extracted from dmesg:
->>
->> [    4.177226] ------------[ cut here ]------------
->> [    4.177227] WARNING: CPU: 6 PID: 248 at
->> drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_factory.c:387
->> construct_phy+0xb26/0xd60 [amdgpu]
-> 
-> Analysis showed that this appears to be a regression from b17ef04bf3a4
-> ("drm/amd/display: Pass pwrseq inst for backlight and ABM"). Does that
-> ring some bells?
-> 
-> See: https://bugs.debian.org/1061449#27
-> 
-> #regzbot introduced: b17ef04bf3a4
-> #regzbot link: https://bugs.debian.org/1061449
-> #regzbot title: Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
+>> Ok, guys, this whole scheduler / cpufreq rewrite seems to have been
+>> completely buggered.
+>> [...]
+> This should fix it:
+> https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
 
-#regzbot monitor:
-https://lore.kernel.org/amd-gfx/20240214184006.1356137-8-Rodrigo.Siqueira@amd.com/
-#regzbot fix: drm/amd/display: Only allow dig mapping to pwrseq in new asic
-#regzbot ignore-activity
+...do you want me to do in situations like this? I'm asking, as I see
+situations like this frequently -- e.g. people reporting problems a
+second, third, or fourth time while the fix is already sitting in -next
+for a few days.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Want me to list them in the weekly reports so that you can cherry-pick
+them from -next if you want?
+
+Ciao, Thorsten
