@@ -1,84 +1,54 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE4169D0F
-	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 10:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA7A67E70
+	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 10:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707991892; cv=none; b=cQgKrkso8MCxmnRi1JXs+vWznA+6h3t+Pz05gqze7UpZj5HLhibdstR1sgtGRs2UuG671LiTWG6QBsoB10q7hf3xPPAujG6SX1pmsQe48I0+kFWGYE4ps2B3URrHvL5ztMIpzAxrGi9VoQvS2TefjpiwymN7TTS5B4XORm6RBdI=
+	t=1707992844; cv=none; b=nUzrHr719X95+FH4ihXHxhvf68EFoiDxBLGBBrYbf6AwbiC9eF9cs11CQxOKIs6FUmn+OL+51Y2lC5ZfZ3Vd5kgD9JTK9netIFydam0+5OP6hQPFhyxqkW7HTtk98Wat/f/ZdiqduSbhQnIi1O/qm3iMYac/3GTFGryGtKKIKRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707991892; c=relaxed/simple;
-	bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OKlzoRVsxAlDd5kWMGuNWh5k4QFZrzzKyjDLP8/aFdkK5tAS083no5PmZkc4dVWX76y2SZnotoIsLXfn2xbOCejZW1HImv0CWWXsB5/I/RCjerzMsWNvFEwDZck43pwODkYKKYL3AEA9E+eXWx4zLl9mUyOM+s5qOWI2M5b6xZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qJO5bA/2; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qJO5bA/2"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d5cbc4a585so237360241.3
-        for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 02:11:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707991889; x=1708596689; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
-        b=qJO5bA/2eH0E/po4AM35v+RhPKVQbINHgXiKY7O2Qkkyu+F9wAv3c+DRlvTMpoTqfj
-         /fGoazhGCacMxX1WKxOcrOBJ+Uo5Y0H1vWPvuT2DoBenlTyRnMJvhQod2RtVuMcMZkKE
-         KqgtNw181gAupqkn7v37bKDC4fHBLyiQB4YJSFjrOoRr+ufZx44ZGgUhSbLvIlcIfJWy
-         nMuVDL/UN7hu4tVzXZ+myksMxsHIXfIj8Y/Y0hY68W0/2VBnwTHdDJYD8mhilAxZsxjP
-         YswHxThISJ2kYa40137UmnYo2hua8grzFX9HWPN7Xbu4leUdIs9j+6tXmwoMKWKsRSZm
-         Bp6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707991889; x=1708596689;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
-        b=LIYdYbPPDwXI5Qn/dmP8IaDyfvDKVqEvbQNCIrfU+LvtzdF8438VsTyUSy9x7RzVHd
-         AjamQ3mwpv3PZCICdm//yhT000GM7RZy8InflAQD+UIWD6M1i3aBT8b89Y70aMGMyHMw
-         ydtoKwA69zMqt7E1TsKOqRRspapz6ph/vwOofljBbXM1MiIBh4LNQwTkXwN0RsTiL3o6
-         kAL3qkb07op/I41jvwB8DxF7yjEL3BTYtJ2wG1raVf/a1PmkQBhIjOTi6DdB+2aRh5NA
-         LYj7kaA03eeLjHVFh3PGQOyJ/5Mi+UIUSxqAH2sIUe/aE8CauPB1SNHVzJRGECbPEvAC
-         B7Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUHL35lUTfOpx1zea3KifYtKaGYT2/neLBiDKQ6LLyK2aA3bgGEYo79yD5u9Cg/cHl3d10GFWRVIy/LuMK65kicpCfiWzGPocupBUk=
-X-Gm-Message-State: AOJu0Yzyy5DO45INkMVDY+YR+u1CBoL7CaxkQkLyFydx2CBfoKvUhT55
-	JCpG+jRQrgvXUA5IoHJzhTLT5gb+SMKzO0zQTNtSssyiTdHcV4Ht30aRCRukLjqca93n3mOxwI2
-	OQdIAQNXLU5wqFArRavjlMddmuefRi5EnhY0U9g==
-X-Google-Smtp-Source: AGHT+IE4dAp0+3pjqzG/5JaQHmc+LoQBsUmyYeVIoxgjylBum1+YCV1FOUa5yOT/OCSjTws5nQmPvSW4yQBgfosYdig=
-X-Received: by 2002:a67:ce1a:0:b0:46e:cf01:95fd with SMTP id
- s26-20020a67ce1a000000b0046ecf0195fdmr1108822vsl.32.1707991888925; Thu, 15
- Feb 2024 02:11:28 -0800 (PST)
+	s=arc-20240116; t=1707992844; c=relaxed/simple;
+	bh=4ou2Gw+NyayEX4XbIa8Bt4BXqOhtw7BfY7v04I8Qz0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=FK2K7/xbI5sgyHQ4LtlhR0WAW9WRsN7pRJeM/y5b0RiW7O2RGMikD9Ir5wXhsp3+wVM0MAC2SOc7tSxwETV0c2sfUwH/ayrtDzB0+705a5VsUf/7pBu+mviURSHd9bQceq4sXIYx3aYx5djyg4Hr8UHrQXluD2TlNipiuO11xiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1raYxc-00064G-6c; Thu, 15 Feb 2024 11:27:20 +0100
+Message-ID: <1ceefc9b-98ea-4ac1-98a2-dacb4201883b@leemhuis.info>
+Date: Thu, 15 Feb 2024 11:27:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 15 Feb 2024 15:41:17 +0530
-Message-ID: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
-Subject: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: MXSFB error: -ENODEV: Cannot connect bridge
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia>
+ <20240214110822.GA81133@francesco-nb>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240214110822.GA81133@francesco-nb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707992842;8ccbbcbb;
+X-HE-SMSGID: 1raYxc-00064G-6c
 
-On today's Linux next-20240215 tinyconfig builds failed on arm, arm64, powerpc,
-s390 and riscv with gcc-13 and clang.
+On 14.02.24 12:08, Francesco Dolcini wrote:
+> #regzbot introduced: edbbae7fba495284f72f05768696572691231558
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+#regzbot duplicate:
+https://lore.kernel.org/lkml/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
+#regzbot ignore-activity
 
-build error:
--------
-aarch64-linux-gnu-ld: kernel/workqueue.o: in function `kick_pool':
-workqueue.c:(.text+0x9e4): undefined reference to `irq_work_queue_on'
-workqueue.c:(.text+0x9e4): relocation truncated to fit:
-R_AARCH64_CALL26 against undefined symbol `irq_work_queue_on'
-
-Links:
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2cO8iztCdxtnbSeW3ekjN25sY6G/
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
-Linaro LKFT
-https://lkft.linaro.org
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
