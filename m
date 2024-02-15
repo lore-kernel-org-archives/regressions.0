@@ -1,122 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B686B65BC5;
-	Thu, 15 Feb 2024 10:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE4169D0F
+	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 10:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707991257; cv=none; b=SbHaQq6Bg6AgnaPw4ZqTU/l0KeB+NNmEnwNYHum/KYFeleHYoJG/DFhVgiOAEQsnv2lnhEuXkjhzPdrUROu9XfZ8H5CjR6U0cYGc4C9GbSnyfkWVGBS1653b08eiiLm7SUGVVOn1+9d/EscnyUWOyV8MZVsCLfcvuTdvT2QwBoA=
+	t=1707991892; cv=none; b=cQgKrkso8MCxmnRi1JXs+vWznA+6h3t+Pz05gqze7UpZj5HLhibdstR1sgtGRs2UuG671LiTWG6QBsoB10q7hf3xPPAujG6SX1pmsQe48I0+kFWGYE4ps2B3URrHvL5ztMIpzAxrGi9VoQvS2TefjpiwymN7TTS5B4XORm6RBdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707991257; c=relaxed/simple;
-	bh=aEQWvoXb3fstBlw62tnmDDTFyQZ5jvByM1k8o7XeXJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CrBAdUOsBHvEWbMqyxTfZgbOLISS+lHOhE2eXXs8yCt+sZGY4ICn2j31ZWOBIOuuaKVVJM5rD/C4WCbNSS6vc0/ed3vovZn+eif+7zQDTcHnfUTGnGxXJ1WX85wYQQLb3giZqrZyRkxc+Bwvu/e7tsqIdExcgGCYNCVNeHA7inY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1raYXo-00009t-RA; Thu, 15 Feb 2024 11:00:40 +0100
-Message-ID: <9a74676c-0032-4f29-84aa-c91e5ef01aae@leemhuis.info>
-Date: Thu, 15 Feb 2024 11:00:39 +0100
+	s=arc-20240116; t=1707991892; c=relaxed/simple;
+	bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OKlzoRVsxAlDd5kWMGuNWh5k4QFZrzzKyjDLP8/aFdkK5tAS083no5PmZkc4dVWX76y2SZnotoIsLXfn2xbOCejZW1HImv0CWWXsB5/I/RCjerzMsWNvFEwDZck43pwODkYKKYL3AEA9E+eXWx4zLl9mUyOM+s5qOWI2M5b6xZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qJO5bA/2; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qJO5bA/2"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d5cbc4a585so237360241.3
+        for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 02:11:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707991889; x=1708596689; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
+        b=qJO5bA/2eH0E/po4AM35v+RhPKVQbINHgXiKY7O2Qkkyu+F9wAv3c+DRlvTMpoTqfj
+         /fGoazhGCacMxX1WKxOcrOBJ+Uo5Y0H1vWPvuT2DoBenlTyRnMJvhQod2RtVuMcMZkKE
+         KqgtNw181gAupqkn7v37bKDC4fHBLyiQB4YJSFjrOoRr+ufZx44ZGgUhSbLvIlcIfJWy
+         nMuVDL/UN7hu4tVzXZ+myksMxsHIXfIj8Y/Y0hY68W0/2VBnwTHdDJYD8mhilAxZsxjP
+         YswHxThISJ2kYa40137UmnYo2hua8grzFX9HWPN7Xbu4leUdIs9j+6tXmwoMKWKsRSZm
+         Bp6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707991889; x=1708596689;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a79toeYJmYUPXuCP+VQUzup7jbk+ihceTcg7eZEHkY4=;
+        b=LIYdYbPPDwXI5Qn/dmP8IaDyfvDKVqEvbQNCIrfU+LvtzdF8438VsTyUSy9x7RzVHd
+         AjamQ3mwpv3PZCICdm//yhT000GM7RZy8InflAQD+UIWD6M1i3aBT8b89Y70aMGMyHMw
+         ydtoKwA69zMqt7E1TsKOqRRspapz6ph/vwOofljBbXM1MiIBh4LNQwTkXwN0RsTiL3o6
+         kAL3qkb07op/I41jvwB8DxF7yjEL3BTYtJ2wG1raVf/a1PmkQBhIjOTi6DdB+2aRh5NA
+         LYj7kaA03eeLjHVFh3PGQOyJ/5Mi+UIUSxqAH2sIUe/aE8CauPB1SNHVzJRGECbPEvAC
+         B7Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUHL35lUTfOpx1zea3KifYtKaGYT2/neLBiDKQ6LLyK2aA3bgGEYo79yD5u9Cg/cHl3d10GFWRVIy/LuMK65kicpCfiWzGPocupBUk=
+X-Gm-Message-State: AOJu0Yzyy5DO45INkMVDY+YR+u1CBoL7CaxkQkLyFydx2CBfoKvUhT55
+	JCpG+jRQrgvXUA5IoHJzhTLT5gb+SMKzO0zQTNtSssyiTdHcV4Ht30aRCRukLjqca93n3mOxwI2
+	OQdIAQNXLU5wqFArRavjlMddmuefRi5EnhY0U9g==
+X-Google-Smtp-Source: AGHT+IE4dAp0+3pjqzG/5JaQHmc+LoQBsUmyYeVIoxgjylBum1+YCV1FOUa5yOT/OCSjTws5nQmPvSW4yQBgfosYdig=
+X-Received: by 2002:a67:ce1a:0:b0:46e:cf01:95fd with SMTP id
+ s26-20020a67ce1a000000b0046ecf0195fdmr1108822vsl.32.1707991888925; Thu, 15
+ Feb 2024 02:11:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant
- case
-Content-Language: en-US, de-DE
-To: Greg KH <greg@kroah.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Jon Hunter <jonathanh@nvidia.com>, mingo@redhat.com, peterz@infradead.org,
- juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, wkarny@gmail.com, qyousef@layalina.io,
- tglx@linutronix.de, rafael@kernel.org, viresh.kumar@linaro.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- Thierry Reding <treding@nvidia.com>, Sasha Levin <sashal@nvidia.com>,
- Laxman Dewangan <ldewangan@nvidia.com>,
- Shardar Mohammed <smohammed@nvidia.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240114183600.135316-1-vincent.guittot@linaro.org>
- <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com>
- <CAHk-=wgjiVanO4ZS1hy2sfAFTN_pYtQqVQb_g+dbrP34M6xTDw@mail.gmail.com>
- <CAKfTPtA8W+SijB9D3GtNbC7o_XHUV-umcL6chJQbMDxWeX7exg@mail.gmail.com>
- <42052f23-d582-4533-a09d-a1de437836b7@leemhuis.info>
- <2024021545-rise-plot-24c3@gregkh>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <2024021545-rise-plot-24c3@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1707991254;5e3a281b;
-X-HE-SMSGID: 1raYXo-00009t-RA
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 15 Feb 2024 15:41:17 +0530
+Message-ID: <CA+G9fYuHF34bSbN9ktKuMAv1eOFVrf+Gw1MC_rG5trUQv9A_Pw@mail.gmail.com>
+Subject: next-20240215: workqueue.c: undefined reference to `irq_work_queue_on'
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 15.02.24 10:13, Greg KH wrote:
-> On Thu, Feb 15, 2024 at 09:45:01AM +0100, Thorsten Leemhuis wrote:
->> Linus, what...
->>
->> On 14.02.24 18:22, Vincent Guittot wrote:
->>> On Wed, 14 Feb 2024 at 18:20, Linus Torvalds
->>> <torvalds@linux-foundation.org> wrote:
->>>> On Wed, 14 Feb 2024 at 09:12, Jon Hunter <jonathanh@nvidia.com> wrote:
->>>>> We have also observed a performance degradation on our Tegra platforms
->>>>> with v6.8-rc1. Unfortunately, the above change does not fix the problem
->>>>> for us and we are still seeing a performance issue with v6.8-rc4. For
->>>>> example, running Dhrystone on Tegra234 I am seeing the following ...
->>>>> [...]
->>>>> If I revert this change and the following ...
->>>>>   b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
->>>>>   f12560779f9d ("sched/cpufreq: Rework iowait boost")
->>>>>   9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
->>>>> ... then the perf is similar to where it was ...
->>>>
->>>> Ok, guys, this whole scheduler / cpufreq rewrite seems to have been
->>>> completely buggered.
->>>> [...]
->>> This should fix it:
->>> https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
->>
->> ...do you want me to do in situations like this? I'm asking, as I see
->> situations like this frequently -- e.g. people reporting problems a
->> second, third, or fourth time while the fix is already sitting in -next
->> for a few days.
->>
->> Want me to list them in the weekly reports so that you can cherry-pick
->> them from -next if you want?
-> 
-> Poke the maintainer to get off their butt and submit the pull request to
-> Linus 
+On today's Linux next-20240215 tinyconfig builds failed on arm, arm64, powerpc,
+s390 and riscv with gcc-13 and clang.
 
-Well, I did that sometimes and will continue to do so. But some
-maintainers then feel pestered and become annoyed by my efforts -- which
-in the long-term is counter productive, as regression tracking will only
-work well if maintainers and I work well together. That's why I'm a bit
-careful with such things (side note: don't worry, I know that some
-conflict is inevitable -- but I don't have your or Linus standing, so I
-have to choose my fights carefully...).
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I sometimes also got replies along the lines of "we are only at -rc2,
-this can wait till -rc5 or -rc6" -- and I have no quote from Linus at
-hand I can point maintainers to that says something along the lines of
-"if a regression fix was in -next for at least two days, submit it to
-mainline before the next -rc, unless there is a strong reason why that
-particular fix needs more testing" (or whatever he actually wants).
+build error:
+-------
+aarch64-linux-gnu-ld: kernel/workqueue.o: in function `kick_pool':
+workqueue.c:(.text+0x9e4): undefined reference to `irq_work_queue_on'
+workqueue.c:(.text+0x9e4): relocation truncated to fit:
+R_AARCH64_CALL26 against undefined symbol `irq_work_queue_on'
 
-> (note, this is me in this case...)
-> I'll get it into the next -rc, sorry for the delay, other things got in
-> the way, my fault.
+Links:
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2cO8iztCdxtnbSeW3ekjN25sY6G/
 
-Happens, I don't care too much about this specific event, more about the
-general problem. Especially the -mm tree bugs me sometimes, as I noticed
-that Andrew often lets regression fixes linger in -next for round about
-a week; he furthermore sometimes sends this stuff to Linus on Mondays or
-Tuesdays. Due to that the fixes often miss at least one, sometimes two
--rcs. That is especially hard to watch if the regression made it to a
-stable kernel and you are waiting for the fix to get mainlined.
-
-Ciao, Thorsten
+--
+Linaro LKFT
+https://lkft.linaro.org
