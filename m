@@ -1,94 +1,44 @@
-Received: from flow7-smtp.messagingengine.com (flow7-smtp.messagingengine.com [103.168.172.142])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58A613FE0
-	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 09:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B1711183
+	for <regressions@lists.linux.dev>; Thu, 15 Feb 2024 09:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707988433; cv=none; b=Jx18HbnF9LZPgieQW+KfyNJj5n4c2BCLAI42Y+HjK8feLDtu1T8DW2GkKbqu6j1T1QfM38aY5n87lI9W8mnqczEGTZpB/EyO3VKZ4IqGn+gTHJioYD0FpkTIqqRC4xECqlaXBOEDyAIaEhCbkiTfSgcxSCZmgfQ1gf+JmBDYEQk=
+	t=1707990423; cv=none; b=pBjeIA89oWgsga3hFImK9e33PWczhCdPmZdObQ1kFL0QzvhhAH9seugwEh5VQJ62jsEq5JLu1YkCfr3CvU3fCXrzpXJmVkUdY4iHC0vJ/hv/pyCZg8lHl2q51+AgRrklHehrIh2hoHYc2u1ohZK7/Ab2sGvbf/t2zpqzmfVXC3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707988433; c=relaxed/simple;
-	bh=O/RwfPbZqb3ZvLhvEoH0BjeWEPwr1fYoyD00l7xYTL8=;
+	s=arc-20240116; t=1707990423; c=relaxed/simple;
+	bh=VUSabbVlezJPL4VM+uGmTR+tds97FDgAdgk3FXX64+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0keAoOUf5JU3bIfNMhlZniBYIgeC2YSDWuatgHiJfCGGfpJFxMCFRUwwT9wOLOqpHZkAw68HH1+jVR3FjmAwfTsqoCnBg5c/KnUMCQg32TSdFjtY+oexG3HbZwHDm/eNmkXWpSWjvJNFUXEpqGZ9r2dn2Y1OcZelBF6WEBJ1NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=ieQ5BDR8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CtUvaV0g; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBBd6sBqVbneU30aatfBO31kBraRBIcPK+ISOw7ON0bxP92ePfOwuMQFmWIrRk2G3JchsyJeHmliZhZWxMb4ytpm+njCFfCSEA6DQmy+zE8M2Yrxy8A/PR2dC2vMeXKL10vn1+3jYJzWwI6gWKizb9IsWNarQSWSAn09QKNrkew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=YbF/JFBU; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ieQ5BDR8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CtUvaV0g"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailflow.nyi.internal (Postfix) with ESMTP id AD7AC2000F8;
-	Thu, 15 Feb 2024 04:13:50 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 15 Feb 2024 04:13:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1707988430; x=1707995630; bh=IC4m81oUgj
-	/tsdcLSrr2mqEGqSm9cd9fjfFWN3WrsQE=; b=ieQ5BDR8Bs4J8ZW50oIAXYAsao
-	UTrP6+iqpCdYfl+BE1ZU/iYQi40eFNZfAq5UehitINaslGjEjsylvNqg556xqtwP
-	vqT+ZXXZBsftS3968V0CdX63apikIw4AQ9rJTEg3DdarH/SuLjhlB7ApJVFu+WFZ
-	kisOFmznpVnDsSjXEvGiu90SF45Lcq0Xi/Wb894yfokeS34EKk3oskqJx5aTWTBB
-	V+/kyYYmMN1buQBiJdJwFSDH7D3kBl5sebixEGOd1v/ImizfbqiExBSA66SHJiYl
-	i3RwJIx90b6ybiWlmaN11RZFlwBGq2pypHKtv/3zXDgk0Ry3pT0oYaDMTp3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1707988430; x=1707995630; bh=IC4m81oUgj/tsdcLSrr2mqEGqSm9
-	cd9fjfFWN3WrsQE=; b=CtUvaV0g2T8ifSQZWiCIE5LJK6NMOZ6lk3NlNBEvB7Ii
-	EHgTyVtYplEvuHy3DgmnELZpfTCAqBCmDhsGt3KnkxzTwRY2FroxVx0P2UiKiwH/
-	LGOk6Rki59VnzjG5qLmD4reI5GOxpjBoXK5krsGOCrwWk/cnRK86I/ZswQ9KFjNY
-	H/U0irm1accRpX/HGUkFk9o1PFVBGPIwersMNqtlJ7MXffDsXtDuOJkC5ETruE3x
-	3OSdI4ypz4DPoWJRHV0T+a98R5UlD9NGUCnITheXZPucfvVI+u8gd8JHOjEEk9OA
-	AbD9Xol0TDQLGhl4rsLl3++2COhaeAzrLU1ZmwSYxA==
-X-ME-Sender: <xms:zdXNZVmfO_RiDekOPDAVHtBn-NPqX5mTVRePn0b8oEulTwg_4jK5sg>
-    <xme:zdXNZQ3rjuquUHhf6-zg5hAltWOcuNtIUNdGxUYOp_gpCKbCctkDGNvt6PNbbQD8s
-    G6uYzluW9mMRQ>
-X-ME-Received: <xmr:zdXNZboaZDO3YBGaO93LVD-TAUt6mh-DX_MbjxhsG5YEbl4KnC2sT9J2CSMfM2nYs8-XqlYvkMhE1fo0-r-o1D84nJWqhpJT4w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddtucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfmjfcu
-    oehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepgeehueehgfdtle
-    dutdelkeefgeejteegieekheefudeiffdvudeffeelvedttddvnecuffhomhgrihhnpehk
-    vghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:zdXNZVnp_QUPhQz5CwySBHttpZNc1Xf-eWBRj2HJftKiRY9eINUqgA>
-    <xmx:zdXNZT0VEjVElFQlldwJh3isoTCKVkLLONzjR30Hm-FdC4oTDXMXhA>
-    <xmx:zdXNZUt16tIgFkoSN1XNMWaPLzG1Kt1Er7MMDoekQC7K2CEpyLgtyw>
-    <xmx:ztXNZWxfD0c6ofm_OMoiqXqAu-hjN5NFNX9jucnst7Hz7n8kGiKzBGEGti4>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 15 Feb 2024 04:13:48 -0500 (EST)
-Date: Thu, 15 Feb 2024 10:13:47 +0100
-From: Greg KH <greg@kroah.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Jon Hunter <jonathanh@nvidia.com>, mingo@redhat.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	wkarny@gmail.com, qyousef@layalina.io, tglx@linutronix.de,
-	rafael@kernel.org, viresh.kumar@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Sasha Levin <sashal@nvidia.com>,
-	Laxman Dewangan <ldewangan@nvidia.com>,
-	Shardar Mohammed <smohammed@nvidia.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] sched/fair: Fix frequency selection for non invariant
- case
-Message-ID: <2024021545-rise-plot-24c3@gregkh>
-References: <20240114183600.135316-1-vincent.guittot@linaro.org>
- <6ec54a8f-a602-4f33-96ce-0204f07046e1@nvidia.com>
- <CAHk-=wgjiVanO4ZS1hy2sfAFTN_pYtQqVQb_g+dbrP34M6xTDw@mail.gmail.com>
- <CAKfTPtA8W+SijB9D3GtNbC7o_XHUV-umcL6chJQbMDxWeX7exg@mail.gmail.com>
- <42052f23-d582-4533-a09d-a1de437836b7@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="YbF/JFBU"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 5D366603EE;
+	Thu, 15 Feb 2024 09:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1707990414;
+	bh=VUSabbVlezJPL4VM+uGmTR+tds97FDgAdgk3FXX64+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YbF/JFBUJVPAWavHokSDrSfTBbRGP+uTaqrelkveX67PIshldZMKbP2brqO6zbIQr
+	 vKf1v8c9/1gYZw2poGXMIsZGYFUzZ4RD2Ll67FT6XjkbxLvhSrq1GAH/YYuMSKtjW4
+	 MZS0ioXZ0XB8CLXlxiqy/RhtQbz1ACqUdIiCW4BubtV6eJO9QpKFhuN33YHsBkBJD2
+	 p77njnAPTZFmojJprc+RTt0eYDkmA5jsclh8bX8EsqaqsLmAH2E1VPOWU68NylqxP8
+	 l08CNTUoA6ZRDK8NLrLNmeJzEulMNzdxIN6ABfhC6lz0XZy3HDWIklWwYPfZRTJc9m
+	 1P+mc/F50x6bg==
+Date: Thu, 15 Feb 2024 11:46:40 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Andreas Schwab <schwab@suse.de>, linux-arm-kernel@lists.infradead.org,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Message-ID: <20240215094640.GS52537@atomide.com>
+References: <mvmcyt13idm.fsf@suse.de>
+ <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -97,44 +47,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <42052f23-d582-4533-a09d-a1de437836b7@leemhuis.info>
+In-Reply-To: <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
 
-On Thu, Feb 15, 2024 at 09:45:01AM +0100, Thorsten Leemhuis wrote:
-> Linus, what...
+* Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info> [240214 14:01]:
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
 > 
-> On 14.02.24 18:22, Vincent Guittot wrote:
-> > On Wed, 14 Feb 2024 at 18:20, Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> >> On Wed, 14 Feb 2024 at 09:12, Jon Hunter <jonathanh@nvidia.com> wrote:
-> >>> We have also observed a performance degradation on our Tegra platforms
-> >>> with v6.8-rc1. Unfortunately, the above change does not fix the problem
-> >>> for us and we are still seeing a performance issue with v6.8-rc4. For
-> >>> example, running Dhrystone on Tegra234 I am seeing the following ...
-> >>> [...]
-> >>> If I revert this change and the following ...
-> >>>   b3edde44e5d4 ("cpufreq/schedutil: Use a fixed reference frequency")
-> >>>   f12560779f9d ("sched/cpufreq: Rework iowait boost")
-> >>>   9c0b4bb7f630 ("sched/cpufreq: Rework schedutil governor
-> >>> ... then the perf is similar to where it was ...
-> >>
-> >> Ok, guys, this whole scheduler / cpufreq rewrite seems to have been
-> >> completely buggered.
-> >> [...]
-> > This should fix it:
-> > https://lore.kernel.org/lkml/20240117190545.596057-1-vincent.guittot@linaro.org/
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 > 
-> ...do you want me to do in situations like this? I'm asking, as I see
-> situations like this frequently -- e.g. people reporting problems a
-> second, third, or fourth time while the fix is already sitting in -next
-> for a few days.
+> Thanks for the report.Added the omap list and the omap mmc maintainer;
+> the root of the problem might be somewhere else, but maybe we get some
+> help from there.
 > 
-> Want me to list them in the weekly reports so that you can cherry-pick
-> them from -next if you want?
+> On 12.02.24 14:46, Andreas Schwab wrote:
+> > I'm getting these messages on the PandaBoard since 6.7:
+> > 
+> > [   29.285522][  T156] platform 4809c000.mmc: deferred probe pending
+> > [   29.291748][  T156] platform 4a0ab000.usb_otg_hs: deferred probe pending
+> > [   29.298522][  T156] platform 58005000.encoder: deferred probe pending
+> > [   29.305053][  T156] platform 58006000.encoder: deferred probe pending
+> > [   29.305145][  T156] i2c 0-004b: deferred probe pending
+> > [   29.316772][  T156] platform 40132000.target-module: deferred probe pending
+> > [   37.382110][  T156] pbias_mmc_omap4: disabling
+> > 
+> > As a result, the SD card is not found.
+> > Any idea what's going on here?
+> 
+> Haven't heard of anything like that. Unless some developer replies with
+> some idea in a day or two I guess you will have to bisect the problem.
 
-Poke the maintainer to get off their butt and submit the pull request to
-Linus (note, this is me in this case...)
+There was a regression recently with the PMIC which would cause NFSroot
+on devices to keep working but may have affected MMC. Please check that
+commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
+is applied. If that does not help, then git bisect is the way to go.
 
-I'll get it into the next -rc, sorry for the delay, other things got in
-the way, my fault.
+Regards,
 
-greg k-h
+Tony
