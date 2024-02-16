@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336597484;
-	Fri, 16 Feb 2024 06:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1211914AA0;
+	Fri, 16 Feb 2024 06:57:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708065117; cv=none; b=NXnfUy5danz8iQxStFCq2IBvLLAZeYurvM0k+jX2KPXAv8C9HC48n6vsIfGefX9Fm+r1cLYD4Op2EWj44vELzYfO83EwGg4J2ZuOJZBjSgbTh4XxAVNZNekYe114kFQ9mpeC2WjvEsDVRoZr6gXFKJ3ymz+eNJ6fqN1dkTh2yN4=
+	t=1708066632; cv=none; b=WxVy8TLgFt+ctug6QQWHgcfh3BzbaN/pkLAVLIlGixJ8ouPZm6mPI+xQcKmLdVGFOMjo4qsfPNQalNztz7ISEjMRPW5LYecLPOUxYTA7X+R/DNKOczZM/V15BfY7Jq9oC+dKKDdTap4d7zPicaE/ua8oyx5cOrsV2AXn3Qnpcvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708065117; c=relaxed/simple;
-	bh=WlzTvqaVZaHacDUt4+KJJgz1oxCtY/LMY/1QpJV2xzY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQ8J5KegkhHf7+n/u0nkC0h8NEGnnXa1dvJL0dlU8aaEk2J6pjVbBDefi43xNglG7yANH1fwOzE65ns6t53tgzreDAyF9Pg5dgRNaR34XHYkeLhe69p4g1jF4yMWNglmA3kDheuwTEA6WxVB1gpgR8dna9jVm2YryOkdlepjy5o=
+	s=arc-20240116; t=1708066632; c=relaxed/simple;
+	bh=DcfqJeb/CLtSUd3Zo3dx5ue5k4+gqON9RTbFiSVUqsM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=afqBSsJD4PpbWse2wlx/TlulgmFuOaLQhB/M43PPEVNam6mQ7QAPGe4619x8DIYP6HqE3OgkjK3ysDQdxsWw0bTjgFLNanoFg8qT4Jv5XpQ0WmObPpyR7ckr3tL5EVdl1AmfmRVATmVXFRFhBDCHTlMRJ5OT+9l8eHa4DQlBtQU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rarlJ-0007LX-AO; Fri, 16 Feb 2024 07:31:53 +0100
-Message-ID: <4db957c0-8ccc-4da8-9445-c209f0cdf983@leemhuis.info>
-Date: Fri, 16 Feb 2024 07:31:52 +0100
+	id 1ras9j-0003WS-TV; Fri, 16 Feb 2024 07:57:07 +0100
+Message-ID: <8e7f9d37-ab18-419f-9641-287412a5cb4a@leemhuis.info>
+Date: Fri, 16 Feb 2024 07:56:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,37 +26,52 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: platform/x86: intel-vbtn: 14c200b7ca46 breaks suspend on Thinkpad
- X1 Tablet Gen2
+Subject: Re: [PATCH v2] Revert "usb: typec: tcpm: fix cc role at port reset"
 Content-Language: en-US, de-DE
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-References: <295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240117114742.2587779-1-badhri@google.com>
+ <ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk>
+ <04fc959a-4a50-4c84-88a5-fa0d79c008b3@leemhuis.info>
+In-Reply-To: <04fc959a-4a50-4c84-88a5-fa0d79c008b3@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708065115;f3e52d2b;
-X-HE-SMSGID: 1rarlJ-0007LX-AO
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708066630;11e64ac6;
+X-HE-SMSGID: 1ras9j-0003WS-TV
 
-On 13.02.24 23:35, Alexander Kobel wrote:
-> 
-> after upgrading to 6.7.1 or 6.6.13 (LTS), my Thinkpad X1 Tablet doesn't suspend anymore. Or, rather, it suspends, but wakes again immediately. This happens regardless of whether the keyboard is attached or not, with all ACPI wakeup triggers disabled according to /proc/acpi/wakeup.
-> I could identify the following commit as the culprit:
-> 
-> 	14c200b7ca46b9a9f4af9e81d258a58274320b6f
-> 	platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
-> 
 
-To be sure the issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, the Linux kernel regression tracking bot:
 
-#regzbot ^introduced 14c200b7ca46b9a9f4af9e81d258a5827432
-#regzbot title platform/x86: intel-vbtn: suspend broken on Thinkpad X1
-Tablet Gen2
+On 10.02.24 08:38, Linux regression tracking #adding (Thorsten Leemhuis)
+wrote:
+> On 08.02.24 23:01, Mark Brown wrote:
+>> On Wed, Jan 17, 2024 at 11:47:42AM +0000, Badhri Jagan Sridharan wrote:
+>>> This reverts commit 1e35f074399dece73d5df11847d4a0d7a6f49434.
+>>>
+>>> Given that ERROR_RECOVERY calls into PORT_RESET for Hi-Zing
+>>> the CC pins, setting CC pins to default state during PORT_RESET
+>>> breaks error recovery.
+>>
+>> Between -rc2 and -rc3 I started seeing boot issues in mainline on
+>> rk3399-roc-pc running arm64 defconfig, a bisection identified this patch
+>> as having broken things.  The issues manifest as a hang while loading
+>> modules from the initd, you can see a full boot log at:
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced b717dfbf73e842d15174699fe2c6ee4fdde8a
+> #regzbot title usb: typec: boot issues on rk3399-roc-pc due to revert
+> #regzbot ignore-activity
+
+#regzbot monitor:
+https://lore.kernel.org/all/20240212-usb-fix-renegade-v1-1-22c43c88d635@kernel.org/
+#regzbot fix: usb: typec: tpcm: Fix issues with power being removed
+during reset
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
