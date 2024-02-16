@@ -1,304 +1,1281 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
+Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08029768F2
-	for <regressions@lists.linux.dev>; Fri, 16 Feb 2024 14:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708093196; cv=fail; b=CyAByzhsAcNZY4D7SQfMQKMUWR0YhYyLWBFF+xbWNem5rzMcwtxntmUHPEYIXyo3nPkwcozneliQNY8fpWciWZCE9VlhfMgJ+iTy3kxceR2sWGBsy9m7xfJKsjLj93TCR4ZGa/du3jj2w77uRb9wx38mCkZ5zwrAthSw8allL/A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708093196; c=relaxed/simple;
-	bh=TW6JEZMg68fiD3SMiPRGrI4qf1leX2CwhUGH84szdiM=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cocI3rXlueqoyOP3gBdQtSNa6l+xGhjTKG9dRK1hA6mFfn0me8WAIicfNtVeYBrr2TeCzxDjbWsaNoJ4gXE2SW/22JqQt0PD2mf2IJhasXGzBB+UmmS4q9+Ccm/mIGM3SacnJNw3Ohm5zeUkj/BYiYeFzjeMkPCgAG4skhQR//4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mR4a3umB; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FE413849C
+	for <regressions@lists.linux.dev>; Fri, 16 Feb 2024 19:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708112509; cv=none; b=iw0mqCvrYD+nwBn/ZyYKgvgCdqQ8n9OTEqZqW+G8b+GAnadphisiVyVI5leKJAqRwkUsAyLKbPNb4dv9ti9cCRn0VBYYg1GaKqy4x1h5RMSYyeOfssUCE7q7UTZxAP6fZFvWUCQ31s6tUcaEYixWvpzez2Wpz9K8m9y/2mwAFZc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708112509; c=relaxed/simple;
+	bh=NYiejMlBKT4hQtVpRu3nvoIpFcksqFt8b9xoyKX8VVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OfJA3q6C22sEwrwnZV+deD58oKawNjd7mXt1WwTnaAj5mbDNIohPnrL68NWV9yZQThX2qLXoUU5dCrN7OLIbRFsh8U4KvF9BdlEoJwzjax4Pb1wmN9LB1SVg3bf7bHGaCBRIXhmi6KN4dgbD9FS7D5+WZxjJARYwtru6BSziAMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=IOJcRZBs; arc=none smtp.client-ip=77.93.223.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mR4a3umB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nNhWgsILl4lTbFcFQSbWKFJXdxFRFH0oFWUVu+v2UiaQ0D7hhrgOHXi9o1fX1eZ341C3UUtx7KQsnR6Jdrc1gaAemjOOSPTygLPhq5fcygLJe/lVG5gJVqHdYtTQrR6fww9USWTyT2XwIDN2+DkqR3Y0bp5MEXR5LLvecf4ZZ0+AM/0Hc2mbd2XscKeEOhllwTcVTolOQ5rHvpXmWcS3CwPNsX5VdZMNPP4K/6cIQ0A+/P6dHd9j5kAiaHi9KSSumPkB7VApSJIRvmYSmGEVDcIdfEHrjbc5h7L73A1gTBjOg1CVuNQ1huh7cYcsUileqdS9sWMtAeohfPdNUeRd6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gZoC7VmztzhMWTvqHJIw+Z1CHlYdU19rFikvGXz/vRk=;
- b=PGUtyBvecoiVTrIZdUrX7WqzfaNx9jRnIe/Mc/3952afBosrti3k/FGQ28+TKN2wAwlBBpVWb/T7yqGeBPq3yBzCDAOeJuwV3M5pfp6kIaVD45vBpXb8VK7DyJWsrGN15X5babPfcGYTNOF1GYOCFJeqw+i5sbdITAq8YbjyYIi/09IzfjmYSnM+pWYfKCRFpQFY7imf1VV2cRQ7cK+YWTXsEkiTq/URTaNGzZbpqK3NLXtHvbeNJZ7pLclO4I42QEkXGZMKiClcb3Zq+Y6/XFAtp9Wmys0yS4mW75sHulmG01en/Xgh6t59bNSQvv0gk8g9D7Z8IgN+K/OUyJd7lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gZoC7VmztzhMWTvqHJIw+Z1CHlYdU19rFikvGXz/vRk=;
- b=mR4a3umB4Pw01cdWIhScF9NBa8i/wAUm6k+sPS8z9GTg1/bSAkjB/xYnYFmpFe1Y/C2dWOO5NDJZva9DP8rtcq/N+fvpnyLYiQpiK6SuPQ2g0aHKgRegDdG+KnkXDEvbCPT/E/zJYoRg6cfEnRhX5e2Qb1hrYw9iR28hQ/tIQes=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB5747.namprd12.prod.outlook.com (2603:10b6:8:5e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.14; Fri, 16 Feb
- 2024 14:19:51 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dd00:9ab5:4d11:2d1a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::dd00:9ab5:4d11:2d1a%7]) with mapi id 15.20.7316.012; Fri, 16 Feb 2024
- 14:19:51 +0000
-Message-ID: <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
-Date: Fri, 16 Feb 2024 08:19:48 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: 6.8-rc: system freezes after resuming from suspend
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Trolli Schmittlauch <t.schmittlauch@orlives.de>
-References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
- <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0084.namprd11.prod.outlook.com
- (2603:10b6:806:d2::29) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="IOJcRZBs"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 909021A8D60;
+	Fri, 16 Feb 2024 20:41:41 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1708112501; bh=FkADS06nGZedHE4DwvuCBwP9OXvG3T4ADq0p3BMgFGc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IOJcRZBsGSSGB99jwBKTZYTiSyS60EHwDOFRMblVoSm9sGV4ujqxcszrkOEkYxvWc
+	 4oUJ/LifBUe/4xRL7FzQQ+DceuuhDMq5O+nNly5ghHjTSS2SSgnI1rDvrmuIGUScxU
+	 DYJV67gO9MZvAH3wAglN9nTCWshGKj2YLh/GPEIa4ZX2L6+N41vw4KyGAQ9gGQ03oH
+	 i+1pT0J7Ko32vYW4fnECoADwaM1aJzu195UmjMcOUjKZUz+QL179orIOCLCPPtlGsi
+	 2ozIQhjrX232bS2vBb14OSCrcQvlOWkVhLaLaev1U2bcrzq3aIC3SWzx+NLmTKwsB7
+	 1ZxhJwTk2nKLQ==
+Date: Fri, 16 Feb 2024 20:41:40 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Jonathan Corbet <corbet@lwn.net>, regressions@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Bagas Sanjaya
+ <bagasdotme@gmail.com>, Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
+ validation
+Message-ID: <20240216204140.2ecbceec@meshulam.tesarici.cz>
+In-Reply-To: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
+References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB5747:EE_
-X-MS-Office365-Filtering-Correlation-Id: 836c62fa-c8af-489a-a1ab-08dc2efa56b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	eVAygwDAK0mgI4EHjLYihP7LN5kyBOfaKgEbrlT8G0mKYY173NUGBGNoVUUNwMrVJMLf22wzGpArFVNLyo0pZ4VhXeKIRwK2SUD22nXDPy7vbW1RM3mlyB4SdESxNbfEyWigrNOxTxOGCgabKhEA+f63zi6TI8GDs5O2Wj+MGQpGtEArM+ROWRpf4wxA8YqYdxIsBQCwdO2MbXgqDNzdYqq6AaX3KNPuTo4fjCRJmgVWJ1MNPbAYgpsx8SUNJB/5B7PAp+lA0hNv3hhm9vtC4eLElcwgRkl7uXpj8ju3AdZHEo+5vDigs/RDFjAF/ktn78piV9psvNi8p19389tlXsi8b5ISQCy9vLwuuLxd41/oKBfXqlf85DjRf8yUx4EVPKt6pAHtJOig5XXtftkFIo6b7AvqyYS3Q3htvFPb8cZzZTFMDI8QJvmrk7blnvwLsDNlPnYJ2OjsKe5U+PX1KT7QZBY0j08+2/MnyVS3B4Zl+x9nK9oEnB3XUkw9Lco8h4jRa7k4UEHvLpyMzOktkzDY/HMlWVGrUi0icgDBo93jr0f7zzWm/Jhqf8OY9xn0xcLm3lMOJYBzDmagZbnEQg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(346002)(366004)(39860400002)(230922051799003)(230473577357003)(1800799012)(186009)(64100799003)(451199024)(15650500001)(44832011)(31686004)(2906002)(5660300002)(83380400001)(26005)(2616005)(36756003)(38100700002)(66899024)(6512007)(6666004)(478600001)(66556008)(53546011)(966005)(6486002)(66476007)(31696002)(66946007)(110136005)(316002)(6506007)(8936002)(8676002)(41300700001)(45080400002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aVhFa3BQdG96TEVpY2tJenVFT1ZRM213VGxQbGNOVkQ4Q25Td0hmVXNIL0xE?=
- =?utf-8?B?akxMelNHNnlTazF6Vlp3azFad1d6T3o3ZDlUM1V2cFFmV29ndG1hVG1FeDRq?=
- =?utf-8?B?ZWZsbklIRm8vK0h0Vmk5Zm5aWjU3OWZJYW5YK0d4Nk1Ub2ZKbkdPeXdWUStn?=
- =?utf-8?B?SFZRQVNvMkxPSS9MMW1xWDVWQjNjL3VRdUV3Rnh2S3lmUFlZemNISDdmUEts?=
- =?utf-8?B?NzRCaFZTQzRuN0hiV0hldW1rKy9wWjhRUk12RW1RdHZ4TzQ3RTlJUG45b3Yv?=
- =?utf-8?B?Qkp6aldhR0RjeFdCZVBiQWhnUitkRVNzU0FCMmwwT3JnNlQvNnJUM1JPbUxS?=
- =?utf-8?B?TDhETU9jMW9rL3A0Mzk3SjRUK2Q0NnBkSHNVTGF5M2RJT3YxMWhJblZyTkVk?=
- =?utf-8?B?WmJIV2gvQzhST2xPSXFOK0dTWkFqbm1xTHc1RkpCTDZIcVNxQXNJMlNHWWxZ?=
- =?utf-8?B?VTB5UHFLSVQrRFhZWDRVVXdRRzBmQTU2bWY5MnlleXdIZFdnRHE3TnprSElk?=
- =?utf-8?B?MzM1ekdKZXVqY3RiZk1DLzVPeWw1LzY0YWxSYzNKUnk3RHQxVmRQNEdUWEtx?=
- =?utf-8?B?Yll4ZG9XaGY4S2RVb0srSFRZanJRUy9wZEd2dGUrT0w1dzhxWWYrbHMrTTdJ?=
- =?utf-8?B?UGxsL0lYSUF5bUxnSG9CRGtiQ0JTL1hyNHlGblRxMWwrSFVNUTB2RmgrNjk2?=
- =?utf-8?B?NGorQ2c3VXRaK1lPMThNZ0dwUHRoeW8vL2Y4ZVZkRUwyZmVHanZSaU9kd1Ex?=
- =?utf-8?B?REp5eHdkTXJzNTZ2OVV3SktoT1lyV1g1YzU5eFZoNnhGdlNycEswT0c0Rmxq?=
- =?utf-8?B?b3dUSEFxM2lJSmFFbmV0SithR2lRWEhCc096TkE4Q2pDVnhiRW1rLzkxVTVO?=
- =?utf-8?B?NUJvZ1JHRFpjUXRvMlNJQzlaMEUzUE00eWNGbU5Ga1dRQTFoWC9vZGtJSFYv?=
- =?utf-8?B?WHhVcXdZUkUxa01tdWREekFSeWJBVFJPVUxjUXNYMitXMFFMSUltWHNtNU9X?=
- =?utf-8?B?U3RYRUZsOUdwWVNGWXpmb2Q2cWduUDVjdjFzNmp4RjJZTzJxNXN2UzRMK25E?=
- =?utf-8?B?NXdaRkR4THFWWEFWZUJZNDB5R2k0YkFTV3k4U1hRNUpibDg3bTFWcWNpaDJN?=
- =?utf-8?B?aDVyVGxkNWRmOHNnUCt5eEpvZ1VXd0xIajZlLzhWV29KQlNPaCtTT3Z2R2ph?=
- =?utf-8?B?aXcvUEhoeDBXM056OVcyRG9ULzZQSmtmd1FyOHBqdzBEYlBjU1ZaYjVJL09T?=
- =?utf-8?B?citYaTRmclBlc0lqZkJVTkxIaTRVQzNiZjFxNGlQVEM1WmtoNHRNTndhVHBU?=
- =?utf-8?B?OTV5My95MnM0TndQQ3NuM3hNcHNscGJ2bXpJM3lLTHZmcXpNTGlHVHAxTjFP?=
- =?utf-8?B?S1NXRDJUaHp0RWhjU3d6S1crZmd5VDZ3Q08yQU9tcmFmZE9XWFE2ZlVCckNX?=
- =?utf-8?B?aytYSVFuODVDOWVnWlBZb0x3VkkvSDErWFFiQ3laa3FMa2FCclBzem9QUmlG?=
- =?utf-8?B?U3lRanM3RnFxbEJtcDVaRllKOUEyaDZXcXVQVTUzYkdvem1NbTdTWUgzckNi?=
- =?utf-8?B?SHVydW1wQlBDekF1Q0RaQkhxU1VaUzhvY1pFNm5MS0J5aGFmcFowTDRtWERY?=
- =?utf-8?B?MXp1Nm9PeUI5cENjeHpDd1VFMnhqU2duNnk5Rk02dW0zQ1lUa1E4NlY0d0NU?=
- =?utf-8?B?aE0vOXAxLzlVTzJCS2xiUmhKNldBbGVXV0dRNmR1c0lHREFOREJVSmVvM3J3?=
- =?utf-8?B?QWZYQlZTMk56Q1hYM1FFRCtIUG5tUG10SDdBM0RWMVBneEZYbXMyNmtlUUdL?=
- =?utf-8?B?MklLVjNGalVMMVc0eFhYclRKeDVqYjJYQ240K0xsY2JtYWg0NURiSFVTenE4?=
- =?utf-8?B?bDRjVmFBMHY4cFcwOFgwSnFEYnNPN3ZzeWh1UlZYdXJzQkFoSnNJL2NjOVBx?=
- =?utf-8?B?NlZuM1BrOFQvV25TSnB3ejkvVHFnZXB2ZmpkQjd6aTR1cHducnQ1YVJvclpO?=
- =?utf-8?B?RWNUVmRmekxGOFIwamJON0ZMVkFWNzJNUDFtSzNtNG9TM00vWVBkRkc3RmRn?=
- =?utf-8?B?SUhOWjd2TllBa1ZCNGROK3JWN1NNcmY5enoraE9xQ1dONlhOTFBEVGJoc0hG?=
- =?utf-8?Q?xXq7BC5kdUzqXLU8sVK0mCSaJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 836c62fa-c8af-489a-a1ab-08dc2efa56b0
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 14:19:51.2429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: H3S4e36r42x5drBinLHOL7CD5W4uJfvBwJ/iTTa7WHTOb2D/xpXDnKhMKp9CtdMH5iWijs5Y3JQl+EytdNe9DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5747
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2/15/2024 23:05, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [moved stable list to bcc, as this is nothing for the stable team]
-> 
-> On 16.02.24 03:42, Trolli Schmittlauch wrote:
->> I've found a regression somewhere between 6.7.4 and 6.8.0-rc0 that
->> causes my Framework 7840 AMD laptop to freeze after waking it from a
->> suspend. I can reliably trigger the issue, but unfortunately cannot
->> provide useful logs for now and hope to get some help with doing so.
-> 
-> Thx for the report. I'm CCing Mario, who has some experience with this
-> kind of problems and often had helpful advice in situations like this.
-> He also wrote a script that can help find the root of the problem on
-> systems that use Suspend-to-Idle:
-> https://gitlab.freedesktop.org/drm/amd/-/blob/master/scripts/amd_s2idle.py
-> 
-> Or does you system use ACPI S3 to suspend?
-> 
-> Furthermore: could you please provide the output of dmesg after the
-> first suspend? Maybe something goes sideways there and causes the later
-> resume processes to fail.
-> 
-> Have you tried if the system is reachable by ssh from another machine
-> when it seems to hang?
-> 
-> And you might want to configure your kernel to print all messages to the
-> tty consoles, maybe then you get to see what the kernel prints before it
-> hangs
-> 
+On Fri, 16 Feb 2024 09:54:46 +0100
+Thorsten Leemhuis <linux@leemhuis.info> wrote:
 
-There have been a lot of regressions in 6.8-rc both in GPU scheduler, MM 
-and AMDGPU.
+>[...]
+> Style and structure of the text match the one
+> Documentation/admin-guide/quickly-build-trimmed-linux.rst uses. Quite a
+> few paragraphs are even copied from there and not changed at all or only
+> slightly. This will complicate maintenance, as some future changes to
+> one of these documents will have to be replicated in the other. But this
+> is the lesser evil: solutions like "sending readers from one document
+> over to the other" or "extracting the common parts into a separate
+> document" might work in other cases, but would be too confusing here
+> given the topic and the target audience.
 
-If it's not already fixed with the stuff that's going into 6.8-rc5 this 
-weekend this is going to be a relatively difficult to bisect.
+Is this because you want to keep it readable if the target audience
+reads the source text of the documentation? Otherwise, the .. include
+directive does not make a difference after rendering to HTML. AFAIK.
 
-Here is what I would suggest:
+>[...]
+> * The text as of now does not really describe what a bisection is --
+> neither in general nor in the scope of Git. Maybe that should be
+> added. Having a few nice graphical diagrams might also be good, as the
+> text is meant to be read in rendered form anyway. But I think it's
+> useful like this already.
 
-1) Test 6.8-rc4 + patch 1 and patch 2 from this series:
+But here you expect it to be read in rendered form. So, are you afraid
+of making things confusing for potential later editors of this text?
 
-https://lore.kernel.org/amd-gfx/20240208055256.130917-1-mario.limonciello@amd.com/
+>[...]
+> diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> new file mode 100644
+> index 00000000000000..0a6a1a082d867c
+> --- /dev/null
+> +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> @@ -0,0 +1,1925 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR CC-BY-4.0)
+> +.. [see the bottom of this file for redistribution information]
+> +
+> +=========================================
+> +How to verify bugs and bisect regressions
+> +=========================================
+> +
+> +This document describes how to check if some Linux kernel problem occurs in the
+> +code developers currently support
 
-These two patches are headed into 6.8-rc5.
+I got puzzled for a moment as the subject of the sentence changed. What about:
 
-2) Test 6.8-rc4 + those 2 above patches + these two from drm-misc-fixes
+  code currently supported by developers
 
-* 
-https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=02f76a9cd4494719600baf1ab278930df39431ab
-* 
-https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=8746c6c9dfa31d269c65dd52ab42fde0720b7d91
+> -- to then explain how to locate the change
+> +causing the issue, if it did not happen with earlier versions.
 
-These two patches are headed into 6.8-rc5.
+I believe this part of the sentence could be also improved. I would not
+be afraid of introducing the word "regression" here, e.g.:
 
-2) If that doesn't work, then do a bisect, but you'll need to apply the 
-following for each (applicable) step.
+  It also explains how to locate the change which introduced the issue if
+  it did not happen with an earlier version. Such issues are commonly
+  called regressions.
 
-* patch 1 + patch 2 from 
-https://lore.kernel.org/amd-gfx/20240208055256.130917-1-mario.limonciello@amd.com/
-* 
-https://github.com/torvalds/linux/commit/66dbd9004a55073c5931f5f65f5fe2bbd414bdaa
-* 
-https://github.com/torvalds/linux/commit/d0399da9fb5f8e3d897b9776bffee2d3bfe20210
-* 
-https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=02f76a9cd4494719600baf1ab278930df39431ab
-* 
-https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=8746c6c9dfa31d269c65dd52ab42fde0720b7d91
+> +
+> +The text aims at people running kernels from mainstream Linux distributions on
+> +commodity hardware who want to report a kernel bug to the upstream Linux
+> +developers. The instructions despite this intent work just as well for users who
 
->> How to reproduce
->> ----------------
->>
->> The last working kernel release was 6.7.4, the issue appeared in all 6.8
->> release candidates from 1-4.
->>
->> 1. normally boot the system with a 6.8 kernel
->> 2. suspend and resume the system 2 to 4 times. Usually, the freeze
->> already occurs at the 2nd resume.
->> 2.1 graphical approach: I've reproduced this directly from the "Suspend"
->> button in my SDDM display manager (X11)
->> 2.2 TTY approach: You can also directly swith to a tty after boot, log
->> in, and then issue `systemctl suspend` 2 to 4 times
->> 3. After resume number 2 or later, the system freezes while resuming and
->> cannot be used anymore. The screen is switched on and displays
->> something, but no inputs are processed and the image is static.
->> 3.1 graphical approach: When suspending and resuming by closing and
->> opening the laptop lid, the screen is black with the cursor displayed.
->> When doing so while keeping the lid open, the display manager's
->> background image and a cursor are displayed, but only statically frozen.
->> No keyboard or touchpad input is processed.
->> 3.2 on a TTY: When suspending and resuming from a tty, a few kernel
->> messages still manage to be printed, but after that no new information
->> is displayed. E.g. when keeping a `journalctl -f` session open in
->> another tmux pane, that journal output does not update anymore. Keyboard
->> inputs are not processed anymore. Nonetheless, the cursor continues to
->> blink regulary.
->> I've attached two screenshots showing the situation with kernels 6.7.4
->> (working) and 6.8 (broken).
->>
->> Detailed Description
->> --------------------
->>
->> In most cases, the freeze already occurs after the 2nd
->> suspend-resume-cycle.
->> Unfortunately, this freeze also appears to block IO, as after a forced
->> hard reboot I cannot retrieve relevant information from `journalctl -b
->> "-1"`. The last retrievable log messages are from the successful suspend
->> action.
->> I welcome any recommendation on how to retrieve valuable information. I
->> have not yet played around with cmdline parameters relevant for debug.
->>
->> System Details
->> --------------
->>
->> Distro: NixOS 23.11, kernel 6.8 rc1-4 compiled manually
->> kernel: Linux version 6.8.0-rc4 (nixbld@localhost) (gcc (GCC) 12.3.0,
->> GNU ld (GNU Binutils) 2.40) #1-NixOS SMP PREEMPT_DYNAMIC Sun Feb 11
->> 20:18:13 UTC 2024
->> hardware: Framework 13 laptop, 7840 AMD series, CPU AMD Ryzen 7 7840U
->> x86_64
->>
->> In the attachments you find:
->> - the used kernel config
->> - my cmdline params
->> - 2 screenshots from the bug occuring when triggered from a tty
->>
->> Next Steps
->> ----------
->>
->> I intend to bisect the issue, but this can take a while due to the need
->> for manual testing and a kernel compile cycle requiring >30min for now.
->> I am mostly reporting this now already to still raise awareness in the
->> RC phase and to have something where I can point other Framework laptop
->> users towards for reproduction of the bug.
->>
->> All the best
->> schmittlauch
->>
->> Disclaimer:
->> I read the kernel docs on reporting issues, IMHO these were a bit
->> unclear on whether RC kernels are in the scope of the stable and
->> regressions lists.
-> 
-> You mean
-> https://docs.kernel.org/admin-guide/reporting-issues.html ?
-> Could you elaborate on that? Did you mean the TLDR version or the longer
-> version?
-> 
->> If they aren't please point me to where to do this. So far I had only
->> reported bugs via the bugzilla.
-> 
-> Ciao, Thorsten
-> 
-> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> regressions; the text you find below is based on a few templates
-> paragraphs you might have encountered already in similar form.
-> See link in footer if these mails annoy you.]
-> 
-> P.S. To be sure the issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, the Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced v6.7..v6.8-1
-> #regzbot title suspend: Framework 7840 AMD freezes on resume
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (the parent of this mail). See page linked in footer for
-> details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
+  Despite this intent, the instructions work... ?
 
+> +are already familiar with building their own kernels: they help avoid mistakes
+> +even experienced developers occasionally make.
+
+Again, why change the subject of the sentence? Sure, it avoids the
+passive voice, which is generally a good thing, but IMO it is more
+important to keep text coherence by always moving from theme to rheme
+and not vice versa. Syntax of an English sentence requires that subject
+appears before object, so if the theme happens to be the object of the
+sentence, passive voice provides a way to place theme before rheme.
+
+In short, what about:
+
+  mistakes occasionally made even by experienced developers.
+
+> +
+> +The essence of the process (aka 'TL;DR')
+> +========================================
+> +
+> +*[If you are new to building or bisecting Linux, ignore this TLDR and head over
+> +to the* ":ref:`step-by-step guide on verifying bugs and bisecting
+> +regressions<introguide_bissbs>`" *below: it utilizes the same commands while
+> +describing them in brief fashion; the steps are nevertheless easy to follow and
+> +together with accompanying entries in a reference section mention many
+> +alternatives, pitfalls, and additional aspects, all of which might be essential
+> +for your needs.]*
+> +
+> +**In case you want to check if a bug is present in a codebase developers
+> +currently support**,
+
+Again: "codebase currently supported by developers" ?
+
+> execute just the *preparations* and *segment 1*; while
+> +doing so, consider the newest Linux kernel you regularly use to be the 'working'
+> +kernel. In the following example that's assumed to be 6.0.13, which is why v6.0
+> +will be used to prepare the .config file.
+> +
+> +**In case you face a regression**, follow the steps at least till the end of
+> +*segment 2*. Then you can submit a preliminary report -- or continue with
+> +*segment 3*, which describes how to perform a bisection a full-fledged
+> +regression report needs. 
+
+a bisection needed for a full-fledged regression?
+
+> In the following example 6.0.13 is assumed to be the
+> +'working' kernel and 6.1.5 the first to be 'broken', hence v6.0 will be
+
+6.1.5 to be the first 'broken' ?
+
+> +considered the 'good' release.
+> +
+> +* **Preparations**: set up everything to build your own kernels::
+> +
+> +    # * Remove any software that depends on externally maintained kernel modules
+> +    #   or builds any automatically during bootup.
+> +    # * Ensure Secure Boot permits booting self-compiled Linux kernels.
+> +    # * If you are not already running the 'working' kernel, reboot into it.
+> +    # * Install compilers and everything else needed for building Linux.
+> +    # * Ensure to have 15 Gigabyte free space in your home directory.
+> +    git clone -o mainline --no-checkout \
+> +      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/linux/
+> +    cd ~/linux/
+> +    git remote add -t master stable \
+> +      https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> +    git checkout --detach v6.0
+> +    # * Hint: if you used an existing clone, ensure no stale .config is around.
+> +    make olddefconfig
+> +    # * Ensure the former command picked the .config of the 'working' kernel.
+> +    # * Connect external hardware (USB keys, tokens, ...), start a VM, bring up
+> +    #   VPNs, mount network shares, and briefly try the feature that is broken.
+> +    yes '' | make localmodconfig
+> +    ./scripts/config --set-str CONFIG_LOCALVERSION '-local'
+> +    ./scripts/config -e CONFIG_LOCALVERSION_AUTO
+> +    # * Note, when short on storage space, check the guide for an alternative:
+> +    ./scripts/config -d DEBUG_INFO_NONE -e KALLSYMS_ALL -e DEBUG_KERNEL \
+> +      -e DEBUG_INFO -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -e KALLSYMS
+> +    # * Hint: at this point you might want to adjust the build configuration;
+> +    #   you'll have to, if you are running Debian.
+
+Ugh... this step is necessary if you are running Debian ?
+
+> +    make olddefconfig
+> +    cp .config ~/kernel-config-working
+> +
+> +* **Segment 1**: build a kernel from the latest mainline codebase.
+> +
+> +  This among others checks if the problem was fixed already and which developers
+> +  later need to be told about the problem; in the regression's case this
+> +  furthermore rules out a .config change as root of the problem.
+
+in case of a regression, this rules out a .config change as root of the
+problem.
+
+> +
+> +  a) Checking out latest mainline code::
+> +
+> +       cd ~/linux/
+> +       git checkout --force --detach mainline/master
+> +
+> +  b) Build, install, and boot a kernel::
+> +
+> +       cp ~/kernel-config-working .config
+> +       make olddefconfig
+> +       make -j $(nproc --all)
+> +       # * Ensure free storage space suffices holding another kernel:
+
+Make sure there is enough disk space to hold another kernel:
+
+> +       df -h /boot/ /lib/modules/
+> +       # * Note: on Arch Linux and a few other distributions the following
+> +       #   commands will do nothing at all or only part of the job. See the
+> +       #   step-by-step guide for details.
+> +       command -v installkernel && sudo make modules_install install
+> +       # * Check how much space your self-built kernel actually needs, which
+> +       #   enables you to make better estimates later:
+> +       du -ch /boot/*$(make -s kernelrelease)* | tail -n 1
+> +       du -sh /lib/modules/$(make -s kernelrelease)/
+> +       # * Hint: the output of the following command will help you pick the
+> +       #   right kernel from the boot menu:
+> +       make -s kernelrelease | tee -a ~/kernels-built
+> +       reboot
+> +       # * Once booted, ensure you are running the kernel you just built by
+> +       #   checking if the output of the next two commands matches:
+> +       tail -n 1 ~/kernels-built
+> +       uname -r
+> +
+> +  c) Check if the problem occurs with this kernel as well.
+> +
+> +* **Segment 2**: ensure the 'good' kernel is also a 'working' kernel.
+> +
+> +  This among others verifies the trimmed .config file actually works well, as
+> +  bisecting with it otherwise would be a waste of time:
+> +
+> +  a) Start by checking out the sources of the 'good' version::
+> +
+> +       cd ~/linux/
+> +       git checkout --force --detach v6.0
+> +
+> +  b) Build, install, and boot a kernel as described earlier in *segment 1,
+> +     section b* -- just feel free to skip the 'du' commands, as you have a rough
+> +     estimate already.
+> +
+> +  c) Ensure the feature that regressed with the 'broken' kernel actually works
+> +     with this one.
+> +
+> +* **Segment 3**: perform and validate the bisection.
+> +
+> +  a) Incase your 'broken' version is a stable/longterm release, add the Git
+
+In case...
+
+> +     branch holding it::
+> +
+> +       git remote set-branches --add stable linux-6.1.y
+> +       git fetch stable
+> +
+> +  b) Initialize the bisection::
+> +
+> +       cd ~/linux/
+> +       git bisect start
+> +       git bisect good v6.0
+> +       git bisect bad v6.1.5
+> +
+> +  c) Build, install, and boot a kernel as described earlier in *segment 1,
+> +     section b*.
+> +
+> +     In case building or booting the kernel fails for unrelated reasons, run
+> +     ``git bisect skip``. In all other outcomes, check if the regressed feature
+> +     works with the newly built kernel. If it does, tell Git by executing
+> +     ``git bisect good``; if it does not, run ``git bisect bad`` instead.
+> +
+> +     All three commands will make Git checkout another commit; then re-execute
+> +     this step (e.g. build, install, boot, and test a kernel to then tell Git
+> +     the outcome). Do so again and again until Git shows which commit broke
+> +     things. If you run short of disk space during this process, check the
+> +     "Supplementary tasks" section below.
+> +
+> +  d) Once your finished the bisection, put a few things away::
+> +
+> +       cd ~/linux/
+> +       git bisect log > ~/bisect-log
+> +       cp .config ~/bisection-config-culprit
+> +       git bisect reset
+> +
+> +  e) Try to verify the bisection result::
+> +
+> +       git checkout --force --detach mainline/master
+> +       git revert --no-edit cafec0cacaca0
+> +
+> +    This is optional, as some commits are impossible to revert. But if the
+> +    second command worked flawlessly, build, install, and boot one more kernel
+> +    kernel, which should not show the regression.
+> +
+> +* **Supplementary tasks**: cleanup during and after the process.
+> +
+> +  a) To avoid running out of disk space during a bisection, you might need to
+> +     remove some kernels you built earlier. You most likely want to keep those
+> +     you built during segment 1 and 2 around for a while, but are unlikely to
+> +     need any again you tested during the actual bisection (Segment 3 c). You
+
+Got lost again.
+
+  but you will most likely no longer need kernels tested during the
+  actual bisection.
+
+> +     can list them in build order using::
+> +
+> +       ls -ltr /lib/modules/*-local*
+> +
+> +    To then for example erase a kernel that identifies itself as
+> +    '6.0-rc1-local-gcafec0cacaca0', use this::
+> +
+> +       sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
+> +       sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
+> +       # * Note, if kernel-install is missing, you will have to
+> +       #   manually remove the kernel image and related files.
+> +
+> +  b) If you performed a bisection and successfully validated the result, feel
+> +     free to remove all kernel build during the actual bisection (Segment 3 c);
+
+all kernels built ?
+
+> +     the kernels you built earlier and later you might want to keep around for
+> +     a week or two.
+> +
+> +.. _introguide_bissbs:
+> +
+> +Step-by-step guide on how to verify bugs and bisect regressions
+> +===============================================================
+> +
+> +..
+> +   Note: if you see this note, you are reading the text's source file. You
+> +   might want to switch to a rendered version: it makes it a lot easier to
+> +   read and navigate this document, especially when you want to look something
+> +   up in the reference section to then jump back to where you left off.
+
+...reference section, then jump back... ?
+
+> +..
+> +   Find a the latest rendered version of this text here:
+
+remove "a"
+
+> +   https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.rst.html
+> +
+> +The following steps show you how to verify a kernel problem you face is present
+
+verify if your kernel problem is present
+
+> +in code the Linux kernel developers support; in case of a regression the steps
+
+code supported by Linux kernel developers
+
+> +furthermore explain how to find the change causing it. The guide separates the
+> +process into five segments where segments 2 and 3 are only relevant for those
+> +facing a regression:
+> +
+> + :ref:`Preparations: set up everything to build your own kernels.<introprep_bissbs>`
+> +
+> + :ref:`Segment 1: try to reproduce the problem with the latest codebase.<introlatestcheck_bissbs>`
+> +
+> + :ref:`Segment 2: check if the kernels you build work fine.<introworkingcheck_bissbs>`
+> +
+> + :ref:`Segment 3: perform a bisection and validate the result.<introbisect_bissbs>`
+> +
+> + :ref:`Supplementary tasks: cleanup during and after following this guide.<introclosure_bissbs>`
+> +
+> +The steps in each segment illustrate the important aspects of the process, while
+> +a comprehensive reference section holds additional details. The latter sometimes
+> +also outlines alternative approaches, pitfalls, as well as problems that might
+> +occur at the particular step -- and how to then get things rolling again.
+
+remove "then" ?
+
+> +
+> +Be aware *segment 1* describes how to build and install your own kernel; the
+> +commands introduced there will be used in later segments in bulk fashion without
+> +further explanation.
+> +
+> +*Segment 1* and *segment 2* might look unnecessary for a bisection, but in fact
+> +in almost all cases are important due to concealed aspects explained below;
+> +skipping these segments thus could result in you wasting a lot of time and
+> +effort on a meaningless bisection.
+> +
+> +Be aware that *segment 3* will require you to build quite a few kernels --
+> +usually about 15 in case you encountered a regression when updating to a version
+> +from a newer mainline release (say from 6.0.11 to 6.1.3). Due to the trimmed
+> +build configuration file created initially this works a lot faster than many
+> +people assume, as overall on average it will often just take about 10 to 15
+> +minutes to compile each kernel on commodity x86 machines.
+> +
+> +For further details on how to report issues with the Linux kernel to its
+> +developers checkout Documentation/admin-guide/reporting-issues.rst, which works
+
+check out
+
+> +in conjunction with this document. It among others explains why you need to
+> +verify bugs with the latest 'mainline' kernel, even if you face a problem with a
+> +kernel from a 'stable/longterm' series; for users facing a regression it also
+> +explains that sending a preliminary report after finishing segment 2 might be
+> +wise, as an bisection might be unnecessary in case the regression is already
+
+remove "an" ?
+
+> +known.
+> +
+> +For further details on what actually qualifies as a regression checkout
+
+Again: check out
+
+> +Documentation/admin-guide/reporting-regressions.rst.
+> +
+> +.. _introprep_bissbs:
+> +
+> +Preparations: set up everything to build your own kernels
+> +---------------------------------------------------------
+> +
+> +.. _backup_bissbs:
+> +
+> +* Create a fresh backup and put system repair and restore tools at hand, just
+> +  to be prepared for the unlikely case of something going sideways.
+> +
+> +  [:ref:`details<backup_bisref>`]
+> +
+> +.. _vanilla_bissbs:
+> +
+> +* Remove all software that depends on externally developed kernel drivers or
+> +  builds them automatically. That includes but is not limited to DKMS, openZFS,
+> +  VirtualBox, and Nvidia's graphics drivers (including the GPLed kernel module).
+> +
+> +  [:ref:`details<vanilla_bisref>`]
+> +
+> +.. _secureboot_bissbs:
+> +
+> +* On platforms with 'Secure Boot' or similar solutions, prepare everything to
+> +  ensure the system will permit your self-compiled kernel to boot. The
+> +  quickest and easiest way to achieve this on commodity x86 systems is to
+> +  disable such techniques in the BIOS setup utility; alternatively, remove
+> +  their restrictions through a process initiated by
+> +  ``mokutil --disable-validation``.
+> +
+> +  [:ref:`details<secureboot_bisref>`]
+> +
+> +.. _rangecheck_bissbs:
+> +
+> +* Determine the kernel versions considered 'good' and 'bad' throughout this
+> +  guide.
+> +
+> +  Do you follow this guide to verify if a bug is present in the code developers
+> +  care for? Then consider the mainline release your 'working' kernel (the newest
+> +  one you regularly use) is based on to be the 'good' version; if your 'working'
+> +  kernel for example is '6.0.11', then your 'good' kernel is 'v6.0'.
+> +
+> +  In case you face a regression, it depends on the version range where the
+> +  regression was introduced:
+> +
+> +  * Something which used to work in Linux 6.0 broken when switching to Linux
+
+s/broken/broke/
+
+> +    6.1-rc1? Then henceforth regard 'v6.0' as the last known 'good' version and
+> +    'v6.1-rc1' as the first 'bad' one.
+> +
+> +  * Some function stopped working when updating from 6.0.11 to 6.1.4? Then for
+> +    the time being consider 'v6.0' as the last 'good' version and 'v6.1.4' as
+> +    the 'bad' one. Note, it at this point is an assumption that 6.0 is fine that
+> +    will be checked in segment 2.
+
+Ugh. What? Probably this:
+
+  Note, at this point it is merely assumed that 6.0 is fine. This
+  assumption will be check in segment 2.
+
+> +
+> +  * A feature you used in 6.0.11 does not work at all or worse in 6.1.13? In
+> +    that case you want to bisect within a stable/longterm series: consider
+> +    'v6.0.11' as the last known 'good' version and 'v6.0.13' as the first 'bad'
+> +    one. Note, you in this case nevertheless want to compile a mainline kernel
+> +    as explained in segment 1, as that will determine if that is a bug that the
+> +    regular developers or the stable team will have to handle.
+
+Ugh again. Probably:
+
+  Note, in this case you still want to compile a mainline kernel as
+  explained in segment 1. It will be used to decide if your issue will
+  be handled by regular developers or by the stable team.
+
+> +
+> +  *Note, do not confuse 'good' version with 'working' kernel; the latter term
+> +  throughout this guide will refer to the last kernel that has been working
+> +  fine.*
+> +
+> +  [:ref:`details<rangecheck_bisref>`]
+> +
+> +.. _bootworking_bissbs:
+> +
+> +* Boot into the 'working' kernel and briefly use the feature apparently broken.
+
+I suggest pre-position: the apparently broken feature
+
+> +
+> +  [:ref:`details<bootworking_bisref>`]
+> +
+> +.. _diskspace_bissbs:
+> +
+> +* Ensure to have enough free space for building Linux. 15 Gigabyte in your home
+> +  directory should typically suffice. If you have less available, be sure to pay
+> +  attention to later steps about retrieving the Linux sources and handling of
+> +  debug symbols: both explain approaches reducing the amount of space, which
+> +  should allow you to master these tasks with about 4 Gigabytes free space.
+> +
+> +  [:ref:`details<diskspace_bisref>`]
+> +
+> +.. _buildrequires_bissbs:
+> +
+> +* Install all software required to build a Linux kernel. Often you will need:
+> +  'bc', 'binutils' ('ld' et al.), 'bison', 'flex', 'gcc', 'git', 'openssl',
+> +  'pahole', 'perl', and the development headers for 'libelf' and 'openssl'. The
+> +  reference section shows how to quickly install those on various popular Linux
+> +  distributions.
+> +
+> +  [:ref:`details<buildrequires_bisref>`]
+> +
+> +.. _sources_bissbs:
+> +
+> +* Retrieve the mainline Linux sources; then change into the directory holding
+> +  them, as all further commands in this guide are meant to be executed from
+> +  there.
+> +
+> +  *Note, the following describe how to retrieve the sources using a full
+> +  mainline clone, which downloads about 2,75 GByte as of early 2024. The*
+> +  :ref:`reference section describes two alternatives <sources_bisref>` *:
+> +  one downloads less than 500 MByte, the other works better with unreliable
+> +  internet connections.*
+> +
+> +  Execute the following command to retrieve a fresh mainline codebase::
+> +
+> +    git clone -o mainline --no-checkout \
+> +      git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/linux/
+> +    cd ~/linux/
+
+This is not very nice to git-daemon. Plus, it uses the insecure git
+protocol. Is it too much to show cloning from a bundle instead?
+
+  https://www.kernel.org/cloning-linux-from-a-bundle.html
+
+> +
+> +  [:ref:`details<sources_bisref>`]
+> +
+> +.. _oldconfig_bissbs:
+> +
+> +* Start preparing a kernel build configuration (the '.config' file).
+> +
+> +  Before doing so, ensure you are still running the 'working' kernel an earlier
+> +  step told you to boot; if you are unsure, check the current kernel release
+> +  identifier using ``uname -r``.
+> +
+> +  Afterwards check out the source code for the version earlier established as
+> +  'good' and create a .config file::
+> +
+> +    git checkout --detach v6.0
+> +    make olddefconfig
+> +
+> +  The second command will try to locate the build configuration file for the
+> +  running kernel and then adjust it for the needs of the kernel sources you
+> +  checked out. While doing so it will print a few lines with a line starting
+> +  with '# using defaults found in'. Ensure it is the former of the two and
+
+Eh, "lines with a line" ? I suggest:
+
+  While doing so, it will print a few lines. One of them starts with
+  '# using defaults ...
+
+> +  followed by a path to a file in '/boot/'; the latter furthermore should
+> +  contain the release identifier of your currently working kernel.
+> +
+> +  If the line instead continued with something like
+
+s/continued/continues/
+
+> +  'arch/x86/configs/x86_64_defconfig', then the build infra failed to find the
+> +  .config file for your running kernel -- in which case you have to put one
+> +  there manually, as explained in the reference section.
+> +
+> +  In case you can not find such a line, look for one containing '# configuration
+> +  written to .config'. If that's the case you have a stale build configuration
+> +  lying around. Unless you intend to use it, delete it -- or better yet, remove
+
+Remove "delete it -- or better yet". Don't confuse people by offering
+two solutions here.
+
+> +  all stale files you might have lying around from earlier builds using ``make
+> +  distclean`` or ``git clean -i``. Afterwards call 'make olddefconfig' again.
+> +
+> +  [:ref:`details<oldconfig_bisref>`]
+> +
+> +.. _localmodconfig_bissbs:
+> +
+> +* Disable any kernel modules apparently superfluous for your setup. This is
+> +  optional, but especially wise for bisections, as it speeds up the build
+> +  process enormously -- at least unless the .config file picked up in the
+> +  previous step was already tailored to your and your hardware needs, in which
+> +  case you should skip this step.
+> +
+> +  To prepare the trimming, connect external hardware you occasionally use (USB
+> +  keys, tokens, ...), quickly start a VM, and bring up VPNs. And if you rebooted
+> +  since you started that guide, ensure that you tried using the feature causing
+> +  trouble since you started the system. Only then trim your .config::
+> +
+> +     yes '' | make localmodconfig
+> +
+> +  There is a catch to this, as the 'apparently' in initial sentence of this step
+> +  and the preparation instructions already hinted at:
+> +
+> +  The 'localmodconfig' target easily disables kernel modules for features only
+> +  used occasionally -- like modules for external peripherals not yet connected
+> +  since booting, virtualization software not yet utilized, VPN tunnels, and a
+> +  few other things. That's because some tasks rely on kernel modules Linux only
+> +  loads when you execute tasks like the aforementioned ones for the first time.
+> +
+> +  This drawback of localmodconfig is nothing you should lose sleep over, but
+> +  something to keep in mind: if something is misbehaving with the kernels built
+> +  during this guide, this is most likely the reason. You can reduce or nearly
+> +  eliminate the risk with tricks the reference section outlines; but when
+
+tricks outlined in the reference section
+
+> +  building a kernel just for quick testing purposes this is usually not worth
+> +  spending much effort on, as long as it boots and allows to properly test the
+> +  feature that causes trouble.
+> +
+> +  [:ref:`details<localmodconfig_bisref>`]
+> +
+> +.. _tagging_bissbs:
+> +
+> +* Ensure all the kernels you will build are clearly identifiable using a special
+> +  tag and a unique version number::
+> +
+> +    ./scripts/config --set-str CONFIG_LOCALVERSION '-local'
+> +    ./scripts/config -e CONFIG_LOCALVERSION_AUTO
+> +
+> +  [:ref:`details<tagging_bisref>`]
+> +
+> +.. _debugsymbols_bissbs:
+> +
+> +* Decide how to handle debug symbols.
+> +
+> +  In the context of this document it is often wise to enable them, as there is a
+> +  decent chance you at some point will need to decode a stack trace from a
+
+Why not remove "at some point"? We're not paid by word, are we? ;-)
+
+> +  'panic', 'Oops', 'warning', or 'BUG'::
+> +
+> +    ./scripts/config -d DEBUG_INFO_NONE -e KALLSYMS_ALL -e DEBUG_KERNEL \
+> +      -e DEBUG_INFO -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -e KALLSYMS
+> +
+> +  But if you are extremely short on storage space, you might want to disable
+> +  debug symbols instead::
+> +
+> +    ./scripts/config -d DEBUG_INFO -d DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
+> +      -d DEBUG_INFO_DWARF4 -d DEBUG_INFO_DWARF5 -e CONFIG_DEBUG_INFO_NONE
+> +
+> +  [:ref:`details<debugsymbols_bisref>`]
+> +
+> +.. _configmods_bissbs:
+> +
+> +* Check if you might want to or have to adjust some other kernel configuration
+
+Sorry, "if you might want to" is over the top. Keep it simple:
+
+    You may need or want to adjust some other kernel configuration options:
+
+> +  options:
+> +
+> +  * Are you running Debian? Then you want to avoid known problems by performing
+> +    additional adjustments explained in the reference section.
+> +
+> +    [:ref:`details<configmods_distros_bisref>`].
+> +
+> +  * If you want to influence other aspects of the configuration, do so now
+> +    by using make targets like 'menuconfig' or 'xconfig'.
+> +
+> +    [:ref:`details<configmods_individual_bisref>`].
+> +
+> +.. _saveconfig_bissbs:
+> +
+> +* Reprocess the .config after the latest adjustments and store it in a safe
+> +  place::
+> +
+> +     make olddefconfig
+> +     cp .config ~/kernel-config-working
+> +
+> +  [:ref:`details<saveconfig_bisref>`]
+> +
+> +.. _introlatestcheck_bissbs:
+> +
+> +Try to reproduce the problem with the latest codebase
+> +-----------------------------------------------------
+> +
+> +The following steps verify if the problem occurs with the code developers
+> +currently support. In case you face a regression, it also checks that the
+
+code currently supported by developers
+
+> +problem is not caused by some .config value your distributor changed between the
+> +'good' and the 'broken' kernel. [:ref:`details<introlatestcheck_bisref>`]
+> +
+> +.. _checkoutmaster_bissbs:
+> +
+> +* Checkout the latest Linux codebase::
+
+Check out ?
+
+> +
+> +    cd ~/linux/
+> +    git checkout --force --detach mainline/master
+> +
+> +  [:ref:`details<checkoutmaster_bisref>`]
+> +
+> +.. _build_bissbs:
+> +
+> +* Build the image and the modules of your first kernel using the config file you
+> +  prepared::
+> +
+> +    cp ~/kernel-config-working .config
+> +    make olddefconfig
+> +    make -j $(nproc --all)
+> +
+> +  If you want your kernel packaged up as deb, rpm, or tar file, see the
+> +  reference section for alternatives, which obviously will require other
+> +  steps to install as well.
+> +
+> +  [:ref:`details<build_bisref>`]
+> +
+> +.. _install_bissbs:
+> +
+> +* Install your newly built kernel.
+> +
+> +  Before doing so, consider checking if there is still enough room for it::
+> +
+> +    df -h /boot/ /lib/modules/
+> +
+> +  150 MByte in /boot/ and 200 in /lib/modules/ usually suffice. Those are rough
+> +  estimates assuming the worst case. How much your kernels actually require will
+> +  be determined later.
+> +
+> +  Now install the kernel, which will be saved in parallel to the kernels from
+> +  your Linux distribution::
+> +
+> +    command -v installkernel && sudo make modules_install install
+> +
+> +  On many commodity Linux distributions this will take care of everything
+> +  required to boot your kernel. You might want to ensure that's the case by
+> +  checking if your boot loader's configuration was updated; furthermore ensure
+> +  an initramfs (also known as initrd) exists, which on many distributions can be
+> +  achieved by running ``ls -l /boot/init*$(make -s kernelrelease)*``. Those
+> +  steps are recommended, as there are quite a few Linux distribution where above
+> +  command is insufficient:
+> +
+> +  * On Arch Linux, its derivatives, many immutable Linux distributions, and a
+> +    few others the above command does nothing at, as they lack 'installkernel'
+> +    executable.
+> +
+> +  * Some distributions install the kernel, but don't add an entry for your
+> +    kernel in your boot loader's configuration -- the kernel thus won't show up
+> +    in the boot menu.
+> +
+> +  * Some distributions add a boot loader menu entry, but don't create an
+> +    initramfs on installation -- in that case your kernel most likely will be
+> +    unable to mount the root partition during bootup.
+> +
+> +  If any of that applies to you, see the reference section for further guidance.
+> +  Once you figured out what to do, consider writing down the necessary
+> +  installation steps: if you will build more kernels as described in
+> +  segment 2 and 3, you will have to execute these commands every time that
+> +  ``command -v installkernel [...]`` comes up again.
+> +
+> +  [:ref:`details<install_bisref>`]
+> +
+> +.. _storagespace_bissbs:
+> +
+> +* In case you plan to follow this guide further, check how much storage space
+> +  the kernel, its modules, and other related files like the initramfs consume::
+> +
+> +    du -ch /boot/*$(make -s kernelrelease)* | tail -n 1
+> +    du -sh /lib/modules/$(make -s kernelrelease)/
+> +
+> +  Write down or remember those two values for later: they enable you to prevent
+> +  running out of disk space accidentally during a bisection.
+> +
+> +  [:ref:`details<storagespace_bisref>`]
+> +
+> +.. _kernelrelease_bissbs:
+> +
+> +* Show and store the kernelrelease identifier of the kernel you just built::
+> +
+> +    make -s kernelrelease | tee -a ~/kernels-built
+> +
+> +  Remember the identifier momentarily, as it will help you pick the right kernel
+> +  from the boot menu upon restarting.
+> +
+> +.. _recheckbroken_bissbs:
+> +
+> +* Reboot into the kernel you just built and check if the feature that is
+> +  expected to be broken really is.
+> +
+> +  Start by ensuring the kernel you booted is the one you just built. When
+
+Start by making sure ...
+
+> +  unsure, check if the output of these commands show the exact same release
+> +  identifier::
+> +
+> +    tail -n 1 ~/kernels-built
+> +    uname -r
+> +
+> + Now verify if the feature that causes trouble works with your newly built
+> + kernel. If things work while investigating a regression, check the reference
+> + section for further details.
+> +
+> +  [:ref:`details<recheckbroken_bisref>`]
+> +
+> +.. _recheckstablebroken_bissbs:
+> +
+> +* Are you facing a problem within a stable/longterm release, but failed to
+> +  reproduce it with the mainline kernel you just built? Then check if the latest
+> +  codebase for the particular series might already fix the problem. To do so,
+> +  add the stable series Git branch for your 'good' kernel and check out the
+> +  latest version::
+> +
+> +    cd ~/linux/
+> +    git remote set-branches --add stable linux-6.0.y
+> +    git fetch stable
+> +    git checkout --force --detach linux-6.0.y
+> +
+> +  Now use the checked out code to build and install another kernel using the
+> +  commands the earlier steps already described in more detail::
+> +
+> +    cp ~/kernel-config-working .config
+> +    make olddefconfig
+> +    make -j $(nproc --all)
+> +    # * Check if the free space suffices holding another kernel:
+> +    df -h /boot/ /lib/modules/
+> +    command -v installkernel && sudo make modules_install install
+> +    make -s kernelrelease | tee -a ~/kernels-built
+> +    reboot
+> +
+> +  Now verify if you booted the kernel you intended to start, to then check if
+> +  everything works fine with this kernel::
+> +
+> +    tail -n 1 ~/kernels-built
+> +    uname -r
+> +
+> +  [:ref:`details<recheckstablebroken_bisref>`]
+> +
+> +You are done here, if you follow this guide to verify if a problem is present in
+
+I suggest to remove the comma. But even then the second "if" confuses
+me. Ideally it should be reworded somehow, but I'm too tired.
+
+> +the code Linux kernel developers support. If you later want to remove the kernel
+
+code supported by Linux kernel developers again?
+
+> +you just built, checkout :ref:`Supplementary tasks: cleanup during and after
+> +following this guide.<introclosure_bissbs>`.
+> +
+> +.. _introworkingcheck_bissbs:
+> +
+> +Check if the kernels you build work fine
+> +----------------------------------------
+> +
+> +In case of a regression, you now want to ensure the trimmed configuration file
+> +you created earlier works as expected; a bisection with the .config file
+> +otherwise would be useless. [:ref:`details<introworkingcheck_bisref>`]
+> +
+> +.. _recheckworking_bissbs:
+> +
+> +* Build your own variant of the 'working' kernel and check if the feature that
+> +  regressed works as expected with it.
+> +
+> +  Start by checking out the sources for the version earlier established as
+> +  'good'::
+> +
+> +    cd ~/linux/
+> +    git checkout --detach v6.0
+> +
+> +  Now use the checked out code to configure, build, and install another kernel
+> +  using the commands the previous subsection explained in more detail::
+> +
+> +    cp ~/kernel-config-working .config
+> +    make olddefconfig
+> +    make -j $(nproc --all)
+> +    # * Check if the free space suffices holding another kernel:
+> +    df -h /boot/ /lib/modules/
+> +    command -v installkernel && sudo make modules_install install
+> +    make -s kernelrelease | tee -a ~/kernels-built
+> +    reboot
+> +
+> +  When the system booted, you once again might want to verify if the kernel yo
+
+When the system boots, you may want to verify once again that the
+kernel you started is the one you just built::
+
+> +  started is the one you just built::
+> +
+> +    tail -n 1 ~/kernels-built
+> +    uname -r
+> +
+> +  Now check if this kernel works as expected; if not, consult the reference
+> +  section for further instructions.
+> +
+> +  [:ref:`details<recheckworking_bisref>`]
+> +
+> +.. _introbisect_bissbs:
+> +
+> +Perform the bisection and validate the result
+> +---------------------------------------------
+> +
+> +With all the preparations and precaution builds taken care of, you are now ready
+> +to begin the bisection.
+> +
+> +* In case your 'bad' version is a stable/longterm release (say v6.1.5), add its
+> +  stable branch, unless you already did so earlier::
+> +
+> +    cd ~/linux/
+> +    git remote add -t master stable \
+> +      git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable.git
+
+Naked git protocol again?
+
+> +    git remote set-branches --add stable linux-6.1.y
+> +    git fetch stable
+> +
+> +.. _bisectstart_bissbs:
+> +
+> +* Start the bisection and tell Git about the versions earlier established as
+> +  'good' and 'bad'::
+> +
+> +    cd ~/linux/
+> +    git bisect start
+> +    git bisect good v6.0
+> +    git bisect bad v6.1.5
+> +
+> +  [:ref:`details<bisectstart_bisref>`]
+> +
+> +.. _bisectbuild_bissbs:
+> +
+> +* Now use the code Git checked out to build, install, and boot a kernel using
+> +  the commands introduced earlier::
+> +
+> +    cp ~/kernel-config-working .config
+> +    make olddefconfig
+> +    make -j $(nproc --all)
+> +    # * Check if the free space suffices holding another kernel:
+> +    df -h /boot/ /lib/modules/
+> +    command -v installkernel && sudo make modules_install install
+> +    make -s kernelrelease | tee -a ~/kernels-built
+> +    reboot
+> +
+> +  If compilation fails for some reason, run ``git bisect skip`` and restart
+> +  executing the stack of commands from the beginning.
+> +
+> +  In case you skipped the "test latest codebase" step in the guide, check its
+> +  description as for why the 'df [...]' and 'make -s kernelrelease [...]'
+> +  commands are here.
+> +
+> +  Important note:, the latter command from this point on will print release
+> +  identifiers that might look odd or wrong to you -- which they are not, as it's
+> +  totally normal to see release identifiers like '6.0-rc1-local-gcafec0cacaca0'
+> +  if you for example would bisect between versions 6.1 and 6.2.
+
+Remove "would". Move "for example" to the end of the sentence.
+
+> +
+> +  [:ref:`details<bisectbuild_bisref>`]
+> +
+> +.. _bisecttest_bissbs:
+> +
+> +* Now check if the feature that regressed works in the kernel you just built.
+> +
+> +  You again might want to start by ensuring the kernel you booted is the one you
+
+making sure
+
+> +  just built::
+> +
+> +    cd ~/linux/
+> +    tail -n 1 ~/kernels-built
+> +    uname -r
+> +
+> +  Now verify if the feature that regressed works at this kernel bisection point.
+> +  If it does, run this::
+> +
+> +    git bisect good
+> +
+> +  If it does not, run this::
+> +
+> +    git bisect bad
+> +
+> +  Be sure about what you tell Git, as getting this wrong just once will send the
+> +  rest of the bisection totally of course.
+
+I guess this should be "off course".
+
+> +
+> +  While the bisection is ongoing, Git will use the information you provided to
+> +  find and checkout another bisection point for you to test. While doing so, it
+
+check out
+
+> +  will print something like 'Bisecting: 675 revisions left to test after this
+> +  (roughly 10 steps)' to indicate how many further changes it expects to be
+> +  tested. Now build and install another kernel using the instructions from the
+> +  previous step; afterwards follow the instructions in this step again.
+> +
+> +  Repeat this again and again until you finish the bisection -- that's the case
+> +  when Git after tagging a change as 'good' or 'bad' prints something like
+> +  'cafecaca0c0dacafecaca0c0dacafecaca0c0da is the first bad commit'; right
+> +  afterwards it will show some details about the culprit including the patch
+> +  description of the change. The latter might fill your terminal screen, so you
+> +  might need to scroll up to see the message mentioning the culprit;
+> +  alternatively, run ``git bisect log > ~/bisection-log``.
+> +
+> +  [:ref:`details<bisecttest_bisref>`]
+> +
+> +.. _bisectlog_bissbs:
+> +
+> +* Store Git's bisection log and the current .config file in a safe place before
+> +  telling Git to reset the sources to the state before the bisection::
+> +
+> +    cd ~/linux/
+> +    git bisect log > ~/bisection-log
+> +    cp .config ~/bisection-config-culprit
+> +    git bisect reset
+> +
+> +  [:ref:`details<bisectlog_bisref>`]
+> +
+> +.. _revert_bissbs:
+> +
+> +* Try reverting the culprit on top of latest mainline to see if this fixes your
+> +  regression.
+> +
+> +  This is optional, as it might be impossible or hard to realize. The former is
+> +  the case, if the bisection determined a merge commit as the culprit; the
+> +  latter happens if other changes depend on the culprit. But if the revert
+> +  succeeds, it is worth building another kernel, as it validates the result of
+> +  a bisection, which can easily deroute; it furthermore will let kernel
+> +  developers know, if they can resolve the regression with a quick revert.
+> +
+> +  Begin by checking out the latest codebase depending on the range you bisected:
+> +
+> +  * Did you face a regression within a stable/longterm series (say between
+> +    6.0.11 and 6.0.13) that does not happen in mainline? Then checkout the
+> +    latest codebase for the affected series like this::
+> +
+> +      git fetch stable
+> +      git checkout --force --detach linux-6.0.y
+> +
+> +  * In all other cases checkout latest mainline::
+> +
+> +      git fetch mainline
+> +      git checkout --force --detach mainline/master
+> +
+> +    If you bisected a regression within a stable/longterm series that also
+> +    happens in mainline, there is one more thing to do: look up the mainline
+> +    commit-id. To do so, use a command like ``git show abcdcafecabcd`` to view
+> +    the patch description of the culprit. It near the top will have a line like
+
+There will be a line near the top which looks like
+
+> +    'commit cafec0cacaca0 upstream.' or 'Upstream commit cafec0cacaca0; use that
+> +    commit-id in the next command and not the one the bisection blamed.
+> +
+> +  Now try reverting the culprit by specifying its commit id::
+> +
+> +    git revert --no-edit cafec0cacaca0
+> +
+> +  If that fails, give up trying and move on to the next step. But if it works,
+> +  build a kernel again using the familiar command sequence::
+> +
+> +    cp ~/kernel-config-working .config
+> +    make olddefconfig &&
+> +    make -j $(nproc --all) &&
+> +    # * Check if the free space suffices holding another kernel:
+> +    df -h /boot/ /lib/modules/
+> +    command -v installkernel && sudo make modules_install install
+> +    Make -s kernelrelease | tee -a ~/kernels-built
+> +    reboot
+> +
+> +  Now check one last time if the feature that made you perform a bisection work
+> +  with that kernel.
+> +
+> +  [:ref:`details<revert_bisref>`]
+> +
+> +.. _introclosure_bissbs:
+> +
+> +Supplementary tasks: cleanup during and after the bisection
+> +-----------------------------------------------------------
+> +
+> +During and after following this guide you might want or need to remove some of
+> +the kernels you installed: the boot menu otherwise will become confusing or
+> +space might run out.
+> +
+> +.. _makeroom_bissbs:
+> +
+> +* To remove one of the kernels you installed, look up its 'kernelrelease'
+> +  identifier. This guide stores them in '~/kernels-built', but the following
+> +  command will print them as well::
+> +
+> +    ls -ltr /lib/modules/*-local*
+> +
+> +  You in most situations want to remove the oldest kernels built during the
+> +  actual bisection (e.g. segment 3 of this guide). The two ones you created
+> +  beforehand (e.g. to test the latest codebase and the version considered
+> +  'good') might become handy to verify something later -- thus better keep them
+> +  around, unless you are really short on storage space.
+> +
+> +  To remove the modules of a kernel with the kernelrelease identifier
+> +  '*6.0-rc1-local-gcafec0cacaca0*', start by removing the directory holding its
+> +  modules::
+> +
+> +    sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
+> +
+> +  Afterwards try the following command::
+> +
+> +    sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
+> +
+> +  On quite a few distributions this will delete all other kernel files installed
+> +  while also removing the kernel's entry from the boot menu. But on some
+> +  distributions this command does not exist or will fail; in that case consult
+> +  the reference section, as your Linux distribution needs special care.
+> +
+> +  [:ref:`details<makeroom_bisref>`]
+> +
+> +.. _finishingtouch_bissbs:
+> +
+> +* Once you have finished the bisection, do not immediately remove anything you
+> +  set up, as you might need a few things again. What is safe to remove depends
+> +  on the outcome of the bisection:
+> +
+> +  * Could you initially reproduce the regression with the latest codebase and
+> +    after the bisection were able to fix the problem by reverting the culprit on
+> +    top of the latest codebase? Then you want to keep those two kernels around
+> +    for a while, but safely remove all others with a '-local' in the release
+> +    identifier.
+> +
+> +  * Did the bisection end on a merge-commit or seems questionable for other
+> +    reasons? Then you want to keep as many kernels as possible around for a few
+> +    days: it's pretty likely that you will be asked to recheck something.
+> +
+> +  * In other cases it likely is a good idea to keep the following kernels around
+> +    for some time: the one built from the latest codebase, the one created from
+> +    the version considered 'good', and the last three or four you compiled
+> +    during the actual bisection process.
+> +
+> +  [:ref:`details<finishingtouch_bisref>`]
+> +
+> +.. _submit_improvements:
+> +
+> +This concludes the step-by-step guide.
+> +
+> +Did you run into trouble following any of the above steps not cleared up by the
+> +reference section below? Did you spot errors? Or do you have ideas how to
+> +improve the guide? Then please take a moment and let the maintainer of this
+> +document know by email (Thorsten Leemhuis <linux@leemhuis.info>), ideally while
+> +CCing the Linux docs mailing list (linux-doc@vger.kernel.org). Such feedback is
+> +vital to improve this document further, which is in everybody's interest, as it
+> +will enable more people to master the task described here -- and hopefully also
+> +improve similar guides inspired by this one.
+> +
+> +
+> +Reference section for the step-by-step guide
+> +============================================
+> +
+> +This section holds additional information for almost all the items in above
+
+...in the above...
+
+> +step-by-step guide.
+> +
+> +.. _backup_bisref:
+> +
+> +Prepare for emergencies
+> +-----------------------
+> +
+> +  *Create a fresh backup and put system repair and restore tools at hand.*
+> +  [:ref:`... <backup_bissbs>`]
+> +
+> +Remember, you are dealing with computers, which sometimes do unexpected things
+> +-- especially if you fiddle with crucial parts like the kernel of an operating
+> +system. That's what you are about to do in this process. Hence, better prepare
+> +for something going sideways, even if that should not happen.
+> +
+> +[:ref:`back to step-by-step guide <backup_bissbs>`]
+> +
+> +.. _vanilla_bisref:
+> +
+> +Remove anything related to externally maintained kernel modules
+> +---------------------------------------------------------------
+> +
+> +  *Remove all software that depends on externally developed kernel drivers or
+> +  builds them automatically.* [:ref:`...<vanilla_bissbs>`]
+> +
+> +Externally developed kernel modules can easily cause trouble during a bisection.
+> +
+> +But there is a more important reason why this guide contains this step: most
+> +kernel developers will not care about reports about regressions occurring with
+> +kernels that utilize such modules. That's because such kernels are not
+> +considered 'vanilla' anymore, as Documentation/admin-guide/reporting-issues.rst
+> +explains in more detail.
+> +
+> +[:ref:`back to step-by-step guide <vanilla_bissbs>`]
+> +
+> +.. _secureboot_bisref:
+> +
+> +Deal with techniques like Secure Boot
+> +-------------------------------------
+> +
+> +  *On platforms with 'Secure Boot' or similar techniques, prepare everything to
+> +  ensure the system will permit your self-compiled kernel to boot later.*
+> +  [:ref:`... <secureboot_bissbs>`]
+> +
+> +Many modern systems allow only certain operating systems to start; they thus by
+> +default will reject booting self-compiled kernels.
+
+that's why they reject booting self-compiled kernels by default.
+
+> +
+> +You ideally deal with this by making your platform trust your self-built kernels
+> +with the help of a certificate. How to do that is not described
+> +here, as it requires various steps that would take the text too far away from
+> +its purpose; 'Documentation/admin-guide/module-signing.rst' and various web
+> +sides already explain everything needed in more detail.
+> +
+> +Temporarily disabling solutions like Secure Boot is another way to make your own
+> +Linux boot. On commodity x86 systems it is possible to do this in the BIOS Setup
+> +utility; the required steps vary a lot between machines and therefore cannot be
+> +described here.
+> +
+> +On mainstream x86 Linux distributions there is a third and universal option:
+> +disable all Secure Boot restrictions for your Linux environment. You can
+> +initiate this process by running ``mokutil --disable-validation``; this will
+> +tell you to create a one-time password, which is safe to write down. Now
+> +restart; right after your BIOS performed all self-tests the bootloader Shim will
+> +show a blue box with a message 'Press any key to perform MOK management'. Hit
+> +some key before the countdown exposes, which will open a menu. Choose 'Change
+> +Secure Boot state'. Shim's 'MokManager' will now ask you to enter three
+> +randomly chosen characters from the one-time password specified earlier. Once
+> +you provided them, confirm you really want to disable the validation.
+> +Afterwards, permit MokManager to reboot the machine.
+> +
+> +[:ref:`back to step-by-step guide <secureboot_bissbs>`]
+> +
+> +.. _bootworking_bisref:
+
+I stop here and call it a week. I may read the rest later. Hope even
+this much helps .
+
+Petr T
