@@ -1,207 +1,172 @@
-Received: from mail.orlives.de (mail.orlives.de [148.251.55.246])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2C31468F6
-	for <regressions@lists.linux.dev>; Fri, 16 Feb 2024 21:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.55.246
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708120537; cv=none; b=Q6S8ssLgKrXOO8zWS2CJiSZS63cGXGbLEPO4an5T3D1w3OtNyei5OXBr7W8kawUA1+iduDajDtD8yRborVHnwtFncRFZzb3b46FUUiQe8WGQDRW/ggrn6DCBUnvSXySpXMOvH/e4DWvw4GYaFffOFH9e/CPxhgHcRky2k16w3po=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708120537; c=relaxed/simple;
-	bh=+LCw6V2e7DqwfCoHmgeT+8PuXuth2OuQJi/OupEfEEk=;
-	h=Message-ID:Date:Mime-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=u1BHSg9aMNBZhe3VAM74tVOwd0Q6DQBeY+htyRg9bV0FMObTrbwVAm5QDGpgm7505NK+MyWehZPzIxjDOM4p73chgu5M5t9Pzk4+zZqv8YDTsilXoPmVOljFHb6wf8t2OULQtL+oNATal7QNBZIBWOvjABPWumIOeG/BCBXLKh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de; spf=pass smtp.mailfrom=orlives.de; dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b=bMkTF2ew; arc=none smtp.client-ip=148.251.55.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orlives.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AADF1CF81
+	for <regressions@lists.linux.dev>; Fri, 16 Feb 2024 23:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708124503; cv=fail; b=pJQnHPM5xRT1KJTXM+wTWp3LePHRVK5rQayaqcwhWjMPiCTaouOCfJj9Q3ynJYglFuj17Vw7dlQ3M7bbAoWkxXGy6UAA5kAkrLf3djahMeEr+CFVxKEnweA678I+LReUwx6OLB5fu44bwS+O7CdoXbGNUWNPPgSkpa2vpG5fMgM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708124503; c=relaxed/simple;
+	bh=oJTP3qXvllkqPBAXH4PIQUrTxD8KtO0KLtCAX8zOD5c=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=W1wfVW/1CjXqc8BWXnOch9MMXZa9Wsc0COIM1WZ4kw7npxCgiOKqfxXRZOZEorcGLISpvNebDE84/BbbPEuQwUAWDhmZ9L14+wHWFS2rhYQi9l0YVan/K529GducAoypKcLJSE+NZyXz2+Sh37is7OQFv9z9S6YinGYE2dnTK+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PPCdAuxx; arc=fail smtp.client-ip=40.107.93.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b="bMkTF2ew"
-Received: from mail.orlives.de (localhost [127.0.0.1])
-	by mail.orlives.de (Postfix) with ESMTPSA id 05B5FA008B;
-	Fri, 16 Feb 2024 22:55:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orlives.de; s=dkim1;
-	t=1708120529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+LCw6V2e7DqwfCoHmgeT+8PuXuth2OuQJi/OupEfEEk=;
-	b=bMkTF2ew+w8SbLKDdUZsjWtpAd/iwadnwO2+SIanF13pmunRLP/UWIzCOtJruIY6RyOtT4
-	jq+wPIxOExhiT2Mke5h8rwCBmQTxaa2zf5+qmbrR2ynIAcebsWo06DsmWMYff4lKrn0XOF
-	igT2U9W0wcEIHwIJm2GiLn36tyJh+Bkacjj/DeUF5ccuKlg68gsVKwjKFAqwdbUDViYFd6
-	lQwpo6VH1O71bG+Juhtjt0OfVvJv8mIEnsrSARqCeAIgdJ9LEC817LhJ2quHhOfVGyTEco
-	4LDyqTZ6ka/sPukhAQZGXdn5KK2KsR0STtJyb0d4v5ZFTCIoF/oyBdSj7HtkynfISz/YIe
-	WhFgPLVoSuW5fhgi2FrAzJRa/TJVjJcmvVvardktVGoRA0eBlBkDngcYCPYKbxosVmr1Wu
-	meKMsKAUNeC9amcxCIVspnTb1Vs5BKZtQvV7pPwfsFATY+Rg/s3PfTK5wqDugiw7MbW7B7
-	Cg58tqp5/Vyl05XDZvNI0GEEL/ASX69mfOXOUPlappZOoNqGlADiQLhktdHU8d0sSBuey0
-	NjBfKnMiL0ldvBvO5A5heTMQgHZol4sJc/zuZ772GZ/8RxD3S6pc3icZQvsKuFL7YLy+R+
-	MEfMW56E2sK+vwaBF+6OJITqTeNeP0OqGVSQhQowZa3plglBvJ96Q=
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=t.schmittlauch@orlives.de smtp.mailfrom=t.schmittlauch@orlives.de
-Message-ID: <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
-Date: Fri, 16 Feb 2024 22:55:25 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PPCdAuxx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Js3ByOMFAOBNVMGx+l8Mjw3K1ArRLhgbceuT0n9dYtq9Tk3GFeQ/dnSGUZkKNiPZmodTwL1dj8v4ahIUThJT8rjLrqgiWgRN5oDU4O2qhtaAyzK4cNkYJk8mBmSPojPvG9DESsSGsEfpMKWIW/MFpt5xMyybP3f0Z77AMUA79e3ZWfOWyb0sm1IPe4Yf0ddLxBjVNqj4bubc71aowln/+j28jXQBiGHNLOTcGBapw71Riqcd7SFY5NDt1shcb+el/n5XF2h7lo4/wex8H+bPeZ+Qr0NTNwrQVPpxBRCV0sndX4q473IrZ3PCDbwk7csasSkbnz/tYMEXMx+ClEC4Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ym9R6I3RiCz6O/kC4Nw5ivWxS7Hm3se8kDvRjxy/kN8=;
+ b=jeoeNCgq4L40fV6vzqqo1qbh70p7Hp7QKhTNsdy7Bzy8VCdFchQPHSoBD8wftk4DZf25W6mtVI75467Px7uYOVjc1Q8LowrSicuHsoqhl+CMyZ/j9CFK/7tG9jpCMk4VCiQ/KDDezhF3xAKkOp4IRgJ7GGEi1CMR3hJuOD+ppKKEphWt7xPQY+7YKcnuQXkCylKSDfmmqXw/r33idytJBgjU403ibwlq+gqZhv3kBjM2V/O58Uz+H1jV6pMkb0dxeLi3spac1Ckli7GQQUN6W4BorZzmur1kRdsdQWSkCDgCQ7XcI4C8prNlZ36/sV9vdK+mal3yGy06C2Q7y4cXRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ym9R6I3RiCz6O/kC4Nw5ivWxS7Hm3se8kDvRjxy/kN8=;
+ b=PPCdAuxxPM+4cAgY8EnNxFksRZ8s5hHzMFs0oo09IoMPPXbbTfs+ZlN1hai10rkiPlkwHVstcu8YosNCWw/VoPSAPJhulq8j8WYnXTg0rD7CgxPuS7VMhc9ftUFQ4qDEolHzTQTSvAZPQWSGe/xLn5E3Y0dSZfa5lp1Jo4jv9TA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DS0PR12MB6608.namprd12.prod.outlook.com (2603:10b6:8:d0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.24; Fri, 16 Feb
+ 2024 23:01:37 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dd00:9ab5:4d11:2d1a]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::dd00:9ab5:4d11:2d1a%7]) with mapi id 15.20.7316.012; Fri, 16 Feb 2024
+ 23:01:36 +0000
+Message-ID: <0a103f43-0340-4c01-8a26-ecdfc186915a@amd.com>
+Date: Fri, 16 Feb 2024 17:01:35 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.8-rc: system freezes after resuming from suspend
+To: Trolli Schmittlauch <t.schmittlauch@orlives.de>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
+ <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
+ <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
+ <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN1PR12CA0059.namprd12.prod.outlook.com
+ (2603:10b6:802:20::30) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-Subject: Re: 6.8-rc: system freezes after resuming from suspend
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
- <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
- <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
-Content-Language: en-US
-Autocrypt: addr=t.schmittlauch@orlives.de; keydata=
- xsBNBF4y2DoBCADCzwZ+V1tJOR2JK20uAVPkAOC5PdIe/UYCVZsYIbh8aIz0HsiqWeTCj3J8
- nZEVKKm6fQRtyMILZeWNHQ98ck+1tmr4a6UQ4UDl+Xb1VuhU4frZI/d75olkn2JNwYcJJcdn
- MJ4WUZ8BWhmia+8ng+7nJ1yOw1ad0uS8dL+w+m+eimFr7HjIXUV/Y5I8NGhkROFDu72byMn1
- OTaq4HFfgilYsDGu8AWUtn+ZBXmCDIYbvXANjDcyuGTTnS/vgyFx66rHOgZKqTafuSAC1k61
- dAYvLlo06yb4S4VNwkW17ho9L6sgqfY5rFd+zQYnXdau7AK7TLAFywHgafHU20Ffv6PbABEB
- AAHNGzx0LnNjaG1pdHRsYXVjaEBvcmxpdmVzLmRlPsLAiQQQAQgAMwIZAQUCXjLYQAIbAwQL
- CQgHBhUICQoLAgMWAgEWIQSJFhEikPObK3+nglaeUEWy+uvFawAKCRCeUEWy+uvFa6UPCACt
- EeMFD8HIbP6vIfs0dQdYw7SyG/Ws/ZEhi61+HfBeltem2LMbcY3B1UNGWWt1px1oFq0sCd12
- j8JhjTPyFoQv+vRDEygMk/OrXfnn32dl9Ttubgz68ktxjv6xQ2q+TGHStUCe9Q1opGqjWqV0
- bqFV9nbpX5DX3urG4eDqjUrvUMasp3/RBBC6dSzRcutbmnFEUhbnQcG2JhxkUqJxErJO7Rs7
- dw5wR+43zipZznrtP/W8nCmL7E8VYn3KWFSb4jSmMyYneqBrhSZMB/BfiOMrWnnMpPChRLyR
- GLqZoyhWDPZyAbKyjlVQVS3d9BtLn5PzNaYRAl9Gad8h+o/WWHGXzsBNBF4y2DoBCACmbQWs
- /CCONpIwsHxKt4fEfbW1XhQFoKPmGF2Xonas6kN3Oh8XXFekkXfnRQJX+fOuv7DbaUsmkPzd
- TB2YtfidZJ6xIYPzSgSMsA945dEOY5yYfeNCH1pQYcq1xfM7bHGSwaNervx0wnK/g7yBgp6E
- 1stOwqoR9M3KgmQJPuaSISSfUH5NKcx38S6w+56I3//f1jyCRG5vkQzHsdioBWkAOfagQmcv
- 6fMhDYCoxlTooxlj1/5mSkspCS7fDkVcZn48t+sPfQAywpUDrWBZhp1vrDHfl+wUvCSXPYEz
- 9dkT9NmLz24H20tLV+btVgMsPXSlnM34lNjABg2x7isCoCZ9ABEBAAHCwHYEGAEIACAFAl4y
- 2EACGwwWIQSJFhEikPObK3+nglaeUEWy+uvFawAKCRCeUEWy+uvFayO5CACDYH46Tay5BSwn
- FK3EwAYSpXIFzhQet7os7InGRS8/2yuqzsunRDbMy11rTGmXXA1LuTizqsgebQbALpkuHEpi
- gX9b20RfsfuZYbdbtLzzVDuOVuGP3+CSJrB1Z+nGeF1+L4m5n7VDPX0MyWKwhlWY9hVmNQ2+
- lMt+fb6+330M9cXCz6H2/k7b2BTEM9xZPytt2ICT8I9rX5+8tuHDrstr13P40QOR0Exh5EHw
- LA00FYsr0e+ijzxRP9EC3AA9Gt/518IRS7FGvszu4qWWRT33P2cABoVUPpsybrhvuApgpf5y
- DLO17h0Vxwoq2qqCO/RqIw+o8Lj89xOl4VkPpXe4
-In-Reply-To: <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------D7KDrM8darWgj9zLs0zBvlsR"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB6608:EE_
+X-MS-Office365-Filtering-Correlation-Id: 605840d7-8771-44c6-1e0e-08dc2f433a50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	P6sInP+Zhq7aGQOG0Gm9AmhsfCsIr4StAvKHb3zrkJsjuAhnmNAQ5+8yY+WlbDFWZsOuxbIka/Sunr4FiCiAwSLbmZOq9e9deYDwuitQHA+Ih33QPQ7WMtqg22femlbobTOsWUuqkIEp+Pk5A8fk6Zpi4HkWFndZd0Fo6keDNZEKBAyVXGvRhZ+xIHHN+uFrx7XAd72y6ZzvR4GZTEIHXhKsen8hLDZsW+juNjpKKAFsVV1yNH125OkIxpQdChjSuKAoCay1wtXqAidvz1Pk4u2vxxvI0CZXX/SNz4xkjjWZUd0PL5dKJaLbNJdvzFI8kEhTbiMpnfHmQXltpVLcUn6svJlkaOqf2vCb7Zk7IwKSnhbzHeYaLDRgfSd/tIn24DwuEMaiI8NWmGsKEJecDJMXX3rF61jUB3m4qNSAQGXdnSV8nSXg0oz+x5mWOHQaFDgUpVeBJahGRI74VnxgNLa6HRjRuN8q5uOYrNabbQpOhEmPL24OrirxqXkvR1yGLC0+azPgcIpTJ8/2C62g99C4ermQxqwO+c6J5WUGmOY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(376002)(136003)(346002)(396003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(966005)(478600001)(44832011)(6486002)(6512007)(2906002)(2616005)(15650500001)(66946007)(66556008)(66476007)(110136005)(5660300002)(53546011)(8936002)(83380400001)(8676002)(316002)(26005)(86362001)(31696002)(38100700002)(6506007)(36756003)(41300700001)(31686004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZUVkbUJwN2h2V2xFTUpjZnJDZm44OGFyMG8xWU9SV3M3TWxLeGw4MDJRcko2?=
+ =?utf-8?B?MVRYek84T1l5QXJReDM1amsxTGlmenNJZVNhaUlaaTN3WHdxTTV1a1E5T0RV?=
+ =?utf-8?B?VG1HRTZib0x0K05wdEphNXRXMEJBUGJubmdxTitiR1dzTzRPSTQrUHlacnFv?=
+ =?utf-8?B?cU1PeDVBK3Vod2RZZVVFZy9LSkFpdGVVSEF0ajkvTGRxS3h2ZTM5cy9jaWN0?=
+ =?utf-8?B?Qk5HcXpzcDRMM2xycmFwRWZFNWkydzByN0RuVk5maXNLRWNrclZ6blYrMGZQ?=
+ =?utf-8?B?SlhRTmFySDFKMUt1cTdMdk85OUN0azhaZDZWeDJqZ3luZDZZT3FNc3c2aWx4?=
+ =?utf-8?B?Wm91dHVWRGdwM1h6MklJYWVYaUdwVUx3cW5Hc2V5MVd5U01BMm4rMkt6Y24w?=
+ =?utf-8?B?alYrdFNUWC9DWVo5WC9LS1poN1hPbSt1MWhCZngxWEtmMFNxWmxyb1JNdFFD?=
+ =?utf-8?B?UmUraXdUU1VFL0ZsODFCemRQZWM3QkY5V2JqSU9TSGVRbnE1ZlJ1ck92VTlP?=
+ =?utf-8?B?T3FVWFZBaFZNOVoxcklkTmdHZHRld0JsWERyZDNTc3REQy9SNi90bHZxSk04?=
+ =?utf-8?B?RFhVNE0zNnVVTjZQZWllZzBsTkNOQVExKzR3SUE1MjU2WW9kN3NvanU2N2FY?=
+ =?utf-8?B?QllGbUx2alRhU1FkaTRvclZFZ3MvWkYyN1VQSVRlUDJNQUxUak1qLysydEtm?=
+ =?utf-8?B?blF4dnZXQWFkdW5NNHhpQnU3N09xcGhzUlVGRWF3QTZjSnV5TWYxTVhMeGk2?=
+ =?utf-8?B?RkorR3FiUmhzWlRiQVJ1S2F2TkV1b05YcFFXdmhDTGdET2FFNnVCcDB0WE9D?=
+ =?utf-8?B?VVFvRFRLUDFyQndNeC9JVE14NDUxYVVNeCtPM0xVSElEckpodmcxNGZ6R05Q?=
+ =?utf-8?B?dHNxQVNjN1lBRGpQN2NHSTdIODl5VFY1ODhzNUJZR0lUUHpkWExuVGUrQmF5?=
+ =?utf-8?B?K014azNxZVBEbWQ1ODJpWnpPeHg1blJVZFkyYm9DYTVLaTZWZFpLSU1xSk1Q?=
+ =?utf-8?B?NUtQVmJOaDllamErbU85ZFdmMEdiRTNDOWMwWWQvMklhd3g0eStzVW1HcjFH?=
+ =?utf-8?B?TjY0K2NIWkxhUGZHQ2dIWDduN0VseGtueGw0dnBlZFIwbnNwM2NFWG5rb082?=
+ =?utf-8?B?U1dlRXhnckpoMHRqS1daQkhUeGJuZDZqaWt2N1dnaVREZDV1Q1lENkRXQitL?=
+ =?utf-8?B?OFVjQWE0OWFwcW9xODc2ZTA3T3ZLaG1HOFR2bXgzMUh3dE9CN25KTEhhK2hp?=
+ =?utf-8?B?UmRlNEZaRDhxc2hBQmRrbXVleVdYbkRMREVEcUN3YUhtRU9NR29WWklibE5w?=
+ =?utf-8?B?a25NZnViem4rNHdacEpJY2ZtTWFtbnI5aU1ERCtEbEVTQ05BL0Fjb1ZwTENS?=
+ =?utf-8?B?MjYwZENWVDJWZjZNeWZNVngyUjNvUTl5b2dqdnIrS0c2T3U3OUxKenRpU1F3?=
+ =?utf-8?B?MkE3R3dhQVpKaWN3UTNMTEp5dm1MM2Z3bnR2bnhiMFBhQ0hUTlpWS0NOUjJU?=
+ =?utf-8?B?TXF5ejlRQVFMU094QXpXZzlabWQ1bUtTVmpOeHh4eVRuYnFwaFJGTkZReVZu?=
+ =?utf-8?B?RVpMaHR3enZSdGVDSUtFRGR2NUJwWSsvcmVBY1ByTUdha0JXRHQxRCtKMUFS?=
+ =?utf-8?B?YVJ1aE1LV1lpdFVmVFZxb3NPK2V4SmlqT29HMkxyKzZ6UWZjREJKa1AwOTIw?=
+ =?utf-8?B?b1M4alhMM2I3b29hN3RXQTBOQ3FYcWRSczhjRk9nQ2ZSZFRrektSWUNjVndR?=
+ =?utf-8?B?eWVjeFY2RWpsajVkY0IxK29oQkdhaEc0aTJRYWFpa2c1a21rZ3BWMXpyb0lD?=
+ =?utf-8?B?amJvNk04WVYvMFlFMUp4WWV4U1MrZGhhclBCWjg1MEVoVXlGVVYzcnlBMG93?=
+ =?utf-8?B?ZXVQTGVoNk9oZFVBZFFFR3pURWs3UlYyOHFkQmRzaXR2RlBZamdQQUZJTDdZ?=
+ =?utf-8?B?R0FkdkNic1E2ZlQ3MG02L2RzT05jYXJkT3pBdTFRdm9LWWo1QTd1UGJpRlBY?=
+ =?utf-8?B?cDdlb1dXOUhVZ0I0RVh0YkJ6Y2FCU0tuOXZ3dzdIYTl0Y0VjKzF1T0Q4TXZn?=
+ =?utf-8?B?MTdOLzN3S1hRRXRibm8wZzNJZWk5MThrSWNaOSt2di94ckk1RnFqVmUxS0Z4?=
+ =?utf-8?Q?r1ogYsUqXKhI4vPYlhWw/uGn4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 605840d7-8771-44c6-1e0e-08dc2f433a50
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 23:01:36.8706
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: naI2jtuVWZAfMdBxxswkClL4AI7vvZLIOBloZ2lYABqqi7mQ4+vNoNjJglXBZQ+vjecX3zdYWo8jEkQWtvW7fQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6608
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------D7KDrM8darWgj9zLs0zBvlsR
-Content-Type: multipart/mixed; boundary="------------9BaPhnugG4shu93EZ7pKDYmd";
- protected-headers="v1"
-From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Message-ID: <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
-Subject: Re: 6.8-rc: system freezes after resuming from suspend
-References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
- <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
- <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
-In-Reply-To: <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
+On 2/16/2024 15:55, Trolli Schmittlauch wrote:
+> Hi,
+> 
+> thanks for the hints.
+> 
+> 
+>> There have been a lot of regressions in 6.8-rc both in GPU scheduler, 
+>> MM and AMDGPU.
+> 
+> Still, I had the time to bisect the vanilla kernel and landed at 
+> 7c45534afa4435c9fceeeb8ca33c0fdc269c2240 as the first bad commit.
+> Could be a red herring though if there have been multiple phases of 
+> brokenness between v6.7 and v6.8-rc1. I've attached the bisect log in 
+> case it might be useful anyways.
+> I'll continue trying out the patches and – if necessary – the bisecting 
+> with the patches applied as you've described.
 
---------------9BaPhnugG4shu93EZ7pKDYmd
-Content-Type: multipart/mixed; boundary="------------0ZwsFPtY52LLqmc0kW3QkbbX"
+If this turns out to be accurate, it's actually quite interesting.
+You can prove it's accurate by doing a module blacklist for the amd-pmf 
+driver (even on 6.8-rc4+).
 
---------------0ZwsFPtY52LLqmc0kW3QkbbX
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+If that works, it's a great hint at the problem scope and we need to 
+pull Shyam into the conversation.
 
-SGksDQoNCnRoYW5rcyBmb3IgdGhlIGhpbnRzLg0KDQoNCj4gVGhlcmUgaGF2ZSBiZWVuIGEg
-bG90IG9mIHJlZ3Jlc3Npb25zIGluIDYuOC1yYyBib3RoIGluIEdQVSBzY2hlZHVsZXIsIE1N
-IGFuZCBBTURHUFUuDQoNClN0aWxsLCBJIGhhZCB0aGUgdGltZSB0byBiaXNlY3QgdGhlIHZh
-bmlsbGEga2VybmVsIGFuZCBsYW5kZWQgYXQgN2M0NTUzNGFmYTQ0MzVjOWZjZWVlYjhjYTMz
-YzBmZGMyNjljMjI0MCBhcyB0aGUgZmlyc3QgYmFkIGNvbW1pdC4NCkNvdWxkIGJlIGEgcmVk
-IGhlcnJpbmcgdGhvdWdoIGlmIHRoZXJlIGhhdmUgYmVlbiBtdWx0aXBsZSBwaGFzZXMgb2Yg
-YnJva2VubmVzcyBiZXR3ZWVuIHY2LjcgYW5kIHY2LjgtcmMxLiBJJ3ZlIGF0dGFjaGVkIHRo
-ZSBiaXNlY3QgbG9nIGluIGNhc2UgaXQgbWlnaHQgYmUgdXNlZnVsIGFueXdheXMuDQpJJ2xs
-IGNvbnRpbnVlIHRyeWluZyBvdXQgdGhlIHBhdGNoZXMgYW5kIOKAkyBpZiBuZWNlc3Nhcnkg
-4oCTIHRoZSBiaXNlY3Rpbmcgd2l0aCB0aGUgcGF0Y2hlcyBhcHBsaWVkIGFzIHlvdSd2ZSBk
-ZXNjcmliZWQuDQoNCkkgc2VlIHlvdSBhbHJlYWR5IGZvdW5kIHRoZSBGcmFtZXdvcmsgZm9y
-dW0gdGhyZWFkIFsxXSB3aGVyZSBvdGhlciB1c2VycyBhbHNvIHdlcmUgYWJsZSB0byBjb25m
-aXJtIHRoaXMgaXNzdWUuIFN0aWxsIGxlYXZpbmcgdGhlIGxpbmsgaGVyZSBmb3IgdGhlIG1h
-aWxpbmcgbGlzdC4NCg0KPiBIZXJlIGlzIHdoYXQgSSB3b3VsZCBzdWdnZXN0Og0KPiANCj4g
-MSkgVGVzdCA2LjgtcmM0ICsgcGF0Y2ggMSBhbmQgcGF0Y2ggMiBmcm9tIHRoaXMgc2VyaWVz
-Oj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYW1kLWdmeC8yMDI0MDIwODA1NTI1Ni4xMzA5
-MTctMS1tYXJpby5saW1vbmNpZWxsb0BhbWQuY29tLw0KPiANCj4gVGhlc2UgdHdvIHBhdGNo
-ZXMgYXJlIGhlYWRlZCBpbnRvIDYuOC1yYzUuDQoNCkp1c3QgdG8gY2xhcmlmeSwgeW91IG1l
-YW4gdGhlIGZpcnN0IHR3byBlLW1haWxzIGZyb20gdGhhdCB0aHJlYWQsIFtQQVRDSCB2NCAx
-LzNdIGFuZCBbUEFUQ0ggdjQgMi8zXT8NCg0KSSdsbCByZXBvcnQgYmFjayBvbmNlIEkndmUg
-ZGlzY292ZXJlZCBtb3JlIGluZm9ybWF0aW9uLg0KDQpbMV0gaHR0cHM6Ly9jb21tdW5pdHku
-ZnJhbWUud29yay90L2tlcm5lbC02LTgtcmMtc3lzdGVtLWZyZWV6ZXMtYWZ0ZXItcmVzdW1p
-bmctZnJvbS1zdXNwZW5kLXJlcHJvZHVjZXJzLXdhbnRlZC80NTM4MQ0KDQo=
---------------0ZwsFPtY52LLqmc0kW3QkbbX
-Content-Type: text/plain; charset=UTF-8; name="bisectlog-kernel-6768"
-Content-Disposition: attachment; filename="bisectlog-kernel-6768"
-Content-Transfer-Encoding: base64
+> 
+> I see you already found the Framework forum thread [1] where other users 
+> also were able to confirm this issue. Still leaving the link here for 
+> the mailing list.
+> 
+>> Here is what I would suggest:
+>>
+>> 1) Test 6.8-rc4 + patch 1 and patch 2 from this series:> 
+>> https://lore.kernel.org/amd-gfx/20240208055256.130917-1-mario.limonciello@amd.com/
+>>
+>> These two patches are headed into 6.8-rc5.
+> 
+> Just to clarify, you mean the first two e-mails from that thread, [PATCH 
+> v4 1/3] and [PATCH v4 2/3]?
+> 
+> I'll report back once I've discovered more information.
+> 
+> [1] 
+> https://community.frame.work/t/kernel-6-8-rc-system-freezes-after-resuming-from-suspend-reproducers-wanted/45381
+> 
 
-Z2l0IGJpc2VjdCBzdGFydAojIFN0YXR1czogd2FydGUgYXVmIGd1dGVuIHVuZCBzY2hsZWNo
-dGVuIENvbW1pdAojIGJhZDogWzY2MTM0NzZlMjI1ZTA5MGNjOWFhZDQ5YmU3ZmE1MDRlMjkw
-ZGQzM2RdIExpbnV4IDYuOC1yYzEKZ2l0IGJpc2VjdCBiYWQgNjYxMzQ3NmUyMjVlMDkwY2M5
-YWFkNDliZTdmYTUwNGUyOTBkZDMzZAojIFN0YXR1czogd2FydGUgYXVmIGd1dGUobikgQ29t
-bWl0KHMpLCBzY2hsZWNodGVyIENvbW1pdCBiZWthbm50CiMgZ29vZDogWzBkZDNlZTMxMTI1
-NTA4Y2Q2N2Y3ZTcxNzIyNDdmMDViN2ZkMTc1M2FdIExpbnV4IDYuNwpnaXQgYmlzZWN0IGdv
-b2QgMGRkM2VlMzExMjU1MDhjZDY3ZjdlNzE3MjI0N2YwNWI3ZmQxNzUzYQojIGJhZDogW2Jh
-NWFmYjlhODRkZjJlNmIyNmExYjYzODliOTg4NDljZDE2ZWE3NTddIGZzOiByZXdvcmsgbGlz
-dG1vdW50KCkgaW1wbGVtZW50YXRpb24KZ2l0IGJpc2VjdCBiYWQgYmE1YWZiOWE4NGRmMmU2
-YjI2YTFiNjM4OWI5ODg0OWNkMTZlYTc1NwojIGJhZDogW2RlOTI3ZjZjMGIwN2Q5ZTY5ODQx
-NmM1YjI4N2M1MjFiMDc2OTRjYWNdIE1lcmdlIHRhZyAnczM5MC02LjgtMScgb2YgZ2l0Oi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3MzOTAvbGludXgKZ2l0
-IGJpc2VjdCBiYWQgZGU5MjdmNmMwYjA3ZDllNjk4NDE2YzViMjg3YzUyMWIwNzY5NGNhYwoj
-IGdvb2Q6IFszNWYxMWEzNzEwY2RjYmJjNTA5MGQxNDAxN2E2Mjk1NDU0ZTBjYzczXSBNZXJn
-ZSB0YWcgJ210ZC9mb3ItNi44JyBvZiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
-bnV4L2tlcm5lbC9naXQvbXRkL2xpbnV4CmdpdCBiaXNlY3QgZ29vZCAzNWYxMWEzNzEwY2Rj
-YmJjNTA5MGQxNDAxN2E2Mjk1NDU0ZTBjYzczCiMgYmFkOiBbZDhjOGU1OTVkYzMxZmI2Mzli
-YzRmOGEyMDI5MDFhZmFhMTViYjEzZl0gTWVyZ2UgdGFnICdkbG0tNi44JyBvZiBnaXQ6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdGVpZ2xhbmQvbGludXgt
-ZGxtCmdpdCBiaXNlY3QgYmFkIGQ4YzhlNTk1ZGMzMWZiNjM5YmM0ZjhhMjAyOTAxYWZhYTE1
-YmIxM2YKIyBiYWQ6IFs1ZDA5ZjYxZTUwNWE2MTQyNTBkZjI0YTBmN2U2NDY4MDJlNDBmYzg3
-XSBNZXJnZSB0YWcgJ2xpbnV4X2tzZWxmdGVzdC1ub2xpYmMtNi44LXJjMScgb2YgZ2l0Oi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3NodWFoL2xpbnV4LWtz
-ZWxmdGVzdApnaXQgYmlzZWN0IGJhZCA1ZDA5ZjYxZTUwNWE2MTQyNTBkZjI0YTBmN2U2NDY4
-MDJlNDBmYzg3CiMgZ29vZDogWzdkYTcxMDcyZTFkNjk2N2MwNDgyYWJjYmI1OTkxZmZiNTk1
-M2ZkZjJdIE1lcmdlIHRhZyAncG0tNi44LXJjMScgb2YgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcv
-cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3JhZmFlbC9saW51eC1wbQpnaXQgYmlzZWN0IGdv
-b2QgN2RhNzEwNzJlMWQ2OTY3YzA0ODJhYmNiYjU5OTFmZmI1OTUzZmRmMgojIGJhZDogWzA5
-NWZhNzJhMTlmMTNiMTU2Mjk2MTFkNTI0NDdjYjE3Y2UyMjNiY2RdIHBsYXRmb3JtL3g4Njog
-d21pOiBDcmVhdGUgV01JIGJ1cyBkZXZpY2UgZmlyc3QKZ2l0IGJpc2VjdCBiYWQgMDk1ZmE3
-MmExOWYxM2IxNTYyOTYxMWQ1MjQ0N2NiMTdjZTIyM2JjZAojIGdvb2Q6IFszNWRkZDYxY2Yw
-MjNiNWRlYjJiN2U5ZjE2MjdhYmVmMDUzMjgxYzBhXSBwbGF0Zm9ybS94ODY6IHg4Ni1hbmRy
-b2lkLXRhYmxldHM6IEZpeCBhbiBJU19FUlIoKSB2cyBOVUxMIGNoZWNrIGluIHByb2JlCmdp
-dCBiaXNlY3QgZ29vZCAzNWRkZDYxY2YwMjNiNWRlYjJiN2U5ZjE2MjdhYmVmMDUzMjgxYzBh
-CiMgZ29vZDogW2VkMjg5Yjk4YzJhZWIzNWYxZDQxOTg5MzMzMTVhOWM1YzMwZTk2MWFdIE1l
-cmdlIHRhZyAncGxhdGZvcm0tZHJpdmVycy14ODYtYW1kLXdicmYtdjYuOC0xJyBpbnRvIHJl
-dmlldy1oYW5zCmdpdCBiaXNlY3QgZ29vZCBlZDI4OWI5OGMyYWViMzVmMWQ0MTk4OTMzMzE1
-YTljNWMzMGU5NjFhCiMgYmFkOiBbNDk4NGRiYjYwNzg5Y2NiODY3NDcwODQ0NjQzMWYzYmMw
-ZGM3MzEwMF0gcGxhdGZvcm0veDg2L2FtZC9wbWY6IE1ha2Ugc291cmNlX2FzX3N0cigpIGFz
-IG5vbi1zdGF0aWMKZ2l0IGJpc2VjdCBiYWQgNDk4NGRiYjYwNzg5Y2NiODY3NDcwODQ0NjQz
-MWYzYmMwZGM3MzEwMAojIGJhZDogWzdjNDU1MzRhZmE0NDM1YzlmY2VlZWI4Y2EzM2MwZmRj
-MjY5YzIyNDBdIHBsYXRmb3JtL3g4Ni9hbWQvcG1mOiBBZGQgc3VwcG9ydCBmb3IgUE1GIFBv
-bGljeSBCaW5hcnkKZ2l0IGJpc2VjdCBiYWQgN2M0NTUzNGFmYTQ0MzVjOWZjZWVlYjhjYTMz
-YzBmZGMyNjljMjI0MAojIGdvb2Q6IFthZTgyY2VmN2Q5YzUzY2FkMDg1MmQyZDc5ZDQzMGIy
-MTA0MzJhMDI1XSBwbGF0Zm9ybS94ODYvYW1kL3BtZjogQWRkIHN1cHBvcnQgZm9yIFBNRi1U
-QSBpbnRlcmFjdGlvbgpnaXQgYmlzZWN0IGdvb2QgYWU4MmNlZjdkOWM1M2NhZDA4NTJkMmQ3
-OWQ0MzBiMjEwNDMyYTAyNQojIGdvb2Q6IFsyYjNhN2YwNmNhYWYxYWE3Mzc5Y2MwMjMzNDYy
-Nzk5ODUyZmNkOGI0XSBwbGF0Zm9ybS94ODYvYW1kL3BtZjogQ2hhbmdlIHJldHVybiB0eXBl
-IG9mIGFtZF9wbWZfc2V0X2RyYW1fYWRkcigpCmdpdCBiaXNlY3QgZ29vZCAyYjNhN2YwNmNh
-YWYxYWE3Mzc5Y2MwMjMzNDYyNzk5ODUyZmNkOGI0CiMgZmlyc3QgYmFkIGNvbW1pdDogWzdj
-NDU1MzRhZmE0NDM1YzlmY2VlZWI4Y2EzM2MwZmRjMjY5YzIyNDBdIHBsYXRmb3JtL3g4Ni9h
-bWQvcG1mOiBBZGQgc3VwcG9ydCBmb3IgUE1GIFBvbGljeSBCaW5hcnkK
-
---------------0ZwsFPtY52LLqmc0kW3QkbbX--
-
---------------9BaPhnugG4shu93EZ7pKDYmd--
-
---------------D7KDrM8darWgj9zLs0zBvlsR
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEiRYRIpDzmyt/p4JWnlBFsvrrxWsFAmXP2c0FAwAAAAAACgkQnlBFsvrrxWu+
-aAgAsFV84j2P4YoOt8tgrKalUssFr2UkIQD4BUCpD+GbkX4p9yOsJG78W6XeJoirGRBu958TY2Sg
-N/Bpu3mpyz1exLg8koZVg1IVxWJekxwgJdWZw5r9wKF0ReoHQyM6/qIUj2M6te13lCZfCC5BGdoG
-f07VerGbhfcp+9bdSaT0MGZM7Q8cKVCj6F+h2+gQfp9soDt5FT/28BzbSzkeDcAVdU38HFMEXPW9
-9urPrT2t0hrZjPJcU1ARJZpOyrLs+heBeABgXC4EpS/DTTW5Hrz8MxY+ShkXzbR2mJxOPbMbv5cr
-E/py2j/3peE6IG3K1LM/QNCQZkiterH7zvG76PX34Q==
-=L4R9
------END PGP SIGNATURE-----
-
---------------D7KDrM8darWgj9zLs0zBvlsR--
