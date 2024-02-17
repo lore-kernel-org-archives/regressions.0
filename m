@@ -1,56 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A94B22094
-	for <regressions@lists.linux.dev>; Sat, 17 Feb 2024 13:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8045B657B6;
+	Sat, 17 Feb 2024 13:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708176657; cv=none; b=kiZ5MGj4ZZvuK0DbmY147CHHlqf4B0eNUFvNxYLXl2lODyRg40CkMd/sf4vTTPlG/lEdQpQfNDeacajuhe9AkafRMNXdjVm8JRf4iq76rthIOlheTqav1ib6oLmovV/380jnmCa2vp7YEDdktDnCTOut3ef+kR9aaNT7NAkMJ7Y=
+	t=1708177497; cv=none; b=uC2S7DyMuoWXF4zcvVG4l3pX8ZY47Qqe/69igyzUNrcXCn6EsipqnESGnMEm19P+7YiQi+e1+pfypbHd3NsgtTjWzMF/sxgZvm2YlnLya5PV2/I7vpqhyEN9+XTvF8VEPAOW7KEdP7J9DKk5LI88uuMDUUO9xsTnvnFyXs/xiOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708176657; c=relaxed/simple;
-	bh=E0gdvspQj6T8uaaCIzG52jj0cMQSbX70hJu4Q2sde6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dQTLaJcdexH727o7W3LH31SccaULM8OJO0FHWJUVzET+vkyCJiRo/Vrf7jrLRrXc/qTQJd4BX1PQjxRLGoldTZpGOl2K9IWn6EAWOXon8URovqvNQUA6zAiA9glpwA13gxHwspzMhv9m5wAEwrCjiCokh78Jfl+NelCmL0Sq4RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R3ZyYGCD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R3ZyYGCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC41DC433C7;
-	Sat, 17 Feb 2024 13:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708176657;
-	bh=E0gdvspQj6T8uaaCIzG52jj0cMQSbX70hJu4Q2sde6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R3ZyYGCDPGn7DKZiUZNNicQ8p7H50QB8j//VnLCj5N83wTHYxE79hQ1fJWjDVRD+/
-	 ge5iuCrQTNEk3OnwzD5VJ7wRaFZNoX5ivzTSjgDoqWnYT0pHD7HpeS/srIoJqHg33k
-	 H/HYiX2bzYIwQ2jXuusE1YGwfnr1e5tepPlb+3gk=
-Date: Sat, 17 Feb 2024 14:30:53 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Roman Benes <benes@riadoklan.sk.eu.org>
-Cc: regressions@lists.linux.dev
-Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
- mesa/amdgpu)
-Message-ID: <2024021732-framing-tactful-833d@gregkh>
-References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
+	s=arc-20240116; t=1708177497; c=relaxed/simple;
+	bh=wt2LLaYXCk03zm2XSKQGJSBwd6IfnznINPWT5GRSu7A=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=P3NNXOcfKEyBN1z8usankLysjskq6hsvhlqUFaW8spPEKXiMYnz6pQQwqcSNUuHGo1exLf6VAJshcEHrsJhiAZSF7pZwcYkowcKSIsNIHCWTmI7eJVT7z3LOmsZw/R5r79+eLNHkyNQ1SyDksJ9YpiWJawKEyWhNC9ZzDNA3JtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rbKzr-0002oJ-VV; Sat, 17 Feb 2024 14:44:52 +0100
+Message-ID: <307eb8d1-2fde-4e12-b48f-9632510b469e@leemhuis.info>
+Date: Sat, 17 Feb 2024 14:44:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sasha Levin <sashal@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+ Yang Shi <shy828301@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: please pick up 4ef9ad19e17676 ("mm: huge_memory: don't force huge
+ page alignment on 32 bit") in linux-6.7.y
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708177495;a602e319;
+X-HE-SMSGID: 1rbKzr-0002oJ-VV
 
-On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
-> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
-> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
-> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
-> even for root. This is not of above apps issue but of the kernel, I read
-> similar issues from other bug reports of above apps. I downgraded to v6.6.10
-> kernel and my 115W(under power)cap work again as before.
+Hi Greg! It seems to me that two of my mails to you[1] fell through the
+cracks during the last two weeks, so I'm trying again with this main
+that is not a reply to the earlier thread:
 
-Any chance you can use 'git bisect' to figure out the offending change?
+Could you please pick up 4ef9ad19e17676 ("mm: huge_memory: don't force
+huge page alignment on 32 bit") in linux-6.7.y? The author ACKed that[2].
 
-thanks,
+And btw: you might also want to pick up c4608d1bf7c653 ("mm: mmap:
+map MAP_STACK to VM_NOHUGEPAGE") as well. Its stable tag contains a
+typo, hence I guess your scripts have missed it (I only noticed that by
+chance).
 
-greg k-h
+Ciao, Thorsten
+
+[1]
+https://lore.kernel.org/all/dc9f8eab-ec5c-46f1-a168-c510650d1cac@leemhuis.info/
+https://lore.kernel.org/all/1354c5d5-99b7-4178-bcf5-9ddb776de946@leemhuis.info/
+
+[2]
+https://lore.kernel.org/all/CAHbLzkp7s1CcSE0rc-CpfcCrNtMdepAA5-K+0P4wz11x4SK6=g@mail.gmail.com/
