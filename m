@@ -1,65 +1,28 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7E14EB3B
-	for <regressions@lists.linux.dev>; Sun, 18 Feb 2024 11:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387AB6350A
+	for <regressions@lists.linux.dev>; Sun, 18 Feb 2024 13:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708254112; cv=none; b=YtxEpQwfRFi/XTKwWkFJgggHZg7cbNdDyxw0XEFD9jtC8ZfNrxCfOAtzqFA4eTAN7mOfKTg/rKaWoQ5rCBDHTtQRYTCZa3K9Igxj1rCUfhofn7BZHJmTOcomZRgcDm7PcFjBgdoV/B5K4QmXq6FalbBMIrLDqpCGLsmCx07eNhc=
+	t=1708261987; cv=none; b=eR50XxFFEVqxMmEcxa6D8tAatvnFS5KuANTDdT3VIbSo6GZqWAyDo9vhTFenziIxocF19JvzcrtJYub4XrzBmBb+AmL3izK+mLVGsA2j8PMesMHFdKt63sMOkkc606DTvtcoDCuc1Ozedj6L8EsukHmFRAMB0vP65yKsoMvAVLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708254112; c=relaxed/simple;
-	bh=M/AHIi+x/jiF/PThKbMOMo4JXa4L1ccApc8Jqc9khAM=;
+	s=arc-20240116; t=1708261987; c=relaxed/simple;
+	bh=yaFLPSiI1CV3Pb147sgWxT4eZhlhqqyrt5YoLH9j6Ks=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OeXF5+PH+s+JA55rMnzbjTP6OF+Q7HOzul4FvNwKyKGvmU5/i6Mz2iM9fAlqbt+h4dKNYqXO3rNpXqcPzEnmARBbBquHmxYbc0h3PJjBRYRx1U5VlC6A5kUb9fHJF3GMZJk4Ldr+SzUrzczP6H6UMGzoZ94wb/j1eDPOHHmUDQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y2e/Eg05; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=iJz0tRY927iD/fsSNvMdDcqOXHA2BMCz+IIR5XBbjxx5/rj037fjRn53uHkBDdPMtwiiOKgiXl6G7a70EF+zX+Z5QiuILpwNK8F5iedmAEhOza0AGi9UCxOQfBsUnyook4Ah3yh3ufKzVW63BnZqQT7U4i2T+YLvJyqQ9BXB90A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lausen.nl; spf=pass smtp.mailfrom=lausen.nl; dkim=fail (0-bit key) header.d=lausen.nl header.i=@lausen.nl header.b=iy5TpIw8 reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lausen.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lausen.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y2e/Eg05"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708254109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PhzxOa+tdV5tT3KRjUp/wlDOXFfnB7vhxjSt9woYKnQ=;
-	b=Y2e/Eg05z6b8S2RUnKocadJlmTKE8HHGsXTBFVc5mLBnJ8JHpFc3O8jML4xtbZJ3Rrj2ry
-	J/V9aDexeqUzebiGa71EJWBrHqul5NWRPO14dGIJJ9N0Gec9sdcxmNfNh1U8rPyqxce94q
-	A5OjD/64ZGK3RItIQU1Jqf0fFHg3dhk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-216-nkczoHB9N1SuCLIHJNQddA-1; Sun, 18 Feb 2024 06:01:47 -0500
-X-MC-Unique: nkczoHB9N1SuCLIHJNQddA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2f71c83b7eso286398066b.1
-        for <regressions@lists.linux.dev>; Sun, 18 Feb 2024 03:01:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708254106; x=1708858906;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PhzxOa+tdV5tT3KRjUp/wlDOXFfnB7vhxjSt9woYKnQ=;
-        b=lQUxznM4BVoqe/idILthp5KvV/XOJPmAYxDAKGezr/uoeuEcV6qSsTI1sZfHEF2/Yv
-         zyOdOhUGWBoR0CxWo063BUsPZ7Do7klLExXhRP8HcBJ8vypxqOI9Y3VbQop0gGNR4OoB
-         y6/cbdRvjKGEnMcGxIrtxjji99oSK3sb+EiraQK2TeZmEXS4VXBk8UkruFOToHhtfGYy
-         yOhwFxLlY2cLrjSicVnjrEcgS6kpAD87WjYPUxUq4X3Pbx2qmvbWpiP24E5TVo+xbS92
-         0nPhcMXVAXz9ye+DNKSTEGAv/xiONL0L7bi4nXG7hW/sFMC0v73wxSxbGxtjNOSySQrp
-         Gb6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAP642tVkHNO80Gf5jhVuTAy0AlpIq+8F1KrZm8KlkdmHh1EwcQkkimz8tgTUNn/sjApiSbZE8NxO56pD+LJCkh/HTnbPjFGsTBss=
-X-Gm-Message-State: AOJu0YwYGLrAgLQGWUjrJfuscW8o0qEEnonR3xWdz9MmEPx6g8VPU5KS
-	dkwVgB153HrFJ6BqqYUsKzESwuMAf6MRnTcYekn9zWnYSRvtph9k1sWW3QKytlC2GLIrWjhiOuJ
-	JI1p/pqxjL5xyip2f95FrnnmuW/+LyN9F5Mxdp8dbrB2lc+ywdR3p/QD0b9nm84oVkSan
-X-Received: by 2002:a17:906:d86:b0:a3d:7559:6ed1 with SMTP id m6-20020a1709060d8600b00a3d75596ed1mr6557321eji.4.1708254106145;
-        Sun, 18 Feb 2024 03:01:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHTOitH7IczymutN2VoJo3b5YCAFLZzH9xYmmAjNuVWwzt/z1AW3C5zjADbe1Ig+jJdPvmwug==
-X-Received: by 2002:a17:906:d86:b0:a3d:7559:6ed1 with SMTP id m6-20020a1709060d8600b00a3d75596ed1mr6557311eji.4.1708254105844;
-        Sun, 18 Feb 2024 03:01:45 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id vo5-20020a170907a80500b00a3d559c6113sm1819579ejc.204.2024.02.18.03.01.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Feb 2024 03:01:45 -0800 (PST)
-Message-ID: <7260ca36-fd92-4bf5-86b1-fb91393ad064@redhat.com>
-Date: Sun, 18 Feb 2024 12:01:44 +0100
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lausen.nl header.i=@lausen.nl header.b="iy5TpIw8"
+Received: (qmail 22200 invoked by uid 990); 18 Feb 2024 13:13:00 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sun, 18 Feb 2024 14:13:00 +0100
+Message-ID: <3639aa97-5681-4704-ac91-388d751dbc72@lausen.nl>
+Date: Sun, 18 Feb 2024 08:12:56 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,176 +30,70 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86/amd/pmf: Fixup error handling for
- amd_pmf_init_smart_pc()
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240217012205.113614-1-mario.limonciello@amd.com>
- <20240217012205.113614-3-mario.limonciello@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240217012205.113614-3-mario.limonciello@amd.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
+Subject: Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for
+ USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Connor Abbott <cwabbott0@gmail.com>, freedreno@lists.freedesktop.org,
+ regressions@lists.linux.dev
+References: <20231207213048.1377147-1-cwabbott0@gmail.com>
+ <85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl>
+ <cf95947d-8bec-4f95-9e08-2d942723cafc@linaro.org>
+Content-Language: en-US
+From: Leonard Lausen <leonard@lausen.nl>
+In-Reply-To: <cf95947d-8bec-4f95-9e08-2d942723cafc@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: ---
+X-Rspamd-Report: BAYES_HAM(-2.99991) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: -3.08991
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from;
+	bh=yaFLPSiI1CV3Pb147sgWxT4eZhlhqqyrt5YoLH9j6Ks=;
+	b=iy5TpIw8mYhLEcX0yEzkuY7e9av3QXIiUK8NPZAvCoHkHRWGTHlV9rdvffjMs3DbbT66QSjwrQ
+	w2rSyVMuZJFgKLKMlSUoNgUkqcZavs2UcOSkuAicsE7odnVbkbq1pNRZIiHcq2JeEb69m8Zah3HO
+	Mht6NuZsw+cfId+zUe0f/Smn8NN+z1ZJlVKq31KRHR3lGupdG8D5PGGQyiVxi5sn23uzDxOomIDV
+	aoXiSc3Kpzp0MxJw3QUKEvO2JWHkNnGqqXeT7+OlCyCtrhGgurmTTrddo8PYNFl/VEApQiqXfweg
+	ZOK8uSSJvPDDaVD8koZjLd5WrU5PrwXxX5xn6aPaOn2UwxdbDxnFcOo84TetCMRrUODHSI4qgejU
+	9zwtlpZUGVTHTvzRdfPtUtBmGgtHjTb7r7afxtUFk9AYkKpY1MH40hgB/S2dGvk0p5ADdiyUHZY4
+	fUVqQhyKhoLFhszDiNMnR1SLdEpa7O44nemfGt5dPuVKxGvfEUHyH0wzP1oObfNApNy29mjEpV0h
+	N3v7U4F5C3/QgPIX9D1l4C5OeDKOOzVclc8FfrssFOAzG/5lfHoI/3j+Vfyy8k++XvH2TFyh3QSr
+	U3CURcMh/RGqjsJvbvcN5jBjSHxAMyIOCvirWKTMLCRwp71zThEWnVywki/bIUdltUwf8ZAHQLYE
+	s=
 
-Hi Mario,
+Hi Dmitry,
 
-Thank you for your patches.
+thank you for sharing a patch. I tested and can confirm it fixes the issue.
 
-On 2/17/24 02:22, Mario Limonciello wrote:
-> amd_pmf_init_smart_pc() calls out to amd_pmf_get_bios_buffer() but
-> the error handling flow doesn't clean everything up all allocated
-> memory.
+Best regards
+Leonard
+
+On 2/17/24 23:04, Dmitry Baryshkov wrote:
+> Hi Leonard,
 > 
-> As amd_pmf_get_bios_buffer() is only called by amd_pmf_init_smart_pc(),
-> fold it into the function and add labels to clean up any step that
-> can fail along the way.
+> On Sun, 18 Feb 2024 at 03:17, Leonard Lausen <leonard@lausen.nl> wrote:
+>>
+>> Hi Connor,
+>>
+>> unfortunately, your series https://patchwork.freedesktop.org/series/127529/ has introduced a regression for external displays connected through USB-C DP Alt Mode, at least on sc7180-trogdor-lazor devices. Do you think it's possible to  fix this before the 6.8 release or would it be better to revert the series? I'm happy to help testing any fixes. The issue is also tracked at https://gitlab.freedesktop.org/drm/msm/-/issues/49.
 > 
-> Fixes: 7c45534afa44 ("platform/x86/amd/pmf: Add support for PMF Policy Binary")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/tee-if.c | 67 ++++++++++++++++++---------
->  1 file changed, 44 insertions(+), 23 deletions(-)
+> Please check whether this quick fix works for you
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 1359ab340f7c..feb9dfafea30 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -338,25 +338,6 @@ static void amd_pmf_remove_pb(struct amd_pmf_dev *dev) {}
->  static void amd_pmf_hex_dump_pb(struct amd_pmf_dev *dev) {}
->  #endif
->  
-> -static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
-> -{
-> -	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
-> -	if (!dev->policy_buf)
-> -		return -ENOMEM;
-> -
-> -	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
-> -	if (!dev->policy_base)
-> -		return -ENOMEM;
-> -
-> -	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
-> -
-> -	amd_pmf_hex_dump_pb(dev);
-> -	if (pb_side_load)
-> -		amd_pmf_open_pb(dev, dev->dbgfs_dir);
-> -
-> -	return amd_pmf_start_policy_engine(dev);
-> -}
-> -
->  static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
->  {
->  	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
-> @@ -454,14 +435,54 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = amd_pmf_set_dram_addr(dev, true);
-> +	if (ret)
-> +		goto out_dram;
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index c9c55e2ea584..f097577a99ad 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -1325,6 +1325,11 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>  {
+>      struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
 > +
-> +	dev->policy_base = devm_ioremap(dev->dev, dev->policy_addr, dev->policy_sz);
-> +	if (!dev->policy_base) {
-> +		ret = -ENOMEM;
-> +		goto out_policy_base;
-> +	}
+> +    /* a618 is using the hw default values */
+> +    if (adreno_is_a618(adreno_gpu))
+> +        return;
 > +
-> +	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
-> +	if (!dev->policy_buf) {
-> +		ret = -ENOMEM;
-> +		goto out_policy_buf;
-> +	}
-> +
-> +	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
-> +
-> +	amd_pmf_hex_dump_pb(dev);
-> +	if (pb_side_load)
-> +		amd_pmf_open_pb(dev, dev->dbgfs_dir);
-> +
->  	INIT_DELAYED_WORK(&dev->pb_work, amd_pmf_invoke_cmd);
-> -	amd_pmf_set_dram_addr(dev, true);
-> -	amd_pmf_get_bios_buffer(dev);
-> +
-> +	ret = amd_pmf_start_policy_engine(dev);
-> +	if (ret)
-> +		goto out_start_engine;
-> +
->  	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
->  	if (!dev->prev_data)
-
-I just checked and dev->prev_data gets used by dev->pb_work
-which gets queued by amd_pmf_start_policy_engine() so there
-is a (pre-existing) race here and dev->prev_data should be allocated
-before amd_pmf_start_policy_engine().
-
-Note kfree(NULL) is a no-op as is cancel_delayed_work_sync()
-on a non-queued work.
-
-So I think you can just use a single error_exit: label 
-(or any other label-name you like) and do:
-
-error_exit:
-	cancel_delayed_work_sync(&dev->pb_work);
-	kfree(dev->prev_data);
-	dev->prev_data = NULL;
-	kfree(dev->policy_buf);
-	dev->policy_buf = NULL;
-	kfree(dev->buf);
-	dev->buf = NULL;
-	amd_pmf_tee_deinit(dev);
-	return ret;
-
-There as long as you do the INIT_DELAYED_WORK() before
-any of the code which may fail with a goto error_exit.
-
-Note I also added clearing of the pointers after freeing
-them, at least for dev->buf this is important because
-that also gets used in non smart-pc paths and those
-count on it either being NULL or a valid pointer.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-> -		return -ENOMEM;
-> +		goto out_prev_data;
-> +
-> +	return 0;
->  
-> -	return dev->smart_pc_enabled;
-> +out_prev_data:
-> +	cancel_delayed_work_sync(&dev->pb_work);
-> +
-> +out_start_engine:
-> +	kfree(dev->policy_buf);
-> +
-> +out_policy_buf:
-> +out_policy_base:
-> +	kfree(dev->buf);
-> +
-> +out_dram:
-> +	amd_pmf_tee_deinit(dev);
-> +
-> +	return ret;
->  }
->  
->  void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
-
+>      /*
+>       * We subtract 13 from the highest bank bit (13 is the minimum value
+>       * allowed by hw) and write the lowest two bits of the remaining value
+> 
+> 
