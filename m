@@ -1,93 +1,234 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E4B63407
-	for <regressions@lists.linux.dev>; Sun, 18 Feb 2024 13:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AAC290F;
+	Sun, 18 Feb 2024 16:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708263116; cv=none; b=ZKiU8aX7BL6nxx/DL4p48gTDhRCXNSRi9oyBeTc4ch8/6Mu5xlb9ltGHU4zT/ByxcZWCfSrtq/26X7tJNlasMXEytO6N5CGd2veXF5d9m8dWX1nWz0dh298rz3+ryPcjiBpLa/3moVY3Z55OARPbf054Vy7dsybD5vbQzen1F9I=
+	t=1708273426; cv=none; b=c54odezsbE7qzIEF9flf2GoifCbXdi54K4p5czqn0yq3ExMaFthjroR7uvw8gZkGaPO7b676QMpGhXk5spZgAvAqb8jkjksJyGAEL27OX8RUH6UrS7fr5X032d6n4iZ3OAIXeczG0BCYFjeB3ZisE/3hdXOl82x0CFlo5UxpBR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708263116; c=relaxed/simple;
-	bh=yrIY/yf8AjHcs9KAgzzhFa0TbucMdW+AXlq+QCL55I8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QW1Bg+uEpgFpP3PyB/4tO7z1ykc7rCkJlrBUNu0EvUEQRmfXztGvwN0rVvOHS7SlkVtWKpLYVyGORRQtQwDk4XupdtJqRLsqZijFf4U0uOdsZZlAAOOMBrM4K7U6OmVAq5e+3vnqcB4DLGpFjcTLl0E8ktayd+F9QhTXAAxP8aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R7ZE+UmJ; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7ZE+UmJ"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so3578624276.2
-        for <regressions@lists.linux.dev>; Sun, 18 Feb 2024 05:31:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708263114; x=1708867914; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BLZq4hHi1AwzI9ptRmrUPgmKE8tZxkSC9vVEZHcAwl4=;
-        b=R7ZE+UmJEBwgozzTPVHhM23a71n5gMnaoZXpAB3Ykl8Sj2qM8qT5DET0iuODi69aTB
-         3O5l9dU8sbPAHqqx/RzbCunWSZe6KsHXQDv3DjGrHNbtvuPBB7Eg0TR669oBB2+S5bAW
-         gZ/4x4Xb0Q5ocgNmLNJXmoaNYHK1eMzwt7PrczNoQjKZdIYUVUECissyhbiCizSF8bkk
-         TOKIES2Q7HrjW+f9q2lmG+PUwvwZHFpVcym5aq7edwWUwL7GtdPj6gsxW26PbGguG7CE
-         /xCBU2Flh78hb9I52pEgDq9kWsYoK1np68FqrARM4f1QL7t667EnQhXwuTQi4M62zhzz
-         wLoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708263114; x=1708867914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BLZq4hHi1AwzI9ptRmrUPgmKE8tZxkSC9vVEZHcAwl4=;
-        b=xGoIg7zHFw0vRoSrMKrQHpGsQzRS7NRSZsL0hHT0OrvHK0sWL569bvOgXj8aKeW8mH
-         sm3yZgN5O2XCCthz8yzYzBcsTcM9CfXniwM4uPHvYM4k/tJuvlu8JxdN9ftUye49wkjg
-         vZbHIGCDffAKdaSG/G6pRg3vqRCwQ1L4D3ruaTRXnAQibGatuiiRSBGgjHWC8s57h/Th
-         KFfCgam6mvFJAlgIgSvaDAp40GEF4aqZ5SzW6wKTPfqyF7L2Y9RhFOy9j55NwC4GF7Bd
-         LJZb6JMXuTJ6fBSD8EZ2uRgME72mOy8o8hMWcF23j2pOxnVjeTqIMe8NLQMIV03ucZ2H
-         o1Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCX3LHj+CQdVQYVfF4MNO1WGLTgHVMvvNeA6jNMT91ACEgeaNWmtO8ZSlfCuU+y0Ni9VfZpfDv5YV0DY/7xdewH4ksoL4yBqAYL6ygg=
-X-Gm-Message-State: AOJu0Yy4ZnpMyZIFcvZJh/tCPK2sMEoPhoAsG6R7lmdwpycsa/sJdU5V
-	TQDpszn2tL7VycRD+G303HuMbDt71iYF3378vzddP7pgtZOJ7bN46wDK/QQyZAidqUfr7fdSEUX
-	9xYzwwl/sfmVfuCY2lQz6AyYlbWNBRJRofr/+vQ==
-X-Google-Smtp-Source: AGHT+IFtJWbUMAlmCDvHbnQtv8DWuSpS+RMOGtTOdZUEacxd/aOjFJ8Dzacfw8W4vpnWE8jAyB0bBS5+Jh+puyW8WEk=
-X-Received: by 2002:a25:8404:0:b0:dbe:4f15:b5cf with SMTP id
- u4-20020a258404000000b00dbe4f15b5cfmr9384502ybk.15.1708263114193; Sun, 18 Feb
- 2024 05:31:54 -0800 (PST)
+	s=arc-20240116; t=1708273426; c=relaxed/simple;
+	bh=/sSFkLOO86XrSdI5vVzZm2lNzngGV+Xm6AlJYHLgqog=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rOJbMh8RwySQfn7Q136jaEmg5m5q4YwpNFN8BcXWnElueMSS0IJUr8mzNVSBeXgoeio9y1Yruvf+EdKMdkKHBZ3HzQNTjAXgRxZkI1CaNBR5E1EIYPXdDo54/VaqeO4WykE2kgIM6yFyu82B/NVfoSzwQPAiGKdLlSHOPvIvJP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rbjx7-0006W2-Vf; Sun, 18 Feb 2024 17:23:42 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-02-18]
+Date: Sun, 18 Feb 2024 16:23:41 +0000
+Message-Id: <170827338885.977320.16936376590840962619@leemhuis.info>
+X-Mailer: git-send-email 2.40.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20231207213048.1377147-1-cwabbott0@gmail.com> <85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl>
-In-Reply-To: <85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 18 Feb 2024 15:31:43 +0200
-Message-ID: <CAA8EJpoqS856N8w3ZxdhQ0TUVP2u5K8qCjG=qLQPnHXGH9NyNg@mail.gmail.com>
-Subject: Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for
- USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
-To: Leonard Lausen <leonard@lausen.nl>
-Cc: Connor Abbott <cwabbott0@gmail.com>, freedreno@lists.freedesktop.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708273424;515acaf0;
+X-HE-SMSGID: 1rbjx7-0006W2-Vf
 
-On Sun, 18 Feb 2024 at 03:17, Leonard Lausen <leonard@lausen.nl> wrote:
->
-> Hi Connor,
->
-> unfortunately, your series https://patchwork.freedesktop.org/series/12752=
-9/ has introduced a regression for external displays connected through USB-=
-C DP Alt Mode, at least on sc7180-trogdor-lazor devices. Do you think it's =
-possible to  fix this before the 6.8 release or would it be better to rever=
-t the series? I'm happy to help testing any fixes. The issue is also tracke=
-d at https://gitlab.freedesktop.org/drm/msm/-/issues/49.
->
-> Thank you
-> Leonard
->
-> #regzbot introduced: 8814455a0e54ca353b4b0ad5105569d3fdb945cc
+Hi Linus, from the regressions point of view it's business as usual and
+nothing to worry about afaics.
 
-#regzbot monitor https://gitlab.freedesktop.org/drm/msm/-/issues/49
+There is a small fix for a fs/9p regression is sitting in a vfs.netfs
+branch for 18 days now; I had expected that it would finally make it to
+you this week, but that did not happen; will poke Al and Christian tomorrow:
+https://lore.kernel.org/v9fs/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=ca9ca1a5d5a980550db1001ea825f9fdfa550b83
+
+There is also one regression from this cycle that looks somewhat
+stalled, but Hans promised to look into it soon:
+https://lore.kernel.org/lkml/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 9 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
 
---=20
-With best wishes
-Dmitry
+======================================================
+current cycle (v6.7.. aka v6.8-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
+---------------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
+https://lore.kernel.org/regressions/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
+
+By Leonard Lausen; 0 days ago; 4 activities, latest 0 days ago.
+Introduced in 8814455a0e54 (v6.8-rc1)
+
+Recent activities from: Dmitry Baryshkov (2), Leonard Lausen (2)
+
+One patch associated with this regression:
+* Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
+  https://lore.kernel.org/regressions/cf95947d-8bec-4f95-9e08-2d942723cafc@linaro.org/
+  0 days ago, by Dmitry Baryshkov
+
+
+[ *NEW* ] platform/x86/amd/pmf: system freezes after resuming from suspend
+--------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
+https://lore.kernel.org/stable/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
+
+By Trolli Schmittlauch; 2 days ago; 13 activities, latest 0 days ago.
+Introduced in 7c45534afa44 (v6.8-rc1)
+
+Recent activities from: Trolli Schmittlauch (6), Mario Limonciello (4),
+  Hans de Goede (2), Thorsten Leemhuis (1)
+
+Noteworthy links:
+* [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+  https://lore.kernel.org/lkml/20240217005216.113408-1-mario.limonciello@amd.com/
+  1 days ago, by Mario Limonciello; thread monitored.
+
+
+usb: typec: boot issues on rk3399-roc-pc due to revert
+------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
+https://lore.kernel.org/lkml/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
+
+By Mark Brown; 9 days ago; 7 activities, latest 1 days ago.
+Introduced in b717dfbf73e8 (v6.8-rc3)
+
+Fix incoming:
+* usb: typec: tpcm: Fix issues with power being removed during reset
+  https://lore.kernel.org/lkml/8e7f9d37-ab18-419f-9641-287412a5cb4a@leemhuis.info/
+
+
+[ *NEW* ] drm/msm: DisplayPort regressions in 6.8-rc1
+-----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
+https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
+
+By Johan Hovold; 5 days ago; 7 activities, latest 1 days ago.
+Introduced in 2bcca96abfbf (v6.8-rc1)
+
+Recent activities from: Johan Hovold (5), Linux regression tracking
+  (Thorsten Leemhuis) (1), Abhinav Kumar (1)
+
+
+[ *NEW* ] sched/cpufreq: reduced maximum CPU frequency is ignored.
+------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/002f01da5ba0$49cbf810$dd63e830$@telus.net/
+https://lore.kernel.org/lkml/002f01da5ba0%2449cbf810%24dd63e830%24@telus.net/
+
+By Doug Smythies; 8 days ago; 10 activities, latest 2 days ago.
+Introduced in 9c0b4bb7f630 (v6.8-rc1)
+
+Recent activities from: Vincent Guittot (4), Doug Smythies (3)
+
+One patch associated with this regression:
+* RE: sched/cpufreq: Rework schedutil governor performance estimation - Regression bisected
+  https://lore.kernel.org/lkml/003001da6061%24bbad1e30%2433075a90%24@telus.net/
+  2 days ago, by Doug Smythies
+
+
+[ *NEW* ] MXSFB error: -ENODEV: Cannot connect bridge
+-----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
+https://lore.kernel.org/lkml/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
+https://lore.kernel.org/regressions/20240214110822.GA81133@francesco-nb/
+
+By Hiago De Franco and Francesco Dolcini; 10 days ago; 5 activities, latest 2 days ago.
+Introduced in edbbae7fba49 (v6.8-rc1)
+
+Recent activities from: Francesco Dolcini (3), Roland Hieber (1)
+
+One patch associated with this regression:
+* Re: MXSFB error: -ENODEV: Cannot connect bridge
+  https://lore.kernel.org/lkml/20240214105223.GA78582@francesco-nb/
+  4 days ago, by Francesco Dolcini
+
+Noteworthy links:
+* [PATCH v1] ARM: dts: imx7: remove DSI port endpoints
+  https://lore.kernel.org/lkml/20240216104255.21052-1-francesco@dolcini.it/
+  2 days ago, by Francesco Dolcini; thread monitored.
+
+
+Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
+--------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZbUB0YWxEET3Y0xA@eldamar.lan/
+https://lore.kernel.org/lkml/ZbUB0YWxEET3Y0xA@eldamar.lan/
+
+By Salvatore Bonaccorso; 22 days ago; 5 activities, latest 3 days ago.
+Introduced in b17ef04bf3a4 (v6.8-rc1)
+
+Fix incoming:
+* drm/amd/display: Only allow dig mapping to pwrseq in new asic
+  https://lore.kernel.org/lkml/e65c6dc4-9b43-4c97-bb4c-d9c14655835d@leemhuis.info/
+
+
+`lis3lv02d_i2c_suspend()` causes `unbalanced disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
+---------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+https://lore.kernel.org/lkml/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+
+By Paul Menzel; 16 days ago; 4 activities, latest 4 days ago.
+Introduced in 2f189493ae32 (v6.8-rc1)
+
+Recent activities from: Hans de Goede (1), Linux regression tracking
+  (Thorsten Leemhuis) (1)
+
+
+fs/9p: "netfs: Zero-sized write" failures during ldconfig test
+--------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
+https://lore.kernel.org/v9fs/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
+
+By Eric Van Hensbergen; 22 days ago; 7 activities, latest 17 days ago.
+Introduced in 153a9961b551 (v6.8-rc1)
+
+Fix incoming:
+* netfs: Fix missing zero-length check in unbuffered write
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=ca9ca1a5d5a980550db1001ea825f9fdfa550b83
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/170764569476.480163.4912590939283332268@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
