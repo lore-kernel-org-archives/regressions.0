@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDA42E410
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 12:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475B633CD5
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 12:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346273; cv=none; b=D9ifHlE/xlc3i7nv1EsjPRCXxBNnLgfvPGZ85W4pR3KnO8x+LsyK2X14sMkojKZFnT1r3l48Y6y1FYDmyiqaX3dp3/uB/nBRyLzcfMlxypRxazrBfEhF9zlQNfIkMzicT2hpeb2L5qw1abK+bmSZzMMZpYE06OUdMRorcvz+Z2w=
+	t=1708347393; cv=none; b=qeN72zhyicA8VZof8CiadjzqIc/CWaYgfVdilZs/gXYm53CwooKjNUi9ykYd3Vidf9ceMMYUcRtKpWpVSHOHj0c20YwLMHyNjH+incrYy+A15W4HTsy6bS9vk+t7WJMnCTFUQ1WtW3hshz8Q7uvr7ZcsQ6tCjmtob9kyepZI26Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346273; c=relaxed/simple;
-	bh=GY8KIVqzsOKGT5UsEsAg9niPyy7MPrFyGo7zraijhPc=;
+	s=arc-20240116; t=1708347393; c=relaxed/simple;
+	bh=tXciXTnzI0WBYuYcYl+Mfk/2akjit8SB45KAKre+59k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M27HtmJ/ArVfPw/5Td2nzupBlzp+qlco4zZSfrKFYLgHm/U5MqR8sCMPe43WwZw1fPWIEJpgJrEV8VDj6uXNoot5nTGhfc53/jYLBGCugsBbxJgz3oG7aqT8leqqbjb98gfrl9CWD68YLNQyllFPAuJew9aHFW2XMD4uFqkIM4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=duV+qDeB; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=shlIVgx44Htog/VNworCcZbO9IPNLkR+vBKY5waLuvv5CKCPV0qeaDCmZ3zP078iOtR5/9bF1Ef/EFhd40TliJB+qVpMg+JPu1fedv55vKyU88xdG0KDmV6WbDlc3C0V7aHy+DjTwSW/zMThyvhtFdir2IvwIpbr+yhCvKQ9UN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMAIdOGX; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duV+qDeB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMAIdOGX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708346270;
+	s=mimecast20190719; t=1708347391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9NUbNB6aBViIXTgaODmTHiYaijHpW84fTtczd3qM8yE=;
-	b=duV+qDeBKp41AVQEj/vnh/WfRc0Brdfi89t/hRxUL4Ss7c4rtVKpz2PKqMMUhXR665Ptm4
-	pqX6B8mmpBD05Rj91i9u/dnwg3bB03z3zXsv7MCutnnZ7+8ZJQNrgD9Es7WKr0WJkQVq0o
-	DgeISgYr56gFMNUqsEJxwBmp3PcMbKI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
+	b=UMAIdOGXzeq/mA6/RLWbJaw1FXGT05lS4rbfE0q0i6qeyb82sn31MkUo3VTaPz+mDsAwSP
+	rOicoVcJvjYj0zb+2KtUsSGQk+lROBZm6SamTTlatF1QuJ8pbbiGAkr0ZLYa+a/O7thugC
+	UhzutUvEBc2OpK2lmdy5b7sJ6RtZMcU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-yOViYoGLNSWkinJjTXAaOw-1; Mon, 19 Feb 2024 07:37:49 -0500
-X-MC-Unique: yOViYoGLNSWkinJjTXAaOw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2c4e9cb449so336828666b.1
-        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 04:37:48 -0800 (PST)
+ us-mta-631-Q2VTumZ1PkS9ZUAuQPqu6g-1; Mon, 19 Feb 2024 07:56:30 -0500
+X-MC-Unique: Q2VTumZ1PkS9ZUAuQPqu6g-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-55fee28d93dso1765464a12.2
+        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 04:56:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346268; x=1708951068;
+        d=1e100.net; s=20230601; t=1708347389; x=1708952189;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NUbNB6aBViIXTgaODmTHiYaijHpW84fTtczd3qM8yE=;
-        b=CSr9t7KD4hSKdPf3sC9lJWGDZmVt1d1ZXMEPmjvh3P0lEs8smNDVFLSObqOLgLyWxL
-         uuAavQehUioYuRziAUnxC88irgXDxjSzAlmZ8CyIWuordRANPl4YLqtukoDzV4H8zVgq
-         i6RDlRnHRmuxjAfbLNuvcy580cxTmMtcVGrO9Dvci2YnwMy6xoSbm+gvtQOcE5mgEvB0
-         ccKyK9WdIf1ZJXLiPd+42noHxxqek8p9ZTUUqMXPiswdzJoYxAp0Vg5Hr1SFtE6BEg4h
-         H+qUygWVld6eEzPjZdlS0Y9vMcXWOdpwrHm263UcjWhRu+oDNIOt0MFXlRWNm1R9zV2q
-         JxvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPYU04C9GEGr2jrTggEomx7D6OB4EAoHD1HQ4plnJhUSM3AWlMmY8pUZHpDjHdXFtR+su5JXnGScRrhVgdpeLQMc1lrJNZGi9xkRU=
-X-Gm-Message-State: AOJu0YxUEeshHU5Nc6OziaF87x7bNYSYaxOLtWmvRPdd+EO9Y9LOcPjU
-	S7KON/ofQJW0xCGN5yYeLXRy/AP/JhnHStINZ0s7MToVsSkX8+bkkwweb7dt/tD/B4UT2tVDe99
-	+Oh2jWWNHIwUMIhh5MychoywaszdR83aRqjgWUd+YcFkY5wgIi/1RWW0wRYMK
-X-Received: by 2002:a17:906:69a:b0:a3e:a8e9:9662 with SMTP id u26-20020a170906069a00b00a3ea8e99662mr1196625ejb.63.1708346267907;
-        Mon, 19 Feb 2024 04:37:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHqz0b4HLJ/9PQmyPbkskX7AkRoz5aMO+JB6bXzgS95r0pkYly3Y7zosh6lr80y/WHlAvfrxg==
-X-Received: by 2002:a17:906:69a:b0:a3e:a8e9:9662 with SMTP id u26-20020a170906069a00b00a3ea8e99662mr1196618ejb.63.1708346267564;
-        Mon, 19 Feb 2024 04:37:47 -0800 (PST)
+        bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
+        b=t8WhdLcBnebf9u2iVkwRK/ZQ/+U2c8A97+mZfxbF2PRNMPxm6f9SdtarU4bgxnDtSl
+         9jt2CzftvVjBt+yNHbmrMOdGynaPw9lIzln3NFSoxmkHbjX/50AOFPgBUYF80ry6OokJ
+         zFy/qpRncx/49o+jfFqp0iLJZfbs1+knuG8BnZ7C08WuGQsDjG9yUbELVvBGtGDIYiIG
+         Kk+gXXFOOz1lUluT2cHqVw0Y5bEyZn2MTE8apJvTBM0FNe2745WuGLVrVLAhU6HbEjqt
+         UmYRtWOIWTDyy4vxHsxOkXdU2zw1727m12Ebhdrz3Vh9gM7YTrl5hwajT+ErmHP+S6cN
+         lxxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzHbCa9/gUNJgcVGY+V9xhq94K8MYU9rAZPOVfh11RDb4f/DtJaTq4LHNPiDljLbcWQnwIzx/7HcK+EL2N5e7wPIJM+dmWP4v4aMg=
+X-Gm-Message-State: AOJu0Yw2jYop0HOD6YvPEPnHXNLOfqIF+GukCqwGyFeIRN2MoxbcufEy
+	zc5FqbWwYswMFjVVwTX8Z+4cWqxlVSDUnnZqwthH4MvJDLutRy33iCvMatxTBh6+keWLMUgtvQu
+	9atqYf+xVKS+5uyWEQTwkVeXdnHvUcnCfhuw34v01CZ0pPEDzE4I144W8UZ9i
+X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171955edb.8.1708347388897;
+        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE+MVN2syDIWOe2FngB3b16L83fgJ+fflH9UzHroMpLNKXN0V7dQIAj5/MRnEBHa4w3lVT60w==
+X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171936edb.8.1708347388548;
+        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id wp1-20020a170907060100b00a3e2e03c155sm2363377ejb.155.2024.02.19.04.37.46
+        by smtp.gmail.com with ESMTPSA id cs1-20020a0564020c4100b005617cebd051sm2684619edb.78.2024.02.19.04.56.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:37:47 -0800 (PST)
-Message-ID: <8c5e67e4-9625-44c9-9f1e-f098d38018a6@redhat.com>
-Date: Mon, 19 Feb 2024 13:37:46 +0100
+        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
+Message-ID: <753c02c9-267f-4b2d-b032-74dc9a03e751@redhat.com>
+Date: Mon, 19 Feb 2024 13:56:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -67,14 +67,16 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Trolli Schmittlauch <t.schmittlauch@orlives.de>
-References: <20240217005216.113408-1-mario.limonciello@amd.com>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Stop calling "VBDL" from
+ notify_handler
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Alexander Kobel
+ <a-kobel@a-kobel.de>, regressions@lists.linux.dev,
+ Arnold Gozum <arngozum@gmail.com>
+References: <20240216203300.245826-1-hdegoede@redhat.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
+In-Reply-To: <20240216203300.245826-1-hdegoede@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -83,48 +85,51 @@ Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 2/17/24 01:52, Mario Limonciello wrote:
-> The buffer is cleared in the suspend handler but used in
-> the delayed work for amd_pmf_get_metrics().
+On 2/16/24 21:33, Hans de Goede wrote:
+> Commit 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing
+> tablet-mode-switch events") causes 2 issues on the ThinkPad X1 Tablet Gen2:
 > 
-> Stop clearing it to fix the hang.
+> 1. The ThinkPad will wake up immediately from suspend
+> 2. When put in tablet mode SW_TABLET_MODE reverts to 0 after about 1 second
 > 
-> Reported-by: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-> Closes: https://lore.kernel.org/regressions/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
-> Closes: https://community.frame.work/t/kernel-6-8-rc-system-freezes-after-resuming-from-suspend-reproducers-wanted/45381
-> Fixes: 2b3a7f06caaf ("platform/x86/amd/pmf: Change return type of amd_pmf_set_dram_addr()")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Both these issues are caused by the "VBDL" ACPI method call added
+> at the end of the notify_handler.
+> 
+> And it never became entirely clear if this call is even necessary to fix
+> the issue of missing tablet-mode-switch events on the Dell Inspiron 7352.
+> 
+> Drop the "VBDL" ACPI method call again to fix the 2 issues this is
+> causing on the ThinkPad X1 Tablet Gen2.
+> 
+> Fixes: 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing tablet-mode-switch events")
+> Reported-by: Alexander Kobel <a-kobel@a-kobel.de>
+> Closes: https://lore.kernel.org/platform-driver-x86/295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de/
+> Cc: regressions@lists.linux.dev
+> Cc: Arnold Gozum <arngozum@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+I've added this to my review-hans (soon to be fixes) branch now.
 
 Regards,
 
 Hans
 
-
 > ---
->  drivers/platform/x86/amd/pmf/core.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/platform/x86/intel/vbtn.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 853158933510..4f734e049f4a 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -299,8 +299,6 @@ static int amd_pmf_suspend_handler(struct device *dev)
->  	if (pdev->smart_pc_enabled)
->  		cancel_delayed_work_sync(&pdev->pb_work);
+> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+> index 210b0a81b7ec..084c355c86f5 100644
+> --- a/drivers/platform/x86/intel/vbtn.c
+> +++ b/drivers/platform/x86/intel/vbtn.c
+> @@ -200,9 +200,6 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+>  	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
 >  
-> -	kfree(pdev->buf);
+>  	sparse_keymap_report_event(input_dev, event, val, autorelease);
 > -
->  	return 0;
+> -	/* Some devices need this to report further events */
+> -	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
 >  }
 >  
+>  /*
 
