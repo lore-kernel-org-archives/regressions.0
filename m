@@ -1,91 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B05E208B9;
-	Mon, 19 Feb 2024 08:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F14322EF7
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 09:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708331921; cv=none; b=Af50z4cL+RdoRQr4a5t79aWrgVjRKWLdqXu8Yd4z2+Mhh4AaxCLs2tJgX0ifYkXhWV7/+NWsxccVoOLMR4nXmSuDrWl1bQHbhCpad6WSpT/Xo/bEfETMAitYMHTIP0OboSglxgFpc+TGpK0E4lvi5gvTCblSD+K9GDJJ3AUIQq4=
+	t=1708334225; cv=none; b=EfRzhW3ObvxvBvlMsar5AaVhDWJdn5R8QtGfrczCAYOIO0W8Yg0b1cN6xfVaeMzQ9P/Js5RsLmIkIQWqvDgRIdUSLdXWJrK3ukIawMfh6Q62sfCucnEblLECTolHyYaoE3F7EAU22DWwDwbBtNgw25rVGwXzUy62hGKOvuLggXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708331921; c=relaxed/simple;
-	bh=dAs2OALmkNudBmi4/5a+XrcRC0uaaEkJeqpRp/lL8ZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZT1BpEGH/bKGTW51pnWYOkYoNYE7zS0VJ/RVRtiD4h/RboYyv76O0uxOMpHZQpMGfwbifulXMPDKfbcn7rOySnBTqZea+LsKc3/M/VDsQPfE3nWkpFJntknPNUFPsuDxFg/OteZOodVvk2zpkwFZsAn6b6XcKaPhIFWKmBvF/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rbzAY-0007jO-Uv; Mon, 19 Feb 2024 09:38:35 +0100
-Message-ID: <960e015a-ec2e-42c2-bd9e-4aa47ab4ef2a@leemhuis.info>
-Date: Mon, 19 Feb 2024 09:38:33 +0100
+	s=arc-20240116; t=1708334225; c=relaxed/simple;
+	bh=GyYzt6VUoYJe//8zMfEv0hCqm1pVm48XUV9bEywIehg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jbKa3NqJr7r5lznKHx0Badxb1Yr0Dg9tS5kpO4Y+G0mrEmjDpGkczHHkhaQVTy58sr2BhCf4E/EoWhT0v5cn1fsV0GuXfb2IE6XCoq8YMVwrc89uBnq4f70YagKsiJtDtIjZ2enuCZJpDn6Tio3kbyX9OUbNi+lZumDLZfEqdA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Of/+DtGE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rT8W7urx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Of/+DtGE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rT8W7urx; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Of/+DtGE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rT8W7urx";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Of/+DtGE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rT8W7urx"
+Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 489351F7E6;
+	Mon, 19 Feb 2024 09:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708334222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87Zm0NzmVvoqxBduW7U8fwevwRdq6z0bA0dQYevcYVE=;
+	b=Of/+DtGEXtsjf9J2gYoRKg/w1Usa0Ymyl7ToKdwLKxZZyDHxIPxZYmBvy4HwrSzf/TSPA7
+	3ybrFZ9plx+GIqEEZDxmvp2zdXQgEu+Cd7sCJi8SH+Z2GObz7z+sO5xTm4vDyJWkoVydwO
+	mk2Pq+4SZmEEiPDFW7wi6Tvd/dR8f80=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708334222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87Zm0NzmVvoqxBduW7U8fwevwRdq6z0bA0dQYevcYVE=;
+	b=rT8W7urxouwGsGUVEmKQNGe2QiaEBUM/lKvCvRbD7pfO/IaCY1a0taqjtCrF5g+yVv5GC0
+	S1QYkN7wquEQK9AA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708334222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87Zm0NzmVvoqxBduW7U8fwevwRdq6z0bA0dQYevcYVE=;
+	b=Of/+DtGEXtsjf9J2gYoRKg/w1Usa0Ymyl7ToKdwLKxZZyDHxIPxZYmBvy4HwrSzf/TSPA7
+	3ybrFZ9plx+GIqEEZDxmvp2zdXQgEu+Cd7sCJi8SH+Z2GObz7z+sO5xTm4vDyJWkoVydwO
+	mk2Pq+4SZmEEiPDFW7wi6Tvd/dR8f80=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708334222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87Zm0NzmVvoqxBduW7U8fwevwRdq6z0bA0dQYevcYVE=;
+	b=rT8W7urxouwGsGUVEmKQNGe2QiaEBUM/lKvCvRbD7pfO/IaCY1a0taqjtCrF5g+yVv5GC0
+	S1QYkN7wquEQK9AA==
+Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
+	id 38EE24A051A; Mon, 19 Feb 2024 10:17:02 +0100 (CET)
+From: Andreas Schwab <schwab@suse.de>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  linux-arm-kernel@lists.infradead.org,
+  Aaro Koskinen <aaro.koskinen@iki.fi>,  Linux-OMAP
+ <linux-omap@vger.kernel.org>
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+In-Reply-To: <20240216120833.GT52537@atomide.com> (Tony Lindgren's message of
+	"Fri, 16 Feb 2024 14:08:33 +0200")
+References: <mvmcyt13idm.fsf@suse.de>
+	<c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
+	<20240215094640.GS52537@atomide.com> <mvmeddeyqb8.fsf@suse.de>
+	<2024021516-stricken-bubble-bf8d@gregkh>
+	<20240216120833.GT52537@atomide.com>
+X-Yow: Why are these athletic shoe salesmen following me??
+Date: Mon, 19 Feb 2024 10:17:02 +0100
+Message-ID: <mvmy1bgyfsh.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] netfs: Fix missing zero-length check in unbuffered
- write
-Content-Language: en-US, de-DE
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>
-Cc: Eric Van Hensbergen <ericvh@kernel.org>,
- Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton
- <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- netfs@lists.linux.dev, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux_oss@crudebyte.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240129094924.1221977-1-dhowells@redhat.com>
- <20240129094924.1221977-3-dhowells@redhat.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <20240129094924.1221977-3-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708331919;be4d50cb;
-X-HE-SMSGID: 1rbzAY-0007jO-Uv
+Content-Type: text/plain
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.89
+X-Spamd-Result: default: False [-3.89 / 50.00];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.17)[-0.846];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-2.62)[98.31%]
+X-Spam-Flag: NO
 
-On 29.01.24 10:49, David Howells wrote:
-> Fix netfs_unbuffered_write_iter() to return immediately if
-> generic_write_checks() returns 0, indicating there's nothing to write.
-> Note that netfs_file_write_iter() already does this.
-> 
-> Also, whilst we're at it, put in checks for the size being zero before we
-> even take the locks.  Note that generic_write_checks() can still reduce the
-> size to zero, so we still need that check.
-> 
-> Without this, a warning similar to the following is logged to dmesg:
-> 
-> 	netfs: Zero-sized write [R=1b6da]
-> 
-> and the syscall fails with EIO, e.g.:
-> 
-> 	/sbin/ldconfig.real: Writing of cache extension data failed: Input/output error
-> 
-> This can be reproduced on 9p by:
-> 
-> 	xfs_io -f -c 'pwrite 0 0' /xfstest.test/foo
-> 
-> Fixes: 153a9961b551 ("netfs: Implement unbuffered/DIO write support")
-> Reported-by: Eric Van Hensbergen <ericvh@kernel.org>
-> Link: https://lore.kernel.org/r/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
+On Feb 16 2024, Tony Lindgren wrote:
 
-David, thx for fixing Eric's regression, which I'm tracking.
+> Andreas, did commit 7a29fa05aeca solve the issue?
 
-Christian, just wondering: that patch afaics is sitting in vfs.netfs for
-about three weeks now -- is that intentional or did it maybe fell
-through the cracks somehow?
+Yes, it does.  Thanks.
 
-> [...]
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
