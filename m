@@ -1,119 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D3E3838A;
-	Mon, 19 Feb 2024 15:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7412B383A1;
+	Mon, 19 Feb 2024 15:29:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708356476; cv=none; b=Ez3xhdlXjINA6IFAeeq18+73lXW5LDnaHffncatMafhvd2bvXjfr0A4st+obC4C7SUh+YxPtiP5Mff45ATQpzfufLxb0AOoM5sr07inZt38PPfHu/FNI2mCEah0w4R+f17cG2Tm5OQzZdGFn0HxZ4L+y2HvCAoVEI/KBuBVOUPA=
+	t=1708356545; cv=none; b=ZH5MSeFo15gHrowrUZ/8FdHiKfJvSdy3C9QQJ3aI+0CAueq4StjXjHTVE7yO02S83BmbMKmR/znr66vHu2k+fyEEJHaEPcaqXAvA2p/+NBo5tUODXKdX8uOAawufU56ynN+bxqB7Zp3vFIHyPkx6I8KqSbAplRToG9CqStJFFN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708356476; c=relaxed/simple;
-	bh=Lxrx7KnYWtzyd1bieirrEJcadfTMhn4CO0AKpath6Eo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bl/qw5M3IxbzIHHYH0z61qbFLkd35sn5a7xFoW1juQBr20XNjuj4HVQDXhXLj9w953s1G9OLayxLpAR0UZlDQfHvnij84i/K431f+0DZSazVB5aLjSrVqbEpWHqEvUjMmggYU4bK2FkPbGxg0WC6oDpNjSzf0gYJjcaqupFiSk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flOSz57c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708356545; c=relaxed/simple;
+	bh=UmQt6AhNUj3p0y4kNfgsnMins5mxo/egCuxtwYpabKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEmaWiblMxjHqDPVa5wHg+TUf1tvA73JxpD5RHISccFkU9fW5QWSlxvizBns9JAYRiTvxuRvzUqO5dHAxr5zEJwWzNXim8I9KeDqnscaKFVM1TyOMbL4oNXmVuxlaagPtT8Y820PjyQlXNct0ePZ3nqQUltFIbJ+i5Rr6e7a/uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R91dznXj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flOSz57c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 888E1C433C7;
-	Mon, 19 Feb 2024 15:27:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R91dznXj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F55C433F1;
+	Mon, 19 Feb 2024 15:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708356475;
-	bh=Lxrx7KnYWtzyd1bieirrEJcadfTMhn4CO0AKpath6Eo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=flOSz57cS3R9PW1sOsoKGfH77MCb2QIcSy/dT9mPqMK8Ul8s+XRakYQjW1Y1q+EPI
-	 Bs2TOqOPByWT29SZOHwvW4fxUw1cjcCHskLX3kAc4Zu/YvpipcQceZVguTRDY8/UKT
-	 0tyqzPzaKTAVVRyr8FQ+OeIbE7I2xN1fFgLxi9LCXgSRhh88X1bt4b5HMmi94STXy4
-	 PznuSZd69pRQ5t2xTkdSQuHPYebkvrtVbJtvYRzOy6JuyRWde8EkSOQ6CwChItpZqi
-	 qPoszWmiBtDFsAfK/Fs66EHOENLCVoMY+k6NIWWmkescjLjYdntxCKiL97xaXhYLUh
-	 67ZmujvZA1ivg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rc5Yf-004cP7-9e;
-	Mon, 19 Feb 2024 15:27:53 +0000
-Date: Mon, 19 Feb 2024 15:27:52 +0000
-Message-ID: <86a5nw4gp3.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list
-	<linux-kernel@vger.kernel.org>,
-	Linux ARM
-	<linux-arm-kernel@lists.infradead.org>,
-	<lkft-triage@lists.linaro.org>,
-	Linux
- Regressions <regressions@lists.linux.dev>,
-	Catalin Marinas
-	<catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter
-	<dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: next-20240219: arm64: boot failed - gic_of_init
-In-Reply-To: <a7d8e529-9a44-3f88-50ef-d87b80515c36@huawei.com>
-References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
-	<86edd84wer.wl-maz@kernel.org>
-	<86cyss4rl7.wl-maz@kernel.org>
-	<a7d8e529-9a44-3f88-50ef-d87b80515c36@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1708356545;
+	bh=UmQt6AhNUj3p0y4kNfgsnMins5mxo/egCuxtwYpabKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R91dznXjVmg0dPVU+qeSDpxmZvpNkaeOM+o/tZPEYO7gyb3Sl4Mw3g3S/0Ts5Gq6o
+	 Q6rIlDnR0dpRv6uRvhGL9D6oFApEZsDyi3Do9EpwJQ0iq8wbG4DnvU8aEaWOTt1yTi
+	 K+/kM1W3C53rKq2mmS6bCb5v8t7y7JTdT1vDLYWAsTGCfexezFnElTLxnTid2+rGLP
+	 U81pRbwxVd1ZU5+XZWzimvhHemg6fyBxvtHvw9AMWKgdS4C+b7BtwoV/KqJy7U6zcn
+	 NM4WWLE1HHEaCLdqQrVwRbXgOqqpQ4uFLvUCtKrYMSJVE7oI+l/bdIEveYD2l306sl
+	 k7UGpwCUoj42g==
+Date: Mon, 19 Feb 2024 16:29:00 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	Dieter Mummenschanz <dmummenschanz@web.de>,
+	Wang Zhihao <wangzhihao9@hotmail.com>,
+	linux-regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH 2/2] ata: libata-core: Revert "ata: libata-core: Fix
+ ata_pci_shutdown_one()"
+Message-ID: <ZdNzvAdKKsQapx8a@x1-carbon>
+References: <20240111115123.1258422-1-dlemoal@kernel.org>
+ <20240111115123.1258422-3-dlemoal@kernel.org>
+ <d63a7b93-d1a3-726e-355c-b4a4608626f4@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkft-triage@lists.linaro.org, regressions@lists.linux.dev, catalin.marinas@arm.com, arnd@arndb.de, dan.carpenter@linaro.org, anders.roxell@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d63a7b93-d1a3-726e-355c-b4a4608626f4@gmail.com>
 
-On Mon, 19 Feb 2024 14:46:46 +0000,
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+Hello Sergei,
+
+On Thu, Jan 11, 2024 at 09:10:43PM +0300, Sergei Shtylyov wrote:
+> On 1/11/24 2:51 PM, Damien Le Moal wrote:
 > 
-> On 2024/2/19 19:32, Marc Zyngier wrote:
-> > For what it is worth, I've just tested both defconfig and my own
-> > configuration with both 4k (kvmtool, QEMU+KVM and on SynQuacer) and
-> > 16k (kvmtool), without any obvious problem.
+> > This reverts commit fd3a6837d8e18cb7be80dcca1283276290336a7a.
+> > 
+> > Several users have signaled issues with commit fd3a6837d8e1 ("ata:
+> > libata-core: Fix ata_pci_shutdown_one()") which causes failure of the
+> > system SoC to go to a low power state. The reason for this problem
+> > is not well understood but given that this patch is harmless with the
+> > improvements to ata_dev_power_set_standby(), restore it to allow system
+> > lower power state transitions.
+> > 
+> > For regular system shutdown, ata_dev_power_set_standby() will be
+> > executed twice: once the scsi device is removed and another when
+> > ata_pci_shutdown_one() executes and EH completes unloading the devices.
+> > Make the second call to ata_dev_power_set_standby() do nothing by using
+> > ata_dev_power_is_active() and return if the device is already in
+> > standby.
+> > 
+> > Fixes: fd3a6837d8e1 ("ata: libata-core: Fix ata_pci_shutdown_one()")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> > ---
+> >  drivers/ata/libata-core.c | 75 +++++++++++++++++++++++----------------
+> >  1 file changed, 45 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+> > index d9f80f4f70f5..20a366942626 100644
+> > --- a/drivers/ata/libata-core.c
+> > +++ b/drivers/ata/libata-core.c
+> > @@ -2001,6 +2001,33 @@ bool ata_dev_power_init_tf(struct ata_device *dev, struct ata_taskfile *tf,
+> >  	return true;
+> >  }
+> >  
+> > +static bool ata_dev_power_is_active(struct ata_device *dev)
+> > +{
+> > +	struct ata_taskfile tf;
+> > +	unsigned int err_mask;
+> > +
+> > +	ata_tf_init(dev, &tf);
+> > +	tf.flags |= ATA_TFLAG_DEVICE | ATA_TFLAG_ISADDR;
 > 
-> I had a quick test on top of next-20240219 with defconfig.  I can
-> reproduce it with QEMU parameter '-cpu max -accel tcg', but things are
-> fine with '-cpu max,lpa2=off -accel tcg'.
+>    Why set ATA_TFLAG_ISADDR, BTW? This command doesn't use any taskfile
+> regs but the device/head reg. Material for a fix, I guess... :-)
 > 
-> Bisection shows that the problem happens when we start putting the
-> latest arm64 and kvmarm changes together.  The following hack fixes the
-> problem for me (but I **only** write it for kernel built with defconfig
-> with ARM64_4K_PAGES=y atm).
-> 
-> I can investigate it further tomorrow (as it's too late now ;-) ).  Or
-> maybe Marc or Catalin can help fix it with a proper approach.
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 4f7662008ede..babdc3f4721b 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -2798,6 +2798,7 @@ static const struct arm64_cpu_capabilities
-> arm64_features[] = {
-> | 		.sign = FTR_SIGNED,
-> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN4_SHIFT,
-> | 		.min_field_value = ID_AA64MMFR0_EL1_TGRAN4_52_BIT,
-> |+		.max_field_value = BIT(ID_AA64MMFR0_EL1_TGRAN4_WIDTH - 1) - 1,
-> | #else
-> | 		.sign = FTR_UNSIGNED,
-> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN16_SHIFT,
+> > +	tf.protocol = ATA_PROT_NODATA;
+> > +	tf.command = ATA_CMD_CHK_POWER;
+> > +
+> [...]
 
-I've posted my take on this at [1], which hopefully matches what you
-were aiming at.
+Looking at the definition of the flag:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/libata.h?h=v6.8-rc5#n76
 
-Thanks,
+"enable r/w to nsect/lba regs"
 
-	M.
+This function does read from the nsect reg:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-core.c?h=v6.8-rc5#n2069
 
-[1] https://lore.kernel.org/all/86bk8c4gyh.wl-maz@kernel.org/
+So I would prefer to keep it as it.
 
 
--- 
-Without deviation from the norm, progress is not possible.
+Basically the whole motto for libata right now:
+"If it ain't broke, don't fix it."
+
+
+Sure, if we look at:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-sff.c?h=v6.8-rc5#n343
+
+it seems that flags ATA_TFLAG_ISADDR, ATA_TFLAG_LBA48, and ATA_TFLAG_DEVICE
+is used to "guard" if these regs should be written to the TF.
+
+
+However, if we look at:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-sff.c?h=v6.8-rc5#n392
+
+is seems that only flag ATA_TFLAG_LBA48 is used to "guard" if the regs should
+be read from the TF.
+
+So it looks like the intention was that these flags should be used
+to guard if certain TF regs should be written or read, but in reality,
+only some of the flags are actually for guarding reads.
+(While all of the flags are used for guarding writes.)
+
+
+Personally, I don't really see the point of using flags to guard writes
+to the host controller. Why would we want to skip writing certain TF regs?
+The struct ata_taskfile should be zero-initialized before filling it with
+a command, so why not always write all TF regs and remove these flags?
+
+Anyway, why touch it now and risk introducing regressions on some old PATA
+hardware?
+
+
+Kind regards,
+Niklas
