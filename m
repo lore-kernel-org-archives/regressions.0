@@ -1,98 +1,135 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1682CCDF
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EBF2C85C;
+	Mon, 19 Feb 2024 11:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708342201; cv=none; b=ad5rqSQoZV5TTCv2g4SF0Slopz9ir+B+GUB2GOZE2X+ws2htEh7rJF2EoeD3YC3fqRLFy3/ywUBbO26PXsmuaG9JUepaLiB4yaCiSC4X7W2n63NwlrQnJvWKCL/4VTigLHp0Uag+tVOmB1LqVEuqEJNWVfaXcFzb2W35Q4TGPRo=
+	t=1708342359; cv=none; b=Npvjuftp9YPzVg7szaGlmiLPhHG2Hvt4usY51pDXCKz+b/tLrFTheGGuI6ic6nr8nw5nS+7R5479Qqedk4istkc/RxdeD4BVyP+1twLcGltiqYFZh5CiYxref352mS4Vi31S4kghJdAdnXGaRazyuoW49Qfw9zCSPXuo/VVnPTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708342201; c=relaxed/simple;
-	bh=k8bNQK6KKfEbdCEoBu/AmOf9cDZ0PlVe99MQWH8wsiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nVBsO5RKFvMTxZPpDWMicMajWiDBjGNBlB3RM9U2Kmy5p65XKN3d7bQtMfKLQlUXTz2R9a52tGZ9KgfX+1QZkscwQjye1nhsHZfUQNK/AZO/k3BnnWff4id34axPqq8j9OFu/tKI0IsJifV9T0p5eWaeR9tMsTenxVmPfXxuAx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rc1qN-0006Ut-2r; Mon, 19 Feb 2024 12:29:55 +0100
-Message-ID: <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
-Date: Mon, 19 Feb 2024 12:29:54 +0100
+	s=arc-20240116; t=1708342359; c=relaxed/simple;
+	bh=77RHh1S722+4UZIFP/TepDf9R/B6Xzqn2rhn7GF3+uY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W6SQL5d7NLRRwy5sdMkYif9+HOYe/UF8czpEXHoPbSH3GRRez/pq+ozornMUsJESEfit1xLlILR4liRocrTDAuCL2pQzQvIjouugHukS3hNeovymprjQsgrt6LoHTAqUyx8qshnvRhPq2r6ASC2MZjt+n1wJtWN8vEi2RM9A63Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcZaLk7Q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcZaLk7Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2179CC433C7;
+	Mon, 19 Feb 2024 11:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708342359;
+	bh=77RHh1S722+4UZIFP/TepDf9R/B6Xzqn2rhn7GF3+uY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OcZaLk7Qto84dLXIvKqf5aWkOulZTjrfezhfVPPyMzz647fRVKpmQLknKwslN2xnd
+	 lJtCIXetyJOgxFkrGK2e/w7PjUN7EmvQ0Yty2f99mjUDj6qxP+rdfOS9OsWEP2HamV
+	 dD1wJ7+FIt1CaiN8P/Gb772cLhhZrHTrmxUelk7/KFLGKsmWKwlmSvIlb1oCmma8Q0
+	 pnt4QmiiVI4oyBuxyxbNLZnuGkX/yc7gF4xQcrM6yhsxg1PBwVlFjzm82j2Qy3PHGr
+	 sKzmCtQVpx0GEqbg2wCA0uMJbDwUzCrT5+gvsSjL5q4D4XppGCOv+ZN4ngZNEpGajk
+	 8YjjodraKjEBA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rc1sz-004YSJ-4G;
+	Mon, 19 Feb 2024 11:32:37 +0000
+Date: Mon, 19 Feb 2024 11:32:36 +0000
+Message-ID: <86cyss4rl7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: next-20240219: arm64: boot failed - gic_of_init
+In-Reply-To: <86edd84wer.wl-maz@kernel.org>
+References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
+	<86edd84wer.wl-maz@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
- >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
- and continuous swapping
-Content-Language: en-US, de-DE
-To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Dave Ertman <david.m.ertman@intel.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
- Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
-References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
- <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
- <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
- <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
- <20240201065726.50a0b1f2@kernel.org>
- <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708342199;7611d165;
-X-HE-SMSGID: 1rc1qN-0006Ut-2r
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkft-triage@lists.linaro.org, regressions@lists.linux.dev, catalin.marinas@arm.com, arnd@arndb.de, dan.carpenter@linaro.org, anders.roxell@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 01.02.24 18:19, Jaroslav Pulchart wrote:
->>
->> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
->> Leemhuis) wrote:
->>>>> I think that's a bad bisect. There is no reason I could understand for
->>>>> that change to cause a continuous or large leak, it really doesn't make
->>>>> any sense. Reverting it consistently helps? You're not just rewinding
->>>>> the tree back to that point, right? just running 6.6.9 without that
->>>>> patch? (sorry for being pedantic, just trying to be certain)
->>>>
->>>> Reverting just the single bisected commit continuously helps for >=
->>>> 6.6.9 and as well for current 6.7.
->>>> We cannot use any new linux kernel without reverting it due to this
->>>> extra memory utilization.
->>>
->>> Quick query: what's the status wrt to this regression? Looks like
->>> nothing happened in the past week.
->>
->> Is someone working on this? Indeed the commit in question looks
->> harmless but can't argue with the revert helping :S
+On Mon, 19 Feb 2024 09:48:28 +0000,
+Marc Zyngier <maz@kernel.org> wrote:
 > 
-> No clue if someone is working on it,
-
-Yeah, a quick public status update would be really helpful. And maybe
-some debugging tips that might enable Jaroslav to pinpoint the real
-problem.
-
-> however the commit itself is a
-> trigger of some other issue.
+> On Mon, 19 Feb 2024 09:42:45 +0000,
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > 
+> > The qemu-arm64 boot failed with linux next-20240219 tag kernel.
+> > 
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > 
+> > Boot log:
+> > ---------
+> > <6>[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+> > <1>[    0.000000] Unable to handle kernel paging request at virtual
+> > address ffff80008001ffe8
+> > <1>[    0.000000] Mem abort info:
+> > <1>[    0.000000]   ESR = 0x0000000096000004
+> > <1>[    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
+> > <1>[    0.000000]   SET = 0, FnV = 0
+> > <1>[    0.000000]   EA = 0, S1PTW = 0
+> > <1>[    0.000000]   FSC = 0x04: level 0 translation fault
+> > <1>[    0.000000] Data abort info:
+> > <1>[    0.000000]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+> > <1>[    0.000000]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> > <1>[    0.000000]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> > <1>[    0.000000] swapper pgtable: 4k pages, 52-bit VAs, pgdp=0000000042497000
+> > <1>[    0.000000] [ffff80008001ffe8] pgd=10000000439a5003,
+> > p4d=10000001000e3003, pud=10000001000e4003, pmd=10000001000e5003,
+> > pte=006800000800f413
+> > <0>[    0.000000] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> > <4>[    0.000000] Modules linked in:
+> > <4>[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+> > 6.8.0-rc5-next-20240219 #1
+> > <4>[    0.000000] Hardware name: linux,dummy-virt (DT)
+> > <4>[    0.000000] pstate: 804000c9 (Nzcv daIF +PAN -UAO -TCO -DIT
+> > -SSBS BTYPE=--)
+> > <4>[    0.000000] pc : gic_of_init+0x84/0x3a8
+> > <4>[    0.000000] lr : gic_of_init+0x290/0x3a8
+> > ...
+> > <4>[    0.000000] Call trace:
+> > <4>[    0.000000]  gic_of_init+0x84/0x3a8
+> > <4>[    0.000000]  of_irq_init+0x1d4/0x3d0
+> > <4>[    0.000000]  irqchip_init+0x20/0x50
+> > <4>[    0.000000]  init_IRQ+0xa8/0xc8
+> > <4>[    0.000000]  start_kernel+0x270/0x690
+> > <4>[    0.000000]  __primary_switched+0x80/0x90
+> > <0>[    0.000000] Code: f94017e0 f90007e0 d29ffd00 8b0002c0 (b9400000)
+> > <4>[    0.000000] ---[ end trace 0000000000000000 ]---
+> > <0>[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+> > <0>[    0.000000] ---[ end Kernel panic - not syncing: Attempted to
+> > kill the idle task! ]---
+> > 
+> > Links:
+> >  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240219/testrun/22730192/suite/boot/test/gcc-13-lkftconfig-armv8_features/log
+> >  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240219/testrun/22730192/suite/boot/tests/
 > 
-> The analysis of my colleague Igor (see previous email) shows the
-> memory consumption is caused by queues of each ice network interface
-> (even the unused ones). Our final fix was to lower the queues to 6 for
-> used interfaces and 2 of unused interfaces manually.
+> Where is the configuration file? What are the parameters to QEMU?
+> Please consider making this a useful and actionable report.
 
-Despite the above allow me to ask: Can you live with that workaround?
-Ideally of course this should be fixed, but well, the world sometimes is
-a tricky place. :-/
+For what it is worth, I've just tested both defconfig and my own
+configuration with both 4k (kvmtool, QEMU+KVM and on SynQuacer) and
+16k (kvmtool), without any obvious problem.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+So until you come up with more specific details, there isn't much I
+can do.
 
-#regzbot poke
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
