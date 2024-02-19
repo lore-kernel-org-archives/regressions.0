@@ -1,147 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAA328DA5;
-	Mon, 19 Feb 2024 10:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20DE572
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339304; cv=none; b=DbFoN7zh+5feSMXvM9U83k3SZ8/xxUF9GFZAb7pTdLAHAJ4Mn0CRLDsqDlt4FmINJB5UPn3qt/2SnT6rKMKhWevob8gueQYqfVKxV56X7IMmAQK86IY+sDIXhoi3IpSJV9NKBa6zEuNBpI4jj13RKqOtI9ZouFIFmsG1p46AONg=
+	t=1708341361; cv=none; b=DkKSPtd5PHsR5iC8RKn/zU8nGgyjrNMo3uVkcSV5f4UNkYMBrYH2+60NydUaOUZ0TzrmXq2bAhFrS/MGzD2a18q0ZNProymE1bmrY3FWmXSIEN8G1dgIvhzVCKUmix25Uvt4J2B+vh5R8nvW7YWL5KY4c/C7m71PwWrTdHlRn14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339304; c=relaxed/simple;
-	bh=j0hZ7OP3iKPpfHm4XNFd9GklyucQI6Echl+Kr1PbKTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d0sFF5oPSj7Gmar+T+mGesT8RbSjcA8HYBfCFBW8YI3bz+JNtPV6V0S4GzX2Uu5Y+XWgtWPBpusX2BXwmQ/YIRaSm0Eud51V+BxVlCrR671jqtjBQ3s4BhVrSthbrdNcLoFbwkbaDF6A6uz/oWw5TFNWEkBPzaWN/g1TlDzcH+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LY6yXZr3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY6yXZr3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0ADCC433F1;
-	Mon, 19 Feb 2024 10:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708339303;
-	bh=j0hZ7OP3iKPpfHm4XNFd9GklyucQI6Echl+Kr1PbKTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LY6yXZr3E2vzWkg1Hg9gmo5TqYcNayGq//e1aM6TDjTSjOYtKCjyL1lOKXFSFAeuF
-	 V2WJ8OD/2ZPSq3wiOlRSM76qr71jZijdaRDQ/BijFj7wZnZ7sViiwSZ4bLlGNoD+ZV
-	 WH4//y4qt8YHFZuPle48PQ0JIjlUyHbs3sqIxnQQwtNo6naYwYzLqwh0n+Ou9KxA9q
-	 TLmwEhUoEEAKU+0VbbUZMfAjrQcLPHK05XkPWQ3IFQ3TazJb5UBMHb4crKm4a5q9n6
-	 NqUbtMGE/2ohmNR3QBpUDSq7onI6kyNLMXQClsTIMiVx+CgsqLyenhRcpbnB8SmjCa
-	 jPT7FURBb12Ew==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rc15h-000000006eY-16Ya;
-	Mon, 19 Feb 2024 11:41:41 +0100
-Date: Mon, 19 Feb 2024 11:41:41 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Rob Clark <robdclark@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>
-Cc: Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: drm/msm: Second DisplayPort regression in 6.8-rc1
-Message-ID: <ZdMwZa98L23mu3u6@hovoldconsulting.com>
-References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
- <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
- <ZczFhVjHIm55JTfO@hovoldconsulting.com>
- <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
+	s=arc-20240116; t=1708341361; c=relaxed/simple;
+	bh=oO3OCmx8Pcf+1FWBlr6snTNv+gJ3xKQgNoMJd/L2kZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eXCLF/V9j4W9umGSxbvOAXNwMWrv+qFBROzL79i2chE5rvFw+gAtExJCB/n2dlTVbMcGTnjG9sFUqPTTSj3PW+6aXzYurjHFe58AD147Xs3v5RuDzEdgmJPJuq//TfcVjl1tgHKqpZw22bzQrub+nPKCycVVbfGSKuY8zHZ5338=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rc1ck-0002hZ-5a; Mon, 19 Feb 2024 12:15:50 +0100
+Message-ID: <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
+Date: Mon, 19 Feb 2024 12:15:49 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
+ mesa/amdgpu)
+Content-Language: en-US, de-DE
+To: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc: regressions@lists.linux.dev, Ma Jun <Jun.Ma2@amd.com>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>, Roman Benes <benes@riadoklan.sk.eu.org>
+References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
+ <2024021732-framing-tactful-833d@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024021732-framing-tactful-833d@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708341358;5ac5858c;
+X-HE-SMSGID: 1rc1ck-0002hZ-5a
 
-On Sat, Feb 17, 2024 at 04:14:58PM +0100, Johan Hovold wrote:
-> On Wed, Feb 14, 2024 at 02:52:06PM +0100, Johan Hovold wrote:
-> > On Tue, Feb 13, 2024 at 10:00:13AM -0800, Abhinav Kumar wrote:
-
-> Since Dmitry had trouble reproducing this issue I took a closer look at
-> the DRM aux bridge series that Abhinav pointed and was able to track
-> down the bridge regressions and come up with a reproducer. I just posted
-> a series fixing this here:
+On 17.02.24 14:30, Greg KH wrote:
+> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
+>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
+>> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
+>> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
+>> even for root. This is not of above apps issue but of the kernel, I read
+>> similar issues from other bug reports of above apps. I downgraded to v6.6.10
+>> kernel and my 115W(under power)cap work again as before.
 > 
-> 	https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
-> 
-> As I mentioned in the cover letter, I am still seeing intermittent hard
-> resets around the time that the DRM subsystem is initialising, which
-> suggests that we may be dealing with two separate DRM regressions here
-> however.
-> 
-> If the hard resets are triggered by something like unclocked hardware,
-> perhaps that bit could this be related to the runtime PM rework?
+> Any chance you can use 'git bisect' to figure out the offending change?
 
-It seems my initial suspicion that at least some of these regressions
-were related to the runtime PM work was correct. The hard resets happens
-when the DP controller is runtime suspended after being probed:
+For the record and everyone that lands here: the cause is known now
+(it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
+value") [v6.7-rc1]) and the issue afaics tracked here:
 
-[   16.748475] bus: 'platform': __driver_probe_device: matched device ae00000.display-subsystem with driver msm-mdss
-[   16.759444] msm-mdss ae00000.display-subsystem: Adding to iommu group 21
-[   16.795226] bus: 'platform': __driver_probe_device: matched device ae01000.display-controller with driver msm_dpu
-[   16.807542] probe of ae01000.display-controller returned -517 after 3 usecs
-[   16.821552] bus: 'platform': __driver_probe_device: matched device ae90000.displayport-controller with driver msm-dp-display
-[   16.837749] probe of ae90000.displayport-controller returned -517 after 1 usecs
-[  OK  ] Listening on Load/Save RF Kill Swit[   16.854659] bus: 'platform': __dch Status /dev/rfkill Watch.
-[   16.868458] probe of ae98000.displayport-controller returned -517 after 2 usecs
-[   16.880012] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
-[   16.891856] probe of aea0000.displayport-controller returned -517 after 2 usecs
-[   16.903825] probe of ae00000.display-subsystem returned 0 after 144497 usecs
-[   16.911636] bus: 'platform': __driver_probe_device: matched device ae01000.display-controller with driver msm_dpu
-[   16.942092] probe of ae01000.display-controller returned 0 after 19593 usecs
-         Starting Load/Save Screen Backligh…rightness[   16.959146] bus: 'platform': _ of backlight:backlight...
-[   16.995355] msm-dp-display ae90000.displayport-controller: dp_display_probe - probe tail
-[   17.004032] probe of ae90000.displayport-controller returned 0 after 30225 usecs
-[   17.012308] bus: 'platform': __driver_probe_device: matched device ae98000.displayport-controller with driver msm-dp-display
-[   17.050193] msm-dp-display ae98000.displayport-controller: dp_display_probe - probe tail
-         Starting Network Name Resolution...
-[   17.058925] probe of ae98000.displayport-controller returned 0 after 34774 usecs
-[   17.074925] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
-[        Starting Network Time Synchronization...
-[   17.112000] msm-dp-display aea0000.displayport-controller: dp_display_probe - populate aux bus
-[   17.125208] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_resume
-         Starting Record System Boot/Shutdown in UTMP...
-         Starting Virtual Console Setup...
-[  OK  ] Finished Load/Save Screen Backlight Brightness of backlight:backlight.
-[   17.197909] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_suspend
-[   17.198079] probe of aea0Format: Log Type - Time(microsec) - Message - Optional Info
-Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
-S - QC_IMAGE_VERSION_STRING=BOOT.MXF.1.1-00470-MAKENA-1
-S - IMAGE_VARIANT_STRING=SocMakenaWP
-S - OEM_IMAGE_VERSION_STRING=crm-ubuntu92
+https://gitlab.freedesktop.org/drm/amd/-/issues/3183
 
-  < machine is reset by hypervisor >
+Other mentions:
+https://gitlab.freedesktop.org/drm/amd/-/issues/3137
+https://gitlab.freedesktop.org/drm/amd/-/issues/2992
 
-Presumably the reset happens when controller is being shut down while
-still being used by the EFI framebuffer.
+Haven't seen any statement from the amdgpu developers (now CCed) yet on
+this there (but might have missed something!). From what I can see I
+assume this will likely be somewhat tricky to handle, as a revert
+overall might be a bad idea here. We'll see I guess.
 
-In the cases where the machines survives boot, the controller is never
-suspended.
+Roman posted something that apparently was meant to go to the list, so
+let me put it here:
 
-When investigating this I've also seen intermittent:
+"""
+UPDATE: User fililip already posted patch, but it need to be merged,
+discussion is on gitlab link below.
 
-	[drm:dp_display_probe [msm]] *ERROR* device tree parsing failed
+(PS: I hope I am replying correctly to "all" now? - using original addr.)
 
-which also appears to be related to the runtime PM rework:
 
-	https://lore.kernel.org/lkml/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
+> it seems that commit was already found(see user's 'fililip' comment):
+>
+> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+> commit 1958946858a62b6b5392ed075aa219d199bcae39
+> Author: Ma Jun <Jun.Ma2@amd.com>
+> Date:   Thu Oct 12 09:33:45 2023 +0800
+>
+>     drm/amd/pm: Support for getting power1_cap_min value
+>
+>     Support for getting power1_cap_min value on smu13 and smu11.
+>     For other Asics, we still use 0 as the default value.
+>
+>     Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+>     Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+>     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>
+> However, this is not good as it remove under-powering range too far. I
+was getting only about 7% less performance but 90W(!) less consumption
+when set to my 115W before. Also I wonder if we as a OS of options and
+freedom have to stick to such very high reference for min values without
+ability to override them through some sys ctrls. Commit was done by amd
+guy and I wonder if because of maybe this post that I made few months
+ago(business strategy?):
+>
+>
+https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
+>
+> This is not a dangerous OC upwards where I can understand desire to
+protect HW, it is downward, having min cap at 190W when card pull on
+115W almost same speed is IMO crazy to deny. We don't talk about default
+or reference values here either, just a move to lower the range of
+options for whatever reason.
+>
+> I don't know how much power you guys have over them, but please
+consider either reverting this change, or give us an option to set
+min_cap through say /sys (right now param is readonly, even for root).
+>
+>
+> Thank you in advance for looking into this, with regards:  Romano
+"""
 
-I believe this is enough evidence to conclude that this second
-regression is introduced by commit 5814b8bf086a ("drm/msm/dp:
-incorporate pm_runtime framework into DP driver"):
+And while at it, let me add this issue to the tracking as well
 
-#regzbot introduced: 5814b8bf086a
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-Has anyone given some thought to how the framebuffer handover is
-supposed to work? It seems we're currently just relying on luck with
-timing.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Johan
+#regzbot introduced 1958946858a62b /
+#regzbot title drm: amdgpu: under-powering broke
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
