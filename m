@@ -1,135 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475B633CD5
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 12:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E57136AE5;
+	Mon, 19 Feb 2024 13:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708347393; cv=none; b=qeN72zhyicA8VZof8CiadjzqIc/CWaYgfVdilZs/gXYm53CwooKjNUi9ykYd3Vidf9ceMMYUcRtKpWpVSHOHj0c20YwLMHyNjH+incrYy+A15W4HTsy6bS9vk+t7WJMnCTFUQ1WtW3hshz8Q7uvr7ZcsQ6tCjmtob9kyepZI26Q=
+	t=1708349924; cv=none; b=ABcn01yEdFgNqRcWU04gF8p2u+aPEiCORAdKJwQ8JD3Es9cZrfA++qL4XmmyRZhtRBli4G3GGiu2ZShDo5eqTRO9tRWppqsfVm6K/j9+rQPSSU5AWK9KIz9PEiS7rG0ZYoT7MPwp2BjkAPGYHYcpLG3cytjzdtszeAduW7iw4qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708347393; c=relaxed/simple;
-	bh=tXciXTnzI0WBYuYcYl+Mfk/2akjit8SB45KAKre+59k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=shlIVgx44Htog/VNworCcZbO9IPNLkR+vBKY5waLuvv5CKCPV0qeaDCmZ3zP078iOtR5/9bF1Ef/EFhd40TliJB+qVpMg+JPu1fedv55vKyU88xdG0KDmV6WbDlc3C0V7aHy+DjTwSW/zMThyvhtFdir2IvwIpbr+yhCvKQ9UN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMAIdOGX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708349924; c=relaxed/simple;
+	bh=2y/R2rNrQF5YNdRb1X6YdN4UDCwnv5pqvMcfcKpihWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s6fCGpt4gOEwaC+tw1LLCvT9sdymmjt03/jiMQIoHjWaEAhKYp4ylEuR12PL0wGqbTsuUiGiC/Tz2ae3q3Sx9gREy6YB8Zl62xTSKIF7W42ShmHGCaIXrg0QO16gg2SPB7v2865S8MM4781vP68YQdYb6JKECYS/AGjlROe2ZKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKU4rhLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMAIdOGX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708347391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
-	b=UMAIdOGXzeq/mA6/RLWbJaw1FXGT05lS4rbfE0q0i6qeyb82sn31MkUo3VTaPz+mDsAwSP
-	rOicoVcJvjYj0zb+2KtUsSGQk+lROBZm6SamTTlatF1QuJ8pbbiGAkr0ZLYa+a/O7thugC
-	UhzutUvEBc2OpK2lmdy5b7sJ6RtZMcU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-Q2VTumZ1PkS9ZUAuQPqu6g-1; Mon, 19 Feb 2024 07:56:30 -0500
-X-MC-Unique: Q2VTumZ1PkS9ZUAuQPqu6g-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-55fee28d93dso1765464a12.2
-        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 04:56:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708347389; x=1708952189;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
-        b=t8WhdLcBnebf9u2iVkwRK/ZQ/+U2c8A97+mZfxbF2PRNMPxm6f9SdtarU4bgxnDtSl
-         9jt2CzftvVjBt+yNHbmrMOdGynaPw9lIzln3NFSoxmkHbjX/50AOFPgBUYF80ry6OokJ
-         zFy/qpRncx/49o+jfFqp0iLJZfbs1+knuG8BnZ7C08WuGQsDjG9yUbELVvBGtGDIYiIG
-         Kk+gXXFOOz1lUluT2cHqVw0Y5bEyZn2MTE8apJvTBM0FNe2745WuGLVrVLAhU6HbEjqt
-         UmYRtWOIWTDyy4vxHsxOkXdU2zw1727m12Ebhdrz3Vh9gM7YTrl5hwajT+ErmHP+S6cN
-         lxxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzHbCa9/gUNJgcVGY+V9xhq94K8MYU9rAZPOVfh11RDb4f/DtJaTq4LHNPiDljLbcWQnwIzx/7HcK+EL2N5e7wPIJM+dmWP4v4aMg=
-X-Gm-Message-State: AOJu0Yw2jYop0HOD6YvPEPnHXNLOfqIF+GukCqwGyFeIRN2MoxbcufEy
-	zc5FqbWwYswMFjVVwTX8Z+4cWqxlVSDUnnZqwthH4MvJDLutRy33iCvMatxTBh6+keWLMUgtvQu
-	9atqYf+xVKS+5uyWEQTwkVeXdnHvUcnCfhuw34v01CZ0pPEDzE4I144W8UZ9i
-X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171955edb.8.1708347388897;
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE+MVN2syDIWOe2FngB3b16L83fgJ+fflH9UzHroMpLNKXN0V7dQIAj5/MRnEBHa4w3lVT60w==
-X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171936edb.8.1708347388548;
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cs1-20020a0564020c4100b005617cebd051sm2684619edb.78.2024.02.19.04.56.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
-Message-ID: <753c02c9-267f-4b2d-b032-74dc9a03e751@redhat.com>
-Date: Mon, 19 Feb 2024 13:56:27 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKU4rhLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E31C433F1;
+	Mon, 19 Feb 2024 13:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708349924;
+	bh=2y/R2rNrQF5YNdRb1X6YdN4UDCwnv5pqvMcfcKpihWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RKU4rhLmXh2QGNfVOd1TLLlAWldlYF1g01lkeL+TNUl/NObJeGAgG8LAVZSK8Zt7l
+	 ySPSnhqT2Gi2bZ5Kz09RVV3tGh8l9vffvkg9q29/Ypd5SQF4fw63Hx7eh3sZhT4Zfa
+	 D6jeHwAt3rfOmYxtibweL82tniOlA9SX5g7Wtuxja01mcAzBbNATfB0mpLVp7IRw2u
+	 s8nNCVyHiDp8qiomruTzVpmtl8nQJjLOy6HBxahTsCeydfzpL2F6c4sTkbsj5+qmGg
+	 FtGX6AoSQRa4y+/hS/mnZvGo+91/BDSS5IEBoYAg0uAXgSWiLXszqzFpZyMt6eF5OF
+	 /sHe0ELFLhLqw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rc3qz-000000002NA-15HX;
+	Mon, 19 Feb 2024 14:38:41 +0100
+Date: Mon, 19 Feb 2024 14:38:41 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: drm/msm: Second DisplayPort regression in 6.8-rc1
+Message-ID: <ZdNZ4TiJn9-yKT5_@hovoldconsulting.com>
+References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+ <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+ <ZczFhVjHIm55JTfO@hovoldconsulting.com>
+ <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
+ <ZdMwZa98L23mu3u6@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Stop calling "VBDL" from
- notify_handler
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Alexander Kobel
- <a-kobel@a-kobel.de>, regressions@lists.linux.dev,
- Arnold Gozum <arngozum@gmail.com>
-References: <20240216203300.245826-1-hdegoede@redhat.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240216203300.245826-1-hdegoede@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdMwZa98L23mu3u6@hovoldconsulting.com>
 
-Hi,
+On Mon, Feb 19, 2024 at 11:41:41AM +0100, Johan Hovold wrote:
 
-On 2/16/24 21:33, Hans de Goede wrote:
-> Commit 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing
-> tablet-mode-switch events") causes 2 issues on the ThinkPad X1 Tablet Gen2:
+> It seems my initial suspicion that at least some of these regressions
+> were related to the runtime PM work was correct. The hard resets happens
+> when the DP controller is runtime suspended after being probed:
+ 
+> [   17.074925] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
+> [   17.112000] msm-dp-display aea0000.displayport-controller: dp_display_probe - populate aux bus
+> [   17.125208] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_resume
+> [   17.197909] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_suspend
+> [   17.198079] probe of aea0Format: Log Type - Time(microsec) - Message - Optional Info
+> Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+> S - QC_IMAGE_VERSION_STRING=BOOT.MXF.1.1-00470-MAKENA-1
+> S - IMAGE_VARIANT_STRING=SocMakenaWP
+> S - OEM_IMAGE_VERSION_STRING=crm-ubuntu92
 > 
-> 1. The ThinkPad will wake up immediately from suspend
-> 2. When put in tablet mode SW_TABLET_MODE reverts to 0 after about 1 second
+>   < machine is reset by hypervisor >
 > 
-> Both these issues are caused by the "VBDL" ACPI method call added
-> at the end of the notify_handler.
+> Presumably the reset happens when controller is being shut down while
+> still being used by the EFI framebuffer.
 > 
-> And it never became entirely clear if this call is even necessary to fix
-> the issue of missing tablet-mode-switch events on the Dell Inspiron 7352.
+> In the cases where the machines survives boot, the controller is never
+> suspended.
 > 
-> Drop the "VBDL" ACPI method call again to fix the 2 issues this is
-> causing on the ThinkPad X1 Tablet Gen2.
+> When investigating this I've also seen intermittent:
 > 
-> Fixes: 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing tablet-mode-switch events")
-> Reported-by: Alexander Kobel <a-kobel@a-kobel.de>
-> Closes: https://lore.kernel.org/platform-driver-x86/295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de/
-> Cc: regressions@lists.linux.dev
-> Cc: Arnold Gozum <arngozum@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 	[drm:dp_display_probe [msm]] *ERROR* device tree parsing failed
 
-I've added this to my review-hans (soon to be fixes) branch now.
+Note that there are further indications there may be more than one bug
+here too.
 
-Regards,
+I definitely see hard resets when dp_pm_runtime_suspend() is shutting
+down the eDP PHY, but there are occasional resets also if I instrument
+DP controller probe() to resume and then prevent the controller from
+suspending until after a timeout (e.g. to be used as a temporary
+workaround):
 
-Hans
+[   15.676495] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
+[   15.769392] msm-dp-display aea0000.displayport-controller: dp_display_probe - populate aux bus
+[   15.778808] msm-dp-display aea0000.displayport-controller: dp_display_probe - scheduling handover
+[   15.789931] probe of aea0000.displayport-controller returned 0 after 91121 usecs
+[   15.790460] bus: 'dp-aux': __driver_probe_device: matched device aux-aea0000.displayport-controller with driver panel-simple-dp-aux
+Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.MXF.1.1-00470-MAKENA-1
 
-> ---
->  drivers/platform/x86/intel/vbtn.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> index 210b0a81b7ec..084c355c86f5 100644
-> --- a/drivers/platform/x86/intel/vbtn.c
-> +++ b/drivers/platform/x86/intel/vbtn.c
-> @@ -200,9 +200,6 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
->  
->  	sparse_keymap_report_event(input_dev, event, val, autorelease);
-> -
-> -	/* Some devices need this to report further events */
-> -	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
->  }
->  
->  /*
+I'll wait for the maintainers and authors of this code to comment, but
+it seems the runtime PM work is broken in multiple ways.
 
+Johan
