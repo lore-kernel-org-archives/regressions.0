@@ -1,193 +1,142 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A90F24B47
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F3D2C6AD
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708342537; cv=none; b=CkzOMkOd7zWdQX5lYOu1OwvPrH8ht3XaBgb4N6mPAvH/ZGzaM0vRGEqOux10C6iKmJboEpgecgH2t28eVd7Y1ID/M8X5xf/1/TKT76vjqjwjk5V4HGq2MjqaGafaax3Ndze+CDV7AICXnF/+mdx2RWDeA6BsVIWpdEC7KZyTycc=
+	t=1708342875; cv=none; b=m6WmsEr1u8hd5dap8tndPSdDQHDpoBS+/ChpMH2kIjNoKomhVLmlTvjcCcIP42OeOX4Cgl1bbxvtmvTdQbiUxXx/aNJdn/knIvxCv9WLvKeUBGyhCUsN1Yb7XYGgoF9Gfv4Lyh8oh/neIkxDW84oICQSgGAmLgDfDT1POA5B6mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708342537; c=relaxed/simple;
-	bh=xmqPjVzYpogRAijd8pYRZRipn0W2NEyFnUi5nFHDuT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c10c05zK7sVecA2S+/Lm7r5I1gSLX7CtagsfERcN8A3OgzxjONaBFje5E06MHRLJs90aoSbrPYKVGJJfvF7ZezkvNeAz3jk8sA1TPrvuo+ZPUT8YfGUFuB1zkqvyWFz8smvySNVaCAjOLkS6iUjou4MmUxkl7IsXioQGSl3Jth8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/nD/fD4; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708342875; c=relaxed/simple;
+	bh=y1rKN4wN4lgtcvFaxZae1zsrB/QMGO6MiKKT9GWoOEg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e6ObsVN6P5sORVHHP01AW1Oh14bhLvxszRyFxg1czzYcO6XK00YjTtkeRx+T2duby0vq1a2GWvOnodriVac9+yuz+ibCn/9RjNh+LLR49thLg9fJBBYHkr4jHLoC8hAH+OEKioWJuU46tUR3bViuhhFYrg6uG3Hna/U8Zk72pV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=EVSjV06I; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gooddata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/nD/fD4"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512a65cd2c7so1908130e87.0
-        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 03:35:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="EVSjV06I"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so573601666b.2
+        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 03:41:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708342534; x=1708947334; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fp0CljdJHSwjfF5ZNUmuD0dU70AWZ9zUOAjyO5xBNe4=;
-        b=f/nD/fD4jsAYgmKBoZ/xb6XV836JfjyBZx9NYhPvmXQapEdNHDFfWHyjzgBzdTxOz6
-         gMNirDWmaQKNpoh2SlOPu4rMIgyNno2fBNT4Whl1oPQ5G6ywCrnjaAmpKFAPn/ASxkrS
-         n6VZ0CyjggnwOf+XPBhK/KHlz+8+lANdzFtQnjco0E0vyN043u9YNgSBdMXMvhaTPoWe
-         Y8f/k370r5mL4Nt175veOUgA4lkDWfZ6vy2gPDPlUEsoCKiIh9YoYEGtk5PwlrlOkuM8
-         OF9m8c6MrCqA8m5wvO2sOYvr31pSkGbGk2v/vXJUUvzdADmFE6ZjpJY+rgTQqem01xbo
-         ZxzQ==
+        d=gooddata.com; s=google; t=1708342871; x=1708947671; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y1rKN4wN4lgtcvFaxZae1zsrB/QMGO6MiKKT9GWoOEg=;
+        b=EVSjV06Irx29zTawZNnuPrQm6r3xNI7pu4LdX4csetC6In+zewaNtmiXQARSIADdky
+         CMAVTGT9JShw4nbJRge2eoTQs1NP/Nmg844HKL6H5/YZjlGSK3ut9YQF7xo8XwB1h0tH
+         gRcp2eze9l5zpuCBj7y7zt5kZiByShehDH0Is=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708342534; x=1708947334;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fp0CljdJHSwjfF5ZNUmuD0dU70AWZ9zUOAjyO5xBNe4=;
-        b=S/U35hAg6GG6flaf7l54upLjcXOdibn4Y2wapKctYK7mXGOQ0Ychyq1kKbIO9+4sOO
-         ytJt/xxK6Eh8K2eMuxJW/az9wcskOgogl0nAo3rXeOCu0nRxzO2qC7ZDD7itUSxZoiEV
-         tnvHRW6D8qOH/m4TabS0RXtXMhY220MQUPFBV0wQ0DzAby/bJeyfohmp7OgMW10jZ2T7
-         8dJwPwwXRf9QL1Jt8JyW27mve/4ZriMku9LQRKrrqlZlRN2Vm9TqV9EU7AIjsZhVYFBc
-         mFOWhZyv4NAciJ/LV8YehtIwJkIu27IuduMe16bfpCVE6eMP+7BgNrCaqyOBiTudT630
-         dy2g==
-X-Gm-Message-State: AOJu0YwibvxzeL2iNJsYPIZVivSLxWUsEXD4fU9mwk74m1GkYbBqqv2+
-	OohNX56RqONjDDK7LLcxRLc2GJGYszIdD5l8Lak6EWvzSgAkf0QkMiWg2iAfEF4=
-X-Google-Smtp-Source: AGHT+IGfyk1oGv6vKjSp6w6XW7c0CC4S9n/+WgaeOfiW2DLN0CbfpnIgrZVk+qQe23FJKdbg1HFndQ==
-X-Received: by 2002:a05:6512:358a:b0:512:b702:a794 with SMTP id m10-20020a056512358a00b00512b702a794mr963508lfr.17.1708342533352;
-        Mon, 19 Feb 2024 03:35:33 -0800 (PST)
-Received: from [10.0.2.1] (server.riadoklan.sk.eu.org. [195.3.170.77])
-        by smtp.gmail.com with ESMTPSA id d21-20020aa7d695000000b00560e72d22b8sm2589324edr.2.2024.02.19.03.35.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 03:35:32 -0800 (PST)
-Message-ID: <8857ad7c-c42a-435c-a74f-ecd6d77dbfa5@gmail.com>
-Date: Mon, 19 Feb 2024 12:35:31 +0100
+        d=1e100.net; s=20230601; t=1708342871; x=1708947671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y1rKN4wN4lgtcvFaxZae1zsrB/QMGO6MiKKT9GWoOEg=;
+        b=Q5WFAl8y4LSKTFPu6BOcdj5+ktBintEHUC58BNxgtxxSl4blKy8HL5GH813+hHVJvP
+         eywedXqeK/C5wZ0xN5mw1DmWk19PYQuGvPx7cpsQpAtkIx7ruyuA4XoeFbovJwx9Db5D
+         O9SS2finT13Z1j3qsJ9vFwhEKCiFkvyIBxzu5Clj/rfpNcY71ulBIae89mQNg3BJXDlc
+         5qkOZSbYfyalbucGOJDHj4DXFiLLuZrCgUlTLRH1mVJtOCIXY656Wq5cm9Bx+MXAbLtS
+         4+IXlcJBGv66M8ac7GfXYbaJaa4yxO7WQOdSa/hCwcRXjnvREsu0crJ4IaaKqgtSUQVu
+         khOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOQQIZ+nE2MZHw+8ZD8lbZ3Sr15qYBcPyH4jGRxSMXJvVjrAerXkuQCwnboILRie69QwspikK4CMQyAJoFJ5IaVEFrrBg/+FBX+Ws=
+X-Gm-Message-State: AOJu0Yxprw7/FxxFbMV1pB9Wj35A8cIq+Kho4SgKPIpZzVSqTsaxT0GR
+	g0HKSHlCiglIsjiSua4//pR6hQNPECXSWz7xwJZ0Izj2f2rlPt0JRDKaJcqDjI4X4c1r5liT6Lu
+	Na/LEpfAvFjELmW/ikjvQ+ycG+ytcBjZG+QjY
+X-Google-Smtp-Source: AGHT+IFkzKLnByBb5OojiCyRc2n/pce5NbSG4IiLldK1gOdgrydITw+b165jPIZbct5ZgG9j3PeK7Lrs24w2rFGV7xQ=
+X-Received: by 2002:a17:906:b316:b0:a3e:6036:3e45 with SMTP id
+ n22-20020a170906b31600b00a3e60363e45mr2322845ejz.30.1708342871514; Mon, 19
+ Feb 2024 03:41:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
- mesa/amdgpu)
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc: Ma Jun <Jun.Ma2@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
- <2024021732-framing-tactful-833d@gregkh>
- <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
-From: Romano <romaniox@gmail.com>
-In-Reply-To: <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+ <bce78734-d359-499b-9693-05549e6a73a4@intel.com> <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+ <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info> <20240201065726.50a0b1f2@kernel.org>
+ <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com> <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
+In-Reply-To: <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
+From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Date: Mon, 19 Feb 2024 12:40:45 +0100
+Message-ID: <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
+ >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
+ and continuous swapping
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Jakub Kicinski <kuba@kernel.org>, Jesse Brandeburg <jesse.brandeburg@intel.com>, 
+	Dave Ertman <david.m.ertman@intel.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Igor Raits <igor@gooddata.com>, Daniel Secik <daniel.secik@gooddata.com>, 
+	intel-wired-lan@lists.osuosl.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello everyone,
+If the question is for me then my opinion about it is this:
 
-patch by user @fililip was posted there, but not submitted:
+I'm fine with the behaviour of a driver about memory consumption if it
+is predictable/described with the possibility to change it from
+default values. My understanding of "predictable" is something like
+this:
 
-"I think I'd have to submit it to the linux kernel mailing list, which I 
-am kinda scared of 😅. It could be better to submit that patch to Arch 
-Linux maintainers; they could include it in their kernel builds."
+The ICE driver is going to
+* Setup 64 queues per each port, not active included.
+* Each queue consumes "xxxx MB" amount of kernel memory per each numa node.
+example: Two 2 ports Intel NICs using ICE driver will consume ~6GB of
+RAM of each NUMA node, please consider changing the defaults values to
+avoid OOM :-).
 
-Implementation of this patch can be simplified by simply setting:
-
-smu->min_power_limit = amdgpu_ignore_min_pcap ? 0 : whatever_default_smuxx;
-
-and then leave rest of the code unchanged(except defining 
-amdgpu_ignore_min_pcap variable of course). Nothing tricky nor need to 
-revert anything should be needed I hope. Please add it to the general 
-kernel as an option, it certainly should not be related to Archlinux only.
-
-Roman
-
-
-
-On 2/19/24 12:15, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 17.02.24 14:30, Greg KH wrote:
->> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
->>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
->>> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
->>> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
->>> even for root. This is not of above apps issue but of the kernel, I read
->>> similar issues from other bug reports of above apps. I downgraded to v6.6.10
->>> kernel and my 115W(under power)cap work again as before.
->> Any chance you can use 'git bisect' to figure out the offending change?
-> For the record and everyone that lands here: the cause is known now
-> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
-> value") [v6.7-rc1]) and the issue afaics tracked here:
+po 19. 2. 2024 v 12:29 odes=C3=ADlatel Thorsten Leemhuis
+<regressions@leemhuis.info> napsal:
 >
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+> On 01.02.24 18:19, Jaroslav Pulchart wrote:
+> >>
+> >> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
+> >> Leemhuis) wrote:
+> >>>>> I think that's a bad bisect. There is no reason I could understand =
+for
+> >>>>> that change to cause a continuous or large leak, it really doesn't =
+make
+> >>>>> any sense. Reverting it consistently helps? You're not just rewindi=
+ng
+> >>>>> the tree back to that point, right? just running 6.6.9 without that
+> >>>>> patch? (sorry for being pedantic, just trying to be certain)
+> >>>>
+> >>>> Reverting just the single bisected commit continuously helps for >=
+=3D
+> >>>> 6.6.9 and as well for current 6.7.
+> >>>> We cannot use any new linux kernel without reverting it due to this
+> >>>> extra memory utilization.
+> >>>
+> >>> Quick query: what's the status wrt to this regression? Looks like
+> >>> nothing happened in the past week.
+> >>
+> >> Is someone working on this? Indeed the commit in question looks
+> >> harmless but can't argue with the revert helping :S
+> >
+> > No clue if someone is working on it,
 >
-> Other mentions:
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3137
-> https://gitlab.freedesktop.org/drm/amd/-/issues/2992
+> Yeah, a quick public status update would be really helpful. And maybe
+> some debugging tips that might enable Jaroslav to pinpoint the real
+> problem.
 >
-> Haven't seen any statement from the amdgpu developers (now CCed) yet on
-> this there (but might have missed something!). From what I can see I
-> assume this will likely be somewhat tricky to handle, as a revert
-> overall might be a bad idea here. We'll see I guess.
+> > however the commit itself is a
+> > trigger of some other issue.
+> >
+> > The analysis of my colleague Igor (see previous email) shows the
+> > memory consumption is caused by queues of each ice network interface
+> > (even the unused ones). Our final fix was to lower the queues to 6 for
+> > used interfaces and 2 of unused interfaces manually.
 >
-> Roman posted something that apparently was meant to go to the list, so
-> let me put it here:
->
-> """
-> UPDATE: User fililip already posted patch, but it need to be merged,
-> discussion is on gitlab link below.
->
-> (PS: I hope I am replying correctly to "all" now? - using original addr.)
->
->
->> it seems that commit was already found(see user's 'fililip' comment):
->>
->> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
->> commit 1958946858a62b6b5392ed075aa219d199bcae39
->> Author: Ma Jun <Jun.Ma2@amd.com>
->> Date:   Thu Oct 12 09:33:45 2023 +0800
->>
->>      drm/amd/pm: Support for getting power1_cap_min value
->>
->>      Support for getting power1_cap_min value on smu13 and smu11.
->>      For other Asics, we still use 0 as the default value.
->>
->>      Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
->>      Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
->>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>
->> However, this is not good as it remove under-powering range too far. I
-> was getting only about 7% less performance but 90W(!) less consumption
-> when set to my 115W before. Also I wonder if we as a OS of options and
-> freedom have to stick to such very high reference for min values without
-> ability to override them through some sys ctrls. Commit was done by amd
-> guy and I wonder if because of maybe this post that I made few months
-> ago(business strategy?):
->>
-> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
->> This is not a dangerous OC upwards where I can understand desire to
-> protect HW, it is downward, having min cap at 190W when card pull on
-> 115W almost same speed is IMO crazy to deny. We don't talk about default
-> or reference values here either, just a move to lower the range of
-> options for whatever reason.
->> I don't know how much power you guys have over them, but please
-> consider either reverting this change, or give us an option to set
-> min_cap through say /sys (right now param is readonly, even for root).
->>
->> Thank you in advance for looking into this, with regards:  Romano
-> """
->
-> And while at it, let me add this issue to the tracking as well
->
-> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> regressions; the text you find below is based on a few templates
-> paragraphs you might have encountered already in similar form.
-> See link in footer if these mails annoy you.]
->
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
->
-> #regzbot introduced 1958946858a62b /
-> #regzbot title drm: amdgpu: under-powering broke
+> Despite the above allow me to ask: Can you live with that workaround?
+> Ideally of course this should be fixed, but well, the world sometimes is
+> a tricky place. :-/
 >
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
 > Everything you wanna know about Linux kernel regression tracking:
 > https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
