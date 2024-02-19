@@ -1,234 +1,116 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AAC290F;
-	Sun, 18 Feb 2024 16:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C211865;
+	Mon, 19 Feb 2024 02:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708273426; cv=none; b=c54odezsbE7qzIEF9flf2GoifCbXdi54K4p5czqn0yq3ExMaFthjroR7uvw8gZkGaPO7b676QMpGhXk5spZgAvAqb8jkjksJyGAEL27OX8RUH6UrS7fr5X032d6n4iZ3OAIXeczG0BCYFjeB3ZisE/3hdXOl82x0CFlo5UxpBR4=
+	t=1708310119; cv=none; b=pEi+77dSa1001qyl7mr5zkTwUSasUrZIz8QHTq6951vwt1EuhFSX5zkquR7ahKBzRvjKTnJgbga/UIhHlXfuVEiHivrnvouHxFToycztkuyC4AG0NqZj54nU2kBAeklnUNuXcxGZRO6BbOZO8Z4qkK9VG2AVFyFUTXTbUZiFJxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708273426; c=relaxed/simple;
-	bh=/sSFkLOO86XrSdI5vVzZm2lNzngGV+Xm6AlJYHLgqog=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rOJbMh8RwySQfn7Q136jaEmg5m5q4YwpNFN8BcXWnElueMSS0IJUr8mzNVSBeXgoeio9y1Yruvf+EdKMdkKHBZ3HzQNTjAXgRxZkI1CaNBR5E1EIYPXdDo54/VaqeO4WykE2kgIM6yFyu82B/NVfoSzwQPAiGKdLlSHOPvIvJP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rbjx7-0006W2-Vf; Sun, 18 Feb 2024 17:23:42 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-02-18]
-Date: Sun, 18 Feb 2024 16:23:41 +0000
-Message-Id: <170827338885.977320.16936376590840962619@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1708310119; c=relaxed/simple;
+	bh=7vOsgnul1GxbRF0500oTwAAKvmXKzp4WUWTaSsUsX/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NM1M06IE/gqOoIDtgkaTo9HmAymsDxgVrEE4AVEPFNZPPrHFCZt3vKWR3WbrxTpFXu+tjHcvexGk4v2Vkf1KMYRy1RwA18OQWwCIxCh1ZXuyzy/7ofIx6iiLC9ZzPOTp/2wh9TFFXFg9X5pZpm11GtoxrN70EXAkEPO22YPDp3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ick1dCly; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ick1dCly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2962C433F1;
+	Mon, 19 Feb 2024 02:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708310118;
+	bh=7vOsgnul1GxbRF0500oTwAAKvmXKzp4WUWTaSsUsX/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ick1dClyqIco0cQcwmp2zXklGRJkUPdQ97kzOUHpc922pxfPbZkj5TQ9x8Sbetr1L
+	 dDAPm/j05sE89tZm59u5YAhad90hTb1aUnXwbQbzDz4+VhhIPwSFmWXhFVsSVc+0ul
+	 HPVAv1/kicGlE8bd1ydxSYHQn3sifhXsVHrn4UkJQj0KTBLnc3s8LKtl9hASIa9kv0
+	 T6mMtz34xwwp4gnQCP47pW5sieNrMbzMiPzJINsJl2aXgl0uxCG1UE8O3ggHeCP0RH
+	 3GEG4NG9/22PQ/gyUMxhGJOZRqsw72Jp2s2KaLA441uDoMhlq0g1wFlipahErJ+/EI
+	 OXo+v7/LByz6Q==
+Message-ID: <6d14ea70-ac1c-46f2-af1d-ba34ea0165aa@kernel.org>
+Date: Mon, 19 Feb 2024 10:35:13 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708273424;515acaf0;
-X-HE-SMSGID: 1rbjx7-0006W2-Vf
-
-Hi Linus, from the regressions point of view it's business as usual and
-nothing to worry about afaics.
-
-There is a small fix for a fs/9p regression is sitting in a vfs.netfs
-branch for 18 days now; I had expected that it would finally make it to
-you this week, but that did not happen; will poke Al and Christian tomorrow:
-https://lore.kernel.org/v9fs/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=ca9ca1a5d5a980550db1001ea825f9fdfa550b83
-
-There is also one regression from this cycle that looks somewhat
-stalled, but Hans promised to look into it soon:
-https://lore.kernel.org/lkml/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 9 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.7.. aka v6.8-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
----------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
-https://lore.kernel.org/regressions/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
-
-By Leonard Lausen; 0 days ago; 4 activities, latest 0 days ago.
-Introduced in 8814455a0e54 (v6.8-rc1)
-
-Recent activities from: Dmitry Baryshkov (2), Leonard Lausen (2)
-
-One patch associated with this regression:
-* Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
-  https://lore.kernel.org/regressions/cf95947d-8bec-4f95-9e08-2d942723cafc@linaro.org/
-  0 days ago, by Dmitry Baryshkov
-
-
-[ *NEW* ] platform/x86/amd/pmf: system freezes after resuming from suspend
---------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
-https://lore.kernel.org/stable/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
-
-By Trolli Schmittlauch; 2 days ago; 13 activities, latest 0 days ago.
-Introduced in 7c45534afa44 (v6.8-rc1)
-
-Recent activities from: Trolli Schmittlauch (6), Mario Limonciello (4),
-  Hans de Goede (2), Thorsten Leemhuis (1)
-
-Noteworthy links:
-* [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
-  https://lore.kernel.org/lkml/20240217005216.113408-1-mario.limonciello@amd.com/
-  1 days ago, by Mario Limonciello; thread monitored.
-
-
-usb: typec: boot issues on rk3399-roc-pc due to revert
-------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
-https://lore.kernel.org/lkml/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
-
-By Mark Brown; 9 days ago; 7 activities, latest 1 days ago.
-Introduced in b717dfbf73e8 (v6.8-rc3)
-
-Fix incoming:
-* usb: typec: tpcm: Fix issues with power being removed during reset
-  https://lore.kernel.org/lkml/8e7f9d37-ab18-419f-9641-287412a5cb4a@leemhuis.info/
-
-
-[ *NEW* ] drm/msm: DisplayPort regressions in 6.8-rc1
------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-
-By Johan Hovold; 5 days ago; 7 activities, latest 1 days ago.
-Introduced in 2bcca96abfbf (v6.8-rc1)
-
-Recent activities from: Johan Hovold (5), Linux regression tracking
-  (Thorsten Leemhuis) (1), Abhinav Kumar (1)
-
-
-[ *NEW* ] sched/cpufreq: reduced maximum CPU frequency is ignored.
-------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/002f01da5ba0$49cbf810$dd63e830$@telus.net/
-https://lore.kernel.org/lkml/002f01da5ba0%2449cbf810%24dd63e830%24@telus.net/
-
-By Doug Smythies; 8 days ago; 10 activities, latest 2 days ago.
-Introduced in 9c0b4bb7f630 (v6.8-rc1)
-
-Recent activities from: Vincent Guittot (4), Doug Smythies (3)
-
-One patch associated with this regression:
-* RE: sched/cpufreq: Rework schedutil governor performance estimation - Regression bisected
-  https://lore.kernel.org/lkml/003001da6061%24bbad1e30%2433075a90%24@telus.net/
-  2 days ago, by Doug Smythies
-
-
-[ *NEW* ] MXSFB error: -ENODEV: Cannot connect bridge
------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
-https://lore.kernel.org/lkml/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
-https://lore.kernel.org/regressions/20240214110822.GA81133@francesco-nb/
-
-By Hiago De Franco and Francesco Dolcini; 10 days ago; 5 activities, latest 2 days ago.
-Introduced in edbbae7fba49 (v6.8-rc1)
-
-Recent activities from: Francesco Dolcini (3), Roland Hieber (1)
-
-One patch associated with this regression:
-* Re: MXSFB error: -ENODEV: Cannot connect bridge
-  https://lore.kernel.org/lkml/20240214105223.GA78582@francesco-nb/
-  4 days ago, by Francesco Dolcini
-
-Noteworthy links:
-* [PATCH v1] ARM: dts: imx7: remove DSI port endpoints
-  https://lore.kernel.org/lkml/20240216104255.21052-1-francesco@dolcini.it/
-  2 days ago, by Francesco Dolcini; thread monitored.
-
-
-Regression by b17ef04bf3a4 ("drm/amd/display: Pass pwrseq inst for backlight and ABM")
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZbUB0YWxEET3Y0xA@eldamar.lan/
-https://lore.kernel.org/lkml/ZbUB0YWxEET3Y0xA@eldamar.lan/
-
-By Salvatore Bonaccorso; 22 days ago; 5 activities, latest 3 days ago.
-Introduced in b17ef04bf3a4 (v6.8-rc1)
-
-Fix incoming:
-* drm/amd/display: Only allow dig mapping to pwrseq in new asic
-  https://lore.kernel.org/lkml/e65c6dc4-9b43-4c97-bb4c-d9c14655835d@leemhuis.info/
-
-
-`lis3lv02d_i2c_suspend()` causes `unbalanced disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
----------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-https://lore.kernel.org/lkml/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-
-By Paul Menzel; 16 days ago; 4 activities, latest 4 days ago.
-Introduced in 2f189493ae32 (v6.8-rc1)
-
-Recent activities from: Hans de Goede (1), Linux regression tracking
-  (Thorsten Leemhuis) (1)
-
-
-fs/9p: "netfs: Zero-sized write" failures during ldconfig test
---------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
-https://lore.kernel.org/v9fs/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
-
-By Eric Van Hensbergen; 22 days ago; 7 activities, latest 17 days ago.
-Introduced in 153a9961b551 (v6.8-rc1)
-
-Fix incoming:
-* netfs: Fix missing zero-length check in unbuffered write
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=ca9ca1a5d5a980550db1001ea825f9fdfa550b83
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170764569476.480163.4912590939283332268@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression 6.1.y] f2fs: invalid zstd compress level: 6
+To: Salvatore Bonaccorso <carnil@debian.org>, Dhya <dhya@picorealm.net>,
+ 1063422@bugs.debian.org, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+References: <170736382774.1975.1861975122613668970.reportbug@tsuga.picorealm.net>
+ <ZcU3VCrt9VOpuFUq@eldamar.lan>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZcU3VCrt9VOpuFUq@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 2024/2/9 4:19, Salvatore Bonaccorso wrote:
+> Hi Jaegeuk Kim, Chao Yu,
+> 
+> In Debian the following regression was reported after a Dhya updated
+> to 6.1.76:
+> 
+> On Wed, Feb 07, 2024 at 10:43:47PM -0500, Dhya wrote:
+>> Package: src:linux
+>> Version: 6.1.76-1
+>> Severity: critical
+>> Justification: breaks the whole system
+>>
+>> Dear Maintainer,
+>>
+>> After upgrade to linux-image-6.1.0-18-amd64 6.1.76-1 F2FS filesystem
+>> fails to mount rw.  Message in the boot journal:
+>>
+>>    kernel: F2FS-fs (nvme0n1p6): invalid zstd compress level: 6
+>>
+>> There was recently an f2fs patch to the 6.1 kernel tree which might be
+>> related: https://www.spinics.net/lists/stable-commits/msg329957.html
+>>
+>> Was able to recover the system by doing:
+>>
+>> sudo mount -o remount,rw,relatime,lazytime,background_gc=on,discard,no_heap,user_xattr,inline_xattr,acl,inline_data,inline_dentry,extent_cache,mode=adaptive,active_logs=6,alloc_mode=default,checkpoint_merge,fsync_mode=posix,compress_algorithm=lz4,compress_log_size=2,compress_mode=fs,atgc,discard_unit=block,memory=normal /dev/nvme0n1p6 /
+>>
+>> under the running bad 6.1.0-18-amd64 kernel, then editing
+>> /etc/default/grub:
+>>
+>>    GRUB_DEFAULT="Advanced options for Debian GNU/Linux>Debian GNU/Linux, with Linux 6.1.0-17-amd64"
+>>
+>> and running 'update-grub' and rebooting to boot the 6.1.0-17-amd64
+>> kernel.
+> 
+> The issue is easily reproducible by:
+> 
+> # dd if=/dev/zero of=test.img count=100 bs=1M
+> # mkfs.f2fs -f -O compression,extra_attr ./test.img
+> # mount -t f2fs -o compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime ./test.img /mnt
+> 
+> resulting in
+> 
+> [   60.789982] F2FS-fs (loop0): invalid zstd compress level: 6
+
+Hi Salvatore,
+
+Can you please try below fixes:
+
+[PATCH 6.1] f2fs: add helper to check compression level
+https://lore.kernel.org/linux-f2fs-devel/20240212160530.1017205-1-chao@kernel.org
+
+[PATCH] f2fs: compress: fix to check zstd compress level correctly in mount option
+https://lore.kernel.org/linux-f2fs-devel/20240212160818.1020903-1-chao@kernel.org
+
+Thanks,
+
+> 
+> A bugzilla report has been submitted in
+> https://bugzilla.kernel.org/show_bug.cgi?id=218471
+> 
+> #regzbot introduced: v6.1.69..v6.1.76
+> #regzbot link: https://bugs.debian.org/1063422
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218471
+> 
+> Regards,
+> Salvatore
