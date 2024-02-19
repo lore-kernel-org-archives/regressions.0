@@ -1,82 +1,83 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7337355E46
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 22:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B6E53E2B
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 22:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708380446; cv=none; b=k3EnC5z+0nhCry2v7Djt7ysLJirIW0PGOeqk3GCHp28nJH3KwTi4f9+NNDSVVeN+pRPrOwbEcnZyumX5Rodn7mKJ/6zG/62nLviDOrrcxJ04Gbik05kk2iwdCbuzSFLTLAYLQgeZ8tKb+TwMUz9w8Ikma6TvHv5zQzZ37psqWAY=
+	t=1708380774; cv=none; b=dr0A3MaVGYf2RJAYkaigCFU/9MxrtXUEr89oftzkJTLtdKJa8LzOSFSokdE/xEhWNM5oearMUBbLo80Ddpz31iq40Vt6MiXLHAmew+P7Nx5FRXrZ2wkMije/Btbpb3T13MqF6iUR2ujXimTQFIESJyA5nBaHhYWmlnVIF0vtw+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708380446; c=relaxed/simple;
-	bh=vPx+i4YZu6acCeEWwBUL2nNSMhYkEmcB/Msn/Zpo4bs=;
+	s=arc-20240116; t=1708380774; c=relaxed/simple;
+	bh=MprGuCqzth6nJ+bm3v2om+NnHH0gsp5Q48D1qQdrV8I=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YaddbvOV4X9b4aeQDRtO6MIExVHT8Kk2w90WjV0HQebypk3LIysj9I0vPrhVcu3lLZ0p8gnknISz7SKHii+8kRKFZ0cHvyw3nsW8SAvm4RYmw+Eygl+IGvYR063XXHttXFN9J0kTpLMwWGzyW1BvyjIxkuGWWLdLyAuC5W+naJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=flDMcufA; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version:Content-Type; b=Y3W+c6miG/vHWLbcwLdNnSkGssg6Lcd5JGw8qGrzfBDssFZ1hEV0eouIc9ePbzE8QLPcAZosOzUjMmuXagCFAERJXG/fZiXuqXCPAaR2cb6aqyc0FdejbCindk+i4Lrz7srvffWmoXj9LE0333oDKg7xsPVpjdTyORtwVN+bQIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=JWTL3GIg; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="flDMcufA"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9727A47A99
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="JWTL3GIg"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BBBE247A99
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1708380444; bh=WQNrF1tBn1L+1P+pwGgLFmtvTUbb66/8AuK0cY3LefU=;
+	t=1708380772; bh=Qd0BQ3n6gkIeJuHHuKpFJNVK61hbHPyFzkqZDXaQUCc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=flDMcufAUFMoNKNheRkxzhUKkvLtaagrWXIjvfHPJlFflZlZV4YiJnP0GU9ulLl6i
-	 PKpj9STlaVHFdBE2b97fNkYkj9QegKbXsoLqvZIwzn0LGzfEZOEdJFCl2n5r68lLMT
-	 frWcxVnpkk+vu5COq3bCXOizDPxbPZ0LAmocUuJAvcIlYMaJJQatKc1E7QHbOdv4U4
-	 frCZIYxR4RrOMDsNL4x+OttX/VI25PzbVBDh1bQr/yKcOEegHLUUVvRnGcmt5TRs+A
-	 d7d2k5y62oGjGDbdGNCgAyqXC8dgEcvFa4LjjtWpHUI0Fa9W8Pl4laYkFwugCW60Wc
-	 r6hPyiVxsGjNQ==
+	b=JWTL3GIgUu00nWJ7QqjWuPjSfIECMiZAVqAjb2jqlxfNl7FzB3tONbcrxg/5F37wh
+	 /7AAa0fAEYIAnbNJoikxGU2BT88mppF5zJL0rmQLTmW0xv1F25NGqHt1avfewFhhe2
+	 8Y7CZJT+a0yd9QPAUvqOgawIO8enEPNvQarRL+sOZn0S+CJJX8Tkr4caw4d9kPguqR
+	 SGm+prdBQYuTd9T/mKPi+D9MoBl192Xww+tbZ2ltLsVhooGC44aFUN6s1dxK11bp+T
+	 eQjY0k+I8awPmSCisFgBLUHFKDui4HOD+fijC6u3XE8RWIxMA55DJcqPECqok9+vEw
+	 YlViVCDY9vEJQ==
 Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 9727A47A99;
-	Mon, 19 Feb 2024 22:07:24 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id BBBE247A99;
+	Mon, 19 Feb 2024 22:12:52 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Petr =?utf-8?B?VGVzYcWZw61r?=
+ <petr@tesarici.cz>
 Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Nathan
  Chancellor <nathan@kernel.org>
 Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
  validation
-In-Reply-To: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
+In-Reply-To: <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
 References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
-Date: Mon, 19 Feb 2024 15:07:23 -0700
-Message-ID: <87edd8m7l0.fsf@meer.lwn.net>
+ <20240216204140.2ecbceec@meshulam.tesarici.cz>
+ <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
+Date: Mon, 19 Feb 2024 15:12:52 -0700
+Message-ID: <87a5nwm7bv.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-> Replace the existing brief explanation on bisecting regressions with a
-> text describing the whole process from beginning to end -- while also
-> describing how to validate if a problem is still present in mainline.
-> This "two in one" approach is possible, as checking whenever a bug is in
-> mainline is one of the first steps before performing a bisection anyway
-> and thus described. Due to this approach the text also works quite
-> nicely in conjunction with
-> Documentation/admin-guide/reporting-issues.rst, as it covers all typical
-> cases where users will need to build a kernel in exactly the same order.
+> On 16.02.24 20:41, Petr Tesa=C5=99=C3=ADk wrote:
+>> Is this because you want to keep it readable if the target audience
+>> reads the source text of the documentation? Otherwise, the .. include
+>> directive does not make a difference after rendering to HTML. AFAIK.
+>
+> It less that I want that, it's more that I got the impression that both
+> Jonathan and most of the kernel development community wants the source
+> text to be readable; not totally sure, but I think that's the right
+> thing to do, too.
 
-I have scanned over this; don't really have a time to do a detailed
-reading at this point.  My overall impression is: it's useful
-information, but I think we're going to overwhelm people.  I worry that
-we're replacing a one-page file on how to do a bisect with a 1,900-line
-beast.  I suspect there are whole classes of readers who want the new
-stuff, but there are others who would be better served by something much
-more terse.
+As a general rule, yes.  To harp on this one more time, I do think we
+could create sections of the manual (a "tutorials" book, say) with a
+different set of priorities.
 
-I'll repeat a question I've asked before: should we create a separate
-"tutorials" book for this kind of material?  I honestly think that the
-readers for this kind of documentation will be a different crowd, and
-everybody might be better off if we put the tutorial material in one
-place where they can find it easily.
+In the documentation session at the last kernel summit, I got some
+pretty clear feedback that plain-text readability could be made
+secondary to getting the best rendered output, at least in some cases.
+Tutorials seems like a good example of such a case, where we could focus
+on good web output without, as you say, creating potential maintenance
+troubles going forward.
 
-Regardless, thanks for doing this,
+Thanks,
 
 jon
