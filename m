@@ -1,44 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7412B383A1;
-	Mon, 19 Feb 2024 15:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F38151016
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 19:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708356545; cv=none; b=ZH5MSeFo15gHrowrUZ/8FdHiKfJvSdy3C9QQJ3aI+0CAueq4StjXjHTVE7yO02S83BmbMKmR/znr66vHu2k+fyEEJHaEPcaqXAvA2p/+NBo5tUODXKdX8uOAawufU56ynN+bxqB7Zp3vFIHyPkx6I8KqSbAplRToG9CqStJFFN0=
+	t=1708372469; cv=none; b=iQY7wumTle/romJ0UWDxIOylrBrnFbu6oclI/q+zyVyqPidNLzIYQY5jEU0TKwKvMkqdDz/19GQQBXy38FyabJtc7h1FIlhDpO6BCIsL5sMi0U75OTRJwSjvt1h3bxVBDjC3+SyD6hXKuKq3nRlwA+CvFrKlVOV7ydh5MiCSvpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708356545; c=relaxed/simple;
-	bh=UmQt6AhNUj3p0y4kNfgsnMins5mxo/egCuxtwYpabKo=;
+	s=arc-20240116; t=1708372469; c=relaxed/simple;
+	bh=ahdS3Zn+QIu0uhv09EiJ8/j1ihnNP5swBR9x0i0/BHw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vEmaWiblMxjHqDPVa5wHg+TUf1tvA73JxpD5RHISccFkU9fW5QWSlxvizBns9JAYRiTvxuRvzUqO5dHAxr5zEJwWzNXim8I9KeDqnscaKFVM1TyOMbL4oNXmVuxlaagPtT8Y820PjyQlXNct0ePZ3nqQUltFIbJ+i5Rr6e7a/uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R91dznXj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fa+mExaJt3VEbBwxO9VGDRr4AyLPHaWr8exYEAkHLBXZyZaQVuEDlG0i9EBb0/QTYE0yw76jtKLKV512Vu3HQIHIlFF/Ex9vxi9oltp2O2jZLNavkPpe3utmgO+8Bw8HERf3K4aNyE0AdI8YIBBnLRHT95KRaMraxkw503VoYCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNX9LvPH; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R91dznXj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F55C433F1;
-	Mon, 19 Feb 2024 15:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708356545;
-	bh=UmQt6AhNUj3p0y4kNfgsnMins5mxo/egCuxtwYpabKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R91dznXjVmg0dPVU+qeSDpxmZvpNkaeOM+o/tZPEYO7gyb3Sl4Mw3g3S/0Ts5Gq6o
-	 Q6rIlDnR0dpRv6uRvhGL9D6oFApEZsDyi3Do9EpwJQ0iq8wbG4DnvU8aEaWOTt1yTi
-	 K+/kM1W3C53rKq2mmS6bCb5v8t7y7JTdT1vDLYWAsTGCfexezFnElTLxnTid2+rGLP
-	 U81pRbwxVd1ZU5+XZWzimvhHemg6fyBxvtHvw9AMWKgdS4C+b7BtwoV/KqJy7U6zcn
-	 NM4WWLE1HHEaCLdqQrVwRbXgOqqpQ4uFLvUCtKrYMSJVE7oI+l/bdIEveYD2l306sl
-	 k7UGpwCUoj42g==
-Date: Mon, 19 Feb 2024 16:29:00 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
-	Dieter Mummenschanz <dmummenschanz@web.de>,
-	Wang Zhihao <wangzhihao9@hotmail.com>,
-	linux-regressions <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] ata: libata-core: Revert "ata: libata-core: Fix
- ata_pci_shutdown_one()"
-Message-ID: <ZdNzvAdKKsQapx8a@x1-carbon>
-References: <20240111115123.1258422-1-dlemoal@kernel.org>
- <20240111115123.1258422-3-dlemoal@kernel.org>
- <d63a7b93-d1a3-726e-355c-b4a4608626f4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNX9LvPH"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56454c695e6so2449675a12.0
+        for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:54:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708372466; x=1708977266; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YPYlqKudaClcKbNFamdeE7+QrC6+8XojTMUekGJ9pw4=;
+        b=kNX9LvPHYtFMx5JBbZ3li68QEAd4ncMXT6UgpsKbWNqmE0+IV4+Mm238CPRNm2CrbB
+         MfvmCFLp7TCSBkOx4tIVVnERhgqVgF4lOzWMD7SxI+zmlbqI4Jtp1NBiL/Jue5FunVF2
+         q1FqP/oD0u7m3oTOfrx2wYhKnknEIBjcViWNrR+r0xpM8abQeTx6sQlbv0EN6oVsUNgU
+         Ku5P6pgaq4uqipqg73FcVv5oB+lggEb0pXIWvRVrmrs/AKc36FqnNoh83UrE+sbaSWS/
+         zfTdUHj6qj63SkMHTNHKd26+2MufvyD76Ft6Db+T+uxJstPg/RMjePNK8K9O4eFKd5yr
+         OtCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708372466; x=1708977266;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YPYlqKudaClcKbNFamdeE7+QrC6+8XojTMUekGJ9pw4=;
+        b=ZYhpxwkQrdUE3fSpS/G9CvNiY0MPLCzCbHcG46d+w7juDDhv96N5LNaBiEAaHyJil4
+         wYIiRjC426LAXlgfUcfqdqgZ411x6/v50ZG9Hoj/+un9+d2U2LFkrJXZGubnHnA6NGh/
+         BOn7YHHVEtXcwL5lYFbp2WWmuiM4mbozdskiys1Kbaj/XSldAZzB/ynqzu3R41QCiknf
+         HE5dh5pEoXVfr7PdpcQQU7l/GpZbCJXacgiagnItADnjtvRIJjOjy2RWtFov91H6uO4u
+         dqQtGicfibdFXuM3xT1IggB1CEdZdVW3SaulqTlBLD/RzzcVuqaKGD+jjQl7fyzXHwz+
+         oy0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCvzMEpmQp7yf1VRsZiz+j/aP1wD+DIRraCdMaaZr3Rwty5AbPtkQ0p+P3Hc7UUD34FGje6x1DCXHaQPn4adzFY8VNRepq74/rqwQ=
+X-Gm-Message-State: AOJu0Yyv1+69ltSn8cb1OiIEb9PstPJ6i/rY7CHAjmYAxArvgzrlT34z
+	iNIFawqQDLkrtvah6s81sPfqSSP3Y/sz/K6nQoMF2ye/n2RY9t0n
+X-Google-Smtp-Source: AGHT+IGy17EHv3w5kRGCvBk4IxezGA5nNXlG3sjHaPpclSP5gUQDDuET4mul61ghYdEBQQf2Q15JQQ==
+X-Received: by 2002:a05:6402:5207:b0:564:4211:faa3 with SMTP id s7-20020a056402520700b005644211faa3mr5547391edd.1.1708372465382;
+        Mon, 19 Feb 2024 11:54:25 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id fi17-20020a056402551100b005612025465asm2964948edb.74.2024.02.19.11.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 11:54:24 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id EF00EBE2EE8; Mon, 19 Feb 2024 20:54:23 +0100 (CET)
+Date: Mon, 19 Feb 2024 20:54:23 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Chao Yu <chao@kernel.org>
+Cc: Dhya <dhya@picorealm.net>, 1063422@bugs.debian.org,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [regression 6.1.y] f2fs: invalid zstd compress level: 6
+Message-ID: <ZdOx73kckFXADcol@eldamar.lan>
+References: <170736382774.1975.1861975122613668970.reportbug@tsuga.picorealm.net>
+ <ZcU3VCrt9VOpuFUq@eldamar.lan>
+ <6d14ea70-ac1c-46f2-af1d-ba34ea0165aa@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,102 +76,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d63a7b93-d1a3-726e-355c-b4a4608626f4@gmail.com>
+In-Reply-To: <6d14ea70-ac1c-46f2-af1d-ba34ea0165aa@kernel.org>
 
-Hello Sergei,
+Hi,
 
-On Thu, Jan 11, 2024 at 09:10:43PM +0300, Sergei Shtylyov wrote:
-> On 1/11/24 2:51 PM, Damien Le Moal wrote:
+On Mon, Feb 19, 2024 at 10:35:13AM +0800, Chao Yu wrote:
+> On 2024/2/9 4:19, Salvatore Bonaccorso wrote:
+> > Hi Jaegeuk Kim, Chao Yu,
+> > 
+> > In Debian the following regression was reported after a Dhya updated
+> > to 6.1.76:
+> > 
+> > On Wed, Feb 07, 2024 at 10:43:47PM -0500, Dhya wrote:
+> > > Package: src:linux
+> > > Version: 6.1.76-1
+> > > Severity: critical
+> > > Justification: breaks the whole system
+> > > 
+> > > Dear Maintainer,
+> > > 
+> > > After upgrade to linux-image-6.1.0-18-amd64 6.1.76-1 F2FS filesystem
+> > > fails to mount rw.  Message in the boot journal:
+> > > 
+> > >    kernel: F2FS-fs (nvme0n1p6): invalid zstd compress level: 6
+> > > 
+> > > There was recently an f2fs patch to the 6.1 kernel tree which might be
+> > > related: https://www.spinics.net/lists/stable-commits/msg329957.html
+> > > 
+> > > Was able to recover the system by doing:
+> > > 
+> > > sudo mount -o remount,rw,relatime,lazytime,background_gc=on,discard,no_heap,user_xattr,inline_xattr,acl,inline_data,inline_dentry,extent_cache,mode=adaptive,active_logs=6,alloc_mode=default,checkpoint_merge,fsync_mode=posix,compress_algorithm=lz4,compress_log_size=2,compress_mode=fs,atgc,discard_unit=block,memory=normal /dev/nvme0n1p6 /
+> > > 
+> > > under the running bad 6.1.0-18-amd64 kernel, then editing
+> > > /etc/default/grub:
+> > > 
+> > >    GRUB_DEFAULT="Advanced options for Debian GNU/Linux>Debian GNU/Linux, with Linux 6.1.0-17-amd64"
+> > > 
+> > > and running 'update-grub' and rebooting to boot the 6.1.0-17-amd64
+> > > kernel.
+> > 
+> > The issue is easily reproducible by:
+> > 
+> > # dd if=/dev/zero of=test.img count=100 bs=1M
+> > # mkfs.f2fs -f -O compression,extra_attr ./test.img
+> > # mount -t f2fs -o compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime ./test.img /mnt
+> > 
+> > resulting in
+> > 
+> > [   60.789982] F2FS-fs (loop0): invalid zstd compress level: 6
 > 
-> > This reverts commit fd3a6837d8e18cb7be80dcca1283276290336a7a.
-> > 
-> > Several users have signaled issues with commit fd3a6837d8e1 ("ata:
-> > libata-core: Fix ata_pci_shutdown_one()") which causes failure of the
-> > system SoC to go to a low power state. The reason for this problem
-> > is not well understood but given that this patch is harmless with the
-> > improvements to ata_dev_power_set_standby(), restore it to allow system
-> > lower power state transitions.
-> > 
-> > For regular system shutdown, ata_dev_power_set_standby() will be
-> > executed twice: once the scsi device is removed and another when
-> > ata_pci_shutdown_one() executes and EH completes unloading the devices.
-> > Make the second call to ata_dev_power_set_standby() do nothing by using
-> > ata_dev_power_is_active() and return if the device is already in
-> > standby.
-> > 
-> > Fixes: fd3a6837d8e1 ("ata: libata-core: Fix ata_pci_shutdown_one()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> > ---
-> >  drivers/ata/libata-core.c | 75 +++++++++++++++++++++++----------------
-> >  1 file changed, 45 insertions(+), 30 deletions(-)
-> > 
-> > diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-> > index d9f80f4f70f5..20a366942626 100644
-> > --- a/drivers/ata/libata-core.c
-> > +++ b/drivers/ata/libata-core.c
-> > @@ -2001,6 +2001,33 @@ bool ata_dev_power_init_tf(struct ata_device *dev, struct ata_taskfile *tf,
-> >  	return true;
-> >  }
-> >  
-> > +static bool ata_dev_power_is_active(struct ata_device *dev)
-> > +{
-> > +	struct ata_taskfile tf;
-> > +	unsigned int err_mask;
-> > +
-> > +	ata_tf_init(dev, &tf);
-> > +	tf.flags |= ATA_TFLAG_DEVICE | ATA_TFLAG_ISADDR;
+> Hi Salvatore,
 > 
->    Why set ATA_TFLAG_ISADDR, BTW? This command doesn't use any taskfile
-> regs but the device/head reg. Material for a fix, I guess... :-)
+> Can you please try below fixes:
 > 
-> > +	tf.protocol = ATA_PROT_NODATA;
-> > +	tf.command = ATA_CMD_CHK_POWER;
-> > +
-> [...]
+> [PATCH 6.1] f2fs: add helper to check compression level
+> https://lore.kernel.org/linux-f2fs-devel/20240212160530.1017205-1-chao@kernel.org
 
-Looking at the definition of the flag:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/libata.h?h=v6.8-rc5#n76
+Confirmed that this fixes the reported issue as it was reported to us
+in Debian in https://bugs.debian.org/1063422 . Thanks a lot!
+(note just tested with the first commit as it landed in 6.1.78 to
+confirm the immediate regression).
 
-"enable r/w to nsect/lba regs"
+#regzbot fixed-by: cf3d57ad6ff8b566deba3544b9ad3384781fb604
 
-This function does read from the nsect reg:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-core.c?h=v6.8-rc5#n2069
-
-So I would prefer to keep it as it.
-
-
-Basically the whole motto for libata right now:
-"If it ain't broke, don't fix it."
-
-
-Sure, if we look at:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-sff.c?h=v6.8-rc5#n343
-
-it seems that flags ATA_TFLAG_ISADDR, ATA_TFLAG_LBA48, and ATA_TFLAG_DEVICE
-is used to "guard" if these regs should be written to the TF.
-
-
-However, if we look at:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-sff.c?h=v6.8-rc5#n392
-
-is seems that only flag ATA_TFLAG_LBA48 is used to "guard" if the regs should
-be read from the TF.
-
-So it looks like the intention was that these flags should be used
-to guard if certain TF regs should be written or read, but in reality,
-only some of the flags are actually for guarding reads.
-(While all of the flags are used for guarding writes.)
-
-
-Personally, I don't really see the point of using flags to guard writes
-to the host controller. Why would we want to skip writing certain TF regs?
-The struct ata_taskfile should be zero-initialized before filling it with
-a command, so why not always write all TF regs and remove these flags?
-
-Anyway, why touch it now and risk introducing regressions on some old PATA
-hardware?
-
-
-Kind regards,
-Niklas
+Regards,
+Salvatore
