@@ -1,126 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9C12556D;
-	Mon, 19 Feb 2024 09:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAA328DA5;
+	Mon, 19 Feb 2024 10:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708336111; cv=none; b=LiZnP/N2saN4Fgi3Gn+Sc9Jdq5rNHMs7gilT92lt+7GJKkoyhrFzZ/uJPzvWjp1i38UMfS6lpMW/I4ne+ReziUey0pPL0tHlW9dG+FZTWhW4w5dMnrQXmHmk/Tcr8gB+ragILYQ043YNJSwXh7cI2sBdyuVDUEgCjhGijNGoA4s=
+	t=1708339304; cv=none; b=DbFoN7zh+5feSMXvM9U83k3SZ8/xxUF9GFZAb7pTdLAHAJ4Mn0CRLDsqDlt4FmINJB5UPn3qt/2SnT6rKMKhWevob8gueQYqfVKxV56X7IMmAQK86IY+sDIXhoi3IpSJV9NKBa6zEuNBpI4jj13RKqOtI9ZouFIFmsG1p46AONg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708336111; c=relaxed/simple;
-	bh=8EXMzXr316H26S3gLy44xerC9vQS2ws3edUhg+achtA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TI4bO6Q+lpbjfYyttZC6dqKm5kFhTw/s4SskBUfO94h9TtJk9KCPpXcwZfb+CwCRhbYFvX4mZVcVDnmH1kJ4KNhCvjGijx8YtJEseCMv7o9WvL6hylp7V+4x6nR69OS/G8OuH+PNZluHCnOPDPzpNSeHRrDDx+sVbPuEvl6oGAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGCtXy+j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708339304; c=relaxed/simple;
+	bh=j0hZ7OP3iKPpfHm4XNFd9GklyucQI6Echl+Kr1PbKTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0sFF5oPSj7Gmar+T+mGesT8RbSjcA8HYBfCFBW8YI3bz+JNtPV6V0S4GzX2Uu5Y+XWgtWPBpusX2BXwmQ/YIRaSm0Eud51V+BxVlCrR671jqtjBQ3s4BhVrSthbrdNcLoFbwkbaDF6A6uz/oWw5TFNWEkBPzaWN/g1TlDzcH+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LY6yXZr3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGCtXy+j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74759C433F1;
-	Mon, 19 Feb 2024 09:48:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY6yXZr3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0ADCC433F1;
+	Mon, 19 Feb 2024 10:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708336110;
-	bh=8EXMzXr316H26S3gLy44xerC9vQS2ws3edUhg+achtA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lGCtXy+jlxZffUYcughOKAox/vCbo5dNHJdE4tJQCU4WSTkaNlnpi22nhadHPGKtC
-	 eUZOliBjdxNkb0zkve8JII0Q+2Cxc6L4aPH9hJCpKvuibpWJVG/aXujUj+DC3sv3V7
-	 vxiQKlagiZtouSBBDWdIOWDpQ5YRKbd1oTGBxpEQVBzSSetAURzapk9oOw6eG6HYrG
-	 znHtvixlbjJw96BjdQOiwRTyOuF/82d6WW5TnCvrL9ILMP0FOSC6Q1IxiYI0UuTHZ/
-	 e+yVZRkU6uh45Q9ZPp/36nqcJDFisthyTb3dEXPT0kdIZgUKXOr+QD+2dFuNmtmDIg
-	 GUz/3r7Rr8//A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rc0GC-004WsF-Gq;
-	Mon, 19 Feb 2024 09:48:28 +0000
-Date: Mon, 19 Feb 2024 09:48:28 +0000
-Message-ID: <86edd84wer.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: next-20240219: arm64: boot failed - gic_of_init
-In-Reply-To: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
-References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1708339303;
+	bh=j0hZ7OP3iKPpfHm4XNFd9GklyucQI6Echl+Kr1PbKTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LY6yXZr3E2vzWkg1Hg9gmo5TqYcNayGq//e1aM6TDjTSjOYtKCjyL1lOKXFSFAeuF
+	 V2WJ8OD/2ZPSq3wiOlRSM76qr71jZijdaRDQ/BijFj7wZnZ7sViiwSZ4bLlGNoD+ZV
+	 WH4//y4qt8YHFZuPle48PQ0JIjlUyHbs3sqIxnQQwtNo6naYwYzLqwh0n+Ou9KxA9q
+	 TLmwEhUoEEAKU+0VbbUZMfAjrQcLPHK05XkPWQ3IFQ3TazJb5UBMHb4crKm4a5q9n6
+	 NqUbtMGE/2ohmNR3QBpUDSq7onI6kyNLMXQClsTIMiVx+CgsqLyenhRcpbnB8SmjCa
+	 jPT7FURBb12Ew==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rc15h-000000006eY-16Ya;
+	Mon, 19 Feb 2024 11:41:41 +0100
+Date: Mon, 19 Feb 2024 11:41:41 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: drm/msm: Second DisplayPort regression in 6.8-rc1
+Message-ID: <ZdMwZa98L23mu3u6@hovoldconsulting.com>
+References: <ZctVmLK4zTwcpW3A@hovoldconsulting.com>
+ <343710b1-f0f4-5c05-70e6-3c221cdc9580@quicinc.com>
+ <ZczFhVjHIm55JTfO@hovoldconsulting.com>
+ <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkft-triage@lists.linaro.org, regressions@lists.linux.dev, catalin.marinas@arm.com, arnd@arndb.de, dan.carpenter@linaro.org, anders.roxell@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdDNcrf4KpflGeYQ@hovoldconsulting.com>
 
-On Mon, 19 Feb 2024 09:42:45 +0000,
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Sat, Feb 17, 2024 at 04:14:58PM +0100, Johan Hovold wrote:
+> On Wed, Feb 14, 2024 at 02:52:06PM +0100, Johan Hovold wrote:
+> > On Tue, Feb 13, 2024 at 10:00:13AM -0800, Abhinav Kumar wrote:
+
+> Since Dmitry had trouble reproducing this issue I took a closer look at
+> the DRM aux bridge series that Abhinav pointed and was able to track
+> down the bridge regressions and come up with a reproducer. I just posted
+> a series fixing this here:
 > 
-> The qemu-arm64 boot failed with linux next-20240219 tag kernel.
+> 	https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> As I mentioned in the cover letter, I am still seeing intermittent hard
+> resets around the time that the DRM subsystem is initialising, which
+> suggests that we may be dealing with two separate DRM regressions here
+> however.
 > 
-> Boot log:
-> ---------
-> <6>[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-> <1>[    0.000000] Unable to handle kernel paging request at virtual
-> address ffff80008001ffe8
-> <1>[    0.000000] Mem abort info:
-> <1>[    0.000000]   ESR = 0x0000000096000004
-> <1>[    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
-> <1>[    0.000000]   SET = 0, FnV = 0
-> <1>[    0.000000]   EA = 0, S1PTW = 0
-> <1>[    0.000000]   FSC = 0x04: level 0 translation fault
-> <1>[    0.000000] Data abort info:
-> <1>[    0.000000]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-> <1>[    0.000000]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> <1>[    0.000000]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> <1>[    0.000000] swapper pgtable: 4k pages, 52-bit VAs, pgdp=0000000042497000
-> <1>[    0.000000] [ffff80008001ffe8] pgd=10000000439a5003,
-> p4d=10000001000e3003, pud=10000001000e4003, pmd=10000001000e5003,
-> pte=006800000800f413
-> <0>[    0.000000] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> <4>[    0.000000] Modules linked in:
-> <4>[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-> 6.8.0-rc5-next-20240219 #1
-> <4>[    0.000000] Hardware name: linux,dummy-virt (DT)
-> <4>[    0.000000] pstate: 804000c9 (Nzcv daIF +PAN -UAO -TCO -DIT
-> -SSBS BTYPE=--)
-> <4>[    0.000000] pc : gic_of_init+0x84/0x3a8
-> <4>[    0.000000] lr : gic_of_init+0x290/0x3a8
-> ...
-> <4>[    0.000000] Call trace:
-> <4>[    0.000000]  gic_of_init+0x84/0x3a8
-> <4>[    0.000000]  of_irq_init+0x1d4/0x3d0
-> <4>[    0.000000]  irqchip_init+0x20/0x50
-> <4>[    0.000000]  init_IRQ+0xa8/0xc8
-> <4>[    0.000000]  start_kernel+0x270/0x690
-> <4>[    0.000000]  __primary_switched+0x80/0x90
-> <0>[    0.000000] Code: f94017e0 f90007e0 d29ffd00 8b0002c0 (b9400000)
-> <4>[    0.000000] ---[ end trace 0000000000000000 ]---
-> <0>[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
-> <0>[    0.000000] ---[ end Kernel panic - not syncing: Attempted to
-> kill the idle task! ]---
-> 
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240219/testrun/22730192/suite/boot/test/gcc-13-lkftconfig-armv8_features/log
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240219/testrun/22730192/suite/boot/tests/
+> If the hard resets are triggered by something like unclocked hardware,
+> perhaps that bit could this be related to the runtime PM rework?
 
-Where is the configuration file? What are the parameters to QEMU?
-Please consider making this a useful and actionable report.
+It seems my initial suspicion that at least some of these regressions
+were related to the runtime PM work was correct. The hard resets happens
+when the DP controller is runtime suspended after being probed:
 
-Thanks,
+[   16.748475] bus: 'platform': __driver_probe_device: matched device ae00000.display-subsystem with driver msm-mdss
+[   16.759444] msm-mdss ae00000.display-subsystem: Adding to iommu group 21
+[   16.795226] bus: 'platform': __driver_probe_device: matched device ae01000.display-controller with driver msm_dpu
+[   16.807542] probe of ae01000.display-controller returned -517 after 3 usecs
+[   16.821552] bus: 'platform': __driver_probe_device: matched device ae90000.displayport-controller with driver msm-dp-display
+[   16.837749] probe of ae90000.displayport-controller returned -517 after 1 usecs
+[  OK  ] Listening on Load/Save RF Kill Swit[   16.854659] bus: 'platform': __dch Status /dev/rfkill Watch.
+[   16.868458] probe of ae98000.displayport-controller returned -517 after 2 usecs
+[   16.880012] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
+[   16.891856] probe of aea0000.displayport-controller returned -517 after 2 usecs
+[   16.903825] probe of ae00000.display-subsystem returned 0 after 144497 usecs
+[   16.911636] bus: 'platform': __driver_probe_device: matched device ae01000.display-controller with driver msm_dpu
+[   16.942092] probe of ae01000.display-controller returned 0 after 19593 usecs
+         Starting Load/Save Screen Backligh…rightness[   16.959146] bus: 'platform': _ of backlight:backlight...
+[   16.995355] msm-dp-display ae90000.displayport-controller: dp_display_probe - probe tail
+[   17.004032] probe of ae90000.displayport-controller returned 0 after 30225 usecs
+[   17.012308] bus: 'platform': __driver_probe_device: matched device ae98000.displayport-controller with driver msm-dp-display
+[   17.050193] msm-dp-display ae98000.displayport-controller: dp_display_probe - probe tail
+         Starting Network Name Resolution...
+[   17.058925] probe of ae98000.displayport-controller returned 0 after 34774 usecs
+[   17.074925] bus: 'platform': __driver_probe_device: matched device aea0000.displayport-controller with driver msm-dp-display
+[        Starting Network Time Synchronization...
+[   17.112000] msm-dp-display aea0000.displayport-controller: dp_display_probe - populate aux bus
+[   17.125208] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_resume
+         Starting Record System Boot/Shutdown in UTMP...
+         Starting Virtual Console Setup...
+[  OK  ] Finished Load/Save Screen Backlight Brightness of backlight:backlight.
+[   17.197909] msm-dp-display aea0000.displayport-controller: dp_pm_runtime_suspend
+[   17.198079] probe of aea0Format: Log Type - Time(microsec) - Message - Optional Info
+Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
+S - QC_IMAGE_VERSION_STRING=BOOT.MXF.1.1-00470-MAKENA-1
+S - IMAGE_VARIANT_STRING=SocMakenaWP
+S - OEM_IMAGE_VERSION_STRING=crm-ubuntu92
 
-	M.
+  < machine is reset by hypervisor >
 
--- 
-Without deviation from the norm, progress is not possible.
+Presumably the reset happens when controller is being shut down while
+still being used by the EFI framebuffer.
+
+In the cases where the machines survives boot, the controller is never
+suspended.
+
+When investigating this I've also seen intermittent:
+
+	[drm:dp_display_probe [msm]] *ERROR* device tree parsing failed
+
+which also appears to be related to the runtime PM rework:
+
+	https://lore.kernel.org/lkml/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
+
+I believe this is enough evidence to conclude that this second
+regression is introduced by commit 5814b8bf086a ("drm/msm/dp:
+incorporate pm_runtime framework into DP driver"):
+
+#regzbot introduced: 5814b8bf086a
+
+Has anyone given some thought to how the framebuffer handover is
+supposed to work? It seems we're currently just relying on luck with
+timing.
+
+Johan
