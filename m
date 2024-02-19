@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20DE572
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1682CCDF
+	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 11:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708341361; cv=none; b=DkKSPtd5PHsR5iC8RKn/zU8nGgyjrNMo3uVkcSV5f4UNkYMBrYH2+60NydUaOUZ0TzrmXq2bAhFrS/MGzD2a18q0ZNProymE1bmrY3FWmXSIEN8G1dgIvhzVCKUmix25Uvt4J2B+vh5R8nvW7YWL5KY4c/C7m71PwWrTdHlRn14=
+	t=1708342201; cv=none; b=ad5rqSQoZV5TTCv2g4SF0Slopz9ir+B+GUB2GOZE2X+ws2htEh7rJF2EoeD3YC3fqRLFy3/ywUBbO26PXsmuaG9JUepaLiB4yaCiSC4X7W2n63NwlrQnJvWKCL/4VTigLHp0Uag+tVOmB1LqVEuqEJNWVfaXcFzb2W35Q4TGPRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708341361; c=relaxed/simple;
-	bh=oO3OCmx8Pcf+1FWBlr6snTNv+gJ3xKQgNoMJd/L2kZA=;
+	s=arc-20240116; t=1708342201; c=relaxed/simple;
+	bh=k8bNQK6KKfEbdCEoBu/AmOf9cDZ0PlVe99MQWH8wsiA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eXCLF/V9j4W9umGSxbvOAXNwMWrv+qFBROzL79i2chE5rvFw+gAtExJCB/n2dlTVbMcGTnjG9sFUqPTTSj3PW+6aXzYurjHFe58AD147Xs3v5RuDzEdgmJPJuq//TfcVjl1tgHKqpZw22bzQrub+nPKCycVVbfGSKuY8zHZ5338=
+	 In-Reply-To:Content-Type; b=nVBsO5RKFvMTxZPpDWMicMajWiDBjGNBlB3RM9U2Kmy5p65XKN3d7bQtMfKLQlUXTz2R9a52tGZ9KgfX+1QZkscwQjye1nhsHZfUQNK/AZO/k3BnnWff4id34axPqq8j9OFu/tKI0IsJifV9T0p5eWaeR9tMsTenxVmPfXxuAx0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rc1ck-0002hZ-5a; Mon, 19 Feb 2024 12:15:50 +0100
-Message-ID: <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
-Date: Mon, 19 Feb 2024 12:15:49 +0100
+	id 1rc1qN-0006Ut-2r; Mon, 19 Feb 2024 12:29:55 +0100
+Message-ID: <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
+Date: Mon, 19 Feb 2024 12:29:54 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -26,120 +26,73 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
- mesa/amdgpu)
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
+ >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
+ and continuous swapping
 Content-Language: en-US, de-DE
-To: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc: regressions@lists.linux.dev, Ma Jun <Jun.Ma2@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>, Roman Benes <benes@riadoklan.sk.eu.org>
-References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
- <2024021732-framing-tactful-833d@gregkh>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2024021732-framing-tactful-833d@gregkh>
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Dave Ertman <david.m.ertman@intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
+ Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+ <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
+ <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+ <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+ <20240201065726.50a0b1f2@kernel.org>
+ <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708341358;5ac5858c;
-X-HE-SMSGID: 1rc1ck-0002hZ-5a
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708342199;7611d165;
+X-HE-SMSGID: 1rc1qN-0006Ut-2r
 
-On 17.02.24 14:30, Greg KH wrote:
-> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
->> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
->> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
->> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
->> even for root. This is not of above apps issue but of the kernel, I read
->> similar issues from other bug reports of above apps. I downgraded to v6.6.10
->> kernel and my 115W(under power)cap work again as before.
+On 01.02.24 18:19, Jaroslav Pulchart wrote:
+>>
+>> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
+>> Leemhuis) wrote:
+>>>>> I think that's a bad bisect. There is no reason I could understand for
+>>>>> that change to cause a continuous or large leak, it really doesn't make
+>>>>> any sense. Reverting it consistently helps? You're not just rewinding
+>>>>> the tree back to that point, right? just running 6.6.9 without that
+>>>>> patch? (sorry for being pedantic, just trying to be certain)
+>>>>
+>>>> Reverting just the single bisected commit continuously helps for >=
+>>>> 6.6.9 and as well for current 6.7.
+>>>> We cannot use any new linux kernel without reverting it due to this
+>>>> extra memory utilization.
+>>>
+>>> Quick query: what's the status wrt to this regression? Looks like
+>>> nothing happened in the past week.
+>>
+>> Is someone working on this? Indeed the commit in question looks
+>> harmless but can't argue with the revert helping :S
 > 
-> Any chance you can use 'git bisect' to figure out the offending change?
+> No clue if someone is working on it,
 
-For the record and everyone that lands here: the cause is known now
-(it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
-value") [v6.7-rc1]) and the issue afaics tracked here:
+Yeah, a quick public status update would be really helpful. And maybe
+some debugging tips that might enable Jaroslav to pinpoint the real
+problem.
 
-https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+> however the commit itself is a
+> trigger of some other issue.
+> 
+> The analysis of my colleague Igor (see previous email) shows the
+> memory consumption is caused by queues of each ice network interface
+> (even the unused ones). Our final fix was to lower the queues to 6 for
+> used interfaces and 2 of unused interfaces manually.
 
-Other mentions:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3137
-https://gitlab.freedesktop.org/drm/amd/-/issues/2992
-
-Haven't seen any statement from the amdgpu developers (now CCed) yet on
-this there (but might have missed something!). From what I can see I
-assume this will likely be somewhat tricky to handle, as a revert
-overall might be a bad idea here. We'll see I guess.
-
-Roman posted something that apparently was meant to go to the list, so
-let me put it here:
-
-"""
-UPDATE: User fililip already posted patch, but it need to be merged,
-discussion is on gitlab link below.
-
-(PS: I hope I am replying correctly to "all" now? - using original addr.)
-
-
-> it seems that commit was already found(see user's 'fililip' comment):
->
-> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
-> commit 1958946858a62b6b5392ed075aa219d199bcae39
-> Author: Ma Jun <Jun.Ma2@amd.com>
-> Date:   Thu Oct 12 09:33:45 2023 +0800
->
->     drm/amd/pm: Support for getting power1_cap_min value
->
->     Support for getting power1_cap_min value on smu13 and smu11.
->     For other Asics, we still use 0 as the default value.
->
->     Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
->     Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->
-> However, this is not good as it remove under-powering range too far. I
-was getting only about 7% less performance but 90W(!) less consumption
-when set to my 115W before. Also I wonder if we as a OS of options and
-freedom have to stick to such very high reference for min values without
-ability to override them through some sys ctrls. Commit was done by amd
-guy and I wonder if because of maybe this post that I made few months
-ago(business strategy?):
->
->
-https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
->
-> This is not a dangerous OC upwards where I can understand desire to
-protect HW, it is downward, having min cap at 190W when card pull on
-115W almost same speed is IMO crazy to deny. We don't talk about default
-or reference values here either, just a move to lower the range of
-options for whatever reason.
->
-> I don't know how much power you guys have over them, but please
-consider either reverting this change, or give us an option to set
-min_cap through say /sys (right now param is readonly, even for root).
->
->
-> Thank you in advance for looking into this, with regards:  Romano
-"""
-
-And while at it, let me add this issue to the tracking as well
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot introduced 1958946858a62b /
-#regzbot title drm: amdgpu: under-powering broke
+Despite the above allow me to ask: Can you live with that workaround?
+Ideally of course this should be fixed, but well, the world sometimes is
+a tricky place. :-/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
