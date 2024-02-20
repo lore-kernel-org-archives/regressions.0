@@ -1,83 +1,100 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B6E53E2B
-	for <regressions@lists.linux.dev>; Mon, 19 Feb 2024 22:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB3E44C73
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 02:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708380774; cv=none; b=dr0A3MaVGYf2RJAYkaigCFU/9MxrtXUEr89oftzkJTLtdKJa8LzOSFSokdE/xEhWNM5oearMUBbLo80Ddpz31iq40Vt6MiXLHAmew+P7Nx5FRXrZ2wkMije/Btbpb3T13MqF6iUR2ujXimTQFIESJyA5nBaHhYWmlnVIF0vtw+s=
+	t=1708396018; cv=none; b=NfopZXdn5eykV+9Px84KrnwrlcToZb0T0R0NNNZKQl44/lopDkC2h3yPUfVhv8CEk0pxFkqr6XXixpSds/OYGHcIRUc3aAqG3Il5ot43DQ8Vrc3+0MbV1ZYxkVpnkxkmZ3zCHATYqMSvigZqA6DFs8eAte9AGWTCTy1xs6AbPPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708380774; c=relaxed/simple;
-	bh=MprGuCqzth6nJ+bm3v2om+NnHH0gsp5Q48D1qQdrV8I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Y3W+c6miG/vHWLbcwLdNnSkGssg6Lcd5JGw8qGrzfBDssFZ1hEV0eouIc9ePbzE8QLPcAZosOzUjMmuXagCFAERJXG/fZiXuqXCPAaR2cb6aqyc0FdejbCindk+i4Lrz7srvffWmoXj9LE0333oDKg7xsPVpjdTyORtwVN+bQIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=JWTL3GIg; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="JWTL3GIg"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BBBE247A99
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1708380772; bh=Qd0BQ3n6gkIeJuHHuKpFJNVK61hbHPyFzkqZDXaQUCc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JWTL3GIgUu00nWJ7QqjWuPjSfIECMiZAVqAjb2jqlxfNl7FzB3tONbcrxg/5F37wh
-	 /7AAa0fAEYIAnbNJoikxGU2BT88mppF5zJL0rmQLTmW0xv1F25NGqHt1avfewFhhe2
-	 8Y7CZJT+a0yd9QPAUvqOgawIO8enEPNvQarRL+sOZn0S+CJJX8Tkr4caw4d9kPguqR
-	 SGm+prdBQYuTd9T/mKPi+D9MoBl192Xww+tbZ2ltLsVhooGC44aFUN6s1dxK11bp+T
-	 eQjY0k+I8awPmSCisFgBLUHFKDui4HOD+fijC6u3XE8RWIxMA55DJcqPECqok9+vEw
-	 YlViVCDY9vEJQ==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id BBBE247A99;
-	Mon, 19 Feb 2024 22:12:52 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>, Petr =?utf-8?B?VGVzYcWZw61r?=
- <petr@tesarici.cz>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Nathan
- Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
- validation
-In-Reply-To: <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
-References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
- <20240216204140.2ecbceec@meshulam.tesarici.cz>
- <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
-Date: Mon, 19 Feb 2024 15:12:52 -0700
-Message-ID: <87a5nwm7bv.fsf@meer.lwn.net>
+	s=arc-20240116; t=1708396018; c=relaxed/simple;
+	bh=8T3tY7oj4cWPmMLru07PWyLzhA0TZeU9DdNfBVxiI2k=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dwrnKj31nPpwmwlVq2Wfzmgks0+IuEY7jzdMllxc9UNy/Lq407somczvVC5dqeO+KvXKOYKp2y1aaKQy9JU12dIvUosdNYqZfm3X0pTwDu6ynbqxMnWUpPLTnH0xAqWHWeB3gsZtI/+BBUUrompb2f2E4xlxrlwoyjFov38l+8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tf3C11Y4Qz1h08w;
+	Tue, 20 Feb 2024 10:24:45 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id AAC471402DE;
+	Tue, 20 Feb 2024 10:26:52 +0800 (CST)
+Received: from [10.174.185.179] (10.174.185.179) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 20 Feb 2024 10:26:51 +0800
+Subject: Re: next-20240219: arm64: boot failed - gic_of_init
+To: Marc Zyngier <maz@kernel.org>
+CC: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
+	<linux-kernel@vger.kernel.org>, Linux ARM
+	<linux-arm-kernel@lists.infradead.org>, <lkft-triage@lists.linaro.org>, Linux
+ Regressions <regressions@lists.linux.dev>, Catalin Marinas
+	<catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dan Carpenter
+	<dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
+ <86edd84wer.wl-maz@kernel.org> <86cyss4rl7.wl-maz@kernel.org>
+ <a7d8e529-9a44-3f88-50ef-d87b80515c36@huawei.com>
+ <86a5nw4gp3.wl-maz@kernel.org>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <f3bd274b-2644-ce5c-315d-36a492814d13@huawei.com>
+Date: Tue, 20 Feb 2024 10:26:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <86a5nw4gp3.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On 2024/2/19 23:27, Marc Zyngier wrote:
+> On Mon, 19 Feb 2024 14:46:46 +0000,
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+>>
+>> On 2024/2/19 19:32, Marc Zyngier wrote:
+>>> For what it is worth, I've just tested both defconfig and my own
+>>> configuration with both 4k (kvmtool, QEMU+KVM and on SynQuacer) and
+>>> 16k (kvmtool), without any obvious problem.
+>>
+>> I had a quick test on top of next-20240219 with defconfig.  I can
+>> reproduce it with QEMU parameter '-cpu max -accel tcg', but things are
+>> fine with '-cpu max,lpa2=off -accel tcg'.
+>>
+>> Bisection shows that the problem happens when we start putting the
+>> latest arm64 and kvmarm changes together.  The following hack fixes the
+>> problem for me (but I **only** write it for kernel built with defconfig
+>> with ARM64_4K_PAGES=y atm).
+>>
+>> I can investigate it further tomorrow (as it's too late now ;-) ).  Or
+>> maybe Marc or Catalin can help fix it with a proper approach.
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 4f7662008ede..babdc3f4721b 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2798,6 +2798,7 @@ static const struct arm64_cpu_capabilities
+>> arm64_features[] = {
+>> | 		.sign = FTR_SIGNED,
+>> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN4_SHIFT,
+>> | 		.min_field_value = ID_AA64MMFR0_EL1_TGRAN4_52_BIT,
+>> |+		.max_field_value = BIT(ID_AA64MMFR0_EL1_TGRAN4_WIDTH - 1) - 1,
+>> | #else
+>> | 		.sign = FTR_UNSIGNED,
+>> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN16_SHIFT,
+> 
+> I've posted my take on this at [1], which hopefully matches what you
+> were aiming at.
+> 
+> [1] https://lore.kernel.org/all/86bk8c4gyh.wl-maz@kernel.org/
 
-> On 16.02.24 20:41, Petr Tesa=C5=99=C3=ADk wrote:
->> Is this because you want to keep it readable if the target audience
->> reads the source text of the documentation? Otherwise, the .. include
->> directive does not make a difference after rendering to HTML. AFAIK.
->
-> It less that I want that, it's more that I got the impression that both
-> Jonathan and most of the kernel development community wants the source
-> text to be readable; not totally sure, but I think that's the right
-> thing to do, too.
-
-As a general rule, yes.  To harp on this one more time, I do think we
-could create sections of the manual (a "tutorials" book, say) with a
-different set of priorities.
-
-In the documentation session at the last kernel summit, I got some
-pretty clear feedback that plain-text readability could be made
-secondary to getting the best rendered output, at least in some cases.
-Tutorials seems like a good example of such a case, where we could focus
-on good web output without, as you say, creating potential maintenance
-troubles going forward.
+Yup, this looks good to me.
 
 Thanks,
-
-jon
+Zenghui
