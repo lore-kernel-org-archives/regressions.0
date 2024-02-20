@@ -1,24 +1,24 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB0F60BBB;
-	Tue, 20 Feb 2024 10:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7BE62160;
+	Tue, 20 Feb 2024 10:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708424787; cv=none; b=DpYpQUz8LUjO6iu5qBZYoo1xB/jSfiVxAhF6ooVzLh81KEVI8MsrTlQ7YgInAAkf6HK8vmMBudtcDFO9TwgOULAhzAPIpNeq/tMhRRvUaDkiuBsSo/TDhtD9MfrRth8MEEjlMxjbm2yhWAK7duuoTy4RdAlPLGhfWH/x/F+dIHY=
+	t=1708424911; cv=none; b=h3iUP0HTgdP5vI4vbCiD5X5MJAhGJqX/SirAgXAvooLDjUL53TwslWPc+Hp4uu8oLZoTSDDdG2o3c4iT81V92JzHkd6l7bfjB5PvGZy/Av1dBU+POg7CsshMLRDhU2F35C5rspqV6VpultCFK0L/mFm7xsSkKbxa6EGJLt8KNQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708424787; c=relaxed/simple;
-	bh=HtRyT0kM9vZyQaLBAdB4P0A2i9jJVXOsS6D6EEVfkLw=;
+	s=arc-20240116; t=1708424911; c=relaxed/simple;
+	bh=+jA3L3roeJSQbJVRsbeM0J3q8pHDGsa0x+hbU6bzk10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hlIQKBTpuD4wySQ4iKF1sHJtHj0Jp/AOuVX7ap53MIMNfASYxi3HF3ouXzk4UgNSgFHR7ZJFLR96GzJ32Tq9lZVC6MgKe6SHaeYaUlQsgIy7/SjgQWKaQLsNpNnysOR2mByDBxY/sh4AlQ+Lx0XV7IWh1r0vOtES/yMyLz7b9qs=
+	 In-Reply-To:Content-Type; b=pK7kD5ajzkpSorss2EYj1l6l34LcFQVJ3QwBaiGlItj8EVLjMo4lizY4pZ/KiWgNDtSZQv284bg2T4atoEXDQwKvJsA6/QrvdjZIAKmRX9k8tRPwWHzK3hjl+8rOvdA14ynqNKkNxixMNPhO3ZF9Bup7QTW7pXabihmbfFsNX28=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rcNKN-0003An-3x; Tue, 20 Feb 2024 11:26:19 +0100
-Message-ID: <2c5a82e1-31f0-4908-80b7-00b3b0257d59@leemhuis.info>
-Date: Tue, 20 Feb 2024 11:26:16 +0100
+	id 1rcNMP-0003kF-LL; Tue, 20 Feb 2024 11:28:25 +0100
+Message-ID: <78075db2-4d1f-4b94-8814-24666a8518a2@leemhuis.info>
+Date: Tue, 20 Feb 2024 11:28:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -29,13 +29,15 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
  validation
 Content-Language: en-US, de-DE
-To: Jonathan Corbet <corbet@lwn.net>
+To: Jonathan Corbet <corbet@lwn.net>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
+ <petr@tesarici.cz>
 Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
- <petr@tesarici.cz>
+ Nathan Chancellor <nathan@kernel.org>
 References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
- <87edd8m7l0.fsf@meer.lwn.net>
+ <20240216204140.2ecbceec@meshulam.tesarici.cz>
+ <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
+ <87a5nwm7bv.fsf@meer.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Autocrypt: addr=linux@leemhuis.info; keydata=
  xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
@@ -80,91 +82,50 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  ysaCIZqWxrlhHWWmJMvowVMkB92uPVkxs5IMhSxHS4c2PfZ6D5kvrs3URvIc6zyOrgIaHNzR
  8AF4PXWPAuZu1oaG/XKwzMqN/Y/AoxWrCFZNHE27E1RrMhDgmyzIzWQTffJsVPDMQqDfLBhV
  ic3b8Yec+Kn+ExIF5IuLfHkUgIUs83kDGGbV+wM8NtlGmCXmatyavUwNCXMsuI24HPl7gV2h n7RI
-In-Reply-To: <87edd8m7l0.fsf@meer.lwn.net>
+In-Reply-To: <87a5nwm7bv.fsf@meer.lwn.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1708424785;dfa4e51b;
-X-HE-SMSGID: 1rcNKN-0003An-3x
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1708424910;2d8c1209;
+X-HE-SMSGID: 1rcNMP-0003kF-LL
 
-On 19.02.24 23:07, Jonathan Corbet wrote:
+On 19.02.24 23:12, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
 > 
->> Replace the existing brief explanation on bisecting regressions with a
->> text describing the whole process from beginning to end -- while also
->> describing how to validate if a problem is still present in mainline.
->> This "two in one" approach is possible, as checking whenever a bug is in
->> mainline is one of the first steps before performing a bisection anyway
->> and thus described. Due to this approach the text also works quite
->> nicely in conjunction with
->> Documentation/admin-guide/reporting-issues.rst, as it covers all typical
->> cases where users will need to build a kernel in exactly the same order.
+>> On 16.02.24 20:41, Petr Tesařík wrote:
+>>> Is this because you want to keep it readable if the target audience
+>>> reads the source text of the documentation? Otherwise, the .. include
+>>> directive does not make a difference after rendering to HTML. AFAIK.
+>>
+>> It less that I want that, it's more that I got the impression that both
+>> Jonathan and most of the kernel development community wants the source
+>> text to be readable; not totally sure, but I think that's the right
+>> thing to do, too.
 > 
-> I have scanned over this; don't really have a time to do a detailed
-> reading at this point.
+> As a general rule, yes.  To harp on this one more time, I do think we
+> could create sections of the manual (a "tutorials" book, say) with a
+> different set of priorities.
 
-No problem, I didn't expect this to be something that would be merged
-quickly.
+Partly answered to that elsewhere in the thread:
+https://lore.kernel.org/linux-doc/2c5a82e1-31f0-4908-80b7-00b3b0257d59@leemhuis.info/
 
->  My overall impression is: it's useful
-> information, but I think we're going to overwhelm people.  I worry that
-> we're replacing a one-page file on how to do a bisect with a 1,900-line
-> beast.
+> In the documentation session at the last kernel summit, I got some
+> pretty clear feedback that plain-text readability could be made
+> secondary to getting the best rendered output, at least in some cases.
 
-I see you point and partly agree. But at the same time I partly disagree
-as well: the gist of the old document is not that different from what
-segment 3 of the TLDR in the new document outlines.
+For the record: I didn't feel any constrains while writing and would not
+know how to improve the "rendered output", except maybe by adding a
+image or two. But even then I'd say that's not worth abandoning
+plain-text readability.
 
-The main problem I thus see is that readers will likely be scared by the
-wall of text and thus will look for some shorter guide. We could avoid
-that by basically replacing the content of
-Documentation/admin-guide/bug-bisect.rst with something that is round
-about a copy of segment 3 of the TLDR with a short new and better intro
-on top of it (e.g. something along the lines of "This assumes that you
-(a) already set up everything up to compile your own Linux kernel from
-sources found in a local Git clone (b) checked if the regression was
-already solved in mainline (c) prepared, validated, and packed to the
-side a .config file with a kernel version known to be working. If any of
-this is not the case, you likely are better of following the
-Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst instead.")
+> Tutorials seems like a good example of such a case, where we could focus
+> on good web output without, as you say, creating potential maintenance
+> troubles going forward.
 
->  I suspect there are whole classes of readers who want the new
-> stuff, but there are others who would be better served by something much
-> more terse.
+It's just a gut feeling, but to me "split the text into smaller parts so
+those can be included in different documents" sounds like a much bigger
+maintenance nightmare than "keeping some sections in sync that two or
+three files (which most likely will be rarely changed!) use in parallel".
 
-As you can see from above I partly agree with that. But the old guide
-(or what I suggested doing above!) OTOH is so terse that it's not that
-different from what the man-page of 'git bisect' already outlines --
-except that it's a kernel specific example. Makes me wonder if that's
-really worth it, but I guess it is.
-
-> I'll repeat a question I've asked before: should we create a separate
-> "tutorials" book for this kind of material?
-
-To be honest I'm not sure if I can help here, as I'm not totally sure
-that I got your intend / long-term goal.
-
->  I honestly think that the
-> readers for this kind of documentation will be a different crowd,
-
-"Different" from what? I mean, my new guide is added to the "user's and
-administrator's guide" book and from what I see we live in times where
-many users and admins might never have compiled a kernel, but still
-occasionally encounter a situation where they want to report a bug
-upstream. That guide allows them to do this. And even if they have
-occasionally complied a kernel in the past the guide works well for
-them, as the TLDR is easy to follow for such readers.
-
-> and
-> everybody might be better off if we put the tutorial material in one
-> place where they can find it easily.
-
-But do you expect more documents like that? FWIW, I for one don't plan
-to write anything more like this (revising the "reporting issues"
-document is next on my list). Unless more is forthcoming I guess a new
-book is not worth it.
-
-> Regardless, thanks for doing this,
-
-Thx for saying that!
+But I fear our docs translators might have a different opinion.
 
 Ciao, Thorsten
