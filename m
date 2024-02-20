@@ -1,56 +1,79 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2046.outbound.protection.outlook.com [40.107.100.46])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EF4664CF
-	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 15:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708442774; cv=fail; b=gtkcS/GXpNeuFfCNiQPk/PPkZpQ5Y2AntAmceP9nkTIrfWjvzoUYZGyfLCWYbSx5F6hdvY59gb5Qe8jMcO4V2VjqpHLXBpJJ1JqtCUMmvDbNi/qU4BQ1DTkYfAMR5sTZ54Mi+p1RW1qoUVet4kJ5OMVvtk1BjNpwfa96CqVTRRY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708442774; c=relaxed/simple;
-	bh=GNrAzK3H4XZzRCeBZbLR+/f25a+rsZMKv1XhDjQbPXQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eXMudcQaPsL5jQSzP2ZMxipD+dNP8sqTVeKKvbvCOCjfJgEH5zITYSF4hLznSD0rbS7acd7h18YSCyL1NEtAdknbA2eo2HG2bETjGsF5W97/m3vptknvxRvCbUM7F8Zvj1nDpv06kheAG7a0jptl/6SsB67+JsDRXGNhZqhEf+I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M526TRoB; arc=fail smtp.client-ip=40.107.100.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08406BB3C
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 15:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708442834; cv=none; b=GJ2E5WAGf3fpo9tSwxFidGXXnEdwtjGB4pgtEZpPterRVGVGHwyAhZOrRe1kS0y1HbVHcxBSzePyauemGaSzfP69LrMJycCaWFgvjAKDjTqGxoT3lG0TPC/BKTwZ7VE3vgRvilwioxrj4fqj1T6hgtfnts59qJSRNMiGxiZt2Ok=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708442834; c=relaxed/simple;
+	bh=CwppVuUlySvym7fwu2Pmm5A0sPbGh59z+JLPXQgqpX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V8hlu7FYybDC2XihAuoqoShmNZEXmpCGanHJU+CaW8Y7pztMuXH361S9SfflQhX/k5O5hdrMeRalLCbaqunzICgZqmnmidZjaJ4LkNIdtjKJ6MKd8cujW5WY2QI5gmEK8sb7pNHWck7kCpT9tBSIgnLSoOH+Pmq+MXsjNrByxUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=izFDobbW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M526TRoB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IFwtYBwt/mePXfabdhN822K1wsRo6qK2H9BgYcy+REWE1KrE8umcX/I3y92fF5eU6y+CkCnHjfoLR+wc78HHhaGH1RxKqprrPTUhJ7O0KjeeI+suiIiQfs75I1dsafwz2nDcJrrLZ6YAMdya5wvXm8oIbYL+owvclZZ4zotyRd1lQLzsT+q9AFgw4asmfih8tzSMzxOjtaCeysAK0yoSTvDFgaeYQjvQ5EdmYWUgvWdiGir7XWWpTmChHmcQBL89LUyO+JYRDoEz4jBZyVawsQ74R3QPHwNE0AK2cFeN59uj5RnWdwtmVmKf3pH+q/ZPy5lX7qGBIMppxB5ppbPSTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9Od+FQT2q9wvY5GlSdsbeRKJ0vW4Oi9SW5ApB+U5wbQ=;
- b=Eif7B9ft8v0CpcaN/D3NV7cCDei8XdliQufQ1bXskZfy8A72o425tWMMsrVee7Wz4cJ/PRjJi6jCSDflqWOVofieepPAdwNymCPsgpG4TKyHUX9ngzGe4/5r7reIzZPYEcvTQG0XkvZHh6gIab675qS5se2ryAdNU9GUwYV3hhrxU9W4r/azG/6hCTxhu82QMW7wMp4ZCpsdL9zF5xgb7fenZv1Fu/4Mkx4tY7AMLWW6qmULcBJ4PmiO3JK4AwopdvdczdIL2oZjYgAzeugvv/2H7g0XiHEatyhokFtlIRa7g134pdjm/Um9FeWGpSJqyfy4uEb+GucHY83RKyGbGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9Od+FQT2q9wvY5GlSdsbeRKJ0vW4Oi9SW5ApB+U5wbQ=;
- b=M526TRoBvWc+ADV+IZP8n40LUGhVdFpm4Sv24GdWkfLGRVUPjqCAyQ3lHV3VUrbc0Dio2L4ZaRpEQlBgDADBZgH0lkQ3ageVjHiHU/iEzkk1NeG4GJcN6GrvHR3Daqx18oBlfie9YXeGasufoSeq/ax/zacKxTBUid7YNH8Z/l4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH0PR12MB5218.namprd12.prod.outlook.com (2603:10b6:610:d1::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
- 2024 15:26:09 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 15:26:09 +0000
-Message-ID: <c89aaae4-b27f-4ec5-9330-5eb104d966b4@amd.com>
-Date: Tue, 20 Feb 2024 16:26:02 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="izFDobbW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708442831;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHZfEehJ30oQDz8+S3jdQFoPQv8+btekLaY6PoGCP/M=;
+	b=izFDobbWbxjv0W66vTZWanp0jJvRJjFrYe4DRAMvWK/g7YG2NwXcvvJ2JcyegQFtQTM/Bs
+	/tFcZzC86OIZJR71tRnE32BzmWkuyP/cSGKJCfvZSuzTKGDLSm2wjnBKTkhXvgUsVA0kAV
+	yRr7uJJcnAehnDI/5z3UncWohe9hoaU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-mIHbSy48P5yNMsApEJx5vw-1; Tue, 20 Feb 2024 10:27:10 -0500
+X-MC-Unique: mIHbSy48P5yNMsApEJx5vw-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-563ffb48a32so2037718a12.2
+        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 07:27:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708442829; x=1709047629;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EHZfEehJ30oQDz8+S3jdQFoPQv8+btekLaY6PoGCP/M=;
+        b=TtTL3HdcSLyNbsN3SZChxq5otgm/gO4xpcVeNTn3XRQGXZD0IC7oyL5klVfCQtUkl7
+         ORW0dGMCa28BzykzTacZbeYUwQET5zCyFDaX7VTp3Jla1XtiC8AfcNiNrPNpcRNj0+Jw
+         XxW+LgEhnnQt4bcjJHM7vaeHC8oVJf135qld6VHuAPlPf3WJVbIpZrmmvej0E1t3V2+S
+         rVdJi41S1ppSgk8VN4ARBS9+zCEJLtKt37iS1IRs6yt+1hGJJSZRZwqF7tyJcJUWWioU
+         i8yI8aODL8isSubaGofu4UQCC+5yAkcFPF9wV4927yB8zEq8OezIS5KWI5/UwWddI9PP
+         0rnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4YA+JJkdIz3NIBMaoWMmt7VvLIZDcel59kbFj+FR825ZQA4TPrWsQ5nl1qtScVWC2Q3zz6c0c/0FeBpxPr7//HlVLz3DWwD58o/w=
+X-Gm-Message-State: AOJu0YxP+4m5f6rd3WO/f/hAocVl/NEg5wxvhWvr0BPOhOx9neOL3V0D
+	xG1wnAyi1tkilkhX9TKIXtYI11MNG4iweZxc4ddPHr8rCThLam97Cyz8fjCvXk4ZbERV0q3ShDI
+	9ku6NX/kPKPpMNjLcrTBIKL22yOWqiMpldXmTq91WiN1tvOf6mpdl2p/j6aRu
+X-Received: by 2002:a17:906:371a:b0:a3f:d50:2f81 with SMTP id d26-20020a170906371a00b00a3f0d502f81mr1250578ejc.15.1708442829096;
+        Tue, 20 Feb 2024 07:27:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFxHJg4IHLApX94QhcFlCjvnTjdQtWaCi56R2/Zf6yt0BkxydCQja5u2fqYbR1jPT5BW5wx+A==
+X-Received: by 2002:a17:906:371a:b0:a3f:d50:2f81 with SMTP id d26-20020a170906371a00b00a3f0d502f81mr1250555ejc.15.1708442828692;
+        Tue, 20 Feb 2024 07:27:08 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id tx12-20020a1709078e8c00b00a3e4673e7dbsm3227736ejc.38.2024.02.20.07.27.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 07:27:08 -0800 (PST)
+Message-ID: <4bc8747a-d87f-423b-b0ce-8891e78ae094@redhat.com>
+Date: Tue, 20 Feb 2024 16:27:07 +0100
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
  mesa/amdgpu)
-Content-Language: en-US
 To: Alex Deucher <alexdeucher@gmail.com>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Alex Deucher <alexander.deucher@amd.com>, "Pan, Xinhui"
- <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
  "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
  Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
  Greg KH <gregkh@linuxfoundation.org>, Roman Benes <benes@riadoklan.sk.eu.org>
@@ -60,85 +83,24 @@ References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
  <CADnq5_OgPBtYpxBQ+aBmA2t7ob7EFPFWrF9OYXNgm00eEayMNA@mail.gmail.com>
  <62bf771e-640a-45ab-a2de-3df459a9ed30@leemhuis.info>
  <CADnq5_M4Zwv0_B1DoU_a8aNpyPVJj_PpjDG_oi3JkrGC5-hNgg@mail.gmail.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <CADnq5_M4Zwv0_B1DoU_a8aNpyPVJj_PpjDG_oi3JkrGC5-hNgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR5P281CA0004.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f2::13) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH0PR12MB5218:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85bb2d64-3cf6-4e78-b193-08dc32284350
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	cyNZz9xJdC0S8u54lWONr8jsrIF1O87qMkyoz+pLDPip+uzyHhea3dshqpgqDOOoWBevrMsqY77cz4HOPcaLFOXUzCY5Gw3DUmMymFt+YBLmVUOxGR7PUGtEbqEVjySioEHBZJ/N/z8OEALHXpCWKbnURZzbXJDxjRWVTCN4PKoiBv6XpYQizzov98DOAoKNiCCRRd3DUFfJ+z/UUBt53z3ZSBa6cqrhHm/LBcY0B81W8EXA67yNu0E3/1+YHuqs+VuVemyTe6olr6/1wb2Qkvbf2vkRTE7EFrorisObuBbnY69TpYcL5zBWhl0HvtafWB+SOmGSwijlgY7KrW0EsLTawGG1cZ4a8KxbvTcHjEcKgghVmdzyX2s0qMx2eaW/SOhP2ADjyZ9LtSrq6IIvLUTS1/lkbA6XWqBuWukrtHQjTc0QJ0RTW7tDbqpC69E4o/pz2azZ6pcE1qaxrncXcEG58SPmLelkrLpqetkbLIuk00EEOkdKG2URv8KLnxb02hEq/C0Bgk2u5rOwzKtBTnGvejFRUIPNRcSwvEnEZvM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MWR6bTBPZGY3dTlGVFZjekMvdHhic0JXS2dmYldvUlFRYnBwdEkrTlBjakx4?=
- =?utf-8?B?N2FqQ05rQ0VkUGN2SXAwNWUrZ1dqS01XTkZqcE1tbkNrUEgwQzRVbEd1anFP?=
- =?utf-8?B?UHQ5bUovdVNJa2dmVGJTWHp6SmlrUDgwdTdpMjM1YkJ1ZjJFREhUMFNTbHB1?=
- =?utf-8?B?UFVXOUs1TzU5NGZLUWVwbEtveERMcTFCaXhLbHk1ZzJxelU4VHlGQ2d0VWha?=
- =?utf-8?B?MzhiNndQQlpoN0xscWpvMTZ4MS9TaktPRHNrYXcyUVVlN0F0WUJ2NHM2M1o2?=
- =?utf-8?B?RGlPV21JcGZoTWlGZXNjd3FSODBUV2ZZZDRQUEdXaE9RbEVrZFZiMHAzM1ZK?=
- =?utf-8?B?WkVBNHprVmJvSDFiZCtNbllLdUZjWUdueWRGTmg2Z1pObjNTRDAyRVlZYS82?=
- =?utf-8?B?SDRwRXNiT1JYblk0dzNFNWp1dWRZQS9QeDczeUlNSjhCVkdwM0tRTGIzbER1?=
- =?utf-8?B?djgvdnJidXp5bWVHVk95ZGdVckduNFBYNERQVWNTcm5HbzNSN1ZVRUF4RHNi?=
- =?utf-8?B?UVY0RGtQcVFTS29HRWFpM3JkSkgwZUVpcTFUSXpRQU42UFllMkVDRWpCMHl5?=
- =?utf-8?B?Z2EyVG9RSUkwOEZ6ZWpHTUhRK1ZjaGo0RUFGSlV0MEFCMG0yUDEwNVF3cE1m?=
- =?utf-8?B?dVU1U2ttNTdCcFFXSkcySmxTRmJOT3YwUmg2bThycVBaSVY4QTh5RTFCWGpI?=
- =?utf-8?B?eVlJWE5JMVM0cWdaSDF1dWJNQkFocXBINDdDbWtMTVpZMnRyaTVhcnlCVzlG?=
- =?utf-8?B?NHpPR3NGYVhpVlhQekNLK2U0ME1xMldxaXJTbUh3cFZYY1h5SWQzQmlyNzIv?=
- =?utf-8?B?L2pmd0xYcnF4eThkdEJ0cTRJd1g5SFU0bXk1UnZ5WHhuSkJhUG51QVJvb2Np?=
- =?utf-8?B?V3ZRZUo4QXgyOXQ0UG9sSDJtVzNZd1ArdlNyekF0dnF1RDZ2UVcyUjJSM2NC?=
- =?utf-8?B?eUVrY25HRFpaTUF5b2J1N0k0anF2ZUdnM0ZGM1NWTVhTamU4elVxUStIVU1J?=
- =?utf-8?B?QU4xVVZXMWZrdVVlMWNJUjlBM243R3NMd1hHNTlFeGJyYitvc1JkaUd4Wkk3?=
- =?utf-8?B?aXF5d25sQmhoTEk2WE9jZTNtdXk4dXBpeWlUS0EwM09iRlRQWHdZY0k1NGlO?=
- =?utf-8?B?YWxnUU9LazN5UmZua0E2b2NrVmI1SThCb000VC8rNFdsNjRHelgwdlVSYVRx?=
- =?utf-8?B?NTRsV29GUTlHeXNPdlhUV0RqeGVuOHluMnVmR1JNM0tJcFQ0QWVDb05ud1dx?=
- =?utf-8?B?N2tLM3diME5NRHNxWVh4RnBsUXFDem85SGdjMSs0TWFYQzVzT3E5T2I4OGtX?=
- =?utf-8?B?azNmM0cyU0d3VE1LckFDVm5rWnJqc2tid2ZUcUoxVWhpMTVXcmgxS0hTSmRB?=
- =?utf-8?B?d252NHllN2NHMXVDY3lGYThSVVJTakxvZkRJd3RKMGRVTVNmVW1QbmxzbTdQ?=
- =?utf-8?B?dEdGeWJ3QzNjWnhPRmFuOXBZSU04N0J6L0lzSXV3dmU1dTQxcE5VUHNSVU4w?=
- =?utf-8?B?UzNsUjFPYnVhbTVVZlBEMVJZNzlndXFOeHZsc1E4cXFZclVIMDB5Ulp2RXZm?=
- =?utf-8?B?c2wwOTYwR2F5cllPTDJZQUhkMW45NENPNFBwaEI1TVRzSkZybFErSENJTVlW?=
- =?utf-8?B?MkdqZ3RHTHAzcW4xWVhNMUlUcGlsUTk3TW5VeG5EMUVYanBDMFJNa0JMRHFz?=
- =?utf-8?B?citQM3BzN0ljOE9tRXhvaXhuU1V1Nzl1T0RCeDg0MWIxdVR6T0ZjZzBYWjBT?=
- =?utf-8?B?dHVDVVNHSWMwdnFxRE5MOEo3dW9SKzdmZFlvTzBMdCtNekU0R1N4M0FCT1lx?=
- =?utf-8?B?My9BQ0twalVEbHM2Vy94WUZxWkRMMlY5QVpvUHREdE91Y3U3MnRxemY2RmRY?=
- =?utf-8?B?QjVqVmw1d2Z0dXc0ZlJXelRxUVJTdG54UmxJQnlURjFiY0JWQjQ2bENISHFR?=
- =?utf-8?B?UWd1WW91Q0hJWjd6eWF6d1JhVkFMem4wYWR6b3pCdElwV2NxRDFxQWZjenpF?=
- =?utf-8?B?SXJ5cmJ0Qm5CQngxV1NPYVAwQ21wMW9vazJIaDFhZ1VoVXNvRnNtK1BLaFNO?=
- =?utf-8?B?TjF4MFZZdTdKMUxVVmkwR3FTZ0UwRnkwbG5OVlhVRmwzYW9Pd0laT3Q5L3lo?=
- =?utf-8?Q?YO5hABFN1yslEWB0LPa3Gh4/t?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85bb2d64-3cf6-4e78-b193-08dc32284350
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 15:26:09.0988
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z1y8IH24BaOHidJwR2bFimle4lkN/Zh570gDorjjvO4U0EYLF5EGvZeXZxhUkHrU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5218
 
-Am 20.02.24 um 16:15 schrieb Alex Deucher:
+Hi,
+
+On 2/20/24 16:15, Alex Deucher wrote:
 > On Tue, Feb 20, 2024 at 10:03 AM Linux regression tracking (Thorsten
 > Leemhuis) <regressions@leemhuis.info> wrote:
+>>
 >> On 20.02.24 15:45, Alex Deucher wrote:
 >>> On Mon, Feb 19, 2024 at 9:47 AM Linux regression tracking (Thorsten
 >>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>
 >>>> On 17.02.24 14:30, Greg KH wrote:
 >>>>> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
 >>>>>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
@@ -147,6 +109,7 @@ Am 20.02.24 um 16:15 schrieb Alex Deucher:
 >>>>>> even for root. This is not of above apps issue but of the kernel, I read
 >>>>>> similar issues from other bug reports of above apps. I downgraded to v6.6.10
 >>>>>> kernel and my 115W(under power)cap work again as before.
+>>>>>
 >>>> For the record and everyone that lands here: the cause is known now
 >>>> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
 >>>> value") [v6.7-rc1]) and the issue afaics tracked here:
@@ -161,10 +124,12 @@ Am 20.02.24 um 16:15 schrieb Alex Deucher:
 >>>> this there (but might have missed something!). From what I can see I
 >>>> assume this will likely be somewhat tricky to handle, as a revert
 >>>> overall might be a bad idea here. We'll see I guess.
+>>>
 >>> The change aligns the driver what has been validated on each board
 >>> design.  Windows uses the same limits.  Using values lower than the
 >>> validated range can lead to undefined behavior and could potentially
 >>> damage your hardware.
+>>
 >> Thx for the reply! Yeah, I was expecting something along those lines.
 >>
 >> Nevertheless it afaics still is a regression in the eyes of many users.
@@ -176,38 +141,27 @@ Am 20.02.24 um 16:15 schrieb Alex Deucher:
 >> And sure, those users would be running their hardware outside of its
 >> specifications. But is that different from overclocking (which the
 >> driver allows, doesn't it? If not by all means please correct me!)?
+> 
 > Sure.  The driver has always had upper bound limits for overclocking,
 > this change adds lower bounds checking for underclocking as well.
 > When the silicon validation teams set the bounding box for a device,
 > they set a range of values where it's reasonable to operate based on
 > the characteristics of the design.
->
+> 
 > If we did want to allow extended underclocking, we need a big warning
 > in the logs at the very least.
 
-Yeah, I mean we had a similar outcry when we started to apply the limits 
-for the display PLLs as well.
-
-It's just that we have to stay inside certain parameters to be allowed 
-as hardware vendor to sell the stuff in most countries because of public 
-regulations.
-
-I mean you can in theory program the ASIC so that it starts sucking more 
-power than allowed through the PCIe lanes which could start a fire. 
-Because of that certain settings are protected by signed firmware images.
-
-Undervolting is not that problematic than overclocking or overvolting, 
-but you can still do stuff which is outside the hardware specification 
-with that.
+Requiring a module-option to be set to allow this, as well as a big
+warning in the logs sounds like a good solution to me.
 
 Regards,
-Christian.
 
->
-> Alex
->
->> Ciao, Thorsten
->>
+Hans
+
+
+
+
+
 >>>> Roman posted something that apparently was meant to go to the list, so
 >>>> let me put it here:
 >>>>
@@ -225,14 +179,14 @@ Christian.
 >>>>> Author: Ma Jun <Jun.Ma2@amd.com>
 >>>>> Date:   Thu Oct 12 09:33:45 2023 +0800
 >>>>>
->>>>>      drm/amd/pm: Support for getting power1_cap_min value
+>>>>>     drm/amd/pm: Support for getting power1_cap_min value
 >>>>>
->>>>>      Support for getting power1_cap_min value on smu13 and smu11.
->>>>>      For other Asics, we still use 0 as the default value.
+>>>>>     Support for getting power1_cap_min value on smu13 and smu11.
+>>>>>     For other Asics, we still use 0 as the default value.
 >>>>>
->>>>>      Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
->>>>>      Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
->>>>>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>>     Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+>>>>>     Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+>>>>>     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 >>>>>
 >>>>> However, this is not good as it remove under-powering range too far. I
 >>>> was getting only about 7% less performance but 90W(!) less consumption
@@ -242,15 +196,19 @@ Christian.
 >>>> guy and I wonder if because of maybe this post that I made few months
 >>>> ago(business strategy?):
 >>>>>
+>>>>>
 >>>> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
+>>>>>
 >>>>> This is not a dangerous OC upwards where I can understand desire to
 >>>> protect HW, it is downward, having min cap at 190W when card pull on
 >>>> 115W almost same speed is IMO crazy to deny. We don't talk about default
 >>>> or reference values here either, just a move to lower the range of
 >>>> options for whatever reason.
+>>>>>
 >>>>> I don't know how much power you guys have over them, but please
 >>>> consider either reverting this change, or give us an option to set
 >>>> min_cap through say /sys (right now param is readonly, even for root).
+>>>>>
 >>>>>
 >>>>> Thank you in advance for looking into this, with regards:  Romano
 >>>> """
@@ -275,4 +233,6 @@ Christian.
 >>>> https://linux-regtracking.leemhuis.info/about/#tldr
 >>>> That page also explains what to do if mails like this annoy you.
 >>>
+>>>
+> 
 
