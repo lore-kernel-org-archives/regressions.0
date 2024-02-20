@@ -1,100 +1,124 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB3E44C73
-	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 02:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA258C04;
+	Tue, 20 Feb 2024 02:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708396018; cv=none; b=NfopZXdn5eykV+9Px84KrnwrlcToZb0T0R0NNNZKQl44/lopDkC2h3yPUfVhv8CEk0pxFkqr6XXixpSds/OYGHcIRUc3aAqG3Il5ot43DQ8Vrc3+0MbV1ZYxkVpnkxkmZ3zCHATYqMSvigZqA6DFs8eAte9AGWTCTy1xs6AbPPw=
+	t=1708396749; cv=none; b=k1EAe3TTLxCG8TWOlPipgX4McivJf+Y/Csbd3OWF0P7EjzEoRW7nruwhVoXmykBiIPwsYhNlptBzwclge7jVVe3ZUpINrKXe1WQ5ee57NxM2mqM98Q7aq4aP/3HlFuUYzLUp2+XckyIeUaDWZSXqMv36IlaBxbqmsK/8hjHDMzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708396018; c=relaxed/simple;
-	bh=8T3tY7oj4cWPmMLru07PWyLzhA0TZeU9DdNfBVxiI2k=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dwrnKj31nPpwmwlVq2Wfzmgks0+IuEY7jzdMllxc9UNy/Lq407somczvVC5dqeO+KvXKOYKp2y1aaKQy9JU12dIvUosdNYqZfm3X0pTwDu6ynbqxMnWUpPLTnH0xAqWHWeB3gsZtI/+BBUUrompb2f2E4xlxrlwoyjFov38l+8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tf3C11Y4Qz1h08w;
-	Tue, 20 Feb 2024 10:24:45 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id AAC471402DE;
-	Tue, 20 Feb 2024 10:26:52 +0800 (CST)
-Received: from [10.174.185.179] (10.174.185.179) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 20 Feb 2024 10:26:51 +0800
-Subject: Re: next-20240219: arm64: boot failed - gic_of_init
-To: Marc Zyngier <maz@kernel.org>
-CC: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
-	<linux-kernel@vger.kernel.org>, Linux ARM
-	<linux-arm-kernel@lists.infradead.org>, <lkft-triage@lists.linaro.org>, Linux
- Regressions <regressions@lists.linux.dev>, Catalin Marinas
-	<catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dan Carpenter
-	<dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
- <86edd84wer.wl-maz@kernel.org> <86cyss4rl7.wl-maz@kernel.org>
- <a7d8e529-9a44-3f88-50ef-d87b80515c36@huawei.com>
- <86a5nw4gp3.wl-maz@kernel.org>
-From: Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <f3bd274b-2644-ce5c-315d-36a492814d13@huawei.com>
-Date: Tue, 20 Feb 2024 10:26:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+	s=arc-20240116; t=1708396749; c=relaxed/simple;
+	bh=IMwzauYZetrMijGUdyA3fsIO45z89hM65VuA1iwSV/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r7JzoGLADWYHkhf+PFpSgAE7Xea2rtcGfBYgZIJ9v3vm8/vOsbZfg9svoS1/pYBb8JU0Db+lPvH797aJxxAT3vMyfBgQJYzDSnzCGTtqe3v5OgFXBdznKMgJ4TRae+Nw86UfWfXPGHLT0BJVq0Gu7QOGATF/shg7QPxrgWeTg2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YB6NFOq7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YB6NFOq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C98C433F1;
+	Tue, 20 Feb 2024 02:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708396748;
+	bh=IMwzauYZetrMijGUdyA3fsIO45z89hM65VuA1iwSV/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YB6NFOq76aBrk1UjP07/9OTebNduLf+HeewS19UjQ16nt8QoxeiQhyW8vrJMGwxDN
+	 wF4BoSSpTb1418jqu29RqMJACKjPDmd045ibXmEppdhRjcR0GiZ/UJUrROONjoJV+8
+	 UAuTHquJ9kkq+/FAuuLjcip0UOTGfHqC/4GPhCOTar28LXFqX+c4NgGD0sngUkUNPW
+	 tLA1+XwXHVMASPoJRiva6tIBUDDHTdEPYn0GntilA8MdJBhrtng/WvMpGi6jyTZYVg
+	 fsp+y4gjM3PA9Xgh55LBrGmLVRAILHITbuQx/x/XkJDj/JlO4mRGwLGitqnStBCDR8
+	 Vb3EOsri+ab7w==
+Message-ID: <2247088a-aed0-4120-93a5-cf52a829db26@kernel.org>
+Date: Tue, 20 Feb 2024 10:39:03 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <86a5nw4gp3.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression 6.1.y] f2fs: invalid zstd compress level: 6
 Content-Language: en-US
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Dhya <dhya@picorealm.net>, 1063422@bugs.debian.org,
+ Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <170736382774.1975.1861975122613668970.reportbug@tsuga.picorealm.net>
+ <ZcU3VCrt9VOpuFUq@eldamar.lan>
+ <6d14ea70-ac1c-46f2-af1d-ba34ea0165aa@kernel.org>
+ <ZdOx73kckFXADcol@eldamar.lan>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZdOx73kckFXADcol@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600007.china.huawei.com (7.193.23.208)
 
-On 2024/2/19 23:27, Marc Zyngier wrote:
-> On Mon, 19 Feb 2024 14:46:46 +0000,
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
->>
->> On 2024/2/19 19:32, Marc Zyngier wrote:
->>> For what it is worth, I've just tested both defconfig and my own
->>> configuration with both 4k (kvmtool, QEMU+KVM and on SynQuacer) and
->>> 16k (kvmtool), without any obvious problem.
->>
->> I had a quick test on top of next-20240219 with defconfig.  I can
->> reproduce it with QEMU parameter '-cpu max -accel tcg', but things are
->> fine with '-cpu max,lpa2=off -accel tcg'.
->>
->> Bisection shows that the problem happens when we start putting the
->> latest arm64 and kvmarm changes together.  The following hack fixes the
->> problem for me (but I **only** write it for kernel built with defconfig
->> with ARM64_4K_PAGES=y atm).
->>
->> I can investigate it further tomorrow (as it's too late now ;-) ).  Or
->> maybe Marc or Catalin can help fix it with a proper approach.
->>
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index 4f7662008ede..babdc3f4721b 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -2798,6 +2798,7 @@ static const struct arm64_cpu_capabilities
->> arm64_features[] = {
->> | 		.sign = FTR_SIGNED,
->> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN4_SHIFT,
->> | 		.min_field_value = ID_AA64MMFR0_EL1_TGRAN4_52_BIT,
->> |+		.max_field_value = BIT(ID_AA64MMFR0_EL1_TGRAN4_WIDTH - 1) - 1,
->> | #else
->> | 		.sign = FTR_UNSIGNED,
->> | 		.field_pos = ID_AA64MMFR0_EL1_TGRAN16_SHIFT,
+On 2024/2/20 3:54, Salvatore Bonaccorso wrote:
+> Hi,
 > 
-> I've posted my take on this at [1], which hopefully matches what you
-> were aiming at.
+> On Mon, Feb 19, 2024 at 10:35:13AM +0800, Chao Yu wrote:
+>> On 2024/2/9 4:19, Salvatore Bonaccorso wrote:
+>>> Hi Jaegeuk Kim, Chao Yu,
+>>>
+>>> In Debian the following regression was reported after a Dhya updated
+>>> to 6.1.76:
+>>>
+>>> On Wed, Feb 07, 2024 at 10:43:47PM -0500, Dhya wrote:
+>>>> Package: src:linux
+>>>> Version: 6.1.76-1
+>>>> Severity: critical
+>>>> Justification: breaks the whole system
+>>>>
+>>>> Dear Maintainer,
+>>>>
+>>>> After upgrade to linux-image-6.1.0-18-amd64 6.1.76-1 F2FS filesystem
+>>>> fails to mount rw.  Message in the boot journal:
+>>>>
+>>>>     kernel: F2FS-fs (nvme0n1p6): invalid zstd compress level: 6
+>>>>
+>>>> There was recently an f2fs patch to the 6.1 kernel tree which might be
+>>>> related: https://www.spinics.net/lists/stable-commits/msg329957.html
+>>>>
+>>>> Was able to recover the system by doing:
+>>>>
+>>>> sudo mount -o remount,rw,relatime,lazytime,background_gc=on,discard,no_heap,user_xattr,inline_xattr,acl,inline_data,inline_dentry,extent_cache,mode=adaptive,active_logs=6,alloc_mode=default,checkpoint_merge,fsync_mode=posix,compress_algorithm=lz4,compress_log_size=2,compress_mode=fs,atgc,discard_unit=block,memory=normal /dev/nvme0n1p6 /
+>>>>
+>>>> under the running bad 6.1.0-18-amd64 kernel, then editing
+>>>> /etc/default/grub:
+>>>>
+>>>>     GRUB_DEFAULT="Advanced options for Debian GNU/Linux>Debian GNU/Linux, with Linux 6.1.0-17-amd64"
+>>>>
+>>>> and running 'update-grub' and rebooting to boot the 6.1.0-17-amd64
+>>>> kernel.
+>>>
+>>> The issue is easily reproducible by:
+>>>
+>>> # dd if=/dev/zero of=test.img count=100 bs=1M
+>>> # mkfs.f2fs -f -O compression,extra_attr ./test.img
+>>> # mount -t f2fs -o compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime ./test.img /mnt
+>>>
+>>> resulting in
+>>>
+>>> [   60.789982] F2FS-fs (loop0): invalid zstd compress level: 6
+>>
+>> Hi Salvatore,
+>>
+>> Can you please try below fixes:
+>>
+>> [PATCH 6.1] f2fs: add helper to check compression level
+>> https://lore.kernel.org/linux-f2fs-devel/20240212160530.1017205-1-chao@kernel.org
 > 
-> [1] https://lore.kernel.org/all/86bk8c4gyh.wl-maz@kernel.org/
+> Confirmed that this fixes the reported issue as it was reported to us
+> in Debian in https://bugs.debian.org/1063422 . Thanks a lot!
+> (note just tested with the first commit as it landed in 6.1.78 to
+> confirm the immediate regression).
+> 
+> #regzbot fixed-by: cf3d57ad6ff8b566deba3544b9ad3384781fb604
 
-Yup, this looks good to me.
+Hi,
+
+Thank you for confirmation.
 
 Thanks,
-Zenghui
+
+> 
+> Regards,
+> Salvatore
