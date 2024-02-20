@@ -1,76 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3E32C1B4;
-	Tue, 20 Feb 2024 14:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F912C6AA
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 14:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708439757; cv=none; b=tUJuMvohDZgZiKHmtCTKXuq5XYjnHKqVpxclMNJLjoCndtusGc0aFWDqTveLnR5WVZpKrIVMLVhNrUTDsynKY5h0DyEwucjYJ2QqLFQNm3O4O6uG1G12qD6C0jQ/fpRix5gb+Zsr6tnL5e6ja2aoK+MJxNLT75NdMYayEpo4vmg=
+	t=1708440362; cv=none; b=GJLynMSYgLJGH9FfrpJrLLmvN3brXmPQrf9WvDArmCTNUOa0W0TmB9MHHiXdng60N6aXehXFhjVogKijGdXrwfPbx+terXAIfsANydimTPYHBDL95bbTnfXs8bPdCZC6O+gXdr0OPrsLJUkeP3T5VHNgPF00KPEt6GHhj7TsML0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708439757; c=relaxed/simple;
-	bh=YvT0MofwUncJLLsALhxER2p5o67FyIoyFgQv131Mwbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JCWE+l6kl4WmnngTe+uu1w43BzpStNd66jwB3pq7XJqsACYP7uBuuUl6k81RfKS/wYwIY/QoqFETdHKVZ94J/n6HXeI2VOXAAMoT1G+QF0qhj4TlQxewSg5d50emAiPRwSksUKjTtLHr5VoH78Vi0cYMxdBsCsr2oJxDN0xaBR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZxuY8J1h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708440362; c=relaxed/simple;
+	bh=nNNW522hhSh2JTEqryXwQXEj8ZeDmhAcd3+o03I/9FM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uwmc0XAwHHL05K6PmxYR62bgJrTm5cPJW4FIeb8dORIrKXOXT50yUv/HeMk6ZSb0Aw7VGXD7/LnVh0oTrvzmK++V+ikNsPtlBWeF4kejhnwywD4RSp/8sICEgyyBgjeTsUkf/XtLPu6BV0iN80bJ256dmxbJwOxhlWi4yVamZ/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDwyeYh+; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZxuY8J1h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E5DC43390;
-	Tue, 20 Feb 2024 14:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708439756;
-	bh=YvT0MofwUncJLLsALhxER2p5o67FyIoyFgQv131Mwbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZxuY8J1hTUs7tvn6yxfPiI4+TAC4d3HeiChVA6cTMzIx7NB6ERu/Dl0kRwJl0k1m+
-	 2vG4/V9qAt+03uszSkIEpVL8uVx82Am4bX87zoMtdMlk+B7aeFhBl1AuMiEOLE6QBb
-	 eB1XR9YkNRUBLb9JINpxfi0qEJX2PYWM5HayMCaU=
-Date: Tue, 20 Feb 2024 15:35:53 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andreas Schwab <schwab@suse.de>
-Cc: Tony Lindgren <tony@atomide.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Linux-OMAP <linux-omap@vger.kernel.org>
-Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
-Message-ID: <2024022022-happiest-affirm-60cf@gregkh>
-References: <mvmcyt13idm.fsf@suse.de>
- <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
- <20240215094640.GS52537@atomide.com>
- <mvmeddeyqb8.fsf@suse.de>
- <2024021516-stricken-bubble-bf8d@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDwyeYh+"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dba6b9b060so27289655ad.1
+        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 06:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708440359; x=1709045159; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dqoh+aO5PuDXiiP1kNhYVUZ2C9dCr9HHTDaZyknCirw=;
+        b=BDwyeYh+SHIxRSxbEQE8TFAuqF8vm/7RuEkR2qK36cEmjwbAmzctT4s+NXZJWd5/IZ
+         BTqFY8pN/qz9/yKgJ6ETx7lxxS5/jHBDqwCpFYLQwqulHT4d/63nVcL+f66mLSrnRg1p
+         WErMQsQRbQWUdhLId5JwyoTqDk9R8hrTSTGwSII2uNa4D5EDDIg3vlCU5JuT54iN2hrH
+         4O06YoAx7apgLPmkKw3iMNnJX37/3n8yowj6nMCiABo9BlBh8zTlObwVEY9Wp/9rScHk
+         D66CiuBwevC76QhoRV6mpE128xBfTLIxtBifmTHFEHvygzIix0BMcIjB/5phh73rUVOE
+         UHag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708440359; x=1709045159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dqoh+aO5PuDXiiP1kNhYVUZ2C9dCr9HHTDaZyknCirw=;
+        b=i8ZKBSTZE1IKHokgazMUfuso2Tngl1RTWOOyuIabZQj8ITkps444hZm5mDTau4Asw9
+         RHIX+rNm6xPIxq2FDrsls5TAIgH0a+9Z8YvhwCWNgVevIvawzjYE3+R2X0kNATIBF3Vh
+         ABoFOiE6xu0MEy/TfaricMqkWowFqiB0f7/5TW4LATDJe9SIUA9bKYdzmfxDwQcND0Kv
+         VBkamrb1HsGl1EQ6cthto716uH9ktuUfifaxL4s3wB9h3/yIeoV2ol94VMgwgEpIz54k
+         ceAVZAYgnuGiYqLooXaLWx/6hoeZGYHjdMgLF+tuxWkdWBRjNTtkmXUrzFjhfIRQqJ62
+         xNpg==
+X-Gm-Message-State: AOJu0YwyfgkO6oZPrk1gPVXJkzYjqggmyC9h+SFvYFwD52TZ7tGwmLQa
+	tEb9KDqFH1FEOEJLCjKW963IACYTrkI5QfLUhl7WRR3A2VemlVL74R9YxuT2UKH24jM2ShlZ3hB
+	HXV3h1Hjxr4lqoPdu6Ko7QLZfAgAn9348
+X-Google-Smtp-Source: AGHT+IEzbFTeHEExGYPs6vvdhejACokVXp8HYK3mE36/KNfRZqfgHDzUh/rrTveciNVPq7sJJFaxRjvi1RJGoOh5znw=
+X-Received: by 2002:a17:90b:1881:b0:299:1cce:f3c3 with SMTP id
+ mn1-20020a17090b188100b002991ccef3c3mr19017313pjb.7.1708440359315; Tue, 20
+ Feb 2024 06:45:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024021516-stricken-bubble-bf8d@gregkh>
+References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
+ <2024021732-framing-tactful-833d@gregkh> <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
+In-Reply-To: <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 20 Feb 2024 09:45:47 -0500
+Message-ID: <CADnq5_OgPBtYpxBQ+aBmA2t7ob7EFPFWrF9OYXNgm00eEayMNA@mail.gmail.com>
+Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux, mesa/amdgpu)
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Greg KH <gregkh@linuxfoundation.org>, 
+	Roman Benes <benes@riadoklan.sk.eu.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 15, 2024 at 12:16:34PM +0100, Greg KH wrote:
-> On Thu, Feb 15, 2024 at 11:28:27AM +0100, Andreas Schwab wrote:
-> > On Feb 15 2024, Tony Lindgren wrote:
-> > 
-> > > There was a regression recently with the PMIC which would cause NFSroot
-> > > on devices to keep working but may have affected MMC. Please check that
-> > > commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
-> > > is applied.
-> > 
-> > That commit hasn't hit stable yet.  Maybe it's because it references a
-> > non-existant commit id (1e0c866887f4 instead of 830fafce06e6).
-> 
-> Yeah, our tools can't do about a commit that does not have a cc: stable@
-> tag in it AND the only commit it does reference is not one actually in
-> the tree at all.
-> 
-> An impossible task for us here, please ask stable@vger.kernel.org to
-> take the commit if this is needed, and let us know how far back it
-> should go.
+On Mon, Feb 19, 2024 at 9:47=E2=80=AFAM Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 17.02.24 14:30, Greg KH wrote:
+> > On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
+> >> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 670=
+0XT,
+> >> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
+> >> neither with Corectrl, LACT or TuxClocker and /sys have a variable rea=
+d-only
+> >> even for root. This is not of above apps issue but of the kernel, I re=
+ad
+> >> similar issues from other bug reports of above apps. I downgraded to v=
+6.6.10
+> >> kernel and my 115W(under power)cap work again as before.
+> >
+> > Any chance you can use 'git bisect' to figure out the offending change?
+>
+> For the record and everyone that lands here: the cause is known now
+> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
+> value") [v6.7-rc1]) and the issue afaics tracked here:
+>
+> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+>
+> Other mentions:
+> https://gitlab.freedesktop.org/drm/amd/-/issues/3137
+> https://gitlab.freedesktop.org/drm/amd/-/issues/2992
+>
+> Haven't seen any statement from the amdgpu developers (now CCed) yet on
+> this there (but might have missed something!). From what I can see I
+> assume this will likely be somewhat tricky to handle, as a revert
+> overall might be a bad idea here. We'll see I guess.
 
-To be explicit, does this need to be applied to the stable tree(s)?  If
-so, please email stable@vger.kernel.org with the git id to do so.
+The change aligns the driver what has been validated on each board
+design.  Windows uses the same limits.  Using values lower than the
+validated range can lead to undefined behavior and could potentially
+damage your hardware.
 
-thanks,
+Alex
 
-greg k-h
+>
+> Roman posted something that apparently was meant to go to the list, so
+> let me put it here:
+>
+> """
+> UPDATE: User fililip already posted patch, but it need to be merged,
+> discussion is on gitlab link below.
+>
+> (PS: I hope I am replying correctly to "all" now? - using original addr.)
+>
+>
+> > it seems that commit was already found(see user's 'fililip' comment):
+> >
+> > https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+> > commit 1958946858a62b6b5392ed075aa219d199bcae39
+> > Author: Ma Jun <Jun.Ma2@amd.com>
+> > Date:   Thu Oct 12 09:33:45 2023 +0800
+> >
+> >     drm/amd/pm: Support for getting power1_cap_min value
+> >
+> >     Support for getting power1_cap_min value on smu13 and smu11.
+> >     For other Asics, we still use 0 as the default value.
+> >
+> >     Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+> >     Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+> >     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> >
+> > However, this is not good as it remove under-powering range too far. I
+> was getting only about 7% less performance but 90W(!) less consumption
+> when set to my 115W before. Also I wonder if we as a OS of options and
+> freedom have to stick to such very high reference for min values without
+> ability to override them through some sys ctrls. Commit was done by amd
+> guy and I wonder if because of maybe this post that I made few months
+> ago(business strategy?):
+> >
+> >
+> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capp=
+ed_115w_at_only_10/
+> >
+> > This is not a dangerous OC upwards where I can understand desire to
+> protect HW, it is downward, having min cap at 190W when card pull on
+> 115W almost same speed is IMO crazy to deny. We don't talk about default
+> or reference values here either, just a move to lower the range of
+> options for whatever reason.
+> >
+> > I don't know how much power you guys have over them, but please
+> consider either reverting this change, or give us an option to set
+> min_cap through say /sys (right now param is readonly, even for root).
+> >
+> >
+> > Thank you in advance for looking into this, with regards:  Romano
+> """
+>
+> And while at it, let me add this issue to the tracking as well
+>
+> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> regressions; the text you find below is based on a few templates
+> paragraphs you might have encountered already in similar form.
+> See link in footer if these mails annoy you.]
+>
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+>
+> #regzbot introduced 1958946858a62b /
+> #regzbot title drm: amdgpu: under-powering broke
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
