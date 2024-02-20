@@ -1,308 +1,251 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA606D1A8
-	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 18:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AAA78B64
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 18:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708452609; cv=none; b=CKa7OwKngiHTFv4cAXoQK7jJ4eu3aMw1s2sWzQhR4dCOjFDTUNROmGD+JdkOnrs0yOqheOW0wf9zh3lETwMgMjVdpxu5EBzp7Ij03Kh8FEKIHCcPWa4xNw7/qgYHcxo9xo02Dc5tNIuF/aFUio/6K1j0oGMQsSAVturgtjLQM1E=
+	t=1708452731; cv=none; b=Lqks47hsT2x3GKtGbUo+FaBbagPR0M/80+uB8wiLjmFWhM7v4F77SAaWyS6g7V3vltITJ7ikS5u5alTMak1fjjve3zfQKs+O0DAUHjE2Jt1Vig21Xz0izubJGFTgx5aq3YOxhlLXFcPI54dnIv8haVw+2FuysgDp5rvX+Np55Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708452609; c=relaxed/simple;
-	bh=YZbsQ0xOTGHKCHx8AdvJtRJKfcO2FT+h2HdiLyZwmjY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qrEmj79Cvvgcz5avgAjBZMqgWvHobo3QowHlYOEFncmMbxWiet0pb//oBcy1YhWRCmZTjZXjI0ZGSbJIZhLywGxfqQHQmUTkhMRM8FyCyHV6OidwU8zv1a+o8auPgd3EhrwtyhLT4+ZWCESqnm1UkOJZO6t5GtmipD18HcVhKEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EoGOnAMt; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1708452731; c=relaxed/simple;
+	bh=K4Pg2ukWWO9VgdQeMinN/m7rs4wCWBDd0u5fathmfgM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=osv/9BN6DW0Rmn2NjY6yrg7FMZfByTq645sG0eeTisvXdKMjcJpueIYgC1GNWsJGQZc0TBE64CJpxoNpTuprqAMqw/7J1AneO8E7f4l5wTxQO8oUu4zH3N4wJWW43ynqX5ET9BWOVbkoIUz7VAuIQV3BN0l5qEKR+wWz/b7N7o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rm/0TCMY; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EoGOnAMt"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-299dba8fd24so809372a91.2
-        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 10:10:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rm/0TCMY"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4126f8c6b3cso6385365e9.0
+        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 10:12:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708452607; x=1709057407; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rE/Q9FHq5cZOGbpSCeSMCF+xdxbm/TzrKlHVpFPm0No=;
-        b=EoGOnAMtbhnVBSG/QWrBlhPFOjbgOWy0ApZHsDkCc3sPOIUVu+e9IEy0ZQxlyN+s2n
-         S3bpNdeB17+sUi7R5R/Xo/boc10Amjlf5cHTm9hft1IUjNrcGcgpRWdKff3utLGnJYva
-         shXRMso+l5PXsnuGfIB2GBpzNE2K0NGwXh46rSUsvMdsiteR14xG1qfHBqh17W4hGAeu
-         YtS5IxnqFGMblGol61Q91sCVUKxB2pZK25ueA30QU80vcz23K8KiAtSA1usHxchrrlHD
-         c2LtZIPq2X4aHkK2anPSxVbTjCd0ZgNgK0JZfqKXSH94ixVTcVsEDpV72T5iM11MESDV
-         lKSA==
+        d=gmail.com; s=20230601; t=1708452727; x=1709057527; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=cx6laXczgEnaoQTUR4D8qlYDX1ToRaSpNxIMxiJrew4=;
+        b=Rm/0TCMYkZy3oc21SPu1KTzy2K50GUkpmhNvY3wpjjDZ5htNHcIrFTCJn4ThDotXpS
+         R2RjG/JKtgE6fpxWc5d9M+9JQfXcWLWMHtYp7eUP+Sku1kjJbbi4SOdLOmyaNnRMi91b
+         +gvWIISDPFd44rY4tas5XD+a/w76HyvvY5gLyO7FT2fJp0P3scNPfcxyye82qcN0F4fI
+         nMTd9Yr8UT9kzkDA5ydic4Zm6YCIyK4N7R7s9Fx3ajEcWyjsnFJ0+ygpiqiYq5wmq76k
+         Zed6z0HUtWeExnUPVsdkCGXi7ni13QgrllIMQ8QUEI1CqJ+2y7WphSXLERcvg1thv2AU
+         kQ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708452607; x=1709057407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rE/Q9FHq5cZOGbpSCeSMCF+xdxbm/TzrKlHVpFPm0No=;
-        b=TOZZ7dkIWJKqO6lJwxIVJdt/6Qxo+8+URgTDv3Rrc7SxA1kk0R3aictwPkV1BX2vq9
-         Qs4nar9XS5njeDvatU0WB6kzpUucmTMcJkFdrcQnzFUkwakc877rkw/RNieHK0nKIAIz
-         LQeou5/o6WJPBLtkiXLx64c/j7/8m13H7Mw/lbDljrBBLPxk5EkfPznP2lmGwI6I2GXq
-         dSzGtVNarepkGDHXTajKhebMOxGjtn94ioWXCdZopetl8j3FlcqlNQmIPdwkm3G73Kk3
-         g2PfwKOzIAFokcqpo1Nd9TqZvJ86nrx3YZgWE4ElF0yWC7MQmLGa5dntVngrfzwBYcKG
-         X0Ew==
-X-Gm-Message-State: AOJu0YxMeQUD9sNFqqL0imZU4LlrKOfPcYvUeGXXfDbMUXgJ1mPkWcKr
-	V6RCKDtw9KmEpecnKlovzI91zvuP+uWHrajJ0gODFtD8QahSpFkJe9cD1XxG7KxKE3llBNDHWo6
-	xc1WoyWIkVml9LpQa5UU9fVjpU9D4U5Sw
-X-Google-Smtp-Source: AGHT+IGWLcCUs4NW3DArSVSatoc4eeH2GMxwJ1j1v+f0qNzjLvM+Izu4TvILfARFwUl6n6JqTEZkFCA3VTdjtObAOrk=
-X-Received: by 2002:a17:90a:bb8d:b0:299:41fd:a59d with SMTP id
- v13-20020a17090abb8d00b0029941fda59dmr8131390pjr.35.1708452606623; Tue, 20
- Feb 2024 10:10:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708452727; x=1709057527;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cx6laXczgEnaoQTUR4D8qlYDX1ToRaSpNxIMxiJrew4=;
+        b=kuxuDobxvkBpR602zbAQzQwTrwV86pcnS75AQ4U1+9mEX/p2ZjwTTSD9wbsqFEhi/W
+         V+8nXz9D+5LPgqVnWEvh03ZrzX0SBV6eYvD4buPlYL/NQ0Vo/BM44fsg4Qngn9oTuEq1
+         f3yC+YJFbh7kyHV0wp70sJ60BSvp2+0eac/zTKlOU/aCVoGwionUQ2PF/8LxkYKWPcPY
+         +QFl2bI7d1S9vhtTjk19+QdyXmWNjVBRB00/TgmxY3jg0cOzl2CMmxJ8EgqHOrQtDbOn
+         91/iirDc38LMoc7OBxcFAgVKsipw+XhXCLyJgX4XJsAF5mmVGh5uCysgXm7Q+HOmpyjE
+         ZZ8A==
+X-Gm-Message-State: AOJu0YzPoC+macUrX5JCw7xhpZZXx880TMcrHWB/atiEIEOMj+nRUCC/
+	I6FMozgojqh1TEodz0pzk+1T95/I++4ZR3bgFc2uPG2SrX2H3ojb
+X-Google-Smtp-Source: AGHT+IEnj5STeqAnpBo732KVTQcITKGLCyco89kcAdtWrY01nn8u9AnHown+reJHgBoTeA2Nsro8dA==
+X-Received: by 2002:a5d:660e:0:b0:33c:f9d6:fb20 with SMTP id n14-20020a5d660e000000b0033cf9d6fb20mr12318593wru.45.1708452727034;
+        Tue, 20 Feb 2024 10:12:07 -0800 (PST)
+Received: from ?IPV6:2a01:e34:ec5f:c111:befe:8ded:1f46:cf9a? ([2a01:e34:ec5f:c111:befe:8ded:1f46:cf9a])
+        by smtp.gmail.com with ESMTPSA id k35-20020a05600c1ca300b00410cfc34260sm16013966wms.2.2024.02.20.10.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 10:12:06 -0800 (PST)
+Message-ID: <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
+Date: Tue, 20 Feb 2024 19:12:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
- <2024021732-framing-tactful-833d@gregkh> <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
- <CADnq5_OgPBtYpxBQ+aBmA2t7ob7EFPFWrF9OYXNgm00eEayMNA@mail.gmail.com>
- <62bf771e-640a-45ab-a2de-3df459a9ed30@leemhuis.info> <CADnq5_M4Zwv0_B1DoU_a8aNpyPVJj_PpjDG_oi3JkrGC5-hNgg@mail.gmail.com>
- <4bc8747a-d87f-423b-b0ce-8891e78ae094@redhat.com> <a6243c3b-d773-4693-88e9-033995616f12@leemhuis.info>
- <CADnq5_MHmz=HdGA22U-bk2b+4un70bmLzpbDyc3+tjzoRAnCeA@mail.gmail.com> <1aa3830d-ceb7-4eb1-b5bb-d6043684507f@gmail.com>
-In-Reply-To: <1aa3830d-ceb7-4eb1-b5bb-d6043684507f@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 20 Feb 2024 13:09:54 -0500
-Message-ID: <CADnq5_Nc+eEfXwaXfaTz75C9ww6ETVm_adCSfGsdD6OzguUQ6Q@mail.gmail.com>
-Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux, mesa/amdgpu)
-To: Romano <romaniox@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Hans de Goede <hdegoede@redhat.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>
+Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux Regressions Mailing List <regressions@lists.linux.dev>,
+ Linux Input Mailing List <linux-input@vger.kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@jikos.cz>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Mikhail Khvainitski <me@khvoinitsky.org>,
+ Linux Stable Mailing List <stable@vger.kernel.org>
+References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
+ <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info>
+Content-Language: fr-FR, en-US
+Autocrypt: addr=raphael.halimi@gmail.com; keydata=
+ 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
+ Wxcwwn0N
+In-Reply-To: <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 20, 2024 at 11:46=E2=80=AFAM Romano <romaniox@gmail.com> wrote:
->
-> For Windows, apps like MSI Afterburner is the one to try and what most
-> people go for. Using it in the past myself, I would be surprised if it
-> adhered to such a high min power cap. But even if it did, why would we
-> have to.
->
-> Relying on vendors cap in this case has already proven wrong because
-> things worked for quite some time already and people reported saving
-> significant amount of watts, in my case 90W(!) for <10% perf.
->
-> Therefore this talk about safety seems rather strange to me and
-> especially so when we are talking about min_cap. Or name me a single
-> case where someone fried his card due to "too low power" set in said
-> variable. Now there was a report, where by going way too low, driver
-> goes opposite into max power. That's it. That can be easily
-> detected(vents going crazy etc.) and reverted. It is a max_cap that
-> protect HW(also above scenario), not a min_cap. Feel free to adhere to
-> safety standards with that one.
+Le 20/02/2024 à 12:35, Thorsten Leemhuis a écrit :
+> [CCing the regression list, as it should be in the loop for regressions:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> 
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Because operation outside of the design bounding box is undefined.  It
-might work for some boards but not others.  It's possible some of the
-logic in the firmware or some of the components used on the board may
-not work correctly below a certain limit, or the voltage regulators
-used on a specific board have a minimum requirement that would not be
-an issue if you stick the bounding box.
+Hi, thanks for replying (even if I find your tone a bit harsh, but I 
+don't blame you - and since English is not my native language, maybe I'm 
+mistaking).
 
-Alex
+>> [1]
+>> https://github.com/torvalds/linux/commit/46a0a2c96f0f47628190f122c2e3d879e590bcbe
+>> [2]
+>> https://github.com/torvalds/linux/commit/2f2bd7cbd1d1548137b351040dc4e037d18cdfdc
+>> [3]
+>> https://github.com/torvalds/linux/commit/43527a0094c10dfbf0d5a2e7979395a38de3ff65
+>>
+>> The regression is that a middle click is performed when releasing middle
+>> button after wheel emulation.
+> 
+> How did you identify these three commits? Or do you just suspect that
+> it's one of them?
 
->
-> As for solution, what some suggested already exist - a patch posted by
-> fililip on gitlab is probably the way most of you would agree. It
-> introduce a variable that can be set during boot to override min_cap.
-> But he did not pull requested it, so please, if any one of you who have
-> access to code and merge kernel would be kind enough to implement it.
->
->
->
-> On 2/20/24 16:46, Alex Deucher wrote:
-> > On Tue, Feb 20, 2024 at 10:42=E2=80=AFAM Linux regression tracking (Tho=
-rsten
-> > Leemhuis) <regressions@leemhuis.info> wrote:
-> >>
-> >>
-> >> On 20.02.24 16:27, Hans de Goede wrote:
-> >>> Hi,
-> >>>
-> >>> On 2/20/24 16:15, Alex Deucher wrote:
-> >>>> On Tue, Feb 20, 2024 at 10:03=E2=80=AFAM Linux regression tracking (=
-Thorsten
-> >>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> >>>>> On 20.02.24 15:45, Alex Deucher wrote:
-> >>>>>> On Mon, Feb 19, 2024 at 9:47=E2=80=AFAM Linux regression tracking =
-(Thorsten
-> >>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
-> >>>>>>> On 17.02.24 14:30, Greg KH wrote:
-> >>>>>>>> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
-> >>>>>>>>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU =
-(RX 6700XT,
-> >>>>>>>>> mesa, archlinux) and I cannot get power cap as low as before(to=
- 115W),
-> >>>>>>>>> neither with Corectrl, LACT or TuxClocker and /sys have a varia=
-ble read-only
-> >>>>>>>>> even for root. This is not of above apps issue but of the kerne=
-l, I read
-> >>>>>>>>> similar issues from other bug reports of above apps. I downgrad=
-ed to v6.6.10
-> >>>>>>>>> kernel and my 115W(under power)cap work again as before.
-> >>>>>>> For the record and everyone that lands here: the cause is known n=
-ow
-> >>>>>>> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap=
-_min
-> >>>>>>> value") [v6.7-rc1]) and the issue afaics tracked here:
-> >>>>>>>
-> >>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
-> >>>>>>>
-> >>>>>>> Other mentions:
-> >>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3137
-> >>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/2992
-> >>>>>>>
-> >>>>>>> Haven't seen any statement from the amdgpu developers (now CCed) =
-yet on
-> >>>>>>> this there (but might have missed something!). From what I can se=
-e I
-> >>>>>>> assume this will likely be somewhat tricky to handle, as a revert
-> >>>>>>> overall might be a bad idea here. We'll see I guess.
-> >>>>>> The change aligns the driver what has been validated on each board
-> >>>>>> design.  Windows uses the same limits.  Using values lower than th=
-e
-> >>>>>> validated range can lead to undefined behavior and could potential=
-ly
-> >>>>>> damage your hardware.
-> >>>>> Thx for the reply! Yeah, I was expecting something along those line=
-s.
-> >>>>>
-> >>>>> Nevertheless it afaics still is a regression in the eyes of many us=
-ers.
-> >>>>> I'm not sure how Linus feels about this, but I wonder if we can fin=
-d
-> >>>>> some solution here so that users that really want to, can continue =
-to do
-> >>>>> what was possible out-of-the box before. Is that possible to realiz=
-e or
-> >>>>> even supported already?
-> >>>>>
-> >>>>> And sure, those users would be running their hardware outside of it=
-s
-> >>>>> specifications. But is that different from overclocking (which the
-> >>>>> driver allows, doesn't it? If not by all means please correct me!)?
-> >>>> Sure.  The driver has always had upper bound limits for overclocking=
-,
-> >>>> this change adds lower bounds checking for underclocking as well.
-> >>>> When the silicon validation teams set the bounding box for a device,
-> >>>> they set a range of values where it's reasonable to operate based on
-> >>>> the characteristics of the design.
-> >>>>
-> >>>> If we did want to allow extended underclocking, we need a big warnin=
-g
-> >>>> in the logs at the very least.
-> >>> Requiring a module-option to be set to allow this, as well as a big
-> >>> warning in the logs sounds like a good solution to me.
-> >> Yeah, especially as it sounds from some of the reports as if some
-> >> vendors did a really bad job when it came to setting the proper
-> >> lower-bound limits are now adhered -- and thus higher then what we use=
-d
-> >> out-of-the box before 1958946858a62b was applied.
-> >>
-> >> Side note: I assume those "lower bounds checking" is done round about
-> >> the same way by the Windows driver? Does that one allow users to go
-> >> lower somehow? Say after modifying the registry or something like that=
-?
-> >> Or through external tools?
-> > Windows uses the same limit.  I'm not aware of any way to override the
-> > limit on windows off hand.
-> >
-> > Alex
-> >
-> >
-> >> Ciao, Thorsten
-> >>
-> >>>>>>> Roman posted something that apparently was meant to go to the lis=
-t, so
-> >>>>>>> let me put it here:
-> >>>>>>>
-> >>>>>>> """
-> >>>>>>> UPDATE: User fililip already posted patch, but it need to be merg=
-ed,
-> >>>>>>> discussion is on gitlab link below.
-> >>>>>>>
-> >>>>>>> (PS: I hope I am replying correctly to "all" now? - using origina=
-l addr.)
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>> it seems that commit was already found(see user's 'fililip' comm=
-ent):
-> >>>>>>>>
-> >>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
-> >>>>>>>> commit 1958946858a62b6b5392ed075aa219d199bcae39
-> >>>>>>>> Author: Ma Jun <Jun.Ma2@amd.com>
-> >>>>>>>> Date:   Thu Oct 12 09:33:45 2023 +0800
-> >>>>>>>>
-> >>>>>>>>      drm/amd/pm: Support for getting power1_cap_min value
-> >>>>>>>>
-> >>>>>>>>      Support for getting power1_cap_min value on smu13 and smu11=
-.
-> >>>>>>>>      For other Asics, we still use 0 as the default value.
-> >>>>>>>>
-> >>>>>>>>      Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
-> >>>>>>>>      Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
-> >>>>>>>>      Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> >>>>>>>>
-> >>>>>>>> However, this is not good as it remove under-powering range too =
-far. I
-> >>>>>>> was getting only about 7% less performance but 90W(!) less consum=
-ption
-> >>>>>>> when set to my 115W before. Also I wonder if we as a OS of option=
-s and
-> >>>>>>> freedom have to stick to such very high reference for min values =
-without
-> >>>>>>> ability to override them through some sys ctrls. Commit was done =
-by amd
-> >>>>>>> guy and I wonder if because of maybe this post that I made few mo=
-nths
-> >>>>>>> ago(business strategy?):
-> >>>>>>>>
-> >>>>>>> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w=
-_to_capped_115w_at_only_10/
-> >>>>>>>> This is not a dangerous OC upwards where I can understand desire=
- to
-> >>>>>>> protect HW, it is downward, having min cap at 190W when card pull=
- on
-> >>>>>>> 115W almost same speed is IMO crazy to deny. We don't talk about =
-default
-> >>>>>>> or reference values here either, just a move to lower the range o=
-f
-> >>>>>>> options for whatever reason.
-> >>>>>>>> I don't know how much power you guys have over them, but please
-> >>>>>>> consider either reverting this change, or give us an option to se=
-t
-> >>>>>>> min_cap through say /sys (right now param is readonly, even for r=
-oot).
-> >>>>>>>>
-> >>>>>>>> Thank you in advance for looking into this, with regards:  Roman=
-o
-> >>>>>>> """
-> >>>>>>>
-> >>>>>>> And while at it, let me add this issue to the tracking as well
-> >>>>>>>
-> >>>>>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> >>>>>>> regressions; the text you find below is based on a few templates
-> >>>>>>> paragraphs you might have encountered already in similar form.
-> >>>>>>> See link in footer if these mails annoy you.]
-> >>>>>>>
-> >>>>>>> Thanks for the report. To be sure the issue doesn't fall through =
-the
-> >>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regr=
-ession
-> >>>>>>> tracking bot:
-> >>>>>>>
-> >>>>>>> #regzbot introduced 1958946858a62b /
-> >>>>>>> #regzbot title drm: amdgpu: under-powering broke
-> >>>>>>>
-> >>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracke=
-r' hat)
-> >>>>>>> --
-> >>>>>>> Everything you wanna know about Linux kernel regression tracking:
-> >>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
-> >>>>>>> That page also explains what to do if mails like this annoy you.
-> >>>>>>
-> >>>
-> >>>
+No, I didn't "just suspect" that it was one of them. I may not be a 
+kernel developer but I'm an experienced sysadmin (25+ years). So please 
+stop taking users for idiots.
+
+First, I compared the three machines I used which have a keyboard with a 
+TrackPoint: my desktop at home (external "Lenovo ThinkPad Compact 
+Keyboard with TrackPoint" (not II, not Bluetooth), Debian unstable (I'm 
+a DM), my desktop at work (same keyboard, Debian Stable) and my personal 
+laptop (ThinkPad X270, internal keyboard, Debian Stable but with backports).
+
+The machine at work had a 5.10 kernel at the time, and the other ones 
+had a 6.6, but only the machines with an external keyboard exhibited the 
+spurious middle-clicks. So I compared the loaded HID drivers, and 
+noticed that both of them had hid_lenovo loaded, whereas the laptop did not.
+
+Confident that I probably pinpointed the faulty driver, I simply looked 
+at the file history on Github, and saw that those three commits were 
+dated from after the time when the bug appeared ; moreover, the comments 
+did mention stuff related to wheel emulation and spurious middle-clicks.
+
+So, no, I didn't "just suspected" that they were responsible, but I hope 
+you'll admit my method was sound, and that my conclusion is a pretty 
+strong (to not say "almost certain") probability.
+
+> And did you try to check which of the three is the actual culprit?
+> Either by reverting them on top of master or by checking the parent for
+> each of the commits (git show '2f2bd7cbd1d^' shows the parent for
+> 2f2bd7cbd1d).
+
+I admit I didn't. I didn't compile my own kernels for ages. I used to do 
+it in the past, but I came to trust Debian's kernels and rely on the 
+maintainers' work. But read below.
+
+>> On Debian Stable, the last working kernel was 5.10.127, the regression
+>> appeared in 5.10.136 (i read all changelogs on kernel.org between those
+>> two releases but couldn't find anything about hid-lenovo, so I can't
+>> tell exactly in which release the regression appeared, Debian upgraded
+>> directly from .127 to .136).
+> 
+> Why not bisect between .127 and .136 then?
+
+I heard of that term before (and I understand the mathematical meaning 
+of it), but I never did it with a Git tree. I read the guide you 
+mentioned below, but it seems much too complicated and too long to me 
+for just verifying if those three commits are indeed the cause of the 
+regression (which I'm almost sure of, as stated above).
+
+So in the meantime, I decided to follow my hunch and recompile only the 
+hid_lenovo module (following the guide at [6], updating it slightly by 
+manually removing kernel signing options in .config, since I obviously 
+don't have Debian's signing keys, and replacing "make 
+SUBDIRS=drivers/..." with "make M=..." as suggested by make), after 
+un-applying those three patches in reverse order.
+
+[6] https://askubuntu.com/a/338403/387067
+
+The HID modules built successfully, and after copying my modified 
+hid-lenovo.ko to /usr/lib/modules/6.6.15-amd64/updates/ and running 
+'depmod -a', the module loaded fine with Debian's kernel (I don't use 
+Secure Boot on this machine).
+
+I'll let a few days pass (remember, the bug doesn't happen immediately 
+but only after a varying amount of time) and I'll report here if the 
+spurious middle-clicks happened again or not.
+
+Notes:
+
+1/ Thank you for (indirectly) giving me this idea. Maybe this relatively 
+simple procedure should be made available somewhere on Debian's wiki 
+(instead of an outdated, but still useful, answer on AskUbuntu).
+
+2/ Please note that I did it only for unstable kernel; unfortunately, I 
+can't do the same for the stable kernel, since I don't have access to my 
+  machine at work anymore (my freelance contract ended one week ago) and 
+I don't have any other machine at home exhibiting this bug. So I won't 
+be able to test it on a stable kernel.
+
+>> I reported it in Debian [4], and apparently I'm not the only person
+>> suffering from it [5].
+>>
+>> [4] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1058758#32
+>> [5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1058758#42
+>>
+>> I would understand that such bugs would end up in a development kernel
+>> like the ones provided by Debian Unstable, but not with stable kernels
+>> like the ones provided by Debian Stable.
+> 
+> A bug report like yours can do the trick sometimes, as it might be
+> enough to ring a bell for one of the developers. But given that nobody
+> replied yet it looks like that is not the case. Then you most likely
+> will need to perform a bisection to identify the exact commit that broke
+> things.
+
+Nobody amongst the developers, yes, I'll give you that. But the comment 
+I linked from the Debian BTS, plus another bug report I found in the 
+Input mailing list [7], show that I'm not the only user complaining from 
+the recent regressions.
+
+[7] 
+https://lore.kernel.org/linux-input/CACSVgagaEHO2zoYQ8zDBrMT9OvT8R5B_h3dxfZuLQFAUBtKMmQ@mail.gmail.com
+
+Regards,
+
+-- 
+Raphaël Halimi
