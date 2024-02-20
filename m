@@ -1,134 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924BE664A5;
-	Tue, 20 Feb 2024 11:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3E32C1B4;
+	Tue, 20 Feb 2024 14:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708428965; cv=none; b=UoBoFofmzOUR2u8VgGXq0Yr4BaS6KQj3CBAzc+Qj0X1t0IXC7Txg3v9QSxPilSROu4b1G4Nv62LyYtR6QfQrFI55sJCcaW9LPbGwdnJij/UfH9WUUd0ZLrm5mRe2aK/OsUXg/wGnMuVMXEQsXwVbTNaAlp+SwOIhmGlQYCkmBuo=
+	t=1708439757; cv=none; b=tUJuMvohDZgZiKHmtCTKXuq5XYjnHKqVpxclMNJLjoCndtusGc0aFWDqTveLnR5WVZpKrIVMLVhNrUTDsynKY5h0DyEwucjYJ2QqLFQNm3O4O6uG1G12qD6C0jQ/fpRix5gb+Zsr6tnL5e6ja2aoK+MJxNLT75NdMYayEpo4vmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708428965; c=relaxed/simple;
-	bh=qHcLJNWxTJQToh5G2HiZBIotoKh5+JiFDgH6sfVxauA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k0cZidHApNZv30sfcTDX8AcEGNNy7Ftj8svgqsSTmByWk7Y5ij1DvClKFDKDB+r1zXwg20DCnmM5tnytrANjXwbVrVXAEcaF9XuChLA7STKvgQuuftUouBOw3p34HKkRwXchCI8+dFzVrG7a5Jk7JROyXskWzDEcSljzXRUblok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rcOPk-0000VS-3L; Tue, 20 Feb 2024 12:35:56 +0100
-Message-ID: <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info>
-Date: Tue, 20 Feb 2024 12:35:54 +0100
+	s=arc-20240116; t=1708439757; c=relaxed/simple;
+	bh=YvT0MofwUncJLLsALhxER2p5o67FyIoyFgQv131Mwbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCWE+l6kl4WmnngTe+uu1w43BzpStNd66jwB3pq7XJqsACYP7uBuuUl6k81RfKS/wYwIY/QoqFETdHKVZ94J/n6HXeI2VOXAAMoT1G+QF0qhj4TlQxewSg5d50emAiPRwSksUKjTtLHr5VoH78Vi0cYMxdBsCsr2oJxDN0xaBR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZxuY8J1h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZxuY8J1h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E5DC43390;
+	Tue, 20 Feb 2024 14:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708439756;
+	bh=YvT0MofwUncJLLsALhxER2p5o67FyIoyFgQv131Mwbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZxuY8J1hTUs7tvn6yxfPiI4+TAC4d3HeiChVA6cTMzIx7NB6ERu/Dl0kRwJl0k1m+
+	 2vG4/V9qAt+03uszSkIEpVL8uVx82Am4bX87zoMtdMlk+B7aeFhBl1AuMiEOLE6QBb
+	 eB1XR9YkNRUBLb9JINpxfi0qEJX2PYWM5HayMCaU=
+Date: Tue, 20 Feb 2024 15:35:53 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Andreas Schwab <schwab@suse.de>
+Cc: Tony Lindgren <tony@atomide.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Linux-OMAP <linux-omap@vger.kernel.org>
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Message-ID: <2024022022-happiest-affirm-60cf@gregkh>
+References: <mvmcyt13idm.fsf@suse.de>
+ <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
+ <20240215094640.GS52537@atomide.com>
+ <mvmeddeyqb8.fsf@suse.de>
+ <2024021516-stricken-bubble-bf8d@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>,
- Linux Stable Mailing List <stable@vger.kernel.org>
-Cc: Linux Regressions Mailing List <regressions@lists.linux.dev>,
- Linux Input Mailing List <linux-input@vger.kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@jikos.cz>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Mikhail Khvainitski <me@khvoinitsky.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708428962;707a7236;
-X-HE-SMSGID: 1rcOPk-0000VS-3L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024021516-stricken-bubble-bf8d@gregkh>
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-On 16.02.24 12:51, Raphaël Halimi wrote:
+On Thu, Feb 15, 2024 at 12:16:34PM +0100, Greg KH wrote:
+> On Thu, Feb 15, 2024 at 11:28:27AM +0100, Andreas Schwab wrote:
+> > On Feb 15 2024, Tony Lindgren wrote:
+> > 
+> > > There was a regression recently with the PMIC which would cause NFSroot
+> > > on devices to keep working but may have affected MMC. Please check that
+> > > commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
+> > > is applied.
+> > 
+> > That commit hasn't hit stable yet.  Maybe it's because it references a
+> > non-existant commit id (1e0c866887f4 instead of 830fafce06e6).
 > 
-> (sorry for the long CC list, it looks quite long to me, but I tried to
-> follow the issue reporting guide as closely as possible)
+> Yeah, our tools can't do about a commit that does not have a cc: stable@
+> tag in it AND the only commit it does reference is not one actually in
+> the tree at all.
 > 
-> Since patches [1], [2] and [3] were applied to the kernel, there is a
-> regression with Lenovo ThinkPad Compact USB Keyboard (old model, not II).
-> 
-> [1]
-> https://github.com/torvalds/linux/commit/46a0a2c96f0f47628190f122c2e3d879e590bcbe
-> [2]
-> https://github.com/torvalds/linux/commit/2f2bd7cbd1d1548137b351040dc4e037d18cdfdc
-> [3]
-> https://github.com/torvalds/linux/commit/43527a0094c10dfbf0d5a2e7979395a38de3ff65
-> 
-> The regression is that a middle click is performed when releasing middle
-> button after wheel emulation.
+> An impossible task for us here, please ask stable@vger.kernel.org to
+> take the commit if this is needed, and let us know how far back it
+> should go.
 
-How did you identify these three commits? Or do you just suspect that
-it's one of them?
+To be explicit, does this need to be applied to the stable tree(s)?  If
+so, please email stable@vger.kernel.org with the git id to do so.
 
-And did you try to check which of the three is the actual culprit?
-Either by reverting them on top of master or by checking the parent for
-each of the commits (git show '2f2bd7cbd1d^' shows the parent for
-2f2bd7cbd1d).
+thanks,
 
-> The bug appears randomly, it can be after 5 minutes or 1 hour of
-> keyboard usage, and can only be worked around by unplugging/re-plugging
-> the keyboard. (I ended up resorting to simulate an unplug/replug, with a
-> script which echoes 0 then 1 to /sys/bus/usb/devices/<id>/authorized,
-> since I was afraid to damage the Micro-USB outlet by physically
-> unplugging/re-plugging too much).
-> 
-> Those spurious clicks are very annoying, since they can open links in
-> new tabs when scrolling in Firefox, or pasting text when scrolling in
-> terminals, or other unwanted stuff.
-> 
-> I witnessed it with latest kernels (Debian unstable) as well as stable
-> kernels (Debian 12 Bookworm, stable).
-> 
-> On Debian Stable, the last working kernel was 5.10.127, the regression
-> appeared in 5.10.136 (i read all changelogs on kernel.org between those
-> two releases but couldn't find anything about hid-lenovo, so I can't
-> tell exactly in which release the regression appeared, Debian upgraded
-> directly from .127 to .136).
-
-Why not bisect between .127 and .136 then?
-
-> I reported it in Debian [4], and apparently I'm not the only person
-> suffering from it [5].
-> 
-> [4] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1058758#32
-> [5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1058758#42
-> 
-> I would understand that such bugs would end up in a development kernel
-> like the ones provided by Debian Unstable, but not with stable kernels
-> like the ones provided by Debian Stable.
-
-A bug report like yours can do the trick sometimes, as it might be
-enough to ring a bell for one of the developers. But given that nobody
-replied yet it looks like that is not the case. Then you most likely
-will need to perform a bisection to identify the exact commit that broke
-things.
-
-FWIW, I'm currently working on a new document describing the bisection,
-maybe it's of help for you:
-https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
-
-Ciao, Thorsten
-
-P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
-
-#regzbot ^introduced v5.10.127..v5.10.136
-#regzbot title HID: lenovo: Lenovo ThinkPad Compact USB Keyboard
-sometimes sends middle-click
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+greg k-h
