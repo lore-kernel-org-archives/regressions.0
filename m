@@ -1,59 +1,65 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8C578B51
-	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 19:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5C412838D
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 19:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708455934; cv=none; b=pUZLBCAxiCZANlh2s88yeTZrqpbTWRC4u3ngyKaUDZugUqK2guU5DyaQY6n8+6pX60T4if+/qw6a1svQN/oFTOqUMkdV0g5QiGI0X+ZJOxTRiK6FniDw0ucpG7tiw/XqcU3uJnxyqF+cyWEDa67hCyFOQ3XGukqSGkC0nzROd80=
+	t=1708456589; cv=none; b=W0Ht5NB3iNt0AZisGyMOx72BUtm+5gUOXLjkfsqvn+BlOhnhe7OPPXQ93K+UfN152tXC86y0zAFmYB0ol84AF3AT7i3QXjn2T59bPXYCLEMmKUADLIadu/4Y0JMhmSQUzWsIFAWLwdqh4/vOkU9a95BVfRbiWpupIjtcKB6iOKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708455934; c=relaxed/simple;
-	bh=d57dwiYN/IUClLZ1zZHaXBEK/xBD1K3nBDTBMz9mmMA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MMITMIoFBNrLzfd4p5J9XMFPpgF7cPIWV+lM6SenGzH7/dX2XxL4BbW/b2rIGArZqrWmJbOnZn+uCHW5nJV5Npovt3052h/4R83Yxoijx8jxWac8z8Rjb6SsOC4IE9ZnBnC82NIEJ4Of2XHOe2q9AFaYINB2OVINyhjcGLKpWNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDAhpZpK; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708456589; c=relaxed/simple;
+	bh=ug9gShDwPfXb7+RC32bHzUadxNMQP5At8HNH5vVUURc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=phARXj30ch4GSy3QBX2nCOvA2It88n4BaWsF0CM8BjIE4KSP6rjWMVIYZyoAzANIui08EZF+vZaQWn7plPmeVp3u/jrqGm77ZdBP8d8+cInROzgOXrVeNAUk9kIKsP6UMlAlFAWJj8f2Wg7nj4w4s4OBg1Z42VD7kaKpvPU+U8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zx+s0nIG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDAhpZpK"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412698ac6f9so12111295e9.0
-        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 11:05:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708455931; x=1709060731; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZlGVc0x7kVqh/QCLdDBir2xloFdYnUlV85OlUaPZ9QU=;
-        b=iDAhpZpKWOAhVtdVicAepZjz/fmCkH7CGQOs2PdhPkSyzJsQ9USTq1S6lCtBu2Nyx4
-         fRIRRBs11vHrp9OpyvqqrS5/v+1Z2f885I2qug7CQKCEwf2RDJnulKVPci6GAsR5GFd+
-         HepcjgnupKc1p0Luh81NuuTzBAU0Rlgpd9LMTgolX8rcaZUKzVoMqCbdSeWxb4CoJA+n
-         aQKRU5ANV7dyXe92JD2RDK3WHfd4HnBrAGkdzKlm+uoO6QEly3olDSi4w8dg8NEp1o7T
-         iaBM5MyXiYMvnx01/ALij5wXrbd03m2NJ7Qstvc+Z18sTNi8xeutin21lPP03fFdYGNI
-         99lA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zx+s0nIG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708456586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZbYHQyJEJ73mSk/R9gEn8hmKc8A4snzJLSWzAxj1WSI=;
+	b=Zx+s0nIGA9GmzvDnJJIcBHQLL1f9NfrSyqZvCjvfawR/8f8SNh2ZV310lRaM7AtBKssH1A
+	yeiyZ9iFxVNXpiaMLezjVFVluPDHhaFTKMzxtkpF8nyf8nH3LFo4+3VWSRoXNWV4cIK+zH
+	SNpfcKmATDbsEylZdv2KrgLJFtZG++I=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-498-Y9u-8Mr9N0mipOUdOIUWIQ-1; Tue, 20 Feb 2024 14:16:23 -0500
+X-MC-Unique: Y9u-8Mr9N0mipOUdOIUWIQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-512bed4e08cso1506572e87.1
+        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 11:16:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708455931; x=1709060731;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZlGVc0x7kVqh/QCLdDBir2xloFdYnUlV85OlUaPZ9QU=;
-        b=sFW2C4sYufWMLz9Ti0IzlKJ/Fw9jHEJv5EtWPuocTu5gwFeLVb7k8XwvcuFljcp6MR
-         siV7u+Sh9G6ZzA2mN17jKAPZsOtt7XeAp9iZCu9WlIscdu4I+RG8J3dqjr1O6+SuUtHO
-         fnbU9xUPQr2Q6k3csxJ6NfSq6WiJURKoXimqJCodMNgxkLdScrEZR6iR/e0oI0uRj+HR
-         8FMzN7t8vcOTrKNX0EN7FDVW8hfHyB0iEnDph319+IzMYWv6ORBRwPSW8uVG9y8spQzA
-         letmgL12Ur4MguEsazgcudcNeJiJ71rdnNk652rT4wOIVpaGSUdBiIztdfWM1UB7vFCE
-         MEpQ==
-X-Gm-Message-State: AOJu0YxUKN40IvsIxvWtBPtU2ScfXFt/IJzzpvpv+XmGIfkKMi/a6709
-	yUd2HIbVf0zecNHkJpyNJd3kLlLfwoUzUDCh8w3uLoRbh4IHQxW/rMxFPTtSYC8=
-X-Google-Smtp-Source: AGHT+IGAcR+g1idnLlewxTtH6P7zOfyXYpv5CvT6kmRXMqmDv5O12robaNxl4YJgXjzQUsy8E8VQOw==
-X-Received: by 2002:a05:600c:3b10:b0:411:aa3c:128d with SMTP id m16-20020a05600c3b1000b00411aa3c128dmr17987166wms.15.1708455931285;
-        Tue, 20 Feb 2024 11:05:31 -0800 (PST)
-Received: from ?IPV6:2a01:e34:ec5f:c111:befe:8ded:1f46:cf9a? ([2a01:e34:ec5f:c111:befe:8ded:1f46:cf9a])
-        by smtp.gmail.com with ESMTPSA id hi16-20020a05600c535000b004126ca2a1cbsm3916582wmb.48.2024.02.20.11.05.30
+        d=1e100.net; s=20230601; t=1708456538; x=1709061338;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbYHQyJEJ73mSk/R9gEn8hmKc8A4snzJLSWzAxj1WSI=;
+        b=rf0UWUtD6d2iZwhTcP09kC9FzcZpnypxrZncIk1Aozln+V933O1BKYBCv8/KcjymMe
+         PMPeHihpaX1lq67dj4+KaYA894imjIVZBFFHQMHogzzMl+B5R9FlmBwH84R+i8fo1Pr0
+         nQR2RNr0a5QJ8gx1oiiTYzRp+vVQlr4/3Yyrykp2oUnfTIaphiIdQjxZT5D6HqfV26T4
+         5mL91FZknTYFgR7uDGIhvNJNKjobG9fuluI5iLjRqyKUGGJiAfo8ZgZNBJKzuunNinjJ
+         1oyi4j1TW4sn6UqS969C9Wf3Icuw/97hgnwr/mF8RgXzsHuO8kVAH0+xRnsJkAC/7aPl
+         qFdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVresP2YuTtN/DRjjRalIJ/sa1h/nP1864zTLzQsZABMbn5bQKQz4JbPc5WUozanCz5qRpp6ygEdWIee+WG2saXzucPkPs/u4RrAGY=
+X-Gm-Message-State: AOJu0YztYv5uoi3tliLdh1ek1rYOU12Ub/5PNj9lpStpkRoa+2CYh9RE
+	yYvRhkPDGJjzBvj4TVLEYWBKyjwt8/7Z4m0BfPDS2AKMn0+ABfl7rJJn/PHxkhrzpmpw5N9RxwD
+	TR3jutvQjebCf8tQ9hxQ07gdIn29GTPcphOlUoEKKAjr5WCJ9ijgQn1JWRDo6
+X-Received: by 2002:ac2:414c:0:b0:512:b6b4:739c with SMTP id c12-20020ac2414c000000b00512b6b4739cmr3922161lfi.60.1708456538150;
+        Tue, 20 Feb 2024 11:15:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFbsU0K4z8xxpCoZpFPXa2x6ux2JexcwGzyXt0jJXOwTln/Osf+0YRqcZ4jmpuxF9Az03UL9A==
+X-Received: by 2002:ac2:414c:0:b0:512:b6b4:739c with SMTP id c12-20020ac2414c000000b00512b6b4739cmr3922148lfi.60.1708456537757;
+        Tue, 20 Feb 2024 11:15:37 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id hw20-20020a170907a0d400b00a3f27031d7bsm154071ejc.104.2024.02.20.11.15.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 11:05:30 -0800 (PST)
-Message-ID: <0877c4fb-cb32-4dd9-b0a4-6bc306384979@gmail.com>
-Date: Tue, 20 Feb 2024 20:05:30 +0100
+        Tue, 20 Feb 2024 11:15:37 -0800 (PST)
+Message-ID: <86968600-34ba-490a-9543-1a6958a93faf@redhat.com>
+Date: Tue, 20 Feb 2024 20:15:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,77 +67,145 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
-Content-Language: fr-FR, en-US
-From: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux Regressions Mailing List <regressions@lists.linux.dev>,
- Linux Input Mailing List <linux-input@vger.kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@jikos.cz>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Mikhail Khvainitski <me@khvoinitsky.org>,
- Linux Stable Mailing List <stable@vger.kernel.org>
-References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
- <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info>
- <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
-Autocrypt: addr=raphael.halimi@gmail.com; keydata=
- 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
- Wxcwwn0N
-In-Reply-To: <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] `lis3lv02d_i2c_suspend()` causes `unbalanced
+ disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Le 20/02/2024 à 19:12, Raphaël Halimi a écrit :
-> Confident that I probably pinpointed the faulty driver, I simply looked 
-> at the file history on Github, and saw that those three commits were 
-> dated from after the time when the bug appeared ; moreover, the comments 
-> did mention stuff related to wheel emulation and spurious middle-clicks.
+Hi Paul,
 
-s/after/just before/
+On 2/2/24 12:38, Paul Menzel wrote:
+> #regzbot introduced 2f189493ae32
+> 
+> 
+> Dear Linux folks,
+> 
+> 
+> Testing commit 2f189493ae32 (i2c: i801: Add lis3lv02d for Dell XPS 15 7590) [1], it’s very likely this commit, it turns out, that Linux logs the warning below during ACPI S3 suspend:
+
+This is actually happening on all models in the DMI match list for creating
+an lis3lv02d i2c-client if a SM88xx ACPI device is present.
+
+This is caused by:
+b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
+
+Which fixed lis3lv02d_poweroff() never turning off the regulators.
+
+But that exposed a bug in the suspend/resume handling.
+
+I have reproduced this on a Latitude E6430 and I'veposted a fix for
+the suspend resume handling upstream:
+https://lore.kernel.org/regressions/20240220190035.53402-1-hdegoede@redhat.com/
 
 Regards,
 
--- 
-Raphaël Halimi
+Hans
+
+
+
+
+
+
+> ```
+> [    0.000000] Linux version 6.8.0-rc2 (pmenzel@villette) (gcc (Debian 13.2.0-12) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41.90.20240122) #9 SMP PREEMPT_DYNAMIC Mon Jan 29 15:49:07 CET 2024
+> [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.8.0-rc2 root=UUID=9fa41e21-7a5f-479e-afdc-9a5503368d8e ro cryptomgr.notests quiet rd.luks=1 rd.auto=1 initcall_debug log_buf_len=8M
+> […]
+> [    0.000000] DMI: Dell Inc. XPS 15 7590/0VYV0G, BIOS 1.24.0 09/11/2023
+> […]
+> [ 1528.577767] lis3lv02d_i2c 0-0029: PM: calling lis3lv02d_i2c_suspend+0x0/0x30 [lis3lv02d_i2c] @ 92, parent: i2c-0
+> […]
+> [ 1528.578506] ------------[ cut here ]------------
+> [ 1528.578508] unbalanced disables for regulator-dummy
+> [ 1528.578522] WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable+0xbb/0x190
+> [ 1528.578532] Modules linked in: snd_seq_dummy(E) snd_hrtimer(E) snd_seq(E) snd_seq_device(E) rfcomm(E) snd_sof_probes(E) snd_hda_codec_hdmi(E) snd_hda_codec_realtek(E) snd_hda_codec_generic(E) l2tp_ppp(E) l2tp_netlink(E) l2tp_core(E) ip6_udp_tunnel(E) udp_tunnel(E) pppox(E) ppp_generic(E) slhc(E) xfrm_interface(E) xfrm6_tunnel(E) tunnel6(E) xfrm_user(E) xfrm_algo(E) qrtr(E) cmac(E) algif_hash(E) algif_skcipher(E) af_alg(E) bnep(E) snd_sof_pci_intel_cnl(E) snd_sof_intel_hda_common(E) snd_sof_pci(E) snd_sof_xtensa_dsp(E) snd_sof_intel_hda(E) snd_sof(E) snd_sof_utils(E) snd_soc_acpi_intel_match(E) snd_soc_acpi(E) snd_soc_hdac_hda(E) binfmt_misc(E) iwlmvm(E) snd_soc_core(E) snd_compress(E) snd_sof_intel_hda_mlink(E) x86_pkg_temp_thermal(E) wacom(E) snd_hda_ext_core(E) intel_powerclamp(E) i915(E) mac80211(E) joydev(E) coretemp(E) iTCO_wdt(E) usbhid(E) hid_multitouch(E) kvm_intel(E) intel_pmc_bxt(E) lis3lv02d_i2c(E) hid_generic(E) iTCO_vendor_support(E) dell_laptop(E)
+> snd_hda_intel(E) lis3lv02d(E) dell_wmi(E) mei_wdt(E)
+> [ 1528.578601]  nls_ascii(E) ledtrig_audio(E) ee1004(E) mei_hdcp(E) libarc4(E) mei_pxp(E) watchdog(E) nls_cp437(E) snd_intel_dspcfg(E) kvm(E)
+> [ 1528.578609] idma64 idma64.1: PM: platform_pm_suspend+0x0/0x50 returned 0 after 742 usecs
+> [ 1528.578612]  snd_hda_codec(E) btusb(E) snd_hwdep(E) vfat(E) i2c_algo_bit(E) processor_thermal_device_pci_legacy(E) btrtl(E) uvcvideo(E) snd_hda_core(E) dell_smbios(E) btintel(E) fat(E)
+> [ 1528.578623] platform regulatory.0: PM: calling platform_pm_suspend+0x0/0x50 @ 70543, parent: platform
+> [ 1528.578625]  videobuf2_vmalloc(E) dcdbas(E) intel_rapl_msr(E) snd_pcm(E) irqbypass(E)
+> [ 1528.578628] platform regulatory.0: PM: platform_pm_suspend+0x0/0x50 returned 0 after 0 usecs
+> [ 1528.578632]  drm_buddy(E) intel_soc_dts_iosf(E) dell_wmi_sysman(E) videobuf2_memops(E) btbcm(E) rapl(E) processor_thermal_device(E) uvc(E) iwlwifi(E)
+> [ 1528.578639] iTCO_wdt iTCO_wdt: PM: calling platform_pm_suspend+0x0/0x50 @ 70543, parent: 0000:00:1f.4
+> [ 1528.578641]  dell_smm_hwmon(E) ttm(E) videobuf2_v4l2(E) mxm_wmi(E)
+> [ 1528.578644] iTCO_wdt iTCO_wdt: PM: platform_pm_suspend+0x0/0x50 returned 0 after 0 usecs
+> [ 1528.578646]  snd_timer(E) firmware_attributes_class(E) wmi_bmof(E) intel_cstate(E) btmtk(E) dell_wmi_descriptor(E) intel_wmi_thunderbolt(E) processor_thermal_wt_hint(E) processor_thermal_rfim(E) intel_uncore(E) psmouse(E) bluetooth(E) pcspkr(E) drm_display_helper(E) i2c_i801(E) snd(E)
+> [ 1528.578661] intel_rapl_msr intel_rapl_msr.0: PM: calling platform_pm_suspend+0x0/0x50 @ 70543, parent: platform
+> [ 1528.578663]  processor_thermal_rapl(E) video(E) videodev(E) drm_kms_helper(E) cfg80211(E) soundcore(E)
+> [ 1528.578667] intel_rapl_msr intel_rapl_msr.0: PM: platform_pm_suspend+0x0/0x50 returned 0 after 0 usecs
+> [ 1528.578670]  i2c_smbus(E) intel_rapl_common(E)
+> [ 1528.578667] i2c_hid_acpi i2c-WCOM490B:00: PM: calling acpi_subsys_suspend+0x0/0x60 @ 88, parent: i2c-1
+> [ 1528.578672]  intel_lpss_pci(E) videobuf2_common(E) cec(E) mei_me(E) processor_thermal_wt_req(E) intel_lpss(E) processor_thermal_power_floor(E) ecdh_generic(E) thunderbolt(E)
+> [ 1528.578679] idma64 idma64.0: PM: calling platform_pm_suspend+0x0/0x50 @ 70543, parent: 0000:00:15.0
+> [ 1528.578683]  mc(E) cdc_acm(E) mei(E) rfkill(E) rc_core(E) idma64(E) processor_thermal_mbox(E) intel_pch_thermal(E) int3403_thermal(E) int340x_thermal_zone(E) dell_smo8800(E) wmi(E) button(E) intel_hid(E) evdev(E) battery(E) int3400_thermal(E) sparse_keymap(E) acpi_thermal_rel(E) acpi_pad(E) ac(E) parport_pc(E) ppdev(E) lp(E) parport(E) fuse(E) loop(E) efi_pstore(E) configfs(E) nfnetlink(E) ip_tables(E) x_tables(E) ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) dm_crypt(E) nvme(E) rtsx_pci_sdmmc(E) xhci_pci(E) i2c_hid_acpi(E) nvme_core(E) i2c_hid(E) mmc_core(E) ahci(E) xhci_hcd(E) hid(E) t10_pi(E) libahci(E) crc64_rocksoft_generic(E) crc32_pclmul(E) ucsi_acpi(E) crc64_rocksoft(E) crc32c_intel(E) libata(E) typec_ucsi(E) crc_t10dif(E) ghash_clmulni_intel(E) crct10dif_generic(E) drm(E) roles(E) sha512_ssse3(E) usbcore(E) crct10dif_pclmul(E) sha256_ssse3(E) crc64(E) scsi_mod(E) sha1_ssse3(E) rtsx_pci(E) typec(E) crct10dif_common(E) scsi_common(E) usb_common(E)
+> serio_raw(E) dm_mirror(E) dm_region_hash(E) dm_log(E)
+> [ 1528.578760]  dm_mod(E) msr(E) efivarfs(E) autofs4(E) aesni_intel(E) crypto_simd(E) cryptd(E)
+> [ 1528.578768] CPU: 1 PID: 92 Comm: kworker/u24:5 Tainted: G E      6.8.0-rc2 #9
+> [ 1528.578773] Hardware name: Dell Inc. XPS 15 7590/0VYV0G, BIOS 1.24.0 09/11/2023
+> [ 1528.578775] Workqueue: events_unbound async_run_entry_fn
+> [ 1528.578783] RIP: 0010:_regulator_disable+0xbb/0x190
+> [ 1528.578789] Code: 56 c7 45 0c 00 00 00 00 eb a8 48 8b 85 a8 03 00 00 48 85 c0 74 2a 48 8b 30 48 85 f6 74 22 48 c7 c7 6f a1 45 b9 e8 55 86 8b ff <0f> 0b 41 bc fb ff ff ff 5b 5d 44 89 e0 41 5c 41 5d c3 cc cc cc cc
+> [ 1528.578793] RSP: 0018:ffffa2a3403e3d48 EFLAGS: 00010282
+> [ 1528.578796] RAX: 0000000000000000 RBX: ffff8bd0456ee300 RCX: 0000000000000027
+> [ 1528.578799] RDX: ffff8bd79a061708 RSI: 0000000000000001 RDI: ffff8bd79a061700
+> [ 1528.578801] RBP: ffff8bd041304000 R08: 0000000000000000 R09: ffff8bd8bc03adff
+> [ 1528.578803] R10: ffffffffffffffff R11: 20726f662073656c R12: ffffffffc10692c8
+> [ 1528.578805] R13: 0000000000000002 R14: ffffffffc10692a8 R15: 0000000000000001
+> [ 1528.578808] FS:  0000000000000000(0000) GS:ffff8bd79a040000(0000) knlGS:0000000000000000
+> [ 1528.578811] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1528.578813] CR2: 000055742d2f3e06 CR3: 0000000466020004 CR4: 00000000003706f0
+> [ 1528.578816] Call Trace:
+> [ 1528.578819]  <TASK>
+> [ 1528.578820]  ? _regulator_disable+0xbb/0x190
+> [ 1528.578825]  ? __warn+0x81/0x130
+> [ 1528.578832]  ? _regulator_disable+0xbb/0x190
+> [ 1528.578837]  ? report_bug+0x171/0x1a0
+> [ 1528.578847]  ? handle_bug+0x3c/0x80
+> [ 1528.578852]  ? exc_invalid_op+0x17/0x70
+> [ 1528.578856]  ? asm_exc_invalid_op+0x1a/0x20
+> [ 1528.578863]  ? _regulator_disable+0xbb/0x190
+> [ 1528.578869]  ? _regulator_disable+0xbb/0x190
+> [ 1528.578874]  regulator_bulk_disable+0x8e/0x180
+> [ 1528.578880]  ? __pfx_lis3lv02d_i2c_suspend+0x10/0x10 [lis3lv02d_i2c]
+> [ 1528.578890]  lis3lv02d_i2c_suspend+0x24/0x30 [lis3lv02d_i2c]
+> [ 1528.578898]  dpm_run_callback+0x89/0x1e0
+> [ 1528.578906]  __device_suspend+0xf1/0x4f0
+> [ 1528.578912]  async_suspend+0x1e/0x70
+> [ 1528.578918]  async_run_entry_fn+0x31/0x130
+> [ 1528.578924]  process_one_work+0x171/0x340
+> [ 1528.578930]  worker_thread+0x27b/0x3a0
+> [ 1528.578936]  ? __pfx_worker_thread+0x10/0x10
+> [ 1528.578940]  kthread+0xe5/0x120
+> [ 1528.578944]  ? __pfx_kthread+0x10/0x10
+> [ 1528.578948]  ret_from_fork+0x31/0x50
+> [ 1528.578952]  ? __pfx_kthread+0x10/0x10
+> [ 1528.578955]  ret_from_fork_asm+0x1b/0x30
+> [ 1528.578965]  </TASK>
+> [ 1528.578967] ---[ end trace 0000000000000000 ]---
+> [ 1528.578970] Failed to disable Vdd_IO: -EIO
+> [ 1528.578974] lis3lv02d_i2c 0-0029: PM: lis3lv02d_i2c_suspend+0x0/0x30 [lis3lv02d_i2c] returned 0 after 1190 usecs
+> ```
+> 
+> Unfortunately, this is out of my expertise, so any help is appreciated.
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> [1]: https://git.kernel.org/linus/2f189493ae32be9768b27072c9388e62b38d2dda
+> 
 
