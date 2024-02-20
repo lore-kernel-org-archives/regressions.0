@@ -1,131 +1,123 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7BE62160;
-	Tue, 20 Feb 2024 10:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A6A61683
+	for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 10:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708424911; cv=none; b=h3iUP0HTgdP5vI4vbCiD5X5MJAhGJqX/SirAgXAvooLDjUL53TwslWPc+Hp4uu8oLZoTSDDdG2o3c4iT81V92JzHkd6l7bfjB5PvGZy/Av1dBU+POg7CsshMLRDhU2F35C5rspqV6VpultCFK0L/mFm7xsSkKbxa6EGJLt8KNQo=
+	t=1708425064; cv=none; b=lOUk9RwMNLTWZaTXO9I50GZ/xUhKeTuwoK3Uvk35fzxDMnnyyt77g4tn5MtQ8rlVZbeJYoCBDV8KqbVlmLu7jOXV7NdSzJ3xdIfXLZsrUrU5oO0Mec0kpCofBUggQt8NdYq/Q+8NwrIGXsgiJvbpmYHBQ9nB6TeOuBoHIx6OPMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708424911; c=relaxed/simple;
-	bh=+jA3L3roeJSQbJVRsbeM0J3q8pHDGsa0x+hbU6bzk10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pK7kD5ajzkpSorss2EYj1l6l34LcFQVJ3QwBaiGlItj8EVLjMo4lizY4pZ/KiWgNDtSZQv284bg2T4atoEXDQwKvJsA6/QrvdjZIAKmRX9k8tRPwWHzK3hjl+8rOvdA14ynqNKkNxixMNPhO3ZF9Bup7QTW7pXabihmbfFsNX28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rcNMP-0003kF-LL; Tue, 20 Feb 2024 11:28:25 +0100
-Message-ID: <78075db2-4d1f-4b94-8814-24666a8518a2@leemhuis.info>
-Date: Tue, 20 Feb 2024 11:28:21 +0100
+	s=arc-20240116; t=1708425064; c=relaxed/simple;
+	bh=4ka26MKTb2gAfNP6PWHyqiItjIFpe0PWywv9rC9J+GY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EIlFm9uSIe2SqSeGDxw0YEpgfo801d9jQn7thCwNB05MGbDI3CVNfJAp4vo6jNDfruOudyxybwV+QGiNc0ISvWlt8mPFiUoegSpPO+cA9/FEeGuH5yVdf7zRn3YwQjU+fmSItn/aEPytgllKGEq0rwo2/43gdQM/pMhalDLGbfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Je8MNqIt; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Je8MNqIt"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4cfa1b3c3a2so141686e0c.0
+        for <regressions@lists.linux.dev>; Tue, 20 Feb 2024 02:31:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708425061; x=1709029861; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HIp91kw+zH2bWJFkkeSlk/Ch+KTOQUCDIw5fmR7h+Tc=;
+        b=Je8MNqItsqn2Hgq3Dli7e/0mmfJq3e7BAMYLlc9dEobcdXwykhOFtDP4JCaYzj+ZoG
+         XiQn5qZgsP8KPixEH5MsV1z/UpmSdczJDmV/Xw/EYKJbtjPuFJ8bb7/LY/Ua42QBLKD5
+         1qzZdhA4vQkbqp4WBOaVMXloG5YoBOh6PEMw8069wmxDY5gt2UFiGg0pm0xGnskj9WQY
+         r1xTAoZyoL6phWynt+cUEDw3dJbytvwc0mLm5XlGJ5l8E3qv+Pa3LyqfnXIlt5dnlK1W
+         909oABjwXrfD31nqSgkXyiIYN4OuDEPH6XgKJDDPYW6S1ClAKpHNPN07G12V8YqAfP97
+         6AAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708425061; x=1709029861;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HIp91kw+zH2bWJFkkeSlk/Ch+KTOQUCDIw5fmR7h+Tc=;
+        b=XyuC3u0giQjkLLeBp06AA4FAtA/b+yMO72HjbZftcvupW4HDl50hpC79XHwjjheD3s
+         YsLZOJkgy3/y+Ck66LpywE4k5RvMAKqGxE3XAkxM64ZtncpYr6L7RxLq5E1u8QiaUwF5
+         WQrxrtjxWAPo0TEU4EyHhRdl3HL86oFGb2inbavJS0/ls/y17M/PGi1gLLCc1w6S+LCT
+         t8aj0cmXCp0i44xyYghNQtvH0QkUU3aZ6NkomG7b8ly32CKys45aw0suXYfnNyT91OMw
+         Usp79hdFh4p3TbPhw1LRixn0xzRF0sBoqRCyld5Zgx7D5rPySM3h/R3e6pwY1d0wo4Gf
+         KWkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVluCUsOEZ4liY9+qZRFmaleSgTjnmwbFIfHO4Zj1svK/qQPfwrE0xm8dUjsba603pArlE3zuFSu0J9oOQqWjEsc3n4Xv9mghQfnhI=
+X-Gm-Message-State: AOJu0YzSkYtxec8nJStYQGi5zBnTwTWCiXWfffVJf0IU8s4NC53rqv5v
+	1ZruWszqiE29xdsWN1Gjhz9FqzxIqHrW/oH4wpYF7aHkyHav0rnUUllT2fE7xCWQBoW/U1ocuRq
+	nCA5cJ3AHsOjJhgkVPGpk51uvOUgl5qGLPCBpgA==
+X-Google-Smtp-Source: AGHT+IGysc0UmXmPnthjzbU7YPIZ9HektmfceOwdP9++ToUAMtvh7ubmq2V4CELGPXIvh6F4I8e8i12+OzE29ejs2dY=
+X-Received: by 2002:a1f:6603:0:b0:4c9:6628:be66 with SMTP id
+ a3-20020a1f6603000000b004c96628be66mr4749965vkc.5.1708425061512; Tue, 20 Feb
+ 2024 02:31:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] docs: new text on bisecting which also covers bug
- validation
-Content-Language: en-US, de-DE
-To: Jonathan Corbet <corbet@lwn.net>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
- <petr@tesarici.cz>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>
-References: <bf1d2eba0d291ff583e01b5985a0dec248eaf27a.1708072870.git.linux@leemhuis.info>
- <20240216204140.2ecbceec@meshulam.tesarici.cz>
- <62ea7097-256c-4331-b937-778444125a06@leemhuis.info>
- <87a5nwm7bv.fsf@meer.lwn.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <87a5nwm7bv.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1708424910;2d8c1209;
-X-HE-SMSGID: 1rcNMP-0003kF-LL
+References: <CA+G9fYugYiLd7MDn3wCxK+x5Td9WO-VUX2OvOtTN7D1d4GHCfg@mail.gmail.com>
+ <86edd84wer.wl-maz@kernel.org> <86cyss4rl7.wl-maz@kernel.org>
+ <a7d8e529-9a44-3f88-50ef-d87b80515c36@huawei.com> <86a5nw4gp3.wl-maz@kernel.org>
+In-Reply-To: <86a5nw4gp3.wl-maz@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 20 Feb 2024 16:00:50 +0530
+Message-ID: <CA+G9fYtWqf1h3w1nkjJGXjYis7Zx5pNxN=EvmfFpMxgktW70Xw@mail.gmail.com>
+Subject: Re: next-20240219: arm64: boot failed - gic_of_init
+To: Marc Zyngier <maz@kernel.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>, open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 19.02.24 23:12, Jonathan Corbet wrote:
-> Thorsten Leemhuis <linux@leemhuis.info> writes:
-> 
->> On 16.02.24 20:41, Petr Tesařík wrote:
->>> Is this because you want to keep it readable if the target audience
->>> reads the source text of the documentation? Otherwise, the .. include
->>> directive does not make a difference after rendering to HTML. AFAIK.
->>
->> It less that I want that, it's more that I got the impression that both
->> Jonathan and most of the kernel development community wants the source
->> text to be readable; not totally sure, but I think that's the right
->> thing to do, too.
-> 
-> As a general rule, yes.  To harp on this one more time, I do think we
-> could create sections of the manual (a "tutorials" book, say) with a
-> different set of priorities.
+On Mon, 19 Feb 2024 at 20:57, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Mon, 19 Feb 2024 14:46:46 +0000,
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+> >
+> > On 2024/2/19 19:32, Marc Zyngier wrote:
+> > > For what it is worth, I've just tested both defconfig and my own
+> > > configuration with both 4k (kvmtool, QEMU+KVM and on SynQuacer) and
+> > > 16k (kvmtool), without any obvious problem.
+> >
+> > I had a quick test on top of next-20240219 with defconfig.  I can
+> > reproduce it with QEMU parameter '-cpu max -accel tcg', but things are
+> > fine with '-cpu max,lpa2=off -accel tcg'.
+> >
+> > Bisection shows that the problem happens when we start putting the
+> > latest arm64 and kvmarm changes together.  The following hack fixes the
+> > problem for me (but I **only** write it for kernel built with defconfig
+> > with ARM64_4K_PAGES=y atm).
+> >
+> > I can investigate it further tomorrow (as it's too late now ;-) ).  Or
+> > maybe Marc or Catalin can help fix it with a proper approach.
+> >
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index 4f7662008ede..babdc3f4721b 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -2798,6 +2798,7 @@ static const struct arm64_cpu_capabilities
+> > arm64_features[] = {
+> > |             .sign = FTR_SIGNED,
+> > |             .field_pos = ID_AA64MMFR0_EL1_TGRAN4_SHIFT,
+> > |             .min_field_value = ID_AA64MMFR0_EL1_TGRAN4_52_BIT,
+> > |+            .max_field_value = BIT(ID_AA64MMFR0_EL1_TGRAN4_WIDTH - 1) - 1,
+> > | #else
+> > |             .sign = FTR_UNSIGNED,
+> > |             .field_pos = ID_AA64MMFR0_EL1_TGRAN16_SHIFT,
+>
+> I've posted my take on this at [1], which hopefully matches what you
+> were aiming at.
 
-Partly answered to that elsewhere in the thread:
-https://lore.kernel.org/linux-doc/2c5a82e1-31f0-4908-80b7-00b3b0257d59@leemhuis.info/
+This patch [1] applied on Linux next-20240219 and tested and the boot
+test passed.
+I have validated today's Linux next-20240220 and the boot test passed.
 
-> In the documentation session at the last kernel summit, I got some
-> pretty clear feedback that plain-text readability could be made
-> secondary to getting the best rendered output, at least in some cases.
+> Thanks,
+>
+>         M.
+>
+> [1] https://lore.kernel.org/all/86bk8c4gyh.wl-maz@kernel.org/
 
-For the record: I didn't feel any constrains while writing and would not
-know how to improve the "rendered output", except maybe by adding a
-image or two. But even then I'd say that's not worth abandoning
-plain-text readability.
-
-> Tutorials seems like a good example of such a case, where we could focus
-> on good web output without, as you say, creating potential maintenance
-> troubles going forward.
-
-It's just a gut feeling, but to me "split the text into smaller parts so
-those can be included in different documents" sounds like a much bigger
-maintenance nightmare than "keeping some sections in sync that two or
-three files (which most likely will be rarely changed!) use in parallel".
-
-But I fear our docs translators might have a different opinion.
-
-Ciao, Thorsten
+- Naresh
