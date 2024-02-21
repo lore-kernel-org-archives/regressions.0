@@ -1,46 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB80C1FDB
-	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 14:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591AA7BB01
+	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 15:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708527033; cv=none; b=pp1ZAEr9VNdUTL2b57eDieK0l8ANbhWWGjEGmNFc5evJhYEZC3frSmO9eTxvcoi0scCXxFaa0o6Hma/EQD6X6/wBqtKgBCycWITRpEf3TIEdJgXzpiYYj8taibrd/4HAmriCl3Crlc1B0dUiZ6PR1575c41ono7070+WIc19enY=
+	t=1708528549; cv=none; b=KWCDg/mWjixlzYu1tHZmgQqR0xcC+pXiM92HN7wubMrwyQfX5nH9JKnPdYVn4gakO+pzaKX/qmU1F1jAZbzHuQcQpKJbKHsK3Bd1cZkLZEYZQ6FwosGn9QALMfXDBxq/23mUDFkiSYsycMDv+nZj3gVE6yfwmqV3B8Ec0DVX5tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708527033; c=relaxed/simple;
-	bh=qbUVDRq1sTiEeH5NjYGofdTZsYOvTMvZCIFACRNBirg=;
+	s=arc-20240116; t=1708528549; c=relaxed/simple;
+	bh=Y89GCaiXmVjZtTWMhYhwDcuhPnj+0bjTjB09Yrh4byU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MhPVk14pU/6VK2kqZupepRJbD1I17qBVyVxZEpM9N6icT1Q38RIQ8QRqHuK+hR/TUXzK8y0Rrwpkbd8Y0fy6BvZK8RWJc7zpn//uODULckYUjN7SuVJTc4qKbN0RXSCBmaMR+ED8QpN2kIdHK543HCcl7fgs82eNNZCf9cwAcGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IgWRcekg; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=C1eUEGyYQKGs+Bdfg5I+Sh+nuwDIix6RrxW3yEUkXTBicxusBDQ/G5q9rWkNjNouOCHfUkCiwRw9P5iAQVNRg/In0HqJxZif9UZq3J7Dk9aVZ9V/Sypli5dVUOGBtE/nJvxjH0yLsLx9AFmZnDJPekzB7asp/7uoThO67+DOchM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvgmhhiF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IgWRcekg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708527033; x=1740063033;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qbUVDRq1sTiEeH5NjYGofdTZsYOvTMvZCIFACRNBirg=;
-  b=IgWRcekgrfegu8A53FqRkEMFwzvcL+oH9PYZ2caqaed/7Ec4eXxl2vXD
-   9Df0/4Xpg4jdh//r0i9eBHr4xj0lPcgvaoiyebfBC1u0UXw/gyl1vYk6S
-   si+bl9yaXNONOE/OKbcyLu6jObt/uCWr+rq062WZETFrY6A1llfxQcn+y
-   Q3pU9Z89rgkeoO8j49eXCrnkggiYUoNyvEjMKLATxkehuDB8NREchDj9Z
-   zMvS1cfKjk9vsyRwDBRbjTnQhiWZbGr3HsRHQNDGV2BnT2FWz0pghpDs6
-   +Iej4LMm+W1ovWhgF4ynj62B+vH/anr+LX6h1V2bFd7ZtgEc68Wkl3ywM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="20124569"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="20124569"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:50:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="5325538"
-Received: from mkusiak-mobl1.ger.corp.intel.com (HELO [10.246.34.229]) ([10.246.34.229])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:50:29 -0800
-Message-ID: <2b5daa31-af66-4297-932b-d2fd341b63e6@linux.intel.com>
-Date: Wed, 21 Feb 2024 15:50:26 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvgmhhiF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33d4c0b198aso492572f8f.2
+        for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 07:15:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708528545; x=1709133345; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SKnZJdmZsuc7Pq8eY4HSG3Q3zdkQX/U+ua875MKuvrU=;
+        b=GvgmhhiFZgiSlGFOSE3Glo1/Nwwdfd5xcLcwfdIL4zn4BBfsRznJdYfeOhP3zW9OAR
+         L/PUeZsq1q98pZo5tCVSnTPwB2mrgz5WQu2zDBzzDMyp8DcfE0F0PMMfV2EWruX1nfSD
+         YjXiv/8B07+dLs6HAF0DWyDnD7XT0fu0pCxVIqqzTM6I2CUjSfq9VxIdMPeZYitd/ApL
+         TiabT/k/xJU7JcR3IyDgxP7xjm0/ANIhFYsTQXhCWpzC22FeRCXEVsKoOn6bqjro8+Dz
+         U/9yGpNL8upSab1t/cv9xzM2Fq4GVyc3PJZFnv1lwcRTgdHsIPQUO7mirTHiui0H/uXs
+         h3ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708528545; x=1709133345;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SKnZJdmZsuc7Pq8eY4HSG3Q3zdkQX/U+ua875MKuvrU=;
+        b=VBzHLD42tAWzj5BgnIxjurU8seefPuRdygBdHQHu7+aaE+jpwZDXyoeKAiaMna8spX
+         r0W8NPvQIn0ZeZuxJ//kVWABM+ojNjUxtwPrgRcSmqlRRK8TBlzAmXPTZuV/MnhTM526
+         TqQFYFVUhsWA9ou3KtVq3yeK0jHABv/kV/3UP0YF6on5Tyd3T68SpqLqfK1xJ9Wh4Q5s
+         20s1uvyAoGCayPADThGblXyiOKNUm0UZsUQV2b5WGUIoCa2LZ78NefRExi9JeZHG3aO7
+         0YIsu9OObLBUT3LjjtNJt1gqfBShaz/ViJ/QdU2O/HMV7U9F6Tf2b2Ox6Pmkn4Bebx5f
+         r+Ew==
+X-Gm-Message-State: AOJu0YzNVyUX4y18yjcsrSlQNnuQMEnkvLuPph5qEKvZt+aSJiOQJ1Ko
+	WrLIyLnKauHFWepfsC3hRqg3eaeo+D2ZJWJ5vZC/ugWU9iqu+051eo5Hh4sC
+X-Google-Smtp-Source: AGHT+IGxqkK6ET3EYw9sOp2J83BFqjQ3AwVa6kP/2GfY/nu+COxEIjSeiDjG/pcoCFzRJ5RVI1JaiQ==
+X-Received: by 2002:a5d:6da2:0:b0:33d:4fca:b7dc with SMTP id u2-20020a5d6da2000000b0033d4fcab7dcmr7289485wrs.62.1708528545212;
+        Wed, 21 Feb 2024 07:15:45 -0800 (PST)
+Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id t17-20020adfe111000000b0033d56d43fbesm8822115wrz.115.2024.02.21.07.15.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 07:15:44 -0800 (PST)
+Message-ID: <2ae0f677-a3b7-4cad-8b37-beb0ae502da8@gmail.com>
+Date: Wed, 21 Feb 2024 16:15:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,40 +60,286 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: junxiao.bi@oracle.com, Dan Moulding <dan@danm.net>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, regressions@lists.linux.dev, song@kernel.org,
- stable@vger.kernel.org
-References: <20240123005700.9302-1-dan@danm.net>
- <20240220230658.11069-1-dan@danm.net>
- <f32cd478-a905-4e98-a46c-0612bc10c38e@oracle.com>
-Content-Language: pl
-From: Mateusz Kusiak <mateusz.kusiak@linux.intel.com>
-In-Reply-To: <f32cd478-a905-4e98-a46c-0612bc10c38e@oracle.com>
+Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
+ mesa/amdgpu)
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Alex Deucher <alexdeucher@gmail.com>, Romano <romaniox@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
+ <2024021732-framing-tactful-833d@gregkh>
+ <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
+ <CADnq5_OgPBtYpxBQ+aBmA2t7ob7EFPFWrF9OYXNgm00eEayMNA@mail.gmail.com>
+ <62bf771e-640a-45ab-a2de-3df459a9ed30@leemhuis.info>
+ <CADnq5_M4Zwv0_B1DoU_a8aNpyPVJj_PpjDG_oi3JkrGC5-hNgg@mail.gmail.com>
+ <4bc8747a-d87f-423b-b0ce-8891e78ae094@redhat.com>
+ <a6243c3b-d773-4693-88e9-033995616f12@leemhuis.info>
+ <CADnq5_MHmz=HdGA22U-bk2b+4un70bmLzpbDyc3+tjzoRAnCeA@mail.gmail.com>
+ <1aa3830d-ceb7-4eb1-b5bb-d6043684507f@gmail.com>
+ <CADnq5_Nc+eEfXwaXfaTz75C9ww6ETVm_adCSfGsdD6OzguUQ6Q@mail.gmail.com>
+ <3e077b5f-0684-4a07-9b74-ab242bb01975@gmail.com>
+ <CADnq5_NszWGKVZZomTojAm_u7O-04M6x_ox4KXQC79OuGA9ARA@mail.gmail.com>
+ <af6291d4-45c3-4eb6-95b8-14a5221e72a1@leemhuis.info>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <af6291d4-45c3-4eb6-95b8-14a5221e72a1@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 21.02.2024 00:15, junxiao.bi@oracle.com wrote:
+Am 21.02.24 um 07:06 schrieb Linux regression tracking (Thorsten Leemhuis):
+> On 20.02.24 21:18, Alex Deucher wrote:
+>> On Tue, Feb 20, 2024 at 2:41 PM Romano <romaniox@gmail.com> wrote:
+>>> If the increased low range is allowed via boot option, like in proposed
+>>> patch, user clearly made an intentional decision. Undefined, but won't
+>>> fry his hardware for sure. Undefined is also overclocking in that
+>>> matter. You can go out of range with ratio of voltage vs frequency(still
+>>> within vendor's limits) for example and crash the system.
+>> This whole thing reminds me of this:
+>> https://xkcd.com/1172/
+>> The problem is another module parameter is another interface to
+>> maintain and validate.
+> Yup, of course, all that is understood.
 >
-> The thing is we can't reproduce this issue at all. If you can generate 
-> a vmcore when the hung happened, then we can review which processes 
-> are stuck.
+> But we have this "no regressions" rule for a reason. Adhering to it
+> strictly would afaics be counter-productive in this situation, but give
+> users some way to manually do what was possible before out-of-the box
+> IMHO is the minimum we should do.
 >
-Hi,
-don't know if that be any of help, but I run below scenario with SATA 
-and NVMe drives. For me, the issue is reproducible on NVMe drives only.
+> Maybe just allow that parameter only up to a certain recent GPU
+> generation, that way you won't have to deal with that at some point in
+> the future.
+>
+>>   Moreover, we've had a number of cases in the
+>> past where users have under or overclocked and reported bugs or
+>> stability issues and it did not come to light that they were doing
+>> that until we'd already spent a good deal of time trying to debug the
+>> issue.
+> Taint the kernel when that module parameter is used? We iirc have a
+> taint bit exactly for this sort of situation. Sure, such reports will
+> still happen, but then you at least have an indicator to spot them.
 
-Scenario:
-1. Create R5D3 with native metadata
-     # mdadm -CR /dev/md/vol -l5 -n3 /dev/nvme[0-2]n1 --assume-clean
-2. Create FS on the array
-     # mkfs.ext4 /dev/md/vol -F
-3. Remove single member drive via "--incremental --fail"
-     # mdadm -If nvme0n1
+Let me recap what happened here:
 
-The result is almost instant.
+1. AMD is the GPU manufacturer, but apart from a few exceptions doesn't 
+assemble boards.
 
-Thanks,
-Mateusz
+2. Vendors take AMDs GPUs and assemble them together with power 
+regulators, memory and a bunch of other components into PCIe board.
+
+3. AMD provides a vendor agnostic driver and for this to work vendors 
+describe to the min/max voltage their power regulators can do in some 
+flash memory.
+
+4. Hardware engineers point out that AMDs open source drivers are not 
+respecting the min value.
+
+5. In response a patch was applied to respect that value and not use 
+something outside of the hardware specification the vendor provided.
+
+I'm not sure about it but I think AMD need to respect the min/max values 
+simply by contract and it's not really an option to not do that.
+
+If someone really want to run your hardware outside the vendor 
+recommended values that person can still patch the driver to ignore the 
+limits. It's just that then AMD is not responsible for any damage 
+resulting from that.
+
+So as far as I can see the request to make that a module option is a 
+no-go, especially since hardware engineers have explicitly pointed out 
+that we have to do this in the software stack.
+
+Regards,
+Christian.
+
+>
+> Ciao, Thorsten
+>
+>>   This obviously can still happen if you allow any sort of over
+>> or underclocking, but at least if you stick to the limits you are
+>> staying within the bounding box of the design.
+>>
+>> Alex
+>>
+>>> On 2/20/24 19:09, Alex Deucher wrote:
+>>>> On Tue, Feb 20, 2024 at 11:46 AM Romano <romaniox@gmail.com> wrote:
+>>>>> For Windows, apps like MSI Afterburner is the one to try and what most
+>>>>> people go for. Using it in the past myself, I would be surprised if it
+>>>>> adhered to such a high min power cap. But even if it did, why would we
+>>>>> have to.
+>>>>>
+>>>>> Relying on vendors cap in this case has already proven wrong because
+>>>>> things worked for quite some time already and people reported saving
+>>>>> significant amount of watts, in my case 90W(!) for <10% perf.
+>>>>>
+>>>>> Therefore this talk about safety seems rather strange to me and
+>>>>> especially so when we are talking about min_cap. Or name me a single
+>>>>> case where someone fried his card due to "too low power" set in said
+>>>>> variable. Now there was a report, where by going way too low, driver
+>>>>> goes opposite into max power. That's it. That can be easily
+>>>>> detected(vents going crazy etc.) and reverted. It is a max_cap that
+>>>>> protect HW(also above scenario), not a min_cap. Feel free to adhere to
+>>>>> safety standards with that one.
+>>>> Because operation outside of the design bounding box is undefined.  It
+>>>> might work for some boards but not others.  It's possible some of the
+>>>> logic in the firmware or some of the components used on the board may
+>>>> not work correctly below a certain limit, or the voltage regulators
+>>>> used on a specific board have a minimum requirement that would not be
+>>>> an issue if you stick the bounding box.
+>>>>
+>>>> Alex
+>>>>
+>>>>> As for solution, what some suggested already exist - a patch posted by
+>>>>> fililip on gitlab is probably the way most of you would agree. It
+>>>>> introduce a variable that can be set during boot to override min_cap.
+>>>>> But he did not pull requested it, so please, if any one of you who have
+>>>>> access to code and merge kernel would be kind enough to implement it.
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2/20/24 16:46, Alex Deucher wrote:
+>>>>>> On Tue, Feb 20, 2024 at 10:42 AM Linux regression tracking (Thorsten
+>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>> On 20.02.24 16:27, Hans de Goede wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 2/20/24 16:15, Alex Deucher wrote:
+>>>>>>>>> On Tue, Feb 20, 2024 at 10:03 AM Linux regression tracking (Thorsten
+>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>> On 20.02.24 15:45, Alex Deucher wrote:
+>>>>>>>>>>> On Mon, Feb 19, 2024 at 9:47 AM Linux regression tracking (Thorsten
+>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>>>>>>>>> On 17.02.24 14:30, Greg KH wrote:
+>>>>>>>>>>>>> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
+>>>>>>>>>>>>>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
+>>>>>>>>>>>>>> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
+>>>>>>>>>>>>>> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
+>>>>>>>>>>>>>> even for root. This is not of above apps issue but of the kernel, I read
+>>>>>>>>>>>>>> similar issues from other bug reports of above apps. I downgraded to v6.6.10
+>>>>>>>>>>>>>> kernel and my 115W(under power)cap work again as before.
+>>>>>>>>>>>> For the record and everyone that lands here: the cause is known now
+>>>>>>>>>>>> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
+>>>>>>>>>>>> value") [v6.7-rc1]) and the issue afaics tracked here:
+>>>>>>>>>>>>
+>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+>>>>>>>>>>>>
+>>>>>>>>>>>> Other mentions:
+>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3137
+>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/2992
+>>>>>>>>>>>>
+>>>>>>>>>>>> Haven't seen any statement from the amdgpu developers (now CCed) yet on
+>>>>>>>>>>>> this there (but might have missed something!). From what I can see I
+>>>>>>>>>>>> assume this will likely be somewhat tricky to handle, as a revert
+>>>>>>>>>>>> overall might be a bad idea here. We'll see I guess.
+>>>>>>>>>>> The change aligns the driver what has been validated on each board
+>>>>>>>>>>> design.  Windows uses the same limits.  Using values lower than the
+>>>>>>>>>>> validated range can lead to undefined behavior and could potentially
+>>>>>>>>>>> damage your hardware.
+>>>>>>>>>> Thx for the reply! Yeah, I was expecting something along those lines.
+>>>>>>>>>>
+>>>>>>>>>> Nevertheless it afaics still is a regression in the eyes of many users.
+>>>>>>>>>> I'm not sure how Linus feels about this, but I wonder if we can find
+>>>>>>>>>> some solution here so that users that really want to, can continue to do
+>>>>>>>>>> what was possible out-of-the box before. Is that possible to realize or
+>>>>>>>>>> even supported already?
+>>>>>>>>>>
+>>>>>>>>>> And sure, those users would be running their hardware outside of its
+>>>>>>>>>> specifications. But is that different from overclocking (which the
+>>>>>>>>>> driver allows, doesn't it? If not by all means please correct me!)?
+>>>>>>>>> Sure.  The driver has always had upper bound limits for overclocking,
+>>>>>>>>> this change adds lower bounds checking for underclocking as well.
+>>>>>>>>> When the silicon validation teams set the bounding box for a device,
+>>>>>>>>> they set a range of values where it's reasonable to operate based on
+>>>>>>>>> the characteristics of the design.
+>>>>>>>>>
+>>>>>>>>> If we did want to allow extended underclocking, we need a big warning
+>>>>>>>>> in the logs at the very least.
+>>>>>>>> Requiring a module-option to be set to allow this, as well as a big
+>>>>>>>> warning in the logs sounds like a good solution to me.
+>>>>>>> Yeah, especially as it sounds from some of the reports as if some
+>>>>>>> vendors did a really bad job when it came to setting the proper
+>>>>>>> lower-bound limits are now adhered -- and thus higher then what we used
+>>>>>>> out-of-the box before 1958946858a62b was applied.
+>>>>>>>
+>>>>>>> Side note: I assume those "lower bounds checking" is done round about
+>>>>>>> the same way by the Windows driver? Does that one allow users to go
+>>>>>>> lower somehow? Say after modifying the registry or something like that?
+>>>>>>> Or through external tools?
+>>>>>> Windows uses the same limit.  I'm not aware of any way to override the
+>>>>>> limit on windows off hand.
+>>>>>>
+>>>>>> Alex
+>>>>>>
+>>>>>>
+>>>>>>> Ciao, Thorsten
+>>>>>>>
+>>>>>>>>>>>> Roman posted something that apparently was meant to go to the list, so
+>>>>>>>>>>>> let me put it here:
+>>>>>>>>>>>>
+>>>>>>>>>>>> """
+>>>>>>>>>>>> UPDATE: User fililip already posted patch, but it need to be merged,
+>>>>>>>>>>>> discussion is on gitlab link below.
+>>>>>>>>>>>>
+>>>>>>>>>>>> (PS: I hope I am replying correctly to "all" now? - using original addr.)
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>> it seems that commit was already found(see user's 'fililip' comment):
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
+>>>>>>>>>>>>> commit 1958946858a62b6b5392ed075aa219d199bcae39
+>>>>>>>>>>>>> Author: Ma Jun <Jun.Ma2@amd.com>
+>>>>>>>>>>>>> Date:   Thu Oct 12 09:33:45 2023 +0800
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>        drm/amd/pm: Support for getting power1_cap_min value
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>        Support for getting power1_cap_min value on smu13 and smu11.
+>>>>>>>>>>>>>        For other Asics, we still use 0 as the default value.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>        Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+>>>>>>>>>>>>>        Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+>>>>>>>>>>>>>        Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> However, this is not good as it remove under-powering range too far. I
+>>>>>>>>>>>> was getting only about 7% less performance but 90W(!) less consumption
+>>>>>>>>>>>> when set to my 115W before. Also I wonder if we as a OS of options and
+>>>>>>>>>>>> freedom have to stick to such very high reference for min values without
+>>>>>>>>>>>> ability to override them through some sys ctrls. Commit was done by amd
+>>>>>>>>>>>> guy and I wonder if because of maybe this post that I made few months
+>>>>>>>>>>>> ago(business strategy?):
+>>>>>>>>>>>> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
+>>>>>>>>>>>>> This is not a dangerous OC upwards where I can understand desire to
+>>>>>>>>>>>> protect HW, it is downward, having min cap at 190W when card pull on
+>>>>>>>>>>>> 115W almost same speed is IMO crazy to deny. We don't talk about default
+>>>>>>>>>>>> or reference values here either, just a move to lower the range of
+>>>>>>>>>>>> options for whatever reason.
+>>>>>>>>>>>>> I don't know how much power you guys have over them, but please
+>>>>>>>>>>>> consider either reverting this change, or give us an option to set
+>>>>>>>>>>>> min_cap through say /sys (right now param is readonly, even for root).
+>>>>>>>>>>>>> Thank you in advance for looking into this, with regards:  Romano
+>>>>>>>>>>>> """
+>>>>>>>>>>>>
+>>>>>>>>>>>> And while at it, let me add this issue to the tracking as well
+>>>>>>>>>>>>
+>>>>>>>>>>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
+>>>>>>>>>>>> regressions; the text you find below is based on a few templates
+>>>>>>>>>>>> paragraphs you might have encountered already in similar form.
+>>>>>>>>>>>> See link in footer if these mails annoy you.]
+>>>>>>>>>>>>
+>>>>>>>>>>>> Thanks for the report. To be sure the issue doesn't fall through the
+>>>>>>>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+>>>>>>>>>>>> tracking bot:
+>>>>>>>>>>>>
+>>>>>>>>>>>> #regzbot introduced 1958946858a62b /
+>>>>>>>>>>>> #regzbot title drm: amdgpu: under-powering broke
+>>>>>>>>>>>>
+>>>>>>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>>>>>>>> --
+>>>>>>>>>>>> Everything you wanna know about Linux kernel regression tracking:
+>>>>>>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>>>>>>>>>>> That page also explains what to do if mails like this annoy you.
+>>
+
