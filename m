@@ -1,361 +1,199 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E87C69313
-	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 17:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708537543; cv=none; b=haXOnHWNHXMq0iK7xp/jnoREOsJUc4skNwIHsxUV5kRHl0bVIUa8yXzujlrfIxhVawOHbRQdrn9KfR5C/+dws3DfD4wbCr3afE18i9MBhKyWTPMAks+qEUAYcZH4VyTYzyoZ+im/YRtTlxYe2Y0itwsQIRKqBbDM2MaA0KqDwQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708537543; c=relaxed/simple;
-	bh=fRS1xPS3muAdkN4ZVIT+SSRCIznn/ZFW5r6TdthJiXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1EdFuVWVH1M9MxwsOa4Gro7fxOYx0DtYsrTFp3ojW0F7+PkbpsI9tXe85pm7fqIXRD5CwfMvfiNo71Mlyf/yWpSTrpYnHSD4tfW1YZd3aXZRx3gvO/096dnh0Me7jsANxzPmIpOG57rLBdu4e7JkIorZOp6zD5AG866HzlV4ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bORbWKAj; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328681097B;
+	Wed, 21 Feb 2024 19:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708542953; cv=fail; b=F1GzGaThwoQhzcR+YZRjxuwi30lFRcESrkjKwqwC3NgMbcVvND133T6JTuIRC9CtKsNaFRtsbSTHV1pSdr4jMBhvOpYDjQnqP+4kj4rmQ2ufagckJDmmPmrQl2EqzDLNyR5fV6abgo/wjHBo09W8666Xh9FOncVHOQI+WFMMKE0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708542953; c=relaxed/simple;
+	bh=7Rl4HqLnUY6i+QVOWzNOQ57BnHsmdJXjlX+Sb2FXe7Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kd0yjquIeDN3O1+xhkDOFcEb+kZTD5sWh67jAFXIYw4DlmeJNtNpAV2TjPEDwHZF/aMvC/hExRxv0xdZIGyPbB8keXNZ2nby2rcyZziU+rz3IUX0AOhsDEZc/VloNAwLieWNjlIfCrOiKSJUTkpAffzInd4Vx0FgfCr+t8/f2CU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=A/+Y4Q36; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=X32Sfdff; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bORbWKAj"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so9349190a12.0
-        for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 09:45:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A/+Y4Q36";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="X32Sfdff"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41LJFClX012122;
+	Wed, 21 Feb 2024 19:15:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=VDwreWdq2w4NecpdR1NOLmJ4fota0eDzaX1C2D58K9s=;
+ b=A/+Y4Q36Hw8GN++QhoPfyhS4agdWmYhDNyHqJLu1Q4Q3tamEYAt3p4A6RlhfIqqeQDFy
+ ARfhGTDRzidUMyY9BlxdfiZFxNgaYC5vUM3Y25ECwTKwwnZtFao5NefPCFHxNUQ6bJ/F
+ nJOvF18yJ1UDwx0ew54pLimAO1S+I1f/9IWvgdVRRPjHCSxciqY5i2ei8DksV7wGlsgK
+ AgDDIdsd+NCaxdiL0pR0fTzi7YKah4av/vfR8r9aKVVKfmKSeKqDDHD+6+Bq5O8e8rsf
+ /b7t7o49qyr5tdiXuHaYgzKfr1JK/+I/ed1MgN1hTrzELijq0EFKwoubA+FwkKV5kFI5 og== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wd5fw2avt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 19:15:41 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41LI8pH7032526;
+	Wed, 21 Feb 2024 19:15:39 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wak89ggqv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 19:15:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EQ/umACDrFBB/8/4WahdvxOMwkN0mNBLoD7G1qhz28ep+I5FKRxbACWjmWPFvT5FX5AW2DPVaiGZYdmkKoL3Uswu/V4vRCS8o0iQWr4LUDqUqoae3i9c8lJgxSY9tDADVsHgBszL5tn0oGDLBGu5UoaGDurueBxItBbX50jRPbWbUdlzsL1xWxfgZJ9q8WWTmFE+2V+IITQGTA/GUHBOIAT/s5Lw5AiQqzhoMGXtJwkOHqsK23EmO221Q3hSTCQq+F8BX2l1cRh+STSwqZS1TP3uY0baky0DDSMr2vvKMfQtEUlr6eyg3EtUHQeCVOfCPkJVe7QCSrX1muSzMJ4Ezw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VDwreWdq2w4NecpdR1NOLmJ4fota0eDzaX1C2D58K9s=;
+ b=IHRUXJbz7+nYMgs+ykWenZj3m82zcbfZUXjNOYO1AJz0r7uMnzUwR+Bx4SZ3rFTVXSW+dvGwuh+pmnCOGSXOPdDDrayQi6hZpn66U27qiNwzk/f+L3ekqwk2OvMI3D08R2RfW4iuIqSOAAQ1PRAvBZg7dQtjOnlV+dJvSTwu3dP8If8AFoKQxlxaRupGBr8lL2mOx8zG3RBBQ8HIYvLq4oyY1jCfbuhujWlQslirsYZzO6i/WFsq9zukOKC+2nqMY3RMUlKbX9uu8dkMsrPcvi94Vq2B3PQgi5viHZ0JF7dgI39EMR6eZX716gjzXJeaTQNp+E4wl+3EbZs6b72eFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708537539; x=1709142339; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V3L8kGeK/sc4dOyinBmU2Nba8CtDTeBUIU0r1CO0I7o=;
-        b=bORbWKAj667Tac9qrWWwkIhsUum5JnbF3UtG898qkdSY8LyAKc4CJvAbVQPTKHrloB
-         6LztpYNp2r/KbR5Vx/E9EvlIb65USzb+0wHkLurm7+EH6jGPH3a/rtURs3EsefOzLihu
-         S1vVxc+WF480Q/PzlYHFhXfNLo2qCP48SxmopZvHt/dxKcKKYzt41qqWZ0aO3SF6HCOa
-         ewlr2VAGUZzbv5oatZYCG19xrPeQf7OGgn5TDanaXnQ6102I6kLJ5bAvlS4SXqN/nxCR
-         b5cCmItRzJ8FuiqguqN0JuHyASd2h/kEcB3FQbNOtw8bfhRD5SdMd3vtrodT01/NNooj
-         oZBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708537539; x=1709142339;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V3L8kGeK/sc4dOyinBmU2Nba8CtDTeBUIU0r1CO0I7o=;
-        b=YangSXPDWqiZT9sc3ud205B2kpEJmjFL1iQ76lCBWSvMUtfK47EsYIf39e66FRy4Ga
-         Mzs/SoMLWNgYbtrcVErFMbouA7CddvZId5Cn/NSKgXnf2v76e6Rz+9mi590Iw3WFeL7r
-         m/GE/5Y+ZsGwW862C2roIMrV90/4Sf1eLMi2TuKHy1ZJW7A8t6G1bxApOZC2oj8KVk7U
-         V4b88X3NtGF6DkQ96oo4nM8qUI0L3Jx+uKHJSEAjFuBaOKP2kI3vmxIjRkOmcPhkS9aU
-         Rt6GFe1MtXVKcWN/OS6DYiJZ8ziI8CovD7N+Gp32hrrXTAX3TDej9htLYpC7To8Tsmtd
-         0/RA==
-X-Forwarded-Encrypted: i=1; AJvYcCXue+83sRy7uPHmiloHBNfHO+iRb3gcV/eGgYBvijgh5lXXHj2WTdA1RTqE2THO59wwNolpTXV+tlalt7Wm7wdYZ7e6Mnm/cF4oHkg=
-X-Gm-Message-State: AOJu0YxatA0LnISrEWvVI/EqrC1CkQNIfh+SO0LiyIbE/iYNuk6Nuf6s
-	qklVcE5LGxaXdGusskdYi5GcjgIhWod3vhf0zctfT0vOWDeBPiac
-X-Google-Smtp-Source: AGHT+IFkuKvDCwRViD3uR1/CfkHucUTQd52K2rHY9MkVxk/fDf9w2sJhim9aN85sNdVu8p82A7Qs/Q==
-X-Received: by 2002:aa7:dd0c:0:b0:564:aa84:caad with SMTP id i12-20020aa7dd0c000000b00564aa84caadmr5459331edv.0.1708537538916;
-        Wed, 21 Feb 2024 09:45:38 -0800 (PST)
-Received: from [10.0.2.1] (server.riadoklan.sk.eu.org. [195.3.170.77])
-        by smtp.gmail.com with ESMTPSA id d11-20020a05640208cb00b00564df589590sm1208553edz.37.2024.02.21.09.45.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 09:45:38 -0800 (PST)
-Message-ID: <a35ee59e-5454-4e7d-aad2-2bbee6c26e89@gmail.com>
-Date: Wed, 21 Feb 2024 18:45:37 +0100
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VDwreWdq2w4NecpdR1NOLmJ4fota0eDzaX1C2D58K9s=;
+ b=X32SfdffOuRSODqxNnkJqlWcKz4AXjawzZkCginD8C/Bu8epsioQL8HGuEaE3o8wLeO3jQk+ZcCjDbe63FC9PMTmMHtPT4W1HWQXbmno2doaErGkUtjR9VF5vLpW0X5ZgZaMcnX/e1zxlfv4BZM2iBWew4fxIi0XmMm4ZCzPz64=
+Received: from SJ0PR10MB4752.namprd10.prod.outlook.com (2603:10b6:a03:2d7::19)
+ by BLAPR10MB5234.namprd10.prod.outlook.com (2603:10b6:208:30c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Wed, 21 Feb
+ 2024 19:15:37 +0000
+Received: from SJ0PR10MB4752.namprd10.prod.outlook.com
+ ([fe80::1e9b:c7cf:d15b:c41c]) by SJ0PR10MB4752.namprd10.prod.outlook.com
+ ([fe80::1e9b:c7cf:d15b:c41c%4]) with mapi id 15.20.7292.036; Wed, 21 Feb 2024
+ 19:15:37 +0000
+Message-ID: <c9b3466c-7972-47c0-b590-9c1012b53a82@oracle.com>
+Date: Wed, 21 Feb 2024 11:15:35 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+Content-Language: en-US
+To: Mateusz Kusiak <mateusz.kusiak@linux.intel.com>,
+        Dan Moulding <dan@danm.net>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, regressions@lists.linux.dev,
+        song@kernel.org, stable@vger.kernel.org
+References: <20240123005700.9302-1-dan@danm.net>
+ <20240220230658.11069-1-dan@danm.net>
+ <f32cd478-a905-4e98-a46c-0612bc10c38e@oracle.com>
+ <2b5daa31-af66-4297-932b-d2fd341b63e6@linux.intel.com>
+From: junxiao.bi@oracle.com
+In-Reply-To: <2b5daa31-af66-4297-932b-d2fd341b63e6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR08CA0024.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::37) To SJ0PR10MB4752.namprd10.prod.outlook.com
+ (2603:10b6:a03:2d7::19)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel 6.7+ broke under-powering of my RX 6700XT. (Archlinux,
- mesa/amdgpu)
-To: Alex Deucher <alexdeucher@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <ae64f04d-6e94-4da4-a740-78ea94e0552c@riadoklan.sk.eu.org>
- <2024021732-framing-tactful-833d@gregkh>
- <d369b45f-e1af-4117-83a5-3e429e3bfb23@leemhuis.info>
- <CADnq5_OgPBtYpxBQ+aBmA2t7ob7EFPFWrF9OYXNgm00eEayMNA@mail.gmail.com>
- <62bf771e-640a-45ab-a2de-3df459a9ed30@leemhuis.info>
- <CADnq5_M4Zwv0_B1DoU_a8aNpyPVJj_PpjDG_oi3JkrGC5-hNgg@mail.gmail.com>
- <4bc8747a-d87f-423b-b0ce-8891e78ae094@redhat.com>
- <a6243c3b-d773-4693-88e9-033995616f12@leemhuis.info>
- <CADnq5_MHmz=HdGA22U-bk2b+4un70bmLzpbDyc3+tjzoRAnCeA@mail.gmail.com>
- <1aa3830d-ceb7-4eb1-b5bb-d6043684507f@gmail.com>
- <CADnq5_Nc+eEfXwaXfaTz75C9ww6ETVm_adCSfGsdD6OzguUQ6Q@mail.gmail.com>
- <3e077b5f-0684-4a07-9b74-ab242bb01975@gmail.com>
- <CADnq5_NszWGKVZZomTojAm_u7O-04M6x_ox4KXQC79OuGA9ARA@mail.gmail.com>
- <af6291d4-45c3-4eb6-95b8-14a5221e72a1@leemhuis.info>
- <CADnq5_Md1yQVxfxWBju7xrqZcU18KqfaJRGcE3tumCUy_3tHoA@mail.gmail.com>
-Content-Language: en-US
-From: Romano <romaniox@gmail.com>
-In-Reply-To: <CADnq5_Md1yQVxfxWBju7xrqZcU18KqfaJRGcE3tumCUy_3tHoA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4752:EE_|BLAPR10MB5234:EE_
+X-MS-Office365-Filtering-Correlation-Id: 396490bf-a0fc-467b-1264-08dc33117c06
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	a8++ly+2YYmhAC5yIxWDVwNsWoNSHbRAD3O/ybsgFkzlUjb5Y+SdyJQEumfOt4Yf+XJKDjVYowKn2jEG6VzJJEYegDwjU0FzAYy4XnJrKazmd3VTNNEvnfrIR86MD2amrOZAJhmOEqOBR06M+JM/BLd6n3jKZ87a+c9S5AiA3a3yiIwkyAeDgXfY1koigBKdPI6il9U8p8y+P4bRtsT8JUOg7YI1S7st6l1atCn8G21zsrXZfSzh4q42ocL4RHAv1epRSmj1RC2CC4eiIMVaPnlqErAOW0xJlPfphAjSl4XwyseKHV1GY1HS8zLEyGHolROFYHRv+65Op78rp8Sq5qqd0BpqHvZyIWnlSpZitG3q1Z+Hfai629R8YONfOoNGleYne08JVSnR6kBxLJ4CT5FiaT6U5vWhNX9RmOCGP+GZtUd0yztuwdvPBWT4ZYO7bJh4rbczSQaUIxgTS3GknOoQtd/Hm8ROiDrpDTs6V4fkI/pTWizAILSc2AEYUkKSLUjmtQ/v3qA6I1iE0PdXNg==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4752.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?Q0I4ZnlKMkpOWU1saGQ1TXoza3RFa2tWUVUyeDZSREZqSU9uWjl2THZnVng1?=
+ =?utf-8?B?VGVGUWs5cTNEUHRud1R3UFhKWTNneUpkMDBDY1ByWkcrSEptVEpHam14QVJh?=
+ =?utf-8?B?bFpsanIybkk3YndqWmlwTzBVdzRyZndNYy9FdC9UQ1ZMSEpFNW9CQUNUU1Jr?=
+ =?utf-8?B?c2d3bjh2VzRVMk9MamdIL09rVzBrblBaV3ZxMFhaUGNEaDBoMTRwNUhxREwy?=
+ =?utf-8?B?UkNCRkNVbHFYRTNrTjVCWnlNekZNRmU1ZVhNL0N4cWJ6ZFlOSlJrKzZ0MTdW?=
+ =?utf-8?B?NHhNUjZlZy8rR081UDRBN1pGRTVLVjRQaWEzbUs3Q1dBbzNheVJpSmNIbFBT?=
+ =?utf-8?B?WG5YaHQ3ODcvakpCRUpDbGlJYWhMZXFmSUhmWUF5NjQ2eWhwRXhERHVrTjB5?=
+ =?utf-8?B?RFArM3F4OUlWZHNoK2JlNW00SFZzRnF6RzRGMGt4NFR2ajZJVXVXd1k2ZFZ2?=
+ =?utf-8?B?bGFhbEZxTlpTN0xpQ1c2Q29jSHhuWHVJeURGcExYYVZzK0lSSTVpZmVZNExT?=
+ =?utf-8?B?MEM3MmwzUXBFSlc2R0JrOUhJb1BLRlhaYW04ejdZVWppM3B5emRBM00zVXo4?=
+ =?utf-8?B?bldtc0NuaFIyUUVSeHBJSDROOW53M2V0aG5zSDkxZ1hWcGptM0x5bHljSDEw?=
+ =?utf-8?B?V25rcFRnTnMxcVVveWxOMGlnbGdmU3JZRmc3Rkl1V0JFV1kxdnZFVTlKbVlI?=
+ =?utf-8?B?TG1CT1Z5a3Jyem9rc0g3aW9ndTJVQldwaUxWUjFzbWFXQ2d1b0d5S1djMUFX?=
+ =?utf-8?B?bHlpdWdaaHVPd1FiMHV6T1ZFL3VWMzhJUnlIdjVoT01xQmI2QXI0SWNnV0s1?=
+ =?utf-8?B?a3dER0Exd2pOOXEwMFNOOXB5VFFhRThyL3BCSUZuTk5CUzE4SjVtL1MzWWJx?=
+ =?utf-8?B?bFZiOVJEZnhZbFZXL1FsUzU3djNmSTg2eDJJMlFZeW96ajEzdHJVblpiVk1m?=
+ =?utf-8?B?OVM3WVBCeHkyc1pROE9OUlBPZkpRWTdqK3pwTCtVZlFqWTN0WHZjak0xbGxk?=
+ =?utf-8?B?eExadFU2Z2c0bi9ycFZkVzJiNVR4RytQWFFSeS9PREdoKzgvNlpvZnVpdGt6?=
+ =?utf-8?B?Yk84cWxydnZzN21VYklXa2FWVDRoWWMzNmc0MEU3Y2pYdnNwcnJNeDBPVHhG?=
+ =?utf-8?B?dGo4RVV6dzFmQ05ZWXBndGF2dVRhREI4NXU0d2N1WDBKMitJY3YwOTV0ZVMr?=
+ =?utf-8?B?R2tKVFlWdUNzUmgvSDB3enk3NTlRRDNRTlA3LzhBU2xVQjJPaWUzdkxNV3cv?=
+ =?utf-8?B?bWg3NFo0b0k2SXdqSkhvZElwM0RWUVdGQ1M1dGc2RUlveFFpSUowVjRBQTVy?=
+ =?utf-8?B?b25uMlBxdW1WVm9sYVNoMEdudzNVSWkwT1poYVpQWG50QWFwUWJaam1qQnJW?=
+ =?utf-8?B?T2tFYWNaWWZKdlZYaXhMUEVsSlBPcVFaSTl3NWxkSGdkamhDcE9lbm1qOGo1?=
+ =?utf-8?B?TnpRWXcvanZsSmN5V3FKWHNkc1R3WWxFYjhLQTFOdXUwbGEvVXRWb3UyWmR1?=
+ =?utf-8?B?MDhvNHlsUXJSSlB2QUV2dDhuV21xNW1ObDR4RTBSYW1LY0FOb3k5bVh3RW5Z?=
+ =?utf-8?B?bVhudUsva213MmZWT241WDNQdTdlWTV3SG1PanhxZGNSRERqYnRMaW8vNThm?=
+ =?utf-8?B?eGM1K1VPNm9wcjhZaXRqenlxQk0vQ1BxTXZDNmxydjdJWVFQaVpjZCtzV3Bh?=
+ =?utf-8?B?SHhSOGJ0aHJvWkNNWnhvdXZLYlJRMldJbnN4cG1UOW81R1UrRmY5WVVJUDF5?=
+ =?utf-8?B?QzJvcEc4U20wWWhaZjZYc0w3anIvZkgzTVhZMXEzbno1Um9PK2hNQ05WbGVO?=
+ =?utf-8?B?SE8rclN3bG5udXozZ1c0TlBFQ0FiZ0QycjdZUmRESmxSaTdxR3o0TSs1NHJ6?=
+ =?utf-8?B?WkhKNnJwZ0wwd1RmUWdwM0lSQkFFL1hGYUVXcDBYKzU0OTBtUmFzdnphZUMv?=
+ =?utf-8?B?OFd6VFN4UExYUjltYm16azZWR1RMYU9Vdkh5bVlxUDhMOUhKWU5PQndjTTl5?=
+ =?utf-8?B?enFvQjNtUkNqMzlXU1drUTRRc29CQnJBYWVWOXdqVWlUY2xQSUV3Wjh5ZVBt?=
+ =?utf-8?B?K3FGODdyTGlqQzI3My95K3ZyYlFEc3Q5VUhWVkpPdzkrWFJSeEJUZlZ3UlpQ?=
+ =?utf-8?Q?tIPOOZR8HRHPKyPyo/naS+yM+?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	fjNh04JIq5RIhIJGO7zWLQ5PjyOoednv+oOPpbBwlQTVXForIhHIcIC7TlWWQyO5sH4tYOkAdaXL9weOcBgo8t2Zcd9o5/RKUn8insFmjF7zJTIBOKJ+2iet8Gkm7/2n1mbJhZ/l2f3KNcWUyiyo0wPgSS6BKNJUT5Ju446VjYU3QNfurJa8+hwgy/sFtKPgg3zpE45Zub1s7kfKvDVNN5i3vOFb8m2lw9am4EtrvTXXylyXWy6NbL36nBYlnKPt9YXPKuzyGkXz8n9AgRf8QRsAMjFMRYp02mP4C0O80a++JSfMrK+yQAF5xcmucyApCn32kiVhXfreW0ug18s+ZVkIEIxejajTXCruoiGSM3aRcKiVqxrkfeniotlN87w1QqWFts0InUmnEspdh1SHsfzarC8hgW+h/kmyLrg/3tEU4HucFZvLhR7z9HbEHoOJvqHLWf7IodW5/iEogFXE9agrGqJkFtJa4AXzwYoq2lx+gr0ElWfjm8RX32U7G5zZ2n4Nz8QcllRoQ54WffXXqhqTJyaRHrm7HpE/ZHY9YOowlm/aQros38sdLfgbfMY5fKx7km3Y5jlLwkZ0J+06L4++FmiK0G7FgMPb6AA7xLc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 396490bf-a0fc-467b-1264-08dc33117c06
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4752.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 19:15:37.0211
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1ieyWhqAS7dXMDQx71clVxPduxWp0+Q0Gxtd9St77sSI1x7fB99581UrnN01vlTz2D4aw6OpZgW+SWX8CvaqoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5234
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-21_06,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402210149
+X-Proofpoint-GUID: tJJmCJknyKsTqVo80g8Bg1PbZCfthfht
+X-Proofpoint-ORIG-GUID: tJJmCJknyKsTqVo80g8Bg1PbZCfthfht
 
-He is my proposal:
-
-On boot, read chip values into min_cap, default_cap, max_cap and set 
-them, satisfying AMD's requirement.
-
-Do not introduce any new boot flags, keeping things simple.
-
-Keep def_cap and max_cap readonly to protect HW.
-
-Make min_cap readwrite: "echo 1234 > /sys/...min_cap".
-
-No limitation to specific HW, just general.
-
-This way you did your job fulfilling AMD's request. If user change min, 
-it was his intention anyway - HW is safe with this option. You won't see 
-any false bug reports because this does not introduce instability, 
-unlike OC.
-
-As a side note, it seems Windows does not allow lower than vendors min 
-as well, even via Afterburner. This may seem like "you see, they too 
-follow specs", but I see it more positive for Linux. We already have a 
-mesa which is on par, if not better than Nvidia driver. It is generally 
-known that AMD is great on Linux. Now if on top of that Windows users 
-find that not only can they get better, limitless drivers, but also 
-significant - out of charts efficiency and power savings, this make 
-Linux only more attractive to Windows users and make an adoption faster.
-
-
-
-On 2/21/24 16:39, Alex Deucher wrote:
-> On Wed, Feb 21, 2024 at 1:06 AM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->> On 20.02.24 21:18, Alex Deucher wrote:
->>> On Tue, Feb 20, 2024 at 2:41 PM Romano <romaniox@gmail.com> wrote:
->>>> If the increased low range is allowed via boot option, like in proposed
->>>> patch, user clearly made an intentional decision. Undefined, but won't
->>>> fry his hardware for sure. Undefined is also overclocking in that
->>>> matter. You can go out of range with ratio of voltage vs frequency(still
->>>> within vendor's limits) for example and crash the system.
->>> This whole thing reminds me of this:
->>> https://xkcd.com/1172/
->>> The problem is another module parameter is another interface to
->>> maintain and validate.
->> Yup, of course, all that is understood.
+On 2/21/24 6:50 AM, Mateusz Kusiak wrote:
+> On 21.02.2024 00:15, junxiao.bi@oracle.com wrote:
 >>
->> But we have this "no regressions" rule for a reason. Adhering to it
->> strictly would afaics be counter-productive in this situation, but give
->> users some way to manually do what was possible before out-of-the box
->> IMHO is the minimum we should do.
+>> The thing is we can't reproduce this issue at all. If you can 
+>> generate a vmcore when the hung happened, then we can review which 
+>> processes are stuck.
 >>
->> Maybe just allow that parameter only up to a certain recent GPU
->> generation, that way you won't have to deal with that at some point in
->> the future.
-> The problem is the cumulative effect of all of these parameters.
-> Every time there is some change in the driver someone disagrees with
-> there is a push to add a module parameter for it.  The driver already
-> has too many module parameters and it's hard to keep them all working
-> consistently and in every possible combination.  Moreover, the module
-> options are supposed to be mainly for debugging.  The driver sets
-> proper defaults for all chips to ensure proper operation, however lots
-> of random forums seem to treat them like they are the recipe for some
-> special sauce so users are constantly setting various combinations of
-> them because they read somewhere on a forum that it would make their
-> GPU run faster.  More often than not this leads to problems.
+> Hi,
+> don't know if that be any of help, but I run below scenario with SATA 
+> and NVMe drives. For me, the issue is reproducible on NVMe drives only.
 >
-> Even if we did make the option only valid for these specific chips,
-> there will be an expectation that future chips will support it as
-> well, because someone will hack the driver and test it and it may work
-> for them and then there will be a push to add it for those chips too.
+> Scenario:
+> 1. Create R5D3 with native metadata
+>     # mdadm -CR /dev/md/vol -l5 -n3 /dev/nvme[0-2]n1 --assume-clean
+> 2. Create FS on the array
+>     # mkfs.ext4 /dev/md/vol -F
+> 3. Remove single member drive via "--incremental --fail"
+>     # mdadm -If nvme0n1
 >
-> Alex
+> The result is almost instant.
+
+This is not the same issue that Dan reported, it looks like another 
+regression that Yu Kuai fixed , can you please try this patch?
+
+https://lore.kernel.org/lkml/95f2e08e-2daf-e298-e696-42ebfa7b9bbf@huaweicloud.com/
+
+Thanks,
+
+Junxiao.
+
 >
->>>   Moreover, we've had a number of cases in the
->>> past where users have under or overclocked and reported bugs or
->>> stability issues and it did not come to light that they were doing
->>> that until we'd already spent a good deal of time trying to debug the
->>> issue.
->> Taint the kernel when that module parameter is used? We iirc have a
->> taint bit exactly for this sort of situation. Sure, such reports will
->> still happen, but then you at least have an indicator to spot them.
->>
->> Ciao, Thorsten
->>
->>>   This obviously can still happen if you allow any sort of over
->>> or underclocking, but at least if you stick to the limits you are
->>> staying within the bounding box of the design.
->>>
->>> Alex
->>>
->>>> On 2/20/24 19:09, Alex Deucher wrote:
->>>>> On Tue, Feb 20, 2024 at 11:46 AM Romano <romaniox@gmail.com> wrote:
->>>>>> For Windows, apps like MSI Afterburner is the one to try and what most
->>>>>> people go for. Using it in the past myself, I would be surprised if it
->>>>>> adhered to such a high min power cap. But even if it did, why would we
->>>>>> have to.
->>>>>>
->>>>>> Relying on vendors cap in this case has already proven wrong because
->>>>>> things worked for quite some time already and people reported saving
->>>>>> significant amount of watts, in my case 90W(!) for <10% perf.
->>>>>>
->>>>>> Therefore this talk about safety seems rather strange to me and
->>>>>> especially so when we are talking about min_cap. Or name me a single
->>>>>> case where someone fried his card due to "too low power" set in said
->>>>>> variable. Now there was a report, where by going way too low, driver
->>>>>> goes opposite into max power. That's it. That can be easily
->>>>>> detected(vents going crazy etc.) and reverted. It is a max_cap that
->>>>>> protect HW(also above scenario), not a min_cap. Feel free to adhere to
->>>>>> safety standards with that one.
->>>>> Because operation outside of the design bounding box is undefined.  It
->>>>> might work for some boards but not others.  It's possible some of the
->>>>> logic in the firmware or some of the components used on the board may
->>>>> not work correctly below a certain limit, or the voltage regulators
->>>>> used on a specific board have a minimum requirement that would not be
->>>>> an issue if you stick the bounding box.
->>>>>
->>>>> Alex
->>>>>
->>>>>> As for solution, what some suggested already exist - a patch posted by
->>>>>> fililip on gitlab is probably the way most of you would agree. It
->>>>>> introduce a variable that can be set during boot to override min_cap.
->>>>>> But he did not pull requested it, so please, if any one of you who have
->>>>>> access to code and merge kernel would be kind enough to implement it.
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2/20/24 16:46, Alex Deucher wrote:
->>>>>>> On Tue, Feb 20, 2024 at 10:42 AM Linux regression tracking (Thorsten
->>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>>>>> On 20.02.24 16:27, Hans de Goede wrote:
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 2/20/24 16:15, Alex Deucher wrote:
->>>>>>>>>> On Tue, Feb 20, 2024 at 10:03 AM Linux regression tracking (Thorsten
->>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>>>>>>>> On 20.02.24 15:45, Alex Deucher wrote:
->>>>>>>>>>>> On Mon, Feb 19, 2024 at 9:47 AM Linux regression tracking (Thorsten
->>>>>>>>>>>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>>>>>>>>>>> On 17.02.24 14:30, Greg KH wrote:
->>>>>>>>>>>>>> On Sat, Feb 17, 2024 at 02:01:54PM +0100, Roman Benes wrote:
->>>>>>>>>>>>>>> Minimum power limit on latest(6.7+) kernels is 190W for my GPU (RX 6700XT,
->>>>>>>>>>>>>>> mesa, archlinux) and I cannot get power cap as low as before(to 115W),
->>>>>>>>>>>>>>> neither with Corectrl, LACT or TuxClocker and /sys have a variable read-only
->>>>>>>>>>>>>>> even for root. This is not of above apps issue but of the kernel, I read
->>>>>>>>>>>>>>> similar issues from other bug reports of above apps. I downgraded to v6.6.10
->>>>>>>>>>>>>>> kernel and my 115W(under power)cap work again as before.
->>>>>>>>>>>>> For the record and everyone that lands here: the cause is known now
->>>>>>>>>>>>> (it's 1958946858a62b ("drm/amd/pm: Support for getting power1_cap_min
->>>>>>>>>>>>> value") [v6.7-rc1]) and the issue afaics tracked here:
->>>>>>>>>>>>>
->>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
->>>>>>>>>>>>>
->>>>>>>>>>>>> Other mentions:
->>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3137
->>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/2992
->>>>>>>>>>>>>
->>>>>>>>>>>>> Haven't seen any statement from the amdgpu developers (now CCed) yet on
->>>>>>>>>>>>> this there (but might have missed something!). From what I can see I
->>>>>>>>>>>>> assume this will likely be somewhat tricky to handle, as a revert
->>>>>>>>>>>>> overall might be a bad idea here. We'll see I guess.
->>>>>>>>>>>> The change aligns the driver what has been validated on each board
->>>>>>>>>>>> design.  Windows uses the same limits.  Using values lower than the
->>>>>>>>>>>> validated range can lead to undefined behavior and could potentially
->>>>>>>>>>>> damage your hardware.
->>>>>>>>>>> Thx for the reply! Yeah, I was expecting something along those lines.
->>>>>>>>>>>
->>>>>>>>>>> Nevertheless it afaics still is a regression in the eyes of many users.
->>>>>>>>>>> I'm not sure how Linus feels about this, but I wonder if we can find
->>>>>>>>>>> some solution here so that users that really want to, can continue to do
->>>>>>>>>>> what was possible out-of-the box before. Is that possible to realize or
->>>>>>>>>>> even supported already?
->>>>>>>>>>>
->>>>>>>>>>> And sure, those users would be running their hardware outside of its
->>>>>>>>>>> specifications. But is that different from overclocking (which the
->>>>>>>>>>> driver allows, doesn't it? If not by all means please correct me!)?
->>>>>>>>>> Sure.  The driver has always had upper bound limits for overclocking,
->>>>>>>>>> this change adds lower bounds checking for underclocking as well.
->>>>>>>>>> When the silicon validation teams set the bounding box for a device,
->>>>>>>>>> they set a range of values where it's reasonable to operate based on
->>>>>>>>>> the characteristics of the design.
->>>>>>>>>>
->>>>>>>>>> If we did want to allow extended underclocking, we need a big warning
->>>>>>>>>> in the logs at the very least.
->>>>>>>>> Requiring a module-option to be set to allow this, as well as a big
->>>>>>>>> warning in the logs sounds like a good solution to me.
->>>>>>>> Yeah, especially as it sounds from some of the reports as if some
->>>>>>>> vendors did a really bad job when it came to setting the proper
->>>>>>>> lower-bound limits are now adhered -- and thus higher then what we used
->>>>>>>> out-of-the box before 1958946858a62b was applied.
->>>>>>>>
->>>>>>>> Side note: I assume those "lower bounds checking" is done round about
->>>>>>>> the same way by the Windows driver? Does that one allow users to go
->>>>>>>> lower somehow? Say after modifying the registry or something like that?
->>>>>>>> Or through external tools?
->>>>>>> Windows uses the same limit.  I'm not aware of any way to override the
->>>>>>> limit on windows off hand.
->>>>>>>
->>>>>>> Alex
->>>>>>>
->>>>>>>
->>>>>>>> Ciao, Thorsten
->>>>>>>>
->>>>>>>>>>>>> Roman posted something that apparently was meant to go to the list, so
->>>>>>>>>>>>> let me put it here:
->>>>>>>>>>>>>
->>>>>>>>>>>>> """
->>>>>>>>>>>>> UPDATE: User fililip already posted patch, but it need to be merged,
->>>>>>>>>>>>> discussion is on gitlab link below.
->>>>>>>>>>>>>
->>>>>>>>>>>>> (PS: I hope I am replying correctly to "all" now? - using original addr.)
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>>> it seems that commit was already found(see user's 'fililip' comment):
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> https://gitlab.freedesktop.org/drm/amd/-/issues/3183
->>>>>>>>>>>>>> commit 1958946858a62b6b5392ed075aa219d199bcae39
->>>>>>>>>>>>>> Author: Ma Jun <Jun.Ma2@amd.com>
->>>>>>>>>>>>>> Date:   Thu Oct 12 09:33:45 2023 +0800
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>        drm/amd/pm: Support for getting power1_cap_min value
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>        Support for getting power1_cap_min value on smu13 and smu11.
->>>>>>>>>>>>>>        For other Asics, we still use 0 as the default value.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>        Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
->>>>>>>>>>>>>>        Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
->>>>>>>>>>>>>>        Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> However, this is not good as it remove under-powering range too far. I
->>>>>>>>>>>>> was getting only about 7% less performance but 90W(!) less consumption
->>>>>>>>>>>>> when set to my 115W before. Also I wonder if we as a OS of options and
->>>>>>>>>>>>> freedom have to stick to such very high reference for min values without
->>>>>>>>>>>>> ability to override them through some sys ctrls. Commit was done by amd
->>>>>>>>>>>>> guy and I wonder if because of maybe this post that I made few months
->>>>>>>>>>>>> ago(business strategy?):
->>>>>>>>>>>>> https://www.reddit.com/r/Amd/comments/183gye7/rx_6700xt_from_230w_to_capped_115w_at_only_10/
->>>>>>>>>>>>>> This is not a dangerous OC upwards where I can understand desire to
->>>>>>>>>>>>> protect HW, it is downward, having min cap at 190W when card pull on
->>>>>>>>>>>>> 115W almost same speed is IMO crazy to deny. We don't talk about default
->>>>>>>>>>>>> or reference values here either, just a move to lower the range of
->>>>>>>>>>>>> options for whatever reason.
->>>>>>>>>>>>>> I don't know how much power you guys have over them, but please
->>>>>>>>>>>>> consider either reverting this change, or give us an option to set
->>>>>>>>>>>>> min_cap through say /sys (right now param is readonly, even for root).
->>>>>>>>>>>>>> Thank you in advance for looking into this, with regards:  Romano
->>>>>>>>>>>>> """
->>>>>>>>>>>>>
->>>>>>>>>>>>> And while at it, let me add this issue to the tracking as well
->>>>>>>>>>>>>
->>>>>>>>>>>>> [TLDR: I'm adding this report to the list of tracked Linux kernel
->>>>>>>>>>>>> regressions; the text you find below is based on a few templates
->>>>>>>>>>>>> paragraphs you might have encountered already in similar form.
->>>>>>>>>>>>> See link in footer if these mails annoy you.]
->>>>>>>>>>>>>
->>>>>>>>>>>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>>>>>>>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>>>>>>>>>>> tracking bot:
->>>>>>>>>>>>>
->>>>>>>>>>>>> #regzbot introduced 1958946858a62b /
->>>>>>>>>>>>> #regzbot title drm: amdgpu: under-powering broke
->>>>>>>>>>>>>
->>>>>>>>>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>>>>>>>>>>> --
->>>>>>>>>>>>> Everything you wanna know about Linux kernel regression tracking:
->>>>>>>>>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>>>>>>>>>>> That page also explains what to do if mails like this annoy you.
->>>
+> Thanks,
+> Mateusz
