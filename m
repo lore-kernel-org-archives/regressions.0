@@ -1,37 +1,46 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9445F3D393
-	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 14:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB80C1FDB
+	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 14:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708526587; cv=none; b=A6p3NrisufswwEND8NGKbrJRQOWQfpxA0mqDD+lvOLtwDLaMzrY658xdystNe1IXwi75QKDiBfW0KPHvQTff3zTHel43ET3Zuvy37ZwjHnjPpM/3+aTFnqHDSkfpAYTB5COkgUBWibgrU7sGUlhq9fqPMbW67oNXeHI7NjM+qoI=
+	t=1708527033; cv=none; b=pp1ZAEr9VNdUTL2b57eDieK0l8ANbhWWGjEGmNFc5evJhYEZC3frSmO9eTxvcoi0scCXxFaa0o6Hma/EQD6X6/wBqtKgBCycWITRpEf3TIEdJgXzpiYYj8taibrd/4HAmriCl3Crlc1B0dUiZ6PR1575c41ono7070+WIc19enY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708526587; c=relaxed/simple;
-	bh=oLIGJrhRydDrcsY5fzeUUEo8DuGxNRXYTaKBa/2hELM=;
+	s=arc-20240116; t=1708527033; c=relaxed/simple;
+	bh=qbUVDRq1sTiEeH5NjYGofdTZsYOvTMvZCIFACRNBirg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ayGQO9XwFkrfCTpgrqAwYO59GTI84EQu8YOxLyousrjPPItKQHouZBWt1VcwNGDq+sjoq2vcXpHpKKeLYosDIT2lVI+xzmg++JbasGPTqbWqaNE9HX6AKKLrxpYY1szq+wlRJLpJnTvevTJT8BcY0rYBbIXVEMXSiUWo/6C9hZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=l+I3mwss; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=MhPVk14pU/6VK2kqZupepRJbD1I17qBVyVxZEpM9N6icT1Q38RIQ8QRqHuK+hR/TUXzK8y0Rrwpkbd8Y0fy6BvZK8RWJc7zpn//uODULckYUjN7SuVJTc4qKbN0RXSCBmaMR+ED8QpN2kIdHK543HCcl7fgs82eNNZCf9cwAcGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IgWRcekg; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="l+I3mwss"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=oLIGJrhRydDrcsY5fzeUUEo8DuGxNRXYTaKBa/2hELM=;
-	t=1708526585; x=1708958585; b=l+I3mwss0UbJ8litZhCf6fxDx8f6chgKOWEYUOM+fl/qZY+
-	LD+kjDGRsDAVOFYgqGmfxWkn8GISWo1ta9tl79xgWvT/UMRrywPLO/GDQIS35AK3rYefvqwXpk+xl
-	pIVBJO9lLTfMNAkQY7dM2J3NH6yXj+TgxWrgEOmQPTeJXsyUTtVpQ1x3ruZPqlEEUlCL5mAd8POgf
-	mb+l3cjrF3m6Z70LMJMSGl6exUlrB1YjXeK0a6H/IICejfUehuE34Iqr9iADXO17U/yA9jF9TjOiR
-	uEeHyrerbMuGIj6apEIlPe7XlMUn659zygXgo5H4sQFDsBl7LcTAAeqdbIjgioqw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rcnoI-00015E-A9; Wed, 21 Feb 2024 15:42:58 +0100
-Message-ID: <9b92706b-14c2-4761-95fb-7dbbaede57f4@leemhuis.info>
-Date: Wed, 21 Feb 2024 15:42:57 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IgWRcekg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708527033; x=1740063033;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qbUVDRq1sTiEeH5NjYGofdTZsYOvTMvZCIFACRNBirg=;
+  b=IgWRcekgrfegu8A53FqRkEMFwzvcL+oH9PYZ2caqaed/7Ec4eXxl2vXD
+   9Df0/4Xpg4jdh//r0i9eBHr4xj0lPcgvaoiyebfBC1u0UXw/gyl1vYk6S
+   si+bl9yaXNONOE/OKbcyLu6jObt/uCWr+rq062WZETFrY6A1llfxQcn+y
+   Q3pU9Z89rgkeoO8j49eXCrnkggiYUoNyvEjMKLATxkehuDB8NREchDj9Z
+   zMvS1cfKjk9vsyRwDBRbjTnQhiWZbGr3HsRHQNDGV2BnT2FWz0pghpDs6
+   +Iej4LMm+W1ovWhgF4ynj62B+vH/anr+LX6h1V2bFd7ZtgEc68Wkl3ywM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="20124569"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="20124569"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:50:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="5325538"
+Received: from mkusiak-mobl1.ger.corp.intel.com (HELO [10.246.34.229]) ([10.246.34.229])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:50:29 -0800
+Message-ID: <2b5daa31-af66-4297-932b-d2fd341b63e6@linux.intel.com>
+Date: Wed, 21 Feb 2024 15:50:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,41 +48,40 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.8-rc process is unable to exit and consumes a lot
- of cpu
-Content-Language: en-US, de-DE
-To: Paul Holzinger <pholzing@redhat.com>, regressions@lists.linux.dev
-Cc: Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>
-References: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
- <652928aa-0fb8-425e-87b0-d65176dd2cfa@redhat.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <652928aa-0fb8-425e-87b0-d65176dd2cfa@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708526585;ee5619e5;
-X-HE-SMSGID: 1rcnoI-00015E-A9
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: junxiao.bi@oracle.com, Dan Moulding <dan@danm.net>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, regressions@lists.linux.dev, song@kernel.org,
+ stable@vger.kernel.org
+References: <20240123005700.9302-1-dan@danm.net>
+ <20240220230658.11069-1-dan@danm.net>
+ <f32cd478-a905-4e98-a46c-0612bc10c38e@oracle.com>
+Content-Language: pl
+From: Mateusz Kusiak <mateusz.kusiak@linux.intel.com>
+In-Reply-To: <f32cd478-a905-4e98-a46c-0612bc10c38e@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 21.02.24 15:31, Paul Holzinger wrote:
-> On 21/02/2024 15:20, Paul Holzinger wrote:
->>
->> we are seeing problems with the 6.8-rc kernels[1] in our CI systems,
->> we see random process timeouts across our test suite. It appears that
->> sometimes a process is unable to exit, nothing happens even if we send
->> SIGKILL and instead the process consumes a lof of cpu.
-> [...]
+On 21.02.2024 00:15, junxiao.bi@oracle.com wrote:
+>
+> The thing is we can't reproduce this issue at all. If you can generate 
+> a vmcore when the hung happened, then we can review which processes 
+> are stuck.
+>
+Hi,
+don't know if that be any of help, but I run below scenario with SATA 
+and NVMe drives. For me, the issue is reproducible on NVMe drives only.
 
-Thx for the report.
+Scenario:
+1. Create R5D3 with native metadata
+     # mdadm -CR /dev/md/vol -l5 -n3 /dev/nvme[0-2]n1 --assume-clean
+2. Create FS on the array
+     # mkfs.ext4 /dev/md/vol -F
+3. Remove single member drive via "--incremental --fail"
+     # mdadm -If nvme0n1
 
-Warning, this is not my area of expertise, so this might send you in the
-totally wrong direction.
+The result is almost instant.
 
-I briefly checked lore for similar reports and noticed this one when I
-searched for shrink_dcache_parent:
-
-https://lore.kernel.org/all/ZcKOGpTXnlmfplGR@gmail.com/
-
-Do you think that might be related? A fix for this is pending in vfs.git.
-
-Ciao, Thorsten
+Thanks,
+Mateusz
