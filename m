@@ -1,157 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D994B3DBBF;
-	Wed, 21 Feb 2024 11:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F547D417
+	for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 14:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708513796; cv=none; b=cr8TvKAapRJyKX1grX6jYjkahhiehFd2XrCOn2EfPKOrQVCESZYU3dIhRS8pYS9P/97rL3mwkjbfGJF05Qt5eaqFJvRUIUESnwXGPCaCwUgAgMOgz7sK/EIV42clr31POgVs9chtVV1DNCO4EitNgQDXzRuapGnRzjD2J92STLo=
+	t=1708525262; cv=none; b=Y/i6af7lCquz2BVjQgMaTDa3nMQmmYNooS4QxsBimvmXJN31562RYwb1pSQ/uFBSMszLva5rVEq7ZSh0OEmyQM3AMIX5x0z2hrLAoTUeTISiURMBqSYwAsp1e15N3hNO4IV7qOid986FjsshiDAeUD9g96xCVFVRGJlSOiaCPfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708513796; c=relaxed/simple;
-	bh=r5M9n+h9xvc6qVOXbDJzEKIEsbVMmU0lw/roKeMtLTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3X6UDTD3+FHhRHD80czXFnZHbNIF85t7/syq1r4qPeTYUAYbPVE1th7AucuMhGDZWhARNUZQLDyqhMV1kgNv6C/u7CiQ2Icz0xOk5HBFwiFD+J8bBb92UlPOc0GAM7v2Az4+uwfoEoUsrGln1w1QCG6/0sTF0ToTqsZSMe0hmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LBSic3xO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708525262; c=relaxed/simple;
+	bh=XBgm3NMRlx7nnVsLuBuTWtxjiqyXmulzyqeZaOEq+RM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=eDcaKGajJJVqSoHvFtiHRgh1FMTSmQTe7Ix4nIA0j1NJnwFpF+JzRsPEv57+rdh6qfRLwvhUg8ZVjY2jPWQGcaks9Vo972rkeZmoYa2p4hIgK6+D8KQyeGjjxaZ8FU6wuhyXpQmPfwwjFgAgF5b+4nngOnFiMDP6gG30CLEBb9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O2JgVq9b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LBSic3xO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00AEDC433F1;
-	Wed, 21 Feb 2024 11:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708513795;
-	bh=r5M9n+h9xvc6qVOXbDJzEKIEsbVMmU0lw/roKeMtLTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LBSic3xOtt1tCN9A/92/nAk2C7hX3VhIpgeNenXsYtHYuEpSSvxDhnOfrvD3bvY5H
-	 LcDHRGq1Rhm0MUZ5mJ1Op99jpTeYqbJEs1Ytost8WnJVMv7zAE86q7cBhJ7JyYWUsD
-	 TIgwV6SDvSJky8V0bgp00hURu2WaiWEKRhGs6kpM=
-Date: Wed, 21 Feb 2024 12:09:52 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Paulo Alcantara <pc@manguebit.com>,
-	Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>,
-	Leonardo Brondani Schenkel <leonardo@schenkel.net>,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-cifs@vger.kernel.org,
-	Mathias =?iso-8859-1?Q?Wei=DFbach?= <m.weissbach@info-gate.de>
-Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
- "Resource temporarily unavailable"
-Message-ID: <2024022137-ducky-upgrade-e50a@gregkh>
-References: <8ad7c20e-0645-40f3-96e6-75257b4bd31a@schenkel.net>
- <7425b05a-d9a1-4c06-89a2-575504e132c3@sairon.cz>
- <446860c571d0699ed664175262a9e84b@manguebit.com>
- <2024010846-hefty-program-09c0@gregkh>
- <88a9efbd0718039e6214fd23978250d1@manguebit.com>
- <Zbl7qIcpekgPmLDP@eldamar.lan>
- <Zbl881W5S-nL7iof@eldamar.lan>
- <2024022058-scrubber-canola-37d2@gregkh>
- <ZdUYvHe6u3LcUHDf@eldamar.lan>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2JgVq9b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708525248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pKiRH/FNVmfn6kjU6vVbtt1MccXnRpiLUIQ6h3WEyio=;
+	b=O2JgVq9bNou85/sYe9KnTKrZjxYEeSqRYAycg2OFF4QopxdaCU4PaUZ5VVdsuGVHuS167N
+	mtS48Us3tDSwJKifG56hQHWSUNqLxVZS3AAvZj6e2/xRHV7Hf9FtxS404ZDaicK3fQuYkh
+	OfRsrSaI2Xc39kn8LZqLlhc/pbcT1Ko=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-675-7uf0tHK7PXuXs5q2GYDMXA-1; Wed, 21 Feb 2024 09:20:45 -0500
+X-MC-Unique: 7uf0tHK7PXuXs5q2GYDMXA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4126d660f01so10561435e9.3
+        for <regressions@lists.linux.dev>; Wed, 21 Feb 2024 06:20:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708525243; x=1709130043;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pKiRH/FNVmfn6kjU6vVbtt1MccXnRpiLUIQ6h3WEyio=;
+        b=c93W+/ZIgle2maotH0L5CwcHIv+iCANtUJHsXs7xwrA79Ujbr6gDLHa7oDSfQc/g8v
+         zH3q8IdOuj4BY1mCQ+m1LE6f5Db5FC09R0FItpoDc+0+4rQDkCdZHFarITctaBjTTiP+
+         YGV0WsQRPQIXnrULCNlMgUZTA5xfO8HyBPscE/hNEZ4+WN1HP53IHh4Xh/HLEpu/S3+L
+         +SP3IuisIOOvo/nd26nqZ8DlkXdW/XJkRyoIqWGI96/06bqAxLuVx1au7xXIxIBB6yhh
+         CuFzW3wh3UIkvS9cynUb3+sRvIlIi+6/l55mlYKR3rGcCAc+1Fy1Gt6RWoLAjiZ0TdvL
+         ImWA==
+X-Gm-Message-State: AOJu0Yx76x79aABUBVD16jWl3S5EHzm2Mt3eHdXvGKjAdqgM48gjVh4b
+	KM3lvc2qh9CS6LWreI0VoFfPKB0/I0Fy2xLLkwvmWccYaZfoeg6OmzgAerXMSEqki3IaJCKP3I+
+	exyqKiWYHqV4WxrAB/hHvMzAQ9oe4doVRZBJ9sIX6z/OQH2Gr+aGa8NadqoMIIFOheaS/Xm3SQv
+	pSIAE24/lhEahpvMo8rJOev8fFMuCWufWCdtVxpY4zGafo
+X-Received: by 2002:a05:600c:4f14:b0:411:eb4f:7fb6 with SMTP id l20-20020a05600c4f1400b00411eb4f7fb6mr15414272wmq.8.1708525243416;
+        Wed, 21 Feb 2024 06:20:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG3dmM274cQ5oDdqAZouEeA82Rqv2m2B9cVPJa4iHpjo5RNtgQeO5hn3xwfURxruB9sUv7vUg==
+X-Received: by 2002:a05:600c:4f14:b0:411:eb4f:7fb6 with SMTP id l20-20020a05600c4f1400b00411eb4f7fb6mr15414214wmq.8.1708525241827;
+        Wed, 21 Feb 2024 06:20:41 -0800 (PST)
+Received: from [192.168.188.25] ([80.243.52.136])
+        by smtp.gmail.com with ESMTPSA id 13-20020a05600c230d00b00411d640085csm18047941wmo.43.2024.02.21.06.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 06:20:41 -0800 (PST)
+Message-ID: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
+Date: Wed, 21 Feb 2024 15:20:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdUYvHe6u3LcUHDf@eldamar.lan>
+User-Agent: Mozilla Thunderbird
+From: Paul Holzinger <pholzing@redhat.com>
+Subject: [REGRESSION] 6.8-rc process is unable to exit and consumes a lot of
+ cpu
+To: regressions@lists.linux.dev
+Cc: Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 20, 2024 at 10:25:16PM +0100, Salvatore Bonaccorso wrote:
-> Hi Greg,
-> 
-> On Tue, Feb 20, 2024 at 09:27:49PM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Jan 30, 2024 at 11:49:23PM +0100, Salvatore Bonaccorso wrote:
-> > > Hi Paulo, hi Greg,
-> > > 
-> > > On Tue, Jan 30, 2024 at 11:43:52PM +0100, Salvatore Bonaccorso wrote:
-> > > > Hi Paulo, hi Greg,
-> > > > 
-> > > > Note this is about the 5.10.y backports of the cifs issue, were system
-> > > > calls fail with "Resource temporarily unavailable".
-> > > > 
-> > > > On Mon, Jan 08, 2024 at 12:58:49PM -0300, Paulo Alcantara wrote:
-> > > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > > > > 
-> > > > > > Why can't we just include eb3e28c1e89b ("smb3: Replace smb2pdu 1-element
-> > > > > > arrays with flex-arrays") to resolve this?
-> > > > > 
-> > > > > Yep, this is the right way to go.
-> > > > > 
-> > > > > > I've queued it up now.
-> > > > > 
-> > > > > Thanks!
-> > > > 
-> > > > Is the underlying issue by picking the three commits:
-> > > > 
-> > > > 3080ea5553cc ("stddef: Introduce DECLARE_FLEX_ARRAY() helper")
-> > > > eb3e28c1e89b ("smb3: Replace smb2pdu 1-element arrays with flex-arrays")
-> > > > 
-> > > > and the last commit in linux-stable-rc for 5.10.y:
-> > > > 
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
-> > > > 
-> > > > really fixing the issue?
-> > > > 
-> > > > Since we need to release a new update in Debian, I picked those three
-> > > > for testing on top of the 5.10.209-1 and while testing explicitly a
-> > > > cifs mount, I still get:
-> > > > 
-> > > > statfs(".", 0x7ffd809d5a70)             = -1 EAGAIN (Resource temporarily unavailable)
-> > > > 
-> > > > The same happens if I build
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
-> > > > (knowing that it is not yet ready for review).
-> > > > 
-> > > > I'm slight confused as a280ecca48be ("cifs: fix off-by-one in
-> > > > SMB2_query_info_init()") says in the commit message:
-> > > > 
-> > > > [...]
-> > > > 	v5.10.y doesn't have
-> > > > 
-> > > >         eb3e28c1e89b ("smb3: Replace smb2pdu 1-element arrays with flex-arrays")
-> > > > 
-> > > > 	and the commit does
-> > > > [...]
-> > > > 
-> > > > and in meanwhile though the eb3e28c1e89b was picked (in a backported
-> > > > version). As 6.1.75-rc2 itself does not show the same problem, might
-> > > > there be a prerequisite missing in the backports for 5.10.y or a
-> > > > backport being wrong?
-> > > 
-> > > The problem seems to be that we are picking the backport for
-> > > eb3e28c1e89b, but then still applying 
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5
-> > > 
-> > > which was made for the case in 5.10.y where eb3e28c1e89b is not
-> > > present.
-> > > 
-> > > I reverted a280ecca48beb40ca6c0fc20dd5 and now:
-> > > 
-> > > statfs(".", {f_type=SMB2_MAGIC_NUMBER, f_bsize=4096, f_blocks=2189197, f_bfree=593878, f_bavail=593878, f_files=0, f_ffree=0, f_fsid={val=[2004816114, 0]}, f_namelen=255, f_frsize=4096, f_flags=ST_VALID|ST_RELATIME}) = 0
-> > 
-> > So this works?  Would that just be easier to do overall?  I feel like
-> > that might be best here.
-> > 
-> > Again, a set of simple "do this and this and this" would be nice to
-> > have, as there are too many threads here, some incomplete and missing
-> > commits on my end.
-> > 
-> > confused,
-> 
-> It is quite chaotic, since I believe multiple people worked on trying
-> to resolve the issue, and then for the 5.10.y and 5.15.y branches
-> different initial commits were applied. 
-> 
-> For 5.10.y it's the case: Keep the backport of eb3e28c1e89b and drop
-> a280ecca48be (as it is not true that v5.10.y does not have
-> eb3e28c1e89b, as it is actually in the current 5.10.y queue).
+Hi all,
 
-I think we are good now.
+we are seeing problems with the 6.8-rc kernels[1] in our CI systems, we 
+see random process timeouts across our test suite. It appears that 
+sometimes a process is unable to exit, nothing happens even if we send 
+SIGKILL and instead the process consumes a lof of cpu.
 
-> Paulo can you please give Greg an authoratitative set of commits to
-> keep/apply in the 5.10.y and 5.15.y series.
+Reproducing the problem outside of our CI systems seem to be very 
+difficult, it took me a week until I finally reproduced the problem on a 
+system where I have ssh access. I currently reproduced it on 6.8-rc3 but 
+we also confirmed that this issue still exists in rc5
+On my system the problematic pid is 661803
 
-Yes, anything I missed?
+# ps -o pid,state,pcpu,comm, -p 661803
+     PID S %CPU COMMAND
+  661803 R 98.8 sh
 
-thanks,
 
-greg k-h
+I was able to read the stack once in proc:
+
+# cat /proc/661803/stack
+[<0>] shrink_dcache_parent+0x64/0x140
+[<0>] shrink_dcache_for_umount+0x3b/0x130
+[<0>] generic_shutdown_super+0x1e/0x110
+[<0>] kill_litter_super+0x27/0x50
+[<0>] deactivate_locked_super+0x30/0xb0
+[<0>] cleanup_mnt+0xba/0x150
+[<0>] task_work_run+0x5a/0x90
+[<0>] do_exit+0x35e/0xaf0
+[<0>] do_group_exit+0x31/0x80
+[<0>] __x64_sys_exit_group+0x18/0x20
+[<0>] do_syscall_64+0x86/0x170
+[<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+
+However if I try the same again now I do not get any output from it. 
+Also the whole /proc/$pid directory is in a weird state, it seems a lot 
+of the process resources are already cleaned up and inaccessible.
+
+Given the process consumes so much cpu I assume it runs in some infinity 
+loop inside the kernel process exit path. I also tried to attach strace 
+and gdb to the process but that just hanged and did nothing.
+
+I still have the system up and running in case more data is needed 
+please let me know. Also any advice on how I could debug this further 
+would be appreciated. I can try to to compile the kernel and use git 
+bisect but given it took me a week to reproduce the first time it will 
+not yield any useful result soon.
+
+
+Note we see this in the Podman tests[1] and because Podman is a 
+container manager we make heavy use of namespaces, cgroups and seccomp 
+in case it matters.
+
+[1] https://github.com/containers/podman/issues/21504
+
+#regzbot introduced v6.7..v6.8-rc1
+
+
+Thanks
+Paul Holzinger
+
