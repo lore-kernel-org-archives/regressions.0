@@ -1,146 +1,186 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B8D22EEF
-	for <regressions@lists.linux.dev>; Thu, 22 Feb 2024 09:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708595510; cv=none; b=u2t7+MtjsC9ayJh5iy7myDxXS91BoSEdSDSkcjePRIabwhER6cEwECnSlUNy0lV543Yob0Ml1j9CM+MiO0JEEv/JSe2NbtprNOgrJaHzcTyKdClC4iiTERxH+TFs3GnM3WxSkdk2+ZOw2Vd/3Pj4zowBJ2hLP9nnwGOlD11kTEg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708595510; c=relaxed/simple;
-	bh=QK/w+zHKermHaVjX09Z8zRk1JxHXviZ9TwuQyQcYtR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kcjsMoMSOclQaOX40/R0BOwC9h/EnVjgorAfXmhROJurQb+7DOYNWh0T/VWH17ERn4CjIXhuHek/8KvTmvdiBoRNWNuDBkS6W426WoHNzGDgaBHyoL62Tl54BrF6Zjw+cWFgtJ2ch+hA/ARH/f0bnOAoE0TNgWuq9hhY6lZbwxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HZEvRCjV; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0276818032
+	for <regressions@lists.linux.dev>; Thu, 22 Feb 2024 23:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708642873; cv=pass; b=LsPAOsLt9uPOPi2GwRuAm6ssfIfj5a+HVVHpaWjsuRTJk0cUa92WlERDT1/62BbckV38B3guwp8zlW04BWCM8cTyISWI8mMNluygoGsDEVqHNkkc6MiVl7s+PHQRR6+KCxabVFclhaXTsXgjIQ5ZA9zsjgS2RMpXh7sMV7KIFaw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708642873; c=relaxed/simple;
+	bh=n3Ye9S6cNTU5mKO/NgYU/i/NCjN1QNFvHc5YgXu4FRo=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=B0r4PntERkKMNjseInKOF5douVb5ye2r9MvX/erddQ6Lam+iUNMq0KyGYkerndlBU8Tisv3b3ezkinacjmoiZUzLRrZrAVOguVUD+bEBG/0B37gSUXjnbbAflykr853w9av7zIoYzFYfGi/ag7LoLryUL6sCFcd2fjz4NA7F+LI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=fbbFD+E7; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HZEvRCjV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=tYXbkmthtSDNeUls404D/ZpViqFJAjLkSPh7YYbl/T4=; t=1708595508;
-	x=1709027508; b=HZEvRCjVesD/6xjOS+evVzoCEoEdQzi7/FCqxtsx5ysJP+MW8+hVeDTqVeZAj
-	P8rGi0CNi3wSaaC1AV+MeYKapSjTEzeOL6AwVvkucXf1Bo/D4avEzwzX893c/ondx17OVpj1tVlGF
-	ZP/xsEvdyHMcVghdDzuVrerkQsL5zUbfrZKlXymY3ZB+RTR96jkIoERuyLvHiPrOv0HSfiXN9xaEI
-	uOVMR6wv6vmwyE9WD/SuUy9IuPl1iCwFcct2+3XNaRICrKDUIfHqtX6gkcFjfueHVArGr7nJEv0Du
-	IyWK0Rck9EAnIsA45IAPmvmjymprPTK1+yon03bbYjD9vbKZng==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rd5k0-0003LX-0y; Thu, 22 Feb 2024 10:51:44 +0100
-Message-ID: <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
-Date: Thu, 22 Feb 2024 10:51:43 +0100
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="fbbFD+E7"
+Message-ID: <181e4ae5b2ea3c2316e577cae4b62cc6@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1708642862;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ULMiVdbvyYhzOmWmU+Y+KH9Pc9rIv3u9RYwV7FVrAFs=;
+	b=fbbFD+E7/+ovmwu/xae3wADXP3lDbuUaLq/+QR96kFyOp6fIiNbHahpR40IvMQMd9leOwH
+	sN06E/UhAUFkvZpyb16fB6EVLL2x6v7LXseJqKioZ+y0TU699JCV6f99n8QyvPY5CNRmJY
+	8eODRbmrI3jKP/XfcyI2e/H8YALRUBHI6siTCuLHNvaZ5nQtjHk1pheXXbUJyskVie+q3w
+	+h4wPKyxcDDKhuVopDZd6Isz4YyjaKHcANXL+l3zzbATfqZMzF/EcFxsiDKvlWSI/RRvU2
+	P5Whd6SUnO6xOiQ7qF9uftMW6ilIhUUTYXyV3KFV2RKYoDX6voKBrqBexWH1Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1708642862; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ULMiVdbvyYhzOmWmU+Y+KH9Pc9rIv3u9RYwV7FVrAFs=;
+	b=AE0cvVTyOToK3izTUAV6csmJvBSHPC3yq+cVIf22xm7jqCwU9G3c6o+iz+d/N5QClfi7YM
+	dpSi4em7aKR8ngAUAKXq1rpGYOLgLHd0vfQJ9pN+14NIqpeyUmLxfX1napIVR5gblceEDZ
+	E8KnA5ifStd3hHDTan7V94InJUEqWxdaIrQHGZMoEVUcaRQqz1vUyIoWej4KF60YQX9neK
+	LAWozNNmY9YFSS77jJILIvQw9TXwLp79vSwwaPOLckBKYVpBfbykA9D53hiBpeqhZ4lcw+
+	dwN2WpGGhrxIqY2x7dOSRfBBAYM1C1zOHXWMkPocNdXMfZuSX+S8Q1GrlD7CLQ==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1708642862; a=rsa-sha256;
+	cv=none;
+	b=WkWbHtBlHb4sIwsRUcLKu9bZOTaK8C22Kmtl+MgPajtuTLFqeZXAqASFCxlZBcWZpv/KoA
+	+4LBJcNamqmSgdiHPKx/ul6Xf8vmsrDaTfJzqgWPcgDMQhgIipu3MJXEp9N0JP7sR0YDOA
+	rme2aAsrCsV3xVfR7I8RJ/WakdWlhrTjssiurayDNywz1A8imMnLPdyKExq3EDLZ5G5idH
+	dnInOrEsRwF5RMOXE0pkrLZMXOB71sP6/l2+eun5Sl6KbanHtpfPN2u2EEIhwCSjYd1nNt
+	k26UF9q/Ap3T8fBSOJlUpjGHQTtSExnx2KzXb32fW3IBX/MOOwiCC7IMbP14qQ==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Salvatore Bonaccorso
+ <carnil@debian.org>
+Cc: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>, Leonardo Brondani
+ Schenkel
+ <leonardo@schenkel.net>, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-cifs@vger.kernel.org, Mathias
+ =?utf-8?Q?Wei=C3=9Fbach?=
+ <m.weissbach@info-gate.de>
+Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with
+ "Resource temporarily unavailable"
+In-Reply-To: <2024022137-ducky-upgrade-e50a@gregkh>
+References: <8ad7c20e-0645-40f3-96e6-75257b4bd31a@schenkel.net>
+ <7425b05a-d9a1-4c06-89a2-575504e132c3@sairon.cz>
+ <446860c571d0699ed664175262a9e84b@manguebit.com>
+ <2024010846-hefty-program-09c0@gregkh>
+ <88a9efbd0718039e6214fd23978250d1@manguebit.com>
+ <Zbl7qIcpekgPmLDP@eldamar.lan> <Zbl881W5S-nL7iof@eldamar.lan>
+ <2024022058-scrubber-canola-37d2@gregkh> <ZdUYvHe6u3LcUHDf@eldamar.lan>
+ <2024022137-ducky-upgrade-e50a@gregkh>
+Date: Thu, 22 Feb 2024 20:00:58 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
- >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
- and continuous swapping
-Content-Language: en-US, de-DE
-To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Dave Ertman <david.m.ertman@intel.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
- Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
-References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
- <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
- <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
- <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
- <20240201065726.50a0b1f2@kernel.org>
- <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
- <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
- <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708595508;c135b6bb;
-X-HE-SMSGID: 1rd5k0-0003LX-0y
+Content-Type: text/plain
 
-On 19.02.24 12:40, Jaroslav Pulchart wrote:
-> If the question is for me then my opinion about it is this:
-> 
-> I'm fine with the behaviour of a driver about memory consumption if it
-> is predictable/described with the possibility to change it from
-> default values. My understanding of "predictable" is something like
-> this:
-> 
-> The ICE driver is going to
-> * Setup 64 queues per each port, not active included.
-> * Each queue consumes "xxxx MB" amount of kernel memory per each numa node.
-> example: Two 2 ports Intel NICs using ICE driver will consume ~6GB of
-> RAM of each NUMA node, please consider changing the defaults values to
-> avoid OOM :-).
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-6GB of RAM for each NUMA node? That sounds, well, a whole lot :-D Makes
-me also wonder a bit why nobody else reported this (and if you have any
-debug option enable in your .config or something like that that which is
-rarely used).
+> On Tue, Feb 20, 2024 at 10:25:16PM +0100, Salvatore Bonaccorso wrote:
+>> Hi Greg,
+>> 
+>> On Tue, Feb 20, 2024 at 09:27:49PM +0100, Greg Kroah-Hartman wrote:
+>> > On Tue, Jan 30, 2024 at 11:49:23PM +0100, Salvatore Bonaccorso wrote:
+>> > > Hi Paulo, hi Greg,
+>> > > 
+>> > > On Tue, Jan 30, 2024 at 11:43:52PM +0100, Salvatore Bonaccorso wrote:
+>> > > > Hi Paulo, hi Greg,
+>> > > > 
+>> > > > Note this is about the 5.10.y backports of the cifs issue, were system
+>> > > > calls fail with "Resource temporarily unavailable".
+>> > > > 
+>> > > > On Mon, Jan 08, 2024 at 12:58:49PM -0300, Paulo Alcantara wrote:
+>> > > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> > > > > 
+>> > > > > > Why can't we just include eb3e28c1e89b ("smb3: Replace smb2pdu 1-element
+>> > > > > > arrays with flex-arrays") to resolve this?
+>> > > > > 
+>> > > > > Yep, this is the right way to go.
+>> > > > > 
+>> > > > > > I've queued it up now.
+>> > > > > 
+>> > > > > Thanks!
+>> > > > 
+>> > > > Is the underlying issue by picking the three commits:
+>> > > > 
+>> > > > 3080ea5553cc ("stddef: Introduce DECLARE_FLEX_ARRAY() helper")
+>> > > > eb3e28c1e89b ("smb3: Replace smb2pdu 1-element arrays with flex-arrays")
+>> > > > 
+>> > > > and the last commit in linux-stable-rc for 5.10.y:
+>> > > > 
+>> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+>> > > > 
+>> > > > really fixing the issue?
+>> > > > 
+>> > > > Since we need to release a new update in Debian, I picked those three
+>> > > > for testing on top of the 5.10.209-1 and while testing explicitly a
+>> > > > cifs mount, I still get:
+>> > > > 
+>> > > > statfs(".", 0x7ffd809d5a70)             = -1 EAGAIN (Resource temporarily unavailable)
+>> > > > 
+>> > > > The same happens if I build
+>> > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5a7fdd9b3ee0b7
+>> > > > (knowing that it is not yet ready for review).
+>> > > > 
+>> > > > I'm slight confused as a280ecca48be ("cifs: fix off-by-one in
+>> > > > SMB2_query_info_init()") says in the commit message:
+>> > > > 
+>> > > > [...]
+>> > > > 	v5.10.y doesn't have
+>> > > > 
+>> > > >         eb3e28c1e89b ("smb3: Replace smb2pdu 1-element arrays with flex-arrays")
+>> > > > 
+>> > > > 	and the commit does
+>> > > > [...]
+>> > > > 
+>> > > > and in meanwhile though the eb3e28c1e89b was picked (in a backported
+>> > > > version). As 6.1.75-rc2 itself does not show the same problem, might
+>> > > > there be a prerequisite missing in the backports for 5.10.y or a
+>> > > > backport being wrong?
+>> > > 
+>> > > The problem seems to be that we are picking the backport for
+>> > > eb3e28c1e89b, but then still applying 
+>> > > 
+>> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit?id=a280ecca48beb40ca6c0fc20dd5
+>> > > 
+>> > > which was made for the case in 5.10.y where eb3e28c1e89b is not
+>> > > present.
+>> > > 
+>> > > I reverted a280ecca48beb40ca6c0fc20dd5 and now:
+>> > > 
+>> > > statfs(".", {f_type=SMB2_MAGIC_NUMBER, f_bsize=4096, f_blocks=2189197, f_bfree=593878, f_bavail=593878, f_files=0, f_ffree=0, f_fsid={val=[2004816114, 0]}, f_namelen=255, f_frsize=4096, f_flags=ST_VALID|ST_RELATIME}) = 0
+>> > 
+>> > So this works?  Would that just be easier to do overall?  I feel like
+>> > that might be best here.
+>> > 
+>> > Again, a set of simple "do this and this and this" would be nice to
+>> > have, as there are too many threads here, some incomplete and missing
+>> > commits on my end.
+>> > 
+>> > confused,
+>> 
+>> It is quite chaotic, since I believe multiple people worked on trying
+>> to resolve the issue, and then for the 5.10.y and 5.15.y branches
+>> different initial commits were applied. 
+>> 
+>> For 5.10.y it's the case: Keep the backport of eb3e28c1e89b and drop
+>> a280ecca48be (as it is not true that v5.10.y does not have
+>> eb3e28c1e89b, as it is actually in the current 5.10.y queue).
+>
+> I think we are good now.
+>
+>> Paulo can you please give Greg an authoratitative set of commits to
+>> keep/apply in the 5.10.y and 5.15.y series.
+>
+> Yes, anything I missed?
 
-Whatever: to me it still feels like this regression is not handled as
-Linus would want it, but I'm not totally sure and guess I have to admit
-that I'm out of my depth here. I'll let my regression tracking bot
-continue monitor this, but will most likely leave things to the network
-and driver maintainers from here on unless something changes.
+The one-liner fix (a280ecca48be) provided by Harshit was only required
+if not backporting eb3e28c1e89b.  As both 5.10.y and 5.15.y now have
+eb3e28c1e89b queued up, LGTM.
 
-Ciao, Thorsten
-
-> po 19. 2. 2024 v 12:29 odesílatel Thorsten Leemhuis
-> <regressions@leemhuis.info> napsal:
->>
->> On 01.02.24 18:19, Jaroslav Pulchart wrote:
->>>>
->>>> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
->>>> Leemhuis) wrote:
->>>>>>> I think that's a bad bisect. There is no reason I could understand for
->>>>>>> that change to cause a continuous or large leak, it really doesn't make
->>>>>>> any sense. Reverting it consistently helps? You're not just rewinding
->>>>>>> the tree back to that point, right? just running 6.6.9 without that
->>>>>>> patch? (sorry for being pedantic, just trying to be certain)
->>>>>>
->>>>>> Reverting just the single bisected commit continuously helps for >=
->>>>>> 6.6.9 and as well for current 6.7.
->>>>>> We cannot use any new linux kernel without reverting it due to this
->>>>>> extra memory utilization.
->>>>>
->>>>> Quick query: what's the status wrt to this regression? Looks like
->>>>> nothing happened in the past week.
->>>>
->>>> Is someone working on this? Indeed the commit in question looks
->>>> harmless but can't argue with the revert helping :S
->>>
->>> No clue if someone is working on it,
->>
->> Yeah, a quick public status update would be really helpful. And maybe
->> some debugging tips that might enable Jaroslav to pinpoint the real
->> problem.
->>
->>> however the commit itself is a
->>> trigger of some other issue.
->>>
->>> The analysis of my colleague Igor (see previous email) shows the
->>> memory consumption is caused by queues of each ice network interface
->>> (even the unused ones). Our final fix was to lower the queues to 6 for
->>> used interfaces and 2 of unused interfaces manually.
->>
->> Despite the above allow me to ask: Can you live with that workaround?
->> Ideally of course this should be fixed, but well, the world sometimes is
->> a tricky place. :-/
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> If I did something stupid, please tell me, as explained on that page.
->>
->> #regzbot poke
-> 
-> 
+Salvatore, please let us know if you can still hit the issue with
+eb3e28c1e89b applied.
