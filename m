@@ -1,36 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F177364C1;
-	Thu, 22 Feb 2024 09:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B8D22EEF
+	for <regressions@lists.linux.dev>; Thu, 22 Feb 2024 09:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592663; cv=none; b=I2XN88FT4pnTHx6d+/9VsqiPY7C7vWumlpmG64udQqlBJYGVk7apgSw9XUDq1C9XaeznYaGzpj00E3bKspNJ62IfryV87kQ8gODXxTvmx6OKyMDWpagBeY5a8fs9cdrzTGFQP3AIbMXwwG4lgD9vZSRoquhA/1ZHm2ModLGANH8=
+	t=1708595510; cv=none; b=u2t7+MtjsC9ayJh5iy7myDxXS91BoSEdSDSkcjePRIabwhER6cEwECnSlUNy0lV543Yob0Ml1j9CM+MiO0JEEv/JSe2NbtprNOgrJaHzcTyKdClC4iiTERxH+TFs3GnM3WxSkdk2+ZOw2Vd/3Pj4zowBJ2hLP9nnwGOlD11kTEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592663; c=relaxed/simple;
-	bh=rktYPar//0iKWagVEAXjEGawgr778Hk9WkEJv630Kt4=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=KeCusXfsB9jQhECTAUj/aCtSfG4SAHJzCB0gHFNJYk3vZ/x9e5OS0eOOGZOO1RdrnfwzHZAgf7y6UDy/fIdvtMhclad+Myniuqza7vd9qlmbuMVf3kPHBu6f5p5LXIpudj9s0LvXZqf+isxV+u2VUheIyTZgRaRHMC8f60NhSKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=P32lxeo1; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1708595510; c=relaxed/simple;
+	bh=QK/w+zHKermHaVjX09Z8zRk1JxHXviZ9TwuQyQcYtR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kcjsMoMSOclQaOX40/R0BOwC9h/EnVjgorAfXmhROJurQb+7DOYNWh0T/VWH17ERn4CjIXhuHek/8KvTmvdiBoRNWNuDBkS6W426WoHNzGDgaBHyoL62Tl54BrF6Zjw+cWFgtJ2ch+hA/ARH/f0bnOAoE0TNgWuq9hhY6lZbwxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HZEvRCjV; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="P32lxeo1"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HZEvRCjV"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=rktYPar//0iKWagVEAXjEGawgr778Hk9WkEJv630Kt4=; t=1708592661; x=1709024661;
-	 b=P32lxeo1KpkOrUEXXNY/fDtAP/8JtPVBQxsWBE6xQ3Rk8wLIvW975T+wcs1DGQXEWJ+G1445Zh
-	xKw5ljafi8mRB/YQ0+Nus8B2E56Uk6a7lyqsxjUXducRw2c5Yz1U5U09D+Oc4oEMwfyrAI2IHV0GC
-	MvjvxTgEhYBhiyuWmAwrlW04Q4eSnuWHnvi9cHCk2YHSnIeuld+KecGGXX13Tk0iJmywe9j/dmcDB
-	eiGKsb9ffUbiCBAaeYKx3n3qmtIP9Xf+Qyn5lNrGWatyKQUQo3HdmjALElBQ+r/JMbE7nDXNwBJYM
-	WbP5+id8cMvcoY6NV2jhyVPamhSathNiZTliw==;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=tYXbkmthtSDNeUls404D/ZpViqFJAjLkSPh7YYbl/T4=; t=1708595508;
+	x=1709027508; b=HZEvRCjVesD/6xjOS+evVzoCEoEdQzi7/FCqxtsx5ysJP+MW8+hVeDTqVeZAj
+	P8rGi0CNi3wSaaC1AV+MeYKapSjTEzeOL6AwVvkucXf1Bo/D4avEzwzX893c/ondx17OVpj1tVlGF
+	ZP/xsEvdyHMcVghdDzuVrerkQsL5zUbfrZKlXymY3ZB+RTR96jkIoERuyLvHiPrOv0HSfiXN9xaEI
+	uOVMR6wv6vmwyE9WD/SuUy9IuPl1iCwFcct2+3XNaRICrKDUIfHqtX6gkcFjfueHVArGr7nJEv0Du
+	IyWK0Rck9EAnIsA45IAPmvmjymprPTK1+yon03bbYjD9vbKZng==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rd504-0006qf-AA; Thu, 22 Feb 2024 10:04:16 +0100
-Message-ID: <b743d91f-5e7d-4701-b515-5c2a84ebd291@leemhuis.info>
-Date: Thu, 22 Feb 2024 10:04:15 +0100
+	id 1rd5k0-0003LX-0y; Thu, 22 Feb 2024 10:51:44 +0100
+Message-ID: <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
+Date: Thu, 22 Feb 2024 10:51:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,34 +39,108 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
+ >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
+ and continuous swapping
 Content-Language: en-US, de-DE
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Dave Ertman <david.m.ertman@intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
+ Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+ <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
+ <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+ <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+ <20240201065726.50a0b1f2@kernel.org>
+ <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
+ <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
+ <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Please pick up 3a9626c816db90 ("drm/amd: Stop evicting resources on
- APUs in suspend") for linux-6.7.y
+In-Reply-To: <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708592661;94c7bcfc;
-X-HE-SMSGID: 1rd504-0006qf-AA
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708595508;c135b6bb;
+X-HE-SMSGID: 1rd5k0-0003LX-0y
 
-Hi Greg! Could you please pick up 3a9626c816db90 ("drm/amd: Stop
-evicting resources on APUs in suspend") for the earliest convenient
-linux-6.7.y release? It together with another commit (91636168531909
-("Revert "drm/amd: flush any delayed gfxoff on suspend entry"")) that is
-also queued for 6.7.6 fixes suspend problems that apparently bother
-quite a few people:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3132
+On 19.02.24 12:40, Jaroslav Pulchart wrote:
+> If the question is for me then my opinion about it is this:
+> 
+> I'm fine with the behaviour of a driver about memory consumption if it
+> is predictable/described with the possibility to change it from
+> default values. My understanding of "predictable" is something like
+> this:
+> 
+> The ICE driver is going to
+> * Setup 64 queues per each port, not active included.
+> * Each queue consumes "xxxx MB" amount of kernel memory per each numa node.
+> example: Two 2 ports Intel NICs using ICE driver will consume ~6GB of
+> RAM of each NUMA node, please consider changing the defaults values to
+> avoid OOM :-).
 
-Both come from the same series (note, patch 3 of that series was deferred):
-https://lore.kernel.org/all/20240208055256.130917-1-mario.limonciello@amd.com/
+6GB of RAM for each NUMA node? That sounds, well, a whole lot :-D Makes
+me also wonder a bit why nobody else reported this (and if you have any
+debug option enable in your .config or something like that that which is
+rarely used).
 
-Mario, who authored 3a9626c816db90, forgot to add a stable tag and ask
-me to send this mail:
-https://gitlab.freedesktop.org/drm/amd/-/issues/3132#note_2292543
+Whatever: to me it still feels like this regression is not handled as
+Linus would want it, but I'm not totally sure and guess I have to admit
+that I'm out of my depth here. I'll let my regression tracking bot
+continue monitor this, but will most likely leave things to the network
+and driver maintainers from here on unless something changes.
 
 Ciao, Thorsten
+
+> po 19. 2. 2024 v 12:29 odesílatel Thorsten Leemhuis
+> <regressions@leemhuis.info> napsal:
+>>
+>> On 01.02.24 18:19, Jaroslav Pulchart wrote:
+>>>>
+>>>> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
+>>>> Leemhuis) wrote:
+>>>>>>> I think that's a bad bisect. There is no reason I could understand for
+>>>>>>> that change to cause a continuous or large leak, it really doesn't make
+>>>>>>> any sense. Reverting it consistently helps? You're not just rewinding
+>>>>>>> the tree back to that point, right? just running 6.6.9 without that
+>>>>>>> patch? (sorry for being pedantic, just trying to be certain)
+>>>>>>
+>>>>>> Reverting just the single bisected commit continuously helps for >=
+>>>>>> 6.6.9 and as well for current 6.7.
+>>>>>> We cannot use any new linux kernel without reverting it due to this
+>>>>>> extra memory utilization.
+>>>>>
+>>>>> Quick query: what's the status wrt to this regression? Looks like
+>>>>> nothing happened in the past week.
+>>>>
+>>>> Is someone working on this? Indeed the commit in question looks
+>>>> harmless but can't argue with the revert helping :S
+>>>
+>>> No clue if someone is working on it,
+>>
+>> Yeah, a quick public status update would be really helpful. And maybe
+>> some debugging tips that might enable Jaroslav to pinpoint the real
+>> problem.
+>>
+>>> however the commit itself is a
+>>> trigger of some other issue.
+>>>
+>>> The analysis of my colleague Igor (see previous email) shows the
+>>> memory consumption is caused by queues of each ice network interface
+>>> (even the unused ones). Our final fix was to lower the queues to 6 for
+>>> used interfaces and 2 of unused interfaces manually.
+>>
+>> Despite the above allow me to ask: Can you live with that workaround?
+>> Ideally of course this should be fixed, but well, the world sometimes is
+>> a tricky place. :-/
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> #regzbot poke
+> 
+> 
