@@ -1,86 +1,64 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA4125AF;
-	Fri, 23 Feb 2024 08:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35ECB7E798
+	for <regressions@lists.linux.dev>; Fri, 23 Feb 2024 14:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708675666; cv=none; b=EIT3Qh3oSIc8clGSlDb0PgaApcRa1JJiTC/QC+2EKxXQaUK3MzjJiAIB0Aft/fWcZeqQnv9S4k2mcdxMJBHlr0wL6hiRf6THTHOn3+9mRtH8BEf5aIyKZtdcA0XWDNmlUSdtcfQjO/fRj2O7VSAMfELH5v63fGpEVocxWpyjQxA=
+	t=1708697339; cv=none; b=S8gjVUhvzCFOfB3ohzzXEE/3ORPh+19UMk79MIyhx4t8CT4mTkpHfYBmnUv9x0mmWZgWJX2hqj/xvaXh3b1yYMgiBfbby05oJCG9oAgt1oERFP6eBztC5xQS1QPoUbPanPGRFmgcuizmpcPxOtmEnXq6zwmTF9uJ+XoArGymiTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708675666; c=relaxed/simple;
-	bh=ypenPyTF5ynt/pDgjgx+1rh7Y2dHoKZRn8wHfY2ebxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i7mhWCnXyJ5ntvFo6dN5KxHMutNEwWTakNA4IVwSrInTbfXUPoDbZukPZi3YNt3b091zFw/i7Lm/XkE3JmwCANxGXCAyJvrjSQM4cS92yGFlrKSPrCAq0FwWfh9t7IrJrHZ64M11rvo5lPegtnfPRItcxdtPoOM/jCp02yScBW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=t5wfrjZC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1708697339; c=relaxed/simple;
+	bh=guPgw7BLwj7dlZ3/rIsnuD4FCPiualIsytSxFaptjZ0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=QwlAs9en4s9m2DWsu5ApIueuQZiEtq6oM0h26enQ9nhfLA/kxXs/yKbAquw4VL/4IyYKjYmAxbFBtIfkOux0BDM4NMQO9sV+srEnKAH6KocPAVi7Pv2fhDf7OSxkcHj4vVsQgYCgUKRk6M5qZ8sZtKDAlCn2RCEEplsXp+slP24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=i8RNYpJg; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="t5wfrjZC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=ypenPyTF5ynt/pDgjgx+1rh7Y2dHoKZRn8wHfY2ebxo=;
-	t=1708675664; x=1709107664; b=t5wfrjZCgikmySYj/9KBDxrZK6s2thCgvJl3Z74x/1veNCl
-	0iXa4pm9sVFJwdXbqq4uGXQZqVJm51cjPkJS/T8BzVzvdhj0GuUIlvhPaNcOHUDUD/safcGnnCMVZ
-	agGDm2tOkcG/AG6J5s7w7u6BhA+hv4r1zU3TYDWVEr7mtoBBjXdcG+OCnlCNzxJIm6zW3/2/xUcfm
-	xZTqZ+tHLGWJyvf8s9cwuGpKcIExEIr3PLKjMbbEaFANdokrB+uzTROWmu0MiaK8H0UcGn+8AKKhX
-	PA7ushcDk4JGo2OI8f2oep77VS6HZ6Bm0k9/FwSHTLrFfD2UdsNfPjCkSzBJm/Eg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rdQar-0007xw-Lf; Fri, 23 Feb 2024 09:07:41 +0100
-Message-ID: <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
-Date: Fri, 23 Feb 2024 09:07:41 +0100
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="i8RNYpJg"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1708697335;
+	bh=guPgw7BLwj7dlZ3/rIsnuD4FCPiualIsytSxFaptjZ0=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=i8RNYpJgaSpgZmxBL3kvwtslvBRS6HMlx2aqNHowiEe7h1S4vcE1z7V9mjWTlzT3Q
+	 ld7s3BnpYFBNHg4F+ygIhXVryHSa5ByhNIywCX2pCxkFDr8/HICAbe6xGnjsRe4Ral
+	 LEEEtbLNcxSlF5iZzcHNhBh37r9bxCkx8cZg1/zA=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-Content-Language: en-US, de-DE
-To: song@kernel.org
-Cc: gregkh@linuxfoundation.org, junxiao.bi@oracle.com,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- Dan Moulding <dan@danm.net>
-References: <20240123005700.9302-1-dan@danm.net>
- <20240220230658.11069-1-dan@danm.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240220230658.11069-1-dan@danm.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708675664;98875bf2;
-X-HE-SMSGID: 1rdQar-0007xw-Lf
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
+Subject: Re: nfs4_schedule_state_manager stuck in tight loop
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
+Date: Fri, 23 Feb 2024 15:08:35 +0100
+Cc: linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <01DFAB47-5AFA-42C2-965B-5A14C331B0A6@flyingcircus.io>
+References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
+To: linux-nfs@vger.kernel.org,
+ chuck.lever@oracle.com,
+ jlayton@kernel.org
 
-On 21.02.24 00:06, Dan Moulding wrote:
-> Just a friendly reminder that this regression still exists on the
-> mainline. It has been reverted in 6.7 stable. But I upgraded a
-> development system to 6.8-rc5 today and immediately hit this issue
-> again. Then I saw that it hasn't yet been reverted in Linus' tree.
+Addendum:
 
-Song Liu, what's the status here? I aware that you fixed with quite a
-few regressions recently, but it seems like resolving this one is
-stalled. Or were you able to reproduce the issue or make some progress
-and I just missed it?
+I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t =
+find anything that I could relate to this aside from *maybe* =
+dfda2a5eb66a685aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of =
+subdirectories) which mentions NFS but doesn=E2=80=99t describe the =
+potential impact.
 
-And if not, what's the way forward here wrt to the release of 6.8?
-Revert the culprit and try again later? Or is that not an option for one
-reason or another?
+We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 =
+months there might be the chance of another lockup in the near future ;)
 
-Or do we assume that this is not a real issue? That it's caused by some
-oddity (bit-flip in the metadata or something like that?) only to be
-found in Dan's setup?
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
