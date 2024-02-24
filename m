@@ -1,110 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F2EDDDF
-	for <regressions@lists.linux.dev>; Sat, 24 Feb 2024 02:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610384C64;
+	Sat, 24 Feb 2024 07:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708740810; cv=none; b=eSV7tUmEDNuuzSm53mxa6y4jDasPt0tErsYtO5NBQpp8i5VLbPYrdMlPthXqXS8kW8fQdt0Xb9v5XhyHKjc6O/L5taSdW41+C0dtDwCOD9RtPfZfoG8wWwD+pYb5oTYao6+jYKxRWcKCfJ57QvLNcQWx59xZAZBPyjSm6CRiaAc=
+	t=1708758042; cv=none; b=TH46GksPb1+YLf0S1+QC2J1gflTDAfnHjr7L3M5iM8535VdkMevNIu6ztQhd6Tqwv8wq5IXQbKtosaCCtfvS+8jCsvvaDRUTp9lMyhhHD/yJ/sPgHKt9goZfDqVWdFyjiNmZtycqh4F2dZV25FwhNn23lfyQ2WyDFSRRgRSWEII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708740810; c=relaxed/simple;
-	bh=X67Qts2eYsMFcbAMnSp7VaC/EkqgWhHXXWuQo770d2A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hc5svJW3tDtAP8urmLa8+m/MT7fEI3fIf433Z1tqseaZ5rXKClyhIVI4i2J/Bwf6J8fLowE6weQekGm2gFG30BNyAYLqoH3fv3ZpkametgeMPQEPCUYBat6ewvXFFJCdfp/DjIEdz/UaVeSg7briFXRpy0/foUBKxCuGn3hwAuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epJrPS6A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708758042; c=relaxed/simple;
+	bh=274OjcGhqqvLhljdp6duAIrxTZju4G8b8t5E2V8XKyA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=urJshLi394o5xqXH5t/RauKJl/AgXVZB/x11Nr7FzM6ZKKAmsOFHjQ5PgccwkCUnXFkszUwW4o0czGNrY21O5w3Ww2xTFyr0+uoG4JVxRDcvMVY/N52D4eBj2tzR+LZqk8lzgCJ1CD7Yg1dBQ+/2qh2zwRddRzaUb9ZioMA73cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aOxtT090; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epJrPS6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EB9C43394
-	for <regressions@lists.linux.dev>; Sat, 24 Feb 2024 02:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708740809;
-	bh=X67Qts2eYsMFcbAMnSp7VaC/EkqgWhHXXWuQo770d2A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=epJrPS6A1G6bhoIZjuzU/0ubkgBn07/pCB5RR8HXzDWXrG/xEvxUHYmcLXGfU/imQ
-	 yb07Bd8uXulcrwxp7aNSgzcQBG2+We+oKXCANEBeFVFkVqYjdpLyM0y/nq+pFM67JD
-	 3OpCquGADVgzVl8p3bXdxUsaosy4lW9/nrjXL7O8eSTqAiicRNdQxXUNlerxC0Jf7E
-	 nDkXxiI8s3ubv+oXywnwEH98e3D7axWyqtVtfK68a1PZxFqQIPN0NNOIV1rpoi2Ajj
-	 ELilxBNyOKFe3CJmdbuUIMKtjwQlj0xJ88g3CkehpyNkX8OTjdFIoKF8yargSJNXSW
-	 2MsK+9AK959lQ==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d220e39907so22597601fa.1
-        for <regressions@lists.linux.dev>; Fri, 23 Feb 2024 18:13:29 -0800 (PST)
-X-Gm-Message-State: AOJu0Yx87sH3XU8hE7+VJWJyL3zfpCXbJO9EcFWkKhPPwNnhmrpE5+Lb
-	ChSEgCTsytpShfj0tSquB/v/IxQ4JVcVk7QoCNk+NO38uZNzLYXrNV2hN/rYZB0DbsFlx8KDR6c
-	jP7OvLw4pck7akInGnaP8dZKv5yo=
-X-Google-Smtp-Source: AGHT+IHbx3gA6OyO539gNo1sNSfaF1AyeEak6jD3EkmuCjjvLRhSzK5c5KY4qJTW9EiP3SWDHxOeEPsGqtLi/aA7Mzk=
-X-Received: by 2002:a2e:a227:0:b0:2d2:63bc:952 with SMTP id
- i7-20020a2ea227000000b002d263bc0952mr450013ljm.35.1708740807610; Fri, 23 Feb
- 2024 18:13:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aOxtT090"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=6ZLkgbwJWG402shRNmQgM7t1ff3qC1484QmYAQ5fASg=;
+	t=1708758040; x=1709190040; b=aOxtT090ER9I8s0iDfJtuITcUaGIW798t3m70YE9LBr9jU/
+	J74s2/kC5ZNNS56rbpiju5mSyysseh/uayLJzACYr9Xk8WSErcQMMdVPthL1hZ3R7bNJWe4T1zcug
+	qRqvBhuggr920MCLNc65zX75xEmmg67KH6k9hKSrVw5CEU1M3kF8ckLznE9+dv7/k9tqZ1kcHleBE
+	sszMc1yCNL+7mjtpPppXY8iWVOyCPFsDum+pHs+rPcea71m04CtCHbmeI16JMqXLB9Z4hSQeA806q
+	pKdAUVyyi2FKhQdxA+7KzuiUoOJrT4/7p4W2WYPeYCXO2h5ibtdVXjGC98Vk9+hg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rdm1M-00042C-Ez; Sat, 24 Feb 2024 08:00:28 +0100
+Message-ID: <c0cbf518-c6d4-4792-ad04-f8b535d41f4e@leemhuis.info>
+Date: Sat, 24 Feb 2024 08:00:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240123005700.9302-1-dan@danm.net> <20240220230658.11069-1-dan@danm.net>
- <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
-In-Reply-To: <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
-From: Song Liu <song@kernel.org>
-Date: Fri, 23 Feb 2024 18:13:16 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
-Message-ID: <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: gregkh@linuxfoundation.org, junxiao.bi@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-	stable@vger.kernel.org, Dan Moulding <dan@danm.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.8-rc process is unable to exit and consumes a lot
+ of cpu
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "Christian Brauner (Microsoft)" <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>,
+ Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Paul Holzinger <pholzing@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
+ <652928aa-0fb8-425e-87b0-d65176dd2cfa@redhat.com>
+ <9b92706b-14c2-4761-95fb-7dbbaede57f4@leemhuis.info>
+ <e733c14e-0bdd-41b2-82aa-90c0449aff25@redhat.com>
+ <f15ee051-2cfe-461f-991d-d09fd53bad4f@leemhuis.info>
+In-Reply-To: <f15ee051-2cfe-461f-991d-d09fd53bad4f@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708758040;08c21b20;
+X-HE-SMSGID: 1rdm1M-00042C-Ez
 
-Hi,
+On 21.02.24 17:32, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [adding Al, Christian and a few lists to the list of recipients to
+> ensure all affected parties are aware of this new report about a bug for
+> which a fix is committed, but not yet mainlined]
+> 
+> Thread starts here:
+> https://lore.kernel.org/all/6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com/
 
-On Fri, Feb 23, 2024 at 12:07=E2=80=AFAM Linux regression tracking (Thorste=
-n
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 21.02.24 00:06, Dan Moulding wrote:
-> > Just a friendly reminder that this regression still exists on the
-> > mainline. It has been reverted in 6.7 stable. But I upgraded a
-> > development system to 6.8-rc5 today and immediately hit this issue
-> > again. Then I saw that it hasn't yet been reverted in Linus' tree.
->
-> Song Liu, what's the status here? I aware that you fixed with quite a
-> few regressions recently, but it seems like resolving this one is
-> stalled. Or were you able to reproduce the issue or make some progress
-> and I just missed it?
+[adding Linus now as well]
 
-Sorry for the delay with this issue. I have been occupied with some
-other stuff this week.
+TWIMC, the quoted mail apparently did not get delivered to Al (I got a
+"48 hours on the queue" warning from my hoster's MTA ~10 hours ago).
 
-I haven't got luck to reproduce this issue. I will spend more time looking
-into it next week.
+Ohh, and there is some suspicion that the problem Calvin[1] and Paul
+(this thread, see quote below for the gist) encountered also causes
+problems for bwrap (used by Flapak)[2].
+[1] https://lore.kernel.org/all/ZcKOGpTXnlmfplGR@gmail.com/
+[2] https://github.com/containers/bubblewrap/issues/620
 
->
-> And if not, what's the way forward here wrt to the release of 6.8?
-> Revert the culprit and try again later? Or is that not an option for one
-> reason or another?
+Christian, Linus, all that makes me wonder if it might be wise to pick
+up the revert[1] Al queued directly in case Al does not submit a PR
+today or tomorrow for -rc6.
 
-If we don't make progress with it in the next week, we will do the revert,
-same as we did with stable kernels.
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/commit/?h=fixes&id=7e4a205fe56b9092f0143dad6aa5fee081139b09
 
->
-> Or do we assume that this is not a real issue? That it's caused by some
-> oddity (bit-flip in the metadata or something like that?) only to be
-> found in Dan's setup?
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-I don't think this is because of oddities. Hopefully we can get more
-information about this soon.
+#regzbot poke
 
-Thanks,
-Song
-
->
+> On 21.02.24 16:56, Paul Holzinger wrote:
+>> Hi Thorsten,
+>>
+>> On 21/02/2024 15:42, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 21.02.24 15:31, Paul Holzinger wrote:
+>>>> On 21/02/2024 15:20, Paul Holzinger wrote:
+>>>>> we are seeing problems with the 6.8-rc kernels[1] in our CI systems,
+>>>>> we see random process timeouts across our test suite. It appears that
+>>>>> sometimes a process is unable to exit, nothing happens even if we send
+>>>>> SIGKILL and instead the process consumes a lof of cpu.
+>>>> [...]
+>>> Thx for the report.
+>>>
+>>> Warning, this is not my area of expertise, so this might send you in the
+>>> totally wrong direction.
+>>>
+>>> I briefly checked lore for similar reports and noticed this one when I
+>>> searched for shrink_dcache_parent:
+>>>
+>>> https://lore.kernel.org/all/ZcKOGpTXnlmfplGR@gmail.com/
+>>
+>>> Do you think that might be related? A fix for this is pending in vfs.git.
+>>>
+>> yes that does seem very relevant. Running the sysrq command I get the
+>> same backtrace as the reporter there so I think it is fair to assume
+>> this is the same bug. Looking forward to get the fix into mainline.
+> 
+> FWIW, "the fix" afaics is 7e4a205fe56b90 ("Revert "get rid of
+> DCACHE_GENOCIDE"") sitting 'fixes' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git for more than
+> a week now.
+> 
+> I assume Al or Christian will send this to Linus soon. Christian in fact
+> already mentioned that he plans to send another vfs fix to Linux, but
+> that one iirc was sitting in another repo (but I might be mistaken there!).
+> 
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
 > Everything you wanna know about Linux kernel regression tracking:
 > https://linux-regtracking.leemhuis.info/about/#tldr
 > If I did something stupid, please tell me, as explained on that page.
->
-> #regzbot poke
->
+> 
+> P.S.: let me update regzbot while at it:
+> 
+> #regzbot introduced 57851607326a2beef21e67f83f4f53a90df8445a.
+> #regzbot fix: Revert "get rid of DCACHE_GENOCIDE"
