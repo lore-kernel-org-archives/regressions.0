@@ -1,37 +1,58 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE06B43AB7;
-	Sat, 24 Feb 2024 13:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2555151004
+	for <regressions@lists.linux.dev>; Sat, 24 Feb 2024 13:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708782244; cv=none; b=W+o1ADnSrGmHu4ZbHIDml3TleTtqOrPCjrm59bNu6eSWhGl5c+U274RWB27tQiRFrIq498fK9RS1qs4uuhPoFZErO+iV/k+Onc2/G57vhiM6OeuxRVLXbbhkao6SIqjZJoXlDXMuwgEI2KtgUr3pUY0EJjUS5loOQDCcF3pR0d4=
+	t=1708782690; cv=none; b=Uu6hMxC7E1CHV0WaNLKDWgJeMiHHySpQzN1v1CJwE5U9EQtjMOQTXFo3TRK768K1cAVxF7TdZpmkLczOiRW9xX4ppB7/tr+b+gIzy8RYZ73ZP3r85tXwlrMhg+dJ4NW8lD9WoQjudpl8BVRrypmZDLMa1Uw7/9YfZP2X4vim7Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708782244; c=relaxed/simple;
-	bh=TaMAjuxK0M1/m1+E5BavhTKhJuPyR1t8GMHXzHJ3M6U=;
+	s=arc-20240116; t=1708782690; c=relaxed/simple;
+	bh=S5n5HU2q/sZRcK5Ft/p5wtTUiswM69Vb7OOQu1x6S2g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sjqOPYieCMmdkkThAxPnaeArnXdiIZ8CkzCKGVoZQ8zn+H4JSegiFZ4WMh3T9aSq6n3+eaE3wRRl2ni1dKHCh8DSgjWB2lJT+9q7vK+BSrdTCAJ6M6PPRE0Azsz9rW0AuydYH38sT0eFqqn5whHZMhqoQg6DSjnkr8Ej7UFxRuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bJahFEi+; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=RGmsrvY/GHblLDDpwvgFpdF0bMC2mZyT4yp6jp0fA/QiY1IqvU/YnZKhZUIUtB8kZw2Q5i0JEylRfTnR5WWidDpfBDKAP0sCbUl/QB6z3JE4ttP9DIV1mTeLsu0Z/bTMa8doiDWL1W71DcwA7fDg7lmf27PwcgvrL0Kz6saFaDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+263a/G; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bJahFEi+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=6wjvGHv5rABfYh1OC9kfAOfTV9TqIB8vdA16HuVPu/k=;
-	t=1708782241; x=1709214241; b=bJahFEi+DIFrvS5pc88TVZlTRNVycCgNw/aAN9JxP1KBnNZ
-	lKFisCqiX0RTkNSWu627RfMFvI5OditP1CXi1tD2jh8fv0VfxA901o781Fh0B4nL5nUQpj/uRQ82p
-	/t6njDZn9VSvJWdyQkQWCD0C84bT4GlYUYuHS2mCrme/wxXAEsJ3ewxfiMgsRp50GFFeLvrRU4uQn
-	ptj/7ugYC9at0vWwU6mFfxdpOHLWZJ/JxhvU3/daJRFAMBXhqHTP33WPRJg7WNa4eP7C2oEdC55/M
-	FolgGzztVF5S+FCP0wFAap3p8Qhn/w3CYQo5JzjnnpvR5g2JrKPOGXt6TOcNbFxw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rdsJm-0002R8-Eb; Sat, 24 Feb 2024 14:43:54 +0100
-Message-ID: <c03533dc-73fc-4d97-8248-0affbddbed32@leemhuis.info>
-Date: Sat, 24 Feb 2024 14:43:53 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+263a/G"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512f3e75391so268163e87.2
+        for <regressions@lists.linux.dev>; Sat, 24 Feb 2024 05:51:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708782687; x=1709387487; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AkSriGHeGBPTD+6EMyhWxKkWSym1Gvc05wjRdmGKnU4=;
+        b=g+263a/G9ac6X63eL/96z3/unhPTX+QubKS2f0DwAKNbrldH0TI3F+VjfAYc8RXo79
+         z4j15/nT2bjImIXMJQhk2UxtuBiK1Hfl6JzQvEge7GQSl/Zm+I90QEhK0Ptct7dCSFaQ
+         /zhHZLMvJAamvbScSIovB07OK6uRZceLozr2bhky63V0C3fvRjCWJhwK113jUKyYhDYT
+         33XrzEUGzgPTC2uYWQi5bwytf2uzZl3mVcUaWvEMExNLaTL1D6MmUVeCFN8P2K0iIeyx
+         pAHdUkjv9AgJ/74dxfwVWmvcE+Tceg7MueELiXxGk/Ym1oY0p5XQUDCFGJ93MoZg4DOk
+         KXEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708782687; x=1709387487;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AkSriGHeGBPTD+6EMyhWxKkWSym1Gvc05wjRdmGKnU4=;
+        b=GAm4K9wCmE9catJkTo/rFpfjvYIVByz5GKK2Gs575gGSHNfOulGYLNXGdEvZ1MLsho
+         hDKf8xWGK4YZ7a0h+fTpXcLF115t21smjM2HRgT5crS+3r0AQe+R9VjtNTyoIJUTG+5H
+         O/5q0vrwxGBySCDT3cBwPi8Z2mDHNrxQ5TQwiSHlMAX6lsxJ2r+PM3UkAIUNHncuGbfD
+         WIue4TXEvxzODr+U8VK61zE8D0horXqepYQSaTc3sYysNoJkhEB1JEgke7cmTkYg9J9p
+         DLTVrGhlE7c/tMOhPN+oXh7bPaD4LaazdoZN2XPNOvc0lf+KzAqdTOthlRCTvCHwFbUx
+         561A==
+X-Gm-Message-State: AOJu0Yy7XftECYsGbdEYmEzI3jcvPB2V3xn+N7Tl+ieL8DQ4uLsYnrsK
+	irMNkdC3Zs5MnfFKjLycK1gNq0GXOrXB6yWFfsVjawpXtANoaBMAPtjzRWxLCzM=
+X-Google-Smtp-Source: AGHT+IG+aPu7WCir06lTu+bsAphOwfYhsD/DcxmncH46zxHN7hdw9vOCyKqs4a0dpcq/pIJIh9TuXQ==
+X-Received: by 2002:a19:7419:0:b0:512:aaba:7657 with SMTP id v25-20020a197419000000b00512aaba7657mr1580780lfe.26.1708782687004;
+        Sat, 24 Feb 2024 05:51:27 -0800 (PST)
+Received: from ?IPV6:2a01:e34:ec5f:c111:ab46:ec03:bf48:53f1? ([2a01:e34:ec5f:c111:ab46:ec03:bf48:53f1])
+        by smtp.gmail.com with ESMTPSA id t21-20020a199115000000b00512dd729430sm219562lfd.91.2024.02.24.05.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Feb 2024 05:51:26 -0800 (PST)
+Message-ID: <7a8d9d60-a151-4b25-882b-48e6929339a4@gmail.com>
+Date: Sat, 24 Feb 2024 14:51:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,183 +60,86 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: sched/cpufreq: Rework schedutil governor performance estimation -
- Regression bisected
-Content-Language: en-US, de-DE
-To: Vincent Guittot <vincent.guittot@linaro.org>,
- Doug Smythies <dsmythies@telus.net>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <002f01da5ba0$49cbf810$dd63e830$@telus.net>
- <CAKfTPtA-jizig0sh_shmkAMudAxDPYHP0SdanZe=Gc57jVKouQ@mail.gmail.com>
- <003801da5bae$02d6f550$0884dff0$@telus.net>
- <CAKfTPtC7pOtb-srrgQLFbTueLLDqHay+GQBm9=sNsnZDg_UYSQ@mail.gmail.com>
- <000b01da5d09$8219f900$864deb00$@telus.net>
- <CAKfTPtB8v30LzL3EufRqbfcCceS2nQ_2G8ZHuoD5N1_y-pvFbg@mail.gmail.com>
- <001b01da5ea7$86c7a070$9456e150$@telus.net>
- <CAKfTPtD4Un-A2FcdsvKnNZskG=xH0wrsT3xzaWDs--mQjgZ3rg@mail.gmail.com>
- <003001da6061$bbad1e30$33075a90$@telus.net>
- <CAKfTPtC82YXOw5yYPNkHHyF+DYSG+Ts9OjnwsVjbd_HcUsZQMg@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CAKfTPtC82YXOw5yYPNkHHyF+DYSG+Ts9OjnwsVjbd_HcUsZQMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708782241;a9f43a03;
-X-HE-SMSGID: 1rdsJm-0002R8-Eb
+Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
+Content-Language: fr-FR, en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linux Input Mailing List <linux-input@vger.kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jiri Kosina <jikos@jikos.cz>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Mikhail Khvainitski <me@khvoinitsky.org>,
+ "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+ Linux Stable Mailing List <stable@vger.kernel.org>
+References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
+ <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info>
+ <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
+ <7a5fc584-1520-4e52-9c77-d67a656524c6@gmail.com>
+ <10022b0c-89c3-43e1-89ba-00e458fe1dfd@leemhuis.info>
+From: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>
+Autocrypt: addr=raphael.halimi@gmail.com; keydata=
+ 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
+ Wxcwwn0N
+In-Reply-To: <10022b0c-89c3-43e1-89ba-00e458fe1dfd@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 16.02.24 14:17, Vincent Guittot wrote:
-> On Thu, 15 Feb 2024 at 23:53, Doug Smythies <dsmythies@telus.net> wrote:
->>
->> This email thread appears as if it might be moving away from a regression
->> caused by your commit towards a conclusion that your commit exposed
->> a pre-existing bug in the intel_psate.c code.
-> Ok
+Le 24/02/2024 à 14:08, Thorsten Leemhuis a écrit :
+> Raphaël: would nevertheless still be good if you could identify which of
+> the three causes the problem, as then the developers might consider
+> simply reverting it.
 
-Well, even in that case it's a regression that must be fixed -- ideally
-before 6.8. Did anything happen towards that?
+Hi,
 
-I noticed that Doug send the fix "cpufreq: intel_pstate: fix pstate
-limits enforcement for adjust_perf call back":
-https://lore.kernel.org/all/20240217213010.2466-1-dsmythies@telus.net/
+It can't be the third one (43527a0) since I clearly remember that I 
+experienced the regression before it was applied to the Debian kernel.
 
-Is that supposed to fix the problem? Looks a bit like it, but I'm not
-totally sure. In that case I'd say it likely should be applied to 6.8,
-but Rafael apparently applied it to 6.9.
+So I'll try applying only the first one (46a0a2c), and report.
 
-I'd also say that a Fixes: would be good as well (to ensure that fix is
-also backported in case anyone backports 9c0b4bb7f630), but I know that
-subsystems handle this differently.
+(in the meantime I crafted a quick and dirty Debian package to build the 
+module with DKMS, so it will be easy)
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Regards,
 
-#regzbot poke
+-- 
+Raphaël Halimi
 
->> Therefore, I have moved Rafael from the C.C. line to the "to" line and
->> added Srinivas.
->>
->> On 2024.02.14 07:38 Vincent wrote:
->>> On Tue, 13 Feb 2024 at 19:07, Doug Smythies <dsmythies@telus.net> wrote:
->>>> On 2024.02.13 03:27 Vincent wrote:
->>>>> On Sun, 11 Feb 2024 at 17:43, Doug Smythies <dsmythies@telus.net> wrote:
->>>>>> On 2024.02.11 05:36 Vincent wrote:
->>>>>>> On Sat, 10 Feb 2024 at 00:16, Doug Smythies <dsmythies@telus.net> wrote:
->>>>>>>> On 2024.02.09.14:11 Vincent wrote:
->>>>>>>>> On Fri, 9 Feb 2024 at 22:38, Doug Smythies <dsmythies@telus.net> wrote:
->>>>>>>>>>
->>>>>>>>>> I noticed a regression in the 6.8rc series kernels. Bisecting the kernel pointed to:
->>>>>>>>>>
->>>>>>>>>> # first bad commit: [9c0b4bb7f6303c9c4e2e34984c46f5a86478f84d]
->>>>>>>>>> sched/cpufreq: Rework schedutil governor performance estimation
->>>>>>>>>>
->>>>>>>>>> There was previous bisection and suggestion of reversion,
->>>>>>>>>> but I guess it wasn't done in the end. [1]
->>>>>>>>>
->>>>>>>>> This has been fixed with
->>>>>>>>> https://lore.kernel.org/all/170539970061.398.16662091173685476681.tip-bot2@tip-bot2/
->>>>>>>>
->>>>>>>> Okay, thanks. I didn't find that one.
->>>>>>>>
->>>>>>>>>> The regression: reduced maximum CPU frequency is ignored.
->>>>>>
->>>>>> Perhaps I should have said "sometimes ignored".
->>>>>> With a maximum CPU frequency for all CPUs set to 2.4 GHz and
->>>>>> a 100% load on CPU 5, its frequency was sampled 1000 times:
->>>>>> 28.6% of samples were 2.4 GHz.
->>>>>> 71.4% of samples were 4.8 GHz (the max turbo frequency)
->>>>>> The results are highly non-repeatable, for example another sample:
->>>>>> 32.8% of samples were 2.4 GHz.
->>>>>> 76.2% of samples were 4.8 GHz
->>>>>>
->>>>>> Another interesting side note: If load is added to the other CPUs,
->>>>>> the set maximum CPU frequency is enforced.
->>>>>
->>>>> Could you trace cpufreq and pstate ? I'd like to understand how
->>>>> policy->cur can be changed
->>>>> whereas there is this comment in intel_pstate_set_policy():
->>>>>        /*
->>>>>         * policy->cur is never updated with the intel_pstate driver, but it
->>>>>         * is used as a stale frequency value. So, keep it within limits.
->>>>>         */
->>>>>
->>>>> but cpufreq_driver_fast_switch() updates it with the freq returned by
->>>>> intel_cpufreq_fast_switch()
->>>>
->>>> Perhaps I should submit a patch clarifying that comment.
->>>> It is true for the "intel_pstate" CPU frequency scaling driver but not for the
->>>> "intel_cpufreq" CPU frequency scaling driver, also known as the intel_pstate
->>>> driver in passive mode. Sorry for any confusion.
->>>>
->>>> I ran the intel_pstate_tracer.py during the test and do observe many, but
->>>> not all, CPUs requesting pstate 48 when the max is set to 24.
->>>> The calling request seems to always be via "fast_switch" path.
->>>> The root issue here appears to be a limit clamping problem for that path.
->>>
->>> Yes, I came to a similar conclusion as well. Whatever does schedutil
->>> ask for, it should be clamped by  cpu->max|min_perf_ratio.
->>
->> Agreed. And it is not clamping properly under specific conditions.
->>
->>> Do you know if you use fast_switch or adjust_perf call back ?
->>
->> I am not certain, but I think it uses "adjust_perf" call back.
->> I do know for certain that it never takes the
->> "intel_cpufreq_update_pstate" path
->> and always takes the
->> "intel_cpu_freq_adjust_perf" path.
-> 
-> intel_cpu_freq_adjust_perf is registered as the callback for
-> cpufreq->adjust_perf
-> 
->>
->> The problem seems to occur when that function is called with:
->> min_perf = 1024
->> target_perf = 1024
->> capacity = 1024
->>
->> Even though cpu->max_perf_ratio is 24, the related HWP MSR,
->> 0x774: IA32_HWP_REQUEST, ends up as 48, 48, 48 for min, max, des.
->>
->> This patch appears to fix the issue (still has my debug code and
->> includes a question):
->>
->> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
->> index ca94e60e705a..8f88a04a494b 100644
->> --- a/drivers/cpufreq/intel_pstate.c
->> +++ b/drivers/cpufreq/intel_pstate.c
->> @@ -2987,12 +2987,22 @@ static void intel_cpufreq_adjust_perf(unsigned int cpunum,
->>         if (min_pstate < cpu->min_perf_ratio)
->>                 min_pstate = cpu->min_perf_ratio;
->>
->> +//     if (min_pstate > cpu->pstate.max_pstate)   /* needed? I don't know */
->> +//             min_pstate = cpu->pstate.max_pstate;
->> +
->> +       if (min_pstate > cpu->max_perf_ratio)
->> +               min_pstate = cpu->max_perf_ratio;
->> +
->>         max_pstate = min(cap_pstate, cpu->max_perf_ratio);
->>         if (max_pstate < min_pstate)
->>                 max_pstate = min_pstate;
->>
->>         target_pstate = clamp_t(int, target_pstate, min_pstate, max_pstate);
->>
->> +       if((max_pstate > 40) || (max_pstate < 7) || (min_pstate < 7) || min_pstate > 40 || target_pstate > 40){
->> +               pr_debug("Doug: t: %d : min %d : max %d : minp %d : maxp %d : mnperf %lu : tgperf %lu : capacity %lu\n", target_pstate, min_pstate, max_pstate, cpu->min_perf_ratio, cpu->max_perf_ratio, min_perf, target_perf, capacity);
->> +       }
->> +
->>         intel_cpufreq_hwp_update(cpu, min_pstate, max_pstate, target_pstate, true);
->>
->>         cpu->pstate.current_pstate = target_pstate;
->>
->> With the patch, I never hit the debug statement if the max CPU frequency is limited to 2.4 GHz,
->> whereas it used to get triggered often.
->> More importantly, the system seems to now behave properly and obey set CPU frequency limits.
->>
->>
