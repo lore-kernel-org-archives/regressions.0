@@ -1,242 +1,77 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3F7469E;
-	Sun, 25 Feb 2024 13:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334B714012;
+	Sun, 25 Feb 2024 14:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708867311; cv=none; b=qmXetfeZ3Y20d+a21xZPqnnAigOtVVTPo4HPtzDLkMUwCf92dgcGS+4Uu7JvLUdzyCacHNOl1I/5tnuIjhbBJR+lp+T5VbiPFJ+aqsdK/ngqMfaaUo9QMOBLY0C6IgtnjRRMxAVDl61++0lx9L5vnrJq5CjzIe9+0wNGDZBKz14=
+	t=1708870911; cv=none; b=QxHfHXFy7QJkwudRTf5HaWfI18QJXx0FP5vWj5ZSIR/iorbyuIfc6gnaJiiixLFs1EOyg9GYE26E+qjE3Q9J9iGXPw1qROCiIhjyPREvnMvOg5PrcddHmpWl5Wqe7jhYDQRB7YEqGFBYME+hWbHtxWX13CyEFSvXqe1u2Ci+Ejs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708867311; c=relaxed/simple;
-	bh=e6Fs5hBNGOJi+qVx0rXmNV0o7cdgPBl+ah7whiZf/cY=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=UmrGMFjjZKXMPmXhaeKulk4/VwE0sWYxwAr2wtI20wiepG2DSYiYh+48YmU7mqNB2W7oz516JIuMki1pLwSOcGt3D3B0B1jVeOxYlq3qgguAwhQdhpjISWStl317fmjRVAOjIc1rkhY6hJebKBjIDWLWxAAk8grQqZ9xRYZ3Fqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LUAKSLD3; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1708870911; c=relaxed/simple;
+	bh=RCSh2ROZ/iFeMJsDJRaRk0vcrWxy8Y3mHcAABJnhl5A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
+	 In-Reply-To:Content-Type; b=ERwXjnv8Ka+uaG7vPtZJAQdVqoxnE+rXlntMX8udIygUrhxq1pENVi7BaamT2Q43WmATpJuKQmtlFHy5OAgEpSw/ANSZk8b8rMZc9Zvpe3f2eITMJDO6gMn5nZKJ72PhDo2UjG2DlQXr4PnF28DGp6//wevgsTOtlu3HiazC2ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CGN+DXPw; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LUAKSLD3"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CGN+DXPw"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-Id:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=JlbyhRQ8fSq4p+P9jKTo/LO9pR3RlBvFeOkH9OxFcLQ=; t=1708867309; x=1709299309;
-	 b=LUAKSLD3gpojRnLiCGsKuyy29yNliRyiBKLnx/yAUbXkW9x81hnj8ddS3ZzsPMMERuAkN4NgFX
-	FjXFI6W4++2YaZpWZugXQsnnITI2C6YRbmvruVmK9Do/n0uPpXsoQFFf42EwJKucAGoMHs23dwjLD
-	CeLZHNpDPOZSudLy8ijigUTzsme8EmglwiSZPWTXNinHEIjrRRRqq/dxqW+2q6zsNrwr5ysprGQY5
-	EWv5VIkFFhyX4diDeHfEyh1QGViYSch6YzhGJL4eIeWOpXQl9y/zDFmBMOq9akflZJ4BmdyjtwkRM
-	2oXfZWnHnWQTTukpOHQ0y2oLv55LgQFwKLmYg==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1reERv-00085o-5l; Sun, 25 Feb 2024 14:21:47 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-02-25]
-Date: Sun, 25 Feb 2024 13:21:46 +0000
-Message-Id: <170886726066.1516351.14377022830495300698@leemhuis.info>
-X-Mailer: git-send-email 2.40.1
-Content-Type: text/plain; charset="utf-8"
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Cc:Reply-To:References:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=5zcxi1j2bz9y7GX419P/KFYBN93Ly9pm3MHmLrZHkIA=;
+	t=1708870909; x=1709302909; b=CGN+DXPwpjp7tELQUqJ237fTJraF2a62JvOi3sYTDkieDHr
+	LbVBJquOZaZ6L+uftuZtCXlEEQrQpmRvL4Gxu8+TppKie+jBmVskIaIgtrQftnf3C2KoiN7YbBYSY
+	s9KhyB+7dTDp6hkDN+aXoHllFiN7TXvlWL8VHuQrX2XqltuG+eHIv6M3Sw4WeYFOsBg4DGG1PGgKW
+	T+p3t05v7rBKtlceC9GMR++lPSX5L5767N9QK+Y5Fm0ytOCt2aUpmFH8o7Vqkjf+M61Hwtr3cEGBk
+	4b2H/DJsE4zcTTpM3RfdR6hg1prfL+fDMr8aufsflE0gCAEAEUodTIUvKV1YJ0EA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1reFNz-0003Ps-2p; Sun, 25 Feb 2024 15:21:47 +0100
+Message-ID: <5ffb73e0-4b00-4bbb-857a-30a48945758d@leemhuis.info>
+Date: Sun, 25 Feb 2024 15:21:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708867309;03f85d7d;
-X-HE-SMSGID: 1reERv-00085o-5l
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux regressions report for mainline [2024-02-25]
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+References: <170886726066.1516351.14377022830495300698@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ ntfs3@lists.linux.dev,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+In-Reply-To: <170886726066.1516351.14377022830495300698@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708870909;c050b0ec;
+X-HE-SMSGID: 1reFNz-0003Ps-2p
 
-Hi Linus, things look mostly normal from my point of view and a few
-fixes for tracked issues are heading your way today or next week.
-Nevertheless let me mention one issue where I fear that they might not
-be fixed before the release:
+On 25.02.24 14:21, Regzbot (on behalf of Thorsten Leemhuis) wrote:
+> Hi Linus, things look mostly normal from my point of view and a few
+> fixes for tracked issues are heading your way today or next week.
+> Nevertheless let me mention one issue where I fear that they might not
+> be fixed before the release:
+> 
+> * Decreased network outgoing speed due to irq sharing that started with
+> [...]
 
-* Decreased network outgoing speed due to irq sharing that started with
-f977f4c9301c8a ("xhci: add handler for only one interrupt line"); the
-report is already 22 days old and the discussion is slowly progressing
-with no fix in sight (tglx was only brought in recently). Will prod
-tomorrow, maybe that will help.
-https://lore.kernel.org/lkml/CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com/
-https://lore.kernel.org/lkml/4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com/
+Sorry, forgot something: there is a patch to fix a ntfs3 build problem
+that was posted 10+ days ago[1] that didn't get any reaction from the
+ntfs3 maintainer at all. Given the history of occasional slow responses
+for that subsystem I thought I'd let you know in case you want to pick
+the fix up directly; but if you do, consider using v2 of the patch[2].
 
-Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
-X13s, but he send out patch series to fix some or all of those[1], so
-with a bit of luck those issues will soon be fixed as well.
-https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-
-[1]
-https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
-https://lore.kernel.org/lkml/20240223152124.20042-1-johan+linaro@kernel.org/
+[1] https://lore.kernel.org/all/20240214224500.811609-1-shiftee@posteo.net/
+[2] https://lore.kernel.org/all/20240221104358.2290969-1-shiftee@posteo.net/
 
 Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 8 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.7.. aka v6.8-rc), culprit identified
-======================================================
-
-
-MXSFB error: -ENODEV: Cannot connect bridge
--------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
-https://lore.kernel.org/lkml/34yzygh3mbwpqr2re7nxmhyxy3s7qmqy4vhxvoyxnoguktriur@z66m7gvpqlia/
-https://lore.kernel.org/regressions/20240214110822.GA81133@francesco-nb/
-
-By Hiago De Franco and Francesco Dolcini; 16 days ago; 7 activities, latest 0 days ago.
-Introduced in edbbae7fba49 (v6.8-rc1)
-
-Recent activities from: Shawn Guo (1), Francesco Dolcini (1)
-
-One patch associated with this regression:
-* Re: MXSFB error: -ENODEV: Cannot connect bridge
-  https://lore.kernel.org/lkml/20240214105223.GA78582@francesco-nb/
-  11 days ago, by Francesco Dolcini
-
-Noteworthy links:
-* [PATCH v1] ARM: dts: imx7: remove DSI port endpoints
-  https://lore.kernel.org/lkml/20240216104255.21052-1-francesco@dolcini.it/
-  9 days ago, by Francesco Dolcini; thread monitored.
-
-
-sched/cpufreq: reduced maximum CPU frequency is ignored.
---------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/002f01da5ba0$49cbf810$dd63e830$@telus.net/
-https://lore.kernel.org/lkml/002f01da5ba0%2449cbf810%24dd63e830%24@telus.net/
-
-By Doug Smythies; 15 days ago; 15 activities, latest 0 days ago.
-Introduced in 9c0b4bb7f630 (v6.8-rc1)
-
-Fix incoming:
-* cpufreq: intel_pstate: fix pstate limits enforcement for adjust_perf call back
-  https://lore.kernel.org/regressions/1049ad19-dc5c-49d4-b12e-5b384f40ad7f@leemhuis.info/
-
-
-usb: typec: boot issues on rk3399-roc-pc due to revert
-------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
-https://lore.kernel.org/lkml/ZcVPHtPt2Dppe_9q@finisterre.sirena.org.uk/
-
-By Mark Brown; 16 days ago; 12 activities, latest 2 days ago.
-Introduced in b717dfbf73e8 (v6.8-rc3)
-
-Fix incoming:
-* usb: typec: tpcm: Fix issues with power being removed during reset
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=69f89168b310878be82d7d97bc0d22068ad858c0
-
-
-[ *NEW* ] drm/msm/dp: runtime PM cause internal eDP display on the Lenovo ThinkPad X13s to not always show up on boot (2/2 regressions)
----------------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/faad839a-4c28-449f-bd87-845b47a1a6a1@leemhuis.info/
-https://lore.kernel.org/regressions/faad839a-4c28-449f-bd87-845b47a1a6a1@leemhuis.info/
-
-By Johan Hovold; 2 days ago; 5 activities, latest 2 days ago.
-Introduced in 5814b8bf086a (v6.8-rc1)
-
-Recent activities from: Johan Hovold (3), Linux regression tracking
-  #adding (Thorsten Leemhuis) (1), Abhinav Kumar (1)
-
-Noteworthy links:
-* drm/msm: Second DisplayPort regression in 6.8-rc1
-  https://lore.kernel.org/lkml/ZdMwZa98L23mu3u6@hovoldconsulting.com/
-  6 days ago, by Johan Hovold; thread monitored.
-
-
-`lis3lv02d_i2c_suspend()` causes `unbalanced disables for regulator-dummy` and `Failed to disable Vdd_IO: -EIO`
----------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-https://lore.kernel.org/lkml/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-
-By Paul Menzel; 23 days ago; 10 activities, latest 3 days ago.
-Introduced in 2f189493ae32 (v6.8-rc1)
-
-Recent activities from: Hans de Goede (6)
-
-Noteworthy links:
-* [PATCH regression fix] misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
-  https://lore.kernel.org/lkml/20240220190035.53402-1-hdegoede@redhat.com/
-  4 days ago, by Hans de Goede; thread monitored.
-
-
-[ *NEW* ] irq/net/usb: performance decrease now that network device and xhci share IRQs
----------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com/
-
-By Mikhail Gavrilov; 22 days ago; 21 activities, latest 3 days ago.
-Introduced in f977f4c9301c (v6.8-rc1)
-
-Recent activities from: Randy Dunlap (2), Mikhail Gavrilov (2), Mathias
-  Nyman (1)
-
-
-drm as well as soc: qcom: internal eDP display on the Lenovo ThinkPad X13s does not always show up on boot
-----------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-
-By Johan Hovold; 12 days ago; 13 activities, latest 4 days ago.
-Introduced in 2bcca96abfbf (v6.8-rc1)
-
-Fix incoming:
-* soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
-  https://lore.kernel.org/regressions/f49c65d0-8f6b-4261-a831-82dd9d3091e1@leemhuis.info/
-
-
-sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
-https://lore.kernel.org/regressions/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
-
-By Leonard Lausen; 7 days ago; 4 activities, latest 6 days ago.
-Introduced in 8814455a0e54 (v6.8-rc1)
-
-One patch associated with this regression:
-* Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
-  https://lore.kernel.org/regressions/cf95947d-8bec-4f95-9e08-2d942723cafc@linaro.org/
-  7 days ago, by Dmitry Baryshkov
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170827338885.977320.16936376590840962619@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
