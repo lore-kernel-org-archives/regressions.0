@@ -1,37 +1,40 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from clark.ferree-clark.org (clark.ferree-clark.org [74.95.126.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334B714012;
-	Sun, 25 Feb 2024 14:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3BF1757E
+	for <regressions@lists.linux.dev>; Sun, 25 Feb 2024 17:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.95.126.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708870911; cv=none; b=QxHfHXFy7QJkwudRTf5HaWfI18QJXx0FP5vWj5ZSIR/iorbyuIfc6gnaJiiixLFs1EOyg9GYE26E+qjE3Q9J9iGXPw1qROCiIhjyPREvnMvOg5PrcddHmpWl5Wqe7jhYDQRB7YEqGFBYME+hWbHtxWX13CyEFSvXqe1u2Ci+Ejs=
+	t=1708883310; cv=none; b=fGdJgATyPY/3QQgFFh8BSh+UTIEiYMImH6jWqz5miGTzmaCVU/zeoyKfrt4MPErK4E5ENTX1k6qdnF9VCRziNusGqnP5myZy97oqyA6YiEYizJE63F1EiGEy5OFGm58ZwCBUuFMtRVF58sJ3kYOeLANTAkR+Mlm381EyBaJ2uWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708870911; c=relaxed/simple;
-	bh=RCSh2ROZ/iFeMJsDJRaRk0vcrWxy8Y3mHcAABJnhl5A=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
-	 In-Reply-To:Content-Type; b=ERwXjnv8Ka+uaG7vPtZJAQdVqoxnE+rXlntMX8udIygUrhxq1pENVi7BaamT2Q43WmATpJuKQmtlFHy5OAgEpSw/ANSZk8b8rMZc9Zvpe3f2eITMJDO6gMn5nZKJ72PhDo2UjG2DlQXr4PnF28DGp6//wevgsTOtlu3HiazC2ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CGN+DXPw; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1708883310; c=relaxed/simple;
+	bh=2CikVZw5yj7Anfr/po21f7lB9khLh4KxTeibgLI9F6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UTLzb94wRkjw/j6/7O7Cmu9wX59QPv8hiWa6o73m5V0KnTVjaD6rrYZe5RPCLqqM6iG3uH7gWQ9/SqkVQnpjlvv/PEE2VF1D1KWVZej26Y5FztWy0vf7IwjjgHWn5gUTVASXw4svHormKVf3g9dlfoNzL8kqcOx4lDEk+E0R+OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=clark.bz; spf=pass smtp.mailfrom=clark.bz; dkim=pass (2048-bit key) header.d=clark.bz header.i=@clark.bz header.b=LsnlwCca; arc=none smtp.client-ip=74.95.126.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=clark.bz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clark.bz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CGN+DXPw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:Reply-To:References:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=5zcxi1j2bz9y7GX419P/KFYBN93Ly9pm3MHmLrZHkIA=;
-	t=1708870909; x=1709302909; b=CGN+DXPwpjp7tELQUqJ237fTJraF2a62JvOi3sYTDkieDHr
-	LbVBJquOZaZ6L+uftuZtCXlEEQrQpmRvL4Gxu8+TppKie+jBmVskIaIgtrQftnf3C2KoiN7YbBYSY
-	s9KhyB+7dTDp6hkDN+aXoHllFiN7TXvlWL8VHuQrX2XqltuG+eHIv6M3Sw4WeYFOsBg4DGG1PGgKW
-	T+p3t05v7rBKtlceC9GMR++lPSX5L5767N9QK+Y5Fm0ytOCt2aUpmFH8o7Vqkjf+M61Hwtr3cEGBk
-	4b2H/DJsE4zcTTpM3RfdR6hg1prfL+fDMr8aufsflE0gCAEAEUodTIUvKV1YJ0EA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1reFNz-0003Ps-2p; Sun, 25 Feb 2024 15:21:47 +0100
-Message-ID: <5ffb73e0-4b00-4bbb-857a-30a48945758d@leemhuis.info>
-Date: Sun, 25 Feb 2024 15:21:46 +0100
+	dkim=pass (2048-bit key) header.d=clark.bz header.i=@clark.bz header.b="LsnlwCca"
+Received: from clark.ferree-clark.org (localhost [IPv6:0:0:0:0:0:0:0:1])
+	by clark.ferree-clark.org (8.17.2/8.17.1) with ESMTP id 41PHkAvS634133;
+	Sun, 25 Feb 2024 09:46:10 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 clark.ferree-clark.org 41PHkAvS634133
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clark.bz; s=c20;
+	t=1708883171; r=y; bh=sBdHkP5cNkJZ0aDx3mj38H7Zkuc+PJWAHEBhty7Uptk=;
+	h=Date:Subject:To:From:From;
+	b=LsnlwCcaB1IeLYcm4X6tZrsrK3upRHhDn7o8nrpZw5xK6k0jU2fxVlTc17PMo4LtR
+	 ZDe8QeSN+lO8L5/f7NMUFnBfwm41FPm2b2P/mBNzIgx2fyX3GC467vXb3yFwGsKwYc
+	 hEtSP7r6Zlurze6Kn8Rsw2EnXfRnyOktwwuYR8sKmaontF1gSlj6JhJaGOMx1jvP6l
+	 RW5sMQK5BpiXiN5q7vkn3fzXeQUJFzRrwarDtl+kNZvIv6As2UUvwiFAJLk0Zvyy3+
+	 7td2SN0494jZa580/xPTNatQthaSoDBdvT5ZVLgvE1TF9z4KJz7BrUJBXP++HnDDjN
+	 WSy5C7fqdb/VQ==
+Received: from [100.115.92.202] ([10.1.10.12])
+	by clark.ferree-clark.org with ESMTPSA
+	id 2B18KuJ822UTrQkACNZ+ew
+	(envelope-from <kernel@clark.bz>); Sun, 25 Feb 2024 09:46:10 -0800
+Message-ID: <c21ee3c9-6cb8-45f7-ba46-880cee757cb3@clark.bz>
+Date: Sun, 25 Feb 2024 09:46:09 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,39 +42,71 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Linux regressions report for mainline [2024-02-25]
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-References: <170886726066.1516351.14377022830495300698@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- ntfs3@lists.linux.dev,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-In-Reply-To: <170886726066.1516351.14377022830495300698@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708870909;c050b0ec;
-X-HE-SMSGID: 1reFNz-0003Ps-2p
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+Content-Language: en-US
+To: Song Liu <song@kernel.org>,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240123005700.9302-1-dan@danm.net>
+ <20240220230658.11069-1-dan@danm.net>
+ <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
+ <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
+From: "Thomas B. Clark" <kernel@clark.bz>
+In-Reply-To: <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.1.10.2
 
-On 25.02.24 14:21, Regzbot (on behalf of Thorsten Leemhuis) wrote:
-> Hi Linus, things look mostly normal from my point of view and a few
-> fixes for tracked issues are heading your way today or next week.
-> Nevertheless let me mention one issue where I fear that they might not
-> be fixed before the release:
-> 
-> * Decreased network outgoing speed due to irq sharing that started with
-> [...]
+This issue isn't limited to RAID5.  It's happening to me on a RAID1 md 
+as well. I use an ext4 filesystem over RAID1 for /guests.
 
-Sorry, forgot something: there is a patch to fix a ntfs3 build problem
-that was posted 10+ days ago[1] that didn't get any reaction from the
-ntfs3 maintainer at all. Given the history of occasional slow responses
-for that subsystem I thought I'd let you know in case you want to pick
-the fix up directly; but if you do, consider using v2 of the patch[2].
+  I can add a couple of observations to what is already noted. The load 
+increases gradually and inconsistently, and sometimes it runs for 
+several hours after rebooting without any noticeable ill effects before 
+the load starts creeping up in the VMs, eventually bringing the server 
+to an unresponsive state. The longest I've seen it run is 12 hours. I 
+haven't figured out whether there is some trigger or a cumulative effect.
 
-[1] https://lore.kernel.org/all/20240214224500.811609-1-shiftee@posteo.net/
-[2] https://lore.kernel.org/all/20240221104358.2290969-1-shiftee@posteo.net/
-
-Ciao, Thorsten
+On 2/23/24 18:13, Song Liu wrote:
+> Hi,
+>
+> On Fri, Feb 23, 2024 at 12:07 AM Linux regression tracking (Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>> On 21.02.24 00:06, Dan Moulding wrote:
+>>> Just a friendly reminder that this regression still exists on the
+>>> mainline. It has been reverted in 6.7 stable. But I upgraded a
+>>> development system to 6.8-rc5 today and immediately hit this issue
+>>> again. Then I saw that it hasn't yet been reverted in Linus' tree.
+>> Song Liu, what's the status here? I aware that you fixed with quite a
+>> few regressions recently, but it seems like resolving this one is
+>> stalled. Or were you able to reproduce the issue or make some progress
+>> and I just missed it?
+> Sorry for the delay with this issue. I have been occupied with some
+> other stuff this week.
+>
+> I haven't got luck to reproduce this issue. I will spend more time looking
+> into it next week.
+>
+>> And if not, what's the way forward here wrt to the release of 6.8?
+>> Revert the culprit and try again later? Or is that not an option for one
+>> reason or another?
+> If we don't make progress with it in the next week, we will do the revert,
+> same as we did with stable kernels.
+>
+>> Or do we assume that this is not a real issue? That it's caused by some
+>> oddity (bit-flip in the metadata or something like that?) only to be
+>> found in Dan's setup?
+> I don't think this is because of oddities. Hopefully we can get more
+> information about this soon.
+>
+> Thanks,
+> Song
+>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> #regzbot poke
+>>
