@@ -1,43 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D8F10E4;
-	Sun, 25 Feb 2024 01:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519B39443;
+	Sun, 25 Feb 2024 05:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708824091; cv=none; b=tOOWMs/FcG1GLvmNw8WocFMIQddg2vg2sG1IxKE9GQ0nobhufezeKYYhQftIpREilFTe9ZOAVb9iOr/SfVUbNXKc5HmDSjljtfHLs5i7qvvC+U0hust8Ji4/vUaxrvaRPbq2S9egHxyYb2Ks67tmU1SNeQMs1jsnbHfrCr9VJLk=
+	t=1708840652; cv=none; b=bfOynNLa3iVIjDKR+NFiOXvMBIoiAxX5fz3ClvGJH/cZka5nwhgnnGpEsFRtyyi+bWd9b/yTd5QmCdW0OyiPKMPIlCNSvS8gY8jr7ctauFBKR4Bz6joupGj42CF4uClmnolK56rqYEDL3QooLwXHAAAEHQDng0k3HBhGwUFef04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708824091; c=relaxed/simple;
-	bh=mFyhUVC44DtaGMHctMSrjt2YDHiRWqydiWVBS+Xjg58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MEN266w72mJiLiEbmguqbhEbqqfWuUjVBNnlIcu//5mOKWj51E0WNe399Cgyshcbxu35nMBYk4ocMEIIQyzhFvHKtNHFXcQyzQRecHhVXmmKWZCnva8hCtqGsO0M6pAuo9hRbsSA+UEoYqigZBuCMT9X9zY1um8JbmNhoFaAtRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXeL2bls; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708840652; c=relaxed/simple;
+	bh=QpPrkM0hEknnX9z72cr5X4Rw6BoHmRfdBG6lB27sycw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V/anwuwg27rgecC/WIReylC05SU448YJKzT+jXzAJWRIK8VYSqbDY2i895hPX3RuXl+TFfcQAxD2Urj6saM5WNxwG/YsW7do0BGEtkoUCgQ/x5lNt64nS+N7byJGLYXwbh3OJIyxcvuu4LnVz14NZqwsSpJRLZrehrgMiHx5+uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XtVGY8p+; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXeL2bls"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CF6C433C7;
-	Sun, 25 Feb 2024 01:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708824090;
-	bh=mFyhUVC44DtaGMHctMSrjt2YDHiRWqydiWVBS+Xjg58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXeL2blskfAFqL6ZyqR1LRwtwpzA0B9B1SEWzVIDeF+qSHJrkFyU9FvpZaVPYOtRh
-	 Og0GP99/8ZvUshqDJfzDFRYTyyfdr1juUc8Mf0HKeXKf1vJf3OrOluK5nQ2FUMbUJQ
-	 LC18qAniTBv/xaEZeX6qlmKMIpmkjfJYXfaZZALS8iAEr/jMzI9afWhmooYKJvspIt
-	 YASDYgPRmQQlPIqYruvgItJRHk3L1mhiBuol/WndgMVcqcS9u/ale0cgsB4EIxHQqo
-	 fAi/GmU6ZNvTSdlDWGk+XXencMZSp4ioxC2g59dQAvIB7XFkblbHF10dr3ES8uPSZC
-	 9KlgwIhLrqQlg==
-Date: Sat, 24 Feb 2024 20:22:42 -0500
-From: Al Viro <viro@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	"Christian Brauner (Microsoft)" <brauner@kernel.org>,
-	Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Paul Holzinger <pholzing@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XtVGY8p+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=5tyQLvMNT9E4Tr/AbhbZm9ixo5fjkwiuVvjkmXED5iE=;
+	t=1708840650; x=1709272650; b=XtVGY8p+effF1uS+uC43CF3IHdFhk/H1r2SiZiEGRS9088L
+	3GYR/amv3y4tWVxfbduSwXoRYXo2uMt59MjM5Nw7IfuW1sRto9MnJ8YKhfETHvXBpDoKl/zI59iSS
+	dKlDQppV324nD1HMaX9Ddfx01uqasC4vrgEBkZoxccDnNU2JsE3HmE7dJWjWUCcugX1zZyjzF++Ep
+	YxZqTm1DUGp351MrI9s+aHfeatcl/3JBv2qPOf4UXqYF8gA8tJEG7gEdboHy80xkVpdiWGGXEnou0
+	zZZSQJHPQb5t04P7ADSMpiTXuy9/XXTSBQt7ZJvfIpk+FNXbjVtzp1l1aytSPfWw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1re7Vv-0008GL-J5; Sun, 25 Feb 2024 06:57:27 +0100
+Message-ID: <5b67d22f-ddd6-4b9d-9c86-00976d6b53ca@leemhuis.info>
+Date: Sun, 25 Feb 2024 06:57:26 +0100
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] 6.8-rc process is unable to exit and consumes a lot
  of cpu
-Message-ID: <ZdqWYplgbHL7xSch@duke.home>
+Content-Language: en-US, de-DE
+To: Al Viro <viro@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Christian Brauner (Microsoft)" <brauner@kernel.org>,
+ Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>,
+ Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Paul Holzinger <pholzing@redhat.com>, LKML <linux-kernel@vger.kernel.org>
 References: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
  <652928aa-0fb8-425e-87b0-d65176dd2cfa@redhat.com>
  <9b92706b-14c2-4761-95fb-7dbbaede57f4@leemhuis.info>
@@ -45,29 +55,40 @@ References: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
  <f15ee051-2cfe-461f-991d-d09fd53bad4f@leemhuis.info>
  <c0cbf518-c6d4-4792-ad04-f8b535d41f4e@leemhuis.info>
  <CAHk-=wg9nqLqxr7bPFt4CUzb+w4TqENb+0G1-yJfZbwvRhi29A@mail.gmail.com>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg9nqLqxr7bPFt4CUzb+w4TqENb+0G1-yJfZbwvRhi29A@mail.gmail.com>
+ <ZdqWYplgbHL7xSch@duke.home>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZdqWYplgbHL7xSch@duke.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708840650;e30ad12f;
+X-HE-SMSGID: 1re7Vv-0008GL-J5
 
-On Sat, Feb 24, 2024 at 03:43:43PM -0800, Linus Torvalds wrote:
-> On Fri, 23 Feb 2024 at 23:00, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > TWIMC, the quoted mail apparently did not get delivered to Al (I got a
-> > "48 hours on the queue" warning from my hoster's MTA ~10 hours ago).
-> 
-> Al's email has been broken for the last almost two weeks - the machine
-> went belly-up in a major way.
-> 
-> I bounced the email to his kernel.org email that seems to work, but I
-> also think Al ends up being busy trying to get through everything else
-> he missed, in addition to trying to get the machine working again...
+On 25.02.24 02:22, Al Viro wrote:
+> On Sat, Feb 24, 2024 at 03:43:43PM -0800, Linus Torvalds wrote:
+>> On Fri, 23 Feb 2024 at 23:00, Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>>
+>>> TWIMC, the quoted mail apparently did not get delivered to Al (I got a
+>>> "48 hours on the queue" warning from my hoster's MTA ~10 hours ago).
+>>
+>> Al's email has been broken for the last almost two weeks - the machine
+>> went belly-up in a major way.
+>>
+>> I bounced the email to his kernel.org email that seems to work,
 
-FWIW, I'm pretty sure that it's fixed by #fixes^ (7e4a205fe56b) in
-my tree; I'll send a pull request, both for #fixes and #fixes.pathwalk.rcu
+Thx!
+
+>> but I
+>> also think Al ends up being busy trying to get through everything else
+>> he missed, in addition to trying to get the machine working again...
+> 
+> FWIW, I'm pretty sure that it's fixed by #fixes^ (7e4a205fe56b) in
+> my tree; I'll send a pull request, both for #fixes and #fixes.pathwalk.rcu
+
+Great, thank you, too!
+
+Ciao, Thorsten
+
+
