@@ -1,247 +1,151 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49163130AC5;
-	Mon, 26 Feb 2024 17:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201C12DDAD
+	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 18:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708969279; cv=none; b=SEjoyNz6XHxspQI5E/mb8noPW0e36OyOfaa6/Fy1etf3RKZF1J6xBFvM/OAif1ASsFT/y45JFHgTkH3HmNvInRP0FQJ2BbRw+HWkOdhb1P/zpgTFmpTXkV6Jd09PxykB7vgQMcx2VBH7UHgH3MYpHHekbXiHKvVxf9zhX3o3/q8=
+	t=1708970967; cv=none; b=Ou+VEvHtnc3b3Z+c7cmH26wsVri1ZjuHOwDz22QFxzqo2cvey0kFCxqKz8AYEA0rqpXV52XSpK9Fz074Ww4+c+vu0vyueMwk1QgkvHrg69V1fIxzJWJntTK5Jd9dOkIgu2ldiOLLcloeyR8SzgjUz0GoZfSICCk55XnBgvZNpD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708969279; c=relaxed/simple;
-	bh=GNokN9HKpjli/Tnl0kGJ5bYmZAropEAOcto1Ku3MYEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QywihHrCVcApaer95x5+Ctk+YRjQieTMzOv2xg9QkZjNFom5r8Z0RSachG+T2coRmKZ0jfOlmxn69WdVdYQsHetvrpAwpkyNo/6wxmv0P5RZHs2BhxN+bXFuPfRfRYOruTI6zmMlnWtZR+O4N7HThdK2iTDhhkndN5vxX5LLH8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sc2GB2da; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708970967; c=relaxed/simple;
+	bh=EgcqXpFezT+1t7YK8f56X0MEgJ6W6GxDYo7o8TM6gUE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KPhTYJQ+7InPGLmyaoQRq0vHRXm+kg5IThQMyuGfHFR1Ga2niTCrOw9hUjo6BUXV3SOGSm8odcDQ7X8qg3MIw6BcK6k0gAkQF6Lh9FWm69X/oHHx4afBNzpEPy5CPUZBd41yXoPDdoIn96u/+9t69x9e6lr0XUcnWYyLin7mg54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G5sDphJs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mZXkRcmU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sc2GB2da"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e537d0ba06so508875b3a.2;
-        Mon, 26 Feb 2024 09:41:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708969276; x=1709574076; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bgTijKmXxs2TTmfZvORuZdqAS/4Fe7yTHh8kyxONrjM=;
-        b=Sc2GB2daEjJW7vvm+a8EV8VpVCXLpFYzSc8YrIAfkPjNSccy2EA8vQsCu0NH+a1rYO
-         TQILzZ82S3qqx4pwTuQIImt7OCfKauWYKsREOTgMhSLBoWFShC4+oo9h1SDLAd0kuMV5
-         aE+fqC6YJEUl2R8HbHHTdHHUreNSodRKJv+4pv/wBHTk1k0+gLpckTLmLG1v/Weot3f2
-         vyHZ38w42chIrsdMAq3lX85uFoDDkE37C+M2nMUEMQ9jyBn/LtS44Saa8wTUxUuZsdn1
-         Sqcg2NCEkqUbNr/ZezCHEfrlBQ2UxoJFM6lpgSWUIWYyqqw3YI14cRVNgbn0JsguspzD
-         B1NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708969276; x=1709574076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bgTijKmXxs2TTmfZvORuZdqAS/4Fe7yTHh8kyxONrjM=;
-        b=Ddqdum6ktgsUdCTLoJH4jOQZk8Zu3a9Bd4gU5NNR9l3b3Z1OjzkeeSAVp3rrvbYY6K
-         YLKSqc5IIYCpjiKkGxJhqK/SlKwreme8Bv8yeNGnxG8T8z/xjhuTXrjigkeS9igRDjmv
-         iUIXmkFD4i8azJmuS5XC9RXPJiu3TUVG74OYkkwuSgdQKoZD9rFvchpPgVXdkrS8NtaT
-         JwkXKUz8PKV9+U17iawdhkKB9x1tMoP4frnaXK+7E6bqXKod69CzAE7YfhsdhMN2gwwy
-         0MSnh8Xe2P34DpcV3jlAo0ACJJaPvaGn28xsueqv3Tg+G0Ip+8EigtfPnzRjf5Mtf+YL
-         flAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcCJKMnAdcoqiqQTu/JijDMrf4gNm9DY2zCWj/II2XBzVXvjL5LW9J9qPUgZl2itkgvvH4v/XPadZ7EUHdSEhQf2P8+9cXemPGz2LVaBV7NUGXliGTUD8YfSFig4y2OC2ISMA3FzHqqQ==
-X-Gm-Message-State: AOJu0YzEntFj01GJzsTIRGHKZG09nCAsA80FZgVSJuUNhf95myHeRRAT
-	s2YpTcr2bmMPP4G+xdPB77vlI/YzCNUw8dtdGvGDLXQxwDOekiuH
-X-Google-Smtp-Source: AGHT+IH/KwcL6EIgZIFJid8+Iuv/hGu/ukOE+8S0Bq41eCSnpaVvodVUZawruucW00ynqaEP1J9T/w==
-X-Received: by 2002:a05:6a21:918a:b0:1a0:885e:96d6 with SMTP id tp10-20020a056a21918a00b001a0885e96d6mr11064774pzb.61.1708969276385;
-        Mon, 26 Feb 2024 09:41:16 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s36-20020a056a0017a400b006e3e72a4f87sm4331124pfg.0.2024.02.26.09.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 09:41:15 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 26 Feb 2024 09:41:14 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Petr Tesarik <petr@tesarici.cz>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	"open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
-	Marc Haber <mh+netdev@zugschlus.de>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit statistics
- counters
-Message-ID: <ef284cb7-5d71-4485-af52-61dc7fb1abb7@roeck-us.net>
-References: <20240203190927.19669-1-petr@tesarici.cz>
- <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G5sDphJs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mZXkRcmU"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708970963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lBiIbeLll0i8806pw3+a5wtiCC8R3KilwQQO3Vmsk48=;
+	b=G5sDphJs7t9/raF+7NYDjjcuKFwrRc0mqtuV/gpfLcT+jH6DXladNCYEqLak8e2uai5TD+
+	ZcTwChJ8MRp+01HO3nKWNKe+NhKUZvPjHaVfpllKVSfsey894PDzlGGuvLRd0X5D8J82dv
+	CqMwC6SoYU86gtUCYVqmQ8Yu7sD05uyf777NW9SzmGMWzGpcxyL2FVvckmC6GlOfGem5AS
+	33YWLOeIMQWQJhI0qjRJgCA7E7rPEUqWA++z25qhnjTzfUmFgKFgXhtYxaa1S1rNjafLx6
+	1JE8wnN5SQygZR6jXnuuQzKneRTbC7TmsoLykcIhsO39hkJ4+vHGjujy2sTf7w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708970963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lBiIbeLll0i8806pw3+a5wtiCC8R3KilwQQO3Vmsk48=;
+	b=mZXkRcmUoZuND93toW5bsRFgQG3qHZFIQrwEXNOwCdtZ2hwAjok8Xgut2Ym9p5Xw23JOqV
+	3M+bMQhHuGc36HAg==
+To: Mathias Nyman <mathias.nyman@linux.intel.com>, Linux regressions mailing
+ list <regressions@lists.linux.dev>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Greg KH
+ <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-x86_64@vger.kernel.org, netdev@vger.kernel.org, Randy Dunlap
+ <rdunlap@infradead.org>, Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: Re: This is the fourth time I've tried to find what led to the
+ regression of outgoing network speed and each time I find the merge commit
+ 8c94ccc7cd691472461448f98e2372c75849406c
+In-Reply-To: <acc2b877-4b42-fd4d-867b-603dae95d09d@linux.intel.com>
+References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
+ <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
+ <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
+ <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
+ <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
+ <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
+ <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
+ <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
+ <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+ <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
+ <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
+ <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
+ <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
+ <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
+ <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
+ <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
+ <acc2b877-4b42-fd4d-867b-603dae95d09d@linux.intel.com>
+Date: Mon, 26 Feb 2024 19:09:22 +0100
+Message-ID: <87r0gz9jxp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
+Content-Type: text/plain
 
-Adding report to regression tracker.
+On Mon, Feb 26 2024 at 12:54, Mathias Nyman wrote:
+> On 26.2.2024 11.51, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> I don't think reverting this series is a solution.
+>>>
+>>> This isn't really about those usb xhci patches.
+>>> This is about which interrupt gets assigned to which CPU.
+>> 
+>> I know, but from my understanding of Linus expectations wrt to handling
+>> regressions it does not matter much if a bug existed earlier or
+>> somewhere else: what counts is the commit that exposed the problem.
+>> 
+>> But I might be wrong here. Anyway, not CCing Linus for this; but I'll
+>> likely point him to this direction on Sunday in my next weekly report,
+>> unless some fix comes into sight.
+>> 
+>>> Mikhail got unlucky when the network adapter interrupts on that system was
+>>> assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
+>>> bandwidth.
+>> 
+>> But maybe others will be just as "unlucky". Or is there anything to
+>> believe otherwise? Maybe some aspect of the .config or local setup that
+>> is most likely unique to Mikhail's setup?
+>
+> I believe this is a zero-sum case.
+>
+> Others got equally lucky due to this change.
+> Their devices end up interrupting less clogged CPUs and see a similar
+> performance increase.
 
-#regzbot ^introduced 38cc3c6dcc09
-#regzbot title Inconsistent lock state in stmmac code
-#regzbot ignore-activity
+Reverting this does not make any sense.
 
-On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote:
-> Hi,
-> 
-> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote:
-> > As explained by a comment in <linux/u64_stats_sync.h>, write side of struct
-> > u64_stats_sync must ensure mutual exclusion, or one seqcount update could
-> > be lost on 32-bit platforms, thus blocking readers forever. Such lockups
-> > have been observed in real world after stmmac_xmit() on one CPU raced with
-> > stmmac_napi_poll_tx() on another CPU.
-> > 
-> > To fix the issue without introducing a new lock, split the statics into
-> > three parts:
-> > 
-> > 1. fields updated only under the tx queue lock,
-> > 2. fields updated only during NAPI poll,
-> > 3. fields updated only from interrupt context,
-> > 
-> > Updates to fields in the first two groups are already serialized through
-> > other locks. It is sufficient to split the existing struct u64_stats_sync
-> > so that each group has its own.
-> > 
-> > Note that tx_set_ic_bit is updated from both contexts. Split this counter
-> > so that each context gets its own, and calculate their sum to get the total
-> > value in stmmac_get_ethtool_stats().
-> > 
-> > For the third group, multiple interrupts may be processed by different CPUs
-> > at the same time, but interrupts on the same CPU will not nest. Move fields
-> > from this group to a newly created per-cpu struct stmmac_pcpu_stats.
-> > 
-> > Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
-> > Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugschlus.de/t/
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Petr Tesarik <petr@tesarici.cz>
-> 
-> This patch results in a lockdep splat. Backtrace and bisect results attached.
-> 
-> Guenter
-> 
-> ---
-> [   33.736728] ================================
-> [   33.736805] WARNING: inconsistent lock state
-> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
-> [   33.737080] --------------------------------
-> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
-> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dwmac_dma_interrupt+0x9c/0x28c
-> [   33.738206] {HARDIRQ-ON-W} state was registered at:
-> [   33.738318]   lock_acquire+0x11c/0x368
-> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
-> [   33.738525]   stmmac_xmit+0x4d0/0xc58
-> [   33.738605]   dev_hard_start_xmit+0xc4/0x2a0
-> [   33.738689]   sch_direct_xmit+0xf8/0x30c
-> [   33.738763]   __dev_queue_xmit+0x400/0xcc4
-> [   33.738831]   ip6_finish_output2+0x254/0xafc
-> [   33.738903]   mld_sendpack+0x260/0x5b0
-> [   33.738969]   mld_ifc_work+0x274/0x588
-> [   33.739032]   process_one_work+0x230/0x604
-> [   33.739101]   worker_thread+0x1dc/0x494
-> [   33.739165]   kthread+0x100/0x120
-> [   33.739225]   ret_from_fork+0x14/0x28
-> [   33.739302] irq event stamp: 3553
-> [   33.739371] hardirqs last  enabled at (3552): [<c03e884c>] __call_rcu_common.constprop.0+0x1a4/0x6b4
-> [   33.739515] hardirqs last disabled at (3553): [<c0300bd4>] __irq_svc+0x54/0xb8
-> [   33.739638] softirqs last  enabled at (3542): [<c1254a60>] neigh_resolve_output+0x1fc/0x254
-> [   33.739795] softirqs last disabled at (3546): [<c1243798>] __dev_queue_xmit+0x48/0xcc4
-> [   33.739919]
-> [   33.739919] other info that might help us debug this:
-> [   33.740021]  Possible unsafe locking scenario:
-> [   33.740021]
-> [   33.740111]        CPU0
-> [   33.740158]        ----
-> [   33.740204]   lock(&syncp->seq#2);
-> [   33.740314]   <Interrupt>
-> [   33.740363]     lock(&syncp->seq#2);
-> [   33.740511]
-> [   33.740511]  *** DEADLOCK ***
-> [   33.740511]
-> [   33.740665] 8 locks held by kworker/0:2/39:
-> [   33.740761]  #0: c4bfb2a8 ((wq_completion)mld){+.+.}-{0:0}, at: process_one_work+0x168/0x604
-> [   33.741025]  #1: f0909f20 ((work_completion)(&(&idev->mc_ifc_work)->work)){+.+.}-{0:0}, at: process_one_work+0x168/0x604
-> [   33.741230]  #2: c328baac (&idev->mc_lock){+.+.}-{3:3}, at: mld_ifc_work+0x24/0x588
-> [   33.741387]  #3: c2191488 (rcu_read_lock){....}-{1:2}, at: mld_sendpack+0x0/0x5b0
-> [   33.741553]  #4: c2191488 (rcu_read_lock){....}-{1:2}, at: ip6_finish_output2+0x174/0xafc
-> [   33.741716]  #5: c219149c (rcu_read_lock_bh){....}-{1:2}, at: __dev_queue_xmit+0x48/0xcc4
-> [   33.741877]  #6: c4d3a974 (dev->qdisc_tx_busylock ?: &qdisc_tx_busylock){+...}-{2:2}, at: __dev_queue_xmit+0x334/0xcc4
-> [   33.742070]  #7: c49e5050 (_xmit_ETHER#2){+...}-{2:2}, at: sch_direct_xmit+0x158/0x30c
-> [   33.742250]
-> [   33.742250] stack backtrace:
-> [   33.742426] CPU: 0 PID: 39 Comm: kworker/0:2 Tainted: G                 N 6.8.0-rc4 #1
-> [   33.742578] Hardware name: Allwinner sun8i Family
-> [   33.742776] Workqueue: mld mld_ifc_work
-> [   33.742998]  unwind_backtrace from show_stack+0x10/0x14
-> [   33.743119]  show_stack from dump_stack_lvl+0x68/0x90
-> [   33.743232]  dump_stack_lvl from mark_lock.part.0+0xbd8/0x12d8
-> [   33.743345]  mark_lock.part.0 from __lock_acquire+0xad4/0x224c
-> [   33.743458]  __lock_acquire from lock_acquire+0x11c/0x368
-> [   33.743564]  lock_acquire from __u64_stats_update_begin+0x104/0x1ac
-> [   33.743683]  __u64_stats_update_begin from sun8i_dwmac_dma_interrupt+0x9c/0x28c
-> [   33.743805]  sun8i_dwmac_dma_interrupt from stmmac_napi_check+0x40/0x1c8
-> [   33.743917]  stmmac_napi_check from stmmac_interrupt+0xa4/0x154
-> [   33.744020]  stmmac_interrupt from __handle_irq_event_percpu+0xcc/0x2ec
-> [   33.744134]  __handle_irq_event_percpu from handle_irq_event+0x38/0x80
-> [   33.744243]  handle_irq_event from handle_fasteoi_irq+0x9c/0x1c4
-> [   33.744346]  handle_fasteoi_irq from generic_handle_domain_irq+0x28/0x38
-> [   33.744459]  generic_handle_domain_irq from gic_handle_irq+0x98/0xcc
-> [   33.744567]  gic_handle_irq from generic_handle_arch_irq+0x34/0x44
-> [   33.744673]  generic_handle_arch_irq from call_with_stack+0x18/0x20
-> [   33.744831]  call_with_stack from __irq_svc+0x9c/0xb8
-> [   33.745018] Exception stack(0xf0909c00 to 0xf0909c48)
-> [   33.745221] 9c00: f0ab0000 c49e506c 0000005a 00000000 c0000006 f0ab0014 0000005a c0f5da68
-> [   33.745387] 9c20: c35bd810 c4b50000 c4b50000 c365d300 00000000 f0909c50 c0f70a70 c0f70a74
-> [   33.745574] 9c40: 60000013 ffffffff
-> [   33.745668]  __irq_svc from sun8i_dwmac_enable_dma_transmission+0x20/0x24
-> [   33.745809]  sun8i_dwmac_enable_dma_transmission from stmmac_xmit+0x790/0xc58
-> [   33.745975]  stmmac_xmit from dev_hard_start_xmit+0xc4/0x2a0
-> [   33.746100]  dev_hard_start_xmit from sch_direct_xmit+0xf8/0x30c
-> [   33.746220]  sch_direct_xmit from __dev_queue_xmit+0x400/0xcc4
-> [   33.746350]  __dev_queue_xmit from ip6_finish_output2+0x254/0xafc
-> [   33.746462]  ip6_finish_output2 from mld_sendpack+0x260/0x5b0
-> [   33.746568]  mld_sendpack from mld_ifc_work+0x274/0x588
-> [   33.746670]  mld_ifc_work from process_one_work+0x230/0x604
-> [   33.746793]  process_one_work from worker_thread+0x1dc/0x494
-> [   33.746906]  worker_thread from kthread+0x100/0x120
-> [   33.746994]  kthread from ret_from_fork+0x14/0x28
-> [   33.747076] Exception stack(0xf0909fb0 to 0xf0909ff8)
-> [   33.747165] 9fa0:                                     00000000 00000000 00000000 00000000
-> [   33.747303] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [   33.747433] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> ---
-> # bad: [841c35169323cd833294798e58b9bf63fa4fa1de] Linux 6.8-rc4
-> # good: [54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478] Linux 6.8-rc3
-> git bisect start 'HEAD' 'v6.8-rc3'
-> # bad: [c76b766ec50d3d43e2dacea53a733b285f4b730d] Merge tag 'drm-fixes-2024-02-09' of git://anongit.freedesktop.org/drm/drm
-> git bisect bad c76b766ec50d3d43e2dacea53a733b285f4b730d
-> # bad: [63e4b9d693e0f8c28359c7ea81e1ee510864c37b] Merge tag 'nf-24-02-08' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
-> git bisect bad 63e4b9d693e0f8c28359c7ea81e1ee510864c37b
-> # bad: [75428f537d7cae33c7e4dd726144074f78622c09] net: intel: fix old compiler regressions
-> git bisect bad 75428f537d7cae33c7e4dd726144074f78622c09
-> # good: [1a1c13303ff6d64e6f718dc8aa614e580ca8d9b4] nfp: flower: prevent re-adding mac index for bonded port
-> git bisect good 1a1c13303ff6d64e6f718dc8aa614e580ca8d9b4
-> # good: [3871aa01e1a779d866fa9dfdd5a836f342f4eb87] tipc: Check the bearer type before calling tipc_udp_nl_bearer_add()
-> git bisect good 3871aa01e1a779d866fa9dfdd5a836f342f4eb87
-> # good: [58086721b7781c3e35b19c9b78c8f5a791070ba3] devlink: avoid potential loop in devlink_rel_nested_in_notify_work()
-> git bisect good 58086721b7781c3e35b19c9b78c8f5a791070ba3
-> # bad: [38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8] net: stmmac: protect updates of 64-bit statistics counters
-> git bisect bad 38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8
-> # good: [cb88cb53badb8aeb3955ad6ce80b07b598e310b8] ppp_async: limit MRU to 64K
-> git bisect good cb88cb53badb8aeb3955ad6ce80b07b598e310b8
-> # first bad commit: [38cc3c6dcc09dc3a1800b5ec22aef643ca11eab8] net: stmmac: protect updates of 64-bit statistics counters
+The kernel assigns the initial interrupt affinities to the CPUs so that
+the number of interrupts is halfways balanced. That spreading algorithm
+is completely agnostic of the actual usage of the interrupts. Where
+e.g. the network interrupt ends up depends on the probe/enumeration
+order of devices. Add another PCI-E card into the machine and it will
+again look different.
+
+There is nothing the kernel can do about it and earlier attempts to do
+interrupt frequency based balancing in the kernel ended up nowhere
+simply because the kernel does not have enough information about the
+overall requirements. That's why the kernel leaves the affinity
+configuration for user space, e.g. irqbalanced, except for true
+multi-queue scenarios like NVME where the kernel binds queues and their
+interrupts to specific CPUs or groups of CPUs.
+
+Why ending up on CPU0 has this particular effect on Mikhails machine is
+unclear as we don't have any information about the overall workload,
+other interrupt sources on CPU0 and their frequency. That'd need to be
+investigated with instrumentation and might unearth some completely
+different underlying reason causing this behavior.
+
+So I don't think this is a regression in the true sense of
+regressions. It's an unfortunate coincidence and reverting the
+identified commits would just paper over the real problem, if there is
+actually one single source of trouble which causes the performance drop
+only on CPU0.  The commits are definitely _not_ the root cause, they
+happen to unearth some other issue, which might be as mundane as
+e.g. that the NVME interrupt on CPU0 is competing with the network
+interrupt. So don't shoot the messenger.
+
+Thanks,
+
+        tglx
+
+
+
+
+
+
+
+
+
+
