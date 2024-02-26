@@ -1,117 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A735FF16;
-	Mon, 26 Feb 2024 12:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FEA7EEFC
+	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 12:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949481; cv=none; b=NX/3361OYxpRCdHTPPODos/FSe3RUgEfngfnnr3mgAKALiHRNUFcYNxpiv9DJaay3QmQGsu/YMdkzfb4Q/qGLbWm4PZeNOgZRcSFdxu3AOSz9lLlvptu7kNVLAZiyhSc6DrwV5sf3JQuWNHLX2g6vNHYcV7oY0dqqFP1FBoom7w=
+	t=1708950776; cv=none; b=edHyWfXbo47EW3O3wdpYe0wa6muNd4roA0R2PbabQ6dVNHdJYA1n0t90zZoPswznj0xJiFIAliv1ww4ianMFNN5y8gu+LATMhhP9QnKoarJTk1fr+WC9OmXFWtVvDbh2nHToqIvLy1/08ZwckGT94vHUjRlgUCcXouaXzo3SeRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949481; c=relaxed/simple;
-	bh=wpeaMyi6hGDRVVtly2OwRv2ZJVjSyjg6AvgPX/nDe14=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=eqEFAnyy8IGA/OpdW9pYcGjHOdmzFnz3YJygLhpXi1ftu8MILUOWY9RzdUHjgqTnd+hS6M6pZn5QjqrAlYDp2O6ZNQqY99N8f5b+Lec+fzOIih7e0i7h7Zsc6RjIoZ5BGy/uSZ10T3brIO3lMLBa1mfZesZJCkJnstS8FtnxsfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qwj33e+2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708950776; c=relaxed/simple;
+	bh=TOinibaoeeuglSCqGrRceZ/5pavWN6fZtE7b7OSbD8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aXm22XHngZpW+ICOgZS0i/IRl/M3KSwhpCIHiPNayvlbBuZLYiXVc8o+LZmC0DJI831tJ+852Iw0gqUuFy3tlA/LB2xu6izEfzM5f/82lRkvd/TopjtYXsC/GJMSmhNBJ7YkREhpTEntCHRMOHVS6b61HbLGe/P5ohwYxPSGI54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FKZUlHBf; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qwj33e+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7494CC433F1;
-	Mon, 26 Feb 2024 12:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708949480;
-	bh=wpeaMyi6hGDRVVtly2OwRv2ZJVjSyjg6AvgPX/nDe14=;
-	h=Subject:To:Cc:From:Date:From;
-	b=Qwj33e+2xlsXTdBcl8n5XbrLN2uBHkSfsC57eEPCIuFj/fuHnZDD893HC9wjRBbit
-	 +cVRvBLtdiY3TFktFNJE4WPPUeWuxR/QflTgtYNsrAoyzQqTTK7xoqjZl/lC8zXgu5
-	 tNnBMLpx7OhvPPsum3LwtoKXHPTi/ngdB596z3og=
-Subject: Patch "platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler" has been added to the 6.6-stable tree
-To: 295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de,a-kobel@a-kobel.de,arngozum@gmail.com,gregkh@linuxfoundation.org,hdegoede@redhat.com,regressions@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 26 Feb 2024 13:08:37 +0100
-Message-ID: <2024022636-poem-gallows-ad55@gregkh>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FKZUlHBf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=naPjzZspUJvzWT+GJjwqLixXs8B0ZAsekA6k8xvkWCk=;
+	t=1708950774; x=1709382774; b=FKZUlHBfGdpiwdJYdHYTR8IC5UZ46ZEEMGmmajfrXQ60WUg
+	WVfVDkE4oDVi6E1ZVTAIqBcGOtzwu46E3dKG1Ze4T79pzcRMWuGA/5D6cDNCeq9ay+sl960V7Qped
+	4N3aK5EKhKXEfa8tlltFJ4134lE+e56fSjuU+oZu8a8Mv0jwHVEfivk8A/nad6gNytuqx3miwbzEL
+	MLdTJ8J73XC6AqALlGK/uOM0gntkgfgxNVIkBIEqi1gArIjkdmYhv8iGC7GxgGFoI+3x95yT5fH1N
+	tyzWkKlzhNtb9Ktck5VjRJ8nhcMass313WqGgcmUif0in1rtFrwOHV6ZXzTv987Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1reaA7-0004cs-Fb; Mon, 26 Feb 2024 13:32:51 +0100
+Message-ID: <a037cb7d-426e-4cd0-9ebb-f299aa48dcf1@leemhuis.info>
+Date: Mon, 26 Feb 2024 13:32:49 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] sc7180-trogdor-lazor image corruption regression for
+ USB-C DP Alt Mode ([PATCH 0/2] Add param for the highest bank bit)
+To: regressions@lists.linux.dev
+Cc: freedreno@lists.freedesktop.org
+References: <20231207213048.1377147-1-cwabbott0@gmail.com>
+ <85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl>
+ <CAA8EJpoqS856N8w3ZxdhQ0TUVP2u5K8qCjG=qLQPnHXGH9NyNg@mail.gmail.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAA8EJpoqS856N8w3ZxdhQ0TUVP2u5K8qCjG=qLQPnHXGH9NyNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708950774;309fa72d;
+X-HE-SMSGID: 1reaA7-0004cs-Fb
+
+On 18.02.24 14:31, Dmitry Baryshkov wrote:
+> On Sun, 18 Feb 2024 at 03:17, Leonard Lausen <leonard@lausen.nl> wrote:
+>>
+>> Hi Connor,
+>>
+>> unfortunately, your series https://patchwork.freedesktop.org/series/127529/ has introduced a regression for external displays connected through USB-C DP Alt Mode, at least on sc7180-trogdor-lazor devices. Do you think it's possible to  fix this before the 6.8 release or would it be better to revert the series? I'm happy to help testing any fixes. The issue is also tracked at https://gitlab.freedesktop.org/drm/msm/-/issues/49.
+>>
+>> Thank you
+>> Leonard
+>>
+>> #regzbot introduced: 8814455a0e54ca353b4b0ad5105569d3fdb945cc
+> 
+> #regzbot monitor https://gitlab.freedesktop.org/drm/msm/-/issues/49
+
+This is a duplicate, thus handle it as such:
+
+#regzbot duplicate https://gitlab.freedesktop.org/drm/msm/-/issues/49
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
 
-This is a note to let you know that I've just added the patch titled
-
-    platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler
-
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     platform-x86-intel-vbtn-stop-calling-vbdl-from-notify_handler.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From 84c16d01ff219bc0a5dca5219db6b8b86a6854fb Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Fri, 16 Feb 2024 21:33:00 +0100
-Subject: platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler
-
-From: Hans de Goede <hdegoede@redhat.com>
-
-commit 84c16d01ff219bc0a5dca5219db6b8b86a6854fb upstream.
-
-Commit 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing
-tablet-mode-switch events") causes 2 issues on the ThinkPad X1 Tablet Gen2:
-
-1. The ThinkPad will wake up immediately from suspend
-2. When put in tablet mode SW_TABLET_MODE reverts to 0 after about 1 second
-
-Both these issues are caused by the "VBDL" ACPI method call added
-at the end of the notify_handler.
-
-And it never became entirely clear if this call is even necessary to fix
-the issue of missing tablet-mode-switch events on the Dell Inspiron 7352.
-
-Drop the "VBDL" ACPI method call again to fix the 2 issues this is
-causing on the ThinkPad X1 Tablet Gen2.
-
-Fixes: 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing tablet-mode-switch events")
-Reported-by: Alexander Kobel <a-kobel@a-kobel.de>
-Closes: https://lore.kernel.org/platform-driver-x86/295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de/
-Cc: regressions@lists.linux.dev
-Cc: Arnold Gozum <arngozum@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Alexander Kobel <a-kobel@a-kobel.de>
-Link: https://lore.kernel.org/r/20240216203300.245826-1-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/x86/intel/vbtn.c |    3 ---
- 1 file changed, 3 deletions(-)
-
---- a/drivers/platform/x86/intel/vbtn.c
-+++ b/drivers/platform/x86/intel/vbtn.c
-@@ -200,9 +200,6 @@ static void notify_handler(acpi_handle h
- 	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
- 
- 	sparse_keymap_report_event(input_dev, event, val, autorelease);
--
--	/* Some devices need this to report further events */
--	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
- }
- 
- /*
-
-
-Patches currently in stable-queue which might be from hdegoede@redhat.com are
-
-queue-6.6/platform-mellanox-mlxbf-tmfifo-drop-tx-network-packe.patch
-queue-6.6/platform-x86-touchscreen_dmi-add-info-for-the-teclas.patch
-queue-6.6/ahci-asm1166-correct-count-of-reported-ports.patch
-queue-6.6/platform-x86-intel-vbtn-stop-calling-vbdl-from-notify_handler.patch
-queue-6.6/input-goodix-accept-acpi-resources-with-gpio_count-3.patch
-queue-6.6/platform-x86-touchscreen_dmi-allow-partial-prefix-matches-for-acpi-names.patch
