@@ -1,86 +1,100 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6738312E1FF
-	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 17:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3D21292FF
+	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 17:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708968813; cv=none; b=irIDHeocveV0ocIQ2jbfzdKe2vOflatcSaixNvIwI31w7pwn/v3IPTR/ts8Ul6hx98OJqcbh90CPAxDQXdsT0uUX/s9oiwtazKqRMumApHSe6rQEvYEXWvNLOLIzz5UiXIujvVwJ4gJFqyFOLgA1zEARoPKbq/uJu4Jy/w6sdqA=
+	t=1708968956; cv=none; b=BpVSVT1mzhBm2BAFUhIG+rLb66un/n8mIi4WLZBZI3zrLl8sorinUNocWelXtnt7z7LuZAZf/Yx+ktJKFTdZiqO4ONcj5VnxBv5NgqeYUJaFOC5O02Amx7rzS+agFdS8aHQI/fUreF+qsg2W1H7v2ygTgCCagyT0OkcVBcgnRnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708968813; c=relaxed/simple;
-	bh=jGHNHxme5qjpR55RWTekjqcx02Y2QJMOPfL+qTuvjKw=;
+	s=arc-20240116; t=1708968956; c=relaxed/simple;
+	bh=uAZCvej72rsWxNZabaonUFsDuRFWj2SlvFhLl3wnwIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IZNyCkjaXrNwf6WA2PTvF23RXnz+fY+ZEPWSeZNAGBZHcInO6UeQTtbeo5bazqAz3jRzHQB10JWJfnnc2Av0iuxRhOfQtMUmgmqPpiyaOyK/beoV7GbSVaKS899MP1016hMS6FOAfHtknKbtSBu0cK09TOTRFjm43BuBx7FuGLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FgCKpv69; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=pULa2PxJ63CuAfnA0TJeWz35ftNjNm7V6mORFQyMbFb3WySuQQ6XLDMEJqjY6XNxzmZLtU4XSP8Ua4TJMyaUZaelMqyiOC7pwIjQyS9MBRGB16pBuUqZggskNAYaPsCum4lH/Y8yHt40/kIPsPfzqKL/hKP4Z4RMANAxk9r9d54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/X0ypbU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FgCKpv69"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so2783038a12.1
-        for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 09:33:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1708968809; x=1709573609; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B+DSV5t8g8pZijgxO3dOQk/2ugtI+XLO7xzncKpdXFs=;
-        b=FgCKpv69ElGrJnPweLmpDe+6geuXCB9BE47nOzNAZnp67zgXwypMPApSCDSKm3rwVN
-         GcCxNv/19eEDtYXme/qyyQ0uqSHZ9eO3fGk7H3vevnzjhc8YDUFiXwNioHkkivJ9b3P/
-         xDGVQ+kg8gwu0xgmUDR+SaOmyA1AdQxoMdoO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708968809; x=1709573609;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B+DSV5t8g8pZijgxO3dOQk/2ugtI+XLO7xzncKpdXFs=;
-        b=FJ6niiZ3xzT2A+JgFHYWaGbyoAZmaAcY1VAtfHZc+9mC13VKUJFgPFIkbU5JrzWIWL
-         pkZVVsaXPWT7Z5mZ7PXhjjZa9J8y47+b4miBgMBzFYvq/lCCo2RIM1HEXbSKGUYoGG1M
-         QytXnUxKzRJPLDN7JuxCnNtL9M4V1zXWn6OV+41PTMkWyNqVlRdP4JHsgggg06MIgFVt
-         qcHFU3qxkDAio2sNhNIBl13l1Hz0/kSGUzHgaG+n0WIAVFKIKg/Uen2cSzNgSbALOUFy
-         +l0VCLJi1b7VWmTvP93E4PL41DWFJT7P9phWrqLxN7o0tohPrZx/IAeC55gRRmnULwmG
-         5y6w==
-X-Gm-Message-State: AOJu0YwFa6mfY3byv7rW1OJ+U2fJ+onMzllK9CKfXu99u0ffe13GQg5b
-	Qb38yHtcQ9EMnzBrM7ZCPAQjEIt30vf2IBIYrW7+QnMTQfXhpIophiYx/iGOnGi465yk35BliT1
-	+rRoRQw==
-X-Google-Smtp-Source: AGHT+IE2uPPk9bgYGDNC47hPPblYKIpx78Ve8Y2gwKK4H78n0OrwZr4BEaIKjZRVTkqs3QD3NKlCmw==
-X-Received: by 2002:a05:6402:400c:b0:565:2ef3:e017 with SMTP id d12-20020a056402400c00b005652ef3e017mr6544695eda.4.1708968809663;
-        Mon, 26 Feb 2024 09:33:29 -0800 (PST)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id fk23-20020a056402399700b005660742bf6bsm782271edb.52.2024.02.26.09.33.28
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 09:33:29 -0800 (PST)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so502905366b.0
-        for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 09:33:28 -0800 (PST)
-X-Received: by 2002:a17:906:3b0e:b0:a42:f194:9cd9 with SMTP id
- g14-20020a1709063b0e00b00a42f1949cd9mr5608776ejf.5.1708968807997; Mon, 26 Feb
- 2024 09:33:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/X0ypbU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB40EC43390
+	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 17:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708968955;
+	bh=uAZCvej72rsWxNZabaonUFsDuRFWj2SlvFhLl3wnwIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=O/X0ypbU0mIHjj51ayDlhG+YsSEPp44zCGu8hKey0yKajs3pur7D41RwVk3Ff+Z93
+	 /QgFxL9XBWj1/q9txfp3lOLBzAPkTuW0qYnJNbApG1GXc9nqZHhFp3ZS9qvK9uUywv
+	 9bbnDLoXHcKJTWmiBo4vlsEDoBFzekzjJEF2Azzn5YZ9lA75YxsHlOP70tlZSpjTDQ
+	 wBaqI7MASmCnC7MUtcxhxgGgf6uoPvmM3dUwkTs+ZVssuaxiaxNmmvr+HY31/AKiR1
+	 be9OZmuDmk6Ke/XvHf/s+2JmepOL3mJLVqTazcgYs/xbEETws6XNTSf3A5jWr7pVFp
+	 ORxypQoGeozQQ==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d22fa5c822so48948961fa.2
+        for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 09:35:55 -0800 (PST)
+X-Gm-Message-State: AOJu0YyWrjZTGYGhCYwHtDxyqnafa5VzCr76ixryjJXFe0kOhiwSc5HP
+	QTt70e7n8SrkwJjV/ZGLgE2ljdLwsWC3Dz3ghtwg0oYr0itBfLAQgJmco6NiCtLLwm8kzOJaumh
+	NZulJ5osjQA/lfACbzFKQOemjTI8=
+X-Google-Smtp-Source: AGHT+IGWw3pd9/ktF7JzQEv1gXsWnYvK0+NqpOTH+iECgCn7WnG8Yf4maidcDFk39iH7LtVpswZ1QJUVOe0tVfqOIw0=
+X-Received: by 2002:a2e:a227:0:b0:2d2:63bc:952 with SMTP id
+ i7-20020a2ea227000000b002d263bc0952mr4083500ljm.35.1708968953998; Mon, 26 Feb
+ 2024 09:35:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <170886726066.1516351.14377022830495300698@leemhuis.info> <5ffb73e0-4b00-4bbb-857a-30a48945758d@leemhuis.info>
-In-Reply-To: <5ffb73e0-4b00-4bbb-857a-30a48945758d@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 26 Feb 2024 09:33:11 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiHmYxCP36ngovZimX9sixWxMrGA_WZdYyE8JPqBQ6ysw@mail.gmail.com>
-Message-ID: <CAHk-=wiHmYxCP36ngovZimX9sixWxMrGA_WZdYyE8JPqBQ6ysw@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2024-02-25]
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, ntfs3@lists.linux.dev, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+References: <20240123005700.9302-1-dan@danm.net> <20240220230658.11069-1-dan@danm.net>
+ <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info> <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
+ <c21ee3c9-6cb8-45f7-ba46-880cee757cb3@clark.bz> <3470e4c8-4bd4-497f-812a-0c2e290d4de8@clark.bz>
+In-Reply-To: <3470e4c8-4bd4-497f-812a-0c2e290d4de8@clark.bz>
+From: Song Liu <song@kernel.org>
+Date: Mon, 26 Feb 2024 09:35:42 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5Pq2iRzk02vwN90BXzjkWcQ=X2u3VNU3L-iXBcOfH5pQ@mail.gmail.com>
+Message-ID: <CAPhsuW5Pq2iRzk02vwN90BXzjkWcQ=X2u3VNU3L-iXBcOfH5pQ@mail.gmail.com>
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: "Thomas B. Clark" <kernel@clark.bz>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, dan@danm.net
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 25 Feb 2024 at 06:21, Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
+Hi Thomas,
+
+On Sun, Feb 25, 2024 at 5:17=E2=80=AFPM Thomas B. Clark <kernel@clark.bz> w=
+rote:
 >
-> Sorry, forgot something: there is a patch to fix a ntfs3 build problem
-> that was posted 10+ days ago[1] that didn't get any reaction from the
-> ntfs3 maintainer at all. Given the history of occasional slow responses
-> for that subsystem I thought I'd let you know in case you want to pick
-> the fix up directly; but if you do, consider using v2 of the patch[2].
+> After finding a few additional responses to Dan Moulding's original
+> post, I would like to add some more detail:
+>
+> 1.  This is a real issue, not a quirk. The first thing I did was rebuild
+> my md RAID1 device by deleting it, wiping out the superblocks and
+> starting over.  I had to boot into 6.6.14 to delete the md device; in
+> 6.7.5 the system hung while trying to stop it.  I then booted into 6.7.5
+> to re-create it.  It made no difference even when the md device was
+> created in 6.7.5.
+>
+> 2.  The original filesystem on which I experienced the issue was xfs.
+> After one of the RAID1 rebuilds, I replaced the filesystem with ext4.
+> It made no difference.  The md device causes the system to hang whether
+> the filesystem is xfs or ext4.
+>
+> 3.  For what it's worth, my RAID1 device includes a hot spare. I did not
+> experiment with creating the md device without a spare because there is
+> a limit to the number of times I can find this server unresponsive. For
+> now, and until this issue is resolved, I will be running 6.6.14.
+>
+> Finally, I can't find that this issue is being tracked anywhere. I can't
+> find it on bugzilla.kernel.org nor on bugzilla.redhat.com.  Is it being
+> tracked anywhere other than email?
 
-Ack. Picked up directly.
+I think you hit a different issue here. The issue Dan experienced can
+be fixed by reverting commit 0de40f76d567, which only affects raid5.
 
-               Linus
+For the issues you are experiencing, could you please test with this
+branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/song/md.git/log/?h=3Dmd-6.7=
+-fix
+
+which is 6.7.6 plus a few fixes queued in 6.8 and 6.9 releases.
+
+Thanks,
+Song
