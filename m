@@ -1,131 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331C04EB5B
-	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 09:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAE656745;
+	Mon, 26 Feb 2024 09:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708939361; cv=none; b=evKFAhtMCq67NbZFq1Ej4c0suMaJUqKyfcXO3XUVyaZdY2eeytH92cVq8RKViDlL0AxE2gWcBUhagzDNoTrQtxxZlyZEod11jStyW9C9CO2TZVEZ0DHLzNdyhiATWhf0dSk4v0zeH+gNAun9Zs4GZInGyzlRVyXeQKmAj893nh0=
+	t=1708939715; cv=none; b=MTDrBp1d2efxYcNxlTj7YiasCA18/cBS0l5ike7kdxybOTP/a0ZGTSxM6FXu/WMXT0VhWdsxgCpJXjsRWSZBmNnaKW1OSaDE//BfC/VnqUKmUb65SJyGJ0jJKUoVry0+9Cik8I/+nN+7H/kd0FRH/eWTVV/ZPdc7+Pf7G0ax9Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708939361; c=relaxed/simple;
-	bh=nHmAy4X/MhOUx7m403mmSo7DPD1Gl0hucVSHAPwk1YA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=LrppRc1rwiJ8FfiSzyS0qeA0J+k7PbbxxkmTG71QwsNDY/NUrWBW4kKLPkO6ea3qZ4tgcf3iXpyIHuU3MZWHW2Q4ES2Zf2xLmFHyhWrbATyDFG8wKuVKlJnTAZ+NXKoJGOSe8WGuUByhNrj4333V9apaI+rk1ye45LpJrOyhgoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lw6p1EJV; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708939715; c=relaxed/simple;
+	bh=vrYLpVGsOGxJxBgY73QB8VPmJHe/LolDJHL4MoBY7Ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6LSpaV6ffsGd8C6icBvzQnTW9CeS/HNHC2dAxGR378C2H46Xr8sOqLlqWp7jqmnbCjIx3codpt4nulzTiJuBL3eU8J5sdbbUI0TLvZ7AHMOdBfNalxJf7/cU62neN40hhAzo3ONZQAhd5sXSmV5ru+Kh3CLvGcOjEd45JoxLtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmRbwWT4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lw6p1EJV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708939361; x=1740475361;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=nHmAy4X/MhOUx7m403mmSo7DPD1Gl0hucVSHAPwk1YA=;
-  b=Lw6p1EJV7agIkqG+SujyyR4/TdX+pYm/lqAdQw/YbhjV+u/3L/SAKCnp
-   6J1GOMbrkYR1vKBdtdZKYFapcHCZcvpsG8gloFn3eqiTiLT5lkj/IizUu
-   CTTItcj4r8BRQva6j+/SXrLTijQhD1SU9m5vkMjERifiMiGkHGXwtyNx3
-   kTWmjBubOWhfH3hp73VVMC4QwhgMHXK0GuBPuKcKP2fbIXReeXSveim+n
-   EgSd1dmrpGJJts2MX2bhfF7aUnhwZYMM3cO+00U3JqM5nylPCXgrXhEA4
-   mOsFTPbz2scXGiAkC1QIlp3ZORlYURv5f4jyVWCB0+GQLPTzeUgd6ysf+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="13764212"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="13764212"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 01:22:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029631"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="937029631"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2024 01:22:36 -0800
-Message-ID: <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
-Date: Mon, 26 Feb 2024 11:24:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmRbwWT4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF65C433F1;
+	Mon, 26 Feb 2024 09:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708939714;
+	bh=vrYLpVGsOGxJxBgY73QB8VPmJHe/LolDJHL4MoBY7Ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dmRbwWT4DHxjtr/CqD7idD68znmVjFlhn8I9hSGYUb3blSGK8SXbTFOf0hIq+qkn4
+	 NrYyXmiya3TNAtjvRgIT6ptCHtCKqwUTTOfFuLgq81m2gjhnOFW/oi1VZ6glgnCXd/
+	 qeAMxvj4iQFcueIWWVrZruDwZBhQRQ+OxqYusauu8ypQgUJmumL6KStLHKLVdCepT9
+	 LzlgI7TI0yAW06TxwEKHaQQzvcnYsr2L8pU2Zx12F/rqtp/ROyQsUTMETqUssK787d
+	 1CpmlF/t3d3H2EROyKW7kaqf5zE9KZrdPLA0yZMHHED9tltdoRob5ZDEsh4EGDRjXF
+	 G6bXKuvJK0X1Q==
+Date: Mon, 26 Feb 2024 10:28:29 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	Dieter Mummenschanz <dmummenschanz@web.de>,
+	Wang Zhihao <wangzhihao9@hotmail.com>,
+	linux-regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH 2/2] ata: libata-core: Revert "ata: libata-core: Fix
+ ata_pci_shutdown_one()"
+Message-ID: <ZdxZvQtiN1up_mnn@fedora>
+References: <20240111115123.1258422-1-dlemoal@kernel.org>
+ <20240111115123.1258422-3-dlemoal@kernel.org>
+ <d63a7b93-d1a3-726e-355c-b4a4608626f4@gmail.com>
+ <ZdNzvAdKKsQapx8a@x1-carbon>
+ <d5b331ba-dc2a-f212-e2b2-f5485cff5801@omp.ru>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-x86_64@vger.kernel.org, netdev@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
- <Zb6D/5R8nNrxveAP@cae.in-ulm.de> <Zb/30qOGYAH4j6Mn@cae.in-ulm.de>
- <CABXGCsPu73D+JS9dpvzX78RktK2VOv_xT8vvuVaQ=B6zs2dMNQ@mail.gmail.com>
- <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
- <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
- <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
- <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
- <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
- <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
- <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
- <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
- <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
- <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
- <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
- <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
- <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: This is the fourth time I've tried to find what led to the
- regression of outgoing network speed and each time I find the merge commit
- 8c94ccc7cd691472461448f98e2372c75849406c
-In-Reply-To: <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5b331ba-dc2a-f212-e2b2-f5485cff5801@omp.ru>
 
-On 26.2.2024 7.45, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 21.02.24 14:44, Mathias Nyman wrote:
->> On 21.2.2024 1.43, Randy Dunlap wrote:
->>> On 2/20/24 15:41, Randy Dunlap wrote:
->>>> {+ tglx]
->>>> On 2/20/24 15:19, Mikhail Gavrilov wrote:
->>>>> On Mon, Feb 19, 2024 at 2:41 PM Mikhail Gavrilov
->>>>> <mikhail.v.gavrilov@gmail.com> wrote:
->>>>> I spotted network performance regression and it turned out, this was
->>>>> due to the network card getting other interrupt. It is a side effect
->>>>> of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
->>>> That's a merge commit (AFAIK, maybe not so much). The commit in
->>>> mainline is:
->>>>
->>>> commit f977f4c9301c
->>>> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
->>>> Date:   Fri Dec 1 17:06:40 2023 +0200
->>>>
->>>>       xhci: add handler for only one interrupt line
->>>>
->>>>> Installing irqbalance daemon did not help. Maybe someone experienced
->>>>> such a problem?
->>>>
->>>> Thomas, would you look at this, please?
->>>>
->>>> A network device and xhci (USB) driver are now sharing interrupts.
->>>> This causes a large performance decrease for the networking device.
->>
->> Short recap:
+Hello Sergey,
+
+On Sat, Feb 24, 2024 at 12:04:46AM +0300, Sergey Shtylyov wrote:
+> On 2/19/24 6:29 PM, Niklas Cassel wrote:
+> [...]
 > 
-> Thx for that. As the 6.8 release is merely two or three weeks away while
-> a fix is nowhere near in sight yet (afaics!) I start to wonder if we
-> should consider a revert here and try reapplying the culprit in a later
-> cycle when this problem is fixed.
+> >>> This reverts commit fd3a6837d8e18cb7be80dcca1283276290336a7a.
+> >>>
+> >>> Several users have signaled issues with commit fd3a6837d8e1 ("ata:
+> >>> libata-core: Fix ata_pci_shutdown_one()") which causes failure of the
+> >>> system SoC to go to a low power state. The reason for this problem
+> >>> is not well understood but given that this patch is harmless with the
+> >>> improvements to ata_dev_power_set_standby(), restore it to allow system
+> >>> lower power state transitions.
+> >>>
+> >>> For regular system shutdown, ata_dev_power_set_standby() will be
+> >>> executed twice: once the scsi device is removed and another when
+> >>> ata_pci_shutdown_one() executes and EH completes unloading the devices.
+> >>> Make the second call to ata_dev_power_set_standby() do nothing by using
+> >>> ata_dev_power_is_active() and return if the device is already in
+> >>> standby.
+> >>>
+> >>> Fixes: fd3a6837d8e1 ("ata: libata-core: Fix ata_pci_shutdown_one()")
+> >>> Cc: stable@vger.kernel.org
+> >>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> >>> ---
+> >>>  drivers/ata/libata-core.c | 75 +++++++++++++++++++++++----------------
+> >>>  1 file changed, 45 insertions(+), 30 deletions(-)
+> >>>
+> >>> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+> >>> index d9f80f4f70f5..20a366942626 100644
+> >>> --- a/drivers/ata/libata-core.c
+> >>> +++ b/drivers/ata/libata-core.c
+> >>> @@ -2001,6 +2001,33 @@ bool ata_dev_power_init_tf(struct ata_device *dev, struct ata_taskfile *tf,
+> >>>  	return true;
+> >>>  }
+> >>>  
+> >>> +static bool ata_dev_power_is_active(struct ata_device *dev)
+> >>> +{
+> >>> +	struct ata_taskfile tf;
+> >>> +	unsigned int err_mask;
+> >>> +
+> >>> +	ata_tf_init(dev, &tf);
+> >>> +	tf.flags |= ATA_TFLAG_DEVICE | ATA_TFLAG_ISADDR;
+> >>
+> >>    Why set ATA_TFLAG_ISADDR, BTW? This command doesn't use any taskfile
+> >> regs but the device/head reg. Material for a fix, I guess... :-)
+> >>
+> >>> +	tf.protocol = ATA_PROT_NODATA;
+> >>> +	tf.command = ATA_CMD_CHK_POWER;
+> >>> +
+> >> [...]
+> > 
+> > Looking at the definition of the flag:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/libata.h?h=v6.8-rc5#n76
+> > 
+> > "enable r/w to nsect/lba regs"
+> 
+>    I'm afraid this comment doesn't reflect the reality in its r/w part --
+> if you look at e.g. ata_sff_tf_read(), you'll see that it always reads 
+> all the legacy taskfile and only checks ATA_TFLAG_LBA48 in order to
+> determine whether it should read the HOBs as well...
 
-I don't think reverting this series is a solution.
+Considering that you have experience with cleaning up a similar mess in
+drivers/ide, patches for drivers/ata which fixes the comment and the
+functions needlessly setting the ATA_TFLAG_DEVICE flag is more than
+welcome.
 
-This isn't really about those usb xhci patches.
-This is about which interrupt gets assigned to which CPU.
+From a quick look, there appears to be quite a few functions (in
+addition to ata_dev_power_is_active()) which needlessly sets this flag.
 
-Mikhail got unlucky when the network adapter interrupts on that system was
-assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
-bandwidth.
 
-Thanks
-Mathias
+Kind regards,
+Niklas
