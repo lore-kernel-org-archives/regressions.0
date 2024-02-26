@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C686C5FDB7;
-	Mon, 26 Feb 2024 12:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A735FF16;
+	Mon, 26 Feb 2024 12:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949370; cv=none; b=I072fMfilXjn6OoYlDl6IZefaUubQ6gEz3d7aJx8kucAOpzclJv1KYMlQ+0Et3ss4/r6iY42O/ZH4uGRjjIkn+vQFo401zJRt0hmrYBgvJkVgKw7Zi0YWfQvewzhBi9Fp/lxkgug/vEfb2SG6pns4SPY7jW7zPnNA8qLHn92wQg=
+	t=1708949481; cv=none; b=NX/3361OYxpRCdHTPPODos/FSe3RUgEfngfnnr3mgAKALiHRNUFcYNxpiv9DJaay3QmQGsu/YMdkzfb4Q/qGLbWm4PZeNOgZRcSFdxu3AOSz9lLlvptu7kNVLAZiyhSc6DrwV5sf3JQuWNHLX2g6vNHYcV7oY0dqqFP1FBoom7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949370; c=relaxed/simple;
-	bh=3W1LFxrUft2Dlt81u1IfdX5nM7C559yo098jRO6FwHw=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=TwlERrhSyBXjiMY03DZPVcwFRu/8HEFVZA+qQE0T0jB7TzADpNUMyPLo0J+NRkRd9UHomTcZTZjmnkPP/pfWlLk2wH+K66FrYRUOv4cTJZL0TMO/DByxzh4FuCoobdQ1AX9B8wnZzOCHNeJNgRYAGFFd5FPDNptx4v9C6b/TRHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Eo0oaQoG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708949481; c=relaxed/simple;
+	bh=wpeaMyi6hGDRVVtly2OwRv2ZJVjSyjg6AvgPX/nDe14=;
+	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=eqEFAnyy8IGA/OpdW9pYcGjHOdmzFnz3YJygLhpXi1ftu8MILUOWY9RzdUHjgqTnd+hS6M6pZn5QjqrAlYDp2O6ZNQqY99N8f5b+Lec+fzOIih7e0i7h7Zsc6RjIoZ5BGy/uSZ10T3brIO3lMLBa1mfZesZJCkJnstS8FtnxsfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qwj33e+2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Eo0oaQoG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E8FC433C7;
-	Mon, 26 Feb 2024 12:09:29 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qwj33e+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7494CC433F1;
+	Mon, 26 Feb 2024 12:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708949370;
-	bh=3W1LFxrUft2Dlt81u1IfdX5nM7C559yo098jRO6FwHw=;
+	s=korg; t=1708949480;
+	bh=wpeaMyi6hGDRVVtly2OwRv2ZJVjSyjg6AvgPX/nDe14=;
 	h=Subject:To:Cc:From:Date:From;
-	b=Eo0oaQoGHIS+SkQmJG7Op5qV8AKVjxkUIrRZBIOxwUgb1xTKJpNjLSLDZTC8nxIDZ
-	 RHmw1y9ZOZI5yX5K3rRiu/LfETdpQCZVYC5yKKArhEfth2r5z+sWEoaYbBdrHrI2Ff
-	 3pqrwcuWDiXaVMFojKWzlWJGO4eIsgVew3RxSXUY=
-Subject: Patch "platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler" has been added to the 6.7-stable tree
+	b=Qwj33e+2xlsXTdBcl8n5XbrLN2uBHkSfsC57eEPCIuFj/fuHnZDD893HC9wjRBbit
+	 +cVRvBLtdiY3TFktFNJE4WPPUeWuxR/QflTgtYNsrAoyzQqTTK7xoqjZl/lC8zXgu5
+	 tNnBMLpx7OhvPPsum3LwtoKXHPTi/ngdB596z3og=
+Subject: Patch "platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler" has been added to the 6.6-stable tree
 To: 295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de,a-kobel@a-kobel.de,arngozum@gmail.com,gregkh@linuxfoundation.org,hdegoede@redhat.com,regressions@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 26 Feb 2024 13:07:46 +0100
-Message-ID: <2024022646-derby-endless-471d@gregkh>
+Date: Mon, 26 Feb 2024 13:08:37 +0100
+Message-ID: <2024022636-poem-gallows-ad55@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,12 +44,12 @@ This is a note to let you know that I've just added the patch titled
 
     platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler
 
-to the 6.7-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      platform-x86-intel-vbtn-stop-calling-vbdl-from-notify_handler.patch
-and it can be found in the queue-6.7 subdirectory.
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -109,10 +109,9 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from hdegoede@redhat.com are
 
-queue-6.7/platform-mellanox-mlxbf-tmfifo-drop-tx-network-packe.patch
-queue-6.7/platform-x86-touchscreen_dmi-add-info-for-the-teclas.patch
-queue-6.7/ahci-asm1166-correct-count-of-reported-ports.patch
-queue-6.7/platform-x86-intel-vbtn-stop-calling-vbdl-from-notify_handler.patch
-queue-6.7/platform-x86-x86-android-tablets-fix-keyboard-touchscreen-on-lenovo-yogabook1-x90.patch
-queue-6.7/input-goodix-accept-acpi-resources-with-gpio_count-3.patch
-queue-6.7/platform-x86-touchscreen_dmi-allow-partial-prefix-matches-for-acpi-names.patch
+queue-6.6/platform-mellanox-mlxbf-tmfifo-drop-tx-network-packe.patch
+queue-6.6/platform-x86-touchscreen_dmi-add-info-for-the-teclas.patch
+queue-6.6/ahci-asm1166-correct-count-of-reported-ports.patch
+queue-6.6/platform-x86-intel-vbtn-stop-calling-vbdl-from-notify_handler.patch
+queue-6.6/input-goodix-accept-acpi-resources-with-gpio_count-3.patch
+queue-6.6/platform-x86-touchscreen_dmi-allow-partial-prefix-matches-for-acpi-names.patch
