@@ -1,151 +1,443 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from peace.netnation.com (peace.netnation.com [204.174.223.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201C12DDAD
-	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 18:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B46712C7F6;
+	Mon, 26 Feb 2024 21:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.174.223.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708970967; cv=none; b=Ou+VEvHtnc3b3Z+c7cmH26wsVri1ZjuHOwDz22QFxzqo2cvey0kFCxqKz8AYEA0rqpXV52XSpK9Fz074Ww4+c+vu0vyueMwk1QgkvHrg69V1fIxzJWJntTK5Jd9dOkIgu2ldiOLLcloeyR8SzgjUz0GoZfSICCk55XnBgvZNpD4=
+	t=1708983544; cv=none; b=NoAyoeeUUkCfkhQnKrVgOsjR4/LD9cFEoAVS71E+CbDV0qUu3W7eesnvlJUSLg8T1Ly4T/w9ziWmJCdyLVFlj1+ZHDyZLTBCGYtHx05a2OttE/jIVnHAfOD94z22NNxFaoxzU2gmnDvLaCTi7UQrQdU8SmBwJJWpeQsiR5wzoL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708970967; c=relaxed/simple;
-	bh=EgcqXpFezT+1t7YK8f56X0MEgJ6W6GxDYo7o8TM6gUE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KPhTYJQ+7InPGLmyaoQRq0vHRXm+kg5IThQMyuGfHFR1Ga2niTCrOw9hUjo6BUXV3SOGSm8odcDQ7X8qg3MIw6BcK6k0gAkQF6Lh9FWm69X/oHHx4afBNzpEPy5CPUZBd41yXoPDdoIn96u/+9t69x9e6lr0XUcnWYyLin7mg54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G5sDphJs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mZXkRcmU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G5sDphJs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mZXkRcmU"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708970963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lBiIbeLll0i8806pw3+a5wtiCC8R3KilwQQO3Vmsk48=;
-	b=G5sDphJs7t9/raF+7NYDjjcuKFwrRc0mqtuV/gpfLcT+jH6DXladNCYEqLak8e2uai5TD+
-	ZcTwChJ8MRp+01HO3nKWNKe+NhKUZvPjHaVfpllKVSfsey894PDzlGGuvLRd0X5D8J82dv
-	CqMwC6SoYU86gtUCYVqmQ8Yu7sD05uyf777NW9SzmGMWzGpcxyL2FVvckmC6GlOfGem5AS
-	33YWLOeIMQWQJhI0qjRJgCA7E7rPEUqWA++z25qhnjTzfUmFgKFgXhtYxaa1S1rNjafLx6
-	1JE8wnN5SQygZR6jXnuuQzKneRTbC7TmsoLykcIhsO39hkJ4+vHGjujy2sTf7w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708970963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lBiIbeLll0i8806pw3+a5wtiCC8R3KilwQQO3Vmsk48=;
-	b=mZXkRcmUoZuND93toW5bsRFgQG3qHZFIQrwEXNOwCdtZ2hwAjok8Xgut2Ym9p5Xw23JOqV
-	3M+bMQhHuGc36HAg==
-To: Mathias Nyman <mathias.nyman@linux.intel.com>, Linux regressions mailing
- list <regressions@lists.linux.dev>
-Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Greg KH
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-x86_64@vger.kernel.org, netdev@vger.kernel.org, Randy Dunlap
- <rdunlap@infradead.org>, Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Subject: Re: This is the fourth time I've tried to find what led to the
- regression of outgoing network speed and each time I find the merge commit
- 8c94ccc7cd691472461448f98e2372c75849406c
-In-Reply-To: <acc2b877-4b42-fd4d-867b-603dae95d09d@linux.intel.com>
-References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
- <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
- <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
- <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
- <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
- <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
- <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
- <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
- <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
- <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
- <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
- <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
- <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
- <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
- <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
- <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
- <acc2b877-4b42-fd4d-867b-603dae95d09d@linux.intel.com>
-Date: Mon, 26 Feb 2024 19:09:22 +0100
-Message-ID: <87r0gz9jxp.ffs@tglx>
+	s=arc-20240116; t=1708983544; c=relaxed/simple;
+	bh=xMphiR4k1dWScJzz0us156a+1yuOacdsGyThna8ThmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ut8AVTG/0IU7+Ww6ONJyqVT2uGlsGs2Dyyrd1M96DPCk/E+0RPJtpuKdl3UVuG7jwyPN1xMf7eKNuhityCVD5LWTJVJ4481fTK5s9SlR6KhDQ6hIp2+KYWCeRdhsG20B4fms81UQ8yIMJV5+XEFPocj2EgsqFckqquD1THTpkZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hostway.ca; spf=pass smtp.mailfrom=hostway.ca; arc=none smtp.client-ip=204.174.223.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hostway.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hostway.ca
+Received: from sim by peace.netnation.com with local (Exim 4.92)
+	(envelope-from <sim@hostway.ca>)
+	id 1reigZ-0003oW-SD; Mon, 26 Feb 2024 13:38:55 -0800
+Date: Mon, 26 Feb 2024 13:38:55 -0800
+From: Simon Kirby <sim@hostway.ca>
+To: linux-bluetooth@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: RE: Bluetooth: af_bluetooth: Fix Use-After-Free in bt_sock_recvmsg
+Message-ID: <20240226213855.GB3202@hostway.ca>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Feb 26 2024 at 12:54, Mathias Nyman wrote:
-> On 26.2.2024 11.51, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> I don't think reverting this series is a solution.
->>>
->>> This isn't really about those usb xhci patches.
->>> This is about which interrupt gets assigned to which CPU.
->> 
->> I know, but from my understanding of Linus expectations wrt to handling
->> regressions it does not matter much if a bug existed earlier or
->> somewhere else: what counts is the commit that exposed the problem.
->> 
->> But I might be wrong here. Anyway, not CCing Linus for this; but I'll
->> likely point him to this direction on Sunday in my next weekly report,
->> unless some fix comes into sight.
->> 
->>> Mikhail got unlucky when the network adapter interrupts on that system was
->>> assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
->>> bandwidth.
->> 
->> But maybe others will be just as "unlucky". Or is there anything to
->> believe otherwise? Maybe some aspect of the .config or local setup that
->> is most likely unique to Mikhail's setup?
->
-> I believe this is a zero-sum case.
->
-> Others got equally lucky due to this change.
-> Their devices end up interrupting less clogged CPUs and see a similar
-> performance increase.
+Hi,
 
-Reverting this does not make any sense.
+I bisected a regression where reading from a Bluetooth device gets stuck
+in recvfrom() calls. The device here is a Wii Balance Board, using
+https://github.com/initialstate/beerfridge/blob/master/wiiboard_test.py;
+this worked fine in v6.6.1 and v6.6.8, but when I tried on a v6.6.14
+build, the script no longer outputs any readings.
 
-The kernel assigns the initial interrupt affinities to the CPUs so that
-the number of interrupts is halfways balanced. That spreading algorithm
-is completely agnostic of the actual usage of the interrupts. Where
-e.g. the network interrupt ends up depends on the probe/enumeration
-order of devices. Add another PCI-E card into the machine and it will
-again look different.
+1d576c3a5af850bf11fbd103f9ba11aa6d6061fb is the first bad commit
 
-There is nothing the kernel can do about it and earlier attempts to do
-interrupt frequency based balancing in the kernel ended up nowhere
-simply because the kernel does not have enough information about the
-overall requirements. That's why the kernel leaves the affinity
-configuration for user space, e.g. irqbalanced, except for true
-multi-queue scenarios like NVME where the kernel binds queues and their
-interrupts to specific CPUs or groups of CPUs.
+which maps to upstream commit 2e07e8348ea454615e268222ae3fc240421be768:
 
-Why ending up on CPU0 has this particular effect on Mikhails machine is
-unclear as we don't have any information about the overall workload,
-other interrupt sources on CPU0 and their frequency. That'd need to be
-investigated with instrumentation and might unearth some completely
-different underlying reason causing this behavior.
+Bluetooth: af_bluetooth: Fix Use-After-Free in bt_sock_recvmsg
 
-So I don't think this is a regression in the true sense of
-regressions. It's an unfortunate coincidence and reverting the
-identified commits would just paper over the real problem, if there is
-actually one single source of trouble which causes the performance drop
-only on CPU0.  The commits are definitely _not_ the root cause, they
-happen to unearth some other issue, which might be as mundane as
-e.g. that the NVME interrupt on CPU0 is competing with the network
-interrupt. So don't shoot the messenger.
+With this commit in place, as also in v6.7 and v6.7.6, the script does
+not output anything _unless_ I strace the process, in which case a bunch
+of recvmsg() syscalls are shown, and then it hangs again. If I ^C the
+strace and run it a few times, eventually the script will get enough data
+and output a reading.
 
-Thanks,
+If I don't strace the script, a hung task warning appears:
 
-        tglx
+INFO: task kworker/u9:1:121 blocked for more than 30 seconds.
+      Not tainted 6.7.6-lemon #183
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:kworker/u9:1    state:D stack:0     pid:121   tgid:121   ppid:2      flags:0x00004000
+Workqueue: hci0 hci_rx_work
+Call Trace:
+ <TASK>
+ __schedule+0x37d/0xa00
+ schedule+0x32/0xe0
+ __lock_sock+0x68/0xa0
+ ? __pfx_autoremove_wake_function+0x10/0x10
+ lock_sock_nested+0x43/0x50
+ l2cap_sock_recv_cb+0x21/0xa0
+ l2cap_recv_frame+0x55b/0x30a0
+ ? psi_task_switch+0xeb/0x270
+ ? finish_task_switch.isra.0+0x93/0x2a0
+ hci_rx_work+0x33a/0x3f0               
+ process_one_work+0x13a/0x2f0
+ worker_thread+0x2f0/0x410
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xe0/0x110
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2c/0x50
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
 
+On 6.8-rc6 with lockdep enabled, I get the following output:
 
+[   22.122337] wlan0: associated
+[ 4547.622339] INFO: task kworker/u9:1:3528 blocked for more than 30 seconds.
 
+[ 4547.622530] =====================================================
+[ 4547.622531] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+[ 4547.622535] 6.8.0-rc6-lemon #190 Not tainted
+[ 4547.622538] -----------------------------------------------------
+[ 4547.622540] khungtaskd/39 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+[ 4547.622546] ffff888101554cf8 ((work_completion)(&(&ops->cursor_work)->work)){+.+.}-{0:0}, at: __flush_work+0x4b/0x3f0
+[ 4547.622569] 
+               and this task is already holding:
+[ 4547.622571] ffffffff8367e600 (console_owner){....}-{0:0}, at: console_flush_all+0x1c9/0x4e0
+[ 4547.622586] which would create a new lock dependency:
+[ 4547.622587]  (console_owner){....}-{0:0} -> ((work_completion)(&(&ops->cursor_work)->work)){+.+.}-{0:0}
+[ 4547.622596] 
+               but this new dependency connects a SOFTIRQ-irq-safe lock:
+[ 4547.622598]  (&trans_pcie->irq_lock){+.-.}-{3:3}
+[ 4547.622601] 
+               ... which became SOFTIRQ-irq-safe at:
+[ 4547.622603]   lock_acquire+0xb0/0x280
+[ 4547.622611]   _raw_spin_lock+0x2b/0x40
+[ 4547.622618]   iwl_pcie_napi_poll+0x7a/0x130
+[ 4547.622627]   __napi_poll.constprop.0+0x23/0x1e0
+[ 4547.622634]   net_rx_action+0x137/0x2a0
+[ 4547.622639]   __do_softirq+0xc7/0x402
+[ 4547.622645]   do_softirq+0x42/0xa0
+[ 4547.622651]   __local_bh_enable_ip+0xb8/0xd0
+[ 4547.622657]   iwl_pcie_irq_handler+0x539/0xb70
+[ 4547.622665]   irq_thread_fn+0x1b/0x60
+[ 4547.622670]   irq_thread+0xe0/0x190
+[ 4547.622675]   kthread+0xe3/0x120
+[ 4547.622679]   ret_from_fork+0x2c/0x50
+[ 4547.622684]   ret_from_fork_asm+0x1b/0x30
+[ 4547.622692] 
+               to a SOFTIRQ-irq-unsafe lock:
+[ 4547.622694]  ((work_completion)(&(&ops->cursor_work)->work)){+.+.}-{0:0}
+[ 4547.622698] 
+               ... which became SOFTIRQ-irq-unsafe at:
+[ 4547.622699] ...
+[ 4547.622700]   lock_acquire+0xb0/0x280
+[ 4547.622706]   process_one_work+0x199/0x480
+[ 4547.622713]   worker_thread+0x1be/0x3b0
+[ 4547.622719]   kthread+0xe3/0x120
+[ 4547.622722]   ret_from_fork+0x2c/0x50
+[ 4547.622725]   ret_from_fork_asm+0x1b/0x30
+[ 4547.622731] 
+               other info that might help us debug this:
 
+[ 4547.622732] Chain exists of:
+                 &trans_pcie->irq_lock --> console_owner --> (work_completion)(&(&ops->cursor_work)->work)
 
+[ 4547.622739]  Possible interrupt unsafe locking scenario:
 
+[ 4547.622741]        CPU0                    CPU1
+[ 4547.622742]        ----                    ----
+[ 4547.622742]   lock((work_completion)(&(&ops->cursor_work)->work));
+[ 4547.622745]                                local_irq_disable();
+[ 4547.622746]                                lock(&trans_pcie->irq_lock);
+[ 4547.622749]                                lock(console_owner);
+[ 4547.622751]   <Interrupt>
+[ 4547.622752]     lock(&trans_pcie->irq_lock);
+[ 4547.622754] 
+                *** DEADLOCK ***
 
+[ 4547.622755] 5 locks held by khungtaskd/39:
+[ 4547.622759]  #0: ffffffff836f14e0 (rcu_read_lock){....}-{1:3}, at: watchdog+0xd8/0x7b0
+[ 4547.622778]  #1: ffffffff836ee820 (console_lock){+.+.}-{0:0}, at: _printk+0x47/0x50
+[ 4547.622789]  #2: ffffffff836ee870 (console_srcu){....}-{0:0}, at: console_flush_all+0x74/0x4e0
+[ 4547.622800]  #3: ffffffff8367e600 (console_owner){....}-{0:0}, at: console_flush_all+0x1c9/0x4e0
+[ 4547.622810]  #4: ffffffff837d8758 (printing_lock){....}-{3:3}, at: vt_console_print+0x47/0x430
+[ 4547.622822] 
+               the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
+[ 4547.622824]   -> (&trans_pcie->irq_lock){+.-.}-{3:3} {
+[ 4547.622830]      HARDIRQ-ON-W at:
+[ 4547.622833]                         lock_acquire+0xb0/0x280
+[ 4547.622839]                         _raw_spin_lock_bh+0x33/0x40
+[ 4547.622845]                         iwl_trans_pcie_alloc+0x2fd/0x990
+[ 4547.622853]                         iwl_pci_probe+0x28/0x810
+[ 4547.622859]                         pci_device_probe+0x94/0x120
+[ 4547.622865]                         really_probe+0x15e/0x2f0
+[ 4547.622872]                         __driver_probe_device+0x6e/0x110
+[ 4547.622878]                         driver_probe_device+0x1a/0xe0
+[ 4547.622884]                         __driver_attach+0x87/0x190
+[ 4547.622890]                         bus_for_each_dev+0x66/0xb0
+[ 4547.622894]                         bus_add_driver+0xea/0x1f0
+[ 4547.622898]                         driver_register+0x54/0x100
+[ 4547.622905]                         iwl_pci_register_driver+0x1a/0x40
+[ 4547.622911]                         do_one_initcall+0x50/0x250
+[ 4547.622918]                         kernel_init_freeable+0x243/0x3e0
+[ 4547.622927]                         kernel_init+0x15/0x1a0
+[ 4547.622931]                         ret_from_fork+0x2c/0x50
+[ 4547.622935]                         ret_from_fork_asm+0x1b/0x30
+[ 4547.622941]      IN-SOFTIRQ-W at:
+[ 4547.622943]                         lock_acquire+0xb0/0x280
+[ 4547.622948]                         _raw_spin_lock+0x2b/0x40
+[ 4547.622953]                         iwl_pcie_napi_poll+0x7a/0x130
+[ 4547.622961]                         __napi_poll.constprop.0+0x23/0x1e0
+[ 4547.622966]                         net_rx_action+0x137/0x2a0
+[ 4547.622971]                         __do_softirq+0xc7/0x402
+[ 4547.622978]                         do_softirq+0x42/0xa0
+[ 4547.622983]                         __local_bh_enable_ip+0xb8/0xd0
+[ 4547.622989]                         iwl_pcie_irq_handler+0x539/0xb70
+[ 4547.622996]                         irq_thread_fn+0x1b/0x60
+[ 4547.623002]                         irq_thread+0xe0/0x190
+[ 4547.623006]                         kthread+0xe3/0x120
+[ 4547.623011]                         ret_from_fork+0x2c/0x50
+[ 4547.623014]                         ret_from_fork_asm+0x1b/0x30
+[ 4547.623020]      INITIAL USE at:
+[ 4547.623022]                        lock_acquire+0xb0/0x280
+[ 4547.623027]                        _raw_spin_lock_bh+0x33/0x40
+[ 4547.623032]                        iwl_trans_pcie_alloc+0x2fd/0x990
+[ 4547.623038]                        iwl_pci_probe+0x28/0x810
+[ 4547.623043]                        pci_device_probe+0x94/0x120
+[ 4547.623047]                        really_probe+0x15e/0x2f0
+[ 4547.623053]                        __driver_probe_device+0x6e/0x110
+[ 4547.623059]                        driver_probe_device+0x1a/0xe0
+[ 4547.623064]                        __driver_attach+0x87/0x190
+[ 4547.623070]                        bus_for_each_dev+0x66/0xb0
+[ 4547.623073]                        bus_add_driver+0xea/0x1f0
+[ 4547.623077]                        driver_register+0x54/0x100
+[ 4547.623084]                        iwl_pci_register_driver+0x1a/0x40
+[ 4547.623090]                        do_one_initcall+0x50/0x250
+[ 4547.623096]                        kernel_init_freeable+0x243/0x3e0
+[ 4547.623103]                        kernel_init+0x15/0x1a0
+[ 4547.623107]                        ret_from_fork+0x2c/0x50
+[ 4547.623110]                        ret_from_fork_asm+0x1b/0x30
+[ 4547.623116]    }
+[ 4547.623118]    ... key      at: [<ffffffff8502fe90>] __key.20+0x0/0x10
+[ 4547.623129]  -> (&trans_pcie->reg_lock){+...}-{3:3} {
+[ 4547.623134]     HARDIRQ-ON-W at:
+[ 4547.623137]                       lock_acquire+0xb0/0x280
+[ 4547.623142]                       _raw_spin_lock_bh+0x33/0x40
+[ 4547.623147]                       iwl_trans_pcie_set_bits_mask+0x25/0x60
+[ 4547.623151]                       iwl_pcie_set_hw_ready+0x1e/0xa0
+[ 4547.623160]                       iwl_pcie_prepare_card_hw+0x33/0x100
+[ 4547.623165]                       iwl_pci_probe+0x42/0x810
+[ 4547.623171]                       pci_device_probe+0x94/0x120
+[ 4547.623175]                       really_probe+0x15e/0x2f0
+[ 4547.623181]                       __driver_probe_device+0x6e/0x110
+[ 4547.623186]                       driver_probe_device+0x1a/0xe0
+[ 4547.623192]                       __driver_attach+0x87/0x190
+[ 4547.623197]                       bus_for_each_dev+0x66/0xb0
+[ 4547.623201]                       bus_add_driver+0xea/0x1f0
+[ 4547.623205]                       driver_register+0x54/0x100
+[ 4547.623211]                       iwl_pci_register_driver+0x1a/0x40
+[ 4547.623217]                       do_one_initcall+0x50/0x250
+[ 4547.623223]                       kernel_init_freeable+0x243/0x3e0
+[ 4547.623229]                       kernel_init+0x15/0x1a0
+[ 4547.623233]                       ret_from_fork+0x2c/0x50
+[ 4547.623236]                       ret_from_fork_asm+0x1b/0x30
+[ 4547.623242]     INITIAL USE at:
+[ 4547.623244]                      lock_acquire+0xb0/0x280
+[ 4547.623249]                      _raw_spin_lock_bh+0x33/0x40
+[ 4547.623254]                      iwl_trans_pcie_set_bits_mask+0x25/0x60
+[ 4547.623257]                      iwl_pcie_set_hw_ready+0x1e/0xa0
+[ 4547.623266]                      iwl_pcie_prepare_card_hw+0x33/0x100
+[ 4547.623271]                      iwl_pci_probe+0x42/0x810
+[ 4547.623277]                      pci_device_probe+0x94/0x120
+[ 4547.623281]                      really_probe+0x15e/0x2f0
+[ 4547.623286]                      __driver_probe_device+0x6e/0x110
+[ 4547.623292]                      driver_probe_device+0x1a/0xe0
+[ 4547.623297]                      __driver_attach+0x87/0x190
+[ 4547.623303]                      bus_for_each_dev+0x66/0xb0
+[ 4547.623306]                      bus_add_driver+0xea/0x1f0
+[ 4547.623310]                      driver_register+0x54/0x100
+[ 4547.623316]                      iwl_pci_register_driver+0x1a/0x40
+[ 4547.623323]                      do_one_initcall+0x50/0x250
+[ 4547.623328]                      kernel_init_freeable+0x243/0x3e0
+[ 4547.623334]                      kernel_init+0x15/0x1a0
+[ 4547.623338]                      ret_from_fork+0x2c/0x50
+[ 4547.623342]                      ret_from_fork_asm+0x1b/0x30
+[ 4547.623347]   }
+[ 4547.623348]   ... key      at: [<ffffffff8502fe80>] __key.19+0x0/0x10
+[ 4547.623358]   ... acquired at:
+[ 4547.623359]    _raw_spin_lock_bh+0x33/0x40
+[ 4547.623364]    iwl_trans_pcie_set_bits_mask+0x25/0x60
+[ 4547.623368]    iwl_pcie_apm_init+0x6e/0x1c0
+[ 4547.623372]    iwl_trans_pcie_start_fw+0x224/0x670
+[ 4547.623377]    iwl_mvm_load_ucode_wait_alive+0xd3/0x5a0
+[ 4547.623383]    iwl_run_init_mvm_ucode+0x8c/0x3a0
+[ 4547.623387]    iwl_mvm_start_get_nvm+0x87/0x210
+[ 4547.623393]    iwl_op_mode_mvm_start+0x962/0xb30
+[ 4547.623399]    _iwl_op_mode_start.isra.0+0x72/0xb0
+[ 4547.623403]    iwl_opmode_register+0x6a/0xe0
+[ 4547.623408]    iwl_mvm_init+0x21/0x60
+[ 4547.623413]    do_one_initcall+0x50/0x250
+[ 4547.623419]    kernel_init_freeable+0x243/0x3e0
+[ 4547.623425]    kernel_init+0x15/0x1a0
+[ 4547.623429]    ret_from_fork+0x2c/0x50
+[ 4547.623432]    ret_from_fork_asm+0x1b/0x30
 
+[ 4547.623441] -> (console_owner){....}-{0:0} {
+[ 4547.623446]    INITIAL USE at:
+[ 4547.623452]                    lock_acquire+0xb0/0x280
+[ 4547.623457]                    console_flush_all+0x1f2/0x4e0
+[ 4547.623463]                    console_unlock+0x33/0x110
+[ 4547.623469]                    vprintk_emit+0x9f/0x320
+[ 4547.623475]                    _printk+0x47/0x50
+[ 4547.623479]                    register_console+0x34b/0x4d0
+[ 4547.623485]                    con_init+0x200/0x270
+[ 4547.623494]                    console_init+0x4a/0x1e0
+[ 4547.623504]                    start_kernel+0x2b9/0x660
+[ 4547.623510]                    x86_64_start_reservations+0x18/0x30
+[ 4547.623517]                    x86_64_start_kernel+0xad/0xc0
+[ 4547.623522]                    secondary_startup_64_no_verify+0x170/0x17b
+[ 4547.623528]  }
+[ 4547.623529]  ... key      at: [<ffffffff8367e600>] console_owner_dep_map+0x0/0x28
+[ 4547.623538]  ... acquired at:
+[ 4547.623540]    console_flush_all+0x1f2/0x4e0
+[ 4547.623545]    console_unlock+0x33/0x110
+[ 4547.623551]    vprintk_emit+0x9f/0x320
+[ 4547.623557]    dev_vprintk_emit+0xce/0x160
+[ 4547.623562]    dev_printk_emit+0x3d/0x50
+[ 4547.623566]    _dev_info+0x5b/0x70
+[ 4547.623572]    __iwl_info+0x58/0x60
+[ 4547.623576]    iwl_pci_probe+0x11c/0x810
+[ 4547.623582]    pci_device_probe+0x94/0x120
+[ 4547.623587]    really_probe+0x15e/0x2f0
+[ 4547.623592]    __driver_probe_device+0x6e/0x110
+[ 4547.623598]    driver_probe_device+0x1a/0xe0
+[ 4547.623603]    __driver_attach+0x87/0x190
+[ 4547.623609]    bus_for_each_dev+0x66/0xb0
+[ 4547.623612]    bus_add_driver+0xea/0x1f0
+[ 4547.623616]    driver_register+0x54/0x100
+[ 4547.623622]    iwl_pci_register_driver+0x1a/0x40
+[ 4547.623629]    do_one_initcall+0x50/0x250
+[ 4547.623634]    kernel_init_freeable+0x243/0x3e0
+[ 4547.623640]    kernel_init+0x15/0x1a0
+[ 4547.623644]    ret_from_fork+0x2c/0x50
+[ 4547.623648]    ret_from_fork_asm+0x1b/0x30
 
+[ 4547.623654] 
+               the dependencies between the lock to be acquired
+[ 4547.623655]  and SOFTIRQ-irq-unsafe lock:
+[ 4547.623665] -> ((work_completion)(&(&ops->cursor_work)->work)){+.+.}-{0:0} {
+[ 4547.623670]    HARDIRQ-ON-W at:
+[ 4547.623672]                     lock_acquire+0xb0/0x280
+[ 4547.623677]                     process_one_work+0x199/0x480
+[ 4547.623684]                     worker_thread+0x1be/0x3b0
+[ 4547.623690]                     kthread+0xe3/0x120
+[ 4547.623694]                     ret_from_fork+0x2c/0x50
+[ 4547.623698]                     ret_from_fork_asm+0x1b/0x30
+[ 4547.623704]    SOFTIRQ-ON-W at:
+[ 4547.623705]                     lock_acquire+0xb0/0x280
+[ 4547.623710]                     process_one_work+0x199/0x480
+[ 4547.623716]                     worker_thread+0x1be/0x3b0
+[ 4547.623722]                     kthread+0xe3/0x120
+[ 4547.623725]                     ret_from_fork+0x2c/0x50
+[ 4547.623729]                     ret_from_fork_asm+0x1b/0x30
+[ 4547.623734]    INITIAL USE at:
+[ 4547.623736]                    lock_acquire+0xb0/0x280
+[ 4547.623741]                    process_one_work+0x199/0x480
+[ 4547.623747]                    worker_thread+0x1be/0x3b0
+[ 4547.623753]                    kthread+0xe3/0x120
+[ 4547.623757]                    ret_from_fork+0x2c/0x50
+[ 4547.623760]                    ret_from_fork_asm+0x1b/0x30
+[ 4547.623766]  }
+[ 4547.623767]  ... key      at: [<ffffffff850211b0>] __key.1+0x0/0x10
+[ 4547.623775]  ... acquired at:
+[ 4547.623777]    lock_acquire+0xb0/0x280
+[ 4547.623781]    __flush_work+0x56/0x3f0
+[ 4547.623789]    __cancel_work_timer+0xd3/0x160
+[ 4547.623796]    fbcon_cursor+0x138/0x170
+[ 4547.623802]    hide_cursor+0x26/0xc0
+[ 4547.623807]    vt_console_print+0x41e/0x430
+[ 4547.623814]    console_flush_all+0x206/0x4e0
+[ 4547.623820]    console_unlock+0x33/0x110
+[ 4547.623825]    vprintk_emit+0x9f/0x320
+[ 4547.623831]    _printk+0x47/0x50
+[ 4547.623834]    watchdog+0x53a/0x7b0
+[ 4547.623838]    kthread+0xe3/0x120
+[ 4547.623841]    ret_from_fork+0x2c/0x50
+[ 4547.623845]    ret_from_fork_asm+0x1b/0x30
 
+[ 4547.623851] 
+               stack backtrace:
+[ 4547.623854] CPU: 2 PID: 39 Comm: khungtaskd Not tainted 6.8.0-rc6-lemon #190
+[ 4547.623860] Hardware name: LENOVO 80MK/VIUU4, BIOS C6CN29WW 09/02/2015
+[ 4547.623862] Call Trace:
+[ 4547.623865]  <TASK>
+[ 4547.623867]  dump_stack_lvl+0x4a/0x80
+[ 4547.623879]  check_irq_usage+0x8aa/0xb10
+[ 4547.623886]  ? check_path.constprop.0+0x24/0x50
+[ 4547.623896]  ? check_noncircular+0x6d/0x120
+[ 4547.623902]  ? __lock_acquire+0x146a/0x25c0
+[ 4547.623907]  __lock_acquire+0x146a/0x25c0
+[ 4547.623913]  lock_acquire+0xb0/0x280
+[ 4547.623918]  ? __flush_work+0x4b/0x3f0
+[ 4547.623925]  ? __flush_work+0x4b/0x3f0
+[ 4547.623932]  __flush_work+0x56/0x3f0
+[ 4547.623939]  ? __flush_work+0x4b/0x3f0
+[ 4547.623946]  ? __lock_acquire+0x3ef/0x25c0
+[ 4547.623952]  __cancel_work_timer+0xd3/0x160
+[ 4547.623960]  fbcon_cursor+0x138/0x170
+[ 4547.623965]  hide_cursor+0x26/0xc0
+[ 4547.623971]  vt_console_print+0x41e/0x430
+[ 4547.623977]  ? lock_release+0xb5/0x230
+[ 4547.623982]  ? console_flush_all+0x1c9/0x4e0
+[ 4547.623988]  console_flush_all+0x206/0x4e0
+[ 4547.623994]  ? console_flush_all+0x1c9/0x4e0
+[ 4547.624001]  console_unlock+0x33/0x110
+[ 4547.624007]  vprintk_emit+0x9f/0x320
+[ 4547.624013]  _printk+0x47/0x50
+[ 4547.624017]  watchdog+0x53a/0x7b0
+[ 4547.624021]  ? __pfx_watchdog+0x10/0x10
+[ 4547.624025]  kthread+0xe3/0x120
+[ 4547.624029]  ? __pfx_kthread+0x10/0x10
+[ 4547.624033]  ret_from_fork+0x2c/0x50
+[ 4547.624037]  ? __pfx_kthread+0x10/0x10
+[ 4547.624041]  ret_from_fork_asm+0x1b/0x30
+[ 4547.624049]  </TASK>
+[ 4548.028173]       Not tainted 6.8.0-rc6-lemon #190
+[ 4548.029491] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 4548.031047] task:kworker/u9:1    state:D stack:0     pid:3528  tgid:3528  ppid:2      flags:0x00004000
+[ 4548.032620] Workqueue: hci0 hci_rx_work
+[ 4548.034099] Call Trace:
+[ 4548.035572]  <TASK>
+[ 4548.036925]  __schedule+0x427/0xd10
+[ 4548.038382]  ? schedule+0xf7/0x140
+[ 4548.039822]  schedule+0x45/0x140
+[ 4548.041201]  __lock_sock+0x86/0xf0
+[ 4548.042601]  ? __pfx_autoremove_wake_function+0x10/0x10
+[ 4548.044030]  lock_sock_nested+0x61/0x70
+[ 4548.045390]  l2cap_sock_recv_cb+0x21/0xa0
+[ 4548.046842]  l2cap_recv_frame+0x5be/0x2e70
+[ 4548.048283]  ? hci_rx_work+0x431/0x830
+[ 4548.049701]  ? lock_release+0xb5/0x230
+[ 4548.051145]  ? __mutex_unlock_slowpath+0x25/0x270
+[ 4548.052524]  hci_rx_work+0x457/0x830
+[ 4548.053945]  ? process_one_work+0x157/0x480
+[ 4548.055460]  process_one_work+0x1ca/0x480
+[ 4548.056862]  worker_thread+0x1be/0x3b0
+[ 4548.058281]  ? __pfx_worker_thread+0x10/0x10
+[ 4548.059783]  kthread+0xe3/0x120
+[ 4548.061141]  ? __pfx_kthread+0x10/0x10
+[ 4548.062600]  ret_from_fork+0x2c/0x50
+[ 4548.064064]  ? __pfx_kthread+0x10/0x10
+[ 4548.065436]  ret_from_fork_asm+0x1b/0x30
+[ 4548.066867]  </TASK>
+[ 4548.068313] INFO: lockdep is turned off.
+
+# cat /proc/3526/stack
+[<0>] __skb_wait_for_more_packets+0xfa/0x150
+[<0>] __skb_recv_datagram+0x59/0xa0
+[<0>] skb_recv_datagram+0x29/0x40
+[<0>] bt_sock_recvmsg+0x42/0x1c0
+[<0>] l2cap_sock_recvmsg+0x5d/0x170
+[<0>] __sys_recvfrom+0x14e/0x160
+[<0>] __x64_sys_recvfrom+0x1f/0x30
+[<0>] do_syscall_64+0x75/0x150
+[<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+
+This is on my laptop with iwlwifi, but at first I saw it on my desktop
+with Ethernet (and Intel 9260 Bluetooth). I can get another lockdep
+capture if that would be helpful.
+
+Simon-
