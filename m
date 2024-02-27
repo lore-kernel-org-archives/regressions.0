@@ -1,91 +1,156 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B541350EC
-	for <regressions@lists.linux.dev>; Mon, 26 Feb 2024 22:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D110E5644F
+	for <regressions@lists.linux.dev>; Tue, 27 Feb 2024 08:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708988058; cv=none; b=fkdm7lCmScaFFf6U1RbpnUhiIi/0+Q1ZuaY4tQh6u/M+k9k2Ag8sGhd4+WqvT1GC2X+6cbHlHu70UATc4t2Ui9DqLl+hP2UltLnRJhkuwypU8nHD2TCCYBLSndKCEPlgu+G2JINCnr+g7U1NzpQak0ERgZXwPHAUdS6OBIjIdmk=
+	t=1709022135; cv=none; b=tDBs2v4DW0d5dQVKnjBZvmNcY4cOY+6Qj2nY5O0t6aa9eRMAlmldCESO8G2Ag/XjvJKhcbYJL1dCViikCzyxwEG/KajzfR1YvZwlp0DEqjAmwcd/w40K5whlLbrhHsaue/2EeTFvxqliqu3ZCsfcsSbmB02VVrzZ1jyJB9uVfZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708988058; c=relaxed/simple;
-	bh=R7yJHhMUzALWUVwkqwEb0QPTmDVjJOjmsFPrpsU34/s=;
-	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WwgELkyiQS4csYc+1YE50gf83Jf6E0eAvL8lIRMqxp95/HYYEhi+E2mdsq3DWniVEqCJPJCkvU3nTq5kk9/a7mzLWYh5nJ4oyd9vGuyEXdHLmWI8ZNked0D5XK17fNChMGYlzN42wTDma/1P7EiWG7Tl7OQFbFeRPcxOuwX20R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=pkl4HWtD; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1709022135; c=relaxed/simple;
+	bh=t8XyXwJueF6HxJmYKGaSm2h/RD9rlpNIcEUyHMTJ/DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=I7PU11HaXhdTRH/TpEUMNKurMMtxMPdmomB2QQhEpzO/H9lgMLBjBPMgIbEY8JKpFkH8W60TOtv/n+B1BzY/o1B7eXHbrszhwW0m0Ht/MrZwq7VmNLqaN0HwblM/ZgKljofhrvqo0wD1P67zuiLNJ6wY0QrWeKIpKjsDAf+hU1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yt5KmAvU; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pkl4HWtD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yt5KmAvU"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dcab44747bso12595725ad.1
+        for <regressions@lists.linux.dev>; Tue, 27 Feb 2024 00:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1708988057; x=1740524057;
-  h=message-id:date:mime-version:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=EBOK6+JFDrs7P79a2vp69jn0JzK7kVNq2lvjt1XUtPg=;
-  b=pkl4HWtD023Oa4Y88bQNxdZrEHkpxk2XuL/zACHCAIJotQfDo8dCKLNT
-   S+kJrXIx6AXFgMtafbUKHTB7eiv/lMTlWsORCcd0ZeaPC0VBHfZS5IAzI
-   PSwlQJD6DAb3+ci7kFl/agG4/BhAIOUyO2O3llrbOtYOLdU29B1LaRVHa
-   E=;
-X-IronPort-AV: E=Sophos;i="6.06,186,1705363200"; 
-   d="scan'208";a="276895848"
-Subject: Re: [REGRESSION 6.1.70] system calls with CIFS mounts failing with "Resource
- temporarily unavailable"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 22:54:15 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.43.254:51768]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.210:2525] with esmtp (Farcaster)
- id 42027716-0bfb-4a9f-a713-883e7afe5f50; Mon, 26 Feb 2024 22:54:13 +0000 (UTC)
-X-Farcaster-Flow-ID: 42027716-0bfb-4a9f-a713-883e7afe5f50
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 26 Feb 2024 22:54:13 +0000
-Received: from [192.168.17.69] (10.106.82.23) by EX19D018EUA004.ant.amazon.com
- (10.252.50.85) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 26 Feb
- 2024 22:54:13 +0000
-Message-ID: <fd3af426-ee53-45be-9220-2ff253ea255b@amazon.com>
-Date: Mon, 26 Feb 2024 22:54:12 +0000
+        d=gmail.com; s=20230601; t=1709022133; x=1709626933; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HI5YfceekB134PHWb0mBfyFs0SgDHAdBofq6LRbVyTI=;
+        b=Yt5KmAvUE6zCqAESEFcDcnphmNZyM9Mt7UAeEE9feW228WugQgZ9PidmF+ZPtrUARI
+         Y67P0R5l0EQHtI5zrrqVoUP0d9mJSeBrEHNRwQP8PdZDz6QRzl8Dfa1W7jtUokbhzz2q
+         HkabBSgRc8h9Fa+wyy25yPeIvSBqJzPL6GMPBOoW8CPO+67DjZTedoU3QrHIQvWbPVE9
+         hSEo2l5UsxpdT6a6rgxTEEzRzJaC9o2kyR/Q/BqMzDWRhLkzN/zxlXlh0CT581XHtU/5
+         kSqpzoJfYIFRxL0d6CruhxeUPWPXU9UiEs//ClcG2rKY3iHp4B04EpsPUnBIKJz2OYIc
+         qA4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709022133; x=1709626933;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HI5YfceekB134PHWb0mBfyFs0SgDHAdBofq6LRbVyTI=;
+        b=EZPHmbDP7dLl1ilNBQq1LAKZPMKcuM5OBCmSDxA7L1cQGbJISNIjfOgfT+ijlqC+wM
+         gcP4pT7gzFVxJr07skovW+Ko3fASKhom+Gzug7aGh7azZdqMJTVeVuWDTUbYTuIr1IVy
+         MWq2ceFcqy1bmLqONCOGrpRf0T8pz/uZ7yj2RoSGgDgXeEUD7WsVszs6vuJ5hbxbehc8
+         4ncPDvk2O9Wk5useO/8qBEEmNMWHNl2kFZ1FbTyTYr+N9cGrIQjv9J8ucALf88O4Hfou
+         cYuRPYo1lmju5N9ZlblMiRROOVBoiOrU4yImNjQqs8ZsbtyCzOE8vnat9veIaYC+846k
+         UYig==
+X-Forwarded-Encrypted: i=1; AJvYcCWMMwB6EQ3LDpXQrfUXOZPbhDth0Axup8Gl4iTx8Jro1QU4dS3hZeOoAHQAX5Zk4dW1bau7CkK4ZpbQ5nHAAG9fOv5wLZupcQJT28I=
+X-Gm-Message-State: AOJu0YxtCYqlt5VFGISbfy9GS9wSDs7zRNsCyFsw9KdzobK5XEWl/tD3
+	KbrnfOr7ynSga3e/ogVXs2GBUW6z4PcH35rjyjjzjhOMKN0Uu+Vy
+X-Google-Smtp-Source: AGHT+IGDA09K8zrsriDSFT8spOeGYcIHZEHFUGp2L17AIuv+iVn/gIpntlin4+FCyzYHZVImkWLF0g==
+X-Received: by 2002:a17:902:8644:b0:1db:5ee2:a772 with SMTP id y4-20020a170902864400b001db5ee2a772mr8267708plt.11.1709022133042;
+        Tue, 27 Feb 2024 00:22:13 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id lo7-20020a170903434700b001db5fc51d71sm952788plb.160.2024.02.27.00.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 00:22:12 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 2732D184CED9D; Tue, 27 Feb 2024 15:22:09 +0700 (WIB)
+Date: Tue, 27 Feb 2024 15:22:09 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Stable <stable@vger.kernel.org>
+Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Klara Modin <klarasmodin@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>, danilrybakov249@gmail.com
+Subject: Fwd: Continuous ACPI errors resulting in high CPU usage by journald
+Message-ID: <Zd2bsV8VsFJMlbFW@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC: Linux regressions mailing list <regressions@lists.linux.dev>, "SeongJae
- Park" <sj@kernel.org>, "pc@manguebit.com" <pc@manguebit.com>,
-	"leonardo@schenkel.net" <leonardo@schenkel.net>, "linux-cifs@vger.kernel.org"
-	<linux-cifs@vger.kernel.org>, "m.weissbach@info-gate.de"
-	<m.weissbach@info-gate.de>, "sairon@sairon.cz" <sairon@sairon.cz>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20240126191351.56183-1-sj@kernel.org>
- <2ab43584-8b6f-4c39-ae49-401530570c7a@leemhuis.info>
- <fd0174a5-8319-436d-bf05-0f6a3794f6f9@amazon.com>
- <2024022604-encrypt-dullness-8127@gregkh>
-From: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-In-Reply-To: <2024022604-encrypt-dullness-8127@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D008EUA003.ant.amazon.com (10.252.50.155) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pgDDeVc61kq9FJT+"
+Content-Disposition: inline
 
-On 26/02/2024 14:55, gregkh@linuxfoundation.org wrote:
 
-> 
-> Please send this as a patch series, in a new thread, so we can properly
-> track this, we have too many different threads here (and the subject
-> line is wrong...)
-> 
-> thanks,
-> 
-> greg k-h
+--pgDDeVc61kq9FJT+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Greg and apologize for the noise, I figured out that this has 
-something to do with our test environment setup. I have redone the test 
-manually and a looks good so I'd say we can close this thread for now :)
+Hi,
 
-Hazem
+On Bugzilla, danilrybakov249@gmail.com reported stable-specific, ACPI error
+regression that led into high CPU temperature [1]. He wrote:
 
+> Overview:
+>=20
+> After updating from lts v6.6.14-2 to lts v6.6.17-1 noticed high CPU tempe=
+rature and lag. After running htop noticed that journald was using 30-60% o=
+f CPU. Afterwards, tried switching to stable, or lts v6.6.18-1, but encount=
+ered the same issue.
+>=20
+> Running journalctl -f gives these lines over and over again:
+>=20
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: Could not disable RealTimeCl=
+ock events (20230628/evxfevnt-243)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No handler or method for GPE=
+ 08, disabling event (20230628/evgpe-839)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No handler or method for GPE=
+ 0A, disabling event (20230628/evgpe-839)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No handler or method for GPE=
+ 0B, disabling event (20230628/evgpe-839)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No installed handler for fix=
+ed event - PM_Timer (0), disabling (20230628/evevent-255)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No installed handler for fix=
+ed event - PowerButton (2), disabling (20230628/evevent-255)
+> Feb 19 21:09:12 danirybe kernel: ACPI Error: No installed handler for fix=
+ed event - SleepButton (3), disabling (20230628/evevent-255)
+>=20
+> My system info:
+>=20
+> Laptop model: ASUS VivoBook D540NV-GQ065T
+> OS: Arch Linux x86_64
+> Kernel: 6.6.14-2-lts
+> WM: sway
+> CPU: Intel Pentium N420 (4) @ 2.500GHz
+> GPU1: Intel Apollo Lake [HD Graphics 505]
+> GPU2: NVIDIA GeForce 920MX
+>=20
+> I've pinned down the commit after which the problem occurs:
+>=20
+> 847e1eb30e269a094da046c08273abe3f3361cf2 is the first bad commit
+> commit 847e1eb30e269a094da046c08273abe3f3361cf2
+> Author: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Date:   Mon Jan 8 15:20:58 2024 +0900
+>=20
+>     platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+>    =20
+>     commit 5913320eb0b3ec88158cfcb0fa5e996bf4ef681b upstream.
+>=20
+> <snipped>...
+
+See Bugzilla for the full thread.
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218531
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--pgDDeVc61kq9FJT+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZd2brQAKCRD2uYlJVVFO
+owXDAQDniDPvwOEXBwUgqdr22mZnIQ+QPQ2O2jmn/xMKKlPADQD+LvJ6iqLHXsP0
+Co46z6CIKqlwUj55oTqUrYdKKCkqlgs=
+=7XYF
+-----END PGP SIGNATURE-----
+
+--pgDDeVc61kq9FJT+--
