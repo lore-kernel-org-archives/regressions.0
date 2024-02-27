@@ -1,85 +1,92 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7849C13A866;
-	Tue, 27 Feb 2024 12:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530084E1C9;
+	Tue, 27 Feb 2024 12:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709035721; cv=none; b=jydQYmAwGndLlv1K304iDINgAlvDmTFU+5ieMm/h2joUtY5J8c/Cx+eQToXMFZEnH61P7JWc29pzFiExN6qAZr5n0bQwJ0mykC7OEv2/XHz3Bh4pwHduAA1Et7+CsbY65iAoXtsC7zlQ+k0mAJyn435y9CE9R99moCm84HWMrLs=
+	t=1709037627; cv=none; b=FL00pN7dLJiCgARhGRHBkc7sHctAMhiOk9EmgWagDllRcSoNm8p7nvh0UaH7tp4bnFvmDl8mGf8qZ3/VN97J+GBowJC9Cgi8hJjffNDJk8YhqB+TlY9Hj7jEMTKmFDqVCv2kGazQP0jHrA3n7Wl6FER4+aZAHLqJbce4Ji2xtIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709035721; c=relaxed/simple;
-	bh=/eKmoNSePZ5CJhcNccLURR3henqSYG/8XWt380u7RTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YasxrPPbY4BtZthsaqMyvlFdoHq9JLQA33vSyrewPQDwtSIAObyRffONzlyfi1+m+CiaXEpJINjo7HEYshq27T0Dl2W+kaEeY8GQIgLu2plvEflLDT5hnXfQ2o4oT7vy9zuK4YMFBRAbeYXtA1JCh3v7XU1FoAglKM8mWHB8kMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DK1hxBmg; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709037627; c=relaxed/simple;
+	bh=4zJjHVcptMKGc+hFgx7D5SAukwz7yawFk+xDkB/Py4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sKXYE8vL/ybANn4IhIq1qKqj7EJBczKoAw/hteDWwSRpa79jjcodlmB7nhxIb5QNVslBWE2HiQogDc3UiN7wPTe1mlVllR+wp/DlQ+P16IwOd9hGRzUEZX9kiFo5QtyHr5zxNJ1agUVI1/SG3qWMaHccBEgFpJIt+ukfSsXX0rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUXpD7UM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DK1hxBmg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=hg3gurSqb69fI8sw7A+fZUJxpI6FFw4keYJjAHYqPP8=;
-	t=1709035719; x=1709467719; b=DK1hxBmg0Arres16FEO6HpE4UNlMUuEamzGGuZvTDg8s6xE
-	1yA2ri/tU7rzaBMPsLP4Awg75OU63bW52Ho76Dxw08inFNFokinlN9rVdH9clEtDE+VyvYW0PB2kE
-	rEAX6G7IJluMcH30AKYAQsKQyV9V5ndjvH5NMlV2HmljHlNRddYAVT5BuZ7+l221vfIF5c3p88eg0
-	4e5BE452BvzRue1okUZD70XvuTdyqezmTD+Jiyh7otGo8CX5YfdAlgf7GDwYQVmExaeHXIKU5E0eV
-	6HDT8aUItED/lfpns6OdSExB4u8ruz6FOsT+iRRupJ2qyl/3S+rrj/tTSUJ/NTqQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rewGD-00051Z-Iy; Tue, 27 Feb 2024 13:08:37 +0100
-Message-ID: <59c10cfd-2f31-42cd-aec0-217127aee228@leemhuis.info>
-Date: Tue, 27 Feb 2024 13:08:37 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUXpD7UM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDDDC433F1;
+	Tue, 27 Feb 2024 12:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709037626;
+	bh=4zJjHVcptMKGc+hFgx7D5SAukwz7yawFk+xDkB/Py4Y=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oUXpD7UMRxUc6WK2I+jo3QEw7Y25GPBMfNtWVCBism4ohrDV/ZH9SxfzYyAOF6ZiF
+	 7CjPLDlNjDquv5OEvQgRKFu68KjjOeq7wKWZty70p6ccb0wkpOfW35KvATwy7reCYT
+	 hJokEChlGxZBjxXx01PYulU6G6LCpvIIF5bBHsQeyqbaRErjgb0YQvI4Dd/gyet9y6
+	 SK7rpCWxr9FcC/BHtNTFTDKBCzYE6XiRmlyAuS23R2ElO7ykqYzJlKCntIRr79KbYP
+	 zSIJy76pgczWKKx09WGkcQ2yXkZ3dVGjZam0L69zENZmMUHINg0j3botqASqfvq/m8
+	 OsNl8Jxfs7IAw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rewl2-000000000DS-26x3;
+	Tue, 27 Feb 2024 13:40:29 +0100
+Date: Tue, 27 Feb 2024 13:40:28 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: drm/msm: VT console DisplayPort regression in 6.8-rc1
+Message-ID: <Zd3YPGmrprxv-N-O@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux regressions report for mainline [2024-02-25]
-Content-Language: en-US, de-DE
-To: Johan Hovold <johan@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <170886726066.1516351.14377022830495300698@leemhuis.info>
- <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709035719;4b52b170;
-X-HE-SMSGID: 1rewGD-00051Z-Iy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 27.02.24 11:20, Johan Hovold wrote:
-> On Sun, Feb 25, 2024 at 01:21:46PM +0000, Regzbot (on behalf of Thorsten Leemhuis) wrote:
-> 
->> Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
->> X13s, but he send out patch series to fix some or all of those[1], so
->> with a bit of luck those issues will soon be fixed as well.
->> https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-> 
->> [1]
->> https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
-> 
-> This series addresses a use-after-free in the PMIC glink driver caused
-> [...]
+Hi,
 
-Thx for the updates. Due to the various issues I got a bit lost here,
-but seems you are at least somewhat on top of this and fixes are in sight.
+Since 6.8-rc1 the VT console is no longer mirrored on an external
+display on coldplug or hotplug on the Lenovo ThinkPad X13s.
 
-> (I just tried updating the regzbot title).
+The hotplug notification appears to be generated immediately but it is
+no longer forwarded or processed correctly:
 
-Great (and yes, that worked).
- > But also with these fixes, there are still a couple of regressions
-> related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
-> separate reports to track those.
+[   22.578434] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+[   22.953161] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+[   23.095122] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+[   24.185683] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+[   24.186197] msm-dp-display ae98000.displayport-controller: dp_pm_runtime_resume
+[   24.188098] msm-dp-display ae98000.displayport-controller: dp_ctrl_phy_init
+[   24.191805] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+[   24.275904] [drm-dp] dp_ctrl_on_link: dp_ctrl_on_link - drm_dev = 0000000000000000
+[   24.276474] [drm-dp] dp_ctrl_enable_mainlink_clocks: dp_ctrl_enable_mainlink_clocks - drm_dev = 0000000000000000
 
-Thx again.
+as the external display remains off/blank.
 
-Ciao, Thorsten
+I've verified that reverting commit e467e0bde881 ("drm/msm/dp: use
+drm_bridge_hpd_notify() to report HPD status changes") fixes "both"
+issues.
+
+I've previously reported this here:
+
+	https://gitlab.freedesktop.org/drm/msm/-/issues/50
+
+Note that a couple of times the display was eventually mirrored after a
+very long timeout, but this doesn't seem to always be the case.
+
+Johan
+
+
+#regzbot introduced: e467e0bde881
