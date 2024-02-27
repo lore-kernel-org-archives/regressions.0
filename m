@@ -1,135 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C672F2D;
-	Tue, 27 Feb 2024 13:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CF213B293;
+	Tue, 27 Feb 2024 13:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040825; cv=none; b=CoubUdz888BYkfXe4dv47JsfrM+xeP2Da6PIZAX+v/s8tq7c/bSs3a4oA3NkMt3NUI6RYU0rn1iRXlVwF6gxcRrRwAkWuNFBLiaQ8andDOBnJro47vtCwuAItLvhb/FsYZ1YJtGHpJDxwsvc+9Ncu9OcOAceFJpuZPd0T2g/Ogw=
+	t=1709041093; cv=none; b=XqoqYpbmmBjLywoadVWDffD0DtuuC/W9jBWLxN1OXAMtqoiDvtWyCgFhwKz0Mn59JriMxfnfsN+LhCr+bWTXnafmxrwKadjj+7H/Fpen/XKIrT/TB4ZaOOjhIGa+dX9P9jLNWon7/JldHJogsjrIrzkRXWb27tWckXkwr8PUqcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040825; c=relaxed/simple;
-	bh=N4hJ3rbmGb3aGfm5/rEMCgX5Pes2gJRcb4blBbA46Mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IK4CYmkINV15FDOcVl6fB4aP08hJKCBoTCgrcI2eE0Y7NtlPygR4yv1eYR6hgKTqdnRBfaE+0gVyJthYPHX7OnlHakqi+DiHn2SqaAkjihM526ZCRwUWICxhmKlpplpRuZoxyhZlvk+wDxhhgJTffogbSGkX1udUrHJGtbA7c2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+KKGwdY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709041093; c=relaxed/simple;
+	bh=XFWYIpBM86Sj0xK3ZgD8f+lYUJwf+IMF6oTap1LEi4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BV8h8O+LejTafpm0u3i1noy6myQQTicwNQxvujsS9BjtrOTjWvgARkXc1ifGIqkqHGKoI9TthNnU3ICzeFF+p/pERIwfoX61GrouaAJMfnIkjvfLgCHRd+yTSi3f5LPERTpDLGqaXD4UTBoSgHTdEq9eIvLigWxZoCia3L5LpqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ED4jnTG6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+KKGwdY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62612C433F1;
-	Tue, 27 Feb 2024 13:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709040825;
-	bh=N4hJ3rbmGb3aGfm5/rEMCgX5Pes2gJRcb4blBbA46Mc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=j+KKGwdYVHf4Tps9pQpbbdwOVyN1f5D00T5l2uPn0z+U9Z71vnoyhCH8hccVsAPRn
-	 B4CWq8Fi8VISDe+Tw9/VF0x1XBM4QjhYB/kAsoXEqHCxxPkOQPr3thYXhZ5+lF85YC
-	 Gh1LEOPgBmK5u7QTsgaShhK2d+kWWU8wiPfIsuw51hwsdsmca03112rf89TcL7ixId
-	 oE/vXOZ2B0MjrHC5g8BZEPovxvkFrzioBSOB0uJWL6z1Eeri9s0MuohrwAKDDsAJGG
-	 ZC26uynk0qS79KXi+o4U+u4mBddkaKQbYwiHtPKIHGiyyoDiVQ0rBk+COt0IRLypSs
-	 JwHL1kvqbFXzQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rexae-000000000VL-23Zy;
-	Tue, 27 Feb 2024 14:33:48 +0100
-Date: Tue, 27 Feb 2024 14:33:48 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Rob Clark <robdclark@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
-Message-ID: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ED4jnTG6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F65BC433C7;
+	Tue, 27 Feb 2024 13:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709041093;
+	bh=XFWYIpBM86Sj0xK3ZgD8f+lYUJwf+IMF6oTap1LEi4c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ED4jnTG6UiAgpfxXc/iXJGzUAC+9Kswa9IwZKeajbNX8Wpsyjab2xLMVIpbS0zwFp
+	 e/M0vf5HiySlEmnzZm1/G6KuqysVCsCQwvuLjrQilrMd+6azZnYPGzvur6ZbTvBmBe
+	 tSRWUgcy4PKz+ax26vpPf1fMn+n2wnys0frt/cD4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Alexander Kobel <a-kobel@a-kobel.de>,
+	regressions@lists.linux.dev,
+	Arnold Gozum <arngozum@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 6.7 178/334] platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler
+Date: Tue, 27 Feb 2024 14:20:36 +0100
+Message-ID: <20240227131636.318820529@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
+References: <20240227131630.636392135@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi,
+6.7-stable review patch.  If anyone has any objections, please let me know.
 
-Since 6.8-rc1 I have seen (and received reports) of hard resets of the
-Lenovo ThinkPad X13s after connecting and disconnecting an external
-display.
+------------------
 
-I have triggered this on a simple disconnect while in a VT console, but
-also when stopping Xorg after having repeatedly connected and
-disconnected an external display and tried to enable it using xrandr.
+From: Hans de Goede <hdegoede@redhat.com>
 
-In the former case, the last (custom debug) messages printed over an SSH
-session were once:
+commit 84c16d01ff219bc0a5dca5219db6b8b86a6854fb upstream.
 
-    [  948.416358] usb 5-1: USB disconnect, device number 3
-    [  948.443496] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
-    [  948.443723] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 1, enable = 0
-    [  948.443872] msm-dp-display ae98000.displayport-controller: dp_ctrl_phy_exit
-    [  948.445117] msm-dp-display ae98000.displayport-controller: dp_ctrl_phy_exit - done
-    
-and then the hypervisor resets the machine.
+Commit 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing
+tablet-mode-switch events") causes 2 issues on the ThinkPad X1 Tablet Gen2:
 
-Hotplug in Xorg seems to work worse than it did with 6.7, which also had
-some issues. Connecting a display once seems to work fine, but trying to
-re-enable a reconnected display using xrandr sometimes does not work at
-all, while with 6.7 it usually worked on the second xrandr execution.
+1. The ThinkPad will wake up immediately from suspend
+2. When put in tablet mode SW_TABLET_MODE reverts to 0 after about 1 second
 
-xrandr reports the reconnected display as disconnected:
+Both these issues are caused by the "VBDL" ACPI method call added
+at the end of the notify_handler.
 
-    Screen 0: minimum 320 x 200, current 1920 x 1200, maximum 5120 x 4096
-    eDP-1 connected primary 1920x1200+0+0 (normal left inverted right x axis y axis) 286mm x 178mm
-       1920x1200     60.03*+
-       1600x1200     60.00  
-    DP-1 disconnected (normal left inverted right x axis y axis)
-    DP-2 disconnected 1920x1200+0+0 (normal left inverted right x axis y axis) 0mm x 0mm
-      1920x1200 (0x40c) 154.000MHz +HSync -VSync
-            h: width  1920 start 1968 end 2000 total 2080 skew    0 clock  74.04KHz
-            v: height 1200 start 1203 end 1209 total 1235           clock  59.95Hz
+And it never became entirely clear if this call is even necessary to fix
+the issue of missing tablet-mode-switch events on the Dell Inspiron 7352.
 
-Running 'xrandr --output DP-2 --auto' 2-3 times makes xrandr report the
-display as connected, but the display is still blank (unlike with 6.7).
+Drop the "VBDL" ACPI method call again to fix the 2 issues this is
+causing on the ThinkPad X1 Tablet Gen2.
 
-A few times after having exercised hotplug this way, the machine hard
-resets when Xorg is later stopped. Once I saw the following log messages
-on an SSH session but they may not have been printed directly before
-the hard reset:
+Fixes: 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing tablet-mode-switch events")
+Reported-by: Alexander Kobel <a-kobel@a-kobel.de>
+Closes: https://lore.kernel.org/platform-driver-x86/295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de/
+Cc: regressions@lists.linux.dev
+Cc: Arnold Gozum <arngozum@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Alexander Kobel <a-kobel@a-kobel.de>
+Link: https://lore.kernel.org/r/20240216203300.245826-1-hdegoede@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/platform/x86/intel/vbtn.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-    [  214.555781] [drm:dpu_encoder_phys_vid_wait_for_commit_done:492] [dpu error]vblank timeout
-    [  214.555843] [drm:dpu_kms_wait_for_commit_done:483] [dpu error]wait for commit done returned -110
-
-Note that this appears to be unrelated to the recently fixed Qualcomm
-power domain driver bug which can trigger similar resets when
-initialising the display subsystem on boot. Specifically, I have
-triggered the hotplug resets described above also with the fix applied.
-[1]
-
-Reverting commit e467e0bde881 ("drm/msm/dp: use drm_bridge_hpd_notify()
-to report HPD status changes") which fixes the related VT console
-regression does not seem to make any difference. [2]
-
-Daniel Thompson reports that reverting the whole runtime PM series
-appears to make the hard resets he has seen with DisplayPort hotplug go
-away however:
-
-	https://lore.kernel.org/lkml/1701472789-25951-1-git-send-email-quic_khsieh@quicinc.com/
-
-So for now, let's assume that these regressions were also introduced (or
-triggered) by commit 5814b8bf086a ("drm/msm/dp: incorporate pm_runtime
-framework into DP driver").
-
-Johan
+--- a/drivers/platform/x86/intel/vbtn.c
++++ b/drivers/platform/x86/intel/vbtn.c
+@@ -200,9 +200,6 @@ static void notify_handler(acpi_handle h
+ 	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+ 
+ 	sparse_keymap_report_event(input_dev, event, val, autorelease);
+-
+-	/* Some devices need this to report further events */
+-	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+ }
+ 
+ /*
 
 
-[1] https://lore.kernel.org/lkml/20240226-rpmhpd-enable-corner-fix-v1-1-68c004cec48c@quicinc.com/
-[2] https://lore.kernel.org/lkml/Zd3YPGmrprxv-N-O@hovoldconsulting.com/
-
-
-#regzbot introduced: 5814b8bf086a
