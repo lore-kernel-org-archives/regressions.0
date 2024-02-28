@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41320DC8;
-	Wed, 28 Feb 2024 06:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632AD2261B;
+	Wed, 28 Feb 2024 07:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709101222; cv=none; b=EyJ8ezycKddmLd0I13ZbLi9P//IyouAiDpxdDbhmhpFZqkJFoAbpYKA3KxUq6VxaBjVYBQMa+OaBoKTylHdbbSFcaclAfVc1ODzbLZreMIAFzZ9na9ii0q40miFEVR92yJhW7wK9KBY4tZ234LaCgZKGBh0P42rJGMnbZJ7um9c=
+	t=1709106796; cv=none; b=H2pOkSy37kJ2YOvlj0U9w2iBNgUzSYs4UqhtEK6SCVSnpf5V8h/+vLfDkFbiDV+5M2v62qsnYb5qX/4AjXooY6V9fZtKEAuish/0C/KZWezuX+T2KYMhR3Dg8AE69utpJ91FXoMga9txr/u6VfxGSSfgIRZ9cx5iyi55TQn9Rnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709101222; c=relaxed/simple;
-	bh=KM3IFL7VBvfv0H/qsM6GNcfHmm/qg0ho1w04RZ/MwvM=;
+	s=arc-20240116; t=1709106796; c=relaxed/simple;
+	bh=/CB87PZsQRl9/B/ojYajPpKXTTCyk5T3TFwmjwz24zM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWU9aI6zVkNujIHgRdrEBrZsAIyCd86s2mvjbMIr8b+5dwn6Emoh70IDa4OaejD4dlnMjyVq16qHBvxBSFAfK8s2wzCjHxMoMkwzPQCsz351tUszmNHscnJfWhnPgFzeaOMXm6bXsnl0KCqjupJF2Ix4kBSgkjJWn1bSbW/xXew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=a7ASRwun; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=oJBK2gUDNTXr0N8mO90B6C4UijT3pDl1MNVbmk3t3CUlxmY31v+OSjpqVvIiciP8sKeLWxtm4Ef0MHrW63HPuIaWDAW4LiiqWLGaxDVU4NrkzOA6WiO2wjlqOkHA6xNllJDSzy0KeMsYS6B1Svl13PWQ1HX7V36QoLx45frbZ4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=v0viYl+t; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="a7ASRwun"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="v0viYl+t"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Tis/Y5P1c6986WEgqGUJ7LAnUXHIukbiwL2Ll2OtVE0=;
-	t=1709101219; x=1709533219; b=a7ASRwuniBuydrELW5EpoamZweLc4G/Bq45P+Mwhoz5Owgu
-	928gKnc/f4z5XX2jvr6840/CVJEU64ZH1J7FRf7gZ37lGJfSA6JdGjxJKXQyTOp6uUNShX7OcZm45
-	ac+s5osril0pRk1jnkCrkQW9AT8fwN0DECm0QuZT/S+Fh7BlU94qpoHyH0x3nsWwXp9Vblcc+xOBW
-	LeXjVT1E/QJFOVS/HBpMF27MDjdMk2Z8B2NkgCMl4mOItG7E4wlNbhxxaEdnKEX7bWlBJVAzSgq/9
-	L2hr5C+Ava/VlZWygSUiOxaJVKrR7D57OKYgvH803yuKrAw4kyZj/ngR4LPFbj2Q==;
+	In-Reply-To:References; bh=ksrtzWPsmCGb+8bRwyY45vlNzPF39f6u8k11zRKewW8=;
+	t=1709106794; x=1709538794; b=v0viYl+tbOf4uMZCFZsurNMX/CHchxr8mFc6cbb9cvwTrNf
+	fbBgIHetW7mOz2NZEelHhUutJEGIMJnDqsmPka8szSvSoFkYglOWPkNNgR6EnIqXqpj6UofNs2ubg
+	xu3BkiARsBj9CoDVf424M0ToV1An6EXpcI28i2evjojTofC5d6ns1I2ao/6dF92IJkrh1IlKYRlxf
+	R3P/id4lQiow/Eq0gu4XU7CmFCQYoEkCFZMfQ/iKgmgKd5TDggn1ra4Twd6hXYsMMX8t5o8dYpzik
+	MVeB0bjp4POLb8Q8LqeltpP/dRyIA1J4zJOJTR0S7iHKuDdj2FomZuTk7aM9weiQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rfDIN-0008F8-3u; Wed, 28 Feb 2024 07:19:59 +0100
-Message-ID: <a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-Date: Wed, 28 Feb 2024 07:19:56 +0100
+	id 1rfEka-00018X-0P; Wed, 28 Feb 2024 08:53:12 +0100
+Message-ID: <1c737d18-47c0-4323-9940-92cb6b961f92@leemhuis.info>
+Date: Wed, 28 Feb 2024 08:53:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,132 +39,58 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit statistics
- counters
+Subject: Re: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
 Content-Language: en-US, de-DE
-To: Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
- Marc Haber <mh+netdev@zugschlus.de>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- alexis.lothore@bootlin.com, Guenter Roeck <linux@roeck-us.net>
-References: <20240203190927.19669-1-petr@tesarici.cz>
- <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
- <Zct5qJcZw0YKx54r@xhacker>
- <CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
- <20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
- <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
+To: "Lin, Wayne" <Wayne.Lin@amd.com>,
+ =?UTF-8?Q?Leon_Wei=C3=9F?= <leon.weiss@ruhr-uni-bochum.de>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "lyude@redhat.com" <lyude@redhat.com>
+References: <38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de>
+ <CO6PR12MB548918C8F66468B947A06885FC512@CO6PR12MB5489.namprd12.prod.outlook.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-In-Reply-To: <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CO6PR12MB548918C8F66468B947A06885FC512@CO6PR12MB5489.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709101219;0a885a42;
-X-HE-SMSGID: 1rfDIN-0008F8-3u
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709106794;96426a0e;
+X-HE-SMSGID: 1rfEka-00018X-0P
 
-Net maintainers, chiming in here, as it seems handling this regression
-stalled.
-
-On 13.02.24 16:52, Eric Dumazet wrote:
-> On Tue, Feb 13, 2024 at 4:26 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Tue, Feb 13, 2024 at 03:51:35PM +0100, Eric Dumazet wrote:
->>> On Tue, Feb 13, 2024 at 3:29 PM Jisheng Zhang <jszhang@kernel.org> wrote:
->>>> On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote:
->>>>> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote:
->>>>>> As explained by a comment in <linux/u64_stats_sync.h>, write side of struct
->>>>>> u64_stats_sync must ensure mutual exclusion, or one seqcount update could
->>>>>> be lost on 32-bit platforms, thus blocking readers forever. Such lockups
->>>>>> have been observed in real world after stmmac_xmit() on one CPU raced with
->>>>>> stmmac_napi_poll_tx() on another CPU.
->>>>>>
->>>>>> To fix the issue without introducing a new lock, split the statics into
->>>>>> three parts:
->>>>>>
->>>>>> 1. fields updated only under the tx queue lock,
->>>>>> 2. fields updated only during NAPI poll,
->>>>>> 3. fields updated only from interrupt context,
->>>>>>
->>>>>> Updates to fields in the first two groups are already serialized through
->>>>>> other locks. It is sufficient to split the existing struct u64_stats_sync
->>>>>> so that each group has its own.
->>>>>>
->>>>>> Note that tx_set_ic_bit is updated from both contexts. Split this counter
->>>>>> so that each context gets its own, and calculate their sum to get the total
->>>>>> value in stmmac_get_ethtool_stats().
->>>>>>
->>>>>> For the third group, multiple interrupts may be processed by different CPUs
->>>>>> at the same time, but interrupts on the same CPU will not nest. Move fields
->>>>>> from this group to a newly created per-cpu struct stmmac_pcpu_stats.
->>>>>>
->>>>>> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
->>>>>> Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugschlus.de/t/
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
->>>>>
->>>>> This patch results in a lockdep splat. Backtrace and bisect results attached.
->>>>>
->>>>> ---
->>>>> [   33.736728] ================================
->>>>> [   33.736805] WARNING: inconsistent lock state
->>>>> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
->>>>> [   33.737080] --------------------------------
->>>>> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>>>> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
->>>>> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dwmac_dma_interrupt+0x9c/0x28c
->>>>> [   33.738206] {HARDIRQ-ON-W} state was registered at:
->>>>> [   33.738318]   lock_acquire+0x11c/0x368
->>>>> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
->>>>> [   33.738525]   stmmac_xmit+0x4d0/0xc58
->>>>
->>>> interesting lockdep splat...
->>>> stmmac_xmit() operates on txq_stats->q_syncp, while the
->>>> sun8i_dwmac_dma_interrupt() operates on pcpu's priv->xstats.pcpu_stats
->>>> they are different syncp. so how does lockdep splat happen.
->>>
->>> Right, I do not see anything obvious yet.
->>
->> Wild guess: I think it maybe saying that due to
->>
->>         inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>
->> the critical code may somehow be interrupted and, while handling the
->> interrupt, try to acquire the same lock again.
+On 19.02.24 08:24, Lin, Wayne wrote:
 > 
-> This should not happen, the 'syncp' are different. They have different
-> lockdep classes.
-> 
-> One is exclusively used from hard irq context.
-> 
-> The second one only used from BH context.
+> Thanks for the catch! Will prepare a patch to fix it.
 
-Alexis Lothoré hit this now as well, see yesterday report in this
-thread; apart from that nothing seem to have happened for two weeks now.
-The change recently made it to some stable/longterm kernels, too. Makes
-me wonder:
-
-What's the plan forward here? Is this considered to be a false positive?
-Or a real problem? Or a kind of situation along the lines of "that
-commit should not cause the problem we are seeing, so it might have
-exposed a older bug in the code, but nobody looked closer yet to check"?
-Or something else?
+Did you do that? I could not find one on lore, but maybe I'm missing
+something.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+> ________________________________________
+> From: Leon Weiß <leon.weiss@ruhr-uni-bochum.de>
+> Sent: Wednesday, February 7, 2024 16:45
+> To: stable@vger.kernel.org
+> Cc: regressions@lists.linux.dev; Lin, Wayne; lyude@redhat.com
+> Subject: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
+> 
+> Hello,
+> 
+> 54d217406afe250d7a768783baaa79a035f21d38 fixed an issue in
+> drm_dp_add_payload_part2 that lead to a NULL pointer dereference in
+> case state is NULL.
+> 
+> The change was (accidentally?) reverted in
+> 5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49 and the problem reappeared.
+> 
+> The issue is rather spurious, but I've had it appear when unplugging a
+> thunderbolt dock.
+> 
+> #regzbot introduced 5aa1dfcdf0a429e4941e2eef75b006a8c7a8ac49
+> 
+> 
