@@ -1,163 +1,107 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C3D2D04A
-	for <regressions@lists.linux.dev>; Wed, 28 Feb 2024 08:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD322D605;
+	Wed, 28 Feb 2024 09:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709109169; cv=none; b=f4qsjZPB6yATNzwQuPpTGaQiBRAsxARBEknex6CpzKiISvnoPk9F95gR3YuALZNuKjmmO+lGzRypr/i0/i9Gn/YMqdaPbm19I/+3RelDf9AHHWfFCi3pDWAOBIXdtrs2um1tUURFNRtkVKUFGDYU9TJ6ZN3c0epmVX5WNeU1G+o=
+	t=1709111362; cv=none; b=GjnIX77xJnqmLr92F3b6Y6/wJwd6p46psDu/oCVxdp8jagiX3Qz8grtAtLWBIJg+SlrWUN+TRuE0RZaUpkvDfzZI4x/hlSsk0YzRT/1ejnG9A6OvK5fuK4kQ70Uf6zqAn5311NjWY7ZZDbQ6NFun33CBZn0i5YsQTKM1ZTVxYPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709109169; c=relaxed/simple;
-	bh=t40K0JM0NMfK3mCMUC77qdJh8lHBWSded2PQLMcMHuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T39lvtBSXvfQ/ywjsOU3BUBsUVkQBSvW8pGgVEYCtIqg9X/qETz2XsooiHc9nQilZYAAP5sYslTGsMvDb+fVdo/y+7jJ1Hw1ftGcQbFudmnBnlNWUt+B1zha+sf3ZWlXPcW7L4bPRXgngL1J+EVa+UD3z38D8cbXlUZVnjBc0gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKnltFli; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709111362; c=relaxed/simple;
+	bh=PUo2nuzZfsQJk0wJ4A+TlJb/U4OyoYIe7zyKbRAH2j4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K1Y8Beuc0eTpAMGK5HTPLKHAbMUiBUk8ON3pc5fCBJ4RiKq5UZNxMthQQjWrWNfGhqQuY1G0nv18t/gRCjZMiRbhbmPqa4Lm/hWJH3d4S7VYFLZnx/0PP/w6Tz6SI3TAwZ6Getnm80l5KRgtXletTU6vJ4srhUXPn8Oddo7OUfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1bRsgAC9; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKnltFli"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29a6dcfdd30so3703671a91.0
-        for <regressions@lists.linux.dev>; Wed, 28 Feb 2024 00:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709109167; x=1709713967; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t40K0JM0NMfK3mCMUC77qdJh8lHBWSded2PQLMcMHuM=;
-        b=eKnltFlip5hNJP/HFL6qGkvAZwsZMmy7LxRCWTHt6LYswY7kIHcyf4v3r5KHm245kk
-         XTlnE7sBEhUAEQGizKcomtV0mp/YbZLdw56D1A7hdgeZt9KQTrCW7h9Lv+WZmcC/gzMD
-         /06fMfPDhyWbnF9KqmDLeII+DxQ82qurdrh987b1HoWw0GJzl7DB3EqgX4iPWC/EPrqQ
-         YP4/licuVJktw+yezHJ2/rTT645txLpEdP3fur7Z7+Xb/acINq7EBjueG+1HhOBfpACA
-         S6AxFql7ePio/QWk4uubb+7V/pxRznMI930dhFbp9uM7Gvhr3KNRFTd2FNZaQBumAB86
-         QLbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709109167; x=1709713967;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t40K0JM0NMfK3mCMUC77qdJh8lHBWSded2PQLMcMHuM=;
-        b=UHhC6m5kSy0q+a94FyrOmjFtlCiwCx/uf1TQ32onfUDiAjXLl4cfGW+LgH8xvq3h0i
-         zZtyx6WFQ8zXtRxgAAKaUQG7N7AcVyCyoMHT254ZB9riZF9OD/UZZZp2/csDtHEegfU7
-         QBFnwPOnkWJrKnePiq31S2U4ClzFf4szGElxm9wGmHAT3leYSdER3nueGsbhMBJZihxE
-         WaxSbdYC6X+EmD8QXU21+mfeGfs2quWNaMl0v/fz3txM2yqmAQ7XGfjN8SV6pNacSwMT
-         rm8EACPGUZh3YSp4j7xp/jRLjausg7+pc+AGWRKjYdktZWs0p0JBz3LupJluH2hhOJ+1
-         K0Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYZSiH6Y5PK1Qc/h8tyv8qzc26nwUb+oURpu6YWx4uV0G+tRwIBCRcVIiG0NfGTRDIpDMgttCc38XNKgizXUi5dEx6laaWVUgXYn0=
-X-Gm-Message-State: AOJu0Yzl0nuI4CsS72Su5BcTfsowlRz8Y1zDTv/URGx3/Aa3qugd6hvQ
-	w4GjjMcIYtAV5JD1dPLw9irTDZrIh7pm4p8q2gbBglvwS4tFWTzl
-X-Google-Smtp-Source: AGHT+IEPBy5Yel+v4FYYx1dJ/kW3sj9XgdN6GjR1Lqmv35o9Q62to13V/d1NNwcnNw4qpmaVH/AN5A==
-X-Received: by 2002:a17:90a:88c:b0:299:3f10:20ba with SMTP id v12-20020a17090a088c00b002993f1020bamr10292017pjc.27.1709109167564;
-        Wed, 28 Feb 2024 00:32:47 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id sy12-20020a17090b2d0c00b00296f4fc7e60sm962560pjb.12.2024.02.28.00.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 00:32:47 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id D8B75187DBEB7; Wed, 28 Feb 2024 15:32:41 +0700 (WIB)
-Date: Wed, 28 Feb 2024 15:32:41 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Abdul Anshad Azeez <abdul-anshad.azeez@broadcom.com>,
-	edumazet@google.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, corbet@lwn.net, dsahern@kernel.org,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Boon Ang <boon.ang@broadcom.com>,
-	John Savanyo <john.savanyo@broadcom.com>,
-	Peter Jonasson <peter.jonasson@broadcom.com>,
-	Rajender M <rajender.m@broadcom.com>
-Subject: Re: Network performance regression in Linux kernel 6.6 for small
- socket size test cases
-Message-ID: <Zd7vqSnT6ocYLuZ4@archie.me>
-References: <CALkn8kLOozs5UO52SQa9PR-CiKx_mqW8VF9US94qN+ixyqnkdQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1bRsgAC9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ihAIQavaiuL126frFYxJ2J//2OLR+lm4YBVeYk3AGSM=;
+	t=1709111360; x=1709543360; b=1bRsgAC9aFQOu7f+zrKhF6ecB+vT/g0rBKrFwDzkiwF8xBq
+	r/1azdWzS8Hty/lYbMLJQRjpzzoUuJeSTffY2qXP4HXh2xp1e/IM6237DNyXrrngrjR+nx6vvjQcm
+	+kT/dOWJ9Vdh0Xrwyax3rwWIvm2gFESE40axQjup2ZMu884BAya6stNJ7iU6WJ3FLkow78dsr43he
+	GVpvc60ksZuimeTyd637NppIm/MVtUzWW7J2e0tUfvrFrVAH90LcFKy96xpocrDO4685hmUAh168C
+	TfhwXE7/ssFH/3pL2bHPv1wQcYzySTu0R3JEI7VAUUAA34m+Ke3Yi3Xy1oDiy7fQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rfFw5-0000L9-8a; Wed, 28 Feb 2024 10:09:09 +0100
+Message-ID: <8015b1f0-d37b-45de-bd24-12fc21cbf83d@leemhuis.info>
+Date: Wed, 28 Feb 2024 10:09:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aJ0FkAcvBcopWHIX"
-Content-Disposition: inline
-In-Reply-To: <CALkn8kLOozs5UO52SQa9PR-CiKx_mqW8VF9US94qN+ixyqnkdQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Network performance regression in Linux kernel 6.6 for small
+ socket size test cases
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Abdul Anshad Azeez <abdul-anshad.azeez@broadcom.com>, edumazet@google.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
+ dsahern@kernel.org, Linux Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Boon Ang <boon.ang@broadcom.com>, John Savanyo
+ <john.savanyo@broadcom.com>, Peter Jonasson <peter.jonasson@broadcom.com>,
+ Rajender M <rajender.m@broadcom.com>
+References: <CALkn8kLOozs5UO52SQa9PR-CiKx_mqW8VF9US94qN+ixyqnkdQ@mail.gmail.com>
+ <Zd7vqSnT6ocYLuZ4@archie.me>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Zd7vqSnT6ocYLuZ4@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709111360;82913b45;
+X-HE-SMSGID: 1rfFw5-0000L9-8a
+
+On 28.02.24 09:32, Bagas Sanjaya wrote:
+> [also Cc: regressions ML]
+> 
+> On Wed, Feb 28, 2024 at 12:13:27PM +0530, Abdul Anshad Azeez wrote:
+>> During performance regression workload execution of the Linux
+>> kernel we observed up to 30% performance decrease in a specific networking
+>> workload on the 6.6 kernel compared to 6.5 (details below). The regression is
+>> reproducible in both Linux VMs running on ESXi and bare metal Linux.
+>>
+>> [...]
+>>
+>> We would like to know if there are any opportunities for optimization in
+>> the test cases with small socket sizes.
+> 
+> Can you verify the regression on current mainline (v6.8-rc6)?
+
+Bagas, I know that you are trying to help, but this is not helpful at
+all (and indirectly puts regression tracking and the kernel development
+community into a bad light).
+
+Asking that question can be the right thing sometimes, for example in a
+bugzilla ticket where the reporter is clearly reporting their first bug.
+But the quoted report above clearly does not fall into that category for
+various obvious reasons.
+
+If you want to ensure that reports like that are acted upon, wait at
+least two or three work days and see if there is a reply from a
+developer. In case there is none (which happens, but I assume for a bug
+report like this is likely rare) prodding a bit can be okay. But even
+then you definitely want to use a more friendly tone. Maybe something
+like "None of the developers reacted yet; maybe none of them bothered to
+take a closer look because it's unclear if the problem still happens
+with the latest code. You thus might want to verify and report back if
+the problem happens with latest mainline, maybe then someone will take a
+closer look".
+
+Okay, that has way too many "maybe" in it, but I'm sure you'll get the
+idea. :-D
+
+Ciao, Thorsten
 
 
---aJ0FkAcvBcopWHIX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-[also Cc: regressions ML]
-
-On Wed, Feb 28, 2024 at 12:13:27PM +0530, Abdul Anshad Azeez wrote:
-> During performance regression workload execution of the Linux
-> kernel we observed up to 30% performance decrease in a specific networking
-> workload on the 6.6 kernel compared to 6.5 (details below). The regressio=
-n is
-> reproducible in both Linux VMs running on ESXi and bare metal Linux.
->=20
-> Workload details:
->=20
-> Benchmark - Netperf TCP_STREAM
-> Socket buffer size - 8K
-> Message size - 256B
-> MTU - 1500B
-> Socket option - TCP_NODELAY
-> # of STREAMs - 32
-> Direction - Uni-Directional Receive
-> Duration - 60 Seconds
-> NIC - Mellanox Technologies ConnectX-6 Dx EN 100G
-> Server Config - Intel(R) Xeon(R) Gold 6348 CPU @ 2.60GHz & 512G Memory
->=20
-> Bisect between 6.5 and 6.6 kernel concluded that this regression originat=
-ed
-> from the below commit:
->=20
-> commit - dfa2f0483360d4d6f2324405464c9f281156bd87 (tcp: get rid of
-> sysctl_tcp_adv_win_scale)
-> Author - Eric Dumazet <edumazet@google.com>
-> Link -
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D
-> dfa2f0483360d4d6f2324405464c9f281156bd87
->=20
-> Performance data for (Linux VM on ESXi):
-> Test case - TCP_STREAM_RECV Throughput in Gbps
-> (for different socket buffer sizes and with constant message size - 256B):
->=20
-> Socket buffer size - [LK6.5 vs LK6.6]
-> 8K - [8.4 vs 5.9 Gbps]
-> 16K - [13.4 vs 10.6 Gbps]
-> 32K - [19.1 vs 16.3 Gbps]
-> 64K - [19.6 vs 19.7 Gbps]
-> Autotune - [19.7 vs 19.6 Gbps]
->=20
-> >From the above performance data, we can infer that:
-> * Regression is specific to lower fixed socket buffer sizes (8K, 16K & 32=
-K).
-> * Increasing the socket buffer size gradually decreases the throughput im=
-pact.
-> * Performance is equal for higher fixed socket size (64K) and Autotune so=
-cket
-> tests.
->=20
-> We would like to know if there are any opportunities for optimization in
-> the test cases with small socket sizes.
->=20
-
-Can you verify the regression on current mainline (v6.8-rc6)?
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---aJ0FkAcvBcopWHIX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZd7vpAAKCRD2uYlJVVFO
-o3FWAQDe+PbGL4LW/N1x23XLUSDEsqAGX9WqhwvPNQEir1nE3gEAqt155Cln5op5
-oMAlTfo6KFQ5Sl5qdUv70rbcuu4T+gs=
-=88Qq
------END PGP SIGNATURE-----
-
---aJ0FkAcvBcopWHIX--
