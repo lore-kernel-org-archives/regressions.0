@@ -1,195 +1,128 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B20556B83;
-	Wed, 28 Feb 2024 11:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B6B73513
+	for <regressions@lists.linux.dev>; Wed, 28 Feb 2024 12:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709118201; cv=none; b=IEI4wlM3McxFhuM+L/E4EJj4NEFLPPS2xqbqHGVqt5TFHGL/n0ItJZecjnItj3htS5fv4HWwJiZqz62ELkpmvYeG38EKfhPgTDOMM8ieMFg4WFHqgcUcPfek0H9M1kBSC3QWeT5eCCgmS7BQhtLfp8oUZBaVJwfhuDRF7TT73AM=
+	t=1709121735; cv=none; b=nqk0iQBfCA8tdqYHEUXGLxLTN1OeY01aqT8z8H9jkgSePSFI9ayTwWQuwmAQvRubqQJlLvwX0/YVmyQ4s4imrpRgsNNiVmYAqB+jm8y0tHSUvrmArb88gqVfqd3eIOotuWVk1txtrL7QpYnPxyawYvC35Lp/f/7S71iyQNDp7dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709118201; c=relaxed/simple;
-	bh=u4IVyFOR7RzjTRTot0y2acP+tk2Gagt6IY28YbB1ciA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqJVxG+zgC4LGito5TNB5lQq3za04m+VoW4qikPQX7cyQpLJ4QFfQTspUqk5vHp+r/ouD/xpZaS3LbkjlaRJHUyFIXTB0kkgHmeLvSQUNbV+JEFc9wqWUH21FLgc1isP2JKB1xCl7NLj9VA0NexqnohV8ZsBpGhHnR68lSaJDXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=OLNEWjdH; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709121735; c=relaxed/simple;
+	bh=6V9fLnX4djEHIHnxWds6qMnJtXmi2aPHUDNuD/uxng8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uLhMlUk54Xz/xGKyJCdq8gMsGyaaccNnRuLi7bLLDWSaCsHTSrfpDT6sOe/q2MU8tzK6kH5Zx9u16rnUbUNpboVptl7vG1qQ8yhtVNq4W1kFYyDvrxMAIR/P/1urbKKp+Q/UUfq4JDCatPJ/8A/4O5v7PC9CkZKE+7uEqKDy2FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3jnP0B3; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="OLNEWjdH"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id A416A1BCF11;
-	Wed, 28 Feb 2024 12:03:09 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709118190; bh=5w3iwvVBIESxi22ZZJiQmoVQjo/FSOSxxrB8vPximt8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OLNEWjdHYJMeowGWV/51UimBdm/m2akUf1btKvRF2NaEFPKURBgX8ac1VYfTbZ9RU
-	 +xj9obZijQlIyybTq7FsrzEjvxwadZc/h9dXCM9Gc2+aI8qBE9GyPyP7EmAoBRXw0u
-	 SCYb28c7TN4IhPXxI2+5QjuoBKCT0CSGNl/YwQoT9d3XXQiVE+FEcogySyA0bL4QfD
-	 2GFWPfZrTUopxHLSXfM12An5+cJSgL2QdaxrDHsXPYVmmFudzUbALqpT7IZRoM0n/s
-	 nzTcV/0RX9m/2I4OEgJr28dLSPAp17apEB125LsiasVpG1L8uOM7fzQRqknRYIJZtz
-	 PF/umqxoAYmVQ==
-Date: Wed, 28 Feb 2024 12:03:08 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Eric
- Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jisheng
- Zhang <jszhang@kernel.org>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>, "moderated
- list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
- <linux-sunxi@lists.linux.dev>, Marc Haber <mh+netdev@zugschlus.de>, Andrew
- Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- stable@vger.kernel.org, alexis.lothore@bootlin.com, Guenter Roeck
- <linux@roeck-us.net>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit
- statistics counters
-Message-ID: <20240228120308.48d6a9c2@meshulam.tesarici.cz>
-In-Reply-To: <a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-References: <20240203190927.19669-1-petr@tesarici.cz>
-	<ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
-	<Zct5qJcZw0YKx54r@xhacker>
-	<CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
-	<20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
-	<CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-	<a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3jnP0B3"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7c7c984699fso139296439f.1
+        for <regressions@lists.linux.dev>; Wed, 28 Feb 2024 04:02:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709121733; x=1709726533; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9EbFg5rAlApTq4Ur/KjS2tqf+My7HKA0PMj35gGR2V8=;
+        b=e3jnP0B3Own0lncqddmNNFbisIlVUNinJv/ant8JrefHyA98Nf/qRg/nhsJ7z4l6Ir
+         xjqgdHt6n773hWGDwqCo1KOwcTB4EoC6KKsT7+fwnsEqfwoT8dFi0JWruVu7xOsYW4ne
+         hf9Wvu02PqSmeb89HJD/OphwAy/nwxbpadfKbWQObGQGh6SxnRqz7+0ImTR7J3Ke/OkE
+         72TgJxaLWjNOqfNNNIepI/7NbqZ/j/djhwheRg9R/OVnTYlNyPlqU95jmZ4sILrulKdf
+         eYV2L95+BgIBbhhqOTr+/quz5GDmrA9KMxL67NyzIh8KlfxyjD3qnZbPtsoYh0X+ROB2
+         pGpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709121733; x=1709726533;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9EbFg5rAlApTq4Ur/KjS2tqf+My7HKA0PMj35gGR2V8=;
+        b=R59leng8rD9FBKHTsG1WWJBpx1INITHBV0RuTHnHkxTlzSM/1VVMIhpqiwEGF+zFqL
+         QyYNfxHgTeANtX4MwpWh7yTlcQqvxDiyVai/mn1ElsD43+oZoMYaY6WUqZ8/RC1uSGiV
+         ECAcEPHGghlE9CCShhPkbNXNmPkMe1emVTfGTw0fE3U41sI1m46KZiDd/VbvUK2+mHya
+         +7lVRXSmqepgnUzLt33KEPIgb97NxMlKldXJPNWPlGb4MVNh9RxiJ+HAQ9sFFK7YyQJD
+         yTVZokelF6FuWHDx8EZCa7QaqD9Cfm5VfUGkf35SG5YG5RDXkXOdm6GE72FE4f2cYaCJ
+         IMhA==
+X-Gm-Message-State: AOJu0YwAdxGpyZpv7oFi5FbkhCKzRc8gKGj4ISQRiUIV9cfWByegG7hq
+	mvo1cPVTngPwr8e6FtabONzsR1qRG8bxXE9p9bzkkG/uPJPtNcDxypXH2H9DQZU=
+X-Google-Smtp-Source: AGHT+IHQ2x000uqQolclyzQgafNQ9xKVlzClv2eZYrTcDX5jTDSRh0RJ/VLEbKeg09C1QMdrtitnjA==
+X-Received: by 2002:a05:6602:358:b0:7c4:61e7:9d77 with SMTP id w24-20020a056602035800b007c461e79d77mr15494595iou.19.1709121732669;
+        Wed, 28 Feb 2024 04:02:12 -0800 (PST)
+Received: from [192.168.0.107] ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id c8-20020a62e808000000b006e4625a0f0dsm7596575pfi.169.2024.02.28.04.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 04:02:12 -0800 (PST)
+Message-ID: <b2b21bca-9c99-4df5-9947-29d19abd89e6@gmail.com>
+Date: Wed, 28 Feb 2024 19:02:03 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Network performance regression in Linux kernel 6.6 for small
+ socket size test cases
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Abdul Anshad Azeez <abdul-anshad.azeez@broadcom.com>, edumazet@google.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
+ dsahern@kernel.org, Linux Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Boon Ang <boon.ang@broadcom.com>, John Savanyo
+ <john.savanyo@broadcom.com>, Peter Jonasson <peter.jonasson@broadcom.com>,
+ Rajender M <rajender.m@broadcom.com>
+References: <CALkn8kLOozs5UO52SQa9PR-CiKx_mqW8VF9US94qN+ixyqnkdQ@mail.gmail.com>
+ <Zd7vqSnT6ocYLuZ4@archie.me>
+ <8015b1f0-d37b-45de-bd24-12fc21cbf83d@leemhuis.info>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <8015b1f0-d37b-45de-bd24-12fc21cbf83d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Wed, 28 Feb 2024 07:19:56 +0100
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
- wrote:
+On 2/28/24 16:09, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 28.02.24 09:32, Bagas Sanjaya wrote:
+>> [also Cc: regressions ML]
+>>
+>> On Wed, Feb 28, 2024 at 12:13:27PM +0530, Abdul Anshad Azeez wrote:
+>>> During performance regression workload execution of the Linux
+>>> kernel we observed up to 30% performance decrease in a specific networking
+>>> workload on the 6.6 kernel compared to 6.5 (details below). The regression is
+>>> reproducible in both Linux VMs running on ESXi and bare metal Linux.
+>>>
+>>> [...]
+>>>
+>>> We would like to know if there are any opportunities for optimization in
+>>> the test cases with small socket sizes.
+>>
+>> Can you verify the regression on current mainline (v6.8-rc6)?
+> 
+> Bagas, I know that you are trying to help, but this is not helpful at
+> all (and indirectly puts regression tracking and the kernel development
+> community into a bad light).
+> 
+> Asking that question can be the right thing sometimes, for example in a
+> bugzilla ticket where the reporter is clearly reporting their first bug.
+> But the quoted report above clearly does not fall into that category for
+> various obvious reasons.
+> 
+> If you want to ensure that reports like that are acted upon, wait at
+> least two or three work days and see if there is a reply from a
+> developer. In case there is none (which happens, but I assume for a bug
+> report like this is likely rare) prodding a bit can be okay. But even
+> then you definitely want to use a more friendly tone. Maybe something
+> like "None of the developers reacted yet; maybe none of them bothered to
+> take a closer look because it's unclear if the problem still happens
+> with the latest code. You thus might want to verify and report back if
+> the problem happens with latest mainline, maybe then someone will take a
+> closer look".
+> 
+> Okay, that has way too many "maybe" in it, but I'm sure you'll get the
+> idea. :-D
+> 
 
-> Net maintainers, chiming in here, as it seems handling this regression
-> stalled.
+Oops, I'm always impatient (and forgot to privately mail you) in this case.
+Sorry for inconvenience.
 
-Indeed, I was too busy with sandbox mode...
+-- 
+An old man doll... just what I always wanted! - Clara
 
-> On 13.02.24 16:52, Eric Dumazet wrote:
-> > On Tue, Feb 13, 2024 at 4:26=E2=80=AFPM Guenter Roeck <linux@roeck-us.n=
-et> wrote: =20
-> >> On Tue, Feb 13, 2024 at 03:51:35PM +0100, Eric Dumazet wrote: =20
-> >>> On Tue, Feb 13, 2024 at 3:29=E2=80=AFPM Jisheng Zhang <jszhang@kernel=
-.org> wrote: =20
-> >>>> On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote: =20
-> >>>>> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote: =20
-> >>>>>> As explained by a comment in <linux/u64_stats_sync.h>, write side =
-of struct
-> >>>>>> u64_stats_sync must ensure mutual exclusion, or one seqcount updat=
-e could
-> >>>>>> be lost on 32-bit platforms, thus blocking readers forever. Such l=
-ockups
-> >>>>>> have been observed in real world after stmmac_xmit() on one CPU ra=
-ced with
-> >>>>>> stmmac_napi_poll_tx() on another CPU.
-> >>>>>>
-> >>>>>> To fix the issue without introducing a new lock, split the statics=
- into
-> >>>>>> three parts:
-> >>>>>>
-> >>>>>> 1. fields updated only under the tx queue lock,
-> >>>>>> 2. fields updated only during NAPI poll,
-> >>>>>> 3. fields updated only from interrupt context,
-> >>>>>>
-> >>>>>> Updates to fields in the first two groups are already serialized t=
-hrough
-> >>>>>> other locks. It is sufficient to split the existing struct u64_sta=
-ts_sync
-> >>>>>> so that each group has its own.
-> >>>>>>
-> >>>>>> Note that tx_set_ic_bit is updated from both contexts. Split this =
-counter
-> >>>>>> so that each context gets its own, and calculate their sum to get =
-the total
-> >>>>>> value in stmmac_get_ethtool_stats().
-> >>>>>>
-> >>>>>> For the third group, multiple interrupts may be processed by diffe=
-rent CPUs
-> >>>>>> at the same time, but interrupts on the same CPU will not nest. Mo=
-ve fields
-> >>>>>> from this group to a newly created per-cpu struct stmmac_pcpu_stat=
-s.
-> >>>>>>
-> >>>>>> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics=
- where necessary")
-> >>>>>> Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugsc=
-hlus.de/t/
-> >>>>>> Cc: stable@vger.kernel.org
-> >>>>>> Signed-off-by: Petr Tesarik <petr@tesarici.cz> =20
-> >>>>>
-> >>>>> This patch results in a lockdep splat. Backtrace and bisect results=
- attached.
-> >>>>>
-> >>>>> ---
-> >>>>> [   33.736728] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>> [   33.736805] WARNING: inconsistent lock state
-> >>>>> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
-> >>>>> [   33.737080] --------------------------------
-> >>>>> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-> >>>>> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
-> >>>>> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dwma=
-c_dma_interrupt+0x9c/0x28c
-> >>>>> [   33.738206] {HARDIRQ-ON-W} state was registered at:
-> >>>>> [   33.738318]   lock_acquire+0x11c/0x368
-> >>>>> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
-> >>>>> [   33.738525]   stmmac_xmit+0x4d0/0xc58 =20
-> >>>>
-> >>>> interesting lockdep splat...
-> >>>> stmmac_xmit() operates on txq_stats->q_syncp, while the
-> >>>> sun8i_dwmac_dma_interrupt() operates on pcpu's priv->xstats.pcpu_sta=
-ts
-> >>>> they are different syncp. so how does lockdep splat happen. =20
-> >>>
-> >>> Right, I do not see anything obvious yet. =20
-> >>
-> >> Wild guess: I think it maybe saying that due to
-> >>
-> >>         inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-> >>
-> >> the critical code may somehow be interrupted and, while handling the
-> >> interrupt, try to acquire the same lock again. =20
-> >=20
-> > This should not happen, the 'syncp' are different. They have different
-> > lockdep classes.
-> >=20
-> > One is exclusively used from hard irq context.
-> >=20
-> > The second one only used from BH context. =20
->=20
-> Alexis Lothor=C3=A9 hit this now as well, see yesterday report in this
-> thread; apart from that nothing seem to have happened for two weeks now.
-> The change recently made it to some stable/longterm kernels, too. Makes
-> me wonder:
->=20
-> What's the plan forward here? Is this considered to be a false positive?
-
-Although my system has run stable for a couple of months, I am hesitant
-to call it a false positive.
-
-> Or a real problem?
-
-That's what I think. But I would have to learn a lot about the network
-stack to understand what exactly happens here.
-
-It may go faster if somebody else on the Cc can give me a hint where to
-start looking based on the lockdep warning.
-
-Petr T
