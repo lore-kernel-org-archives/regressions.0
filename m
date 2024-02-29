@@ -1,210 +1,101 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE7274426;
-	Wed, 28 Feb 2024 19:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E3147F42;
+	Thu, 29 Feb 2024 07:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709149080; cv=none; b=dzBubnjeWvxmK/DbadQ5HhHFvftznVNhe+sLtV1+c+x1hGcRhe0Q+QxFPDoAUS8U8MsNxRYMb1yR9bEHYzSaBEpIpInkzCwSnMpDNYqrwH4e+DnuMXqDJPV+zYdryqz5ccDKY0qq592PAtbZHd/Ds7+TKDBFwgcUXUYYZrKe/b4=
+	t=1709192046; cv=none; b=ZmToVk+AuR0Ior9iQsuL/TsrqOk53jkn4cZhq5Udj/izftadq/0MU6O9TXd/QY3ISVw5btB6SgetzEcFPYiGBNB0K372OKt7F48lx+R9VRKHXarhsFGiV+doEs/vQq3ZbQwFgL70CVHaYnN5irJ1/yTi8YyTkLBe+Ls8uL9V7Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709149080; c=relaxed/simple;
-	bh=EFmB4lWDphV8+EpOjlrT5HS+VlJ+NqK1Vzka+3xudRI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uJBJbLpAhsd49PQbIrD//UtsCbaNTQXMirO62mYfIh/4rUPqZCf93epUI4z1lo/rOzIawQTDPzCLtkYyAgQugJgfw7sETA9LX0nODtk+hZTmhh5sXm3nYLPUR/RJ3wq484vYmh/sLIM2q/4ugb3M9mdGWIykGqq9tzJlF+EH3ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cfkDZP0d; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709192046; c=relaxed/simple;
+	bh=upVVE5UZbd+pNFh7XTDBAnXaQKzlOnrLOZYiup6SgMo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnHBViXYI9DQlL/T1zwqVwS/Npm0LNNtLPOenSKiaxJtm3I0/ogWfIO2yhfwDaX+9xnOjiAR5rFPRFKqHup4jxeil2O9eIX8eLE5mBP5NJ6x2r7jkhH9I2d9DE1Hua21+uudGysuLNIfjd1gtDpXtS3Is63YZigpO9wYtKCMZ1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=x9cFIalg; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfkDZP0d"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d23114b19dso1080921fa.3;
-        Wed, 28 Feb 2024 11:37:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709149077; x=1709753877; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qyl4cRu1qlUcGFJZjiydTaxtRFK5CrOEvpLgHrcgqZA=;
-        b=cfkDZP0dqElspGgbNtRQ33eHPsGSUHOTQ6AnyTvNDvs/w6xpJEddtv7U2VkjGSKn0n
-         jw+3WQaekWl+BvOcjLV/Z09Ocb3MR8/OQ00Bu7vyhWWq6Pyf2Uuq5/U4ck618LQRE1Xy
-         veYAA9Gkrl8m2kRZCMKAubW8g8IvQQpkV1vQd7Mj3v9E4wnIbr9vHMyXgZdVbxv2QdII
-         gWYCS3iUdtFRAoVjtiUTl9fRNUPagHKObpF15TTNGg+VqVWufBrgQVU57tlHjxtxPR30
-         K+YvM5AIMS+Dj3DRFly8cU+/De3h4xE3/rOaDsLgquYm304WnMWwphsQHWIY9A1f1N+f
-         MsGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709149077; x=1709753877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qyl4cRu1qlUcGFJZjiydTaxtRFK5CrOEvpLgHrcgqZA=;
-        b=RHX019X/biDulam0O1f8tnliufESMQ1ugGi9dKordkwtIVBHdXte80nhf9n0R7LJgQ
-         8cx56yI0fFwI7T5whiduJkUMd70l/amYarkLDFPO7oHIXxKWzE8dSU37WJhkv5om4exB
-         lNT+pMd+9jPlk8cLiZ2HfU5h/HTTCPlTHZy71sn3KfAVm0H4qUbVArd+zduoilJPmZxf
-         ZGZjhalYraGVS24Drma19O8lEpeMQfpimGF6Ph5Xjo5A+1Fw5tw/Y4Z0mQMx/RzDATs6
-         PITEGDsNNtA9b2YvzzFgV3I8FiVRYOJFrIGY3DubVCDzqe2vUmfyWfgiSzZ0hlKuNChh
-         fTmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjbDY8d5LIy+f7sPodCPNk82mjCRmZai8I9ncMSPomvbtKwFRCmCRDbLrvRtZDUOMhaMbobRpfPrRYXbTn4YelcMO9JtuN6eOAqQl+3ACFlIZ9euften+qIVFOAr06QSnu78PW+A==
-X-Gm-Message-State: AOJu0YziakgnXT+MPA062m+Fsy5TZWsTiHduI2hhytK9K4zjYouV1Ppu
-	g+DckUBs5I/I3shKnaEkzxqpOQhGtRUkxA2X0b3MIKdN56WmUTAhFHVmwuV95nlmJjMw/VEbKTA
-	AyqzWe0Pb+TCxi/AR1avDjOLWCu8=
-X-Google-Smtp-Source: AGHT+IFr8Dy0vd+CWwPk6/6vxQc4Lc0pIfgo9F4ScipgWNlM+NiqFebxiO0hpCqIsRTpWsBoy5CcS04jzTzjwy6WBdE=
-X-Received: by 2002:a2e:92c9:0:b0:2d2:393d:91b7 with SMTP id
- k9-20020a2e92c9000000b002d2393d91b7mr8098184ljh.52.1709149076723; Wed, 28 Feb
- 2024 11:37:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="x9cFIalg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=JWP7vIFZ5FuFgqo/8c4mSpijFYJIYzeqkTzRqdlTjAA=;
+	t=1709192043; x=1709624043; b=x9cFIalgwTHEEJ2FkFv7AmxFqx+qkWlzRWRtQWXTd9nU9LN
+	Lq7223drK7s+6CgLijmMaDn20rxQLv61zF2Ic/HuAFVJKxveIM4L/96Q/eAdHg6ZFALAQQ1fgq/BV
+	JagsgnljaEK/b+ZxqADc6lZvH3zwu/gDVBgjBlKlb1SvhNfeRop35yVg9iRfEOvu8KYRHZ7j2mURR
+	j0hCNh3jKuaNIwPxKgvE/cotPf6cOds06L0ThXIh5G6IE1QseqVunwJCdERh/kI3TURqS4fkoUE52
+	NlsEGJXYLrcPOUhuMwzuRVD9NIJXXQnY99MUDCVKKR/W2u3E2rDb4E2b44QqzEMA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rfavT-0007TL-7L; Thu, 29 Feb 2024 08:33:55 +0100
+Message-ID: <d3e2c122-da90-4c72-8db4-e69a243a4b74@leemhuis.info>
+Date: Thu, 29 Feb 2024 08:33:54 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOCpoWc_HQy4UJzTi9pqtJdO740Wx5Yd702O-mwXBE6RVBX1Eg@mail.gmail.com>
- <CAOCpoWf3TSQkUUo-qsj0LVEOm-kY0hXdmttLE82Ytc0hjpTSPw@mail.gmail.com>
- <CAOCpoWeNYsMfzh8TSnFqwAG1BhAYnNt_J+AcUNqRLF7zmJGEFA@mail.gmail.com> <672e88f2-8ac3-45fe-a2e9-730800017f53@libero.it>
-In-Reply-To: <672e88f2-8ac3-45fe-a2e9-730800017f53@libero.it>
-From: Patrick Plenefisch <simonpatp@gmail.com>
-Date: Wed, 28 Feb 2024 14:37:45 -0500
-Message-ID: <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
-Subject: Re: [REGRESSION] LVM-on-LVM: error while submitting device barriers
-To: kreijack@inwind.it
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-	Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	David Sterba <dsterba@suse.com>, regressions@lists.linux.dev, dm-devel@lists.linux.dev, 
-	linux-btrfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.7 regression: platform 4809c000.mmc: deferred probe pending
+Content-Language: en-US, de-DE
+To: Andreas Schwab <schwab@suse.de>
+Cc: Tony Lindgren <tony@atomide.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-arm-kernel@lists.infradead.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Linux-OMAP <linux-omap@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+References: <mvmcyt13idm.fsf@suse.de>
+ <c92385d2-1909-43a8-aea8-cd9a8687a898@leemhuis.info>
+ <20240215094640.GS52537@atomide.com> <mvmeddeyqb8.fsf@suse.de>
+ <2024021516-stricken-bubble-bf8d@gregkh>
+ <2024022022-happiest-affirm-60cf@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024022022-happiest-affirm-60cf@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709192043;7bc27738;
+X-HE-SMSGID: 1rfavT-0007TL-7L
 
-On Wed, Feb 28, 2024 at 2:19=E2=80=AFPM Goffredo Baroncelli <kreijack@liber=
-o.it> wrote:
->
-> On 28/02/2024 18.25, Patrick Plenefisch wrote:
-> > I'm unsure if this is just an LVM bug, or a BTRFS+LVM interaction bug,
-> > but LVM is definitely involved somehow.
-> > Upgrading from 5.10 to 6.1, I noticed one of my filesystems was
-> > read-only. In dmesg, I found:
-> >
-> > BTRFS error (device dm-75): bdev /dev/mapper/lvm-brokenDisk errs: wr
-> > 0, rd 0, flush 1, corrupt 0, gen 0
-> > BTRFS warning (device dm-75): chunk 13631488 missing 1 devices, max
-> > tolerance is 0 for writable mount
-> > BTRFS: error (device dm-75) in write_all_supers:4379: errno=3D-5 IO
-> > failure (errors while submitting device barriers.)
-> > BTRFS info (device dm-75: state E): forced readonly
-> > BTRFS warning (device dm-75: state E): Skipping commit of aborted trans=
-action.
-> > BTRFS: error (device dm-75: state EA) in cleanup_transaction:1992:
-> > errno=3D-5 IO failure
-> >
-> > At first I suspected a btrfs error, but a scrub found no errors, and
-> > it continued to be read-write on 5.10 kernels.
-> >
-> > Here is my setup:
-> >
-> > /dev/lvm/brokenDisk is a lvm-on-lvm volume. I have /dev/sd{a,b,c,d}
-> > (of varying sizes) in a lower VG, which has three LVs, all raid1
-> > volumes. Two of the volumes are further used as PV's for an upper VGs.
-> > One of the upper VGs has no issues. The non-PV LV has no issue. The
-> > remaining one, /dev/lowerVG/lvmPool, hosting nested LVM, is used as a
-> > PV for VG "lvm", and has 3 volumes inside. Two of those volumes have
-> > no issues (and are btrfs), but the last one is /dev/lvm/brokenDisk.
-> > This volume is the only one that exhibits this behavior, so something
-> > is special.
-> >
-> > Or described as layers:
-> > /dev/sd{a,b,c,d} =3D> PV =3D> VG "lowerVG"
-> > /dev/lowerVG/single (RAID1 LV) =3D> BTRFS, works fine
-> > /dev/lowerVG/works (RAID1 LV) =3D> PV =3D> VG "workingUpper"
-> > /dev/workingUpper/{a,b,c} =3D> BTRFS, works fine
-> > /dev/lowerVG/lvmPool (RAID1 LV) =3D> PV =3D> VG "lvm"
-> > /dev/lvm/{a,b} =3D> BTRFS, works fine
-> > /dev/lvm/brokenDisk =3D> BTRFS, Exhibits errors
->
-> I am a bit curious about the reasons of this setup.
+On 20.02.24 15:35, Greg KH wrote:
+> On Thu, Feb 15, 2024 at 12:16:34PM +0100, Greg KH wrote:
+>> On Thu, Feb 15, 2024 at 11:28:27AM +0100, Andreas Schwab wrote:
+>>> On Feb 15 2024, Tony Lindgren wrote:
+>>>
+>>>> There was a regression recently with the PMIC which would cause NFSroot
+>>>> on devices to keep working but may have affected MMC. Please check that
+>>>> commit 7a29fa05aeca ("mfd: twl6030-irq: Revert to use of_match_device()")
+>>>> is applied.
+>>>
+>>> That commit hasn't hit stable yet.  Maybe it's because it references a
+>>> non-existant commit id (1e0c866887f4 instead of 830fafce06e6).
+>>
+>> Yeah, our tools can't do about a commit that does not have a cc: stable@
+>> tag in it AND the only commit it does reference is not one actually in
+>> the tree at all.
+>>
+>> An impossible task for us here, please ask stable@vger.kernel.org to
+>> take the commit if this is needed, and let us know how far back it
+>> should go.
+> 
+> To be explicit, does this need to be applied to the stable tree(s)?  If
+> so, please email stable@vger.kernel.org with the git id to do so.
 
-The lowerVG is supposed to be a pool of storage for several VM's &
-containers. [workingUpper] is for one VM, and [lvm] is for another VM.
-However right now I'm still trying to organize the files directly
-because I don't have all the VM's fully setup yet
+Andreas, Tony afaics asked you to do that here:
+https://lore.kernel.org/all/20240226113635.GX52537@atomide.com/
 
-> However I understood that:
->
-> /dev/sda -+                +-- single (RAID1) -> ok             +-> a   o=
-k
-> /dev/sdb  |                |                                    |-> b   o=
-k
-> /dev/sdc  +--> [lowerVG]>--+-- works (RAID1) -> [workingUpper] -+-> c   o=
-k
-> /dev/sdd -+                |
->                             |                       +-> a          -> ok
->                             +-- lvmPool -> [lvm] ->-|
->                                                     +-> b          -> ok
->                                                     |
->                                                     +->brokenDisk  -> fai=
-l
->
-> [xxx] means VG, the others are LVs that may act also as PV in
-> an upper VG
+But unless I missed something nothing happened since then. Did it fall
+through the cracks? Reminder, if that patch clearly applied to 6.7.y
+then all that's afaics needed is a mail with a simple text along the
+lines of "Greg, please pick up 7a29fa05aeca2c ("mfd: twl6030-irq: Revert
+to use of_match_device()") for linux-6.7.y, it fixes a bug I ran into
+and Tony is fine with it."
 
-Note that lvmPool is also RAID1, but yes
-
->
-> So, it seems that
->
-> 1) lowerVG/lvmPool/lvm/a
-> 2) lowerVG/lvmPool/lvm/a
-> 3) lowerVG/lvmPool/lvm/brokenDisk
->
-> are equivalent ... so I don't understand how 1) and 2) are fine but 3) is
-> problematic.
-
-I assume you meant  lvm/b for 2?
-
->
-> Is my understanding of the LVM layouts correct ?
-
-Your understanding is correct. The only thing that comes to my mind to
-cause the problem is asymmetry of the SATA devices. I have one 8TB
-device, plus a 1.5TB, 3TB, and 3TB drives. Doing math on the actual
-extents, lowerVG/single spans (3TB+3TB), and
-lowerVG/lvmPool/lvm/brokenDisk spans (3TB+1.5TB). Both obviously have
-the other leg of raid1 on the 8TB drive, but my thought was that the
-jump across the 1.5+3TB drive gap was at least "interesting"
-
->
->
-> >
-> > After some investigation, here is what I've found:
-> >
-> > 1. This regression was introduced in 5.19. 5.18 and earlier kernels I
-> > can keep this filesystem rw and everything works as expected, while
-> > 5.19.0 and later the filesystem is immediately ro on any write
-> > attempt. I couldn't build rc1, but I did confirm rc2 already has this
-> > regression.
-> > 2. Passing /dev/lvm/brokenDisk to a KVM VM as /dev/vdb with an
-> > unaffected kernel inside the vm exhibits the ro barrier problem on
-> > unaffected kernels.
->
-> Is /dev/lvm/brokenDisk *always* problematic with affected ( >=3D 5.19 ) a=
-nd
-> UNaffected ( < 5.19 ) kernel ?
-
-Yes, I didn't test it in as much depth, but 5.15 and 6.1 in the VM
-(and 6.1 on the host) are identically problematic
-
->
-> > 3. Passing /dev/lowerVG/lvmPool to a KVM VM as /dev/vdb with an
-> > affected kernel inside the VM and using LVM inside the VM exhibits
-> > correct behavior (I can keep the filesystem rw, no barrier errors on
-> > host or guest)
->
-> Is /dev/lowerVG/lvmPool problematic with only "affected" kernel ?
-
-Uh, passing lvmPool directly to the VM is never problematic. I tested
-5.10 and 6.1 in the VM (and 6.1 on the host), and neither setup throws
-barrier errors.
-
-> [...]
->
-> --
-> gpg @keyserver.linux.it: Goffredo Baroncelli <kreijackATinwind.it>
-> Key fingerprint BBF5 1610 0B64 DAC6 5F7D  17B2 0EDA 9B37 8B82 E0B5
->
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
