@@ -1,151 +1,113 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2F86DCF5
-	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 11:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD44368
+	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 12:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709293823; cv=none; b=LBPhHVDuHs+9HDzx1+cx42T3fv9mlo/s53IJ3U4ML8B/DjKubPl1JW2CD9hqHZ5BA8NfsddZr2195q0ZasHv7zLHhHwD30Fd7YS+RfiDI7VVf50mI8fizv/vohxZH6XvFRLnhR8FW97V1dBOJqCCSLWgGc1w0XBTIYkSJogQ1+o=
+	t=1709296275; cv=none; b=WJK+Mg0Cy+0oTsJaqv2CbUQA9V6b/wsj+wCyzjmjpNCtD1U/ymYUrVJlG0YtQt4Tv1rRN4cx5NJksZ07o3GjaE7jzemJr0WaVgkoHRULxPDw4za3ooTY8EENzbxBJh+GCEICKeHApe8wilo1F5ve74wC3rprkOV0m2hcwPwfWU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709293823; c=relaxed/simple;
-	bh=ZyOdMMu8KP6WhIKw+knptD9Cm6F09MQ4QMVz6tu/0BQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PynbSzb6JrajPKf0Zr1gIljAndfMyrtXvoGkcs6/laGwDMKCwa7Haj5JeL11AkdGX5iWTvnovvnwtiD15YC3TQ5AGP/HJTDtPARBWBvkF5HXFItyrXTmIdyWGVVy28USAJna7YpgA0q2RlhGwA0DZmnWKZhc439lKajv9hKFEvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 097B161E5FE01;
-	Fri,  1 Mar 2024 12:50:08 +0100 (CET)
-Message-ID: <38c07228-639f-4082-b09a-ffe62fe14b71@molgen.mpg.de>
-Date: Fri, 1 Mar 2024 12:50:07 +0100
+	s=arc-20240116; t=1709296275; c=relaxed/simple;
+	bh=8RnPvClv7KQ+Hc7khmpr12985u/duy/3v/TKfh9A88M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M7bl3P6q36aolLpPvgUoJbp3sr32b7aa7AtRWtFJhhE9/WzqsB2oNZBY1lYYPODuQ+7nV1rteeaweuBJAb+gAuPXhkd9cFra2I4E2fCUwV/0nOvsG02weewWlQO4FZOIgUWn0XIbP5peEVIdc3yMiF38IXR3q47lqEdzhqiar9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADAiC9eP; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADAiC9eP"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-563d56ee65cso3347653a12.2
+        for <regressions@lists.linux.dev>; Fri, 01 Mar 2024 04:31:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709296272; x=1709901072; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=qOvH3P5HGSrpjjPMuyCiz1PZ+rc7XO0ytGp7zjRcMjA=;
+        b=ADAiC9ePEqyQtYmVWwV1a5/JyQxIMAszefR21o2dP7XVoXYMkixOCAC6K01/rKi3lf
+         pZ9Qtzl7XZsxijlhMoWVLYFmLFA6JG2kUrUmBNbITb2dUeusPTcRygKgf6/uQTnLS4yv
+         HnsdNpkae5pkCFgQj9djKobF7v8DV8ZovLs4tg5uWm6DbNHF+0qPv2+Zkvaxa5mGMhSC
+         R9jhPeSs9fDZNjy9ZvAgCZ6XpV4AHTvmmOGCOhE13ByvOsW+25U51GjB4hG2KfFn2lb7
+         KSnyFBU7cN9NRimu8k4d4cObp+PwTxVBaCvA4tMnNjmR98DeYXgtJ9JxTAyQuR/OjgtW
+         5JfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709296272; x=1709901072;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qOvH3P5HGSrpjjPMuyCiz1PZ+rc7XO0ytGp7zjRcMjA=;
+        b=r78/TodDuSaxLj90s0wyKb9cDX5ByMM7UY1fMfhQHV8O6uahtOosDlmNxpwlijtaCG
+         GIymZqo7sU5tfAFZzcSUH0PguvLzURajeEPIiRW+05iY2VXhy6iFiZGaT0Wwno1xoKi0
+         ONiuQ3BAmPXsaVMUF0JJ56i47Nccej5IT3Tu4r/VS8MxtoUkxAsFrsAbtHtqGOYDCW/l
+         TB1izHImJBLkz3Yb575tNPFxFB5vBlyCd+kvvhij7qyF03IysXIx6IlrOj55o2X7ztiW
+         7LfeNm0/NgGp8uwYFHi6HaVu/RA+9qjiX32HxbhFlKSn1IRpRIDAJKM3OtsBWjNLyz/a
+         YrFQ==
+X-Gm-Message-State: AOJu0Yx809z0e0N+K/e4eOUOr33H45BBxZpBWvhFZNvbTM9zvMSHONAX
+	qOlYJTKYToEYnkVOKNlWLAd8kI0N/jVkWBmsqA7gr/py2GZV+xvp
+X-Google-Smtp-Source: AGHT+IFd140UexM9EOnEMJHomFWLoVYeGO7aw8HyZ/c5klK42r+DtIXPre1WNqulSOjeGkGfj4x07w==
+X-Received: by 2002:a17:906:ccc8:b0:a44:1a51:a1fd with SMTP id ot8-20020a170906ccc800b00a441a51a1fdmr1069869ejb.64.1709296272204;
+        Fri, 01 Mar 2024 04:31:12 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id mp7-20020a1709071b0700b00a440ceb4110sm1673266ejc.183.2024.03.01.04.31.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 04:31:11 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id D1E30BE2EE8; Fri,  1 Mar 2024 13:31:10 +0100 (CET)
+Date: Fri, 1 Mar 2024 13:31:10 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: regressions@lists.linux.dev, stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Aditya Srivastava <yashsri421@gmail.com>, 1064035@bugs.debian.org
+Subject: [regression 5.10.y] linux-doc builds: Global symbol "$args" requires
+ explicit package name (did you forget to declare "my $args"?) at
+ ./scripts/kernel-doc line 1236.
+Message-ID: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH regression fix] misc: lis3lv02d_i2c: Fix regulators
- getting en-/dis-abled twice on suspend/resume
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Arnd Bergmann <arnd@arndb.de>, Eric Piel <eric.piel@tremplin-utc.net>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20240220190035.53402-1-hdegoede@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20240220190035.53402-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Dear Hans,
+Hi,
 
+Ben Hutchings reported in https://bugs.debian.org/1064035 a problem
+with the kernel-doc builds once 3080ea5553cc ("stddef: Introduce
+DECLARE_FLEX_ARRAY() helper") got applied in 5.10.210 (as
+prerequisite of another fix in 5.10.y):
 
-Thank you for the patch.
-
-Am 20.02.24 um 20:00 schrieb Hans de Goede:
-> When not configured for wakeup lis3lv02d_i2c_suspend() will call
-> lis3lv02d_poweroff() even if the device has already been turned off
-> by the runtime-suspend handler and if configured for wakeup and
-> the device is runtime-suspended at this point then it is not turned
-> back on to serve as a wakeup source.
+> The backport of commit 3080ea5553cc "stddef: Introduce
+> DECLARE_FLEX_ARRAY() helper" modified scripts/kernel-doc and
+> introduced a syntax error:
 > 
-> Before commit b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting
-> of the reg_ctrl callback"), lis3lv02d_poweroff() failed to disable
-> the regulators which as a side effect made calling poweroff() twice ok.
+> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> Execution of ./scripts/kernel-doc aborted due to compilation errors.
 > 
-> Now that poweroff() correctly disables the regulators, doing this twice
-> triggers a WARN() in the regulator core:
+> This doesn't stop the documentation build process, but causes the
+> documentation that should be extracted by kernel-doc to be missing
+> from linux-doc-5.10.
 > 
-> unbalanced disables for regulator-dummy
-> WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable
-> ...
+> We should be able to fix this by eithering backport commit
+> e86bdb24375a "scripts: kernel-doc: reduce repeated regex expressions
+> into variables" or replacing /$args/ with /([^,)]+)/.
 > 
-> Fix lis3lv02d_i2c_suspend() to not call poweroff() a second time if
-> already runtime-suspended and add a poweron() call when necessary to
-> make wakeup work.
-> 
-> lis3lv02d_i2c_resume() has similar issues, with an added weirness that
-> it always powers on the device if it is runtime suspended, after which
-> the first runtime-resume will call poweron() again, causing the enabled
-> count for the regulator to increase by 1 every suspend/resume. These
-> unbalanced regulator_enable() calls cause the regulator to never
-> be turned off and trigger the following WARN() on driver unbind:
-> 
-> WARNING: CPU: 1 PID: 1724 at drivers/regulator/core.c:2396 _regulator_put
-> 
-> Fix this by making lis3lv02d_i2c_resume() mirror the new suspend().
-> 
-> Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-> Cc: stable@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->   drivers/misc/lis3lv02d/lis3lv02d_i2c.c | 21 +++++++++++++--------
->   1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-> index c6eb27d46cb0..15119584473c 100644
-> --- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-> +++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-> @@ -198,8 +198,14 @@ static int lis3lv02d_i2c_suspend(struct device *dev)
->   	struct i2c_client *client = to_i2c_client(dev);
->   	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
->   
-> -	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
-> +	/* Turn on for wakeup if turned off by runtime suspend */
-> +	if (lis3->pdata && lis3->pdata->wakeup_flags) {
-> +		if (pm_runtime_suspended(dev))
-> +			lis3lv02d_poweron(lis3);
-> +	/* For non wakeup turn off if not already turned off by runtime suspend */
-> +	} else if (!pm_runtime_suspended(dev))
->   		lis3lv02d_poweroff(lis3);
-> +
->   	return 0;
->   }
->   
-> @@ -208,13 +214,12 @@ static int lis3lv02d_i2c_resume(struct device *dev)
->   	struct i2c_client *client = to_i2c_client(dev);
->   	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
->   
-> -	/*
-> -	 * pm_runtime documentation says that devices should always
-> -	 * be powered on at resume. Pm_runtime turns them off after system
-> -	 * wide resume is complete.
-> -	 */
-> -	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
-> -		pm_runtime_suspended(dev))
-> +	/* Turn back off if turned on for wakeup and runtime suspended*/
-> +	if (lis3->pdata && lis3->pdata->wakeup_flags) {
-> +		if (pm_runtime_suspended(dev))
-> +			lis3lv02d_poweroff(lis3);
-> +	/* For non wakeup turn back on if not runtime suspended */
-> +	} else if (!pm_runtime_suspended(dev))
->   		lis3lv02d_poweron(lis3);
->   
->   	return 0;
+> Ben.
 
-I applied this commit on top of Linus’ master branch, and successfully 
-tested with S0ix and ACPI S3, that the warning is gone.
+What would be prefered here from stable maintainers point of view?
+AFAICS e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
+expressions into variables") won't apply cleanly and needs some
+refactoring. The alternative pointed out by Ben would be to replace
+the /$args/ with  /([^,)]+)/.
 
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 15 7590
+# 5.10.y specific regression
+#regzbot introduced: 443b16ee3d9ce0a3ece0e3526a5af883e5b16eaf
+#regzbot link: https://bugs.debian.org/1064035
 
-Looking at the diff, this also looks good. Thank you for writing the 
-helpful commit message.
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-Thank you for addressing this so quickly, and sorry for the late reply.
-
-
-Kind regards,
-
-Paul
+Regards,
+Salvatore
