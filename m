@@ -1,47 +1,37 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AD06E5EB
-	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 14:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3763984F;
+	Fri,  1 Mar 2024 14:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709302685; cv=none; b=Ov3PUOyZYI4tmV4s58RdKVCVEzkjKJDo05Y3tDk5g/4jtWI4j39TvHV4Lc1nQffEQGZK+SHZYiJqG1fmNlSGFun+HXMCEMfBcLvpm6MXVRNbBO7NlRF+iKjAwjnuFpxyim/rgVAu1w/gYio7SaCgIiL6XLdJLPTqYBpfRfi+TMc=
+	t=1709304347; cv=none; b=X6rzcq8RVbG0FmwEaRdP2RPVoNyk+vLou/C+cOsPzjgL33yKwaC3SqMsPFlMFzmJkNlphQsAq8SPBQDzFk+0IoK2maq2kHLl4EZGnIrg8mx0V2LjjsTqsf7wR5o5B6fn9lsQ91FmJnyK6xYeUe2VguSJzSO0Pw9TvEdSCrZAOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709302685; c=relaxed/simple;
-	bh=eRHjrkdrsJg43/9heYvQDxEKsE5N6/ROvqRBnivHrb8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=CSZIS8FFcU8uwZnVok8t07EklZpy5WRfJl2S3V2JJOe7axXvl7nN4r3L2rmnkbHaZNJrSybV5YwgS/3QEuOX+oThNZIRBPnsWOsr996YADDozheaBgFOpQch/TR04y2dKnfPeaccRg1NLyFrzHhGX8VhFGfUm9ymfJP3BfQJ9f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=nFIBZhEu; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
+	s=arc-20240116; t=1709304347; c=relaxed/simple;
+	bh=4QLH3hE2S+z5IGf50KcUJjIxVIczQPhQjmmLNlgPVQc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hpjYBiRJMYLpOp19Ga9Frn7EJp+H6fCIfUX/xpdHSUqrdRzFSGZh0pDqCHF+EBHIr1jO/Wo6Wo8Ua1qZae4bmRfjpt6HAj57PIlXjjnXsHIjhGzfG9WEceZxNIb5gXMVz7GtG71x1u3x/eiKq+WTyd+Qh/GRrXstFTVex+ISMzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A4IDRX5p; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="nFIBZhEu"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 6F662217AB
-	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 14:10:30 +0000 (UTC)
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id AFA6A20058
-	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 14:10:21 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 6EB6C203D6;
-	Fri,  1 Mar 2024 14:10:14 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 5E79F4007F;
-	Fri,  1 Mar 2024 14:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1709302213;
-	bh=eRHjrkdrsJg43/9heYvQDxEKsE5N6/ROvqRBnivHrb8=;
-	h=Date:To:Cc:From:Subject:From;
-	b=nFIBZhEujakHkeU1+NlkID5+4hvTFQLvIGv4elPMwOIuQiRAXsiLssb/qOPudCqg3
-	 IB+IS7rF73O/3/Wu1U9+MrVu13X2GrrVosV/oIU5I5U0bEfq+VieKkAjpbP86O09U2
-	 mOZiGsaMbTjG1Niy/lHWGsqOIN4c3gtEwHtO02rY=
-Received: from [10.66.66.8] (unknown [139.59.64.216])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 12D0B40CE5;
-	Fri,  1 Mar 2024 14:10:11 +0000 (UTC)
-Message-ID: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
-Date: Fri, 1 Mar 2024 19:40:09 +0530
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A4IDRX5p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=K6eQV30rwyI05k/lIeSe0J0bdWqaOHSEWuwMEmSdXho=;
+	t=1709304345; x=1709736345; b=A4IDRX5pvC16NXmxWenlSWAJVqMpI40oEAIcB4EDkeq+3ye
+	lp9XZyN64S0NUpbZ1+Y18+djWwJotoxDFbESNAZ8aIZnXnJvrHX8cH3fBT4nukLjMxgRiqYxEcA7a
+	so1BB5IQrQ34pPbyUMxijLbGimdp9KxC9wOS9IdG21B5jCXRzPQQ+RlkAwDBUd/kbkmEtd9kJsLfO
+	41Q2p307Pyj6rnAvQ9tFZ+QxX33zco2xO4TiKnhO7SIXCqC49Pl2C5mK01fK/GKAoOSRc2jE1blai
+	YeQsVSbgZZTbONgsJUpR5q9nomkew3knceo3IisClQo/iZqzAWGmPsXvauUVq6sA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rg48t-0006xb-6h; Fri, 01 Mar 2024 15:45:43 +0100
+Message-ID: <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
+Date: Fri, 1 Mar 2024 15:45:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,69 +39,61 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+Content-Language: en-US, de-DE
+To: Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org
 Cc: regressions@lists.linux.dev
-From: Pavin Joseph <me@pavinjoseph.com>
-Subject: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_NONE(0.00)[];
-	MIME_TRACE(0.00)[0:+]
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 5E79F4007F
+References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709304345;bbd5c064;
+X-HE-SMSGID: 1rg48t-0006xb-6h
 
-Hello everyone,
+Hi! Thx for the report.
 
-#regzbot introduced v6.7.5..v6.7.6
+On 01.03.24 15:10, Pavin Joseph wrote:
+> 
+> #regzbot introduced v6.7.5..v6.7.6
+> 
+> I'm experiencing an issue where kexec does a full firmware reboot
+> instead of kexec reboot.
 
-I'm experiencing an issue where kexec does a full firmware reboot 
-instead of kexec reboot.
+Does mainline show the same problem? The answer determines who later
+will have to look into this.
 
-Issue first submitted at OpenSuse bugzilla [0].
+> Issue first submitted at OpenSuse bugzilla [0].
+> 
+> OS details as follows:
+> Distributor ID:    openSUSE
+> Description:    openSUSE Tumbleweed-Slowroll
+> Release:    20240213
+> 
+> Issue has been reproduced by building kernel from source.
+> 
+> kexec works as expected in kernel v6.7.5.
+> kexec does full firmware reboot in kernel v6.7.6.
+> 
+> I followed the docs here [1] to perform git bisect and find the culprit,
+> hope it's alright as I'm quite out of my depth here.
 
-OS details as follows:
-Distributor ID:	openSUSE
-Description:	openSUSE Tumbleweed-Slowroll
-Release:	20240213
+With a bit of luck somebody might have heard about problems like yours.
+But if nobody comes up with an idea up within a few days we almost
+certainly need a bisection to get down to the root of the problem.
 
-Issue has been reproduced by building kernel from source.
+I'm working on a more detailed guide describing the process, maybe that
+works better for you:
 
-kexec works as expected in kernel v6.7.5.
-kexec does full firmware reboot in kernel v6.7.6.
+https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
 
-I followed the docs here [1] to perform git bisect and find the culprit, 
-hope it's alright as I'm quite out of my depth here.
+It among other will make you check mainline and also 6.7.7, which was
+just released.
 
-Git bisect logs:
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [b631f5b445dc3379f67ff63a2e4c58f22d4975dc] Linux 6.7.6
-git bisect bad b631f5b445dc3379f67ff63a2e4c58f22d4975dc
-# status: waiting for good commit(s), bad commit known
-# good: [004dcea13dc10acaf1486d9939be4c793834c13c] Linux 6.7.5
-git bisect good 004dcea13dc10acaf1486d9939be4c793834c13c
-
-Let me know if there's anything else I can do to help troubleshoot the 
-issue.
-
-[0]: https://bugzilla.suse.com/show_bug.cgi?id=1220541
-[1]: https://docs.kernel.org/admin-guide/bug-bisect.html
-
-Kind regards,
-Pavin Joseph.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
