@@ -1,113 +1,85 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD44368
-	for <regressions@lists.linux.dev>; Fri,  1 Mar 2024 12:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E4810E9;
+	Fri,  1 Mar 2024 13:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709296275; cv=none; b=WJK+Mg0Cy+0oTsJaqv2CbUQA9V6b/wsj+wCyzjmjpNCtD1U/ymYUrVJlG0YtQt4Tv1rRN4cx5NJksZ07o3GjaE7jzemJr0WaVgkoHRULxPDw4za3ooTY8EENzbxBJh+GCEICKeHApe8wilo1F5ve74wC3rprkOV0m2hcwPwfWU0=
+	t=1709299359; cv=none; b=EtYtwRO9ZqYiLMb2qS/Y5dutrkcZ2jnFyGSSATVl6jUUCONxJcfvRDD3DheBhRxVnpe/tasbxHipLhYyEa5GTSEbfCX4RxOCiRfqQCOyuxb7AJdIxOl1IQNklGekJIXrVQOpDakugz7AI56+nf0/DYK6d0wztJ1r0eIPPYjcNzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709296275; c=relaxed/simple;
-	bh=8RnPvClv7KQ+Hc7khmpr12985u/duy/3v/TKfh9A88M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=M7bl3P6q36aolLpPvgUoJbp3sr32b7aa7AtRWtFJhhE9/WzqsB2oNZBY1lYYPODuQ+7nV1rteeaweuBJAb+gAuPXhkd9cFra2I4E2fCUwV/0nOvsG02weewWlQO4FZOIgUWn0XIbP5peEVIdc3yMiF38IXR3q47lqEdzhqiar9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADAiC9eP; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709299359; c=relaxed/simple;
+	bh=cr2xzVzhBgRlA4qOBy83c8kVVYBBeoVu7rnkvJ5fZzo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sN8wL/eJbCsbtBDCMwoEWczIiin0Mvotpayz5EVauUlOR+xhL3KseoFzu9D80EUJT0//9SZgbnxXkbH9V18kPWa+SZhIncCxlIQZgFZXMktdcryCu0kWGiEB3nyiStKh9PB5yzA3QbZdog3Soqb+9E2Z8Y/JNrfgYxWZ9Zxzkfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qd3500ft; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADAiC9eP"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-563d56ee65cso3347653a12.2
-        for <regressions@lists.linux.dev>; Fri, 01 Mar 2024 04:31:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709296272; x=1709901072; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOvH3P5HGSrpjjPMuyCiz1PZ+rc7XO0ytGp7zjRcMjA=;
-        b=ADAiC9ePEqyQtYmVWwV1a5/JyQxIMAszefR21o2dP7XVoXYMkixOCAC6K01/rKi3lf
-         pZ9Qtzl7XZsxijlhMoWVLYFmLFA6JG2kUrUmBNbITb2dUeusPTcRygKgf6/uQTnLS4yv
-         HnsdNpkae5pkCFgQj9djKobF7v8DV8ZovLs4tg5uWm6DbNHF+0qPv2+Zkvaxa5mGMhSC
-         R9jhPeSs9fDZNjy9ZvAgCZ6XpV4AHTvmmOGCOhE13ByvOsW+25U51GjB4hG2KfFn2lb7
-         KSnyFBU7cN9NRimu8k4d4cObp+PwTxVBaCvA4tMnNjmR98DeYXgtJ9JxTAyQuR/OjgtW
-         5JfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709296272; x=1709901072;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qOvH3P5HGSrpjjPMuyCiz1PZ+rc7XO0ytGp7zjRcMjA=;
-        b=r78/TodDuSaxLj90s0wyKb9cDX5ByMM7UY1fMfhQHV8O6uahtOosDlmNxpwlijtaCG
-         GIymZqo7sU5tfAFZzcSUH0PguvLzURajeEPIiRW+05iY2VXhy6iFiZGaT0Wwno1xoKi0
-         ONiuQ3BAmPXsaVMUF0JJ56i47Nccej5IT3Tu4r/VS8MxtoUkxAsFrsAbtHtqGOYDCW/l
-         TB1izHImJBLkz3Yb575tNPFxFB5vBlyCd+kvvhij7qyF03IysXIx6IlrOj55o2X7ztiW
-         7LfeNm0/NgGp8uwYFHi6HaVu/RA+9qjiX32HxbhFlKSn1IRpRIDAJKM3OtsBWjNLyz/a
-         YrFQ==
-X-Gm-Message-State: AOJu0Yx809z0e0N+K/e4eOUOr33H45BBxZpBWvhFZNvbTM9zvMSHONAX
-	qOlYJTKYToEYnkVOKNlWLAd8kI0N/jVkWBmsqA7gr/py2GZV+xvp
-X-Google-Smtp-Source: AGHT+IFd140UexM9EOnEMJHomFWLoVYeGO7aw8HyZ/c5klK42r+DtIXPre1WNqulSOjeGkGfj4x07w==
-X-Received: by 2002:a17:906:ccc8:b0:a44:1a51:a1fd with SMTP id ot8-20020a170906ccc800b00a441a51a1fdmr1069869ejb.64.1709296272204;
-        Fri, 01 Mar 2024 04:31:12 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id mp7-20020a1709071b0700b00a440ceb4110sm1673266ejc.183.2024.03.01.04.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 04:31:11 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id D1E30BE2EE8; Fri,  1 Mar 2024 13:31:10 +0100 (CET)
-Date: Fri, 1 Mar 2024 13:31:10 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: regressions@lists.linux.dev, stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ben Hutchings <ben@decadent.org.uk>,
-	Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Aditya Srivastava <yashsri421@gmail.com>, 1064035@bugs.debian.org
-Subject: [regression 5.10.y] linux-doc builds: Global symbol "$args" requires
- explicit package name (did you forget to declare "my $args"?) at
- ./scripts/kernel-doc line 1236.
-Message-ID: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qd3500ft"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=gO2dxyiql6R0pRnjLVBTDL+/qu9DBW5s7IS4Px0iE6A=;
+	t=1709299357; x=1709731357; b=qd3500ftlQtxDys+gdpqs+bx9idBlgirBoRBC8NsiYYFE1a
+	DJxe/b6P5XkFPihvhHP3YWDhEJiXEISpG3TF1vmrhG5/iIvZg5rqFIj3Kx9ma2p2QrkBOwdqjaz2d
+	uYKftZySDMwFJ9q0+D+uwi5zAc0xF0BhbnkhaMz++OwF842SMB4r5thVMsSkH1aKt3d6Ybv/ToKyl
+	8b43AVNgx7+hWWld/01T54w3Z5MZvK51qA6V25emBZ1xzcpji+fOohsWMgXbu4qDeoEpzrm5rN2Vc
+	N4IJyjYLBA9G0nkVbUEQScm+eC6aqEHEXqwD0KMg9qavntP05EMX3klRKT0c1ebA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rg2qK-0006R6-HH; Fri, 01 Mar 2024 14:22:28 +0100
+Message-ID: <6d282271-25fa-4ed9-9748-df3705f9d5fb@leemhuis.info>
+Date: Fri, 1 Mar 2024 14:22:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] docs: new text on bisecting which also covers bug
+ validation
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
+ Nathan Chancellor <nathan@kernel.org>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
+ <petr@tesarici.cz>, Vegard Nossum <vegard.nossum@oracle.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>
+References: <02b084a06de4ad61ac4ecd92b9265d4df4d03d71.1709282441.git.linux@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <02b084a06de4ad61ac4ecd92b9265d4df4d03d71.1709282441.git.linux@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709299357;39e0a914;
+X-HE-SMSGID: 1rg2qK-0006R6-HH
 
-Hi,
+On 01.03.24 09:41, Thorsten Leemhuis wrote:
+> Add a second document on bisecting regressions explaining the whole
+> process from beginning to end -- while also describing how to validate
+> if a problem is still present in mainline.  This "two in one" approach
+> is possible, as checking whenever a bug is in mainline is one of the
+> first steps before performing a bisection anyway and thus needs to be
+> described. Due to this approach the text also works quite nicely in
+> conjunction with Documentation/admin-guide/reporting-issues.rst, as it
+> covers all typical cases where users will need to build a kernel in
+> exactly the same order.
+> [...]
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index ed8a629e59c86a..c53bb6e36291b8 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -1,4 +1,3 @@
+> -=================================================
 
-Ben Hutchings reported in https://bugs.debian.org/1064035 a problem
-with the kernel-doc builds once 3080ea5553cc ("stddef: Introduce
-DECLARE_FLEX_ARRAY() helper") got applied in 5.10.210 (as
-prerequisite of another fix in 5.10.y):
+Just saw that, that line obviously was not meant to be removed. Sorry.
 
-> The backport of commit 3080ea5553cc "stddef: Introduce
-> DECLARE_FLEX_ARRAY() helper" modified scripts/kernel-doc and
-> introduced a syntax error:
-> 
-> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
-> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
-> Execution of ./scripts/kernel-doc aborted due to compilation errors.
-> 
-> This doesn't stop the documentation build process, but causes the
-> documentation that should be extracted by kernel-doc to be missing
-> from linux-doc-5.10.
-> 
-> We should be able to fix this by eithering backport commit
-> e86bdb24375a "scripts: kernel-doc: reduce repeated regex expressions
-> into variables" or replacing /$args/ with /([^,)]+)/.
-> 
-> Ben.
+Jonathan, in case you consider merging this "soon", as suggested
+yesterday by  Vegard, could you please fix this up? Otherwise I'll fix
+this with v3.
 
-What would be prefered here from stable maintainers point of view?
-AFAICS e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
-expressions into variables") won't apply cleanly and needs some
-refactoring. The alternative pointed out by Ben would be to replace
-the /$args/ with  /([^,)]+)/.
-
-# 5.10.y specific regression
-#regzbot introduced: 443b16ee3d9ce0a3ece0e3526a5af883e5b16eaf
-#regzbot link: https://bugs.debian.org/1064035
-
-Regards,
-Salvatore
+Ciao, Thorsten
