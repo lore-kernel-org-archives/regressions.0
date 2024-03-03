@@ -1,45 +1,37 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F899BE4B
-	for <regressions@lists.linux.dev>; Sun,  3 Mar 2024 10:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D18D310;
+	Sun,  3 Mar 2024 12:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709461088; cv=none; b=ZFpqlxDsiP9cjVhvNc8d9nKvSTgG8jQk80qPXgim+QViT0wcHi6/NcSfYC/ax5mkAbGkyjSx25opPEUhItxHNqPG+7u141wuYMQ5xMFSXsCUASOw+2fSoVwRXrdJiu4hudHVai8aGyEohdZnDFYhkK+1asR9pQIv6maLQ855jpA=
+	t=1709467683; cv=none; b=gVjagBfmN5x/T574RMfvlzEEPTpj4WkYsLu5D/0j7PfR/PiM3W2Ju+oSiELSROoCl+gQPyFV287FhiAtJYIynrf4AE80N7SpCQihaSeqwQMFqXpN34X3TcLxdWX+zA/EoIf5bgoK/mj5jtZKk+UDktP7KclHd5f6zmCANOWT/ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709461088; c=relaxed/simple;
-	bh=45ij17AkYurMrAWoXY+Q9kcrsIcKnV/tqm8Gw0XdLlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7XyTd+bX14cmwXSOk2XKo1FRfMHjBvsMN9xIJnXVqgDxBK+47lB+rppdN823yHXbMaUlE2Da3TClSpJQbLclzP1taMZM0bIcZXkaS6wxTB83nMu/0Dcc//PGkMV+SdDmKYoHwgu7IZRsKLCNiynPdbhneL7rzeYMipjTpLozPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=QC2JlroV; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
+	s=arc-20240116; t=1709467683; c=relaxed/simple;
+	bh=ZVzuIPJ2Spz42dW3z+sI1ANyF8EV1ajAg3ADQrGKUwI=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:To:
+	 In-Reply-To:Content-Type; b=STg/01HbGk63Wue524DnkB//I7UYrmc1gZQGb6iVuqWj2q7VKSLWnJg3TrcA720VuebasyPQf6+uCd0Kxi/yuFjJsQZiCXkEAN74BCvV8pQpvc1qeIX/PI3PfCBVV8Ag7OIo87HHS6lFokKGVujIqbv3GkZeeGBFwYJ/u7gg3YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FxA46i5o; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="QC2JlroV"
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id BCFA12610A
-	for <regressions@lists.linux.dev>; Sun,  3 Mar 2024 10:17:58 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id ADFD23E981;
-	Sun,  3 Mar 2024 10:17:50 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id DB2E440604;
-	Sun,  3 Mar 2024 10:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1709461069;
-	bh=45ij17AkYurMrAWoXY+Q9kcrsIcKnV/tqm8Gw0XdLlg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QC2JlroVsBdMrNV2WhzaAhprVI13i1nuw73dvnmCs9gMAWy9HeFkZTG1454LU3KQu
-	 rmihuW7g+lDTpJb2z273hjI+bJQTuew+n9b5GJzEB69l/6+dcKShhJKXDFYuJOHpyv
-	 SHAh6f9K246yS8i3xZQmR1MRtUkISnKPzhUOzwhY=
-Received: from [10.66.66.8] (unknown [139.59.64.216])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2C17D4244B;
-	Sun,  3 Mar 2024 10:17:46 +0000 (UTC)
-Message-ID: <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
-Date: Sun, 3 Mar 2024 15:47:44 +0530
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FxA46i5o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:To:Reply-To:From:References:Cc:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=PJwJk2t8D6bGLaekvbSUAMPsqL9sh+IsbZwuA2V5S24=;
+	t=1709467681; x=1709899681; b=FxA46i5osCuwnGbbi19rlrEtSrWLXkIzhSu1bvaK9IXZSlE
+	F55cKfZD0cg0+HN3WNK2pHlfXCeMUYuMY7V+RUo9dlWid5HD00edkx6W1IcpdvE8lcO6ezhYJHiCs
+	9HdiL37yFB5THeGZiNzURLKcNS0Y05+t1O3zHt8pQ/1HIr3dRhk8QE8tW40TRiO21adhk3MlaafKA
+	Pb343cWoS3wpWxZLF5zbBF5zITEDWabMr/wyRiVAwBi/zSIb09QpOBm1b9b7mVGp8zeyR0QZK6Wji
+	pK8Nyl8bX2nZ+g80YH+Rtw/PpupTWgVDXsHairDD1dleRapbBvp7NhiT0aAGcMcA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rgkdJ-0002Pq-0Q; Sun, 03 Mar 2024 13:07:57 +0100
+Message-ID: <1270339f-3d35-4281-ba02-009005877877@leemhuis.info>
+Date: Sun, 3 Mar 2024 13:07:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,111 +39,96 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
- reboot in kernel v6.7.6)
-Content-Language: en-US
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>
-References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
- <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
- <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
- <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
- <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
- <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
-From: Pavin Joseph <me@pavinjoseph.com>
-In-Reply-To: <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4]
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: DB2E440604
+Subject: Re: [PATCH] drm/nouveau: keep DMA buffers required for suspend/resume
+Content-Language: en-US, de-DE
+Cc: Sid Pranjale <sidpranjale127@protonmail.com>,
+ Sid Pranjale <siddharthpranjale127@gmail.com>,
+ dri-devel@lists.freedesktop.org, ML nouveau <nouveau@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@redhat.com>
+References: <20240229175822.30613-1-sidpranjale127@protonmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Timur Tabi <ttabi@nvidia.com>
+In-Reply-To: <20240229175822.30613-1-sidpranjale127@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709467681;934e2524;
+X-HE-SMSGID: 1rgkdJ-0002Pq-0Q
 
-On 3/3/24 14:06, Thorsten Leemhuis wrote:
+[adding a bunch of list and people as well as Timur Tabi, who authored
+the culprit]
 
-> That being said: I think I might know what sent you sideways: the main
-> section lacked a "git remote add -t master stable
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git". :-((
+Sid Pranjale, thx for the report. FWIW, I'm just replying to add this to
+the regression tracking to ensure it does not fall through the cracks.
+Nevertheless let me mention two things while at it:
 
-Now that I read through it with a fresh pair of eyes, this is exactly 
-the problem!
+On 29.02.24 18:58, Sid Pranjale wrote:
+> Nouveau deallocates a few buffers post GPU init which are required for GPU suspend/resume to function correctly.
+> This is likely not as big an issue on systems where the NVGPU is the only GPU, but on multi-GPU set ups it leads to a regression where the kernel module errors and results in a system-wide rendering freeze.
 
->> 2. The "installkernel" command is called "kernel-install" in OpenSuse,
+These lines are too long, see
+Documentation/process/submitting-patches.rst for details.
+
+> This commit addresses that regression by moving the two buffers required for suspend and resume to be deallocated at driver unload instead of post init.
 > 
-> Yeah, it looks like that, but that's not really the case. :-) In short:
-> on Fedora "installkernel" calls into kernel-install -- and
-> "installkernel" has a long history, so doing what Fedora does is likely
-> a wise thing for distros. And openSUSE had a "installkernel" as well,
-> which was part of the dracut package. Not sure if that is still the case
-> for current Leap and Tumbleweed. Could you check?
+> Fixes: 042b5f8 ("drm/nouveau: fix several DMA buffer leaks")
 
-It's not available even as a symlink in OpenSuse TW / Slowroll I'm afraid.
+And that should be:
 
-suse-pc:~ # whereis installkernel
-installkernel:
-suse-pc:~ # whereis kernel-install
-kernel-install: /usr/bin/kernel-install 
-/usr/share/man/man8/kernel-install.8.gz
-suse-pc:~ # man kernel-install | grep -i installkernel
-        installkernel [OPTIONS...] VERSION VMLINUZ [MAP] [INSTALLATION-DIR]
-        When invoked as installkernel, this program accepts arguments as 
-specified by the kernel build system's make install command. The VERSION 
-and VMLINUZ parameters
+Fixes:  042b5f83841fbf ("drm/nouveau: fix several DMA buffer leaks")
 
->> and it doesn't really perform all the steps to install kernel. It calls
->> dracut to create initramfs though, but that's hardly much help.
+> Signed-off-by: Sid Pranjale <sidpranjale127@protonmail.com>
+> ---
+>  drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Could you please elaborate a bit on that "hardly much help", as I'm not
-> really sure what you exactly mean here. Are you and/or openSUSE normally
-> not using dracut?
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+> index a64c81385..a73a5b589 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+> @@ -1054,8 +1054,6 @@ r535_gsp_postinit(struct nvkm_gsp *gsp)
+>  	/* Release the DMA buffers that were needed only for boot and init */
+>  	nvkm_gsp_mem_dtor(gsp, &gsp->boot.fw);
+>  	nvkm_gsp_mem_dtor(gsp, &gsp->libos);
+> -	nvkm_gsp_mem_dtor(gsp, &gsp->rmargs);
+> -	nvkm_gsp_mem_dtor(gsp, &gsp->wpr_meta);
+>  
+>  	return ret;
+>  }
+> @@ -2163,6 +2161,8 @@ r535_gsp_dtor(struct nvkm_gsp *gsp)
+>  
+>  	r535_gsp_dtor_fws(gsp);
+>  
+> +	nvkm_gsp_mem_dtor(gsp, &gsp->rmargs);
+> +	nvkm_gsp_mem_dtor(gsp, &gsp->wpr_meta);
+>  	nvkm_gsp_mem_dtor(gsp, &gsp->shm.mem);
+>  	nvkm_gsp_mem_dtor(gsp, &gsp->loginit);
+>  	nvkm_gsp_mem_dtor(gsp, &gsp->logintr);
 
-I meant that calling kernel-install in OpenSuse only seems to then call 
-dracut to build an initramfs for the kernel. I can call dracut myself 
-without adding an unnecessary middleman (kernel-install) in the process 
-and less verbosely too: dracut --kver $(make -s kernelrelease)
+To be sure the issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot:
 
-Perhaps you could add generic details such as I provided in the 
-reference section for distros where installkernel doesn't exist or don't 
-perform all the steps required.
+#regzbot ^introduced 042b5f83841fbf
+#regzbot title drm/nouveau: rendering freezes with multi-GPU setup
+#regzbot ignore-activity
 
->> 3. The dependencies for kernel building in OpenSuse and other major
->> distros are incomplete,
-> 
-> So what was missing?
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-Sorry, I don't remember. The compile/build threw some error and I looked 
-up how to install kernel building dependencies in OpenSuse only to find 
-out there was a pattern for it already.
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-Perhaps you could list the basic dependencies in the main section and 
-provide the collection/patterns in the reference section.
-
->> 4. The command to build RPM package (make binrpm-pkg) fails as the
->> modules are installed into "/home/<user>/linux/.../lib" while depmod
->> checks for modules in "/home/<user>/linux/.../usr/lib".
-> 
-> That sounds like a bug that should be reported and fixed, not something
-> that docs should catch and work around. Could you report that?
-
-Please, could you tell me where to report this bug? Kernel bugzilla? 
-Which category/component? Thanks for all your help 😉
-
-Kind regards,
-Pavin Joseph.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
