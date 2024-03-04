@@ -1,180 +1,85 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056B03D0A9
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 12:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0733D579;
+	Mon,  4 Mar 2024 13:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709556334; cv=none; b=LB2BW9xo6P/yeOt1lgaOBXLdsY6G/ef9w/qJ/m0y89/F75ZOBZJ/IXUcEdKp4mNb4UYTTOEJe5ov5d8KkPyclX0ZGf5OITAaD4PM4kJPPru7tMKd3FjkNS4wRt7wCU+pVRLh+Xy2Ejmigfalz2ne+WEbozcJGzET6zjDF2KKb8s=
+	t=1709558852; cv=none; b=AebEmkeLPx3NsJJagoE2zWiqQysUssXK7pTykxblb0tmaJX0t8JNyc43ockhmL6spcLJosLpqA4Ynd0TBK8BVnjtkL/EB10hdnQSRvEcq2snz4OtDlUzUsKD6ufZYgaz9t30vTCUTSZU1sKl4CPu/HIwJZ3M7LdnZGi2/l8A2e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709556334; c=relaxed/simple;
-	bh=hgg7ztDSEPRjWgfx5szBQ5vnIIPmCrUaIAUDotlaUXg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mb9EcSGt8D5mDViL1qs9UYiSeHsZuqyzJbX2kxHeIrUlaFLuq8l4OFypixMtqNVD1kMM6+H9gnVJlkxDZtRiI5pXLFQPy+C4FVQI9ecwFS5SESmIGzkP744MgSz2Ya1uTzfcKvQbAucGoAC2vi120q7eAr9N49tBzxOxLQlQU2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HzA21dkH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yMcq3/+6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HzA21dkH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yMcq3/+6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709558852; c=relaxed/simple;
+	bh=AXT83CsKS04YlrnMU/ETXsCuo5f4Okc9c/ART/JBAD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxdMeKGwGcEU8+P1IctlF0+ynVolL77j9sn0xjSLGroohDAHZ4siajpNTJNaoSKAeFtZEFFQtFoVAn2m1+BziDqS7wXN7JwZRVL7KAq1lHq5h0PpZVofTw/FlGaDVvy8R808Q0CSOFoNmLFEaBbcI47Ub11Rn9a4zf0oeQluWLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0tlxS6qV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HzA21dkH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yMcq3/+6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HzA21dkH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yMcq3/+6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3F04D4E584;
-	Mon,  4 Mar 2024 12:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709556331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYwciqTpDEG3fTSKbV8dQHE0AxNIrAo1Mvf8rFjUd30=;
-	b=HzA21dkHt6RNAEyo6l5tKymmNyJFSXhsUdamIt5gZkzy+u3wUfUomthDGaYE3soM+iIxDy
-	p2F2SSvSe+3B35M0YEm/WhEXQHQVMMvEV6DqJDsS/au1NiUEnHF8Tw6OBoU893c1K5jWbt
-	vD3FfunEe+nVZu5YRkHi1WO5tT4TyMk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709556331;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYwciqTpDEG3fTSKbV8dQHE0AxNIrAo1Mvf8rFjUd30=;
-	b=yMcq3/+6vKMpWbQJqI6jPBF9+8N5EY9Rszo8BUWBqg/1og3OyCiUcWQHiFFrmu+RhW3GMG
-	1CwLss5a8ILjj6Cw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709556331; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYwciqTpDEG3fTSKbV8dQHE0AxNIrAo1Mvf8rFjUd30=;
-	b=HzA21dkHt6RNAEyo6l5tKymmNyJFSXhsUdamIt5gZkzy+u3wUfUomthDGaYE3soM+iIxDy
-	p2F2SSvSe+3B35M0YEm/WhEXQHQVMMvEV6DqJDsS/au1NiUEnHF8Tw6OBoU893c1K5jWbt
-	vD3FfunEe+nVZu5YRkHi1WO5tT4TyMk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709556331;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYwciqTpDEG3fTSKbV8dQHE0AxNIrAo1Mvf8rFjUd30=;
-	b=yMcq3/+6vKMpWbQJqI6jPBF9+8N5EY9Rszo8BUWBqg/1og3OyCiUcWQHiFFrmu+RhW3GMG
-	1CwLss5a8ILjj6Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFC4F13A5B;
-	Mon,  4 Mar 2024 12:45:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9MgQOWrC5WVtOgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 04 Mar 2024 12:45:30 +0000
-Date: Mon, 04 Mar 2024 13:45:30 +0100
-Message-ID: <874jdm17yt.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-In-Reply-To: <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
-References: <87sf161jjc.wl-tiwai@suse.de>
-	<6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0tlxS6qV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BBC1C43390;
+	Mon,  4 Mar 2024 13:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709558851;
+	bh=AXT83CsKS04YlrnMU/ETXsCuo5f4Okc9c/ART/JBAD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0tlxS6qVrdvzqApIqQuYs8I3eEuFgwlc+COKdoQ3ERDdpxCGpc/DDeGYuETJNPzI7
+	 xb6dqhGYn770z46p21tEFvimEoKrscjPCGydoEdmXSoiVChbwYjFByr4tEDYJxPFS/
+	 Ze2YUvOwkH0CQ+xedYdNgA8t3C8VnCVnlpuuIWLw=
+Date: Mon, 4 Mar 2024 14:27:29 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Aditya Srivastava <yashsri421@gmail.com>, 1064035@bugs.debian.org
+Subject: Re: [regression 5.10.y] linux-doc builds: Global symbol "$args"
+ requires explicit package name (did you forget to declare "my $args"?) at
+ ./scripts/kernel-doc line 1236.
+Message-ID: <2024030412-street-phoenix-882e@gregkh>
+References: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.80
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[suse.de,gmail.com,vger.kernel.org,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
 
-On Mon, 04 Mar 2024 12:26:48 +0100,
-Javier Carrasco wrote:
+On Fri, Mar 01, 2024 at 01:31:10PM +0100, Salvatore Bonaccorso wrote:
+> Hi,
 > 
-> On 04.03.24 09:35, Takashi Iwai wrote:
-> > Hi,
-> > 
-> > we've received a few regression reports for openSUSE Leap about the
-> > missing touchpad on Macbooks.  After debugging, this turned out to be
-> > the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
-> >     Input: bcm5974 - check endpoint type before starting traffic
-> > 
-> > And, the same regression was confirmed on the upstream 6.8-rc6
-> > kernel.
-> > 
-> > Reverting the commit above fixes the problem, the touchpad reappears.
-> > 
-> > The detailed hardware info is found at:
-> >   https://bugzilla.suse.com/show_bug.cgi?id=1220030
-> > 
-> > Feel free to join the bugzilla above, or let me know if you need
-> > something for debugging, then I'll delegate on the bugzilla.
-> > 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> > 
+> Ben Hutchings reported in https://bugs.debian.org/1064035 a problem
+> with the kernel-doc builds once 3080ea5553cc ("stddef: Introduce
+> DECLARE_FLEX_ARRAY() helper") got applied in 5.10.210 (as
+> prerequisite of another fix in 5.10.y):
 > 
-> Hi Takashi,
+> > The backport of commit 3080ea5553cc "stddef: Introduce
+> > DECLARE_FLEX_ARRAY() helper" modified scripts/kernel-doc and
+> > introduced a syntax error:
+> > 
+> > Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> > Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> > Execution of ./scripts/kernel-doc aborted due to compilation errors.
+> > 
+> > This doesn't stop the documentation build process, but causes the
+> > documentation that should be extracted by kernel-doc to be missing
+> > from linux-doc-5.10.
+> > 
+> > We should be able to fix this by eithering backport commit
+> > e86bdb24375a "scripts: kernel-doc: reduce repeated regex expressions
+> > into variables" or replacing /$args/ with /([^,)]+)/.
+> > 
+> > Ben.
 > 
-> The commit adds a check to ensure that the endpoint type is interrupt.
-> 
-> According to that report, the issue arose with a MacBook Pro 5.1 (no
-> button, only trackpad endpoint), so the check on the tp_ep address
-> (0x81) returns false. I assume that you see an error message
-> ("Unexpected non-int endpoint) and  the probe function fails returning
-> -ENODEV.
+> What would be prefered here from stable maintainers point of view?
+> AFAICS e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
+> expressions into variables") won't apply cleanly and needs some
+> refactoring. The alternative pointed out by Ben would be to replace
+> the /$args/ with  /([^,)]+)/.
 
-Right, there is the message.
-
-> Do you see any warning in the logs when you revert the commit? It was
-> added to prevent using wrong endpoint types, which will display the
-> following warning: "BOGUS urb xfer, pipe "some_number" != type
-> "another_number""
-
-The revert was tested on the downstream kernel, but it has also the
-check of bogus pipe, and there was no such warning, as far as I see
-the report.
-
-> I am just wondering if for some reason the check on interrupt type is
-> wrong here.
-
-I'll ask reporters to give the lsusb -v output so that we can take a
-deeper look.  Also, I'm building a test kernel based on 6.8-rc7 with
-the revert, and ask reporters to test with it, just to be sure.
-
+I'll take a patch that does either, your call :)
 
 thanks,
 
-Takashi
+greg k-h
