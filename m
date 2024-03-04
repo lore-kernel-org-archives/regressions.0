@@ -1,136 +1,69 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0FC199A1
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 08:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B0720B27;
+	Mon,  4 Mar 2024 10:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541339; cv=none; b=pTi9jVJrbS44BXiBl+go3kNzkcWs392B8jsXrtfPIwgLtDvreCdvvT/d9RzvcJFX/4BMpzO3fDHJknAhqSKQIsw1pdpS98i0HD9t9P1gtlKqkBl58RB6NOYnf3Tqa+zzxeWqaqaP83z5eq37mTcmb6wh+CeboPQwW+Apo3qk4YE=
+	t=1709549556; cv=none; b=XEMjM7DhzGMq+mW+/ALZ8oA8GjR3e1brcZ1MxmBe5Nn0yKKnr1P3c007AtmGoE7dFOF7RujhboeJENH4dfxdwlKjQ1sfLCUe7yxce+WCD9SywiMLsjnyqR+pssJLXDxZbIY55HtoibO0rboHiOp80eXWO8mvMCGYpnAxaDtZAmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541339; c=relaxed/simple;
-	bh=WKGGpWRMANQaqtEPi4SVdmap1qUQKAiiyE9H3DFCJF8=;
-	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=h65i/dNqlX3iId6PR5RHDfa1s0FBg6m/AJuZIawgjd7cUZaAyHV0RCs9By014saIcARp716XbLz+4OkmcsJSc2MGxltpDINjkFO3mSsUbYeb8s9ARdlh45bAY2rKNhcsjVhhjisKa8nWcRlqL96KmdAqp+ZlSmsZdSBIrHDQxqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709549556; c=relaxed/simple;
+	bh=jyX89aDVSEYtaj6kbA78kpRmGgpNRc44wI4hO8W7sAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfmK1s49sdOr6afTLmFBZvtoseGvsxVIBUyBkLl/zRCiAOmBXt6FQDSSoDJCZRb6hSwUR/OtxHDOClevy9MyUCoHqpxfmCtX62hDs/WLIXiwYYpYHRgSMQ0zYCaUsb1tskaLs0A3Abu5LNa3ke+jeN7HJQzQj4dB4nzyxOK3pD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mZW0xvOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EC2768848;
-	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
-	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
-	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
-	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709541336;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
-	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
-	nWL8jnFUFY3H/xCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
-	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
-	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
-	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709541336;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
-	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
-	nWL8jnFUFY3H/xCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1629813A5B;
-	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id d3qxA9iH5WX1bgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 04 Mar 2024 08:35:36 +0000
-Date: Mon, 04 Mar 2024 09:35:35 +0100
-Message-ID: <87sf161jjc.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-    linux-input@vger.kernel.org,
-    linux-kernel@vger.kernel.org,
-    regressions@lists.linux.dev
-Subject: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mZW0xvOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070EDC43394;
+	Mon,  4 Mar 2024 10:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709549555;
+	bh=jyX89aDVSEYtaj6kbA78kpRmGgpNRc44wI4hO8W7sAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZW0xvOUF9nTJ5Ay0udStvD7g7KyS8fQgiqFCMHv2GOhdkccC41Ak9PBb8RTlOC5h
+	 AdiqBVlTXkQZL+Dfrg08Cqe0tCl67FaQJPqKwMxuEYYUWz8c45i2T5KkJ7nuPyhVH/
+	 rE9wV71agiNn329EhIrbsHnjX+iVkHBQi6HntrVE=
+Date: Mon, 4 Mar 2024 11:52:32 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: max.oss.09@gmail.com
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, sam@ravnborg.org,
+	maxime@cerno.tech, sashal@kernel.org,
+	Max Krummenacher <max.krummenacher@toradex.com>
+Subject: Re: [REGRESSION][PATCH 5.15 v1] Revert "drm/bridge: lt8912b:
+ Register and attach our DSI device at probe"
+Message-ID: <2024030418-clinic-cardboard-bec8@gregkh>
+References: <20240228145945.2499754-1-max.oss.09@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="cuKySK/g";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PhtnxHOY
-X-Spamd-Result: default: False [-1.94 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.com:url];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-2.63)[98.35%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 4EC2768848
-X-Spam-Level: 
-X-Spam-Score: -1.94
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228145945.2499754-1-max.oss.09@gmail.com>
 
-Hi,
+On Wed, Feb 28, 2024 at 03:59:45PM +0100, max.oss.09@gmail.com wrote:
+> From: Max Krummenacher <max.krummenacher@toradex.com>
+> 
+> This reverts commit ef4a40953c8076626875ff91c41e210fcee7a6fd.
+> 
+> The commit was applied to make further commits apply cleanly, but the
+> commit depends on other commits in the same patchset. I.e. the
+> controlling DSI host would need a change too. Thus one would need to
+> backport the full patchset changing the DSI hosts and all downstream
+> DSI device drivers.
+> 
+> Revert the commit and fix up the conflicts with the backported fixes
+> to the lt8912b driver.
+> 
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+> 
+> Conflicts:
+> 	drivers/gpu/drm/bridge/lontium-lt8912b.c
 
-we've received a few regression reports for openSUSE Leap about the
-missing touchpad on Macbooks.  After debugging, this turned out to be
-the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
-    Input: bcm5974 - check endpoint type before starting traffic
+No need for the "conflicts" section...
 
-And, the same regression was confirmed on the upstream 6.8-rc6
-kernel.
+now queued up, thanks.
 
-Reverting the commit above fixes the problem, the touchpad reappears.
-
-The detailed hardware info is found at:
-  https://bugzilla.suse.com/show_bug.cgi?id=1220030
-
-Feel free to join the bugzilla above, or let me know if you need
-something for debugging, then I'll delegate on the bugzilla.
-
-
-thanks,
-
-Takashi
+greg k-h
