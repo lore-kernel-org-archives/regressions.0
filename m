@@ -1,175 +1,126 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2107.outbound.protection.outlook.com [40.107.241.107])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD999383AF
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 11:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709551618; cv=fail; b=hvAUjFe+EOQznPYFxI09Wck6kn1neniqD9okBiSQlQSxCcCUCA/PsreD41mBF5xcm6ITbOQzqRFKQ73EMRutikVSlmZyqjjY9QtY46LKneyDTil2hjumIPJVNZX5+09MLKJdtwJ47CEdenPZVzRAFwMJ8Z2xvb/JG/a6jnHogjI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709551618; c=relaxed/simple;
-	bh=j5YQxIDLEfFf7xqfnGU8B4I/W5vBPzhG7i3bgae1ZY0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aE5IkLwQ4BCDCJ26Dt3Y/jTvbtx/J2wwPdAE6C5hOuhaa1t/GBUbAD9mnk1/c1zUxaKhp0JH7zMT3V/P8IpVideMMPdxiuxvptsvgu2+brJWrZA3g8FM8iPO3H2p+EDDpwWliazkop0cX3tA+2G32hfRa9jKjU8xU0itJbt/rCk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=yes33q77; arc=fail smtp.client-ip=40.107.241.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12633BB51
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 11:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709553355; cv=none; b=lLFDB8eT05VqUkLZc9Hqu6tei3kcp2oLw7nX/dVfWiNKr+zsRbnJRuKGr40Vdb17+gtbnYp1h48kGNXB08qgAygMV/LtoVh/3GQERCpIN7bYCefss7a5XvyYA1lyljjOZTLYrBTe2SiWbtqBy86ijKttZSWbH/NWV3K3+dfM/fc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709553355; c=relaxed/simple;
+	bh=STXcOLTjf1xq1SwKva2e5Epz+VhE7cqnT+3mPxu+aNA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=SlUTVox9NfDXxm2E+WFaWFe8TJYugTSVKTLtLlh8RV+c75bAiP3vQIsxxAEk85B9zkjpba28F+NmJJt9psCpWjKPvZpn6l4l1geW8hE3eg2q90C5j/HtyzybV2pHOc5pfA/k1J6qDOLhS22Fs26TpXMo9vZnboHzucm3IERZgdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZJ1cpMh; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="yes33q77"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ifG3D/+2OgNdV8YAN+QnpXeOZ2CVePvb+iLlGQayTaD0DrJx1J2veza7Tat31tcra4HYIQ5fYGKY1f8qNKc59S+XPoUoKxRD4FcB58gI/mOikBppNzeq1Lx9Avybblg3j7izKjQvoYu1CWtCiTjAoQw6XHIM0hC1obawmFV5PFyyS2ZRihfbAkG5r1DJUcxtWnNbScIkMqnCq22+ThhU7aZiVd6ysnZjllWGtgjCSwNug3lxLtAmOJqDBHnT/iJGyJYnPMMRUDEmZiASullVUy1B4SsnTbovlrf3ksPGqv8FpIgftQrJN9FUZFhYunMuD3jcDvRVjLh/UaYJkY8l2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BNTfJxFgEO9CtF1hHmBaENIoGSBRFpJAm2prjvzBgH4=;
- b=XbY+k/m8cHubAgPcTx38qwL8gbEVp95PbnycEMSgJlHWC6j3AO5WLmVMqoqqkCXhj7MTecxQO4bwz+vsbKLJ6fAxPcG/WWR0T05GP4s40y4tUWrbFvNUyyduU117JUIzZ/QixJs0rpnMbwHJ+X9O2W9Ri70HakyDUswIYI8cp70HGIeVBCgfjou/akPPQmvJddlQcQ9jWB0OjLGXuJD1PwKrFFx4C0VaXwwFrLkq4aNE+Saq2bkm7FwI4mzkcEv5ckyAdx6WUjQYyUIzTQl8Hz1iApNilxgrfkgFHfg4WwsTIe7SprmfTGZbvdPSphgFGvvT4oYMwxmaWDEizI6q/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wolfvision.net; dmarc=pass action=none
- header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BNTfJxFgEO9CtF1hHmBaENIoGSBRFpJAm2prjvzBgH4=;
- b=yes33q77cAsUJB1JHrGnGe9BXMFdP25jjQJ/yxj617R+1bfZ/zC2xkV6wf9MOx9PfGTsL2ipAxdykbL/4ECDvkP3li63md/w9u5q5fM/YcuhZ+uKU0aKIoR1GOPA28MMqg8EAXw4zzj37a5i248MP2c1i2m6V/M5iGrmzbid1SU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wolfvision.net;
-Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
- by AS8PR08MB10315.eurprd08.prod.outlook.com (2603:10a6:20b:5bd::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 11:26:51 +0000
-Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
- ([fe80::9e35:6de9:e4fc:843f]) by VE1PR08MB4974.eurprd08.prod.outlook.com
- ([fe80::9e35:6de9:e4fc:843f%7]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 11:26:51 +0000
-Message-ID: <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
-Date: Mon, 4 Mar 2024 12:26:48 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <87sf161jjc.wl-tiwai@suse.de>
-From: Javier Carrasco <javier.carrasco@wolfvision.net>
-In-Reply-To: <87sf161jjc.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-X-ClientProxiedBy: FR5P281CA0007.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f2::17) To VE1PR08MB4974.eurprd08.prod.outlook.com
- (2603:10a6:803:111::15)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZJ1cpMh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709553354; x=1741089354;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=STXcOLTjf1xq1SwKva2e5Epz+VhE7cqnT+3mPxu+aNA=;
+  b=AZJ1cpMhZWrq6eJRZd5OwuUIHr6PIqOlCbr/NEWRFIhKpnABwxoWdxcE
+   CvonFc7DDBciUkx1Fh6D/SLhWuetbKLuz9fhL4jrdRxzP52DaD0ECmmyo
+   w3xzFKN5Bdtsazethez2RMhYRb6lm0ix+eF1aHYm7sDEwAceiZnBy0clr
+   PFoY9sNjf2uu7kGIM8fAe6tj+TbwdeeJqVldOjTxUA4UGSolLZcllGUr9
+   ZcFsaPtm03xln2nvxqWKxl+qxQOQ3mlyToOGpeqzkhPRpZhZSbDao43jW
+   CzkdpDBvPC5giOjflavVJvhWwCz88TvfHvOxPfrzUeshOX4EQlTTYKjzO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="3898897"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="3898897"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 03:55:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="937040376"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="937040376"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 03:55:50 -0800
+Message-ID: <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com>
+Date: Mon, 4 Mar 2024 13:57:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|AS8PR08MB10315:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60590d7e-0bf8-4af2-cdf1-08dc3c3dfcdd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	k/cjpEPPrYsrrZssfS9nZTNpQ/pZlZGd4nC5/E/5nr/S6fMJh+SDPmnvBrcPqPrz1xDx4jf48c8fL9gTQMNAj9IO5ZNlUupct5WMDq/EGbKWMq31cVaE60pQ7pRJLMZVetAcFfXaqyGo8FKiG0I4XlxS/8mPlpTxz7sQZwcl0rAztfsWwRGqZPJfXhsoD8r7qyKzDsCJTPLJHlqX/zYKqq2MU8ed2ROAfsAZbzsgfmvdcPxachpj6IdpZGKaNWCPAJEReEImR9gRy0GbgmMBPP4a/d3acySLbrhUWLEmM8Mb3N8+ccaJ3UvC79tz6B++N/jd5e8Z4Nor2+kV+8OI4lf9paBPDggysCdskgoFwOoeTcdlHU2OMVuQfb5UwmFcbPmOuhb0cC1iPc0PAV8AqJGZEp6eEtlRinF8qU9qzBkMHDysAeOK9hTmwaUt8qOAVTsledffvBjH+lCFR+ekHxoflmAH4EZWNZS7eXNGEw+cVnVhIhVzuI9UOLFpRYhF5eJn/4+bCYM/PW7RbofCXYyx1TwSwZij/YxMO6MLvpOhIRRaZioNBOTE8IE4s826lxfcT+aSEWcN6zY1z8e48UOjRrf4Jl1Rl+eJ/8b6oGw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QjA4NkFmY282SklETFRvSFpqMm1MYlQwdzY1N2lsRkJsQkkrUWVDUDU5ck1m?=
- =?utf-8?B?ZUR6QXVoYUQ1WFZuRzk5NFI4M1J2eUhOQVNuSnIxS2I1MUo0bzJVYWJzR2xU?=
- =?utf-8?B?NlkrT3k5V0VkMUtFMCtza1ZCWGNYdzVkZng1RDlUeklOR0EreGZQaDN5SDNP?=
- =?utf-8?B?SytkZjJmQUlpZm1qOGM1cE15eUFNMERqYnJrTTZyV2k5S0Jnb2FYQmFQdzc0?=
- =?utf-8?B?ZjN2bzdXY2tleitkZTZJNFBQdVQyNzY4dVAxcXVERURIcUZsRm4zUVRmWVNr?=
- =?utf-8?B?UkRSbG5QWTVmb0xVUmRyVUl4NzZDbVVpZmh3YzdyeEcxZUhVcXFSMFJqeHRE?=
- =?utf-8?B?d0JTNFkvRmJrNVd6ZGZwS00vL2J5Vkh5NmZKUG1xWEVqay92dk1TbmcvTnN5?=
- =?utf-8?B?NnpnMUZuRkd1d0o3emVzMEZ1M3hwL242T29WRmRseVdyL3lXSG1ObmZCYWNX?=
- =?utf-8?B?RGFGNVYzdXlJS0RrOVdjSjZrOUVWS1hwb0dqZmRiUkNQNUNnTk9MbmNxNmtB?=
- =?utf-8?B?dTkxSmJ1QWI2Qy9rbHJPcmZqSEcxZ2hFemtDZFVWaTFSU09ZV1ZsYWFLSThD?=
- =?utf-8?B?YmNQK1NBdy9zc0xtY0VHOUZOUWVWS0hOdVM5Y0VkdUxpOWc1QmNibHNNS2Jw?=
- =?utf-8?B?WE9yTW1RQ3ZBTVEzWlkzUTcwcitTS0VNL055bVArby92OUJDNUpTdE9GQmQ5?=
- =?utf-8?B?WWd0MmJWYTNXeVBzNCtLcGNZb1NtdnVDNHlMSTBOUVN5dEgxT2hNYUNnWlN1?=
- =?utf-8?B?NThJUlRweWVCRjJhTEVHWGU2NWN6d3pPQVZZdEFDWkZsOHBXN3RVY0NuNFJS?=
- =?utf-8?B?ZDZkaytEL2NRQUVVemJDQjY5YUxCTDJGTHBZYzlFbUpKL3BQSDdYZUlkOEFr?=
- =?utf-8?B?dFpxMFc5d29JbnpzNm1veEU1VXMxQ3piczdoQXpzK2xMT1BSOCtEVlNDa2Fx?=
- =?utf-8?B?bG91Y1dyWFhyLzhRMUhsakMvb1R6a01qWTkvRE02NHJDaUV2S3piRDFxc2Ux?=
- =?utf-8?B?U0dqK2prek9tTENVTVhTMnlqVzRhQk5rUHBINGV4NUpxSzF0b2ExbUhzN2ZT?=
- =?utf-8?B?ZDZOTjBFNVYyd2xiYTFWbGZmQ1RYdlJDRXJ6RFFQSjVaN1BkWlZYRUVXSU85?=
- =?utf-8?B?WHV4RDcreTNibS9vQncvMkNXWUlkc09xL05kbkJMbXZHOHV0a01uYVZqODNU?=
- =?utf-8?B?ZkcyUTZycHY5aXdhNy9malkrS1BiRGwwQkxCS3Y0OUVKaVhuTUk3NTcwLzJu?=
- =?utf-8?B?MDRKOVF1MERTZFFScmhRMkVTMlg0VkZjM2hzU05kd2RiMmpKMWpFMnVqaWtP?=
- =?utf-8?B?OTdrWlVUc2ZYNmw2V0dGRFB6T3AvRVVtRW5mTkh1MDU5QWNIa3RIRHVPVzhq?=
- =?utf-8?B?UWJQazc1ZUN5UGhaWFltQmZvQzYya2piR2lYRUFhRElocFI2Z1B3RlR3QWxr?=
- =?utf-8?B?eUtQMzVXalIybCtNZmdqY2JuRDAzSC9zWmtuazlQb0VhMHptTlpTR2owNnND?=
- =?utf-8?B?MUM4T1YzRW4zT3Q5dEM4SW1XeTY5eVJSVXJ6VmptMjJtaUM5dUhpUVlIS0U3?=
- =?utf-8?B?eEo4cWxlNDZLM2pndG9KdXRucjZCSU52ZDhCbE5BS01jbTQxQkFvSWNSWUZ3?=
- =?utf-8?B?N0hVa1RERll5SmlFTGRsRG9ycnNycWxrZVNMNkZTQkd0MTgrUVZqelBKK1A0?=
- =?utf-8?B?YitGYVhWd3hzZGVra0V5MmwrLzhsUGZWU0d4SXdnQ0JEYnBVdTdLODhyYXBn?=
- =?utf-8?B?bTJ5SzR5ekhTTGZGQWw5SFNTL0daRWJGWWUra0VrNEhJaFhUVDMzNFE2RGo4?=
- =?utf-8?B?N0hSN21MNHVUMENjYkdiRXNoU3lMa3gvSnErS2E2S3J1M1NoOXRZTUdaUkNK?=
- =?utf-8?B?ekY1dnA0SGR1d3JtanJMNDg3T3kvaSsxc0dVb0ZvaWE0b0I3VHM2ak4vcmVW?=
- =?utf-8?B?d05qQUh0UmZ0ZGJNT05zZFlyRG9Cb3BuTkJ1cWJqM3RuNEY5cG0vNGRxSFEx?=
- =?utf-8?B?MTRQSWZ2VXVDUmIrR2E4WUFTaE91eU10WTZ1R0tIV01hNzdlNVJ2UFpQenV2?=
- =?utf-8?B?blBGRG9abS94eVBhQ2NxdkNOQi93WHh1a0VNRGtzSE5tSi9ncis1aGsyalZK?=
- =?utf-8?B?Y2U1UFVsUnhkcEhLeE9ncXdlN3R4b0V3REtITnBZRnZ4eDFKY09BT3BscGF3?=
- =?utf-8?B?Z1docGdSakxjeU15SFlIZ1RETXdXeUJkaHJYdjJ4LzVHTVAwL0xpeDRxWE9q?=
- =?utf-8?Q?8Yzz8dSUMCpOhx2hiLSAtmmgKLpmSs+8ctRDH1XP6o=3D?=
-X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60590d7e-0bf8-4af2-cdf1-08dc3c3dfcdd
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 11:26:51.4248
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j5blr7XNyZiYVW1qbfEFuBf5q9c7cFW+10uxvQmaieZ1sM0DdbTXG11k9rLAWV2gFBNXwo2Dp+xpA1oxCWB0N1j/WI5iODusCm3ecQFRcgk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB10315
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Chris Yokum <linux-usb@mail.totalphase.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable <stable@vger.kernel.org>, linux-usb@vger.kernel.org,
+ Niklas Neronin <niklas.neronin@linux.intel.com>
+References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com>
+ <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info>
+ <2024030246-wife-detoxify-08c0@gregkh>
+ <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
+In-Reply-To: <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04.03.24 09:35, Takashi Iwai wrote:
-> Hi,
+On 2.3.2024 17.55, Chris Yokum wrote:
 > 
-> we've received a few regression reports for openSUSE Leap about the
-> missing touchpad on Macbooks.  After debugging, this turned out to be
-> the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
->     Input: bcm5974 - check endpoint type before starting traffic
-> 
-> And, the same regression was confirmed on the upstream 6.8-rc6
-> kernel.
-> 
-> Reverting the commit above fixes the problem, the touchpad reappears.
-> 
-> The detailed hardware info is found at:
->   https://bugzilla.suse.com/show_bug.cgi?id=1220030
-> 
-> Feel free to join the bugzilla above, or let me know if you need
-> something for debugging, then I'll delegate on the bugzilla.
-> 
-> 
-> thanks,
-> 
-> Takashi
+> The submission of >512 URBs is via usbfs, yes. This worked forever, and still works on EHCI, it's just been failing on xHCI once the indicated change was applied.
 > 
 
-Hi Takashi,
+>>> We have found a regression bug, where more than 512 URBs cannot be
+>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
+>>> valid data in the buffer.
+> 
+>>
+>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
+>> calculation") [v6.5-rc1] from Mathias.
+>>
+>>> Attached is a test program that demonstrates the problem. We used a few
+>>> different USB-to-Serial adapters with no driver installed as a
+>>> convenient way to reproduce. We check the TRB debug information before
+>>> and after to verify the actual number of allocated TRBs.
+> 
 
-The commit adds a check to ensure that the endpoint type is interrupt.
+Could you send me that test program as well?
 
-According to that report, the issue arose with a MacBook Pro 5.1 (no
-button, only trackpad endpoint), so the check on the tp_ep address
-(0x81) returns false. I assume that you see an error message
-("Unexpected non-int endpoint) and  the probe function fails returning
--ENODEV.
+> Ah, so this is just through usbfs?
+> 
+>>> With some adapters on unaffected kernels, the TRB map gets expanded
+>>> correctly. This directly corresponds to correct functional behavior. On
+>>> affected kernels, the TRB ring does not expand, and our functional tests
+>>> also will fail.
+>>>
+>>> We don't know exactly why this happens. Some adapters do work correctly,
+>>> so there seems to also be some subtle problem that was being masked by
+>>> the liberal expansion of the TRB ring in older kernels. We also saw on
+>>> one system that the TRB expansion did work correctly with one particular
+>>> adapter. However, on all systems at least two adapters did exhibit the
+>>> problem and fail.
 
-Do you see any warning in the logs when you revert the commit? It was
-added to prevent using wrong endpoint types, which will display the
-following warning: "BOGUS urb xfer, pipe "some_number" != type
-"another_number""
+Ok, I see, this could be the empty ring exception check in xhci-ring.c:
 
-I am just wondering if for some reason the check on interrupt type is
-wrong here.
+It could falsely assume ring is empty when it in fact is filled up in one
+go by queuing several small urbs.
 
+static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhci_ring *ring,
+                                                unsigned int num_trbs)
+{
+  ...
+         /* Empty ring special case, enqueue stuck on link trb while dequeue advanced */
+         if (trb_is_link(ring->enqueue) && ring->enq_seg->next->trbs == ring->dequeue)
+                 return 0;
+...
+}
 
-Best regards,
-Javier Carrasco
+https://elixir.bootlin.com/linux/v6.7/source/drivers/usb/host/xhci-ring.c#L333
 
+Can you help me test some patches on your setup?
+
+Thanks
+Mathias
+
+  
