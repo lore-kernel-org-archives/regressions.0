@@ -1,161 +1,134 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE2C46BA0
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 21:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4EF7D3E7
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 23:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709588516; cv=none; b=IbbAV7b5CiWTI3nd23+RGWwGxmwVpbcDeo8w1mvaVZcQXd3Jkn8qzUy4gND2ZHgReuHr/rFRm/yGT5IMPCdgAHdO/hw5i2gR6Zq8JpNWDOhyOv69i+V58T6S0FxqdJXRjAHsKqPPBT5EZZnr4cGllCN5gctxCuGK4n1J51HHbdw=
+	t=1709596267; cv=none; b=f/BIeL6gb76Z4cgoGZF4R9Ws+3N/QWLiiKqPW5LkfbkeT73PWujBgQ2mM2KSqP0nrK6J/Da7OCSsC/qGDk2wfknhagXu5VZYOKfXDVHujW4W6RGiCaI8epQq5JVLZm34ZFxqeHmuvtlIdebFjrnp2n0kMsfTm8SXnUzjdi4I0e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709588516; c=relaxed/simple;
-	bh=9SEv1fZ/gQAqY+O/ktRXWn4grnSoNnUcFBAN3ld0CVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKqAK3LoleGoklQyM0FFBiXpBUtVP2WuKGOuaAz4LZGQMe3diFmxnTHTpmLHHBcajFD+Xn7xlyxvYHzzMilspqWV8kEsRDzXyhbAqa4qf/NcjVA03QsQCyMwCTH9WbiTpca+yqtLksxPdp40ql6L3f4wwkASW+faUPZSdUgpKAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKHICAXY; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709596267; c=relaxed/simple;
+	bh=lZBdGXN3sDOALNhqG18J8ZzeUVL9c1fKKZLxSYGTO8Q=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=QF5aUC3KFi6sF4MHKNxVouwK1AFjpGMtxM44mB5ZlCHpFT6E1Bz4RKxKbtHSy8NYjVyZEo8Zf+ka95nsA7KudhE0S+S0x4ARqs7R581uCvJ913/6nu26pr5i6nzY5WmAxFp6n9nD504lEe8vBkCnFgNnzje38H47VD3AxjidGJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com; spf=pass smtp.mailfrom=totalphase.com; dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b=vNImkBjh; arc=none smtp.client-ip=209.85.219.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=totalphase.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKHICAXY"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e7fe4497so6910775e9.1
-        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 13:41:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b="vNImkBjh"
+Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-68f9e399c91so43915186d6.2
+        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 15:51:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709588513; x=1710193313; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rGrlaWOqHwE4QKgjxl7U7FEwFsj916aCtQXG9iXn0EY=;
-        b=IKHICAXYm+6LZa/pNzkQsfuLmIx+zmETppvwxzhZg5BwMNX8/txY5M4R9ekoUlgLhW
-         iakMyPpXo/WeG5aVxhZgocRFAHn98HHGpWeIdScCqh9W8dqmsSd2vFIPGTFpCU2ceKgd
-         A1GcF7UMNsbLckrHY0M2aKnIPRXVeqws/Y9RxiNJ+HLJw9wZR2zrcUKlX/Xde8dbXD/3
-         BJtlPFCYZ61QivOUEmp6EtcLkOW+DsvthKDl/Ur4iKxXbXH8xMkqTVIptjFdVg4cxH9y
-         PR2XR8eKigmISTt1QbkteMX6vW+Df+fY9gWbjwZMKA9nT+ODJvnEvcUoZkzD6UwSMjWN
-         SssQ==
+        d=totalphase-com.20230601.gappssmtp.com; s=20230601; t=1709596262; x=1710201062; darn=lists.linux.dev;
+        h=thread-index:thread-topic:content-transfer-encoding:mime-version
+         :subject:references:in-reply-to:message-id:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wHZdIg82gQhhliIHQKfVKh00PcHpYfuwKdT2lavfKEM=;
+        b=vNImkBjhx5HTGyRmpaQphahKdy9bdAMF3fOEAEFLM2w9/5xE6fOpYcK7gSckmUTNo1
+         OqaqijCHsdaaErSYsPsSHF32fQY1zQm6igoxitoL3BfeUUitBPUrPwsaxaQcQDajXp5D
+         HltBJOav+xie4eTaQHh2mdYggp8BwMtB//7mJ6PKd1BQq85HrB9yApZYUEBvzGkaL4ua
+         cwwlYa5rLDmpoquce6v2KsRnhtOpC/NmLycSkfH6XslmG2CkIwAcyONXwMPf1yVqgIt0
+         tG4KcoEYxiTuT2Fer0xHAJ/K0c6rnMuSmOQyOSDZMcL3B5T60WVIU+a6djB0A/R6nEis
+         tlKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709588513; x=1710193313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rGrlaWOqHwE4QKgjxl7U7FEwFsj916aCtQXG9iXn0EY=;
-        b=V/gdW3Q8qBf3TfBEfnu/kUaayHA/eGU7AjY8eSf7cIpARw84vdCsNn7GnmyylIjPlQ
-         Kn7GnecxvLuW1v5hMUo0+YZ03zTr2QU5oSxcIUiK63rhQG8VGdkVXDeQ6i53UxJoN4s/
-         UnmRDVmePzQt5+gG/8Nzkr8D8aQpNp1/hvwOfdRsG2UQcr2TuaM+IfS6xeh9ultGnzOj
-         k6Llz410BJC04LBaQWj/cw0yXIJr0JAxr6A6sx7R0IaPyeaF0rvYGtt7rB+AJmzsJRre
-         UHW5yvVKd5Qi3sMh1TWiIYAkmNZX+bBbmmUyfohvrpsI91wdVh5BnlF/FZJ8+Pt8giI5
-         Uj+Q==
-X-Gm-Message-State: AOJu0YxzT9IgZkuIGnL5PlzDROe3TqF8fMXgH4quQDuw2mx6bgJ83bIN
-	2RNTTWCmdsGmH4vo2mGxnudiPqi59rqcOcTzFrPglA1v7WHeLC9y
-X-Google-Smtp-Source: AGHT+IHS4Ph0K17h5ybJ4yv/Ax/dRUFfDIaeA86vo6DSHkFXwpvHydlfr7H15a+V+WFlSgowjooCuQ==
-X-Received: by 2002:a05:600c:468a:b0:412:bcc9:32dc with SMTP id p10-20020a05600c468a00b00412bcc932dcmr8364626wmo.31.1709588512525;
-        Mon, 04 Mar 2024 13:41:52 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id o17-20020a05600c4fd100b00412d68dbf75sm8769968wmq.35.2024.03.04.13.41.50
+        d=1e100.net; s=20230601; t=1709596262; x=1710201062;
+        h=thread-index:thread-topic:content-transfer-encoding:mime-version
+         :subject:references:in-reply-to:message-id:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wHZdIg82gQhhliIHQKfVKh00PcHpYfuwKdT2lavfKEM=;
+        b=j9OeiVivL9jIEy4INee1ivztXyYdNrEbtAncBOgDsvsaouti8+PgE7wsyGjdef/BY0
+         N4b4aQog46Hq06CNvlJeObaAdrlp/XCNYs87+FRWLUEIXSbd1lGMhszNmBif8B1BO+8K
+         /UbVFk+OdIxuGwhQHcp4NC6y1y6DWD85ujukhwMPzbhelRvloThpzRAkkLtDRHtPa8u9
+         fLE4B3oaT6opEB2hE27pr/o6PYfS67+10CxfpLlZ4e85csgQdp8wifa+6lx6PE3+E3cQ
+         /z0L8d+eOywX32JlQQHZF6N2DUwh0yPuLeB6jjhRTc5UHm8+Vdcq4BVgyVhKrW6vz49G
+         zpuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUv8VJEkHwsyc+yDbCJiYy2LMbl92DmxAJoF/36nbUcZeSIU+WDHU+Pu1mERdhANdkvNHOTamm4M8eUVCMmLRpJ5UePqZpySvr1fR8=
+X-Gm-Message-State: AOJu0YzhO6Mk3lA3AHlSOU+lghgbjHIaEmLbn+Yc9YrMFA3PTW4ufml2
+	oFkYrKGiFfHAOLl+FAhipDt9nbp4kc750YqoBIG7Fln+jPiannoKLi5jz/xR6ReiceTBIScfD33
+	+gHxfeLMg0EIIpHscpjMGkCOCFeLx7Zkz
+X-Google-Smtp-Source: AGHT+IGjrnpWm32tjepbwSg4ok414e9vCSPGJ/gCDRSDlPlb+tNcp7BCav1jwGVFW7lOL9uJ2BNP02koL33o
+X-Received: by 2002:a0c:e114:0:b0:690:5f74:81a7 with SMTP id w20-20020a0ce114000000b006905f7481a7mr390876qvk.45.1709596261870;
+        Mon, 04 Mar 2024 15:51:01 -0800 (PST)
+Received: from postfix.totalphase.com ([65.19.189.126])
+        by smtp-relay.gmail.com with ESMTPS id ke25-20020a056214301900b0068f732494easm562457qvb.42.2024.03.04.15.51.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 13:41:50 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 14349BE2EE8; Mon,  4 Mar 2024 22:41:50 +0100 (CET)
-Date: Mon, 4 Mar 2024 22:41:50 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ben Hutchings <ben@decadent.org.uk>,
-	Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Aditya Srivastava <yashsri421@gmail.com>, 1064035@bugs.debian.org
-Subject: Re: [regression 5.10.y] linux-doc builds: Global symbol "$args"
- requires explicit package name (did you forget to declare "my $args"?) at
- ./scripts/kernel-doc line 1236.
-Message-ID: <ZeZAHnzlmZoAhkqW@eldamar.lan>
-References: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
- <877ciiw1yp.fsf@meer.lwn.net>
- <ZeYoZNJaZ4ejONTZ@eldamar.lan>
- <874jdlsqyy.fsf@meer.lwn.net>
+        Mon, 04 Mar 2024 15:51:01 -0800 (PST)
+X-Relaying-Domain: totalphase.com
+Date: Mon, 4 Mar 2024 15:50:58 -0800 (PST)
+From: Chris Yokum <linux-usb@mail.totalphase.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Chris Yokum <linux-usb@mail.totalphase.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	stable <stable@vger.kernel.org>, 
+	linux-usb <linux-usb@vger.kernel.org>, 
+	Niklas Neronin <niklas.neronin@linux.intel.com>
+Message-ID: <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
+In-Reply-To: <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com>
+References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com> <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info> <2024030246-wife-detoxify-08c0@gregkh> <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com> <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com> <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com>
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="AtnHYYbjYt9cf90c"
-Content-Disposition: inline
-In-Reply-To: <874jdlsqyy.fsf@meer.lwn.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Thread-Topic: 6.5.0 broke XHCI URB submissions for count >512
+Thread-Index: VuTzduXODhc7IqP5hozJk2GPpe5bnA==
+
+Hello Mathias,
+
+Yes! This fixed the problem. I've checked with our repro case as well as our functional tests.
+
+I'll email you the repro code directly, you can compare the unpatched and patched kernel behavior.
+
+Best regards,
+Chris
 
 
---AtnHYYbjYt9cf90c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+----- Original Message -----
+From: "Mathias Nyman" <mathias.nyman@linux.intel.com>
+To: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
+Sent: Monday, March 4, 2024 7:53:03 AM
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
 
-Hi,
-
-On Mon, Mar 04, 2024 at 01:05:09PM -0700, Jonathan Corbet wrote:
-> Salvatore Bonaccorso <carnil@debian.org> writes:
+On 4.3.2024 13.57, Mathias Nyman wrote:
+> On 2.3.2024 17.55, Chris Yokum wrote:
+>>>> We have found a regression bug, where more than 512 URBs cannot be
+>>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
+>>>> valid data in the buffer.
+>>>
+>>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
+>>> calculation") [v6.5-rc1] from Mathias.
+>>>
 > 
-> > Ok. In the sprit of the stable series rules we might try the later and
-> > if it's not feasible pick the first variant?
+> Ok, I see, this could be the empty ring exception check in xhci-ring.c:
 > 
-> Well, "the spirit of the stable series" is one of Greg's titles, and he
-> said either was good...:)
+> It could falsely assume ring is empty when it in fact is filled up in one
+> go by queuing several small urbs.
 
-here we go. Please let me know if you need anything changed in the
-commit message to describe the situation better.
+Does this help?
 
-Greg, in the Fixes tag I added the 5.10.y commit as the issue is
-specific to the 5.10.y series. Is this the correct form to note this?
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 6a29ebd6682d..52278afea94b 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -332,7 +332,13 @@ static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhc
+         /* how many trbs will be queued past the enqueue segment? */
+         trbs_past_seg = enq_used + num_trbs - (TRBS_PER_SEGMENT - 1);
+  
+-       if (trbs_past_seg <= 0)
++       /*
++        * Consider expanding the ring already if num_trbs fills the current
++        * segment (i.e. trbs_past_seg == 0), not only when num_trbs goes into
++        * the next segment. Avoids confusing full ring with special empty ring
++        * case below
++        */
++       if (trbs_past_seg < 0)
+                 return 0;
 
-Regards,
-Salvatore
-
---AtnHYYbjYt9cf90c
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-scripts-kernel-doc-Fix-syntax-error-due-to-undeclare.patch"
-
-From ccddb9f4915f0dbf28fb72b6ff4c04977978ed3d Mon Sep 17 00:00:00 2001
-From: Salvatore Bonaccorso <carnil@debian.org>
-Date: Mon, 4 Mar 2024 22:24:12 +0100
-Subject: [PATCH] scripts: kernel-doc: Fix syntax error due to undeclared args
- variable
-
-The backport of commit 3080ea5553cc ("stddef: Introduce
-DECLARE_FLEX_ARRAY() helper") to 5.10.y (as a prerequisite of another
-fix) modified scripts/kernel-doc and introduced a syntax error:
-
-Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
-Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
-Execution of ./scripts/kernel-doc aborted due to compilation errors.
-
-Note: The issue could be fixed in the 5.10.y series as well by
-backporting e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
-expressions into variables") but just replacing the undeclared args back
-to ([^,)]+) was the most straightforward approach. The issue is specific
-to the backport to the 5.10.y series. Thus there is as well no upstream
-commit for this change.
-
-Fixes: 443b16ee3d9c ("stddef: Introduce DECLARE_FLEX_ARRAY() helper") # 5.10.y
-Reported-by: Ben Hutchings <ben@decadent.org.uk>
-Link: https://lore.kernel.org/regressions/ZeHKjjPGoyv_b2Tg@eldamar.lan/T/#u
-Link: https://bugs.debian.org/1064035
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- scripts/kernel-doc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 7a04d4c05326..8e3257f1ea2c 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1233,7 +1233,7 @@ sub dump_struct($$) {
- 	# replace DECLARE_KFIFO_PTR
- 	$members =~ s/DECLARE_KFIFO_PTR\s*\(([^,)]+),\s*([^,)]+)\)/$2 \*$1/gos;
- 	# replace DECLARE_FLEX_ARRAY
--	$members =~ s/(?:__)?DECLARE_FLEX_ARRAY\s*\($args,\s*$args\)/$1 $2\[\]/gos;
-+	$members =~ s/(?:__)?DECLARE_FLEX_ARRAY\s*\(([^,)]+),\s*([^,)]+)\)/$1 $2\[\]/gos;
- 	my $declaration = $members;
- 
- 	# Split nested struct/union elements as newer ones
--- 
-2.43.0
-
-
---AtnHYYbjYt9cf90c--
+Thanks
+Mathias
