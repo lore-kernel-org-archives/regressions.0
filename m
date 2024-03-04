@@ -1,59 +1,37 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709E33F8D0
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 14:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9C23D9E;
+	Mon,  4 Mar 2024 14:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709561072; cv=none; b=P7AUj5zxwq3ObcIWraDWsb7YJ6V4qpO3jEiHz0UM8Il06AO8OYlxQVDE3EcH2Jlkmpkji0j609zTsroiMcIvN3Ki7nyq1dVT3PW9Btd3N0l0Oq5bq3+He9azh0cwkg+gqHGev4fSzdkyDOCzeHTSIbpmynn6s7TS3WLTpZdkBm0=
+	t=1709561420; cv=none; b=rrqktHcTi0ptiZGztycZGs9UUV7pP8pyPuGL2tedtNgPKEhLaxohrHElx975zRecS7P+1BtXn00xOVpBDN4DeyIRQ48wpruzgJD61CUcLKKuegxsrpTOyKvS+xX2R9CtWC1SgtnQIXPsl9ADbwjDFy2EU3THM+h7GogeMlAxgGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709561072; c=relaxed/simple;
-	bh=SLbSjt9SbkPv+g6/vROjXm/Gz3EE39aUaCGhCyjYusE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZqcCfKA1XvWVszmgO9Q9jNHF02Bk2B1DDqBU2kKcDYc2K5qwmaYg6X9uQOx0pf4Xo2WIpFccmYXHxeliKOWU5Dvck8zxAMONRzpRXSKxEZDKFn8WIoPkuL7yI6nDqhqxX8dlsFybVc8F1PfesJskvXuJdutfcNIAgPsbhHk38w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3wuhyva; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709561420; c=relaxed/simple;
+	bh=iq23kpk8WdH7WCVOi5NjLdInalEVix39z/ioMqK4M0g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=X62xdaC+pvnSXKOxpUmxAD+ceNTTHdNkJqzCEgFV5yi/M+SkQsRkB/qLiSA+AsAMKg9EkJ5ptOTTmxDBQJYvEKO99xqSn038U65NDtHx8TTJaTm2yv+52tBkQVjtLAlu+hHuSyv0aEo10MkWS+br3HmWcMCnmf4cNxW26pgOSgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VYu11XBP; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3wuhyva"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512b700c8ebso5052236e87.0
-        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 06:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709561069; x=1710165869; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+A2MIgcuwPWk7lZwI41C//csGmOFt/MFKi0gAzZz/R8=;
-        b=T3wuhyvao300igTvKdBja8MyYOWPfAcTVn1eCnIQ4HfL/jCjFu4dIAkxwPU/3NMbtc
-         yi5jl51qw9mFfa6abWpfYGhGupIA22aUbxGV2hbA+QUwwXiPaEvAzJZzvDIOG4E8zs7W
-         U6Zc2My0FJtJRaA34TB1ItdFfWgdqAH4HQLOE4NrGiw6DW+T0mj/lyUwZsM2M9vdVnLg
-         zdZ7DzR9kJAmc2w24YSAlZ2sswjjohrNhtSceqZD31k4w4zdblq3yoR8uBKkqc4N6UMr
-         LxQ8e9jlP9aXJquJ4Dna2kxu9Ve0r10rjA/i05Dv8M8WyodvHwhLq0gJtItqUw6LKXZM
-         hA3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709561069; x=1710165869;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+A2MIgcuwPWk7lZwI41C//csGmOFt/MFKi0gAzZz/R8=;
-        b=D5WGM6O13PTmFbiEz9S31Uj3pm+/6E9kwtLx8ZVtPETC40TbYHxVSO1pHWY7yHPqio
-         zb1qWlvZxbHVxwRdkm8tPEBtYhrbSWA/tZsq+y+qfVnzdwM8cOAUCdyBdUFdF3xb7BBe
-         NNvWA3Bx+Zm6ZSJxpLsuw5CWoxRL2DQlZzzYVMqYEIQFM2u1yb1EnSyp/Tq/vYAHHSZ1
-         4w/g6Wtym6UgPW3C11Tkn5ph2mCCHR/SJeogncrDG+TRO+eQNOWd1qmTxabvDo4mph3B
-         s7giF2JKdT2qfUQRp6MdnFHe9D7Behl1S4AMM43z5VNrl7Z/eyCIRpffUSsvCpLJAABx
-         Zhow==
-X-Forwarded-Encrypted: i=1; AJvYcCWamF1c4XEZVRKjfc42E+B4sa5uFEooC7U9DXPmIfQrcjHE8h8tk0eOAyle4mrfCMKHuzEqhcmT6WgRhK7GlgRfQZb6EXv73yUODJk=
-X-Gm-Message-State: AOJu0YxI4vomT8aCV9cxvNQfzplABsynz3b7iAMkxc2i/FHuyDEZSJpQ
-	7SeZp5iiyYlNVrHWj5bI9+CTC0CiqdJFFkpF8qaAMoix3LRc8oji
-X-Google-Smtp-Source: AGHT+IEz+skFuqRkbnNFQLR4g/WSQnRAMiBY6M1c7WhrM5/JBrRjGoqo0wpSyC71RQNJ1tmb9ttgfg==
-X-Received: by 2002:a05:6512:34c8:b0:512:b00f:a55e with SMTP id w8-20020a05651234c800b00512b00fa55emr5880137lfr.13.1709561068360;
-        Mon, 04 Mar 2024 06:04:28 -0800 (PST)
-Received: from [192.168.0.31] (84-115-209-225.cable.dynamic.surfer.at. [84.115.209.225])
-        by smtp.gmail.com with ESMTPSA id q22-20020aa7da96000000b005669ce3f761sm4660283eds.59.2024.03.04.06.04.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 06:04:27 -0800 (PST)
-Message-ID: <c2e4ae25-1e8a-4f54-8321-800a7b7f8583@gmail.com>
-Date: Mon, 4 Mar 2024 15:04:26 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VYu11XBP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=iq23kpk8WdH7WCVOi5NjLdInalEVix39z/ioMqK4M0g=;
+	t=1709561418; x=1709993418; b=VYu11XBPnwHeYC7pVVai8SZCY2gERnTTURV+S+EV7XXIfGY
+	Gbo//1Q9BWzxq6vp6rCO2gkbpxvrNRlHrxiFuA86nT7hKDyByJH8YPl4+M5/gKXpwzmoZ3zt5eNmW
+	cqVAkuPAkSuPIH/8ZYWwtOX1OPBPl7zST5T5tb/bB/t81Tn4xcGUsyWPW7NpsI/2UO0d1L0EbyScT
+	HlqmePSjry49aGF9adqi7jOXQil1NqwNgQXFvwrlIsrBGzV+JSQjRfMK/RHFDMMvuMUXqRpMa1/Sc
+	a8QTFoVtEkSL0z7jRXOPVA7g9sWqIoUZ4EDAL3UT2YRPuUoYRpLkfsuDGBdSveDg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rh917-0000G0-OE; Mon, 04 Mar 2024 15:10:09 +0100
+Message-ID: <2ae4d3ba-3024-4bfe-8f95-c5c9526cd16f@leemhuis.info>
+Date: Mon, 4 Mar 2024 15:10:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,102 +39,83 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>,
- Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <87sf161jjc.wl-tiwai@suse.de>
- <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
- <874jdm17yt.wl-tiwai@suse.de>
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <874jdm17yt.wl-tiwai@suse.de>
+Subject: Re: This is the fourth time I've tried to find what led to the
+ regression of outgoing network speed and each time I find the merge commit
+ 8c94ccc7cd691472461448f98e2372c75849406c
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-x86_64@vger.kernel.org, netdev@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
+ <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
+ <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
+ <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
+ <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
+ <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
+ <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
+ <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
+ <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+ <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
+ <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
+ <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
+ <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
+ <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
+ <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
+ <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
+In-Reply-To: <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709561418;440f53ab;
+X-HE-SMSGID: 1rh917-0000G0-OE
 
+On 26.02.24 10:51, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 26.02.24 10:24, Mathias Nyman wrote:
+>> On 26.2.2024 7.45, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 21.02.24 14:44, Mathias Nyman wrote:
+>>>> On 21.2.2024 1.43, Randy Dunlap wrote:
+>>>>> On 2/20/24 15:41, Randy Dunlap wrote:
+>>>>>> {+ tglx]
+>>>>>> On 2/20/24 15:19, Mikhail Gavrilov wrote:
+>>>>>>> On Mon, Feb 19, 2024 at 2:41 PM Mikhail Gavrilov
+>>>>>>> <mikhail.v.gavrilov@gmail.com> wrote:
+>>>>>>> I spotted network performance regression and it turned out, this was
+>>>>>>> due to the network card getting other interrupt. It is a side effect
+>>>>>>> of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
+>>>>>> That's a merge commit (AFAIK, maybe not so much). The commit in
+>>>>>> mainline is:
+>>>>>>
+>>>>>> commit f977f4c9301c
+>>>>>> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
+>>>>>> Date:   Fri Dec 1 17:06:40 2023 +0200
+>>>>>>
+>>>>>>       xhci: add handler for only one interrupt line
+>>>>>>
+>>>>>>> Installing irqbalance daemon did not help. Maybe someone experienced
+>>>>>>> such a problem?
+>> This isn't really about those usb xhci patches.
+>> This is about which interrupt gets assigned to which CPU.
+> I know, but from my understanding of Linus expectations wrt to handling
+> regressions it does not matter much if a bug existed earlier or
+> somewhere else: what counts is the commit that exposed the problem.
 
-On 04.03.24 13:45, Takashi Iwai wrote:
-> On Mon, 04 Mar 2024 12:26:48 +0100,
-> Javier Carrasco wrote:
->>
->> On 04.03.24 09:35, Takashi Iwai wrote:
->>> Hi,
->>>
->>> we've received a few regression reports for openSUSE Leap about the
->>> missing touchpad on Macbooks.  After debugging, this turned out to be
->>> the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
->>>     Input: bcm5974 - check endpoint type before starting traffic
->>>
->>> And, the same regression was confirmed on the upstream 6.8-rc6
->>> kernel.
->>>
->>> Reverting the commit above fixes the problem, the touchpad reappears.
->>>
->>> The detailed hardware info is found at:
->>>   https://bugzilla.suse.com/show_bug.cgi?id=1220030
->>>
->>> Feel free to join the bugzilla above, or let me know if you need
->>> something for debugging, then I'll delegate on the bugzilla.
->>>
->>>
->>> thanks,
->>>
->>> Takashi
->>>
->>
->> Hi Takashi,
->>
->> The commit adds a check to ensure that the endpoint type is interrupt.
->>
->> According to that report, the issue arose with a MacBook Pro 5.1 (no
->> button, only trackpad endpoint), so the check on the tp_ep address
->> (0x81) returns false. I assume that you see an error message
->> ("Unexpected non-int endpoint) and  the probe function fails returning
->> -ENODEV.
-> 
-> Right, there is the message.
-> 
->> Do you see any warning in the logs when you revert the commit? It was
->> added to prevent using wrong endpoint types, which will display the
->> following warning: "BOGUS urb xfer, pipe "some_number" != type
->> "another_number""
-> 
-> The revert was tested on the downstream kernel, but it has also the
-> check of bogus pipe, and there was no such warning, as far as I see
-> the report.
-> 
->> I am just wondering if for some reason the check on interrupt type is
->> wrong here.
-> 
-> I'll ask reporters to give the lsusb -v output so that we can take a
-> deeper look.  Also, I'm building a test kernel based on 6.8-rc7 with
-> the revert, and ask reporters to test with it, just to be sure.
-> 
-> 
-> thanks,
-> 
-> Takashi
+TWIMC, I mentioned this twice in mails to Linus, he didn't get involved,
+so I assume things are fine the way they are for him. And then it's of
+course totally fine for me, too. :-D
 
+Thx again for all your help and sorry for causing trouble, but in my
+line of work these "might or might not be a regression from Linus
+viewpoint" sometimes happen.
 
-Getting the output of lsusb would be awesome, thank you.
+Ciao, Thorsten
 
-The bcm9547 driver has always made the assumption that the endpoint type
-is interrupt, and the expected output from lsusb would be something like
-
-bEndpointAddress     0x81  EP 1 IN
-bmAttributes         3
-Transfer Type        Interrupt
-
-which is what the reverted commit checks.
-
-I don't have the specific piece of hardware the report mentions, but I
-triggered the probe with the endpoint type = interrupt and the check was
-fine i.e. the probe did not fail. That made me think that the endpoint
-type could be different, but I am dubious about that.
-
-I will keep an eye on the bugzilla you linked, in case we get feedback
-quickly.
-
-Best regards,
-Javier Carrasco
+#regzbot resolve: apparently not a regression from Linus viewpoint
