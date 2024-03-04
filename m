@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8303BB3C;
-	Mon,  4 Mar 2024 12:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3983B193;
+	Mon,  4 Mar 2024 12:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709554694; cv=none; b=RqzkKbQEA+8iMS5rUmhCeOribCcdIfA0CxG44Cyjc0/zdgyRfMcatiYrnJO/em1fSwpKBY1qyc1268BjPDQK12M4tmJYP7ADI1h6O46aOBVW8oBVhM91e9ZRCKKkSzTIZ+b5f2Ww4KGu/au7whaBCuZvUxlGniUG0ePBR5N7EbY=
+	t=1709554935; cv=none; b=mEfA1SYzM6Os6cMTSUL8262bl8/e6g0HqNgUxLuVa8p2upQ1k1b8woHf8NJi9u5pb+MkStNwCiUMt2vI9kSO8T1OipaSSM8xpxY7fQ9plS5kJaFbjobGCuliWWw0vR8AX1vYORiMR7ZqCg3eoR682Dal0PQh7DSj653tN6TpIXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709554694; c=relaxed/simple;
-	bh=N2W3mE8rnw2SVp2I4OlDvkJ1azlDiC+mHB23aFxRlX0=;
+	s=arc-20240116; t=1709554935; c=relaxed/simple;
+	bh=iaLvMkscTu22PMg6EbbOG8ddmaxyYkSqojzFu2hcZX4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLXgPC+cbAOkUw0axWbn6VhpihAVtS2Zz/ZmfvZ5ifJfp2wiQpOwzxU5nUAluCuzCZJhno00sPmyTrOsK2kIMBKtvbU6I93pkLkgQAZ+Tmd/btItFmWrzihhHOiHWVdtutWnqUQaOEJYLpguVhP3zsGVhC2JDhYCAt+ZFqJ0Mxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=d0UfJP/k; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=Y9MmoIoZIO2zARG3Wvvfwxzv/71yIjcAfwUIBfK9GhwltIoFhW5F4mdj/xer4reak7ZmltIkpGWnGzv1XqQzCwUFxqU2FqUK3dGiQ3MHIbWRGcebpextf89+K8e8KHIWYUCM40cjozGkmV9AGwiPDloyOGXaUhNaf6xzSxZ/4vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VUZDVgRT; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="d0UfJP/k"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VUZDVgRT"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=uf9/2sCOY3v4S1nCPA6rsbwBK7yGOrOwP1YZD759F5Y=;
-	t=1709554692; x=1709986692; b=d0UfJP/kksHG+VFWhn/EsuBO+7Y9Ua442cnflhjdTKVbT/Q
-	1n5sqokjgSGlNhrTvffgquEiM3FkIsONWDVXt6Ee2DCgzPYa3iJ4xfK29mBemBAxtebDfwd5SmjtG
-	+etbL+zopIKaqnHLzpYxoVSd65uDeaouhUyFcdomVWOnyEzWVA3UoMcYuUW6DDRollfx20ATbI/y4
-	us314FSyoN0C5BXt7dvq8BNJPI+ZUCD4gDTIKh01yml9XBdJ09cc15Vk0udEag5SMfF2zj0J2WqmG
-	vQQXCJhcKqFg2ySOxTbC1yYHmfT+3vWvSfWnulJHnIuusafoTgJN3UEfzHfeaiAg==;
+	In-Reply-To:References; bh=hMCkIUe+XyHaUa+80k/WKyK1Rur9pNDUNUE4O40OC+0=;
+	t=1709554933; x=1709986933; b=VUZDVgRT1+M0EH0E91TBKm6loP2eLABA0m3HGiuRtQeBMqh
+	EX/vKimGSMJpjuJiyN3zjcfIpdLVW5v5r9lXrymuyI1VKyaRwTEnjCRdd1Jj2wx88w/YPkRwZz0bm
+	5+h4YG5dg5p5dbvuFjl9YcH5w8nmUInSodYnyPE6xoeJJ01ul4BplBYJX1+ySHTKdvjYWSWpGKcZ3
+	XmIUPq6h5GOSj40ym7IbiCNfIMZ+QIa39Phu415iaZnD/Klei/LF/pwiL0nnvp7NylsXNKEm2gGMV
+	os68EQa3PyhX3bZxnxG+7HcqDp2d9B7ZBmdvljdqHL53fUr8gTKt/A7RN0WkOxIg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rh7Gj-0007ZK-Aw; Mon, 04 Mar 2024 13:18:09 +0100
-Message-ID: <ab9d758c-3ce9-42f6-99af-877055a589e6@leemhuis.info>
-Date: Mon, 4 Mar 2024 13:18:08 +0100
+	id 1rh7KW-0008UW-Bd; Mon, 04 Mar 2024 13:22:04 +0100
+Message-ID: <aaf7a195-e726-4bcb-a63a-4e75c09608ef@leemhuis.info>
+Date: Mon, 4 Mar 2024 13:22:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,51 +39,61 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
+Subject: Re: [PATCH v2] docs: new text on bisecting which also covers bug
+ validation
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <87sf161jjc.wl-tiwai@suse.de>
-From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
+ Nathan Chancellor <nathan@kernel.org>, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
+ <petr@tesarici.cz>, Vegard Nossum <vegard.nossum@oracle.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>
+References: <02b084a06de4ad61ac4ecd92b9265d4df4d03d71.1709282441.git.linux@leemhuis.info>
+ <6d282271-25fa-4ed9-9748-df3705f9d5fb@leemhuis.info>
+ <878r2zz5n7.fsf@meer.lwn.net>
+From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <87sf161jjc.wl-tiwai@suse.de>
+In-Reply-To: <878r2zz5n7.fsf@meer.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709554692;3519abd2;
-X-HE-SMSGID: 1rh7Gj-0007ZK-Aw
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709554933;f4826097;
+X-HE-SMSGID: 1rh7KW-0008UW-Bd
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 04.03.24 09:35, Takashi Iwai wrote:
+On 03.03.24 16:39, Jonathan Corbet wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
 > 
-> we've received a few regression reports for openSUSE Leap about the
-> missing touchpad on Macbooks.  After debugging, this turned out to be
-> the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
->     Input: bcm5974 - check endpoint type before starting traffic
+>> On 01.03.24 09:41, Thorsten Leemhuis wrote:
+>>> Add a second document on bisecting regressions explaining the whole
+>>> process from beginning to end -- while also describing how to validate
+>>> if a problem is still present in mainline.  This "two in one" approach
+>>> is possible, as checking whenever a bug is in mainline is one of the
+>>> first steps before performing a bisection anyway and thus needs to be
+>>> described. Due to this approach the text also works quite nicely in
+>>> conjunction with Documentation/admin-guide/reporting-issues.rst, as it
+>>> covers all typical cases where users will need to build a kernel in
+>>> exactly the same order.
+>>> [...]
+>>> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+>>> index ed8a629e59c86a..c53bb6e36291b8 100644
+>>> --- a/Documentation/admin-guide/index.rst
+>>> +++ b/Documentation/admin-guide/index.rst
+>>> @@ -1,4 +1,3 @@
+>>> -=================================================
+>>
+>> Just saw that, that line obviously was not meant to be removed. Sorry.
+>>
+>> Jonathan, in case you consider merging this "soon", as suggested
+>> yesterday by  Vegard, could you please fix this up? Otherwise I'll fix
+>> this with v3.
 > 
-> And, the same regression was confirmed on the upstream 6.8-rc6
-> kernel.
-> 
-> Reverting the commit above fixes the problem, the touchpad reappears.
-> 
-> The detailed hardware info is found at:
->   https://bugzilla.suse.com/show_bug.cgi?id=1220030
+> I've applied the patch and undone the little change, no need for a v3.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Great, thx and thx!
 
-#regzbot ^introduced 2b9c3eb32a699ac
-#regzbot title Input: missing bcm5974 touchpad on Macbooks
-#regzbot duplicate: https://bugzilla.suse.com/show_bug.cgi?id=1220030
-#regzbot ignore-activity
+FWIW, I received some feedback from a user who among others also noticed
+a bug. Will send a follow-up patch in a few days when the dust settled
+and a few details are fully ironed out.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Thx again for merging it. Ciao, Thorsten
