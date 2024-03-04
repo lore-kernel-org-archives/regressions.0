@@ -1,81 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEB2B667;
-	Mon,  4 Mar 2024 07:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0FC199A1
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 08:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709535658; cv=none; b=RO/FqCzxVRb7JvW5LB9GlvoQLRJMVOcmSDN0yyEHRXlACqIUnuiaBDHlQ1RF62SK8zmnd7ccCpMOqViJy/jGEQJ+LRNE1fhi2LuiTfcFmLqe01Cc+UGCdDV848mgLCL7aoTLJ9I9BtlbuPz4LqFH/AV5d5FAyNoemNJ7t+I4aOg=
+	t=1709541339; cv=none; b=pTi9jVJrbS44BXiBl+go3kNzkcWs392B8jsXrtfPIwgLtDvreCdvvT/d9RzvcJFX/4BMpzO3fDHJknAhqSKQIsw1pdpS98i0HD9t9P1gtlKqkBl58RB6NOYnf3Tqa+zzxeWqaqaP83z5eq37mTcmb6wh+CeboPQwW+Apo3qk4YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709535658; c=relaxed/simple;
-	bh=+6O1b61eegcauwvncVdJAGt41wHdeb1LoXWkjLcqFoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HbXxrGogjKz785tt+KA2AXaUAcWDQwEeu26zZdJHx9whgYmIRGKnhS2b0y7+KwdCEd0zFKCY8OyLFYuoeNV6269QRE3pSF98uQD8/A9LCK51cvkVoJVnJyKs6n08sCqKBwuUu15ziToFnlRw+0GSaUTH6KSelgMnOnnnDBwyyQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UxuI2eHH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709541339; c=relaxed/simple;
+	bh=WKGGpWRMANQaqtEPi4SVdmap1qUQKAiiyE9H3DFCJF8=;
+	h=Date:Message-ID:From:To:Cc:Subject:MIME-Version:Content-Type; b=h65i/dNqlX3iId6PR5RHDfa1s0FBg6m/AJuZIawgjd7cUZaAyHV0RCs9By014saIcARp716XbLz+4OkmcsJSc2MGxltpDINjkFO3mSsUbYeb8s9ARdlh45bAY2rKNhcsjVhhjisKa8nWcRlqL96KmdAqp+ZlSmsZdSBIrHDQxqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cuKySK/g; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PhtnxHOY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UxuI2eHH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E26C433F1;
-	Mon,  4 Mar 2024 07:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709535658;
-	bh=+6O1b61eegcauwvncVdJAGt41wHdeb1LoXWkjLcqFoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UxuI2eHHYYG49CuvPpfxTZ4Lym5ZGcUhVYM77yOxy0x9oL1Q+CbpyB7FXUCq77XyD
-	 LxbM2dHSvTuLkvWcrcx8SBt7yL1lfP6xhMS++RyJyMSqDQgWi8r1BSQNygoB7brDT5
-	 WWHar8t2Qrf1cvtd8e7eiIoJZz2TBZxFvtXK8iks=
-Date: Mon, 4 Mar 2024 07:58:56 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Eric Piel <eric.piel@tremplin-utc.net>,
-	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH regression fix] misc: lis3lv02d_i2c: Fix regulators
- getting en-/dis-abled twice on suspend/resume
-Message-ID: <2024030432-deploy-tingle-f2bb@gregkh>
-References: <20240220190035.53402-1-hdegoede@redhat.com>
- <1d8226cd-df43-4ef6-8425-2db01d513b32@leemhuis.info>
- <d2465271-1e4b-4bae-9399-4d49d3938048@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cuKySK/g";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PhtnxHOY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4EC2768848;
+	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
+	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
+	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709541336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
+	nWL8jnFUFY3H/xCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709541336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=cuKySK/gWSj3aRK5Akjm7J4dlysMBPpA6EKLtardyf/lc5ZodDMeelhHejt/rPUEQSdMam
+	VlTUVqT10JUVTYPWYEPu6kCJZdQPtVRHey6zhFzXKTfLF6X3lBXJ1jyjFBY1xbY5EjB7xv
+	3w7pvKRu6XNmgYE1SjGu/CTSlOqNp7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709541336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=5Ods5nKi3JLGo8dY/EevI/LJTv5iSGmPuUIXJnh5aFY=;
+	b=PhtnxHOYukPKzudsPxUY3YQPZJNaj5df0/OOXPic59SJ3yk9oQF0i95b75cBYYSxqtXZS5
+	nWL8jnFUFY3H/xCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1629813A5B;
+	Mon,  4 Mar 2024 08:35:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id d3qxA9iH5WX1bgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 04 Mar 2024 08:35:36 +0000
+Date: Mon, 04 Mar 2024 09:35:35 +0100
+Message-ID: <87sf161jjc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+    linux-input@vger.kernel.org,
+    linux-kernel@vger.kernel.org,
+    regressions@lists.linux.dev
+Subject: [REGRESSION] Missing bcm5974 touchpad on Macbooks
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2465271-1e4b-4bae-9399-4d49d3938048@leemhuis.info>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="cuKySK/g";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PhtnxHOY
+X-Spamd-Result: default: False [-1.94 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.com:url];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,lists.linux.dev];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.63)[98.35%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 4EC2768848
+X-Spam-Level: 
+X-Spam-Score: -1.94
+X-Spam-Flag: NO
 
-On Fri, Mar 01, 2024 at 06:20:52AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 27.02.24 17:25, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 20.02.24 20:00, Hans de Goede wrote:
-> >> When not configured for wakeup lis3lv02d_i2c_suspend() will call
-> >> lis3lv02d_poweroff() even if the device has already been turned off
-> >> by the runtime-suspend handler and if configured for wakeup and
-> >> the device is runtime-suspended at this point then it is not turned
-> >> back on to serve as a wakeup source.
-> >>
-> >> [...]
-> >>
-> >> Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
-> >> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> >> Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-> >> Cc: stable@vger.kernel.org
-> >> Cc: regressions@lists.linux.dev
-> > 
-> > Paul, did you maybe test this? I suppose Greg had no time to review this
-> > yet due to all the CVE stuff and stable tree maintenance; but with a bit
-> > of luck a "Tested-by" from your side might motivate him or somebody else
-> > to look into this.
-> 
-> Hmmm, Greg seems to be pretty busy with other stuff. Hans, is there
-> maybe someone we can motivate into reviewing this to make it easier for
-> Greg to pick this up and send it to Linus before -rc8/the final?
-> 
-> Sure, it's "just" a warning fix, still would have been nice to get this
-> into -rc7. But I guess time has already run out on that. :-/
+Hi,
 
-Sorry for the delay, this ended up at the bottom of my pile.  I'll pick
-it up now...
+we've received a few regression reports for openSUSE Leap about the
+missing touchpad on Macbooks.  After debugging, this turned out to be
+the backport of the commit 2b9c3eb32a699acdd4784d6b93743271b4970899
+    Input: bcm5974 - check endpoint type before starting traffic
 
-greg k-h
+And, the same regression was confirmed on the upstream 6.8-rc6
+kernel.
+
+Reverting the commit above fixes the problem, the touchpad reappears.
+
+The detailed hardware info is found at:
+  https://bugzilla.suse.com/show_bug.cgi?id=1220030
+
+Feel free to join the bugzilla above, or let me know if you need
+something for debugging, then I'll delegate on the bugzilla.
+
+
+thanks,
+
+Takashi
