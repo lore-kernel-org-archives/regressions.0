@@ -1,106 +1,146 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C3D1756D
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 18:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FED7995F
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 20:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709575416; cv=none; b=JRdu84x8WinnFRuGcSM37AsQh1+PmseaGaIvQ8PaJwh7Y47vt7yXC5cLKu2iVxbVjRODQ8FSfiHalmEYq4XmmUfSgDWgeQCYq4+eXqrNfRR8qD9KqtUmx8I0m/EZ5oGE9izR5Zad7gnnIEi/Ri4k+QVJ2LtppohcqvGlSJn87ws=
+	t=1709582443; cv=none; b=Nqje7AK3+v0Gxt9Xv9TUcU4cByuA0wndvfn1Qe9lbiELz0n3w1iGdDvksJNUsxcxUP7hENh0XhCS45327W8zhXakpXuEEKxp2gidWTwyH/Mar3ibNfoaoPYRciUQD0ZEVTZ3DTC5jAmlNrRKTl8YjRuhBw9J+OliWzBiWj+ZjO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709575416; c=relaxed/simple;
-	bh=0uJGpOI+Rh64wRVIQbrKMA5KI3BR1426JYHXEJX/tu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I/A35kRVNCOS7UGzfMCMv0zRyFknhlO7CJh8ygDkVpBUOy/cQsF+gqXDyQLMPP2RGnAH4WOq4rczvMyylAok131jyWfcx0bz2E9Zm2p4cVF9MFvh5EwdikYGt7op2aw8nglBNQgcL4cYXiiMXyln61iRuxliohocWvYjg+VSNoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=bLApyCSk; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
+	s=arc-20240116; t=1709582443; c=relaxed/simple;
+	bh=XvM+66VhbbeNHen8cDDRkVqqLC5Yo36gqh2E2nY94W8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z2umr7jkIOvi60dCSSRzsB2GjHcuJglFQJDhqLgNKFxVV2j/DfO5lvYolGWpuWUhah9KgC4h6GHGNNDtBECynIPv3H+wo+hBuuZNN9hbxJQOLjSAI2JzI5DNjoQ6EUehaT/pJC2j9acr4lHXDBnejUUk/5bl2h374ZGOdv61UXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IuYc7DBX; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="bLApyCSk"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id EB75820098
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 18:03:26 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 43D7A3E989;
-	Mon,  4 Mar 2024 19:03:19 +0100 (CET)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 19E0E4007F;
-	Mon,  4 Mar 2024 18:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1709575398;
-	bh=0uJGpOI+Rh64wRVIQbrKMA5KI3BR1426JYHXEJX/tu4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bLApyCSksVMMr8pDE+OTY1DI9HM0Bb5lp9O1Dchw4popfy8F116nLrhJeIslnEYla
-	 rehUDk16kxgvnEK7y1PrINwdXpLGVMF2tnFwsnB6Ku4TDjCeMv+Y7RF0YBQi65lm8F
-	 K/QR0YRlpEwl2jORX2c9JcMHk0tXrnVyBDNBQ1Fc=
-Received: from [10.66.66.8] (unknown [139.59.64.216])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2E0694047D;
-	Mon,  4 Mar 2024 18:03:15 +0000 (UTC)
-Message-ID: <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
-Date: Mon, 4 Mar 2024 23:33:13 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuYc7DBX"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e72b0d96so6703105e9.0
+        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 12:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709582440; x=1710187240; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qgHCyC+Ikfdy07nvjol19ApsqbmdnmuhNond4BBAt+Y=;
+        b=IuYc7DBXd6BXL0ya2RjYOZriWaj0n+aJPETnXnCY5fEZgspZkVzEmCJzO8RTDkL0u5
+         HzT/ImoYeayw3ElXe7aI46vbz33oAYV9wWCbdOaTdZ3UGEXctBM4ijsYaffMu7B1LoBo
+         uR04Iwqflkh+sihYBRd5NxjXYzsUG+5dPxKquk2q977Gptvp5kzJLO0xukddn3SuuFuU
+         OrJqfFu5fzLhl1KTuVDAXrftpiM45QPRchsN6TtrLgqUa9HUhXE49KMla23nRJnrAlhw
+         mJc7Utssu8Zzzpe4ji4pH7irj9mwDqmaz51NC7FufUo/c3Ry4mUwS63tfDLda/ETNmK4
+         hjDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709582440; x=1710187240;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qgHCyC+Ikfdy07nvjol19ApsqbmdnmuhNond4BBAt+Y=;
+        b=pxlSEB2jBzO+m39iCdmjjDg92u8t1ew6wJogSPsMBqwSf4wUtxabrQHjBvkH0zAjJO
+         SUQBZz5NtnooIkLKvkVShOdt9oMWpjFyWrwfGLJWfUGVkbXeMHVRNRCy52TIfIj2CknV
+         Nn5M8u52w7GjKc73BDmM5VaFZGjZXoaF3LH29X9feFu4bFb+UEJPC7Q7eWt8E+ZyPGHt
+         FsCFjYgTxoObxT8EEtQmeCINO+ZkRUZR37b34hXPat/5m4rNqOoKFiTcgxwB0Q1pt7Ci
+         ecqRK9PmayIYYH11TBD4u290+8Jxih570cle2VSKwIZEH8knyLj3X7BwwuTrulSccQv+
+         yZ9w==
+X-Gm-Message-State: AOJu0YwV1pVPc4JQLN54442ECLO1aIvLNIcTu+z7nA97TJMzF9cvBI3b
+	I6Wo82jZqmLJzaU2+VDaQhfu6pPwx9Tbi9lNNvl+K47jTioAijI2
+X-Google-Smtp-Source: AGHT+IEG6VFBumkdiKt3bV/gFyaWTxyNPWjZ8t9eO9T+jnNpADN4tBLH9fymg1RHv/pFVFu+3LqEsw==
+X-Received: by 2002:a05:600c:4e8b:b0:412:b83c:d97d with SMTP id f11-20020a05600c4e8b00b00412b83cd97dmr8154909wmq.16.1709582439907;
+        Mon, 04 Mar 2024 12:00:39 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id m11-20020a7bcb8b000000b00412dd56e0desm2428259wmi.1.2024.03.04.12.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 12:00:37 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id C6ECABE2EE8; Mon,  4 Mar 2024 21:00:36 +0100 (CET)
+Date: Mon, 4 Mar 2024 21:00:36 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Aditya Srivastava <yashsri421@gmail.com>, 1064035@bugs.debian.org
+Subject: Re: [regression 5.10.y] linux-doc builds: Global symbol "$args"
+ requires explicit package name (did you forget to declare "my $args"?) at
+ ./scripts/kernel-doc line 1236.
+Message-ID: <ZeYoZNJaZ4ejONTZ@eldamar.lan>
+References: <ZeHKjjPGoyv_b2Tg@eldamar.lan>
+ <877ciiw1yp.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
- reboot in kernel v6.7.6)
-Content-Language: en-US
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>
-References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
- <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
- <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
- <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
- <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
- <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
- <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
- <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
-From: Pavin Joseph <me@pavinjoseph.com>
-In-Reply-To: <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4]
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 19E0E4007F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877ciiw1yp.fsf@meer.lwn.net>
 
-On 3/4/24 11:46, Thorsten Leemhuis wrote:
-> I'm not really familiar with openSUSE, but it set up a TW container and
-> found that a package kernel-install-tools provides installkernel script.
-> Not sure how good it works though. Could you maybe test that?
+Hi Jonathan,
 
-Yep, that package got me "installkernel" and it does all the 
-installation as expected. I only needed to change the symlink of 
-"/boot/<initrd|vmlinuz>" to point to the new ones created by it.
+On Mon, Mar 04, 2024 at 06:39:26AM -0700, Jonathan Corbet wrote:
+> Salvatore Bonaccorso <carnil@debian.org> writes:
+> 
+> > Hi,
+> >
+> > Ben Hutchings reported in https://bugs.debian.org/1064035 a problem
+> > with the kernel-doc builds once 3080ea5553cc ("stddef: Introduce
+> > DECLARE_FLEX_ARRAY() helper") got applied in 5.10.210 (as
+> > prerequisite of another fix in 5.10.y):
+> >
+> >> The backport of commit 3080ea5553cc "stddef: Introduce
+> >> DECLARE_FLEX_ARRAY() helper" modified scripts/kernel-doc and
+> >> introduced a syntax error:
+> >> 
+> >> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> >> Global symbol "$args" requires explicit package name (did you forget to declare "my $args"?) at ./scripts/kernel-doc line 1236.
+> >> Execution of ./scripts/kernel-doc aborted due to compilation errors.
+> >> 
+> >> This doesn't stop the documentation build process, but causes the
+> >> documentation that should be extracted by kernel-doc to be missing
+> >> from linux-doc-5.10.
+> >> 
+> >> We should be able to fix this by eithering backport commit
+> >> e86bdb24375a "scripts: kernel-doc: reduce repeated regex expressions
+> >> into variables" or replacing /$args/ with /([^,)]+)/.
+> >> 
+> >> Ben.
+> >
+> > What would be prefered here from stable maintainers point of view?
+> > AFAICS e86bdb24375a ("scripts: kernel-doc: reduce repeated regex
+> > expressions into variables") won't apply cleanly and needs some
+> > refactoring. The alternative pointed out by Ben would be to replace
+> > the /$args/ with  /([^,)]+)/.
+> 
+> Hmm...this is the first I see of any of this...
+> 
+> The latter fix seems like the more straightforward of the two.  The only
+> concern might be if there are other kernel-doc backports that might run
+> afoul of the same problem, hopefully not.
 
-> kernel-install is normally meant to copy the image over to /boot/ as
-> well afaik; maybe it did not do that in your case because you already
-> had placed it there manually?
+Ok. In the sprit of the stable series rules we might try the later and
+if it's not feasible pick the first variant?
 
-kernel-install doesn't do that in my testing, it also doesn't remove 
-anything AFAICT. 🧐
+> But this makes me wonder if there are other stable kernels that are
+> affected as well.  I guess that, despite all of the testing being done
+> on stable updates, nobody is testing the docs build?
 
-Kind regards,
-Pavin Joseph.
+Only 5.10.y is affected AFAICT, and the reaso nis that the cherry-pick
+of ("stddef: Introduce DECLARE_FLEX_ARRAY() helper") in 5.10.y (as
+requisite of the smb fixes) requires as well e86bdb24375a ("scripts:
+kernel-doc: reduce repeated regex expressions into variables").
+
+3080ea5553cc ("stddef: Introduce DECLARE_FLEX_ARRAY() helper") is in 
+5.10.210, 5.15.54 and 5.16-rc1.
+
+e86bdb24375a ("scripts: kernel-doc: reduce repeated regex expressions
+into variables") is in 5.14-rc1.
+
+So it's covered for the later series, but causes problems in the
+5.10.y.
+
+Regards,
+Salvatore
