@@ -1,45 +1,45 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12451612FE
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 17:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C3D1756D
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 18:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709574552; cv=none; b=i5D5aDtnTUG3TTR7lcwiQgAJX1ljp8LQbvSXU+oDFeEBICtKyek5D1F4m4ZhARFglV980XQwYabPL7dSm9PJXouZgrvTl4HfoIFEKWf10AMY0NDwXRaiHzE39UsDj3/m6cqRZBrY0mBabMV3QDa+Tf4NYx9ycocE8ARLkH/b4Cg=
+	t=1709575416; cv=none; b=JRdu84x8WinnFRuGcSM37AsQh1+PmseaGaIvQ8PaJwh7Y47vt7yXC5cLKu2iVxbVjRODQ8FSfiHalmEYq4XmmUfSgDWgeQCYq4+eXqrNfRR8qD9KqtUmx8I0m/EZ5oGE9izR5Zad7gnnIEi/Ri4k+QVJ2LtppohcqvGlSJn87ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709574552; c=relaxed/simple;
-	bh=ccPdTJp3Uk6HHfgsE62VmoQ4mlajKldDF4M5V0Z/vPQ=;
+	s=arc-20240116; t=1709575416; c=relaxed/simple;
+	bh=0uJGpOI+Rh64wRVIQbrKMA5KI3BR1426JYHXEJX/tu4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FQifMTY5OnaFai/LspSTsXyVOKj0/4H2Nq/hRzDu18vq8qjuTpgU0NIn3CGhkCIz7jpRB7DYuytKBwtUlbJk/5UQxYEk+gYH0I/N2apA+M363TDQCTPZ/JO6VxoKsY+8c0pj/Nrcw5GChQzYupod1eVe8JUptv4WQdBCqgmzjAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=cyHehOvt; arc=none smtp.client-ip=159.100.248.207
+	 In-Reply-To:Content-Type; b=I/A35kRVNCOS7UGzfMCMv0zRyFknhlO7CJh8ygDkVpBUOy/cQsF+gqXDyQLMPP2RGnAH4WOq4rczvMyylAok131jyWfcx0bz2E9Zm2p4cVF9MFvh5EwdikYGt7op2aw8nglBNQgcL4cYXiiMXyln61iRuxliohocWvYjg+VSNoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=bLApyCSk; arc=none smtp.client-ip=159.100.241.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="cyHehOvt"
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.102])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 33FAA2610A
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 17:49:03 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="bLApyCSk"
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id EB75820098
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 18:03:26 +0000 (UTC)
 Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id 765623E875;
-	Mon,  4 Mar 2024 17:48:55 +0000 (UTC)
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 43D7A3E989;
+	Mon,  4 Mar 2024 19:03:19 +0100 (CET)
 Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9715E40604;
-	Mon,  4 Mar 2024 17:48:54 +0000 (UTC)
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 19E0E4007F;
+	Mon,  4 Mar 2024 18:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1709574534;
-	bh=ccPdTJp3Uk6HHfgsE62VmoQ4mlajKldDF4M5V0Z/vPQ=;
+	s=default; t=1709575398;
+	bh=0uJGpOI+Rh64wRVIQbrKMA5KI3BR1426JYHXEJX/tu4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cyHehOvtZcTpdq4ApFqOM+uNMHyZd4WqC/uPuAKz1tb6XfDTPgS8TB7NmwRZUF0ar
-	 klZzZNMQKeYrrC6LhQ4kOJ0JLWUjwaUsHdZSe00gdsPvjrCgQFDEAfOJfqMpzDGNWB
-	 7PKUQnnxMR9VES3/IPGvm0yydnoIki76eeYXtx4Q=
+	b=bLApyCSksVMMr8pDE+OTY1DI9HM0Bb5lp9O1Dchw4popfy8F116nLrhJeIslnEYla
+	 rehUDk16kxgvnEK7y1PrINwdXpLGVMF2tnFwsnB6Ku4TDjCeMv+Y7RF0YBQi65lm8F
+	 K/QR0YRlpEwl2jORX2c9JcMHk0tXrnVyBDNBQ1Fc=
 Received: from [10.66.66.8] (unknown [139.59.64.216])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6AC684047D;
-	Mon,  4 Mar 2024 17:48:51 +0000 (UTC)
-Message-ID: <fe72c912-f1a0-4a53-88ab-b85e8c3f7bd9@pavinjoseph.com>
-Date: Mon, 4 Mar 2024 23:18:49 +0530
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2E0694047D;
+	Mon,  4 Mar 2024 18:03:15 +0000 (UTC)
+Message-ID: <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
+Date: Mon, 4 Mar 2024 23:33:13 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,55 +47,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-To: Steve Wahl <steve.wahl@hpe.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
+ reboot in kernel v6.7.6)
+Content-Language: en-US
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>
 References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
  <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
  <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
  <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
  <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
- <ZeO9n6oqXosX1I6C@swahl-home.5wahls.com>
- <f264a320-3e0d-49b6-962b-e9a741dcdf00@pavinjoseph.com>
- <ZeXzoTjki+1WR258@swahl-home.5wahls.com>
-Content-Language: en-US
+ <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
+ <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
+ <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
 From: Pavin Joseph <me@pavinjoseph.com>
-In-Reply-To: <ZeXzoTjki+1WR258@swahl-home.5wahls.com>
+In-Reply-To: <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.09 / 10.00];
 	MIME_GOOD(-0.10)[text/plain];
 	XM_UA_NO_VERSION(0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCPT_COUNT_THREE(0.00)[4]
 X-Rspamd-Server: nf1.mymailcheap.com
 X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 9715E40604
+X-Rspamd-Queue-Id: 19E0E4007F
 
-On 3/4/24 21:45, Steve Wahl wrote
-> There's a chance you may be running out of the memory reserved for the
-> kexec kernel.  If you have the time to try adding the command line
-> option "nogbpages" to a kernel that's working for you to see if that
-> breaks it in a similar way or not, that would be valuable information.
+On 3/4/24 11:46, Thorsten Leemhuis wrote:
+> I'm not really familiar with openSUSE, but it set up a TW container and
+> found that a package kernel-install-tools provides installkernel script.
+> Not sure how good it works though. Could you maybe test that?
 
-I tried it and it breaks working kernels (6.7.4).
+Yep, that package got me "installkernel" and it does all the 
+installation as expected. I only needed to change the symlink of 
+"/boot/<initrd|vmlinuz>" to point to the new ones created by it.
 
-> My next steps are to read through your logs more closely, and load
-> OpenSUSE somewhere to see if I can replicate your problem.
+> kernel-install is normally meant to copy the image over to /boot/ as
+> well afaik; maybe it did not do that in your case because you already
+> had placed it there manually?
 
-I wasn't able to reproduce the issue inside a VM (virt-manager, QEMU/KVM).
+kernel-install doesn't do that in my testing, it also doesn't remove 
+anything AFAICT. 🧐
 
 Kind regards,
 Pavin Joseph.
