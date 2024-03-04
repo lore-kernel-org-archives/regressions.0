@@ -1,119 +1,159 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56704CB36
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 16:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203575D738
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 16:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709568942; cv=none; b=V7Cfl6A31lIy3nQn/yQscleSKyyJkz7uXnZsz3xu/MqJpycS/lxrm8KZyz0P51Tb4LRVsLK1wgxBukAMFk6pLvxc/btpRIVTaniWzLiGC99Es0XJ27QpUb7lNoweDxHYEITIomFIjCelxYPQI5csw6BSWomFgvBn3WqzVycVrak=
+	t=1709571412; cv=none; b=Ff3NXYHsqXIxZ6BfvUtdIOAHqNNrTK7/qAj0Gm+KNkDEYFplDMuCKKNh2+/1WAKtXC1nIqShQrP6pPGGAp080ML0UZOLPS/wl9nTnMb9goQaJKliSQeTHiGiObDNY5kbLBWK5jn0NMSTJBWq1tT2OJNUm3eidl6UPZyb/qR4bCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709568942; c=relaxed/simple;
-	bh=76RSLLNMJXqoycoCvWjqw9JFVKzRErP3ckyQpEA9WXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ck4Pt6AKG3y713xQc138kAAyQUUp1zlcc5bgC2Pc94g2x3cI5MVnsHVO0F2hQd7Awt93YzuaVz2I5ydDROLr1fsc8WXCqBSUvqUhgenJR5rT3YE7wBXvtmbQVLgWcjuVq9mfYpiJBmUOHiguxlwOvipxuvDtgNvxXOf57WcMm2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=kI85SnPM; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1709571412; c=relaxed/simple;
+	bh=ZGMXcFuQrgx1SMeh//RuHHEKTwX4JgGSvJklkPh98+A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ty9y1M7HTIi37yDGW+bAkNdc3FfAGXGRSCjxkQj7YElqY1vYpooJdxQkLIPUazCnhNulDiiIdgyCMKIKM0lw9O+TiSNsBliDrIwnkIvH8TMCBkbxVKybuUcnCpn2Q9rQdltByyKjQ8Plm4WL+aXdzd00mEErOG/Xf/b7XToAbds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dmrsCZlk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ivc7oN7f; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dmrsCZlk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ivc7oN7f; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="kI85SnPM"
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 424EWJJl015891;
-	Mon, 4 Mar 2024 16:15:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=/cJqAd0M+vSwxU0c4OzETTinjHcmf9rPnD50ESY2xCs=;
- b=kI85SnPM79weW92/Z16oltWUhkA77l1YteeAlYJK2FuZgzIBdUmU3Fnn5JVAn798VG6c
- FVZbs4wSkltTwOj4/FS8lfOAYnTO4EqQMmX4FVghYm9LACYiK3WfrnW9ZURLvR3nLgGJ
- RfeB4ii0oIVSq7p4/Uy5JTpiwFxq4NnaPI/2fId8Hv+xhzoxyN4W8YBOGNxVCd7bvq/M
- OFArd4S3DKNNYubi03NP9S2T7qcNrDmxg0NVD3uuZ3x9aavWUUQ76Lfw7Dqt+8xDPoIw
- oxnqIcxDj10jFgg2Qqc1ahJXDN+KrXUDztJv6swXGxnnrbXDXCeGZmxvLAJ28JRA00En cQ== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wneaeu104-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Mar 2024 16:15:33 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dmrsCZlk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ivc7oN7f";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dmrsCZlk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ivc7oN7f"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 5DE31130AB;
-	Mon,  4 Mar 2024 16:15:32 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4CEDE33688;
+	Mon,  4 Mar 2024 16:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709571409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X18wun2KPgEkmdf+nMDldpOLsokiS1pBuUIkbNKN0Jc=;
+	b=dmrsCZlkGijUKt4OPFwE+aIuXT1qureSUgSqEQv3iJOtSpcVMLx4+8m00Y3BPHXLvQIy5X
+	vJ38Z0PvADCOOKqMFK9HlYprqdbwV/a3NYIKje+f0SiTH5V7WSDLVeuF+Fvd/6dSfHDhr4
+	d6qWybpfVftpH01YmFHzMtuUbKt0jBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709571409;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X18wun2KPgEkmdf+nMDldpOLsokiS1pBuUIkbNKN0Jc=;
+	b=ivc7oN7fe5rpjHA2qwoj4aFXG+p3OJvZpRqkl5c6Qs1H9K23FDr6B1gk8YDBHDq/TcOZBx
+	MZNl9qLkLjZsTnAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709571409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X18wun2KPgEkmdf+nMDldpOLsokiS1pBuUIkbNKN0Jc=;
+	b=dmrsCZlkGijUKt4OPFwE+aIuXT1qureSUgSqEQv3iJOtSpcVMLx4+8m00Y3BPHXLvQIy5X
+	vJ38Z0PvADCOOKqMFK9HlYprqdbwV/a3NYIKje+f0SiTH5V7WSDLVeuF+Fvd/6dSfHDhr4
+	d6qWybpfVftpH01YmFHzMtuUbKt0jBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709571409;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X18wun2KPgEkmdf+nMDldpOLsokiS1pBuUIkbNKN0Jc=;
+	b=ivc7oN7fe5rpjHA2qwoj4aFXG+p3OJvZpRqkl5c6Qs1H9K23FDr6B1gk8YDBHDq/TcOZBx
+	MZNl9qLkLjZsTnAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 57915800EF6;
-	Mon,  4 Mar 2024 16:15:31 +0000 (UTC)
-Date: Mon, 4 Mar 2024 10:15:29 -0600
-From: Steve Wahl <steve.wahl@hpe.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0D7DB13A5B;
+	Mon,  4 Mar 2024 16:56:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id iHG3AVH95WX1BAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 04 Mar 2024 16:56:49 +0000
+Date: Mon, 04 Mar 2024 17:56:48 +0100
+Message-ID: <87il223pgv.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
 To: Pavin Joseph <me@pavinjoseph.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <ZeXzoTjki+1WR258@swahl-home.5wahls.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6)
+In-Reply-To: <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
 References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
- <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
- <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
- <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
- <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
- <ZeO9n6oqXosX1I6C@swahl-home.5wahls.com>
- <f264a320-3e0d-49b6-962b-e9a741dcdf00@pavinjoseph.com>
+	<7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
+	<3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
+	<a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
+	<806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
+	<4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
+	<66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f264a320-3e0d-49b6-962b-e9a741dcdf00@pavinjoseph.com>
-X-Proofpoint-ORIG-GUID: JVAHZmODXutakwm_r6kL30WYrh-39Z8Q
-X-Proofpoint-GUID: JVAHZmODXutakwm_r6kL30WYrh-39Z8Q
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-04_11,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403040123
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dmrsCZlk;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ivc7oN7f
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.93 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 TO_DN_ALL(0.00)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.92)[86.30%]
+X-Spam-Score: -4.93
+X-Rspamd-Queue-Id: 4CEDE33688
+X-Spam-Flag: NO
 
-On Sun, Mar 03, 2024 at 12:02:31PM +0530, Pavin Joseph wrote:
-> On 3/3/24 05:30, Steve Wahl wrote:
-> >
-> > The machines I work on are large, though.  Can you give specifics on
-> > exactly how you are performing your kexec, and what hardware you are
-> > using when you hit this (especially memory size)?  Have you made any
-> > special arrangements for the size of memory reserved for kexec on your
-> > system?
+On Sun, 03 Mar 2024 11:17:44 +0100,
+Pavin Joseph wrote:
 > 
-> Hi Steve, I'm using a mainstream Lenovo laptop with an AMD APU (Ryzen 3
-> 5300U), this is my secondary/testing machine using which I've built the
-> kernels and performed the git bisection. I've attached the relevant journal
-> logs and inxi output.
+> On 3/3/24 14:06, Thorsten Leemhuis wrote:
+> 
+> >> 2. The "installkernel" command is called "kernel-install" in OpenSuse,
+> > 
+> > Yeah, it looks like that, but that's not really the case. :-) In short:
+> > on Fedora "installkernel" calls into kernel-install -- and
+> > "installkernel" has a long history, so doing what Fedora does is likely
+> > a wise thing for distros. And openSUSE had a "installkernel" as well,
+> > which was part of the dracut package. Not sure if that is still the case
+> > for current Leap and Tumbleweed. Could you check?
+> 
+> It's not available even as a symlink in OpenSuse TW / Slowroll I'm afraid.
+> 
+> suse-pc:~ # whereis installkernel
+> installkernel:
+> suse-pc:~ # whereis kernel-install
+> kernel-install: /usr/bin/kernel-install
+> /usr/share/man/man8/kernel-install.8.gz
+> suse-pc:~ # man kernel-install | grep -i installkernel
+>        installkernel [OPTIONS...] VERSION VMLINUZ [MAP] [INSTALLATION-DIR]
+>        When invoked as installkernel, this program accepts arguments
+> as specified by the kernel build system's make install command. The
+> VERSION and VMLINUZ parameters
 
-Hi, Pavin,
+FYI, /usr/sbin/installkernel is included in kernel-install-tools
+package.
 
-Thanks for the extra information.  I have skimmed it, and will
-continue to read more thoroughly.
 
-There's a chance you may be running out of the memory reserved for the
-kexec kernel.  If you have the time to try adding the command line
-option "nogbpages" to a kernel that's working for you to see if that
-breaks it in a similar way or not, that would be valuable information.
-
-Explanation: My patch can require additional memory for the identity
-map, should be worst case an extra 4K per GiB mapped.  The nogbpages
-option always does what my patch only does sometimes, including
-requiring this extra memory.  
-
-My next steps are to read through your logs more closely, and load
-OpenSUSE somewhere to see if I can replicate your problem.
-
-Thanks again,
-
---> Steve Wahl
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Takashi
