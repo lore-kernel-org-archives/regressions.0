@@ -1,94 +1,107 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5B2481D1
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 15:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D573547772
+	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 15:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709565168; cv=none; b=gTNXOv1LzvhnPWF3KJUHK7hAyGB1lTf8p/+RN/7pccp691JihvP+nInKXJzoaAzEji3fI5uQuUMY8gb6KM/OhZ0Y6u9+cfpwQhFamMzsmKZgi0IV0U+81UjRM5zOdvHKEri4JEBFA3g2a9fxwEUsGpXQqAqe0K4Dg2GFl/HPoc8=
+	t=1709567486; cv=none; b=tkuINaVGpKEqukaSBMGxC5k2f+ghSo8de+MfX6jraH13OnhYRPGHbwtQgNDcTNj+0T1VWm+mztXNaD7oehf7zAYScTotiBR/ycWfSwQMK/aV8WPMasHNcHTWBZtrPWVeBUEBvUkUi20DyJlPFvITlPyhz2AYEqWtvsC2YxMC21U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709565168; c=relaxed/simple;
-	bh=ANeFn0Vl19JA8TowDhr8E9cVOSbKmBckjJC7ISr9KYc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fStUg4UJL0Ky2g/qGVIZkeehRz26KGiw05iU8pg4fuK8J2nrzr8n50rFxfsTBlB3lNr1JUXyo8CBntFq8yNR7iH7vaU+7Tuus3JgOxCq6pwkXdUWtPreqHMj+eg3wO8iaUvPlob6d8gUTadXRtAlD32vOlZTHH+bQrxBqVAG2uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=khvoinitsky.org; spf=pass smtp.mailfrom=khvoinitsky.org; dkim=pass (1024-bit key) header.d=khvoinitsky.org header.i=@khvoinitsky.org header.b=ivalrMd1; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=khvoinitsky.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khvoinitsky.org
+	s=arc-20240116; t=1709567486; c=relaxed/simple;
+	bh=0lbdHoE8wBY59uc2iX+cWek1vZda8uKlxFEeIYRikvY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XKDTLoxaYDbhvRq5jNliZtM5Ex+osAEcf48uHAGR/8rqb+1/LV0mdpC25jSs3H8C3w5xhAeaY89wEy7U16rpgEuwrdFP4of9qts5MHyMpyEFKokBm/2fo9QZiqRCYo4hPpLN5VO9r7Y9wmRKI83/FgqLhlJhYFhV+KmguonX42s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6CByYTB; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=khvoinitsky.org header.i=@khvoinitsky.org header.b="ivalrMd1"
-X-Gm-Message-State: AOJu0YywvRAZVs12t+nTVtZgNioXGtdia5wxyLFO10XBsoJcK2TYGWb9
-	vdmwVZG5MD/8kHgG0YVMxRWBZG/qx5+L6N503FloiywqEodB/HONNE/l0zTFdUdLh7B9wB1gn1U
-	Nl4AXqhlMZcliIUzgOU6lXOousgs=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=khvoinitsky.org;
-	s=key1; t=1709565164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ANeFn0Vl19JA8TowDhr8E9cVOSbKmBckjJC7ISr9KYc=;
-	b=ivalrMd1BBqiIIdghJtxs9m4MaM4OLWJT3llH6hD7KBtvTqh4Zt6ekv5rF0x50w3+NcxdP
-	bUOwZ8JqLlWTvYeTclMcEZUA/QQstyzuS/eZH8mx0s1z0nixBBh1VuMOOQZ+Pd4Fm7AWEr
-	b+eehcM918Fb2cJ3XSL05rJeCsXMYGU=
-X-Google-Smtp-Source: AGHT+IFZiTc6XQ3gEJ5lwVog5csOwbE54OhnpzQYOO/02vEVnkVNrSEs9bBKpXOwO+iF9WTpihpZIhlIgCbCPU/cIvw=
-X-Received: by 2002:a05:6512:3c8d:b0:513:30fd:2985 with SMTP id
- h13-20020a0565123c8d00b0051330fd2985mr5648347lfv.0.1709565160554; Mon, 04 Mar
- 2024 07:12:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6CByYTB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709567485; x=1741103485;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=0lbdHoE8wBY59uc2iX+cWek1vZda8uKlxFEeIYRikvY=;
+  b=R6CByYTBJhgFp1iKtpkg5s2IYlrjIBwTiBeBo33iRpzRMTgGEr/z0fUa
+   XCqYnr7IWf7+GC37lP9CUGTuB8L+i1C8+YdZnfefu4mOPSTQIq7pH+qSp
+   2f1WUit3mq5ZEAKdOW6PAWZE1UURhtdF3fS5GF3hQ+OASkAGcHwkWikON
+   Iv4jBB3GYeXtTYfgGSO2zRAvhysWhziFUMN7jzj1jBJqSuQ7o/9dVXlZK
+   30ZG+3UF0qqVqD+1ByDa0HlsHscA9xNadyQTrJiLMDpM2xsiP/wzwMdWx
+   q2fIJkfOSbKjj+8gGNTJWqmoeyxbZ5VAokJQCCroUnn+NayRD/IzslmWg
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="3929475"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="3929475"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 07:51:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="937040723"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="937040723"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2024 07:51:22 -0800
+Message-ID: <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com>
+Date: Mon, 4 Mar 2024 17:53:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
- <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info> <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
- <7a5fc584-1520-4e52-9c77-d67a656524c6@gmail.com> <10022b0c-89c3-43e1-89ba-00e458fe1dfd@leemhuis.info>
- <7a8d9d60-a151-4b25-882b-48e6929339a4@gmail.com> <9db59ae4-be28-4ab3-a2ae-0b0f661f56be@gmail.com>
- <3bb95fcd-65cf-45dd-8d81-1a41b1ae0288@leemhuis.info> <CAMMabwNo_yT4S3LaMV16Rmj6MiWL=TRYtB9wspfs_LWVgM=U8Q@mail.gmail.com>
- <b30dc4a1-57aa-4ff5-ae52-7a01203b8be9@gmail.com>
-In-Reply-To: <b30dc4a1-57aa-4ff5-ae52-7a01203b8be9@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Mikhail Khvoinitsky <me@khvoinitsky.org>
-Date: Mon, 4 Mar 2024 17:12:29 +0200
-X-Gmail-Original-Message-ID: <CAMMabwNVwapthrDkCLOQsWkObzvTKVzDMiod3KPVa1hoy0CzRA@mail.gmail.com>
-Message-ID: <CAMMabwNVwapthrDkCLOQsWkObzvTKVzDMiod3KPVa1hoy0CzRA@mail.gmail.com>
-Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
-To: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jiri Kosina <jikos@jikos.cz>, 
-	Linux Input Mailing List <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Linux Stable Mailing List <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+To: Chris Yokum <linux-usb@mail.totalphase.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable <stable@vger.kernel.org>, linux-usb@vger.kernel.org,
+ Niklas Neronin <niklas.neronin@linux.intel.com>
+References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com>
+ <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info>
+ <2024030246-wife-detoxify-08c0@gregkh>
+ <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com>
+ <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com>
+In-Reply-To: <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> I'd be glad to test the module with this patch applied.
+On 4.3.2024 13.57, Mathias Nyman wrote:
+> On 2.3.2024 17.55, Chris Yokum wrote:
+>>>> We have found a regression bug, where more than 512 URBs cannot be
+>>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
+>>>> valid data in the buffer.
+>>>
+>>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
+>>> calculation") [v6.5-rc1] from Mathias.
+>>>
+> 
+> Ok, I see, this could be the empty ring exception check in xhci-ring.c:
+> 
+> It could falsely assume ring is empty when it in fact is filled up in one
+> go by queuing several small urbs.
 
-Sure.
+Does this help?
 
-> What's the default setting ? Should I set any parameter in sysfs to get
-> the desired result (apply workaround) ?
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 6a29ebd6682d..52278afea94b 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -332,7 +332,13 @@ static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhc
+         /* how many trbs will be queued past the enqueue segment? */
+         trbs_past_seg = enq_used + num_trbs - (TRBS_PER_SEGMENT - 1);
+  
+-       if (trbs_past_seg <= 0)
++       /*
++        * Consider expanding the ring already if num_trbs fills the current
++        * segment (i.e. trbs_past_seg == 0), not only when num_trbs goes into
++        * the next segment. Avoids confusing full ring with special empty ring
++        * case below
++        */
++       if (trbs_past_seg < 0)
+                 return 0;
 
-Default is 1, so you don't have to change anything.
+Thanks
+Mathias
 
-On Mon, 4 Mar 2024 at 17:07, Rapha=C3=ABl Halimi <raphael.halimi@gmail.com>=
- wrote:
->
-> Le 04/03/2024 =C3=A0 15:52, Mikhail Khvoinitsky a =C3=A9crit :
-> > Hi,
-> >
-> > Sorry for ignoring this thread. I've submitted the fix [1] quite a
-> > while ago but it is now in hid tree targeting 6.9. Maybe we can
-> > redirect it into 6.8? Jiri, what do you think?
-> >
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/=
-?h=3Dfor-6.9/lenovo&id=3D2814646f76f8518326964f12ff20aaee70ba154d
->
-> I'd be glad to test the module with this patch applied.
->
-> What's the default setting ? Should I set any parameter in sysfs to get
-> the desired result (apply workaround) ?
->
-> Regards,
->
-> --
-> Rapha=C3=ABl Halimi
