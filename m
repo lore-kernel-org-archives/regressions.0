@@ -1,130 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4BB46521;
-	Tue,  5 Mar 2024 06:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC3629437
+	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 06:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709619176; cv=none; b=W+iPPK0Oe+sSzv/pgGb5AH5KCKNFv4XADeHmiHI6j7HNrNVP+P/+w28fERN39Aqfs2BepQ+xnLbngvSrTJhEneVVWXQd9BRwayQqWaGkJdDC2uW0TqnDIHgzQ6G6MQyTUF3fFCKSgVdIxinKAzIe+yLppow3l/ADnUTCQiCaQYk=
+	t=1709619331; cv=none; b=WvpmEPTA17UwbU+Y2OXSQnfjrAQ3uod8buOkqJ/V07qgLCdRJ87mEXVqkbuBqOF79utd75gjsPEg1ocvGKSTuByEMBsga1vMbIjoML978YsEtwYHDcUIMFOuQxFLbmci3/06U9VHhwBinM/2kU+NDhYgzzDplLrE7cgWpErS+QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709619176; c=relaxed/simple;
-	bh=4nOYQQ8uNDN7HjpBsrd6iHaYnvNzIDPqpGD/YtxJKfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l971/++N/TuUpaanN/r4sJ6XDFDYkctS5jeCDm4DTMVtfEzHH6adghySQetN4gFXWvdxmMcIg41jwF3ClEPda1izozZsTJh3N7p7nfqRbye3FsLfDkJ+8S12k+bonbaQ7gMEWp3AEYSjYuYKgGh0behLyQas9//lmWxe72Yq2Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=2nt9y63M; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709619331; c=relaxed/simple;
+	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=eZVnPMNZIHHK4+XKEXiPz2i3joHpkb69Vxk3nUOU6pAE+3tyaigjqd7Rxpsk5ag+YNCRqIgw19Mtuh4lIyrY/pcCrJL4Wmb3HtapBe2SuDbMpwgA3yiJGjuJ5f4Qn2CawC++8kzkcveMwEXCEcIAJkMdhCTG+BYoma2Q9k4nNx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=QBOeYQWj; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="2nt9y63M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=wpIFNwTJixU7Q5MPmH075gULND/b/ip4CNFfUzWwDzg=; t=1709619174;
-	x=1710051174; b=2nt9y63MCkTq3i6+sehl+t4+sQFsao8pn+cmWDjaZvP8yuEnKfR5bG5gOuA15
-	OxiT8kYFXi3tQ3vFH5AlR0k99JfeaV7OtSoIt+fptBB9DCRQuFAkDyg0D20RDuZCGcX4uTSxodElK
-	um4CMJhEXlTUuwHh1Ew2t222dDbSfL1W0UN/ASf43C6ZN10UhyMlJ3/+EsO5p/w+T0aED9VfZjvbV
-	7tW0tn+VH5s+dW2eiFT0meXiQO7zQ4WSR67YfX0hCHFUTIS+zUYsmUO6Mi2YCGqufCD73yhZ9iSRa
-	oI8nKbBnlm1MoWphJFZfgUO26r9VlJMoUxrH3ouEMCJRiu8Y4w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rhO2l-00079m-TG; Tue, 05 Mar 2024 07:12:51 +0100
-Message-ID: <610f1a24-e8e7-4f79-97f2-7fc6c725ea2e@leemhuis.info>
-Date: Tue, 5 Mar 2024 07:12:51 +0100
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="QBOeYQWj"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1709618979;
+	bh=k0S++Cu8Iyr6uXBN6ACI05p0wIHJD7IqUIi1EDWRXX0=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=QBOeYQWjPjcVLq2dQ5HyXh22PMZs7KuESHcPaGtHEHmWgwM115uQLZdf4M0c48GBi
+	 ovEehHg1WSiwOjpDCXFmFJy7F+yOQpUPAthHdGOkOmNbbHebQ2hTKr7MIMjXZJQWnT
+	 lBL4chzEwOh1OHe4bq0TvoSNd+lkl725lOsu4NkM=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
- reboot in kernel v6.7.6)
-Content-Language: en-US, de-DE
-To: Pavin Joseph <me@pavinjoseph.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Doc Mailing List <linux-doc@vger.kernel.org>
-References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
- <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
- <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
- <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
- <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
- <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
- <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
- <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
- <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1709619174;547fa1c0;
-X-HE-SMSGID: 1rhO2l-00079m-TG
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
+Subject: Re: nfs4_schedule_state_manager stuck in tight loop
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <ZdisssP88_9o0BXn@manet.1015granger.net>
+Date: Tue, 5 Mar 2024 07:09:19 +0100
+Cc: linux-nfs@vger.kernel.org,
+ jlayton@kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ trondmy@hammerspace.com,
+ anna@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
+References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
+ <ZdisssP88_9o0BXn@manet.1015granger.net>
+To: Chuck Lever <chuck.lever@oracle.com>
 
-On 04.03.24 19:03, Pavin Joseph wrote:
-> On 3/4/24 11:46, Thorsten Leemhuis wrote:
->> I'm not really familiar with openSUSE, but it set up a TW container and
->> found that a package kernel-install-tools provides installkernel script.
->> Not sure how good it works though. Could you maybe test that?
-> 
-> Yep, that package got me "installkernel" and it does all the
-> installation as expected. I only needed to change the symlink of
-> "/boot/<initrd|vmlinuz>" to point to the new ones created by it.
+Hi,
 
-Well, if openSUSE uses those links (other distros don't have them) then
-you might want to report a bug to openSUSE.
+not sure whether I may have missed a response that didn=E2=80=99t make =
+it back to me or any of the lists.
 
->> kernel-install is normally meant to copy the image over to /boot/ as
->> well afaik; maybe it did not do that in your case because you already
->> had placed it there manually?
-> kernel-install doesn't do that in my testing, it also doesn't remove
-> anything AFAICT. 🧐
+Just in case, because the CC didn=E2=80=99t include the original =
+addendum I made to my report:
 
-Ahh what a mess. I will slightly change the text to indicate that might
-happen.
+Addendum:
 
-Ciao, Thorsten
+I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t =
+find anything that I could relate to this aside from *maybe* =
+dfda2a5eb66a685aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of =
+subdirectories) which mentions NFS but doesn=E2=80=99t describe the =
+potential impact.
+
+We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 =
+months there might be the chance of another lockup in the near future ;)
+
+If anyone has ideas on how to debug/approach a reproducer I=E2=80=99d be =
+more than happy to help and try to provide more data.
+
+Cheers,
+Christian
+
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
+
