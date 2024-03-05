@@ -1,134 +1,130 @@
-Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4EF7D3E7
-	for <regressions@lists.linux.dev>; Mon,  4 Mar 2024 23:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31151111A2
+	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 01:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709596267; cv=none; b=f/BIeL6gb76Z4cgoGZF4R9Ws+3N/QWLiiKqPW5LkfbkeT73PWujBgQ2mM2KSqP0nrK6J/Da7OCSsC/qGDk2wfknhagXu5VZYOKfXDVHujW4W6RGiCaI8epQq5JVLZm34ZFxqeHmuvtlIdebFjrnp2n0kMsfTm8SXnUzjdi4I0e4=
+	t=1709601344; cv=none; b=J3YehWyrhNzcWCXw9ZYKKDMRNvSnV8c6VMG1YLIoseQI4LAgedx3XJ/AovnOpEmxSSQYDkDytSf5Nm0QofY/ns7OMHYyXCLg9vR9e9DUTRMVDcZfnoZH+79FOmX/RFkYpdcSZwNFfYENPC58E68DLKkq5SFj6Vlzn0YCYH2w9bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709596267; c=relaxed/simple;
-	bh=lZBdGXN3sDOALNhqG18J8ZzeUVL9c1fKKZLxSYGTO8Q=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=QF5aUC3KFi6sF4MHKNxVouwK1AFjpGMtxM44mB5ZlCHpFT6E1Bz4RKxKbtHSy8NYjVyZEo8Zf+ka95nsA7KudhE0S+S0x4ARqs7R581uCvJ913/6nu26pr5i6nzY5WmAxFp6n9nD504lEe8vBkCnFgNnzje38H47VD3AxjidGJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com; spf=pass smtp.mailfrom=totalphase.com; dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b=vNImkBjh; arc=none smtp.client-ip=209.85.219.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=totalphase.com
+	s=arc-20240116; t=1709601344; c=relaxed/simple;
+	bh=rNYrYnUDeiQThIlOLf7GZzdLyTpjLYQxAmN0MpVAUGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KzJvpzv/V3rHtGj2aJUC6OPGR1L5Aa17Wxrgpl/ZMcst+GoMTNPqs4Mmy+TfAWh9kjtmfD6+i3NQz4u76I/fIvsd89qVBg7FegnlYzPdeMqBus8kRgKwHeG59GZ3oQofNqVQXmXPSzZnipIafapQ5o0I1h+DR4X5Z9CTQUUcryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PFAGYjqY; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b="vNImkBjh"
-Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-68f9e399c91so43915186d6.2
-        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 15:51:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFAGYjqY"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-299354e5f01so4666975a91.1
+        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 17:15:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=totalphase-com.20230601.gappssmtp.com; s=20230601; t=1709596262; x=1710201062; darn=lists.linux.dev;
-        h=thread-index:thread-topic:content-transfer-encoding:mime-version
-         :subject:references:in-reply-to:message-id:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wHZdIg82gQhhliIHQKfVKh00PcHpYfuwKdT2lavfKEM=;
-        b=vNImkBjhx5HTGyRmpaQphahKdy9bdAMF3fOEAEFLM2w9/5xE6fOpYcK7gSckmUTNo1
-         OqaqijCHsdaaErSYsPsSHF32fQY1zQm6igoxitoL3BfeUUitBPUrPwsaxaQcQDajXp5D
-         HltBJOav+xie4eTaQHh2mdYggp8BwMtB//7mJ6PKd1BQq85HrB9yApZYUEBvzGkaL4ua
-         cwwlYa5rLDmpoquce6v2KsRnhtOpC/NmLycSkfH6XslmG2CkIwAcyONXwMPf1yVqgIt0
-         tG4KcoEYxiTuT2Fer0xHAJ/K0c6rnMuSmOQyOSDZMcL3B5T60WVIU+a6djB0A/R6nEis
-         tlKw==
+        d=gmail.com; s=20230601; t=1709601342; x=1710206142; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a97puSPee8NDveftoKysQGZs9RYm6VyTGxwyRsunH+Y=;
+        b=PFAGYjqYeg2tU7Nq7BJCxtyPN7faogZoxh++p5+EdR3BH9b2S7m5c9Cn7ntWs2dW93
+         rRaKt4WbWj1Kzdz+nxMZawj2hyuFL6k6nHhX1Eek6ucMKTYizqlfvhU5BpBiv5qDNITh
+         DiqcLs0fm5a8szOaWqNo0Df3aeo8UiFSBS7VdhN2B7lszEP5z28WoZG1f2Q/u5V3BvEt
+         lOkPzf9oY6Zte7+QhBOv5vT31VhLTRzJtWIAhhxx19nMKizb020tVg9CK2gTOTk+sFQL
+         AXQJwYjCTjdeXyXMuFR+8cPmqY8xTuzUSXNyoi7WF4Q07Z4zSZUauAF5IfLRsqKsFj0A
+         I1UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709596262; x=1710201062;
-        h=thread-index:thread-topic:content-transfer-encoding:mime-version
-         :subject:references:in-reply-to:message-id:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wHZdIg82gQhhliIHQKfVKh00PcHpYfuwKdT2lavfKEM=;
-        b=j9OeiVivL9jIEy4INee1ivztXyYdNrEbtAncBOgDsvsaouti8+PgE7wsyGjdef/BY0
-         N4b4aQog46Hq06CNvlJeObaAdrlp/XCNYs87+FRWLUEIXSbd1lGMhszNmBif8B1BO+8K
-         /UbVFk+OdIxuGwhQHcp4NC6y1y6DWD85ujukhwMPzbhelRvloThpzRAkkLtDRHtPa8u9
-         fLE4B3oaT6opEB2hE27pr/o6PYfS67+10CxfpLlZ4e85csgQdp8wifa+6lx6PE3+E3cQ
-         /z0L8d+eOywX32JlQQHZF6N2DUwh0yPuLeB6jjhRTc5UHm8+Vdcq4BVgyVhKrW6vz49G
-         zpuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUv8VJEkHwsyc+yDbCJiYy2LMbl92DmxAJoF/36nbUcZeSIU+WDHU+Pu1mERdhANdkvNHOTamm4M8eUVCMmLRpJ5UePqZpySvr1fR8=
-X-Gm-Message-State: AOJu0YzhO6Mk3lA3AHlSOU+lghgbjHIaEmLbn+Yc9YrMFA3PTW4ufml2
-	oFkYrKGiFfHAOLl+FAhipDt9nbp4kc750YqoBIG7Fln+jPiannoKLi5jz/xR6ReiceTBIScfD33
-	+gHxfeLMg0EIIpHscpjMGkCOCFeLx7Zkz
-X-Google-Smtp-Source: AGHT+IGjrnpWm32tjepbwSg4ok414e9vCSPGJ/gCDRSDlPlb+tNcp7BCav1jwGVFW7lOL9uJ2BNP02koL33o
-X-Received: by 2002:a0c:e114:0:b0:690:5f74:81a7 with SMTP id w20-20020a0ce114000000b006905f7481a7mr390876qvk.45.1709596261870;
-        Mon, 04 Mar 2024 15:51:01 -0800 (PST)
-Received: from postfix.totalphase.com ([65.19.189.126])
-        by smtp-relay.gmail.com with ESMTPS id ke25-20020a056214301900b0068f732494easm562457qvb.42.2024.03.04.15.51.01
+        d=1e100.net; s=20230601; t=1709601342; x=1710206142;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a97puSPee8NDveftoKysQGZs9RYm6VyTGxwyRsunH+Y=;
+        b=pJ9Z/1fS6uojZa2kGfcXw74sgn4xh27o7d1iRvqy9AflFxxjOGz2etfip8KvEU5CJ8
+         /zIFaH6UUeIvGhYxI/Lxv6ogCA9025Q0cXZtZC7mkLXMR5iFXMN1L5hJe62xXIhjFq7E
+         Vg76V9cJCefPz6/pplVdWzU/dr5s6BqVMNm2a+6KKLk3u85GbdLPQsE7OfXWNl4+t1sA
+         uubcV8ksJ0aCG6aoEzADXoKMlcE6nagP7dR1yzpmlzA9e9Z/+jo+KxJxeu5NU2I4eLvc
+         4xdXDd0mtC3y7KzRbuZyzAgcKCmQEwfHpFtGYenKMjbzxK928Mlr/w97SJG5BTquxC+G
+         Zx0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWYFeRoc5uvdPu7bPCAkACriVeAXsXI3eVRHc+GG/zKrFulvA+G5TX179qmb6EIiLqFkaGWGL7xvW21dhNguWBH/J+774P3jdq/wJs=
+X-Gm-Message-State: AOJu0YxCPnmCZ6MgE7+jXZ+tIFd1puo1It8ASNb/qVJ1dwZ389PWWiBb
+	u4y1DrPBsMKT3tNBF+NfTFBZyQI+ZYPcXaDbKsXHKmFsxp834MXRoetG+wn8
+X-Google-Smtp-Source: AGHT+IGf/n6nOjCwoUrmBtzH0Ck54FjovaK9aQfF83w1GFO/2lpWpRKOz6N0/J/WgsAWRf4Tx45MzQ==
+X-Received: by 2002:a17:90a:9601:b0:29b:9e1:2fb0 with SMTP id v1-20020a17090a960100b0029b09e12fb0mr1416148pjo.0.1709601342390;
+        Mon, 04 Mar 2024 17:15:42 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:a5d5:fe74:fba8:86b5])
+        by smtp.gmail.com with ESMTPSA id p4-20020a17090b010400b0029af35db43csm8520610pjz.43.2024.03.04.17.15.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 15:51:01 -0800 (PST)
-X-Relaying-Domain: totalphase.com
-Date: Mon, 4 Mar 2024 15:50:58 -0800 (PST)
-From: Chris Yokum <linux-usb@mail.totalphase.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Chris Yokum <linux-usb@mail.totalphase.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	stable <stable@vger.kernel.org>, 
-	linux-usb <linux-usb@vger.kernel.org>, 
-	Niklas Neronin <niklas.neronin@linux.intel.com>
-Message-ID: <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
-In-Reply-To: <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com>
-References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com> <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info> <2024030246-wife-detoxify-08c0@gregkh> <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com> <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com> <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com>
-Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
+        Mon, 04 Mar 2024 17:15:42 -0800 (PST)
+Date: Mon, 4 Mar 2024 17:15:39 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Javier Carrasco <javier.carrasco@wolfvision.net>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, Henrik Rydberg <rydberg@euromail.se>,
+	John Horan <knasher@gmail.com>
+Subject: Re: [REGRESSION] Missing bcm5974 touchpad on Macbooks
+Message-ID: <ZeZyO7RUGyC8BRKP@google.com>
+References: <87sf161jjc.wl-tiwai@suse.de>
+ <6ef6c5bf-e6e5-4711-81c6-6ae41de2e61e@wolfvision.net>
+ <874jdm17yt.wl-tiwai@suse.de>
+ <449417ca-aae1-4868-a96f-a99ac5d187d6@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Thread-Topic: 6.5.0 broke XHCI URB submissions for count >512
-Thread-Index: VuTzduXODhc7IqP5hozJk2GPpe5bnA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <449417ca-aae1-4868-a96f-a99ac5d187d6@gmail.com>
 
-Hello Mathias,
-
-Yes! This fixed the problem. I've checked with our repro case as well as our functional tests.
-
-I'll email you the repro code directly, you can compare the unpatched and patched kernel behavior.
-
-Best regards,
-Chris
-
-
------ Original Message -----
-From: "Mathias Nyman" <mathias.nyman@linux.intel.com>
-To: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
-Sent: Monday, March 4, 2024 7:53:03 AM
-Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
-
-On 4.3.2024 13.57, Mathias Nyman wrote:
-> On 2.3.2024 17.55, Chris Yokum wrote:
->>>> We have found a regression bug, where more than 512 URBs cannot be
->>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
->>>> valid data in the buffer.
->>>
->>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
->>> calculation") [v6.5-rc1] from Mathias.
->>>
+On Mon, Mar 04, 2024 at 09:21:19PM +0100, Javier Carrasco wrote:
 > 
-> Ok, I see, this could be the empty ring exception check in xhci-ring.c:
+> There is indeed an interrupt endpoint with address 0x81, but the driver
+> defines bInterfaceProtocol = 2 (Mouse), and the endpoint in that
+> interface is 0x84:
 > 
-> It could falsely assume ring is empty when it in fact is filled up in one
-> go by queuing several small urbs.
+> #define BCM5974_DEVICE(prod) {					\
+> 	.match_flags = (USB_DEVICE_ID_MATCH_DEVICE |		\
+> 			USB_DEVICE_ID_MATCH_INT_CLASS |		\
+> 			USB_DEVICE_ID_MATCH_INT_PROTOCOL),	\
+> 	.idVendor = USB_VENDOR_ID_APPLE,			\
+> 	.idProduct = (prod),					\
+> 	.bInterfaceClass = USB_INTERFACE_CLASS_HID,		\
+> 	.bInterfaceProtocol = USB_INTERFACE_PROTOCOL_MOUSE	\
+> }
+> 
+> where USB_INTERFACE_PROTOCOL_MOUSE = 2.
+> 
+> 
+> My interpretation is that the driver is checking if the endpoint with
+> address 0x81 form the interface with bInterfaceProtocol = 2 (that is the
+> last interface of the list, the one with bInterfaceNumber = 2), but it
+> is not found, because its only endpoint has a different address (0x84).
+> 
+> Interestingly, 0x84 is the address given to the endpoint of the button
+> interface. The button interface should not be relevant for Macbook 5,1
+> (TYPE 2 in the driver), according to 43f482b48d03 ("Input: bcm5974 -
+> only setup button urb for TYPE1 devices").
+> 
+> If that is true, does anyone know why bInterfaceProtocol is always set
+> to USB_INTERFACE_PROTOCOL_MOUSE, and why the driver works anyway with
+> bEndpointAddress = 0x81 for the trackpad? The urb setup for 0x84 is only
+> executed for TYPE 1 devices, and the mouse interface does not have an
+> endpoint with address 0x81. Or am I missing something?
 
-Does this help?
+The driver is naughty, it binds to the 3rd interface (bInterfaceNumber
+2) but actually pokes into the 2nd interface with endpoint 0x84 without
+actually claiming it. Your check expects that the endpoint belongs to
+the interface that the driver binds to and thus fails.
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 6a29ebd6682d..52278afea94b 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -332,7 +332,13 @@ static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhc
-         /* how many trbs will be queued past the enqueue segment? */
-         trbs_past_seg = enq_used + num_trbs - (TRBS_PER_SEGMENT - 1);
-  
--       if (trbs_past_seg <= 0)
-+       /*
-+        * Consider expanding the ring already if num_trbs fills the current
-+        * segment (i.e. trbs_past_seg == 0), not only when num_trbs goes into
-+        * the next segment. Avoids confusing full ring with special empty ring
-+        * case below
-+        */
-+       if (trbs_past_seg < 0)
-                 return 0;
+> 
+> We could revert the patch in question, but I see no reason why checking
+> an expected interrupt endpoint should cause trouble. It looks like there
+> is something fishy going on.
 
-Thanks
-Mathias
+Yes, the driver needs to claim both interfaces and when checking use the
+right one. I will revert the patch for now given that it causes
+regression and we can try fixing it again.
+
+Thanks.
+
+-- 
+Dmitry
