@@ -1,49 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345484683;
-	Tue,  5 Mar 2024 15:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F35C1272A2
+	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 15:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709651303; cv=none; b=bJbdGGaYbZU5YNvwkSPjd/FRbQPd30dG0hdrdDjemmH6Cn9eH3Xz079uus4rSO+cJLg++iu9yNcKBcPKD+DCX1vpKj/DG5X2R49IxKakxUVRbg5c+BR6OQ4f1vPtleJ3OYUYa3Mtss4RmGdCdVbvqSgT7tszjhPbElmYfIdWb9s=
+	t=1709652314; cv=none; b=jTwJeSE+H76SQkNQtEh6Zqc0Coz/jdzYW4QbpxcAYgNH8LP0HoSQeWqSuPWlnEhdZAtxmz+0Vbz6cn6P/GMC03IyfqcNZi2APyoxdplXvp7dP7hW2Eka9SW1B6G64Dw/xGz9cggrkTNeBR/u9oCYxuaX/Jd2KIyvhqNBxVkMKJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709651303; c=relaxed/simple;
-	bh=kb0HU/bpu81+bPdS1bu4ZUmTsI3IRN22602RSyuVVlQ=;
+	s=arc-20240116; t=1709652314; c=relaxed/simple;
+	bh=q7EQj5T0Are7t8oh5ebCVYH/j+VAIo2h2q8OFWU/E5k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AX8l65lun1IxoLnpW2oPe7RqvWDR+wwTatu+0hVefy+pAv2QPO5wEH/2CXkXjcD8QYWkGXJUCimFLdj0p7CGgyMEUBNKGlDeaWF5LEHx7WMMPgfu6WEwL9LXkIQqd9Nlj2Er6ZZVQ81iIVEyKXjNDick+Xg8Mqvx2xyr28aitfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7K5oniR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eAKXqk+wdFFNeNqTxDdCFqBPe7hi2PtYkiyyt2uQW6BBJfrfnV33bDY6R1bjwUn0TblnfDyKZkSXjU5Lu/oXRLxj4sqkpnm5gscIH2TT2onX8XJi+IOBsjXEBM1LCVvwcHzU0NX/oO7ZeEPPqLP+mQrbjJviTZ34L5v2iBJQ7vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=d0BLrSxJ; arc=none smtp.client-ip=148.163.143.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7K5oniR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDD8C433C7;
-	Tue,  5 Mar 2024 15:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709651303;
-	bh=kb0HU/bpu81+bPdS1bu4ZUmTsI3IRN22602RSyuVVlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y7K5oniR0R+3MqTla0QfY1U5DvqGXZ1O5zRn1mrswdu2kQxmQ4aay0nMetZ1J25So
-	 PLDIPSDF0AqSxbWo9nCWBBxe93V0DR4KJtzDWVpDociPFs0orbDtIaFjBy8h7YNTlq
-	 VXEb45vgTTIY5RJGFvWSJ5FBlryIMJx5XUn875K/YSnczJImIElKkIwWX/ZrqzJcDl
-	 P+gtAg/gJ7fkGPcSMmK6ckHpteEH324QViltEdYhkiaZfaLNDqI8y6Iv1q8G+QCrZE
-	 xqM8MQNn1lsNd3JWMg6jMhpu0Zfahhj8fAUAwUvsjzlLaoSGb8PekEWjj1oYBvvckE
-	 DFf1YYgS7VD3A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rhWP7-000000000Uq-3pFe;
-	Tue, 05 Mar 2024 16:08:30 +0100
-Date: Tue, 5 Mar 2024 16:08:29 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@linaro.org>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: Lenovo ThinkPad X13s regerssions (was Re: Linux regressions
- report for mainline [2024-02-25])
-Message-ID: <Zec1bSx4H0VRmzfe@hovoldconsulting.com>
-References: <170886726066.1516351.14377022830495300698@leemhuis.info>
- <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
- <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
- <ZecjcApvdZSGRysT@hovoldconsulting.com>
- <1726bbb2-2cdc-4cad-b6b1-295f6338e771@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="d0BLrSxJ"
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 425F5fdV005466;
+	Tue, 5 Mar 2024 15:25:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=6rKM/hQsKq/kpwMcC1BQSxxYUcrxG6XXX0yEkHvLLjo=;
+ b=d0BLrSxJ10ynJKPbK55DTmAIMIM2Nl3ikwLuK14oWwxzs2uj/1Yoqh5MGciY7mvof9lK
+ nz/lvrfLSly8pWq8KBHEoM422PS51GmRN9bPij6zcf2zkezkrDK4VXGS/GVj+lXghx8p
+ 3fXULq8+SynaeuPP1xWvZYqV8qmWxenDPDI4HJZsoRyiBjbzb51pW00I8XfnRcsugfZF
+ qUxCJ4jHwIeCC47n3yih5n+7l7eEaQ51b2dd+uYG7E4SgBW5/oUjbEDTekQA3piEDf5g
+ i4q4ZMhx/Lm49/CqCdoaaCAsSrU07HboWq0lH/dPjgBDRyLvv+kjQGN0/dAt3IRrRICP mw== 
+Received: from p1lg14878.it.hpe.com ([16.230.97.204])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wp4j2sma3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 15:25:10 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 66C1D27644;
+	Tue,  5 Mar 2024 15:25:09 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id B3BB9801FD5;
+	Tue,  5 Mar 2024 15:25:07 +0000 (UTC)
+Date: Tue, 5 Mar 2024 09:25:05 -0600
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Pavin Joseph <me@pavinjoseph.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+Message-ID: <Zec5Ubr7G9NbnIyq@swahl-home.5wahls.com>
+References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
+ <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
+ <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
+ <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
+ <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
+ <ZeO9n6oqXosX1I6C@swahl-home.5wahls.com>
+ <f264a320-3e0d-49b6-962b-e9a741dcdf00@pavinjoseph.com>
+ <ZeXzoTjki+1WR258@swahl-home.5wahls.com>
+ <fe72c912-f1a0-4a53-88ab-b85e8c3f7bd9@pavinjoseph.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,61 +68,54 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1726bbb2-2cdc-4cad-b6b1-295f6338e771@leemhuis.info>
+In-Reply-To: <fe72c912-f1a0-4a53-88ab-b85e8c3f7bd9@pavinjoseph.com>
+X-Proofpoint-ORIG-GUID: sHk-IgT3tMDLQNZhnheyDRQYM9YqSXC2
+X-Proofpoint-GUID: sHk-IgT3tMDLQNZhnheyDRQYM9YqSXC2
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_12,2024-03-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ mlxscore=0 suspectscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2403050122
 
-On Tue, Mar 05, 2024 at 03:50:13PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 05.03.24 14:51, Johan Hovold wrote:
-> > On Tue, Mar 05, 2024 at 10:33:39AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> [dropping Linus from CC, we can add him back later when needed]
-> >>
-> >> On 27.02.24 11:20, Johan Hovold wrote:
+[Oops; previously sent this to Pavin only when I ment to copy everyone.]
 
-> >>> But also with these fixes, there are still a couple of regressions
-> >>> related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
-> >>> separate reports to track those.
-> >
-> >> Any decision yet if they are going to be reverted for now?
-> >>
-> >> Am I right assuming those would fix
-> >> https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
-> >> which did not get even a single reply?
-> > 
-> > That was the hope, but I've managed to trigger a reset on disconnect
-> > once also with the runtime PM series reverted.
+On Mon, Mar 04, 2024 at 11:18:49PM +0530, Pavin Joseph wrote:
+> On 3/4/24 21:45, Steve Wahl wrote
+> > There's a chance you may be running out of the memory reserved for the
+> > kexec kernel.  If you have the time to try adding the command line
+> > option "nogbpages" to a kernel that's working for you to see if that
+> > breaks it in a similar way or not, that would be valuable information.
 > 
-> Ohh. So did the PM series increase the chance of hitting this? Because
-> if not, then...
+> I tried it and it breaks working kernels (6.7.4).
 
-What we know is that some change in 6.8-rc1 either introduced or
-increased the chances of hitting the disconnect resets, while the
-runtime PM series (and patch which has now been reverted) broke hotplug
-detect.
+Thank you.  That's good news, it means I'm thinking on the right
+track.
 
-> > One of the patches from that series has already been reverted (to fix
-> > the VT console hotplug regression) and there is some indication that
-> > that was sufficient to address the issue with hotplug not being detected
-> > in X/Wayland too. I'm waiting for confirmation from some users that have
-> > not been able to use their external displays at all since 6.8-rc1, but
-> > it does seem to fix the X/Wayland issues I could reproduce here.
-> > 
-> > But either way, the reset on disconnect is still there, and have since
-> > been reproduced by Bjorn also on another Qualcomm platform without a
-> > hypervisor so that we've now got a call stack. I've heard that Abhinav
-> > is looking into that, but I don't know if there's any chance to have a
-> > fix ready this week.
+I'm still on the way to getting a system installed with OpenSUSE to
+try and replicate your problem.  In the meantime, if you want to try
+figuring out how to increase the memory allocated for kexec kernel
+purposes, that might correct the problem.
+
+> > My next steps are to read through your logs more closely, and load
+> > OpenSUSE somewhere to see if I can replicate your problem.
 > 
-> ...this sounds (please correct me if I'm wrong) like on Sunday the
-> situation likely will be "the problem is basically in 6.7.y already, so
-> there is not much we can do for 6.8 and reverting or delaying the
-> release is unneeded" -- unless of course a fix comes in reach during
-> this week.
+> I wasn't able to reproduce the issue inside a VM (virt-manager, QEMU/KVM).
 
-Yes, unless Abhinav and Bjorn can pinpoint the change that makes us hit
-this since 6.8-rc1 and revert that change (or come up with some
-temporary band-aid).
+Also good to know, as that was a possibility I was considering trying.
 
-It is also possible that we're dealing more than one bug here, since
-we're seeing resets both on disconnect and when stopping X some time
-after a disconnect.
+The number of regions created in the identity map as you're kexecing
+is fairly system dependent, it's been a couple of months since I
+looked through the callers, but as I recall it might even include
+regions that are in tables passed in by the BIOS.  So, it varies from
+system to system, and a VM is probably going to be much simpler
+compared to real hardware.
 
-Johan
+Thanks.
+
+--> Steve Wahl
+-- 
+Steve Wahl, Hewlett Packard Enterprise
