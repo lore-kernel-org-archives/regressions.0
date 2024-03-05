@@ -1,104 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAD558205
-	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 11:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5967E767
+	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 13:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709638773; cv=none; b=rNu296LEXp53aObL1JES6uSGCDqIoHpgkMedas1ubKe+/1HbxEJykNbndsR/lCzk46OCvApdy6bs/MK7Xpdr8ihNcdr7GoMXoWjfeGTD2qzu8+6+tCGiGvz8jz0s2N+CW3TgB0uc8nbHEHhwiUqf1eLtvBBivDz94WU0MXmwZDQ=
+	t=1709643661; cv=none; b=kBntF1zlapDdDxJaI1r97VXBTmBNpwIJ/yA+YDfXzbWSAlgvR1Am2PT8Tbw8smf+eJKbgILGyp9Shjj7y0yWXDH54zqhO8FYGk3BnHVWqMtLu/bcG4GZxIJY5h7eTVMLp2fs54pfzoO0mzLLIM9RMn/bXTrPsxSr/969GGw7tuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709638773; c=relaxed/simple;
-	bh=yGIHvaUSGtSh8SOfvZ4m5hJZFHMxJezWum2+AMtKBHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RIAetb9D17DR1eb3BTYNMgcunC79liHvKHylmBw4Kb6gguyJmsEAJalNosdagAOB3Ihxdhe/J0Fau0C3t/SGxcsKXdE6AUwjSNmr/r+MWHHnnRD8YLBaPitdFZIapLxDJ6HqsJ0g0mARQEIQIOcX8Jiz9ts+tjVNOF0LvIGb73k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GxF5cBTs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709643661; c=relaxed/simple;
+	bh=CwjQ+PntkYB1UQgwnX/qTQVQutEyGkMYnOYcmoBYE1o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Q58qByM1pkhshrIPC3a00eX6tjWJSIRQqrHIndCU6oOe57JwppC5/ssrSUKz9Gq8v/z/Lo8tix3MQhkggGsVwnCqZH1rtZ6Me/+fa4+0LsNkH2ELfgh0QOdS6kFVKgGBGzJMMsV/H1v6Z2pB1Vx+MiZzHAa45UcqXExK6mzRziQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kiTcj0XC; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GxF5cBTs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709638770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yGIHvaUSGtSh8SOfvZ4m5hJZFHMxJezWum2+AMtKBHs=;
-	b=GxF5cBTss3H7VNVHO7DVLU4Id664raOMGdd7VYFu5jeurJ7J7wTVpyzApiyLcO8DDhbFMB
-	KfYu4yIl72G97qf3QzXr8Q/4/LimLNHOqkpfnGIVW/9krPMWGYR9RmjWMAR1UFoIYq8+dq
-	3zGpm4oAIy/AThK+OrhmwO2W2OQgx+Y=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-527-J3WurOEcM4WfOcjwZVGixw-1; Tue, 05 Mar 2024 06:39:28 -0500
-X-MC-Unique: J3WurOEcM4WfOcjwZVGixw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD8D6800264;
-	Tue,  5 Mar 2024 11:39:27 +0000 (UTC)
-Received: from [100.115.132.116] (ovpn-0-8.rdu2.redhat.com [10.22.0.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 75904404392A;
-	Tue,  5 Mar 2024 11:39:26 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Christian Theune <ct@flyingcircus.io>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- jlayton@kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- trondmy@hammerspace.com, anna@kernel.org
-Subject: Re: nfs4_schedule_state_manager stuck in tight loop
-Date: Tue, 05 Mar 2024 06:39:25 -0500
-Message-ID: <9FB1C80C-CF8A-4650-8918-475A19F353EB@redhat.com>
-In-Reply-To: <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
-References: <8B04DA70-ABEF-44A4-BBA7-60968E6CFA10@flyingcircus.io>
- <ZdisssP88_9o0BXn@manet.1015granger.net>
- <3404A3C2-31BE-4D39-A256-E3A1FB48ACFB@flyingcircus.io>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kiTcj0XC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=C35oy+gp5SOol1L0HxLq0i85k6CXt5kYA/95s0UUOIo=;
+	t=1709643659; x=1710075659; b=kiTcj0XCu1NLmYYwO36DQoL7zkIp4gpkmIsX2A790w2hw/E
+	eBeSJ2AbtvvJxi/nZxJ7gB7+RqSyyRddhtnGCzp6CXsnVS4ts3drw+XTDU0hDB/VK4cnWuXpy/5Sz
+	WlLnngbmBHavZaziWqFFBUiHmuumZDIvjZQkoplTGiMJUrOzen1gkDCJZ7rBbojFV6erdvaQPgeKE
+	uNyB7JsKxMvdd18aqcQv95WcjzS9jubTKrvTBz0M5cWdMfJ+JCk6j0fqgE3T0MxdKdeAPhXRJlebT
+	zRLm1L+kMBSQNxn1QpEav2DMmc5qHe7zfwA/fsh+YQsFd2+61YaklUm2W+xlcgLQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rhUPf-00026i-8o; Tue, 05 Mar 2024 14:00:55 +0100
+Message-ID: <d05966fc-7daa-42a9-a125-ffc1478be430@leemhuis.info>
+Date: Tue, 5 Mar 2024 14:00:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
+ >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
+ and continuous swapping
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Dave Ertman <david.m.ertman@intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
+ Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
+References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
+ <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
+ <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
+ <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
+ <20240201065726.50a0b1f2@kernel.org>
+ <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
+ <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
+ <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
+ <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709643659;ffd1eb08;
+X-HE-SMSGID: 1rhUPf-00026i-8o
 
-On 5 Mar 2024, at 1:09, Christian Theune wrote:
+On 22.02.24 10:51, Thorsten Leemhuis wrote:
+> On 19.02.24 12:40, Jaroslav Pulchart wrote:
+>> If the question is for me then my opinion about it is this:
+>>
+>> I'm fine with the behaviour of a driver about memory consumption if it
+>> is predictable/described with the possibility to change it from
+>> default values. My understanding of "predictable" is something like
+>> this:
+>>
+>> The ICE driver is going to
+>> * Setup 64 queues per each port, not active included.
+>> * Each queue consumes "xxxx MB" amount of kernel memory per each numa node.
+>> example: Two 2 ports Intel NICs using ICE driver will consume ~6GB of
+>> RAM of each NUMA node, please consider changing the defaults values to
+>> avoid OOM :-).
+> [...]
+> Whatever: to me it still feels like this regression is not handled as
+> Linus would want it, but I'm not totally sure and guess I have to admit
+> that I'm out of my depth here. I'll let my regression tracking bot
+> continue monitor this, but will most likely leave things to the network
+> and driver maintainers from here on unless something changes.
 
-> Hi,
->
-> not sure whether I may have missed a response that didn=E2=80=99t make =
-it back to me or any of the lists.
->
-> Just in case, because the CC didn=E2=80=99t include the original addend=
-um I made to my report:
->
-> Addendum:
->
-> I=E2=80=99ve checked kernel changelogs since then but didn=E2=80=99t fi=
-nd anything that I could relate to this aside from *maybe* dfda2a5eb66a68=
-5aa6d0b81c0cef1cf8bfe0b3c4 (rename(): fix the locking of subdirectories) =
-which mentions NFS but doesn=E2=80=99t describe the potential impact.
->
-> We=E2=80=99re running 5.15.148 now and as it=E2=80=99s been another 2 m=
-onths there might be the chance of another lockup in the near future ;)
->
-> If anyone has ideas on how to debug/approach a reproducer I=E2=80=99d b=
-e more than happy to help and try to provide more data.
->
-> Cheers,
-> Christian
+FWIW, it seems nobody really cares, so I'll strop tracking this issue:
 
-When the problem occurs, use the
+#regzbot inconclusive: might not qualify as a regression
 
-nfs4:nfs4_state_mgr
-nfs4:nfs4_state_mgr_failed
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-tracepoints to see what the state manager might be doing.
 
-Also a network capture might show what the state manager thread is up to =
-if
-it is sending operations.
-
-Ben
-
+>> po 19. 2. 2024 v 12:29 odesílatel Thorsten Leemhuis
+>> <regressions@leemhuis.info> napsal:
+>>>
+>>> On 01.02.24 18:19, Jaroslav Pulchart wrote:
+>>>>>
+>>>>> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
+>>>>> Leemhuis) wrote:
+>>>>>>>> I think that's a bad bisect. There is no reason I could understand for
+>>>>>>>> that change to cause a continuous or large leak, it really doesn't make
+>>>>>>>> any sense. Reverting it consistently helps? You're not just rewinding
+>>>>>>>> the tree back to that point, right? just running 6.6.9 without that
+>>>>>>>> patch? (sorry for being pedantic, just trying to be certain)
+>>>>>>>
+>>>>>>> Reverting just the single bisected commit continuously helps for >=
+>>>>>>> 6.6.9 and as well for current 6.7.
+>>>>>>> We cannot use any new linux kernel without reverting it due to this
+>>>>>>> extra memory utilization.
+>>>>>>
+>>>>>> Quick query: what's the status wrt to this regression? Looks like
+>>>>>> nothing happened in the past week.
+>>>>>
+>>>>> Is someone working on this? Indeed the commit in question looks
+>>>>> harmless but can't argue with the revert helping :S
+>>>>
+>>>> No clue if someone is working on it,
+>>>
+>>> Yeah, a quick public status update would be really helpful. And maybe
+>>> some debugging tips that might enable Jaroslav to pinpoint the real
+>>> problem.
+>>>
+>>>> however the commit itself is a
+>>>> trigger of some other issue.
+>>>>
+>>>> The analysis of my colleague Igor (see previous email) shows the
+>>>> memory consumption is caused by queues of each ice network interface
+>>>> (even the unused ones). Our final fix was to lower the queues to 6 for
+>>>> used interfaces and 2 of unused interfaces manually.
+>>>
+>>> Despite the above allow me to ask: Can you live with that workaround?
+>>> Ideally of course this should be fixed, but well, the world sometimes is
+>>> a tricky place. :-/
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>
+>>
+> 
+> 
