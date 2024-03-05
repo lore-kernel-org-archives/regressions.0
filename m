@@ -1,173 +1,130 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8306D2AE95
-	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 05:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4BB46521;
+	Tue,  5 Mar 2024 06:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709617979; cv=none; b=FgyI81KzxhLAtFphWYogchVoB82MqLmY8ESIr+Ezm1fkFrcIduJXxIRc1f1B5n6KP2vEH9YEjIT5EO7PcByJUVmMKvQFiiQ81+MjUm2xPqQKhOE2NR5bkmL3+RZZUJLCor3iUdLGsb9JdLvfdsIAbi1Lv6hmJs2PiMy/NdB7I/8=
+	t=1709619176; cv=none; b=W+iPPK0Oe+sSzv/pgGb5AH5KCKNFv4XADeHmiHI6j7HNrNVP+P/+w28fERN39Aqfs2BepQ+xnLbngvSrTJhEneVVWXQd9BRwayQqWaGkJdDC2uW0TqnDIHgzQ6G6MQyTUF3fFCKSgVdIxinKAzIe+yLppow3l/ADnUTCQiCaQYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709617979; c=relaxed/simple;
-	bh=AYLW1//dy5xf/Pa6/bMw0sJZYBaMmhOjIUuu7n6/e20=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tSfOaq1U/jS2XLdwxPd2bbBMZwypQ7btPV+ZXJtQj3RVg6sGXFjKUsZE2Q5Qvd9bWobaeu1Y5QKaKyzhMTRetd+tA4/QmBAI4nLoi0ef01lIb/8IYQPBGtVFoC8D5gbHbP9Mn7q22mWzluDQwexB9ututo4R6Wb/iYvgkr27JVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IavB8w8g; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709619176; c=relaxed/simple;
+	bh=4nOYQQ8uNDN7HjpBsrd6iHaYnvNzIDPqpGD/YtxJKfA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l971/++N/TuUpaanN/r4sJ6XDFDYkctS5jeCDm4DTMVtfEzHH6adghySQetN4gFXWvdxmMcIg41jwF3ClEPda1izozZsTJh3N7p7nfqRbye3FsLfDkJ+8S12k+bonbaQ7gMEWp3AEYSjYuYKgGh0behLyQas9//lmWxe72Yq2Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=2nt9y63M; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IavB8w8g"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3f893ad5f4so779493466b.2
-        for <regressions@lists.linux.dev>; Mon, 04 Mar 2024 21:52:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709617976; x=1710222776; darn=lists.linux.dev;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iNfYyJIcPqgZYHnSjE0qasYntQo5CxIhhJdeJyjsmfw=;
-        b=IavB8w8gwJl8PRd5VCraUhaWkD5nGWHjvJGCPOrYNATZhiECB3eQGzlKPno+zgS+PG
-         BOkNq2tH36nrcQCNrTJcYdk2wEec8biSCKeq4ByWulWDWKQZKICUxEgV/9LLknOSOIpu
-         hFmKMKVAp9gXGS+Ap1Uv/dPskJpyWF66If7D9Mz/D3d8SBJHyvDAylQdoenBlOkJ0J0h
-         o75UPvmyBjJzxRwIwVnOZaF3tv45boJHP2g4oyhe2uPaVuw/yHHpckYcora0Nr+Fc7KX
-         Pcu1xhNwO+6on4qF3Lb6p+zAnCJLlnS4tf0FAZTNM4q4LpmnozymEd4mqGPd5Ons5faF
-         VNaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709617976; x=1710222776;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iNfYyJIcPqgZYHnSjE0qasYntQo5CxIhhJdeJyjsmfw=;
-        b=f8dlz3uram9AOWozjT541SzRwY64ZD77sxPfRk74YNmhJL34+DFVNVJkcMkMITe92y
-         KPv53XgMaGG0uiJl4ec9kjHY6zCu+ak0Xlro03LCBaom7HfyUHz9FnJgvsIkwMkB+W4S
-         Zfppm255DbfcWc0Xd00AdYBmHLBL/6Yoyp5whRK6+8E5hPHGvO1Qk6GqQI4cPNOvVlmb
-         xrthNyBXydaFXVDzpRAXQ7fOk0CrL0WB66XT3xIiyUc95PqwsFA/EjwJ/s23grONfeD0
-         y35ZghY1XxqylOm90Aj88owAGfjXtMNIPTuvXtPO37NkXAva1zl77Uyml5IRqTRwT8qd
-         qHTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUahc4oeNoNDqCpLjne9JibNl45zWxwsbkmXhbpLi5CAOvYL5qQSN1fvbIONW329XvflbW5DcyjTDm6fLk4pSbphYyJDVvCj3Z8xUU=
-X-Gm-Message-State: AOJu0Ywr40L4UHgYx55WwuXyLwMx0iZ1MAPp+O+dKT+PaUp9QQyjikS8
-	iPbPWCBn91GVRagO2WYf//QppDxO3AtcY7lFkweOGQCzgInuA8po
-X-Google-Smtp-Source: AGHT+IGvy4VyIAdGOPrnkE7IhGVpRILLK08YsbaHw7JmOvxFg/w40x+sca9mmrhsXAZ8uYYraF94mw==
-X-Received: by 2002:a17:906:c7c3:b0:a3e:34e8:626f with SMTP id dc3-20020a170906c7c300b00a3e34e8626fmr7917401ejb.66.1709617975573;
-        Mon, 04 Mar 2024 21:52:55 -0800 (PST)
-Received: from [127.0.1.1] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
-        by smtp.gmail.com with ESMTPSA id lb24-20020a170906add800b00a4131367204sm5633692ejb.80.2024.03.04.21.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Mar 2024 21:52:54 -0800 (PST)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Tue, 05 Mar 2024 06:52:43 +0100
-Subject: [PATCH] Revert "Input: bcm5974 - check endpoint type before
- starting traffic"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="2nt9y63M"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=wpIFNwTJixU7Q5MPmH075gULND/b/ip4CNFfUzWwDzg=; t=1709619174;
+	x=1710051174; b=2nt9y63MCkTq3i6+sehl+t4+sQFsao8pn+cmWDjaZvP8yuEnKfR5bG5gOuA15
+	OxiT8kYFXi3tQ3vFH5AlR0k99JfeaV7OtSoIt+fptBB9DCRQuFAkDyg0D20RDuZCGcX4uTSxodElK
+	um4CMJhEXlTUuwHh1Ew2t222dDbSfL1W0UN/ASf43C6ZN10UhyMlJ3/+EsO5p/w+T0aED9VfZjvbV
+	7tW0tn+VH5s+dW2eiFT0meXiQO7zQ4WSR67YfX0hCHFUTIS+zUYsmUO6Mi2YCGqufCD73yhZ9iSRa
+	oI8nKbBnlm1MoWphJFZfgUO26r9VlJMoUxrH3ouEMCJRiu8Y4w==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rhO2l-00079m-TG; Tue, 05 Mar 2024 07:12:51 +0100
+Message-ID: <610f1a24-e8e7-4f79-97f2-7fc6c725ea2e@leemhuis.info>
+Date: Tue, 5 Mar 2024 07:12:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240305-revert_bcm5974_ep_check-v1-1-db4f0422588f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIACqz5mUC/x2MWwqAIBAArxL7nWA+krpKhJittUQPNCKI7p70O
- TAzDySMhAna4oGIFyXatwxVWYCf3TYhozEzCC4Ul1yzLGE87eBX3Rhl8bB+Rr8waYJwtRuEqRT
- k+ogY6P7PXf++H3gbtSlpAAAA
-To: Henrik Rydberg <rydberg@bitmath.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709617973; l=3264;
- i=javier.carrasco.cruz@gmail.com; s=20230509; h=from:subject:message-id;
- bh=AYLW1//dy5xf/Pa6/bMw0sJZYBaMmhOjIUuu7n6/e20=;
- b=UMHi2tDKeW5/xZXMWhszo8IKwIEF/XFtfTC1wu/2uAqsqt23o93AXZH5YXy07BHLyF95heJKC
- CCY2je1DrW5AQw/LSqjiWqQ/UfXIwthZbU1UVxsSQma86cFcpidBO5V
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
+User-Agent: Mozilla Thunderbird
+Subject: Re: guide on bisecting (was Re: [REGRESSION] kexec does firmware
+ reboot in kernel v6.7.6)
+Content-Language: en-US, de-DE
+To: Pavin Joseph <me@pavinjoseph.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>
+References: <3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com>
+ <7ebb1c90-544d-4540-87c0-b18dea963004@leemhuis.info>
+ <3a8453e8-03a3-462f-81a2-e9366466b990@pavinjoseph.com>
+ <a84c1a5d-3a8a-4eea-9f66-0402c983ccbb@leemhuis.info>
+ <806629e6-c228-4046-828a-68d397eb8dbc@pavinjoseph.com>
+ <4630483e-fc4e-448d-8fd6-916d3422784e@leemhuis.info>
+ <66019e35-5adb-4817-a64d-e379b6f4240a@pavinjoseph.com>
+ <e1d87d5c-97ee-4e08-84c9-61a02c81ca63@leemhuis.info>
+ <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <5a4e412e-e797-4db6-908e-09cb1e5f5623@pavinjoseph.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1709619174;547fa1c0;
+X-HE-SMSGID: 1rhO2l-00079m-TG
 
-This patch intended to fix an well-knonw issue in old drivers where the
-endpoint type is taken for granted, which is often triggered by fuzzers.
+On 04.03.24 19:03, Pavin Joseph wrote:
+> On 3/4/24 11:46, Thorsten Leemhuis wrote:
+>> I'm not really familiar with openSUSE, but it set up a TW container and
+>> found that a package kernel-install-tools provides installkernel script.
+>> Not sure how good it works though. Could you maybe test that?
+> 
+> Yep, that package got me "installkernel" and it does all the
+> installation as expected. I only needed to change the symlink of
+> "/boot/<initrd|vmlinuz>" to point to the new ones created by it.
 
-That was the case for this driver [1], and although the fix seems to be
-correct, it uncovered another issue that leads to a regression [2] if
-the endpoints of the current interface are checked. The driver makes use
-of endpoints that belong to a different interface rather than the one it
-binds (it binds to the third interface, but also accesses an endpoint
-from a different one). The driver should claim the interfaces it
-requires, but that is still not the case.
+Well, if openSUSE uses those links (other distros don't have them) then
+you might want to report a bug to openSUSE.
 
-Given that the regression is more severe than the issue found by
-syzkaller, the best approach is reverting the patch that causes the
-regression, and trying to fix the underlying problem before checking
-the endpoint types again.
+>> kernel-install is normally meant to copy the image over to /boot/ as
+>> well afaik; maybe it did not do that in your case because you already
+>> had placed it there manually?
+> kernel-install doesn't do that in my testing, it also doesn't remove
+> anything AFAICT. 🧐
 
-Note that reverting this patch will probably trigger the syzkaller bug
-at some point.
+Ahh what a mess. I will slightly change the text to indicate that might
+happen.
 
-[1] https://syzkaller.appspot.com/bug?extid=348331f63b034f89b622
-[2] https://lore.kernel.org/linux-input/ab9d758c-3ce9-42f6-99af-877055a589e6@leemhuis.info/T/#t
-
-This reverts commit 2b9c3eb32a699acdd4784d6b93743271b4970899.
-
-Fixes: b516b1b0dfcc ("Revert "Input: bcm5974 - check endpoint type before starting traffic"")
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- drivers/input/mouse/bcm5974.c | 20 --------------------
- 1 file changed, 20 deletions(-)
-
-diff --git a/drivers/input/mouse/bcm5974.c b/drivers/input/mouse/bcm5974.c
-index 953992b458e9..ca150618d32f 100644
---- a/drivers/input/mouse/bcm5974.c
-+++ b/drivers/input/mouse/bcm5974.c
-@@ -19,7 +19,6 @@
-  * Copyright (C) 2006	   Nicolas Boichat (nicolas@boichat.ch)
-  */
- 
--#include "linux/usb.h"
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/slab.h>
-@@ -194,8 +193,6 @@ enum tp_type {
- 
- /* list of device capability bits */
- #define HAS_INTEGRATED_BUTTON	1
--/* maximum number of supported endpoints (currently trackpad and button) */
--#define MAX_ENDPOINTS	2
- 
- /* trackpad finger data block size */
- #define FSIZE_TYPE1		(14 * sizeof(__le16))
-@@ -894,18 +891,6 @@ static int bcm5974_resume(struct usb_interface *iface)
- 	return error;
- }
- 
--static bool bcm5974_check_endpoints(struct usb_interface *iface,
--				    const struct bcm5974_config *cfg)
--{
--	u8 ep_addr[MAX_ENDPOINTS + 1] = {0};
--
--	ep_addr[0] = cfg->tp_ep;
--	if (cfg->tp_type == TYPE1)
--		ep_addr[1] = cfg->bt_ep;
--
--	return usb_check_int_endpoints(iface, ep_addr);
--}
--
- static int bcm5974_probe(struct usb_interface *iface,
- 			 const struct usb_device_id *id)
- {
-@@ -918,11 +903,6 @@ static int bcm5974_probe(struct usb_interface *iface,
- 	/* find the product index */
- 	cfg = bcm5974_get_config(udev);
- 
--	if (!bcm5974_check_endpoints(iface, cfg)) {
--		dev_err(&iface->dev, "Unexpected non-int endpoint\n");
--		return -ENODEV;
--	}
--
- 	/* allocate memory for our device state and initialize it */
- 	dev = kzalloc(sizeof(struct bcm5974), GFP_KERNEL);
- 	input_dev = input_allocate_device();
-
----
-base-commit: 90d35da658da8cff0d4ecbb5113f5fac9d00eb72
-change-id: 20240305-revert_bcm5974_ep_check-37f2a6ab2714
-
-Best regards,
--- 
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-
+Ciao, Thorsten
