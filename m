@@ -1,156 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5967E767
-	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 13:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21A6762DF;
+	Tue,  5 Mar 2024 13:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709643661; cv=none; b=kBntF1zlapDdDxJaI1r97VXBTmBNpwIJ/yA+YDfXzbWSAlgvR1Am2PT8Tbw8smf+eJKbgILGyp9Shjj7y0yWXDH54zqhO8FYGk3BnHVWqMtLu/bcG4GZxIJY5h7eTVMLp2fs54pfzoO0mzLLIM9RMn/bXTrPsxSr/969GGw7tuM=
+	t=1709646698; cv=none; b=j/8Po7ZYtbhq+FPh3SGHJsWAkthBrH6R29m6vKhjGXagflltT++ZZ180c6KMmybkuCBrg0c65yGB6MAdeBZyO0QPKOOCK1jhEyeEk+qgTKB6OnuS6n4dlRYUC1fgOaaIVrTE/vbOC4Suf2DPiOOTHaodzC2hVaaKMBbOmzOXXhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709643661; c=relaxed/simple;
-	bh=CwjQ+PntkYB1UQgwnX/qTQVQutEyGkMYnOYcmoBYE1o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Q58qByM1pkhshrIPC3a00eX6tjWJSIRQqrHIndCU6oOe57JwppC5/ssrSUKz9Gq8v/z/Lo8tix3MQhkggGsVwnCqZH1rtZ6Me/+fa4+0LsNkH2ELfgh0QOdS6kFVKgGBGzJMMsV/H1v6Z2pB1Vx+MiZzHAa45UcqXExK6mzRziQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kiTcj0XC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709646698; c=relaxed/simple;
+	bh=fCj5iwo9v14uEMpRZ3mkoCxKtCZRsdCnJwUBfQ0/Fdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uhYK73Rzt0p+ig/0LcuMOr4cUIG41yv+X91cmXry3HhbGB0PyYe/saRS+DWjaeLeWuAqioRIwXGFB7DDk9Yz52uucSX8RQp1pYO1efxCWvYG42Z6RcnYx5toFS+OjC9lt1bx8W2cPJ6+eI7DtBLD8PZBiQByx+8B5NVu/J3rdXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPBEgT0z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kiTcj0XC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=C35oy+gp5SOol1L0HxLq0i85k6CXt5kYA/95s0UUOIo=;
-	t=1709643659; x=1710075659; b=kiTcj0XCu1NLmYYwO36DQoL7zkIp4gpkmIsX2A790w2hw/E
-	eBeSJ2AbtvvJxi/nZxJ7gB7+RqSyyRddhtnGCzp6CXsnVS4ts3drw+XTDU0hDB/VK4cnWuXpy/5Sz
-	WlLnngbmBHavZaziWqFFBUiHmuumZDIvjZQkoplTGiMJUrOzen1gkDCJZ7rBbojFV6erdvaQPgeKE
-	uNyB7JsKxMvdd18aqcQv95WcjzS9jubTKrvTBz0M5cWdMfJ+JCk6j0fqgE3T0MxdKdeAPhXRJlebT
-	zRLm1L+kMBSQNxn1QpEav2DMmc5qHe7zfwA/fsh+YQsFd2+61YaklUm2W+xlcgLQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rhUPf-00026i-8o; Tue, 05 Mar 2024 14:00:55 +0100
-Message-ID: <d05966fc-7daa-42a9-a125-ffc1478be430@leemhuis.info>
-Date: Tue, 5 Mar 2024 14:00:53 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPBEgT0z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572A2C433C7;
+	Tue,  5 Mar 2024 13:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709646697;
+	bh=fCj5iwo9v14uEMpRZ3mkoCxKtCZRsdCnJwUBfQ0/Fdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LPBEgT0zgzdMuuwlu9frzkuCZxVHaxx3EMz8btKj4RBSKZyvpEbHv/rza82HdbSew
+	 GU49teZaKaKhLZj4AVjYuWvbLFMc+EFWau1wJq3xKehyLcJjbGl3RUSOF8FlliWiDC
+	 GtNAkQlUsGWQbKbjIEjQTWy2okoPsnCg5Xi/GILvxhSpq6nFRYXHOp7Il99gaCpwas
+	 lsu6Cp2GIcxMxROEzAmqBihJO8/sHP4PRQmGBGpqPLC0O5+gy7EUf2f56NJOPLw+3d
+	 wv/JfOIEwcU71TqnImYTfc3NYIuKKSR/mjLvqw0yZnRM83gCpVkbNOei2LA42Isp00
+	 LX8OtVHikO9SQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rhVCq-000000000Ek-2aI6;
+	Tue, 05 Mar 2024 14:51:44 +0100
+Date: Tue, 5 Mar 2024 14:51:44 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@linaro.org>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: Lenovo ThinkPad X13s regerssions (was Re: Linux regressions
+ report for mainline [2024-02-25])
+Message-ID: <ZecjcApvdZSGRysT@hovoldconsulting.com>
+References: <170886726066.1516351.14377022830495300698@leemhuis.info>
+ <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
+ <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [REGRESSION] Intel ICE Ethernet driver in linux
- >= 6.6.9 triggers extra memory consumption and cause continous kswapd* usage
- and continuous swapping
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Dave Ertman <david.m.ertman@intel.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, Igor Raits <igor@gooddata.com>,
- Daniel Secik <daniel.secik@gooddata.com>, intel-wired-lan@lists.osuosl.org
-References: <CAK8fFZ7Xi3=1HFY400firmpRWzHDPsi90cUU5bjOkF00KNZWeA@mail.gmail.com>
- <bce78734-d359-499b-9693-05549e6a73a4@intel.com>
- <CAK8fFZ6PqCwgt1n4iuROs=76esQVSOS-HHL=0eN7+efeKT25Uw@mail.gmail.com>
- <898b6ac8-186d-4675-a1e7-abd78b885d01@leemhuis.info>
- <20240201065726.50a0b1f2@kernel.org>
- <CAK8fFZ6jige-zA5YPMKVf3bB2gCL8WDrY-SCs5EWeJBn5A7YQg@mail.gmail.com>
- <5727309c-6ced-45b8-bb0c-110b3893aa4f@leemhuis.info>
- <CAK8fFZ73=DQrwep_0kdmr9EfjA5CmxKOHcWCyiO7Lg5m1Gqx3A@mail.gmail.com>
- <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <f41bcb25-0f22-4018-851f-a70ca841cf34@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709643659;ffd1eb08;
-X-HE-SMSGID: 1rhUPf-00026i-8o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
 
-On 22.02.24 10:51, Thorsten Leemhuis wrote:
-> On 19.02.24 12:40, Jaroslav Pulchart wrote:
->> If the question is for me then my opinion about it is this:
->>
->> I'm fine with the behaviour of a driver about memory consumption if it
->> is predictable/described with the possibility to change it from
->> default values. My understanding of "predictable" is something like
->> this:
->>
->> The ICE driver is going to
->> * Setup 64 queues per each port, not active included.
->> * Each queue consumes "xxxx MB" amount of kernel memory per each numa node.
->> example: Two 2 ports Intel NICs using ICE driver will consume ~6GB of
->> RAM of each NUMA node, please consider changing the defaults values to
->> avoid OOM :-).
-> [...]
-> Whatever: to me it still feels like this regression is not handled as
-> Linus would want it, but I'm not totally sure and guess I have to admit
-> that I'm out of my depth here. I'll let my regression tracking bot
-> continue monitor this, but will most likely leave things to the network
-> and driver maintainers from here on unless something changes.
+[ +CC: Vinod, Bjorn, Abhinav ]
 
-FWIW, it seems nobody really cares, so I'll strop tracking this issue:
-
-#regzbot inconclusive: might not qualify as a regression
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-
->> po 19. 2. 2024 v 12:29 odesílatel Thorsten Leemhuis
->> <regressions@leemhuis.info> napsal:
->>>
->>> On 01.02.24 18:19, Jaroslav Pulchart wrote:
->>>>>
->>>>> On Wed, 24 Jan 2024 15:29:38 +0100 Linux regression tracking (Thorsten
->>>>> Leemhuis) wrote:
->>>>>>>> I think that's a bad bisect. There is no reason I could understand for
->>>>>>>> that change to cause a continuous or large leak, it really doesn't make
->>>>>>>> any sense. Reverting it consistently helps? You're not just rewinding
->>>>>>>> the tree back to that point, right? just running 6.6.9 without that
->>>>>>>> patch? (sorry for being pedantic, just trying to be certain)
->>>>>>>
->>>>>>> Reverting just the single bisected commit continuously helps for >=
->>>>>>> 6.6.9 and as well for current 6.7.
->>>>>>> We cannot use any new linux kernel without reverting it due to this
->>>>>>> extra memory utilization.
->>>>>>
->>>>>> Quick query: what's the status wrt to this regression? Looks like
->>>>>> nothing happened in the past week.
->>>>>
->>>>> Is someone working on this? Indeed the commit in question looks
->>>>> harmless but can't argue with the revert helping :S
->>>>
->>>> No clue if someone is working on it,
->>>
->>> Yeah, a quick public status update would be really helpful. And maybe
->>> some debugging tips that might enable Jaroslav to pinpoint the real
->>> problem.
->>>
->>>> however the commit itself is a
->>>> trigger of some other issue.
->>>>
->>>> The analysis of my colleague Igor (see previous email) shows the
->>>> memory consumption is caused by queues of each ice network interface
->>>> (even the unused ones). Our final fix was to lower the queues to 6 for
->>>> used interfaces and 2 of unused interfaces manually.
->>>
->>> Despite the above allow me to ask: Can you live with that workaround?
->>> Ideally of course this should be fixed, but well, the world sometimes is
->>> a tricky place. :-/
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
->>
->>
+On Tue, Mar 05, 2024 at 10:33:39AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [dropping Linus from CC, we can add him back later when needed]
 > 
+> On 27.02.24 11:20, Johan Hovold wrote:
+> > On Sun, Feb 25, 2024 at 01:21:46PM +0000, Regzbot (on behalf of Thorsten Leemhuis) wrote:
+> > 
+> >> Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
+> >> X13s, but he send out patch series to fix some or all of those[1], so
+> >> with a bit of luck those issues will soon be fixed as well.
+> >> https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
 > 
+> As 6.8 final might be just five days away, could you please help me out
+> with a short status update wrt. unresolved regressions from your side if
+> you have a minute? It's easy to get lost in all those issues. :-/ :-D
+
+Heh. Indeed. It's been a rough cycle. :)
+
+> >> [1]
+> >> https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
+> > 
+> > This series addresses a use-after-free in the PMIC glink driver caused
+> > by DRM bridge changes in rc1 and which can result in the internal
+> > display not showing up on boot.
+> > 
+> > The DRM/SoC fixes here have now been merged to drm-misc for 6.8.
+> 
+> What about the others from that series? Can they wait till 6.9? Or are
+> they on track for 6.8?
+
+Vinod, the PHY maintainer, just told me he will try to get them into
+6.8.
+
+> > But also with these fixes, there are still a couple of regressions
+> > related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
+> > separate reports to track those.
+> 
+> Any decision yet if they are going to be reverted for now?
+>
+> Am I right assuming those would fix
+> https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
+> which did not get even a single reply?
+
+That was the hope, but I've managed to trigger a reset on disconnect
+once also with the runtime PM series reverted.
+
+One of the patches from that series has already been reverted (to fix
+the VT console hotplug regression) and there is some indication that
+that was sufficient to address the issue with hotplug not being detected
+in X/Wayland too. I'm waiting for confirmation from some users that have
+not been able to use their external displays at all since 6.8-rc1, but
+it does seem to fix the X/Wayland issues I could reproduce here.
+
+But either way, the reset on disconnect is still there, and have since
+been reproduced by Bjorn also on another Qualcomm platform without a
+hypervisor so that we've now got a call stack. I've heard that Abhinav
+is looking into that, but I don't know if there's any chance to have a
+fix ready this week.
+
+Johan
