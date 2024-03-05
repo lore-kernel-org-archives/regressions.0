@@ -1,101 +1,71 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E4850272;
-	Tue,  5 Mar 2024 09:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A605B5DD
+	for <regressions@lists.linux.dev>; Tue,  5 Mar 2024 10:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631224; cv=none; b=gZ+Q8rXaKQT5wCsw7w0tntc0EARvbP1kKBDwQlmXq/R/jcrj/D1/7U9apMM16VNOHOkmNcauI/xBtsAbYk0q/QyL1tDbb1y2F7VULle04dYCQ9BGObdF94R+J54OuPEi2qsosgegcQOn63B9lAvnZBQJqssf8mti9DXyz+nmkAk=
+	t=1709635186; cv=none; b=gybe0H1bL4JvGPh+fjPnoa3Bmi9JX2kWNmUwkUcIxfuU061mnakhgcbgIi2pBBHac+fx60C1tm7ubYzYPuuHLmML5RQALEOO4i7iIdNPAW2MdMHr7SNwtMSyBFUt1o6CLeKVLLC7/YXPlsCxE7h64a41sDfbw684Uz29pxJVAos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631224; c=relaxed/simple;
-	bh=tyXjWQ6oTfBc0STjbgaI+jZeYhzMh6HZOelWe8HPHi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=brjQh8WLN/9gU0Q/E34DprCxz0vRKsgtxYGiHWcXfXSHD7KSamxDTePTxtQmaDV/XnTzq6KEeTw9L1CeHsmk/CdYQBT4UMH27bf56xvDQ/+kHZq1+X+DDOTRGKfoABClh34DaiQbm8yKx1FljLS5kKukbpHHuN7pPeyY0519q3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3Q5pX8xn; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709635186; c=relaxed/simple;
+	bh=pFdYAnZdJkey2fB1AXbz9SK46Qgp8Uv9r7+q1l7WKMo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fcC3Px7Pz8IveeN5F569clw0jLD/mM3O2df4PteJahz7/oRx27POcQ64R7yd9RZgvRJdajS6QbSC9EadOMczquePnVvpB/MhtOA8gkE7cRyfLNTKJ3JkwryGA06KNKTGWmXWnK3AKnLMdg2thk+3BoQQLsh/VoPAUQkR2o6kJQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=deu3g8Vw; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3Q5pX8xn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=U2WukJ7OKv2T/LS0xNPodSXzP9djVjo0sK1RH9RhhXM=;
-	t=1709631222; x=1710063222; b=3Q5pX8xnp4vhCJafC/7EhGcPbbYzvPQ+sQd6BN8UUKeewTo
-	DYjylOb1Eql64Oc3Pt+rYks/aI8+0WtG6G4t5yrM1cCtUR7/hZsWp27+XFyfQ8vIoRvYn+sSbPpGB
-	WZ0+nb4x7x0QnQ7vrRZ+PwjjOgKiV6oywvH2tF1pNF1wy/RH3TCtieiR+35x/u/3D7V1OmC/DR8qv
-	80G+JnZueQkHgZKSflC08jWHW2pj63s0eBWlJOk8oqjltKL8jBJ6RHFAbsNbpxZaTYoa2gkxmxj2D
-	XMkbkmBQr2oytZI83RtxzIshO4JmJOcqAhENsO4yUrEmEfQIwHXf0lZH/ocUwrew==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rhRB5-0007zv-JF; Tue, 05 Mar 2024 10:33:39 +0100
-Message-ID: <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
-Date: Tue, 5 Mar 2024 10:33:39 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deu3g8Vw"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7c78573f294so22291239f.0
+        for <regressions@lists.linux.dev>; Tue, 05 Mar 2024 02:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709635184; x=1710239984; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pFdYAnZdJkey2fB1AXbz9SK46Qgp8Uv9r7+q1l7WKMo=;
+        b=deu3g8VwhMH0tZC0RlrfhMbNlir3oKiXiPPnwBbP02PSC745TWEXQNRH040SAUgA+0
+         OevDXBtN6oJcjC+sfEsES8JYJ5K3bhJjzhmvl2/P/245Y4z9VoVa1aZL4WzfU8MNGizC
+         lZTCHkbRn4/V1/Kw/cg5NFxFC+sDoT/ECEbPuj1Q2YjFDn4hN1k72KU+61rgvbP5yt/q
+         wsOYaNSoncvjqz4yE7r+2wpg0J8NqMZkVkheTCSl+GEtoicfxtuA13T+uQ+4dJ10B69e
+         weDERffieWBkKH+EfHOeaVZKLBh+L1FOtuH6fYZ2+k98p8COlj/0QmyiEzOQJN7Gl+UE
+         SZ4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709635184; x=1710239984;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pFdYAnZdJkey2fB1AXbz9SK46Qgp8Uv9r7+q1l7WKMo=;
+        b=RLyTDhU10XanYTw7RJeSCxoamCwlAxU/sbljSYm4QneiEUi9qY+8AC27lmpdytDLZn
+         ZFx5XGZ9eeQCuCQ6QvBfrTwO1lyXoF1kc3Wg+tuKVGS9Xdc0qKYZ1cwesSbEGzuPQpuF
+         c6PQATjogGgQUclRvPNe1ZupYRMYhTMT2QAgw3C2DdubOu2Yv3eBDpapgIaLlp1xG/2B
+         EicA12uVh/TlB2CQX1DbtFE1njxCVT6iUUA3qJE8uXnU472DtNZcrd7f3Aw46GZPWHFg
+         aK65PNGSbTrKFfvDfmU/0CSCFcSX67gPokdZOmLvegG0vjNOMoHaCbtpbDchSv1YEJAi
+         1QfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVsVguUixJCBMVBxF/6CV2lU34NyXyWiCUQTXq0X4zx000SG9A2QK8iP4V4hB2hC+nhx5/4gv/vfDV47bfy4kpWfMinTgDBpIUI/Y=
+X-Gm-Message-State: AOJu0Yym4NKO5OIuy8nO4AsuDuJZvMJH57ftBYTijSvlL9MFm5tMbFaT
+	Uz0CpyrpbggzJYYNnraBRDwt2Q/hKIoieigGgz37dO44uYmWgOpKfChOY+nc+CrOv+PKL1MLWFa
+	kQoxJ/LHkhwjVtM2gHTU9TXpWiT0H2z1FjyU70g==
+X-Google-Smtp-Source: AGHT+IHXewfnOMLd4nsI0abW4hEBKxDQ5wmxfSkGzuHLsYPW7rSimdeSKDK536GOszGfWSsdAecIXmaCFXlJjF252hY=
+X-Received: by 2002:a6b:d912:0:b0:7c8:5946:f45a with SMTP id
+ r18-20020a6bd912000000b007c85946f45amr4576400ioc.7.1709635183767; Tue, 05 Mar
+ 2024 02:39:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Lenovo ThinkPad X13s regerssions (was Re: Linux regressions report
- for mainline [2024-02-25])
-Content-Language: en-US, de-DE
-To: Johan Hovold <johan@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <170886726066.1516351.14377022830495300698@leemhuis.info>
- <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709631222;c7dc2368;
-X-HE-SMSGID: 1rhRB5-0007zv-JF
+From: Eric Hagberg <ehagberg@gmail.com>
+Date: Tue, 5 Mar 2024 05:39:32 -0500
+Message-ID: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+To: me@pavinjoseph.com
+Cc: dave.hansen@linux.intel.com, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, steve.wahl@hpe.com
+Content-Type: text/plain; charset="UTF-8"
 
-[dropping Linus from CC, we can add him back later when needed]
+To add another datapoint to this - I've seen the same problem on Dell
+PowerEdge R6615 servers... but no others.
 
-On 27.02.24 11:20, Johan Hovold wrote:
-> On Sun, Feb 25, 2024 at 01:21:46PM +0000, Regzbot (on behalf of Thorsten Leemhuis) wrote:
-> 
->> Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
->> X13s, but he send out patch series to fix some or all of those[1], so
->> with a bit of luck those issues will soon be fixed as well.
->> https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
-
-As 6.8 final might be just five days away, could you please help me out
-with a short status update wrt. unresolved regressions from your side if
-you have a minute? It's easy to get lost in all those issues. :-/ :-D
-
->> [1]
->> https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
-> 
-> This series addresses a use-after-free in the PMIC glink driver caused
-> by DRM bridge changes in rc1 and which can result in the internal
-> display not showing up on boot.
-> 
-> The DRM/SoC fixes here have now been merged to drm-misc for 6.8.
-
-What about the others from that series? Can they wait till 6.9? Or are
-they on track for 6.8?
-
-> [...]
-
-> But also with these fixes, there are still a couple of regressions
-> related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
-> separate reports to track those.
-
-Any decision yet if they are going to be reverted for now?
-
-Am I right assuming those would fix
-https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
-which did not get even a single reply?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+The problem also crept into the 6.1.79 kernel with the commit
+mentioned earlier, and is fixed by reverting that commit. Adding
+nogbpages to the kernel command line can cause the failure to
+reproduce on that hardware as well.
