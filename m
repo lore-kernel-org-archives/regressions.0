@@ -1,233 +1,367 @@
-Received: from bee.tesarici.cz (unknown [77.93.223.253])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786065E08F;
-	Wed,  6 Mar 2024 09:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FE8D53F;
+	Wed,  6 Mar 2024 09:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709715721; cv=none; b=itT+UTVTg+Kwdabs2azBuXpCc8EbbawPnR+9iO3N5jv054S8Ch0wNb2a9w2GWvcmKqicNUSL3H2gxwSzBaWMIqebjDmE6AuIpbSSNoh4qUkuggtX0zB9I17jZqcgCmOWxkVp3tonC2yO3GubfqBj66mLyKwtDM0oBbec8q7w7Aw=
+	t=1709716881; cv=none; b=lZ5yCoiIhdloHyst/JDbbUgATbuPneoBQcu+0Q2IysRIZU8elFCW9ecUlE6RGrk3+oUalR+wz3ivN7YTm8VLnrQw6ESyPTe7IycvcRbGooql5zR4umcKt6edg6mHI0dGnuIeoSGRaonFDsuUlLo7N9L8GEQToe8FbfIW4dcdW1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709715721; c=relaxed/simple;
-	bh=7XL+rmg/KDDdM8d5X26+ryR+7KjkuSIR7iF+X0R/4d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ey35N6c97eY08NJRU3xokS74JDeYFo6Hvuf0siU/2t+zooFRD5XZp+2TEUqWHgsOo3ZN5Yue1/oNEjyWpYvVhVOPa0TXdViC3swF5+8K29qixbsh/1jyQX/iJ1rWAIOm6pk4OQZrd5yr1c8zr6RxShgwsnGUzvbcPgp0NPXgakA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=kpBLh5rE; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709716881; c=relaxed/simple;
+	bh=pGa9mdlvKwjfobh9Qn2cKqrNObJsTaPZcQwmDmiXL6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hs3N0qLvUFfhHwp5+Ct4l/eVgH9lC5+xJJTDAm0e4/MuLzLfPDRhTlRECO8ah+K4ZJnBgqtwY3rufAtZQlvWIrh+rZX6j6q4HF7CBR9e/FSp9zhkd68uHPnVjekjyxAi5iEuibLQ0ZAz3L07xtX035MeIhIt6oBxSX8auiv+y7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=R5LF02AZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="kpBLh5rE"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 7B6871CA38F;
-	Wed,  6 Mar 2024 10:01:54 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709715714; bh=YzH+vqMnEg2qYPMQb47PYCat1WD2FNYibWcd0rUjZiY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kpBLh5rESQNyznO+SYYM00jpTxdGjER/C8xQnqISGk8f0f0ZNTfT/wigUZmhMQnJ2
-	 lOxnSFnQV276r/0/82WhJDGm7FuNZXWk5cYXxuI64wbdf+opcec/OfNzeagtaH+93y
-	 0FdlRPPUnUdTVWLxO/mwJTyeVqpAdwnVcJ9yxLw6Xqq8i8nINb7oboUnf9g98TZKxe
-	 +BcSmKTaeZSSPzDJNNM1g9gethLgL5aYOun3EKdUvVp2yW/MKxpBCjDWzvrHMqWzgl
-	 psC2i4iZCrhSlkzrcCwazXxAQmLnORH7LaXGXDF2FuzX8aK9xPcG2eUxN8H3NAWoOL
-	 ZwMpmdC/IZiFw==
-Date: Wed, 6 Mar 2024 10:01:53 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Eric
- Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jisheng
- Zhang <jszhang@kernel.org>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>, "moderated
- list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
- <linux-sunxi@lists.linux.dev>, Marc Haber <mh+netdev@zugschlus.de>, Andrew
- Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- stable@vger.kernel.org, alexis.lothore@bootlin.com, Guenter Roeck
- <linux@roeck-us.net>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit
- statistics counters
-Message-ID: <20240306100153.32d305f7@meshulam.tesarici.cz>
-In-Reply-To: <e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info>
-References: <20240203190927.19669-1-petr@tesarici.cz>
-	<ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
-	<Zct5qJcZw0YKx54r@xhacker>
-	<CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
-	<20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
-	<CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-	<a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-	<20240228120308.48d6a9c2@meshulam.tesarici.cz>
-	<e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="R5LF02AZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=3biypYV+gbhxHHtP/tQVz92UYZTIUPbXvDcOsML1WdY=; t=1709716878; x=1710148878;
+	 b=R5LF02AZNZaX0ykUZLu+fBu2+N9w5rUl8HtOCWGj1xsESDFN8KZaZBur4AOYu1ONs5QNcVJsnF
+	7MJGWnUwsEzAFmvX1NRooH2ZyyAM8kGz1lhu8Gb4vUMsWhY+L4xbafSpOqW7maRV39H6HiULRp8nf
+	ikLUBsV4eybNicN2vq+s8IUb84ehA6LEz428XvNkJ/NVg7QnzaqD3F345P0JW1Mq8u4eebMb5qjKF
+	kx3icP1gLV9XQRGui9bOyDokK9jV/+6k0/zznRZvA4D4kUUxodWh47IoIIkEZW9NSXTJbtwqLtziC
+	36J6BS1ctNq+/CJ8mMOohjN2HfMn/6RgpAWEw==;
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rhnSb-00084Q-2E; Wed, 06 Mar 2024 10:21:13 +0100
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
+Subject: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support for Arch
+Date: Wed,  6 Mar 2024 10:21:12 +0100
+Message-ID: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1709716878;071bd769;
+X-HE-SMSGID: 1rhnSb-00084Q-2E
 
-On Wed, 6 Mar 2024 09:23:53 +0100
-"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>=
- wrote:
+Assorted changes for the recently added document.
 
-> On 28.02.24 12:03, Petr Tesa=C5=99=C3=ADk wrote:
-> > On Wed, 28 Feb 2024 07:19:56 +0100
-> > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.i=
-nfo> wrote:
-> >  =20
-> >> Net maintainers, chiming in here, as it seems handling this regression
-> >> stalled. =20
-> > Indeed, I was too busy with sandbox mode... =20
->=20
-> Hmm, no reply in the past week to Petr's request for help from someone
-> with more knowledge about the field. :-/
->=20
-> So I guess this means that this won't be fixed for 6.8? Unfortunate, but
-> well, that's how it it sometimes.
+Improvements:
 
-For the record, I _can_ reproduce lockdep splats on my device, but they
-don't make any sense to me. They seem to confirm Jisheng Zhang's
-conclusion that lockdep conflates two locks which should have different
-lock-classes.
+* Add instructions for installing required software on Arch Linux.
 
-So far I have noticed only one issue: the per-cpu syncp's are not
-initialized. I'll recompile and see if that's what confuses lockdep.
+Fixes:
 
-Petr T
+* Move a 'git remote add -t master stable [...]' from a totally wrong
+  to the right place.
 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
-> #regzbot poke
->=20
-> >> On 13.02.24 16:52, Eric Dumazet wrote: =20
-> >>> On Tue, Feb 13, 2024 at 4:26=E2=80=AFPM Guenter Roeck <linux@roeck-us=
-.net> wrote:   =20
-> >>>> On Tue, Feb 13, 2024 at 03:51:35PM +0100, Eric Dumazet wrote:   =20
-> >>>>> On Tue, Feb 13, 2024 at 3:29=E2=80=AFPM Jisheng Zhang <jszhang@kern=
-el.org> wrote:   =20
-> >>>>>> On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote:   =
-=20
-> >>>>>>> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote:   =
-=20
-> >>>>>>>> As explained by a comment in <linux/u64_stats_sync.h>, write sid=
-e of struct
-> >>>>>>>> u64_stats_sync must ensure mutual exclusion, or one seqcount upd=
-ate could
-> >>>>>>>> be lost on 32-bit platforms, thus blocking readers forever. Such=
- lockups
-> >>>>>>>> have been observed in real world after stmmac_xmit() on one CPU =
-raced with
-> >>>>>>>> stmmac_napi_poll_tx() on another CPU.
-> >>>>>>>>
-> >>>>>>>> To fix the issue without introducing a new lock, split the stati=
-cs into
-> >>>>>>>> three parts:
-> >>>>>>>>
-> >>>>>>>> 1. fields updated only under the tx queue lock,
-> >>>>>>>> 2. fields updated only during NAPI poll,
-> >>>>>>>> 3. fields updated only from interrupt context,
-> >>>>>>>>
-> >>>>>>>> Updates to fields in the first two groups are already serialized=
- through
-> >>>>>>>> other locks. It is sufficient to split the existing struct u64_s=
-tats_sync
-> >>>>>>>> so that each group has its own.
-> >>>>>>>>
-> >>>>>>>> Note that tx_set_ic_bit is updated from both contexts. Split thi=
-s counter
-> >>>>>>>> so that each context gets its own, and calculate their sum to ge=
-t the total
-> >>>>>>>> value in stmmac_get_ethtool_stats().
-> >>>>>>>>
-> >>>>>>>> For the third group, multiple interrupts may be processed by dif=
-ferent CPUs
-> >>>>>>>> at the same time, but interrupts on the same CPU will not nest. =
-Move fields
-> >>>>>>>> from this group to a newly created per-cpu struct stmmac_pcpu_st=
-ats.
-> >>>>>>>>
-> >>>>>>>> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statisti=
-cs where necessary")
-> >>>>>>>> Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zug=
-schlus.de/t/
-> >>>>>>>> Cc: stable@vger.kernel.org
-> >>>>>>>> Signed-off-by: Petr Tesarik <petr@tesarici.cz>   =20
-> >>>>>>>
-> >>>>>>> This patch results in a lockdep splat. Backtrace and bisect resul=
-ts attached.
-> >>>>>>>
-> >>>>>>> ---
-> >>>>>>> [   33.736728] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>>>>> [   33.736805] WARNING: inconsistent lock state
-> >>>>>>> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
-> >>>>>>> [   33.737080] --------------------------------
-> >>>>>>> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usag=
-e.
-> >>>>>>> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
-> >>>>>>> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dw=
-mac_dma_interrupt+0x9c/0x28c
-> >>>>>>> [   33.738206] {HARDIRQ-ON-W} state was registered at:
-> >>>>>>> [   33.738318]   lock_acquire+0x11c/0x368
-> >>>>>>> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
-> >>>>>>> [   33.738525]   stmmac_xmit+0x4d0/0xc58   =20
-> >>>>>>
-> >>>>>> interesting lockdep splat...
-> >>>>>> stmmac_xmit() operates on txq_stats->q_syncp, while the
-> >>>>>> sun8i_dwmac_dma_interrupt() operates on pcpu's priv->xstats.pcpu_s=
-tats
-> >>>>>> they are different syncp. so how does lockdep splat happen.   =20
-> >>>>>
-> >>>>> Right, I do not see anything obvious yet.   =20
-> >>>>
-> >>>> Wild guess: I think it maybe saying that due to
-> >>>>
-> >>>>         inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-> >>>>
-> >>>> the critical code may somehow be interrupted and, while handling the
-> >>>> interrupt, try to acquire the same lock again.   =20
-> >>>
-> >>> This should not happen, the 'syncp' are different. They have different
-> >>> lockdep classes.
-> >>>
-> >>> One is exclusively used from hard irq context.
-> >>>
-> >>> The second one only used from BH context.   =20
-> >>
-> >> Alexis Lothor=C3=A9 hit this now as well, see yesterday report in this
-> >> thread; apart from that nothing seem to have happened for two weeks no=
-w.
-> >> The change recently made it to some stable/longterm kernels, too. Makes
-> >> me wonder:
-> >>
-> >> What's the plan forward here? Is this considered to be a false positiv=
-e? =20
-> >=20
-> > Although my system has run stable for a couple of months, I am hesitant
-> > to call it a false positive.
-> >  =20
-> >> Or a real problem? =20
-> >=20
-> > That's what I think. But I would have to learn a lot about the network
-> > stack to understand what exactly happens here.
-> >=20
-> > It may go faster if somebody else on the Cc can give me a hint where to
-> > start looking based on the lockdep warning.
-> >=20
-> > Petr T
-> >=20
-> >  =20
+* Fix two anchors.
+
+* Add two required packages to the openSUSE install instructions.
+
+Fine tuning:
+
+* Improve the reference section about downloading Linux mainline sources
+  to make it more obvious that those are alternatives.
+
+* Include the full instructions for git bundles to ensure the remote
+  gets the right name; that way the text also works stand alone.
+
+* Install ncurses and qt headers for use of menuconfig and xconfig by
+  default, but tell users that they are free to omit them.
+
+* Mention ahead of time which version number are meant as example in
+  commands used during the step-by-step guide.
+
+* Mention that 'kernel-install remove' might do a incomplete job.
+
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+---
+
+Lo! A quick note reg "mention ahead of time which version numbers are
+meant as example in commands used during the step-by-step guide". I did
+that, as I've seen someone following the guide without replacing the
+version numbers, so pointing this out with a few words seemed wise. But
+I'm not sure if the way I did it was the best; if someone has a better
+idea how to do that, please let me know. Ciao, Thorsten
+---
+ .../verify-bugs-and-bisect-regressions.rst    | 135 +++++++++++-------
+ 1 file changed, 84 insertions(+), 51 deletions(-)
+
+diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+index 54bde8bac95c67..58211840ac6ffb 100644
+--- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
++++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+@@ -192,8 +192,8 @@ will be considered the 'good' release and used to prepare the .config file.
+ 
+        sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
+        sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
+-       # * Note, if kernel-install is missing, you will have to
+-       #   manually remove the kernel image and related files.
++       # * Note, on some distributions kernel-install is missing
++       #   or does only part of the job.
+ 
+   b) If you performed a bisection and successfully validated the result, feel
+      free to remove all kernels built during the actual bisection (Segment 3 c);
+@@ -348,11 +348,14 @@ Preparations: set up everything to build your own kernels
+   one downloads less than 500 MByte, the other works better with unreliable
+   internet connections.*
+ 
+-  Execute the following command to retrieve a fresh mainline codebase::
++  Execute the following command to retrieve a fresh mainline codebase while
++  preparing things to add stable/longterm branches later::
+ 
+     git clone -o mainline --no-checkout \
+       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/linux/
+     cd ~/linux/
++    git remote add -t master stable \
++      https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+ 
+   [:ref:`details<sources_bisref>`]
+ 
+@@ -365,7 +368,7 @@ Preparations: set up everything to build your own kernels
+   identifier using ``uname -r``.
+ 
+   Afterwards check out the source code for the version earlier established as
+-  'good' and create a .config file::
++  'good' (in this example this is assumed to be 6.0) and create a .config file::
+ 
+     git checkout --detach v6.0
+     make olddefconfig
+@@ -462,8 +465,10 @@ Preparations: set up everything to build your own kernels
+ 
+     [:ref:`details<configmods_distros_bisref>`].
+ 
+-  * If you want to influence other aspects of the configuration, do so now
+-    by using make targets like 'menuconfig' or 'xconfig'.
++  * If you want to influence other aspects of the configuration, do so now using
++    your preferred tool. Note, to use make targets like 'menuconfig' or
++    'nconfig', you will need to install the development files of ncurses; for
++    'xconfig' you likewise need the Qt5 or Qt6 headers.
+ 
+     [:ref:`details<configmods_individual_bisref>`].
+ 
+@@ -601,8 +606,8 @@ be a waste of time. [:ref:`details<introlatestcheck_bisref>`]
+ * Are you facing a problem within a stable/longterm release, but failed to
+   reproduce it with the mainline kernel you just built? Then check if the latest
+   codebase for the particular series might already fix the problem. To do so,
+-  add the stable series Git branch for your 'good' kernel and check out the
+-  latest version::
++  add the stable series Git branch for your 'good' kernel (again, this here is
++  assumed to be 6.0) and check out the latest version::
+ 
+     cd ~/linux/
+     git remote set-branches --add stable linux-6.0.y
+@@ -652,7 +657,7 @@ otherwise would be a waste of time. [:ref:`details<introworkingcheck_bisref>`]
+   regressed works as expected with it.
+ 
+   Start by checking out the sources for the version earlier established as
+-  'good'::
++  'good' (once again assumed to be 6.0 here)::
+ 
+     cd ~/linux/
+     git checkout --detach v6.0
+@@ -697,15 +702,13 @@ each kernel on commodity x86 machines.
+   stable branch, unless you already did so earlier::
+ 
+     cd ~/linux/
+-    git remote add -t master stable \
+-      https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable.git
+     git remote set-branches --add stable linux-6.1.y
+     git fetch stable
+ 
+ .. _bisectstart_bissbs:
+ 
+ * Start the bisection and tell Git about the versions earlier established as
+-  'good' and 'bad'::
++  'good' (6.0 in the following example command) and 'bad' (6.1.5)::
+ 
+     cd ~/linux/
+     git bisect start
+@@ -884,8 +887,9 @@ space might run out.
+ 
+   On quite a few distributions this will delete all other kernel files installed
+   while also removing the kernel's entry from the boot menu. But on some
+-  distributions this command does not exist or will fail; in that case consult
+-  the reference section, as your Linux distribution needs special care.
++  distributions kernel-install does not exist or leaves boot-loader entries or
++  kernel image and related files behind; in that case remove them as described
++  in the reference section.
+ 
+   [:ref:`details<makeroom_bisref>`]
+ 
+@@ -1015,8 +1019,6 @@ the right thing.
+ 
+ [:ref:`back to step-by-step guide <bootworking_bissbs>`]
+ 
+-.. _buildrequires_bisref:
+-
+ .. _diskspace_bisref:
+ 
+ Space requirements
+@@ -1060,7 +1062,7 @@ to do this as well, if you tried bisecting between 6.0.11 and 6.1.13.
+ 
+ [:ref:`back to step-by-step guide <rangecheck_bissbs>`]
+ 
+-.. _sources_bisref:
++.. _buildrequires_bisref:
+ 
+ Install build requirements
+ --------------------------
+@@ -1076,72 +1078,103 @@ about to build.
+ Here are a few examples what you typically need on some mainstream
+ distributions:
+ 
++* Arch Linux and derivatives::
++
++    sudo pacman --needed -S bc binutils bison flex gcc git kmod libelf openssl \
++      pahole perl zlib ncurses qt6-base
++
+ * Debian, Ubuntu, and derivatives::
+ 
+-    sudo apt install bc binutils bison dwarves flex gcc git make openssl \
+-      pahole perl-base libssl-dev libelf-dev
++    sudo apt install bc binutils bison dwarves flex gcc git kmod libelf-dev \
++      libssl-dev make openssl pahole perl-base pkg-config zlib1g-dev \
++      libncurses-dev qt6-base-dev g++
+ 
+ * Fedora and derivatives::
+ 
+-    sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h} \
+-      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
++    sudo dnf install binutils \
++      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole,rpmbuild} \
++      /usr/include/{libelf.h,openssl/pkcs7.h,zlib.h,ncurses.h,qt6/QtGui/QAction}
+ 
+ * openSUSE and derivatives::
+ 
+-    sudo zypper install bc binutils bison dwarves flex gcc git make perl-base \
+-      openssl openssl-devel libelf-dev
+-
+-In case you wonder why these lists include openssl and its development headers:
+-they are needed for the Secure Boot support, which many distributions enable in
+-their kernel configuration for x86 machines.
++    sudo zypper install bc binutils bison dwarves flex gcc git \
++      kernel-install-tools libelf-devel make modutils openssl openssl-devel \
++      perl-base zlib-devel rpm-build ncurses-devel qt6-base-devel
+ 
+-Sometimes you will need tools for compression formats like bzip2, gzip, lz4,
+-lzma, lzo, xz, or zstd as well.
+-
+-In case you want to adjust the build configuration with make targets like
+-'menuconfig' or 'xconfig' later, ensure to also install development headers for
+-ncurses and Qt5.
++These commands install a few packages that are often, but not always needed. You
++for example might want to skip installing the development headers for ncurses,
++which you will only need in case you later might want to adjust the kernel build
++configuration using make the targets 'menuconfig' or 'nconfig'; likewise omit
++the headers of Qt6 is you do not plan to adjust the .config using 'xconfig'.
+ 
+ You furthermore might need additional libraries and their development headers
+-for tasks not covered in this guide. For example, zlib will be needed when
+-building kernel tools from the tools/ directory;.
++for tasks not covered in this guide -- for example when building utilities from
++the kernel's tools/ directory.
+ 
+ [:ref:`back to step-by-step guide <buildrequires_bissbs>`]
+ 
+-Download the sources using git
++.. _sources_bisref:
++
++Download the sources using Git
+ ------------------------------
+ 
+   *Retrieve the Linux mainline sources.*
+   [:ref:`...<sources_bissbs>`]
+ 
+-The step-by-step guide outlines how to retrieve the Linux sources using a full
+-Git clone of Linus' mainline repository. If you have an unreliable internet
+-connection, you instead might want to use a 'Git bundle' to retrieve the
+-sources; if downloading the complete repository would take too long or requires
+-too much storage space, use a shallow clone instead.
++The step-by-step guide outlines how to download the Linux sources using a full
++Git clone of Linus' mainline repository. There is nothing more to say about
++that -- but there are two alternatives ways to retrieve the sources that might
++work better for you:
+ 
+-Downloading Linux mainline using a bundle
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ * If you have an unreliable internet connection, consider
++   :ref:`using a 'Git bundle'<sources_bundle_bisref>`.
+ 
+-Switch to you home directory and follow the instructions `kernel.org provides
+-for this case <https://www.kernel.org/cloning-linux-from-a-bundle.html>`_.
++ * If downloading the complete repository would take too long or requires too
++   much storage space, consider :ref:`using a 'shallow
++   clone'<sources_shallow_bisref>`.
+ 
+-Afterwards add the stable Git repository as remote and all required
+-stable/branches as explained in the step-by-step guide.
++.. _sources_bundle_bisref:
+ 
+-Downloading Linux mainline using a shallow clone
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++Downloading Linux mainline sources using a bundle
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Use the following commands to retrieve the Linux mainline sources using a
++bundle::
++
++    wget -c \
++      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/clone.bundle
++    git clone --no-checkout clone.bundle ~/linux/
++    cd ~/linux/
++    git remote remove origin
++    git remote add mainline \
++      https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
++    git fetch mainline
++    git remote add -t master stable \
++      https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
++
++In case the 'wget' command fails, just re-execute it, it will pick up where
++it left off.
++
++[:ref:`back to step-by-step guide <sources_bissbs>`]
++[:ref:`back to section intro <sources_bisref>`]
++
++.. _sources_shallow_bisref:
++
++Downloading Linux mainline sources using a shallow clone
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ First, execute the following command to retrieve the latest mainline codebase::
+ 
+     git clone -o mainline --no-checkout --depth 1 -b master \
+       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ~/linux/
+     cd ~/linux/
++    git remote add -t master stable \
++      https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+ 
+ Now deepen your clone's history to the second predecessor of the mainline
+ release of your 'good' version. In case the latter are 6.0 or 6.0.11, 5.19 would
+ be the first predecessor and 5.18 the second -- hence deepen the history up to
+-the latter::
++that version::
+ 
+     git fetch --shallow-exclude=v5.18 mainline
+ 
+@@ -1150,7 +1183,7 @@ branches as explained in the step-by-step guide.
+ 
+ Note, shallow clones have a few peculiar characteristics:
+ 
+- * For bisections the history needs to be deepend a few mainline versions
++ * For bisections the history needs to be deepened a few mainline versions
+    farther than it seems necessary, as explained above already. That's because
+    Git otherwise will be unable to revert or describe most of the commits within
+    a range (say v6.1..v6.2), as they are internally based on earlier kernels
+
+base-commit: a800c6f5b0573847722c5ec70e0ce5cde6ca13dd
+-- 
+2.44.0
 
