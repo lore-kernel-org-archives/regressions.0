@@ -1,95 +1,154 @@
-Received: from bee.tesarici.cz (unknown [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7F56089B
-	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 11:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2806B130AFE
+	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 13:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709723543; cv=none; b=W30JrULtp/Y9zUHopyJXguExj0TbDOBP6eDtjpisvC5Jdq/W/xXhUgGT1aJFkZrgFNm1I+0EXc9ckAh20hYFkQOa3+y4IUK6E15BYZnKEJpYzVeMFzNwtLwr7T8ODhrnrImnuncNUlXFw8/XfKP5GXhLKyIOq5WJT3M7OmaUMHs=
+	t=1709731629; cv=none; b=qss8w5gw9juUo+9FPJNYLcBKBhPldHLwOqPKWXBEQ8W47YoQ3C1kqftj+gQkNfD4A0bL5oLkw+WZ6jYbkBiG9fFIFVkTu4K8FB/Rt1Tz1xFPlxzl0isYvAqOwfLSYMXnExuTgd95tmNTVTX1IH5l2wd5bUJiBuixAz6gUoMeezI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709723543; c=relaxed/simple;
-	bh=wmU/DUhfL3HovQWf0NwpKdiQKOYEvrY68QLwAtIMdKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lCfG0JaAWlfgbePkCSnrkSzgccuVm5NnNLJp0/McSZn+KWi1EXizsaklQdCCYdwoxw7+nkYdOJbLfSGr+0fBJ6A1e3ppHC9H4sI6KCryowjXRgFpwYiwqgsY6nPWYJWofIQIJAPkXAqRWTPH9DZ8PGXX9nDOIM9jYJ1+bnw3Mpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ACUaXUva; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709731629; c=relaxed/simple;
+	bh=+sPm+oKCXQGcQ9Lw/Yo0t+Ryp5HfmG552sHNArAQGDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOxlD7Pm6dkk2zwVgnZqDwbJKkfkwh1X+DKJD+kTfP8aFk6aw+zmX/GFeV7NI1Vkyb/cr/VjUVWFyaeqL7UM50NTB6YnOiKsyHCr0zLgQPo4WAu/Nk/JIQQHzwfy6fEVDE+w8F1ycB1vRM23RACGCYagY5CYctBIqfOsYu/xkgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6q/Adf0; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ACUaXUva"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 1771D1C964D;
-	Wed,  6 Mar 2024 12:12:17 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709723538; bh=v5JAMBrNDP5b7jIy8twzxHR53DVo5CONXkezKDhBooE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ACUaXUvacShu6y73ZneV5eg+QL4cfJNYceBIwSoDPbNHX/S+hKo9mNTsvadU5FzCv
-	 14SRl4wTP5eNUFzlaTT7arH2x2HPMg8gFtbMLkl6CO1Mi3RQF/9TQTTpesOi7kjQXd
-	 kPNCSZm5bR/shpSPPoFizvNNWNg/GBAVfyTBiMVonu3YmlHTMf4Od2oE4dj/0iVlC/
-	 PzYf5qoY3tNK/sTwcUQfToDC2S5bfd42/gQ4EotR7buRprXn0HUFncRPON+TfkVNPY
-	 M6yFuNvJ+0xvt7p5xZPmLir2+9wY8jbQqLrLU+atv1mPf8yz9CEVpkrcZ0MO10Kbtw
-	 YrQa05SdLQn5Q==
-From: Petr Tesarik <petr@tesarici.cz>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-kernel@vger.kernel.org (open list)
-Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Petr Tesarik <petr@tesarici.cz>,
-	stable@kernel.org
-Subject: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
-Date: Wed,  6 Mar 2024 12:11:57 +0100
-Message-ID: <20240306111157.29327-1-petr@tesarici.cz>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6q/Adf0"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dd3bdb6e9eso3892875ad.3
+        for <regressions@lists.linux.dev>; Wed, 06 Mar 2024 05:27:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709731627; x=1710336427; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RiLQ/Gwlknvzeh2DwRC01mhrnxKX+BxC7evLtK7aSHk=;
+        b=g6q/Adf06ZbdSHU9v1klOgNK7AeqeFJbwUUqejrT7rhGcUbpe5YTOw/CjbEEaBtNzD
+         kuMamaJ+YUmsMqseH0WtqfDVIg3ydQHrKVfb3+MBpTiCGca/nd701NY6P+BDt+hzQMXe
+         ZNeVniMchGokkHZpp0CXKL5J4GccdoyWVjFrNqo0XS7KzzVyiBzrwHEciNbxOfYwuEj1
+         Lybgbfg1fZiGxyHgwoNcu/bPDxEGUnIQyaA9Nn6ZvMewM07fkGbxkj0bbls/YcQ7/2M5
+         xOg826HA8jEAFIJfirCdhZBaC0F4LkW9fh8C2JR273cdIzVJ+7mUf6FDyznNLIj1PuR7
+         3pyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709731627; x=1710336427;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RiLQ/Gwlknvzeh2DwRC01mhrnxKX+BxC7evLtK7aSHk=;
+        b=jdtOVtWtbD/9WB5gr4Y38Fwogoa/PQjuRq/jfZjh7XN5loojTXCf3jB4g/tzAUtw4H
+         KbBrLzR8oS9PcSqlt02cpb0s4BTR1a6KwQYa/ZZaeXNegLLjwpanPqk4sbyJyBQcgmaN
+         1b/+pXGZU0yYwWrOoEmj93Lsw6Zs47xj5R5LxKuQX+o+v9CsIWdWZwTEOtQqskDGrgkA
+         4D3Zw1WaBzFBXl76Sonzt2tbv7iZN86aQosObxM6VqWA+0xceT5JTTgXLi6nkECh0TG1
+         faAk3/T7fT0sjsutIfFliAXU0E+1t8HSOChQuINHxtBRym9s4H6dCm5eXeru7R1Mp7zl
+         VXgA==
+X-Gm-Message-State: AOJu0YwUz5oxh+XppRGZcgMZ1FTUD5PTtJ+Ef92X2+zZS3z2u4a5C6ni
+	1fo62Rbu9u6wFe540PgiaEAiqyiby7nOkopsbKXM9d1DOnhwMNVl
+X-Google-Smtp-Source: AGHT+IGbzpjggy4PP+k4v7TS6DtV6f8SDz9RQOR92oZBLAFBg7AXN3v+tlMA5JaLtbGxDD0Ip5wRKA==
+X-Received: by 2002:a17:903:1cf:b0:1db:fd4e:329f with SMTP id e15-20020a17090301cf00b001dbfd4e329fmr5516641plh.15.1709731627409;
+        Wed, 06 Mar 2024 05:27:07 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id k23-20020a170902ba9700b001da105d6a83sm12473865pls.224.2024.03.06.05.27.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 05:27:05 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E12A918163A92; Wed,  6 Mar 2024 20:27:02 +0700 (WIB)
+Date: Wed, 6 Mar 2024 20:27:02 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support
+ for Arch
+Message-ID: <ZehvJv3fDZIPs9Kc@archie.me>
+References: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lazs5xFE0/5FrnVE"
+Content-Disposition: inline
+In-Reply-To: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
 
-Fix bogus lockdep warnings if multiple u64_stats_sync variables are
-initialized in the same file.
 
-With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+--lazs5xFE0/5FrnVE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	static struct lock_class_key __key;
+On Wed, Mar 06, 2024 at 10:21:12AM +0100, Thorsten Leemhuis wrote:
+> diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions=
+=2Erst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> index 54bde8bac95c67..58211840ac6ffb 100644
+> --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+> @@ -192,8 +192,8 @@ will be considered the 'good' release and used to pre=
+pare the .config file.
+> =20
+>         sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
+>         sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
+> -       # * Note, if kernel-install is missing, you will have to
+> -       #   manually remove the kernel image and related files.
+> +       # * Note, on some distributions kernel-install is missing
+> +       #   or does only part of the job.
 
-Since u64_stats_init() is a function (albeit an inline one), all calls
-within the same file end up using the same instance, effectively treating
-them all as a single lock-class.
+Consult documentation of your distribution for how to manually install/remo=
+ve
+the kernel.
 
-Cc: stable@kernel.org
-Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
-Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
-Signed-off-by: Petr Tesarik <petr@tesarici.cz>
----
- include/linux/u64_stats_sync.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+>  Install build requirements
+>  --------------------------
+> @@ -1076,72 +1078,103 @@ about to build.
+>  Here are a few examples what you typically need on some mainstream
+>  distributions:
+> =20
+> +* Arch Linux and derivatives::
+> +
+> +    sudo pacman --needed -S bc binutils bison flex gcc git kmod libelf o=
+penssl \
+> +      pahole perl zlib ncurses qt6-base
+> +
+>  * Debian, Ubuntu, and derivatives::
+> =20
+> -    sudo apt install bc binutils bison dwarves flex gcc git make openssl=
+ \
+> -      pahole perl-base libssl-dev libelf-dev
+> +    sudo apt install bc binutils bison dwarves flex gcc git kmod libelf-=
+dev \
+> +      libssl-dev make openssl pahole perl-base pkg-config zlib1g-dev \
+> +      libncurses-dev qt6-base-dev g++
+> =20
+>  * Fedora and derivatives::
+> =20
+> -    sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h} \
+> -      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
+> +    sudo dnf install binutils \
+> +      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole,rpmbuild}=
+ \
+> +      /usr/include/{libelf.h,openssl/pkcs7.h,zlib.h,ncurses.h,qt6/QtGui/=
+QAction}
 
-diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
-index ffe48e69b3f3..457879938fc1 100644
---- a/include/linux/u64_stats_sync.h
-+++ b/include/linux/u64_stats_sync.h
-@@ -135,10 +135,11 @@ static inline void u64_stats_inc(u64_stats_t *p)
- 	p->v++;
- }
- 
--static inline void u64_stats_init(struct u64_stats_sync *syncp)
--{
--	seqcount_init(&syncp->seq);
--}
-+#define u64_stats_init(syncp)				\
-+	do {						\
-+		struct u64_stats_sync *__s = (syncp);	\
-+		seqcount_init(&__s->seq);		\
-+	} while (0)
- 
- static inline void __u64_stats_update_begin(struct u64_stats_sync *syncp)
- {
--- 
-2.44.0
+IMO qt packages are for people who wish to do xconfig instead of menuconfig
+or nconfig.
 
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--lazs5xFE0/5FrnVE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZehvHQAKCRD2uYlJVVFO
+o8QAAQDL2QAo686CyoAn0M4a/QzWk42pLsA/+Yxo1q8pRmmQ8gEA9v12OA9wft3g
+ear6xki6AjucstJTnmst30tNIF03OAo=
+=mmbI
+-----END PGP SIGNATURE-----
+
+--lazs5xFE0/5FrnVE--
