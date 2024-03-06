@@ -1,127 +1,146 @@
-Received: from bee.tesarici.cz (unknown [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46EB5F576;
-	Wed,  6 Mar 2024 10:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.223.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59C45FDB3
+	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 10:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709719399; cv=none; b=Q+1uQe0Rs+FQG/EkFEnm6gEOQ1KVNtFYSfVzv9hVr6ZHSj2gXVDTAZiBP4Qr4AvIBvC7Cvp/Mxh/2KHPGoe5/fMA4xAJO9XUC01BroB1eB45gCjXa/w70PAoWIzL5rhxWTVwtlwOhgW1qsX9GZoQxz9ASSkfpIKOrbZVR0wqeIk=
+	t=1709720254; cv=none; b=Ecu/9QHQRzCbIVl0QI9W+IHJpv1zYntuPxe1XwloTIOlQzBA73TP9hQe8EvU7YIBTtST+axQ0NbfUdxfmPgYysAxr8/dYbdz2WoutpzGhpBwdJ2z2GvYLUOIYymQhlo4/VwEKMcmm0tYUabHg3qABwTez1SspnljnMoNnVxwhWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709719399; c=relaxed/simple;
-	bh=jxwznpdyYueFkeb4KzOmzTRoxHJqaVHSTFEhTSAKMtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HdHACIqrbyCnXUMIAcrIiz9acEktTkEZV8uNu0K8NcgPD5Ag6CmwZ1hsKEekxzyfgRYPPdppBrKsh+BTNz8vSLd8bzg6gfYyqx3uDFVPb+zLNQD5kZapoA7UZ2pLnW0VX2eUMMiwXtr9us4AU6/ImG3EA+oHIFhro5VkxQr4NG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=RlP2Oi+O; arc=none smtp.client-ip=77.93.223.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1709720254; c=relaxed/simple;
+	bh=aftI2J7tWkan9F3k+WavIQOst/Q5zH24e7gYDaM6WSE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=makjnKLtylsSVYqAbKBO9QIYzdYzLdemvKCQ0AosGroyZvPo45O8zt74eqPO20Tc86DSO4PSbHwaV0ONOHDojDZZ6P/+ShwEnzV/4YH1jmQc5s0JuBysuHDDExswS/C+Zsrt+33bDvNBefZQssH+vtetzkYNtXr3HWS6nNvRhg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dDC5JFKV; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="RlP2Oi+O"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 8F1AE1CA694;
-	Wed,  6 Mar 2024 11:03:13 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709719394; bh=LS0wJFf5B1tehneoZpGaqF5s3dF3oVsKN5z6xY0DqMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RlP2Oi+O4wJ/Ea1AjU8xy+THyjDsyEFw51VxG9ETIqAxI8g1tCOlVx4XquuNwsBvU
-	 IEkz8g7NsRz4iqnJl6dlhVR3ltrOvh+/GtDgYmE8MuN1WYhLMqql3I3KRESYlBz3V/
-	 8WVSnoUfBhGMNEhdSZt3EBy7LnEbMuDDFyASgMkRZuNYgbuqUEiB8WAkJb3MXpQFSi
-	 0HwRq4R0lscJwUlb/QXb1ThASEAZRMWCuIog0BaqMS8GqSBOoWU/rXuI1Pr8g0J4hK
-	 TivKZmrO0NS868efpT0j0M1zp08xfRJNCtvJm7HKYtvt4t9CfMZOJXqI4RwbtqXBV2
-	 3xIa4SYfK+7Ow==
-Date: Wed, 6 Mar 2024 11:03:12 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Eric Dumazet <edumazet@google.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, "David S.
- Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Jakub
- Kicinski <kuba@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, "open list:STMMAC ETHERNET DRIVER"
- <netdev@vger.kernel.org>, "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>, "moderated list:ARM/STM32
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
- <linux-sunxi@lists.linux.dev>, Marc Haber <mh+netdev@zugschlus.de>, Andrew
- Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- stable@vger.kernel.org, alexis.lothore@bootlin.com, Guenter Roeck
- <linux@roeck-us.net>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit
- statistics counters
-Message-ID: <20240306110312.04ddcde3@meshulam.tesarici.cz>
-In-Reply-To: <20240306100153.32d305f7@meshulam.tesarici.cz>
-References: <20240203190927.19669-1-petr@tesarici.cz>
-	<ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
-	<Zct5qJcZw0YKx54r@xhacker>
-	<CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
-	<20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
-	<CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-	<a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-	<20240228120308.48d6a9c2@meshulam.tesarici.cz>
-	<e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info>
-	<20240306100153.32d305f7@meshulam.tesarici.cz>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dDC5JFKV"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso10773a12.0
+        for <regressions@lists.linux.dev>; Wed, 06 Mar 2024 02:17:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709720251; x=1710325051; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KXp3dvj8RXyd5VC25WQpvIY0TxZT9QViO+VH9V+80YQ=;
+        b=dDC5JFKVov+wnHU1H7VJdEDwg6Hmi2E1K6FhnUrzNlhzqzpa2wociEc9p4F4s+NTCB
+         qyuPsT4IWY5eLerGtf7DcpiLOvA2zETYPgBOSXtI/D6YohkECrbUTE8ITlJI49vluFIN
+         BkYXXmIUUXr9xEnEbOQ1kx1fKnfYmdLqqVNha7GS34vmrK65Ah/pEIs5N4Z7sIUvNRVE
+         VRywCKUxX1BX7zzcCk96h5iQDNd2ftIX91RAC4HmucMtDjL81EOKsRxH/BvWNCHkHPXI
+         WfsMOC2hOMTuFMrvfj9rzgIU3fmkJLw64DFO1vHWby9dhlDii5Lu1x9u7ZQQmy/3SpHP
+         lEvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709720251; x=1710325051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KXp3dvj8RXyd5VC25WQpvIY0TxZT9QViO+VH9V+80YQ=;
+        b=NMtnsJCV9H5qiwlw6dKYbVTIijisOqa/SjbmKAjA1wKkB9Qe3nri3vJnsRdRq7BkPh
+         WK0r5wtSLzLtbrdbuXLbPoDjxA444cFTIw9Qx0CR1FcIOQwLjFb5klYA2gLPauAdgxIo
+         m2nmp233jqP7WmulG0iyEbQ6prRN+8gw1lOiYk9dfD/1lFMHOl3fDsntpIy+t/a5EI4h
+         y7D2hIq8NO4E5xUCYvOP1km5n9rtA5UwIGETOOQ3ZVtUM9WdtPacomzIK+rHh9tIaFvw
+         D/iR7z1jc+BG1RXVmSn4loi9qI4js7CAjZHi1ekQQZcrURAs5J+H0sNJnrTG7j16KB5/
+         R6wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWe32e8JmaxPLnDlmokNc87TL627GHnyX5u6M6DG9mIp7ESawsT38Y/cSOQaLsmQ9Pq9ABqzmN542bO1PxfC0/pPsLdIQcC4PclThY=
+X-Gm-Message-State: AOJu0YzHm7ERvDK3fNDwcQI85SzgybBA3RDQBbjl11azlUKVCl2bjjLj
+	dmPgzO1hNbLTlR/nHhXLKvsOUT0IAvk33CcPpfAeodH2goe1H7c+p+diUMPzRNJXsPw/6DmKnO2
+	sb6mluAZe4ihXJgEHTuRNggBfIVLFBglPrxDC
+X-Google-Smtp-Source: AGHT+IEaRNnQwsDV5h/jJAyuRY2UuSSKqo6/ZssDUcS4IdliuD1AivloeSKEHCB7mXUWavBTCp+AAniu+YaHMq/FGWY=
+X-Received: by 2002:a50:8744:0:b0:567:9d6a:b82b with SMTP id
+ 4-20020a508744000000b005679d6ab82bmr274320edv.7.1709720250668; Wed, 06 Mar
+ 2024 02:17:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240203190927.19669-1-petr@tesarici.cz> <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
+ <Zct5qJcZw0YKx54r@xhacker> <CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
+ <20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net> <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
+ <a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info> <20240228120308.48d6a9c2@meshulam.tesarici.cz>
+ <e3181555-c08d-463f-a9a9-b08c69875c84@leemhuis.info> <20240306100153.32d305f7@meshulam.tesarici.cz>
+ <20240306110312.04ddcde3@meshulam.tesarici.cz>
+In-Reply-To: <20240306110312.04ddcde3@meshulam.tesarici.cz>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 6 Mar 2024 11:17:17 +0100
+Message-ID: <CANn89iLfgK7zTWMutOycKyVepq=8n26MO_LTsUAy2JdVtXr-_g@mail.gmail.com>
+Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit statistics counters
+To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
+Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, "David S. Miller" <davem@davemloft.net>, 
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	"open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>, 
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>, 
+	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>, Marc Haber <mh+netdev@zugschlus.de>, 
+	Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org, 
+	alexis.lothore@bootlin.com, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 6 Mar 2024 10:01:53 +0100
-Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+On Wed, Mar 6, 2024 at 11:03=E2=80=AFAM Petr Tesa=C5=99=C3=ADk <petr@tesari=
+ci.cz> wrote:
+>
+> On Wed, 6 Mar 2024 10:01:53 +0100
+> Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+>
+> > On Wed, 6 Mar 2024 09:23:53 +0100
+> > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.i=
+nfo> wrote:
+> >
+> > > On 28.02.24 12:03, Petr Tesa=C5=99=C3=ADk wrote:
+> > > > On Wed, 28 Feb 2024 07:19:56 +0100
+> > > > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhu=
+is.info> wrote:
+> > > >
+> > > >> Net maintainers, chiming in here, as it seems handling this regres=
+sion
+> > > >> stalled.
+> > > > Indeed, I was too busy with sandbox mode...
+> > >
+> > > Hmm, no reply in the past week to Petr's request for help from someon=
+e
+> > > with more knowledge about the field. :-/
+> > >
+> > > So I guess this means that this won't be fixed for 6.8? Unfortunate, =
+but
+> > > well, that's how it it sometimes.
+> >
+> > For the record, I _can_ reproduce lockdep splats on my device, but they
+> > don't make any sense to me. They seem to confirm Jisheng Zhang's
+> > conclusion that lockdep conflates two locks which should have different
+> > lock-classes.
+> >
+> > So far I have noticed only one issue: the per-cpu syncp's are not
+> > initialized. I'll recompile and see if that's what confuses lockdep.
+>
+> That wasn't the issue. FTR the syncp was in fact initialized, because
+> devm_netdev_alloc_pcpu_stats() is a macro that also takes care of the
+> initialization of the syncp struct field.
+>
+> The problem is u64_stats_init().
+>
+> Commit 9464ca650008 ("net: make u64_stats_init() a function") changed
+> it to an inline function. But that's wrong. It uses seqcount_init(),
+> which in turn declares:
+>
+>         static struct lock_class_key __key;
+>
+> This assumes that each lock gets its own instance. But if
+> u64_stats_init() is a function (albeit an inline one), all calls
+> within the same file end up using the same instance.
+>
+> Eric, would it be OK to revert the above-mentioned commit?
 
-> On Wed, 6 Mar 2024 09:23:53 +0100
-> "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.inf=
-o> wrote:
->=20
-> > On 28.02.24 12:03, Petr Tesa=C5=99=C3=ADk wrote: =20
-> > > On Wed, 28 Feb 2024 07:19:56 +0100
-> > > "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis=
-.info> wrote:
-> > >    =20
-> > >> Net maintainers, chiming in here, as it seems handling this regressi=
-on
-> > >> stalled.   =20
-> > > Indeed, I was too busy with sandbox mode...   =20
-> >=20
-> > Hmm, no reply in the past week to Petr's request for help from someone
-> > with more knowledge about the field. :-/
-> >=20
-> > So I guess this means that this won't be fixed for 6.8? Unfortunate, but
-> > well, that's how it it sometimes. =20
->=20
-> For the record, I _can_ reproduce lockdep splats on my device, but they
-> don't make any sense to me. They seem to confirm Jisheng Zhang's
-> conclusion that lockdep conflates two locks which should have different
-> lock-classes.
->=20
-> So far I have noticed only one issue: the per-cpu syncp's are not
-> initialized. I'll recompile and see if that's what confuses lockdep.
+Oh, nice !
 
-That wasn't the issue. FTR the syncp was in fact initialized, because
-devm_netdev_alloc_pcpu_stats() is a macro that also takes care of the
-initialization of the syncp struct field.
+Well, this would not be a revert, let's keep type safety checks if possible=
+.
 
-The problem is u64_stats_init().
-
-Commit 9464ca650008 ("net: make u64_stats_init() a function") changed
-it to an inline function. But that's wrong. It uses seqcount_init(),
-which in turn declares:
-
-	static struct lock_class_key __key;
-
-This assumes that each lock gets its own instance. But if
-u64_stats_init() is a function (albeit an inline one), all calls
-within the same file end up using the same instance.
-
-Eric, would it be OK to revert the above-mentioned commit?
-
-Petr T
+Thanks.
