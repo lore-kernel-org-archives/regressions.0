@@ -1,112 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179F0137909
-	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 17:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B6C0818C1A
+	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 21:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709745216; cv=none; b=QhziW/nlAHb+qmB6EpMeOggOTG99tHDXCQF8wcs0gpPPYGxf0FMb/kwKHD9Sb2evXh0vx9/h7BedSojyQOps9WW0fHzvEYdLyvILgmrXISYiZSvd50PCVKxPiPLR6MySHb4GjrmMK8cfy7zhQOQDxbDz0IyHgEeILVc1vobB+W8=
+	t=1709759285; cv=none; b=ENVlKY690dHnf7XD1eqLFGnbBiCstxdJDNvZ9WDn9Zbkwn+dvlynUB0fLWyCq10uYcpWcWo/6y2jwOQiQJdAEaf/5lPBbt5sbg3whkhyzkJFsQd5j9Txqcj7GdgIRNW/IrMmDbEdb1I4LSWjis51O79R93wo4QSdQE0hqRlvWUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709745216; c=relaxed/simple;
-	bh=i8O4cidZUJE+wd+JfV1lnCzYwc7HF+gqMw+qaCzi2WQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zta4sUA4Gm8SVn6pfPwk9f4TmFr9xFLfKNMCi6U52u3X9RVMVHvmm3NDk1ADRQRShrjCKTTxDGB6ygPX+Ktwjl6XBBMMVUT23SkFXaD7UYeLFpRtnkMfDrWmb/embS6U1TfZsZG8eNWkXU26CkmqulImxaW5y9vzEs8GNFyXKcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q63NrNsX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q63NrNsX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0F4C433F1
-	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 17:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709745215;
-	bh=i8O4cidZUJE+wd+JfV1lnCzYwc7HF+gqMw+qaCzi2WQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q63NrNsXvD6tGEaLxz6b4pcxnx5y3+dJDdxEjj2bXNO4M0WbhPdPUI6KGvcsZika4
-	 lpVD9gSaAnxVsUjV64dzmh5GpNOaiBFpfyBpt9wzY+KmlFNeycPSRXdxZflyjerpJJ
-	 oWrBirTULi+GPEce2rZj/N5vESKTzQlq2sQTE8CqRmek4ztT7AqE23eX6Y9Q2sBgE2
-	 5olG4vALzIRJqzQ8ij45yCIAK4rUC0rPvrxQPsgG/3ojpIjfC8FTxRm7y4Cu5YMsy8
-	 tSfbT97zXRyqnaPEJmO6OLdijmyFX6aoRS0MVinB8hGruSszILilkSxWEpNXesAZGn
-	 u60XXN24T31Cw==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-512f3e75391so2163830e87.2
-        for <regressions@lists.linux.dev>; Wed, 06 Mar 2024 09:13:35 -0800 (PST)
-X-Gm-Message-State: AOJu0YyY3nrLrD/A457plBNtebocZ2Dbd6XHeTfBiGMIG5eftPFDXztI
-	mNofCTH+nawvtsIUwNP98IirPlAk/aRewzWmP/6J0WqN/cCmSSSPJBuyuMsjkidZoAVM7x3Ccr3
-	HfFEiqNEWQY6USN+9/q5NfB4SY2M=
-X-Google-Smtp-Source: AGHT+IEl8SMdQaqSsPVKRhZkiVnx0eV7x/opmy0GG7cynT/haqS02qSyJFBJHINL+DSfiJUTQ9R3BL08ycyYuAdYkQg=
-X-Received: by 2002:a05:6512:2208:b0:513:5f2d:3d83 with SMTP id
- h8-20020a056512220800b005135f2d3d83mr1909349lfu.23.1709745213645; Wed, 06 Mar
- 2024 09:13:33 -0800 (PST)
+	s=arc-20240116; t=1709759285; c=relaxed/simple;
+	bh=XXbOdt/8dHYV01mKifmZFKHcb/pfCcfFzWLW1L+aVhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d4MWEzL4JJZW4Y97bRnS1UqexKG7mkbUNDPFUQjZBCsUoGlYVD4CyI2qUmNpdgh1K9Z+dBwna0+X1isPT7DRjqUiycwHal4/L1cdeHnqMN+cfeBK2GtZuB1J2X80JTyj8Q+zn0t5NvTAlb0RzWkoo1LN9xbKYRvGIFVJAuewcVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 201984 invoked by uid 1000); 6 Mar 2024 16:08:00 -0500
+Date: Wed, 6 Mar 2024 16:08:00 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Message-ID: <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
- <20240301231222.20120-1-dan@danm.net> <CAPhsuW73WZRekVSEFPgL7R-KNtd2DuhDo7oUNmjZN4Hr7w0dhg@mail.gmail.com>
- <1d3ed2b9-a44e-45f9-a523-d219c141ea5a@leemhuis.info>
-In-Reply-To: <1d3ed2b9-a44e-45f9-a523-d219c141ea5a@leemhuis.info>
-From: Song Liu <song@kernel.org>
-Date: Wed, 6 Mar 2024 09:13:21 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW51ND4qH4My8Uz1XaZSdvAjDR7eL7O-RLr5wKmFJA0XMQ@mail.gmail.com>
-Message-ID: <CAPhsuW51ND4qH4My8Uz1XaZSdvAjDR7eL7O-RLr5wKmFJA0XMQ@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Dan Moulding <dan@danm.net>, junxiao.bi@oracle.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
 
-Hi Thorsten,
+On Tue, Mar 05, 2024 at 09:20:22AM +0100, Jan Čermák wrote:
+> Hi Alan, Greg, everyone,
+> 
+> On 04. 08. 23 21:09, Alan Stern wrote:
+> > An outstanding syzbot bug report has been traced to a race between the
+> > routine that reads in the device descriptor for a device being
+> > reinitialized and the routine that writes the descriptors to a sysfs
+> > attribute file.  The problem is that reinitializing a device, like
+> > initializing it for the first time, stores the device descriptor
+> > directly in the usb_device structure, where it may be accessed
+> > concurrently as part of sending the descriptors to the sysfs reader.
+> 
+> I have a suspicion that some of these patches (three from the original
+> series, plus the "Fix oversight..." one) introduced a regression we see with
+> some USB devices in Home Assistant OS (but in mainstream distro as well, see
+> below). In particular it's Z-Wave.me UZB stick (0658:0200), however roughly
+> at the time of introduction of these patches, we started to see a few more
+> reports of issues with USB devices (in general radios for IoT protocols), so
+> I can't rule out it's source of more regressions. For this particular
+> device, we have most detailed tracing of the issue, confirming it also
+> manifests on mainstream distribution (Debian) which included these patches
+> in its kernel. Most issue reports come from RPi 3 but we also got them on
+> amd64, and both on HAOS and Debian.
+> 
+> I'm a layman in terms of the USB stack, so I might be wrong about some
+> assumptions, but anyway, the device seemed to always misbehave due to poor
+> HW (?) implementation - every time it's plugged into an USB slot, the
+> following messages appear:
+> 
+> [ 1134.073005] usb 1-1.4: new full-speed USB device number 12 using dwc_otg
+> [ 1134.153006] usb 1-1.4: device descriptor read/64, error -32
+> [ 1134.341003] usb 1-1.4: device descriptor read/64, error -32
+> [ 1134.529004] usb 1-1.4: new full-speed USB device number 13 using dwc_otg
+> [ 1134.609063] usb 1-1.4: device descriptor read/64, error -32
+> [ 1134.797005] usb 1-1.4: device descriptor read/64, error -32
+> [ 1134.905181] usb 1-1-port4: attempt power cycle
+> 
+> However, kernel versions prior to 6.1.52, or 6.1.73 with these patches
+> reverted, were able to recover:
+> 
+> [ 1135.717049] usb 1-1.4: new full-speed USB device number 14 using dwc_otg
+> [ 1135.741234] usb 1-1.4: New USB device found, idVendor=0658,
+> idProduct=0200, bcdDevice= 0.00
+> [ 1135.741275] usb 1-1.4: New USB device strings: Mfr=0, Product=0,
+> SerialNumber=0
+> [ 1135.743959] cdc_acm 1-1.4:1.0: ttyACM0: USB ACM device
+> 
+> Without these patches reverted, 6.1.73 goes 2 another rounds of device
+> descriptor read errors, and ends with:
+> 
+> [ 263.705865] usb 1-1-port4: unable to enumerate USB device
+> 
+> Also it should be noted that it seems that this only happens on USB 2 ports,
+> on USB 3/SS ports, the descriptor read errors are "protocol error" instead
+> of "broken pipe", and the driver recovers (realizing this, I am now finally
+> able to reproduce the issue in my environment):
+> 
+> [ 38.244292] usb 2-3: new full-speed USB device number 3 using xhci_hcd
+> [ 38.372319] usb 2-3: device descriptor read/64, error -71
+> [ 38.608317] usb 2-3: device descriptor read/64, error -71
+> [ 38.844287] usb 2-3: new full-speed USB device number 4 using xhci_hcd
+> [ 38.972317] usb 2-3: device descriptor read/64, error -71
+> [ 39.208325] usb 2-3: device descriptor read/64, error -71
+> [ 39.316405] usb usb2-port3: attempt power cycle
+> [ 39.936295] usb 2-3: new full-speed USB device number 5 using xhci_hcd
+> [ 39.957228] usb 2-3: New USB device found, idVendor=0658, idProduct=0200,
+> bcdDevice= 0.00
+> [ 39.957241] usb 2-3: New USB device strings: Mfr=0, Product=0,
+> SerialNumber=0
+> [ 39.999591] cdc_acm 2-3:1.0: ttyACM0: USB ACM device
+> [ 39.999639] usbcore: registered new interface driver cdc_acm
+> [ 39.999641] cdc_acm: USB Abstract Control Model driver for USB modems and
+> ISDN adapters
+> 
+> This is the gist of the problem, more detailed findings can be found in
+> reports by @FredrikFornstad in the GH issue [1], who managed to reproduce
+> and pinpoint the likely source of the problem.
+> 
+> Let me know if you need any more details, or if there's something more to
+> try, I'll be happy to help with getting this resolved.
 
-On Wed, Mar 6, 2024 at 12:38=E2=80=AFAM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> On 02.03.24 01:05, Song Liu wrote:
-> > On Fri, Mar 1, 2024 at 3:12=E2=80=AFPM Dan Moulding <dan@danm.net> wrot=
-e:
-> >>
-> >>> 5. Looks like the block layer or underlying(scsi/virtio-scsi) may hav=
-e
-> >>> some issue which leading to the io request from md layer stayed in a
-> >>> partial complete statue. I can't see how this can be related with the
-> >>> commit bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING=
- in
-> >>> raid5d"")
-> >>
-> >> There is no question that the above mentioned commit makes this
-> >> problem appear. While it may be that ultimately the root cause lies
-> >> outside the md/raid5 code (I'm not able to make such an assessment), I
-> >> can tell you that change is what turned it into a runtime
-> >> regression. Prior to that change, I cannot reproduce the problem. One
-> >> of my RAID-5 arrays has been running on every kernel version since
-> >> 4.8, without issue. Then kernel 6.7.1 the problem appeared within
-> >> hours of running the new code and affected not just one but two
-> >> different machines with RAID-5 arrays. With that change reverted, the
-> >> problem is not reproducible. Then when I recently upgraded to 6.8-rc5
-> >> I immediately hit the problem again (because it hadn't been reverted
-> >> in the mainline yet). I'm now running 6.8.0-rc5 on one of my affected
-> >> machines without issue after reverting that commit on top of it.
-> > [...]
-> > I also tried again to reproduce the issue, but haven't got luck. While
-> > I will continue try to repro the issue, I will also send the revert to =
-6.8
-> > kernel.
->
-> Is that revert on the way meanwhile? I'm asking because Linus might
-> release 6.8 on Sunday.
+Can you provide two usbmon traces, one showing the problem with those 
+patches present and the other (on the same system but with the patches 
+reverted) showing the recovery?  Comparison of the two should indicate 
+what's happening differently.
 
-The patch is on its way to 6.9 kernel via a PR yesterday [1]. It will land =
-in
-stable 6.8 kernel via stable backports.
+Alan Stern
 
-Since this is not a new regression in 6.8 kernel and Dan is the only one
-experiencing this, we would rather not rush last minute change to the 6.8
-release.
-
-Thanks,
-Song
-
-[1] https://lore.kernel.org/linux-raid/1C22EE73-62D9-43B0-B1A2-2D3B95F774AC=
-@fb.com/
+PS: I would avoid the Raspberry Pi for this sort of testing, because 
+it uses a nonstandard USB host controller driver (dwc-otg) by default.
