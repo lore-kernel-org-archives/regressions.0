@@ -1,57 +1,62 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D846347A2
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 16:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D9A12FB2B
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 17:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709829213; cv=none; b=aHfyqhfmhUw6ueqIioTfUjjVqibAdbrQmTt6Zxjhcq89NkuqjiMGl2dYNukt8x/Y6r92/02Jvp0v/OLqiC7WnTLH9yXgPFVP6RK/U2huwWubFyBHtyh08Ps+qpV6KvZ4YROOr75J828t1gLB9naKJ+2tAvc3H7P4A8uzWx2nt4U=
+	t=1709834308; cv=none; b=rtLP1GzaoRs8F8LA4Rw1qy6FBgLbeHrdvy6t6Z/6MD0czfNAAA9VHIvN8fVzk5zOToxMH/gYNbpcwRxLFetH5xR5/5gEXFGwaigiUC8ObOx/5YVcvpMX9ex85dAid6ljyZxqJMuheHK38MTi/iBK69IxtG/k01NyLcTdyWvBsDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709829213; c=relaxed/simple;
-	bh=U1Z2tkgu2fMFZPvl/6LixoDhnirrzlLfHlKIU+w4m7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxlcYb3CNtSAmdGExtxhy7wq7S1LgRmn+szkctHVEXW+CnL9xGAXbgvjXsXk7pJ+N4SQyeuWIvY1sSTzvplXmnQBy8x6LstupXwwWN/ld/0RdvhAOw8TQXs6ppzDq6jDPX9fJfcsr5YQlkVJAfbtJt4buPp4wPQ1ssxXfK6s9vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=cWmRyH6B; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1709834308; c=relaxed/simple;
+	bh=dUPKNgTf8Q7huMS685lraUps112KLf/d1jw598FMIdY=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=b3FFRzq4EKIVa/D3YhfAYWVxUIJlry3jV/uc2e7AJqJQ3Ma7b3VI2MI5YJT/C/SpFeLJr3r+SWlla0zV2XlPxKIZsNUpBO56vQbJ6ecz2kh6PLdY0mIqXggAkNevQ0Vr64Uik0frOrab5KMbIGIyDSXm0fI0v2/y9Jv73rRxMs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGs9rCtR; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="cWmRyH6B"
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427Fw8c9012311;
-	Thu, 7 Mar 2024 16:33:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=L+bCcgjNV0jP4EzKldKfLGA3rqj+8jsnx29Ys9iDLZI=;
- b=cWmRyH6B8yGij9Dr6YP9Apm9sIVZbNgXj4G8qZKYSxOxx6LvfiMi6zkv3920BO4zl+yk
- 21Ux3h4KjmuPE+beRI3KVkC29Q4a8mX8JYiRgO/UVArP2Z2Ee7m3F9jdodT85w5bu2H/
- qz9yZQmZ6sS0nBhlkHrdT0xGuArLgH8gLbS3l9uAWyQ+fa8dZOm0Zl6C+JQoqind9OQS
- RXzrsMw993ApJkgQl5zf/4CgVp4rZHvZb3XFy2SHfP5hrC/JlvtkjJAqqxgTFGMARzka
- egmVOAN232vzbUQtfMQjQM6bHeXQrl68eEl/ymn+tvLaqpg1DNpJLACB5QoFXnkMDK43 HQ== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wqbduas3m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Mar 2024 16:33:22 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 589F78005DB;
-	Thu,  7 Mar 2024 16:33:22 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 814B7800EDF;
-	Thu,  7 Mar 2024 16:33:18 +0000 (UTC)
-Date: Thu, 7 Mar 2024 10:33:16 -0600
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Eric Hagberg <ehagberg@gmail.com>
-Cc: me@pavinjoseph.com, dave.hansen@linux.intel.com,
-        regressions@lists.linux.dev, stable@vger.kernel.org,
-        steve.wahl@hpe.com
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGs9rCtR"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512e39226efso1302335e87.0
+        for <regressions@lists.linux.dev>; Thu, 07 Mar 2024 09:58:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709834304; x=1710439104; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:to:from:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wC7C8LynimcouW7gr+bLmFhro9+jLWF30LgqbGRcneE=;
+        b=mGs9rCtR9NuPg1diaC6BhA0X+rM/jBLalfHUVQnWA0fr6vFs9DuHtqJ9AFxqJhJvet
+         nV7sCU7R2ymT9U/VhQ78XITyMmakrPuxhWHr7QcNG/MaW3IFJtM5014NNIEPLyQ7Jhcx
+         0YhvUe83hX2AMhOF0xcfMXXbcJwwKt36PGzCdrf8fxEXGFwduNtmDfkG0+sngmHMVArC
+         RYGglcJy+Uu2Q8f14ALVCqmBVL7pRWR1NZL4FHlhVWJWwyBK3PXvP25evuXYBPs/EHcR
+         WdgDq6EhUpZXQPZXcdDdSe9QjbXN7SfeUJimZpsuA/9tvPD8whxEuxati3dfgPPBMtKd
+         W5nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709834304; x=1710439104;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wC7C8LynimcouW7gr+bLmFhro9+jLWF30LgqbGRcneE=;
+        b=Uq1vBJaC2V073cXYJ0aSlfzk12jvgfss87ui1A0j04Czacxt1gn10+XpRMdTQIAFrH
+         rRfxxvT2kbvZLaOWaZ39jMGf9b4OwF0tb7JypT4T5qyxtJmZgj8LrA7PJ2fpyNxT8Wa0
+         armvPtsptf7x5FOmmquBjTO/WlKXhOLAjw9fqlXTajqtTt21NtJSXXswmiYQjlBOwifT
+         zMfhVA86lhJvFVr/GqeBERdOwqmfvwXal4Jj83vIibJZgxH82DDCteC0U0GUFkzVJjrr
+         TOf8p/olf1h3K9jVCoMupm++Q7PigAclhcqrIYjt/HjZIz31C7ZvOf6bb81SpDXnRPB8
+         WIcg==
+X-Gm-Message-State: AOJu0YwsQLCL/4YBGY7WTnNqEjuj9FOsxt5UGhPBT6CEsGLRRfIsawOr
+	UJQKk+ApYA8ZfDoSRM8Gp3wjirhuwPMWlShFhcUlWUYA8FgFS6ySjTQLW81v
+X-Google-Smtp-Source: AGHT+IGc9viHaHVWKFupkqGcAe3dLwRI4uvq2XXGnmvY3SowOw0uQ2HMvqPWvV5vhChzILk4mupmYA==
+X-Received: by 2002:a05:6512:324b:b0:513:3fb3:334e with SMTP id c11-20020a056512324b00b005133fb3334emr1688185lfr.27.1709834304193;
+        Thu, 07 Mar 2024 09:58:24 -0800 (PST)
+Received: from debian.local (80-44-66-160.dynamic.dsl.as9105.com. [80.44.66.160])
+        by smtp.gmail.com with ESMTPSA id s15-20020ac2464f000000b005133d11b261sm2355558lfo.92.2024.03.07.09.58.23
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 09:58:23 -0800 (PST)
+Date: Thu, 7 Mar 2024 17:58:20 +0000
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: regressions@lists.linux.dev
+Subject: [REGRESSION] Divide-by-zero on DisplayPort MST unplug with nouveau
+Message-ID: <ZeoAPFIF6NClUl4P@debian.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -60,43 +65,140 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
-X-Proofpoint-ORIG-GUID: Hg7j_6QEM8L5-LDw6zgw6LXXVpDDmMQU
-X-Proofpoint-GUID: Hg7j_6QEM8L5-LDw6zgw6LXXVpDDmMQU
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 bulkscore=0 mlxlogscore=926
- suspectscore=0 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2403070113
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 05, 2024 at 05:39:32AM -0500, Eric Hagberg wrote:
-> To add another datapoint to this - I've seen the same problem on Dell
-> PowerEdge R6615 servers... but no others.
-> 
-> The problem also crept into the 6.1.79 kernel with the commit
-> mentioned earlier, and is fixed by reverting that commit. Adding
-> nogbpages to the kernel command line can cause the failure to
-> reproduce on that hardware as well.
+#regzbot introduced: c1d6a22b7219bd52c66e9e038a282ba79f04be1f
 
-Eric,
+----- Forwarded message from Chris Bainbridge <chris.bainbridge@gmail.com> =
+-----
 
-What Linux Distribution are you running on that machine?  My guess
-would be that this is not distro related; if you are running something
-quite different from Pavin that would confirm this.
+Date: Sat, 10 Feb 2024 21:24:59 +0000
+=46rom: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: lyude@redhat.com, ville.syrjala@linux.intel.com, stanislav.lisovskiy@in=
+tel.com,
+	mripard@kernel.org, imre.deak@intel.com
+Subject: [PATCH] Fix divide-by-zero on DP unplug with nouveau
 
-I found an AMD based system to try to reproduce this on. The 6.7.7
-kernel doesn't seem to have a problem in the machine's existing RHEL
-environment.  I think it's likely that this system's hardware doesn't
-have the characteristics that bring this problem to the surface.  But
-I will be trying OpenSUSE Tumbleweed on it if I can.
+The following trace occurs when using nouveau and unplugging a DP MST
+adaptor:
 
-Thanks,
+ divide error: 0000 [#1] PREEMPT SMP PTI
+ CPU: 7 PID: 2962 Comm: Xorg Not tainted 6.8.0-rc3+ #744
+ Hardware name: Razer Blade/DANA_MB, BIOS 01.01 08/31/2018
+ RIP: 0010:drm_dp_bw_overhead+0xb4/0x110 [drm_display_helper]
+ Code: c6 b8 01 00 00 00 75 61 01 c6 41 0f af f3 41 0f af f1 c1 e1 04 48 63=
+ c7 31 d2 89 ff 48 8b 5d f8 c9 48 0f af f1 48 8d 44 06 ff <48> f7 f7 31 d2 =
+31 c9 31 f6 31 ff 45 31 c0 45 31 c9 45 31 d2 45 31
+ RSP: 0018:ffffb2c5c211fa30 EFLAGS: 00010206
+ RAX: ffffffffffffffff RBX: 0000000000000000 RCX: 0000000000f59b00
+ RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+ RBP: ffffb2c5c211fa48 R08: 0000000000000001 R09: 0000000000000020
+ R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000023b4a
+ R13: ffff91d37d165800 R14: ffff91d36fac6d80 R15: ffff91d34a764010
+ FS:  00007f4a1ca3fa80(0000) GS:ffff91d6edbc0000(0000) knlGS:00000000000000=
+00
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000559491d49000 CR3: 000000011d180002 CR4: 00000000003706f0
+ Call Trace:
+  <TASK>
+  ? show_regs+0x6d/0x80
+  ? die+0x37/0xa0
+  ? do_trap+0xd4/0xf0
+  ? do_error_trap+0x71/0xb0
+  ? drm_dp_bw_overhead+0xb4/0x110 [drm_display_helper]
+  ? exc_divide_error+0x3a/0x70
+  ? drm_dp_bw_overhead+0xb4/0x110 [drm_display_helper]
+  ? asm_exc_divide_error+0x1b/0x20
+  ? drm_dp_bw_overhead+0xb4/0x110 [drm_display_helper]
+  ? drm_dp_calc_pbn_mode+0x2e/0x70 [drm_display_helper]
+  nv50_msto_atomic_check+0xda/0x120 [nouveau]
+  drm_atomic_helper_check_modeset+0xa87/0xdf0 [drm_kms_helper]
+  drm_atomic_helper_check+0x19/0xa0 [drm_kms_helper]
+  nv50_disp_atomic_check+0x13f/0x2f0 [nouveau]
+  drm_atomic_check_only+0x668/0xb20 [drm]
+  ? drm_connector_list_iter_next+0x86/0xc0 [drm]
+  drm_atomic_commit+0x58/0xd0 [drm]
+  ? __pfx___drm_printfn_info+0x10/0x10 [drm]
+  drm_atomic_connector_commit_dpms+0xd7/0x100 [drm]
+  drm_mode_obj_set_property_ioctl+0x1c5/0x450 [drm]
+  ? __pfx_drm_connector_property_set_ioctl+0x10/0x10 [drm]
+  drm_connector_property_set_ioctl+0x3b/0x60 [drm]
+  drm_ioctl_kernel+0xb9/0x120 [drm]
+  drm_ioctl+0x2d0/0x550 [drm]
+  ? __pfx_drm_connector_property_set_ioctl+0x10/0x10 [drm]
+  nouveau_drm_ioctl+0x61/0xc0 [nouveau]
+  __x64_sys_ioctl+0xa0/0xf0
+  do_syscall_64+0x76/0x140
+  ? do_syscall_64+0x85/0x140
+  ? do_syscall_64+0x85/0x140
+  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+ RIP: 0033:0x7f4a1cd1a94f
+ Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44=
+ 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 =
+f0 ff ff 77 1f 48 8b 44 24 18 64 48 2b 04 25 28 00
+ RSP: 002b:00007ffd2f1df520 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+ RAX: ffffffffffffffda RBX: 00007ffd2f1df5b0 RCX: 00007f4a1cd1a94f
+ RDX: 00007ffd2f1df5b0 RSI: 00000000c01064ab RDI: 000000000000000f
+ RBP: 00000000c01064ab R08: 000056347932deb8 R09: 000056347a7d99c0
+ R10: 0000000000000000 R11: 0000000000000246 R12: 000056347938a220
+ R13: 000000000000000f R14: 0000563479d9f3f0 R15: 0000000000000000
+  </TASK>
+ Modules linked in: rfcomm xt_conntrack nft_chain_nat xt_MASQUERADE nf_nat =
+nf_conntrack_netlink nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xfrm_user x=
+frm_algo xt_addrtype nft_compat nf_tables nfnetlink br_netfilter bridge stp=
+ llc ccm cmac algif_hash overlay algif_skcipher af_alg bnep binfmt_misc snd=
+_sof_pci_intel_cnl snd_sof_intel_hda_common snd_soc_hdac_hda snd_sof_pci sn=
+d_sof_xtensa_dsp snd_sof_intel_hda snd_sof snd_sof_utils snd_soc_acpi_intel=
+_match snd_soc_acpi snd_soc_core snd_compress snd_sof_intel_hda_mlink snd_h=
+da_ext_core iwlmvm intel_rapl_msr intel_rapl_common intel_tcc_cooling x86_p=
+kg_temp_thermal intel_powerclamp mac80211 coretemp kvm_intel snd_hda_codec_=
+hdmi kvm snd_hda_codec_realtek snd_hda_codec_generic uvcvideo libarc4 snd_h=
+da_intel snd_intel_dspcfg snd_hda_codec iwlwifi videobuf2_vmalloc videobuf2=
+_memops uvc irqbypass btusb videobuf2_v4l2 snd_seq_midi crct10dif_pclmul hi=
+d_multitouch crc32_pclmul snd_seq_midi_event btrtl snd_hwdep videodev polyv=
+al_clmulni polyval_generic snd_rawmidi
+  ghash_clmulni_intel aesni_intel btintel crypto_simd snd_hda_core cryptd s=
+nd_seq btbcm ee1004 8250_dw videobuf2_common btmtk rapl nls_iso8859_1 mei_h=
+dcp thunderbolt bluetooth intel_cstate wmi_bmof intel_wmi_thunderbolt cfg80=
+211 snd_pcm mc snd_seq_device i2c_i801 r8169 ecdh_generic snd_timer i2c_smb=
+us ecc snd mei_me intel_lpss_pci mei ahci intel_lpss soundcore realtek liba=
+hci idma64 intel_pch_thermal i2c_hid_acpi i2c_hid acpi_pad sch_fq_codel msr=
+ parport_pc ppdev lp parport efi_pstore ip_tables x_tables autofs4 dm_crypt=
+ raid10 raid456 libcrc32c async_raid6_recov async_memcpy async_pq async_xor=
+ xor async_tx raid6_pq raid1 raid0 joydev input_leds hid_generic usbhid hid=
+ nouveau i915 drm_ttm_helper gpu_sched drm_gpuvm drm_exec i2c_algo_bit drm_=
+buddy ttm drm_display_helper drm_kms_helper cec rc_core drm nvme nvme_core =
+mxm_wmi xhci_pci xhci_pci_renesas video wmi pinctrl_cannonlake mac_hid
+ ---[ end trace 0000000000000000 ]---
 
---> Steve
+Fix this by avoiding the divide if bpp is 0.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Fixes: c1d6a22b7219 ("drm/dp: Add helpers to calculate the link BW overhead=
+")
+Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+---
+ drivers/gpu/drm/display/drm_dp_helper.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/disp=
+lay/drm_dp_helper.c
+index b1ca3a1100da..bb8794c8f99c 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -4024,6 +4024,9 @@ int drm_dp_bw_overhead(int lane_count, int hactive,
+ 							  bpp_x16, symbol_size,
+ 							  is_mst);
+=20
++	/* Avoid potential divide by zero in DIV_ROUND_UP_ULL */
++	if (bpp_x16 =3D=3D 0)
++		return 0;
+ 	return DIV_ROUND_UP_ULL(mul_u32_u32(symbol_cycles * symbol_size * lane_co=
+unt,
+ 					    overhead * 16),
+ 				hactive * bpp_x16);
+--=20
+2.39.2
+
+
+----- End forwarded message -----
