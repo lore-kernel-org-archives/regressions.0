@@ -1,126 +1,318 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id B6C0818C1A
-	for <regressions@lists.linux.dev>; Wed,  6 Mar 2024 21:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571FDCA6B
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 03:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709759285; cv=none; b=ENVlKY690dHnf7XD1eqLFGnbBiCstxdJDNvZ9WDn9Zbkwn+dvlynUB0fLWyCq10uYcpWcWo/6y2jwOQiQJdAEaf/5lPBbt5sbg3whkhyzkJFsQd5j9Txqcj7GdgIRNW/IrMmDbEdb1I4LSWjis51O79R93wo4QSdQE0hqRlvWUs=
+	t=1709782507; cv=none; b=fNQC4WuJmpBW+ExEucCbR5En/zFx+Umgl87zm9+l+bwJOPg4N/6qzYj5NxfWsAb/TJvKRz4V5QgUsTLjmcIF84C8/0xu/drEuh5WV9x2kONROcxZjmTZymNiKzZgmUGFmVyYFRX81+WZ2KmmxtNJ/KA4X9CYw1ME10t9E/BWlks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709759285; c=relaxed/simple;
-	bh=XXbOdt/8dHYV01mKifmZFKHcb/pfCcfFzWLW1L+aVhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4MWEzL4JJZW4Y97bRnS1UqexKG7mkbUNDPFUQjZBCsUoGlYVD4CyI2qUmNpdgh1K9Z+dBwna0+X1isPT7DRjqUiycwHal4/L1cdeHnqMN+cfeBK2GtZuB1J2X80JTyj8Q+zn0t5NvTAlb0RzWkoo1LN9xbKYRvGIFVJAuewcVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 201984 invoked by uid 1000); 6 Mar 2024 16:08:00 -0500
-Date: Wed, 6 Mar 2024 16:08:00 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+	s=arc-20240116; t=1709782507; c=relaxed/simple;
+	bh=SmFs9CXqMnMDgOlmrhFcrJLGlHiq9rT416WY1uJ3UJ4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=oJVDlRwdjcoMZYDQ2nIuOqdfTK3M3np95uFikMpra5Lhf3Y41iZY/VHJIL33CPC1BnKcZfSp2k68Q0EFDER6s8SchqPSzJRl+mcKEKWGwMfGy80+7KnYWW1XdXhV5KdPU+9QyvSTmalCSbP+7Hv5OkSDwm3QpTFbdpWyWLHr3bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tqw0Y2Pv2z4f3mHZ
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 11:34:53 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id DB54F1A0392
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 11:35:00 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g7hNellZOu6GA--.41300S3;
+	Thu, 07 Mar 2024 11:34:59 +0800 (CST)
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: junxiao.bi@oracle.com, Song Liu <song@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, stable@vger.kernel.org,
+ Dan Moulding <dan@danm.net>, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240123005700.9302-1-dan@danm.net>
+ <20240220230658.11069-1-dan@danm.net>
+ <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
+ <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
+ <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <cd0f300f-49a0-235a-099c-e76af5ed7c05@huaweicloud.com>
+Date: Thu, 7 Mar 2024 11:34:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+X-CM-TRANSID:cCh0CgAn9g7hNellZOu6GA--.41300S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3XrWkAFyUAr4ruFWxZw1xGrg_yoWfJw1rpr
+	Z3tFs8CrW8tr1kJr1UJw4xXFy8Zr12y3WUJr95JFyUG3y5GFyjqrWxWrWjgF1DZr40ya17
+	Xr1UJryDuryUKw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Mar 05, 2024 at 09:20:22AM +0100, Jan Čermák wrote:
-> Hi Alan, Greg, everyone,
-> 
-> On 04. 08. 23 21:09, Alan Stern wrote:
-> > An outstanding syzbot bug report has been traced to a race between the
-> > routine that reads in the device descriptor for a device being
-> > reinitialized and the routine that writes the descriptors to a sysfs
-> > attribute file.  The problem is that reinitializing a device, like
-> > initializing it for the first time, stores the device descriptor
-> > directly in the usb_device structure, where it may be accessed
-> > concurrently as part of sending the descriptors to the sysfs reader.
-> 
-> I have a suspicion that some of these patches (three from the original
-> series, plus the "Fix oversight..." one) introduced a regression we see with
-> some USB devices in Home Assistant OS (but in mainstream distro as well, see
-> below). In particular it's Z-Wave.me UZB stick (0658:0200), however roughly
-> at the time of introduction of these patches, we started to see a few more
-> reports of issues with USB devices (in general radios for IoT protocols), so
-> I can't rule out it's source of more regressions. For this particular
-> device, we have most detailed tracing of the issue, confirming it also
-> manifests on mainstream distribution (Debian) which included these patches
-> in its kernel. Most issue reports come from RPi 3 but we also got them on
-> amd64, and both on HAOS and Debian.
-> 
-> I'm a layman in terms of the USB stack, so I might be wrong about some
-> assumptions, but anyway, the device seemed to always misbehave due to poor
-> HW (?) implementation - every time it's plugged into an USB slot, the
-> following messages appear:
-> 
-> [ 1134.073005] usb 1-1.4: new full-speed USB device number 12 using dwc_otg
-> [ 1134.153006] usb 1-1.4: device descriptor read/64, error -32
-> [ 1134.341003] usb 1-1.4: device descriptor read/64, error -32
-> [ 1134.529004] usb 1-1.4: new full-speed USB device number 13 using dwc_otg
-> [ 1134.609063] usb 1-1.4: device descriptor read/64, error -32
-> [ 1134.797005] usb 1-1.4: device descriptor read/64, error -32
-> [ 1134.905181] usb 1-1-port4: attempt power cycle
-> 
-> However, kernel versions prior to 6.1.52, or 6.1.73 with these patches
-> reverted, were able to recover:
-> 
-> [ 1135.717049] usb 1-1.4: new full-speed USB device number 14 using dwc_otg
-> [ 1135.741234] usb 1-1.4: New USB device found, idVendor=0658,
-> idProduct=0200, bcdDevice= 0.00
-> [ 1135.741275] usb 1-1.4: New USB device strings: Mfr=0, Product=0,
-> SerialNumber=0
-> [ 1135.743959] cdc_acm 1-1.4:1.0: ttyACM0: USB ACM device
-> 
-> Without these patches reverted, 6.1.73 goes 2 another rounds of device
-> descriptor read errors, and ends with:
-> 
-> [ 263.705865] usb 1-1-port4: unable to enumerate USB device
-> 
-> Also it should be noted that it seems that this only happens on USB 2 ports,
-> on USB 3/SS ports, the descriptor read errors are "protocol error" instead
-> of "broken pipe", and the driver recovers (realizing this, I am now finally
-> able to reproduce the issue in my environment):
-> 
-> [ 38.244292] usb 2-3: new full-speed USB device number 3 using xhci_hcd
-> [ 38.372319] usb 2-3: device descriptor read/64, error -71
-> [ 38.608317] usb 2-3: device descriptor read/64, error -71
-> [ 38.844287] usb 2-3: new full-speed USB device number 4 using xhci_hcd
-> [ 38.972317] usb 2-3: device descriptor read/64, error -71
-> [ 39.208325] usb 2-3: device descriptor read/64, error -71
-> [ 39.316405] usb usb2-port3: attempt power cycle
-> [ 39.936295] usb 2-3: new full-speed USB device number 5 using xhci_hcd
-> [ 39.957228] usb 2-3: New USB device found, idVendor=0658, idProduct=0200,
-> bcdDevice= 0.00
-> [ 39.957241] usb 2-3: New USB device strings: Mfr=0, Product=0,
-> SerialNumber=0
-> [ 39.999591] cdc_acm 2-3:1.0: ttyACM0: USB ACM device
-> [ 39.999639] usbcore: registered new interface driver cdc_acm
-> [ 39.999641] cdc_acm: USB Abstract Control Model driver for USB modems and
-> ISDN adapters
-> 
-> This is the gist of the problem, more detailed findings can be found in
-> reports by @FredrikFornstad in the GH issue [1], who managed to reproduce
-> and pinpoint the likely source of the problem.
-> 
-> Let me know if you need any more details, or if there's something more to
-> try, I'll be happy to help with getting this resolved.
+Hi,
 
-Can you provide two usbmon traces, one showing the problem with those 
-patches present and the other (on the same system but with the patches 
-reverted) showing the recovery?  Comparison of the two should indicate 
-what's happening differently.
+在 2024/03/02 4:26, junxiao.bi@oracle.com 写道:
+> Hi Dan & Song,
+> 
+> I have not root cause this yet, but would like share some findings from 
+> the vmcore Dan shared. From what i can see, this doesn't look like a md 
+> issue, but something wrong with block layer or below.
 
-Alan Stern
+I would like to take a look at vmcore as well. How dose Dan sharing the
+vmcore? I don't find it in the thread.
 
-PS: I would avoid the Raspberry Pi for this sort of testing, because 
-it uses a nonstandard USB host controller driver (dwc-otg) by default.
+Thanks,
+Kuai
+
+> 
+> 1. There were multiple process hung by IO over 15mins.
+> 
+> crash> ps -m | grep UN
+> [0 00:15:50.424] [UN]  PID: 957      TASK: ffff88810baa0ec0  CPU: 1 
+> COMMAND: "jbd2/dm-3-8"
+> [0 00:15:56.151] [UN]  PID: 1835     TASK: ffff888108a28ec0  CPU: 2 
+> COMMAND: "dd"
+> [0 00:15:56.187] [UN]  PID: 876      TASK: ffff888108bebb00  CPU: 3 
+> COMMAND: "md0_reclaim"
+> [0 00:15:56.185] [UN]  PID: 1914     TASK: ffff8881015e6740  CPU: 1 
+> COMMAND: "kworker/1:2"
+> [0 00:15:56.255] [UN]  PID: 403      TASK: ffff888101351d80  CPU: 7 
+> COMMAND: "kworker/u21:1"
+> 
+> 2. Let pick md0_reclaim to take a look, it is waiting done super_block 
+> update. We can see there were two pending superblock write and other 
+> pending io for the underling physical disk, which caused these process 
+> hung.
+> 
+> crash> bt 876
+> PID: 876      TASK: ffff888108bebb00  CPU: 3    COMMAND: "md0_reclaim"
+>   #0 [ffffc900008c3d10] __schedule at ffffffff81ac18ac
+>   #1 [ffffc900008c3d70] schedule at ffffffff81ac1d82
+>   #2 [ffffc900008c3d88] md_super_wait at ffffffff817df27a
+>   #3 [ffffc900008c3dd0] md_update_sb at ffffffff817df609
+>   #4 [ffffc900008c3e20] r5l_do_reclaim at ffffffff817d1cf4
+>   #5 [ffffc900008c3e98] md_thread at ffffffff817db1ef
+>   #6 [ffffc900008c3ef8] kthread at ffffffff8114f8ee
+>   #7 [ffffc900008c3f30] ret_from_fork at ffffffff8108bb98
+>   #8 [ffffc900008c3f50] ret_from_fork_asm at ffffffff81000da1
+> 
+> crash> mddev.pending_writes,disks 0xffff888108335800
+>    pending_writes = {
+>      counter = 2  <<<<<<<<<< 2 active super block write
+>    },
+>    disks = {
+>      next = 0xffff88810ce85a00,
+>      prev = 0xffff88810ce84c00
+>    },
+> crash> list -l md_rdev.same_set -s md_rdev.kobj.name,nr_pending 
+> 0xffff88810ce85a00
+> ffff88810ce85a00
+>    kobj.name = 0xffff8881067c1a00 "dev-dm-1",
+>    nr_pending = {
+>      counter = 0
+>    },
+> ffff8881083ace00
+>    kobj.name = 0xffff888100a93280 "dev-sde",
+>    nr_pending = {
+>      counter = 10 <<<<
+>    },
+> ffff8881010ad200
+>    kobj.name = 0xffff8881012721c8 "dev-sdc",
+>    nr_pending = {
+>      counter = 8 <<<<<
+>    },
+> ffff88810ce84c00
+>    kobj.name = 0xffff888100325f08 "dev-sdd",
+>    nr_pending = {
+>      counter = 2 <<<<<
+>    },
+> 
+> 3. From block layer, i can find the inflight IO for md superblock write 
+> which has been pending 955s which matches with the hung time of 
+> "md0_reclaim"
+> 
+> crash> 
+> request.q,mq_hctx,cmd_flags,rq_flags,start_time_ns,bio,biotail,state,__data_len,flush,end_io 
+> ffff888103b4c300
+>    q = 0xffff888103a00d80,
+>    mq_hctx = 0xffff888103c5d200,
+>    cmd_flags = 38913,
+>    rq_flags = 139408,
+>    start_time_ns = 1504179024146,
+>    bio = 0x0,
+>    biotail = 0xffff888120758e40,
+>    state = MQ_RQ_COMPLETE,
+>    __data_len = 0,
+>    flush = {
+>      seq = 3, <<<< REQ_FSEQ_PREFLUSH |  REQ_FSEQ_DATA
+>      saved_end_io = 0x0
+>    },
+>    end_io = 0xffffffff815186e0 <mq_flush_data_end_io>,
+> 
+> crash> p tk_core.timekeeper.tkr_mono.base
+> $1 = 2459916243002
+> crash> eval 2459916243002-1504179024146
+> hexadecimal: de86609f28
+>      decimal: 955737218856  <<<<<<< IO pending time is 955s
+>        octal: 15720630117450
+>       binary: 
+> 0000000000000000000000001101111010000110011000001001111100101000
+> 
+> crash> bio.bi_iter,bi_end_io 0xffff888120758e40
+>    bi_iter = {
+>      bi_sector = 8, <<<< super block offset
+>      bi_size = 0,
+>      bi_idx = 0,
+>      bi_bvec_done = 0
+>    },
+>    bi_end_io = 0xffffffff817dca50 <super_written>,
+> crash> dev -d | grep ffff888103a00d80
+>      8 ffff8881003ab000   sdd        ffff888103a00d80       0 0     0
+> 
+> 4. Check above request, even its state is "MQ_RQ_COMPLETE", but it is 
+> still pending. That's because each md superblock write was marked with 
+> REQ_PREFLUSH | REQ_FUA, so it will be handled in 3 steps: pre_flush, 
+> data, and post_flush. Once each step complete, it will be marked in 
+> "request.flush.seq", here the value is 3, which is REQ_FSEQ_PREFLUSH | 
+> REQ_FSEQ_DATA, so the last step "post_flush" has not be done.  Another 
+> wired thing is that blk_flush_queue.flush_data_in_flight is still 1 even 
+> "data" step already done.
+> 
+> crash> blk_mq_hw_ctx.fq 0xffff888103c5d200
+>    fq = 0xffff88810332e240,
+> crash> blk_flush_queue 0xffff88810332e240
+> struct blk_flush_queue {
+>    mq_flush_lock = {
+>      {
+>        rlock = {
+>          raw_lock = {
+>            {
+>              val = {
+>                counter = 0
+>              },
+>              {
+>                locked = 0 '\000',
+>                pending = 0 '\000'
+>              },
+>              {
+>                locked_pending = 0,
+>                tail = 0
+>              }
+>            }
+>          }
+>        }
+>      }
+>    },
+>    flush_pending_idx = 1,
+>    flush_running_idx = 1,
+>    rq_status = 0 '\000',
+>    flush_pending_since = 4296171408,
+>    flush_queue = {{
+>        next = 0xffff88810332e250,
+>        prev = 0xffff88810332e250
+>      }, {
+>        next = 0xffff888103b4c348, <<<< the request is in this list
+>        prev = 0xffff888103b4c348
+>      }},
+>    flush_data_in_flight = 1,  >>>>>> still 1
+>    flush_rq = 0xffff888103c2e000
+> }
+> 
+> crash> list 0xffff888103b4c348
+> ffff888103b4c348
+> ffff88810332e260
+> 
+> crash> request.tag,state,ref 0xffff888103c2e000 >>>> flush_rq of hw queue
+>    tag = -1,
+>    state = MQ_RQ_IDLE,
+>    ref = {
+>      counter = 0
+>    },
+> 
+> 5. Looks like the block layer or underlying(scsi/virtio-scsi) may have 
+> some issue which leading to the io request from md layer stayed in a 
+> partial complete statue. I can't see how this can be related with the 
+> commit bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in 
+> raid5d"")
+> 
+> 
+> Dan,
+> 
+> Are you able to reproduce using some regular scsi disk, would like to 
+> rule out whether this is related with virtio-scsi?
+> 
+> And I see the kernel version is 6.8.0-rc5 from vmcore, is this the 
+> official mainline v6.8-rc5 without any other patches?
+> 
+> 
+> Thanks,
+> 
+> Junxiao.
+> 
+> On 2/23/24 6:13 PM, Song Liu wrote:
+>> Hi,
+>>
+>> On Fri, Feb 23, 2024 at 12:07 AM Linux regression tracking (Thorsten
+>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>> On 21.02.24 00:06, Dan Moulding wrote:
+>>>> Just a friendly reminder that this regression still exists on the
+>>>> mainline. It has been reverted in 6.7 stable. But I upgraded a
+>>>> development system to 6.8-rc5 today and immediately hit this issue
+>>>> again. Then I saw that it hasn't yet been reverted in Linus' tree.
+>>> Song Liu, what's the status here? I aware that you fixed with quite a
+>>> few regressions recently, but it seems like resolving this one is
+>>> stalled. Or were you able to reproduce the issue or make some progress
+>>> and I just missed it?
+>> Sorry for the delay with this issue. I have been occupied with some
+>> other stuff this week.
+>>
+>> I haven't got luck to reproduce this issue. I will spend more time 
+>> looking
+>> into it next week.
+>>
+>>> And if not, what's the way forward here wrt to the release of 6.8?
+>>> Revert the culprit and try again later? Or is that not an option for one
+>>> reason or another?
+>> If we don't make progress with it in the next week, we will do the 
+>> revert,
+>> same as we did with stable kernels.
+>>
+>>> Or do we assume that this is not a real issue? That it's caused by some
+>>> oddity (bit-flip in the metadata or something like that?) only to be
+>>> found in Dan's setup?
+>> I don't think this is because of oddities. Hopefully we can get more
+>> information about this soon.
+>>
+>> Thanks,
+>> Song
+>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> -- 
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> If I did something stupid, please tell me, as explained on that page.
+>>>
+>>> #regzbot poke
+>>>
+> 
+> .
+> 
+
