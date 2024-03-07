@@ -1,167 +1,122 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2072.outbound.protection.outlook.com [40.107.95.72])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E31CF8A
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 07:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709795472; cv=fail; b=VUm5dyxef5slkNO5xoXtJagkDGXHXgoTgx0xxPza3bNUZH5fDyddajZVtkopSs2Y9tH6+GO1LYqvxf1zXuFzWPls9Loqvehe5HIiWdX1JbvcrzkvWjwoGcKmfOfSkU4iZrZTrpawI9Vs9vNupcmidOO2MHIwiTjikH+qIFJFo/U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709795472; c=relaxed/simple;
-	bh=LHpCgYwzuHvT1vQW5sBiB0VJwT+yYGJqxb4uAAgy61k=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CKQeOoY/ThRCKNoknEYlqKDNYa3Kj+kSp/BDS1QDesIIqRhLU5AL36DgWkSIIMvGQchgfu950Kr3SosIE5QymxdYkONf7xNlgee89byi2B7tETQrAfCZwDGQMuMgN2iCbT6svauvHafy5r1xO4W1MR4oFcQTR06cnhUg5skT3PE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GdGa776y; arc=fail smtp.client-ip=40.107.95.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE25682D66;
+	Thu,  7 Mar 2024 08:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709801823; cv=none; b=OX2x5cF79Us5Cs/z/c+m5fEJDC/o6ZDl3lGeIVskzXbBdRqvf6GFOZa+hdel8oZC8twsUzDPFz/dNRfEaKRA9EfNhnQxCWvvahQTZ7upLAHzvB4jT+TVbx450nDhSlvU9VyE9giIu4U92w0q/p/sp4IvSYTJRrN10yASudFq7YU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709801823; c=relaxed/simple;
+	bh=2Why6ASryWefTeocwYtFuP6wrGLxahOJQ9wXxsf8FuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WgrCwBWwQuvEuszxDSqQ9ZnJMHTyF27EBBdtmLWkW/enmll0SFYEk84dCwN3beVO5CXdZP2ENJ8mqtsbqe0YwrB147gTDsfEeEW9o6Znby/tjSgAsQaYIc07+MtIwrI2RXEnGXGJPy7uJ1oaoJrDPmr+lr6pseCbPl/T5XWTgk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=m6hTmrSX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GdGa776y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LP3ziSEkVDt3xZJxO/bvTNV+5qT+dlACd9MzCsPt5By1Z+/135HLnmhSHwJxK4uiU9Lww4o2NxsbOy6WAZmT6T7h3apWnJzWpqYRG3S4Xb/P8zl07tUtSYBgMoN2D0IGaJGAKn0iwOUPqnju3TGjmJum94GSGXol40Pj9HibB5U1POxtwVU9m4HrxYCu03QLBrWzu45/KgYlIV35UDefJraghViXQSEF23lmzEwFRrU0JPf70K8LAjHQTBeZXukMyJh418SMu9v8JR0q8BpfODLfnWdY/JDQis7HuILHeBBGnjW26UDLnjh+luFOHw1CW4H9pcUxkbSSNdgIS01rqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LHpCgYwzuHvT1vQW5sBiB0VJwT+yYGJqxb4uAAgy61k=;
- b=kQ2tBVL8SVnIW2Fosqg+VtLhFHZxLF0bBO/hc6bAH22jfZnoMMYMROs5Ptcehg09neDzg7ZrqCDr7GOSzAmdpMmmR0yMSCIiQ8Yl2hBXHSRpp2g2Ed+pf0MbwfAEfkWrmU0CqqhUucff0BlTeX3GYCSctRvY10PXrNCT/vcEjCl4s1SvEMUD9+1OFEwtQGNN4zQE6SqSI8j5YA1kZ68UU5zMyX3khG0AKNUrgpt9eXEh45X1gnp7NidoF7nz+11g85X53JY+Yb3FyOQpjN/KSHoXEvRGf3PCrl5MTyYpOekS5EbWckXb0mFWN9u9cLlPRr830cJaWSZcC4sBd1r82w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHpCgYwzuHvT1vQW5sBiB0VJwT+yYGJqxb4uAAgy61k=;
- b=GdGa776y5wiik7TyxmggxvTG4p9RNuY3Eew7xhcN/lK8Th34sLCgDUWDcEXaexQHhpvusBTGS/+uoGW/TwTOaehEjb9ymgFzWa1DN2gIKni42Y7zFNxgCuOuV5Q8RvAoo+RKoUSlkDzXvAIqahc0q6q8Di3Lmf5/8jcNWenLuIc=
-Received: from CO6PR12MB5489.namprd12.prod.outlook.com (2603:10b6:303:139::18)
- by SJ2PR12MB7964.namprd12.prod.outlook.com (2603:10b6:a03:4cf::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
- 2024 07:11:06 +0000
-Received: from CO6PR12MB5489.namprd12.prod.outlook.com
- ([fe80::7a06:2a38:4667:d5a7]) by CO6PR12MB5489.namprd12.prod.outlook.com
- ([fe80::7a06:2a38:4667:d5a7%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 07:11:06 +0000
-From: "Lin, Wayne" <Wayne.Lin@amd.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	=?utf-8?B?TGVvbiBXZWnDnw==?= <leon.weiss@ruhr-uni-bochum.de>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-CC: "lyude@redhat.com" <lyude@redhat.com>
-Subject: RE: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
-Thread-Topic: [REGRESSION] NULL pointer dereference drm_dp_add_payload_part2
-Thread-Index: AQHaWaIV/cd6X4DkAkCWcz17/q/UZ7ERVUXPgA4t0ICADIVV4A==
-Date: Thu, 7 Mar 2024 07:11:06 +0000
-Message-ID:
- <CO6PR12MB54895ADFB76F744194A8F59CFC202@CO6PR12MB5489.namprd12.prod.outlook.com>
-References:
- <38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de>
- <CO6PR12MB548918C8F66468B947A06885FC512@CO6PR12MB5489.namprd12.prod.outlook.com>
- <1c737d18-47c0-4323-9940-92cb6b961f92@leemhuis.info>
-In-Reply-To: <1c737d18-47c0-4323-9940-92cb6b961f92@leemhuis.info>
-Accept-Language: en-US, zh-TW
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=a60e2712-bbde-4f4a-a0e7-82384c85085c;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=0;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP
- 2.0;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2024-03-07T07:05:42Z;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR12MB5489:EE_|SJ2PR12MB7964:EE_
-x-ms-office365-filtering-correlation-id: 2ccea6f9-8d24-45ef-c63b-08dc3e75c1c4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- EjHBf+nwBvw6+LFsFPeMmCBrf9f24bmQjYK1NCxXMKUXlX8PoKT2MH/cfrhBA71s8Q2dKFY5fZ40zW/U/QLICobcwyNHjd9xSiDoftYti3oiM6skr3nEGLSKux1HB/ngkFrC+X+7O5iBfO1ljgqNa0G53NdmdVid7b1cSRiH84R3uqdQYKDnNPfy+DgkleAOKFOUAHFAif37ea8IGhHi/sjpo78cpfeE5rlvkMHFM5WbZ7YhGThkixmxwjuBq0E/6IQaGtPs4YdIDOwd6IUUMmoF7srqugahojKFhDNqmAOyc/2tWIePIKtFQO9N3lqTkyw5mvtFR/X41mc+oPJ1D5Xu6M6vp29rs8QXuQ2E1a7gNQLKHU0Dj+63x+d2xSfD7OSpt/dbcgKYHEVoegsThnjyXq1338sdGwOxZXcraB2Jk7hETvdjzXA6edNVMrQXkuo+90mSKKdCAZSHVM7xizcHlycsKFdAqKRC/5TfIDZ4RSLzM77+ZWHKkJ2FJXAoTy1Kh20EFm2ClLLdLgOIxScJdT9outOJFy+GgKbbixTt2xa83G6+2rAysdiTbr4zZcPlyNoCXIusMwXyHp57nmeQQa7Fxai7t+lhUsUj+tItXyUPS0/7x4heyK1gekdWWO7NDZdiZj9ZF6ROpIciHqvp6SrR3nLSzIZ2ZZQKTpo=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5489.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?S2MweFQ1NzFQbC9vUmhaQ1BBSVJqcjRobzlCemlZaG9iTHNIaVhTWG5va3Yx?=
- =?utf-8?B?b2thYXYyR29aTmJWZWhIOXcrb3NVT2FwTmIzNUIwSCtCUUFzcTJ0NFJlem1M?=
- =?utf-8?B?QWp3VzRtV1gxcjBwb1ZIY05weGxtdnh5dEp1YmtxYmMxUzNDRitSTVo3bGM2?=
- =?utf-8?B?TjhmYjhTazB1TjVBWkVkb0sxOUNwWE0wTDZBT1B2YUpxVU5GV2VjVTViTmRx?=
- =?utf-8?B?c2IzM1lEckxPeDJrelNpN2dZSU4zYXl0a2Q1ZG9zQUhYckdkREJuUTRUbXJY?=
- =?utf-8?B?WkhwYmZqNjQrSkhwTkQ4ejBwU1EyWllWaE44TFE4cm5od1FQZnp6bFlXc1BL?=
- =?utf-8?B?K2VjZTkxU1VZZ1dGdnVINmdoZGk3NllyeFZ3QmEybXZDOWFnVzNlTTE0bjRB?=
- =?utf-8?B?M1l1a1dGR29zd0NoSzV2c2VSdkhRc3llSlh3UXJoRXZyUm0vZE5oTW5KYWJR?=
- =?utf-8?B?ZkkySURxOFIyOTd3cUNCNDhta20wZnNZOEkwblQvb1Vjd3lOaGJ1ZXRpWUtv?=
- =?utf-8?B?aW9TZ3gwWm0rTTlob1hEdVNyUXVtWHJJcDVFLzhvejhjZUgwNk5OeW5kcXhD?=
- =?utf-8?B?YzRSZDJQVjhScktJM2JPSDFNR2hycUZhVUs2bUtQakREQzhFdW9iVlY3b09i?=
- =?utf-8?B?cGtCa01OckxOUzBndUFDRWNkWHd6aHlVWmE2RUtjNmVqa0VZeE1GeXpJQkh1?=
- =?utf-8?B?NDRlMXdYcWdmSC9GVUhITGlYQTlWYnh0Q01HcWRTM0VhRTRudjEzcTNkcjZo?=
- =?utf-8?B?YmZoOWlwV2ZSSGsvMndsL1NiRkE4c2hmV0grajRGZ3NpL3FVRmFZZS9wVm9a?=
- =?utf-8?B?VlB5Q2wzUld6VWVWZHJCKzZmd0VEdVhwa0NER0ZvVHh3MVdvRi83ckxnOFJu?=
- =?utf-8?B?WTVla0pNMkN6TXdhZ1BEbGUwVExEanhvSkVzTU81SnAyQmdXVnQzaFUwT3FZ?=
- =?utf-8?B?WXJKbTlCN2FENzQ0eEt4VG1oalRpNkl0UVBKWWdYbFo1Z0ljanpVNFNzUFFv?=
- =?utf-8?B?Rzl4aXlmUHdYbzRrM3IxelJBeTUrNm45NnJUOTU5Ryt1ZXc5OHhJOTU0dWNM?=
- =?utf-8?B?M0FBV2hrMWFvMlFqVjN5Nmd5bStFSkc2UVJISkF6ajhiYjlaSGRYL1kwMHUv?=
- =?utf-8?B?RHpYODhhYnZLam1mNzkyWVlXSDhyeU0wTkxEODBMUmwzSVZNV3U2Y09ucTln?=
- =?utf-8?B?amNnUWhJOWxzUmFKYUFTaFNTOFJvazBvdzZnQTVMVlQ2VUxkb3dtclJrSmNZ?=
- =?utf-8?B?d25TckQrQ0Q4UEI5ZEdUZGtsSW9ZRmRON1Yrd1ZlTTRiRDVTNktPbDZCdzYx?=
- =?utf-8?B?QnEweGhnTkFaN3VIa0xMbG96dkxvRHFMY2VXbVUwemZ1MnhaK3BKQ3didW82?=
- =?utf-8?B?YksydEc4WWhiTllEM29JRmNDVGRxVjN6QjEweDFoT1U4UkV6YXU0NjgweHpF?=
- =?utf-8?B?SDhKbENjQnZkNkJkYlgyWTdZZUhQSC8vWTJVZDV6bGg1Yy9ldlNGVC9uUThi?=
- =?utf-8?B?eFdheHBnTU9vSUk2bDFLc2lOaUVpcU5TenJjbXQ2Z3BFdXZ6blVqSnpNalp5?=
- =?utf-8?B?WkFKOWoxNUhFRlp2V0VRZkg0ekI0WWRtK1VnMDV2RUxYNFNBaVV5cmpyNnZl?=
- =?utf-8?B?S1NNYWl5QzQ4N1QycTVvbEhFaHJBTHBZbmU2SnJCVjBudDZjdW50QTJTR3VT?=
- =?utf-8?B?TFJLUnI4ZlM0YzlpV3d0NVYvMGdXb3k0bGJxRU53eTFtTFBoLzVoMFU1ZDZx?=
- =?utf-8?B?SEg3WlVIREk1TWppaXpqRzdwaVZRMHFucE1vRk8ycTVYank0cnU2cmpVQjNv?=
- =?utf-8?B?TG1EbE01Zlc1SVNaOHpNQUN0c2Njb1lvOE1ha1EwUmFGcGRja3pNWC9XQmY2?=
- =?utf-8?B?SXhGY3dDWGpXSGRkdTBxZytlRmNFM3p2bDJrSCs0WENEOXY4K0tJVDJtMEhw?=
- =?utf-8?B?Y0Y0TDNoUDhRTXpacFFxdC9tbytHdzgrNkIrQjhVYXZqRFNGbkRSV2Z0RW0y?=
- =?utf-8?B?OGxIbmdiUnNRNDNLU3hLRzdOaDh6OS9MVkFjL3RWTElQQ0laNVJLU0pBUUM4?=
- =?utf-8?B?TDlVSFdjTVdXZGFUODZ4aEhYZDd5WHE0M0x1OWhlKzEwUW9nbUpLK0VkeE9U?=
- =?utf-8?Q?8Sow=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="m6hTmrSX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=pbTln/+BFFiNFZUa3+2kviLssti+B6ZMA9ZszG0nGPY=;
+	t=1709801820; x=1710233820; b=m6hTmrSX0cyxzAph1Wzc54rRygBgdG56ct8DtT9lVDNPTQ1
+	uqVFgJNd/ybAYducxExeiJ2pKJYVQ3Ix5cnDwxBoPbhxyCGVldbV7oVeO2HUhNfDg6JeX5nIzmnAl
+	SRIU31RCOGg1PIPVRHOiSatBY2luu5+xqfb9NUIgIPzdGY/tcGWpefUBTXvoZO0N/7TKO7fP1uK/+
+	HFAy0BQB3MaOUBD/ET/b8Yq/rsPwtapE59YVAYQqUaxUeldN3s31UW+2nZtK6A7hpX0Yil9IiSoqR
+	jaqY5OKbsS8LDN6TmLtgqj8NwlIK5Bgy9AJ0AcpSNLvGeQXzi2T4vLj0DPrVGU9Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ri9YW-0000vH-An; Thu, 07 Mar 2024 09:56:48 +0100
+Message-ID: <feba810d-1391-475e-9b56-fbb6c52912a0@leemhuis.info>
+Date: Thu, 7 Mar 2024 09:56:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5489.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ccea6f9-8d24-45ef-c63b-08dc3e75c1c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Mar 2024 07:11:06.2190
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Kez3hkx4TAFYwcafzb/dy/+J/ScLzYv/SzO2pUqCUa6aKSiCPbeSdfZFIpEnarIhZXpihunGoxVATLfp1Hpb/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7964
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support
+ for Arch
+Content-Language: en-US, de-DE
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?=
+ <petr@tesarici.cz>
+References: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
+ <ZehvJv3fDZIPs9Kc@archie.me>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZehvJv3fDZIPs9Kc@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709801820;f34de042;
+X-HE-SMSGID: 1ri9YW-0000vH-An
 
-W1B1YmxpY10NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51eCBy
-ZWdyZXNzaW9uIHRyYWNraW5nIChUaG9yc3RlbiBMZWVtaHVpcykNCj4gPHJlZ3Jlc3Npb25zQGxl
-ZW1odWlzLmluZm8+DQo+IFNlbnQ6IFdlZG5lc2RheSwgRmVicnVhcnkgMjgsIDIwMjQgMzo1MyBQ
-TQ0KPiBUbzogTGluLCBXYXluZSA8V2F5bmUuTGluQGFtZC5jb20+OyBMZW9uIFdlacOfIDxsZW9u
-LndlaXNzQHJ1aHItdW5pLQ0KPiBib2NodW0uZGU+OyBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+
-IENjOiByZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY7IGx5dWRlQHJlZGhhdC5jb20NCj4gU3Vi
-amVjdDogUmU6IFtSRUdSRVNTSU9OXSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UNCj4gZHJtX2Rw
-X2FkZF9wYXlsb2FkX3BhcnQyDQo+DQo+IE9uIDE5LjAyLjI0IDA4OjI0LCBMaW4sIFdheW5lIHdy
-b3RlOg0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgY2F0Y2ghIFdpbGwgcHJlcGFyZSBhIHBhdGNo
-IHRvIGZpeCBpdC4NCj4NCj4gRGlkIHlvdSBkbyB0aGF0PyBJIGNvdWxkIG5vdCBmaW5kIG9uZSBv
-biBsb3JlLCBidXQgbWF5YmUgSSdtIG1pc3NpbmcNCj4gc29tZXRoaW5nLg0KSGksDQpTb3JyeSBm
-b3IgdGhlIGRlbGF5LiBXYXMgZHJhZ2dlZCBhbmQgZGlzdHJhY3RlZCBieSBvdGhlciB3b3Jrcy4N
-Ckp1c3QgcHVzaGVkIHRoZSBwYXRjaCB0b2RheSBmb3IgY29kZSByZXZpZXcuIFRoYW5rcyENCg0K
-Pg0KPiBDaWFvLCBUaG9yc3RlbiAod2VhcmluZyBoaXMgJ3RoZSBMaW51eCBrZXJuZWwncyByZWdy
-ZXNzaW9uIHRyYWNrZXInIGhhdCkNCj4gLS0NCj4gRXZlcnl0aGluZyB5b3Ugd2FubmEga25vdyBh
-Ym91dCBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2luZzoNCj4gaHR0cHM6Ly9saW51eC1y
-ZWd0cmFja2luZy5sZWVtaHVpcy5pbmZvL2Fib3V0LyN0bGRyDQo+IElmIEkgZGlkIHNvbWV0aGlu
-ZyBzdHVwaWQsIHBsZWFzZSB0ZWxsIG1lLCBhcyBleHBsYWluZWQgb24gdGhhdCBwYWdlLg0KPg0K
-PiAjcmVnemJvdCBwb2tlDQo+DQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXw0KPiA+IEZyb206IExlb24gV2Vpw58gPGxlb24ud2Vpc3NAcnVoci11bmktYm9jaHVt
-LmRlPg0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgRmVicnVhcnkgNywgMjAyNCAxNjo0NQ0KPiA+IFRv
-OiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+ID4gQ2M6IHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4
-LmRldjsgTGluLCBXYXluZTsgbHl1ZGVAcmVkaGF0LmNvbQ0KPiA+IFN1YmplY3Q6IFtSRUdSRVNT
-SU9OXSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UNCj4gPiBkcm1fZHBfYWRkX3BheWxvYWRfcGFy
-dDINCj4gPg0KPiA+IEhlbGxvLA0KPiA+DQo+ID4gNTRkMjE3NDA2YWZlMjUwZDdhNzY4NzgzYmFh
-YTc5YTAzNWYyMWQzOCBmaXhlZCBhbiBpc3N1ZSBpbg0KPiA+IGRybV9kcF9hZGRfcGF5bG9hZF9w
-YXJ0MiB0aGF0IGxlYWQgdG8gYSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgaW4NCj4gPiBjYXNl
-IHN0YXRlIGlzIE5VTEwuDQo+ID4NCj4gPiBUaGUgY2hhbmdlIHdhcyAoYWNjaWRlbnRhbGx5Pykg
-cmV2ZXJ0ZWQgaW4NCj4gPiA1YWExZGZjZGYwYTQyOWU0OTQxZTJlZWY3NWIwMDZhOGM3YThhYzQ5
-IGFuZCB0aGUgcHJvYmxlbQ0KPiByZWFwcGVhcmVkLg0KPiA+DQo+ID4gVGhlIGlzc3VlIGlzIHJh
-dGhlciBzcHVyaW91cywgYnV0IEkndmUgaGFkIGl0IGFwcGVhciB3aGVuIHVucGx1Z2dpbmcgYQ0K
-PiA+IHRodW5kZXJib2x0IGRvY2suDQo+ID4NCj4gPiAjcmVnemJvdCBpbnRyb2R1Y2VkIDVhYTFk
-ZmNkZjBhNDI5ZTQ5NDFlMmVlZjc1YjAwNmE4YzdhOGFjNDkNCj4gPg0KPiA+DQo=
+On 06.03.24 14:27, Bagas Sanjaya wrote:
+> On Wed, Mar 06, 2024 at 10:21:12AM +0100, Thorsten Leemhuis wrote:
+>> diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+>> index 54bde8bac95c67..58211840ac6ffb 100644
+>> --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+>> +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+>> @@ -192,8 +192,8 @@ will be considered the 'good' release and used to prepare the .config file.
+>>  
+>>         sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
+>>         sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
+>> -       # * Note, if kernel-install is missing, you will have to
+>> -       #   manually remove the kernel image and related files.
+>> +       # * Note, on some distributions kernel-install is missing
+>> +       #   or does only part of the job.
+> 
+> Consult documentation of your distribution for how to manually install/remove
+> the kernel.
+
+That would sent the wrong message in the TLDR, as the step-by-step guide
+and the reference section would be the first place to look for details,
+which is kinda implicit for a TLDR.
+
+That being said: that made me look closer at the install section of the
+guide and the reference section. I think they should mention "consult
+documentation of your distribution" more clearly. I just looked into
+this, but that requires a few bigger changes, so I'll take care of that
+in a later patch I hope to send in the next few days.
+
+>>  Install build requirements
+>>  --------------------------
+>> @@ -1076,72 +1078,103 @@ about to build.
+>>  Here are a few examples what you typically need on some mainstream
+>>  distributions:
+>>  
+>> +* Arch Linux and derivatives::
+>> +
+>> +    sudo pacman --needed -S bc binutils bison flex gcc git kmod libelf openssl \
+>> +      pahole perl zlib ncurses qt6-base
+>> +
+>>  * Debian, Ubuntu, and derivatives::
+>>  
+>> -    sudo apt install bc binutils bison dwarves flex gcc git make openssl \
+>> -      pahole perl-base libssl-dev libelf-dev
+>> +    sudo apt install bc binutils bison dwarves flex gcc git kmod libelf-dev \
+>> +      libssl-dev make openssl pahole perl-base pkg-config zlib1g-dev \
+>> +      libncurses-dev qt6-base-dev g++
+>>  
+>>  * Fedora and derivatives::
+>>  
+>> -    sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h} \
+>> -      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
+>> +    sudo dnf install binutils \
+>> +      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole,rpmbuild} \
+>> +      /usr/include/{libelf.h,openssl/pkcs7.h,zlib.h,ncurses.h,qt6/QtGui/QAction}
+> 
+> IMO qt packages are for people who wish to do xconfig instead of menuconfig
+> or nconfig.
+
+Well, yes, that's why the patch also added a few lines to point this out
+and mention that installing the qt dev headers is optional. Guess you
+just missed that.
+
+Ciao, Thorsten
