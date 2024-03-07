@@ -1,71 +1,102 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFC321A14
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 18:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B2A39136666
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 19:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709835252; cv=none; b=UoKPuUzIdAVPhPK+xKgd6Q1qAHwpuUt3vBwn6OShc4EHmtBzVT8mW7dgRsn5w0GEiiSfe9Z99XeNHN27B+eFOJ7nQ1VfgzJt2XBMQgwBuO9q+0rB6Af3PcxvpILc+WHe5IP/IA6gKSZCfRsXujSXQmrgOpoFlIxRvmZueKvKlWA=
+	t=1709840060; cv=none; b=EPL+Cqb2hJpag9H4IYB+ZwVQwLOoribnJI9uT08QWYSUzOooFaSyWzO/B9A0BkOPCu+rmqgRCBFIXsbG0RjDAW2KCT1nypNTbdAvGHZ7Pei/3VN2rzyyz5ymLRNe9ibPmYRxZqRZiakkLWH/W0xiI+38aTZmT2ug24vUkqACSwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709835252; c=relaxed/simple;
-	bh=cu6HE91SMw7pgLLILBNFoaMUnUyoviAkBFKyhfhTaYw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rhyWIfp9BdEu/k2mRyNUsXVOJiW9RnP9R6pzCzm0Tg0+7EZbSTpgu90jM7OusBISOnCyJyV6G94p50O/En2VCKs3ZGapH0nWMPunoquh+yEtK/5rBdaw2dMDTo84SWwNXXiLmK3Z+cVGb+u5TKP21IPsshvHFpJ35VI+WPleJdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d53Eb3+V; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d53Eb3+V"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512e4f4e463so1624383e87.1
-        for <regressions@lists.linux.dev>; Thu, 07 Mar 2024 10:14:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709835247; x=1710440047; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cu6HE91SMw7pgLLILBNFoaMUnUyoviAkBFKyhfhTaYw=;
-        b=d53Eb3+V/ChtCQAxhDLyuz9UqNUcdLbblCRwLjOtg87J4/WRlzrHWGAyyZQ/4UQza5
-         de6TuTTKlt3vAllEsCeriGdzNng8AvPTQ1jtl1pjIka2rgsG/+5ahivePKRaN7BYgyEU
-         MsqWfh0w28/I4w2qdm5sB3ErwsWfrica8JgNOn1vI0ly+tQ2Kfu7qWyX9ozknbsdM9Cw
-         gIXLVISthgLvRDoC8K76+OXEFK40EywRzxYeB864Wf/YpwHA/szlIq9RZoHHBFKehD+Y
-         fO1a+N4ZXrKfOkL20NjbUxUYgqJ/LiUoo0F7pTqhLIPvEHOgREjzxuPgYDfAz9F85gFN
-         6t9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709835247; x=1710440047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cu6HE91SMw7pgLLILBNFoaMUnUyoviAkBFKyhfhTaYw=;
-        b=uugDPsvUxsuY5WsFrrwo6tgxE4DmiCde7oOSIY//WiYNkhH1kmMAHMZ/uUexhtm2w4
-         bA4gB2mP2vuXzTnSyVAdM0ngtoCTrXaEsjMdKf3nFcYCD8LuayugAUb+Vrgn1I+DW5vo
-         hpjp2MB6xUZq1BYNi3jtvNQ+Z4tIVSazs8bT8cb/+bwEZtCVg7QtJk/matqHkw9VFOjf
-         3VR21XZqbamwzGkvUr/KITU142kOK69XSYd91V1ZfCtldsDg04nH7Q+jYOZ7RPgI/cx8
-         LtChZlvUHTzwgoTEEbuX2ek9914HZGXT50c/VMpQmTV4oT/gKuWJV1zu3jJyjJqQSbDk
-         3hvQ==
-X-Gm-Message-State: AOJu0Yz4MUCXl7S4LWiP5PiJU1+IGpGIou4VONUGCjmNUa3l8OV6ILXi
-	kzsypt5KC7AIfNSBaQLf+Nby84MyGrGDcVC0w7Jsg3lcSzoV1ZR1WpaiG2bP
-X-Google-Smtp-Source: AGHT+IEQBWWBHJ8RuT7qMXcXOG3o6zq+Mu8S+LvujsXV8vAzlpEWO9s3S6K/QTiIORsmKWq5cOsJDA==
-X-Received: by 2002:a05:6512:1149:b0:513:2329:4308 with SMTP id m9-20020a056512114900b0051323294308mr2589625lfg.14.1709835247113;
-        Thu, 07 Mar 2024 10:14:07 -0800 (PST)
-Received: from debian.local (80-44-66-160.dynamic.dsl.as9105.com. [80.44.66.160])
-        by smtp.gmail.com with ESMTPSA id bd26-20020a05600c1f1a00b0041313c55ba4sm1217696wmb.16.2024.03.07.10.14.06
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 10:14:06 -0800 (PST)
-Date: Thu, 7 Mar 2024 18:14:04 +0000
-From: Chris Bainbridge <chris.bainbridge@gmail.com>
-To: regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Divide-by-zero on DisplayPort MST unplug with
- nouveau
-Message-ID: <ZeoD7CrI2ujoidW7@debian.local>
-References: <ZeoAPFIF6NClUl4P@debian.local>
+	s=arc-20240116; t=1709840060; c=relaxed/simple;
+	bh=dzWw9ypdL6tyWbWNt4plhJV3vNWWQvPdRPS/5vUSsMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6XLslOICuD5xl63MqL3T+eZILFSDuNVKWKjbzilPj12j3nujjEI35mBxlKWyH6s1uenIxJjv4bi08e7kvOQPIdk/BKYCejUPhRh/R3o+feJeAsPMKplJ2RG263urBMIqYRno89NiN3lFy5h4Wzhjzy2ddg+31A1807EY7zqMzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 230033 invoked by uid 1000); 7 Mar 2024 14:34:17 -0500
+Date: Thu, 7 Mar 2024 14:34:17 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Message-ID: <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+ <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+ <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZeoAPFIF6NClUl4P@debian.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
 
-#regzbot monitor: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/36
+On Thu, Mar 07, 2024 at 05:17:20PM +0100, Jan Čermák wrote:
+> Hi Alan,
+> 
+> On 06. 03. 24 22:08, Alan Stern wrote:
+> > Can you provide two usbmon traces, one showing the problem with those
+> > patches present and the other (on the same system but with the patches
+> > reverted) showing the recovery?  Comparison of the two should indicate
+> > what's happening differently.
+> 
+> I reproduced the issue on my old ThinkPad X220 with 6.6.20 kernel, you can
+> find the usbmon captures below.
+
+This is quite strange; the two traces are the same up to this point:
+
+ffff9f9a29b3f300 298538675 S Co:1:002:0 s 23 03 0004 0002 0000 0
+ffff9f9a29b3f300 298538893 C Co:1:002:0 0 0
+ffff9f9a012cae40 298581342 C Ii:1:002:1 0:2048 1 = 04
+ffff9f9a012cae40 298581372 S Ii:1:002:1 -115:2048 1 <
+ffff9f9a29b3f300 298742112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff9f9a29b3f300 298742459 C Ci:1:002:0 0 4 = 03011000
+
+------------------------------------------------------------------
+
+ffff8fc4ee367240 368298641 S Co:1:002:0 s 23 03 0004 0002 0000 0
+ffff8fc4ee367240 368298823 C Co:1:002:0 0 0
+ffff8fc4c0c5ac00 368343025 C Ii:1:002:1 0:2048 1 = 04
+ffff8fc4c0c5ac00 368343056 S Ii:1:002:1 -115:2048 1 <
+ffff8fc4ee367240 368502095 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff8fc4ee367240 368502372 C Ci:1:002:0 0 4 = 01011100
+
+The difference is in the last line: 03011000 vs. 01011100.  This means
+that in the "working" scenario the device disconnected itself from
+the USB bus for no apparent reason and then reconnected, whereas in
+the "nonworking" scenario it didn't.  The computer did nothing
+different before then, so I have no idea why the device's behavior
+changed.  It's a mystery.
+
+Another thing the traces showed is that the device doesn't like the
+"new" initialization scheme; it wants the "old" one.  You can test
+this by setting the old_scheme_first module parameter for usbcore
+before plugging in the device:
+
+	echo 1 >/sys/module/usbcore/parameters/old_scheme_first
+
+Also, you can try the patch below (without the module parameter set).
+I suspect it should be applied in any case, but it would be nice to
+know if it makes any difference in your case.
+
+Alan Stern
+
+
+
+Index: usb-devel/drivers/usb/core/hub.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/hub.c
++++ usb-devel/drivers/usb/core/hub.c
+@@ -5481,6 +5481,7 @@ loop:
+ 			msleep(2 * hub_power_on_good_delay(hub));
+ 			usb_hub_set_port_power(hdev, hub, port1, true);
+ 			msleep(hub_power_on_good_delay(hub));
++			hub_port_debounce_be_stable(hub, port1);
+ 		}
+ 	}
+ 	if (hub->hdev->parent ||
