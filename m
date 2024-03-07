@@ -1,318 +1,212 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571FDCA6B
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 03:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709782507; cv=none; b=fNQC4WuJmpBW+ExEucCbR5En/zFx+Umgl87zm9+l+bwJOPg4N/6qzYj5NxfWsAb/TJvKRz4V5QgUsTLjmcIF84C8/0xu/drEuh5WV9x2kONROcxZjmTZymNiKzZgmUGFmVyYFRX81+WZ2KmmxtNJ/KA4X9CYw1ME10t9E/BWlks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709782507; c=relaxed/simple;
-	bh=SmFs9CXqMnMDgOlmrhFcrJLGlHiq9rT416WY1uJ3UJ4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=oJVDlRwdjcoMZYDQ2nIuOqdfTK3M3np95uFikMpra5Lhf3Y41iZY/VHJIL33CPC1BnKcZfSp2k68Q0EFDER6s8SchqPSzJRl+mcKEKWGwMfGy80+7KnYWW1XdXhV5KdPU+9QyvSTmalCSbP+7Hv5OkSDwm3QpTFbdpWyWLHr3bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tqw0Y2Pv2z4f3mHZ
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 11:34:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DB54F1A0392
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 11:35:00 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7hNellZOu6GA--.41300S3;
-	Thu, 07 Mar 2024 11:34:59 +0800 (CST)
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: junxiao.bi@oracle.com, Song Liu <song@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, stable@vger.kernel.org,
- Dan Moulding <dan@danm.net>, "yukuai (C)" <yukuai3@huawei.com>
-References: <20240123005700.9302-1-dan@danm.net>
- <20240220230658.11069-1-dan@danm.net>
- <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
- <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
- <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <cd0f300f-49a0-235a-099c-e76af5ed7c05@huaweicloud.com>
-Date: Thu, 7 Mar 2024 11:34:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E277D1CF8B
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 06:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709793030; cv=fail; b=Qfu6Yx3w3JOmXrMk28G4sC9gmIWJk6w9CLTgJVhIaNUUpJwvo6olE7wAxGtVXSAGAdy+GlEIAf5BDzkSWi8hJFnRsBrE8JBYKCeJ8BwMeq/IyrrTAjRUyVT8HxzJpLczjadLYLUOBeiHMI/Z5F5am54eLhlEWLSlL0WjKQSkXSw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709793030; c=relaxed/simple;
+	bh=vG6GaHNfav46vQBkdOYSnxupiUrUxtKuJ9nq3TYLeq8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/XkI1gYgjjjo3pWSiYAT0Gj8PtffOGf/+dBJNIup4C1w7msQ3i3puuKRon1Ib5fLVI6yskaIqJ56Jberjj23DBVz4qQNloeSq0oit7cpEXCALZ3rpVY9ZQFq679Et1b0v3ZXEfNi1DIz0kvmgo2VYoEDMxijhwZHihIkTzRZNM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IYhvMHvv; arc=fail smtp.client-ip=40.107.237.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IYhvMHvv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n2cXJ+m0syPutltptQdDI0fkaJTTFZawwp4hRSUCj35eQ6js4THeV1yb7G/+kmqhUurRVLpitSfzIvhEndl8/e/kbAVyD1GWXktSfyr4cfioviMPzuEpiO+5rMI/+TWUt5/2yfkCbVQWUzizhi8BXbrgDwI7ex6gvZwGhWXMo610hrm9KQODvJmJASky4D5+FbI4SE+0/QtH3yxOqrswwN1h8Ky2Nnab2ec0MwoeOxc6i5K1SkGTQ8/1+vNXh383OjvARKvp3PCzryu2gnV0NKxfFmaHxpsVceNw6M3j79UCraONZNk6bMR1BLHw/wBEB47RzwQwVFCVJdy4bbB/pQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vtLSn2+SuLBTcsOr9G7Up5ReL8JqH1qpiX1afZ+NghA=;
+ b=F5WGA+11TfYJi0ppAQ7F8URzic+H64v/8NHifOUWui0j26k2XoXt2mOUENWM2afniZA36CtekAaRorh9v+VuKxUFe6AUbR6vfgZs3nps9ftutsHntQiPUA9Tbwexor/DLXspfS1qp9kClod9mMql08mD7cisUyq/yzSWy3mjbbtWzqzbSekx4qJ7EsvaXIl1RJmT3QHPmqq5g1DE2cvN3/DK0Y88H1mPmPcLNMUVM/fGa6F6NHbgSfYGtewZpIVexHu4E4h1hRwngOchhTNtkjhAdxsPGUc8pb/Ie83UuOJYs5FcsXodvQbgO5Y9rsFtyLDW0cvkRRWu+pwrKSb0hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vtLSn2+SuLBTcsOr9G7Up5ReL8JqH1qpiX1afZ+NghA=;
+ b=IYhvMHvvv6S4JZZf0Z2KqOAh4DZNHLRbUxMpXwr52WIMzDiDX8rDNMPvb1DisX13wd7jOYtmKNJPkOX4R3NQC9NcZNcxP+qrn/sOQ0YiIkLFIJU4fxxFv4jcHexc5LbwkiNOxuPcxkrmd+5bV5WNp6csXxj2X6u/lqu6uusyqOU=
+Received: from SA0PR11CA0201.namprd11.prod.outlook.com (2603:10b6:806:1bc::26)
+ by SJ2PR12MB7893.namprd12.prod.outlook.com (2603:10b6:a03:4cc::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Thu, 7 Mar
+ 2024 06:30:24 +0000
+Received: from SA2PEPF000015C9.namprd03.prod.outlook.com
+ (2603:10b6:806:1bc:cafe::6a) by SA0PR11CA0201.outlook.office365.com
+ (2603:10b6:806:1bc::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26 via Frontend
+ Transport; Thu, 7 Mar 2024 06:30:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SA2PEPF000015C9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Thu, 7 Mar 2024 06:30:24 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 7 Mar
+ 2024 00:30:23 -0600
+Received: from wayne-dev-lnx.amd.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 7 Mar 2024 00:30:20 -0600
+From: Wayne Lin <Wayne.Lin@amd.com>
+To: <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
+	<intel-gfx@lists.freedesktop.org>
+CC: <lyude@redhat.com>, <harry.wentland@amd.com>, <imre.deak@intel.com>,
+	"Wayne Lin" <Wayne.Lin@amd.com>, =?UTF-8?q?Leon=20Wei=C3=9F?=
+	<leon.weiss@ruhr-uni-bochum.de>, <stable@vger.kernel.org>,
+	<regressions@lists.linux.dev>
+Subject: [PATCH] drm/mst: Fix NULL pointer dereference at drm_dp_add_payload_part2
+Date: Thu, 7 Mar 2024 14:29:57 +0800
+Message-ID: <20240307062957.2323620-1-Wayne.Lin@amd.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7hNellZOu6GA--.41300S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3XrWkAFyUAr4ruFWxZw1xGrg_yoWfJw1rpr
-	Z3tFs8CrW8tr1kJr1UJw4xXFy8Zr12y3WUJr95JFyUG3y5GFyjqrWxWrWjgF1DZr40ya17
-	Xr1UJryDuryUKw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Received-SPF: None (SATLEXMB03.amd.com: Wayne.Lin@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|SJ2PR12MB7893:EE_
+X-MS-Office365-Filtering-Correlation-Id: afd8a756-f805-4b79-5db6-08dc3e701240
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	rVPnLV3MKWxW3IDagIoKoWIKstipolT4k1q7eD7Fga7gOMBNuJi/OGjbVpjCgBDZpBVR8SCMqoAki4acashjrpp0LpLuVcE/gY1HVyZrERwWimVeRPLmi5Vfau1iMvbRisKudgyJMfe0a2iXPa7bXq8JthKi3EsaUka/jCBXgi4dpbzTTeXJ3HKo+/mSmuf3qcP+SnXK1Meyom1Ymm8EmWLAr7ilABNzCBR2T+WJeKV23mwy15ulZnI56GHOm79GsnYTYO4wPRmES+VRhXLhQE1DBsAESxNXvdug/W1rsGxpM1adCD7uNFTZB7PcpQxGZQRLYdbHgVjJ2NJ1s/NBAIeJYc+dnH7zjQqExeyFlYdn6afzas5zG14WaPjbecXTsEXa5Nd+QG3BEAgmG8UNZdyeDzYI9Su6f49ozT8Ul5Qi/T4iAzn6ILb6jfy4jzO5ZlSnrCtepcUwHcxXlcYnhQGDbEVTiQcgIGoES4st5vweNseK5JjKE1Vc6oVm+1CKJjYZvhUEeWGWfRBiF64vHb0CIYFMJd/L8V5DXR0eo2guB3bjmM3WLVO18IZ51EmHIM9j52B4RH8S7DPXXNm+o9N3FTKojYBnlBKFojBa10QZlnlNDuIEpeNEGp0oRG0voEAi6ayljUGuPNTo3hANZP8ZfrLDRjtAPIIlKYGxVUC49mB7nf681gLVpDdGxz9yBySNhSSn9FpKIfysXZsEww==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 06:30:24.2610
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd8a756-f805-4b79-5db6-08dc3e701240
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7893
 
-Hi,
+[Why]
+Commit:
+- commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
+accidently overwrite the commit
+- commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in drm_dp_add_payload_part2")
+which cause regression.
 
-在 2024/03/02 4:26, junxiao.bi@oracle.com 写道:
-> Hi Dan & Song,
-> 
-> I have not root cause this yet, but would like share some findings from 
-> the vmcore Dan shared. From what i can see, this doesn't look like a md 
-> issue, but something wrong with block layer or below.
+[How]
+Recover the original NULL fix and remove the unnecessary input parameter 'state' for
+drm_dp_add_payload_part2().
 
-I would like to take a look at vmcore as well. How dose Dan sharing the
-vmcore? I don't find it in the thread.
+Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
+Reported-by: Leon Weiß <leon.weiss@ruhr-uni-bochum.de>
+Link: https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
+Cc: lyude@redhat.com
+Cc: imre.deak@intel.com
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 +-
+ drivers/gpu/drm/display/drm_dp_mst_topology.c             | 4 +---
+ drivers/gpu/drm/i915/display/intel_dp_mst.c               | 2 +-
+ drivers/gpu/drm/nouveau/dispnv50/disp.c                   | 2 +-
+ include/drm/display/drm_dp_mst_helper.h                   | 1 -
+ 5 files changed, 4 insertions(+), 7 deletions(-)
 
-Thanks,
-Kuai
-
-> 
-> 1. There were multiple process hung by IO over 15mins.
-> 
-> crash> ps -m | grep UN
-> [0 00:15:50.424] [UN]  PID: 957      TASK: ffff88810baa0ec0  CPU: 1 
-> COMMAND: "jbd2/dm-3-8"
-> [0 00:15:56.151] [UN]  PID: 1835     TASK: ffff888108a28ec0  CPU: 2 
-> COMMAND: "dd"
-> [0 00:15:56.187] [UN]  PID: 876      TASK: ffff888108bebb00  CPU: 3 
-> COMMAND: "md0_reclaim"
-> [0 00:15:56.185] [UN]  PID: 1914     TASK: ffff8881015e6740  CPU: 1 
-> COMMAND: "kworker/1:2"
-> [0 00:15:56.255] [UN]  PID: 403      TASK: ffff888101351d80  CPU: 7 
-> COMMAND: "kworker/u21:1"
-> 
-> 2. Let pick md0_reclaim to take a look, it is waiting done super_block 
-> update. We can see there were two pending superblock write and other 
-> pending io for the underling physical disk, which caused these process 
-> hung.
-> 
-> crash> bt 876
-> PID: 876      TASK: ffff888108bebb00  CPU: 3    COMMAND: "md0_reclaim"
->   #0 [ffffc900008c3d10] __schedule at ffffffff81ac18ac
->   #1 [ffffc900008c3d70] schedule at ffffffff81ac1d82
->   #2 [ffffc900008c3d88] md_super_wait at ffffffff817df27a
->   #3 [ffffc900008c3dd0] md_update_sb at ffffffff817df609
->   #4 [ffffc900008c3e20] r5l_do_reclaim at ffffffff817d1cf4
->   #5 [ffffc900008c3e98] md_thread at ffffffff817db1ef
->   #6 [ffffc900008c3ef8] kthread at ffffffff8114f8ee
->   #7 [ffffc900008c3f30] ret_from_fork at ffffffff8108bb98
->   #8 [ffffc900008c3f50] ret_from_fork_asm at ffffffff81000da1
-> 
-> crash> mddev.pending_writes,disks 0xffff888108335800
->    pending_writes = {
->      counter = 2  <<<<<<<<<< 2 active super block write
->    },
->    disks = {
->      next = 0xffff88810ce85a00,
->      prev = 0xffff88810ce84c00
->    },
-> crash> list -l md_rdev.same_set -s md_rdev.kobj.name,nr_pending 
-> 0xffff88810ce85a00
-> ffff88810ce85a00
->    kobj.name = 0xffff8881067c1a00 "dev-dm-1",
->    nr_pending = {
->      counter = 0
->    },
-> ffff8881083ace00
->    kobj.name = 0xffff888100a93280 "dev-sde",
->    nr_pending = {
->      counter = 10 <<<<
->    },
-> ffff8881010ad200
->    kobj.name = 0xffff8881012721c8 "dev-sdc",
->    nr_pending = {
->      counter = 8 <<<<<
->    },
-> ffff88810ce84c00
->    kobj.name = 0xffff888100325f08 "dev-sdd",
->    nr_pending = {
->      counter = 2 <<<<<
->    },
-> 
-> 3. From block layer, i can find the inflight IO for md superblock write 
-> which has been pending 955s which matches with the hung time of 
-> "md0_reclaim"
-> 
-> crash> 
-> request.q,mq_hctx,cmd_flags,rq_flags,start_time_ns,bio,biotail,state,__data_len,flush,end_io 
-> ffff888103b4c300
->    q = 0xffff888103a00d80,
->    mq_hctx = 0xffff888103c5d200,
->    cmd_flags = 38913,
->    rq_flags = 139408,
->    start_time_ns = 1504179024146,
->    bio = 0x0,
->    biotail = 0xffff888120758e40,
->    state = MQ_RQ_COMPLETE,
->    __data_len = 0,
->    flush = {
->      seq = 3, <<<< REQ_FSEQ_PREFLUSH |  REQ_FSEQ_DATA
->      saved_end_io = 0x0
->    },
->    end_io = 0xffffffff815186e0 <mq_flush_data_end_io>,
-> 
-> crash> p tk_core.timekeeper.tkr_mono.base
-> $1 = 2459916243002
-> crash> eval 2459916243002-1504179024146
-> hexadecimal: de86609f28
->      decimal: 955737218856  <<<<<<< IO pending time is 955s
->        octal: 15720630117450
->       binary: 
-> 0000000000000000000000001101111010000110011000001001111100101000
-> 
-> crash> bio.bi_iter,bi_end_io 0xffff888120758e40
->    bi_iter = {
->      bi_sector = 8, <<<< super block offset
->      bi_size = 0,
->      bi_idx = 0,
->      bi_bvec_done = 0
->    },
->    bi_end_io = 0xffffffff817dca50 <super_written>,
-> crash> dev -d | grep ffff888103a00d80
->      8 ffff8881003ab000   sdd        ffff888103a00d80       0 0     0
-> 
-> 4. Check above request, even its state is "MQ_RQ_COMPLETE", but it is 
-> still pending. That's because each md superblock write was marked with 
-> REQ_PREFLUSH | REQ_FUA, so it will be handled in 3 steps: pre_flush, 
-> data, and post_flush. Once each step complete, it will be marked in 
-> "request.flush.seq", here the value is 3, which is REQ_FSEQ_PREFLUSH | 
-> REQ_FSEQ_DATA, so the last step "post_flush" has not be done.  Another 
-> wired thing is that blk_flush_queue.flush_data_in_flight is still 1 even 
-> "data" step already done.
-> 
-> crash> blk_mq_hw_ctx.fq 0xffff888103c5d200
->    fq = 0xffff88810332e240,
-> crash> blk_flush_queue 0xffff88810332e240
-> struct blk_flush_queue {
->    mq_flush_lock = {
->      {
->        rlock = {
->          raw_lock = {
->            {
->              val = {
->                counter = 0
->              },
->              {
->                locked = 0 '\000',
->                pending = 0 '\000'
->              },
->              {
->                locked_pending = 0,
->                tail = 0
->              }
->            }
->          }
->        }
->      }
->    },
->    flush_pending_idx = 1,
->    flush_running_idx = 1,
->    rq_status = 0 '\000',
->    flush_pending_since = 4296171408,
->    flush_queue = {{
->        next = 0xffff88810332e250,
->        prev = 0xffff88810332e250
->      }, {
->        next = 0xffff888103b4c348, <<<< the request is in this list
->        prev = 0xffff888103b4c348
->      }},
->    flush_data_in_flight = 1,  >>>>>> still 1
->    flush_rq = 0xffff888103c2e000
-> }
-> 
-> crash> list 0xffff888103b4c348
-> ffff888103b4c348
-> ffff88810332e260
-> 
-> crash> request.tag,state,ref 0xffff888103c2e000 >>>> flush_rq of hw queue
->    tag = -1,
->    state = MQ_RQ_IDLE,
->    ref = {
->      counter = 0
->    },
-> 
-> 5. Looks like the block layer or underlying(scsi/virtio-scsi) may have 
-> some issue which leading to the io request from md layer stayed in a 
-> partial complete statue. I can't see how this can be related with the 
-> commit bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in 
-> raid5d"")
-> 
-> 
-> Dan,
-> 
-> Are you able to reproduce using some regular scsi disk, would like to 
-> rule out whether this is related with virtio-scsi?
-> 
-> And I see the kernel version is 6.8.0-rc5 from vmcore, is this the 
-> official mainline v6.8-rc5 without any other patches?
-> 
-> 
-> Thanks,
-> 
-> Junxiao.
-> 
-> On 2/23/24 6:13 PM, Song Liu wrote:
->> Hi,
->>
->> On Fri, Feb 23, 2024 at 12:07 AM Linux regression tracking (Thorsten
->> Leemhuis) <regressions@leemhuis.info> wrote:
->>> On 21.02.24 00:06, Dan Moulding wrote:
->>>> Just a friendly reminder that this regression still exists on the
->>>> mainline. It has been reverted in 6.7 stable. But I upgraded a
->>>> development system to 6.8-rc5 today and immediately hit this issue
->>>> again. Then I saw that it hasn't yet been reverted in Linus' tree.
->>> Song Liu, what's the status here? I aware that you fixed with quite a
->>> few regressions recently, but it seems like resolving this one is
->>> stalled. Or were you able to reproduce the issue or make some progress
->>> and I just missed it?
->> Sorry for the delay with this issue. I have been occupied with some
->> other stuff this week.
->>
->> I haven't got luck to reproduce this issue. I will spend more time 
->> looking
->> into it next week.
->>
->>> And if not, what's the way forward here wrt to the release of 6.8?
->>> Revert the culprit and try again later? Or is that not an option for one
->>> reason or another?
->> If we don't make progress with it in the next week, we will do the 
->> revert,
->> same as we did with stable kernels.
->>
->>> Or do we assume that this is not a real issue? That it's caused by some
->>> oddity (bit-flip in the metadata or something like that?) only to be
->>> found in Dan's setup?
->> I don't think this is because of oddities. Hopefully we can get more
->> information about this soon.
->>
->> Thanks,
->> Song
->>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> -- 
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
->>>
-> 
-> .
-> 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+index c27063305a13..2c36f3d00ca2 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -363,7 +363,7 @@ void dm_helpers_dp_mst_send_payload_allocation(
+ 	mst_state = to_drm_dp_mst_topology_state(mst_mgr->base.state);
+ 	new_payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->mst_output_port);
+ 
+-	ret = drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, new_payload);
++	ret = drm_dp_add_payload_part2(mst_mgr, new_payload);
+ 
+ 	if (ret) {
+ 		amdgpu_dm_set_mst_status(&aconnector->mst_status,
+diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+index 03d528209426..95fd18f24e94 100644
+--- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+@@ -3421,7 +3421,6 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
+ /**
+  * drm_dp_add_payload_part2() - Execute payload update part 2
+  * @mgr: Manager to use.
+- * @state: The global atomic state
+  * @payload: The payload to update
+  *
+  * If @payload was successfully assigned a starting time slot by drm_dp_add_payload_part1(), this
+@@ -3430,14 +3429,13 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
+  * Returns: 0 on success, negative error code on failure.
+  */
+ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
+-			     struct drm_atomic_state *state,
+ 			     struct drm_dp_mst_atomic_payload *payload)
+ {
+ 	int ret = 0;
+ 
+ 	/* Skip failed payloads */
+ 	if (payload->payload_allocation_status != DRM_DP_MST_PAYLOAD_ALLOCATION_DFP) {
+-		drm_dbg_kms(state->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
++		drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
+ 			    payload->port->connector->name);
+ 		return -EIO;
+ 	}
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+index 53aec023ce92..2fba66aec038 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -1160,7 +1160,7 @@ static void intel_mst_enable_dp(struct intel_atomic_state *state,
+ 	if (first_mst_stream)
+ 		intel_ddi_wait_for_fec_status(encoder, pipe_config, true);
+ 
+-	drm_dp_add_payload_part2(&intel_dp->mst_mgr, &state->base,
++	drm_dp_add_payload_part2(&intel_dp->mst_mgr,
+ 				 drm_atomic_get_mst_payload_state(mst_state, connector->port));
+ 
+ 	if (DISPLAY_VER(dev_priv) >= 12)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 0c3d88ad0b0e..88728a0b2c25 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -915,7 +915,7 @@ nv50_msto_cleanup(struct drm_atomic_state *state,
+ 		msto->disabled = false;
+ 		drm_dp_remove_payload_part2(mgr, new_mst_state, old_payload, new_payload);
+ 	} else if (msto->enabled) {
+-		drm_dp_add_payload_part2(mgr, state, new_payload);
++		drm_dp_add_payload_part2(mgr, new_payload);
+ 		msto->enabled = false;
+ 	}
+ }
+diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/drm_dp_mst_helper.h
+index 9b19d8bd520a..6c9145abc7e2 100644
+--- a/include/drm/display/drm_dp_mst_helper.h
++++ b/include/drm/display/drm_dp_mst_helper.h
+@@ -851,7 +851,6 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
+ 			     struct drm_dp_mst_topology_state *mst_state,
+ 			     struct drm_dp_mst_atomic_payload *payload);
+ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
+-			     struct drm_atomic_state *state,
+ 			     struct drm_dp_mst_atomic_payload *payload);
+ void drm_dp_remove_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
+ 				 struct drm_dp_mst_topology_state *mst_state,
+-- 
+2.37.3
 
