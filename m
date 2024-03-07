@@ -1,372 +1,102 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72551EB40
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 16:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D846347A2
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 16:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709828247; cv=none; b=WOYsPnuOTPQE0mSSqipf492Yyw1vWvan2XjoE9QSi6fQ6XLYdXoHwl7w3nkJIuSXPkRp2hs87JwBqr6euKL9eGCCAehBTVRMeGaJD2kdDcmD/SmBB1izqLXDYowWQHuaE+hpkwJHLukoleUKVvXE+74W1gis0+0yxMQmNhS2Tcs=
+	t=1709829213; cv=none; b=aHfyqhfmhUw6ueqIioTfUjjVqibAdbrQmTt6Zxjhcq89NkuqjiMGl2dYNukt8x/Y6r92/02Jvp0v/OLqiC7WnTLH9yXgPFVP6RK/U2huwWubFyBHtyh08Ps+qpV6KvZ4YROOr75J828t1gLB9naKJ+2tAvc3H7P4A8uzWx2nt4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709828247; c=relaxed/simple;
-	bh=HlJFS+N4fAQ4Lz8RUhCbxj0mRjLMfbPHnBP2YTCVmeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EcelxPLk9ZhwRCPanGP4M644D84TBHgNhM0qLmM1YsnhH79YOdeTOnN2qK2ViQ5mwNR/sMdOd436eupVwB3sTiTQAnVOyA+u6H61vI6lLaYOqMFgezX0/LKitZQv9oD+f4gWJfsomyA2V2mkwlf6RR8LQg2ioY20fC0Ka8eUNog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sairon.cz; spf=pass smtp.mailfrom=sairon.cz; dkim=pass (2048-bit key) header.d=sairon.cz header.i=@sairon.cz header.b=EeZFrhOM; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sairon.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sairon.cz
+	s=arc-20240116; t=1709829213; c=relaxed/simple;
+	bh=U1Z2tkgu2fMFZPvl/6LixoDhnirrzlLfHlKIU+w4m7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cxlcYb3CNtSAmdGExtxhy7wq7S1LgRmn+szkctHVEXW+CnL9xGAXbgvjXsXk7pJ+N4SQyeuWIvY1sSTzvplXmnQBy8x6LstupXwwWN/ld/0RdvhAOw8TQXs6ppzDq6jDPX9fJfcsr5YQlkVJAfbtJt4buPp4wPQ1ssxXfK6s9vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=cWmRyH6B; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sairon.cz header.i=@sairon.cz header.b="EeZFrhOM"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5645960cd56so1614075a12.1
-        for <regressions@lists.linux.dev>; Thu, 07 Mar 2024 08:17:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sairon.cz; s=google; t=1709828242; x=1710433042; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qt+CgjTUfQUyJTTNV8+W0Z0U/4NxDg/6pvqKShA/pP0=;
-        b=EeZFrhOMelOkxRINYpXxPWwNc14NHhFPcN/ur/UG6Aka2c5a9ljvuR0u3DeDL65Mry
-         fsA949+Icf9vdgrUeqUC0FLhYf4FN3sqV57LN4HYQ7304b0vfRCW/wsGrNIgDLyUyEnS
-         OpB+/C/+fJptbj0mCJ0GoPY4B859E26FuQrcXRW33W8PeATzmLGUl4ISWoJ6Bp7ipnuK
-         dj6coDDFsf+S+RjesBVyPj8nPem+Cz8SDZZK2WSWuZQveloBNm2xPtZRLoaow6ILIGe1
-         9gEUKJQ9/1j2x/7mRnjin0SlxiRZhMR0wwD7/jq3AUNZCwiRFUQtcyhkvG1S7SAu80ZH
-         dtMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709828242; x=1710433042;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qt+CgjTUfQUyJTTNV8+W0Z0U/4NxDg/6pvqKShA/pP0=;
-        b=cW3ZJsinqMoj03PmJ63CY1XzD3isVl5tam876BCA7BgvTOj3vao5P+v8Fu9q6ZcNwX
-         UxqZJn250Sehr+yPs1yPAVKYxZMh3Tmcl+nWTtxu4/CcFjrpQlvZyERE9EIFbngXvq/H
-         T/3u77Ik87jxCdm+5RxXCUoilhtb9ixbkcnQCVFaj5Ubwu5vatenslkIjA9p3qIREQfs
-         3MRVtpQTJQ/YnNMxv2dA4eU27kPDRLZ4VKW6iAg0XQYMv/YiJm8sOo8DgvbKQ/hxl2Tq
-         9OV02fWWD3FOZrDbTHVt/IE/vcGN3JfoBSYiQw/ty3FDQ/t/TdT1FpD6SAGjEZq9MExG
-         3SaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhNS6R2dQaZY0FMiin7J+bm2LafLJ3fuhuNxuQxXe0OW18t52bqk/f4CcoqfBNSLbaL+/NYcIkej1gxvxXeut0tEGP3Ujhlf7eFV8=
-X-Gm-Message-State: AOJu0Yyzry7ex2wPsD+lZZZrbEoYZ6DjEDyaAiKTmaWFDAcBqWPtzcin
-	387TtlKFt4DMPTZPjOPjLxokAgjmqSr18xJE21QANFeETaVZQQPRtMp8jLMFBYs=
-X-Google-Smtp-Source: AGHT+IE87XG0K7rYlOiNT2JRUrvBY7FaaWDo8w0M8pIA8xyrJkzqbw/Jg0VMsA7WDGuuF7eah+DHHw==
-X-Received: by 2002:a50:c908:0:b0:566:348:fc4a with SMTP id o8-20020a50c908000000b005660348fc4amr168761edh.32.1709828241941;
-        Thu, 07 Mar 2024 08:17:21 -0800 (PST)
-Received: from [192.168.127.42] (ip-89-103-66-201.bb.vodafone.cz. [89.103.66.201])
-        by smtp.gmail.com with ESMTPSA id cs4-20020a0564020c4400b00566a4dec01fsm8083137edb.11.2024.03.07.08.17.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 08:17:21 -0800 (PST)
-Message-ID: <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
-Date: Thu, 7 Mar 2024 17:17:20 +0100
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="cWmRyH6B"
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 427Fw8c9012311;
+	Thu, 7 Mar 2024 16:33:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=L+bCcgjNV0jP4EzKldKfLGA3rqj+8jsnx29Ys9iDLZI=;
+ b=cWmRyH6B8yGij9Dr6YP9Apm9sIVZbNgXj4G8qZKYSxOxx6LvfiMi6zkv3920BO4zl+yk
+ 21Ux3h4KjmuPE+beRI3KVkC29Q4a8mX8JYiRgO/UVArP2Z2Ee7m3F9jdodT85w5bu2H/
+ qz9yZQmZ6sS0nBhlkHrdT0xGuArLgH8gLbS3l9uAWyQ+fa8dZOm0Zl6C+JQoqind9OQS
+ RXzrsMw993ApJkgQl5zf/4CgVp4rZHvZb3XFy2SHfP5hrC/JlvtkjJAqqxgTFGMARzka
+ egmVOAN232vzbUQtfMQjQM6bHeXQrl68eEl/ymn+tvLaqpg1DNpJLACB5QoFXnkMDK43 HQ== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wqbduas3m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Mar 2024 16:33:22 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 589F78005DB;
+	Thu,  7 Mar 2024 16:33:22 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 814B7800EDF;
+	Thu,  7 Mar 2024 16:33:18 +0000 (UTC)
+Date: Thu, 7 Mar 2024 10:33:16 -0600
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Eric Hagberg <ehagberg@gmail.com>
+Cc: me@pavinjoseph.com, dave.hansen@linux.intel.com,
+        regressions@lists.linux.dev, stable@vger.kernel.org,
+        steve.wahl@hpe.com
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+Message-ID: <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Content-Language: en-US
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
- USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
- <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
-From: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
-In-Reply-To: <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+X-Proofpoint-ORIG-GUID: Hg7j_6QEM8L5-LDw6zgw6LXXVpDDmMQU
+X-Proofpoint-GUID: Hg7j_6QEM8L5-LDw6zgw6LXXVpDDmMQU
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-07_08,2024-03-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 bulkscore=0 mlxlogscore=926
+ suspectscore=0 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2403070113
 
-Hi Alan,
+On Tue, Mar 05, 2024 at 05:39:32AM -0500, Eric Hagberg wrote:
+> To add another datapoint to this - I've seen the same problem on Dell
+> PowerEdge R6615 servers... but no others.
+> 
+> The problem also crept into the 6.1.79 kernel with the commit
+> mentioned earlier, and is fixed by reverting that commit. Adding
+> nogbpages to the kernel command line can cause the failure to
+> reproduce on that hardware as well.
 
-On 06. 03. 24 22:08, Alan Stern wrote:
-> Can you provide two usbmon traces, one showing the problem with those
-> patches present and the other (on the same system but with the patches
-> reverted) showing the recovery?  Comparison of the two should indicate
-> what's happening differently.
+Eric,
 
-I reproduced the issue on my old ThinkPad X220 with 6.6.20 kernel, you 
-can find the usbmon captures below.
+What Linux Distribution are you running on that machine?  My guess
+would be that this is not distro related; if you are running something
+quite different from Pavin that would confirm this.
 
-Regards,
-Jan
+I found an AMD based system to try to reproduce this on. The 6.7.7
+kernel doesn't seem to have a problem in the machine's existing RHEL
+environment.  I think it's likely that this system's hardware doesn't
+have the characteristics that bring this problem to the surface.  But
+I will be trying OpenSUSE Tumbleweed on it if I can.
 
+Thanks,
 
-#############################
-# Failing to recover (6.6.20)
-#############################
+--> Steve
 
-ffff9f9a012cae40 297301265 C Ii:1:002:1 0:2048 1 = 04
-ffff9f9a012cae40 297301305 S Ii:1:002:1 -115:2048 1 <
-ffff9f9a29b3f300 297301346 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297301530 C Ci:1:002:0 0 4 = 01010100
-ffff9f9a29b3f300 297301555 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff9f9a29b3f300 297301789 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297301803 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297302073 C Ci:1:002:0 0 4 = 01010000
-ffff9f9a29b3f300 297329100 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297329348 C Ci:1:002:0 0 4 = 01010000
-ffff9f9a29b3f300 297356109 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297356276 C Ci:1:002:0 0 4 = 01010000
-ffff9f9a29b3f300 297383108 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297383392 C Ci:1:002:0 0 4 = 01010000
-ffff9f9a29b3f300 297410108 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297410303 C Ci:1:002:0 0 4 = 01010000
-ffff9f9a29b3f300 297410342 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f300 297410560 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297422109 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297422231 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f300 297422249 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f300 297422492 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297474142 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297474386 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297474654 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297474910 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297474959 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297475295 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297475361 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f300 297475613 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297488055 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297488336 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f300 297488365 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f300 297488593 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297646110 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297646603 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297646635 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297646934 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297646998 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f300 297647326 C Ci:1:000:0 -32 0
-ffff9f9a29b3f300 297647390 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f300 297647649 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297659102 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 297659257 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f300 297659272 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f300 297659512 C Co:1:002:0 0 0
-ffff9f9a29b3f300 297814110 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff9f9a29b3f300 297814487 C Co:1:002:0 0 0
-ffff9f9a29b3f240 297814536 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f240 297814758 C Co:1:002:0 0 0
-ffff9f9a29b3f240 297826111 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 297826417 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f240 297826444 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f240 297826680 C Co:1:002:0 0 0
-ffff9f9a29b3f240 297878173 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 297878367 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 297878391 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 297878992 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 297879258 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 297879521 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 297879608 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f240 297879852 C Co:1:002:0 0 0
-ffff9f9a29b3f240 297891106 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 297891266 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f240 297891294 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f240 297891528 C Co:1:002:0 0 0
-ffff9f9a29b3f240 298046109 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 298046587 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 298046610 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 298046926 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 298046998 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff9f9a29b3f240 298047338 C Ci:1:000:0 -32 0
-ffff9f9a29b3f240 298047353 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f240 298047600 C Co:1:002:0 0 0
-ffff9f9a29b3f240 298059108 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 298059372 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f240 298059398 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f240 298059630 C Co:1:002:0 0 0
-ffff9f9a29b3f240 298214111 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff9f9a29b3f240 298214247 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298214304 S Co:1:002:0 s 23 01 0008 0002 0000 0
-ffff9f9a29b3f300 298214501 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298422107 S Co:1:002:0 s 23 03 0008 0002 0000 0
-ffff9f9a29b3f300 298422285 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298526126 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f300 298526358 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298538105 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 298538360 C Ci:1:002:0 0 4 = 03011100
-ffff9f9a29b3f300 298538388 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff9f9a29b3f300 298538633 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298538675 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f300 298538893 C Co:1:002:0 0 0
-ffff9f9a012cae40 298581342 C Ii:1:002:1 0:2048 1 = 04
-ffff9f9a012cae40 298581372 S Ii:1:002:1 -115:2048 1 <
-ffff9f9a29b3f300 298742112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f300 298742459 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f300 298742483 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f300 298742715 C Co:1:002:0 0 0
-ffff9f9a29b3f300 298794144 S Co:1:000:0 s 00 05 0006 0000 0000 0
-ffff9f9a29b3f300 298794387 C Co:1:000:0 -32 0
-ffff9f9a29b3f300 298998127 S Co:1:000:0 s 00 05 0006 0000 0000 0
-ffff9f9a29b3f300 298998509 C Co:1:000:0 -32 0
-ffff9f9a012cae40 299093323 C Ii:1:002:1 0:2048 1 = 04
-ffff9f9a012cae40 299093338 S Ii:1:002:1 -115:2048 1 <
-ffff9f9a29b3f300 299206193 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff9f9a29b3f300 299206523 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299206583 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f240 299206778 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299218068 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 299218239 C Ci:1:002:0 0 4 = 03011100
-ffff9f9a29b3f240 299218261 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff9f9a29b3f240 299218503 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299218534 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff9f9a29b3f240 299218765 C Co:1:002:0 0 0
-ffff9f9a012cae40 299349383 C Ii:1:002:1 0:2048 1 = 04
-ffff9f9a012cae40 299349398 S Ii:1:002:1 -115:2048 1 <
-ffff9f9a29b3f240 299422112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 299422523 C Ci:1:002:0 0 4 = 03011000
-ffff9f9a29b3f240 299422547 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff9f9a29b3f240 299422781 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299474143 S Co:1:000:0 s 00 05 0007 0000 0000 0
-ffff9f9a29b3f240 299474452 C Co:1:000:0 0 0
-ffff9f9a29b3f300 299488113 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299488395 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299488479 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299488798 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299488868 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299489193 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299610112 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299610456 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299610480 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299610792 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299610817 S Ci:1:007:0 s 80 06 0100 0000 0008 8 <
-ffff9f9a29b3f300 299611376 C Ci:1:007:0 -32 0
-ffff9f9a29b3f300 299718111 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff9f9a29b3f300 299718382 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299718493 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff9f9a29b3f240 299718640 C Co:1:002:0 0 0
-ffff9f9a29b3f240 299718675 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff9f9a29b3f240 299718902 C Ci:1:002:0 0 4 = 01010000
-
-#############################
-# Recovered (6.6.20 + revert)
-#############################
-
-ffff8fc4c0c5ac00 367063066 C Ii:1:002:1 0:2048 1 = 04
-ffff8fc4c0c5ac00 367063105 S Ii:1:002:1 -115:2048 1 <
-ffff8fc4ee367300 367063140 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367300 367063319 C Ci:1:002:0 0 4 = 01010100
-ffff8fc4ee367300 367063325 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff8fc4ee367300 367063590 C Co:1:002:0 0 0
-ffff8fc4ee367300 367063619 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367300 367063850 C Ci:1:002:0 0 4 = 01010000
-ffff8fc4ee367240 367090072 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367090360 C Ci:1:002:0 0 4 = 01010000
-ffff8fc4ee367240 367117131 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367117280 C Ci:1:002:0 0 4 = 01010000
-ffff8fc4ee367240 367144088 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367144414 C Ci:1:002:0 0 4 = 01010000
-ffff8fc4ee367240 367171102 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367171308 C Ci:1:002:0 0 4 = 01010000
-ffff8fc4ee367240 367171358 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 367171559 C Co:1:002:0 0 0
-ffff8fc4ee367240 367183082 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367183422 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367240 367183452 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367240 367183693 C Co:1:002:0 0 0
-ffff8fc4ee367240 367235143 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367235569 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367235656 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367235907 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367235922 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367236569 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367236656 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 367236915 C Co:1:002:0 0 0
-ffff8fc4ee367240 367248033 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367248326 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367240 367248343 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367240 367248585 C Co:1:002:0 0 0
-ffff8fc4ee367240 367406114 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367406405 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367406432 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367406778 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367406796 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367240 367407117 C Ci:1:000:0 -32 0
-ffff8fc4ee367240 367407188 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 367407446 C Co:1:002:0 0 0
-ffff8fc4ee367240 367419108 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 367419418 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367240 367419451 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367240 367419869 C Co:1:002:0 0 0
-ffff8fc4ee367240 367574110 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff8fc4ee367240 367574446 C Co:1:002:0 0 0
-ffff8fc4ee367180 367574511 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367180 367574700 C Co:1:002:0 0 0
-ffff8fc4ee367180 367586105 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367180 367586361 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367180 367586390 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367180 367586619 C Co:1:002:0 0 0
-ffff8fc4ee367180 367638098 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367638506 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367638524 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367639020 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367639037 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367639390 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367639406 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367180 367639654 C Co:1:002:0 0 0
-ffff8fc4ee367180 367651093 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367180 367651455 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367180 367651483 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367180 367651706 C Co:1:002:0 0 0
-ffff8fc4ee367180 367806113 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367806291 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367806319 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367806947 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367807039 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
-ffff8fc4ee367180 367807536 C Ci:1:000:0 -32 0
-ffff8fc4ee367180 367807569 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367180 367808060 C Co:1:002:0 0 0
-ffff8fc4ee367180 367820112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367180 367820430 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367180 367820456 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367180 367820694 C Co:1:002:0 0 0
-ffff8fc4ee367180 367974107 S Co:1:002:0 s 23 01 0001 0002 0000 0
-ffff8fc4ee367180 367974289 C Co:1:002:0 0 0
-ffff8fc4ee367240 367974353 S Co:1:002:0 s 23 01 0008 0002 0000 0
-ffff8fc4ee367240 367974556 C Co:1:002:0 0 0
-ffff8fc4ee367240 368182107 S Co:1:002:0 s 23 03 0008 0002 0000 0
-ffff8fc4ee367240 368182386 C Co:1:002:0 0 0
-ffff8fc4ee367240 368286131 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 368286298 C Co:1:002:0 0 0
-ffff8fc4ee367240 368298105 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 368298310 C Ci:1:002:0 0 4 = 03011100
-ffff8fc4ee367240 368298332 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff8fc4ee367240 368298571 C Co:1:002:0 0 0
-ffff8fc4ee367240 368298641 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 368298823 C Co:1:002:0 0 0
-ffff8fc4c0c5ac00 368343025 C Ii:1:002:1 0:2048 1 = 04
-ffff8fc4c0c5ac00 368343056 S Ii:1:002:1 -115:2048 1 <
-ffff8fc4ee367240 368502095 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 368502372 C Ci:1:002:0 0 4 = 01011100
-ffff8fc4ee367240 368502407 S Co:1:002:0 s 23 01 0010 0002 0000 0
-ffff8fc4ee367240 368502627 C Co:1:002:0 0 0
-ffff8fc4ee367240 368502648 S Co:1:002:0 s 23 03 0004 0002 0000 0
-ffff8fc4ee367240 368502886 C Co:1:002:0 0 0
-ffff8fc4c0c5ac00 368598913 C Ii:1:002:1 0:2048 1 = 04
-ffff8fc4c0c5ac00 368598925 S Ii:1:002:1 -115:2048 1 <
-ffff8fc4ee367240 368710109 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367240 368710339 C Ci:1:002:0 0 4 = 03011000
-ffff8fc4ee367240 368710367 S Co:1:002:0 s 23 01 0014 0002 0000 0
-ffff8fc4ee367240 368710594 C Co:1:002:0 0 0
-ffff8fc4ee367240 368762141 S Co:1:000:0 s 00 05 0006 0000 0000 0
-ffff8fc4ee367240 368762451 C Co:1:000:0 0 0
-ffff8fc4ee367180 368776096 S Ci:1:006:0 s 80 06 0100 0000 0008 8 <
-ffff8fc4ee367180 368776399 C Ci:1:006:0 0 8 = 12010002 02000008
-ffff8fc4ee367240 368778058 S Ci:1:006:0 s 80 06 0100 0000 0012 18 <
-ffff8fc4ee367240 368778361 C Ci:1:006:0 0 18 = 12010002 02000008 
-58060002 00000000 0001
-ffff8fc4ee367240 368778400 S Ci:1:006:0 s 80 06 0600 0000 000a 10 <
-ffff8fc4ee367240 368778629 C Ci:1:006:0 -32 0
-ffff8fc4ee367240 368778644 S Ci:1:006:0 s 80 06 0600 0000 000a 10 <
-ffff8fc4ee367240 368778967 C Ci:1:006:0 -32 0
-ffff8fc4ee367240 368778996 S Ci:1:006:0 s 80 06 0600 0000 000a 10 <
-ffff8fc4ee367240 368779315 C Ci:1:006:0 -32 0
-ffff8fc4ee367240 368779397 S Ci:1:006:0 s 80 06 0200 0000 0009 9 <
-ffff8fc4ee367240 368779667 C Ci:1:006:0 0 9 = 09024300 02010080 32
-ffff8fc4ee367240 368779679 S Ci:1:006:0 s 80 06 0200 0000 0043 67 <
-ffff8fc4ee367240 368780133 C Ci:1:006:0 0 67 = 09024300 02010080 
-32090400 00010202 01000524 00100105 24010001 04240200
-ffff8fc4ee367000 368780596 S Co:1:006:0 s 00 09 0001 0000 0000 0
-ffff8fc4ee367000 368780976 C Co:1:006:0 0 0
-ffff8fc4ee367000 368781766 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
-ffff8fc4ee367000 368782044 C Ci:1:002:0 0 4 = 03010000
-ffff8fc505e4b480 368805117 S Co:1:006:0 s 21 20 0000 0000 0007 7 = 
-80250000 000008
-ffff8fc505e4b480 368805270 C Co:1:006:0 0 7 >
+-- 
+Steve Wahl, Hewlett Packard Enterprise
