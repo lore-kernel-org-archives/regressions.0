@@ -1,212 +1,152 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E277D1CF8B
-	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 06:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709793030; cv=fail; b=Qfu6Yx3w3JOmXrMk28G4sC9gmIWJk6w9CLTgJVhIaNUUpJwvo6olE7wAxGtVXSAGAdy+GlEIAf5BDzkSWi8hJFnRsBrE8JBYKCeJ8BwMeq/IyrrTAjRUyVT8HxzJpLczjadLYLUOBeiHMI/Z5F5am54eLhlEWLSlL0WjKQSkXSw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709793030; c=relaxed/simple;
-	bh=vG6GaHNfav46vQBkdOYSnxupiUrUxtKuJ9nq3TYLeq8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/XkI1gYgjjjo3pWSiYAT0Gj8PtffOGf/+dBJNIup4C1w7msQ3i3puuKRon1Ib5fLVI6yskaIqJ56Jberjj23DBVz4qQNloeSq0oit7cpEXCALZ3rpVY9ZQFq679Et1b0v3ZXEfNi1DIz0kvmgo2VYoEDMxijhwZHihIkTzRZNM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IYhvMHvv; arc=fail smtp.client-ip=40.107.237.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A932F1CAB2
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 06:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709794283; cv=none; b=j5MP1fdeYooF01jcq68T3J5n8X2r9x66QHVWrAUAR3gIaNP8h3XcBcQPqlOw8I6baXnVLt8NRWL0gt7kfHTYTJIUlXeGlbSXsRgavWUMm3qZqfauu+JPXaqSrNADU+3ZbtqLbIUjvsffc79VpPILrRhmdQSGQEUNKqV1ABDbCn0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709794283; c=relaxed/simple;
+	bh=3H/lvOapkzvFzelyzgbt32NSIz7kMrDaoswIBUoWId0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a48UjVKMD4exIJqaZcLrpsqH2+yGkECx9QlIxoxyQMoxwcIeUGBC7NsR9t2Sz0z08APpw4RcjE/D/z5ZBaEajk5BPeKjzYOcs9thHC9DmvjTA2kC9KuTXQdA9137VSbseNfCI5oICU/WdtxJhTUo2kftUJjn3ziB4RSFZXdVsXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=sCUfvg8Z; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IYhvMHvv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n2cXJ+m0syPutltptQdDI0fkaJTTFZawwp4hRSUCj35eQ6js4THeV1yb7G/+kmqhUurRVLpitSfzIvhEndl8/e/kbAVyD1GWXktSfyr4cfioviMPzuEpiO+5rMI/+TWUt5/2yfkCbVQWUzizhi8BXbrgDwI7ex6gvZwGhWXMo610hrm9KQODvJmJASky4D5+FbI4SE+0/QtH3yxOqrswwN1h8Ky2Nnab2ec0MwoeOxc6i5K1SkGTQ8/1+vNXh383OjvARKvp3PCzryu2gnV0NKxfFmaHxpsVceNw6M3j79UCraONZNk6bMR1BLHw/wBEB47RzwQwVFCVJdy4bbB/pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vtLSn2+SuLBTcsOr9G7Up5ReL8JqH1qpiX1afZ+NghA=;
- b=F5WGA+11TfYJi0ppAQ7F8URzic+H64v/8NHifOUWui0j26k2XoXt2mOUENWM2afniZA36CtekAaRorh9v+VuKxUFe6AUbR6vfgZs3nps9ftutsHntQiPUA9Tbwexor/DLXspfS1qp9kClod9mMql08mD7cisUyq/yzSWy3mjbbtWzqzbSekx4qJ7EsvaXIl1RJmT3QHPmqq5g1DE2cvN3/DK0Y88H1mPmPcLNMUVM/fGa6F6NHbgSfYGtewZpIVexHu4E4h1hRwngOchhTNtkjhAdxsPGUc8pb/Ie83UuOJYs5FcsXodvQbgO5Y9rsFtyLDW0cvkRRWu+pwrKSb0hA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vtLSn2+SuLBTcsOr9G7Up5ReL8JqH1qpiX1afZ+NghA=;
- b=IYhvMHvvv6S4JZZf0Z2KqOAh4DZNHLRbUxMpXwr52WIMzDiDX8rDNMPvb1DisX13wd7jOYtmKNJPkOX4R3NQC9NcZNcxP+qrn/sOQ0YiIkLFIJU4fxxFv4jcHexc5LbwkiNOxuPcxkrmd+5bV5WNp6csXxj2X6u/lqu6uusyqOU=
-Received: from SA0PR11CA0201.namprd11.prod.outlook.com (2603:10b6:806:1bc::26)
- by SJ2PR12MB7893.namprd12.prod.outlook.com (2603:10b6:a03:4cc::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Thu, 7 Mar
- 2024 06:30:24 +0000
-Received: from SA2PEPF000015C9.namprd03.prod.outlook.com
- (2603:10b6:806:1bc:cafe::6a) by SA0PR11CA0201.outlook.office365.com
- (2603:10b6:806:1bc::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.26 via Frontend
- Transport; Thu, 7 Mar 2024 06:30:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SA2PEPF000015C9.mail.protection.outlook.com (10.167.241.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7362.11 via Frontend Transport; Thu, 7 Mar 2024 06:30:24 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 7 Mar
- 2024 00:30:23 -0600
-Received: from wayne-dev-lnx.amd.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 7 Mar 2024 00:30:20 -0600
-From: Wayne Lin <Wayne.Lin@amd.com>
-To: <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>
-CC: <lyude@redhat.com>, <harry.wentland@amd.com>, <imre.deak@intel.com>,
-	"Wayne Lin" <Wayne.Lin@amd.com>, =?UTF-8?q?Leon=20Wei=C3=9F?=
-	<leon.weiss@ruhr-uni-bochum.de>, <stable@vger.kernel.org>,
-	<regressions@lists.linux.dev>
-Subject: [PATCH] drm/mst: Fix NULL pointer dereference at drm_dp_add_payload_part2
-Date: Thu, 7 Mar 2024 14:29:57 +0800
-Message-ID: <20240307062957.2323620-1-Wayne.Lin@amd.com>
-X-Mailer: git-send-email 2.37.3
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="sCUfvg8Z"
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 774C04112C
+	for <regressions@lists.linux.dev>; Thu,  7 Mar 2024 06:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1709794279;
+	bh=1XHqEKGDEWpYWhhB4V3kQVznnM/0tQjfz0REQnBC9xs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=sCUfvg8ZRDyO4WCJSmgpvgv7dvQOB+SRjOau9wuBe44QYwYNUq/w/qgdzQnAJIQ+1
+	 e5ZaU7NtDftJ0CAQxnMSfehpwQ6rOgOT3VlW5zgnryV2StlTZBZWKeG4T9IdaORidU
+	 mKJkMNv8W8iYxzDUkrVYWIDT3sGh3IRBsbUKFwPRR8/lfnnDO+0iE85IB/01yfGYaI
+	 o3fqRuPIpmDBkBYu6F3zdTJy84cHiv50aJi2IhuwAeK4PeLCztjVCfBcLLDOgjfk5X
+	 VJv+qXuBeBlSYZAmuRDWAnRbBLIqX/dbk8e3XWQQnhZc2SIJmD67rSihDb1pVhduig
+	 Rwy3VGKwEUUUw==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-29b742ad588so380105a91.2
+        for <regressions@lists.linux.dev>; Wed, 06 Mar 2024 22:51:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709794278; x=1710399078;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1XHqEKGDEWpYWhhB4V3kQVznnM/0tQjfz0REQnBC9xs=;
+        b=U7CEu8gqEtOpcVX0fpZdnlbAUHyCuTbJucwPiQs/3t5BsX0mJJdTkLR/M0ouc41dQr
+         Ahh6srPzIQIs6ksFYSQeKiVgYlrRlBjZgnwiaR8caoXPEzB3CWSXiY2x3shcTPz1BGP0
+         C17FITYAkU5PTRN6SGpyW49Nl4QcpIcuMCMu/g9K0OKs4zrrEKBkU38rPRA4s+ZHOfI5
+         RrENgfXGnnlv+VSavHSWyhd7P9N4D7q9LsbGn2G3nxIjrglV8RQ2Ha5bABRWz6Z1mJJG
+         7d6ugPhcfO3KVx5lwDC5U80+cyZL/qlycaQycuu+xeyRGzc+Pl5JuDsXzWlL7ZMxcOWh
+         ekZw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1vmIJdF4Y99hPJsyBZwwgm9KX4KJHzNoalbOjS3W6IsU5Dd0XRRYom2ADV9cOq+Ld3pXyyb8/vf8MgU0MuQSxvdl0n7e8cEGQJVQ=
+X-Gm-Message-State: AOJu0Yy0Z7U03UbnTFIVS8/pmRp9Kh2n3MJgeOFYQwyf6zDOg5Lnl0E0
+	rXt4Prpk336YnQw+csTAScw9kHSoWQhf3XNWQxWN1f2xIlZitYxPCgp5CI+cwnweK+4zWG+ApfS
+	jmF2VseZXY7V1yluc7RmRZRIX22KcPxzpNvY1CCBvpAKwr7+iM/QFQkhm86Y35MCB0ur9QKia7J
+	P7yI4u+CWCjfFFebnJy/Lcq1wsnF5VooL5jSoSimzk1XbyhBAeYnI=
+X-Received: by 2002:a17:90b:1214:b0:29b:23bc:19a5 with SMTP id gl20-20020a17090b121400b0029b23bc19a5mr16294040pjb.26.1709794277965;
+        Wed, 06 Mar 2024 22:51:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/lzIcUCqv0H8CBqPe30CqTsc2cPSeSmtT2lFHGN90fG85b/xxIUsgCM/tV1RPHe7TGAt8/gKh/V1tFsZ+8OE=
+X-Received: by 2002:a17:90b:1214:b0:29b:23bc:19a5 with SMTP id
+ gl20-20020a17090b121400b0029b23bc19a5mr16294025pjb.26.1709794277695; Wed, 06
+ Mar 2024 22:51:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de>
+ <20240105155100.GA1861423@bhelgaas> <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+ <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de>
+In-Reply-To: <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Thu, 7 Mar 2024 14:51:05 +0800
+Message-ID: <CAAd53p6GEPJe3rNNrUAah5PdLXspKh5Gz9tFstR6SFCREs+9=Q@mail.gmail.com>
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+To: Michael Schaller <michael@5challer.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, macro@orcam.me.uk, 
+	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
+	gregkh@linuxfoundation.org, hkallweit1@gmail.com, 
+	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB03.amd.com: Wayne.Lin@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|SJ2PR12MB7893:EE_
-X-MS-Office365-Filtering-Correlation-Id: afd8a756-f805-4b79-5db6-08dc3e701240
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rVPnLV3MKWxW3IDagIoKoWIKstipolT4k1q7eD7Fga7gOMBNuJi/OGjbVpjCgBDZpBVR8SCMqoAki4acashjrpp0LpLuVcE/gY1HVyZrERwWimVeRPLmi5Vfau1iMvbRisKudgyJMfe0a2iXPa7bXq8JthKi3EsaUka/jCBXgi4dpbzTTeXJ3HKo+/mSmuf3qcP+SnXK1Meyom1Ymm8EmWLAr7ilABNzCBR2T+WJeKV23mwy15ulZnI56GHOm79GsnYTYO4wPRmES+VRhXLhQE1DBsAESxNXvdug/W1rsGxpM1adCD7uNFTZB7PcpQxGZQRLYdbHgVjJ2NJ1s/NBAIeJYc+dnH7zjQqExeyFlYdn6afzas5zG14WaPjbecXTsEXa5Nd+QG3BEAgmG8UNZdyeDzYI9Su6f49ozT8Ul5Qi/T4iAzn6ILb6jfy4jzO5ZlSnrCtepcUwHcxXlcYnhQGDbEVTiQcgIGoES4st5vweNseK5JjKE1Vc6oVm+1CKJjYZvhUEeWGWfRBiF64vHb0CIYFMJd/L8V5DXR0eo2guB3bjmM3WLVO18IZ51EmHIM9j52B4RH8S7DPXXNm+o9N3FTKojYBnlBKFojBa10QZlnlNDuIEpeNEGp0oRG0voEAi6ayljUGuPNTo3hANZP8ZfrLDRjtAPIIlKYGxVUC49mB7nf681gLVpDdGxz9yBySNhSSn9FpKIfysXZsEww==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 06:30:24.2610
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afd8a756-f805-4b79-5db6-08dc3e701240
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015C9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7893
+Content-Transfer-Encoding: quoted-printable
 
-[Why]
-Commit:
-- commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
-accidently overwrite the commit
-- commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in drm_dp_add_payload_part2")
-which cause regression.
+Hi Michael,
 
-[How]
-Recover the original NULL fix and remove the unnecessary input parameter 'state' for
-drm_dp_add_payload_part2().
+Sorry for the belated response.
 
-Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
-Reported-by: Leon Weiß <leon.weiss@ruhr-uni-bochum.de>
-Link: https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
-Cc: lyude@redhat.com
-Cc: imre.deak@intel.com
-Cc: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 +-
- drivers/gpu/drm/display/drm_dp_mst_topology.c             | 4 +---
- drivers/gpu/drm/i915/display/intel_dp_mst.c               | 2 +-
- drivers/gpu/drm/nouveau/dispnv50/disp.c                   | 2 +-
- include/drm/display/drm_dp_mst_helper.h                   | 1 -
- 5 files changed, 4 insertions(+), 7 deletions(-)
+On Wed, Jan 10, 2024 at 8:40=E2=80=AFPM Michael Schaller <michael@5challer.=
+de> wrote:
+>
+>
+> On 10.01.24 04:43, Kai-Heng Feng wrote:
+> > On Fri, Jan 5, 2024 at 11:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> >>
+> >> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
+> >>> On 05.01.24 04:25, Kai-Heng Feng wrote:
+> >>>> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
+> >>>
+> >>> Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result =
+in a
+> >>> working resume. I've tested this on kernel 6.6.9 (which still has com=
+mit
+> >>> 08d0cc5f3426). I've also attached the relevant dmesg output of the
+> >>> suspend/resume cycle in case this helps.
+> >>
+> >> Thanks for testing that!
+> >>
+> >>> Furthermore does this mean that commit 08d0cc5f3426 isn't at fault bu=
+t
+> >>> rather that we are dealing with a timing issue?
+> >>
+> >> PCI does have a few software timing requirements, mostly related to
+> >> reset and power state (D0/D3cold).  ASPM has some timing parameters,
+> >> too, but I think they're all requirements on the hardware, not on
+> >> software.
+> >>
+> >> Adding an arbitrary delay anywhere shouldn't break anything, and other
+> >> than those few required situations, it shouldn't fix anything either.
+> >
+> > At least it means 8d0cc5f3426 isn't the culprit?
+> >
+> > Michael, does the issue happen when iwlwifi module is not loaded? It
+> > can be related to iwlwifi firmware.
+> >
+> > Kai-Heng
+> >
+> The issue still happens if the iwlwifi module has been blacklisted and
+> after a reboot. This was again with vanilla kernel 6.6.9 and I've
+> confirmed via dmesg that iwlwifi wasn't loaded.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-index c27063305a13..2c36f3d00ca2 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-@@ -363,7 +363,7 @@ void dm_helpers_dp_mst_send_payload_allocation(
- 	mst_state = to_drm_dp_mst_topology_state(mst_mgr->base.state);
- 	new_payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->mst_output_port);
- 
--	ret = drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, new_payload);
-+	ret = drm_dp_add_payload_part2(mst_mgr, new_payload);
- 
- 	if (ret) {
- 		amdgpu_dm_set_mst_status(&aconnector->mst_status,
-diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-index 03d528209426..95fd18f24e94 100644
---- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-@@ -3421,7 +3421,6 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
- /**
-  * drm_dp_add_payload_part2() - Execute payload update part 2
-  * @mgr: Manager to use.
-- * @state: The global atomic state
-  * @payload: The payload to update
-  *
-  * If @payload was successfully assigned a starting time slot by drm_dp_add_payload_part1(), this
-@@ -3430,14 +3429,13 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
-  * Returns: 0 on success, negative error code on failure.
-  */
- int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
--			     struct drm_atomic_state *state,
- 			     struct drm_dp_mst_atomic_payload *payload)
- {
- 	int ret = 0;
- 
- 	/* Skip failed payloads */
- 	if (payload->payload_allocation_status != DRM_DP_MST_PAYLOAD_ALLOCATION_DFP) {
--		drm_dbg_kms(state->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
-+		drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
- 			    payload->port->connector->name);
- 		return -EIO;
- 	}
-diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-index 53aec023ce92..2fba66aec038 100644
---- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-@@ -1160,7 +1160,7 @@ static void intel_mst_enable_dp(struct intel_atomic_state *state,
- 	if (first_mst_stream)
- 		intel_ddi_wait_for_fec_status(encoder, pipe_config, true);
- 
--	drm_dp_add_payload_part2(&intel_dp->mst_mgr, &state->base,
-+	drm_dp_add_payload_part2(&intel_dp->mst_mgr,
- 				 drm_atomic_get_mst_payload_state(mst_state, connector->port));
- 
- 	if (DISPLAY_VER(dev_priv) >= 12)
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 0c3d88ad0b0e..88728a0b2c25 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -915,7 +915,7 @@ nv50_msto_cleanup(struct drm_atomic_state *state,
- 		msto->disabled = false;
- 		drm_dp_remove_payload_part2(mgr, new_mst_state, old_payload, new_payload);
- 	} else if (msto->enabled) {
--		drm_dp_add_payload_part2(mgr, state, new_payload);
-+		drm_dp_add_payload_part2(mgr, new_payload);
- 		msto->enabled = false;
- 	}
- }
-diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/drm_dp_mst_helper.h
-index 9b19d8bd520a..6c9145abc7e2 100644
---- a/include/drm/display/drm_dp_mst_helper.h
-+++ b/include/drm/display/drm_dp_mst_helper.h
-@@ -851,7 +851,6 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
- 			     struct drm_dp_mst_topology_state *mst_state,
- 			     struct drm_dp_mst_atomic_payload *payload);
- int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
--			     struct drm_atomic_state *state,
- 			     struct drm_dp_mst_atomic_payload *payload);
- void drm_dp_remove_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
- 				 struct drm_dp_mst_topology_state *mst_state,
--- 
-2.37.3
+Can you please give latest mainline kernel a try? With commit
+f93e71aea6c60ebff8adbd8941e678302d377869 (Revert "PCI/ASPM: Remove
+pcie_aspm_pm_state_change()") reverted.
 
+Also do you have efi-pstore enabled? Is there anything logged in
+/var/lib/systemd/pstore (assuming systemd is used)?
+
+Kai-Heng
+
+>
+> I've also checked if there is a newer firmware but Ubuntu 23.10 is
+> already using the newest firmware available from
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.g=
+it/log/iwlwifi-8265-36.ucode
+> (version 36.ca7b901d.0 according to dmesg).
+>
+> Michael
+>
+> >>
+> >> Bjorn
