@@ -1,131 +1,117 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FADD139B;
-	Fri,  8 Mar 2024 14:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9861DFDE
+	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 15:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709909855; cv=none; b=QT9W/Nev+QPFY7x5b7ImWffC/zQVNEgBJKn/vrjaQAd8hqIZvpRu/W/WAfxdQ9QlSdEYGWTOd1LfDSuidWvAhBx+QnZlaH0vEQA//80Txuz7CidQ36Udk8IB/xs7GrBO/VgeDTRdaweahx1rPLhS+UnRtUyw3DoTS6rh3X+glA0=
+	t=1709912970; cv=none; b=oBDqRCfLe9Akvt5Es70lyKZ/uPfbWQrCpz87W5c/0RIuOhuSbDyY+TJFiKz26tuEbDjMeA0DwwbtSsQoWAyrgRGG8vfHUjetQnOFWI16PgtXK1hdmG3uRAdetPUJhQA51K0sgnIsmEFBkV1wrJeN7wdGHkjJouOkJ7VMohvtyO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709909855; c=relaxed/simple;
-	bh=SoBP5zdgJWYtt7+AXt9ixFnf+qarEoVQ+eVaOaf4HfM=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=ppdKAcpNxJN/PVjhRT39lhPHvU9m7Jj43dVFaJd0ZIodrRtarIgCMkqQm1U7elgPsVmvRG9lkhDlriDYvwlsEKZRB9DqZs/BlHsSIid/EBo0weCnOyvuer/ldBonh1fm/iCO6Xi9YOnx+CIv+3pJYDhIDDGQSM61yAvpNYHjXyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UlbljNRT; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709912970; c=relaxed/simple;
+	bh=91DpN+5jqCtFxdFAdJyx2F5lCUgsbaBUIGnQ7cQW6Vo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ugm6K51lnGuAVj/QuB3VESIxpYdW8qNFnVBugAnpCfhTBNRYGblALjCsaCLI50YIqiC+q/upoT7rOkCWTWkRi5i5Gtt8j17uxf9NbeXZQNNvoHDM2PyXJXjlLiur+s/vofrSQDm/gDw5bDUIq8kNGjnfAM1+bQQLl4TFwYLF9xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SH0Njf64; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UlbljNRT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
-	:Cc:To:Reply-To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
-	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=SoBP5zdgJWYtt7+AXt9ixFnf+qarEoVQ+eVaOaf4HfM=; t=1709909853;
-	x=1710341853; b=UlbljNRTZWGCN7M4RmludKLlq9ABJVw11bVBJKR2wJBGT5P1NZBQwInAZB/nf
-	jht1m7QT3z7i2w7yu43FxIiT8ndls9iB+kCgDiy16TCmBg+DDKyl3sxVcaPr2sw635OtuZwOoqE4g
-	r1fjODltr3kD1upYy42zy5qsUQuYVTei9nw8tYirStw0a7bsUqR/r6GAVs4NMBXfYmSLzHAgP9ojO
-	FOse0V8iYFJYnsGhKl+Llfie2y0MsdhhmYj9w2bysa8KhT5dY18wKCk7YyLqfYjxKOr8KEQH8EhUN
-	/YDj0h/YnEep5ZTqS+1hEehLQUmhfaJ8jtMMpvOI+n3GvD4bmA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ribf8-0001bq-Uw; Fri, 08 Mar 2024 15:57:31 +0100
-Message-ID: <d85b8998-f7b8-465d-b5f0-d8fbb5382cce@leemhuis.info>
-Date: Fri, 8 Mar 2024 15:57:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SH0Njf64"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d3f4fef377so29738911fa.1
+        for <regressions@lists.linux.dev>; Fri, 08 Mar 2024 07:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709912967; x=1710517767; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ld+4cFJiCUpIgeEmlpcazZFkXkoYjxiqrgcd7maZMKE=;
+        b=SH0Njf64RCWePec7s0X2de6tnUDYLVJywNU6RA9wiRg5bIHJhnem5OxCy0fHZ7qZ7B
+         ztNp8xdsnsZ5gK4RN39M1bOczTNnm09FJNh/7A6TkkP5mLT/IpHshEJ9lOt8ufwQP0ki
+         TwqGxrhJVkgR3TUFswtKdXqhtgd9O/BdChuKPxVMgXsT5mb1aRffQsi4CUzcf4/5I5+k
+         6YYHjyN41ok324M9kUTwlVOgkHgqd/3Xh9+mwpyvx2Rp7Bcs6L/5tbhLbxRtftDstl4l
+         18XonRyC3KxtecSzsB/AUya/OMFoBgCVwTorGQ4pK09F6rXCM2YslvIMqdPHY3GsRtdL
+         GLZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709912967; x=1710517767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ld+4cFJiCUpIgeEmlpcazZFkXkoYjxiqrgcd7maZMKE=;
+        b=fA2aDgFzRCKrlVPbKOvL0TuOXpXyPz3earV/3DQNL/zqz8WB3327VTTz8K+UVpa+g5
+         dpMUbmS76bj0csoGBWoZdZjyBgSd9ZxfPzlpzQ0IKpc6uaJ7U+rTErCYU3TWPlSJJ9KR
+         qpWR/5BciUT4BAvyrVXR7J3z3xmZRJ6KtZPkfpbS6IxpvQkdAeOIn1Dzj3EXj8/2UhjC
+         9XPp8WEHpXbsut5DTYodJArVdpml9kVtqEIPBhNZkP8MJiUCSjh+2vdkJVmH34TrQrfQ
+         uXVeFmK6DWnj3mpkhsDwy0O5wXVK90f9vScqqmuK5tpJu1Qajlms0eoxVpJx8uXizZwz
+         cGJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6sB9flUdjnnUAYaWV5U8RouLIMZ4VDKgigqrV0YhQjStcfhsiJTB0F8KWiHl6nXfh4AiYcHOi1EebV4vXGmgaDyu0yGbmQ4FL9fs=
+X-Gm-Message-State: AOJu0YzdPVBsYPQBLYwZxlYoQo0ZO/Nak4hqPOhM0THtdPGA9LhAHL78
+	i7Ba8azRcdv36rIg7LMRABk7NebJk/bZYrnM/PueCXIXgKYgDanTs7225AznRYE5GIEEHRvPHKx
+	oV/g1ClUlGK3os1xLhPIWtiAQGtk=
+X-Google-Smtp-Source: AGHT+IGPyssiDhhfcu2ArxzuzahLXmqh8jRRtzzOKzL6wiSwUy7U9ClXjqn4LMqSqv3rNw24PwXN+9uNqUZrMxSzDL4=
+X-Received: by 2002:a05:6512:3d09:b0:513:3309:cc62 with SMTP id
+ d9-20020a0565123d0900b005133309cc62mr4774260lfv.47.1709912966304; Fri, 08 Mar
+ 2024 07:49:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: "Extra" Linux regressions report for mainline slightly ahead of
- 6.8-rc8/final
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709909853;57c071e1;
-X-HE-SMSGID: 1ribf8-0001bq-Uw
+References: <CA+G9fYsVni7x6AuP97i10oxcusUrB4+m2wpM4Z3mTzWsnMz-Mg@mail.gmail.com>
+ <8f69d1f2-0ce3-4851-a784-c76b274dd9ff@app.fastmail.com> <CA+G9fYvhxJ_Tokrc3zxgP4UNjrRXjhxjfqMtSbMOoURCF1GjmQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYvhxJ_Tokrc3zxgP4UNjrRXjhxjfqMtSbMOoURCF1GjmQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 8 Mar 2024 07:49:14 -0800
+Message-ID: <CAADnVQJLhKPA1MGtpqDwAnSDrCXBd1dxoCor2RwD22a-VLpiKA@mail.gmail.com>
+Subject: Re: arm64: WARNING: at mm/vmalloc.c:315 ioremap_page_range
+To: Naresh Kamboju <naresh.kamboju@linaro.org>, Christoph Hellwig <hch@infradead.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-mm <linux-mm@kvack.org>, 
+	linux-next <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus, here is a quick manual extra regression report due to the
-nearing 6.8 release:
+On Fri, Mar 8, 2024 at 6:24=E2=80=AFAM Naresh Kamboju <naresh.kamboju@linar=
+o.org> wrote:
+>
+> On Fri, 8 Mar 2024 at 17:34, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Fri, Mar 8, 2024, at 12:53, Naresh Kamboju wrote:
+> > > The following warning was noticed while boot arm and arm64 devices.
+> > > The below log is extracted from arm64 ROCK Pi 4B while booting and
+> > > another issue is kernel oops noticed while testing selftests:  kvm:
+> > > memslot_perf_test.
+> > >
+> > > 1) WARNING: CPU: 1 PID: 201 at mm/vmalloc.c:315 ioremap_page_range
+> > > 2)  Unable to handle kernel NULL pointer dereference at virtual addre=
+ss
+> > >   Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
+> > >   Kernel panic - not syncing: Oops: Fatal exception in interrupt
+> > >
+> > > Please find steps to reproduce, logs and config file links below.
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> <trim>
+>
+> > The warning was added by commit 3e49a866c9dc ("mm: Enforce
+> > VM_IOREMAP flag and range in ioremap_page_range.").
+> >
+> > This indeed uses a special memory area at a fixed physical address,
+> > but I don't see where the vm_struct comes from.
+>
+> Thanks for your explanation.
+>
+> > No idea here, but it seems unrelated to the first one.
+>
+> I will reproduce this issue a few more times and get back to you.
 
+See the proposed fix:
+https://lore.kernel.org/bpf/CAADnVQLP=3DdxBb+RiMGXoaCEuRrbK387J6B+pfzWKF_F=
+=3DaRgCPQ@mail.gmail.com/
 
-# Fixes for regressions from this cycle afaics unlikely to reach 6.8
-
-* 3445139e3a594b ("Revert "Revert "md/raid5: Wait for
-MD_SB_CHANGE_PENDING in raid5d""") in next, which reverts a commits from
-6.8-rc1; Song thinks it's better to merge this revert for 6.9 and then
-backport to 6.8:
-https://lore.kernel.org/all/CAPhsuW51ND4qH4My8Uz1XaZSdvAjDR7eL7O-RLr5wKmFJA0XMQ@mail.gmail.com/
-Report: https://lore.kernel.org/all/20240123005700.9302-1-dan@danm.net/
-
-* 0d7dfc79fb9b4b ("drm/msm/a6xx: specify UBWC config for sc7180" in
-next. No reply to my recent inquiry why this fix for a commit from this
-cycle was queued for 6.9:
-https://lore.kernel.org/all/4e55f6fd-8875-4a61-9070-f0ecad8082ea@leemhuis.info/
-Report: https://gitlab.freedesktop.org/drm/msm/-/issues/49 and
-https://lore.kernel.org/all/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
-
-
-
-# Regressions fixes sitting on the list awaiting review:
-
-* Fix divide-by-zero on DP unplug with nouveau
-https://lore.kernel.org/regressions/ZeoAPFIF6NClUl4P@debian.local/
-
-* u64_stats: fix u64_stats_init() for lockdep when used repeatedly in
-one file
-https://lore.kernel.org/lkml/20240306111157.29327-1-petr@tesarici.cz/
-
-* drm/nouveau: keep DMA buffers required for suspend/resume
-https://lore.kernel.org/dri-devel/20240229175822.30613-1-sidpranjale127@protonmail.com/
-
-
-
-# Regression reports where no fix is in sight afaics
-
-* dmaengine: CPU stalls while loading bluetooth module
-https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/ and
-https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
-See also:
-https://lore.kernel.org/all/000001da7140%246a0f1570%243e2d4050%24@samsung.com/
-Revert might be counter-productive.
-
-* drm/msm: Thinkpad X13s hard resets disconnecting external displays (
-https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
-See also: lore.kernel.org/all/ZesK1SKUB9BVKouF%40hovoldconsulting.com
-and https://lore.kernel.org/lkml/ZesH21DcfOldRD9g@hovoldconsulting.com/
-Maybe the whole series that causes this should have been reverted a week
-ago...
-
-* x86/mm/ident_map: kexec now leads to reboot
-https://lore.kernel.org/stable/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-https://lore.kernel.org/all/CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com/
-A revert apparently could fix this.
-
-
-
-# For completeness: fixes that I assume will make it to you soon
-
-* I assume Dmitry will send 7105e92c60c9cc ("Revert "Input: bcm5974 -
-check endpoint type before starting traffic"") soon.
-
-* I assume Greg will send ac3e0384073b24 ("misc: lis3lv02d_i2c: Fix
-regulators getting en-/dis-abled twice on suspend/resume") soon.
-
-* Not totally sure, but I assume the Btrfs folks will send
-978b63f7464abc ("btrfs: fix race when detecting delalloc ranges during
-fiemap") and 1cab1375ba6d53 ("btrfs: reuse cloned extent buffer during
-fiemap to avoid re-allocations") to you, too.
-
-
-Ciao, Thorsten
-
-Side note: /me hopes this mail is not classified as spam due to all the
-links...
+but Christoph believes a different approach is necessary:
+https://lore.kernel.org/bpf/Zeso7eNj1sBhH5zY@infradead.org/
