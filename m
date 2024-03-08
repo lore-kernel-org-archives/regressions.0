@@ -1,113 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CEA63B8;
-	Fri,  8 Mar 2024 12:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16B963B8
+	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 14:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709902543; cv=none; b=rAFK6NGMKtEqzu2ttZrm7F+jKQzwei/aFbnUOv/pulpuimHCvCHTGEnHjpj1DZhQsCNZGr2rgrfIjT4CVhUzVt51Dyfou00hGJ6TjNnT8OUVaRcaME4G19BuD5IKnNsCMwhfyzbspNO2LllKq7rD9Kck/HQwmUJ5O245YJOtCrY=
+	t=1709907015; cv=none; b=Nu2btqkKXRHzRqiawqp1x2gBKeUk16JbP+xcFAKXkGVzfJN0TI95y3YlRcXMgfQpACogcczQ8+symLAReajep05OpzcjoBKzdb5JbLi1rcLp+WOU0DKce8iH9UMuAZDpfYhmSTncE7ly4FAOKcp2f+aKNNJ71yvn9X+7DG7P0nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709902543; c=relaxed/simple;
-	bh=XzlD8OK+n2+8xxnxUIfr7jDUUAa8eBm1PY9cIuQU2Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KtYaBSMtEQ22UBdd0UaGtt1bFzUjurcBfszSSY3UpXc0Qtuey04QjtXgvE4T74y0cQPWyvq+/MubrozdL44ZUKGXY1OFuktpE93B0mDPpRwBUU1SHFVMT8Ms+REgNajBikud1W8X0SCypcsd2aSnD4E/FMgQhTEhnaA8omZKn/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+7uzEgl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709907015; c=relaxed/simple;
+	bh=XLcTd1jrwQne/noRDe0myK0vDxF9rSMC3JA5FM14s5Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UmQyCi0QmMid/X4o5zjDfiHkf3INyKoWpO5N7tY5hmprYdS3gT2iMet7aAoRhSZchYdEeQWpvqkOaKYiLJgHsuagXy3RBs1DxNNQ0HcjPqRWtJb8NL8uVRELozLNZ3w1qFLVa+7oV9Uxio6kzMWy/+Flfd5JGoVvAttzpkHeLMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OmocXzmt; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+7uzEgl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6490C433F1;
-	Fri,  8 Mar 2024 12:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709902542;
-	bh=XzlD8OK+n2+8xxnxUIfr7jDUUAa8eBm1PY9cIuQU2Is=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e+7uzEglLWDQFyNu1AHUm/0A3RA1njvNqcsFtlLxGMTpEIJQPoqFqMn5LmIpnoZvX
-	 Gy+9hmogANN4mkIjbjwaTMe8RWwy7JVWsJBs843XLOP5DaJtrS+jLf3FsI/TVbbUi5
-	 ee1XQ5WI1t+0Q6P4//COxaV9bJXKTJItCt200dL65lvgHoiS5SfogrBOU0PD8lL4lS
-	 MxDnHFPhyUBMPqLuXdDGOqZTND25R41iA0KqqZn6/MYN4ce2/STj8Vx6xXxg5CeDG4
-	 Iie7fMOKCK6aerRWEcmVLFz6A787X4/R3R85zVXMpIvQFI0ab81wZU+PF7D+bA8VJ/
-	 EAl1noOaoVCug==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1riZlN-000000001rW-2J4a;
-	Fri, 08 Mar 2024 13:55:50 +0100
-Date: Fri, 8 Mar 2024 13:55:49 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Vinod Koul <vinod.koul@linaro.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: Lenovo ThinkPad X13s regerssions (was Re: Linux regressions
- report for mainline [2024-02-25])
-Message-ID: <ZesK1SKUB9BVKouF@hovoldconsulting.com>
-References: <170886726066.1516351.14377022830495300698@leemhuis.info>
- <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
- <83c6019f-9c6f-4ad1-87d5-e4f1bdaca93c@leemhuis.info>
- <ZecjcApvdZSGRysT@hovoldconsulting.com>
- <20240306041947.GG3213752@hu-bjorande-lv.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OmocXzmt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709907012;
+	bh=XLcTd1jrwQne/noRDe0myK0vDxF9rSMC3JA5FM14s5Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OmocXzmtuGKY+YVyMZvclR1jb48vjlwF41USSTEdJsSx9zgIEX3w4MsuPZfGK2TXt
+	 ss5buoUhhjiOm+UBYN0NNkduKGVKxaIeunUgkMqOO3WMm5WjGR6aDisY+KHAnOMh9a
+	 JxMzU53UwYGYuXtNj3fTN7JSlYqzYIi5pGp0fSV5DHPf5BTO14ggmfDLdQyHypUSJG
+	 F6U0kzYP/PLLW3cCHk6OGM4FcfrwvQLl4MotECpr0n9xesTc+FQb9m5KYQd+rjosZM
+	 VwPG/YvKPXCApqTIKBcBP5TxN86SheBcDzPZ2DcTzyZYMfLVk3goKPAZQ5ahcR+DMo
+	 ZMei9xd32G2+w==
+Received: from [192.168.1.13] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A835C37820F1;
+	Fri,  8 Mar 2024 14:10:10 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH 0/2] docs: *-regressions.rst: Tweaks to the commands
+Date: Fri, 08 Mar 2024 09:09:58 -0500
+Message-Id: <20240308-regzbot-fixes-v1-0-577a4fe16e12@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306041947.GG3213752@hu-bjorande-lv.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADYc62UC/x3LQQqAIBBA0avIrBPMJKKrRIvM0WZTMUZE4t0bW
+ j4+v0BGJswwqgKMN2U6dkHbKFi3ZU+oKYjBGutMZwbNmF5/XDrSg1m7brFDDM73tgV5TsY/yDL
+ NtX5iGZcqXwAAAA==
+To: Thorsten Leemhuis <linux@leemhuis.info>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, regressions@lists.linux.dev, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ workflows@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-On Tue, Mar 05, 2024 at 08:19:47PM -0800, Bjorn Andersson wrote:
-> On Tue, Mar 05, 2024 at 02:51:44PM +0100, Johan Hovold wrote:
-> > On Tue, Mar 05, 2024 at 10:33:39AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+A couple tweaks to the commands in the regression documentation to make
+them up-to-date and less confusing.
 
-> > > Any decision yet if they are going to be reverted for now?
-> > >
-> > > Am I right assuming those would fix
-> > > https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
-> > > which did not get even a single reply?
-> > 
-> > That was the hope, but I've managed to trigger a reset on disconnect
-> > once also with the runtime PM series reverted.
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Nícolas F. R. A. Prado (2):
+      docs: *-regressions.rst: Use collon after regzbot introduced command
+      docs: handling-regressions.rst: Update regzbot command fixed-by to fix
 
-I have not been able to reproduce the reset with the series reverted,
-and after reviewing the code in question it seems unlikely that I ever
-did so.
+ Documentation/admin-guide/reporting-regressions.rst |  2 +-
+ Documentation/process/handling-regressions.rst      | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 11afac187274a6177a7ac82997f8691c0f469e41
+change-id: 20240308-regzbot-fixes-43a28fd4b621
 
-> > One of the patches from that series has already been reverted (to fix
-> > the VT console hotplug regression) and there is some indication that
-> > that was sufficient to address the issue with hotplug not being detected
-> > in X/Wayland too. I'm waiting for confirmation from some users that have
-> > not been able to use their external displays at all since 6.8-rc1, but
-> > it does seem to fix the X/Wayland issues I could reproduce here.
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-> I bumped my X13s to v6.8-rc7 earlier today and took it for a spin.
-> 
-> I was successfully able to plug/unplug my main display both in fbcon and
-> Wayland (sway) a number of times, I was able to boot with external
-> display connected and have it show up in fbcon and then survive into
-> sway. I tried suspending (echo mem > /sys/power/state) and got back from
-> that state a few times without problems.
-> 
-> Mixing connection/disconnection with being in suspended state was less
-> successful and I was able to crash the machine twice here - but I can't
-> say this worked before... (As previously we would not have eDP after
-> suspending with external display).
-> 
-> So, things are looking much better with -rc7, but of course, my test
-> scope is limited.
-
-Thanks for confirming. The revert in rc7 seems to help with the hotplug
-detect issues I could reproduce too. And for some reason, I can no
-longer seem to reproduce the reset either, possibly due to unrelated
-changes in timing (e.g. as I don't see it after reapplying the reverted
-patch either). 
-
-I just spent some more time on this driver and sent a follow-up report
-here:
-
-	https://lore.kernel.org/lkml/ZesH21DcfOldRD9g@hovoldconsulting.com/
-
-It seems quite clear to me that the reset-on-disconnect regression have
-been introduced by the runtime PM series and I don't currently see how
-the hotplug notification revert in rc7 could have fixed it.
-
-Johan
