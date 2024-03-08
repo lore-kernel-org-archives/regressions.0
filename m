@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CDB208AD;
-	Fri,  8 Mar 2024 08:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439935103F;
+	Fri,  8 Mar 2024 08:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887879; cv=none; b=SgpaxdbafI7kdjexLz1U8d21gdMgVEhKIsDjM49hETnH8h8X/KXYTqIuQRKmGJC5WokamvVGPMgX0VfxnxsuyfrqxNBI1lKJdmukgbLBmRs5rBTcCCItTviUhVV55AhzyWHxF2H9KkFLqglbB7wUBElLPDKYXwN/qntMHXL9f6E=
+	t=1709888359; cv=none; b=hha/vUgFN0SxzdzuSwLb6/AuuDj53FTsSPg4aV51U1LMQtMl5MUaXO+LI914/FH/hVqCEgNPb+/7nffQIxmCYNTZFdV9QmV2YT1Jq460R8IFmqbMtAm1fDi8gSS28B0x38DXEO/4iwiifGBedp92mxSi8tuNOAcJLAZeMneQ7ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887879; c=relaxed/simple;
-	bh=xa9S9gA+2Kdx0nRGP4a+OCGAFa+zMDo98VZV5Yh0Xcg=;
+	s=arc-20240116; t=1709888359; c=relaxed/simple;
+	bh=9nk/LM8qbXxqqrGQTnt5jKWaF87oDn2J91q3tvQdGAc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HKb+gO2wUttVDRUw9fk4H82hWUAQP46Xa8E0J0+SuOCzBNpvKV1Ma6fqoRlKsDlmk7irfQd5WraM8TStUldavxX792ScmFEHOeQnp/Csj1hC44Vqu+w0m1dYwz2wq6EeBCd1+oZlf9S2tb/UMUXh2iW4hFIkBscH88VYa5Rffco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=of2pqqxZ; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=kB0lJfT7YVSp5Zqqc051xJSF9sdMtkOwdpYbTEUDKt0vhD7jltvACkQTiCVrguWaPPPBO2EGZ333N4RNy+9TaAHJbCCWimKHZXxUY/kLZVwt1iQeuPAGE5HOPU/sLS3bGFJxQjzcRgsIhci/4ZdrJ7CVQktVnbRbQbWmbeCLql8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bdSRG0xm; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="of2pqqxZ"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bdSRG0xm"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=IPYOyNy9SYM4JNCOX10vMNStn8WkuVS6FnTRy1OZhq8=;
-	t=1709887877; x=1710319877; b=of2pqqxZxl23woIulpy9kOTQsuDdqvWDpRW5oc0AXqzKULJ
-	tXR3gQ6nPdgX0WIUcrFZ5n/RtE+pN5PEmy8RO2yuZgmFehjgqzjGYRjFy+y5vTaInSVwFLlzL8bFp
-	cQhMnCDhJqp5jbx0vUM0dNeOpDT0oyPLJTIdIbYTOXV8xXb8CTeDvHE3KniTKUuCBiaRbKrOe5hBg
-	ZDz7KhgCGMjf9j01af7OCtvAbiJjOCfqD+R26VayiX42juYJwjU6L2nQ9Af9NZuaNK/F9VC6Ww+Ju
-	Dwk+DI84ZvUdiu/qwuCGOknJ7W7VpM4fo63vBkDFt2Vc6+QziMuBu9kj3egnFOsA==;
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=9nk/LM8qbXxqqrGQTnt5jKWaF87oDn2J91q3tvQdGAc=; t=1709888357;
+	x=1710320357; b=bdSRG0xmeLMlyH1q4zHZRFOQZ96DPNKdWGyVdBaPjbdgD+cyotvxft8Pp2eT/
+	YcXx2DlQlwhSHI32OlTD0s8i1ydk2n+dTkmlNvQZvT84ui5MzQfPTwTBwTetKwWWN+rxm9FnnBzjC
+	wfIiLRJ6ct9u1RosnHKNHmn9D7VB/IY3H5B0WvLc/huDV1IN/eMICIbT4SspgsgSs8eU5QAyFEHNg
+	30Jfq9zl0u9wP7QhZpGmvdIz4I5utKPup2aNkQ6+dtfzcQ3r+pW36ZoCq+J8GqJUlHiP7W/WgwOdc
+	iiU17RskOH0mhca0IzS5NMTYU3gnM1XgL2m+IUMERlTPSZuMkw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1riVwf-0005on-QT; Fri, 08 Mar 2024 09:51:13 +0100
-Message-ID: <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
-Date: Fri, 8 Mar 2024 09:51:13 +0100
+	id 1riW4D-0001ul-M1; Fri, 08 Mar 2024 09:59:01 +0100
+Message-ID: <7c7e363b-ec9b-4b46-a0bf-7ae062d734d1@leemhuis.info>
+Date: Fri, 8 Mar 2024 09:58:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,74 +39,38 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Subject: Re: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
 Content-Language: en-US, de-DE
-To: "bumyong.lee" <bumyong.lee@samsung.com>,
- 'karthikeyan' <karthikeyan@linumiz.com>, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
- <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
- <000001da6ecc$adb25420$0916fc60$@samsung.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <000001da6ecc$adb25420$0916fc60$@samsung.com>
+To: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
+Cc: 1054514@bugs.debian.org, airlied@redhat.com, carnil@debian.org,
+ daniel@ffwll.ch, dri-devel@lists.freedesktop.org, kraxel@redhat.com,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi,
+ tzimmermann@suse.de, virtualization@lists.linux-foundation.org
+References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+ <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
+ <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709887877;4e0565a6;
-X-HE-SMSGID: 1riVwf-0005on-QT
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709888357;95bd5470;
+X-HE-SMSGID: 1riW4D-0001ul-M1
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On 08.03.24 02:08, Alex Constantino wrote:
+> Fix OOM scenario by doing multiple notifications to the OOM handler through
+> a busy wait logic.
+> Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
+> result in a '[TTM] Buffer eviction failed' exception whenever it reached a
+> timeout.
 
-On 05.03.24 08:13, bumyong.lee wrote:
->> we have encountered CPU stalls in mainline kernel while loading the
->> bluetooth module. We have custom board based on rockchip rv1109 soc and
->> there is bluetooth chipset of relatek 8821cs. CPU is stalls  while realtek
->> 8821cs module.
->>
->> Bug/Regression:
->> In current mainline, we found CPU is stalls when we load bluetooth module.
->> git bisect shows commit 22a9d9585812440211b0b34a6bc02ade62314be4
->> as a bad, which produce CPU stalls.
->>
->> git show 22a9d9585812440211b0b34a6bc02ade62314be4
->> commit 22a9d9585812440211b0b34a6bc02ade62314be4
->> Author: Bumyong Lee <bumyong.lee@samsung.com>
->> Date:   Tue Dec 19 14:50:26 2023 +0900
->>
->>      dmaengine: pl330: issue_pending waits until WFP state
->>
-> [...]
->>
->> By reverting this commit, we have success in loading of bluetooth module.
-> 
->> Output of CPU stalls:
-> [...]
-> 
-> I discussed this issue. Could you refer to this[1]?
-> I haven't received anymore reply from him after that.
-> If you have any more opinion, please let me know.
-> [1]: https://lore.kernel.org/lkml/000001da3869$ca643fa0$5f2cbee0$@samsung.com/T/
+Thx for working on this.
 
-Hmmm. 6.8 final is due. Is that something we can live with? Or would it
-be a good idea to revert above commit for now and reapply it when
-something better emerged? I doubt that the answer is "yes, let's do
-that", but I have to ask.
+> Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
+> Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Nitpicking: that ideally should be pointing to
+https://lore.kernel.org/regressions/ZTgydqRlK6WX_b29@eldamar.lan/ , as
+that the report and not just a reply to prod things.
 
-P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
-
-#regzbot report /
-#regzbot introduced 22a9d9585812440211b
-#regzbot duplicate: https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/
-#regzbot title dmaengine: CPU stalls while loading bluetooth module
-#regzbot ignore-activity
+Ciao, Thorsten
