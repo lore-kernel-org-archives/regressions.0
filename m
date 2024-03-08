@@ -1,57 +1,57 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128BC22EE8
-	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 01:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9829823753
+	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 01:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709860337; cv=none; b=Gxxee6R9Iz0JvJDNFmRoPVx1Z8Lk8F4IGV4J0vc362qwoeL5mRGUd4mD5DTOlU6ZFPSJTo83s3yzVRSA3KZ0h10ahq7MHifSRuhGgDX0oIrPXA5XF7F4ZPQik5fB4k3zrt6PPQAaVvcP8Bsd7nyR92ZbFV+uM32vAY+7EYhNJDM=
+	t=1709860348; cv=none; b=bXjjjYJV0HS+WVsIee89FTa5i+WI7Tpa/1temHxIcIB2R/tA065oE+5Q3DNfHv+ZcWYmyIfm7NrbOzc1d0jXbTiphY1ddxPH2xjViS+E+kWlgAfp5iVgXwPA4AaVydBJP15xY+8CNWlnRsWYftR4O4Ok0qTfCNPDjPwUqZ3Qbio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709860337; c=relaxed/simple;
-	bh=1ry6AQG7FDQURpCv8xY189XkCSFEOUrLObp2q9zDSA8=;
+	s=arc-20240116; t=1709860348; c=relaxed/simple;
+	bh=sA5YotOtX3AcvjjrYf5fHrYUORIzots7hTq07UQbKVI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=irby/RM44jcQP3QKHEgSm1ZQzYlEjc2mJzbbtTKQNjGEqq9Hxa09UI+9th81HWbEB7l3y+jh4Jcc1m62CjC81XF+4x/VbKwrwLvkOGf4ysGrIEzHRL66VguZXTM0TW0sY00/4IU7fGPGmSaHM3fc7hzZlBdUWRpE9iSe5Bh0xdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUFWy4Te; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=f3Y4/lvJO+nluz5GD6eSoOHJ7ZNPQHZUIODAAgM9Ydl4z/YwDtECwDetYd2T4iXrjrJ7kPZ9J2v60z6MvS3MGHa18Jjgd7dsLH+L/f7VG4iPGMx8TNrDBCCXO9EleVOcpk5S0V0i7ozvUqAhBUVEn+krQiD0ik46oFa8+3V2mU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AFSDSglC; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUFWy4Te"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e76d653b5so74405f8f.3
-        for <regressions@lists.linux.dev>; Thu, 07 Mar 2024 17:12:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFSDSglC"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33d38c9ca5bso916504f8f.2
+        for <regressions@lists.linux.dev>; Thu, 07 Mar 2024 17:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709860334; x=1710465134; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1709860345; x=1710465145; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9rYDwFy7vdGfEU3AYQcMyBM3b1/hHXEUCIhC7owEbTA=;
-        b=IUFWy4TeD4xp/YpIJa0zLLdqBy9LNaUkuWjoNBSuWKFEfjt8eo38aw0T3b1+iEr5hw
-         MlqU4srZtyOKdAdL8A/N8bNrWolIUdu+WXIrLQOEPQ1QeogibUkSC2wzjrXn3y2erpWr
-         YjE1PsGbUBNloUoQCaOALgbQysWJfnaBpluIbpIMTEtpj9rFTP4fjOVxdKVklLl5Oodf
-         HpDdhP5EXJ+O2an4+J8eB9CBXWtDP12SlNypqp4q9SWpu247isr5d8fAq1H8sQPefGP6
-         zp+e8IXkJvv5w9On4yjp7DRGURDg6qUD1fxBB2ylniCEs3VCKbFsZT6nbV72bAhhpDIp
-         uekQ==
+        bh=Owx6jt72g5QT/V0uQHGstO9uCqzU46h0v31gh/DzxSw=;
+        b=AFSDSglCgy+p+AC1MQuBqWoVnkAGSKUzrFe0pAUxRJxH8NfMtqAxM9q5f41XoIgzbg
+         EBsDBzdnGjRbdqPhV18yvJu4acpCD6vOqwcUi6+63tIVkW1j6uw5tSCB234EqTvSBUpn
+         jUl6FCvKIK9sg0f34LlitBXy3MjQ26klxPhVuw6+6vXpYGw7luKslM/nYEEGZIbU2WMh
+         qakhn/flpNp5lffjywEkV8GHsHgluDgVsDFQw4v+Web0qkqLjo/7fguk6kKde4N/SJpR
+         ErzMzevPCGjcFpZOHVgRaOPD5QEKyueBig5f4Wpupd1bgTkxdLPqzOkmFwAWjAgsH8gE
+         qtug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709860334; x=1710465134;
+        d=1e100.net; s=20230601; t=1709860345; x=1710465145;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9rYDwFy7vdGfEU3AYQcMyBM3b1/hHXEUCIhC7owEbTA=;
-        b=GyOJIXpFq41Z6ntjYidch8OLsoZBIH2w3pBfVIaNZaCf3lQ6vdSyT+bzzD0h6WjPSq
-         OOnPdg3533xRzkZag4TLHg2FciXNJ9Rw1i8EuGuFGYuBt7FAoYqWfCvpt4Ee35eZp2t1
-         gjgbSvKyRbFMCdewuqSeoBUE+N0H1NQ4eGy+hFkfmW8GYdRyO+MSEOoWxVF6ImPJUSns
-         nmPaLYR0P2B5Y887GQfK8La8xnouQsB5ROW3tuIcEDzOe/ln6jA2yHVFX+iTlnWmxHd7
-         f38rQyn8zyHhz4pT4BSme7ICnIaciac/4qplJCAGU+1eDNhWOy2LDhzqcel/BgwalZ0a
-         qT6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVyjvNXnefuSXdb2/wwb8d0HDpEt2qJd5442rbnl8WIhzoaviMpizHYTgfeoccfS5N2yItvTS5vKmSNneE2kyhesUJ8d1uC1YdaKtM=
-X-Gm-Message-State: AOJu0Ywus22vJRVAwGhIxlSMtNNaNobQxWE+QvBcpe++3mPlxKydxfiC
-	WtBCYT8Ny0wFwPnl4df9nvbgFq3Pw+1LOf4VNphKwWkwA+zUYRHZ
-X-Google-Smtp-Source: AGHT+IGKMlg7G8idiMgtUIW7KsMqQOgjBUReKZbtn1HelBvnmw950hTkhxqpW8un5mj/gRLn/HuyMA==
-X-Received: by 2002:adf:f7d2:0:b0:33d:6ede:1149 with SMTP id a18-20020adff7d2000000b0033d6ede1149mr13774269wrq.35.1709860334120;
-        Thu, 07 Mar 2024 17:12:14 -0800 (PST)
+        bh=Owx6jt72g5QT/V0uQHGstO9uCqzU46h0v31gh/DzxSw=;
+        b=X8oeYae+kTQKaBVwp5XlM51jStsD0QYBWQu9LETEClKivCOCRXbyHPA7raiMyptum/
+         YOr2w+OvhctqUaNIxM6Vkaa/umUIzaCxBNmM8qimu5hIL0Fhpr+vryqHUZfqI69KSxZC
+         p2DzCRIpCRd0UX+50Qx4V2l7/fKlZ0q5mvgyiASymIQ1Pf66h4OYRn3Zpr+gZcIVoYeN
+         fSmHs6Ote1+JHQuR2WICy/0H6ixySgxAplJ9BHXW8Vs+67oiinqLf13JxKt4QjL6VLT1
+         kLukHFfhgiOFBp98R231KdRgRyJulLbvAec7sGoPOTQKiFsWlTYNNneAvhEUYDqGH6mw
+         Q9CA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0H10qRHH4qNnvTy3nNUW/QxnjPY84uUnIpZdvAbIrZRNkItA1MzqIjDeogdrQr4gEwM5pWaEYslMy1765qYhs0ae8IXtijqStIus=
+X-Gm-Message-State: AOJu0Yw6wyAiqRresn846Zoy73OxSz7BGaKGehs6pITwe1q+c82xtwzy
+	mIaNdErjaMlJhAsVO9uXtEfsbGV2P9id2VLX5Y0u+GUBzOkj8TJPKcrIt+wrx1vPpKTxe5U=
+X-Google-Smtp-Source: AGHT+IGyFK85fLcK62sC298qj//c9CgMsC5e3P8Va0z/mRDqMFtCe0XGX8iOSmZnzWnJeMlfMP112A==
+X-Received: by 2002:a5d:554d:0:b0:33e:6760:6def with SMTP id g13-20020a5d554d000000b0033e67606defmr2195331wrw.56.1709860344707;
+        Thu, 07 Mar 2024 17:12:24 -0800 (PST)
 Received: from localhost (ec2-18-169-47-158.eu-west-2.compute.amazonaws.com. [18.169.47.158])
-        by smtp.gmail.com with ESMTPSA id w15-20020adfec4f000000b0033e767cac6csm298769wrn.115.2024.03.07.17.12.13
+        by smtp.gmail.com with ESMTPSA id f14-20020a5d50ce000000b0033b66c2d61esm21450770wrt.48.2024.03.07.17.12.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 17:12:13 -0800 (PST)
+        Thu, 07 Mar 2024 17:12:24 -0800 (PST)
 From: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
 To: regressions@leemhuis.info
 Cc: 1054514@bugs.debian.org,
@@ -67,12 +67,13 @@ Cc: 1054514@bugs.debian.org,
 	tzimmermann@suse.de,
 	virtualization@lists.linux-foundation.org,
 	Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-Subject: [PATCH 0/1] drm/qxl: fixes qxl_fence_wait
-Date: Fri,  8 Mar 2024 01:08:50 +0000
-Message-Id: <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
+Subject: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
+Date: Fri,  8 Mar 2024 01:08:51 +0000
+Message-Id: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+In-Reply-To: <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
 References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+ <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -81,116 +82,63 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
-As initially reported by Timo in the QXL driver will crash given enough
-workload:
-https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info/
-I initially came across this problem when migrating Debian VMs from Bullseye
-to Bookworm. This bug will somewhat randomly but consistently happen, even
-just by using neovim with plugins or playing a video. This exception would
-then cascade and make Xorg crash too.
+Fix OOM scenario by doing multiple notifications to the OOM handler through
+a busy wait logic.
+Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
+result in a '[TTM] Buffer eviction failed' exception whenever it reached a
+timeout.
 
-The error log from dmesg would have `[TTM] Buffer eviction failed` followed
-by either a `failed to allocate VRAM BO` or `failed to allocate GEM object`.
-And the error log from Xorg would have `qxl(0): error doing QXL_ALLOC`
-followed by a backtrace and segmentation fault.
-
-I can confirm the problem still exists in latest kernel versions:
-https://gitlab.freedesktop.org/drm/kernel @ c6d6a82d8a9f
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git @ 1870cdc0e8de
-
-When I was investigating this issue I ended up creating a script which
-triggers the issue in just a couple of minutes when executed under uxterm.
-YMMV according to your system, for example when using urxvt crashes were
-not as consistent, likely due to it being more efficient and having less
-video memory allocations.
-For me this is the fastest way to trigger the bug. Here follows:
-```
-#!/bin/bash
-print_gradient_with_awk() {
-    local arg="$1"
-    if [[ -n $arg ]]; then
-        arg=" ($arg)"
-    fi
-    awk -v arg="$arg" 'BEGIN{
-        s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
-        for (colnum = 0; colnum<77; colnum++) {
-            r = 255-(colnum*255/76);
-            g = (colnum*510/76);
-            b = (colnum*255/76);
-            if (g>255) g = 510-g;
-            printf "\033[48;2;%d;%d;%dm", r,g,b;
-            printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
-            printf "%s\033[0m", substr(s,colnum+1,1);
-        }
-        printf "%s\n", arg;
-    }'
-}
-for i in {1..10000}; do
-    print_gradient_with_awk $i
-done
-```
-
-Timo initially reported:
-commit 5f6c871fe919 ("drm/qxl: properly free qxl releases") as working fine
-commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") introducing the bug
-
-The bug occurs whenever a timeout is reached in wait_event_timeout.
-To fix this issue I updated the code to include a busy wait logic, which
-was how the last working version operated. That fixes this bug while still
-keeping the code simple (which I suspect was the motivation for the
-5a838e5d5825 commit in the first place), as opposed to just reverting to
-the last working version at 5f6c871fe919
-The choice for the use of HZ as a scaling factor for the loop was that it
-is also used by ttm_bo_wait_ctx which is one of the indirect callers of
-qxl_fence_wait, with the other being ttm_bo_delayed_delete
-
-To confirm the problem no longer manifests I have:
-- executed my own test case pasted above
-- executed Timo's test case pasted below
-- played a video stream in mplayer for 3h (no audio stream because
-  apparently pulseaudio and/or alsa have memory leaks that make the
-  system run out of memory)
-
-For quick reference here is Timo's script:
-```
-#!/bin/bash
-chvt 3
-for j in $(seq 80); do
-    echo "$(date) starting round $j"
-    if [ "$(journalctl --boot | grep "failed to allocate VRAM BO")" != "" ]; then
-        echo "bug was reproduced after $j tries"
-        exit 1
-    fi
-    for i in $(seq 100); do
-        dmesg > /dev/tty3
-    done
-done
-echo "bug could not be reproduced"
-exit 0
-```
-
-From what I could find online it seems that users that have been affected
-by this problem just tend to move from QXL to VirtIO, that is why this bug
-has been hidding for over 3 years now.
-This issue was initially reported by Timo 4 months ago but the discussion
-seems to have stalled.
-It would be great if this could be addressed and avoid it falling through
-the cracks.
-
-Thank you for your time.
-
-
+Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
+Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
+Reported-by: Timo Lindfors <timo.lindfors@iki.fi>
+Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054514
+Signed-off-by: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
 ---
-
-Alex Constantino (1):
-  drm/qxl: fixes qxl_fence_wait
-
  drivers/gpu/drm/qxl/qxl_release.c | 20 ++++++++++++++------
  1 file changed, 14 insertions(+), 6 deletions(-)
 
-
-base-commit: 1870cdc0e8dee32e3c221704a2977898ba4c10e8
+diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
+index 368d26da0d6a..51c22e7f9647 100644
+--- a/drivers/gpu/drm/qxl/qxl_release.c
++++ b/drivers/gpu/drm/qxl/qxl_release.c
+@@ -20,8 +20,6 @@
+  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#include <linux/delay.h>
+-
+ #include <trace/events/dma_fence.h>
+ 
+ #include "qxl_drv.h"
+@@ -59,14 +57,24 @@ static long qxl_fence_wait(struct dma_fence *fence, bool intr,
+ {
+ 	struct qxl_device *qdev;
+ 	unsigned long cur, end = jiffies + timeout;
++	signed long iterations = 1;
++	signed long timeout_fraction = timeout;
+ 
+ 	qdev = container_of(fence->lock, struct qxl_device, release_lock);
+ 
+-	if (!wait_event_timeout(qdev->release_event,
++	// using HZ as a factor since it is used in ttm_bo_wait_ctx too
++	if (timeout_fraction > HZ) {
++		iterations = timeout_fraction / HZ;
++		timeout_fraction = HZ;
++	}
++	for (int i = 0; i < iterations; i++) {
++		if (wait_event_timeout(
++				qdev->release_event,
+ 				(dma_fence_is_signaled(fence) ||
+-				 (qxl_io_notify_oom(qdev), 0)),
+-				timeout))
+-		return 0;
++					(qxl_io_notify_oom(qdev), 0)),
++				timeout_fraction))
++			break;
++	}
+ 
+ 	cur = jiffies;
+ 	if (time_after(cur, end))
 -- 
 2.39.2
 
