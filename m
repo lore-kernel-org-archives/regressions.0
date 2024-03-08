@@ -1,137 +1,131 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9802036F
-	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 14:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FADD139B;
+	Fri,  8 Mar 2024 14:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709908320; cv=none; b=S2l2fUPlWb4I19IlHQH4LtV9UsQYflWcvE3lxXnhBiaa2sJOMW6665Gb3p8mgF2W9/CAU5gSd5Yy5xu4U/dbF8ld5XRmsTv9JNbYcx2LSE5AWk7AdSyawQD0BBpmD1nnKTDYNf1IUWBzDlfFgBJPRNJ/tXkSqJizTCtdoGIGJ48=
+	t=1709909855; cv=none; b=QT9W/Nev+QPFY7x5b7ImWffC/zQVNEgBJKn/vrjaQAd8hqIZvpRu/W/WAfxdQ9QlSdEYGWTOd1LfDSuidWvAhBx+QnZlaH0vEQA//80Txuz7CidQ36Udk8IB/xs7GrBO/VgeDTRdaweahx1rPLhS+UnRtUyw3DoTS6rh3X+glA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709908320; c=relaxed/simple;
-	bh=wdtYuwWx8ORQMwU47Qj5g2L7s2yOzijaUjNod58MtHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuK4QtRbGdt7rivX05lDiL05A3TtfuRnhQL4JtOu9Yx4/3KTdcFrIcDxTlZsseMlpHLIBsNFxZOJdlU65DHjan2FtUxW1B3lr6VwDKRPNlNTwjBms5Vs70gpj0p0CWX+bi8Xdb/leIb8C6IsPXRBLZIHlwy4ZCPEyLdo3K+JYbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WOV78bzO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709909855; c=relaxed/simple;
+	bh=SoBP5zdgJWYtt7+AXt9ixFnf+qarEoVQ+eVaOaf4HfM=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=ppdKAcpNxJN/PVjhRT39lhPHvU9m7Jj43dVFaJd0ZIodrRtarIgCMkqQm1U7elgPsVmvRG9lkhDlriDYvwlsEKZRB9DqZs/BlHsSIid/EBo0weCnOyvuer/ldBonh1fm/iCO6Xi9YOnx+CIv+3pJYDhIDDGQSM61yAvpNYHjXyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UlbljNRT; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WOV78bzO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709908317;
-	bh=wdtYuwWx8ORQMwU47Qj5g2L7s2yOzijaUjNod58MtHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WOV78bzOtFgbkclVF1IHUAojPBKxxPeMbLzSqAkg93ILAG1TPRonZhHVToLUUKerl
-	 OBGMcXxyT9ozJdaCYQcLI1absu/0fJ3VL3mG6siOMAWwkbpRvVbJaNwx5xzDIMWj4o
-	 t8B8DrXILMB+OgyhVvbTHlFGQL4VOQk/zQXdTpRpaulErM4EcQsj1N6wePREhWHlQk
-	 KkqXUCBn8BPY/urVHoe+xqOBr+6+gu9eGWu2ky2tDZOdyQ8GBDPgNMyDn9n4AZGExc
-	 lg3p2EFHPey7EMKIJu7kOVhofva1YqpBdgsxYASnZst/+wCQgYrWGyjn/PafgWZ8Mo
-	 Dsi/vkQHKarig==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A282D37820C3;
-	Fri,  8 Mar 2024 14:31:54 +0000 (UTC)
-Date: Fri, 8 Mar 2024 09:31:52 -0500
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Chen-Yu Tsai <wenst@chromium.org>
-Cc: regressions@lists.linux.dev, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: Probe regression of efuse@11f10000 on
- mt8183-kukui-jacuzzi-juniper-sku16 running next-20240202
-Message-ID: <c4416256-eedc-4c9b-b968-3a02490c4c09@notapiano>
-References: <47cdeac1-121d-4b1a-a3ac-e2affc7a2fc3@notapiano>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UlbljNRT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Cc:To:Reply-To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=SoBP5zdgJWYtt7+AXt9ixFnf+qarEoVQ+eVaOaf4HfM=; t=1709909853;
+	x=1710341853; b=UlbljNRTZWGCN7M4RmludKLlq9ABJVw11bVBJKR2wJBGT5P1NZBQwInAZB/nf
+	jht1m7QT3z7i2w7yu43FxIiT8ndls9iB+kCgDiy16TCmBg+DDKyl3sxVcaPr2sw635OtuZwOoqE4g
+	r1fjODltr3kD1upYy42zy5qsUQuYVTei9nw8tYirStw0a7bsUqR/r6GAVs4NMBXfYmSLzHAgP9ojO
+	FOse0V8iYFJYnsGhKl+Llfie2y0MsdhhmYj9w2bysa8KhT5dY18wKCk7YyLqfYjxKOr8KEQH8EhUN
+	/YDj0h/YnEep5ZTqS+1hEehLQUmhfaJ8jtMMpvOI+n3GvD4bmA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ribf8-0001bq-Uw; Fri, 08 Mar 2024 15:57:31 +0100
+Message-ID: <d85b8998-f7b8-465d-b5f0-d8fbb5382cce@leemhuis.info>
+Date: Fri, 8 Mar 2024 15:57:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <47cdeac1-121d-4b1a-a3ac-e2affc7a2fc3@notapiano>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: "Extra" Linux regressions report for mainline slightly ahead of
+ 6.8-rc8/final
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709909853;57c071e1;
+X-HE-SMSGID: 1ribf8-0001bq-Uw
 
-On Tue, Feb 06, 2024 at 11:11:00AM -0500, Nícolas F. R. A. Prado wrote:
-> Hi,
-> 
-> KernelCI has identified a regression [1] on the
-> mt8183-kukui-jacuzzi-juniper-sku16 machine running on next-20240202 compared to
-> next-20240118:
-> 
-> <4>[    0.627077] sysfs: cannot create duplicate filename '/bus/nvmem/devices/mtk-efuse0'
-> <4>[    0.634945] CPU: 7 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc2-next-20240202 #1
-> <4>[    0.642542] Hardware name: Google juniper sku16 board (DT)
-> <4>[    0.648237] Call trace:
-> <4>[    0.650917]  dump_backtrace+0x94/0xec
-> <4>[    0.654815]  show_stack+0x18/0x24
-> <4>[    0.658359]  dump_stack_lvl+0x48/0x60
-> <4>[    0.662252]  dump_stack+0x18/0x24
-> <4>[    0.665796]  sysfs_warn_dup+0x64/0x80
-> <4>[    0.669688]  sysfs_do_create_link_sd+0xf0/0xf8
-> <4>[    0.674353]  sysfs_create_link+0x20/0x40
-> <4>[    0.678500]  bus_add_device+0x64/0x104
-> <4>[    0.682475]  device_add+0x33c/0x778
-> <4>[    0.686193]  nvmem_register+0x514/0x714
-> <4>[    0.690256]  devm_nvmem_register+0x1c/0x6c
-> <4>[    0.694577]  mtk_efuse_probe+0xe8/0x170
-> <4>[    0.698637]  platform_probe+0x68/0xd8
-> <4>[    0.702525]  really_probe+0x148/0x2b4
-> <4>[    0.706413]  __driver_probe_device+0x78/0x12c
-> <4>[    0.710990]  driver_probe_device+0xdc/0x160
-> <4>[    0.715394]  __driver_attach+0x94/0x19c
-> <4>[    0.719453]  bus_for_each_dev+0x74/0xd4
-> <4>[    0.723512]  driver_attach+0x24/0x30
-> <4>[    0.727312]  bus_add_driver+0xe4/0x1e8
-> <4>[    0.731284]  driver_register+0x60/0x128
-> <4>[    0.735343]  __platform_driver_register+0x28/0x34
-> <4>[    0.740265]  mtk_efuse_init+0x20/0x5c
-> <4>[    0.744155]  do_one_initcall+0x6c/0x1b0
-> <4>[    0.748214]  kernel_init_freeable+0x1c8/0x290
-> <4>[    0.752795]  kernel_init+0x20/0x1dc
-> <4>[    0.756512]  ret_from_fork+0x10/0x20
-> <4>[    0.760353] mediatek,efuse: probe of 11f10000.efuse failed with error -17
-> 
-> This efuse probe failure causes the probe failure of other components that
-> depend on it, including the display pipeline:
-> 
-> /soc/dsi-phy@11e50000
-> /soc/dsi@14014000
-> /soc/efuse@11f10000
-> /soc/i2c@11008000/anx7625@58
-> /soc/i2c@11008000/anx7625@58/aux-bus/panel
-> /soc/thermal@1100b000
-> 
-> There is a series already addressing the issue [2]. The first two patches have
-> been merged into the mediatek tree, but that tree isn't currently being
-> integrated into linux-next. Besides that, patch 3 hasn't been merged into the
-> nvmem tree yet, and it is required in order to solve the issue.
-> 
-> I'm sending this regression report so we can properly track the regression while
-> the fixes don't land on linux-next.
-> 
-> Thanks,
-> Nícolas
-> 
-> [1] https://linux.kernelci.org/test/plan/id/65bd63c3f12d8a95e200a225/
-> [2] https://lore.kernel.org/linux-mediatek/20240130095656.3712469-1-wenst@chromium.org/
-> 
-> #regzbot introduced next-20240118..next-20240202
+Hi Linus, here is a quick manual extra regression report due to the
+nearing 6.8 release:
 
-Not sure why this got filed by regzbot under the mainline tab rather than next.
-Maybe it was the missing collon? Let me try again:
 
-#regzbot introduced: next-20240118..next-20240202
+# Fixes for regressions from this cycle afaics unlikely to reach 6.8
 
-In any case, the fix has already made it to linux-next, so this should close the
-regression:
+* 3445139e3a594b ("Revert "Revert "md/raid5: Wait for
+MD_SB_CHANGE_PENDING in raid5d""") in next, which reverts a commits from
+6.8-rc1; Song thinks it's better to merge this revert for 6.9 and then
+backport to 6.8:
+https://lore.kernel.org/all/CAPhsuW51ND4qH4My8Uz1XaZSdvAjDR7eL7O-RLr5wKmFJA0XMQ@mail.gmail.com/
+Report: https://lore.kernel.org/all/20240123005700.9302-1-dan@danm.net/
 
-#regzbot fix: nvmem: mtk-efuse: Drop NVMEM device name
+* 0d7dfc79fb9b4b ("drm/msm/a6xx: specify UBWC config for sc7180" in
+next. No reply to my recent inquiry why this fix for a commit from this
+cycle was queued for 6.9:
+https://lore.kernel.org/all/4e55f6fd-8875-4a61-9070-f0ecad8082ea@leemhuis.info/
+Report: https://gitlab.freedesktop.org/drm/msm/-/issues/49 and
+https://lore.kernel.org/all/85581fad-da8f-4550-a1c8-8f2996425dcd@lausen.nl/
 
-Thanks,
-Nícolas
+
+
+# Regressions fixes sitting on the list awaiting review:
+
+* Fix divide-by-zero on DP unplug with nouveau
+https://lore.kernel.org/regressions/ZeoAPFIF6NClUl4P@debian.local/
+
+* u64_stats: fix u64_stats_init() for lockdep when used repeatedly in
+one file
+https://lore.kernel.org/lkml/20240306111157.29327-1-petr@tesarici.cz/
+
+* drm/nouveau: keep DMA buffers required for suspend/resume
+https://lore.kernel.org/dri-devel/20240229175822.30613-1-sidpranjale127@protonmail.com/
+
+
+
+# Regression reports where no fix is in sight afaics
+
+* dmaengine: CPU stalls while loading bluetooth module
+https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/ and
+https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+See also:
+https://lore.kernel.org/all/000001da7140%246a0f1570%243e2d4050%24@samsung.com/
+Revert might be counter-productive.
+
+* drm/msm: Thinkpad X13s hard resets disconnecting external displays (
+https://lore.kernel.org/lkml/Zd3kvD02Qvsh2Sid@hovoldconsulting.com/
+See also: lore.kernel.org/all/ZesK1SKUB9BVKouF%40hovoldconsulting.com
+and https://lore.kernel.org/lkml/ZesH21DcfOldRD9g@hovoldconsulting.com/
+Maybe the whole series that causes this should have been reverted a week
+ago...
+
+* x86/mm/ident_map: kexec now leads to reboot
+https://lore.kernel.org/stable/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+https://lore.kernel.org/all/CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com/
+A revert apparently could fix this.
+
+
+
+# For completeness: fixes that I assume will make it to you soon
+
+* I assume Dmitry will send 7105e92c60c9cc ("Revert "Input: bcm5974 -
+check endpoint type before starting traffic"") soon.
+
+* I assume Greg will send ac3e0384073b24 ("misc: lis3lv02d_i2c: Fix
+regulators getting en-/dis-abled twice on suspend/resume") soon.
+
+* Not totally sure, but I assume the Btrfs folks will send
+978b63f7464abc ("btrfs: fix race when detecting delalloc ranges during
+fiemap") and 1cab1375ba6d53 ("btrfs: reuse cloned extent buffer during
+fiemap to avoid re-allocations") to you, too.
+
+
+Ciao, Thorsten
+
+Side note: /me hopes this mail is not classified as spam due to all the
+links...
