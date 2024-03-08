@@ -1,159 +1,216 @@
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6396E5645C
-	for <regressions@lists.linux.dev>; Fri,  8 Mar 2024 12:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CD314F98;
+	Fri,  8 Mar 2024 12:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709899493; cv=none; b=T3A6vdUJqPEnJP+WuCVnZHpOrOPzF5ouqhei+JcrgYCz4l9lGT6fFP2+SV8yi0l8Z2RrMIHdeaRd6bty2uxaeE6xG4F9U60nTRkP7gqBar9rfIUQ2SnXR0/0YjAlIWB8U3AWNcEGHHqDZ7nwDqRum3d2FNCCQ/UbbaOmJkYSC2U=
+	t=1709901781; cv=none; b=RvcjnbCe5UMdWkV0tTIekNA54giB0/NaONdgyJ/EJm2Q2ZDoOYpZyginW4YVfWVxsrYCQ/5Vgm8nHYOz4cFthkVE50bHm8dgrJZm13m7X/yTsS7oSIodGR+jSEzwFzcy1jor8APyk3lJFnIUofFLu3k/FMYkDNgm/T0YyPuBQuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709899493; c=relaxed/simple;
-	bh=enJzpMkxpty9ZZFrdBUYmXNvaIBQeUC0olKR1k99CJ0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Bl+kWYgHDgj1iH1f33mkvg3VpQCY5k9LyiuvKW6USNqd/UFHnZhbeS8p73CT0ZKOz1uTvNysglPTYpjAENeYmuYKTgb9IaK7SU8bMzstIB/XYWCAlBarDB18vqB2lh7wTHBtMig05nMN/Z6KOUw/+FJDdSAnrs5x4niPRr7mlNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=caqsbDKf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dkRkZUc3; arc=none smtp.client-ip=66.111.4.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709901781; c=relaxed/simple;
+	bh=TEqtbaIb2Bb2PY8/Wx9U5VFN7qYLTRCGUbtfSXdqMnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8igZL8zTWNIaaUsosJfBl/wThY5IdlRLZNWGl1eAaBqladCxsVUDA12t+/BB21az0zaBQY/GNdxTtJscR5F+okdf2QtdfbfqNlvrwiGG9AySfxIROAYt+IdGbbu100norsVdhrUb6cnICeIh2e8lzy3IbEtifPBuJmABtxEDfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mz0Zbzvd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="caqsbDKf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dkRkZUc3"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 5482E5C0067;
-	Fri,  8 Mar 2024 07:04:50 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 08 Mar 2024 07:04:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1709899490; x=1709985890; bh=RKnGe+GTEV
-	6c+u5mEN7T/9INXIlRU9V+9PALmdI4oS8=; b=caqsbDKfWyQXdlBJvne1YNI+PG
-	4owQLmFjhBobfNPlBnsbMJA0ooi6PC56BElSyrsk29rF9QfNnjB0vSm0mI3DhIQV
-	zKcfCKPi5cxLSEAPE8H1sjVDRqRTZiufgPBeeGOkg5sFgb+kNv4C7B5O0HX9SO+b
-	UsD+lbJ1vgM2mHZTzddpDTONCdmc5dqgLE4hRYrKiAPIe4SgOB1WbyKVmKEfAbQF
-	23sKmgRDfYE2s3kbt5PW7z18Tiwj8evO1kR5PwKCorlS2W1WB72Y2JGTmH4DVgcn
-	IibudJLqxUkIlB9ZQJkJ+1ZDQ9NtjoiwJ8WfyM266ZHQ21tpajXtbuUsrU3Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709899490; x=1709985890; bh=RKnGe+GTEV6c+u5mEN7T/9INXIlR
-	U9V+9PALmdI4oS8=; b=dkRkZUc3y2z7ZKn83ZbrrgzKdoCJ4scJEgt2pil/lRuE
-	I0OCbqLifw0OBqjLhWzfP2ov0YI6TPYei99rsvG92sNFhQzPdEIJge2OE1JkLG5S
-	m2SdiQU8f/pZmDwJ0k0C9UnXNYHR/JeH0TaHCfZvhR7x9YZFo4oTx4Ervw8prBUn
-	uIz3N/f9sFh7U6DTVd6zIH1BsLDC5/gJp9FtmtsUMlcq7QehA6hbPp7n3Zx1G/F5
-	lfAhm/7L5G5FlIMw8+L8iCODwTU3LdcA8FC727FL/WhDU87XOQGrHT9CnhI1mkE4
-	7QKC0XmijJLFTqPg9KGJswb2dXZQERaiEhdr/gb6Ng==
-X-ME-Sender: <xms:4f7qZTyoIhUj1Drd7ogj5tLobTgH8nTGQJCsozpgik132j3HpBavMA>
-    <xme:4f7qZbSlLYplzUvtIFmyIUW7a0YWMMrW8wdYNPyCsY7FKB7zTiRh74ZjPaPm9raGa
-    h3u3yX2_fc9Q4rD1YY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieehgdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:4f7qZdWdn6lInjr8DU9CrwkyH2xEYq65CoeKdtrGQbyFpb4u8n8x3Q>
-    <xmx:4f7qZdj9AhzCNetrW-roRPCHIXHuqBO0WTZNLS0FkGRECN5LBVMqVA>
-    <xmx:4f7qZVDpuSyswAg_X-zllSL2hUeFhyX_Ep8Lr36eZO1ErcpRNGXYpQ>
-    <xmx:4v7qZZtEs0WY8V-esfqBZBpDV4AE5Y1648nBirvNwf_NlObhdCcNEw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 156C7B6008D; Fri,  8 Mar 2024 07:04:48 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-251-g8332da0bf6-fm-20240305.001-g8332da0b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mz0Zbzvd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D266EC433F1;
+	Fri,  8 Mar 2024 12:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709901781;
+	bh=TEqtbaIb2Bb2PY8/Wx9U5VFN7qYLTRCGUbtfSXdqMnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mz0ZbzvdBBL+Z760YDWyOibq3ilCb7xG6ijR8C/EaYfNgBTXkRPCogXrfleLy3fq6
+	 YrEQvtDyfkogAax/u8RWXk7ncridP0y9ro1nUzHcl5K2flamhpIA9yrnC9karVecIr
+	 N7LoAzJKvDGfjixCWJP1LUB0je9nBfd7pNyNUIZy+GfmY4uxgdxQXII5yEyVxb5mHj
+	 51+F5BijEUKsXPqVP6L1t++gTK8opiriDiLwzxtWDrpdIuBs9+AyzvjUz/KY0jR48L
+	 GhrpSkJt2ORbpu7zZOUyPoe+Jmx8xY40HcDxGS2Zaaleq7xPM0SKxBtsjIn0NoKAwX
+	 tvKdHehmRiIgg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1riZZ5-000000001o5-189g;
+	Fri, 08 Mar 2024 13:43:08 +0100
+Date: Fri, 8 Mar 2024 13:43:07 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
+Message-ID: <ZesH21DcfOldRD9g@hovoldconsulting.com>
+References: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <8f69d1f2-0ce3-4851-a784-c76b274dd9ff@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYsVni7x6AuP97i10oxcusUrB4+m2wpM4Z3mTzWsnMz-Mg@mail.gmail.com>
-References: 
- <CA+G9fYsVni7x6AuP97i10oxcusUrB4+m2wpM4Z3mTzWsnMz-Mg@mail.gmail.com>
-Date: Fri, 08 Mar 2024 13:04:28 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- linux-mm <linux-mm@kvack.org>, linux-next <linux-next@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "Linux Regressions" <regressions@lists.linux.dev>,
- lkft-triage@lists.linaro.org
-Cc: "Andrew Morton" <akpm@linux-foundation.org>,
- "Ard Biesheuvel" <ardb@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>
-Subject: Re: arm64: WARNING: at mm/vmalloc.c:315 ioremap_page_range
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
 
-On Fri, Mar 8, 2024, at 12:53, Naresh Kamboju wrote:
-> The following warning was noticed while boot arm and arm64 devices.
-> The below log is extracted from arm64 ROCK Pi 4B while booting and
-> another issue is kernel oops noticed while testing selftests:  kvm:
-> memslot_perf_test.
->
-> 1) WARNING: CPU: 1 PID: 201 at mm/vmalloc.c:315 ioremap_page_range
-> 2)  Unable to handle kernel NULL pointer dereference at virtual address
->   Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
->   Kernel panic - not syncing: Oops: Fatal exception in interrupt
->
-> Please find steps to reproduce, logs and config file links below.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Warning log:
-> -----------
-> [   21.074045] ------------[ cut here ]------------
-> [   21.074468] vm_area at addr ffffffffc0800000 is not marked as VM_IOREMAP
-> [   21.075125] WARNING: CPU: 1 PID: 201 at mm/vmalloc.c:315
-> ioremap_page_range (vmalloc.c:?)
-> [   21.075854] Modules linked in: industrialio_triggered_buffer
-> pcie_rockchip_host(+) coresight kfifo_buf drm fuse backlight dm_mod
-> ip_tables x_tables
-> [   21.077047] CPU: 1 PID: 201 Comm: (udev-worker) Not tainted
-> 6.8.0-rc7-next-20240307 #1
-> [   21.077749] Hardware name: Radxa ROCK Pi 4B (DT)
-> [   21.078163] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   21.078782] pc : ioremap_page_range (vmalloc.c:?)
-> [   21.079197] lr : ioremap_page_range (vmalloc.c:?)
-> <trim>
-> [   21.086242] Call trace:
-> [   21.086464] ioremap_page_range (vmalloc.c:?)
-> [   21.086839] pci_remap_iospace (??:?)
-> [   21.087192] devm_pci_remap_iospace (??:?)
-> [   21.087579] devm_of_pci_bridge_init (??:?)
-> [   21.087990] devm_pci_alloc_host_bridge (??:?)
-> [   21.088410] rockchip_pcie_probe+0x34/0x30c pcie_rockchip_host
+Hi Abhinav, Rob, Dmitry and Kuogee,
 
-The warning was added by commit 3e49a866c9dc ("mm: Enforce
-VM_IOREMAP flag and range in ioremap_page_range.").
+On Tue, Feb 27, 2024 at 02:33:48PM +0100, Johan Hovold wrote:
 
-This indeed uses a special memory area at a fixed physical address,
-but I don't see where the vm_struct comes from.
+> Since 6.8-rc1 I have seen (and received reports) of hard resets of the
+> Lenovo ThinkPad X13s after connecting and disconnecting an external
+> display.
+> 
+> I have triggered this on a simple disconnect while in a VT console, but
+> also when stopping Xorg after having repeatedly connected and
+> disconnected an external display and tried to enable it using xrandr.
+> 
+> In the former case, the last (custom debug) messages printed over an SSH
+> session were once:
+> 
+>     [  948.416358] usb 5-1: USB disconnect, device number 3
+>     [  948.443496] msm_dpu ae01000.display-controller: msm_fbdev_client_hotplug
+>     [  948.443723] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 1, enable = 0
+>     [  948.443872] msm-dp-display ae98000.displayport-controller: dp_ctrl_phy_exit
+>     [  948.445117] msm-dp-display ae98000.displayport-controller: dp_ctrl_phy_exit - done
+>     
+> and then the hypervisor resets the machine.
 
+Has there been any progress on tracking down the reset on disconnect
+issue? I was expecting you to share your findings here so that we can
+determine if the rest of the runtime PM series needs to be reverted or
+not before 6.8 is released (possibly on Sunday).
 
-> # Testing move active area performance with 1 runs, 5 seconds each
-> [  353.142236] Unable to handle kernel NULL pointer dereference at
-> virtual address 000000000000000a
-> [  353.143045] Mem abort info:
-....
-> [  353.156328] Hardware name: Radxa ROCK Pi 4B (DT)
-> [  353.156743] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [  353.157369] pc : unmap_region (mmap.c:?)
-> [  353.157744] lr : unmap_region (mmap.c:?)
-> <trim>
->
-> [  353.164918] Call trace:
-> [  353.165144] unmap_region (mmap.c:?)
-> [  353.165478] do_vmi_align_munmap (mmap.c:?)
-> [  353.165873] do_vmi_munmap (??:?)
+I really did not want to spend more on this driver than I already have
+this cycle, but the lack of (visible) progress has again forced me to do
+so.
 
-No idea here, but it seems unrelated to the first one.
+It's quite likely that the resets are indeed a regression caused by the
+runtime PM series as the bus clocks were not disabled on disconnect
+before that one was merged in 6.8-rc1.
 
-Something is wrong with your address decoding, there are no line
-numbers.
+In a VT console, the device is now runtime suspended immediately on
+disconnect, while in X, it currently remains active until X is killed,
+which is consistent with what I reported above.
 
-      Arnd
+We now also have Bjorn's call trace from a different Qualcomm platform
+triggering an unclocked access on disconnect, something which would
+trigger a reset by the hypervisor on sc8280xp platforms like the X13s:
+
+[ 2030.379417] SError Interrupt on CPU0, code 0x00000000be000000 -- SError
+[ 2030.379425] CPU: 0 PID: 239 Comm: kworker/0:2 Not tainted 6.8.0-rc4-next-20240216-00015-gc937d3c43ffe-dirty #219
+[ 2030.379430] Hardware name: Qualcomm Technologies, Inc. Robotics RB3gen2 (DT)
+[ 2030.379435] Workqueue: events output_poll_execute [drm_kms_helper]
+[ 2030.379495] pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 2030.379501] pc : el1_interrupt+0x28/0xc0
+[ 2030.379514] lr : el1h_64_irq_handler+0x18/0x24
+[ 2030.379520] sp : ffff80008129b700
+[ 2030.379523] x29: ffff80008129b700 x28: ffff7a0a031aa200 x27: ffff7a0af768c3c0
+[ 2030.379530] x26: 0000000000000000 x25: ffff7a0a024bb568 x24: ffff7a0a031aa200
+[ 2030.379537] x23: 0000000060400005 x22: ffffd2a4a10c871c x21: ffff80008129b8a0
+[ 2030.379544] x20: ffffd2a4a00002f0 x19: ffff80008129b750 x18: 0000000000000000
+[ 2030.379549] x17: 0000000000000000 x16: ffffd2a4a10c21d4 x15: 0000000000000000
+[ 2030.379555] x14: 0000000000000000 x13: 000000000001acf6 x12: 0000000000000000
+[ 2030.379560] x11: 0000000000000001 x10: ffff7a0af623f680 x9 : 0000000100000001
+[ 2030.379565] x8 : 00000000000000c0 x7 : 0000000000000000 x6 : 000000000000003f
+[ 2030.379570] x5 : ffff7a0a003c6a70 x4 : 000000000000001f x3 : ffffd2a48d6722dc
+[ 2030.379576] x2 : 0000000000000002 x1 : ffffd2a4a00002f0 x0 : ffff80008129b750
+[ 2030.379583] Kernel panic - not syncing: Asynchronous SError Interrupt
+[ 2030.379586] CPU: 0 PID: 239 Comm: kworker/0:2 Not tainted 6.8.0-rc4-next-20240216-00015-gc937d3c43ffe-dirty #219
+[ 2030.379590] Hardware name: Qualcomm Technologies, Inc. Robotics RB3gen2 (DT)
+[ 2030.379592] Workqueue: events output_poll_execute [drm_kms_helper]
+[ 2030.379642] Call trace:
+[ 2030.379644]  dump_backtrace+0xec/0x108
+[ 2030.379654]  show_stack+0x18/0x24
+[ 2030.379659]  dump_stack_lvl+0x40/0x84
+[ 2030.379664]  dump_stack+0x18/0x24
+[ 2030.379668]  panic+0x130/0x34c
+[ 2030.379673]  nmi_panic+0x44/0x90
+[ 2030.379679]  arm64_serror_panic+0x68/0x74
+[ 2030.379683]  do_serror+0xc4/0xcc
+[ 2030.379686]  el1h_64_error_handler+0x34/0x4c
+[ 2030.379692]  el1h_64_error+0x64/0x68
+[ 2030.379696]  el1_interrupt+0x28/0xc0
+[ 2030.379700]  el1h_64_irq_handler+0x18/0x24
+[ 2030.379706]  el1h_64_irq+0x64/0x68
+[ 2030.379710]  _raw_spin_unlock_irq+0x20/0x48
+[ 2030.379718]  wait_for_common+0xb4/0x16c
+[ 2030.379722]  wait_for_completion_timeout+0x14/0x20
+[ 2030.379727]  dp_ctrl_push_idle+0x34/0x8c [msm]
+[ 2030.379844]  dp_bridge_atomic_disable+0x18/0x24 [msm]
+[ 2030.379959]  drm_atomic_bridge_chain_disable+0x6c/0xb4 [drm]
+[ 2030.380150]  drm_atomic_helper_commit_modeset_disables+0x174/0x57c [drm_kms_helper]
+[ 2030.380200]  msm_atomic_commit_tail+0x1b4/0x474 [msm]
+[ 2030.380316]  commit_tail+0xa4/0x158 [drm_kms_helper]
+[ 2030.380369]  drm_atomic_helper_commit+0x24c/0x26c [drm_kms_helper]
+[ 2030.380418]  drm_atomic_commit+0xa8/0xd4 [drm]
+[ 2030.380529]  drm_client_modeset_commit_atomic+0x16c/0x244 [drm]
+[ 2030.380641]  drm_client_modeset_commit_locked+0x50/0x168 [drm]
+[ 2030.380753]  drm_client_modeset_commit+0x2c/0x54 [drm]
+[ 2030.380865]  __drm_fb_helper_restore_fbdev_mode_unlocked+0x60/0xa4 [drm_kms_helper]
+[ 2030.380915]  drm_fb_helper_hotplug_event+0xe0/0xf4 [drm_kms_helper]
+[ 2030.380965]  msm_fbdev_client_hotplug+0x28/0xc8 [msm]
+[ 2030.381081]  drm_client_dev_hotplug+0x94/0x118 [drm]
+[ 2030.381192]  output_poll_execute+0x214/0x26c [drm_kms_helper]
+[ 2030.381241]  process_scheduled_works+0x19c/0x2cc
+[ 2030.381249]  worker_thread+0x290/0x3cc
+[ 2030.381255]  kthread+0xfc/0x184
+[ 2030.381260]  ret_from_fork+0x10/0x20
+
+The above could happen if the convoluted hotplug state machine breaks
+down so that the device is runtime suspended before
+dp_bridge_atomic_disable() is called.
+
+For some reason, possibly due to unrelated changes in timing, possibly
+after the hotplug revert, I am no longer able to reproduce the reset
+with 6.8-rc7 on the X13s.
+
+I am however able to get the hotplug state machine to leak
+runtime PM reference counts which prevents it from ever being suspended
+(e.g. by disconnecting slowly so that we get multiple connect and
+disconnect events). This can manifest itself as a hotplug event which is
+processed after disconnecting the display:
+
+	[drm:dp_panel_read_sink_caps [msm]] *ERROR* read dpcd failed -110
+
+I would not be surprised at all if there's a sequence of events that
+leads to an unbalanced put instead (and the stack trace and observations
+above make this appear likely). 
+
+Were you able to determine what events lead to the premature disabling
+of the bus clocks on the RB3?
+
+Have you got any reason to believe that the revert of the hotplug
+notification patch may in anyway prevent that? Or is it just papering
+over the issue?
+ 
+> Hotplug in Xorg seems to work worse than it did with 6.7, which also had
+> some issues. Connecting a display once seems to work fine, but trying to
+> re-enable a reconnected display using xrandr sometimes does not work at
+> all, while with 6.7 it usually worked on the second xrandr execution.
+> 
+> xrandr reports the reconnected display as disconnected:
+
+> Running 'xrandr --output DP-2 --auto' 2-3 times makes xrandr report the
+> display as connected, but the display is still blank (unlike with 6.7).
+
+As I mentioned elsewhere, the revert of e467e0bde881 ("drm/msm/dp: use
+drm_bridge_hpd_notify() to report HPD status changes") in rc7 does seem
+to help with the hotplug detect issues that I could reproduce (in VT
+console, X and wayland).
+
+The question is whether we should revert the whole runtime PM series so
+that the bus clock is left on, which should prevent any resets on
+disconnect.
+
+Without any analysis from you or reason to be believe the issue to have
+been resolved, I'm inclined to just go ahead and revert it. It clearly
+had not been tested enough before being merged and I'm quite frustrated
+with how this has been handled.
+
+Johan
