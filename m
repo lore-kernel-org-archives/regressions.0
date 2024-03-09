@@ -1,245 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CCC15B1;
-	Sat,  9 Mar 2024 16:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9B222F07;
+	Sat,  9 Mar 2024 20:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710001809; cv=none; b=Ktgg3ztlrr5UbEbABbq+nzOyglJ9A0q3fOnXY04bS1kAoGPGSqZvDeeXjlVOcdEVKk1l1SfNJSwJKpUSxXb2NtLXNyUIY41sC3Ap4uADHhC0v6SF40ESY+/ZulVokZznqVFGUIs1da68xknSKVk6vzR7sAL0cDFCszr/nWC2wqI=
+	t=1710016745; cv=none; b=p8d6zDdX0W3qYyACsnoChmddmpmcsf9sZ7LkzL6/FaxBJEDkYpaZu42T+W2vRGKKgwguL/zGJFCePqzG7++zRXQYPDC4pAd28oQsFWN1Y9ChUdS0QvO6ZRQdsnJuphOXaD8lGaMLVlaD/ZvtBUCzLHMg2yLSajUcVyZ1LVkl9/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710001809; c=relaxed/simple;
-	bh=Z8NYMNi75dMPpNy4mJ7qTSQzkrstQRIM4zNyis8YJtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBVND/bLbGJ6Hk6n8WtymHucRqOOowwq5vc33j7AkPr28VKReTE+0L9Yhk8s94QIbFMbUuxxwAirlqaidDR0n+D5bg/G6Xvn4s1CD0st/yDqi135EZKOvRGA2ZJ/CE5YzA70Nr1X3hMiuxAGbRadec7czxfkKPvpo31cNHtzKcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtOOz9a1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710016745; c=relaxed/simple;
+	bh=08Kf6wLUralnLwdcMzfktgfwRNCnuyqHwA/xZ33ICdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GehoxrjvXB3xRIIMxV8ZgolEjjtstYsWqm1u9ePyqrvtbeWgHsg/UMyZVoF6lJiV5BkQDQtXaGcP6FPT3Q6oPJTMaAwhN8UOdZ0l04NVRP9k1yhEe88LBOp3VWl6ircGyjbpTJ/6giSlFFwDr2SWJjnCAO4d3M3T+QPM+0lXsy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENclhA+O; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtOOz9a1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E84EBC433F1;
-	Sat,  9 Mar 2024 16:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710001809;
-	bh=Z8NYMNi75dMPpNy4mJ7qTSQzkrstQRIM4zNyis8YJtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PtOOz9a19RHXtayeov5eJZw28Eu0tjt638RoawRo5es4cJLeERmUcYj3lyY45zQVL
-	 Za2XoTc7l7RXSihFU9waQp4CKwy5zD1/J+5cccgrLM/0BAVz4pZqmfpuEDjEPumN7g
-	 SX2n3Vt4fXOiq7k3Ybm524pNXcOmv4TIXd6e/NKwEWP2FTbn2vovEsSAzChZnl9Rg5
-	 Y4bCTSBfawzNIdgvRWfD1fBIQM+051+a/pHRuf4Sp5yUMUeoxvmd3Dl2CJ5nJyjuOl
-	 SmtnyJFZJPn/fViINBffgONjrLaoT6MmZ8xTmk44+PF8yjwTEmm9KHJoiQmRImj11K
-	 SFQNdK8VwgOrQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rizaS-000000001sK-0xji;
-	Sat, 09 Mar 2024 17:30:16 +0100
-Date: Sat, 9 Mar 2024 17:30:16 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
-Message-ID: <ZeyOmJLlBbwnmaJN@hovoldconsulting.com>
-References: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
- <ZesH21DcfOldRD9g@hovoldconsulting.com>
- <56de6cfb-fe0f-de30-d4d0-03c0fbb0afbb@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENclhA+O"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d094bc2244so45545761fa.1;
+        Sat, 09 Mar 2024 12:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710016741; x=1710621541; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JDiTA26ys4mFafvA8yF6JgwyplvVYoLA/SIyv4h4Hm8=;
+        b=ENclhA+OgtLBO7lpVPZBgF4UVQ7iliUcP+qzap0gJddxvF7BSYWeJ7qIO8VbDyV/gf
+         oMcmC8m9FaaB0iOb4Oz2mbFynI4e0O63mKZZg1+3TsAsgFwUbJuv4v9ssXiFiv8DdaQZ
+         n0xTYrPP7O5j1Imld5WH3yhuduLhRa8NEfTOscpDPasGCKE+iE8c+xqrQoPgaOXsFrO4
+         0S8lO14hoXNjPgVLFqn9pAV66wSleHcvLL3kdLZQvnvYq1miDSoWDldEXckcttfu3z/w
+         COJ/R9qDIx5u4xFbJDhfe9HkpLgLVz6Uv8ODVV+JNVnqCLzm5a+aKmFzuk94On8MwY58
+         BsFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710016741; x=1710621541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JDiTA26ys4mFafvA8yF6JgwyplvVYoLA/SIyv4h4Hm8=;
+        b=URtVs8S42gqS+31IkTV+FAubbKb8q/LA5MxL3Pi36KRVbhGPamJ/tki+YF9AIRbEif
+         dwdbHFyTWAqlLoDIcCqY13+jtVocdJZdrBQKyOs1iFy6Kkm6IuVXDDtj8sUOnGKF2PhB
+         1FwgSkFsz8snb1CVXXgP0ipIRrcarsnsNLrcepOZqwRDdcyVpbE+w8VCZY0lu9cqVCVj
+         1NhIbrf7X4KjmoJVKUSp0Wrch+sV0ccpJC9uY1rIDcZE53UveM3hg/knsgF+Tz8Cq1ab
+         snO4/VeCnCjPSfbUNOD9jOmmfr1f6zJA5DA59xOKcZji6avwz7zjFenpLQ4pzuk2CXnE
+         wCpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdrjWziLbVGZwaMpp5/1C8HJBrFx3W7TIQQ1kT+PNXQQI1NlvQ3wUDY7qNtgl623n6kS7kpRREoQHsJoAKrdONfVgWuxVNHamxYD3J8WEesKGKB9yYjczh+l62mmELWSqSMKSX0Q==
+X-Gm-Message-State: AOJu0YxIyOEzH/Ll58U5d6zyXAUcypRmkxXXawqNBNqt/1sG/VbirRx9
+	28uuxtkdvDun/T+ojbAl/mp44GRSVV3UTU+POMVN6MTkR99rcFtuLt/gEzsE5u4m/1G7cMnnlOA
+	MNrs+WCF3CjEvuje6JY6rBOq9Ke0=
+X-Google-Smtp-Source: AGHT+IERdTqVKoEUSiKVsznN2p28O7YPJAQLGRcEucrnAT2z/cFJQ/aJKo0t7/J70EHiCTkANMK5kbyYF9wJmGkOoy0=
+X-Received: by 2002:a2e:8ec5:0:b0:2d4:21d6:b05e with SMTP id
+ e5-20020a2e8ec5000000b002d421d6b05emr1605477ljl.52.1710016741237; Sat, 09 Mar
+ 2024 12:39:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56de6cfb-fe0f-de30-d4d0-03c0fbb0afbb@quicinc.com>
+References: <CAOCpoWc_HQy4UJzTi9pqtJdO740Wx5Yd702O-mwXBE6RVBX1Eg@mail.gmail.com>
+ <CAOCpoWf3TSQkUUo-qsj0LVEOm-kY0hXdmttLE82Ytc0hjpTSPw@mail.gmail.com>
+ <CAOCpoWeNYsMfzh8TSnFqwAG1BhAYnNt_J+AcUNqRLF7zmJGEFA@mail.gmail.com>
+ <672e88f2-8ac3-45fe-a2e9-730800017f53@libero.it> <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
+ <a1e30dab-dfde-418e-a0dd-3e294838e839@inwind.it> <CAOCpoWeB=2j+n+5K5ytj2maZxdrV80cxJcM5CL=z1bZKgpXPWQ@mail.gmail.com>
+ <a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it> <ZedaKUge-EBo4CuT@redhat.com>
+ <ZeiS/bjJaRcrerWW@fedora>
+In-Reply-To: <ZeiS/bjJaRcrerWW@fedora>
+From: Patrick Plenefisch <simonpatp@gmail.com>
+Date: Sat, 9 Mar 2024 15:39:02 -0500
+Message-ID: <CAOCpoWeoQMh_-MxzxGBnK2Kf5EhvTLs=GrGwJ5XcfGVRTp73Eg@mail.gmail.com>
+Subject: Re: LVM-on-LVM: error while submitting device barriers
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>, Goffredo Baroncelli <kreijack@inwind.it>, linux-kernel@vger.kernel.org, 
+	Alasdair Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, regressions@lists.linux.dev, 
+	dm-devel@lists.linux.dev, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 08, 2024 at 09:50:17AM -0800, Abhinav Kumar wrote:
-> On 3/8/2024 4:43 AM, Johan Hovold wrote:
+On Wed, Mar 6, 2024 at 11:00=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
+e:
+>
+> On Tue, Mar 05, 2024 at 12:45:13PM -0500, Mike Snitzer wrote:
+> > On Thu, Feb 29 2024 at  5:05P -0500,
+> > Goffredo Baroncelli <kreijack@inwind.it> wrote:
+> >
+> > > On 29/02/2024 21.22, Patrick Plenefisch wrote:
+> > > > On Thu, Feb 29, 2024 at 2:56=E2=80=AFPM Goffredo Baroncelli <kreija=
+ck@inwind.it> wrote:
+> > > > >
+> > > > > > Your understanding is correct. The only thing that comes to my =
+mind to
+> > > > > > cause the problem is asymmetry of the SATA devices. I have one =
+8TB
+> > > > > > device, plus a 1.5TB, 3TB, and 3TB drives. Doing math on the ac=
+tual
+> > > > > > extents, lowerVG/single spans (3TB+3TB), and
+> > > > > > lowerVG/lvmPool/lvm/brokenDisk spans (3TB+1.5TB). Both obviousl=
+y have
+> > > > > > the other leg of raid1 on the 8TB drive, but my thought was tha=
+t the
+> > > > > > jump across the 1.5+3TB drive gap was at least "interesting"
+> > > > >
+> > > > >
+> > > > > what about lowerVG/works ?
+> > > > >
+> > > >
+> > > > That one is only on two disks, it doesn't span any gaps
+> > >
+> > > Sorry, but re-reading the original email I found something that I mis=
+sed before:
+> > >
+> > > > BTRFS error (device dm-75): bdev /dev/mapper/lvm-brokenDisk errs: w=
+r
+> > > > 0, rd 0, flush 1, corrupt 0, gen 0
+> > > > BTRFS warning (device dm-75): chunk 13631488 missing 1 devices, max
+> > >                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > tolerance is 0 for writable mount
+> > > > BTRFS: error (device dm-75) in write_all_supers:4379: errno=3D-5 IO
+> > > > failure (errors while submitting device barriers.)
+> > >
+> > > Looking at the code, it seems that if a FLUSH commands fails, btrfs
+> > > considers that the disk is missing. The it cannot mount RW the device=
+.
+> > >
+> > > I would investigate with the LVM developers, if it properly passes
+> > > the flush/barrier command through all the layers, when we have an
+> > > lvm over lvm (raid1). The fact that the lvm is a raid1, is important =
+because
+> > > a flush command to be honored has to be honored by all the
+> > > devices involved.
+>
+> Hello Patrick & Goffredo,
+>
+> I can trigger this kind of btrfs complaint by simulating one FLUSH failur=
+e.
+>
+> If you can reproduce this issue easily, please collect log by the
+> following bpftrace script, which may show where the flush failure is,
+> and maybe it can help to narrow down the issue in the whole stack.
+>
+>
+> #!/usr/bin/bpftrace
+>
+> #ifndef BPFTRACE_HAVE_BTF
+> #include <linux/blkdev.h>
+> #endif
+>
+> kprobe:submit_bio_noacct,
+> kprobe:submit_bio
+> / (((struct bio *)arg0)->bi_opf & (1 << __REQ_PREFLUSH)) !=3D 0 /
+> {
+>         $bio =3D (struct bio *)arg0;
+>         @submit_stack[arg0] =3D kstack;
+>         @tracked[arg0] =3D 1;
+> }
+>
+> kprobe:bio_endio
+> /@tracked[arg0] !=3D 0/
+> {
+>         $bio =3D (struct bio *)arg0;
+>
+>         if (($bio->bi_flags & (1 << BIO_CHAIN)) && $bio->__bi_remaining.c=
+ounter > 1) {
+>                 return;
+>         }
+>
+>         if ($bio->bi_status !=3D 0) {
+>                 printf("dev %s bio failed %d, submitter %s completion %s\=
+n",
+>                         $bio->bi_bdev->bd_disk->disk_name,
+>                         $bio->bi_status, @submit_stack[arg0], kstack);
+>         }
+>         delete(@submit_stack[arg0]);
+>         delete(@tracked[arg0]);
+> }
+>
+> END {
+>         clear(@submit_stack);
+>         clear(@tracked);
+> }
+>
 
-> For this last remaining reset with the stacktrace you have mentioned 
-> below, I do not think this was introduced due to PM runtime series. We 
-> have had this report earlier with the same stacktrace as well in earlier 
-> kernels which didnt have PM runtime support:
+Attaching 4 probes...
+dev dm-77 bio failed 10, submitter
+       submit_bio_noacct+5
+       __send_duplicate_bios+358
+       __send_empty_flush+179
+       dm_submit_bio+857
+       __submit_bio+132
+       submit_bio_noacct_nocheck+345
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
+completion
+       bio_endio+5
+       dm_submit_bio+955
+       __submit_bio+132
+       submit_bio_noacct_nocheck+345
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
 
-> But, it seems like there is another race condition in this code 
-> resulting in this issue again.
-> 
-> I have posted my analysis with the patch here as a RFC y'day:
-> 
-> https://patchwork.freedesktop.org/patch/581758/
-> 
-> I missed CCing you and Bjorn on the RFC but when I post it as a patch 
-> either today/tomm, will CC you both.
+dev dm-86 bio failed 10, submitter
+       submit_bio_noacct+5
+       write_all_supers+1718
+       btrfs_commit_transaction+2342
+       transaction_kthread+345
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
+completion
+       bio_endio+5
+       clone_endio+295
+       clone_endio+295
+       process_one_work+369
+       worker_thread+635
+       kthread+229
+       ret_from_fork+49
+       ret_from_fork_asm+27
 
-Ok, thanks. I'll take a closer look at that next week. It's not clear to
-me what that race looks like after reading the commit message. It would
-be good to have some more details in there (e.g. the sequence of events
-that breaks the state machine) and some way to reproduce the issue
-reliably.
 
-> > We now also have Bjorn's call trace from a different Qualcomm platform
-> > triggering an unclocked access on disconnect, something which would
-> > trigger a reset by the hypervisor on sc8280xp platforms like the X13s:
+For context, dm-86 is /dev/lvm/brokenDisk and dm-77 is /dev/lowerVG/lvmPool
 
-> > [ 2030.379583] Kernel panic - not syncing: Asynchronous SError Interrupt
-> > [ 2030.379586] CPU: 0 PID: 239 Comm: kworker/0:2 Not tainted 6.8.0-rc4-next-20240216-00015-gc937d3c43ffe-dirty #219
-> > [ 2030.379590] Hardware name: Qualcomm Technologies, Inc. Robotics RB3gen2 (DT)
-> > [ 2030.379592] Workqueue: events output_poll_execute [drm_kms_helper]
-> > [ 2030.379642] Call trace:
 
-> > [ 2030.379722]  wait_for_completion_timeout+0x14/0x20
-> > [ 2030.379727]  dp_ctrl_push_idle+0x34/0x8c [msm]
-> > [ 2030.379844]  dp_bridge_atomic_disable+0x18/0x24 [msm]
-> > [ 2030.379959]  drm_atomic_bridge_chain_disable+0x6c/0xb4 [drm]
-> > [ 2030.380150]  drm_atomic_helper_commit_modeset_disables+0x174/0x57c [drm_kms_helper]
-> > [ 2030.380200]  msm_atomic_commit_tail+0x1b4/0x474 [msm]
-> > [ 2030.380316]  commit_tail+0xa4/0x158 [drm_kms_helper]
-> > [ 2030.380369]  drm_atomic_helper_commit+0x24c/0x26c [drm_kms_helper]
-> > [ 2030.380418]  drm_atomic_commit+0xa8/0xd4 [drm]
-> > [ 2030.380529]  drm_client_modeset_commit_atomic+0x16c/0x244 [drm]
-> > [ 2030.380641]  drm_client_modeset_commit_locked+0x50/0x168 [drm]
-> > [ 2030.380753]  drm_client_modeset_commit+0x2c/0x54 [drm]
-> > [ 2030.380865]  __drm_fb_helper_restore_fbdev_mode_unlocked+0x60/0xa4 [drm_kms_helper]
-> > [ 2030.380915]  drm_fb_helper_hotplug_event+0xe0/0xf4 [drm_kms_helper]
-> > [ 2030.380965]  msm_fbdev_client_hotplug+0x28/0xc8 [msm]
-> > [ 2030.381081]  drm_client_dev_hotplug+0x94/0x118 [drm]
-> > [ 2030.381192]  output_poll_execute+0x214/0x26c [drm_kms_helper]
-> > [ 2030.381241]  process_scheduled_works+0x19c/0x2cc
-> > [ 2030.381249]  worker_thread+0x290/0x3cc
-> > [ 2030.381255]  kthread+0xfc/0x184
-> > [ 2030.381260]  ret_from_fork+0x10/0x20
-> > 
-> > The above could happen if the convoluted hotplug state machine breaks
-> > down so that the device is runtime suspended before
-> > dp_bridge_atomic_disable() is called.
+>
+>
+> Thanks,
+> Ming
+>
 
-> Yes, state machine got broken and I have explained how in the commit 
-> text of the RFC. But its not necessarily due to PM runtime but a 
-> sequence of events happening from userspace exposing this breakage.
+And to answer Mike's question:
+>
+> Also, I didn't see any kernel logs that show DM-specific errors.  I
+> doubt you'd have left any DM-specific errors out in your report.  So
+> is btrfs the canary here?  To be clear: You're only seeing btrfs
+> errors in the kernel log?
 
-After looking at this some more today, I agree with you. The
-observations I've reported are consistent with what would happen if the
-link clock is disabled when dp_bridge_atomic_disable() is called.
-
-That clock is disabled in dp_bridge_atomic_post_disable() before runtime
-suspending, but perhaps there are some further paths that can end up
-disabling it.
-
-> > For some reason, possibly due to unrelated changes in timing, possibly
-> > after the hotplug revert, I am no longer able to reproduce the reset
-> > with 6.8-rc7 on the X13s.
-
-> I do not know how the hotplug revert fixed this stack because I think 
-> this can still happen.
-
-Thanks for confirming.
- 
-> > I am however able to get the hotplug state machine to leak
-> > runtime PM reference counts which prevents it from ever being suspended
-> > (e.g. by disconnecting slowly so that we get multiple connect and
-> > disconnect events). This can manifest itself as a hotplug event which is
-> > processed after disconnecting the display:
-> > 
-> > 	[drm:dp_panel_read_sink_caps [msm]] *ERROR* read dpcd failed -110
-
-> hmm ... this is another new report. I was not aware of this till this 
-> instance. We would like to debug this issue too as we have also not seen 
-> this one before.
-> 
-> But, I am suspicious about how or why a refcount leak leads to a DPCD 
-> read failure.
-
-It's the other way round: the hotplug event is processed after
-disconnect and that leaks a runtime PM usage count:
-
-< usb-c disconnect >
-
-[  158.167845] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 2
-
-Here's the disconnect event.
-
-[  158.172234] msm-dp-display ae98000.displayport-controller: dp_hpd_unplug_handle
-[  158.175164] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 1
-
-Here's an unexpected connect event which is added to the event queue if
-the link state is updated by a racing thread (after this printk).
-
-[  158.175696] msm-dp-display ae98000.displayport-controller: __pm_runtime_idle - usage count = 1
-[  158.175704] msm-dp-display ae98000.displayport-controller: dp_display_send_hpd_notification - hpd = 0
-
-Such as here.
-
-[  158.180972] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 0, status = 2
-[  158.184146] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 0, status = 2
-[  158.186565] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_disable
-[  158.235903] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_post_disable
-[  158.237759] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 2, enable = 0
-[  158.238484] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 1, enable = 0
-[  158.240350] msm-dp-display ae98000.displayport-controller: __pm_runtime_idle - usage count = 0
-[  158.240966] msm-dp-display ae98000.displayport-controller: dp_pm_runtime_suspend
-[  158.242674] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 0, enable = 0
-[  158.259286] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 0, status = 2
-[  158.275869] msm-dp-display ae98000.displayport-controller: dp_hpd_plug_handle
-
-Here the spurious connect event is processed but the external display is
-already disconnected.
-
-[  158.277070] msm-dp-display ae98000.displayport-controller: dp_hpd_plug_handle - rpm get
-[  158.278234] msm-dp-display ae98000.displayport-controller: __pm_runtime_resume - usage count = 1
-[  158.279322] msm-dp-display ae98000.displayport-controller: dp_pm_runtime_resume
-[  158.280386] msm-dp-display ae98000.displayport-controller: dp_power_clk_enable - type = 0, enable = 1
-[  158.283766] msm-dp-display ae98000.displayport-controller: __pm_runtime_resume - usage count = 2
-[  158.340829] msm-dp-display ae98000.displayport-controller: __pm_runtime_idle - usage count = 1
-...
-[  160.101867] msm-dp-display ae98000.displayport-controller: __pm_runtime_resume - usage count = 2
-[  160.159553] msm-dp-display ae98000.displayport-controller: __pm_runtime_idle - usage count = 1
-[  160.160643] [drm:dp_panel_read_sink_caps [msm]] *ERROR* read dpcd failed -110
-
-Which leads to the dpcd read failure and leaves the runtime PM usage
-count incremented (the next hotplug event bumps the count to 2).
-
-I've also hit one other scenario where a runtime PM reference count is
-leaked (without any dpcd errors), but the above one is easily reproduced
-by pulling out the plug slowly (the printks may possibly help make this
-more reproducable by altering the timing slightly).
-
-> At this point, I would say if the RFC resolves the reset for you and 
-> Bjorn with the above stack, that should be the way to go and not full 
-> revert.
-> 
-> Unless you are facing other issues other than this last reset crash.
-
-We only have Bjorn's stack trace as the hypervisor just resets the
-machine when I hit this on sc8280xp, but I think it's reasonable to
-assume that we are hitting the same or at least a related issue.
-
-Also note that I've hit the resets in two different ways; disconnect in
-VT console and when stopping X some time after a disconnect (Bjorn's
-stack trace is from the former case I think).
-
-Both resets occur around the time where dp_bridge_atomic_disable() is
-normally called, but I'm still missing an explanation for how the link
-clock got disabled prematurely (if that's what happened).
-
-> To avoid the breakages on sc8280xp moving forward as it has more 
-> visibility, our team here has decided to setup sc8280xp devices to test 
-> out all msm display related changes especially eDP/DP as it shares the 
-> eDP/DP driver. We can also CC you on these, in case you want to test it 
-> out as well and give your Tested-by.
-
-That's good to hear. I'm sure your testing will be sufficient to catch
-any obvious regressions. Once it hits mainline we have a larger user
-base of people running the X13s which will provide further testing, but
-it's not very efficient to rely on third parties with these kind of
-issues that just trigger resets on this platform. It gives us an
-indication that something is broken, but someone still needs to spend
-time to try to narrow it down.
-
-Johan
+Correct, that's why I initially thought it was a btrfs issue. No DM
+errors in dmesg, btrfs is just the canary
