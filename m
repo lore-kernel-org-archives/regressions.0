@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350352E62E
-	for <regressions@lists.linux.dev>; Sat,  9 Mar 2024 12:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1C31BDF4;
+	Sat,  9 Mar 2024 14:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709988002; cv=none; b=Hy5NPcyrcoRwS7TVF/vvGdTlu0pMxjDuoQSU5TRwV8aPmCPU7BQuS6yNE+R0gMehy+skqRMqSZRL51LA4kFVBqyK82QRM8ji7N2/LNIGJXcGETBEafOjrYfutQMCgvsb4GmgMo2U3QZHZCB9zVSblGHNvgPWMtixgnvR3A4aH2Y=
+	t=1709993209; cv=none; b=kJEJBbrd/cmweBhEIajX5G8wvyuijh89qypQrKFysafFPD+3ourxC4oN3pnZMiUOe28aYYgpCwkkoB1PcCikpKgza8PlAEEQlbLyOpz1CKsEFaIjGOWhl9wQWJpBL6iMzPJRGLo+KtW8bW3RIpyYtDz+lyfWDdNDbuDA9qMYO6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709988002; c=relaxed/simple;
-	bh=1KpRuStLbmXHkKsZWXYuN7+hVxDUo1iAJFXwMTXLQeo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=RhBJzY8eIQd/jPP3EFiCFuKtMy98ncGCB48yKQ0Ldm7QZ+oeMxQ0uQ8zpK99sRbFLxrICjZstTlRxj4rB2F1TJpk7za43BrCnBflf+2UXhcUzIIbiRPNrZKEQdwK0PQa/4HTH83JegCATYPno87NKyTu7n70PBDrIvgcQLD+67g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UnHVdUgn; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1709993209; c=relaxed/simple;
+	bh=DRLJ4cBuxvF0fY5uEWgVJE771EWuG5ot5GbzGWoLM8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lxkjH0OnpXWWDkoX3yDJEXnBuKpbXZssC+0p6515JX7DBv+oyn80lYTFfFBwO0mlaa16VEA5uhBjOPK293qwNnOLkbtSKYtCfTt1nk7628s+Zx1yD0HfwjI2I3/PMRVKzBG8v7n5Og5Ln7Yw0te3erxoneo73f8V5hyXrTS4BYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VoW/Q4px; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UnHVdUgn"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VoW/Q4px"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=1KpRuStLbmXHkKsZWXYuN7+hVxDUo1iAJFXwMTXLQeo=; t=1709988000;
-	x=1710420000; b=UnHVdUgnYnnS08sq23ipUxpMuTeVfL/YRPSyS6ZbltmUKWbPPzOMbSDCafg2E
-	YdUd+nOEgzYj9RZVsfvq0/ZM3l8dVn5zVBd9/wPcj15hhDmsqzoPcZfsy9TTVtA/nqtckesEWHBMx
-	aZBCd2g2VYCZNjfgy+Y32lXVsB3JWIWwvdAX5q+5iCBHeXOxiVmGU53NO6XMalhnAFKf4r3bYUbxg
-	0x7x+cUvQQ/Cy0kSFVaVrVz+awYJ5FGVCh0XWOiN9O9uAvmJehifK8lQ5xSMA+QkWK7bhRNJOIGWM
-	A/4dXPT9NOTp6I4ETD2i9uzoudFWM/rsrGjXOstI4dE5M8XO+g==;
+	References; bh=Tw2VS+QsVfGXZiZF1IkS/2FHF2jIkdONTN9aFBFDJco=; t=1709993207;
+	x=1710425207; b=VoW/Q4pxBpnYhwN1FjFf/rZ0yfISfiuRhIylFAfoIlV8BB90wjqBJHAmkEJdb
+	4xEc22hUDxlX3nlfGxMjBmH3Eg8twNLRal/M047kigODfN34SZV9ctR71rQQDrh4sGUYQLBVc1X//
+	JcSxrNhwz+XMIM+Hb9fXdyqHfybffe0kL0c9kpEMgx1ez4PFLVi3NbedrEIRUmOjK7dPAIW40ixNk
+	veP7GZxVUbRPJqXJNsWQaA2eNc5oVaU9gADwDfO74FC28bnatPeRbABeq7JK8QUMq+lIxUqIvRJnf
+	gEheFW1DWNm7m87AwS6fghoGJynhVc3XnUoZUSG6/vwi2EmbVw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rivza-0002h2-Ad; Sat, 09 Mar 2024 13:39:58 +0100
-Message-ID: <2ae922be-6e80-4bdf-9207-853f60a4e61c@leemhuis.info>
-Date: Sat, 9 Mar 2024 13:39:57 +0100
+	id 1rixLT-0007yp-Dn; Sat, 09 Mar 2024 15:06:39 +0100
+Message-ID: <b888cbe2-6071-4445-91cd-8ce7cc9cc8f4@leemhuis.info>
+Date: Sat, 9 Mar 2024 15:06:38 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,31 +39,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
+Subject: Re: Probe regression of efuse@11f10000 on
+ mt8183-kukui-jacuzzi-juniper-sku16 running next-20240202
 Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Chen-Yu Tsai <wenst@chromium.org>
+Cc: regressions@lists.linux.dev, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <47cdeac1-121d-4b1a-a3ac-e2affc7a2fc3@notapiano>
+ <c4416256-eedc-4c9b-b968-3a02490c4c09@notapiano>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <c4416256-eedc-4c9b-b968-3a02490c4c09@notapiano>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709988000;82b4619d;
-X-HE-SMSGID: 1rivza-0002h2-Ad
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709993207;077ff1e8;
+X-HE-SMSGID: 1rixLT-0007yp-Dn
 
-[of course the first real use of mulitple "#regzbot report" in one mail
-resulted in some problems I missed and fixed, so trying this again]
+On 08.03.24 15:31, Nícolas F. R. A. Prado wrote:
+> On Tue, Feb 06, 2024 at 11:11:00AM -0500, Nícolas F. R. A. Prado wrote:
+>>
+>> KernelCI has identified a regression [1] on the
+>> mt8183-kukui-jacuzzi-juniper-sku16 machine running on next-20240202 compared to
+>> next-20240118:
+>>
+>> #regzbot introduced next-20240118..next-20240202
+> 
+> Not sure why this got filed by regzbot under the mainline tab rather than next.
+> Maybe it was the missing collon? 
 
-#regzbot report
-https://lore.kernel.org/stable/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-#regzbot relate
-https://lore.kernel.org/all/CAJbxNHe3EJ88ABB1aZ8bYZq%3Da36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com/
+No, I guess that is a bug in regzbot: the support for -next is there,
+but not much tested. Will need to take a closer look, will do so in the
+next few days.
 
-#regzbot report
-https://lore.kernel.org/regressions/ZeoAPFIF6NClUl4P@debian.local/
-#regzbot unrelate https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/36
-#regzbot duplicate
-https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/36
-#regzbot summary drm/nouveau: divide-by-zero on DisplayPort MST unplug
+> In any case, the fix has already made it to linux-next, so this should close the
+> regression:
+>
+> #regzbot fix: nvmem: mtk-efuse: Drop NVMEM device name
+
+Out of interest: Is involving regzbot worth it in case the fix is
+already in -next? Or is that primarily to keep track of "we found a
+regression and a fix was already available in next". I don't mind if
+it's the latter, just curious.
+
+Ciao, Thorsten
