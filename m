@@ -1,176 +1,69 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A632E62A
-	for <regressions@lists.linux.dev>; Sat,  9 Mar 2024 06:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61F14C90
+	for <regressions@lists.linux.dev>; Sat,  9 Mar 2024 10:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709967281; cv=none; b=VUOfJqL85aK+pczvUgiq1KGJh3ycj/ad42RUvO/ra+bDimCezUzkOoNtsWIefTPPUyJvoT5Dj6aPb/LSPWoWh4VzgmDoWATlaLi762DPHngrrAf3noP+xb0Q/e7h8NUzGrT/Uqvofvj8rZ3Tiwph/rCYK5cr+Sfh0C3p1Iz4SDw=
+	t=1709979511; cv=none; b=tMeTOrfBJt3YzTsWF94gfOGsd4oEaHJu5Dhav0JBK2SoNfeUGZT+DlZqX+mxoanrQD9ORso2TVbPX2Ts1N3tgF4LzLvIpEEw2SOpzUdN/1iVJnuLZQbftUcjroCFEjpM+wNvGzmZBEPdVPJE7IIyrq2SsNFRZcUN+8AyOVOYvCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709967281; c=relaxed/simple;
-	bh=zE5llABa6OUSWAXGxaevMEl71+ZRFhwSH+z3I9FbD3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZBlL8o/rM6TjbKrUC/0XnRhP+C1bdwu8JOCA9l4RPrJHSUL7NPoj63KsJtMQDuU+pH2adSbr1ofHafhBTYT8NgEDut14VaCoPFRpZAKPH9kyB88Dv+gSC8iWug4pdVYsM2KZaRiFBuYYsmut34K4X+Pif8uaxmZU0147GvXXmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAXvaEUB; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709979511; c=relaxed/simple;
+	bh=3y377lhh6SXAkJgZ3nS2wCj02tvfmHyR8XqLo0mfGto=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=YNBdeaP5yhqcxUZn/txockC4293z0P7b0AhwclbkzYrSvpsQ/zmcilz8frZrPnrQ4Q/DTq62xPVzBcQfCmHQC3ZB4dX0x3u+7YSKc3kYB/O2cKAzOxReHCZss94nBaGZGB24b7RL+xr7ZNZPqUVHVpI4lWxW2aVE0buEPw4cmVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VIVIYbWJ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAXvaEUB"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so2477465a12.1
-        for <regressions@lists.linux.dev>; Fri, 08 Mar 2024 22:54:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709967279; x=1710572079; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GFVaDFLqdGwfwQuEkW9PKhIJH9fl4L06eRAN/wjSBaI=;
-        b=gAXvaEUBunn4Kg1W93Ck3pBfC8SftAB7wMKO5LJpVyMGtZh1DRHEyXi83onJN682Ah
-         rz6NG1JVRXcbFG45VeC2J6m6neZdx121lGcclp+M2X82Pcxy9C1yM2htttQUsB68b2Vc
-         wXtLt90yD7xCCVSOEODF50vcWEFZ13tGXbqcKbzPLpXUIycA1RC65u2CgREYv0aTqS4F
-         +9YOXOAZ2ZDVAho/59FvOzIuYGKL2Fm8pmCICW46PUJL4eFigbdBmisgJetw0PKQrj2F
-         8/8EEvejTF4gX/Fo5JpeJus0Il+xYv8q3xxMNqmMox+KixHjEsDneVpBKXNFXl1AO31c
-         8ETw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709967279; x=1710572079;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GFVaDFLqdGwfwQuEkW9PKhIJH9fl4L06eRAN/wjSBaI=;
-        b=jdXiZM3Jfh7dhJF+NxkJP/GJWh2zZ/UQmAsh/SoykCS5YSJ8ZQNPijXTRm4nokbDaF
-         D/X4n0s7eOvSY2smZugR9x/dapj7otkU1oW9k+QF5M41LIL+8X7eCeoREUJpyEdHvQGK
-         ekhQQ1q44y98eHFNwxwfr7ZksTfjImIv0Y48WCXPr3oOeBal2xHdG7AB926HwgEpE5wZ
-         hZ3k2/Xv0cXpONgffK7PnZDVd2BVaP/Ooz1BlK063kpdU8YjPx0bWC5wOs97aXBk6WXR
-         FZjHOSBhoPIn+mOQ1roJ5fRjqhi27Cu368ByKJXaoPZzVgzXajr3rH7GvvYtHCgqrtac
-         EWcQ==
-X-Gm-Message-State: AOJu0YxkC449BMPMrFW1WeYYWP8c3hLMy2PUQzWf0mWvUTw+PimsbRqw
-	H1ZBp542d4H8E4OKGgDmV43KgH7nsYjgWet+H4w9Oo4pqHMAM/7a
-X-Google-Smtp-Source: AGHT+IF2fDVjG29onY/4FvdxbJ5iKCefwCDjEM0f5AM4a86mvOxkPcspIPPqnLE5KdtvL+jXEAGRGQ==
-X-Received: by 2002:a05:6a21:199:b0:1a0:e187:87c4 with SMTP id le25-20020a056a21019900b001a0e18787c4mr1247749pzb.38.1709967279176;
-        Fri, 08 Mar 2024 22:54:39 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id f5-20020a17090a4a8500b0029b2e5bc1b9sm4006549pjh.23.2024.03.08.22.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 22:54:38 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 22C9D184F7F74; Sat,  9 Mar 2024 13:54:35 +0700 (WIB)
-Date: Sat, 9 Mar 2024 13:54:35 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-Subject: Re: [PATCH v1] docs: verify/bisect: fixes, finetuning, and support
- for Arch
-Message-ID: <ZewHqzDi5Juou1rU@archie.me>
-References: <6592c9ef4244faa484b4113f088dbc1beca61015.1709716794.git.linux@leemhuis.info>
- <ZehvJv3fDZIPs9Kc@archie.me>
- <feba810d-1391-475e-9b56-fbb6c52912a0@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VIVIYbWJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:To:
+	Subject:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=3y377lhh6SXAkJgZ3nS2wCj02tvfmHyR8XqLo0mfGto=; t=1709979508; x=1710411508;
+	 b=VIVIYbWJhuhHG8WsfN5pxajB3J4cH6lyPXEgifJo/rgWsxxdTZ5fo6m8N4Ial+7+XnaZm1kkjA
+	5NdedBiIZsVEk1gVb7Nxckmqq3u36wqAYICIVL20ykQ5YzE6lrevF/ENlJysEfVXdzbpx82KMV9U/
+	ub8DNKCUdr4apcm+aGrG9FUOCyz91Z0eYjkISuI/RSfFmyDiX8Cbf7tH6ktzUbBxht9RspUhkFpWK
+	r2iu9hyiSl2EYGLuU+gM/iaDg9ruo/I1Gr0NtruILyj378fnwU2n4hsnxnigqlZgZuRi90tUw/0I3
+	myce9qKw3Ad7jFARBLi7RYScFNg+4duy1JSfw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ritmW-0008DB-KL; Sat, 09 Mar 2024 11:18:20 +0100
+Message-ID: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Date: Sat, 9 Mar 2024 11:18:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="W/axohnCOtDbrhTh"
-Content-Disposition: inline
-In-Reply-To: <feba810d-1391-475e-9b56-fbb6c52912a0@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Thread for updating minor properties of tracked regressions [consider
+ ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709979508;26678c7c;
+X-HE-SMSGID: 1ritmW-0008DB-KL
 
+Hi! This is the start of a thread I'll use for updating minor properties
+of regressions tracked by regzbot. Consider telling your mailer to
+ignore this thread, the replies are unlikely to be of relevance for you,
+but done here to ensure a public paper trail.
 
---W/axohnCOtDbrhTh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Interacting with regzbot from arbitrary places is a recently added
+feature of regzbot usable via the new '#regzbot report <url>' command.
+The indented use of this feature is for updating minor aspect of
+regressions already tracked, e.g. "change the title" or "tell regzbot
+about a related discussion". Such things until now had to be done using
+regzbot commands in a direct or indirect reply to report -- but there
+they would mainly be noise for most others and just add to the huge
+amount of mail people already get. It's also takes a more time to send a
+lot of individual mails instead of preparing just one.
 
-On Thu, Mar 07, 2024 at 09:56:47AM +0100, Linux regression tracking (Thorst=
-en Leemhuis) wrote:
-> On 06.03.24 14:27, Bagas Sanjaya wrote:
-> > On Wed, Mar 06, 2024 at 10:21:12AM +0100, Thorsten Leemhuis wrote:
-> >> diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressi=
-ons.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-> >> index 54bde8bac95c67..58211840ac6ffb 100644
-> >> --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-> >> +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-> >> @@ -192,8 +192,8 @@ will be considered the 'good' release and used to =
-prepare the .config file.
-> >> =20
-> >>         sudo rm -rf /lib/modules/6.0-rc1-local-gcafec0cacaca0
-> >>         sudo kernel-install -v remove 6.0-rc1-local-gcafec0cacaca0
-> >> -       # * Note, if kernel-install is missing, you will have to
-> >> -       #   manually remove the kernel image and related files.
-> >> +       # * Note, on some distributions kernel-install is missing
-> >> +       #   or does only part of the job.
-> >=20
-> > Consult documentation of your distribution for how to manually install/=
-remove
-> > the kernel.
->=20
-> That would sent the wrong message in the TLDR, as the step-by-step guide
-> and the reference section would be the first place to look for details,
-> which is kinda implicit for a TLDR.
->=20
-> That being said: that made me look closer at the install section of the
-> guide and the reference section. I think they should mention "consult
-> documentation of your distribution" more clearly. I just looked into
-> this, but that requires a few bigger changes, so I'll take care of that
-> in a later patch I hope to send in the next few days.
->=20
-> >>  Install build requirements
-> >>  --------------------------
-> >> @@ -1076,72 +1078,103 @@ about to build.
-> >>  Here are a few examples what you typically need on some mainstream
-> >>  distributions:
-> >> =20
-> >> +* Arch Linux and derivatives::
-> >> +
-> >> +    sudo pacman --needed -S bc binutils bison flex gcc git kmod libel=
-f openssl \
-> >> +      pahole perl zlib ncurses qt6-base
-> >> +
-> >>  * Debian, Ubuntu, and derivatives::
-> >> =20
-> >> -    sudo apt install bc binutils bison dwarves flex gcc git make open=
-ssl \
-> >> -      pahole perl-base libssl-dev libelf-dev
-> >> +    sudo apt install bc binutils bison dwarves flex gcc git kmod libe=
-lf-dev \
-> >> +      libssl-dev make openssl pahole perl-base pkg-config zlib1g-dev \
-> >> +      libncurses-dev qt6-base-dev g++
-> >> =20
-> >>  * Fedora and derivatives::
-> >> =20
-> >> -    sudo dnf install binutils /usr/include/{libelf.h,openssl/pkcs7.h}=
- \
-> >> -      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole}
-> >> +    sudo dnf install binutils \
-> >> +      /usr/bin/{bc,bison,flex,gcc,git,openssl,make,perl,pahole,rpmbui=
-ld} \
-> >> +      /usr/include/{libelf.h,openssl/pkcs7.h,zlib.h,ncurses.h,qt6/QtG=
-ui/QAction}
-> >=20
-> > IMO qt packages are for people who wish to do xconfig instead of menuco=
-nfig
-> > or nconfig.
->=20
-> Well, yes, that's why the patch also added a few lines to point this out
-> and mention that installing the qt dev headers is optional. Guess you
-> just missed that.
->=20
+The new command will be documented on
+https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
 
-OK, thanks!
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---W/axohnCOtDbrhTh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZewHpwAKCRD2uYlJVVFO
-oyN9AP4qiCxkqPRLMtJeAgSU6Kg8PssrdGDymIdNwE5I7KC74QD9GHIDsxA2aDGg
-BGfaFSW2UxE+kZzALs5qmS+05hqoVwE=
-=ZICm
------END PGP SIGNATURE-----
-
---W/axohnCOtDbrhTh--
+Ciao, Thorsten
