@@ -1,100 +1,127 @@
-Received: from mr85p00im-zteg06011501.me.com (mr85p00im-zteg06011501.me.com [17.58.23.182])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AEC184F
-	for <regressions@lists.linux.dev>; Sun, 10 Mar 2024 05:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAEA6AC2;
+	Sun, 10 Mar 2024 07:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710047607; cv=none; b=IBe9En6nL7uw3YIr2tMVGscri5SmUIXReMWy4k4ArIv0PW/YlRwslzyjRwmkT1/TNuTuVqB4ChV9rgglEKgl5ed1qFX2Mz59s5O3jKgECCzo6Wm9edIvzKsQ0upv1hNZJSmevnou9hjK+44D87EkFrtC0m7H4k2BFiEs1A0rDHQ=
+	t=1710057482; cv=none; b=Ycfwn61LXv461sB5Gp97toRvkYtCMyC4areps75KxoCyJn4Wd4O9MFq424Z3VGpOpNAEPcTzlv4qI+01hdLKNdOQ5BnMnbtAj5FPLDbQojiyTtmfSYeDMzmrul7OqEHuRA4nkbFmY0nXqtSmQ0pmiHCkjLNPyF56/N1SrNWFJwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710047607; c=relaxed/simple;
-	bh=T6XjRhnGO6nIaTDzl99aOQ6bUYJdL4xvjrQ7ZIMu54s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fi4qNo24nCbT6qvVTC1pArqpJs+PsFD5+rTbfPa9qMKR51Wl90UU8qQDfx5U1enk2u0tSE5papgPQqt7srih/jdfkxstk34C9/PpQZdcAs/zDjnJUVReglF6GkTxSNnHodZAsXYVj39gXL9b/HMBkXta6ymZduHkwsB816iCyOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=HSuH3Roe; arc=none smtp.client-ip=17.58.23.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	s=arc-20240116; t=1710057482; c=relaxed/simple;
+	bh=EG1HIoO3PlMXPYnZIQTO36mGj6DX1FjXlCXNwWpbrfA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OAdolDW8B4m+Mm2eyUPf5LLGQr93sIDGpveAg72UYeWxYsYbN/fIDq+lNhoYjSIAVjKOXR2jEuhRxs6uIY3zC5MwUsFSlJIISBM3bO3xrAvNSIN8KGvagoCJUC5dYRD8cHJrnMwoYHWPPfGYRByLIjuqvTrtUt06zeVWD4ujsXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vZx/fdwD; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="HSuH3Roe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1710047604; bh=w5RhIat3cVeSw5iGnaflty1U4Kd5aUaXoJYaNdQwBJA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=HSuH3RoerZbtH1tXsy/ZzNESP80YvZeB7v60YYjpz4+FBKQjP4C21DxYFGdREgCcN
-	 TCAm+JqJbfo8mnvYAAJr0ACqBB5ifQTLtaH3zAR68L/X6/LfmmMM9FO0ROkwAQ3x+n
-	 YGb1unOUgwznjUkp7C2N4mMI2hcL15hF7KZT3kohMDpBJamDofMZ+ajsLfJZz+tHos
-	 d01NXUxwMtiF/tfYpUjMiTOup+QGhAg9bfbSBvBBT+VS2rFgLDUXlfnm9XkNKb/2Nv
-	 qrIGw8KrpFTemMPCR211U+pfiKDNuPpNEHyRIcmVFowh1PfaAelTkSl2uQR7utAdb3
-	 EUrmHFASJ/5zg==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06011501.me.com (Postfix) with ESMTPSA id 1AF6748012F;
-	Sun, 10 Mar 2024 05:13:22 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: junxiao.bi@oracle.com
-Cc: dan@danm.net,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	regressions@lists.linux.dev,
-	song@kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system; successfully bisected
-Date: Sat,  9 Mar 2024 22:13:21 -0700
-Message-ID: <20240310051321.9812-1-dan@danm.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <d3cdebfe-17c0-4f61-9ad9-71d9de2339b2@oracle.com>
-References: <d3cdebfe-17c0-4f61-9ad9-71d9de2339b2@oracle.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vZx/fdwD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=EG1HIoO3PlMXPYnZIQTO36mGj6DX1FjXlCXNwWpbrfA=; t=1710057479;
+	x=1710489479; b=vZx/fdwDwbDEV5edXp0n5BDCkqm1Q0NQl9zr60+y7C4C+4C9Ywdw7LHlrn/le
+	+lxyaM7rl7VcloS7oBjv7XRXaWKI/rVnDErPs9aCeT2UYrvbp6wwIsKVUt7fnNzGw4kbBVIrfE9Ik
+	64Aj9v5el9ezbpRHUvB4yKHt3Vrc75Ewt6AzxS8CkdqJzcJakrA/DzMVEVNlMS5+SHfuVqc48O5Wt
+	D3RPlKy8PjK2hQPxZjtT0dD3A0F+nuNAuj6CFfGCHvJpPswuZNVUCHHCTmG7Gn0jjeuL6d1V6EzE8
+	K1AkTVsQDWfe1X4E5paoChAxOp1Sa1VjBEdj+jvKZz3GlOnwrw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rjE4C-0002mx-9V; Sun, 10 Mar 2024 08:57:56 +0100
+Message-ID: <cd766a41-4dfa-4f57-8af2-163023acbead@leemhuis.info>
+Date: Sun, 10 Mar 2024 08:57:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Fix typo in reporting-regressions.rst
+Content-Language: en-US, de-DE
+To: Chris Bainbridge <chris.bainbridge@gmail.com>
+Cc: regressions@lists.linux.dev, trivial@kernel.org,
+ =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <ZeoDMtLGIHvbavW2@debian.local>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <ZeoDMtLGIHvbavW2@debian.local>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: VCMOOETFy1S8Cuqw7AMi3jOVnDROoe4i
-X-Proofpoint-ORIG-GUID: VCMOOETFy1S8Cuqw7AMi3jOVnDROoe4i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-10_02,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1030
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2403100041
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1710057479;41ef0cfd;
+X-HE-SMSGID: 1rjE4C-0002mx-9V
 
-> Dan, can you try the following patch?
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index de771093b526..474462abfbdc 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1183,6 +1183,7 @@ void __blk_flush_plug(struct blk_plug *plug, bool 
-> from_schedule)
->          if (unlikely(!rq_list_empty(plug->cached_rq)))
->                  blk_mq_free_plug_rqs(plug);
->   }
-> +EXPORT_SYMBOL(__blk_flush_plug);
-> 
->   /**
->    * blk_finish_plug - mark the end of a batch of submitted I/O
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 8497880135ee..26e09cdf46a3 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -6773,6 +6773,11 @@ static void raid5d(struct md_thread *thread)
-> spin_unlock_irq(&conf->device_lock);
->                          md_check_recovery(mddev);
->                          spin_lock_irq(&conf->device_lock);
-> +               } else {
-> + spin_unlock_irq(&conf->device_lock);
-> +                       blk_flush_plug(&plug, false);
-> +                       cond_resched();
-> +                       spin_lock_irq(&conf->device_lock);
->                  }
->          }
->          pr_debug("%d stripes handled\n", handled);
+[CCing Nícolas]
 
-This patch seems to work! I can no longer reproduce the problem after
-applying this.
+On 07.03.24 19:10, Chris Bainbridge wrote:
 
-Thanks,
+First off: many thx for this, much appreciated!
 
--- Dan
+> Append a ':' character to the first usage of "#regzbot introduced".
+
+FWIW, that is obvious and not needed here; but having it in the subject
+would be good. The subject also does not really match the expected
+style. But let's ignore that for now due the aspect mentioned below.
+
+> According to the regzbot documentation, the ':' suffix is the correct
+> format, and, even if not strictly necessary, it is good to be
+> consistent.
+
+Sadly a slightly tricky situation developed coincidentally: Nícolas not
+even 24 hours later send a patch that fixes this as well, but does so in
+a related document as well, which is wise:
+https://lore.kernel.org/all/20240308-regzbot-fixes-v1-1-577a4fe16e12@collabora.com/
+
+Which leads to the question: how much do you care that you patch makes
+it in? If you would like to have a fresh commit in the kernel (which is
+totally valid thing to want!) we definitely could improve your
+submission and then adjust Nícolas changes on top of it -- but if you
+don't care at all we could just directly take Nícolas patch.
+
+Ciao, Thorsten
