@@ -1,98 +1,84 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FA33FB9A
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 13:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7104040843
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 14:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710165484; cv=none; b=CNbRHaR492umJkjvqw1pb/13HseCcIvY4+P07Cv6RencxHRheJnbXaTFkJhTA6b34049QPwCcgKkf4EPpTbtrQP93w7kBxNhrADfw8/9jyYq9bVo55Tj6XU8Pzl1+/9Foru/iWGFwL/FFTswv9VXj/OAdcM5C7Q7BGreowidqZ0=
+	t=1710167819; cv=none; b=ThgVML3ntbR4sCae9W54tfnY+jsXI1rXy+1m55YUq5sk0cQWjfy9N7479tZxsAAvD6qqq5zxjbOXq5LsQiOtoLOwn++1BEptqBx2k3kIKkN2LTPhcBQUvBfYfpNoyxQY+qO1P6/INUsJwUgzATvnMPtaSbqIQof/g/RgPctfbKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710165484; c=relaxed/simple;
-	bh=FWMRXGnwN11kherO0jWB8E9UkYMhbotLeOkQfTIe/z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQHep+UtFFcqoHvqcu/VVVAjfF6M9NHnNOasvPCnwVHz9rfeSGw/blZOaI13lrfOgMyidlYFSNh3MOvFdZrmFjV2L9SS2cb7mBJ1x+95nyRYT4zHRGr71pne/Y1xnPr9Lo1ZCz2XJF8s4frWkcLIc5V1waFcEwW7NN5CTb12eGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QwiUryaj; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1710167819; c=relaxed/simple;
+	bh=NFXgzJ4YuGprBA9q+Ng9neXNqQYOjSNfOZEoYCQyD90=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QkUQgSC+Oqqn2ShRzs4kPoCWyrgbY7H2vxpDvucpOFRFghRVI7ltzHUmjcotk3u8PpeRyvKGDmZ9PzrGf+926AP/2HhGmYm9Sjwdth+3BGtfh2N7bLdgJQ123A0tiqWIlxr3DjPz+a4gwPvppF3OOQCQvXxIz7tXeAYhI+iyAcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uZFVB6LN; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QwiUryaj"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uZFVB6LN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710165480;
-	bh=FWMRXGnwN11kherO0jWB8E9UkYMhbotLeOkQfTIe/z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QwiUryajADe27ncwX2jdf5S6xpGZTCbkc1dKJAfEIXi43Ftqpmhd8iQpG/FYDpiJH
-	 QachjINcFF7k4f8AKZ7wp0DwFzS7qLac36KqQtS3Avfrdk/Qf61sHGuvQ8lrLvfmIK
-	 BPz+sKD8edRsJuFyNqOIXZ63QcyxEGLnL7hcYlq9zWoU+n1+UvJ4KXASsgErWs/81R
-	 LaBHwFz5THIl4GHaygPGliwXcH1UnNTJq2RpEq+F2vGbRwrA2RahVubwC7Q+Rwh3vW
-	 MvbQgqbDfvCOvtdQYWRN1Xl/mb+9WUKxJu/Oc6DJIn/wPtniwkoaBalUvaihAMQG3W
-	 h5LkCV5IswixQ==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	s=mail; t=1710167816;
+	bh=NFXgzJ4YuGprBA9q+Ng9neXNqQYOjSNfOZEoYCQyD90=;
+	h=From:Subject:Date:To:Cc:From;
+	b=uZFVB6LNYCf23aphtIoK/AhSqbKOiA1JbRU613SBw1HVKf8x2QAUx/CB0TJ/vxWmj
+	 VBAja6ELPwXH2neoSWfPWA1fsvC+FGGO35RjuS42Bzh97KVcmG3+EyGdgi/vf2lkAU
+	 dWIpTN8IyhM7XR3c3EmwTRFZW0SIfPUbLSFX+H89b4MVmX3eQJv5KzdkDkevl03llA
+	 of+O6mFHLSPOUByw80y4UCp/BtPNdBNUXNcbnTtMwTewWA5efk9ZgY8ek4PWElvGDk
+	 m3awNwVtMc5brEljRQHFfJJ7ahex0uQX8BrkH8WmWC4TwjTnoOyGLEF/lubfRtVFnv
+	 Oj7GsFCJ1GfvQ==
+Received: from [192.168.1.36] (zone.collabora.co.uk [167.235.23.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A1B4B37811D4;
-	Mon, 11 Mar 2024 13:57:58 +0000 (UTC)
-Date: Mon, 11 Mar 2024 09:57:56 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jonathan Corbet <corbet@lwn.net>, kernel@collabora.com,
-	regressions@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, workflows@vger.kernel.org
-Subject: Re: [PATCH 1/2] docs: *-regressions.rst: Use collon after regzbot
- introduced command
-Message-ID: <2d666b8c-96c7-4789-8282-6b28cd932920@notapiano>
-References: <20240308-regzbot-fixes-v1-0-577a4fe16e12@collabora.com>
- <20240308-regzbot-fixes-v1-1-577a4fe16e12@collabora.com>
- <82cf3fba-fdfa-4185-b2b9-c8ed8d123136@leemhuis.info>
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B374B37813B6;
+	Mon, 11 Mar 2024 14:36:54 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH v2 0/2] docs: *-regressions.rst: Tweaks to the commands
+Date: Mon, 11 Mar 2024 10:36:14 -0400
+Message-Id: <20240311-regzbot-fixes-v2-0-98c1b6ec0678@collabora.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <82cf3fba-fdfa-4185-b2b9-c8ed8d123136@leemhuis.info>
+X-B4-Tracking: v=1; b=H4sIAN4W72UC/3WMQQ6CMBBFr0JmbU1bKhBX3sOwaMsUJkHGtISop
+ He3snf5/s97OySMhAmu1Q4RN0rESwF9qsBPdhlR0FAYtNRG1rITEceP41UEemESpra6C4NxjVZ
+ QnGfE4yjKvS88UVo5vo/8pn7rv9KmhBSXtrUmoGpQ6ZvnebaOoz17fkCfc/4CRCGbC64AAAA=
+To: Thorsten Leemhuis <linux@leemhuis.info>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, regressions@lists.linux.dev, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ workflows@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-On Mon, Mar 11, 2024 at 02:39:46PM +0100, Thorsten Leemhuis wrote:
-> Thx for this!
-> 
-> On 08.03.24 15:09, Nícolas F. R. A. Prado wrote:
-> > All the examples in the reference documentation for regzbot have a
-> > collon
-> 
-> s/collon/colon/ here and a few lines below as well. And in the subject
-> as well. Speaking of which: something like "docs: *-regressions.rst:
-> add colon to regzbot commands" might be better.
-> 
-> > after the "introduced" command, while on the kernel documentation
-> > some have and others don't. This suggests both are acceptable,
-> 
-> Yup.
-> 
-> > but in
-> > order to avoid confusion, add collons after all the commands to match
-> > the reference docs.
-> 
-> Yeah, good idea. I likely would have done this myself soon while doing a
-> few other changes I plan, but whatever. :-D
-> 
-> > Link: https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> > Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> 
-> With the changes above:
-> 
-> Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
-> 
-> Side note: I wonder if the commit message could come a bit quicker to
-> the point (something along the lines of "Use colons as command
-> terminator everywhere for consistency, even if it not strictly
-> necessary. That way it will also match regzbot's reference
-> documentation.". But not really important I guess. Up to John.
+A couple tweaks to the commands in the regression documentation to make
+them up-to-date and less confusing.
 
-Yep, all great suggestions, thanks. Will apply them for v2.
+Signed-off-by: NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
+---
+Changes in v2:
+- Reworded patch 1:
+  - s/collon/colon/
+  - Made title and message more straightforward
+- Link to v1: https://lore.kernel.org/r/20240308-regzbot-fixes-v1-0-577a4fe16e12@collabora.com
 
-Thanks,
-Nícolas
+---
+NÃ­colas F. R. A. Prado (2):
+      docs: *-regressions.rst: Add colon to regzbot commands
+      docs: handling-regressions.rst: Update regzbot command fixed-by to fix
+
+ Documentation/admin-guide/reporting-regressions.rst |  2 +-
+ Documentation/process/handling-regressions.rst      | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 11afac187274a6177a7ac82997f8691c0f469e41
+change-id: 20240308-regzbot-fixes-43a28fd4b621
+
+Best regards,
+-- 
+NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
+
