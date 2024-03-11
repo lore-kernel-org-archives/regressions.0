@@ -1,282 +1,147 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f226.google.com (mail-pf1-f226.google.com [209.85.210.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8704AEC3
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 16:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF7247F63
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 17:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710175935; cv=none; b=eXQQfVhf08bD1ugYHAmaGPmlZPLGVLqM445If14cVOZmB2VVsxGJGZEHncfHwsWBkoV/c/H5n5rrmfKyBDjKs2niegX9R4Xz828sXzszY5TFxy7EaqHZNt6yyk45AWisx5LZvbZkZyPqprDbtdGb8MoG5tkkHt9XeVwow/7O4SA=
+	t=1710176595; cv=none; b=ibBBLLUWYDvnwOXYY29v5OJQG+AnCb/FSBjBDznzGhEWy5i4sxx3DwJxFxQQUC+l71kTYdXKtoMQJG4Tykbnlsa3FB/TBPMu8OKvKRa7huSEfgjfOTwNeLSU8jU3SJorF7CjXnCDqCWrZKbMOD2BtUQZ++SgTglvN0QNJgdQFUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710175935; c=relaxed/simple;
-	bh=kSKxbHU3xiEOgYOp0bCxr/3ERIewJ50ZvLhy6RaOa9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=f+rc3hVaweNT48cBtH+5eseYhr+ru4gySHQ5DgvAITCsiMvcKgIaQiOhMdXym3yy0OBcrkuJOss1fS4Bm6qPg+HfYeICeR07z9gMsqK41XEr5qi0KeUqPR4VWluurCAFO9KxNlwB9LmwUi7Om/iX+e4RGtPbctve7Mj/zNo6O04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=poNd9bed; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1710176595; c=relaxed/simple;
+	bh=agaJq87etNffqdB6IMs5QiSDbY44VKyrosXTgjFI/t4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=M0MjzqMyamQAyGYgfyYBt9P5pfDg73J/aO5Xofpqo9UbJzAKvY2rlohfQOEGwriEu2O6UQu8vwGSlE9x/7oXp8HZ0aEPl/i0hoV8gJT/kzHDDQKpMBS925G2Aaw8yzixzyin7hoQ728Eq2+Akz7zOtJMr4F519hl9iGuQ8hrJxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com; spf=pass smtp.mailfrom=totalphase.com; dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b=qMj347CI; arc=none smtp.client-ip=209.85.210.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=totalphase.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="poNd9bed"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42B7t52a004010;
-	Mon, 11 Mar 2024 16:51:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=DJsySqRf7nCURDT9iP0DaCaSIGev0XqvLhdnQhcBmAA=; b=po
-	Nd9bedqRB5wiBWPwb4N3JgfTwG39s6itx+xi1A30yt9dxdTAklyYjhEZLAIY828T
-	8ho/Wz9f1MN5mPPREkmNRauyGq8vq0mNacoHYSOFe8ryMRLHly5kW02Hr/3fW+NJ
-	IRQrinl7FKvUIaJYWy/LW86Ehpi08OYxKYUoj6/HzfXmWy9B3gbUPHjK/F25UUKK
-	FsYtsPWcBGLaNBI5sOTh4ZO0a2rrHcjYwnLCa+BBaoOrVISYZcV+X7ZMY7PDRr12
-	ijSmnoKx8KIf3gzUcTidSzCilU9JFZ/2ZHD2ApV3SSTilxDBzT22jjBCIejkxTrP
-	rW9aB827VWApoH6SRYFw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wswyj9g34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 16:51:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42BGpY7L018153
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 11 Mar 2024 16:51:34 GMT
-Received: from [10.110.79.125] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 11 Mar
- 2024 09:51:30 -0700
-Message-ID: <b1ae6e39-10c3-0ee1-11f4-3436c3e4ec1a@quicinc.com>
-Date: Mon, 11 Mar 2024 09:51:29 -0700
+	dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b="qMj347CI"
+Received: by mail-pf1-f226.google.com with SMTP id d2e1a72fcca58-6e6277f72d8so3057243b3a.1
+        for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 10:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=totalphase-com.20230601.gappssmtp.com; s=20230601; t=1710176592; x=1710781392; darn=lists.linux.dev;
+        h=thread-index:thread-topic:content-transfer-encoding:mime-version
+         :subject:references:in-reply-to:message-id:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=shpVNyKeSTmB1beltwD0e8eAjAeqYSJLBZ+0bq/aWSk=;
+        b=qMj347CIkwiH5lWfMFafQETlGAB3X68mKpMvA5fX03S1fYJJeA0j47G50dwGTitR1G
+         Fd6yCEJe2GOAEmRD2/uC1f/zCynjoZoXwZbdsdq/ZC3WLmcMcjgaYIrPiA6Fnx7RFq8p
+         1FUlDnfDkhcwa+37F3oc0eIVaXHcZKOrVlWgxHjJsk1YWxN+vEoF2ga3U+ODT5JPmBfU
+         56OIkLzyQgYT4A5kd9faJJDuSrD+s8Jhfzh/ZBTDi+/9PuWTtMfzcGaHtHa2ewlD6Ytn
+         KQUseBHdGoh4bPKiZril45J9Qs+7PXec5tdkgL4S3NsfvvRW07jtYTbhfeedEVnPrfAP
+         w47w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710176592; x=1710781392;
+        h=thread-index:thread-topic:content-transfer-encoding:mime-version
+         :subject:references:in-reply-to:message-id:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=shpVNyKeSTmB1beltwD0e8eAjAeqYSJLBZ+0bq/aWSk=;
+        b=BioRaLrHqRjZ3VMLeJrKNNKAgngg/BlD48iD+a9LqXZ8XIUQAMz/v8uCTNF23AznDD
+         QQF9qbdZe2EXRKp/7aZkGiJaaLSrSh1lxG7QjgYrFtjRfQKXKZOSL8XtJz16XubReHXg
+         4r6TjyTRt8AYxSFoxH9vxYTwp+uB6P6uS/RYyFu7rT64Hz0XhA0TzABQSHE7tFE5gtjk
+         O1gDMJinXYgFFVidxCMxQMFMf//BjAbeZIgMijV+kvdGGzAiB9so80ndM0ycpZSKxGxN
+         Z9RsDezfS4IeU2LLk/1DK17G9NTtQM9SVYFp7RXPkAvRJOKaedHkGjzkmdMN4H0oJ1s7
+         fq2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXFUvAznIaa0bqMQf20tn4nzf21HvHjL5EfdNtPXmNE27cNrQnYsHxCyVU5DyMv9rOpAWaQ0J6HmWNp62k0jRa5bie0fLP74Mzp6G8=
+X-Gm-Message-State: AOJu0Yy81GbUinRBNX51kKGmYERXHpUGUzxp/xKnm0xHWP0Shv0vlQWR
+	p1K4gGV7o05S7YcYTjtBOtOJkBMsy+/bTkIOgIRXBMw5D4il6DswbhTTWzqLVsGWODpX6DohNSV
+	46C7Yy6Ug7O6S54DtODICVSdteeF+obuc
+X-Google-Smtp-Source: AGHT+IE9dy7qP1AWuyzDV9+vOmVP7Cxxr7MyciseHsVaUm/V7/oyEVUvRITXAfD74JVyYFkequ25w9vWrbam
+X-Received: by 2002:a05:6a00:22d1:b0:6e6:9812:9c03 with SMTP id f17-20020a056a0022d100b006e698129c03mr2384694pfj.31.1710176590780;
+        Mon, 11 Mar 2024 10:03:10 -0700 (PDT)
+Received: from postfix.totalphase.com ([65.19.189.126])
+        by smtp-relay.gmail.com with ESMTPS id f14-20020a056a00228e00b006e698eaa3fcsm122133pfe.3.2024.03.11.10.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Mar 2024 10:03:10 -0700 (PDT)
+X-Relaying-Domain: totalphase.com
+Date: Mon, 11 Mar 2024 10:03:07 -0700 (PDT)
+From: Chris Yokum <linux-usb@mail.totalphase.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	stable <stable@vger.kernel.org>, 
+	linux-usb <linux-usb@vger.kernel.org>, 
+	Niklas Neronin <niklas.neronin@linux.intel.com>
+Message-ID: <1525093096.37868.1710176587331.JavaMail.zimbra@totalphase.com>
+In-Reply-To: <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
+References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com> <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info> <2024030246-wife-detoxify-08c0@gregkh> <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com> <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com> <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com> <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
-Content-Language: en-US
-To: Johan Hovold <johan@kernel.org>
-CC: Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        "Daniel Thompson" <daniel.thompson@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        "Marijn Suijten" <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Andersson
-	<quic_bjorande@quicinc.com>,
-        <quic_jesszhan@quicinc.com>, <quic_sbillaka@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-arm-msm@vger.kernel.org>, <regressions@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
- <ZesH21DcfOldRD9g@hovoldconsulting.com>
- <56de6cfb-fe0f-de30-d4d0-03c0fbb0afbb@quicinc.com>
- <ZeyOmJLlBbwnmaJN@hovoldconsulting.com>
- <Ze8Ke_M2xHyPYCu-@hovoldconsulting.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <Ze8Ke_M2xHyPYCu-@hovoldconsulting.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BX2bXjfYCQi2RS20pNe9if4sN1kzV9zE
-X-Proofpoint-ORIG-GUID: BX2bXjfYCQi2RS20pNe9if4sN1kzV9zE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-11_10,2024-03-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- mlxlogscore=999 phishscore=0 impostorscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403110127
+Thread-Topic: 6.5.0 broke XHCI URB submissions for count >512
+Thread-Index: VuTzduXODhc7IqP5hozJk2GPpe5bnIAKY5/B
+
+Hello Mathias,
+
+Thanks for the help with this! We saw that it's made it into 6.8. Is it possible to get this into 6.6 and 6.7?
+
+Best regards,
+Chris
+
+----- Original Message -----
+From: "Chris Yokum" <linux-usb@mail.totalphase.com>
+To: "Mathias Nyman" <mathias.nyman@linux.intel.com>
+Cc: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
+Sent: Monday, March 4, 2024 3:50:58 PM
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
+
+Hello Mathias,
+
+Yes! This fixed the problem. I've checked with our repro case as well as our functional tests.
+
+I'll email you the repro code directly, you can compare the unpatched and patched kernel behavior.
+
+Best regards,
+Chris
 
 
+----- Original Message -----
+From: "Mathias Nyman" <mathias.nyman@linux.intel.com>
+To: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
+Sent: Monday, March 4, 2024 7:53:03 AM
+Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
 
-On 3/11/2024 6:43 AM, Johan Hovold wrote:
-> On Sat, Mar 09, 2024 at 05:30:17PM +0100, Johan Hovold wrote:
->> On Fri, Mar 08, 2024 at 09:50:17AM -0800, Abhinav Kumar wrote:
->>> On 3/8/2024 4:43 AM, Johan Hovold wrote:
->>
->>> For this last remaining reset with the stacktrace you have mentioned
->>> below, I do not think this was introduced due to PM runtime series. We
->>> have had this report earlier with the same stacktrace as well in earlier
->>> kernels which didnt have PM runtime support:
->>
->>> But, it seems like there is another race condition in this code
->>> resulting in this issue again.
+On 4.3.2024 13.57, Mathias Nyman wrote:
+> On 2.3.2024 17.55, Chris Yokum wrote:
+>>>> We have found a regression bug, where more than 512 URBs cannot be
+>>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
+>>>> valid data in the buffer.
 >>>
->>> I have posted my analysis with the patch here as a RFC y'day:
+>>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
+>>> calculation") [v6.5-rc1] from Mathias.
 >>>
->>> https://patchwork.freedesktop.org/patch/581758/
->>>
->>> I missed CCing you and Bjorn on the RFC but when I post it as a patch
->>> either today/tomm, will CC you both.
->>
->> Ok, thanks. I'll take a closer look at that next week. It's not clear to
->> me what that race looks like after reading the commit message. It would
->> be good to have some more details in there (e.g. the sequence of events
->> that breaks the state machine) and some way to reproduce the issue
->> reliably.
 > 
-> I was able to reproduce the reset with some of my debug printks in place
-> after reapplying the reverted hpd notify change so I have an explanation
-> for (one of) the ways we can up in this state now.
+> Ok, I see, this could be the empty ring exception check in xhci-ring.c:
 > 
-> This does not match description of the problem in the fix linked to
-> above and I don't think that patch solves the underlying issue even if
-> it may make the race window somewhat smaller. More details below.
->   
+> It could falsely assume ring is empty when it in fact is filled up in one
+> go by queuing several small urbs.
 
-Its the same condition you described below that enable does not go 
-through and we bail out as we are in ST_DISCONNECTED.
+Does this help?
 
->>>> We now also have Bjorn's call trace from a different Qualcomm platform
->>>> triggering an unclocked access on disconnect, something which would
->>>> trigger a reset by the hypervisor on sc8280xp platforms like the X13s:
->>
->>>> [ 2030.379583] Kernel panic - not syncing: Asynchronous SError Interrupt
->>>> [ 2030.379586] CPU: 0 PID: 239 Comm: kworker/0:2 Not tainted 6.8.0-rc4-next-20240216-00015-gc937d3c43ffe-dirty #219
->>>> [ 2030.379590] Hardware name: Qualcomm Technologies, Inc. Robotics RB3gen2 (DT)
->>>> [ 2030.379592] Workqueue: events output_poll_execute [drm_kms_helper]
->>>> [ 2030.379642] Call trace:
->>
->>>> [ 2030.379722]  wait_for_completion_timeout+0x14/0x20
->>>> [ 2030.379727]  dp_ctrl_push_idle+0x34/0x8c [msm]
->>>> [ 2030.379844]  dp_bridge_atomic_disable+0x18/0x24 [msm]
->>>> [ 2030.379959]  drm_atomic_bridge_chain_disable+0x6c/0xb4 [drm]
->>>> [ 2030.380150]  drm_atomic_helper_commit_modeset_disables+0x174/0x57c [drm_kms_helper]
->>>> [ 2030.380200]  msm_atomic_commit_tail+0x1b4/0x474 [msm]
->>>> [ 2030.380316]  commit_tail+0xa4/0x158 [drm_kms_helper]
->>>> [ 2030.380369]  drm_atomic_helper_commit+0x24c/0x26c [drm_kms_helper]
->>>> [ 2030.380418]  drm_atomic_commit+0xa8/0xd4 [drm]
->>>> [ 2030.380529]  drm_client_modeset_commit_atomic+0x16c/0x244 [drm]
->>>> [ 2030.380641]  drm_client_modeset_commit_locked+0x50/0x168 [drm]
->>>> [ 2030.380753]  drm_client_modeset_commit+0x2c/0x54 [drm]
->>>> [ 2030.380865]  __drm_fb_helper_restore_fbdev_mode_unlocked+0x60/0xa4 [drm_kms_helper]
->>>> [ 2030.380915]  drm_fb_helper_hotplug_event+0xe0/0xf4 [drm_kms_helper]
->>>> [ 2030.380965]  msm_fbdev_client_hotplug+0x28/0xc8 [msm]
->>>> [ 2030.381081]  drm_client_dev_hotplug+0x94/0x118 [drm]
->>>> [ 2030.381192]  output_poll_execute+0x214/0x26c [drm_kms_helper]
->>>> [ 2030.381241]  process_scheduled_works+0x19c/0x2cc
->>>> [ 2030.381249]  worker_thread+0x290/0x3cc
->>>> [ 2030.381255]  kthread+0xfc/0x184
->>>> [ 2030.381260]  ret_from_fork+0x10/0x20
->>>>
->>>> The above could happen if the convoluted hotplug state machine breaks
->>>> down so that the device is runtime suspended before
->>>> dp_bridge_atomic_disable() is called.
->>
->>> Yes, state machine got broken and I have explained how in the commit
->>> text of the RFC. But its not necessarily due to PM runtime but a
->>> sequence of events happening from userspace exposing this breakage.
->>
->> After looking at this some more today, I agree with you. The
->> observations I've reported are consistent with what would happen if the
->> link clock is disabled when dp_bridge_atomic_disable() is called.
->>
->> That clock is disabled in dp_bridge_atomic_post_disable() before runtime
->> suspending, but perhaps there are some further paths that can end up
->> disabling it.
-> 
-> Turns out there are paths like that and we hit those more often before
-> reverting e467e0bde881 ("drm/msm/dp: use drm_bridge_hpd_notify().
-> 
-> Specifically, when a previous connect attempt did not enable the bridge
-> fully so that it is still in the ST_MAINLINK_READY when we receive a
-> disconnect event, dp_hpd_unplug_handle() will turn of the link clock.
-> 
-> [  204.527625] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 2
-> [  204.531553] msm-dp-display ae98000.displayport-controller: dp_hpd_unplug_handle
-> [  204.533261] msm-dp-display ae98000.displayport-controller: dp_ctrl_off_link
-> 
-> A racing connect event, such as the one I described earlier, can then
-> try to enable the bridge again but dp_bridge_atomic_enable() just bails
-> out early (and leaks a rpm reference) because we're now in
-> ST_DISCONNECTED:
-> 
-> [  204.535773] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 1
-> [  204.536187] [CONNECTOR:35:DP-2] status updated from disconnected to connected
-> [  204.536905] msm-dp-display ae98000.displayport-controller: dp_display_notify_disconnect - would clear link ready (1), state = 0
-> [  204.537821] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_check - link_ready = 1
-> [  204.538063] msm-dp-display ae98000.displayport-controller: dp_display_send_hpd_notification - hpd = 0, link_ready = 1
-> [  204.542778] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_enable
-> [  204.586547] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_enable - state = 0 (rpm leak?)
-> 
-> Clearing link_ready already in dp_display_notify_disconnect() would make
-> the race window slightly smaller, but it would essentially just paper
-> over the bug as the events are still not serialised. Notably, there is
-> no user space interaction involved here and it's the spurious connect
-> event that triggers the bridge enable.
-> 
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 6a29ebd6682d..52278afea94b 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -332,7 +332,13 @@ static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhc
+         /* how many trbs will be queued past the enqueue segment? */
+         trbs_past_seg = enq_used + num_trbs - (TRBS_PER_SEGMENT - 1);
+  
+-       if (trbs_past_seg <= 0)
++       /*
++        * Consider expanding the ring already if num_trbs fills the current
++        * segment (i.e. trbs_past_seg == 0), not only when num_trbs goes into
++        * the next segment. Avoids confusing full ring with special empty ring
++        * case below
++        */
++       if (trbs_past_seg < 0)
+                 return 0;
 
-Yes, it only narrows down the race condition window. The issue can still 
-happen if the commit / modeset was issued before we marked link_ready as 
-false.
-
-And yes, I was only targetting a short term fix till we rework the HPD. 
-That will happen only incrementally as its a delicate piece of code.
-
-> When the fbdev hotplug code later disables the never-enabled bridge,
-> things go boom:
-> 
-> [  204.649072] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 0, status = 2
-> [  204.650378] [CONNECTOR:35:DP-2] status updated from connected to disconnected
-> [  204.651111] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_disable
-> 
-> as the link clock has already been disabled when accessing the link
-> registers.
-> 
-> The stack trace for the bridge enable above is:
-> 
-> [  204.553922]  dp_bridge_atomic_enable+0x40/0x2f0 [msm]
-> [  204.555241]  drm_atomic_bridge_chain_enable+0x54/0xc8 [drm]
-> [  204.556557]  drm_atomic_helper_commit_modeset_enables+0x194/0x26c [drm_kms_helper]
-> [  204.557853]  msm_atomic_commit_tail+0x204/0x804 [msm]
-> [  204.559173]  commit_tail+0xa4/0x18c [drm_kms_helper]
-> [  204.560450]  drm_atomic_helper_commit+0x19c/0x1b0 [drm_kms_helper]
-> [  204.561743]  drm_atomic_commit+0xa4/0xdc [drm]
-> [  204.563065]  drm_client_modeset_commit_atomic+0x22c/0x298 [drm]
-> [  204.564402]  drm_client_modeset_commit_locked+0x60/0x1c0 [drm]
-> [  204.565733]  drm_client_modeset_commit+0x30/0x58 [drm]
-> [  204.567055]  __drm_fb_helper_restore_fbdev_mode_unlocked+0xbc/0xfc [drm_kms_helper]
-> [  204.568381]  drm_fb_helper_hotplug_event.part.0+0xd4/0x110 [drm_kms_helper]
-> [  204.569708]  drm_fb_helper_hotplug_event+0x38/0x44 [drm_kms_helper]
-> [  204.571032]  msm_fbdev_client_hotplug+0x28/0xd4 [msm]
-> [  204.572395]  drm_client_dev_hotplug+0xcc/0x130 [drm]
-> [  204.573755]  drm_kms_helper_connector_hotplug_event+0x34/0x44 [drm_kms_helper]
-> [  204.575114]  drm_bridge_connector_hpd_cb+0x90/0xa4 [drm_kms_helper]
-> [  204.576465]  drm_bridge_hpd_notify+0x40/0x5c [drm]
-> [  204.577842]  drm_aux_hpd_bridge_notify+0x18/0x28 [aux_hpd_bridge]
-> [  204.579184]  pmic_glink_altmode_worker+0xc0/0x23c [pmic_glink_altmode]
-> 
->>>> For some reason, possibly due to unrelated changes in timing, possibly
->>>> after the hotplug revert, I am no longer able to reproduce the reset
->>>> with 6.8-rc7 on the X13s.
->>
->>> I do not know how the hotplug revert fixed this stack because I think
->>> this can still happen.
-> 
-> So, while it may still be theoretically possible to hit the resets after
-> the revert, the HPD notify revert effectively "fixed" the regression in
-> 6.8-rc1 by removing the preconditions that now made us hit it (i.e. the
-> half-initialised bridge).
-> 
-
-Not entirely. In the bug which was reported before the patch 
-e467e0bde881 ("drm/msm/dp: use drm_bridge_hpd_notify() got landed, its a 
-classic example of how this issue can happen with userspace involvement 
-and not just fbdev client which was your case.
-
-> It seems the hotplug state machine needs to be reworked completely, but
-> at least we're roughly back where we were with 6.7 (including that the
-> bus clocks will never be turned of because of the rpm leaks on
-> disconnect).
-> 
-
-Yes, we already landed that revert but I am also planning to land the 
-patch I had posted till we rework HPD.
-
-> Johan
+Thanks
+Mathias
