@@ -1,100 +1,91 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C0F4DA1A
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 17:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B765B53E0D
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 18:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710179057; cv=none; b=kWAottKw3yo8pv3nY8ik543n9DO5qj5/33eT1QuzkSijkH2F70I3WWLhp4CNjE9dEgWfRDyaYK2shRvLpI2AA0HvfmJZTru/E+LPdXS6dKeuMuInPw+bvAkHFokMe/BCZ7vy/PPtNsDjPQvROTtIaXk32HGtcISyqrCtXRmXYJs=
+	t=1710181283; cv=none; b=GHicmNDDdOW61UafrhfZQwNIJ6qDoRllZFU9WIpj8KHm6wj4pdtOO5v/9TvsWEWVNsuGUB6AjJ+lGcGrR7cco8b+ONvTZKXrVvQK4HJee72EeHgucTZHonlnbSRYbIty7RWi+pvEFnan/bSQ7mLO9LWexLpSagYiRh7epf4S9/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710179057; c=relaxed/simple;
-	bh=dVABVYkEnzvrtDxSt88BcX8bbJ/2fnXzw4JV5D5ODLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gLzVFRBDy05LGZUju1WzNVA9Y18aXTn+XiowrQLy2Q6Pg7sSdlfB0WvID9Rc7msJg0wYcVNsYAip3ySXzSWLh7TwysbHlDDK+r98K+4HBPbeFSJfDHj2rcW2/WkebSpgPPXD0GF+qoUJ1xKsziN5J9+SD7Q1JhWQbXlNEWGdk44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eo71/UAT; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710181283; c=relaxed/simple;
+	bh=BUUe45GmcgEf+7sZXAFei90Gwt6yjfK4dCtth9t62L8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AYEB/6xEheoT15iBQOVvxhLDRbWf2vMgghvfqDpnfwGdrQdsFE8wKDKw17eHdm0h0qc5m12RBimUM2kudriCDPjLu6xxRB8H7Y3XpYcOhEx6+7m5unoGDrPVlxsk/Ce874TseIlXqFWzv/9ljVJO/qPmmxuw5RihCeYGztRvWHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=z8AlPkLX; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eo71/UAT"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-568251882d7so1065a12.0
-        for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 10:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710179054; x=1710783854; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6njN+Ix5AAlz5r+8JT2vb+hUlGcvA64q3xEcgqXOsgU=;
-        b=eo71/UATOXcoEh148dEXPRVulIdlzHKLttK7aWy2iueFEDNWQYyVX1C7fU9dMH0wTs
-         UZgSI3JhZJW9ElkcAn8hUIqKXgQNL03C1nFdHrhBMJiI3ookkJ5J6RfvX9HSYScq6a89
-         HKl+xNk/d6/VThprRY1M3fIhF1j5S0RqXu3CjRWeRHL/p3BQEqrn0Q/D7b0KHsSQfTxa
-         FFKso1dnTerdnT1a1RcpIG8Jh0PBeUDIAb28Hwnt3SF8/ir14wxStwITfdyEYQ1kA8PS
-         tFPkvBzDBelu3OWpvHgGVNhBM0A+XfyUzshVVoFi8/9CVibLDOS8ooGabor3kDYjr2qT
-         Gbhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710179054; x=1710783854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6njN+Ix5AAlz5r+8JT2vb+hUlGcvA64q3xEcgqXOsgU=;
-        b=PU1gq9VQRAwKDL+EUsJRHs3KJclZ1q5yYiXKKCZu7clEOioP/0v++ms3IrWSF3ExsO
-         sZGd2OUpgqe1tTjROE3q+0Hrcu9DOp1NM2hKNIuOOKojop48C/9Jg9oOfKn+ePixE5a2
-         aKbTUHAgCktEPGuFlBW2siH6Cb9VMxjke/biJjEVMXu5KKQZDWTfoTFNoJu+w4c5u/PB
-         55XrQq2K5URlraNCXsOZbWG9jmv5RGu3CKPAckfTYpfTbG42gnEs2+gnkjaXsemXJiRh
-         tumLcTMto5uyLcBvqUWT450zvjCDnBMmtqi7G64ecktby9JGZ50KMBkNqYNzbqj1BcMT
-         uVRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWudjL2gkPzcXryhxyLahbeuUol+STifw8a3XT+5qKmoUdumFHV8eoFGsheEynOvrNiva+akrPXa7GECbYqJekMRdYEgm5cmixNWZ8=
-X-Gm-Message-State: AOJu0Yw+gCJx4cLfHLwcro23szdV1S0OgOEZ6+Db4iYyenSmHEiKRBaw
-	/lr3NA7KuC8TS3lRhEIj5LGHSX7ja7jmmlv+KIbvQJ5DGSGc4U+tUAhg0rcTYCJnqFshbi8NZjo
-	8mypNtdwynAN2yjGdbx2p3oOgoIDTdBO1PGzA
-X-Google-Smtp-Source: AGHT+IEiyXoLtl8FGPR0QpQwioDmfpwtMlSqt/TB1uax5qtbflKwpR9qoDDE3tJQLCaR9qvo9iItIuvqoZmyCSDKVLQ=
-X-Received: by 2002:aa7:d891:0:b0:568:569f:be4c with SMTP id
- u17-20020aa7d891000000b00568569fbe4cmr193644edq.3.1710179053955; Mon, 11 Mar
- 2024 10:44:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="z8AlPkLX"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id E98F51CF161;
+	Mon, 11 Mar 2024 19:21:18 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1710181279; bh=uu0vN9OWT5pwA8su6yrDf5xh0xrr2nA/BSmFKgc9obg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=z8AlPkLXRH8Hln+3lBF66TakbKoQUJNIR7HACFeYLc4orin1UX92nUGDp6Gof/ce/
+	 EQ1hv+PfbQXUyjFF5VdWAjRr2jLchmmiN/QqFZMGlO58xrr+nTSIL66116Flyq170G
+	 am4F5ykQZhKId0GOCZ/puKSRUomgVsonaZAZC/jouLH0aDGhQpGkQkpYNHp0oMZptV
+	 ypJa45o8g4vyJOeZqoAg6VU+R65qWHeszCI1fdHilIlLAlJ+AAeM/KILPqHqCw1XNM
+	 hphvY1/fF3bpiPNqx6HpAVgdXaEUZzzZfAX5oSs36H7PnEbeICfJtQos3IHDnEMpF+
+	 M/BhtUiTpE3JA==
+Date: Mon, 11 Mar 2024 19:21:18 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Linux regressions mailing list
+ <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>,
+ "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, stable@kernel.org
+Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when
+ used repeatedly in one file
+Message-ID: <20240311192118.31cfc1fb@meshulam.tesarici.cz>
+In-Reply-To: <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
+References: <20240306111157.29327-1-petr@tesarici.cz>
+	<20240311182516.1e2eebd8@meshulam.tesarici.cz>
+	<CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240306111157.29327-1-petr@tesarici.cz> <20240311182516.1e2eebd8@meshulam.tesarici.cz>
-In-Reply-To: <20240311182516.1e2eebd8@meshulam.tesarici.cz>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 11 Mar 2024 18:43:59 +0100
-Message-ID: <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
- repeatedly in one file
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 11, 2024 at 6:25=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesari=
-ci.cz> wrote:
->
-> On Wed,  6 Mar 2024 12:11:57 +0100
-> Petr Tesarik <petr@tesarici.cz> wrote:
->
-> > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
-> > initialized in the same file.
-> >
-> > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
-> >
-> >       static struct lock_class_key __key;
-> >
-> > Since u64_stats_init() is a function (albeit an inline one), all calls
-> > within the same file end up using the same instance, effectively treati=
-ng
-> > them all as a single lock-class.
->
-> What happens with this fix now?
->
-> IIUC it should be reviewed by Eric, but I don't know through which tree
-> it should be merged. Any plans yet?
+On Mon, 11 Mar 2024 18:43:59 +0100
+Eric Dumazet <edumazet@google.com> wrote:
 
-I thought I gave a reply, but apparently not .
+> On Mon, Mar 11, 2024 at 6:25=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesa=
+rici.cz> wrote:
+> >
+> > On Wed,  6 Mar 2024 12:11:57 +0100
+> > Petr Tesarik <petr@tesarici.cz> wrote:
+> > =20
+> > > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+> > > initialized in the same file.
+> > >
+> > > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+> > >
+> > >       static struct lock_class_key __key;
+> > >
+> > > Since u64_stats_init() is a function (albeit an inline one), all calls
+> > > within the same file end up using the same instance, effectively trea=
+ting
+> > > them all as a single lock-class. =20
+> >
+> > What happens with this fix now?
+> >
+> > IIUC it should be reviewed by Eric, but I don't know through which tree
+> > it should be merged. Any plans yet? =20
+>=20
+> I thought I gave a reply, but apparently not .
+>=20
+> Reviewed-by: Eric Dumazet <edumazet@google.com>
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Thank you!
 
-Thanks.
+Petr T
