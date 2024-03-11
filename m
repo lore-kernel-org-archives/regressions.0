@@ -1,147 +1,159 @@
-Received: from mail-pf1-f226.google.com (mail-pf1-f226.google.com [209.85.210.226])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF7247F63
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 17:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B1F3C46B
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 17:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710176595; cv=none; b=ibBBLLUWYDvnwOXYY29v5OJQG+AnCb/FSBjBDznzGhEWy5i4sxx3DwJxFxQQUC+l71kTYdXKtoMQJG4Tykbnlsa3FB/TBPMu8OKvKRa7huSEfgjfOTwNeLSU8jU3SJorF7CjXnCDqCWrZKbMOD2BtUQZ++SgTglvN0QNJgdQFUE=
+	t=1710176684; cv=none; b=KPvn6Luw6OgOs3ZBib+IUZpLKaIERGjGZatmLzgjvd5Nh4JqxVIoAA31f3j8JmcqevSF+fPA5GoeKNHBUc7LXkk/523gTWb3zj0anFK0Ey/OyEtZMlfKaLxwQd80r0reRU2NosQ2ElwGB3xhbPZThpnkHp0JAU7qvksKVc3/Uug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710176595; c=relaxed/simple;
-	bh=agaJq87etNffqdB6IMs5QiSDbY44VKyrosXTgjFI/t4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=M0MjzqMyamQAyGYgfyYBt9P5pfDg73J/aO5Xofpqo9UbJzAKvY2rlohfQOEGwriEu2O6UQu8vwGSlE9x/7oXp8HZ0aEPl/i0hoV8gJT/kzHDDQKpMBS925G2Aaw8yzixzyin7hoQ728Eq2+Akz7zOtJMr4F519hl9iGuQ8hrJxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com; spf=pass smtp.mailfrom=totalphase.com; dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b=qMj347CI; arc=none smtp.client-ip=209.85.210.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.totalphase.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=totalphase.com
+	s=arc-20240116; t=1710176684; c=relaxed/simple;
+	bh=nEwjlsDuh1BBJpQl7CFyLetW/Pf4Lp62bRB2Jd2W7Rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJA5gqIhY2UNsu2RmMxRCcIqAXy5InFrBNRYBqsID5UN0ewI++Ku/hDJWVhGJQ9Nb8PW1UL/z800NmLHttZDArhgQWoIweMcnUFIIjWq7rGacRxIljK3FaRmdIzQzca3FpsRBnQz1iY1EAsGzjhd7qy/pORsKOmjVJYS+SkCc14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQGGFGbg; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=totalphase-com.20230601.gappssmtp.com header.i=@totalphase-com.20230601.gappssmtp.com header.b="qMj347CI"
-Received: by mail-pf1-f226.google.com with SMTP id d2e1a72fcca58-6e6277f72d8so3057243b3a.1
-        for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 10:03:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQGGFGbg"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3664e9d66b9so8103205ab.2
+        for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 10:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=totalphase-com.20230601.gappssmtp.com; s=20230601; t=1710176592; x=1710781392; darn=lists.linux.dev;
-        h=thread-index:thread-topic:content-transfer-encoding:mime-version
-         :subject:references:in-reply-to:message-id:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=shpVNyKeSTmB1beltwD0e8eAjAeqYSJLBZ+0bq/aWSk=;
-        b=qMj347CIkwiH5lWfMFafQETlGAB3X68mKpMvA5fX03S1fYJJeA0j47G50dwGTitR1G
-         Fd6yCEJe2GOAEmRD2/uC1f/zCynjoZoXwZbdsdq/ZC3WLmcMcjgaYIrPiA6Fnx7RFq8p
-         1FUlDnfDkhcwa+37F3oc0eIVaXHcZKOrVlWgxHjJsk1YWxN+vEoF2ga3U+ODT5JPmBfU
-         56OIkLzyQgYT4A5kd9faJJDuSrD+s8Jhfzh/ZBTDi+/9PuWTtMfzcGaHtHa2ewlD6Ytn
-         KQUseBHdGoh4bPKiZril45J9Qs+7PXec5tdkgL4S3NsfvvRW07jtYTbhfeedEVnPrfAP
-         w47w==
+        d=gmail.com; s=20230601; t=1710176681; x=1710781481; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YLvEvFfc7sXj9N7DoQT3M6dC8xShppj/zokxxJquUjk=;
+        b=JQGGFGbgj4TsPStsgGOMGlW5OYZtEZh9uQArQ8tK2s7FucUMItKqj5WQetuONsst7B
+         uQsaMrqYI3YJL6Sc+6uaX/xjvzKa0QHuenJupJXIcHRaoT6su/jGeCML47QVScn8fdpI
+         wpHQHANvzPyFiM3dIMYuMI0E2Bc+nPHqv7UP9iHRZtFNJpvQroFwo3Y9vjfPc21Xg5Oy
+         g0UtZJIGxCoTXSPQUoCdL7/HR/DRX83KlkQIubGg33kftuh+RwFiAZoZfd2hKsPQDDkP
+         dyy3LJTSMWgUH3sr5lSwaPzPznrKpil/q/T3aTK7JtTKQntM0BHPt0CDF64WFJKT8FDW
+         Pq4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710176592; x=1710781392;
-        h=thread-index:thread-topic:content-transfer-encoding:mime-version
-         :subject:references:in-reply-to:message-id:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=shpVNyKeSTmB1beltwD0e8eAjAeqYSJLBZ+0bq/aWSk=;
-        b=BioRaLrHqRjZ3VMLeJrKNNKAgngg/BlD48iD+a9LqXZ8XIUQAMz/v8uCTNF23AznDD
-         QQF9qbdZe2EXRKp/7aZkGiJaaLSrSh1lxG7QjgYrFtjRfQKXKZOSL8XtJz16XubReHXg
-         4r6TjyTRt8AYxSFoxH9vxYTwp+uB6P6uS/RYyFu7rT64Hz0XhA0TzABQSHE7tFE5gtjk
-         O1gDMJinXYgFFVidxCMxQMFMf//BjAbeZIgMijV+kvdGGzAiB9so80ndM0ycpZSKxGxN
-         Z9RsDezfS4IeU2LLk/1DK17G9NTtQM9SVYFp7RXPkAvRJOKaedHkGjzkmdMN4H0oJ1s7
-         fq2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXFUvAznIaa0bqMQf20tn4nzf21HvHjL5EfdNtPXmNE27cNrQnYsHxCyVU5DyMv9rOpAWaQ0J6HmWNp62k0jRa5bie0fLP74Mzp6G8=
-X-Gm-Message-State: AOJu0Yy81GbUinRBNX51kKGmYERXHpUGUzxp/xKnm0xHWP0Shv0vlQWR
-	p1K4gGV7o05S7YcYTjtBOtOJkBMsy+/bTkIOgIRXBMw5D4il6DswbhTTWzqLVsGWODpX6DohNSV
-	46C7Yy6Ug7O6S54DtODICVSdteeF+obuc
-X-Google-Smtp-Source: AGHT+IE9dy7qP1AWuyzDV9+vOmVP7Cxxr7MyciseHsVaUm/V7/oyEVUvRITXAfD74JVyYFkequ25w9vWrbam
-X-Received: by 2002:a05:6a00:22d1:b0:6e6:9812:9c03 with SMTP id f17-20020a056a0022d100b006e698129c03mr2384694pfj.31.1710176590780;
-        Mon, 11 Mar 2024 10:03:10 -0700 (PDT)
-Received: from postfix.totalphase.com ([65.19.189.126])
-        by smtp-relay.gmail.com with ESMTPS id f14-20020a056a00228e00b006e698eaa3fcsm122133pfe.3.2024.03.11.10.03.10
+        d=1e100.net; s=20230601; t=1710176681; x=1710781481;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YLvEvFfc7sXj9N7DoQT3M6dC8xShppj/zokxxJquUjk=;
+        b=FuKukwS/gikjpcvMTyBfyncrHFfW0NjnT1y95kxII01EtANaLSRp2c9IoC9ang0cQS
+         mQG+Y4sWsO5blMXa72THR3/jkuRib/PSmgvdEiMryzCOpZTQ0nkcVZy9J3+t4GN/Wk9P
+         zhs7makEowooHRSeXnlS1rAvcHD+FvFcIKV+eb33vbDmc2CZhn46OOzXc7atuQzzlyMJ
+         ziJ/KeJc05ds4tDEGdUzGdrBRtNpOXLLRi7WhqNPGPFN/kPS7ZtQx8b318cHEBtnWc5s
+         jcACmqp5TWn02/yBYXiW6vkd2YRzTnx9g+MFZb7jZd5j07lU34bRbEJ9PI91W3Ufhk8T
+         QqpA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+EnLEdzUs1n82Z0wkECNf4xGT+WvCKbJ9lpJ0l/migecv4c8e1Drm2gaY5LcU+lvVsL2mV9E7Zlt6NN+5C4luw4tpAzX0E1BzvMw=
+X-Gm-Message-State: AOJu0YyTcOZ81D+aXlh2lUvGJSfzTa+z5n2/t5P2XP95Fp432SUIbwLl
+	qRS0EJqm+RZVT4Vt0H5mDDYBsRv4unDquID/FJ4pBYu60lChr1to
+X-Google-Smtp-Source: AGHT+IEgAZfjT7LfIQHhxciQab3kA+AMIbmZFE5+4xwrYc+EzjZ26fQCy34O0B5bZyGjrTyX9jYR7Q==
+X-Received: by 2002:a05:6e02:1a2e:b0:365:27e7:4b60 with SMTP id g14-20020a056e021a2e00b0036527e74b60mr11077796ile.21.1710176681285;
+        Mon, 11 Mar 2024 10:04:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t17-20020a63f351000000b005dc4829d0e1sm4700602pgj.85.2024.03.11.10.04.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 10:03:10 -0700 (PDT)
-X-Relaying-Domain: totalphase.com
-Date: Mon, 11 Mar 2024 10:03:07 -0700 (PDT)
-From: Chris Yokum <linux-usb@mail.totalphase.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	stable <stable@vger.kernel.org>, 
-	linux-usb <linux-usb@vger.kernel.org>, 
-	Niklas Neronin <niklas.neronin@linux.intel.com>
-Message-ID: <1525093096.37868.1710176587331.JavaMail.zimbra@totalphase.com>
-In-Reply-To: <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
-References: <949223224.833962.1709339266739.JavaMail.zimbra@totalphase.com> <50f3ca53-40e3-41f2-8f7a-7ad07c681eea@leemhuis.info> <2024030246-wife-detoxify-08c0@gregkh> <278587422.841245.1709394906640.JavaMail.zimbra@totalphase.com> <a6a04009-c3fe-e50d-d792-d075a14ff825@linux.intel.com> <3a560c60-ffa2-a511-98d3-d29ef807b213@linux.intel.com> <717413307.861315.1709596258844.JavaMail.zimbra@totalphase.com>
-Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
+        Mon, 11 Mar 2024 10:04:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 11 Mar 2024 10:04:38 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Problems with csum_partial with misaligned buffers on sh4
+ platform
+Message-ID: <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
+References: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Thread-Topic: 6.5.0 broke XHCI URB submissions for count >512
-Thread-Index: VuTzduXODhc7IqP5hozJk2GPpe5bnIAKY5/B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
 
-Hello Mathias,
-
-Thanks for the help with this! We saw that it's made it into 6.8. Is it possible to get this into 6.6 and 6.7?
-
-Best regards,
-Chris
-
------ Original Message -----
-From: "Chris Yokum" <linux-usb@mail.totalphase.com>
-To: "Mathias Nyman" <mathias.nyman@linux.intel.com>
-Cc: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
-Sent: Monday, March 4, 2024 3:50:58 PM
-Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
-
-Hello Mathias,
-
-Yes! This fixed the problem. I've checked with our repro case as well as our functional tests.
-
-I'll email you the repro code directly, you can compare the unpatched and patched kernel behavior.
-
-Best regards,
-Chris
-
-
------ Original Message -----
-From: "Mathias Nyman" <mathias.nyman@linux.intel.com>
-To: "Chris Yokum" <linux-usb@mail.totalphase.com>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Linux regressions mailing list" <regressions@lists.linux.dev>, "stable" <stable@vger.kernel.org>, "linux-usb" <linux-usb@vger.kernel.org>, "Niklas Neronin" <niklas.neronin@linux.intel.com>
-Sent: Monday, March 4, 2024 7:53:03 AM
-Subject: Re: 6.5.0 broke XHCI URB submissions for count >512
-
-On 4.3.2024 13.57, Mathias Nyman wrote:
-> On 2.3.2024 17.55, Chris Yokum wrote:
->>>> We have found a regression bug, where more than 512 URBs cannot be
->>>> reliably submitted to XHCI. URBs beyond that return 0x00 instead of
->>>> valid data in the buffer.
->>>
->>> FWIW, that's f5af638f0609af ("xhci: Fix transfer ring expansion size
->>> calculation") [v6.5-rc1] from Mathias.
->>>
+On Sat, Feb 10, 2024 at 07:12:39AM -0800, Guenter Roeck wrote:
+> Hi,
 > 
-> Ok, I see, this could be the empty ring exception check in xhci-ring.c:
+> when running checksum unit tests on sh4 qemu emulations, I get the following
+> errors.
 > 
-> It could falsely assume ring is empty when it in fact is filled up in one
-> go by queuing several small urbs.
 
-Does this help?
+Adding to regression tracker.
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 6a29ebd6682d..52278afea94b 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -332,7 +332,13 @@ static unsigned int xhci_ring_expansion_needed(struct xhci_hcd *xhci, struct xhc
-         /* how many trbs will be queued past the enqueue segment? */
-         trbs_past_seg = enq_used + num_trbs - (TRBS_PER_SEGMENT - 1);
-  
--       if (trbs_past_seg <= 0)
-+       /*
-+        * Consider expanding the ring already if num_trbs fills the current
-+        * segment (i.e. trbs_past_seg == 0), not only when num_trbs goes into
-+        * the next segment. Avoids confusing full ring with special empty ring
-+        * case below
-+        */
-+       if (trbs_past_seg < 0)
-                 return 0;
+#regzbot ^introduced cadc4e1a2b4d2
+#regzbot title Problems with csum_partial with misaligned buffers on sh4 platform
+#regzbot ignore-activity
 
-Thanks
-Mathias
+>     KTAP version 1
+>     # Subtest: checksum
+>     # module: checksum_kunit
+>     1..5
+>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 53378 (0xd082)
+>         ( u64)expec == 33488 (0x82d0)
+>     not ok 1 test_csum_fixed_random_inputs
+>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 65281 (0xff01)
+>         ( u64)expec == 65280 (0xff00)
+>     not ok 2 test_csum_all_carry_inputs
+>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:573
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 65535 (0xffff)
+>         ( u64)expec == 65534 (0xfffe)
+>     not ok 3 test_csum_no_carry_inputs
+>     ok 4 test_ip_fast_csum
+>     ok 5 test_csum_ipv6_magic
+> # checksum: pass:2 fail:3 skip:0 total:5
+> 
+> The above is with from a little endian system. On a big endian system,
+> the test result is as follows.
+> 
+>     KTAP version 1
+>     # Subtest: checksum
+>     # module: checksum_kunit
+>     1..5
+>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 33488 (0x82d0)
+>         ( u64)expec == 53378 (0xd082)
+>     not ok 1 test_csum_fixed_random_inputs
+>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 65281 (0xff01)
+>         ( u64)expec == 255 (0xff)
+>     not ok 2 test_csum_all_carry_inputs
+>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:565
+>     Expected ( u64)result == ( u64)expec, but
+>         ( u64)result == 1020 (0x3fc)
+>         ( u64)expec == 0 (0x0)
+>     not ok 3 test_csum_no_carry_inputs
+>     # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:589
+>     Expected ( u64)expected == ( u64)csum_result, but
+>         ( u64)expected == 55939 (0xda83)
+>         ( u64)csum_result == 33754 (0x83da)
+>     not ok 4 test_ip_fast_csum
+>     # test_csum_ipv6_magic: ASSERTION FAILED at lib/checksum_kunit.c:617
+>     Expected ( u64)expected_csum_ipv6_magic[i] == ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum), but
+>         ( u64)expected_csum_ipv6_magic[i] == 6356 (0x18d4)
+>         ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum) == 43586 (0xaa42)
+>     not ok 5 test_csum_ipv6_magic
+> # checksum: pass:0 fail:5 skip:0 total:5
+> 
+> Note that test_ip_fast_csum and test_csum_ipv6_magic fail on all big endian
+> systems due to a bug in the test code, unrelated to this problem.
+> 
+> Analysis shows that the errors are seen only if the buffer is misaligned.
+> Looking into arch/sh/lib/checksum.S, I found commit cadc4e1a2b4d2 ("sh:
+> Handle calling csum_partial with misaligned data") which seemed to be
+> related. Reverting that commit fixes the problem.
+> This suggests that something may be wrong with that commit. Alternatively,
+> of course, it may be possible that something is wrong with the qemu
+> emulation, but that seems unlikely.
+> 
+> Thanks,
+> Guenter
