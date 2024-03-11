@@ -1,63 +1,239 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A0838394
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 13:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBFA3D541
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 13:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710162746; cv=none; b=tS11daUkHNqoB2RYM1nTlXXDggO9bU+Fyy3qrKeN9jR9pLln5sYCAm7YsCfMw1OTVURSWiv9NFQoQrHUpvnf+wnCfcumFpCg0hXyt5jZ1fa3fvtNNTwX9OsUls9V1JDuiq5qMDm+XSG0Mgw6hCXT27HEkGUAhaoL6UWlegwTbYM=
+	t=1710162808; cv=none; b=cH8cbzY3o4f3IL2tak9D+A2gSQtKG7B1pLeEfp/3HX1P5K04iUxxSibCoTbYlI7usRea7XIxB+LvUieOSo+lFHeMXr3WFRQLI3CaMMFacuaqEW+17YQ9oonGwJccuSdFQDj3VV/BuUaOP1j4QsoFFILxDA2f5kb4yveOUOp+jtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710162746; c=relaxed/simple;
-	bh=lxSjV5zdo7Z6Kantrt7sbi6rbzm7HqMJ/SMgv5BoIwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=CFyDpKD/Umg0l5H199MF6rsguAdQrz/HQKxnP8WdFB6vy8kcjZEaQaWm3GLZRd4hHixvSdX2+5LxAV81sCiLvJFo7FxxL3k3w1AHB0NwAPTOxd0MCIeZYrK57Ny98GvI/jpH7NJgQUiReNwjAGXM6ERzgNTzErBusMlZJzIEraU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mlraWx/1; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1710162808; c=relaxed/simple;
+	bh=oklUwL+uJA6fNtuusqrKD0mu1H8aZpzPS0lrskntuAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCxChD5WZDjFwWmYIcIwy0Wbl+CDGt7lvSmhXJrODEst9Ip2N88ocbOlfL9ihheKk5Gfcs+ppfGBeajDngwtG/vtYM5h6fVWtuJqerN1t97mNasjaviC+qzQEtKXW+IAtWS4V3egIWBEquirM01fPx/VSPTXPwX7TqXA3Tjj5oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+APKYOb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mlraWx/1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=lxSjV5zdo7Z6Kantrt7sbi6rbzm7HqMJ/SMgv5BoIwQ=; t=1710162744;
-	x=1710594744; b=mlraWx/1uP0Cqv7Tscwm2XiRI39491Q7DlUgF4hO2z1TTb2B/TLWOaMZN/Drv
-	ZBvoy3XJEbfzlcTyCyKgQMJbu0YWhn1wnYz/D1+px6QVvJNGFt7bNvLaDdZX9R6BsFmagnDGNyvZA
-	VbIT7dmYEQfJN3ygO0Zgt+ZwCWbiadGBihwThyiCl7ZrEx4ChJzuCHGGcEuGlGyreQuZPeTWWj2mg
-	NWyLPb8GFCM+jg3r2cT7RfAaqJS3HerbgzC72tKMPfrDzclJF+0OZK5r4Jfh0DinOtIIZPNIBwkhQ
-	ECUXZUKJvuuY6OIM8rBA17AUWZlb5SIccQtT9MA7fPgkZWlsZA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rjfRx-0000Sc-2k; Mon, 11 Mar 2024 14:12:17 +0100
-Message-ID: <9425085d-1bd4-4e56-b0ee-6796dc9973e8@leemhuis.info>
-Date: Mon, 11 Mar 2024 14:12:16 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+APKYOb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710162805;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SF+hHbhR6PmZRbNnvRDOIoP+U+GWHfuAJbw7MsIUXN0=;
+	b=D+APKYObZFPJXNbJOPUv2bUuZRZ1p2FvtxS6LVDJfuHNfhDzLTxpXZ8lfZLK1x/LHRCbAO
+	9cMDS7gHOMgwOmcILtFUQRRsj11tMLSY9o7kI03NAWojfsmWybik47Qq6ZugH8zYJMgJTu
+	YFtiHmho2qQ/doeP1hbzmHyIsmvI9Nw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-182-Udhoi6WwMIqlcHlVxvW-Ng-1; Mon,
+ 11 Mar 2024 09:13:20 -0400
+X-MC-Unique: Udhoi6WwMIqlcHlVxvW-Ng-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5ED1538000B0;
+	Mon, 11 Mar 2024 13:13:19 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A3C7C04125;
+	Mon, 11 Mar 2024 13:13:12 +0000 (UTC)
+Date: Mon, 11 Mar 2024 21:13:08 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Patrick Plenefisch <simonpatp@gmail.com>
+Cc: Mike Snitzer <snitzer@kernel.org>,
+	Goffredo Baroncelli <kreijack@inwind.it>,
+	linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	regressions@lists.linux.dev, dm-devel@lists.linux.dev,
+	linux-btrfs@vger.kernel.org, ming.lei@redhat.com
+Subject: Re: LVM-on-LVM: error while submitting device barriers
+Message-ID: <Ze8DZLBHhCxgzc+r@fedora>
+References: <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
+ <a1e30dab-dfde-418e-a0dd-3e294838e839@inwind.it>
+ <CAOCpoWeB=2j+n+5K5ytj2maZxdrV80cxJcM5CL=z1bZKgpXPWQ@mail.gmail.com>
+ <a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it>
+ <ZedaKUge-EBo4CuT@redhat.com>
+ <ZeiS/bjJaRcrerWW@fedora>
+ <CAOCpoWeoQMh_-MxzxGBnK2Kf5EhvTLs=GrGwJ5XcfGVRTp73Eg@mail.gmail.com>
+ <Ze2azGlb1WxVFv7Z@fedora>
+ <Ze3RWqLvG18cQ4dz@redhat.com>
+ <CAOCpoWf7C=B1sdeUL46sVVtVUDH8+o_T9LGJNTOYqA317uMdmA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710162744;d1b8861f;
-X-HE-SMSGID: 1rjfRx-0000Sc-2k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOCpoWf7C=B1sdeUL46sVVtVUDH8+o_T9LGJNTOYqA317uMdmA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-#regzbot report:
-https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
-#regzbot duplicate: https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/
+On Sun, Mar 10, 2024 at 02:11:11PM -0400, Patrick Plenefisch wrote:
+> On Sun, Mar 10, 2024 at 11:27 AM Mike Snitzer <snitzer@kernel.org> wrote:
+> >
+> > On Sun, Mar 10 2024 at  7:34P -0400,
+> > Ming Lei <ming.lei@redhat.com> wrote:
+> >
+> > > On Sat, Mar 09, 2024 at 03:39:02PM -0500, Patrick Plenefisch wrote:
+> > > > On Wed, Mar 6, 2024 at 11:00 AM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > >
+> > > > > #!/usr/bin/bpftrace
+> > > > >
+> > > > > #ifndef BPFTRACE_HAVE_BTF
+> > > > > #include <linux/blkdev.h>
+> > > > > #endif
+> > > > >
+> > > > > kprobe:submit_bio_noacct,
+> > > > > kprobe:submit_bio
+> > > > > / (((struct bio *)arg0)->bi_opf & (1 << __REQ_PREFLUSH)) != 0 /
+> > > > > {
+> > > > >         $bio = (struct bio *)arg0;
+> > > > >         @submit_stack[arg0] = kstack;
+> > > > >         @tracked[arg0] = 1;
+> > > > > }
+> > > > >
+> > > > > kprobe:bio_endio
+> > > > > /@tracked[arg0] != 0/
+> > > > > {
+> > > > >         $bio = (struct bio *)arg0;
+> > > > >
+> > > > >         if (($bio->bi_flags & (1 << BIO_CHAIN)) && $bio->__bi_remaining.counter > 1) {
+> > > > >                 return;
+> > > > >         }
+> > > > >
+> > > > >         if ($bio->bi_status != 0) {
+> > > > >                 printf("dev %s bio failed %d, submitter %s completion %s\n",
+> > > > >                         $bio->bi_bdev->bd_disk->disk_name,
+> > > > >                         $bio->bi_status, @submit_stack[arg0], kstack);
+> > > > >         }
+> > > > >         delete(@submit_stack[arg0]);
+> > > > >         delete(@tracked[arg0]);
+> > > > > }
+> > > > >
+> > > > > END {
+> > > > >         clear(@submit_stack);
+> > > > >         clear(@tracked);
+> > > > > }
+> > > > >
+> > > >
+> > > > Attaching 4 probes...
+> > > > dev dm-77 bio failed 10, submitter
+> > > >        submit_bio_noacct+5
+> > > >        __send_duplicate_bios+358
+> > > >        __send_empty_flush+179
+> > > >        dm_submit_bio+857
+> > > >        __submit_bio+132
+> > > >        submit_bio_noacct_nocheck+345
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > > completion
+> > > >        bio_endio+5
+> > > >        dm_submit_bio+955
+> > > >        __submit_bio+132
+> > > >        submit_bio_noacct_nocheck+345
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > >
+> > > > dev dm-86 bio failed 10, submitter
+> > > >        submit_bio_noacct+5
+> > > >        write_all_supers+1718
+> > > >        btrfs_commit_transaction+2342
+> > > >        transaction_kthread+345
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > > completion
+> > > >        bio_endio+5
+> > > >        clone_endio+295
+> > > >        clone_endio+295
+> > > >        process_one_work+369
+> > > >        worker_thread+635
+> > > >        kthread+229
+> > > >        ret_from_fork+49
+> > > >        ret_from_fork_asm+27
+> > > >
+> > > >
+> > > > For context, dm-86 is /dev/lvm/brokenDisk and dm-77 is /dev/lowerVG/lvmPool
+> > >
+> > > io_status is 10(BLK_STS_IOERR), which is produced in submission code path on
+> > > /dev/dm-77(/dev/lowerVG/lvmPool) first, so looks it is one device mapper issue.
+> > >
+> > > The error should be from the following code only:
+> > >
+> > > static void __map_bio(struct bio *clone)
+> > >
+> > >       ...
+> > >       if (r == DM_MAPIO_KILL)
+> > >               dm_io_dec_pending(io, BLK_STS_IOERR);
+> > >       else
+> > >               dm_io_dec_pending(io, BLK_STS_DM_REQUEUE);
+> > >     break;
+> >
+> > I agree that the above bpf stack traces for dm-77 indicate that
+> > dm_submit_bio failed, which would end up in the above branch if the
+> > target's ->map() returned DM_MAPIO_KILL or DM_MAPIO_REQUEUE.
+> >
+> > But such an early failure speaks to the flush bio never being
+> > submitted to the underlying storage. No?
+> >
+> > dm-raid.c:raid_map does return DM_MAPIO_REQUEUE with:
+> >
+> >         /*
+> >          * If we're reshaping to add disk(s)), ti->len and
+> >          * mddev->array_sectors will differ during the process
+> >          * (ti->len > mddev->array_sectors), so we have to requeue
+> >          * bios with addresses > mddev->array_sectors here or
+> >          * there will occur accesses past EOD of the component
+> >          * data images thus erroring the raid set.
+> >          */
+> >         if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
+> >                 return DM_MAPIO_REQUEUE;
+> >
+> > But a flush doesn't have an end_sector (it'd be 0 afaik).. so it seems
+> > weird relative to a flush.
+> >
+> > > Patrick, you mentioned lvmPool is raid1, can you explain how lvmPool is
+> > > built? It is dm-raid1 target or over plain raid1 device which is
+> > > build over /dev/lowerVG?
+> 
+> LVM raid1:
+> lvcreate --type raid1 -m 1 ...
 
-#regzbot report:
-https://lore.kernel.org/regressions/ZeoAPFIF6NClUl4P@debian.local/
-#regzbot duplicate:
-https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/36
+OK, that is the reason, as Mike mentioned.
+
+dm-raid.c:raid_map returns DM_MAPIO_REQUEUE, which is translated into
+BLK_STS_IOERR in dm_io_complete().
+
+Empty flush bio is sent from btrfs, both .bi_size and .bi_sector are set
+as zero, but the top dm is linear, which(linear_map()) maps new
+bio->bi_iter.bi_sector, and the mapped bio is sent to dm-raid(raid_map()),
+then DM_MAPIO_REQUEUE is returned.
+
+The one-line patch I sent in last email should solve this issue.
+
+https://lore.kernel.org/dm-devel/a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it/T/#m8fce3ecb2f98370b7d7ce8db6714bbf644af5459
+
+But DM_MAPIO_REQUEUE misuse needs close look, and I believe Mike is working
+on that bigger problem.
+
+I guess most of dm targets don't deal with empty bio well, at least
+linear & dm-raid, not look into others yet, :-(
+
+
+Thanks,
+Ming
+
