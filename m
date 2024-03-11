@@ -1,103 +1,74 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 6CD6540873
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 14:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1DD3FB8F;
+	Mon, 11 Mar 2024 15:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710168605; cv=none; b=s6fLGIquoeDHODGe1pzQUtxbSm89KmXAq96CR1exdK56Q0pDTYrC2/r3UwWAa+zg9UeZkQLrfoFBrRy4lJwp7Kqn07ZhhShBOM+1JeH9lu6j2CL6F+mEABa2Y7woEZOcbFE8pAYqXsZAcYcx2kbxLBeXLKqEY5q0ZUbZVBEt7L0=
+	t=1710170197; cv=none; b=LBj13DNsBEbHRcIBre9hLSm9hCTPGYlM/7Gks2Re4nSfOFj0kQ8WqcZPmByAJfR1gNaYYugVUzJT7NO4Qw7DE+pggRR24K9u3KWmjpTcmHaa+JG4aXkQ5lH4htBGKvkDhFbQalmD5jXuYMMpuFiXsEnlHCzR6tfRJbeiQY8BDrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710168605; c=relaxed/simple;
-	bh=GHnYMe+WEotd44RKk/LUCLleSJ/Soc7ZLvvKc9Wt2lo=;
+	s=arc-20240116; t=1710170197; c=relaxed/simple;
+	bh=wKdCzd6BnmptS+QJnboMGafnedP7woLGUI8aYnsac7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rBiTIMFRhmue4/WQS/gdvF5v1Q7/UCX/BATS1VckbB2ziPi8HjORPQc3b9WtbSyaSjgM9oBJLEVBTvv6Mo/vkm+L2bnJFZDqvqSyhGjTNK8VsLJ+xbegexAmPJMav2TmdBT8kjXrDXQPIxkMDe4YC5Scmn4/5vL1foQCok0/sz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 350621 invoked by uid 1000); 11 Mar 2024 10:43:21 -0400
-Date: Mon, 11 Mar 2024 10:43:21 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
- <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
- <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
- <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
- <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HnBTV34TL+IlvqAlhdkeMkRZksHu/OttDizcdpo5uLNQKRMNPnZZyCYeZtiV4x+9rcavGzWBdI9Yd72sFHyBu0xrrcA3JhFKcGVjIS+FNAnqem3gLPgXzXer+4oe9DqxhtCqVUm7DRgpg6Z1yz2ricd6hlMaR2sebuPPT0TXB70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skhuymnT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skhuymnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E6DC43390;
+	Mon, 11 Mar 2024 15:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710170197;
+	bh=wKdCzd6BnmptS+QJnboMGafnedP7woLGUI8aYnsac7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=skhuymnT6wj0znfcfZZjkDOn+WslqtCW0qO5oNlgmTe0NuIz2Ak8RXXdmmUWD0dpQ
+	 mlXO4OJe2n0e9c2PsgHiGa1ZkK+FcVhzT4SdRcuTnVjsgpkdBFV7GRXyPq/YQM+kCG
+	 OpAH/PdbM5pYT3/1emuYP0y5VuyWLFhY4gbAUcN/dmIxkSXUFVGCkf2W0d0wjIpM/Y
+	 IGVSDq1VYhiEqkwaYw2GrVK9FU/JrdKamPiF48Fe6O/nCIDGLgwkP0yPvVfYBqVljg
+	 klMql6cJ4UlYQuECxe2mAV0/BMJ6iHihVFufryZJr2diUfcmtI5p9CnM9/nL5lYNpP
+	 JvZKQgcO8Mlrg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rjhOK-0000000056X-3qz4;
+	Mon, 11 Mar 2024 16:16:40 +0100
+Date: Mon, 11 Mar 2024 16:16:40 +0100
+From: Johan Hovold <johan@kernel.org>
+To: regressions@lists.linux.dev
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
+Message-ID: <Ze8gWHK2ipXIHRAP@hovoldconsulting.com>
+References: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
+ <ZesH21DcfOldRD9g@hovoldconsulting.com>
+ <56de6cfb-fe0f-de30-d4d0-03c0fbb0afbb@quicinc.com>
+ <ZeyOmJLlBbwnmaJN@hovoldconsulting.com>
+ <Ze8Ke_M2xHyPYCu-@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
+In-Reply-To: <Ze8Ke_M2xHyPYCu-@hovoldconsulting.com>
 
-On Mon, Mar 11, 2024 at 10:58:18AM +0100, Jan Čermák wrote:
-> On 07. 03. 24 20:34, Alan Stern wrote:
-> > Another thing the traces showed is that the device doesn't like the
-> > "new" initialization scheme; it wants the "old" one.  You can test
-> > this by setting the old_scheme_first module parameter for usbcore
-> > before plugging in the device:
-> > 
-> > 	echo 1 >/sys/module/usbcore/parameters/old_scheme_first
-> > 
+On Mon, Mar 11, 2024 at 02:43:24PM +0100, Johan Hovold wrote:
+
+> So, while it may still be theoretically possible to hit the resets after
+> the revert, the HPD notify revert effectively "fixed" the regression in
+> 6.8-rc1 by removing the preconditions that now made us hit it (i.e. the
+> half-initialised bridge).
 > 
-> You are right, this indeed works and probing is successful after the
-> power-cycling attempt.
+> It seems the hotplug state machine needs to be reworked completely, but
+> at least we're roughly back where we were with 6.7 (including that the
+> bus clocks will never be turned of because of the rpm leaks on
+> disconnect).
 
-Well, at least this means you do have a way of using the device, even
-if it is rather awkward.  It might even work on the Raspberry Pi machine.
-
-> > Also, you can try the patch below (without the module parameter set).
-> > I suspect it should be applied in any case, but it would be nice to
-> > know if it makes any difference in your case.
-> > 
-> > Index: usb-devel/drivers/usb/core/hub.c
-> > ===================================================================
-> > --- usb-devel.orig/drivers/usb/core/hub.c
-> > +++ usb-devel/drivers/usb/core/hub.c
-> > @@ -5481,6 +5481,7 @@ loop:
-> >   			msleep(2 * hub_power_on_good_delay(hub));
-> >   			usb_hub_set_port_power(hdev, hub, port1, true);
-> >   			msleep(hub_power_on_good_delay(hub));
-> > +			hub_port_debounce_be_stable(hub, port1);
-> >   		}
-> >   	}
-> >   	if (hub->hdev->parent ||
-> 
-> Unfortunately, this doesn't fix it. It changes the log output a bit but
-> still does not enumerate:
-> 
-> [  199.295695] usb 1-1.2: new full-speed USB device number 25 using ehci-pci
-> [  199.360684] usb 1-1.2: device descriptor read/64, error -32
-> [  199.534678] usb 1-1.2: device descriptor read/64, error -32
-> [  199.708671] usb 1-1.2: new full-speed USB device number 26 using ehci-pci
-> [  199.773666] usb 1-1.2: device descriptor read/64, error -32
-> [  199.941602] usb 1-1.2: device descriptor read/64, error -32
-> [  200.044871] usb 1-1-port2: attempt power cycle
-> [  200.528631] usb 1-1.2: new full-speed USB device number 27 using ehci-pci
-> [  200.940603] usb 1-1.2: device not accepting address 27, error -32
-> [  201.208592] usb 1-1.2: new full-speed USB device number 28 using ehci-pci
-> [  201.223783] usb 1-1.2: device descriptor read/8, error -32
-> [  201.345772] usb 1-1.2: device descriptor read/8, error -32
-> [  201.452899] usb 1-1-port2: unable to enumerate USB device
-> 
-> I'm attaching usbmon traces with this patch.
-
-The device is so non-responsive, I'm amazed it ever works at all.
-Judging by the usbmon traces, it doesn't look as if it would work on a
-Windows system.
-
-Actually, if you have access to a computer running Windows or Mac OSX
-and you can try out the device on that computer, it would be good to
-get the equivalent of a usbmon trace (something like a Wireshark
-capture log would do).  If those systems manage to do something that
-Linux doesn't, we ought to know what it is.
-
-Alan Stern
+#regzbot introduced: e467e0bde881
+#regzbot fix: 664bad6af3cb
