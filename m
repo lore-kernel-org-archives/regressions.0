@@ -1,75 +1,153 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5473D541
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 13:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBBF22064;
+	Mon, 11 Mar 2024 13:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710163692; cv=none; b=n1sryEJI2g1WbTwoFE5Vlw6uRXKu3J6RhW9qmS7PrFZN9f+bFOzaQ3pVHDFQ8LyreCKYr/yNB/NZRt534hov0D3ESNz/5NGHwASDA3K5aIbWwbLyn3ol8vkr1oHuYkQWIgYQKj44REaQKzkaImywsv5HDuPig4AoiM6bx1z5fyg=
+	t=1710164395; cv=none; b=or2Mc3p3SQnrZCbWPYA8oZdNk45TnYJiVitVOO8hdhIsS0Z8oLD9YR6+6M3vZ92vo8lIIULgnPbym0oEg90S1FKS3PCZoH6lDJ+M31wenJfIwvGZ4ivh8zxSB2V+cNDAu4/N52b4PAJl7psifH5L4DSkPBjF3rGRSIswObF6C50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710163692; c=relaxed/simple;
-	bh=GQQ1bl/o8G29EUhq7LWesXSsxkHYPUoSZvjAF8nhAq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DNW2f3NDt+JszhS1zNUN7XaH4o76NVsmTPIYRzPqJSTQkM0Ry2H+emrI7vQODHhy/j7QzOw9PpPeAra72rmwvZG5COLZU34a6mAXqo7rR74THNwF+VLdzYnTD51szVA/jZwDo1WG6GO91EU3zFzLfPhDOdQrUk2XVnaUewJyXCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2TI3C4KE; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1710164395; c=relaxed/simple;
+	bh=SEEjQagVJJYIXoK3Q+z+Gy4Jtn5En5vzFh8nYszbxjk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gFtU0AtUDg9NOdVAzGClmyvcwYeO2X9fd1dw7wmz5srpdEpfpnJcVtWT1x19Pp3gooHvo7h6OuwfxPquLu04txutQyHiR//2cbwK7aGD61xs28NLd5Cm9N0g+uVBSI4t0p63got+xGHNuRp07BPdUoNe9mnMJji4yxhIulwqRTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wgMpo1af; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2TI3C4KE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710163688;
-	bh=GQQ1bl/o8G29EUhq7LWesXSsxkHYPUoSZvjAF8nhAq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2TI3C4KEK3UF4vgPRMr8V43ERNDiKd8ZFL9KrX/KoSdIcvHwZQeKTOJ14ybiQMVvn
-	 jDN9oMK9SYhPL9hfZ3b2vXkufkgQFrjFYUR/K2EQWVHQ9YJeD3oMB2W90VWBmRMUc1
-	 UE3a4U3oN7FTFhFoaSSOvuP0b5Sxi7YQ/TBs0qjk862Z6Ol+Yw75UVCGZYQRKahYBl
-	 ec7tXv8sQ9w6m3pq0+NHEKOBTUTsyBaPzPD2WuCj8FOpvOqPraFms9MQ0pUPkl1v/U
-	 Ph7bFjBGgxVzpr7VQiT8vKobL5yokuFMMD/UNtaZ7e3WM0IN6RdZL+EL8T4XDSQMSx
-	 nQP9LfStRJaMw==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7EC7D3780016;
-	Mon, 11 Mar 2024 13:28:07 +0000 (UTC)
-Date: Mon, 11 Mar 2024 09:28:05 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Chris Bainbridge <chris.bainbridge@gmail.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, regressions@lists.linux.dev,
-	trivial@kernel.org,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Fix typo in reporting-regressions.rst
-Message-ID: <939d580a-9646-4e58-aadc-1eb40f17e0b5@notapiano>
-References: <ZeoDMtLGIHvbavW2@debian.local>
- <cd766a41-4dfa-4f57-8af2-163023acbead@leemhuis.info>
- <Ze2PT8oamTSm23ny@debian.local>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wgMpo1af"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=KBYkYC7Q3Vs3PYXioBEI+v+74ZYf4zGI6NQfn8C50kY=; t=1710164393;
+	x=1710596393; b=wgMpo1afu1C27tRgT78ad+Q25fPDKENd+HVMTlPI6lxBVrfcejp+HZPSGAL/U
+	IIPkRxOU3k4GFM0VgjEnqKY/E4PF6RRayBX4UaLzCQURbNj81xnzUMsmQ/tuPbfMJb7gn/ZRZFptv
+	hUqMNYfKADtifF67B8snOsfXaMUNB2U3fBW1U4wmAtxxy2OlaN6wgJ5OfWpcPWy80zELNK/KdNNsM
+	CUijPD4PpGsw+bvB2feUrAwMVLFmLhEGNJQl94Pz7PYyUUp3+nh1hVbYqcAg1PXmP7ojuid70YsHi
+	Mz3hDF+yHgeeW1umCrkZ/dwBPtfswGpNNrkVMnq8Q0OyxbIfXw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rjfsY-0007K8-KI; Mon, 11 Mar 2024 14:39:46 +0100
+Message-ID: <82cf3fba-fdfa-4185-b2b9-c8ed8d123136@leemhuis.info>
+Date: Mon, 11 Mar 2024 14:39:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] docs: *-regressions.rst: Use collon after regzbot
+ introduced command
+Content-Language: en-US, de-DE
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, regressions@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ workflows@vger.kernel.org
+References: <20240308-regzbot-fixes-v1-0-577a4fe16e12@collabora.com>
+ <20240308-regzbot-fixes-v1-1-577a4fe16e12@collabora.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20240308-regzbot-fixes-v1-1-577a4fe16e12@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ze2PT8oamTSm23ny@debian.local>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710164393;2d3a856a;
+X-HE-SMSGID: 1rjfsY-0007K8-KI
 
-On Sun, Mar 10, 2024 at 10:45:35AM +0000, Chris Bainbridge wrote:
-> On Sun, Mar 10, 2024 at 08:57:55AM +0100, Thorsten Leemhuis wrote:
-> > Which leads to the question: how much do you care that you patch makes
-> > it in? If you would like to have a fresh commit in the kernel (which is
-> > totally valid thing to want!) we definitely could improve your
-> > submission and then adjust Nícolas changes on top of it -- but if you
-> > don't care at all we could just directly take Nícolas patch.
+Thx for this!
+
+On 08.03.24 15:09, NÃ­colas F. R. A. Prado wrote:
+> All the examples in the reference documentation for regzbot have a
+> collon
+
+s/collon/colon/ here and a few lines below as well. And in the subject
+as well. Speaking of which: something like "docs: *-regressions.rst:
+add colon to regzbot commands" might be better.
+
+> after the "introduced" command, while on the kernel documentation
+> some have and others don't. This suggests both are acceptable,
+
+Yup.
+
+> but in
+> order to avoid confusion, add collons after all the commands to match
+> the reference docs.
+
+Yeah, good idea. I likely would have done this myself soon while doing a
+few other changes I plan, but whatever. :-D
+
+> Link: https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> Signed-off-by: NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
+
+With the changes above:
+
+Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
+
+Side note: I wonder if the commit message could come a bit quicker to
+the point (something along the lines of "Use colons as command
+terminator everywhere for consistency, even if it not strictly
+necessary. That way it will also match regzbot's reference
+documentation.". But not really important I guess. Up to John.
+
+Ciao, Thorsten
+
+> ---
+>  Documentation/admin-guide/reporting-regressions.rst |  2 +-
+>  Documentation/process/handling-regressions.rst      | 10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> I don't care - just take the other patch. But please fix the multiple
-> incorrect spellings of colon ('collon') first.
-
-Oh wow, I looked it up before writing and was confident that was the right
-spelling... Thanks for pointing it out, will fix in v2 after Thorsten gives any
-other feedback he might have.
-
-Thanks,
-Nícolas
+> diff --git a/Documentation/admin-guide/reporting-regressions.rst b/Documentation/admin-guide/reporting-regressions.rst
+> index d8adccdae23f..76b246ecf21b 100644
+> --- a/Documentation/admin-guide/reporting-regressions.rst
+> +++ b/Documentation/admin-guide/reporting-regressions.rst
+> @@ -31,7 +31,7 @@ The important bits (aka "TL;DR")
+>     Linux kernel regression tracking bot "regzbot" track the issue by specifying
+>     when the regression started like this::
+>  
+> -       #regzbot introduced v5.13..v5.14-rc1
+> +       #regzbot introduced: v5.13..v5.14-rc1
+>  
+>  
+>  All the details on Linux kernel regressions relevant for users
+> diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+> index 5d3c3de3f4ec..42b13f77b019 100644
+> --- a/Documentation/process/handling-regressions.rst
+> +++ b/Documentation/process/handling-regressions.rst
+> @@ -27,11 +27,11 @@ The important bits (aka "The TL;DR")
+>     is optional, but recommended):
+>  
+>      * For mailed reports, check if the reporter included a line like ``#regzbot
+> -      introduced v5.13..v5.14-rc1``. If not, send a reply (with the regressions
+> +      introduced: v5.13..v5.14-rc1``. If not, send a reply (with the regressions
+>        list in CC) containing a paragraph like the following, which tells regzbot
+>        when the issue started to happen::
+>  
+> -       #regzbot ^introduced 1f2e3d4c5b6a
+> +       #regzbot ^introduced: 1f2e3d4c5b6a
+>  
+>      * When forwarding reports from a bug tracker to the regressions list (see
+>        above), include a paragraph like the following::
+> @@ -79,7 +79,7 @@ When doing either, consider making the Linux kernel regression tracking bot
+>  "regzbot" immediately start tracking the issue:
+>  
+>   * For mailed reports, check if the reporter included a "regzbot command" like
+> -   ``#regzbot introduced 1f2e3d4c5b6a``. If not, send a reply (with the
+> +   ``#regzbot introduced: 1f2e3d4c5b6a``. If not, send a reply (with the
+>     regressions list in CC) with a paragraph like the following:::
+>  
+>         #regzbot ^introduced: v5.13..v5.14-rc1
+> @@ -398,9 +398,9 @@ By using a 'regzbot command' in a direct or indirect reply to the mail with the
+>  regression report. These commands need to be in their own paragraph (IOW: they
+>  need to be separated from the rest of the mail using blank lines).
+>  
+> -One such command is ``#regzbot introduced <version or commit>``, which makes
+> +One such command is ``#regzbot introduced: <version or commit>``, which makes
+>  regzbot consider your mail as a regressions report added to the tracking, as
+> -already described above; ``#regzbot ^introduced <version or commit>`` is another
+> +already described above; ``#regzbot ^introduced: <version or commit>`` is another
+>  such command, which makes regzbot consider the parent mail as a report for a
+>  regression which it starts to track.
+>  
+> 
