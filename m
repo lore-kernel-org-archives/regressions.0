@@ -1,462 +1,329 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C480801
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 01:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB67733070;
+	Mon, 11 Mar 2024 09:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710121831; cv=none; b=fh8U+LWQGTqVc+E8hQc/ailtIReFYqSZxTRs9IKgrV3X/vL8qfzenSGKC+VuQr5bnXA7kWCyvYFcUsP5RIKeLi60923zsXjp1mXix981TvfR0oIZQ9qfDCkLvips83c7T0lvCJbU7Z90Y6r7eWpkYuBaDKRpQHa1eTK1U0qe8k8=
+	t=1710148538; cv=none; b=JIf6UaIMQZQr3NsL7iZI+B8HEXrsses38xXThxo+gxOuJ9Apgch1/V+NJfkoxeYsZOTjATYM0eL+e9sNGO8Gkq3ofh+omgbUpNeAHY2+eVSV7LWyEXNMJSrLR29ECmfe59nwJY0zUB4i5m4MyUrh6MS6XSeeOlZWNhGRV7WuPvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710121831; c=relaxed/simple;
-	bh=hfjsoxtrw6ahsQJbKwotw/NRwujaP0BZl944UqvaXao=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PogqYgHFs/BHIxFtJH3TGvcpKNo+peqh3qYvfWX/+aYFU34o4lmFfopEaVmYtHkt35vITx05Qa+W1zXOpTyGX4YYQHqthRyxeeDSShC5kxKjs22v1e+DEbRfhFlZDIZ2banpkFyY687ul1MLmvyqMnYAuzpqW/QrHbsHi29yj1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TtKTw31Fyz4f3jMr
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 09:50:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 0D0861A016E
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 09:50:18 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBFUY+5leIJQGg--.38947S3;
-	Mon, 11 Mar 2024 09:50:13 +0800 (CST)
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-To: junxiao.bi@oracle.com, Song Liu <song@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, stable@vger.kernel.org,
- Dan Moulding <dan@danm.net>, "yukuai (C)" <yukuai3@huawei.com>
-References: <20240123005700.9302-1-dan@danm.net>
- <20240220230658.11069-1-dan@danm.net>
- <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info>
- <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
- <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com>
- <d3cdebfe-17c0-4f61-9ad9-71d9de2339b2@oracle.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <ecfce4d7-bcf7-c09a-7f01-5c7de88df107@huaweicloud.com>
-Date: Mon, 11 Mar 2024 09:50:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1710148538; c=relaxed/simple;
+	bh=fDcyWtsKLpMUlBDZfvyHMi0/iqNhwLjnewlmBXGhQeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d2gOmZSZUmLkBLA4TqOygCzCbZC59DwGNeTZkxzpehrlrjWs5Al1p8wZoMy5GvZSI6JhtrzLe9LtHof0KfD4VnkpAuc+k6WyC0AoFh4a5pOgLztQSLZR/RDPRbQQiU7J1a4eWzKevfJmypP+5oUP2XR/GNflbp/eVYdWlnJIAoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VoylY6yu; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VoylY6yu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=rm2u1DC2SQLO/GhCuJ2mUooy8fntRke757nFqBbgD2k=;
+	t=1710148535; x=1710580535; b=VoylY6yuRK/0sU0/64QivCQqs7GgA+0GYsaXHS9Y8ujtSUD
+	ECdC4j18kyxN08AF6biBu3ezMk89hwF/TYJjXcYBYPWM9zy4BJJ7jheGQiQsUdoLvOfKfJ7Mlytgf
+	rSDrEg/4Gas0CZUBVx9GLLj2HxOFZ7dmGyuIw7LdIlWLUXcpgHZNUCXZ8i42bvn750pVPZx+gFEt2
+	2O2GmZHc3s73uQB2ovJ9N3LhNqZgBwkIOIFd7QyE4K5tzKlD/rlWaItPU6/ij9kb2FHZfrNktLwvS
+	qXgwD83WYQjibFrnB9pM7SxjZ9LpGg+6/SwWwXLe4kU1rSNsYxQe6Um1w5pjsK3g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rjbkq-0001Hx-Kh; Mon, 11 Mar 2024 10:15:32 +0100
+Message-ID: <da17e97b-1880-415d-8cdb-07e79808e702@leemhuis.info>
+Date: Mon, 11 Mar 2024 10:15:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <d3cdebfe-17c0-4f61-9ad9-71d9de2339b2@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 6.7 001/162] btrfs: fix deadlock with fiemap and extent
+ locking
+Content-Language: en-US, de-DE
+To: Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ Josef Bacik <josef@toxicpanda.com>, Sasha Levin <sashal@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Chris Mason <clm@fb.com>, linux-btrfs <linux-btrfs@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20240304211551.833500257@linuxfoundation.org>
+ <20240304211551.880347593@linuxfoundation.org>
+ <CAKisOQGCiJUUc62ptxp08LkR88T5t1swcBPYi84y2fLP6Tag7g@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <CAKisOQGCiJUUc62ptxp08LkR88T5t1swcBPYi84y2fLP6Tag7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBFUY+5leIJQGg--.38947S3
-X-Coremail-Antispam: 1UD129KBjvAXoW3ZFWkJF4fJrWUtr4fAr4rGrg_yoW8XryDJo
-	WFgw1fXa1rWw4UKFnrJw1DAry3Ga4DAFsxJr15Wr17Jrn5JrW5A34rCrWrJ3y7tF18GFn7
-	AryUJr1YyFyUJw4kn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUU5R7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK
-	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710148535;60c88d1c;
+X-HE-SMSGID: 1rjbkq-0001Hx-Kh
 
-Hi,
-
-在 2024/03/09 7:49, junxiao.bi@oracle.com 写道:
-> Here is the root cause for this issue:
+On 06.03.24 13:39, Filipe Manana wrote:
+> On Mon, Mar 4, 2024 at 9:26 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>>
+>> 6.7-stable review patch.  If anyone has any objections, please let me know.
 > 
-> Commit 5e2cf333b7bd ("md/raid5: Wait for MD_SB_CHANGE_PENDING in 
-> raid5d") introduced a regression, it got reverted through commit 
-> bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in 
-> raid5d"). To fix the original issue commit 5e2cf333b7bd was fixing, 
-> commit d6e035aad6c0 ("md: bypass block throttle for superblock update") 
-> was created, it avoids md superblock write getting throttled by block 
-> layer which is good, but md superblock write could be stuck in block 
-> layer due to block flush as well, and that is what was happening in this 
-> regression report.
+> It would be better to delay the backport of this patch (and the
+> followup fix) to any stable release, because it introduced another
+> regression for which there is a reviewed fix but it's not yet in
+> Linus' tree:
 > 
-> Process "md0_reclaim" got stuck while waiting IO for md superblock write 
-> done, that IO was marked with REQ_PREFLUSH | REQ_FUA flags, these 3 
-> steps ( PREFLUSH, DATA and POSTFLUSH ) will be executed before done, the 
-> hung of this process is because the last step "POSTFLUSH" never done. 
-> And that was because of  process "md0_raid5" submitted another IO with 
-> REQ_FUA flag marked just before that step started. To handle that IO, 
-> blk_insert_flush() will be invoked and hit "REQ_FSEQ_DATA | 
-> REQ_FSEQ_POSTFLUSH" case where "fq->flush_data_in_flight" will be 
-> increased. When the IO for md superblock write was to issue "POSTFLUSH" 
-> step through blk_kick_flush(), it found that "fq->flush_data_in_flight" 
-> was not zero, so it will skip that step, that is expected, because flush 
-> will be triggered when "fq->flush_data_in_flight" dropped to zero.
-> 
-> Unfortunately here that inflight data IO from "md0_raid5" will never 
-> done, because it was added into the blk_plug list of that process, but 
-> "md0_raid5" run into infinite loop due to "MD_SB_CHANGE_PENDING" which 
-> made it never had a chance to finish the blk plug until 
-> "MD_SB_CHANGE_PENDING" was cleared. Process "md0_reclaim" was supposed 
-> to clear that flag but it was stuck by "md0_raid5", so this is a deadlock.
-> 
-> Looks like the approach in the RFC patch trying to resolve the 
-> regression of commit 5e2cf333b7bd can help this issue. Once "md0_raid5" 
-> starts looping due to "MD_SB_CHANGE_PENDING", it should release all its 
-> staging IO requests to avoid blocking others. Also a cond_reschedule() 
-> will avoid it run into lockup.
+> https://lore.kernel.org/linux-btrfs/cover.1709202499.git.fdmanana@suse.com/
 
-The analysis sounds good, however, it seems to me that the behaviour
-raid5d() pings the cpu to wait for 'MD_SB_CHANGE_PENDING' to be cleared
-is not reasonable, because md_check_recovery() must hold
-'reconfig_mutex' to clear the flag.
+Those two missed 6.8 afaics. Will those be heading to mainline any time
+soon? And how fast afterwards will it be wise to backport them to 6.8?
+Will anyone ask Greg for that when the time has come? Same for
+backporting "btrfs: fix deadlock with fiemap and extent locking", the
+followup fix and the two fixed mentioned above for 6.6 and 6.7?
 
-Look at raid1/raid10, there are two different behaviour that seems can
-avoid this problem as well:
+Cioa, Thorsten
 
-1) blk_start_plug() is delayed until all failed IO is handled. This look
-reasonable because in order to get better performance, IO should be
-handled by submitted thread as much as possible, and meanwhile, the
-deadlock can be triggered here.
-2) if 'MD_SB_CHANGE_PENDING' is not cleared by md_check_recovery(), skip
-the handling of failed IO, and when mddev_unlock() is called, daemon
-thread will be woken up again to handle failed IO.
-
-How about the following patch?
-
-Thanks,
-Kuai
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 3ad5f3c7f91e..0b2e6060f2c9 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6720,7 +6720,6 @@ static void raid5d(struct md_thread *thread)
-
-         md_check_recovery(mddev);
-
--       blk_start_plug(&plug);
-         handled = 0;
-         spin_lock_irq(&conf->device_lock);
-         while (1) {
-@@ -6728,6 +6727,14 @@ static void raid5d(struct md_thread *thread)
-                 int batch_size, released;
-                 unsigned int offset;
-
-+               /*
-+                * md_check_recovery() can't clear sb_flags, usually 
-because of
-+                * 'reconfig_mutex' can't be grabbed, wait for 
-mddev_unlock() to
-+                * wake up raid5d().
-+                */
-+               if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags))
-+                       goto skip;
-+
-                 released = release_stripe_list(conf, 
-conf->temp_inactive_list);
-                 if (released)
-                         clear_bit(R5_DID_ALLOC, &conf->cache_state);
-@@ -6766,8 +6773,8 @@ static void raid5d(struct md_thread *thread)
-                         spin_lock_irq(&conf->device_lock);
-                 }
-         }
-+skip:
-         pr_debug("%d stripes handled\n", handled);
--
-         spin_unlock_irq(&conf->device_lock);
-         if (test_and_clear_bit(R5_ALLOC_MORE, &conf->cache_state) &&
-             mutex_trylock(&conf->cache_size_mutex)) {
-@@ -6779,6 +6786,7 @@ static void raid5d(struct md_thread *thread)
-                 mutex_unlock(&conf->cache_size_mutex);
-         }
-
-+       blk_start_plug(&plug);
-         flush_deferred_bios(conf);
-
-         r5l_flush_stripe_to_raid(conf->log);
-
-> 
-> https://www.spinics.net/lists/raid/msg75338.html
-> 
-> Dan, can you try the following patch?
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index de771093b526..474462abfbdc 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1183,6 +1183,7 @@ void __blk_flush_plug(struct blk_plug *plug, bool 
-> from_schedule)
->          if (unlikely(!rq_list_empty(plug->cached_rq)))
->                  blk_mq_free_plug_rqs(plug);
->   }
-> +EXPORT_SYMBOL(__blk_flush_plug);
-> 
->   /**
->    * blk_finish_plug - mark the end of a batch of submitted I/O
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 8497880135ee..26e09cdf46a3 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -6773,6 +6773,11 @@ static void raid5d(struct md_thread *thread)
-> spin_unlock_irq(&conf->device_lock);
->                          md_check_recovery(mddev);
->                          spin_lock_irq(&conf->device_lock);
-> +               } else {
-> + spin_unlock_irq(&conf->device_lock);
-> +                       blk_flush_plug(&plug, false);
-> +                       cond_resched();
-> +                       spin_lock_irq(&conf->device_lock);
->                  }
->          }
->          pr_debug("%d stripes handled\n", handled);
-> 
-> Thanks,
-> 
-> Junxiao.
-> 
-> On 3/1/24 12:26 PM, junxiao.bi@oracle.com wrote:
->> Hi Dan & Song,
+>> ------------------
 >>
->> I have not root cause this yet, but would like share some findings 
->> from the vmcore Dan shared. From what i can see, this doesn't look 
->> like a md issue, but something wrong with block layer or below.
+>> From: Josef Bacik <josef@toxicpanda.com>
 >>
->> 1. There were multiple process hung by IO over 15mins.
+>> [ Upstream commit b0ad381fa7690244802aed119b478b4bdafc31dd ]
 >>
->> crash> ps -m | grep UN
->> [0 00:15:50.424] [UN]  PID: 957      TASK: ffff88810baa0ec0  CPU: 1 
->> COMMAND: "jbd2/dm-3-8"
->> [0 00:15:56.151] [UN]  PID: 1835     TASK: ffff888108a28ec0  CPU: 2 
->> COMMAND: "dd"
->> [0 00:15:56.187] [UN]  PID: 876      TASK: ffff888108bebb00  CPU: 3 
->> COMMAND: "md0_reclaim"
->> [0 00:15:56.185] [UN]  PID: 1914     TASK: ffff8881015e6740  CPU: 1 
->> COMMAND: "kworker/1:2"
->> [0 00:15:56.255] [UN]  PID: 403      TASK: ffff888101351d80  CPU: 7 
->> COMMAND: "kworker/u21:1"
+>> While working on the patchset to remove extent locking I got a lockdep
+>> splat with fiemap and pagefaulting with my new extent lock replacement
+>> lock.
 >>
->> 2. Let pick md0_reclaim to take a look, it is waiting done super_block 
->> update. We can see there were two pending superblock write and other 
->> pending io for the underling physical disk, which caused these process 
->> hung.
+>> This deadlock exists with our normal code, we just don't have lockdep
+>> annotations with the extent locking so we've never noticed it.
 >>
->> crash> bt 876
->> PID: 876      TASK: ffff888108bebb00  CPU: 3    COMMAND: "md0_reclaim"
->>  #0 [ffffc900008c3d10] __schedule at ffffffff81ac18ac
->>  #1 [ffffc900008c3d70] schedule at ffffffff81ac1d82
->>  #2 [ffffc900008c3d88] md_super_wait at ffffffff817df27a
->>  #3 [ffffc900008c3dd0] md_update_sb at ffffffff817df609
->>  #4 [ffffc900008c3e20] r5l_do_reclaim at ffffffff817d1cf4
->>  #5 [ffffc900008c3e98] md_thread at ffffffff817db1ef
->>  #6 [ffffc900008c3ef8] kthread at ffffffff8114f8ee
->>  #7 [ffffc900008c3f30] ret_from_fork at ffffffff8108bb98
->>  #8 [ffffc900008c3f50] ret_from_fork_asm at ffffffff81000da1
+>> Since we're copying the fiemap extent to user space on every iteration
+>> we have the chance of pagefaulting.  Because we hold the extent lock for
+>> the entire range we could mkwrite into a range in the file that we have
+>> mmap'ed.  This would deadlock with the following stack trace
 >>
->> crash> mddev.pending_writes,disks 0xffff888108335800
->>   pending_writes = {
->>     counter = 2  <<<<<<<<<< 2 active super block write
->>   },
->>   disks = {
->>     next = 0xffff88810ce85a00,
->>     prev = 0xffff88810ce84c00
->>   },
->> crash> list -l md_rdev.same_set -s md_rdev.kobj.name,nr_pending 
->> 0xffff88810ce85a00
->> ffff88810ce85a00
->>   kobj.name = 0xffff8881067c1a00 "dev-dm-1",
->>   nr_pending = {
->>     counter = 0
->>   },
->> ffff8881083ace00
->>   kobj.name = 0xffff888100a93280 "dev-sde",
->>   nr_pending = {
->>     counter = 10 <<<<
->>   },
->> ffff8881010ad200
->>   kobj.name = 0xffff8881012721c8 "dev-sdc",
->>   nr_pending = {
->>     counter = 8 <<<<<
->>   },
->> ffff88810ce84c00
->>   kobj.name = 0xffff888100325f08 "dev-sdd",
->>   nr_pending = {
->>     counter = 2 <<<<<
->>   },
+>> [<0>] lock_extent+0x28d/0x2f0
+>> [<0>] btrfs_page_mkwrite+0x273/0x8a0
+>> [<0>] do_page_mkwrite+0x50/0xb0
+>> [<0>] do_fault+0xc1/0x7b0
+>> [<0>] __handle_mm_fault+0x2fa/0x460
+>> [<0>] handle_mm_fault+0xa4/0x330
+>> [<0>] do_user_addr_fault+0x1f4/0x800
+>> [<0>] exc_page_fault+0x7c/0x1e0
+>> [<0>] asm_exc_page_fault+0x26/0x30
+>> [<0>] rep_movs_alternative+0x33/0x70
+>> [<0>] _copy_to_user+0x49/0x70
+>> [<0>] fiemap_fill_next_extent+0xc8/0x120
+>> [<0>] emit_fiemap_extent+0x4d/0xa0
+>> [<0>] extent_fiemap+0x7f8/0xad0
+>> [<0>] btrfs_fiemap+0x49/0x80
+>> [<0>] __x64_sys_ioctl+0x3e1/0xb50
+>> [<0>] do_syscall_64+0x94/0x1a0
+>> [<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
 >>
->> 3. From block layer, i can find the inflight IO for md superblock 
->> write which has been pending 955s which matches with the hung time of 
->> "md0_reclaim"
+>> I wrote an fstest to reproduce this deadlock without my replacement lock
+>> and verified that the deadlock exists with our existing locking.
 >>
->> crash> 
->> request.q,mq_hctx,cmd_flags,rq_flags,start_time_ns,bio,biotail,state,__data_len,flush,end_io 
->> ffff888103b4c300
->>   q = 0xffff888103a00d80,
->>   mq_hctx = 0xffff888103c5d200,
->>   cmd_flags = 38913,
->>   rq_flags = 139408,
->>   start_time_ns = 1504179024146,
->>   bio = 0x0,
->>   biotail = 0xffff888120758e40,
->>   state = MQ_RQ_COMPLETE,
->>   __data_len = 0,
->>   flush = {
->>     seq = 3, <<<< REQ_FSEQ_PREFLUSH |  REQ_FSEQ_DATA
->>     saved_end_io = 0x0
->>   },
->>   end_io = 0xffffffff815186e0 <mq_flush_data_end_io>,
+>> To fix this simply don't take the extent lock for the entire duration of
+>> the fiemap.  This is safe in general because we keep track of where we
+>> are when we're searching the tree, so if an ordered extent updates in
+>> the middle of our fiemap call we'll still emit the correct extents
+>> because we know what offset we were on before.
 >>
->> crash> p tk_core.timekeeper.tkr_mono.base
->> $1 = 2459916243002
->> crash> eval 2459916243002-1504179024146
->> hexadecimal: de86609f28
->>     decimal: 955737218856  <<<<<<< IO pending time is 955s
->>       octal: 15720630117450
->>      binary: 
->> 0000000000000000000000001101111010000110011000001001111100101000
+>> The only place we maintain the lock is searching delalloc.  Since the
+>> delalloc stuff can change during writeback we want to lock the extent
+>> range so we have a consistent view of delalloc at the time we're
+>> checking to see if we need to set the delalloc flag.
 >>
->> crash> bio.bi_iter,bi_end_io 0xffff888120758e40
->>   bi_iter = {
->>     bi_sector = 8, <<<< super block offset
->>     bi_size = 0,
->>     bi_idx = 0,
->>     bi_bvec_done = 0
->>   },
->>   bi_end_io = 0xffffffff817dca50 <super_written>,
->> crash> dev -d | grep ffff888103a00d80
->>     8 ffff8881003ab000   sdd        ffff888103a00d80       0 0 0
+>> With this patch applied we no longer deadlock with my testcase.
 >>
->> 4. Check above request, even its state is "MQ_RQ_COMPLETE", but it is 
->> still pending. That's because each md superblock write was marked with 
->> REQ_PREFLUSH | REQ_FUA, so it will be handled in 3 steps: pre_flush, 
->> data, and post_flush. Once each step complete, it will be marked in 
->> "request.flush.seq", here the value is 3, which is REQ_FSEQ_PREFLUSH 
->> |  REQ_FSEQ_DATA, so the last step "post_flush" has not be done. 
->> Another wired thing is that blk_flush_queue.flush_data_in_flight is 
->> still 1 even "data" step already done.
+>> CC: stable@vger.kernel.org # 6.1+
+>> Reviewed-by: Filipe Manana <fdmanana@suse.com>
+>> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+>> Reviewed-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: David Sterba <dsterba@suse.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  fs/btrfs/extent_io.c | 62 ++++++++++++++++++++++++++++++++------------
+>>  1 file changed, 45 insertions(+), 17 deletions(-)
 >>
->> crash> blk_mq_hw_ctx.fq 0xffff888103c5d200
->>   fq = 0xffff88810332e240,
->> crash> blk_flush_queue 0xffff88810332e240
->> struct blk_flush_queue {
->>   mq_flush_lock = {
->>     {
->>       rlock = {
->>         raw_lock = {
->>           {
->>             val = {
->>               counter = 0
->>             },
->>             {
->>               locked = 0 '\000',
->>               pending = 0 '\000'
->>             },
->>             {
->>               locked_pending = 0,
->>               tail = 0
->>             }
->>           }
->>         }
->>       }
->>     }
->>   },
->>   flush_pending_idx = 1,
->>   flush_running_idx = 1,
->>   rq_status = 0 '\000',
->>   flush_pending_since = 4296171408,
->>   flush_queue = {{
->>       next = 0xffff88810332e250,
->>       prev = 0xffff88810332e250
->>     }, {
->>       next = 0xffff888103b4c348, <<<< the request is in this list
->>       prev = 0xffff888103b4c348
->>     }},
->>   flush_data_in_flight = 1,  >>>>>> still 1
->>   flush_rq = 0xffff888103c2e000
->> }
+>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+>> index 8f724c54fc8e9..197b41d02735b 100644
+>> --- a/fs/btrfs/extent_io.c
+>> +++ b/fs/btrfs/extent_io.c
+>> @@ -2645,16 +2645,34 @@ static int fiemap_process_hole(struct btrfs_inode *inode,
+>>          * it beyond i_size.
+>>          */
+>>         while (cur_offset < end && cur_offset < i_size) {
+>> +               struct extent_state *cached_state = NULL;
+>>                 u64 delalloc_start;
+>>                 u64 delalloc_end;
+>>                 u64 prealloc_start;
+>> +               u64 lockstart;
+>> +               u64 lockend;
+>>                 u64 prealloc_len = 0;
+>>                 bool delalloc;
 >>
->> crash> list 0xffff888103b4c348
->> ffff888103b4c348
->> ffff88810332e260
+>> +               lockstart = round_down(cur_offset, inode->root->fs_info->sectorsize);
+>> +               lockend = round_up(end, inode->root->fs_info->sectorsize);
+>> +
+>> +               /*
+>> +                * We are only locking for the delalloc range because that's the
+>> +                * only thing that can change here.  With fiemap we have a lock
+>> +                * on the inode, so no buffered or direct writes can happen.
+>> +                *
+>> +                * However mmaps and normal page writeback will cause this to
+>> +                * change arbitrarily.  We have to lock the extent lock here to
+>> +                * make sure that nobody messes with the tree while we're doing
+>> +                * btrfs_find_delalloc_in_range.
+>> +                */
+>> +               lock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>                 delalloc = btrfs_find_delalloc_in_range(inode, cur_offset, end,
+>>                                                         delalloc_cached_state,
+>>                                                         &delalloc_start,
+>>                                                         &delalloc_end);
+>> +               unlock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>                 if (!delalloc)
+>>                         break;
 >>
->> crash> request.tag,state,ref 0xffff888103c2e000 >>>> flush_rq of hw queue
->>   tag = -1,
->>   state = MQ_RQ_IDLE,
->>   ref = {
->>     counter = 0
->>   },
+>> @@ -2822,15 +2840,15 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>                   u64 start, u64 len)
+>>  {
+>>         const u64 ino = btrfs_ino(inode);
+>> -       struct extent_state *cached_state = NULL;
+>>         struct extent_state *delalloc_cached_state = NULL;
+>>         struct btrfs_path *path;
+>>         struct fiemap_cache cache = { 0 };
+>>         struct btrfs_backref_share_check_ctx *backref_ctx;
+>>         u64 last_extent_end;
+>>         u64 prev_extent_end;
+>> -       u64 lockstart;
+>> -       u64 lockend;
+>> +       u64 range_start;
+>> +       u64 range_end;
+>> +       const u64 sectorsize = inode->root->fs_info->sectorsize;
+>>         bool stopped = false;
+>>         int ret;
 >>
->> 5. Looks like the block layer or underlying(scsi/virtio-scsi) may have 
->> some issue which leading to the io request from md layer stayed in a 
->> partial complete statue. I can't see how this can be related with the 
->> commit bed9e27baf52 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING 
->> in raid5d"")
+>> @@ -2841,12 +2859,11 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>                 goto out;
+>>         }
+>>
+>> -       lockstart = round_down(start, inode->root->fs_info->sectorsize);
+>> -       lockend = round_up(start + len, inode->root->fs_info->sectorsize);
+>> -       prev_extent_end = lockstart;
+>> +       range_start = round_down(start, sectorsize);
+>> +       range_end = round_up(start + len, sectorsize);
+>> +       prev_extent_end = range_start;
+>>
+>>         btrfs_inode_lock(inode, BTRFS_ILOCK_SHARED);
+>> -       lock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>
+>>         ret = fiemap_find_last_extent_offset(inode, path, &last_extent_end);
+>>         if (ret < 0)
+>> @@ -2854,7 +2871,7 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>         btrfs_release_path(path);
+>>
+>>         path->reada = READA_FORWARD;
+>> -       ret = fiemap_search_slot(inode, path, lockstart);
+>> +       ret = fiemap_search_slot(inode, path, range_start);
+>>         if (ret < 0) {
+>>                 goto out_unlock;
+>>         } else if (ret > 0) {
+>> @@ -2866,7 +2883,7 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>                 goto check_eof_delalloc;
+>>         }
+>>
+>> -       while (prev_extent_end < lockend) {
+>> +       while (prev_extent_end < range_end) {
+>>                 struct extent_buffer *leaf = path->nodes[0];
+>>                 struct btrfs_file_extent_item *ei;
+>>                 struct btrfs_key key;
+>> @@ -2889,19 +2906,19 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>                  * The first iteration can leave us at an extent item that ends
+>>                  * before our range's start. Move to the next item.
+>>                  */
+>> -               if (extent_end <= lockstart)
+>> +               if (extent_end <= range_start)
+>>                         goto next_item;
+>>
+>>                 backref_ctx->curr_leaf_bytenr = leaf->start;
+>>
+>>                 /* We have in implicit hole (NO_HOLES feature enabled). */
+>>                 if (prev_extent_end < key.offset) {
+>> -                       const u64 range_end = min(key.offset, lockend) - 1;
+>> +                       const u64 hole_end = min(key.offset, range_end) - 1;
+>>
+>>                         ret = fiemap_process_hole(inode, fieinfo, &cache,
+>>                                                   &delalloc_cached_state,
+>>                                                   backref_ctx, 0, 0, 0,
+>> -                                                 prev_extent_end, range_end);
+>> +                                                 prev_extent_end, hole_end);
+>>                         if (ret < 0) {
+>>                                 goto out_unlock;
+>>                         } else if (ret > 0) {
+>> @@ -2911,7 +2928,7 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>                         }
+>>
+>>                         /* We've reached the end of the fiemap range, stop. */
+>> -                       if (key.offset >= lockend) {
+>> +                       if (key.offset >= range_end) {
+>>                                 stopped = true;
+>>                                 break;
+>>                         }
+>> @@ -3005,29 +3022,41 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>         btrfs_free_path(path);
+>>         path = NULL;
+>>
+>> -       if (!stopped && prev_extent_end < lockend) {
+>> +       if (!stopped && prev_extent_end < range_end) {
+>>                 ret = fiemap_process_hole(inode, fieinfo, &cache,
+>>                                           &delalloc_cached_state, backref_ctx,
+>> -                                         0, 0, 0, prev_extent_end, lockend - 1);
+>> +                                         0, 0, 0, prev_extent_end, range_end - 1);
+>>                 if (ret < 0)
+>>                         goto out_unlock;
+>> -               prev_extent_end = lockend;
+>> +               prev_extent_end = range_end;
+>>         }
+>>
+>>         if (cache.cached && cache.offset + cache.len >= last_extent_end) {
+>>                 const u64 i_size = i_size_read(&inode->vfs_inode);
+>>
+>>                 if (prev_extent_end < i_size) {
+>> +                       struct extent_state *cached_state = NULL;
+>>                         u64 delalloc_start;
+>>                         u64 delalloc_end;
+>> +                       u64 lockstart;
+>> +                       u64 lockend;
+>>                         bool delalloc;
+>>
+>> +                       lockstart = round_down(prev_extent_end, sectorsize);
+>> +                       lockend = round_up(i_size, sectorsize);
+>> +
+>> +                       /*
+>> +                        * See the comment in fiemap_process_hole as to why
+>> +                        * we're doing the locking here.
+>> +                        */
+>> +                       lock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>                         delalloc = btrfs_find_delalloc_in_range(inode,
+>>                                                                 prev_extent_end,
+>>                                                                 i_size - 1,
+>>                                                                 &delalloc_cached_state,
+>>                                                                 &delalloc_start,
+>>                                                                 &delalloc_end);
+>> +                       unlock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>                         if (!delalloc)
+>>                                 cache.flags |= FIEMAP_EXTENT_LAST;
+>>                 } else {
+>> @@ -3038,7 +3067,6 @@ int extent_fiemap(struct btrfs_inode *inode, struct fiemap_extent_info *fieinfo,
+>>         ret = emit_last_fiemap_cache(fieinfo, &cache);
+>>
+>>  out_unlock:
+>> -       unlock_extent(&inode->io_tree, lockstart, lockend, &cached_state);
+>>         btrfs_inode_unlock(inode, BTRFS_ILOCK_SHARED);
+>>  out:
+>>         free_extent_state(delalloc_cached_state);
+>> --
+>> 2.43.0
 >>
 >>
->> Dan,
 >>
->> Are you able to reproduce using some regular scsi disk, would like to 
->> rule out whether this is related with virtio-scsi?
->>
->> And I see the kernel version is 6.8.0-rc5 from vmcore, is this the 
->> official mainline v6.8-rc5 without any other patches?
->>
->>
->> Thanks,
->>
->> Junxiao.
->>
->> On 2/23/24 6:13 PM, Song Liu wrote:
->>> Hi,
->>>
->>> On Fri, Feb 23, 2024 at 12:07 AM Linux regression tracking (Thorsten
->>> Leemhuis) <regressions@leemhuis.info> wrote:
->>>> On 21.02.24 00:06, Dan Moulding wrote:
->>>>> Just a friendly reminder that this regression still exists on the
->>>>> mainline. It has been reverted in 6.7 stable. But I upgraded a
->>>>> development system to 6.8-rc5 today and immediately hit this issue
->>>>> again. Then I saw that it hasn't yet been reverted in Linus' tree.
->>>> Song Liu, what's the status here? I aware that you fixed with quite a
->>>> few regressions recently, but it seems like resolving this one is
->>>> stalled. Or were you able to reproduce the issue or make some progress
->>>> and I just missed it?
->>> Sorry for the delay with this issue. I have been occupied with some
->>> other stuff this week.
->>>
->>> I haven't got luck to reproduce this issue. I will spend more time 
->>> looking
->>> into it next week.
->>>
->>>> And if not, what's the way forward here wrt to the release of 6.8?
->>>> Revert the culprit and try again later? Or is that not an option for 
->>>> one
->>>> reason or another?
->>> If we don't make progress with it in the next week, we will do the 
->>> revert,
->>> same as we did with stable kernels.
->>>
->>>> Or do we assume that this is not a real issue? That it's caused by some
->>>> oddity (bit-flip in the metadata or something like that?) only to be
->>>> found in Dan's setup?
->>> I don't think this is because of oddities. Hopefully we can get more
->>> information about this soon.
->>>
->>> Thanks,
->>> Song
->>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' 
->>>> hat)
->>>> -- 
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> If I did something stupid, please tell me, as explained on that page.
->>>>
->>>> #regzbot poke
->>>>
-> 
-> .
-> 
-
