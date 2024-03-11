@@ -1,86 +1,103 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD9B41740
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 14:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 6CD6540873
+	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 14:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710167824; cv=none; b=mX9iP6rcpJPBfMx6nz48k7x3eSklFwVWeaj9r4GQjHCVzKJ48nVtekLqEj5IBOm8yX32O0kNLbmhS5yHzfQ2KG8qJXyG9pmsfT7+g//6U3l5NlJs5E8RW04xz5852yq5KJgwTQQ+ajPgnn+eE5UKLpZtJqvc/VqLqExQL7tWZHY=
+	t=1710168605; cv=none; b=s6fLGIquoeDHODGe1pzQUtxbSm89KmXAq96CR1exdK56Q0pDTYrC2/r3UwWAa+zg9UeZkQLrfoFBrRy4lJwp7Kqn07ZhhShBOM+1JeH9lu6j2CL6F+mEABa2Y7woEZOcbFE8pAYqXsZAcYcx2kbxLBeXLKqEY5q0ZUbZVBEt7L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710167824; c=relaxed/simple;
-	bh=xV3mfmooKuHKOZRsW6Ju1vuf71tCKRTrqOwkJmIhNYM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RL/Lep9M4TRjPCw8EWa3K6o6mD4plmRDfwvNsFoFa/JV6y+4jyhOZfwTsSTwpjW6lnrZCK4if4P2jrUgSHtibBN4mS+4uaftAeWU47b4cOSASk1kUp7gSkPZAWwk/m+DMVZC/heg1PxvNFcqe9pvRu/OsFh0wkXM801CaJA5wdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tXydkk09; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tXydkk09"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1710167821;
-	bh=xV3mfmooKuHKOZRsW6Ju1vuf71tCKRTrqOwkJmIhNYM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tXydkk09ykO9Jk9RfZphYwABfRpMwSKeP9nvOwPyalsb5dLb/giICI6NzPaPNzecc
-	 UPRouqI2i8zBat+k0HXwjUoeZPVBTwpN5+AHLcaRqEPu3h6BwtCrQtb4gGBEhJte+r
-	 0ik6kVPINg8WPu2FhCFAG116Zv6NBgFGkEdces8cuGhvcmeeKZmbrrC5Kbc+qyFvNz
-	 HcK6EwHcX6lelXKEVPli4XYYN+s/lepj565GQ5Mpz3CqH5CnbfS789l563F5X1VJRj
-	 SghFDfnhxvQiKWZGC8Mm/5icc4giGX2ipnBLzTh5JUPGSuSzYT4jfThwRVzZeTYghB
-	 rGSTHkeMemucg==
-Received: from [192.168.1.36] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 858CB378206B;
-	Mon, 11 Mar 2024 14:36:59 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 11 Mar 2024 10:36:16 -0400
-Subject: [PATCH v2 2/2] docs: handling-regressions.rst: Update regzbot
- command fixed-by to fix
+	s=arc-20240116; t=1710168605; c=relaxed/simple;
+	bh=GHnYMe+WEotd44RKk/LUCLleSJ/Soc7ZLvvKc9Wt2lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBiTIMFRhmue4/WQS/gdvF5v1Q7/UCX/BATS1VckbB2ziPi8HjORPQc3b9WtbSyaSjgM9oBJLEVBTvv6Mo/vkm+L2bnJFZDqvqSyhGjTNK8VsLJ+xbegexAmPJMav2TmdBT8kjXrDXQPIxkMDe4YC5Scmn4/5vL1foQCok0/sz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 350621 invoked by uid 1000); 11 Mar 2024 10:43:21 -0400
+Date: Mon, 11 Mar 2024 10:43:21 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Message-ID: <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+ <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+ <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
+ <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
+ <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240311-regzbot-fixes-v2-2-98c1b6ec0678@collabora.com>
-References: <20240311-regzbot-fixes-v2-0-98c1b6ec0678@collabora.com>
-In-Reply-To: <20240311-regzbot-fixes-v2-0-98c1b6ec0678@collabora.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: kernel@collabora.com, regressions@lists.linux.dev, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- workflows@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.13.0
+In-Reply-To: <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
 
-On the reference documentation for regzbot, the fixed-by command has
-been renamed to fix. Update the kernel documentation accordingly.
+On Mon, Mar 11, 2024 at 10:58:18AM +0100, Jan Čermák wrote:
+> On 07. 03. 24 20:34, Alan Stern wrote:
+> > Another thing the traces showed is that the device doesn't like the
+> > "new" initialization scheme; it wants the "old" one.  You can test
+> > this by setting the old_scheme_first module parameter for usbcore
+> > before plugging in the device:
+> > 
+> > 	echo 1 >/sys/module/usbcore/parameters/old_scheme_first
+> > 
+> 
+> You are right, this indeed works and probing is successful after the
+> power-cycling attempt.
 
-Link: https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-Link: https://gitlab.com/knurd42/regzbot/-/commit/6d8d30f6bda84e1b711121bb98a07a464d3f089a
-Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- Documentation/process/handling-regressions.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Well, at least this means you do have a way of using the device, even
+if it is rather awkward.  It might even work on the Raspberry Pi machine.
 
-diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
-index 42b13f77b019..ce6753a674f3 100644
---- a/Documentation/process/handling-regressions.rst
-+++ b/Documentation/process/handling-regressions.rst
-@@ -432,7 +432,7 @@ or itself is a reply to that mail:
-  * Mark a regression as fixed by a commit that is heading upstream or already
-    landed::
- 
--       #regzbot fixed-by: 1f2e3d4c5d
-+       #regzbot fix: 1f2e3d4c5d
- 
-  * Mark a regression as a duplicate of another one already tracked by regzbot::
- 
+> > Also, you can try the patch below (without the module parameter set).
+> > I suspect it should be applied in any case, but it would be nice to
+> > know if it makes any difference in your case.
+> > 
+> > Index: usb-devel/drivers/usb/core/hub.c
+> > ===================================================================
+> > --- usb-devel.orig/drivers/usb/core/hub.c
+> > +++ usb-devel/drivers/usb/core/hub.c
+> > @@ -5481,6 +5481,7 @@ loop:
+> >   			msleep(2 * hub_power_on_good_delay(hub));
+> >   			usb_hub_set_port_power(hdev, hub, port1, true);
+> >   			msleep(hub_power_on_good_delay(hub));
+> > +			hub_port_debounce_be_stable(hub, port1);
+> >   		}
+> >   	}
+> >   	if (hub->hdev->parent ||
+> 
+> Unfortunately, this doesn't fix it. It changes the log output a bit but
+> still does not enumerate:
+> 
+> [  199.295695] usb 1-1.2: new full-speed USB device number 25 using ehci-pci
+> [  199.360684] usb 1-1.2: device descriptor read/64, error -32
+> [  199.534678] usb 1-1.2: device descriptor read/64, error -32
+> [  199.708671] usb 1-1.2: new full-speed USB device number 26 using ehci-pci
+> [  199.773666] usb 1-1.2: device descriptor read/64, error -32
+> [  199.941602] usb 1-1.2: device descriptor read/64, error -32
+> [  200.044871] usb 1-1-port2: attempt power cycle
+> [  200.528631] usb 1-1.2: new full-speed USB device number 27 using ehci-pci
+> [  200.940603] usb 1-1.2: device not accepting address 27, error -32
+> [  201.208592] usb 1-1.2: new full-speed USB device number 28 using ehci-pci
+> [  201.223783] usb 1-1.2: device descriptor read/8, error -32
+> [  201.345772] usb 1-1.2: device descriptor read/8, error -32
+> [  201.452899] usb 1-1-port2: unable to enumerate USB device
+> 
+> I'm attaching usbmon traces with this patch.
 
--- 
-2.44.0
+The device is so non-responsive, I'm amazed it ever works at all.
+Judging by the usbmon traces, it doesn't look as if it would work on a
+Windows system.
 
+Actually, if you have access to a computer running Windows or Mac OSX
+and you can try out the device on that computer, it would be good to
+get the equivalent of a usbmon trace (something like a Wireshark
+capture log would do).  If those systems manage to do something that
+Linux doesn't, we ought to know what it is.
+
+Alan Stern
