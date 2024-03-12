@@ -1,82 +1,173 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACA258234
-	for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 23:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9DF71B42;
+	Tue, 12 Mar 2024 08:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710200878; cv=none; b=QhXLfmrcEeJdM55Sefk4FM9dUdlh9oV7ZrRJQxtESQZGZSeI4P8n1B5EhiyyFrqflsfB5fuXxTjGlE7hkq4lx0niuxBpJbkUSGasPf7XhWYnIPwVBV8TvZcsYMm6NJFNsDHCX2it93KlRLGACOvN9T1hKaf198+66rTBCydnzuw=
+	t=1710232283; cv=none; b=EXwEMxjeMK+Qy7JKJdm5H6j6XBrUMQM1K8IrVWqXeYB+7zBlxu1pOTx3woQJc40L3mO4RygU/dZ0BkrVyl5rxdeWfmWDEx87EgUV1I04RDP3QheMjV95Yuajr9cfxAH26220k9RbpIB13ereFHZ63uLwyQteJy0PUdwisOmD2bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710200878; c=relaxed/simple;
-	bh=47I9y9d6m+sWHb20BjXAdG4iVoGGvHvr9MoKNbZqVB4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qgOTvR6F3gUqeTA/fOap1/yt5Bk+IuSLtDDIA/E19oD59jgzUKKMSvLntxCmylnGSsm66YRl6F7Rcm51CQZB9NfkLjjHSKtfVVy0O4UyPLfK+bKP8pemyWvk8cj1aGTdQaO1wChMRA9X6hUkArTnlS9hbgMgbzHYJwNSll1c9ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dJmAOrjC; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1710232283; c=relaxed/simple;
+	bh=ncyot6GZVlpy2LYZy0ZH/PUatwzNeQz1tW9YE81ui3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2M/xypdRlztkhCqy8CsJmdXDv4+2LdHqqHofXQOlssNTt5J8Be+5cZm4y6WIYS7AdpsDxMoI9HzAsXrEpKhgKY0xq4306yXqZ92C9UpYtry0EFPKMZ301su0TrtdOJhmAQh5+Ic+nzcyR9XhHOAR3kz58qCRQyIByzUPDwvnFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArsYcGPK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dJmAOrjC"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso1687a12.1
-        for <regressions@lists.linux.dev>; Mon, 11 Mar 2024 16:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1710200875; x=1710805675; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=47I9y9d6m+sWHb20BjXAdG4iVoGGvHvr9MoKNbZqVB4=;
-        b=dJmAOrjCLxxl+Xhr4MDMd6pPYIYaZuwSTju4gphY6OxlU974TA7qCvmoxHr+EtdoAp
-         mKisuqXtr0GIN4mDNkFe9sZJCoNaXRKSN0B6psIzfE4T+Q4BnP5PjjdT13AO+6BEMdg7
-         IN9lhkQu9TrfBwjHWSZHXdp7AbpEfDuD5Kx/ZqE1WH2GfHJ+dU4rqgyqKwT1d4XGq5Tg
-         Z0sAB2t86/gf8S5r2voLFHd5LP9ZMC6S6dixt1BROWe9QoOyo6ugXsQfeL+nRMFUFcpr
-         P13DdOU9aeqUZVQg7BIM7Qck8XqXSAL0Zrg1Cf/l+RAIQEtHDsQEYOkE8x6GQecL02mv
-         fwlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710200875; x=1710805675;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=47I9y9d6m+sWHb20BjXAdG4iVoGGvHvr9MoKNbZqVB4=;
-        b=vcKzwNJRAMj20aWtAOy4RHW2uY7YKAJVSmfiMxeaulqVGWJvv4ZVuAcTua2CSavFjO
-         CBkP/bnnAI3Bs9zfP6amR6hYXKhnf2CkbFbVGI/+UheOx1j+nysBcxRExl11Y0WPyq7I
-         AegATlGqrwBmFM21MoxAJ5t5B5TyXigRaqTHbK8jD3w16+4TmMCs/42WKHgFtJu9OAX7
-         0NzowYW1lxnQhopLN9IX3IojKds/R/Cdqssq5X1buphV8pTpTmHQA10cMRsYQh//T0lD
-         PoBmfwbhu3yBJocmRQ5RDLNwdotGW9CJHd1pOCd3PJsB64CLPXhOWTI/LzYXeBdj9oxL
-         dnWA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Nt7W75M5mGiQUKzrcrA6sQwtoC1jqGPaQ6l7dTnWGW8AJVLqCdFJhEIesQiBKmvrwa19CSJKRj09F9Qu5o+A8nZQCnNxVURvZaE=
-X-Gm-Message-State: AOJu0Yx+ZPvJn38W9Vwg60eVmjL+uwdNm3G9JfC4g9px3DFpRdyEODVI
-	Z97M43qP1eX0JNhkFy5T9mkOLaqP4SznQDFX8VoJALVamsC9o1V/CPf1txvZ0uw1/9aPvCEm9OV
-	S3Q7BNU1eT527VS7to1EN+XaUyvWacuMZmDyX
-X-Google-Smtp-Source: AGHT+IETgRPqiRPbjXlytKWnI8hu5RRmZmhuCnz7VkKXbd9crkp5Z06XYH+DNdrtU45ZfgOq+m/uFl50UP0/GeFNtkg=
-X-Received: by 2002:aa7:da44:0:b0:568:55db:8c69 with SMTP id
- w4-20020aa7da44000000b0056855db8c69mr72961eds.4.1710200875068; Mon, 11 Mar
- 2024 16:47:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArsYcGPK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 969D2C433C7;
+	Tue, 12 Mar 2024 08:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710232282;
+	bh=ncyot6GZVlpy2LYZy0ZH/PUatwzNeQz1tW9YE81ui3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArsYcGPK1Nefx4rCHDQ5BLI3uYbqXqHkK96AybpsjZT7FAKKxhDT5Z4mUffTfMlWl
+	 Fxzphszn3bX/RXuJCge442ZflprWulEV1qLtYVbEPRhYefNHp+XNT9xHWWlwEFJaFG
+	 iJXdp7rBBmI5NFQDh8t925ZE4jpQ79M1rSeuCpL2ErLl7iQb1xHiGyf/Vxmtx7Y6AZ
+	 hMqm/DWW+CUhqMrW//3EX1oEBBWHIcBqedYtrWwH8OpP+zp4wIJfwlWS8FLUkMC3Ax
+	 IUZt3iMScNzb2t4hH/ddHY2xZUEXdVlh+vBEtayNtjGV5k5c7kGRDKDWK1VKHAdB6e
+	 BnZn2hH4i+OoA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rjxXk-000000007Ib-21Kk;
+	Tue, 12 Mar 2024 09:31:28 +0100
+Date: Tue, 12 Mar 2024 09:31:28 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	quic_jesszhan@quicinc.com, quic_sbillaka@quicinc.com,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: drm/msm: DisplayPort hard-reset on hotplug regression in 6.8-rc1
+Message-ID: <ZfAS4MOXn_3Nk2OR@hovoldconsulting.com>
+References: <Zd3kvD02Qvsh2Sid@hovoldconsulting.com>
+ <ZesH21DcfOldRD9g@hovoldconsulting.com>
+ <56de6cfb-fe0f-de30-d4d0-03c0fbb0afbb@quicinc.com>
+ <ZeyOmJLlBbwnmaJN@hovoldconsulting.com>
+ <Ze8Ke_M2xHyPYCu-@hovoldconsulting.com>
+ <b1ae6e39-10c3-0ee1-11f4-3436c3e4ec1a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240305025804.1290919-1-jthies@google.com> <20240305025804.1290919-3-jthies@google.com>
- <44e8142f-d9b3-487b-83fe-39deadddb492@linaro.org>
-In-Reply-To: <44e8142f-d9b3-487b-83fe-39deadddb492@linaro.org>
-From: Jameson Thies <jthies@google.com>
-Date: Mon, 11 Mar 2024 16:47:42 -0700
-Message-ID: <CAMFSARdZLnfUOZcKVFNCwq40bEZgk0Bo_Oe-o8o7iKk7gQ9G2g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] usb: typec: ucsi: Register cables based on GET_CABLE_PROPERTY
-To: neil.armstrong@linaro.org
-Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org, 
-	pmalani@chromium.org, bleung@google.com, abhishekpandit@chromium.org, 
-	andersson@kernel.org, dmitry.baryshkov@linaro.org, 
-	fabrice.gasnier@foss.st.com, gregkh@linuxfoundation.org, hdegoede@redhat.com, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1ae6e39-10c3-0ee1-11f4-3436c3e4ec1a@quicinc.com>
 
-Hi Neil,
-thanks for catching this. You're right, the UCSI driver doesn't need
-to be sending these commands when they are not supported. I'll post a
-followup patch properly gating ucsi_get_partner_identity and
-ucsi_check_cable.
+On Mon, Mar 11, 2024 at 09:51:29AM -0700, Abhinav Kumar wrote:
+> On 3/11/2024 6:43 AM, Johan Hovold wrote:
+> > On Sat, Mar 09, 2024 at 05:30:17PM +0100, Johan Hovold wrote:
+> >> On Fri, Mar 08, 2024 at 09:50:17AM -0800, Abhinav Kumar wrote:
 
-Thanks,
-Jameson
+> >>> I have posted my analysis with the patch here as a RFC y'day:
+> >>>
+> >>> https://patchwork.freedesktop.org/patch/581758/
+
+> > I was able to reproduce the reset with some of my debug printks in place
+> > after reapplying the reverted hpd notify change so I have an explanation
+> > for (one of) the ways we can up in this state now.
+> > 
+> > This does not match description of the problem in the fix linked to
+> > above and I don't think that patch solves the underlying issue even if
+> > it may make the race window somewhat smaller. More details below.
+
+> Its the same condition you described below that enable does not go 
+> through and we bail out as we are in ST_DISCONNECTED.
+
+It's closely related but clearly not the same as user space is not
+involved in the reset I see.
+ 
+> > Turns out there are paths like that and we hit those more often before
+> > reverting e467e0bde881 ("drm/msm/dp: use drm_bridge_hpd_notify().
+> > 
+> > Specifically, when a previous connect attempt did not enable the bridge
+> > fully so that it is still in the ST_MAINLINK_READY when we receive a
+> > disconnect event, dp_hpd_unplug_handle() will turn of the link clock.
+> > 
+> > [  204.527625] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 2
+> > [  204.531553] msm-dp-display ae98000.displayport-controller: dp_hpd_unplug_handle
+> > [  204.533261] msm-dp-display ae98000.displayport-controller: dp_ctrl_off_link
+> > 
+> > A racing connect event, such as the one I described earlier, can then
+> > try to enable the bridge again but dp_bridge_atomic_enable() just bails
+> > out early (and leaks a rpm reference) because we're now in
+> > ST_DISCONNECTED:
+> > 
+> > [  204.535773] msm-dp-display ae98000.displayport-controller: dp_bridge_hpd_notify - link_ready = 1, status = 1
+> > [  204.536187] [CONNECTOR:35:DP-2] status updated from disconnected to connected
+> > [  204.536905] msm-dp-display ae98000.displayport-controller: dp_display_notify_disconnect - would clear link ready (1), state = 0
+> > [  204.537821] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_check - link_ready = 1
+> > [  204.538063] msm-dp-display ae98000.displayport-controller: dp_display_send_hpd_notification - hpd = 0, link_ready = 1
+> > [  204.542778] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_enable
+> > [  204.586547] msm-dp-display ae98000.displayport-controller: dp_bridge_atomic_enable - state = 0 (rpm leak?)
+> > 
+> > Clearing link_ready already in dp_display_notify_disconnect() would make
+> > the race window slightly smaller, but it would essentially just paper
+> > over the bug as the events are still not serialised. Notably, there is
+> > no user space interaction involved here and it's the spurious connect
+> > event that triggers the bridge enable.
+
+> Yes, it only narrows down the race condition window. The issue can still 
+> happen if the commit / modeset was issued before we marked link_ready as 
+> false.
+> 
+> And yes, I was only targetting a short term fix till we rework the HPD. 
+> That will happen only incrementally as its a delicate piece of code.
+
+Ok, thanks for confirming. Please also make that clear in the commit
+message of any patch.
+
+I am however not sure that your patch (RFC) is needed at this point as
+the HPD revert fixes the 6.8-rc1 regression, and moving the clearing of
+link_ready can actually make things worse as it makes any spurious
+hotplug event always be processed (not just if they happen after
+dp_display_send_hpd_notification()).
+
+I'll reply to you patch as well.
+ 
+> > So, while it may still be theoretically possible to hit the resets after
+> > the revert, the HPD notify revert effectively "fixed" the regression in
+> > 6.8-rc1 by removing the preconditions that now made us hit it (i.e. the
+> > half-initialised bridge).
+
+> Not entirely. In the bug which was reported before the patch 
+> e467e0bde881 ("drm/msm/dp: use drm_bridge_hpd_notify() got landed, its a 
+> classic example of how this issue can happen with userspace involvement 
+> and not just fbdev client which was your case.
+
+Sure, but you already added some kind of band-aid for that issue, right?
+
+	https://lore.kernel.org/all/1664408211-25314-1-git-send-email-quic_khsieh@quicinc.com/
+
+How likely is it that you'd still hit that? Have you had an reports of
+anyone actually hitting that issue since the above workaround was
+merged?
+
+Note that I, and other users of the X13s, only started hitting the
+resets with 6.8-rc1, which broke hotplug notification and resulted in
+the half-initialised bridges.
+
+I'm not saying it's impossible to hit the unclocked access still, just
+that that does not seem to be relevant for the regression.
+ 
+> > It seems the hotplug state machine needs to be reworked completely, but
+> > at least we're roughly back where we were with 6.7 (including that the
+> > bus clocks will never be turned of because of the rpm leaks on
+> > disconnect).
+
+> Yes, we already landed that revert but I am also planning to land the 
+> patch I had posted till we rework HPD.
+
+Ok, but please consider the implications that would have for any
+spurious connect events first.
+
+Johan
