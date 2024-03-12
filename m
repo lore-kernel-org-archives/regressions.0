@@ -1,42 +1,43 @@
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.102])
+Received: from kali.sitour.cz (smtp.sitour.cz [77.48.244.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE0113E7C7
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 18:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.217.248.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43E3142648
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 19:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.244.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710268971; cv=none; b=VPmpX4vQr8ZsT9LVIjj5nC7mL0A1G4G1KlkNi2uFJqDHUgG9nLqLFw2htgjDemMYUjvWgooBrjn6yIoy4OBqRHBrF0fq4uMOoCUpj1e2dTmsCdyOVlfBAHqvV34Pfzeza5fsHgQqV1Yxm3kE4TvwRwe/kO7oCLTWotHi8qe2YQY=
+	t=1710273443; cv=none; b=hslK3XT2G56n7riGy0hfXNogOyCZGotYCU13/wH0+LPm6gYkCEh7T2fPBxz8U70Ez/Tl+KE3Shgfi+EUTuukOFYObo8ZOi23rIFmvEeR97VMPsMd5ato5kJuYDnbquIV6ouqL1VD6hHbGpOt9ZRrhbmP+Mh7FiCsAHwZ5sLGfeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710268971; c=relaxed/simple;
-	bh=l4dlNYc4tBoZ2E4xUmmIf+GLxBScNZeT6o1fKTSwhDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lanXpsoYaSPsVjfJdAIVgJNdXtfjb2whEh9qsgv1iejUPIU8Zhu0FN5fJnAV+k6hrstq/yzHeWb2TJyethkWO5ZDWZbGuc7hI1rAmB+qRH4FrnxQyRf3tg3VeHUQJwQfA/cKlkbvfCtw5dOcT4ETAK+SEFvDKyg+IKefAQ5z73U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=IvxOvlVC; arc=none smtp.client-ip=144.217.248.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
+	s=arc-20240116; t=1710273443; c=relaxed/simple;
+	bh=GUrmdKnweXO/sLu3wA3GMFNaFVHLS8AhG3rvVMW+K7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NoxuFhNvD9TQzEL7mAxmf9DqiRE8AZFR1BGdck6S1WFQfX2ZN475/uSphpTjoIHO53zv3UxBvWLuCR++FGc0mnavv384EF5gcwGTxEhma4bTCGi29nxlqD42dfvwttAEzeJziFHXFdyF3R5tRc7ZuwnBSBfgzbVaTXFUsv3koTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mydatex.cz; spf=pass smtp.mailfrom=mydatex.cz; dkim=pass (2048-bit key) header.d=mydatex.cz header.i=@mydatex.cz header.b=HUQjQN33; arc=none smtp.client-ip=77.48.244.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mydatex.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mydatex.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="IvxOvlVC"
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id 8B7123E88F;
-	Tue, 12 Mar 2024 18:42:41 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id BE87E400B6;
-	Tue, 12 Mar 2024 18:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1710268959;
-	bh=l4dlNYc4tBoZ2E4xUmmIf+GLxBScNZeT6o1fKTSwhDQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IvxOvlVCNc2JxyLm71Xa/F/g975rghU5038soitpXQYsW67BjhuSMb3IZf/EKFUjm
-	 f2pBAERjFa0Jwlqhc8OliqLSiAmbOPUEShWQV/60heaL1sQ0M+SgSvaEpxw0gJemlq
-	 whaO/20ihke/sAI62BlGcyv4h8S5Hzu+Hv0w4TtI=
-Received: from [10.66.66.8] (unknown [139.59.64.216])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2321A4104A;
-	Tue, 12 Mar 2024 18:42:33 +0000 (UTC)
-Message-ID: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-Date: Wed, 13 Mar 2024 00:12:31 +0530
+	dkim=pass (2048-bit key) header.d=mydatex.cz header.i=@mydatex.cz header.b="HUQjQN33"
+Received: from localhost (localhost [127.0.0.1])
+	by kali.sitour.cz (Postfix) with ESMTP id 7344E4E0275
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:57:13 +0100 (CET)
+X-Virus-Scanned: Debian amavis at sitour.cz
+Received: from kali.sitour.cz ([127.0.0.1])
+ by localhost (sitour.cz [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id qGmp8JfGJN3P for <regressions@lists.linux.dev>;
+ Tue, 12 Mar 2024 20:57:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mydatex.cz; s=mydatex;
+	t=1710273430; bh=GUrmdKnweXO/sLu3wA3GMFNaFVHLS8AhG3rvVMW+K7s=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=HUQjQN33PxJdfyAw9o/IFgCCz5qGT1CU4k0/kXntrrJmublbXmo2fVVSmvEkIt00x
+	 J0xlrc80kUdkr+q2rvmSl4IYSKHdYO5vpuaCAwqRRioTeUTqP+1qiB6YPMFnilMX6H
+	 i03wnie6lqbG3H/eXd396s9ygEHVKry32PnPCHym1IldmD6fDI7Px7jI+IVfskhDye
+	 AbosF4wikSq3uzEHLcO77hZSKC21r6gzaURLih76k9ISqC6o5ZTjvXsFk9zBMlGhm0
+	 5wwUNU8SaLY7QDZ1N5pCEraENgaQDZU0sIfZa8sEDykskbuCWTd4MlbAFLcOp06cFm
+	 jXg7W6+Q0mhhQ==
+Received: from [192.168.3.13] (firma.mydatex.cz [84.242.99.246])
+	by kali.sitour.cz (Postfix) with ESMTPSA id D7D444E0272
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:57:10 +0100 (CET)
+Message-ID: <6918321b-038d-40b9-8149-d535bf9d3d52@mydatex.cz>
+Date: Tue, 12 Mar 2024 20:57:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,60 +45,85 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-To: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>
-Cc: dave.hansen@linux.intel.com, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
-Content-Language: en-US
-From: Pavin Joseph <me@pavinjoseph.com>
-In-Reply-To: <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+Subject: Re: Regressions can bus with MCP2515 on sama5d3 connected over SPI
+ stop working on kernel > 5.4.271
+Content-Language: cs-CZ, en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <2ede8f49-41f8-4d9a-83e4-ea5d4d1677fe@mydatex.cz>
+ <a2e64be0-e07d-4c55-aba7-87c7e4c876e0@leemhuis.info>
+ <734cf096-3769-4610-b72f-394c31a8d942@mydatex.cz>
+ <91d8a6b6-6186-4aa0-8462-56b4751854e9@leemhuis.info>
+From: Daniel Smolik <smolik@mydatex.cz>
+In-Reply-To: <91d8a6b6-6186-4aa0-8462-56b4751854e9@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[hpe.com,gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: BE87E400B6
+Content-Transfer-Encoding: 8bit
 
-On 3/12/24 20:43, Steve Wahl wrote:
-> But I don't want to introduce a new command line parameter if the
-> actual problem can be understood and fixed.  The question is how much
-> time do I have to persue a direct fix before some other action needs
-> to be taken?
+Hi ,
+6.8  is affected   with this bug.  I try bisect the bug.
 
-Perhaps the kexec maintainers [0] can be made aware of this and you 
-could coordinate with them on a potential fix?
+Regards
+             Dan
 
-Currently maintained by
-P:      Simon Horman
-M:      horms@verge.net.au
-L:      kexec@lists.infradead.org
+Dne 12. 03. 24 v 11:39 Linux regression tracking (Thorsten Leemhuis) 
+napsal(a):
+> On 12.03.24 11:27, Dan Smolik wrote:
+>> Dne 12. 03. 24 v 11:19 Linux regression tracking (Thorsten Leemhuis)
+>> napsal(a):
+>>> On 11.03.24 22:55, Daniel Smolik wrote:
+>>>> I have found problem with kernel > 5.4.271 (long term) on sama5d3. When
+>>>> I config can bus with:
+>>>>
+>>>> ip link set can0 type can bitrate 125000 triple-sampling on
+>>>>
+>>>> and type
+>>>> ifconfig can0 up
+>>>>
+>>>> prompt never returns and cannot run eg. ip a (never returns) existing
+>>>> ssh connection works but can´t do new one.
+>>>>
+>>>>
+>>>>     I have my own daughter  board with can bus driver MCP2515 connected
+>>>> over SPI bus. There is
+>>>> snippet of my DTB:
+>>>>
+>>>>    can0: can@0 {
+>>>>                                           compatible =
+>>>> "microchip,mcp2515";
+>>>>                                           reg = <0>;
+>>>>                                           clocks = <&can0_osc_fixed>;
+>>>>                                           interrupt-parent = <&pioD>;
+>>>>                                           interrupts = <29
+>>>> IRQ_TYPE_EDGE_RISING>;
+>>>>                                           spi-max-frequency = <10000000>;
+>>>>                                       };
+>>>>
+>>>> with this all working  perfect  on long term kernels 4.19.  I try switch
+>>>> to newer kernel and latest I get working is 5.4.271.   Kernel 5.5.0
+>>>> -5.5.6 I can´t  compile and 5.5.14  is affected with bug.
+>>> The two important question here are:
+>>>
+>>> * Is mainline (e.g. 6.8) affected as well? That determines if the
+>>> regular developers or the stable team has to look into this.
+>> I mean yes,  I tested 6.6.21 and is affected.   6.8 I can test today
+>> afternoon.
+> Yes, please test 6.8.
+>
+>>> * Could you bisect the problem (e.g. I assume between 5.4.271 and
+>>> 5.4.272)? I'm working on a guide that explains this:
+>>> https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
+>> Yes I try this but it looks like that latest good is 5.4.271 and first
+>> bad us 5.5.0  but this kernel fail when building to arm platform.  First
+>> which I build for arm is 5.5.14.
+>>
+>> I try bisecting but when I can't build kernel what can I do ?
+> Bisect between 5.4 and 5.5 and during the bisection use "git cherry-pick
+> --no-commit <sha1sum>" to apply the fix(es) without committing them
+> before you build; once the build is ready, use "git reset --hard" to
+> reset things.
+>
+> But please check 6.8 first; if it is affected we can CC a few
+> developers. If you are lucky they have an idea what might be wrong here
+> and then no bisection might be needed.
+>
+> Ciao, Thorsten
 
-I hope the root cause can be fixed instead of patching it over with a 
-flag to suppress the problem, but I don't know how regressions are 
-handled here.
-
-[0]: 
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/AUTHORS
-
-Pavin.
