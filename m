@@ -1,76 +1,133 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF5179DD4
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D1F14265A;
+	Tue, 12 Mar 2024 20:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710273778; cv=none; b=aE9Wwixk+GeIjSNgVrwoMAEbrR4FZoQi2EZwt8mznqGZREcyleuiVfm7vTmIaj+AU6Fmr0NMp+m+ger5mt+fyxtj5xEls5+UrF0OBFqcSsn39qAV2eDcnRMSJKYxd67lQK79RRsmN8uC4XPcIwDjmM1yiaJnU6/RQyBZQvuQOnc=
+	t=1710274210; cv=none; b=RwO7YCgAdp6dSWoj3qS5jrmeBUCma8na4NFVGI5jx+K2WmGWg9wunuH4bkjkGei9jlTy9fr/o82wZGAbSCdwWnCFuzBmJdTEhGTJcf5o9dJ2kNSt1fmu2HAdes1RadqhURQ0cxalcTk5bLpkBvAtXVFaYy0EKxQDMKXLy0jmT0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710273778; c=relaxed/simple;
-	bh=w0F3Vljj+1CRShV+pztrhZYCiYIXdrXhUnzsRvjb3UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUo80IBA+/AamoD1CCWvRq5b9ZA8QqFuBMKvyq/5bNwhNueNWTeyN8Lj5U5/qhCecMgdCdMwRj8QVjFU6eRVGE4ac/4cklmJL9VrOGRvWx0uCSnAp/GAkQqZv5Rm8gnAc9AYlU2CVkJ1KFfMpTuSET8SO07KxN+oKgI+wSFFh1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KHI7rGow; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1710274210; c=relaxed/simple;
+	bh=afb+J2W1RZOvBUpT1q1VDqOla0v+GNPldfNpGi6NmXU=;
+	h=Date:From:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=aMmy1ERej9XCxdmVm3d+WajoAITDaNCvSN6fA1hckcUTZQOe6Ahxu9TJ6nVJWsh/mTWD9snD2oFlzCaNSQhV1xemgzMXb6EX9txalWTDbTAwUW4IHeePR3psH9QBDXf9XuSIYLbFx3J6HJT7UBFAJL7oxYtp60x0FXyafxs7/JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=WibrX5wU; arc=none smtp.client-ip=148.163.143.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KHI7rGow"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8FC3B40E0174;
-	Tue, 12 Mar 2024 20:02:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id SNUhqhzl345T; Tue, 12 Mar 2024 20:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1710273770; bh=G9j3WgM8NkLL61DmuzulPlr5Z8U/krXvHKPrr0OyKRA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KHI7rGownI4H2gKn+RqK4CbbT4I8e4wAXrnt41AuUUrvzjznqVVeRs337Mdj3Dwk2
-	 5W/T3NWNat0g9GqZHp5qtt6HQH6SVfqzkbpIxsOn4AvZfzFi1apXu7z6u6DkNbb9jJ
-	 bns7EFfHQ5BlcSX7Khna4glJThk/pGkJulJQ+jotzJ3NA22JWP6n81RlKVBhpGxcna
-	 3cmvEUaZmooaMnzZjJ2yA8hj+CO9DufQCKprem8TWOZutIhCH2itfEy/ZYUB8OdX7z
-	 ORumPpkkuF3ZEUrA52Cyf4CVMzvQtzAjDsvspgbPS/VwKys/BMgotY9+sod9fRNbJW
-	 MrGNjoHRowPIVusuJfFAF9LPZ4NJJnoudL9T+9Mm5XElwsP/i9KQh/67NoG1MJFR9K
-	 LpFu4po6VMbms3Knyyd48Rj25psdILdEuaxdWvkMB7F5EWl1+zrdTmkUixqxo98JEE
-	 n9ESXDZ4ijYuJQxtGgAOXBkvSe3aOMNNxzsXPMR44pJWGn8Vdj8I8GHJqUn0ISO10a
-	 1UMqRM2LcBFIw/cZ3hE+NY4TM2YsIf1oCki2GazxvgoR93Og3kQWvz+G+0NyFwy92L
-	 nJu7DRu18b2ic2UGfz8Y3pmDvpU7cpBHVRE4Br16EjFZw2l4gQVxoOBgy7fWL8tYh0
-	 USCD/oXDnjG0Ot0iSG+uG5VE=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="WibrX5wU"
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CJgFuw001162;
+	Tue, 12 Mar 2024 20:10:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pps0720; bh=VnYb1j2+6PuZRCVUgTvKkrGm5+N4Va1AiIS3ecX1k3M=;
+ b=WibrX5wUkkHVo8AAWxqnzQVTR7yngJpCe0/XkzX8o7+84/ZRZj8w+8L+TRBI5KN0k5ly
+ 1rGwndPXKQJs4evW1/TV3fk1xzwEFy2CV/xJ3a/2RVPZPwcEzsHgCR3m5+daZP5MLCMx
+ j0/8bnra9B91SBT3GtE14VkTbIb7o1S4uu2L6zXX4hjyS4hi8/YWHhFkR9QE4HuT0/bM
+ lk7+Jhrb2+2BKkQarKCTMEjJopHUtfqgjCJh68vxuwijioOOOEJo/2llrvpGp8beaWiK
+ LZvu50cCnBtKAnKm/i6F44A5pC+4SYoHfcA1mZKzXKmjek9kwjqpE6VXzkKu+Y1n8Cmf Ig== 
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wts7su02b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 20:09:59 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36DC440E0028;
-	Tue, 12 Mar 2024 20:02:45 +0000 (UTC)
-Date: Tue, 12 Mar 2024 21:02:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Mahmoud Adam <mngyadam@amazon.com>
-Cc: peterz@infradead.org, tglx@linutronix.de, gregkh@linuxfoundation.org,
-	regressions@lists.linux.dev
-Subject: Re: Regression caused by 'x86/returnthunk: Allow different return
- thunks'
-Message-ID: <20240312200239.GIZfC033qDtEUZmwgV@fat_crate.local>
-References: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id CFADB12E9C;
+	Tue, 12 Mar 2024 20:09:58 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 37928800EF7;
+	Tue, 12 Mar 2024 20:09:57 +0000 (UTC)
+Date: Tue, 12 Mar 2024 15:09:55 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>,
+        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
+        stable@vger.kernel.org
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+Message-ID: <ZfC2k66jb8CcupYm@swahl-home.5wahls.com>
+References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+ <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+ <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
+ <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+ <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+X-Proofpoint-GUID: jkORMdzEPtbMJn1k3DXDtW93TkvInsdf
+X-Proofpoint-ORIG-GUID: jkORMdzEPtbMJn1k3DXDtW93TkvInsdf
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_12,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxscore=0 phishscore=0
+ clxscore=1015 priorityscore=1501 adultscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403120154
 
-On Tue, Mar 12, 2024 at 08:58:39PM +0100, Mahmoud Adam wrote:
-> note: the regression is seen even with retbleed=off and also with spectre_v2=off
+[Added kexec maintainers]
 
-Try with spec_rstack_overflow=off or mitigations=off.
+Full thread starts here:
+https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+
+On Wed, Mar 13, 2024 at 12:12:31AM +0530, Pavin Joseph wrote:
+> On 3/12/24 20:43, Steve Wahl wrote:
+> > But I don't want to introduce a new command line parameter if the
+> > actual problem can be understood and fixed.  The question is how much
+> > time do I have to persue a direct fix before some other action needs
+> > to be taken?
+> 
+> Perhaps the kexec maintainers [0] can be made aware of this and you could
+> coordinate with them on a potential fix?
+> 
+> Currently maintained by
+> P:      Simon Horman
+> M:      horms@verge.net.au
+> L:      kexec@lists.infradead.org
+
+Probably a good idea to add kexec people to the list, so I've added
+them to this email.
+
+Everyone, my recent patch to the kernel that changed identity mapping:
+
+7143c5f4cf2073193 x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
+
+... has broken kexec on a few machines.  The symptom is they do a full
+BIOS reboot instead of a kexec of the new kernel.  Seems to be limited
+to AMD processors, but it's not all AMD processors, probably just some
+characteristic that they happen to share.
+
+The same machines that are broken by my patch, are also broken in
+previous kernels if you add "nogbpages" to the kernel command line
+(which makes the identity map bigger, "nogbpages" doing for all parts
+of the identity map what my patch does only for some parts of it).
+
+I'm still hoping to find a machine I can reproduce this on to try and
+debug it myself.
+
+If any of you have any assistance or advice to offer, it would be most
+welcome!
+
+> I hope the root cause can be fixed instead of patching it over with a flag
+> to suppress the problem, but I don't know how regressions are handled here.
+
+That would be my preference as well.
+
+Thanks,
+
+--> Steve Wahl
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Steve Wahl, Hewlett Packard Enterprise
