@@ -1,95 +1,80 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id A2B9C1420D7
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A39B382
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 21:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710276432; cv=none; b=Km+JeoqWUBj+rOCLTojyrl9hApHxWrY0udWIJI/qvP9aFouaW9BIJkdurpjxykpqPlNeoTmBiVbfr4BLDVut5ZNRzUMkDWMmgh3Rex/uHwK8Mkdasrrg1miQtLNxn9B14hlEPrSAC5EYKSGSIbFR8s7f90Y58ncMmCumhm0QiTQ=
+	t=1710277207; cv=none; b=EcKfLShfdbg6kEHeukLCRv/myLppw3xQq3CjXaJl5JGd0ABzGOj2av9SFci/vxsako0xSctqiNDH7R/kTJkf1USOSWLD2H8w5fJaQXe4g9lm5vOZrw54inPsucqM2ROKGyJJhHpJdAxuZ+H1Q/YB/lpVIeLH/cSe5pKHfpAYqEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710276432; c=relaxed/simple;
-	bh=P1NCPsLVEkLdCqz5V0MpZqW0w0TkNvmE8PjL1Dk7UI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dfinEYnGorQDXOs2JvY2DKLEwPcGGMWILCn9SxScAhW7z3ImmbCI5JjBO0OrwDevqJvjiwVLsvfOQ+fiAyaUBK91smbklnPmr14cFSWBneT2ddxVbudvaGsbO3e/+bsxfJpEJPXoEruIf+F/DQeLqojyXNb2GZKsVVIpGmUoulo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 395255 invoked by uid 1000); 12 Mar 2024 16:47:09 -0400
-Date: Tue, 12 Mar 2024 16:47:09 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <580528c3-7084-40ff-9b2e-6f395266b0b2@rowland.harvard.edu>
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
- <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
- <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
- <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
- <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
- <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
- <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
+	s=arc-20240116; t=1710277207; c=relaxed/simple;
+	bh=3ox4+r8jsk8IQmGj2tvvu3o+OB7+dNw9bA8HI9xbtK0=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dZZcKMHVDAVPPtphPN+10zrFuoCSWT0DQP5Hf0R/zXjVW3jbIeZfjjx046hYz7yY1LR/zI/P8I8UOjiD8A7NMFmSW+nUfyW2L4GY96+bfXcjW6Jt3b/gQZ2mjmtkN9IXXdum+gmQN6mrc2963bidRDQQjFnT9TkyN3OtwspU2Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=K9pyiCpm; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="K9pyiCpm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1710277207; x=1741813207;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=3ox4+r8jsk8IQmGj2tvvu3o+OB7+dNw9bA8HI9xbtK0=;
+  b=K9pyiCpmqQiYVGbORZ9t3JKy+Y+v7p/cB1VjDbkUDp1Fkt5w+6A4iWsB
+   ST3qnDnqhG4OsVpFXycYXkDixWJZXJonc6mafX0Bex76jM0JxFNoIQ0UQ
+   UndRBbMpBpal+OHB0o0KVaOTkZ/cBK/eSqDPzQIHpy5c/ECAakHksEQkN
+   4=;
+X-IronPort-AV: E=Sophos;i="6.07,119,1708387200"; 
+   d="scan'208";a="392824154"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 21:00:04 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:13505]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.57.218:2525] with esmtp (Farcaster)
+ id 09b0a864-729a-4cd9-b000-218510908bbf; Tue, 12 Mar 2024 21:00:03 +0000 (UTC)
+X-Farcaster-Flow-ID: 09b0a864-729a-4cd9-b000-218510908bbf
+Received: from EX19EXOUWB001.ant.amazon.com (10.250.64.229) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 12 Mar 2024 21:00:03 +0000
+Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
+ EX19EXOUWB001.ant.amazon.com (10.250.64.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 12 Mar 2024 21:00:02 +0000
+Received: from dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (10.15.1.225)
+ by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Tue, 12 Mar 2024 21:00:02 +0000
+Received: by dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (Postfix, from userid 23907357)
+	id 651522426; Tue, 12 Mar 2024 22:00:02 +0100 (CET)
+From: Mahmoud Adam <mngyadam@amazon.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: <peterz@infradead.org>, <tglx@linutronix.de>,
+	<gregkh@linuxfoundation.org>, <regressions@lists.linux.dev>
+Subject: Re: Regression caused by 'x86/returnthunk: Allow different return
+ thunks'
+In-Reply-To: <20240312200239.GIZfC033qDtEUZmwgV@fat_crate.local> (Borislav
+	Petkov's message of "Tue, 12 Mar 2024 21:02:39 +0100")
+References: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	<20240312200239.GIZfC033qDtEUZmwgV@fat_crate.local>
+Date: Tue, 12 Mar 2024 22:00:02 +0100
+Message-ID: <lrkyq1q8fyxm5.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
+Content-Type: text/plain
 
-On Tue, Mar 12, 2024 at 09:57:06AM +0100, Jan Čermák wrote:
-> Hi Alan
-> 
-> On 11. 03. 24 15:43, Alan Stern wrote:
-> > Well, at least this means you do have a way of using the device, even
-> > if it is rather awkward.  It might even work on the Raspberry Pi machine.
-> 
-> Still, I'm looking for a more permanent and robust solution. If it were only
-> a single device I'm using myself, I could come up with a workaround.
-> However, this is one of the very few available Z-Wave USB interfaces and
-> there are more users affected. So far we went with reverting the patches,
-> but that's surely not the way we want to go forward.
+Borislav Petkov <bp@alien8.de> writes:
 
-I agree, this should be fixed if we can.  I'm still puzzled about how 
-commits you located could cause any difference in the device's behavior, 
-given that they don't seem to cause any change's to the computer's 
-behavior.
+> On Tue, Mar 12, 2024 at 08:58:39PM +0100, Mahmoud Adam wrote:
+>> note: the regression is seen even with retbleed=off and also with spectre_v2=off
+>
+> Try with spec_rstack_overflow=off or mitigations=off.
 
-> > The device is so non-responsive, I'm amazed it ever works at all.
-> > Judging by the usbmon traces, it doesn't look as if it would work on a
-> > Windows system.
-> > 
-> > Actually, if you have access to a computer running Windows or Mac OSX
-> > and you can try out the device on that computer, it would be good to
-> > get the equivalent of a usbmon trace (something like a Wireshark
-> > capture log would do).  If those systems manage to do something that
-> > Linux doesn't, we ought to know what it is.
-> 
-> Fredrik (one of the original reporters) is following this conversation, here
-> [1] are logs from his machine with some details in the ticket [2]. He also
-> wonders why the initialization doesn't work only on USB2 ports but works on
-> USB3 if the initialization code is shared between those two.
+No regression with these cases.
 
-Good.  I've been quite busy recently, but I'll look at the logs when 
-there is time.
-
-The USB-2 and USB-3 drivers do share some initialization code, but not 
-all of it.  The first couple of steps are quite different: With a USB-2 
-controller they are handled by the kernel driver, but with a USB-3 
-controller they are handled directly by the controller's hardware with 
-no software influence.
-
-Alan Stern
-
-> Also, if needed, I can get more logs from the X220 I was using for my usbmon
-> traces - I believe I have an HDD with Windows 7 install lying somewhere.
-> 
-> Regards,
-> Jan
-> 
-> 
-> [1] https://github.com/home-assistant/operating-system/files/14563813/usbPcap1_USB2-port.txt
-> [2] https://github.com/home-assistant/operating-system/issues/2995#issuecomment-1989329739
+-MNAdam
