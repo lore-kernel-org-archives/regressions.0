@@ -1,135 +1,262 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AC34AEEB
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 22:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19665446A2;
+	Tue, 12 Mar 2024 22:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710280963; cv=none; b=lW9UpYxcylXMj6Cvj7BVBjL6d2Mc+IYnLjDHOYlDQHMyZLNEPuIQcQ2LROtkL7qYJEHSErTEAjnbH0kD8V9iyL5RRyaKDy5qxytj8Z/p23LxStVFcsUjx1rhuuQYPAlaxyK26sAlH2W1dS3Kq7gjo0B+y37d6eO8RYXzdgvXJtA=
+	t=1710284114; cv=none; b=FLn14dXWSWjYzkXOnKdtNAoQpkIbs3kLAnwvaQFYe5CB6GCzywKkNtknUSGRoR4VeOA+O+SCcSD7WY8c0lDS/4aucqPCgVJojzQUpFsGHCQCk81/ZfoKNcqltGd+C0HGVwrAIfoWD/FZltUFtppQPaHiYEH27xhp9DVjfQQ1Yws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710280963; c=relaxed/simple;
-	bh=NIpadVgmIMc4eJ5HzL87jmlPi6Cnq8lk4PIKggkREzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Wo6mMEyxA9a8l7MqmNj34PY7VP6D5hJ7OuSQc1/Lukipvx5JcJi2BK2v+9R1+GxAmxHR0L1uGfO+KkJM9TiiZyJAGZ75/lQ9wM4RDcyuu+HtARbzzHlsUuOY/4IPmRMPKj/AJq+f54Ojl0TpHBM9egzyVlZb06GnAxdCjtMPZ4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=IWgrNNoL; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1710284114; c=relaxed/simple;
+	bh=pqB0kQNo2lOrlfpuu3b2oAK++B35JKyT39mKFe8+dtc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TV+FImfA5AB90WxsnXeBZWwRMkrD6Z68NxzGvqETJFPTtSqhYFd3GegddOR1TfAzWS5Qnsp+0sjZEVIr8RKlpIiCQUzFFGzZiFJ03T7F9oB3uI3aUjFmHVRkvtkhJxlkCGZi1aTjRECeDRc892IjsDouaejlrXLc2GoTCcXfHsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRLhNfN4; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="IWgrNNoL"
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CKsYa2019505;
-	Tue, 12 Mar 2024 22:02:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pps0720; bh=uxe6i6hGgOKOpq5leYsB3kltqxDst/MLHuGk9MswOl8=;
- b=IWgrNNoLu+PwkoncOgis8ahHkYiebda1uxWHm4zis4tiTUUZAWJyd46fz0PrczShaIFr
- Cvcr1MkvjzqLG6bqkX1nYx57MX9DmaHZHemPgA8a1IzG/VPp+Sos7THZBfU6FY8S3qAy
- muspVoyVa/zoCSw2EiIcQVcnNH+7dHycFoHyjTpqW8Wv8/3iCI7FExo7o3tlRYVq5x0Y
- DRXxBNguS1e/2XKLyXcqEExTgDeEWeQx+4oqLqWfNZ6JQ7e3pb5bD9Pvc2Bj7w2KmX01
- elHbZSzdNVbORouhsSBF1Htke4OOI/Gn1SyXN8JYife1N8vUcIXkytaqRUFd3oqZ3BG9 sQ== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wtrp4v1ud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 22:02:29 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id DCBF113046;
-	Tue, 12 Mar 2024 22:02:20 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 9AF0980ACA7;
-	Tue, 12 Mar 2024 22:02:08 +0000 (UTC)
-Date: Tue, 12 Mar 2024 17:02:06 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Pavin Joseph <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>,
-        kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>,
-        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
- <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-X-Proofpoint-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
-X-Proofpoint-ORIG-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRLhNfN4"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d33986dbc0so69500661fa.2;
+        Tue, 12 Mar 2024 15:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710284110; x=1710888910; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dn4o2EhSzw/dPcbf0I+GhuZZGnLjYr0VW9p4Ognw3lA=;
+        b=kRLhNfN4MOvltVcSCD4WChbGmAfqNg9EsWiEK2m/tSxZ6Tg0bYTdybeiEmgwRuPcNq
+         TO8BDrRO4rEZjK3ScaU1e5J2ToXYQN5bGYivC6LVjcnlkXClIhAprofZAmfeLW/cV/Mq
+         ClozsJ4/Bpl25UlAkXoZ/Wjn8cE0CzIutleXPVu5gVgOrGOkN8sHDcsGeT7F2qYbEMet
+         InE0YG59Tsh9s+Ur730+nwFvlC9gkbrkMHu4nHzf1meJB1IFp4ls/jpnlSZOm2MhFtzJ
+         wX86+h4E4S5u3x4U5xl/JEKK/1gefq9VFnlknQzy0pu3fkCcCcmk31DNyQMQn7rTfYt+
+         7wfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710284110; x=1710888910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dn4o2EhSzw/dPcbf0I+GhuZZGnLjYr0VW9p4Ognw3lA=;
+        b=U20FF5sUitVcTbM/lhPJreRcBzKUV+oduW6Vg83kzOf66/519uuYDKTtDy0jFxqLd0
+         PhXJVm21V2hWB6jdIro4ytE09fFystuyABSktptUJDv1eEOcslekyk4aotZvH8Ue+LNL
+         mtRxrsPG7Rq68sWCelLEPrFILuGiqKay+1bfdNyBmrXpz678R39rRc6PAFykTe876Jd3
+         FFTX0BWTDnvQ52nMim5y4XSUpDTQLjg7wJeM/NZ0OrzQpKLZSNe4a9ebZpQoW1zljKqM
+         +cum+S/1j6eUAmHNh4v98AuKobWX3R9pYOZvJtqN0I/N0vwcFyYCLt2bG53INaOykOlj
+         PzHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTMAYtNnzvQY/7+0MgiWeQfbsnHmBFgERz6ec5owoUiGg+S3CZc+bNaDE68bJO3vPK4sCgWYj9X8AKghfxBwqllUlKpzOPM+Gch5Twkg0Q11VaEMDyWSaTEyRSd0eiKb4TP3KPaQ==
+X-Gm-Message-State: AOJu0YwDTwj6RcXv45BvfqabYk/q2Ep+5jhgHUs5LjeCevTrPF+iYVg+
+	pc/Wu/Tu/l0I7RY7HAOzVcOmdAjCBY1XQ55X7/X5FguPeOWNN03Y1yZP64VCazEkHfAgAYI4SPV
+	yPITi2iZXyhcOCV3YbYfPbd6XyV0=
+X-Google-Smtp-Source: AGHT+IFbWul1azbb7FTg9EddCY7T7oYsUqF6TE3i9r9b9TycKD6mwZxOcnZoYoeU6Y0yDRibf8dC3NEMMFfQCe9VDFo=
+X-Received: by 2002:a05:651c:222b:b0:2d2:751f:abb2 with SMTP id
+ y43-20020a05651c222b00b002d2751fabb2mr2507208ljq.3.1710284110049; Tue, 12 Mar
+ 2024 15:55:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_13,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 clxscore=1011 phishscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403120168
+References: <CAOCpoWexiuYLu0fpPr71+Uzxw_tw3q4HGF9tKgx5FM4xMx9fWA@mail.gmail.com>
+ <a1e30dab-dfde-418e-a0dd-3e294838e839@inwind.it> <CAOCpoWeB=2j+n+5K5ytj2maZxdrV80cxJcM5CL=z1bZKgpXPWQ@mail.gmail.com>
+ <a783e5ed-db56-4100-956a-353170b1b7ed@inwind.it> <ZedaKUge-EBo4CuT@redhat.com>
+ <ZeiS/bjJaRcrerWW@fedora> <CAOCpoWeoQMh_-MxzxGBnK2Kf5EhvTLs=GrGwJ5XcfGVRTp73Eg@mail.gmail.com>
+ <Ze2azGlb1WxVFv7Z@fedora> <Ze3RWqLvG18cQ4dz@redhat.com> <CAOCpoWf7C=B1sdeUL46sVVtVUDH8+o_T9LGJNTOYqA317uMdmA@mail.gmail.com>
+ <Ze8DZLBHhCxgzc+r@fedora>
+In-Reply-To: <Ze8DZLBHhCxgzc+r@fedora>
+From: Patrick Plenefisch <simonpatp@gmail.com>
+Date: Tue, 12 Mar 2024 18:54:59 -0400
+Message-ID: <CAOCpoWd5VWZnAaYvkFDYo736ZXDK0bExC9NkwVGfLv_CATj9Rw@mail.gmail.com>
+Subject: Re: LVM-on-LVM: error while submitting device barriers
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>, Goffredo Baroncelli <kreijack@inwind.it>, linux-kernel@vger.kernel.org, 
+	Alasdair Kergon <agk@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, regressions@lists.linux.dev, 
+	dm-devel@lists.linux.dev, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[*really* added kexec maintainers this time.]
+On Mon, Mar 11, 2024 at 9:13=E2=80=AFAM Ming Lei <ming.lei@redhat.com> wrot=
+e:
+>
+> On Sun, Mar 10, 2024 at 02:11:11PM -0400, Patrick Plenefisch wrote:
+> > On Sun, Mar 10, 2024 at 11:27=E2=80=AFAM Mike Snitzer <snitzer@kernel.o=
+rg> wrote:
+> > >
+> > > On Sun, Mar 10 2024 at  7:34P -0400,
+> > > Ming Lei <ming.lei@redhat.com> wrote:
+> > >
+> > > > On Sat, Mar 09, 2024 at 03:39:02PM -0500, Patrick Plenefisch wrote:
+> > > > > On Wed, Mar 6, 2024 at 11:00=E2=80=AFAM Ming Lei <ming.lei@redhat=
+.com> wrote:
+> > > > > >
+> > > > > > #!/usr/bin/bpftrace
+> > > > > >
+> > > > > > #ifndef BPFTRACE_HAVE_BTF
+> > > > > > #include <linux/blkdev.h>
+> > > > > > #endif
+> > > > > >
+> > > > > > kprobe:submit_bio_noacct,
+> > > > > > kprobe:submit_bio
+> > > > > > / (((struct bio *)arg0)->bi_opf & (1 << __REQ_PREFLUSH)) !=3D 0=
+ /
+> > > > > > {
+> > > > > >         $bio =3D (struct bio *)arg0;
+> > > > > >         @submit_stack[arg0] =3D kstack;
+> > > > > >         @tracked[arg0] =3D 1;
+> > > > > > }
+> > > > > >
+> > > > > > kprobe:bio_endio
+> > > > > > /@tracked[arg0] !=3D 0/
+> > > > > > {
+> > > > > >         $bio =3D (struct bio *)arg0;
+> > > > > >
+> > > > > >         if (($bio->bi_flags & (1 << BIO_CHAIN)) && $bio->__bi_r=
+emaining.counter > 1) {
+> > > > > >                 return;
+> > > > > >         }
+> > > > > >
+> > > > > >         if ($bio->bi_status !=3D 0) {
+> > > > > >                 printf("dev %s bio failed %d, submitter %s comp=
+letion %s\n",
+> > > > > >                         $bio->bi_bdev->bd_disk->disk_name,
+> > > > > >                         $bio->bi_status, @submit_stack[arg0], k=
+stack);
+> > > > > >         }
+> > > > > >         delete(@submit_stack[arg0]);
+> > > > > >         delete(@tracked[arg0]);
+> > > > > > }
+> > > > > >
+> > > > > > END {
+> > > > > >         clear(@submit_stack);
+> > > > > >         clear(@tracked);
+> > > > > > }
+> > > > > >
+> > > > >
+> > > > > Attaching 4 probes...
+> > > > > dev dm-77 bio failed 10, submitter
+> > > > >        submit_bio_noacct+5
+> > > > >        __send_duplicate_bios+358
+> > > > >        __send_empty_flush+179
+> > > > >        dm_submit_bio+857
+> > > > >        __submit_bio+132
+> > > > >        submit_bio_noacct_nocheck+345
+> > > > >        write_all_supers+1718
+> > > > >        btrfs_commit_transaction+2342
+> > > > >        transaction_kthread+345
+> > > > >        kthread+229
+> > > > >        ret_from_fork+49
+> > > > >        ret_from_fork_asm+27
+> > > > > completion
+> > > > >        bio_endio+5
+> > > > >        dm_submit_bio+955
+> > > > >        __submit_bio+132
+> > > > >        submit_bio_noacct_nocheck+345
+> > > > >        write_all_supers+1718
+> > > > >        btrfs_commit_transaction+2342
+> > > > >        transaction_kthread+345
+> > > > >        kthread+229
+> > > > >        ret_from_fork+49
+> > > > >        ret_from_fork_asm+27
+> > > > >
+> > > > > dev dm-86 bio failed 10, submitter
+> > > > >        submit_bio_noacct+5
+> > > > >        write_all_supers+1718
+> > > > >        btrfs_commit_transaction+2342
+> > > > >        transaction_kthread+345
+> > > > >        kthread+229
+> > > > >        ret_from_fork+49
+> > > > >        ret_from_fork_asm+27
+> > > > > completion
+> > > > >        bio_endio+5
+> > > > >        clone_endio+295
+> > > > >        clone_endio+295
+> > > > >        process_one_work+369
+> > > > >        worker_thread+635
+> > > > >        kthread+229
+> > > > >        ret_from_fork+49
+> > > > >        ret_from_fork_asm+27
+> > > > >
+> > > > >
+> > > > > For context, dm-86 is /dev/lvm/brokenDisk and dm-77 is /dev/lower=
+VG/lvmPool
+> > > >
+> > > > io_status is 10(BLK_STS_IOERR), which is produced in submission cod=
+e path on
+> > > > /dev/dm-77(/dev/lowerVG/lvmPool) first, so looks it is one device m=
+apper issue.
+> > > >
+> > > > The error should be from the following code only:
+> > > >
+> > > > static void __map_bio(struct bio *clone)
+> > > >
+> > > >       ...
+> > > >       if (r =3D=3D DM_MAPIO_KILL)
+> > > >               dm_io_dec_pending(io, BLK_STS_IOERR);
+> > > >       else
+> > > >               dm_io_dec_pending(io, BLK_STS_DM_REQUEUE);
+> > > >     break;
+> > >
+> > > I agree that the above bpf stack traces for dm-77 indicate that
+> > > dm_submit_bio failed, which would end up in the above branch if the
+> > > target's ->map() returned DM_MAPIO_KILL or DM_MAPIO_REQUEUE.
+> > >
+> > > But such an early failure speaks to the flush bio never being
+> > > submitted to the underlying storage. No?
+> > >
+> > > dm-raid.c:raid_map does return DM_MAPIO_REQUEUE with:
+> > >
+> > >         /*
+> > >          * If we're reshaping to add disk(s)), ti->len and
+> > >          * mddev->array_sectors will differ during the process
+> > >          * (ti->len > mddev->array_sectors), so we have to requeue
+> > >          * bios with addresses > mddev->array_sectors here or
+> > >          * there will occur accesses past EOD of the component
+> > >          * data images thus erroring the raid set.
+> > >          */
+> > >         if (unlikely(bio_end_sector(bio) > mddev->array_sectors))
+> > >                 return DM_MAPIO_REQUEUE;
+> > >
+> > > But a flush doesn't have an end_sector (it'd be 0 afaik).. so it seem=
+s
+> > > weird relative to a flush.
+> > >
+> > > > Patrick, you mentioned lvmPool is raid1, can you explain how lvmPoo=
+l is
+> > > > built? It is dm-raid1 target or over plain raid1 device which is
+> > > > build over /dev/lowerVG?
+> >
+> > LVM raid1:
+> > lvcreate --type raid1 -m 1 ...
+>
+> OK, that is the reason, as Mike mentioned.
+>
+> dm-raid.c:raid_map returns DM_MAPIO_REQUEUE, which is translated into
+> BLK_STS_IOERR in dm_io_complete().
+>
+> Empty flush bio is sent from btrfs, both .bi_size and .bi_sector are set
+> as zero, but the top dm is linear, which(linear_map()) maps new
+> bio->bi_iter.bi_sector, and the mapped bio is sent to dm-raid(raid_map())=
+,
+> then DM_MAPIO_REQUEUE is returned.
+>
+> The one-line patch I sent in last email should solve this issue.
+>
+> https://lore.kernel.org/dm-devel/a783e5ed-db56-4100-956a-353170b1b7ed@inw=
+ind.it/T/#m8fce3ecb2f98370b7d7ce8db6714bbf644af5459
 
-Full thread starts here:
-https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+With this patch on a 6.6.13 base, I can modify files and the BTRFS
+volume stays RW, while no errors are logged in dmesg!
 
-On Wed, Mar 13, 2024 at 12:12:31AM +0530, Pavin Joseph wrote:
-> On 3/12/24 20:43, Steve Wahl wrote:
-> > But I don't want to introduce a new command line parameter if the
-> > actual problem can be understood and fixed.  The question is how much
-> > time do I have to persue a direct fix before some other action needs
-> > to be taken?
-> 
-> Perhaps the kexec maintainers [0] can be made aware of this and you could
-> coordinate with them on a potential fix?
-> 
-> Currently maintained by
-> P:      Simon Horman
-> M:      horms@verge.net.au
-> L:      kexec@lists.infradead.org
 
-Probably a good idea to add kexec people to the list, so I've added
-them to this email.
-
-Everyone, my recent patch to the kernel that changed identity mapping:
-
-7143c5f4cf2073193 x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
-
-... has broken kexec on a few machines.  The symptom is they do a full
-BIOS reboot instead of a kexec of the new kernel.  Seems to be limited
-to AMD processors, but it's not all AMD processors, probably just some
-characteristic that they happen to share.
-
-The same machines that are broken by my patch, are also broken in
-previous kernels if you add "nogbpages" to the kernel command line
-(which makes the identity map bigger, "nogbpages" doing for all parts
-of the identity map what my patch does only for some parts of it).
-
-I'm still hoping to find a machine I can reproduce this on to try and
-debug it myself.
-
-If any of you have any assistance or advice to offer, it would be most
-welcome!
-
-> I hope the root cause can be fixed instead of patching it over with a flag
-> to suppress the problem, but I don't know how regressions are handled here.
-
-That would be my preference as well.
-
-Thanks,
-
---> Steve Wahl
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+>
+> But DM_MAPIO_REQUEUE misuse needs close look, and I believe Mike is worki=
+ng
+> on that bigger problem.
+>
+> I guess most of dm targets don't deal with empty bio well, at least
+> linear & dm-raid, not look into others yet, :-(
+>
+>
+> Thanks,
+> Ming
+>
