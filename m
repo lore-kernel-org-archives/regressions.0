@@ -1,77 +1,118 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE9579B6F
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 12:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7303811
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 13:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710246453; cv=none; b=FzKf9905JU5h3d8dfuR44OMzrfiy1zfoyXQ1CgOPTzbyZqWtRj6EWVRSm6ArMHF0BjDTOU5gGb2C48oKnTCTfGW0u6WLJQCLjxHd6xe0XehHuoFx3JguLSIoG4pteRKiaR21PuQrUdfNFyjF+gqS+TQCFoRc6qF0U3DOJdurvWU=
+	t=1710248736; cv=none; b=K6kE7I86aXn8eMjNoJbMWPHUSTLmGrH4No+I39WVq35UqCasaF4ZPbqAQBL8+zsDh4OrT4eoavoXEK5+edD4uONZZTtIMVwsPmiC6mBY8M26oPzTu7ll3+ALt7JXTVH+KnkZKPS4n5IvfIkxhdFHiJIpB+XFWD4igc3T1E1dP5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710246453; c=relaxed/simple;
-	bh=bzTrgr9ZRKXLb8iOggCN4C+1FgnhB9lh2xhl04/QGaE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=VACTBhvmrYR6WVHIdeWh6l3952O0wzPJLzHjENYIYCYd2A6qYR6UEVGwAUBvUnmmqLxrRtfVAhkDXbXIwZX/9EO6LaGRj1DA/iAFplQUh+XwvwYLXZvDTBTKjrrXxyxpnc3Rwu7JX9ZfGk2Hc8jrJQIASDJN7vx0mJ++4ERuK8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GmwCvkzE; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1710248736; c=relaxed/simple;
+	bh=LtUpf8o4cRDws08hBEsHiAvXVpFfY7ndPUFj4Qdryug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VODm7zzvp4wQcqqg1jEe6hnvAmJZhapaJeC52RjmLl7Sji9Msxumfz0MedfQ/jsN/k5Q9wkTrldfKTdGO+jwKcGk2we1rYbGu/Xv9AEVMewf9YzUzXu+ioKwoQoEK0vqanqthCEHrWRBzv8Ll4jHA7RoBrfqmGK/9xkPuY2Fq8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=khvoinitsky.org; spf=pass smtp.mailfrom=khvoinitsky.org; dkim=pass (1024-bit key) header.d=khvoinitsky.org header.i=@khvoinitsky.org header.b=V8At0smJ; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=khvoinitsky.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=khvoinitsky.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GmwCvkzE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=bzTrgr9ZRKXLb8iOggCN4C+1FgnhB9lh2xhl04/QGaE=; t=1710246451;
-	x=1710678451; b=GmwCvkzE1NryS5wZv8/G6tveGyPR+QguW1QbciPqvLNuDp8JJZYygc10MOBWh
-	LPlfRsPG2sZIZF2iHoM4p088AxQg3kdJbvuTB5qjteFz7cmMAOiOwCpK4JCP8Z0Nkee/eUxA6QFPO
-	QNu1vc13nllaeGhpK5TigC/sdIE9GsmYXReid5xGRhDJ1BFPH4aXWlOCImsOM4TABWMAPIwtseBFm
-	S3hUre+nAfiboEzfgann6x+sZbWrJ3GertlUBBmv658sjriapnrlTEspkJ5oXuhFZ/PKPYadoN/MG
-	8QXqrooSMdNQZ1VG9wTZt7XMzkAmDe0847FKC3ywH7ibt1odBA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rk1E9-0004np-Dk; Tue, 12 Mar 2024 13:27:29 +0100
-Message-ID: <c7cea06b-682d-433e-92dc-35f714e743e7@leemhuis.info>
-Date: Tue, 12 Mar 2024 13:27:29 +0100
+	dkim=pass (1024-bit key) header.d=khvoinitsky.org header.i=@khvoinitsky.org header.b="V8At0smJ"
+X-Gm-Message-State: AOJu0YxPVcbvuDBBYKqjurlf1+4UOczcoKvU30sc+9KizN94cOmfWsMf
+	uQ//iFeW4vfm2gjLoLam6655gqh3sTXAL/62kkOVZOnTeA8iuVJT3aZ3HJ0YsqhNfinLsn6fGka
+	+6ctvhw22BddxBxilo0Z6z04kMpw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=khvoinitsky.org;
+	s=key1; t=1710248731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LtUpf8o4cRDws08hBEsHiAvXVpFfY7ndPUFj4Qdryug=;
+	b=V8At0smJG2pyIIg1cJAl/sd2t33YxgAtVA/swgU63NwkxYnQV+qK3FE7/t9NRCfINadqV5
+	MNGQZSWNxcab/Twb4GcglkOcl3wNfDPAHTaa/J3wTwkYz5+a5kfs9MYX73M++QAenFqAUx
+	j5DE9p9r9AYaThQ2rzgbG/WbQF8JpUU=
+X-Google-Smtp-Source: AGHT+IGnOFxOFezHjAmJUlxEr9UulxKpV48algWbNSGjNho00p9nrQZda/a1daNl4tfE0qC6Ts7OMKpXCGv54vGRZkM=
+X-Received: by 2002:a05:6512:3af:b0:513:ace2:ed64 with SMTP id
+ v15-20020a05651203af00b00513ace2ed64mr2564951lfp.6.1710248729831; Tue, 12 Mar
+ 2024 06:05:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710246451;40b8c196;
-X-HE-SMSGID: 1rk1E9-0004np-Dk
+References: <a29d56d2-c440-4a26-a9ac-014595d2ae8c@gmail.com>
+ <21370dc5-94a3-442c-ae04-76f9f94b1b96@leemhuis.info> <c8986411-2bf7-4b7d-8ac1-f702dc7c725a@gmail.com>
+ <7a5fc584-1520-4e52-9c77-d67a656524c6@gmail.com> <10022b0c-89c3-43e1-89ba-00e458fe1dfd@leemhuis.info>
+ <7a8d9d60-a151-4b25-882b-48e6929339a4@gmail.com> <9db59ae4-be28-4ab3-a2ae-0b0f661f56be@gmail.com>
+ <3bb95fcd-65cf-45dd-8d81-1a41b1ae0288@leemhuis.info> <CAMMabwNo_yT4S3LaMV16Rmj6MiWL=TRYtB9wspfs_LWVgM=U8Q@mail.gmail.com>
+ <b30dc4a1-57aa-4ff5-ae52-7a01203b8be9@gmail.com> <CAMMabwNVwapthrDkCLOQsWkObzvTKVzDMiod3KPVa1hoy0CzRA@mail.gmail.com>
+ <0d2b0c46-4d84-4279-8964-589d77435e6a@gmail.com> <9a55659c-86a6-4d9a-ab4f-94fbfb72e7c4@gmail.com>
+In-Reply-To: <9a55659c-86a6-4d9a-ab4f-94fbfb72e7c4@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Mikhail Khvoinitsky <me@khvoinitsky.org>
+Date: Tue, 12 Mar 2024 15:05:18 +0200
+X-Gmail-Original-Message-ID: <CAMMabwMDvumbNOvFk3mdqXfprO_xy4gB5R0KangvzJatv8BhUw@mail.gmail.com>
+Message-ID: <CAMMabwMDvumbNOvFk3mdqXfprO_xy4gB5R0KangvzJatv8BhUw@mail.gmail.com>
+Subject: Re: Regression with Lenovo ThinkPad Compact USB Keyboard
+To: =?UTF-8?Q?Rapha=C3=ABl_Halimi?= <raphael.halimi@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jiri Kosina <jikos@jikos.cz>, 
+	Linux Input Mailing List <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+	Linux Stable Mailing List <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-#regzbot report:
-https://lore.kernel.org/dri-devel/20240229175822.30613-1-sidpranjale127@protonmail.com/
-#regzbot fix: f6ecfdad359a01c7fd8a3
+> Not a single spurious middle-click, which is not surprising since, if I
+> understand correctly, this last patch just disables 46a0a2c and makes it
+> optional, allowing to enable it on demand with a setting in sysfs.
 
-#regzbot report: https://lore.kernel.org/lkml/87a5v8szhc.fsf@mutex.one/
-#regzbot fix: c95a2a0be0b1bb
+That's correct.
 
-#regzbot report:
-https://lore.kernel.org/lkml/20231229002623.GA1560896@bhelgaas/
-#regzbot fix: f93e71aea6c60ebff
+> And I have vertical and horizontal scrolling with the middle button
+> working reliably
 
-#regzbot report:
-https://lore.kernel.org/lkml/20240110190021.GA2113949@bhelgaas/
-#regzbot fix: 41044d536068
+If you mean my statement in the initial commit that the original
+firmware doesn't support horizontal scrolling, I might be wrong, looks
+like I've mixed it up with something. But the main reason for the
+change was hi-res scrolling.
 
-#regzbot report:
-https://lore.kernel.org/dri-devel/7c50e051-eba2-09fc-da9f-023d592de457@ristioja.ee/
-#regzbot fix: d1b163aa07497
+> (I'm not sure of what you mean by "hi-res scrolling",
+> is it about 4K displays ?).
 
-#regzbot report:
-https://lore.kernel.org/linux-scsi/bug-217599-11613@https.bugzilla.kernel.org%2F/
-#regzbot fix: c5becf57dd5659c6
+No, it's about scrolling not by a fixed amount of lines but by
+individual pixels depending on how strongly you press the trackpoint.
+More like modern touchpads work.
+
+> So as far as I'm concerned, this patch should be included ASAP in the
+> next kernels releases (both latest and stable).
+
+Yes, as soon as it gets into master (given that 6.8 has just been
+released it will be soon), I'll make sure it will be included in
+stable (either automatically or manually).
+
+
+
+On Tue, 12 Mar 2024 at 13:57, Rapha=C3=ABl Halimi <raphael.halimi@gmail.com=
+> wrote:
+>
+> Le 04/03/2024 =C3=A0 17:09, Rapha=C3=ABl Halimi a =C3=A9crit :
+> > Thanks, it's done. I'll test and report.
+>
+> Nearly a week testing this patch (with kernels 6.6.15, 6.7.7 and 6.7.9,
+> following Debian unstable updates) and it's working well so far.
+>
+> Not a single spurious middle-click, which is not surprising since, if I
+> understand correctly, this last patch just disables 46a0a2c and makes it
+> optional, allowing to enable it on demand with a setting in sysfs.
+>
+> And I have vertical and horizontal scrolling with the middle button
+> working reliably (I'm not sure of what you mean by "hi-res scrolling",
+> is it about 4K displays ?).
+>
+> So as far as I'm concerned, this patch should be included ASAP in the
+> next kernels releases (both latest and stable).
+>
+> Regards,
+>
+> --
+> Rapha=C3=ABl Halimi
