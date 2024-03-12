@@ -1,133 +1,95 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D1F14265A;
-	Tue, 12 Mar 2024 20:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id A2B9C1420D7
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710274210; cv=none; b=RwO7YCgAdp6dSWoj3qS5jrmeBUCma8na4NFVGI5jx+K2WmGWg9wunuH4bkjkGei9jlTy9fr/o82wZGAbSCdwWnCFuzBmJdTEhGTJcf5o9dJ2kNSt1fmu2HAdes1RadqhURQ0cxalcTk5bLpkBvAtXVFaYy0EKxQDMKXLy0jmT0o=
+	t=1710276432; cv=none; b=Km+JeoqWUBj+rOCLTojyrl9hApHxWrY0udWIJI/qvP9aFouaW9BIJkdurpjxykpqPlNeoTmBiVbfr4BLDVut5ZNRzUMkDWMmgh3Rex/uHwK8Mkdasrrg1miQtLNxn9B14hlEPrSAC5EYKSGSIbFR8s7f90Y58ncMmCumhm0QiTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710274210; c=relaxed/simple;
-	bh=afb+J2W1RZOvBUpT1q1VDqOla0v+GNPldfNpGi6NmXU=;
-	h=Date:From:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aMmy1ERej9XCxdmVm3d+WajoAITDaNCvSN6fA1hckcUTZQOe6Ahxu9TJ6nVJWsh/mTWD9snD2oFlzCaNSQhV1xemgzMXb6EX9txalWTDbTAwUW4IHeePR3psH9QBDXf9XuSIYLbFx3J6HJT7UBFAJL7oxYtp60x0FXyafxs7/JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=WibrX5wU; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="WibrX5wU"
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CJgFuw001162;
-	Tue, 12 Mar 2024 20:10:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pps0720; bh=VnYb1j2+6PuZRCVUgTvKkrGm5+N4Va1AiIS3ecX1k3M=;
- b=WibrX5wUkkHVo8AAWxqnzQVTR7yngJpCe0/XkzX8o7+84/ZRZj8w+8L+TRBI5KN0k5ly
- 1rGwndPXKQJs4evW1/TV3fk1xzwEFy2CV/xJ3a/2RVPZPwcEzsHgCR3m5+daZP5MLCMx
- j0/8bnra9B91SBT3GtE14VkTbIb7o1S4uu2L6zXX4hjyS4hi8/YWHhFkR9QE4HuT0/bM
- lk7+Jhrb2+2BKkQarKCTMEjJopHUtfqgjCJh68vxuwijioOOOEJo/2llrvpGp8beaWiK
- LZvu50cCnBtKAnKm/i6F44A5pC+4SYoHfcA1mZKzXKmjek9kwjqpE6VXzkKu+Y1n8Cmf Ig== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wts7su02b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 20:09:59 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id CFADB12E9C;
-	Tue, 12 Mar 2024 20:09:58 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 37928800EF7;
-	Tue, 12 Mar 2024 20:09:57 +0000 (UTC)
-Date: Tue, 12 Mar 2024 15:09:55 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>,
-        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <ZfC2k66jb8CcupYm@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
- <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-X-Proofpoint-GUID: jkORMdzEPtbMJn1k3DXDtW93TkvInsdf
-X-Proofpoint-ORIG-GUID: jkORMdzEPtbMJn1k3DXDtW93TkvInsdf
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1710276432; c=relaxed/simple;
+	bh=P1NCPsLVEkLdCqz5V0MpZqW0w0TkNvmE8PjL1Dk7UI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dfinEYnGorQDXOs2JvY2DKLEwPcGGMWILCn9SxScAhW7z3ImmbCI5JjBO0OrwDevqJvjiwVLsvfOQ+fiAyaUBK91smbklnPmr14cFSWBneT2ddxVbudvaGsbO3e/+bsxfJpEJPXoEruIf+F/DQeLqojyXNb2GZKsVVIpGmUoulo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 395255 invoked by uid 1000); 12 Mar 2024 16:47:09 -0400
+Date: Tue, 12 Mar 2024 16:47:09 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Message-ID: <580528c3-7084-40ff-9b2e-6f395266b0b2@rowland.harvard.edu>
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+ <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+ <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
+ <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
+ <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
+ <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
+ <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_12,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403120154
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
 
-[Added kexec maintainers]
-
-Full thread starts here:
-https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-
-On Wed, Mar 13, 2024 at 12:12:31AM +0530, Pavin Joseph wrote:
-> On 3/12/24 20:43, Steve Wahl wrote:
-> > But I don't want to introduce a new command line parameter if the
-> > actual problem can be understood and fixed.  The question is how much
-> > time do I have to persue a direct fix before some other action needs
-> > to be taken?
+On Tue, Mar 12, 2024 at 09:57:06AM +0100, Jan Čermák wrote:
+> Hi Alan
 > 
-> Perhaps the kexec maintainers [0] can be made aware of this and you could
-> coordinate with them on a potential fix?
+> On 11. 03. 24 15:43, Alan Stern wrote:
+> > Well, at least this means you do have a way of using the device, even
+> > if it is rather awkward.  It might even work on the Raspberry Pi machine.
 > 
-> Currently maintained by
-> P:      Simon Horman
-> M:      horms@verge.net.au
-> L:      kexec@lists.infradead.org
+> Still, I'm looking for a more permanent and robust solution. If it were only
+> a single device I'm using myself, I could come up with a workaround.
+> However, this is one of the very few available Z-Wave USB interfaces and
+> there are more users affected. So far we went with reverting the patches,
+> but that's surely not the way we want to go forward.
 
-Probably a good idea to add kexec people to the list, so I've added
-them to this email.
+I agree, this should be fixed if we can.  I'm still puzzled about how 
+commits you located could cause any difference in the device's behavior, 
+given that they don't seem to cause any change's to the computer's 
+behavior.
 
-Everyone, my recent patch to the kernel that changed identity mapping:
+> > The device is so non-responsive, I'm amazed it ever works at all.
+> > Judging by the usbmon traces, it doesn't look as if it would work on a
+> > Windows system.
+> > 
+> > Actually, if you have access to a computer running Windows or Mac OSX
+> > and you can try out the device on that computer, it would be good to
+> > get the equivalent of a usbmon trace (something like a Wireshark
+> > capture log would do).  If those systems manage to do something that
+> > Linux doesn't, we ought to know what it is.
+> 
+> Fredrik (one of the original reporters) is following this conversation, here
+> [1] are logs from his machine with some details in the ticket [2]. He also
+> wonders why the initialization doesn't work only on USB2 ports but works on
+> USB3 if the initialization code is shared between those two.
 
-7143c5f4cf2073193 x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
+Good.  I've been quite busy recently, but I'll look at the logs when 
+there is time.
 
-... has broken kexec on a few machines.  The symptom is they do a full
-BIOS reboot instead of a kexec of the new kernel.  Seems to be limited
-to AMD processors, but it's not all AMD processors, probably just some
-characteristic that they happen to share.
+The USB-2 and USB-3 drivers do share some initialization code, but not 
+all of it.  The first couple of steps are quite different: With a USB-2 
+controller they are handled by the kernel driver, but with a USB-3 
+controller they are handled directly by the controller's hardware with 
+no software influence.
 
-The same machines that are broken by my patch, are also broken in
-previous kernels if you add "nogbpages" to the kernel command line
-(which makes the identity map bigger, "nogbpages" doing for all parts
-of the identity map what my patch does only for some parts of it).
+Alan Stern
 
-I'm still hoping to find a machine I can reproduce this on to try and
-debug it myself.
-
-If any of you have any assistance or advice to offer, it would be most
-welcome!
-
-> I hope the root cause can be fixed instead of patching it over with a flag
-> to suppress the problem, but I don't know how regressions are handled here.
-
-That would be my preference as well.
-
-Thanks,
-
---> Steve Wahl
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+> Also, if needed, I can get more logs from the X220 I was using for my usbmon
+> traces - I believe I have an HDD with Windows 7 install lying somewhere.
+> 
+> Regards,
+> Jan
+> 
+> 
+> [1] https://github.com/home-assistant/operating-system/files/14563813/usbPcap1_USB2-port.txt
+> [2] https://github.com/home-assistant/operating-system/issues/2995#issuecomment-1989329739
