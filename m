@@ -1,86 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FDA273FC;
-	Tue, 12 Mar 2024 16:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE0113E7C7
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 18:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.217.248.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710262640; cv=none; b=hGHswftbv79Jf1ajjct2g/F1pHbdBsWc/bU8d4HK4y+pl6B5bhtL9Bdgs1yeoyLxaeZQ9Ylxa1DStmxUO1VQvxLHEhXPSXj2p6D6LSj87YLpKq88jk4CX4QTvWJ0hBLTgEuh8D2Y7EUPHTUOrAlzJkWrTP7Fm20+J6HlL2QyAT0=
+	t=1710268971; cv=none; b=VPmpX4vQr8ZsT9LVIjj5nC7mL0A1G4G1KlkNi2uFJqDHUgG9nLqLFw2htgjDemMYUjvWgooBrjn6yIoy4OBqRHBrF0fq4uMOoCUpj1e2dTmsCdyOVlfBAHqvV34Pfzeza5fsHgQqV1Yxm3kE4TvwRwe/kO7oCLTWotHi8qe2YQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710262640; c=relaxed/simple;
-	bh=PoMYnCgPakbjiaIG4AGm3MpS8jEc7BheNhqUZ/bRjdM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VAkS4tmUhyVHrVvmaRpMcTcRp4pVenMoajL4Zxz3jlH2tj7cHvvJ796nFwP8f7+sS+PK0y6Is6GbZDM2GKvtyvysvC84NBSlOehSLmR3+jEQd1v6l/Go0GKzCs1p/L63n5B9GsI9cQvjLGOfFP0Ue9T5bR09btfy+ZsMHkf321w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuVBQ3lW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710268971; c=relaxed/simple;
+	bh=l4dlNYc4tBoZ2E4xUmmIf+GLxBScNZeT6o1fKTSwhDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lanXpsoYaSPsVjfJdAIVgJNdXtfjb2whEh9qsgv1iejUPIU8Zhu0FN5fJnAV+k6hrstq/yzHeWb2TJyethkWO5ZDWZbGuc7hI1rAmB+qRH4FrnxQyRf3tg3VeHUQJwQfA/cKlkbvfCtw5dOcT4ETAK+SEFvDKyg+IKefAQ5z73U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=IvxOvlVC; arc=none smtp.client-ip=144.217.248.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuVBQ3lW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4ADC433F1;
-	Tue, 12 Mar 2024 16:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710262640;
-	bh=PoMYnCgPakbjiaIG4AGm3MpS8jEc7BheNhqUZ/bRjdM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=IuVBQ3lWf5x6beNTTHw+NBaFEpnOMVIoNQqY01RMGZkaGcsE1qid1HNtGrnitnlVo
-	 1IgFQnkrQd38DUFGVjqBiKy3TjKoj4z5mDkZiFUeGXi2T+6IKB2GRuoqr12R7xvvfZ
-	 gVs8v8CDOzy3xQSzD14ywyRpkoa9WS9gHw+PbctiyeH/caQnzEDpXwx3tMP6AbvA7l
-	 hL3ICWvq4hHdLsBHyGNQbFwSuRwzCqqy9s3UEJcWsa38fuW/6OIFQt6rdkkHORvycX
-	 olzERaPLmo8kQNzCQPcNFmjYL1yQK+ogGVKNhgJNFUMCUZ6mx+a2r8h/u+FU7aJbpv
-	 /FwDOFL8QOG8w==
-From: Mark Brown <broonie@kernel.org>
-To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>, 
- Janne Grunau <j@jannau.net>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- asahi@lists.linux.dev, regressions@lists.linux.dev
-In-Reply-To: <20240311-spi-cs-delays-regression-v1-1-0075020a90b2@jannau.net>
-References: <20240311-spi-cs-delays-regression-v1-1-0075020a90b2@jannau.net>
-Subject: Re: [PATCH] spi: Restore delays for non-GPIO chip select
-Message-Id: <171026263882.57722.2234727273926926410.b4-ty@kernel.org>
-Date: Tue, 12 Mar 2024 16:57:18 +0000
+	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="IvxOvlVC"
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 8B7123E88F;
+	Tue, 12 Mar 2024 18:42:41 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id BE87E400B6;
+	Tue, 12 Mar 2024 18:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
+	s=default; t=1710268959;
+	bh=l4dlNYc4tBoZ2E4xUmmIf+GLxBScNZeT6o1fKTSwhDQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IvxOvlVCNc2JxyLm71Xa/F/g975rghU5038soitpXQYsW67BjhuSMb3IZf/EKFUjm
+	 f2pBAERjFa0Jwlqhc8OliqLSiAmbOPUEShWQV/60heaL1sQ0M+SgSvaEpxw0gJemlq
+	 whaO/20ihke/sAI62BlGcyv4h8S5Hzu+Hv0w4TtI=
+Received: from [10.66.66.8] (unknown [139.59.64.216])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 2321A4104A;
+	Tue, 12 Mar 2024 18:42:33 +0000 (UTC)
+Message-ID: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+Date: Wed, 13 Mar 2024 00:12:31 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+To: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>
+Cc: dave.hansen@linux.intel.com, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+ <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+ <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
+ <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+Content-Language: en-US
+From: Pavin Joseph <me@pavinjoseph.com>
+In-Reply-To: <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+X-Spamd-Result: default: False [-0.09 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[hpe.com,gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCPT_COUNT_FIVE(0.00)[5]
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: BE87E400B6
 
-On Mon, 11 Mar 2024 23:53:17 +0100, Janne Grunau wrote:
-> SPI controller with integrated chip select handling still need to adhere
-> to SPI device's CS setup, hold and inactive delays. For controller
-> without set_cs_timing spi core shall handle the delays to avoid
-> duplicated delay handling in each controller driver.
-> Fixes a regression for the out of tree SPI controller and SPI HID
-> transport on Apple M1/M1 Pro/Max notebooks.
-> 
-> [...]
+On 3/12/24 20:43, Steve Wahl wrote:
+> But I don't want to introduce a new command line parameter if the
+> actual problem can be understood and fixed.  The question is how much
+> time do I have to persue a direct fix before some other action needs
+> to be taken?
 
-Applied to
+Perhaps the kexec maintainers [0] can be made aware of this and you 
+could coordinate with them on a potential fix?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Currently maintained by
+P:      Simon Horman
+M:      horms@verge.net.au
+L:      kexec@lists.infradead.org
 
-Thanks!
+I hope the root cause can be fixed instead of patching it over with a 
+flag to suppress the problem, but I don't know how regressions are 
+handled here.
 
-[1/1] spi: Restore delays for non-GPIO chip select
-      commit: aa0162dc0dd95c3bf248e3c78068760094e8f64b
+[0]: 
+https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/AUTHORS
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Pavin.
