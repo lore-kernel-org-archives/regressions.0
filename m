@@ -1,129 +1,85 @@
-Received: from kali.sitour.cz (smtp.sitour.cz [77.48.244.2])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43E3142648
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 19:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.244.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF05A5914E
+	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 19:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710273443; cv=none; b=hslK3XT2G56n7riGy0hfXNogOyCZGotYCU13/wH0+LPm6gYkCEh7T2fPBxz8U70Ez/Tl+KE3Shgfi+EUTuukOFYObo8ZOi23rIFmvEeR97VMPsMd5ato5kJuYDnbquIV6ouqL1VD6hHbGpOt9ZRrhbmP+Mh7FiCsAHwZ5sLGfeM=
+	t=1710273533; cv=none; b=KZwYKuC97gRNyhQTI7k2cYA1shqxroSREQmouoRk9Z5iLbKuevEUee4EHtdWSCQCb8gIvI9PLO1x33IUNlsmtsaQcFaYMWCvVjUH67Eh5pwR3KHczkpU0KSoOcAAgiqAeWSSDiewMMIS5h56kJuc+OWtI/EBBj6+58vJqAXKKjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710273443; c=relaxed/simple;
-	bh=GUrmdKnweXO/sLu3wA3GMFNaFVHLS8AhG3rvVMW+K7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NoxuFhNvD9TQzEL7mAxmf9DqiRE8AZFR1BGdck6S1WFQfX2ZN475/uSphpTjoIHO53zv3UxBvWLuCR++FGc0mnavv384EF5gcwGTxEhma4bTCGi29nxlqD42dfvwttAEzeJziFHXFdyF3R5tRc7ZuwnBSBfgzbVaTXFUsv3koTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mydatex.cz; spf=pass smtp.mailfrom=mydatex.cz; dkim=pass (2048-bit key) header.d=mydatex.cz header.i=@mydatex.cz header.b=HUQjQN33; arc=none smtp.client-ip=77.48.244.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mydatex.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mydatex.cz
+	s=arc-20240116; t=1710273533; c=relaxed/simple;
+	bh=NHW3IaISh50Myyp54DeATRM9ze8PTsnzxTNyx85E6Ck=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sFkFLdpHb64vKFo9AwJnTWJ159y8qvj0j+Gth+Ktk/oYgvM6H53AGS/kJaU5+fm2qcePbn+qsW5TRfGNaY7DKD5hZo9FQOGaOciV7UJWjd135Jei/ht+lvX+/pDjm2JrJiUZUyhhvy9MNcOlNL5gD1c19AxwNCT+RqmZrIzIR5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ZALj9yj6; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mydatex.cz header.i=@mydatex.cz header.b="HUQjQN33"
-Received: from localhost (localhost [127.0.0.1])
-	by kali.sitour.cz (Postfix) with ESMTP id 7344E4E0275
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:57:13 +0100 (CET)
-X-Virus-Scanned: Debian amavis at sitour.cz
-Received: from kali.sitour.cz ([127.0.0.1])
- by localhost (sitour.cz [127.0.0.1]) (amavis, port 10024) with ESMTP
- id qGmp8JfGJN3P for <regressions@lists.linux.dev>;
- Tue, 12 Mar 2024 20:57:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mydatex.cz; s=mydatex;
-	t=1710273430; bh=GUrmdKnweXO/sLu3wA3GMFNaFVHLS8AhG3rvVMW+K7s=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=HUQjQN33PxJdfyAw9o/IFgCCz5qGT1CU4k0/kXntrrJmublbXmo2fVVSmvEkIt00x
-	 J0xlrc80kUdkr+q2rvmSl4IYSKHdYO5vpuaCAwqRRioTeUTqP+1qiB6YPMFnilMX6H
-	 i03wnie6lqbG3H/eXd396s9ygEHVKry32PnPCHym1IldmD6fDI7Px7jI+IVfskhDye
-	 AbosF4wikSq3uzEHLcO77hZSKC21r6gzaURLih76k9ISqC6o5ZTjvXsFk9zBMlGhm0
-	 5wwUNU8SaLY7QDZ1N5pCEraENgaQDZU0sIfZa8sEDykskbuCWTd4MlbAFLcOp06cFm
-	 jXg7W6+Q0mhhQ==
-Received: from [192.168.3.13] (firma.mydatex.cz [84.242.99.246])
-	by kali.sitour.cz (Postfix) with ESMTPSA id D7D444E0272
-	for <regressions@lists.linux.dev>; Tue, 12 Mar 2024 20:57:10 +0100 (CET)
-Message-ID: <6918321b-038d-40b9-8149-d535bf9d3d52@mydatex.cz>
-Date: Tue, 12 Mar 2024 20:57:10 +0100
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZALj9yj6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1710273532; x=1741809532;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=NHW3IaISh50Myyp54DeATRM9ze8PTsnzxTNyx85E6Ck=;
+  b=ZALj9yj69TPE8Ez+8XgxExZakmU3e9T9klGMVFYZUk9PFYN8zVJDtKM8
+   SlbEIuI2Uji/ZTPk9qc0lUS0OEi8/T7e2G9Soy8XM1mUCLHsCpM9/0eP0
+   eIbulOhickRlpkAg0n8SrKT7S7XKp6jSMaXf8ovpQW2GXeu0UPFiJnPpb
+   U=;
+X-IronPort-AV: E=Sophos;i="6.07,119,1708387200"; 
+   d="scan'208";a="640404346"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 19:58:48 +0000
+Received: from EX19MTAUEB001.ant.amazon.com [10.0.44.209:21156]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.60.110:2525] with esmtp (Farcaster)
+ id 131e9eb3-cf19-4da3-9bbc-00c7e068918e; Tue, 12 Mar 2024 19:58:47 +0000 (UTC)
+X-Farcaster-Flow-ID: 131e9eb3-cf19-4da3-9bbc-00c7e068918e
+Received: from EX19EXOUEB001.ant.amazon.com (10.252.135.46) by
+ EX19MTAUEB001.ant.amazon.com (10.252.135.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 12 Mar 2024 19:58:40 +0000
+Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
+ EX19EXOUEB001.ant.amazon.com (10.252.135.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 12 Mar 2024 19:58:40 +0000
+Received: from dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (10.15.1.225)
+ by mail-relay.amazon.com (10.252.134.102) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Tue, 12 Mar 2024 19:58:40 +0000
+Received: by dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (Postfix, from userid 23907357)
+	id 2567C7CE; Tue, 12 Mar 2024 20:58:40 +0100 (CET)
+From: Mahmoud Adam <mngyadam@amazon.com>
+To: <peterz@infradead.org>
+CC: <tglx@linutronix.de>, <bp@alien8.de>, <gregkh@linuxfoundation.org>,
+	<regressions@lists.linux.dev>
+Subject: Regression caused by 'x86/returnthunk: Allow different return thunks'
+Date: Tue, 12 Mar 2024 20:58:39 +0100
+Message-ID: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regressions can bus with MCP2515 on sama5d3 connected over SPI
- stop working on kernel > 5.4.271
-Content-Language: cs-CZ, en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <2ede8f49-41f8-4d9a-83e4-ea5d4d1677fe@mydatex.cz>
- <a2e64be0-e07d-4c55-aba7-87c7e4c876e0@leemhuis.info>
- <734cf096-3769-4610-b72f-394c31a8d942@mydatex.cz>
- <91d8a6b6-6186-4aa0-8462-56b4751854e9@leemhuis.info>
-From: Daniel Smolik <smolik@mydatex.cz>
-In-Reply-To: <91d8a6b6-6186-4aa0-8462-56b4751854e9@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi ,
-6.8  is affected   with this bug.  I try bisect the bug.
+Hello,
 
-Regards
-             Dan
+ We've seen ~35% regression on fio benchamrk on AMD caused by these
+commits:
+`
+545a94ffc29a4 * x86/alternative: Make custom return thunk unconditional
+b012dcf39d9e7 * Revert "x86/alternative: Make custom return thunk unconditional"
+1221b8ea25cc8 * x86/returnthunk: Allow different return thunks
+`
+the finding and bisection was done on v6.1, but the regression is
+already seen on the new rebases of other stable kernel 5.10 & 5.15 that
+have the same patches.
 
-Dne 12. 03. 24 v 11:39 Linux regression tracking (Thorsten Leemhuis) 
-napsal(a):
-> On 12.03.24 11:27, Dan Smolik wrote:
->> Dne 12. 03. 24 v 11:19 Linux regression tracking (Thorsten Leemhuis)
->> napsal(a):
->>> On 11.03.24 22:55, Daniel Smolik wrote:
->>>> I have found problem with kernel > 5.4.271 (long term) on sama5d3. When
->>>> I config can bus with:
->>>>
->>>> ip link set can0 type can bitrate 125000 triple-sampling on
->>>>
->>>> and type
->>>> ifconfig can0 up
->>>>
->>>> prompt never returns and cannot run eg. ip a (never returns) existing
->>>> ssh connection works but can´t do new one.
->>>>
->>>>
->>>>     I have my own daughter  board with can bus driver MCP2515 connected
->>>> over SPI bus. There is
->>>> snippet of my DTB:
->>>>
->>>>    can0: can@0 {
->>>>                                           compatible =
->>>> "microchip,mcp2515";
->>>>                                           reg = <0>;
->>>>                                           clocks = <&can0_osc_fixed>;
->>>>                                           interrupt-parent = <&pioD>;
->>>>                                           interrupts = <29
->>>> IRQ_TYPE_EDGE_RISING>;
->>>>                                           spi-max-frequency = <10000000>;
->>>>                                       };
->>>>
->>>> with this all working  perfect  on long term kernels 4.19.  I try switch
->>>> to newer kernel and latest I get working is 5.4.271.   Kernel 5.5.0
->>>> -5.5.6 I can´t  compile and 5.5.14  is affected with bug.
->>> The two important question here are:
->>>
->>> * Is mainline (e.g. 6.8) affected as well? That determines if the
->>> regular developers or the stable team has to look into this.
->> I mean yes,  I tested 6.6.21 and is affected.   6.8 I can test today
->> afternoon.
-> Yes, please test 6.8.
->
->>> * Could you bisect the problem (e.g. I assume between 5.4.271 and
->>> 5.4.272)? I'm working on a guide that explains this:
->>> https://www.leemhuis.info/files/misc/How%20to%20bisect%20a%20Linux%20kernel%20regression%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
->> Yes I try this but it looks like that latest good is 5.4.271 and first
->> bad us 5.5.0  but this kernel fail when building to arm platform.  First
->> which I build for arm is 5.5.14.
->>
->> I try bisecting but when I can't build kernel what can I do ?
-> Bisect between 5.4 and 5.5 and during the bisection use "git cherry-pick
-> --no-commit <sha1sum>" to apply the fix(es) without committing them
-> before you build; once the build is ready, use "git reset --hard" to
-> reset things.
->
-> But please check 6.8 first; if it is affected we can CC a few
-> developers. If you are lucky they have an idea what might be wrong here
-> and then no bisection might be needed.
->
-> Ciao, Thorsten
+the following exact fio command that sees this regression:
 
+fio --time_based --name=benchmark --size=50G --runtime=60
+--filename=$device --ioengine=psync --randrepeat=0 --iodepth=1
+--fsync=64 --invalidate=1 --verify=0 --verify_fatal=0 --blocksize=4k
+--group_reporting --rw=randwrite --numjobs=1
+
+note: the regression is seen even with retbleed=off and also with spectre_v2=off
+
+-MNAdam
