@@ -1,100 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11244768EF
-	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 21:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B0DDB7
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 22:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710453196; cv=none; b=EeO4bqt4QuVQR9hLiyMNQIlkt0JxQEe/02QzbReYUbY5P5vXLVLWTqO7d34SE/xBMO/qHozcGCTLkvBUOf0nCG9JgkhvRAfbV1tDZ2gOLh0Ajgkv1E9iEnpppy7z0m03bx0c0KbtcEZ3Och8GHUVQcM8vpmDJi9h+mkEwv8aW+k=
+	t=1710455812; cv=none; b=ORPyVkB578nU+uxcvNI+9rYq9cRLxL2a4CJsPR4YL+vUwSgmYVo5eYpGAKZFXmkqVnP3OQIrvSTQP44lT1ploqtB1onqEkTQTOMLQn/Whe0f5uF93XEVaMxCt6P0hF6VuNnE7mQNd2fkQFvs6KWocFE30cQQlPkRR/9a8bDfMQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710453196; c=relaxed/simple;
-	bh=WPRfkxJqbJBYPqNpxCyMjPF27M2MVRXoenCnOxv8VfY=;
+	s=arc-20240116; t=1710455812; c=relaxed/simple;
+	bh=fbNb5wcqEZU5SnCBUM6reim3vrCnqaK/WfSKJQJ0njg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hVhF/2HB4CKPGROktURZsi2NOQDZKPgMxq4IxUiqbS19o6Zcu4ShSEkFpMi0Ukb1MzxNKWuCnCyyAuXWxW8JPA5GTXx22kmVIDIMpWDYbDsHE0TQ8VeI0Zfzq2SiCarQvbWC6tORvkwd+2VwVfpHq5u4sS5LbB/RJu8fzCDxgzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbzfDuKG; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=fIw0ZuuiaR1tUk1fZTX2RJHN7EFb8ZRBpXgVVWf5ze6J1SjHsA41r5OPONlDWQ7wdXubQ+RshDutlBgISL252JNGVH0q4wCIFWNsqKvKkMZlIR1WkOTAUYjswiPyXRN89TkiLRmsLpnuFyEFi/CqhjSl6p8eSrU00EEyEKLswI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eX0FkPV2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbzfDuKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7160C43390
-	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 21:53:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eX0FkPV2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3C3C433A6
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 22:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710453195;
-	bh=WPRfkxJqbJBYPqNpxCyMjPF27M2MVRXoenCnOxv8VfY=;
+	s=k20201202; t=1710455811;
+	bh=fbNb5wcqEZU5SnCBUM6reim3vrCnqaK/WfSKJQJ0njg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FbzfDuKG5SJAT17JTkLwXswieoLq4cCm13Ud/J+wId3WzGbuxONv4nooZrIIlWtwP
-	 TV7gRO3f7aWmNpwWKCqZZ6sFXr6aGwRKeCmWtbTjwFcnxgOvA2Vapzepd3oEI6+jbj
-	 OhcW94EokTr3Ehhm67bFJwmYttJF1ZTgq0tzqDK0Eoiu9YrdBf86edTnKSudPy0yjK
-	 XQ07crASzeC4krlBSDubvyHh7R48H12MlROz218DVDWzQTImw9PnF18484RbSvQlI0
-	 jhreYyOg+IA4d86DcMQHeEAMGKTRQTsMr29SJCG2NyNKtdqISZTP+Bbc/ZZ6dAgDHB
-	 nS75jsKOO7l1w==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d288bac3caso18589701fa.2
-        for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 14:53:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgoMuTk7MMV9JUy5Q7Unbo8IgCBsFF76WQK8tYXsAiZgE8Wjn15IyA1ZL654xsqPZN8aWIe4lk3Xe14jwyb/3X+ZA3t7Bks/wAqIo=
-X-Gm-Message-State: AOJu0YzPUbDCdyWFBfKqo/bR/3WThy0vuh5hoNsdOhER6kK/+vMUgpIZ
-	XG0MvFY2wSi2jjVfIl5pgIgKIZGKQNnq0zTy1OnuU6K0jetSD1GXoiw2y6t5D363dMMlQa2Tqwo
-	Pfm777pkiD379spYNq9MzlcdQgko=
-X-Google-Smtp-Source: AGHT+IH+JKw0N+3Gs/RY5NStXciyGSAfDdP5e6wmmSFfMTkxWU4/NM5mxE0nKf/+8/S3+UVsTbzgaOYYe6jSVdBJx+U=
-X-Received: by 2002:a2e:9b99:0:b0:2d4:7756:3549 with SMTP id
- z25-20020a2e9b99000000b002d477563549mr1887421lji.16.1710453194104; Thu, 14
- Mar 2024 14:53:14 -0700 (PDT)
+	b=eX0FkPV29BtRH+YQ2XMihobim0z38t5NXP5yWvokl1Ow+kh5NDpOuNHMh8NIqtO4E
+	 MlbvzYFjojFJqVU4bCAjf0oc44Pdg2OMgade2Dfjuvi5IMm20v1Z3z5EpzVF2dWEkP
+	 VkzASyUbYjj+5TpfpNeG8KXFXZCMmS88XFOuPQB37hKXhVjjjD71fnlez/rlPdy6lF
+	 l0YkbIQOveYU6f2L8QW9sFolAhX0qqfJg0M3r9ts1PwyRpD2MHEc4FE1wjwqxgGIrT
+	 zHqPdaJvbdPGLSwJmBcDnVYMYTrGepyL3katyh7vL+COLjv3MYNzn14scUBcrly/SN
+	 qxtA2OvlgsR5g==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d459a0462fso20861291fa.2
+        for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 15:36:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVNaoP9hzrdw18UgVDfU4MFRW0dKeEVL7Q5qDMtResB5zDQEl3EEg9hT+GU8SVdG+Un1tamTfwEE3i9cUlEl8I5rmySRz6oTy8D2PY=
+X-Gm-Message-State: AOJu0YzBXwqxvm2ff1wc2rG/xTPr2Z8+23McxIL4k4KqYXTifNuGIWHZ
+	V0cZ3SVlcZPauylLpfnEAlAcZocBdo+vD/t0gltS8sSqt5hVUPtRJHGuuDG9NitsPDCZPz2nGY8
+	CT2tx4hHXrSIvFFt/5xBm9tm8Tlk=
+X-Google-Smtp-Source: AGHT+IFiM0ytae454y9Doy0DuUAI+DWqxfqDNq0jd8LMDy7eU4aCLH+y9/AkZYl+Sa+21uX20P6wffVPOv9NMK7csE8=
+X-Received: by 2002:a2e:bba5:0:b0:2d4:72c1:d2dd with SMTP id
+ y37-20020a2ebba5000000b002d472c1d2ddmr2106863lje.8.1710455809914; Thu, 14 Mar
+ 2024 15:36:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz> <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
-In-Reply-To: <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 14 Mar 2024 22:53:02 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
-Message-ID: <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	regressions@leemhuis.info
+References: <20240123005700.9302-1-dan@danm.net> <20240220230658.11069-1-dan@danm.net>
+ <7efac6e0-32df-457e-9d21-4945c69328f8@leemhuis.info> <CAPhsuW5QYTjBvjAjf8SdcKmPGO20e5-p57n6af5FaXudSiOCmg@mail.gmail.com>
+ <739634c3-3e21-44dd-abb1-356cf54e54fd@oracle.com> <d3cdebfe-17c0-4f61-9ad9-71d9de2339b2@oracle.com>
+ <ecfce4d7-bcf7-c09a-7f01-5c7de88df107@huaweicloud.com> <ba26ac4f-160a-451e-a08b-27f577d8d2ba@oracle.com>
+ <fa4beda8-986c-1112-f3f2-159f20674d47@huaweicloud.com> <e58155bf-71c1-48c4-94c7-b0d9ecbbef99@oracle.com>
+In-Reply-To: <e58155bf-71c1-48c4-94c7-b0d9ecbbef99@oracle.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 14 Mar 2024 15:36:38 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7V_n96PDp0wBe5pFNrrkZsbiTQZgZkY+FN7fpJYUmmaw@mail.gmail.com>
+Message-ID: <CAPhsuW7V_n96PDp0wBe5pFNrrkZsbiTQZgZkY+FN7fpJYUmmaw@mail.gmail.com>
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: junxiao.bi@oracle.com
+Cc: Yu Kuai <yukuai1@huaweicloud.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+	stable@vger.kernel.org, Dan Moulding <dan@danm.net>, "yukuai (C)" <yukuai3@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Mar 2024 at 20:35, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Thu, Mar 14, 2024 at 11:20=E2=80=AFAM <junxiao.bi@oracle.com> wrote:
 >
-> On Thu, 14 Mar 2024 at 19:32, Radek Podgorny <radek@podgorny.cz> wrote:
+[...]
+> >>
+> >> This patch eliminated the benefit of blk_plug, i think it will not be
+> >> good for IO performance perspective?
 > >
-> > hi,
-> >
-> > i seem to be the only one in the world to have this problem. :-(
-> >
-> > on one of my machines, updating to 6.6.18 and later (including mainline
-> > branch) leads to unbootable system. all other computers are unaffected.
-> >
-> > bisecting the history leads to:
-> >
-> > commit 8117961d98fb2d335ab6de2cad7afb8b6171f5fe
-> > Author: Ard Biesheuvel <ardb@kernel.org>
-> >
->
-> Thanks for the report.
->
-> I'd like to get to the bottom of this if we can.
->
-> Please share as much information as you can about the system
-> - boot logs
-> - DMI data to identify the system and firmware etc
-> - distro version
-> - versions of boot components (shim, grub, systemd-boot, etc including
-> config files)
-> - other information that might help narrow this down.
+> > There is only one daemon thread, so IO should not be handled here as
+> > much as possible. The IO should be handled by the thread that is
+> > submitting the IO, and let daemon to hanldle the case that IO failed or
+> > can't be submitted at that time.
 
-Also, please check whether the below change makes a difference or not
+raid5 can have multiple threads calling handle_stripe(). See raid5_do_work(=
+).
+Only chunk_aligned_read() can be handled in raid5_make_request.
 
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -477,6 +477,8 @@
-                efi_exit(handle, status);
-        }
+>
+> I am not sure how much it will impact regarding drop the blk_plug.
+>
+> Song, what's your take on this?
 
-+       memset(&boot_params, 0, sizeof(boot_params));
-+
-        /* Assign the setup_header fields that the kernel actually
-cares about */
-        hdr->root_flags = 1;
-        hdr->vid_mode   = 0xffff;
+I think we need to evaluate the impact of (removing) blk_plug. We had
+some performance regressions related to blk_plug a couple years ago.
+
+Thanks,
+Song
