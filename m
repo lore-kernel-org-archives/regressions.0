@@ -1,123 +1,106 @@
-Received: from mr85p00im-zteg06021601.me.com (mr85p00im-zteg06021601.me.com [17.58.23.187])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6347319F
-	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 16:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D047441E
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 16:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710432739; cv=none; b=flUWVi2uIQbECGGYawX9rZSnR3ZYGzs8lt7F/Fh6oHRh9UXwVRIrtNzWF9nVS2vs9FqgWKc7fAeK8einjoa8i3Ddq+LgYuU3KB1mjBCt+in/l+NcL/krp7Lx74iy+P6Odg6kix5EtrCEUrT9wEPAeOSaOV3KBob9GiwswFJm/t8=
+	t=1710434605; cv=none; b=NLnZWYPkN8Vuu6hKix6D/AiqDNNi8BJmDbCijPsOMTZdRp+DlL3PlH5bOqEZjj4jBp6qog/nhruOAjKJOyDQfYbywIANHghrLi7QSYjSB8rvme7xtmuzkDjb0nHhiLtQtchgdi50rVOEDO8dA9BGykyiHYVPCFFikPZnzkSSqLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710432739; c=relaxed/simple;
-	bh=PCA4oEGeHzergRYebAFkfnGjTh/er2Db/gz5H42uMWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZuhQShNHmJjxPZn1BwVKF2BYQIUJuf9ryN6oyVZ2K5NL1VAmfsGtint29BHx8+Z0uScKge3B+1uFjuZdB80s44jm9l3m21XKOR8eYnVE85kIgq02PzYzdvz5YkFx1B28+Lsa0guYG/SO/VTT8k5qav8OUV3iOLg4X0Guq272G5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=dLG7BlGV; arc=none smtp.client-ip=17.58.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	s=arc-20240116; t=1710434605; c=relaxed/simple;
+	bh=F+jWqDGGfOIf2dwHhOKxk8w5QAp7Gn2ZWLqVone/E8E=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ozXOlURmV+gZ1Av9v0S0FAyJoalkbKt2InUs2GLUDwi+l/X6G2KcLidRs/lrKFRN1bhP2XCSNL7AgzXFaZMDA5JSNOXnAY1zhl0qvtm5PcR9aYOsm1UncZ0+SL76d7rIhRN5wY0GE1zF+VRmemQShzPseeG03kRPzksmuTAR8Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=MTFwXwn3; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="dLG7BlGV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1710432735; bh=1luFzV2CPB2v/YqlRKWWzf4uwnz03g7Ye4zf7/eqxm4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dLG7BlGV8NylXoAI//Vb+4/4o+da8YCly/CXZCm2kgpQW7tfq2MFAtcCNGsIi7S7G
-	 J0SlTwS0CO2aaI5uoE1vE2iBbntQ4rZ4uByY6eMmLES8MZTnIk5x7dj79j+Q8U0KQn
-	 VnRmeiSHK/dgzy5BJsWAtFBDIZtUuiRF16O1UpFxlg7ciTtdpSyyxPIJ43nvwFd2Q/
-	 gs/P6eGcwDh3Rmu8AGyBSRLj80ttCWRudfFYHVK8A79fOtlY0X6I7Sj693XypaC7Xb
-	 aPQ6peNdQaD7csfwKLXC3MCCl+UYReQ+TRKKqGFkRrC0/N/cMwyDJKGC/DeW5qQHpq
-	 XyLPvEz1An2Bg==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021601.me.com (Postfix) with ESMTPSA id BDCA63058A81;
-	Thu, 14 Mar 2024 16:12:13 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: yukuai1@huaweicloud.com
-Cc: dan@danm.net,
-	gregkh@linuxfoundation.org,
-	junxiao.bi@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	regressions@lists.linux.dev,
-	song@kernel.org,
-	stable@vger.kernel.org,
-	yukuai3@huawei.com
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system; successfully bisected
-Date: Thu, 14 Mar 2024 10:12:11 -0600
-Message-ID: <20240314161211.14002-1-dan@danm.net>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <ecfce4d7-bcf7-c09a-7f01-5c7de88df107@huaweicloud.com>
-References: <ecfce4d7-bcf7-c09a-7f01-5c7de88df107@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MTFwXwn3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1710434605; x=1741970605;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=jQra6uXIBNcg4Dam997blH33D3Sik7pC44xNHzeQhaE=;
+  b=MTFwXwn3u6IAMJLWES0e2AD74eIGP4Lw8Yf3a4kigCqoFKm9K4H5IDG/
+   lJdNjSs01NoLDL/T7f3fgYE7gT4pnMsMQiHOaOkLyewMuUAabCoir00rj
+   sbG087MvWrgyu5FfQOaZJNRNuVXZQwvjPPMp5FXOjPJbXcWFat5w1Dg1l
+   w=;
+X-IronPort-AV: E=Sophos;i="6.07,125,1708387200"; 
+   d="scan'208";a="191615721"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 16:43:22 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:60788]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.10:2525] with esmtp (Farcaster)
+ id 83b776e8-afb3-4100-a22c-3976d1e92cfb; Thu, 14 Mar 2024 16:43:20 +0000 (UTC)
+X-Farcaster-Flow-ID: 83b776e8-afb3-4100-a22c-3976d1e92cfb
+Received: from EX19EXOUWA002.ant.amazon.com (10.250.64.216) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 14 Mar 2024 16:43:20 +0000
+Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.218) by
+ EX19EXOUWA002.ant.amazon.com (10.250.64.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 14 Mar 2024 16:43:20 +0000
+Received: from dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (10.15.1.225)
+ by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Thu, 14 Mar 2024 16:43:19 +0000
+Received: by dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com (Postfix, from userid 23907357)
+	id 77FBB64B4; Thu, 14 Mar 2024 17:43:19 +0100 (CET)
+From: Mahmoud Adam <mngyadam@amazon.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: <peterz@infradead.org>, <tglx@linutronix.de>,
+	<gregkh@linuxfoundation.org>, <regressions@lists.linux.dev>, David Kaplan
+	<David.Kaplan@amd.com>
+Subject: Re: Regression caused by 'x86/returnthunk: Allow different return
+ thunks'
+In-Reply-To: <20240314143848.GAZfML-Bbk3_Nxyc0c@fat_crate.local> (Borislav
+	Petkov's message of "Thu, 14 Mar 2024 15:38:48 +0100")
+References: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+	<20240314143848.GAZfML-Bbk3_Nxyc0c@fat_crate.local>
+Date: Thu, 14 Mar 2024 17:43:19 +0100
+Message-ID: <lrkyqle6kydaw.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: n00SGHrE7BkMgWyyYDU0ShHBWmWW7znb
-X-Proofpoint-GUID: n00SGHrE7BkMgWyyYDU0ShHBWmWW7znb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=984
- adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- clxscore=1030 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2403140122
+Content-Type: text/plain
 
-> How about the following patch?
-> 
-> Thanks,
-> Kuai
-> 
-> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-> index 3ad5f3c7f91e..0b2e6060f2c9 100644
-> --- a/drivers/md/raid5.c
-> +++ b/drivers/md/raid5.c
-> @@ -6720,7 +6720,6 @@ static void raid5d(struct md_thread *thread)
-> 
->          md_check_recovery(mddev);
-> 
-> -       blk_start_plug(&plug);
->          handled = 0;
->          spin_lock_irq(&conf->device_lock);
->          while (1) {
-> @@ -6728,6 +6727,14 @@ static void raid5d(struct md_thread *thread)
->                  int batch_size, released;
->                  unsigned int offset;
-> 
-> +               /*
-> +                * md_check_recovery() can't clear sb_flags, usually 
-> because of
-> +                * 'reconfig_mutex' can't be grabbed, wait for 
-> mddev_unlock() to
-> +                * wake up raid5d().
-> +                */
-> +               if (test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags))
-> +                       goto skip;
-> +
->                  released = release_stripe_list(conf, 
-> conf->temp_inactive_list);
->                  if (released)
->                          clear_bit(R5_DID_ALLOC, &conf->cache_state);
-> @@ -6766,8 +6773,8 @@ static void raid5d(struct md_thread *thread)
->                          spin_lock_irq(&conf->device_lock);
->                  }
->          }
-> +skip:
->          pr_debug("%d stripes handled\n", handled);
-> -
->          spin_unlock_irq(&conf->device_lock);
->          if (test_and_clear_bit(R5_ALLOC_MORE, &conf->cache_state) &&
->              mutex_trylock(&conf->cache_size_mutex)) {
-> @@ -6779,6 +6786,7 @@ static void raid5d(struct md_thread *thread)
->                  mutex_unlock(&conf->cache_size_mutex);
->          }
-> 
-> +       blk_start_plug(&plug);
->          flush_deferred_bios(conf);
-> 
->          r5l_flush_stripe_to_raid(conf->log);
+Borislav Petkov <bp@alien8.de> writes:
 
-I can confirm that this patch also works. I'm unable to reproduce the
-hang after applying this instead of the first patch provided by
-Junxiao. So looks like both ways are succesful in avoiding the hang.
+> On Tue, Mar 12, 2024 at 08:58:39PM +0100, Mahmoud Adam wrote:
+>>  We've seen ~35% regression on fio benchamrk on AMD caused by these
+>> commits:
+>> `
+>> 545a94ffc29a4 * x86/alternative: Make custom return thunk unconditional
+>> b012dcf39d9e7 * Revert "x86/alternative: Make custom return thunk unconditional"
+>> 1221b8ea25cc8 * x86/returnthunk: Allow different return thunks
+>> `
+>> the finding and bisection was done on v6.1, but the regression is
+>> already seen on the new rebases of other stable kernel 5.10 & 5.15 that
+>> have the same patches.
+>> 
+>> the following exact fio command that sees this regression:
+>> 
+>> fio --time_based --name=benchmark --size=50G --runtime=60
+>> --filename=$device --ioengine=psync --randrepeat=0 --iodepth=1
+>> --fsync=64 --invalidate=1 --verify=0 --verify_fatal=0 --blocksize=4k
+>> --group_reporting --rw=randwrite --numjobs=1
+>> 
+>> note: the regression is seen even with retbleed=off and also with spectre_v2=off
+>
+> Say, out of curiosity, how exactly are you running the fio benchmark?
+>
+> Baremetal, what CPU, kernel, etc?
 
--- Dan
+Virtual, AMD EPYC 7002 series processors, v6.1.80 kernel
+More specifically: this was run on C5ad EC2 instance[1], device used
+for benchmarking was the attached ephemeral NVMe.
+
+[1] https://aws.amazon.com/ec2/instance-types/c5/
+
+-MNAdam
+
