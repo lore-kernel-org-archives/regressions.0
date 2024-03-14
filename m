@@ -1,142 +1,83 @@
-Received: from mxb.seznam.cz (mxb.seznam.cz [77.75.78.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60861E480
-	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 18:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.75.78.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BA97317D
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 19:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710442021; cv=none; b=ttnvLnsKiuvq8wphfVdw7dTcCyJQ1ENdXg+oM5k3ZcPxQ26GypVFOCk02qTeD11UjKeMlkBUqBeMzNa9TMLbd1qhQfyrVYyfmvdoM/GopBrIO5X/am3Ph4KEmu8wFanRWRmj7UjA2t0cGjjAIGJLp2sHzYbhohIFVVqxXTuqFdk=
+	t=1710444950; cv=none; b=lhgDQaGAzrAXMZ9vLgaWze24LXjoMmOZvazdasrNtgvf2+f2Z5fJH3gZr5k65bB03oqOsCiUX2sJvaKeDIoGYgUy6MpI8LoD6PMoSwMsvPKG/U2pWjze+JEQ02o56NkF3+g9t3LElINAGN0dyjXwAeTwDQSUF/5WGmqamMJZ4xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710442021; c=relaxed/simple;
-	bh=ceLo9Rj8yu4e9lUaL42kim2b3g/U7nf+tkiHDnZBTvY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=uGAKZNXnVPnmpbX5kPQrkmt0+6lFNh92N4pS3VAGbo6SNfwEs5K+FKQCR9nSN6FljHw8gEwffrp22ESteeJlCo7Q6P/bNkwjd92/My5PhlWwunVqs/+myTZCuOMJ8A6f8pGUxY5rW+SAahdOZBnAiG8JtaMuulMbdfyK4DUeDhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz; spf=pass smtp.mailfrom=podgorny.cz; dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b=c+b8Yx7x; arc=none smtp.client-ip=77.75.78.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=podgorny.cz
+	s=arc-20240116; t=1710444950; c=relaxed/simple;
+	bh=3Rxcynx0H5QzoAHSHBaaELOKSYM44kiaWaRSgICVEDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IcXwHgAYfeXnn8VrY4m5Q1PVrUWxBn4qyHsE0+xHLu/5k86Ty3oO61604Tv8rRi1YpRNRcMKN5H5a1B0U1zlBsaaCGmqN0Eu1PYXeSYmGpapmEB8Nly0YVLpyj3yN6viB+hoqeA29YFvzT1seCxn9v2EeQ+X5uUhKMnT0zbdLNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VReS/6zN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b="c+b8Yx7x"
-Received: from email.seznam.cz
-	by smtpc-mxb-765b87775b-k85z9
-	(smtpc-mxb-765b87775b-k85z9 [2a02:598:128:8a00::1000:3f8])
-	id 2df69c989bcc3181287986d0;
-	Thu, 14 Mar 2024 19:46:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=emailprofi.seznam.cz; s=szn20221014; t=1710442014;
-	bh=ceLo9Rj8yu4e9lUaL42kim2b3g/U7nf+tkiHDnZBTvY=;
-	h=Received:Message-ID:Date:MIME-Version:User-Agent:Content-Language:
-	 From:Subject:To:Cc:Content-Type;
-	b=c+b8Yx7xVnyYD/+IEuZuzsomlrW70vgUROS8sMscKdjDBqRBGpfZI4pS78eYlQ8PJ
-	 lTYcqJEOtHRkop+Z5+CSedwpBSNKkrWoxT7mCMTQw/LuLvlGHOnehgSLGMytsxxVRG
-	 QBySHc7VQgrkF0QnCPb3U3HUCD16DdJaulSnfpSPBx/krjMtYeygYDQadaVF+cIPFW
-	 +X3yY/SnXFes3vGsehjQQ98FwuuFP3IFXNU5pN4h1BUQHxOAEhaK4PZ2AP9elQYwdC
-	 SCdJrkfCb3q/xIvdd5QwUfO8OTOxZEVBf6YB5XyymAps6fLPxLSxlLGhlJvRqbUDCM
-	 MBRO7OJ5zKiwQ==
-Received: from [IPV6:2a01:9422:904:1ee:e65e:37ff:feee:e29c]
-	([2a01:9422:904:1ee:e65e:37ff:feee:e29c])
-	by smtpd-relay-594d8f6859-m6hpf (szn-email-smtpd/2.0.18) with ESMTPA
-	id c51e4f74-8c4d-4a36-8f2a-6e42de0460e8;
-	Thu, 14 Mar 2024 19:31:48 +0100
-Message-ID: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
-Date: Thu, 14 Mar 2024 19:31:42 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VReS/6zN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9606BC43390
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 19:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710444949;
+	bh=3Rxcynx0H5QzoAHSHBaaELOKSYM44kiaWaRSgICVEDk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VReS/6zNZ1aLwVvcvTW9Y7tjePO5DJhvfoqwljq+2kikReVb/uSHJKvdYhy7pFrb6
+	 1/vdrlkM/uIzHS1qaRhmeV+gFRbMd/wYQYkJRleQUuLyCxhYpZpdSJg1k2y+UL045G
+	 fV5cQTBb0jU2cq83PlLH2KZ5mv1gqMSjCVxucK/abe3Q5wfOu+w75/p/rj+wygCl3b
+	 T5SWQs2BSgbpOg+IGKMwogJrnQXjLoXI9JM5OjGKON6kn/53bmIZE6ANYznFDT6NdQ
+	 3EEtk4l+4gORp7ycCz8lBI6GgpOm8Mxy1Mi3I40R+n/VvFae3UmrwuHd653tF3Kyog
+	 m8u7kNRbptdIQ==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d29111272eso18052531fa.0
+        for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 12:35:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMkOT90Ohh3JRLkcoMApfMVCyItKIij0b/LXnj+CteYQJi8zO+UVazBXfe3N+8OzGjI7Wjitq9Ccs8diiaH/h7a6EQpC8FaOjhRSM=
+X-Gm-Message-State: AOJu0YzNAnz6eTyrGjEoTrpDaMeZ+Q3fwzmpGclo2xFDg6JUzghkS165
+	4a+9vexXx7Mv95aKLb7+eKb6r4CfFMxkYSNDwV7sLTBQOsi1aLXcuYwSzB/B6V6qeEpVH8tihec
+	qp37ABPEqhQNEgzfwNZuzK10u2XA=
+X-Google-Smtp-Source: AGHT+IEwnps9//0HdKcTZTraFUrI+fQOtyX8t4Df7pqLnapVn8csrqLB74SDqSDuaJc47XQnHtLFhmTVFUjDc007GDs=
+X-Received: by 2002:a05:651c:1025:b0:2d4:67d8:7bbf with SMTP id
+ w5-20020a05651c102500b002d467d87bbfmr1687886ljm.47.1710444947967; Thu, 14 Mar
+ 2024 12:35:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US-large
-From: Radek Podgorny <radek@podgorny.cz>
-Subject: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+In-Reply-To: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 14 Mar 2024 20:35:36 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+Message-ID: <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
  unpacking failed: invalid magic at start of compressed archive"
-To: Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Cc: regressions@leemhuis.info
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------pdMdvZsGczNI50M8e09AvFdI"
+To: Radek Podgorny <radek@podgorny.cz>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------pdMdvZsGczNI50M8e09AvFdI
-Content-Type: multipart/mixed; boundary="------------aRgCRvGyZw0PvoZ2H1rHjGSj";
- protected-headers="v1"
-From: Radek Podgorny <radek@podgorny.cz>
-To: Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Cc: regressions@leemhuis.info
-Message-ID: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
-Subject: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
+On Thu, 14 Mar 2024 at 19:32, Radek Podgorny <radek@podgorny.cz> wrote:
+>
+> hi,
+>
+> i seem to be the only one in the world to have this problem. :-(
+>
+> on one of my machines, updating to 6.6.18 and later (including mainline
+> branch) leads to unbootable system. all other computers are unaffected.
+>
+> bisecting the history leads to:
+>
+> commit 8117961d98fb2d335ab6de2cad7afb8b6171f5fe
+> Author: Ard Biesheuvel <ardb@kernel.org>
+>
 
---------------aRgCRvGyZw0PvoZ2H1rHjGSj
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Thanks for the report.
 
-aGksDQoNCmkgc2VlbSB0byBiZSB0aGUgb25seSBvbmUgaW4gdGhlIHdvcmxkIHRvIGhhdmUg
-dGhpcyBwcm9ibGVtLiA6LSgNCg0Kb24gb25lIG9mIG15IG1hY2hpbmVzLCB1cGRhdGluZyB0
-byA2LjYuMTggYW5kIGxhdGVyIChpbmNsdWRpbmcgbWFpbmxpbmUgDQpicmFuY2gpIGxlYWRz
-IHRvIHVuYm9vdGFibGUgc3lzdGVtLiBhbGwgb3RoZXIgY29tcHV0ZXJzIGFyZSB1bmFmZmVj
-dGVkLg0KDQpiaXNlY3RpbmcgdGhlIGhpc3RvcnkgbGVhZHMgdG86DQoNCmNvbW1pdCA4MTE3
-OTYxZDk4ZmIyZDMzNWFiNmRlMmNhZDdhZmI4YjYxNzFmNWZlDQpBdXRob3I6IEFyZCBCaWVz
-aGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+IA0KIA0KDQpEYXRlOiAgIFR1ZSBTZXAgMTIgMDk6
-MDA6NTMgMjAyMyArMDAwMCANCiANCg0KIA0KIA0KDQogICAgIHg4Ni9lZmk6IERpc3JlZ2Fy
-ZCBzZXR1cCBoZWFkZXIgb2YgbG9hZGVkIGltYWdlIA0KIA0KDQogDQogDQoNCiAgICAgY29t
-bWl0IDdlNTAyNjIyMjlmYWFkMGM3YjhjNTQ0NzdjZDFjODgzZjMxY2M0YTcgdXBzdHJlYW0u
-IA0KIA0KDQoNCiAgICAgVGhlIG5hdGl2ZSBFRkkgZW50cnlwb2ludCBkb2VzIG5vdCB0YWtl
-IGEgc3RydWN0IGJvb3RfcGFyYW1zIGZyb20gdGhlDQogICAgIGxvYWRlciwgYnV0IGluc3Rl
-YWQsIGl0IGNvbnN0cnVjdHMgb25lIGZyb20gc2NyYXRjaCwgdXNpbmcgdGhlIHNldHVwDQog
-ICAgIGhlYWRlciBkYXRhIHBsYWNlZCBhdCB0aGUgc3RhcnQgb2YgdGhlIGltYWdlLg0KDQog
-ICAgIFRoaXMgc2V0dXAgaGVhZGVyIGlzIHBsYWNlZCBpbiBhIHdheSB0aGF0IHBlcm1pdHMg
-bGVnYWN5IGxvYWRlcnMgdG8NCiAgICAgbWFuaXB1bGF0ZSB0aGUgY29udGVudHMgKGkuZS4s
-IHRvIHBhc3MgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgb3IgdGhlDQogICAgIGFkZHJlc3Mg
-YW5kIHNpemUgb2YgYW4gaW5pdGlhbCByYW1kaXNrKSwgYnV0IEVGSSBib290IGRvZXMgbm90
-IHVzZSANCml0IGluDQogICAgIHRoYXQgd2F5IC0gaXQgb25seSBjb3BpZXMgdGhlIGNvbnRl
-bnRzIHRoYXQgd2VyZSBwbGFjZWQgdGhlcmUgYXQgYnVpbGQNCiAgICAgdGltZSwgYnV0IEVG
-SSBsb2FkZXJzIHdpbGwgbm90IChhbmQgc2hvdWxkIG5vdCkgbWFuaXB1bGF0ZSB0aGUgc2V0
-dXANCiAgICAgaGVhZGVyIHRvIGNvbmZpZ3VyZSB0aGUgYm9vdC4gKENvbW1pdCA2M2JmMjhj
-ZWIzZWJiZTc2ICJlZmk6IHg4NjogV2lwZQ0KICAgICBzZXR1cF9kYXRhIG9uIHB1cmUgRUZJ
-IGJvb3QiIGRlYWxzIHdpdGggc29tZSBvZiB0aGUgZmFsbG91dCBvZiB1c2luZw0KICAgICBz
-ZXR1cF9kYXRhIGluIGEgd2F5IHRoYXQgYnJlYWtzIEVGSSBib290LikNCg0KICAgICBHaXZl
-biB0aGF0IG5vbmUgb2YgdGhlIG5vbi16ZXJvIHZhbHVlcyB0aGF0IGFyZSBjb3BpZWQgZnJv
-bSB0aGUgc2V0dXANCiAgICAgaGVhZGVyIGludG8gdGhlIEVGSSBzdHViJ3Mgc3RydWN0IGJv
-b3RfcGFyYW1zIGFyZSByZWxldmFudCB0byB0aGUgYm9vdA0KICAgICBub3cgdGhhdCB0aGUg
-RUZJIHN0dWIgbm8gbG9uZ2VyIGVudGVycyB2aWEgdGhlIGxlZ2FjeSBkZWNvbXByZXNzb3Is
-IHRoZQ0KICAgICBjb3B5IGNhbiBiZSBvbWl0dGVkIGFsdG9nZXRoZXIuDQoNCiAgICAgU2ln
-bmVkLW9mZi1ieTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCiAgICAgU2ln
-bmVkLW9mZi1ieTogSW5nbyBNb2xuYXIgPG1pbmdvQGtlcm5lbC5vcmc+DQogICAgIExpbms6
-IA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDIzMDkxMjA5MDA1MS40MDE0MTE0LTE5
-LWFyZGJAZ29vZ2xlLmNvbQ0KICAgICBTaWduZWQtb2ZmLWJ5OiBHcmVnIEtyb2FoLUhhcnRt
-YW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPg0KDQp0aGlzIHNlZW1zIHRvIGJlIHRo
-ZSBjb21taXQgdG8gaW50cm9kdWNlIHRoZSByZWdyZXNzaW9uLg0KDQppIGhhdmUgbm8gaWRl
-YSB3aGVyZSB0byBsb29rIGFuZCB3aGF0IGluZm9ybWF0aW9uIHRvIHByb3ZpZGUgdG8gZXhw
-bGFpbiANCndoYXQgdGhlIHByb2JsZW0gbWlnaHQgYmUgb3Igd2h5IHRoaXMgc2luZ2xlIG1h
-Y2hpbmUgaXMgZGlmZmVyZW50LiA6LSgNCg0KcGxlYXNlIGRvbid0IGhlc2l0YXRlIHRvIGFz
-ayBtZSBmdXJ0aGVyIHF1ZXN0aW9ucyAtIGkgY2FuIGRvIGFueSANCmRlYnVnZ2luZyB5b3Ug
-bWF5IG5lZWQgb24geW91ciBiZWhhbGYuDQoNCnNpbmNlcmVseSwNClIuDQoNCiNyZWd6Ym90
-IGludHJvZHVjZWQ6IDgxMTc5NjFkOThmYjJkMzM1YWI2ZGUyY2FkN2FmYjhiNjE3MWY1ZmUN
-Cg==
+I'd like to get to the bottom of this if we can.
 
---------------aRgCRvGyZw0PvoZ2H1rHjGSj--
-
---------------pdMdvZsGczNI50M8e09AvFdI
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEEydMGi3nQKasCS8bLahNm1VQL0ZwFAmXzQpAFAwAAAAAACgkQahNm1VQL0ZwK
-tA/9FGzilbYIPP4AwHtENWOQB5oeQXo8fqK0YienUbVpR9ozHwtyKwk2dseunv9R7T+4hRgEnn+S
-Sx7L6y4C8t8tSgW+PZvJ462Rv2n7CREY+LtxAvdrw5LTcmZwElLVzuv1eGvnhIjYE0wlwfp6ndad
-U0bm3KsE/p5A5kD0GbwE8OT1PRThYRA6xaBHe8YOWa3dilPPQONmZ5QABnn5ffTzzV7Msp+IX3RB
-OubHJdCKM0VnX59uLB9PcFvqwJIpT1vP5Gu5bw74RMTfLe5qRCGH4gildU3UpTn26VqhsQ5n2wCi
-NTKV+/U2/eckRMsFbvsyJHMQtNSq3BwP1VsoTdlpSCj97fPNPg3MAywxXtD+TmDczwQ/SJ8uLr2F
-IjQDsZzAbND8jG9v4Sbwb+Y7fcaz5qEYr9RKVdp3warGveZ4LUWx8KL6YDwypc70vPl5O+EWhis2
-DBdFXRAodumzVQqf5NyDt04/65EnvLhNx7pxrMAu8Y34QMMbxUjZOQCCUUSmiVSjuq+nWddaMr6j
-GZsH9C5L4ISqSvpqLCvoyGX0a2zdosP8Uy0D8trz+l8auA0wFPJfYgcDl8g35ZyCa26v2Wg0PP1l
-R6K8hDrCklOyU6pG0eEi5b2O7Juncjce6OWzjUZAMWBj4IHMjAak7GUAjI9D7AKqQPNLLUIPjKeX
-ahw=
-=fRg6
------END PGP SIGNATURE-----
-
---------------pdMdvZsGczNI50M8e09AvFdI--
+Please share as much information as you can about the system
+- boot logs
+- DMI data to identify the system and firmware etc
+- distro version
+- versions of boot components (shim, grub, systemd-boot, etc including
+config files)
+- other information that might help narrow this down.
