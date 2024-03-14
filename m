@@ -1,150 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4046CDD5
-	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 09:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A176FE02
+	for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 14:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710408347; cv=none; b=pnVW/Bl+9wjTF/JO0CrC0O2HZLSkdEYQdUF1Rf2/VKT77ZtJWqkc2r69IGNea3/8RUQvNeAO6979oGfJrk5SbFXs+baBxkrYZP8ukGObC+nrSURIbyzS8Eyc3d5zhyD/jQ6qvpYYizwidkJyRP+lck3ph64jwsO5ldQ8Zq/pxHg=
+	t=1710427154; cv=none; b=V61CtzUOz2lW4qrFZLdpAicTXninaLHBuLWjR7qrkEMnx8bXjj5v1//Nu3Z26V5lJoFTsGNTw9UGOiDclKtdAj6ztlj6uVMjnEoyJPFKMjnNwpbOdAbfyYyerHQSW8extwG8WjN5OE81p9/W2gpmvh353H/5GSGGYaz8vlRrXws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710408347; c=relaxed/simple;
-	bh=zAq7B127SJlJg80NOehyDIikyu1/dR36D90cGWogZtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FL8XT+0NOdfalzVb2XH0BJtvoroFViqUdtMkyUi7ge3iqRd74+2Dh0zCcK/s1/Jm5kS3xvm8HOTW7MSlSRQZ9Kt5AP+mBBUgjiH7EDNi1fEL5hnFls3qcgNTabSg3ZRY5qBTEXb1hEH8begf3tO/uq/ggv/JfSbalkapzQ+rcyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d8Ddl84k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710427154; c=relaxed/simple;
+	bh=Iyitn/qTh9Xm05kOT4csGXbgCgiQy9MG2KZbnCZIA6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxGXHUcF47JRqFHSc83vBXnFz3w+34fUkqSJoAFJZo8nq20fK+x7xqV1VVCkUZjUTyHisnwuxpRTvG8qBJZSd1yyLMYpWLneWGcx8sD97xrF+X3r8342hl+NFsXCCYyo4h3y1SlhnF7dh/EbpeG+YNx+t5KS9/R3WUldlFlj3jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BDUS7Quy; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8Ddl84k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710408344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rl/H4MWGLgmEqfgbk+kWHokXGlfem4Ht/IF+GTQnQp4=;
-	b=d8Ddl84k5J1BmnlY2kK1d+OX4izryqGA8auStABY7L50u9XL2kVbhiumAmuUGnwsxN17Up
-	h7N2ecnkj1B50G6iPamC1ZeP03wKgWcv0TXVNnaiddO2Dd0KTztqV0j+0h8oxQOdV1Rse6
-	gPnv0wmtS4TN3JpiQpdNv+2ISjDEFkc=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-kqDi_MPrP-C6lyTXSYunvA-1; Thu, 14 Mar 2024 05:25:42 -0400
-X-MC-Unique: kqDi_MPrP-C6lyTXSYunvA-1
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3665480799bso2507905ab.0
-        for <regressions@lists.linux.dev>; Thu, 14 Mar 2024 02:25:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710408342; x=1711013142;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rl/H4MWGLgmEqfgbk+kWHokXGlfem4Ht/IF+GTQnQp4=;
-        b=uA1la/HfQcEXn21PxCm68A+Ut0ibCwb44O2+of+iKYmos23MOMBQAha7/tfx3JBm/4
-         78igQXj/rONI3x911S9O44ZV2kSBavC9cMRAvAvt13SAh/EyX46ZIsADnhn7W2aQxB61
-         8V0fnfw3SmkEqJn2ISMqYYawr7WZR/eGFlb8r8H48mGxE1nMywi/Uf3TlkyMHHm/jBa6
-         L0RBwM8f91hwELMS4z0/JM4xBVXaeemUu0X/F87c1WNsUTVEcMS7cw8pjPtWttPMglET
-         3oFFgL7byUcJhVdxGV9KjkFQMexgmrd87YFwgbLZGO7m0l04pDYmQlZHXPeO95LlfljM
-         erRA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5nPCLF9HDUrfqDi3bLSY+L0DyTD4y84WkuBJbQpH99DvvmfHNHgShriSFh7i0xPw76fVd0WKMeLjr+fN8BS8GduOSWNOTeCST0qg=
-X-Gm-Message-State: AOJu0Yw1wTCmW1edWgCwPiJryDfrbHoWW29sAL6mQ7BB7KhQrZ3l4OZ5
-	EUBrUxM3zVMXnrpxuqt4AqUIcjCK6YR7O+BG5y7FEomW1g36LyQPzGJThhynUU/papGAmwD5XOo
-	Qw7Myi6MeA2Oj8sdNvcYHSC11DgdJMG6S6iPNxMzbDhhFw/zPw0nH8msQ82ET4zz4wuuJW1oink
-	2Gm4Rx9qisHPtT9ZECQS3tiWGheIpVgWCTn3I=
-X-Received: by 2002:a92:de44:0:b0:365:4e45:33ad with SMTP id e4-20020a92de44000000b003654e4533admr935899ilr.1.1710408342161;
-        Thu, 14 Mar 2024 02:25:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEW8ilRYhJOkTU999SkD7mYGv+S2pTq79uG4Gtss8uUESu2wfnl2F8tti+O0WDSOfuRxxW4k70RHgq5g5PMV/g=
-X-Received: by 2002:a92:de44:0:b0:365:4e45:33ad with SMTP id
- e4-20020a92de44000000b003654e4533admr935892ilr.1.1710408341845; Thu, 14 Mar
- 2024 02:25:41 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BDUS7Quy"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E23DD40E0174;
+	Thu, 14 Mar 2024 14:39:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rXZ-qIPWRjTq; Thu, 14 Mar 2024 14:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1710427140; bh=CkyV6JNyQs6Odg06W7LbFbWnDSkx46toEX7TZkdMp80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BDUS7QuyU1T6NteH4NBY0ttYeyy2NMACWDL1uS6FGyEq7a9HUUpcTcz2W2rVyjO3D
+	 p+TR2/Dvd/jsJQq0YvHiAjW+bmZW9pUY99eZCMHinFg7HpG+o/Xp4lu08R8MK4T2XH
+	 3YYgkmuAY19n9JUBtxd3sqdjVXDyoOjlZ2X77E+UgkNc3yQtt3JyqHlvzHG2EzSKkT
+	 2CDJj0y2Tk2GUviGu9GFPJROCd8x4zLaHrVXxCFkS224acl4WpGx7eJ3c4Nj/ST13T
+	 9iefoDBe1wOUBTOjeGLwY9Wl+CRa/myDDbTYWepNrigGmMZtNVnGXDvU8rDRANaBVf
+	 zHBC2PamsEfAAiy77idTXOfsLEAyqNHUIeaKw7rXid0CqnwKepseSup0Co4LeOzWYq
+	 m6Itus8SRPeXzqX8XKCmyCOkb3+nOjzV3kte4m1H1jah+RrTk5YxuQgkQKf9PQ9Ixh
+	 9Xkxq3LPBGEza+eU9GjUDXHc5mNFhPraECGmwJCrkyfLFvals8RezOP/G2W+/JpFMX
+	 NGYOOc8R/so3ub+B/iMS0xOY9r5QC4VtG9A4ALq9Hs9Z7NZpjHz829GXrPOlZpkrxE
+	 NXn02A6OaYwGNiFoWwqWHLtEljkTz0lDI1iUmegfrhT6pgKanKI9LvfSts3GwnTwBW
+	 4TfZAQoLlg0Tg5+FUvWaUypk=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 657A840E0028;
+	Thu, 14 Mar 2024 14:38:54 +0000 (UTC)
+Date: Thu, 14 Mar 2024 15:38:48 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Mahmoud Adam <mngyadam@amazon.com>
+Cc: peterz@infradead.org, tglx@linutronix.de, gregkh@linuxfoundation.org,
+	regressions@lists.linux.dev, David Kaplan <David.Kaplan@amd.com>
+Subject: Re: Regression caused by 'x86/returnthunk: Allow different return
+ thunks'
+Message-ID: <20240314143848.GAZfML-Bbk3_Nxyc0c@fat_crate.local>
+References: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com> <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com> <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
- <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com> <87cyryxr6w.fsf@email.froward.int.ebiederm.org>
- <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
-In-Reply-To: <ZfHRsL4XYrBQctdu@swahl-home.5wahls.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Thu, 14 Mar 2024 17:25:52 +0800
-Message-ID: <CALu+AoSZhUm_JuHf-KuhoQp-S31XFE=GfKUe6jR8MuPy4oQiFw@mail.gmail.com>
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-To: Steve Wahl <steve.wahl@hpe.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Pavin Joseph <me@pavinjoseph.com>, 
-	Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, 
-	Eric Hagberg <ehagberg@gmail.com>, dave.hansen@linux.intel.com, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <lrkyq5xxrz0gg.fsf@dev-dsk-mngyadam-1c-a2602c62.eu-west-1.amazon.com>
 
-On Thu, 14 Mar 2024 at 00:18, Steve Wahl <steve.wahl@hpe.com> wrote:
->
-> On Wed, Mar 13, 2024 at 07:16:23AM -0500, Eric W. Biederman wrote:
-> >
-> > Kexec happens on identity mapped page tables.
-> >
-> > The files of interest are machine_kexec_64.c and relocate_kernel_64.S
-> >
-> > I suspect either the building of the identity mappged page table in
-> > machine_kexec_prepare, or the switching to the page table in
-> > identity_mapped in relocate_kernel_64.S is where something goes wrong.
-> >
-> > Probably in kernel_ident_mapping_init as that code is directly used
-> > to build the identity mapped page tables.
-> >
-> > Hmm.
-> >
-> > Your change is commit d794734c9bbf ("x86/mm/ident_map: Use gbpages only
-> > where full GB page should be mapped.")
->
-> Yeah, sorry, I accidentally used the stable cherry-pick commit id that
-> Pavin Joseph found with his bisect results.
->
-> > Given the simplicity of that change itself my guess is that somewhere in
-> > the first 1Gb there are pages that needed to be mapped like the idt at 0
-> > that are not getting mapped.
->
-> ...
->
-> > It might be worth setting up early printk on some of these systems
-> > and seeing if the failure is in early boot up of the new kernel (that is
-> > using kexec supplied identity mapped pages) rather than in kexec per-se.
-> >
-> > But that is just my guess at the moment.
->
-> Thanks for the input.  I was thinking in terms of running out of
-> memory somewhere because we're using more page table entries than we
-> used to.  But you've got me thinking that maybe some necessary region
-> is not explicitly requested to be placed in the identity map, but is
-> by luck included in the rounding errors when we use gbpages.
+On Tue, Mar 12, 2024 at 08:58:39PM +0100, Mahmoud Adam wrote:
+>  We've seen ~35% regression on fio benchamrk on AMD caused by these
+> commits:
+> `
+> 545a94ffc29a4 * x86/alternative: Make custom return thunk unconditional
+> b012dcf39d9e7 * Revert "x86/alternative: Make custom return thunk unconditional"
+> 1221b8ea25cc8 * x86/returnthunk: Allow different return thunks
+> `
+> the finding and bisection was done on v6.1, but the regression is
+> already seen on the new rebases of other stable kernel 5.10 & 5.15 that
+> have the same patches.
+> 
+> the following exact fio command that sees this regression:
+> 
+> fio --time_based --name=benchmark --size=50G --runtime=60
+> --filename=$device --ioengine=psync --randrepeat=0 --iodepth=1
+> --fsync=64 --invalidate=1 --verify=0 --verify_fatal=0 --blocksize=4k
+> --group_reporting --rw=randwrite --numjobs=1
+> 
+> note: the regression is seen even with retbleed=off and also with spectre_v2=off
 
-Yes, it is possible. Here is an example case:
-http://lists.infradead.org/pipermail/kexec/2023-June/027301.html
-Final change was to avoid doing AMD things on Intel platform, but the
-mapping code is still not fixed in a good way.
+Say, out of curiosity, how exactly are you running the fio benchmark?
 
->
-> At any rate, since I am still unable to reproduce this for myself, I
-> am going to contact Pavin Joseph off-list and see if he's willing to
-> do a few debugging kernel steps for me and send me the results, to see
-> if I can get this figured out.  (I believe trimming the CC list and/or
-> going private is usually frowned upon for the LKML, but I think this
-> is appropriate as it only adds noise for the rest.  Let me know if I'm
-> wrong.)
->
-> Thank you.
->
-> --> Steve Wahl
->
-> --
-> Steve Wahl, Hewlett Packard Enterprise
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+Baremetal, what CPU, kernel, etc?
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
