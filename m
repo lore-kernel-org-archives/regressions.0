@@ -1,84 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxb.seznam.cz (mxb.seznam.cz [77.75.78.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD5638392
-	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 14:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677438380
+	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 14:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.75.78.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710512755; cv=none; b=ephAqFVQ7t2rJn5UKpf+KGrmO5pXH5zvjqXw8Fme06Hg6WzIpSdFEgYohKgNSmnLuG/Q6zZfQzXifw+uxMiTYR6kp2oD74lwYK3sH/zDY7Qqt3/l3BR3JUceN3ADd38Ahknd3NTfISOHRgtFH/KTaF9PrRuCTQ9v+HD7IhvgRgc=
+	t=1710514315; cv=none; b=aP3soaNWYI7U2t/iRNMyMUaJDEq9CzplecPUNZum7OLPrUHUbA9t1bg2mWcWql+AAIv45j2NPf70iq9U7EWBXHYZSo7ElWvooGc/MydL8yzPPs68U+DewDO8lIPEeGIIcb09X14QpkyMo7XBAZQIZw+PAKLJlWDkVklPdB6fZwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710512755; c=relaxed/simple;
-	bh=yCAii4u6k7UDf2mCfYs3azGv5SdtykhLrhBD1xm5jHI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wvu2ZPkQY0253k69NSjB8RHYXi2gA+JBqZsPHNBfwcnCARDuNcQlG5/M9Fr0Hp0HvALIz2wqy8bTLlZiWV1hVANoJTMeVHQbZ9PPpwYuP4Ih+Awf/TH0jfr5iRv4rltQikRXr6WAcM6139uTJHFjXy27bJFYIF13CeRaMEPd7oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npfOG5uG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710514315; c=relaxed/simple;
+	bh=dOwhBo0NeJjHvCrIemZZp50EMXX1nAE4hUqkSh+64g4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fe2lHhpYDdCTLP7pO8GBFk0noEOU67znLg4o/P9Hv3diFZlMSg8ULJNaJ28r/IDb5OmDLI/iAdy11LIRG+Uzm4elcY+bLHuEeWz/5M5B0myDFPMR/+coi42MS4K9j+EOcffG9US4FRMLULDIw171lG3aTKSYk8qEmTRGutSBCmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz; spf=pass smtp.mailfrom=podgorny.cz; dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b=kl8XrhMc; arc=none smtp.client-ip=77.75.78.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=podgorny.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npfOG5uG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F7BC43394
-	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 14:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710512754;
-	bh=yCAii4u6k7UDf2mCfYs3azGv5SdtykhLrhBD1xm5jHI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=npfOG5uGsT42CXiqG5ONDEM9vZ68ZeBWf16auY8HA8VRWrgFWzudGniSnBGA9yrTM
-	 3m1FPI6SswVyFknVGjhPbosK93bBlfuW+1TWCOpqD8IDACvUbc3kpniHU77YxCYhWy
-	 A36mUKCMMeWJtoAvDGVi97Hwd4n3ZRLjIxgafRhzhnfBSGb3N7GCjj28jr1eTFi2ZG
-	 PPu46Qn+HieDrf/V/40kOS9XYivDzci+1XG0ZhCnRDViHPjp3mehh1BvwjgA4sOR79
-	 8rUPX2uJ/HHR/dp9KkD6n7Mrjp+3utzt/g1z0t0uybtqWXWkqhKzKLwXKUcU5JYeDD
-	 3wvrpiV+nM/SA==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d46dd8b0b8so26489891fa.2
-        for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 07:25:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUPpRIHs5pEQStttK5Gk9Z7EjEyNh58dezGNYJZfkvGTDd4OUsIMwCLUSw6n0uj3LlDkJSz2Ma6AQD3cnMVUznLL2sowXq7quCWhEA=
-X-Gm-Message-State: AOJu0Yx5ACMSk1sVa7vPMcgQcO6IhZEoiB/GdWaPETI316LKEe5bnAHF
-	APb5zKJCZpkRC0dE1NEPkUiz8NBK7g2aBWiDmUG1JEbXeFhEv7vwXQhxShzLyptz3nsZdFfIITR
-	7PyqSpotXeoKAyGjd+Z0+E+tov5A=
-X-Google-Smtp-Source: AGHT+IFOEzPhwI7bPX7c3aIyx5R9PN+Qx+tidIc3rtmHrgcwyOqKxM31J5bCrIAM16kOU+IuZMMYJQ7o8J9GCNZwefk=
-X-Received: by 2002:a2e:b5c8:0:b0:2d4:76c9:2573 with SMTP id
- g8-20020a2eb5c8000000b002d476c92573mr3355048ljn.18.1710512753337; Fri, 15 Mar
- 2024 07:25:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b="kl8XrhMc"
+Received: from email.seznam.cz
+	by smtpc-mxb-696f4f9cf9-hjdgl
+	(smtpc-mxb-696f4f9cf9-hjdgl [2a02:598:64:8a00::1000:3b6])
+	id 10628b25a658263c15ed916d;
+	Fri, 15 Mar 2024 15:51:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=emailprofi.seznam.cz; s=szn20221014; t=1710514298;
+	bh=dOwhBo0NeJjHvCrIemZZp50EMXX1nAE4hUqkSh+64g4=;
+	h=Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type;
+	b=kl8XrhMcs2KnLLen5e5Vw4X3RGjaKBpvZtBY3Mi4fprr0CSRSyaC+I9uBR4IETwin
+	 uVT28YLxzq+z+wYYNvKvkTficegP+i+wEA9Oh7J4xvvSntax8YI4oM6hIrTz2eFp0C
+	 tjMqOwkeXKqcdSb2zr/7K34hNgRi19nbE9+Tye2XoWiQZigRtsyDkQkyvO7CiNinJm
+	 wAv+ywD6y1CjVlLcENTLBe3+UNZwnskbJDlu6v24RHBCYp4loEjrPGC9vI6wkN+cOs
+	 pLP/gWzu/DeHT0nYYiZAZtvZXjUFzdSO8riEY9mXBvVFGw2PKrRC9G/LibABSqlAvg
+	 Rlrga4Rdq72PA==
+Received: from [IPV6:2a01:9422:904:1ee:e65e:37ff:feee:e29c]
+	([2a01:9422:904:1ee:e65e:37ff:feee:e29c])
+	by smtpd-relay-594d8f6859-w4lvq (szn-email-smtpd/2.0.18) with ESMTPA
+	id 40fae93a-075b-4aca-9519-52e347320dbf;
+	Fri, 15 Mar 2024 15:51:35 +0100
+Message-ID: <f85da4d3-f1c7-44fb-8e5a-30833208d019@podgorny.cz>
+Date: Fri, 15 Mar 2024 15:51:33 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+Content-Language: en-US-large
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
 References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
  <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
  <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com> <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
-In-Reply-To: <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 15 Mar 2024 15:25:41 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
-Message-ID: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
+From: Radek Podgorny <radek@podgorny.cz>
+In-Reply-To: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------UQd7gZVizApNq8CM3fjNNrIT"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------UQd7gZVizApNq8CM3fjNNrIT
+Content-Type: multipart/mixed; boundary="------------ahXkXiDqN6T1ouNDVYpUeH0H";
+ protected-headers="v1"
+From: Radek Podgorny <radek@podgorny.cz>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Message-ID: <f85da4d3-f1c7-44fb-8e5a-30833208d019@podgorny.cz>
 Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
  unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+ <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+ <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
+In-Reply-To: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
 
-On Fri, 15 Mar 2024 at 15:12, Radek Podgorny <radek@podgorny.cz> wrote:
->
-> hi ard, thanks for the effort!
->
-> so, your first recommended patch (the memset thing), applied to current
-> mainline (6.8) DOES NOT resolve the issue.
->
-> the second recommendation, a revert patch, applied to the same mainline
-> tree, indeed DOES resolve the problem.
->
-> just to be sure, i'm attaching the revert patch.
->
+--------------ahXkXiDqN6T1ouNDVYpUeH0H
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Thanks.
+b2ssIG5vIHByb2JsZW0sIHRoYW5rcyENCg0KaSB3YXMganVzdCB3b25kZXJpbmcgd2hhdCB3
+YXMgdGhlIHB1cnBvc2Ugb2YgdGhlIG9yaWdpbmFsIGNoYW5nZSAtIGkgDQpkb24ndCB3YW50
+IG90aGVycyB0byBtaXNzIHNvbWUgaW1wcm92ZW1lbnQganVzdCBiZWNhdXNlIG9mIG15IHdl
+aXJkIA0KbWFjaGluZS4gOy0pDQoNCnIuDQoNCg0KT24gMy8xNS8yNCAxNToyNSwgQXJkIEJp
+ZXNoZXV2ZWwgd3JvdGU6DQo+IE9uIEZyaSwgMTUgTWFyIDIwMjQgYXQgMTU6MTIsIFJhZGVr
+IFBvZGdvcm55IDxyYWRla0Bwb2Rnb3JueS5jej4gd3JvdGU6DQo+Pg0KPj4gaGkgYXJkLCB0
+aGFua3MgZm9yIHRoZSBlZmZvcnQhDQo+Pg0KPj4gc28sIHlvdXIgZmlyc3QgcmVjb21tZW5k
+ZWQgcGF0Y2ggKHRoZSBtZW1zZXQgdGhpbmcpLCBhcHBsaWVkIHRvIGN1cnJlbnQNCj4+IG1h
+aW5saW5lICg2LjgpIERPRVMgTk9UIHJlc29sdmUgdGhlIGlzc3VlLg0KPj4NCj4+IHRoZSBz
+ZWNvbmQgcmVjb21tZW5kYXRpb24sIGEgcmV2ZXJ0IHBhdGNoLCBhcHBsaWVkIHRvIHRoZSBz
+YW1lIG1haW5saW5lDQo+PiB0cmVlLCBpbmRlZWQgRE9FUyByZXNvbHZlIHRoZSBwcm9ibGVt
+Lg0KPj4NCj4+IGp1c3QgdG8gYmUgc3VyZSwgaSdtIGF0dGFjaGluZyB0aGUgcmV2ZXJ0IHBh
+dGNoLg0KPj4NCj4gDQo+IFRoYW5rcy4NCj4gDQo+IElmIHRoZSByZXZlcnQgd29ya3MgZm9y
+IHlvdSwgSSB0aGluayB3ZSBjYW4gc3RvcCBsb29raW5nLg0KPiANCj4gVGhpcyBwb2ludHMg
+dG8gYW4gaXNzdWUgaW4gdGhlIGZpcm13YXJlJ3MgaW1hZ2UgbG9hZGVyLCB3aGljaCBkb2Vz
+IG5vdA0KPiBjbGVhciBhbGwgdGhlIG1lbW9yeSBpdCBzaG91bGQgYmUgY2xlYXJpbmcuDQo+
+IA0KPiBJIHdpbGwgcXVldWUgdXAgdGhlIHJldmVydCB3aXRoIHlvdXIgdGVzdGVkLWJ5Lg0K
+PiANCj4gVGhhbmtzLA0KPiBBcmQuDQo=
 
-If the revert works for you, I think we can stop looking.
+--------------ahXkXiDqN6T1ouNDVYpUeH0H--
 
-This points to an issue in the firmware's image loader, which does not
-clear all the memory it should be clearing.
+--------------UQd7gZVizApNq8CM3fjNNrIT
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-I will queue up the revert with your tested-by.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Ard.
+wsF5BAABCAAjFiEEydMGi3nQKasCS8bLahNm1VQL0ZwFAmX0YHYFAwAAAAAACgkQahNm1VQL0ZwT
+FhAAgriWpppJ5em4Otg4407vC4/VTNa0xFL7hFIy4gLlTmhgFmWAJoQ3KDZGikvHWnXz4KcFEKgA
+AH2aOTvRkXp05C9V1XzK08mMrXuDhSPfzhOwCSQU/jQqmbgzF4BrdAPZou2/snSD/3+xobObdAp3
+6FCe6Ggq49ozaIHiRQCDTWlCbYPlvJmkEX4+bJAcV2+EAksbM89s6VohNv4U4JCDIQgFJyKOSg4I
+IFD4AdCCR5US/uSln9l59H8stpDXGrWEBHJa/n6RX5tVV+Ewmy2et/f3p9tSMVdQyQEgLdT1rQ5K
+vd2WzYInnPrixmonZ448Q+wnBCFyxcZw1fC/3STwvHEhyHR00vplod8OUAZ6GpAiBUYZi1HkybDW
+uehPfVOPGOECPt3f3lNTCOu7oePH91O3r94jYRoMGnFiqyicPxT2NFuy6z0PVRZgft//alnAdGEM
+NFjLoUdStoUZop0BL4IdJLpDLazpUDsiHH0OOLYATgtAz8mRQObdv13aj3RwwZ88Ou2ZXEDnw6W/
++eLxKef4Q51jaLlRN6O0fTAZGXuciKEGCx+3ESGUHVELBINz2VrO4cA4Q0L1X1XYVjA7hEWap7O8
+HmOctO3Hjk+jP0G37nZGpedXYXjkonfK58sjZjT+RzP2p1IYxi+FbUw3d844LE1Z1S2pvcHCMfOT
+rdg=
+=NbLM
+-----END PGP SIGNATURE-----
+
+--------------UQd7gZVizApNq8CM3fjNNrIT--
