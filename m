@@ -1,132 +1,103 @@
-Received: from mxb.seznam.cz (mxb.seznam.cz [77.75.78.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677438380
-	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 14:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.75.78.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDB7405F2
+	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 15:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710514315; cv=none; b=aP3soaNWYI7U2t/iRNMyMUaJDEq9CzplecPUNZum7OLPrUHUbA9t1bg2mWcWql+AAIv45j2NPf70iq9U7EWBXHYZSo7ElWvooGc/MydL8yzPPs68U+DewDO8lIPEeGIIcb09X14QpkyMo7XBAZQIZw+PAKLJlWDkVklPdB6fZwE=
+	t=1710516848; cv=none; b=vC1rxddevFftUFFg5pOQYh73QIKyQv8FFlfJ/DL1zMIc4SowvqcxI6H7+OPmv198VmSq8nl4xMgqDMcpiKZST/oTOtzy6CPtosaHEqYIsTsULDr7VT4AGk4oMDdzIunHyjpWdftuW6aAlX0oy+V92eOxbQAym7dy9n8lPoybGP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710514315; c=relaxed/simple;
-	bh=dOwhBo0NeJjHvCrIemZZp50EMXX1nAE4hUqkSh+64g4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fe2lHhpYDdCTLP7pO8GBFk0noEOU67znLg4o/P9Hv3diFZlMSg8ULJNaJ28r/IDb5OmDLI/iAdy11LIRG+Uzm4elcY+bLHuEeWz/5M5B0myDFPMR/+coi42MS4K9j+EOcffG9US4FRMLULDIw171lG3aTKSYk8qEmTRGutSBCmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz; spf=pass smtp.mailfrom=podgorny.cz; dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b=kl8XrhMc; arc=none smtp.client-ip=77.75.78.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=podgorny.cz
+	s=arc-20240116; t=1710516848; c=relaxed/simple;
+	bh=iX+K8eUt9o/U11c9IgO1wi35l31v3eJabjYDZkAsezw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DtdXxbG2DSCT2BNjWwgK733f6sQ8vYurjB2+EnseafZ9ywZxXhNyzYZbCCZge5k0Y7KA8CgpU9dB4sCl5dHY0TqLGHRu6zYBjTkxR1Vm4t//dDIbrerlYPsYxIy4HFXeFV6OVWj1C41CzA0wKrcm4zSH+QNKHqPxmZKIcWAuRrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ha6gVUVT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b="kl8XrhMc"
-Received: from email.seznam.cz
-	by smtpc-mxb-696f4f9cf9-hjdgl
-	(smtpc-mxb-696f4f9cf9-hjdgl [2a02:598:64:8a00::1000:3b6])
-	id 10628b25a658263c15ed916d;
-	Fri, 15 Mar 2024 15:51:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=emailprofi.seznam.cz; s=szn20221014; t=1710514298;
-	bh=dOwhBo0NeJjHvCrIemZZp50EMXX1nAE4hUqkSh+64g4=;
-	h=Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
-	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type;
-	b=kl8XrhMcs2KnLLen5e5Vw4X3RGjaKBpvZtBY3Mi4fprr0CSRSyaC+I9uBR4IETwin
-	 uVT28YLxzq+z+wYYNvKvkTficegP+i+wEA9Oh7J4xvvSntax8YI4oM6hIrTz2eFp0C
-	 tjMqOwkeXKqcdSb2zr/7K34hNgRi19nbE9+Tye2XoWiQZigRtsyDkQkyvO7CiNinJm
-	 wAv+ywD6y1CjVlLcENTLBe3+UNZwnskbJDlu6v24RHBCYp4loEjrPGC9vI6wkN+cOs
-	 pLP/gWzu/DeHT0nYYiZAZtvZXjUFzdSO8riEY9mXBvVFGw2PKrRC9G/LibABSqlAvg
-	 Rlrga4Rdq72PA==
-Received: from [IPV6:2a01:9422:904:1ee:e65e:37ff:feee:e29c]
-	([2a01:9422:904:1ee:e65e:37ff:feee:e29c])
-	by smtpd-relay-594d8f6859-w4lvq (szn-email-smtpd/2.0.18) with ESMTPA
-	id 40fae93a-075b-4aca-9519-52e347320dbf;
-	Fri, 15 Mar 2024 15:51:35 +0100
-Message-ID: <f85da4d3-f1c7-44fb-8e5a-30833208d019@podgorny.cz>
-Date: Fri, 15 Mar 2024 15:51:33 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ha6gVUVT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC45BC43394
+	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 15:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710516847;
+	bh=iX+K8eUt9o/U11c9IgO1wi35l31v3eJabjYDZkAsezw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ha6gVUVTMGFntQa1xKK6lahNgpjZOcp58BBSDuzPRHwtP4274S1TrK88S+WTBmGGf
+	 I1xflxJpPDi4vxhoITuSkhQ5VOKpizRd2lRos76Qfo3A6ZKwBLLK26lCQzMUAb3nqP
+	 v6Acwldtx7RbnFDMWhtsf3BHWtPL+vL5ejkS2YDvFnvmcwNjDxHyg2CXdlsc7Xha97
+	 SJquc+yRRsUHaVIdzHJOLxAyK2kTVxc0XGlbGnoG9FSTy63vG453ZxgGq9MTGD7nNF
+	 /2HhFeUK5m/hygI49fXI4mF/YI2GyIoumpTDF0zv1e5ov5PedHa3i768NZvM3QletN
+	 oUMCkEp3FFyZw==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d109e82bd0so26403281fa.3
+        for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 08:34:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWprTxgs9mJHHTDskG2uqdYgC+qgXY2WuA/QNo3ZpNx9D11HTmh9A3yfTHRyOkd35lCpPM+hk6DS8pE0qBWw9KniCQDalQmYZf9H+A=
+X-Gm-Message-State: AOJu0Yzb7MH/yslFaLyBD2zRBUpAjCN+bkNMa+/6PBP3Q/dzNE0d6z3f
+	ibnwUk9rxJ91EjpY/YQmX5yJAeSMtR2dG6hhBfQql6YFeXSLt7Rzr2et3RrYCgv5UKumYJWcgnN
+	XzCCZQfPEmJm7k+LFsLd6p2JA70M=
+X-Google-Smtp-Source: AGHT+IGFpxavl901L1RrvIOvAJF6Nzop/EfdOiv7vPfaAxGVFejM7iTagrS2FXemuSiUK9VCG9KsVYjQueNaelFe41g=
+X-Received: by 2002:a05:651c:10c9:b0:2d4:7503:13a7 with SMTP id
+ l9-20020a05651c10c900b002d4750313a7mr3847314ljn.14.1710516846062; Fri, 15 Mar
+ 2024 08:34:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-Content-Language: en-US-large
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- regressions@leemhuis.info
 References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
  <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
  <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
- <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
-From: Radek Podgorny <radek@podgorny.cz>
-In-Reply-To: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------UQd7gZVizApNq8CM3fjNNrIT"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------UQd7gZVizApNq8CM3fjNNrIT
-Content-Type: multipart/mixed; boundary="------------ahXkXiDqN6T1ouNDVYpUeH0H";
- protected-headers="v1"
-From: Radek Podgorny <radek@podgorny.cz>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- regressions@leemhuis.info
-Message-ID: <f85da4d3-f1c7-44fb-8e5a-30833208d019@podgorny.cz>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com> <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+In-Reply-To: <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 15 Mar 2024 16:33:54 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
+Message-ID: <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
 Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
  unpacking failed: invalid magic at start of compressed archive"
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
- <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
- <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
-In-Reply-To: <CAMj1kXGWMOOJwezcOyS1qfAimLHmptUuL=hiqrinLL_FWHpm2A@mail.gmail.com>
+To: Radek Podgorny <radek@podgorny.cz>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
 
---------------ahXkXiDqN6T1ouNDVYpUeH0H
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Fri, 15 Mar 2024 at 15:12, Radek Podgorny <radek@podgorny.cz> wrote:
+>
+> hi ard, thanks for the effort!
+>
+> so, your first recommended patch (the memset thing), applied to current
+> mainline (6.8) DOES NOT resolve the issue.
+>
+> the second recommendation, a revert patch, applied to the same mainline
+> tree, indeed DOES resolve the problem.
+>
+> just to be sure, i'm attaching the revert patch.
+>
 
-b2ssIG5vIHByb2JsZW0sIHRoYW5rcyENCg0KaSB3YXMganVzdCB3b25kZXJpbmcgd2hhdCB3
-YXMgdGhlIHB1cnBvc2Ugb2YgdGhlIG9yaWdpbmFsIGNoYW5nZSAtIGkgDQpkb24ndCB3YW50
-IG90aGVycyB0byBtaXNzIHNvbWUgaW1wcm92ZW1lbnQganVzdCBiZWNhdXNlIG9mIG15IHdl
-aXJkIA0KbWFjaGluZS4gOy0pDQoNCnIuDQoNCg0KT24gMy8xNS8yNCAxNToyNSwgQXJkIEJp
-ZXNoZXV2ZWwgd3JvdGU6DQo+IE9uIEZyaSwgMTUgTWFyIDIwMjQgYXQgMTU6MTIsIFJhZGVr
-IFBvZGdvcm55IDxyYWRla0Bwb2Rnb3JueS5jej4gd3JvdGU6DQo+Pg0KPj4gaGkgYXJkLCB0
-aGFua3MgZm9yIHRoZSBlZmZvcnQhDQo+Pg0KPj4gc28sIHlvdXIgZmlyc3QgcmVjb21tZW5k
-ZWQgcGF0Y2ggKHRoZSBtZW1zZXQgdGhpbmcpLCBhcHBsaWVkIHRvIGN1cnJlbnQNCj4+IG1h
-aW5saW5lICg2LjgpIERPRVMgTk9UIHJlc29sdmUgdGhlIGlzc3VlLg0KPj4NCj4+IHRoZSBz
-ZWNvbmQgcmVjb21tZW5kYXRpb24sIGEgcmV2ZXJ0IHBhdGNoLCBhcHBsaWVkIHRvIHRoZSBz
-YW1lIG1haW5saW5lDQo+PiB0cmVlLCBpbmRlZWQgRE9FUyByZXNvbHZlIHRoZSBwcm9ibGVt
-Lg0KPj4NCj4+IGp1c3QgdG8gYmUgc3VyZSwgaSdtIGF0dGFjaGluZyB0aGUgcmV2ZXJ0IHBh
-dGNoLg0KPj4NCj4gDQo+IFRoYW5rcy4NCj4gDQo+IElmIHRoZSByZXZlcnQgd29ya3MgZm9y
-IHlvdSwgSSB0aGluayB3ZSBjYW4gc3RvcCBsb29raW5nLg0KPiANCj4gVGhpcyBwb2ludHMg
-dG8gYW4gaXNzdWUgaW4gdGhlIGZpcm13YXJlJ3MgaW1hZ2UgbG9hZGVyLCB3aGljaCBkb2Vz
-IG5vdA0KPiBjbGVhciBhbGwgdGhlIG1lbW9yeSBpdCBzaG91bGQgYmUgY2xlYXJpbmcuDQo+
-IA0KPiBJIHdpbGwgcXVldWUgdXAgdGhlIHJldmVydCB3aXRoIHlvdXIgdGVzdGVkLWJ5Lg0K
-PiANCj4gVGhhbmtzLA0KPiBBcmQuDQo=
+Actually, that is not the patch I had in mind.
 
---------------ahXkXiDqN6T1ouNDVYpUeH0H--
+Please revert
 
---------------UQd7gZVizApNq8CM3fjNNrIT
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+x86/efi: Drop EFI stub .bss from .data section
 
------BEGIN PGP SIGNATURE-----
+commit fa244085025f4a8fb38ec67af635aed04297758d in v6.6
 
-wsF5BAABCAAjFiEEydMGi3nQKasCS8bLahNm1VQL0ZwFAmX0YHYFAwAAAAAACgkQahNm1VQL0ZwT
-FhAAgriWpppJ5em4Otg4407vC4/VTNa0xFL7hFIy4gLlTmhgFmWAJoQ3KDZGikvHWnXz4KcFEKgA
-AH2aOTvRkXp05C9V1XzK08mMrXuDhSPfzhOwCSQU/jQqmbgzF4BrdAPZou2/snSD/3+xobObdAp3
-6FCe6Ggq49ozaIHiRQCDTWlCbYPlvJmkEX4+bJAcV2+EAksbM89s6VohNv4U4JCDIQgFJyKOSg4I
-IFD4AdCCR5US/uSln9l59H8stpDXGrWEBHJa/n6RX5tVV+Ewmy2et/f3p9tSMVdQyQEgLdT1rQ5K
-vd2WzYInnPrixmonZ448Q+wnBCFyxcZw1fC/3STwvHEhyHR00vplod8OUAZ6GpAiBUYZi1HkybDW
-uehPfVOPGOECPt3f3lNTCOu7oePH91O3r94jYRoMGnFiqyicPxT2NFuy6z0PVRZgft//alnAdGEM
-NFjLoUdStoUZop0BL4IdJLpDLazpUDsiHH0OOLYATgtAz8mRQObdv13aj3RwwZ88Ou2ZXEDnw6W/
-+eLxKef4Q51jaLlRN6O0fTAZGXuciKEGCx+3ESGUHVELBINz2VrO4cA4Q0L1X1XYVjA7hEWap7O8
-HmOctO3Hjk+jP0G37nZGpedXYXjkonfK58sjZjT+RzP2p1IYxi+FbUw3d844LE1Z1S2pvcHCMfOT
-rdg=
-=NbLM
------END PGP SIGNATURE-----
+(or apply the changes below by hand if that is easier for you)
 
---------------UQd7gZVizApNq8CM3fjNNrIT--
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -47,6 +47,7 @@ SECTIONS
+                _data = . ;
+                *(.data)
+                *(.data.*)
++               *(.bss.efistub)
+
+                /* Add 4 bytes of extra space for a CRC-32 checksum */
+                . = ALIGN(. + 4, 0x200);
+
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -108,6 +108,13 @@
+ # https://bugs.llvm.org/show_bug.cgi?id=46480
+ STUBCOPY_FLAGS-y               += --remove-section=.note.gnu.property
+
++STUBCOPY_FLAGS-$(CONFIG_X86)   += --rename-section .bss=.bss.efistub,load,alloc
+ STUBCOPY_RELOC-$(CONFIG_X86_32)        := R_386_32
+ STUBCOPY_RELOC-$(CONFIG_X86_64)        := R_X86_64_64
