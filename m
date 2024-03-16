@@ -1,104 +1,151 @@
-Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D2D12B93
-	for <regressions@lists.linux.dev>; Sat, 16 Mar 2024 16:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 44FEF2903
+	for <regressions@lists.linux.dev>; Sat, 16 Mar 2024 20:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710605540; cv=none; b=jfVS68nJ054l0EkbjmFrPokyaxv2nBdO00MHmEptcEAIMXD6VJfOBOiS3NmS6GVxg1znVdq7robl/hUZx+IWvHI3azHvY37Fj4ozB4XN6X6FZmwjM3TANb5XPzu+K5eDpUjGlLX+mTMsD5DHqrdqwIPoFuK5m6ivYcLMo1yToFI=
+	t=1710621341; cv=none; b=HlU09q6Fr+aRM8AH7L3hvxmHTDxOBcAmt+5ciSnNFieDGpvr3l/tpVq4EChUT64gJhc52z+Q0H6WLPX0eJAjlPAWUUAwNZlCNM35gGQz4tJubys6GzckRCwYFzN6Id2nCTW2BIAzFtflorvJJHTQyUgSktz4f7oaRpk+NcDXiCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710605540; c=relaxed/simple;
-	bh=g4nGgd5d+n4r1pkNGKScINQzMsotxC1M0q7NSeKpWag=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TdJY14PhIyFC43Qu3Ewe0ogAnxU7sR5OldM08VkpW6rud74Rd3FzwnIiebcG5V651KBgwaZdeiF8UxARAw1Ukwjm/V0rBvx/slwYGI4oXLBwRRE6l3KrDXvjpIiDbmZ6jpRtovrHvXfwZT2CVn0SAmfYx29rxecZCQ1G6moxo4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id D3AFE8C23DA;
-	Sat, 16 Mar 2024 17:12:15 +0100 (CET)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [regression] 6.8.1: fails to hibernate with
- pm_runtime_force_suspend+0x0/0x120 returns -16
-Date: Sat, 16 Mar 2024 17:12:15 +0100
-Message-ID: <12401263.O9o76ZdvQC@lichtvoll.de>
-In-Reply-To: <2325246.ElGaqSPkdT@lichtvoll.de>
-References: <2325246.ElGaqSPkdT@lichtvoll.de>
+	s=arc-20240116; t=1710621341; c=relaxed/simple;
+	bh=gTuos2vrk2Aq2RdkAXzhuDP3hXzu8Fb6ZlqMaChzjhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=APONsMnJrjXCbLGNh9fDyMuLlNtIQgwbanYPJyiO5OO2mXH9JCY4QQcZFXIwxL9aaxVhmG6aWi1i0mYPtqSdylTULhz67uZfVpvw/wuf/tSLkSIXtljKnEDXl99eDfNyh9XQVvoeOc/WPqAIjEfeub+N6eYR45RHYlrcvrywwUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 524355 invoked by uid 1000); 16 Mar 2024 16:35:30 -0400
+Date: Sat, 16 Mar 2024 16:35:30 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Message-ID: <8b8e2773-47eb-48f4-b5e8-dcd885ee5c5b@rowland.harvard.edu>
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+ <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+ <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
+ <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
+ <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
+ <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
+ <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
 
-Martin Steigerwald - 16.03.24, 17:02:44 CET:
-> ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
-> Hibernation works correctly with self-compiled 6.7.9.
+On Tue, Mar 12, 2024 at 09:57:06AM +0100, Jan Čermák wrote:
+> Hi Alan
+> 
+> On 11. 03. 24 15:43, Alan Stern wrote:
+> > Well, at least this means you do have a way of using the device, even
+> > if it is rather awkward.  It might even work on the Raspberry Pi machine.
+> 
+> Still, I'm looking for a more permanent and robust solution. If it were only
+> a single device I'm using myself, I could come up with a workaround.
+> However, this is one of the very few available Z-Wave USB interfaces and
+> there are more users affected. So far we went with reverting the patches,
+> but that's surely not the way we want to go forward.
+> 
+> > The device is so non-responsive, I'm amazed it ever works at all.
+> > Judging by the usbmon traces, it doesn't look as if it would work on a
+> > Windows system.
+> > 
+> > Actually, if you have access to a computer running Windows or Mac OSX
+> > and you can try out the device on that computer, it would be good to
+> > get the equivalent of a usbmon trace (something like a Wireshark
+> > capture log would do).  If those systems manage to do something that
+> > Linux doesn't, we ought to know what it is.
+> 
+> Fredrik (one of the original reporters) is following this conversation, here
+> [1] are logs from his machine with some details in the ticket [2]. He also
+> wonders why the initialization doesn't work only on USB2 ports but works on
+> USB3 if the initialization code is shared between those two.
 
-Apparently  6.8.1 does not even reboot correctly anymore. runit on Devuan.
-It says it is doing the system reboot but then nothing happens.
+It's very difficult to compare the Windows log with the usbmon trace.  
+However, something Frederik mentioned about the number of resets led me 
+to check more closely.  There are some extra unnecessary resets in the 
+usbmon trace, and a reset that should be there is missing.
 
-As for hibernation the kernel cancels the attempt and returns back to
-user space desktop session.
+Below is a patch meant to get the number of resets back to what it 
+should be.  I'd appreciate it if you can test this, and report the 
+kernel log output along with the usbmon output for the normal case and 
+also with the "old_scheme_first" parameter set.
 
-> Trying to use "no_console_suspend" to debug next. Will not do bisect
-> between major kernel releases on a production machine.
+I'm not very hopeful that this will solve the problem, but there's a 
+good chance it will help point us in the right direction by removing 
+extraneous complications.
 
-Output with "no_console_suspend":
+Alan Stern
 
-[   82.593360] r8169 0000:05:00.0 en1: Link is Down
-[   83.196401] PM: hibernation: hibernation entry
-[   83.671489] Filesystems sync: 0.121 seconds
-[   83.671977] Freezing user space processes
-[   83.674855] Freezing user space processes completed (elapsed 0.002 seconds)
-[   83.674879] OOM killer disabled.
-[   83.675111] PM: hibernation: Marking nosave pages: [mem 0x00000000-0x00000fff]
-[   83.675114] PM: hibernation: Marking nosave pages: [mem 0x0009f000-0x000fffff]
-[   83.675117] PM: hibernation: Marking nosave pages: [mem 0x09c00000-0x09d00fff]
-[   83.675122] PM: hibernation: Marking nosave pages: [mem 0x09f00000-0x09f0ffff]
-[   83.675123] PM: hibernation: Marking nosave pages: [mem 0xa2357000-0xa2357fff]
-[   83.675125] PM: hibernation: Marking nosave pages: [mem 0xa2364000-0xa2365fff]
-[   83.675126] PM: hibernation: Marking nosave pages: [mem 0xa2373000-0xa2374fff]
-[   83.675128] PM: hibernation: Marking nosave pages: [mem 0xa2385000-0xa2385fff]
-[   83.675129] PM: hibernation: Marking nosave pages: [mem 0xb9532000-0xb95c2fff]
-[   83.675132] PM: hibernation: Marking nosave pages: [mem 0xbd9de000-0xcc3fdfff]
-[   83.675620] PM: hibernation: Marking nosave pages: [mem 0xce000000-0xffffffff]
-[   83.676393] PM: hibernation: Basic memory bitmaps created
-[   83.681188] PM: hibernation: Preallocating image memory
-[   85.599072] PM: hibernation: Allocated 2043901 pages for snapshot
-[   85.599105] PM: hibernation: Allocated 8175604 kbytes in 1.91 seconds (4280.42 MB/s)
-[   85.599125] Freezing remaining freezable tasks
-[   85.600726] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
-[   85.611679] port 0000:02:00.1:0.0: PM: dpm_run_callback(): pm_runtime_force_suspend+0x0/0x120 returns -16
-[   85.611709] port 0000:02:00.1:0.0: PM: failed to freeze: error -16
-[   86.303477] PM: hibernation: Basic memory bitmaps freed
-[   86.304003] OOM killer enabled.
-[   86.304582] Restarting tasks ... done.
-[   86.307452] thermal thermal_zone0: failed to read out thermal zone (-61)
-[   86.307507] PM: hibernation: hibernation exit
-[   86.331566] Generic FE-GE Realtek PHY r8169-0-200:00: attached PHY driver (mii_bus:phy_addr=r8169-0-200:00, irq=MAC)
-[   86.932558] r8169 0000:02:00.0 en0: rtl_ep_ocp_read_cond == 0 (loop: 30, delay: 10000).
-[   87.004862] psmouse serio1: synaptics: queried max coordinates: x [..5678], y [..4694]
-[   87.038125] r8169 0000:02:00.0 en0: Link is Down
-[   87.043559] psmouse serio1: synaptics: queried min coordinates: x [1266..], y [1162..]
-[   87.067568] Generic FE-GE Realtek PHY r8169-0-500:00: attached PHY driver (mii_bus:phy_addr=r8169-0-500:00, irq=MAC)
-[   87.204101] r8169 0000:05:00.0 en1: Link is Down
-[   90.639039] r8169 0000:05:00.0 en1: Link is Up - 1Gbps/Full - flow control rx/tx
 
-Downgrading to 6.7.
 
-Thanks.
--- 
-Martin
+ drivers/usb/core/hub.c |   27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
+Index: usb-devel/drivers/usb/core/hub.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/hub.c
++++ usb-devel/drivers/usb/core/hub.c
+@@ -4961,6 +4961,18 @@ hub_port_init(struct usb_hub *hub, struc
+ 			break;
+ 		}
+ 
++		if (retries > 0) {
++			retval = hub_port_reset(hub, port1, udev, delay, false);
++			if (retval < 0)		/* error or disconnect */
++				goto fail;
++			if (oldspeed != udev->speed) {
++				dev_dbg(&udev->dev,
++					"device reset changed speed!\n");
++				retval = -ENODEV;
++				goto fail;
++			}
++		}
++
+ 		if (do_new_scheme) {
+ 			retval = hub_enable_device(udev);
+ 			if (retval < 0) {
+@@ -4972,6 +4984,13 @@ hub_port_init(struct usb_hub *hub, struc
+ 
+ 			maxp0 = get_bMaxPacketSize0(udev, buf,
+ 					GET_DESCRIPTOR_BUFSIZE, retries == 0);
++			if (maxp0 < 0) {
++				if (maxp0 != -ENODEV)
++					dev_err(&udev->dev, "device descriptor read/64, error %d\n",
++							maxp0);
++				retval = maxp0;
++				continue;
++			}
+ 			if (maxp0 > 0 && !initial &&
+ 					maxp0 != udev->descriptor.bMaxPacketSize0) {
+ 				dev_err(&udev->dev, "device reset changed ep0 maxpacket size!\n");
+@@ -4988,13 +5007,6 @@ hub_port_init(struct usb_hub *hub, struc
+ 				retval = -ENODEV;
+ 				goto fail;
+ 			}
+-			if (maxp0 < 0) {
+-				if (maxp0 != -ENODEV)
+-					dev_err(&udev->dev, "device descriptor read/64, error %d\n",
+-							maxp0);
+-				retval = maxp0;
+-				continue;
+-			}
+ 		}
+ 
+ 		for (operations = 0; operations < SET_ADDRESS_TRIES; ++operations) {
+@@ -5533,6 +5545,7 @@ loop:
+ 			msleep(2 * hub_power_on_good_delay(hub));
+ 			usb_hub_set_port_power(hdev, hub, port1, true);
+ 			msleep(hub_power_on_good_delay(hub));
++			hub_port_debounce_be_stable(hub, port1);
+ 		}
+ 	}
+ 	if (hub->hdev->parent ||
 
