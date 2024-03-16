@@ -1,74 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.lichtvoll.de (luna.lichtvoll.de [194.150.191.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053404AEF1
-	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 18:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B271BF20
+	for <regressions@lists.linux.dev>; Sat, 16 Mar 2024 16:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.150.191.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710527156; cv=none; b=YOvKvxmKwsBDHPfDG72IdjNBNkPwZ61AejpMNHKJxUdYi0dZZ/cM+KTQkd35N9cGNhxVHBxyuBOs8U048i36NH9ZFJP8bMqUV1rgt75JV5cMVYAnS5NofCiz+c23Naoo+jymrkcoBetkYs/KM/JV8BOZe6ApUaHCkprLiigvnoQ=
+	t=1710604969; cv=none; b=IjOyqjyPI+QOi8dH5emADdMZQmvO+PlkL6od9wD9kvAyVHQXdI2478J9OQwESH3RBhfApvGvhQ6JmZZmiUeU2AkkB36zsD5rp07U2Vn4SQilGOtZcmrrQcIxgSF2UZ6G3f/V6CeIG3QQv/wqwVwka6DU+ZjsqrAFrZV/AdlYHx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710527156; c=relaxed/simple;
-	bh=tr6ntZPX7I7g5hEdJ+vW6afZngBdxB4VLUeNuYVx/5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtEfq/25fcEs1qSEJ3CvNSmWRmduDZhoNChMOIiuZ828qdinxCoAGDAUfzNvUVvjM7XGg13Nn/Nrpj6aK+YvpHejzgodBMCoL2x3j3FVUV1bng9or8qTgTEU3OYjVvT/2xtaLsBL5BIa2nnIE4JznEJS6dsB7M1VBqa+izJynuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUxrGNxw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUxrGNxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A2DC43399
-	for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 18:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710527155;
-	bh=tr6ntZPX7I7g5hEdJ+vW6afZngBdxB4VLUeNuYVx/5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gUxrGNxwfevnUmm+z9Y+bpoTac4e/jZP34VlEAg1ZFmBHyXp39nBf4nQ+y08Aix35
-	 ynWYIOAdd34vTiwEijzQi0E+J+4dM4399OARaYxi7tJq3tgf+RMP97cLknjWS0bkRP
-	 N4gENT9c5Om7uxiZQoGT4yEtojcM3IpevnPqqCwpZSbtjLhVyjB8PaF/66yjPv8XWU
-	 /B1Wy1qi7qVsH3aMZgMul5sxm6cvDIyOYZVK4dVsCbKfOLJ5EE2EqaKPFTbBhIlbmk
-	 yehUEvUlDDv5if47+sCDPpe7GBTjM67n64VdMB2IL/GFTwlHsmga51dBnXcZZgn5Dp
-	 ae3R0sOK2zBCg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5131a9b3d5bso2851910e87.0
-        for <regressions@lists.linux.dev>; Fri, 15 Mar 2024 11:25:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV6Qw1duzJ4gosiQiyV2m6J/bfLvDiCulN4+2oDieyMndA138aW1M990fbWJ5KhZYUsbPx8lvqsQg8q0LD5lw3xLkpeIL5qCUqUtl8=
-X-Gm-Message-State: AOJu0Yw+t4yIputY1cf7kn9LoqE9wFcJpx9RQEYNgMok1OfgHZD861mt
-	v4LJaGYzJB3fvwAJKOkTz7qEzGnvyyIZyOwLSb/x67cXcvyAnZqkPG6N/lGnbO3wwgkVjXhoUmb
-	E7QP1QkJp1lipiHz3LYin6qKNDdc=
-X-Google-Smtp-Source: AGHT+IHG7q71Pp8wrwC72c6hoP6KsfADEgvzZfjnqNkb1bLVbUMmrg9BkXFI9zrkov6W5GHHpKbxoTCjazuwD+35SGU=
-X-Received: by 2002:a19:6406:0:b0:513:d8e3:fe3d with SMTP id
- y6-20020a196406000000b00513d8e3fe3dmr2170705lfb.26.1710527154049; Fri, 15 Mar
- 2024 11:25:54 -0700 (PDT)
+	s=arc-20240116; t=1710604969; c=relaxed/simple;
+	bh=psWNJLyeG2dJDUOJLnxmct4u0lVIvH8kn+tzl248vrI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LnXcbr4oVtSc3p4FzYSAhR51ALeHaSsFrVoHMHdjQSRtG8NJhD10//svnHLisltkBPBBFK1TWeTutBvZwsamWS7REdeMybo0eAN2mgVwxv0ELrdlE/6o6U+HiuV607Wma4vkwbIeLlEZujHfvzBcRAcION+u7s4df0mHSP0teo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=194.150.191.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id 420E78C2375;
+	Sat, 16 Mar 2024 17:02:45 +0100 (CET)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject:
+ [regression] 6.8.1: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
+Date: Sat, 16 Mar 2024 17:02:44 +0100
+Message-ID: <2325246.ElGaqSPkdT@lichtvoll.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
- <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz> <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
- <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
- <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz> <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
- <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
-In-Reply-To: <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 15 Mar 2024 19:25:42 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
-Message-ID: <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 15 Mar 2024 at 19:11, Radek Podgorny <radek@podgorny.cz> wrote:
->
-> ok, will. the kernel with previous patch is still compiling so i'll
-> queue it. ;-)
->
-> anyway, should i apply this as a separate patch or as an addition to the
-> previous one (the one with bss.efistub addition)?
->
+Hi!
 
-Only this one change please.
+ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
+Hibernation works correctly with self-compiled 6.7.9.
+
+Trying to use "no_console_suspend" to debug next. Will not do bisect
+between major kernel releases on a production machine.
+
+[  409.847217] PM: hibernation: hibernation entry
+[  409.874672] Filesystems sync: 0.027 seconds
+[  409.875204] Freezing user space processes
+[  409.877765] Freezing user space processes completed (elapsed 0.002 seconds)
+[  409.877770] OOM killer disabled.
+[  409.878027] PM: hibernation: Marking nosave pages: [mem 0x00000000-0x00000fff]
+[  409.878031] PM: hibernation: Marking nosave pages: [mem 0x0009f000-0x000fffff]
+[  409.878034] PM: hibernation: Marking nosave pages: [mem 0x09c00000-0x09d00fff]
+[  409.878039] PM: hibernation: Marking nosave pages: [mem 0x09f00000-0x09f0ffff]
+[  409.878041] PM: hibernation: Marking nosave pages: [mem 0xa2356000-0xa2356fff]
+[  409.878042] PM: hibernation: Marking nosave pages: [mem 0xa2363000-0xa2364fff]
+[  409.878043] PM: hibernation: Marking nosave pages: [mem 0xa2372000-0xa2373fff]
+[  409.878045] PM: hibernation: Marking nosave pages: [mem 0xa2384000-0xa2384fff]
+[  409.878046] PM: hibernation: Marking nosave pages: [mem 0xb9c57000-0xb9ce7fff]
+[  409.878049] PM: hibernation: Marking nosave pages: [mem 0xbd9de000-0xcc3fdfff]
+[  409.878530] PM: hibernation: Marking nosave pages: [mem 0xce000000-0xffffffff]
+[  409.879306] PM: hibernation: Basic memory bitmaps created
+[  409.884500] PM: hibernation: Preallocating image memory
+[  412.146014] PM: hibernation: Allocated 2800864 pages for snapshot
+[  412.146022] PM: hibernation: Allocated 11203456 kbytes in 2.26 seconds (4957.28 MB/s)
+[  412.146025] Freezing remaining freezable tasks
+[  412.147610] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+[  412.147829] printk: Suspending console(s) (use no_console_suspend to debug)
+[  412.158400] port 0000:02:00.1:0.0: PM: dpm_run_callback(): pm_runtime_force_suspend+0x0/0x120 returns -16
+[  412.158418] port 0000:02:00.1:0.0: PM: failed to freeze: error -16
+[  413.879379] PM: hibernation: Basic memory bitmaps freed
+[  413.879847] OOM killer enabled.
+[  413.879852] Restarting tasks ... done.
+[  413.882304] PM: hibernation: hibernation exit
+
+Best,
+-- 
+Martin
+
+
