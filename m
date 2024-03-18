@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A84E1A0;
-	Mon, 18 Mar 2024 14:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B314F1E3;
+	Mon, 18 Mar 2024 15:04:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710771828; cv=none; b=S+pxOeC0qpULPs4J1oEt8CppXAf3Ix7O3JVtKMkqwNGsDVLGQH2KF97983wWW7TddkV3cfQgc9gtz52GAivsqw0qdqu4+u7WWXWYizItRgQzOjSPEdZh/68UQ6u1RvVbn9WyzI/1d5znHBgOSBpAH2mppFlGyFNKT8jmK+l1des=
+	t=1710774260; cv=none; b=R42mK9VoYyEFb+XWHoFRjEjOzChW4Qhy5YNf81bXLknHuyJx0M7ZZwx8P5k0QLewKpdibjonEO/WjxanOWHSYheZhHBe/6OkRJfpSqFDHqa72y4/JObYD+9N0P0SdgHXreChrsJxZb/tV46qRZOX+1YsBixMlomjLhGq+lj4Cio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710771828; c=relaxed/simple;
-	bh=c6uoZOmmg1ClfgDRLu/D429KDEPIAYcmzMObVVAixM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fF/MvL7MaC1SGKhbIupe94uk03uB6FhdTcJp7ig2kkbndZ1IHoi4LUe7PUvnyHZ/62UHfJM3Vka+xucM0LYahFt+nt+XmQ0mhbRqQRJprgDTRTgBlwHKy6Wfw+bEs1AMXV85QtcvmRG1wk0145kGPfxUNwvWcJjBtlZvquRXWK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FFpxyMmW; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1710774260; c=relaxed/simple;
+	bh=2LQU/waPjsREZUsLg9NrzpLXBHyStidTkJNjdyXC8Rg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YhbWk42GdW/gvgQPZ1ckICIndM5io/29MGvkIsfJXAvQVPyHZ/doe9DNyPqLBcdGwxSU/QQ03Q8yrm7G0CyWSalKZso69cWEleYPgDy9XfvyN8lG5LDN/kLGAM6tXjIReXm4aRz11Cm/GItUHE6K6VN7q5kiwiLad2JWBCwhuLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zJhwOLrJ; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FFpxyMmW"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zJhwOLrJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	In-Reply-To:References:Cc:To:Reply-To:Subject:From:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=XzC0+Hwr1TDXS2snk7C57VVemGg1yb3OgZJVr0YWweI=;
-	t=1710771826; x=1711203826; b=FFpxyMmWvFTbLjGiACPSX12N0SAjl3w8iVSti7h9+2xLX8j
-	loLa9AUWGCb4BJG+dID3I+DvDOWWCIzYXQCu95Jpyj/0JEEyhyZdsc1odrgKIa8LSa7y7PlM/BCew
-	sIL4igoE7acCqQ6edJ0OzfyIeFEVZHzFdI9F9vJH3XM8qXOON2vabaTEa9+IXrJWgmXMEDBSdeqoa
-	LV3qLiQtHBvp1BUqQuAX3zZ7tp5BwhncIsT8L8Ehq0c0XRFvlfRE4qVDJYsUDUALTqM4cVj27s+WO
-	69TzEjbKBm7hwQblK0hLHoDhzVGoRc/TmWZC0r4+TublNkU5ESReXpe1pHgRsuqg==;
+	In-Reply-To:References; bh=xIz7iXaGyTgA8QLC484uOZk8/HP4X9mjTbdpsdit22s=;
+	t=1710774258; x=1711206258; b=zJhwOLrJqnKOUsr48QWkkkY5ewkRm1Y1Ay9EqFFARUcExXm
+	pQEfnGYbQ2t/W/9kh2Cpn7EKzPaiW9gl3DRjGHXbtSSfOVmfvWBh/kFMc1r7XQpq3526EkEFOY90k
+	1yWtvwCF1xfJQUw2txTeWI9QBnozXrpekUj4y5WRt7dUmIs4xjexVcZYZo759oGuXQqoPir7P5cjL
+	xHHrx+mQThSp6iZMIUnvJTvLyzkMFLobNZOIHwqHwbyTp6LZqzuPFZHdcalGOrIl/9VlcDNFCquT+
+	Roqk59yNBK41MEFOVtfMe7dmrmkbGQs3U4z9STbzfI8juU8bqT1FNOIAc/slsa5w==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmDtv-0001UH-9b; Mon, 18 Mar 2024 15:23:43 +0100
-Message-ID: <764f2b10-9791-4861-9bef-7160fdb8f3ae@leemhuis.info>
-Date: Mon, 18 Mar 2024 15:23:42 +0100
+	id 1rmEX6-0001co-Fx; Mon, 18 Mar 2024 16:04:12 +0100
+Message-ID: <2b54a5d8-b317-4df7-ab2e-d63a352dd77d@leemhuis.info>
+Date: Mon, 18 Mar 2024 16:04:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,73 +39,112 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
- repeatedly in one file
-Content-Language: en-US, de-DE
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
- Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>, stable@kernel.org,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev <netdev@vger.kernel.org>
-References: <20240306111157.29327-1-petr@tesarici.cz>
- <20240311182516.1e2eebd8@meshulam.tesarici.cz>
- <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
- <20240311192118.31cfc1fb@meshulam.tesarici.cz>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+Subject: Re: Problems with csum_partial with misaligned buffers on sh4
+ platform
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240311192118.31cfc1fb@meshulam.tesarici.cz>
+To: Guenter Roeck <linux@roeck-us.net>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
+ <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
+Content-Language: en-US, de-DE
+In-Reply-To: <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710771826;9e9993c1;
-X-HE-SMSGID: 1rmDtv-0001UH-9b
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710774258;3ff2e1e0;
+X-HE-SMSGID: 1rmEX6-0001co-Fx
 
-On 11.03.24 19:21, Petr Tesařík wrote:
-> On Mon, 11 Mar 2024 18:43:59 +0100
-> Eric Dumazet <edumazet@google.com> wrote:
->> On Mon, Mar 11, 2024 at 6:25 PM Petr Tesařík <petr@tesarici.cz> wrote:
->>> On Wed,  6 Mar 2024 12:11:57 +0100
->>> Petr Tesarik <petr@tesarici.cz> wrote:
->>>  
->>>> Fix bogus lockdep warnings if multiple u64_stats_sync variables are
->>>> initialized in the same file.
->>>>
->>>> With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
->>>>
->>>>       static struct lock_class_key __key;
->>>>
->>>> Since u64_stats_init() is a function (albeit an inline one), all calls
->>>> within the same file end up using the same instance, effectively treating
->>>> them all as a single lock-class.  
->>> What happens with this fix now?
->>>
->>> IIUC it should be reviewed by Eric, but I don't know through which tree
->>> it should be merged. Any plans yet?  
+On 11.03.24 18:04, Guenter Roeck wrote:
+> On Sat, Feb 10, 2024 at 07:12:39AM -0800, Guenter Roeck wrote:
 >>
->> I thought I gave a reply, but apparently not .
->>
->> Reviewed-by: Eric Dumazet <edumazet@google.com>
+>> when running checksum unit tests on sh4 qemu emulations, I get the following
+>> errors.
 > 
-> Thank you!
+> Adding to regression tracker.
+> 
+> #regzbot ^introduced cadc4e1a2b4d2
 
-Great. Just wondering, as there afaics was no activity since about one
-week: what is the plan forward here?
+Hmmm, thx for that, but well, I'm a bit taken back and forth here. That
+commit afaics is from v3.0-rc1 and Linus iirc at least once said
+something along the lines of "a regression only reported after a long
+time at some point becomes just a bug". I'd say that applies there,
+which is why I'm wondering if tracking this really is worth it.
 
-Is the "through which tree it should be merged" question still
-unresolved? I quickly looked and it seems two of the last tree changes
-to that file over the past years went through net-next (the other one
-through the tip tree). That's why I CCed the other two net maintainers
-and the net list now.
+Ciao, Thorsten
 
-Or is the plan to merge this after the merge window? Or only merge it
-for 6.10, as it are bogus lockdep warnings that are being fixed?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
+>>     KTAP version 1
+>>     # Subtest: checksum
+>>     # module: checksum_kunit
+>>     1..5
+>>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 53378 (0xd082)
+>>         ( u64)expec == 33488 (0x82d0)
+>>     not ok 1 test_csum_fixed_random_inputs
+>>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 65281 (0xff01)
+>>         ( u64)expec == 65280 (0xff00)
+>>     not ok 2 test_csum_all_carry_inputs
+>>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:573
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 65535 (0xffff)
+>>         ( u64)expec == 65534 (0xfffe)
+>>     not ok 3 test_csum_no_carry_inputs
+>>     ok 4 test_ip_fast_csum
+>>     ok 5 test_csum_ipv6_magic
+>> # checksum: pass:2 fail:3 skip:0 total:5
+>>
+>> The above is with from a little endian system. On a big endian system,
+>> the test result is as follows.
+>>
+>>     KTAP version 1
+>>     # Subtest: checksum
+>>     # module: checksum_kunit
+>>     1..5
+>>     # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/checksum_kunit.c:500
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 33488 (0x82d0)
+>>         ( u64)expec == 53378 (0xd082)
+>>     not ok 1 test_csum_fixed_random_inputs
+>>     # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:525
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 65281 (0xff01)
+>>         ( u64)expec == 255 (0xff)
+>>     not ok 2 test_csum_all_carry_inputs
+>>     # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_kunit.c:565
+>>     Expected ( u64)result == ( u64)expec, but
+>>         ( u64)result == 1020 (0x3fc)
+>>         ( u64)expec == 0 (0x0)
+>>     not ok 3 test_csum_no_carry_inputs
+>>     # test_ip_fast_csum: ASSERTION FAILED at lib/checksum_kunit.c:589
+>>     Expected ( u64)expected == ( u64)csum_result, but
+>>         ( u64)expected == 55939 (0xda83)
+>>         ( u64)csum_result == 33754 (0x83da)
+>>     not ok 4 test_ip_fast_csum
+>>     # test_csum_ipv6_magic: ASSERTION FAILED at lib/checksum_kunit.c:617
+>>     Expected ( u64)expected_csum_ipv6_magic[i] == ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum), but
+>>         ( u64)expected_csum_ipv6_magic[i] == 6356 (0x18d4)
+>>         ( u64)csum_ipv6_magic(saddr, daddr, len, proto, csum) == 43586 (0xaa42)
+>>     not ok 5 test_csum_ipv6_magic
+>> # checksum: pass:0 fail:5 skip:0 total:5
+>>
+>> Note that test_ip_fast_csum and test_csum_ipv6_magic fail on all big endian
+>> systems due to a bug in the test code, unrelated to this problem.
+>>
+>> Analysis shows that the errors are seen only if the buffer is misaligned.
+>> Looking into arch/sh/lib/checksum.S, I found commit cadc4e1a2b4d2 ("sh:
+>> Handle calling csum_partial with misaligned data") which seemed to be
+>> related. Reverting that commit fixes the problem.
+>> This suggests that something may be wrong with that commit. Alternatively,
+>> of course, it may be possible that something is wrong with the qemu
+>> emulation, but that seems unlikely.
+>>
+>> Thanks,
+>> Guenter
