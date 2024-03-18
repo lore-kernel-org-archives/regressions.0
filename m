@@ -1,35 +1,35 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57E622086;
-	Mon, 18 Mar 2024 08:38:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA6B25757;
+	Mon, 18 Mar 2024 08:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710751134; cv=none; b=q/pYIEedDnbcIYwwZ1LjGBi/ylJfdPq+TPycDQIRLQFW9CD0fx35n0c6mIkmjseVJczrW35cfWDkpTdnxHgKa93yqyaLjt5x6El9NSqEa4cKSlXuvQH2O5MwfpyMprz5w7bd9e2gXUNfWheJ3LZKZ9TDGOpdUEuZFFxDFgTqcW4=
+	t=1710751135; cv=none; b=NIq3+0fCqfVVBHnanaSZ9ds6ur1FydHjXcYX0gEbv5INQ3pMCIIs/XtDdXdZ4eeYltimplT+N4R68XD9b98xeNGIualxCGdHAKQ5ItonjHTA3x2bIIXxMh3FvbhpsjMGzf3kaUSmarnpnFSRRCy7yTL4CiZ2HfSgU9FV2v+U2Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710751134; c=relaxed/simple;
-	bh=Wsp4QU0EbEp59KyAXAfPwstK+7jqUH5pvIFh0uCXQn8=;
+	s=arc-20240116; t=1710751135; c=relaxed/simple;
+	bh=LyKymQpai4NPJgMQu4KSa1lmNvpYbFeMuDfPh2+HPv4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r7gb3r+Yk5PoMOU91lzJytJ4SHXTu5qvkqGUuKXUmiHW10wXigHPRUCZNaY4Y275ui+nNqd8f9tx1vpbMcl1nL0ZRPaM1sCkmupfThIjs5GRBx437FEhkpZWoC2REbifLmiJ0epaZTnYpzXJYIa7hZdel1uFEJBpvZj190ADXFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=mTqPZHRm; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=qzELMgblVdTeXXWikI+lrTXtIJg0UWB4iXvzGYRMz3rgOlrSbuD/ggu6RDjMtkUYV+AdXAyMXWFqTzOhrhnnvBF4spOf24coPNDepjmxhbsKJRpTPY7iO4Z7m6USmV+2RAAE7H2UOIcU6LSQQzNeAmbTrF/x5qNjF2O+8KR0+nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Y5W9u7Ga; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="mTqPZHRm"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Y5W9u7Ga"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=qNS37WICxSoFpCabsEiBmVjOxf9ErAGU0YHXXLoH3j4=; t=1710751131;
-	x=1711183131; b=mTqPZHRmrtpmBUhyxdeHvxoAi9d/Wo2L+S8J8OHosn8wOINPeBiVDuxHeFqjW
-	TwmkUO+eCqfkmXDDRBAYA10Nfz3ov+v1PPg5qnPWSP+x3T9MoWlH8NTeetUKx4getyA205GXE8Uj9
-	SgXtpYyxaC6pBJ94+YEDax7L2FGHD65gAUKWVcxF8FoFGWXeyBTSCwVSrbHY/Ctk/Fo6sMPqUNWpF
-	GLpHt1h1y19m4/+T3h5tqo0W9W4Fws3duxFxIdUcWGcNZ3jrexDS5em5eUPlZ/4mmhLoqUs1arjcS
-	T1JcicrFQ59m4TXAuIMBc2Nuw/R5911SJY1hXrGZSrVpVf7eJw==;
+	References; bh=/HUnBo7yzk/GQr34a886n6vcdOoie6mtT3fmI7o6CHQ=; t=1710751133;
+	x=1711183133; b=Y5W9u7GafPV+vKVJf6vSWu7YK17qKyhgNovDbjQHhMaGiJyLSyV+KWwc1CFk3
+	XcebkZxwzkuzG8GuoArEUVBQELcNKRQDZuhxOjC4wKKYZBYPcOQG9SqBf9he8h7+u1zKSGmGK+DmT
+	9Y4xMOu3mBfQ1Hmz4i/iZUgCf9MubVjWcRAxOCZtWRLSNOH3MxsqXwedG6AFxKYJ68XoNNuH1TJRY
+	em6qLUrlEPoqALmPskt6m2OEnkOTgHq2EtGPZMpP0g2zYg1Cj5Lyv82gE/XgClrZBJEnXNUwLrHxG
+	JGtPYa7r+/hCM1VE2n/6qlLb9yBExDCJpuRdE+CJloGmjCiqjw==;
 Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rm8W1-00037E-St; Mon, 18 Mar 2024 09:38:41 +0100
+	id 1rm8W1-00037E-0R; Mon, 18 Mar 2024 09:38:41 +0100
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: regressions@lists.linux.dev,
@@ -37,9 +37,9 @@ Cc: regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Bagas Sanjaya <bagasdotme@gmail.com>,
 	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
-Subject: [PATCH v1 4/4] docs: verify/bisect: remove a level of indenting
-Date: Mon, 18 Mar 2024 09:38:39 +0100
-Message-ID: <01f1a407e92b92d9f8614bd34882956694bab123.1710750972.git.linux@leemhuis.info>
+Subject: [PATCH v1 2/4] docs: verify/bisect: check taint flag
+Date: Mon, 18 Mar 2024 09:38:37 +0100
+Message-ID: <8fcaffa8e85f36d51178d61061355c3c8bc85a0f.1710750972.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1710750972.git.linux@leemhuis.info>
 References: <cover.1710750972.git.linux@leemhuis.info>
@@ -50,189 +50,132 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1710751131;f9e8a67c;
-X-HE-SMSGID: 1rm8W1-00037E-St
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1710751133;a9f5f439;
+X-HE-SMSGID: 1rm8W1-00037E-0R
 
-Remove a unnecessary level of indenting in some areas of the reference
-section. No text changes.
+Instruct readers to check the taint flag, as the reason why it's set
+might directly or indirectly cause the bug or interfere with testing.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../verify-bugs-and-bisect-regressions.rst    | 114 +++++++++---------
- 1 file changed, 57 insertions(+), 57 deletions(-)
+ .../verify-bugs-and-bisect-regressions.rst    | 64 ++++++++++++++-----
+ 1 file changed, 49 insertions(+), 15 deletions(-)
 
 diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-index ee9df7ecb02ac7..d3504826f40154 100644
+index fb82118bb011b9..632372e343d89f 100644
 --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
 +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-@@ -1138,12 +1138,12 @@ Git clone of Linus' mainline repository. There is nothing more to say about
- that -- but there are two alternatives ways to retrieve the sources that might
- work better for you:
+@@ -113,6 +113,7 @@ will be considered the 'good' release and used to prepare the .config file.
+        #   checking if the output of the next two commands matches:
+        tail -n 1 ~/kernels-built
+        uname -r
++       cat /proc/sys/kernel/tainted
  
-- * If you have an unreliable internet connection, consider
--   :ref:`using a 'Git bundle'<sources_bundle_bisref>`.
-+* If you have an unreliable internet connection, consider
-+  :ref:`using a 'Git bundle'<sources_bundle_bisref>`.
+   c) Check if the problem occurs with this kernel as well.
  
-- * If downloading the complete repository would take too long or requires too
--   much storage space, consider :ref:`using a 'shallow
--   clone'<sources_shallow_bisref>`.
-+* If downloading the complete repository would take too long or requires too
-+  much storage space, consider :ref:`using a 'shallow
-+  clone'<sources_shallow_bisref>`.
+@@ -572,21 +573,29 @@ be a waste of time. [:ref:`details<introlatestcheck_bisref>`]
+   Remember the identifier momentarily, as it will help you pick the right kernel
+   from the boot menu upon restarting.
  
- .. _sources_bundle_bisref:
+-.. _recheckbroken_bissbs:
+-
+-* Reboot into the kernel you just built and check if the feature that is
+-  expected to be broken really is.
+-
+-  Start by making sure the kernel you booted is the one you just built. When
+-  unsure, check if the output of these commands show the exact same release
+-  identifier::
++* Reboot into your newly built kernel. To ensure your actually started the one
++  you just built, you might want to verify if the output of these commands
++  matches::
  
-@@ -1195,23 +1195,23 @@ branches as explained in the step-by-step guide.
+     tail -n 1 ~/kernels-built
+     uname -r
  
- Note, shallow clones have a few peculiar characteristics:
+- Now verify if the feature that causes trouble works with your newly built
+- kernel. If things work while investigating a regression, check the reference
+- section for further details.
++.. _tainted_bissbs:
++
++* Check if the kernel marked itself as 'tainted'::
++
++    cat /proc/sys/kernel/tainted
++
++  If that command does not return '0', check the reference section, as the cause
++  for this might interfere with your testing.
++
++  [:ref:`details<tainted_bisref>`]
++
++.. _recheckbroken_bissbs:
++
++* Verify if your bug occurs with the newly built kernel. If it does not, check
++  out the instructions in the reference section to ensure nothing went sideways
++  during your tests.
  
-- * For bisections the history needs to be deepened a few mainline versions
--   farther than it seems necessary, as explained above already. That's because
--   Git otherwise will be unable to revert or describe most of the commits within
--   a range (say 6.1..6.2), as they are internally based on earlier kernels
--   releases (like 6.0-rc2 or 5.19-rc3).
-+* For bisections the history needs to be deepened a few mainline versions
-+  farther than it seems necessary, as explained above already. That's because
-+  Git otherwise will be unable to revert or describe most of the commits within
-+  a range (say 6.1..6.2), as they are internally based on earlier kernels
-+  releases (like 6.0-rc2 or 5.19-rc3).
+   [:ref:`details<recheckbroken_bisref>`]
  
-- * This document in most places uses ``git fetch`` with ``--shallow-exclude=``
--   to specify the earliest version you care about (or to be precise: its git
--   tag). You alternatively can use the parameter ``--shallow-since=`` to specify
--   an absolute (say ``'2023-07-15'``) or relative (``'12 months'``) date to
--   define the depth of the history you want to download. When using them while
--   bisecting mainline, ensure to deepen the history to at least 7 months before
--   the release of the mainline release your 'good' kernel is based on.
-+* This document in most places uses ``git fetch`` with ``--shallow-exclude=``
-+  to specify the earliest version you care about (or to be precise: its git
-+  tag). You alternatively can use the parameter ``--shallow-since=`` to specify
-+  an absolute (say ``'2023-07-15'``) or relative (``'12 months'``) date to
-+  define the depth of the history you want to download. When using them while
-+  bisecting mainline, ensure to deepen the history to at least 7 months before
-+  the release of the mainline release your 'good' kernel is based on.
+@@ -616,11 +625,14 @@ be a waste of time. [:ref:`details<introlatestcheck_bisref>`]
+     make -s kernelrelease | tee -a ~/kernels-built
+     reboot
  
-- * Be warned, when deepening your clone you might encounter an error like
--   'fatal: error in object: unshallow cafecaca0c0dacafecaca0c0dacafecaca0c0da'.
--   In that case run ``git repack -d`` and try again.
-+* Be warned, when deepening your clone you might encounter an error like
-+  'fatal: error in object: unshallow cafecaca0c0dacafecaca0c0dacafecaca0c0da'.
-+  In that case run ``git repack -d`` and try again.
+-  Now verify if you booted the kernel you intended to start, to then check if
+-  everything works fine with this kernel::
++  Confirm you booted the kernel you intended to start and check its tainted
++  status::
  
- [:ref:`back to step-by-step guide <sources_bissbs>`]
- [:ref:`back to section intro <sources_bisref>`]
-@@ -1235,23 +1235,23 @@ locate the right build configuration.*
+     tail -n 1 ~/kernels-built
+     uname -r
++    cat /proc/sys/kernel/tainted
++
++  Now verify if this kernel is showing the problem.
  
- Two things can easily go wrong when creating a .config file as advised:
+   [:ref:`details<recheckstablebroken_bisref>`]
  
-- * The oldconfig target will use a .config file from your build directory, if
--   one is already present there (e.g. '~/linux/.config'). That's totally fine if
--   that's what you intend (see next step), but in all other cases you want to
--   delete it. This for example is important in case you followed this guide
--   further, but due to problems come back here to redo the configuration from
--   scratch.
-+* The oldconfig target will use a .config file from your build directory, if
-+  one is already present there (e.g. '~/linux/.config'). That's totally fine if
-+  that's what you intend (see next step), but in all other cases you want to
-+  delete it. This for example is important in case you followed this guide
-+  further, but due to problems come back here to redo the configuration from
-+  scratch.
+@@ -1629,13 +1641,32 @@ need to look in different places.
  
-- * Sometimes olddefconfig is unable to locate the .config file for your running
--   kernel and will use defaults, as briefly outlined in the guide. In that case
--   check if your distribution ships the configuration somewhere and manually put
--   it in the right place (e.g. '~/linux/.config') if it does. On distributions
--   where /proc/config.gz exists this can be achieved using this command::
-+* Sometimes olddefconfig is unable to locate the .config file for your running
-+  kernel and will use defaults, as briefly outlined in the guide. In that case
-+  check if your distribution ships the configuration somewhere and manually put
-+  it in the right place (e.g. '~/linux/.config') if it does. On distributions
-+  where /proc/config.gz exists this can be achieved using this command::
+ [:ref:`back to step-by-step guide <storagespace_bissbs>`]
  
--     zcat /proc/config.gz > .config
-+    zcat /proc/config.gz > .config
++.. _tainted_bisref:
++
++Check if your newly built kernel considers itself 'tainted'
++-----------------------------------------------------------
++
++  *Check if the kernel marked itself as 'tainted'.*
++  [:ref:`... <tainted_bissbs>`]
++
++Linux marks itself as tainted when something happens that potentially leads to
++follow-up errors that look totally unrelated. That is why developers might
++ignore or react scantly to reports from tainted kernels -- unless of course the
++kernel set the flag right when the reported bug occurred.
++
++That's why you want check why a kernel is tainted as explained in
++Documentation/admin-guide/tainted-kernels.rst; doing so is also in your own
++interest, as your testing might be flawed otherwise.
++
++[:ref:`back to step-by-step guide <tainted_bissbs>`]
++
+ .. _recheckbroken_bisref:
  
--   Once you put it there, run ``make olddefconfig`` again to adjust it to the
--   needs of the kernel about to be built.
-+  Once you put it there, run ``make olddefconfig`` again to adjust it to the
-+  needs of the kernel about to be built.
+ Check the kernel built from the latest codebase
+ -----------------------------------------------
  
- Note, the olddefconfig target will set any undefined build options to their
- default value. If you prefer to set such configuration options manually, use
-@@ -1393,16 +1393,16 @@ when following this guide on a few commodity distributions.
+-  *Reboot into the kernel you just built and check if the feature that regressed
+-  is really broken there.* [:ref:`... <recheckbroken_bissbs>`]
++  *Verify if your bug occurs with the newly built kernel.*
++  [:ref:`... <recheckbroken_bissbs>`]
  
- **Debian:**
+ There are a couple of reasons why the regression you face might not show up with
+ your own kernel built from the latest codebase. These are the most frequent:
+@@ -1712,6 +1743,9 @@ In case the feature that broke with newer kernels does not work with your first
+ self-built kernel, find and resolve the cause before moving on. There are a
+ multitude of reasons why this might happen. Some ideas where to look:
  
-- * Remove a stale reference to a certificate file that would cause your build to
--   fail::
-+* Remove a stale reference to a certificate file that would cause your build to
-+  fail::
- 
--    ./scripts/config --set-str SYSTEM_TRUSTED_KEYS ''
-+   ./scripts/config --set-str SYSTEM_TRUSTED_KEYS ''
- 
--   Alternatively, download the needed certificate and make that configuration
--   option point to it, as `the Debian handbook explains in more detail
--   <https://debian-handbook.info/browse/stable/sect.kernel-compilation.html>`_
--   -- or generate your own, as explained in
--   Documentation/admin-guide/module-signing.rst.
-+  Alternatively, download the needed certificate and make that configuration
-+  option point to it, as `the Debian handbook explains in more detail
-+  <https://debian-handbook.info/browse/stable/sect.kernel-compilation.html>`_
-+  -- or generate your own, as explained in
-+  Documentation/admin-guide/module-signing.rst.
- 
- [:ref:`back to step-by-step guide <configmods_bissbs>`]
- 
-@@ -1563,11 +1563,11 @@ The step-by-step guide uses the default make targets (e.g. 'bzImage' and
- steps of the guide then install. You instead can also directly build everything
- and directly package it up by using one of the following targets:
- 
-- * ``make -j $(nproc --all) bindeb-pkg`` to generate a deb package
-+* ``make -j $(nproc --all) bindeb-pkg`` to generate a deb package
- 
-- * ``make -j $(nproc --all) binrpm-pkg`` to generate a rpm package
-+* ``make -j $(nproc --all) binrpm-pkg`` to generate a rpm package
- 
-- * ``make -j $(nproc --all) tarbz2-pkg`` to generate a bz2 compressed tarball
-+* ``make -j $(nproc --all) tarbz2-pkg`` to generate a bz2 compressed tarball
- 
- This is just a selection of available make targets for this purpose, see
- ``make help`` for others. You can also use these targets after running
-@@ -1599,20 +1599,20 @@ If installkernel is found, the kernel's build system will delegate the actual
- installation of your kernel image to this executable, which then performs some
- or all of these tasks:
- 
-- * On almost all Linux distributions installkernel will store your kernel's
--   image in /boot/, usually as '/boot/vmlinuz-<kernelrelease_id>'; often it will
--   put a 'System.map-<kernelrelease_id>' alongside it.
-+* On almost all Linux distributions installkernel will store your kernel's
-+  image in /boot/, usually as '/boot/vmlinuz-<kernelrelease_id>'; often it will
-+  put a 'System.map-<kernelrelease_id>' alongside it.
- 
-- * On most distributions installkernel will then generate an 'initramfs'
--   (sometimes also called 'initrd'), which usually are stored as
--   '/boot/initramfs-<kernelrelease_id>.img' or
--   '/boot/initrd-<kernelrelease_id>'. Commodity distributions rely on this file
--   for booting, hence ensure to execute the make target 'modules_install' first,
--   as your distribution's initramfs generator otherwise will be unable to find
--   the modules that go into the image.
-+* On most distributions installkernel will then generate an 'initramfs'
-+  (sometimes also called 'initrd'), which usually are stored as
-+  '/boot/initramfs-<kernelrelease_id>.img' or
-+  '/boot/initrd-<kernelrelease_id>'. Commodity distributions rely on this file
-+  for booting, hence ensure to execute the make target 'modules_install' first,
-+  as your distribution's initramfs generator otherwise will be unable to find
-+  the modules that go into the image.
- 
-- * On some distributions installkernel will then add an entry for your kernel
--   to your bootloader's configuration.
-+* On some distributions installkernel will then add an entry for your kernel
-+  to your bootloader's configuration.
- 
- You have to take care of some or all of the tasks yourself, if your
- distribution lacks a installkernel script or does only handle part of them.
++* Check the taint status and the output of ``dmesg``, maybe something unrelated
++  went wrong.
++
+ * Maybe localmodconfig did something odd and disabled the module required to
+   test the feature? Then you might want to recreate a .config file based on the
+   one from the last working kernel and skip trimming it down; manually disabling
 -- 
 2.44.0
 
