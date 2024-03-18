@@ -1,102 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371194438F
-	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 13:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A84E1A0;
+	Mon, 18 Mar 2024 14:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710767995; cv=none; b=ruDWrP9Su13VxhZs5+oqCa86tkbe7m5k+NvpTTKszpfMihaLrNr7bVaTCHv3QeX2h/PNQSTMNl/wSkCO1WIrUN0wWqmRMffhc7DRd75wHOohoo8oRYvjOJ/12IHQDy9CZ7qUvV9jh3yfCpCB6X7JXyvdnhT6hhQLzZ39KkCpF8o=
+	t=1710771828; cv=none; b=S+pxOeC0qpULPs4J1oEt8CppXAf3Ix7O3JVtKMkqwNGsDVLGQH2KF97983wWW7TddkV3cfQgc9gtz52GAivsqw0qdqu4+u7WWXWYizItRgQzOjSPEdZh/68UQ6u1RvVbn9WyzI/1d5znHBgOSBpAH2mppFlGyFNKT8jmK+l1des=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710767995; c=relaxed/simple;
-	bh=B7EFWJAvkf3Ub97Zkwa4Dlgr6sAIbdL0b6kzx37r2cU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E5fKFJz21AnIVm+GecTrn1I8INjrvdJAxxpG8v2/I4wq2eMLCy1hS9TBfYBafsVBFFEtwSY1VmoiB383Sntb40ZnitQZJPOtf5m3NwDb5XgCvO+DkPgYh6mIIm4c29Iqw1E9SY2KLS2E2KyvXYZjfMX8iOugig9Kc5MPyhnxiaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1CZmIVi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710771828; c=relaxed/simple;
+	bh=c6uoZOmmg1ClfgDRLu/D429KDEPIAYcmzMObVVAixM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fF/MvL7MaC1SGKhbIupe94uk03uB6FhdTcJp7ig2kkbndZ1IHoi4LUe7PUvnyHZ/62UHfJM3Vka+xucM0LYahFt+nt+XmQ0mhbRqQRJprgDTRTgBlwHKy6Wfw+bEs1AMXV85QtcvmRG1wk0145kGPfxUNwvWcJjBtlZvquRXWK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FFpxyMmW; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1CZmIVi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B58D8C433F1
-	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 13:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710767994;
-	bh=B7EFWJAvkf3Ub97Zkwa4Dlgr6sAIbdL0b6kzx37r2cU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c1CZmIVi+G/qv5A+yCvMmvkEntSRAaMT4vpe9ijuWBZk1fn8acWHKWG4slP/db/U1
-	 +MLta9/82y7WsnrMSEPKZi9RIDNnHIRUDmJfjeTXYFpw8CEATj3KcyAgu46+SGObSs
-	 WKxsrk5vrG0DX2MXoo99BcLPApr8eHssxdbgxJzN/UNEo8foKHHE8X6P2kENmPrJ0A
-	 RkWd2E+uNoy0yiTfYj/D5ShxpppZN+C3cnpML9v2RYSTYFDRiBlppgy3XcK6ni4ATr
-	 JlxT47eDu7UkRojsR5QHQWCkKHb/TO8Y5jHx1CbD+rqB/EWqPDXlHRv4zeMPjbtjnv
-	 xLSO5GG9Sf0oQ==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d109e82bd0so55597181fa.3
-        for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 06:19:54 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yz9/S5UORjJvVyWZCUejIQ6AVuUB+Gw00rF/Uk6mKKLhZDBQhNW
-	7eRm0azTH7LKN2ZPJIbPIw6dnAeA7s13uUDcJuQ2uob2FPdm2HgwasVKql41phayeGGmjTb+8yp
-	70uGtKNHS3D8hkP0ORU/tskYfGos=
-X-Google-Smtp-Source: AGHT+IGlhfktgrOiEm5j/xxVkcMAbmQ24qNESVHLHUGuFyx/TO6Qu3P6sQtMG+xVY8S/ZxU104+UE76iGifx4SvAINU=
-X-Received: by 2002:a2e:b054:0:b0:2d4:3b3b:68d5 with SMTP id
- d20-20020a2eb054000000b002d43b3b68d5mr7963082ljl.26.1710767993111; Mon, 18
- Mar 2024 06:19:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FFpxyMmW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=XzC0+Hwr1TDXS2snk7C57VVemGg1yb3OgZJVr0YWweI=;
+	t=1710771826; x=1711203826; b=FFpxyMmWvFTbLjGiACPSX12N0SAjl3w8iVSti7h9+2xLX8j
+	loLa9AUWGCb4BJG+dID3I+DvDOWWCIzYXQCu95Jpyj/0JEEyhyZdsc1odrgKIa8LSa7y7PlM/BCew
+	sIL4igoE7acCqQ6edJ0OzfyIeFEVZHzFdI9F9vJH3XM8qXOON2vabaTEa9+IXrJWgmXMEDBSdeqoa
+	LV3qLiQtHBvp1BUqQuAX3zZ7tp5BwhncIsT8L8Ehq0c0XRFvlfRE4qVDJYsUDUALTqM4cVj27s+WO
+	69TzEjbKBm7hwQblK0hLHoDhzVGoRc/TmWZC0r4+TublNkU5ESReXpe1pHgRsuqg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rmDtv-0001UH-9b; Mon, 18 Mar 2024 15:23:43 +0100
+Message-ID: <764f2b10-9791-4861-9bef-7160fdb8f3ae@leemhuis.info>
+Date: Mon, 18 Mar 2024 15:23:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
- <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz> <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
- <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
- <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz> <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
- <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz> <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
- <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
-In-Reply-To: <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 18 Mar 2024 14:19:41 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
-Message-ID: <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
+ repeatedly in one file
+Content-Language: en-US, de-DE
+To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
+ Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ open list <linux-kernel@vger.kernel.org>, stable@kernel.org,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev <netdev@vger.kernel.org>
+References: <20240306111157.29327-1-petr@tesarici.cz>
+ <20240311182516.1e2eebd8@meshulam.tesarici.cz>
+ <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
+ <20240311192118.31cfc1fb@meshulam.tesarici.cz>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240311192118.31cfc1fb@meshulam.tesarici.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710771826;9e9993c1;
+X-HE-SMSGID: 1rmDtv-0001UH-9b
 
-On Mon, 18 Mar 2024 at 14:14, Radek Podgorny <radek@podgorny.cz> wrote:
->
-> hello ard,
->
-> so, i have some bad news. unfortunately, none of the suggested changes
-> resolves the issue. :-(
->
+On 11.03.24 19:21, Petr Tesařík wrote:
+> On Mon, 11 Mar 2024 18:43:59 +0100
+> Eric Dumazet <edumazet@google.com> wrote:
+>> On Mon, Mar 11, 2024 at 6:25 PM Petr Tesařík <petr@tesarici.cz> wrote:
+>>> On Wed,  6 Mar 2024 12:11:57 +0100
+>>> Petr Tesarik <petr@tesarici.cz> wrote:
+>>>  
+>>>> Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+>>>> initialized in the same file.
+>>>>
+>>>> With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+>>>>
+>>>>       static struct lock_class_key __key;
+>>>>
+>>>> Since u64_stats_init() is a function (albeit an inline one), all calls
+>>>> within the same file end up using the same instance, effectively treating
+>>>> them all as a single lock-class.  
+>>> What happens with this fix now?
+>>>
+>>> IIUC it should be reviewed by Eric, but I don't know through which tree
+>>> it should be merged. Any plans yet?  
+>>
+>> I thought I gave a reply, but apparently not .
+>>
+>> Reviewed-by: Eric Dumazet <edumazet@google.com>
+> 
+> Thank you!
 
-... except reverting the patch that you bisected the regression to, right?
+Great. Just wondering, as there afaics was no activity since about one
+week: what is the plan forward here?
 
-> the last two patches still lead to boot-stuck system.
->
+Is the "through which tree it should be merged" question still
+unresolved? I quickly looked and it seems two of the last tree changes
+to that file over the past years went through net-next (the other one
+through the tip tree). That's why I CCed the other two net maintainers
+and the net list now.
 
-What does 'boot-stuck' mean? Please provide as much context as you
-can. More is more.
+Or is the plan to merge this after the merge window? Or only merge it
+for 6.10, as it are bogus lockdep warnings that are being fixed?
 
-> overall, the patches only make the difference in error being printed:
-> sometimes it's something like "wrong padding",
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Can you share the entire, exact error message?
-
-> sometimes the "invalid
-> magic" message. i only noticed later so i can't really tell which patch
-> leads to which message but i can retry them all and tell you exactly if
-> it helps.
->
-
-Yes, please.
-
-> anyway, if you have any other patches, i'll be more than happy to test
-> them out (and be more careful about the message this time)!
->
-
-We should be able to narrow down why that one particular change causes
-the issue. I can split the change in question into smaller ones to see
-which exact change triggers the failure.
-
-And many thanks for taking the time - I really want to figure out what
-is happening here.
+#regzbot poke
