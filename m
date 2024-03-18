@@ -1,50 +1,48 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B572D61B
-	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 09:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8D92C694
+	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 09:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710754865; cv=none; b=eseG3It4Setpoa1ykNMuuSdf/cVnhJyjQ+8CnFk5XS7EqkisbXDGFKhr0Hd7uIxlqaFnhn+ha0LBXh375XlpyxnT0yzwlgyVMc3liSg4uMEwC2scZ1LuEZT0e1HitzTPAZ7bPhv0yjpHpsKpeBIcSVfOIh5G1CIfkO5o0rnWKgY=
+	t=1710755081; cv=none; b=Rwm9sMhXMVBKYgfxbAksl4iIejBThEAoAUGm1OZ59YRxWzvqeQ+8AL3Yk/wFd/Rlhhcy/wCTftrw72u6PY+k5bi9QfuvOcigMkCOfvHpacX/yIedniJulekP7hzT9ba+VfX7hU0SzMmswk905NrUW6YrieR92gavW5ONUDwz6Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710754865; c=relaxed/simple;
-	bh=Rw1hNtfJiAGkJcXBduFbgoUE8X3Z/UIDYOX+xgmBwhw=;
+	s=arc-20240116; t=1710755081; c=relaxed/simple;
+	bh=clpK5/hgFVQ6y90q1invbFi5wfYWxiwpju2/zLJ8Y54=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CFIyipZ34EW6RjYC33j45uwfxeDfLiSZcP7N7/+1KtQG7Dj4T1EXmvPgfZntnq7jJUslaKg5MNFhwpba522XmGXKNESs5O0GhKQ1DGehdH/JtJRMgK+diU/N12dxzIFqFQdYTQElt3C5MvdXHD17fqAFDnMxGpddUArFzn8bG2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=gptay8ah; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version:Content-Type; b=I3ZwTI+pjrSrUc1mLNW28E0RAKAWBc7aFBf1WuQEds5Had33WlKUE4S53OzIFaRsK3H8yaQoE9mEAQGBA0iEpDj/AV68CbYjQBf6EqJGnwatYPWHW1O5aSjyXVhX78ro7lERTAKN8IcmxADMJgQIFNxNfNBQh32nNkwYwS1pBRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=L5cgQpGN; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gptay8ah"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8D808418C4
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="L5cgQpGN"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EB435418C4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1710754863; bh=xKOrfowcxhP62fcLUdlphsdPX0NycUtodiRNloAifDU=;
+	t=1710755079; bh=hY9sbxkA5b6oOGMua/46fI6ru6HCKNfDB3qjt/oFvo4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gptay8ahH8034EWx5v3A1M4fQiOli/2zCuRu3YAQ0YZYThrGcuFEVQc4+h0cD6Xic
-	 EwyyCFynCC9FlLopzptVciRNF6vtAWyIj4uZ2N6BYnbvn1D8shSPqtdviANR/rCNmI
-	 Iz4rlUWg4Hp2ekumxWF1h++le8JhHvMGNWoWDwXVW6BO4shopla2FddFZpg1wizl9z
-	 Jnr3pKhBV9bYqucecujcIqxyQ4Wge0sh67dESG0H1o7vsi7yI4lU+eUnxP94L7icfa
-	 E4JiaAF37xikauT7KNxpgZHKE8/URGZhMcAHMf37qo7Ryu3RwM9V+edlxDdc0ns37m
-	 +Si5cIgzApPcA==
+	b=L5cgQpGNOm5JQBBcDMO4RiLWnpGAb5uEm+VzSHXa5pmsXvBG319mqekWL+FTeRMQL
+	 37MM+oW3ffLH1Xj6apOtRu/+ejQV72Bpt6t4aVE11GaGUkTMqkLRRZhWA/UqpnVUSX
+	 oC5SO+SqP0Q+3hmdQaEaoActH8NnpIh8o0wkZPXyBSK9XVWO7aOVk2HyLXuZu7yBnk
+	 JrAq8GukSMuNtpcVpEJOkQICmenDbo9VZWECDO8KxEWOBva4tgP29yxh9qYOc8oAKM
+	 Lai9Scdh29v1+vFX7STlmT3KOuB7mX83qbIG58ovt+9+Kk6Of/YFC92qMt/2goFTyp
+	 14+cB1idlmM1g==
 Received: from localhost (mdns.lwn.net [45.79.72.68])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8D808418C4;
-	Mon, 18 Mar 2024 09:41:02 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id EB435418C4;
+	Mon, 18 Mar 2024 09:44:38 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
-To: =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- Thorsten Leemhuis
- <linux@leemhuis.info>
-Cc: kernel@collabora.com, regressions@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- workflows@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>,
- =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Subject: Re: [PATCH v2 0/2] docs: *-regressions.rst: Tweaks to the commands
-In-Reply-To: <20240311-regzbot-fixes-v2-0-98c1b6ec0678@collabora.com>
-References: <20240311-regzbot-fixes-v2-0-98c1b6ec0678@collabora.com>
-Date: Mon, 18 Mar 2024 03:40:59 -0600
-Message-ID: <87edc7andg.fsf@meer.lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
+ =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+Subject: Re: [PATCH v1 0/4] docs: verify/bisect: install, tainting, and
+ finetuning
+In-Reply-To: <cover.1710750972.git.linux@leemhuis.info>
+References: <cover.1710750972.git.linux@leemhuis.info>
+Date: Mon, 18 Mar 2024 03:44:35 -0600
+Message-ID: <87a5mvan7g.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,30 +52,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com> writes:
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-> A couple tweaks to the commands in the regression documentation to make
-> them up-to-date and less confusing.
+> Here are a few small improvements for Documentation/admin-guide/
+> verify-bugs-and-bisect-regressions.rst.
 >
-> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-> Changes in v2:
-> - Reworded patch 1:
->   - s/collon/colon/
->   - Made title and message more straightforward
-> - Link to v1: https://lore.kernel.org/r/20240308-regzbot-fixes-v1-0-577a4=
-fe16e12@collabora.com
+> * The "improve install instructions" aspects (link to distro docs, Arch
+>   support) were brought up on the list and in a chat.
 >
-> ---
-> N=C3=ADcolas F. R. A. Prado (2):
->       docs: *-regressions.rst: Add colon to regzbot commands
->       docs: handling-regressions.rst: Update regzbot command fixed-by to =
-fix
+> * The "check tainted status" thing was something I had forgotten; I
+>   noticed this aspect should likely be covered while doing some early
+>   work to better align Documentation/admin-guide/reporting-issues.rst
+>   with this text.
 >
->  Documentation/admin-guide/reporting-regressions.rst |  2 +-
->  Documentation/process/handling-regressions.rst      | 12 ++++++------
->  2 files changed, 7 insertions(+), 7 deletions(-)
+> * The rest are minor fixes for things. Many are things I noticed while
+>   working on the above changes. Quite a few are also things Petr Tesa=C5=
+=99=C3=ADk
+>   brought to my attention (many thx!).
+>
+> Ciao, Thorsten
+>
+> Thorsten Leemhuis (4):
+>   docs: verify/bisect: improve install instructions
+>   docs: verify/bisect: check taint flag
+>   docs: verify/bisect: drop 'v' prefix, EOL aspect, and assorted fixes
+>   docs: verify/bisect: remove a level of indenting
+>
+>  .../verify-bugs-and-bisect-regressions.rst    | 389 ++++++++++--------
+>  1 file changed, 211 insertions(+), 178 deletions(-)
 
-Applied, thanks.
+I've gone ahead and applied these, thanks.
 
 jon
