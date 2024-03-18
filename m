@@ -1,151 +1,84 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 44FEF2903
-	for <regressions@lists.linux.dev>; Sat, 16 Mar 2024 20:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581525624;
+	Mon, 18 Mar 2024 08:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710621341; cv=none; b=HlU09q6Fr+aRM8AH7L3hvxmHTDxOBcAmt+5ciSnNFieDGpvr3l/tpVq4EChUT64gJhc52z+Q0H6WLPX0eJAjlPAWUUAwNZlCNM35gGQz4tJubys6GzckRCwYFzN6Id2nCTW2BIAzFtflorvJJHTQyUgSktz4f7oaRpk+NcDXiCU=
+	t=1710751134; cv=none; b=NdD3MGMTIw2ULXep0gYm+KRZSqf5Oa+mUlmv2ExaDuL9cC/ljsAUKHwNIVpDl7HsTlCi2TetSFGE8q+xhMVFNJBwA5mhBRJoCe84Een4uPK4Yfi8jcQLJbqatfl/64LTjAwl/UI79b5eXBS4i1VLAzyHTt6b5y4FkqGL6CSlF8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710621341; c=relaxed/simple;
-	bh=gTuos2vrk2Aq2RdkAXzhuDP3hXzu8Fb6ZlqMaChzjhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APONsMnJrjXCbLGNh9fDyMuLlNtIQgwbanYPJyiO5OO2mXH9JCY4QQcZFXIwxL9aaxVhmG6aWi1i0mYPtqSdylTULhz67uZfVpvw/wuf/tSLkSIXtljKnEDXl99eDfNyh9XQVvoeOc/WPqAIjEfeub+N6eYR45RHYlrcvrywwUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 524355 invoked by uid 1000); 16 Mar 2024 16:35:30 -0400
-Date: Sat, 16 Mar 2024 16:35:30 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <8b8e2773-47eb-48f4-b5e8-dcd885ee5c5b@rowland.harvard.edu>
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
- <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
- <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
- <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
- <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
- <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
- <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
+	s=arc-20240116; t=1710751134; c=relaxed/simple;
+	bh=Q1xjT+rtpxSXBeIBdH+RqFFAq8QdGlmiKD2Xuo4StNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SorGz4ROGDK/OHOO4GLO07IOnte/7uGCtE3N5l2/6PZSrfCFRIU/cgXkcAJ0FKxYdLWjGWHVakCqqlta2Af19wGXJ/7bo3Hn91CgdL6L0jWX2kgm3qxFRpKjExH5E1RAgPiJbJ9WutD4rjSuTebzlF03bIsuDxDV2wZyHdVajiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=xDqpIbDD; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="xDqpIbDD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=oRQDdmgf9lAqQVGEv78ZqQtrkzdwgqSXfSY5t2nDCv8=; t=1710751131; x=1711183131;
+	 b=xDqpIbDDQLAfM14or5tvD1I8Z5aSOzqLI2mD58Sn8lc6kk5NXg5EcWgq+ef1sM/JKwcb9b7JhS
+	+oPxSKKs/IeEeYF5VwB2ZtQNARKKBjuJ0xACbIMyodCtO3NOmv7M99FKKqTPx0U/C1cYpY9r+RnJi
+	Dy8ISTyfJZlFi4cKHWZly2jAn5OP2JCMjRPMsGZ4MGpDyn7+9GRnvQ7geAV0wOZGZObTMh36/2nIh
+	xCjp/wRDgwJuZVeHIg9x94iSpuzC3+89sxyyfUmw5BCJUeCWkNSGdSWbF4bWfnwP4rHi5jUhmoqWL
+	461TOSMFW+ILTIQjopDgxrORrNVGVU236gi2w==;
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rm8W0-00037E-63; Mon, 18 Mar 2024 09:38:40 +0100
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
+Subject: [PATCH v1 0/4] docs: verify/bisect: install, tainting, and finetuning
+Date: Mon, 18 Mar 2024 09:38:35 +0100
+Message-ID: <cover.1710750972.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1710751131;f9e8a67c;
+X-HE-SMSGID: 1rm8W0-00037E-63
 
-On Tue, Mar 12, 2024 at 09:57:06AM +0100, Jan Čermák wrote:
-> Hi Alan
-> 
-> On 11. 03. 24 15:43, Alan Stern wrote:
-> > Well, at least this means you do have a way of using the device, even
-> > if it is rather awkward.  It might even work on the Raspberry Pi machine.
-> 
-> Still, I'm looking for a more permanent and robust solution. If it were only
-> a single device I'm using myself, I could come up with a workaround.
-> However, this is one of the very few available Z-Wave USB interfaces and
-> there are more users affected. So far we went with reverting the patches,
-> but that's surely not the way we want to go forward.
-> 
-> > The device is so non-responsive, I'm amazed it ever works at all.
-> > Judging by the usbmon traces, it doesn't look as if it would work on a
-> > Windows system.
-> > 
-> > Actually, if you have access to a computer running Windows or Mac OSX
-> > and you can try out the device on that computer, it would be good to
-> > get the equivalent of a usbmon trace (something like a Wireshark
-> > capture log would do).  If those systems manage to do something that
-> > Linux doesn't, we ought to know what it is.
-> 
-> Fredrik (one of the original reporters) is following this conversation, here
-> [1] are logs from his machine with some details in the ticket [2]. He also
-> wonders why the initialization doesn't work only on USB2 ports but works on
-> USB3 if the initialization code is shared between those two.
+Here are a few small improvements for Documentation/admin-guide/
+verify-bugs-and-bisect-regressions.rst.
 
-It's very difficult to compare the Windows log with the usbmon trace.  
-However, something Frederik mentioned about the number of resets led me 
-to check more closely.  There are some extra unnecessary resets in the 
-usbmon trace, and a reset that should be there is missing.
+* The "improve install instructions" aspects (link to distro docs, Arch
+  support) were brought up on the list and in a chat.
 
-Below is a patch meant to get the number of resets back to what it 
-should be.  I'd appreciate it if you can test this, and report the 
-kernel log output along with the usbmon output for the normal case and 
-also with the "old_scheme_first" parameter set.
+* The "check tainted status" thing was something I had forgotten; I
+  noticed this aspect should likely be covered while doing some early
+  work to better align Documentation/admin-guide/reporting-issues.rst
+  with this text.
 
-I'm not very hopeful that this will solve the problem, but there's a 
-good chance it will help point us in the right direction by removing 
-extraneous complications.
+* The rest are minor fixes for things. Many are things I noticed while
+  working on the above changes. Quite a few are also things Petr Tesařík
+  brought to my attention (many thx!).
 
-Alan Stern
+Ciao, Thorsten
+
+Thorsten Leemhuis (4):
+  docs: verify/bisect: improve install instructions
+  docs: verify/bisect: check taint flag
+  docs: verify/bisect: drop 'v' prefix, EOL aspect, and assorted fixes
+  docs: verify/bisect: remove a level of indenting
+
+ .../verify-bugs-and-bisect-regressions.rst    | 389 ++++++++++--------
+ 1 file changed, 211 insertions(+), 178 deletions(-)
 
 
-
- drivers/usb/core/hub.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
-
-Index: usb-devel/drivers/usb/core/hub.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/hub.c
-+++ usb-devel/drivers/usb/core/hub.c
-@@ -4961,6 +4961,18 @@ hub_port_init(struct usb_hub *hub, struc
- 			break;
- 		}
- 
-+		if (retries > 0) {
-+			retval = hub_port_reset(hub, port1, udev, delay, false);
-+			if (retval < 0)		/* error or disconnect */
-+				goto fail;
-+			if (oldspeed != udev->speed) {
-+				dev_dbg(&udev->dev,
-+					"device reset changed speed!\n");
-+				retval = -ENODEV;
-+				goto fail;
-+			}
-+		}
-+
- 		if (do_new_scheme) {
- 			retval = hub_enable_device(udev);
- 			if (retval < 0) {
-@@ -4972,6 +4984,13 @@ hub_port_init(struct usb_hub *hub, struc
- 
- 			maxp0 = get_bMaxPacketSize0(udev, buf,
- 					GET_DESCRIPTOR_BUFSIZE, retries == 0);
-+			if (maxp0 < 0) {
-+				if (maxp0 != -ENODEV)
-+					dev_err(&udev->dev, "device descriptor read/64, error %d\n",
-+							maxp0);
-+				retval = maxp0;
-+				continue;
-+			}
- 			if (maxp0 > 0 && !initial &&
- 					maxp0 != udev->descriptor.bMaxPacketSize0) {
- 				dev_err(&udev->dev, "device reset changed ep0 maxpacket size!\n");
-@@ -4988,13 +5007,6 @@ hub_port_init(struct usb_hub *hub, struc
- 				retval = -ENODEV;
- 				goto fail;
- 			}
--			if (maxp0 < 0) {
--				if (maxp0 != -ENODEV)
--					dev_err(&udev->dev, "device descriptor read/64, error %d\n",
--							maxp0);
--				retval = maxp0;
--				continue;
--			}
- 		}
- 
- 		for (operations = 0; operations < SET_ADDRESS_TRIES; ++operations) {
-@@ -5533,6 +5545,7 @@ loop:
- 			msleep(2 * hub_power_on_good_delay(hub));
- 			usb_hub_set_port_power(hdev, hub, port1, true);
- 			msleep(hub_power_on_good_delay(hub));
-+			hub_port_debounce_be_stable(hub, port1);
- 		}
- 	}
- 	if (hub->hdev->parent ||
+base-commit: 0c8e9b538ed7ecf4159b080ab0dafca3941c69db
+-- 
+2.44.0
 
