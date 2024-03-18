@@ -1,86 +1,143 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mxb.seznam.cz (mxb.seznam.cz [77.75.78.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8D92C694
-	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 09:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3413BBC1
+	for <regressions@lists.linux.dev>; Mon, 18 Mar 2024 13:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.75.78.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710755081; cv=none; b=Rwm9sMhXMVBKYgfxbAksl4iIejBThEAoAUGm1OZ59YRxWzvqeQ+8AL3Yk/wFd/Rlhhcy/wCTftrw72u6PY+k5bi9QfuvOcigMkCOfvHpacX/yIedniJulekP7hzT9ba+VfX7hU0SzMmswk905NrUW6YrieR92gavW5ONUDwz6Z0=
+	t=1710767708; cv=none; b=PjOmjf07bQxSNGeRpLz9yYm36OSJ9ziHwJkgWlaeMnF1zlrgU1AZqB5Qyq+5WYgm4pG+vCTaDJT0zuxvb/QhHqDDbuxsGjQL44hLIudx4BweOLlxj8ebCuI6FeYrN2XkyDZQ/2mE+6Y4P0BwLfvlk90jcpL7jR8iJlAKBpz2K8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710755081; c=relaxed/simple;
-	bh=clpK5/hgFVQ6y90q1invbFi5wfYWxiwpju2/zLJ8Y54=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=I3ZwTI+pjrSrUc1mLNW28E0RAKAWBc7aFBf1WuQEds5Had33WlKUE4S53OzIFaRsK3H8yaQoE9mEAQGBA0iEpDj/AV68CbYjQBf6EqJGnwatYPWHW1O5aSjyXVhX78ro7lERTAKN8IcmxADMJgQIFNxNfNBQh32nNkwYwS1pBRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=L5cgQpGN; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1710767708; c=relaxed/simple;
+	bh=1XBByTK9DjWO/DFvSmlMo/lt91DVDV5uNytS+AKDCLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SKmH8egdsHYGmPEM1K7FUQfP84Dph18EvCVE9yuruaK3WAQ+3PoJDNTUUKXYsiGIiIdtLee4KtPQEQzWyiycYJ43LVMhEBt/QDjUjlrJOmE/p5DJnHf8BksMa5fV2jH1PmXRpPY35E3WnT1ynJHFpOnsErUkMerORhk4Zli9crk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz; spf=pass smtp.mailfrom=podgorny.cz; dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b=KfGrZM0B; arc=none smtp.client-ip=77.75.78.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=podgorny.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="L5cgQpGN"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EB435418C4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1710755079; bh=hY9sbxkA5b6oOGMua/46fI6ru6HCKNfDB3qjt/oFvo4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=L5cgQpGNOm5JQBBcDMO4RiLWnpGAb5uEm+VzSHXa5pmsXvBG319mqekWL+FTeRMQL
-	 37MM+oW3ffLH1Xj6apOtRu/+ejQV72Bpt6t4aVE11GaGUkTMqkLRRZhWA/UqpnVUSX
-	 oC5SO+SqP0Q+3hmdQaEaoActH8NnpIh8o0wkZPXyBSK9XVWO7aOVk2HyLXuZu7yBnk
-	 JrAq8GukSMuNtpcVpEJOkQICmenDbo9VZWECDO8KxEWOBva4tgP29yxh9qYOc8oAKM
-	 Lai9Scdh29v1+vFX7STlmT3KOuB7mX83qbIG58ovt+9+Kk6Of/YFC92qMt/2goFTyp
-	 14+cB1idlmM1g==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EB435418C4;
-	Mon, 18 Mar 2024 09:44:38 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
- =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-Subject: Re: [PATCH v1 0/4] docs: verify/bisect: install, tainting, and
- finetuning
-In-Reply-To: <cover.1710750972.git.linux@leemhuis.info>
-References: <cover.1710750972.git.linux@leemhuis.info>
-Date: Mon, 18 Mar 2024 03:44:35 -0600
-Message-ID: <87a5mvan7g.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b="KfGrZM0B"
+Received: from email.seznam.cz
+	by smtpc-mxb-765b87775b-k85z9
+	(smtpc-mxb-765b87775b-k85z9 [2a02:598:128:8a00::1000:3f8])
+	id 5e2d7064e817dd7d5ba26a2c;
+	Mon, 18 Mar 2024 14:14:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=emailprofi.seznam.cz; s=szn20221014; t=1710767679;
+	bh=1XBByTK9DjWO/DFvSmlMo/lt91DVDV5uNytS+AKDCLQ=;
+	h=Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type;
+	b=KfGrZM0Bv/cN8spP2Z2uSn/zGApnAPFNa3oF8XD06KZR/w9hfRJrw5rMwFCZ1RQMf
+	 a+56a9a6RX5GdKmy4x3YBigRuqxIJsVYO/WAJmf4T8jlDaHW1xuIOCdbgW3zo4he3V
+	 xFKT6UzVsiOkeB2hRYvbRBiAg1WpKXncYkFKBQ5XtJY9YBAA/q0lzwgdmzbUK+5XI4
+	 7fO7UmUh4cJDofj21ZUy2NgKR9/ZWUUAJ+kjEmPdeR+mvSZp/BuiNZgmAl6KTeCkFT
+	 r5IxAUDCIaQ/DM7Jwloc5E3R8CkADpEoqWjHpsXon7rRmfJs7rTnQStHVuCnwjSMl2
+	 /dZ8CoTNN/39A==
+Received: from [IPV6:2a01:9422:904:1ee:e65e:37ff:feee:e29c]
+	([2a01:9422:904:1ee:e65e:37ff:feee:e29c])
+	by smtpd-relay-594d8f6859-2ldrj (szn-email-smtpd/2.0.18) with ESMTPA
+	id 4c250af0-e637-466a-9a24-3b79821497e9;
+	Mon, 18 Mar 2024 14:14:36 +0100
+Message-ID: <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
+Date: Mon, 18 Mar 2024 14:14:33 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+Content-Language: en-US-large
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+ <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+ <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
+ <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
+ <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz>
+ <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
+ <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
+ <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
+From: Radek Podgorny <radek@podgorny.cz>
+In-Reply-To: <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------HEnKX58qu80dj0vSgweuWTi0"
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------HEnKX58qu80dj0vSgweuWTi0
+Content-Type: multipart/mixed; boundary="------------GmtRFQGqL2eqf8NcZm5hpxEY";
+ protected-headers="v1"
+From: Radek Podgorny <radek@podgorny.cz>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Message-ID: <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+ <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+ <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
+ <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
+ <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz>
+ <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
+ <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
+ <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
+In-Reply-To: <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
 
-> Here are a few small improvements for Documentation/admin-guide/
-> verify-bugs-and-bisect-regressions.rst.
->
-> * The "improve install instructions" aspects (link to distro docs, Arch
->   support) were brought up on the list and in a chat.
->
-> * The "check tainted status" thing was something I had forgotten; I
->   noticed this aspect should likely be covered while doing some early
->   work to better align Documentation/admin-guide/reporting-issues.rst
->   with this text.
->
-> * The rest are minor fixes for things. Many are things I noticed while
->   working on the above changes. Quite a few are also things Petr Tesa=C5=
-=99=C3=ADk
->   brought to my attention (many thx!).
->
-> Ciao, Thorsten
->
-> Thorsten Leemhuis (4):
->   docs: verify/bisect: improve install instructions
->   docs: verify/bisect: check taint flag
->   docs: verify/bisect: drop 'v' prefix, EOL aspect, and assorted fixes
->   docs: verify/bisect: remove a level of indenting
->
->  .../verify-bugs-and-bisect-regressions.rst    | 389 ++++++++++--------
->  1 file changed, 211 insertions(+), 178 deletions(-)
+--------------GmtRFQGqL2eqf8NcZm5hpxEY
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-I've gone ahead and applied these, thanks.
+aGVsbG8gYXJkLA0KDQpzbywgaSBoYXZlIHNvbWUgYmFkIG5ld3MuIHVuZm9ydHVuYXRlbHks
+IG5vbmUgb2YgdGhlIHN1Z2dlc3RlZCBjaGFuZ2VzIA0KcmVzb2x2ZXMgdGhlIGlzc3VlLiA6
+LSgNCg0KdGhlIGxhc3QgdHdvIHBhdGNoZXMgc3RpbGwgbGVhZCB0byBib290LXN0dWNrIHN5
+c3RlbS4NCg0Kb3ZlcmFsbCwgdGhlIHBhdGNoZXMgb25seSBtYWtlIHRoZSBkaWZmZXJlbmNl
+IGluIGVycm9yIGJlaW5nIHByaW50ZWQ6IA0Kc29tZXRpbWVzIGl0J3Mgc29tZXRoaW5nIGxp
+a2UgIndyb25nIHBhZGRpbmciLCBzb21ldGltZXMgdGhlICJpbnZhbGlkIA0KbWFnaWMiIG1l
+c3NhZ2UuIGkgb25seSBub3RpY2VkIGxhdGVyIHNvIGkgY2FuJ3QgcmVhbGx5IHRlbGwgd2hp
+Y2ggcGF0Y2ggDQpsZWFkcyB0byB3aGljaCBtZXNzYWdlIGJ1dCBpIGNhbiByZXRyeSB0aGVt
+IGFsbCBhbmQgdGVsbCB5b3UgZXhhY3RseSBpZiANCml0IGhlbHBzLg0KDQphbnl3YXksIGlm
+IHlvdSBoYXZlIGFueSBvdGhlciBwYXRjaGVzLCBpJ2xsIGJlIG1vcmUgdGhhbiBoYXBweSB0
+byB0ZXN0IA0KdGhlbSBvdXQgKGFuZCBiZSBtb3JlIGNhcmVmdWwgYWJvdXQgdGhlIG1lc3Nh
+Z2UgdGhpcyB0aW1lKSENCg0KdGhhbmtzLA0Kci4NCg0KDQpPbiAzLzE1LzI0IDE5OjI1LCBB
+cmQgQmllc2hldXZlbCB3cm90ZToNCj4gT24gRnJpLCAxNSBNYXIgMjAyNCBhdCAxOToxMSwg
+UmFkZWsgUG9kZ29ybnkgPHJhZGVrQHBvZGdvcm55LmN6PiB3cm90ZToNCj4+DQo+PiBvaywg
+d2lsbC4gdGhlIGtlcm5lbCB3aXRoIHByZXZpb3VzIHBhdGNoIGlzIHN0aWxsIGNvbXBpbGlu
+ZyBzbyBpJ2xsDQo+PiBxdWV1ZSBpdC4gOy0pDQo+Pg0KPj4gYW55d2F5LCBzaG91bGQgaSBh
+cHBseSB0aGlzIGFzIGEgc2VwYXJhdGUgcGF0Y2ggb3IgYXMgYW4gYWRkaXRpb24gdG8gdGhl
+DQo+PiBwcmV2aW91cyBvbmUgKHRoZSBvbmUgd2l0aCBic3MuZWZpc3R1YiBhZGRpdGlvbik/
+DQo+Pg0KPiANCj4gT25seSB0aGlzIG9uZSBjaGFuZ2UgcGxlYXNlLg0K
 
-jon
+--------------GmtRFQGqL2eqf8NcZm5hpxEY--
+
+--------------HEnKX58qu80dj0vSgweuWTi0
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEydMGi3nQKasCS8bLahNm1VQL0ZwFAmX4PjoFAwAAAAAACgkQahNm1VQL0ZwV
+XA/+LeywJlMRtbDUGsigXD/P3YAyO7gIG/+Gb5y9TT0qPaTcGCIVM8qvtLgwAiYE4VSZaolvzzji
+sC9L6bnHinScLGtuFf3apq+ZS5rct/Pfw8WiVQbMHIMMNDXNZhBcsW0vrksztSJhsixXyHoqJXmI
+YL8foRBnmPSFnmKnOXYOw6+wWipYdNtGrjAH0NkO0PxHNS7+2hoia9x0LtDsMd42VhDgh/FjT4TF
+5Z3f7Mi4vUdbgsulJi/cJHGQ62aNWhXuRa34n6frthmv6YzoV9KbOylibfEHOfK0PjBQhQZV5VjH
+lQPurUbTzFQSdvjk7kJ8f4xgNaAzmNx1ceU+ya5RCgMJ8aRmlR6/2HnPotuJ569dDJbuPNBOHhBl
+nyGrn6+/bwZd78lsSZNFJDPPZf8jg70mpUw7zz6fLW7eGFUu13xuF1phw9EBONG0O1UyFZeYy/YV
+pY02835gtkX9Rtm1ZURvRQx8xdK8wOFMtPp8L4FsQL/0p+A0e4SVw3504Vt1VCyROo/Ws65zO0Uw
+M4nVPS6c8YW7S7vjztbsP5PnVSk0yilBM25GvHbmDva27Q6oAM1S6SXpVO3lSZqvA6BPL+j+Snac
+TMWkfvjvSmUCONxBjawvwn9myp7r+2RY/7p0wdmuImQ73em6eqj8ZZmzVuWYCpgpuqujhP5T7tvO
+LAY=
+=zCyH
+-----END PGP SIGNATURE-----
+
+--------------HEnKX58qu80dj0vSgweuWTi0--
