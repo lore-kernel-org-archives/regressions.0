@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E399374CB;
-	Mon, 18 Mar 2024 15:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1FA22339;
+	Tue, 19 Mar 2024 08:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710777530; cv=none; b=JPVCFHLryA+fr4O/BDHhXiYAPOQQgrtqjY7+Oh15y5BiXMSjnDMLdIUiwrGPGH+w9BSV4muSIyBWZBQkcCCA4n9LBkjiBkCdPHYyULfNQBpPhWXDx1w169A7yh6sMM+F6XFd20+ouJFDO0tzB+r6KbjcPZvJzLZI5ayNVonh/7c=
+	t=1710837619; cv=none; b=T6M6tZ3Fe6SdRo9oWoQAKFSjz2RNZLN/Lm9uFKHhLLXWjH0hZbxjq2vUh/2ZLyHE/XeCQKsw7RU08FOCTllq5fFnpG0/EahPhHzTx6nhW3DAWXVYBoXhexRisf4mSdy5hbqn1xxzp8iuqcN8AhjOe2tcId40XwwJe56lmb08/xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710777530; c=relaxed/simple;
-	bh=02hLa+502nthqIpJ3Rj+S+Vi3TlZ9i7evQxRTLzmvl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RPHKHjFKJ0FgvfUVC5DIs3lXszdFiJFnGaEQSFJ+zpP90F0bLb7C7qE5i8TDDIs/fs2YGkL6ydEHwZwGFk6GPMHH/XRTzsdk20W12RiD9j9rMOqcXToXdQIi4q+9brE4DYIhQnyQV5zCfY+QF+fMt03ixewm4oqQ3UUI24NzBUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SLvwGWdq; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1710837619; c=relaxed/simple;
+	bh=awU6bHfyFvME5sBPQIOIZlxiBWs4318LwwLhArgAyPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=A/zOmJe9eEH1b5jklJ8M3BF5iWjBrdBrjlOdMmymbg0V4v0c8eXq6hAYYtZ4pmjayojoxib2aWUwbMmdRhBXSr2V0jM8LxE9by82qW8lPE9vSUlGPYncZhqLkJDuxOthuDcRBL/IWHGMOF3rF2LqZJUVKUcX60fVAnUg4aokGZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=m/M173BU; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SLvwGWdq"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="m/M173BU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=4dpC3v9e7yNk/nqbEoKg8rGA46wzi6nH/HPa6PvvuGI=;
-	t=1710777528; x=1711209528; b=SLvwGWdqhFHvB/9eQojjGJ9lIEPWvnzD1b8HtpH+zTS8BDZ
-	sUSKPCXl3+6Bm/IqyA8NFQxyHjDqof5lMZyMOOTYppjtApLE3I6b8TOqew6ptPnXZsULOEN/Id+Em
-	ZumpAM++iFg+uJg2hrgWH1Qxh75ipjXZVJrSpSljz9k9UEnRgtMreeDihYLyoXenv0nSj0YK+Skde
-	yD3lWCH1NdvuZBMl9e5bOXU7DbEXNGixWLCHMnyTBGxb88ZYrx3sdQpjm9ezgIMVRKY5JnzmUfXL9
-	m9yqEFQB4mBRJ9RJP7aL1G3nlbCNPPlCjfXvE/I5tD6fiAIrBEl3h4P7pMGynTwA==;
+	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=osWUnIlqD8Dt5t4BF7gk8jBXgg5fKeale1jkrNw0dMk=; t=1710837617;
+	x=1711269617; b=m/M173BUwddvN7kpdyUNyosaXEKl5ilpVXeTJZLlCir3fCAXM3+ET2NRyJoAT
+	Ve6SsZP6Ka/qGagMhuz+zKH3oFSoKl/m84x8D3fPjuRtBOhosFd7O9rjrzh27a2pzFuxPjzPlznkV
+	QXJsAuAnF4ry7ROSAvsTgpbL/GDW5vzSIkVBSbIzVk27AQob3Nsax0eAccp9zyUiNNw30I77KopDh
+	3Rk/fRQ5GDaX4gnodWnlJZ+wVgkjs9a1gnyM1G9p9z6+JQplMRk6SWLvOAIFAyOcv2sORbkbXmH1y
+	6ssqYIMBwaxfm6APGP9JBFhuR43DDXkt/NxASt5JiZxIJiKmBg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmFNt-0004i8-8b; Mon, 18 Mar 2024 16:58:45 +0100
-Message-ID: <dfabddd0-7284-480f-8c6c-135fb169a11c@leemhuis.info>
-Date: Mon, 18 Mar 2024 16:58:44 +0100
+	id 1rmV0y-000611-V8; Tue, 19 Mar 2024 09:40:09 +0100
+Message-ID: <be5a7213-78b3-4917-b95b-ec31cd2350e4@leemhuis.info>
+Date: Tue, 19 Mar 2024 09:40:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,88 +39,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Problems with csum_partial with misaligned buffers on sh4
- platform
+Subject: Re: [regression] 6.8.1: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
 Content-Language: en-US, de-DE
-To: Guenter Roeck <linux@roeck-us.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <65ed7c95-712c-410b-84f3-58496b0c9649@roeck-us.net>
- <351dfebd-c09f-470e-8b03-cc904753b136@roeck-us.net>
- <2b54a5d8-b317-4df7-ab2e-d63a352dd77d@leemhuis.info>
- <93ad802f-c152-4461-9f9f-c338f58a000d@roeck-us.net>
+To: Martin Steigerwald <martin@lichtvoll.de>, linux-pm@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <2325246.ElGaqSPkdT@lichtvoll.de>
+ <12401263.O9o76ZdvQC@lichtvoll.de>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <93ad802f-c152-4461-9f9f-c338f58a000d@roeck-us.net>
+In-Reply-To: <12401263.O9o76ZdvQC@lichtvoll.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710777528;418c2201;
-X-HE-SMSGID: 1rmFNt-0004i8-8b
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710837617;2b3652af;
+X-HE-SMSGID: 1rmV0y-000611-V8
 
-On 18.03.24 16:32, Guenter Roeck wrote:
-> On 3/18/24 08:04, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 11.03.24 18:04, Guenter Roeck wrote:
->>> On Sat, Feb 10, 2024 at 07:12:39AM -0800, Guenter Roeck wrote:
->>>>
->>>> when running checksum unit tests on sh4 qemu emulations, I get the
->>>> following
->>>> errors.
->>>
->>> Adding to regression tracker.
->>>
->>> #regzbot ^introduced cadc4e1a2b4d2
->>
->> Hmmm, thx for that, but well, I'm a bit taken back and forth here. That
->> commit afaics is from v3.0-rc1 and Linus iirc at least once said
->> something along the lines of "a regression only reported after a long
->> time at some point becomes just a bug". I'd say that applies there,
->> which is why I'm wondering if tracking this really is worth it.
+On 16.03.24 17:12, Martin Steigerwald wrote:
+> Martin Steigerwald - 16.03.24, 17:02:44 CET:
+>> ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
+>> Hibernation works correctly with self-compiled 6.7.9.
 > 
-> Not my call to make. I'll keep in mind to not add "bugs" to the regression
-> tracker in the future.
+> Apparently 6.8.1 does not even reboot correctly anymore. runit on Devuan.
+> It says it is doing the system reboot but then nothing happens.
+> 
+> As for hibernation the kernel cancels the attempt and returns back to
+> user space desktop session.
+> 
+>> Trying to use "no_console_suspend" to debug next. Will not do bisect
+>> between major kernel releases on a production machine.
 
-From my side there is no need for you to keep that in mind, as "somewhat
-added this regression to the tracking" might be something that will
-occasionally make a developer finally fix the problem -- which is why I
-waited a few days with today's reply. :-D
+FWIW, without a bisection I guess no developer will take a closer look
+(but I might be wrong and you lucky here!), as any change in those
+hundreds of drivers used on that machine can possibly lead to problems
+like yours. So without a bisection we are likely stuck here, unless
+someone else runs into the same problem and bisects or fixes it. Sorry,
+but that's just how it is.
 
-> Feel free to drop.
+> [...]
 
-Let me do that:
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-#regzbot inconclusive: really old regression
-
-> For my understanding, what is "a long time" ?
-
-That is a good question and I guess the answer like so often in kernel
-land depends on the regression in question. :-/ Also note that that
-"iirc" really was meant like it, as I might misremember. I just checked
-and found two related quotes, but the situations are somewhat different:
-
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-"""
-And yes, I do consider "regression in an earlier release" to be a
-regression that needs fixing.
-
-There's obviously a time limit: if that "regression in an earlier
-release" was a year or more ago, and just took forever for people to
-notice, and it had semantic changes that now mean that fixing the
-regression could cause a _new_ regression, then that can cause me to
-go "Oh, now the new semantics are what we have to live with".
-"""
-
-And also:
-https://lore.kernel.org/all/CAHk-=wiVi7mSrsMP=fLXQrXK_UimybW=ziLOwSzFTtoXUacWVQ@mail.gmail.com/
-"""
-And obviously, if users take years to even notice that something
-broke, or if we have sane ways to work around the breakage that
-doesn't make for too much trouble for users (ie "ok, there are a
-handful of users, and they can use a kernel command line to work
-around it" kind of things) we've also been a bit less strict.
-"""
-
-Ciao, Thorsten
