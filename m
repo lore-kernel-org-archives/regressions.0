@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4797A51C58;
-	Wed, 20 Mar 2024 15:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B8F53E12;
+	Wed, 20 Mar 2024 15:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710947624; cv=none; b=baC+EyYX9+2eU1ppERQkIw40R5LnfGUmiQ/71GW+kdjG5pbI3zZtGBKJ92pP0Quke1IwVvpcoby53QSmhZK+Qh7K92dblVM68o986znLtKYLzOZS5K1Q0AnroyE8jNsAklOgN7Z3jAzl/Z8NQu0mCi8I1hkxyTyBkJZMSt+G3is=
+	t=1710948362; cv=none; b=BTZfgIcUZwoy9YJ8T5A56tj5YS2adKrhHAxJzOUrq2ldtt5rs1Z1rdN3Th8ZoCDNxEYa8RD6+45H4IZVVDv6/KBO29kQUTjo6RCGztHU+Wdh4u5u0lJfLxui47YEORznjd44XyncOAWofgu6qs+7P1APOksbfYqP1arflu1Lx4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710947624; c=relaxed/simple;
-	bh=LtLbr9/vDD9oCkEi6bkKIcq4qBaMLATwiFb0k5KE+TU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WMyQyupp3oZVRSuUgxRHzlKbbegxOKj6bPFnG9gk4ojbL9ikL7NrjVRx3Fl6nx4QCx7Oy/1ZDEL8QSpGO3tv6XCrCgKbP1ecdxfetql7GT9fnz6sCkdj0UwPhH+CSj3QnEl0aUj2gV/C/89PbfyqeuddoqSFGGisr8AU6Qzu1S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=T8/8XNdC; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1710948362; c=relaxed/simple;
+	bh=zR+ah/AZybH8jZSLZxrEDknNvOMLtHTgIU4u4ltErhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nid56izkehyOkBKHVyGdGQdse8boxtpmm+REBOzJN6nLYH+9IoTsWujaTzYJI4Wwh9mmqprZjuipNsGa18q3zH/Yt/xvg6MURuJVcT4r7H+j3QMlgviOqfrqqeUN38jrcYSrul+FAP87n1oS9jL4FrdYqs0tT1FE4+WdQgnStxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aEEEM0p7; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="T8/8XNdC"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aEEEM0p7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=OLxm6fLIR0Yj0UHnwoux3tx7eG7VNhXfLRRrf+zGO48=;
-	t=1710947622; x=1711379622; b=T8/8XNdC0Bbhfcq+MyDCKDnP5j7iJctSxm8gwzjsvimd48N
-	zC8aE/w38g+eUdxC2rvmA0+bV72KEtwY4+0epVG87Eda0QH2GrOpecm9JnBbLf3fiyWvrSjtYyauS
-	Q3DObdWY0zYERZfSoyOXWbbRXOawhQ/ieoubrLr8ARJkOCrEkns39h4erPp5fM8gdjM9M4AEZV5gI
-	kcMJeOnzjf2VZjNAwop9jMBIMsCdncWaxtJlVIqFtfiLvZVyXlmjQwSdZH7i5y6dKQOHixucdQA/W
-	vEe93KErzXSJ1K4YTCZSNjijBaO0o4lGZysVcD2Rh/6gwPb3EsUMjmwRTOCLKd3Q==;
+	In-Reply-To:References; bh=/EpaCQTpGqGU5ULt8qAmE+s8SSReKSogNzvd/au7Mjs=;
+	t=1710948359; x=1711380359; b=aEEEM0p7s17EwmLjSOM6aJGjCpI3t4WfBnkIqt0HSK1doXv
+	FJdYNQgIkX3PfQQhw5p/zKZet62Vejar9cEv8dfDfHDaZpkWW0MwFgG2nyuq25KqcgdUq1v0jp8pu
+	9SZ2sAH7N63C/Jy67R2y1PNev3BZjK2nniABPOlbypWZg935cspcVqjGytErp2b9BdkMlB+TR62Z7
+	dWAR/Rdm8z61S7p+UPs6TxwaeI2wjtpIEPxd9A1Id2HSkb1f7lmptlp1HiYLqvPwFhq66U0NGLvR4
+	mIJGa4HUTVXCW44ZMXzM7Dlxa3dvZRrxi64zEE131NtEg2Obh018gjTuWSWQ70dw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmxdL-0000FB-JQ; Wed, 20 Mar 2024 16:13:39 +0100
-Message-ID: <d9aae981-ea93-418e-8c98-94eb27f4a80d@leemhuis.info>
-Date: Wed, 20 Mar 2024 16:13:39 +0100
+	id 1rmxp7-0004iK-29; Wed, 20 Mar 2024 16:25:49 +0100
+Message-ID: <db4c8e74-5c79-49be-9781-a5d8669eccc1@leemhuis.info>
+Date: Wed, 20 Mar 2024 16:25:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,90 +39,99 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: af_alg - Disallow multiple in-flight AIO requests
+Subject: Re: [PATCH 1/1] drm/qxl: fixes qxl_fence_wait
 Content-Language: en-US, de-DE
+To: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
+Cc: 1054514@bugs.debian.org, airlied@redhat.com, carnil@debian.org,
+ daniel@ffwll.ch, dri-devel@lists.freedesktop.org, kraxel@redhat.com,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi,
+ tzimmermann@suse.de, virtualization@lists.linux-foundation.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>
+References: <fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info>
+ <20240308010851.17104-1-dreaming.about.electric.sheep@gmail.com>
+ <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Ralph Siemsen <ralph.siemsen@linaro.org>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Sasha Levin <sashal@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <ZWWkDZRR33ypncn7@gondor.apana.org.au>
- <20240315175529.GA268782@maple.netwinder.org>
- <256024ba-c889-4400-a7cd-002291e64ad5@leemhuis.info>
-In-Reply-To: <256024ba-c889-4400-a7cd-002291e64ad5@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240308010851.17104-2-dreaming.about.electric.sheep@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710947622;8e374c55;
-X-HE-SMSGID: 1rmxdL-0000FB-JQ
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710948359;70f82cbe;
+X-HE-SMSGID: 1rmxp7-0004iK-29
 
-On 20.03.24 15:54, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [CCing the stable team, as it looks like two prerequisite changes for a
-> patch already applied are missing in at least 4.19.y]
+On 08.03.24 02:08, Alex Constantino wrote:
+> Fix OOM scenario by doing multiple notifications to the OOM handler through
+> a busy wait logic.
+> Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
+> result in a '[TTM] Buffer eviction failed' exception whenever it reached a
+> timeout.
+> 
+> Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
+> Link: https://lore.kernel.org/regressions/fb0fda6a-3750-4e1b-893f-97a3e402b9af@leemhuis.info
+> Reported-by: Timo Lindfors <timo.lindfors@iki.fi>
+> Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054514
+> Signed-off-by: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
+> ---
+>  drivers/gpu/drm/qxl/qxl_release.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 
-Argh, race condition, it's now 15 minutes later and I by chance just saw
-that Ralph about about 45 minutes ago took action as well an brought the
-issue to the stable teams attention:
-https://lore.kernel.org/all/20240320143143.1643630-1-ralph.siemsen@linaro.org/
+Hey Dave and Gerd as well as Thomas, Maarten and Maxime (the latter two
+I just added to the CC), it seems to me this regression fix did not
+maybe any progress since it was posted. Did I miss something, is it just
+"we are busy with the merge window", or is there some other a reason?
+Just wondering, I just saw someone on a Fedora IRC channel complaining
+about the regression, that's why I'm asking. Would be really good to
+finally get this resolved...
 
-Guess its best if everyone ignored my earlier mail. Sorry, bad timing,
-happens.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Ciao, Thorsten
+#regzbot poke
 
-> On 15.03.24 18:55, Ralph Siemsen wrote:
->>
->> I have found a regression in userspace behaviour after this patch was
->> merged into the 4.19.y kernel. The fix seems to involve backporting a
->> few more changes. Could you review details below and confirm if this is
->> the right approach?
-> 
-> FWIW, developers are totally free to not care about stable and longterm
-> kernels series. Not sure if Herbert is among those developers, but it
-> might explain why there is no reply yet. That's why I CCed the stable
-> maintainers, strictly speaking they are responsible.
-> 
->> On Tue, Nov 28, 2023 at 04:25:49PM +0800, Herbert Xu wrote:
->>> Having multiple in-flight AIO requests results in unpredictable
->>> output because they all share the same IV.  Fix this by only allowing
->>> one request at a time.
->> [...]
->> This change got backported on the 4.19 kernel in January:
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-4.19.y&id=19af0310c8767c993f2a5d5261e4df3f9f465ce1
->>
->> Since then, I am seeCiao, ing a regression in a simple openssl encoding test:
->>
->> openssl enc -k mysecret -aes-256-cbc -in plain.txt -out cipher.txt
->> -engine afalg
->>
->> It fails intermittently with the message "error writing to file", but
->> this error is a bit misleading, the actual problem is that the kernel
->> returns -16 (EBUSY) on the encoding operation.
->>
->> This happens only in 4.19, and not under 5.10. The patch seems correct,
->> however it seems we are missing a couple of other patches on 4.19:
->>
->> f3c802a1f3001 crypto: algif_aead - Only wake up when ctx->more is zero
->> 21dfbcd1f5cbf crypto: algif_aead - fix uninitialized ctx->init
->>
->> I was able to cherry-pick those into 4.19.y, with just a minor conflict
->> in one case. With those applied, the openssl command no longer fails.
-> 
-> Some feedback here from Herbert would of course be splendid, but maybe
-> your tests are all the stable team needs to pick those up for a future
-> 4.19.y release.
-> 
->> I suspect similar changes would be needed also in 5.4 kernel, however I
->> neither checked that, nor have I run any tests on that version.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> 
+> diff --git a/drivers/gpu/drm/qxl/qxl_release.c b/drivers/gpu/drm/qxl/qxl_release.c
+> index 368d26da0d6a..51c22e7f9647 100644
+> --- a/drivers/gpu/drm/qxl/qxl_release.c
+> +++ b/drivers/gpu/drm/qxl/qxl_release.c
+> @@ -20,8 +20,6 @@
+>   * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> -#include <linux/delay.h>
+> -
+>  #include <trace/events/dma_fence.h>
+>  
+>  #include "qxl_drv.h"
+> @@ -59,14 +57,24 @@ static long qxl_fence_wait(struct dma_fence *fence, bool intr,
+>  {
+>  	struct qxl_device *qdev;
+>  	unsigned long cur, end = jiffies + timeout;
+> +	signed long iterations = 1;
+> +	signed long timeout_fraction = timeout;
+>  
+>  	qdev = container_of(fence->lock, struct qxl_device, release_lock);
+>  
+> -	if (!wait_event_timeout(qdev->release_event,
+> +	// using HZ as a factor since it is used in ttm_bo_wait_ctx too
+> +	if (timeout_fraction > HZ) {
+> +		iterations = timeout_fraction / HZ;
+> +		timeout_fraction = HZ;
+> +	}
+> +	for (int i = 0; i < iterations; i++) {
+> +		if (wait_event_timeout(
+> +				qdev->release_event,
+>  				(dma_fence_is_signaled(fence) ||
+> -				 (qxl_io_notify_oom(qdev), 0)),
+> -				timeout))
+> -		return 0;
+> +					(qxl_io_notify_oom(qdev), 0)),
+> +				timeout_fraction))
+> +			break;
+> +	}
+>  
+>  	cur = jiffies;
+>  	if (time_after(cur, end))
