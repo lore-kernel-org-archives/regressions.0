@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950811864A;
-	Wed, 20 Mar 2024 06:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB134CB5B;
+	Wed, 20 Mar 2024 14:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710916108; cv=none; b=rqG+VqjA5Z4BRMgWJ0K3Dgy8HdqZ/Jb2A4gJkZpeplihOW2lJdHQFHnC1RjwpBmCZjOvcAx/NXczEnbJVjeBgICc35SPR/ble4uk7hzT879MMO4WMQouUwJr9y/eCk71O8pwS7aaL4YBmzLhn+69tBddgc22alJ5gIF2qkCfa3Y=
+	t=1710946471; cv=none; b=cN+atIXNolBQfm5sLFRwbtRblC2VGAHlybbJOhX5hPxlLlnDR3nHMw+mO+CnRn9694sUtWl5AlUan/OoIf5zU/iR8KryuyZWNJP3bq/xG9T6O1bWjskOvzZuuMIPakp213CRRgJHJiYtRXi29wXJtqOb3aLf7W+69Fx6sWWl0AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710916108; c=relaxed/simple;
-	bh=NHf4lcNnbKil3Xd3j0ggC1F+MXxx5165hkG+xD5RsMs=;
+	s=arc-20240116; t=1710946471; c=relaxed/simple;
+	bh=l84i0sEPInrq5lJIYS2I2zVxcDj2BHW/93OahkYwp5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5Ht/pG3qeXQB4U/cVPXRGO+yLi5M2Zf4a7QSYIU2h+vX4f7HARGuTSGkK/xrOc/IrYgeOZvHycHlKGbTiiCLK9VoeauwV54TsfOzagWj37RraaUp7WekuVbwcCpH+VDjCnm8sb4j3hQvI3uEgpWHz1lVnVhkwkE+GE6Rt20F/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X4dOTilF; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=ig+jE6dM3uIKhVuGFyitEj8t196zNIIXqft83NbPapo7um/4Kj2bpCR4VqxyB+C5kXh+8YY9+X8jBNXbVtVUYrQvaahLXnBGJ8aSHG0DdSyuNjiowOpqurDj2IVra84ctBZbDAxB4hal2Aa5k+6o9sSIzd4OOlKRCtr8f5JOgdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=H8WeWHZf; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X4dOTilF"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="H8WeWHZf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=+uvbFMBaxnEo7FnlRK2VWajdBLpdj74HCBLMlUuMnzs=;
-	t=1710916106; x=1711348106; b=X4dOTilFLlgayLWWCqi/gx7N9s7/xqE38i/e7uH+77VYwTK
-	sgdY/JzK4jlAtJJpHxb+AAQiUjenqEhjEzl5AbkbX1Fd07fhCM9wQKWJ0mghctqnypInTb6ZAanDI
-	CtrW5tWGXlT7d9mjqwRzN9HLQBHoH3Q0bPB1LW2eI6atPosLTY/9XkA78EC4y+AFnyUuSZGZq4F5Z
-	Z2XIkkOEhRMFf9w/fyi9ar7hZMiAWOJittvQCjjOOYg8lVzeC50ZjsfsEppvWwB2SRCRbPOANc0ti
-	PCCoG41xuhBFbUyggeTfpKr0gvy/SVww8reMFcXhWLrUsYw6xfJlQu43nKQOp6Lg==;
+	In-Reply-To:References; bh=6Gjn1V01WyKkpjbLddeTXkLKXDQ7KdJBsP0B81Mf7Og=;
+	t=1710946469; x=1711378469; b=H8WeWHZfwR1UrES/n/Hoq4kB8xlYUssm/masRNb2G7BN6+b
+	QP4mCIlYKS7CUEVzfixKTDH9mcdYr6ok/qzZToJ502excVlLMYNYvw6jKuCBtW+bQfdD7LNVy1Wam
+	e2nyGKFK4FmYB52HMjqdJLNUmsYY9N2sg/TDmqgGWvBJ4bncd6Hbj4NTSkcqMJfIhrgki757cLd+I
+	DuAujzMNK22zjNwWpAzYR3uyC4EQDCvccHK8/3SKI8XqAuJ9yw+/VGSgJEzi2pOXw+IxatnM9fx8W
+	pWgSX6qC3JE3AQD7g4yYMa4ykwdaU2zADb0oEk4V9aS9Lu0dLvxLN+rtfVo5q2Xg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rmpR0-0007mH-ND; Wed, 20 Mar 2024 07:28:22 +0100
-Message-ID: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Date: Wed, 20 Mar 2024 07:28:22 +0100
+	id 1rmxKc-0004oj-MI; Wed, 20 Mar 2024 15:54:18 +0100
+Message-ID: <256024ba-c889-4400-a7cd-002291e64ad5@leemhuis.info>
+Date: Wed, 20 Mar 2024 15:54:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,56 +39,72 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Subject: Re: [PATCH] crypto: af_alg - Disallow multiple in-flight AIO requests
 Content-Language: en-US, de-DE
-To: "bumyong.lee" <bumyong.lee@samsung.com>,
- 'Linux regressions mailing list' <regressions@lists.linux.dev>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- 'karthikeyan' <karthikeyan@linumiz.com>, vkoul@kernel.org
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
- <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
- <000001da6ecc$adb25420$0916fc60$@samsung.com>
- <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
- <000001da7140$6a0f1570$3e2d4050$@samsung.com>
- <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
- <001001da7a60$78603130$69209390$@samsung.com>
+To: Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sasha Levin <sashal@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <ZWWkDZRR33ypncn7@gondor.apana.org.au>
+ <20240315175529.GA268782@maple.netwinder.org>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <001001da7a60$78603130$69209390$@samsung.com>
+In-Reply-To: <20240315175529.GA268782@maple.netwinder.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710916106;93568396;
-X-HE-SMSGID: 1rmpR0-0007mH-ND
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710946469;e25eb307;
+X-HE-SMSGID: 1rmxKc-0004oj-MI
 
-On 20.03.24 01:49, bumyong.lee wrote:
->>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
->>>> it be a good idea to revert above commit for now and reapply it when
->>>> something better emerged? I doubt that the answer is "yes, let's do
->>>> that", but I have to ask.
->>>
->>> I couldn't find better way now.
->>> I think it's better to follow you mentioned
->>
->> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
->> did "submit a revert" fell through the cracks or is there some other
->> solution in the works? Or am I missing something?
+[CCing the stable team, as it looks like two prerequisite changes for a
+patch already applied are missing in at least 4.19.y]
+
+On 15.03.24 18:55, Ralph Siemsen wrote:
 > 
-> "submit a revert" would fix the issue. but it would make another issue
-> that the errata[1] 719340 described.
+> I have found a regression in userspace behaviour after this patch was
+> merged into the 4.19.y kernel. The fix seems to involve backporting a
+> few more changes. Could you review details below and confirm if this is
+> the right approach?
 
-"Make" as it "that other issue was present before the culprit was
-applied"? Then that other issue does not matter due to the "no
-regression" rule and how Linus afaics wants to see it applied in
-practice. For details on the latter, see the quotes from him here:
-https://docs.kernel.org/process/handling-regressions.html
- Hence please submit a revert (or tell me if I misunderstood something)
--- or of course a workaround for the other issue that does not cause the
-regression people reported.
+FWIW, developers are totally free to not care about stable and longterm
+kernels series. Not sure if Herbert is among those developers, but it
+might explain why there is no reply yet. That's why I CCed the stable
+maintainers, strictly speaking they are responsible.
 
+> On Tue, Nov 28, 2023 at 04:25:49PM +0800, Herbert Xu wrote:
+>> Having multiple in-flight AIO requests results in unpredictable
+>> output because they all share the same IV.  Fix this by only allowing
+>> one request at a time.
 > [...]
-> [1]: https://developer.arm.com/documentation/genc008428/latest
+> This change got backported on the 4.19 kernel in January:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-4.19.y&id=19af0310c8767c993f2a5d5261e4df3f9f465ce1
+> 
+> Since then, I am seeCiao, ing a regression in a simple openssl encoding test:
+> 
+> openssl enc -k mysecret -aes-256-cbc -in plain.txt -out cipher.txt
+> -engine afalg
+> 
+> It fails intermittently with the message "error writing to file", but
+> this error is a bit misleading, the actual problem is that the kernel
+> returns -16 (EBUSY) on the encoding operation.
+> 
+> This happens only in 4.19, and not under 5.10. The patch seems correct,
+> however it seems we are missing a couple of other patches on 4.19:
+> 
+> f3c802a1f3001 crypto: algif_aead - Only wake up when ctx->more is zero
+> 21dfbcd1f5cbf crypto: algif_aead - fix uninitialized ctx->init
+> 
+> I was able to cherry-pick those into 4.19.y, with just a minor conflict
+> in one case. With those applied, the openssl command no longer fails.
+
+Some feedback here from Herbert would of course be splendid, but maybe
+your tests are all the stable team needs to pick those up for a future
+4.19.y release.
+
+> I suspect similar changes would be needed also in 5.4 kernel, however I
+> neither checked that, nor have I run any tests on that version.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
