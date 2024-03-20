@@ -1,145 +1,97 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5222A10FA
-	for <regressions@lists.linux.dev>; Wed, 20 Mar 2024 00:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950811864A;
+	Wed, 20 Mar 2024 06:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710895783; cv=none; b=ebqk7psPl0pFIcI5JtITStrJeziZyWM3d0asvew/kgpNC5A/Jv2ZbNMRcPP/N//k4XNkcaRxjMaqN2FnYm9gWS+e6SscLFXwo264Fw61hU0BTow7HG5I7oR6jbRzfZnz/zxxvmVIAw2MPHXL2uuGco/4b8Ft+1KgA0KbRdTLVqs=
+	t=1710916108; cv=none; b=rqG+VqjA5Z4BRMgWJ0K3Dgy8HdqZ/Jb2A4gJkZpeplihOW2lJdHQFHnC1RjwpBmCZjOvcAx/NXczEnbJVjeBgICc35SPR/ble4uk7hzT879MMO4WMQouUwJr9y/eCk71O8pwS7aaL4YBmzLhn+69tBddgc22alJ5gIF2qkCfa3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710895783; c=relaxed/simple;
-	bh=ERVtS46WeUubUziYLbTp6DRCLkiyt+pu3gjQPBSpKD4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=sMmPNQbKrEkiodTj3PwZxK6mr2d98VHpUq7IJjfJBGFdzU2rWVk+f/JaHy2Ji+lI13o4kFJ9hTcwKJ56JDslIggiYsSUAmWpU+Ahp8Ab0dODCdRazHiZZVCg5/HIMl8bD+IrMIAkHyDCmMrRzBX01/qmHcG1PaFN6GksNARfZzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EbL12eIL; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1710916108; c=relaxed/simple;
+	bh=NHf4lcNnbKil3Xd3j0ggC1F+MXxx5165hkG+xD5RsMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p5Ht/pG3qeXQB4U/cVPXRGO+yLi5M2Zf4a7QSYIU2h+vX4f7HARGuTSGkK/xrOc/IrYgeOZvHycHlKGbTiiCLK9VoeauwV54TsfOzagWj37RraaUp7WekuVbwcCpH+VDjCnm8sb4j3hQvI3uEgpWHz1lVnVhkwkE+GE6Rt20F/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X4dOTilF; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EbL12eIL"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240320004932epoutp045bb5cddcd7b6e2b9c0a71d5ab9e60e8e~_UqQA1ECK3276332763epoutp04w
-	for <regressions@lists.linux.dev>; Wed, 20 Mar 2024 00:49:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240320004932epoutp045bb5cddcd7b6e2b9c0a71d5ab9e60e8e~_UqQA1ECK3276332763epoutp04w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1710895772;
-	bh=VpzjF0qh5NjxrbLO1pfq2OCm/9xagT5oGFlM8kOGkmo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=EbL12eILelxY7BgKGdSl13nEX0ZFwIxZXrtvKIkgCJEloQwj5V3bDKK1fWO+aUXlq
-	 fXx/TcLz5zUpoigbS13YmBLPLY1fv7cyz+snNQFqs9A1ZEn0VWf9UObMURt7+AQGcz
-	 m1KnPHlKJWRtbqEBS0vs0c0WmUyFMS1aOZ3BhF5A=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20240320004932epcas2p3945220f7bc1e27524c58948e93f69d4e~_UqP0vgW60173201732epcas2p3P;
-	Wed, 20 Mar 2024 00:49:32 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.88]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Tzqjm1vrCz4x9Pv; Wed, 20 Mar
-	2024 00:49:32 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	DC.97.09639.C923AF56; Wed, 20 Mar 2024 09:49:32 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240320004931epcas2p45e52ca36be366e939d955328dbc669af~_UqPKeSGr0836708367epcas2p4D;
-	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240320004931epsmtrp2db333263e58585f51908abdc1f7adcee~_UqPJ2zus2082220822epsmtrp2X;
-	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
-X-AuditID: b6c32a46-8ddfa700000025a7-a8-65fa329c5503
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E3.66.08924.B923AF56; Wed, 20 Mar 2024 09:49:31 +0900 (KST)
-Received: from KORCO121695 (unknown [10.229.18.202]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240320004931epsmtip15aba2402f24312054e5e51e5bb0ddec4~_UqPByw1c2365923659epsmtip1e;
-	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
-From: "bumyong.lee" <bumyong.lee@samsung.com>
-To: "'Linux regressions mailing list'" <regressions@lists.linux.dev>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<parthiban@linumiz.com>, <saravanan@linumiz.com>, "'karthikeyan'"
-	<karthikeyan@linumiz.com>, <vkoul@kernel.org>
-In-Reply-To: <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
-Subject: RE: dmaengine: CPU stalls while loading bluetooth module
-Date: Wed, 20 Mar 2024 09:49:31 +0900
-Message-ID: <001001da7a60$78603130$69209390$@samsung.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X4dOTilF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=+uvbFMBaxnEo7FnlRK2VWajdBLpdj74HCBLMlUuMnzs=;
+	t=1710916106; x=1711348106; b=X4dOTilFLlgayLWWCqi/gx7N9s7/xqE38i/e7uH+77VYwTK
+	sgdY/JzK4jlAtJJpHxb+AAQiUjenqEhjEzl5AbkbX1Fd07fhCM9wQKWJ0mghctqnypInTb6ZAanDI
+	CtrW5tWGXlT7d9mjqwRzN9HLQBHoH3Q0bPB1LW2eI6atPosLTY/9XkA78EC4y+AFnyUuSZGZq4F5Z
+	Z2XIkkOEhRMFf9w/fyi9ar7hZMiAWOJittvQCjjOOYg8lVzeC50ZjsfsEppvWwB2SRCRbPOANc0ti
+	PCCoG41xuhBFbUyggeTfpKr0gvy/SVww8reMFcXhWLrUsYw6xfJlQu43nKQOp6Lg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rmpR0-0007mH-ND; Wed, 20 Mar 2024 07:28:22 +0100
+Message-ID: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
+Date: Wed, 20 Mar 2024 07:28:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMwipOl/cAOi38P2p1VCUOGtvzp0QMWgtoHAULg3K4CqzIErAEiRasjAoYUeeCuPkDJsA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmue4co1+pBnt+8FisnvqX1WLHak2L
-	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wAS1S2TUZq
-	YkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QfiWFssScUqBQ
-	QGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsbW3SdZ
-	Cy6xVZw50cfWwDiPtYuRk0NCwETizPZHTF2MXBxCAjsYJd5NWQPlfGKU+PTlOBuE841RYvqa
-	CywwLTMWnWaBSOxllOhcMJcZwnnJKDH/yTo2kCo2AV2JmS8PgnWICLhITJrXDjaKWWALo8S1
-	rUsYQRKcAo4Ss25OYAKxhYHs3kkTwK5iEVCVWP7oEZjNK2Ap0bCwDcoWlDg58wnYUGYBeYnt
-	b+cwQ5ykIPHz6TJWiGVhErv2L2eDqBGRmN3ZBnadhEAnh8Sr3Z+hGlwkmm9NYoOwhSVeHd/C
-	DmFLSXx+txcqni8xc84NqJ9rJL7e+wcVt5dYdOYnUD0H0AJNifW79EFMCQFliSO3oE7jk+g4
-	/JcdIswr0dEmBGGqSjTdrIeYIS2x7MwM1gmMSrOQ/DULyV+zkNw/C2HVAkaWVYxiqQXFuemp
-	xUYFRvDITs7P3cQITppabjsYp7z9oHeIkYmD8RCjBAezkggvO/fPVCHelMTKqtSi/Pii0pzU
-	4kOMpsCQnsgsJZqcD0zbeSXxhiaWBiZmZobmRqYG5krivPda56YICaQnlqRmp6YWpBbB9DFx
-	cEo1MDnttHG2mLamYN9F9wKNGS1qNqd/1+Uyna3uq1Rf5Ca08eT2mPqNuvzx/5T5/s7wmaX/
-	/5n6TNn5k89oHeE4wMzN83Lhbckgp802HkwrDhwtfMbJ9V/xRdjrzsxwpZLzL478fSX1Wr1R
-	4/Qd365W2/Sfd2ec33/w8KFdxqEFL8K/2sRklW9aa2U9SzpSc0HokmjvKxqnXv1dHx3yKzCw
-	WzXO5UrGuqlC8te1z0dJvTt45b5bqE5tB0/8gz+/Xr56w8lv9vPtqxAdK3GVAntt9WwFt6e/
-	ja48X3JZpoz1VI3Xii6R3Afviw8aPTi+7vLm2entmzc6n4mvYLi9ISpq04bfaWf2m61Mzeq9
-	e+VaSpQSS3FGoqEWc1FxIgC5NHaTIwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSnO5so1+pBmdvG1msnvqX1WLHak2L
-	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wASxSXTUpq
-	TmZZapG+XQJXxtbdJ1kLLrFVnDnRx9bAOI+1i5GTQ0LARGLGotMsXYxcHEICuxklGvu6WSAS
-	0hIvWr9BFQlL3G85wgpR9JxRYte2dkaQBJuArsTMlwfBGkQEXCQmzWtnAyliFtjFKLH39jtm
-	iI5rTBK9v2Yzg1RxCjhKzLo5gQnEFgayeydNAFvBIqAqsfzRIzCbV8BSomFhG5QtKHFy5hOw
-	DcwC2hK9D1sZIWx5ie1v5zBDnKcg8fPpMlaIK8Ikdu1fzgZRIyIxu7ONeQKj8Cwko2YhGTUL
-	yahZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjiItzR2M21d90DvEyMTB
-	eIhRgoNZSYSXnftnqhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe8Re9KUIC6YklqdmpqQWpRTBZ
-	Jg5OqQYm51e602Ym23IGaAW9+ZJeWfefWU19isNinSUMH2Xe8TgHMc6y6frBe6LhTfaSgqV3
-	uPYmvb8x0U638nl80JtffdIsAe1XZdj0XoSWS/z5aH/hsdnXatmy6IyD3yr+XuOa61T/+1VO
-	3fNjV+vUpU/rK667cmBFOYv7E2ab1mszU3JtzG/rbfR6p2OoPGvaprsmxanh6vqxPPkyFpPY
-	/1rrOUYpG9Qf+Kj44tKOJ2p6eXrTDvrICjRUarov5lPm+Dlpc/BtEYmn8wKmspv8cls6f6fm
-	vaJ9b3JeVJY2WOT/ufLgQ/9e74Oqn52fP3+zZt/3mdxXLfaL2r5viw2VYs72SesWsykNlLC4
-	ffqL4EYlluKMREMt5qLiRAAF6GL3EQMAAA==
-X-CMS-MailID: 20240320004931epcas2p45e52ca36be366e939d955328dbc669af
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb
+User-Agent: Mozilla Thunderbird
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Content-Language: en-US, de-DE
+To: "bumyong.lee" <bumyong.lee@samsung.com>,
+ 'Linux regressions mailing list' <regressions@lists.linux.dev>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ parthiban@linumiz.com, saravanan@linumiz.com,
+ 'karthikeyan' <karthikeyan@linumiz.com>, vkoul@kernel.org
 References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
-	<1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
-	<000001da6ecc$adb25420$0916fc60$@samsung.com>
-	<12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
-	<000001da7140$6a0f1570$3e2d4050$@samsung.com>
-	<07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+ <000001da6ecc$adb25420$0916fc60$@samsung.com>
+ <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+ <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+ <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <001001da7a60$78603130$69209390$@samsung.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <001001da7a60$78603130$69209390$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1710916106;93568396;
+X-HE-SMSGID: 1rmpR0-0007mH-ND
 
-Hello.
-
-> >> Hmmm. 6.8 final is due. Is that something we can live with? Or would
-> >> it be a good idea to revert above commit for now and reapply it when
-> >> something better emerged? I doubt that the answer is "yes, let's do
-> >> that", but I have to ask.
-> >
-> > I couldn't find better way now.
-> > I think it's better to follow you mentioned
+On 20.03.24 01:49, bumyong.lee wrote:
+>>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
+>>>> it be a good idea to revert above commit for now and reapply it when
+>>>> something better emerged? I doubt that the answer is "yes, let's do
+>>>> that", but I have to ask.
+>>>
+>>> I couldn't find better way now.
+>>> I think it's better to follow you mentioned
+>>
+>> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
+>> did "submit a revert" fell through the cracks or is there some other
+>> solution in the works? Or am I missing something?
 > 
-> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
-> did "submit a revert" fell through the cracks or is there some other
-> solution in the works? Or am I missing something?
+> "submit a revert" would fix the issue. but it would make another issue
+> that the errata[1] 719340 described.
 
-"submit a revert" would fix the issue. but it would make another issue
-that the errata[1] 719340 described.
+"Make" as it "that other issue was present before the culprit was
+applied"? Then that other issue does not matter due to the "no
+regression" rule and how Linus afaics wants to see it applied in
+practice. For details on the latter, see the quotes from him here:
+https://docs.kernel.org/process/handling-regressions.html
+ Hence please submit a revert (or tell me if I misunderstood something)
+-- or of course a workaround for the other issue that does not cause the
+regression people reported.
 
-Sometimes dma wouldn't work well when issueing dma_issue_pending()
-after dma_terminate()
+> [...]
+> [1]: https://developer.arm.com/documentation/genc008428/latest
 
-Best regards
-
-[1]: https://developer.arm.com/documentation/genc008428/latest
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
