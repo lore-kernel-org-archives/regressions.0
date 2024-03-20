@@ -1,84 +1,145 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E08C181AC1
-	for <regressions@lists.linux.dev>; Tue, 19 Mar 2024 16:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5222A10FA
+	for <regressions@lists.linux.dev>; Wed, 20 Mar 2024 00:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710864220; cv=none; b=om1GkXK6Pj24NV62+ox65OieIj97Eao5YJunhwOOEPpCuBc+HzsNcF66oHbXXYoe5OrYysjfa3j3k6vVV18jjGfMeKCwGCd10wL1gHBYmwBO/Ue2qfVNw5htukO/Shpknn0XqvoLamtyo3qgzVeeRGj7vf8z/6sPs62Ld9/aIbU=
+	t=1710895783; cv=none; b=ebqk7psPl0pFIcI5JtITStrJeziZyWM3d0asvew/kgpNC5A/Jv2ZbNMRcPP/N//k4XNkcaRxjMaqN2FnYm9gWS+e6SscLFXwo264Fw61hU0BTow7HG5I7oR6jbRzfZnz/zxxvmVIAw2MPHXL2uuGco/4b8Ft+1KgA0KbRdTLVqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710864220; c=relaxed/simple;
-	bh=GfaLZGMTz9cmq4flbeIofGJbdiKDWXVWn45A7/cEDbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXUGoe1U8/L8d4iFhv6YPzODGMVJNBrqOa5wE9hrb7kK6eOGelEvJJS+PIG7TM+UlCPXZXbwTEP6FZIgEEA0DeBDINaF1XrkQ+/vnerG7781FPa4TvJ3J1yP4ZoCbgAfOb2k1qZRYOPsfNOrF6kLtnjiNXswxgRC50ngvDy3wHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 625704 invoked by uid 1000); 19 Mar 2024 12:03:30 -0400
-Date: Tue, 19 Mar 2024 12:03:30 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <1b2ccaf6-597c-40fe-877a-4ed1fab5261b@rowland.harvard.edu>
-References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
- <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
- <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
- <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
- <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
- <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
- <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
- <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
- <8b8e2773-47eb-48f4-b5e8-dcd885ee5c5b@rowland.harvard.edu>
- <befc1081-e512-4727-a911-f030e1aac626@sairon.cz>
+	s=arc-20240116; t=1710895783; c=relaxed/simple;
+	bh=ERVtS46WeUubUziYLbTp6DRCLkiyt+pu3gjQPBSpKD4=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=sMmPNQbKrEkiodTj3PwZxK6mr2d98VHpUq7IJjfJBGFdzU2rWVk+f/JaHy2Ji+lI13o4kFJ9hTcwKJ56JDslIggiYsSUAmWpU+Ahp8Ab0dODCdRazHiZZVCg5/HIMl8bD+IrMIAkHyDCmMrRzBX01/qmHcG1PaFN6GksNARfZzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EbL12eIL; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EbL12eIL"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240320004932epoutp045bb5cddcd7b6e2b9c0a71d5ab9e60e8e~_UqQA1ECK3276332763epoutp04w
+	for <regressions@lists.linux.dev>; Wed, 20 Mar 2024 00:49:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240320004932epoutp045bb5cddcd7b6e2b9c0a71d5ab9e60e8e~_UqQA1ECK3276332763epoutp04w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1710895772;
+	bh=VpzjF0qh5NjxrbLO1pfq2OCm/9xagT5oGFlM8kOGkmo=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=EbL12eILelxY7BgKGdSl13nEX0ZFwIxZXrtvKIkgCJEloQwj5V3bDKK1fWO+aUXlq
+	 fXx/TcLz5zUpoigbS13YmBLPLY1fv7cyz+snNQFqs9A1ZEn0VWf9UObMURt7+AQGcz
+	 m1KnPHlKJWRtbqEBS0vs0c0WmUyFMS1aOZ3BhF5A=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+	20240320004932epcas2p3945220f7bc1e27524c58948e93f69d4e~_UqP0vgW60173201732epcas2p3P;
+	Wed, 20 Mar 2024 00:49:32 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.88]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4Tzqjm1vrCz4x9Pv; Wed, 20 Mar
+	2024 00:49:32 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DC.97.09639.C923AF56; Wed, 20 Mar 2024 09:49:32 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240320004931epcas2p45e52ca36be366e939d955328dbc669af~_UqPKeSGr0836708367epcas2p4D;
+	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240320004931epsmtrp2db333263e58585f51908abdc1f7adcee~_UqPJ2zus2082220822epsmtrp2X;
+	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
+X-AuditID: b6c32a46-8ddfa700000025a7-a8-65fa329c5503
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E3.66.08924.B923AF56; Wed, 20 Mar 2024 09:49:31 +0900 (KST)
+Received: from KORCO121695 (unknown [10.229.18.202]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240320004931epsmtip15aba2402f24312054e5e51e5bb0ddec4~_UqPByw1c2365923659epsmtip1e;
+	Wed, 20 Mar 2024 00:49:31 +0000 (GMT)
+From: "bumyong.lee" <bumyong.lee@samsung.com>
+To: "'Linux regressions mailing list'" <regressions@lists.linux.dev>
+Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<parthiban@linumiz.com>, <saravanan@linumiz.com>, "'karthikeyan'"
+	<karthikeyan@linumiz.com>, <vkoul@kernel.org>
+In-Reply-To: <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+Subject: RE: dmaengine: CPU stalls while loading bluetooth module
+Date: Wed, 20 Mar 2024 09:49:31 +0900
+Message-ID: <001001da7a60$78603130$69209390$@samsung.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <befc1081-e512-4727-a911-f030e1aac626@sairon.cz>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMwipOl/cAOi38P2p1VCUOGtvzp0QMWgtoHAULg3K4CqzIErAEiRasjAoYUeeCuPkDJsA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmue4co1+pBnt+8FisnvqX1WLHak2L
+	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wAS1S2TUZq
+	YkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QfiWFssScUqBQ
+	QGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsbW3SdZ
+	Cy6xVZw50cfWwDiPtYuRk0NCwETizPZHTF2MXBxCAjsYJd5NWQPlfGKU+PTlOBuE841RYvqa
+	CywwLTMWnWaBSOxllOhcMJcZwnnJKDH/yTo2kCo2AV2JmS8PgnWICLhITJrXDjaKWWALo8S1
+	rUsYQRKcAo4Ss25OYAKxhYHs3kkTwK5iEVCVWP7oEZjNK2Ap0bCwDcoWlDg58wnYUGYBeYnt
+	b+cwQ5ykIPHz6TJWiGVhErv2L2eDqBGRmN3ZBnadhEAnh8Sr3Z+hGlwkmm9NYoOwhSVeHd/C
+	DmFLSXx+txcqni8xc84NqJ9rJL7e+wcVt5dYdOYnUD0H0AJNifW79EFMCQFliSO3oE7jk+g4
+	/JcdIswr0dEmBGGqSjTdrIeYIS2x7MwM1gmMSrOQ/DULyV+zkNw/C2HVAkaWVYxiqQXFuemp
+	xUYFRvDITs7P3cQITppabjsYp7z9oHeIkYmD8RCjBAezkggvO/fPVCHelMTKqtSi/Pii0pzU
+	4kOMpsCQnsgsJZqcD0zbeSXxhiaWBiZmZobmRqYG5krivPda56YICaQnlqRmp6YWpBbB9DFx
+	cEo1MDnttHG2mLamYN9F9wKNGS1qNqd/1+Uyna3uq1Rf5Ca08eT2mPqNuvzx/5T5/s7wmaX/
+	/5n6TNn5k89oHeE4wMzN83Lhbckgp802HkwrDhwtfMbJ9V/xRdjrzsxwpZLzL478fSX1Wr1R
+	4/Qd365W2/Sfd2ec33/w8KFdxqEFL8K/2sRklW9aa2U9SzpSc0HokmjvKxqnXv1dHx3yKzCw
+	WzXO5UrGuqlC8te1z0dJvTt45b5bqE5tB0/8gz+/Xr56w8lv9vPtqxAdK3GVAntt9WwFt6e/
+	ja48X3JZpoz1VI3Xii6R3Afviw8aPTi+7vLm2entmzc6n4mvYLi9ISpq04bfaWf2m61Mzeq9
+	e+VaSpQSS3FGoqEWc1FxIgC5NHaTIwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSnO5so1+pBmdvG1msnvqX1WLHak2L
+	y7vmsFnsvv2H1WLj2w52i3d7FC123jnB7MDusWlVJ5vH9s+n2D1ebJ7J6PF5k1wASxSXTUpq
+	TmZZapG+XQJXxtbdJ1kLLrFVnDnRx9bAOI+1i5GTQ0LARGLGotMsXYxcHEICuxklGvu6WSAS
+	0hIvWr9BFQlL3G85wgpR9JxRYte2dkaQBJuArsTMlwfBGkQEXCQmzWtnAyliFtjFKLH39jtm
+	iI5rTBK9v2Yzg1RxCjhKzLo5gQnEFgayeydNAFvBIqAqsfzRIzCbV8BSomFhG5QtKHFy5hOw
+	DcwC2hK9D1sZIWx5ie1v5zBDnKcg8fPpMlaIK8Ikdu1fzgZRIyIxu7ONeQKj8Cwko2YhGTUL
+	yahZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjiItzR2M21d90DvEyMTB
+	eIhRgoNZSYSXnftnqhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe8Re9KUIC6YklqdmpqQWpRTBZ
+	Jg5OqQYm51e602Ym23IGaAW9+ZJeWfefWU19isNinSUMH2Xe8TgHMc6y6frBe6LhTfaSgqV3
+	uPYmvb8x0U638nl80JtffdIsAe1XZdj0XoSWS/z5aH/hsdnXatmy6IyD3yr+XuOa61T/+1VO
+	3fNjV+vUpU/rK667cmBFOYv7E2ab1mszU3JtzG/rbfR6p2OoPGvaprsmxanh6vqxPPkyFpPY
+	/1rrOUYpG9Qf+Kj44tKOJ2p6eXrTDvrICjRUarov5lPm+Dlpc/BtEYmn8wKmspv8cls6f6fm
+	vaJ9b3JeVJY2WOT/ufLgQ/9e74Oqn52fP3+zZt/3mdxXLfaL2r5viw2VYs72SesWsykNlLC4
+	ffqL4EYlluKMREMt5qLiRAAF6GL3EQMAAA==
+X-CMS-MailID: 20240320004931epcas2p45e52ca36be366e939d955328dbc669af
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb
+References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
+	<1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+	<000001da6ecc$adb25420$0916fc60$@samsung.com>
+	<12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+	<000001da7140$6a0f1570$3e2d4050$@samsung.com>
+	<07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
 
-On Tue, Mar 19, 2024 at 12:54:37PM +0100, Jan Čermák wrote:
-> Hello Alan,
+Hello.
+
+> >> Hmmm. 6.8 final is due. Is that something we can live with? Or would
+> >> it be a good idea to revert above commit for now and reapply it when
+> >> something better emerged? I doubt that the answer is "yes, let's do
+> >> that", but I have to ask.
+> >
+> > I couldn't find better way now.
+> > I think it's better to follow you mentioned
 > 
-> On 16. 03. 24 21:35, Alan Stern wrote:
-> > Below is a patch meant to get the number of resets back to what it
-> > should be.  I'd appreciate it if you can test this, and report the
-> > kernel log output along with the usbmon output for the normal case and
-> > also with the "old_scheme_first" parameter set.
-> > 
-> > I'm not very hopeful that this will solve the problem, but there's a
-> > good chance it will help point us in the right direction by removing
-> > extraneous complications.
-> 
-> unfortunately you were right, the problem is still unresolved with your
-> patch. I hope the traces will provide some new insights then.
+> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
+> did "submit a revert" fell through the cracks or is there some other
+> solution in the works? Or am I missing something?
 
-I get the strong impression that this device just takes a long time to
-initialize when it is plugged in.  A lot longer than the current
-debounce time of 150 ms -- more like 2000 ms!  The usbmon traces show
-the device disconnecting and reconnecting about 1500 ms after it is
-first plugged in, and then it starts working about 300-400 ms later.
+"submit a revert" would fix the issue. but it would make another issue
+that the errata[1] 719340 described.
 
-Try doing this: Keep the patch applied, but make the following changes
-in addition.  In drivers/usb/core/hub.c, around line 128 the code says:
+Sometimes dma wouldn't work well when issueing dma_issue_pending()
+after dma_terminate()
 
-#define HUB_DEBOUNCE_TIMEOUT	2000
-#define HUB_DEBOUNCE_STEP	  25
-#define HUB_DEBOUNCE_STABLE	 100
+Best regards
 
-Change the HUB_DEBOUNCE_TIMEOUT value to 4500, the HUB_DEBOUNCE_STEP
-value to 250 and the HUB_DEBOUNCE_STABLE value to 2000.  That just
-might give the device enough time to settle down and start working
-before the computer tries using it.
+[1]: https://developer.arm.com/documentation/genc008428/latest
 
-This is not something we would want to do for ordinary kernels; it
-would cause new USB devices to be ignored for more than 2 seconds
-after they are plugged in, which would annoy many people.  But if my
-theory is right, it may be what your device needs.
-
-Alan Stern
