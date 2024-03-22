@@ -1,131 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9F446B6
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 12:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DD447A40
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 14:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711111939; cv=none; b=foHxbauHmWTYRuFsvvZovapcDmUYn150uehdc8QpZeggyZs3O2QnjfPmtEJKriPxawz8M2dFjx1YagqzsT8ejgjacytrUsnebfee09AzldxsopEG77ULC2Sk2ZkzXU5td20Vyf8zoldbbPT09YgdHXxEp/5Ot1l1yR7HoY1hv/M=
+	t=1711116750; cv=none; b=rpUzp2AjUCN1LwvWVUTt5eX8fyTxOL25pkQIfrY5crwkU8rmrxNd0JX+u7oHTUSoi4QE/HQICtqxkMBZ8wHjw+KF7w1H/sHSu53bDqosVRd4vt/i4Yu2DUUIdDoAipKb+nS9Mmb8ui7EDY0t3T3dvbmuIr8tTgTSlVAv4ZfB2w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711111939; c=relaxed/simple;
-	bh=mKpFVELhqQO/MJQzF7MS3ARP49TrE+jyDb5kEDSxe4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YlNvxECo9O2J4NGpSB89Cc6IO9Zbq9fLa2/uVZw6ALOdAZRN11CNi+qE0wdlon99BsRCOn7QEeD2/Sgy/K1aBb6LhMZ2PnaxmbwYdFEouNxlMaQZ/p7nG1zahhysV3eHImkN5yz7nSz/FA5TZHPFuKFGDA+0jWkZGpBiqcWjBgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTFNuXN7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711116750; c=relaxed/simple;
+	bh=xaP3sAbLubt6f1b7wDUbIs8Zobt3RgckgcUvcMqq0tw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cm1iQidk/R8qXbkXR/WxFj8/QwmbbM8IXnAUFfgH98hUqE9VgUHrAi5KYcG+3tFrkcpWp3CeH8x2vTlf1Zqe5DLSuNeo5oi0fep0b2OzPjLh32xWFM9VrnpPdx3KzvIJt9F9K6qH6tR70WTxGsuAc97QxCHCZGjn+a7B0NePrJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=hRO5wmDE; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTFNuXN7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDA9C433A6
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 12:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711111938;
-	bh=mKpFVELhqQO/MJQzF7MS3ARP49TrE+jyDb5kEDSxe4Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rTFNuXN7JV4H1M8lLXRl6mOJlWMr4A6pU8HEO6y7MijPx4W9rSw9Pyvr5Bwq3IIk0
-	 LNaObKIDTjch5G9YXExNvq07vTwioeOu/P6r/BVYcpOVGcVE3LtmIwm8gkKIC9GEH7
-	 nSTDeHx5fGMFmjMU7Ckckq6suE2n6mscUs65BXjt+wapmqXn1HmHkyiEdIPqs+VYAv
-	 2l3afxG3UidmbmwbsX6Rr2NGI0bZhSNOEJocVQAt+IRBliuVwXHZ6uSzSedUQPGjIj
-	 nX6vYYO8H8uF1LzTAoOBAiKgEnESFNZs+WhCvGd8dBDEXOg4JnxiK1QiL6OwAyTx+o
-	 M9wOrlCgMnvMA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512f3e75391so1567831e87.2
-        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 05:52:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX6vyVgV1g1PgxZEPMTgnUcUFZHDEufS6L0fDFQhspMABxTlAh6Qz46iG9CD8gcoEELfIicT+VZm08nvNd/3b4+iKz0eQ24M108MM4=
-X-Gm-Message-State: AOJu0YyXOvCQ7cgB2q/lcUyfV4c77soyk39YXHv0u9TaNutAzYlMlFRh
-	oARNae4wa/s4S/oV6qzweBcvPCAnEZlStkOB6GlK6P7kTEphZ5qcIZIYv0EXE1cMf5SZPddIzSJ
-	Y3TqQWgnuyoqQ6xCJBUgitDFmdzE=
-X-Google-Smtp-Source: AGHT+IHklJRW3LUltX6SoxEccs31USx3zcS1zXoGK6HTBbqRH+NoHQwA+Fh/DI4NCb7BYfEXe3bp6gH48jeuRVFqdw8=
-X-Received: by 2002:a19:9157:0:b0:513:d1b6:6f0e with SMTP id
- y23-20020a199157000000b00513d1b66f0emr1553664lfj.36.1711111937220; Fri, 22
- Mar 2024 05:52:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="hRO5wmDE"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78a15537fa1so128828685a.1
+        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 07:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711116747; x=1711721547; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ccm1mtAb95qdb6lkqB0FItmGid6eaARPcUgc6MW739g=;
+        b=hRO5wmDE1RLgbqL+/rMRg5s8+ONuePJnMU5WXZUKVdYM8JTZft8CMNnKG6J9B/JKw0
+         IwTKfqUoygxxvhZ7kCUsX+mWCd8c4wbSF+NV9gYZWs0ZWLuKF/pYOZrMqVxvjR0ToWPy
+         t+qzPkZruMbGRky8R2E6pnt53EE1ZqCKayCt4Qq8K7FjdoQjsp58DiznuSMZVLNg6Rh8
+         I0eud8LfecA5D68Arwt7An5dZYpaGrHZhD0Aq98DpU33No85Xrs5NZThBxB3qaOrqDWt
+         wH22k+AOBjfGvTAxi6BfYJMtwP3uxzp3cE4f1VzDhETunV9hqTHYUtJTJnaqnBze6DHP
+         Kp9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711116747; x=1711721547;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ccm1mtAb95qdb6lkqB0FItmGid6eaARPcUgc6MW739g=;
+        b=gkh7UFq+Hw9G9IkTdIKjiL9HqW3OfFiJvKYlx+8ZgzY39/buqTJ+cUff2ZF+75S/h+
+         rPIwVRIKV6XSjdsisW/r0tabBsWyxO0Xl5Rz0XDneujIVJMvvPzWtUs/hRkwiiHg7u49
+         XsvCOUJlcAxS0WDx9sKiXAE60HwOEts84dqquZPJTGkI7nh3g5L9X9vnZ6UE1fo/601U
+         I0O85HzyWAnaldHTQHZ0UC42kgOxehEPCctm1zRQvvFo2aQ/8R1Ux91q/0Kxw6uVrG3h
+         2N1va39fhl7OJ0m36N0YOkxaeG5PtUpN0z+d5pLJGoijz6B1z9hgBezkqPF7mPFz1XoG
+         j86Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbo+l54JFPqHf5ByNh5t84Pgt3Qm98RCfSLCTywg/DHhHxKniBlqxm6Dry8El4xHgqJnfNHKCcSfTCcH/LqbIuaYPS5UUnVn2n+Mc=
+X-Gm-Message-State: AOJu0Yxq14X60kw57dVmIG7UDlSDR9bBTyvkWrRWcPGXPIs/X/7EDC40
+	7nLAW0Y9J5FqfhCL4vrx+9mucZ8EPhHg0+MHMR8Iufvt7QNOVCwT25RIRZKynwk=
+X-Google-Smtp-Source: AGHT+IFnfaJOCDK6cUge2Q0kmiLhh1+As+3fWIT4dvDOMO5Q9mrgQY3RBqSVCXK7jYSLUb7CSofK/A==
+X-Received: by 2002:a05:620a:5605:b0:789:d306:879a with SMTP id vu5-20020a05620a560500b00789d306879amr2427097qkn.7.1711116746679;
+        Fri, 22 Mar 2024 07:12:26 -0700 (PDT)
+Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
+        by smtp.gmail.com with ESMTPSA id bj23-20020a05620a191700b00789f34f225dsm782925qkb.71.2024.03.22.07.12.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 07:12:26 -0700 (PDT)
+Message-ID: <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
+Date: Fri, 22 Mar 2024 10:12:25 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <20240321170641.GK8211@craftyguy.net>
-In-Reply-To: <20240321170641.GK8211@craftyguy.net>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 22 Mar 2024 13:52:05 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
-Message-ID: <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ regressions@lists.linux.dev, linux-serial@vger.kernel.org
+References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
+ <20240322051531.GA5132@atomide.com>
+ <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
+ <20240322064843.GC5132@atomide.com> <20240322090657.GD5132@atomide.com>
+Content-Language: en-US
+From: Nick Bowler <nbowler@draconx.ca>
+In-Reply-To: <20240322090657.GD5132@atomide.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Mar 2024 at 01:06, Clayton Craft <clayton@craftyguy.net> wrote:
->
-> On Thu, 21 Mar 2024 23:48:09 +0100 Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > v6.8 fails for me, and presumably so does everything back to v6.2. v6.1 is able
-> > > to boot OK on these platforms with mixed mode, and it looks like there are a lot
-> > > of changes from 6.1..6.2 for EFI/mixed mode booting.
-> >
-> > v6.1 just received some EFI related backports, so please check the
-> > latest v6.1.y as well.
->
-> I just gave v6.1.82 a try, and it fails to boot for me. That seems to be a
-> regression from the 6.1.0 that I tested previously.
->
-> > I usually test on 32-bit OVMF built with LOAD_X64_ON_IA32_ENABLE,
-> > which allows the use of the compat entry point. This is different from
-> > the EFI handover protocol, and I am not sure which one you are using.
->
-> I should have mentioned this previously, here's the EFI-related kconfig that I
-> am using. If there's anything missing then please let me know:
->
->         CONFIG_EFI=y
->         CONFIG_EFI_EARLYCON=y
->         CONFIG_EFI_ESRT=y
->         # CONFIG_EFI_HANDOVER_PROTOCOL is not set
->         CONFIG_EFI_MIXED=y
->         CONFIG_EFI_RUNTIME_WRAPPERS=y
->         CONFIG_EFI_STUB=y
->         CONFIG_EFI_VARS_PSTORE=m
->         CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE=y
->
-> Note that the EFI handover protocol support is disabled, I was under the
-> impression that it's not required for mixed mode.
->
+On 2024-03-22 05:06, Tony Lindgren wrote:
+[...]
+> I can't reproduce this on qemu-system-sparc64, probably as it does not use
+> the sunsab driver.
+> 
+> I noticed something though, I think we need to test for the port device
+> instead for being runtime PM enabled.
+> 
+> Can you please test if the updated patch below make things work again?
 
-That depends on the bootloader. One of the changes around that time is
-the introduction of this Kconfig symbol: before that, the EFI handover
-protocol was always supported but now it can be compiled out. So the
-safe choice is to enable it.
+Yes, with the below patch applied on top of 6.8 things are working.
 
-However, while looking more deeply into this, I noticed that we are
-running quite low own stack space. Mixed mode is different because it
-calls into the boot services using the decompressor's boot stack,
-rather than using the one that was provided by firmware at entry.
-(Note that the UEFI spec mandates 128k of stack space)
+Thanks,
+  Nick
 
-In my case, I bisected the regression to
-
-commit 5c4feadb0011983bbc4587bc61056c7b379d9969 (HEAD)
-Author: Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon Aug 7 18:27:16 2023 +0200
-
-    x86/decompressor: Move global symbol references to C code
-
-which moves the boot stack into a different memory region. Formerly,
-we'd end up at the far end of the heap when overrunning the stack but
-now, we end up crashing. Of course, overwriting the heap can cause
-problems of its own, so we'll need to bump this in any case.
-
-Could you give this a try please?
-
-
---- a/arch/x86/include/asm/boot.h
-+++ b/arch/x86/include/asm/boot.h
-@@ -38,7 +38,7 @@
- #endif
-
- #ifdef CONFIG_X86_64
--# define BOOT_STACK_SIZE       0x4000
-+# define BOOT_STACK_SIZE       0x10000
-
- /*
-  * Used by decompressor's startup_32() to allocate page tables for identity
+> 8< -------------------
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
+>  	 * enabled, serial_port_runtime_resume() calls start_tx() again
+>  	 * after enabling the device.
+>  	 */
+> -	if (pm_runtime_active(&port_dev->dev))
+> +	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
+>  		port->ops->start_tx(port);
+>  	pm_runtime_mark_last_busy(&port_dev->dev);
+>  	pm_runtime_put_autosuspend(&port_dev->dev)
