@@ -1,126 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93695FDA0
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 17:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3BC605D1
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 17:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711129420; cv=none; b=hNZpYeM8sC65MpEDpigKnl7u769PjUpOydRQo61Nbap7VjKY829CKDW7CtT486J/sfeOtsWkldsENfmx0xzRET+5Ez8sJEe961WfjPXOgwzU9aJue3NVkwc/sjLBtyDiP7GuL4Bna++MdCzOw/Z9IKSdvOKLWbo2yEZASjgtdhk=
+	t=1711129917; cv=none; b=rlt3qTCOz8FvE+gr6o4KPns9010E04VkyRmcX4Qp67luhSm1LQgFcsaGjv/LajDMaOBiZtNPto+35a9k+RgGgYDixVstpbJGLdIOgbWV7ETpJnqNbhtcEHp1l1fToN5pZ0flY7UU/e0HPb7KcaF1nuvLF7dHr2dhvs1EFSWHlwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711129420; c=relaxed/simple;
-	bh=+Ke7JiYTzzkmJt1eudUpKlOYPyexMXs9pD2hW7J0cPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i9g1jBRWpYy9aY+9VJ6XUi6qK01ZlbHBIexhDqh/JOnklvErURPC7ZwjadK5kd0h7NFRenZkxi+z63ATZPev5pyv3Tb5+jL8lMli2nx6g+8pqoImQRgukw7vfQgV8TcyHAkqENfeG3ChpcItQ3daS+ouiu3DVHudR2vwUH9mph8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9FJ/mwH; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711129917; c=relaxed/simple;
+	bh=PZdEA2lkWEJu+n4Qdcxn8N11KxjDt+CSGgGsSTjIJPQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jELyFb/bkFIhIDhtYpiWKL/XdRmnD4fFP7Wdwca6ns9m2kUUh201GCn3f7ckviP1DJpVx2wP7GzRnI6IsmHfL9EZ47Pm7zWjV5QgM8zcdJchfbvv0Q/dpp49FUzIOXBIg7ltANWi1JfM895CKsIXwCae6U9OKb51agrdmslYN+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L0zU8CJQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9FJ/mwH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711129419; x=1742665419;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+Ke7JiYTzzkmJt1eudUpKlOYPyexMXs9pD2hW7J0cPk=;
-  b=l9FJ/mwHoOHdpG+KXa+4wAfbo0ElU5pPm6N5cPO5cJ6qD4zaizSMWXIZ
-   CfiYf5aFTwZnxe6DZn2Lj1MP5UngzXRbhCq//nskrWfnGOEpaCRcmGSMn
-   6sMdSaEJoTptO5S4dXpdkvEogCOmx3OVzSw/uUEDZznkFIBN7yB9PGaCM
-   zYBkB6XIg13ZqY2wDKkhCXkTiKbvRqmKED2MNGXYFAaxDN2gnyWF73Yud
-   X/eX3QEvFxQ7mKS0Glu42M4fKAIdMOQeEHADKQdVfmtFsDScqu4pfrsi4
-   VtnU9QUFD7zJOCHpbvu7TI9aMZKyYyId2F0HFCKMAKJaQu1XDsUElWau5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="6795664"
-X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
-   d="scan'208";a="6795664"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 10:43:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
-   d="scan'208";a="19460960"
-Received: from ashwanim-mobl.amr.corp.intel.com (HELO [10.209.56.241]) ([10.209.56.241])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 10:43:37 -0700
-Message-ID: <01e64b89-8d30-45c5-9b83-f2e4d81b6344@intel.com>
-Date: Fri, 22 Mar 2024 10:43:36 -0700
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L0zU8CJQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711129914;
+	bh=PZdEA2lkWEJu+n4Qdcxn8N11KxjDt+CSGgGsSTjIJPQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=L0zU8CJQYJEE1MettTXheU6GoTyEYajLxMR+b1F8s2gNBbQjl37RaejsZWWuS6LvN
+	 W98TRjTtR4J5reWe+euTGIpWherMT1pTZiAjSv/PP035fygpoJvvnP8ncynrZJUSp1
+	 QXOLWvQDaEGGVmfFIwvORl3j+Lo85S5apTtFVGx7WktKkW6rN/vo9Mpoa+DL1mB6kd
+	 OlRr6k7tRJbkG5u9shKivt4T4IQlzL5fvrGh+TjLOfbSgb1/nFMB1vpU5in4FABtGI
+	 Kg0pdcPJdAfXkfumngsvweE2eD+PaZFTlkIc2LA8VDvm2hxpcB09fsZ9kw73Cp0URq
+	 /aICVlqxK3xqQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 876F9378211C;
+	Fri, 22 Mar 2024 17:51:53 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Fri, 22 Mar 2024 18:52:10 +0100
+Message-Id: <20240322175210.124416-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-Content-Language: en-US
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
- Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
- Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
- Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
- <003f1e83-fd93-4f4f-a316-d3e89e5a23a5@intel.com>
- <87le6ab2bn.fsf@email.froward.int.ebiederm.org>
- <2f8d726a-9800-4068-9c0c-6c4a79d69a85@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <2f8d726a-9800-4068-9c0c-6c4a79d69a85@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/22/24 10:40, Dave Hansen wrote:
->  * Mapping extra memory on UV systems causes halts[1]
->  * Mapping extra memory on UV systems breaks kexec (this thread)
+Hello,
 
-Sorry, I said that second one backwards:
+KernelCI has identified a mainline boot regression [1] on the following
+AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
+v6.8-1185-g855684c7d938 (855684):
+- Acer Chromebook Spin 311 R721T (codename kasumi360)
+- HP Chromebook 14 (codename careena)
+- HP Chromebook 11A G6 EE (codename barla)
 
- * _Not_ mapping extra memory on UV systems breaks kexec
+The kernel doesn't boot at all and nothing is reported on the serial
+console after "Starting kernel ...". The issue is still present on the
+latest mainline revision.
+The defconfig used by KernelCI for the boot tests can be found in [2].
 
+Sending this report in order to track the regression while a fix is
+identified.
+
+Thanks,
+
+Laura
+
+[1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
+[2]
+https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
+
+#regzbot introduced: v6.8..v6.8-1185-g855684c7d938
 
