@@ -1,77 +1,77 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3BC605D1
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 17:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416765FDA0
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 17:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711129917; cv=none; b=rlt3qTCOz8FvE+gr6o4KPns9010E04VkyRmcX4Qp67luhSm1LQgFcsaGjv/LajDMaOBiZtNPto+35a9k+RgGgYDixVstpbJGLdIOgbWV7ETpJnqNbhtcEHp1l1fToN5pZ0flY7UU/e0HPb7KcaF1nuvLF7dHr2dhvs1EFSWHlwI=
+	t=1711130228; cv=none; b=YBSiFHh5k3HqSCfKCpDJt+x7Qag8Xjii4pRIuKr/PyoJ88SuGlbeU07yI0pGkH988kTWQcfD5AefJaztJTeWS2JGZXwxZwoa7gxcxcpvv9QpU4P+y+k53puM5+UA12wSHaKX6Uh1H61wI3Z/AwQhfoUAuIkFxoDsvENc6KdkXcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711129917; c=relaxed/simple;
-	bh=PZdEA2lkWEJu+n4Qdcxn8N11KxjDt+CSGgGsSTjIJPQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jELyFb/bkFIhIDhtYpiWKL/XdRmnD4fFP7Wdwca6ns9m2kUUh201GCn3f7ckviP1DJpVx2wP7GzRnI6IsmHfL9EZ47Pm7zWjV5QgM8zcdJchfbvv0Q/dpp49FUzIOXBIg7ltANWi1JfM895CKsIXwCae6U9OKb51agrdmslYN+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L0zU8CJQ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711130228; c=relaxed/simple;
+	bh=GOaDAfKIwYJMXMttYU5xrZYRWFH8Axb85aDlLZ/MHUc=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=hbfbAqPfzN2RdYCCudSGJOWavCiiOYlOtdD7lcSHN+F/iklw4dM/YQuXQxJ7FifX2ueeX4a+O7SFkYAFUBDt0DrxR8FfzAdgbUzgSUmE3xfH5RDhExD8a1WJvmCqTd7v/s8Hd/pqDrfJocuUgNPkSQVJ98GnFsvRfHCUGcd0BIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=YefMcjDu; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L0zU8CJQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711129914;
-	bh=PZdEA2lkWEJu+n4Qdcxn8N11KxjDt+CSGgGsSTjIJPQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=L0zU8CJQYJEE1MettTXheU6GoTyEYajLxMR+b1F8s2gNBbQjl37RaejsZWWuS6LvN
-	 W98TRjTtR4J5reWe+euTGIpWherMT1pTZiAjSv/PP035fygpoJvvnP8ncynrZJUSp1
-	 QXOLWvQDaEGGVmfFIwvORl3j+Lo85S5apTtFVGx7WktKkW6rN/vo9Mpoa+DL1mB6kd
-	 OlRr6k7tRJbkG5u9shKivt4T4IQlzL5fvrGh+TjLOfbSgb1/nFMB1vpU5in4FABtGI
-	 Kg0pdcPJdAfXkfumngsvweE2eD+PaZFTlkIc2LA8VDvm2hxpcB09fsZ9kw73Cp0URq
-	 /aICVlqxK3xqQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 876F9378211C;
-	Fri, 22 Mar 2024 17:51:53 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Fri, 22 Mar 2024 18:52:10 +0100
-Message-Id: <20240322175210.124416-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="YefMcjDu"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
+	s=key1; t=1711130224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YudYEjU2aj1tRkCPMZdhkWAFRPscPYsfidHJdnSxDNw=;
+	b=YefMcjDuxr17W58utUapTKOhMNE6r3wYwzNwUUFLzsTTppRfAOiUMgzDMQDt3H6qE7GjHu
+	FHOVv6Lr2OSizsS5+GkHu6pnEJV6+XAoeqvON4HCOLfr2oqXxMdiWIYa0+5CMXPPbK/1Am
+	20Dg0TGKZwsTAxWBR2vCWuyIMXPUObu6iaZlbd1hVXu+Mfn0Sar9nMHL0JmwFYJyJXW1GA
+	LgmXpB9cwG2IOevOXNdKYU+IfQhsLEqp8XMZlbmGl/PDOP7tNqP2OJ6tcKhskoNJ0KluGg
+	4BqM+40Gl4QTKsFwA+C1lDFDH5aIXQvhVgobWvqyxtPfz3FDAIiACtuTN1kRKw==
+Date: Fri, 22 Mar 2024 17:57:01 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Clayton Craft" <clayton@craftyguy.net>
+Message-ID: <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net>
+TLS-Required: No
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: "Ard Biesheuvel" <ardb@kernel.org>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+In-Reply-To: <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+References: <20240321150510.GI8211@craftyguy.net>
+ <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net>
+ <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+ <20240322091857.GM8211@craftyguy.net>
+ <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+March 22, 2024 at 9:51 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
 
-KernelCI has identified a mainline boot regression [1] on the following
-AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
-v6.8-1185-g855684c7d938 (855684):
-- Acer Chromebook Spin 311 R721T (codename kasumi360)
-- HP Chromebook 14 (codename careena)
-- HP Chromebook 11A G6 EE (codename barla)
 
-The kernel doesn't boot at all and nothing is reported on the serial
-console after "Starting kernel ...". The issue is still present on the
-latest mainline revision.
-The defconfig used by KernelCI for the boot tests can be found in [2].
+> > As I mentioned initially, I bisected my failure to e2ab9eab32. Does t=
+hat give
+> >=20
+>=20>  any hint about what might be the problem?
+> >=20
+>=20
+> Not at all, unfortunately. What we might try is to back out the
+>=20
+>=20changes step by step. I can prepare a branch for you if you like.
 
-Sending this report in order to track the regression while a fix is
-identified.
 
-Thanks,
+Yeah sure, if you don't mind! I'd be happy to test changes in a branch to=
+ try and figure out what is causing this.
 
-Laura
-
-[1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
-[2]
-https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
-
-#regzbot introduced: v6.8..v6.8-1185-g855684c7d938
-
+-Clayton
