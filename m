@@ -1,105 +1,364 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DD447A40
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 14:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E05047A6A
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 14:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711116750; cv=none; b=rpUzp2AjUCN1LwvWVUTt5eX8fyTxOL25pkQIfrY5crwkU8rmrxNd0JX+u7oHTUSoi4QE/HQICtqxkMBZ8wHjw+KF7w1H/sHSu53bDqosVRd4vt/i4Yu2DUUIdDoAipKb+nS9Mmb8ui7EDY0t3T3dvbmuIr8tTgTSlVAv4ZfB2w0=
+	t=1711117575; cv=none; b=s2gr+VgjWmf6cxInK0rAutd+DhAM7XTcSsaoTNS0ybBsvk1HLs2zCyEAms2CR9cIFjWXgzQZ6RHUMxoqh3in4AuHFhXGOOVQYWNIajBoQHr3wg/n8FGBe5Z6bAyGnUvHbmfYvm+Cx47HXd9toFkDL0avwsT4Th9gFLcfSRqChdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711116750; c=relaxed/simple;
-	bh=xaP3sAbLubt6f1b7wDUbIs8Zobt3RgckgcUvcMqq0tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cm1iQidk/R8qXbkXR/WxFj8/QwmbbM8IXnAUFfgH98hUqE9VgUHrAi5KYcG+3tFrkcpWp3CeH8x2vTlf1Zqe5DLSuNeo5oi0fep0b2OzPjLh32xWFM9VrnpPdx3KzvIJt9F9K6qH6tR70WTxGsuAc97QxCHCZGjn+a7B0NePrJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=hRO5wmDE; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	s=arc-20240116; t=1711117575; c=relaxed/simple;
+	bh=nSU7Us69HjcGfMbnFoTnP50Z6345s8XT/n87H31Yw/4=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=fbRxckbWn78fIiDFJI61el89z1Xjok80PYexwCSifWJJJkiSRG9RCYgoB2jv7nAWVAVauc95KisMue/3dzvjWz0QrpuG3Hw4oYR6dr2GD/8lJocS3+UfwAHZJqkA0RB7rX1ynuhqwbXfakVxs2t+NwCOroe8NY0s6sYrjz+RY2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bLcBL/ob; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="hRO5wmDE"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78a15537fa1so128828685a.1
-        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 07:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711116747; x=1711721547; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ccm1mtAb95qdb6lkqB0FItmGid6eaARPcUgc6MW739g=;
-        b=hRO5wmDE1RLgbqL+/rMRg5s8+ONuePJnMU5WXZUKVdYM8JTZft8CMNnKG6J9B/JKw0
-         IwTKfqUoygxxvhZ7kCUsX+mWCd8c4wbSF+NV9gYZWs0ZWLuKF/pYOZrMqVxvjR0ToWPy
-         t+qzPkZruMbGRky8R2E6pnt53EE1ZqCKayCt4Qq8K7FjdoQjsp58DiznuSMZVLNg6Rh8
-         I0eud8LfecA5D68Arwt7An5dZYpaGrHZhD0Aq98DpU33No85Xrs5NZThBxB3qaOrqDWt
-         wH22k+AOBjfGvTAxi6BfYJMtwP3uxzp3cE4f1VzDhETunV9hqTHYUtJTJnaqnBze6DHP
-         Kp9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711116747; x=1711721547;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ccm1mtAb95qdb6lkqB0FItmGid6eaARPcUgc6MW739g=;
-        b=gkh7UFq+Hw9G9IkTdIKjiL9HqW3OfFiJvKYlx+8ZgzY39/buqTJ+cUff2ZF+75S/h+
-         rPIwVRIKV6XSjdsisW/r0tabBsWyxO0Xl5Rz0XDneujIVJMvvPzWtUs/hRkwiiHg7u49
-         XsvCOUJlcAxS0WDx9sKiXAE60HwOEts84dqquZPJTGkI7nh3g5L9X9vnZ6UE1fo/601U
-         I0O85HzyWAnaldHTQHZ0UC42kgOxehEPCctm1zRQvvFo2aQ/8R1Ux91q/0Kxw6uVrG3h
-         2N1va39fhl7OJ0m36N0YOkxaeG5PtUpN0z+d5pLJGoijz6B1z9hgBezkqPF7mPFz1XoG
-         j86Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXbo+l54JFPqHf5ByNh5t84Pgt3Qm98RCfSLCTywg/DHhHxKniBlqxm6Dry8El4xHgqJnfNHKCcSfTCcH/LqbIuaYPS5UUnVn2n+Mc=
-X-Gm-Message-State: AOJu0Yxq14X60kw57dVmIG7UDlSDR9bBTyvkWrRWcPGXPIs/X/7EDC40
-	7nLAW0Y9J5FqfhCL4vrx+9mucZ8EPhHg0+MHMR8Iufvt7QNOVCwT25RIRZKynwk=
-X-Google-Smtp-Source: AGHT+IFnfaJOCDK6cUge2Q0kmiLhh1+As+3fWIT4dvDOMO5Q9mrgQY3RBqSVCXK7jYSLUb7CSofK/A==
-X-Received: by 2002:a05:620a:5605:b0:789:d306:879a with SMTP id vu5-20020a05620a560500b00789d306879amr2427097qkn.7.1711116746679;
-        Fri, 22 Mar 2024 07:12:26 -0700 (PDT)
-Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
-        by smtp.gmail.com with ESMTPSA id bj23-20020a05620a191700b00789f34f225dsm782925qkb.71.2024.03.22.07.12.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Mar 2024 07:12:26 -0700 (PDT)
-Message-ID: <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
-Date: Fri, 22 Mar 2024 10:12:25 -0400
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bLcBL/ob"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- regressions@lists.linux.dev, linux-serial@vger.kernel.org
-References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
- <20240322051531.GA5132@atomide.com>
- <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
- <20240322064843.GC5132@atomide.com> <20240322090657.GD5132@atomide.com>
-Content-Language: en-US
-From: Nick Bowler <nbowler@draconx.ca>
-In-Reply-To: <20240322090657.GD5132@atomide.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1711117571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rNKWKSvBYXyFmKH07lb65pWFdnTMZ8/LLL+0AQv8eO4=;
+	b=bLcBL/obbWtDCzqCO3PPbrtR4uBJqRvJ9isSCYkkQzvmeOpM7HYPwrHRtlBpachPQ0RyLd
+	pVYF0eKPaX4UzpEj/vz0wtlb+5aYl5mwwgiLSbYoyuQpfLYlg0MBgn/rt5CuMO05gsmDGy
+	M30mRDjb5vDuINRUcVBYiQM1w5UjR5I=
+Date: Fri, 22 Mar 2024 14:26:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Eric Van Hensbergen" <eric.vanhensbergen@linux.dev>
+Message-ID: <ada13e85bf2ceed91052fa20adb02c4815953e26@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH next] fs/9p: fix uaf in in v9fs_stat2inode_dotl
+To: "Jakub Kicinski" <kuba@kernel.org>, asmadeus@codewreck.org
+Cc: "Lizhi Xu" <lizhi.xu@windriver.com>,
+ syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux_oss@crudebyte.com, lucho@ionkov.net,
+ syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev,
+ regressions@lists.linux.dev, netdev@vger.kernel.org
+In-Reply-To: <20240321182824.6f303e38@kernel.org>
+References: <00000000000055ecb906105ed669@google.com>
+ <20240202121531.2550018-1-lizhi.xu@windriver.com>
+ <ZeXGZS1-X8_CYCUz@codewreck.org>
+ <20240321182824.6f303e38@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 2024-03-22 05:06, Tony Lindgren wrote:
-[...]
-> I can't reproduce this on qemu-system-sparc64, probably as it does not use
-> the sunsab driver.
-> 
-> I noticed something though, I think we need to test for the port device
-> instead for being runtime PM enabled.
-> 
-> Can you please test if the updated patch below make things work again?
+Patch is in the unapplied portion of my for-next tree along with another =
+one.  I was hoping to hear some feedback on the other one before i did a =
+pull request and was torn on whether or not I wait on -rc1 to send since =
+we are so close.
 
-Yes, with the below patch applied on top of 6.8 things are working.
+       -eric
 
-Thanks,
-  Nick
 
-> 8< -------------------
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
->  	 * enabled, serial_port_runtime_resume() calls start_tx() again
->  	 * after enabling the device.
->  	 */
-> -	if (pm_runtime_active(&port_dev->dev))
-> +	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
->  		port->ops->start_tx(port);
->  	pm_runtime_mark_last_busy(&port_dev->dev);
->  	pm_runtime_put_autosuspend(&port_dev->dev)
+March 21, 2024 at 8:28 PM, "Jakub Kicinski" <kuba@kernel.org> wrote:
+>=20
+>=20On Mon, 4 Mar 2024 22:02:29 +0900 asmadeus@codewreck.org wrote:
+>=20
+>=20>=20
+>=20> Lizhi Xu wrote on Fri, Feb 02, 2024 at 08:15:31PM +0800:
+> >=20
+>=20>  The incorrect logical order of accessing the st object code in v9f=
+s_fid_iget_dotl
+> >=20
+>=20>  is causing this uaf.=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  Thanks for the fix!
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Eric, this is also for your tree.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Fixes: 724a08450f74 ("fs/9p: simplify iget to remove unnecessary p=
+aths")=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  (careful if you rebase your tree as this commit isn't merged yet)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Reported-and-tested-by: syzbot+7a3d75905ea1a830dbe5@syzkaller.apps=
+potmail.com
+> >=20
+>=20>  Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  Reviewed-by: Dominique Martinet <asmadeus@codewreck.org>
+> >=20
+>=20
+> Looks like this UAF is in Linus's tree now, and possibly getting hit
+>=20
+>=20by anyone using virtme to test the kernel? I can't vouch for the
+>=20
+>=20correctness of the fix but it does make the KASAN splat go away for m=
+e.
+>=20
+>=20[ 12.474676][ T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+>=20
+>=20[ 12.474870][ T1] BUG: KASAN: slab-use-after-free in v9fs_stat2inode_=
+dotl+0x9d6/0xb80
+>=20
+>=20[ 12.475060][ T1] Read of size 8 at addr ffff888002bdbad8 by task swa=
+pper/0/1
+>=20
+>=20[ 12.475248][ T1]=20
+>=20
+> [ 12.475314][ T1] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.8.0-virtm=
+e #1
+>=20
+>=20[ 12.475503][ T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 199=
+6), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+>=20
+>=20[ 12.475811][ T1] Call Trace:
+>=20
+>=20[ 12.475908][ T1] <TASK>
+>=20
+>=20[ 12.475976][ T1] dump_stack_lvl+0x82/0xd0
+>=20
+>=20[ 12.476133][ T1] print_address_description.constprop.0+0x2c/0x3b0
+>=20
+>=20[ 12.476295][ T1] ? v9fs_stat2inode_dotl+0x9d6/0xb80
+>=20
+>=20[ 12.476425][ T1] print_report+0xb4/0x270
+>=20
+>=20[ 12.476552][ T1] ? kasan_addr_to_slab+0x4e/0x90
+>=20
+>=20[ 12.476679][ T1] kasan_report+0xbd/0xf0
+>=20
+>=20[ 12.476775][ T1] ? v9fs_stat2inode_dotl+0x9d6/0xb80
+>=20
+>=20[ 12.476903][ T1] v9fs_stat2inode_dotl+0x9d6/0xb80
+>=20
+>=20[ 12.477053][ T1] v9fs_fid_iget_dotl+0x18c/0x210
+>=20
+>=20[ 12.477180][ T1] v9fs_mount+0x3fe/0x7d0
+>=20
+>=20[ 12.477281][ T1] ? __pfx_v9fs_mount+0x10/0x10
+>=20
+>=20[ 12.477406][ T1] ? vfs_parse_fs_string+0xdb/0x130
+>=20
+>=20[ 12.477533][ T1] ? __pfx_vfs_parse_fs_string+0x10/0x10
+>=20
+>=20[ 12.477660][ T1] ? __pfx_v9fs_mount+0x10/0x10
+>=20
+>=20[ 12.477786][ T1] legacy_get_tree+0x107/0x200
+>=20
+>=20[ 12.477912][ T1] vfs_get_tree+0x8a/0x2e0
+>=20
+>=20[ 12.478042][ T1] do_new_mount+0x27d/0x5e0
+>=20
+>=20[ 12.478170][ T1] ? __pfx_do_new_mount+0x10/0x10
+>=20
+>=20[ 12.478294][ T1] ? __pfx___debug_check_no_obj_freed+0x10/0x10
+>=20
+>=20[ 12.478453][ T1] ? __virt_addr_valid+0x227/0x420
+>=20
+>=20[ 12.478583][ T1] path_mount+0x271/0x14f0
+>=20
+>=20[ 12.478713][ T1] ? __pfx_path_mount+0x10/0x10
+>=20
+>=20[ 12.478840][ T1] ? kmem_cache_free+0xd7/0x220
+>=20
+>=20[ 12.478970][ T1] ? kern_path+0x3d/0x50
+>=20
+>=20[ 12.479068][ T1] init_mount+0x9d/0xf0
+>=20
+>=20[ 12.479164][ T1] ? __pfx_init_mount+0x10/0x10
+>=20
+>=20[ 12.479292][ T1] do_mount_root+0xbc/0x330
+>=20
+>=20[ 12.479419][ T1] mount_root_generic+0x22c/0x470
+>=20
+>=20[ 12.479550][ T1] ? __pfx_mount_root_generic+0x10/0x10
+>=20
+>=20[ 12.479680][ T1] ? mount_root+0x25b/0x2f0
+>=20
+>=20[ 12.479807][ T1] prepare_namespace+0xa5/0x2d0
+>=20
+>=20[ 12.479933][ T1] ? __pfx_prepare_namespace+0x10/0x10
+>=20
+>=20[ 12.480061][ T1] ? __pfx_kernel_init+0x10/0x10
+>=20
+>=20[ 12.480188][ T1] kernel_init+0x20/0x200
+>=20
+>=20[ 12.480285][ T1] ? __pfx_kernel_init+0x10/0x10
+>=20
+>=20[ 12.480410][ T1] ret_from_fork+0x31/0x70
+>=20
+>=20[ 12.480543][ T1] ? __pfx_kernel_init+0x10/0x10
+>=20
+>=20[ 12.480670][ T1] ret_from_fork_asm+0x1a/0x30
+>=20
+>=20[ 12.480807][ T1] </TASK>
+>=20
+>=20[ 12.480904][ T1]=20
+>=20
+> [ 12.480969][ T1] Allocated by task 1:
+>=20
+>=20[ 12.481063][ T1] kasan_save_stack+0x24/0x50
+>=20
+>=20[ 12.481191][ T1] kasan_save_track+0x14/0x30
+>=20
+>=20[ 12.481323][ T1] __kasan_kmalloc+0x7f/0x90
+>=20
+>=20[ 12.481449][ T1] p9_client_getattr_dotl+0x4c/0x1a0
+>=20
+>=20[ 12.481576][ T1] v9fs_fid_iget_dotl+0xca/0x210
+>=20
+>=20[ 12.481706][ T1] v9fs_mount+0x3fe/0x7d0
+>=20
+>=20[ 12.481801][ T1] legacy_get_tree+0x107/0x200
+>=20
+>=20[ 12.481927][ T1] vfs_get_tree+0x8a/0x2e0
+>=20
+>=20[ 12.482053][ T1] do_new_mount+0x27d/0x5e0
+>=20
+>=20[ 12.482178][ T1] path_mount+0x271/0x14f0
+>=20
+>=20[ 12.482303][ T1] init_mount+0x9d/0xf0
+>=20
+>=20[ 12.482397][ T1] do_mount_root+0xbc/0x330
+>=20
+>=20[ 12.482523][ T1] mount_root_generic+0x22c/0x470
+>=20
+>=20[ 12.482649][ T1] prepare_namespace+0xa5/0x2d0
+>=20
+>=20[ 12.482779][ T1] kernel_init+0x20/0x200
+>=20
+>=20[ 12.482876][ T1] ret_from_fork+0x31/0x70
+>=20
+>=20[ 12.483002][ T1] ret_from_fork_asm+0x1a/0x30
+>=20
+>=20[ 12.483128][ T1]=20
+>=20
+> [ 12.483191][ T1] Freed by task 1:
+>=20
+>=20[ 12.483283][ T1] kasan_save_stack+0x24/0x50
+>=20
+>=20[ 12.483409][ T1] kasan_save_track+0x14/0x30
+>=20
+>=20[ 12.483535][ T1] kasan_save_free_info+0x3b/0x60
+>=20
+>=20[ 12.483662][ T1] __kasan_slab_free+0xf4/0x180
+>=20
+>=20[ 12.483788][ T1] kfree+0xd3/0x230
+>=20
+>=20[ 12.483886][ T1] v9fs_fid_iget_dotl+0x15e/0x210
+>=20
+>=20[ 12.484017][ T1] v9fs_mount+0x3fe/0x7d0
+>=20
+>=20[ 12.484112][ T1] legacy_get_tree+0x107/0x200
+>=20
+>=20[ 12.484238][ T1] vfs_get_tree+0x8a/0x2e0
+>=20
+>=20[ 12.484365][ T1] do_new_mount+0x27d/0x5e0
+>=20
+>=20[ 12.484492][ T1] path_mount+0x271/0x14f0
+>=20
+>=20[ 12.484619][ T1] init_mount+0x9d/0xf0
+>=20
+>=20[ 12.484713][ T1] do_mount_root+0xbc/0x330
+>=20
+>=20[ 12.484846][ T1] mount_root_generic+0x22c/0x470
+>=20
+>=20[ 12.484974][ T1] prepare_namespace+0xa5/0x2d0
+>=20
+>=20[ 12.485100][ T1] kernel_init+0x20/0x200
+>=20
+>=20[ 12.485196][ T1] ret_from_fork+0x31/0x70
+>=20
+>=20[ 12.485324][ T1] ret_from_fork_asm+0x1a/0x30
+>=20
+>=20[ 12.485449][ T1]=20
+>=20
+> [ 12.485512][ T1] The buggy address belongs to the object at ffff888002=
+bdbad8
+>=20
+>=20[ 12.485512][ T1] which belongs to the cache kmalloc-192 of size 192
+>=20
+>=20[ 12.485825][ T1] The buggy address is located 0 bytes inside of
+>=20
+>=20[ 12.485825][ T1] freed 192-byte region [ffff888002bdbad8, ffff888002=
+bdbb98)
+>=20
+>=20[ 12.486131][ T1]=20
+>=20
+> [ 12.486194][ T1] The buggy address belongs to the physical page:
+>=20
+>=20[ 12.486347][ T1] page: refcount:1 mapcount:0 mapping:000000000000000=
+0 index:0xffff888002bdbc10 pfn:0x2bda
+>=20
+>=20[ 12.486600][ T1] head: order:1 entire_mapcount:0 nr_pages_mapped:0 p=
+incount:0
+>=20
+>=20[ 12.486795][ T1] flags: 0x80000000000a40(workingset|slab|head|node=
+=3D0|zone=3D1)
+>=20
+>=20[ 12.486989][ T1] page_type: 0xffffffff()
+>=20
+>=20[ 12.487088][ T1] raw: 0080000000000a40 ffff888001042c40 ffff88800104=
+0a88 ffff888001040a88
+>=20
+>=20[ 12.487315][ T1] raw: ffff888002bdbc10 00000000001a0017 00000001ffff=
+ffff 0000000000000000
+>=20
+>=20[ 12.487538][ T1] head: 0080000000000a40 ffff888001042c40 ffff8880010=
+40a88 ffff888001040a88
+>=20
+>=20[ 12.487765][ T1] head: ffff888002bdbc10 00000000001a0017 00000001fff=
+fffff 0000000000000000
+>=20
+>=20[ 12.487992][ T1] head: 0080000000000001 ffffea00000af681 dead0000000=
+00122 00000000ffffffff
+>=20
+>=20[ 12.488213][ T1] head: 0000000200000000 0000000000000000 00000000fff=
+fffff 0000000000000000
+>=20
+>=20[ 12.488436][ T1] page dumped because: kasan: bad access detected
+>=20
+>=20[ 12.488590][ T1]=20
+>=20
+> [ 12.488653][ T1] Memory state around the buggy address:
+>=20
+>=20[ 12.488797][ T1] ffff888002bdb980: fc fc fc fc 00 00 00 00 00 00 00 =
+00 00 00 00 00
+>=20
+>=20[ 12.488986][ T1] ffff888002bdba00: 00 00 00 00 00 00 00 00 00 00 fc =
+fc fc fc fc fc
+>=20
+>=20[ 12.489168][ T1] >ffff888002bdba80: fc fc fc fc fc fc fc fc fc fc fc=
+ fa fb fb fb fb
+>=20
+>=20[ 12.489353][ T1] ^
+>=20
+>=20[ 12.489506][ T1] ffff888002bdbb00: fb fb fb fb fb fb fb fb fb fb fb =
+fb fb fb fb fb
+>=20
+>=20[ 12.489688][ T1] ffff888002bdbb80: fb fb fb fc fc fc fc fc fc fc fc =
+fc fc fc fc fc
+>=20
+>=20[ 12.489873][ T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+>
