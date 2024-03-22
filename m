@@ -1,117 +1,84 @@
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804B56168B;
-	Fri, 22 Mar 2024 18:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0729067C52
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 18:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711130862; cv=none; b=bSO5/xwgdjU26iGGHsTLvabf/AKJjM1grc/MKbtg8IJ+jAVBjc72ACpbY7NjUvhns+8I+xM0Gk+SAsHF8HgXMxvcQHyL/j+mo5nD2aiKUaJKHQWJclSJH13FdKEVyGJN3CxPDBemFdgssscl9om1VHm0w4jxW5hY8nnbUHsEK0s=
+	t=1711132236; cv=none; b=B2TcmULNJXKexCG8As5oNP0gI/5A9t4bb1/8StprjLd029/cu5jYQEIK9obewMKOwl6tEWpE6GonsGqgkaTOSm+UIE6N3kt+yJBWGGc5enGcHgmxCg9kjTLNgrbh+lPCRBWdbMUt3CxQHiHtPUDAw7+o2J5+84PpS5WqNQAMZLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711130862; c=relaxed/simple;
-	bh=epCbL1igJ7lobjd9Ar0a6bb7CfPsN6ZdIgcKRJGWeuI=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=Nnm8SzkJ72gnOKkSy6GeE2FTKzxY3ukFlpAAMGUcd+sPg5U6a9qLedLdAl6ZSGnlOla4RgkkDiwsCCfpmSIwpOtavRr9ttIV4gjkf/ldKcRyC6KrkZodymBP04Jvw3sNtWoUe92CASSKEVL58trS4MgX0mW9Xmr6Hp2JJC5wCWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:46388)
-	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rnik8-0014jr-9d; Fri, 22 Mar 2024 11:31:48 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:37452 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rnik7-004NHx-B5; Fri, 22 Mar 2024 11:31:47 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>,  Dave Hansen
- <dave.hansen@linux.intel.com>,  Andy Lutomirski <luto@kernel.org>,  Peter
- Zijlstra <peterz@infradead.org>,  Thomas Gleixner <tglx@linutronix.de>,
-  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov <bp@alien8.de>,
-  x86@kernel.org,  "H. Peter Anvin" <hpa@zytor.com>,
-  linux-kernel@vger.kernel.org,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  Pavin Joseph <me@pavinjoseph.com>,
-  stable@vger.kernel.org,  Eric Hagberg <ehagberg@gmail.com>,  Simon Horman
- <horms@verge.net.au>,  Dave Young <dyoung@redhat.com>,  Sarah Brofeldt
- <srhb@dbc.dk>,  Russ Anderson <rja@hpe.com>,  Dimitri Sivanich
- <sivanich@hpe.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
-	<003f1e83-fd93-4f4f-a316-d3e89e5a23a5@intel.com>
-Date: Fri, 22 Mar 2024 12:31:40 -0500
-In-Reply-To: <003f1e83-fd93-4f4f-a316-d3e89e5a23a5@intel.com> (Dave Hansen's
-	message of "Fri, 22 Mar 2024 09:27:54 -0700")
-Message-ID: <87le6ab2bn.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1711132236; c=relaxed/simple;
+	bh=eLZrPW5/BBzCKT083Tm+TToma1maumf1MAEtzAoEDpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r9GaKuaIIPzlKeLpb1naYTPqNnTGhMUAPdllVc8rovWw4jJvdZC+TTqr35ICtfaYv5LXektrSBBoOPx7+mzS5mm9VOchrwLnlynR0DYcBflN4S/0WrEzYoRg3bfBbUTX6qZ8Htr9+NZ/gp/RSJeGrs6CIY/GM6O0K3smOwXQ4Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnoN8CRL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnoN8CRL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D49C433B2
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 18:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711132235;
+	bh=eLZrPW5/BBzCKT083Tm+TToma1maumf1MAEtzAoEDpU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gnoN8CRLC7rrYvNlxsh4qcU0RIvxQAJjEL3frxWP01vNulKnqAdDVR3shz1BfSjSb
+	 zDTySd7cg5+Vu4HkK9vj2zfwKoVpI6P+amLPCvQcE67kkeYTHuqh92INgzCGPu4H5p
+	 IMwcwrLqs1LcfJmsx89o4O0+ppPGxikG55XETOASRotJHaYDbEo9CeIhJnv7tt4FJf
+	 9zsdTh59u9gnniy9ciwUYOyNWjFq+y7Oq7yCnGvZNpwYfXUKGEbbZoXaifIi8ezdmy
+	 42vbK5vGxLUj/7D8SRicudhtl88h17m7noCObQMcqU5gSMAu4ckD/Ipnvspj7q15sI
+	 JzcTK/dIX3HbQ==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d476d7972aso41757801fa.1
+        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 11:30:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW5gJ7LUcfEGw8XZNp6aYvE/lwmXUcLGiu7hXP6k9rprQMl8TsfbXf7+LkshmN6ybrmDjKSIXi3U914GqmwMhevZfu8LhS0PzSIvlU=
+X-Gm-Message-State: AOJu0YzJ2zriyOxEA2M8tOPFH6TKnTby9+YIWic1rbTssPfzo4Z/3qxy
+	MYgQgwnobpfYp/qtcutG+tWcy4N+jJzZu0qk5PMee5pMTUskJ65gdUbGSMmKuR+d7iSUhDHGjYs
+	ism9S5KWNvva8ag2K3ajiHXn/Gj8=
+X-Google-Smtp-Source: AGHT+IEY+hpTZZfoFV0XughIgQM77xIK8PD83oEmajbW4ZYcRsXaZ5ZfGGOc9RPxz5aF0rP1rIrDSEnvvHm+d3Gzj/k=
+X-Received: by 2002:a05:651c:b1f:b0:2d4:6e08:34a2 with SMTP id
+ b31-20020a05651c0b1f00b002d46e0834a2mr275700ljr.47.1711132234004; Fri, 22 Mar
+ 2024 11:30:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1rnik7-004NHx-B5;;;mid=<87le6ab2bn.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX182K7ZeK1zm1O7MPM0uW0UgHwiPD3rE928=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4986]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa08 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_02 5+ unique symbols in subject
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-X-Spam-DCC: XMission; sa08 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Dave Hansen <dave.hansen@intel.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 426 ms - load_scoreonly_sql: 0.04 (0.0%),
-	signal_user_changed: 14 (3.3%), b_tie_ro: 12 (2.9%), parse: 1.05
-	(0.2%), extract_message_metadata: 13 (2.9%), get_uri_detail_list: 1.09
-	(0.3%), tests_pri_-2000: 5 (1.2%), tests_pri_-1000: 3.1 (0.7%),
-	tests_pri_-950: 1.35 (0.3%), tests_pri_-900: 1.14 (0.3%),
-	tests_pri_-90: 93 (21.7%), check_bayes: 90 (21.1%), b_tokenize: 7
-	(1.6%), b_tok_get_all: 8 (2.0%), b_comp_prob: 2.4 (0.6%),
-	b_tok_touch_all: 66 (15.6%), b_finish: 1.72 (0.4%), tests_pri_0: 210
-	(49.3%), check_dkim_signature: 0.48 (0.1%), check_dkim_adsp: 3.5
-	(0.8%), poll_dns_idle: 61 (14.4%), tests_pri_10: 2.1 (0.5%),
-	tests_pri_500: 79 (18.6%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net> <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+ <20240322091857.GM8211@craftyguy.net> <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+ <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net>
+In-Reply-To: <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 22 Mar 2024 20:30:22 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
+Message-ID: <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Dave Hansen <dave.hansen@intel.com> writes:
-
-> On 3/22/24 09:21, Steve Wahl wrote:
->> Some systems have ACPI tables that don't include everything that needs
->> to be mapped for a successful kexec.  These systems rely on identity
->> maps that include the full gigabyte surrounding any smaller region
->> requested for kexec success.  Without this, they fail to kexec and end
->> up doing a full firmware reboot.
->> 
->> So, reduce the use of GB pages only on systems where this is known to
->> be necessary (specifically, UV systems).
+On Fri, 22 Mar 2024 at 19:57, Clayton Craft <clayton@craftyguy.net> wrote:
 >
-> Isn't this called "buggy firmware"?
+> March 22, 2024 at 9:51 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
 >
-> I'd much rather add synthetic entries to the memory maps that have this
-> information than hack around it by assuming that things are within a
-> gigabyte.
+>
+> > > As I mentioned initially, I bisected my failure to e2ab9eab32. Does that give
+> > >
+> > >  any hint about what might be the problem?
+> > >
+> >
+> > Not at all, unfortunately. What we might try is to back out the
+> >
+> > changes step by step. I can prepare a branch for you if you like.
+>
+>
+> Yeah sure, if you don't mind! I'd be happy to test changes in a branch to try and figure out what is causing this.
+>
 
-So this change is a partial revert of a change that broke kexec in
-existing configurations.  To fix a regression that breaks kexec.
+I have pushed a branch below that reverts the patch you identified in
+4 separate steps. Could you please check which step makes your system
+boot again?
 
-I don't have enough to know which systems broke.  So I don't know
-the difficulty in fixing systems.
-
-Dave do you know what synthetic entries need to be added to the
-memory maps to fix the regression?  If not we should go with this
-and if we care enough we can add the synthetic entries later.
-
-Eric
+https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton
