@@ -1,91 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720CC59163;
-	Fri, 22 Mar 2024 16:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C1A5FB81
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 16:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711125300; cv=none; b=ohzfMF2ObaL3FD4imUyeBSU6LLoAWDXo7sJgpcHWxGtvAreshxntFpqV6NPM+dIrRFUvzPyJO+dAr/qK+8P+BE4XZBNQylLbWw/RW6EuNl8XNW022dlXVHEra1SvIpiDl75TnjSTSnygihZ9JuAUB0fLOxZoTyY2aqLCa5lonLE=
+	t=1711126319; cv=none; b=D7kIaEeCpyePlpejLxo3xXIXXgVTqwJnNYi8rOfL1V+L1GZCvrL+/PDAwOVOnKniOTahppl+V/w14DjEZLg4KoQ/KabIwuPTlwAAZ4FVHY3yPwhRnQCuYECW46zlEtlpcDDUHEBTroH/cz9ML36H0pB4ozPhl4ogDw3sjUsmLJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711125300; c=relaxed/simple;
-	bh=Cm01Q1014eD7bi3Ghg+OrTnDa1xuGXQVz909MO6xnV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MjLsqidYFkPyaGAAWe/9MmIU6DJetDSjAItPwfHTh+LOPq1OvCHPQ8/5D9uUwQEw/dQKd+w6yJaXgBNSjoZtzMTeyL5dAXvdhZGWvmXVPFJIj4I1yava1dCXXrjKRh9/YtSNWCclJfgesqzf+gY3tr8H8Zc+S4sbwsSQSjJeMLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oilfk1zh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711126319; c=relaxed/simple;
+	bh=lE+j9KmSnjltzBjQCfhK7TmKOK+5AHSKNREDslpxLpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OZV4nkhVeVMThkGm0HCdJ/mHb7gBN9N+iOkZIWWVjltE1I9MAFaE+zw8gAXxrL3EOLFIP/kJP8LtxaHXIHvcjDwR1+Id/wo81GTccV4Ql7GT2NHu3iozbCnS/FXsvWIVC3fjsHMj9q49y+2g359S/tYVYBkKKb/nhck0IVjh9YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxlmZODE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oilfk1zh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76F9C433C7;
-	Fri, 22 Mar 2024 16:34:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxlmZODE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3261AC43394
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 16:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711125299;
-	bh=Cm01Q1014eD7bi3Ghg+OrTnDa1xuGXQVz909MO6xnV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oilfk1zhhkn6/QOWDSz8/xIOh7J5NgEpjruYLPRoOiQu7qb+7CCiRMJ6HGhhZ3G37
-	 22WO4Fni5z3Nn7DxP/5MjqDRY7el+s5C9bv1JZLU3yPq9l2G/H2M5wDVc+w63r7+qr
-	 gRkiw253U2LkRccgdcHyUFCWWFGf7Aj3XuXLGbxiLUJ4iJjg8uEi6i5CfxoXwxh4G/
-	 o8LVa3+Z9Eu1eszg90WUqbizm0iKL+6ux4d7yM2nI8UlJC3wYW+t6pHNq52RMjk9qD
-	 YY2utGSjPSnX9dN/R6u1dKE9EPLmLyWFf3JI9xM26pzu+T+qh+sMa8wrSsM7V8LRf+
-	 KI6AYxOrY3dTQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rnhrJ-000000002rv-2vlb;
-	Fri, 22 Mar 2024 17:35:09 +0100
-Date: Fri, 22 Mar 2024 17:35:09 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Christian Brauner <brauner@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-	ntfs3@lists.linux.dev, Anton Altaparmakov <anton@tuxera.com>,
-	Namjae Jeon <linkinjeon@kernel.org>, regressions@lists.linux.dev
-Subject: Re: [PATCH] fs: Remove NTFS classic
-Message-ID: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
-References: <20240115072025.2071931-1-willy@infradead.org>
- <20240116-fernbedienung-vorwort-a21384fd7962@brauner>
+	s=k20201202; t=1711126319;
+	bh=lE+j9KmSnjltzBjQCfhK7TmKOK+5AHSKNREDslpxLpU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NxlmZODEEA0ISb7ievayKFW0t96UaeZconP+faJmHR9A0TeQjfHBdohc5UI5rtjW8
+	 87eAbnW8X+9elu9p+o/j/Og0NeeqdBEJuc8ijaWzoXAvKGqy9MlMpUeHTg8dMVQH+p
+	 wod7/zlDWxJEBNLVgYjMoMGbHHyKY1DBX3H+HveCzZ7q8JOiIf8bW+7EvOSMwfLdg+
+	 lPz+LesocOyBQPZhrlV2tXvwc4jeUHlZkhC7QB6S3ujQQVz/jhzoVcEkFFVCLPR+nC
+	 wagd+8ZW6e1RNcvf4WFOe0C1uzf7cQPUUDSn8BOxwkgf6asx7/XL22YDjfVczey5Zf
+	 BOaXs+/pdcZGg==
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-513dc9d6938so3114102e87.2
+        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 09:51:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXePDZsj3oZopnRpR2OakGaG0kc6jjL8dMcG0iDWO4Rm6AQ03ZWjIr0v5VTI0UUyUxIPCU06EB7PXUOK9dIwbVBsyWWAs6FCaBWx2g=
+X-Gm-Message-State: AOJu0Yxu5oY/11MRSZZM1+ji6oSHzYBlbDiR1R24dCf38Cqo68vm162i
+	It2yBsGseEzhN88fPLiI+UJvIul3Dy6B7Ltaejbhn6wCjqKDO1JGmcORCe72SlP3SEP7I3dP9hF
+	Bpxs0qxGjlfAq4No3s2lVZV5r54Q=
+X-Google-Smtp-Source: AGHT+IEZsoLGEBUw8HqAozJH8a40krnMcztaIt8FfqJgaMyd5W2p+IJDw4vv0XGWJS29LGQ4L0XJs/l7n89iFIg5d+8=
+X-Received: by 2002:ac2:5bc5:0:b0:513:c28e:8215 with SMTP id
+ u5-20020ac25bc5000000b00513c28e8215mr1985077lfn.64.1711126317477; Fri, 22 Mar
+ 2024 09:51:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116-fernbedienung-vorwort-a21384fd7962@brauner>
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net> <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+ <20240322091857.GM8211@craftyguy.net>
+In-Reply-To: <20240322091857.GM8211@craftyguy.net>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 22 Mar 2024 18:51:46 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+Message-ID: <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jan 16, 2024 at 10:33:49AM +0100, Christian Brauner wrote:
-> On Mon, 15 Jan 2024 07:20:25 +0000, Matthew Wilcox (Oracle) wrote:
-> > The replacement, NTFS3, was merged over two years ago.  It is now time to
-> > remove the original from the tree as it is the last user of several APIs,
-> > and it is not worth changing.
+On Fri, 22 Mar 2024 at 18:19, Clayton Craft <clayton@craftyguy.net> wrote:
+>
+> On Fri, 22 Mar 2024 13:52:05 +0100 Ard Biesheuvel <ardb@kernel.org> wrote:
+> > That depends on the bootloader. One of the changes around that time is
+> > the introduction of this Kconfig symbol: before that, the EFI handover
+> > protocol was always supported but now it can be compiled out. So the
+> > safe choice is to enable it.
+>
+> I am using systemd-boot, and based on my understanding of its source it seems to
+> only use handover on old kernels that don't support LINUX_INITRD_MEDIA_GUID.
 
-> I see no reason to not at least try and remove it given that we have
-> ntfs3 as a replacement. Worst case is we have to put it back in. Let's
-> try it.
+That does ring a bell. So that means you must be using the .compat
+entry point, which is what 32-bit OVMF uses too.
 
-This patch breaks boot of my Lenovo ThinkPad X13s where I have an fstab
-entry to access firmware from the original Windows partition; ended up
-in some kind of systemd emergency mode.
+> >
+> > However, while looking more deeply into this, I noticed that we are
+> > running quite low own stack space. Mixed mode is different because it
+> > calls into the boot services using the decompressor's boot stack,
+> > rather than using the one that was provided by firmware at entry.
+> > (Note that the UEFI spec mandates 128k of stack space)
+> >
+> > In my case, I bisected the regression to
+> >
+> > commit 5c4feadb0011983bbc4587bc61056c7b379d9969 (HEAD)
+> > Author: Ard Biesheuvel <ardb@kernel.org>
+> > Date:   Mon Aug 7 18:27:16 2023 +0200
+> >
+> >     x86/decompressor: Move global symbol references to C code
+> >
+> > which moves the boot stack into a different memory region. Formerly,
+> > we'd end up at the far end of the heap when overrunning the stack but
+> > now, we end up crashing. Of course, overwriting the heap can cause
+> > problems of its own, so we'll need to bump this in any case.
+> >
+> > Could you give this a try please?
+> >
+> >
+> > --- a/arch/x86/include/asm/boot.h
+> > +++ b/arch/x86/include/asm/boot.h
+> > @@ -38,7 +38,7 @@
+> >  #endif
+> >
+> >  #ifdef CONFIG_X86_64
+> > -# define BOOT_STACK_SIZE       0x4000
+> > +# define BOOT_STACK_SIZE       0x10000
+> >
+> >  /*
+> >   * Used by decompressor's startup_32() to allocate page tables for identity
+>
+> Just gave this a try, on 6.1.82, and the system still reboots after selecting
+> the kernel in the bootloader. So it seems like my problem is different.
+>
 
-Fix is easy enough once I figured out what broke, but requires changing
-the fs type from 'ntfs' to 'ntfs3' in the fstab (after enabling NTFS3 in
-the kernel config).
+Yeah, it was a long shot.
 
-Is it possible to provide an alias or something to avoid breaking
-people's machines like this? Perhaps something is needed for the Kconfig
-too.
+> As I mentioned initially, I bisected my failure to e2ab9eab32. Does that give
+> any hint about what might be the problem?
+>
 
-I also now get a bunch of warning when listing the root directory:
-
-[   68.967970] ntfs3: nvme0n1p3: ino=130d6, Correct links count -> 1.
-[   68.969137] ntfs3: nvme0n1p3: ino=13a, Correct links count -> 1.
-[   68.969798] ntfs3: nvme0n1p3: ino=3ad, Correct links count -> 1.
-[   68.970431] ntfs3: nvme0n1p3: ino=3d9, Correct links count -> 1.
-[   68.971150] ntfs3: nvme0n1p3: ino=26, Correct links count -> 1.
-[   68.971780] ntfs3: nvme0n1p3: ino=eb, Correct links count -> 1.
-[   68.972263] ntfs3: nvme0n1p3: ino=1ce, Correct links count -> 1.
-[   68.973062] ntfs3: nvme0n1p3: ino=a608, Correct links count -> 1.
-
-Flagging this as a regression so that Thorsten is aware of it:
-
-#regzbot introduced: 7ffa8f3d3023
-
-Johan
+Not at all, unfortunately. What we might try is to back out the
+changes step by step. I can prepare a branch for you if you like.
