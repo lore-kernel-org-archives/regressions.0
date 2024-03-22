@@ -1,91 +1,115 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83283199AD
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 09:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1826E3E479;
+	Fri, 22 Mar 2024 11:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711098439; cv=none; b=HmRpXJM05W55mI3K2DHVi0A/DraXsJAn8YJ1xU7J4wWanpnkC9MOLbK+7wbllBtwBQ2pTwQzbP+U0lZwXFR1znvy7MrmOQvTmti0UnerbNjfOFeF9BVK9uhmykdjCKtmbxUVfxk/8eeD97Y0fk3rlm4I8wbywC9YkrFgnbUxjjo=
+	t=1711105324; cv=none; b=kpzVTWY5CtjonOSEcdMP4bUKvtBhQbmwca9tGTpdiefWwE+kRLr4mgPiVHNCJhYNay0GDja/cPNgRHRWspMhPutpijYOSUAjzA5QVyd8Ke8IYwB2TdMgtUpjvAa9iake4pTfGyBx5G2WOvbw87zMYaiBijD2njHkiG3FO6cg+Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711098439; c=relaxed/simple;
-	bh=fqnq0phZd8eQ1RBeCYKOKzraow94yCRC0cLooXVkLDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbTEi6mlR+W2WC9cucA0VYQogblYgcgcmpaBFP/o3XRUNzvER8jeOt2fs99mjEnmm9nQF3/jdSi2/gb9YiZahLBe8IsCyXeu3x26nZO2YPviuy+HBJuEYFJ87J6gxPglpE5XqcuNnyX32EZXmsQrVoS9F+AMEEStVD8wxvwOkl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=M9YV8kKn; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1711105324; c=relaxed/simple;
+	bh=DNDM9B9ksrZKSGXDoW6GLQK1di53GABk/SxYnxD0ID4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EpA18iRxHyCowhfJFp9k/cMkpykfspSY5X6xmWv7VGF8gf8M5tUjFErMHD2kVli6cpL1kCStVvfzW0ZHy/i9UuLHWhbeVqk2ragnTUcvfNHtM8EiKR4mYmgV+RpMjLNazIQD0HuRlHZyymrotEXSJSGbzaQ9Yd4+iBih1/M0ANg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aOXwkk6i; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="M9YV8kKn"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 0040360340;
-	Fri, 22 Mar 2024 09:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1711098430;
-	bh=fqnq0phZd8eQ1RBeCYKOKzraow94yCRC0cLooXVkLDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M9YV8kKnPAlSqDp772EmB/bHzTaDkR+q2GDGF+ZJKdISm9Z7MMsp/ij3Z7kNDdk97
-	 Y1/FDp98vv4WSDMbb1u1jk7XpUF8Kto52j04bNH8Wiw59zGrol+rEDjX0PWUf2XCSg
-	 0W+bh4RLEtuztC9SwxnvNZNbqw4Bt4e83IrZNlS2WD9yGzg80XD8LecgN1ht2ncY4Z
-	 sIUgOcMW3TgauctmrAvxSFEAddpztd96nqkNvjQnhj2rxYE3GFoAPOYO0zEKoT7qfJ
-	 J5QzaBv6TvPU/sE/HFDT4JLac2RkQSh2s72B/FvaI9qiPtX6/wTVTnzFjI+nzYAnpk
-	 8qg+hiadrnNmg==
-Date: Fri, 22 Mar 2024 11:06:57 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	regressions@lists.linux.dev, linux-serial@vger.kernel.org
-Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
-Message-ID: <20240322090657.GD5132@atomide.com>
-References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
- <20240322051531.GA5132@atomide.com>
- <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
- <20240322064843.GC5132@atomide.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aOXwkk6i"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=jOb6LgQkAYOowfd3TpK62M7x65cNcm8EVJDYWoVUq0o=;
+	t=1711105322; x=1711537322; b=aOXwkk6irLvjl9Fm6k3ejyqMRYxk4ErvGPKuozLNMVfX162
+	GV2CLH0E8hcS2zjaF2YR1JliiWgqqytJc1I50BfZVker6I7HOinRKEOXHK8POvzLOWwUmQAtU4wXP
+	QBSfOuAywOFScuu48W8ggL+vGhqXFGNvOXII2iZK0lC2tb0kAJo9FXwPEi7lAqe6GyddrSoYU0eVQ
+	GSQs1TrncqrcRnrXR0esMA03nf1YsJnbfSTeI7mDkvnC7JOFL7QfyCA5QqXQoChDJDW4j+YcpEMth
+	9eZ22V3X+504NnXaaV8uMCZ9KHfKYulWFZH0IeFB7Rg20CPQArXRAXWuw+2Dv0cA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rncen-0000K5-P3; Fri, 22 Mar 2024 12:01:53 +0100
+Message-ID: <5e278d43-93dd-47ac-8502-28db2fcd32f9@leemhuis.info>
+Date: Fri, 22 Mar 2024 12:01:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322064843.GC5132@atomide.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] 6.8 - i2c_hid_acpi: probe of i2c-XXX0001:00 failed
+ with error -110
+Content-Language: en-US, de-DE
+To: =?UTF-8?Q?Philip_M=C3=BCller?= <philm@manjaro.org>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <9a880b2b-2a28-4647-9f0f-223f9976fdee@manjaro.org>
+ <a587f3f3-e0d5-4779-80a4-a9f7110b0bd2@manjaro.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <a587f3f3-e0d5-4779-80a4-a9f7110b0bd2@manjaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711105322;b07c2670;
+X-HE-SMSGID: 1rncen-0000K5-P3
 
-* Tony Lindgren <tony@atomide.com> [240322 08:48]:
-> * Nick Bowler <nbowler@draconx.ca> [240322 06:36]:
-> > On 2024-03-22 01:15, Tony Lindgren wrote:
-> > > Can you please test if the following change to add back the check for
-> > > !pm_runtime_active() is enough to fix the issue?
-> > 
-> > I applied the below patch on top of 6.8 and unfortunately it does _not_
-> > fix the problem (no obvious change in behaviour).
+[BCCed Greg and the stable list, as this is apparently a mainline
+regression and has nothing to do with the stable series
+
+Also CCing Jiri, Benjamin as well as various lists]
+
+On 19.03.24 05:52, Philip Müller wrote:
+> On 18/03/2024 17:58, Philip Müller wrote:
+>> I'm currently developing on the OrangePi Neo-01, which ships with two
+>> similar touchpads using the Synaptics driver. On 6.7.10 those two
+>> devices get detected normally. On 6.8.1 it seems to error out.
+
+Thx or the report.
+
+>> I either get none, or at best only one of those two devices.
+>>
+>> i2c_hid_acpi: probe of i2c-XXX0001:00 failed with error -110
+>> i2c_hid_acpi: probe of i2c-XXX0002:00 failed with error -110
 > 
-> Hmm OK thanks for testing. I'll take a look and see if I can debug this
-> with qemu sparc as I no longer have any sparc boxes around.
+> I found the regression in commit aa69d6974185e9f7a552ba982540a38e34f69690
+> HID: i2c-hid: Switch i2c_hid_parse() to goto style error handling
 
-I can't reproduce this on qemu-system-sparc64, probably as it does not use
-the sunsab driver.
+FWIW, that's a change from Hans. He is normally quite responsive, but as
+he has not replied yet I guess he is AFK for a few days.
 
-I noticed something though, I think we need to test for the port device
-instead for being runtime PM enabled.
+Ciao, Thorsten
 
-Can you please test if the updated patch below make things work again?
+> When I use the commit before I can rmmod and modprobe in a batch script
+> using a loop without erroring out to -110. Attached the testing script
+> and dmesg log snippets
+> 
+> #!/bin/bash
+> for ((n=0;n<5;n++))
+> do
+> sudo rmmod i2c_hid_acpi
+> sleep 1
+> sudo modprobe i2c_hid_acpi --force-vermagic
+> sleep 2
+> done
+> 
+> I will try to use the code of 6.8.1 and revert that commit.
 
-Regards,
+P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
 
-Tony
+#regzbot report /
+#regzbot introduced aa69d6974185e9f7a552ba982540a38e34f69690
+#regzbot title HID: i2c-hid: probe of i2c-XXX0001:00 failed with error -110
+#regzbot ignore-activity
 
-8< -------------------
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
- 	 * enabled, serial_port_runtime_resume() calls start_tx() again
- 	 * after enabling the device.
- 	 */
--	if (pm_runtime_active(&port_dev->dev))
-+	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
- 		port->ops->start_tx(port);
- 	pm_runtime_mark_last_busy(&port_dev->dev);
- 	pm_runtime_put_autosuspend(&port_dev->dev);
--- 
-2.44.0
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
