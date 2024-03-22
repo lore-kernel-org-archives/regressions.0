@@ -1,162 +1,130 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9D55674C
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 16:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7B847A52
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 16:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711124546; cv=none; b=La03L553c340AKWWPAyklPpPNLvz0mM4fZCvJP3mpA+HvV/8Ejqi1YSIA1+gPlTkumOWcAjdAIF3C4mcw6w78qa8uuvIVy1wqkOVmr/dKkIFryxHA5PkMQJl+oWiysnOm7xrlfKt4zJmPXWiQd0cccyj9avWcG5pok7xTbkMMDs=
+	t=1711124879; cv=none; b=TZS8/lZLM/U22DZwKTxrQY0gPvK7KZ1wp5gtZ4tsEBWnCUJspJBcbvnfEh2m7Xj+UFCk06s3X2yH+yywW01T0YbFJ42l94DjDB8knWw/Z/G6zEHoArgWFqLrgGv4m8QhKWfu2/GJMIZOYlRVMZdMTbe6FD77PCoSU2bsDvQZDWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711124546; c=relaxed/simple;
-	bh=MAE8WIHU9ta7n4x/BR5+OwfH/AdkCJB+DKep9CrSiJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oHQXEfB3getFF7CukI1ENbUn+k69okt0eGFdHOsi9rJqIU1ZlkHX/Gmsh9FYHtOClOQJbDJGUnV1UM8vafo78bWOwydzA2r2pbBxDzLAOmN8ExKVsKdWV6TnWCArLWO7yk72tcWQ1AkzKWrr7zs4aR/MAlGEfa9aCsyq1q70U88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=Ip4ViCWf; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1711124879; c=relaxed/simple;
+	bh=Yg2Xfm9bBL3/e8m4eyIH1Wm/XrSP3qfZNh7KZLgdZbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ALGeQv/Ng/J4ge1nzj2c5si59EYTDs98R+olVHdj9DgpDjJ9ku+JWPZKSgZfxCv/ZLZagGXLMdBKe33QlFgYs4mJDNGMDhxKRaSDRz1YCiEa8Bt8yFWyFb0DWMPgUaOjuaWOE35LmJfaAPIw837kEgK0bGTUqX1Rlh62zYmzgyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hwch4OxJ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Ip4ViCWf"
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42MDWoAc020466;
-	Fri, 22 Mar 2024 16:21:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pps0720;
- bh=UkvndrBpowbSq2m7Khs+/6kDy0TN1ypmmFxO26zOD98=;
- b=Ip4ViCWf/re1gFk8m+T/teZhgpZs46nWSlanj0dgUdQM+i3bi6ofXxeEhI0whQMxJQxP
- 55CHzRjLhQqxA9Fvv1CyvB30sh1I72nWJ6f7ZvvMl/jTYYvaZGKQWTxRd0Q8NOqPjuBx
- PLMShfMn/BGNilt7LHzLs4T10FIRDOfLkEK2XyW+oI9LSDxTX4x3YnR93LpO2AgNqkn0
- w7pxLQKU8ERnIBwQXSvOoWGwZLvH67X22uDS1/dg4nrsUT/48KTmYTZxHIOyMR5D7e6m
- JS1ZILLydV4+/XXoNiNjuMSVcdANOybSJcJW3R3fl/bVabV8uKdxiywkBRNnD6L7mlqW Ow== 
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x183dbayg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Mar 2024 16:21:57 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id EC9B68059E3;
-	Fri, 22 Mar 2024 16:21:55 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id DA6E9808350;
-	Fri, 22 Mar 2024 16:21:51 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
-	id A1A6B3000059D; Fri, 22 Mar 2024 11:21:35 -0500 (CDT)
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
-        Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps except on UV platform.
-Date: Fri, 22 Mar 2024 11:21:35 -0500
-Message-Id: <20240322162135.3984233-1-steve.wahl@hpe.com>
-X-Mailer: git-send-email 2.26.2
-X-Proofpoint-GUID: oYOSRYdA2RlWrO_MVfNl-dLggOq7mrmq
-X-Proofpoint-ORIG-GUID: oYOSRYdA2RlWrO_MVfNl-dLggOq7mrmq
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hwch4OxJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711124878; x=1742660878;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Yg2Xfm9bBL3/e8m4eyIH1Wm/XrSP3qfZNh7KZLgdZbg=;
+  b=Hwch4OxJ2Qx/emOvLbjz5yEaj1I/rY6PYXwhTkmgF0H3bmFDBHb114oM
+   7YiSBV5y7F9pHCnSw+HxQPyLIiYGMr8jr9SQ/2Q0ULNECmYpbAeWeJefy
+   QHwD5ZG6caqX6YjsbM86CuXylw9FOgJPMlqbESYpJFeIwm1zlkcDKqWj6
+   ZleBJmJ20bOjJgSg32hTLdXMj3gZGB3Xckf3Mu3nPalh6QY9RiDiDDG0X
+   sasCeDnBl2QX1MEX90dIKeyiLH2ArcjqTyuDC+Y72IvnqMY3Hznv/2IFX
+   LZqB6hdU5L8txG4TXr7CGVhHYBJFuI9wgfsvwVsx1kOUbwQIAbhkmLCLd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="17574398"
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="17574398"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 09:27:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,146,1708416000"; 
+   d="scan'208";a="15017149"
+Received: from ashwanim-mobl.amr.corp.intel.com (HELO [10.209.56.241]) ([10.209.56.241])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 09:27:55 -0700
+Message-ID: <003f1e83-fd93-4f4f-a316-d3e89e5a23a5@intel.com>
+Date: Fri, 22 Mar 2024 09:27:54 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-22_08,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 adultscore=0
- clxscore=1011 spamscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403220117
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Content-Language: en-US
+To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+ Eric Hagberg <ehagberg@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, Eric Biederman
+ <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+ Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
+ Dimitri Sivanich <sivanich@hpe.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240322162135.3984233-1-steve.wahl@hpe.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Some systems have ACPI tables that don't include everything that needs
-to be mapped for a successful kexec.  These systems rely on identity
-maps that include the full gigabyte surrounding any smaller region
-requested for kexec success.  Without this, they fail to kexec and end
-up doing a full firmware reboot.
+On 3/22/24 09:21, Steve Wahl wrote:
+> Some systems have ACPI tables that don't include everything that needs
+> to be mapped for a successful kexec.  These systems rely on identity
+> maps that include the full gigabyte surrounding any smaller region
+> requested for kexec success.  Without this, they fail to kexec and end
+> up doing a full firmware reboot.
+> 
+> So, reduce the use of GB pages only on systems where this is known to
+> be necessary (specifically, UV systems).
 
-So, reduce the use of GB pages only on systems where this is known to
-be necessary (specifically, UV systems).
+Isn't this called "buggy firmware"?
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
-Reported-by: Pavin Joseph <me@pavinjoseph.com>
-Closes: https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-Tested-by: Pavin Joseph <me@pavinjoseph.com>
-Tested-by: Eric Hagberg <ehagberg@gmail.com>
-Tested-by: Sarah Brofeldt <srhb@dbc.dk>
----
- arch/x86/include/asm/init.h        |  1 +
- arch/x86/kernel/machine_kexec_64.c |  3 +++
- arch/x86/mm/ident_map.c            | 13 +++++++------
- 3 files changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index cc9ccf61b6bd..4ae843e8fefb 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -10,6 +10,7 @@ struct x86_mapping_info {
- 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
- 	bool direct_gbpages;		 /* PUD level 1GB page support */
-+	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
- 	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
- };
- 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index b180d8e497c3..1e1c6633bbec 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-+#include <asm/uv/uv.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -212,6 +213,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 
- 	if (direct_gbpages)
- 		info.direct_gbpages = true;
-+	if (!is_uv_system())
-+		info.direct_gbpages_always = true;
- 
- 	for (i = 0; i < nr_pfn_mapped; i++) {
- 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index a204a332c71f..8039498b9713 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -39,12 +39,13 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 		/* Is using a gbpage allowed? */
- 		use_gbpage = info->direct_gbpages;
- 
--		/* Don't use gbpage if it maps more than the requested region. */
--		/* at the begining: */
--		use_gbpage &= ((addr & ~PUD_MASK) == 0);
--		/* ... or at the end: */
--		use_gbpage &= ((next & ~PUD_MASK) == 0);
--
-+		if (!info->direct_gbpages_always) {
-+			/* Don't use gbpage if it maps more than the requested region. */
-+			/* at the beginning: */
-+			use_gbpage &= ((addr & ~PUD_MASK) == 0);
-+			/* ... or at the end: */
-+			use_gbpage &= ((next & ~PUD_MASK) == 0);
-+		}
- 		/* Never overwrite existing mappings */
- 		use_gbpage &= !pud_present(*pud);
- 
--- 
-2.26.2
-
+I'd much rather add synthetic entries to the memory maps that have this
+information than hack around it by assuming that things are within a
+gigabyte.
