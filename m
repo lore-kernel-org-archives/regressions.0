@@ -1,115 +1,131 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1826E3E479;
-	Fri, 22 Mar 2024 11:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9F446B6
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 12:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711105324; cv=none; b=kpzVTWY5CtjonOSEcdMP4bUKvtBhQbmwca9tGTpdiefWwE+kRLr4mgPiVHNCJhYNay0GDja/cPNgRHRWspMhPutpijYOSUAjzA5QVyd8Ke8IYwB2TdMgtUpjvAa9iake4pTfGyBx5G2WOvbw87zMYaiBijD2njHkiG3FO6cg+Qc=
+	t=1711111939; cv=none; b=foHxbauHmWTYRuFsvvZovapcDmUYn150uehdc8QpZeggyZs3O2QnjfPmtEJKriPxawz8M2dFjx1YagqzsT8ejgjacytrUsnebfee09AzldxsopEG77ULC2Sk2ZkzXU5td20Vyf8zoldbbPT09YgdHXxEp/5Ot1l1yR7HoY1hv/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711105324; c=relaxed/simple;
-	bh=DNDM9B9ksrZKSGXDoW6GLQK1di53GABk/SxYnxD0ID4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EpA18iRxHyCowhfJFp9k/cMkpykfspSY5X6xmWv7VGF8gf8M5tUjFErMHD2kVli6cpL1kCStVvfzW0ZHy/i9UuLHWhbeVqk2ragnTUcvfNHtM8EiKR4mYmgV+RpMjLNazIQD0HuRlHZyymrotEXSJSGbzaQ9Yd4+iBih1/M0ANg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aOXwkk6i; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711111939; c=relaxed/simple;
+	bh=mKpFVELhqQO/MJQzF7MS3ARP49TrE+jyDb5kEDSxe4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YlNvxECo9O2J4NGpSB89Cc6IO9Zbq9fLa2/uVZw6ALOdAZRN11CNi+qE0wdlon99BsRCOn7QEeD2/Sgy/K1aBb6LhMZ2PnaxmbwYdFEouNxlMaQZ/p7nG1zahhysV3eHImkN5yz7nSz/FA5TZHPFuKFGDA+0jWkZGpBiqcWjBgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTFNuXN7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aOXwkk6i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=jOb6LgQkAYOowfd3TpK62M7x65cNcm8EVJDYWoVUq0o=;
-	t=1711105322; x=1711537322; b=aOXwkk6irLvjl9Fm6k3ejyqMRYxk4ErvGPKuozLNMVfX162
-	GV2CLH0E8hcS2zjaF2YR1JliiWgqqytJc1I50BfZVker6I7HOinRKEOXHK8POvzLOWwUmQAtU4wXP
-	QBSfOuAywOFScuu48W8ggL+vGhqXFGNvOXII2iZK0lC2tb0kAJo9FXwPEi7lAqe6GyddrSoYU0eVQ
-	GSQs1TrncqrcRnrXR0esMA03nf1YsJnbfSTeI7mDkvnC7JOFL7QfyCA5QqXQoChDJDW4j+YcpEMth
-	9eZ22V3X+504NnXaaV8uMCZ9KHfKYulWFZH0IeFB7Rg20CPQArXRAXWuw+2Dv0cA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rncen-0000K5-P3; Fri, 22 Mar 2024 12:01:53 +0100
-Message-ID: <5e278d43-93dd-47ac-8502-28db2fcd32f9@leemhuis.info>
-Date: Fri, 22 Mar 2024 12:01:52 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTFNuXN7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDA9C433A6
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 12:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711111938;
+	bh=mKpFVELhqQO/MJQzF7MS3ARP49TrE+jyDb5kEDSxe4Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rTFNuXN7JV4H1M8lLXRl6mOJlWMr4A6pU8HEO6y7MijPx4W9rSw9Pyvr5Bwq3IIk0
+	 LNaObKIDTjch5G9YXExNvq07vTwioeOu/P6r/BVYcpOVGcVE3LtmIwm8gkKIC9GEH7
+	 nSTDeHx5fGMFmjMU7Ckckq6suE2n6mscUs65BXjt+wapmqXn1HmHkyiEdIPqs+VYAv
+	 2l3afxG3UidmbmwbsX6Rr2NGI0bZhSNOEJocVQAt+IRBliuVwXHZ6uSzSedUQPGjIj
+	 nX6vYYO8H8uF1LzTAoOBAiKgEnESFNZs+WhCvGd8dBDEXOg4JnxiK1QiL6OwAyTx+o
+	 M9wOrlCgMnvMA==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512f3e75391so1567831e87.2
+        for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 05:52:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX6vyVgV1g1PgxZEPMTgnUcUFZHDEufS6L0fDFQhspMABxTlAh6Qz46iG9CD8gcoEELfIicT+VZm08nvNd/3b4+iKz0eQ24M108MM4=
+X-Gm-Message-State: AOJu0YyXOvCQ7cgB2q/lcUyfV4c77soyk39YXHv0u9TaNutAzYlMlFRh
+	oARNae4wa/s4S/oV6qzweBcvPCAnEZlStkOB6GlK6P7kTEphZ5qcIZIYv0EXE1cMf5SZPddIzSJ
+	Y3TqQWgnuyoqQ6xCJBUgitDFmdzE=
+X-Google-Smtp-Source: AGHT+IHklJRW3LUltX6SoxEccs31USx3zcS1zXoGK6HTBbqRH+NoHQwA+Fh/DI4NCb7BYfEXe3bp6gH48jeuRVFqdw8=
+X-Received: by 2002:a19:9157:0:b0:513:d1b6:6f0e with SMTP id
+ y23-20020a199157000000b00513d1b66f0emr1553664lfj.36.1711111937220; Fri, 22
+ Mar 2024 05:52:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] 6.8 - i2c_hid_acpi: probe of i2c-XXX0001:00 failed
- with error -110
-Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Philip_M=C3=BCller?= <philm@manjaro.org>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <9a880b2b-2a28-4647-9f0f-223f9976fdee@manjaro.org>
- <a587f3f3-e0d5-4779-80a4-a9f7110b0bd2@manjaro.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <a587f3f3-e0d5-4779-80a4-a9f7110b0bd2@manjaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711105322;b07c2670;
-X-HE-SMSGID: 1rncen-0000K5-P3
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net>
+In-Reply-To: <20240321170641.GK8211@craftyguy.net>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 22 Mar 2024 13:52:05 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+Message-ID: <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-[BCCed Greg and the stable list, as this is apparently a mainline
-regression and has nothing to do with the stable series
+On Fri, 22 Mar 2024 at 01:06, Clayton Craft <clayton@craftyguy.net> wrote:
+>
+> On Thu, 21 Mar 2024 23:48:09 +0100 Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > v6.8 fails for me, and presumably so does everything back to v6.2. v6.1 is able
+> > > to boot OK on these platforms with mixed mode, and it looks like there are a lot
+> > > of changes from 6.1..6.2 for EFI/mixed mode booting.
+> >
+> > v6.1 just received some EFI related backports, so please check the
+> > latest v6.1.y as well.
+>
+> I just gave v6.1.82 a try, and it fails to boot for me. That seems to be a
+> regression from the 6.1.0 that I tested previously.
+>
+> > I usually test on 32-bit OVMF built with LOAD_X64_ON_IA32_ENABLE,
+> > which allows the use of the compat entry point. This is different from
+> > the EFI handover protocol, and I am not sure which one you are using.
+>
+> I should have mentioned this previously, here's the EFI-related kconfig that I
+> am using. If there's anything missing then please let me know:
+>
+>         CONFIG_EFI=y
+>         CONFIG_EFI_EARLYCON=y
+>         CONFIG_EFI_ESRT=y
+>         # CONFIG_EFI_HANDOVER_PROTOCOL is not set
+>         CONFIG_EFI_MIXED=y
+>         CONFIG_EFI_RUNTIME_WRAPPERS=y
+>         CONFIG_EFI_STUB=y
+>         CONFIG_EFI_VARS_PSTORE=m
+>         CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE=y
+>
+> Note that the EFI handover protocol support is disabled, I was under the
+> impression that it's not required for mixed mode.
+>
 
-Also CCing Jiri, Benjamin as well as various lists]
+That depends on the bootloader. One of the changes around that time is
+the introduction of this Kconfig symbol: before that, the EFI handover
+protocol was always supported but now it can be compiled out. So the
+safe choice is to enable it.
 
-On 19.03.24 05:52, Philip Müller wrote:
-> On 18/03/2024 17:58, Philip Müller wrote:
->> I'm currently developing on the OrangePi Neo-01, which ships with two
->> similar touchpads using the Synaptics driver. On 6.7.10 those two
->> devices get detected normally. On 6.8.1 it seems to error out.
+However, while looking more deeply into this, I noticed that we are
+running quite low own stack space. Mixed mode is different because it
+calls into the boot services using the decompressor's boot stack,
+rather than using the one that was provided by firmware at entry.
+(Note that the UEFI spec mandates 128k of stack space)
 
-Thx or the report.
+In my case, I bisected the regression to
 
->> I either get none, or at best only one of those two devices.
->>
->> i2c_hid_acpi: probe of i2c-XXX0001:00 failed with error -110
->> i2c_hid_acpi: probe of i2c-XXX0002:00 failed with error -110
-> 
-> I found the regression in commit aa69d6974185e9f7a552ba982540a38e34f69690
-> HID: i2c-hid: Switch i2c_hid_parse() to goto style error handling
+commit 5c4feadb0011983bbc4587bc61056c7b379d9969 (HEAD)
+Author: Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon Aug 7 18:27:16 2023 +0200
 
-FWIW, that's a change from Hans. He is normally quite responsive, but as
-he has not replied yet I guess he is AFK for a few days.
+    x86/decompressor: Move global symbol references to C code
 
-Ciao, Thorsten
+which moves the boot stack into a different memory region. Formerly,
+we'd end up at the far end of the heap when overrunning the stack but
+now, we end up crashing. Of course, overwriting the heap can cause
+problems of its own, so we'll need to bump this in any case.
 
-> When I use the commit before I can rmmod and modprobe in a batch script
-> using a loop without erroring out to -110. Attached the testing script
-> and dmesg log snippets
-> 
-> #!/bin/bash
-> for ((n=0;n<5;n++))
-> do
-> sudo rmmod i2c_hid_acpi
-> sleep 1
-> sudo modprobe i2c_hid_acpi --force-vermagic
-> sleep 2
-> done
-> 
-> I will try to use the code of 6.8.1 and revert that commit.
+Could you give this a try please?
 
-P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
 
-#regzbot report /
-#regzbot introduced aa69d6974185e9f7a552ba982540a38e34f69690
-#regzbot title HID: i2c-hid: probe of i2c-XXX0001:00 failed with error -110
-#regzbot ignore-activity
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -38,7 +38,7 @@
+ #endif
 
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+ #ifdef CONFIG_X86_64
+-# define BOOT_STACK_SIZE       0x4000
++# define BOOT_STACK_SIZE       0x10000
+
+ /*
+  * Used by decompressor's startup_32() to allocate page tables for identity
