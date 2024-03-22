@@ -1,66 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896634644E;
-	Fri, 22 Mar 2024 15:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF3956B98
+	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 16:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711120394; cv=none; b=CHvFy7hlx7QJgJArJVvScXpWQELZdf0hYqVJsm2iYhR09bQsMCGpcsPyKjjrOjxkfd56+0Eb4yPxNu9ciCvCFaKv+R3k538650yUpRaAjDfb/25EkCpkGP4nGH5VY+ldnbasaGf5BuQ63RXJ7nmutY7vZ9xAMuQToio5Rmg845M=
+	t=1711124351; cv=none; b=L8SSmd8VDg9Dn2HeKHwdAHKwg92ap385AxklydCixfNku40WwuWknJGBsf5VZaD8HbGrPGuSWO6Su7QbLOnedB8DTDHTlpIH5dlF1aWNvijBNvLtJ1m5WWsvuFyg75uCl42+uADszzV/H+lojFOOCzDqi9na1GQ2SgyWvIE5i68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711120394; c=relaxed/simple;
-	bh=Dw4ByjZkVEzsc9Sp+TM4v9hJZ71PCSuq7eO3NUfsKAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=awOZx7uyrTfoR1bSv8CpTtouug+uc4n6llZ9VKHFYIxqAy63rpEr50kZb5ZL0KIBORTHYlyg145J4+jdc+B08slWFuFvdQ5HYmp+pDgtJ5ykUID6UETDKhdbNgt4fngWVDuVtkQk8e1wZq181be+SuNrVnqTKp3LI3DzMUf43iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2jc6i1b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711124351; c=relaxed/simple;
+	bh=pRMg/t6wZBrXTf4eCE43zA/56qnnDkoAuBkVWGZYyic=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tJOKZPw/IPxrMEbz4n+6ctggbKMTWFcMGKsHO+6ChdO4EOUPS2pav4l8GnB4VL2RSyjbIpHF3oAqwlW6h//86f0FL2Csi9wi1YlZIfTyQ2Rgklnb1JUHj16iQ5a6BV5i2ccDkpEjytirnleATbxb0BMyaMWxfT6Mu9vaSszai8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=edP+l9Ib; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2jc6i1b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87098C433C7;
-	Fri, 22 Mar 2024 15:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711120394;
-	bh=Dw4ByjZkVEzsc9Sp+TM4v9hJZ71PCSuq7eO3NUfsKAw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I2jc6i1bQ/VajU1sWOLiT0eFC2kaIA4tkdniovHcHkCqFBL5vMWNDVpw93VXj9mNh
-	 52uhqqog+uOD5WMT/FEQ/8oGDu1dImC7Tx/EM1gWbE33a9oEdPfC+p2Wwf1wwG+fzl
-	 cJ9LB75vZiTF9uL7m8zMob9vSzaPWeu/4ntQzF7NBnch0DSkRumV+W/9+sAc1FHb68
-	 rWaXn3/4rDQVguPMIcQySdmxw3QW5TmX/TMbfjUPc1gNlJ/hSjcxnI70yrXsftknM6
-	 LQVcLvLlkJ75xKHwdyCXQvOzNDvDbUAdHQE7IqbAS5YcPyP0P/lw8LfYyXDBLGDrmC
-	 4zyzl0fwZa6Mw==
-Date: Fri, 22 Mar 2024 08:13:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Eric Van Hensbergen" <eric.vanhensbergen@linux.dev>
-Cc: asmadeus@codewreck.org, "Lizhi Xu" <lizhi.xu@windriver.com>,
- syzbot+7a3d75905ea1a830dbe5@syzkaller.appspotmail.com,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com,
- v9fs@lists.linux.dev, regressions@lists.linux.dev, netdev@vger.kernel.org
-Subject: Re: [PATCH next] fs/9p: fix uaf in in v9fs_stat2inode_dotl
-Message-ID: <20240322081312.2a8a4908@kernel.org>
-In-Reply-To: <ada13e85bf2ceed91052fa20adb02c4815953e26@linux.dev>
-References: <00000000000055ecb906105ed669@google.com>
-	<20240202121531.2550018-1-lizhi.xu@windriver.com>
-	<ZeXGZS1-X8_CYCUz@codewreck.org>
-	<20240321182824.6f303e38@kernel.org>
-	<ada13e85bf2ceed91052fa20adb02c4815953e26@linux.dev>
+	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="edP+l9Ib"
+Date: Fri, 22 Mar 2024 09:18:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
+	s=key1; t=1711124343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pRMg/t6wZBrXTf4eCE43zA/56qnnDkoAuBkVWGZYyic=;
+	b=edP+l9Ibbgtc8Vbzfc5iQXpNnl9xNH2sqO08Nd8rF5tjabh8YwZbbmW70v7KjHidoXTAno
+	g5swq3UNoo/f6CmlgcUi2bAFjtysd78faP1RclxupYnCEk1FHB6jEqujqj/VyCkqmbVo2M
+	1QUbmbapLgxR74iNQjks8qqm+i/mll1tiXQ7Ra0FqVkHctBVnhhLSDGxmFZ/k3W6ISqGS1
+	qYmYgSL7tdGdvnM2F+jAD6tWX6pugCyAsfSag1CgktnXmkGNzCutSCtQfAlHpC3qfy54dY
+	wPyIYErSIfnJFRS2i5gFX1s03OECTRnvuinP+qBLUMgf8Eoqs1s71F2ZB+daJg==
+Message-ID: <20240322091857.GM8211@craftyguy.net>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Clayton Craft <clayton@craftyguy.net>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ regressions@lists.linux.dev
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+In-Reply-To: <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+References: <20240321150510.GI8211@craftyguy.net>
+ <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net>
+ <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="ZDwzZQYzZVCy0qwd"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 22 Mar 2024 14:26:07 +0000 Eric Van Hensbergen wrote:
-> Patch is in the unapplied portion of my for-next tree along with
-> another one.  I was hoping to hear some feedback on the other one
-> before i did a pull request and was torn on whether or not I wait on
-> -rc1 to send since we are so close.
 
-My guess would be that quite a few folks use 9p for in-VM kernel
-testing. Real question is how many actually update their work tree
-before -rc1 or even -rc2, given the anticipated merge window code
-instability.. so maybe there's no extreme urgency?
+--ZDwzZQYzZVCy0qwd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: base64
 
-=46rom netdev's perspective, FWIW, it'd be great if the fix reached
-Linux before Thursday, which is when we will forward our tree again.
+T24gRnJpLCAyMiBNYXIgMjAyNCAxMzo1MjowNSArMDEwMCBBcmQgQmllc2hldXZlbCA8YXJkYkBr
+ZXJuZWwub3JnPiB3cm90ZToKPiBUaGF0IGRlcGVuZHMgb24gdGhlIGJvb3Rsb2FkZXIuIE9uZSBv
+ZiB0aGUgY2hhbmdlcyBhcm91bmQgdGhhdCB0aW1lIGlzCj4gdGhlIGludHJvZHVjdGlvbiBvZiB0
+aGlzIEtjb25maWcgc3ltYm9sOiBiZWZvcmUgdGhhdCwgdGhlIEVGSSBoYW5kb3Zlcgo+IHByb3Rv
+Y29sIHdhcyBhbHdheXMgc3VwcG9ydGVkIGJ1dCBub3cgaXQgY2FuIGJlIGNvbXBpbGVkIG91dC4g
+U28gdGhlCj4gc2FmZSBjaG9pY2UgaXMgdG8gZW5hYmxlIGl0LgoKSSBhbSB1c2luZyBzeXN0ZW1k
+LWJvb3QsIGFuZCBiYXNlZCBvbiBteSB1bmRlcnN0YW5kaW5nIG9mIGl0cyBzb3VyY2UgaXQgc2Vl
+bXMgdG8Kb25seSB1c2UgaGFuZG92ZXIgb24gb2xkIGtlcm5lbHMgdGhhdCBkb24ndCBzdXBwb3J0
+IExJTlVYX0lOSVRSRF9NRURJQV9HVUlELgo+IAo+IEhvd2V2ZXIsIHdoaWxlIGxvb2tpbmcgbW9y
+ZSBkZWVwbHkgaW50byB0aGlzLCBJIG5vdGljZWQgdGhhdCB3ZSBhcmUKPiBydW5uaW5nIHF1aXRl
+IGxvdyBvd24gc3RhY2sgc3BhY2UuIE1peGVkIG1vZGUgaXMgZGlmZmVyZW50IGJlY2F1c2UgaXQK
+PiBjYWxscyBpbnRvIHRoZSBib290IHNlcnZpY2VzIHVzaW5nIHRoZSBkZWNvbXByZXNzb3IncyBi
+b290IHN0YWNrLAo+IHJhdGhlciB0aGFuIHVzaW5nIHRoZSBvbmUgdGhhdCB3YXMgcHJvdmlkZWQg
+YnkgZmlybXdhcmUgYXQgZW50cnkuCj4gKE5vdGUgdGhhdCB0aGUgVUVGSSBzcGVjIG1hbmRhdGVz
+IDEyOGsgb2Ygc3RhY2sgc3BhY2UpCj4gCj4gSW4gbXkgY2FzZSwgSSBiaXNlY3RlZCB0aGUgcmVn
+cmVzc2lvbiB0bwo+IAo+IGNvbW1pdCA1YzRmZWFkYjAwMTE5ODNiYmM0NTg3YmM2MTA1NmM3YjM3
+OWQ5OTY5IChIRUFEKQo+IEF1dGhvcjogQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4K
+PiBEYXRlOiAgIE1vbiBBdWcgNyAxODoyNzoxNiAyMDIzICswMjAwCj4gCj4gICAgIHg4Ni9kZWNv
+bXByZXNzb3I6IE1vdmUgZ2xvYmFsIHN5bWJvbCByZWZlcmVuY2VzIHRvIEMgY29kZQo+IAo+IHdo
+aWNoIG1vdmVzIHRoZSBib290IHN0YWNrIGludG8gYSBkaWZmZXJlbnQgbWVtb3J5IHJlZ2lvbi4g
+Rm9ybWVybHksCj4gd2UnZCBlbmQgdXAgYXQgdGhlIGZhciBlbmQgb2YgdGhlIGhlYXAgd2hlbiBv
+dmVycnVubmluZyB0aGUgc3RhY2sgYnV0Cj4gbm93LCB3ZSBlbmQgdXAgY3Jhc2hpbmcuIE9mIGNv
+dXJzZSwgb3ZlcndyaXRpbmcgdGhlIGhlYXAgY2FuIGNhdXNlCj4gcHJvYmxlbXMgb2YgaXRzIG93
+biwgc28gd2UnbGwgbmVlZCB0byBidW1wIHRoaXMgaW4gYW55IGNhc2UuCj4gCj4gQ291bGQgeW91
+IGdpdmUgdGhpcyBhIHRyeSBwbGVhc2U/Cj4gCj4gCj4gLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9h
+c20vYm9vdC5oCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vYm9vdC5oCj4gQEAgLTM4LDcg
+KzM4LDcgQEAKPiAgI2VuZGlmCj4gCj4gICNpZmRlZiBDT05GSUdfWDg2XzY0Cj4gLSMgZGVmaW5l
+IEJPT1RfU1RBQ0tfU0laRSAgICAgICAweDQwMDAKPiArIyBkZWZpbmUgQk9PVF9TVEFDS19TSVpF
+ICAgICAgIDB4MTAwMDAKPiAKPiAgLyoKPiAgICogVXNlZCBieSBkZWNvbXByZXNzb3IncyBzdGFy
+dHVwXzMyKCkgdG8gYWxsb2NhdGUgcGFnZSB0YWJsZXMgZm9yIGlkZW50aXR5CgpKdXN0IGdhdmUg
+dGhpcyBhIHRyeSwgb24gNi4xLjgyLCBhbmQgdGhlIHN5c3RlbSBzdGlsbCByZWJvb3RzIGFmdGVy
+IHNlbGVjdGluZwp0aGUga2VybmVsIGluIHRoZSBib290bG9hZGVyLiBTbyBpdCBzZWVtcyBsaWtl
+IG15IHByb2JsZW0gaXMgZGlmZmVyZW50LgoKQXMgSSBtZW50aW9uZWQgaW5pdGlhbGx5LCBJIGJp
+c2VjdGVkIG15IGZhaWx1cmUgdG8gZTJhYjllYWIzMi4gRG9lcyB0aGF0IGdpdmUKYW55IGhpbnQg
+YWJvdXQgd2hhdCBtaWdodCBiZSB0aGUgcHJvYmxlbT8KCi1DbGF5dG9uCg==
+
+--ZDwzZQYzZVCy0qwd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEkdOrrjmBP3eB7DeWSkztbX7flQoFAmX9r3EACgkQSkztbX7f
+lQrrVw/9Fb/e4pVj5RoGppymFb9gjfxLYT21kL08bq3otfPXNTif7telFvum9WTg
+9iua6RX0TYnUoJ5wj74XhoDjFyJpzqNk2dPNyMKENCcqJ+5YwZYFWUcZNqTGIttt
+n94TMqowODXjZgAcUxmWqyLMgdHyK9FnoXlVGD15o060B3Px69qub/VUtnfSc8DC
+DX8qsHbbarYEE0mX15Z9PynuEdz3y5f2spNFYkLJzM6/brrNOJ6jRInV3t32YMZD
+oBPFg7NaarSEjTJhp051DyUaa4rZU+TgxOF8wKCgzTiGj1kTj9AtTIaeIE6uCB6R
+ADNTYFjrcccCUNdFg8FXR9YxDtRbsyCN+CaziXIAC6rRWwAAk3Q0PKdJvvjJjCsY
+m6F08lb+3VdFmz7WRuCAXFWVjjXVXKCRgiPxtsmYW4dKrID9hrmHU8ulJqQJuPIn
+t14ex4BvOz2/mRGCJd4e13nm3lsk4DjW9JNbo1aLscED5AtrZpcjq5Um5+WS0Icn
+qJzahTfWX0H8lT/xLTe9dQBf/T/LqzqRyzJjvw3ThyQe+1Fu2vXNpd2t4fLaexCs
+vYtjBatMyLwAp8EP2ILpDCGyD+aMv4DWgXKjnhYqZ50TpHE0nyUa/HOrvnC25YSj
+1y8JOfHH1QW3HVkEFS1oy61TaB2SA8tZDrMFvZ6O9X6FoGB4uPQ=
+=QTbx
+-----END PGP SIGNATURE-----
+
+--ZDwzZQYzZVCy0qwd--
