@@ -1,86 +1,98 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B346A0
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 06:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F73DDD9
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 12:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711176586; cv=none; b=K29jC14ajnjVfsCN2G9YY1YZLv+at9dh1wNU3QSTHUhjWNF1PxHs227xnGK/EQ5rr19WmJJ6POPmgXeagK8byBiVlqh4KKdnGbZsu4sTywZC5j5ReZeaUuxcIu6RT0P8pnqwNqNv3yOT1b6+m8ByEYETKWFUXg+nYuzJYX7FVq4=
+	t=1711197279; cv=none; b=UxeBRBHz4bI0ToCuJpKGCqp0ENVsa/bMZAPCyi+TF3wfLh6fYdw+mYC8KeEz+sDg1hy+hKEMCY96wo0OvDoysEeiIFaOuGbXGAqySw9rYqwibjwk+PJcZ00IhXf/dmfxAP/aA7dRNihOtEZqEJUP0NopPPG9drPxLj31OEzVqEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711176586; c=relaxed/simple;
-	bh=NqzzK0iz78KIPvtZ1w0JtdqyZDW7tedW5UnASOm5zGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EN3rj0PKlfIacFzYaqnsVeo+vlGyeZOchhNM6EJmPEYMURnGJmUhCiCSYAjA5NLeHUr54i+Sr2Z/+d7+NbVrQBJan8wfHSrTEdDDG5O1BpdlqK3fxWiXygw1ee0cofm6j7IxSrIBMWUMwBLO6qxOrfvy25duFwi5vvCLe8/rsok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=KxJDs5kU; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1711197279; c=relaxed/simple;
+	bh=RDhuHvEYGZSQzoL8mc9I97JQjcjL6ZW69jBy0wd3KUo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=H6CI8Pe2L/JMXQBHLzihNvCjyRg7qFM6iCvdkCQ9MpqM/JbMnnGRoZcrANHDzLbihcDP9bBIYVhyDsSlMdcDdkuJdIQrqjddNf29qoAKXJzMD6fif7zEbXcXQrkzpGSBSQBArN0Ou4Zd6UHDsZe5Zh9U7NahphaGQl3S6W9iAwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IZAKMmeu; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="KxJDs5kU"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id AF5B060412;
-	Sat, 23 Mar 2024 06:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1711176578;
-	bh=NqzzK0iz78KIPvtZ1w0JtdqyZDW7tedW5UnASOm5zGQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KxJDs5kUZdfOQ1L2jFBxRGef4vObdcMlhJiKC2R1m0lQiwuZHEusMKDibM79sSFbT
-	 8mjLaNPaxxtvaVcZm+n8s89byOt0z9FO0uGyRfJe90wE1t9ntm81v6rTQLUW5gYbD4
-	 PDWscr2BWoXto6AemF++NYujKC8EAM7hy5dAwiPo5A/wMU+t4OM0c0mtlyGE1hVjBa
-	 TZCpkxA5e1devphdXOcb3TeL1kQ3uftEzn/RxDMJ/htD6LStfpL5lIOIfi8W7NimuC
-	 JaIPkSznA7+8VrNajtNofg/glL1O1XuP/f5Aqv0aNEeiQPrJ83pw99hMWNlKnkWR2h
-	 Z1KWIGTU0fmjQ==
-Date: Sat, 23 Mar 2024 08:49:25 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	regressions@lists.linux.dev, linux-serial@vger.kernel.org
-Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
-Message-ID: <20240323064925.GE5132@atomide.com>
-References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
- <20240322051531.GA5132@atomide.com>
- <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
- <20240322064843.GC5132@atomide.com>
- <20240322090657.GD5132@atomide.com>
- <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IZAKMmeu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=RDhuHvEYGZSQzoL8mc9I97JQjcjL6ZW69jBy0wd3KUo=; t=1711197276;
+	x=1711629276; b=IZAKMmeuBQLGZTV3naEO4xvMhkNbRkZLCStUlT/wWzeXlo5NDfUZzejrKclcx
+	Gs2hRIXxPps/eoprzolTvPP88KFbEXL52oz4Wk8Zn5rB9LN1BLgoq8eLR2p714ht1CXjCa9jNjxgC
+	gIoRaZ0atJ7y8HIS0xIQ+K3Qjjeff2Ylwn85+XhgZU4q0dNpCQZJJ8AscIeg3V/7XxlOFqGDw0d9O
+	kgmvkEcBinvrIayyOjinsiGdd5OsB4WLCbzdvVU5GIYQ2ePS7jw7iOJS36OIWcExup/KGAms3zgpG
+	4TsJCzGuyaE2rMlp7sK6RerNCLoKSFuFquNinMqmDpYevQlN4A==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ro0Zw-0004MU-IS; Sat, 23 Mar 2024 13:34:28 +0100
+Message-ID: <07ba20d1-3c95-42b6-b566-f5c1980ffe16@leemhuis.info>
+Date: Sat, 23 Mar 2024 13:34:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+Content-Language: en-US, de-DE
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711197276;78fdac10;
+X-HE-SMSGID: 1ro0Zw-0004MU-IS
 
-* Nick Bowler <nbowler@draconx.ca> [240322 14:12]:
-> On 2024-03-22 05:06, Tony Lindgren wrote:
-> [...]
-> > I can't reproduce this on qemu-system-sparc64, probably as it does not use
-> > the sunsab driver.
-> > 
-> > I noticed something though, I think we need to test for the port device
-> > instead for being runtime PM enabled.
-> > 
-> > Can you please test if the updated patch below make things work again?
-> 
-> Yes, with the below patch applied on top of 6.8 things are working.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-OK great thanks for testing, I'll send out a proper patch.
+#regzbot report: https://lore.kernel.org/all/Ze8OXcCA_BCN2MVE@nuoska/
+#regzbot introduced: 4d0c8d0aef6355
+#regzbot title: mmc: core: RPMB breakage
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218587
+#regzbot fix: mmc core block.c: initialize mmc_blk_ioc_data
+#regzbot monitor:
+https://lore.kernel.org/all/20240313133744.2405325-1-mikko.rapeli@linaro.org/
 
-Regards,
+#regzbot report:
+https://lore.kernel.org/all/20240313072625.76804-1-vaibhav@linux.ibm.com/
+#regzbot introduced: 180c6b072bf3
+#regzbot KVM: PPC: Book3S HV nestedv2: pending HDEC exception for
+nestedv2 KVM guests broke
+#regzbot fix: KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC exception
 
-Tony
+#regzbot report: https://lore.kernel.org/all/ZfvN5jDrftG-YRG4@titan/
+#regzbot introduced: 7cb50f6c9fbaa1
+#regzbot title: of: property: fw_devlink: audio-graph-card2 setup broken
 
-> > 8< -------------------
-> > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> > --- a/drivers/tty/serial/serial_core.c
-> > +++ b/drivers/tty/serial/serial_core.c
-> > @@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
-> >  	 * enabled, serial_port_runtime_resume() calls start_tx() again
-> >  	 * after enabling the device.
-> >  	 */
-> > -	if (pm_runtime_active(&port_dev->dev))
-> > +	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
-> >  		port->ops->start_tx(port);
-> >  	pm_runtime_mark_last_busy(&port_dev->dev);
-> >  	pm_runtime_put_autosuspend(&port_dev->dev)
+#regzbot report:
+https://lore.kernel.org/all/e20d88d0-5fb9-4307-be67-88b04ae9a188@roeck-us.net/
+#regzbot introduced: 71eb4893cfaf37
+#regzbot title: x86/percpu: crashes in qemu with nosmp builds and Intel CPUs
+#regzbot fix: x86/cpu: Ensure that CPU info updates are propagated on UP
+#regzbot monitor:
+https://lore.kernel.org/all/20240322184944.141421692@linutronix.de/
+
+#regzbot report: https://lore.kernel.org/all/ZfxJZFwXqqurfet0@aion/
+#regzbot introduced: 561141dd494382
+#regzbot title: SUNRPC: RFC 8009 encryption test fails
+
+#regzbot report:
+https://lore.kernel.org/all/bbc242d5-3ab0-410f-a3b1-54a68e3e375f@roeck-us.net/
+#regzbot introduced: 72210662c5a2b6
+#regzbot title: mm: vmalloc: persistent "spinlock bad magic" message
+when booting s390 images with spinlock debugging enabled
+
