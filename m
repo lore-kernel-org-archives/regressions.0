@@ -1,154 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40EA1CD00
-	for <regressions@lists.linux.dev>; Fri, 22 Mar 2024 23:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B346A0
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 06:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711150173; cv=none; b=WLFQaF0sY5hSgmH47HA4WSGJPJz3a/AvDJKkRHBs+eTrBjwyKFbaDi1f5KUeFnsHrF/GmShgYgwGGSc+BGvkPVF9TeY9lvu0zZLQVNmIaISlcsEbTsfeALzCF5omcx6mfKWdMlgIp36tinfx0cYq1hYKfcHOcrJY8Q/QXwhKlnY=
+	t=1711176586; cv=none; b=K29jC14ajnjVfsCN2G9YY1YZLv+at9dh1wNU3QSTHUhjWNF1PxHs227xnGK/EQ5rr19WmJJ6POPmgXeagK8byBiVlqh4KKdnGbZsu4sTywZC5j5ReZeaUuxcIu6RT0P8pnqwNqNv3yOT1b6+m8ByEYETKWFUXg+nYuzJYX7FVq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711150173; c=relaxed/simple;
-	bh=aCxz5dhHUIMuqRIxxYPbx79j/iDvyE5i2fZchEXGcFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlSUjYMzzim2lYYIxIcEeKQF7CK+4WXOkZGJSiW3uwo5FVBFPG7jztaawNOefHJkgQt05I7K+4FccVCATmC+4YAmqD5NvUKbKnofkDub8clLoLdN+feuxschU2qVvUeTodXNmfN1nzlI3rOE4dbqGzr375KNXI87hb5gzdigD80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYJI1VDU; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711176586; c=relaxed/simple;
+	bh=NqzzK0iz78KIPvtZ1w0JtdqyZDW7tedW5UnASOm5zGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN3rj0PKlfIacFzYaqnsVeo+vlGyeZOchhNM6EJmPEYMURnGJmUhCiCSYAjA5NLeHUr54i+Sr2Z/+d7+NbVrQBJan8wfHSrTEdDDG5O1BpdlqK3fxWiXygw1ee0cofm6j7IxSrIBMWUMwBLO6qxOrfvy25duFwi5vvCLe8/rsok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=KxJDs5kU; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYJI1VDU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711150170; x=1742686170;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=aCxz5dhHUIMuqRIxxYPbx79j/iDvyE5i2fZchEXGcFU=;
-  b=kYJI1VDUoolEcfZOojpEikHlglWqV3A2wZgieETwp/xp4dflJHgmobk+
-   I/R9hU4//4I6LQI19JG03QTgJ+AbTYBFEoYzGYX/kuu73mwv7QijJnu8q
-   9KV0BGO9fuvcGlLHVkgk8WOOpcDsdHWFZiQrx1C8Fij+pZfkoId6FyIXk
-   GMHZdekt1UdOAd6jIn4AyYEVg2ANjm3qSlMqvir8BylbdhGzxYxPYjdSB
-   NvSeWsy6mFGJZlYsEQGFg4KcfLuBwRgFuNytNbxAW3aWR/AJpbSvvoQBe
-   jZt/wZFeFhoFvc154O6GmMA/ezhkV6pSwKnyrTCN2ZhEptC0oXN3jZnQD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="17610560"
-X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="17610560"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 16:29:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="19750852"
-Received: from jdwaldem-mobl1.amr.corp.intel.com (HELO [10.209.55.147]) ([10.209.55.147])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 16:29:28 -0700
-Message-ID: <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
-Date: Fri, 22 Mar 2024 16:29:27 -0700
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="KxJDs5kU"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id AF5B060412;
+	Sat, 23 Mar 2024 06:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1711176578;
+	bh=NqzzK0iz78KIPvtZ1w0JtdqyZDW7tedW5UnASOm5zGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KxJDs5kUZdfOQ1L2jFBxRGef4vObdcMlhJiKC2R1m0lQiwuZHEusMKDibM79sSFbT
+	 8mjLaNPaxxtvaVcZm+n8s89byOt0z9FO0uGyRfJe90wE1t9ntm81v6rTQLUW5gYbD4
+	 PDWscr2BWoXto6AemF++NYujKC8EAM7hy5dAwiPo5A/wMU+t4OM0c0mtlyGE1hVjBa
+	 TZCpkxA5e1devphdXOcb3TeL1kQ3uftEzn/RxDMJ/htD6LStfpL5lIOIfi8W7NimuC
+	 JaIPkSznA7+8VrNajtNofg/glL1O1XuP/f5Aqv0aNEeiQPrJ83pw99hMWNlKnkWR2h
+	 Z1KWIGTU0fmjQ==
+Date: Sat, 23 Mar 2024 08:49:25 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+	regressions@lists.linux.dev, linux-serial@vger.kernel.org
+Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
+Message-ID: <20240323064925.GE5132@atomide.com>
+References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
+ <20240322051531.GA5132@atomide.com>
+ <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
+ <20240322064843.GC5132@atomide.com>
+ <20240322090657.GD5132@atomide.com>
+ <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-Content-Language: en-US
-To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
- Eric Hagberg <ehagberg@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Eric Biederman
- <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
- Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
- Dimitri Sivanich <sivanich@hpe.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240322162135.3984233-1-steve.wahl@hpe.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
 
-On 3/22/24 09:21, Steve Wahl wrote:
-> Some systems have ACPI tables that don't include everything that needs
-> to be mapped for a successful kexec.  These systems rely on identity
-> maps that include the full gigabyte surrounding any smaller region
-> requested for kexec success.  Without this, they fail to kexec and end
-> up doing a full firmware reboot.
+* Nick Bowler <nbowler@draconx.ca> [240322 14:12]:
+> On 2024-03-22 05:06, Tony Lindgren wrote:
+> [...]
+> > I can't reproduce this on qemu-system-sparc64, probably as it does not use
+> > the sunsab driver.
+> > 
+> > I noticed something though, I think we need to test for the port device
+> > instead for being runtime PM enabled.
+> > 
+> > Can you please test if the updated patch below make things work again?
+> 
+> Yes, with the below patch applied on top of 6.8 things are working.
 
-I'm still missing something here.  Which ACPI tables are we talking
-about?  What don't they map?  I normally don't think of ACPI _tables_ as
-"mapping" things.
+OK great thanks for testing, I'll send out a proper patch.
 
-It seems like there's a theory that some ACPI table isn't mapped, but
-looking through the discussion so far I don't see a smoking gun.  Let's
-say the kernel has a bug and the kernel was actively not mapping
-something that it should have mapped.  The oversized 1GB mappings made
-the bug harder to hit.  If that's the case, we'll just be adding a hack
-which papers over the bug instead of fixing it properly.
+Regards,
 
-I'm kind of leaning to say that we should just revert d794734c9bbf and
-have the UV folks go back to the nogbpages until we get this properly
-sorted.
+Tony
 
-> @@ -10,6 +10,7 @@ struct x86_mapping_info {
->  	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
->  	unsigned long offset;		 /* ident mapping offset */
->  	bool direct_gbpages;		 /* PUD level 1GB page support */
-> +	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
->  	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
->  };
-
-But let's at least talk about this patch in case we decide to go forward
-with it.  We've really got two things:
-
-1. Can the system use gbpages in the first place?
-2. Do the gbpages need to be exact (UV) or sloppy (everything else)?
-
-I wouldn't refer to this at all as "always" use gbpages.  It's really a
-be-sloppy-and-paper-over-bugs mode.  They might be kernel bugs or
-firmware bugs, but they're bugs _somewhere_ right?
+> > 8< -------------------
+> > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> > --- a/drivers/tty/serial/serial_core.c
+> > +++ b/drivers/tty/serial/serial_core.c
+> > @@ -156,7 +156,7 @@ static void __uart_start(struct uart_state *state)
+> >  	 * enabled, serial_port_runtime_resume() calls start_tx() again
+> >  	 * after enabling the device.
+> >  	 */
+> > -	if (pm_runtime_active(&port_dev->dev))
+> > +	if (!pm_runtime_enabled(port->dev) || pm_runtime_active(&port_dev->dev))
+> >  		port->ops->start_tx(port);
+> >  	pm_runtime_mark_last_busy(&port_dev->dev);
+> >  	pm_runtime_put_autosuspend(&port_dev->dev)
