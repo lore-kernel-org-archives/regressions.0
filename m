@@ -1,98 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4018.proton.ch (mail-4018.proton.ch [185.70.40.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9B447A5D
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B846F47F7A
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711214337; cv=none; b=lwFeCxRRdw6wfHFbDbmxee1Y+1ZAdnKJZgFZTVvU3OskMkeHw+bCRG+6tJRWWQxw8E0QuBXf3NXqqts//WsMtjzDL5IUbTWsywYZ0zxMnRJ2ptAVaLuDqzneLfxn0desivq8Zlno0CQB+FBO3K231btLOoe2F2kzX9ZAgasBwxU=
+	t=1711214640; cv=none; b=nwF/hDr1hFPWMAs4IgvmQv680aR4IWAnWH6Sg19f6/sM7ph4nzHaHWHwymIxLsakdsP9Wx9KELykhDJvynwF42MPqwEDCU1NKTIaxwlisKkC77cqFsnxG8XN+c5em8c187ZiIUxs1HWhI74uJWtTkkHszFVA2agMLZ+Rx0igOmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711214337; c=relaxed/simple;
-	bh=YsvblgwmDLQtvJ2SS/c86WY6mRVzSY9IS5ya+KTKy6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CWGO/Bmt+s6PbZM/PErI8h10EB/33+GMdiolbsXuRBDf+3bbCTvBC3nYQxm32wpanliJra7/GkPHMkxI6S7DbQh4I5gVIywvl4V0xJhsWPBT2KsP58TDja0UsSNkhADLV257A0vtIjCLH7VszdttErpwWcP7wmvroapeycSTY8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwaqfXmv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711214640; c=relaxed/simple;
+	bh=hLd9g0J+arhug+21RAMsKmSEAuU65lTeZKlInmYv/o0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TlfN1Ffp/Q6Q5aOTEeKuYXoFB2m+Yic1Z5O2VZCynNu/8Fj4RyWGLmz60z+MNQ8rwrxjex8Mt7DmcVPUmTPylQ9zUQMYmHS2p1bjCSsDLqy/ccG0wBBWeyxOPgA3cjCd5bHOeLj9hVGnWWpIEpbcuK9H6uEuRz3veXJDd08fg8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=q8pqdray; arc=none smtp.client-ip=185.70.40.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwaqfXmv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04604C433B2
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711214337;
-	bh=YsvblgwmDLQtvJ2SS/c86WY6mRVzSY9IS5ya+KTKy6A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YwaqfXmv2rWOp9PkKOFbaCUcd3FTcHn/VKBiuHUEmcKKLm8SNUPsfkrXI3YCqBGLG
-	 qqLs7s88noenFlxdf/OkvUasL6RMVRGrTGrjgvOqfRXM+G2z6f71T/c6blvtWf4ey5
-	 R5T1V3R3YheEwZ3EhPQYiN+lClJRaHNjrgNZxT6kx4bW6rDi3SJnRmdihM5slVlAvL
-	 ffDgUBp2nV/xO9gWhJdNxja1rtegdIDhlOAgY2B1yJUIt00lALcNK7fTmuIXUrzkQi
-	 l6SEGEEaWtY5sCV1ztZo07xUMcgVe16ZqWSp1IBObqn4dv0u0zNd2/a9pxtDcCoagD
-	 sJ5OSiNy5yGcg==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d094bc2244so42310071fa.1
-        for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 10:18:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTC/dAWt2lmrdOjI8PE+YH6zIxTksVkP4RhYSSjo+VO/X3wuhWSzDmQr5OyQ8SnxfOqYyxuLZw9bAz+mbgLuP5xrn1qB9L99q27og=
-X-Gm-Message-State: AOJu0YwKJPI2XC86mClKF42vfa8eb7E8UAN1ecwpx9Q6OFso+XakWzmU
-	4fh5xSgXaWtn5sPyzL0Bga8d6fRO+h993jzW57HsfmUykTqSRjwwh/6ZrY6vajYl7j5/K5Lgllg
-	b+Cs3Epyy59EzoxL/NCEJsWUpQrE=
-X-Google-Smtp-Source: AGHT+IElyK7wxxON6t0kB6QHEL4Gmij3dcTe/m8dkE3fDOkS3+rJwNBNre0HRuB8OHnaJXR/HUFNm+rf3WJhWB1dC3Y=
-X-Received: by 2002:a05:651c:547:b0:2d4:5404:3e8e with SMTP id
- q7-20020a05651c054700b002d454043e8emr1857603ljp.42.1711214335293; Sat, 23 Mar
- 2024 10:18:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="q8pqdray"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
+	s=protonmail; t=1711214635; x=1711473835;
+	bh=hLd9g0J+arhug+21RAMsKmSEAuU65lTeZKlInmYv/o0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=q8pqdrayecYfqrEuANc8LK9O5kKn9h5cphBj9UumlvrDAVHKSrVxzDyJE2t5F9b5U
+	 Aoe807R7CUJOlv+pR641GkAk/wGuHw7meGMLJ8NaMEhV4Ioy9ZqOMXRlCmENkIR4kx
+	 wQ1PREruEKOtR/cuJpiK3T1YjVqs2XTlJsp1Zb4yaHWnxK8G7ef9ZhOsDYPDevV0YN
+	 eCAPYjydSRmeXZQHdKCl14AACNpfJQ2z2bvbscO93RsszIIHZyE/VbP7x64/fisf5B
+	 bL5eQRQCWVvObycGUmNrwGekIkkQ2xdxsv6RCs2dgNNj2tbqOMFYmotGoFOZ2M2KTe
+	 8+NbVT+9gnO9A==
+Date: Sat, 23 Mar 2024 17:23:38 +0000
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+From: Pratham Patel <prathampatel@thefossguy.com>
+Cc: "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>, "saravanak@google.com" <saravanak@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+Message-ID: <28S1EMw5YOnQIBpQ8_qaZZ6c9Go-j6-lLuWWbRpe6-MtRUd7Ay-uXq8JHbVVtJv3LzpxjI8jYg7ukNntbN22PVV-hOWbuTY8FNWgvM4zSwI=@thefossguy.com>
+In-Reply-To: <092a7c4c-0a75-4b27-acec-385fdcfb9f7a@leemhuis.info>
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com> <092a7c4c-0a75-4b27-acec-385fdcfb9f7a@leemhuis.info>
+Feedback-ID: 104309535:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <20240321170641.GK8211@craftyguy.net> <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
- <20240322091857.GM8211@craftyguy.net> <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
- <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net> <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
- <8a64ba697d719bc9750e6fffc268e194dfde16e5@craftyguy.net> <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
-In-Reply-To: <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 23 Mar 2024 19:18:43 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
-Message-ID: <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68"; charset=utf-8
 
-On Sat, 23 Mar 2024 at 14:39, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Fri, 22 Mar 2024 at 21:34, Clayton Craft <clayton@craftyguy.net> wrote:
-> >
-> > March 22, 2024 at 11:30 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
-> >
-> >
-> > >
-> > > On Fri, 22 Mar 2024 at 19:57, Clayton Craft <clayton@craftyguy.net> wrote:
-> > >
-> > > I have pushed a branch below that reverts the patch you identified in
-> > >
-> > > 4 separate steps. Could you please check which step makes your system
-> > >
-> > > boot again?
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton
-> > >
-> >
-> > Thanks a lot for doing this, I really appreciate the help!
-> >
-> > It looks like if I build from 868a7245, booting breaks again on my Bay Trail systems. If I put back 00e85ab5, they boot again.
-> >
->
-> OK.
->
-> I have reshuffled the branch and put the patch you identified as the
-> one fixing the boot first. Please double check whether this change
-> still fixes the boot for you.
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-2
->
-> If so, we can try applying it to mainline, and merge it if it works there too.
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68
+Content-Type: multipart/mixed;boundary=---------------------ae8a0b7b1b36c345004b08b7de4976a5
 
-I have a mainline branch with the same change applied, please try that one too.
+-----------------------ae8a0b7b1b36c345004b08b7de4976a5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
+
+On Saturday, March 23rd, 2024 at 22:47, Linux regression tracking (Thorste=
+n Leemhuis) <regressions@leemhuis.info> wrote:
+
+> =
+
+
+> =
+
+
+> On 23.03.24 18:02, Pratham Patel wrote:
+> =
+
+
+> > Since the introduction of the `of: property: fw_devlink: Fix stupid bu=
+g in remote-endpoint parsing` patch,
+> =
+
+
+> =
+
+
+> There is an earlier bug report asking for a revert of that patch:
+> =
+
+
+> https://lore.kernel.org/all/ZfvN5jDrftG-YRG4@titan/
+> =
+
+
+> > an issue
+> =
+
+
+> =
+
+
+> Is your problem maybe similar to the one above?
+
+I don't get that exact message in the boot log but yes.
+
+> Ciao, Thorsten
+
+ -- Pratham Patel
+-----------------------ae8a0b7b1b36c345004b08b7de4976a5
+Content-Type: application/pgp-keys; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWmZjR2RSWUpLd1lCQkFI
+YVJ3OEJBUWRBa2VYM3NrdFI1R0lZQTM5VXhoRTlZcitZMy8zd0ZXUmwKZlZ5T1hsaWdnS2ZOT1hC
+eVlYUm9ZVzF3WVhSbGJFQjBhR1ZtYjNOelozVjVMbU52YlNBOGNISmhkR2hoCmJYQmhkR1ZzUUhS
+b1pXWnZjM05uZFhrdVkyOXRQc0tNQkJBV0NnQStCWUpsOXdaMUJBc0pCd2dKa01lcApYbTlkS2Er
+V0F4VUlDZ1FXQUFJQkFoa0JBcHNEQWg0QkZpRUU4dDNsVFJRTDQ4NE9oNDE3eDZsZWIxMHAKcjVZ
+QUFDYlFBUDlMc1NwUlQwSTV2TC8ycHpBa2F2UVhLdStWR1BRMk44RUVYZGpSVkRseGl3RUFwMVpS
+ClB0M2k5RG9qcXg1OE9MQ2R3N2xHMlVwdkJGZ2dCeGVrV216d1dRbk9PQVJsOXdaMUVnb3JCZ0VF
+QVpkVgpBUVVCQVFkQXJlOWp5aVR3VFBGSjNaazJvTVd0ZDVxSi9zcWNKRUZrckZxNUpVVzRWalVE
+QVFnSHduZ0UKR0JZS0FDb0ZnbVgzQm5VSmtNZXBYbTlkS2ErV0Fwc01GaUVFOHQzbFRSUUw0ODRP
+aDQxN3g2bGViMTBwCnI1WUFBRFRGQVA5WUZIL0FxKzVFd3pHQ0xJZWhNNGJsUW5hK2t0cnNPRWlw
+VllVTVZMd0tjQUQvVktHQwo0eFRtTENUQUNDcFNqRjdVRzBVY2NNOVU0T21ZV2RlVU9HUk1hd1k9
+Cj01cTBtCi0tLS0tRU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
+-----------------------ae8a0b7b1b36c345004b08b7de4976a5--
+
+--------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wnUEARYKACcFgmX/D/UJkMepXm9dKa+WFiEE8t3lTRQL484Oh417x6leb10p
+r5YAAHYlAP9lfb3BSFKYtWm/S0bfoj6e7K4Y+l8y9pnmg7U4pWoPkQEAjxWI
+9LvXFmeUGLD2Z2Lu+WoJ7RU/hCOljmBRtQHtEgU=
+=V9PA
+-----END PGP SIGNATURE-----
+
+
+--------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68--
+
