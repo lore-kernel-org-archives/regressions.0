@@ -1,95 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBCF1DDC9
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 12:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C351D523C
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711197605; cv=none; b=Mkywwto2zkJ+jErmO6eS/ecxZO/i/AoxryuoSgjTT2YZ0YXR1QFh0ZiZGNmsiC6zsTctArCOmLimQHEoY2P7PltNrwP0aNTb+2PlwZtvWN7dbGsKkpEuN8TKPuEDPAWIZ5qwrzMceh9BlUj+D4IwybZtkewRXxnDTLsNxQ47qJA=
+	t=1711213366; cv=none; b=E+KiqrPXHYkSsK9JnL2T4wfkEAPQrgJ+VYK7dxJoAyqvyr2Hf3jL6j1l3Zkr2AMdAV9Fe4abHricLqigGWMd/uGOEyWhX9dxH/ScHDpfogK90st4BRPlH/DJUE3mm1LkR1NS9RHlQeowZppBBA4EzvrDKbw9YgYTfIvWwCnlkaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711197605; c=relaxed/simple;
-	bh=cbSZolRDzHHEJXXy+xiONqpLt3MC8VuAdPFXF38KDkU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=alIdw9PrhmrlgeP+GKyaZohgvWmqWTqHjYKYpRCkDeM8sO2LgVgGGfoR9BLXjmfAAf5738PbMeS/nDz79ubOkT5UoaC1/6+uTzcHpUOFfmxXfT3QnwnIR3OLdsmbBqQnSRnvM9t6DjIQ62r4djCkP/nRr76Wyi4eYeqPrbos+Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNOXMR9W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711213366; c=relaxed/simple;
+	bh=qvUqg6yRFXdlsTOpAmC16iOEVx9U+T5DcMXxNJwAodo=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qbw350nd07Pd2wF28cs/zv+OsXrK/qOLdi/fL7L9TDkTPoEqIza5ltQCCHcztb9BJWK0OHEe1AbVmh0rtuC5YHuOGv2ywennWVm7npLWpEZmeFlqVbQvBwlDq/ESqLX7NVyhmB0TsNXo+g5STdjWvr3DX5zUStyOVf2BUC0fiuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=O1vMnH14; arc=none smtp.client-ip=185.70.40.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNOXMR9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4ECC43330
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 12:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711197605;
-	bh=cbSZolRDzHHEJXXy+xiONqpLt3MC8VuAdPFXF38KDkU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lNOXMR9WCZz1sx4YPMuxBR4aCsOYTQoGLWRdvInLWitHiKWJmADDfu7UgNKcdmolB
-	 bRPBPEMov9gMUpgXZ2GqrdeAy6rfyuQgCvhhR5J6zKXm8i1tDlAWkajoShtiv9cePP
-	 znZLByFqd+JlcM3q45TkKJI7iNAN7hh2GS12uO/Atgg4xUjxR+QC9P+DinDeZFBeZK
-	 QUjIdZrh1RtEabIY+qxh5F7jC3WtUbySjZAJPWkXxnmdiV5OX3UMbsuC3u5i4CEADt
-	 zDFrh/VDcMd9tE74JNUMg345+gY4e6HuaIp9xVoNPOCo8gBofJq4aAbjZtMCAfIBVm
-	 d75l4ueuSW4Ig==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d46c2e8dd7so38347931fa.1
-        for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 05:40:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXC9lmrQtDpkBuk2SNBasK0aY6v+MrrxNI+uNz3XIOnHHpgK9g7E27wQuHAbglMBIRLqlhNttb8R9Lz5ujcOAEPPpEeRYskshxAdNQ=
-X-Gm-Message-State: AOJu0YwTk7ApSZZjJhJMtx9CIYcnckv6BCodcBm8TW93OIkhgFWQaayG
-	CD4RpsmF9i9/lWP6gtAESPnCRSHyiS47/ppNi771FoUs6CnWVYP0pFFUBXd3XwezF0Z5KAbvlks
-	T1t8TajKawOCAjDr7VPE59aEP/xU=
-X-Google-Smtp-Source: AGHT+IEJvtbme/eS1L6D9RG94EKx6mhtYiagbSFm78FWvwIqq+NA3C7kvVkTUtUFsPi+e1xNkbGDEo6a9nBFejMQlu4=
-X-Received: by 2002:a2e:3615:0:b0:2d4:3b15:5561 with SMTP id
- d21-20020a2e3615000000b002d43b155561mr1366070lja.40.1711197603491; Sat, 23
- Mar 2024 05:40:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="O1vMnH14"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
+	s=protonmail; t=1711213358; x=1711472558;
+	bh=MOWxTE0LblY9DjHp6xvHXR+dNjwb9gyrT6Bdl3jULYM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=O1vMnH14S9ECDduacDf1d5GXHglynF4vpqGjZ4VPv78aikkbNCNtwnYcbxzLxwkTn
+	 Ch+L8mISP8PYSya9toKglHel3tOn3RysBd73aKFcWtJDyqblvLdbQwNJ5k3h3EadFn
+	 0krL9oB83e0e76NnACDphttEP5ollFB4KKvspfJgasZ4JLheUcaY2+DDpOn4vNu68N
+	 mX/1tFCCGIFJK+RpEJeDb6Kb2c2BFa4QpD0iuv+QZAkF2UmlpWaqMx8XKmrOmd8wAa
+	 XBGupi7aO193oWcjMrUyUpLDUbUV6I6L8QSG0Vqzb1eZo6I2HJckRtMVPwaFAwf19V
+	 Us4jjW8dG5oyw==
+Date: Sat, 23 Mar 2024 17:02:19 +0000
+To: "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>, "saravanak@google.com" <saravanak@google.com>
+From: Pratham Patel <prathampatel@thefossguy.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Fixing the devicetree of Rock 5 Model B (and possibly others)
+Message-ID: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
+Feedback-ID: 104309535:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <20240321170641.GK8211@craftyguy.net> <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
- <20240322091857.GM8211@craftyguy.net> <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
- <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net> <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
- <8a64ba697d719bc9750e6fffc268e194dfde16e5@craftyguy.net>
-In-Reply-To: <8a64ba697d719bc9750e6fffc268e194dfde16e5@craftyguy.net>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 23 Mar 2024 14:39:51 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
-Message-ID: <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------9fbc6d827d5b25b8ec5d0d21b3f1f4a54ca515d16ca64f730918341a8d911348"; charset=utf-8
 
-On Fri, 22 Mar 2024 at 21:34, Clayton Craft <clayton@craftyguy.net> wrote:
->
-> March 22, 2024 at 11:30 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
->
->
-> >
-> > On Fri, 22 Mar 2024 at 19:57, Clayton Craft <clayton@craftyguy.net> wrote:
-> >
-> > I have pushed a branch below that reverts the patch you identified in
-> >
-> > 4 separate steps. Could you please check which step makes your system
-> >
-> > boot again?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton
-> >
->
-> Thanks a lot for doing this, I really appreciate the help!
->
-> It looks like if I build from 868a7245, booting breaks again on my Bay Trail systems. If I put back 00e85ab5, they boot again.
->
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------9fbc6d827d5b25b8ec5d0d21b3f1f4a54ca515d16ca64f730918341a8d911348
+Content-Type: multipart/mixed;boundary=---------------------87a844869beee976bdc9af190bfad2e7
 
-OK.
+-----------------------87a844869beee976bdc9af190bfad2e7
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-I have reshuffled the branch and put the patch you identified as the
-one fixing the boot first. Please double check whether this change
-still fixes the boot for you.
+Since the introduction of the `of: property: fw_devlink: Fix stupid bug in=
+ remote-endpoint parsing` patch, an issue with the device-tree of the Rock=
+ 5 Model B has been detected. All the stable kernels (6.7.y and 6.8.y) wor=
+k on the Orange Pi 5, which has the Rockchip RK3588S SoC (same as the RK35=
+88, but less I/O basically). So, being an owner of only two SBCs which use=
+ the RK3588* SoC, it appears that the Rock 5 Model B's DT is incorrect.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-2
+I looked at the patch and tried several things, neither resulted in anythi=
+ng that would point me to the core issue. Then I tried this:
 
-If so, we can try applying it to mainline, and merge it if it works there too.
+```
+$ grep -C 3 remote-endpoint arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dt=
+s
 
-If not, we will need better debugging to figure out what the hell is going on.
+                port {
+                        es8316_p0_0: endpoint {
+                                remote-endpoint =3D <&i2s0_8ch_p0_0>;
+                        };
+                };
+        };
+--
+                i2s0_8ch_p0_0: endpoint {
+                        dai-format =3D "i2s";
+                        mclk-fs =3D <256>;
+                        remote-endpoint =3D <&es8316_p0_0>;
+                };
+        };
+};
+```
+
+So, from a cursory look, the issue seems to be related to either the DT no=
+de for the audio codec or related to the es8316's binding itself. Though I=
+ doubt that the later is the issue because if that were the issue, _someon=
+e_ with a Pine64 Pinebook Pro would've raised alarms. So far, this seems t=
+o be related to the `rk3588-rock-5b.dts` and possibly with the `rk3588s-ro=
+ck-5a.dts` too.
+
+I would **love** to help but I'm afraid I device-trees are not something t=
+hat I am at-all familiar with. That said, I am open to methods of debuggin=
+g this issue to provide a fix myself.
+
+I would have replied to the patch's link but unfortunately, I haven't yet =
+setup neomutt and my email provider's web UI doesn't have a [straightforwa=
+rd] way to reply using the 'In-Reply-To' header, hence a new thread. Apolo=
+gies for the inconvenience caused.
+
+  -- Pratham Patel
+-----------------------87a844869beee976bdc9af190bfad2e7
+Content-Type: application/pgp-keys; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWmZjR2RSWUpLd1lCQkFI
+YVJ3OEJBUWRBa2VYM3NrdFI1R0lZQTM5VXhoRTlZcitZMy8zd0ZXUmwKZlZ5T1hsaWdnS2ZOT1hC
+eVlYUm9ZVzF3WVhSbGJFQjBhR1ZtYjNOelozVjVMbU52YlNBOGNISmhkR2hoCmJYQmhkR1ZzUUhS
+b1pXWnZjM05uZFhrdVkyOXRQc0tNQkJBV0NnQStCWUpsOXdaMUJBc0pCd2dKa01lcApYbTlkS2Er
+V0F4VUlDZ1FXQUFJQkFoa0JBcHNEQWg0QkZpRUU4dDNsVFJRTDQ4NE9oNDE3eDZsZWIxMHAKcjVZ
+QUFDYlFBUDlMc1NwUlQwSTV2TC8ycHpBa2F2UVhLdStWR1BRMk44RUVYZGpSVkRseGl3RUFwMVpS
+ClB0M2k5RG9qcXg1OE9MQ2R3N2xHMlVwdkJGZ2dCeGVrV216d1dRbk9PQVJsOXdaMUVnb3JCZ0VF
+QVpkVgpBUVVCQVFkQXJlOWp5aVR3VFBGSjNaazJvTVd0ZDVxSi9zcWNKRUZrckZxNUpVVzRWalVE
+QVFnSHduZ0UKR0JZS0FDb0ZnbVgzQm5VSmtNZXBYbTlkS2ErV0Fwc01GaUVFOHQzbFRSUUw0ODRP
+aDQxN3g2bGViMTBwCnI1WUFBRFRGQVA5WUZIL0FxKzVFd3pHQ0xJZWhNNGJsUW5hK2t0cnNPRWlw
+VllVTVZMd0tjQUQvVktHQwo0eFRtTENUQUNDcFNqRjdVRzBVY2NNOVU0T21ZV2RlVU9HUk1hd1k9
+Cj01cTBtCi0tLS0tRU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
+-----------------------87a844869beee976bdc9af190bfad2e7--
+
+--------9fbc6d827d5b25b8ec5d0d21b3f1f4a54ca515d16ca64f730918341a8d911348
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wnUEARYKACcFgmX/CwEJkMepXm9dKa+WFiEE8t3lTRQL484Oh417x6leb10p
+r5YAAKA/AQCkw7cy5Xleb1CszXzbi/+SMY/azZf3PhmHDQSDAXlD7AD/bGg/
+Hgdzv+VyRF3bwym4zEmt0uIwU8vj74qgQCGsaw8=
+=kvaJ
+-----END PGP SIGNATURE-----
+
+
+--------9fbc6d827d5b25b8ec5d0d21b3f1f4a54ca515d16ca64f730918341a8d911348--
+
