@@ -1,106 +1,98 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDA718E20;
-	Sat, 23 Mar 2024 17:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9B447A5D
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711214266; cv=none; b=KwFsjYPYf3tUDu2V8k9NROnL2mwee25tAJ5qpfOIAjn6easJxYd82UoiCeUIFZpk0qsIQ6fiVdHfK9ZmzL6kxmX0XtltIX5DOB6V6EYliaI3vVqbxPFvohRa9aJCm4yrsDVF0A7h6AKNSDENX1cHPF9QQYy6zTwL20iy2wp0e5M=
+	t=1711214337; cv=none; b=lwFeCxRRdw6wfHFbDbmxee1Y+1ZAdnKJZgFZTVvU3OskMkeHw+bCRG+6tJRWWQxw8E0QuBXf3NXqqts//WsMtjzDL5IUbTWsywYZ0zxMnRJ2ptAVaLuDqzneLfxn0desivq8Zlno0CQB+FBO3K231btLOoe2F2kzX9ZAgasBwxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711214266; c=relaxed/simple;
-	bh=mGAh5fu0/Fw6zUZIRDr+OZ5+xOoq6Q7dS6tDtFcWVQc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q7aNmwkmZ3D35SuysI+EJjdlL05WiA56ftp52KoM6ldOi5PqTo1oDhFeGCLHSsQFFb4MNVIfICAeL2+E5DGb+9PMxAhceV5oK1L2JTAnWSQG4WOoRyCi60Ug276UBSoekOoHHzLh+nZE/JYIdPslHbgPHtTdrKA/wf+xlgjD6dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C0ADh3f0; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711214337; c=relaxed/simple;
+	bh=YsvblgwmDLQtvJ2SS/c86WY6mRVzSY9IS5ya+KTKy6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CWGO/Bmt+s6PbZM/PErI8h10EB/33+GMdiolbsXuRBDf+3bbCTvBC3nYQxm32wpanliJra7/GkPHMkxI6S7DbQh4I5gVIywvl4V0xJhsWPBT2KsP58TDja0UsSNkhADLV257A0vtIjCLH7VszdttErpwWcP7wmvroapeycSTY8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwaqfXmv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C0ADh3f0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=bJ/40L52EMuGnORgpe1TjrWvCrigiJKMPJYJJOTHF8g=;
-	t=1711214264; x=1711646264; b=C0ADh3f0sYm+vEreHCkWmp35KiziMRuws5WQN6fQwOHgxw/
-	b17bHfk3M9R/VwhYmkthlv6pu6lKsQe333ALNuUCDPK5tSs8WiPvWoPVUWExfK9llrzK7bs0KjLco
-	ETJPvGGKFoDqotlvoumWTp67srZIYKSK8IoHfCON/OvX4bW1qIIBzDxtMAnW3pHU2jYd4UZ1zmpS9
-	pLSvkK9EJRvNFhwmpZq1zWaX2StqfWqjnrINuN4kKIWyJAt4DSaYBPq/mTutdCJP5NOpcHbucnuRl
-	k5GqkeZ9hUn7z1Le3vTi6axwQFYoVru3UJRoI19lfm172Cqjd53zP8t0OxMeM6nw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ro4zz-0008P9-Ok; Sat, 23 Mar 2024 18:17:39 +0100
-Message-ID: <092a7c4c-0a75-4b27-acec-385fdcfb9f7a@leemhuis.info>
-Date: Sat, 23 Mar 2024 18:17:39 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwaqfXmv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04604C433B2
+	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711214337;
+	bh=YsvblgwmDLQtvJ2SS/c86WY6mRVzSY9IS5ya+KTKy6A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YwaqfXmv2rWOp9PkKOFbaCUcd3FTcHn/VKBiuHUEmcKKLm8SNUPsfkrXI3YCqBGLG
+	 qqLs7s88noenFlxdf/OkvUasL6RMVRGrTGrjgvOqfRXM+G2z6f71T/c6blvtWf4ey5
+	 R5T1V3R3YheEwZ3EhPQYiN+lClJRaHNjrgNZxT6kx4bW6rDi3SJnRmdihM5slVlAvL
+	 ffDgUBp2nV/xO9gWhJdNxja1rtegdIDhlOAgY2B1yJUIt00lALcNK7fTmuIXUrzkQi
+	 l6SEGEEaWtY5sCV1ztZo07xUMcgVe16ZqWSp1IBObqn4dv0u0zNd2/a9pxtDcCoagD
+	 sJ5OSiNy5yGcg==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d094bc2244so42310071fa.1
+        for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 10:18:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXTC/dAWt2lmrdOjI8PE+YH6zIxTksVkP4RhYSSjo+VO/X3wuhWSzDmQr5OyQ8SnxfOqYyxuLZw9bAz+mbgLuP5xrn1qB9L99q27og=
+X-Gm-Message-State: AOJu0YwKJPI2XC86mClKF42vfa8eb7E8UAN1ecwpx9Q6OFso+XakWzmU
+	4fh5xSgXaWtn5sPyzL0Bga8d6fRO+h993jzW57HsfmUykTqSRjwwh/6ZrY6vajYl7j5/K5Lgllg
+	b+Cs3Epyy59EzoxL/NCEJsWUpQrE=
+X-Google-Smtp-Source: AGHT+IElyK7wxxON6t0kB6QHEL4Gmij3dcTe/m8dkE3fDOkS3+rJwNBNre0HRuB8OHnaJXR/HUFNm+rf3WJhWB1dC3Y=
+X-Received: by 2002:a05:651c:547:b0:2d4:5404:3e8e with SMTP id
+ q7-20020a05651c054700b002d454043e8emr1857603ljp.42.1711214335293; Sat, 23 Mar
+ 2024 10:18:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
-Content-Language: en-US, de-DE
-To: Pratham Patel <prathampatel@thefossguy.com>,
- "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>,
- "saravanak@google.com" <saravanak@google.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711214264;fa5dfef6;
-X-HE-SMSGID: 1ro4zz-0008P9-Ok
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <20240321170641.GK8211@craftyguy.net> <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
+ <20240322091857.GM8211@craftyguy.net> <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
+ <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net> <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
+ <8a64ba697d719bc9750e6fffc268e194dfde16e5@craftyguy.net> <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
+In-Reply-To: <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 23 Mar 2024 19:18:43 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
+Message-ID: <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 23.03.24 18:02, Pratham Patel wrote:
-> Since the introduction of the `of: property: fw_devlink: Fix stupid bug in remote-endpoint parsing` patch,
+On Sat, 23 Mar 2024 at 14:39, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Fri, 22 Mar 2024 at 21:34, Clayton Craft <clayton@craftyguy.net> wrote:
+> >
+> > March 22, 2024 at 11:30 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
+> >
+> >
+> > >
+> > > On Fri, 22 Mar 2024 at 19:57, Clayton Craft <clayton@craftyguy.net> wrote:
+> > >
+> > > I have pushed a branch below that reverts the patch you identified in
+> > >
+> > > 4 separate steps. Could you please check which step makes your system
+> > >
+> > > boot again?
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton
+> > >
+> >
+> > Thanks a lot for doing this, I really appreciate the help!
+> >
+> > It looks like if I build from 868a7245, booting breaks again on my Bay Trail systems. If I put back 00e85ab5, they boot again.
+> >
+>
+> OK.
+>
+> I have reshuffled the branch and put the patch you identified as the
+> one fixing the boot first. Please double check whether this change
+> still fixes the boot for you.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-2
+>
+> If so, we can try applying it to mainline, and merge it if it works there too.
+>
 
-There is an earlier bug report asking for a revert of that patch:
-
-https://lore.kernel.org/all/ZfvN5jDrftG-YRG4@titan/
-
-> an issue 
-
-Is your problem maybe similar to the one above?
-
-Ciao, Thorsten
-
-> with the device-tree of the Rock 5 Model B has been detected. All the stable kernels (6.7.y and 6.8.y) work on the Orange Pi 5, which has the Rockchip RK3588S SoC (same as the RK3588, but less I/O basically). So, being an owner of only two SBCs which use the RK3588* SoC, it appears that the Rock 5 Model B's DT is incorrect.
-> 
-> I looked at the patch and tried several things, neither resulted in anything that would point me to the core issue. Then I tried this:
-> 
-> ```
-> $ grep -C 3 remote-endpoint arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> 
->                 port {
->                         es8316_p0_0: endpoint {
->                                 remote-endpoint = <&i2s0_8ch_p0_0>;
->                         };
->                 };
->         };
-> --
->                 i2s0_8ch_p0_0: endpoint {
->                         dai-format = "i2s";
->                         mclk-fs = <256>;
->                         remote-endpoint = <&es8316_p0_0>;
->                 };
->         };
-> };
-> ```
-> 
-> So, from a cursory look, the issue seems to be related to either the DT node for the audio codec or related to the es8316's binding itself. Though I doubt that the later is the issue because if that were the issue, _someone_ with a Pine64 Pinebook Pro would've raised alarms. So far, this seems to be related to the `rk3588-rock-5b.dts` and possibly with the `rk3588s-rock-5a.dts` too.
-> 
-> I would **love** to help but I'm afraid I device-trees are not something that I am at-all familiar with. That said, I am open to methods of debugging this issue to provide a fix myself.
-> 
-> I would have replied to the patch's link but unfortunately, I haven't yet setup neomutt and my email provider's web UI doesn't have a [straightforward] way to reply using the 'In-Reply-To' header, hence a new thread. Apologies for the inconvenience caused.
-> 
->   -- Pratham Patel
+I have a mainline branch with the same change applied, please try that one too.
