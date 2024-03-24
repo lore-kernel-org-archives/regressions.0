@@ -1,92 +1,114 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56782D528
-	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 05:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E3517582
+	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 10:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711259639; cv=none; b=qRSYFyoA2NzEbbooMay+kAL0TE+vNTZSSlT1ZSHnCx4eNONLlBkjX83VrA69lQ2yFMRozxy9LEuoXv+qnTuA0kjIZmjtRNkw0NLzH901NNIXcTsyshrJs9LDhLf+Ik4YiFJtpJadR+Bv3yykQkUtkB6NCojkspqaHc4jHBZHEyQ=
+	t=1711276305; cv=none; b=EVL59QKJxA07Loq0FwWm5Fba0rxx6IjcMonKWu8poY1fUfxtPbTtgVtXtC5kVL/+QOgchkgQNQfM6PjL23ihA5414WJkP8QZWovpDPV1jBWJTIWC+59Oi+Q224ymSxSn0oS4C7f1n3owuBnNIDRaFNPJbTRHuwtvaJj0RFrCNGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711259639; c=relaxed/simple;
-	bh=k6K1qJsbWkoTQwo17/BGCwBZeOrK8asEP4jPl+ndMqc=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=E+Ebt4hG+KiKyS8m9u7KgVND7ojSpl8HXrwlImKTa/w8HQG2HRn3CAQ/8nQez1u6MaHwEmyxfOUDhD9482za8HSMshmb+Nx9ODffUMoq5ZO4KtvlqZC+fviUv/zRucuuYXoD55xG7zsha5S3YmF9MTlxCjtewFi9MhPK/IrnCwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=FRt+yN14; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
+	s=arc-20240116; t=1711276305; c=relaxed/simple;
+	bh=SlUKX+vpE5/tUofA5xnCFLMt/y1YnwkKM0QuVaQkt3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hVc1eLPlhIiBQGkio48uwBx9af3EhqzYAzJ5iG7j1AfZOY5kkRziCdcBZqUlP/k7aZLTlIwXqysPVt3VwnqkgacRdVuQ/1l/ybzZaoRoiglqYtPvI+BjGpTCcRQWjIev+idRpltuVznlHc+JAGRDjW5hajsqY1TWQMMqgXrh+kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQQCflHP; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="FRt+yN14"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQQCflHP"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41482aa8237so7008025e9.2
+        for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 03:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711276302; x=1711881102; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rQyx9cpHkhk4sWfUXICYh7TCfwztYm/UYhwISHKdM1Q=;
+        b=WQQCflHPB1FWKJab+O2PoacuPPh4HSGjnp1FvLoRe9oBCey+vmIkLAWUmvTpngDu6M
+         +gqhNwXPVQmspbjMHvgv4F5by7zIGA2uHpDgIQPxkuQf7a70/zyFyLdh9aaqcS+D7bA2
+         qpoI0dKy8+VX7qaXOQGcPn639x+5IwgLxdqIYM9VPNBSfz0pAmaPnVDu+opW72ED/SZV
+         NMpkM4f1oxwGuSaRW52cG9wS/ZxicXWjgcxv7ZVrruTSKi7VAAyTmSvpsq2l6ncqN6QW
+         2WyqZmRJyVE/rz4zL8JjaDlfsF7HJ4ErJ0Zs1IeeNvPlmwPL2ROAaX4M+C89y2gHdaJv
+         QRBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711276302; x=1711881102;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rQyx9cpHkhk4sWfUXICYh7TCfwztYm/UYhwISHKdM1Q=;
+        b=tDODsZRS307x5iJ9uf60H+fiOLmqZTrGWHdnucHVtxWkZs8GGip0vq2XgV9VXk5TFv
+         v0zwVPJhNWx3ii66Ho/YSYmfeGnba/b7zW739H0HLq5oKd5NMMT6U+pi1of/3GiP6TG9
+         erL9AQKohZLzeWiXzEcIxOs8JoHWgk99rHLKfRmnErrmxlxJIycsS4Kgu0QFH0ixFgzS
+         /JAwI/feMZ/v8rhceqlz3IUOELfn1vm6cXEM0rFlPAJVJ5NmnZq84x9roKCK7MKE4wiy
+         QGxbVCLjSYWLY1J19nsP8ApfRC+vkjbSbI8beVQg8FhLxQ4K4qzt3+XmffJyLw67Xo37
+         yb9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJjWyD2Uuih/WWCrpvdSiSF8eHZsFV5Kf1LCnKaA/MQ17mjWrAbZQjZzhS82m9G+TshN7DLpyCid+JencuxO3sF1hcG5w3Q8a9jeA=
+X-Gm-Message-State: AOJu0YwHqCgmguhYKQsXt0uO9kZ5m/rY2i8gycohLjLRBlmE43ixREHh
+	1o24q3ErSyq8ZbYeU9Tmmit1niUOecgKVfnY6+orbrT+W0m5T0y+
+X-Google-Smtp-Source: AGHT+IGjLy01aO9r5B3GkKksauwntrKkor9blN2uaDBKNhlfd/tgRSqfW1/ieOqNiBxvigUAZ25tlw==
+X-Received: by 2002:a7b:c055:0:b0:414:5cec:a9dd with SMTP id u21-20020a7bc055000000b004145ceca9ddmr3643664wmc.38.1711276302185;
+        Sun, 24 Mar 2024 03:31:42 -0700 (PDT)
+Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
+        by smtp.gmail.com with ESMTPSA id x18-20020adfffd2000000b0034181bea3b0sm6554504wrs.3.2024.03.24.03.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 03:31:41 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sun, 24 Mar 2024 11:31:39 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Steve Wahl <steve.wahl@hpe.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+	Eric Hagberg <ehagberg@gmail.com>,
+	Simon Horman <horms@verge.net.au>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgABC1oQ9YJW6Bw3@gmail.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
-	s=key1; t=1711259634;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9noNjRG5J01WXAhzTC1re8jGZ/L4ci7PArNMcz5zSdQ=;
-	b=FRt+yN14LDuW1S6eg8vkC3y3RQTlw8VeiBduPXcNaOVh2vzfl3Zr4moDi2HpyjFMUdKOG7
-	iJpbQ2XpTeuM7oTLaEpRiPsG511uyJ0jk2Wv6FictZ5XD6ZyQeFKhhkxMA5EEqqk+2hvgg
-	xURZ9BsoXz99aUh/+kz7tnMFILdhGP2a6DrluqaWS/MIX/hP0g8f6OhQK0YGNYScJmDd9j
-	RTLTehHG3wy9zfyT83xUbnTJA26G5wviE+rTe4eQsvJM069gvwCJQFBS0JdHI+SQsQgQzb
-	84VwvrMMSuLUGL6hyCjqGVmpioNzTJXPOWF2Jqi8B3uxNV/it1K5/uBGpUSndw==
-Date: Sun, 24 Mar 2024 05:53:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Clayton Craft" <clayton@craftyguy.net>
-Message-ID: <2a15095b2b6343f63e228443d9fd3f35872b6d09@craftyguy.net>
-TLS-Required: No
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: "Ard Biesheuvel" <ardb@kernel.org>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, "Thomas
- Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-In-Reply-To: <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
-References: <20240321150510.GI8211@craftyguy.net>
- <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <20240321170641.GK8211@craftyguy.net>
- <CAMj1kXE-sxGM2H8akunJ1mZPDSVX1+2ehDtK-jqW--8tw9J5LA@mail.gmail.com>
- <20240322091857.GM8211@craftyguy.net>
- <CAMj1kXFmnv+FGRMnnJMJejj5yvSybgZTNEYZz0hxb6K9VAeo1Q@mail.gmail.com>
- <fe09869c2d853bde8ce0feb537c4dab09014f5d9@craftyguy.net>
- <CAMj1kXEH4CTnQ3d+Z-TnqNUhFaFc1yH+Eaa6cHk9-vZ_geQ2nw@mail.gmail.com>
- <8a64ba697d719bc9750e6fffc268e194dfde16e5@craftyguy.net>
- <CAMj1kXEk=7_BoaavZtZs7giBq4Kwk-QQoNjMZS=rWLJP=LdVLw@mail.gmail.com>
- <CAMj1kXHEJuZH4GsPKpu2vn6NQtKq1FBUtb-Rkfatwa63brgXpw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
-
-March 23, 2024 at 10:18 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
-> On Sat, 23 Mar 2024 at 14:39, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >=20
->=20>  OK.
-> >=20
->=20>  I have reshuffled the branch and put the patch you identified as t=
-he
-> >=20
->=20>  one fixing the boot first. Please double check whether this change
-> >=20
->=20>  still fixes the boot for you.
-> >=20
->=20>  https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log=
-/?h=3Defi-clayton-2
-> >=20
->=20>  If so, we can try applying it to mainline, and merge it if it work=
-s there too.
-
-This branch boots on my Bay Trail systems.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322162135.3984233-1-steve.wahl@hpe.com>
 
 
-> I have a mainline branch with the same change applied, please try that =
-one too.
+* Steve Wahl <steve.wahl@hpe.com> wrote:
 
-I assume this is the `efi-mixed-mode-boot-hack` branch, if so then this b=
-ranch also boots on these systems.
+> Some systems have ACPI tables that don't include everything that needs
+> to be mapped for a successful kexec.  These systems rely on identity
+> maps that include the full gigabyte surrounding any smaller region
+> requested for kexec success.  Without this, they fail to kexec and end
+> up doing a full firmware reboot.
+> 
+> So, reduce the use of GB pages only on systems where this is known to
+> be necessary (specifically, UV systems).
+> 
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+> Reported-by: Pavin Joseph <me@pavinjoseph.com>
 
--Clayton
+Sigh, why was d794734c9bbf marked for a -stable backport? The commit 
+never explains ...
+
+If it's broken, it should be reverted - instead of trying to partially 
+revert and then maybe break some other systems.
+
+When there's boot breakage with new patches, we back out the bad patch 
+and re-try in 99.9% of the cases.
+
+Thanks,
+
+	Ingo
