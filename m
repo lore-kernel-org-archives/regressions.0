@@ -1,134 +1,154 @@
-Received: from mail-4018.proton.ch (mail-4018.proton.ch [185.70.40.18])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B846F47F7A
-	for <regressions@lists.linux.dev>; Sat, 23 Mar 2024 17:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09EB33CA;
+	Sun, 24 Mar 2024 04:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711214640; cv=none; b=nwF/hDr1hFPWMAs4IgvmQv680aR4IWAnWH6Sg19f6/sM7ph4nzHaHWHwymIxLsakdsP9Wx9KELykhDJvynwF42MPqwEDCU1NKTIaxwlisKkC77cqFsnxG8XN+c5em8c187ZiIUxs1HWhI74uJWtTkkHszFVA2agMLZ+Rx0igOmc=
+	t=1711255609; cv=none; b=uXZowhZKakjmMGn0NcIyZwN7pKVomP4dtKGYEltKNYgOJrG6PYcfDNMC+AxmHbwx/8wf90MKGkkjImQz+5EUQBhqCJrQdcQyZxbxw/V4yutOiC7RudB57wl1YovQxN3rgXPcn4LYzUrWNRcsypsPSDphlXITf0WAMimLALbmktk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711214640; c=relaxed/simple;
-	bh=hLd9g0J+arhug+21RAMsKmSEAuU65lTeZKlInmYv/o0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TlfN1Ffp/Q6Q5aOTEeKuYXoFB2m+Yic1Z5O2VZCynNu/8Fj4RyWGLmz60z+MNQ8rwrxjex8Mt7DmcVPUmTPylQ9zUQMYmHS2p1bjCSsDLqy/ccG0wBBWeyxOPgA3cjCd5bHOeLj9hVGnWWpIEpbcuK9H6uEuRz3veXJDd08fg8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=q8pqdray; arc=none smtp.client-ip=185.70.40.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="q8pqdray"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
-	s=protonmail; t=1711214635; x=1711473835;
-	bh=hLd9g0J+arhug+21RAMsKmSEAuU65lTeZKlInmYv/o0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=q8pqdrayecYfqrEuANc8LK9O5kKn9h5cphBj9UumlvrDAVHKSrVxzDyJE2t5F9b5U
-	 Aoe807R7CUJOlv+pR641GkAk/wGuHw7meGMLJ8NaMEhV4Ioy9ZqOMXRlCmENkIR4kx
-	 wQ1PREruEKOtR/cuJpiK3T1YjVqs2XTlJsp1Zb4yaHWnxK8G7ef9ZhOsDYPDevV0YN
-	 eCAPYjydSRmeXZQHdKCl14AACNpfJQ2z2bvbscO93RsszIIHZyE/VbP7x64/fisf5B
-	 bL5eQRQCWVvObycGUmNrwGekIkkQ2xdxsv6RCs2dgNNj2tbqOMFYmotGoFOZ2M2KTe
-	 8+NbVT+9gnO9A==
-Date: Sat, 23 Mar 2024 17:23:38 +0000
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-From: Pratham Patel <prathampatel@thefossguy.com>
-Cc: "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>, "saravanak@google.com" <saravanak@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
-Message-ID: <28S1EMw5YOnQIBpQ8_qaZZ6c9Go-j6-lLuWWbRpe6-MtRUd7Ay-uXq8JHbVVtJv3LzpxjI8jYg7ukNntbN22PVV-hOWbuTY8FNWgvM4zSwI=@thefossguy.com>
-In-Reply-To: <092a7c4c-0a75-4b27-acec-385fdcfb9f7a@leemhuis.info>
-References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com> <092a7c4c-0a75-4b27-acec-385fdcfb9f7a@leemhuis.info>
-Feedback-ID: 104309535:user:proton
+	s=arc-20240116; t=1711255609; c=relaxed/simple;
+	bh=yVR06Ih/KJ5pGPueVFaxchOrqFkSterp3P0mEJLquFQ=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=BG9L7YdDm0LbXCMI5seC56EqI6EGyAOAvRS+3iMf7CWJ1yLfCLfsq9IAqhBqb3EtR81rzThIyW6iwUN0HTBhdMzpTlPpnb+DysbI9o6mog7w3TO4Jf9FpaPkrACOuCgzc3e2T324oZuzBLkI9hg8yMvVPRdFW3rWRC1hNMPpOp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:52900)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1roFkj-00AWYi-75; Sat, 23 Mar 2024 22:46:37 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:33228 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1roFki-0097H7-5N; Sat, 23 Mar 2024 22:46:36 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>,  Dave Hansen
+ <dave.hansen@linux.intel.com>,  Andy Lutomirski <luto@kernel.org>,  Peter
+ Zijlstra <peterz@infradead.org>,  Thomas Gleixner <tglx@linutronix.de>,
+  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov <bp@alien8.de>,
+  x86@kernel.org,  "H. Peter Anvin" <hpa@zytor.com>,
+  linux-kernel@vger.kernel.org,  Linux regressions mailing list
+ <regressions@lists.linux.dev>,  Pavin Joseph <me@pavinjoseph.com>,
+  stable@vger.kernel.org,  Eric Hagberg <ehagberg@gmail.com>,  Simon Horman
+ <horms@verge.net.au>,  Dave Young <dyoung@redhat.com>,  Sarah Brofeldt
+ <srhb@dbc.dk>,  Russ Anderson <rja@hpe.com>,  Dimitri Sivanich
+ <sivanich@hpe.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+	<8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
+Date: Sat, 23 Mar 2024 23:45:45 -0500
+In-Reply-To: <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com> (Dave Hansen's
+	message of "Fri, 22 Mar 2024 16:29:27 -0700")
+Message-ID: <87r0g09r0m.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68"; charset=utf-8
+Content-Type: text/plain
+X-XM-SPF: eid=1roFki-0097H7-5N;;;mid=<87r0g09r0m.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+1mU387us5HCk1pfooEbFfD96wfus8BAg=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4951]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.0 T_TooManySym_02 5+ unique symbols in subject
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Dave Hansen <dave.hansen@intel.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 492 ms - load_scoreonly_sql: 0.05 (0.0%),
+	signal_user_changed: 14 (2.9%), b_tie_ro: 9 (1.9%), parse: 0.80 (0.2%),
+	 extract_message_metadata: 10 (1.9%), get_uri_detail_list: 1.51 (0.3%),
+	 tests_pri_-2000: 4.2 (0.8%), tests_pri_-1000: 2.9 (0.6%),
+	tests_pri_-950: 0.97 (0.2%), tests_pri_-900: 0.80 (0.2%),
+	tests_pri_-90: 79 (16.0%), check_bayes: 77 (15.7%), b_tokenize: 8
+	(1.6%), b_tok_get_all: 11 (2.2%), b_comp_prob: 2.7 (0.6%),
+	b_tok_touch_all: 53 (10.8%), b_finish: 0.72 (0.1%), tests_pri_0: 366
+	(74.4%), check_dkim_signature: 0.51 (0.1%), check_dkim_adsp: 2.7
+	(0.6%), poll_dns_idle: 1.16 (0.2%), tests_pri_10: 2.1 (0.4%),
+	tests_pri_500: 9 (1.8%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68
-Content-Type: multipart/mixed;boundary=---------------------ae8a0b7b1b36c345004b08b7de4976a5
+Dave Hansen <dave.hansen@intel.com> writes:
 
------------------------ae8a0b7b1b36c345004b08b7de4976a5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;charset=utf-8
+> On 3/22/24 09:21, Steve Wahl wrote:
+>> Some systems have ACPI tables that don't include everything that needs
+>> to be mapped for a successful kexec.  These systems rely on identity
+>> maps that include the full gigabyte surrounding any smaller region
+>> requested for kexec success.  Without this, they fail to kexec and end
+>> up doing a full firmware reboot.
+>
+> I'm still missing something here.  Which ACPI tables are we talking
+> about?  What don't they map?  I normally don't think of ACPI _tables_ as
+> "mapping" things.
 
-On Saturday, March 23rd, 2024 at 22:47, Linux regression tracking (Thorste=
-n Leemhuis) <regressions@leemhuis.info> wrote:
+Either E820 or ACPI lists which areas of memory are present in a
+machine.  Those tables are used to build the identity memory mappings.
 
-> =
+Those identity mapped page tables not built with GB pages cause kexec to
+fail for at least 3 people.  Presumably because something using those
+page tables accesses memory that is not mapped.
 
+> It seems like there's a theory that some ACPI table isn't mapped, but
+> looking through the discussion so far I don't see a smoking gun.  Let's
+> say the kernel has a bug and the kernel was actively not mapping
+> something that it should have mapped.  The oversized 1GB mappings made
+> the bug harder to hit.  If that's the case, we'll just be adding a hack
+> which papers over the bug instead of fixing it properly.
+>
+> I'm kind of leaning to say that we should just revert d794734c9bbf and
+> have the UV folks go back to the nogbpages until we get this properly
+> sorted.
 
-> =
+That is exactly what this patch does.  It reverts the change except
+on UV systems.
 
+>> @@ -10,6 +10,7 @@ struct x86_mapping_info {
+>>  	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+>>  	unsigned long offset;		 /* ident mapping offset */
+>>  	bool direct_gbpages;		 /* PUD level 1GB page support */
+>> +	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
+>>  	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
+>>  };
+>
+> But let's at least talk about this patch in case we decide to go forward
+> with it.  We've really got two things:
+>
+> 1. Can the system use gbpages in the first place?
+> 2. Do the gbpages need to be exact (UV) or sloppy (everything else)?
+>
+> I wouldn't refer to this at all as "always" use gbpages.  It's really a
+> be-sloppy-and-paper-over-bugs mode.  They might be kernel bugs or
+> firmware bugs, but they're bugs _somewhere_ right?
 
-> On 23.03.24 18:02, Pratham Patel wrote:
-> =
+Is it?
 
+As far as I can tell the UV mode is be exact and avoid cpu bugs mode.
 
-> > Since the introduction of the `of: property: fw_devlink: Fix stupid bu=
-g in remote-endpoint parsing` patch,
-> =
+My sense is that using GB pages for everything (when we want an identity
+mapping) should be much cheaper TLB wise, so we probably want to use GB
+pages for everything if we can.
 
+Personally I'd rather turn of the page tables entirely for kexec but
+that is not an option in x86_64.
 
-> =
+Eric
 
-
-> There is an earlier bug report asking for a revert of that patch:
-> =
-
-
-> https://lore.kernel.org/all/ZfvN5jDrftG-YRG4@titan/
-> =
-
-
-> > an issue
-> =
-
-
-> =
-
-
-> Is your problem maybe similar to the one above?
-
-I don't get that exact message in the boot log but yes.
-
-> Ciao, Thorsten
-
- -- Pratham Patel
------------------------ae8a0b7b1b36c345004b08b7de4976a5
-Content-Type: application/pgp-keys; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"; name="publickey - prathampatel@thefossguy.com - 0xF2DDE54D.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWmZjR2RSWUpLd1lCQkFI
-YVJ3OEJBUWRBa2VYM3NrdFI1R0lZQTM5VXhoRTlZcitZMy8zd0ZXUmwKZlZ5T1hsaWdnS2ZOT1hC
-eVlYUm9ZVzF3WVhSbGJFQjBhR1ZtYjNOelozVjVMbU52YlNBOGNISmhkR2hoCmJYQmhkR1ZzUUhS
-b1pXWnZjM05uZFhrdVkyOXRQc0tNQkJBV0NnQStCWUpsOXdaMUJBc0pCd2dKa01lcApYbTlkS2Er
-V0F4VUlDZ1FXQUFJQkFoa0JBcHNEQWg0QkZpRUU4dDNsVFJRTDQ4NE9oNDE3eDZsZWIxMHAKcjVZ
-QUFDYlFBUDlMc1NwUlQwSTV2TC8ycHpBa2F2UVhLdStWR1BRMk44RUVYZGpSVkRseGl3RUFwMVpS
-ClB0M2k5RG9qcXg1OE9MQ2R3N2xHMlVwdkJGZ2dCeGVrV216d1dRbk9PQVJsOXdaMUVnb3JCZ0VF
-QVpkVgpBUVVCQVFkQXJlOWp5aVR3VFBGSjNaazJvTVd0ZDVxSi9zcWNKRUZrckZxNUpVVzRWalVE
-QVFnSHduZ0UKR0JZS0FDb0ZnbVgzQm5VSmtNZXBYbTlkS2ErV0Fwc01GaUVFOHQzbFRSUUw0ODRP
-aDQxN3g2bGViMTBwCnI1WUFBRFRGQVA5WUZIL0FxKzVFd3pHQ0xJZWhNNGJsUW5hK2t0cnNPRWlw
-VllVTVZMd0tjQUQvVktHQwo0eFRtTENUQUNDcFNqRjdVRzBVY2NNOVU0T21ZV2RlVU9HUk1hd1k9
-Cj01cTBtCi0tLS0tRU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0K
------------------------ae8a0b7b1b36c345004b08b7de4976a5--
-
---------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-
-wnUEARYKACcFgmX/D/UJkMepXm9dKa+WFiEE8t3lTRQL484Oh417x6leb10p
-r5YAAHYlAP9lfb3BSFKYtWm/S0bfoj6e7K4Y+l8y9pnmg7U4pWoPkQEAjxWI
-9LvXFmeUGLD2Z2Lu+WoJ7RU/hCOljmBRtQHtEgU=
-=V9PA
------END PGP SIGNATURE-----
-
-
---------f1e788887cf9d788045acc7ae71ae8322eea6a98cb58be5654c24d039bf47d68--
 
