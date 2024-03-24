@@ -1,188 +1,126 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E9E1426F;
-	Sun, 24 Mar 2024 15:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3DC2C8
+	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 17:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711293375; cv=none; b=BgQEVpnDAI5jB83n8awvnspYXv+19p+74TbRjxdAu0V2S9bOvo+9J/0X7osrPHEcgi9AJ6WohsKSroq0jwvW/Af2YrcRcuusL+81lbr280qpCMPszKKa45nFR2NawyrnXQgELFoS6k2/KMmN91NJLQX71oASTOz31xB/BUPJcis=
+	t=1711302217; cv=none; b=ODRqAXLa9YNZ3C9AKx8szvYNAsCBce13mC7ABwY5vljTN9ANMgBUEI+KbOP571lV5BL/yF0ifByKtUfBkPXSHjr4+h2KGkB4zndNlMzEKLlWB06l1JRJKnhdk4qQGoENvjpphLMlQbrqBPsFmTVP8a6ukhjdlsexw6pN76uhg8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711293375; c=relaxed/simple;
-	bh=/vVhyZaEb80l55hrvuHY1aJaeQ00mWkK1psLju4BvtQ=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EGf4MpFhtOIZ0aNPoEtxhDVBk+3HDPGd1KegCOUC73u++qY/5Fy2YD4ocX1UTsXZlCB4K0Td8ZWEYRR1RRrpxPOV+5G1WS6MtnH6g+4Bt4FndFRzOzSItLRdstK5f2Xd7Wr6XuadZoTAssrFIYpY4HGAT0f5QRtJOWG5VABB+TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UeKm70/b; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711302217; c=relaxed/simple;
+	bh=iV5eaQhCMjboTPn8RIB6+34ItDagxR0EDqsSNn6cFkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j8zmVUb8Io1mU3shCDwKwP3+pRcbP89b3FhRcAsx4IEJREiYMHPtsViaMECtcdQfZ649+Hxu/kJ9AFTAwG3uPnQXh75bNAihJThyOkGnKJ8ANQuUiGBQ0xqRziKEbUHyHwpvXZHolYUqah8jR4KqH9xnfnuJdhJf3BXOFt19mOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GngHH2Em; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UeKm70/b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=zGy+MTIuQKj08FjWhGd/m2pfMqypqBovoRY5p/5r4AM=; t=1711293372; x=1711725372;
-	 b=UeKm70/bZJ7F7+A5UcWH1v+rixCBqX7ZNbZVUkrm+E/Uv9R7cHZSF2HYfMU3OKirREt9NFBCzL
-	oNjTma9Tp1UMfzFMVlk2B2pq4e0fmN3PvKf75i8+vSSyZF6hcEKj0HQeFAZ/M5m4vGVYATN28+FDj
-	OwRECOfUYIQq+8II+G7/h1M4pRDom5VzR2rk9Ywd9cjm/r1B2cJfU/+rwHcgSHNAhCr2cHSxwRpP/
-	kKkU7ML/2ZDXjKYameRAFeKE2xKBBEFyCebGBHYxqVDqW3U436psfE45CTnBcubz7DiX5AlLJrqyQ
-	8GDvDMi0Dx/RZEXnYsRA5uRKHGb+yQ9IPaygQ==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1roPZy-0005NA-4s; Sun, 24 Mar 2024 16:16:10 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-03-24]
-Date: Sun, 24 Mar 2024 15:16:08 +0000
-Message-ID: <171129332789.1915280.10544327663661648631@leemhuis.info>
-X-Mailer: git-send-email 2.44.0
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GngHH2Em"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B40AC433C7
+	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 17:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711302217;
+	bh=iV5eaQhCMjboTPn8RIB6+34ItDagxR0EDqsSNn6cFkI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GngHH2Emt0UgAODe8rNAAbokRjd/3dZz7d9ws6sN5rYoXRd+5kjoAE5LR7fcihClr
+	 6n/ddHPnr+a2z3iOenF528yUnqOsuLQvmmX/Vt92ZwYNbPVlbHRyjfxIexeMM/xEYL
+	 h8bfdJM9eHnP29h77+iEgrVuKVB8S+Dges8W2LkKJmVAoGjQD/cJGQAfwuKVUQPz/q
+	 Pu/aHQ55eLaw6zFrZlkca1N0URitlog0p/zxiVM7a3LbDJtgxrOfTr/3Q5JbZEoeta
+	 plEAJdzjILd3eT1fOhfi0eV+glR0i3WGGwF6xzH8fEfzim5iiVLAJbK/0VGlSqfvAC
+	 NEGYrLaIl5ZkA==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d476d7972aso59898991fa.1
+        for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 10:43:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVdzpIm78xLYgu4R/4du/h8WqgW1swsp98smSyH+/Ov4PfnwmEVGn7FE15orCci7YE6UJJw/+TCCr1BELMy4bYlytz5qnxCWdhBAU8=
+X-Gm-Message-State: AOJu0YzAZS+QGefHsqpUhFQ5RdJ6y0SP8mm8zGq9KDQThbGzF5UHahPN
+	XXM12dJFDvqLAXB5ROh6cL9K7TLahK8tpRqp/UcKfPMjyIJYVr0SaM2kaw40cFtDdmy5Kt2omtK
+	EFWNEoCZeZLKFUdMdt5ZpxvDRvgY=
+X-Google-Smtp-Source: AGHT+IE7AWt7cuttWyQSkz/6C8k8f2wmWamg+V4k0ou5nWU+WNaV/FU3iygPmrusTd7cZR+rbmAd6ob/9A1zn1IdK/8=
+X-Received: by 2002:a2e:8eda:0:b0:2d2:df0d:9e92 with SMTP id
+ e26-20020a2e8eda000000b002d2df0d9e92mr3139059ljl.49.1711302215418; Sun, 24
+ Mar 2024 10:43:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711293372;deb53a8e;
-X-HE-SMSGID: 1roPZy-0005NA-4s
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <a3aae375-5582-46e4-866b-6a81641998af@redhat.com>
+In-Reply-To: <a3aae375-5582-46e4-866b-6a81641998af@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 24 Mar 2024 19:43:24 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
+Message-ID: <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Clayton Craft <clayton@craftyguy.net>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus, here is a quick regressions report. I already added a handful
-of regression from this cycle to the tracking (see below), but none of
-those are really worrying I'd say.
+On Sun, 24 Mar 2024 at 16:49, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 3/21/24 11:48 PM, Ard Biesheuvel wrote:
+> > (cc Hans)
+> >
+> > On Thu, 21 Mar 2024 at 23:05, Clayton Craft <clayton@craftyguy.net> wrote:
+> >>
+> >> I've been chasing a problem with 32-bit EFI mixed mode booting on two different
+> >> (x86_64) Intel Bay Trail platforms, where the system reboots or hangs seemingly
+> >> very early somewhere before or after loading the kernel. I've not been able to
+> >> get any output from the kernel or stub over efifb when the issue happens[0], and
+> >> do not have serial console access on these systems.
+> >>
+> >> v6.8 fails for me, and presumably so does everything back to v6.2. v6.1 is able
+> >> to boot OK on these platforms with mixed mode, and it looks like there are a lot
+> >> of changes from 6.1..6.2 for EFI/mixed mode booting.
+> >
+> > v6.1 just received some EFI related backports, so please check the
+> > latest v6.1.y as well.
+> >
+> >> I did managed to bisect the
+> >> issue to:
+> >>
+> >>         commit e2ab9eab324cdf240de89741e4a1aa79919f0196
+> >>         Author: Ard Biesheuvel <ardb@kernel.org>
+> >>         Date:   Tue Nov 22 17:10:02 2022 +0100
+> >>
+> >>             x86/boot/compressed: Move 32-bit entrypoint code into .text section
+> >>
+> >> However I'm not sure how to proceed from here, or if my bisect is all that
+> >> useful since the commit seems to be in the middle of a bunch of changes I do not
+> >> understand. I've been using systemd-boot to test this (both the full bootloader
+> >> and UKI w/ the sd-boot stub). Is 32-bit mixed mode on x86_64 working for others?
+> >>
+> >
+> > I usually test on 32-bit OVMF built with LOAD_X64_ON_IA32_ENABLE,
+> > which allows the use of the compat entry point. This is different from
+> > the EFI handover protocol, and I am not sure which one you are using.
+> >
+> > I have never had any reports, or noticed any issues myself. Last time
+> > I tried (some weeks ago) it was working for me.
+> > CC'ing Hans who may have more data points.
+>
+> I've been offline for most of the week and I see that in the mean time
+> you seem to have found a fix, great.
+>
+> FWIW I have been booting everything up to 6.8.0 on my own mixed-mode
+> Bay Trail tablets without issues, so the problem seems to be specific to
+> certain BIOS-es.
+>
+> Please Cc me on the final fix, then I can test that early and double check
+> that things don't regress on other mixed-mode Bay Trail devices.
+>
 
-There is one more: a fix for a KASAN splat is already in next since
-Friday as 9ddd90c947da4e ("fs/9p: fix uaf in in
-v9fs_stat2inode_dotl")[1]. I had hoped Eric would have sent it to you by
-now because it apparently is somewhat annoying for the net
-maintainers[2] and maybe other kernel developers that use virtme -- but
-seems that it's not on the way to you yet. :-/ Sigh. This "regression
-fixes are ready at have been in next, but maintainers don't send them to
-Linus before the next -rc" is sometimes slightly annoying from my point
-of view...
+Thanks.
 
-[1] https://lore.kernel.org/all/20240202121531.2550018-1-lizhi.xu@windriver.com/
-[2] https://lore.kernel.org/all/20240321182824.6f303e38@kernel.org/
+I pushed another branch
 
-A few words on regressions from the 6.8 cycle that have an easy fix
-available and are kinda stalled, in case you are interested:
+https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-3
 
-* A change that came late in the previous cycle made Johan Hovold report
-yet another 6.8 regression with the Lenovo ThinkPad X13s, this time
-about a Bluetooth problem. He provided a revert to fix it - the BT
-people replied, but then nothing happened for 10 days now afaics; will
-prod tomorrow:
-https://lore.kernel.org/lkml/20240314100103.GC6100@craftyguy.net/
+which has a proper fix for the issue that you found.
 
-* Two people reported CPU stalls on some Rockchip SOCs that a revert can
-fix, but so far I could not convince the developer to set things in motion: 
-https://lore.kernel.org/lkml/ZYhQ2-OnjDgoqjvt@wens.tw/
-https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
-
-* A fix for bogus lockdep warnings in network driver stmmac also is
-making no progress, despite a Reviewed-by: from Eric and some prodding
-from my side:
-https://lore.kernel.org/lkml/20240306111157.29327-1-petr@tesarici.cz/
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 4 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v6.8.. aka v6.8-post), culprit identified
-========================================================
-
-
-[ *NEW* ] x86/percpu: crashes in qemu with nosmp builds and Intel CPUs
-----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/e20d88d0-5fb9-4307-be67-88b04ae9a188@roeck-us.net/
-https://lore.kernel.org/lkml/e20d88d0-5fb9-4307-be67-88b04ae9a188@roeck-us.net/
-
-By Guenter Roeck; 8 days ago; 34 activities, latest 1 days ago.
-Introduced in 71eb4893cfaf
-
-Fix incoming:
-* x86/cpu: Ensure that CPU info updates are propagated on UP
-  https://lore.kernel.org/regressions/07ba20d1-3c95-42b6-b566-f5c1980ffe16@leemhuis.info/
-
-
-[ *NEW* ] mm: vmalloc: persistent "spinlock bad magic" message when booting s390 images with spinlock debugging enabled
------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/bbc242d5-3ab0-410f-a3b1-54a68e3e375f@roeck-us.net/
-https://lore.kernel.org/lkml/bbc242d5-3ab0-410f-a3b1-54a68e3e375f@roeck-us.net/
-
-By Guenter Roeck; 1 days ago; 3 activities, latest 1 days ago.
-Introduced in 72210662c5a2
-
-Recent activities from: Guenter Roeck (2), Uladzislau Rezki (1)
-
-One patch associated with this regression:
-* Re: [PATCH v3 07/11] mm: vmalloc: Offload free_vmap_area_lock lock
-  https://lore.kernel.org/lkml/Zf3V6B9f5o0H1LnE@pc636/
-  1 days ago, by Uladzislau Rezki
-
-
-[ *NEW* ] Re: [PATCH] fs: Remove NTFS classic
----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-https://lore.kernel.org/linux-fsdevel/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-
-By Johan Hovold; 1 days ago; 1 activities, latest 1 days ago.
-Introduced in 7ffa8f3d3023
-
-Recent activities from: Johan Hovold (1)
-
-
-[ *NEW* ] SUNRPC: RFC 8009 encryption test fails
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ZfxJZFwXqqurfet0@aion/
-https://lore.kernel.org/linux-nfs/ZfxJZFwXqqurfet0@aion/
-
-By Scott Mayhew; 3 days ago; 2 activities, latest 2 days ago.
-Introduced in 561141dd4943
-
-Recent activities from: Chuck Lever III (1), Scott Mayhew (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/170947112079.436664.2969102323110743234@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+As it turns out, the compat mixed mode (with handover protocol) was
+broken from the beginning, and the change you identified just happened
+to trigger it on your hardware.
