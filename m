@@ -1,37 +1,65 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E931A38DA
-	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 13:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B237A17C9E
+	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 14:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711285463; cv=none; b=f81KwBwVEPdltvmZpS7SYM60iupH1MA50kh91VhUYmBriC4rTKR5odpRIMqgivhc/oWSjJlYRVT4rCrT9YkubNgZdrgRpeWnwb9wDJzEBICgl5VYJLiX84BLzhGrQeWwZBbqRZQPvuIvAoBWVQjH5drackEnPCeYCSbmraMIFCc=
+	t=1711291771; cv=none; b=oOdIGZMU+2cMQrTGcZu/ElSx5epbi2InNUKiC28R45ataZZ+O0FSlUQtZgAy6162HyIudxcoS15wc8DdxabGdhkhvYYYdg0EoAYhhHNhAHi5wLj2e6QIzFkMTUKhnVdbVHishNDC7loYOBW8lfWpIxcZcRWaKAN8CDqpi5XSGtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711285463; c=relaxed/simple;
-	bh=qiYM8sv4AzxhGHDyAI3nznH8LocAPzezav/agriFyCA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=cFoHl7DbN5g2r4J5sFymgxnbmZT+sfBlx+BtaoDmVus8MXblcoFZQ1BICWd3IO/irFZuCOPxFkQvkT6O97n79Odu2hBLPxjga6RjhIGtx2qjH+ALCAai+0/8XMbbiQPQ6lNOt1Jn5cO/0nx9scgO9Be1apc252oST36+Nn3JHOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ldsoIgCl; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711291771; c=relaxed/simple;
+	bh=b0T2E6rfT+SfjZ3KicwpabA3ip4trl8wAgPlr1ugUpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e12OuO+B9K8aW69O8SPBsOnzjaOfQoUkTueduaQIx/8v0anjSSvk9meNCiAord5aCXUYKd6QaLZsqOpWcXtQOu136SbWeAdX2d/4RXm5LYC10UIuJhzttWYEQjjqe1p/0qvKAqMuEAJVOKi7gKVX4tvo1n8aO+jPw69KhIPXu6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JPDshrsW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ldsoIgCl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=qiYM8sv4AzxhGHDyAI3nznH8LocAPzezav/agriFyCA=; t=1711285461;
-	x=1711717461; b=ldsoIgClEvjoZmBb/3jHC+Bu2++FblYypvPOZcJDzDgEMtJZQr34bJY/58AgL
-	UpJIz1pVXDgZUv7OZXlCnKGsZQvb9fuNgM1tjb0xgFwUWfg6GzmvMob9a6aCUBhHRSHDoajdNtNmu
-	KIAke+y4US5kVE2hY6Zdd6AvWjx/hrGSw3/1gTtYEMyiYdxLgcBq8HkuZ3zh5M0APTFLeJi5moR3v
-	9qpx9xzCOTUvTI8+036vgSy19a9t4p3kS5bp5bFlXDCdwW/VTzC0h+/dSfnrwVBPSFwuMH9XOQr7A
-	OUJBqrFfdtI6/azz2OCIJMUrUZHNgIrKkAQurzbBIDcivmSyrQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1roNWH-00015b-1S; Sun, 24 Mar 2024 14:04:13 +0100
-Message-ID: <20116054-638e-41b7-a892-64dc714e01f7@leemhuis.info>
-Date: Sun, 24 Mar 2024 14:04:12 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JPDshrsW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711291768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bQeOWgDE8ZK/2VH8iK9oZfcBxftmpHefx2GklYdNKXY=;
+	b=JPDshrsWr/wjE56u+saCfH8lbxgtCxBrs0Eimlm5xsal3Jd8jqqZvfGhpNSkdNMIv0aIRm
+	4QaVQtKEFsOsRhEQNGR/q6K5NrfYE3tGF6imkM35vZ3zfqtkYbN0wjGIPnqJ1jhEhGzmUw
+	v5IA00mnXEoAUMN9p18q4zdO4VwI/M8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-600-bctWQso5Muue2Id5zEv0LA-1; Sun, 24 Mar 2024 10:49:26 -0400
+X-MC-Unique: bctWQso5Muue2Id5zEv0LA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a450265c7b6so186177566b.0
+        for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 07:49:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711291765; x=1711896565;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bQeOWgDE8ZK/2VH8iK9oZfcBxftmpHefx2GklYdNKXY=;
+        b=Wjis5ehUAPshOFPdNn3kIUFCio1KhRVYOlYH9vMwFZZaLEKoOL11+2Eabrm2BAabP5
+         aYSGXsS3jkm/gcoEOPxu4LXcstWLg90fa+5nl9/nqYwStZ6ofLATlCbYEWEWzof2iMiS
+         9DBf94wOauREhXlJLXoudho9d1Dp5AQwLLLl2Dg+YeB70wgEUdbCzJxnOmaLJaUICQON
+         nvAQEFC28EHxlp1PcVJ5C8XDVDjzQilYRCXHKVUaZqEvCRI7Mq2LZBZy1AnB+9BRkBXG
+         EUAYfqM4BlbMm7TCc6Xp6d5fHHYAHIk4MDENfEXzsNKLePUuYXHRrf7mFNDCHUFdAlWg
+         vUnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/wTX5ktxGXU1M4IXytVZt8OgyX6ersmPZEPp5gbBrJZtx/62cEhVXbAoaRefk5gY57xL5yZhMlMBmUcGQ2ayldrZQcxhmD5+q6u8=
+X-Gm-Message-State: AOJu0Yw0HR1H1qlOEJ8FtBdEMsBZ+k3RbkPCldmnaT69SkzaKOcMiMjY
+	URtNpYtAjtRhjwt7aOZPbaIa8KJAAnK1EcDhNoe8lkAEDD0Uh3PNFGAwq6fWMn6huQUGLLfCx7M
+	Nw4XvEs5c3PodtgLfzpaQ3ClfPtlwJv2dUX6xnh+GNua5iYiZH7zpfGZtYcmy
+X-Received: by 2002:a17:906:c111:b0:a47:4b76:6258 with SMTP id do17-20020a170906c11100b00a474b766258mr2091373ejc.25.1711291765649;
+        Sun, 24 Mar 2024 07:49:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3AfZuVj/LH8PmM5oxAKwVmIGD0XD2zB7qT+98dJjuYKKW3sKq+XAUtMPDBs/qzFmH11boVA==
+X-Received: by 2002:a17:906:c111:b0:a47:4b76:6258 with SMTP id do17-20020a170906c11100b00a474b766258mr2091360ejc.25.1711291765291;
+        Sun, 24 Mar 2024 07:49:25 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id se16-20020a170906ce5000b00a468be342bfsm2036173ejb.136.2024.03.24.07.49.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 Mar 2024 07:49:24 -0700 (PDT)
+Message-ID: <a3aae375-5582-46e4-866b-6a81641998af@redhat.com>
+Date: Sun, 24 Mar 2024 15:49:23 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,35 +67,79 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Content-Language: en-US, de-DE
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Ard Biesheuvel <ardb@kernel.org>, Clayton Craft <clayton@craftyguy.net>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ regressions@lists.linux.dev
+References: <20240321150510.GI8211@craftyguy.net>
+ <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711285461;94fd9467;
-X-HE-SMSGID: 1roNWH-00015b-1S
+
+Hi,
+
+On 3/21/24 11:48 PM, Ard Biesheuvel wrote:
+> (cc Hans)
+> 
+> On Thu, 21 Mar 2024 at 23:05, Clayton Craft <clayton@craftyguy.net> wrote:
+>>
+>> I've been chasing a problem with 32-bit EFI mixed mode booting on two different
+>> (x86_64) Intel Bay Trail platforms, where the system reboots or hangs seemingly
+>> very early somewhere before or after loading the kernel. I've not been able to
+>> get any output from the kernel or stub over efifb when the issue happens[0], and
+>> do not have serial console access on these systems.
+>>
+>> v6.8 fails for me, and presumably so does everything back to v6.2. v6.1 is able
+>> to boot OK on these platforms with mixed mode, and it looks like there are a lot
+>> of changes from 6.1..6.2 for EFI/mixed mode booting.
+> 
+> v6.1 just received some EFI related backports, so please check the
+> latest v6.1.y as well.
+> 
+>> I did managed to bisect the
+>> issue to:
+>>
+>>         commit e2ab9eab324cdf240de89741e4a1aa79919f0196
+>>         Author: Ard Biesheuvel <ardb@kernel.org>
+>>         Date:   Tue Nov 22 17:10:02 2022 +0100
+>>
+>>             x86/boot/compressed: Move 32-bit entrypoint code into .text section
+>>
+>> However I'm not sure how to proceed from here, or if my bisect is all that
+>> useful since the commit seems to be in the middle of a bunch of changes I do not
+>> understand. I've been using systemd-boot to test this (both the full bootloader
+>> and UKI w/ the sd-boot stub). Is 32-bit mixed mode on x86_64 working for others?
+>>
+> 
+> I usually test on 32-bit OVMF built with LOAD_X64_ON_IA32_ENABLE,
+> which allows the use of the compat entry point. This is different from
+> the EFI handover protocol, and I am not sure which one you are using.
+> 
+> I have never had any reports, or noticed any issues myself. Last time
+> I tried (some weeks ago) it was working for me.
+> CC'ing Hans who may have more data points.
+
+I've been offline for most of the week and I see that in the mean time
+you seem to have found a fix, great.
+
+FWIW I have been booting everything up to 6.8.0 on my own mixed-mode
+Bay Trail tablets without issues, so the problem seems to be specific to
+certain BIOS-es.
+
+Please Cc me on the final fix, then I can test that early and double check
+that things don't regress on other mixed-mode Bay Trail devices.
+
+Regards,
+
+Hans
 
 
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
 
-#regzbot report:
-https://lore.kernel.org/all/d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca/
-#regzbot introduced: 45a3a8ef81291b63a2b50a1a145857dd9fc05e89
-#regzbot title: serial: core: Sun Ultra 60 hangs on boot
-
-#regzbot report: https://lore.kernel.org/all/ZfvN5jDrftG-YRG4@titan/
-#regzbot duplicate:
-https://lore.kernel.org/all/tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com/
-#regzbot monitor:
-https://lore.kernel.org/all/20240324062816.145858-1-prathampatel@thefossguy.com/
