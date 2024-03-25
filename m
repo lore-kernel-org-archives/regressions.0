@@ -1,169 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F8B131E3C
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 16:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AD612B6C
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 16:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711383912; cv=none; b=g3uQ3YYp9u9L3PG78eVoQmEDqUeeCNbe3qgTb4YL7lnnCy4UpT7F/ZL4q1PcXNqIhmnJGiMLpqzdcip2LCy8icdnl/tRWPM3UvsitQ8saS0dot8o4oMixO14G7RwuAfYgTgYktjKnAgdw/+3OvVK+LyAWgcp1vzh+vAyYAUfTSU=
+	t=1711385817; cv=none; b=T/Z6z/rpY9MMijw/yAEuvYTB+yul+xbP++qnIYlcQOQhJ2JMkRu71W98wMwPVOZ4e+9PqgiDXccrytRF7100YxnvMHjrB+t87jUhawhT7AmOihcy+wkAc+zQ1T4I6CZYFoAWjyJP6CIoB4AvyZIDxeD9K7BFrlqIiNmlmFbQVts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711383912; c=relaxed/simple;
-	bh=fd6v3YipbAZg5gp4YXc+Et/ZlvKwwwlSiueLy2jek0s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EEwNIbD+RqF2Gn/T+zttnQM2UZ8Y7JVRU2ZbLmCo6w9YI8zY4peXMXmtaPvLTXWxXZgpw/awZkXNX2Em51tAaNvhnyn9GcbioQrWIwZxDaP/qeNjyFGKHlxT3ZuEhCJJYhepL/Af7gEsGZycgW91D+EUbyD1Q6e5+BPodJujNJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiHF+pWp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711385817; c=relaxed/simple;
+	bh=xPp/RUzgQsiSSqM+nB7eJxXqxjfyHTpV6y11jbU95bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tLCH/4gXl2YcZVZbRUgBNOh+ohKZ5buF5g8AV41S+TH4XQuCcj7CkvC9mu3gPGp9p90CGthnG9yVPMEKgfFnLHS7FW5TzWH9ajyPPm11ptNeVNc5vHDv793nu00ObdvtsjMxJF55u1D+zcszg9f8EVrkbFtoMennnvrKv4+59SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G1+UiDw5; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiHF+pWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A45C433C7
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 16:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711383911;
-	bh=fd6v3YipbAZg5gp4YXc+Et/ZlvKwwwlSiueLy2jek0s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PiHF+pWpDJmBKqJUODbV7zwfUUYblJzS7jRtBB3zpOpgBrxbjSJon2OUiLPav6FNq
-	 7kasWKcUV9XkI6jNgJUyxkHnuz0EWyPbMD4x9Bca545mCM9YQIYM5jie+f9o++iJaI
-	 uz0SZWCGhEuDftJ8c+Q8LUVy17AOdBMX9msiRMzKHUWmayMh+/T0MTnqxsJO8r9oTD
-	 5cAC45QPMjiScZEjA++YdrOav7Wr4fXi4WK8XfyYcvtTeHulPrd2QnOmUXnd1pl4pX
-	 vSJvvKv0LJLyPGzp9F5IPmAhvyLFVD8ZwV77v4QUg5zSOIbw8NQieIcdhYz7UOMCk7
-	 6ek4r/IWFnUrg==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d68651e253so75977491fa.0
-        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 09:25:11 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwZzCL26/NKu697iC1QtosC4cT8UeW3+JL2lOmGn1DZWip7BjAM
-	6abSFGs4+1e0B8A5cQq8ghpa6zl3nUo1gpDtfFlxIEHD9u6ZCFkwu73b3BLEuWwtJsKXuq6eic2
-	Lywds/jKDPt1lv9p6esyL6yCrxQg=
-X-Google-Smtp-Source: AGHT+IGbLavez2FXU8AxIus4yd3iMiBH8A2mEZKKwRZe49AtjRBE5serGnGMWb9QhwZklLaU5Tu7zLhnK+kXf84qe1w=
-X-Received: by 2002:a2e:bc07:0:b0:2d6:d536:41ca with SMTP id
- b7-20020a2ebc07000000b002d6d53641camr3044886ljf.4.1711383909889; Mon, 25 Mar
- 2024 09:25:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G1+UiDw5"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6b729669bso3773259b3a.3
+        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711385815; x=1711990615; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
+        b=G1+UiDw5ZA0EgaS7CCHVdp770+zbCbMV0Y0vuUxifikQmWT6ZwBMZSp8WTa9ohSuW8
+         E4pR3KwomGkjpsAl5wuln+EE2MFMd9pJxDqd46LiWf+1fJ9W8Y8b6o9mgPvdYg+ulTqW
+         YGbKnQzu1aFdlOoImwuOGqqHKbj2CTO7QoR68=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711385815; x=1711990615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
+        b=mW0Je5shO1p/U5uZlz7GK7uzl/rMN52PWCVLvbAp5MDLugPCQ0AUirjYTBYxTeO3O5
+         eyqq4VAsBehfU02+7idUG1z6kVHTHhjiwdRG5DLdRpNLCR01rSv+SnTl8Exz2LJCH76n
+         AqofKa8lQbXkZjKAykeuV2pMKSyVdK/eB8mcZVAysMrwGhK/q4jjTzflxAUGodxokjWJ
+         GDlAAeGei2QYRvy+Q4NEPxj83ry2Jobi+d0OpTYbSmqZZFPYaV1YUEd2549/3jlT+N/K
+         5sreQl3jB2VLkRkACoTUAN+tK7g4KgM3UumBQp67Kj3CmZ7Dy7CKcIUQOIPoCGlvnjL2
+         ydig==
+X-Gm-Message-State: AOJu0Yyt9MLzUSn3qVtsoUILIoRu8wHty8zTTmRKJBLqtQt9b8AtY7MF
+	3OaY2yYBo6ibz3y7BZfDhivBAeyGaxEs5mzvpj3Jsd0acNeuZmO5TSVgWSt4Lg==
+X-Google-Smtp-Source: AGHT+IFJxDTO0PPcnDj1vjtBLWF+b9VN6OetGp9OFxlLXp0FJcL16ixfPvEZpVS4aubfeA3ZUF7duQ==
+X-Received: by 2002:a05:6a00:2eaa:b0:6e7:29dd:84db with SMTP id fd42-20020a056a002eaa00b006e729dd84dbmr10135239pfb.31.1711385815206;
+        Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b7-20020a62cf07000000b006e6aee6807dsm4500309pfg.22.2024.03.25.09.56.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 09:56:54 -0700 (PDT)
+Date: Mon, 25 Mar 2024 09:56:53 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
+Message-ID: <202403250949.3ED2F977@keescook>
+References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
+ <874jf5co8g.fsf@email.froward.int.ebiederm.org>
+ <202401221226.DAFA58B78@keescook>
+ <87v87laxrh.fsf@email.froward.int.ebiederm.org>
+ <202401221339.85DBD3931@keescook>
+ <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
+ <202402041526.23118AD@keescook>
+ <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
- <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz> <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
- <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
- <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz> <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
- <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz> <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
- <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz> <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
- <dd6e61ac-2356-4b97-85b4-b963a045361b@podgorny.cz> <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
- <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz>
-In-Reply-To: <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 25 Mar 2024 18:24:58 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF5TUNXVxcaY550_3JYvkGUZDRYtmPAKpbk64Ci8gpbqw@mail.gmail.com>
-Message-ID: <CAMj1kXF5TUNXVxcaY550_3JYvkGUZDRYtmPAKpbk64Ci8gpbqw@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: multipart/mixed; boundary="0000000000000623a306147e9ece"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
 
---0000000000000623a306147e9ece
-Content-Type: text/plain; charset="UTF-8"
+On Mon, Mar 25, 2024 at 04:26:56PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 05.02.24 00:27, Kees Cook wrote:
+> > On Thu, Feb 01, 2024 at 11:47:02AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> >> for once, to make this easily accessible to everyone.
+> >>
+> >> Eric, what's the status wrt. to this regression? Things from here look
+> >> stalled, but I might be missing something.
+> >>
+> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > 
+> > If Eric doesn't beat me to it, I'm hoping to look at this more this
+> > coming week.
+> 
+> Friendly reminder: that was quite a while ago by now and it seems
+> neither you nor Eric looked into this. Or was there some progress and I
+> just missed it?
 
-On Mon, 25 Mar 2024 at 16:56, Radek Podgorny <radek@podgorny.cz> wrote:
->
-> hi!
->
-> patch 106 - does NOT work - result same as with patch 105 (Initramfs
-> unpacking failed: broken padding
-> patch 107 - WORKS - result same asi with patch 100 (full revert)
->
+The original reporter hasn't responded to questions and no one else has
+mentioned this issue, so I think we can remove this from the tracker.
+
+#regzbot resolve: regression is not visible without manually constructing broken ELF headers
 
 
-OK, we're making progress!
-
-Please try the attached patches (try 0001 first and then 0001+0002)
-instead of 107, and capture the output of the combination that
-produces a working boot. There should be some diagnostic data on the
-screen followed by a 10s delay.
-
---0000000000000623a306147e9ece
-Content-Type: text/x-patch; charset="US-ASCII"; name="0001-Dump-setup-header.patch"
-Content-Disposition: attachment; filename="0001-Dump-setup-header.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lu75ruwr1>
-X-Attachment-Id: f_lu75ruwr1
-
-RnJvbSAxMWFkZDRhOGRhZTVjMzZiMzBkYTAxOGUzMGQ2MmE3ZmMxYTM3YmMwIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPgpEYXRl
-OiBNb24sIDI1IE1hciAyMDI0IDE3OjE4OjMzICswMTAwClN1YmplY3Q6IFtQQVRDSCAxLzJdIER1
-bXAgc2V0dXAgaGVhZGVyCgotLS0KIGRyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2LXN0
-dWIuYyB8IDI5ICsrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjkgaW5zZXJ0
-aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2LXN0
-dWIuYyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2LXN0dWIuYwppbmRleCA3YmNj
-NTE3MDA0M2YuLmFhNDRiZGEyMzA1ZiAxMDA2NDQKLS0tIGEvZHJpdmVycy9maXJtd2FyZS9lZmkv
-bGlic3R1Yi94ODYtc3R1Yi5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2
-LXN0dWIuYwpAQCAtNDUwLDYgKzQ1MCwyMCBAQCB2b2lkIF9fbm9yZXR1cm4gZWZpX3N0dWJfZW50
-cnkoZWZpX2hhbmRsZV90IGhhbmRsZSwKIAkJCSAgICAgICBlZmlfc3lzdGVtX3RhYmxlX3QgKnN5
-c190YWJsZV9hcmcsCiAJCQkgICAgICAgc3RydWN0IGJvb3RfcGFyYW1zICpib290X3BhcmFtcyk7
-CiAKK3N0YXRpYyB2b2lkIGR1bXBfYnVmKGNvbnN0IHU4ICpwLCBpbnQgc2l6ZSkKK3sKKwlmb3Ig
-KGludCBpID0gMDsgaSA8IHNpemU7IGkrKykgeworCQljaGFyIHNbNF0sICpjID0gIiAuLiI7CisK
-KwkJaWYgKCEoaSAlIDMyKSkKKwkJCWVmaV9wdXRzKCJcbiMjIyMjIik7CisJCWlmIChwW2ldKQor
-CQkJc25wcmludGYoYyA9IHMsIDQsICIgJTAyeCIsIHBbaV0pOworCQllZmlfcHV0cyhjKTsKKwl9
-CisJZWZpX3B1dHMoIlxuIik7Cit9CisKIC8qCiAgKiBCZWNhdXNlIHRoZSB4ODYgYm9vdCBjb2Rl
-IGV4cGVjdHMgdG8gYmUgcGFzc2VkIGEgYm9vdF9wYXJhbXMgd2UKICAqIG5lZWQgdG8gY3JlYXRl
-IG9uZSBvdXJzZWx2ZXMgKHVzdWFsbHkgdGhlIGJvb3Rsb2FkZXIgd291bGQgY3JlYXRlCkBAIC00
-NjAsNiArNDc0LDcgQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9wZV9lbnRyeShlZmlfaGFu
-ZGxlX3QgaGFuZGxlLAogewogCXN0YXRpYyBzdHJ1Y3QgYm9vdF9wYXJhbXMgYm9vdF9wYXJhbXMg
-X19wYWdlX2FsaWduZWRfYnNzOwogCXN0cnVjdCBzZXR1cF9oZWFkZXIgKmhkciA9ICZib290X3Bh
-cmFtcy5oZHI7CisJdm9pZCAqaW1hZ2VfYmFzZTsKIAllZmlfZ3VpZF90IHByb3RvID0gTE9BREVE
-X0lNQUdFX1BST1RPQ09MX0dVSUQ7CiAJaW50IG9wdGlvbnNfc2l6ZSA9IDA7CiAJZWZpX3N0YXR1
-c190IHN0YXR1czsKQEAgLTQ3Nyw2ICs0OTIsMTYgQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVm
-aV9wZV9lbnRyeShlZmlfaGFuZGxlX3QgaGFuZGxlLAogCQllZmlfZXhpdChoYW5kbGUsIHN0YXR1
-cyk7CiAJfQogCisJZHVtcF9idWYoKHU4ICopaGRyLCBzaXplb2YoKmhkcikpOworCisJaW1hZ2Vf
-YmFzZSA9IGVmaV90YWJsZV9hdHRyKGltYWdlLCBpbWFnZV9iYXNlKTsKKworCS8qIENvcHkgdGhl
-IHNldHVwIGhlYWRlciBmcm9tIHRoZSBzZWNvbmQgc2VjdG9yIHRvIGJvb3RfcGFyYW1zICovCisJ
-bWVtY3B5KCZoZHItPmp1bXAsIGltYWdlX2Jhc2UgKyA1MTIsCisJICAgICAgIHNpemVvZihzdHJ1
-Y3Qgc2V0dXBfaGVhZGVyKSAtIG9mZnNldG9mKHN0cnVjdCBzZXR1cF9oZWFkZXIsIGp1bXApKTsK
-KworCWR1bXBfYnVmKCh1OCAqKWhkciwgc2l6ZW9mKCpoZHIpKTsKKwogCS8qIEFzc2lnbiB0aGUg
-c2V0dXBfaGVhZGVyIGZpZWxkcyB0aGF0IHRoZSBrZXJuZWwgYWN0dWFsbHkgY2FyZXMgYWJvdXQg
-Ki8KIAloZHItPnJvb3RfZmxhZ3MJPSAxOwogCWhkci0+dmlkX21vZGUJPSAweGZmZmY7CkBAIC00
-OTEsNiArNTE2LDggQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9wZV9lbnRyeShlZmlfaGFu
-ZGxlX3QgaGFuZGxlLAogCWVmaV9zZXRfdTY0X3NwbGl0KCh1bnNpZ25lZCBsb25nKWNtZGxpbmVf
-cHRyLCAmaGRyLT5jbWRfbGluZV9wdHIsCiAJCQkgICZib290X3BhcmFtcy5leHRfY21kX2xpbmVf
-cHRyKTsKIAorCWR1bXBfYnVmKCh1OCAqKWhkciwgc2l6ZW9mKCpoZHIpKTsKKwogCWVmaV9zdHVi
-X2VudHJ5KGhhbmRsZSwgc3lzX3RhYmxlX2FyZywgJmJvb3RfcGFyYW1zKTsKIAkvKiBub3QgcmVh
-Y2hlZCAqLwogCkBAIC05MDgsNiArOTM1LDggQEAgdm9pZCBfX25vcmV0dXJuIGVmaV9zdHViX2Vu
-dHJ5KGVmaV9oYW5kbGVfdCBoYW5kbGUsCiAJCQkJICAmYm9vdF9wYXJhbXMtPmV4dF9yYW1kaXNr
-X3NpemUpOwogCX0KIAorCWR1bXBfYnVmKCh1OCAqKWhkciwgc2l6ZW9mKCpoZHIpKTsKKwllZmlf
-YnNfY2FsbChzdGFsbCwgMTAgKiBFRklfVVNFQ19QRVJfU0VDKTsKIAogCS8qCiAJICogSWYgdGhl
-IGJvb3QgbG9hZGVyIGdhdmUgdXMgYSB2YWx1ZSBmb3Igc2VjdXJlX2Jvb3QgdGhlbiB3ZSB1c2Ug
-dGhhdCwKLS0gCjIuNDQuMC4zOTYuZzZlNzkwZGJlMzYtZ29vZwoK
---0000000000000623a306147e9ece
-Content-Type: text/x-patch; charset="US-ASCII"; name="0002-Set-some-header-flags.patch"
-Content-Disposition: attachment; filename="0002-Set-some-header-flags.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lu75ruwo0>
-X-Attachment-Id: f_lu75ruwo0
-
-RnJvbSAzOTdjMGEzOGE4MzY3YWNkOWJiZWJkMmNjZDhkYTg3MzcxNTgyODVmIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPgpEYXRl
-OiBNb24sIDI1IE1hciAyMDI0IDE3OjIyOjIzICswMTAwClN1YmplY3Q6IFtQQVRDSCAyLzJdIFNl
-dCBzb21lIGhlYWRlciBmbGFncwoKLS0tCiBkcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL3g4
-Ni1zdHViLmMgfCAxMSArKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL3g4Ni1zdHViLmMg
-Yi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL3g4Ni1zdHViLmMKaW5kZXggYWE0NGJkYTIz
-MDVmLi4wN2IyMzdkYWZhMDQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0
-dWIveDg2LXN0dWIuYworKysgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL3g4Ni1zdHVi
-LmMKQEAgLTUwNSw2ICs1MDUsNyBAQCBlZmlfc3RhdHVzX3QgX19lZmlhcGkgZWZpX3BlX2VudHJ5
-KGVmaV9oYW5kbGVfdCBoYW5kbGUsCiAJLyogQXNzaWduIHRoZSBzZXR1cF9oZWFkZXIgZmllbGRz
-IHRoYXQgdGhlIGtlcm5lbCBhY3R1YWxseSBjYXJlcyBhYm91dCAqLwogCWhkci0+cm9vdF9mbGFn
-cwk9IDE7CiAJaGRyLT52aWRfbW9kZQk9IDB4ZmZmZjsKKwloZHItPmJvb3RfZmxhZwk9IDB4QUE1
-NTsKIAogCWhkci0+dHlwZV9vZl9sb2FkZXIgPSAweDIxOwogCkBAIC01MTYsNiArNTE3LDE2IEBA
-IGVmaV9zdGF0dXNfdCBfX2VmaWFwaSBlZmlfcGVfZW50cnkoZWZpX2hhbmRsZV90IGhhbmRsZSwK
-IAllZmlfc2V0X3U2NF9zcGxpdCgodW5zaWduZWQgbG9uZyljbWRsaW5lX3B0ciwgJmhkci0+Y21k
-X2xpbmVfcHRyLAogCQkJICAmYm9vdF9wYXJhbXMuZXh0X2NtZF9saW5lX3B0cik7CiAKKwloZHIt
-PnJhbWRpc2tfaW1hZ2UgPSAwOworCWhkci0+cmFtZGlza19zaXplID0gMDsKKworCS8qCisJICog
-RGlzcmVnYXJkIGFueSBzZXR1cCBkYXRhIHRoYXQgd2FzIHByb3ZpZGVkIGJ5IHRoZSBib290bG9h
-ZGVyOgorCSAqIHNldHVwX2RhdGEgY291bGQgYmUgcG9pbnRpbmcgYW55d2hlcmUsIGFuZCB3ZSBo
-YXZlIG5vIHdheSBvZgorCSAqIGF1dGhlbnRpY2F0aW5nIG9yIHZhbGlkYXRpbmcgdGhlIHBheWxv
-YWQuCisJICovCisJaGRyLT5zZXR1cF9kYXRhID0gMDsKKwogCWR1bXBfYnVmKCh1OCAqKWhkciwg
-c2l6ZW9mKCpoZHIpKTsKIAogCWVmaV9zdHViX2VudHJ5KGhhbmRsZSwgc3lzX3RhYmxlX2FyZywg
-JmJvb3RfcGFyYW1zKTsKLS0gCjIuNDQuMC4zOTYuZzZlNzkwZGJlMzYtZ29vZwoK
---0000000000000623a306147e9ece--
+-- 
+Kees Cook
