@@ -1,122 +1,148 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E94FC01
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 19:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F131B977
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 19:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394578; cv=none; b=IE+1UZW2n4P0R9z4WYXT6zYoSy6TgzSuuSzWOCPaZBdFZwq3FcUc89IeIE4aVFp/l4GdvftEnRvaWd2p7+ci2bhzQsSy0jHaC/czLkpN7tjfz48+XDcB/LLdLvLzd3mRIRZhkgkdJBHOwLzBZzZynISKiHWc6mSbEpFBUEbQnZg=
+	t=1711395560; cv=none; b=hMh7oC5t27Yn6uvgWQCnIvNAY3PVK/zZ3OVTg1MNMW0NCIFLUhAZQuzjqRe+BvJW4kgEiBi2a2XgH9X5tbEd04CLxvk3MwhWREiC9/LSzUcGLyPp3AWPiDLLB89tIxd3JdZuhDlzE7DnanC3veapurmNLKsT2tnXmVHVZ/b+t18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394578; c=relaxed/simple;
-	bh=7culdjHPWtO4rCw2JPlSW0eveazDTAT80DhwvtzRH7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CpPKW3LACpdx0E5+9rllgtmX99E4IvJMlkdsFcM7JSHwJq2hTjFIG5ka+epzYCp/K1QG3SvHzHFSuuaJkQ79ALX/vMXeer8cGkBWUiYSfn4N8EtWC1qo/7KokJEzBNr1DzIooD6FJCE5Noks7+vUPS7H2xEYi5FIxXWroKO7zWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=f1Vj+EL7; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1711395560; c=relaxed/simple;
+	bh=CsVUf50sObcUku/mroVotClxV0W8lcZ0puo+cGBDLrk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VQCafsbMXivNaDfNTRScS/stvuEphcTFPiMi12H22p1/+drodkwr4nF3hVh99m25MhlGlDIacxZgOiEAv0TT8BQhnClr2VLA7cOjGkY//BfTuQT5nsEjShNZcrizXRX7a5M1aP4v2ELtHKuV07ht1KNGh4IslZa13hndBY3BWqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghopdPeM; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="f1Vj+EL7"
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PJ2els018274;
-	Mon, 25 Mar 2024 19:22:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=DhYi/4Kwoqd+aMH4bZbT7Tk7UOmwG8WruxUswzwA/zs=;
- b=f1Vj+EL7+PjrC+2oI0sZ+K3dIjFcfb+VAd0qB0Cf0nbk2t5EySN2/OGPUON9w8+VgvbH
- ajCzVABPj6rIR0B+CY9WxVkVpgLkxTiulCUrlgMYT1vpXdr7SWjI117BMGihoYfodPuN
- tsPMWr0rdPN/hYfXf+5mYq9E6buZ0R6AQioOX7ldBYd6IX0tNTZB7z2O3FeEtfm9T5EZ
- WUG3y/TYTBHV34p0cwX0Exj1xIcrjSgEU2zVsZov6iRZkEpoXws4/qITfDdf6J3SYHkx
- UeAt/tEaWH16Vznh2QDdTemH6vGnz6HUzoDzJ4ppq8VfO90aofAdds6GIsYua5ALruWa 1w== 
-Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x37c4vg5w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 19:22:32 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id AA769805EB9;
-	Mon, 25 Mar 2024 19:22:31 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 3AF18808E91;
-	Mon, 25 Mar 2024 19:22:27 +0000 (UTC)
-Date: Mon, 25 Mar 2024 14:22:25 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
-        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-Message-ID: <ZgHO8T_dfrzPBTaZ@swahl-home.5wahls.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
- <ZgABC1oQ9YJW6Bw3@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghopdPeM"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d6a1ad08b8so65953341fa.1
+        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 12:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711395556; x=1712000356; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NCiFMH0263F/w1Boz/4ACSdzIpxCPhV2O6OirjCh0B0=;
+        b=ghopdPeMKX7sUVEp3xwg/OpJ/TfW77Jg0O1FbRKuFMtHBnrlhfLRIt7EC8suC05Mzh
+         HkYMx164PR6bHJX/rXHfHoFm04Q/V1fEI1pHL2P72b+5rXDAm94+hTMyo785evg8ZEBJ
+         JLW3C3Mj/AlCRuil35eMEGWHQoq1XKzjh60+m1ck4R+7kCHZtteGOorpI00pZ3PjPQLh
+         yVZaTsI4scO493wk28bbB/qlXazt5cUkgIJI3ahdc4fG9cI4EjOgZLZOtdzGN/shAepc
+         4SPk8es3rgB82qiByXeWvUtCqZIR9Mg+L+lMntTOdsO1Mm6xLgnlW6hdbMOmCUZTnTBB
+         zWTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711395556; x=1712000356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NCiFMH0263F/w1Boz/4ACSdzIpxCPhV2O6OirjCh0B0=;
+        b=DpXhyh/e4Ay8jr2Kz/Zjz+396N9ujds7xKCwbeOiH5X5RQzbw0SohORKUTK8ESPVom
+         jWLLswuEdcDdYuAOdOVB6FhiPyOPaRDyAES94sShEP8KxxZvGJk7rby17jA/W6sniUdq
+         St18BflzTV4leWBug/LD55Go+tXeCiNcbaH212Rt+UCAFeDqJpBpN0NTvLePjXkmjb31
+         9t74fG73KOVTkERhBj21I07vdjJTcuGPs3B9TbmRLc0JTP1AMFxrwZlFPbcpxIdDMZiH
+         RM/wXIUDh9GBLpuoIrRobehaLiJ1HMEwtjP9ke0AlEOi+0ntmHXHCQVPMKFIbREfZFaM
+         JRig==
+X-Gm-Message-State: AOJu0Yxxgb8VmGGkBgUVL/zdWVXVmfCp9ygndxhsj6uWx+96r2StfY20
+	Mj/xJdR2zOipHi2WlkqIzyHZjexeLln43kPSms0q2yEsV8P1/IVMPhDvRZ9K6wBQsjiB0PuIG0x
+	JRxGVnA1528PnOONZuGz36liw64Y=
+X-Google-Smtp-Source: AGHT+IEO0HQYH0RAUefHQ88oKPd8VrLRPkmE6nkd2e0YQtTaamD6D0keaaFiiiGRD8g+GOmhBLFR4FTEiV/wSwncUdI=
+X-Received: by 2002:a2e:8e86:0:b0:2d4:8fd0:b5f2 with SMTP id
+ z6-20020a2e8e86000000b002d48fd0b5f2mr5556267ljk.7.1711395556273; Mon, 25 Mar
+ 2024 12:39:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgABC1oQ9YJW6Bw3@gmail.com>
-X-Proofpoint-ORIG-GUID: EJ20KfSpLGvNUN8sK5aTGqJOTVRgmrYW
-X-Proofpoint-GUID: EJ20KfSpLGvNUN8sK5aTGqJOTVRgmrYW
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_18,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 clxscore=1011 lowpriorityscore=0
- spamscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2403210000 definitions=main-2403250116
+References: <20240314084412.1127-1-johan+linaro@kernel.org>
+ <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
+ <ZfMStHjwtCT1SW3z@hovoldconsulting.com> <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
+ <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com> <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
+In-Reply-To: <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 25 Mar 2024 15:39:03 -0400
+Message-ID: <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+To: Johan Hovold <johan@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Johan Hovold <johan+linaro@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 24, 2024 at 11:31:39AM +0100, Ingo Molnar wrote:
-> 
-> * Steve Wahl <steve.wahl@hpe.com> wrote:
-> 
-> > Some systems have ACPI tables that don't include everything that needs
-> > to be mapped for a successful kexec.  These systems rely on identity
-> > maps that include the full gigabyte surrounding any smaller region
-> > requested for kexec success.  Without this, they fail to kexec and end
-> > up doing a full firmware reboot.
-> > 
-> > So, reduce the use of GB pages only on systems where this is known to
-> > be necessary (specifically, UV systems).
-> > 
-> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-> > Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
-> > Reported-by: Pavin Joseph <me@pavinjoseph.com>
-> 
-> Sigh, why was d794734c9bbf marked for a -stable backport? The commit 
-> never explains ...
-> 
-> If it's broken, it should be reverted - instead of trying to partially 
-> revert and then maybe break some other systems.
-> 
-> When there's boot breakage with new patches, we back out the bad patch 
-> and re-try in 99.9% of the cases.
+Hi Johan
 
-Fine with me, especially as you've already done the revert. :-)
+On Mon, Mar 25, 2024 at 1:24=E2=80=AFPM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Mon, Mar 25, 2024 at 01:10:13PM -0400, Luiz Augusto von Dentz wrote:
+> > On Mon, Mar 25, 2024 at 9:57=E2=80=AFAM Linux regression tracking (Thor=
+sten
+> > Leemhuis) <regressions@leemhuis.info> wrote:
+> > > On 14.03.24 16:07, Johan Hovold wrote:
+> > > > On Thu, Mar 14, 2024 at 10:30:36AM -0400, Luiz Augusto von Dentz wr=
+ote:
+> > > >> On Thu, Mar 14, 2024 at 4:44=E2=80=AFAM Johan Hovold <johan+linaro=
+@kernel.org> wrote:
+> > > >
+> > > >>> This reverts commit 7dcd3e014aa7faeeaf4047190b22d8a19a0db696.
+> > > >>>
+> > > >>> Qualcomm Bluetooth controllers like WCN6855 do not have persisten=
+t
+> > > >>> storage for the Bluetooth address and must therefore start as
+> > > >>> unconfigured to allow the user to set a valid address unless one =
+has
+> > > >>> been provided by the boot firmware in the devicetree.
+> > > >>>
+> > > >>> A recent change snuck into v6.8-rc7 and incorrectly started marki=
+ng the
+> > > >>> default (non-unique) address as valid. This specifically also bre=
+aks the
+> > > >>> Bluetooth setup for some user of the Lenovo ThinkPad X13s.
+> > > >>>
+> > > >>> Note that this is the second time Qualcomm breaks the driver this=
+ way
+> > > >>> and that this was fixed last year by commit 6945795bc81a ("Blueto=
+oth:
+> > > >>> fix use-bdaddr-property quirk"), which also has some further deta=
+ils.
+> > > >>>
+> > > >>> Fixes: 7dcd3e014aa7 ("Bluetooth: hci_qca: Set BDA quirk bit if fw=
+node exists in DT")
+> > > >>> Cc: stable@vger.kernel.org      # 6.8
+> > > >>> Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+> > > >>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+>
+> > > ...the plan forward here? This to me sounds like a case where a quick
+> > > revert is the right (interim?) solution, but nevertheless nothing
+> > > happened for ~10 days now afaics. Or am I missing something?
+>
+> > I guess the following is the latest version:
+> >
+> > https://patchwork.kernel.org/project/bluetooth/list/?series=3D836664
+> >
+> > Or are you working on a v5?
+>
+> This patch (revert) fixes a separate issue than the series you link to
+> above, but it is also a prerequisite for that series.
+>
+> v4 is indeed the latest version, and it has been acked by Rob and Bjorn
+> so you can take it all through the Bluetooth tree. Just remember to
+> apply this patch (the revert) first.
 
-I will create a new patch that combines the two.  If you have any
-specific actions you'd like to be sure I do for this, let me know.
+Doesn't seem to apply cleanly:
 
-Thanks,
+Applying: Bluetooth: qca: fix device-address endianness
+error: patch failed: drivers/bluetooth/hci_qca.c:1904
+error: drivers/bluetooth/hci_qca.c: patch does not apply
+Patch failed at 0004 Bluetooth: qca: fix device-address endianness
 
---> Steve Wahl
--- 
-Steve Wahl, Hewlett Packard Enterprise
+> Johan
+
+
+
+--=20
+Luiz Augusto von Dentz
