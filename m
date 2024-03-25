@@ -1,89 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E890E3398B;
-	Mon, 25 Mar 2024 19:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0344743AB6
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 20:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396111; cv=none; b=cJGPm2qEbBnBoD1bGIS3eCkyMdzEkRbJOjOKI6jdRuKsvYXbuGHx2LJQgIwkSusyWDe++wRFNlOVdZbTxRwEtYShcBu3ZoVpdG+bhTYU6u8psRDbnhchVg64TyCZfjTopAOyD+OFEFDU3vnsB2K2vZkNp6zF9tVvkGi+J5MhcXA=
+	t=1711397239; cv=none; b=RLGl1UvRsdt4JlxA4jgnXFRG0B0LX/e0JIgO5gWOlUoVhosoqJo441i0e5XMUszggi1xBFFGHHBGiTJtyC9aMOs0wSj3gH1tzVHttY6Hp+71Zf0mDNWXHtHps8FS1JlsBFOlZ7wt0uROtqq/nVZ27K1FlqX3moGuUycmD0WHm3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396111; c=relaxed/simple;
-	bh=kewFYRqhie/XcnlberYm9YkkG/goelTdU5EXcYg82SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoXGaAItEnUp7lCNacU0J4tn+LK027YbjhHhlh19am7qRVmu3yWtVY0N65TIsbYppgGtDFXYuXVlPBD7pd8xoF6cEG1hkox3AJEeu/lr7kvsI9tAK9Zp4I764OKeQvFoB1S+EfbjJhjqWuU8emUNN1M0YAHK9/0COV34XmyrmMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heK1Rnyk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711397239; c=relaxed/simple;
+	bh=du4SRixuDJpsGc6Pl95gu+UfcgZcN4SGXN5Fz8Z6dDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mk/W9HJXe5L89Se+EwyMlCDwTETyom0ISam9fygAvUjdIK5QZWkQKu4KAOi1P7TCMGoy54+JvaAvHN7Txrv0VNGjk93nz8Pq3zPZeFMSAzLH6JfSnuJB88eN6SMyhpp8OCj7uqBT1tLbRQkBI68J5BuHU4xOJmGXUIDhsPVTRS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gy1/VsRd; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heK1Rnyk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6615EC43399;
-	Mon, 25 Mar 2024 19:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711396110;
-	bh=kewFYRqhie/XcnlberYm9YkkG/goelTdU5EXcYg82SI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=heK1Rnyk787MP455BDd1yxr9409bzn8Hv0bqIVRyNYrbowroQ69aNvxQOxU4DHGBR
-	 jJh+DkmtP+ncevvebIpYOT/JxqxQZNuc2WCQZ/MUQAIVlComsZ91HsiEKFk0Weg1x5
-	 gkecO7l0hRzPxVykSxxNN/pIK49A7u1M+wFPK26oSaGNgDeeTXDCAKUhmwfr0Apsw4
-	 6p76S4hoVFFN1I+paNG+Ey0UHIH059mzKj7O6+hoIfKydPhuSN07bkDMzx66mLSYpL
-	 snZe4KI+OFFcuQChSQFw62REjB4YAb3kVgLoYUe4qDk2r8Em6pZOppG21KKclXtfjc
-	 QD8WACQy4sdYA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1roqJC-000000004LS-15hB;
-	Mon, 25 Mar 2024 20:48:38 +0100
-Date: Mon, 25 Mar 2024 20:48:38 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
- exists in DT"
-Message-ID: <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
-References: <20240314084412.1127-1-johan+linaro@kernel.org>
- <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
- <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
- <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
- <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
- <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
- <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gy1/VsRd"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d68c6a4630so57690511fa.3
+        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 13:07:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711397236; x=1712002036; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=du4SRixuDJpsGc6Pl95gu+UfcgZcN4SGXN5Fz8Z6dDU=;
+        b=Gy1/VsRdfOtArEK5ZQxGmjKeTtoXTwczGQ0BDPAcOwEyFu6MdvCcp3zWbB+RrMklyA
+         CyVbIzCIjEEhkNZ7nI426PT49+cZ4rL3kX9KFwboKcoZjg16zXXj4h4V8F+rk9gJDYP2
+         x+iU+0JWEjRkhbOODwzer5HowYxOsMKbfmRRoqHVbvWzjuqQj0JQS6tg5+P8YlRcEeo/
+         5/MfhOZbH8uuiCL+JwFp3LbOeg9HTySofdWHhj8k2sCFB7uTfclul77kLg7nYnFK9k1B
+         BtTvWJQo0aVraT6lm43jYKwv8nZPaSu48HGYzN67nh2K5aK+9eP2MMEe2dDarwHInH8+
+         Hhbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711397236; x=1712002036;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=du4SRixuDJpsGc6Pl95gu+UfcgZcN4SGXN5Fz8Z6dDU=;
+        b=CZ7nyZbDXWdmFaEcSu/ZYMp5pSAy6Bbytl+VVv57EbEBsfUQJ7O2Vk+EEDMws7QDhO
+         vI+L7GD2ijKqQjuaRwW+UcNHAmCo91d1rWb/gr7LESPkMmfHPonYqP+OxIdgSPuw3V51
+         d2OSuJMD4D1vt1lisBwJaoNdLYKF689QomRYqodTzPx0pM64QHC2C2NqoHMBqIMVszMn
+         mRW9+LpOxmQHTCbFeIhWLETuQ6LTA+OL1dH6OCwuEsH4cMot9m/L3Bz/b/JT7MBFm8np
+         fpyIwpD9zef1cAxMuUNPBLHnPQDlcxJ+MUIRohBB1+dUkHXs5p8K68d9g0mRZiOHR+Mh
+         IfvQ==
+X-Gm-Message-State: AOJu0YwqbK/OEHTXK7IwzLXp2mfTnKHTRsV53WNui5Q/4CEdeTU166Ai
+	18FmqO2MZDIt1rZsNkR/cWVazQAhzIMVQvWj60gYZ4TLAl58pWLDjK+yXVPrm0ICU15Nt8fFDVD
+	3lhJV+WdUc8UMqBTX+9WA4uoWt08=
+X-Google-Smtp-Source: AGHT+IHlayvaP0yY4B5G/tL55lxT++Fsn1ZkhDpnNssxYt+RRaI9Pmd8pmh3B5/obFUWOWyZNGwQqHHqCji5jwiL+Hs=
+X-Received: by 2002:a2e:8552:0:b0:2d6:b8d2:3712 with SMTP id
+ u18-20020a2e8552000000b002d6b8d23712mr5740462ljj.26.1711397235773; Mon, 25
+ Mar 2024 13:07:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+References: <20240314084412.1127-1-johan+linaro@kernel.org>
+ <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
+ <ZfMStHjwtCT1SW3z@hovoldconsulting.com> <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
+ <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+ <ZgGzWWV4Lh2Nal--@hovoldconsulting.com> <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+ <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
+In-Reply-To: <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 25 Mar 2024 16:07:03 -0400
+Message-ID: <CABBYNZJUVhNKVD=s+=eYJ1q+j1W8rVSRqM4bKPbxT=TKrnZdoQ@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+To: Johan Hovold <johan@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Johan Hovold <johan+linaro@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 25, 2024 at 03:39:03PM -0400, Luiz Augusto von Dentz wrote:
-> On Mon, Mar 25, 2024 at 1:24 PM Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Mar 25, 2024 at 01:10:13PM -0400, Luiz Augusto von Dentz wrote:
+Hi Johan,
 
-> > > I guess the following is the latest version:
+On Mon, Mar 25, 2024 at 3:48=E2=80=AFPM Johan Hovold <johan@kernel.org> wro=
+te:
+>
+> On Mon, Mar 25, 2024 at 03:39:03PM -0400, Luiz Augusto von Dentz wrote:
+> > On Mon, Mar 25, 2024 at 1:24=E2=80=AFPM Johan Hovold <johan@kernel.org>=
+ wrote:
+> > > On Mon, Mar 25, 2024 at 01:10:13PM -0400, Luiz Augusto von Dentz wrot=
+e:
+>
+> > > > I guess the following is the latest version:
+> > > >
+> > > > https://patchwork.kernel.org/project/bluetooth/list/?series=3D83666=
+4
+> > > >
+> > > > Or are you working on a v5?
 > > >
-> > > https://patchwork.kernel.org/project/bluetooth/list/?series=836664
+> > > This patch (revert) fixes a separate issue than the series you link t=
+o
+> > > above, but it is also a prerequisite for that series.
 > > >
-> > > Or are you working on a v5?
+> > > v4 is indeed the latest version, and it has been acked by Rob and Bjo=
+rn
+> > > so you can take it all through the Bluetooth tree. Just remember to
+> > > apply this patch (the revert) first.
 > >
-> > This patch (revert) fixes a separate issue than the series you link to
-> > above, but it is also a prerequisite for that series.
+> > Doesn't seem to apply cleanly:
 > >
-> > v4 is indeed the latest version, and it has been acked by Rob and Bjorn
-> > so you can take it all through the Bluetooth tree. Just remember to
-> > apply this patch (the revert) first.
-> 
-> Doesn't seem to apply cleanly:
-> 
-> Applying: Bluetooth: qca: fix device-address endianness
-> error: patch failed: drivers/bluetooth/hci_qca.c:1904
-> error: drivers/bluetooth/hci_qca.c: patch does not apply
-> Patch failed at 0004 Bluetooth: qca: fix device-address endianness
+> > Applying: Bluetooth: qca: fix device-address endianness
+> > error: patch failed: drivers/bluetooth/hci_qca.c:1904
+> > error: drivers/bluetooth/hci_qca.c: patch does not apply
+> > Patch failed at 0004 Bluetooth: qca: fix device-address endianness
+>
+> Did you apply this patch (the revert) before trying to apply the series?
 
-Did you apply this patch (the revert) before trying to apply the series?
+Probably needs rebasing:
 
-Johan
+Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in=
+ DT"
+error: drivers/bluetooth/hci_qca.c: does not match index
+Patch failed at 0001 Revert "Bluetooth: hci_qca: Set BDA quirk bit if
+fwnode exists in DT"
+
+> Johan
+
+
+
+--=20
+Luiz Augusto von Dentz
