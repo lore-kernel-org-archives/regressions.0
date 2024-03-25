@@ -1,51 +1,51 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D855118E3F
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 19:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E94FC01
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 19:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394161; cv=none; b=Wmd6q93h0k+dy+wJODfmDkFuROWP45DG/Cdt0gYWla2H3w0YuRtkpFYeRZz/G9Sh/FLXNqscH67Uh4X+zcnZLPxc0wn9wgSYtmjykMnzmt9YMRMFKM47naB5fhk8exPGWtEHXtitpmzzQOuTeD6Ma4G3Gnsr/4Kef8vPh5om7lc=
+	t=1711394578; cv=none; b=IE+1UZW2n4P0R9z4WYXT6zYoSy6TgzSuuSzWOCPaZBdFZwq3FcUc89IeIE4aVFp/l4GdvftEnRvaWd2p7+ci2bhzQsSy0jHaC/czLkpN7tjfz48+XDcB/LLdLvLzd3mRIRZhkgkdJBHOwLzBZzZynISKiHWc6mSbEpFBUEbQnZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394161; c=relaxed/simple;
-	bh=FBaCIU/QKc8O+jfVz9mAPjwwXcmEgyAfdz0ZkQYLWtA=;
+	s=arc-20240116; t=1711394578; c=relaxed/simple;
+	bh=7culdjHPWtO4rCw2JPlSW0eveazDTAT80DhwvtzRH7g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CyGAxiHcZsTbq31RxnH4Af284mczQ+vgRjaRQijs4Q1OSq/D0e/0FoeAKxuAS+CKpxaZxpKJyuMbNQc/ufPi9frkPhkGJmT6LOooZhs1sTdWZM7kr8eM9/987S/venXjOYvFbxqzotm3ncbD7D5nYDq11q1+1Zy0rKi187iZeKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=ezkCU3ng; arc=none smtp.client-ip=148.163.147.86
+	 Content-Type:Content-Disposition:In-Reply-To; b=CpPKW3LACpdx0E5+9rllgtmX99E4IvJMlkdsFcM7JSHwJq2hTjFIG5ka+epzYCp/K1QG3SvHzHFSuuaJkQ79ALX/vMXeer8cGkBWUiYSfn4N8EtWC1qo/7KokJEzBNr1DzIooD6FJCE5Noks7+vUPS7H2xEYi5FIxXWroKO7zWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=f1Vj+EL7; arc=none smtp.client-ip=148.163.143.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="ezkCU3ng"
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PIKWEu028215;
-	Mon, 25 Mar 2024 19:15:36 GMT
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="f1Vj+EL7"
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PJ2els018274;
+	Mon, 25 Mar 2024 19:22:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
  subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=HsQQaVfK6Od0VFK+iLeSTloVRjxn4J5cRsMR9GNjL5Q=;
- b=ezkCU3ngbQ9G2X2YqGUN7zk/YPzed/Sukghzz0rB5wnK9vb0kgsQG188wdzRPG3fLUKK
- 4Vml6FKsYgnL4lw+SsxKCGf+pX2+u2rNlwd+pO85fB7gVMI43Wb4DG9H+7T/HFPfxstT
- eayEVc7nzsDryTHuWb5hSUx7qdkF7QZwpc+NCkwdLDiD6Y2yEn5R2rl3TnxoAZWdsgnK
- 7D5hwBt91E75/p3sX5hEK8xNgd7MLD5m1ZXNvGfRbdJzDdX4HyXjflbfSxL+N36SxVel
- PPbhmkUYKmt/mkWVBhCnwM8IfhM71ZhBFCBPOplDIUj2cOOj5g8hBlirmNDQ0svFQAFh Jg== 
+ in-reply-to; s=pps0720; bh=DhYi/4Kwoqd+aMH4bZbT7Tk7UOmwG8WruxUswzwA/zs=;
+ b=f1Vj+EL7+PjrC+2oI0sZ+K3dIjFcfb+VAd0qB0Cf0nbk2t5EySN2/OGPUON9w8+VgvbH
+ ajCzVABPj6rIR0B+CY9WxVkVpgLkxTiulCUrlgMYT1vpXdr7SWjI117BMGihoYfodPuN
+ tsPMWr0rdPN/hYfXf+5mYq9E6buZ0R6AQioOX7ldBYd6IX0tNTZB7z2O3FeEtfm9T5EZ
+ WUG3y/TYTBHV34p0cwX0Exj1xIcrjSgEU2zVsZov6iRZkEpoXws4/qITfDdf6J3SYHkx
+ UeAt/tEaWH16Vznh2QDdTemH6vGnz6HUzoDzJ4ppq8VfO90aofAdds6GIsYua5ALruWa 1w== 
 Received: from p1lg14881.it.hpe.com ([16.230.97.202])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x36k1vr67-1
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x37c4vg5w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Mar 2024 19:15:35 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	Mon, 25 Mar 2024 19:22:32 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 3C4C2805EBA;
-	Mon, 25 Mar 2024 19:15:34 +0000 (UTC)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id AA769805EB9;
+	Mon, 25 Mar 2024 19:22:31 +0000 (UTC)
 Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id F0F9D80163C;
-	Mon, 25 Mar 2024 19:15:29 +0000 (UTC)
-Date: Mon, 25 Mar 2024 14:15:27 -0500
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 3AF18808E91;
+	Mon, 25 Mar 2024 19:22:27 +0000 (UTC)
+Date: Mon, 25 Mar 2024 14:22:25 -0500
 From: Steve Wahl <steve.wahl@hpe.com>
-To: Dave Hansen <dave.hansen@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
 Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -60,9 +60,9 @@ Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
         Dimitri Sivanich <sivanich@hpe.com>
 Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
  except on UV platform.
-Message-ID: <ZgHNT1bYV8KNRr1G@swahl-home.5wahls.com>
+Message-ID: <ZgHO8T_dfrzPBTaZ@swahl-home.5wahls.com>
 References: <20240322162135.3984233-1-steve.wahl@hpe.com>
- <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
+ <ZgABC1oQ9YJW6Bw3@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -71,113 +71,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
-X-Proofpoint-ORIG-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
-X-Proofpoint-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
+In-Reply-To: <ZgABC1oQ9YJW6Bw3@gmail.com>
+X-Proofpoint-ORIG-GUID: EJ20KfSpLGvNUN8sK5aTGqJOTVRgmrYW
+X-Proofpoint-GUID: EJ20KfSpLGvNUN8sK5aTGqJOTVRgmrYW
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-25_18,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250115
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 lowpriorityscore=0
+ spamscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2403210000 definitions=main-2403250116
 
-I understand the original has been reverted, and that my way forward
-is likely to combine the original patch and the fix into a combined
-patch (possibly a set).  I still think some of this conversation will
-be valuable to creation of that patch, so continuing to reply.  More
-below.
-
-On Fri, Mar 22, 2024 at 04:29:27PM -0700, Dave Hansen wrote:
-> On 3/22/24 09:21, Steve Wahl wrote:
+On Sun, Mar 24, 2024 at 11:31:39AM +0100, Ingo Molnar wrote:
+> 
+> * Steve Wahl <steve.wahl@hpe.com> wrote:
+> 
 > > Some systems have ACPI tables that don't include everything that needs
 > > to be mapped for a successful kexec.  These systems rely on identity
 > > maps that include the full gigabyte surrounding any smaller region
 > > requested for kexec success.  Without this, they fail to kexec and end
 > > up doing a full firmware reboot.
+> > 
+> > So, reduce the use of GB pages only on systems where this is known to
+> > be necessary (specifically, UV systems).
+> > 
+> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+> > Reported-by: Pavin Joseph <me@pavinjoseph.com>
 > 
-> I'm still missing something here.  Which ACPI tables are we talking
-> about?  What don't they map?  I normally don't think of ACPI _tables_ as
-> "mapping" things.
-
-I'm refering to the memory areas that are mapped in machine_kexec_64.c
-in the function map_acpi_tables.  These appear to be e820 table
-entries that have a type of E820_TYPE_ACPI which the kernel marks as
-IORES_DESC_ACPI_TABLES, or a type of E820_TYPE_NVS that the kernel
-marks as IORES_DESC_ACPI_NV_STORAGE.
-
-The name of the function that maps them is why I refer to them as ACPI
-tables.  Sorry if that is inaccurate.
-
-> It seems like there's a theory that some ACPI table isn't mapped, but
-> looking through the discussion so far I don't see a smoking gun.
-
-I think I'm saying more that the ACPI table doesn't list everything
-that needs to be mapped, not that the table itself isn't mapped.  Not
-sure if that changes your picture or not.
-
-My debuging exchanges with Pavin showed that the regions mapped within
-the map_acpi_tables function were the ones that left uncovered holes
-in the identity map if you don't overshoot what's requested by using
-full gbpages for everything.
-
-For his system only, I manually added hardcoded regions corresponding
-to the holes that got left by using 2M pages instead of GB pages, and
-kexec succeeded.
-
-Having the list of holes-not-covered (IIRC, four of them), I could
-have persued which particular holes cause kexec to fail, but I did not
-because I couldn't think of a way to make use of that information.
-Even knowing which additional addresses need coverage for this
-particular machine, I have no way of knowing what is in those regions,
-nor how to generalize to what is needed on other machines.
-
-> Let's say the kernel has a bug and the kernel was actively not
-> mapping something that it should have mapped.  The oversized 1GB
-> mappings made the bug harder to hit.  If that's the case, we'll just
-> be adding a hack which papers over the bug instead of fixing it
-> properly.
-
-I hope you agree that by reverting, we have now papered over that bug,
-just in a different way.
-
-If a patch that leaves this papered over except for UV systems won't
-be acceptable -- that's what I intend to do, just combining my two
-patches -- please let me know what my way forward should be.
-
-> I'm kind of leaning to say that we should just revert d794734c9bbf and
-> have the UV folks go back to the nogbpages until we get this properly
-> sorted.
-
-Being larger memory systems (for example, 32 socket Sapphire Rapids
-systems with a full set of RAM on each socket), UV probably suffers
-the most from having an extra 4K per GiB to create the identity map.
-
-> > @@ -10,6 +10,7 @@ struct x86_mapping_info {
-> >  	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
-> >  	unsigned long offset;		 /* ident mapping offset */
-> >  	bool direct_gbpages;		 /* PUD level 1GB page support */
-> > +	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
-> >  	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
-> >  };
+> Sigh, why was d794734c9bbf marked for a -stable backport? The commit 
+> never explains ...
 > 
-> But let's at least talk about this patch in case we decide to go forward
-> with it.  We've really got two things:
+> If it's broken, it should be reverted - instead of trying to partially 
+> revert and then maybe break some other systems.
 > 
-> 1. Can the system use gbpages in the first place?
-> 2. Do the gbpages need to be exact (UV) or sloppy (everything else)?
-> 
-> I wouldn't refer to this at all as "always" use gbpages.  It's really a
-> be-sloppy-and-paper-over-bugs mode.  They might be kernel bugs or
-> firmware bugs, but they're bugs _somewhere_ right?
+> When there's boot breakage with new patches, we back out the bad patch 
+> and re-try in 99.9% of the cases.
 
-Do you have a concise suggestion of what you'd call it?  I could use
-*_sloppy if you'd like, but I don't care much for the way that
-reads.
+Fine with me, especially as you've already done the revert. :-)
 
-Thanks for your time,
+I will create a new patch that combines the two.  If you have any
+specific actions you'd like to be sure I do for this, let me know.
+
+Thanks,
 
 --> Steve Wahl
 -- 
