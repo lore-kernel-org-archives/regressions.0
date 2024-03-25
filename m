@@ -1,105 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7955A1272B7;
-	Mon, 25 Mar 2024 17:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D855118E3F
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 19:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387475; cv=none; b=aqdrAEiXVYQoQCNSm5EUmumukRjPFypUZFJcEQgUBuJZ5t59Js2s7pTdSo1LSrNEsj6sIf7S/aAmk27vyaBEDMErG55FqRlqWdffEiDgRXBawee3vgjaIP1hknxKNGot5xlHvhRZ/OmTKgx4iWWbxVuPW+2GxBlsvL313xUQo7E=
+	t=1711394161; cv=none; b=Wmd6q93h0k+dy+wJODfmDkFuROWP45DG/Cdt0gYWla2H3w0YuRtkpFYeRZz/G9Sh/FLXNqscH67Uh4X+zcnZLPxc0wn9wgSYtmjykMnzmt9YMRMFKM47naB5fhk8exPGWtEHXtitpmzzQOuTeD6Ma4G3Gnsr/4Kef8vPh5om7lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387475; c=relaxed/simple;
-	bh=SG6EGca3m/NZMVmD+LxtzI3FPLdQj5ggvZ1olnz8HTI=;
+	s=arc-20240116; t=1711394161; c=relaxed/simple;
+	bh=FBaCIU/QKc8O+jfVz9mAPjwwXcmEgyAfdz0ZkQYLWtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WxRjIBUPp1AmcDLfFE7xUfSr/LG5Uns+1pax0THfJrYwuspoqiFPLLtrF3Y3pKq/jw49WQZdylLCF9wxrLS2ZwuUBsI7e8J+R59J7irZUC+t4U2aKZqCl8WpELkucpj4L+ccHvL5VfEBEoSBVDs4MJ9PUzyoBCDUtsQLCK/HmfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgsmoO/w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CyGAxiHcZsTbq31RxnH4Af284mczQ+vgRjaRQijs4Q1OSq/D0e/0FoeAKxuAS+CKpxaZxpKJyuMbNQc/ufPi9frkPhkGJmT6LOooZhs1sTdWZM7kr8eM9/987S/venXjOYvFbxqzotm3ncbD7D5nYDq11q1+1Zy0rKi187iZeKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=ezkCU3ng; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgsmoO/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050EAC43390;
-	Mon, 25 Mar 2024 17:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711387475;
-	bh=SG6EGca3m/NZMVmD+LxtzI3FPLdQj5ggvZ1olnz8HTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fgsmoO/w37AzO+prEM9Ft/N4eq5n4ItZ+8EMWV1UByxm8W8USJXyj6Hj0Gm7BmrGT
-	 vyByf40ffH3tIkPP0VCbKQvkT1e58wXQVH4iPIGXVYIvNdV6FV0kEYOh+07jfU1hqD
-	 byneQL3xWLOhGcg5jSMyj+F0kthJn5y3hNKe83runpMAFVWpkRXOF0XcjVGdetYC+R
-	 Ug5GpG50+qra8r6atTzz9YlHRQTIbtnPFK41Vu6uIG67G+jYdeknOSc4sX5GsquPZe
-	 /aze01GgFpUJ+oqJtrn9bS5iAvLwIlYOY9ciTLjA0sfvfDKEr5cg426fNtaQTYsD0f
-	 cDQBdON1ilgVQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1roo3t-0000000049f-2nVQ;
-	Mon, 25 Mar 2024 18:24:42 +0100
-Date: Mon, 25 Mar 2024 18:24:41 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
- exists in DT"
-Message-ID: <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
-References: <20240314084412.1127-1-johan+linaro@kernel.org>
- <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
- <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
- <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
- <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="ezkCU3ng"
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PIKWEu028215;
+	Mon, 25 Mar 2024 19:15:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=HsQQaVfK6Od0VFK+iLeSTloVRjxn4J5cRsMR9GNjL5Q=;
+ b=ezkCU3ngbQ9G2X2YqGUN7zk/YPzed/Sukghzz0rB5wnK9vb0kgsQG188wdzRPG3fLUKK
+ 4Vml6FKsYgnL4lw+SsxKCGf+pX2+u2rNlwd+pO85fB7gVMI43Wb4DG9H+7T/HFPfxstT
+ eayEVc7nzsDryTHuWb5hSUx7qdkF7QZwpc+NCkwdLDiD6Y2yEn5R2rl3TnxoAZWdsgnK
+ 7D5hwBt91E75/p3sX5hEK8xNgd7MLD5m1ZXNvGfRbdJzDdX4HyXjflbfSxL+N36SxVel
+ PPbhmkUYKmt/mkWVBhCnwM8IfhM71ZhBFCBPOplDIUj2cOOj5g8hBlirmNDQ0svFQAFh Jg== 
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x36k1vr67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 19:15:35 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 3C4C2805EBA;
+	Mon, 25 Mar 2024 19:15:34 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id F0F9D80163C;
+	Mon, 25 Mar 2024 19:15:29 +0000 (UTC)
+Date: Mon, 25 Mar 2024 14:15:27 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+        Sarah Brofeldt <srhb@dbc.dk>, Russ Anderson <rja@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgHNT1bYV8KNRr1G@swahl-home.5wahls.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+In-Reply-To: <8cc9e238-fa70-402f-9990-f7e391b367a9@intel.com>
+X-Proofpoint-ORIG-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
+X-Proofpoint-GUID: 1J9A2RlA4nbSnn1VN6TCvYxRifonpGVY
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-25_18,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250115
 
-On Mon, Mar 25, 2024 at 01:10:13PM -0400, Luiz Augusto von Dentz wrote:
-> On Mon, Mar 25, 2024 at 9:57 AM Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
-> > On 14.03.24 16:07, Johan Hovold wrote:
-> > > On Thu, Mar 14, 2024 at 10:30:36AM -0400, Luiz Augusto von Dentz wrote:
-> > >> On Thu, Mar 14, 2024 at 4:44 AM Johan Hovold <johan+linaro@kernel.org> wrote:
-> > >
-> > >>> This reverts commit 7dcd3e014aa7faeeaf4047190b22d8a19a0db696.
-> > >>>
-> > >>> Qualcomm Bluetooth controllers like WCN6855 do not have persistent
-> > >>> storage for the Bluetooth address and must therefore start as
-> > >>> unconfigured to allow the user to set a valid address unless one has
-> > >>> been provided by the boot firmware in the devicetree.
-> > >>>
-> > >>> A recent change snuck into v6.8-rc7 and incorrectly started marking the
-> > >>> default (non-unique) address as valid. This specifically also breaks the
-> > >>> Bluetooth setup for some user of the Lenovo ThinkPad X13s.
-> > >>>
-> > >>> Note that this is the second time Qualcomm breaks the driver this way
-> > >>> and that this was fixed last year by commit 6945795bc81a ("Bluetooth:
-> > >>> fix use-bdaddr-property quirk"), which also has some further details.
-> > >>>
-> > >>> Fixes: 7dcd3e014aa7 ("Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT")
-> > >>> Cc: stable@vger.kernel.org      # 6.8
-> > >>> Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-> > >>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+I understand the original has been reverted, and that my way forward
+is likely to combine the original patch and the fix into a combined
+patch (possibly a set).  I still think some of this conversation will
+be valuable to creation of that patch, so continuing to reply.  More
+below.
 
-> > ...the plan forward here? This to me sounds like a case where a quick
-> > revert is the right (interim?) solution, but nevertheless nothing
-> > happened for ~10 days now afaics. Or am I missing something?
-
-> I guess the following is the latest version:
+On Fri, Mar 22, 2024 at 04:29:27PM -0700, Dave Hansen wrote:
+> On 3/22/24 09:21, Steve Wahl wrote:
+> > Some systems have ACPI tables that don't include everything that needs
+> > to be mapped for a successful kexec.  These systems rely on identity
+> > maps that include the full gigabyte surrounding any smaller region
+> > requested for kexec success.  Without this, they fail to kexec and end
+> > up doing a full firmware reboot.
 > 
-> https://patchwork.kernel.org/project/bluetooth/list/?series=836664
+> I'm still missing something here.  Which ACPI tables are we talking
+> about?  What don't they map?  I normally don't think of ACPI _tables_ as
+> "mapping" things.
+
+I'm refering to the memory areas that are mapped in machine_kexec_64.c
+in the function map_acpi_tables.  These appear to be e820 table
+entries that have a type of E820_TYPE_ACPI which the kernel marks as
+IORES_DESC_ACPI_TABLES, or a type of E820_TYPE_NVS that the kernel
+marks as IORES_DESC_ACPI_NV_STORAGE.
+
+The name of the function that maps them is why I refer to them as ACPI
+tables.  Sorry if that is inaccurate.
+
+> It seems like there's a theory that some ACPI table isn't mapped, but
+> looking through the discussion so far I don't see a smoking gun.
+
+I think I'm saying more that the ACPI table doesn't list everything
+that needs to be mapped, not that the table itself isn't mapped.  Not
+sure if that changes your picture or not.
+
+My debuging exchanges with Pavin showed that the regions mapped within
+the map_acpi_tables function were the ones that left uncovered holes
+in the identity map if you don't overshoot what's requested by using
+full gbpages for everything.
+
+For his system only, I manually added hardcoded regions corresponding
+to the holes that got left by using 2M pages instead of GB pages, and
+kexec succeeded.
+
+Having the list of holes-not-covered (IIRC, four of them), I could
+have persued which particular holes cause kexec to fail, but I did not
+because I couldn't think of a way to make use of that information.
+Even knowing which additional addresses need coverage for this
+particular machine, I have no way of knowing what is in those regions,
+nor how to generalize to what is needed on other machines.
+
+> Let's say the kernel has a bug and the kernel was actively not
+> mapping something that it should have mapped.  The oversized 1GB
+> mappings made the bug harder to hit.  If that's the case, we'll just
+> be adding a hack which papers over the bug instead of fixing it
+> properly.
+
+I hope you agree that by reverting, we have now papered over that bug,
+just in a different way.
+
+If a patch that leaves this papered over except for UV systems won't
+be acceptable -- that's what I intend to do, just combining my two
+patches -- please let me know what my way forward should be.
+
+> I'm kind of leaning to say that we should just revert d794734c9bbf and
+> have the UV folks go back to the nogbpages until we get this properly
+> sorted.
+
+Being larger memory systems (for example, 32 socket Sapphire Rapids
+systems with a full set of RAM on each socket), UV probably suffers
+the most from having an extra 4K per GiB to create the identity map.
+
+> > @@ -10,6 +10,7 @@ struct x86_mapping_info {
+> >  	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+> >  	unsigned long offset;		 /* ident mapping offset */
+> >  	bool direct_gbpages;		 /* PUD level 1GB page support */
+> > +	bool direct_gbpages_always;	 /* use 1GB pages exclusively */
+> >  	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
+> >  };
 > 
-> Or are you working on a v5?
+> But let's at least talk about this patch in case we decide to go forward
+> with it.  We've really got two things:
+> 
+> 1. Can the system use gbpages in the first place?
+> 2. Do the gbpages need to be exact (UV) or sloppy (everything else)?
+> 
+> I wouldn't refer to this at all as "always" use gbpages.  It's really a
+> be-sloppy-and-paper-over-bugs mode.  They might be kernel bugs or
+> firmware bugs, but they're bugs _somewhere_ right?
 
-This patch (revert) fixes a separate issue than the series you link to
-above, but it is also a prerequisite for that series.
+Do you have a concise suggestion of what you'd call it?  I could use
+*_sloppy if you'd like, but I don't care much for the way that
+reads.
 
-v4 is indeed the latest version, and it has been acked by Rob and Bjorn
-so you can take it all through the Bluetooth tree. Just remember to
-apply this patch (the revert) first.
+Thanks for your time,
 
-Johan
+--> Steve Wahl
+-- 
+Steve Wahl, Hewlett Packard Enterprise
