@@ -1,71 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0DB145B29;
-	Mon, 25 Mar 2024 12:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8BB13CF99;
+	Mon, 25 Mar 2024 13:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711368333; cv=none; b=XwX5D9Rmsg5Key0rWsQo3W/chrHaMcoUe7l7qRTdqcXEcTtjtVbc85ENJ9uWKXyaZ18QzVNAc53n9Lxk8trM/22FZAwZGcBJOwLEzvDUEc54Hfe3eTZ4A68QvKvfelsUYsNce5hPx7a6Da+WLW0VJ13OyyPRkGayVs7lWxWWFjI=
+	t=1711375080; cv=none; b=dnPTGbfPj2xrjRcl5XvyxJJ8hHuhWfRqR6VR51swW5UwerF8M9dcVcmrtWNS/3I2thEHTse97oqq2nD/Es2N4SZh6ze/skGIs9vCZ5s6+DMCckA+8eZqklk6m3uEAyVjq0hZchS9sUJ6lYTcf6M2Z1m5tOc6pK4GzcEMuUiXwyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711368333; c=relaxed/simple;
-	bh=/eWTHCGbthMM8s000KyybSQhaxmkfQahpwzNlykKCR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mL23SoASqBJKN+CWFC+j/b4hI5uS6Xj3J/MoqITttjl/+LMgueYb5NUYxdCV3YvaH94wZqnxF1b0vxk7DY+L9uJEYioM2X0oLFR1QYsdeuI07l22+vXRvg1dlH0Wg3N8gBxn6hdW0dua8XkO7mcSllEL0BCxmCquWvHyFeCn8fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lam2HJ0n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711375080; c=relaxed/simple;
+	bh=SLkYKf7P/7HX8XrRjqY8I+HwX6HiSpxlmzsrBdk+4vY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fveS+5Ay3vNWzaeW/KF+KVv8djuByRs1YV1vMfDQ3z5qt5VqF55/RL0KwWxb+QSgZPS7vpzUgreV285s7k+e1UJp9to8l6VMWM/L2sSoEKnOfEUS9LDdG5SHTwkWq6M2UN/SfsPb93rswfIy8xkqMpxCCuki3pPu+UH4SqeMjbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cJtsiE3T; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lam2HJ0n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D291CC433F1;
-	Mon, 25 Mar 2024 12:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711368332;
-	bh=/eWTHCGbthMM8s000KyybSQhaxmkfQahpwzNlykKCR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lam2HJ0nZdB04deN0sWBUNzu9z6Xsvm4NsmTY1g/ji/2bkV5XoQeYV+9ssahTdoDH
-	 cqdaYdqk3291t3mby8pEoMZKjtbILq080aPI4EzSWDMuJmoARNbRv8SnemPk9hNDnL
-	 TQ+vAxtz7I2klk1k5CZ1iLVl67TNhCikY9JB6Xn7EiB3lZOyv8MZ962zkDuI1ycFcT
-	 bOyNimsO4rAQivKaib9fBn1KB5mD2M769B+9DcWMGctRjI7B4O+P/iiOOu04l9I/3n
-	 C1W76gLtt3wOmIZ8V0QCofGVECD4aJl6sDhIubwVp4EzblUQjVI8HpgpUyGGZLtE5Y
-	 kDVtVjUWkxIHw==
-Date: Mon, 25 Mar 2024 13:05:27 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Anton Altaparmakov <anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>, ntfs3@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, 
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 2/2] ntfs3: remove warning
-Message-ID: <20240325-shrimps-ballverlust-dc44fa157138@brauner>
-References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
- <20240325-faucht-kiesel-82c6c35504b3@brauner>
- <ZgFN8LMYPZzp6vLy@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cJtsiE3T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=zXzI4MBpAZyeY9dZ4v2b6WShvnTo9KadIGopnBs+80c=;
+	t=1711375078; x=1711807078; b=cJtsiE3TGuC5YtQ1tMLq3RnwS2MGlMhDQ4k7J3TWJRf4cE6
+	A79jR8SDckNHuindHSKkmgZC1qt35FVHJ757Y3O/n00+2u38CnJk4juZ8EDPetaVXfXprg4swI9si
+	5JiA7OgxowznlInN76ZJ7+7wZQ7qU5RebYMf48QmP/FkM6bIIxJkWEyaLUgLID3F+GIiKGXticj3+
+	ZU6g+b3toeMz5Z/lERuD/oBpb0N8G8LP7RREaQXmisije3Bzc3l2/wWjEc715MdBsVSilgx8OsfWU
+	w2InjtJWYfhp0LPXy4YhvjblUnzSsV5wKb3mks4nw6SR5cDDVNsaiMNighIG38gQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rokpn-0004yx-OJ; Mon, 25 Mar 2024 14:57:55 +0100
+Message-ID: <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
+Date: Mon, 25 Mar 2024 14:57:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZgFN8LMYPZzp6vLy@hovoldconsulting.com>
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+Content-Language: en-US, de-DE
+To: Johan Hovold <johan@kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Janaki Ramaiah Thota <quic_janathot@quicinc.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240314084412.1127-1-johan+linaro@kernel.org>
+ <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
+ <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711375078;17de2c7d;
+X-HE-SMSGID: 1rokpn-0004yx-OJ
 
-On Mon, Mar 25, 2024 at 11:12:00AM +0100, Johan Hovold wrote:
-> On Mon, Mar 25, 2024 at 09:34:38AM +0100, Christian Brauner wrote:
-> > This causes visible changes for users that rely on ntfs3 to serve as an
-> > alternative for the legacy ntfs driver. Print statements such as this
-> > should probably be made conditional on a debug config option or similar.
-> > 
-> > Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > Cc: Johan Hovold <johan@kernel.org>
-> > Link: https://lore.kernel.org/r/Zf2zPf5TO5oYt3I3@hovoldconsulting.com
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> 
-> I also see a
-> 
-> 	ntfs3: Max link count 4000
-> 
-> message on mount which wasn't there with NTFS legacy. Is that benign
-> and should be suppressed too perhaps?
+Bluetooth Maintainers, what's...
 
-We need a reply from the ntfs3 maintainers here.
+On 14.03.24 16:07, Johan Hovold wrote:
+> On Thu, Mar 14, 2024 at 10:30:36AM -0400, Luiz Augusto von Dentz wrote:
+>> On Thu, Mar 14, 2024 at 4:44 AM Johan Hovold <johan+linaro@kernel.org> wrote:
+> 
+>>> This reverts commit 7dcd3e014aa7faeeaf4047190b22d8a19a0db696.
+>>>
+>>> Qualcomm Bluetooth controllers like WCN6855 do not have persistent
+>>> storage for the Bluetooth address and must therefore start as
+>>> unconfigured to allow the user to set a valid address unless one has
+>>> been provided by the boot firmware in the devicetree.
+>>>
+>>> A recent change snuck into v6.8-rc7 and incorrectly started marking the
+>>> default (non-unique) address as valid. This specifically also breaks the
+>>> Bluetooth setup for some user of the Lenovo ThinkPad X13s.
+>>>
+>>> Note that this is the second time Qualcomm breaks the driver this way
+>>> and that this was fixed last year by commit 6945795bc81a ("Bluetooth:
+>>> fix use-bdaddr-property quirk"), which also has some further details.
+>>>
+>>> Fixes: 7dcd3e014aa7 ("Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT")
+>>> Cc: stable@vger.kernel.org      # 6.8
+>>> Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+>>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+>>
+>> Well I guess I will need to start asking for evidence that this works
+>> on regular Linux distros then, because it looks like that is not the
+>> environment Janaki and others Qualcomm folks are testing with.
+>>
+>> What I probably would consider as evidence is bluetoothd logs showing
+>> that the controller has been configured correctly or perhaps there is
+>> a simpler way?
+> 
+> Well, in this case we actually want the controller to remain
+> unconfigured (e.g. to avoid having every user of the X13s unknowingly
+> use the same default address). 
+> 
+> I'm not sure why Qualcomm insists on breaking these quirks, but I guess
+> they just haven't understood why they exist. It's of course convenient
+> to be able to use the default address during development without first
+> having to provide an address, but that's not a valid reason to break the
+> driver.
+> 
+> From what I hear the Qualcomm developers only care about Android and I
+> believe they have some out-of-tree hack for retrieving the device
+> address directly from the rootfs.
+> 
+> For the X13s, and as I think I've mentioned before, we have been trying
+> to get Qualcomm to tell us how to access the assigned addresses that are
+> stored in some secure world storage so that we can set it directly from
+> the driver. But until we figure that out, users will need to continue
+> setting the address manually.
+
+...the plan forward here? This to me sounds like a case where a quick
+revert is the right (interim?) solution, but nevertheless nothing
+happened for ~10 days now afaics. Or am I missing something?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
