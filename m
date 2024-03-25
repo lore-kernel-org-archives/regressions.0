@@ -1,61 +1,51 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AD612B6C
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 16:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78EA1369AD;
+	Mon, 25 Mar 2024 17:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711385817; cv=none; b=T/Z6z/rpY9MMijw/yAEuvYTB+yul+xbP++qnIYlcQOQhJ2JMkRu71W98wMwPVOZ4e+9PqgiDXccrytRF7100YxnvMHjrB+t87jUhawhT7AmOihcy+wkAc+zQ1T4I6CZYFoAWjyJP6CIoB4AvyZIDxeD9K7BFrlqIiNmlmFbQVts=
+	t=1711386545; cv=none; b=l78pZ09DAe3zcaJ311m+mq0kelUtN9C+Qfr5Gne1/+Y3VdeLflqCRDy8G2Z4OkbTasWplF5jrfb3eNszYweWaHHxSu8G/wZZeGckORjcvc/Uq1hlvNbL97q/uv0pr5nW6VcNWLXqudIKr1HS8V2FBSErZxhbaua6JzGxFSVkjY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711385817; c=relaxed/simple;
-	bh=xPp/RUzgQsiSSqM+nB7eJxXqxjfyHTpV6y11jbU95bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tLCH/4gXl2YcZVZbRUgBNOh+ohKZ5buF5g8AV41S+TH4XQuCcj7CkvC9mu3gPGp9p90CGthnG9yVPMEKgfFnLHS7FW5TzWH9ajyPPm11ptNeVNc5vHDv793nu00ObdvtsjMxJF55u1D+zcszg9f8EVrkbFtoMennnvrKv4+59SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G1+UiDw5; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1711386545; c=relaxed/simple;
+	bh=UYyk8goNTowWikjuMMKS6U8Bzza67VHqAbb7Yx2knn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rwYt+wS7jjwBcWM7vwy7ZSwYMZgPtfxRQ81Zfo8wZ7alwG1pA0GZHRJXVM94bXMxWvg9ijBkfaev2y7w4FZmxZKJXyyz3uA6C3ZCbs+m/UyhPIDMKwLivkVLgO+f3RKkD5yiFWgO6y1IMdHpIbss8RvofmN7ifGWrSvsb74vUdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cQ/ZhxNQ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G1+UiDw5"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e6b729669bso3773259b3a.3
-        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711385815; x=1711990615; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
-        b=G1+UiDw5ZA0EgaS7CCHVdp770+zbCbMV0Y0vuUxifikQmWT6ZwBMZSp8WTa9ohSuW8
-         E4pR3KwomGkjpsAl5wuln+EE2MFMd9pJxDqd46LiWf+1fJ9W8Y8b6o9mgPvdYg+ulTqW
-         YGbKnQzu1aFdlOoImwuOGqqHKbj2CTO7QoR68=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711385815; x=1711990615;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uv8OSr8XfO/UGe4RvS9k3B7kgKFsdVwGKtydzmzsC34=;
-        b=mW0Je5shO1p/U5uZlz7GK7uzl/rMN52PWCVLvbAp5MDLugPCQ0AUirjYTBYxTeO3O5
-         eyqq4VAsBehfU02+7idUG1z6kVHTHhjiwdRG5DLdRpNLCR01rSv+SnTl8Exz2LJCH76n
-         AqofKa8lQbXkZjKAykeuV2pMKSyVdK/eB8mcZVAysMrwGhK/q4jjTzflxAUGodxokjWJ
-         GDlAAeGei2QYRvy+Q4NEPxj83ry2Jobi+d0OpTYbSmqZZFPYaV1YUEd2549/3jlT+N/K
-         5sreQl3jB2VLkRkACoTUAN+tK7g4KgM3UumBQp67Kj3CmZ7Dy7CKcIUQOIPoCGlvnjL2
-         ydig==
-X-Gm-Message-State: AOJu0Yyt9MLzUSn3qVtsoUILIoRu8wHty8zTTmRKJBLqtQt9b8AtY7MF
-	3OaY2yYBo6ibz3y7BZfDhivBAeyGaxEs5mzvpj3Jsd0acNeuZmO5TSVgWSt4Lg==
-X-Google-Smtp-Source: AGHT+IFJxDTO0PPcnDj1vjtBLWF+b9VN6OetGp9OFxlLXp0FJcL16ixfPvEZpVS4aubfeA3ZUF7duQ==
-X-Received: by 2002:a05:6a00:2eaa:b0:6e7:29dd:84db with SMTP id fd42-20020a056a002eaa00b006e729dd84dbmr10135239pfb.31.1711385815206;
-        Mon, 25 Mar 2024 09:56:55 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b7-20020a62cf07000000b006e6aee6807dsm4500309pfg.22.2024.03.25.09.56.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 09:56:54 -0700 (PDT)
-Date: Mon, 25 Mar 2024 09:56:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cQ/ZhxNQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=/1vRIRCMcKep857REgOgnY61TxUx/MYY2ON/5+tnNIo=; t=1711386543;
+	x=1711818543; b=cQ/ZhxNQxjkQTacefYhl5aMZ4TdaVIOZZ9edbbiI93wSd2bpfyqrdHNk9g+xr
+	ioDfu3WLK2RBxxhHSBQutoPRtSZ3fsriDsyek1n15J/jSk/IohR1Dz+KAHDSi3WrTMc8HKiwB0wye
+	xYtKba4bIPrlLkfv+zUf14gKhJNmMVof4ayaQS+Zs3IE5VquYbIIRHqCdlINxFzS5u5Clv19ww0dq
+	yRSQGJxWkZytZlZmoq8RT8x5lAtqfTnA3u1JV7IEabo9H9yDAkGeDP/7b+hQl5/f3LftsO4NHtT84
+	kOgnBq6ZqqffTwZUsh6ikkK/icM4gaU/VeRiY2mMo6id14d14Q==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ronoc-0004O2-Gt; Mon, 25 Mar 2024 18:08:54 +0100
+Message-ID: <b5749b25-7f1b-4933-9e72-87c3ef178c35@leemhuis.info>
+Date: Mon, 25 Mar 2024 18:08:53 +0100
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
-Message-ID: <202403250949.3ED2F977@keescook>
+Content-Language: en-US, de-DE
+To: Kees Cook <keescook@chromium.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, linux-fsdevel@vger.kernel.org
 References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
  <874jf5co8g.fsf@email.froward.int.ebiederm.org>
  <202401221226.DAFA58B78@keescook>
@@ -64,39 +54,19 @@ References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
  <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
  <202402041526.23118AD@keescook>
  <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51f61874-0567-4b4f-ab06-ecb3b27c9e41@leemhuis.info>
+ <202403250949.3ED2F977@keescook>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <202403250949.3ED2F977@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711386543;9cf8b45d;
+X-HE-SMSGID: 1ronoc-0004O2-Gt
 
-On Mon, Mar 25, 2024 at 04:26:56PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 05.02.24 00:27, Kees Cook wrote:
-> > On Thu, Feb 01, 2024 at 11:47:02AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-> >> for once, to make this easily accessible to everyone.
-> >>
-> >> Eric, what's the status wrt. to this regression? Things from here look
-> >> stalled, but I might be missing something.
-> >>
-> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > 
-> > If Eric doesn't beat me to it, I'm hoping to look at this more this
-> > coming week.
+On 25.03.24 17:56, Kees Cook wrote:
+
+> The original reporter hasn't responded to questions and no one else has
+> mentioned this issue, so I think we can remove this from the tracker.
 > 
-> Friendly reminder: that was quite a while ago by now and it seems
-> neither you nor Eric looked into this. Or was there some progress and I
-> just missed it?
+> #regzbot resolve: regression is not visible without manually constructing broken ELF headers
 
-The original reporter hasn't responded to questions and no one else has
-mentioned this issue, so I think we can remove this from the tracker.
-
-#regzbot resolve: regression is not visible without manually constructing broken ELF headers
-
-
--- 
-Kees Cook
+Ahh, that's how it is sometimes, thx for the update! Ciao Thorsten
