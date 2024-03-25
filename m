@@ -1,68 +1,91 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CF0839EC
-	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 07:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFC8129A9A;
+	Mon, 25 Mar 2024 08:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711352405; cv=none; b=b1I3wgjEwM0jhN99XkmxmSYUutE/5MiAkz83EnANBDnxLHRRYnmWGSWNF7eqbW2+bnJ8VSur0clDi6ndboKRLeWnzL8HRq+cTGtckWRU9+YcvjPwO2YlFk+KZTy+voli1qJbR9SUStbDva//XkKMCKX1BCdYa/XMpn1lWJiruDM=
+	t=1711355311; cv=none; b=eXBuhdpT4xsY8z3k2G1Ju8ZvJ5p9dEz0nlVDgQKIRL12EqUsOpQ+BYX+joAtR1zTVgjvx8Qbnw7iu6AnITdY/xdZm2Ahw8dSU5v7kpI3hONVaP6vWptpkKJIi611BulJ3BpF/K2DBLsPOpfv3KxuslrlUtSXAKRyvjk14g++pKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711352405; c=relaxed/simple;
-	bh=P57Y9I6HUeQDxtauGaO6GSib3ALlVXY8LaHqz73i1f8=;
+	s=arc-20240116; t=1711355311; c=relaxed/simple;
+	bh=RMBDhtLJFHpfCbaX9R2WGjf18nDYg0WPC7sGTRlkJws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7vxoIHQJdSzV5SkkyvWTZWtpya/A8HRZlM/07OxhPvNCYpSk8eTZues/FUl/akCfM2yzL1yy1vXx0rM/wVHX6IiMse1nkBcfyrp8VkHLh6bUpQhNvlVGmopi6IOAone077P9G0DGjDc/dtimh+2ClfmPfsAaHgihq8B+w47WGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=g+X8BfP7; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCvfSArLP112g+6OoaRioUVEh8yWbQXGndR6xKasBy+6KbWawcUQ5qBv7s9Agcr9CMInxu1VV9o9JUu8gSrJVaYioLWR5co/5F6wSXnw0jntZfp1jXA11vpGZttLWFo0zLnvsokXl90hxiZU4X/B/BqDGqj+9ZoBOyWc7wB/MtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0abnv1e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="g+X8BfP7"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id F06E1603C4;
-	Mon, 25 Mar 2024 07:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1711352402;
-	bh=P57Y9I6HUeQDxtauGaO6GSib3ALlVXY8LaHqz73i1f8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0abnv1e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E064CC433C7;
+	Mon, 25 Mar 2024 08:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711355311;
+	bh=RMBDhtLJFHpfCbaX9R2WGjf18nDYg0WPC7sGTRlkJws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g+X8BfP7UAqtNQ8ZFM7VgwQinktNdorUxeqytHyLkjTUiXzCek6R0jqRYD11os0S0
-	 boDprVrdjuxGB8ot5GDZXKDiR1R4IhFbYikVjPuGDX9+ayiTdlRiZZePp7USDaO24N
-	 T96vqRYLetIHrCZRZnvNZ3lNRLFkBuGvZcTDCpd21OqNUaRHXArL82HnXXGFLRhhsv
-	 w46xvAQcj9wJVi3V0dqyWVsTu2nXqp/+8OyCNgXCPfXn+GemV9rPaWXhDOv6U9RkPn
-	 +8+xBNcYLAwT6UQ4v1ghKL6YtPZbDzp1my35hOrLiCRsw8rBEhg0zZnlc8fYVzqslT
-	 akrkEtlF1mQdQ==
-Date: Mon, 25 Mar 2024 09:39:50 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	regressions@lists.linux.dev, linux-serial@vger.kernel.org
-Subject: Re: PROBLEM: Sun Ultra 60 hangs on boot since Linux 6.8
-Message-ID: <20240325073950.GF5132@atomide.com>
-References: <d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca>
- <20240322051531.GA5132@atomide.com>
- <d7337014-09ac-8a35-7159-e75ecd2707b6@draconx.ca>
- <20240322064843.GC5132@atomide.com>
- <20240322090657.GD5132@atomide.com>
- <193a134c-f0da-4a45-b45a-a3605f91cfa4@draconx.ca>
- <20240323064925.GE5132@atomide.com>
+	b=U0abnv1e2DCdX9wu4/1zgBQRQ+WknXqlH9QwRLIVjD6t/wrheAkk3iektDmq0QmVx
+	 fXrAVvmUTyq9BatngAtaSVKYWats+U5O9qcbIQz4GsBQt+FWg3zMC+M90YyN/svuCo
+	 BMXQ+zwvocKn+Bd2sfxc3Kz8gFjdaMidc9qtSi5o9tIf6WtUln5TrXKCTbsdMSrHfQ
+	 lMO09G20QnfJYE96Ag5bYgu6VoAMbfursYfW6L3ZquWsNpVuOwGWTjflcr8s1eBsrO
+	 DjNjSiWI202gx2qK1M+OBHd6uQfVzCct+PcILEZ1IqVFkRoOBkfgGa6d3y4z0B9fWM
+	 lgd4d5AKtcYGw==
+Date: Mon, 25 Mar 2024 09:28:25 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	linux-fsdevel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev, 
+	Anton Altaparmakov <anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>, regressions@lists.linux.dev
+Subject: Re: [PATCH] fs: Remove NTFS classic
+Message-ID: <20240325-halbnackt-flutlicht-688f1de80b35@brauner>
+References: <20240115072025.2071931-1-willy@infradead.org>
+ <20240116-fernbedienung-vorwort-a21384fd7962@brauner>
+ <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240323064925.GE5132@atomide.com>
+In-Reply-To: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
 
-* Tony Lindgren <tony@atomide.com> [240323 08:49]:
-> * Nick Bowler <nbowler@draconx.ca> [240322 14:12]:
-> > Yes, with the below patch applied on top of 6.8 things are working.
+On Fri, Mar 22, 2024 at 05:35:09PM +0100, Johan Hovold wrote:
+> On Tue, Jan 16, 2024 at 10:33:49AM +0100, Christian Brauner wrote:
+> > On Mon, 15 Jan 2024 07:20:25 +0000, Matthew Wilcox (Oracle) wrote:
+> > > The replacement, NTFS3, was merged over two years ago.  It is now time to
+> > > remove the original from the tree as it is the last user of several APIs,
+> > > and it is not worth changing.
 > 
-> OK great thanks for testing, I'll send out a proper patch.
+> > I see no reason to not at least try and remove it given that we have
+> > ntfs3 as a replacement. Worst case is we have to put it back in. Let's
+> > try it.
+> 
+> This patch breaks boot of my Lenovo ThinkPad X13s where I have an fstab
+> entry to access firmware from the original Windows partition; ended up
+> in some kind of systemd emergency mode.
+> 
+> Fix is easy enough once I figured out what broke, but requires changing
+> the fs type from 'ntfs' to 'ntfs3' in the fstab (after enabling NTFS3 in
+> the kernel config).
+> 
+> Is it possible to provide an alias or something to avoid breaking
+> people's machines like this? Perhaps something is needed for the Kconfig
+> too.
+> 
+> I also now get a bunch of warning when listing the root directory:
+> 
+> [   68.967970] ntfs3: nvme0n1p3: ino=130d6, Correct links count -> 1.
+> [   68.969137] ntfs3: nvme0n1p3: ino=13a, Correct links count -> 1.
+> [   68.969798] ntfs3: nvme0n1p3: ino=3ad, Correct links count -> 1.
+> [   68.970431] ntfs3: nvme0n1p3: ino=3d9, Correct links count -> 1.
+> [   68.971150] ntfs3: nvme0n1p3: ino=26, Correct links count -> 1.
+> [   68.971780] ntfs3: nvme0n1p3: ino=eb, Correct links count -> 1.
+> [   68.972263] ntfs3: nvme0n1p3: ino=1ce, Correct links count -> 1.
+> [   68.973062] ntfs3: nvme0n1p3: ino=a608, Correct links count -> 1.
 
-For reference, patch posted now at [0] below.
+This shouldn't warn because it's correcting this on the fly.
 
-Regards,
+> 
+> Flagging this as a regression so that Thorsten is aware of it:
+> 
+> #regzbot introduced: 7ffa8f3d3023
 
-Tony
-
-[0] https://lore.kernel.org/linux-serial/20240325071649.27040-1-tony@atomide.com/T/#u
+Thanks for the report. I'll send a fix.
