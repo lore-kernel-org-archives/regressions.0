@@ -1,86 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4BF8BFB
-	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 20:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76090140E5B
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 02:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711313641; cv=none; b=aukCNjjUt379UGSQBjobGS0dZ2YZMvn0HCgbH2faKLUtUHtS3aPTpfiFrtPsW8QcOcIFaeC7IrMewdy6483Dbzvxf6VPmTxT8ne6MBV7YbUPHGUZAf0wYAuMdyPAArnoBYO2vNeVkGjPz4OA9o92Rr7RN3jd4d86zgukizmLYsI=
+	t=1711332398; cv=none; b=AhBxvB0u84wK/vHAzsbE0pAf3PKVVVXzxct47LuqblvNaBWBrKD+Lz51n6vNQ+NvS1qDh901zhe57e3Q5xnd8IXP9GmZ1gWW9E7XhvnlmRYDoQgxLkunA5B9WrDbwiGAfMplhTirYpLxSeOVTRyIIC8xL9Q6pgWXMrElSpbPcPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711313641; c=relaxed/simple;
-	bh=2sxR9gem4rOkDv3LJEJDqf4tBKN+JI2mEjl3swXxyuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PabSmtqoLr+FY5SScP6J2P5OsM0lmbP33DLOFw+unFXSWIzXornGGyzTGS59mV3nO+k5/ZrFwnl7u9qxVFk/8BTLGmHcfoZsvKOEe9VUFKIw/GeHXGzv2pjgQqmCUsohKTpzGfUvXqKPhaYP0B5gXlUovD64Wqw1teUf5v3o39w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovOhXdxf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711332398; c=relaxed/simple;
+	bh=th+lOl8TaguURs7T4/qevNJns4c251FfNsGSkCJOYCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=vDN08SyGxRTbXyB8VPTqTT6MfRRjefo6p+m6aPwIsEZaMbVYkxkfGlE/YfZbR7UYAn2HUxaagcnAMKFKuuEL/npJh2k0FKuD/rBid2McrgCebkf3D7+qi3kYbK2CO7KL/U5RwdEc0gCkebxBZ/FjMv69PxKjsXuDwV61czJBtIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=PxbrELzz; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovOhXdxf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE7CC433A6
-	for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 20:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711313641;
-	bh=2sxR9gem4rOkDv3LJEJDqf4tBKN+JI2mEjl3swXxyuY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ovOhXdxfjk5Ht36sjn3SLnoY5KoxbidxLBEHhlLqiSQTIx53YUJ2q36E6CJyy5wTB
-	 XfEU+tHrwf9W3S9foGvqJ7Gy2EIFJ5F6gdYYrGVVAaA2xjz2PyWnLL+ZWl4DBplByH
-	 NKViYuwg3oE0w97ImY/VI75mxnz11pwouUtFX7orW6VBVVZ5qw1unHHzoXkPPxWHxX
-	 1cnd2Zl7VdDm1JlrR35ZpYgryxvw+q2k9HRg2yo7c+hT70wJF21ykMbtBdBYKES7zq
-	 AEIure9RatI4bI/p0HAasYirS8Xk7AIQLfsU9324Mn5Q5WTexy7TaQEUfHfsT13ObO
-	 RAsmAmrIMghFQ==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so55812491fa.0
-        for <regressions@lists.linux.dev>; Sun, 24 Mar 2024 13:54:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWcp4laCY8kKvxd80Kl0x+h6zrRVJ2gqJBFTotNpCzavTJgk3/MqDfaie38K670wefn0xgXvQv0F+UCoPCogsPHuSWCStGQmNh5200=
-X-Gm-Message-State: AOJu0YwpwLbQPhslY1nuyvtgyhSumE2HaXsKJhJM00hwfgY4l/+9Uwk5
-	ikyyef+szEy43riVg5pg5cj0QezOJXO+MbgQ6Ng/XInSMHLga7zMggTYuu9FT5cknDQ9LGgVcF9
-	kxPZP6F9q4mQDHMUjrvGf2RFb590=
-X-Google-Smtp-Source: AGHT+IEI9gi+Y9xgxil9ULR4YqHb6Y06MvrPiPhmb1TymyhNk4w1g0FnkQvVCa7vNQCMMAJCGMPJ6dAChX6G+gAID5s=
-X-Received: by 2002:a2e:98d9:0:b0:2d4:6c1c:7734 with SMTP id
- s25-20020a2e98d9000000b002d46c1c7734mr3124077ljj.26.1711313639873; Sun, 24
- Mar 2024 13:53:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="PxbrELzz"
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42P1WPnj029411;
+	Mon, 25 Mar 2024 02:03:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : content-type : in-reply-to
+ : mime-version; s=pps0720;
+ bh=dxof5wf3hIra4YnNU29jynn3K8tspUO9+ofjFnVhJ5I=;
+ b=PxbrELzzeWv6d8P8+veX1uY4xFJMBZruTXQf/CdNJVNOsrMIbwn77mIMdxNGwG9fzH1r
+ Mo/b72iMhvQuY0gx6LtqpdlZIEaxnGqUr69bqJ/Tlfhk7ZduKw5fQJtgVs0rAvFH3GZ7
+ rthx+bY8U+TNSKgBqyV8tMOhMcHW4J/ibfDiUUgQe1haXK1FGyssLoWu1tPH/KxT5Nlj
+ XxOHp6Y/dxlPGLh69TlsJsZI/maf+imlhB8zmY8eRbR756IsjXwojLt/98e9U/pJ1q65
+ wV1t326RyhyHm027t1FiYXm2468KT2PZaBLCX2YlJdcclJg0ubLO17UGA4JOaS8KgDVO dw== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3x1nrhc41k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 25 Mar 2024 02:03:52 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id ADD96800349;
+	Mon, 25 Mar 2024 02:03:41 +0000 (UTC)
+Received: from hpe.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id BF9F2800EFE;
+	Mon, 25 Mar 2024 02:03:36 +0000 (UTC)
+Date: Sun, 24 Mar 2024 21:03:34 -0500
+From: Russ Anderson <rja@hpe.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>,
+        Sarah Brofeldt <srhb@dbc.dk>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <20240325020334.GA10309@hpe.com>
+Reply-To: Russ Anderson <rja@hpe.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <ZgABC1oQ9YJW6Bw3@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgABC1oQ9YJW6Bw3@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-GUID: cE3LkNmzgzy5T9RG2lGAzoCUF_seZTCo
+X-Proofpoint-ORIG-GUID: cE3LkNmzgzy5T9RG2lGAzoCUF_seZTCo
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <a3aae375-5582-46e4-866b-6a81641998af@redhat.com> <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
- <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net>
-In-Reply-To: <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 24 Mar 2024 22:53:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
-Message-ID: <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-24_18,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
+ impostorscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403250010
 
-On Sun, 24 Mar 2024 at 22:46, Clayton Craft <clayton@craftyguy.net> wrote:
->
-> March 24, 2024 at 10:43 AM, "Ard Biesheuvel" <ardb@kernel.org> wrote:
->
->
-> > Thanks.
-> >
-> > I pushed another branch
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-3
-> >
-> > which has a proper fix for the issue that you found.
-> >
-> > As it turns out, the compat mixed mode (with handover protocol) was
-> >
-> > broken from the beginning, and the change you identified just happened
-> >
-> > to trigger it on your hardware.
->
->
-> Tested and fixes booting on my Bay Trail tablet and NUC. Thanks for fixing this!
->
-> Tested-by: Clayton Craft <clayton@craftyguy.net>
->
+On Sun, Mar 24, 2024 at 11:31:39AM +0100, Ingo Molnar wrote:
+> 
+> * Steve Wahl <steve.wahl@hpe.com> wrote:
+> 
+> > Some systems have ACPI tables that don't include everything that needs
+> > to be mapped for a successful kexec.  These systems rely on identity
+> > maps that include the full gigabyte surrounding any smaller region
+> > requested for kexec success.  Without this, they fail to kexec and end
+> > up doing a full firmware reboot.
+> > 
+> > So, reduce the use of GB pages only on systems where this is known to
+> > be necessary (specifically, UV systems).
+> > 
+> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > Fixes: d794734c9bbf ("x86/mm/ident_map: Use gbpages only where full GB page should be mapped.")
+> > Reported-by: Pavin Joseph <me@pavinjoseph.com>
+> 
+> Sigh, why was d794734c9bbf marked for a -stable backport? The commit 
+> never explains ...
 
-Thanks!
+I will try to explain, since Steve is offline.  That commit fixes a
+legitimate bug where more address range is mapped (1G) than the
+requested address range.  The fix avoids the issue of cpu speculativly
+loading beyond the requested range, which inludes specutalive loads
+from reserved memory.  That is why it was marked for -stable.
+
+> If it's broken, it should be reverted - instead of trying to partially 
+> revert and then maybe break some other systems.
+
+Three people reported that mapping only the correct address range
+caused problems on their platforms.  https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+Steve and several people helped debug the issue.  The commit itself
+looks correct but the correct behavior causes some side effect on
+a few platforms.  Some memory ends up not being mapped, but it is not
+clear if it is due to some other bug, such as bios not accurately
+providing the right memory map or some other kernel code path did
+not map what it should.  The 1G mapping covers up that type issue.
+
+Steve's second patch was to not break those platforms while leaving the
+fix on the platform detected the original mapping problem (UV platform).
+
+> When there's boot breakage with new patches, we back out the bad patch 
+> and re-try in 99.9% of the cases.
+
+Steve can certainly merge his two patches and resubmit, to replace the
+reverted original patch.  He should be on in the morning to speak for
+himself.
+
+Thanks
+-- 
+Russ Anderson,  SuperDome Flex Linux Kernel Group Manager
+HPE - Hewlett Packard Enterprise (formerly SGI)  rja@hpe.com
