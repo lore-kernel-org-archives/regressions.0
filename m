@@ -1,37 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mxb.seznam.cz (mxb.seznam.cz [77.75.76.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8BB13CF99;
-	Mon, 25 Mar 2024 13:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A61703DE
+	for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 14:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.75.76.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711375080; cv=none; b=dnPTGbfPj2xrjRcl5XvyxJJ8hHuhWfRqR6VR51swW5UwerF8M9dcVcmrtWNS/3I2thEHTse97oqq2nD/Es2N4SZh6ze/skGIs9vCZ5s6+DMCckA+8eZqklk6m3uEAyVjq0hZchS9sUJ6lYTcf6M2Z1m5tOc6pK4GzcEMuUiXwyk=
+	t=1711378614; cv=none; b=Ekl4lCvR/mXoCh05HpStoRNJTbtcM6fDMtUuhuh5LwjTLgJImSokmq1M2JbjJyVP0eHGGxMcogY1YM3Zy76jQqk1UA/V82BoUzbwVrymY+VN8bnSIJFrEySFQdgyFjAUiixZLoE1WxCin0FYLJ4OyU3GOJ1tLY6CDvKFX2q+0xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711375080; c=relaxed/simple;
-	bh=SLkYKf7P/7HX8XrRjqY8I+HwX6HiSpxlmzsrBdk+4vY=;
+	s=arc-20240116; t=1711378614; c=relaxed/simple;
+	bh=l0I4yCmFkiOx1uX1Zj9rmArdYSpWXRTsbyWmf8pmwuY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fveS+5Ay3vNWzaeW/KF+KVv8djuByRs1YV1vMfDQ3z5qt5VqF55/RL0KwWxb+QSgZPS7vpzUgreV285s7k+e1UJp9to8l6VMWM/L2sSoEKnOfEUS9LDdG5SHTwkWq6M2UN/SfsPb93rswfIy8xkqMpxCCuki3pPu+UH4SqeMjbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cJtsiE3T; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=UY06XfZ3ihWLo7d1VjrAtxbeEZHHvdbwu/Sei0qQ6kCPhRr5R35gRxRf6va3EzKZs5qbcSLcCr5A3ODX/UlUTeezr5caqU6aFvqu2C/diOeGPS/ZAT9xT26wfjpHx1vS926oVLFzY9zrPzRCWV/+CZzRYsKGYUilJOwFL3rREKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz; spf=pass smtp.mailfrom=podgorny.cz; dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b=e2o1yUm3; arc=none smtp.client-ip=77.75.76.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=podgorny.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=podgorny.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cJtsiE3T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=zXzI4MBpAZyeY9dZ4v2b6WShvnTo9KadIGopnBs+80c=;
-	t=1711375078; x=1711807078; b=cJtsiE3TGuC5YtQ1tMLq3RnwS2MGlMhDQ4k7J3TWJRf4cE6
-	A79jR8SDckNHuindHSKkmgZC1qt35FVHJ757Y3O/n00+2u38CnJk4juZ8EDPetaVXfXprg4swI9si
-	5JiA7OgxowznlInN76ZJ7+7wZQ7qU5RebYMf48QmP/FkM6bIIxJkWEyaLUgLID3F+GIiKGXticj3+
-	ZU6g+b3toeMz5Z/lERuD/oBpb0N8G8LP7RREaQXmisije3Bzc3l2/wWjEc715MdBsVSilgx8OsfWU
-	w2InjtJWYfhp0LPXy4YhvjblUnzSsV5wKb3mks4nw6SR5cDDVNsaiMNighIG38gQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rokpn-0004yx-OJ; Mon, 25 Mar 2024 14:57:55 +0100
-Message-ID: <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
-Date: Mon, 25 Mar 2024 14:57:55 +0100
+	dkim=pass (2048-bit key) header.d=emailprofi.seznam.cz header.i=@emailprofi.seznam.cz header.b="e2o1yUm3"
+Received: from email.seznam.cz
+	by smtpc-mxb-f558fd76-wxzsv
+	(smtpc-mxb-f558fd76-wxzsv [2a02:598:128:8a00::1000:3d9])
+	id 7fb7b238c98d1f217a38a870;
+	Mon, 25 Mar 2024 15:56:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=emailprofi.seznam.cz; s=szn20221014; t=1711378582;
+	bh=l0I4yCmFkiOx1uX1Zj9rmArdYSpWXRTsbyWmf8pmwuY=;
+	h=Received:Message-ID:Date:MIME-Version:User-Agent:Subject:
+	 Content-Language:To:Cc:References:From:In-Reply-To:Content-Type;
+	b=e2o1yUm3z2LVPfGRrKKdTBPpWCAdrROABwg4w59JGqmTGoPu2proYluxZIAq1tQNe
+	 cir5J4JMLYCLc+UY1ChQODUFDSpFo1Ys28upFqZgV+QOwhvhkU6uerlavQzp39HAgQ
+	 4csuR5p9PqHyjmDJfiaISU9jvGt3WikCND3XE1eK46CkdYdgdyDTNc1FzfjfdtHYS0
+	 HKXWbj4hI6g7PyEexRvcY+r0Z2s/1yPaj4bzdHRJIheUXEHspifQ6A7BTW1cDr1lQv
+	 Mcc0xXvSIJ2ZWO6IfFsHR7P15Eq/MWdvQ4fZb05WETYHUDCYuQaAuXv94Q4bu4oJtA
+	 4eyfRf8YXnHDw==
+Received: from [IPV6:2a01:9422:904:1ee:e65e:37ff:feee:e29c]
+	([2a01:9422:904:1ee:e65e:37ff:feee:e29c])
+	by smtpd-relay-f946c5bd5-d52p6 (szn-email-smtpd/2.0.18) with ESMTPA
+	id 11116833-25c8-4a35-9ed6-0c6fcb4643a2;
+	Mon, 25 Mar 2024 15:56:18 +0100
+Message-ID: <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz>
+Date: Mon, 25 Mar 2024 15:56:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,90 +46,211 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
- exists in DT"
-Content-Language: en-US, de-DE
-To: Johan Hovold <johan@kernel.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Janaki Ramaiah Thota <quic_janathot@quicinc.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240314084412.1127-1-johan+linaro@kernel.org>
- <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
- <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711375078;17de2c7d;
-X-HE-SMSGID: 1rokpn-0004yx-OJ
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+Content-Language: en-US-large
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: regressions@lists.linux.dev, regressions@leemhuis.info
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+ <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+ <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
+ <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
+ <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz>
+ <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
+ <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
+ <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
+ <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
+ <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
+ <dd6e61ac-2356-4b97-85b4-b963a045361b@podgorny.cz>
+ <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
+From: Radek Podgorny <radek@podgorny.cz>
+In-Reply-To: <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------beeiiKVfi00VMW14DODrcB0h"
 
-Bluetooth Maintainers, what's...
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------beeiiKVfi00VMW14DODrcB0h
+Content-Type: multipart/mixed; boundary="------------JtBrBHm5YCrPzSi0iFDIBoCb";
+ protected-headers="v1"
+From: Radek Podgorny <radek@podgorny.cz>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: regressions@lists.linux.dev, regressions@leemhuis.info
+Message-ID: <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz>
+Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
+ unpacking failed: invalid magic at start of compressed archive"
+References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
+ <CAMj1kXF7gaaARdyN=bVuXtJb_S=-_ewAavXHgN4DS36jxK8r6A@mail.gmail.com>
+ <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
+ <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
+ <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz>
+ <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
+ <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
+ <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz>
+ <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
+ <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz>
+ <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
+ <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz>
+ <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
+ <dd6e61ac-2356-4b97-85b4-b963a045361b@podgorny.cz>
+ <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
+In-Reply-To: <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
 
-On 14.03.24 16:07, Johan Hovold wrote:
-> On Thu, Mar 14, 2024 at 10:30:36AM -0400, Luiz Augusto von Dentz wrote:
->> On Thu, Mar 14, 2024 at 4:44 AM Johan Hovold <johan+linaro@kernel.org> wrote:
-> 
->>> This reverts commit 7dcd3e014aa7faeeaf4047190b22d8a19a0db696.
->>>
->>> Qualcomm Bluetooth controllers like WCN6855 do not have persistent
->>> storage for the Bluetooth address and must therefore start as
->>> unconfigured to allow the user to set a valid address unless one has
->>> been provided by the boot firmware in the devicetree.
->>>
->>> A recent change snuck into v6.8-rc7 and incorrectly started marking the
->>> default (non-unique) address as valid. This specifically also breaks the
->>> Bluetooth setup for some user of the Lenovo ThinkPad X13s.
->>>
->>> Note that this is the second time Qualcomm breaks the driver this way
->>> and that this was fixed last year by commit 6945795bc81a ("Bluetooth:
->>> fix use-bdaddr-property quirk"), which also has some further details.
->>>
->>> Fixes: 7dcd3e014aa7 ("Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT")
->>> Cc: stable@vger.kernel.org      # 6.8
->>> Cc: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
->>> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
->>
->> Well I guess I will need to start asking for evidence that this works
->> on regular Linux distros then, because it looks like that is not the
->> environment Janaki and others Qualcomm folks are testing with.
->>
->> What I probably would consider as evidence is bluetoothd logs showing
->> that the controller has been configured correctly or perhaps there is
->> a simpler way?
-> 
-> Well, in this case we actually want the controller to remain
-> unconfigured (e.g. to avoid having every user of the X13s unknowingly
-> use the same default address). 
-> 
-> I'm not sure why Qualcomm insists on breaking these quirks, but I guess
-> they just haven't understood why they exist. It's of course convenient
-> to be able to use the default address during development without first
-> having to provide an address, but that's not a valid reason to break the
-> driver.
-> 
-> From what I hear the Qualcomm developers only care about Android and I
-> believe they have some out-of-tree hack for retrieving the device
-> address directly from the rootfs.
-> 
-> For the X13s, and as I think I've mentioned before, we have been trying
-> to get Qualcomm to tell us how to access the assigned addresses that are
-> stored in some secure world storage so that we can set it directly from
-> the driver. But until we figure that out, users will need to continue
-> setting the address manually.
+--------------JtBrBHm5YCrPzSi0iFDIBoCb
+Content-Type: multipart/mixed; boundary="------------zK8ErjAgW1FXVddhJ7QUqXe0"
 
-...the plan forward here? This to me sounds like a case where a quick
-revert is the right (interim?) solution, but nevertheless nothing
-happened for ~10 days now afaics. Or am I missing something?
+--------------zK8ErjAgW1FXVddhJ7QUqXe0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+aGkhDQoNCnBhdGNoIDEwNiAtIGRvZXMgTk9UIHdvcmsgLSByZXN1bHQgc2FtZSBhcyB3aXRo
+IHBhdGNoIDEwNSAoSW5pdHJhbWZzIA0KdW5wYWNraW5nIGZhaWxlZDogYnJva2VuIHBhZGRp
+bmcNCnBhdGNoIDEwNyAtIFdPUktTIC0gcmVzdWx0IHNhbWUgYXNpIHdpdGggcGF0Y2ggMTAw
+IChmdWxsIHJldmVydCkNCg0KY2hlZXJzLA0Kci4NCg0KDQpPbiAzLzIyLzI0IDE4OjIzLCBB
+cmQgQmllc2hldXZlbCB3cm90ZToNCj4gT24gRnJpLCAyMiBNYXIgMjAyNCBhdCAxODoyOSwg
+UmFkZWsgUG9kZ29ybnkgPHJhZGVrQHBvZGdvcm55LmN6PiB3cm90ZToNCj4+DQo+PiBoaSBh
+cmQhDQo+Pg0KPj4gc29ycnkgZm9yIHRoZSBkZWxheSwgaSBoYWQgc29tZSBzdHVmZiB0byBo
+YW5kbGUuIDotKA0KPj4NCj4+IGFueXdheSwgaSd2ZSBzZXQgdXAgc29tZXdoYXQgbW9yZSBv
+cmdhbml6ZWQgdGVzdGluZyBlbnZpcm9ubWVudCBzbyBpIGNhbg0KPj4gbm93IHRlc3QgcG9z
+c2libGUgcGF0Y2hlcyBtdWNoIG1vcmUgZWZmaWNpZW50bHkgKGJ1dCBzdGlsbCBub3QgaW5z
+dGFudGx5DQo+PiAtIHRoZSBjb21waWxhdGlvbiBzdGlsbCB0YWtlcyBzb21lIHRpbWUgb24g
+bXkgbWFjaGluZSkuDQo+Pg0KPj4gaSdtIHNlbmRpbmcgcmVzdWx0cyBvZiBwcmV2aW91cyBw
+YXRjaGVzLiBleHBsYW5hdGlvbjoNCj4+DQo+PiA5OSAtIHVucGF0Y2hlZCBsaW51eC1tYWlu
+bGluZSAoNi44KSAtIGRvZXMgTk9UIFdPUksNCj4+IDEwMCAtIGFwcGxpZWQgcGF0Y2ggMTAw
+IChyZXZlcnQpIC0gV09SS1MNCj4+IDEwMSAtIHNraXBwZWQgLSBwYXRjaCBkb2VzIG5vdCBh
+cHBseSBjbGVhbmx5DQo+PiAxMDIgLSBhcHBsaWVkIHBhdGNoIDEwMiAtIGRvZXMgTk9UIFdP
+UksNCj4+IC4uLmV0Yy4gdXAgdG8gMTA1IC0gbmVpdGhlciBvZiB3aGljaCB3b3JrcyA6LSgN
+Cj4+DQo+PiBzY3JlZW5zaG90cyBvZiBzdHVjayBib290IGF0dGFjaGVkIChhbmQgaW4gb25l
+IGNhc2UgLSBwYXRjaDEwMCAtIHVuc3R1Y2sNCj4+IGJvb3QpLg0KPj4NCj4+IGJ5ICJzdHVj
+ayBib290IiBpIG1lYW4gYSBzaXR1YXRpb24gd2hlbiB0aGUgcGMgYm9vdHMgdXAsIHRoZSBi
+b290bG9hZGVyDQo+PiBsb2FkcyB0aGUga2VybmVsIChhbmQgaW5pdHJhbWZzPykgYW5kIHRy
+aWVzIHRvIGNvbnRpbnVlIHdpdGggdGhlIGJvb3QNCj4+IHNlcXVlbmNlIGJ1dCBnZXRzIHN0
+dWNrIGZvcmV2ZXIgd2l0aG91dCBhbnkgc2lnbnMgb2YgZnVydGhlciBhY3Rpdml0eS4NCj4+
+IGN0cmwrYWx0K2RlbCBkb2VzIG5vdCB3b3JrIC0gaSBoYXZlIHRvIHJlYm9vdCB3aXRoIHBo
+eXNpY2FsIGJ1dHRvbi4gc2VlDQo+PiB0aGUgYXR0YWNoZWQgcGljdHVyZXMgdG8gc2VlIHdo
+YXQgaSBtZWFuIChhbmQgdHJ5IHRvIHNwb3QgdGhlIGRpZmZlcmVuY2UNCj4+IGJldHdlZW4g
+bm9uLXN0dWNrIGJvb3QgaW4gcGljdHVyZSAxMDAgYXQgdGhlIHZlcnkgYm90dG9tKS4NCj4+
+DQo+PiBlYWdlcmx5IHdhaXRpbmcgZm9yIG1vcmUgLSBwb3NzaWJseSBsb3RzIC0gb2YgcGF0
+Y2hlcyB0byB0cnkhDQo+Pg0KPiANCj4gUGxlYXNlIHRyeSB0aGUgYXR0YWNoZWQgcGF0Y2hl
+cyAtIHRoZXkgYXJlIHBhcnRpYWwgcmV2ZXJ0cyBvZiB0aGUNCj4gb2ZmZW5kaW5nIHBhdGNo
+LCBhbmQga25vd2luZyB3aGljaCBvbmUgb2YgdGhvc2UgYnJlYWtzIHlvdXIgc3lzdGVtDQo+
+IHdvdWxkIGJlIHVzZWZ1bCB0byBuYXJyb3cgdGhpcyBkb3duIGZ1cnRoZXIuDQo=
+--------------zK8ErjAgW1FXVddhJ7QUqXe0
+Content-Type: text/x-patch; charset=UTF-8; name="patch106.patch"
+Content-Disposition: attachment; filename="patch106.patch"
+Content-Transfer-Encoding: base64
 
-#regzbot poke
+RnJvbSA5ZDNkZjJmM2Q3ODFhNzcwZTkzZWZkNWFiZjhjYjg3MmIxNTAxY2Y0IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3Jn
+PgpEYXRlOiBGcmksIDIyIE1hciAyMDI0IDE4OjExOjMyICswMTAwClN1YmplY3Q6IFtQQVRD
+SF0gUGFydGlhbCByZXZlcnQgb2YgODExNzk2MWQ5OGYgIzEKCi0tLQogZHJpdmVycy9maXJt
+d2FyZS9lZmkvbGlic3R1Yi94ODYtc3R1Yi5jIHwgMjUgKysrKysrKysrKysrKysrLS0tLS0K
+IDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQoKZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2LXN0dWIuYyBiL2Ry
+aXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2LXN0dWIuYwppbmRleCA5OTQyOWJjNGIw
+YzcuLmIxMTdmZTliZTUxNiAxMDA2NDQKLS0tIGEvZHJpdmVycy9maXJtd2FyZS9lZmkvbGli
+c3R1Yi94ODYtc3R1Yi5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xpYnN0dWIveDg2
+LXN0dWIuYwpAQCAtNDU4LDggKzQ1OCw4IEBAIHZvaWQgX19ub3JldHVybiBlZmlfc3R1Yl9l
+bnRyeShlZmlfaGFuZGxlX3QgaGFuZGxlLAogZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9w
+ZV9lbnRyeShlZmlfaGFuZGxlX3QgaGFuZGxlLAogCQkJCSAgIGVmaV9zeXN0ZW1fdGFibGVf
+dCAqc3lzX3RhYmxlX2FyZykKIHsKLQlzdGF0aWMgc3RydWN0IGJvb3RfcGFyYW1zIGJvb3Rf
+cGFyYW1zIF9fcGFnZV9hbGlnbmVkX2JzczsKLQlzdHJ1Y3Qgc2V0dXBfaGVhZGVyICpoZHIg
+PSAmYm9vdF9wYXJhbXMuaGRyOworCXN0cnVjdCBib290X3BhcmFtcyAqYm9vdF9wYXJhbXM7
+CisJc3RydWN0IHNldHVwX2hlYWRlciAqaGRyOwogCWVmaV9ndWlkX3QgcHJvdG8gPSBMT0FE
+RURfSU1BR0VfUFJPVE9DT0xfR1VJRDsKIAlpbnQgb3B0aW9uc19zaXplID0gMDsKIAllZmlf
+c3RhdHVzX3Qgc3RhdHVzOwpAQCAtNDc3LDcgKzQ3NywxNyBAQCBlZmlfc3RhdHVzX3QgX19l
+ZmlhcGkgZWZpX3BlX2VudHJ5KGVmaV9oYW5kbGVfdCBoYW5kbGUsCiAJCWVmaV9leGl0KGhh
+bmRsZSwgc3RhdHVzKTsKIAl9CiAKLQkvKiBBc3NpZ24gdGhlIHNldHVwX2hlYWRlciBmaWVs
+ZHMgdGhhdCB0aGUga2VybmVsIGFjdHVhbGx5IGNhcmVzIGFib3V0ICovCisJc3RhdHVzID0g
+ZWZpX2FsbG9jYXRlX3BhZ2VzKHNpemVvZihzdHJ1Y3QgYm9vdF9wYXJhbXMpLAorCQkJCSAg
+ICAodW5zaWduZWQgbG9uZyAqKSZib290X3BhcmFtcywgVUxPTkdfTUFYKTsKKwlpZiAoc3Rh
+dHVzICE9IEVGSV9TVUNDRVNTKSB7CisJCWVmaV9lcnIoIkZhaWxlZCB0byBhbGxvY2F0ZSBs
+b3dtZW0gZm9yIGJvb3QgcGFyYW1zXG4iKTsKKwkJZWZpX2V4aXQoaGFuZGxlLCBzdGF0dXMp
+OworCX0KKworCW1lbXNldChib290X3BhcmFtcywgMHgwLCBzaXplb2Yoc3RydWN0IGJvb3Rf
+cGFyYW1zKSk7CisKKwloZHIgPSAmYm9vdF9wYXJhbXMtPmhkcjsKKwogCWhkci0+cm9vdF9m
+bGFncwk9IDE7CiAJaGRyLT52aWRfbW9kZQk9IDB4ZmZmZjsKIApAQCAtNDg4LDEzICs0OTgs
+MTYgQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9wZV9lbnRyeShlZmlfaGFuZGxlX3Qg
+aGFuZGxlLAogCWlmICghY21kbGluZV9wdHIpCiAJCWdvdG8gZmFpbDsKIAotCWVmaV9zZXRf
+dTY0X3NwbGl0KCh1bnNpZ25lZCBsb25nKWNtZGxpbmVfcHRyLCAmaGRyLT5jbWRfbGluZV9w
+dHIsCi0JCQkgICZib290X3BhcmFtcy5leHRfY21kX2xpbmVfcHRyKTsKKwllZmlfc2V0X3U2
+NF9zcGxpdCgodW5zaWduZWQgbG9uZyljbWRsaW5lX3B0ciwKKwkJCSAgJmhkci0+Y21kX2xp
+bmVfcHRyLCAmYm9vdF9wYXJhbXMtPmV4dF9jbWRfbGluZV9wdHIpOworCiAKLQllZmlfc3R1
+Yl9lbnRyeShoYW5kbGUsIHN5c190YWJsZV9hcmcsICZib290X3BhcmFtcyk7CisJZWZpX3N0
+dWJfZW50cnkoaGFuZGxlLCBzeXNfdGFibGVfYXJnLCBib290X3BhcmFtcyk7CiAJLyogbm90
+IHJlYWNoZWQgKi8KIAogZmFpbDoKKwllZmlfZnJlZShzaXplb2Yoc3RydWN0IGJvb3RfcGFy
+YW1zKSwgKHVuc2lnbmVkIGxvbmcpYm9vdF9wYXJhbXMpOworCiAJZWZpX2V4aXQoaGFuZGxl
+LCBzdGF0dXMpOwogfQogCi0tIAoyLjQ0LjAuMzk2Lmc2ZTc5MGRiZTM2LWdvb2cKCg==
+--------------zK8ErjAgW1FXVddhJ7QUqXe0
+Content-Type: text/x-patch; charset=UTF-8; name="patch107.patch"
+Content-Disposition: attachment; filename="patch107.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAyMDk1YjE5NzlhYmJjMjJlYTgzY2EzZGIxNzFlYjNmNzhiY2U5OTY4IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3Jn
+PgpEYXRlOiBGcmksIDIyIE1hciAyMDI0IDE4OjIxOjI5ICswMTAwClN1YmplY3Q6IFtQQVRD
+SF0gUGFydGlhbCByZXZlcnQgb2YgODExNzk2MWQ5OGYgIzIKCi0tLQogZHJpdmVycy9maXJt
+d2FyZS9lZmkvbGlic3R1Yi94ODYtc3R1Yi5jIHwgMjMgKysrKysrKysrKysrKysrKysrKy0K
+IDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi94ODYtc3R1Yi5jIGIvZHJp
+dmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi94ODYtc3R1Yi5jCmluZGV4IDk5NDI5YmM0YjBj
+Ny4uZDM2NzhjYTIzOTgwIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJz
+dHViL3g4Ni1zdHViLmMKKysrIGIvZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi94ODYt
+c3R1Yi5jCkBAIC00NjAsNiArNDYwLDcgQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9w
+ZV9lbnRyeShlZmlfaGFuZGxlX3QgaGFuZGxlLAogewogCXN0YXRpYyBzdHJ1Y3QgYm9vdF9w
+YXJhbXMgYm9vdF9wYXJhbXMgX19wYWdlX2FsaWduZWRfYnNzOwogCXN0cnVjdCBzZXR1cF9o
+ZWFkZXIgKmhkciA9ICZib290X3BhcmFtcy5oZHI7CisJdm9pZCAqaW1hZ2VfYmFzZTsKIAll
+ZmlfZ3VpZF90IHByb3RvID0gTE9BREVEX0lNQUdFX1BST1RPQ09MX0dVSUQ7CiAJaW50IG9w
+dGlvbnNfc2l6ZSA9IDA7CiAJZWZpX3N0YXR1c190IHN0YXR1czsKQEAgLTQ3Nyw5ICs0Nzgs
+MTkgQEAgZWZpX3N0YXR1c190IF9fZWZpYXBpIGVmaV9wZV9lbnRyeShlZmlfaGFuZGxlX3Qg
+aGFuZGxlLAogCQllZmlfZXhpdChoYW5kbGUsIHN0YXR1cyk7CiAJfQogCi0JLyogQXNzaWdu
+IHRoZSBzZXR1cF9oZWFkZXIgZmllbGRzIHRoYXQgdGhlIGtlcm5lbCBhY3R1YWxseSBjYXJl
+cyBhYm91dCAqLworCWltYWdlX2Jhc2UgPSBlZmlfdGFibGVfYXR0cihpbWFnZSwgaW1hZ2Vf
+YmFzZSk7CisKKwkvKiBDb3B5IHRoZSBzZXR1cCBoZWFkZXIgZnJvbSB0aGUgc2Vjb25kIHNl
+Y3RvciB0byBib290X3BhcmFtcyAqLworCW1lbWNweSgmaGRyLT5qdW1wLCBpbWFnZV9iYXNl
+ICsgNTEyLAorCSAgICAgICBzaXplb2Yoc3RydWN0IHNldHVwX2hlYWRlcikgLSBvZmZzZXRv
+ZihzdHJ1Y3Qgc2V0dXBfaGVhZGVyLCBqdW1wKSk7CisKKwkvKgorCSAqIEZpbGwgb3V0IHNv
+bWUgb2YgdGhlIGhlYWRlciBmaWVsZHMgb3Vyc2VsdmVzIGJlY2F1c2UgdGhlCisJICogRUZJ
+IGZpcm13YXJlIGxvYWRlciBkb2Vzbid0IGxvYWQgdGhlIGZpcnN0IHNlY3Rvci4KKwkgKi8K
+IAloZHItPnJvb3RfZmxhZ3MJPSAxOwogCWhkci0+dmlkX21vZGUJPSAweGZmZmY7CisJaGRy
+LT5ib290X2ZsYWcJPSAweEFBNTU7CiAKIAloZHItPnR5cGVfb2ZfbG9hZGVyID0gMHgyMTsK
+IApAQCAtNDkxLDYgKzUwMiwxNiBAQCBlZmlfc3RhdHVzX3QgX19lZmlhcGkgZWZpX3BlX2Vu
+dHJ5KGVmaV9oYW5kbGVfdCBoYW5kbGUsCiAJZWZpX3NldF91NjRfc3BsaXQoKHVuc2lnbmVk
+IGxvbmcpY21kbGluZV9wdHIsICZoZHItPmNtZF9saW5lX3B0ciwKIAkJCSAgJmJvb3RfcGFy
+YW1zLmV4dF9jbWRfbGluZV9wdHIpOwogCisJaGRyLT5yYW1kaXNrX2ltYWdlID0gMDsKKwlo
+ZHItPnJhbWRpc2tfc2l6ZSA9IDA7CisKKwkvKgorCSAqIERpc3JlZ2FyZCBhbnkgc2V0dXAg
+ZGF0YSB0aGF0IHdhcyBwcm92aWRlZCBieSB0aGUgYm9vdGxvYWRlcjoKKwkgKiBzZXR1cF9k
+YXRhIGNvdWxkIGJlIHBvaW50aW5nIGFueXdoZXJlLCBhbmQgd2UgaGF2ZSBubyB3YXkgb2YK
+KwkgKiBhdXRoZW50aWNhdGluZyBvciB2YWxpZGF0aW5nIHRoZSBwYXlsb2FkLgorCSAqLwor
+CWhkci0+c2V0dXBfZGF0YSA9IDA7CisKIAllZmlfc3R1Yl9lbnRyeShoYW5kbGUsIHN5c190
+YWJsZV9hcmcsICZib290X3BhcmFtcyk7CiAJLyogbm90IHJlYWNoZWQgKi8KIAotLSAKMi40
+NC4wLjM5Ni5nNmU3OTBkYmUzNi1nb29nCgo=
+
+--------------zK8ErjAgW1FXVddhJ7QUqXe0--
+
+--------------JtBrBHm5YCrPzSi0iFDIBoCb--
+
+--------------beeiiKVfi00VMW14DODrcB0h
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEydMGi3nQKasCS8bLahNm1VQL0ZwFAmYBkJAFAwAAAAAACgkQahNm1VQL0ZzT
+lg/8D6kgHMeB1YqLoZVW8SHgNaGVrywT+p2RFBgYFMbgXlv5tXid29iEJzm2rA1C9d0ECpGGM9SV
+ypMT0HIBWctUASZVcEhbba26SiZtkath3GuOaBSPTjalvTX+osiGoYWyPNmrBdNGTxd13K2ONNYZ
+0Aseu7sBPp3VdanH8wTAE58qx3Q4KYf0Yvt9pvcifHdRRE7SYqONp0RDESPhhcr2kj1lNQMUgMLw
+GuG++DGDX2z5y2zkN7nsgWN6LQqoX/ZLbZNIDoZR58xH+WNVcUGhXpZjNYQjRiHkCgB21NCBPDGU
+b4CLJTiwKLbA2ED7g9JUopvocqjJzX1athkwRYnSyl1R9H6Pk9Zzonx55vDqAZvs47EkhvnYP21f
+D0PTA9mj3mUmB2NqxTR8WMGgPAWG/VZB+4WatvgZd3dMunOHC15wnK4c9VmlIYtm0vPRm/TuabCy
+9C7reI1jLqzdrvv851llPoDFaTZ63W/w9eXsPKQFJ+tGDaQxWT/nlab79XIdbfQnMfnfal6WvKrW
+1N27nD5jGBaRgYB7RqElMr3sfouJUbrTmfS3xFSQXw02k1+UYY25IAWXqJAhXoUncUA5IPAzAdCr
+UUpQyYyscuRb/a1kxp0Rs7LoIgJgA2PmgfBNBQc6KwnE6JI5dIWvspsQhJse03czUjONKH+vZv/l
+IeU=
+=B456
+-----END PGP SIGNATURE-----
+
+--------------beeiiKVfi00VMW14DODrcB0h--
