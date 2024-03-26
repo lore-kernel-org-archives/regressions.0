@@ -1,99 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E73B13CA98;
-	Tue, 26 Mar 2024 16:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D7618EB0
+	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 16:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711470027; cv=none; b=Fw4GL4TrfuRDdq7Gpqb6IDhhkJ4Mr6nXSTj5g5tjPHpKviFSvVwNqdAXVa7qbDwdMqt7ZXcQu+zeNFL2g8mbismeGw0d38j/6BDO1lOdCvD+1okBB/7ZccwyTkHUuh4XdfNqHtPSGGzgcg2RhwXMDGjmlsG1KVRcP+rlTaO63wA=
+	t=1711472226; cv=none; b=Jg50Zr5O9gBt8SxFBIDHY/sA6CAcvkrKF14CH3n784+EDccwzH4a4hBNsG+60l4ay+Pq0/lhrosUpHDc4xzHaLD0oE3tU8fln9sR0lw19HswvCe5EOXjesGb60VRcsbiVsmUWmI+bJFasyg5F5LwsGkoYptYeKyCFTOCCvizL4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711470027; c=relaxed/simple;
-	bh=tH7ShG5e19q5dk8DGs/7rFZaClfulgISrGFPuWcP0mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CWAkjnaQ1RMfxJ58iRTpgBFDJVYthH8VLGqhuMzy8ShmMWfbB0sREts2gNmmNku0lYma4XhaWgAmoud6U135rXq1jjTPvZhHJn1Vneiqj5Rz+tl3i3Rtc+C0/CYv9aaa3IRjD07a2R0IF3vhoe9mEfnitb08LSet+FGkD++e8lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6C92dz6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711472226; c=relaxed/simple;
+	bh=2qeRp3NpCuiDAJ/3gyrJI5txbBbOCmyfgeNGwUJ34QM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IeXg1uaGseb1Pp1ZlAIDk27kRWKZJBf9fWxNT8l/WxVJGTo8tcFIDUmIDI5V+g8uLPq5C5U4wTKnmspeft3Yew8Oax3X5ENGvdCNX/xEtYg2Zvu5LT5UTNxtzIH0vue1EEnohBdI9hP9zwv1RqQzmAy+EadInUQnZEDfP1ls988=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6R/n9/Q; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6C92dz6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3EE8C43394;
-	Tue, 26 Mar 2024 16:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711470026;
-	bh=tH7ShG5e19q5dk8DGs/7rFZaClfulgISrGFPuWcP0mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e6C92dz6raZp0WrjtLHCxqpCcVWV3awH3jwOkT/LShocw+towYCYzHIpMxVqVR6ci
-	 S4vUVgmYGNay0dotswGf42xd6YmI7FN3UtHnq6i4yoeLo+CYBvI39oh+zvkPu/nwP6
-	 ze88G0lKQJKrmGrEVoi348mOb39+eZjNn3WGMk9Elebb301GZ8pneFWt9kNFD/0BoR
-	 C2ADW6obNGlsFyXcw3F6Z0qvBucbUllRtd/Dd06q/8Xx85VfeplO6YXdN3Kd3Ia0RI
-	 O4dyir2E/RrcwhToChH4LNMoUI3HwPM4CWyWULbzkCZysMCLqQdXDQiswmdtYCXJOZ
-	 munyLNIT7r7zQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rp9XO-000000006Yi-1ZUs;
-	Tue, 26 Mar 2024 17:20:35 +0100
-Date: Tue, 26 Mar 2024 17:20:34 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
-Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
- exists in DT"
-Message-ID: <ZgL10ur0825LgWVK@hovoldconsulting.com>
-References: <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
- <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
- <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
- <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
- <CABBYNZJUVhNKVD=s+=eYJ1q+j1W8rVSRqM4bKPbxT=TKrnZdoQ@mail.gmail.com>
- <ZgHbPo57UKUxK7G8@hovoldconsulting.com>
- <CABBYNZJFzDaLdXsdNEP1384JaJEN5E78cgmWfOus_LGOREGsWA@mail.gmail.com>
- <ZgJ0okobGv5nPreG@hovoldconsulting.com>
- <CABBYNZKJJuPHEwyXFRi8Z=P0GyaY-HdamsxmV8sR+R97ETTmEg@mail.gmail.com>
- <ZgLnOHiCzo5AQzra@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6R/n9/Q"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d49f7e5c2cso75601541fa.2
+        for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 09:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711472223; x=1712077023; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IU22RLww3/XOivsSv4VG6tutKJTJKSIdnxTJz7w+A7w=;
+        b=i6R/n9/Qj2vZ65q8C+twssMAfZWG/kniEv5wglF401ZqDC9Qt1vN+Uqx+P9QXPJNIo
+         7khZ5inqsVFWweZsmnTbEmaMVYOL0aEg7J7aBK4ba8o5mO+ob03JisICa93kEMxRwX9c
+         rxqURpHgWX3uaq9Fz7vlmZa3FJzsDbc9tHsac+GIQ6/yjvPTRU6hBpIyZq+rLczGDJM6
+         6nzXilwZK+YPjLJhgJUuznZclvoMagGUumuiPn/5KlC262LPbR9gPc7S+u7L79dFhFXG
+         UtMtgkNdgdYKAW2+QYd80eRtAuccgyHdpbNHXusOl6jOXrsA87ApwyCxyE9MQ12F7dV2
+         w9gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711472223; x=1712077023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IU22RLww3/XOivsSv4VG6tutKJTJKSIdnxTJz7w+A7w=;
+        b=ks2QyiL+HByaRH+4pp0VK4pE+PcnXDgmgoTj8TYe/vZLYSbhIvfLTSaWvGNg/6MVgt
+         Qm9p2fypaRQ9/TDhdExs0v5QWdTB5IO2chZMIq5TRlfFHR6VrELWm3DTpw+f6Y0UB5ZH
+         em/ls4Wm3ZQphtGT6CGzl7U475ODMVdHU/JzVQfPxCMROqUpchm7qESe9VYeaPY7F5+G
+         jgWutxHfSixDSP/+Ah3gvwrXkPdBUYKAD/Mk4dLS7Gxnr03pj96pxJYqwiQm88a6Vubr
+         dN4IZ5aaBFxolDJOLJ2PkNk9uHI9mmy19ddGRwTge13HhxyCorMABCxIm+mnfs6xrn+V
+         Q4pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfUManP8XsbL7JtOJw6WQ00VsyX0eeIkK6qtDGMRkqTJk5PmqFMiC1vUxRjFm7EyEUdFoHzlIhPm2c0V869Jb235szrARmz+kcbRk=
+X-Gm-Message-State: AOJu0Yzei9Pd3ThT0NAlLjNvQNF8ahWy9KIEsXgTdkGUV+T7We9xly39
+	GIiaKvz/2lBdQrxdw66KoIrh751Y86QjXfJH56/RFiSJuQSG8016ckeHBCCJtdMY1ZdJjhKkMrr
+	38e/97pri6DT7goVZGUNUlXche8M=
+X-Google-Smtp-Source: AGHT+IG1ZbFTx/MVVy6KI+dZ/kXiCyWDzCYWscY6etooM2mCnGEIMPlRg7hdSoLTGuQbmIXPG1EoR/a1KhikHD0w/O4=
+X-Received: by 2002:a2e:b8cb:0:b0:2d2:dac3:90f with SMTP id
+ s11-20020a2eb8cb000000b002d2dac3090fmr157304ljp.52.1711472222756; Tue, 26 Mar
+ 2024 09:57:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZgLnOHiCzo5AQzra@hovoldconsulting.com>
+References: <08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info>
+In-Reply-To: <08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Tue, 26 Mar 2024 12:56:50 -0400
+Message-ID: <CABBYNZKDa9KR8A_4TbpPyiLWFFH22T=Z9jk7N=o6U+z1oB+7vg@mail.gmail.com>
+Subject: Re: [REGRESSION] Oops during init in btintel_read_debug_features with
+ today's mainline
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Marcel Holtmann <marcel@holtmann.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Luiz,
+Hi Thorsten,
 
-On Tue, Mar 26, 2024 at 04:18:16PM +0100, Johan Hovold wrote:
-> On Tue, Mar 26, 2024 at 10:17:13AM -0400, Luiz Augusto von Dentz wrote:
-> > On Tue, Mar 26, 2024 at 3:09 AM Johan Hovold <johan@kernel.org> wrote:
-> > > On Mon, Mar 25, 2024 at 04:31:53PM -0400, Luiz Augusto von Dentz wrote:
+On Tue, Mar 26, 2024 at 4:44=E2=80=AFAM Thorsten Leemhuis <linux@leemhuis.i=
+nfo> wrote:
+>
+> Lo! Just booted 6.9 for the first time and noticed the Bluetooth code
+> causes an Oops (see below) during boot that did not happen with 6.8 and
+> earlier. This is on Fedora 40 with a vanilla kernel on a Lenovo Thinkpad
+> T14s Gen1 AMD.
+>
+> Do I need to bisect this? Or is this known already? Or does anyone by
+> chance an idea what might cause this? Or is there some other way to get
+> down to the problem?
+>
+> Ciao, Thorsten
+>
+> [Full dmesg: https://www.leemhuis.info/files/misc/dmesg-6.9-btprob]
+>
+> [   19.903869] Bluetooth: hci0: Found device firmware: intel/ibt-20-1-3.s=
+fi
+> [   19.903908] Bluetooth: hci0: Boot Address: 0x24800
+> [   19.903913] Bluetooth: hci0: Firmware Version: 255-255.255
+> [   19.906245] usb 6-4: USB disconnect, device number 3
+> [   19.906364] usb 2-2: Found UVC 1.50 device Integrated Camera (04f2:b6c=
+b)
+> [   19.906583] Bluetooth: hci0: FW download error recovery failed (-19)
+> [   19.906649] Bluetooth: hci0: sending frame failed (-19)
+> [   19.906666] BUG: kernel NULL pointer dereference, address: 00000000000=
+00070
+> [   19.906672] #PF: supervisor read access in kernel mode
+> [   19.906677] #PF: error_code(0x0000) - not-present page
+> [   19.906681] PGD 0 P4D 0
+> [   19.906688] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [   19.906701] Hardware name: LENOVO 20UH001HGE/20UH001HGE, BIOS R1CET77W=
+(1.46 ) 10/26/2023
+> [   19.906706] Workqueue: hci0 hci_power_on [bluetooth]
+> [   19.906775] RIP: 0010:btintel_read_debug_features (/usr/src/debug/[...=
+]/drivers/bluetooth/btintel.c:1306) btintel
 
-> > > > All the
-> > > > CI automation is done on bluetooth-next and if you are asking to be
-> > > > done via bluetooth tree which is based on the latest rc that is not
-> > > > how things works here, we usually first apply to bluetooth-next and in
-> > > > case it needs to be backported then it later done via pull-request.
-> > >
-> > > The revert fixes a regression in 6.7-rc7 and should get to Linus as soon
-> > > as possible and I assume you have some way to get fixes into mainline
-> > > for the current development cycle.
-> > 
-> > Yeah I will send it later today to be included in the next rc release
-> > and since it is marked for stable that shall trigger the process of
-> > backporting it.
-> > 
-> > > The series fixes a critical bug in the Qualcomm driver and should
-> > > similarly get into mainline as soon as possible to avoid having people
-> > > unknowingly start relying on the broken behaviour (reversed address).
-> > > The bug in this case is older, but since the bug is severe and we're
-> > > only at rc1, I don't think this one should wait for 6.10 either.
+Seem like the following could be reason:
 
-I just double checked the bluetooth-next branch and everything looks
-good now (revert + endianness fix series). Thanks!
-
-Did I understand you correctly that you'll be able to get all five
-commits into 6.9 during this development cycle (e.g. 6.9-rc2)?
- 
-Johan
+https://patchwork.kernel.org/project/bluetooth/patch/20240326164317.1460864=
+-1-luiz.dentz@gmail.com/
