@@ -1,36 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5C867A00;
-	Tue, 26 Mar 2024 13:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0AC71726
+	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 13:37:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711459121; cv=none; b=hAK8kJQrspuI6S9WP1kSoO5H4XyrrN3zxYqhzeFdntXvJ4SF4189+pjIQleGFv74TBF66oqpxp/gXXg8UV81mltUXOlFe0zls6k0UEo9aCvqa/aHibnwQXFzRiC4wyCM4MSC7MtxseZGKHuf+QsmxEXoYg/EjuWLcZWBvdM4VE0=
+	t=1711460259; cv=none; b=Ue1l5l+cehnKGw0FHTTNiiOyC/tBKFlbqylJfCoQFCRd5c2wXOq7qFPp0nxuAJybtarzlDNzsuqD7ZcdbMKVOT45PP3+J1PDCF0UVGMC+p2DV/sJ+J7S/SmsNQkjHwPWLPoT3dXHCri1Ol/uSApSVgJ/j/S6dctN6ZnQYjwF8yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711459121; c=relaxed/simple;
-	bh=kwbtxjvyoboouuP30XD7UmJ9Tak2JX2+1XT+llOTBfU=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QVmHGcJ/2CLE/0jFhB4SMli7S8cgy2C8vv7nReIO1sArDXPGnx0E4HW3CVWRP8X2vtA5GZZgH3x7m2bVxzPc33DGomuri3dw+9rUezHKC13E8Awf6nms3BNQKc9KoTOD0Pm469mBjlvVGFStB3YK05nk8mfQlSGDTqs4gdHVBu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YBYljSo1; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1711460259; c=relaxed/simple;
+	bh=h60tFvj2/wNY4+Jdnt/8wU2izHvLtLRVjjICYsUPsyE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=D5FrAYzF2GdOl4fJDq5nmQFn8OfnQkp2h8ddgYuJIXk5ICOpHlcN5UpykPcF69lmytTRDremcjyHeFXNqSVXnR8Tc83FRRuFLxT+gZJbVBJlpgbl8afIuY8V7DQfM34wgFEWA5O/gM8dznEzNKv4ACJi9IiGgQzMJY6kmiTBRqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OqqXQSpr; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YBYljSo1"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OqqXQSpr"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	In-Reply-To:References:To:Reply-To:Subject:From:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=lKr8vjI/MKPiGxt3h9ZRIfJRuD3apPKLQIAIGxuGMwY=; t=1711459119;
-	x=1711891119; b=YBYljSo1n6H8XdcfSJPHGDeh0/bBwb7Cwdtg4HST5YWsGyxgXgNz5Omgyz5IX
-	X8E/OQ6VqUggXEbl0UMTb0hAr2IZHe1mY8e9X2PlpHFws7PVaZ5Qss8/c19Vl2tSc+5/flRms7UHP
-	3Uwv4Cp4XPPyxb/1qOkr/HrI6IX/VeiIj25+exwzcoyCAZzM1SSmfxTE1dULHG3g5AeZt/9i53Eku
-	XhqZxQdn8MOlpWSuQRQRLAqbx/nZq8Kr0APR6UEqPQeetQD9DAuZMzS6ZIp4Wlbz9Pgcp6A7cM5U1
-	edLgOX6nTIPuXvmEqEDtI7tXaNyxYQfctzBQk74voWToGZcz4A==;
+	References; bh=h60tFvj2/wNY4+Jdnt/8wU2izHvLtLRVjjICYsUPsyE=; t=1711460256;
+	x=1711892256; b=OqqXQSpr740ezNsqn/oQTj8S6/NI+kCbuydzvpnobxjR7atbeRuGbQ7NqA1GG
+	jrfAtRvq1vbaWORvIpFmEQSuJS9Zxw+1e/epoCXDmzkCeXrNybfTLH+ax9lE+yNfvRwH14bH+/9je
+	5syx1WslVLtIvtfSDQwaFHsqdn7roJU8GUF8vKr6z0YUZfEWgtu0m7DHNuCL/l6+XmXYSq990/bMj
+	rvPIsvRXIZWuYM4WEVTCJ5W7ZwkCR47JyNjkEvLM0/l+PcnKhJ4cIbR9aoTvT8HwXKgBFksIphJ3N
+	Pf9DqC7PpbEQd5ZaDjvZjLRIsNCtscWy8JqJ6PZ46kKftpD4pg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rp6hI-0005Mm-No; Tue, 26 Mar 2024 14:18:36 +0100
-Message-ID: <5b778e74-1278-42b1-84e1-a2c04a8211f0@leemhuis.info>
-Date: Tue, 26 Mar 2024 14:18:21 +0100
+	id 1rp6zc-0000wx-Pv; Tue, 26 Mar 2024 14:37:32 +0100
+Message-ID: <1431ec54-f22d-4f2f-9556-a1c217373741@leemhuis.info>
+Date: Tue, 26 Mar 2024 14:37:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,67 +41,33 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Mario Limonciello <mario.limonciello@amd.com>
-Subject: [regression] Bug 218641 - Framework Laptop 13 AMD suspend/wakeup
- regression with 6.9rc1
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711459119;1ec67ad1;
-X-HE-SMSGID: 1rp6hI-0005Mm-No
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711460256;a24c54a6;
+X-HE-SMSGID: 1rp6zc-0000wx-Pv
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Anna-Maria, I noticed a regression report in bugzilla.kernel.org that
-apparently is caused by a change of yours. As many (most?) kernel
-developers don't keep an eye on it, I decided to forward it by mail.
+#regzbot report:
+https://lore.kernel.org/all/Zfv8iCL6CT2JqLIC@darkstar.users.ipa.redhat.com/
+#regzbot introduced: 4a693ce65b18
+#regzbot duplicate:
+https://lore.kernel.org/all/4eeac1f733584855965a2ea62fa4da58@huawei.com/
+#regzbot title: kdump/crash: crashkernel region on x86_64 can't be added
+into iomem tree sometimes
+#regzbot fix: crash: use macro to add crashk_res into iomem early for
+specific arch
+#regzbot monitor:
+https://lore.kernel.org/all/20240324033513.1027427-1-bhe@redhat.com/
 
-Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-not CC them in mails like this.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218641 :
-
->  David Markey 2024-03-25 22:08:29 UTC
-> 
-> Was trying out 6.9rc1 to give prefcore a whirl but I've noticed that
-> when I go to s2idle I cannot wake up, the power button does not wake
-> the laptop up again and stays flashing and requires a full reboot to
-> become responsive again.
-Later:
-
->  Mario Limonciello (AMD) 2024-03-26 02:38:06 UTC
-> 
-> I finished up bisecting and it comes down to this commit:
-> 
-> ```
-> commit 7ee988770326fca440472200c3eb58935fe712f6
-> Author: Anna-Maria Behnsen <anna-maria@linutronix.de>                          
-> Date:   Thu Feb 22 11:37:10 2024 +0100                                                   
->                                                                                          
->     timers: Implement the hierarchical pull model
-> ```
-See the ticket for more details and additional comments.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 7ee988770326fca440472200c3eb58935fe712f6
-#regzbot title: timers: suspend/wakeup problems on Framework Laptop 13 AMD
-#regzbot from: David Markey
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218641
-#regzbot ignore-activity
