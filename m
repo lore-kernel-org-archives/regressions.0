@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F069013C805;
-	Tue, 26 Mar 2024 15:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E73B13CA98;
+	Tue, 26 Mar 2024 16:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466289; cv=none; b=BNAIQ2nQVtLsUiuKPJcomB19NGDRKhzw4iS9u9wsxuJziR8pZSZDnb7iO9U/mSoikj6KAinwDK5OkPzfp1/Z0nkk6DuFjgag6GtKT3jsOqqZPJ8Kn6KOvg1qY1CCCJbRWr5iFC168to4RLgJPZrkwq2LCKJDqHuzpk8UhcOhtus=
+	t=1711470027; cv=none; b=Fw4GL4TrfuRDdq7Gpqb6IDhhkJ4Mr6nXSTj5g5tjPHpKviFSvVwNqdAXVa7qbDwdMqt7ZXcQu+zeNFL2g8mbismeGw0d38j/6BDO1lOdCvD+1okBB/7ZccwyTkHUuh4XdfNqHtPSGGzgcg2RhwXMDGjmlsG1KVRcP+rlTaO63wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466289; c=relaxed/simple;
-	bh=5CFqXTRiPA7QPiMzP6jRV1zgDfIHtr1T5FItOcXiCCA=;
+	s=arc-20240116; t=1711470027; c=relaxed/simple;
+	bh=tH7ShG5e19q5dk8DGs/7rFZaClfulgISrGFPuWcP0mg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X+CHxwj8/oeGUKvjNEl7qq3CGB0ar5Ap5bXUjpJTc0FRWRAPf/+bkNnQn1xoeCqbkDncLNOC1R1ETrd4ptpxBci5R8yN5USHkKBP/Hnpxxr9bycJ6YHTiHfqUFe9MBjuPCcNDvH8d2eT6gTxnCBFl1Su2wIXd45OWomJwnfBpzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGoxXeV4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CWAkjnaQ1RMfxJ58iRTpgBFDJVYthH8VLGqhuMzy8ShmMWfbB0sREts2gNmmNku0lYma4XhaWgAmoud6U135rXq1jjTPvZhHJn1Vneiqj5Rz+tl3i3Rtc+C0/CYv9aaa3IRjD07a2R0IF3vhoe9mEfnitb08LSet+FGkD++e8lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6C92dz6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGoxXeV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B428C43390;
-	Tue, 26 Mar 2024 15:18:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6C92dz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3EE8C43394;
+	Tue, 26 Mar 2024 16:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711466288;
-	bh=5CFqXTRiPA7QPiMzP6jRV1zgDfIHtr1T5FItOcXiCCA=;
+	s=k20201202; t=1711470026;
+	bh=tH7ShG5e19q5dk8DGs/7rFZaClfulgISrGFPuWcP0mg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HGoxXeV41GEMH80edsOQXFQBWqYiVMBVcjgUFa/D+LbXeyWyBRKj6mHOirR3w+BCt
-	 p5x8gNJpShgQwJwL29tNGXdoSxadPhXjrZLKeWqKac8C5C0/UkWSy7xnkihxuw5N0X
-	 6NBos5YrWhwsUiJtz6wMqAGzjKBHvBSsxIcJ0NGnieGJ2LXCpmL+m+Gox+9IuRjG8P
-	 4tZx6GXE2lMoeGAsLOdbMkXyjwcP6y2uNw662FgiHmQbV6T2Q1Mh527Kiutw9r3/ak
-	 J0XohuzmVVG9V9OIxvAmAQgjDs3+C4/Syh3DC2S5D2xlMXu+mOBQqTB8baYq+UrC0C
-	 hbyv1sqn5LGuQ==
+	b=e6C92dz6raZp0WrjtLHCxqpCcVWV3awH3jwOkT/LShocw+towYCYzHIpMxVqVR6ci
+	 S4vUVgmYGNay0dotswGf42xd6YmI7FN3UtHnq6i4yoeLo+CYBvI39oh+zvkPu/nwP6
+	 ze88G0lKQJKrmGrEVoi348mOb39+eZjNn3WGMk9Elebb301GZ8pneFWt9kNFD/0BoR
+	 C2ADW6obNGlsFyXcw3F6Z0qvBucbUllRtd/Dd06q/8Xx85VfeplO6YXdN3Kd3Ia0RI
+	 O4dyir2E/RrcwhToChH4LNMoUI3HwPM4CWyWULbzkCZysMCLqQdXDQiswmdtYCXJOZ
+	 munyLNIT7r7zQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1rp8Z6-000000006RV-2tuL;
-	Tue, 26 Mar 2024 16:18:16 +0100
-Date: Tue, 26 Mar 2024 16:18:16 +0100
+	id 1rp9XO-000000006Yi-1ZUs;
+	Tue, 26 Mar 2024 17:20:35 +0100
+Date: Tue, 26 Mar 2024 17:20:34 +0100
 From: Johan Hovold <johan@kernel.org>
 To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
@@ -41,9 +41,8 @@ Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
 	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
 Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
  exists in DT"
-Message-ID: <ZgLnOHiCzo5AQzra@hovoldconsulting.com>
-References: <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
- <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+Message-ID: <ZgL10ur0825LgWVK@hovoldconsulting.com>
+References: <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
  <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
  <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
  <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
@@ -52,6 +51,7 @@ References: <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
  <CABBYNZJFzDaLdXsdNEP1384JaJEN5E78cgmWfOus_LGOREGsWA@mail.gmail.com>
  <ZgJ0okobGv5nPreG@hovoldconsulting.com>
  <CABBYNZKJJuPHEwyXFRi8Z=P0GyaY-HdamsxmV8sR+R97ETTmEg@mail.gmail.com>
+ <ZgLnOHiCzo5AQzra@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,102 +61,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABBYNZKJJuPHEwyXFRi8Z=P0GyaY-HdamsxmV8sR+R97ETTmEg@mail.gmail.com>
+In-Reply-To: <ZgLnOHiCzo5AQzra@hovoldconsulting.com>
 
-On Tue, Mar 26, 2024 at 10:17:13AM -0400, Luiz Augusto von Dentz wrote:
-> On Tue, Mar 26, 2024 at 3:09 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Mar 25, 2024 at 04:31:53PM -0400, Luiz Augusto von Dentz wrote:
-> > > On Mon, Mar 25, 2024 at 4:14 PM Johan Hovold <johan@kernel.org> wrote:
+Hi Luiz,
 
-> > > > I just verified that it applies cleanly to 6.9-rc1.
-> > > >
-> > > >         $ git checkout tmp v6.9-rc1
-> > > >         $ b4 am -sl ZgHVFjAZ1uqEiUa2@hovoldconsulting.com
-> > > >         ...
-> > > >         $ git am ./20240314_johan_linaro_revert_bluetooth_hci_qca_set_bda_quirk_bit_if_fwnode_exists_in_dt.mbx
-> > > >         Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
-> > > >         $ b4 am -sl 20240320075554.8178-2-johan+linaro@kernel.org
-> > > >         ...
-> > > >         $ git am ./v4_20240320_johan_linaro_bluetooth_qca_fix_device_address_endianness.mbx
-> > > >         Applying: dt-bindings: bluetooth: add 'qcom,local-bd-address-broken'
-> > > >         Applying: arm64: dts: qcom: sc7180-trogdor: mark bluetooth address as broken
-> > > >         Applying: Bluetooth: add quirk for broken address properties
-> > > >         Applying: Bluetooth: qca: fix device-address endianness
-> > > >
-> > > > Do you have anything else in your tree which may interfere? What tree is
-> > > > that exactly?
+On Tue, Mar 26, 2024 at 04:18:16PM +0100, Johan Hovold wrote:
+> On Tue, Mar 26, 2024 at 10:17:13AM -0400, Luiz Augusto von Dentz wrote:
+> > On Tue, Mar 26, 2024 at 3:09 AM Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Mar 25, 2024 at 04:31:53PM -0400, Luiz Augusto von Dentz wrote:
+
+> > > > All the
+> > > > CI automation is done on bluetooth-next and if you are asking to be
+> > > > done via bluetooth tree which is based on the latest rc that is not
+> > > > how things works here, we usually first apply to bluetooth-next and in
+> > > > case it needs to be backported then it later done via pull-request.
 > > >
-> > > bluetooth-next tree, why would it be anything other than that?
-> >
-> > I ask because I did not see anything in either the bluetooth or
-> > bluetooth-next tree which should interfere.
-> >
-> > And I just verified that by applying the revert followed by the series
-> > to bluetooth-next. In that order it applies just fine, as expected.
-> >
-> > > All the
-> > > CI automation is done on bluetooth-next and if you are asking to be
-> > > done via bluetooth tree which is based on the latest rc that is not
-> > > how things works here, we usually first apply to bluetooth-next and in
-> > > case it needs to be backported then it later done via pull-request.
-> >
-> > The revert fixes a regression in 6.7-rc7 and should get to Linus as soon
-> > as possible and I assume you have some way to get fixes into mainline
-> > for the current development cycle.
-> 
-> Yeah I will send it later today to be included in the next rc release
-> and since it is marked for stable that shall trigger the process of
-> backporting it.
-> 
-> > The series fixes a critical bug in the Qualcomm driver and should
-> > similarly get into mainline as soon as possible to avoid having people
-> > unknowingly start relying on the broken behaviour (reversed address).
-> > The bug in this case is older, but since the bug is severe and we're
-> > only at rc1, I don't think this one should wait for 6.10 either.
-> 
-> The revert is now pushed, I had to apply it manually though since it
-> didn't apply cleanly, that said the other set still don't apply:
+> > > The revert fixes a regression in 6.7-rc7 and should get to Linus as soon
+> > > as possible and I assume you have some way to get fixes into mainline
+> > > for the current development cycle.
+> > 
+> > Yeah I will send it later today to be included in the next rc release
+> > and since it is marked for stable that shall trigger the process of
+> > backporting it.
+> > 
+> > > The series fixes a critical bug in the Qualcomm driver and should
+> > > similarly get into mainline as soon as possible to avoid having people
+> > > unknowingly start relying on the broken behaviour (reversed address).
+> > > The bug in this case is older, but since the bug is severe and we're
+> > > only at rc1, I don't think this one should wait for 6.10 either.
 
-I have no idea what you did here but you need to drop that commit
-immediately, it's completely messed up:
+I just double checked the bluetooth-next branch and everything looks
+good now (revert + endianness fix series). Thanks!
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/commit/?id=1b2cc5c2e5a666bdaa57a7a3964a2fe2afefb667
-
-This is the revert:
-
-	https://lore.kernel.org/lkml/20240314084412.1127-1-johan+linaro@kernel.org/
-
-and as you can see your commit bears no resemblance to the revert
-(instead it includes code from the below series which obviously then
-fails to apply):
-
-> Applying: Bluetooth: qca: fix device-address endianness
-> error: patch failed: drivers/bluetooth/btqca.c:826
-> error: drivers/bluetooth/btqca.c: patch does not apply
-> error: drivers/bluetooth/hci_qca.c: does not match index
-> Patch failed at 0004 Bluetooth: qca: fix device-address endianness
-> 
-> So please rebase and send a v5.
-
-There should be no need to resend as the problem is clearly on your end.
-
-Just drop whatever you applied and start fresh:
-
-> > > >         $ b4 am -sl ZgHVFjAZ1uqEiUa2@hovoldconsulting.com
-> > > >         ...
-> > > >         $ git am ./20240314_johan_linaro_revert_bluetooth_hci_qca_set_bda_quirk_bit_if_fwnode_exists_in_dt.mbx
-> > > >         Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
-
-This is the revert from this thread.
-
-> > > >         $ b4 am -sl 20240320075554.8178-2-johan+linaro@kernel.org
-> > > >         ...
-> > > >         $ git am ./v4_20240320_johan_linaro_bluetooth_qca_fix_device_address_endianness.mbx
-> > > >         Applying: dt-bindings: bluetooth: add 'qcom,local-bd-address-broken'
-> > > >         Applying: arm64: dts: qcom: sc7180-trogdor: mark bluetooth address as broken
-> > > >         Applying: Bluetooth: add quirk for broken address properties
-> > > >         Applying: Bluetooth: qca: fix device-address endianness
-
-And this is the follow-on series that depends on the revert.
-
+Did I understand you correctly that you'll be able to get all five
+commits into 6.9 during this development cycle (e.g. 6.9-rc2)?
+ 
 Johan
