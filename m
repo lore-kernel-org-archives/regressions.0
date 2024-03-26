@@ -1,114 +1,119 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12FA74BE2
-	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 06:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464CD128394;
+	Tue, 26 Mar 2024 07:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711435177; cv=none; b=VusPk4Msi+vHKfWy/vQPtho0fSTELMTcC5DVEaUbNMDdNp3KJC0pulPrEorr0qLzuONmxNx5qhFQDLIw326b/+FpxaJBHqmr9l8ugIzeBvKupMbvfyT7v9zHDrrcrsk7lDGEPVJRePiDDeNNZczfsk3jqlvRi2u5NDR8TkHtcr0=
+	t=1711436956; cv=none; b=HYWEv5sBLDK8sQq+zWyBntE+e0QPxtiBL3ES0yNCw2b6JCgDHt05MxXS8yb+f3nFXrayXwtsWWB897Mrrsfcdcxa5eoMc3kfD7/8uWIN+dLvULBIYYbseDVma1wIgren1a2bibZxbAz0poevFf1dujchx/n2uutrIdQSow/9u8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711435177; c=relaxed/simple;
-	bh=8hkG47Q40QgzkBdUkNgiugWCufZOCQ5wxIkjT5JKDc0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oe3t/daJw8jrQj6lJPNU1MPHwZiYrn8YLdU5CzxulP/PLS2HdTnP8g6ekJbTTAvaNZSwugiPmkqELLEF8KLtDS2aXZZQGLGdXJpElDUZ6mWIe3vsB8ZZANLkyIYxIQTYyK7qxUvIARpqAZszOLYxkJ+VHi+PNYVS/L5Bjh+NGCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zYLQLmvq; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711436956; c=relaxed/simple;
+	bh=S1+D5CctG8AMUv6EK6M5WzyBfkPV4fTXRAVv7FJqFkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUkEz95uDrswXKzl8dxd1FwfF8krHFXgd3wPFl2hvUnyZrxL+NjDzBiWxAK65++z45FYp4IxTPOiBI1FBnp3FXF5G+Df8pEZkPdD7nB020a+TEsY/GgBTIicSwW0t++DY2iwKGBy+B2mIY1VYzIPscfCnpla8sw+WtziyTyxJfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2tAol0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYLQLmvq"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7e06168551eso1467157241.2
-        for <regressions@lists.linux.dev>; Mon, 25 Mar 2024 23:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711435175; x=1712039975; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=drVZ42Pjz6m24bstfIZiE8BogPtQcG+Q1nzebdlWw4A=;
-        b=zYLQLmvqqsOHGxOj45F0EK0iiowws1LoBSnv6pU0xaK2lVjDvYLzkwUujYEdfOzYhc
-         1j1d4/ObiYIMwdRn6YiItvSVdUApJMCUyUWMLofbg2k52oiaSBfjjrO35ru+1scmhYoq
-         b7gtQecpK0PfocrGE7aH3F6JfZ5YXjsUhhoaWefEFdsCbQIT0pnzgRevs/aRNnZQkISL
-         Oea3cF661cOP8Zf6O8tM7pz5sdoi5McNU8ggk51EFxovyPWEosfDMy2N8g8v76IrcnCz
-         Sb18PR8aks3eF6vROzlOr7/8mUfBj2nkz1pEO+gkHt7ErQz7xKiLbg9So9GM3xWDLuWN
-         xM7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711435175; x=1712039975;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=drVZ42Pjz6m24bstfIZiE8BogPtQcG+Q1nzebdlWw4A=;
-        b=W7j1Q/mvNWkTZnWJzYy9s0f6xdM0zj3NP9r8H6/p3hyXZOvlgioWg9v1aHa7lJ67Yq
-         Sb+BS6h3LdYfdTP8Jj4hPGWHKvY01WWO8eMShEk4oz0WxDzmV1Bgcx+GQIx54JPdLqVV
-         IrzanN3VKNq4wO9W0TXNzBszjhl/8s2h4phDSDCh8dp1KupClMnEq3D2cmvdpirc0Txx
-         kDPih755ui1usJQzgo18HEwpQ4t4HRw3cmW7yOwSAh2N0nIJbjDZwSbBcc+cmF18OHlF
-         Bei+dYbmq7k0wQKnaFV/MyFB/M79v4vosTu+hoeckOrhfkpl7DTpgxENpGI6Rv1qKHEn
-         qHxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW20AB0P2fwXI+rbelq+Q0lDW1F4qqjFJNZjGEMrpEVPlVfTRZlLboZ16yjAs87PP++xKeigKAhKXC66CQDTYmSSznuvA3OKXelw8s=
-X-Gm-Message-State: AOJu0YwhhWzEG0CuOYwgwJ2S68Jpx7ye3AQGu5cfNMGNmmF6HK7TBZz2
-	MjjNvEAMrR00KSDeIMdUQ6W96YuzTYhB84VUMyugnYDGNwJY+1zRqRyGVW25n8CEMxtffXZhedy
-	jW8hXM2NCPObiUz3CXXwRxvV0+u3/ibEvMIg5Cw==
-X-Google-Smtp-Source: AGHT+IHEXqKXr2zeKfb/dcXtTpJUneKb2/8gxWMltBIlJ3SC8orv+0q/CSPQOhwnG8MsvVlHWmkE85wSNg0nDxpryiY=
-X-Received: by 2002:a1f:f843:0:b0:4d8:7a5e:392f with SMTP id
- w64-20020a1ff843000000b004d87a5e392fmr6046584vkh.12.1711435174828; Mon, 25
- Mar 2024 23:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2tAol0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4AE2C433C7;
+	Tue, 26 Mar 2024 07:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711436955;
+	bh=S1+D5CctG8AMUv6EK6M5WzyBfkPV4fTXRAVv7FJqFkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o2tAol0CxU9tomWHC/iz/dFozSU/D59ojiuI/3zLTetuGVO/oo53gqCkFAjGte4fo
+	 OgTaF/oL32d4rpcz4jpKxZ5qi4ho8M8KM9iM4rPJq2fb2+eAacq7uAMh2B0rfyd4TQ
+	 C9doQKhvnHmOfXgHKXqXMB8jGLcbieY0ce5C83YP/2Jxx84vYPC+DVXF047sSClPjs
+	 qctSgRjmbz1s35PsYz8G6J1n+Qp/XNJ64DuBVX5iBJgzFsaYGXWGlffbT0c8nLgsHi
+	 30MWDlByuga01WNoMg8HG18fZTn3QX7dUxzxfd+VOb/wNDdnj3zPrsV22u2ZZaURBW
+	 WjuEBLEm8qkyQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rp0vy-000000004q7-21w1;
+	Tue, 26 Mar 2024 08:09:23 +0100
+Date: Tue, 26 Mar 2024 08:09:22 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+Subject: Re: [PATCH] Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode
+ exists in DT"
+Message-ID: <ZgJ0okobGv5nPreG@hovoldconsulting.com>
+References: <CABBYNZJV1htg46Gyu=7_iUWdukM+rHLitsLjxmWWYFGXty3tVw@mail.gmail.com>
+ <ZfMStHjwtCT1SW3z@hovoldconsulting.com>
+ <964131ff-293d-47d1-8119-a389fa21f385@leemhuis.info>
+ <CABBYNZJ0ukd_8=SFzy8CEwgP7hV5unodca0NZ2zDZh+jPJsEFQ@mail.gmail.com>
+ <ZgGzWWV4Lh2Nal--@hovoldconsulting.com>
+ <CABBYNZJaXUhu1A+NyVT-TAJw49zcV6TMdGeVy2F+AVKWBOVC-g@mail.gmail.com>
+ <ZgHVFjAZ1uqEiUa2@hovoldconsulting.com>
+ <CABBYNZJUVhNKVD=s+=eYJ1q+j1W8rVSRqM4bKPbxT=TKrnZdoQ@mail.gmail.com>
+ <ZgHbPo57UKUxK7G8@hovoldconsulting.com>
+ <CABBYNZJFzDaLdXsdNEP1384JaJEN5E78cgmWfOus_LGOREGsWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 26 Mar 2024 12:09:23 +0530
-Message-ID: <CA+G9fYu49=6_L6r8hdagZHUSGk+JfjioFaqh+kRaxhce84Q5Kw@mail.gmail.com>
-Subject: next: arc: defconfig - gcc-9 - mmu-arcv2.h:82:2: error: implicit
- declaration of function 'write_aux_reg' [-Werror=implicit-function-declaration]
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, linux-mm <linux-mm@kvack.org>, 
-	linux-snps-arc@lists.infradead.org
-Cc: Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, vgupta@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABBYNZJFzDaLdXsdNEP1384JaJEN5E78cgmWfOus_LGOREGsWA@mail.gmail.com>
 
-The following arc defconfig build warnings / errors noticed on today's
-Linux next-20240326 tag.
+On Mon, Mar 25, 2024 at 04:31:53PM -0400, Luiz Augusto von Dentz wrote:
+> On Mon, Mar 25, 2024 at 4:14 PM Johan Hovold <johan@kernel.org> wrote:
+> > On Mon, Mar 25, 2024 at 04:07:03PM -0400, Luiz Augusto von Dentz wrote:
 
-Regressions:
-    * arc - defconfig - gcc-9 build failed.
+> > > Probably needs rebasing:
+> > >
+> > > Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
+> > > error: drivers/bluetooth/hci_qca.c: does not match index
+> > > Patch failed at 0001 Revert "Bluetooth: hci_qca: Set BDA quirk bit if
+> > > fwnode exists in DT"
+> >
+> > I just verified that it applies cleanly to 6.9-rc1.
+> >
+> >         $ git checkout tmp v6.9-rc1
+> >         $ b4 am -sl ZgHVFjAZ1uqEiUa2@hovoldconsulting.com
+> >         ...
+> >         $ git am ./20240314_johan_linaro_revert_bluetooth_hci_qca_set_bda_quirk_bit_if_fwnode_exists_in_dt.mbx
+> >         Applying: Revert "Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT"
+> >         $ b4 am -sl 20240320075554.8178-2-johan+linaro@kernel.org
+> >         ...
+> >         $ git am ./v4_20240320_johan_linaro_bluetooth_qca_fix_device_address_endianness.mbx
+> >         Applying: dt-bindings: bluetooth: add 'qcom,local-bd-address-broken'
+> >         Applying: arm64: dts: qcom: sc7180-trogdor: mark bluetooth address as broken
+> >         Applying: Bluetooth: add quirk for broken address properties
+> >         Applying: Bluetooth: qca: fix device-address endianness
+> >
+> > Do you have anything else in your tree which may interfere? What tree is
+> > that exactly?
+> 
+> bluetooth-next tree, why would it be anything other than that?
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I ask because I did not see anything in either the bluetooth or
+bluetooth-next tree which should interfere.
 
-Build log:
----------
-arch/arc/kernel/ptrace.c:342:16: warning: no previous prototype for
-'syscall_trace_enter' [-Wmissing-prototypes]
-  342 | asmlinkage int syscall_trace_enter(struct pt_regs *regs)
-      |                ^~~~~~~~~~~~~~~~~~~
-arch/arc/kernel/kprobes.c:193:15: warning: no previous prototype for
-'arc_kprobe_handler' [-Wmissing-prototypes]
-  193 | int __kprobes arc_kprobe_handler(unsigned long addr, struct
-pt_regs *regs)
-      |               ^~~~~~~~~~~~~~~~~~
-In file included from arch/arc/include/asm/mmu.h:21,
-                 from arch/arc/include/asm/pgtable.h:14,
-                 from include/linux/pgtable.h:6,
-                 from include/asm-generic/io.h:1047,
-                 from arch/arc/include/asm/io.h:232,
-                 from include/linux/io.h:13,
-                 from kernel/dma/coherent.c:6:
-arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
-arch/arc/include/asm/mmu-arcv2.h:82:2: error: implicit declaration of
-function 'write_aux_reg' [-Werror=implicit-function-declaration]
-   82 |  write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
-      |  ^~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+And I just verified that by applying the revert followed by the series
+to bluetooth-next. In that order it applies just fine, as expected.
 
-Steps to reproduce:
--------
-# tuxmake --runtime podman --target-arch arc --toolchain gcc-9
---kconfig defconfig
+> All the
+> CI automation is done on bluetooth-next and if you are asking to be
+> done via bluetooth tree which is based on the latest rc that is not
+> how things works here, we usually first apply to bluetooth-next and in
+> case it needs to be backported then it later done via pull-request.
 
+The revert fixes a regression in 6.7-rc7 and should get to Linus as soon
+as possible and I assume you have some way to get fixes into mainline
+for the current development cycle.
 
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240325/testrun/23149630/suite/build/test/gcc-9-defconfig/log
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240325/testrun/23149630/suite/build/test/gcc-9-defconfig/history/
- - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eA2VSZdDsL0DMBBhjoauN9IVoK/
+The series fixes a critical bug in the Qualcomm driver and should
+similarly get into mainline as soon as possible to avoid having people
+unknowingly start relying on the broken behaviour (reversed address).
+The bug in this case is older, but since the bug is severe and we're
+only at rc1, I don't think this one should wait for 6.10 either.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Johan
