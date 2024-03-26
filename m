@@ -1,126 +1,81 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C405182A3;
-	Tue, 26 Mar 2024 13:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F280476033
+	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 13:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711461017; cv=none; b=RD5qOCesad4ax4Dqi4S5x7z4VkPEcZHAHWM8uHMgva1D+jZZ8px3Fn+Kgta8NJRuF41krq9+30mPdhWvwKerei+nTkY7ftL8sf0DPhJyu8wJABQ/KdURnuTqCcJTi502wn+QYFgLGRFaX5GnKafXWLLV0y8MDFUHevGw6rXO87Q=
+	t=1711461397; cv=none; b=Q/H4Fi5fz0J/YUZrVnj3V+2DhWAiyRIKFPxj+jrLGlqZcsPSXoL1SxBKV1/BmNIUz/Kl5ksu6PDWQzqxo2xGhavXQJgh/z2iPRbttpt4Ow91qZiZGATEAPjphlHcNugrRJsBW1mdChchiw7PneZEmxYFczTgWM4gM0/X0NL5Wro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711461017; c=relaxed/simple;
-	bh=ge9l/Gwc3AxYtcSsPMc+z1dOFILly49XM8PZgooU2WM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Y0XUCqfVYp6gQfyfrzXCDNXXBjfvElqF0SP43s96YOIJLM69XfpVHOOcQTfxa05XXO+N/BI7+i9gN/SexRS51Q787gPsGe8EZ1zzNlhQAeYAyoaYfzIbktfUzhnkuk9/GwS4y81lwPxYewkmTnCdbQZN5V7Cb08QhYLzu+vMScU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZHynT0rv; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711461397; c=relaxed/simple;
+	bh=nxQFAB1Tb5hVwu9qk7YsFavhCTXPLgENlIfm4MVLRZE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=f6oYrPL8gITQRW2OfuxuRlB7gMjdoqe45y2uXTFTAdIbdN2hrG6AxUDnNN6ohEjI6LwdGAmuubrGtsMWG4MEOrMDiMW0Mu/6sqYgxy9Hc4iMfEwMYM2SXwOdcKdrgnwMzmu6ebVpa3Qi3x8DuU+ZU4AF0FCbUQo/mDWEGVm7H7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fJR/E4g7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QkPPSOqz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZHynT0rv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=42Ec/7rrOkb0s10VDIHJ7GTucWOmYS68hh6j9o0Neio=;
-	t=1711461015; x=1711893015; b=ZHynT0rvvMp2iCCb9ldJ5pRPHY7yKvOU2jYRS+XrzZX39b7
-	KfT+NkSz/HRTZtcKISuA4qKuCuw5iKPlizxYWPndZjP4cxAJ39VVrh2+SZ3TTbikHOVfUIByH2WG/
-	fjRzSDFhI9BPhl5i9ENXHcbcRFUh7LHg3UjM0M0lvOiR5qskJQyC9BgU+M4/qztpQTtY/NRRuyPtK
-	XC+ThhiT7WHVorQ0a59wjET1Eaq2VVrzfQUDLgoyv0FuMtw4XrpGJUk0HMnUVH/ZsVTpzyTm8beWS
-	qW5ple9+9k4oQIBvuZps1qeq+veh6uc1b6cna0OvRUuAVLJr3ddVai3ejKvk7+Yw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rp7Bl-0003I9-VQ; Tue, 26 Mar 2024 14:50:06 +0100
-Message-ID: <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
-Date: Tue, 26 Mar 2024 14:50:05 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fJR/E4g7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QkPPSOqz"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1711461394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w9sxAoNwjLa7ZuS8N1Wq8b3qnMTcZlZr1kvXbtFsTqc=;
+	b=fJR/E4g759XVdYJEa54Mevc9uuM88nSKytFGSKgo4XAPjZy3nzWqWHPXKQSGiZ4LQ7U0Rk
+	bCsujEz2FSvAqBxCr+I9dUTGFK7qaVZWtwB0nUVKl60NStxYCQRGxX0LsIOoBMFEJQI8Yg
+	bTPYz6fwuoD9JmllnVZ7wVAArduoGMcdKW4vJLgb4US0vvsx40T26JsT/aoJeix71ZUxlb
+	d2+ukO2FSwCNp4E7msFVzwQkes4NLPrcQvjYeCtEpTMKuQu372E/gPjZm8BIIRnFeyHlwN
+	ILDXcLj/5vHWSencVp4uRcvXN5dMR3FF4OebtbLtYzWLnZWf6ko8wPte0n3biQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1711461394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w9sxAoNwjLa7ZuS8N1Wq8b3qnMTcZlZr1kvXbtFsTqc=;
+	b=QkPPSOqzYC0gPGN2VTGmjDHzf1mNoUBt05sDF2w2qz3e7sV/VQmyMP79E711Q7LEtfqB4f
+	O4q3P6mDJhPCeiBg==
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux kernel
+ regressions list <regressions@lists.linux.dev>, Mario Limonciello
+ <mario.limonciello@amd.com>
+Subject: Re: [regression] Bug 218641 - Framework Laptop 13 AMD
+ suspend/wakeup regression with 6.9rc1
+In-Reply-To: <5b778e74-1278-42b1-84e1-a2c04a8211f0@leemhuis.info>
+References: <5b778e74-1278-42b1-84e1-a2c04a8211f0@leemhuis.info>
+Date: Tue, 26 Mar 2024 14:56:33 +0100
+Message-ID: <877chpt7u6.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: dmaengine: CPU stalls while loading bluetooth module
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- parthiban@linumiz.com, saravanan@linumiz.com,
- 'karthikeyan' <karthikeyan@linumiz.com>,
- "bumyong.lee" <bumyong.lee@samsung.com>,
- 'Linux regressions mailing list' <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
- <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
- <000001da6ecc$adb25420$0916fc60$@samsung.com>
- <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
- <000001da7140$6a0f1570$3e2d4050$@samsung.com>
- <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
- <001001da7a60$78603130$69209390$@samsung.com>
- <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711461015;a078b924;
-X-HE-SMSGID: 1rp7Bl-0003I9-VQ
+Content-Type: text/plain
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Hi,
 
-Vinod Koul, what's your option here? We have two reports about
-regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
-waits until WFP state") [v6.8-rc1] now:
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 
-https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>
+> Anna-Maria, I noticed a regression report in bugzilla.kernel.org that
+> apparently is caused by a change of yours. As many (most?) kernel
+> developers don't keep an eye on it, I decided to forward it by mail.
 
-https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
-[the first link points to the start of this thread]
+Thanks a lot! I already saw this bug report in the morning and will have
+a look at it.
 
-To me it sounds like this is a change that better should be reverted,
-but you are of course the better judge here.
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CC them in mails like this.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+I will do this :)
 
-On 20.03.24 07:28, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 20.03.24 01:49, bumyong.lee wrote:
->>>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
->>>>> it be a good idea to revert above commit for now and reapply it when
->>>>> something better emerged? I doubt that the answer is "yes, let's do
->>>>> that", but I have to ask.
->>>>
->>>> I couldn't find better way now.
->>>> I think it's better to follow you mentioned
->>>
->>> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
->>> did "submit a revert" fell through the cracks or is there some other
->>> solution in the works? Or am I missing something?
->>
->> "submit a revert" would fix the issue. but it would make another issue
->> that the errata[1] 719340 described.
-> 
-> "Make" as it "that other issue was present before the culprit was
-> applied"? Then that other issue does not matter due to the "no
-> regression" rule and how Linus afaics wants to see it applied in
-> practice. For details on the latter, see the quotes from him here:
-> https://docs.kernel.org/process/handling-regressions.html
->  Hence please submit a revert (or tell me if I misunderstood something)
-> -- or of course a workaround for the other issue that does not cause the
-> regression people reported.
-> 
->> [...]
->> [1]: https://developer.arm.com/documentation/genc008428/latest
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> 
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Thanks,
 
-#regzbot poke
+	Anna-Maria
+
