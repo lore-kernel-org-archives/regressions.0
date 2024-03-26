@@ -1,143 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7BB6FE16
-	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 22:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BA013DDAC
+	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 23:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711490975; cv=none; b=Zsnjltx39SGceQdLArQc1bkY5K4tnYbBeyPl/VwNtsOnx5VerKGrKHrVOQTHfPKMCVg+r8TAleW0zsa7PjZa0u8nAiX2A5/dFo2YkRwG/cZk5kexq7nK7546crv9Z6oVwHegsqVUXTPl5Zj1BDWWYDobjUtAWr9wevF0KdpnN44=
+	t=1711495194; cv=none; b=rGdC7eIfxsHSbfD57V7lzp6IXlTxiURju//YKr/5xC5RgIoyNZeSrZADY/gLMij+LrFUgGD/jRPT2hzwFZzhn7uxXSsx+ZtexlDETdrFkOYT+LT9FSH5JrZxCWGBa6sN2ZmVL7Z2MYCBpfUObLQosqdEAjKV1mGO3HYV9Ebi6kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711490975; c=relaxed/simple;
-	bh=mtMkhn3CfgiqKNePweOv4Nxw2Ho38rO8NpPlXWz4g4M=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEFjJmuwb2wRfnsIJrkwrVP0afQ19RJG2xlL7/7GUdHwSoVuABtHJSwkDmNbQC9PIBtVWP+R0v6uFBLw9yaMOgtG8udgMPRLUbLHjv570yIrKudpsWdKiCBdElbvjSYi6X5tneaIFcBhzBTnRtIkPKlTbw/sYhgAJW4He0edOAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fdN7hXKw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1711495194; c=relaxed/simple;
+	bh=UvWP6b18kN8mm8jE4MtS1uYsAsJWVUOJQTXrlWh4/Ww=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NytfoNdYdPgLg1Ew01hg522y1H4ZbE7lS1CfBqb0VCQCDuI/ip6BImHVO7LmJ6138Z4C6ZTnZwqcukaD/BpF3+4KH9yw/QX+R9GCtVJzjT9i6tH24KJ7vDDqIIUxmOV1XBWsXItLCP7Wasv1GNW8s3HL2GiujPdxb10b4NJDS3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tT2x/6TK; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fdN7hXKw"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QM8CZq028203;
-	Tue, 26 Mar 2024 22:09:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=+QDqt7fkKKNbqUcMuvxF1
-	CaKjYlw/mVm2eVrDepyTWY=; b=fdN7hXKwBSOSMoyuzbGLvQrw88Hk5iXYfBFK/
-	aH5rbpZcCIQJAoa4fA9xFMa5VgGk8ihJMTwNBZ+m2JzXSrQLzkHFHXCOINtbSRTe
-	8uE4QKHI9Jm6fWBADvp8Hln66VGvwA9JC7WXnZsJDR7aItNtzhIfX8hyUwrJKBHa
-	b09FQDC9aI8Wd3+0PGCDwFlIf2G5ZQ3MqT+2eN68g0RcoWmUEnR6oTlo/i3Iqjw8
-	9lbWC/UqJfRDvIimW8XhfTat5fTJMgrxaBZ0hkGrxOcWH+5SMpScpGk9OBhvzIvV
-	vcUr4Zp0N1V045YvJL+ZUGyMlzbFyDxSAa0ojI8tR+VN9UdnQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x3w0x9qy3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 22:09:23 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QM9LVS001691
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 22:09:21 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 26 Mar 2024 15:09:21 -0700
-Date: Tue, 26 Mar 2024 15:09:19 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: <neil.armstrong@linaro.org>
-CC: Jameson Thies <jthies@google.com>, <heikki.krogerus@linux.intel.com>,
-        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
-        <bleung@google.com>, <abhishekpandit@chromium.org>,
-        <andersson@kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <fabrice.gasnier@foss.st.com>, <gregkh@linuxfoundation.org>,
-        <hdegoede@redhat.com>, <rajaram.regupathy@intel.com>,
-        <saranya.gopal@intel.com>, <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux
- regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH v4 2/4] usb: typec: ucsi: Register cables based on
- GET_CABLE_PROPERTY
-Message-ID: <20240326220919.GA2136359@hu-bjorande-lv.qualcomm.com>
-References: <20240305025804.1290919-1-jthies@google.com>
- <20240305025804.1290919-3-jthies@google.com>
- <44e8142f-d9b3-487b-83fe-39deadddb492@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tT2x/6TK"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56bde8ea904so4031a12.0
+        for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 16:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711495191; x=1712099991; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvWP6b18kN8mm8jE4MtS1uYsAsJWVUOJQTXrlWh4/Ww=;
+        b=tT2x/6TKDss5rb4yVk1KqN9R1fUM8D3HRCsJ20DFlhFrjrq1N0yhSlwxxlMn66ogcI
+         7QtXoeO5A8fugxANjujDJnX+kx9cNBD/V9Y7y7oRxWy7Bajcrxf+bofYv5eKwreJIUJ/
+         1J9Gp9k+FhqWifKQ87FvOM1umHRHNu3fQpt6uj3JbrtiagGkBNak2XXwj2HteXPvICEt
+         n4Og6I2tBTNQBlhPoiPVjdvHZ2gTKIxASi7uUASzZR56qxu2s0QW6sxW1LDq5YF6DxgP
+         lbK0AB1KbXoTW8S6XZULUfsaxIP3IL2SjKjzrKwArK++s5+tfcNZokdl8IJC59P3gVhN
+         Yofg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711495191; x=1712099991;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UvWP6b18kN8mm8jE4MtS1uYsAsJWVUOJQTXrlWh4/Ww=;
+        b=Pdrr01s6GzgEjWu2prFRF1tTKIilMUhXx0jtrPOnOkdx492EaCl2MjS74/KRg/hBYw
+         35hUaUqTH78+7gTB0BPncXFUCSKzH+BnYabOmO/9gqHvW0H7nm968tQWuy2SmvvYuz1t
+         YwcVo9qDIhbeXJu7eM2iFBhE23SCjMDqlnaW3cQb/TYRcllZyKYYHGgeP9Swemz0/f4m
+         qO4FTkq2PdrpYT7kHl0jocehqhbO0ur3zX6N5993jFVGaBa69sYjXTu6rXgk22T9a9KD
+         0HM321QmBeLRbNr2f0fOWteGjKp1kuJZMK9+SEMI3hXRkEcKZPulnuK8iNtm1vT1NeHl
+         BWyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHAP2q0YwCQQ774uW/88sJv/33CZFdPUnM3MXLiZ1CFgVgjN+lcmqGPFSXnmAVjLTAC5hFENRygQpOjBQL7SgWipaOPDahfrsH7UU=
+X-Gm-Message-State: AOJu0Yzl772Z9EaQzEWcLgWLkT97uZcFshhdHQHzZoaieLris4wQNTxc
+	X9nwI7uoig3FkbZ57A0EFUZgtkKYBRSrMVt1F6B9kcPbMj/cLj2+mYgmBCMav3hBs6yv7zmPfI0
+	YYYFbzfTM4nh+fsiZ1hmNbczHFohj5lnOzcpm
+X-Google-Smtp-Source: AGHT+IGZWut7iYxsRXsNc34sf0qz5fmBiwVI3r+NknfdcTh9appFJDXacDvZoJGMK/rXWQcZT5jiuuBFscfiEQScH5M=
+X-Received: by 2002:aa7:d910:0:b0:56c:c20:6b40 with SMTP id
+ a16-20020aa7d910000000b0056c0c206b40mr19214edr.0.1711495191346; Tue, 26 Mar
+ 2024 16:19:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <44e8142f-d9b3-487b-83fe-39deadddb492@linaro.org>
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: h-E4Gy2N13WJuPoHmePuq7mzy3MXPXnh
-X-Proofpoint-ORIG-GUID: h-E4Gy2N13WJuPoHmePuq7mzy3MXPXnh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_09,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- clxscore=1011 priorityscore=1501 lowpriorityscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2403260160
+References: <20240305025804.1290919-1-jthies@google.com> <20240305025804.1290919-3-jthies@google.com>
+ <44e8142f-d9b3-487b-83fe-39deadddb492@linaro.org> <20240326220919.GA2136359@hu-bjorande-lv.qualcomm.com>
+In-Reply-To: <20240326220919.GA2136359@hu-bjorande-lv.qualcomm.com>
+From: Jameson Thies <jthies@google.com>
+Date: Tue, 26 Mar 2024 16:19:38 -0700
+Message-ID: <CAMFSAReKmon7xAXWq4kJvN4Ge-tKkhUaaDZFP5EZA-=WU5oL1g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] usb: typec: ucsi: Register cables based on GET_CABLE_PROPERTY
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: neil.armstrong@linaro.org, heikki.krogerus@linux.intel.com, 
+	linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com, 
+	abhishekpandit@chromium.org, andersson@kernel.org, 
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
+	gregkh@linuxfoundation.org, hdegoede@redhat.com, rajaram.regupathy@intel.com, 
+	saranya.gopal@intel.com, linux-kernel@vger.kernel.org, 
+	Benson Leung <bleung@chromium.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 11, 2024 at 06:28:41PM +0100, neil.armstrong@linaro.org wrote:
-> On 05/03/2024 03:58, Jameson Thies wrote:
-[..]
-> With:
-> =================><====================================
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index cf52cb34d285..eec64a4c8cdd 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1189,8 +1189,10 @@ static void ucsi_handle_connector_change(struct work_struct *work)
->                         ucsi_register_partner(con);
->                         ucsi_partner_task(con, ucsi_check_connection, 1, HZ);
->                         ucsi_partner_task(con, ucsi_check_connector_capability, 1, HZ);
-> -                       ucsi_partner_task(con, ucsi_get_partner_identity, 1, HZ);
-> -                       ucsi_partner_task(con, ucsi_check_cable, 1, HZ);
-> +                       if (con->ucsi->cap.features & UCSI_CAP_GET_PD_MESSAGE)
-> +                               ucsi_partner_task(con, ucsi_get_partner_identity, 1, HZ);
-> +                       if (con->ucsi->cap.features & UCSI_CAP_CABLE_DETAILS)
-> +                               ucsi_partner_task(con, ucsi_check_cable, 1, HZ);
-> 
->                         if (UCSI_CONSTAT_PWR_OPMODE(con->status.flags) ==
->                             UCSI_CONSTAT_PWR_OPMODE_PD)
-> @@ -1589,8 +1591,10 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
->                 ucsi_register_partner(con);
->                 ucsi_pwr_opmode_change(con);
->                 ucsi_port_psy_changed(con);
-> -               ucsi_get_partner_identity(con);
-> -               ucsi_check_cable(con);
-> +               if (con->ucsi->cap.features & UCSI_CAP_GET_PD_MESSAGE)
-> +                       ucsi_get_partner_identity(con);
-> +               if (con->ucsi->cap.features & UCSI_CAP_CABLE_DETAILS)
-> +                       ucsi_check_cable(con);
->         }
-> 
->         /* Only notify USB controller if partner supports USB data */
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index 32daf5f58650..2e9c35a3af27 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -215,6 +215,7 @@ struct ucsi_capability {
->  #define UCSI_CAP_CABLE_DETAILS                 BIT(5)
->  #define UCSI_CAP_EXT_SUPPLY_NOTIFICATIONS      BIT(6)
->  #define UCSI_CAP_PD_RESET                      BIT(7)
-> +#define UCSI_CAP_GET_PD_MESSAGE                        BIT(8)
->         u16 reserved_1;
->         u8 num_alt_modes;
->         u8 reserved_2;
-> =================><====================================
-> it works fine again.
-> 
+Hi Bjorn,
+posted at https://lore.kernel.org/lkml/20240315171836.343830-2-jthies@google.com/
 
-The series broke role switching on qcs6490-rb3gen2 (next-20240326 is
-broken). You're proposed addition brings it back, thank you.
-
-Was this posted somewhere?
-
-Regards,
-Bjorn
+Thanks,
+Jameson
