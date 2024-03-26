@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0AC71726
-	for <regressions@lists.linux.dev>; Tue, 26 Mar 2024 13:37:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C405182A3;
+	Tue, 26 Mar 2024 13:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711460259; cv=none; b=Ue1l5l+cehnKGw0FHTTNiiOyC/tBKFlbqylJfCoQFCRd5c2wXOq7qFPp0nxuAJybtarzlDNzsuqD7ZcdbMKVOT45PP3+J1PDCF0UVGMC+p2DV/sJ+J7S/SmsNQkjHwPWLPoT3dXHCri1Ol/uSApSVgJ/j/S6dctN6ZnQYjwF8yE=
+	t=1711461017; cv=none; b=RD5qOCesad4ax4Dqi4S5x7z4VkPEcZHAHWM8uHMgva1D+jZZ8px3Fn+Kgta8NJRuF41krq9+30mPdhWvwKerei+nTkY7ftL8sf0DPhJyu8wJABQ/KdURnuTqCcJTi502wn+QYFgLGRFaX5GnKafXWLLV0y8MDFUHevGw6rXO87Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711460259; c=relaxed/simple;
-	bh=h60tFvj2/wNY4+Jdnt/8wU2izHvLtLRVjjICYsUPsyE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=D5FrAYzF2GdOl4fJDq5nmQFn8OfnQkp2h8ddgYuJIXk5ICOpHlcN5UpykPcF69lmytTRDremcjyHeFXNqSVXnR8Tc83FRRuFLxT+gZJbVBJlpgbl8afIuY8V7DQfM34wgFEWA5O/gM8dznEzNKv4ACJi9IiGgQzMJY6kmiTBRqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OqqXQSpr; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1711461017; c=relaxed/simple;
+	bh=ge9l/Gwc3AxYtcSsPMc+z1dOFILly49XM8PZgooU2WM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Y0XUCqfVYp6gQfyfrzXCDNXXBjfvElqF0SP43s96YOIJLM69XfpVHOOcQTfxa05XXO+N/BI7+i9gN/SexRS51Q787gPsGe8EZ1zzNlhQAeYAyoaYfzIbktfUzhnkuk9/GwS4y81lwPxYewkmTnCdbQZN5V7Cb08QhYLzu+vMScU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZHynT0rv; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OqqXQSpr"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZHynT0rv"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:Reply-To:Subject:From:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=h60tFvj2/wNY4+Jdnt/8wU2izHvLtLRVjjICYsUPsyE=; t=1711460256;
-	x=1711892256; b=OqqXQSpr740ezNsqn/oQTj8S6/NI+kCbuydzvpnobxjR7atbeRuGbQ7NqA1GG
-	jrfAtRvq1vbaWORvIpFmEQSuJS9Zxw+1e/epoCXDmzkCeXrNybfTLH+ax9lE+yNfvRwH14bH+/9je
-	5syx1WslVLtIvtfSDQwaFHsqdn7roJU8GUF8vKr6z0YUZfEWgtu0m7DHNuCL/l6+XmXYSq990/bMj
-	rvPIsvRXIZWuYM4WEVTCJ5W7ZwkCR47JyNjkEvLM0/l+PcnKhJ4cIbR9aoTvT8HwXKgBFksIphJ3N
-	Pf9DqC7PpbEQd5ZaDjvZjLRIsNCtscWy8JqJ6PZ46kKftpD4pg==;
+	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=42Ec/7rrOkb0s10VDIHJ7GTucWOmYS68hh6j9o0Neio=;
+	t=1711461015; x=1711893015; b=ZHynT0rvvMp2iCCb9ldJ5pRPHY7yKvOU2jYRS+XrzZX39b7
+	KfT+NkSz/HRTZtcKISuA4qKuCuw5iKPlizxYWPndZjP4cxAJ39VVrh2+SZ3TTbikHOVfUIByH2WG/
+	fjRzSDFhI9BPhl5i9ENXHcbcRFUh7LHg3UjM0M0lvOiR5qskJQyC9BgU+M4/qztpQTtY/NRRuyPtK
+	XC+ThhiT7WHVorQ0a59wjET1Eaq2VVrzfQUDLgoyv0FuMtw4XrpGJUk0HMnUVH/ZsVTpzyTm8beWS
+	qW5ple9+9k4oQIBvuZps1qeq+veh6uc1b6cna0OvRUuAVLJr3ddVai3ejKvk7+Yw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rp6zc-0000wx-Pv; Tue, 26 Mar 2024 14:37:32 +0100
-Message-ID: <1431ec54-f22d-4f2f-9556-a1c217373741@leemhuis.info>
-Date: Tue, 26 Mar 2024 14:37:32 +0100
+	id 1rp7Bl-0003I9-VQ; Tue, 26 Mar 2024 14:50:06 +0100
+Message-ID: <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
+Date: Tue, 26 Mar 2024 14:50:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,35 +39,88 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+To: vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ parthiban@linumiz.com, saravanan@linumiz.com,
+ 'karthikeyan' <karthikeyan@linumiz.com>,
+ "bumyong.lee" <bumyong.lee@samsung.com>,
+ 'Linux regressions mailing list' <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
+ <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+ <000001da6ecc$adb25420$0916fc60$@samsung.com>
+ <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+ <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+ <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <001001da7a60$78603130$69209390$@samsung.com>
+ <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711460256;a24c54a6;
-X-HE-SMSGID: 1rp6zc-0000wx-Pv
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711461015;a078b924;
+X-HE-SMSGID: 1rp7Bl-0003I9-VQ
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-#regzbot report:
-https://lore.kernel.org/all/Zfv8iCL6CT2JqLIC@darkstar.users.ipa.redhat.com/
-#regzbot introduced: 4a693ce65b18
-#regzbot duplicate:
-https://lore.kernel.org/all/4eeac1f733584855965a2ea62fa4da58@huawei.com/
-#regzbot title: kdump/crash: crashkernel region on x86_64 can't be added
-into iomem tree sometimes
-#regzbot fix: crash: use macro to add crashk_res into iomem early for
-specific arch
-#regzbot monitor:
-https://lore.kernel.org/all/20240324033513.1027427-1-bhe@redhat.com/
+Vinod Koul, what's your option here? We have two reports about
+regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
+waits until WFP state") [v6.8-rc1] now:
 
+https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+
+https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
+[the first link points to the start of this thread]
+
+To me it sounds like this is a change that better should be reverted,
+but you are of course the better judge here.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+On 20.03.24 07:28, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 20.03.24 01:49, bumyong.lee wrote:
+>>>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
+>>>>> it be a good idea to revert above commit for now and reapply it when
+>>>>> something better emerged? I doubt that the answer is "yes, let's do
+>>>>> that", but I have to ask.
+>>>>
+>>>> I couldn't find better way now.
+>>>> I think it's better to follow you mentioned
+>>>
+>>> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
+>>> did "submit a revert" fell through the cracks or is there some other
+>>> solution in the works? Or am I missing something?
+>>
+>> "submit a revert" would fix the issue. but it would make another issue
+>> that the errata[1] 719340 described.
+> 
+> "Make" as it "that other issue was present before the culprit was
+> applied"? Then that other issue does not matter due to the "no
+> regression" rule and how Linus afaics wants to see it applied in
+> practice. For details on the latter, see the quotes from him here:
+> https://docs.kernel.org/process/handling-regressions.html
+>  Hence please submit a revert (or tell me if I misunderstood something)
+> -- or of course a workaround for the other issue that does not cause the
+> regression people reported.
+> 
+>> [...]
+>> [1]: https://developer.arm.com/documentation/genc008428/latest
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> 
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
