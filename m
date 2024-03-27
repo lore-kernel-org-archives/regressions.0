@@ -1,156 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C25D130A6D;
-	Wed, 27 Mar 2024 15:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEA24A1A
+	for <regressions@lists.linux.dev>; Wed, 27 Mar 2024 15:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553507; cv=none; b=cmiJirv5MmgUNwsXj8dHVnrMF0GcT2hUukHJUpiLMkWVu3HGxWL2scTKxlvo9ArxLqsFFC5gb0G3udGlB23Xv5ljiPhXi9SqJHemYQiWhVL/bZpuFxfnaMY/wEzPpHB5uPOvB0uh3Mz0DgQoAqJGq+uqIdHPRAMP5/sC1N2mBxI=
+	t=1711553695; cv=none; b=HNz4CAh3Iffn8PvNZp8yi72iduIwoBinkWK8cOQOvQW8kglwHqcf+tVquvwet3f0HkFhQiwPHnWZRqd5UyFn87NBEGwo+/yGX+xRNy83CD23SdoRLSxrAtpm0NxAu9UYpr4LjZAm+/WA+ccE1T7qMe30XSpT8npbMnnbnhSUgjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553507; c=relaxed/simple;
-	bh=o/XjqHPPxn8SwIHhADNnxxLXgvMJhzhnJUAcMoohRHM=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=M0hD8mxF8Sq0jdHd122GI0M8VxwtJb4yPBCOPv5eaB50KFt8dOuOIrzL5W5mkmL9m+sPKsF/RJJMMpZzk5+UyArwUq792G/QOdlDmqMkxFIpveIu/5xdq3PMsVgc/UKLQrVs+hJZ4b+FnKt/xHzWJKOuh7n257+xdRMnk+FxpM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=feuaIoos; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553695; c=relaxed/simple;
+	bh=3dGKXadnvUzzFxKE9M8CbOWXoP1h+Vaqd44OvUDZdaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ladITy3G0jbA2XfoRGzYgjqphpmAmpCgcAcDMoWMu+cWnlI2CrNCM9PxtltoiJYt+M8zbrp5/HuHWDxdsS0+hus3vshEh7owjkKPC21GvsNOeDvtg/eVkZAMCo2dVQL3rKUIDbwSErpZbnKKyQvjnZWmtdWCZtuELjLSeYh5tag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=PvRe4boi; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="feuaIoos"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D91C433C7;
-	Wed, 27 Mar 2024 15:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711553507;
-	bh=o/XjqHPPxn8SwIHhADNnxxLXgvMJhzhnJUAcMoohRHM=;
-	h=Subject:To:Cc:From:Date:From;
-	b=feuaIoos+sZoKxLhgjkiyEy+tbLIGfKoHAngUFZa2c7ikrxkqwCbq/Sjv5DI7BN4s
-	 SA7rPPn0b+yKycTs0i9YOaNbSs5nhSbuyRIYWSqeHiR8EKOBImsmwOW2GvP/NQHdr9
-	 guAoZHwyqWJKAptI+GCGXqQTRGREqhIsLG1Ryx7g=
-Subject: Patch "misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume" has been added to the 6.7-stable tree
-To: 5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de,gregkh@linuxfoundation.org,hdegoede@redhat.com,pmenzel@molgen.mpg.de,regressions@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 27 Mar 2024 16:28:33 +0100
-Message-ID: <2024032733-tank-moonscape-b149@gregkh>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="PvRe4boi"
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42REeGd6013349;
+	Wed, 27 Mar 2024 15:33:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=HP/lAbwJJi4uuj4vGtzb1Gyy0HMSeSMy8EHwIc6WHJ0=;
+ b=PvRe4boiY81wL4J0eRAsH5zeZMIEjCCWyW6c32sXB4+S2RpgJTCvnaPw77VFqNqK4yTb
+ xXpKTDezZh2btM5dE/+ZOWDDl/F1Xu07TGrVgrnw7UnRuZrOXDf3dswmIMaan78dy++b
+ f30zWXJfX3fHkWDb/9pQLU7r0JqrX/NP6+wvsbaGhfnRbzP5RAE1isTeK3ZqTTiTyrhE
+ Q3HggkVIP3fqvt7w6jovmySTEJkcvUx5mTZcXyTPhYSr84twqpMsa7LUf9QDiqK17OHm
+ Wyz0PF0+p4GYP7/hl0xZJomttQqDzDDt4BR7NfefO1yTOj07e+/L/PgoTRkGOp15jAZk xg== 
+Received: from p1lg14878.it.hpe.com ([16.230.97.204])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x4jtta1f6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Mar 2024 15:33:35 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 45ED0295C2;
+	Wed, 27 Mar 2024 15:33:34 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 8943180851C;
+	Wed, 27 Mar 2024 15:33:22 +0000 (UTC)
+Date: Wed, 27 Mar 2024 10:33:20 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Russ Anderson <rja@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+        Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgQ8Ej-MLlNJR6wn@swahl-home.5wahls.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <ZgABC1oQ9YJW6Bw3@gmail.com>
+ <20240325020334.GA10309@hpe.com>
+ <87o7b273p2.fsf@email.froward.int.ebiederm.org>
+ <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
+ <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
+X-Proofpoint-GUID: 6jR5NrVJvBQoLKa05dSFACb5VGeJ02fX
+X-Proofpoint-ORIG-GUID: 6jR5NrVJvBQoLKa05dSFACb5VGeJ02fX
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-27_11,2024-03-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2403270106
 
+On Wed, Mar 27, 2024 at 07:57:52AM -0500, Eric W. Biederman wrote:
+> Steve Wahl <steve.wahl@hpe.com> writes:
+> 
+> > On Mon, Mar 25, 2024 at 10:04:41AM -0500, Eric W. Biederman wrote:
+> >> Russ Anderson <rja@hpe.com> writes:
+> >> > Steve can certainly merge his two patches and resubmit, to replace the
+> >> > reverted original patch.  He should be on in the morning to speak for
+> >> > himself.
+> >> 
+> >> I am going to push back and suggest that this is perhaps a bug in the
+> >> HPE UV systems firmware not setting up the cpus memory type range
+> >> registers correctly.
+> >> 
+> >> Unless those systems are using new fangled cpus that don't have 16bit
+> >> and 32bit support, and don't implement memory type range registers,
+> >> I don't see how something that only affects HPE UV systems could be
+> >> anything except an HPE UV specific bug.
+> >
+> > Eric,
+> >
+> > I took the time to communicate with others in the company who know
+> > this stuff better than I do before replying on this.
+> >
+> > One of the problems with using the MTRRs for this is that there are
+> > simply not enough of them.  The MTRRs size/alignment requirements mean
+> > that more than one entry would be required per reserved region, and we
+> > need one reserved region per socket on systems that currently can go
+> > up to 32 sockets.  (In case you would think to ask, the reserved
+> > regions also cannot be made contiguous.)
+> >
+> > So MTRRs will not work to keep speculation out of our reserved memory
+> > regions.
+> >
+> > Let me know if you need more information from us on this.
+> 
+> Thanks for this.
+> 
+> Do you know if there are enough MTRRs for the first 4GB?
 
-This is a note to let you know that I've just added the patch titled
+I don't personally know all the details of how BIOS chooses to place
+things, but I suspect that might be true.  The restricted spaces
+usually end up at the end of the address range for a particular node,
+and 4GB would be in the early part of node 0.  If the conversation
+develops further along these lines, I can find out more definitively.
 
-    misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
+> I am curious if kexec should even consider going into 32bit mode without
+> page tables or even into 16bit mode on such a system.  Or if such a
+> system will always require using page tables.
 
-to the 6.7-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+Unless I'm mistaken, wouldn't that put a pretty heavy restriction on
+where the kdump kernel could be located?  Or the target region for
+KASLR?  
 
-The filename of the patch is:
-     misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
-and it can be found in the queue-6.7 subdirectory.
+> If you don't have enough MTRRs on a big NUMA system I think it is
+> perfectly understandable, to need to use the page tables.
+> 
+> Please include this the fact that splitting GBpages is necessary because
+> of a lack of MTRRs in the change description.
 
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
+OK.
 
+> Given that it is the lack of MTRRs on a large NUMA system that make the
+> change necessary.   The goes from a pure bug fix change to a change to
+> accommodate systems without enough MTRRs.
+> 
+> That information makes it more understandable why older systems (at
+> least in the case of kexec) might not be ok with the change.  As for
+> older systems their MTRRs are sufficient and thus they can use fewer
+> page table entries.  Allowing for use of larger TLB entries.
 
-From ac3e0384073b2408d6cb0d972fee9fcc3776053d Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Tue, 20 Feb 2024 20:00:35 +0100
-Subject: misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
+That last paragraph doesn't match what I think is happening.
 
-From: Hans de Goede <hdegoede@redhat.com>
+At least from my point of view, that some systems aren't OK with the
+change has nothing to do with MTRRs or TLB page size.  They simply
+require the extra "slop" of GB pages, implicitly adding a full GB of
+space around any smaller space requested by map_acpi_tables().
 
-commit ac3e0384073b2408d6cb0d972fee9fcc3776053d upstream.
+The systems that failed with my original change also failed on earlier
+kernels when nogbpages was added to the kernel command line.  That
+creates the identity map using 2M pages for everything, with no GB
+page "slop".   I'm pretty sure these systems will continue to fail with
+"nogbpages" enabled.
 
-When not configured for wakeup lis3lv02d_i2c_suspend() will call
-lis3lv02d_poweroff() even if the device has already been turned off
-by the runtime-suspend handler and if configured for wakeup and
-the device is runtime-suspended at this point then it is not turned
-back on to serve as a wakeup source.
+For one debug-kernel cycle on Pavin's system I added in hard-coded
+requests to explicitly add back in the areas that not being sloppy had
+excluded, and that brought kexec back to functioning; which further
+proves my point.  
 
-Before commit b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting
-of the reg_ctrl callback"), lis3lv02d_poweroff() failed to disable
-the regulators which as a side effect made calling poweroff() twice ok.
+I wanted to be sure you understood this in case it has any effect on
+what you think should be done.
 
-Now that poweroff() correctly disables the regulators, doing this twice
-triggers a WARN() in the regulator core:
+--> Steve
 
-unbalanced disables for regulator-dummy
-WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable
-...
-
-Fix lis3lv02d_i2c_suspend() to not call poweroff() a second time if
-already runtime-suspended and add a poweron() call when necessary to
-make wakeup work.
-
-lis3lv02d_i2c_resume() has similar issues, with an added weirness that
-it always powers on the device if it is runtime suspended, after which
-the first runtime-resume will call poweron() again, causing the enabled
-count for the regulator to increase by 1 every suspend/resume. These
-unbalanced regulator_enable() calls cause the regulator to never
-be turned off and trigger the following WARN() on driver unbind:
-
-WARNING: CPU: 1 PID: 1724 at drivers/regulator/core.c:2396 _regulator_put
-
-Fix this by making lis3lv02d_i2c_resume() mirror the new suspend().
-
-Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
-Cc: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 15 7590
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Link: https://lore.kernel.org/r/20240220190035.53402-1-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
-
---- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-+++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-@@ -198,8 +198,14 @@ static int lis3lv02d_i2c_suspend(struct
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
- 
--	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
-+	/* Turn on for wakeup if turned off by runtime suspend */
-+	if (lis3->pdata && lis3->pdata->wakeup_flags) {
-+		if (pm_runtime_suspended(dev))
-+			lis3lv02d_poweron(lis3);
-+	/* For non wakeup turn off if not already turned off by runtime suspend */
-+	} else if (!pm_runtime_suspended(dev))
- 		lis3lv02d_poweroff(lis3);
-+
- 	return 0;
- }
- 
-@@ -208,13 +214,12 @@ static int lis3lv02d_i2c_resume(struct d
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
- 
--	/*
--	 * pm_runtime documentation says that devices should always
--	 * be powered on at resume. Pm_runtime turns them off after system
--	 * wide resume is complete.
--	 */
--	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
--		pm_runtime_suspended(dev))
-+	/* Turn back off if turned on for wakeup and runtime suspended*/
-+	if (lis3->pdata && lis3->pdata->wakeup_flags) {
-+		if (pm_runtime_suspended(dev))
-+			lis3lv02d_poweroff(lis3);
-+	/* For non wakeup turn back on if not runtime suspended */
-+	} else if (!pm_runtime_suspended(dev))
- 		lis3lv02d_poweron(lis3);
- 
- 	return 0;
-
-
-Patches currently in stable-queue which might be from hdegoede@redhat.com are
-
-queue-6.7/ahci-asm1064-asm1166-don-t-limit-reported-ports.patch
-queue-6.7/misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
+-- 
+Steve Wahl, Hewlett Packard Enterprise
