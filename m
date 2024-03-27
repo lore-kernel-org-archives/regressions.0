@@ -1,148 +1,193 @@
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D8812C80B;
-	Wed, 27 Mar 2024 12:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEFB13AD39
+	for <regressions@lists.linux.dev>; Wed, 27 Mar 2024 13:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711544332; cv=none; b=Zs0qQwzKETCaWzADIixsXuQ5TmBQOOJPkXL6h+9RH0nh9m77He39ItkUZTJGH4YSWzutKrodYDh0BjnqR/+LMPLFBqUpJ6kmUFuTLVceSp8RAvVu7aUJQF1fkAr5gzjWgNttbU99C2pEhwD67Y7gzDspw6V4MjCYnyQy9TuWVCw=
+	t=1711545879; cv=none; b=O3G3ouJkRs/t2Un+y/L331wKeFGMFES7Lwfh60kI87jJ9eHQK+bg+isdZ4IPJ8aSH7MmQkERLhbn3I/z+pWq6aPO/iykrwiHTSFdLPwDqTmLjGyH+m3kjr/iGFhzfF/s3mpDx19PAXDBUv8wcn1w1BBDCitGLP50VBG67LHB7eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711544332; c=relaxed/simple;
-	bh=iG8uPrBOIOH+AQyDUzYn/BzO2DNiuhvbgR0PyAf2uwk=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=Knqja2l5ETFLunV0iEgHkeqd7FQHFY99Mk3+OXsJzFb2yS362HwKnOfhwsnxP2n2VoKLKIogwJNEk1PU8LbfepbGHlyEWW8LhWzOC1um05JWZFsNdyr9kDViGSleBhfxnvPL+XpO/7swVorp13slqmqKV9sGhInH6zv+vnameBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in01.mta.xmission.com ([166.70.13.51]:49876)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rpSrZ-001fy3-Ti; Wed, 27 Mar 2024 06:58:41 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:50926 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rpSrY-00GeAq-LA; Wed, 27 Mar 2024 06:58:41 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Steve Wahl <steve.wahl@hpe.com>
-Cc: Russ Anderson <rja@hpe.com>,  Ingo Molnar <mingo@kernel.org>,  Dave
- Hansen <dave.hansen@linux.intel.com>,  Andy Lutomirski <luto@kernel.org>,
-  Peter Zijlstra <peterz@infradead.org>,  Thomas Gleixner
- <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov
- <bp@alien8.de>,  x86@kernel.org,  "H. Peter Anvin" <hpa@zytor.com>,
-  linux-kernel@vger.kernel.org,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  Pavin Joseph <me@pavinjoseph.com>,
-  stable@vger.kernel.org,  Eric Hagberg <ehagberg@gmail.com>,  Simon Horman
- <horms@verge.net.au>,  Dave Young <dyoung@redhat.com>,  Sarah Brofeldt
- <srhb@dbc.dk>,  Dimitri Sivanich <sivanich@hpe.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
-	<ZgABC1oQ9YJW6Bw3@gmail.com> <20240325020334.GA10309@hpe.com>
-	<87o7b273p2.fsf@email.froward.int.ebiederm.org>
-	<ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
-Date: Wed, 27 Mar 2024 07:57:52 -0500
-In-Reply-To: <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com> (Steve Wahl's message of
-	"Mon, 25 Mar 2024 14:41:18 -0500")
-Message-ID: <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1711545879; c=relaxed/simple;
+	bh=sK4u1JyrPL0gWSb3KWFe9C6ypVmyXQk2VkY15iFmMjY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xa2HlnjzNDgVo9gDXQolHdnnsATOtrmXrKpO56h2ZcsRp0AnBIRZ0c1bVpFxu9P3IYTVE3/GV6FUbBjUoGI11jQbr1qqp2z+D8afGD3nhU0n8h8wW802uHXL7T2O8UN4aU5/A8NyWAPuUzQIVDYkTWoKTcg3Nu6Hqf8t0mlyky0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sairon.cz; spf=pass smtp.mailfrom=sairon.cz; dkim=pass (2048-bit key) header.d=sairon.cz header.i=@sairon.cz header.b=eOmDB+Iv; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sairon.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sairon.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sairon.cz header.i=@sairon.cz header.b="eOmDB+Iv"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-512e4f4e463so7511555e87.1
+        for <regressions@lists.linux.dev>; Wed, 27 Mar 2024 06:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sairon.cz; s=google; t=1711545875; x=1712150675; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z6utm7a7Re6Wiqpc5NgWio6rQ7rFlgDjaONm7apCUWA=;
+        b=eOmDB+IvIgMLlVcuzn4+bYzgA+LJ2oHG12vaZyQxhjgiJ7UCsXtTaFgs1NhNoVstr4
+         OO1q/QLWLKphtKDjsZ8BW4bgpnhFMvkowGkfPu5Xbq/AyQ7BiuJnt/5gsjL1SnCcNbMp
+         qLWHivLFBUtMurYTzvI9m2AmIiWCPv+VThYJTgcQ3LApySnzU2Vd+ir+P4lMPfg9RFTb
+         1fAhXMYiGXaMWOrpzU60OFvG30C5644WczUxRdVOTkLFhD+0Ap5PDvmtggWkVetkkbMA
+         gi/DYl9R5+OXYHiNOa59v1JpX8Pi4WlyVTxplg5N7+3rr2R9NW4lg8/Bcn//drEqDuqy
+         YgDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711545875; x=1712150675;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z6utm7a7Re6Wiqpc5NgWio6rQ7rFlgDjaONm7apCUWA=;
+        b=Mi3/4cbb0npXaw1xPpM5yyMMETDL46ggyCDvPwjvfsYGRhUDLRru7WTKPJyjXL//tR
+         kQX2mCgfNA2nBqCvtpVnkP5EA65PUv/iwjPERtwiFPoo5mL00ZXWaYdN0eZReanRrqNv
+         xIJd2jThmh4Axl2iMiVq1T+ycMBa6xZ0NgvGN6IwrydlVLGcvknj0IZXpj86iIFFJnLF
+         ooBRaIjjy92TvXxjWKg2MhtbPkQd5vYjgeXeV39W3qkMqA0jxkAWAuzgoVhISN7Pu9Cm
+         ZHNg65pVATEz3p1sz8F+OSDEUgLRUJg66yEjUR77NgylcB5f0NJEwgHCgZ0LvI48S+LN
+         bCXg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7KQchgHTE0SuFrsnOyFd23KV4GxaqdrxqYESOjW1UvOr7KgUeW96rtlNjmU1wytLp5iWOEILLpKBIfcY1xeLThbixWRtlW06AUPk=
+X-Gm-Message-State: AOJu0Yz/ulUCPhyiorVQ3H5ur3+JlX1718zIMifYlHaeAxKsshJQ3fv8
+	9RdEzsebafWsIqhbblE4TQzqatrTSGHd+8wKD/cYWwoUixWGDAPkNStnIEdZv+k=
+X-Google-Smtp-Source: AGHT+IGTzynkBIqcDpsPLyKTUQXtSjSEbSbSBD5cTdpnmo65u6B1II3AYQD+agdiUyzPKAx4ztUZhw==
+X-Received: by 2002:a19:4341:0:b0:515:8bb2:72a2 with SMTP id m1-20020a194341000000b005158bb272a2mr3737599lfj.55.1711545875255;
+        Wed, 27 Mar 2024 06:24:35 -0700 (PDT)
+Received: from [192.168.127.42] (ip-89-103-66-201.bb.vodafone.cz. [89.103.66.201])
+        by smtp.gmail.com with ESMTPSA id h4-20020aa7c944000000b0056bdf694890sm5432854edt.43.2024.03.27.06.24.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 06:24:35 -0700 (PDT)
+Message-ID: <3939f491-4890-4a64-9f41-8c3bf738bbc3@sairon.cz>
+Date: Wed, 27 Mar 2024 14:24:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1rpSrY-00GeAq-LA;;;mid=<87r0fv6ddb.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX18MbAr20HjhuH3WMgkVKae6ZAm/7EpD1rc=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4918]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_02 5+ unique symbols in subject
-	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Steve Wahl <steve.wahl@hpe.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 699 ms - load_scoreonly_sql: 0.11 (0.0%),
-	signal_user_changed: 13 (1.9%), b_tie_ro: 11 (1.6%), parse: 1.68
-	(0.2%), extract_message_metadata: 19 (2.7%), get_uri_detail_list: 2.9
-	(0.4%), tests_pri_-2000: 7 (1.0%), tests_pri_-1000: 5 (0.7%),
-	tests_pri_-950: 1.68 (0.2%), tests_pri_-900: 1.37 (0.2%),
-	tests_pri_-90: 65 (9.3%), check_bayes: 64 (9.1%), b_tokenize: 12
-	(1.7%), b_tok_get_all: 10 (1.4%), b_comp_prob: 3.5 (0.5%),
-	b_tok_touch_all: 35 (4.9%), b_finish: 0.91 (0.1%), tests_pri_0: 341
-	(48.8%), check_dkim_signature: 0.57 (0.1%), check_dkim_adsp: 2.4
-	(0.3%), poll_dns_idle: 193 (27.7%), tests_pri_10: 6 (0.8%),
-	tests_pri_500: 233 (33.4%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
+ descriptor during reinitialization
+Content-Language: en-US
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
+ USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
+References: <6eadec91-990a-4fbd-8883-8366c4a4d8e4@rowland.harvard.edu>
+ <1e954652-dfb3-4248-beea-b8a449128ff0@sairon.cz>
+ <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
+ <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
+ <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
+ <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
+ <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
+ <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
+ <8b8e2773-47eb-48f4-b5e8-dcd885ee5c5b@rowland.harvard.edu>
+ <befc1081-e512-4727-a911-f030e1aac626@sairon.cz>
+ <1b2ccaf6-597c-40fe-877a-4ed1fab5261b@rowland.harvard.edu>
+From: =?UTF-8?B?SmFuIMSMZXJtw6Fr?= <sairon@sairon.cz>
+In-Reply-To: <1b2ccaf6-597c-40fe-877a-4ed1fab5261b@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Steve Wahl <steve.wahl@hpe.com> writes:
+Hi Alan,
 
-> On Mon, Mar 25, 2024 at 10:04:41AM -0500, Eric W. Biederman wrote:
->> Russ Anderson <rja@hpe.com> writes:
->> > Steve can certainly merge his two patches and resubmit, to replace the
->> > reverted original patch.  He should be on in the morning to speak for
->> > himself.
->> 
->> I am going to push back and suggest that this is perhaps a bug in the
->> HPE UV systems firmware not setting up the cpus memory type range
->> registers correctly.
->> 
->> Unless those systems are using new fangled cpus that don't have 16bit
->> and 32bit support, and don't implement memory type range registers,
->> I don't see how something that only affects HPE UV systems could be
->> anything except an HPE UV specific bug.
->
-> Eric,
->
-> I took the time to communicate with others in the company who know
-> this stuff better than I do before replying on this.
->
-> One of the problems with using the MTRRs for this is that there are
-> simply not enough of them.  The MTRRs size/alignment requirements mean
-> that more than one entry would be required per reserved region, and we
-> need one reserved region per socket on systems that currently can go
-> up to 32 sockets.  (In case you would think to ask, the reserved
-> regions also cannot be made contiguous.)
->
-> So MTRRs will not work to keep speculation out of our reserved memory
-> regions.
->
-> Let me know if you need more information from us on this.
+On 19. 03. 24 17:03, Alan Stern wrote:
+> Change the HUB_DEBOUNCE_TIMEOUT value to 4500, the HUB_DEBOUNCE_STEP
+> value to 250 and the HUB_DEBOUNCE_STABLE value to 2000.  That just
+> might give the device enough time to settle down and start working
+> before the computer tries using it.
 
-Thanks for this.
+sorry for the delay, I only managed to test it today. You are right, 
+with the timeouts adjusted, it enumerates fine after a while, without 
+any descriptor read errors or anything like that:
 
-Do you know if there are enough MTRRs for the first 4GB?
+[  210.957371] usb 1-1.2: new full-speed USB device number 5 using ehci-pci
+[  211.037728] usb 1-1.2: New USB device found, idVendor=0658, 
+idProduct=0200, bcdDevice= 0.00
+[  211.037747] usb 1-1.2: New USB device strings: Mfr=0, Product=0, 
+SerialNumber=0
+[  211.039764] cdc_acm 1-1.2:1.0: ttyACM0: USB ACM device
 
-I am curious if kexec should even consider going into 32bit mode without
-page tables or even into 16bit mode on such a system.  Or if such a
-system will always require using page tables.
+If it's worth anything, usbmon trace is attached below. Anyway, do you 
+have any ideas what could be done to make it work without doing any 
+detrimental changes? I was thinking I'll try to reach out to the vendor 
+at this point - they should be aware their device might stop working 
+with recent kernels, and they could explain the quirky behavior, or 
+implement any changes on the firmware side (if it's even possible).
 
-If you don't have enough MTRRs on a big NUMA system I think it is
-perfectly understandable, to need to use the page tables.
-
-Please include this the fact that splitting GBpages is necessary because
-of a lack of MTRRs in the change description.
-
-Given that it is the lack of MTRRs on a large NUMA system that make the
-change necessary.   The goes from a pure bug fix change to a change to
-accommodate systems without enough MTRRs.
-
-That information makes it more understandable why older systems (at
-least in the case of kexec) might not be ok with the change.  As for
-older systems their MTRRs are sufficient and thus they can use fewer
-page table entries.  Allowing for use of larger TLB entries.
+Regards,
+Jan
 
 
-Eric
+
+ffff888101391300 207454583 C Ii:1:002:1 0:2048 1 = 04
+ffff888101391300 207454617 S Ii:1:002:1 -115:2048 1 <
+ffff88814d461180 207454651 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 207454845 C Ci:1:002:0 0 4 = 01010100
+ffff88814d461180 207454860 S Co:1:002:0 s 23 01 0010 0002 0000 0
+ffff88814d461180 207455110 C Co:1:002:0 0 0
+ffff88814d461180 207455119 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 207455368 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 207710110 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 207710378 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 207966112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 207966378 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 208222112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 208222401 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 208478109 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 208478561 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 208734110 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 208734342 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 208990111 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 208990297 C Ci:1:002:0 0 4 = 01010100
+ffff88814d461180 208990317 S Co:1:002:0 s 23 01 0010 0002 0000 0
+ffff888101391300 208990557 C Ii:1:002:1 0:2048 1 = 04
+ffff888101391300 208990574 S Ii:1:002:1 -115:2048 1 <
+ffff88814d461180 208990583 C Co:1:002:0 0 0
+ffff88814d461180 209246112 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 209246405 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 209502108 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 209502393 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 209758115 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 209758358 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 210014113 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 210014318 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 210270107 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 210270327 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 210526114 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 210526337 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 210782106 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 210782340 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 211038111 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 211038365 C Ci:1:002:0 0 4 = 01010000
+ffff88814d461180 211038419 S Co:1:002:0 s 23 03 0004 0002 0000 0
+ffff88814d461180 211038621 C Co:1:002:0 0 0
+ffff88814d461180 211050109 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 211050473 C Ci:1:002:0 0 4 = 03011000
+ffff88814d461180 211050508 S Co:1:002:0 s 23 01 0014 0002 0000 0
+ffff88814d461180 211050732 C Co:1:002:0 0 0
+ffff88814d461180 211102145 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
+ffff88814d461180 211102383 C Ci:1:000:0 0 8 = 12010002 02000008
+ffff88814d461180 211102410 S Co:1:002:0 s 23 03 0004 0002 0000 0
+ffff88814d461180 211102640 C Co:1:002:0 0 0
+ffff88814d461180 211114111 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff88814d461180 211114411 C Ci:1:002:0 0 4 = 03011000
+ffff88814d461180 211114446 S Co:1:002:0 s 23 01 0014 0002 0000 0
+ffff88814d461180 211114667 C Co:1:002:0 0 0
+ffff88814d461180 211166117 S Co:1:000:0 s 00 05 0005 0000 0000 0
+ffff88814d461180 211166509 C Co:1:000:0 0 0
+ffff88814d461240 211180097 S Ci:1:005:0 s 80 06 0100 0000 0012 18 <
+ffff88814d461240 211180460 C Ci:1:005:0 0 18 = 12010002 02000008 
+58060002 00000000 0001
+ffff88814d461240 211180500 S Ci:1:005:0 s 80 06 0600 0000 000a 10 <
+ffff88814d461240 211180722 C Ci:1:005:0 -32 0
+ffff88814d461240 211180989 S Ci:1:005:0 s 80 06 0600 0000 000a 10 <
+ffff88814d461240 211181294 C Ci:1:005:0 -32 0
+ffff88814d461240 211181324 S Ci:1:005:0 s 80 06 0600 0000 000a 10 <
+ffff88814d461240 211181647 C Ci:1:005:0 -32 0
+ffff88814d461240 211181669 S Ci:1:005:0 s 80 06 0200 0000 0009 9 <
+ffff88814d461240 211181972 C Ci:1:005:0 0 9 = 09024300 02010080 32
+ffff88814d461240 211181999 S Ci:1:005:0 s 80 06 0200 0000 0043 67 <
+ffff88814d461240 211182437 C Ci:1:005:0 0 67 = 09024300 02010080 
+32090400 00010202 01000524 00100105 24010001 04240200
+ffff88814d461300 211182850 S Co:1:005:0 s 00 09 0001 0000 0000 0
+ffff88814d461300 211183117 C Co:1:005:0 0 0
+ffff888145f1cb40 211184128 S Co:1:005:0 s 21 20 0000 0000 0007 7 = 
+80250000 000008
+ffff888145f1cb40 211184335 C Co:1:005:0 0 7 >
+ffff888145f1cb40 211184995 S Ci:1:002:0 s a3 00 0000 0002 0004 4 <
+ffff888145f1cb40 211185187 C Ci:1:002:0 0 4 = 03010000
