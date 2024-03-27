@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AE01311A4;
-	Wed, 27 Mar 2024 15:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C25D130A6D;
+	Wed, 27 Mar 2024 15:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711553374; cv=none; b=LS5w41zy3V9ETzUdVueBPlidV9pgn/nD1bvLx1N4K+NlfH35+EHSRjwyBvMayw82ov1w7VEQQGF8KtOdYPWfPmTugdDLuu772fMpS02wBrMP39P1Mxlf4DJL6LxkZlWy5zCfO1fCqfhe5tycssvfRZNG28x01Q7Z7G6r7TVfR3s=
+	t=1711553507; cv=none; b=cmiJirv5MmgUNwsXj8dHVnrMF0GcT2hUukHJUpiLMkWVu3HGxWL2scTKxlvo9ArxLqsFFC5gb0G3udGlB23Xv5ljiPhXi9SqJHemYQiWhVL/bZpuFxfnaMY/wEzPpHB5uPOvB0uh3Mz0DgQoAqJGq+uqIdHPRAMP5/sC1N2mBxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711553374; c=relaxed/simple;
-	bh=Hr5FcO+oQyky+xwc0HqE2WSYQ2Rx3b8lyqV2lfX3mVE=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=glg3ioWdxfG398mjbxindJSZF8GrotwxeZ0mTwKqZRyrtv83tFzNd/L8QrNHq50P7J/PKAMEOmzmQ2vKmjsrSK5LM9iklmW3vCq3kzl19q8qXEdkBKI4czlgzUFYQwfJRvXDwinaDuu4eSHez/plBnHZYU4EJZO/PIRefhxwdWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zFFn7hH0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711553507; c=relaxed/simple;
+	bh=o/XjqHPPxn8SwIHhADNnxxLXgvMJhzhnJUAcMoohRHM=;
+	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=M0hD8mxF8Sq0jdHd122GI0M8VxwtJb4yPBCOPv5eaB50KFt8dOuOIrzL5W5mkmL9m+sPKsF/RJJMMpZzk5+UyArwUq792G/QOdlDmqMkxFIpveIu/5xdq3PMsVgc/UKLQrVs+hJZ4b+FnKt/xHzWJKOuh7n257+xdRMnk+FxpM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=feuaIoos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zFFn7hH0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD9BC433C7;
-	Wed, 27 Mar 2024 15:29:33 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="feuaIoos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D91C433C7;
+	Wed, 27 Mar 2024 15:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711553374;
-	bh=Hr5FcO+oQyky+xwc0HqE2WSYQ2Rx3b8lyqV2lfX3mVE=;
+	s=korg; t=1711553507;
+	bh=o/XjqHPPxn8SwIHhADNnxxLXgvMJhzhnJUAcMoohRHM=;
 	h=Subject:To:Cc:From:Date:From;
-	b=zFFn7hH0egFj7tNv5alYKWcpyfgmnHLw/2WvrR20MOqwYzAD72SEtAHdZjHYn+1M0
-	 0CdYGtpk+t8zIPIOAltzE0DKDduRvq2bl+rle7z69LfeXpmTXcQyF81EI1TYrqi4MC
-	 ymvbu4T84LoYXkg32SA/3MAVkB6hKbZ+RV1t+eCA=
-Subject: Patch "misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume" has been added to the 6.6-stable tree
+	b=feuaIoos+sZoKxLhgjkiyEy+tbLIGfKoHAngUFZa2c7ikrxkqwCbq/Sjv5DI7BN4s
+	 SA7rPPn0b+yKycTs0i9YOaNbSs5nhSbuyRIYWSqeHiR8EKOBImsmwOW2GvP/NQHdr9
+	 guAoZHwyqWJKAptI+GCGXqQTRGREqhIsLG1Ryx7g=
+Subject: Patch "misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume" has been added to the 6.7-stable tree
 To: 5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de,gregkh@linuxfoundation.org,hdegoede@redhat.com,pmenzel@molgen.mpg.de,regressions@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Wed, 27 Mar 2024 16:27:34 +0100
-Message-ID: <2024032734-pointed-zipping-ba09@gregkh>
+Date: Wed, 27 Mar 2024 16:28:33 +0100
+Message-ID: <2024032733-tank-moonscape-b149@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,12 +44,12 @@ This is a note to let you know that I've just added the patch titled
 
     misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
 
-to the 6.6-stable tree which can be found at:
+to the 6.7-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
-and it can be found in the queue-6.6 subdirectory.
+and it can be found in the queue-6.7 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -152,5 +152,5 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from hdegoede@redhat.com are
 
-queue-6.6/ahci-asm1064-asm1166-don-t-limit-reported-ports.patch
-queue-6.6/misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
+queue-6.7/ahci-asm1064-asm1166-don-t-limit-reported-ports.patch
+queue-6.7/misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
