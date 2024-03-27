@@ -1,87 +1,157 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 309CA12F370
-	for <regressions@lists.linux.dev>; Wed, 27 Mar 2024 14:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D3812DDA1;
+	Wed, 27 Mar 2024 15:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711549283; cv=none; b=GYWmZIhvY3euskbihZSvXdeSOc0U0tQLiCvg1ATYatnQTMxMSbM1S89tnc+d2JByZ/R6r9/0p68SffZbkuliOnD3HpjW2kbwYefAQqP4cUJUYH6kDOqNgJZdyUdm1X368qXjDyOis2IFJZ3Bqx+kXJsC+TLeXX2Z3xarciZWHyw=
+	t=1711553282; cv=none; b=cv3EvbHonaxHSGzDcI1ELJVMRxfQSLasWE2vl9SJkWOK1Z1PMKKOmB5DQ2Kj0bq0ysNfg+5mhgPJn5wQIalqqjI5dHGYjCZrLwsGK0QzPyg2c7JuIfwbx3XGjV5R5Cu6hqVg9N2FyeTPBLfL0UDTv2RbaHXyljtRg1+6274GtNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711549283; c=relaxed/simple;
-	bh=wVZikXz90bRied4WNuk55XjnAyVLku4154DxaB2rEOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AX4LgsnZlVO58c8Dw3hkPMbTcgCHfpKjBz20wSVRcKloWyAL4isGVUZ9Bxvhm9myjbNOK315SBqAcJggBnTv+IG8KmQshB6aWSGavsjg0TIExI1wwsBatfyBDPB181eW2cQmp1mGLPi0D/4XxjFIFAo8ufU/SPrz6UBoehvXBJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 927408 invoked by uid 1000); 27 Mar 2024 10:21:19 -0400
-Date: Wed, 27 Mar 2024 10:21:19 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jan =?utf-8?B?xIxlcm3DoWs=?= <sairon@sairon.cz>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Khazhy Kumykov <khazhy@google.com>,
-  USB mailing list <linux-usb@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Re: [PATCH 0/3] USB: core: Don't overwrite device
- descriptor during reinitialization
-Message-ID: <62a33e61-b202-4af5-bb91-96dc87783eb3@rowland.harvard.edu>
-References: <4c3ab861-0274-409b-aad3-7cfb53dc2308@rowland.harvard.edu>
- <00f0786b-a9f2-4f73-8d23-3b1fa4c8b77e@sairon.cz>
- <60def275-5237-48df-b37b-ab886f4ee017@rowland.harvard.edu>
- <4c2a410b-2997-4a7a-8fd6-2bec819a1c4f@sairon.cz>
- <4a168b8b-f012-4b36-92bd-83aeb6849410@rowland.harvard.edu>
- <92d3d802-73df-4ab5-aab4-b2325512e98f@sairon.cz>
- <8b8e2773-47eb-48f4-b5e8-dcd885ee5c5b@rowland.harvard.edu>
- <befc1081-e512-4727-a911-f030e1aac626@sairon.cz>
- <1b2ccaf6-597c-40fe-877a-4ed1fab5261b@rowland.harvard.edu>
- <3939f491-4890-4a64-9f41-8c3bf738bbc3@sairon.cz>
+	s=arc-20240116; t=1711553282; c=relaxed/simple;
+	bh=rLJF7+sW988+foiRlJM2IrWKXDO1APQPyP3x1To+Bts=;
+	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=NZnblDo4sSaFUmDM+gjeDH1HQ22cQ3PMN8usb5P+65Yk9a3Vuy4TpjZAWGNT6bwMC3rZdTUCtKt+Mvq9mXsIJZgdybXr2mCZtz69V5mcAMxinUSKYKPzwoAmYPo61Ot1itEK0xmq3YAUItO+SPT9s1LVwMQglv8wrBzRbaMaSyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m/eYL3v4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m/eYL3v4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77111C433F1;
+	Wed, 27 Mar 2024 15:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711553281;
+	bh=rLJF7+sW988+foiRlJM2IrWKXDO1APQPyP3x1To+Bts=;
+	h=Subject:To:Cc:From:Date:From;
+	b=m/eYL3v4zUrsUR+mW85M/fgv21o13s6GK26m9auZ75FJLifcNES5ODDr1VHEuv6OR
+	 6M9EhDHTOHoA+zyYOaPqgDqd5OxiPmhBMd78uOhbvNDKyA50et33uzBrPXz1oHUJgg
+	 xOm9AXD8nKHUdULLa7QQ436MbzAO/xb0dvpHRiJ0=
+Subject: Patch "misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume" has been added to the 6.1-stable tree
+To: 5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de,gregkh@linuxfoundation.org,hdegoede@redhat.com,pmenzel@molgen.mpg.de,regressions@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Wed, 27 Mar 2024 16:27:11 +0100
+Message-ID: <2024032710-crazily-bovine-eaa1@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3939f491-4890-4a64-9f41-8c3bf738bbc3@sairon.cz>
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-On Wed, Mar 27, 2024 at 02:24:34PM +0100, Jan Čermák wrote:
-> Hi Alan,
-> 
-> On 19. 03. 24 17:03, Alan Stern wrote:
-> > Change the HUB_DEBOUNCE_TIMEOUT value to 4500, the HUB_DEBOUNCE_STEP
-> > value to 250 and the HUB_DEBOUNCE_STABLE value to 2000.  That just
-> > might give the device enough time to settle down and start working
-> > before the computer tries using it.
-> 
-> sorry for the delay, I only managed to test it today. You are right, with
-> the timeouts adjusted, it enumerates fine after a while, without any
-> descriptor read errors or anything like that:
-> 
-> [  210.957371] usb 1-1.2: new full-speed USB device number 5 using ehci-pci
-> [  211.037728] usb 1-1.2: New USB device found, idVendor=0658,
-> idProduct=0200, bcdDevice= 0.00
-> [  211.037747] usb 1-1.2: New USB device strings: Mfr=0, Product=0,
-> SerialNumber=0
-> [  211.039764] cdc_acm 1-1.2:1.0: ttyACM0: USB ACM device
 
-Great!
+This is a note to let you know that I've just added the patch titled
 
-> If it's worth anything, usbmon trace is attached below. Anyway, do you have
-> any ideas what could be done to make it work without doing any detrimental
-> changes? I was thinking I'll try to reach out to the vendor at this point -
-> they should be aware their device might stop working with recent kernels,
-> and they could explain the quirky behavior, or implement any changes on the
-> firmware side (if it's even possible).
+    misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
 
-The ideal solution would be if the vendor updates the firmware to
-prevent the device from turning on its pull-up (thereby telling the
-host computer that it is connected to the bus) until it is ready to
-operate.  There's no good reason to have that > 1-second period during
-which the device claims to be connected but does not work.
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-Another possible solution, a lot less attractive, would be to change
-the initialization code in the hub driver so that if it sees the
-device disconnect itself from the bus, it restarts the entire
-procedure from the beginning.  You'd end up getting a bunch of error
-messages during the initial non-working period, just as you do now,
-but afterwards the device should be detected and initialized okay.
+The filename of the patch is:
+     misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
+and it can be found in the queue-6.1 subdirectory.
 
-Alan Stern
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From ac3e0384073b2408d6cb0d972fee9fcc3776053d Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Tue, 20 Feb 2024 20:00:35 +0100
+Subject: misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
+
+From: Hans de Goede <hdegoede@redhat.com>
+
+commit ac3e0384073b2408d6cb0d972fee9fcc3776053d upstream.
+
+When not configured for wakeup lis3lv02d_i2c_suspend() will call
+lis3lv02d_poweroff() even if the device has already been turned off
+by the runtime-suspend handler and if configured for wakeup and
+the device is runtime-suspended at this point then it is not turned
+back on to serve as a wakeup source.
+
+Before commit b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting
+of the reg_ctrl callback"), lis3lv02d_poweroff() failed to disable
+the regulators which as a side effect made calling poweroff() twice ok.
+
+Now that poweroff() correctly disables the regulators, doing this twice
+triggers a WARN() in the regulator core:
+
+unbalanced disables for regulator-dummy
+WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable
+...
+
+Fix lis3lv02d_i2c_suspend() to not call poweroff() a second time if
+already runtime-suspended and add a poweron() call when necessary to
+make wakeup work.
+
+lis3lv02d_i2c_resume() has similar issues, with an added weirness that
+it always powers on the device if it is runtime suspended, after which
+the first runtime-resume will call poweron() again, causing the enabled
+count for the regulator to increase by 1 every suspend/resume. These
+unbalanced regulator_enable() calls cause the regulator to never
+be turned off and trigger the following WARN() on driver unbind:
+
+WARNING: CPU: 1 PID: 1724 at drivers/regulator/core.c:2396 _regulator_put
+
+Fix this by making lis3lv02d_i2c_resume() mirror the new suspend().
+
+Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 15 7590
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Link: https://lore.kernel.org/r/20240220190035.53402-1-hdegoede@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+--- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+@@ -199,8 +199,14 @@ static int lis3lv02d_i2c_suspend(struct
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
++	/* Turn on for wakeup if turned off by runtime suspend */
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweron(lis3);
++	/* For non wakeup turn off if not already turned off by runtime suspend */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweroff(lis3);
++
+ 	return 0;
+ }
+ 
+@@ -209,13 +215,12 @@ static int lis3lv02d_i2c_resume(struct d
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	/*
+-	 * pm_runtime documentation says that devices should always
+-	 * be powered on at resume. Pm_runtime turns them off after system
+-	 * wide resume is complete.
+-	 */
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
+-		pm_runtime_suspended(dev))
++	/* Turn back off if turned on for wakeup and runtime suspended*/
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweroff(lis3);
++	/* For non wakeup turn back on if not runtime suspended */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweron(lis3);
+ 
+ 	return 0;
+
+
+Patches currently in stable-queue which might be from hdegoede@redhat.com are
+
+queue-6.1/platform-x86-p2sb-on-goldmont-only-cache-p2sb-and-spi-devfn-bar.patch
+queue-6.1/ahci-asm1064-asm1166-don-t-limit-reported-ports.patch
+queue-6.1/misc-lis3lv02d_i2c-fix-regulators-getting-en-dis-abled-twice-on-suspend-resume.patch
