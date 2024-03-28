@@ -1,113 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6547E772
-	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 14:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E027E772;
+	Thu, 28 Mar 2024 15:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711637381; cv=none; b=HsXWRwXa+KnBYZaYrXeNdmQJP8/PZ8t29Tdaq1nnknE7a9Onvq95GKXXHE51FALoiUh9xOoKm7gavPYu5Nq2shD8lckZ3oo1+wg1D7hw1pIODLRJw7PHHZeI3KcG9a1/uCrxKLwIWY/sJDqR4TMpX8VFpFLHaywEPCCAZ3pYU54=
+	t=1711638401; cv=none; b=AEL81ssOhYVARd3aFOjQtgS+mdwAgrJmdSVCH7eXMoknmde9Al0hINXKcXosnGrdYLqvn5nCK5mY5Dd0fy7DJaI1xY4qZqHP17Ykc1BQikv8hazYDKoB+Ebg/eLv0z73IOYq5lfGb5osC1uxJcQOI5JETAw52X923R2fZPLdG8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711637381; c=relaxed/simple;
-	bh=6qGB0m49wbcH/K4Wq1c7B1JEGzsyhRzf4Hp5H0Xn/4I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKAU2jb61VaG6Q/yTQLAAJZUiiMisiARAP5Yd/NnJDINzU/RP+96QanfJ/OBr6fripCceL5b77tz7HYbDiF3Y6GAuoPZTh7T1+4etZvDbjAsSy/8S5+H9/jBZnrrJt8vceSt3upTjac/aGpAG0BBCj5MrzvBsGW66fJm7C8nVao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHOrF0v1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711638401; c=relaxed/simple;
+	bh=tFIN/tKvxw1OPQyXxVyqG9hoRwQxc5PdtvaAaSxuREw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uWVDhbofI225QAXVabZ1oANOmpnqtoT3abQ879zxsamtD5LqulobpDGmc+Jk2owD2UxrflM6nQB6z03da+q3t2N+uDcYzBRQwtqwKPzi04V+KHkHl/9sG8CunffSGiQde12d3qFgPeTthvrvOaLK2H5BPpAXfNuDA6tQ537rHVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zC7qQt9D; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHOrF0v1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F3FC43390
-	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 14:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711637380;
-	bh=6qGB0m49wbcH/K4Wq1c7B1JEGzsyhRzf4Hp5H0Xn/4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JHOrF0v1GV9HJLVgUMgzMIqjqyvHloYv691wwj2lpc4AsJ1jyQMM9HmKUiu9WlWHL
-	 YpoxHypqUifqfbpFs5ZK7JRG5035Tn4hh1QZmmRE73OQ6bURXGrws/aNL40g+NSAMY
-	 VlTyQCm7lbDPf5thuALbY5dph4FxHjWb2bUXO5aOWcOkJUD30Qn207e7TpGfLN6aa+
-	 eMzB6/RVl/3nPXPyVFqRFdy2QJg/BK7OSFF/2IJznVoBnmxiEAzt0WvLxGZ7RoSxEi
-	 mJr6ipdInBysTuDrboV+fmCSrCRGaWsJvLkqRos+Hu1B9O8Y76cNzjR/piMPc71zI7
-	 dsiFPvBCSxtpA==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-513e6777af4so1556949e87.2
-        for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 07:49:40 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzWsDT8H5JkGGl33P6bVfqKA6SympDfoxW9T9m0fp1CqMBT75vB
-	6dqKZiPqo3Yxo3k63lhlshFrK/Mw74TLa0zQv3nQeBNLfOwemSNGAtPLVlYnbqjbbrQeAKd0G/1
-	gJe/bikUimv5Mk/RaNBYw8GDWg+M=
-X-Google-Smtp-Source: AGHT+IEDh63ONB9aWaAgssdm8sLQ1IUibtUNQ0AWBDg5E8/uvEzkyxvL70Z3aOt/Yu5xdtQYrUSjyQS1RmmcXB+ZAvM=
-X-Received: by 2002:a05:6512:60a:b0:513:e7a0:5aa5 with SMTP id
- b10-20020a056512060a00b00513e7a05aa5mr2576636lfe.51.1711637378936; Thu, 28
- Mar 2024 07:49:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zC7qQt9D"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=HlX7rSDT+xTTJ0yT83bN1/Fuwujcx7/ZH4CK3LA5S8Q=;
+	t=1711638399; x=1712070399; b=zC7qQt9DAfcLxsoFIpmLF77yysU10TQLtSicYa2HvaoHOcJ
+	hdXNT7O+di3Sa7THW+G6YXui+N8Aao61AREokP3BThG3I0JZLO6VPFQyzIIFUTCLeZB6VmsbmwWJY
+	a2+8NXyzcLKoQJjLSxjgbAmF03x7ZfJowBstutquIO86/Vizv7xE30QIuJu3PFJ+RR5SbB514yQpg
+	gLvlnQJRolohgeUq4IvLbaaJ7ghUBQ3P+A5PfOGWeYtQ0uJs7UPHHRBlxSj1+nvE3kI1kqAieT3F1
+	LRFT8pnkz0PmtOiTLjslBaGdnNOUQksRXtYJTtWWlIlHoN0DrYmKKKqOfSemImPw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rprKn-0000Xu-B6; Thu, 28 Mar 2024 16:06:29 +0100
+Message-ID: <2b2a6c9f-4df2-4962-b926-09adccd20715@leemhuis.info>
+Date: Thu, 28 Mar 2024 16:06:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXEo-y1DfY_kBhwGU0xMkGp1PhdqGFmw6ToLePiZy4YgZQ@mail.gmail.com>
- <CAMj1kXFmgba8HyZ-yO7MsQBgOGjM10hZKWESBbfrUcjdhq0XsQ@mail.gmail.com>
- <225e9c2a-9889-4c9e-865c-9ef96bb266f3@podgorny.cz> <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
- <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
- <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz> <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
- <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz> <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
- <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz> <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
- <dd6e61ac-2356-4b97-85b4-b963a045361b@podgorny.cz> <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
- <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz> <CAMj1kXF5TUNXVxcaY550_3JYvkGUZDRYtmPAKpbk64Ci8gpbqw@mail.gmail.com>
- <ae488ff7-97f8-4210-a1a7-98f7a5c3ffa7@podgorny.cz> <CAMj1kXEarH+vdk3SqJ8_Vcf-uF4FjTfmjepVbXQ6KciBuCK-wg@mail.gmail.com>
-In-Reply-To: <CAMj1kXEarH+vdk3SqJ8_Vcf-uF4FjTfmjepVbXQ6KciBuCK-wg@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 28 Mar 2024 16:49:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXESfih-V4ObfoyROyABoYNp6e9gwGH236=PfJA_AWhQsQ@mail.gmail.com>
-Message-ID: <CAMj1kXESfih-V4ObfoyROyABoYNp6e9gwGH236=PfJA_AWhQsQ@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: regressions@lists.linux.dev, regressions@leemhuis.info
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+To: Vinod Koul <vkoul@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ parthiban@linumiz.com, saravanan@linumiz.com,
+ 'karthikeyan' <karthikeyan@linumiz.com>,
+ "bumyong.lee" <bumyong.lee@samsung.com>
+References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
+ <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+ <000001da6ecc$adb25420$0916fc60$@samsung.com>
+ <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+ <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+ <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <001001da7a60$78603130$69209390$@samsung.com>
+ <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
+ <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
+ <ZgUTbiL86_bg0ZkZ@matsya>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZgUTbiL86_bg0ZkZ@matsya>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711638399;3bbc3f2a;
+X-HE-SMSGID: 1rprKn-0000Xu-B6
 
-On Thu, 28 Mar 2024 at 11:41, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 28 Mar 2024 at 11:18, Radek Podgorny <radek@podgorny.cz> wrote:
-> >
-> > hi!
-> >
-> > results:
-> >
-> > 108 - just patch 0001 - WORKS
-> > 109 - patch 0001+0002 - WORKS
-> >
-> > visually, i see no difference between the output of 108 and 109. :-(
-> >
-> > both start with a hex dump before the "normal" booting sequence.
-> > unfortunately, i doesn't seem to fit to screen so the top of the dump
-> > scrolls of almost immediately. i was able to only shoot the "bottom" of
-> > the dump. i can make a video and try to extract frames if you also need
-> > the beginning of the dump.
-> >
->
-> Can you drop the last two 'dump_buf()' calls and try again? But keep the call to
->
-> efi_bs_call(stall, 10 * EFI_USEC_PER_SEC);
->
-> which is what generates the 10s delay.
->
-> The first dump is interesting because the memcpy() that is being
-> brought back overwrites those contents, and I'd like to see what is
-> there before in your case.
->
-> Also fine just to capture it on video - I suspect it's all 0x0 anyway
-> (.. in the dump)
->
+On 28.03.24 07:51, Vinod Koul wrote:
+> On 26-03-24, 14:50, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Vinod Koul, what's your option here? We have two reports about
+>> regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
+>> waits until WFP state") [v6.8-rc1] now:
+>>
+>> https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+>>
+>> https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
+>> [the first link points to the start of this thread]
+>>
+>> To me it sounds like this is a change that better should be reverted,
+>> but you are of course the better judge here.
+> 
+> Sure I have reverted this,
 
-After some more head scratching, I identified an issue in the original
-patch that might explain the behavior you are seeing. Could you try
-the below please? (and drop all the other reverts)
+Thx!
 
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -496,6 +496,7 @@
-        hdr->vid_mode   = 0xffff;
+> so original issue exist as is now...
 
-        hdr->type_of_loader = 0x21;
-+       hdr->initrd_addr_max = INT_MAX;
+Yeah, that's a downside, but that's afaik how Linus wants these
+situations to be handled. Hopefully it will motivate someone to fix the
+original issue without causing a regression.
 
-        /* Convert unicode cmdline to ascii */
-        cmdline_ptr = efi_convert_cmdline(image, &options_size);
+Thx again! Ciao, Thorsten
+
+P.S.:
+
+#regzbot fix: dmaengine: Revert "dmaengine: pl330: issue_pending waits
+until WFP state"
+
+(that's
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/commit/?h=fixes&id=afc89870ea677bd5a44516eb981f7a259b74280c
+currently)
