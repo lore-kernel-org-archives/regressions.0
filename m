@@ -1,116 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4BA27459;
-	Thu, 28 Mar 2024 05:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4B34F889;
+	Thu, 28 Mar 2024 06:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711604783; cv=none; b=KrkilPcIheQ95hdbhaPGgdS7W8SsHwiKrCqK2P0I6EiUTsDF8rQf7CrlN7jg9KCSazkYfIeBlUngiZMmUuQLPKKEp1rlay/5qCXIOSTL2ecyHtu3iIiaDcMw9hl5VLtIFLZb2pSdxv71yV+Z+j4JRZaMv5/qFlWI7QITzJkTmJA=
+	t=1711608692; cv=none; b=iDwCa9CVbvPT3hnp/DLeWflRSD6JWPKlNfEwnL80dwUPoGlcde4KPiUepJRReV8cSib8rhh6dBfJJ1mnj4A8l18SI70qnIRDdX6kmUfVv1lTpzFbFgeBCT4syiKz9WWz0CLLhG/BPkyPqUa2SpY5eOfHZhCrgQNAiX1qajpmrF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711604783; c=relaxed/simple;
-	bh=gxiY5UZLlWOxibFFRP8rSgWNhezHAFR/cKLxo5sMnvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O3//duGuUmeJDawlDYM0vrz5mt0eaPXMh97mdHMIQg45J5ogtiV3RMfBe9P3Cswdw1pIoSa8Se7HGOycuIda7fRDs/zmtW+bY1fMgeHZZrNB+z8fwS3gvYW4UZDWhiiwyD72Z+FcTkiFUFKVVuYxsD4QUkxUdgA1glYFCb0tfAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+v8UuEh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711608692; c=relaxed/simple;
+	bh=LIDoAU5YVIxdpGw5qxykbilLNFof0t4byLQ0YDnjk58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulYYhOUD79+r467zLvW+5eHelO+GB/3wKX+EUFYKy475Ogf4Wj0sUstjepEEI1TMyANcBTLe8HpxWfdZOTdyFQYljC7Wkbvdm03GSn3vhczwOl2kcVGfIRaj/UvIgRbDlmZ7JuPzVksWX25Udv0FJ6hAAsBnFIzZi/cnP7rk6CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUs/Eaw+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+v8UuEh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD4AC433F1;
-	Thu, 28 Mar 2024 05:46:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUs/Eaw+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE52C433F1;
+	Thu, 28 Mar 2024 06:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711604783;
-	bh=gxiY5UZLlWOxibFFRP8rSgWNhezHAFR/cKLxo5sMnvw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L+v8UuEh5O1tRgEFJMJ5Frrf4/ID+uUfia8uNCp3PWr94ErWQFVIA9RJ/1Ji34rSh
-	 nITbYuxDiU6daI4zgCWdKOc/Ef6ztJgQhOpDoykrvacACxsKwLB6A+7O/RNq3fAIvr
-	 DY+Cvakh6ZYloDPjzy/tbNoDXFTPzbl1VtMZG56pcFE7cJdg0GfJktJzfOfPoJSIiS
-	 yYkVd0Utalj5sB9tvwnJ2uL7kvRyKNpE456II0VPUkSb7TXxUKHjTYJ2jO32An7OZZ
-	 VH9lC6DjHAMJrk4e8f/vpS9N666M/AmMOV3SsNiQhPuZ/Luc2WFAUM4uibZ88msq0p
-	 aLE4q8CXiL67w==
-Message-ID: <d22054a8-76d3-4ae2-9e20-38a7a8ce902d@kernel.org>
-Date: Wed, 27 Mar 2024 22:46:20 -0700
+	s=k20201202; t=1711608691;
+	bh=LIDoAU5YVIxdpGw5qxykbilLNFof0t4byLQ0YDnjk58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DUs/Eaw+N4AwggWOeEtrI6Y1nrWJvaS1iuv+3LHFcXD4DUiCX3rIc2uITA+DXZPPm
+	 ECVDRpq9cV7tNlC7HPfcMfI/sA7v6Xcm2RTCWfxQxeNT6ZUPZCcRBILnfXv+5/t2ZE
+	 IyltIgBcWuY42pRbwQv6meEl7tCERg05/I6ykZgIspWukeeVwQaYL89u5jvZz2/cPx
+	 u76V9Jwab7ZeW3vPwhmXiF2Er4T9CRUrz/3Jp1auWN+1hiV03z/pz8Cgz8BZPC15rk
+	 yJzYdvy5YeZpDGQp/6DR0NZuoY8fxSIngrEzKqejqcwL3NgKyST5mAVGpzd2aFAW4h
+	 i/3Vzn5A45LRA==
+Date: Thu, 28 Mar 2024 12:21:26 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	parthiban@linumiz.com, saravanan@linumiz.com,
+	'karthikeyan' <karthikeyan@linumiz.com>,
+	"bumyong.lee" <bumyong.lee@samsung.com>
+Subject: Re: dmaengine: CPU stalls while loading bluetooth module
+Message-ID: <ZgUTbiL86_bg0ZkZ@matsya>
+References: <CGME20240305062038epcas2p143c5e1e725d8a934b0208266a2f78ccb@epcas2p1.samsung.com>
+ <1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com>
+ <000001da6ecc$adb25420$0916fc60$@samsung.com>
+ <12de921e-ae42-4eb3-a61a-dadc6cd640b8@leemhuis.info>
+ <000001da7140$6a0f1570$3e2d4050$@samsung.com>
+ <07b0c5f6-1fe2-474e-a312-5eb85a14a5c8@leemhuis.info>
+ <001001da7a60$78603130$69209390$@samsung.com>
+ <9490757c-4d7c-4d8b-97e2-812a237f902b@leemhuis.info>
+ <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: next: arc: defconfig - gcc-9 - mmu-arcv2.h:82:2: error: implicit
- declaration of function 'write_aux_reg'
- [-Werror=implicit-function-declaration]
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>,
- linux-mm <linux-mm@kvack.org>, linux-snps-arc@lists.infradead.org
-Cc: Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Andrew Morton <akpm@linux-foundation.org>, vgupta@kernel.org
-References: <CA+G9fYu49=6_L6r8hdagZHUSGk+JfjioFaqh+kRaxhce84Q5Kw@mail.gmail.com>
-Content-Language: en-US
-From: Vineet Gupta <vgupta@kernel.org>
-In-Reply-To: <CA+G9fYu49=6_L6r8hdagZHUSGk+JfjioFaqh+kRaxhce84Q5Kw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8734a80b-c7a9-4cc2-91c9-123b391d468c@leemhuis.info>
 
+On 26-03-24, 14:50, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+> 
+> Vinod Koul, what's your option here? We have two reports about
+> regressions caused by 22a9d958581244 ("dmaengine: pl330: issue_pending
+> waits until WFP state") [v6.8-rc1] now:
+> 
+> https://lore.kernel.org/lkml/1553a526-6f28-4a68-88a8-f35bd22d9894@linumiz.com/
+> 
+> https://lore.kernel.org/all/ZYhQ2-OnjDgoqjvt@wens.tw/
+> [the first link points to the start of this thread]
+> 
+> To me it sounds like this is a change that better should be reverted,
+> but you are of course the better judge here.
 
+Sure I have reverted this, so original issue exist as is now...
 
-On 3/25/24 23:39, Naresh Kamboju wrote:
-> The following arc defconfig build warnings / errors noticed on today's
-> Linux next-20240326 tag.
->
-> Regressions:
->     * arc - defconfig - gcc-9 build failed.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log:
-> ---------
-> arch/arc/kernel/ptrace.c:342:16: warning: no previous prototype for
-> 'syscall_trace_enter' [-Wmissing-prototypes]
->   342 | asmlinkage int syscall_trace_enter(struct pt_regs *regs)
->       |                ^~~~~~~~~~~~~~~~~~~
-> arch/arc/kernel/kprobes.c:193:15: warning: no previous prototype for
-> 'arc_kprobe_handler' [-Wmissing-prototypes]
->   193 | int __kprobes arc_kprobe_handler(unsigned long addr, struct
-> pt_regs *regs)
->       |               ^~~~~~~~~~~~~~~~~~
-> In file included from arch/arc/include/asm/mmu.h:21,
->                  from arch/arc/include/asm/pgtable.h:14,
->                  from include/linux/pgtable.h:6,
->                  from include/asm-generic/io.h:1047,
->                  from arch/arc/include/asm/io.h:232,
->                  from include/linux/io.h:13,
->                  from kernel/dma/coherent.c:6:
-> arch/arc/include/asm/mmu-arcv2.h: In function 'mmu_setup_asid':
-> arch/arc/include/asm/mmu-arcv2.h:82:2: error: implicit declaration of
-> function 'write_aux_reg' [-Werror=implicit-function-declaration]
->    82 |  write_aux_reg(ARC_REG_PID, asid | MMU_ENABLE);
->       |  ^~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-
-Thx for the report. Fix posted for first 2 warnings [1]
-
-I can't reproduce the last warning about write_aux_reg() despite using
-the config from 3rd link below.
-
--Vineet
-
-[1]
-http://lists.infradead.org/pipermail/linux-snps-arc/2024-March/007916.html
-
-
->
-> Steps to reproduce:
-> -------
-> # tuxmake --runtime podman --target-arch arc --toolchain gcc-9
-> --kconfig defconfig
->
->
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240325/testrun/23149630/suite/build/test/gcc-9-defconfig/log
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240325/testrun/23149630/suite/build/test/gcc-9-defconfig/history/
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eA2VSZdDsL0DMBBhjoauN9IVoK/
->
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> On 20.03.24 07:28, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > On 20.03.24 01:49, bumyong.lee wrote:
+> >>>>> Hmmm. 6.8 final is due. Is that something we can live with? Or would
+> >>>>> it be a good idea to revert above commit for now and reapply it when
+> >>>>> something better emerged? I doubt that the answer is "yes, let's do
+> >>>>> that", but I have to ask.
+> >>>>
+> >>>> I couldn't find better way now.
+> >>>> I think it's better to follow you mentioned
+> >>>
+> >>> 6.8 is out, but that issue afaics was not resolved, so allow me to ask:
+> >>> did "submit a revert" fell through the cracks or is there some other
+> >>> solution in the works? Or am I missing something?
+> >>
+> >> "submit a revert" would fix the issue. but it would make another issue
+> >> that the errata[1] 719340 described.
+> > 
+> > "Make" as it "that other issue was present before the culprit was
+> > applied"? Then that other issue does not matter due to the "no
+> > regression" rule and how Linus afaics wants to see it applied in
+> > practice. For details on the latter, see the quotes from him here:
+> > https://docs.kernel.org/process/handling-regressions.html
+> >  Hence please submit a revert (or tell me if I misunderstood something)
+> > -- or of course a workaround for the other issue that does not cause the
+> > regression people reported.
+> > 
+> >> [...]
+> >> [1]: https://developer.arm.com/documentation/genc008428/latest
+> > 
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > --
+> > Everything you wanna know about Linux kernel regression tracking:
+> > https://linux-regtracking.leemhuis.info/about/#tldr
+> > If I did something stupid, please tell me, as explained on that page.
+> > 
+> > 
 > --
-> Linaro LKFT
-> https://lkft.linaro.org
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
 
+-- 
+~Vinod
