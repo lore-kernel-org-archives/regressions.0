@@ -1,168 +1,82 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAF67460;
-	Thu, 28 Mar 2024 19:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16E01EA6E
+	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 19:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711654571; cv=none; b=sYiLnpLAOpLV3kIYMdKaMEfKFEORadPzB/jexjQn3B6M8JKqaRAAGiA0qyXgx7wx5/X0IuQGvKDYBcMdrCH0K0qFU+RLUuz6T8UpRw4U4AIZ1mnpN37tJt+b5roTapqvEa8byL354MmoX8785qS8/NS/t9IqlkLCT2CwOwGjI2w=
+	t=1711655052; cv=none; b=DoV2UWhNy0QbmhbLIKahSELj1vhQZEuNIBBL21MPzGlT12S6MnP6XJYaYbF0Fg9/QXNdrHwYDTly1maoJB3YU85HVMgpudRHQeO2zFaQ150YmL252h9BvXEavQrwB4XfNr12dwOxEtASitz97ti88wGAjGViZiOyRKj3Ra+Qa/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711654571; c=relaxed/simple;
-	bh=GBMP9eUzd576uCKEfwrAbrzJQU5ydmFcRsIdjAE9gJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZU4qz1QIvXPqKMKGuaXTFgkpe+yOj0UWRuupvgBNbJP2ZXRyycB0q0Ix47yopvjPfK5nJg5gC10tZz3E2Ih4NK4Iosc0A6GEqqxgQQB7ERZ2qx8cx9BoTLSjrbkygqN/45yXyGUN8oj200KbpHdgoXBfzIspnl3QZD9bXZ0rkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pnkZFVIZ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711655052; c=relaxed/simple;
+	bh=BA0p6EgNxcmz4H9GYa0tDJrQXGb/k9OOb1DW6MRHGHw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9Acu6Dt0j1LxZWUoJxyfn4PnMz4chknWcuKLvg/NUqWtHHhslY07B7QkAfyoESStetaN+Z4TDc1m4lJdxNmsACYFEi0hHuFMYX0IpaCyIePFpo4v1d+H4ETctDoar4nKAAyZlgAgqZVWZ/gNoHvvik5kSu/k7A6W0UlaVjC/Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=ZnKiZLpA; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pnkZFVIZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=hOLQ5DNBslqKcP2P0bqf6nLCFB2CmCUnxKgsxc2Zg4o=;
-	t=1711654569; x=1712086569; b=pnkZFVIZyJ2TujNDEb9SvZAIgM20GaX8xQNys3ymRxyCyn+
-	ZGKaBV9CHMZPCaBlvxmpPmEZIlhUnNtRaewTja65NJzx7OqbsbSEAnQphhmsgGl0LFqiSBZFVpQUQ
-	cK9aNiOkI5zH2882cK7l+DH1LcJoFXkHm3srOLVsRJTEH/V28h7se6AD+KQp6fCpuo7cE5z/w8pxX
-	n8sK6H7h5DUnl723SjzPU3YD6m82MkTc6P9bH2rE1dUwpLlum8zFCRIMP1zGIRnwG9BoxvqvgT21/
-	oBEQmSnCeAl++1Ue7j4aQ1FH7TcLG8wZWobr/Xdpb8dgkCuLTWLIkDip/4xUwosQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rpvXi-0004a7-Hq; Thu, 28 Mar 2024 20:36:06 +0100
-Message-ID: <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
-Date: Thu, 28 Mar 2024 20:36:04 +0100
+	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="ZnKiZLpA"
+X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
+	serial F5FD910E8FE2121B897F7E55B84E351D
+	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
+	auth type TLS.CUNI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
+	s=submission; t=1711655043; x=1712955043;
+	bh=fKOBcit0OLSIvvpbV7fpFKk/+/JlS7VOufh0Oihpa10=;
+	h=From:MIME-Version;
+	b=ZnKiZLpAu25fer/vfl6cNMeySwxQoMcMbf6GmMyq3xu4asRubhzUFqXPz5c09UhSd
+	 b16Vn1Hreeo8E05pUPiJR8DonSmwBwk89f2wG6+XK5m8JylMaK/4WBhgTzMO7wn2QL
+	 cKuSGx+D/9g/sHuGzkJgM/9wst1QDTlWpn3yBoQDojh54o+VcR/rpEikhU2/kh4Etq
+	 Bw7R3xF2GXjALShGFtEK3hp88TXXW0yGTpuYtIMExdvO+DGn4MgEwg4x9Y8mXqUzZp
+	 /E4/WW9naIKWQRyLeo2CTG5u5VFlhMlZyVcdw8VevDkg+fV8lakzONsPZZ4ybB/B2/
+	 N8XSN5fr1Povw==
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 42SJi0QS074668
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 20:44:01 +0100 (CET)
+	(envelope-from balejk@matfyz.cz)
+From: Karel Balej <balejk@matfyz.cz>
+To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet <corbet@lwn.net>,
+        regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, workflows@vger.kernel.org
+Cc: balejk@matfyz.cz
+Subject: [PATCH 0/2] regressions documentation improvements
+Date: Thu, 28 Mar 2024 20:29:14 +0100
+Message-ID: <20240328194342.11760-1-balejk@matfyz.cz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
-To: Nick Bowler <nbowler@draconx.ca>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- sparclinux@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
- <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
- <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
- <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711654569;30692136;
-X-HE-SMSGID: 1rpvXi-0004a7-Hq
+Content-Transfer-Encoding: 8bit
 
-[CCing Linus, in case I say something to his disliking]
+Hello,
 
-On 22.03.24 05:57, Nick Bowler wrote:
-> 
-> Just a friendly reminder that this issue still happens on Linux 6.8 and
-> reverting commit 9b2f753ec237 as indicated below is still sufficient to
-> resolve the problem.
+this small series suggests two (hopefully) improvements for the
+regressions-related documentation texts.
 
-FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
-nr_cpus is set") is from v4.8. Reverting it after all that time might
-easily lead to even bigger trouble. That's why it might be better to
-handle this like a bug and not like a regression. At least unless we
-find someone to judge how likely such an outcome is. But it seems nobody
-really cared so far, so unless this mail makes someone act you might be
-out of luck. :-/
+The first one is perhaps unnecessarily nitpicky but if nothing else, it
+at least adds a missing word.
 
-I wish it was different, but in the end we (including the maintainers)
-are all just volunteers here which you can only motivate or compel (up
-to some point) to look into some issue, but can not force to do so.
+The other one tries to clarify for future readers a question which was
+on my mind through the whole process during my first attempt at
+reporting a regression.
 
-Ciao, Thorsten
+Please take a look, I am eager to hear what you think.
 
-> On 2023-01-21 08:31, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->> CCing the sparc maintainer. Also CCing the regression list, as it should
->> be in the loop for regressions:
->> https://docs.kernel.org/admin-guide/reporting-regressions.html
->>
->> The the mail address of the culprit's author bounces. There is another
->> Atish Patra still active; does anyone known if those two are the same
->> person?
->>
->> Anyway, that's it from my side.
-> [...]
->> On 20.01.23 04:15, Nick Bowler wrote:
->>> Hi,
->>>
->>> I'm resending this report CC'd to linux-kernel as there was no response
->>> on the sparclinux list.
->>>
->>> I tried 6.2-rc4 and there is no change in behaviour.  Reverting the
->>> indicated commit still works to fix the problem.
->>>
->>> On 2022-07-12, Nick Bowler <nbowler@draconx.ca> wrote:
->>>> When using newer kernels on my Ultra 60 with dual 450MHz UltraSPARC-II
->>>> CPUs, I noticed that only CPU 0 comes up, while older kernels (including
->>>> 4.7) are working fine with both CPUs.
->>>>
->>>> I bisected the failure to this commit:
->>>>
->>>>   9b2f753ec23710aa32c0d837d2499db92fe9115b is the first bad commit
->>>>   commit 9b2f753ec23710aa32c0d837d2499db92fe9115b
->>>>   Author: Atish Patra <atish.patra@oracle.com>
->>>>   Date:   Thu Sep 15 14:54:40 2016 -0600
->>>>
->>>>       sparc64: Fix cpu_possible_mask if nr_cpus is set
->>>>
->>>> This is a small change that reverts very easily on top of 5.18: there is
->>>> just one trivial conflict.  Once reverted, both CPUs work again.
->>>>
->>>> Maybe this is related to the fact that the CPUs on this system are
->>>> numbered CPU0 and CPU2 (there is no CPU1)?
->>>>
->>>> Here is /proc/cpuinfo on a working kernel:
->>>>
->>>>     % cat /proc/cpuinfo
->>>>     cpu             : TI UltraSparc II  (BlackBird)
->>>>     fpu             : UltraSparc II integrated FPU
->>>>     pmu             : ultra12
->>>>     prom            : OBP 3.23.1 1999/07/16 12:08
->>>>     type            : sun4u
->>>>     ncpus probed    : 2
->>>>     ncpus active    : 2
->>>>     D$ parity tl1   : 0
->>>>     I$ parity tl1   : 0
->>>>     cpucaps         : flush,stbar,swap,muldiv,v9,mul32,div32,v8plus,vis
->>>>     Cpu0ClkTck      : 000000001ad31b4f
->>>>     Cpu2ClkTck      : 000000001ad31b4f
->>>>     MMU Type        : Spitfire
->>>>     MMU PGSZs       : 8K,64K,512K,4MB
->>>>     State:
->>>>     CPU0:           online
->>>>     CPU2:           online
->>>>
->>>> And on a broken kernel:
->>>>
->>>>     % cat /proc/cpuinfo
->>>>     cpu             : TI UltraSparc II  (BlackBird)
->>>>     fpu             : UltraSparc II integrated FPU
->>>>     pmu             : ultra12
->>>>     prom            : OBP 3.23.1 1999/07/16 12:08
->>>>     type            : sun4u
->>>>     ncpus probed    : 2
->>>>     ncpus active    : 1
->>>>     D$ parity tl1   : 0
->>>>     I$ parity tl1   : 0
->>>>     cpucaps         : flush,stbar,swap,muldiv,v9,mul32,div32,v8plus,vis
->>>>     Cpu0ClkTck      : 000000001ad31861
->>>>     MMU Type        : Spitfire
->>>>     MMU PGSZs       : 8K,64K,512K,4MB
->>>>     State:
->>>>     CPU0:           online
->>>>
->>>> Let me know if you need any more info.
->>>>
->>>> Thanks,
->>>>   Nick
-> 
-> 
+Thank you, kind regards,
+K. B.
+
+Karel Balej (2):
+  docs: *-regressions.rst: unify quoting, add missing word
+  docs: handling-regressions.rst: clarify that "Closes:" tags work too
+
+ .../admin-guide/reporting-regressions.rst     | 10 +++---
+ .../process/handling-regressions.rst          | 32 ++++++++++---------
+ 2 files changed, 22 insertions(+), 20 deletions(-)
+
+-- 
+2.44.0
+
