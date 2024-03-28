@@ -1,100 +1,97 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BE1224D0
-	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 11:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03487EEFD
+	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 13:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711626592; cv=none; b=MK+6q108/Hw2jkrckRw9L3Qr0T+vt7xGLsM1YB/UFRw4w7nnD8zGPj67PxUO4iSrXhLJY9XQ8aCTyNSVm2FAmJ8n3S7X5s/F6malyqFYr3Gj5lWm2q8dYB0Znwb+1f72TItEqKFdlheXqf8DM6FFA1qbYL5gzQ5DHTOnZ0gNkM0=
+	t=1711632965; cv=none; b=G5KaPgJYH5lLBkmGUpsVzE5/Ce6ByF2uS9JAwFv1TgITMRw5+wu/AHzdTzLyOcejWHILJEtQFPP/areZRcJwYbqzM+xl1FWso6/wDMIShhjGCsfdTnKYq4+4h/+MatZgnpR5QWIrKCQUMfmcvFHiv+jI7we+n6cpCYp9/Cm/rxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711626592; c=relaxed/simple;
-	bh=TzxfchxKF1g1YLWqQ7EsptMXtq62lqT0fTbIsNNR3Fo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=drGlfq+lPlRICEnC+6cQkZvt9SmhmPL6IF5zu5e5q8SRWowVIk8+/ONgGhs9hsLkam30zhEekof5d1DHKwHla4ZuqA+MvbKelMX/OWoj/Uc3umQs93tisdARYRhWHlFrezhZk2EsEgonA87chWGxdoH2AH2HlxpMpCPzTfP76z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=xT+f5pgy; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1711632965; c=relaxed/simple;
+	bh=qPSo9SyuNPKLPGiduEGiKIv2kZsIHdaIyrrQp+mxrXo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=iw+9LmTwaskDoLLTjDjTbwUv2paCFQDYipVfVVJAqfCUW59Iz4tgZ8pH4QnYQOFaS/F2G+GERQ1P48qJMs30CBT8pszfr8UXngHDioSP7vqOL4MOJJCpF2zc/nkAEmIBklPyYGq3saYunHQ4ZAWaAxbtJeTdIw92EFlwiRNNlH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzUOUr1S; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="xT+f5pgy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1711626589;
-	bh=TzxfchxKF1g1YLWqQ7EsptMXtq62lqT0fTbIsNNR3Fo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=xT+f5pgyVtmLKfUpZ2gqo7EFR/4xYwwxj3nQ8ImaOVyLzT7J/U40y4XEzNdESN6i9
-	 2pfS8F1Xqo9J2NfqVjY6GoifUKWESKsbN8dliC7gPrPFJRXDMhUSlVq04JWgTa/UcQ
-	 lFlKUTsi56GGOkbKXWuKlJZ0GQ4V0tgqegfXAmW1Grnj0p7E6rwGfaNGq6AbFOcARo
-	 RSDMN/p1cSgELO0JMe1RKLBCVXkDS/5YYMAE7TUiiWRfh7anyzLQsHujAq8o32XM8g
-	 oqme/YhOKr3wdLN2yYTIQjLXVMkU1dt/plYF0yQfDGru3gU5DCbPy3EQzeJ+d1CcRl
-	 PwGagJKI5Wmng==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EA7E7378003D;
-	Thu, 28 Mar 2024 11:49:48 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: laura.nao@collabora.com
-Cc: kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	tglx@linutronix.de
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Thu, 28 Mar 2024 12:50:15 +0100
-Message-Id: <20240328115015.36646-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240328094433.20737-1-laura.nao@collabora.com>
-References: <20240328094433.20737-1-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzUOUr1S"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7e0ae718e36so237355241.2
+        for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 06:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711632963; x=1712237763; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HuxlR8CvEOXqyHj+Qq7Cj7wAF1B8kiKsrY6NRMdaszA=;
+        b=UzUOUr1SbtNUNNYXadZcQ/yIySybro2gtwTkbqz9sDCiLYDeudopKkeP8wAGnlZU+M
+         4KX/lalu1IADSL5gsS6EwicMByCVEfAZqKNyGWbpTkxK6i9XJ46NkpDPd8rHUfPea8x6
+         6WRoj945DeqfIKyzpSTsOeURY77koTT7s55+5DdExZdU9fymJva7H8bx7/8cqhNGK1kr
+         Ioj+9R37Uobftod6EJWPulPi0XRqXu8163508JJJjqlfJxAUEZqKhV7Hnci5DmQWrcr0
+         HfJMUxUz2vlUMUQ2oc/+LXHisiWdLA11O46Ku3GhhjMUf4SpxfaCXxs7C4Lv2WHcjYgo
+         exgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711632963; x=1712237763;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HuxlR8CvEOXqyHj+Qq7Cj7wAF1B8kiKsrY6NRMdaszA=;
+        b=KeaGmFpxLFUtrdHc8KyRNRONNib3uqRcPb3+F1qGAitV2SOjB96D5+jTgv4msuk1Vk
+         M5v1b3KqKf5+SKws2LdnYPK3dIcgQLdA/w9QpfbMnOU5Ttap6X1m7takvqTfGwaQe3tY
+         v/9E7FTh/0zRoKqKtdDwJJY0ck0VwOm8LyjxpX59wSv6QuHFnM9nqsWv4URvxKKtTfQO
+         I0fI8+3NlGg9qrykEAyhMr96JPepTOynosfdp6OC8GbK5+M0IOdaqbpNLb7eLoPTZQ43
+         o3SzsP6eoc/8VssMzaXaCQYIMSw1TrUoX48SYpF1gtSunsyUSi9U+5MVWSF8e4EDGEO1
+         COeA==
+X-Forwarded-Encrypted: i=1; AJvYcCX30WehUnu1wOTsp+OzGPMoDdT/+DDYLeSpwHERl6Rqbv07UueDMYL/PUox2ixfvtO4Cm3zXldfGiGcnMC2rNyEi5rOHEfWV/VTekQ=
+X-Gm-Message-State: AOJu0YyNyriB6M/+Zh+VBO2hdmWy67MoYGgVZeTboD/ny0tHLbwVQOYX
+	d3l+7FnlRMegLwcDcFzfq1Btl9R0Y2PLS/AuKwAE8pSqLfe0ajfqppeJZwFfStRxuG5fefW1xCB
+	AzfBE5Cf4j054wcfI3hi53XIebWo5WhhNb/iZNA==
+X-Google-Smtp-Source: AGHT+IHu7K7lWRnHw3NgjJmNDEaFubXFArdguKWXHksy1hC4QSKCDsGBXOPEsK+90ZnaUJkZYzR6GUfytoXhOk105Yo=
+X-Received: by 2002:a05:6122:1698:b0:4d8:9541:41a0 with SMTP id
+ 24-20020a056122169800b004d8954141a0mr3518206vkl.12.1711632962732; Thu, 28 Mar
+ 2024 06:36:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 28 Mar 2024 19:05:51 +0530
+Message-ID: <CA+G9fYvbFMMCmk91vzVXcS5T2Ezkwg8tQDgt_TfF-8Q=c0B0PQ@mail.gmail.com>
+Subject: next: x86_64 defconfig with clang-17 failed
+To: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
+	clang-built-linux <llvm@lists.linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	willy@infradead.org, David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-> Hi Thomas,
-> 
-> I ran a manual bisection to track down the root cause for this
-> regression and landed on the c749ce commit from this series:
-> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
-> 
-> Do you have any insight on this issue or any suggestion on how to
-> effectively debug this?
-> 
-> Thank you!
-> 
-> Laura
+While building x86_64 defconfig with clang-17 the following build warnings /
+errors noticed on Linux next-20240328 tag.
 
-Hi again,
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I actually forgot to quote the previous message describing the issue:
+Build error:
+---------
+mm/memory.c:5094:25: error: variable 'pte' is uninitialized when used
+here [-Werror,-Wuninitialized]
+ 5094 |                         writable = pte_write(pte);
+      |                                              ^~~
+mm/memory.c:5083:3: note: variable 'pte' is declared here
+ 5083 |                 pte_t pte, old_pte;
+      |                 ^
+1 error generated.
 
-> KernelCI has identified a mainline boot regression [1] on the following
-> AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
-> v6.8-1185-g855684c7d938 (855684):
-> - Acer Chromebook Spin 311 R721T (codename kasumi360)
-> - HP Chromebook 14 (codename careena)
-> - HP Chromebook 11A G6 EE (codename barla)
-> 
-> The kernel doesn't boot at all and nothing is reported on the serial
-> console after "Starting kernel ...". The issue is still present on the
-> latest mainline revision.
-> The defconfig used by KernelCI for the boot tests can be found in [2].
-> 
-> Sending this report in order to track the regression while a fix is
-> identified.
-> 
-> Thanks,
-> 
-> Laura
-> 
-> [1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
-> [2]
-> https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
+steps to reproduce:
+----------
+# tuxmake --runtime podman --target-arch x86_64 --toolchain clang-17
+--kconfig x86_64_defconfig LLVM=1 LLVM_IAS=1
 
-sorry about that!
 
-Best,
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240328/testrun/23230289/suite/build/test/clang-17-x86_64_defconfig/log
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240328/testrun/23230289/suite/build/test/clang-17-x86_64_defconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eIseG3mebbz7v0HESNW2YOTmiu/
 
-Laura
+--
+Linaro LKFT
+https://lkft.linaro.org
