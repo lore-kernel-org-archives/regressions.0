@@ -1,66 +1,69 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562C3131E59;
-	Thu, 28 Mar 2024 18:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CE07E115;
+	Thu, 28 Mar 2024 18:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711651678; cv=none; b=rCGszEKag4XiaHHFS+XO1gEze212qVonkE6oCA2O7F/1WvHuoBZ2PgtnjCxUyBXKlo48o96YPzRQ4MKsj9kY58hQZqBhb9lqVyiUAkY49mkXl9llV+RGl7awpLNPaRFZuLfCXsrdR50ccxXE6EaNyTdnR4sSrBu+bY7NJlJE1bQ=
+	t=1711651818; cv=none; b=OAnU+bCjRA4XGujFd4RCxOc2AoiABIuJljW5JodM20Mad9PO8JcA2vijyiZbtYs0x5+k8vYqAITbN8w82LKv/zdaMBj7ySeNWC0QZFvh7lKkCXy9NNkjuxQtDH5hNzoeE9bVnuJeL2kUXSh9hTgT/FAFduA7vJCIrnVKjm+taok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711651678; c=relaxed/simple;
-	bh=g6StRBHsTVZSxHL0TornCMnMWzf+XeBT0TuciQlLyIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gp7bWXA1Lx5mPm6mkK2WLa7z66z1JODsxPG3mJDT2ILhEapguBT1+R6Jn30oBs7yHN1UJkEWPQ3p7905ydTGR3TyfJu485Fp+s1jkViL02qTEiHG+JhXLewP3KGPOikVSHLg8a+Quq1eOOEvzErT9S0tHagQjdt+1verhXQeooQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qtqHVRfJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711651818; c=relaxed/simple;
+	bh=F/HJwyzJf8Uss0XAVW7YuuqoQ7rS2WoYp45boQWDGm8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=dhwx7bQDHORoG5cyPTw31fNNdmGw18ltOCtXS7fvrSdSNpG9qwnCrsfeEjqIOix9hvZ8sVI1tVoyEMkQIvEGpPMTmV340kvtDuf9Prp1sr9jsF43olm2wepn/tYfG9HYaDwcrKD+0QT3JHVCj2Q4nHcKlDIkHTm7F2y4rQvVK2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=K5LV5K59; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtqHVRfJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xlwUW7hO6KLAS8sHng2ia5d8RT6xl+DwoE+2+h3+WD4=; b=qtqHVRfJvYEAIKUu+9WiDZ7IZb
-	81d2puBqVN+HP6ywT6bbPAZhFgjp1qFYzN7hrr7AFC/7gQmaDLjH4iotqGvmv//kP8MWdP5H96+NL
-	U7Lx3Vg7qNKbkNjGQB4DBBFZwgcPGLKGud4uMHILSAWshNjU7HciQzl2UAeOQ3stVuOF87ZjdLxo/
-	xbs2iaXPHruEsCsB5oZePd9LMH3UW2834ZrrakQcZGRMV+7aKcKaVHB/GVY/VX6sSdtX9S2z4NuD1
-	HRh+5f+b6gEImbDxWcEX5Ugh9RMK2CC3QMGG2IDSdXdnDvDiNePmx06s8U+h75xelPOVA3puG9zOT
-	cRDKizTg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpun4-00000006xdZ-0ZW0;
-	Thu, 28 Mar 2024 18:47:54 +0000
-Date: Thu, 28 Mar 2024 18:47:54 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org, linux-mm <linux-mm@kvack.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: next: sh: mm/cache-sh4.c:250:51: error: too few arguments to
- function 'folio_flags'
-Message-ID: <ZgW7WhTBcDX5Fl81@casper.infradead.org>
-References: <CA+G9fYvB6unkhzFomVcg+M14Cc7xSKkzhMuXaWqZQbDej_aduQ@mail.gmail.com>
- <20240328114612.d60b7ad4eb552281bedbff10@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="K5LV5K59"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CDEC433C7;
+	Thu, 28 Mar 2024 18:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1711651818;
+	bh=F/HJwyzJf8Uss0XAVW7YuuqoQ7rS2WoYp45boQWDGm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=K5LV5K59HTaPTHPaJcC4ecFQSBf/oze43b5ftafjrU72Xj7wpMsQi280aAjHgoZW4
+	 Z5GQuBTFbWstEpa3fqgWc67NWYcF5OoNpHO42A99VouIGVmZ54R5a3pyqByTbP6xGL
+	 oXCV4NMgOpspOce8nJxmjNUruKoOZe8tbS5U+YEc=
+Date: Thu, 28 Mar 2024 11:50:17 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ lkft-triage@lists.linaro.org, clang-built-linux <llvm@lists.linux.dev>,
+ Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <ndesaulniers@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ willy@infradead.org, David Hildenbrand <david@redhat.com>
+Subject: Re: next: x86_64 defconfig with clang-17 failed
+Message-Id: <20240328115017.5c585e5709b0444c31811714@linux-foundation.org>
+In-Reply-To: <CA+G9fYvbFMMCmk91vzVXcS5T2Ezkwg8tQDgt_TfF-8Q=c0B0PQ@mail.gmail.com>
+References: <CA+G9fYvbFMMCmk91vzVXcS5T2Ezkwg8tQDgt_TfF-8Q=c0B0PQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328114612.d60b7ad4eb552281bedbff10@linux-foundation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 11:46:12AM -0700, Andrew Morton wrote:
-> --- a/arch/sh/mm/cache-sh4.c~sh-remove-use-of-pg_arch_1-on-individual-pages-fix
-> +++ a/arch/sh/mm/cache-sh4.c
-> @@ -247,7 +247,7 @@ static void sh4_flush_cache_page(void *a
->  		 * another ASID than the current one.
->  		 */
->  		map_coherent = (current_cpu_data.dcache.n_aliases &&
-> -			test_bit(PG_dcache_clean, folio_flags(folio)) &&
-> +			test_bit(PG_dcache_clean, folio_flags(folio, 0)) &&
+On Thu, 28 Mar 2024 19:05:51 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-Yup.
-https://lore.kernel.org/linux-mm/ZgRqLDP7yVCT2dnh@casper.infradead.org/
+> While building x86_64 defconfig with clang-17 the following build warnings /
+> errors noticed on Linux next-20240328 tag.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Build error:
+> ---------
+> mm/memory.c:5094:25: error: variable 'pte' is uninitialized when used
+> here [-Werror,-Wuninitialized]
+>  5094 |                         writable = pte_write(pte);
+>       |                                              ^~~
+> mm/memory.c:5083:3: note: variable 'pte' is declared here
+>  5083 |                 pte_t pte, old_pte;
+>       |                 ^
+
+Thanks.  Presumably ptent was intended, but this may not have had
+adequate runtime testing.  I'll drop the two-patch series "support
+multi-size THP numa balancing".
+
