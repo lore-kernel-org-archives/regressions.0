@@ -1,101 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7F07E115;
-	Thu, 28 Mar 2024 18:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562C3131E59;
+	Thu, 28 Mar 2024 18:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711651573; cv=none; b=qp+5qaDEwMfUIdNHGVltDfkHCgioWd0JfwzfdbO0xMz/T2GVh8e5QmUEK07kOjP3BIVqVPxcMw16H9bcrVBtNt/DMAI0JpQulr3NbXVuFxg8VJkndMWDj/+VfGBvDlvtnKSE7bbmmdWsFQXLch2P6D88b/5jGYch9DiWIP3noAc=
+	t=1711651678; cv=none; b=rCGszEKag4XiaHHFS+XO1gEze212qVonkE6oCA2O7F/1WvHuoBZ2PgtnjCxUyBXKlo48o96YPzRQ4MKsj9kY58hQZqBhb9lqVyiUAkY49mkXl9llV+RGl7awpLNPaRFZuLfCXsrdR50ccxXE6EaNyTdnR4sSrBu+bY7NJlJE1bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711651573; c=relaxed/simple;
-	bh=r9sPgfprQr4ss5yOQRQ+LuOkNETi9+8h/ITL1cLkamo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tgYMYGs7aWBN0OMcJ0PCa7zY7vjJpNnJu8AKaBk01FRA64U5C0uPHQrJQEUbLq4kAFT6Z4H67522ZWs0TRogQUF+1J/yF3HxBxEgUYZRoE/noVJOmOJqfr8xHX7kbVxAOuJ14PLDb/rcwcZ8z0ha0nhiXutHykJYPDVI6jbHk7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LdHR18D+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711651678; c=relaxed/simple;
+	bh=g6StRBHsTVZSxHL0TornCMnMWzf+XeBT0TuciQlLyIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gp7bWXA1Lx5mPm6mkK2WLa7z66z1JODsxPG3mJDT2ILhEapguBT1+R6Jn30oBs7yHN1UJkEWPQ3p7905ydTGR3TyfJu485Fp+s1jkViL02qTEiHG+JhXLewP3KGPOikVSHLg8a+Quq1eOOEvzErT9S0tHagQjdt+1verhXQeooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qtqHVRfJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LdHR18D+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C88C433C7;
-	Thu, 28 Mar 2024 18:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1711651573;
-	bh=r9sPgfprQr4ss5yOQRQ+LuOkNETi9+8h/ITL1cLkamo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LdHR18D+vl35xAZ8PoRaL+NhkViGAemYSCiROgu6PEwl0+nyTZD+42wut061xBmeC
-	 6g3Ztc66LxXtoLnUUmXABlSFwF7Rg/ZXKi64ykyqyE41OcycuD1HdN2mGC9rnwiLv2
-	 /isOduoShBIG+Ej4piZULRL6sIyoxXagFJqs7eGY=
-Date: Thu, 28 Mar 2024 11:46:12 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- linux-mm <linux-mm@kvack.org>, Linux Regressions
- <regressions@lists.linux.dev>, willy@infradead.org, Arnd Bergmann
- <arnd@arndb.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtqHVRfJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xlwUW7hO6KLAS8sHng2ia5d8RT6xl+DwoE+2+h3+WD4=; b=qtqHVRfJvYEAIKUu+9WiDZ7IZb
+	81d2puBqVN+HP6ywT6bbPAZhFgjp1qFYzN7hrr7AFC/7gQmaDLjH4iotqGvmv//kP8MWdP5H96+NL
+	U7Lx3Vg7qNKbkNjGQB4DBBFZwgcPGLKGud4uMHILSAWshNjU7HciQzl2UAeOQ3stVuOF87ZjdLxo/
+	xbs2iaXPHruEsCsB5oZePd9LMH3UW2834ZrrakQcZGRMV+7aKcKaVHB/GVY/VX6sSdtX9S2z4NuD1
+	HRh+5f+b6gEImbDxWcEX5Ugh9RMK2CC3QMGG2IDSdXdnDvDiNePmx06s8U+h75xelPOVA3puG9zOT
+	cRDKizTg==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rpun4-00000006xdZ-0ZW0;
+	Thu, 28 Mar 2024 18:47:54 +0000
+Date: Thu, 28 Mar 2024 18:47:54 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, linux-mm <linux-mm@kvack.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>
 Subject: Re: next: sh: mm/cache-sh4.c:250:51: error: too few arguments to
  function 'folio_flags'
-Message-Id: <20240328114612.d60b7ad4eb552281bedbff10@linux-foundation.org>
-In-Reply-To: <CA+G9fYvB6unkhzFomVcg+M14Cc7xSKkzhMuXaWqZQbDej_aduQ@mail.gmail.com>
+Message-ID: <ZgW7WhTBcDX5Fl81@casper.infradead.org>
 References: <CA+G9fYvB6unkhzFomVcg+M14Cc7xSKkzhMuXaWqZQbDej_aduQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20240328114612.d60b7ad4eb552281bedbff10@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328114612.d60b7ad4eb552281bedbff10@linux-foundation.org>
 
-On Thu, 28 Mar 2024 19:12:26 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Thu, Mar 28, 2024 at 11:46:12AM -0700, Andrew Morton wrote:
+> --- a/arch/sh/mm/cache-sh4.c~sh-remove-use-of-pg_arch_1-on-individual-pages-fix
+> +++ a/arch/sh/mm/cache-sh4.c
+> @@ -247,7 +247,7 @@ static void sh4_flush_cache_page(void *a
+>  		 * another ASID than the current one.
+>  		 */
+>  		map_coherent = (current_cpu_data.dcache.n_aliases &&
+> -			test_bit(PG_dcache_clean, folio_flags(folio)) &&
+> +			test_bit(PG_dcache_clean, folio_flags(folio, 0)) &&
 
-> While building sh defconfig with gcc-11 the following build warnings /
-> errors noticed on Linux next-20240328 tag.
-> 
-> sh:
->   build:
->     * gcc-11-shx3_defconfig  - Failed
->     * gcc-11-dreamcast_defconfig - Failed
->     * gcc-11-defconfig - Failed
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build error:
-> ---------
-> arch/sh/kernel/cpu/sh4/fpu.c:389:6: warning: no previous prototype for
-> 'float_raise' [-Wmissing-prototypes]
->   389 | void float_raise(unsigned int flags)
->       |      ^~~~~~~~~~~
-> arch/sh/kernel/cpu/sh4/fpu.c:394:5: warning: no previous prototype for
-> 'float_rounding_mode' [-Wmissing-prototypes]
->   394 | int float_rounding_mode(void)
->       |     ^~~~~~~~~~~~~~~~~~~
-> In file included from include/linux/thread_info.h:27,
->                  from include/asm-generic/preempt.h:5,
->                  from ./arch/sh/include/generated/asm/preempt.h:1,
->                  from include/linux/preempt.h:79,
->                  from include/linux/spinlock.h:56,
->                  from include/linux/mmzone.h:8,
->                  from include/linux/gfp.h:7,
->                  from include/linux/mm.h:7,
->                  from arch/sh/mm/cache-sh4.c:14:
-> arch/sh/mm/cache-sh4.c: In function 'sh4_flush_cache_page':
-> arch/sh/mm/cache-sh4.c:250:51: error: too few arguments to function
-> 'folio_flags'
->   250 |                         test_bit(PG_dcache_clean, folio_flags(folio)) &&
->       |                                                   ^~~~~~~~~~~
-> 
-
-Thanks.
-
---- a/arch/sh/mm/cache-sh4.c~sh-remove-use-of-pg_arch_1-on-individual-pages-fix
-+++ a/arch/sh/mm/cache-sh4.c
-@@ -247,7 +247,7 @@ static void sh4_flush_cache_page(void *a
- 		 * another ASID than the current one.
- 		 */
- 		map_coherent = (current_cpu_data.dcache.n_aliases &&
--			test_bit(PG_dcache_clean, folio_flags(folio)) &&
-+			test_bit(PG_dcache_clean, folio_flags(folio, 0)) &&
- 			page_mapped(page));
- 		if (map_coherent)
- 			vaddr = kmap_coherent(page, address);
-_
-
+Yup.
+https://lore.kernel.org/linux-mm/ZgRqLDP7yVCT2dnh@casper.infradead.org/
