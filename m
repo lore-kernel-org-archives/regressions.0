@@ -1,123 +1,220 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from mailrelay1-1.pub.mailoutpod3-cph3.one.com (mailrelay1-1.pub.mailoutpod3-cph3.one.com [46.30.211.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915C82B9DC
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 08:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F178E4879E
+	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 09:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711702587; cv=none; b=rPCpFVWXCDtoWLSMsncVGSTraO7rz6ET2kGRbKLndJGoAi3XiA6Z1DMGZqOkK8lP893O8kZP2AgxPtO4NNB2mxk9mrUh9TcwzgLH/aIFiz6+b7+k+kv69wAn5u07bnllyRkuPzKh6dS80iyE5ILjdE3EyVFFc6O4BX8ryahiTpE=
+	t=1711705574; cv=none; b=ce2sSORT10GLNQo173xGw5NeSUGl62SR9wU77RUhGK1HJZUEXQshYNaHLJP04oIVhu0fSU5hK22PSkafHwvo87cTQAtDFWgPJUYSvJ9WkufI2XK01jr0D+ujdCxBMBpueonexQOlVPx+/1/OhgVzy4fJd+ngAf+w7PTqqsDhxEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711702587; c=relaxed/simple;
-	bh=BhxWWD1/6hpzW0ZuCB47ZyZpGCd1UhWx6YWmIPxtGBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uVs/kv4rs185rjp/t4GFEubJngwMFrKFlgzVK9CLWs730IZSatCvYpOvyeo/8OW7yS7z0x7rjXmvHwDiFSPEnSSmhg2bGDTh3UuXoT4NB1Hys55G3qLhzJ1cIvGEhHKgzzR7dlaxWar+QBAVvEq5xW7Rf58rOfKbdtWqy4aHuzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com; spf=pass smtp.mailfrom=pavinjoseph.com; dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b=GN6A20EK; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pavinjoseph.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pavinjoseph.com
+	s=arc-20240116; t=1711705574; c=relaxed/simple;
+	bh=5eh1LRXd5nmvFvjVFyc2eA97A0oxvEmwBBzfWaixRGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RCX8iAcK+s+2Wlaq3P39niVPNNjH8dJFXcmS5OliTGuWBQYzau5nKXAHGsdyVAdDx3XA0pw0flWYD/gjGEGvzveIrhLTds+3D+CUkEFGZRU1t35gnQD1OCfat5FsGWc8dPMFeBUsMXKRQeLVJmc4G9rGxwT9WOo5wqDqdTWXB7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=HtaLcmDX; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=lM7CM1rP; arc=none smtp.client-ip=46.30.211.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pavinjoseph.com header.i=@pavinjoseph.com header.b="GN6A20EK"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.113.132])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 959D7260DE
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 08:56:23 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id E9E573E870;
-	Fri, 29 Mar 2024 09:56:15 +0100 (CET)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id AC4664007F;
-	Fri, 29 Mar 2024 08:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=pavinjoseph.com;
-	s=default; t=1711702575;
-	bh=BhxWWD1/6hpzW0ZuCB47ZyZpGCd1UhWx6YWmIPxtGBA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GN6A20EKSr0i3BIX2IzE0nB/Ew0aNAsUezWnAnuNzPOQ2Dqrr204U/GDkPhfvm/cq
-	 1xAHVVZhFbAcwaLCQjBMgmf/PSiUr3BWQb6oxveH91T5TByQ4drEsgKp0m3/taOlwd
-	 PNH61X+daeSDKLdoqbibhvhlgu0VuXurPiKcnFws=
-Received: from [10.66.66.8] (unknown [139.59.64.216])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0931040FCD;
-	Fri, 29 Mar 2024 08:56:09 +0000 (UTC)
-Message-ID: <be5982f8-3928-455e-969c-1e4c419d80a2@pavinjoseph.com>
-Date: Fri, 29 Mar 2024 14:26:07 +0530
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="HtaLcmDX";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="lM7CM1rP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=3posw3aF/pMHBf0L+fS4u0dsD0hBXMZlR0kURZ1EsvQ=;
+	b=HtaLcmDXG+yhe1LyCwzuJFbMn3QlNTVDlVjkaRK99DCZTOyiU0PKy/fA1te74et227FYnzVqjYkSK
+	 rZ28SuUQVbEWbv/qhCKVRiKcZsScXrKDlh5lIkJ+57RrTw5/dgleu3BLqLpaI7+EcrWL5L8buCBAMk
+	 5+BTnpMP0VlVbN7i1eHN2BOa0LWxduI1ujdt3cpU90bYYiL90ispbfXtN+y/DJvDETfrhSJZZxlJGO
+	 GJ7i54PtHetSnjWc2udQH8ZiEMVVp3kUB5PzBdLn+jnYTdOcq+/Hn2Y0CevMpjGTnvJ7HVXioIMWCn
+	 08l2CqUOvLk+8f1noRqZQgzBR4P8y2w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=3posw3aF/pMHBf0L+fS4u0dsD0hBXMZlR0kURZ1EsvQ=;
+	b=lM7CM1rPfy3FSKRPpuaHF9mCkbIzHw2H1+iu5lnnog/EZuyaiWySNFxogVCKHRTQW5kpSG+/9J4VJ
+	 vxvN/2tDg==
+X-HalOne-ID: 0058c688-edb1-11ee-b65f-1ff1563c5748
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id 0058c688-edb1-11ee-b65f-1ff1563c5748;
+	Fri, 29 Mar 2024 09:44:57 +0000 (UTC)
+Date: Fri, 29 Mar 2024 10:44:56 +0100
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org,
+	Andreas Larsson <andreas@gaisler.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
+Message-ID: <20240329094456.GA44268@ravnborg.org>
+References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
+ <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
+ <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
+ <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
+ <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
+ <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
+ <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] x86/mm/ident_map: On UV systems, use gbpages only
- where full GB page should be mapped.
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, Eric Hagberg <ehagberg@gmail.com>,
- Simon Horman <horms@verge.net.au>, Eric Biederman <ebiederm@xmission.com>,
- Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
- Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
- Hou Wenlong <houwenlong.hwl@antgroup.com>,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
- Yuntao Wang <ytcoode@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-References: <20240328160614.1838496-1-steve.wahl@hpe.com>
- <ZgZqhWoRZoq5tJoU@gmail.com>
- <47302624-6466-41a7-85db-f6872d58a4d2@pavinjoseph.com>
- <ZgZ4qlbncvxhboQ0@gmail.com>
-Content-Language: en-US
-From: Pavin Joseph <me@pavinjoseph.com>
-In-Reply-To: <ZgZ4qlbncvxhboQ0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[hpe.com,linux.intel.com,kernel.org,infradead.org,linutronix.de,redhat.com,alien8.de,zytor.com,vger.kernel.org,lists.linux.dev,gmail.com,verge.net.au,xmission.com,dbc.dk,antgroup.com,linux-foundation.org,google.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: AC4664007F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
 
-On 3/29/24 13:45, Ingo Molnar wrote:
-> Just to clarify, we have the following 3 upstream (and soon to be upstream) versions:
-> 
->   v1: pre-d794734c9bbf kernels
->   v2: d794734c9bbf x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
->   v3: c567f2948f57 Revert "x86/mm/ident_map: Use gbpages only where full GB page should be mapped."
-> 
-> Where v1 and v3 ought to be the same in behavior.
-> 
-> So how does the failure matrix look like on your systems? Is my
-> understanding accurate:
-> 
-> 
->             regular boot  | regular kexec | nogbpages boot | nogbpages kexec boot
->   ------------------------|---------------------------------------------------
->   v1:       OK            | OK            | OK             | FAIL
->   v2:       OK            | FAIL          | FAIL           | FAIL
+Hi Nick,
 
-Slight correction:
+On Thu, Mar 28, 2024 at 05:08:50PM -0400, Nick Bowler wrote:
+> On 2024-03-28 16:09, Linus Torvalds wrote:
+> > On Thu, 28 Mar 2024 at 12:36, Linux regression tracking (Thorsten
+> > Leemhuis) <regressions@leemhuis.info> wrote:
+> >>
+> >> [CCing Linus, in case I say something to his disliking]
+> >>
+> >> On 22.03.24 05:57, Nick Bowler wrote:
+> >>>
+> >>> Just a friendly reminder that this issue still happens on Linux 6.8 and
+> >>> reverting commit 9b2f753ec237 as indicated below is still sufficient to
+> >>> resolve the problem.
+> >>
+> >> FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
+> >> nr_cpus is set") is from v4.8. Reverting it after all that time might
+> >> easily lead to even bigger trouble.
+> > 
+> > I'm definitely not reverting a patch from almost a decade ago as a regression.
+> > 
+> > If it took that long to find, it can't be that critical of a regression.
+> 
+> FWIW I'm not the first person to notice this problem.  Searching the sparclinux
+> archive for "ultra 60" which turns up this very similar report[1] from two years
+> prior to mine which also went nowhere (sadly, this reporter did not perform a
+> bisection to find the problematic commit -- perhaps because nobody asked).
+> 
+> [1] https://lore.kernel.org/sparclinux/20201009161924.c8f031c079dd852941307870@gmx.de/
 
-    regular boot  | regular kexec | nogbpages boot | nogbpages kexec boot
------------------|---------------|----------------|------------------
-v1:       OK     | OK            | OK             | FAIL
-v2:       OK     | FAIL          | OK             | FAIL
+I took a look at this and may have a fix. Could you try the following
+patch. It builds - but I have not tested it.
 
-Pavin.
+	Sam
+
+
+From a0fb7c6e6817849550d07b4c5a354ccc58382bc1 Mon Sep 17 00:00:00 2001
+From: Sam Ravnborg <sam@ravnborg.org>
+Date: Fri, 29 Mar 2024 10:34:07 +0100
+Subject: [PATCH] sparc64: Fix number of online CPUs
+
+Nick Bowler reported:
+    When using newer kernels on my Ultra 60 with dual 450MHz UltraSPARC-II
+    CPUs, I noticed that only CPU 0 comes up, while older kernels (including
+    4.7) are working fine with both CPUs.
+
+      I bisected the failure to this commit:
+
+      9b2f753ec23710aa32c0d837d2499db92fe9115b is the first bad commit
+      commit 9b2f753ec23710aa32c0d837d2499db92fe9115b
+      Author: Atish Patra <atish.patra@oracle.com>
+      Date:   Thu Sep 15 14:54:40 2016 -0600
+
+      sparc64: Fix cpu_possible_mask if nr_cpus is set
+
+    This is a small change that reverts very easily on top of 5.18: there is
+    just one trivial conflict.  Once reverted, both CPUs work again.
+
+    Maybe this is related to the fact that the CPUs on this system are
+    numbered CPU0 and CPU2 (there is no CPU1)?
+
+The current code that adjust cpu_possible based on nr_cpu_ids do not
+take into account that CPU's may not come one after each other.
+Move the check to the function that setup the cpu_possible mask
+so there is no need to adjust it later.
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reported-by: Nick Bowler <nbowler@draconx.ca>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+---
+ arch/sparc/include/asm/smp_64.h |  2 --
+ arch/sparc/kernel/prom_64.c     |  4 +++-
+ arch/sparc/kernel/setup_64.c    |  1 -
+ arch/sparc/kernel/smp_64.c      | 14 --------------
+ 4 files changed, 3 insertions(+), 18 deletions(-)
+
+diff --git a/arch/sparc/include/asm/smp_64.h b/arch/sparc/include/asm/smp_64.h
+index 505b6700805d..0964fede0b2c 100644
+--- a/arch/sparc/include/asm/smp_64.h
++++ b/arch/sparc/include/asm/smp_64.h
+@@ -47,7 +47,6 @@ void arch_send_call_function_ipi_mask(const struct cpumask *mask);
+ int hard_smp_processor_id(void);
+ #define raw_smp_processor_id() (current_thread_info()->cpu)
+ 
+-void smp_fill_in_cpu_possible_map(void);
+ void smp_fill_in_sib_core_maps(void);
+ void __noreturn cpu_play_dead(void);
+ 
+@@ -77,7 +76,6 @@ void __cpu_die(unsigned int cpu);
+ #define smp_fill_in_sib_core_maps() do { } while (0)
+ #define smp_fetch_global_regs() do { } while (0)
+ #define smp_fetch_global_pmu() do { } while (0)
+-#define smp_fill_in_cpu_possible_map() do { } while (0)
+ #define smp_init_cpu_poke() do { } while (0)
+ #define scheduler_poke() do { } while (0)
+ 
+diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
+index 998aa693d491..ba82884cb92a 100644
+--- a/arch/sparc/kernel/prom_64.c
++++ b/arch/sparc/kernel/prom_64.c
+@@ -483,7 +483,9 @@ static void *record_one_cpu(struct device_node *dp, int cpuid, int arg)
+ 	ncpus_probed++;
+ #ifdef CONFIG_SMP
+ 	set_cpu_present(cpuid, true);
+-	set_cpu_possible(cpuid, true);
++
++	if (num_possible_cpus() < nr_cpu_ids)
++		set_cpu_possible(cpuid, true);
+ #endif
+ 	return NULL;
+ }
+diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
+index 6a4797dec34b..6bbe8e394ad3 100644
+--- a/arch/sparc/kernel/setup_64.c
++++ b/arch/sparc/kernel/setup_64.c
+@@ -671,7 +671,6 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	paging_init();
+ 	init_sparc64_elf_hwcap();
+-	smp_fill_in_cpu_possible_map();
+ 	/*
+ 	 * Once the OF device tree and MDESC have been setup and nr_cpus has
+ 	 * been parsed, we know the list of possible cpus.  Therefore we can
+diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
+index f3969a3600db..e50c38eba2b8 100644
+--- a/arch/sparc/kernel/smp_64.c
++++ b/arch/sparc/kernel/smp_64.c
+@@ -1220,20 +1220,6 @@ void __init smp_setup_processor_id(void)
+ 		xcall_deliver_impl = hypervisor_xcall_deliver;
+ }
+ 
+-void __init smp_fill_in_cpu_possible_map(void)
+-{
+-	int possible_cpus = num_possible_cpus();
+-	int i;
+-
+-	if (possible_cpus > nr_cpu_ids)
+-		possible_cpus = nr_cpu_ids;
+-
+-	for (i = 0; i < possible_cpus; i++)
+-		set_cpu_possible(i, true);
+-	for (; i < NR_CPUS; i++)
+-		set_cpu_possible(i, false);
+-}
+-
+ void smp_fill_in_sib_core_maps(void)
+ {
+ 	unsigned int i;
+-- 
+2.34.1
+
