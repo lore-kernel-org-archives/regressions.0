@@ -1,109 +1,123 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC02F1384A3
-	for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 21:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3C6F9E4
+	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 07:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660135; cv=none; b=g4nL8qrXxQVn2l4RuanBOVV67FGb15+wTyn0+zXh07P4uunCxZUWp01olkFeUwN2XyUV+1vPNGEnCWAq8Rmt73IKSjzmeJyhNnIexgonFbgUAUdlBbH8ScUaXFrCI2N7CeHuYCH//z64VK1WnHNE7l/RgtmXUiEp8jE+axn1ef0=
+	t=1711696524; cv=none; b=LQW1HnWpolnfmGAESqx1PWR8TZc8Scd0DYcyoWheN09hLb6450CDy4dXwWd7ecmtouRSRcSgbHXNeNphuHlndlpsor7q2P1Ksbclh/vPAn+V7jFhqdiKo/f0/fzxOv9w7gQmW1r9kAVGA3NqSgCA1iQh5Shr57RW6HM+FRz2isk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660135; c=relaxed/simple;
-	bh=F4IrvSS6WvfTbwg+S1nOzbzpIHvcq0dGlD5txkHzVK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fupKa9BndLXJrWIQu6Mu48/7OjV3M4YlX9DImTezOoPboTXKLRXRwTjCBTMOH4lOuQTi71N0aYHggkRD9ukBJk+4FO4oKxMfvbAZpToGdK/ZndueK+tRQXmx1NnCobZqPTTaQuOxGdYjB9SpW/ORcnLtRCD4NWx/ZMqnLjpD1G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=RhR9pQlV; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	s=arc-20240116; t=1711696524; c=relaxed/simple;
+	bh=vcBZF75PvdSN87wejsi7pX6QTEy6uXjLbXwwfZFg3Eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3Hjt6z+YPScPnfhV9akejUaJq1WnXQX1xLSINAn+e4DDyyX4hec32nIjZjhUytJnpJjOCz3Cr80JTT1maILdWY7CuO0fyiICpOYIbXeMGTkK1rO5as034ZzYHPx9QmAOiTybg+m2MzjSbvNZhCyQwxN8b/mBCJ8h/uX7I3nuAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPn5NEaA; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="RhR9pQlV"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a467dae51dso506890eaf.1
-        for <regressions@lists.linux.dev>; Thu, 28 Mar 2024 14:08:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPn5NEaA"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56c36f8f932so4835779a12.0
+        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 00:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711660132; x=1712264932; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fhOqlDsFnhyStsUL+RT7PNmxZO7uBWizHf6GICmX+OI=;
-        b=RhR9pQlVRQRu6JwR/gCaszwL3MfEyNV6c0fCl/CUU7fKz2mCka8px9BCDqXj0BcEm/
-         YCalvECxzZ8rQ6kPeWf9LImgmot4iEJPf67kFtV27TcPuIpsCq90T8jODDNAEWf28TBC
-         eU+9O4OmInGvvtS6y9jxwn4vj4dKaNZHAaC8XDbwit98o0nViyzsjO5PpVV1L92YmUPu
-         1oP9xGE/Isx9pEy6Ug8IlWRtCHj8xtX3dOesZVvQ4KCuXZ9Xw58KFOC2SwrPxnlEgYyL
-         A7sKf+odlh/mXbY8KrzTmGUg9GWKebZXdOeVEbMPDIX87w82JLP9+KxI4jrYlxf7C1Bi
-         U+hg==
+        d=gmail.com; s=20230601; t=1711696521; x=1712301321; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mozfWZbRnnqWKHe9tnc7q0wOVsOmikcudgvgpeew1+E=;
+        b=TPn5NEaAmX4PZaqG0YZmAAVqUr1StUp5znKlC/+zCMGKeroP1EkcL5TjvMkKLc2hSG
+         ZKc6QztW4hAXorfvaAxgJ8IG6c3DzF4pyWPytGzjt8FqkFjt+jFXJZIde6La0rRF34MN
+         XLwDrDx1Tf3qyBa8kSykZDVFA1taVgAAIR9Eqb9GVqjKcW2XU2SFAQZv8WCSh3rDE0r5
+         pn5M9eWiuxFPZR3ZYjmQsakHsTdzGTX3QUIpTuxGjb9Dznm2VL3U4GP3XkV7rEERkNER
+         rHwzS7Ye1XCznwqP93qOdQ5ZW7Uj+S+wYAqYrmFX9wfbe0ueG1583WymYNyor6VDffjR
+         Hk0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711660132; x=1712264932;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fhOqlDsFnhyStsUL+RT7PNmxZO7uBWizHf6GICmX+OI=;
-        b=bkAvoc6UcaEIYW3JITfevsLsEdGr4tbXw+1T2z8H2CB+fps2QCEsuxvL5wRDhxDA2A
-         J6Y+QVfCy/deZvF6vuNjC962LyvZYFsCWPRLdKQtAPepSkdkbpG3SJw0Rp8sW7qHngY0
-         A7j58A/21iyU8bo8ZGmQeB2XNSTDz6e8Wf6/A7+uUMCdD7F6wlOzgsmqOOkT21YhWTXF
-         F2ZxfKYW+oZdIDo621SwoNOBm/mSlY0+SDy/kt7QRoDDPD/N7ZRE2NumBvjPGaeXGHK1
-         L8J9QnTJosupJCeQ+VtSPM6YkJVBR9yHt20AwZ7Nwp8uQ9Uyx1Iib3rGAGD4NATkSNUU
-         0WOw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2LpIpStFJBXXl8z5yPtvTI3omECV302hubtKdOf3h9/7NcoXQr0U8eRzbcM2J2glCEwH11aAVDsT8Sqs6cde76TlRL5hdIx+3ubA=
-X-Gm-Message-State: AOJu0YzdraGuAH/RBNTG6hNqDwTow8pLBgG9q+EAu0kJNVddLi9j2xll
-	SANdPMck9seo5wJWgLbn3bZh7oIdu68A5VrsoVJBl2UdpvfPbheaR1KNATyG3Z4=
-X-Google-Smtp-Source: AGHT+IGfo+9brJXeQXDPL+VZY/J/lhapMlsOdjDfc2YE8PgBEa/Sxxdwof6mO9UnEH8hZci7XVl3nQ==
-X-Received: by 2002:a05:6820:208:b0:5a4:7696:6ba8 with SMTP id bw8-20020a056820020800b005a476966ba8mr317575oob.7.1711660131965;
-        Thu, 28 Mar 2024 14:08:51 -0700 (PDT)
-Received: from [192.168.0.50] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
-        by smtp.gmail.com with ESMTPSA id l26-20020ac848da000000b0042ee2bda028sm954486qtr.54.2024.03.28.14.08.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 14:08:51 -0700 (PDT)
-Message-ID: <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
-Date: Thu, 28 Mar 2024 17:08:50 -0400
+        d=1e100.net; s=20230601; t=1711696521; x=1712301321;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mozfWZbRnnqWKHe9tnc7q0wOVsOmikcudgvgpeew1+E=;
+        b=DCQkl2oFsG9PB36XwGPG8AVIfVcew9rTkHdGhwFzj8x0THQ0mnMVaglolDkuuVx8cB
+         LShtTy+v1Ba2pAadShWBf1BnWDexT6pNkGql9uyWWjV4E/HjWDY50NNBFmaJMcycfFvc
+         XqI2apzfIG9pFzB16GQzK8yEWc7VEjZCifkIt4vra8MeCDpLW2gr2sc0R3O3W4enL44u
+         OtBTGe1P+XW1CL3YRufmULtpaMEbl6zOSVfTQci8m+krUQjQD5MMBJtlDehA6U1POA1w
+         9KurIOCQcz4uF51ogBDcXy01E2zMZ/+0BbrP6K/XFJsaOkAOMlozF+r6PxOLYOuoBpUB
+         EM+g==
+X-Forwarded-Encrypted: i=1; AJvYcCV4+Jj5EYxd0mBZhl1fzL4bITkaRBk2YVou3YAHC+Gf19RSieihFxm9f054jaUm86a7zfOZA46Ur74pvJ+b2bRfOsTvHgqFdbAwe2c=
+X-Gm-Message-State: AOJu0YzMuUz0LEA2MSNz5Myqb0tob8Lbu1GPYwU9DJ/cf4TRN9au896S
+	JMBC3F1KwdK/zmg0nb4WKzCH/77B79lJXeMctS1V2idIzIu1Dp9+
+X-Google-Smtp-Source: AGHT+IFhRkjxogRTyF/K3aWBTa/zm6XcSZhhLZnndCssQDKYDtq+qxbh6p75jpjUxX89xLoNA/e6vw==
+X-Received: by 2002:a50:8e1b:0:b0:568:b0f4:fe69 with SMTP id 27-20020a508e1b000000b00568b0f4fe69mr4049605edw.12.1711696520810;
+        Fri, 29 Mar 2024 00:15:20 -0700 (PDT)
+Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
+        by smtp.gmail.com with ESMTPSA id ew12-20020a056402538c00b0056a033fa007sm1675741edb.64.2024.03.29.00.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 00:15:20 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Fri, 29 Mar 2024 08:15:17 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Steve Wahl <steve.wahl@hpe.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+	Eric Hagberg <ehagberg@gmail.com>,
+	Simon Horman <horms@verge.net.au>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Yuntao Wang <ytcoode@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4] x86/mm/ident_map: On UV systems, use gbpages only
+ where full GB page should be mapped.
+Message-ID: <ZgZqhWoRZoq5tJoU@gmail.com>
+References: <20240328160614.1838496-1-steve.wahl@hpe.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- sparclinux@vger.kernel.org, Andreas Larsson <andreas@gaisler.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
- <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
- <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
- <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
- <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
- <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
-From: Nick Bowler <nbowler@draconx.ca>
-In-Reply-To: <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328160614.1838496-1-steve.wahl@hpe.com>
 
-On 2024-03-28 16:09, Linus Torvalds wrote:
-> On Thu, 28 Mar 2024 at 12:36, Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> [CCing Linus, in case I say something to his disliking]
->>
->> On 22.03.24 05:57, Nick Bowler wrote:
->>>
->>> Just a friendly reminder that this issue still happens on Linux 6.8 and
->>> reverting commit 9b2f753ec237 as indicated below is still sufficient to
->>> resolve the problem.
->>
->> FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
->> nr_cpus is set") is from v4.8. Reverting it after all that time might
->> easily lead to even bigger trouble.
+
+* Steve Wahl <steve.wahl@hpe.com> wrote:
+
+> When ident_pud_init() uses only gbpages to create identity maps, large
+> ranges of addresses not actually requested can be included in the
+> resulting table; a 4K request will map a full GB.  On UV systems, this
+> ends up including regions that will cause hardware to halt the system
+> if accessed (these are marked "reserved" by BIOS).  Even processor
+> speculation into these regions is enough to trigger the system halt.
+> And MTRRs cannot be used to restrict this speculation, there are not
+> enough MTRRs to cover all the reserved regions.
+
+Nor should MTRRs be (ab-)used for this really.
+
+> The fix for that would be to only use gbpages when map creation 
+> requests include the full GB page of space, and falling back to using 
+> smaller 2M pages when only portions of a GB page are included in the 
+> request.
 > 
-> I'm definitely not reverting a patch from almost a decade ago as a regression.
-> 
-> If it took that long to find, it can't be that critical of a regression.
+> But on some other systems, possibly due to buggy bios, that solution 
+> leaves some areas out of the identity map that are needed for kexec 
+> to succeed.  It is believed that these areas are not marked properly 
+> for map_acpi_tables() in arch/x86/kernel/machine_kexec_64.c to catch 
+> and map them.  The nogbpages kernel command line option also causes 
+> these systems to fail even without these changes.
 
-FWIW I'm not the first person to notice this problem.  Searching the sparclinux
-archive for "ultra 60" which turns up this very similar report[1] from two years
-prior to mine which also went nowhere (sadly, this reporter did not perform a
-bisection to find the problematic commit -- perhaps because nobody asked).
+Does the 'nogbpages' kernel command line option fail on these systems 
+even outside of kexec (ie. regular boot), or only in combination with 
+kexec?
 
-[1] https://lore.kernel.org/sparclinux/20201009161924.c8f031c079dd852941307870@gmx.de/
+Thanks,
 
-Cheers,
-  Nick
+	Ingo
