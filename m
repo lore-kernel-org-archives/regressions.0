@@ -1,75 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943E24F5E6
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 14:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B8A1EA8F
+	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 15:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711723016; cv=none; b=F7uJM+BRaJzV00jWDAsU4wp2M6qZObp0kG+svIeOdDm6zzpmJbWHzBb1CjTC+Ci7Gt9Ek7bC4pQtlVo9lP2Fzx00TgRRWAY9knKlmA6bzww2jYuG2ilqV4sBNB+COB8C2/XFndLH8NtK+QImotSGBknPSTuDQR7CPYKzHzpeS4U=
+	t=1711725407; cv=none; b=OMMEsZOSt4Aj+yNvaF4/J99F+F1sHElUKhXOlQrnUnSAvMYCP5GjVudnQ4XhtZ5KSwuf23pCzv7n7bxhOc8O2Q4TychdP6MIYAtbRwz8zbIfmBk52W7ZAtL1AduxmGbvrx6uRjsx+wl7cNjZGCvB7D61bEJFrchWmvcJdMK03x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711723016; c=relaxed/simple;
-	bh=bPvMNR7MbmnvRzmrCeFpHuyhDQ8Ru5g+65WvijZ7CRY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EaEb4/ObDz/nzh8tuco7NjEmk2/2mniC8hNhGf0H1rtfwazsCV21UqkEtYCPnFTOwoccppWSk6gkcXKvUhtXCM7YDleHVuNQjJplzyijSyGpAIzSVb5GQj3xWfCVVbNWe2R1r6UblbHvIFtmOpRZBSLxk2PbkPlg9yE8Hv9CHpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cg60A4l/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711725407; c=relaxed/simple;
+	bh=bXqO9ldKgORkZ+8U29cEO9eCzS1Prl/TZB36JmaV/hs=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aYSG5Ylwjpwhpvhebxfr2T5mDyHIztbvKSWc31QrPrYEyGNlTRI036c7PGebYmtS69MHNNyFjtCEvGy0SSBzuIRiGsVYKE75VX98aMOaDOerEaXE7n4EB+AOfjPMrJ6PXWzz0Z6F5+8f1r013fMzFU3MNndIjkDwoQs6D43137g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eELclVTP; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cg60A4l/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBDAC43390
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 14:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711723016;
-	bh=bPvMNR7MbmnvRzmrCeFpHuyhDQ8Ru5g+65WvijZ7CRY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Cg60A4l/pBDcXDsBPD0RJyhbe72b62jmIyyImJWz9dnt6j07XFudf03kWvHirABhy
-	 yY7N06LI6ni+1ov2Yv/PdX25viaee2D+jAv6eSNrBSBL+HjfXGx+yz6cZ14jYR7sn7
-	 ywQm6JUm6En2Ctf68alf+McMLKF8Kre4FCqGHJNioZiOvaoSN0XPKg3I7iZgMTyAaZ
-	 Mv9ty5vPPi/2B+u6QedI2FZ84S37x3ERRBhK0X1zAD48AnPQCgJs6d4hQT7mhLTwdk
-	 JmDmayfILHtPLJwem0RqOnv78NEXpkdmE+QVlOta0p0i9SJfRhbqhYaI5B5qho02Sc
-	 H80XGdtTi8zdw==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-515a81928faso2427159e87.1
-        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 07:36:56 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyDlUjxmjisi5jx1rbJMzLEN3oVqr0uYr5pBd/sjUZK5t5z67dC
-	B+th0o3nC5FbUr50wGD4W5/Id61ue2Hq+f0ln5mzEkR6h1ZiNo2xZmtgYSWINbmoHHdUfKOYD0h
-	LAq6oq1jV1RfJwiHpN5FOOiITYZk=
-X-Google-Smtp-Source: AGHT+IGmzjYqwJVJ6BHhkhSSbXixb/5G5AEc5KD8ztiu+Kfa1bTnd/8z5/UwyPUj8twpE4WpeupR5TzwQLPSnbpfzLE=
-X-Received: by 2002:a05:6512:2813:b0:515:d1f9:983e with SMTP id
- cf19-20020a056512281300b00515d1f9983emr1239535lfb.12.1711723014416; Fri, 29
- Mar 2024 07:36:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eELclVTP"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-513e25afabaso2242161e87.2
+        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 08:16:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711725404; x=1712330204; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DqNwX/X38tayRDAW4Zlj0+695u0d2YomcEbZiHh9vxQ=;
+        b=eELclVTPwX2wiGHl4sI1czKNPb0CDRdKTPS1TjLsrp/g1w+oSaRjWmw2axEuyEUBHy
+         nmY0zSRwaG5iARQJoSXWOx9Pcb88X3jpMaqKNGbgrFCM7AjFd0FHCboVSbgBFe1XVO4/
+         jVRrO06c6wqLMRmeRtPCT16caDiLN6hVs4ueHxP+y6QA0zW8zTxDl45Q7AThRCXGL/7Q
+         F4kfvXdygxrdM5PjEYY1GcSZlKSedqcKJhC11q58EU4STiD6APiDU3k/Xdsf6Yfyf7cw
+         Vm7OqwWvmIaJ9NsWuhmJMr9/nRWI86zjg2E5tq+ef/R+2P+443H6DlEtQJs4kwrhFTPf
+         +ouQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711725404; x=1712330204;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DqNwX/X38tayRDAW4Zlj0+695u0d2YomcEbZiHh9vxQ=;
+        b=SUTMB77KIb5CYpcnV0fHJdHHPmFaM4bdwWK62oRMXRYC6VKMO8nHfpi+YO7AwcUxHx
+         RyvhLNyZK3qsl2CE7YbPJpvXgVUpyyhPq/ALuNdzRXe94GyDBBu1i2we0aai/YogtEG7
+         gDM0SVcXrJQsMFEC/7Dy9WdntMks5RFCnF5OlXap8RKGSXDNB+WKnISQFdj34wilukjt
+         h3ie86wHy+1KQV4WJD/HAKx/5kfg32o/0RUQJoaGMWi1VTPqatyRuP551AsP7C1vw+f9
+         Yqu+iuogEiGWd7mB92Gew60G4B3GUmN72MPLN8+Kta7VqUGbspJaUXysm9Ibj0d509Yp
+         g3tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLRzPs8AUYxK8hOORPU2M4Otsr6cu6CatLB7jl66B87QfvjarRb5Uv0YGTHZqHsY3exO4YTx0GqtkYhq9SFNhEVcYeUTpxq8dOBHs=
+X-Gm-Message-State: AOJu0YyF+CXKVaG2hgbJVh5dMEQnHnX2hXKvbsWIb2SXDrmD0ctonBsM
+	2/guygd4A/WBsaz9xx+Hq+lFO6A4o902sqEH8P1Q3Civ8jl9Ty6p7HL6DNkUF4u5I6QoAu8zwBk
+	ggUFLAopmcUb0gPySxVuVpFkYV3m2b6MgRByokA==
+X-Google-Smtp-Source: AGHT+IG21XPIIeej7UxBpa2cGsWVRF31o4EA+Zq7Y09z8tl5e0tGI8gOndkj1llDUytkKUy8+WDfp10/Oe2W/IeM0aY=
+X-Received: by 2002:ac2:5d71:0:b0:513:c9ca:1333 with SMTP id
+ h17-20020ac25d71000000b00513c9ca1333mr1655888lft.22.1711725403783; Fri, 29
+ Mar 2024 08:16:43 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 29 Mar 2024 08:16:43 -0700
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a99a831a-8ad5-4cb0-bff9-be637311f771@podgorny.cz>
- <CAMj1kXG1Vgpp+ckwDww_4q2SF+kajUaoE3+qe5FzMkGyq-Lbag@mail.gmail.com>
- <CAMj1kXGZLs3MdFiK9jrkmWR+YPt50L5tuCJ+rLLTjVa3Grm6tw@mail.gmail.com>
- <61148405-2036-4994-9eef-45cbe6aa9adb@podgorny.cz> <CAMj1kXHn0qp2Qq1WfoT015ezjnzHLoy7=XVE_RY+6jsHzQ+gkA@mail.gmail.com>
- <35ae3208-a0ba-43a7-ac4c-6f770b3df405@podgorny.cz> <CAMj1kXHO_R4XpQ=To1ZW_yac_sjWFPnw7pjunn0UmraFDA2wCg@mail.gmail.com>
- <92898285-e85c-4e72-a179-70fb65349978@podgorny.cz> <CAMj1kXEfeC=O2_NFteJM+L1PqgR2MiXQEcFzmeemsgdKC8s7xQ@mail.gmail.com>
- <dd6e61ac-2356-4b97-85b4-b963a045361b@podgorny.cz> <CAMj1kXGcsEhf24QO1_4Wf99z=PR1cqdxim0Ttj-TqQijZOW=+Q@mail.gmail.com>
- <5e9b5508-cbec-4b81-a2e4-4a02e7c201dc@podgorny.cz> <CAMj1kXF5TUNXVxcaY550_3JYvkGUZDRYtmPAKpbk64Ci8gpbqw@mail.gmail.com>
- <ae488ff7-97f8-4210-a1a7-98f7a5c3ffa7@podgorny.cz> <CAMj1kXEarH+vdk3SqJ8_Vcf-uF4FjTfmjepVbXQ6KciBuCK-wg@mail.gmail.com>
- <CAMj1kXESfih-V4ObfoyROyABoYNp6e9gwGH236=PfJA_AWhQsQ@mail.gmail.com> <240d9025-243f-49d7-bc81-88deceefe12e@podgorny.cz>
-In-Reply-To: <240d9025-243f-49d7-bc81-88deceefe12e@podgorny.cz>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 29 Mar 2024 16:36:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE9GDfQKr=VV9USSKOV4s8pXMz_4trVnbkC0GM6grhJOA@mail.gmail.com>
-Message-ID: <CAMj1kXE9GDfQKr=VV9USSKOV4s8pXMz_4trVnbkC0GM6grhJOA@mail.gmail.com>
-Subject: Re: [REGRESSION] linux 6.6.18 and later fails to boot with "initramfs
- unpacking failed: invalid magic at start of compressed archive"
-To: Radek Podgorny <radek@podgorny.cz>
-Cc: regressions@lists.linux.dev, regressions@leemhuis.info
+References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
+Date: Fri, 29 Mar 2024 08:16:43 -0700
+Message-ID: <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
+ is not, initialized, yet kobject_get() errors
+To: Hans de Goede <hans@hansg.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Andy Shevchenko <andy@kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 29 Mar 2024 at 12:43, Radek Podgorny <radek@podgorny.cz> wrote:
+On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
+> Hi All,
 >
-> hello,
+> I've already tried to fix this, so let me just copy and paste my half finished patch
+> to explain the problem.
 >
-> this patch (i named it 112) WORKS. no initramfs error, normal boot sequence.
+> I was planning on submitting this as a RFC patch at least, but there are also some
+> other new issues with 6.9 on this tablet and I'm not sure how this interacts
+> with those issues and I don't have time to work on this any further this weekend.
+>
+> Anyways below is the patch / bug report.
+>
+> I'm wondering if a better fix would be to add a "ready" flag to gdev
+> and may gpiochip_find ignore not yet ready chips (we need them on
+> the list before they are ready to reserve the GPIO numbers) ?
+>
+> Regards,
+>
+> Hans
 >
 
-I'll take that as a tested-by, thanks
+Hi Hans!
 
-I'll send this fix out to Linus today, so it should hit v6.9-rc2 and
-make its way back through the stable releases in the following weeks.
+Thanks for the report. I hope I'm not being naive here but would the following
+one-liner work?
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ce94e37bcbee..69f365ccbfd8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *data,
+
+ 		gc = srcu_dereference(gdev->chip, &gdev->srcu);
+
+-		if (gc && match(gc, data))
++		if (device_is_registered(&gdev->dev) && gc && match(gc, data))
+ 			return gpio_device_get(gdev);
+ 	}
+
+This would make gpio_device_find() ignore any GPIO device that's not yet
+registered on the GPIO bus which is almost the last step of the registration
+process right before creating the sysfs attributes.
+
+Bartosz
