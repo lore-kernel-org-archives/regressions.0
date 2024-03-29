@@ -1,102 +1,116 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0AC36AF9
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 18:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7228139D04
+	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 19:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711735574; cv=none; b=YqjCgmgliRpBRt+zXf8mE0xaiAzGsNxtR7CdUIb6WOYb4VnxdukK2u9xJHeALKWkNwU/vU0mbd1KL5b+EnpMI1GYhrEiSEQ1RPet0fZ6QzbVtoPo5tDQpiZl2uQ+Ia1EWwuSQxL/rhvaqflc2QtnXEWBOKSK+WhrOc/saj+d05Q=
+	t=1711741247; cv=none; b=d0djzwNhdQ43qGfYao25+NU6fbq7p/5Q37E46cUi7Uxt7tfRUux1MhXRgWBAVev9cDW7JM8vYMnpJ+u8PC3ZNfvnu+6vDu5QjwVzsTREi9dNL5HL/Z4mNb+hv8vYVXhY5477fHrM9ptYYHwHI5u1ejz1Dj8+OBQrDChivNl9lo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711735574; c=relaxed/simple;
-	bh=R3BSlNZGjpe56WqazE4wFdBARmf3FVEmHM7BHsgVa9M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ShPxQk5oTx8zt4N/k4ujEZCIEi0NZBZDdxJFW8KMW8j+yoOgl1AWHZXnFFXqnf5KbpBaQ2rySmqTi1KqY2Dp7qwqofMsxvDtAwRu5XyTJbYcQ44ZchjBoRMKIy24z8FekQsh1MiPhEGjp0RaX9a0TnpSLn/8bhZMa1ejr6WcaUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LvhIcEih; arc=none smtp.client-ip=209.85.161.45
+	s=arc-20240116; t=1711741247; c=relaxed/simple;
+	bh=BOQI1k1tfyqL0tc7+yYdpT34753QIX3JP8lZfbTdaqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oKO6AE8jQOiyC4zbEr2LWWIOuoYnvP7TyqB1KMAmnDD17irjMtgeD6dhy6glOGxvyWXUCpt6v7Vqp5LqhSl89+ZT5dMotpaXmxrllwp/pM7pJZl0tBPaGfi9rMRfHpww/0V4f5VTcFcCfJ51+K0fWbDJ3s6xi5NsGi7CcnrR7wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lmd+54DQ; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvhIcEih"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a47680a806so512060eaf.0
-        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 11:06:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmd+54DQ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a466e53f8c0so295303066b.1
+        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 12:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711735572; x=1712340372; darn=lists.linux.dev;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3BSlNZGjpe56WqazE4wFdBARmf3FVEmHM7BHsgVa9M=;
-        b=LvhIcEihDb8dbBl5aGX3MwaNIwMgVNPPAtb+4RwdHzvOOAG9EgfaLwKnkoC+iU6FZC
-         5LRcYWJ1Yz22o1ZjlysF7xWjE7FxPi8SJl/GoI0uN3ps4B+uCcUJGPmNgf0+/6wZBBnG
-         BTxG5t2WgIUFr66uXtKRl2a1aMcc92Q7JjJ0PUuUSMjHdlxzMk6+tFNtxoAMbud0z4HX
-         mE/8fWuzvxDnOiQEYZFoqHZyrQcS3AzrksTDWP/N6y0ZiOUMg0MdvZWRAp+FPKJw/Lfv
-         MlugASjmTT4bVf5rREua6+/JbkKekiT13yR0VPUOeE8LUfB7YXXmnKWVAJy2hzZp1PJM
-         XI6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711735572; x=1712340372;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1711741244; x=1712346044; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R3BSlNZGjpe56WqazE4wFdBARmf3FVEmHM7BHsgVa9M=;
-        b=N8oNg76disTSLYL9ehE1kfTkS3uridboVXqw4LJWOFHIa8Zmok/qpBL4cnaiRVihnu
-         lwUfmu7vtckyw16a7//agwZaLX3w3E9/lssy6M3JoJinY0bcFvfhBuaP1xxNKUQ3KOZr
-         fGTVaf1yI2YYNZyvH/PlwP5gxv/sINDAHY5qkVcdZvyV2QILm3koLuYEf4WoFxDXyuHa
-         BtM291nI04Jjre4MIN+8hgoh22D616HoeTAy1RZDGv06ITcmTaRV5TzuCsMtRoLHHljk
-         GN5P6KpYc6AYlVTrQ9rtnI/R4Epg3+jsi48y0IgBHilg9IG6QBn84671IrK4jKfzaoS5
-         EFUw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3ZXR2Wj4hl5FmU3ELZSfwaqElkxLoBvvoxIEkY8runDrUQwsDTcvOx1jM4CVUQvgviLc46+NNpYCjZJBrXvFdt8R+WGxXsVfQNxo=
-X-Gm-Message-State: AOJu0Yyz8dN1jfu0GV3Nd+XUVqLvJUBRsUHSIxGhVyFqO6ySBc+1TxBB
-	Uce90Z5w1/RFlso1pIY3h8gGZFz/vIyf/GTDAZlBDkhcY8/TO2MG
-X-Google-Smtp-Source: AGHT+IGOg/geWD4v+qwNlFlaTa+hTI8kOf/RVIEj1oqLw5OnBFGg4z0B/qqLXoBgpz1gwipqIOngrw==
-X-Received: by 2002:a05:6830:1d61:b0:6e6:c6ef:cb3 with SMTP id l1-20020a0568301d6100b006e6c6ef0cb3mr3019879oti.0.1711735572023;
-        Fri, 29 Mar 2024 11:06:12 -0700 (PDT)
-Received: from office-nix (hlfxns018gw-134-41-63-216.dhcp-dynamic.fibreop.ns.bellaliant.net. [134.41.63.216])
-        by smtp.gmail.com with ESMTPSA id jt12-20020a05621427ec00b00696766401adsm1860527qvb.38.2024.03.29.11.06.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 11:06:11 -0700 (PDT)
-From: David McFarland <corngood@gmail.com>
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: Chris Feng <chris.feng@mediatek.com>,  Linux regressions mailing list
- <regressions@lists.linux.dev>,  "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>,  Alex Hung <alexhung@gmail.com>,  Hans de
- Goede <hdegoede@redhat.com>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>,  "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,  LKML
- <linux-kernel@vger.kernel.org>,  linux-pm@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
- releases
-In-Reply-To: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info> (Linux
-	regression tracking's message of "Fri, 29 Mar 2024 14:51:47 +0100")
-References: <20240318191153.6978-1-corngood@gmail.com>
-	<20240318191153.6978-2-corngood@gmail.com>
-	<1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-Date: Fri, 29 Mar 2024 15:06:10 -0300
-Message-ID: <87bk6wlxpp.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        bh=iFomKtJ/ko5gP2de8iELQHNaNB6nelyPz/WP1+pjQaI=;
+        b=lmd+54DQTk6QQCBoIzGd4Jv1glrYwkGm7p0QUKv7DFe8t8pn48lNSyzi9SwelscnLH
+         VWY2eJ0LDBQzhOWfhfYV55T3UaupU5EfMzE3mrdZZoGdq7ASxABakTX08pACXcZeLmJD
+         fwyIU3X+l00tg9QxNE4BTkBDTng+YAFZcJPWgWSI2fefqezVddbyyKaBa6Lfpmdn55PX
+         gwvMLxuj2oWVvrAyQgrNAwTjZMWEU2vXYm+H8vNXL/GsYVw0xeAd/ck8JDa5V12ECRR9
+         oYdZEZrIXvJRa40/E9vGBP45Q8PDcBHaf70hCwH3hEuFOi3xsWpgoj7l4R+1PpCf8I7C
+         YqQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711741244; x=1712346044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iFomKtJ/ko5gP2de8iELQHNaNB6nelyPz/WP1+pjQaI=;
+        b=cLe+NitKxWKdrnzBqvLU9pyKuO1BJxswCCqa/h9vqzxUIcCtJNPhVvSS5SgiDpAIir
+         3ysg5R+O0U3po3po/uLWRjxd0sW+YEwvuuyc9v+Bim4brsX64b9uXQF3MtULQcytmG63
+         r9tF7+LJaeKJae9VSCgQyezlnhp67fyHL3v47iuBKp0FvT45Tg1T44M+EnQ9utasZ/Yd
+         VUOih9Fpmf21SMtbu/0/9mBq8/loeE6gpbwjNOF46H/9ZsVS5Lqkrf3ddtx9JYXrPPz2
+         tkj8/R4IwvaNiFGbQegt87sVolwZgtZp2edsN+wp6Id4NwWI+Ssn+94Wx94xYzPyZ6Ds
+         34UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWh0i+Iu/0oDFldiRfIzfEj9bCz/aYrTU9lJcI+VsaW9Rly58hUW9AXNlqp8LeCHYd4mV7Fnrm0+OU2uH+b6WFFbyxoKbuTUDLC9P0=
+X-Gm-Message-State: AOJu0YxjOy42ucC6S/THf4MVUJpzzFK3BrqYrFoeb7XvoJOdY+brX4MN
+	XxjodpIzz/2lcipBB86ZAfKjeYOmuxm9JFtYoIoqWjUPWGxctWNV4JE7R7XD0+GgdVu4xsWncst
+	CfU/o3QRZP/Q2yGG6iWu0PNvShM0=
+X-Google-Smtp-Source: AGHT+IGEd5TAwHxcVRtd8OO7jcqTvMmHL9Tj1oNs1dYRZsLV0e01+/MQ6GAw59woWU5+V7U+VpgndoJAejiFMZ0RdHI=
+X-Received: by 2002:a17:906:1699:b0:a4e:4369:236e with SMTP id
+ s25-20020a170906169900b00a4e4369236emr591925ejd.41.1711741243955; Fri, 29 Mar
+ 2024 12:40:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org> <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 29 Mar 2024 21:40:07 +0200
+Message-ID: <CAHp75Vd3qQC6YY1Ysf2EqH9RFHQygX7HXP37Ju5p6BzsD7S3Ug@mail.gmail.com>
+Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
+ is not, initialized, yet kobject_get() errors
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Hans de Goede <hans@hansg.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Andy Shevchenko <andy@kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-"Linux regression tracking (Thorsten Leemhuis)"
-<regressions@leemhuis.info> writes:
+On Fri, Mar 29, 2024 at 5:16=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
 
-> David, from here is looks like this is stalled for ten days now. Or was
-> there some progress and I just missed it?
+...
 
-No, I've not seen any emails since your last.
+> Thanks for the report. I hope I'm not being naive here but would the foll=
+owing
+> one-liner work?
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index ce94e37bcbee..69f365ccbfd8 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *da=
+ta,
+>
+>                 gc =3D srcu_dereference(gdev->chip, &gdev->srcu);
+>
+> -               if (gc && match(gc, data))
+> +               if (device_is_registered(&gdev->dev) && gc && match(gc, d=
+ata))
+>                         return gpio_device_get(gdev);
 
-> From the cover letter[1] is sounds a lot like a "Fixes: 0c4cae1bc00d31
-> ("PM: hibernate: Avoid missing wakeup events during hibernation")" would
-> be appropriate here.
+In case you are going with this approach, wouldn't be better to
 
-The specific behaviour I encountered (failure to hibernate) started with
-that commit, but I think it just exposed the underlying behaviour (wake
-on button release), which probably dates to when the driver was
-introduced.
+  if (!device_is_register(...))
+    continue;
 
-I believe it would have been possible to reproduce the other behaviour I
-mentioned (long hold of button to suspend causes the machine to wake on
-release), even before 0c4cae1bc00d31.
+  gc =3D ...
 
-That's why I left it off, but I'm happy to revise.
+?
+
+>         }
+>
+> This would make gpio_device_find() ignore any GPIO device that's not yet
+> registered on the GPIO bus which is almost the last step of the registrat=
+ion
+> process right before creating the sysfs attributes.
+
+--=20
+With Best Regards,
+Andy Shevchenko
