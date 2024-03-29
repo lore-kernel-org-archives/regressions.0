@@ -1,220 +1,82 @@
-Received: from mailrelay1-1.pub.mailoutpod3-cph3.one.com (mailrelay1-1.pub.mailoutpod3-cph3.one.com [46.30.211.240])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F178E4879E
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 09:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659B251C46
+	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 10:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711705574; cv=none; b=ce2sSORT10GLNQo173xGw5NeSUGl62SR9wU77RUhGK1HJZUEXQshYNaHLJP04oIVhu0fSU5hK22PSkafHwvo87cTQAtDFWgPJUYSvJ9WkufI2XK01jr0D+ujdCxBMBpueonexQOlVPx+/1/OhgVzy4fJd+ngAf+w7PTqqsDhxEE=
+	t=1711706426; cv=none; b=TFxCoRVxWkRDs+8VttXwr6AX/ZeRWhArmTKF8OO7cLebWabrI7yYLPCzoK9jk2B5y3PyL3Yd/uJP9YcBhJdWJkPw3q3H2MgZ+EoB9BwOOhe5tTkb09Q/i+izjJ6pS1X6EUyDfWWhYKCR8cg9qKRU0XYkWMO5pttQ/2k4Htq9NsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711705574; c=relaxed/simple;
-	bh=5eh1LRXd5nmvFvjVFyc2eA97A0oxvEmwBBzfWaixRGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RCX8iAcK+s+2Wlaq3P39niVPNNjH8dJFXcmS5OliTGuWBQYzau5nKXAHGsdyVAdDx3XA0pw0flWYD/gjGEGvzveIrhLTds+3D+CUkEFGZRU1t35gnQD1OCfat5FsGWc8dPMFeBUsMXKRQeLVJmc4G9rGxwT9WOo5wqDqdTWXB7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=HtaLcmDX; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=lM7CM1rP; arc=none smtp.client-ip=46.30.211.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	s=arc-20240116; t=1711706426; c=relaxed/simple;
+	bh=Xf7/VRL3Cg0cj0R1DCNjac0CmIm6pJcrq6MiP5TUl4M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Bdc1hD4f0sjylVVrCi8jqgkT+xxirsnOhQQZkuXvofTpE+dyfZ1AvZwTKUERXaCOpqKy7Akf0UbLNdKmGJWytK/27fDDfzeWXhuZ/TO/mnWeh99rNPiYr3IEQn98WgZq3VFPN6fnfnaGdzFqz9ZaTg/XwyE4h32ms5B4t69QXyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wnUAFRDw; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="HtaLcmDX";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="lM7CM1rP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=3posw3aF/pMHBf0L+fS4u0dsD0hBXMZlR0kURZ1EsvQ=;
-	b=HtaLcmDXG+yhe1LyCwzuJFbMn3QlNTVDlVjkaRK99DCZTOyiU0PKy/fA1te74et227FYnzVqjYkSK
-	 rZ28SuUQVbEWbv/qhCKVRiKcZsScXrKDlh5lIkJ+57RrTw5/dgleu3BLqLpaI7+EcrWL5L8buCBAMk
-	 5+BTnpMP0VlVbN7i1eHN2BOa0LWxduI1ujdt3cpU90bYYiL90ispbfXtN+y/DJvDETfrhSJZZxlJGO
-	 GJ7i54PtHetSnjWc2udQH8ZiEMVVp3kUB5PzBdLn+jnYTdOcq+/Hn2Y0CevMpjGTnvJ7HVXioIMWCn
-	 08l2CqUOvLk+8f1noRqZQgzBR4P8y2w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=3posw3aF/pMHBf0L+fS4u0dsD0hBXMZlR0kURZ1EsvQ=;
-	b=lM7CM1rPfy3FSKRPpuaHF9mCkbIzHw2H1+iu5lnnog/EZuyaiWySNFxogVCKHRTQW5kpSG+/9J4VJ
-	 vxvN/2tDg==
-X-HalOne-ID: 0058c688-edb1-11ee-b65f-1ff1563c5748
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 0058c688-edb1-11ee-b65f-1ff1563c5748;
-	Fri, 29 Mar 2024 09:44:57 +0000 (UTC)
-Date: Fri, 29 Mar 2024 10:44:56 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org,
-	Andreas Larsson <andreas@gaisler.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
-Message-ID: <20240329094456.GA44268@ravnborg.org>
-References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
- <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
- <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
- <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
- <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
- <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
- <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wnUAFRDw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Xf7/VRL3Cg0cj0R1DCNjac0CmIm6pJcrq6MiP5TUl4M=; t=1711706424;
+	x=1712138424; b=wnUAFRDwAafq2VLDFI0HUIt9eletmv32JwYcMFtHBEjkaGQSStliE8ITgfFGX
+	Ywzkld+Rd+xAv7p/zPqtzWDkVHPEu6eD/vTSJEQu7/L9/kTueJta/PYmWlFBsaMdmTqTg7E0Z9EW8
+	LzKDAwTSxfS9Spn1OoO9E4ZtDaUy88Cq0g/4trM/eFfACNijJMGE15ILsCFEHZoSEYhlhofWE/gY6
+	mIJvhfhus52IYrcx1bh+LFNfMs9BsgT+ZdFql1LOhMgCiC1Tn++bJn34cW62QstO9kTSZcLfF5P9K
+	ODT/iWEVxNXzi8Cxu+KSnsQ8RhpFI3uiMeeLPbmY2l3zY1cdlg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rq926-0005J5-2h; Fri, 29 Mar 2024 11:00:22 +0100
+Message-ID: <a02b05be-f70b-4e4c-89fe-04d53211b477@leemhuis.info>
+Date: Fri, 29 Mar 2024 11:00:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
-
-Hi Nick,
-
-On Thu, Mar 28, 2024 at 05:08:50PM -0400, Nick Bowler wrote:
-> On 2024-03-28 16:09, Linus Torvalds wrote:
-> > On Thu, 28 Mar 2024 at 12:36, Linux regression tracking (Thorsten
-> > Leemhuis) <regressions@leemhuis.info> wrote:
-> >>
-> >> [CCing Linus, in case I say something to his disliking]
-> >>
-> >> On 22.03.24 05:57, Nick Bowler wrote:
-> >>>
-> >>> Just a friendly reminder that this issue still happens on Linux 6.8 and
-> >>> reverting commit 9b2f753ec237 as indicated below is still sufficient to
-> >>> resolve the problem.
-> >>
-> >> FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
-> >> nr_cpus is set") is from v4.8. Reverting it after all that time might
-> >> easily lead to even bigger trouble.
-> > 
-> > I'm definitely not reverting a patch from almost a decade ago as a regression.
-> > 
-> > If it took that long to find, it can't be that critical of a regression.
-> 
-> FWIW I'm not the first person to notice this problem.  Searching the sparclinux
-> archive for "ultra 60" which turns up this very similar report[1] from two years
-> prior to mine which also went nowhere (sadly, this reporter did not perform a
-> bisection to find the problematic commit -- perhaps because nobody asked).
-> 
-> [1] https://lore.kernel.org/sparclinux/20201009161924.c8f031c079dd852941307870@gmx.de/
-
-I took a look at this and may have a fix. Could you try the following
-patch. It builds - but I have not tested it.
-
-	Sam
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711706424;d34340db;
+X-HE-SMSGID: 1rq926-0005J5-2h
 
 
-From a0fb7c6e6817849550d07b4c5a354ccc58382bc1 Mon Sep 17 00:00:00 2001
-From: Sam Ravnborg <sam@ravnborg.org>
-Date: Fri, 29 Mar 2024 10:34:07 +0100
-Subject: [PATCH] sparc64: Fix number of online CPUs
 
-Nick Bowler reported:
-    When using newer kernels on my Ultra 60 with dual 450MHz UltraSPARC-II
-    CPUs, I noticed that only CPU 0 comes up, while older kernels (including
-    4.7) are working fine with both CPUs.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-      I bisected the failure to this commit:
+#regzbot report:
+https://lore.kernel.org/all/9a880b2b-2a28-4647-9f0f-223f9976fdee@manjaro.org/
+#regzbot introduced: v6.7..v6.8
+#regzbot summary: i2c_hid_acpi: probe of i2c-XXX0001:00 failed with
+error -110
 
-      9b2f753ec23710aa32c0d837d2499db92fe9115b is the first bad commit
-      commit 9b2f753ec23710aa32c0d837d2499db92fe9115b
-      Author: Atish Patra <atish.patra@oracle.com>
-      Date:   Thu Sep 15 14:54:40 2016 -0600
+#regzbot report: https://lore.kernel.org/linux-nfs/ZfxJZFwXqqurfet0@aion/
+#regzbot fix: 6978bd6a913825
 
-      sparc64: Fix cpu_possible_mask if nr_cpus is set
+#regzbot report:
+https://lore.kernel.org/lkml/bbc242d5-3ab0-410f-a3b1-54a68e3e375f@roeck-us.net/
+#regzbot fix: mm: vmalloc: bail out early in find_vmap_area() if vmap is
+not init
 
-    This is a small change that reverts very easily on top of 5.18: there is
-    just one trivial conflict.  Once reverted, both CPUs work again.
-
-    Maybe this is related to the fact that the CPUs on this system are
-    numbered CPU0 and CPU2 (there is no CPU1)?
-
-The current code that adjust cpu_possible based on nr_cpu_ids do not
-take into account that CPU's may not come one after each other.
-Move the check to the function that setup the cpu_possible mask
-so there is no need to adjust it later.
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reported-by: Nick Bowler <nbowler@draconx.ca>
-Cc: Andreas Larsson <andreas@gaisler.com>
-Cc: "David S. Miller" <davem@davemloft.net>
----
- arch/sparc/include/asm/smp_64.h |  2 --
- arch/sparc/kernel/prom_64.c     |  4 +++-
- arch/sparc/kernel/setup_64.c    |  1 -
- arch/sparc/kernel/smp_64.c      | 14 --------------
- 4 files changed, 3 insertions(+), 18 deletions(-)
-
-diff --git a/arch/sparc/include/asm/smp_64.h b/arch/sparc/include/asm/smp_64.h
-index 505b6700805d..0964fede0b2c 100644
---- a/arch/sparc/include/asm/smp_64.h
-+++ b/arch/sparc/include/asm/smp_64.h
-@@ -47,7 +47,6 @@ void arch_send_call_function_ipi_mask(const struct cpumask *mask);
- int hard_smp_processor_id(void);
- #define raw_smp_processor_id() (current_thread_info()->cpu)
- 
--void smp_fill_in_cpu_possible_map(void);
- void smp_fill_in_sib_core_maps(void);
- void __noreturn cpu_play_dead(void);
- 
-@@ -77,7 +76,6 @@ void __cpu_die(unsigned int cpu);
- #define smp_fill_in_sib_core_maps() do { } while (0)
- #define smp_fetch_global_regs() do { } while (0)
- #define smp_fetch_global_pmu() do { } while (0)
--#define smp_fill_in_cpu_possible_map() do { } while (0)
- #define smp_init_cpu_poke() do { } while (0)
- #define scheduler_poke() do { } while (0)
- 
-diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
-index 998aa693d491..ba82884cb92a 100644
---- a/arch/sparc/kernel/prom_64.c
-+++ b/arch/sparc/kernel/prom_64.c
-@@ -483,7 +483,9 @@ static void *record_one_cpu(struct device_node *dp, int cpuid, int arg)
- 	ncpus_probed++;
- #ifdef CONFIG_SMP
- 	set_cpu_present(cpuid, true);
--	set_cpu_possible(cpuid, true);
-+
-+	if (num_possible_cpus() < nr_cpu_ids)
-+		set_cpu_possible(cpuid, true);
- #endif
- 	return NULL;
- }
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index 6a4797dec34b..6bbe8e394ad3 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -671,7 +671,6 @@ void __init setup_arch(char **cmdline_p)
- 
- 	paging_init();
- 	init_sparc64_elf_hwcap();
--	smp_fill_in_cpu_possible_map();
- 	/*
- 	 * Once the OF device tree and MDESC have been setup and nr_cpus has
- 	 * been parsed, we know the list of possible cpus.  Therefore we can
-diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
-index f3969a3600db..e50c38eba2b8 100644
---- a/arch/sparc/kernel/smp_64.c
-+++ b/arch/sparc/kernel/smp_64.c
-@@ -1220,20 +1220,6 @@ void __init smp_setup_processor_id(void)
- 		xcall_deliver_impl = hypervisor_xcall_deliver;
- }
- 
--void __init smp_fill_in_cpu_possible_map(void)
--{
--	int possible_cpus = num_possible_cpus();
--	int i;
--
--	if (possible_cpus > nr_cpu_ids)
--		possible_cpus = nr_cpu_ids;
--
--	for (i = 0; i < possible_cpus; i++)
--		set_cpu_possible(i, true);
--	for (; i < NR_CPUS; i++)
--		set_cpu_possible(i, false);
--}
--
- void smp_fill_in_sib_core_maps(void)
- {
- 	unsigned int i;
--- 
-2.34.1
-
+#regzbot report:
+https://lore.kernel.org/lkml/d84baa5d-a092-3647-8062-ed7081d329d4@draconx.ca/
+#regzbot fix: serial: core: Fix regression when runtime PM is not enabled
+#regzbot monitor:
+https://lore.kernel.org/linux-serial/20240325071649.27040-1-tony@atomide.com/
