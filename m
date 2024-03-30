@@ -1,59 +1,37 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6811313B58B
-	for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 20:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A315CE;
+	Sat, 30 Mar 2024 06:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711743071; cv=none; b=iuaBNTppwoNsSztj0WtHqe1cyBIOwHHRKgdUgi9oezDQbPc1Wo/zcM6jy+jds3xfeMwlDqtsjze5gEff1ODaKgtHHzamb+KfQZSPUU9SxJqZ0HZKLsqYaRUv8cSt2SrhF347vVnUa63/ScbU4WvZTZN5BrCzB93Nc1Cqz2sQ/V8=
+	t=1711781680; cv=none; b=HEGhAd5B/shieFcMg+Jus8J5n0dYiRs/yT8jtpORp50DOIgKfSY1K/ieM7pF9n9krqP8Bf31Dq86ea9fauhiFYRJjI7CEcWSP156VaZUXAGo5WWs3M2J4WuA2R4P9mgfkgSKnPxBB9hAdlnryhNxbEqFjaIseq5xytjJfnFQ2ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711743071; c=relaxed/simple;
-	bh=JFOQEXfKJj6L95cbNdEhqXmDor0VdRGOyQdHZQcmfBM=;
+	s=arc-20240116; t=1711781680; c=relaxed/simple;
+	bh=+ou0jJukvfoQwr+mDiPl4YAYu4nw/6Sg7nRXHQldpJU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZrS/ZFBEfAubrwCD7nLg+fPgrFZgQ+bBFVuUwBr3uMXvVIYO9RKqV9f+FQy9vxYqV1nnkSkyhkTfn+Az1gpZJwobwGOBQLuTOyM8Yu3B7l+IqcUuS2iUS4SjQTstY0+CU5plQgFoD64GTfhIV+in3hxTsbRE2MShm+Az0DJ/upY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=lA//TMqd; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
+	 In-Reply-To:Content-Type; b=ZmL5NhqOT75vvtOGpH6Cuc/7dTt/0ulDjQjszhQ17HRrHSpBPepSUoKoDoqjpnSq0cjJA4TYmceH8dyM20ffsLfoXl3AGSS9HHdq2xZUm89tu7P+auQFDd6umEsCQ62aVDuo1O215hVRMkhMsiR/LUABxc4l4RQ5UpXMBp0m5+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IOfhLqrZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="lA//TMqd"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-789db18e24eso145663385a.1
-        for <regressions@lists.linux.dev>; Fri, 29 Mar 2024 13:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1711743069; x=1712347869; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hLdrq5ApysJPOm9cC9+h8scwdpRx9Rxz159Ug4BYLkQ=;
-        b=lA//TMqdAvKUEo/1mKMPHn6NZh2hduhKcCpAVVqOXEXBAk82mXdtN5BXjoypg2GQ7r
-         MrcTlxxgrbR+5zOw3RDLo18PeGl1VOvt2oGVNO44pQN3D0vFxpigz/0iKmjGKL9cGyXs
-         dClig2oEs/LsdlbFaLwpTXmNUxORgScotV8gg8g15XgfkYPp5SCFv28BjsnKDc+gQDzX
-         pZjpolj0oUq98eiAfAU2n8Zs37icd2/xDwj4Yevozo3DFyxZVIBq0DA6f/0olIE58Rjx
-         3inO5+8p9Q760/cizoAv/aFXVY3NeOQM/H6XPwwokCzzQ92BfGqRLfxSSKxyzsiRPEWv
-         y0KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711743069; x=1712347869;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLdrq5ApysJPOm9cC9+h8scwdpRx9Rxz159Ug4BYLkQ=;
-        b=hJF1S0P40OwFQ+H4FlhBdaEMLNGpKHuWVK5MOLYWCPWY8dY2BjQERF3CRbgUosVd2C
-         s/8ntdIfV8fX45GqiAhvEQwQnUebyHSLxaZ0YB0vFW35rcX7mupL/pdee5EmA5uEJd18
-         5sTg1/hwCOE35qt596rA0s+K6hq+MfGLttD1fUKx3jODhXHxw+1jZDvwAEJeS/piT8CS
-         s7uHY54366HXM7kWbLac/dYuhqEd4/OOWcIsffevjNOEbHCMyBTs6g6YELK0YNt7la0q
-         IbWskdFTZYdsB77jO8qtnDPCgZO5RjjyUqWWfIHaDnz56G+oTlRe6C2TTdNDwOk/GTXN
-         rF/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVLqTBlbTDf+0hIepcv6ps3a3vgUFh52Ztn7sECwkaWGB+7Uw8AWRq9iu1+qvDCf30/Z4aw6u5AFNnaHn7tlnf5p0MNvtK9AJAB1so=
-X-Gm-Message-State: AOJu0YyD8j1E2Or7t+LeCb1YSO2ZDwlIQHagN6B77XlIdgNnqzKU48j/
-	lYynjLPXULS2IX7ItkEr4zAtFkQ+W6WEntXIlD5b9nCfioWkS7QJ4VkqURFxRNA=
-X-Google-Smtp-Source: AGHT+IF6m8gLB1IT6KnRdGCEpVEVEafj0Co9hKlODWBQcr9Sla0q1oME3n9YfdiX5aJhbEn2RLaxRg==
-X-Received: by 2002:a05:620a:224:b0:788:4891:53d0 with SMTP id u4-20020a05620a022400b00788489153d0mr3458538qkm.30.1711743069122;
-        Fri, 29 Mar 2024 13:11:09 -0700 (PDT)
-Received: from [192.168.0.51] (dhcp-24-53-241-2.cable.user.start.ca. [24.53.241.2])
-        by smtp.gmail.com with ESMTPSA id 10-20020a05620a04ca00b0078a6a010d81sm1600271qks.49.2024.03.29.13.11.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Mar 2024 13:11:08 -0700 (PDT)
-Message-ID: <a7c155ed-71fc-4ed9-a8c8-f98024b74651@draconx.ca>
-Date: Fri, 29 Mar 2024 16:11:06 -0400
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IOfhLqrZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=syQUrvl2dgCvGtizdT7QEDmhkcbW3zS6mu/xuvhkvtM=;
+	t=1711781677; x=1712213677; b=IOfhLqrZA72NhvaODwms+j/TUGDaktmxl7rIt5SzvR9XJCu
+	pRmxQdkS7iBWhBHdsqirH7B62wh+zyJbfyCTeYXSH/SeojvRfPpFrru+4GsB//utXfPcjT9/N1FA7
+	zo0/Lmfj9wohTFvOGOnoI3hLjuQVS/21I/N/8iZSgJruzG36OQxyqjTaz++t6zKwzHWNoqc2cgwVI
+	sQqwRDwHGGpb5NoEIaqb5UKkzDG7WLqRqKmHoRKgkKJZsGiv2huHdgtlRQAbw+az5z1RXLND21MOw
+	YlJxmuaerWzn/5POOGYp3reviF933SCDJA4b31uLO07v3FIHCfHniBxCmeGnLQTA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rqSbo-00030o-V8; Sat, 30 Mar 2024 07:54:33 +0100
+Message-ID: <29abd2f6-2de5-4a69-9113-61042c52f6bc@leemhuis.info>
+Date: Sat, 30 Mar 2024 07:54:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,42 +39,56 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
-Content-Language: en-US
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- sparclinux@vger.kernel.org, Andreas Larsson <andreas@gaisler.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
- <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
- <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
- <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
- <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
- <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
- <943c6d11-e214-43c8-8813-8e1aba6be15c@draconx.ca>
- <20240329094456.GA44268@ravnborg.org>
-From: Nick Bowler <nbowler@draconx.ca>
-In-Reply-To: <20240329094456.GA44268@ravnborg.org>
+Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
+ releases
+To: David McFarland <corngood@gmail.com>
+Cc: Chris Feng <chris.feng@mediatek.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+References: <20240318191153.6978-1-corngood@gmail.com>
+ <20240318191153.6978-2-corngood@gmail.com>
+ <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
+ <87bk6wlxpp.fsf@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87bk6wlxpp.fsf@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711781677;ddeb3204;
+X-HE-SMSGID: 1rqSbo-00030o-V8
 
-Hi Sam,
+On 29.03.24 19:06, David McFarland wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
+> 
+>> David, from here is looks like this is stalled for ten days now. Or was
+>> there some progress and I just missed it?
+> No, I've not seen any emails since your last.
 
-On 2024-03-29 05:44, Sam Ravnborg wrote:
-> I took a look at this and may have a fix. Could you try the following
-> patch. It builds - but I have not tested it.
+Thx for confirming.
 
-With this patch applied on top of 6.9-rc1, both CPUs appear to come up:
+>> From the cover letter[1] is sounds a lot like a "Fixes: 0c4cae1bc00d31
+>> ("PM: hibernate: Avoid missing wakeup events during hibernation")" would
+>> be appropriate here.
+> 
+> The specific behaviour I encountered (failure to hibernate) started with
+> that commit, but I think it just exposed the underlying behaviour (wake
+> on button release), which probably dates to when the driver was
+> introduced.
 
-  % cat /proc/cpuinfo 
-  [...]
-  ncpus probed	: 2
-  ncpus active	: 2
-  [...]
-  State:
-  CPU0:		online
-  CPU2:		online
+Well, it depends on the maintainer in question (so you might better want
+to ignore this advice!), but I'd say: mention that in the patch
+description and add Fixes: tag, to ensure people pick it up when the
+change that exposed the problem is backported.
 
-Thanks,
-  Nick
+This is hinted at in submitting-patches: "This tag also assists the
+stable kernel team in determining which stable kernel versions should
+receive your fix.". Maybe that text should mention scenario.
+
+Ciao, Thorsten
