@@ -1,231 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A67338DF1;
-	Sat, 30 Mar 2024 13:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C745137714;
+	Sat, 30 Mar 2024 14:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711806418; cv=none; b=juZik5Bo3fm9m1jKvwLH1o87B/SX7eozsFjUp0JZE1ct5QaanZkYhoAliIQztI5d2yYWHRh9DMiCtBAkj9lTD8eu9HwB5SydP1YPR9gjMO1kzPYc7gktTRsbYRphjrR4irA/Wg/hJhCdsLITXWh++Mhy6tfODLg5FsCiELT4baw=
+	t=1711810768; cv=none; b=hr6ZVuT1mPRz6gQKoxXHnZdRsMtQmTEkYIKYrAVpNFqp+vEDiW/84rYmUOPk+McH82MGs6gJYBSrCPnr3nQ4UxuczHPGMYp6y1AczUB8rljxzTp+D5KITbBgGm4hS9KD7AHtJQnO0MDKdw5shfvSnbjooilxQ4e5dEDN0T20KAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711806418; c=relaxed/simple;
-	bh=12eUH24Evzx0eCQ4eL4gtrmRZMuYkNV0sF0qoZdQEXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hjc01Kta3aksZuNQRlXrFqWUNFkg9lsEwwt3z14zQ1P4+pG3e7+6zdeu5Eu68YwhN2z5mZsrR/5V0YeqfNY7TfaRYiklS3QuE1G76LjxEQ4pvTbOoPZzaQDmEcy0S/Ia3nbrMqQz59pMudidLdZuvlrIzNEPuKLWVOSwwfXOgvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERrgVHsw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711810768; c=relaxed/simple;
+	bh=rZ8tdPh1C+hRTf8PLer5uxXElPXls2N8CqlXiFribAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i/yOWNo99Y8phvLoG13KqSPAG1kIz5nPGvS6aOzc50w0FgDqqWc90y5LhF1k6pCfur87YDZW3P9LshAU0F3jhY03nIar9b+NWPwyG9d8MF2ghQqrtyybHs8z6gOx/VPUteOMqpsRIVlbjfF7AcATDGCWPBm68q59mSHmIGTswfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iAh+n0oQ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERrgVHsw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5A2C433C7;
-	Sat, 30 Mar 2024 13:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711806417;
-	bh=12eUH24Evzx0eCQ4eL4gtrmRZMuYkNV0sF0qoZdQEXc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ERrgVHswUV6pqvGhHbMTzn4oCU+YAzaOxhif//9nUH7DGEgBQ8S255iMyvqxOW6x2
-	 qlfMTCsIZox9vHvTReZaO+v2V/geKSAkEFwNuf/klLDOheaXs1KI3XAO8jUg3SxZHQ
-	 kQOLxbeuOmG8AEgYhsiD2WGkWV1O8UJZVQkkrvatQwPwuMk7CNzPSjbbvfmsZYwcS7
-	 Y65mtAtbWO39qXzNxbJUgEcdYCZmsjdtDImlwq75/b61B4FcH7ZIyIeWx8RN46eAN+
-	 AXEaDR8QCHHNguF1vgatcDgNOdiUzJJWfIhBICz0L0/q7nUh9ct2k/mb5LtG1xnlbj
-	 moJt+V4xAPhyg==
-Date: Sat, 30 Mar 2024 08:46:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Linux NVMe <linux-nvme@lists.infradead.org>,
-	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>,
-	gloriouseggroll@gmail.com, Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: Fwd: Regression: Kernel 6.4 rc1 and higher causes Steam Deck to
- fail to wake from suspend (bisected)
-Message-ID: <20240330134655.GA1659153@bhelgaas>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iAh+n0oQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ZkD5ajmB6EjozrfKJAzN2VG60x9g0fXxfM+nKI7AEdo=;
+	t=1711810765; x=1712242765; b=iAh+n0oQcXBg7bwAUUS/CsjAaMIrT3XpLCgS+D1Pxiqsk9W
+	8brHSJjjf7ETVnAPwqxb1daxFaAY1R6fmJZtcxFwILzFuSFKv+sY6qR7X36zitq2ZuO23auRWDpCk
+	RnmtR9Iyl/G6PZvm37+M1bwxZRp7t191z52k+eoXm74Tr9gGwmM6oM7mY5HuHRqFsjoxft6HIwXll
+	ryng6/qv26fua9Ad3ryI4dGNEwmznYQE/TYHDwQQ44AM7Qnje6NCkI5OogQGJwGrkGSpL/s7GrrBN
+	+XUi+A4xXmkHDOu25m6QVa0nwku24MzIra49BUGppBkqDpz2bIQ+aLrkjpS/Nmtw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rqaB0-0001NX-O7; Sat, 30 Mar 2024 15:59:22 +0100
+Message-ID: <bf267566-c18c-4ad9-9263-8642ecfdef1f@leemhuis.info>
+Date: Sat, 30 Mar 2024 15:59:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231101114541.GA43502@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Bluetooth broken for some people with 6.8.2 [Was: [PATCH 6.8 308/715]
+ Bluetooth: hci_core: Cancel request on command timeout]
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240324223455.1342824-1-sashal@kernel.org>
+ <20240324223455.1342824-309-sashal@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20240324223455.1342824-309-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711810765;f882f0bc;
+X-HE-SMSGID: 1rqaB0-0001NX-O7
 
-[+cc Keith, Sagi, Hannes, Kai-Heng, +bcc silverspring from bugzilla]
-
-On Wed, Nov 01, 2023 at 06:45:41AM -0500, Bjorn Helgaas wrote:
-> On Tue, Oct 31, 2023 at 03:21:20PM +0700, Bagas Sanjaya wrote:
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
-> > 
-> > > On Kernel 6.4 rc1 and higher if you put the Steam Deck into
-> > > suspend then press the power button again it will not wake up. 
-> > > 
-> > > I don't have a clue as to -why- this commit breaks wake from
-> > > suspend on steam deck, but it does. Bisected to:
-> > > 
-> > > ```
-> > > 1ad11eafc63ac16e667853bee4273879226d2d1b is the first bad commit
-> > > commit 1ad11eafc63ac16e667853bee4273879226d2d1b
-> > > Author: Bjorn Helgaas <bhelgaas@google.com>
-> > > Date:   Tue Mar 7 14:32:43 2023 -0600
-> > > 
-> > >     nvme-pci: drop redundant pci_enable_pcie_error_reporting()
-> > >     
-> > >     pci_enable_pcie_error_reporting() enables the device to send ERR_*
-> > >     Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> > >     native"), the PCI core does this for all devices during enumeration, so the
-> > >     driver doesn't need to do it itself.
-> > >     
-> > >     Remove the redundant pci_enable_pcie_error_reporting() call from the
-> > >     driver.  Also remove the corresponding pci_disable_pcie_error_reporting()
-> > >     from the driver .remove() path.
-> > >     
-> > >     Note that this only controls ERR_* Messages from the device.  An ERR_*
-> > >     Message may cause the Root Port to generate an interrupt, depending on the
-> > >     AER Root Error Command register managed by the AER service driver.
-> > >     
-> > >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > >     Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-> > >     Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > 
-> > >  drivers/nvme/host/pci.c | 6 +-----
-> > >  1 file changed, 1 insertion(+), 5 deletions(-)
-> > > ```
-
-> > > Reverting that commit by itself on top of 6.5.9 (stable) allows
-> > > it to wake from suspend properly.
-
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+On 24.03.24 23:28, Sasha Levin wrote:
+> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 > 
-> Thanks, I requested some dmesg logs and lspci output to help debug
-> this.
+> [ Upstream commit 63298d6e752fc0ec7f5093860af8bc9f047b30c8 ]
+> 
+> If command has timed out call __hci_cmd_sync_cancel to notify the
+> hci_req since it will inevitably cause a timeout.
+> 
+> This also rework the code around __hci_cmd_sync_cancel since it was
+> wrongly assuming it needs to cancel timer as well, but sometimes the
+> timers have not been started or in fact they already had timed out in
+> which case they don't need to be cancel yet again.
+> 
+> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> Stable-dep-of: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-silverspring attached lspci output and a dmesg log from v6.8 to the
-bugzilla and also noted that "pci=noaer" works around the problem.
+Hey stable team, I wonder if it might be wise to pick up 1c3366abdbe884
+("Bluetooth: hci_sync: Fix not checking error on
+hci_cmd_sync_cancel_sync") from next
+(https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1c3366abdbe884)
+for the next releases of all series that a few days ago received
+63298d6e752fc0 ("Bluetooth: hci_core: Cancel request on command timeout").
 
-The problem commit is 1ad11eafc63a ("nvme-pci: drop redundant
-pci_enable_pcie_error_reporting()")
-(https://git.kernel.org/linus/1ad11eafc63a)
+The latter patch sadly on quite a few systems causes a Oops due to a
+NULL pointer dereference and breaks Bluetooth. This was reported for
+mainline here (yes, coincidentally it was reported by yours truly):
+https://lore.kernel.org/all/08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info/
 
-1ad11eafc63a removed pci_disable_pcie_error_reporting() from the
-nvme_suspend() path, so we now leave the PCIe Device Control error
-enables set when we didn't before.  My theory is that the PCIe link
-goes down during suspend, which causes an error interrupt, and the
-interrupt causes a problem on Steam Deck.  Maybe there's some BIOS
-connection.
+Now that the patch landed in 6.8.2 it seems to happen there as well
+(guess in 6.7 and others, too), as can be seen from this bug report
+where multiple people already joined:
+https://bugzilla.kernel.org/show_bug.cgi?id=218651
 
-"pci=noaer" would work around this because those error enables would
-never be set in the first place.
+The fix mentioned above is on the way to Linus, but due to unlucky
+timing missed this weeks network pull, hence will likely only reach
+mainline next Thursday. But the fix afaics has a stable commit id, so
+might be worth picking up soon for the stable releases to fix the
+regression quickly.
 
-I asked reporters to test the debug patches below to disable those
-error interrupts during suspend.
-
-I don't think this would be the *right* fix; if we need to do this, I
-think it should be done by the PCI core, not by individual drivers.
-Kai-Heng has been suggesting this for a while for a different
-scenario.
-
-Bjorn
-
-
-commit 60c07557d0cc ("Revert "PCI/AER: Drop unused pci_disable_pcie_error_reporting()"")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri Mar 29 17:54:30 2024 -0500
-
-    Revert "PCI/AER: Drop unused pci_disable_pcie_error_reporting()"
-    
-    This reverts commit 69b264df8a412820e98867dbab871c6526c5e5aa.
-
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ac6293c24976..273f9c6f93dd 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -243,6 +243,18 @@ static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- 	return pcibios_err_to_errno(rc);
- }
- 
-+int pci_disable_pcie_error_reporting(struct pci_dev *dev)
-+{
-+	int rc;
-+
-+	if (!pcie_aer_is_native(dev))
-+		return -EIO;
-+
-+	rc = pcie_capability_clear_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	return pcibios_err_to_errno(rc);
-+}
-+EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
-+
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 4b97f38f3fcf..425e5e430e65 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -40,9 +40,14 @@ struct aer_capability_regs {
- int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
- 
- #if defined(CONFIG_PCIEAER)
-+int pci_disable_pcie_error_reporting(struct pci_dev *dev);
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
- int pcie_aer_is_native(struct pci_dev *dev);
- #else
-+static inline int pci_disable_pcie_error_reporting(struct pci_dev *dev)
-+{
-+	return -EINVAL;
-+}
- static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- {
- 	return -EINVAL;
-commit 8efb88cf23d4 ("nvme-pci: disable error reporting in nvme_dev_disable()")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri Mar 29 17:52:39 2024 -0500
-
-    nvme-pci: disable error reporting in nvme_dev_disable()
-    
-    Debug patch.
-    
-    The PCI core enables error reporting in pci_aer_init() for all devices that
-    advertise AER support.
-    
-    During suspend, nvme_suspend() calls nvme_dev_disable() in several cases.
-    Prior to 1ad11eafc63a, nvme_dev_disable() disabled error reporting.
-    
-    After 1ad11eafc63a, error reporting will remain enabled during suspend.
-    Maybe having error reporting enabled during suspend causes a problem on
-    Steam Deck.
-    
-    "pci=noaer" prevents pci_aer_init() from enabling error reporting, so as
-    long as the BIOS doesn't enable it, error reporting should always be
-    disabled.
-    
-      nvme_suspend
-        nvme_disable_prepare_reset
-          nvme_dev_disable
-
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 8e0bb9692685..2be838b5d1f6 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/aer.h>
- #include <linux/async.h>
- #include <linux/blkdev.h>
- #include <linux/blk-mq.h>
-@@ -2603,8 +2604,10 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	nvme_suspend_io_queues(dev);
- 	nvme_suspend_queue(dev, 0);
- 	pci_free_irq_vectors(pdev);
--	if (pci_is_enabled(pdev))
-+	if (pci_is_enabled(pdev)) {
-+		pci_disable_pcie_error_reporting(pdev);
- 		pci_disable_device(pdev);
-+	}
- 	nvme_reap_pending_cqes(dev);
- 
- 	nvme_cancel_tagset(&dev->ctrl);
+Ciao, Thorsten
