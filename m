@@ -1,158 +1,173 @@
-Received: from gbr-app-1.alpinelinux.org (gbr-app-1.alpinelinux.org [213.219.36.190])
+Received: from mail.inka.de (quechua.inka.de [193.197.184.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7344C46436
-	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 15:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.219.36.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6324501C;
+	Mon,  1 Apr 2024 15:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.197.184.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711985260; cv=none; b=TEvnIDiqPCo900HS2wgTMmPfyRorLVIOxdG7xoCiEVuD7XTluQIRutddKzcgTkJlmfHSpN2gr5s6YG/B4yrxBpLDBTZhXRhImfM+5PMblBUYoEhsTWqk39P80nVpyDudALylqwxno5Gb0WdKxTJNo7oFEoepaok6V27a65Ef/Jk=
+	t=1711985810; cv=none; b=gRBoHAMRSppPND7vtpbIaneEUhLK51dposn1KRJ4MLMNhHBth3KGPLrpb7HrqiuZuBWMKKBM+AP5YaMn6ITRyafVJN1E+uTShjOXCTVhxB5MRLEjtOL/8qNBEERU4/i0KDt22JthRab30skQQcpu2WiW+un4dHAHfOnkOUw8M7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711985260; c=relaxed/simple;
-	bh=IXumSUCWEcxOebRu6c1bG6LiQip87HwwnASHg6ZJEjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rr16GrepieDZWKFbqK8bRlizvw05W3icoTXOp10RXJpNgre0Z1f6bovmhzp/pqj/eZpJJWFE69MWW71gixlSqh3ehYlLhcKMbYTP88xNDhbeBrfXEqKt8eHgqBcw7xaEo9qCv0lkEAypmxF/pi3Ykrb88gwrkQ5MAV3+u0AciY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org; spf=pass smtp.mailfrom=alpinelinux.org; dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b=sPJRUoCt; arc=none smtp.client-ip=213.219.36.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpinelinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpinelinux.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alpinelinux.org header.i=@alpinelinux.org header.b="sPJRUoCt"
-Received: from ncopa-desktop.lan (ti0056a400-4037.bb.online.no [85.167.238.210])
-	(Authenticated sender: ncopa@alpinelinux.org)
-	by gbr-app-1.alpinelinux.org (Postfix) with ESMTPSA id 9A4EA2258D6;
-	Mon,  1 Apr 2024 15:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alpinelinux.org;
-	s=smtp; t=1711985251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EbZD58z1sAwDWkRRamsCF5H1xsswpcXAj/U5NCBJMJk=;
-	b=sPJRUoCtJxBkzo1TMAIXuyD7WhrFnxik4mBvsq7xHxnEIiHz81kZ2yh3t/HyQh8SQXeBMg
-	3zOZY8RIaaye90ogxhfcvrwUDMrZABv2/v9fTzSly/NC2/8yLSMqaHJwWns3/Rb27Ms7IO
-	rEoiYark49mI6qtPcbqilt1VFKXYQD0=
-Date: Mon, 1 Apr 2024 17:27:27 +0200
-From: Natanael Copa <ncopa@alpinelinux.org>
-To: Greg Thelen <gthelen@google.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Greg KH <greg@kroah.com>, Viktor
- Malik <vmalik@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, Daniel Xu
- <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Regressions
- <regressions@lists.linux.dev>, Linux Stable <stable@vger.kernel.org>
-Subject: Re: stable kernels 6.6.23 and 6.1.83 fails to build: error: unknown
- type name 'u32'
-Message-ID: <20240401172727.08b65053@ncopa-desktop.lan>
-In-Reply-To: <CAHH2K0apZttqAhMZ9H_fygUC_Oa9G5-4XYmmqZu-EWNOuqc4Xg@mail.gmail.com>
-References: <ZgrAM4NjZQWZ2Jq6@archie.me>
-	<2024040143-shrimp-congress-8263@gregkh>
-	<ZgrD-XtaG9D8jFnA@archie.me>
-	<CAHH2K0apZttqAhMZ9H_fygUC_Oa9G5-4XYmmqZu-EWNOuqc4Xg@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-alpine-linux-musl)
+	s=arc-20240116; t=1711985810; c=relaxed/simple;
+	bh=4IkYm12Xm40qZ4Fx7s8GjYsSBQxNdQAXgH2rzdNq4sw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sq9OXk9HhAdw0/CvxN2/My5zO5MYx5opPuTt/L5NeduUVcYxhVPxra24P25/wJHKre0+lweM/fULtkECUHcXu5wpHak8/tu8kDXdmnWbTNv+srf9U8tVzQodX/tKjvQ8ieMEz+LAe/tRaX2YaQefYwvxYySTPXJSKqzt20Bi3QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de; spf=pass smtp.mailfrom=inka.de; arc=none smtp.client-ip=193.197.184.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inka.de
+Received: from mail.berkhan-weisser.de ([2a03:4000:54:b9a::4])
+	by mail.inka.de with esmtpsa 
+	id 1rrJiE-00ArAD-30; Mon, 01 Apr 2024 17:36:42 +0200
+Received: from 127.0.0.1 (helo=localhost.localdomain)
+	by mail.berkhan-weisser.de with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <Enrik.Berkhan@inka.de>)
+	id 1rrJiD-003wxe-30;
+	Mon, 01 Apr 2024 17:36:41 +0200
+Message-ID: <85837371eadac58dec812c0be14264152ee1e5fd.camel@inka.de>
+Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
+ releases
+From: Enrik Berkhan <Enrik.Berkhan@inka.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, David
+ McFarland <corngood@gmail.com>, Chris Feng <chris.feng@mediatek.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Alex Hung
+ <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,  LKML
+ <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Date: Mon, 01 Apr 2024 17:36:35 +0200
+In-Reply-To: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
+References: <20240318191153.6978-1-corngood@gmail.com>
+	 <20240318191153.6978-2-corngood@gmail.com>
+	 <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
+Autocrypt: addr=Enrik.Berkhan@inka.de; prefer-encrypt=mutual;
+ keydata=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
+ Dh1pYX8125Sys26JeDfnh3bnI=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 1 Apr 2024 07:36:08 -0700
-Greg Thelen <gthelen@google.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-> On Mon, Apr 1, 2024 at 7:26*AM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> >
-> > On Mon, Apr 01, 2024 at 04:15:25PM +0200, Greg KH wrote: =20
-> > > On Mon, Apr 01, 2024 at 09:09:55PM +0700, Bagas Sanjaya wrote: =20
-> > > > Hi,
-> > > >
-> > > > On Bugzilla, ncopa@alpinelinux.org reported resolve_btfids FTBFS re=
-gression
-> > > > on musl system [1]:
-> > > > =20
-> > > > > The latest releases fails to build with musl libc (Alpine Linux e=
-dge and v3.19):
-> > > > >
-> > > > > ```
-> > > > > rm -f -f /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/t=
-ools/bpf/resolve_btfids/libbpf/libbpf.a; ar rcs /home/ncopa/aports/main/lin=
-ux-lts/src/build-lts.x86_64/tool
-> > > > > s/bpf/resolve_btfids/libbpf/libbpf.a /home/ncopa/aports/main/linu=
-x-lts/src/build-lts.x86_64/tools/bpf/resolve_btfids/libbpf/staticobjs/libbp=
-f-in.o
-> > > > > In file included from main.c:73:
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:7:9: error: unknown type name 'u32'
-> > > > >     7 |         u32 cnt;
-> > > > >       |         ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:8:9: error: unknown type name 'u32'
-> > > > >     8 |         u32 ids[];
-> > > > >       |         ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:12:9: error: unknown type name 'u32'
-> > > > >    12 |         u32 cnt;
-> > > > >       |         ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:13:9: error: unknown type name 'u32'
-> > > > >    13 |         u32 flags;
-> > > > >       |         ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:15:17: error: unknown type name 'u32'
-> > > > >    15 |                 u32 id;
-> > > > >       |                 ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:16:17: error: unknown type name 'u32'
-> > > > >    16 |                 u32 flags;
-> > > > >       |                 ^~~
-> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/lin=
-ux/btf_ids.h:215:8: error: unknown type name 'u32'
-> > > > >   215 | extern u32 btf_tracing_ids[];
-> > > > >       |        ^~~
-> > > > > make[4]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/too=
-ls/build/Makefile.build:98: /home/ncopa/aports/main/linux-lts/src/build-lts=
-.x86_64/tools/bpf/resolve_btfids
-> > > > > /main.o] Error 1
-> > > > > make[4]: *** Waiting for unfinished jobs....
-> > > > > make[3]: *** [Makefile:83: /home/ncopa/aports/main/linux-lts/src/=
-build-lts.x86_64/tools/bpf/resolve_btfids//resolve_btfids-in.o] Error 2
-> > > > > make[2]: *** [Makefile:76: bpf/resolve_btfids] Error 2
-> > > > > make[1]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/Mak=
-efile:1354: tools/bpf/resolve_btfids] Error 2
-> > > > > make: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/Makefi=
-le:234: __sub-make] Error 2
-> > > > > ``` =20
-> > > >
-> > > > Bisection led to upstream commit 9707ac4fe2f5ba ("tools/resolve_btf=
-ids:
-> > > > Refactor set sorting with types from btf_ids.h") as the culprit.
-> > > >
-> > > > See the report on Bugzilla for the full thread and proposed fix. =20
-> > >
-> > > Is the proposed fix a commit to backport? =20
-> >
-> > Nope (see below).
-> > =20
-> > >
-> > > Digging through entries is not the easiest way to get things resolved=
-...
-> > > =20
-> >
-> > The reporter posted the fix as bug comment [1] instead (hint: include
-> > linux/types.h) but not submitted it to mailing lists first.
-> >
-> > Thanks.
-> >
-> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218647#c2
-> >
-> > --
-> > An old man doll... just what I always wanted! - Clara =20
+On Fri, 2024-03-29 at 14:51 +0100, Linux regression tracking (Thorsten
+Leemhuis) wrote:
+> [CCing Chris, who authored the culprit; also CCing the platform folks
+> and a few lists]
+
+(Intentionally replying to the "wrong" e-mail to get the enlarged
+recipient list for free ...)
+
 >=20
-> Does https://lore.kernel.org/all/20240328110103.28734-1-ncopa@alpinelinux=
-.org/
-> resolve this? It's staged in the bpf tree. Though I'm not sure when
-> it'll be merged upstream.
 
-Yes. this is the fix
+> Regarding the patch itself: hopefully this mail will get things
+> moving.
+>=20
+> [1]
+> https://lore.kernel.org/linux-pm/20240318191153.6978-1-corngood@gmail.com=
+/
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+> hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+> > Signed-off-by: David McFarland <corngood@gmail.com>
 
--nc
+Tested-by: Enrik Berkhan <Enrik.Berkhan@inka.de>
+
+> > > ---
+> > =C2=A0drivers/platform/x86/intel/hid.c | 8 +++++++-
+> > =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/hid.c
+> > b/drivers/platform/x86/intel/hid.c
+> > index 7457ca2b27a6..707de9895965 100644
+> > --- a/drivers/platform/x86/intel/hid.c
+> > +++ b/drivers/platform/x86/intel/hid.c
+> > @@ -504,6 +504,7 @@ static void notify_handler(acpi_handle handle,
+> > u32 event, void *context)
+> > =C2=A0	struct platform_device *device =3D context;
+> > =C2=A0	struct intel_hid_priv *priv =3D dev_get_drvdata(&device-
+> > >dev);
+> > =C2=A0	unsigned long long ev_index;
+> > +	struct key_entry *ke;
+> > =C2=A0	int err;
+> > =C2=A0
+> > =C2=A0	/*
+> > @@ -545,11 +546,16 @@ static void notify_handler(acpi_handle
+> > handle, u32 event, void *context)
+> > =C2=A0		if (event =3D=3D 0xc0 || !priv->array)
+> > =C2=A0			return;
+> > =C2=A0
+> > -		if (!sparse_keymap_entry_from_scancode(priv-
+> > >array, event)) {
+> > +		ke =3D sparse_keymap_entry_from_scancode(priv-
+> > >array, event);
+> > +
+> > +		if (!ke) {
+> > =C2=A0			dev_info(&device->dev, "unknown event
+> > 0x%x\n", event);
+> > =C2=A0			return;
+> > =C2=A0		}
+> > =C2=A0
+> > +		if (ke->type =3D=3D KE_IGNORE)
+> > +			return;
+> > +
+> > =C2=A0wakeup:
+> > =C2=A0		pm_wakeup_hard_event(&device->dev);
+> > =C2=A0
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCAAdFiEEbLyQBMI0qAWiF6l31AjqSkbLPKQFAmYK1IQACgkQ1AjqSkbL
+PKSUXwv/YWiU334Osus+niffw9gN94vCQid6OWuTIbX2zMNIunHmpHouMtfo6dpb
+7Qsyaz0sxaUEclRPLf/bSAV8zWromM/4Xoa/DoBq+GPOLle5wTJAlislhZVfDZFX
+FZ0EfUg+MvThqlJD8yhGNJWGVnSn92hDid7yy5Y/BSWTPCNhRxEsqy+d0pN82EnD
+0mqWnpfG28uqK6dtOLnvbiOuWQhgKYerKFYHXw8FLxZV0eKb3+RqBFf6ZdsAjUEC
++d7G9Oq4pc9jxZNvOMop+z3Eskd/bD8Wi2aDtR1qcRENMaK0ucevTuOjGL8Gh80c
+SbgKu2eU/qVlbnVrcaPgpB0CXXza7SYUynw5XWB8jBWOj6w2nxpnQPm5a0Z5aNYw
+/kLuabhSommEmUIJtoOA2vgO8D0ACfF2n95cNXaJRiOhuag3SRoair50TOzmf09Z
+4uco5iaWeIQwEpVFGdy+qh0V18kYclnNMZHC9bhO6heBDLB9Wy/iXDxko9tMXm/v
+XnfAKKw9
+=3DudJV
+-----END PGP SIGNATURE-----
