@@ -1,202 +1,143 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9603A3FBBD
-	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 15:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C46446AC;
+	Mon,  1 Apr 2024 16:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711986372; cv=none; b=C72+RD5d02E7Q6i+Ci3zqWipN6QmnADsJT9y/d0i0rMLU1zEK+Szu7j8zxSOdq5puwUggh6j5hljR7J/72bt8639fUG9hQXwwXxnib6Hv+IWT0ACH/F2m6KXC7ac4hL26XyPKo58+VZ3A9ld/mrPcfTB9aYGav8JufuhqYOcyXs=
+	t=1711988717; cv=none; b=FVgRhXUs7b0g160oZbpBS3aLFQVCzjuXrLtQcjJO4ShMK9DM53WCEAmDH7dgvQRW8Lqj7pScw9qPZST32K0khQIDKrldnRtFF8btHOC0mrAs0EIXOO2Y8qHja2ur+QgUkXcndBS8ymlan44hukg/GY5zYSKqvhcz+vPYg8HGTt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711986372; c=relaxed/simple;
-	bh=oJmSsv5xGOhFtnk+Xic/LQeUyvu+FYl2RG6Gz/YH/qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BypW1wWkb5KK/iVN7GmRyCeP3OrGarsIMyQMn0I79v8qU8OyoEwPB5Ly+qHZksAKVL4H8F5qPxFI91Z2498SK+0IDOh/LNjrDCpvCQnTTdJ8MCXtubJlm+0yZarmDtyiDYsJQXKCeVePWuHTEcfhT8gC9oX0ZL44yrp0eDokpDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=GEwJij2p; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1711988717; c=relaxed/simple;
+	bh=buDAD1XiVbMMNDOJxpslMhg3x/gVnt6LMMX8xAH6dI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ntswYfOsa8wBgxenn4+EZaRgrulZ1lXPXWfoTOMfpgADE+FXVDTEH12k9F9kd1bmcGbTsMGBEt0UEGh9QgSEAt7P4HIMLRzoxXM8PkAnDXDCWIb8tzCR6P3gnJ+w5Mrt3BKcQXrPvcpseFvig0T2DGIDDSqDdzEKDWWeuKtFf8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bNswvILM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="GEwJij2p"
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431C2Qwp021586;
-	Mon, 1 Apr 2024 15:16:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=BirW+UIBY1HR4YTM1gaQXYTvu6fujR94JXCjW3QUDQg=;
- b=GEwJij2p2LTOrxopReL8DU9Uy/7sy1wneW3c+CHkmpffhuqrxvIw0/uECwm9v7v14/FA
- bDcOq1fxAwFLH12Q4xpR9xznDMPXyNvSd5sZaSZuSJpRYXRvGcC6SJHDNA6AYBXDMhst
- Q0D/3o9wYgN0YWjmloPRfaSS4JHBoZAEEK0W0eolKTk2GqQmq+Jv7eTVrOsW6ImZYH26
- 8s8S2q17mb/GsW3FgG4PWlm0hGTbia4mV53/2M26H1yw4ID8G7OZh7/tv+tOtbHwMG5L
- /rGKk/kBeXB008JuXMXNxL+iVo28sREMso0JBrgVex86XiCaLRbEkcHX9tKpzmrKegIF 3w== 
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3x7s8gauu3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 15:16:26 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 63B281379E;
-	Mon,  1 Apr 2024 15:16:15 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id EA89E80360A;
-	Mon,  1 Apr 2024 15:15:59 +0000 (UTC)
-Date: Mon, 1 Apr 2024 10:15:57 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Russ Anderson <rja@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-Message-ID: <ZgrPrZqAXeq7e_wh@swahl-home.5wahls.com>
-References: <20240322162135.3984233-1-steve.wahl@hpe.com>
- <ZgABC1oQ9YJW6Bw3@gmail.com>
- <20240325020334.GA10309@hpe.com>
- <87o7b273p2.fsf@email.froward.int.ebiederm.org>
- <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
- <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
- <ZgQ8Ej-MLlNJR6wn@swahl-home.5wahls.com>
- <87zfuj2bgh.fsf@email.froward.int.ebiederm.org>
- <ZgWO5I_p8zHyp3en@swahl-home.5wahls.com>
- <87msqf12sy.fsf@email.froward.int.ebiederm.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bNswvILM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 811C8C433F1;
+	Mon,  1 Apr 2024 16:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711988717;
+	bh=buDAD1XiVbMMNDOJxpslMhg3x/gVnt6LMMX8xAH6dI4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bNswvILMkN88eWfSE+tqe0G3ZAkNOmKuNA3Z/M0blLkM7WwMPey6cJJ8uZKGGI4ue
+	 jo+sGN2iKBr8T4kXuMOSYeacONaPpvIy5OZBrD2F9z+xOZ1EeDPOtFwO5eojUgFfre
+	 C3FXwl+nq69pTv0CvMMLIw6oF+QBxqW8jcHVbE4o=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	regressions@lists.linux.dev,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 6.7 268/432] misc: lis3lv02d_i2c: Fix regulators getting en-/dis-abled twice on suspend/resume
+Date: Mon,  1 Apr 2024 17:44:15 +0200
+Message-ID: <20240401152601.150862272@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240401152553.125349965@linuxfoundation.org>
+References: <20240401152553.125349965@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87msqf12sy.fsf@email.froward.int.ebiederm.org>
-X-Proofpoint-ORIG-GUID: SldB7dXPKExcbOG7DIQQKbrxLxnGuLBX
-X-Proofpoint-GUID: SldB7dXPKExcbOG7DIQQKbrxLxnGuLBX
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_10,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 adultscore=0
- malwarescore=0 clxscore=1015 bulkscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404010108
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 30, 2024 at 10:46:21PM -0500, Eric W. Biederman wrote:
-> Steve Wahl <steve.wahl@hpe.com> writes:
-> 
-> > On Thu, Mar 28, 2024 at 12:05:02AM -0500, Eric W. Biederman wrote:
-> >> 
-> >> From my perspective the entire reason for wanting to be fine grained and
-> >> precise in the kernel memory map is because the UV systems don't have
-> >> enough MTRRs.  So you have to depend upon the cache-ability attributes
-> >> for specific addresses of memory coming from the page tables instead of
-> >> from the MTRRs.
-> >
-> > It would be more accurate to say we depend upon the addresses not
-> > being listed in the page tables at all.  We'd be OK with mapped but
-> > not accessed, if it weren't for processor speculation.  There's no "no
-> > access" setting within the existing MTRR definitions, though there may
-> > be a setting that would rein in processor speculation enough to make
-> > due.
-> 
-> The uncached setting and the write-combining settings that are used for
-> I/O are required to disable speculation for any regions so marked.  Any
-> reads or writes to a memory mapped I/O region can result in hardware
-> with processing it as a command.  Which as I understand it is exactly
-> the problem with UV systems.
-> 
-> Frankly not mapping an I/O region (in an identity mapped page table)
-> instead of properly mapping it as it would need to be mapped for
-> performing I/O seems like a bit of a bug.
-> 
-> >> If you had enough MTRRs more defining the page tables to be precisely
-> >> what is necessary would be simply an exercise in reducing kernel
-> >> performance, because it is more efficient in both page table size, and
-> >> in TLB usage to use 1GB pages instead of whatever smaller pages you have
-> >> to use for oddball regions.
-> >> 
-> >> For systems without enough MTRRs the small performance hit in paging
-> >> performance is the necessary trade off.
-> >> 
-> >> At least that is my perspective.  Does that make sense?
-> >
-> > I think I'm begining to get your perspective.  From your point of
-> > view, is kexec failing with "nogbpages" set a bug?  My point of view
-> > is it likely is.  I think your view would say it isn't?
-> 
-> I would say it is a bug.
-> 
-> Part of the bug is someone yet again taking something simple that
-> kexec is doing and reworking it to use generic code, then changing
-> the generic code to do something different from what kexec needs
-> and then being surprised that kexec stops working.
-> 
-> The interface kexec wants to provide to whatever is being loaded is not
-> having to think about page tables until that software is up far enough
-> to enable their own page tables.
-> 
-> People being clever and enabling just enough pages in the page  tables
-> to work based upon the results of some buggy (they are always buggy some
-> are just less so than others) boot up firmware is where I get concerned.
-> 
-> Said another way the point is to build an identity mapped page table.
-> Skipping some parts of the physical<->virtual identity because we seem
-> to think no one will use it is likely a bug.
+6.7-stable review patch.  If anyone has any objections, please let me know.
 
-Hmm.  I would think what's needed for kexec is to create, as nearly as
-possible, identical conditions to what the BIOS / bootloader provides
-when jumping to the kernel entry point.  Whatever agreements are set
-on entry to the kernel, kexec needs to match.
+------------------
 
-And I think you want a completely identity mapped table to match those
-entry point requirements, that's why on other platforms, the condition
-is MMU turned off.
+From: Hans de Goede <hdegoede@redhat.com>
 
-From that point of view, it does make sense to special case UV systems
-for this.  The restricted areas we're talking about are not in the map
-when the bootloader is started on the UV platform.
+commit ac3e0384073b2408d6cb0d972fee9fcc3776053d upstream.
 
-> I really don't see any point in putting holes in such a page table for
-> any address below the highest address that is good for something.  Given
-> that on some systems the MTRRs are insufficient to do there job it
-> definitely makes sense to not enable caching on areas that we don't
-> think are memory.
+When not configured for wakeup lis3lv02d_i2c_suspend() will call
+lis3lv02d_poweroff() even if the device has already been turned off
+by the runtime-suspend handler and if configured for wakeup and
+the device is runtime-suspended at this point then it is not turned
+back on to serve as a wakeup source.
 
-Well, on the UV platform, these addresses are *not* good for
-something, at least from any processor's point of view, nor any IO
-device (they are not allowed to appear in any DMA or PCI bus master
-transaction, either).  A hardware ASIC is using this portion of local
-RAM to hold some tables that are too large to put directly on the
-ASIC.  Things turn ugly if anyone else tries to access these
-addresses.
+Before commit b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting
+of the reg_ctrl callback"), lis3lv02d_poweroff() failed to disable
+the regulators which as a side effect made calling poweroff() twice ok.
 
-In another message, Pavin thanked you for you work on kexec.  I'd like
-to express my appreciation also.  In my current job, I'm mostly
-focused on its use for kdump kernels.  I've been dealing with kernel
-crash dumps since running Unix on i386 machines, and always had do
-deal with "OK, but what if the kernel state gets corrupt enough that
-the disk driver won't work, or network if you're trying to do a remote
-dump."  The use of kexec to start a fresh instance of the kernel is an
-excelent way to solve that problem, in my opinion.  And a couple of
-jobs ago we were able to use it to restart a SAN switch after software
-upgrade, without needing to stop forwarding traffic, which wouldn't
-have been possible without kexec.
+Now that poweroff() correctly disables the regulators, doing this twice
+triggers a WARN() in the regulator core:
 
-Thanks,
+unbalanced disables for regulator-dummy
+WARNING: CPU: 1 PID: 92 at drivers/regulator/core.c:2999 _regulator_disable
+...
 
---> Steve Wahl
+Fix lis3lv02d_i2c_suspend() to not call poweroff() a second time if
+already runtime-suspended and add a poweron() call when necessary to
+make wakeup work.
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+lis3lv02d_i2c_resume() has similar issues, with an added weirness that
+it always powers on the device if it is runtime suspended, after which
+the first runtime-resume will call poweron() again, causing the enabled
+count for the regulator to increase by 1 every suspend/resume. These
+unbalanced regulator_enable() calls cause the regulator to never
+be turned off and trigger the following WARN() on driver unbind:
+
+WARNING: CPU: 1 PID: 1724 at drivers/regulator/core.c:2396 _regulator_put
+
+Fix this by making lis3lv02d_i2c_resume() mirror the new suspend().
+
+Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de> # Dell XPS 15 7590
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Link: https://lore.kernel.org/r/20240220190035.53402-1-hdegoede@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+--- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+@@ -198,8 +198,14 @@ static int lis3lv02d_i2c_suspend(struct
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
++	/* Turn on for wakeup if turned off by runtime suspend */
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweron(lis3);
++	/* For non wakeup turn off if not already turned off by runtime suspend */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweroff(lis3);
++
+ 	return 0;
+ }
+ 
+@@ -208,13 +214,12 @@ static int lis3lv02d_i2c_resume(struct d
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+ 
+-	/*
+-	 * pm_runtime documentation says that devices should always
+-	 * be powered on at resume. Pm_runtime turns them off after system
+-	 * wide resume is complete.
+-	 */
+-	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
+-		pm_runtime_suspended(dev))
++	/* Turn back off if turned on for wakeup and runtime suspended*/
++	if (lis3->pdata && lis3->pdata->wakeup_flags) {
++		if (pm_runtime_suspended(dev))
++			lis3lv02d_poweroff(lis3);
++	/* For non wakeup turn back on if not runtime suspended */
++	} else if (!pm_runtime_suspended(dev))
+ 		lis3lv02d_poweron(lis3);
+ 
+ 	return 0;
+
+
