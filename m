@@ -1,173 +1,202 @@
-Received: from mail.inka.de (quechua.inka.de [193.197.184.2])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6324501C;
-	Mon,  1 Apr 2024 15:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.197.184.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9603A3FBBD
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 15:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711985810; cv=none; b=gRBoHAMRSppPND7vtpbIaneEUhLK51dposn1KRJ4MLMNhHBth3KGPLrpb7HrqiuZuBWMKKBM+AP5YaMn6ITRyafVJN1E+uTShjOXCTVhxB5MRLEjtOL/8qNBEERU4/i0KDt22JthRab30skQQcpu2WiW+un4dHAHfOnkOUw8M7E=
+	t=1711986372; cv=none; b=C72+RD5d02E7Q6i+Ci3zqWipN6QmnADsJT9y/d0i0rMLU1zEK+Szu7j8zxSOdq5puwUggh6j5hljR7J/72bt8639fUG9hQXwwXxnib6Hv+IWT0ACH/F2m6KXC7ac4hL26XyPKo58+VZ3A9ld/mrPcfTB9aYGav8JufuhqYOcyXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711985810; c=relaxed/simple;
-	bh=4IkYm12Xm40qZ4Fx7s8GjYsSBQxNdQAXgH2rzdNq4sw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sq9OXk9HhAdw0/CvxN2/My5zO5MYx5opPuTt/L5NeduUVcYxhVPxra24P25/wJHKre0+lweM/fULtkECUHcXu5wpHak8/tu8kDXdmnWbTNv+srf9U8tVzQodX/tKjvQ8ieMEz+LAe/tRaX2YaQefYwvxYySTPXJSKqzt20Bi3QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de; spf=pass smtp.mailfrom=inka.de; arc=none smtp.client-ip=193.197.184.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inka.de
-Received: from mail.berkhan-weisser.de ([2a03:4000:54:b9a::4])
-	by mail.inka.de with esmtpsa 
-	id 1rrJiE-00ArAD-30; Mon, 01 Apr 2024 17:36:42 +0200
-Received: from 127.0.0.1 (helo=localhost.localdomain)
-	by mail.berkhan-weisser.de with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <Enrik.Berkhan@inka.de>)
-	id 1rrJiD-003wxe-30;
-	Mon, 01 Apr 2024 17:36:41 +0200
-Message-ID: <85837371eadac58dec812c0be14264152ee1e5fd.camel@inka.de>
-Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
- releases
-From: Enrik Berkhan <Enrik.Berkhan@inka.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, David
- McFarland <corngood@gmail.com>, Chris Feng <chris.feng@mediatek.com>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Alex Hung
- <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,  LKML
- <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Date: Mon, 01 Apr 2024 17:36:35 +0200
-In-Reply-To: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-References: <20240318191153.6978-1-corngood@gmail.com>
-	 <20240318191153.6978-2-corngood@gmail.com>
-	 <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-Autocrypt: addr=Enrik.Berkhan@inka.de; prefer-encrypt=mutual;
- keydata=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
- Dh1pYX8125Sys26JeDfnh3bnI=
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.0 
+	s=arc-20240116; t=1711986372; c=relaxed/simple;
+	bh=oJmSsv5xGOhFtnk+Xic/LQeUyvu+FYl2RG6Gz/YH/qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BypW1wWkb5KK/iVN7GmRyCeP3OrGarsIMyQMn0I79v8qU8OyoEwPB5Ly+qHZksAKVL4H8F5qPxFI91Z2498SK+0IDOh/LNjrDCpvCQnTTdJ8MCXtubJlm+0yZarmDtyiDYsJQXKCeVePWuHTEcfhT8gC9oX0ZL44yrp0eDokpDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=GEwJij2p; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="GEwJij2p"
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431C2Qwp021586;
+	Mon, 1 Apr 2024 15:16:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=BirW+UIBY1HR4YTM1gaQXYTvu6fujR94JXCjW3QUDQg=;
+ b=GEwJij2p2LTOrxopReL8DU9Uy/7sy1wneW3c+CHkmpffhuqrxvIw0/uECwm9v7v14/FA
+ bDcOq1fxAwFLH12Q4xpR9xznDMPXyNvSd5sZaSZuSJpRYXRvGcC6SJHDNA6AYBXDMhst
+ Q0D/3o9wYgN0YWjmloPRfaSS4JHBoZAEEK0W0eolKTk2GqQmq+Jv7eTVrOsW6ImZYH26
+ 8s8S2q17mb/GsW3FgG4PWlm0hGTbia4mV53/2M26H1yw4ID8G7OZh7/tv+tOtbHwMG5L
+ /rGKk/kBeXB008JuXMXNxL+iVo28sREMso0JBrgVex86XiCaLRbEkcHX9tKpzmrKegIF 3w== 
+Received: from p1lg14878.it.hpe.com ([16.230.97.204])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3x7s8gauu3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 15:16:26 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 63B281379E;
+	Mon,  1 Apr 2024 15:16:15 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id EA89E80360A;
+	Mon,  1 Apr 2024 15:15:59 +0000 (UTC)
+Date: Mon, 1 Apr 2024 10:15:57 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Russ Anderson <rja@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
+        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
+        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
+        Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
+ except on UV platform.
+Message-ID: <ZgrPrZqAXeq7e_wh@swahl-home.5wahls.com>
+References: <20240322162135.3984233-1-steve.wahl@hpe.com>
+ <ZgABC1oQ9YJW6Bw3@gmail.com>
+ <20240325020334.GA10309@hpe.com>
+ <87o7b273p2.fsf@email.froward.int.ebiederm.org>
+ <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
+ <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
+ <ZgQ8Ej-MLlNJR6wn@swahl-home.5wahls.com>
+ <87zfuj2bgh.fsf@email.froward.int.ebiederm.org>
+ <ZgWO5I_p8zHyp3en@swahl-home.5wahls.com>
+ <87msqf12sy.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87msqf12sy.fsf@email.froward.int.ebiederm.org>
+X-Proofpoint-ORIG-GUID: SldB7dXPKExcbOG7DIQQKbrxLxnGuLBX
+X-Proofpoint-GUID: SldB7dXPKExcbOG7DIQQKbrxLxnGuLBX
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_10,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 suspectscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2404010108
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On Sat, Mar 30, 2024 at 10:46:21PM -0500, Eric W. Biederman wrote:
+> Steve Wahl <steve.wahl@hpe.com> writes:
+> 
+> > On Thu, Mar 28, 2024 at 12:05:02AM -0500, Eric W. Biederman wrote:
+> >> 
+> >> From my perspective the entire reason for wanting to be fine grained and
+> >> precise in the kernel memory map is because the UV systems don't have
+> >> enough MTRRs.  So you have to depend upon the cache-ability attributes
+> >> for specific addresses of memory coming from the page tables instead of
+> >> from the MTRRs.
+> >
+> > It would be more accurate to say we depend upon the addresses not
+> > being listed in the page tables at all.  We'd be OK with mapped but
+> > not accessed, if it weren't for processor speculation.  There's no "no
+> > access" setting within the existing MTRR definitions, though there may
+> > be a setting that would rein in processor speculation enough to make
+> > due.
+> 
+> The uncached setting and the write-combining settings that are used for
+> I/O are required to disable speculation for any regions so marked.  Any
+> reads or writes to a memory mapped I/O region can result in hardware
+> with processing it as a command.  Which as I understand it is exactly
+> the problem with UV systems.
+> 
+> Frankly not mapping an I/O region (in an identity mapped page table)
+> instead of properly mapping it as it would need to be mapped for
+> performing I/O seems like a bit of a bug.
+> 
+> >> If you had enough MTRRs more defining the page tables to be precisely
+> >> what is necessary would be simply an exercise in reducing kernel
+> >> performance, because it is more efficient in both page table size, and
+> >> in TLB usage to use 1GB pages instead of whatever smaller pages you have
+> >> to use for oddball regions.
+> >> 
+> >> For systems without enough MTRRs the small performance hit in paging
+> >> performance is the necessary trade off.
+> >> 
+> >> At least that is my perspective.  Does that make sense?
+> >
+> > I think I'm begining to get your perspective.  From your point of
+> > view, is kexec failing with "nogbpages" set a bug?  My point of view
+> > is it likely is.  I think your view would say it isn't?
+> 
+> I would say it is a bug.
+> 
+> Part of the bug is someone yet again taking something simple that
+> kexec is doing and reworking it to use generic code, then changing
+> the generic code to do something different from what kexec needs
+> and then being surprised that kexec stops working.
+> 
+> The interface kexec wants to provide to whatever is being loaded is not
+> having to think about page tables until that software is up far enough
+> to enable their own page tables.
+> 
+> People being clever and enabling just enough pages in the page  tables
+> to work based upon the results of some buggy (they are always buggy some
+> are just less so than others) boot up firmware is where I get concerned.
+> 
+> Said another way the point is to build an identity mapped page table.
+> Skipping some parts of the physical<->virtual identity because we seem
+> to think no one will use it is likely a bug.
 
-On Fri, 2024-03-29 at 14:51 +0100, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> [CCing Chris, who authored the culprit; also CCing the platform folks
-> and a few lists]
+Hmm.  I would think what's needed for kexec is to create, as nearly as
+possible, identical conditions to what the BIOS / bootloader provides
+when jumping to the kernel entry point.  Whatever agreements are set
+on entry to the kernel, kexec needs to match.
 
-(Intentionally replying to the "wrong" e-mail to get the enlarged
-recipient list for free ...)
+And I think you want a completely identity mapped table to match those
+entry point requirements, that's why on other platforms, the condition
+is MMU turned off.
 
->=20
+From that point of view, it does make sense to special case UV systems
+for this.  The restricted areas we're talking about are not in the map
+when the bootloader is started on the UV platform.
 
-> Regarding the patch itself: hopefully this mail will get things
-> moving.
->=20
-> [1]
-> https://lore.kernel.org/linux-pm/20240318191153.6978-1-corngood@gmail.com=
-/
->=20
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
-> hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
-> #regzbot poke
->=20
-> > Signed-off-by: David McFarland <corngood@gmail.com>
+> I really don't see any point in putting holes in such a page table for
+> any address below the highest address that is good for something.  Given
+> that on some systems the MTRRs are insufficient to do there job it
+> definitely makes sense to not enable caching on areas that we don't
+> think are memory.
 
-Tested-by: Enrik Berkhan <Enrik.Berkhan@inka.de>
+Well, on the UV platform, these addresses are *not* good for
+something, at least from any processor's point of view, nor any IO
+device (they are not allowed to appear in any DMA or PCI bus master
+transaction, either).  A hardware ASIC is using this portion of local
+RAM to hold some tables that are too large to put directly on the
+ASIC.  Things turn ugly if anyone else tries to access these
+addresses.
 
-> > > ---
-> > =C2=A0drivers/platform/x86/intel/hid.c | 8 +++++++-
-> > =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/hid.c
-> > b/drivers/platform/x86/intel/hid.c
-> > index 7457ca2b27a6..707de9895965 100644
-> > --- a/drivers/platform/x86/intel/hid.c
-> > +++ b/drivers/platform/x86/intel/hid.c
-> > @@ -504,6 +504,7 @@ static void notify_handler(acpi_handle handle,
-> > u32 event, void *context)
-> > =C2=A0	struct platform_device *device =3D context;
-> > =C2=A0	struct intel_hid_priv *priv =3D dev_get_drvdata(&device-
-> > >dev);
-> > =C2=A0	unsigned long long ev_index;
-> > +	struct key_entry *ke;
-> > =C2=A0	int err;
-> > =C2=A0
-> > =C2=A0	/*
-> > @@ -545,11 +546,16 @@ static void notify_handler(acpi_handle
-> > handle, u32 event, void *context)
-> > =C2=A0		if (event =3D=3D 0xc0 || !priv->array)
-> > =C2=A0			return;
-> > =C2=A0
-> > -		if (!sparse_keymap_entry_from_scancode(priv-
-> > >array, event)) {
-> > +		ke =3D sparse_keymap_entry_from_scancode(priv-
-> > >array, event);
-> > +
-> > +		if (!ke) {
-> > =C2=A0			dev_info(&device->dev, "unknown event
-> > 0x%x\n", event);
-> > =C2=A0			return;
-> > =C2=A0		}
-> > =C2=A0
-> > +		if (ke->type =3D=3D KE_IGNORE)
-> > +			return;
-> > +
-> > =C2=A0wakeup:
-> > =C2=A0		pm_wakeup_hard_event(&device->dev);
-> > =C2=A0
+In another message, Pavin thanked you for you work on kexec.  I'd like
+to express my appreciation also.  In my current job, I'm mostly
+focused on its use for kdump kernels.  I've been dealing with kernel
+crash dumps since running Unix on i386 machines, and always had do
+deal with "OK, but what if the kernel state gets corrupt enough that
+the disk driver won't work, or network if you're trying to do a remote
+dump."  The use of kexec to start a fresh instance of the kernel is an
+excelent way to solve that problem, in my opinion.  And a couple of
+jobs ago we were able to use it to restart a SAN switch after software
+upgrade, without needing to stop forwarding traffic, which wouldn't
+have been possible without kexec.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQGzBAEBCAAdFiEEbLyQBMI0qAWiF6l31AjqSkbLPKQFAmYK1IQACgkQ1AjqSkbL
-PKSUXwv/YWiU334Osus+niffw9gN94vCQid6OWuTIbX2zMNIunHmpHouMtfo6dpb
-7Qsyaz0sxaUEclRPLf/bSAV8zWromM/4Xoa/DoBq+GPOLle5wTJAlislhZVfDZFX
-FZ0EfUg+MvThqlJD8yhGNJWGVnSn92hDid7yy5Y/BSWTPCNhRxEsqy+d0pN82EnD
-0mqWnpfG28uqK6dtOLnvbiOuWQhgKYerKFYHXw8FLxZV0eKb3+RqBFf6ZdsAjUEC
-+d7G9Oq4pc9jxZNvOMop+z3Eskd/bD8Wi2aDtR1qcRENMaK0ucevTuOjGL8Gh80c
-SbgKu2eU/qVlbnVrcaPgpB0CXXza7SYUynw5XWB8jBWOj6w2nxpnQPm5a0Z5aNYw
-/kLuabhSommEmUIJtoOA2vgO8D0ACfF2n95cNXaJRiOhuag3SRoair50TOzmf09Z
-4uco5iaWeIQwEpVFGdy+qh0V18kYclnNMZHC9bhO6heBDLB9Wy/iXDxko9tMXm/v
-XnfAKKw9
-=3DudJV
------END PGP SIGNATURE-----
+--> Steve Wahl
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
