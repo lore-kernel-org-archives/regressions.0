@@ -1,59 +1,91 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1562F481C6;
-	Mon,  1 Apr 2024 17:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711992925; cv=none; b=WxnwWIKiSnQqWDj0ISNIeqoglnB3ZBPCzVa4onoqaLhG04PbdIAvCg1PZRrRnXXizTzeUV8+LSBalTIi/7BK2jsMUnufR9BudwZ/K+shG1ALXdhdZZkHsw5DebDkvQ4XaKrVrfLS628MFDG1KZzzJ059ClkD3i759bjSwS1t4HA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711992925; c=relaxed/simple;
-	bh=/gd/IDUDM2QAMzVDFtOTXs1+3awZOO9qC8xtxmt8JT4=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=bkzSINljY0CwRL+rhvjblSAUkluEEy/huLTZZ5cCSUoruAUkS0FJLsQ08l4MOi1JAmdGn2DQrQinKodyiiEUoJ+1gCk1Pf0kfMuise6PSapjBfjhwMZgmvc12mOomXdeAxf0sODYROTDrIFhjfhkVjI/ryUVmjZcDQKR8CXa8i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b=dzMlTCzL; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A114D59F
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 17:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711993917; cv=fail; b=sRcclYfUVynb64n4kF1A/8W+uUC8eNFi9TdddqV17ls4k5eEKTbiBE54A7YgqyK6HWCCLvXLIhZm8PaKlXUrtQC73tq6qjKaZdLQfNOIM2gga2sCA3DgvArWMtZRBazs/KjqyErEIkz0oUfIkc+ahYuLixnYb1OYnLG3cqEpd1s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711993917; c=relaxed/simple;
+	bh=twPsY1L8ZXewI75VDuxoA+Q2QiUI3PUygZE0pEaIOvA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gNepFx55HQ46ywRM2GM5elIIjSj+WATdkXrrpzIAbb2qqO1gitgBzpvUAol7jME1ZP9F6IbEpyeIYURXBwdodDcrFv1QzVjkkc670l0qeYQjLg0Sp5vi7r+yPR2Qg73wOLmbFhjZ096e3UvQ2JhY4Zr2u/3Umhm8fETlkSQCF0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=anH4dv4W; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=f+Bk5Mcy; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=scpcom@gmx.de header.b="dzMlTCzL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711992900; x=1712597700; i=scpcom@gmx.de;
-	bh=BRM8MxPwi3d472uvoCEaL5F5lAKEmhzYRMik63wqMOs=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=dzMlTCzLTT0ANeL1LRK0AVcjw2p5TlJLSNJvGwP7aBaf5uzJr9y5jCjDtXsB7NTB
-	 HIcgApvedObbm8j8Zq+sNAl6GG/anB41bFuEQCcPzwH0i/RMUEKadFUCL7hRVHMWZ
-	 qXhzRBjxu35C+SJIVj3CmgtQTPCXyZTusz7GkBYM9yyok3nP91CkPLuwxqneVmYA0
-	 gdzrD+Jrnq9/eUHufzLJVd19ymAK8fY8MKeG7TcYm2FWM+acp5/nNolvcnvzo4DPs
-	 9SFEfJeQZitwq3voTEtqFv2MZK05QPsjntVywwDrzqZKlyilyY9E65WpTg4CilE/l
-	 gEm5GmTe9S5q7vA6bg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.236.10.6] ([10.236.10.6]) by msvc-mesg-gmx024 (via HTTP);
- Mon, 1 Apr 2024 19:35:00 +0200
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Message-ID: <trinity-00b2c0aa-3284-4d74-8184-71b5374bd8d7-1711992900521@msvc-mesg-gmx021>
-From: Jan Schunk <scpcom@gmx.de>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Benjamin Coddington <bcodding@redhat.com>, Jeff Layton
- <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David
- Howells <dhowells@redhat.com>, Linux regressions mailing list
- <regressions@lists.linux.dev>
-Subject: Aw: Re: [External] : nfsd: memory leak when client does many file
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="anH4dv4W";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="f+Bk5Mcy"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431HU1YA018518;
+	Mon, 1 Apr 2024 17:51:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=twPsY1L8ZXewI75VDuxoA+Q2QiUI3PUygZE0pEaIOvA=;
+ b=anH4dv4WJ7OH7TuQ6/5ISRxCl0uJeKSB3Sj/RHbDdhNXktifvMUK6Z7t10l2Ik1qsGRp
+ UdxJws9grDic6suATZ02F15J8TssRmtWPIzjSEfZJHyAGeOqSBVqnkxlFlSx2njo50I2
+ OUZPU5GGrl8Zh5PPPq0CXPYktC6qVeuUBwE+KJe1y++lgOK+RF4YBkKEe4EyGuXafuIC
+ ymIKzXfNKQEZ0p5cnrQtbSW2SPt713aNKswmyZ8OTYsy+uMuRbbLmQVljwi480kNQZNE
+ CtsjIHe7JQ4lsIU9O1Ol6WaSWgoitOa/v5PSTXWD789zxqylyhN2fRpdIbrpXmgTz3pB 5g== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x6b9vavp1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 01 Apr 2024 17:51:50 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 431Gr5b2018580;
+	Mon, 1 Apr 2024 17:51:49 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x696bxhke-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 01 Apr 2024 17:51:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FOCXP7Viijrs71L+qRkF0HfwEqOH4hMWyFtwzTKpR8TGwWOh8L/n7ubPdxKQyQB5h9eCo9c1ZuGmJvtGADORiYyRrhazEkZO/vuaVxVFXt1ixu1aZMPQkMoxtFbo7mKO+JQ5QPiYqBLctHYhmHVqJleEC8hTx9CbqmDsX1jIKYF0B/6AXdS6v9pV5r+mZdZkb3e9exUlNfBYmkp3lFb8op1P44PcIkSiG5TOdrwjK3sCZRXdhag+4cIDwI63yJN78tSOIhR3uKSDj8sHIF3KWOl0DWEc1rVMEWkW9HQD45k+yXzwEbHOlgPgT96/GUKCQlTk33q+AFOQccGPQJrZyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=twPsY1L8ZXewI75VDuxoA+Q2QiUI3PUygZE0pEaIOvA=;
+ b=Hbip9lTfFbCzSxFbucyNplDCX++sFwV9tlX/OTgxwwC47845HLVlZZAtRQTQvstRxRVjpk/IY47NXU80rca5Jd/LBWpiCHl4FingqS35gNjuEqaHKmSJPnii0tw56tYPs70YSEM0bQQexxM3w/hBOII0XsttOEk+g6A5OzDWz24Wz+vymRqW62iEBRVSt2mbhSqeJ6lIHyRpA1hsbZpqDmAg/Bp2jPssfnaicOENGLwf4DUJuT01VF0GTL6+rSxdmKpzY6NCkL9qqyFFSFfZSCDuAHT2XUpzfU8K4JaxSBlJHlLaeXsrZNpEw68JogJHs/eOpQ5eWN37+YP6EBxEcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=twPsY1L8ZXewI75VDuxoA+Q2QiUI3PUygZE0pEaIOvA=;
+ b=f+Bk5McyLUkFi/kyu+P+jR3grTniJQEKEqkannQp4ie4oUD13wO4J4ZD8N/ljrfwAh+biJS1L0Ldo54PACRJ6fEzHSKbtPH5upS5I49EG8xSQJp2xnuMVE2FcTHHSdZpoYzCIYmAmv8d04Yc2Hw1QKNkUHH0OQRYv7r6ERiNQWA=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH2PR10MB4149.namprd10.prod.outlook.com (2603:10b6:610:a7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.42; Mon, 1 Apr
+ 2024 17:51:47 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ad12:a809:d789:a25b%4]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
+ 17:51:46 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Jan Schunk <scpcom@gmx.de>
+CC: Benjamin Coddington <bcodding@redhat.com>,
+        Jeff Layton
+	<jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia
+	<kolga@netapp.com>, Dai Ngo <dai.ngo@oracle.com>,
+        Tom Talpey
+	<tom@talpey.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Howells
+	<dhowells@redhat.com>,
+        Linux regressions mailing list
+	<regressions@lists.linux.dev>
+Subject: Re: [External] : nfsd: memory leak when client does many file
  operations
-Content-Type: text/plain; charset=UTF-8
-Importance: normal
-Sensitivity: Normal
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 1 Apr 2024 19:35:00 +0200
-In-Reply-To: <308BAEFD-8CAE-4496-8146-8C05DD78FB37@oracle.com>
+Thread-Topic: [External] : nfsd: memory leak when client does many file
+ operations
+Thread-Index: AQHahF1E0Q3VyufE+kWxK44vN4DB2w==
+Date: Mon, 1 Apr 2024 17:51:46 +0000
+Message-ID: <760D3DE9-AD47-46A2-8914-1CD7122301B7@oracle.com>
 References: <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
  <trinity-66047013-4d84-4eef-b5d3-d710fe6be805-1711316386382@msvc-mesg-gmx005>
  <6F16BCCE-3000-4BCB-A3B4-95B4767E3577@oracle.com>
@@ -66,169 +98,97 @@ References: <567BBF54-D104-432C-99C0-1A7EE7939090@oracle.com>
  <trinity-157de7e0-d394-47fa-bb44-2621045a5b6e-1711812369391@msvc-mesg-gmx004>
  <Zgg9OzeFZUTc4hck@tissot.1015granger.net>
  <308BAEFD-8CAE-4496-8146-8C05DD78FB37@oracle.com>
-X-Priority: 3
-X-Provags-ID: V03:K1:8Qgcbc8YOU6Quga0KAVBADM5hF+gS5qYQPqH/liqGeWndvoiMC+1r5eXGQrvfunnNiLhQ
- +3n42PaHD2+YPfQLXLD4zIkU7TPZCDnCdyG3n1swmuxB72gSacaKUpyfU2p1pziYhPiTZ8mxVn2v
- 5xlli/GWlifkrZ5/oWQ+GdyXJDMZRgV83QRiXmQk5wQAFDXqva3LsPVNGdmm+YYKV+NlZbBNR+dl
- z6amjIhyk0pFPnhNCP50PB13/HccFmalhcSWW0ZWb7Wncy1vcWv+FSfD4WhzzEZdwxkdrv9X+t54
- uc=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3toanD41SXU=;+9v1Zos/3j5NP5dHyFvayW1QJ+k
- sHMpCIi/6Tb/yiz8eI+1Vj6jzTi2vM8YKQ9bSyuBI2sWsF8Xb9TnBYc4CsAKxS5Q4rG2AMkSh
- faPWC5fleA+aVMcGAXtBjcAIRs/VbE7KsFXCkYdzlHA5d+IWamnrb0zTNNHE50n3RepAEAULY
- wZ6+WKjS/f2Pw/X9E4VaGkcCTYCylr0K1d80cHu8l1QCWxYFiRCUx3JMju7gqx8XnvfwinLko
- Zy2Ia96WsGIniIiyLCgEMAoEF6RZ0Amrbha2I8BuxRvbk4dU5z7kHpvy5xl5gPBH5P8DB1S19
- yDigwj+Sn/c4zYWZPY54yvYXlzbqUnnS/ed+zxO18rduSpCUansEsaFdqHI7n4jtJo9qtaMAF
- HePyQkSTsr5NMb7a3a/Beop5B7hv2VerWqUxd4WyVkEPEXK0NhqItGt8ruGA7Ngd9PZtVh+Wg
- qsHVfdkFznB/OUbLjfmToJehylAYb4hHvsj9/xnMKDGAf0lF4+lnKEx0ezY4TWuprG5VeGq9l
- bVZDlASo/8p4D4Rlz3/n+fl7Gr54sjNBt5fYsaBjlm97e8TIH+R8PVE7oBYJ4hzN4unYEn6EZ
- 9RwDnFhPMfbzi1MriLheLHE8nQvaaQ80jZA0WJaX5zWEg2uo4h+E22lA/RBnLrqouDcVXNjpf
- zsTMNfEQAAyipcVnme5TZU0dMaE69SNpx77zgzn4SiWYSnhG75A3WwZBQwO/rZg=
+ <trinity-00b2c0aa-3284-4d74-8184-71b5374bd8d7-1711992900521@msvc-mesg-gmx021>
+In-Reply-To: 
+ <trinity-00b2c0aa-3284-4d74-8184-71b5374bd8d7-1711992900521@msvc-mesg-gmx021>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.400.31)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CH2PR10MB4149:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ 0jlf3FRrRuLwxkRql2v8OPhqsc2V4wxHp0loDv43Yt8mR8rZRNI3Fe4HuMTfsjm0tuxP+PjpzRlffl+0jsRcDnMuziXigXTEzzXtmw8Kh9utyQXJuGewcKjhqPMjM33QZoFmSM0QynpRu491Lm4Ld8VA4zTNDj3JftnfCzwldPZnVs5zcUXmZ6q2hANtDnz1EePsPn5pO30CiNGrF4L38VF2PUxVqgGb5ZZ1SweJcfYV76bVooEyPr3dfnKubi397VqpogG8ta2ceKzuroMKXOsmPxWcrmu8B9U3v+DbHCmBAojFeHr1gYDxVG1k9J1qKfoTWSCTmvL05OuQ7UZt13Mo+yC5SnX7L2Oa0SvJ40XM+nZ2hjaYeXxIdQOQbR/C01VCa9e/cpZSE3HWw37UBAI4Sq2Cl5p3PnDTBcqewATTrD1qoxG5ikR2JiCja6bnEfqn+8+LEKHLpyMNJ9AgN7NvMT0UGYSluuKHCLpAup2Mb0r9vX1LoTqr2SPnF4KsIV9j18OkKKWiiAzQS3/XnEgpeSwuDJwN4vEu54R6PnqzCnt7latlyQVfDBJ70UxEfQ6tEo4BiD1yLYm1+SIG9XnzJWhNr1ZvQEqfX+VvpFE=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?Q1RaRUx5UVJ3NGlEZHlSNkViblJCWjdOY0hydEo1UG83RUFubW1TdE1vV2xD?=
+ =?utf-8?B?WnVVME1aUnUyRVFkaE9TOTRta0NoMDF2TVlFOTdDM0pIWlh1bmZlMEUyN1lj?=
+ =?utf-8?B?Z25BWGJEbjlmcm9yOFU4ZlJPOWtmeEF6VS8rdVg1U1BrRWlxTG9XYWJ6RUo0?=
+ =?utf-8?B?VnhsTlJBZko5dGFJR09NRnBSbGx1R1gxQ1FMY2ZlU2UrcEIyQ2t1VTRSSUpW?=
+ =?utf-8?B?aTVZNFpWS1dCSnVHQ3h3WC9kb0dVeVRrekJNNWNNMGZJb2dCZzYyemJ4RDhJ?=
+ =?utf-8?B?dWhTUzZxTWRuKzlvQVN5YUNpbE9GQW5KREcyci9PWXR1djdWYjNodkpOMHV6?=
+ =?utf-8?B?NXMzWlB1WGtSU3ZyRk5oZGZoK0JqelpKK3ZZY0ljVEcvb0ozN21weG12WUZ5?=
+ =?utf-8?B?b05ISlpqR0hNWEVJMjZjZHdiVnNob2FhT2hGcU1rSUJYR0kzcnR0akhVbk9Z?=
+ =?utf-8?B?aEV4OTNUUDdLakFVRXc2ZlRJWENvN2YyaElSYjhCWkJPUmd1SFdVTTZnUDM4?=
+ =?utf-8?B?SGpkYXpRR3B6bEFlRERSVmtETWR6MkhkYXBqTkx4bVlUOWwxelpJYXhKcnY5?=
+ =?utf-8?B?QTA3TmtvbkVBU2U5TzA0eFg0TEdrbW9tK2NWVFNhNkplZnAwa3NIQll4U3Rh?=
+ =?utf-8?B?L0pGZ0tHeldiVUNTL1R4elVlZTJFd0x1MU9nc3J1VWdjZlJiNWFmL2xmZzN1?=
+ =?utf-8?B?YnlOT3ZvUVRFTE9la3BFSlhlbFFhWlMyblZNTHBlbDVPVVo4U1R4UEFkNEtq?=
+ =?utf-8?B?SnRNM1pQT2tiN3pJc0xOL2U2SVJrc3BOV1pwaklaQmV1VGJONTR3Z0hlWkRW?=
+ =?utf-8?B?L1pXNGthY2gwNkpFdWVQSzhCV01rR2gxRUtmNDI0L0pGb3l6V2c3K3pTVEM2?=
+ =?utf-8?B?a3FLZytUeXNqTDN0WEx1dlprWklUZVJXRkg2cTVVT1gxZzBicDNZVXRqcU9i?=
+ =?utf-8?B?SnBLUmp5bWxYdGJWd2laejRrU0t3UXRFOTl1NXFhY0VMc3hFdnZNQk1ta0h1?=
+ =?utf-8?B?dEJJQ1d4N0NqeTM0b2Z3eDlCQ3dXVytMTkJzL3pRbjQ5K3UwK1ZsQWFSS1hI?=
+ =?utf-8?B?U2swZlNubXBqa1JjNFA3bG16Y0ZwemtvN0RCYUs3Y3pqN0JuRkhpMUxEUEh1?=
+ =?utf-8?B?VkpaYkxMK2l6ckU5cmFITmYyODNGZFJkQlU4alN6dU83MzB6MG16NnVaa0Zr?=
+ =?utf-8?B?cXJaT1FPcGYxRW0wZ1R0TUJadENqakMvaTI1aGdUYi9DejhsWm9sQ1hlNzhS?=
+ =?utf-8?B?REJXcFFVaVkyMDhhS0J2MDVEWE9YV2xaMnBnakJHZXRzbmt3WFBwRTBmNXd4?=
+ =?utf-8?B?dHNKRkM0ZlRkQlNuUkh4Znh6ZWIwK2twczRxdUFUMFdmbmlCSUxLMGdIckty?=
+ =?utf-8?B?R1U4UW9CVGxCVXVKdkNiNTg1VUpWbytzclVSb1JCZnFlQUZ4N0E3RytTUjkx?=
+ =?utf-8?B?ZG11QS9BdmMxV0kzSTl5OWFBczdjTnZlR3ZCWk9YRnVBWDUweFJVTG9VTmky?=
+ =?utf-8?B?WHA1Y1AyV2tXSHV5YXlFTkt6ZTVxUGV5bDB5YkN5bU5TaFVWRnZnZVlMcy9J?=
+ =?utf-8?B?Vi9ZeGYvZUpCZ05aL1cyTVB1MnkvdTAyL0J2dW9peWdtYyswcmc3SDRVWUMx?=
+ =?utf-8?B?SVRvNlBoTm5hL3FLNjd6SitWZTYvd0lqWkdUYUlpWitFdXRydXQ3aHk4aWFl?=
+ =?utf-8?B?eUg4cGJyVzVyTEpEOXl0QVhvbHBVSnMyUnh5eGZyWGxCQWpXemJLMmtoMCtq?=
+ =?utf-8?B?Z3YzQlg5ZW96U080S0VnY1hUeWdqMTVxc0JQYkVCMlZIRGVSUUZoT2ZFcXBV?=
+ =?utf-8?B?N1hUQ0ZNVDkrM3QxU21Md0pnM0h3MDVyQjFmR3hwRFhqeGc3Y3FRc2NOYVlV?=
+ =?utf-8?B?K0x1Mm55UXQ1VS8zbFRkQjNSQStlbFdoV3I0cWMzdGs0YVlseGZJVWxXOHFS?=
+ =?utf-8?B?elJMeFlHRjhCQVFENEs0dnhPWUJXdUZyTjlyT3M2OUtteEtFeGJwN2lBUXF2?=
+ =?utf-8?B?Wkl4L0ZKcGY3VXBwMGM1K2VWeUJ4NUd2Rk56SXE4Yys0OTdhTldTVTJ0c3JI?=
+ =?utf-8?B?NHFRenN5aFNNSHAvSUF5bFo2K0xGbllSSldwb3ltbjNWREdqbW1IZXY0aWE0?=
+ =?utf-8?B?eGh3KzhDTGtraWFUV2NZQjRYTGRQcjd5ZXI4bTY0c253R1JPbjdsYldabVlG?=
+ =?utf-8?B?WUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <22DB6965C45BA541AFDB808207074DE4@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	Fo43lA4x/E3oxuHucbKjKbeEJDyJdP+xUktJjrE5ZkupyXJWv/GYB3rqr8k2p4+k+WziKP0asfsabt+Aidoa5NkPdyjv7JuDsyuAM2/nr0skKqQHF/yT0NQqcTd4y8RWR9QWOnnnkGvcRAZIfBUvt8N9fq/54zX2Zbw9OL4g76ajbgpKyAGcLSvwf8/HgHlCFzAI0NSKlbHcergkcTLXSoKkH1YMgPSipk/Io5UeIkhEduY9WoN8XY+7AIp6QhjCLYQQQNe6Z2W4r0v62WV28xcuKF+iffY918D7eXmFdukTg7uIUWJLZOakeRgD1hDPgpMhwbk2naVl4/zp+xOdxgU4xBGZ/KVWWEE4hFv7fgbXwNMR7nFQog8PeBizERnaY5aRTkLIiVcOnWtRFUSG7SQO4YDm+W6iG5DZ+tzNIaPENbnGfRNWf+5a98qfZlt4jQvKP/Lpy2foSXhTumvcqKIfJG7fHtVPk1+ilIbgMUgOJfxFripyYKzv7e2gYw4AFUUMusWt2q4WL1sXdCzwfk5p0lMI0PLPB3Mp7hYHHtCW+gjWg0tbOpV3H8JQ44cCCYIqXZ5dUFpRJdHQ1csx9GxgaaDjEfvMfaj2EaeXuYg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee146b96-d6af-4e8a-eb79-08dc52746680
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 17:51:46.8926
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jK0aWdDS11ibXl23LfnvnzS8X4d8DUkY1NtO8YEhrY6T4tv83ui4m31Ca5VHfwEKfLw/28cLcAejEGssAkmIeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4149
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_12,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2404010126
+X-Proofpoint-ORIG-GUID: kMw9REQKQ6zgUgrVrBsXFE2GlUBV003y
+X-Proofpoint-GUID: kMw9REQKQ6zgUgrVrBsXFE2GlUBV003y
 
-Hi,
-the bug report is now here:
-https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D218671
-
-PS: I can also confirm, if you use the latest v6=2E6=2E22 and only revert =
-e18e157bb5c8 nfsd works without any issue=2E
-
-> Gesendet: Montag, den 01=2E04=2E2024 um 16:08 Uhr
-> Von: "Chuck Lever III" <chuck=2Elever@oracle=2Ecom>
-> An: "Jan Schunk" <scpcom@gmx=2Ede>
-> Cc: "Benjamin Coddington" <bcodding@redhat=2Ecom>, "Jeff Layton" <jlayto=
-n@kernel=2Eorg>, "Neil Brown" <neilb@suse=2Ede>, "Olga Kornievskaia" <kolga=
-@netapp=2Ecom>, "Dai Ngo" <dai=2Engo@oracle=2Ecom>, "Tom Talpey" <tom@talpe=
-y=2Ecom>, "Linux NFS Mailing List" <linux-nfs@vger=2Ekernel=2Eorg>, "linux-=
-kernel@vger=2Ekernel=2Eorg" <linux-kernel@vger=2Ekernel=2Eorg>, "David Howe=
-lls" <dhowells@redhat=2Ecom>, "Linux regressions mailing list" <regressions=
-@lists=2Elinux=2Edev>
-> Betreff: Re: [External] : nfsd: memory leak when client does many file o=
-perations
->=20
->=20
->=20
-> > On Mar 30, 2024, at 12:26=E2=80=AFPM, Chuck Lever <chuck=2Elever@oracl=
-e=2Ecom> wrote:
-> >=20
-> > On Sat, Mar 30, 2024 at 04:26:09PM +0100, Jan Schunk wrote:
-> >> Full test result:
-> >>=20
-> >> $ git bisect start v6=2E6 v6=2E5
-> >> Bisecting: 7882 revisions left to test after this (roughly 13 steps)
-> >> [a1c19328a160c80251868dbd80066dce23d07995] Merge tag 'soc-arm-6=2E6' =
-of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/soc/soc
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 3935 revisions left to test after this (roughly 12 steps)
-> >> [e4f1b8202fb59c56a3de7642d50326923670513f] Merge tag 'for_linus' of g=
-it://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mst/vhost
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 2014 revisions left to test after this (roughly 11 steps)
-> >> [e0152e7481c6c63764d6ea8ee41af5cf9dfac5e9] Merge tag 'riscv-for-linus=
--6=2E6-mw1' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/riscv/linu=
-x
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 975 revisions left to test after this (roughly 10 steps)
-> >> [4a3b1007eeb26b2bb7ae4d734cc8577463325165] Merge tag 'pinctrl-v6=2E6-=
-1' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/linusw/linux-pinctr=
-l
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 476 revisions left to test after this (roughly 9 steps)
-> >> [4debf77169ee459c46ec70e13dc503bc25efd7d2] Merge tag 'for-linus-iommu=
-fd' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/jgg/iommufd
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 237 revisions left to test after this (roughly 8 steps)
-> >> [e7e9423db459423d3dcb367217553ad9ededadc9] Merge tag 'v6=2E6-vfs=2Esu=
-per=2Efixes=2E2' of git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/vfs/v=
-fs
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 141 revisions left to test after this (roughly 7 steps)
-> >> [8ae5d298ef2005da5454fc1680f983e85d3e1622] Merge tag '6=2E6-rc-ksmbd-=
-fixes-part1' of git://git=2Esamba=2Eorg/ksmbd
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 61 revisions left to test after this (roughly 6 steps)
-> >> [99d99825fc075fd24b60cc9cf0fb1e20b9c16b0f] Merge tag 'nfs-for-6=2E6-1=
-' of git://git=2Elinux-nfs=2Eorg/projects/anna/linux-nfs
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 39 revisions left to test after this (roughly 5 steps)
-> >> [7b719e2bf342a59e88b2b6215b98ca4cf824bc58] SUNRPC: change svc_recv() =
-to return void=2E
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 19 revisions left to test after this (roughly 4 steps)
-> >> [e7421ce71437ec8e4d69cc6bdf35b6853adc5050] NFSD: Rename struct svc_ca=
-cherep
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 9 revisions left to test after this (roughly 3 steps)
-> >> [baabf59c24145612e4a975f459a5024389f13f5d] SUNRPC: Convert svc_udp_se=
-ndto() to use the per-socket bio_vec array
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 4 revisions left to test after this (roughly 2 steps)
-> >> [be2be5f7f4436442d8f6bffbb97a6f438df2896b] lockd: nlm_blocked list ra=
-ce fixes
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 2 revisions left to test after this (roughly 1 step)
-> >> [d424797032c6e24b44037e6c7a2d32fd958300f0] nfsd: inherit required uns=
-et default acls from effective set
-> >> --
-> >> $ git bisect good
-> >> Bisecting: 0 revisions left to test after this (roughly 1 step)
-> >> [e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4] SUNRPC: Send RPC message o=
-n TCP with a single sock_sendmsg() call
-> >> --
-> >> $ git bisect bad
-> >> Bisecting: 0 revisions left to test after this (roughly 0 steps)
-> >> [2eb2b93581813b74c7174961126f6ec38eadb5a7] SUNRPC: Convert svc_tcp_se=
-ndmsg to use bio_vecs directly
-> >> --
-> >> $ git bisect good
-> >> e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4 is the first bad commit
-> >> commit e18e157bb5c8c1cd8a9ba25acfdcf4f3035836f4
-> >=20
-> > This is a plausible bisect result for this behavior, so nice work=2E
-> >=20
-> > David (cc'd), can you have a brief look at this? What did we miss?
-> > I'm guessing it's a page reference count issue that might occur
-> > only when the XDR head and tail buffers are in the same page=2E Or
-> > it might occur if two entries in the XDR page array point to the
-> > same page=2E=2E=2E?
-> >=20
-> > /me stabs in the darkness
-> >=20
-> >=20
-> >> I found the memory loss inside /proc/meminfo only on MemAvailable
-> >> MemTotal:         346948 kB
-> >> On a bad test run in looks like this:
-> >> -MemAvailable:     210820 kB
-> >> +MemAvailable:      26608 kB
-> >> On a good test run it looks like this:
-> >> -MemAvailable:     215872 kB
-> >> +MemAvailable:     221128 kB
->=20
-> Jan, may I ask one more favor? Since this might take a little
-> time to run down, can you open a bug report on
-> bugzilla=2Ekernel=2Eorg <http://bugzilla=2Ekernel=2Eorg/>, and copy in t=
-he symptomology and the
-> bisect results? It will get assigned to Trond, and he can
-> pass it to me=2E
->=20
-> The problem looks like how we're using a page_frag_cache to
-> handle the record marker buffers, but I'm not sure what the
-> proper solution is yet=2E
->=20
-> #regzbot ^introduced: e18e157bb5c8
->=20
-> --
-> Chuck Lever
->=20
->
+DQoNCj4gT24gQXByIDEsIDIwMjQsIGF0IDE6MzXigK9QTSwgSmFuIFNjaHVuayA8c2NwY29tQGdt
+eC5kZT4gd3JvdGU6DQo+IA0KPiB0aGUgYnVnIHJlcG9ydCBpcyBub3cgaGVyZToNCj4gaHR0cHM6
+Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMTg2NzENCg0KVGhhbmtzLCBJ
+J2xsIHRyeSB0byBrZWVwIHRoYXQgYnVnIHVwZGF0ZWQuDQoNCi0tDQpDaHVjayBMZXZlcg0KDQoN
+Cg==
