@@ -1,110 +1,144 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A1C56B70
-	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 22:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7414356B87
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 23:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712011490; cv=none; b=Imb+9kMCdU31O6H9MMM3IpD+TfykNf+9nm4urx0Xyb3yWvqAYbM1zTrvr6E8ibelIhaFZZUCdex9Da5GLU4ok1WuJUwoKJiMZCBzcpkpRXQDULDPdvUkQHjTSdL7C80V/yfLNuANKblWhXQrn/+tkeZOx2glstiwMELKFYAl9qE=
+	t=1712013931; cv=none; b=olPY6JjD5fciVLe4EiOhr6SHPtGjXbRg4As76UBE0fLq088ylzB9KdjUXo6jFhfmZX6o8sZ/BiPTmKewaqAWVWyxUrHA2658AP0iPCmq7uHOWePQtkmpeiYosP05jFguj0Y53jgNjxBdEElLBLaM0P8gZJZqHveoh9G7pm3WZVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712011490; c=relaxed/simple;
-	bh=IqTxP6MAaADfSiLtLnKmzpDhHoIeGwlP4HGHqpHgvI8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=axrn8eOZmpgrZziuTjrE9l/ZP1BIG/51YDrJfXBn4fEBxN83ihsACYvQBL1uTBCBgt/bvJ3MMyfHzB/VUuONgoTKwXXEbN/5p33QyajCVmEdoxegvgIvTbq1a7YLDxwLBE2B+b01e6NJSH9c/ZPv8qUpZlviP3ERtGUJMjou09A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=uB9hx2Ns; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
+	s=arc-20240116; t=1712013931; c=relaxed/simple;
+	bh=7O6ujO5rc0L0/KR/mKMdDyxpsqTMox7YCAlN6/iMYXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ptt2ehb5dP5KCCQ45PBLKjUHq1nMhv6Xp8pelsHT3T3uz+couwuGrEruFjRahqR/zElN3ufA3H0G3eHe7fizgGDsTSEJpzBA7TIoiZA427hYKZcqpDs7LeD442EWybYrAym/rpJSeLSNsZTbekv3sv14zUpNvJ6myhj1XwqwPUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dNwGuKfM; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="uB9hx2Ns"
-Date: Mon, 1 Apr 2024 15:44:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
-	s=key1; t=1712011484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IqTxP6MAaADfSiLtLnKmzpDhHoIeGwlP4HGHqpHgvI8=;
-	b=uB9hx2Nsrh2B0sXIAks4hvNgr/u3SN138VrofuuR6Hb8oXJkIe4jeanOBdCBfGT5a3DKPG
-	g9ef+VcEC8kq0Q5gRuIjxzkXzUhRMCsLSA/LQI2291QTN6U5iRce5o/FUljGj0OvggCmAE
-	Qs32lO7g7/YSNqSLtOsRbuP8puFR5DxSTQb2LULaMmcD9u+294NDIrmgv/ccJh/30wusJQ
-	1/tLF07MMr5qJEKJKjkKME5W46QDJhU6XhyZ/PiUIOv0NNaVUp4C7t+Z6Koy0fl5ExBZJ5
-	ULk0ve2q+gQmp9yXvCVl0HU1jc5o5SHSvsXRsTbc1oFUEwlruLJiJspQ6o68xg==
-Message-ID: <20240401154436.GB26633@craftyguy.net>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Clayton Craft <clayton@craftyguy.net>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- regressions@lists.linux.dev
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-In-Reply-To: <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
-References: <20240321150510.GI8211@craftyguy.net>
- <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <a3aae375-5582-46e4-866b-6a81641998af@redhat.com>
- <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
- <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net>
- <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNwGuKfM"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-432d55b0fa9so674331cf.1
+        for <regressions@lists.linux.dev>; Mon, 01 Apr 2024 16:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712013928; x=1712618728; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBFnvPatyDI2+u+ojuWnolOosfbwXQU3OHbOSZ7OXrI=;
+        b=dNwGuKfMPe6iMw9E6xPtXPphO5UNVH9YpnqW8yn4loKnQsZhE4dOPFNALV/8JVRuxK
+         As9p2KcKDmX/GOPbdxwiU9Bnumegk3oIJSNHPIiROxriqcZHMNftzMfQgIIsXXK1EV7K
+         MrZVMVWHZVUcOx+yO5ZvWUEEtS1RA4x5vj6aTg+cmcU1dG2q8Xp7ex7tCia7NLEMmX4t
+         /Um/NOAQDgxPykNZfJXUewXdEUs43yHQtJUE9X3xDTPxCXg9aJ8DrEOIykWCqScCLtEh
+         wt2CDSZ5J6Y4UQrD7PTrSZtjtp1RLV0iG/YT4oVniJLfPvIU/AEQxPpAdTF08XO70+FO
+         /zkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712013928; x=1712618728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RBFnvPatyDI2+u+ojuWnolOosfbwXQU3OHbOSZ7OXrI=;
+        b=vtAZ8YmRZdeCthnZntW6JWQwX2mnSFOoKsZGIHZ5eUJ9FX+5XRGpXNcLorfuot2D3n
+         4c07lzM+LqQXevd538okD7e+YXaxhuJwGlrws6Cze185ZDSAlq0RIN7PUBqqeTPIR+mH
+         5xWWW4em3wWvgZtvpLSDEzn4b4FH/KdcYd/zNhpMFdunnyEEEamspTYXtNV4cPCQB5k+
+         bkLCVdmqBfeV165obq4DAWFuDd1M2Pri1KNGCyhjc1ZmYbdfu7EBiZHcriUwUeuKwa3q
+         ui4Fy1QH+Sxfuz5lALXb3QkW1yfqNfHnNzSKSXmkofNYG75Ri11hlCwvY16n7WZS8SAP
+         ks0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVP+jNHeT1qVnCt2jT6n+1zJIPVC1FzhJlv2c9kewkkXMn8oMNo2iPW/kdUt7+YrUyWTiONH+aIUfoqPH54hxfTexgFW5e5kdEBVd4=
+X-Gm-Message-State: AOJu0Yy25iTH3R1VNNF+ZIv7LQbAkHbqt8SYtzsT5NdFufn6s3G8xBOr
+	YAGaHDNuB+RNiv5hZ51jub/PKWgMXNqaJ4QB/DNOwKziC5l6uj5qkYZTDLbyBEzQlYJqVitSF7d
+	5UJceTnHV2qGQhx6p+hXBzwipXdpgFLPOxPrr
+X-Google-Smtp-Source: AGHT+IFcZ8LGPNpxD+CyijkSEakaabqejnuTmSNnd7xvNofgmBOU9Q+hLp0gjmEcQ9dp7UWhkk+oSQSje588a0Wc16k=
+X-Received: by 2002:ac8:7fc2:0:b0:432:fea5:e3b4 with SMTP id
+ b2-20020ac87fc2000000b00432fea5e3b4mr179052qtk.3.1712013928247; Mon, 01 Apr
+ 2024 16:25:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="fpZYhPLy/yUVa6iM"; micalg="pgp-sha512"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
+ <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org>
+In-Reply-To: <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org>
+From: Saravana Kannan <saravanak@google.com>
+Date: Mon, 1 Apr 2024 16:24:51 -0700
+Message-ID: <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Pratham Patel <prathampatel@thefossguy.com>, sebastian.reichel@collabora.com, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Mar 23, 2024 at 10:10=E2=80=AFAM Dragan Simic <dsimic@manjaro.org> =
+wrote:
+>
+> Hello Pratham,
+>
+> On 2024-03-23 18:02, Pratham Patel wrote:
+> > Since the introduction of the `of: property: fw_devlink: Fix stupid
+> > bug in remote-endpoint parsing` patch, an issue with the device-tree
+> > of the Rock 5 Model B has been detected. All the stable kernels (6.7.y
+> > and 6.8.y) work on the Orange Pi 5, which has the Rockchip RK3588S SoC
+> > (same as the RK3588, but less I/O basically). So, being an owner of
+> > only two SBCs which use the RK3588* SoC, it appears that the Rock 5
+> > Model B's DT is incorrect.
+> >
+> > I looked at the patch and tried several things, neither resulted in
+> > anything that would point me to the core issue. Then I tried this:
+>
+> Could you, please, clarify a bit what's the actual issue you're
+> experiencing on your Rock 5B?
 
---fpZYhPLy/yUVa6iM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: base64
+Pratham, can you reply to this please? I don't really understand what
+your issue is for me to be able to help.
 
-T24gU3VuLCAyNCBNYXIgMjAyNCAyMjo1Mzo0NyArMDIwMCBBcmQgQmllc2hldXZlbCA8YXJkYkBr
-ZXJuZWwub3JnPiB3cm90ZToKPiA+ID4gVGhhbmtzLgo+ID4gPgo+ID4gPiBJIHB1c2hlZCBhbm90
-aGVyIGJyYW5jaAo+ID4gPgo+ID4gPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
-dXgva2VybmVsL2dpdC9hcmRiL2xpbnV4LmdpdC9sb2cvP2g9ZWZpLWNsYXl0b24tMwo+ID4gPgo+
-ID4gPiB3aGljaCBoYXMgYSBwcm9wZXIgZml4IGZvciB0aGUgaXNzdWUgdGhhdCB5b3UgZm91bmQu
-Cj4gPiA+Cj4gPiA+IEFzIGl0IHR1cm5zIG91dCwgdGhlIGNvbXBhdCBtaXhlZCBtb2RlICh3aXRo
-IGhhbmRvdmVyIHByb3RvY29sKSB3YXMKPiA+ID4KPiA+ID4gYnJva2VuIGZyb20gdGhlIGJlZ2lu
-bmluZywgYW5kIHRoZSBjaGFuZ2UgeW91IGlkZW50aWZpZWQganVzdCBoYXBwZW5lZAo+ID4gPgo+
-ID4gPiB0byB0cmlnZ2VyIGl0IG9uIHlvdXIgaGFyZHdhcmUuCj4gPgo+ID4KPiA+IFRlc3RlZCBh
-bmQgZml4ZXMgYm9vdGluZyBvbiBteSBCYXkgVHJhaWwgdGFibGV0IGFuZCBOVUMuIFRoYW5rcyBm
-b3IgZml4aW5nIHRoaXMhCj4gPgo+ID4gVGVzdGVkLWJ5OiBDbGF5dG9uIENyYWZ0IDxjbGF5dG9u
-QGNyYWZ0eWd1eS5uZXQ+CgpTby4uLiBtYXliZSBteSB0ZXN0aW5nIHdhc24ndCBhcyB0aG9yb3Vn
-aCBhcyBJIHRob3VnaHQsIE9SIEkgYW0gZXhwZXJpZW5jaW5nIGFuCnVucmVsYXRlZCBwcm9ibGVt
-LiBJbiBhbnkgY2FzZSwgSSdtIGhhdmluZyBzb21lIGRpZmZpY3VsdHkgZmlndXJpbmcgb3V0IHdo
-YXQgdG8KYmxhbWUuIFdoZW4gdXNpbmcgdGhpcyBwYXRjaCBvbiB0aGUgNi42IExUUzoKCjEpIGtl
-cm5lbCBzZWVtcyB0byBwYW5pYyByaWdodCBhZnRlciBkaXNwbGF5aW5nIGBkaXNhYmxpbmcgYm9v
-dGNvbiBbZWZpZmIwXWAuIEkKZGV0ZXJtaW5lZCB0aGF0IGl0J3MgcGFuaWNraW5nIGJ5IHNldHRp
-bmcgYHBhbmljPS0xYCBhbmQgc2VlaW5nIGl0IHJlYm9vdCBhZnRlcgpzaG93aW5nIHRoYXQgbWVz
-c2FnZS4gSSBjYW4gd29yayBhcm91bmQgaXQgYnkgc2V0dGluZyBga2VlcF9ib290Y29uYCwgYnV0
-IHRoYXQncwpub3QgaWRlYWwuCgoyKSBrZXJuZWwgY29tcGxhaW5zIGFib3V0IG5vIHJvb3QgKGZy
-b20gaW5pdHJkKS4gSSBjYW4gd29yayBhcm91bmQgdGhpcyBieQpwYXNzaW5nIGBpbml0cmQ9bXkt
-aW5pdHJhbWZzYCBvbiB0aGUga2VybmVsIGNtZGxpbmUuCgpJIGhhdmVuJ3QgdHJpZWQgYW55IG5l
-d2VyIGtlcm5lbHMgeWV0LiBUaGUgc2Vjb25kIGlzc3VlIGFib3ZlIG1ha2VzIG1lIHdvbmRlciBp
-Zgp5b3VyIHBhdGNoIHJlbGF0ZWQgdG8gYXJncyBtaWdodCBiZSB0byBibGFtZSwgYnV0IEknbSBu
-b3Qgc3VyZS4gQW55IGhlbHAgcG9raW5nCmFyb3VuZCBmdXJ0aGVyIHdvdWxkIGJlIGdyZWF0bHkg
-YXBwcmVjaWF0ZWQgOikKCi1DbGF5dG9uCg==
+Also, can you give the output of <debugfs>/devices_deferred for the
+good vs bad case?
 
---fpZYhPLy/yUVa6iM
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Saravana
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEkdOrrjmBP3eB7DeWSkztbX7flQoFAmYLONQACgkQSkztbX7f
-lQreeA/+ISYhfctY3E26tF3E1urqhF/W1EHFZCPlKqRbdj894UQ8jOThbzq+E73y
-dXvGu/dLCEooVJi8/ueTCzyUQBDDJe9uiZnpvCLs929NJ07yBaN/cz4kIPH+AaLi
-LaFUDuPgiJrBlBF5FAtx0NBCQCIg3m7R8drPg8ToAjR/wbsOOcFw1qtbBKni6UGZ
-b7f3LMiUkLHCx/39+G/uD+HR5Enel6BG/Tg/kWC2g/aFiyn4vec7CpuEa09NbPZG
-MzZyj4wxc2FCKATcqy7imGGiVLetveKtXHgdRnYHo26OyMPTdPALyREFKHdbfPcD
-urGj7434ruzxKLdk85YgHQx2OEbFWVxeK2FN0zplToP1RUPKN6Uf1cPDXDhHc0gm
-SGVOzAyue63XMT0JaVh3YccQwK0u9KKk8nZr//9tFQ1ye9auunRRZKC4MAcKb6Qk
-Qb5YyQ2vGi3gSaY4e/ObeXecHpdexjC/GkVZSG1JF5rUilg6Z5x7dXkyMARcutev
-b9Z6UsJ4HmjfohV3rlwnXd+F2SrpGJgyAqNvkWXde3eGvoqxlqZ994S7smYXpQ0a
-ZLzeK9h1JHZkGKkDZx5fyJ1awAOd3WgBQpuGPbtKMNP+bQyi99Rra5jVFSb6V5WO
-X/YYAytXarwsDITd1UdtJjWuRNRJvbzBNkLAu3kukjuSAJbKlQE=
-=3hLn
------END PGP SIGNATURE-----
-
---fpZYhPLy/yUVa6iM--
+>
+> > ```
+> > $ grep -C 3 remote-endpoint
+> > arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> >
+> >                 port {
+> >                         es8316_p0_0: endpoint {
+> >                                 remote-endpoint =3D <&i2s0_8ch_p0_0>;
+> >                         };
+> >                 };
+> >         };
+> > --
+> >                 i2s0_8ch_p0_0: endpoint {
+> >                         dai-format =3D "i2s";
+> >                         mclk-fs =3D <256>;
+> >                         remote-endpoint =3D <&es8316_p0_0>;
+> >                 };
+> >         };
+> > };
+> > ```
+> >
+> > So, from a cursory look, the issue seems to be related to either the
+> > DT node for the audio codec or related to the es8316's binding itself.
+> > Though I doubt that the later is the issue because if that were the
+> > issue, _someone_ with a Pine64 Pinebook Pro would've raised alarms. So
+> > far, this seems to be related to the `rk3588-rock-5b.dts` and possibly
+> > with the `rk3588s-rock-5a.dts` too.
+> >
+> > I would **love** to help but I'm afraid I device-trees are not
+> > something that I am at-all familiar with. That said, I am open to
+> > methods of debugging this issue to provide a fix myself.
+> >
+> > I would have replied to the patch's link but unfortunately, I haven't
+> > yet setup neomutt and my email provider's web UI doesn't have a
+> > [straightforward] way to reply using the 'In-Reply-To' header, hence a
+> > new thread. Apologies for the inconvenience caused.
+> >
+> >   -- Pratham Patel
+> > _______________________________________________
+> > Linux-rockchip mailing list
+> > Linux-rockchip@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
