@@ -1,138 +1,166 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D0FC08;
-	Mon,  1 Apr 2024 08:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4238D10788;
+	Mon,  1 Apr 2024 09:29:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711960748; cv=none; b=R0VKFJUYfluRdOjLilZV6fhNDlBwhNpy9B5MXynYxi/APeN7ztA/aqlzHBxknYANKZSoSuNIgP+buEGnNd/oNojf/nNzMToMDRWnURFNK0XOOs/JR/JiUej8HhvdiivKv3eOEanNnZLzGMoyALn2c6mjeS6lJc8BO5kGHvnnfA0=
+	t=1711963791; cv=none; b=Ujn4PEqc1aP/bxtzrZPbojMNl4EyjmkDVEMvp1I0Ry8SSsScILCJlKHucf+AGzR1Xyu0iWpeZOTFoe5dMg0pIEiJNJL2Yhec1IiGi5UvucXRB2j7TjImBdPOb820X60jN8Jdz13x9fWLimXxUsyyRR8BgyNTnvotZydY84h8VFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711960748; c=relaxed/simple;
-	bh=1Tn1esD1kJcJI+TkMvadUmF0KzwOA5IFTcW+3nhhjFM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uXMO5wdGcCnQh6n1d4guxIhwVMP8SlO3POhRBc6Vbv9HEKnUUtACCA6NKCqJzvhC7K0Ve7o/+NEZD0tokMgaXTjIPGPwAPAsqwOXqr0r+G+bI5o+i5TUr8NRpXbKcpRroG9RF0lS2kNwL35DwYViHc5nks7wgmHH70ci6VzsYac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JOyiWYWB; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1711963791; c=relaxed/simple;
+	bh=1xbwl3deUI8EugEpHFtd11RFuw1yy3rmyznd1Szn2Z8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uadVLD49qJuEP8LM+izAkLpET2yq6Q5othscvx971qiEl0GOiNsIp8mHF4eAvKfNVRuQIrbh2DClFeufMIxdo1IhPp3SgspMvD9IWX6OsYPLX4xc0IOakqF16Atdlya64cYNEP5FLFOgqIITvoUZYSYYHA2KfyJrAYMTBS/49gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RD52WKjU; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JOyiWYWB"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RD52WKjU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=BjGaJFLrLvMVQq06MTRerBRTLWVUItjpux/8jwfcOwI=; t=1711960745;
-	x=1712392745; b=JOyiWYWBuh/2oVTIpol+iSbaGT0B0vCD+LqVqsra6DeRg+j3M9t4Ld2OhkYny
-	M5HqF+eOW1TMtjNUydKDO6gItTIRmpnV5LIuiaByOkwoasvttdshAuxYmEjeGS8/wqjj/3ihIEsTr
-	ijG9cToFSxHcXqGnUQDHom58AHah1tSJUz3bretCDSY2gk1YvVpJYRGMubg5yQQJROTtxhUMcZkHz
-	Kzvr9pxdRrIDKOu472H4Qu1qSdlOKcfD1rO4nMcctGT9+RGAw0sYOpKKE8cGsnDVxbBG8A/e7YPBE
-	nHyzI53EK0bZMdSHWR5WhnH3SiX5DYacTZE6sZ1v7c/TOWDx3g==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rrDBt-0007A8-17; Mon, 01 Apr 2024 10:38:53 +0200
-Message-ID: <dfa22ac1-36e9-48da-a2a8-8d7818c09187@leemhuis.info>
-Date: Mon, 1 Apr 2024 10:38:52 +0200
+	References; bh=sBR4AUtbOWGkAitvBQQqQOWJXiRUJp1cu3pYde9QQ8Q=; t=1711963789;
+	x=1712395789; b=RD52WKjUiqye7VkoUPvw7NdOInJIbP1bt0qKHjN2htkjQFlYNMeCGP3EiBnvk
+	KzyMAP0U8P1GS9MXe2S/XCN2bP8z/KAQKrmjhgQGcruADaWmNVysKNnVEN8ZVHEdNiCNOZqf+MNUl
+	f5Pl7cr+13e1K/8NkIdsdo+ghUfCBeL792zBTXVp7RF7R+aEQT1KABF5Tm8ptk+ueIGeewxY4N5mm
+	UM16QXltQaQLqnVfP6PBveTm2woblkHxhDr36WvxP+FZBTmA5HEIgwQtFHQfmHLyzTi5cjF0hFS4m
+	YnWy8XT0UQ/w61+Xr6VSR+C5Wifo25U2Jyx4HqR9VAm/Dx6ttQ==;
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rrDz7-0001Lq-Iw; Mon, 01 Apr 2024 11:29:45 +0200
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
+Subject: [PATCH v1 3/3] docs: verify/bisect: describe how to use a build host
+Date: Mon,  1 Apr 2024 11:29:43 +0200
+Message-ID: <0d863aeea2f19f1eac460e503bd09ed2519d09a5.1711963460.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1711963460.git.linux@leemhuis.info>
+References: <cover.1711963460.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] docs: handling-regressions.rst: clarify that
- "Closes:" tags work too
-To: Karel Balej <balejk@matfyz.cz>, Jonathan Corbet <corbet@lwn.net>,
- regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, workflows@vger.kernel.org
-References: <20240328194342.11760-1-balejk@matfyz.cz>
- <20240328194342.11760-3-balejk@matfyz.cz>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20240328194342.11760-3-balejk@matfyz.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711960745;94e34c62;
-X-HE-SMSGID: 1rrDBt-0007A8-17
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711963789;9169144f;
+X-HE-SMSGID: 1rrDz7-0001Lq-Iw
 
-On 28.03.24 20:29, Karel Balej wrote:
-> The regressions handling manual claims that regzbot associates patches
-> fixing an issue with the report based on the occurrence of the
-> appropriate "Link:" trailers. It reasons that this does not add any
-> burden on the maintainers/bug fix authors as this is already mandated by
-> the "Submitting patches" guide. In fact however, the guide encourages
-> using "Link:" tags for related discussions or issues which the patch
-> fixes only partially, recommending "Closes:" for full resolutions.
-> 
-> Despite it not being mentioned anywhere in the "Handling regressions"
-> guide, regzbot does in fact take the "Closes:" tags into account and
-> seems to in fact treat them fully equivalently to "Link:" tags.
-> 
-> Clarify this in the regressions handling guide by always mentioning both
-> of the tags.
+Describe how to build kernels on another system (with and without
+cross-compiling), as building locally can be quite painfully on some
+slow systems. This is done in an add-on section, as it would make the
+step-by-step guide to complicated if this special case would be
+described there.
 
-Many thx for this and the other patch. I had planned to do something
-like this myself, but never got around to.
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+---
+ .../verify-bugs-and-bisect-regressions.rst    | 78 ++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 4 deletions(-)
 
-There is just one thing that makes me slightly unhappy: this tells
-readers that they can use both, but leaves the question "what's the
-difference" respectively "in which situation should I use one or the
-other" unanswered.
+diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+index 24a54fcd6abe1b..f371c48e9ef603 100644
+--- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
++++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+@@ -275,6 +275,10 @@ Preparations: set up everything to build your own kernels
+ 
+ The following steps lay the groundwork for all further tasks.
+ 
++Note: the instructions assume you are building and testing on the same
++machine; if you want to compile the kernel on another system, check
++:ref:`Build kernels on a different machine <buildhost_bis>` below.
++
+ .. _backup_bissbs:
+ 
+ * Create a fresh backup and put system repair and restore tools at hand, just
+@@ -2096,11 +2100,77 @@ problems will arise if the kernelrelease identifier exceeds 63 characters.
+ [:ref:`back to step-by-step guide <introoptional_bissbs>`].
+ 
+ 
+-Additional reading material
+-===========================
++Additional information
++======================
++
++.. _buildhost_bis:
++
++Build kernels on a different machine
++------------------------------------
++
++To compile kernels on another system, slightly alter the step-by-step guide's
++instructions:
++
++* Start following the guide on the machine where you want to install and test
++  the kernels later.
++
++* After executing ':ref:`Boot into the working kernel and briefly use the
++  apparently broken feature <bootworking_bissbs>`', save the list of loaded
++  modules to a file using ``lsmod > ~/test-machine-lsmod``. Then locate the
++  build configuration for the running kernel (see ':ref:`Start defining the
++  build configuration for your kernel <oldconfig_bisref>`' for hints on where
++  to find it) and store it as '~/test-machine-config-working'. Transfer both
++  files to the home directory of your build host.
++
++* Continue the guide on the build host (e.g. with ':ref:`Ensure to have enough
++  free space for building [...] <diskspace_bissbs>`').
++
++* When you reach ':ref:`Start preparing a kernel build configuration[...]
++  <oldconfig_bissbs>`': before running ``make olddefconfig`` for the first time,
++  execute the following command to base your configuration on the one from the
++  test machine's 'working' kernel::
++
++    cp ~/test-machine-config-working ~/linux/.config
++
++* During the next step to ':ref:`disable any apparently superfluous kernel
++  modules <localmodconfig_bissbs>`' use the following command instead::
++
++    yes '' | make localmodconfig LSMOD=~/lsmod_foo-machine localmodconfig
++
++* Continue the guide, but ignore the instructions outlining how to compile,
++  install, and reboot into a kernel every time they come up. Instead build
++  like this::
+ 
+-Further sources
+----------------
++    cp ~/kernel-config-working .config
++    make olddefconfig &&
++    make -j $(nproc --all) targz-pkg
++
++  This will generate a gzipped tar file whose name is printed in the last
++  line shown; for example, a kernel with the kernelrelease identifier
++  '6.0.0-rc1-local-g928a87efa423' built for x86 machines usually will
++  be stored as '~/linux/linux-6.0.0-rc1-local-g928a87efa423-x86.tar.gz'.
++
++  Copy that file to your test machine's home directory.
++
++* Switch to the test machine to check if you have enough space to hold another
++  kernel. Then extract the file you transferred::
++
++    sudo tar -xvzf ~/linux-6.0.0-rc1-local-g928a87efa423-x86.tar.gz -C /
++
++  Afterwards :ref:`generate the initramfs and add the kernel to your boot
++  loader's configuration <install_bisref>`; on some distributions the following
++  command will take care of both these tasks::
++
++    sudo /sbin/installkernel 6.0.0-rc1-local-g928a87efa423 /boot/vmlinuz-6.0.0-rc1-local-g928a87efa423
++
++  Now reboot and ensure you started the intended kernel.
++
++This approach even works when building for another architecture: just install
++cross-compilers and add the appropriate parameters to every invocation of make
++(e.g. ``make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- [...]``).
++
++Additional reading material
++---------------------------
+ 
+ * The `man page for 'git bisect' <https://git-scm.com/docs/git-bisect>`_ and
+   `fighting regressions with 'git bisect' <https://git-scm.com/docs/git-bisect-lk2009.html>`_
+-- 
+2.44.0
 
-To answer that question: in a ideal world developers would use "Closes:"
-when a change resolves an issue, and "Link" when it's somehow related to
-a report, but not resolving the problem.
-
-But we don't live in that world and I wonder if we ever reach that point
-where regzbot could act accordingly. Nevertheless I'd say it would be
-wise to write the docs towards that ideal world. E.g.: tell developers
-to uses 'Closes:', but in some places briefly hint that "'Link:' works
-for now, too".
-
-I also find the patch description a bit verbose; and it would be good to
-turn the text upside down: first outline what the patch, then maybe
-describe the "why".
-
-Ciao, Thorsten
