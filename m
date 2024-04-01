@@ -1,106 +1,159 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from flow6-smtp.messagingengine.com (flow6-smtp.messagingengine.com [103.168.172.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617F93FBBD;
-	Mon,  1 Apr 2024 15:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EE83F8E0
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 15:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984766; cv=none; b=OdSey1+BGN6GMeTjeYF+LaedLyEK9QoU4GNRNpYAtgBXuKqPOZCC9eo7ZgH76DENVvMPtho8GvHUt5UT6W+5Of2kCFU9Dm6zUdKvF0BFTxOR46vYgUSvzJIribbYgIRJeGZTvDP7DA4sGP1dm4zR9HK6V6/3MD0JKboqp+spoes=
+	t=1711985057; cv=none; b=BIDk/e1hkGKjkapr9qBccv6lL6Kcr4ub3chqnwi9xq6g7WCJJ4h1JSkL2nIM8GOCEAMIMNIClc4DdxMnTXJOAWHKs7H5f9ONiuAmoFDE4NLbwrrOTtVAO5yH/H2skMHPZ5xRKn+kRHeOvJLZQix0uNX37/ry7vbz5M6N0G4Gqm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711984766; c=relaxed/simple;
-	bh=Mn1oI23NTg1AaPyrE/mNULagWOv/BYrH388SG9DOQ3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mFPfcldQKcX+QLEVaPPG4QSByOWjVzq28SahAhaCIdwQQlWTEJ1XNk6C4HL2QW1doeMasyzEWYbZbIE4YqT6yAfWg2mT68v8v/dQS3Rg5AzMeCWXkNKn9uUFRidjRhe1EtfSYLbL8mkAuPfA+SCixuSVine026mIMeP1lCDZpqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j2L+IDWd; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1711985057; c=relaxed/simple;
+	bh=Vu9NJbqYq8DKSNj9RbFUIEuMF9BDspzO48JX9Fl5sic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnPkn9fQ0JxA4ZY99G+sVWZpKO7vEgYtA5jUf8PI+u1TrlwL9c0iIDSaCaZsuyycKbAc+rAqBUoz5SpnNRQ7SiwH0B7H/S3LteN+oAm6ia6DPfsnI1d6ZuMsSmn/eIVGoVSVYsVx2gONjvOZ5jzeOVVHqCPk+1MNI3te4RiXwjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=jnHP2wjm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H8ViwOeG; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j2L+IDWd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=PhKhQVr7znpcbPo62k7GO48yiZBLMZxLiecMoLCt7H0=; b=j2L+IDWdbDjfujvsEsWML8vFZ6
-	zbq6Ls9c9euevDYveD9NG+7LLKm7ZfwjqJpmtnRJZBsGFglBLjOX9pX4z9kXnGbC7jm4J+WCkq/bv
-	azbYVH+XEEebbJ+pfcHZaBjGi4H5hkn6D4tKce7P/qMuyFObMoYJE4oBJgHkVDpimYS7e5pfqA4MO
-	EG3a99Wq+EOizTudYSE7ewsJc3OGbIqF0y31Z/B2StM3uwm2jjdKi30GOWFXueFTxa9ezc9y1xUi4
-	zeSetGH6ToX9LR71sSJURpblWy4rnJ4ZxapdKrp7bXwCk2oDjwYuNpBvZpvkfhXBI2sBhGUPLHWPw
-	BdKDniwQ==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrJRQ-00000008A3d-42JM;
-	Mon, 01 Apr 2024 15:19:21 +0000
-Message-ID: <b3b37454-df45-4826-ac5a-85c687f99d20@infradead.org>
-Date: Mon, 1 Apr 2024 08:19:13 -0700
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="jnHP2wjm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H8ViwOeG"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailflow.nyi.internal (Postfix) with ESMTP id 9DD8D2003F2;
+	Mon,  1 Apr 2024 11:24:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 01 Apr 2024 11:24:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1711985054;
+	 x=1711992254; bh=RrcJpR6o9gazuIRw+eN1bhtXNZiNsVKHCtdZLgD7j4Q=; b=
+	jnHP2wjmGtEGrFtLrX0/ULGt9yGo4k11CaiBLNQqQ5nV7yu3MV0sYpwvlLp2qv67
+	weGXSGWx2iArteij+jagEnnly7VEZGJVLrriVR99KN55+fwNa1KpaNvxkJth7CSB
+	90uRFsncryY990CQ/2AX/tg8BDJeMgDC8MyailmsZfj1FWbbmT40ve/6KFYnCVKZ
+	vkKhmYQFk4zjnEsMVAJJLB/8bK9ne4dh7bgxDynrdeqqiiObunh61/PoURupWQA6
+	GvB5Uj/PJX8Oo1yFBwCwQxKp0EwTYsncWSX9q87v6bYxotYlo0pGZqkFDfRkZEEp
+	Lf54LU2aEhfJWmalHjGIWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711985054; x=
+	1711992254; bh=RrcJpR6o9gazuIRw+eN1bhtXNZiNsVKHCtdZLgD7j4Q=; b=H
+	8ViwOeGbbq+0ftgw9lG/q6Sdjq4sstv3j2cC3fs7fOHnewCJDDiRp8KHeb4eqEe4
+	6J68gmHTANZIX3mQlpy26hioYdl1oZGz31HdQKvoQgCzXyNX3WOpzO9hMt4Hn0i+
+	DTzd6mYgBPTskSGZfzB53y5O4UclDSY0vjv7aKyokvuN/Z/xNL985lSoFNRyuY2W
+	+7i4BzVYZGGdC7nRi1IPzUoSvMpt9FDLVWvIJ4LyiwuOI4yrmFpHODtv03T3x0KC
+	tlRobgtTo1YtI92uULA3LQFXWZfvY2/98nLk2B3BAkzOFfTelaStGUmzaoovksqz
+	q4byBey1VgsA43juLcSTw==
+X-ME-Sender: <xms:ntEKZozS0a8pOEmT36gLQdTsXIiId2RrOZbstEIqM38l41gH33HB-A>
+    <xme:ntEKZsSJhijCPaoJgOq2SgZpWN2v405Kxb6m0BGEUxDfdIqAGIPd-KKjITKkPDAfs
+    Of5PhHg2eKBnQ>
+X-ME-Received: <xmr:ntEKZqUYHxEaSurgUJG0KIUyZqyyr6BsoHkl_gmEY-ZObq5iHJu9PZub8-hSv0JGFIDHQLIKy2XNppSw15PilgaRxMnYmcTIBoBgOg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeftddgkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpefgke
+    ffieefieevkeelteejvdetvddtledugfdvhfetjeejieduledtfefffedvieenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhroh
+    grhhdrtghomh
+X-ME-Proxy: <xmx:ntEKZmgoYU3GWP4Lanm9HM2Wkw_ui5LnCByHgaAmyZYmR5XMvDluBA>
+    <xmx:ntEKZqBoz-h9uJduIzKB4wgdu6evwXCw6iuwdDpy94Tl6w9WeOF7-w>
+    <xmx:ntEKZnLotSxXLlOOBQ1X9nU79PKr5AQmlhfERlfl4nkr5BE0PpvqSA>
+    <xmx:ntEKZhD2_w8X8IGFH6tyz8YolDWMMLcNVLSDigPgiaFDQG2T5rv6pQ>
+    <xmx:ntEKZswiv-wUVhV_XG16Q-u-D2OiXfIOCvt4w1dKcYpA9zB_4j3pH6EBqog>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 1 Apr 2024 11:24:13 -0400 (EDT)
+Date: Mon, 1 Apr 2024 17:24:10 +0200
+From: Greg KH <greg@kroah.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Viktor Malik <vmalik@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Natanael Copa <ncopa@alpinelinux.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Stable <stable@vger.kernel.org>
+Subject: Re: Fwd: stable kernels 6.6.23 and 6.1.83 fails to build: error:
+ unknown type name 'u32'
+Message-ID: <2024040100-skies-outplayed-c162@gregkh>
+References: <ZgrAM4NjZQWZ2Jq6@archie.me>
+ <2024040143-shrimp-congress-8263@gregkh>
+ <ZgrD-XtaG9D8jFnA@archie.me>
+ <CAADnVQ+3bGQL9tpAR-up0_bPeF-+zW9xPp=Li1xUYf-2SaRuCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] docs: handling-regressions.rst: clarify that
- "Closes:" tags work too
-To: Thorsten Leemhuis <linux@leemhuis.info>, Karel Balej <balejk@matfyz.cz>,
- Jonathan Corbet <corbet@lwn.net>, regressions@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- workflows@vger.kernel.org
-References: <20240328194342.11760-1-balejk@matfyz.cz>
- <20240328194342.11760-3-balejk@matfyz.cz>
- <dfa22ac1-36e9-48da-a2a8-8d7818c09187@leemhuis.info>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <dfa22ac1-36e9-48da-a2a8-8d7818c09187@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQ+3bGQL9tpAR-up0_bPeF-+zW9xPp=Li1xUYf-2SaRuCw@mail.gmail.com>
 
-
-
-On 4/1/24 1:38 AM, Thorsten Leemhuis wrote:
-> On 28.03.24 20:29, Karel Balej wrote:
->> The regressions handling manual claims that regzbot associates patches
->> fixing an issue with the report based on the occurrence of the
->> appropriate "Link:" trailers. It reasons that this does not add any
->> burden on the maintainers/bug fix authors as this is already mandated by
->> the "Submitting patches" guide. In fact however, the guide encourages
->> using "Link:" tags for related discussions or issues which the patch
->> fixes only partially, recommending "Closes:" for full resolutions.
->>
->> Despite it not being mentioned anywhere in the "Handling regressions"
->> guide, regzbot does in fact take the "Closes:" tags into account and
->> seems to in fact treat them fully equivalently to "Link:" tags.
->>
->> Clarify this in the regressions handling guide by always mentioning both
->> of the tags.
+On Mon, Apr 01, 2024 at 08:09:40AM -0700, Alexei Starovoitov wrote:
+> On Mon, Apr 1, 2024 at 7:26 AM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> >
+> > On Mon, Apr 01, 2024 at 04:15:25PM +0200, Greg KH wrote:
+> > > On Mon, Apr 01, 2024 at 09:09:55PM +0700, Bagas Sanjaya wrote:
+> > > > Hi,
+> > > >
+> > > > On Bugzilla, ncopa@alpinelinux.org reported resolve_btfids FTBFS regression
+> > > > on musl system [1]:
+> > > >
+> > > > > The latest releases fails to build with musl libc (Alpine Linux edge and v3.19):
+> > > > >
+> > > > > ```
+> > > > > rm -f -f /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/tools/bpf/resolve_btfids/libbpf/libbpf.a; ar rcs /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/tool
+> > > > > s/bpf/resolve_btfids/libbpf/libbpf.a /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/tools/bpf/resolve_btfids/libbpf/staticobjs/libbpf-in.o
+> > > > > In file included from main.c:73:
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:7:9: error: unknown type name 'u32'
+> > > > >     7 |         u32 cnt;
+> > > > >       |         ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:8:9: error: unknown type name 'u32'
+> > > > >     8 |         u32 ids[];
+> > > > >       |         ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:12:9: error: unknown type name 'u32'
+> > > > >    12 |         u32 cnt;
+> > > > >       |         ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:13:9: error: unknown type name 'u32'
+> > > > >    13 |         u32 flags;
+> > > > >       |         ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:15:17: error: unknown type name 'u32'
+> > > > >    15 |                 u32 id;
+> > > > >       |                 ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:16:17: error: unknown type name 'u32'
+> > > > >    16 |                 u32 flags;
+> > > > >       |                 ^~~
+> > > > > /home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/include/linux/btf_ids.h:215:8: error: unknown type name 'u32'
+> > > > >   215 | extern u32 btf_tracing_ids[];
+> > > > >       |        ^~~
+> > > > > make[4]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/tools/build/Makefile.build:98: /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/tools/bpf/resolve_btfids
+> > > > > /main.o] Error 1
+> > > > > make[4]: *** Waiting for unfinished jobs....
 > 
-> Many thx for this and the other patch. I had planned to do something
-> like this myself, but never got around to.
+> > > > > make[3]: *** [Makefile:83: /home/ncopa/aports/main/linux-lts/src/build-lts.x86_64/tools/bpf/resolve_btfids//resolve_btfids-in.o] Error 2
+> > > > > make[2]: *** [Makefile:76: bpf/resolve_btfids] Error 2
+> > > > > make[1]: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/Makefile:1354: tools/bpf/resolve_btfids] Error 2
+> > > > > make: *** [/home/ncopa/aports/main/linux-lts/src/linux-6.6/Makefile:234: __sub-make] Error 2
+> > > > > ```
+> > > >
+> > > > Bisection led to upstream commit 9707ac4fe2f5ba ("tools/resolve_btfids:
+> > > > Refactor set sorting with types from btf_ids.h") as the culprit.
+> > > >
+> > > > See the report on Bugzilla for the full thread and proposed fix.
+> > >
+> > > Is the proposed fix a commit to backport?
+> >
+> > Nope (see below).
 > 
-> There is just one thing that makes me slightly unhappy: this tells
-> readers that they can use both, but leaves the question "what's the
-> difference" respectively "in which situation should I use one or the
-> other" unanswered.
-> 
-> To answer that question: in a ideal world developers would use "Closes:"
-> when a change resolves an issue, and "Link" when it's somehow related to
-> a report, but not resolving the problem.
+> The fix is in bpf tree.
+> commit 62248b22d01e ("tools/resolve_btfids: fix build with musl libc")
 
-I use Link: when I fix only part of an LKP report and Closes: when I fix
-all of one.
+Thanks, I'll go queue that up now to make people's lives easier.
 
-> But we don't live in that world and I wonder if we ever reach that point
-> where regzbot could act accordingly. Nevertheless I'd say it would be
-> wise to write the docs towards that ideal world. E.g.: tell developers
-> to uses 'Closes:', but in some places briefly hint that "'Link:' works
-> for now, too".
-
-I don't see Link: going away any time in the "near" future.
-
-> I also find the patch description a bit verbose; and it would be good to
-> turn the text upside down: first outline what the patch, then maybe
-> describe the "why".
-
-It's almost amusing that you find something verbose.  ;)
-
--- 
-#Randy
+greg k-h
