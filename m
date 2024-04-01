@@ -1,55 +1,55 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943D8383A9
-	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 14:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836744501C
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 15:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711982210; cv=none; b=U0EKmjoepvCeGQ5FAbDXuztc8yw9uQgPXy1nDyGZwc+DSd3F6omozfZ/qas0mqJCemNbV9YRQ2D0vezYxukHtCUTPL1hbaQaq0p1TbYuEsw+zb779Ho7QW3BpCqtGSfGJSb/R6AfFBvNJaEcxXgBIqNn6DYB2rGqYo6iMmIVgKI=
+	t=1711984195; cv=none; b=B5hjYQfvcV2wlqkh1LpQCjDQWarXRw89GXf/05wyFnzmrVyspzKGUvftwimXzRDFdfakC24Vbo54NcsKvCyp465Pmb7KlqJvzcUWzPBfGLHRWfYeTeZ5ARprf7lsNx1zfegqVvA4NSDyv5PBGNcrMTshEUOhfG/kHg/Z+n+0y+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711982210; c=relaxed/simple;
-	bh=EEmuc+b2AkAn41DgNIfZqUpWsbsfsG2NOQu7/VnUndE=;
+	s=arc-20240116; t=1711984195; c=relaxed/simple;
+	bh=L/8gZAolucuwwkQmFM70oji/BIRrViO0fJYD11aqWo8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eiu4B9pllaFVpMZy14JQBUYxNixTFaejYwWmabzHRMHtiC7lJh1k3+OkuktpbMe+vQfky8C3vCC/L0Pd80z4fe2BYN+7wNpzVsTV4CzL6TQ99zTee+G+50StGhTV5G9SSUzAQwaNQR94zys8SBdw1qmiON/DXm1Hhw5uMOssMzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kj5GwetP; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=HObulN6eKw/2Y40vvXFheYD2YBY4XN2otFw7WCjdu93NOA8TFx0wTsPyCVenUU4KdipPQB276PEz6kAT3YA8t5ymonLG/WMIILFwCdp80chCEgMAAC/FmTeMmpfFvg883q5+yCvHPppBYsA86RApq3kM0N2vjs3uhQqkhymSfI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiUzLy3T; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kj5GwetP"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-432d55b0fa9so435981cf.1
-        for <regressions@lists.linux.dev>; Mon, 01 Apr 2024 07:36:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiUzLy3T"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-341cf28e055so3100880f8f.0
+        for <regressions@lists.linux.dev>; Mon, 01 Apr 2024 08:09:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711982207; x=1712587007; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1711984192; x=1712588992; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pODHKe4h1pzV0fTG3f868sZOWbcBvAE1L0zwg0ZSk74=;
-        b=kj5GwetPba6Ef6w9hHAMSibnpD6qwg1KP9l0LoDLeHc7kHKG43Cks24NSbzRRZKEH6
-         gz4Bb4gS2B5pRC3zFWWWf4poRZnmz1Nm3o2jMmdhoTUl6HobEBi7y6Hy/eHX+FFB6zBS
-         xO4ycjfcQcMgWEiyw87Ue/6DbtfrgO8XfYAv1gwKMp/E5lIQJbW37/NorPbwHc4xZUxQ
-         rVtAGLH73F0xccUbRZkNT1qawTtvlp0xTW31eZ7Oh6N0gM9tpXSgiz7aFs5MGG7/d6Q/
-         qnUjnYzFIDxbV+r2og3qNnLeuMI1zVqDom+s5AS2+Vcbieh23jg70+N0E5eTJ6ykbM6t
-         6wkA==
+        bh=rD0kt0FvGy6RrN2V5n3OM/nHuzCqFzbTG5LJZtlBfSQ=;
+        b=MiUzLy3Tim9MFhJGZ3qlCZ6gETA0fwfwqe7WWymveBkjyiPFHcP0zIUWfJKBP+MiZt
+         YddQFKqsp2dkh/Kr//Yu303evpqBiAO8/gTLbENVWpYg0qq7hdx5TgI/fEQH8ONPWAFz
+         G/EUEuT0F55t3aNSlKqeukA4mT6LnB5nd6hyYbrlUygbaz2qrPBFTA0j7iJzmOw0skLq
+         nEcSZGMoxLuQDWFKFwXFUBeowAGuorKN6RQtU616WQzgTIRdfHzcisExg0sgeMElYCfj
+         KRYDOggf0tId5gvi1xgADd7Nly3SLL/oQhbG/tkceEFohYiHb2ImX1O3BPciPrCFw2v/
+         8vjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711982207; x=1712587007;
+        d=1e100.net; s=20230601; t=1711984192; x=1712588992;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pODHKe4h1pzV0fTG3f868sZOWbcBvAE1L0zwg0ZSk74=;
-        b=cpGViXTQ7YDarxvkMy1n08bQ17I+I34FhrLPn7OpO75aebqI38YdLnQiIW695oFhT+
-         7ebfaIWqU1N/GqzSkjpz1Z9VGVdQcxWbjDvvTZMHlvbFqm7H+V7xabufwAu9S3nOYxQ6
-         T7XByyWQErHGrks22DszI/sPG9yje133B80G9kes835O+XP4GKlrzHDbu3arDxkPKfkT
-         CqFQCz8hO4uNWnAJoKMkKKjqrtdPpdpsvGv4wenUSeTDt/4JmUgbCvqVNwwHCsoCuhdf
-         e96VURWftH0GaLEZ0JP33jjUQ9WOO+NU0hsaFxOjf09LjkUKtn2WY8pou01SAYlhemHQ
-         IaEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqR2AasmZKXr+tVnlpM+gWMFGdfziBfson6Kj3g+mr80TsFC4Lp3eqZPdWyQIH3uVoICe8CVwvv1ObA8Cvj0UDVe8VZl0LKXExuQg=
-X-Gm-Message-State: AOJu0Yx5nsLsLmO4UUOuLQ3MfJ+BkwH+P9hXZ7rqUmnRewU8cYUpdgK+
-	MjGzDQ2dRU/E22lWXqMiq3owzy+WeJWm/0Um3ByKIKJgf332DZJczEb1zJzJLVB6gdDOJd7DUnn
-	eBNPEhAwBj4HPwroS02MF95jk4VHx9zqS4Hmg
-X-Google-Smtp-Source: AGHT+IFIKGtehE7EtnkbuM+FGm+p/vKoFf3BbH+1VMoO4S3HYrVMe4yr936V9dflX6oN4dO9In0k2mzov9SRMoBv+Bg=
-X-Received: by 2002:a05:622a:1e08:b0:432:b567:407d with SMTP id
- br8-20020a05622a1e0800b00432b567407dmr739326qtb.6.1711982207211; Mon, 01 Apr
- 2024 07:36:47 -0700 (PDT)
+        bh=rD0kt0FvGy6RrN2V5n3OM/nHuzCqFzbTG5LJZtlBfSQ=;
+        b=o1pXwNtZOKu8HgXDiF5KGkWySxTwFSiB0efXwO8uss23K8JHzqYXl1p3Z8RL2ZdNHs
+         GvhpXaO3bM+zv3z7VLBGV1CX+b4YwkV9bMUfCl2T2QjWR8P78dP2VEzVJb9nuqGqef+k
+         rk6SpX0Gfd/lgp47voQ+smmRNSbx6QZjiUAPTzXPf+fZ9/muPLYHSx0DTRvJqr6nVj0X
+         GfT2aLfTHQDswFa841HAoLlcqAYqZHEkgxeOZTbHoFpexCW4j0QLzbDINQYTsAnunalH
+         TxeEjbuZdvZ8bZmtobpUqLxk5FN2zbU20QbLK2v0ly6dIe9oA2Awf2xTGZyZDXclJbhO
+         ijcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVt/egt3bubqiLr/WKpGVf8xRCr5oI6h20FZFV+mI0AlzJHVKoza3AjhrhKhu5HqgKEsP5myo/4jMW6NL7SaYubB1vTJnlM+DewqPI=
+X-Gm-Message-State: AOJu0YzXVtQCIA7ZIgJQq8EZfpFqYOHOyWpF4Iy7aTOXNPMvrEwSPm8r
+	jVKXwJbD01a24j6ceQP47eA5qge1CJctJW5xDyWJqLPJFYk1WDKFelpEVJXSBWBDMAwqCb1vgCg
+	eMpDn9CeCHBD+TIET8tBr0kHAe9E=
+X-Google-Smtp-Source: AGHT+IEcCbfFXr199EiYnJw5HlOBHWx9BjzqxHRRFkUu/0fAKDBUv9lM2OvcK/+c4eD5ryX6cPZTpJiLniN6MRKODT4=
+X-Received: by 2002:a5d:4523:0:b0:33e:4810:a052 with SMTP id
+ j3-20020a5d4523000000b0033e4810a052mr7375023wra.70.1711984191568; Mon, 01 Apr
+ 2024 08:09:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,15 +59,15 @@ MIME-Version: 1.0
 References: <ZgrAM4NjZQWZ2Jq6@archie.me> <2024040143-shrimp-congress-8263@gregkh>
  <ZgrD-XtaG9D8jFnA@archie.me>
 In-Reply-To: <ZgrD-XtaG9D8jFnA@archie.me>
-From: Greg Thelen <gthelen@google.com>
-Date: Mon, 1 Apr 2024 07:36:08 -0700
-Message-ID: <CAHH2K0apZttqAhMZ9H_fygUC_Oa9G5-4XYmmqZu-EWNOuqc4Xg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 1 Apr 2024 08:09:40 -0700
+Message-ID: <CAADnVQ+3bGQL9tpAR-up0_bPeF-+zW9xPp=Li1xUYf-2SaRuCw@mail.gmail.com>
 Subject: Re: Fwd: stable kernels 6.6.23 and 6.1.83 fails to build: error:
  unknown type name 'u32'
 To: Bagas Sanjaya <bagasdotme@gmail.com>
 Cc: Greg KH <greg@kroah.com>, Viktor Malik <vmalik@redhat.com>, 
 	Andrii Nakryiko <andrii@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, ncopa@alpinelinux.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Natanael Copa <ncopa@alpinelinux.org>, 
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
 	Linux Regressions <regressions@lists.linux.dev>, Linux Stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -128,6 +128,7 @@ in.o
 86_64/tools/bpf/resolve_btfids
 > > > > /main.o] Error 1
 > > > > make[4]: *** Waiting for unfinished jobs....
+
 > > > > make[3]: *** [Makefile:83: /home/ncopa/aports/main/linux-lts/src/bu=
 ild-lts.x86_64/tools/bpf/resolve_btfids//resolve_btfids-in.o] Error 2
 > > > > make[2]: *** [Makefile:76: bpf/resolve_btfids] Error 2
@@ -146,23 +147,6 @@ s:
 > > Is the proposed fix a commit to backport?
 >
 > Nope (see below).
->
-> >
-> > Digging through entries is not the easiest way to get things resolved..=
-.
-> >
->
-> The reporter posted the fix as bug comment [1] instead (hint: include
-> linux/types.h) but not submitted it to mailing lists first.
->
-> Thanks.
->
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218647#c2
->
-> --
-> An old man doll... just what I always wanted! - Clara
 
-Does https://lore.kernel.org/all/20240328110103.28734-1-ncopa@alpinelinux.o=
-rg/
-resolve this? It's staged in the bpf tree. Though I'm not sure when
-it'll be merged upstream.
+The fix is in bpf tree.
+commit 62248b22d01e ("tools/resolve_btfids: fix build with musl libc")
