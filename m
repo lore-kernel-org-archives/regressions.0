@@ -1,242 +1,110 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E81229CFA
-	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 18:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A1C56B70
+	for <regressions@lists.linux.dev>; Mon,  1 Apr 2024 22:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711997418; cv=none; b=NKC9koz1FjNtbjwIYZZRfAZLLvcWCHtzQanQ3ybg06c8B5+SPnZ/Jttf1hZsy5bLYuWCICIi8TAwdq9gQifKPpxCO5Z+boAF7VKZhy+PmwZBmfG+6/dGdVJ0mQroc3jz869ElIo3ndx4pngQYFtqvSJ+vZhqmNasiM72JDbywUk=
+	t=1712011490; cv=none; b=Imb+9kMCdU31O6H9MMM3IpD+TfykNf+9nm4urx0Xyb3yWvqAYbM1zTrvr6E8ibelIhaFZZUCdex9Da5GLU4ok1WuJUwoKJiMZCBzcpkpRXQDULDPdvUkQHjTSdL7C80V/yfLNuANKblWhXQrn/+tkeZOx2glstiwMELKFYAl9qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711997418; c=relaxed/simple;
-	bh=sjUYPGDNRSdGzzx8R0tH/tvpolN4kLr6fmOP3fD/W1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QUdBJc9m6Yt4uIvun6rO7XuckrufOVXV3DR1s10HN4LaHrgZaWD6ps4p8wYlfUtemgDTVWYGS46Q+W8C6A/y2S7YsJpjypG9jj/eYX0wbjIvRJVrcBCTLtOD1r1sNcosKr26OprJsbCVsvxZyO0v55/b0v54QGbZlhpyUOcuUjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=bC5QKIRl; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1712011490; c=relaxed/simple;
+	bh=IqTxP6MAaADfSiLtLnKmzpDhHoIeGwlP4HGHqpHgvI8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=axrn8eOZmpgrZziuTjrE9l/ZP1BIG/51YDrJfXBn4fEBxN83ihsACYvQBL1uTBCBgt/bvJ3MMyfHzB/VUuONgoTKwXXEbN/5p33QyajCVmEdoxegvgIvTbq1a7YLDxwLBE2B+b01e6NJSH9c/ZPv8qUpZlviP3ERtGUJMjou09A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=uB9hx2Ns; arc=none smtp.client-ip=91.218.175.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="bC5QKIRl"
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431DWGTv026768;
-	Mon, 1 Apr 2024 18:49:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=f6gnBP/qgPzz4w+zIHZr9v9UGVHd5fkV6AeZxdtCzM8=;
- b=bC5QKIRlshsYCYQhaPFuqTeE3enl5XYYufsFpuq64w4+pmyJaZQuBnAy/yyLBR/2S/S2
- YAauIa8yKs3xupq6I1CYsVIptGeVVQ15pu5wxB0bCP6/ag0eEXpWySxx6S9u1/M0MR4g
- 2bHFKD8Ekr2mE6a+4LY9Axod6WpI16t1ODEiMYzYFPOVwYlZ3BomcemqSP5Qs1C+M00Y
- uT6nCih6bmqWXNhuUdVXzRu8WyBBetSr5tC4diPAUL8s1o/gEkssplNal+qV4b1Txw6M
- 2FGUEm+5rga2Dsi9OHbd3QadzwIUQXf53nUgI+Fqbe6x4xin07J/7t+wZnhJmgIgHm9y 5g== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3x7p17dnvq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 18:49:21 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 0E4EC8005E7;
-	Mon,  1 Apr 2024 18:49:20 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id E6F86805E72;
-	Mon,  1 Apr 2024 18:49:15 +0000 (UTC)
-Date: Mon, 1 Apr 2024 13:49:13 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Russ Anderson <rja@hpe.com>, Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Pavin Joseph <me@pavinjoseph.com>, stable@vger.kernel.org,
-        Eric Hagberg <ehagberg@gmail.com>, Simon Horman <horms@verge.net.au>,
-        Dave Young <dyoung@redhat.com>, Sarah Brofeldt <srhb@dbc.dk>,
-        Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH] x86/mm/ident_map: Use full gbpages in identity maps
- except on UV platform.
-Message-ID: <ZgsBqS5JquMgIh_j@swahl-home.5wahls.com>
-References: <20240325020334.GA10309@hpe.com>
- <87o7b273p2.fsf@email.froward.int.ebiederm.org>
- <ZgHTXvCQr6ycbVzp@swahl-home.5wahls.com>
- <87r0fv6ddb.fsf@email.froward.int.ebiederm.org>
- <ZgQ8Ej-MLlNJR6wn@swahl-home.5wahls.com>
- <87zfuj2bgh.fsf@email.froward.int.ebiederm.org>
- <ZgWO5I_p8zHyp3en@swahl-home.5wahls.com>
- <87msqf12sy.fsf@email.froward.int.ebiederm.org>
- <ZgrPrZqAXeq7e_wh@swahl-home.5wahls.com>
- <ed6a32ef-85f0-4f90-883b-911ef0964984@intel.com>
+	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="uB9hx2Ns"
+Date: Mon, 1 Apr 2024 15:44:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
+	s=key1; t=1712011484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IqTxP6MAaADfSiLtLnKmzpDhHoIeGwlP4HGHqpHgvI8=;
+	b=uB9hx2Nsrh2B0sXIAks4hvNgr/u3SN138VrofuuR6Hb8oXJkIe4jeanOBdCBfGT5a3DKPG
+	g9ef+VcEC8kq0Q5gRuIjxzkXzUhRMCsLSA/LQI2291QTN6U5iRce5o/FUljGj0OvggCmAE
+	Qs32lO7g7/YSNqSLtOsRbuP8puFR5DxSTQb2LULaMmcD9u+294NDIrmgv/ccJh/30wusJQ
+	1/tLF07MMr5qJEKJKjkKME5W46QDJhU6XhyZ/PiUIOv0NNaVUp4C7t+Z6Koy0fl5ExBZJ5
+	ULk0ve2q+gQmp9yXvCVl0HU1jc5o5SHSvsXRsTbc1oFUEwlruLJiJspQ6o68xg==
+Message-ID: <20240401154436.GB26633@craftyguy.net>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Clayton Craft <clayton@craftyguy.net>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ regressions@lists.linux.dev
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+In-Reply-To: <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
+References: <20240321150510.GI8211@craftyguy.net>
+ <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <a3aae375-5582-46e4-866b-6a81641998af@redhat.com>
+ <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
+ <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net>
+ <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="fpZYhPLy/yUVa6iM"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-Migadu-Flow: FLOW_OUT
+
+
+--fpZYhPLy/yUVa6iM
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ed6a32ef-85f0-4f90-883b-911ef0964984@intel.com>
-X-Proofpoint-GUID: lSluWFEGi9WgwyKJ13Q18NFYhbd1rxhx
-X-Proofpoint-ORIG-GUID: lSluWFEGi9WgwyKJ13Q18NFYhbd1rxhx
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_13,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0
- phishscore=0 spamscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404010132
+Content-Transfer-Encoding: base64
 
-On Mon, Apr 01, 2024 at 11:03:20AM -0700, Dave Hansen wrote:
-> On 4/1/24 08:15, Steve Wahl wrote:
-> > From that point of view, it does make sense to special case UV systems
-> > for this.  The restricted areas we're talking about are not in the map
-> > when the bootloader is started on the UV platform.
-> 
-> Just to be clear what I'm looking for here: Special casing UV systems is
-> theoretically OK.  What I don't like is doing that in using GB pages or not.
-> 
-> It would be much nicer to have specific, precise information about what
-> UV needs done.  For instance, do we know where the special address range
-> is?  Is it fixed?  If so, I'd much rather have code that says: "Whoa,
-> don't map this range with *any* identity map page tables" versus
-> something targeted specifically at gbpages.
+T24gU3VuLCAyNCBNYXIgMjAyNCAyMjo1Mzo0NyArMDIwMCBBcmQgQmllc2hldXZlbCA8YXJkYkBr
+ZXJuZWwub3JnPiB3cm90ZToKPiA+ID4gVGhhbmtzLgo+ID4gPgo+ID4gPiBJIHB1c2hlZCBhbm90
+aGVyIGJyYW5jaAo+ID4gPgo+ID4gPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
+dXgva2VybmVsL2dpdC9hcmRiL2xpbnV4LmdpdC9sb2cvP2g9ZWZpLWNsYXl0b24tMwo+ID4gPgo+
+ID4gPiB3aGljaCBoYXMgYSBwcm9wZXIgZml4IGZvciB0aGUgaXNzdWUgdGhhdCB5b3UgZm91bmQu
+Cj4gPiA+Cj4gPiA+IEFzIGl0IHR1cm5zIG91dCwgdGhlIGNvbXBhdCBtaXhlZCBtb2RlICh3aXRo
+IGhhbmRvdmVyIHByb3RvY29sKSB3YXMKPiA+ID4KPiA+ID4gYnJva2VuIGZyb20gdGhlIGJlZ2lu
+bmluZywgYW5kIHRoZSBjaGFuZ2UgeW91IGlkZW50aWZpZWQganVzdCBoYXBwZW5lZAo+ID4gPgo+
+ID4gPiB0byB0cmlnZ2VyIGl0IG9uIHlvdXIgaGFyZHdhcmUuCj4gPgo+ID4KPiA+IFRlc3RlZCBh
+bmQgZml4ZXMgYm9vdGluZyBvbiBteSBCYXkgVHJhaWwgdGFibGV0IGFuZCBOVUMuIFRoYW5rcyBm
+b3IgZml4aW5nIHRoaXMhCj4gPgo+ID4gVGVzdGVkLWJ5OiBDbGF5dG9uIENyYWZ0IDxjbGF5dG9u
+QGNyYWZ0eWd1eS5uZXQ+CgpTby4uLiBtYXliZSBteSB0ZXN0aW5nIHdhc24ndCBhcyB0aG9yb3Vn
+aCBhcyBJIHRob3VnaHQsIE9SIEkgYW0gZXhwZXJpZW5jaW5nIGFuCnVucmVsYXRlZCBwcm9ibGVt
+LiBJbiBhbnkgY2FzZSwgSSdtIGhhdmluZyBzb21lIGRpZmZpY3VsdHkgZmlndXJpbmcgb3V0IHdo
+YXQgdG8KYmxhbWUuIFdoZW4gdXNpbmcgdGhpcyBwYXRjaCBvbiB0aGUgNi42IExUUzoKCjEpIGtl
+cm5lbCBzZWVtcyB0byBwYW5pYyByaWdodCBhZnRlciBkaXNwbGF5aW5nIGBkaXNhYmxpbmcgYm9v
+dGNvbiBbZWZpZmIwXWAuIEkKZGV0ZXJtaW5lZCB0aGF0IGl0J3MgcGFuaWNraW5nIGJ5IHNldHRp
+bmcgYHBhbmljPS0xYCBhbmQgc2VlaW5nIGl0IHJlYm9vdCBhZnRlcgpzaG93aW5nIHRoYXQgbWVz
+c2FnZS4gSSBjYW4gd29yayBhcm91bmQgaXQgYnkgc2V0dGluZyBga2VlcF9ib290Y29uYCwgYnV0
+IHRoYXQncwpub3QgaWRlYWwuCgoyKSBrZXJuZWwgY29tcGxhaW5zIGFib3V0IG5vIHJvb3QgKGZy
+b20gaW5pdHJkKS4gSSBjYW4gd29yayBhcm91bmQgdGhpcyBieQpwYXNzaW5nIGBpbml0cmQ9bXkt
+aW5pdHJhbWZzYCBvbiB0aGUga2VybmVsIGNtZGxpbmUuCgpJIGhhdmVuJ3QgdHJpZWQgYW55IG5l
+d2VyIGtlcm5lbHMgeWV0LiBUaGUgc2Vjb25kIGlzc3VlIGFib3ZlIG1ha2VzIG1lIHdvbmRlciBp
+Zgp5b3VyIHBhdGNoIHJlbGF0ZWQgdG8gYXJncyBtaWdodCBiZSB0byBibGFtZSwgYnV0IEknbSBu
+b3Qgc3VyZS4gQW55IGhlbHAgcG9raW5nCmFyb3VuZCBmdXJ0aGVyIHdvdWxkIGJlIGdyZWF0bHkg
+YXBwcmVjaWF0ZWQgOikKCi1DbGF5dG9uCg==
 
-The area is not fixed.  Some reserved memory in each numa node,
-address and amount varies depending on the amount of memory in the
-system.
+--fpZYhPLy/yUVa6iM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We've kept the memory range marked as reserved in the e820 memory
-tables, and our experience is the kernel respects that in all other
-aspects.  Even creation of the identity maps is on the surface
-respecting those areas being listed as reserved, but using GBpages
-"swings wide" and includes the reserved areas in the identity map.
+-----BEGIN PGP SIGNATURE-----
 
-So, I don't fully understand your hesitation in being more selective
-in the use of gbpages on UV, or what I might suggest in its place.
+iQIzBAABCgAdFiEEkdOrrjmBP3eB7DeWSkztbX7flQoFAmYLONQACgkQSkztbX7f
+lQreeA/+ISYhfctY3E26tF3E1urqhF/W1EHFZCPlKqRbdj894UQ8jOThbzq+E73y
+dXvGu/dLCEooVJi8/ueTCzyUQBDDJe9uiZnpvCLs929NJ07yBaN/cz4kIPH+AaLi
+LaFUDuPgiJrBlBF5FAtx0NBCQCIg3m7R8drPg8ToAjR/wbsOOcFw1qtbBKni6UGZ
+b7f3LMiUkLHCx/39+G/uD+HR5Enel6BG/Tg/kWC2g/aFiyn4vec7CpuEa09NbPZG
+MzZyj4wxc2FCKATcqy7imGGiVLetveKtXHgdRnYHo26OyMPTdPALyREFKHdbfPcD
+urGj7434ruzxKLdk85YgHQx2OEbFWVxeK2FN0zplToP1RUPKN6Uf1cPDXDhHc0gm
+SGVOzAyue63XMT0JaVh3YccQwK0u9KKk8nZr//9tFQ1ye9auunRRZKC4MAcKb6Qk
+Qb5YyQ2vGi3gSaY4e/ObeXecHpdexjC/GkVZSG1JF5rUilg6Z5x7dXkyMARcutev
+b9Z6UsJ4HmjfohV3rlwnXd+F2SrpGJgyAqNvkWXde3eGvoqxlqZ994S7smYXpQ0a
+ZLzeK9h1JHZkGKkDZx5fyJ1awAOd3WgBQpuGPbtKMNP+bQyi99Rra5jVFSb6V5WO
+X/YYAytXarwsDITd1UdtJjWuRNRJvbzBNkLAu3kukjuSAJbKlQE=
+=3hLn
+-----END PGP SIGNATURE-----
 
-Here's partial kernel output showing the memory map, from a randomly
-selected system in case it helps illustrate it for you:
-
-[Tue Mar 21 09:40:00 2023] BIOS-provided physical RAM map:
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000000100000-0x0000000068285fff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000068286000-0x0000000068286fff] ACPI NVS
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000068287000-0x0000000068baefff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000068baf000-0x0000000068bb1fff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000068bb2000-0x0000000068c3ffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000068c40000-0x000000006a33ffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000006a340000-0x000000006d5fefff] ACPI NVS
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000006d5ff000-0x000000006fffefff] ACPI data
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000006ffff000-0x000000006fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000070000000-0x000000008fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x00000000f8000000-0x00000000fbffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x00000000fe010000-0x00000000fe010fff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000000100000000-0x0000003f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000003f80000000-0x000000407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000004080000000-0x0000007f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000007f80000000-0x000000807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000008080000000-0x000000bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000bf80000000-0x000000c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000c080000000-0x000000ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000000ff80000000-0x000001007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000010080000000-0x0000013f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000013f80000000-0x000001407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000014080000000-0x0000017f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000017f80000000-0x000001807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000018080000000-0x000001bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000001bf80000000-0x000001c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000001c080000000-0x000001ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000001ff80000000-0x000002007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000020080000000-0x0000023f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000023f80000000-0x000002407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000024080000000-0x0000027f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000027f80000000-0x000002807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000028080000000-0x000002bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000002bf80000000-0x000002c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000002c080000000-0x000002ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000002ff80000000-0x000003007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000030080000000-0x0000033f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000033f80000000-0x000003407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000034080000000-0x0000037f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000037f80000000-0x000003807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x0000038080000000-0x000003bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000003bf80000000-0x000003c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000003c080000000-0x000003ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x000003ff80000000-0x000004007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x00001ffe00000000-0x00001ffeffffffff] reserved
-[Tue Mar 21 09:40:00 2023] BIOS-e820: [mem 0x00001fffc0000000-0x00001fffdfffffff] reserved
-[Tue Mar 21 09:40:00 2023] printk: bootconsole [earlyser0] enabled
-[Tue Mar 21 09:40:00 2023] NX (Execute Disable) protection: active
-[Tue Mar 21 09:40:00 2023] e820: update [mem 0x3d279018-0x3d2b3a57] usable ==> usable
-[Tue Mar 21 09:40:00 2023] e820: update [mem 0x3d279018-0x3d2b3a57] usable ==> usable
-[Tue Mar 21 09:40:00 2023] e820: update [mem 0x3d23e018-0x3d278a57] usable ==> usable
-[Tue Mar 21 09:40:00 2023] e820: update [mem 0x3d23e018-0x3d278a57] usable ==> usable
-[Tue Mar 21 09:40:00 2023] extended physical RAM map:
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000000000000-0x000000000009ffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x00000000000a0000-0x00000000000fffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000000100000-0x000000003d23e017] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000003d23e018-0x000000003d278a57] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000003d278a58-0x000000003d279017] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000003d279018-0x000000003d2b3a57] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000003d2b3a58-0x0000000068285fff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000068286000-0x0000000068286fff] ACPI NVS
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000068287000-0x0000000068baefff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000068baf000-0x0000000068bb1fff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000068bb2000-0x0000000068c3ffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000068c40000-0x000000006a33ffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000006a340000-0x000000006d5fefff] ACPI NVS
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000006d5ff000-0x000000006fffefff] ACPI data
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000006ffff000-0x000000006fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000070000000-0x000000008fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x00000000f8000000-0x00000000fbffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x00000000fe010000-0x00000000fe010fff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000000100000000-0x0000003f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000003f80000000-0x000000407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000004080000000-0x0000007f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000007f80000000-0x000000807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000008080000000-0x000000bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000bf80000000-0x000000c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000c080000000-0x000000ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000000ff80000000-0x000001007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000010080000000-0x0000013f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000013f80000000-0x000001407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000014080000000-0x0000017f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000017f80000000-0x000001807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000018080000000-0x000001bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000001bf80000000-0x000001c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000001c080000000-0x000001ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000001ff80000000-0x000002007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000020080000000-0x0000023f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000023f80000000-0x000002407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000024080000000-0x0000027f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000027f80000000-0x000002807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000028080000000-0x000002bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000002bf80000000-0x000002c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000002c080000000-0x000002ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000002ff80000000-0x000003007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000030080000000-0x0000033f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000033f80000000-0x000003407fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000034080000000-0x0000037f7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000037f80000000-0x000003807fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x0000038080000000-0x000003bf7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000003bf80000000-0x000003c07fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000003c080000000-0x000003ff7fffffff] usable
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x000003ff80000000-0x000004007fffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x00001ffe00000000-0x00001ffeffffffff] reserved
-[Tue Mar 21 09:40:00 2023] reserve setup_data: [mem 0x00001fffc0000000-0x00001fffdfffffff] reserved
-[Tue Mar 21 09:40:00 2023] efi: EFI v2.7 by HPE
-
-Thanks,
-
---> Steve Wahl
--- 
-Steve Wahl, Hewlett Packard Enterprise
+--fpZYhPLy/yUVa6iM--
