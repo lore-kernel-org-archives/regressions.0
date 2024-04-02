@@ -1,131 +1,109 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879C14B06C
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 17:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904215B972
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 19:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712078862; cv=none; b=UxY1b52LKfi0Z2k/9vsX8I8y05vRyudfj/1TDA+/UMeLFTsV025LkUWLXNJYrlzjbaO9B2XltGmYK0+GrMUqADoDTM5HlNEW96OcHVJwMXQ7ukPzxBr8ocoCCEsbXaA2tGoz5DxlrZS6uAugTTfdbXhRL6EG3fXE0bo6iUPQLRM=
+	t=1712086569; cv=none; b=V2/COJe8U38mFm3/1JbSbgljsHD6y0z6PRuBByaj+5F12M+9js8DreBZ5R+bcVqax5CDLOFUq/mn8qIpQa4eCeuUFUITkIZ6oBj0azAD2n8sdDCcpxg5Ejf8bcqXvwPM9IFIIjMPkv6Z00uqTbsK2aMDHLKVxmSbC3dhGcaPZM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712078862; c=relaxed/simple;
-	bh=C+KN2V9wpye3eVQp8A9k8wGfFywTWnLq6qVtUjdFm2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GSVs78LEWaE4jY2PGpTWG8ytg6BpMW0gfiNy4rg76dMSwVS73IkqW4V9ZS4/qdpugsvtHQAcvQSxZmQLAmZUdTGY5royjulJryCgp4dCwSoSaxx2HpPK2APIqiaM5gBqajep3OXV2ByljRHwwRvUJ5+MX2BWKr6SiieUFwbP5OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1MSA/FI; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1MSA/FI"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so15605566b.1
-        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 10:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712078859; x=1712683659; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EEHmyuJnTcLQOH/PKZK7H+N0e7ofu0PP36+q0+beXDY=;
-        b=A1MSA/FI5CYgKR1qUpaDtqGNo6QBjI3NgEcUEFUjzPkjs7MCYgz46hE/bKnPthtfwz
-         XbkcPuiXiw0wRW54m/md9iOPow73MGxz7yhP6J7z1JBmNAyZyP3Yuv/HOZUCiGwgu3fT
-         tEcB3lWsBKOdojluiLTAKi2+2gaEPy0/XA1SJ2IGBQL2fxERb+DAZ1w6iCpMjvL+pKOr
-         UMlqls9awtp8Volp5pV+mu/XCv+daQE9WWUzBaijPmZD3yFxYhsb5cWgonYCxp2BKxwY
-         2aNCZdLwlhRMCinQr3uh6uOElCMaLCXgJDFgcE8sgC48QsdqU9AoUglEtQ5kKbQYeVSf
-         9quA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712078859; x=1712683659;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EEHmyuJnTcLQOH/PKZK7H+N0e7ofu0PP36+q0+beXDY=;
-        b=aUFeOrhFEn4QGlQrGMV8LkaqKncFXIZxhv21iHgWGeybGN01VOGJQ9QNybysuKSMVS
-         lvWEGGbUIbAd33FzDIstFxuZkYJGmuwgGr5q0Fa+G/5NE3SUOdsNv4JbCXHyurNhSNR4
-         b/43dBGsXZnumddgm8hgzyKS4cJkyGhUezHxUoxN3I/ESsUltkfdd2ohj5ySNGRaVoIK
-         PBYLCKEyYJUUg4si/TolmI0jHuBUiEOm1mkl72wspFmCgHTjCbM8jX2NAjWJ3XLRTxXi
-         i21QUDCLXhMq/xNQcnVZilxa6IZKUEqp+edFjAEMHy6IvqooHHZXvZ/akzhMgUULuk2c
-         e5Bw==
-X-Gm-Message-State: AOJu0Yxj1DrrAROHr0geN0B5qIX15Qbym3NE0jJN/pp/5nKjNDdDRYj0
-	FVb6uL9NG0gByqJ4JbF3QYq2xhQBBaSmaLjrWoyhDmOyaj27FjyTPEYIqE8=
-X-Google-Smtp-Source: AGHT+IGxLtnnZo/nwOFRpJkkD6C5Ad3DTeR5fuztUnmw36V5pRmDqe8TW8eDD2edsI+CnSSZXLCEWA==
-X-Received: by 2002:a17:906:1388:b0:a4e:8992:2b9e with SMTP id f8-20020a170906138800b00a4e89922b9emr135535ejc.3.1712078859220;
-        Tue, 02 Apr 2024 10:27:39 -0700 (PDT)
-Received: from [194.171.31.163] ([194.171.31.163])
-        by smtp.googlemail.com with ESMTPSA id e10-20020a1709061e8a00b00a4df061728fsm6740061ejj.83.2024.04.02.10.27.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 10:27:38 -0700 (PDT)
-Message-ID: <ec06af0a-a8e4-4681-be7f-10dcfb5e70d1@gmail.com>
-Date: Tue, 2 Apr 2024 19:27:37 +0200
+	s=arc-20240116; t=1712086569; c=relaxed/simple;
+	bh=C+sxaHWdoQnuXwu4aDiuiJDjiNUG2v14M2Yveog+WBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JUiz63aFoCrKGThoWrUG7/zMtLTgRIuD8wj0w8YrMEhnC4WiE5oj9HRAOYzQTz3HCpRwaaW79W6sm6YO4Bq2kMjKV734UTC6Z1QN0aKl9giahiSmqHs8pBfjelvrvSSAb38qq9s3e+Vdd8FT2CMlUB1KvBRJVHyIBdKl7UO6twI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id B36DF8718;
+	Tue,  2 Apr 2024 19:29:54 +0000 (UTC)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
+Cc: stable@vger.kernel.org
+Subject: 6.7.11: Fails to hibernate - work queues still busy
+Date: Tue, 02 Apr 2024 21:29:50 +0200
+Message-ID: <13486453.uLZWGnKmhe@lichtvoll.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression : Latitude 5500 do not always go to true sleep mode
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org
-References: <1ee68691-9eb4-404a-adb4-fdaaf12c905d@gmail.com>
- <2a4a2d24-2c4d-47cc-bc1b-30c309c173e3@leemhuis.info>
-From: =?UTF-8?Q?L=C3=A9o_COLISSON?= <leo.colisson@gmail.com>
-In-Reply-To: <2a4a2d24-2c4d-47cc-bc1b-30c309c173e3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Dear Thorsten,
+Hi Thorsten, hi Greg,
 
-Thanks a lot for your answer. I'd love to give a more precise bug 
-report, but it's not so easy (see below), so my hope was that this would 
-ring a bell to some devs here with a trivial fix to apply, especially as 
-I see surprisingly many people with this issue (3 people reported 
-similar regressions in my threads). Since it seems not to be the case, 
-I'll try to bisect … But it might take quite some time as it is not so 
-easy to do as I can't find:
+6.7.9 + some bcachefs upgrade/downgrade fixes included in 6.7.11 works
+okay. 6.7.11 fails. Two repeated attempts failed with a dmesg like this:
 
-1) a deterministic way to trigger the bug (sometimes it goes to sleep 
-correctly, sometimes not) Even worse, I feel like some kernel versions 
-are "less buggy", for instance, I tried 6.1 and I only experienced a 
-single complete battery drop, and 2 drops of 20% (which never occurred 
-before), while on 6.6, it was significantly more often in my (short) 
-experience. But this might just be statistical bias.
-2) a simple way to check if the bug occurred (waiting for my battery to 
-drop is not really optimal)
+[  192.465064] r8169 0000:05:00.0 en1: Link is Down
+[  193.246691] PM: hibernation: hibernation entry
+[  193.622844] Filesystems sync: 0.097 seconds
+[  193.623337] Freezing user space processes
+[  193.627326] Freezing user space processes completed (elapsed 0.003 seconds)
+[  193.627390] OOM killer disabled.
+[  193.627889] PM: hibernation: Marking nosave pages: [mem 0x00000000-0x00000fff]
+[  193.627933] PM: hibernation: Marking nosave pages: [mem 0x0009f000-0x000fffff]
+[  193.627973] PM: hibernation: Marking nosave pages: [mem 0x09c00000-0x09d00fff]
+[  193.628022] PM: hibernation: Marking nosave pages: [mem 0x09f00000-0x09f0ffff]
+[  193.628063] PM: hibernation: Marking nosave pages: [mem 0xa22d1000-0xa22d1fff]
+[  193.628099] PM: hibernation: Marking nosave pages: [mem 0xa22de000-0xa22dffff]
+[  193.628135] PM: hibernation: Marking nosave pages: [mem 0xa22ed000-0xa22eefff]
+[  193.628172] PM: hibernation: Marking nosave pages: [mem 0xa22ff000-0xa22fffff]
+[  193.628210] PM: hibernation: Marking nosave pages: [mem 0xb9533000-0xb95c3fff]
+[  193.628263] PM: hibernation: Marking nosave pages: [mem 0xbd9de000-0xcc3fdfff]
+[  193.630011] PM: hibernation: Marking nosave pages: [mem 0xce000000-0xffffffff]
+[  193.632545] PM: hibernation: Basic memory bitmaps created
+[  193.639135] PM: hibernation: Preallocating image memory
+[  195.755034] PM: hibernation: Allocated 2438707 pages for snapshot
+[  195.755817] PM: hibernation: Allocated 9754828 kbytes in 2.11 seconds (4623.14 MB/s)
+[  195.755842] Freezing remaining freezable tasks
+[  215.764748] Freezing remaining freezable tasks failed after 20.009 seconds (0 tasks refusing to freeze, wq_busy=1):
+[  215.764813] Showing freezable workqueues that are still busy:
+[  215.764841] workqueue events_freezable: flags=0x4
+[  215.764869]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=0 refcnt=2
+[  215.764881]     inactive: pci_pme_list_scan
+[  215.764895] workqueue usb_hub_wq: flags=0x4
+[  215.764965]   pwq 4: cpus=2 node=0 flags=0x0 nice=0 active=2 refcnt=3
+[  215.764974]     in-flight: 350:hub_event [usbcore] hub_event [usbcore]
+[  215.765212] Restarting kernel threads ... done.
+[  216.244833] PM: hibernation: Basic memory bitmaps freed
+[  216.245961] OOM killer enabled.
+[  216.246377] Restarting tasks ... done.
+[  216.250708] thermal thermal_zone0: failed to read out thermal zone (-61)
+[  216.252313] PM: hibernation: hibernation exit
+[  216.276601] Generic FE-GE Realtek PHY r8169-0-200:00: attached PHY driver (mii_bus:phy_addr=r8169-0-200:00, irq=MAC)
+[  216.871301] r8169 0000:02:00.0 en0: rtl_ep_ocp_read_cond == 0 (loop: 30, delay: 10000).
+[  216.976901] r8169 0000:02:00.0 en0: Link is Down
+[  217.003589] Generic FE-GE Realtek PHY r8169-0-500:00: attached PHY driver (mii_bus:phy_addr=r8169-0-500:00, irq=MAC)
+[  217.169087] r8169 0000:05:00.0 en1: Link is Down
+[  220.611547] r8169 0000:05:00.0 en1: Link is Up - 1Gbps/Full - flow control rx/tx
 
-I'll let you know if I have some progress…
+ThinkPad T14 Gen 1 with AMD Ryzen 4750U and 32 GiB of RAM.
 
-Cheers,
-Léo
+Could that be related to the following issue?
+
+* Hibernate stuck after recent kernel/workqueue.c changes in Stable 6.6.23
+@ 2024-04-02  8:08 Linux regression tracking (Thorsten Leemhuis)
+
+https://lore.kernel.org/regressions/ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info/T/#u
+
+However I did not find above work queue related error messages in the
+dmesg in the bug tracker bug report mentioned there:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=218658
+
+If really needed I could do a bisect, but it would take a while until I
+can take time to do it.
+
+Best,
+-- 
+Martin
 
 
-
-On 29/03/2024 17:14, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 29.03.24 16:21, Léo COLISSON wrote:
->> Since I upgraded my system (from NixOs release
->> 2caf4ef5005ecc68141ecb4aac271079f7371c44, running linux 5.15.90, to
->> b8697e57f10292a6165a20f03d2f42920dfaf973, running linux 6.6.19), my
->> system started to experience a weird behavior : when closing the lid,
->> the system does not always go to a true sleep mode : when I restart it,
->> the battery is drained. Not sure what I can try here.
->>
->> You can find more information on my tries here, with some journalctl logs :
->>
->> - https://github.com/NixOS/nixpkgs/issues/299464
->>
->> -
->> https://discourse.nixos.org/t/since-upgrade-my-laptop-does-not-go-to-sleep-when-closing-the-lid/42243/2
-> Thx for the report, but the sad reality is: I doubt that any kernel
-> developer will look into the report unless you perform a bisection to
-> find the change that causes the problem. That's because the report lacks
-> details and this kind of problem can be caused by various areas of the
-> kernels, so none of the developer will feel responsible to take a closer
-> look. From a quick look into your log it seems you are also using
-> out-of-tree drivers that taint the kernel, which is another reason why
-> it's unlikely that anyone will take a closer look.
->
-> For further details on reporting issues and mistakes many people make
-> (and you might want to avoid in case you want to submit a improve
-> report), see:
->
-> https://docs.kernel.org/admin-guide/reporting-issues.html
-> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
->
-> Ciao, Thorsten
