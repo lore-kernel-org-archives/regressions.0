@@ -1,188 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B537126F04
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 14:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACB115A484
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 16:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712068203; cv=none; b=kBDJZT3Rr5LP/c/wiZOza/cVL5SMRTu37Dst0ejNZlAErGQIF9QmQ0E9CzEz/b8bX1QWgfO1RAIlQiVGhEWIT7hZybyGAWIvKcImcpwNQd6KcRJIA5XNITOUwPelq8Cd/yF2/xhExUlXA5WIJU/9FaZou0S9sZtpFIrjqzbrh+Y=
+	t=1712076241; cv=none; b=aQHa3IZPfkruJY1/x34s4Y4Noi+N2nGVLydYQy/3rMBJ49KNEU0VmrIwjRJZCSDKgcWauv/vNfDxjzhZGU1ppoG4S38VG69LeB8olOc8kFjPDG5qX12sEBQXaV2GjLm/rmKywz1JVD/MmOFpxX86YWSvYukF0BAngmz7roZacxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712068203; c=relaxed/simple;
-	bh=QvzrPHZ1SrSjuYLatIYldVAuS9qqdVLXvpXnuacOUc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cvs5pPVo7dcVrzVa2e5oQtlSB0VtzyNhNRzOlk3YsZo2fm1DfDLvetj1xLRWX6ZdxYqQvGjJBYDS+KtRsSMu+Dx72voHGvZVkAfPtozGg4b+PU2BUmEYRkbZ/VfxrA3gC+r0gof1Ds3XuTGGFS/X9Zip6bYCVCnSsZLxOyOz7To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: eQHDnkdXREewE5bMZm148A==
-X-CSE-MsgGUID: t/srlB+ZQrqHhJ+WEF7dHQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10205490"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="10205490"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 07:30:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915142916"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="915142916"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 07:29:59 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rrf9B-00000000pid-2tHz;
-	Tue, 02 Apr 2024 17:29:57 +0300
-Date: Tue, 2 Apr 2024 17:29:57 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] gpiolib: Fix triggering "kobject: 'gpiochipX' is not
- initialized, yet" kobject_get() errors
-Message-ID: <ZgwWZRMnMxtS-7gr@smile.fi.intel.com>
-References: <20240402134334.173409-1-hdegoede@redhat.com>
+	s=arc-20240116; t=1712076241; c=relaxed/simple;
+	bh=zRkhmGjgmVMhbBTs4VgkmwPJvD4Nu5No5k8gC7QBMGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E0/tJ8xWBzGKjdXl0i2NAADNzpAPl7dQvcQCYlwqa6CEW9esIcnQmilBSwNEigKRGfNrEdRbsfn1opGLibFs8nugKCRpGYoo8mAJJg6PvkMvsJMbivMCWRp9LeMny6iZ761+F7WQAoEzuKEQWGc+fXjHWyVnMsEiKDP0Tv5YExc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LZxeOZq0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LZxeOZq0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712076239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3mmSRm2AtBAuROYhBMqBOzOmzoCJiEGySZSdD2yP9So=;
+	b=LZxeOZq0RlGmaS65drqu7mcWuOg3sRtK3FMecsYuXu9XcT5w+8UQMFeQC1m2ibV4nzkT1H
+	OYo8EKKIn3w1+dWV8jjnAAa+lPJ7p8IQ9PbgjoA9RXdV253V74TKwNMTuACoA2fovcnyf0
+	38bwk73qpyxUZwBLFDCufOUnM5wSiOg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-jS27BinaPdS8F1B7XgUnkg-1; Tue, 02 Apr 2024 12:43:53 -0400
+X-MC-Unique: jS27BinaPdS8F1B7XgUnkg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B4C681A291;
+	Tue,  2 Apr 2024 16:43:52 +0000 (UTC)
+Received: from x1.nl (unknown [10.39.192.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D3BD917B24;
+	Tue,  2 Apr 2024 16:43:50 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-gpio@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH v2] gpiolib: Fix triggering "kobject: 'gpiochipX' is not initialized, yet" kobject_get() errors
+Date: Tue,  2 Apr 2024 18:43:45 +0200
+Message-ID: <20240402164345.14065-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240402134334.173409-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Tue, Apr 02, 2024 at 03:43:34PM +0200, Hans de Goede wrote:
-> When a gpiochip gets added by loading a module, then another driver may
-> be waiting for that gpiochip to load on the deferred-probe list.
->=20
-> If the deferred-probe for the consumer of gpiochip then triggers between
-> the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find()
-> see the chip and the gpiochip_setup_dev() later then gpio_device_find()
-> does a kobject_get() on an uninitialzed kobject since the kobject is
-> initialized by gpiochip_setup_dev() calling device_initialize():
+When a gpiochip gets added by loading a module, then another driver may
+be waiting for that gpiochip to load on the deferred-probe list.
 
-> [   30.408904] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.422987] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.456477] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.619517] ------------[ cut here ]------------
-> [   30.619580] kobject: 'gpiochip5' (00000000241466f2): is not initialize=
-d, yet kobject_get() is being called.
-> [   30.619664] WARNING: CPU: 3 PID: 42 at lib/kobject.c:640 kobject_get+0=
-x43/0x70
-> [   30.619685] Modules linked in: rmi_core(+) lenovo_yoga_tab2_pro_1380_f=
-astcharger(E) cs_dsp industrialio gpio_arizona(+) extcon_lc824206xa(+) ariz=
-ona_micsupp(+) lp855x_bl bq27xxx_battery_i2c pn544_mei bq27xxx_battery phy_=
-tusb1210 mei_phy dwc3 pn544 hci nfc snd_soc_sst_bytcr_wm5102 udc_core mei_h=
-dcp ulpi mei_pxp gpio_keys intel_rapl_msr intel_soc_dts_thermal intel_soc_d=
-ts_iosf brcmfmac_wcc intel_powerclamp coretemp kvm_intel bq24190_charger x8=
-6_android_tablets(E) brcmfmac kvm snd_sof_acpi_intel_byt snd_sof_acpi snd_s=
-of_intel_atom brcmutil punit_atom_debug snd_sof_xtensa_dsp cfg80211 intel_c=
-state snd_sof atomisp(C) snd_sof_utils atomisp_gmin_platform(C) ipu_bridge =
-pcspkr v4l2_fwnode v4l2_async snd_intel_sst_acpi videobuf2_vmalloc snd_inte=
-l_sst_core videobuf2_memops snd_soc_sst_atom_hifi2_platform videobuf2_v4l2 =
-intel_bytcrc_pwrsrc(E) videodev snd_soc_acpi_intel_match videobuf2_common s=
-nd_soc_acpi snd_intel_dspcfg mei_txe snd_intel_sdw_acpi snd_hdmi_lpe_audio =
-mei mc snd_soc_core lpc_ich dwc3_pci hci_uart btqca btrtl
-> [   30.620209]  btintel snd_compress ac97_bus btbcm snd_pcm_dmaengine int=
-3401_thermal processor_thermal_device processor_thermal_wt_hint bluetooth p=
-rocessor_thermal_rfim snd_seq processor_thermal_rapl binfmt_misc intel_rapl=
-_common soc_button_array snd_seq_device int3406_thermal snd_pcm processor_t=
-hermal_wt_req processor_thermal_power_floor int3403_thermal processor_therm=
-al_mbox dptf_power int340x_thermal_zone int3400_thermal acpi_thermal_rel ec=
-dh_generic rfkill_gpio intel_int0002_vgpio(E) snd_timer rfkill arizona_spi =
-arizona_ldo1 snd arizona acpi_pad regmap_spi soundcore vfat fat loop nfnetl=
-ink zram i915 crct10dif_pclmul crc32_pclmul mmc_block crc32c_intel ghash_cl=
-mulni_intel sha512_ssse3 sha256_ssse3 wdat_wdt sha1_ssse3 i2c_algo_bit drm_=
-buddy ttm drm_display_helper cec video sdhci_acpi wmi sdhci spi_pxa2xx_plat=
-form mmc_core i2c_hid_acpi i2c_hid dw_dmac pwm_lpss_platform pwm_lpss ip6_t=
-ables ip_tables i2c_dev fuse
-> [   30.620662] CPU: 3 PID: 42 Comm: kworker/u18:0 Tainted: G         C  E=
-      6.9.0-rc1+ #9
-> [   30.620675] Hardware name: Intel Corp. VALLEYVIEW C0 PLATFORM/BYT-T FF=
-D8, BIOS BLADE_21.X64.0005.R00.1504101516 FFD8_X64_R_2015_04_10_1516 04/10/=
-2015
-> [   30.620685] Workqueue: events_unbound deferred_probe_work_func
-> [   30.620708] RIP: 0010:kobject_get+0x43/0x70
-> [   30.620722] Code: 0f c1 43 38 85 c0 74 39 8d 50 01 09 c2 78 1f 48 89 d=
-8 5b c3 cc cc cc cc 48 8b 37 48 89 fa 48 c7 c7 00 b5 b1 a9 e8 ed 1a 0b ff <=
-0f> 0b eb c8 be 01 00 00 00 e8 ef 47 82 ff 48 89 d8 5b c3 cc cc cc
-> [   30.620733] RSP: 0000:ffffb743401b7b88 EFLAGS: 00010296
-> [   30.620749] RAX: 000000000000005f RBX: ffff9ea156b13800 RCX: 000000000=
-0000000
-> [   30.620758] RDX: 0000000000000002 RSI: 0000000000000027 RDI: 00000000f=
-fffffff
-> [   30.620767] RBP: ffff9ea156b13800 R08: 0000000000000000 R09: ffffb7434=
-01b7a30
-> [   30.620776] R10: ffff9ea1adbe2fa8 R11: 0000000000000003 R12: 000000000=
-0000000
-> [   30.620785] R13: ffff9ea148d8f830 R14: ffff9ea156b13e80 R15: ffffffffa=
-8947926
-> [   30.620794] FS:  0000000000000000(0000) GS:ffff9ea1b9580000(0000) knlG=
-S:0000000000000000
-> [   30.620805] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   30.620814] CR2: 00007f67ea538478 CR3: 0000000004850000 CR4: 000000000=
-01006f0
-> [   30.620824] Call Trace:
-> [   30.620834]  <TASK>
-> [   30.620849]  ? __warn.cold+0xb1/0x13e
-> [   30.620867]  ? kobject_get+0x43/0x70
-> [   30.620885]  ? report_bug+0xe6/0x170
-> [   30.620910]  ? handle_bug+0x3c/0x80
-> [   30.620927]  ? exc_invalid_op+0x13/0x60
-> [   30.620943]  ? asm_exc_invalid_op+0x16/0x20
-> [   30.620957]  ? gpio_device_find+0x16/0x260
-> [   30.620997]  ? kobject_get+0x43/0x70
-> [   30.621016]  ? kobject_get+0x43/0x70
-> [   30.621029]  gpio_device_find+0x216/0x260
-> [   30.621047]  ? __pfx_gpio_chip_match_by_label+0x10/0x10
-> [   30.621120]  gpiod_find_and_request+0x33a/0x480
-> [   30.621140]  ? __pfx_device_match_name+0x10/0x10
-> [   30.621170]  gpiod_get+0x41/0x60
-> [   30.621191]  snd_byt_wm5102_mc_probe+0xfd/0x500 [snd_soc_sst_bytcr_wm5=
-102]
-> [   30.621231]  ? __pfx___device_attach_driver+0x10/0x10
-> [   30.621247]  platform_probe+0x40/0xa0
-> [   30.621269]  really_probe+0xde/0x340
-> [   30.621282]  ? pm_runtime_barrier+0x50/0x90
-> [   30.621304]  __driver_probe_device+0x78/0x110
-> [   30.621324]  driver_probe_device+0x1f/0xa0
-> [   30.621343]  __device_attach_driver+0x85/0x110
-> [   30.621364]  bus_for_each_drv+0x78/0xc0
-> [   30.621389]  __device_attach+0xb0/0x1b0
-> [   30.621413]  bus_probe_device+0x94/0xb0
-> [   30.621435]  deferred_probe_work_func+0x99/0xf0
-> [   30.621452]  process_one_work+0x222/0x5a0
-> [   30.621470]  ? move_linked_works+0x70/0xa0
-> [   30.621502]  worker_thread+0x1d1/0x3e0
-> [   30.621526]  ? __pfx_worker_thread+0x10/0x10
-> [   30.621539]  kthread+0xee/0x120
-> [   30.621554]  ? __pfx_kthread+0x10/0x10
-> [   30.621572]  ret_from_fork+0x30/0x50
-> [   30.621587]  ? __pfx_kthread+0x10/0x10
-> [   30.621602]  ret_from_fork_asm+0x1a/0x30
-> [   30.621652]  </TASK>
-> [   30.621661] irq event stamp: 11481
-> [   30.621669] hardirqs last  enabled at (11487): [<ffffffffa81b9ccd>] co=
-nsole_unlock+0x10d/0x140
-> [   30.621683] hardirqs last disabled at (11492): [<ffffffffa81b9cb2>] co=
-nsole_unlock+0xf2/0x140
-> [   30.621695] softirqs last  enabled at (11330): [<ffffffffa81143eb>] __=
-irq_exit_rcu+0x9b/0x100
-> [   30.621708] softirqs last disabled at (11325): [<ffffffffa81143eb>] __=
-irq_exit_rcu+0x9b/0x100
-> [   30.621720] ---[ end trace 0000000000000000 ]---
+If the deferred-probe for the consumer of gpiochip then triggers between
+the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find()
+see the chip and the gpiochip_setup_dev() later then gpio_device_find()
+does a kobject_get() on an uninitialzed kobject since the kobject is
+initialized by gpiochip_setup_dev() calling device_initialize():
 
-Ouch, please, reduce this in accordance with
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#back=
-traces-in-commit-messages
+ arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
+ arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
+ ------------[ cut here ]------------
+ kobject: 'gpiochip5' (00000000241466f2): is not initialized, yet kobject_get() is being called.
+ WARNING: CPU: 3 PID: 42 at lib/kobject.c:640 kobject_get+0x43/0x70
+ Call Trace:
+  kobject_get
+  gpio_device_find
+  gpiod_find_and_request
+  gpiod_get
+  snd_byt_wm5102_mc_probe
 
---=20
-With Best Regards,
-Andy Shevchenko
+Not only is the device not initialized yet, but when the gpio-device is
+added to the list things like the irqchip also have not been initialized
+yet.
 
+So gpio_device_find() should really ignore the gpio-device until
+gpiochip_add_data_with_key() is fully done. Add a device_is_registered()
+check to gpio_device_find() to ignore gpio-devices on the list which are
+not yet fully initialized.
+
+Fixes: aab5c6f20023 ("gpio: set device type for GPIO chips")
+Suggested-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-Move device_is_registered() outside of RCU read lock section
+-Simplify backtrace in commit msg
+-Add fixes tag
+---
+ drivers/gpio/gpiolib.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 59ccf9a3e153..94903fc1c145 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1175,6 +1175,9 @@ struct gpio_device *gpio_device_find(const void *data,
+ 
+ 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
+ 				 srcu_read_lock_held(&gpio_devices_srcu)) {
++		if (!device_is_registered(&gdev->dev))
++			continue;
++
+ 		guard(srcu)(&gdev->srcu);
+ 
+ 		gc = srcu_dereference(gdev->chip, &gdev->srcu);
+-- 
+2.44.0
 
