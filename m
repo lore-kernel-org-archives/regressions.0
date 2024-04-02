@@ -1,167 +1,235 @@
-Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
+Received: from jake.logic.tuwien.ac.at (jake.logic.tuwien.ac.at [128.130.175.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E33159172
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 10:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2678A5A4C7
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 11:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.130.175.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712052868; cv=none; b=ExT2hoHJyoMBW+aevKES2wvHy5Ff2cFfM1c9za+M4Lx5rvQ/vS2NsZ1zplTZtFj/o9SrUzsuT7nTGJT7VU1+DY669au4HQC9FRmkOoDFRI8Qaxfi3TT+XTq8jxEXA1mBTR5MqsbYJK5iGUqto24KHx89wW+MkHOcfWP8u2gA5gY=
+	t=1712056747; cv=none; b=crKYEal0BFGuUgEiwmjq1vSMXdEmPFoFwTCLXO//Ofu0jm541VYqv/FRhzqr/nYEQF23CTrg/9JETsbmw6uIAVwoAoSdPVpumRM9z+mDr2zWmRA816+Mu3vDlaqupdCt84kToU5Pz3XsIW7MOUAi0zizFqRsF/pycAZvFPWt/Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712052868; c=relaxed/simple;
-	bh=hlUCPDyMrcMVJPOFhZIUAAzhQs7Ot/u9oKA1OiN5DsA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:From:
-	 References:In-Reply-To; b=maQcfPiAF55bknG9bRSJ9wx1uApDp/sZknxi0lhoBljvMwXDwVAOdU6ZHgvMHz0AsVxxHZEgiIlbw1NE1SnEdQquofaQXPE4Y+6u+EFYwXTgedk5MidCL50gQreJhs8ndbVL/IduX5H6ZkRSq1R7rG0fgstcIsFZ4t5NCY/AgKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=du3H3Kxj; arc=none smtp.client-ip=195.113.20.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="du3H3Kxj"
-X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
-	serial F5FD910E8FE2121B897F7E55B84E351D
-	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
-	auth type TLS.CUNI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
-	s=submission; t=1712052842; x=1713352842;
-	bh=hlUCPDyMrcMVJPOFhZIUAAzhQs7Ot/u9oKA1OiN5DsA=; h=From;
-	b=du3H3KxjIpomuO6SxOG5G8zrXblGfU8e9B0rnTnrQQsBbtywtAnV4+MpWAaxgTOB0
-	 PfdJByEHG8uaDZ/xXyTV1dxyj3XK4dFDadX4bQEr7EzAwNlMvd4uaghS9BI1nG21oc
-	 M1OsWbg87VUSrslgmRRDYrAlrO81RLVGhFZPpZGTDWcFxJ1f9Q/+Y/A6lNpM538DlK
-	 GP4i/+qRf8wJ8bEKGnYb094FBuMV4872J3AF2WNRn6SoasrmHuN0c06HgGybYgBSn1
-	 h5sBfjrhnA+/qIbiTBJs3TcQ9FqDKw/751pmgGac5duLDqysvN5tL224qVZm2nwdUe
-	 +g6pCwFk1mo3Q==
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(authenticated)
-	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 432ADxkE089761
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Tue, 2 Apr 2024 12:14:00 +0200 (CEST)
-	(envelope-from balejk@matfyz.cz)
+	s=arc-20240116; t=1712056747; c=relaxed/simple;
+	bh=Fw1+hra0A03myJvexzxBfAOfEr31l9iivWcQ+7VOtjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oFjxbmzhqafg7+M2EX6nFgEe+tACf3jx/JIZL/T/4S3FDodHf8XeH5N3BExsjnMogJL8wzDDdCzo6VDA5ZsaV2E6wE7Fa0zCMNp26bM5kNE2Pm//IZ0Tvv0rrydP/uE3cmguYmnPXzN6phzvmkXlcVjwBT/go9/dSTx12cdrRFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=preining.info; spf=pass smtp.mailfrom=logic.at; arc=none smtp.client-ip=128.130.175.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=preining.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=logic.at
+Received: from burischnitzel.preining.info (tvk215040.tvk.ne.jp [180.94.215.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by jake.logic.tuwien.ac.at (Postfix) with ESMTPSA id B30E4C0101;
+	Tue,  2 Apr 2024 13:10:48 +0200 (CEST)
+Received: by burischnitzel.preining.info (Postfix, from userid 1000)
+	id BD123F8C1D1; Tue,  2 Apr 2024 20:10:44 +0900 (JST)
+Resent-From: Norbert Preining <preining@logic.at>
+Resent-Date: Tue, 2 Apr 2024 20:10:44 +0900
+Resent-Message-ID: <ZgvntOMbjdtE2NLg@burischnitzel>
+Resent-To: stable@vger.kernel.org, regressions@lists.linux.dev
+Date: Tue, 2 Apr 2024 19:55:29 +0900
+From: Norbert Preining <norbert@preining.info>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Subject: Regression in kernel 6.8.2 fails in various ways (USB, BT, ...)
+Message-ID: <ZgvkIZFN23rkYhtS@burischnitzel>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 02 Apr 2024 12:13:58 +0200
-Message-Id: <D09K2WCTEKK9.2NJ2C8NVQXZ6D@matfyz.cz>
-Cc: "Randy Dunlap" <rdunlap@infradead.org>,
-        "Jonathan Corbet"
- <corbet@lwn.net>, <regressions@lists.linux.dev>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <workflows@vger.kernel.org>
-Subject: Re: [PATCH 2/2] docs: handling-regressions.rst: clarify that
- "Closes:" tags work too
-To: "Thorsten Leemhuis" <linux@leemhuis.info>
-From: "Karel Balej" <balejk@matfyz.cz>
-References: <20240328194342.11760-1-balejk@matfyz.cz>
- <20240328194342.11760-3-balejk@matfyz.cz>
- <dfa22ac1-36e9-48da-a2a8-8d7818c09187@leemhuis.info>
- <b3b37454-df45-4826-ac5a-85c687f99d20@infradead.org>
- <5ea364e9-8a7d-4239-bf3b-1f4ae13f311b@leemhuis.info>
-In-Reply-To: <5ea364e9-8a7d-4239-bf3b-1f4ae13f311b@leemhuis.info>
 
-Thorsten,
+Hi all
 
-thank you very much for your feedback.
+(please cc)
 
-Thorsten Leemhuis, 2024-04-02T11:27:57+02:00:
-> On 01.04.24 17:19, Randy Dunlap wrote:
-> > On 4/1/24 1:38 AM, Thorsten Leemhuis wrote:
-> >> On 28.03.24 20:29, Karel Balej wrote:
-> >>> The regressions handling manual claims that regzbot associates patche=
-s
-> >>> fixing an issue with the report based on the occurrence of the
-> >>> appropriate "Link:" trailers. It reasons that this does not add any
-> >>> burden on the maintainers/bug fix authors as this is already mandated=
- by
-> >>> the "Submitting patches" guide. In fact however, the guide encourages
-> >>> using "Link:" tags for related discussions or issues which the patch
-> >>> fixes only partially, recommending "Closes:" for full resolutions.
-> >>>
-> >>> Despite it not being mentioned anywhere in the "Handling regressions"
-> >>> guide, regzbot does in fact take the "Closes:" tags into account and
-> >>> seems to in fact treat them fully equivalently to "Link:" tags.
-> >>>
-> >>> Clarify this in the regressions handling guide by always mentioning b=
-oth
-> >>> of the tags.
-> >>
-> >> Many thx for this and the other patch. I had planned to do something
-> >> like this myself, but never got around to.
-> >>
-> >> There is just one thing that makes me slightly unhappy: this tells
-> >> readers that they can use both, but leaves the question "what's the
-> >> difference" respectively "in which situation should I use one or the
-> >> other" unanswered.
+I am running Arch Linux on a Lenovo X1 Carbon Gen 10.
+Tests are made with uptodate system, and besides the kernel no
+difference.
+The kernels are as distributed by Arch, but if necessary I can compile
+locally.
 
-I see your point and I agree. I have perceived something similar when
-editing the document: I wondered whether it's really good to *always*
-spell out both variants or whether it would perhaps be enough in some
-places only.
 
-I think the way that I ultimately did it counts on the reader being
-familiar with the "Submitting patches" document and knowing the "true"
-meanings of both Closes: and Link: and when to use each. So my goal was
-only to mention it because the way it was written seemed to almost imply
-to me that Closes: does *not* work and is thus not recommended which
-seemed in conflict with the "Submitting patch" guide, which was even
-more confusing since it literally referred to it.
+Arch Linux kernel 6.8.1 works without any problems.
+Upgrading to 6.8.2 breaks a lot of things:
 
-In other words, it wasn't actually my goal to answer that question you
-pose, because that is already answered in the other document.
+* Plugging in my Yubikey C does not trigger any reaction
+  (as a consequence scdaemon hangs)
+* sending of bluetooth firmware data fails with Oops (see below)
+* shutdown hangs and does not turn off the computer
 
-I also didn't want to be too drastic with the changes because the
-prevalence of Link: seemed so strong that I thought that I must be
-missing something and that you have a good reason to write it like this.
-So I wanted to stay safe :-)
 
-Anyway, if you are OK with that, I can definitely change it to Closes:
-everywhere and only mention Link: marginally, saying that it works too
-and explaining the difference while referring the reader to "Submitting
-patches" for more information (not that there would be too much more on
-this subject).
+I can repeat this behaviour on every reboot into 6.8.2.
 
-> Just in the scope of the document and the sections where the tag is
-> mentioned I think (but it would be good to recheck) it's always about
-> a "resolving a reported regression", so Closes there makes more sense.
+I have dmesg/journalctl -b for both kernels collected, if required, I
+can send them. I checked the diffs but nothing really did stand out.
 
-Exactly.
+Yubikey plugin:
+On 6.8.1 when I plug in the yubikey it lights up, and in the logs I see:
+[  370.767739] usb 3-1: new full-speed USB device number 5 using xhci_hcd
+[  370.910392] usb 3-1: New USB device found, idVendor=3D1050, idProduct=3D=
+0407, bcdDevice=3D 5.43
+[  370.910403] usb 3-1: New USB device strings: Mfr=3D1, Product=3D2, Seria=
+lNumber=3D0
+[  370.910407] usb 3-1: Product: YubiKey OTP+FIDO+CCID
+[  370.910409] usb 3-1: Manufacturer: Yubico
+[  371.497496] input: Yubico YubiKey OTP+FIDO+CCID as /devices/pci0000:00/0=
+000:00:14.0/usb3/3-1/3-1:1.0/0003:1050:0407.0005/input/input21
+[  371.555342] hid-generic 0003:1050:0407.0005: input,hidraw4: USB HID v1.1=
+0 Keyboard [Yubico YubiKey OTP+FIDO+CCID] on usb-0000:00:14.0-1/input0
+[  371.557021] hid-generic 0003:1050:0407.0006: hiddev96,hidraw5: USB HID v=
+1.10 Device [Yubico YubiKey OTP+FIDO+CCID] on usb-0000:00:14.0-1/input1
+[  371.557145] usbcore: registered new interface driver usbhid
+[  371.557151] usbhid: USB HID core driver
 
-> Karel: if I'm asking too much here, I could pick up your patches and
-> improve upon them to handle this. Or we simply wait until two other
-> regzbot features are in place, then I could fix this as part of some
-> other changes.
+On 6.8.2 not short blinking, and nothing in the logs.
 
-Not at all, I will be happy to make the changes, if you don't mind that
-it might take me some time, but I would definitely get around to it
-eventually.
 
-Of course I wouldn't want to for example delay you so if you get around
-to it sooner than I will then feel free to make the changes either as a
-modification of this patch or just on its own.
 
-Perhaps you could take the first patch already if you have no
-reservations there and I will then just send v2 of this one?
+Bluetooth Ooops:
+   14.271713] usb usb3-port10: disabled by hub (EMI?), re-enabling...
+[   14.271725] usb 3-10: USB disconnect, device number 4
+[   14.271893] Bluetooth: hci0: Failed to send firmware data (-19)
+[   14.271953] Bluetooth: hci0: sending frame failed (-19)
+[   14.271976] Bluetooth: hci0: Intel reset sent to retry FW download
+[   14.427765] Bluetooth: hci0: sending frame failed (-19)
+[   14.427811] BUG: kernel NULL pointer dereference, address: 0000000000000=
+070
+[   14.427814] #PF: supervisor read access in kernel mode
+[   14.427815] #PF: error_code(0x0000) - not-present page
+[   14.427816] PGD 0 P4D 0
+[   14.427819] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[   14.427820] CPU: 0 PID: 198 Comm: kworker/u41:0 Tainted: G           OE =
+     6.8.2-arch2-1 #1 a430fb92f7ba43092b62bbe6bac995458d3d442d
+[   14.427823] Hardware name: LENOVO 21CBCTO1WW/21CBCTO1WW, BIOS N3AET80W (=
+1.45 ) 02/20/2024
+[   14.427824] Workqueue: hci0 hci_power_on [bluetooth]
+[   14.427874] RIP: 0010:btintel_read_debug_features+0x4d/0xf0 [btintel]
+[   14.427880] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d =
+4c 24 07 c6 44 24 07 01 e8 de a9 ef ff 48 89 c3 48 3d 00 f0 ff ff 77 49 <83=
+> 78 70 13 75 67 48 8b 80 d0 00 00 00 be 02 00 00 00 48 89 df 48
+[   14.427881] RSP: 0018:ffffb7ba80aa3cc0 EFLAGS: 00010207
+[   14.427882] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff965ac0d=
+daab0
+[   14.427884] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff965ac0d=
+daaa8
+[   14.427884] RBP: ffffb7ba80aa3cf0 R08: ffff965ac0ddaab0 R09: 00000000000=
+00000
+[   14.427885] R10: 0000000000000001 R11: 0000000000000100 R12: ffff965ac0d=
+da000
+[   14.427886] R13: ffff965a84746900 R14: ffff965a8208ca05 R15: ffff965ac0d=
+da6d0
+[   14.427887] FS:  0000000000000000(0000) GS:ffff9661bf400000(0000) knlGS:=
+0000000000000000
+[   14.427888] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   14.427889] CR2: 0000000000000070 CR3: 00000002bb620000 CR4: 0000000000f=
+50ef0
+[   14.427889] PKRU: 55555554
+[   14.427890] Call Trace:
+[   14.427891]  <TASK>
+[   14.427893]  ? __die+0x23/0x70
+[   14.427898]  ? page_fault_oops+0x171/0x4e0
+[   14.427901]  ? __timer_delete_sync+0x7d/0xe0
+[   14.427905]  ? exc_page_fault+0x7f/0x180
+[   14.427908]  ? asm_exc_page_fault+0x26/0x30
+[   14.427912]  ? btintel_read_debug_features+0x4d/0xf0 [btintel 6735e787c9=
+ed982ceaa471c7ab364a390a1acb37]
+[   14.427916]  btintel_register_devcoredump_support.isra.0+0x3e/0x110 [bti=
+ntel 6735e787c9ed982ceaa471c7ab364a390a1acb37]
+[   14.427921]  btintel_setup_combined+0x503/0x790 [btintel 6735e787c9ed982=
+ceaa471c7ab364a390a1acb37]
+[   14.427925]  hci_dev_open_sync+0x102/0xc20 [bluetooth 81a2e5f6c3a85f38da=
+de670bfe91d861a9119613]
+[   14.427953]  ? __schedule+0x3ee/0x1520
+[   14.427956]  hci_dev_do_open+0x23/0x60 [bluetooth 81a2e5f6c3a85f38dade67=
+0bfe91d861a9119613]
+[   14.427975]  hci_power_on+0x51/0x260 [bluetooth 81a2e5f6c3a85f38dade670b=
+fe91d861a9119613]
+[   14.427994]  process_one_work+0x183/0x370
+[   14.427998]  worker_thread+0x3ab/0x4f0
+[   14.428000]  ? __pfx_worker_thread+0x10/0x10
+[   14.428001]  kthread+0xe5/0x120
+[   14.428005]  ? __pfx_kthread+0x10/0x10
+[   14.428006]  ret_from_fork+0x31/0x50
+[   14.428009]  ? __pfx_kthread+0x10/0x10
+[   14.428011]  ret_from_fork_asm+0x1b/0x30
+[   14.428014]  </TASK>
+[   14.428015] Modules linked in: nf_tables bnep tun btusb btrtl btintel bt=
+bcm btmtk bluetooth gpio_ljca i2c_ljca ecdh_generic hid_sensor_custom_intel=
+_hinge hid_sensor_trigger industrialio_triggered_buffer kfifo_buf hid_senso=
+r_iio_common industrialio hid_sensor_custom hid_sensor_hub intel_ishtp_hid =
+joydev vfat fat ext4 crc16 mbcache jbd2 snd_ctl_led snd_soc_skl_hda_dsp snd=
+_soc_hdac_hdmi snd_soc_intel_hda_dsp_common snd_sof_probes hid_multitouch h=
+id_generic mousedev snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_=
+generic snd_soc_dmic snd_sof_pci_intel_tgl snd_sof_intel_hda_common soundwi=
+re_intel snd_sof_intel_hda_mlink soundwire_cadence snd_sof_intel_hda snd_so=
+f_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_soc_hdac_hda snd_hda_ext=
+_core snd_soc_acpi_intel_match intel_uncore_frequency intel_uncore_frequenc=
+y_common snd_soc_acpi intel_tcc_cooling iwlmvm soundwire_generic_allocation=
+ soundwire_bus x86_pkg_temp_thermal intel_powerclamp snd_soc_core mac80211 =
+coretemp snd_compress ac97_bus snd_pcm_dmaengine kvm_intel
+[   14.428048]  snd_hda_intel libarc4 ptp snd_intel_dspcfg pps_core snd_int=
+el_sdw_acpi snd_hda_codec processor_thermal_device_pci kvm processor_therma=
+l_device processor_thermal_wt_hint snd_hda_core processor_thermal_rfim iwlw=
+ifi iTCO_wdt irqbypass intel_rapl_msr processor_thermal_rapl mei_pxp snd_hw=
+dep ucsi_acpi mei_hdcp mei_wdt rapl intel_rapl_common intel_pmc_bxt typec_u=
+csi iTCO_vendor_support intel_lpss_pci intel_cstate thinkpad_acpi mei_me th=
+ink_lmi snd_pcm spi_nor processor_thermal_wt_req intel_ish_ipc typec ntfs3 =
+i2c_i801 intel_lpss nxp_nci_i2c ledtrig_audio processor_thermal_power_floor=
+ cfg80211 wmi_bmof intel_uncore psmouse pcspkr firmware_attributes_class mt=
+d thunderbolt mei snd_timer idma64 intel_ishtp i2c_smbus ov2740 roles platf=
+orm_profile igen6_edac processor_thermal_mbox nxp_nci v4l2_fwnode nci snd i=
+ntel_skl_int3472_tps68470 int3403_thermal v4l2_async intel_pmc_core soc_but=
+ton_array tps68470_regulator nfc soundcore int340x_thermal_zone clk_tps6847=
+0 mei_vsc_hw rfkill videodev intel_vsec i2c_hid_acpi
+[   14.428085]  intel_hid int3400_thermal i2c_hid pmt_telemetry mc pinctrl_=
+tigerlake sparse_keymap acpi_pad acpi_thermal_rel intel_skl_int3472_discret=
+e acpi_tad pmt_class mac_hid i2c_dev corefreqk(OE) sg crypto_user fuse loop=
+ nfnetlink ip_tables x_tables btrfs blake2b_generic libcrc32c crc32c_generi=
+c xor raid6_pq dm_crypt cbc encrypted_keys trusted asn1_encoder tee dm_mod =
+xe drm_ttm_helper gpu_sched drm_suballoc_helper drm_gpuvm drm_exec spi_ljca=
+ usb_ljca i915 crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni p=
+olyval_generic gf128mul ghash_clmulni_intel sha512_ssse3 serio_raw sha256_s=
+sse3 atkbd i2c_algo_bit sha1_ssse3 drm_buddy libps2 vivaldi_fmap aesni_inte=
+l ttm nvme intel_gtt crypto_simd nvme_core cryptd drm_display_helper video =
+xhci_pci spi_intel_pci i8042 nvme_auth xhci_pci_renesas spi_intel cec serio=
+ wmi
+[   14.428121] CR2: 0000000000000070
+[   14.428123] ---[ end trace 0000000000000000 ]---
+[   14.428124] RIP: 0010:btintel_read_debug_features+0x4d/0xf0 [btintel]
+[   14.428128] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d =
+4c 24 07 c6 44 24 07 01 e8 de a9 ef ff 48 89 c3 48 3d 00 f0 ff ff 77 49 <83=
+> 78 70 13 75 67 48 8b 80 d0 00 00 00 be 02 00 00 00 48 89 df 48
+[   14.428130] RSP: 0018:ffffb7ba80aa3cc0 EFLAGS: 00010207
+[   14.428131] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff965ac0d=
+daab0
+[   14.428131] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff965ac0d=
+daaa8
+[   14.428132] RBP: ffffb7ba80aa3cf0 R08: ffff965ac0ddaab0 R09: 00000000000=
+00000
+[   14.428133] R10: 0000000000000001 R11: 0000000000000100 R12: ffff965ac0d=
+da000
+[   14.428133] R13: ffff965a84746900 R14: ffff965a8208ca05 R15: ffff965ac0d=
+da6d0
+[   14.428134] FS:  0000000000000000(0000) GS:ffff9661bf400000(0000) knlGS:=
+0000000000000000
+[   14.428135] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   14.428136] CR2: 0000000000000070 CR3: 00000002bb620000 CR4: 0000000000f=
+50ef0
+[   14.428137] PKRU: 55555554
+[   14.428137] note: kworker/u41:0[198] exited with irqs disabled
+[   16.434794] Bluetooth: hci0: command 0xfc09 tx timeout
 
-> >> I also find the patch description a bit verbose; and it would be
-> >> good to turn the text upside down: first outline what the patch,
-> >> then maybe describe the "why".
 
-I actually probably like it more this way. After all, the outline (or
-"what") is the patch subject, everything that comes after it in the body
-is usually meant to explain "why". But sure, I can swap it if you want
-:-)
+Thanks for any suggestions and best regards
+(and please Cc)
 
-As for the verbosity, I will keep it in mind when working on v2,
-although I also generally don't consider verbosity a bad thing. I might
-have been too verbose, though, because as I have mentioned, I was
-confused why it isn't like this already and wanted to offer my full
-reasoning so that I could be shown where I err :-)
+Norbert
 
-One more thing that I wanted but ultimately forgot to mention in the
-cover letter: thank you very much for writing these guides in the first
-place, I find them very instructive and useful.
-
-Kind regards,
-K. B.
+--
+PREINING Norbert                              https://www.preining.info
+arXiv / Cornell University   +   IFMGA Guide   +   TU Wien  +  TeX Live
+GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
