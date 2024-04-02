@@ -1,93 +1,119 @@
-Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
+Received: from mail-4018.proton.ch (mail-4018.proton.ch [185.70.40.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7356915AAA1
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 20:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7004A41C7F
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 23:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712088187; cv=none; b=WFShuYcsRrcj5y4ZUfVFJtHDil9UBjxT2bQaMCeV+asTieIc2VpYznnEU5J+bVO8Dy0C0Qogy7J1cgcufLdGljDaxxsr7IOMm5VTT7s1udlJj4sVHiUIOyPAKIvOrYPcpSUmaSKBkNsvTsV8WLTy6bhiGiQLdqra6h7emXxhBHg=
+	t=1712100757; cv=none; b=IE4H30kZWmZmlZnFa0SvCEHjj8kfqGIltIXEJ87dgyHpP0IALOTWHpMqcDvu0n+OR6pxTfYe7mRNIrLHEIWLqxCDCo/k4CSeDNEGIP9Yt2wdDzAdmFzIxtEedUiyBnznxuYxzjulblIKwL8/WeVW0dZd24mMZdlTlQQeOqgcWLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712088187; c=relaxed/simple;
-	bh=7uZCfmNAtD4Zk2/AALoalCyE13Z2i9dxS6bZMw5kwCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pSwTTtZnzaggI9EfOdLmXzwC5L0YmAvwMpRqQpaGu6NJf6bV+JyUieJT1BeXnuJ9bfbcoOEzTxMMwogkynyM1NFJ8OsWjhJMzL8JF+dLdez+4qDqoQTbv3EhIPIxrq8k9ZU+Kd1OvZCWFwwQ0CE9cf8I02qky4uUrmAyaRZx+iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id D53778755;
-	Tue,  2 Apr 2024 20:03:02 +0000 (UTC)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: Linux kernel regressions list <regressions@lists.linux.dev>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org
-Subject: Re: 6.7.11: Fails to hibernate - work queues still busy
-Date: Tue, 02 Apr 2024 22:03:02 +0200
-Message-ID: <4912750.31r3eYUQgx@lichtvoll.de>
-In-Reply-To: <13486453.uLZWGnKmhe@lichtvoll.de>
-References: <13486453.uLZWGnKmhe@lichtvoll.de>
+	s=arc-20240116; t=1712100757; c=relaxed/simple;
+	bh=Miy8h+46r9L1yli6HXvFolWZmx7sqZ1TBD8yhEMAhbg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sLULCfNOhre2bTKQw1lxPmSV+z2nxpjsXtj5c//9yg3Klsao5JS49izGI6BQ+S2hDlzFoozLtYVMaY6yu5ZqHdLLH4KHcXyIrMCkwHZA1UKBfTl61QZ/8UCz4HI4bCzpAR+FjjWCffYJca21JfmMjk+UBazA7OpauoCGuLZZAX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=jiJebc2i; arc=none smtp.client-ip=185.70.40.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="jiJebc2i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
+	s=protonmail; t=1712100746; x=1712359946;
+	bh=eYfJr8KvAv/8O8BAWI9vNpWVyP4tpL6uvttbF+aIVu4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=jiJebc2iTvQ7DqOGLbq51xyXRi2Fq7r/KJfvy/87mOd0Q3kz5GOdh5yR0T5/6r0xt
+	 9/eNq3T+lJk4ongASmJANrlCUliuVgdo3nKQn6TFJ4j09ZJF927p0HVx5Y/g6qsrr8
+	 4gpXnqaAealF68SfLtAH5CFJQ99uRiwHG9RSTjqjLJ6G7m9J33/vh6W1bAC+3O7iy6
+	 GRet7xPum1GiyuF+pHJ4HhLW5XqkJfUTZoOA3bRrY0yNn9OMw7/Q9OeKIZh/u8HmJn
+	 rhaZRUfbMjYtMApSBWSv+yAnqxU6RoPO46G1xtHwkFjtVqO9tVQyD4hp0ZQKS1J9qn
+	 /XfTWWMaA7CxQ==
+Date: Tue, 02 Apr 2024 23:32:19 +0000
+To: Saravana Kannan <saravanak@google.com>, Dragan Simic <dsimic@manjaro.org>
+From: Pratham Patel <prathampatel@thefossguy.com>
+Cc: sebastian.reichel@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+Message-ID: <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
+In-Reply-To: <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com> <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org> <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+Feedback-ID: 104309535:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
 
-Martin Steigerwald - 02.04.24, 21:29:50 CEST:
-> 6.7.9 + some bcachefs upgrade/downgrade fixes included in 6.7.11 works
-> okay. 6.7.11 fails. Two repeated attempts failed with a dmesg like this:
+On Tue Apr 2, 2024 at 4:54 AM IST, Saravana Kannan wrote:
+> On Sat, Mar 23, 2024 at 10:10=E2=80=AFAM Dragan Simic <dsimic@manjaro.org=
+> wrote:
+> >
+> > Hello Pratham,
+> >
+> > On 2024-03-23 18:02, Pratham Patel wrote:
+> > > I looked at the patch and tried several things, neither resulted in
+> > > anything that would point me to the core issue. Then I tried this:
+> >
+> > Could you, please, clarify a bit what's the actual issue you're
+> > experiencing on your Rock 5B?
+>
+> Pratham, can you reply to this please? I don't really understand what
+> your issue is for me to be able to help.
 
-Also 6.7.11 appears not to be capable to reboot the machine. Runit says
-it is rebooting and then it hangs there with no further output.
+Hi,
 
-Which reminds me of:
+I apologize for not replying. Somehow, I did not notice the reply from
+Dragan. :(
 
-* Re: [regression] 6.8.1: fails to hibernate with pm_runtime_force_suspend+=
-0x0/0x120 returns -16
-  2024-03-16 16:02 [regression] 6.8.1: fails to hibernate with pm_runtime_f=
-orce_suspend+0x0/0x120 returns -16 Martin Steigerwald
-[=E2=80=A6]
+Since this patch was applied, an issue in the Rock 5B's DT has been
+unearthed which now results in the kernel being unable to boot properly.
 
-https://lore.kernel.org/regressions/22240355.EfDdHjke4D@lichtvoll.de/T/#md9=
-dd4c2abed8503c0613d39be3cdc833aadecd6d
+Following is the relevant call trace from the UART capture:
 
-I don't know whether those two relate as dmesg outputs differ.
+[   21.595068] Call trace:
+[   21.595288]  smp_call_function_many_cond+0x174/0x5f8
+[   21.595728]  on_each_cpu_cond_mask+0x2c/0x40
+[   21.596109]  cpuidle_register_driver+0x294/0x318
+[   21.596524]  cpuidle_register+0x24/0x100
+[   21.596875]  psci_cpuidle_probe+0x2e4/0x490
+[   21.597247]  platform_probe+0x70/0xd0
+[   21.597575]  really_probe+0x18c/0x3d8
+[   21.597905]  __driver_probe_device+0x84/0x180
+[   21.598294]  driver_probe_device+0x44/0x120
+[   21.598669]  __device_attach_driver+0xc4/0x168
+[   21.599063]  bus_for_each_drv+0x8c/0xf0
+[   21.599408]  __device_attach+0xa4/0x1c0
+[   21.599748]  device_initial_probe+0x1c/0x30
+[   21.600118]  bus_probe_device+0xb4/0xc0
+[   21.600462]  device_add+0x68c/0x888
+[   21.600775]  platform_device_add+0x19c/0x270
+[   21.601154]  platform_device_register_full+0xdc/0x178
+[   21.601602]  psci_idle_init+0xa0/0xc8
+[   21.601934]  do_one_initcall+0x60/0x290
+[   21.602275]  kernel_init_freeable+0x20c/0x3e0
+[   21.602664]  kernel_init+0x2c/0x1f8
+[   21.602979]  ret_from_fork+0x10/0x20
 
-The output from 6.8.2 on hibernation attempt
+> Also, can you give the output of <debugfs>/devices_deferred for the
+> good vs bad case?
 
-[  412.158400] port 0000:02:00.1:0.0: PM: dpm_run_callback(): pm_runtime_fo=
-rce_suspend+0x0/0x120 returns -16
-[  412.158418] port 0000:02:00.1:0.0: PM: failed to freeze: error -16
+I can't provide you with requested output from the bad case, since the
+kernel never moves past this to an initramfs rescue shell, but following
+is the output from v6.8.1 (**with aforementioned patch reverted**).
 
-versus the output 6.7.11 on hibernation attempt
+# cat /sys/kernel/debug/devices_deferred
+fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
+1-0022  typec_fusb302: cannot register tcpm port
+fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
 
-[  215.764813] Showing freezable workqueues that are still busy:
-[  215.764841] workqueue events_freezable: flags=3D0x4
-[  215.764869]   pwq 0: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D0 r=
-efcnt=3D2
-[  215.764881]     inactive: pci_pme_list_scan
-[  215.764895] workqueue usb_hub_wq: flags=3D0x4
-[  215.764965]   pwq 4: cpus=3D2 node=3D0 flags=3D0x0 nice=3D0 active=3D2 r=
-efcnt=3D3
-[  215.764974]     in-flight: 350:hub_event [usbcore] hub_event [usbcore]
+It seems that v6.8.2 works _without needing to revert the patch_. I will
+have to look into this sometime this week but it seems like
+a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only from rk=
+3588 i2s)
+seems to be the one that fixed the root issue. I will have to test it
+sometime later this week.
 
-does not really look related to me.
-
-Yet both kernels do not seem to like to reboot the machine.
-
-As written I am willing to bisect this 6.7.9 versus 6.7.11 issue, but not
-6.8.1 versus some 6.7 issues cause I do not want to risk filesystem
-corruption on a production machine by bisecting between stable and rc1.
-
-Best,
-=2D-=20
-Martin
-
+ -- Pratham Patel
 
