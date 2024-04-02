@@ -1,97 +1,165 @@
-Received: from hz.preining.info (hz.preining.info [95.216.25.247])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4F7A158;
-	Tue,  2 Apr 2024 13:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.25.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6CB85285
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 13:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063890; cv=none; b=TlQhn3VFqLXdVoWWD63EThK4JVj7EKXnvfTAgsbEMOQIk36Xy18Q77FJdWC7/vVQdN8VOm4JV+o++mHHcMl8LsMVHM9h34WUxBk71Qpn3Sd6axB37iYgLC+SsdM++5J1BCyE9pQa5DbR75a6N90G5Yxshi4xT5cOxs4AaT9Xypg=
+	t=1712065269; cv=none; b=sN4p7dJoEbMkmVfGIkmCDAEpRYxf8dYTiU0XsFnM5ynlIoLtpiNPCqg+ogCb309bk+3qNvBKQSa38runk06qR6e6mnsMmWmAzTCLGu/Vxxzm3rP//n9x/5GTq+9RqhK4YOmOohjJw3hlyqwyqIjpjfj5PF6l8kdMAhr08HTGdjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063890; c=relaxed/simple;
-	bh=80IhwDgD1gPqa9vTqSCEAKUjeZBU8j6RuuQa/+lWtsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AgVBpQh+hx7zopbR0Zn+7Fj5DF4ltIf5A6CNJKr194pxsN100vCeFIvrUwSQOBosBk+SOy5vamtNfcL6AtIeYAIjicU5WH5t8rbmKpydnJQ94OcsfoT362hxpowe4iwxkotc9nUpJISlvyqK8Fmn5m7i7QqHImn8M8cqQfQWPCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info; spf=pass smtp.mailfrom=preining.info; dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b=YqZ08d2Z; arc=none smtp.client-ip=95.216.25.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=preining.info
+	s=arc-20240116; t=1712065269; c=relaxed/simple;
+	bh=fSmUEcJkMiaEn5CB8sSP3SxvGvNVpxw0TJkE/LxdJVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YrK3Wyr8fqzzOSAfw/bETWNVA47vHJ8rbc+fTjwhoX7S2kVkKZkEwGVtPXrS6fayIOlWtIAsvDyDirg1wTbPJmPU8N5HswCKR0nHzQ7u0YIinMdd4x5vRTrIITZrnYlRglLjWGPf3jjx5kmHwxd16pOB9lixpFXGXlos9TmGFQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HHDsgS1R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b="YqZ08d2Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=preining.info; s=201909; h=In-Reply-To:Content-Type:MIME-Version:References
-	:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-	:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G5P4FMG63I9JSCmj4VgPs+r9J18nRxq7QCCPof1NWb8=; b=YqZ08d2Z55jJgnSijAQ1kJ/xiU
-	qw+x1trC64zVlt/IHhIH4HJZK0FUVKR5dasr1NNg8iuj7ea3pVyeQ4s20Z2QNF/pzi2BdWX0U4DtY
-	4Fu0Tc/57NbcycLX2WLoMuZvhSZb8ZFEvl7B8AEd4P/1okPvaDGDqdtWpknjaK2oFPndpfenHGLuj
-	3RSjSVVACHHBWJoEunfnDdCOTV74ouAqIYSZSxP6Lh8a2s/bJwtRPG8M+xhaBSvHaMReAZGbeNxO/
-	iWSIH9sZfqLEgRq+OhSrYLUEc3+iiesbSOj4JxcLdXKIXDoeDvaNWvxTTLcIGHqjn5jT4tez9CDof
-	QljD9XAQ==;
-Received: from tvk215040.tvk.ne.jp ([180.94.215.40] helo=bulldog.preining.info)
-	by hz.preining.info with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <norbert@preining.info>)
-	id 1rre1d-00F0hY-2F;
-	Tue, 02 Apr 2024 13:18:06 +0000
-Received: by bulldog.preining.info (Postfix, from userid 1000)
-	id 464361DF3C0A; Tue,  2 Apr 2024 22:18:01 +0900 (JST)
-Date: Tue, 2 Apr 2024 22:18:01 +0900
-From: Norbert Preining <norbert@preining.info>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: stable@vger.kernel.org
-Subject: Re: Regression in kernel 6.8.2 fails in various ways (USB, BT, ...)
-Message-ID: <ZgwFiaLefPAaH3tw@bulldog>
-References: <ZgvkIZFN23rkYhtS@burischnitzel>
- <1c698f8e-c7ca-4909-8872-057d6ae149ff@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HHDsgS1R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712065266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1iNybg/HGgjMFLmB8r7gE55WyymvOpYihwbPUaOsCw=;
+	b=HHDsgS1R8pmVvw56Fp/wfPlKmtKfrj2TFSt1NlyQjFV6iKWSA0i20BNGPKwA8HQh6T9Pkj
+	FwkgnOvvxYTsvdKRZPrm7h8rHJNCgFjq3I4Vgf3/PW/rBRM1dUUQyS2Dgi0bQxUY9dJv2r
+	epaHAyu2aQowbsLSqiUaABCSFxJXzCE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-279-AiXhZCvCNVykygmjovvYOA-1; Tue, 02 Apr 2024 09:41:03 -0400
+X-MC-Unique: AiXhZCvCNVykygmjovvYOA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a4943e972d1so610985666b.0
+        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 06:41:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712065262; x=1712670062;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c1iNybg/HGgjMFLmB8r7gE55WyymvOpYihwbPUaOsCw=;
+        b=SpC/5GVwKRXBb7AiFtE5FtrpB7dLaD+ojnKkF03asHvyibBVxmrL7xjrHbDpXRp8ZK
+         v1zz6xcGYUFuXph/kRvnSxb4Xm6glc4fads6g2NqH6QqckRgoqcCR2ZeCTKdTFoOW2xn
+         EKBIDvATaeEM6SEQiSpp6xWYAFDKs4nXNWURyBJd4YJa9gmZFDIHMAE7RoyNuznHMHRy
+         sjEKndA3f+dr8yLNn/MwYiX+EQN+st2VHwFqrWKCsX5LgqkGDQLTnANySDKku9toQsMO
+         9loHYMXl0Ov1Cp9M9QBu2wtpEk84awoE/5xlmHGXWQ4kA+TlK85eOrm0bokYu54JJ9T4
+         guLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlz+fnIerhNZU+Ccx3idkF58C0mMGkzxsoh3AM2dOzkYo+rGlYBGEwJgxIWcN1pZ/A1OfWBNTlhQCCla8iNlHRqpWGqUYoyHMb7KE=
+X-Gm-Message-State: AOJu0YzHkHAXlPR6ajKM+UALSMRkcsEdnSk4QJP4daOJvI5dBsJjOmzK
+	/UrJs5SdZmMkGJTmYJKh3MLkwaFNw737sTc53dIZ4zzvy+0SrnAgHE4ZfHLFP/ygDq0yBKZPDxx
+	TAdljvOt0At2RlvwRKLHIW/cQpt8meGcoYXcQlABXImzZNvHP40L8rg6Omi5i
+X-Received: by 2002:a17:907:9488:b0:a4e:58f0:922d with SMTP id dm8-20020a170907948800b00a4e58f0922dmr7866368ejc.22.1712065262066;
+        Tue, 02 Apr 2024 06:41:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKDmFGZIoVsSTi0KlJmjjJyKBZ8ifM82H0Bfvo0aF8XA2+r0tQ3lZ/fAvcHNpyQfvO2WGsMg==
+X-Received: by 2002:a17:907:9488:b0:a4e:58f0:922d with SMTP id dm8-20020a170907948800b00a4e58f0922dmr7866344ejc.22.1712065261575;
+        Tue, 02 Apr 2024 06:41:01 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id w17-20020a170906185100b00a4e9359fbe8sm259504eje.44.2024.04.02.06.41.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 06:41:01 -0700 (PDT)
+Message-ID: <634bbfb6-a5a4-40ae-b89f-5fc50db43d4f@redhat.com>
+Date: Tue, 2 Apr 2024 15:41:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c698f8e-c7ca-4909-8872-057d6ae149ff@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
+ is not, initialized, yet kobject_get() errors
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Hans de Goede <hans@hansg.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Andy Shevchenko <andy@kernel.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
+ <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thorsten,
+Hi Bartosz,
 
-thanks for your quick answer, much appreciated.
-
-> Thx for your reports. Nitpicking: next time, please report each issue in
-> separate mails, as mentioned by
-> https://docs.kernel.org/admin-guide/reporting-issues.html
-
-Ok, will remember. It wasn't clear to me whether this is just one issue
-or multiple.
-
-> > * Plugging in my Yubikey C does not trigger any reaction
-> >   (as a consequence scdaemon hangs)
+On 3/29/24 4:16 PM, Bartosz Golaszewski wrote:
+> On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
+>> Hi All,
+>>
+>> I've already tried to fix this, so let me just copy and paste my half finished patch
+>> to explain the problem.
+>>
+>> I was planning on submitting this as a RFC patch at least, but there are also some
+>> other new issues with 6.9 on this tablet and I'm not sure how this interacts
+>> with those issues and I don't have time to work on this any further this weekend.
+>>
+>> Anyways below is the patch / bug report.
+>>
+>> I'm wondering if a better fix would be to add a "ready" flag to gdev
+>> and may gpiochip_find ignore not yet ready chips (we need them on
+>> the list before they are ready to reserve the GPIO numbers) ?
+>>
+>> Regards,
+>>
+>> Hans
+>>
 > 
-> Have not heard about a problem like this yet.
+> Hi Hans!
 > 
-> Could you bisect?
-
-Will do.
-
-> > * sending of bluetooth firmware data fails with Oops (see below)
+> Thanks for the report. I hope I'm not being naive here but would the following
+> one-liner work?
 > 
-> A changes that hopefully fixes this is in 6.8.3-rc1:
-
-Nice, good to hear.
-
-> > * shutdown hangs and does not turn off the computer
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index ce94e37bcbee..69f365ccbfd8 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *data,
 > 
-> That might or might not be a follow-up problem due to one of the other
-> two problems. :-/
+>  		gc = srcu_dereference(gdev->chip, &gdev->srcu);
+> 
+> -		if (gc && match(gc, data))
+> +		if (device_is_registered(&gdev->dev) && gc && match(gc, data))
+>  			return gpio_device_get(gdev);
+>  	}
+> 
+> This would make gpio_device_find() ignore any GPIO device that's not yet
+> registered on the GPIO bus which is almost the last step of the registration
+> process right before creating the sysfs attributes.
 
-I agree. I will see what bisect tells me.
+Yes that should work and it has the added advantage that it also waits
+for things like the irqchip to be setup before gpio_device_find() will
+find the gpio-device.
 
-Best regards
+I cannot trigger the race every boot, but I do hit it quite regularly
+and with this change I've done 10 successful consecutive boots, so
+I believe that this indeed fixes the race.
 
-Norbert
+I've prepared a patch with this fix now which I'll send out shortly.
 
---
-PREINING Norbert                              https://www.preining.info
-arXiv / Cornell University   +   IFMGA Guide   +   TU Wien  +  TeX Live
-GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
+As for Andy's suggestion I'm not all that familiar with the RCU stuff,
+but I think that if we were to go that route then the device_is_registered()
+check should be moved up to above the "guard(srcu)(&gdev->srcu);"
+line rather then above the "gc = srcu_deref..." line, since in that
+case we are not using the gdev->chip pointer at all if we bail ?
+
+Anyways for now I've just gone with your suggested 1 liner.
+
+Regards,
+
+Hans
+
+
+p.s.
+
+While looking into this I noticed one other possible problem,
+unless gpiochip_add_data_with_key() and gpiolib_dev_init() are
+guaranteed to never run at the same time then we may end up calling
+gpiochip_setup_dev() twice, once from gpiolib_dev_init() and
+once from gpiochip_add_data_with_key() when the 2 race.
+
+
