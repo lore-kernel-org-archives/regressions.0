@@ -1,66 +1,66 @@
 Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEBB84039
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 14:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F24085268
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 14:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066929; cv=none; b=Hltxsyx8Z0DE/xzZkQ/RTIMEXOBoHoYQix1rxTy5Zr0SAJUSVofJgTVWiTo//o9HYKs5j1ycwGHghF1yO3AmsLhGrewYNOxUiPUxC3lqrinzOa8F3iPkALzx80t3QGdZj/lsLMi6XZ/JLK4JR7F7Bc52f8CfVOXPygqVULF9lvo=
+	t=1712066977; cv=none; b=Pewy0/ubvx5GMeeuRpddMgKVFHCySxAHex3oM8bIwG/3t3eXF9MLPsLHMi86NlE8aWlKDtgGH13FsnILVHj6rjpAUwcWvvgdwB2aQBoXU+bEMuP4wrj5pkFS/HQvtTON2PI9wLhHqViYv2THflKHZ5xm3eFODOj/w2qIT0FiuCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066929; c=relaxed/simple;
-	bh=OfegeGTsuDo0Gr9lisUs3MR1SVlAPcGR7u4MXKa1G/Q=;
+	s=arc-20240116; t=1712066977; c=relaxed/simple;
+	bh=Jt8J83Qs52Euab+TTyyULznFALZqzcKbukrVmjAqGVA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JPMTK7v2xlrFUWbbtQejWOZKEcsRtCGaVSAfHd9DYk5Jq33ewtcnbUMwrdmRnjD6is+T2AensfshLVW2se8iGNR/lczx7lc129EfvK+Vb8LygIXL9xgFv4ASBKqGNme84qsCIbhrKKDxM/bzYrUNp/G8mhjWr8g6R7EtxdPN7Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0u5HOfWi; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=jYEDw6+yIoNPju+QBgR65dBfoLEGGk7IAtoWVcp8yRrrZB81D3i8SdUg1Abay+PQ5HWyiBBkoeRBgpn2xlmx14JifPFZxLn1c95n6/LauRl+SDn0TLJ1O5zEU3X84YVYGIDJi/2MZPGAKuwe9/h3HEd85yA5gfQcwRbZqqF0pzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZqJQDFnD; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0u5HOfWi"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d476d7972aso75265721fa.1
-        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 07:08:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZqJQDFnD"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d71765d3e1so52872271fa.0
+        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 07:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712066925; x=1712671725; darn=lists.linux.dev;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712066974; x=1712671774; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8vX+0WXeHjydpf0hdk+Y+lBJHF757e6rNrDRH73PIDY=;
-        b=0u5HOfWi6P15FzsRLUr/iQZr/mnlgiXUusctLA2+mZDG1D3O+ygrN+GdpeYGUDooYe
-         1NaMI3vClQ733ecl6c+Me17JYMJJnrQmNvcV/JBhrj+UTPDzpJNhwSwheKYCQbycIF3U
-         ZRZJB5EAdZBM0ijZrrNtKdplK5OXtD6adu7SO7tP619jxKq6UsktPd5Z9Uw7Rx9+P9Ue
-         TnYbiF36/zYJsfJxxGe2yw2kvjeoLLuJRVAgVW/JulGQk+19sV+mGQeZouZDcSYRQ5j/
-         tT4P6/d7hUMiUL7c04+e6zakDtrZdiRAqDXGbWYVJrYJs7dZjwtXKutOqP2w1L0mjuBR
-         Dmcg==
+        bh=aPGwoUzYRhrsxJJ6NbAyzYSFsQyX9rvT9zXjZL5FaHg=;
+        b=ZqJQDFnDkVOYEScuSmEsZDEA6nBKK1oJcsOhWD/G0UNurvPWiQhMQ0+hoNPN3fhg2z
+         jxun3e2W1GSVxggfxe36ma+WR/6GZlASxv3tt6PuI33722QT0JHrJxkZvPU7lKgtBNs1
+         sZ/qOSvbLst6LnT/ZZpkBFVnIhjDUv3GkjUKAJGxqUfVwqvlMb4spGeN43Z8GqUkgW09
+         YgqVQLtm7crdjQuboxUNgNayRJkVhSd6b41w9Mqz1fP/2eCoTE7jPTWzvkblfGIukl4A
+         kSKBeEMDGRZ1gMxk3IjgAlXYbypYDGScJ2034WMEtgKHqht0hwT7M2z0J+Iy198u7Gry
+         cMoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712066925; x=1712671725;
+        d=1e100.net; s=20230601; t=1712066974; x=1712671774;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8vX+0WXeHjydpf0hdk+Y+lBJHF757e6rNrDRH73PIDY=;
-        b=pKwZTPijWZPjY+2pBOmn09UFC+wglYd7kSu85Wkn44JFRg4s7jsMSD/Mu9Bs3G2qUH
-         luhAsUm0mHev7a/vGEvI1DbnHDzHfV1Cw1KipND8BrH0DfPeer5tNGaKRQGmQ/W65rn1
-         IutxWK0JVf0i4MQqHlEhRJkGugyPTTGh2XqUonMgC4yAPad1CVRRnQ4TdJL4MSVIwklN
-         SmGrYVGVOxx096a/PVZk7sVzCJIsZoB8jPVRsCfo7nDDDpFDVQwkwT35P33cQp4+bhve
-         7mXZED/I3ZJXu3tf0CLLRXhXhwZgcLm/6QvyVhASrh5xtpFgwIjj+AdvP5crdoTr7jdz
-         N5yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUO8f5LYGAfDtJi7yu9xcEXC4ZVM7M7wCpC+U28CAUhQ8kiaH31sLNo0/3m8B7kFORN6Z+jKit/hbpbcvkFXOUchBKWFbySDa9qHl8=
-X-Gm-Message-State: AOJu0YxIXolvokpXniLdYUtZAybPt3H9QZBLNlYNK0YtDzr+uzEfLukF
-	RaqceK3nKvFIuA0FeO6uaJgCauws5hqLyt7mfZJDJNSvDtrPbtlYdHW4X3nMykEHaATMklrNiaZ
-	AUOy4K6Sj6EpPESjmyYd8YXtO0RYIr8gF9Y1+UA==
-X-Google-Smtp-Source: AGHT+IEjCOOKr1y2D8G2pH38sYIqKcHShA4fpYhtVjcPE5IZdZRWmcTtI44soPagnSb/QLrTGHK8g7GC9Bp3YAuOpqA=
-X-Received: by 2002:a2e:b903:0:b0:2d2:dfd6:8335 with SMTP id
- b3-20020a2eb903000000b002d2dfd68335mr7931445ljb.22.1712066925002; Tue, 02 Apr
- 2024 07:08:45 -0700 (PDT)
+        bh=aPGwoUzYRhrsxJJ6NbAyzYSFsQyX9rvT9zXjZL5FaHg=;
+        b=tjkiJtVfZvigSw5rJinOWvMwkIEs4LL5UpAIErkGdvgpPA3qlniiEl0WVko6nki7u2
+         Vh3G+HtyqqfYuQfjIZSlGNeF/vI+kGefLXJcA+EFprlOWTH6kzmz58fJCkaXQnXS8OzO
+         UO0vDflphZOb1mkQNoApjmxa7XEiBuSDIIIk8Rxe2Z3ydK7/pvgXQPh8hqy2qkdc2rGF
+         yBw6hQMh0sdwTm3H97xXZ3BNkL3LqVRPNe3gGpEROfV/pTRhiNNCYWKeoD3SekrCy09s
+         Q9sExlGv9OnTT7ABhmeyZHCMI2kQ/bM/x7oW5k9ECZoCKb7oBEzX6UrBeTQZpFtB+g/P
+         1vhg==
+X-Forwarded-Encrypted: i=1; AJvYcCWx3FClIyiIL4xYeefipXD4S+VM2TLeVGPRxoX5+k/APD7Y2XZ9V9wTeS40UQq9FJZ/S8mFHxoFgxXOmETrTWJ5h6Q/ydY0P5XwYz8=
+X-Gm-Message-State: AOJu0Yx8pljOwToxeqmkIwMuFB2HGuc9+pbbMyDPG9F2er/8Xr2rdks0
+	szhUbOFqOpqk7Xgc369DYJTXLii4YVPl6ycW/HnXLpZ0x6mVeXanYEo/pn+Zkq1hRHJ44OWEfhu
+	cSl9h/t6pBEpR7NI6xUE3SKZEIz81wQyn88brEA==
+X-Google-Smtp-Source: AGHT+IGVLgbiu0THc2aQqtdUiIKArPfEBHJNcPp4M7o4+j2DroDeGXiKjz7cFgg590XIJhOVWCEaf+V62qpHjsMKBqs=
+X-Received: by 2002:a2e:740f:0:b0:2d7:1323:6792 with SMTP id
+ p15-20020a2e740f000000b002d713236792mr8996831ljc.43.1712066974361; Tue, 02
+ Apr 2024 07:09:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240402134334.173409-1-hdegoede@redhat.com>
-In-Reply-To: <20240402134334.173409-1-hdegoede@redhat.com>
+References: <20240402134334.173409-1-hdegoede@redhat.com> <CAMRc=MciKFPrqSG0BbLr3oQmXXfDsJGiqukhjKryxUGNPg4KYw@mail.gmail.com>
+In-Reply-To: <CAMRc=MciKFPrqSG0BbLr3oQmXXfDsJGiqukhjKryxUGNPg4KYw@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Apr 2024 16:08:33 +0200
-Message-ID: <CAMRc=MciKFPrqSG0BbLr3oQmXXfDsJGiqukhjKryxUGNPg4KYw@mail.gmail.com>
+Date: Tue, 2 Apr 2024 16:09:23 +0200
+Message-ID: <CAMRc=Meygux5seJTkW7ya-Bm-4bQkzd56VPJ-RWMTNjAoG+qWQ@mail.gmail.com>
 Subject: Re: [PATCH] gpiolib: Fix triggering "kobject: 'gpiochipX' is not
  initialized, yet" kobject_get() errors
 To: Hans de Goede <hdegoede@redhat.com>
@@ -69,168 +69,34 @@ Cc: Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 2, 2024 at 3:43=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+On Tue, Apr 2, 2024 at 4:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
 wrote:
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index 59ccf9a3e153..4c674a37bcfc 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *=
+data,
+> >
+> >                 gc =3D srcu_dereference(gdev->chip, &gdev->srcu);
+> >
+> > -               if (gc && match(gc, data))
+> > +               if (device_is_registered(&gdev->dev) && gc && match(gc,=
+ data))
+> >                         return gpio_device_get(gdev);
+> >         }
+> >
+> > --
+> > 2.44.0
+> >
 >
-> When a gpiochip gets added by loading a module, then another driver may
-> be waiting for that gpiochip to load on the deferred-probe list.
+> Can you do what Andy suggested and move this check even before taking
+> the SRCU read lock? It doesn't protect the underlying kobject struct
+> in any way.
 >
-> If the deferred-probe for the consumer of gpiochip then triggers between
-> the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find()
-> see the chip and the gpiochip_setup_dev() later then gpio_device_find()
-> does a kobject_get() on an uninitialzed kobject since the kobject is
-> initialized by gpiochip_setup_dev() calling device_initialize():
->
-> [   30.408904] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.422987] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.456477] arizona spi-10WM5102:00: cannot find GPIO chip arizona, de=
-ferring
-> [   30.619517] ------------[ cut here ]------------
-> [   30.619580] kobject: 'gpiochip5' (00000000241466f2): is not initialize=
-d, yet kobject_get() is being called.
-> [   30.619664] WARNING: CPU: 3 PID: 42 at lib/kobject.c:640 kobject_get+0=
-x43/0x70
-> [   30.619685] Modules linked in: rmi_core(+) lenovo_yoga_tab2_pro_1380_f=
-astcharger(E) cs_dsp industrialio gpio_arizona(+) extcon_lc824206xa(+) ariz=
-ona_micsupp(+) lp855x_bl bq27xxx_battery_i2c pn544_mei bq27xxx_battery phy_=
-tusb1210 mei_phy dwc3 pn544 hci nfc snd_soc_sst_bytcr_wm5102 udc_core mei_h=
-dcp ulpi mei_pxp gpio_keys intel_rapl_msr intel_soc_dts_thermal intel_soc_d=
-ts_iosf brcmfmac_wcc intel_powerclamp coretemp kvm_intel bq24190_charger x8=
-6_android_tablets(E) brcmfmac kvm snd_sof_acpi_intel_byt snd_sof_acpi snd_s=
-of_intel_atom brcmutil punit_atom_debug snd_sof_xtensa_dsp cfg80211 intel_c=
-state snd_sof atomisp(C) snd_sof_utils atomisp_gmin_platform(C) ipu_bridge =
-pcspkr v4l2_fwnode v4l2_async snd_intel_sst_acpi videobuf2_vmalloc snd_inte=
-l_sst_core videobuf2_memops snd_soc_sst_atom_hifi2_platform videobuf2_v4l2 =
-intel_bytcrc_pwrsrc(E) videodev snd_soc_acpi_intel_match videobuf2_common s=
-nd_soc_acpi snd_intel_dspcfg mei_txe snd_intel_sdw_acpi snd_hdmi_lpe_audio =
-mei mc snd_soc_core lpc_ich dwc3_pci hci_uart btqca btrtl
-> [   30.620209]  btintel snd_compress ac97_bus btbcm snd_pcm_dmaengine int=
-3401_thermal processor_thermal_device processor_thermal_wt_hint bluetooth p=
-rocessor_thermal_rfim snd_seq processor_thermal_rapl binfmt_misc intel_rapl=
-_common soc_button_array snd_seq_device int3406_thermal snd_pcm processor_t=
-hermal_wt_req processor_thermal_power_floor int3403_thermal processor_therm=
-al_mbox dptf_power int340x_thermal_zone int3400_thermal acpi_thermal_rel ec=
-dh_generic rfkill_gpio intel_int0002_vgpio(E) snd_timer rfkill arizona_spi =
-arizona_ldo1 snd arizona acpi_pad regmap_spi soundcore vfat fat loop nfnetl=
-ink zram i915 crct10dif_pclmul crc32_pclmul mmc_block crc32c_intel ghash_cl=
-mulni_intel sha512_ssse3 sha256_ssse3 wdat_wdt sha1_ssse3 i2c_algo_bit drm_=
-buddy ttm drm_display_helper cec video sdhci_acpi wmi sdhci spi_pxa2xx_plat=
-form mmc_core i2c_hid_acpi i2c_hid dw_dmac pwm_lpss_platform pwm_lpss ip6_t=
-ables ip_tables i2c_dev fuse
-> [   30.620662] CPU: 3 PID: 42 Comm: kworker/u18:0 Tainted: G         C  E=
-      6.9.0-rc1+ #9
-> [   30.620675] Hardware name: Intel Corp. VALLEYVIEW C0 PLATFORM/BYT-T FF=
-D8, BIOS BLADE_21.X64.0005.R00.1504101516 FFD8_X64_R_2015_04_10_1516 04/10/=
-2015
-> [   30.620685] Workqueue: events_unbound deferred_probe_work_func
-> [   30.620708] RIP: 0010:kobject_get+0x43/0x70
-> [   30.620722] Code: 0f c1 43 38 85 c0 74 39 8d 50 01 09 c2 78 1f 48 89 d=
-8 5b c3 cc cc cc cc 48 8b 37 48 89 fa 48 c7 c7 00 b5 b1 a9 e8 ed 1a 0b ff <=
-0f> 0b eb c8 be 01 00 00 00 e8 ef 47 82 ff 48 89 d8 5b c3 cc cc cc
-> [   30.620733] RSP: 0000:ffffb743401b7b88 EFLAGS: 00010296
-> [   30.620749] RAX: 000000000000005f RBX: ffff9ea156b13800 RCX: 000000000=
-0000000
-> [   30.620758] RDX: 0000000000000002 RSI: 0000000000000027 RDI: 00000000f=
-fffffff
-> [   30.620767] RBP: ffff9ea156b13800 R08: 0000000000000000 R09: ffffb7434=
-01b7a30
-> [   30.620776] R10: ffff9ea1adbe2fa8 R11: 0000000000000003 R12: 000000000=
-0000000
-> [   30.620785] R13: ffff9ea148d8f830 R14: ffff9ea156b13e80 R15: ffffffffa=
-8947926
-> [   30.620794] FS:  0000000000000000(0000) GS:ffff9ea1b9580000(0000) knlG=
-S:0000000000000000
-> [   30.620805] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   30.620814] CR2: 00007f67ea538478 CR3: 0000000004850000 CR4: 000000000=
-01006f0
-> [   30.620824] Call Trace:
-> [   30.620834]  <TASK>
-> [   30.620849]  ? __warn.cold+0xb1/0x13e
-> [   30.620867]  ? kobject_get+0x43/0x70
-> [   30.620885]  ? report_bug+0xe6/0x170
-> [   30.620910]  ? handle_bug+0x3c/0x80
-> [   30.620927]  ? exc_invalid_op+0x13/0x60
-> [   30.620943]  ? asm_exc_invalid_op+0x16/0x20
-> [   30.620957]  ? gpio_device_find+0x16/0x260
-> [   30.620997]  ? kobject_get+0x43/0x70
-> [   30.621016]  ? kobject_get+0x43/0x70
-> [   30.621029]  gpio_device_find+0x216/0x260
-> [   30.621047]  ? __pfx_gpio_chip_match_by_label+0x10/0x10
-> [   30.621120]  gpiod_find_and_request+0x33a/0x480
-> [   30.621140]  ? __pfx_device_match_name+0x10/0x10
-> [   30.621170]  gpiod_get+0x41/0x60
-> [   30.621191]  snd_byt_wm5102_mc_probe+0xfd/0x500 [snd_soc_sst_bytcr_wm5=
-102]
-> [   30.621231]  ? __pfx___device_attach_driver+0x10/0x10
-> [   30.621247]  platform_probe+0x40/0xa0
-> [   30.621269]  really_probe+0xde/0x340
-> [   30.621282]  ? pm_runtime_barrier+0x50/0x90
-> [   30.621304]  __driver_probe_device+0x78/0x110
-> [   30.621324]  driver_probe_device+0x1f/0xa0
-> [   30.621343]  __device_attach_driver+0x85/0x110
-> [   30.621364]  bus_for_each_drv+0x78/0xc0
-> [   30.621389]  __device_attach+0xb0/0x1b0
-> [   30.621413]  bus_probe_device+0x94/0xb0
-> [   30.621435]  deferred_probe_work_func+0x99/0xf0
-> [   30.621452]  process_one_work+0x222/0x5a0
-> [   30.621470]  ? move_linked_works+0x70/0xa0
-> [   30.621502]  worker_thread+0x1d1/0x3e0
-> [   30.621526]  ? __pfx_worker_thread+0x10/0x10
-> [   30.621539]  kthread+0xee/0x120
-> [   30.621554]  ? __pfx_kthread+0x10/0x10
-> [   30.621572]  ret_from_fork+0x30/0x50
-> [   30.621587]  ? __pfx_kthread+0x10/0x10
-> [   30.621602]  ret_from_fork_asm+0x1a/0x30
-> [   30.621652]  </TASK>
-> [   30.621661] irq event stamp: 11481
-> [   30.621669] hardirqs last  enabled at (11487): [<ffffffffa81b9ccd>] co=
-nsole_unlock+0x10d/0x140
-> [   30.621683] hardirqs last disabled at (11492): [<ffffffffa81b9cb2>] co=
-nsole_unlock+0xf2/0x140
-> [   30.621695] softirqs last  enabled at (11330): [<ffffffffa81143eb>] __=
-irq_exit_rcu+0x9b/0x100
-> [   30.621708] softirqs last disabled at (11325): [<ffffffffa81143eb>] __=
-irq_exit_rcu+0x9b/0x100
-> [   30.621720] ---[ end trace 0000000000000000 ]---
->
-> Not only is the device not initialized yet, but when the gpio-device is
-> added to the list things like the irqchip also have not been initialized
-> yet.
->
-> So gpio_device_find() should really ignore the gpio-device until
-> gpiochip_add_data_with_key() is fully done. Add a device_is_registered()
-> check to gpio_device_find() to ignore gpio-devices on the list which are
-> not yet fully initialized.
->
-> Suggested-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 59ccf9a3e153..4c674a37bcfc 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *da=
-ta,
->
->                 gc =3D srcu_dereference(gdev->chip, &gdev->srcu);
->
-> -               if (gc && match(gc, data))
-> +               if (device_is_registered(&gdev->dev) && gc && match(gc, d=
-ata))
->                         return gpio_device_get(gdev);
->         }
->
-> --
-> 2.44.0
->
+> Bart
 
-Can you do what Andy suggested and move this check even before taking
-the SRCU read lock? It doesn't protect the underlying kobject struct
-in any way.
+Oh, and please add a Fixes tag too.
 
 Bart
