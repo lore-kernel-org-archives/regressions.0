@@ -1,122 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F84820DD2
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 06:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0B12C683;
+	Tue,  2 Apr 2024 06:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712039124; cv=none; b=LoJTMAWmhBZ52/me3l0EalLOZ6Ts6Qz52+1CXiN50O9EwMNIMKIt9akSzE/kzT3zm0BHwsI5PFEn2Ta6blbQGdozff8/egyUF51yjjbvSWsizAo9nvV50xSaujyjDrEiuSGafMUaGNwFVFVQl848bLcqAl9baOyZFwDoDFcm7tk=
+	t=1712040157; cv=none; b=jTo2fDk2hplyxq9ISDlpnLOS9yCeXn1BqUUTyyaYotmXToLMMB8e0+vamBrWpmr80Hw39Qqzlw5WoNhrnTXpwLbMPuHXqqwq3ON/XbtsyKkbVGSbw25C//gsUMUHgBEkHM+DaAkLUsXLonBksFAU1vesaOrs+thyfGGKATWgVm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712039124; c=relaxed/simple;
-	bh=qWNlzf9hVn7Nq9JKKcMH71MNQcX1Kc7lHC9pZXRDUEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yygrqc01Y3vqCam3bKQJUCY1M5dJUoOdSDI8/ziRY85A2mRKhMbcd/L9sS5NopHUsinBuP3RN2TfF1y47wtv5UErVsIIwxXxJn5rBCT7GnEyiu4npS04Su3PHLEAFE4bSCOjTfy+IK+uqzCe9GrIM0mgWUfhrNx/G3PZvc5teII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBoduPgq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712040157; c=relaxed/simple;
+	bh=4Ciphw3v/0eaq2NINfS6PY2B58XLCzpIwHinJUIINd4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uaOGeI6Bb1+BQuaK07Wa15opDUhFoI0T2zeB5slgUNtWW1ibqEJpBQaxmf4J/hoQaFKRoNpU21eYfe6fSAvZfINwDzZVAl3HqfMLNeiSMCmmbGSzCge+mzXOpPo6VgEXfRrAuX99twJrl+iFQc21wepCHx/d69VexyH41jYkaYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gOEBAKo+; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBoduPgq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB70C43399
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 06:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712039124;
-	bh=qWNlzf9hVn7Nq9JKKcMH71MNQcX1Kc7lHC9pZXRDUEw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pBoduPgqQBVKrCZGKup28FQzuFNeO+1oV8fiEpigtfVatinFyIgw8ZNeOm9RV9FH6
-	 ntME1QS8fJHbDm3yU08kpeokI284bAUWnhJAhU9MNV1GPhgImTbB9/S8VEEFCAHyC+
-	 dCpQeNnF81SEhQbE183YkYPH5amLNKDUkm//gsoirkR57UMVmIh/0x/L9FAMHqcItg
-	 7jjD8XksSDM72QGw25si1SDxvRsLWlBOJh/LLjmY8TH7Ff3pLkFxOFneDHIkEVGFiD
-	 AlsgRU/PdVJ0T8usj2NDb/5Jf5hde0+VAWtxQbgCg1MXchScoEmSrcTq2wOOqtCAKr
-	 ARDGciy3PXMig==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-513dc9d6938so5755524e87.2
-        for <regressions@lists.linux.dev>; Mon, 01 Apr 2024 23:25:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXQgzhxFR85pr8lrxvMAjaSEGMh6ZKFHGdrQ53e/r8F0Y2UKHm/peBACGlUniPYLIrVe8enVtAGpzNQX02c0dgZ9F9a49LYOYHN4vI=
-X-Gm-Message-State: AOJu0YxD1ZnLWW8MZUA01nPeN6bR2bum+wcAyl5KMzgCByHZ6QQ01hyr
-	i5r2r/8sLglYzQ9ryk0aPLG5JTT1drr0iPO+R9YjFywWqF/NurgUG5CzDSSKxkOeR/sR1gMlgmv
-	OmpBchSMylbmGhNI+jfkhbSQKmOk=
-X-Google-Smtp-Source: AGHT+IGhyrPVK3HlxK0dcUI85aMquYw1I/ByvFIRl+DehA6Qm3UUsArC6R4U6R5J6xCr3U/WZOdnNH/nN4Vfyncx7ao=
-X-Received: by 2002:a2e:a606:0:b0:2d4:973e:247f with SMTP id
- v6-20020a2ea606000000b002d4973e247fmr7308348ljp.23.1712039122487; Mon, 01 Apr
- 2024 23:25:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gOEBAKo+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=4Ciphw3v/0eaq2NINfS6PY2B58XLCzpIwHinJUIINd4=;
+	t=1712040155; x=1712472155; b=gOEBAKo+PX3TPbICgSuNXG864kAMpFsdxyqFZqZvw5LkgC/
+	cFDa2lRpy8k/xMaKM5r/STAQ96vuRnmDzFQV2nDYPuXiwsGBAHlHYXjYw8uHVGin96LBuBb0Ec2/u
+	LEfLq+IZQ+Z1j0fNSIJBH2P5Lkfi3j5dB/yKrQAwDwbsuYMM819jQSlcg/wMajyT6phc0C9i/3XYH
+	yj+GA/CuNFlckV0bDKh9vsXv3pK1wXxXlxKg2s7aT/1iBjO3s5ljNE+13oM9tc5QZ2vDmW9M4yxSJ
+	9g0+a7O4p9biDsTOaUwqGiB9hlpsw8YGZSoAMYG8j3AKsD8bOi7XTkzryMRrOmpg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rrXqq-0006Mx-BC; Tue, 02 Apr 2024 08:42:32 +0200
+Message-ID: <84da1f26-0457-451c-b4fd-128cb9bd860d@leemhuis.info>
+Date: Tue, 2 Apr 2024 08:42:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
- <a3aae375-5582-46e4-866b-6a81641998af@redhat.com> <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
- <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net> <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
- <20240401154436.GB26633@craftyguy.net>
-In-Reply-To: <20240401154436.GB26633@craftyguy.net>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 2 Apr 2024 09:25:10 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGDnYoz-rF+8JZoMfhGmGqL0PEdvSK8xWH8F4ELXiJB_Q@mail.gmail.com>
-Message-ID: <CAMj1kXGDnYoz-rF+8JZoMfhGmGqL0PEdvSK8xWH8F4ELXiJB_Q@mail.gmail.com>
-Subject: Re: x86_64 32-bit EFI mixed mode boot broken
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bluetooth broken for some people with 6.8.2 [Was: [PATCH 6.8
+ 308/715] Bluetooth: hci_core: Cancel request on command timeout]
+To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
+ Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240324223455.1342824-1-sashal@kernel.org>
+ <20240324223455.1342824-309-sashal@kernel.org>
+ <bf267566-c18c-4ad9-9263-8642ecfdef1f@leemhuis.info>
+ <2024033018-speller-supremacy-5436@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024033018-speller-supremacy-5436@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712040155;5860bd99;
+X-HE-SMSGID: 1rrXqq-0006Mx-BC
 
-On Tue, 2 Apr 2024 at 01:44, Clayton Craft <clayton@craftyguy.net> wrote:
->
-> On Sun, 24 Mar 2024 22:53:47 +0200 Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > > Thanks.
-> > > >
-> > > > I pushed another branch
-> > > >
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-3
-> > > >
-> > > > which has a proper fix for the issue that you found.
-> > > >
-> > > > As it turns out, the compat mixed mode (with handover protocol) was
-> > > >
-> > > > broken from the beginning, and the change you identified just happened
-> > > >
-> > > > to trigger it on your hardware.
-> > >
-> > >
-> > > Tested and fixes booting on my Bay Trail tablet and NUC. Thanks for fixing this!
-> > >
-> > > Tested-by: Clayton Craft <clayton@craftyguy.net>
->
-> So... maybe my testing wasn't as thorough as I thought, OR I am experiencing an
-> unrelated problem. In any case, I'm having some difficulty figuring out what to
-> blame. When using this patch on the 6.6 LTS:
->
-> 1) kernel seems to panic right after displaying `disabling bootcon [efifb0]`. I
-> determined that it's panicking by setting `panic=-1` and seeing it reboot after
-> showing that message. I can work around it by setting `keep_bootcon`, but that's
-> not ideal.
->
+On 30.03.24 17:23, Greg KH wrote:
+> On Sat, Mar 30, 2024 at 03:59:22PM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 24.03.24 23:28, Sasha Levin wrote:
+>>> From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>>
+>>> [ Upstream commit 63298d6e752fc0ec7f5093860af8bc9f047b30c8 ]
+>>>
+>>> If command has timed out call __hci_cmd_sync_cancel to notify the
+>>> hci_req since it will inevitably cause a timeout.
+> [...]
+>>> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>> Stable-dep-of: 2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")
+>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>
+>> Hey stable team, I wonder if it might be wise to pick up 1c3366abdbe884
+>> ("Bluetooth: hci_sync: Fix not checking error on hci_cmd_sync_cancel_sync") from next
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1c3366abdbe884)
+>> for the next releases of all series that a few days ago received
+>> 63298d6e752fc0 ("Bluetooth: hci_core: Cancel request on command timeout").
+>>
+>> The latter patch sadly on quite a few systems causes a Oops due to a
+>> NULL pointer dereference and breaks Bluetooth. This was reported for
+>> mainline here (yes, coincidentally it was reported by yours truly):
+>> https://lore.kernel.org/all/08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info/
+>>
+>> Now that the patch landed in 6.8.2 it seems to happen there as well
+>> (guess in 6.7 and others, too), as can be seen from this bug report
+>> where multiple people already joined:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218651
+> [...]
+> Now queued up, thanks for letting us know.
 
-First of all, if you make it all the way to this point, it is unlikely
-that this is the same issue. The issue that was fixed was preventing
-the boot from proceeding past the very early 32-bit boot stage in the
-decompressor, and by the time you hit this panic, the kernel is up an
-running.
+FWIW, at least one user reported additional BT problems in bugzilla that
+might or might not be related to the backports. But I write for a
+different reason:
 
+Luiz replied in bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=218651#c20) and you might
+want to know about it:
 
-> 2) kernel complains about no root (from initrd). I can work around this by
-> passing `initrd=my-initramfs` on the kernel cmdline.
->
+"'"
+Hmm, was the original change [63298d6e752fc0 ("Bluetooth: hci_core:
+Cancel request on command timeout")] backported to stable kernels, afaik
+I didn't mark it to Cc stable: [...]
 
-So why is systemd-boot not passing this directly? AFAIK this is the
-default method for systemd-boot, and I don't think it implements any
-other methods.
+I wonder why it got selected to be backported, in any case I don't think
+it is a good idea to attempt to do backporting without having at least a
+Fixes tag to begin with otherwise we risk having problems like this
+widespread to people not really running the latest where this sort of
+problem is sort of expected during the early rc phase, so instead of
+having these 2 patches backported we could just remove the above from
+the stable trees.
+"'"
 
-> I haven't tried any newer kernels yet. The second issue above makes me wonder if
-> your patch related to args might be to blame, but I'm not sure. Any help poking
-> around further would be greatly appreciated :)
->
+Luiz: Sasha and Greg can speak for themselves, but the "Stable-dep-of:
+2615fd9a7c25 ("Bluetooth: hci_sync: Fix overwriting request callback")"
+tag above is a strong indicator why 63298d6e752fc0 was backported.
 
-You might try this stable -rc
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/log/?h=linux-6.6.y
-
-which should get released any day now. It has a couple of EFI related
-fixes, although none of them seem related in particular.
-
-Another thing you might try is to pass efi=noruntime to the boot, to
-check whether EFI is implicated in this to begin with.
+Ciao, Thorsten (who now hopes the developers sort this out without him
+as accidentally man-in-the-middle)
