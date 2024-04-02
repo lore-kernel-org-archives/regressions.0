@@ -1,15 +1,16 @@
 Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904215B972
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 19:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F3815B980
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 19:43:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712086569; cv=none; b=V2/COJe8U38mFm3/1JbSbgljsHD6y0z6PRuBByaj+5F12M+9js8DreBZ5R+bcVqax5CDLOFUq/mn8qIpQa4eCeuUFUITkIZ6oBj0azAD2n8sdDCcpxg5Ejf8bcqXvwPM9IFIIjMPkv6Z00uqTbsK2aMDHLKVxmSbC3dhGcaPZM4=
+	t=1712086982; cv=none; b=RsAb8MnltWq7mkajqHf7Tt+tmot9uH355Vr5gWD87xy4AfK4ICPgVUbPds0SvdRdulwR0U6WyibgtphMAe/VEUEUq5dyFL0BJC/Pq8yn2upjrO1zZ2hwynn8/YyfvSSNsD69Gh6ZoTQh6LYJmMXX8D1eG2qWLERqsmWmqR9t29o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712086569; c=relaxed/simple;
-	bh=C+sxaHWdoQnuXwu4aDiuiJDjiNUG2v14M2Yveog+WBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JUiz63aFoCrKGThoWrUG7/zMtLTgRIuD8wj0w8YrMEhnC4WiE5oj9HRAOYzQTz3HCpRwaaW79W6sm6YO4Bq2kMjKV734UTC6Z1QN0aKl9giahiSmqHs8pBfjelvrvSSAb38qq9s3e+Vdd8FT2CMlUB1KvBRJVHyIBdKl7UO6twI=
+	s=arc-20240116; t=1712086982; c=relaxed/simple;
+	bh=T2zD/3mEbZDKBbyeVef0lMlUrsq/eZAor3kTjCaqZq8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uHEal2uDs/WWdopDYkExoij2S3seS8Rd9RHOOryK7j/iEn4MranTT9MzWuRtU9D11ulMLBHQL7efW5z7+qNsW4YryQFRB//ExbtDBeSX58iLfk9NETU8EByZTSR3e26paPFkKdAq5gXgH6CjdgZbVyJYtEZFE66xPkvHTwKTpc8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
@@ -17,93 +18,95 @@ Received: from 127.0.0.1 (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id B36DF8718;
-	Tue,  2 Apr 2024 19:29:54 +0000 (UTC)
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id A96EA872F;
+	Tue,  2 Apr 2024 19:42:58 +0000 (UTC)
 Authentication-Results: mail.lichtvoll.de;
 	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
 From: Martin Steigerwald <martin@lichtvoll.de>
-To: Linux kernel regressions list <regressions@lists.linux.dev>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org
-Subject: 6.7.11: Fails to hibernate - work queues still busy
-Date: Tue, 02 Apr 2024 21:29:50 +0200
-Message-ID: <13486453.uLZWGnKmhe@lichtvoll.de>
+To: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Subject:
+ Re: [regression] 6.8.1: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
+Date: Tue, 02 Apr 2024 21:42:58 +0200
+Message-ID: <22240355.EfDdHjke4D@lichtvoll.de>
+In-Reply-To: <be5a7213-78b3-4917-b95b-ec31cd2350e4@leemhuis.info>
+References:
+ <2325246.ElGaqSPkdT@lichtvoll.de> <12401263.O9o76ZdvQC@lichtvoll.de>
+ <be5a7213-78b3-4917-b95b-ec31cd2350e4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Thorsten, hi Greg,
+Hi Thorsten, hi,
 
-6.7.9 + some bcachefs upgrade/downgrade fixes included in 6.7.11 works
-okay. 6.7.11 fails. Two repeated attempts failed with a dmesg like this:
+Linux regression tracking (Thorsten Leemhuis) - 19.03.24, 09:40:06 CEST:
+> On 16.03.24 17:12, Martin Steigerwald wrote:
+> > Martin Steigerwald - 16.03.24, 17:02:44 CET:
+> >> ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
+> >> Hibernation works correctly with self-compiled 6.7.9.
+> >=20
+> > Apparently 6.8.1 does not even reboot correctly anymore. runit on
+> > Devuan. It says it is doing the system reboot but then nothing
+> > happens.
+> >=20
+> > As for hibernation the kernel cancels the attempt and returns back to
+> > user space desktop session.
+> >=20
+> >> Trying to use "no_console_suspend" to debug next. Will not do bisect
+> >> between major kernel releases on a production machine.
+>=20
+> FWIW, without a bisection I guess no developer will take a closer look
+> (but I might be wrong and you lucky here!), as any change in those
+> hundreds of drivers used on that machine can possibly lead to problems
+> like yours. So without a bisection we are likely stuck here, unless
+> someone else runs into the same problem and bisects or fixes it. Sorry,
+> but that's just how it is.
 
-[  192.465064] r8169 0000:05:00.0 en1: Link is Down
-[  193.246691] PM: hibernation: hibernation entry
-[  193.622844] Filesystems sync: 0.097 seconds
-[  193.623337] Freezing user space processes
-[  193.627326] Freezing user space processes completed (elapsed 0.003 seconds)
-[  193.627390] OOM killer disabled.
-[  193.627889] PM: hibernation: Marking nosave pages: [mem 0x00000000-0x00000fff]
-[  193.627933] PM: hibernation: Marking nosave pages: [mem 0x0009f000-0x000fffff]
-[  193.627973] PM: hibernation: Marking nosave pages: [mem 0x09c00000-0x09d00fff]
-[  193.628022] PM: hibernation: Marking nosave pages: [mem 0x09f00000-0x09f0ffff]
-[  193.628063] PM: hibernation: Marking nosave pages: [mem 0xa22d1000-0xa22d1fff]
-[  193.628099] PM: hibernation: Marking nosave pages: [mem 0xa22de000-0xa22dffff]
-[  193.628135] PM: hibernation: Marking nosave pages: [mem 0xa22ed000-0xa22eefff]
-[  193.628172] PM: hibernation: Marking nosave pages: [mem 0xa22ff000-0xa22fffff]
-[  193.628210] PM: hibernation: Marking nosave pages: [mem 0xb9533000-0xb95c3fff]
-[  193.628263] PM: hibernation: Marking nosave pages: [mem 0xbd9de000-0xcc3fdfff]
-[  193.630011] PM: hibernation: Marking nosave pages: [mem 0xce000000-0xffffffff]
-[  193.632545] PM: hibernation: Basic memory bitmaps created
-[  193.639135] PM: hibernation: Preallocating image memory
-[  195.755034] PM: hibernation: Allocated 2438707 pages for snapshot
-[  195.755817] PM: hibernation: Allocated 9754828 kbytes in 2.11 seconds (4623.14 MB/s)
-[  195.755842] Freezing remaining freezable tasks
-[  215.764748] Freezing remaining freezable tasks failed after 20.009 seconds (0 tasks refusing to freeze, wq_busy=1):
-[  215.764813] Showing freezable workqueues that are still busy:
-[  215.764841] workqueue events_freezable: flags=0x4
-[  215.764869]   pwq 0: cpus=0 node=0 flags=0x0 nice=0 active=0 refcnt=2
-[  215.764881]     inactive: pci_pme_list_scan
-[  215.764895] workqueue usb_hub_wq: flags=0x4
-[  215.764965]   pwq 4: cpus=2 node=0 flags=0x0 nice=0 active=2 refcnt=3
-[  215.764974]     in-flight: 350:hub_event [usbcore] hub_event [usbcore]
-[  215.765212] Restarting kernel threads ... done.
-[  216.244833] PM: hibernation: Basic memory bitmaps freed
-[  216.245961] OOM killer enabled.
-[  216.246377] Restarting tasks ... done.
-[  216.250708] thermal thermal_zone0: failed to read out thermal zone (-61)
-[  216.252313] PM: hibernation: hibernation exit
-[  216.276601] Generic FE-GE Realtek PHY r8169-0-200:00: attached PHY driver (mii_bus:phy_addr=r8169-0-200:00, irq=MAC)
-[  216.871301] r8169 0000:02:00.0 en0: rtl_ep_ocp_read_cond == 0 (loop: 30, delay: 10000).
-[  216.976901] r8169 0000:02:00.0 en0: Link is Down
-[  217.003589] Generic FE-GE Realtek PHY r8169-0-500:00: attached PHY driver (mii_bus:phy_addr=r8169-0-500:00, irq=MAC)
-[  217.169087] r8169 0000:05:00.0 en1: Link is Down
-[  220.611547] r8169 0000:05:00.0 en1: Link is Up - 1Gbps/Full - flow control rx/tx
+I have been asked this repeatedly with previous bug reports. My issue
+with bisecting between major kernel versions is this:
 
-ThinkPad T14 Gen 1 with AMD Ryzen 4750U and 32 GiB of RAM.
+When I look around here I see no second ThinkPad T14 AMD Gen 1 here I=20
+could use for testing. Also doing a kernel bisect using a GRML live iso=E2=
+=80=A6=20
+not really.
 
-Could that be related to the following issue?
+The one I reported this from is a production machine with a 4 TB NVMe
+SSD which contains a lot of data. I am not willing to risk data loss or
+(silent) file system corruption by bisecting between major kernel
+releases. Bisecting between major kernel releases in my understanding
+would require to test various releases between in this example 6.7 and
+6.8 and even between 6.7 and 6.8-rc1. At least in my understand anything=20
+between 6.7 and 6.8-rc1 is not guaranteed to be even be somewhat stable. I=
+=20
+am not usually installing an rc1 kernel on a production machine, but=20
+rather wait for at least rc2/3 nowadays. Its a balanced risk calculation.=20
+And rc2/3 or later appears to be a risk I am willing to take. But=20
+something between stable and rc1? Nope.
 
-* Hibernate stuck after recent kernel/workqueue.c changes in Stable 6.6.23
-@ 2024-04-02  8:08 Linux regression tracking (Thorsten Leemhuis)
+It is not even that rare. 6.7 some rc failed with hibernation as well.=20
+With exactly the same machine. I refused to do a bisect as well in that=20
+case. At some later time the issue was fixed without me doing anything=20
+more.
 
-https://lore.kernel.org/regressions/ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info/T/#u
+Now my question is this: Without me willing to bisect in that case, is
+a bug report even useful? Otherwise I may just switch this last machine
+to distribution kernels. It would save a lot of time for me. This private=20
+and freelancer production machine is the last left-over machine with self-
+compiled kernels.
 
-However I did not find above work queue related error messages in the
-dmesg in the bug tracker bug report mentioned there:
+So far I still thought I would somehow be contributing to Linux kernel
+quality with detailed bug reports that take time to write, but apparently=20
+I am not. Can you clarify?
 
-https://bugzilla.kernel.org/show_bug.cgi?id=218658
-
-If really needed I could do a bisect, but it would take a while until I
-can take time to do it.
-
-Best,
--- 
+Ciao,
+=2D-=20
 Martin
 
 
