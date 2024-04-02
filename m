@@ -1,114 +1,131 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3147215A4BF
-	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 16:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3879C14B06C
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 17:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712076721; cv=none; b=SGF0TYQP2ZzSk38a4hV7vNqNZibKKr1YimIglHlLJmQWuSYl5BeMyNM0CGWsKOfqSM3ThFIU5//djx8FOn6JYovVSexQ94oKzpIWQwtR3Tq+VkTe92HO6yAZr6cRPVu2XrjM9ZrHXMWkopm3ehK7GsR6TCf/Vdfqh9Mog8t4IKI=
+	t=1712078862; cv=none; b=UxY1b52LKfi0Z2k/9vsX8I8y05vRyudfj/1TDA+/UMeLFTsV025LkUWLXNJYrlzjbaO9B2XltGmYK0+GrMUqADoDTM5HlNEW96OcHVJwMXQ7ukPzxBr8ocoCCEsbXaA2tGoz5DxlrZS6uAugTTfdbXhRL6EG3fXE0bo6iUPQLRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712076721; c=relaxed/simple;
-	bh=SJbU2X7441mYJCFBc2qvaCsgEGCMk8xV0KIIvRAIKzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FVfbs28e3T4+yYYzalVXuyUDx05DArkwnnLKeJwQIEs5c4cKJKl9LgpAFwEfBsiZjQ4eQx6N7vDlLnXVkOtrLvOhFczvZlMrOdToAC9WFB2ISH8kwvgWyAXGEtuDAViuiWneRvXO3f58CDOcMUZAcUK10oMRyFhYRlruvPU12Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGfvNeLK; arc=none smtp.client-ip=209.85.167.47
+	s=arc-20240116; t=1712078862; c=relaxed/simple;
+	bh=C+KN2V9wpye3eVQp8A9k8wGfFywTWnLq6qVtUjdFm2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GSVs78LEWaE4jY2PGpTWG8ytg6BpMW0gfiNy4rg76dMSwVS73IkqW4V9ZS4/qdpugsvtHQAcvQSxZmQLAmZUdTGY5royjulJryCgp4dCwSoSaxx2HpPK2APIqiaM5gBqajep3OXV2ByljRHwwRvUJ5+MX2BWKr6SiieUFwbP5OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1MSA/FI; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGfvNeLK"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513e6777af4so8932290e87.2
-        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 09:51:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1MSA/FI"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so15605566b.1
+        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 10:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712076718; x=1712681518; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wgISE5etL0neRViDNv8SHE5eH5odsBSeTE4yjpddWsk=;
-        b=jGfvNeLK2LQLbSYqJe4qbPk7FsCoWTHHFoXX+T8CmygfsAJf7fvqqYycgn3xFebp/I
-         RptPUEQS+VOPQ03ZU5X/vdBEQzEf9lOODT+Hez1TYC/CuBjnA4DWFQ6CoVBPtU2DR403
-         CRjn1uVQAxfLM9kZBbSf4PBzkeHlsDOKnS0U58Rf7vOjt1zYqFp4qcoJjgVnhTUgApY6
-         CxC5rcexBYXf3IOc18ZpDShXXDR5BLiH+f9bu7/wDYyXVSfJaM4pex7xCea0dVTqw1rs
-         NDbBQHLohtOvNYbyuEAnfpRGZs+TjnxOFO/TMY8sdLEQE9pfBcA7oQFpsA3jB5MgL8Ja
-         7dRQ==
+        d=gmail.com; s=20230601; t=1712078859; x=1712683659; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EEHmyuJnTcLQOH/PKZK7H+N0e7ofu0PP36+q0+beXDY=;
+        b=A1MSA/FI5CYgKR1qUpaDtqGNo6QBjI3NgEcUEFUjzPkjs7MCYgz46hE/bKnPthtfwz
+         XbkcPuiXiw0wRW54m/md9iOPow73MGxz7yhP6J7z1JBmNAyZyP3Yuv/HOZUCiGwgu3fT
+         tEcB3lWsBKOdojluiLTAKi2+2gaEPy0/XA1SJ2IGBQL2fxERb+DAZ1w6iCpMjvL+pKOr
+         UMlqls9awtp8Volp5pV+mu/XCv+daQE9WWUzBaijPmZD3yFxYhsb5cWgonYCxp2BKxwY
+         2aNCZdLwlhRMCinQr3uh6uOElCMaLCXgJDFgcE8sgC48QsdqU9AoUglEtQ5kKbQYeVSf
+         9quA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712076718; x=1712681518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wgISE5etL0neRViDNv8SHE5eH5odsBSeTE4yjpddWsk=;
-        b=KStIsp/T39aViC3X+hbv3tn/dnnmwLJl2vpufiTXACwdBwI5L0sVkhT8is3y96DYQN
-         hyL3gRmIx8keejqcIPq9dy8rKUatq8tFwEbzkur1e9heWHLoi92o22pPgkNEGXklTA41
-         wN5PwjzpSAidgdXUUeGLREhdllCUcYIp42UpSoBZIza5ngauCygwsl0S2xjfe8Jx4Ewv
-         1Qc4hJ+yf+dlyFR9xGu6wDsKZV6B0fC8LQxe4TMIvndo+pc5MuR+LGYEgtoR/0It7s6Z
-         RJZsplBVFHTLLHSGayisdJ3ohnzVbW7WR7aAN5mBtXL4Hae2zO4P+WJOY9TGK2y29ipC
-         k22A==
-X-Forwarded-Encrypted: i=1; AJvYcCXB5+HkSDmjd2beBgAJG+D7bGkMyyHu0j8FUoLAxAJ5IwHb1ilVnKpVS2bD50Afjo3PzicvEwoOsIdxFgNysFEK0x3x00WdWxJZdZI=
-X-Gm-Message-State: AOJu0YxerAbbnxPIMp5IJ0XhdC8P95zOG0HZvtMGbb68FEyiHFyGm39l
-	epem7gmQUB2OIGDwN/9JaZsssJJcBhpXi8EDNHrRXiK/2PWJ/eXhCC4K6dl5BHcoPBoObGLV+ME
-	l1/M+ZdSV84YJ1Pi7EMHu7w0yL8I=
-X-Google-Smtp-Source: AGHT+IFkZ8Fljuu+7esyL9W9leJUOufQMhdJaMevUKQhSvGeXEfzLVh/OLYbTMyr2Xz/3ayXWd9W6SkCVg8xApbQmU8=
-X-Received: by 2002:ac2:4149:0:b0:516:9eb9:dcd1 with SMTP id
- c9-20020ac24149000000b005169eb9dcd1mr1955851lfi.34.1712076718157; Tue, 02 Apr
- 2024 09:51:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712078859; x=1712683659;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EEHmyuJnTcLQOH/PKZK7H+N0e7ofu0PP36+q0+beXDY=;
+        b=aUFeOrhFEn4QGlQrGMV8LkaqKncFXIZxhv21iHgWGeybGN01VOGJQ9QNybysuKSMVS
+         lvWEGGbUIbAd33FzDIstFxuZkYJGmuwgGr5q0Fa+G/5NE3SUOdsNv4JbCXHyurNhSNR4
+         b/43dBGsXZnumddgm8hgzyKS4cJkyGhUezHxUoxN3I/ESsUltkfdd2ohj5ySNGRaVoIK
+         PBYLCKEyYJUUg4si/TolmI0jHuBUiEOm1mkl72wspFmCgHTjCbM8jX2NAjWJ3XLRTxXi
+         i21QUDCLXhMq/xNQcnVZilxa6IZKUEqp+edFjAEMHy6IvqooHHZXvZ/akzhMgUULuk2c
+         e5Bw==
+X-Gm-Message-State: AOJu0Yxj1DrrAROHr0geN0B5qIX15Qbym3NE0jJN/pp/5nKjNDdDRYj0
+	FVb6uL9NG0gByqJ4JbF3QYq2xhQBBaSmaLjrWoyhDmOyaj27FjyTPEYIqE8=
+X-Google-Smtp-Source: AGHT+IGxLtnnZo/nwOFRpJkkD6C5Ad3DTeR5fuztUnmw36V5pRmDqe8TW8eDD2edsI+CnSSZXLCEWA==
+X-Received: by 2002:a17:906:1388:b0:a4e:8992:2b9e with SMTP id f8-20020a170906138800b00a4e89922b9emr135535ejc.3.1712078859220;
+        Tue, 02 Apr 2024 10:27:39 -0700 (PDT)
+Received: from [194.171.31.163] ([194.171.31.163])
+        by smtp.googlemail.com with ESMTPSA id e10-20020a1709061e8a00b00a4df061728fsm6740061ejj.83.2024.04.02.10.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 10:27:38 -0700 (PDT)
+Message-ID: <ec06af0a-a8e4-4681-be7f-10dcfb5e70d1@gmail.com>
+Date: Tue, 2 Apr 2024 19:27:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240402164345.14065-1-hdegoede@redhat.com>
-In-Reply-To: <20240402164345.14065-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 2 Apr 2024 19:51:21 +0300
-Message-ID: <CAHp75VeJYASFaxwG2yuAdBLn7H5hK1BESP7p+3CzBVmNdCTpwg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Fix triggering "kobject: 'gpiochipX' is not
- initialized, yet" kobject_get() errors
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression : Latitude 5500 do not always go to true sleep mode
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org
+References: <1ee68691-9eb4-404a-adb4-fdaaf12c905d@gmail.com>
+ <2a4a2d24-2c4d-47cc-bc1b-30c309c173e3@leemhuis.info>
+From: =?UTF-8?Q?L=C3=A9o_COLISSON?= <leo.colisson@gmail.com>
+In-Reply-To: <2a4a2d24-2c4d-47cc-bc1b-30c309c173e3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 2, 2024 at 7:43=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> When a gpiochip gets added by loading a module, then another driver may
-> be waiting for that gpiochip to load on the deferred-probe list.
->
-> If the deferred-probe for the consumer of gpiochip then triggers between
-> the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find()
-> see the chip and the gpiochip_setup_dev() later then gpio_device_find()
-> does a kobject_get() on an uninitialzed kobject since the kobject is
+Dear Thorsten,
 
-uninitialized
+Thanks a lot for your answer. I'd love to give a more precise bug 
+report, but it's not so easy (see below), so my hope was that this would 
+ring a bell to some devs here with a trivial fix to apply, especially as 
+I see surprisingly many people with this issue (3 people reported 
+similar regressions in my threads). Since it seems not to be the case, 
+I'll try to bisect … But it might take quite some time as it is not so 
+easy to do as I can't find:
 
-> initialized by gpiochip_setup_dev() calling device_initialize():
->
->  arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
->  arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
->  ------------[ cut here ]------------
->  kobject: 'gpiochip5' (00000000241466f2): is not initialized, yet kobject=
-_get() is being called.
->  WARNING: CPU: 3 PID: 42 at lib/kobject.c:640 kobject_get+0x43/0x70
->  Call Trace:
->   kobject_get
->   gpio_device_find
->   gpiod_find_and_request
->   gpiod_get
->   snd_byt_wm5102_mc_probe
->
-> Not only is the device not initialized yet, but when the gpio-device is
-> added to the list things like the irqchip also have not been initialized
-> yet.
->
-> So gpio_device_find() should really ignore the gpio-device until
-> gpiochip_add_data_with_key() is fully done. Add a device_is_registered()
-> check to gpio_device_find() to ignore gpio-devices on the list which are
-> not yet fully initialized.
+1) a deterministic way to trigger the bug (sometimes it goes to sleep 
+correctly, sometimes not) Even worse, I feel like some kernel versions 
+are "less buggy", for instance, I tried 6.1 and I only experienced a 
+single complete battery drop, and 2 drops of 20% (which never occurred 
+before), while on 6.6, it was significantly more often in my (short) 
+experience. But this might just be statistical bias.
+2) a simple way to check if the bug occurred (waiting for my battery to 
+drop is not really optimal)
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+I'll let you know if I have some progress…
 
---=20
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Léo
+
+
+
+On 29/03/2024 17:14, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 29.03.24 16:21, Léo COLISSON wrote:
+>> Since I upgraded my system (from NixOs release
+>> 2caf4ef5005ecc68141ecb4aac271079f7371c44, running linux 5.15.90, to
+>> b8697e57f10292a6165a20f03d2f42920dfaf973, running linux 6.6.19), my
+>> system started to experience a weird behavior : when closing the lid,
+>> the system does not always go to a true sleep mode : when I restart it,
+>> the battery is drained. Not sure what I can try here.
+>>
+>> You can find more information on my tries here, with some journalctl logs :
+>>
+>> - https://github.com/NixOS/nixpkgs/issues/299464
+>>
+>> -
+>> https://discourse.nixos.org/t/since-upgrade-my-laptop-does-not-go-to-sleep-when-closing-the-lid/42243/2
+> Thx for the report, but the sad reality is: I doubt that any kernel
+> developer will look into the report unless you perform a bisection to
+> find the change that causes the problem. That's because the report lacks
+> details and this kind of problem can be caused by various areas of the
+> kernels, so none of the developer will feel responsible to take a closer
+> look. From a quick look into your log it seems you are also using
+> out-of-tree drivers that taint the kernel, which is another reason why
+> it's unlikely that anyone will take a closer look.
+>
+> For further details on reporting issues and mistakes many people make
+> (and you might want to avoid in case you want to submit a improve
+> report), see:
+>
+> https://docs.kernel.org/admin-guide/reporting-issues.html
+> https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+>
+> Ciao, Thorsten
