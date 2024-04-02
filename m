@@ -1,90 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from hz.preining.info (hz.preining.info [95.216.25.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAAB657AD;
-	Tue,  2 Apr 2024 11:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4F7A158;
+	Tue,  2 Apr 2024 13:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.25.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712057740; cv=none; b=jwT+sjhJrSdx3TQa2qmvx4c5vYIayAXx1xxbW6jHxCoYNx22Og80HXXvq/5PW7PSN4ib90AGZgChMjUO65LB6yyGNomilHQ3rfwmjQePr/NikGuqQ3wAW7ok2iwDyb6DcK1QfphOP1242FTYS4qVPFiOZr5o/inl0pPlsTEkcrU=
+	t=1712063890; cv=none; b=TlQhn3VFqLXdVoWWD63EThK4JVj7EKXnvfTAgsbEMOQIk36Xy18Q77FJdWC7/vVQdN8VOm4JV+o++mHHcMl8LsMVHM9h34WUxBk71Qpn3Sd6axB37iYgLC+SsdM++5J1BCyE9pQa5DbR75a6N90G5Yxshi4xT5cOxs4AaT9Xypg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712057740; c=relaxed/simple;
-	bh=q/eZjUWAugq5q/OxFoUEqB9Q/iPA9gpO4VsEYccFMtE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6TmSkpW5v4CI2JRQrp+DAUJeEuc/UfmUwihrx5ChP4TIZtWDbCtv9AGHMjivQzWVeKYV/z2f/SXk/RJTJVUE80Pk1NPNatmNYX09YUw2DG3KgoPjRZorc/nHI84qvZ5LnpBrJCwi05I/zQOb9eQ2Wj+nEmG12PoZ7+jiMs6Wrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jYZE6pOL; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712063890; c=relaxed/simple;
+	bh=80IhwDgD1gPqa9vTqSCEAKUjeZBU8j6RuuQa/+lWtsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgVBpQh+hx7zopbR0Zn+7Fj5DF4ltIf5A6CNJKr194pxsN100vCeFIvrUwSQOBosBk+SOy5vamtNfcL6AtIeYAIjicU5WH5t8rbmKpydnJQ94OcsfoT362hxpowe4iwxkotc9nUpJISlvyqK8Fmn5m7i7QqHImn8M8cqQfQWPCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info; spf=pass smtp.mailfrom=preining.info; dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b=YqZ08d2Z; arc=none smtp.client-ip=95.216.25.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=preining.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jYZE6pOL"
+	dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b="YqZ08d2Z"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=7awxh5qbtdWbV+znG2uCAsRKZ70Rg1TLE8l9FPivOcg=;
-	t=1712057738; x=1712489738; b=jYZE6pOL9CTNxFy4o4qhSgDd2FmLrrY+yPzf/48v7XwBj1S
-	D90bq63kbNxBTCVvx1D7gZNNTTHPuBywceRMUnGYGIW/+68Ja9Q8Pc1pyGLl5AVn55vW8b+wesrK0
-	bZ+xncx12TBBrlKzzqqucITicUDqne2loh/ZWObTAeiK4J3g31aHMXgu5hTNUrn08WB7s44KMvofg
-	iyUtBVAbV4R+RXHkiscK/TpFpnhqLK9fX4/n/RfONiZjgljkiQc0GcX/q8LKHrev3xZWuAycDs9Ap
-	a5kydLVIlW352hCwe2wvfFxOOGddagAOUTTYwN6FiZ3ssGYy84j7/ATZDrh4EWQA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rrcQR-0002IY-3Q; Tue, 02 Apr 2024 13:35:35 +0200
-Message-ID: <1c698f8e-c7ca-4909-8872-057d6ae149ff@leemhuis.info>
-Date: Tue, 2 Apr 2024 13:35:34 +0200
+	d=preining.info; s=201909; h=In-Reply-To:Content-Type:MIME-Version:References
+	:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
+	:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=G5P4FMG63I9JSCmj4VgPs+r9J18nRxq7QCCPof1NWb8=; b=YqZ08d2Z55jJgnSijAQ1kJ/xiU
+	qw+x1trC64zVlt/IHhIH4HJZK0FUVKR5dasr1NNg8iuj7ea3pVyeQ4s20Z2QNF/pzi2BdWX0U4DtY
+	4Fu0Tc/57NbcycLX2WLoMuZvhSZb8ZFEvl7B8AEd4P/1okPvaDGDqdtWpknjaK2oFPndpfenHGLuj
+	3RSjSVVACHHBWJoEunfnDdCOTV74ouAqIYSZSxP6Lh8a2s/bJwtRPG8M+xhaBSvHaMReAZGbeNxO/
+	iWSIH9sZfqLEgRq+OhSrYLUEc3+iiesbSOj4JxcLdXKIXDoeDvaNWvxTTLcIGHqjn5jT4tez9CDof
+	QljD9XAQ==;
+Received: from tvk215040.tvk.ne.jp ([180.94.215.40] helo=bulldog.preining.info)
+	by hz.preining.info with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <norbert@preining.info>)
+	id 1rre1d-00F0hY-2F;
+	Tue, 02 Apr 2024 13:18:06 +0000
+Received: by bulldog.preining.info (Postfix, from userid 1000)
+	id 464361DF3C0A; Tue,  2 Apr 2024 22:18:01 +0900 (JST)
+Date: Tue, 2 Apr 2024 22:18:01 +0900
+From: Norbert Preining <norbert@preining.info>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: stable@vger.kernel.org
+Subject: Re: Regression in kernel 6.8.2 fails in various ways (USB, BT, ...)
+Message-ID: <ZgwFiaLefPAaH3tw@bulldog>
+References: <ZgvkIZFN23rkYhtS@burischnitzel>
+ <1c698f8e-c7ca-4909-8872-057d6ae149ff@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression in kernel 6.8.2 fails in various ways (USB, BT, ...)
-To: Norbert Preining <norbert@preining.info>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <ZgvkIZFN23rkYhtS@burischnitzel>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZgvkIZFN23rkYhtS@burischnitzel>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712057738;d6f7ad17;
-X-HE-SMSGID: 1rrcQR-0002IY-3Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c698f8e-c7ca-4909-8872-057d6ae149ff@leemhuis.info>
 
-On 02.04.24 12:55, Norbert Preining wrote:
+Hi Thorsten,
+
+thanks for your quick answer, much appreciated.
+
+> Thx for your reports. Nitpicking: next time, please report each issue in
+> separate mails, as mentioned by
+> https://docs.kernel.org/admin-guide/reporting-issues.html
+
+Ok, will remember. It wasn't clear to me whether this is just one issue
+or multiple.
+
+> > * Plugging in my Yubikey C does not trigger any reaction
+> >   (as a consequence scdaemon hangs)
 > 
-> I am running Arch Linux on a Lenovo X1 Carbon Gen 10.
-> Tests are made with uptodate system, and besides the kernel no
-> difference.
-> The kernels are as distributed by Arch, but if necessary I can compile
-> locally.
-
-Thx for your reports. Nitpicking: next time, please report each issue in
-separate mails, as mentioned by
-https://docs.kernel.org/admin-guide/reporting-issues.html
-
- > Arch Linux kernel 6.8.1 works without any problems.
-> Upgrading to 6.8.2 breaks a lot of things:
+> Have not heard about a problem like this yet.
 > 
-> * Plugging in my Yubikey C does not trigger any reaction
->   (as a consequence scdaemon hangs)
+> Could you bisect?
 
-Have not heard about a problem like this yet.
+Will do.
 
-Could you bisect?
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+> > * sending of bluetooth firmware data fails with Oops (see below)
+> 
+> A changes that hopefully fixes this is in 6.8.3-rc1:
 
-> * sending of bluetooth firmware data fails with Oops (see below)
+Nice, good to hear.
 
-A changes that hopefully fixes this is in 6.8.3-rc1:
-https://lore.kernel.org/all/bf267566-c18c-4ad9-9263-8642ecfdef1f@leemhuis.info/
-But from other reports there might be more problems. Could you check?
+> > * shutdown hangs and does not turn off the computer
+> 
+> That might or might not be a follow-up problem due to one of the other
+> two problems. :-/
 
-> * shutdown hangs and does not turn off the computer
+I agree. I will see what bisect tells me.
 
-That might or might not be a follow-up problem due to one of the other
-two problems. :-/
+Best regards
 
-Ciao, Thorsten
+Norbert
+
+--
+PREINING Norbert                              https://www.preining.info
+arXiv / Cornell University   +   IFMGA Guide   +   TU Wien  +  TeX Live
+GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
