@@ -1,129 +1,128 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2C085C52;
-	Tue,  2 Apr 2024 14:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF4686251
+	for <regressions@lists.linux.dev>; Tue,  2 Apr 2024 14:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066983; cv=none; b=ZyQJaUJuaSAAxQxBiUB1nAu15uAtozxCFO4j47iC2aBx5sDcvQFlzZJwd4IQlcNz4SYDdMICGSIWTAOCSj3kiuLjJDUcW+7jRkj+QxA8YrZhCajPGEG4dFpgZiSRT6Gvqjpb7Rq5QKMk3y0uZTuY4Y26uUhtcQZehsoPZHuWPSE=
+	t=1712067098; cv=none; b=QXz3Nnu95yvPlltytu7sHzYM9TjR5vRz2tnrrv7OT5n/18xfdxxn2IH86ew5q0MSs3J02nIKPJtnt3+wJn48CjTofpqNieAUTKi4P/ACeUdyFyU84jaLI+ynVkiPq5I6bODqNFytZpmz0XYdfTS4PZsTya6T1qpiYPxayCYu/tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066983; c=relaxed/simple;
-	bh=o9zg2EYP3VfME7dTRKvMGNy5dt/wZYuKnQ/u1Qb2bmk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=G6oMmAXaU5icwT8kNA6UC9jLLd9MGLHkESlQ6FJwdp+pouWkXVJvACOtK6/hveEO8dDh0VV1KeG2ILSP4yy6y5GbEBazXSRi207hGO8gKxhuOYczk7T0eebfpApgGEK9ZN7hgIbYwvy236ZO3aXWwAUGJSD9K8dXeOpzS2gPfT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JVs4qOJy; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712067098; c=relaxed/simple;
+	bh=WCDRnY/oJd/DONLSqBRLIktLGw9RKMQ5gh8bjDiLz/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IhIC3MxODFs5IGIBsE1TLSH0rZbd04tKacfJF8guAPl58jZMhPsOIiMUYFFrlcDx52jjZHmQ6Y+dzCf6++O6mMgvJVoFH5q0pXQjsyBJ2gCjOYmQ7Y/MNXYpzGoRy9eQN9Imyv1MsfmfB47+cKs013FcqlBsrIu0JseITYeqhWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SnqICsR7; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JVs4qOJy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Reply-To:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=dqvRXQEZOjC607wRxzYnb2l3bFAM7p6fyF69p9Uu1wc=;
-	t=1712066981; x=1712498981; b=JVs4qOJy8tPoEAVSmdzq2Z0buwo32F0KEq5zLrZIYJuBtUM
-	OwMTxoakhZe3ffuk2KlmfM616EBQjySd3Sbbx4LurafhcTqtwzYji4aC/xKBeA9vay825pLscAXK6
-	Frxc4IcR/PNel4mrcnHCy8Zy6NwQSlTZhI2GRhmO/EKoQLdoEsuLJQFVQ2fj988NjdYQcD2/UaTXk
-	KhDE2ZMAzEvqYK/uN+UpO5PH+ywF1nOCoJxf6/GeZRhol1JD+7+4YgsKTjhKwNNx4S/hr/2pmD4lB
-	A8zQTrdgAeE9yEdofNAaaYAyxLIgaeHEHnP4K0JIbtfCGf0cjNJtjoRmYV3qo12A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rreN7-0002lq-56; Tue, 02 Apr 2024 15:40:17 +0200
-Message-ID: <72e39571-7122-4f6a-9252-83e663e4b703@leemhuis.info>
-Date: Tue, 2 Apr 2024 15:40:16 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SnqICsR7"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso5078573276.3
+        for <regressions@lists.linux.dev>; Tue, 02 Apr 2024 07:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712067095; x=1712671895; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MfAyyaKhDHVtWK5o5tUmbDJTiRRfvCRYxpLagrGb6Sc=;
+        b=SnqICsR7hJAS0RHRZ8SYGtDkpK29J7Ie5s2UUJa0+AjzCotu8vn/31rF/tjGV+fL6g
+         +/xggpQQ0owyhWH5O9Pdf7bvXxX3FSWy/HPrN+Y0F7D2EqaSc7TWAaWSf5sQUp8rhVuK
+         rm5M0A38bUzG+/YO3WxCvjhxeT2o9BdnIlP0E9OMUxby0+rB/sqG2sGl21DwsjGgZFwe
+         MqLbh/O74ZzgnYta79GqjtTC3ZJRD3b8U0nxZq/f6Mm6aE6PcUREE/KwGJJAnoFa1S3Z
+         9iflfyEFNxYhu7tDw7zNiLqqeL+96LHUF0lB11BBW8jImU+EF+R9pAeXmu33xGVByy0Z
+         oTdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712067095; x=1712671895;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MfAyyaKhDHVtWK5o5tUmbDJTiRRfvCRYxpLagrGb6Sc=;
+        b=TWaC18gkSWCM5E44m0KizRYsjYA1IpJp0hmjb5qRRuKuajeSs2dd0t5wDcKEUqoukJ
+         aPGNHjECXC9KnfFzo/YocNTi3bok7mrvDLzZbZNXhZCbsgwPkpeKesqWqcWRdIc2D7wz
+         HDIotCRxiLptFKmuA0VCP5n09IWee6+oFqQE3JPjBM8hTNylH2O2ctfhP/+7x7Qc2JLB
+         dqAexORKA6d8XGsA6VpcSFDF3I+dexU3/sYpN9dao4c+81NuJeU/KRMHaUIOh6dzqJ1K
+         bHzZO2Cj2ubyfKOIPZUEo5H+pYExEmRQgvRQiOlslXSTUO4hJRbYzHBod7OJmiXa8NA9
+         FqxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyB4l7YPwixDdJokVe7xf8+fcjD2O9tD2X2FALwFsw5JwlcOfLvr2HnEy3cUwK7b/hKdSCrphtBvAXRsXLHJ5bHlR/2BoTBWgR6YM=
+X-Gm-Message-State: AOJu0Ywz9/dTRb/4DCCn8vlkd1eETGo+wDu5bnegyXDuJrLkqCtwKnup
+	155nbfNbBNMx8FTujjhKg2m7fC0nD5RL1hW2MNYaTJ/HxyoKOdAtebA9Z0R3GXgQvAsnc6cvRKK
+	HkDEJ1MuUrMFbMD5D+ZN2hvgNEUd50QstKTpgZQ==
+X-Google-Smtp-Source: AGHT+IHtJx+kBMaX8BpuA0YA7KnAAQyaJsPxHeu2fo45Gx0F5VaYXK6jNX2qhgMuRzBxoSq5A3qMV2Nb0evHRXeU1LA=
+X-Received: by 2002:a25:6ac1:0:b0:dd0:702:577a with SMTP id
+ f184-20020a256ac1000000b00dd00702577amr10226940ybc.35.1712067095531; Tue, 02
+ Apr 2024 07:11:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
- repeatedly in one file
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
- Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>, stable@kernel.org,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev <netdev@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240306111157.29327-1-petr@tesarici.cz>
- <20240311182516.1e2eebd8@meshulam.tesarici.cz>
- <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
- <20240311192118.31cfc1fb@meshulam.tesarici.cz>
- <764f2b10-9791-4861-9bef-7160fdb8f3ae@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <764f2b10-9791-4861-9bef-7160fdb8f3ae@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712066981;5f967a66;
-X-HE-SMSGID: 1rreN7-0002lq-56
+References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
+ <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+ <634bbfb6-a5a4-40ae-b89f-5fc50db43d4f@redhat.com> <ZgwOIKSRcK5X9-vu@smile.fi.intel.com>
+In-Reply-To: <ZgwOIKSRcK5X9-vu@smile.fi.intel.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 2 Apr 2024 16:11:24 +0200
+Message-ID: <CACMJSeub8aTbRCwEpW=V5A_aoE4iY+eoa4tnV_XfnumaEmJGDw@mail.gmail.com>
+Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
+ is not, initialized, yet kobject_get() errors
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Hans de Goede <hans@hansg.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi. Top-posting for once, to make this easily accessible to everyone.
+On Tue, 2 Apr 2024 at 15:54, Andy Shevchenko <andy@kernel.org> wrote:
+>
+> On Tue, Apr 02, 2024 at 03:41:00PM +0200, Hans de Goede wrote:
+> > On 3/29/24 4:16 PM, Bartosz Golaszewski wrote:
+> > > On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
+>
+> ...
+>
+> > > Thanks for the report. I hope I'm not being naive here but would the following
+> > > one-liner work?
+> > >
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index ce94e37bcbee..69f365ccbfd8 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *data,
+> > >
+> > >             gc = srcu_dereference(gdev->chip, &gdev->srcu);
+> > >
+> > > -           if (gc && match(gc, data))
+> > > +           if (device_is_registered(&gdev->dev) && gc && match(gc, data))
+> > >                     return gpio_device_get(gdev);
+> > >     }
+> > >
+> > > This would make gpio_device_find() ignore any GPIO device that's not yet
+> > > registered on the GPIO bus which is almost the last step of the registration
+> > > process right before creating the sysfs attributes.
+> >
+> > Yes that should work and it has the added advantage that it also waits
+> > for things like the irqchip to be setup before gpio_device_find() will
+> > find the gpio-device.
+> >
+> > I cannot trigger the race every boot, but I do hit it quite regularly
+> > and with this change I've done 10 successful consecutive boots, so
+> > I believe that this indeed fixes the race.
+> >
+> > I've prepared a patch with this fix now which I'll send out shortly.
+> >
+> > As for Andy's suggestion I'm not all that familiar with the RCU stuff,
+> > but I think that if we were to go that route then the device_is_registered()
+> > check should be moved up to above the "guard(srcu)(&gdev->srcu);"
+> > line rather then above the "gc = srcu_deref..." line, since in that
+> > case we are not using the gdev->chip pointer at all if we bail ?
+>
+> I believe you are right and we need to move this check out of SRCU scope.
+> (FWIW, I also thought the very same way after I had sent the message and
+>  was hesitating to reply with that.)
+>
 
-Hmmm, looks like Petr's patch for a (minor) 6.8 regression didn't make
-any progress in the past two weeks.
+Yes, there's no reason to have it inside the SRCU read lock section.
+It doesn't protect the kobject internals. The variable checked in
+device_is_registered() is a single bit. Once we see it as set, we can
+assume the device is registered with its subsystem.
 
-Does nobody care? Did nobody merge it because no tree feels really
-appropriate? Or am I missing something obvious and making a fool out of
-myself by asking these questions? :D
-
-Ciao, Thorsten
-
-#regzbot ignore-activity
-
-On 18.03.24 15:23, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 11.03.24 19:21, Petr Tesařík wrote:
->> On Mon, 11 Mar 2024 18:43:59 +0100
->> Eric Dumazet <edumazet@google.com> wrote:
->>> On Mon, Mar 11, 2024 at 6:25 PM Petr Tesařík <petr@tesarici.cz> wrote:
->>>> On Wed,  6 Mar 2024 12:11:57 +0100
->>>> Petr Tesarik <petr@tesarici.cz> wrote:
->>>>  
->>>>> Fix bogus lockdep warnings if multiple u64_stats_sync variables are
->>>>> initialized in the same file.
->>>>>
->>>>> With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
->>>>>
->>>>>       static struct lock_class_key __key;
->>>>>
->>>>> Since u64_stats_init() is a function (albeit an inline one), all calls
->>>>> within the same file end up using the same instance, effectively treating
->>>>> them all as a single lock-class.  
->>>> What happens with this fix now?
->>>>
->>>> IIUC it should be reviewed by Eric, but I don't know through which tree
->>>> it should be merged. Any plans yet?  
->>>
->>> I thought I gave a reply, but apparently not .
->>>
->>> Reviewed-by: Eric Dumazet <edumazet@google.com>
->>
->> Thank you!
-> 
-> Great. Just wondering, as there afaics was no activity since about one
-> week: what is the plan forward here?
-> 
-> Is the "through which tree it should be merged" question still
-> unresolved? I quickly looked and it seems two of the last tree changes
-> to that file over the past years went through net-next (the other one
-> through the tip tree). That's why I CCed the other two net maintainers
-> and the net list now.
-> 
-> Or is the plan to merge this after the merge window? Or only merge it
-> for 6.10, as it are bogus lockdep warnings that are being fixed?
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-> 
-> 
+Bart
