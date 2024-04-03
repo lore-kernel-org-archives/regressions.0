@@ -1,132 +1,128 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72C014900C;
-	Wed,  3 Apr 2024 14:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12C8146A91
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 15:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712153643; cv=none; b=fs3RfVb6VvVorO1XSf3Kjw5Vzy5qRKbbaH/0lSCOncW8RroT6usF4Yu4mc2vqWjMQfF0Wqgn5uTmJu6dFJhSLE06AsJRUHC9yt8ThmDPBLWFrwu0Oz7UKMtWX0pkL2DecR5Kek+DX95O53fz7OVlZbarqVcYUOPv2s6ggd0ZL3o=
+	t=1712157741; cv=none; b=HCtaLAEIJz7UU7H1fvY4A0q287isog5Z9sIfszOmD7c6ERbibSURry8qmSV/DxXynPFV4s6uK/1UfTBgnvv0BzBv+UkIqmDsEClO5baHYGyi0GTLJhXb6EIrQAJ069KDdNpMQIVKuot+E2zlAeUrT8kbQrRx41TBSW0zdXOsHJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712153643; c=relaxed/simple;
-	bh=DwlKSANN19zo2hxwH89sP0PAV6BFj/6aU1fv2ORo6Dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Pny23h5cV/Sd63GEkWj32LyZmtqacd325tqxZZTfAR+GAasMq2SoO6nNfT22M2PpLyZ0Vz0lVzHiv/86VbnnGKFGiCP69RUPB1k6zssrkxkbLoXuDMMWQ9BqgnetxVyCdCrZTaAXmfN1Ptkikb1b3OXh9sD+w+bKNq6KSLnVIso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FsgdTNda; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712157741; c=relaxed/simple;
+	bh=ibwa7qVlsz6WfcpJqPrroTnKs/SIZZIG690/0G7mCPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSbS1DNZ+th1Bxk1eUSHK9+7Cavj2mu9cyH4XQo8yanFIUkXxkn3atR3XE9jA9+QyqdNhju3vvNp3BjjLmJ+6Hu8basf9vNDUShXnY+VB+4LnmgbjAT+f2phdeEyiq2fjnYrZgdeAfsrY6AapF102ewrmNb5mr1awDpY76QAK98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4tzQ5Oc; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FsgdTNda"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=s2Hjna+7Gigv0uDBX5QjiFF/xA8CsPgyBJQvKbNatcs=; t=1712153641;
-	x=1712585641; b=FsgdTNdap3z+fS9b1TDqtQ8umiugpRhQZ6NecB2dCrUzEfqtpfAkgtAQbTSnd
-	Ns4SyFDNMdtTV/Kog1UpUz6DjBUQV4ahKqxpCjDftUQdfglfdbHy4Us9eUpYUpsOXAfheaNWkS3aP
-	vNKbog4lim5PxQ5013JfA7iUuue+RMHXPySeY2oKFbHI8tDZ5XXBlTyNBlpK8ZvdxKq/lLccdQgyX
-	9Sw0N6F619STqECYGBb+MSHW/hN7DQpU3qrv7M+s/Aaa6qJPSldaWMnUP/wZJDlc/qXwzXGaL75CU
-	1zqB+JMt2fF+Q2QUkHvm07Nm1Xo6WBT3CQKwgZtRUU73A1F+Jg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rs1NC-0008IN-EQ; Wed, 03 Apr 2024 16:13:54 +0200
-Message-ID: <3e53f18c-12aa-4bf8-b3f7-7945bbca6882@leemhuis.info>
-Date: Wed, 3 Apr 2024 16:13:53 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4tzQ5Oc"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e24c889618so29073135ad.2
+        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712157739; x=1712762539; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fd7qpkMBxQ2+k8rxh1w6ZQnt5fuyzAt4KYqqtVYV1Mw=;
+        b=b4tzQ5OcQeQhcQI28gmLwjVqbkZj20ChrrID+xM+TeohlD+GEbJUt9p/+AvoZh+e1l
+         ijOwaC3kXPoqhVM8gUeLfdnsMQfw7QA8hrH2cVmmim4pvlqd/c6OzsGcg2aCsit4bgtl
+         BnOeip3MgfBRm+zoSlvoGspRdqQ0LPan43m++/3WuBxtmpM6+ybIqSbXOfB2er8nMg00
+         vSDCccuRPRbi71IIQdTtihrXpyQKToY0dhvCDro/QozpZmWz4m0MsP13Xih/pmT0vURd
+         XEZX+DAVuLQExK0MwKe6Z48ewq6eLl9n4rWqxNEgB+MXDwGC4Gq9upCwe1/L6G9DuzQc
+         whrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712157739; x=1712762539;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fd7qpkMBxQ2+k8rxh1w6ZQnt5fuyzAt4KYqqtVYV1Mw=;
+        b=rcyP2RkpGRm8jOHZmAtx2/YKzd9ZeaXG6vT/R6Uuc1DHYyDm4jvPh/Gs3WaXC7o6G7
+         YyXyg12eEK0BxNmdSPusIo/uxCbT8dKdKLWQ99P/3Cevgy2l+Y0M8B118exKz/vwubBU
+         tVlO5axjzBmLiScPWTluop7bgw6p3+UwSzt6BQkhbInyQ3sRijJ1D0NZzj9vqsMXdi58
+         xCPDqyc7tUedCUC6rWIZxIX2AzD3bytAdPY4lymFC0nPvPqMAemc5dhMwmNDO4EVqoS0
+         CkKWfX7C1zqyGY561Xjd0quu/9JERpJqgyQI9YeKAMI34RXUHFe30Bv2wqRbqKviSYDC
+         Fgvw==
+X-Gm-Message-State: AOJu0YyPQ2HX2bzgyO6//IWHN/nyAhv48oSXV4Ogty18qWIAw1qr2+/n
+	5ibQdYG5GQMjwRkyXjSs8jvG6GKK2EnGWzbflxuYCC3PpBB//BqF
+X-Google-Smtp-Source: AGHT+IHjO4mpK4Tq4azhCzt5xkjqRK+0OXIWC7WSgQ51pHzDtg/QMk6JiACDB2L0msI6Q6if578FSw==
+X-Received: by 2002:a17:902:f612:b0:1e2:9ae0:2165 with SMTP id n18-20020a170902f61200b001e29ae02165mr1541870plg.0.1712157738889;
+        Wed, 03 Apr 2024 08:22:18 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902d89500b001d91d515dffsm13428232plz.156.2024.04.03.08.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 08:22:18 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Apr 2024 05:22:17 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Sasha Levin <sashal@kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in
+ Stable 6.6.23
+Message-ID: <Zg10Keik4KORjXMh@slm.duckdns.org>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] docs: *-regressions.rst: unify quoting, add missing
- word
-To: Karel Balej <balejk@matfyz.cz>, Jonathan Corbet <corbet@lwn.net>,
- regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, workflows@vger.kernel.org
-References: <20240328194342.11760-1-balejk@matfyz.cz>
- <20240328194342.11760-2-balejk@matfyz.cz>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240328194342.11760-2-balejk@matfyz.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712153641;1673022d;
-X-HE-SMSGID: 1rs1NC-0008IN-EQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024040328-surfacing-breezy-34c6@gregkh>
 
-On 28.03.24 20:29, Karel Balej wrote:
-> Quoting of the '"no regressions" rule' expression differs between
-> occurrences, sometimes being presented as '"no regressions rule"'. Unify
-> the quoting using the first form which seems semantically correct or is
-> at least used dominantly, albeit marginally.
+Hello,
+
+On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
+> > Side note: I have no idea why the stable team backported those patches
+> > and no option on whether that was wise, just trying to help finding the best
+> > solution forward from the current state of things.
 > 
-> One of the occurrences is obviously missing the 'rule' part -- add it.
+> The Fixes: tag triggered it, that's why they were backported.
 > 
-> Signed-off-by: Karel Balej <balejk@matfyz.cz>
-
-Thx for this:
-
-Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
-
-Ciao, Thorsten
-
-
-> ---
->  Documentation/admin-guide/reporting-regressions.rst | 10 +++++-----
->  Documentation/process/handling-regressions.rst      |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
+> > > which would
+> > > be far too invasive for -stable, thus no Cc: stable.
+> > >
+> > > I didn't know a Fixes
+> > > tag automatically triggers backport to -stable. I will keep that in mind for
+> > > future.
+> > 
+> > /me fears that more and more developers due to situations like this will
+> > avoid Fixes: tags and wonders what consequences that might have for the
+> > kernel as a whole
 > 
-> diff --git a/Documentation/admin-guide/reporting-regressions.rst b/Documentation/admin-guide/reporting-regressions.rst
-> index 76b246ecf21b..946518355a2c 100644
-> --- a/Documentation/admin-guide/reporting-regressions.rst
-> +++ b/Documentation/admin-guide/reporting-regressions.rst
-> @@ -42,12 +42,12 @@ The important basics
->  --------------------
->  
->  
-> -What is a "regression" and what is the "no regressions rule"?
-> +What is a "regression" and what is the "no regressions" rule?
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  It's a regression if some application or practical use case running fine with
->  one Linux kernel works worse or not at all with a newer version compiled using a
-> -similar configuration. The "no regressions rule" forbids this to take place; if
-> +similar configuration. The "no regressions" rule forbids this to take place; if
->  it happens by accident, developers that caused it are expected to quickly fix
->  the issue.
->  
-> @@ -173,7 +173,7 @@ Additional details about regressions
->  ------------------------------------
->  
->  
-> -What is the goal of the "no regressions rule"?
-> +What is the goal of the "no regressions" rule?
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  Users should feel safe when updating kernel versions and not have to worry
-> @@ -199,8 +199,8 @@ Exceptions to this rule are extremely rare; in the past developers almost always
->  turned out to be wrong when they assumed a particular situation was warranting
->  an exception.
->  
-> -Who ensures the "no regressions" is actually followed?
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +Who ensures the "no regressions" rule is actually followed?
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
->  The subsystem maintainers should take care of that, which are watched and
->  supported by the tree maintainers -- e.g. Linus Torvalds for mainline and
-> diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
-> index ce6753a674f3..49ba1410cfce 100644
-> --- a/Documentation/process/handling-regressions.rst
-> +++ b/Documentation/process/handling-regressions.rst
-> @@ -284,7 +284,7 @@ What else is there to known about regressions?
->  Check out Documentation/admin-guide/reporting-regressions.rst, it covers a lot
->  of other aspects you want might want to be aware of:
->  
-> - * the purpose of the "no regressions rule"
-> + * the purpose of the "no regressions" rule
->  
->   * what issues actually qualify as regression
->  
+> The problem is that we have subsystems that only use Fixes: and not cc:
+> stable which is why we need to pick these up as well.  Fixes: is great,
+> but if everyone were to do this "properly" then we wouldn't need to pick
+> these other ones up, but instead, it's about 1/3 of our volume :(
+> 
+> I'll gladly revert the above series if they shouldn't have been
+> backported to stable, but from reading them, it seemed like they were
+> fixing an issue that was serious and should have been added to stable,
+> which is why they were.
+
+Oh, yeah, they're fixing an issue. It's just that the issue is relatively
+confined peformance degradation and the fix is really invasive, so not a
+great -stable candidate. At the very least, they'd need a log longer cooking
+time in mainline before being considered for -stable backport.
+
+My intention w/ Fixes: wasn't triggering -stable backport at all, so it's a
+miscommunication. From now on, I'll keep in mind that Fixes: does trigger
+backports. I'm not too worried about not using it as the fixee commit can be
+mentioned in the commit message.
+
+> This is also why we have review cycles, so maintainers can let us know
+> if they want us to drop them :)
+
+Heh, sorry about that. This never caused any issues, so I just glide over
+the stable mails without thinking.
+
+Thanks.
+
+-- 
+tejun
