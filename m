@@ -1,43 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F1C14AD1A;
-	Wed,  3 Apr 2024 16:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9384C154C08
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 19:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160643; cv=none; b=OLA2ZLsMXmQXUXFdF1F+57V169/gZulnTvpVLLCtxZoxc3WHuYwMKMp6nbYQ94iHwQqZA8rgAPf8d3/ooA5BhgYgnr76uYKBpR8VjXfMCNhNlbcY7uUd9dUvfn2gUYQxuTWG16lwDB+qpGKwd0F8XmW1WoWLQ/lfjUKOsAHUr8A=
+	t=1712171681; cv=none; b=AuN9jReN+kuUDRLo43ngaCxE7nl2kZ23Y1N/mXQOJ2vOG+Uz3imFfs3aDYEayyKsduVNINN9c9pGkxcL7Q2PM/P9x7tMo3texPskggdEHHNaLU9gCXkTz1jwqezVjUcwrUhs3W8nsB7kNki+hZ+XpJyZgt/HczJ77r0wAxYNEVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160643; c=relaxed/simple;
-	bh=RjjA3injla+yLIn6vNl/4MPYrvsFXCQlqf9JhAg/KQM=;
+	s=arc-20240116; t=1712171681; c=relaxed/simple;
+	bh=FJ+t/gDiplQiUtBc16qSLCueyfEyhKBzs5fbOgUf8SE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rq00+axNFdAXeFn97lK6+QWOIxoDE+7ge0+8AnwJKbOdSlegx390FCHBupzQwozmCoDTQSdBtIzPbM8BdooGOHkSW5NKY1io8n6SPpjuWc1O2nB8ivn1wkfOuW6LtQoxxMqAqwSoKw76mePWAPkq0JtQMY2mTpSRfpS0q2snKZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kjfnl1kp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYTy95S2dMuR3vLxxkDRzpdPeBc7zxrE8GLhwJc+viT7s8lwwpwCaWv+Mga3HFM6mxnPZfFjOvEUEJzscz/5edsfYFeNyFu3EIAb/CDpYNn7qhiUxbPufE0qReRopB0uOMrsqnshWRMwR0PX+pp/mskr2NcGudQMOLD/gtUXBPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BullExaR; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kjfnl1kp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D596C43390;
-	Wed,  3 Apr 2024 16:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712160643;
-	bh=RjjA3injla+yLIn6vNl/4MPYrvsFXCQlqf9JhAg/KQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kjfnl1kpSAKDDMhblTZ/p/hPxaV/nIts/skjhfLCRSpXCJLhtZxUGkF4/eIr40Z8L
-	 fTmth+n6+l4CI2GVjdTYomvaqCYKDIpyMrEMEKAxvWBwXk9+zV0oXy6SU2nSqQ9xKp
-	 qge43Xu7r8oDhdOapRhhg5mUq0MkiQ+Bzm3kAL5Q=
-Date: Wed, 3 Apr 2024 18:10:39 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Sasha Levin <sashal@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in
- Stable 6.6.23
-Message-ID: <2024040319-doorbell-ecosystem-7d31@gregkh>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
- <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
- <2024040328-surfacing-breezy-34c6@gregkh>
- <Zg10Keik4KORjXMh@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BullExaR"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e0ae065d24so1103795ad.1
+        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 12:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712171678; x=1712776478; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EVpGTxFXS5uXsCBb768x+7/nyj1uORz4WNXl8EbIhlU=;
+        b=BullExaRhWPBgGr4dCQf7QzcZNc3XLAlc9fY4deXFwPm/pxdimQlQHRFj5LDQs1Ezm
+         FngMFy/WdqRE5evqbrOFHpuvuiCUrgLVCul7O73Ka5cIKDTad0nGQt4VPupStXCZevW2
+         X3RwwNTLOvqez5sBG84ocNZzMU7ozfU5ljJPOc+mpZiClKFHPc+qF2LSTsSy1FVUz8pz
+         C1Am4+tKdgaYQKqo1H8WYW5grCHqClGE9jevZ+ybRTwUDpRtLVBeML1opeHjMOHR/K/b
+         izyCUDCN4a8UoH2fXUgfUvVMUbzNEk1P3YjfOT0OWcxjn1cip1UJdSYbXqqpuQ8oITxC
+         nlgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712171678; x=1712776478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EVpGTxFXS5uXsCBb768x+7/nyj1uORz4WNXl8EbIhlU=;
+        b=cMgpg56RY/7+2aAsaXr+Bw6LOyJcm6V/cRMgrwf1Syra2FuAdAg6BT2/VbKT51Edsu
+         R7It6G8GiTyyYaz/W8oC/dp6xidifprW+g1nq3sSdFrWXvI7bIm2FsrG5kc0H/h3rmjp
+         TVr7kQEpRYi4W34stkfh+rHmqawtHOba9Kz173bqGxjgCPXVHNwDYUtQZHwulvpivAj0
+         bKT/ijII+slj8kGP6aJXstFhVtZCRCQMqlozx880mhnAjyTKBRA1SMjwfJICTEN0pE35
+         rbjLnB8jxd7dA+V88dG1KwoL0XN1Or6ZYx6p9Nowj58nyPCcR58W4FS4KAon2qNCIoWt
+         vqXw==
+X-Gm-Message-State: AOJu0Yz/0ZWRP4bVNOd0/maNjfTSDZ92wPv0yyGW3dgaH5Tpkf3jZZ2u
+	Sob4phpYwCbjL9mPxRkWD4srfOdMM8cB2pgZfpabhNvpyLfLkHpqGBKdq4Xi
+X-Google-Smtp-Source: AGHT+IFjVj+8On2PFUPVYQMCQadRX0E6HTfgGElVggaP9InZtQw2So6f/WRTROp6i8r8ixwluZ/syw==
+X-Received: by 2002:a17:902:8c97:b0:1e0:e85b:b9ca with SMTP id t23-20020a1709028c9700b001e0e85bb9camr162971plo.21.1712171678270;
+        Wed, 03 Apr 2024 12:14:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:25ab])
+        by smtp.gmail.com with ESMTPSA id kx12-20020a170902f94c00b001e0b5eeee41sm4201776plb.38.2024.04.03.12.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 12:14:37 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Apr 2024 09:14:36 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+Message-ID: <Zg2qnEgOo9CaFwgB@slm.duckdns.org>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,58 +67,31 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zg10Keik4KORjXMh@slm.duckdns.org>
+In-Reply-To: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
 
-On Wed, Apr 03, 2024 at 05:22:17AM -1000, Tejun Heo wrote:
-> Hello,
+Hello, Thorsten.
+
+On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
 > 
-> On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
-> > > Side note: I have no idea why the stable team backported those patches
-> > > and no option on whether that was wise, just trying to help finding the best
-> > > solution forward from the current state of things.
-> > 
-> > The Fixes: tag triggered it, that's why they were backported.
-> > 
-> > > > which would
-> > > > be far too invasive for -stable, thus no Cc: stable.
-> > > >
-> > > > I didn't know a Fixes
-> > > > tag automatically triggers backport to -stable. I will keep that in mind for
-> > > > future.
-> > > 
-> > > /me fears that more and more developers due to situations like this will
-> > > avoid Fixes: tags and wonders what consequences that might have for the
-> > > kernel as a whole
-> > 
-> > The problem is that we have subsystems that only use Fixes: and not cc:
-> > stable which is why we need to pick these up as well.  Fixes: is great,
-> > but if everyone were to do this "properly" then we wouldn't need to pick
-> > these other ones up, but instead, it's about 1/3 of our volume :(
-> > 
-> > I'll gladly revert the above series if they shouldn't have been
-> > backported to stable, but from reading them, it seemed like they were
-> > fixing an issue that was serious and should have been added to stable,
-> > which is why they were.
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developers don't keep an eye on it, I decided to forward it by mail.
 > 
-> Oh, yeah, they're fixing an issue. It's just that the issue is relatively
-> confined peformance degradation and the fix is really invasive, so not a
-> great -stable candidate. At the very least, they'd need a log longer cooking
-> time in mainline before being considered for -stable backport.
+> Tejun, apparently it's cause by a change of yours.
+> 
+> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+> not CCed them in mails like this.
+> 
+> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
 
-Ok, I'll go revert them all now.  I did some test builds here with them
-reverted and they seem sane.  I'll push out some -rcs with just the
-reverts to at least fix the regressions found in the 6.8.y tree now.
+This looks like the same problem that's being discussed in the following
+thread.
 
-> My intention w/ Fixes: wasn't triggering -stable backport at all, so it's a
-> miscommunication. From now on, I'll keep in mind that Fixes: does trigger
-> backports. I'm not too worried about not using it as the fixee commit can be
-> mentioned in the commit message.
+ http://lkml.kernel.org/r/20240402105847.GA24832@redhat.com
 
-No worries, if you want, we can add any files/paths to our "ignore
-Fixes: tags, only take cc: stable ones" that we have for many parts of
-the kernel already, where maintainers are good and properly tag stuff.
-Just let me know.
+Hopefully, we'll soon reach a resolution.
 
-thanks,
+Thanks.
 
-greg k-h
+-- 
+tejun
