@@ -1,125 +1,129 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ABB148843
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 13:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B41148318
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 13:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712150778; cv=none; b=IMUnZS0ALnHcL08cYMA0dcY/D2f21dI7GeffgejLO11iT7xke6bUnnVqqGNezzV2I/v6qW23TMW94CCrKnmBsG0st5UrEpb9/2J5+Vs9oKNsL94TGgPvsQEfI26tF91X5SDCpnDODbFOX9r05SJumsYnPU/2Rkg+kkpzw0CA78w=
+	t=1712152301; cv=none; b=eO6Cntb25P7Mk7OyRRTqamJi3DpItzEl4cysMF7T21evIsaG1ZKmtk+wXOBZIR9W1r+Yjn/eUOz58Qg360Eai4fGd0rkHzW4idFzJIdtmRlbt2KulOY+CRMMujtaivq0xUh+26q8xDGofCYqVYL2HRFOM6U8l+ctMsCY9wZ4jrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712150778; c=relaxed/simple;
-	bh=/ZFx3ebO9y9cafs7GJSvKhCZCl2L53c7NYdEippbANY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nC2J2NTSuDA7bn9AqUmEYKmEVbJIv7wyU2mwTe00qPDk/DBRCMn5VYlY1gWrDn5uLY+KFlp/ebJYunfpCcSP/VKi00E63/PmrJxmJLx8nKK7G/aVjcTpZJfJMi2N6FbcUKenk4taAKyaPfENZEkIdSDzrwz3jFRoYNpE8gybVts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=umwxK4KK; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712152301; c=relaxed/simple;
+	bh=Bsd6ob511k3QYVp8+Jssqa3MiM5VrfAAPII3Y9YU9H8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=FwUuMS2HKzPSla7NwoBvETp4eBv0JQuLRnI7Nrm/nweApFK9fXUDm9DTSJAGdN698r7HWygTJutokrRDIrvwV1tP4kBLt6eFm9wB4o84KPIHzsnoqMUt67w+EfacvzV/G9Do18E2xzsjGRyO01eZWI3W5avd9LEoaGiyIwSxLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=GiS2zBBT; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umwxK4KK"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-29f93c4946cso4616989a91.1
-        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 06:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712150776; x=1712755576; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kr5yQL8fx0u0tyLMbu3sLuMSllEG5G+mAeHccxYfdVY=;
-        b=umwxK4KKByOj/COu24jV2itAunqLtVyHvkAADbIOoxCfowx0BRpkqHf0JeQ1qCIA+4
-         yBS69PiFLlb0vtW8DulIstDQGcyk7Q0DrYt8XMn6fgQQjk9qrpVC3WXWvG0qSc65cDPS
-         yV8s6LLCBWSWXKrrsgnPjIfhmH4d/mgF+0IvIjwJvPCHLmAyu625+JsJ1HGaMOhwW69J
-         qB4KiuZSRLbqp3ktQbjdUrU6CGCLdsg+ZAdZVWPZgTULSssZCbiB50oOaDU6wR+bbbY8
-         Hm0EnZCxNLFk/Y9LYo3NzN2BE4ssDDerrdAQE/U6hJy0RndYWrvn4zQE6uSQXMoXZVXe
-         biFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712150776; x=1712755576;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kr5yQL8fx0u0tyLMbu3sLuMSllEG5G+mAeHccxYfdVY=;
-        b=R0Sdc5ZZ5AmP01Uwd4uXfvsa5J7YZnwe9xl0MjSo8OKeVbRuC874YLt2VwPxFyKoIO
-         54j4mzkao9HNnvktvv9K82LJPOVlOzflhG2A65vItv5iw2vhvPWkYl8O4QAyNhKDBByN
-         dFBK1fSUhfxuG32UJ0JfnOKrDzwQqz09/mV4c4AwOp7jhe7P5eN8eWL+J1NCfjTOkAH+
-         vTiwSYEIKhPHZiLLzJXYS7QyMQYB/UQlnFSBixF3YyBnfj56bQ1isl2uMnzte+J2T0cg
-         +k88jaq/Z9HiuFzIW+0T3st7KtxXE/arSgA7XaKGND2GyxzV0IE6hsnOT0g6C7nrFeem
-         xk+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXObo0CLWPNCosNDCZx8fqFDDGisQHnY4IdmzufKhOVlFzL5tCwrc5mIDMcs48CLbF20IZ3scKgz+oiJxnowCv0cdCg+MnPEhUueF8=
-X-Gm-Message-State: AOJu0YwMULdbrafMbUSFlR1b5f2fBxb1Fx+Cjczf7ot/05r8HsRSRBK2
-	pNOhu3NH1vg47e/bXdlcqDitAzQjJJHj/GPMR8pOa12E+o8nCfA2n1ujhJEGhJwfZ8BUF5+Cv3S
-	jZSidwDy2t1T3OixpmQJfVv9boZO4CdFkWscRqA==
-X-Google-Smtp-Source: AGHT+IEak/WLSgffbuVSjwab06JTulWpxWfMzkQ8I6F5L8nOzPRvaiqB048L3gfCz5mrvMfqk7JY/JqIUVyg8IDxNG0=
-X-Received: by 2002:a17:90b:19c3:b0:2a2:a7be:3b5c with SMTP id
- nm3-20020a17090b19c300b002a2a7be3b5cmr1005626pjb.6.1712150776261; Wed, 03 Apr
- 2024 06:26:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="GiS2zBBT"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtj3aBdRreBmKZDQApEe2x8mugycPgN+_J5ebJzXDEq4g@mail.gmail.com>
-In-Reply-To: <CA+G9fYtj3aBdRreBmKZDQApEe2x8mugycPgN+_J5ebJzXDEq4g@mail.gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 3 Apr 2024 15:26:05 +0200
-Message-ID: <CAKfTPtC9YgbZgGNK82MhhzzsD3P6j64+w6oieJMDKQNOmrC4FQ@mail.gmail.com>
-Subject: Re: kernel/sched/core.c:961:15: error: incompatible pointer to
- integer conversion passing 'typeof
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	clang-built-linux <llvm@lists.linux.dev>, Linux PM <linux-pm@vger.kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, linux-riscv@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1712152288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nG+giMXCItEPgMBqHyNixdKSn5F1WOll+iAb1XwFvHo=;
+	b=GiS2zBBTYOl+k7jg3WvYCBgfq3wdoGR6VfB6hX8A5ejjfLhB0KkKtX0YgNLGLyaJcngEV5
+	4GnPQ5SDj3QlLbF3AzrYfJavWLNADOc3g7ZB9JVlCpHOAcC3X35/Ex/vy7tIy4OoSyPRSl
+	fLXc3sHfJl1cuoWv8fvAqWK4mg+8LcGVpwBVbmv1/ps0c7tNJHfj/Ual2sVy81QAle6J4i
+	gH8DqM41H8hP+FbpDvTgWVpgHOsPp8h7EudBv5Ii2q9uYnmVwb0jWLaojgkjNMKdEYJeQk
+	yEH5ELQNdi6ZhMv7Q6y6MUDZYLtvxH/k4PKaQFZ0YQ4eQwHJ7QGBMTkO9b8xeQ==
+Date: Wed, 03 Apr 2024 15:51:28 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Pratham Patel <prathampatel@thefossguy.com>
+Cc: Saravana Kannan <saravanak@google.com>, sebastian.reichel@collabora.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+In-Reply-To: <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
+ <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org>
+ <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+ <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
+Message-ID: <0926eeecfec56fa9225a8aa2a319678a@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi Naresh,
+Hello Pratham,
 
-Adding riscv people
+On 2024-04-03 01:32, Pratham Patel wrote:
+> On Tue Apr 2, 2024 at 4:54 AM IST, Saravana Kannan wrote:
+>> On Sat, Mar 23, 2024 at 10:10 AM Dragan Simic <dsimic@manjaro.org> 
+>> wrote:
+>> > On 2024-03-23 18:02, Pratham Patel wrote:
+>> > > I looked at the patch and tried several things, neither resulted in
+>> > > anything that would point me to the core issue. Then I tried this:
+>> >
+>> > Could you, please, clarify a bit what's the actual issue you're
+>> > experiencing on your Rock 5B?
+>> 
+>> Pratham, can you reply to this please? I don't really understand what
+>> your issue is for me to be able to help.
+> 
+> I apologize for not replying. Somehow, I did not notice the reply from
+> Dragan. :(
 
-On Wed, 3 Apr 2024 at 09:38, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The riscv clang-17 defconfig build failed due to following warnings / errors
-> on the Linux next-20240402.
+No worries, I saw the serial console log file in one of your messages,
+which actually provided the answer to my question. :)
 
-Could you confirm that there is no problem with other arch and/or
-other toolchain ?
-
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> riscv:
->   build:
->     * clang-17-lkftconfig - Failed
->     * rv32-clang-17-defconfig - Failed
->     * clang-17-tinyconfig - Failed
->     * rv32-clang-17-tinyconfig - Failed
->     * clang-17-defconfig - Failed
->     * clang-17-allnoconfig - Failed
->     * rv32-clang-17-allnoconfig - Failed
->
-> Build log:
-> -------
-> kernel/sched/core.c:961:15: error: incompatible pointer to integer
-> conversion passing 'typeof (*((__ai_ptr)))' (aka 'struct wake_q_node
-> *') to parameter of type 'uintptr_t' (aka 'unsigned long')
-> [-Wint-conversion]
->   961 |         if (unlikely(cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL)))
->       |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-There is no recent change on this code. Could it be a change in
-cmpxchg_relaxed ?
-
->
-> Steps to reproduce:
-> ---------
-> # tuxmake --runtime podman --target-arch riscv --toolchain clang-17
-> --kconfig defconfig LLVM=1 LLVM_IAS=1
->
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264917/suite/build/test/clang-17-defconfig/details/
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264917/suite/build/test/clang-17-defconfig/log
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> Since this patch was applied, an issue in the Rock 5B's DT has been
+> unearthed which now results in the kernel being unable to boot 
+> properly.
+> 
+> Following is the relevant call trace from the UART capture:
+> 
+> [   21.595068] Call trace:
+> [   21.595288]  smp_call_function_many_cond+0x174/0x5f8
+> [   21.595728]  on_each_cpu_cond_mask+0x2c/0x40
+> [   21.596109]  cpuidle_register_driver+0x294/0x318
+> [   21.596524]  cpuidle_register+0x24/0x100
+> [   21.596875]  psci_cpuidle_probe+0x2e4/0x490
+> [   21.597247]  platform_probe+0x70/0xd0
+> [   21.597575]  really_probe+0x18c/0x3d8
+> [   21.597905]  __driver_probe_device+0x84/0x180
+> [   21.598294]  driver_probe_device+0x44/0x120
+> [   21.598669]  __device_attach_driver+0xc4/0x168
+> [   21.599063]  bus_for_each_drv+0x8c/0xf0
+> [   21.599408]  __device_attach+0xa4/0x1c0
+> [   21.599748]  device_initial_probe+0x1c/0x30
+> [   21.600118]  bus_probe_device+0xb4/0xc0
+> [   21.600462]  device_add+0x68c/0x888
+> [   21.600775]  platform_device_add+0x19c/0x270
+> [   21.601154]  platform_device_register_full+0xdc/0x178
+> [   21.601602]  psci_idle_init+0xa0/0xc8
+> [   21.601934]  do_one_initcall+0x60/0x290
+> [   21.602275]  kernel_init_freeable+0x20c/0x3e0
+> [   21.602664]  kernel_init+0x2c/0x1f8
+> [   21.602979]  ret_from_fork+0x10/0x20
+> 
+>> Also, can you give the output of <debugfs>/devices_deferred for the
+>> good vs bad case?
+> 
+> I can't provide you with requested output from the bad case, since the
+> kernel never moves past this to an initramfs rescue shell, but 
+> following
+> is the output from v6.8.1 (**with aforementioned patch reverted**).
+> 
+> # cat /sys/kernel/debug/devices_deferred
+> fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
+> 1-0022  typec_fusb302: cannot register tcpm port
+> fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
+> 
+> It seems that v6.8.2 works _without needing to revert the patch_. I 
+> will
+> have to look into this sometime this week but it seems like
+> a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only
+> from rk3588 i2s)
+> seems to be the one that fixed the root issue. I will have to test it
+> sometime later this week.
