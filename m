@@ -1,150 +1,132 @@
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5EC28FC
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 01:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066A34120B;
+	Wed,  3 Apr 2024 04:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712106199; cv=none; b=mecIfPlYEo8ypBh/dzf7qT5A4f32uLc3H4z+24k9mdss+2ctZQYd+CrxAiQs6XhUz+iOdUxWuxcNVin6fvauDs4/h8XM1Xd6Sgy2TCJ5F78nKb1bvKkFhBSSMOOoLDcnhtUoMXIF9hUib3OBOsDaX9VYf5an2A8mlwTdrIU8CW4=
+	t=1712118389; cv=none; b=RsFaRwgxNRlMTxVM9myWwcvoREgbL9vbM23uZsq+pWUOWXRv92Oeu1goWhEV9QOARCzCv3jOGVMatP7GeRV6nHuzHniOID7HCFM9tE0Ik1BieJVrDtVVv0y0gxZsC7+C0moYBsLIbcWhNzpT7RK+4wnyUOdY7+04dsr8Ge7urg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712106199; c=relaxed/simple;
-	bh=AOZHdUFBAbZLCmK2+LKYvUtaym4XNZbYFlXQzqVeLzo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BK5TTL+p18Ir7vgrOzONX6Uj47K0fHkrw/3y9Zxz7xuTZXNuSRLf5mzveQCwYd0exMnv01t83RAbajYI4X37Owm8NmR61ctfsHgPKP9NC4k/R1hK/xpNViO09DQtMWbBnMfIk/wTxyW3xqZffGGcH2ldbwktfyNxmH4ksaRe7sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=TZre1Pda; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
+	s=arc-20240116; t=1712118389; c=relaxed/simple;
+	bh=GFopZvyivykktQ72jqds+qx9RyJ0KszyGSYlJEDTeuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IX3XaEX9ZD78szhQ0HOL6e/IGoT64bXi+6/JMFTcqKKfEgWSer3Jbmm23DbqkRglW6CI1sMfdaVE/Z6JHXp2jpEEh1SWSjQ1b1qOrODREo65kMZyEGkqj8rYED6nU7lnMHT9Ljf4KbwKiMh6ZzUEWvM4bUKRoVSsZiOjggHJzwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gZE5dRG/; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="TZre1Pda"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
-	s=protonmail; t=1712106195; x=1712365395;
-	bh=nHxcYCHNMSfzwkXGRERFhLW2wEH2xIMrQxurqp9tbRI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=TZre1PdaZbND18eFBwwhyDtGirzYl/imTukmyF5tJw/SWpeZF0Zydt4e3s1+WF5jv
-	 FqVbQdH/ZEU+skT79DAlhwwftq4iSIlaWZJtRopHGcnCVWul9SFAaqOhj18UPFVWi/
-	 0vTW5Dh70G9iG4GtntujilYBF41ArOy22rYr1aLtvCF/eZILe/r/7zHXsv2N7VHWAo
-	 N8jnBhlpmwt14ds5H/ZC+3CnaWaajNEnnSLPJ2FGsOfPgzmmjVt8O/cJxzd3XPfuBt
-	 CGYis613tXuVjpgBAQ/PZUadsWrQPgBpQ7U8+m0zS7Foyu5vXGBkdZLRyrGSIPWWYb
-	 +xa/PhPqMHJdQ==
-Date: Wed, 03 Apr 2024 01:03:07 +0000
-To: Saravana Kannan <saravanak@google.com>
-From: Pratham Patel <prathampatel@thefossguy.com>
-Cc: Dragan Simic <dsimic@manjaro.org>, sebastian.reichel@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
-Message-ID: <D0A2ZL6S8UG6.2BQKIBQWYB36D@thefossguy.com>
-In-Reply-To: <CAGETcx_ToHsp_c+Yt0qqST4Zd-GC7dPn_j=PpB1n1xpZtOnMfg@mail.gmail.com>
-References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com> <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org> <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com> <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com> <CAGETcx_ToHsp_c+Yt0qqST4Zd-GC7dPn_j=PpB1n1xpZtOnMfg@mail.gmail.com>
-Feedback-ID: 104309535:user:proton
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gZE5dRG/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=QyVQuuWUk2XuaF7soW3Q/khOH9t0orQsT6WSZbVXx2k=;
+	t=1712118387; x=1712550387; b=gZE5dRG/tMD/U4WVfh0XI/UVHhBN+SCx+1Kox4o5wsdWe61
+	arEgelcyS5/AKBKvk6wsR0cToZczV7dujVd+mslqcekX8KCElai6BsknqjPcWbaeYrcwAzq5wyleS
+	9DinbuEgmN5JPqSJqxxI3J8V5NXqT1xEa6agub+5wMynUNqMUC+YywIWoLz+j0wVJ2iytacgnRbQK
+	n/aKUMs3B9Ha/bbBpJ/6cssGI3uYML/N4xmYgrOcEWq1l+m5BUdCtuRaUAV0EGQdce3PQf1at9YFu
+	IXW1AtWH+mCU9uP4c4IZUHyDWcdl13DpPcstu9wUTj0lqZMQGky+6AyW2UJ8xgnA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rrsCe-000542-LX; Wed, 03 Apr 2024 06:26:24 +0200
+Message-ID: <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+Date: Wed, 3 Apr 2024 06:26:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in Stable
+ 6.6.23
+To: Tejun Heo <tj@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZgylCe48FuOKNWtM@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712118387;eb609220;
+X-HE-SMSGID: 1rrsCe-000542-LX
 
-On Wed Apr 3, 2024 at 6:16 AM IST, Saravana Kannan wrote:
-> On Tue, Apr 2, 2024 at 4:32=E2=80=AFPM Pratham Patel
-> <prathampatel@thefossguy.com> wrote:
-> >
-> > On Tue Apr 2, 2024 at 4:54 AM IST, Saravana Kannan wrote:
-> > > On Sat, Mar 23, 2024 at 10:10=E2=80=AFAM Dragan Simic <dsimic@manjaro=
-.org> wrote:
-> > > >
-> > > > Hello Pratham,
-> > > >
-> > > > On 2024-03-23 18:02, Pratham Patel wrote:
-> > > > > I looked at the patch and tried several things, neither resulted =
-in
-> > > > > anything that would point me to the core issue. Then I tried this=
-:
-> > > >
-> > > > Could you, please, clarify a bit what's the actual issue you're
-> > > > experiencing on your Rock 5B?
-> > >
-> > > Pratham, can you reply to this please? I don't really understand what
-> > > your issue is for me to be able to help.
-> >
-> > Hi,
-> >
-> > I apologize for not replying. Somehow, I did not notice the reply from
-> > Dragan. :(
-> >
-> > Since this patch was applied, an issue in the Rock 5B's DT has been
-> > unearthed which now results in the kernel being unable to boot properly=
-.
-> >
-> > Following is the relevant call trace from the UART capture:
-> >
-> > [   21.595068] Call trace:
-> > [   21.595288]  smp_call_function_many_cond+0x174/0x5f8
-> > [   21.595728]  on_each_cpu_cond_mask+0x2c/0x40
-> > [   21.596109]  cpuidle_register_driver+0x294/0x318
-> > [   21.596524]  cpuidle_register+0x24/0x100
-> > [   21.596875]  psci_cpuidle_probe+0x2e4/0x490
-> > [   21.597247]  platform_probe+0x70/0xd0
-> > [   21.597575]  really_probe+0x18c/0x3d8
-> > [   21.597905]  __driver_probe_device+0x84/0x180
-> > [   21.598294]  driver_probe_device+0x44/0x120
-> > [   21.598669]  __device_attach_driver+0xc4/0x168
-> > [   21.599063]  bus_for_each_drv+0x8c/0xf0
-> > [   21.599408]  __device_attach+0xa4/0x1c0
-> > [   21.599748]  device_initial_probe+0x1c/0x30
-> > [   21.600118]  bus_probe_device+0xb4/0xc0
-> > [   21.600462]  device_add+0x68c/0x888
-> > [   21.600775]  platform_device_add+0x19c/0x270
-> > [   21.601154]  platform_device_register_full+0xdc/0x178
-> > [   21.601602]  psci_idle_init+0xa0/0xc8
-> > [   21.601934]  do_one_initcall+0x60/0x290
-> > [   21.602275]  kernel_init_freeable+0x20c/0x3e0
-> > [   21.602664]  kernel_init+0x2c/0x1f8
-> > [   21.602979]  ret_from_fork+0x10/0x20
+On 03.04.24 02:38, Tejun Heo wrote:
+> On Tue, Apr 02, 2024 at 10:08:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi stable team, there is a report that the recent backport of
+>> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
+>> for unbound workqueues") [from Tejun] to 6.6.y (as 5a70baec2294) broke
+>> hibernate for a user. 6.6.24-rc1 did not fix this problem; reverting the
+>> culprit does.
+>>
+>>> With kernel 6.6.23 hibernating usually hangs here: the display stays
+>>> on but the mouse pointer does not move and the keyboard does not work.
+>>> But SysRq REISUB does reboot. Sometimes it seems to hibernate: the
+>>> computer powers down and can be waked up and the previous display comes
+>>> visible, but it is stuck there.
+>>
+>> See https://bugzilla.kernel.org/show_bug.cgi?id=218658 for details.
+>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+>> not CCed them in mails like this.
+>>
+>> Side note: there is a mainline report about problems due to
+>> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
+>> for unbound workqueues") as well, but it's about "nohz_full=0 prevents
+>> kernel from booting":
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218665; will forward that
+>> separately to Tejun.
+> 
+> Sorry about late reply
+
+No problem at all, really, thx for your reply!
+
+> but that commit is not for -stable. It does fix an
+> undesirable behavior from an earlier commit, so it has the Fixes tag but it
+> has a series of dependencies that need to be backported together
+
+Not sure if you know, but the stable team apparently recently backported a
+bunch of other workqueue commits as well; I see 10 from a quick look here:
+https://lore.kernel.org/all/20240326223803.2647796-1-sashal@kernel.org/
+
+$ git log --grep='workqueue:' --oneline v6.6.22..stable/linux-6.6.y -- include/linux/workqueue.h kernel/workqueue*
+7df62b8cca38aa workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
+5a70baec2294e8 workqueue: Implement system-wide nr_active enforcement for unbound workqueues
+b522229a56941a workqueue: Introduce struct wq_node_nr_active
+bd31fb926dfa02 workqueue: RCU protect wq->dfl_pwq and implement accessors for it
+5f99fee6f2dea1 workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
+4023a2d9507691 workqueue: Move nr_active handling into helpers
+6c592f0bb96815 workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
+bad184d26a4f68 workqueue: Factor out pwq_is_empty()
+82e098f5bed1ff workqueue: Move pwq->max_active to wq->max_active
+43a181f8f41aca workqueue.c: Increase workqueue name length
+
+And there is also "workqueue: Shorten events_freezable_power_efficient name"
+in the queue for the next 6.6.y release:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.6
+
+That leads to the question: what is the better patch forward here: pick
+up what's is missing or back out?
+
+Side note: I have no idea why the stable team backported those patches
+and no option on whether that was wise, just trying to help finding the best
+solution forward from the current state of things.
+
+> which would
+> be far too invasive for -stable, thus no Cc: stable.
 >
-> This doesn't make a lot of sense. "remote-endpoint" shouldn't be
-> related to anything to do with psci cpuidle. I'm guessing something
-> else is failing much earlier in boot that's indirectly causing this
-> somehow? Can you please take a look at what's failing earlier and let
-> us know? Or see what driver probe is failing up to this point but used
-> to work in the good case.
+> I didn't know a Fixes
+> tag automatically triggers backport to -stable. I will keep that in mind for
+> future.
 
-I'm pretty new to this, "just starting". I'm not sure how to do that,
-since the kernel doesn't really "move forward". I will verify if
-a8037ceb8964 fixes it or not and get back by the end of this week.
+/me fears that more and more developers due to situations like this will
+avoid Fixes: tags and wonders what consequences that might have for the
+kernel as a whole
 
-> Also, where is the dts file that corresponds to this board in upstream? I=
-s it
-> arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-
-Yes.
-
-> >
-> > > Also, can you give the output of <debugfs>/devices_deferred for the
-> > > good vs bad case?
-> >
-> > I can't provide you with requested output from the bad case, since the
-> > kernel never moves past this to an initramfs rescue shell, but followin=
-g
-> > is the output from v6.8.1 (**with aforementioned patch reverted**).
-> >
-> > # cat /sys/kernel/debug/devices_deferred
-> > fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
-> > 1-0022  typec_fusb302: cannot register tcpm port
-> > fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
-> >
-> > It seems that v6.8.2 works _without needing to revert the patch_. I wil=
-l
-> > have to look into this sometime this week but it seems like
-> > a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only fro=
-m rk3588 i2s)
-> > seems to be the one that fixed the root issue. I will have to test it
-> > sometime later this week.
->
-> Ok, once you find the patch that fixes things, let me know too.
-
-Will do!
-
- -- Pratham Patel
-
+Ciao, Thorsten
