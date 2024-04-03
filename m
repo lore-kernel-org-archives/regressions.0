@@ -1,137 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23681645;
-	Wed,  3 Apr 2024 05:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ED85B1F8
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 07:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712121072; cv=none; b=HcpE5uWtwIb3Z9xy8+x2Cr0ZsGDjhLAOMqZPXPYx6+H/E23zqIYsi4QYZe1QxrhMQR7AenkVi3JIQELe01KApn+TjF3LZw3GXpAB5K8QLCJOJbE2PmFsPABDkv+wZ2MCMtdT9zGB8alpf+trOFBIcSwK2cUtZQvzM8HK2ERpLFU=
+	t=1712129903; cv=none; b=UZ5/u0ioaetUM7g8N0x8n25ZFYA2/cQD6vFBnFlT09qHOzxG/Q5YE7gVqUPEYB910BN/70WQBePLw22HLs5RLzlX4lmINWZZMS9s5SlYaDM7f1S9VSC6lscqcDml51dhtoGQwswLh/9ihg+SGJmYYnsAomLOFgO5pk2LLjwfSys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712121072; c=relaxed/simple;
-	bh=T9MKyL0Zcn/MBAFQd4GiMUaz82CINlxa5onm2hdqIFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qi4glJMVZo6twm4llGF3v2pKX2ZRdmMfAmHJc7NZGo6VXE+6BSa13m84EQVVVc3epzGJf1lhsAiJU7nBzdNgz31Nurkh4d9q+pPQ1LdrzyRtfuoC8K+gIv+suDcgmrJ3MdHXkhg8X20Cya+fEBDTjBZZ8/NoQmNCikUFB0ITyyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=whgPDScP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712129903; c=relaxed/simple;
+	bh=9WbOVVSwUWwd5K793ppWlQLxaj4rX8ZTjnhFhq5Y5v8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cpRZQ1+3ik4ioJf0wqqIu91TgMSdxYuXgAU9Pm3A299OjklAT8IjPh6jIQXt8inR8vit3JAVM24HoHXoKkpgY4SWGUBe+E3FxXLuqByefezjrrxwZJ/vu9qsFKHZcgflzQUwZr3vy2ci+3oO+Qv3bmn+Cn4Bp+Vo3+vhOnVaiZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h5jTtbEx; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="whgPDScP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F319AC433C7;
-	Wed,  3 Apr 2024 05:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712121071;
-	bh=T9MKyL0Zcn/MBAFQd4GiMUaz82CINlxa5onm2hdqIFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=whgPDScPUWSD3vvHP8tZsIVB+ziBCCcwZBIYgk/Y9wdUhPLxu2t9jDw4G99SN35tS
-	 2WiTsOtTRbQlETx8ZjQXC9HYRF2hihaSmTcngrmjc94hv7wBATGzV9eBJ/IP5lOgGS
-	 IJ60C718Ohk47fuKA18h4IDrBDbf5bX/IJ+voKzM=
-Date: Wed, 3 Apr 2024 07:11:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in
- Stable 6.6.23
-Message-ID: <2024040328-surfacing-breezy-34c6@gregkh>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
- <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h5jTtbEx"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7e3b3e33ae3so278980241.0
+        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 00:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712129900; x=1712734700; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QKsiTWwQltevYA1r+W4p6ubtTr4MlTT13dNzhqyl5yk=;
+        b=h5jTtbExD3olT3RfzP00t/JzotC1K2JGqcnUMVxx5T+qexjEu+4MgEXZy3GCdSfMne
+         hesjJdY65uik9UPUVyuAzA/7STFwCzVIGXMf0x+5GBXD88m3NHBBlLYlQlRLXJHPO+Ek
+         sOI19L4I34Mxz1aXqR9tQjSN0D9FpFU7+KG/7WiaT61Ov7wBOd5nn9RH0e/r+1ekHx2u
+         WODxxtn2DtIS7fgzQxWUI6grllQIS38nI8vUnxqF14zsIWfqwIl+BcWlMumA0upNOZLk
+         nFvtUlmQCAwg7zWHd+itA753PmgCsnQaxRJfC7EeXWX7t/VPVwcqpjtnXvIz2xb/VSO9
+         fh/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712129900; x=1712734700;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QKsiTWwQltevYA1r+W4p6ubtTr4MlTT13dNzhqyl5yk=;
+        b=LH9mNyOsfwAABQrtZsA1FAs/XlskMleLDKlG2vR+BVrcqURJVeOD/UAG6E/cpWk7vy
+         EA+//y7AtB+ElORAnx4jn1kOrN8D4NVplQk1TgHAFxsAYs/586EH3nQiMfdk87fbGhdQ
+         lr/6zPz9zUeM1xflMJm8enQg3qSJ1c6TTif3LCED/cccDZ1AHB3f1ljxY0GdX21iGwwu
+         VWDPIJSaHgcZmX5CHj09b8C6m7em/HPl/9CDrpioSoBMgcDEOSu1Lt1LtTBdiS9O8MNY
+         q5ymZLMbIZ81R3VgngWIkkgWYHhA4VC4eRCM8GxNPQvE6vdUnGtW1wqcj0MRM7QntNAA
+         qDDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKHNzxsKC53dooh7uDH098k5uzgECbe5gncNfi7WIfvKXmfOwzsmu0OEO2w2A5KV23pAZKpvgaI/RMDpIHy6SvaUoAto8Rlh3zE4Y=
+X-Gm-Message-State: AOJu0YynQwfKuARtz+gsKSGv3pCANW2EiFrZ4QtoakW2F3tDf/wES4MP
+	VqPWe/EH0f9fl8Uj8b4DKbabJLeKO+kB6QnpaXTmn9KJDmQNpS1BZ8W6/7gZysKsUs+eHcVB0Ps
+	0TeuJI5+ckFW0Totsj2zUMbBV6HO8m0WDuLWyzA==
+X-Google-Smtp-Source: AGHT+IEDsnkIj6HCOWhXVjqLOlYJRYneScfnCc6Qn1cRIG8coLw2kTdZBaOy3HnsF7h3qlnpsiRbKmaYqRzZ9wPLo58=
+X-Received: by 2002:a67:e359:0:b0:478:32e2:1833 with SMTP id
+ s25-20020a67e359000000b0047832e21833mr11298728vsm.22.1712129900501; Wed, 03
+ Apr 2024 00:38:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 3 Apr 2024 13:08:08 +0530
+Message-ID: <CA+G9fYtj3aBdRreBmKZDQApEe2x8mugycPgN+_J5ebJzXDEq4g@mail.gmail.com>
+Subject: kernel/sched/core.c:961:15: error: incompatible pointer to integer
+ conversion passing 'typeof
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
+	clang-built-linux <llvm@lists.linux.dev>, Linux PM <linux-pm@vger.kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 03, 2024 at 06:26:24AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 03.04.24 02:38, Tejun Heo wrote:
-> > On Tue, Apr 02, 2024 at 10:08:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> Hi stable team, there is a report that the recent backport of
-> >> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
-> >> for unbound workqueues") [from Tejun] to 6.6.y (as 5a70baec2294) broke
-> >> hibernate for a user. 6.6.24-rc1 did not fix this problem; reverting the
-> >> culprit does.
-> >>
-> >>> With kernel 6.6.23 hibernating usually hangs here: the display stays
-> >>> on but the mouse pointer does not move and the keyboard does not work.
-> >>> But SysRq REISUB does reboot. Sometimes it seems to hibernate: the
-> >>> computer powers down and can be waked up and the previous display comes
-> >>> visible, but it is stuck there.
-> >>
-> >> See https://bugzilla.kernel.org/show_bug.cgi?id=218658 for details.
-> >> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-> >> not CCed them in mails like this.
-> >>
-> >> Side note: there is a mainline report about problems due to
-> >> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
-> >> for unbound workqueues") as well, but it's about "nohz_full=0 prevents
-> >> kernel from booting":
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=218665; will forward that
-> >> separately to Tejun.
-> > 
-> > Sorry about late reply
-> 
-> No problem at all, really, thx for your reply!
-> 
-> > but that commit is not for -stable. It does fix an
-> > undesirable behavior from an earlier commit, so it has the Fixes tag but it
-> > has a series of dependencies that need to be backported together
-> 
-> Not sure if you know, but the stable team apparently recently backported a
-> bunch of other workqueue commits as well; I see 10 from a quick look here:
-> https://lore.kernel.org/all/20240326223803.2647796-1-sashal@kernel.org/
-> 
-> $ git log --grep='workqueue:' --oneline v6.6.22..stable/linux-6.6.y -- include/linux/workqueue.h kernel/workqueue*
-> 7df62b8cca38aa workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
-> 5a70baec2294e8 workqueue: Implement system-wide nr_active enforcement for unbound workqueues
-> b522229a56941a workqueue: Introduce struct wq_node_nr_active
-> bd31fb926dfa02 workqueue: RCU protect wq->dfl_pwq and implement accessors for it
-> 5f99fee6f2dea1 workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
-> 4023a2d9507691 workqueue: Move nr_active handling into helpers
-> 6c592f0bb96815 workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
-> bad184d26a4f68 workqueue: Factor out pwq_is_empty()
-> 82e098f5bed1ff workqueue: Move pwq->max_active to wq->max_active
-> 43a181f8f41aca workqueue.c: Increase workqueue name length
-> 
-> And there is also "workqueue: Shorten events_freezable_power_efficient name"
-> in the queue for the next 6.6.y release:
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.6
-> 
-> That leads to the question: what is the better patch forward here: pick
-> up what's is missing or back out?
-> 
-> Side note: I have no idea why the stable team backported those patches
-> and no option on whether that was wise, just trying to help finding the best
-> solution forward from the current state of things.
+The riscv clang-17 defconfig build failed due to following warnings / errors
+on the Linux next-20240402.
 
-The Fixes: tag triggered it, that's why they were backported.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> > which would
-> > be far too invasive for -stable, thus no Cc: stable.
-> >
-> > I didn't know a Fixes
-> > tag automatically triggers backport to -stable. I will keep that in mind for
-> > future.
-> 
-> /me fears that more and more developers due to situations like this will
-> avoid Fixes: tags and wonders what consequences that might have for the
-> kernel as a whole
+riscv:
+  build:
+    * clang-17-lkftconfig - Failed
+    * rv32-clang-17-defconfig - Failed
+    * clang-17-tinyconfig - Failed
+    * rv32-clang-17-tinyconfig - Failed
+    * clang-17-defconfig - Failed
+    * clang-17-allnoconfig - Failed
+    * rv32-clang-17-allnoconfig - Failed
 
-The problem is that we have subsystems that only use Fixes: and not cc:
-stable which is why we need to pick these up as well.  Fixes: is great,
-but if everyone were to do this "properly" then we wouldn't need to pick
-these other ones up, but instead, it's about 1/3 of our volume :(
+Build log:
+-------
+kernel/sched/core.c:961:15: error: incompatible pointer to integer
+conversion passing 'typeof (*((__ai_ptr)))' (aka 'struct wake_q_node
+*') to parameter of type 'uintptr_t' (aka 'unsigned long')
+[-Wint-conversion]
+  961 |         if (unlikely(cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL)))
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I'll gladly revert the above series if they shouldn't have been
-backported to stable, but from reading them, it seemed like they were
-fixing an issue that was serious and should have been added to stable,
-which is why they were.
+Steps to reproduce:
+---------
+# tuxmake --runtime podman --target-arch riscv --toolchain clang-17
+--kconfig defconfig LLVM=1 LLVM_IAS=1
 
-This is also why we have review cycles, so maintainers can let us know
-if they want us to drop them :)
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264917/suite/build/test/clang-17-defconfig/details/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264917/suite/build/test/clang-17-defconfig/log
 
-thanks,
-
-greg k-h
+--
+Linaro LKFT
+https://lkft.linaro.org
