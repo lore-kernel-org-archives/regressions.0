@@ -1,52 +1,52 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B364B5CDE1
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 07:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF2179CE
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 08:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130817; cv=none; b=aIS42wWs3PzZ8vE43faU+2VCHvHmGTMbo5H0vM1Rg0Veb1LEAbXUTvBznakhV6paRRKwymDPZNB/vbS4I773IzZAmTSsYQAoezGpGBz9DUN4hg9FC8ejcxTXGRlM0HI22k3aajUmvHM8NUO8dF9EvwBsY5EF9zCOdBzHaMmukCA=
+	t=1712131438; cv=none; b=I+BsHGc2d8dfq6HD635DMgt7lzB6/E5mvOlcaooIotcgtzemxktxe6AdBZeOn90purX8F+HKtnD7xzM9n/JD0VjfVqfd0HTIBPeKCoPp2B21HCVr5BnwDYUwyf1esJnhx/VUGS1KpefX4M8IY+WCPbLXlGP4WJVHNB7JgkLiEgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130817; c=relaxed/simple;
-	bh=lu4lr9wamx7dI/HCTq6kawIsHy+GqxMxRmNu/rjakdA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BoAQNbHb94wtF3VjW77vXc1sstNfOptU7g/LRSxhbvmF1NBKKNFj2MZa6bRppnw28hX6r7vJs1Rx+fi0sPEDH4AibDiM3K0BiTotB3rXkIMBJ4lCcu3vuKjVTl2suLksOvKuv3OizQf9cq6LXhEs73TPy4ETjsdEC9l9JOwJpqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zPwmlCXb; arc=none smtp.client-ip=209.85.217.48
+	s=arc-20240116; t=1712131438; c=relaxed/simple;
+	bh=KjDKKZQAsR2x90HWBcTUfYwToWStcC316tpU9s74CdM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=dy9mmSWonQwL1xqifR0pt5vwHzuCW/DRpmgIRe4Zk3LvzgD69J6fmLtyEdCCfuEHmnMcex7e9g3HKjjRKFb/DaMLiKuOQc5Qm5Zn0AmRDIxkCVQEkYj72Z2uW7s3UAZMAmZsvSxasd4mr2fPSo9rjfrRGuPa5JF3gEYIM5D4WWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q23rkjt8; arc=none smtp.client-ip=209.85.222.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zPwmlCXb"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-476cec93716so1793764137.2
-        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 00:53:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q23rkjt8"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7e376672375so1024618241.2
+        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 01:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712130814; x=1712735614; darn=lists.linux.dev;
+        d=linaro.org; s=google; t=1712131435; x=1712736235; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=z7p53XmkkGTALNH4Ix0xvzQLOZKvgVhwnYYuHGcSQF4=;
-        b=zPwmlCXbq7tiVjW79e6B7HVrI4zoEmHDHvJy/rr+rxNO/KmzxO4KyGC3s1bqb4roia
-         hTDtkEcbZgsGdlQibLm8bhRhBFRHpshkT4LR3sc+x8p94f8+CG0H8LUEOGIv75x5IVZK
-         1DNR3oBGGzBSpEcENZRTjsrQL9jWyXZBfOWsMjCW5oXvryQ8Asx+2gd/rDe8ZT+uHYwt
-         tTlcZSje0UFulnSFW3pyFhuLCZAaxcsPpkdb6ubJJXcRDLuZX7lXtkFLe0YHjXuokB3H
-         Fc8UD+7dpTKhXpGBQ7SULxp64LC/G8P4HCA0mCwTIaI9bPT7UpvnFMJyHP0OBOd8gSf4
-         R8CA==
+        bh=KF5rMcRDqQoWBU2qheNbp11b4MuIV67CJIqxgZePRvk=;
+        b=q23rkjt8uj1IKeAnsIMEyoC8t2u028i4zfjekhKAaSTwUSP5dQYy+Z1orSN3dmAvSa
+         Fcoq5K9CbLD+MY1mKhIQnoyXpKGsxNcgui58Dztp3p3sw16lkyWoNjdXMFYdCVXcXCqi
+         kf5dIWDWF2bGQloRECiNaD2enoDg3UufW5zKQpDcTQLg31lGaXfGc3BoXfSESKNoFZ3q
+         PYkY0p9f8CBU/mrLnXqwJhhRTw0aAr0empVMdmzn3nCNa7WfxAtvEBnecYNjOOmZqEvC
+         mNWPOKRid12c96IU8r47dHJuezC27u7FHl5Df8eavBHQ4oTxZKB+UpWw1MzgckrmApVl
+         Nr4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712130814; x=1712735614;
+        d=1e100.net; s=20230601; t=1712131435; x=1712736235;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=z7p53XmkkGTALNH4Ix0xvzQLOZKvgVhwnYYuHGcSQF4=;
-        b=GvnoaF/OOfDeE5Fge1bmc8wR8MAylgpsOZ4DtjapbrlFjaUQ8JYazuRUpjO65dcKzO
-         VZiNVWpnKFtvhVvFjtK0pGyG3Fp16Hd+38PF7xpVRQUfMbANS7UkhPwMxEQEKGC8O9VO
-         l63Pb8fs2cFntYlXX7HLlr3Zo2Dm4do3EVC4ggYK+KvnbAyHRoLyA75nMvga+vAY+BgD
-         DaWdLok/QOON/nBmoQafsGsKU6jvvOaGwi/SnCiOmKxXE3+BkSInkVxlxrk6DxY0RKR7
-         wmgbgjR5PUmCupx7PMcNg9jkhmknmFT2186ff3mLDAQn5KWiy/RrmrRNIZgTNizBK0xB
-         OkrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEfjD6ZD442TnXabZ79TNbMacIhZW0+4swnWnL2/b9WXtFGQxQhmuzbuW543YE/673IDK0vA4gondAB235IUk15J+lkyudKABiE6w=
-X-Gm-Message-State: AOJu0Yys4Oy9lKU4+MLSaJSG6RuOeKpYf/aXcA5mxI6XB1+IqFYXCrlC
-	dH2gQZWJswPBwwhaKCmKbYUDpFeGlwxa7sX71y8/i+QG0sOh2ChHC+B1MPwdTchdI/fgH/ex+UY
-	XTZ0vVgUxyUCOymhr3hwGaBvRT+lHSajuNgy204mf/LQtW7rXOA4=
-X-Google-Smtp-Source: AGHT+IG60A9cZw5q2ghP0j48oSICnM4EvMleBb57CwMtDkNbKO547PHL78ohs2lagIPlHsnadarK5o/Vf4QbZb3wFa0=
-X-Received: by 2002:a05:6102:4bc6:b0:478:8714:e1e with SMTP id
- id6-20020a0561024bc600b0047887140e1emr8289869vsb.4.1712130814422; Wed, 03 Apr
- 2024 00:53:34 -0700 (PDT)
+        bh=KF5rMcRDqQoWBU2qheNbp11b4MuIV67CJIqxgZePRvk=;
+        b=Rx+qwgvQW9BGb4Ui61lXh3r/vVPB4uEmTar7F8Huo75ktXbvwjnCErPxsQTP1MNC1A
+         Xuo2TwhJGj3xP/nvpyBsSL3uDHPwiZPLkIv9TEsb6LHaXAKRHMmQd7EZXS1h3mgcNDqU
+         VGfuGLmxaYPbNeAxzyw696TK7WeVVV6JZ7bd/NewsljWhzUYRPRQSABEbUC6HfW+zlTb
+         gUUf9OqNncY4DIeAt0+NQAH2wEYrJmvEu3QpFbHccZd6HENgHLFhRQtrVZMy7Tq7UeAN
+         w5wJx98SdXjmlU68mWcZaEDNxXeYLT1XUo5E9U1PS7U9gnwgmlS+bjLOEV/X4iw0JtDv
+         8CIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0bKzumZfWmeJPHBcbuMBE+rAksKbNMbmJ+5Zd6hzf6jKR8dlzDo4EfC6nAMXDrvZf6IaWZxqdiwWnd4R8BRAhn7zGjSdFZHFRG0I=
+X-Gm-Message-State: AOJu0Yzgu42EqPwuPeNj/usrVSPm+bXoNd11RGXBRUn7iVWqvbnrfiHn
+	OgZzbBbJbsF02DosfyoEzfh/1e2/fvr96mZkhrF6363KM9dSVUbEXNQFkO/1tDY+5E6Q3cxL7MA
+	RI2Mng9yF3wJh6k4X7Tbdw0kPvVV53moFjRwtAA==
+X-Google-Smtp-Source: AGHT+IF2bSuMQc4R8MCFBCOJr83VFrCimkABelAQd1QiE/nIT3+sNxsbnogNduwIzLN2Oc0WhC2CzgR9vBfGuKNzyv8=
+X-Received: by 2002:a05:6102:3753:b0:476:fa5b:e826 with SMTP id
+ u19-20020a056102375300b00476fa5be826mr2565038vst.4.1712131435492; Wed, 03 Apr
+ 2024 01:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,64 +54,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 3 Apr 2024 13:23:23 +0530
-Message-ID: <CA+G9fYvUwyf-5yB=xZVAPXrF3C9z==7bbhDYBnX9jdJ1PxzPnQ@mail.gmail.com>
-Subject: sh4: parisc: asm/cmpxchg.h:60:24: error: implicit declaration of
- function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	linux-parisc <linux-parisc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Mel Gorman <mgorman@techsingularity.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Rik van Riel <riel@surriel.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Date: Wed, 3 Apr 2024 13:33:44 +0530
+Message-ID: <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
+Subject: include/linux/build_bug.h:78:41: error: static assertion failed:
+ "struct bpf_fib_lookup size check"
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anton Protopopov <aspsk@isovalent.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, aleksander.lobakin@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-The parisc and sh defconfig builds failed due to following build warnings
-and errors on Linux next-20240402.
+The arm footbridge_defconfig failed with gcc-13 and gcc-8 on Linux next
+starting from next-20240328..next-20240402.
+
+arm:
+  build:
+    * gcc-8-footbridge_defconfig - Failed
+    * gcc-13-footbridge_defconfig - Failed
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-parisc:
-  build:
-    * gcc-11-tinyconfig - Failed
-    * gcc-11-allnoconfig - Failed
-    * gcc-11-defconfig - Failed
-
-sh:
-  build:
-    * gcc-11-defconfig - Failed
-    * gcc-11-dreamcast_defconfig - Failed
-    * gcc-11-tinyconfig - Failed
-    * gcc-11-shx3_defconfig - Failed
-    * gcc-11-allnoconfig - Failed
-
-In file included from arch/sh/include/asm/atomic.h:19,
+In file included from include/linux/bitfield.h:10,
+                 from arch/arm/include/asm/ptrace.h:13,
+                 from arch/arm/include/asm/processor.h:14,
+                 from include/linux/prefetch.h:15,
+                 from arch/arm/include/asm/atomic.h:12,
                  from include/linux/atomic.h:7,
-                 from include/asm-generic/bitops/lock.h:5,
-                 from arch/sh/include/asm/bitops.h:63,
-                 from include/linux/bitops.h:70,
-                 from include/linux/log2.h:12,
-                 from kernel/bounds.c:13:
-arch/sh/include/asm/cmpxchg.h: In function '__cmpxchg':
-arch/sh/include/asm/cmpxchg.h:60:24: error: implicit declaration of
-function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-   60 |                 return cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-      |                        ^~~~~~~~~~~~~~
-arch/sh/include/asm/cmpxchg.h:62:24: error: implicit declaration of
-function 'cmpxchg_emu_u16' [-Werror=implicit-function-declaration]
-   62 |                 return cmpxchg_emu_u16((volatile u16 *)ptr, old, new);
-      |                        ^~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+                 from net/core/filter.c:20:
+include/linux/build_bug.h:78:41: error: static assertion failed:
+"struct bpf_fib_lookup size check"
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                         ^~~~~~~~~~~~~~
 
 Steps to reproduce:
 ------
-# tuxmake --runtime podman --target-arch sh --toolchain gcc-11
---kconfig defconfig
+# tuxmake --runtime podman --target-arch arm --toolchain gcc-13
+--kconfig footbridge_defconfig
 
 Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264271/suite/build/test/gcc-11-defconfig/details/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264273/suite/build/test/gcc-11-defconfig/details/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264362/suite/build/test/gcc-13-footbridge_defconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eWtBPKv1yM8gfZJC8GkEkxN2j8/
 
 --
 Linaro LKFT
