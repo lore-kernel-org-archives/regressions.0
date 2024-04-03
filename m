@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066A34120B;
-	Wed,  3 Apr 2024 04:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4557517997;
+	Wed,  3 Apr 2024 04:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712118389; cv=none; b=RsFaRwgxNRlMTxVM9myWwcvoREgbL9vbM23uZsq+pWUOWXRv92Oeu1goWhEV9QOARCzCv3jOGVMatP7GeRV6nHuzHniOID7HCFM9tE0Ik1BieJVrDtVVv0y0gxZsC7+C0moYBsLIbcWhNzpT7RK+4wnyUOdY7+04dsr8Ge7urg4=
+	t=1712119765; cv=none; b=EotcjlblgSz3cKNDB9CTQ6WG07wL6vLc/rR4A1p+1anygAe0Y4kwDCle8B4dL7p1dWgMEib2mwniriE/gB/7epUQtEUf1WAYIAd5ZrfJHb+e9SpWBOATWZ0MhRrM6R+/Q0kBqPtRR/2GIEF7isYeeIRiQR67U+I4Qr3lSPcc488=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712118389; c=relaxed/simple;
-	bh=GFopZvyivykktQ72jqds+qx9RyJ0KszyGSYlJEDTeuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IX3XaEX9ZD78szhQ0HOL6e/IGoT64bXi+6/JMFTcqKKfEgWSer3Jbmm23DbqkRglW6CI1sMfdaVE/Z6JHXp2jpEEh1SWSjQ1b1qOrODREo65kMZyEGkqj8rYED6nU7lnMHT9Ljf4KbwKiMh6ZzUEWvM4bUKRoVSsZiOjggHJzwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gZE5dRG/; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1712119765; c=relaxed/simple;
+	bh=QmDWs704HYYc5Y6/bd68g/B3XytY1/o4TXKGVFkVfSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gIyWRD8oakRE2jOp7uwIeC0vScX00o6rRLemsatCO0bByxXcHfaev03fkYE6lV6llfnDkbWO/5PAyrnvMN5jBob0qzn4bHJnV8AlI71wcOj3DDS3PISMz7lIvbo9qjtgOGD8BzMcAtKvIdHt6yNYvNID4Xo5A7CWMhqiDISvv5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ADTRbQNU; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gZE5dRG/"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ADTRbQNU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=QyVQuuWUk2XuaF7soW3Q/khOH9t0orQsT6WSZbVXx2k=;
-	t=1712118387; x=1712550387; b=gZE5dRG/tMD/U4WVfh0XI/UVHhBN+SCx+1Kox4o5wsdWe61
-	arEgelcyS5/AKBKvk6wsR0cToZczV7dujVd+mslqcekX8KCElai6BsknqjPcWbaeYrcwAzq5wyleS
-	9DinbuEgmN5JPqSJqxxI3J8V5NXqT1xEa6agub+5wMynUNqMUC+YywIWoLz+j0wVJ2iytacgnRbQK
-	n/aKUMs3B9Ha/bbBpJ/6cssGI3uYML/N4xmYgrOcEWq1l+m5BUdCtuRaUAV0EGQdce3PQf1at9YFu
-	IXW1AtWH+mCU9uP4c4IZUHyDWcdl13DpPcstu9wUTj0lqZMQGky+6AyW2UJ8xgnA==;
+	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=9f2oNPXNMAeWBLw7dRuSLYmhlGmf0wKBLFiNHGbRWNk=; t=1712119763;
+	x=1712551763; b=ADTRbQNUxOVtXv8Us8yvjrCLS6RFxp5o2kkx/HxfJqxavSDt0Ue+G7CLLPZLY
+	8X2MhU3brQoZu4i5LdX/3r6HIaiDu7+BUDqAQQ+X451OjAwULFw5+yEJ/XBBKLjjPhKTAftzW2AsK
+	uD89VXJnfk+3vz8mkJ7C/zVkdwTRIfDJyHThhxvcbai7l1M4BDA8tIDNqC75grHcbpH/F76HSrWpV
+	wbJiXtb3nhrUEz22Vvz/cVeInjE2VwVm7cqnHVrl4HCeCpqW0O0yDCZQzlo1Kv68aes4J8paexho1
+	JTFbwrVps/zhF52ZT9lgWNAIOOrVGrTfKYJgpg5vgrPcX9QqXQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rrsCe-000542-LX; Wed, 03 Apr 2024 06:26:24 +0200
-Message-ID: <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
-Date: Wed, 3 Apr 2024 06:26:24 +0200
+	id 1rrsYq-0001Bk-WD; Wed, 03 Apr 2024 06:49:21 +0200
+Message-ID: <990192aa-f554-4aba-b935-f522c62188ab@leemhuis.info>
+Date: Wed, 3 Apr 2024 06:49:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,94 +39,110 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in Stable
- 6.6.23
-To: Tejun Heo <tj@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
+Subject: Re: [regression] 6.8.1: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
+To: Martin Steigerwald <martin@lichtvoll.de>, linux-pm@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <2325246.ElGaqSPkdT@lichtvoll.de>
+ <12401263.O9o76ZdvQC@lichtvoll.de>
+ <be5a7213-78b3-4917-b95b-ec31cd2350e4@leemhuis.info>
+ <22240355.EfDdHjke4D@lichtvoll.de>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZgylCe48FuOKNWtM@slm.duckdns.org>
+In-Reply-To: <22240355.EfDdHjke4D@lichtvoll.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712118387;eb609220;
-X-HE-SMSGID: 1rrsCe-000542-LX
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712119763;ca4dd1c0;
+X-HE-SMSGID: 1rrsYq-0001Bk-WD
 
-On 03.04.24 02:38, Tejun Heo wrote:
-> On Tue, Apr 02, 2024 at 10:08:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hi stable team, there is a report that the recent backport of
->> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
->> for unbound workqueues") [from Tejun] to 6.6.y (as 5a70baec2294) broke
->> hibernate for a user. 6.6.24-rc1 did not fix this problem; reverting the
->> culprit does.
+On 02.04.24 21:42, Martin Steigerwald wrote:
+> Linux regression tracking (Thorsten Leemhuis) - 19.03.24, 09:40:06 CEST:
+>> On 16.03.24 17:12, Martin Steigerwald wrote:
+>>> Martin Steigerwald - 16.03.24, 17:02:44 CET:
+>>>> ThinkPad T14 AMD Gen 1 fails to hibernate with self-compiled 6.8.1.
+>>>> Hibernation works correctly with self-compiled 6.7.9.
+>>>
+>>> Apparently 6.8.1 does not even reboot correctly anymore. runit on
+>>> Devuan. It says it is doing the system reboot but then nothing
+>>> happens.
+>>>
+>>> As for hibernation the kernel cancels the attempt and returns back to
+>>> user space desktop session.
+>>>
+>>>> Trying to use "no_console_suspend" to debug next. Will not do bisect
+>>>> between major kernel releases on a production machine.
 >>
->>> With kernel 6.6.23 hibernating usually hangs here: the display stays
->>> on but the mouse pointer does not move and the keyboard does not work.
->>> But SysRq REISUB does reboot. Sometimes it seems to hibernate: the
->>> computer powers down and can be waked up and the previous display comes
->>> visible, but it is stuck there.
->>
->> See https://bugzilla.kernel.org/show_bug.cgi?id=218658 for details.
->> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
->> not CCed them in mails like this.
->>
->> Side note: there is a mainline report about problems due to
->> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
->> for unbound workqueues") as well, but it's about "nohz_full=0 prevents
->> kernel from booting":
->> https://bugzilla.kernel.org/show_bug.cgi?id=218665; will forward that
->> separately to Tejun.
+>> FWIW, without a bisection I guess no developer will take a closer look
+>> (but I might be wrong and you lucky here!), as any change in those
+>> hundreds of drivers used on that machine can possibly lead to problems
+>> like yours. So without a bisection we are likely stuck here, unless
+>> someone else runs into the same problem and bisects or fixes it. Sorry,
+>> but that's just how it is.
 > 
-> Sorry about late reply
+> I have been asked this repeatedly with previous bug reports. My issue
+> with bisecting between major kernel versions is this:
+>  
+> When I look around here I see no second ThinkPad T14 AMD Gen 1 here I 
+> could use for testing. Also doing a kernel bisect using a GRML live iso… 
+> not really.
+> 
+> The one I reported this from is a production machine with a 4 TB NVMe
+> SSD which contains a lot of data. I am not willing to risk data loss or
+> (silent) file system corruption by bisecting between major kernel
+> releases. Bisecting between major kernel releases in my understanding
+> would require to test various releases between in this example 6.7 and
+> 6.8 and even between 6.7 and 6.8-rc1. At least in my understand anything 
+> between 6.7 and 6.8-rc1 is not guaranteed to be even be somewhat stable.
 
-No problem at all, really, thx for your reply!
+It's hard to qualify and always a matter of personal viewpoint/opinion,
+but I'd say: kernel from the merge window are pretty stable and
+reliable. But sure, accidents that eat data happen and they happen
+slightly more often during merge windows because the rate of change is
+higher. But in the end they do not happen often, which is why Fedora
+rawhide for example ships merge window kernels all the time.
 
-> but that commit is not for -stable. It does fix an
-> undesirable behavior from an earlier commit, so it has the Fixes tag but it
-> has a series of dependencies that need to be backported together
+> I 
+> am not usually installing an rc1 kernel on a production machine, but 
+> rather wait for at least rc2/3 nowadays. Its a balanced risk calculation. 
+> And rc2/3 or later appears to be a risk I am willing to take. But 
+> something between stable and rc1? Nope.
 
-Not sure if you know, but the stable team apparently recently backported a
-bunch of other workqueue commits as well; I see 10 from a quick look here:
-https://lore.kernel.org/all/20240326223803.2647796-1-sashal@kernel.org/
+Well, that's up to you -- but the reality is also that developers are
+not obliged to look into regressions report closely, unless someone
+bisected it.
 
-$ git log --grep='workqueue:' --oneline v6.6.22..stable/linux-6.6.y -- include/linux/workqueue.h kernel/workqueue*
-7df62b8cca38aa workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
-5a70baec2294e8 workqueue: Implement system-wide nr_active enforcement for unbound workqueues
-b522229a56941a workqueue: Introduce struct wq_node_nr_active
-bd31fb926dfa02 workqueue: RCU protect wq->dfl_pwq and implement accessors for it
-5f99fee6f2dea1 workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
-4023a2d9507691 workqueue: Move nr_active handling into helpers
-6c592f0bb96815 workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
-bad184d26a4f68 workqueue: Factor out pwq_is_empty()
-82e098f5bed1ff workqueue: Move pwq->max_active to wq->max_active
-43a181f8f41aca workqueue.c: Increase workqueue name length
+> It is not even that rare. 6.7 some rc failed with hibernation as well. 
 
-And there is also "workqueue: Shorten events_freezable_power_efficient name"
-in the queue for the next 6.6.y release:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.6
+Maybe too few people (or too few of those that run the latest kernels)
+use hibernate these days (I haven't for more than 15 years), which is
+why it's not tested much.
 
-That leads to the question: what is the better patch forward here: pick
-up what's is missing or back out?
+> With exactly the same machine. I refused to do a bisect as well in that 
+> case. At some later time the issue was fixed without me doing anything 
+> more.
 
-Side note: I have no idea why the stable team backported those patches
-and no option on whether that was wise, just trying to help finding the best
-solution forward from the current state of things.
+Maybe you were lucky, maybe someone else bisected and reported the problem.
 
-> which would
-> be far too invasive for -stable, thus no Cc: stable.
->
-> I didn't know a Fixes
-> tag automatically triggers backport to -stable. I will keep that in mind for
-> future.
+> Now my question is this: Without me willing to bisect in that case, is
+> a bug report even useful? Otherwise I may just switch this last machine
+> to distribution kernels. It would save a lot of time for me. This private 
+> and freelancer production machine is the last left-over machine with self-
+> compiled kernels.
+> 
+> So far I still thought I would somehow be contributing to Linux kernel
+> quality with detailed bug reports that take time to write, but apparently 
+> I am not. Can you clarify?
 
-/me fears that more and more developers due to situations like this will
-avoid Fixes: tags and wonders what consequences that might have for the
-kernel as a whole
+Not really, as it always depends on the situation. There are bugs (like
+https://lore.kernel.org/all/08275279-7462-4f4a-a0ee-8aa015f829bc@leemhuis.info/
+) where a report without a bisection is enough. But there are others
+where it's unlikely that anyone will take a closer look; a lot of those
+reg. suspend/hibernate fall into this category, as problems in that area
+can be cause by any subsystem and its drivers -- which is why the power
+management people can't look into most of those, as then they quickly
+wouldn't get anything else done while spending time on bugs most of the
+time other people caused.
 
 Ciao, Thorsten
