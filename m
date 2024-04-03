@@ -1,102 +1,130 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B57D136E3E
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 11:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC5D6CDDB
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 11:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712142320; cv=none; b=l+LCB4/FFUHVZ50M6/bld1y4nTTr1e8gmQQ4blE9Gc7dIqqnhuBzmXyQiwMar4fIrKEWcDaW8P80VTooIhexo7y2sJIV79iOp2h9LFSDkSuMoX7LECh07Gcr8ulajwhkOHpEzZ9JaTVq9VcY/GqfHaZp2urLpR7pFTy+A03je0Q=
+	t=1712143050; cv=none; b=s/gziTvcwkqoQl1XeDOi4FJpbSxSsrBy/I0beP3V2PsDEJlPfCzOvhd2F3UjlTKkHL2KHTg2gJMbO5PKYzzOMe373/L1Hd8ev7WMuvZut7v5zjaWz49b6uv+lgieNqRRvK19r23IkJy0vWOWq0V3HASrbsTX9KuvAbcA342fzEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712142320; c=relaxed/simple;
-	bh=ZJvZmJHxJhSPiXQev3phRQ5xGMWb3Gfu1/whv/9iNZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r75QxafFixH/A6VhKZ67PgLKFW8niuK586U+3EhuQHuLqFcWMZ0c/QNK6dzNtzZzZbSQ7sFri/z8WUiGoJiHWcM6GTM0jbopfkQbMdUA8YSLv3/ShtYaFAitTAdG9YDyxqkKhr3QiI3/YxHgcOK8RKHJiTBrh1BHOmt89++1LZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vst8ujd+; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1712143050; c=relaxed/simple;
+	bh=hVe9rbSPpT2y71SxD/q11C+ArqBPm7Fa1Gwafs7sHM4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=JR8YvslJA+c5rmtFk6Yv3Ls8OU5xK99uB6drL6Cd3FDMOjXCABciwzGg+MdqmsH8Ih/radurePKndrJWZMfYN1H4uuAJyQtNW56uWi6ig5JIql7s5rJZM090+z/BrT6XI9AqWd6o08IMGT0BWzw7ZwQV1DXsCh5xHhz8V88nHSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=JO1Rz2tL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VIONJcZP; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vst8ujd+"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d52e65d4a8so85697871fa.0
-        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 04:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712142317; x=1712747117; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZJvZmJHxJhSPiXQev3phRQ5xGMWb3Gfu1/whv/9iNZ4=;
-        b=Vst8ujd+ErPnXVywiwVdsXsecFlvjIY7O8Cosda7GH/dJVIxx3AmTMeS+JDxXByVZv
-         SanyRBLcRmJ6T/bwXJOkjMr7i/A14bgLK75ibFII92c809C/uInSNiso1/V1GbLl6pDO
-         HEKh/0cT5aeApjEDPVxx8p8VGyVF0DTypQlWrQLmuhJngpft7ZDrmUIf5KxrH7dl4hLQ
-         S6Hbv2qDz5DtE60XoUzoRvqdiiBQtNlh4Re/v+bDv60yv4Q7F7KcFJc68HrUyfEMy4Be
-         4mNR7t+VUGI6pnSp/+zzAIENTsOVTALDxRRtqU+vC0z0+HBqqLegh2oujRr5q/GLT9/T
-         6vLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712142317; x=1712747117;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZJvZmJHxJhSPiXQev3phRQ5xGMWb3Gfu1/whv/9iNZ4=;
-        b=K2lipK8Bufrk1Bm3ZTJY+5KXaTcNSwPFIJhKjxif+eB9B4iAmDEbm3u4lhRJ53koQX
-         CoExHHfrM3Qzc+9bk41WZHRc9KlUIT2eP+L/rBslimXWc0qWfcLiWPY7aDFY+qnYlVcW
-         jARMvWObM0Ew5PHmQAt4SVdXcYMJ89WYzoHA8pdhm6Al+st0UfNXty8gNobl0X5lzJav
-         LS63iC1zyNsubKW3v3Z9bY+BG//LVM2FqsBU4cR0NmtfUw2wSFkz7tXIsdlWiFeMAgWs
-         WG9aF02SIeQzmsxDtsCrIOUKB2K/e/hXfqlyFo4BvcCuI9MVmsD6/Gq+5691b2fi3nJg
-         Lg4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUYGa+dXFnQ/FUnuLVN+WbS6AzLBwqhkqAOCpkK9Gh+VO2apVfK8bcCvy7GYolFbDJAryVNpcidqYnkCHdNHN/xSXqAV/3Z/cDbXbU=
-X-Gm-Message-State: AOJu0Ywxy/OqY1gVTJfkk5roCreM+mjrNCDXXXQjHxZZA7FFaRH2jzbl
-	STddZ4zB7pg3ejkC5dbp7Fc3GEj6Lwz/K6LblidrDiLhrMLNf32RjXv5HPnxJ0Z1qscXsqXDR2g
-	u9PLVzT1Vn6zQi7dgXX7XTw7gJ2oHmOwKN2fF3Q==
-X-Google-Smtp-Source: AGHT+IGUbSycw+xhCKbzuunuEt8CNkPSdh4HUdvDp0mg4wHbwgOvRmj7W6DJfRWgVQ/4OQszflMyHYsz/5zEYPSkFKk=
-X-Received: by 2002:a2e:b5c3:0:b0:2d6:b424:a634 with SMTP id
- g3-20020a2eb5c3000000b002d6b424a634mr8638113ljn.15.1712142317196; Wed, 03 Apr
- 2024 04:05:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="JO1Rz2tL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VIONJcZP"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 5BD9B138018F;
+	Wed,  3 Apr 2024 07:17:27 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 03 Apr 2024 07:17:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1712143047;
+	 x=1712229447; bh=gbdRMeNJ6ALKR+3+hWL9ZqdoOal70v+nuEve4HR/CQw=; b=
+	JO1Rz2tLI7Ma0JjtwrzkGEkz9hSCLJhsxeULuLb6C5TXucDPVEJoUyUaHdBNN2m6
+	26lo5XemS017jTZFAyHFBaU1A1/eXwEM5P6vESQIx1j78Uu0YwSC/SBzzKmj3MtD
+	UMRgr83iopvPUdPatr5CnNofvWIWlsytb/B/HUHR5O4yKXnzIHzA//bDVwnTPwm6
+	PbiM/mcNvmsFnzGx7RI9hbYqAMClaenNo/rV+U3a4QykXsoo8Nbs7Yw4C/Dgs/Qf
+	Zwj9HbtQ5VlXZmJmBOlBEuwBvaUWf6v3ce4aotFM7rjtquvYtcxXDUAWL5ZMp693
+	+8g7+EV7hPQg12vnYuYrMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712143047; x=
+	1712229447; bh=gbdRMeNJ6ALKR+3+hWL9ZqdoOal70v+nuEve4HR/CQw=; b=V
+	IONJcZPa5Itt751Ra1NUbEPIYjGfWgM5CY2EWU/rZsYOHOPFYHoPWd8KSkdin/qi
+	vSZq4IT29fyF6oiJJbGlNkpJMID4v8LXy7/+v6f/sXxM15xwU5UZhDdxwxODi6CH
+	Awp+kx3ECjkSpVqbEleYp64044OZUMfkrn7LZ2VL2Ayid+aPFvniCIBGKZZ7j+Bq
+	o9L1Phr4AihxnKFfAWXP6Dq7qQ3o8qQquhgQ+pLnroOR/6YPIv6Omcb74n+kpy9+
+	+gi3jPUPuXHon/qN6ydA6GMWD6l19G23SJ9y7J2pohsoBnpbpMVnvqH6nBbEhHfg
+	75IhsFUwPpBfbw+IMmFDQ==
+X-ME-Sender: <xms:xjoNZm5R9FVsmKvAJ41w1le4LaewYsU3dwWHh2tIivBv5G0LJwD-7g>
+    <xme:xjoNZv6bjdcf1aIyI5rczcDpOAi0I0dHtKsA2f09gWWVQnwDDxlgemMHAyYaxNRrt
+    Q72xCeuSghjLwn0QcU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefhedgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:xjoNZlf3-QqN9gFEUDV78JW0ZmjZaJ4cHbCuWUN-5kXXSFsO7hp7Dw>
+    <xmx:xjoNZjLmvftUBSL57wUDkfbWXKK5zzlzlTrPbqxpJJ4UXRz5IWFMiA>
+    <xmx:xjoNZqKzB5tXrFdOV7oGDKIZ6OP3DAyuFcTtzKvnTywySIlvopoatA>
+    <xmx:xjoNZkyk6YPlqcL_frNQCQ6xBkHBgCyQl87n_0oOFrZ8DIB8UJ2qvQ>
+    <xmx:xzoNZsjMu5rr0GTWb5E3JxNMDJeh3CqNsz513omGA1797VirUjrNlkK->
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A1592B6008D; Wed,  3 Apr 2024 07:17:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240402164345.14065-1-hdegoede@redhat.com> <CAHp75VeJYASFaxwG2yuAdBLn7H5hK1BESP7p+3CzBVmNdCTpwg@mail.gmail.com>
- <0303f5f6-05f8-43c7-8922-11de2550d356@redhat.com>
-In-Reply-To: <0303f5f6-05f8-43c7-8922-11de2550d356@redhat.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Apr 2024 13:05:06 +0200
-Message-ID: <CAMRc=Mcocz5fJUJsjje_2qSRcptv-dx6bWFsaWZNVQs=+n7YKA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Fix triggering "kobject: 'gpiochipX' is not
- initialized, yet" kobject_get() errors
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <80d7ab36-2746-43c7-a9b5-184f59981b81@app.fastmail.com>
+In-Reply-To: 
+ <CAPyNcWdPJYOtDbun-qUJApm9ndsVkEj-sHDfbMWK2yCT6FOwdA@mail.gmail.com>
+References: 
+ <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
+ <CAPyNcWeu+bzyQg9S3wDb43jbfk95Su5XcSRFPzUbS2ofZ=+5Fg@mail.gmail.com>
+ <347bb21e-98db-4bd5-9ca1-550eac5be9f8@app.fastmail.com>
+ <277decf7-d9cb-451c-a105-6ecc998f9f46@intel.com>
+ <CAPyNcWeXpidnVsXgt4XpwXiA0CRFdZYFN9O2ys5oq9FQKXNxsw@mail.gmail.com>
+ <CAPyNcWdPJYOtDbun-qUJApm9ndsVkEj-sHDfbMWK2yCT6FOwdA@mail.gmail.com>
+Date: Wed, 03 Apr 2024 13:17:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Anton Protopopov" <aspsk@isovalent.com>,
+ "Alexander Lobakin" <aleksander.lobakin@intel.com>
+Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, "David Ahern" <dsahern@kernel.org>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>
+Subject: Re: include/linux/build_bug.h:78:41: error: static assertion failed: "struct
+ bpf_fib_lookup size check"
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024 at 10:17=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
- wrote:
+On Wed, Apr 3, 2024, at 12:09, Anton Protopopov wrote:
+> On Wed, Apr 3, 2024 at 11:57=E2=80=AFAM Anton Protopopov <aspsk@isoval=
+ent.com> wrote:
+ end.
+>>
+>> Yeah, I am sending a patch for this right now. Better not to depend on
+>> compiler options
 >
-> Hi,
->
-> On 4/2/24 6:51 PM, Andy Shevchenko wrote:
-> > On Tue, Apr 2, 2024 at 7:43=E2=80=AFPM Hans de Goede <hdegoede@redhat.c=
-om> wrote:
-> >>
-> >> When a gpiochip gets added by loading a module, then another driver ma=
-y
-> >> be waiting for that gpiochip to load on the deferred-probe list.
-> >>
-> >> If the deferred-probe for the consumer of gpiochip then triggers betwe=
-en
-> >> the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find(=
-)
-> >> see the chip and the gpiochip_setup_dev() later then gpio_device_find(=
-)
-> >> does a kobject_get() on an uninitialzed kobject since the kobject is
-> >
-> > uninitialized
->
-> Bartosz, can you fix this up while merging or do you prefer a v3?
->
+> One __packed__ was not enough though. The problem was also with the
+> union of two __u16's which is padded to be 32 bits when AEABI=3Dn and
+> the whole structure is packed (so total size is 66 in this case).
 
-Yes, queued for fixes.
+The __packed attribute is easy to misunderstand, in this case you
+would need to mark every internal union and struct as well, since
+you otherwise run into one or both of these problems:
 
-Bart
+- an inner aggregate with explicit packing still requires
+  32-bit alignment (and padding) for each member, even if the
+  outer struct puts it at an unaligned position
+
+- You get a compiler warning if an internal structure
+  is follows the normal alignment constraints but is located
+  at an unaligned offset, since that violates the alignment
+  constraints of the C standard.
+
+      Arnd
