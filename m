@@ -1,135 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AC46996F
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 08:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CE947A53
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 08:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132269; cv=none; b=Xs1fQfhcc3/qH1rIC0hj44iLw0U8XqC8NjClLN8hgJzC/YnK/iEoLqq8fhLt4RpnKE2w8lKxEHsvDJ0RO77t0ujYP62EcAt+upInrJsqzfbvCvCBDsXA4OBYCrXT9ym2AJB2zLLZaFeL8jcmUStCMtLVZ7yXjt8NWBTE7H4jjE8=
+	t=1712133969; cv=none; b=lt84pdbZZXJNO67HZGDHFoL8bXJ39HJRk0iYdwAltetYd42Ok1RGNKFGF1muL46SPKpX7B1CAEgw1qDMPLQU5/A46B8JTa8EFOHYS6BFlZOw6UdYwx5GnMBAO88PCP68k0kTEF3tzfoHzx/EiNiDU7DHaFk+59pa1ARWlEK13bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132269; c=relaxed/simple;
-	bh=WZVLpsgEZyMee2esS1uHXrzyFJR0vhK0SpAjmX1pzA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MstVYEarGHK7/D7yUtNqAFwUqFxPTOGqAr+O2r2SJrb68Z2kvtK2PXBMJZDGzbx7H+BZpvcaPq56cipOHIgKyv9Kexi0yeVG3z1WiO3VV7meEYdP5XpcJglWrpbfjHjjJTGDhH4ftB62Zt1etQRiuDmg8bz+usXVvKER0fJJaKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GIwqZl4V; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712133969; c=relaxed/simple;
+	bh=+S2O1GFt8qjMUrM23cyYAgm/pmRLL3owMuc0LTyf644=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=bixG3PX7cnEKsmSG2oC/pKa/nBjhlSXNTE6CCBRiXOnIzndNZls9vMG3Jkw/NMSo3hWeUfTfh3cYHqmOFxNH8QWpEVcZRRcpQGn8tZNFqdo5/zmdQyMU6at0/LyKGhwbQNsbIAZlUdzlKHP6ZVwcBxwFO062U5+p4n8zgdyF7xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Y3TEof7R; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RN+/7xAa; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GIwqZl4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712132267;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SdMK7f7rQBNlLOVVhFtlCqSnYbgxL7W9IIMpIkzT6qw=;
-	b=GIwqZl4VFSd4Sf/bQk8LUEVd8YJ0t3Eprh4EdphaamPv+U32DULfAaL6yCLbmNy3fWwCrr
-	xynNM1FHimHCv4qMxKrrLFvS5qzfQN7Rc3WmwkL7Jq0Xk2F+8zOsedFIhpZes+DKIu1Yqe
-	/k9XMg4Wj3kdoXLjCLKco6Ue6Aex78s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-QgwkB8oGPLmoax3m9UYK5g-1; Wed, 03 Apr 2024 04:17:45 -0400
-X-MC-Unique: QgwkB8oGPLmoax3m9UYK5g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a4e9ac44d37so44397866b.0
-        for <regressions@lists.linux.dev>; Wed, 03 Apr 2024 01:17:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712132264; x=1712737064;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SdMK7f7rQBNlLOVVhFtlCqSnYbgxL7W9IIMpIkzT6qw=;
-        b=swZKwHgLE7j55ub2zI6YJnD6BKZbBRi1vHafsCBviV5wwMR+GPBUPHwVp3zXrxFH9i
-         R10pqPBMneG0wyWiSJ2Y49uXCEf3ckJ7BTFMxByV68378zHebu67AZhfVKPACF6zf7qC
-         DxSSu7oRq1najRtTy/dG4daaHBkObmKDc235eYXA48fiBkhRX1VhRj+/kgQznBAhdEpo
-         EyPGzknfNNpPAwnqyq3uC7sBwqYRQf69jKUH3Lf9Wa7aYQXdWAjHVx46jf8+YXfKxakc
-         rRnHI7Lg2FPmkqG6H3Ot1AeUaiV7CI2Dv9Y3Ib7IDrcH/OrJ0abgPk5MGSZQfSMfiymx
-         kP0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbPRFNm6XMRWof9eXak7/4Kqrdv2N/Mp1BtiGWYJMYelLGfe+zdf5okNLLqceCgdEgzO9hJBBIiwy8w4OOd/roxRTCyClTro+/Xno=
-X-Gm-Message-State: AOJu0YzeyWWZ3ZP8cZ+ObzbyP5BCj+uXeIHRVEA1zlT0PwRePbVMBO3y
-	flGS/6oZTHzlUyCNxNU/Cl/fVYYgj/rTldILasmfctsScHlGW+dAi7R8KUBCi2PuuY/uYhAI/pU
-	zLEA2NmOBeFxiPG2yW2vjnMIhu3TnVhmRaXCc34ecvD9G1u8s6nKFRQVxouQ0
-X-Received: by 2002:a17:906:470c:b0:a4e:6957:de24 with SMTP id y12-20020a170906470c00b00a4e6957de24mr1303529ejq.37.1712132264445;
-        Wed, 03 Apr 2024 01:17:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9W+msJ9cw1PLqVvsdlsPE3wNn+yIqe/WBgeUUUFOwvy3JKmF6zlJAQklGl8EXuEy+A1yZ1Q==
-X-Received: by 2002:a17:906:470c:b0:a4e:6957:de24 with SMTP id y12-20020a170906470c00b00a4e6957de24mr1303520ejq.37.1712132264063;
-        Wed, 03 Apr 2024 01:17:44 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n10-20020a170906118a00b00a461d2a3374sm7470177eja.47.2024.04.03.01.17.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 01:17:43 -0700 (PDT)
-Message-ID: <0303f5f6-05f8-43c7-8922-11de2550d356@redhat.com>
-Date: Wed, 3 Apr 2024 10:17:43 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Y3TEof7R";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RN+/7xAa"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 8465C13800C9;
+	Wed,  3 Apr 2024 04:46:03 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Wed, 03 Apr 2024 04:46:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1712133963;
+	 x=1712220363; bh=1RZn0oM8m1GPiYmL1YCObPZ+6sAGKW8OKj+b4oKvzPI=; b=
+	Y3TEof7RVUdF+jqdcs+14jebAXyfqAfC4LJ/bLpL/ItC7h9c+O+rGV7fy0hKDLZz
+	1wr3ucOJNDE7i0O9QSu+wj/pqrW2hvhUUURgki4vJIlsktFALiSq43oiDXKzs1H3
+	Fpg92F1QI8xlrsIZi/IbviFig4Zk+CxLVn8zCQGsUpCYUcgdSshAX0DpXq2QwSo8
+	aPWi1qDiJstbTU3Hm1bHH8iIxv4dgOASGO8JcidgfOOv4Efg3aSYHeOF8w2tTYhJ
+	p+sqm0vC37EoT6ntcWA2ShnCYxn1+R67L34GQzXjajVXMOPQa1RTPYVpOw5Nv2R8
+	E7tlWWMhlepyYZOHyIChoA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712133963; x=
+	1712220363; bh=1RZn0oM8m1GPiYmL1YCObPZ+6sAGKW8OKj+b4oKvzPI=; b=R
+	N+/7xAaXMCa/EUYS5g/twnoo48wxABoaj3vDVbJRH+8/HFdihcSb6UofMNwegFfV
+	yD41JjKPd11OVNMb+FwrShitYKMMXQmOiNmfpIHdPC42C8jOYlsfUmcc/nmISBA9
+	vgxL83qcQwaW7EEAO4QtMTG8ByE1rLlpR9E2FmWx3jGQ3aW4ZJ6JAikJEAqSx0vi
+	GxTbUYAG6aqDeLRkBDy2TDeoIyxCspp/bHQXM5l+H0lfDbRJaseQ4qQQRE8fvEXx
+	+stxLQ6KmoNCdAC7YSrCBVq+ykVaa15NtKAXI5lOV+CwUc2GqZx9pUlE57uUc1CU
+	162q+eOIoztml2J1JSAFg==
+X-ME-Sender: <xms:ShcNZnAZyLm9XHd-kHPDBTAa05x8FVQjByZqNNVNsnv0CQvb_K8UuA>
+    <xme:ShcNZtiQQ7wL9b2prKFgzwBthuVm9Z0lu8tf87mfOGWqOqmt5e7wp3Hvnn5TQmov3
+    0phvys8atXgITbuoyY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefgedgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:ShcNZikUZ6uVcU5hyjM93JxHlsFt20g5gL_9ZHffgFMKg34sDzaHFg>
+    <xmx:ShcNZpzXr_8MtgDzJ1r_t7vFS-qxmxPrsCF4SScOqmhEKTZMcIFRUA>
+    <xmx:ShcNZsS5qCHQPvBJlt6Xx18zYp0Csp-GcJELWR0AfKQbJdXVgf69KQ>
+    <xmx:ShcNZsbMU6X-uK0waRSjIad6i9a1HHhRrhBWjD8sgzZF6jGNs6yIEg>
+    <xmx:SxcNZorngdJunJJo9PgIKLOSr0B-OaaCHu3Kgx_JRta-azWTBkIBsb4h>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id CB4B1B6008F; Wed,  3 Apr 2024 04:46:02 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpiolib: Fix triggering "kobject: 'gpiochipX' is not
- initialized, yet" kobject_get() errors
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20240402164345.14065-1-hdegoede@redhat.com>
- <CAHp75VeJYASFaxwG2yuAdBLn7H5hK1BESP7p+3CzBVmNdCTpwg@mail.gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VeJYASFaxwG2yuAdBLn7H5hK1BESP7p+3CzBVmNdCTpwg@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <347bb21e-98db-4bd5-9ca1-550eac5be9f8@app.fastmail.com>
+In-Reply-To: 
+ <CAPyNcWeu+bzyQg9S3wDb43jbfk95Su5XcSRFPzUbS2ofZ=+5Fg@mail.gmail.com>
+References: 
+ <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
+ <CAPyNcWeu+bzyQg9S3wDb43jbfk95Su5XcSRFPzUbS2ofZ=+5Fg@mail.gmail.com>
+Date: Wed, 03 Apr 2024 10:45:36 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Anton Protopopov" <aspsk@isovalent.com>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>
+Cc: "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, "David Ahern" <dsahern@kernel.org>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Alexander Lobakin" <aleksander.lobakin@intel.com>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>
+Subject: Re: include/linux/build_bug.h:78:41: error: static assertion failed: "struct
+ bpf_fib_lookup size check"
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 4/2/24 6:51 PM, Andy Shevchenko wrote:
-> On Tue, Apr 2, 2024 at 7:43 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Wed, Apr 3, 2024, at 10:10, Anton Protopopov wrote:
+> On Wed, Apr 3, 2024 at 10:03=E2=80=AFAM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
 >>
->> When a gpiochip gets added by loading a module, then another driver may
->> be waiting for that gpiochip to load on the deferred-probe list.
+>> The arm footbridge_defconfig failed with gcc-13 and gcc-8 on Linux ne=
+xt
+>> starting from next-20240328..next-20240402.
 >>
->> If the deferred-probe for the consumer of gpiochip then triggers between
->> the gpiodev_add_to_list_unlocked() calls which makes gpio_device_find()
->> see the chip and the gpiochip_setup_dev() later then gpio_device_find()
->> does a kobject_get() on an uninitialzed kobject since the kobject is
-> 
-> uninitialized
-
-Bartosz, can you fix this up while merging or do you prefer a v3?
-
-
->> initialized by gpiochip_setup_dev() calling device_initialize():
+>> arm:
+>>   build:
+>>     * gcc-8-footbridge_defconfig - Failed
+>>     * gcc-13-footbridge_defconfig - Failed
 >>
->>  arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
->>  arizona spi-10WM5102:00: cannot find GPIO chip arizona, deferring
->>  ------------[ cut here ]------------
->>  kobject: 'gpiochip5' (00000000241466f2): is not initialized, yet kobject_get() is being called.
->>  WARNING: CPU: 3 PID: 42 at lib/kobject.c:640 kobject_get+0x43/0x70
->>  Call Trace:
->>   kobject_get
->>   gpio_device_find
->>   gpiod_find_and_request
->>   gpiod_get
->>   snd_byt_wm5102_mc_probe
+>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 >>
->> Not only is the device not initialized yet, but when the gpio-device is
->> added to the list things like the irqchip also have not been initialized
->> yet.
->>
->> So gpio_device_find() should really ignore the gpio-device until
->> gpiochip_add_data_with_key() is fully done. Add a device_is_registered()
->> check to gpio_device_find() to ignore gpio-devices on the list which are
->> not yet fully initialized.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+>> In file included from include/linux/bitfield.h:10,
+>>                  from arch/arm/include/asm/ptrace.h:13,
+>>                  from arch/arm/include/asm/processor.h:14,
+>>                  from include/linux/prefetch.h:15,
+>>                  from arch/arm/include/asm/atomic.h:12,
+>>                  from include/linux/atomic.h:7,
+>>                  from net/core/filter.c:20:
+>> include/linux/build_bug.h:78:41: error: static assertion failed:
+>> "struct bpf_fib_lookup size check"
+>>    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, =
+msg)
+>>       |                                         ^~~~~~~~~~~~~~
+>
+> Thanks, I will take a look today
 
-Thank you for the review.
+The problem is CONFIG_AEABI=3Dn, which changes the alignment
+of sub-word struct members. I had assumed that AEABI is enabled
+by default for everything already, but it looks like footbridge
+and a couple of other defconfigs still have it turned off:
 
-Regards,
+$ git grep -l  CONFIG_ARCH_MULTI_V7.is.not arch/arm/configs/* | xargs gi=
+t grep -L AEABI
+arch/arm/configs/assabet_defconfig
+arch/arm/configs/collie_defconfig
+arch/arm/configs/footbridge_defconfig
+arch/arm/configs/h3600_defconfig
+arch/arm/configs/jornada720_defconfig
+arch/arm/configs/neponset_defconfig
+arch/arm/configs/netwinder_defconfig
+arch/arm/configs/rpc_defconfig
+arch/arm/configs/spear3xx_defconfig
+arch/arm/configs/spear6xx_defconfig
+arch/arm/configs/spitz_defconfig
 
-Hans
+Russell still has machines with an OABI toolchain, but I'm not
+aware of anyone else relying on it. It does cause other
+problems as well, so I already turned it off a long time ago
+for my randconfig testing.
 
+We should probably make it the default for everything, except
+whichever defconfig Russell uses:
 
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1159,7 +1159,7 @@ config ARM_PATCH_IDIV
+ config AEABI
+        bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
+                !CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG && !COMP=
+ILE_TEST
+-       default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG ||=
+ COMPILE_TEST
++       default y
+        help
+          This option allows for the kernel to be compiled using the lat=
+est
+          ARM ABI (aka EABI).  This is only useful if you are using a us=
+er
+
+Or we could go one step further and make it 'depends on
+EXPERT', short of removing it entirely.
+
+     Arnd
