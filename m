@@ -1,129 +1,132 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B41148318
-	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 13:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43BE14885E
+	for <regressions@lists.linux.dev>; Wed,  3 Apr 2024 14:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152301; cv=none; b=eO6Cntb25P7Mk7OyRRTqamJi3DpItzEl4cysMF7T21evIsaG1ZKmtk+wXOBZIR9W1r+Yjn/eUOz58Qg360Eai4fGd0rkHzW4idFzJIdtmRlbt2KulOY+CRMMujtaivq0xUh+26q8xDGofCYqVYL2HRFOM6U8l+ctMsCY9wZ4jrc=
+	t=1712153361; cv=none; b=YB+2F0tDP1mwS3W4RkTQ8axqmognJkOFMrOYw45oSBAfo3iXqdZhChQ6hi8QkAajSAuKty2+AqMMEr0zDFLFVyPVdVecHbgh18MW1jtOSrhEuMYCsvBd99eUZZQ82AZdkEH68m3ukSkac0TUyCztz/YZNluTCfthYBpAzpIcMiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152301; c=relaxed/simple;
-	bh=Bsd6ob511k3QYVp8+Jssqa3MiM5VrfAAPII3Y9YU9H8=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=FwUuMS2HKzPSla7NwoBvETp4eBv0JQuLRnI7Nrm/nweApFK9fXUDm9DTSJAGdN698r7HWygTJutokrRDIrvwV1tP4kBLt6eFm9wB4o84KPIHzsnoqMUt67w+EfacvzV/G9Do18E2xzsjGRyO01eZWI3W5avd9LEoaGiyIwSxLKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=GiS2zBBT; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1712153361; c=relaxed/simple;
+	bh=agTHV4kamLLPYcNHOfaIhrtk8c/lda8kF/YWjh1kBJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Puvw8YLfBR2R+vytGC0dMLTmM8FSXNesMLWJaQd5pI6rnI0zEib8F7jB4sQSsUpXgwCIMjHpabBV6+B6+nJodh05t6DX8G2wUieyR8090qOpLrdvb+HgVADZhBpkNEqPnzDEfSTxRF53lRM1aWXYwyqaipM2+JdDQ/Tl5o5gXtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ej5TuduV; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="GiS2zBBT"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ej5TuduV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712153358;
+	bh=agTHV4kamLLPYcNHOfaIhrtk8c/lda8kF/YWjh1kBJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ej5TuduVQzkPKOqmLXBWFS4juFDp4MmlKPVPcTaeoSqlAy48WAn1nq0ecYlAIQow6
+	 J6TlBihY4qc7QNKs9/1bOWSpoNpAndiX5VWK+c5LnV7z1vcADEOzZUEdLIQ0EwxrS0
+	 Ru8uWgGZZOmthtVp/8LCe/1/PDhwVA33EnZUzGvCqClWTmlJXIdZODfRAzRdcsw6QO
+	 LEUPf4ZMmk8WIvt/EKwilFZ3oOXrIV2eSy66+zHF9cH9tPVoajTUo/RLplO5XmtOp0
+	 tBZ65nThRBz5Fp2SVGYPf4AuGbV4z0R+xST8gP6it6QkMgNgk3yg6qlDrc96fmLaRr
+	 9ul7GpGOBrqGQ==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E10B037814A4;
+	Wed,  3 Apr 2024 14:09:17 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id D07B01060E07; Wed,  3 Apr 2024 15:52:11 +0200 (CEST)
+Date: Wed, 3 Apr 2024 15:52:11 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Pratham Patel <prathampatel@thefossguy.com>
+Cc: Saravana Kannan <saravanak@google.com>, 
+	Dragan Simic <dsimic@manjaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+Message-ID: <4zlnwwycmjt4p2efqvvxirgcxqyyptf4ndqmbm5uxjjbk2toyz@uyxh2lmwb2fz>
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
+ <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org>
+ <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+ <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
+ <CAGETcx_ToHsp_c+Yt0qqST4Zd-GC7dPn_j=PpB1n1xpZtOnMfg@mail.gmail.com>
+ <D0A2ZL6S8UG6.2BQKIBQWYB36D@thefossguy.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1712152288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nG+giMXCItEPgMBqHyNixdKSn5F1WOll+iAb1XwFvHo=;
-	b=GiS2zBBTYOl+k7jg3WvYCBgfq3wdoGR6VfB6hX8A5ejjfLhB0KkKtX0YgNLGLyaJcngEV5
-	4GnPQ5SDj3QlLbF3AzrYfJavWLNADOc3g7ZB9JVlCpHOAcC3X35/Ex/vy7tIy4OoSyPRSl
-	fLXc3sHfJl1cuoWv8fvAqWK4mg+8LcGVpwBVbmv1/ps0c7tNJHfj/Ual2sVy81QAle6J4i
-	gH8DqM41H8hP+FbpDvTgWVpgHOsPp8h7EudBv5Ii2q9uYnmVwb0jWLaojgkjNMKdEYJeQk
-	yEH5ELQNdi6ZhMv7Q6y6MUDZYLtvxH/k4PKaQFZ0YQ4eQwHJ7QGBMTkO9b8xeQ==
-Date: Wed, 03 Apr 2024 15:51:28 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Pratham Patel <prathampatel@thefossguy.com>
-Cc: Saravana Kannan <saravanak@google.com>, sebastian.reichel@collabora.com,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
-In-Reply-To: <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
-References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com>
- <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org>
- <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
- <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
-Message-ID: <0926eeecfec56fa9225a8aa2a319678a@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4danktmrrrxcg4g2"
+Content-Disposition: inline
+In-Reply-To: <D0A2ZL6S8UG6.2BQKIBQWYB36D@thefossguy.com>
 
-Hello Pratham,
 
-On 2024-04-03 01:32, Pratham Patel wrote:
-> On Tue Apr 2, 2024 at 4:54 AM IST, Saravana Kannan wrote:
->> On Sat, Mar 23, 2024 at 10:10 AM Dragan Simic <dsimic@manjaro.org> 
->> wrote:
->> > On 2024-03-23 18:02, Pratham Patel wrote:
->> > > I looked at the patch and tried several things, neither resulted in
->> > > anything that would point me to the core issue. Then I tried this:
->> >
->> > Could you, please, clarify a bit what's the actual issue you're
->> > experiencing on your Rock 5B?
->> 
->> Pratham, can you reply to this please? I don't really understand what
->> your issue is for me to be able to help.
-> 
-> I apologize for not replying. Somehow, I did not notice the reply from
-> Dragan. :(
+--4danktmrrrxcg4g2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No worries, I saw the serial console log file in one of your messages,
-which actually provided the answer to my question. :)
+Hi,
 
-> Since this patch was applied, an issue in the Rock 5B's DT has been
-> unearthed which now results in the kernel being unable to boot 
-> properly.
-> 
-> Following is the relevant call trace from the UART capture:
-> 
-> [   21.595068] Call trace:
-> [   21.595288]  smp_call_function_many_cond+0x174/0x5f8
-> [   21.595728]  on_each_cpu_cond_mask+0x2c/0x40
-> [   21.596109]  cpuidle_register_driver+0x294/0x318
-> [   21.596524]  cpuidle_register+0x24/0x100
-> [   21.596875]  psci_cpuidle_probe+0x2e4/0x490
-> [   21.597247]  platform_probe+0x70/0xd0
-> [   21.597575]  really_probe+0x18c/0x3d8
-> [   21.597905]  __driver_probe_device+0x84/0x180
-> [   21.598294]  driver_probe_device+0x44/0x120
-> [   21.598669]  __device_attach_driver+0xc4/0x168
-> [   21.599063]  bus_for_each_drv+0x8c/0xf0
-> [   21.599408]  __device_attach+0xa4/0x1c0
-> [   21.599748]  device_initial_probe+0x1c/0x30
-> [   21.600118]  bus_probe_device+0xb4/0xc0
-> [   21.600462]  device_add+0x68c/0x888
-> [   21.600775]  platform_device_add+0x19c/0x270
-> [   21.601154]  platform_device_register_full+0xdc/0x178
-> [   21.601602]  psci_idle_init+0xa0/0xc8
-> [   21.601934]  do_one_initcall+0x60/0x290
-> [   21.602275]  kernel_init_freeable+0x20c/0x3e0
-> [   21.602664]  kernel_init+0x2c/0x1f8
-> [   21.602979]  ret_from_fork+0x10/0x20
-> 
->> Also, can you give the output of <debugfs>/devices_deferred for the
->> good vs bad case?
-> 
-> I can't provide you with requested output from the bad case, since the
-> kernel never moves past this to an initramfs rescue shell, but 
-> following
-> is the output from v6.8.1 (**with aforementioned patch reverted**).
-> 
-> # cat /sys/kernel/debug/devices_deferred
-> fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
-> 1-0022  typec_fusb302: cannot register tcpm port
-> fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
-> 
-> It seems that v6.8.2 works _without needing to revert the patch_. I 
-> will
-> have to look into this sometime this week but it seems like
-> a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only
-> from rk3588 i2s)
-> seems to be the one that fixed the root issue. I will have to test it
-> sometime later this week.
+On Wed, Apr 03, 2024 at 01:03:07AM +0000, Pratham Patel wrote:
+> > > > Also, can you give the output of <debugfs>/devices_deferred for the
+> > > > good vs bad case?
+> > >
+> > > I can't provide you with requested output from the bad case, since the
+> > > kernel never moves past this to an initramfs rescue shell, but follow=
+ing
+> > > is the output from v6.8.1 (**with aforementioned patch reverted**).
+> > >
+> > > # cat /sys/kernel/debug/devices_deferred
+> > > fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
+> > > 1-0022  typec_fusb302: cannot register tcpm port
+> > > fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
+> > >
+> > > It seems that v6.8.2 works _without needing to revert the patch_. I w=
+ill
+> > > have to look into this sometime this week but it seems like
+> > > a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only f=
+rom rk3588 i2s)
+> > > seems to be the one that fixed the root issue. I will have to test it
+> > > sometime later this week.
+> >
+> > Ok, once you find the patch that fixes things, let me know too.
+>=20
+> Will do!
+
+FWIW the v6.8.1 kernel referenced above is definitely patched, since
+upstream's Rock 5B DT does neither describe fusb302, nor the USB
+port it is connected to.
+
+We have a few Rock 5B in Kernel CI and upstream boots perfectly
+fine:
+
+https://lava.collabora.dev/scheduler/device_type/rk3588-rock-5b
+
+So it could be one of your downstream patches, which is introducing
+this problem.
+
+-- Sebastian
+
+--4danktmrrrxcg4g2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYNXwcACgkQ2O7X88g7
++ppSBQ//WsXoLg+w00Vt6lS7Fu+Ry1/gMQ7+0b0R66GBVrconK+w8cdxwNCmJe+z
+0/5ehaf6Wd4Btp2YcDywLFVFv+nHEg6H3t+PSyVzST2EnEGpJBzL9FBGq/J8XIVv
+TSyMJPEb911F63xSgZXoqlLa/Jti4ccqYIJUy6LYLJ97/3Wm1rtzPvPyrs2ySJ8I
+5l3zLA4POdS6I7vdbPNVjzY4LVEG9CwQIJIwGoScCwoxESlMpiB1+hLYil/2GsVq
+1OKAwEZuRycmROdMobiYYsO/a1GQU2FcIcZ4ocmX5e1U94qmP578endIVW+lFz8+
+S5FXoSOmxCZY6x4mczQ2nrGNI0vHfUuiNZHOxpoUZa2Y6Lw1D1v2a9Ek1IKH0LUt
+t8vp4w2k9nvMAXpRXaCK17zR/x92osn5SNNKz7RCd2Q9yGeB4a0iSDoA82xCYpGd
+lTtrxBkBSLKJlraVeeCuuwRxINRRg5DFwhleXfSEvIFXOHPVV+Fc/UPoq1bNzgF/
+jDVLTdRtfiWgl0c833WyLvCU7A3AjuFmO3AmxV+Z6gvv97o7JknuX5fsW5cjfAHx
+UIp/OBj+aEG/fZc5cG74LxfVZbxpK9McusBysf8BsFNAmHIzMoCsnGstfmSNHGr+
+fRntqsaKh8rDFgN5rKRB7svYg2dmFVKjtH7uPmQl9DPhfx5zSG8=
+=feq8
+-----END PGP SIGNATURE-----
+
+--4danktmrrrxcg4g2--
