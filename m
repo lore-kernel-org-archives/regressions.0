@@ -1,92 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC5914C5B3;
-	Wed,  3 Apr 2024 21:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3B95F850
+	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 07:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712178154; cv=none; b=XpoDmGCWuCWJa8xnwxap2xPUPjB0JGATHKuqcsSGH2UlW4DKKhflwq2G8eR5QpufonrndrNDBbZQkVV431b/michwFFu8OanMEWnlqrx7L/KJizsR363fFGVXao/nbAySZhXnekk6KUnnS1RoxQCn2TQnuQ+p3sjio6dumDf0XI=
+	t=1712217486; cv=none; b=oJ49OShfS0v74Bqojs1Hg2u/XJmxokrFOFoz6XkwiRqaOqZuWdkIcjoE8WOF0M8KukQJ1B5wBMM7+4PH6MvKvcpbH5HEidJSOYAS44Ma4nE0YKtQaCjc7j3Q3nUUHCZL6XqYH/UJ+kZmEIHtmG8s7TKQeOBTSNNzb6oO5oAOc+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712178154; c=relaxed/simple;
-	bh=Ka5S/o+PuGXyYozTDCBhkrVTP/HWO8pnb/sg7I29qMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrnI1OMPCUjb9paKZZKpSrEVrnq3azvu+lzHv00uZP746tBm64Iiiz2oYS06l/rqp9haN8u0AzPoR0d4AWQ5v8P9RTJw2UhAFQSlXMHrV0XRqHrBepYEhyukkrRsyiev+9iAZCYET2MGD5acVzj0mkWE1pqVtMEv2vF5+adfXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyqIxHKF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712217486; c=relaxed/simple;
+	bh=jtzhrMLdZ8BM8eIGM+1HCvFVB4kJmRbapmmThq4pMyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lp/1oB/RWwwk0vJ0tbRnvqDCgmfTiI+1rujoWEONAZ4Hkz6/JMuvDtoo2YhiA5BpFVqObz9FO/Q9kVlUB4H0LSfH/emhxNACNM3SnuAxpXPGq42HDPtI5giYVG50mNRWMJgdgQqIFXPso40dBHM91W2JrcJsuJVK/cDVRwxOw2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=BTPeoF04; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyqIxHKF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C5C43390;
-	Wed,  3 Apr 2024 21:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712178153;
-	bh=Ka5S/o+PuGXyYozTDCBhkrVTP/HWO8pnb/sg7I29qMg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=pyqIxHKFIrJmnwzJixTb2gwdLbGae7ctqEU2pSE+3GmE1HMfrTFCKNE2oz7JLigJp
-	 XSn+jNUK4BDExZcbmUjbdaqvIlf39WboGln5Dnn0ixqpmGzkxnY9z5Yco05r0z9wC6
-	 OA5C1uSVCQbr57fzOLMwB3WgnbIwRqB5eV4Wrn3xacrFiHxgnHBNLfImbQ/eGoZYNo
-	 fuwMVmfOued93xgR38LDNysGMjrAbbaFtP8PbNp5sMCS9kU4QJdU4O8/vbvebzxm2N
-	 5Gfl01ShCY+fGkV8zFEcW4ixD82M7m7nRfjbohTpblkEDj3GAW6FAiiW+zpOkeH+lK
-	 r7t61sYgvFAvw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 11AA7CE109B; Wed,  3 Apr 2024 14:02:33 -0700 (PDT)
-Date: Wed, 3 Apr 2024 14:02:33 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	lkft-triage@lists.linaro.org,
-	linux-parisc <linux-parisc@vger.kernel.org>,
-	Linux-sh list <linux-sh@vger.kernel.org>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Rik van Riel <riel@surriel.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: sh4: parisc: asm/cmpxchg.h:60:24: error: implicit declaration of
- function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-Message-ID: <7357cf3e-0a46-4672-bc8b-ee896ffacb87@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYvUwyf-5yB=xZVAPXrF3C9z==7bbhDYBnX9jdJ1PxzPnQ@mail.gmail.com>
- <20240403135205.7673001add2216e63db02d1e@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="BTPeoF04"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 8F4C41BF132;
+	Thu,  4 Apr 2024 09:58:00 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1712217480; bh=ZeTrjHj8R8/GGeNF/M+NaL7fhHhYqCIgj0CVkk8KzLg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BTPeoF04gCPLsFsx12CG+rAV9sdx737J25fCkK4oVXJMrnTAYLFOVoe9YGkgvUJ5a
+	 ZaecnVh3gxT7Jv+5bhR21nxMu9PW665iI1as0B7z7AdpzqIpn3BGIWCXT/WXYzn14m
+	 wk1rHGeajIUNtm4tSVYi6rkuskfibzSZ/uLWF9bxqkfYS/vAvpxwQ5Lvxxj/0K/IR0
+	 JHqfOlGD2ANKdmjHhku5afPml/bH3lFSXtr9rP9cMZMHtAsQwz3+3mEI0y8byw+aBK
+	 23epvw7DbQe6b/SvEei8yLjTFA+OmFQukCEfKwZxIJtxNSwYN6bgQ4ZnrLd2mFF+3F
+	 Yg5dhg7dHhJdw==
+From: Petr Tesarik <petr@tesarici.cz>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	netdev@vger.kernel.org (open list)
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-kernel@vger.kernel.org (open list),
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
+Date: Thu,  4 Apr 2024 09:57:40 +0200
+Message-ID: <20240404075740.30682-1-petr@tesarici.cz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403135205.7673001add2216e63db02d1e@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 01:52:05PM -0700, Andrew Morton wrote:
-> On Wed, 3 Apr 2024 13:23:23 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> 
-> > The parisc and sh defconfig builds failed due to following build warnings
-> > and errors on Linux next-20240402.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > parisc:
-> >   build:
-> >     * gcc-11-tinyconfig - Failed
-> >     * gcc-11-allnoconfig - Failed
-> >     * gcc-11-defconfig - Failed
-> > 
-> > sh:
-> >   build:
-> >     * gcc-11-defconfig - Failed
-> >     * gcc-11-dreamcast_defconfig - Failed
-> >     * gcc-11-tinyconfig - Failed
-> >     * gcc-11-shx3_defconfig - Failed
-> >     * gcc-11-allnoconfig - Failed
-> 
-> Is this a new failure?  If so, can we please identify a suitable Fixes: target?
+Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+initialized in the same file.
 
-This one is already fixed, but I am pulling the offending commits out
-of -next for a few days in order to fix some additional casting issues
-identified by kernel test robot.
+With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
 
-Apologies for the hassle!
+	static struct lock_class_key __key;
 
-							Thanx, Paul
+Since u64_stats_init() is a function (albeit an inline one), all calls
+within the same file end up using the same instance, effectively treating
+them all as a single lock-class.
+
+Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
+Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
+Signed-off-by: Petr Tesarik <petr@tesarici.cz>
+---
+ include/linux/u64_stats_sync.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
+index ffe48e69b3f3..457879938fc1 100644
+--- a/include/linux/u64_stats_sync.h
++++ b/include/linux/u64_stats_sync.h
+@@ -135,10 +135,11 @@ static inline void u64_stats_inc(u64_stats_t *p)
+ 	p->v++;
+ }
+ 
+-static inline void u64_stats_init(struct u64_stats_sync *syncp)
+-{
+-	seqcount_init(&syncp->seq);
+-}
++#define u64_stats_init(syncp)				\
++	do {						\
++		struct u64_stats_sync *__s = (syncp);	\
++		seqcount_init(&__s->seq);		\
++	} while (0)
+ 
+ static inline void __u64_stats_update_begin(struct u64_stats_sync *syncp)
+ {
+-- 
+2.44.0
+
