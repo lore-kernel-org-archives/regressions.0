@@ -1,111 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D26A763F4;
-	Thu,  4 Apr 2024 15:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6B12B95;
+	Thu,  4 Apr 2024 15:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712245462; cv=none; b=Tfkw7vUaq67+Ub0ZNrefeuCol9ycHfYsW6A2TGu6eJrVACJFz0V1u6Ly5Q3V8It/4PQUJ6dkiLgMRKZX8B9cxaXMn6KBWxWR3UGfYBvEveg6r3HPqMLu0JhiO9rB4Chu5/3uD8PvdZs+RqBSOXofx0Muihv0WnxPb+3VBRAYO1I=
+	t=1712246223; cv=none; b=LlxuTrt0aCNQEzsRTtWLcRUq2O7xawfMLj82+HKEx4XwXKahy0TNrbUJ3WNuEzbwgiCBBBZn10ORBqy+DbEXqJOesej97FfL0DEKuu1uWvO9ILPBkrlO3kYfCgyE1FnLDlI0Fjv+c9CAMNtAUJMK2DQ3QVBZ15Rxs689Myh9voU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712245462; c=relaxed/simple;
-	bh=XyF/KPOxCX9FXqX/BdsHnu7IbjmJCKAUNKTfXOqk1v8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CHGxIwLlnbN3BVYFQX76QTY9aCc2YGI7Mf0/myi/9GI81yLt2MGvrL1p9K4TgRJkFhiOE6j8FcLfuY/CRAaluDtB5yndCOSWi26Kf+mPUjisQaT8Offe8XS4gPVF5gOuPiEClpmXX4UAX1Pyx0L4oK5EfLZC/bgaeykSPicJQ0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Clz870Dj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712246223; c=relaxed/simple;
+	bh=vvvHPDpFZbDyDQk3Ld550STpcnhIi6ap4/awPQYL3+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CvT1rsZn2fOPbtpIuNlTvc9+0aXcOjShWTSeWB89ZbcgeaQEUdgzhPZkrb0lqbril1+bpLe4TDpI0ug3HPsHKapA09H24qZeiJVqsv+kHhdbPMx+FRfylrZcq9WY9J2jyPOQDhehwM5pFgvhUENm48xfNKRf23O/h7mFfBo3wk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CcWtbQUt; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Clz870Dj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7445AC433F1;
-	Thu,  4 Apr 2024 15:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712245461;
-	bh=XyF/KPOxCX9FXqX/BdsHnu7IbjmJCKAUNKTfXOqk1v8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Clz870DjZTRnsAcEdvUqazZ8PFZrZ10E8IYBcCgZCKJCV3VZb138qfAS8JSNf9Pem
-	 FfjAlLdQYoAdf5/pRDobmSfUka9nqNV5MA+d77H77bNqPy+4tEWWmc0iuLjqeikBpU
-	 t/YEpw05pNUPEj2VBBmMS2rCVbo4d0FOEW3e8y+Y=
-Date: Thu, 4 Apr 2024 17:44:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Do we need a "DoNotBackPort" tag? (was: Re: Hibernate stuck
- after recent kernel/workqueue.c changes in Stable 6.6.23)
-Message-ID: <2024040454-playful-tainted-7446@gregkh>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
- <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
- <2024040328-surfacing-breezy-34c6@gregkh>
- <Zg10Keik4KORjXMh@slm.duckdns.org>
- <2024040319-doorbell-ecosystem-7d31@gregkh>
- <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CcWtbQUt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=1f4OlMHCTglftLsccsnxMI7CfS7xy5tbZ+cp8vg03tM=;
+	t=1712246221; x=1712678221; b=CcWtbQUtdmYDqxwF7MzHN6XSRHWhZC1yDdfndx6RjjGU80P
+	SxUvK99wzBCejJXnfJufoIrlH2ZqrCdtov7f2Sz1/VCSL3ToqtFdixndFALygDfIBWEOZKTbWZqUp
+	5y/vqUwzAH0k3rYNEn+t6StfaApMdflXrejGsOL1ZnH05notgI0g9naVUW/CJngla0RF5XjSge787
+	+QW6Y+dRjMwleGoCktAJ0Eg/IHzQKhIn/oAgVbjwoGLQM4I3s3ieQpJpSI8doZ3fg4fMXT+OPinge
+	6t2UmfoFXLW++y+YH2+OBXJ5DxqdwXskPkXpTAXLNSAGMT4W46cg+bYOXeocodXA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rsPSV-0007nG-9G; Thu, 04 Apr 2024 17:56:59 +0200
+Message-ID: <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
+Date: Thu, 4 Apr 2024 17:56:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Do we need a "DoNotBackPort" tag?
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh> <Zg10Keik4KORjXMh@slm.duckdns.org>
+ <2024040319-doorbell-ecosystem-7d31@gregkh>
+ <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
+ <2024040454-playful-tainted-7446@gregkh>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <2024040454-playful-tainted-7446@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712246221;6c48b54e;
+X-HE-SMSGID: 1rsPSV-0007nG-9G
 
-On Thu, Apr 04, 2024 at 05:36:42PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 03.04.24 18:10, Greg KH wrote:
-> > On Wed, Apr 03, 2024 at 05:22:17AM -1000, Tejun Heo wrote:
-> >> On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
-> >>>> Side note: I have no idea why the stable team backported those patches
-> >>>> and no option on whether that was wise, just trying to help finding the best
-> >>>> solution forward from the current state of things.
-> >>>
-> >>> The Fixes: tag triggered it, that's why they were backported.
+On 04.04.24 17:44, Greg KH wrote:
+> On Thu, Apr 04, 2024 at 05:36:42PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 03.04.24 18:10, Greg KH wrote:
+>>> On Wed, Apr 03, 2024 at 05:22:17AM -1000, Tejun Heo wrote:
+>>>> On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
+>>>>>> Side note: I have no idea why the stable team backported those patches
+>>>>>> and no option on whether that was wise, just trying to help finding the best
+>>>>>> solution forward from the current state of things.
+>>>>>
+>>>>> The Fixes: tag triggered it, that's why they were backported.
+>>
+>> Yeah, this is what I assumed.
+>>
+>>>>>>> which would
+>>>>>>> be far too invasive for -stable, thus no Cc: stable.
+>>>>>>>
+>>>>>>> I didn't know a Fixes
+>>>>>>> tag automatically triggers backport to -stable. I will keep that in mind for
+>>>>>>> future.
+>>>>>>
+>>>>>> /me fears that more and more developers due to situations like this will
+>>>>>> avoid Fixes: tags and wonders what consequences that might have for the
+>>>>>> kernel as a whole
+>>>>>
+>>>>> The problem is that we have subsystems that only use Fixes: and not cc:
+>>>>> stable which is why we need to pick these up as well.  Fixes: is great,
+>>>>> but if everyone were to do this "properly" then we wouldn't need to pick
+>>>>> these other ones up, but instead, it's about 1/3 of our volume :(
+>>
+>> I'm also well aware of that and do not want to complain about it, as I
+>> think I grasped why the stable team works like that -- and even think
+>> given the circumstances it is round about the right approach. I also
+>> understand that mistakes will always happen.
+>>
+>> Nevertheless this thread and the Bluetooth thing we had earlier this
+>> week[1] makes me fear that this approach could lead to developer
+>> avoiding Fixes: tags. And funny thing, that's something that is already
+>> happening, as I noticed by chance today: "'"A "Fixes" tag has been
+>> deliberately omitted to avoid potential test failures and subsequent
+>> regression issues that could arise from backporting."'"[2].
+>>
+>> I wonder if that in the long term might be bad. But well, maybe it won't
+>> matter much. Still made me wonder if we should have a different solution
+>> for this kind of problem. Something like this?
+>>
+>>   Cc: <stable@vger.kernel.org> # DoNotBackport
+>>
+>> Or something like this?
+>>
+>>   Cc: <stable@vger.kernel.org> # DoNotBackport - or only after 16 weeks
+>> in mainline [but I don't care]
 > 
-> Yeah, this is what I assumed.
+> We do this today, with stuff like:
+> 	Cc: stable <stable@kernel.org>	# wait for -rc3 to be out
 > 
-> >>>>> which would
-> >>>>> be far too invasive for -stable, thus no Cc: stable.
-> >>>>>
-> >>>>> I didn't know a Fixes
-> >>>>> tag automatically triggers backport to -stable. I will keep that in mind for
-> >>>>> future.
-> >>>>
-> >>>> /me fears that more and more developers due to situations like this will
-> >>>> avoid Fixes: tags and wonders what consequences that might have for the
-> >>>> kernel as a whole
-> >>>
-> >>> The problem is that we have subsystems that only use Fixes: and not cc:
-> >>> stable which is why we need to pick these up as well.  Fixes: is great,
-> >>> but if everyone were to do this "properly" then we wouldn't need to pick
-> >>> these other ones up, but instead, it's about 1/3 of our volume :(
-> 
-> I'm also well aware of that and do not want to complain about it, as I
-> think I grasped why the stable team works like that -- and even think
-> given the circumstances it is round about the right approach. I also
-> understand that mistakes will always happen.
-> 
-> Nevertheless this thread and the Bluetooth thing we had earlier this
-> week[1] makes me fear that this approach could lead to developer
-> avoiding Fixes: tags. And funny thing, that's something that is already
-> happening, as I noticed by chance today: "'"A "Fixes" tag has been
-> deliberately omitted to avoid potential test failures and subsequent
-> regression issues that could arise from backporting."'"[2].
-> 
-> I wonder if that in the long term might be bad. But well, maybe it won't
-> matter much. Still made me wonder if we should have a different solution
-> for this kind of problem. Something like this?
-> 
->   Cc: <stable@vger.kernel.org> # DoNotBackport
-> 
-> Or something like this?
-> 
->   Cc: <stable@vger.kernel.org> # DoNotBackport - or only after 16 weeks
-> in mainline [but I don't care]
+> So if people want to do that, they can, the documentation says that you
+> can give us hints and the like in the # area, and usually we notice them :)
 
-We do this today, with stuff like:
-	Cc: stable <stable@kernel.org>	# wait for -rc3 to be out
+I know, as I wrote that (as you likely remember). ;-) But it seems it's
+not well known; and maybe making it explicit that this can be used to
+convey a "DoNotBackport" message is supported as well.
 
-So if people want to do that, they can, the documentation says that you
-can give us hints and the like in the # area, and usually we notice them :)
+Guess I'll prepare a patch to do that then and we'll see how it goes
+from there.
 
-thanks,
-
-greg k-h
+Ciao, Thorsten
