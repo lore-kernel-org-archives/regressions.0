@@ -1,133 +1,126 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F1E1E86F;
-	Thu,  4 Apr 2024 08:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993CD7352F
+	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 09:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712219758; cv=none; b=T0hjZCTpEsogmrte2NazkOXUtkEfb2L/x9BCcqBmThNAl4DERDqOcwA8jDf6NOp9XHCdIsOfHX1ejQKb9A5XoVT2f7V3EwyFcRdmPBi+m3MkbXnezmqcUhCJaSns4fDLS8bWwSmyp8MIbsRan0ZfVJyB2IkZF3S8Lsq3OfgBxC0=
+	t=1712222796; cv=none; b=q8b+4NS82fXAj8+V5nnv13PV6BeycUzv0FwLe6Yh46tjjL6jYehV/jWJS8rmb/d3etSzNTF+YunWEdK1dmKSIBf/OmqG3/mfjg8GMHitq5nBUOb1MyDjjTFOF4qLoxpBGrzrmM6ERHXsWHM48m+uROv2orZWAZJE5Xw10UeJAW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712219758; c=relaxed/simple;
-	bh=pW9lJVcByIr6coYIc9zEDDgHzk/MplgZr99q4AzfSIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q4qb8UjwCSUrgsZsdorQppifHzyFlMjomeiL3aFwjJgc470RuVdIVL+12KefjmyT3lqTxyd/o+fNwGuzZj6kq8sumQAwLXRPaKD7+37L0WXX6dlz7cSffCqzjHJBIDFbZ0pv9SqY+DmUon2eg0ByvDWJ74jQqK4jn1KNMTiI1J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZJ98WAic; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712222796; c=relaxed/simple;
+	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F2daPvUo0xBwvWgNBOGWvWJ16qBr5rtueuzf3pKJdemxPmJqTt9mOWo4wX7mKtFlgQe1pw7IlNjwFUYNZzdtEtpji0uQNFIpBHfangKS9iD4sSmOV3ZB1y0Tlq9Ahbwgb/E2HhinZvlFwRmyPH3MJaHUfX655NdK6TVq9+r6Pt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vv736jNp; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZJ98WAic"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=XGHxVqk4pP10Jn+yNRakH5zgTP0QZEzijKIINGCO2kM=;
-	t=1712219756; x=1712651756; b=ZJ98WAicu+XqWCQv2CJyv1smUti1qPzCU85iUh5WstpgnY6
-	9QNTu1HcWcbgBiEbPBFXtOBVK2szMZfReqQc5Oy6nD3i18/Hj6tiCE3uL2XFTRL8CpxO44yDWuKbF
-	m8Up9HY1x1muwojyGrZB1Ii31pQvq3hyUkevBXs7ggUqz9Bl7L6j4Fyb7MLYO7EJbGRXiFBDvSAsq
-	/9JRt4iR+ZODo7lYRaHAb/ZkZGsN7VRVQDfu6jb43J2OKr6anDbRo0hA4T94rjc0QhycJKvtSAdOv
-	jxrXKxLFZbCCpO/y/x8yURJWDEeyjE8V81W+OtQHwifLRtTE5iNddBOVS+oYt4sQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rsIZd-0002eV-40; Thu, 04 Apr 2024 10:35:53 +0200
-Message-ID: <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
-Date: Thu, 4 Apr 2024 10:35:52 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vv736jNp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712222792;
+	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vv736jNpmicCIQP5dOfis7w7uG6VPaYsYmPMO5hX/jw3+pqZAd3SM5guyyeE1DsM4
+	 WVbgaRBAS5eGqZlbD4Raqgds6QwW9bG7SOqDrU769EEyZTrsGuI9GwLQOTfrcS4bAw
+	 5NcR6MgYFXogzK2Eiy9wL48rCZ3nZhnax+EhnHaNz+RrGfGE1kfD1mms1zhDSB6Ahm
+	 SNxvdd6Y7ndLA39+T/DknUeLRLmaXVyOThMvLaNsypHD/8UjnRUDsBHT/HEjStKJv3
+	 1qAsRatLsj9Bq4act0U0JmX8MGts5JXR335bY4T++FtR77Xdon9eHwtCydfR/+eZan
+	 P8j1qtVcwERkQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6A0483782117;
+	Thu,  4 Apr 2024 09:26:32 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@leemhuis.info
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	tglx@linutronix.de,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Thu,  4 Apr 2024 11:26:59 +0200
+Message-Id: <20240404092659.176813-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
+References: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
- exception
-To: Nicholas Piggin <npiggin@gmail.com>, Vaibhav Jain
- <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
- kvm-ppc@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Jordan Niethe
- <jniethe5@gmail.com>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
- mikey@neuling.org, paulus@ozlabs.org, sbhat@linux.ibm.com,
- gautam@linux.ibm.com, kconsul@linux.vnet.ibm.com,
- amachhiw@linux.vnet.ibm.com, David.Laight@ACULAB.COM,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
- <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712219756;98cda012;
-X-HE-SMSGID: 1rsIZd-0002eV-40
+Content-Transfer-Encoding: 8bit
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+Hi Thorsten,
 
-Was this regression ever resolved? Doesn't look like it, but maybe I
-just missed something.
+On 4/4/24 10:24, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [/me added x86 team]
+> 
+> On 28.03.24 12:50, Laura Nao wrote:
+>>>
+>>> I ran a manual bisection to track down the root cause for this
+>>> regression and landed on the c749ce
+>>> commit from this series:
+>>> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
+> 
+> FWIW, that commit is c749ce393b8fe9 ("x86/cpu: Use common topology code
+> for AMD") from tglx that was part of the "x86/cpu: Rework topology
+> evaluation" series.
+> 
+>>> Do you have any insight on this issue or any suggestion on how to
+>>> effectively debug this?
+>>>
+>>> Thank you!
+> 
+> Hmmm, it looks like this did not make any progress. Thomas, did this
+> fall through the cracks due to Easter, or is this this on your todo list?
+> 
+> Or was there some progress and I just missed it?
+> 
+> Laura Nao, I assume the problem is still happening?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Yes, I confirm the issue is still happening.
 
-#regzbot poke
+See e.g. KernelCI report for next-20240403:
 
-On 20.03.24 14:43, Nicholas Piggin wrote:
-> On Wed Mar 13, 2024 at 5:26 PM AEST, Vaibhav Jain wrote:
->> This reverts commit 180c6b072bf360b686e53d893d8dcf7dbbaec6bb ("KVM: PPC:
->> Book3S HV nestedv2: Do not cancel pending decrementer exception") which
->> prevented cancelling a pending HDEC exception for nestedv2 KVM guests. It
->> was done to avoid overhead of a H_GUEST_GET_STATE hcall to read the 'HDEC
->> expiry TB' register which was higher compared to handling extra decrementer
->> exceptions.
->>
->> This overhead of reading 'HDEC expiry TB' register has been mitigated
->> recently by the L0 hypervisor(PowerVM) by putting the value of this
->> register in L2 guest-state output buffer on trap to L1. From there the
->> value of this register is cached, made available in kvmhv_run_single_vcpu()
->> to compare it against host(L1) timebase and cancel the pending hypervisor
->> decrementer exception if needed.
+https://linux.kernelci.org/test/plan/id/660dbeed148e1a8a284c4372/
+
 > 
-> Ah, I figured out the problem here. Guest entry never clears the
-> queued dec, because it's level triggered on the DEC MSB so it
-> doesn't go away when it's delivered. So upstream code is indeed
-> buggy and I think I take the blame for suggesting this nestedv2
-> workaround.
+> FWIW, this was the initial problem description:
 > 
-> I actually don't think that is necessary though, we could treat it
-> like other interrupts.  I think that would solve the problem without
-> having to test dec here.
+>>>> KernelCI has identified a mainline boot regression [1] on the following
+>>>> AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
+>>>> v6.8-1185-g855684c7d938 (855684):
+>>>> - Acer Chromebook Spin 311 R721T (codename kasumi360)
+>>>> - HP Chromebook 14 (codename careena)
+>>>> - HP Chromebook 11A G6 EE (codename barla)
+>>>>
+>>>> The kernel doesn't boot at all and nothing is reported on the serial
+>>>> console after "Starting kernel ...". The issue is still present on the
+>>>> latest mainline revision.
+>>>> The defconfig used by KernelCI for the boot tests can be found in [2].
+>>>>
+>>>> Sending this report in order to track the regression while a fix is
+>>>> identified.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> Laura
+>>>>
+>>>> [1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
+>>>> [2]
+>>>> https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
 > 
-> I am wondering though, what workload slows down that this patch
-> was needed in the first place. We'd only get here after a cede
-> returns, then we'd dequeue the dec and stop having to GET_STATE
-> it here.
 > 
-> Thanks,
-> Nick
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 > 
->>
->> Fixes: 180c6b072bf3 ("KVM: PPC: Book3S HV nestedv2: Do not cancel pending decrementer exception")
->> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
->> ---
->>  arch/powerpc/kvm/book3s_hv.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
->> index 0b921704da45..e47b954ce266 100644
->> --- a/arch/powerpc/kvm/book3s_hv.c
->> +++ b/arch/powerpc/kvm/book3s_hv.c
->> @@ -4856,7 +4856,7 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
->>  	 * entering a nested guest in which case the decrementer is now owned
->>  	 * by L2 and the L1 decrementer is provided in hdec_expires
->>  	 */
->> -	if (!kvmhv_is_nestedv2() && kvmppc_core_pending_dec(vcpu) &&
->> +	if (kvmppc_core_pending_dec(vcpu) &&
->>  			((tb < kvmppc_dec_expires_host_tb(vcpu)) ||
->>  			 (trap == BOOK3S_INTERRUPT_SYSCALL &&
->>  			  kvmppc_get_gpr(vcpu, 3) == H_ENTER_NESTED)))
-> 
+> #regzbot poke
+
