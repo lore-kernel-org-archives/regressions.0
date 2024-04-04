@@ -1,94 +1,102 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3B95F850
-	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE2A5DF23;
+	Thu,  4 Apr 2024 08:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712217486; cv=none; b=oJ49OShfS0v74Bqojs1Hg2u/XJmxokrFOFoz6XkwiRqaOqZuWdkIcjoE8WOF0M8KukQJ1B5wBMM7+4PH6MvKvcpbH5HEidJSOYAS44Ma4nE0YKtQaCjc7j3Q3nUUHCZL6XqYH/UJ+kZmEIHtmG8s7TKQeOBTSNNzb6oO5oAOc+g=
+	t=1712217972; cv=none; b=NVZiHqZwMLYdTpCaGU7mLtlCpjsWF5A1JKR2ereZWZ/uzZAV7Mr2m9dL5WQ0T7wiCFOyDT4TtfrHnQfCGar+sfvgaR93m5NICgysZyw+AjlRlgHqddKFr0OD6Xq+vt0U7ulvfxfjtQpz9KIv9+3ZPt7fYl/FLc4q7AwtNhZl0PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712217486; c=relaxed/simple;
-	bh=jtzhrMLdZ8BM8eIGM+1HCvFVB4kJmRbapmmThq4pMyk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lp/1oB/RWwwk0vJ0tbRnvqDCgmfTiI+1rujoWEONAZ4Hkz6/JMuvDtoo2YhiA5BpFVqObz9FO/Q9kVlUB4H0LSfH/emhxNACNM3SnuAxpXPGq42HDPtI5giYVG50mNRWMJgdgQqIFXPso40dBHM91W2JrcJsuJVK/cDVRwxOw2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=BTPeoF04; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1712217972; c=relaxed/simple;
+	bh=V0ZzmEqQsQKwVDJeWcxb9WLsHGI8+KEPzrwafFQMJh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FJnOlpuTaR5pvnPm1/BfyOvqtpPH6/6qsL7COtOPs4ar3gBoqcIRVrzOdBTQtjNWlJONzyHuLOYlzWsqb8IJJqc6TxFEmbzOF7rvvU0ofcBjsDBwsJfJ2uDO1LWq1UubTBt/fD0g8npbhkwgHqiUBZKmUaG8XDEevuxQkPA/MfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hqQ2aPWv; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="BTPeoF04"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 8F4C41BF132;
-	Thu,  4 Apr 2024 09:58:00 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1712217480; bh=ZeTrjHj8R8/GGeNF/M+NaL7fhHhYqCIgj0CVkk8KzLg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BTPeoF04gCPLsFsx12CG+rAV9sdx737J25fCkK4oVXJMrnTAYLFOVoe9YGkgvUJ5a
-	 ZaecnVh3gxT7Jv+5bhR21nxMu9PW665iI1as0B7z7AdpzqIpn3BGIWCXT/WXYzn14m
-	 wk1rHGeajIUNtm4tSVYi6rkuskfibzSZ/uLWF9bxqkfYS/vAvpxwQ5Lvxxj/0K/IR0
-	 JHqfOlGD2ANKdmjHhku5afPml/bH3lFSXtr9rP9cMZMHtAsQwz3+3mEI0y8byw+aBK
-	 23epvw7DbQe6b/SvEei8yLjTFA+OmFQukCEfKwZxIJtxNSwYN6bgQ4ZnrLd2mFF+3F
-	 Yg5dhg7dHhJdw==
-From: Petr Tesarik <petr@tesarici.cz>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	netdev@vger.kernel.org (open list)
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-kernel@vger.kernel.org (open list),
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
-	Petr Tesarik <petr@tesarici.cz>
-Subject: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
-Date: Thu,  4 Apr 2024 09:57:40 +0200
-Message-ID: <20240404075740.30682-1-petr@tesarici.cz>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hqQ2aPWv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=lvik5pSFcG40Al9cRmT31wTUpqQ/o8j4XMGvq8bSXT8=;
+	t=1712217970; x=1712649970; b=hqQ2aPWvnKygWOpZ1E0z6luWkVMjsv4VUpwDBN7by4nk3Kt
+	6Jt+WsL0G/SO1DLRyku2oDKJiQfZiHP/sjQXh3tfRXejhkMUbDIhBpYmkkccVnuWhwp8angs9Ghbs
+	ggPZugdCaepIWPSJU52J98a1ZBjXODsTnB0qcVVCQbrFw7kLuD+fPzqkx+8lbE9dyNGLI9zZcb4HP
+	aygOiTWV/VgGFCgSh4Jb+I0+10biI0PDdC1Q4JVBCPx144mGi2mA0RP8Lv77podZF4UJ2rEmOQafQ
+	/OqFsgYx0Zr9XRTQI+hCV/FRa2U8MZWGjOQzUHnMVG+EdE10wTmAcOqah8qix3WQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rsI6m-0003jS-Ir; Thu, 04 Apr 2024 10:06:04 +0200
+Message-ID: <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
+Date: Thu, 4 Apr 2024 10:06:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ntfs3: remove warning
+To: Christian Brauner <brauner@kernel.org>, Johan Hovold <johan@kernel.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Anton Altaparmakov <anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>,
+ ntfs3@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-ntfs-dev@lists.sourceforge.net, regressions@lists.linux.dev
+References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
+ <20240325-faucht-kiesel-82c6c35504b3@brauner>
+ <ZgFN8LMYPZzp6vLy@hovoldconsulting.com>
+ <20240325-shrimps-ballverlust-dc44fa157138@brauner>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240325-shrimps-ballverlust-dc44fa157138@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712217970;d526d445;
+X-HE-SMSGID: 1rsI6m-0003jS-Ir
 
-Fix bogus lockdep warnings if multiple u64_stats_sync variables are
-initialized in the same file.
+On 25.03.24 13:05, Christian Brauner wrote:
+> On Mon, Mar 25, 2024 at 11:12:00AM +0100, Johan Hovold wrote:
+>> On Mon, Mar 25, 2024 at 09:34:38AM +0100, Christian Brauner wrote:
+>>> This causes visible changes for users that rely on ntfs3 to serve as an
+>>> alternative for the legacy ntfs driver. Print statements such as this
+>>> should probably be made conditional on a debug config option or similar.
+>>>
+>>> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>>> Cc: Johan Hovold <johan@kernel.org>
+>>> Link: https://lore.kernel.org/r/Zf2zPf5TO5oYt3I3@hovoldconsulting.com
+>>> Signed-off-by: Christian Brauner <brauner@kernel.org>
+>>
+>> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+>>
+>> I also see a
+>>
+>> 	ntfs3: Max link count 4000
+>>
+>> message on mount which wasn't there with NTFS legacy. Is that benign
+>> and should be suppressed too perhaps?
+> 
+> We need a reply from the ntfs3 maintainers here.
 
-With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+Those are known for taken their time to respond -- like we see here, as
+nothing happened for 10 days now. Which makes we wonder: should we at
+least bring the first patch from this series onto the track towards
+mainline?
 
-	static struct lock_class_key __key;
+FWIW, quick side note: just noticed there was another report about the
+"Correct links count -> 1." messages:
+https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
 
-Since u64_stats_init() is a function (albeit an inline one), all calls
-within the same file end up using the same instance, effectively treating
-them all as a single lock-class.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
-Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
-Signed-off-by: Petr Tesarik <petr@tesarici.cz>
----
- include/linux/u64_stats_sync.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
-index ffe48e69b3f3..457879938fc1 100644
---- a/include/linux/u64_stats_sync.h
-+++ b/include/linux/u64_stats_sync.h
-@@ -135,10 +135,11 @@ static inline void u64_stats_inc(u64_stats_t *p)
- 	p->v++;
- }
- 
--static inline void u64_stats_init(struct u64_stats_sync *syncp)
--{
--	seqcount_init(&syncp->seq);
--}
-+#define u64_stats_init(syncp)				\
-+	do {						\
-+		struct u64_stats_sync *__s = (syncp);	\
-+		seqcount_init(&__s->seq);		\
-+	} while (0)
- 
- static inline void __u64_stats_update_begin(struct u64_stats_sync *syncp)
- {
--- 
-2.44.0
-
+#regzbot duplicate:
+https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
+#regzbot poke
