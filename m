@@ -1,130 +1,77 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6B12B95;
-	Thu,  4 Apr 2024 15:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786E9745C4
+	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 16:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246223; cv=none; b=LlxuTrt0aCNQEzsRTtWLcRUq2O7xawfMLj82+HKEx4XwXKahy0TNrbUJ3WNuEzbwgiCBBBZn10ORBqy+DbEXqJOesej97FfL0DEKuu1uWvO9ILPBkrlO3kYfCgyE1FnLDlI0Fjv+c9CAMNtAUJMK2DQ3QVBZ15Rxs689Myh9voU=
+	t=1712247274; cv=none; b=oYzTujkyNBlBcwQNEq2YlzInvOMMFDvinPfVW/DS01pyOI0jc0CjzudbVw3LdS/2n/OonPrIsYbb237AFm1n4ClX31jKiTc9/gfF9rlD/53Fq3MJ8DW8dHpegiDtGJzDnYeYFzxIXCswNHziS7NDER0CYwVWEqI09NZKFZOKiCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246223; c=relaxed/simple;
-	bh=vvvHPDpFZbDyDQk3Ld550STpcnhIi6ap4/awPQYL3+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CvT1rsZn2fOPbtpIuNlTvc9+0aXcOjShWTSeWB89ZbcgeaQEUdgzhPZkrb0lqbril1+bpLe4TDpI0ug3HPsHKapA09H24qZeiJVqsv+kHhdbPMx+FRfylrZcq9WY9J2jyPOQDhehwM5pFgvhUENm48xfNKRf23O/h7mFfBo3wk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CcWtbQUt; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712247274; c=relaxed/simple;
+	bh=zQIu0W+9tdYoBo5T+slKZD8LMHqeZZgVgPHuv1ZgG/0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FA7Kbdd2yUOrN+3V+t5Y6erml5s+s1ggg1HDoyTHtwDc25B7AKS81lUdCc5SKW5OYdZV8knig3ll6plaTslDqtOejwarxxbsdyS1UdwviOma+cMd3EPeaCV++qM3CtMbrok1X8pRQj7DC6mAZ9KXxObFeJOeqL10TRerDTJzMJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X0iUeh8p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n9Ky/D2N; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CcWtbQUt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=1f4OlMHCTglftLsccsnxMI7CfS7xy5tbZ+cp8vg03tM=;
-	t=1712246221; x=1712678221; b=CcWtbQUtdmYDqxwF7MzHN6XSRHWhZC1yDdfndx6RjjGU80P
-	SxUvK99wzBCejJXnfJufoIrlH2ZqrCdtov7f2Sz1/VCSL3ToqtFdixndFALygDfIBWEOZKTbWZqUp
-	5y/vqUwzAH0k3rYNEn+t6StfaApMdflXrejGsOL1ZnH05notgI0g9naVUW/CJngla0RF5XjSge787
-	+QW6Y+dRjMwleGoCktAJ0Eg/IHzQKhIn/oAgVbjwoGLQM4I3s3ieQpJpSI8doZ3fg4fMXT+OPinge
-	6t2UmfoFXLW++y+YH2+OBXJ5DxqdwXskPkXpTAXLNSAGMT4W46cg+bYOXeocodXA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rsPSV-0007nG-9G; Thu, 04 Apr 2024 17:56:59 +0200
-Message-ID: <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
-Date: Thu, 4 Apr 2024 17:56:58 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X0iUeh8p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n9Ky/D2N"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712247270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OGS/44FU5GIZLtaLg0w/7PHFNSThm+pNn7jES6aXJuY=;
+	b=X0iUeh8pWpCS8duV5Y428mGvbebbynLG7B3UpxtjFBZTSPubH13lV4alGWThaypltwE6FC
+	jujEHtP7JKFgnh7qL8xvm3oo0jhTD/1WbuHAR+fprlo/ShpHjWaKXIukXY+dS//bkq4ydK
+	62T7oY84f61D+KWyAdoWcR/gL2nbAWDXON5SEVID5TRwgYgEt2WHKABGrsrh1etaYDVCTR
+	eDoUOWp6vKdcn1N7WKPuY451UoUFVWD5S1Zlb8rM6pLodiLIOT3LkH1yvrxH7aIKS5eZqW
+	f1BYT8UA/UKlnnSdfCFNNeKN3vPfmTsp0KenXCXzWyZ170O+J/DyN0KIpeplyg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712247270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OGS/44FU5GIZLtaLg0w/7PHFNSThm+pNn7jES6aXJuY=;
+	b=n9Ky/D2Ntwy8PG7Vns5taE92H5P268YAEDjBMMcaf9d+MuAbMwqmd3i7oJwXlyo34U9c3b
+	SI0NkQKVyJdXIYAQ==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240404152317.464796-1-laura.nao@collabora.com>
+References: <874jchb7na.ffs@tglx>
+ <20240404152317.464796-1-laura.nao@collabora.com>
+Date: Thu, 04 Apr 2024 18:14:30 +0200
+Message-ID: <87sf019kbd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Do we need a "DoNotBackPort" tag?
-To: Greg KH <gregkh@linuxfoundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
- <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
- <2024040328-surfacing-breezy-34c6@gregkh> <Zg10Keik4KORjXMh@slm.duckdns.org>
- <2024040319-doorbell-ecosystem-7d31@gregkh>
- <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
- <2024040454-playful-tainted-7446@gregkh>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2024040454-playful-tainted-7446@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712246221;6c48b54e;
-X-HE-SMSGID: 1rsPSV-0007nG-9G
+Content-Type: text/plain
 
-On 04.04.24 17:44, Greg KH wrote:
-> On Thu, Apr 04, 2024 at 05:36:42PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 03.04.24 18:10, Greg KH wrote:
->>> On Wed, Apr 03, 2024 at 05:22:17AM -1000, Tejun Heo wrote:
->>>> On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
->>>>>> Side note: I have no idea why the stable team backported those patches
->>>>>> and no option on whether that was wise, just trying to help finding the best
->>>>>> solution forward from the current state of things.
->>>>>
->>>>> The Fixes: tag triggered it, that's why they were backported.
->>
->> Yeah, this is what I assumed.
->>
->>>>>>> which would
->>>>>>> be far too invasive for -stable, thus no Cc: stable.
->>>>>>>
->>>>>>> I didn't know a Fixes
->>>>>>> tag automatically triggers backport to -stable. I will keep that in mind for
->>>>>>> future.
->>>>>>
->>>>>> /me fears that more and more developers due to situations like this will
->>>>>> avoid Fixes: tags and wonders what consequences that might have for the
->>>>>> kernel as a whole
->>>>>
->>>>> The problem is that we have subsystems that only use Fixes: and not cc:
->>>>> stable which is why we need to pick these up as well.  Fixes: is great,
->>>>> but if everyone were to do this "properly" then we wouldn't need to pick
->>>>> these other ones up, but instead, it's about 1/3 of our volume :(
->>
->> I'm also well aware of that and do not want to complain about it, as I
->> think I grasped why the stable team works like that -- and even think
->> given the circumstances it is round about the right approach. I also
->> understand that mistakes will always happen.
->>
->> Nevertheless this thread and the Bluetooth thing we had earlier this
->> week[1] makes me fear that this approach could lead to developer
->> avoiding Fixes: tags. And funny thing, that's something that is already
->> happening, as I noticed by chance today: "'"A "Fixes" tag has been
->> deliberately omitted to avoid potential test failures and subsequent
->> regression issues that could arise from backporting."'"[2].
->>
->> I wonder if that in the long term might be bad. But well, maybe it won't
->> matter much. Still made me wonder if we should have a different solution
->> for this kind of problem. Something like this?
->>
->>   Cc: <stable@vger.kernel.org> # DoNotBackport
->>
->> Or something like this?
->>
->>   Cc: <stable@vger.kernel.org> # DoNotBackport - or only after 16 weeks
->> in mainline [but I don't care]
-> 
-> We do this today, with stuff like:
-> 	Cc: stable <stable@kernel.org>	# wait for -rc3 to be out
-> 
-> So if people want to do that, they can, the documentation says that you
-> can give us hints and the like in the # area, and usually we notice them :)
+Laura!
 
-I know, as I wrote that (as you likely remember). ;-) But it seems it's
-not well known; and maybe making it explicit that this can be used to
-convey a "DoNotBackport" message is supported as well.
+On Thu, Apr 04 2024 at 17:23, Laura Nao wrote:
+> On 4/4/24 15:05, Thomas Gleixner wrote:
+>> Can you please provide a boot dmesg from a 6.8 kernel and the output of
+>> 'cpuid' ?
+>
+> Sure, here's the output from an Acer Chromebook Spin 311 R721T device:
+> - kernel log: https://pastebin.com/raw/NNbeJupE
+> - cpuid output: https://pastebin.com/raw/ThmGqnqG
 
-Guess I'll prepare a patch to do that then and we'll see how it goes
-from there.
+Thanks for the quick response.
 
-Ciao, Thorsten
+Can you please provide 'cpuid -r' output too as 'cpuid' does a few
+tweaks to the raw data and it's hard to match it back to the code.
+
+Thanks,
+
+        tglx
