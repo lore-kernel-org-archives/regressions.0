@@ -1,80 +1,88 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4289112E7E
-	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 13:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D6254905
+	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 15:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712235916; cv=none; b=SaQM75gHjCxtRrfoy24iDNVHCPucwzNIMhY4DpEmEnNG1oG8U7+zZ62jIgv2W8nozm18HAksEm370X4JMEewWTg1YdFUtCI0GKYM8pcYPpjfLGA9qdlqDz6zygZpZGgqYuvPL0DcmwFNKUnyC4ElO4QG4zpH1M9yFFczujNAAIE=
+	t=1712244178; cv=none; b=Hc6HizHzkI84Inv5sHIIx1xGQCHhKkK+cV6V/NzxwTVuAjXxcDo29whdR9G+HYwkfeVMItnb7X6orDeLGvTDDeZtDBrKcvR0AwQIwCi5VrLnHqpDaNU8F3caaM0w9K6AizI3eXzat/9j2AtyBA56jEBxdLjQ/KFGLX3MD30HACU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712235916; c=relaxed/simple;
-	bh=R4d9+Tq2yuTymn2MJRI7oRSBN3ws9x0+B9iYO5ab3X4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Sh7GGusZHBTPTdxfRxZ6UQl+9+pb2B0FO2erqXs5+dV4U8KjTPrgn7Q1qMJWqEBzZyuAJ3Xh4MGoWS5Jw2ma8uxaE/vaaVOfOuNSyYem1zcdQb5SS65HQ3WaHxDepz7aLOmSI0STT/me96tfSzfRdDcAjvqHu4Brqxw+pkp2gGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xe85SSJJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=49Cb+ZzD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712244178; c=relaxed/simple;
+	bh=EMwT4Y2inuVPzK35wOcuimN88Lo0Bzf/ESD4NioLRnw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Gnwtiup4HrrFNwqp0ZgiJrk8w6whgoUXz2gIOo5uPUrpcG5umPA4acLZcAO6netqMOO8NtQzYScCZJIxuUoRHg5IF8VNznxHflh4HI2onxLbF55Tfi18lgBWFFYSzxP/7YFHyd2fxw4xhB5GWgRQaTqG7IGzmFgn+4YJUtci62k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1/8yhpIY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xe85SSJJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="49Cb+ZzD"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712235913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v9J5ctIKprExexRBqle5OJ6DAsejEIo1IBkZ/m315SM=;
-	b=xe85SSJJyn0iRd+9iRsKrNguKKvLiRaMSYyIGo9kA4qLu3fJMoc3ObHW6VxdoC+VFfrAZi
-	y8CZH3/n18yRay1D7nasonH76Vw3zcx2lcOf2iKAkJ256DpZ3gn4aTmnKpWyC3SWGnPX4o
-	XgVnmT8DrxMj5uBcFvmDC1jXXaaNL3qEdCJLbd7T5kDBQLOlBbTbu1xuE2A8eUgB4n+BQ+
-	SP1Zz4dL7VfwTB/qkvGKmNfOCOe7Wl7ltvrhspXfpwN4I2lfyR1tV5mZM2wRgF5Z0EjdQD
-	FweDaHWM/FpjGqtdTw9Epb41CvJtr+Mi+alSvABVS+ceD9BZoqNicLCTVN2SMQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712235913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v9J5ctIKprExexRBqle5OJ6DAsejEIo1IBkZ/m315SM=;
-	b=49Cb+ZzDIUuj4tXYjuk9qn5NqHRDqq2IqANma049TM4DQNE0ADo/zG1g7G7tFSciO0eDD5
-	50eMp9zAxy5VQODA==
-To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Laura Nao <laura.nao@collabora.com>, the
- arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
- Chromebooks
-In-Reply-To: <877chdb7tf.ffs@tglx>
-References: <20240328094433.20737-1-laura.nao@collabora.com>
- <20240328115015.36646-1-laura.nao@collabora.com>
- <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info> <877chdb7tf.ffs@tglx>
-Date: Thu, 04 Apr 2024 15:05:13 +0200
-Message-ID: <874jchb7na.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1/8yhpIY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712244175;
+	bh=EMwT4Y2inuVPzK35wOcuimN88Lo0Bzf/ESD4NioLRnw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=1/8yhpIYITyxW7arJHLQ6SLLqAevKgCLaeVHIKWnfYBV4KqGyJNm5GaojBpK5JyhZ
+	 qaLRWouh4TedmwYUw9tmlog5zvKnvG6zVpfi/XzBAtroqBLmTCUQWQ675y6owE1Eyo
+	 pFXkuLTRRmlkI/HVpiNJoJtGTdlIkmUiojGvvIXPQUDvjAmwg0EUCQPI/F18jDWMs6
+	 JD7sVdq4pLRwsHbseacSTp85MkPNuFZxQO0EI+6znI+iGSkaICzqD81HVlaDQ3mjzi
+	 uqu/HbFQdD910eBoMfEotInmsl559jso9jtD6mTQcUSljBwSaJo6iemgK1dtlcrMaU
+	 XrEnGyzRGwlDA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2529E37813A4;
+	Thu,  4 Apr 2024 15:22:55 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: tglx@linutronix.de
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Thu,  4 Apr 2024 17:23:17 +0200
+Message-Id: <20240404152317.464796-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <874jchb7na.ffs@tglx>
+References: <874jchb7na.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Laura!
+Hi Thomas,
 
-On Thu, Apr 04 2024 at 15:01, Thomas Gleixner wrote:
-> On Thu, Apr 04 2024 at 10:24, Linux regression tracking wrote:
->> On 28.03.24 12:50, Laura Nao wrote:
->>>>
->>>> I ran a manual bisection to track down the root cause for this
->>>> regression and landed on the c749ce
->>>> commit from this series:
->>>> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
->>
->> FWIW, that commit is c749ce393b8fe9 ("x86/cpu: Use common topology code
->> for AMD") from tglx that was part of the "x86/cpu: Rework topology
->> evaluation" series.
+On 4/4/24 15:05, Thomas Gleixner wrote:
+> Laura!
+> 
+> On Thu, Apr 04 2024 at 15:01, Thomas Gleixner wrote:
+>> On Thu, Apr 04 2024 at 10:24, Linux regression tracking wrote:
+>>> On 28.03.24 12:50, Laura Nao wrote:
+>>>>>
+>>>>> I ran a manual bisection to track down the root cause for this
+>>>>> regression and landed on the c749ce
+>>>>> commit from this series:
+>>>>> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
+>>>
+>>> FWIW, that commit is c749ce393b8fe9 ("x86/cpu: Use common topology code
+>>> for AMD") from tglx that was part of the "x86/cpu: Rework topology
+>>> evaluation" series.
+> 
+> Can you please provide a boot dmesg from a 6.8 kernel and the output of
+> 'cpuid' ?
 
-Can you please provide a boot dmesg from a 6.8 kernel and the output of
-'cpuid' ?
+Sure, here's the output from an Acer Chromebook Spin 311 R721T device:
+- kernel log: https://pastebin.com/raw/NNbeJupE
+- cpuid output: https://pastebin.com/raw/ThmGqnqG
 
-Thanks,
+This is with kernel v6.8 (e8f897f4afef0031fe618a8e94127a0934896aba), let
+me know if you need the output from a different revision.
 
-        tglx
+Thank you!
+
+Laura
