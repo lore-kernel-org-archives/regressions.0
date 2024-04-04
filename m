@@ -1,126 +1,90 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993CD7352F
-	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 09:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B368E126F3B
+	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 13:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712222796; cv=none; b=q8b+4NS82fXAj8+V5nnv13PV6BeycUzv0FwLe6Yh46tjjL6jYehV/jWJS8rmb/d3etSzNTF+YunWEdK1dmKSIBf/OmqG3/mfjg8GMHitq5nBUOb1MyDjjTFOF4qLoxpBGrzrmM6ERHXsWHM48m+uROv2orZWAZJE5Xw10UeJAW0=
+	t=1712235696; cv=none; b=p7a+iglYkBitjW7foZUrAYvr+tab5jJX1pUon2nXrwTOOqcSmEOueGXKTokYo+W8p9L4lSRwS5kYnOr11lT5f2QZLYVBn9GBDgLL40znu8NxM0Z0y/HN7zNIuNPTzeBzwfxwQGs4QV3tJyrOhhqIp2b5S4ZCx/V2LSPCzwSitOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712222796; c=relaxed/simple;
-	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F2daPvUo0xBwvWgNBOGWvWJ16qBr5rtueuzf3pKJdemxPmJqTt9mOWo4wX7mKtFlgQe1pw7IlNjwFUYNZzdtEtpji0uQNFIpBHfangKS9iD4sSmOV3ZB1y0Tlq9Ahbwgb/E2HhinZvlFwRmyPH3MJaHUfX655NdK6TVq9+r6Pt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vv736jNp; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712235696; c=relaxed/simple;
+	bh=Ef65XznV/bmQcGHmioaUFT0V+mvjSQhs27D1vrEQrRg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tu4mOte1K1MF0fT2SodZtxfb04j0LPBgleoV51ZgHXy416qAa39p/1NlIJ6CHcRZMeRuvDusdlaoh7A3jHBhfDVG1pOWSjLMg2ev9r5D9sNueL6vpaTy7pqxOPrsLCtAIwY3DLq4lescL8kCaQJyIkRSCkbrquAJj1pDoeY8bM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qkya+Uxp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=264OAWp4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vv736jNp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712222792;
-	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vv736jNpmicCIQP5dOfis7w7uG6VPaYsYmPMO5hX/jw3+pqZAd3SM5guyyeE1DsM4
-	 WVbgaRBAS5eGqZlbD4Raqgds6QwW9bG7SOqDrU769EEyZTrsGuI9GwLQOTfrcS4bAw
-	 5NcR6MgYFXogzK2Eiy9wL48rCZ3nZhnax+EhnHaNz+RrGfGE1kfD1mms1zhDSB6Ahm
-	 SNxvdd6Y7ndLA39+T/DknUeLRLmaXVyOThMvLaNsypHD/8UjnRUDsBHT/HEjStKJv3
-	 1qAsRatLsj9Bq4act0U0JmX8MGts5JXR335bY4T++FtR77Xdon9eHwtCydfR/+eZan
-	 P8j1qtVcwERkQ==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6A0483782117;
-	Thu,  4 Apr 2024 09:26:32 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@leemhuis.info
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Thu,  4 Apr 2024 11:26:59 +0200
-Message-Id: <20240404092659.176813-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qkya+Uxp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="264OAWp4"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712235692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SHqs79hU1DdSIz6PLmrqAUm1EAe6ocE8arUu1kzHUso=;
+	b=Qkya+UxpinwX1RAfR2uRTvI5/3B37WRg2iapfpx424cis58HJqbLE2OjFPEVq+jEVq8QLT
+	oFPM9JPMCX+vR5dFgPoAzYOjyN+z9EwIBnnDvqjV82IxUhpQe3s9gq0FrnxrUNmIeGScg8
+	2Xpys0yMpOGKW6vE/bJ4YT87j68SWOVfTfDmJAo6FXfQvwqTZ/P4vxZ6rEdGeCmh8W5GWG
+	JB7PBLqmII3/pYGa0mngND+dxFonVvWUn4Na9rv04Xpl4FNcPoqhXJCZL1eojUxsJEhEkE
+	nejFVxECziJtNtqrtrI73tS2qZFSui4h2TCcR2fAqvfBrRuWHcbmhJxf6PkuhQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712235692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SHqs79hU1DdSIz6PLmrqAUm1EAe6ocE8arUu1kzHUso=;
+	b=264OAWp40k/pBW2GMWorGjhLz8xwkXh6FxvC7FZdd7ZGeYdhhgypHtsbrEOUHVC4HUpETH
+	s/EP9qH18U36WjBQ==
+To: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Laura Nao <laura.nao@collabora.com>, the
+ arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
 In-Reply-To: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
-References: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
+References: <20240328094433.20737-1-laura.nao@collabora.com>
+ <20240328115015.36646-1-laura.nao@collabora.com>
+ <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
+Date: Thu, 04 Apr 2024 15:01:32 +0200
+Message-ID: <877chdb7tf.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Thorsten,
-
-On 4/4/24 10:24, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [/me added x86 team]
-> 
+On Thu, Apr 04 2024 at 10:24, Linux regression tracking wrote:
 > On 28.03.24 12:50, Laura Nao wrote:
 >>>
 >>> I ran a manual bisection to track down the root cause for this
 >>> regression and landed on the c749ce
 >>> commit from this series:
 >>> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
-> 
+>
 > FWIW, that commit is c749ce393b8fe9 ("x86/cpu: Use common topology code
 > for AMD") from tglx that was part of the "x86/cpu: Rework topology
 > evaluation" series.
-> 
+>
 >>> Do you have any insight on this issue or any suggestion on how to
 >>> effectively debug this?
 >>>
 >>> Thank you!
-> 
+>
 > Hmmm, it looks like this did not make any progress. Thomas, did this
-> fall through the cracks due to Easter, or is this this on your todo list?
-> 
+> fall through the cracks due to Easter, or is this this on your todo
+> list?
+>
 > Or was there some progress and I just missed it?
-> 
-> Laura Nao, I assume the problem is still happening?
 
-Yes, I confirm the issue is still happening.
+No. It's in my easter eggs basket, but I need to eat all the chocolate
+eggs first to get to this.
 
-See e.g. KernelCI report for next-20240403:
+I'll have a look later today.
 
-https://linux.kernelci.org/test/plan/id/660dbeed148e1a8a284c4372/
+Thanks,
 
-> 
-> FWIW, this was the initial problem description:
-> 
->>>> KernelCI has identified a mainline boot regression [1] on the following
->>>> AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
->>>> v6.8-1185-g855684c7d938 (855684):
->>>> - Acer Chromebook Spin 311 R721T (codename kasumi360)
->>>> - HP Chromebook 14 (codename careena)
->>>> - HP Chromebook 11A G6 EE (codename barla)
->>>>
->>>> The kernel doesn't boot at all and nothing is reported on the serial
->>>> console after "Starting kernel ...". The issue is still present on the
->>>> latest mainline revision.
->>>> The defconfig used by KernelCI for the boot tests can be found in [2].
->>>>
->>>> Sending this report in order to track the regression while a fix is
->>>> identified.
->>>>
->>>> Thanks,
->>>>
->>>> Laura
->>>>
->>>> [1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
->>>> [2]
->>>> https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
-> 
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
-> #regzbot poke
-
+        tglx
