@@ -1,89 +1,141 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF311643D
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 02:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C470256D
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 03:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712285699; cv=none; b=H4zcfmnNDwUkoNvcYFY4Q9UaxSji0FOuaGQ2HE6PoqIE9sWXGecwzJPdE6zB/jd8NcsdjPrh8THbKK3l+5GUYiU4Vg+N6NPmbwihgm8KZ2sPNuyyz1fI7GDy1j+StNum4wArgaOq1YyAsW0+oYOdYXL35cJaL7BzHa9WQRCTjFE=
+	t=1712287226; cv=none; b=qIboIKpgwaiI2tb1ND6kSZCLJ2cjSAcPeZcMQxObnpid/wA1yy6xfRZwCRmmpOqQ8RDu2E6Y27GdAfZfLyTZk+ot1CfIhO6XtQuL+nkbIWrajfbaf3KpDwrPD7sbog0ELCPa0zxUV56RA8aarSr3o9DKk8KR6brAZe+hKdw31NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712285699; c=relaxed/simple;
-	bh=e9llrihK5byMhFHIZeeQIEult4uk6A4t2h+EPc40sOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SyMw1XCuKrkqLQaY7ilxp3rC/xyjqxdJr1Peq6AJA4kI++U0FfD9NFxj+VdBYnEIcG4mKPuv7DtqapaeaAXng4H3IkvoDJ4h7t5g3BtyjvyDyNtGqONffu8yyA0NM8lirOSZLcnae03zg+OqNK6su+KkJ10OtZMZu9mAc7P3ilw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=dCTQlyw0; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1712287226; c=relaxed/simple;
+	bh=iMlwtCluKgt/yru1GplRV6mXGvO5sai8Pz5HQ2wsUcA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PTW5w7P5VLOeOWEg9Omj5L9SSpRdA5pHnQPxxi9n822It7qt+Ny9aedhMGi1+eXdmhRdfmI7mIJFyNxfMIRXGVLn/Dt5gF2d/UuVPPwGGOWN6PG1gx7KkRwXuC3b0ytjHagChPOwuI3yyfT0E42ZBtIDGniTKUwzg0qnY6Hfo6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=oeh6yhkc; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="dCTQlyw0"
-Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4352sd5s002237
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Apr 2024 22:54:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1712285681; bh=IJ37NqUIwrNgsAizQ/y4TjAF/Vi8qw2ku0kzM5T3adk=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=dCTQlyw09B6Td81OI8jDSAxF6BsliQVkPSB7Jq91t2UhCtgrwS+2ooW6RYGWiH/B+
-	 ktnMR9n5/F6Keh44Aie/6pV/i8UzZJzYcjusIZLVUV7HxHOwzoBhEFfOTiwrEPz66J
-	 NePPwwfcPJyFsbTo9XCv6906aqqoBRNYzR3kpWboLlYqEs/iDQwZ09/+ochVUIKmMG
-	 jI8Zw31xeYY1btJR1zaM2GPUhwiVhxgnKP+tbnk1Oq1I/5Vk5rF4y7eFXyhSb9BdfR
-	 mvgK2kq0Micr5uyAdkcq7aF82MGtOEBCX28JV9OEq2dpVjXBekr7t9sUJ2i33JKPFX
-	 K7PRZY9weZmEQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id AFE3115C00DE; Thu,  4 Apr 2024 22:54:39 -0400 (EDT)
-Date: Thu, 4 Apr 2024 22:54:39 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Do we need a "DoNotBackPort" tag?
-Message-ID: <20240405025439.GC13376@mit.edu>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
- <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
- <2024040328-surfacing-breezy-34c6@gregkh>
- <Zg10Keik4KORjXMh@slm.duckdns.org>
- <2024040319-doorbell-ecosystem-7d31@gregkh>
- <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
- <2024040454-playful-tainted-7446@gregkh>
- <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oeh6yhkc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1712287223;
+	bh=BzOgV/+Na+A/Ref7N5qSUr8kt2YEgbL91XAVdwt4w18=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=oeh6yhkcpwXKcHmtw6MAbTvlbPXAM/96yJA9sgFi/cSRHxSZU1GOlWjCnNuO+71da
+	 aybge/mqP0XmlGCOOBryClA3ybY8Er/3bGlwL9tGjZdh7kAb5qOgmrRs0+9n9uTAAi
+	 YHv4pRrhlDmNffTfyCMT0mnEIrCiRpN8MZTQh1ne5zYsvqdu4cHnDcigpAp2Pohx0G
+	 K8h0V+AV1fl5Q9OengudjNlIoReVGlTBuSTpYEliUABPpiaz9smSu2g6mr4ffKgEMA
+	 5cZbPzKAqmR5pYQmPHQ9NMeEaZMm8I4HcBjzjsslCO7/TkUK/cqj2DGYS7cZDAw17g
+	 H+bTqfOwcS4dg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V9kJQ1GQNz4wcb;
+	Fri,  5 Apr 2024 14:20:21 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Nicholas Piggin <npiggin@gmail.com>, Vaibhav
+ Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, kvm-ppc@vger.kernel.org
+Cc: Jordan Niethe <jniethe5@gmail.com>, Vaidyanathan Srinivasan
+ <svaidy@linux.vnet.ibm.com>, mikey@neuling.org, paulus@ozlabs.org,
+ sbhat@linux.ibm.com, gautam@linux.ibm.com, kconsul@linux.vnet.ibm.com,
+ amachhiw@linux.vnet.ibm.com, David.Laight@ACULAB.COM, Linux kernel
+ regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
+ exception
+In-Reply-To: <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
+References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
+ <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
+ <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
+Date: Fri, 05 Apr 2024 14:20:21 +1100
+Message-ID: <87sf007ax6.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
+Content-Type: text/plain
 
-On Thu, Apr 04, 2024 at 05:56:58PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> 
-> I know, as I wrote that (as you likely remember). ;-) But it seems it's
-> not well known; and maybe making it explicit that this can be used to
-> convey a "DoNotBackport" message is supported as well.
-> 
-> Guess I'll prepare a patch to do that then and we'll see how it goes
-> from there.
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
+> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> for once, to make this easily accessible to everyone.
+>
+> Was this regression ever resolved? Doesn't look like it, but maybe I
+> just missed something.
 
-Maybe something like "ManualBackportOnly"instead?   The basic idea is
-that it's not that the commit should *never* be backported, but only
-with human intervention where someone has specifically requested the
-backport, perhaps with qualification test.
+I'm not sure how it ended up on the regression list. IMHO it's not
+really a regression. It was an attempt at a performance optimisation,
+which is no longer needed due to changes in (unreleased) firmware.
 
-(For example, the XFS file system has an implicit ManualBackportOnly
-on all commits, and the XFS stable maintainers are responsible for
-backporting identifying commits with Fixes: tags, and running QA
-before passing on a request to having them be backported.)
+I haven't merged it because Nick's reply contained several questions for
+Vaibhav, so I'm expecting either a reply to those or a new version of
+the patch.
 
-              	       	    	       - Ted
+cheers
 
-P.S.  I'd love to be able do something equivalent for ext4, if we
-could scare up the resources to do the same, in terms of having some
-company fund the necessary developer resources, or someone turn up to
-volunteer to do that for ext4.  Gentle reader, if that's you or your
-company --- let's talk.  :-)
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>
+> #regzbot poke
+>
+> On 20.03.24 14:43, Nicholas Piggin wrote:
+>> On Wed Mar 13, 2024 at 5:26 PM AEST, Vaibhav Jain wrote:
+>>> This reverts commit 180c6b072bf360b686e53d893d8dcf7dbbaec6bb ("KVM: PPC:
+>>> Book3S HV nestedv2: Do not cancel pending decrementer exception") which
+>>> prevented cancelling a pending HDEC exception for nestedv2 KVM guests. It
+>>> was done to avoid overhead of a H_GUEST_GET_STATE hcall to read the 'HDEC
+>>> expiry TB' register which was higher compared to handling extra decrementer
+>>> exceptions.
+>>>
+>>> This overhead of reading 'HDEC expiry TB' register has been mitigated
+>>> recently by the L0 hypervisor(PowerVM) by putting the value of this
+>>> register in L2 guest-state output buffer on trap to L1. From there the
+>>> value of this register is cached, made available in kvmhv_run_single_vcpu()
+>>> to compare it against host(L1) timebase and cancel the pending hypervisor
+>>> decrementer exception if needed.
+>> 
+>> Ah, I figured out the problem here. Guest entry never clears the
+>> queued dec, because it's level triggered on the DEC MSB so it
+>> doesn't go away when it's delivered. So upstream code is indeed
+>> buggy and I think I take the blame for suggesting this nestedv2
+>> workaround.
+>> 
+>> I actually don't think that is necessary though, we could treat it
+>> like other interrupts.  I think that would solve the problem without
+>> having to test dec here.
+>> 
+>> I am wondering though, what workload slows down that this patch
+>> was needed in the first place. We'd only get here after a cede
+>> returns, then we'd dequeue the dec and stop having to GET_STATE
+>> it here.
+>> 
+>> Thanks,
+>> Nick
+>> 
+>>>
+>>> Fixes: 180c6b072bf3 ("KVM: PPC: Book3S HV nestedv2: Do not cancel pending decrementer exception")
+>>> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>>> ---
+>>>  arch/powerpc/kvm/book3s_hv.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+>>> index 0b921704da45..e47b954ce266 100644
+>>> --- a/arch/powerpc/kvm/book3s_hv.c
+>>> +++ b/arch/powerpc/kvm/book3s_hv.c
+>>> @@ -4856,7 +4856,7 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
+>>>  	 * entering a nested guest in which case the decrementer is now owned
+>>>  	 * by L2 and the L1 decrementer is provided in hdec_expires
+>>>  	 */
+>>> -	if (!kvmhv_is_nestedv2() && kvmppc_core_pending_dec(vcpu) &&
+>>> +	if (kvmppc_core_pending_dec(vcpu) &&
+>>>  			((tb < kvmppc_dec_expires_host_tb(vcpu)) ||
+>>>  			 (trap == BOOK3S_INTERRUPT_SYSCALL &&
+>>>  			  kvmppc_get_gpr(vcpu, 3) == H_ENTER_NESTED)))
+>> 
