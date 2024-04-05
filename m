@@ -1,94 +1,74 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C690816FF32;
-	Fri,  5 Apr 2024 15:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF6417167F;
+	Fri,  5 Apr 2024 19:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712330468; cv=none; b=OCcqRo0Q0QZD5n/+qLpZkTkfZKkLMvUPHNebdHPgMgMf6jrjIkImQbbKEqRPjnhhlLo/shXEDZABXXyaiuCAn7isajiaxz6ekJCLbKmGxYrav+WDqzzV/4p0EB11ed6maFdDGfed663GadDF71VsxCzYBsW7fnR9OWahU5ujWO8=
+	t=1712346681; cv=none; b=MFFuCyY16ykeUKT7xnHm7cGig4lJLn9VlYDlySiLteV/Oppi50Ows6tkFcrl+F/c+XAkFMOMITzkIYy/bFXtN1m8Bzs5/h4LaK9i4TbakaZ9lIwgvU/zzN/y423NwvHj0V6NIjhbFF2BuYlKhiI6rB1F75IPpTlPBBX/CKS9bJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712330468; c=relaxed/simple;
-	bh=X6XGUm6JZsKq6Bbf/V28UbuXZ15PV3XG3X+8BEf6k+A=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Cc:Content-Type; b=XoXN/idxczbvda//DrW6G4Z6XlqVlSDwcX6gydJbEG6pgClIf/0fRZ5U+OCKLk4r7XuEme9Czpe4f6Crkjd+6POB8Ghp+9yqMynF7uTHmt+u/ZN4J+9/DaU7TIzrrvHZCf0zldCNerzPWTQzdh1gROjh/QL/0lR3yvGvQsOyYUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JNhKaCGk; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712346681; c=relaxed/simple;
+	bh=f/CMxni7jFnpuDFclRQ1sPJPHz81GAHsls7RUeZIdCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DP9avejGEJDGOKtgugqG2TTHzemCeXlKa74efNSNmdhCDpSf8Pjcfr4AXqxLQUqjJyWgLMkmjWXheVUwkz95cdpWebTyLvYYzJ9AnBM7Xciwhmm0STvzj2J1YX5iRNzwbHaeH8YH8IWWmAFfqEQCbhZb6bB//wbAOAzAM+MZdYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFZ6BxS6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JNhKaCGk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Cc:Subject:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=v+qNG8sMUH5bGX+DRd6ZrkCiAd3Pu96BpQB8qRYZ0u8=; t=1712330466;
-	x=1712762466; b=JNhKaCGks6Ki/21xuIkSJgSjtV4ew9AwXk7AkkePp35/SD46QhNIC53V99JpL
-	+QlLXAxsYqtNN5VlvKa4HtKtHu8snRPec9pvRDmAnDdaKO71hbIJ5MYoRldSMTb2cQ0hhi4xpxK0x
-	QiPyEAdyeJvAVOO7Y25qHPzVkRVc23u9i4Co3D67KL8OLzCX/G76S0INmfasbURVgpDu5IlT7QzAT
-	ycinjlaOUcObl2pVjqPeSTbN0QjFBdoQsNd2NYWddDYVtyAP09QV4eSS0k8kAY5H+LvK6FXAQycvB
-	mwDJvOnX0rVtYSboiERpk2LYUH04uj+Tr4Jl9z2bCUTNsmRpLQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rslNI-0005aJ-0J; Fri, 05 Apr 2024 17:21:04 +0200
-Message-ID: <19851b9b-c3ff-4781-8292-4ce5999747d3@leemhuis.info>
-Date: Fri, 5 Apr 2024 17:21:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFZ6BxS6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753DCC433C7;
+	Fri,  5 Apr 2024 19:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712346681;
+	bh=f/CMxni7jFnpuDFclRQ1sPJPHz81GAHsls7RUeZIdCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pFZ6BxS6BGeI5OmF9rs1tRD2Hp2W9N7XTVe5pVrAF7rvPFaOibY/fpmVZ77dK4bZU
+	 noTNHTNfxSHvFI/0c+n17Iae2j+0W9yaOVfBx78hiU2/XenxVQuMWhOUcKkWXh/TNM
+	 camqvKOLDRLcXNuarSCk2hmBGYczjWSaeMr6YhupVqTTqEw5efmoDy6HFY6BpBfJqg
+	 ml06ZbuI7lS1204c90vdfBpuLAHgCaObxPLt2TOen9bauIKLgNgCValaYzlat1Kcuw
+	 O3NzhV+3p3z6GSlCC1yz2JO0DTfuROqOWmYRV5lXO9vGx7T9ye7uLYThf96k2WCJXR
+	 RsZJ01ZdoIUyg==
+Date: Fri, 5 Apr 2024 20:51:17 +0100
+From: Simon Horman <horms@kernel.org>
+To: Petr Tesarik <petr@tesarici.cz>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <netdev@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
+Subject: Re: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when
+ used repeatedly in one file
+Message-ID: <20240405195117.GV26556@kernel.org>
+References: <20240404075740.30682-1-petr@tesarici.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [regression] opp issues on devices with multiple power-domains
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712330466;6f3db7fd;
-X-HE-SMSGID: 1rslNI-0005aJ-0J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404075740.30682-1-petr@tesarici.cz>
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
-
-Viresh Kumar, I noticed a report about a regression in
-bugzilla.kernel.org that appears to be caused by a change of yours
-(e37440e7e2c276 ("OPP: Call dev_pm_opp_set_opp() for required OPPs")
-[v6.8-rc1]). As many (most?) kernel developers don't keep an eye on it,
-I decided to forward it by mail.
-
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218682 :
-
-> Created attachment 306086 [details]
-> Dmesg from xiaomi-onclite
+On Thu, Apr 04, 2024 at 09:57:40AM +0200, Petr Tesarik wrote:
+> Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+> initialized in the same file.
 > 
-> Devices with multiple power-domains has issues with required_opps is
-> pointing to wrong opp table because it lazily just uses dt node to find it.
-> But every genpd device has its own table.
+> With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
 > 
-> The issue was fixed downstream with this commit:
-> https://github.com/msm8953-mainline/linux/commit/6afec1ea2cf1cdb968d646c45d1d1a80f6cb5fb2
+> 	static struct lock_class_key __key;
+> 
+> Since u64_stats_init() is a function (albeit an inline one), all calls
+> within the same file end up using the same instance, effectively treating
+> them all as a single lock-class.
+> 
+> Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
+> Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
+> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
 
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Interesting bug. I'm wondering if you also looked over other users of
+u64_stats_init() to see if any of them can result in unexpected aliasing of
+lock keys too.
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
-
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: e37440e7e2c2760475d60c5556b59c8880a7fd63
-#regzbot title: OPP: issues on devices with multiple power-domains
-#regzbot from: Barnabás Czémán
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218682
-#regzbot ignore-activity
+...
