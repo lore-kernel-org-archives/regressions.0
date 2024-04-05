@@ -1,103 +1,109 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1BE161902;
-	Fri,  5 Apr 2024 10:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9605C161326
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 10:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312578; cv=none; b=kdGfLICJh0IjlS/rq3KN7WYDwyHHa7qPJGTY+ZRj4sAs//KlG5yyPLhf6eeyzrPaRLhV5FkzMO7JJQcH5CbApu2j7Wgau9HbcLgZiHGNGk02z7f6vyzik163SKVLPflJnvDb901Bg6sv/vP+E1aU/jfNF5fc42r8khTMezSqdkk=
+	t=1712313140; cv=none; b=FXVV3+QNK3gco0JVRAzPvd9XJKn5isCxgcGafUyDTKOwcUEN2vF66z294wpl8ttfozlHeOINcrzMNNSQjb3/+2tQUZWjjJt5wsRmT0ZMCeZIbONB/A2qFpktCWDVcGN/BbpDz62ezOfbZ2zDsn3hJK6zw8PUsMhoK24nAcaRKNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312578; c=relaxed/simple;
-	bh=20WIFlqzXv8bEsaIHY6yoNZA6nIiAZntm4F/ctnVrUg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=h3Gr3dxCwS8uF/zycaJ507FB7FkdJYLTpwSJkqCRZFWTY5ofHUJvDeRSrBkR4x7boa8DlgNGZABLtyjWPtNhtFfLuEhuJReDhJ3kOUSpn72k0kngN2nAGU3H6KwA4cNK8j0GiTaEEfRhGjMMoFeQcygTF58CJeFWSPSjdONon0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=p8wGCgW6; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712313140; c=relaxed/simple;
+	bh=k/RJgxIGRh0rGUH8b0MelIQXUqRr3is2NPVQNA9TFMQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DI5X1rVTTzvr/0c7OinIJKt9KtbkJklgfoDNPY3mSpG7/6EWcIlb+1Krfx92/xk/4eqFtr1peUdVBXy4FVlrgEcnxqhtQjg9LkifsPUqV/mr4po3TZS7OuCCowIYdQVzZ5AJmWVRKPM87ZWlaDPs7F7LsPXDVYrc60eMsLhuYRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CwZF9RPk; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="p8wGCgW6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=CBcb0HqkxR3k46bsLAYeHj2Pxqw1LMgdMN4SvfAtuUo=;
-	t=1712312576; x=1712744576; b=p8wGCgW6veaEPLnuFcloMunOMkOFF/yhV1+DqXtM6eyZZE/
-	AWlmqN0X7+2w+bkSDuOwmvrW8qHr79ptMmK2mnKDWjA2fnBvTeHXv1/LjTjovuqsciRrztEpc2rcO
-	sb5goXnA3ti6qdw1WMdLXkhbWjXxyZW2TRSnivAdnDAmHtJF74yip6+lVQBzBEY5/+/olycGkdO1/
-	50qD8gqGoAlmmCuSVE81rIDyry06si3hcWn81eu82DM8afVdKHN9JylTHjoh7sMOmk1lXFjvrEH+N
-	uSkOfTxCTBL6MKMX1TWzgW/W4BOLlVZRjBKwQTMJSrRie3bDLLmRSZwVbzKQRreg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rsgih-0007ZM-8N; Fri, 05 Apr 2024 12:22:51 +0200
-Message-ID: <96059b4b-f58c-49f9-8fdf-ccdcfdde6abc@leemhuis.info>
-Date: Fri, 5 Apr 2024 12:22:50 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CwZF9RPk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712313136;
+	bh=k/RJgxIGRh0rGUH8b0MelIQXUqRr3is2NPVQNA9TFMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CwZF9RPkt6MTtl61EqVrut+UekjZTlckK/K5UYzuTcOXKI9UZo189v6Q9QD/ZdcrF
+	 YSwL1TzhNKMVF5JQMqRn6xS+xRrog8te3g7EqLYYrkjs/xtlXinwe2fqE5cqjbNIbn
+	 179YAzfny0eOq2f59zTll4Mqgb+XnQgVbhgkTFBt/SVzqN9uiM6dzuX/5mkoEtBdEn
+	 iWBG2u0I0cWuxXx/SCD8uM8jRMR2k4EaJ556irQOAjTUeai8moOHUi6qpx8z4p/hNI
+	 4sf0N3LmKHyiKMJPOav/6uv1qoll/oJyO6yI2Pn66aTEwfKLB9V23odCwlBaSvsixP
+	 i7yY/h3rFLAag==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F1F4037813A4;
+	Fri,  5 Apr 2024 10:32:15 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: tglx@linutronix.de
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Fri,  5 Apr 2024 12:32:33 +0200
+Message-Id: <20240405103233.268999-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <877chc9p4l.ffs@tglx>
+References: <877chc9p4l.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] docs: verify/bisect: fine tuning, testing fixes,
- and using a build host
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
- =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
-References: <cover.1711963460.git.linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <cover.1711963460.git.linux@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712312576;f029586c;
-X-HE-SMSGID: 1rsgih-0007ZM-8N
+Content-Transfer-Encoding: 8bit
 
-On 01.04.24 11:29, Thorsten Leemhuis wrote:
-> A quick series with various improvements for
-> Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
+On 4/5/24 10:42, Thomas Gleixner wrote:
+> Laura!
+> 
+> On Fri, Apr 05 2024 at 10:14, Laura Nao wrote:
+>> On 4/4/24 22:05, Thomas Gleixner wrote:
+>>> Can I get the /proc/cpuinfo output please?
+>>
+>> Here are more logs from the same device running v6.8:
+>> - cpuid -r: https://pastebin.com/raw/YmDrnw06
+>> - cpuinfo: https://pastebin.com/raw/Ki0vwdDE
+> 
+> Thanks for the info. I'm still not seing why that wouldn't work.
+> 
+> As the machine seems to have a serial port, can you please replace
+> 'earlycon' with 'earlyprintk=ttyS0,115200' on the command line and see
+> whether that gives some output. I'm not sure that the current 'earlycon'
+> has the same effect.
+> 
 
-Feel free to ignore this series, I found another problem and will post a
-v2 within a few days. Will likely also use that occasion to split the
-first patch into two, it does a bit too much.
+Thanks for the hint - replacing earlycon with earlyprintk=ttyS0,115200 
+doesn't seem to help unfortunately, I still get no output at all.
 
-Ciao, Thorsten
+Not sure if it's really relevant to mention, but when booting a v6.8
+kernel the first stage bootloader (i.e. coreboot in this case) spits out
+a few lines before the kernel takes over:
 
-> * The first patch contains various fixes and some fine tuning.
-> 
-> * The second adds a few instructions for later testing of reverts,
->   fixes, or newer versions. This was already hinted at; but during some
->   early work on Documentation/admin-guide/reporting-issues.rst to better
->   reconcile the two it seemed wise to cover this properly here.
-> 
-> * The third patch briefly outlines how to build kernels on a different
->   host; it came into being after a second user within one week asked for
->   this. That also allowed the text to briefly cover cross-compilation.
-> ---
-> 
-> Hi! While at it let me mention one more thing unrelated to the changes
-> where I'm unsure if the current approach by the text was a wise choice:
-> 
-> * Should the document tell users to avoid mainline during merge windows?
-> 
-> Some input from the community on this would be splendid.
-> 
-> Ciao, Thorsten
-> 
-> P.S.: Not totally sure, but I think this should go into 6.9 as this is
-> a new document; but I can split this up if the two latter patches better
-> should go into -next.
-> 
-> Thorsten Leemhuis (3):
->   docs: verify/bisect: git switch; proper headlines; various fixes;
->   docs: verify/bisect: explain testing reverts, patches and newer code
->   docs: verify/bisect: describe how to use a build host
-> 
->  .../verify-bugs-and-bisect-regressions.rst    | 469 +++++++++++++-----
->  1 file changed, 344 insertions(+), 125 deletions(-)
-> 
-> 
-> base-commit: b8cfda5c9065cd619a97c17da081cbfab3b1e756
+coreboot-v1.9308_26_0.0.22-6034-gd586c7b122 Wed Jul 15 17:51:44 UTC 2020 smm starting...
+SMI# #0
+Chrome EC: Set SMI mask to 0x0000000000000000
+Chrome EC: UHEPI supported
+Clearing pending EC events. Error code 1 is expected.
+EC returned error result code 9
+Chrome EC: Set SCI mask to 0x00000000142609fb
+
+When booting e.g. next-20240404 not even these lines are reported after
+'Starting Kernel...'. Not sure if that suggests anything significant
+though.
+
+For the sake of completeness, I'm leaving here links to the full test
+jobs run in our Collabora LAVA lab, to include everything that's reported
+on the serial console after the device is powered on:
+- v6.8 test job: https://lava.collabora.dev/scheduler/job/13265735#L279
+- next-20240404 test job w/ 'earlyprintk=ttyS0,115200' in cmdline:
+https://lava.collabora.dev/scheduler/job/13266992#L279
+
+I also tried applying the patch you attached above on top of
+next-20240404 but it doesn't seem to make any difference unfortunately.
+
+Best,
+
+Laura
+
