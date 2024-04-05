@@ -1,107 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A2A18659;
-	Fri,  5 Apr 2024 06:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA22145B15
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 08:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299373; cv=none; b=uqWMeJJ0v8qOsbpK90OJc3h+2FeT29V8qonabf6Mne5t/Xj0f0TqBEEcgv882KF0uGm7CQ5QWwjwE25HOGWfb8reqQQD8yg3Q2ACbO2NZwF1Wbys3JUA+EcBPF5JzMm3BwqMz68J00MyW2wWQrJU0Z9ZYpyI4ETZd5HuPejyBss=
+	t=1712304837; cv=none; b=Tw9/Sc3aQ38VZQ2ofrBF0sdJTpwQUERplNG1T3k24UOw37Fe7nT7Ae15o8HhoPUS5gQ0YFdoALY052H8qLI0031BR9kAYAQ9AZCWV3YXeR1+H8/Aqca5KXL1otvadxI8K9QuYI7358abouSwP5ZA/Wc/O3fY4oZayeTQMsLuPTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299373; c=relaxed/simple;
-	bh=yqvRzGgJBEoPw84m3wibIRMoO901bjxYZLE2U2L0kkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nky6ik9+R85PGy/umNSUHHCJJ6fXr/MiJzFpVeue9aLWuDgGXDfFQiIJ3zVhvLL56KqM3CCG4EByjFRzEQU0ZXe038w3lNi02xbP2gOcQzyJSLCO1I1j1r5iYL36ef7UevQpIR3XrBiQevJ8wEDlJq7VchC2Fw3l1rK0sUEWrIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OYr+vmzN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712304837; c=relaxed/simple;
+	bh=aLcvOXrdCrqopfXqGq+WE4Bd9vEupxkZrmFX8Q7u6Ao=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TjscRNpGl31XuWjzr27O0QSOJgJspi1cDczWYC4/qVkAWPTxWoLgn7iBtWt/uYqlz2bJlCDXvyppRXUKG2VYhkTiijNMMlmsZ94ESeZHUf4WJwzQGWPxVjs0K5jzp2DgDuy5yEBBb5Q8rptSaLPz4e5WwL8UkYmFeBz8BKoHmwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yj76Ra8A; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OYr+vmzN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A43C433C7;
-	Fri,  5 Apr 2024 06:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712299372;
-	bh=yqvRzGgJBEoPw84m3wibIRMoO901bjxYZLE2U2L0kkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYr+vmzNVqXaqcPNVGMFNFrMEJt80lkvX2Ld8wWVM3prY52XF4Z/NgsiEfE0gClDO
-	 wsuXF2qbGz4QhwiAJ0K4NqiNrSlsFa7V4s67572GL5WWxmtuV9TvnSnjLz3Oveop09
-	 zqtZmD4BaDeRTZdvaxkuy3SeaH2eWwrWNs4QA+HM=
-Date: Fri, 5 Apr 2024 08:42:49 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Peter Collingbourne <pcc@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
-	stable@vger.kernel.org, VAMSHI GAJJELA <vamshigajjela@google.com>
-Subject: Re: [PATCH] serial: 8250_dw: Revert: Do not reclock if already at
- correct rate
-Message-ID: <2024040500-snowbound-cadet-bba2@gregkh>
-References: <20240317214123.34482-1-hdegoede@redhat.com>
- <ZfgZEcg2RXSz08Gd@smile.fi.intel.com>
- <CAMn1gO4zPpwVDcv5FFiimG0MkGdni_0QRMoJH9SSA3LJAk7JqQ@mail.gmail.com>
- <35cdaf7e-ef32-470f-ab61-e5f4a3b35238@redhat.com>
- <33110d20-45d6-45b9-8af0-d3eac8c348b8@redhat.com>
- <CAMn1gO5-WD5wyPt+ZKDL-sRKhZvz1sUSPP-Mq59Do5kySpm=Sg@mail.gmail.com>
- <8cbe0f5f-0672-4bca-b539-8bff254c7c97@redhat.com>
- <2024032922-stipulate-skeleton-6f9c@gregkh>
- <1d7c3e03-fb25-4891-87bb-f4e7b8b4ee30@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yj76Ra8A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712304835;
+	bh=aLcvOXrdCrqopfXqGq+WE4Bd9vEupxkZrmFX8Q7u6Ao=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=yj76Ra8AXVginYgFPamjr/H/RiuVNbfSOwZkOKBzzXPhPzNHnlz4wjj9ikH/FalfY
+	 bW26gpoPbGvIktS8C/gzeYZLVCxE+pHFLabtfOPcm7ycCXkX0NA8CdBcxusi8LIKuj
+	 aYHfJssGT4q3Du2w9wQUlJi0toIFxnEyCyUaKIobe555F84jRhcVBBv4WpE/nEbJEg
+	 WoUtiSEQTAolfzHoZ8yrqIQSQ3wUpbfxqnrpwpJh1/eA+89ThiSqjd+BdLEV3H0e0z
+	 hG3mLljicyma/TuvQSP8ncUgbM4ZX80kI+5IqrDkBh/G40pln/1nHubYnFYV/Y8lSt
+	 C4ZtdzaJoHC5A==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 22B2B378212D;
+	Fri,  5 Apr 2024 08:13:54 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: tglx@linutronix.de
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Fri,  5 Apr 2024 10:14:15 +0200
+Message-Id: <20240405081415.15170-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <87cyr4ao79.ffs@tglx>
+References: <87cyr4ao79.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d7c3e03-fb25-4891-87bb-f4e7b8b4ee30@leemhuis.info>
 
-On Fri, Apr 05, 2024 at 08:14:03AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 29.03.24 13:12, Greg Kroah-Hartman wrote:
-> > On Fri, Mar 29, 2024 at 12:42:14PM +0100, Hans de Goede wrote:
-> >> On 3/29/24 3:35 AM, Peter Collingbourne wrote:
-> >>> On Thu, Mar 28, 2024 at 5:35 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>>> On 3/28/24 8:10 AM, Hans de Goede wrote:
-> >>>>> On 3/18/24 7:52 PM, Peter Collingbourne wrote:
-> >>>>>> On Mon, Mar 18, 2024 at 3:36 AM Andy Shevchenko
-> >>>>>> <andriy.shevchenko@linux.intel.com> wrote:
-> >>>>>>>
-> >>>>>>> On Sun, Mar 17, 2024 at 10:41:23PM +0100, Hans de Goede wrote:
-> >>>>>>>> Commit e5d6bd25f93d ("serial: 8250_dw: Do not reclock if already at
-> >>>>>>>> correct rate") breaks the dw UARTs on Intel Bay Trail (BYT) and
-> >>>>>>>> Cherry Trail (CHT) SoCs.
-> >>>>>>>>
-> >>>>>>>> Before this change the RTL8732BS Bluetooth HCI which is found
-> >>>>>>>> connected over the dw UART on both BYT and CHT boards works properly:
-> >>>>>>>>
-> >>>>>>>> Bluetooth: hci0: RTL: examining hci_ver=06 hci_rev=000b lmp_ver=06 lmp_subver=8723
-> >>>>>>>> Bluetooth: hci0: RTL: rom_version status=0 version=1
-> >>>>>>>> Bluetooth: hci0: RTL: loading rtl_bt/rtl8723bs_fw.bin
-> >>>>>>>> Bluetooth: hci0: RTL: loading rtl_bt/rtl8723bs_config-OBDA8723.bin
-> >>>>>>>> Bluetooth: hci0: RTL: cfg_sz 64, total sz 24508
-> >>>>>>>> Bluetooth: hci0: RTL: fw version 0x365d462e
-> >>>>>>>>
-> >>>>>>>> where as after this change probing it fails:
-> > [...]
-> >>> Acked-by: Peter Collingbourne <pcc@google.com>
-> >>
-> >> Thanks. Greg can we get this merged please
-> >> (it is a regression fix for a 6.8 regression) ?
-> > 
-> > Will queue it up soon, thanks.
+Hi Thomas,
+
+On 4/4/24 22:05, Thomas Gleixner wrote:
+> On Thu, Apr 04 2024 at 21:14, Thomas Gleixner wrote:
 > 
-> You are obviously busy (we really need to enhance Git so it can clone
-> humans, too!), nevertheless: friendly reminder that that fix afaics
-> still is not queued.
+>> On Thu, Apr 04 2024 at 20:06, Thomas Gleixner wrote:
+>>> On Thu, Apr 04 2024 at 18:14, Thomas Gleixner wrote:
+>>>> Can you please provide 'cpuid -r' output too as 'cpuid' does a few
+>>>> tweaks to the raw data and it's hard to match it back to the code.
+>>>
+>>> Don't bother. I think I figured it out.
+>>>
+>>> Can you please test the patch below?
+>>
+>> Bah. Won't help. Let me dig deeper.
+> 
+> Can I get the /proc/cpuinfo output please?
 
-"soon" is relative :)
+Here are more logs from the same device running v6.8:
+- cpuid -r: https://pastebin.com/raw/YmDrnw06
+- cpuinfo: https://pastebin.com/raw/Ki0vwdDE
 
-> Side note: there is another fix for a serial 6.8 regression I track
-> waiting for review here:
-> https://lore.kernel.org/linux-serial/20240325071649.27040-1-tony@atomide.com/
+Thanks for looking into this!
 
-It's in my queue, I'll try to get to serial stuff later today, but not
-promising anything...
-
-thanks,
-
-greg k-h
+Laura
