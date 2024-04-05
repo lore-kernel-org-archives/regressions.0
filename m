@@ -1,97 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A010422EE0;
-	Fri,  5 Apr 2024 04:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB8B28E2;
+	Fri,  5 Apr 2024 05:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712291854; cv=none; b=RcQXXmehdd7/ga9UJWxuH46ShotNWsd842SVETI8IUCdMBKwDlDOKLbKdNN1NUOujV16l/29zcCYPgm0kxdhdZcERZcnz+LrMPIvVpAAOneisP62Na7NfTXsiQTsm6J0SbvCIZcyEvdwZP2XLa3xj4OjCSFHsxQwRw5Q34e1j5Y=
+	t=1712296481; cv=none; b=eoi4yqYqcheomuKd25cVII6Xkj2hO/7KROg9iZqwwkZ4fbYoNhafBmvc1t2eFppVCWgCHIoSbly5iWn8PIdskf5nyrieE4QeS9UUiQfGPLfI12x8Enn/75JsRiftpaSAjWrNOPx0x5uZ7Q9Lmq+hOsAYqsXWl8nfEZh6w1Qy4Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712291854; c=relaxed/simple;
-	bh=fQSJmR5fXeT1gKRT6xVc9s6XAIrv64NLyk1tAD9C5N4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t4uxno4ImL/yRulRrtySeGQuodunnUWJgbc5QoEcubZdna4RKpSvkOxq8SlqHibJLaFyly+mqsz3KEkIYgoDJ+01RfmjD5/LLgN1Pvt/SghySa/S+C9cGllhV/p3trUI8rG7Y2PCjDLloN82KGjVn02gTawPlCyhw7mzROwgj6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X0h+sQCa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712296481; c=relaxed/simple;
+	bh=kpeRlCRjQYB9jQvGRYR8m1gduP3dQIVeiVNAcTnLfI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCdZpAOxAk4YUyuGZNLGBOFWLbG1KDkLavKk7m3W5rckyn+gTcAnaDg0/7AGfwpF+FT8qCAA06XoFY1E3h94sn1f29O4pdTg2VA6/+vdmfiopq5viUYMNPJaEYnsNz0xz34gVMyoqeoiTPi1SVZTyriQVjGcqvsEnXlzwTYCgQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=thhaDw7h; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X0h+sQCa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8622EC43390;
-	Fri,  5 Apr 2024 04:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712291854;
-	bh=fQSJmR5fXeT1gKRT6xVc9s6XAIrv64NLyk1tAD9C5N4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X0h+sQCaGpjBLPFOm2xQNQMCU5oLeDF03fPj6tAlY6RTNfQnrK5F6BapIWUPLXnWP
-	 2uWu+p9v4S3+ywP1x4IR/M/2xI5CBMayVe6Q5E84QciliA8B1mr8zqykyLNhqPhZU0
-	 AIOnC0lmtTp0k0nJJXScRmV5o7i55Dp7io+zr3cY=
-Date: Fri, 5 Apr 2024 06:37:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-Cc: mripard@kernel.org, 1054514@bugs.debian.org, airlied@redhat.com,
-	carnil@debian.org, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-	kraxel@redhat.com, linux-kernel@vger.kernel.org,
-	maarten.lankhorst@linux.intel.com, regressions@lists.linux.dev,
-	spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi,
-	tzimmermann@suse.de, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 1/1] Revert "drm/qxl: simplify qxl_fence_wait"
-Message-ID: <2024040515-salvage-uncounted-8164@gregkh>
-References: <20240327-cuddly-smooth-trogon-59c02d@houat>
- <20240404181448.1643-1-dreaming.about.electric.sheep@gmail.com>
- <20240404181448.1643-2-dreaming.about.electric.sheep@gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="thhaDw7h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=5+CSatVUX1mB5iLzA7Er8OGguj0pB7lpB5xhAhk7j8k=; t=1712296479;
+	x=1712728479; b=thhaDw7h4wBp37OhoHgzfSlW3c/g4wl3hTo0PiCjbMAQV126Ue75+XxYy56yN
+	qFaPK1yOdfYnFD7L0C8T/nJvosGfep1d4MzgAjS4L+mqIxWXnKJaiVH7UaaZUdCeezgtlNllVKj1n
+	FepsIcaIPhSaHEBtsH/Y5mWwwjworbO77Y3dgSG7KkPfFs/+gh4vTav9ZzAof7FQxdB48rbhqNkz0
+	dm8t/gYSa4MTJcuZzoKEyltR9IHPn/zSy4hxI5tD4QCi7MDdQ+jklWZHcF8eJsOBAjzh/XqLjZ0FL
+	k6BLSfMYp5W/XZAsjvFrGehaUDL9ZqzKKX2fEi9hE1rSIokzjg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rscX3-00021j-El; Fri, 05 Apr 2024 07:54:33 +0200
+Message-ID: <cb038940-63fd-4348-bed2-13e1b2844b92@leemhuis.info>
+Date: Fri, 5 Apr 2024 07:54:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404181448.1643-2-dreaming.about.electric.sheep@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
+ exception
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org
+Cc: Jordan Niethe <jniethe5@gmail.com>,
+ Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, mikey@neuling.org,
+ paulus@ozlabs.org, sbhat@linux.ibm.com, gautam@linux.ibm.com,
+ kconsul@linux.vnet.ibm.com, amachhiw@linux.vnet.ibm.com,
+ David.Laight@ACULAB.COM,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
+ <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
+ <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
+ <87sf007ax6.fsf@mail.lhotse>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <87sf007ax6.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712296479;f77730c1;
+X-HE-SMSGID: 1rscX3-00021j-El
 
-On Thu, Apr 04, 2024 at 07:14:48PM +0100, Alex Constantino wrote:
-> This reverts commit 5a838e5d5825c85556011478abde708251cc0776.
+On 05.04.24 05:20, Michael Ellerman wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Was this regression ever resolved? Doesn't look like it, but maybe I
+>> just missed something.
 > 
-> Changes from commit 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait") would
-> result in a '[TTM] Buffer eviction failed' exception whenever it reached a
-> timeout.
-> Due to a dependency to DMA_FENCE_WARN this also restores some code deleted
-> by commit d72277b6c37d ("dma-buf: nuke DMA_FENCE_TRACE macros v2").
-> 
-> Fixes: 5a838e5d5825 ("drm/qxl: simplify qxl_fence_wait")
-> Link: https://lore.kernel.org/regressions/ZTgydqRlK6WX_b29@eldamar.lan/
-> Reported-by: Timo Lindfors <timo.lindfors@iki.fi>
-> Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054514
-> Signed-off-by: Alex Constantino <dreaming.about.electric.sheep@gmail.com>
-> ---
->  drivers/gpu/drm/qxl/qxl_release.c | 50 +++++++++++++++++++++++++++----
->  include/linux/dma-fence.h         |  7 +++++
->  2 files changed, 52 insertions(+), 5 deletions(-)
+> I'm not sure how it ended up on the regression list.
 
-Hi,
+That is easy to explain: I let lei search for mails containing words
+like regress, bisect, and revert to become aware of regressions that
+might need tracking. And...
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+> IMHO it's not really a regression.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+...sometimes I misjudge or misinterpret something and add it to the
+regression tracking. Looks like that happened here.
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+Sorry for that and the noise it caused!
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+#regzbot resolve: invalid: was not really a regression in the first place
 
-thanks,
-
-greg k-h's patch email bot
+Ciao, Thorsten
