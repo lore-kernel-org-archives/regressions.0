@@ -1,72 +1,70 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E1A16C848
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 13:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016A616F27A
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 14:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712325497; cv=none; b=gz9YfjVHg/8Xapczn5qY2ta2WnQIKUstObRYI7ONUp7Lw2imrBrx1Pzsy4+8P1Q49BXdW6a4Va0x8wNIut08fARn+tWmz7+CQoH3wKviYqcyDV0MzOp5ipvEXg4qWcdWrZZc20QVlKHAmWCiyI7/qTLcM/KiyPt6DefoI1NQGN8=
+	t=1712327911; cv=none; b=n7SSHjvPqvVIonZMZbdVzFHDrV861beLWjCocsxwZnwFY1U1ypsv5M7n5LPWq3330v5UIRpibAjuc3dJi3lYkd+xOLXTWFKQO8aBkgfrJ3Ms3axNYs+bFP+efQF//H0VOUgN2Gfzn0HJJvNmEgITaocp7Os6CZiOK+hL+C8L5pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712325497; c=relaxed/simple;
-	bh=sqqgEu6lEH3lsouDnOTSlnsnADaGQFVT5jr/EVD56e8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QlaO9pTezcCbx9ldC5nUXezwwC/dm5aPelGN45Rd4LXKTCdojhWlpSKOKvP1TKS/HnzIIF4BLvwasXEVkyANK+6sOliqX9YpcSxxH07Y+YYNeARnRrSYA563pbAvLtOgLUdgm/72WTcHKFfgPOyLtEkYU3meNUvfpC19CkVDsKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EpuP4K0V; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EpuP4K0V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712325494;
-	bh=sqqgEu6lEH3lsouDnOTSlnsnADaGQFVT5jr/EVD56e8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EpuP4K0VVVnXP5RJwSUsYUvswr0diIrWWZiXQ4o0+HTr0vwZWwJAG4r6kfexwXhn0
-	 wUMCL8EbH1lJVcSvHbsg/2fZMzOLTw4zegmz+OUq8PeiR7ahvtqVNyQJB/wJsXHtHL
-	 NdaUfZk/jhU2HhniGNVEOO2d1EwRTLFqXYeDBD3OW8vrkyeRifSwqB5aStGpElEEJg
-	 EyQFO6/m517ou453WZf4JD82X8x8cR0v/Nm/JS52LGAyk6TOmgwUwQFhOz7uhTyhpN
-	 fs/80Rt+pEeclMJ0YKqVxSmdMic+DuCSwxRlks/uOnAMIIJRIpKuc6voNP7msEeBqh
-	 9v1jE7EZJU92g==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	s=arc-20240116; t=1712327911; c=relaxed/simple;
+	bh=ha8MdiwTOidPbAsf5RIcUUL2CKYMBNElNFxN1UpQ9h8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ilzZZybM9EeDGBmkBrY1IGu1rDPfTaqFFe4r/cx16lcBlkdGeNsUBE+ueo2+XjAxPVq8gBZrNIy77qyZXN6AQzblsBGWH7PyXlB+f/tZfEubMyojU/HCbpGTf+JQNtcOQ3gkXmafRmwPVBHvfh4tPKP3hDfaO8d+6CWXTgfo+XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
+Received: from 127.0.0.1 (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6949D37813DC;
-	Fri,  5 Apr 2024 13:58:13 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: tglx@linutronix.de
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Fri,  5 Apr 2024 15:58:37 +0200
-Message-Id: <20240405135837.306376-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <87ttkg7wvg.ffs@tglx>
-References: <87ttkg7wvg.ffs@tglx>
+	by mail.lichtvoll.de (Postfix) with ESMTPSA id AF255A286;
+	Fri,  5 Apr 2024 14:38:26 +0000 (UTC)
+Authentication-Results: mail.lichtvoll.de;
+	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
+From: Martin Steigerwald <martin@lichtvoll.de>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [regression] 6.8.1 and 6.7.12: fails to hibernate with
+ pm_runtime_force_suspend+0x0/0x120 returns -16
+Date: Fri, 05 Apr 2024 16:38:23 +0200
+Message-ID: <2181810.irdbgypaU6@lichtvoll.de>
+In-Reply-To: <2024040512-defective-wreckage-f202@gregkh>
+References:
+ <2325246.ElGaqSPkdT@lichtvoll.de> <12414153.O9o76ZdvQC@lichtvoll.de>
+ <2024040512-defective-wreckage-f202@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 4/5/24 15:38, Thomas Gleixner wrote:
+Greg KH - 05.04.24, 15:34:30 CEST:
+> > I think ThinkPad T14 AMD Gen 1 or similar systems with Linux are not
+> > that rare. I am surprised this is not hitting more people. Well maybe
+> > it does and no one reported it here.
+> > 
+> > Well let's see what happens when 6.7.12 hits distribution kernels.
+> > 
+> > Anyway, I have an actionable git bisect between 6.7.11 and 6.7.12,
+> > just not today. Maybe beginning of next week.
 > 
-> Can you please boot a working kernel and provide the output of:
-> 
-> # rdmsr 0xc0011005
-> 
+> 6.7.y is end-of-life, I wouldn't worry too much about it, there's
+> nothing we can do about it anymore, sorry.
 
-Sure:
+Ah, I see. Thanks.
 
-# rdmsr 0xc0011005
-2fabbfff2fd3fbff
+Still its a good short cut for bisection. Bisecting between 6.7.11 and 
+6.7.12 should get much quicker results than bisecting between 6.7 and 6.8 
+and as its the same error message in 6.8.1/6.8.4 and 6.7.12 it might be 
+the same (backported) patch causing the issue.
 
-Thanks,
+-- 
+Martin
 
-Laura
+
