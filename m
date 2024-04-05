@@ -1,116 +1,79 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC579145B09;
-	Fri,  5 Apr 2024 08:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA81215FCEB
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 08:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712306075; cv=none; b=oBxq1bqma3AghioY3O9H3KXs6eSGdpOdjgao8l6HZl1cpRqPQZlM3zQ8o9doFKNVczAsPxtPx7N3qBUjdnIpmdA6uXsmmdwxNBVXlvz5lUAi+9l9vU2RhoAV+37SB00el9hyfMYWUYGo9K6S7K5AJ4cRwnrdnHEsVq0SI2Ka+ow=
+	t=1712306574; cv=none; b=f1BVlK0++vLEcq5nQpzA7JM0ecTWz7LkSZmpLxh9MgFPOIOrG33AaDA4rm7UPPmFME0gNUuvNwfkUL+GZqYd2KmR40WM1FtGM+/+DMSgYV0bNFwDcR+2ncq0kAnf7RqLeMMHnRq7z+664DpctbDgroGW4ZsmyQAn5ryihW3jUmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712306075; c=relaxed/simple;
-	bh=Yako+DMTpbUlsWgZYmb5aBvtdempxtUvW+SFSwCrbYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LSCfDcak1Y7ZGXWSaZpvXXeS/2Plpto2iMKL/wJcScRETkPT41W/JQfh8XdhlA6ophpggutU7+q2cXzts3A4UTYaarqWORKaoSMi+mD0jfsMfq4T1ADztUiVzNvOqMkazA+vewIGRKpvxBWdF9JA4j7oFKmi9NfAyBwb/bOvdzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=T6amqLXC; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712306574; c=relaxed/simple;
+	bh=gH27NJNXWx8yHvqdIIM2H5tc5F94P1Mi80i+28bcZGc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OSnzt5rgcGegc5LBkSAUdejQifqwBgbbRHy87Slx7IHIc4NsGLSIyncUjSdqcbjxG2IAwHeUaCxxW3hfON+bfL7QUZDNXPdvTSdD0jYlZaPX3GwEFBPBVRBVKUL4Mij7JLHSwqgsjiRnKWyrcMUlUf2ssGnAF6inwIbMAG0aBaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EFmc8d5S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FcdNlC4C; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="T6amqLXC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=DLsk7UNbl2mGLlf8AChN6UTKTKuAoEYD5hs7O3ETLuk=;
-	t=1712306073; x=1712738073; b=T6amqLXCw+tbHT8+D+/EV2iwEqf0JJktgLc4i38HU4TOkRM
-	m+ZT746D9qjHKwl9U8XGGOfahxqNV4IoAK+3NmGatsanFtOUsKcK78mb6unPRRNvjo79huRQvqOTA
-	MTIibIrxxcm+/KmwsKXs7kEUSUB4WTu5lnbafy6yKgniBeSeS7GAzmrZO7Fxo4WxOa5sBb/eoap5l
-	ie5XiJFybSxZ5+yHHiUE9OVVuz7qPz/ULurc6P05dtNdzwB8nMHCvHA2oapkrdS8GE7YiKbVmpBvy
-	qcGMSyCuTtWrhdU7hwMMrWNIEn9/GEt/KlSoCiduwLSt68kTrnv0Efy1h39rv2jA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rsf1n-0000E9-IL; Fri, 05 Apr 2024 10:34:27 +0200
-Message-ID: <2d822b6c-8b55-443d-ad9e-03e97ce7b99b@leemhuis.info>
-Date: Fri, 5 Apr 2024 10:34:26 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EFmc8d5S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FcdNlC4C"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712306571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8zy9gkE0NL3wEID3wV6rSctgthIXwXNWDbVxfqHZhIU=;
+	b=EFmc8d5SU23iug9CgZKrNnehllIivytV50mkvFXjnhoo/aUn+bfy0IrN4Gq/kknOLciUWA
+	jKQbi6HvE2gZ2v2lQVp99UCYfQaEdhqjP0wmMFOXZdHHga0sBh6xvT0oTK+kJTdPE+ReG8
+	+Vl+10g+0buEuWVAUi0rf0ZxgWWtjq9yKu4UkQG3xr7fxh5zakjvXn1l62mNr5Y9aEr/j8
+	NWCMuk3rgtdNFcKWXagex2ysCzqwflk+Mr9YIjGpw61pORbzzB8mranXJbDOILk7ObVZZ8
+	vDRoV/NZnUdtLKrJkYGCUAf9/htMw+0P40eY3BgtcOijGnGboIpk9VMoOnZDbA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712306571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8zy9gkE0NL3wEID3wV6rSctgthIXwXNWDbVxfqHZhIU=;
+	b=FcdNlC4CKZ9wDtWyDg7qc3UE2yr9b+PEl+e14BdmO5V+pDLiomtTItE+MOcgH8Ra9wIyBd
+	6LOGgpXWzCBVEjDA==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240405081415.15170-1-laura.nao@collabora.com>
+References: <87cyr4ao79.ffs@tglx>
+ <20240405081415.15170-1-laura.nao@collabora.com>
+Date: Fri, 05 Apr 2024 10:42:50 +0200
+Message-ID: <877chc9p4l.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] [PATCH] Bluetooth: btusb: Add support Mediatek MT7920
-To: Mike Lothian <mike@fireburn.co.uk>, peter.tsao@mediatek.com
-Cc: aaron.hou@mediatek.com, chris.lu@mediatek.com, deren.Wu@mediatek.com,
- johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
- luiz.dentz@gmail.com, marcel@holtmann.org, sean.wang@mediatek.com,
- steve.lee@mediatek.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240304144844.2042-1-peter.tsao@mediatek.com>
- <20240401144424.1714-1-mike@fireburn.co.uk>
- <CAHbf0-FqUqoDty81OH9_Et7MTWFikYYhEvP7SBVGyeXO-R94_A@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <CAHbf0-FqUqoDty81OH9_Et7MTWFikYYhEvP7SBVGyeXO-R94_A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712306073;1a58ee15;
-X-HE-SMSGID: 1rsf1n-0000E9-IL
+Content-Type: text/plain
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Laura!
 
-On 01.04.24 17:20, Mike Lothian wrote:
-> On Mon, 1 Apr 2024 at 15:44, Mike Lothian <mike@fireburn.co.uk> wrote:
->>
->> I think this patch is causing issues with older firmware
->>
->> Bus 003 Device 002: ID 13d3:3563 IMC Networks Wireless_Device
->>
->> [    0.315064] Bluetooth: Core ver 2.22
->> [    0.315064] NET: Registered PF_BLUETOOTH protocol family
->> [    0.315064] Bluetooth: HCI device and connection manager initialized
->> [    0.315064] Bluetooth: HCI socket layer initialized
->> [    0.315064] Bluetooth: L2CAP socket layer initialized
->> [    0.315064] Bluetooth: SCO socket layer initialized
->> [    4.670811] Bluetooth: RFCOMM TTY layer initialized
->> [    4.671029] Bluetooth: RFCOMM socket layer initialized
->> [    4.671790] Bluetooth: RFCOMM ver 1.11
->> [    4.673416] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
->> [    4.673659] Bluetooth: BNEP filters: protocol multicast
->> [    4.673895] Bluetooth: BNEP socket layer initialized
->> [    4.674125] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
->> [    4.674360] Bluetooth: HIDP socket layer initialized
->> [    5.016365] bluetooth hci0: Direct firmware load for mediatek/BT_RAM_CODE_MT7961_1a_2_hdr.bin failed with error -2
->> [    5.017163] Bluetooth: hci0: Failed to load firmware file (-2)
->> [    5.017557] Bluetooth: hci0: Failed to set up firmware (-2)
->> [    5.018129] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
->>
->> The correct name should be mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
->>
->> Reverting this patch fixes things
-> 
-> If it helps, the device ID is 0x7961 and the fw_flavour is 24 or 0x18 in hex
+On Fri, Apr 05 2024 at 10:14, Laura Nao wrote:
+> On 4/4/24 22:05, Thomas Gleixner wrote:
+>> Can I get the /proc/cpuinfo output please?
+>
+> Here are more logs from the same device running v6.8:
+> - cpuid -r: https://pastebin.com/raw/YmDrnw06
+> - cpuinfo: https://pastebin.com/raw/Ki0vwdDE
 
-Thanks for the report!
+Thanks for the info. I'm still not seing why that wouldn't work.
 
-Peter, did you look into this?
+As the machine seems to have a serial port, can you please replace
+'earlycon' with 'earlyprintk=ttyS0,115200' on the command line and see
+whether that gives some output. I'm not sure that the current 'earlycon'
+has the same effect.
 
-Anyway: To be sure the issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, the Linux kernel regression tracking bot:
+Thanks,
 
-#regzbot report:
-https://lore.kernel.org/all/20240401144424.1714-1-mike@fireburn.co.uk/
-#regzbot introduced: 1cb63d80fff6c4
-#regzbot title: net: Bluetooth: firmware loading problems with older
-firmware
-#regzbot ignore-activity
+        Thomas
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
