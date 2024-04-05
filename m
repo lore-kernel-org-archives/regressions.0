@@ -1,38 +1,36 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED63D43170
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 15:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C690816FF32;
+	Fri,  5 Apr 2024 15:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712329909; cv=none; b=WOXAleSo0wzYr5XT6k6OLpUldrIV6KI+lWvqcq0eV+StQrGXEgXchysBcIPiTEUfSGwT8or5VCDG2lnCsOnSGbGfYEgM+Vg8oR5WFcML7JCK56zcV3e5jYH0da6WY0i8+1dLu9PunhhPpFCS+DOvsnOyOyZTkiKZIS6DtCGYHz4=
+	t=1712330468; cv=none; b=OCcqRo0Q0QZD5n/+qLpZkTkfZKkLMvUPHNebdHPgMgMf6jrjIkImQbbKEqRPjnhhlLo/shXEDZABXXyaiuCAn7isajiaxz6ekJCLbKmGxYrav+WDqzzV/4p0EB11ed6maFdDGfed663GadDF71VsxCzYBsW7fnR9OWahU5ujWO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712329909; c=relaxed/simple;
-	bh=i/FBrmXeRYRAkZo+w8z9IKfnevF7NzMKdBcR5i1GyaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F443aVuFKkdkpS12sG8fpctS5fBl3PV0thXZdzFoBFbc4s4fI3OF3vpRKPrpWJhWlDc1clujUyN/b5tXQZCeJZKSxSnyKENfm68UGq7LssYSWYfkDpl3cX9xZuEvXUpeNzT6bRjix9uYasN4GQ26qC+DECIwzMymYQ1gDx4CavM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=KAAtwnPj; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1712330468; c=relaxed/simple;
+	bh=X6XGUm6JZsKq6Bbf/V28UbuXZ15PV3XG3X+8BEf6k+A=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Cc:Content-Type; b=XoXN/idxczbvda//DrW6G4Z6XlqVlSDwcX6gydJbEG6pgClIf/0fRZ5U+OCKLk4r7XuEme9Czpe4f6Crkjd+6POB8Ghp+9yqMynF7uTHmt+u/ZN4J+9/DaU7TIzrrvHZCf0zldCNerzPWTQzdh1gROjh/QL/0lR3yvGvQsOyYUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JNhKaCGk; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="KAAtwnPj"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4VB1yQ1vzLz6839;
-	Fri,  5 Apr 2024 17:05:50 +0200 (CEST)
-Received: from [10.10.15.20] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4VB1yP6kvsz680y;
-	Fri,  5 Apr 2024 17:05:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1712329550;
-	bh=6CbXOq/C6yEQwlReHz1yEL3Ba6l2jK2jJJv8AXL2LzE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KAAtwnPjCFUeznelsBSSFkOTTnV258nZcPC+4Ie3DHVGsOl5E2LGvjPvWv8SY0tAu
-	 beI/vYsBcUWaA8xVC0CbFQCSwViXKnjvaOHG/5byuWOMgNbyGSkc4G5DN9EPfwTJon
-	 3kMOc8fNBTousHgMdaARXBuvBApkqf6cEEQ+cnLY=
-Message-ID: <5f022f30-e1f2-46e3-b75b-0cb4b157448e@gaisler.com>
-Date: Fri, 5 Apr 2024 17:05:49 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JNhKaCGk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Cc:Subject:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=v+qNG8sMUH5bGX+DRd6ZrkCiAd3Pu96BpQB8qRYZ0u8=; t=1712330466;
+	x=1712762466; b=JNhKaCGks6Ki/21xuIkSJgSjtV4ew9AwXk7AkkePp35/SD46QhNIC53V99JpL
+	+QlLXAxsYqtNN5VlvKa4HtKtHu8snRPec9pvRDmAnDdaKO71hbIJ5MYoRldSMTb2cQ0hhi4xpxK0x
+	QiPyEAdyeJvAVOO7Y25qHPzVkRVc23u9i4Co3D67KL8OLzCX/G76S0INmfasbURVgpDu5IlT7QzAT
+	ycinjlaOUcObl2pVjqPeSTbN0QjFBdoQsNd2NYWddDYVtyAP09QV4eSS0k8kAY5H+LvK6FXAQycvB
+	mwDJvOnX0rVtYSboiERpk2LYUH04uj+Tr4Jl9z2bCUTNsmRpLQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rslNI-0005aJ-0J; Fri, 05 Apr 2024 17:21:04 +0200
+Message-ID: <19851b9b-c3ff-4781-8292-4ce5999747d3@leemhuis.info>
+Date: Fri, 5 Apr 2024 17:21:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,57 +38,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: Only one CPU active on Ultra 60 since ~4.8 (regression)
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org,
- Sam Ravnborg <sam@ravnborg.org>
-References: <CADyTPEwt=ZNams+1bpMB1F9w_vUdPsGCt92DBQxxq_VtaLoTdw@mail.gmail.com>
- <CADyTPEyAidGgBT3f1VJLHb3ouO-r1UyvFp1PcwXxy0NRG94sbw@mail.gmail.com>
- <1df92fec-7f57-5080-94ed-b149ed384280@leemhuis.info>
- <14dcd743-144a-9f7b-849c-0843d50e4c04@draconx.ca>
- <4dce7447-678d-4e60-b76e-b01988bd6515@leemhuis.info>
- <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <CAHk-=wgFuoHpMk_Z_R3qMXVDgq0N1592+bABkyGjwwSL4zBtHA@mail.gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [regression] opp issues on devices with multiple power-domains
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712330466;6f3db7fd;
+X-HE-SMSGID: 1rslNI-0005aJ-0J
 
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
+Viresh Kumar, I noticed a report about a regression in
+bugzilla.kernel.org that appears to be caused by a change of yours
+(e37440e7e2c276 ("OPP: Call dev_pm_opp_set_opp() for required OPPs")
+[v6.8-rc1]). As many (most?) kernel developers don't keep an eye on it,
+I decided to forward it by mail.
 
-On 2024-03-28 21:09, Linus Torvalds wrote:
-> On Thu, 28 Mar 2024 at 12:36, Linux regression tracking (Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> [CCing Linus, in case I say something to his disliking]
->>
->> On 22.03.24 05:57, Nick Bowler wrote:
->>>
->>> Just a friendly reminder that this issue still happens on Linux 6.8 and
->>> reverting commit 9b2f753ec237 as indicated below is still sufficient to
->>> resolve the problem.
->>
->> FWIW, that commit 9b2f753ec23710 ("sparc64: Fix cpu_possible_mask if
->> nr_cpus is set") is from v4.8. Reverting it after all that time might
->> easily lead to even bigger trouble.
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218682 :
+
+> Created attachment 306086 [details]
+> Dmesg from xiaomi-onclite
 > 
-> I'm definitely not reverting a patch from almost a decade ago as a regression.
+> Devices with multiple power-domains has issues with required_opps is
+> pointing to wrong opp table because it lazily just uses dt node to find it.
+> But every genpd device has its own table.
 > 
-> If it took that long to find, it can't be that critical of a regression.
-> 
-> So yes, let's treat it as a regular bug. And let's bring in Andreas to
-> the discussion too (although presumably he has seen it on the
-> sparclinux mailing list).
-Yes, I am aware and I agree we should treat it as a regular bug.
+> The issue was fixed downstream with this commit:
+> https://github.com/msm8953-mainline/linux/commit/6afec1ea2cf1cdb968d646c45d1d1a80f6cb5fb2
 
-Reverting it as a regression fix would lead to followup issues like
-canceling the effect of commit ebb99a4c12e4 ("sparc64: Fix irq stack
-bootmem allocation.") but with misleading comments left in place. 
+See the ticket for more details. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
 
-Sam's fix looks like a good solution for me to pick up to my
-for-next branch.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-Thanks,
-Andreas
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: e37440e7e2c2760475d60c5556b59c8880a7fd63
+#regzbot title: OPP: issues on devices with multiple power-domains
+#regzbot from: Barnabás Czémán
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218682
+#regzbot ignore-activity
