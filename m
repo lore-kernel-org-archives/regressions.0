@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9636315FD18
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 09:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1BE161902;
+	Fri,  5 Apr 2024 10:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712309753; cv=none; b=eMVF8BDctiGj/EjB6D5LwvssKEcZk0ia5XZv48kxGgxxjbOb1iYqM27DYHBlHqpv9ztOL2i9Y8LgdTpOdw3Eo18uQX4VuGS1rtIN8/4c8S+/gp7BsQyUCQCt5euehQJjcY62BFVd41Y3zQXgtrltuGj0Ws+9eASK0hFEdXlKEys=
+	t=1712312578; cv=none; b=kdGfLICJh0IjlS/rq3KN7WYDwyHHa7qPJGTY+ZRj4sAs//KlG5yyPLhf6eeyzrPaRLhV5FkzMO7JJQcH5CbApu2j7Wgau9HbcLgZiHGNGk02z7f6vyzik163SKVLPflJnvDb901Bg6sv/vP+E1aU/jfNF5fc42r8khTMezSqdkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712309753; c=relaxed/simple;
-	bh=EsXdMFD4/eHvZfCq2A994xrliz/F9wfQmJ26yE3iJNM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=umjUFDuPY/dJDYBkGq9yvePaP9R8MWzqNOvrjwoAZmRlkyooRM2WrWyb5TMVSADpJaov5R0BV8XJnqGu/WMBMdniPn/qvSyKllqqfKp3364GyQEKwlT1Bg8i3tS+jR5ZlSeuk6kip3lzhkGypuLk77J9yUIM1oB3WUbFEt2du3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CFMAmJsI; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1712312578; c=relaxed/simple;
+	bh=20WIFlqzXv8bEsaIHY6yoNZA6nIiAZntm4F/ctnVrUg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=h3Gr3dxCwS8uF/zycaJ507FB7FkdJYLTpwSJkqCRZFWTY5ofHUJvDeRSrBkR4x7boa8DlgNGZABLtyjWPtNhtFfLuEhuJReDhJ3kOUSpn72k0kngN2nAGU3H6KwA4cNK8j0GiTaEEfRhGjMMoFeQcygTF58CJeFWSPSjdONon0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=p8wGCgW6; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CFMAmJsI"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="p8wGCgW6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=EsXdMFD4/eHvZfCq2A994xrliz/F9wfQmJ26yE3iJNM=; t=1712309750;
-	x=1712741750; b=CFMAmJsIhXOVzsHYh2Xcj6UMmPtUi9rWg2wPVesTzH3Ht0DpV3Gs75gwRhiuR
-	ZxjOruqEkWtcXMO9o0omKrBebdCba83j04cSNA1XyGmaFJYlm+CsL9lkiae2axZ5BKpbBeZryRDdR
-	RfFv8XknKI48FRy8kUr4PI07v2a+FcGfnFFUb8q1usPtYHCZvt6dgNowP278zaHuQt9eQ08lwPgyz
-	WDmQGtHqCn15nbwrHEjn6NheJMA+I3mtSpvMkGQSCsFHE8k92rrKbB7XS6DM5VxqEwx4XYyOZ4Rn+
-	+qMxeIwCtz3dAPaSQGBXP8IXidiHPhs+tQUY5aMMtQn20XcnOg==;
+	In-Reply-To:Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=CBcb0HqkxR3k46bsLAYeHj2Pxqw1LMgdMN4SvfAtuUo=;
+	t=1712312576; x=1712744576; b=p8wGCgW6veaEPLnuFcloMunOMkOFF/yhV1+DqXtM6eyZZE/
+	AWlmqN0X7+2w+bkSDuOwmvrW8qHr79ptMmK2mnKDWjA2fnBvTeHXv1/LjTjovuqsciRrztEpc2rcO
+	sb5goXnA3ti6qdw1WMdLXkhbWjXxyZW2TRSnivAdnDAmHtJF74yip6+lVQBzBEY5/+/olycGkdO1/
+	50qD8gqGoAlmmCuSVE81rIDyry06si3hcWn81eu82DM8afVdKHN9JylTHjoh7sMOmk1lXFjvrEH+N
+	uSkOfTxCTBL6MKMX1TWzgW/W4BOLlVZRjBKwQTMJSrRie3bDLLmRSZwVbzKQRreg==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rsfz6-0005TQ-VP; Fri, 05 Apr 2024 11:35:45 +0200
-Message-ID: <dcb3ced4-23a5-4655-8e5a-a2f112b91e93@leemhuis.info>
-Date: Fri, 5 Apr 2024 11:35:44 +0200
+	id 1rsgih-0007ZM-8N; Fri, 05 Apr 2024 12:22:51 +0200
+Message-ID: <96059b4b-f58c-49f9-8fdf-ccdcfdde6abc@leemhuis.info>
+Date: Fri, 5 Apr 2024 12:22:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,37 +39,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
+Subject: Re: [PATCH v1 0/3] docs: verify/bisect: fine tuning, testing fixes,
+ and using a build host
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>,
+ =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>
+References: <cover.1711963460.git.linux@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: <cover.1711963460.git.linux@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712309750;721679a3;
-X-HE-SMSGID: 1rsfz6-0005TQ-VP
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712312576;f029586c;
+X-HE-SMSGID: 1rsgih-0007ZM-8N
 
+On 01.04.24 11:29, Thorsten Leemhuis wrote:
+> A quick series with various improvements for
+> Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst.
 
+Feel free to ignore this series, I found another problem and will post a
+v2 within a few days. Will likely also use that occasion to split the
+first patch into two, it does a bit too much.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Ciao, Thorsten
 
-#regzbot report:
-https://lore.kernel.org/lkml/Zgg9OzeFZUTc4hck@tissot.1015granger.net/
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218671
-#regzbot fix: SUNRPC: Fix a slow server-side memory leak with RPC-over-TCP
-
-#regzbot report:
-https://lore.kernel.org/all/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-#regzbot introduced: f5c31bcf604db54470868f3118a60dc4a9ba8813
-#regzbot title: leds: hangs on boot
-
-#regzbot report:
-https://lore.kernel.org/lkml/tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com/
+> * The first patch contains various fixes and some fine tuning.
+> 
+> * The second adds a few instructions for later testing of reverts,
+>   fixes, or newer versions. This was already hinted at; but during some
+>   early work on Documentation/admin-guide/reporting-issues.rst to better
+>   reconcile the two it seemed wise to cover this properly here.
+> 
+> * The third patch briefly outlines how to build kernels on a different
+>   host; it came into being after a second user within one week asked for
+>   this. That also allowed the text to briefly cover cross-compilation.
+> ---
+> 
+> Hi! While at it let me mention one more thing unrelated to the changes
+> where I'm unsure if the current approach by the text was a wise choice:
+> 
+> * Should the document tell users to avoid mainline during merge windows?
+> 
+> Some input from the community on this would be splendid.
+> 
+> Ciao, Thorsten
+> 
+> P.S.: Not totally sure, but I think this should go into 6.9 as this is
+> a new document; but I can split this up if the two latter patches better
+> should go into -next.
+> 
+> Thorsten Leemhuis (3):
+>   docs: verify/bisect: git switch; proper headlines; various fixes;
+>   docs: verify/bisect: explain testing reverts, patches and newer code
+>   docs: verify/bisect: describe how to use a build host
+> 
+>  .../verify-bugs-and-bisect-regressions.rst    | 469 +++++++++++++-----
+>  1 file changed, 344 insertions(+), 125 deletions(-)
+> 
+> 
+> base-commit: b8cfda5c9065cd619a97c17da081cbfab3b1e756
