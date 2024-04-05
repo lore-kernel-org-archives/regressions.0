@@ -1,70 +1,78 @@
-Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016A616F27A
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 14:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDD716F82D
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 14:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327911; cv=none; b=n7SSHjvPqvVIonZMZbdVzFHDrV861beLWjCocsxwZnwFY1U1ypsv5M7n5LPWq3330v5UIRpibAjuc3dJi3lYkd+xOLXTWFKQO8aBkgfrJ3Ms3axNYs+bFP+efQF//H0VOUgN2Gfzn0HJJvNmEgITaocp7Os6CZiOK+hL+C8L5pA=
+	t=1712329151; cv=none; b=VlywIP7Jzxni22H+BuNIEr5ehGZnB7FGzb6i6SKa+pCBU1lMPsIW2xAIPsMf0ai8ZFOfcNQexYjRoP4LYPKVkrWJRDc9f/ZwghkV7DoSqKGqVZZScT4AY2/eDq9tvqt2yraJWOUJL+y5yS7zIO6rVDvKxWGU5hjOjebVcaOrPdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327911; c=relaxed/simple;
-	bh=ha8MdiwTOidPbAsf5RIcUUL2CKYMBNElNFxN1UpQ9h8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ilzZZybM9EeDGBmkBrY1IGu1rDPfTaqFFe4r/cx16lcBlkdGeNsUBE+ueo2+XjAxPVq8gBZrNIy77qyZXN6AQzblsBGWH7PyXlB+f/tZfEubMyojU/HCbpGTf+JQNtcOQ3gkXmafRmwPVBHvfh4tPKP3hDfaO8d+6CWXTgfo+XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id AF255A286;
-	Fri,  5 Apr 2024 14:38:26 +0000 (UTC)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [regression] 6.8.1 and 6.7.12: fails to hibernate with
- pm_runtime_force_suspend+0x0/0x120 returns -16
-Date: Fri, 05 Apr 2024 16:38:23 +0200
-Message-ID: <2181810.irdbgypaU6@lichtvoll.de>
-In-Reply-To: <2024040512-defective-wreckage-f202@gregkh>
-References:
- <2325246.ElGaqSPkdT@lichtvoll.de> <12414153.O9o76ZdvQC@lichtvoll.de>
- <2024040512-defective-wreckage-f202@gregkh>
+	s=arc-20240116; t=1712329151; c=relaxed/simple;
+	bh=GoD5cDngPo9za+wnO1zqHCoyvjOVhhc2Sev/5MLX6yo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nm2uZyKJmqWlMfsB7SQ8pwKfnHBck6FwF5Dy0i2m45x+WL6Fjg7Hj5jIcC3d0tSV12iwwwfC2kxvtMkUqZtPPHbu+3h9UCttibEEdgUu9+U5CJn+ZNjwz+vt35DKSnSUGIy00UTV6BVcM+bDu9tPwND2lxs9cF9W6jIIP77OkR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Baaiar0l; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qXPXpHH+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Baaiar0l";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qXPXpHH+"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712329148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7La8PmKGqPZj7+uG421aocfuKn6lduDBmlIV/b+eU1k=;
+	b=Baaiar0lhJoVgsBN2kMiw9yiODR1K0JJ4kWjU5X5+Xofoa9xCjruZyOlhKA5KwncXK/RyI
+	uUZJm2kxMcX3PFQUOdFNyJKDRuAV4d2r2f7JgTL3YmIDb2tJIEy54sVe8TgmwRkJab/y1Y
+	7ZEN+JLcqdKb2g8D9R4vdqjG1e4xI9rbY4x3LQgs+CvAq2mjREA+wGcocyOuURIb8b/fHa
+	+lFyOi+YGpxEKrMp+UrbB7UPkFp7zVhcmE/muCw49ZAPwfH8nqqDwCJSMW+RsAlXS+woYj
+	vuxWrllTLnak/TlBiMX487q2QLNHo2n1hjHvFVdxGmiulvEurLVatZNWOod20g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712329148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7La8PmKGqPZj7+uG421aocfuKn6lduDBmlIV/b+eU1k=;
+	b=qXPXpHH+AlgUB7J0s2S/abzJFuQMBkbkPJFZ+GSLx3dIG3toXRc2FeVdQIjK9rQt5xevRm
+	hdsJwUXR7UZ8FuCA==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240405135837.306376-1-laura.nao@collabora.com>
+References: <87ttkg7wvg.ffs@tglx>
+ <20240405135837.306376-1-laura.nao@collabora.com>
+Date: Fri, 05 Apr 2024 16:59:08 +0200
+Message-ID: <87msq797pf.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 
-Greg KH - 05.04.24, 15:34:30 CEST:
-> > I think ThinkPad T14 AMD Gen 1 or similar systems with Linux are not
-> > that rare. I am surprised this is not hitting more people. Well maybe
-> > it does and no one reported it here.
-> > 
-> > Well let's see what happens when 6.7.12 hits distribution kernels.
-> > 
-> > Anyway, I have an actionable git bisect between 6.7.11 and 6.7.12,
-> > just not today. Maybe beginning of next week.
-> 
-> 6.7.y is end-of-life, I wouldn't worry too much about it, there's
-> nothing we can do about it anymore, sorry.
+On Fri, Apr 05 2024 at 15:58, Laura Nao wrote:
+> On 4/5/24 15:38, Thomas Gleixner wrote:
+>> 
+>> Can you please boot a working kernel and provide the output of:
+>> 
+>> # rdmsr 0xc0011005
+>
+> # rdmsr 0xc0011005
+> 2fabbfff2fd3fbff
 
-Ah, I see. Thanks.
+Ok. So the CPU does not advertise FEATURE_TOPOEXT which is consistent
+with CPUID.
 
-Still its a good short cut for bisection. Bisecting between 6.7.11 and 
-6.7.12 should get much quicker results than bisecting between 6.7 and 6.8 
-and as its the same error message in 6.8.1/6.8.4 and 6.7.12 it might be 
-the same (backported) patch causing the issue.
+Now I'm even more puzzled because then the patch I gave you should make
+a difference. I need to run some errands now, I will provide a debug
+patch later this evening.
 
--- 
-Martin
+Thanks,
 
-
+        tglx
