@@ -1,89 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB8B28E2;
-	Fri,  5 Apr 2024 05:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A2A18659;
+	Fri,  5 Apr 2024 06:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712296481; cv=none; b=eoi4yqYqcheomuKd25cVII6Xkj2hO/7KROg9iZqwwkZ4fbYoNhafBmvc1t2eFppVCWgCHIoSbly5iWn8PIdskf5nyrieE4QeS9UUiQfGPLfI12x8Enn/75JsRiftpaSAjWrNOPx0x5uZ7Q9Lmq+hOsAYqsXWl8nfEZh6w1Qy4Do=
+	t=1712299373; cv=none; b=uqWMeJJ0v8qOsbpK90OJc3h+2FeT29V8qonabf6Mne5t/Xj0f0TqBEEcgv882KF0uGm7CQ5QWwjwE25HOGWfb8reqQQD8yg3Q2ACbO2NZwF1Wbys3JUA+EcBPF5JzMm3BwqMz68J00MyW2wWQrJU0Z9ZYpyI4ETZd5HuPejyBss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712296481; c=relaxed/simple;
-	bh=kpeRlCRjQYB9jQvGRYR8m1gduP3dQIVeiVNAcTnLfI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LCdZpAOxAk4YUyuGZNLGBOFWLbG1KDkLavKk7m3W5rckyn+gTcAnaDg0/7AGfwpF+FT8qCAA06XoFY1E3h94sn1f29O4pdTg2VA6/+vdmfiopq5viUYMNPJaEYnsNz0xz34gVMyoqeoiTPi1SVZTyriQVjGcqvsEnXlzwTYCgQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=thhaDw7h; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712299373; c=relaxed/simple;
+	bh=yqvRzGgJBEoPw84m3wibIRMoO901bjxYZLE2U2L0kkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nky6ik9+R85PGy/umNSUHHCJJ6fXr/MiJzFpVeue9aLWuDgGXDfFQiIJ3zVhvLL56KqM3CCG4EByjFRzEQU0ZXe038w3lNi02xbP2gOcQzyJSLCO1I1j1r5iYL36ef7UevQpIR3XrBiQevJ8wEDlJq7VchC2Fw3l1rK0sUEWrIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OYr+vmzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="thhaDw7h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=5+CSatVUX1mB5iLzA7Er8OGguj0pB7lpB5xhAhk7j8k=; t=1712296479;
-	x=1712728479; b=thhaDw7h4wBp37OhoHgzfSlW3c/g4wl3hTo0PiCjbMAQV126Ue75+XxYy56yN
-	qFaPK1yOdfYnFD7L0C8T/nJvosGfep1d4MzgAjS4L+mqIxWXnKJaiVH7UaaZUdCeezgtlNllVKj1n
-	FepsIcaIPhSaHEBtsH/Y5mWwwjworbO77Y3dgSG7KkPfFs/+gh4vTav9ZzAof7FQxdB48rbhqNkz0
-	dm8t/gYSa4MTJcuZzoKEyltR9IHPn/zSy4hxI5tD4QCi7MDdQ+jklWZHcF8eJsOBAjzh/XqLjZ0FL
-	k6BLSfMYp5W/XZAsjvFrGehaUDL9ZqzKKX2fEi9hE1rSIokzjg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rscX3-00021j-El; Fri, 05 Apr 2024 07:54:33 +0200
-Message-ID: <cb038940-63fd-4348-bed2-13e1b2844b92@leemhuis.info>
-Date: Fri, 5 Apr 2024 07:54:32 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OYr+vmzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A43C433C7;
+	Fri,  5 Apr 2024 06:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712299372;
+	bh=yqvRzGgJBEoPw84m3wibIRMoO901bjxYZLE2U2L0kkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OYr+vmzNVqXaqcPNVGMFNFrMEJt80lkvX2Ld8wWVM3prY52XF4Z/NgsiEfE0gClDO
+	 wsuXF2qbGz4QhwiAJ0K4NqiNrSlsFa7V4s67572GL5WWxmtuV9TvnSnjLz3Oveop09
+	 zqtZmD4BaDeRTZdvaxkuy3SeaH2eWwrWNs4QA+HM=
+Date: Fri, 5 Apr 2024 08:42:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Peter Collingbourne <pcc@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
+	stable@vger.kernel.org, VAMSHI GAJJELA <vamshigajjela@google.com>
+Subject: Re: [PATCH] serial: 8250_dw: Revert: Do not reclock if already at
+ correct rate
+Message-ID: <2024040500-snowbound-cadet-bba2@gregkh>
+References: <20240317214123.34482-1-hdegoede@redhat.com>
+ <ZfgZEcg2RXSz08Gd@smile.fi.intel.com>
+ <CAMn1gO4zPpwVDcv5FFiimG0MkGdni_0QRMoJH9SSA3LJAk7JqQ@mail.gmail.com>
+ <35cdaf7e-ef32-470f-ab61-e5f4a3b35238@redhat.com>
+ <33110d20-45d6-45b9-8af0-d3eac8c348b8@redhat.com>
+ <CAMn1gO5-WD5wyPt+ZKDL-sRKhZvz1sUSPP-Mq59Do5kySpm=Sg@mail.gmail.com>
+ <8cbe0f5f-0672-4bca-b539-8bff254c7c97@redhat.com>
+ <2024032922-stipulate-skeleton-6f9c@gregkh>
+ <1d7c3e03-fb25-4891-87bb-f4e7b8b4ee30@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
- exception
-To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org
-Cc: Jordan Niethe <jniethe5@gmail.com>,
- Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, mikey@neuling.org,
- paulus@ozlabs.org, sbhat@linux.ibm.com, gautam@linux.ibm.com,
- kconsul@linux.vnet.ibm.com, amachhiw@linux.vnet.ibm.com,
- David.Laight@ACULAB.COM,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
- <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
- <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
- <87sf007ax6.fsf@mail.lhotse>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <87sf007ax6.fsf@mail.lhotse>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712296479;f77730c1;
-X-HE-SMSGID: 1rscX3-00021j-El
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1d7c3e03-fb25-4891-87bb-f4e7b8b4ee30@leemhuis.info>
 
-On 05.04.24 05:20, Michael Ellerman wrote:
-> "Linux regression tracking (Thorsten Leemhuis)"
-> <regressions@leemhuis.info> writes:
->> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->> for once, to make this easily accessible to everyone.
->>
->> Was this regression ever resolved? Doesn't look like it, but maybe I
->> just missed something.
+On Fri, Apr 05, 2024 at 08:14:03AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 29.03.24 13:12, Greg Kroah-Hartman wrote:
+> > On Fri, Mar 29, 2024 at 12:42:14PM +0100, Hans de Goede wrote:
+> >> On 3/29/24 3:35 AM, Peter Collingbourne wrote:
+> >>> On Thu, Mar 28, 2024 at 5:35 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>> On 3/28/24 8:10 AM, Hans de Goede wrote:
+> >>>>> On 3/18/24 7:52 PM, Peter Collingbourne wrote:
+> >>>>>> On Mon, Mar 18, 2024 at 3:36 AM Andy Shevchenko
+> >>>>>> <andriy.shevchenko@linux.intel.com> wrote:
+> >>>>>>>
+> >>>>>>> On Sun, Mar 17, 2024 at 10:41:23PM +0100, Hans de Goede wrote:
+> >>>>>>>> Commit e5d6bd25f93d ("serial: 8250_dw: Do not reclock if already at
+> >>>>>>>> correct rate") breaks the dw UARTs on Intel Bay Trail (BYT) and
+> >>>>>>>> Cherry Trail (CHT) SoCs.
+> >>>>>>>>
+> >>>>>>>> Before this change the RTL8732BS Bluetooth HCI which is found
+> >>>>>>>> connected over the dw UART on both BYT and CHT boards works properly:
+> >>>>>>>>
+> >>>>>>>> Bluetooth: hci0: RTL: examining hci_ver=06 hci_rev=000b lmp_ver=06 lmp_subver=8723
+> >>>>>>>> Bluetooth: hci0: RTL: rom_version status=0 version=1
+> >>>>>>>> Bluetooth: hci0: RTL: loading rtl_bt/rtl8723bs_fw.bin
+> >>>>>>>> Bluetooth: hci0: RTL: loading rtl_bt/rtl8723bs_config-OBDA8723.bin
+> >>>>>>>> Bluetooth: hci0: RTL: cfg_sz 64, total sz 24508
+> >>>>>>>> Bluetooth: hci0: RTL: fw version 0x365d462e
+> >>>>>>>>
+> >>>>>>>> where as after this change probing it fails:
+> > [...]
+> >>> Acked-by: Peter Collingbourne <pcc@google.com>
+> >>
+> >> Thanks. Greg can we get this merged please
+> >> (it is a regression fix for a 6.8 regression) ?
+> > 
+> > Will queue it up soon, thanks.
 > 
-> I'm not sure how it ended up on the regression list.
+> You are obviously busy (we really need to enhance Git so it can clone
+> humans, too!), nevertheless: friendly reminder that that fix afaics
+> still is not queued.
 
-That is easy to explain: I let lei search for mails containing words
-like regress, bisect, and revert to become aware of regressions that
-might need tracking. And...
+"soon" is relative :)
 
-> IMHO it's not really a regression.
+> Side note: there is another fix for a serial 6.8 regression I track
+> waiting for review here:
+> https://lore.kernel.org/linux-serial/20240325071649.27040-1-tony@atomide.com/
 
-...sometimes I misjudge or misinterpret something and add it to the
-regression tracking. Looks like that happened here.
+It's in my queue, I'll try to get to serial stuff later today, but not
+promising anything...
 
-Sorry for that and the noise it caused!
+thanks,
 
-#regzbot resolve: invalid: was not really a regression in the first place
-
-Ciao, Thorsten
+greg k-h
