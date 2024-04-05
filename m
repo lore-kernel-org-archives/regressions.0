@@ -1,73 +1,89 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A510F134439
-	for <regressions@lists.linux.dev>; Thu,  4 Apr 2024 20:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF311643D
+	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 02:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712261118; cv=none; b=lY9X4SEO67hzMC3uSEsdoa92GMLSzVK0gL9hh4YoixBL+hTqcAzsSL+2ZWwVMKFEBRgRNA8dYJM743qtvbdYFucfMdv5OUVSlEdq1cVu/ETcLpuDd4HwviKg+fyeGIQa5KNU2RQz4ySchUITvT/yWVSpN1LzoggfJ/7cB9FMVL4=
+	t=1712285699; cv=none; b=H4zcfmnNDwUkoNvcYFY4Q9UaxSji0FOuaGQ2HE6PoqIE9sWXGecwzJPdE6zB/jd8NcsdjPrh8THbKK3l+5GUYiU4Vg+N6NPmbwihgm8KZ2sPNuyyz1fI7GDy1j+StNum4wArgaOq1YyAsW0+oYOdYXL35cJaL7BzHa9WQRCTjFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712261118; c=relaxed/simple;
-	bh=wsHuS/KXt9orAfcZ3WyjyEtk4smY9xBR+xVYHxV/BcA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PAYA0/4Scz2AGHG0DIlncRGWIdxlcFeb/3qhWxtc2DXGlIttz1hshB3kA0dHAJ1o1OQgHGUq+JiDmK+J6o1Fd+xGZBj7PU7f+KSjFU5g+Kv0RRmbXQaF/meAXZrDbsQGbkXi7N9iHTE6zvRvmOGk721ySmtNoKVPrPvHmsxEq5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BzqwXqNr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jt8XReyX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712285699; c=relaxed/simple;
+	bh=e9llrihK5byMhFHIZeeQIEult4uk6A4t2h+EPc40sOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyMw1XCuKrkqLQaY7ilxp3rC/xyjqxdJr1Peq6AJA4kI++U0FfD9NFxj+VdBYnEIcG4mKPuv7DtqapaeaAXng4H3IkvoDJ4h7t5g3BtyjvyDyNtGqONffu8yyA0NM8lirOSZLcnae03zg+OqNK6su+KkJ10OtZMZu9mAc7P3ilw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=dCTQlyw0; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BzqwXqNr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jt8XReyX"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712261115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wsHuS/KXt9orAfcZ3WyjyEtk4smY9xBR+xVYHxV/BcA=;
-	b=BzqwXqNrLuAUB60Mmnr9dKxOiWhkni341JUmCIqBh+sgoYx2Vrhd5y73HsO+5iWHTB66eR
-	+MThA+4iXALxFXzQNrycUpjMQEWcRf+XO1N9RyE7Ohf3BG5+n3flDdl0Qv052z+TcMtshz
-	Eg73ohNNoR70/pluyoBlyTDi+bRf4raYYsPv5oELQO5f1c/3i14F0Zlt1cn/KJGTR2cZNS
-	6hzY6dPF9i69mdedIh8WbUmNoYtMbF6HGOtI8mlYdpU1sPIprWbbo2hjdllUtYn72h8lXh
-	q5pUmM7yoP8f/vCEYfIyBQp4Vx/Z8AgGjnjU/5wobMqdWK0+fMGPg3zgApcXJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712261115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wsHuS/KXt9orAfcZ3WyjyEtk4smY9xBR+xVYHxV/BcA=;
-	b=jt8XReyXTulKwGpd7gPsFitdDLwXkgG6t/uQd/WEX8ON/N8AjWw5P4LkF3y8UdNc1Xe640
-	754OL5bwdO+F1zDQ==
-To: Laura Nao <laura.nao@collabora.com>
-Cc: kernel@collabora.com, laura.nao@collabora.com,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
- Chromebooks
-In-Reply-To: <87frw19bz8.ffs@tglx>
-References: <874jchb7na.ffs@tglx>
- <20240404152317.464796-1-laura.nao@collabora.com> <87sf019kbd.ffs@tglx>
- <87plv59f45.ffs@tglx> <87frw19bz8.ffs@tglx>
-Date: Thu, 04 Apr 2024 22:05:14 +0200
-Message-ID: <87cyr4ao79.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="dCTQlyw0"
+Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4352sd5s002237
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Apr 2024 22:54:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1712285681; bh=IJ37NqUIwrNgsAizQ/y4TjAF/Vi8qw2ku0kzM5T3adk=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=dCTQlyw09B6Td81OI8jDSAxF6BsliQVkPSB7Jq91t2UhCtgrwS+2ooW6RYGWiH/B+
+	 ktnMR9n5/F6Keh44Aie/6pV/i8UzZJzYcjusIZLVUV7HxHOwzoBhEFfOTiwrEPz66J
+	 NePPwwfcPJyFsbTo9XCv6906aqqoBRNYzR3kpWboLlYqEs/iDQwZ09/+ochVUIKmMG
+	 jI8Zw31xeYY1btJR1zaM2GPUhwiVhxgnKP+tbnk1Oq1I/5Vk5rF4y7eFXyhSb9BdfR
+	 mvgK2kq0Micr5uyAdkcq7aF82MGtOEBCX28JV9OEq2dpVjXBekr7t9sUJ2i33JKPFX
+	 K7PRZY9weZmEQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id AFE3115C00DE; Thu,  4 Apr 2024 22:54:39 -0400 (EDT)
+Date: Thu, 4 Apr 2024 22:54:39 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Do we need a "DoNotBackPort" tag?
+Message-ID: <20240405025439.GC13376@mit.edu>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh>
+ <Zg10Keik4KORjXMh@slm.duckdns.org>
+ <2024040319-doorbell-ecosystem-7d31@gregkh>
+ <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
+ <2024040454-playful-tainted-7446@gregkh>
+ <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
 
-On Thu, Apr 04 2024 at 21:14, Thomas Gleixner wrote:
+On Thu, Apr 04, 2024 at 05:56:58PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+> I know, as I wrote that (as you likely remember). ;-) But it seems it's
+> not well known; and maybe making it explicit that this can be used to
+> convey a "DoNotBackport" message is supported as well.
+> 
+> Guess I'll prepare a patch to do that then and we'll see how it goes
+> from there.
 
-> On Thu, Apr 04 2024 at 20:06, Thomas Gleixner wrote:
->> On Thu, Apr 04 2024 at 18:14, Thomas Gleixner wrote:
->>> Can you please provide 'cpuid -r' output too as 'cpuid' does a few
->>> tweaks to the raw data and it's hard to match it back to the code.
->>
->> Don't bother. I think I figured it out.
->>
->> Can you please test the patch below?
->
-> Bah. Won't help. Let me dig deeper.
+Maybe something like "ManualBackportOnly"instead?   The basic idea is
+that it's not that the commit should *never* be backported, but only
+with human intervention where someone has specifically requested the
+backport, perhaps with qualification test.
 
-Can I get the /proc/cpuinfo output please?
+(For example, the XFS file system has an implicit ManualBackportOnly
+on all commits, and the XFS stable maintainers are responsible for
+backporting identifying commits with Fixes: tags, and running QA
+before passing on a request to having them be backported.)
+
+              	       	    	       - Ted
+
+P.S.  I'd love to be able do something equivalent for ext4, if we
+could scare up the resources to do the same, in terms of having some
+company fund the necessary developer resources, or someone turn up to
+volunteer to do that for ext4.  Gentle reader, if that's you or your
+company --- let's talk.  :-)
