@@ -1,94 +1,77 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF5E174ECB
-	for <regressions@lists.linux.dev>; Fri,  5 Apr 2024 21:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA3D208C4;
+	Sat,  6 Apr 2024 06:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712351354; cv=none; b=sN3zMGtpiZgNWVTwjboK7lTpU3wqnG8RRxwc2NQQmEnUfPOM8L7opPmv8sf8x0dPErhH4qZQuzUFB76qn3YpC8+ctGJqrpVDCYXd/xII08SnOlImipLTlk07IvMvd+CPlLsoKFDyVTGxZuaBl02oeTuKbOgISU5Mr1nPoSLrPrA=
+	t=1712383829; cv=none; b=MTIaubK79e+IRe3lXKZ7DZDO4iRoXLzllJeSl/lyZcm0aJqjEeTqUtSl2XrkGOIUuQsY++LWYIhTm/41WdDUlfPuseShDIyZoJCullmUknjik5cV33o6sJ9HxoMU3c52fRKJulfIwMbFyiE+YIDvhzqaUvga8aLhGXBFhik11UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712351354; c=relaxed/simple;
-	bh=2YOecpYsyh+vm9vBQZX0fTyz2T1YdsNL1F7SgfXoFyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WEoLPKr6S0eUKoiXxtENzbLoqxHawn9MSn94DWH1+m8TpsQPpUNaZpxY21oX64/bqM81j9yAOckKRAAXOeeqU5FfG/IhERjmS8c+6TG5gfvRHmJ8CcUDrqbjaHi2ZzVYml0cHnKa2HwJqurV0Qe4vYFDHCXuNcRY+ggK3NGXe2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IFXe0yFM; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712383829; c=relaxed/simple;
+	bh=8zAAZQ5FVJuQ9n09nU25o0th4TcxCMkiE15rYRVwHjk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SKlOBrZHihXrG+gQ3FemuYqxXEcE7OsmDX0PCcPQ6Cu/DkHGoC+foMjZIH/dZANdqjpinOjmnpWMFw53W9PM6u9Yc19QrqllOObEWpu7Foh/O6I5lOk57m5+w50nuGovuiEyKS+dvXdECD2g00jT8r9nbJDvJfRhUnlYboBCt7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gC3Yov+6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IFXe0yFM"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56e0430f714so1462a12.1
-        for <regressions@lists.linux.dev>; Fri, 05 Apr 2024 14:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712351350; x=1712956150; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E1nP8K+fSotDuy4QoPEUBun3bv7r+0pyJXy5f5RUr3M=;
-        b=IFXe0yFMyKzEENw0FjVbktkgqkjl3gxPTpg/rLAmujtZQUNRjgZXNzmjAdCmDzQf5P
-         izw/pi9m7hss/2LWchD0FPYFWPFE1HPXjsEJnML+fMgwSvmhoqiYVMhyb6v/5k0AGl00
-         FpiSKrv/cniFoOoTRJOO1psAKgmvz0aVNzslff3xzAUOXbst45QCEoLZgF/Gc1GBAWCp
-         nzYggxNM5KzyOLVY1btJfGU2B5V8VPCsrpKkPHUHKWKYZQ2iCz0N/LE8nMa3gxJIXLSs
-         TKMPb79yg4OYCIsKLiNXhh5SOVpyfqWNpSHKeKcrZMhtiSmtxrgTZUhseb+f6oP+56u6
-         ge0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712351350; x=1712956150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E1nP8K+fSotDuy4QoPEUBun3bv7r+0pyJXy5f5RUr3M=;
-        b=NgvfD98qd6FFZdVFUckHsii6N9u/MOOAtOKx3ffr4Ti80FDw5d3XZxTkuQLppOghEB
-         UZFMDGf+ynuB2n3AECGDEwNc2GvGHZPhMiw3fYKvGzgzBoGm5sprALNnbur537kzxnpT
-         v6FwWD8mOQpUmL+Xeev/xD0qB4liOiQPBIJZfcMqU392boUnZiSVD5wyI+f1BZDOuRD+
-         x54ffeSLxacFNHLKNeQiaH1Z3botFROxZmiL8jhAsPIqO/svPMZNFwd9tWFpu+9Ool6Z
-         oLXOnYKctco475TdEistKFThL/pxkgK6IijW30q+snR8euEb8Kcwq2Azu5O+t0VPqa9/
-         wX7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVQuqkR9QrrMMmwXfLSZdDpoh59MCsByw50VHh//0lcfQoELfL9Fb5OtV9Xbgdl/jkx7f8BxGtqn3gYJE05jfXuVYSZImp4gYcFjTY=
-X-Gm-Message-State: AOJu0YyuTc5KdyHsTr9UEq3h6fKA8g60gKLG+jYjPzdN1vVK3z0RrMZQ
-	3dWWNBuLZjxAZy8BrEmpfapkzg+swa+NdnJEZQi7KdJWaIPVVhdetIN+kf6DgbUp3jqUtQAvl2H
-	RVDqSLyX47KupoA5JJRrHJBkLlD0M5LFBBLi+
-X-Google-Smtp-Source: AGHT+IH6IwdzbaNmHE9q05G7M8OOFo6JwqXRFkysioKrnXxqk9sxeJ5AYEGVY6iQXgSOlVBzeAMeOTtELpWyHpXZPT0=
-X-Received: by 2002:a05:6402:27d0:b0:56e:76e:6ea9 with SMTP id
- c16-20020a05640227d000b0056e076e6ea9mr45888ede.6.1712351349505; Fri, 05 Apr
- 2024 14:09:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gC3Yov+6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 53DB2C43394;
+	Sat,  6 Apr 2024 06:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712383829;
+	bh=8zAAZQ5FVJuQ9n09nU25o0th4TcxCMkiE15rYRVwHjk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gC3Yov+6vxydYB1n/dpImuWo7wA558nkRFgYjv3Episj1MvWbJbk5j217M8r2RNRJ
+	 JK26Dc4Qo2OqQtWtnADTwFGYKxQtGXsqOme51/xkHiYmQkBTYyktog52wF8Q+YLg56
+	 Rq2soHNO1iEIROm0ipFQ3fqbWoUjHB33nkbj+wmNqt+6DH8h9UEQohhH47qZBKprKa
+	 p3JIt8pc5bPqmjEAYglkY+VplC1UIERPus+Lg+9hkX+GFwuTDD6L/IuuFKZz2rcq3s
+	 9mpwGsGg8z9tY9e8zb2bAq9odx5zgiidSLwvzbA5h/AmvhysxXwzgTArc2w8i4Q3b1
+	 3ADdotqUvdVFQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3D317D8A103;
+	Sat,  6 Apr 2024 06:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240404075740.30682-1-petr@tesarici.cz>
-In-Reply-To: <20240404075740.30682-1-petr@tesarici.cz>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 5 Apr 2024 23:08:58 +0200
-Message-ID: <CANn89iLZ9rkSpT6crP89RV-GPSnSxhUkjPSSh3PmiLNDH103yQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when used
  repeatedly in one file
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171238382924.24936.14587108517208356483.git-patchwork-notify@kernel.org>
+Date: Sat, 06 Apr 2024 06:10:29 +0000
+References: <20240404075740.30682-1-petr@tesarici.cz>
+In-Reply-To: <20240404075740.30682-1-petr@tesarici.cz>
 To: Petr Tesarik <petr@tesarici.cz>
-Cc: "David S. Miller" <davem@davemloft.net>, open list <netdev@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ regressions@leemhuis.info
 
-On Thu, Apr 4, 2024 at 9:58=E2=80=AFAM Petr Tesarik <petr@tesarici.cz> wrot=
-e:
->
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu,  4 Apr 2024 09:57:40 +0200 you wrote:
 > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
 > initialized in the same file.
->
+> 
 > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
->
->         static struct lock_class_key __key;
->
-> Since u64_stats_init() is a function (albeit an inline one), all calls
-> within the same file end up using the same instance, effectively treating
-> them all as a single lock-class.
->
-> Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
-> Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d18=
-21@roeck-us.net/
-> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
+> 
+> 	static struct lock_class_key __key;
+> 
+> [...]
 
-I thought I gave a Reviewed-by: tag already...
+Here is the summary with links:
+  - [net] u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
+    https://git.kernel.org/netdev/net/c/38a15d0a50e0
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
