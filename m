@@ -1,199 +1,186 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242DB22EED
-	for <regressions@lists.linux.dev>; Sat,  6 Apr 2024 08:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F9B3611E
+	for <regressions@lists.linux.dev>; Sat,  6 Apr 2024 13:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712391129; cv=none; b=Tz6T+K9bgvWyaWxk//JPfAny1/+zOHqLFBFhylKZA7uvHjGTE4FXb4vLhpAa2WWWmypbFN5GV8c1OBFfdPDW/jlhjLUqToZWN0T2Twh0H+oaH3XvSYdzxwj2MakgnZRgYCzk5jXn+78TSv5hZ4Nf9Zo8bKkg6aGq2biz9/6vPMI=
+	t=1712408940; cv=none; b=Us5tQuG7bbWHN8qDpeCdEwvxi2P3ss3RQwhGWOiBRdLUzvxm35rhn4L8HwZbZI6IqNO9WpFkOmsOSSakNb1yOh01/hlLLTWQhTn5ZWmMmODd4TUpCwHWK3fOLYAnRbKmRyGsXRfjE68MJosd75++Hedzpy/2RSxfDoQbtW93UTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712391129; c=relaxed/simple;
-	bh=aWf5pSZLUsdnn16jPhoQuV6DiBeHMtampzsnziXCRVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=reETpE163DInVWDtmK2R6PkBfsSj3oxkyr6L6mRD29lSAVQLYe6udJWBkv58/LrwO4SoB5yrHAuXiOKNBB0VK46zQy1VxsrhfrbEeoDlHY4vNVkQvIsrD0uUtxwY2jIIL8GFnjs0QiZg9uLx/jgibnZvh/9q9MMPPFo8XFkF08w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=M9jj1B+l; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1712408940; c=relaxed/simple;
+	bh=kaUDzIEbecBFBGUdbUAl78HhXM3LqI9CU5IHcy4ZaXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fgAlr7wZzaZVl7qEKiOvAG04ltfW5xzbNRwWC/HU5sUTi8Sj+VmoHNR+p8d93SUTAyK9Q0RJan56YEesbR0Ppl6I6fEKtTu6wyV9s6XkRxSZqcWJ3R2/0TLcM38/neFf786VWUNLrPg+9OMzuGCf1QLIwVxTK802MgqqmbJn6ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDu8nB4y; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="M9jj1B+l"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 17E5E1B24BF;
-	Sat,  6 Apr 2024 10:12:05 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1712391125; bh=ZxNgUKAyIwv4+Cogy0VobezkIMJAIKV1c3sCN/kVg+8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=M9jj1B+l+y/zOaBW84NSfFbxs8Yh4JohdWvQi/fzdCRHES5AbuoNrhI+NOZqOqvy1
-	 r9VfMkAa50tYDQmkx8XGEGH4bkAroyDaqZu4G6oH+1bm/Rfh9YWpkxYxCPBcL7TExc
-	 cFWF8lpahQr+v08yC9r9rBLMJF7472dyFmkjpJprhMYwunHt1y+WpFXCJM7yxWeT+S
-	 8GPvWTgUM8d2W4q+ssEtxT6X+XFxjUvIPO8hA7gdCyB0DkcuFn+84WEs/kMtInC4vU
-	 foJU0To0HvAYRFxVLVcRxznZ4lhEiHkOxy0T9rGOTMXEonTUt6jtxgFFLBnrxJYwnL
-	 Z3NIkoDgoRldQ==
-Date: Sat, 6 Apr 2024 10:12:04 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Simon Horman <horms@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, open list <netdev@vger.kernel.org>, Linux
- regressions mailing list <regressions@lists.linux.dev>, open list
- <linux-kernel@vger.kernel.org>, "Linux regression tracking (Thorsten
- Leemhuis)" <regressions@leemhuis.info>
-Subject: Re: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when
- used repeatedly in one file
-Message-ID: <20240406101204.1f7827ae@meshulam.tesarici.cz>
-In-Reply-To: <20240405195117.GV26556@kernel.org>
-References: <20240404075740.30682-1-petr@tesarici.cz>
-	<20240405195117.GV26556@kernel.org>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDu8nB4y"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ed150119f6so307143b3a.1
+        for <regressions@lists.linux.dev>; Sat, 06 Apr 2024 06:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712408938; x=1713013738; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VJ8WfPeJwP/hN9b5IyWNxIFJSiglqUGmf6rb1vuLbUI=;
+        b=gDu8nB4yAtVBtBmIBYS7B6YEsB9Gcq4nuVfuXmRDfRX6IaCy6Ww9vW0wrQpWjjB9pF
+         zTHv04jCEz9QCXQWUbqyWH1HCW8G2Ga1dzXOBTfSYxW1KtL7GBl2XusibBDsThNyTvbE
+         SlXQ7DwfmxCSgONUZ8DXs9JW7jmsHSrYwsR4rer8OXXazGcCXhIOZpKVapXG7k0gckXp
+         u/gcN3i/4rh5x4D2B5d26T+W44rMmLTrKZXY3KEut24uKTo1aUFf69ISLkhcbXXUS93z
+         fAdCMknaN/+eXMnrurobVKVx66tlfI9bfPrsHvU9GA3ZUzXEEk+GUZjVjWdNrARqpy/M
+         ogFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712408938; x=1713013738;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VJ8WfPeJwP/hN9b5IyWNxIFJSiglqUGmf6rb1vuLbUI=;
+        b=s9yXB1GSxEN1kQcwKIC6H7FWzFlJT5RoOg4uuW64nDUbCFa5o+O1DPX/goBJ3jRCs6
+         VwmXpPNNNEKRed/WcwSJwIJ59OZn2fv3p6UzaThZhaG8YyGJJxdM1KQbZ2+mhJUCEi4l
+         vsnyvbjtfDvPC5lU6GoL134ofCZhC8ZHWfo7BMnQVT6d7DKOLNekzYm2ToZsE7bRtsjE
+         Hj3uquopGklr4YdrbwaC2SlX5s4skobtNDxz4MfSBbTTGbbMV9m9LG8xuMXiTaZJRynO
+         xI0KMvb9tHgMTV3zjTMXC7my4NkYXBCjYt+1eWq/YQ1j+ceXRkU+Cz5UPa8s3KFy5OLm
+         o3mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1NK3kWL7k1cHekHpraAYLei8F+NsToRmAzX8C6QBZnH8uAmcLs+h9N9Ry37tfggq5Wh8f66WDwsbbTBMNph0Qy6Qk76OXsjSy/sM=
+X-Gm-Message-State: AOJu0YxGB7dEOXxfVU6GNcDvfdhJLHlwtLGuFlIAeAoLkOJC+eHL7ZAP
+	ogpdXEJXZKqkQ6+1R+u8ZtHHfAhNM2TGkof++9s/+PzHGQ7P1dL2
+X-Google-Smtp-Source: AGHT+IGxP6jF9vpvANF2puNlutOZ79gt8X8maKtByPAIHJKls4TeQp6HCDbqkQRi4fwIgO8YzsRC/w==
+X-Received: by 2002:a17:903:2b05:b0:1e3:cd8c:d370 with SMTP id mc5-20020a1709032b0500b001e3cd8cd370mr3977830plb.44.1712408938102;
+        Sat, 06 Apr 2024 06:08:58 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id e5-20020a17090301c500b001e3c972c811sm2688004plh.131.2024.04.06.06.08.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Apr 2024 06:08:57 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 266E0186046F9; Sat,  6 Apr 2024 20:08:54 +0700 (WIB)
+Date: Sat, 6 Apr 2024 20:08:54 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Sound System <linux-sound@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Emil Velikov <emil.velikov@collabora.com>,
+	Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Daniel <dmanlfc@gmail.com>
+Subject: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
+Message-ID: <ZhFJZoful6nEFskW@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YSxOllt9oMHUTSam"
+Content-Disposition: inline
 
-On Fri, 5 Apr 2024 20:51:17 +0100
-Simon Horman <horms@kernel.org> wrote:
 
-> On Thu, Apr 04, 2024 at 09:57:40AM +0200, Petr Tesarik wrote:
-> > Fix bogus lockdep warnings if multiple u64_stats_sync variables are
-> > initialized in the same file.
-> > 
-> > With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
-> > 
-> > 	static struct lock_class_key __key;
-> > 
-> > Since u64_stats_init() is a function (albeit an inline one), all calls
-> > within the same file end up using the same instance, effectively treating
-> > them all as a single lock-class.
-> > 
-> > Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
-> > Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
-> > Signed-off-by: Petr Tesarik <petr@tesarici.cz>  
-> 
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> 
-> Interesting bug. I'm wondering if you also looked over other users of
-> u64_stats_init() to see if any of them can result in unexpected aliasing of
-> lock keys too.
+--YSxOllt9oMHUTSam
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I didn't.
+Hi,
 
-I have now run `git grep u64_stats_init | sed -e 's/:.*//' | uniq -d`
-and there indeed appears to be some aliasing in other files.
+On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
+on Steam Deck OLED [1]. He wrote:
 
-block/blk-cgroup.c:
-- struct blkg_iostat_set.sync
-- struct blkg_iostat_set.sync
+> I'm adding this here, I hope it's the correct place.
+>=20
+> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to init=
+ialise the topology for the device.
+> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLE=
+D and associated firmware.
+>=20
+> When I manually patched support for the 6.6 or 6.7 mainline kernel it wor=
+ked fine.
+> Now the official implementation fails as per below.
+>=20
+> Do we need an updated topology file?
+>=20
+> dmesg info...
+>=20
+> [   12.844720] snd_hda_intel 0000:04:00.1: enabling device (0000 -> 0002)
+> [   12.846177] snd_hda_intel 0000:04:00.1: Handle vga_switcheroo audio cl=
+ient
+> [   12.853045] max98388 i2c-ADS8388:00: MAX98388 revisionID: 0x41
+> [   12.854798] max98388 i2c-ADS8388:01: MAX98388 revisionID: 0x41
+> [   13.049834] input: HD-Audio Generic HDMI/DP,pcm=3D3 as /devices/pci000=
+0:00/0000:00:08.1/0000:04:00.1/sound/card0/input10
+> [   13.095674] input: FTS3528:00 2808:1015 as /devices/platform/AMDI0010:=
+01/i2c-1/i2c-FTS3528:00/0018:2808:1015.0003/input/input16
+> [   13.114799] input: HD-Audio Generic HDMI/DP,pcm=3D7 as /devices/pci000=
+0:00/0000:00:08.1/0000:04:00.1/sound/card0/input11
+> [   13.115023] input: Valve Software Steam Controller as /devices/pci0000=
+:00/0000:00:08.1/0000:04:00.4/usb1/1-3/1-3:1.0/0003:28DE:1205.0001/input/in=
+put19
+> [   13.120952] snd_sof_amd_vangogh 0000:04:00.5: enabling device (0000 ->=
+ 0002)
+> [   13.167809] snd_sof_amd_vangogh 0000:04:00.5: Firmware paths/files for=
+ ipc type 0:
+> [   13.169329] snd_sof_amd_vangogh 0000:04:00.5:  Topology file:     amd/=
+sof-tplg/sof-vangogh-nau8821-max.tplg
+> [   13.171103] input: FTS3528:00 2808:1015 UNKNOWN as /devices/platform/A=
+MDI0010:01/i2c-1/i2c-FTS3528:00/0018:2808:1015.0003/input/input18
+> [   13.171619] input: HD-Audio Generic HDMI/DP,pcm=3D8 as /devices/pci000=
+0:00/0000:00:08.1/0000:04:00.1/sound/card0/input12
+> [   13.172518] hid-steam 0003:28DE:1205.0001: input,hidraw2: USB HID v1.1=
+0 Mouse [Valve Software Steam Controller] on usb-0000:04:00.4-3/input0
+> [   13.172556] input: HD-Audio Generic HDMI/DP,pcm=3D9 as /devices/pci000=
+0:00/0000:00:08.1/0000:04:00.1/sound/card0/input13
+> [   13.173623] hid-steam 0003:28DE:1205.0004: hiddev0: USB HID v1.10 Devi=
+ce [Valve Software Steam Controller] on usb-0000:04:00.4-3/input2
+> [   13.215330] snd_sof_amd_vangogh 0000:04:00.5: Firmware info: version 0=
+:0:0-7863d
+> [   13.217053] snd_sof_amd_vangogh 0000:04:00.5: Firmware: ABI 3:26:0 Ker=
+nel ABI 3:23:0
+> [   13.234447] hid-steam 0003:28DE:1205.0004: Steam Controller 'FYZZ34102=
+C64' connected
+> [   13.242606] input: Steam Deck as /devices/pci0000:00/0000:00:08.1/0000=
+:04:00.4/usb1/1-3/1-3:1.2/0003:28DE:1205.0004/input/input20
+> [   13.289530] snd_sof_amd_vangogh 0000:04:00.5: Topology: ABI 3:26:0 Ker=
+nel ABI 3:23:0
+> [   13.291262] hid-multitouch 0018:2808:1015.0003: input,hidraw1: I2C HID=
+ v1.00 Device [FTS3528:00 2808:1015] on i2c-FTS3528:00
+> [   13.291402] sof_mach nau8821-max: ASoC: physical link acp-bt-codec (id=
+ 2) not exist
+> [   13.291500] input: Valve Software Steam Controller as /devices/pci0000=
+:00/0000:00:08.1/0000:04:00.4/usb1/1-3/1-3:1.1/0003:28DE:1205.0002/input/in=
+put21
+> [   13.296647] sof_mach nau8821-max: ASoC: topology: could not load heade=
+r: -22
+> [   13.298510] snd_sof_amd_vangogh 0000:04:00.5: error: tplg component lo=
+ad failed -22
+> [   13.300270] snd_sof_amd_vangogh 0000:04:00.5: error: failed to load DS=
+P topology -22
+> [   13.302008] snd_sof_amd_vangogh 0000:04:00.5: ASoC: error at snd_soc_c=
+omponent_probe on 0000:04:00.5: -22
+> [   13.303785] sof_mach nau8821-max: ASoC: failed to instantiate card -22
+> [   13.305586] sof_mach nau8821-max: error -EINVAL: Failed to register ca=
+rd(sof-nau8821-max)
 
-drivers/net/ethernet/amazon/ena/ena_netdev.c:
-- struct ena_ring.syncp
-  struct ena_adapter.syncp
+See Bugzilla for the full thread.
 
-drivers/net/ethernet/aquantia/atlantic/aq_ring.c:
-- struct aq_ring_stats_tx_s.syncp
-- struct aq_ring_stats_rx_s.syncp
+Thanks.
 
-drivers/net/ethernet/emulex/benet/be_main.c:
-- struct be_tx_stats.sync
-  + aliasing between this struct in
-    - struct be_tx_obj
-    - struct be_rx_obj
-- struct be_tx_stats.sync_compl
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218677
 
-drivers/net/ethernet/google/gve/gve_main.c:
-- struct gve_priv.rx[].statss
-- struct gve_priv.tx[].statss
+--=20
+An old man doll... just what I always wanted! - Clara
 
-drivers/net/ethernet/intel/fm10k/fm10k_netdev.c:
-- tx_ring->syncp
-- rx_ring->syncp
+--YSxOllt9oMHUTSam
+Content-Type: application/pgp-signature; name="signature.asc"
 
-drivers/net/ethernet/intel/i40e/i40e_txrx.c:
-- tx_ring->syncp
-- rx_ring->syncp
+-----BEGIN PGP SIGNATURE-----
 
-drivers/net/ethernet/intel/igb/igb_main.c:
-- struct igb_ring.tx_syncp
-- struct igb_ring.tx_syncp2
-- struct igb_ring.rx_syncp
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZhFJYQAKCRD2uYlJVVFO
+ozOYAQCjC7dhB6602A9unTbLpzRAaaU92jOL0oZmwdjl1KJciQEArrbM5YcBR87U
+Y525Kboh1Hms20eiwZ28oKuh/ESpEAM=
+=Kj2s
+-----END PGP SIGNATURE-----
 
-drivers/net/ethernet/intel/ixgbe/ixgbe_main.c:
-- struct ixgbe_adapter.rx_ring[]->syncp
-- struct ixgbe_adapter.tx_ring[]->syncp
-- struct ixgbe_adapter.xdp_ring[]->syncp
-
-drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:
-- tx_ring->syncp
-- rx_ring->syncp
-
-drivers/net/ethernet/marvell/sky2.c:
-- struct sky2_port.tx_stats.syncp
-- struct sky2_port.rx_stats.syncp
-
-drivers/net/ethernet/microsoft/mana/mana_en.c:
-- struct mana_txq.stats.syncp
-- struct mana_rxq.stats.syncp
-
-drivers/net/ethernet/netronome/nfp/nfp_net_dp.c:
-- struct nfp_net_tx_ring.r_vec->tx_sync
-- struct nfp_net_rx_ring.r_vec->rx_sync
-
-drivers/net/ethernet/nvidia/forcedeth.c:
-- struct fe_priv.swstats_tx_syncp
-- struct fe_priv.swstats_rx_syncp
-
-drivers/net/ethernet/realtek/8139too.c:
-- struct rtl8139_private.tx_stats.syncp
-- struct rtl8139_private.rx_stats.syncp
-
-drivers/net/ethernet/socionext/sni_ave.c:
-- struct ave_private.stats_tx.syncp
-- struct ave_private.stats_rx.syncp
-
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:
-- this was the trigger ;-)
-
-drivers/net/ethernet/ti/netcp_core.c:
-- struct netcp_stats.syncp_tx
-- struct netcp_stats.syncp_rx
-
-drivers/net/ethernet/via/via-rhine.c:
-- struct rhine_private.tx_stats.syncp
-- struct rhine_private.rx_stats.syncp
-
-drivers/net/ethernet/xilinx/xilinx_axienet_main.c:
-- struct axienet_local.tx_stat_sync
-- struct axienet_local.rx_stat_sync
-
-drivers/net/hyperv/netvsc.c:
-- struct netvsc_channel.tx_stats.syncp
-- struct netvsc_channel.rx_stats.syncp
-
-drivers/net/ifb.c:
-- struct ifb_q_private.tx_stats.sync
-- struct ifb_q_private.rx_stats.sync
-
-drivers/net/mhi_net.c:
-- struct mhi_net_stats.tx_syncp
-- struct mhi_net_stats.rx_syncp
-
-drivers/net/virtio_net.c:
-- struct virtnet_info.rq[].stats.syncp
-- struct virtnet_info.sq[].stats.syncp
-
-drivers/net/wwan/mhi_wwan_mbim.c:
-- struct mhi_mbim_link.tx_syncp
-- struct mhi_mbim_link.rx_syncp
-
-drivers/vdpa/vdpa_sim/vdpa_sim_net.c:
-- struct vdpasim_net.tx_stats.syncp
-- struct vdpasim_net.rx_stats.syncp
-- struct vdpasim_net.cq_stats.syncp
-
-HTH
-Petr T
+--YSxOllt9oMHUTSam--
