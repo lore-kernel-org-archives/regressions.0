@@ -1,97 +1,211 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A721117999
-	for <regressions@lists.linux.dev>; Sun,  7 Apr 2024 10:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44E3A1B5;
+	Sun,  7 Apr 2024 17:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712487305; cv=none; b=EREbl95apcskVPVf+vFraQ4sBn+kByt+ccPSUCrI9thIhLphjksm3SASNfXygOVmOVmuNnj33FAtvpLQdJTw0GT5yKVDzBmJIyC1oSWvwhsQYmJq6+lUmQO/BNSUfEO0ZtSECAMybR6LH/nCO2JyYn7cmLBZ1jWhNHWHSxd+UBg=
+	t=1712512049; cv=none; b=CIbiAXryuKm2yIZAFY8LuVayvmaQFgEKtLIdMD2yLD0fC0YqMLo3BO9ANzY20Y00Ee04SeO5P6HOPb5NRO5ykoG4HLm63TebGRG5MT1L7L2likMrOp42wQbwMJTdbzMYco+hFbNP0Mq7fbg28czuHv6lzCHx2wWnubol8r9Ilh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712487305; c=relaxed/simple;
-	bh=0FNkFT5QS5lBRnQ/rWzuQ5eMPzd/+jLUn2aoKvSyB0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dVF2qB1yDcMo6ndsBMLBDdMbRTH8b5zX6IWJA3sYDhNNpV2Qd8Dfkzay9AoWPQVHoF6Wtutv06FWa7rzC+XO0kdqLeNdLUFqWJSmSdETZwHbyVVF2bTHNG8YzQhWMlTQd1aeuQL+q5wY9ifGR/yAf1R7FUNIebaolKvHmkh1jMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKBEpIgr; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712512049; c=relaxed/simple;
+	bh=3Md9tJVX6dqO0+rjVuEn6Fwi1QnMIsBlC/t3nZwgSFs=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=TaTeB8tz82l9MG8JQCJpc1SwpC8sE3AfsAqhXLI+ozlduxsls2jH0gtOHG7HVONSnImqCLReseDQCFdZZN4Is9pZRPld1HgXZH3ti27dMFqnTSNLCmjwmC80onpjgcvNCIajOkUJeOJ+/6zpjJZpZN3clBxghiN2kl0qof0SSMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=rR9VYt/G; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKBEpIgr"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2228c4c5ac3so2221526fac.0
-        for <regressions@lists.linux.dev>; Sun, 07 Apr 2024 03:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712487302; x=1713092102; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hi6IMRhAW/p8+uIEIPIdvOce9xoFdjPwOwNp3TWqz14=;
-        b=eKBEpIgrMjVaUkGZJS/ldbJ7+EdNvzSg1alG9sf9k/X3zL6cCVnfOWpqIs8BLngdUu
-         vht5cCmJCFTynvVSRBVG3EMLdd7mIe/fCLHKaFiJcDMywTwPv36TePxfNywCCVtgqj2N
-         P8h4fUsfAA3Cr6xvcPtyvridSaeH0WF06NeNs1F5N2G4S4mmvv8h2ufHuaDg5v7LHITb
-         8ZqRka+9OxRs3O1RP/bd9C29yiy+3wTsNJC5q8f7de1E7YPnaY3sWeyNzF8Zd3CFJE7M
-         2ZR8heSU7hoR3H/3jNFm8YwhfuxlNGoyoOdEM8/ZtaswZsNmYNfugVAzmO7yU7JvxZnL
-         tk3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712487302; x=1713092102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hi6IMRhAW/p8+uIEIPIdvOce9xoFdjPwOwNp3TWqz14=;
-        b=svPWc+iKK2uedi7P2rqD0M0Tr+IWhT9vFlFhGKotfzKFmuMp0gC8w6pEGW91m5AOoI
-         ts9esiSrv0k7Eqylhf/UfpILcPJ422W/zD/o25BnVIWAJc7hcKyGAd6MczEmogilzPDb
-         mNXIpyGN+4vJ2mLxlBcGpHsShh8uXvj23qka/WnU6YqH/l/qrplJuAdHU0EFpCpRUCeH
-         sVpBkeojyBqVYpxpDZoQTiGb2re5Lg1F+MugCiDW9XTVbjOdihAgd95eDL+P029JMtfm
-         1oMeXQ7kTy2Er16llhXzsKWd6kI2RD8HsuT9PRd18EPp82gMuG90qeJaA3rSDfMDtqGn
-         cqIg==
-X-Gm-Message-State: AOJu0Yy8gHEPaWnPsul6mhC5kbS6E+G9VJDqKb/ShSfwFHscevVBL4yL
-	RYsah2dpuvAozl/p7MUwtp1SxF03I42MbpmGZ+sW4hZbjCf6Rvi4
-X-Google-Smtp-Source: AGHT+IGgFKaNNHzF6DVMLndXuLCmjKQEvme5nIK3evzX5ufqHby78SZeGt98w7h6wxysANH3M+t1IA==
-X-Received: by 2002:a05:6870:5694:b0:22a:1ce4:c0cf with SMTP id p20-20020a056870569400b0022a1ce4c0cfmr7378479oao.55.1712487302656;
-        Sun, 07 Apr 2024 03:55:02 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id fn10-20020a056a002fca00b006ecfdcc2de9sm4607717pfb.10.2024.04.07.03.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 03:55:02 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 03F7A184690B1; Sun,  7 Apr 2024 17:54:58 +0700 (WIB)
-Date: Sun, 7 Apr 2024 17:54:58 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Emil Velikov <emil.velikov@collabora.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Daniel <dmanlfc@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Sound System <linux-sound@vger.kernel.org>
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-Message-ID: <ZhJ7gpvvkAiOXM5e@archie.me>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="rR9VYt/G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=KzB9+NC/iNbqC4GHXz3EN1UlpiBjSRxEyFKgXhwdjJE=; t=1712512046; x=1712944046;
+	 b=rR9VYt/G7sGpCcjeNo/q80LxjukEZzygy/DQEXAWelkb3F5TvDlK1yIzICcZHj7HmI7rrzqU92
+	60hYTlRHW255l6le8omZsrBx+G4tN0PFrtLt64wL5ybfdEspCywHFjiceqIbhylI7WZCck7xKiS9S
+	YIa8vtYu1Y1WI5QRNrwrFU38QyYKL3sxJ9Ajwb+whrTm0zyBjlPaWBy7IZUW22JR40T1MCELi4mq4
+	GSKlUO73VRBaZ6CGTtmSi2ixHeWjkEkrGswFqZ7o40Mae6Y4+6vZp/Z7RqHXzaullIs2+u2LQQ5TF
+	yKs87DKO5TB499cOHOI2ipYMKOCUi9MXo9tyw==;
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1rtWbz-0001uW-Vz; Sun, 07 Apr 2024 19:47:24 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-04-07]
+Date: Sun,  7 Apr 2024 17:47:23 +0000
+Message-ID: <171251198215.2979732.6005919918293923522@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712512046;1646a24a;
+X-HE-SMSGID: 1rtWbz-0001uW-Vz
 
-On Sun, Apr 07, 2024 at 09:47:00AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 06.04.24 15:08, Bagas Sanjaya wrote:
-> > 
-> > On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
-> > on Steam Deck OLED [1]. He wrote:
-> 
-> Bagas, why didn't you forward this to me in private first, as we agreed
-> on as general procedure for cases like this?
+Hi Linus, here is the weekly regressions report. Nothing worth highlighting, so you might as well ignore this. :-D
 
-At skim it was a rather (subtle) regression, so I forwarded it myself.
+Ciao, Thorsten
 
-Thanks for the reminder!
 
--- 
-An old man doll... just what I always wanted! - Clara
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 7 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.8.. aka v6.9-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] workqueue: nohz_full=0 prevents booting
+-------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218665/
+https://bugzilla.kernel.org/show_bug.cgi?id=218665
+https://lore.kernel.org/lkml/5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info/
+
+By Friedrich Oslage and Friedrich Oslage; 7 days ago; 15 activities, latest 0 days ago.
+Introduced in 5797b1c18919 (v6.9-rc1)
+
+Recent activities from: Oleg Nesterov (5), Frederic Weisbecker (2),
+  Tejun Heo (2), The Linux kernel's regression tracker (Thorsten
+  Leemhuis) (2)
+
+3 patch postings are associated with this regression, the latest is this:
+* Re: Nohz_full on boot CPU is broken (was: Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on queue_delayed_work)
+  https://lore.kernel.org/lkml/20240407135248.GB10796@redhat.com/
+  0 days ago, by Oleg Nesterov
+
+Noteworthy links:
+* Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on queue_delayed_work
+  https://lore.kernel.org/lkml/20240402105847.GA24832@redhat.com/
+  7 days ago, by Oleg Nesterov; thread monitored.
+
+
+Framework Laptop 13 AMD suspend/wakeup regression with 6.9rc1
+-------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218641/
+https://bugzilla.kernel.org/show_bug.cgi?id=218641
+https://lore.kernel.org/lkml/5b778e74-1278-42b1-84e1-a2c04a8211f0@leemhuis.info/
+
+By David Markey and David Markey; 12 days ago; 20 activities, latest 0 days ago.
+Introduced in 7ee988770326 (v6.9-rc1)
+
+Recent activities from: anna-maria (5), Mario Limonciello (AMD) (5),
+  Thomas Gleixner (2), Anna-Maria Behnsen (1), D.F. (1)
+
+4 patch postings are associated with this regression, the latest is this:
+* [PATCH] PM: s2idle: Make sure CPUs will wakeup directly on resume [implicit due to Link/Closes tag]
+  https://lore.kernel.org/lkml/20240405083410.4896-1-anna-maria@linutronix.de/
+  2 days ago, by Anna-Maria Behnsen; thread monitored.
+
+
+mainline boot regression on AMD Stoney Ridge Chromebooks
+--------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240322175210.124416-1-laura.nao@collabora.com/
+https://lore.kernel.org/lkml/20240322175210.124416-1-laura.nao@collabora.com/
+
+By Laura Nao; 15 days ago; 16 activities, latest 2 days ago.
+Introduced in c749ce393b (v6.9-rc1)
+
+Recent activities from: Thomas Gleixner (9), Laura Nao (4)
+
+One patch associated with this regression:
+* Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+  https://lore.kernel.org/lkml/87plv59f45.ffs@tglx/
+  2 days ago, by Thomas Gleixner
+
+
+[ *NEW* ] net: Bluetooth: firmware loading problems with older firmware
+-----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
+https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
+
+By Mike Lothian; 6 days ago; 3 activities, latest 2 days ago.
+Introduced in 1cb63d80fff6 (v6.9-rc1)
+
+Recent activities from: Mike Lothian (2), Deren Wu (武德仁) (1)
+
+
+clk: qcom: gdsc: lockdep splat
+------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
+https://lore.kernel.org/lkml/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
+
+By Johan Hovold; 16 days ago; 14 activities, latest 2 days ago.
+Introduced in 9187ebb954ab (v6.9-rc1)
+
+Fix incoming:
+* clk: qcom: gdsc: treat optional supplies as optional
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6677196fb1932e60b88ad0794a7ae532df178654
+
+
+[ *NEW* ] leds: hangs on boot
+-----------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+
+By Ben Greear; 5 days ago; 3 activities, latest 3 days ago.
+Introduced in f5c31bcf604d (v6.9-rc1)
+
+Recent activities from: Ben Greear (3)
+
+
+fs: ntfs: obsolete legacy driver and a bunch of  warnings
+---------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
+https://lore.kernel.org/linux-fsdevel/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
+https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
+
+By Johan Hovold and Artem S. Tashkinov; 16 days ago; 8 activities, latest 13 days ago; poked 3 days ago.
+Introduced in 7ffa8f3d3023 (v6.9-rc1)
+
+2 patch postings are associated with this regression, the latest is this:
+* [PATCH 2/2] ntfs3: remove warning
+  https://lore.kernel.org/linux-fsdevel/20240325-faucht-kiesel-82c6c35504b3@brauner/
+  13 days ago, by Christian Brauner
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/171190174577.2331570.14684431508078699808@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
