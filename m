@@ -1,57 +1,53 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A3F7462
-	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 05:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA9A3BB22
+	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 08:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712553616; cv=none; b=LcVT068aulW9SGSLyRkW/bG/biyHuA69fRyxSjAYssfueE73DE1cUlxcnrJrhRydxv5+z/XHjBrx+JtmmiEc92tbLsg4D8KqOD3WKqN5MeXz9YCfJdAbzcOu2aBXYNnuXFD1QfoK++r671WHy7WlxZfz1vlnNtoiMe0wfPc9ZYg=
+	t=1712564439; cv=none; b=ptp3rPURw82hJjYIiJz3d4h2mqymyc0ftd2DZzM88jD/IkDnFuwuBiiiYEBJwuGJh7nLdJZ75x6UVBCqC9URYxvKtiZhUbEqCGNwKwsIjFydYPe/sVN1lYJ0eDoEWxtlS4ZMEBeuVAzrt3DsASJDismUQQz9D6fJiB2DvwzBhIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712553616; c=relaxed/simple;
-	bh=9LJuWuOpABTv9KgvHhQORrnmPBq13CalFtT6NDkHYyM=;
+	s=arc-20240116; t=1712564439; c=relaxed/simple;
+	bh=6KcrIOycZ3UQaXDbv1ynZutea7vqMZldQFCg0ePvU1E=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UO663ziMhu/7QwY0wSabdyR0zK+DiDDlntDHuGgoHkSyPtz2qM6xAtxei5X7uMD1VqNXxuhLViT1uBMUAoLIKS7MpjhWKJ77H8BLKY0ul2NI1rKwmzDpV6J3hJVw6+VdKW2bnlXunYH93A/i/q3qoRTEKbN/p8fG/laaB2gVnUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=NtwXaEjq; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	 MIME-Version:Content-Type; b=IlPLyVq+lM5Ir5u8ikeHUmb6s+8hFMtnJoCKwNlCESwVabdSI4YvdfDEqy4Bq1QsfPiUMaN00pawiiqvfV4KMLfOh8WxhlckPR78wBmG98jKR65eRXNRvBBE+4Ec5UwZZywoFAQhVm0wbRrqqZN4vfL0gAoR1G90knb4BWrm6JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lwMEQRfP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2gAX/aOT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NtwXaEjq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1712553612;
-	bh=XZu26WoVj+aYiP2HgRzxMGfR6mT0EhwCcY1NLc0eUAI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NtwXaEjqDnzFWsb+68xwuVHgjWc8ce+M8o1K/NSpjV0/oHq/uhFonP/RqANt0LSZ+
-	 CuUt5MniSq6tM1ytEtlx5S6twMM/2+tjnQJSLhJfrJ0dvlkBRJCznN5ukPiOpVeTf6
-	 IMsULyM2pdA+EvT500NoWRT01y/0oUsOsjqPltol8pAMS+JeT7mGykB+er9ATz30Fu
-	 YD/jvCbeLTDZfBd3kmG+piRw1lIyteeFq+lAKQF2UwNC8DKShMbiF46v/OLuF++nt1
-	 gnF49PuVw8b1dyJLf+PEBkd4pSxzDkghJ1UjzocPyOZqCUyxufHbpOUklWxfVtLRHF
-	 gd5UfzxksZ2JA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VCcqJ0WXPz4wcR;
-	Mon,  8 Apr 2024 15:20:11 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Nicholas Piggin
- <npiggin@gmail.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
- kvm-ppc@vger.kernel.org
-Cc: Jordan Niethe <jniethe5@gmail.com>, Vaidyanathan Srinivasan
- <svaidy@linux.vnet.ibm.com>, mikey@neuling.org, paulus@ozlabs.org,
- sbhat@linux.ibm.com, gautam@linux.ibm.com, kconsul@linux.vnet.ibm.com,
- amachhiw@linux.vnet.ibm.com, David.Laight@ACULAB.COM, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
- exception
-In-Reply-To: <cb038940-63fd-4348-bed2-13e1b2844b92@leemhuis.info>
-References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
- <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
- <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
- <87sf007ax6.fsf@mail.lhotse>
- <cb038940-63fd-4348-bed2-13e1b2844b92@leemhuis.info>
-Date: Mon, 08 Apr 2024 15:20:11 +1000
-Message-ID: <87y19obfck.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lwMEQRfP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2gAX/aOT"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712564435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gMVoXZYiIlU4ozo0MMikevpPJnSQyAU1xeiARptVQkM=;
+	b=lwMEQRfPQrZHwqAmcMB4zNpJtkLi8QKVo1LTD3fkZGIpURL/vTWo+9kgfnEW1cv4kVfHzr
+	Ze3Scqi//prSRq+m1VLRkfo89oq/Y/xSC9UrJBTUcCWKgSZ8BAdI5LFDw+9szCOHb0AOmw
+	yr3DkRPJh35NxSaNFQvLXLuUECDnsGFxmEpkwD2UN6wdixnobDoR5u6ar9QBVTx5rWngD7
+	lh2q8tdL/PNGhcR+8mnBhQZcOkZ+uahk4bjlZOJhcSivzp4Sm2/HyRiZMvPUJ9nrnriot7
+	Wtugu9jamIGI4eli0RYeP5yAg66PT59MePdEj75w0QucKbX7JgbBn1IEVW17WA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712564435;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gMVoXZYiIlU4ozo0MMikevpPJnSQyAU1xeiARptVQkM=;
+	b=2gAX/aOTReJ9BYRzukzs7x7HXkdrbC/ojll590P0SHoWe3KeuMrM0gwSI190xlkZrlKcoX
+	KpZCGlL7nYVBSsDg==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <87msq797pf.ffs@tglx>
+References: <87ttkg7wvg.ffs@tglx>
+ <20240405135837.306376-1-laura.nao@collabora.com> <87msq797pf.ffs@tglx>
+Date: Mon, 08 Apr 2024 10:20:34 +0200
+Message-ID: <87zfu46zal.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -60,29 +56,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
-> On 05.04.24 05:20, Michael Ellerman wrote:
->> "Linux regression tracking (Thorsten Leemhuis)"
->> <regressions@leemhuis.info> writes:
->>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
->>> for once, to make this easily accessible to everyone.
->>>
->>> Was this regression ever resolved? Doesn't look like it, but maybe I
->>> just missed something.
->> 
->> I'm not sure how it ended up on the regression list.
->
-> That is easy to explain: I let lei search for mails containing words
-> like regress, bisect, and revert to become aware of regressions that
-> might need tracking. And...
->
->> IMHO it's not really a regression.
->
-> ...sometimes I misjudge or misinterpret something and add it to the
-> regression tracking. Looks like that happened here.
->
-> Sorry for that and the noise it caused!
+Laura!
 
-No worries.
+On Fri, Apr 05 2024 at 16:59, Thomas Gleixner wrote:
+> On Fri, Apr 05 2024 at 15:58, Laura Nao wrote:
+>> On 4/5/24 15:38, Thomas Gleixner wrote:
+>>> 
+>>> Can you please boot a working kernel and provide the output of:
+>>> 
+>>> # rdmsr 0xc0011005
+>>
+>> # rdmsr 0xc0011005
+>> 2fabbfff2fd3fbff
+>
+> Ok. So the CPU does not advertise FEATURE_TOPOEXT which is consistent
+> with CPUID.
+>
+> Now I'm even more puzzled because then the patch I gave you should make
+> a difference. I need to run some errands now, I will provide a debug
+> patch later this evening.
 
-cheers
+Hmm. No real good idea yet.
+
+Can you please checkout
+
+    c749ce393b8f ("x86/cpu: Use common topology code for AMD")
+
+and apply the patch further up in the thread and see whether that
+boots. We'll take it from there.
+
+Thanks,
+
+        tglx
