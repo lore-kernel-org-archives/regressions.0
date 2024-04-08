@@ -1,135 +1,97 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF6C146A6B
-	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 20:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25D14601C
+	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 20:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712607835; cv=none; b=AuvAzcc5EcNvMVbR6Ac2ZvqhAeEYRT3xvZxi7HWA6cNDCMLtouyBf74vlUTcUyz9Hg4N+7j+tOw4xML8twpeSbu6zSsF7EtQH7j7my85QNyMofJtUT7zAHOrHjJxywl3qOu2Z0NqMAy/PhkR1ll0JQBgWgNzXD/Qw1jsH/PvZUw=
+	t=1712609876; cv=none; b=RTMCWkm6NLxcGEx1s7KfJ5Lf6BSqD+KgOcXPSo92e74BlZX/1jjfepeBmQMXBPaa+ffA3giG2+jXRG7ANAmkn8D0M4DgM86fGb741uC0Vt7h3hexvhTU9p8vWa4nG+jFEYCHKZCawciFBJb4a4CU71idTUHj9MXfONFhigP5G30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712607835; c=relaxed/simple;
-	bh=9ToRaUSFylkRrYfTwRebtnPF5fsDHwr785XYZw6kIcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qs7JZsefPU17UMpti3UaZfLn3T4Fm4XktU/Z86ATKHD8OYF8y3zyiCjUBZ1CWt9PTV3x9iWlTU79LAJmaqgtRPr1AgFeRSQNhCdehayfbq4CV9lFInXbmxfOvSLJSXhaprEKfO+HqNwd8Hd4EAuNTSbrIT7ZpX6RLhf7DMJnehU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [85.214.157.71])
-	by gardel.0pointer.net (Postfix) with ESMTP id 312CAE801D2;
-	Mon,  8 Apr 2024 22:23:50 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id D6D9316019A; Mon,  8 Apr 2024 22:23:49 +0200 (CEST)
-Date: Mon, 8 Apr 2024 22:23:49 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <ZhRSVSmNmb_IjCCH@gardel-login>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+	s=arc-20240116; t=1712609876; c=relaxed/simple;
+	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kKWDOMMks0Yi+tU1uCh805pRvzm8nfnJkBETQSBLhXiCb3dYNBNKaTiSaP/rajvTF02v/CK/TvSwV/uztlY6kun5SursaU8fHokmoQJvQ2JuN3gVnjqonm3jzmbdPyiY9ripB6dePl+FkuvEQM1CXF1n1vBlbAE2GsoKnV2X6g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W0uuhNIB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IFtxMwuM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W0uuhNIB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IFtxMwuM"
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712609873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
+	b=W0uuhNIBDOPqaJwoxUBWZ3IAGkt5Vl7lUEZbTiPDQOZee+JlrOQMXi83qC3JgUJ/A3JVnl
+	X2dOzeMNWS3ERZ9GySQXSAhlGXNSK1jZ/uE2gKRwKhoPneufJx/lrH5GgbuNyGz7vHG/ln
+	dCNzbjnzi247bPx0k6GNvYl5c//BvSjIKnfmYmYyyIH9FxuYt3EPFahGJ0JyMWggtvy6Eg
+	wJ8WDFGNby80HtSVml8Uq53KJCKGtPdqbnqm6MLGpc0SEQKOjFEHmbeb66nj9lfwBy2Nq0
+	2fNPktYUtmi5uyYLcelOySx7bfuNma8jimsDhEZ76QJtgk+1/JA3VxSTqoYp1g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712609873;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
+	b=IFtxMwuMH15gaoSCdTXU55z019DP0SPWbOCtuLMh9tClrF9yEEN8EIDwM4Ox4Wl5FnE857
+	ObbppXYbdZHD7xAA==
+To: Andrew Lunn <andrew@lunn.ch>, Marek =?utf-8?Q?Marczykowski-G=C3=B3reck?=
+ =?utf-8?Q?i?=
+ <marmarek@invisiblethingslab.com>
+Cc: netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: 6.9-rc2: Deadlock on unbinding network device from a driver
+ (regression)
+In-Reply-To: <bad26563-33b1-47d2-a62e-723bbb77690b@lunn.ch>
+References: <ZhRD3cOtz5i-61PB@mail-itl>
+ <bad26563-33b1-47d2-a62e-723bbb77690b@lunn.ch>
+Date: Mon, 08 Apr 2024 22:57:51 +0200
+Message-ID: <878r1nlghc.fsf@kurt.kurt.home>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On Mo, 08.04.24 12:41, Keith Busch (kbusch@kernel.org) wrote:
+--=-=-=
+Content-Type: text/plain
 
-> On Mon, Apr 08, 2024 at 07:43:04PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > [adding the culprit's author to the loop; also CCing everyone else in
-> > the Signed-off-by chain and a few lists that should be in the loop, too]
-> >
-> > On 08.04.24 17:13, Lennart Poettering wrote:
-> > >
-> > > So this broke systemd:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e81cd5a983bb35dabd38ee472cf3fea1c63e0f23
-> >>
-> > > We use the "capability" sysfs attr to figure out if a block device has
-> > > part scanning enabled or not. There seems to be no other API for
-> > > this. (We also use it in our test suite to see if devices match are
-> > > expectations, and older systemd/udev versions used to match agains it
-> > > from udev rules.)
-> > >
-> > > The interface was part of sysfs, and documented:
-> > >
-> > > https://www.kernel.org/doc/html/v5.5/block/capability.html
+Hi Andrew,
 
-I linked to the wrong docs btw: here is the right one:
-
-https://www.kernel.org/doc/html/v5.15/block/capability.html
-
-Quoting:
-
-        This file documents the sysfs file block/<disk>/capability.
-
-        capability is a bitfield, printed in hexadecimal, indicating
-        which capabilities a specific block device supports:
-
-        …
-
-        GENHD_FL_NO_PART_SCAN (0x0200): partition scanning is disabled. Used
-        for loop devices in their default settings and some MMC devices.
-
-We used the flag 0x200 in systemd. i.e. followed the docs, and it
-worked back when we added this.
-
-> > > While it doesn't list the partscan bit it actually does document that
-> > > one is supposed to look into include/linux/genhd.h for the various
-> > > bits and their meanings. I'd argue that makes them API to some level.
-> > >
-> > > Could this please be reverted? Just keeping the relevant bits (i.e. at
-> > > least the media change feature bit, and the part scanning bit) is
-> > > enough for retaining userspace compat.
-> > >
-> > > (Please consider googling or a github code search or so before removing
-> > > a public API like this. This compat breakage was very much avoidable
-> > > with a tiny bit of googling.)
+On Mon Apr 08 2024, Andrew Lunn wrote:
+> Hi Kurt
 >
-> That is unfortunate wording in the sysfs description.
->
-> How were keeping in sync with the changing values before? The setting
-> you seem to care about is now defined in a different file, with a
-> different name, and with a different value. Or are you suggesting all
-> those things should have been stable API?
+> Heiner just fixed a similar problem with Realtek driver. You might
+> need the same fix here.
 
-Ah, so this ws already broken once
-before... 430cc5d3ab4d0ba0bd011cfbb0035e46ba92920c
+thanks, I'm aware of that. The igc driver requires a fix as well.
 
-So the documented API was not just broken completely once but twice?
+Thanks,
+Kurt
 
-Good to know.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-1. GENHD_FL_NO_PART(_SCAN) was originally documented as 0x200.
+-----BEGIN PGP SIGNATURE-----
 
-2. GENHD_FL_MEDIA_CHANGE_NOTIFY was originally documented as 4.
-
-3. And then GENHD_FL_NO_PART(_SCAN) got redefined to 4 in
-   430cc5d3ab4d0ba0bd011cfbb0035e46ba92920c.
-
-All that even though this is documented API which is still up on
-kernel.org?
-
-Not sure how this is salvageable. This is just seriously fucked
-up. What now?
-
-It has been proposed to use the "range_ext" sysfs attr instead as a
-hint if partition scanning is available or not. But it's entirely
-undocumented. Is this something that will remain stable? (I mean,
-whether something is documented or not apparently has no effect on the
-stability of an API anyway, so I guess it's equally shaky as the
-capability sysattr? Is any of the block device sysfs interfaces
-actually stable or can they change any time?)
-
-Lennart
-
---
-Lennart Poettering, Berlin
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmYUWlATHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgmL+D/9M6HU09O0fkVNb8G5aywOA+jRiIXHK
+ZpcLASGq+yUXQCuTeCmjgrE6C1nCouI0QMolbDHUsFc20Cx7iBwehu4mXu7dVDwf
+gin9ymMcPwCd0Fp1eGtgD3No1RqP3d2NnYAJ1emmGt03VyCad7P2hn0ZdMU7V4cP
+hiCDrFXjFRY0mN1phtNfOH6umcfNbCq9k+RMzM3LyLlFUdjj9qN0X/oHMf94Glmu
+7+mimZyH2ebhRjpJnwMkT8opO8fKoirI0y3yNihP1EOXEGGOXU9quA15oLuuCtFX
+DsNdNiTYTBaIkd8BLO0J44aPFVIb4KDRNaXXLdeuj4YbzNij9wJOJESsYIBGW/a0
+MVXT8/mOPfwd5gmOtCKRU4MHuUO4Al0zqOmS7qqVbsmA8AxmGnKdWfSRcaBTWIys
+wJcA2IBUjnn2tS2jfopR1+Xb6Q+RIMewaW3sNSjE3h8ftExntQJkdr+Jc16DU5G2
+bgS5UdKg2O9udz1C6O8f6PRJyfdhL//fj+lljgU0uN9aCXP1QpySEY6FhwXFfJQQ
+yjRtWT6jRj+la/niqmlBO7y2JD2YLv5mb/eNBa8Al1XWN9xLnCEgTG86mu28zOQp
+uJLnwWzxyCqd8ADvJ0m48s3oAUOapR4pE0GxRNF5jab3f0HNcux85by+4/GRoK0p
+WE4Oc9iwmxoATA==
+=ueAZ
+-----END PGP SIGNATURE-----
+--=-=-=--
