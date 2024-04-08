@@ -1,74 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A82381AD;
-	Mon,  8 Apr 2024 22:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FADD171A1
+	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 23:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712616072; cv=none; b=mKOIp4M3opmCBEE6VU6ex8VJ7aNE7SqM2IPTsJyPgUydlZdxgY9iMrv+9VCKFcHAMvLyiMJ8r88un1OGPirceHmRd4hUnnMcFWaxZdws6sv/vKvNm1HJeHNCfjGtv4yvpfNkVb6LbM5niQzJnnO0uN1px1gFVzGO2xGJnfndPNU=
+	t=1712619860; cv=none; b=rw7iVRgMthZfuIHrb57M1U9BT9KiN9ijkwpOUh45bBxKlGCJQkN8uQRm4SdQ8qbSdTaduqnVLlroUObqoFk+kWq3lfHW9+VJ48QROv55t75VPspLdWtsqoWmb6QudKcAvpQosZUz6QiKSv3S4WNaaEFS8xhI5qi5gJMhG42F1qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712616072; c=relaxed/simple;
-	bh=uq+iuZWFJeFjkBxY9LAE5aFyS6mStouA09bvmO1Xduk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lwl0glV8XOqkOT7OpFkq9iwQ5Z7KPOvWpLE87rqFaoZ6qk8BZp03wjNSFDQr5uRrbRMf+NnLF8v9TFllhmPk9eg1bMcdIWUtBqzUer9MZ3guW4QW2GubZu3tc29goa/9NiYKy1urbt63m+OH3GoUcVzrN4obDcURGvXEgZhgZK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEKHOMvY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712619860; c=relaxed/simple;
+	bh=9v+/+KHAGA01kkiMa2qAh1zC5zHXgmpHxJ+Jd2ebixs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YJkDncnOVk1DTpmrzsckQMEFro+juqqJvWN8HkSaCgEVgkbaQvmbZH1xfTq/WkZBkE7nQ9MTNMD8jEpsleFyx8tDfhDtO1n/xkVia3A6wCw2udVlKDFN8S36vGlay1DX41wW+BcTFO8MABTvKXTPoWC1oxJvG0BXPptEpkAculU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n3xQE403; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEKHOMvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5515EC433C7;
-	Mon,  8 Apr 2024 22:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712616071;
-	bh=uq+iuZWFJeFjkBxY9LAE5aFyS6mStouA09bvmO1Xduk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tEKHOMvYUum8eYAsZcQaVxVMVx/WPybI5+LjUwRKgwoGCBYs2NiqfITsfLF4GRg3j
-	 jWAR4EygzbUY1QA4UGSEzrD+NJ6/z62iXMf84eFyoIS+Thhla8Yi+U3Z02J9Bj+Uge
-	 RF9hQnEgU0PJu6lTl+lgJPX/X3rs0ZLPJ5QueHi9EE5pyMmB7NT4WZAB5SX2q+ULcV
-	 vTy6EpqL/qEXpdlP/DlBG+fQJC6UYxv34rGaPThX9gPCrGxclzl7mZIZq/Z8LZlnMY
-	 yq0NU0O/sj12i9qFtSaVeJkpHzU9X7+c7nVKNzaQFO2nGtUQtBOsx1ps4hy16VHp3x
-	 lclfJetttHdaw==
-Date: Mon, 8 Apr 2024 16:41:08 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n3xQE403"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712619856;
+	bh=9v+/+KHAGA01kkiMa2qAh1zC5zHXgmpHxJ+Jd2ebixs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n3xQE403gyfiyrWVcY5h3QGFR8w37IqKfBbPLnpxgJ4Ju5j+lDF6mR+WZQytR7YpZ
+	 qtYPW6khkoHdA2HCWO3GsYS2LJySKOtxFkLUpvP9IwIVHKmSEkq07lVH2wGt1ReR5s
+	 b89F/Y1tG4dxzR95c3loshe8OMDNXwDGgawFoTAWFKcIHAC2PGCt4XPlUxST0c6ml/
+	 mCjLvLTz9P8S36wFY1bWzePJmYoXynxCjRK/6dB5pErn7YCEaRVKsHjQeiBXzlh2z/
+	 qvFtFsq1WbDWt8xPImQ/HiGm3GNelNOOc5f6U8C9trPipdzai3z4W0MUVN+p7Or+Cg
+	 avfIjoGpsptMA==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AF36E37813CA;
+	Mon,  8 Apr 2024 23:44:15 +0000 (UTC)
+Message-ID: <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
+Date: Tue, 9 Apr 2024 02:44:15 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhRSVSmNmb_IjCCH@gardel-login>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Daniel <dmanlfc@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Sound System <linux-sound@vger.kernel.org>
+References: <ZhFJZoful6nEFskW@archie.me>
+ <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
-> Not sure how this is salvageable. This is just seriously fucked
-> up. What now?
->
-> It has been proposed to use the "range_ext" sysfs attr instead as a
-> hint if partition scanning is available or not. But it's entirely
-> undocumented. Is this something that will remain stable? (I mean,
-> whether something is documented or not apparently has no effect on the
-> stability of an API anyway, so I guess it's equally shaky as the
-> capability sysattr? Is any of the block device sysfs interfaces
-> actually stable or can they change any time?)
+On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 06.04.24 15:08, Bagas Sanjaya wrote:
+>>
+>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
+>> on Steam Deck OLED [1]. He wrote:
+> 
+> Bagas, why didn't you forward this to me in private first, as we agreed
+> on as general procedure for cases like this?
+> 
+> Anyway:
+> 
+>>> I'm adding this here, I hope it's the correct place.
+>>>
+>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
+>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
+>>
+>> See Bugzilla for the full thread.
+>>
+>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
+> 
+> A quick search made me find these posts/threads that foreshadow the problem:
+> 
+> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
+> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
+> 
+> From a quick look at the second discussion it seems a bit like we are
+> screwed, as iiutc topology files are out in the wild for one or the
+> other approach. So we might have to bite a bullet there and accept the
+> regression -- but I might easily be totally mistaken here. Would be good
+> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
+> explain what's up here.
 
-The "ext_range" attribute does look like an appropriate proxy for the
-attribute, but indeed, it's not well documented.
+The problem here is that Steam Deck OLED provides a topology file which
+uses an incorrect DAI link ID for BT codec. 
 
-Looking at the history of the documentation you had been relying on, it
-appears that was submitted with good intentions (9243c6f3e012a92d), but
-it itself changed values, acknowledging the instability of this
-interface.
+Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
+topology, but this is not a change that can be accepted upstream as it
+would break other devices which rely on BT_BE_ID set to 3.  
 
-So what to do? If documentation is all that's preventing "ext_range"
-from replacing you're previous usage, then let's add it in the
-Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
-that seems like a reliable attribute to put there.
+The proper solution would be to update the topology file on Steam Deck,
+but this is probably not straightforward to be accomplished as it would
+break the compatibility with the currently released (downstream)
+kernels.
+
+Hopefully, this sheds some more light on the matter.
+
+Regards,
+Cristian
+
+[1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
