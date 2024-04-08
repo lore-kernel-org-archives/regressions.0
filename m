@@ -1,97 +1,74 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25D14601C
-	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 20:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A82381AD;
+	Mon,  8 Apr 2024 22:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712609876; cv=none; b=RTMCWkm6NLxcGEx1s7KfJ5Lf6BSqD+KgOcXPSo92e74BlZX/1jjfepeBmQMXBPaa+ffA3giG2+jXRG7ANAmkn8D0M4DgM86fGb741uC0Vt7h3hexvhTU9p8vWa4nG+jFEYCHKZCawciFBJb4a4CU71idTUHj9MXfONFhigP5G30=
+	t=1712616072; cv=none; b=mKOIp4M3opmCBEE6VU6ex8VJ7aNE7SqM2IPTsJyPgUydlZdxgY9iMrv+9VCKFcHAMvLyiMJ8r88un1OGPirceHmRd4hUnnMcFWaxZdws6sv/vKvNm1HJeHNCfjGtv4yvpfNkVb6LbM5niQzJnnO0uN1px1gFVzGO2xGJnfndPNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712609876; c=relaxed/simple;
-	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kKWDOMMks0Yi+tU1uCh805pRvzm8nfnJkBETQSBLhXiCb3dYNBNKaTiSaP/rajvTF02v/CK/TvSwV/uztlY6kun5SursaU8fHokmoQJvQ2JuN3gVnjqonm3jzmbdPyiY9ripB6dePl+FkuvEQM1CXF1n1vBlbAE2GsoKnV2X6g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W0uuhNIB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IFtxMwuM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712616072; c=relaxed/simple;
+	bh=uq+iuZWFJeFjkBxY9LAE5aFyS6mStouA09bvmO1Xduk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lwl0glV8XOqkOT7OpFkq9iwQ5Z7KPOvWpLE87rqFaoZ6qk8BZp03wjNSFDQr5uRrbRMf+NnLF8v9TFllhmPk9eg1bMcdIWUtBqzUer9MZ3guW4QW2GubZu3tc29goa/9NiYKy1urbt63m+OH3GoUcVzrN4obDcURGvXEgZhgZK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEKHOMvY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W0uuhNIB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IFtxMwuM"
-From: Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712609873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
-	b=W0uuhNIBDOPqaJwoxUBWZ3IAGkt5Vl7lUEZbTiPDQOZee+JlrOQMXi83qC3JgUJ/A3JVnl
-	X2dOzeMNWS3ERZ9GySQXSAhlGXNSK1jZ/uE2gKRwKhoPneufJx/lrH5GgbuNyGz7vHG/ln
-	dCNzbjnzi247bPx0k6GNvYl5c//BvSjIKnfmYmYyyIH9FxuYt3EPFahGJ0JyMWggtvy6Eg
-	wJ8WDFGNby80HtSVml8Uq53KJCKGtPdqbnqm6MLGpc0SEQKOjFEHmbeb66nj9lfwBy2Nq0
-	2fNPktYUtmi5uyYLcelOySx7bfuNma8jimsDhEZ76QJtgk+1/JA3VxSTqoYp1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712609873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67gTuXdpNGQK5571aAIhNAvLohYoHM4XJBB0HFk8gv8=;
-	b=IFtxMwuMH15gaoSCdTXU55z019DP0SPWbOCtuLMh9tClrF9yEEN8EIDwM4Ox4Wl5FnE857
-	ObbppXYbdZHD7xAA==
-To: Andrew Lunn <andrew@lunn.ch>, Marek =?utf-8?Q?Marczykowski-G=C3=B3reck?=
- =?utf-8?Q?i?=
- <marmarek@invisiblethingslab.com>
-Cc: netdev@vger.kernel.org, linux-leds@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: 6.9-rc2: Deadlock on unbinding network device from a driver
- (regression)
-In-Reply-To: <bad26563-33b1-47d2-a62e-723bbb77690b@lunn.ch>
-References: <ZhRD3cOtz5i-61PB@mail-itl>
- <bad26563-33b1-47d2-a62e-723bbb77690b@lunn.ch>
-Date: Mon, 08 Apr 2024 22:57:51 +0200
-Message-ID: <878r1nlghc.fsf@kurt.kurt.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEKHOMvY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5515EC433C7;
+	Mon,  8 Apr 2024 22:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712616071;
+	bh=uq+iuZWFJeFjkBxY9LAE5aFyS6mStouA09bvmO1Xduk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tEKHOMvYUum8eYAsZcQaVxVMVx/WPybI5+LjUwRKgwoGCBYs2NiqfITsfLF4GRg3j
+	 jWAR4EygzbUY1QA4UGSEzrD+NJ6/z62iXMf84eFyoIS+Thhla8Yi+U3Z02J9Bj+Uge
+	 RF9hQnEgU0PJu6lTl+lgJPX/X3rs0ZLPJ5QueHi9EE5pyMmB7NT4WZAB5SX2q+ULcV
+	 vTy6EpqL/qEXpdlP/DlBG+fQJC6UYxv34rGaPThX9gPCrGxclzl7mZIZq/Z8LZlnMY
+	 yq0NU0O/sj12i9qFtSaVeJkpHzU9X7+c7nVKNzaQFO2nGtUQtBOsx1ps4hy16VHp3x
+	 lclfJetttHdaw==
+Date: Mon, 8 Apr 2024 16:41:08 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: API break, sysfs "capability" file
+Message-ID: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhRSVSmNmb_IjCCH@gardel-login>
 
---=-=-=
-Content-Type: text/plain
-
-Hi Andrew,
-
-On Mon Apr 08 2024, Andrew Lunn wrote:
-> Hi Kurt
+On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
+> Not sure how this is salvageable. This is just seriously fucked
+> up. What now?
 >
-> Heiner just fixed a similar problem with Realtek driver. You might
-> need the same fix here.
+> It has been proposed to use the "range_ext" sysfs attr instead as a
+> hint if partition scanning is available or not. But it's entirely
+> undocumented. Is this something that will remain stable? (I mean,
+> whether something is documented or not apparently has no effect on the
+> stability of an API anyway, so I guess it's equally shaky as the
+> capability sysattr? Is any of the block device sysfs interfaces
+> actually stable or can they change any time?)
 
-thanks, I'm aware of that. The igc driver requires a fix as well.
+The "ext_range" attribute does look like an appropriate proxy for the
+attribute, but indeed, it's not well documented.
 
-Thanks,
-Kurt
+Looking at the history of the documentation you had been relying on, it
+appears that was submitted with good intentions (9243c6f3e012a92d), but
+it itself changed values, acknowledging the instability of this
+interface.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmYUWlATHGt1cnRAbGlu
-dXRyb25peC5kZQAKCRDBk9HyqkZzgmL+D/9M6HU09O0fkVNb8G5aywOA+jRiIXHK
-ZpcLASGq+yUXQCuTeCmjgrE6C1nCouI0QMolbDHUsFc20Cx7iBwehu4mXu7dVDwf
-gin9ymMcPwCd0Fp1eGtgD3No1RqP3d2NnYAJ1emmGt03VyCad7P2hn0ZdMU7V4cP
-hiCDrFXjFRY0mN1phtNfOH6umcfNbCq9k+RMzM3LyLlFUdjj9qN0X/oHMf94Glmu
-7+mimZyH2ebhRjpJnwMkT8opO8fKoirI0y3yNihP1EOXEGGOXU9quA15oLuuCtFX
-DsNdNiTYTBaIkd8BLO0J44aPFVIb4KDRNaXXLdeuj4YbzNij9wJOJESsYIBGW/a0
-MVXT8/mOPfwd5gmOtCKRU4MHuUO4Al0zqOmS7qqVbsmA8AxmGnKdWfSRcaBTWIys
-wJcA2IBUjnn2tS2jfopR1+Xb6Q+RIMewaW3sNSjE3h8ftExntQJkdr+Jc16DU5G2
-bgS5UdKg2O9udz1C6O8f6PRJyfdhL//fj+lljgU0uN9aCXP1QpySEY6FhwXFfJQQ
-yjRtWT6jRj+la/niqmlBO7y2JD2YLv5mb/eNBa8Al1XWN9xLnCEgTG86mu28zOQp
-uJLnwWzxyCqd8ADvJ0m48s3oAUOapR4pE0GxRNF5jab3f0HNcux85by+4/GRoK0p
-WE4Oc9iwmxoATA==
-=ueAZ
------END PGP SIGNATURE-----
---=-=-=--
+So what to do? If documentation is all that's preventing "ext_range"
+from replacing you're previous usage, then let's add it in the
+Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
+that seems like a reliable attribute to put there.
