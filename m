@@ -1,98 +1,133 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4526168C
-	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 11:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9077012A14C
+	for <regressions@lists.linux.dev>; Mon,  8 Apr 2024 14:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712574348; cv=none; b=oiENNILdnvU5xQgfz3U+iEl+XKtXk900IAF0JsvmL2B9qSBAFAA5fKh0UqMES8hMiVZBAO1+oFsf9lsPQL50F9Le9hauApnXLLq/54VGG52nSCcXCb9is+o9t5M1UdIhJGxgQCsv7L26UlE86JQKCUVHaVlbFVxaeWftJMc+Qts=
+	t=1712585973; cv=none; b=gfwh4zeNzHfFykjKafiPHwG0+MUDzra7UtgROaHtkjwo7WPEcQ39mqaDYeZ1iGzS6efCdI9ejrtsf2bNzVj4qMalF4vNeXNWi2YaWajQF/6T2iIf0DpC9eZOVcaWCFpuS32B+A/+dXrQ2mAk544bvl4A3LONNbQq+tm/FO/tsxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712574348; c=relaxed/simple;
-	bh=RadQCsKzg81Q1XqoXp12XBaKB24mRnrGDLMTm5uLssE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rEDjKwrCYOwBLdoPqmSzJsvwK1vRwEaYV36+4RBjdqCNIAYLe+8KMuuOA0XfFrCWZPHqXaG6BaYFt/aYPiwB47qNU1/vVG3y3aDiWjvIh45MFLXRHzDLYRvMFHFWrpOsAw+kNzYKpLkgJPdq/ECgMpnsNC44yOYLK4zKFW5HGbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kF/AwbdZ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712585973; c=relaxed/simple;
+	bh=dburm2e0CH8RMC8ZTCT8ZG/KPOT3+NbIGLgwYleaQGc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=W/5HURQT1L04rUMHiosiU42Mar+R8XujDsCDr535/1wGcOQ8UylJhj0obRyItIvOUOQ6PINNX7TRezWtJL6O/HSQy+nOem2DfZczADZds5IW9xxtRG+BMcI3MOpqKdCL3iuG+P5tr12UxzwS0HU3hpg1eMl78UAW4A0ZGUotTWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JyMQ8LnK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kyoO6H0X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kF/AwbdZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712574345;
-	bh=RadQCsKzg81Q1XqoXp12XBaKB24mRnrGDLMTm5uLssE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kF/AwbdZxLkRY+CHgg4PKjZ+ac7Ydb4psYIIb3HVXHJ46gI1yZzGR0r5XyfvqaZyx
-	 4ckyodW+j7/RUxHGC/cuLDFy15Mi/1VXdPZoHVPk/3aFItHKJUH3cOAkYLpAzaRjvb
-	 U7N2pT9GwZ9H80CIdQfl/Ut0GQgdrbkKA9lytrMZKBRtk8Krpq1C5UJZ/aXH9L1Phl
-	 GasXgzWcmI8S5NTFLwbkdG8dIEuvW2icQiiQUU16emLMxQbLApyHg0rb6/agKZ/mFW
-	 hNjXqXd7ZWMuOjQlYBKy4qS4vn9L5DaSvRXWKhS1LxNhLMB7fyFxMzctB2fu/hrtJe
-	 y3Z44TRTfErvg==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CBB923781183;
-	Mon,  8 Apr 2024 11:05:44 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: tglx@linutronix.de
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Mon,  8 Apr 2024 13:06:05 +0200
-Message-Id: <20240408110605.164608-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <87zfu46zal.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JyMQ8LnK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kyoO6H0X"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712585969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zjhyLQPDLHKrpTEkAe5cnDIyWOE69JGkyLJy181UziI=;
+	b=JyMQ8LnKeAoO5DRg2np8AeZd3nbWuoGJvoaJYJpH9Cse3j7soPQk1687SvFW06rRB64QDs
+	Zast2jMyMkAHWKIHyIEcouQ8K0ZJU17if5DGR7PHxjp0GBxuhHscy2AzbUs72HDKJJWjm+
+	Wj/qUD2xtAh6ayi+nh51UlEyrmKWLeBoXIHGYdaA/C2TMq/uGFDVH/4aliw2S9Ywa+U1Db
+	gghkg7XeLb78XZnP4phJwzYyZU5rOLJrZ7CWesOX4WFpYuPXiVBKSArBi1MpxbyKnWOi8C
+	iR439lbfOAZeVKakN8hp/VP92ev9Nn+bG61WGufql+QStaH3beca1dIH9xYJ2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712585969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zjhyLQPDLHKrpTEkAe5cnDIyWOE69JGkyLJy181UziI=;
+	b=kyoO6H0XTyjNhhV/ui/mCn2yrgxkjTfIMs0FSIxPTuzmbkAMR0iANW7eZoRo7r2yajjqdb
+	QujbPKCrPYymZGBA==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240408110605.164608-1-laura.nao@collabora.com>
 References: <87zfu46zal.ffs@tglx>
+ <20240408110605.164608-1-laura.nao@collabora.com>
+Date: Mon, 08 Apr 2024 16:19:29 +0200
+Message-ID: <87r0fg6ioe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Thomas,
+Laura!
 
-On 4/8/24 10:20, Thomas Gleixner wrote:
-> Laura!
-> 
-> On Fri, Apr 05 2024 at 16:59, Thomas Gleixner wrote:
->> On Fri, Apr 05 2024 at 15:58, Laura Nao wrote:
->>> On 4/5/24 15:38, Thomas Gleixner wrote:
->>>>
->>>> Can you please boot a working kernel and provide the output of:
->>>>
->>>> # rdmsr 0xc0011005
->>>
->>> # rdmsr 0xc0011005
->>> 2fabbfff2fd3fbff
->>
->> Ok. So the CPU does not advertise FEATURE_TOPOEXT which is consistent
->> with CPUID.
->>
->> Now I'm even more puzzled because then the patch I gave you should make
->> a difference. I need to run some errands now, I will provide a debug
->> patch later this evening.
-> 
-> Hmm. No real good idea yet.
-> 
-> Can you please checkout
-> 
->      c749ce393b8f ("x86/cpu: Use common topology code for AMD")
-> 
-> and apply the patch further up in the thread and see whether that
-> boots. We'll take it from there.
-> 
+On Mon, Apr 08 2024 at 13:06, Laura Nao wrote:
+> Just tried that and it doesn't boot, nothing on the serial console (I
+> kept earlyprintk=ttyS0,115200 in the cmdline).
 
-Just tried that and it doesn't boot, nothing on the serial console (I
-kept earlyprintk=ttyS0,115200 in the cmdline).
+Thanks for trying. Now let's take a small step back.
 
-Test job for reference: https://lava.collabora.dev/scheduler/job/13297561
+Please reset the tree to:
+
+      ace278e7eca6 ("x86/smpboot: Teach it about topo.amd_node_id")
+
+That's the commit right before switching over and according to your
+bisect it works. Now apply the patch below, which just runs the new
+topology scan function but discards the result.
 
 Thanks,
 
-Laura
+        tglx
+---
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -29,7 +29,17 @@ static bool parse_8000_0008(struct topo_
+ 	if (!sft)
+ 		sft = get_count_order(ecx.cpu_nthreads + 1);
+ 
+-	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
++	/*
++	 * cpu_nthreads describes the number of threads in the package
++	 * sft is the number of APIC ID bits per package
++	 *
++	 * As the number of actual threads per core is not described in
++	 * this leaf, just set the CORE domain shift and let the later
++	 * parsers set SMT shift. Assume one thread per core by default
++	 * which is correct if there are no other CPUID leafs to parse.
++	 */
++	topology_update_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
++	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.cpu_nthreads + 1);
+ 	return true;
+ }
+ 
+@@ -73,12 +83,14 @@ static bool parse_8000_001e(struct topo_
+ 	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
+ 
+ 	/*
+-	 * If leaf 0xb is available, then SMT shift is set already. If not
+-	 * take it from ecx.threads_per_core and use topo_update_dom() -
+-	 * topology_set_dom() would propagate and overwrite the already
+-	 * propagated CORE level.
++	 * If leaf 0xb is available, then the domain shifts are set
++	 * already and nothing to do here.
+ 	 */
+ 	if (!has_0xb) {
++		/*
++		 * Leaf 0x80000008 set the CORE domain shift already.
++		 * Update the SMT domain, but do not propagate it.
++		 */
+ 		unsigned int nthreads = leaf.core_nthreads + 1;
+ 
+ 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -133,6 +133,10 @@ static void parse_topology(struct topo_s
+ 	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
+ 
+ 	switch (c->x86_vendor) {
++	case X86_VENDOR_AMD:
++		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
++			cpu_parse_topology_amd(tscan);
++		break;
+ 	case X86_VENDOR_CENTAUR:
+ 	case X86_VENDOR_ZHAOXIN:
+ 		parse_legacy(tscan);
+
+
