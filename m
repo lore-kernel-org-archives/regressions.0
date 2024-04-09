@@ -1,37 +1,40 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47F87C08D
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 07:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49866D1C7
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 07:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712648215; cv=none; b=La80PFxDhn14gugNdG4fpxsjvLhgRA7043gJvQkPK6/sdMm1858KSXKDt2XcC58fhUYe2yZ8h4+3q5+yYZt2RZdNSIDeGhxnjxOL+Ym4jhay/m4hpSqJqBvXnG1peZUmIj9wN9iQntfzc9yrhKv8fYQ3r70tF6I6dGmTS5Sx0Nw=
+	t=1712648558; cv=none; b=Su1ybohCiw1etMMHz8iM0XpZ7CA2ZuUGR3StYfcxus1B+Ux7BjLUH8D6l8DiEPvZG56DoK0yDDf9EcbT2qt+lq3wvHFpn5rUBY3OQvLRJwhP+y/HasdpkzNOBWNVTqUw8hoSz4MP14Ie66gVhSz8LAnFcie/rAUgx1PgQN7ryok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712648215; c=relaxed/simple;
-	bh=0OsgygWE847EvL7YQcWZOPwRIp8fpJNyMdM1Ih82n4c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=GinUZR7XCzi6AGQ0gPHO4M0hLuJaxHV44M9M2EUKSdExCPdmYBXrK+HTHdgQXFcWAQZYz1oAmUkbeBk0jvUN7qq1FfkPppWaroXlpQbudlPC99tJlpg7tIehPUFXCmsGtSQgTpzZomP28j3MzU/wJTQbG4QbaD/mcxgk3WLwKdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cF2pvCLn; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712648558; c=relaxed/simple;
+	bh=wWWDqi7kssbzxmlTz22Wcp6yLPhzsSk+wfMK0IOEF7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UGK/jpJscxYxk45yegAij+PkuvozTV8zngZ/yC71i7GqJMBfv/9502+nKNSAQygxr62YtajQtABeCdvf7i2+667HzIgnK1b6NcgcyiRrs91zDdwEGU14M6lt9PxovqqcDvnzyJUftOlTFybiC7hQMxr9Jv5tOzd/gl9B0TIMX4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m9Q7JlBV; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cF2pvCLn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:Reply-To:Subject:From:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=0OsgygWE847EvL7YQcWZOPwRIp8fpJNyMdM1Ih82n4c=; t=1712648213;
-	x=1713080213; b=cF2pvCLnLiZI4yAfW9HmawrgUQkgENoCBr0T9t2QA0y0/qsdQBn1+MoZqxtfD
-	lPDI359K3V7Kz0JQGyHSwD4JjFIBE8iBmB53YlGnAEQDAR9npNoMH6YXff43MZGKKdWN9Rtz/bnlp
-	qKK/CiZW3yQQccU0kl3K9C8tKlAWOZb526iY5RbrOjjBIS9ppQmma/4PlFba9tXWSixgZXVyX4QHC
-	5nipQchauWick1fwW51QkNI4jQ6G5JKPBZQXxgH8UM/up8pmBb9fKukt1e4iTRvMByaFCd+vUUa9P
-	7NNnuIBAYxvZMQqqAeOwm3fsjNPWXjM5/nuFLbp+6eIcKDSt1Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ru62F-0007cl-TZ; Tue, 09 Apr 2024 09:36:51 +0200
-Message-ID: <970dc454-1e1e-4db5-8c6f-fb869e5cfef4@leemhuis.info>
-Date: Tue, 9 Apr 2024 09:36:49 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m9Q7JlBV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712648554;
+	bh=wWWDqi7kssbzxmlTz22Wcp6yLPhzsSk+wfMK0IOEF7E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m9Q7JlBVy54nlghxML/6BzlBi3raVoxAFHWjN2noJmfj35j7mWVTwia/5YsAKP1Z1
+	 hJ9emT5k3cSIRRpKFe9jk1GD8DErPOqsDWdhs7lPoKSwlNmVRQccyV9J6oO1KaLXEF
+	 F6PZIDmBm+eQCPBN91gRocBv+BWkYL5pAFl8ZPEpxVvbOwxQNEJH1HYK5gQjYK1qVY
+	 /qmtak97nDUMhHtz8q0Y+UxI7zX+NR6J7S463vy1OHT+sT0rdN4YlJUbfBc4IH3h5s
+	 vbuld1lxrjglZ9opGQP7rbVBBZwnLPop+KVCHyox21xxNFFoSd+0kOrh5a4Hh4W4ME
+	 bRKHX2tayIPkg==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0C48B37820CD;
+	Tue,  9 Apr 2024 07:42:33 +0000 (UTC)
+Message-ID: <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
+Date: Tue, 9 Apr 2024 10:42:33 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,40 +42,79 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Daniel <dmanlfc@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Sound System <linux-sound@vger.kernel.org>
+References: <ZhFJZoful6nEFskW@archie.me>
+ <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+ <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
+ <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Content-Language: en-US
+In-Reply-To: <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712648213;7bbca814;
-X-HE-SMSGID: 1ru62F-0007cl-TZ
 
+On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 09.04.24 01:44, Cristian Ciocaltea wrote:
+>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
+>>>>
+>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
+>>>> on Steam Deck OLED [1]. He wrote:
+>>
+>>>>> I'm adding this here, I hope it's the correct place.
+>>>>>
+>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
+>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
+>>>>
+>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
+>>>
+>>> A quick search made me find these posts/threads that foreshadow the problem:
+>>>
+>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
+>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
+>>>
+>>> From a quick look at the second discussion it seems a bit like we are
+>>> screwed, as iiutc topology files are out in the wild for one or the
+>>> other approach. So we might have to bite a bullet there and accept the
+>>> regression -- but I might easily be totally mistaken here. Would be good
+>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
+>>> explain what's up here.
+>>
+>> The problem here is that Steam Deck OLED provides a topology file which
+>> uses an incorrect DAI link ID for BT codec. 
+>>
+>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
+>> topology, but this is not a change that can be accepted upstream as it
+>> would break other devices which rely on BT_BE_ID set to 3.  
+>>
+>> The proper solution would be to update the topology file on Steam Deck,
+>> but this is probably not straightforward to be accomplished as it would
+>> break the compatibility with the currently released (downstream)
+>> kernels.
+>>
+>> Hopefully, this sheds some more light on the matter.
+>>
+>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
+> 
+> Many thx, yes, this sheds some light on the matter. But there is one
+> remaining question: can we make both camps happy somehow? E.g. something
+> along the lines of "first detect if the topology file has BT_BE_ID in
+> position 2 or 3 and then act accordingly?
 
+Right, I have this on my TODOs list but haven't managed to dig into it
+yet. However, that would be most likely just another hack to be carried
+on until the transition to a fixed topology is completed.
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-From
-https://lore.kernel.org/lkml/Z6J7NF8AKNHDzwd1lbld1obVJZrKq0UKLSzKVtoL0TmOzpdyM8PRMvel8IUyhwsphxBg1bjku4ZaeQcwMhfKagEM2lRYtMChYv6VNPK5Tvg=@thefossguy.com/:
-
-#regzbot report: https://lore.kernel.org/lkml/ZfvN5jDrftG-YRG4@titan/
-#regzbot fix: a8037ceb896496
-
-
-#regzbot report: https://lore.kernel.org/all/ZhNvwwYRN4-EczYi@codewreck.org/
-#regzbot introduced: v6.8..v6.9-rc2
-#regzbot duplicate:
-https://lore.kernel.org/all/f6upxoxa6d2c6cbh4ka775msggvuduigiu7xgvfx7qsufg2lo6@2ellaad6b2on/
-#regzbot duplicate:
-https://lore.kernel.org/all/E7D462A2-EE93-4A57-9F15-8565EE1567F3@linux.dev/
-#regzbot title: fs: 9p: various problems (xfstests; open / unlink /
-fstat|ftruncate etc fail; warning when using apt)
+Regards,
+Cristian
