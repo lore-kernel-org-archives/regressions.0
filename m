@@ -1,201 +1,69 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B0129A7B
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 12:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6E87F7CB
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 14:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712665539; cv=none; b=g6RzV6kwZUSKncr8p+n/HFMXoRdX0pMb1OjvHkZEmpESiNQL5x66+RqfRfm1xVzhApxPcp1f8DGDLd1pyqrDbll7MC1/b5nTAb/y8e+bPmUhjGiX/soeGbjzo4pxraIY1mb3Lpm4kNwh3fKRga3bqcirBTkcB5o8Rfsj5Kdf5A4=
+	t=1712672138; cv=none; b=bGLUHZXtvOM4NVFcZZbEh9eIaabcbI4KJkV2xO2oGjQbTrmPMj15EvHGJyoDgumliJGxvqk9N8e/RLl2Amy3OHLKJmS9XWCjjVs+6SK9p9ihPGTwXIxnlHI2zhvsqHUwhtFXLEsEgrUJbh/B7as8rxB6xbd7F/L+ogwmyGAEv4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712665539; c=relaxed/simple;
-	bh=TgYVwxUaN7W/0/J228omEQaBSEXn7kj3mU8IA4nEz/w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LOdD0wyMofhUVws4/Wd/QD0JJC+GAGw/Vt/7zv2cGv+f2vtmyIr4wdmvFO/veCGxS6YwQRsS0rgahbg3CBrOoFidumkridIlQCuRZfh9lWF6hP4pW6p69eJPU7dG4p6c6qD9MFvd+M3KuoAy02bO58aMSu9rw5CwRcHFJsxSo9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BMz7Vtzq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BNBi7We/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BMz7Vtzq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BNBi7We/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712665535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4cb/lg7L2LLjelwouGfPsEX0svE8jil8IXco8Gx6oM=;
-	b=BMz7Vtzq0s1E25+mY1AS9phnPNZfwCmgFuQBAzFvz3mtY7phMMsPoK32ZKEDI0hDaN1Abj
-	FA9fKj/Qq/s/kih8cVq2mUCaMUtEAmN4yHlyNkavTgZe62SFrKsBGIN272tzipxoMVXOo8
-	SAQFgFqcxORMstGxaU9Y8eNrjUH6kwAJvBF1VKaYYcB3S03/s81E8C2KnCzooZLrKMVAm6
-	HPNG/4yXiwtvru1LC86zRs2CPV/IWRg1EFjYvXQL1cnvEqgYIEoEz0ySBOuBVIkmI5AMDn
-	OwsmfSY+qCwu/BAkcETYdniQfF64wb4ezdsyfelrHm5ubHO67YdPWSnrm6ewlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712665535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4cb/lg7L2LLjelwouGfPsEX0svE8jil8IXco8Gx6oM=;
-	b=BNBi7We/WCdEtlPe2M+AZeJILRlT2ug3N4TO6p6L3fbYwSH6GB6HSy0fO5Esa/0W7lkzyT
-	/iXC93bnHSarFLDw==
-To: Laura Nao <laura.nao@collabora.com>
-Cc: kernel@collabora.com, laura.nao@collabora.com,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
- Chromebooks
-In-Reply-To: <20240409100736.139489-1-laura.nao@collabora.com>
-References: <87r0fg6ioe.ffs@tglx>
- <20240409100736.139489-1-laura.nao@collabora.com>
-Date: Tue, 09 Apr 2024 14:25:34 +0200
-Message-ID: <874jca7mf5.ffs@tglx>
+	s=arc-20240116; t=1712672138; c=relaxed/simple;
+	bh=1Hvn0UUQi7daY6MeWzk+embfXVjNT5NRKIlTZP6dTWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VM30V1E9KCYCvnUFUQVKk3uq335eW1DXoTlnxs8OTyjFak6mhRCMeQqFuOY0MuCLAbxO5OaMCD3IIJCx4nKPSmi6b3uY+0dgMU9k7F2OOj8gL9zNfYa5HxTHBpwgJGm+wJAPaGCQJs7wF0MOrEogA9B90M3d4HJ2RydsF3RmzvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 65FB468B05; Tue,  9 Apr 2024 16:15:32 +0200 (CEST)
+Date: Tue, 9 Apr 2024 16:15:31 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: API break, sysfs "capability" file
+Message-ID: <20240409141531.GB21514@lst.de>
+References: <ZhQJf8mzq_wipkBH@gardel-login> <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info> <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com> <ZhRSVSmNmb_IjCCH@gardel-login> <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com> <ZhT5_fZ9SrM0053p@gardel-login>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhT5_fZ9SrM0053p@gardel-login>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Laura!
+On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+> All I am looking for is a very simple test that returns me a boolean:
+> is there kernel-level partition scanning enabled on this device or
+> not.
 
-On Tue, Apr 09 2024 at 12:07, Laura Nao wrote:
-> On 4/8/24 16:19, Thomas Gleixner wrote:
->> That's the commit right before switching over and according to your
->> bisect it works. Now apply the patch below, which just runs the new
->> topology scan function but discards the result.
->
-> The ace278e7eca6 revision with the patch you provided boots correctly.
+And we can add a trivial sysfs attribute for that.
 
-Progress :)
+> At this point it's not clear to me if I can write this at all in
+> a way that works reasonably correctly on any kernel since let's say
+> 4.15 (which is systemd's "recommended baseline" right now).
+> 
+> I am really not sure how to salvage this mess at all. AFAICS there's
+> currently no way to write such a test correctly.
 
-Can you please replace that patch with the one below?
+You can't.  Maybe that's a lesson to not depend on undocumented internal
+flags exposed by accident by a weirdo interface.  Just talk to people.
 
-Thanks,
+> I think it would be nice if the "capabilities" thing would be brought
+> back in a limited form. For example, if it would be changed to start
+> to return 0x200|0x1000 for part scanning is off, 0x1000 when it is on.
+> 
+> That would then mean we return to compatibility with Linux <= 5.15,
+> but the new 0x1000 bit would tell us that the information is
+> reliable. i.e. if userspace sees 0x1000 being set we know that the
+> 0x200 bit is definitely correct. That would then just mean that
+> kernels >= 5.16 until today are left in the cold...
 
-        tglx
----
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1616,6 +1616,13 @@ void __init early_cpu_init(void)
- #endif
- 	}
- 	early_identify_cpu(&boot_cpu_data);
-+
-+	pr_info("Max cores: %u\n", boot_cpu_data.x86_max_cores);
-+	pr_info("pkg %u die %u core %u nid %u\n", boot_cpu_data.topo.pkg_id,
-+		boot_cpu_data.topo.die_id, boot_cpu_data.topo.core_id,
-+		boot_cpu_data.topo.amd_node_id);
-+	pr_info("SNS %u\n", smp_num_siblings);
-+	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
- }
- 
- static bool detect_null_seg_behavior(void)
---- a/arch/x86/kernel/cpu/topology_amd.c
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -29,7 +29,17 @@ static bool parse_8000_0008(struct topo_
- 	if (!sft)
- 		sft = get_count_order(ecx.cpu_nthreads + 1);
- 
--	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
-+	/*
-+	 * cpu_nthreads describes the number of threads in the package
-+	 * sft is the number of APIC ID bits per package
-+	 *
-+	 * As the number of actual threads per core is not described in
-+	 * this leaf, just set the CORE domain shift and let the later
-+	 * parsers set SMT shift. Assume one thread per core by default
-+	 * which is correct if there are no other CPUID leafs to parse.
-+	 */
-+	topology_update_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
-+	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.cpu_nthreads + 1);
- 	return true;
- }
- 
-@@ -73,12 +83,14 @@ static bool parse_8000_001e(struct topo_
- 	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
- 
- 	/*
--	 * If leaf 0xb is available, then SMT shift is set already. If not
--	 * take it from ecx.threads_per_core and use topo_update_dom() -
--	 * topology_set_dom() would propagate and overwrite the already
--	 * propagated CORE level.
-+	 * If leaf 0xb is available, then the domain shifts are set
-+	 * already and nothing to do here.
- 	 */
- 	if (!has_0xb) {
-+		/*
-+		 * Leaf 0x80000008 set the CORE domain shift already.
-+		 * Update the SMT domain, but do not propagate it.
-+		 */
- 		unsigned int nthreads = leaf.core_nthreads + 1;
- 
- 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
---- a/arch/x86/kernel/cpu/topology_common.c
-+++ b/arch/x86/kernel/cpu/topology_common.c
-@@ -133,6 +133,10 @@ static void parse_topology(struct topo_s
- 	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
- 
- 	switch (c->x86_vendor) {
-+	case X86_VENDOR_AMD:
-+		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
-+			cpu_parse_topology_amd(tscan);
-+		break;
- 	case X86_VENDOR_CENTAUR:
- 	case X86_VENDOR_ZHAOXIN:
- 		parse_legacy(tscan);
-@@ -162,6 +166,9 @@ static void topo_set_ids(struct topo_sca
- 
- 	if (c->x86_vendor == X86_VENDOR_AMD)
- 		cpu_topology_fixup_amd(tscan);
-+
-+	pr_info("pkg %u die %u core %u nid %u\n", c->topo.pkg_id, c->topo.die_id,
-+		c->topo.core_id, c->topo.amd_node_id);
- }
- 
- static void topo_set_max_cores(struct topo_scan *tscan)
-@@ -175,6 +182,7 @@ static void topo_set_max_cores(struct to
- 	 */
- 	tscan->c->x86_max_cores = tscan->dom_ncpus[TOPO_DIEGRP_DOMAIN] >>
- 		x86_topo_system.dom_shifts[TOPO_SMT_DOMAIN];
-+	pr_info("Max cores: %u\n", tscan->c->x86_max_cores);
- }
- 
- void cpu_parse_topology(struct cpuinfo_x86 *c)
-@@ -215,18 +223,19 @@ void __init cpu_init_topology(struct cpu
- 
- 	parse_topology(&tscan, true);
- 
--	if (!topo_is_converted(c))
--		return;
--
- 	/* Copy the shift values and calculate the unit sizes. */
- 	memcpy(x86_topo_system.dom_shifts, tscan.dom_shifts, sizeof(x86_topo_system.dom_shifts));
- 
- 	dom = TOPO_SMT_DOMAIN;
- 	x86_topo_system.dom_size[dom] = 1U << x86_topo_system.dom_shifts[dom];
-+	pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
-+		x86_topo_system.dom_shifts[dom]);
- 
- 	for (dom++; dom < TOPO_MAX_DOMAIN; dom++) {
- 		sft = x86_topo_system.dom_shifts[dom] - x86_topo_system.dom_shifts[dom - 1];
- 		x86_topo_system.dom_size[dom] = 1U << sft;
-+		pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
-+			x86_topo_system.dom_shifts[dom]);
- 	}
- 
- 	topo_set_ids(&tscan);
-@@ -238,6 +247,7 @@ void __init cpu_init_topology(struct cpu
- 	 * changes further down the road to get it right during early boot.
- 	 */
- 	smp_num_siblings = tscan.dom_ncpus[TOPO_SMT_DOMAIN];
-+	pr_info("SNS %u\n", smp_num_siblings);
- 
- 	/*
- 	 * Neither it's clear whether there are as many dies as the APIC
-@@ -252,4 +262,6 @@ void __init cpu_init_topology(struct cpu
- 	 */
- 	if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
- 		__amd_nodes_per_pkg = __max_die_per_package = tscan.amd_nodes_per_pkg;
-+
-+	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
- }
+At this point we're just better off with a clean new interface.
+And you can use the old hack for < 5.15 if you care strongly enough
+or just talk distros into backporting it to make their lives easier.
