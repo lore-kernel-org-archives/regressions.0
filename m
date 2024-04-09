@@ -1,37 +1,80 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537DC4C69;
-	Tue,  9 Apr 2024 04:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF96A033
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 06:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712637861; cv=none; b=R6+Q0oiT1TjTD4AhkddYIz/x5p3V2cVlHBxCrlzYsrp5yqjLlY8s/VhU77BC9PqmiIA716PBjMk96aFhPfFh3kGp+Z+ItpkITo/XEOtwPEUALFNHF9uYnvs/n93rDnQCs+miiHR05e4IbjRwASZGhUw5fxw5UU/Qpv8eSoU2kxM=
+	t=1712643001; cv=none; b=fx0G8RqHy5IUfNN7HtHqZcEKNF5x1nY/mo+1VJYJqMh6ucPXeiARZlPggNJ3+Eya0lYxvdpwEo9ISyKSAbu90zXDL+rXDRAzcQcqr38STnesy3UdnuEXK6w73aPDXVzcG1+FAa3r2XD7mj+UTIsj1ayY0e7uWPHkvhjbzj4nZfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712637861; c=relaxed/simple;
-	bh=z1C/leeSe16QR15Sg06+OOAnz1Y1OhA/4oHDdhPPOic=;
+	s=arc-20240116; t=1712643001; c=relaxed/simple;
+	bh=Fco9MlyEHsy7mhFviXbafrMc879Fz3eOcdblRV4eUbE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q3pW5SJqDKGqtBJe10eDImhmdwk2qFJP9TS0qVvgftET9v6uIN0UJrhfeqABNAzyldbJPyJVnhHq7qfftEiY4Us5Df2+xkXHRfi+cKVWYgfF0lps8AgqDdJMV4Qp15DBg++HYWKS5ro9dV2vQ7UBZYBa2uDuIIa3074VR2kiq3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OOYFuEZR; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=eQx0NjgpdNTNe9IPJNzmDmDGkjohVIYGgA4L0koNOdbyATXJcBjLzKtRuVTSMfmW7eGBC8lCZ//wMCyAKFVwebC81qb5ZA44mb+DFcNyWCB/iOPG2TTmeN0b3sx40TZW/6iyqCTlBC/hfAAGVGc9T8zJsFAy/2xXUpUj56RkeeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yeK5ttk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+fwt4ZT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yeK5ttk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+fwt4ZT; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OOYFuEZR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=o6ILPPveJlwz9YEeNN8wQwk/Eo5S7ZuMsIS0vRw778k=;
-	t=1712637859; x=1713069859; b=OOYFuEZRRgR1vQGioLvph4BfC8LiVwksAonepMddiYChNFw
-	mPhTRCMhWGGyi9MlvAwmBCRE7aMrplLQZ/8+V+0SuEUPBNq7LvpfOuJKA0/PAzFj/ucykHVoCK46Q
-	nJxafBJVjKl7+XlYsnOawgzWGoG+wMCWbIdQQFWCchTTfnvgKeVpUFxWhJ7Oayvfq4Z8oOEoh5tYZ
-	uSIzvBP0R+IAG7NBAN/iUiKEtLI0Dst08fBNzPKycz4ly852pCjLEgUyC4NpiJSEhK//RMlHDhh1o
-	uSacxLu4L2E5/DSDNSGJzYHZNN0chmmh+d4tQnvLXLPMUiEVQavtA5F/xjwRMUFA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ru3LD-0007xB-FV; Tue, 09 Apr 2024 06:44:15 +0200
-Message-ID: <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
-Date: Tue, 9 Apr 2024 06:44:12 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yeK5ttk0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+fwt4ZT";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yeK5ttk0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+fwt4ZT"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 155353382A;
+	Tue,  9 Apr 2024 06:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712642998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
+	b=yeK5ttk0JoBlkCZtpZJWXkddSspxkBC326yN+bBMObzYUoMZWKrM+KrKEG+rNi5kRhlcSH
+	XA+S14fUpvxxcPIbq/mp8LVxP8KfbTwdYT3d18xYFk7c7XIhC4ZD5jyxlNvK1O3ffytqkq
+	SpPy0x7wqccgdQprE3NqtOdpbMmTw/Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712642998;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
+	b=D+fwt4ZTMAh9jvd67LKVhj9vA8GKG1hXKAKzWB3VsKGaME3w45lNoi5yqS0XBTaZYofYMb
+	pRoxqa/VsAJRxfBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712642998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
+	b=yeK5ttk0JoBlkCZtpZJWXkddSspxkBC326yN+bBMObzYUoMZWKrM+KrKEG+rNi5kRhlcSH
+	XA+S14fUpvxxcPIbq/mp8LVxP8KfbTwdYT3d18xYFk7c7XIhC4ZD5jyxlNvK1O3ffytqkq
+	SpPy0x7wqccgdQprE3NqtOdpbMmTw/Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712642998;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
+	b=D+fwt4ZTMAh9jvd67LKVhj9vA8GKG1hXKAKzWB3VsKGaME3w45lNoi5yqS0XBTaZYofYMb
+	pRoxqa/VsAJRxfBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8AD513313;
+	Tue,  9 Apr 2024 06:09:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rJfbLrXbFGamKQAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 09 Apr 2024 06:09:57 +0000
+Message-ID: <6ef177d7-a565-4ddb-8522-81ffbfb5380e@suse.de>
+Date: Tue, 9 Apr 2024 08:09:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,77 +82,76 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Daniel <dmanlfc@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
- <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: API break, sysfs "capability" file
+Content-Language: en-US
+To: Keith Busch <kbusch@kernel.org>, Lennart Poettering <mzxreary@0pointer.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712637859;356ca266;
-X-HE-SMSGID: 1ru3LD-0007xB-FV
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.52 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	BAYES_HAM(-0.23)[72.47%];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -1.52
+X-Spam-Flag: NO
 
-On 09.04.24 01:44, Cristian Ciocaltea wrote:
-> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 06.04.24 15:08, Bagas Sanjaya wrote:
->>>
->>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
->>> on Steam Deck OLED [1]. He wrote:
->
->>>> I'm adding this here, I hope it's the correct place.
->>>>
->>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
->>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
->>>
->>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
+On 4/9/24 00:41, Keith Busch wrote:
+> On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
+>> Not sure how this is salvageable. This is just seriously fucked
+>> up. What now?
 >>
->> A quick search made me find these posts/threads that foreshadow the problem:
->>
->> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
->> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
->>
->> From a quick look at the second discussion it seems a bit like we are
->> screwed, as iiutc topology files are out in the wild for one or the
->> other approach. So we might have to bite a bullet there and accept the
->> regression -- but I might easily be totally mistaken here. Would be good
->> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
->> explain what's up here.
+>> It has been proposed to use the "range_ext" sysfs attr instead as a
+>> hint if partition scanning is available or not. But it's entirely
+>> undocumented. Is this something that will remain stable? (I mean,
+>> whether something is documented or not apparently has no effect on the
+>> stability of an API anyway, so I guess it's equally shaky as the
+>> capability sysattr? Is any of the block device sysfs interfaces
+>> actually stable or can they change any time?)
 > 
-> The problem here is that Steam Deck OLED provides a topology file which
-> uses an incorrect DAI link ID for BT codec. 
+> The "ext_range" attribute does look like an appropriate proxy for the
+> attribute, but indeed, it's not well documented.
 > 
-> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
-> topology, but this is not a change that can be accepted upstream as it
-> would break other devices which rely on BT_BE_ID set to 3.  
+> Looking at the history of the documentation you had been relying on, it
+> appears that was submitted with good intentions (9243c6f3e012a92d), but
+> it itself changed values, acknowledging the instability of this
+> interface.
 > 
-> The proper solution would be to update the topology file on Steam Deck,
-> but this is probably not straightforward to be accomplished as it would
-> break the compatibility with the currently released (downstream)
-> kernels.
+> So what to do? If documentation is all that's preventing "ext_range"
+> from replacing you're previous usage, then let's add it in the
+> Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
+> that seems like a reliable attribute to put there.
 > 
-> Hopefully, this sheds some more light on the matter.
->
-> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
+I'll side with Keith. Our management tools use 'ext_range' to find
+if a device is partitionable, and we've done that since the very
+beginning of sysfs.
 
-Many thx, yes, this sheds some light on the matter. But there is one
-remaining question: can we make both camps happy somehow? E.g. something
-along the lines of "first detect if the topology file has BT_BE_ID in
-position 2 or 3 and then act accordingly?
+Cheers,
 
-Ciao, Thorsten
+Hannes
+
