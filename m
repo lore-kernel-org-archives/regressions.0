@@ -1,130 +1,130 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EAF69DF4;
-	Tue,  9 Apr 2024 08:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D00128818
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 08:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712649897; cv=none; b=jMAbgI4Gl695ikbqBOijXdPQUPVjxL6Jp2N1mDGUi+EuTJmo3K4s/PVp4uDIo3K2+Ec+n+ZcnxJUSf9pA7cw9OO7p1Ghc/3N0ESrV3T9Q4qaNklEKqYtTp2FSr33KiW7WzGuZ6oewGaBNq/WRfaiJUQUaF2dFrxwzohj1/0cbJA=
+	t=1712650756; cv=none; b=rwgMuRtH2/o0G4KKAra/kYgwDG8XPDQtUZZVGul+Qj3pq5soSq+6gBFdUrtRq+JFExdxPFqtKHbQZcQQ+uxU57MWKvd44+c8g/1trxbgILTXyWYzxtxWrGNu6wxZ0Hqe2x42hLSiaaEuEVeplwrFIbmuzT2/sXMcpbWIsKO0iGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712649897; c=relaxed/simple;
-	bh=cCaMo1+fUxFrVXXV1Xzdl9z/C7bdZto8r66DdOhDa5w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l/ccNNnuT127H5qrbWhcS49o8JUMmpGMq+UdowvWsUMwHXf4UM+NEtce8sLFcDGfbR+UkB7k7SWsYQj608e3Ce3poaajsz6IWPLyNHfVdQHd/WYv3O4OciGR5v3xTJ6vVMMcL7/YsQYnwhxHsXYcZ5ve+XezqtpkmSwndccaCeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LNBLii2l; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LNBLii2l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=8QDe2x01Jl30GauNep5LKLXloCu2mfNe49QJ7ZfgzCA=;
-	t=1712649895; x=1713081895; b=LNBLii2l+46qlTbl5K0o7mTkN+cMdzXfF8G1LRRDPtBFi3k
-	3wlfBwtiaVkCvsE6l9X6khKXpDmYk35AMBXvOmxqy+yKeu603W+RBnNgmx8G069hEDxOEcYdO0ubO
-	Q6UC9AkxcKxbg8JTKrHW50+K2xV8YnpQvi+++7N/HPuW4OF3DDjLh9KqmJFGY93RQVmhD2brwA78x
-	2+ujQlalRejBwspCiT2SiahwoAvwh9UyFP/pO+l+3h7oucoOkIJJFCKrZSAmKXJwuVWap1U6nhPpU
-	ECYz7JrXy889zQMKi7vwqvjaFALABunRKAB8KO++1MUKtVC1AGvPb7TYMBcoHtbQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ru6TL-0006TY-40; Tue, 09 Apr 2024 10:04:51 +0200
-Message-ID: <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
-Date: Tue, 9 Apr 2024 10:04:50 +0200
+	s=arc-20240116; t=1712650756; c=relaxed/simple;
+	bh=VJyWzBnYyefyTtjqbrovv8c/SufEzmjLtuCvSB1LCCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dy6KiOsD3DavSKG0Nfikb17Rw6eeUQmv1PB6uf7v1rfnKUrzJJsrJYecdY10GbBa0+WGr/3fpoIAc5PRBVcb8UNWWfkBLRRrXfNnL8VAKbyRaGvwMWPD2cmPioWJgykjo8u7qN+46ewPMTKIEf/qsKpcjRHPQ2ztacitXH/91KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+	by gardel.0pointer.net (Postfix) with ESMTP id F1D32E80204;
+	Tue,  9 Apr 2024 10:19:10 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 23E6D160433; Tue,  9 Apr 2024 10:19:09 +0200 (CEST)
+Date: Tue, 9 Apr 2024 10:19:09 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: API break, sysfs "capability" file
+Message-ID: <ZhT5_fZ9SrM0053p@gardel-login>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Daniel <dmanlfc@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
- <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
- <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
- <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712649895;6540c33d;
-X-HE-SMSGID: 1ru6TL-0006TY-40
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
 
-On 09.04.24 09:42, Cristian Ciocaltea wrote:
-> On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 09.04.24 01:44, Cristian Ciocaltea wrote:
->>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
->>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
->>>>> on Steam Deck OLED [1]. He wrote:
->>>
->>>>>> I'm adding this here, I hope it's the correct place.
->>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
->>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
->>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
->>>> A quick search made me find these posts/threads that foreshadow the problem:
->>>>
->>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
->>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
->>>>
->>>> From a quick look at the second discussion it seems a bit like we are
->>>> screwed, as iiutc topology files are out in the wild for one or the
->>>> other approach. So we might have to bite a bullet there and accept the
->>>> regression -- but I might easily be totally mistaken here. Would be good
->>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
->>>> explain what's up here.
->>>
->>> The problem here is that Steam Deck OLED provides a topology file which
->>> uses an incorrect DAI link ID for BT codec. 
->>>
->>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
->>> topology, but this is not a change that can be accepted upstream as it
->>> would break other devices which rely on BT_BE_ID set to 3.  
->>>
->>> The proper solution would be to update the topology file on Steam Deck,
->>> but this is probably not straightforward to be accomplished as it would
->>> break the compatibility with the currently released (downstream)
->>> kernels.
->>>
->>> Hopefully, this sheds some more light on the matter.
->>>
->>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
->>
->> Many thx, yes, this sheds some light on the matter. But there is one
->> remaining question: can we make both camps happy somehow? E.g. something
->> along the lines of "first detect if the topology file has BT_BE_ID in
->> position 2 or 3 and then act accordingly?
-> 
-> Right, I have this on my TODOs list but haven't managed to dig into it
-> yet. However, that would be most likely just another hack to be carried
-> on until the transition to a fixed topology is completed.
+On Mo, 08.04.24 16:41, Keith Busch (kbusch@kernel.org) wrote:
 
-Well, sure it's a hack, but the thing is, our number one rule is "no
-regressions" and the reporter apparently faces one (see start of the
-thread). So to fulfill this rule it would be ideal to have a fix
-available soonish or revert the culprit and reply it later together with
-the fix.
+> On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
+> > Not sure how this is salvageable. This is just seriously fucked
+> > up. What now?
+> >
+> > It has been proposed to use the "range_ext" sysfs attr instead as a
+> > hint if partition scanning is available or not. But it's entirely
+> > undocumented. Is this something that will remain stable? (I mean,
+> > whether something is documented or not apparently has no effect on the
+> > stability of an API anyway, so I guess it's equally shaky as the
+> > capability sysattr? Is any of the block device sysfs interfaces
+> > actually stable or can they change any time?)
+>
+> The "ext_range" attribute does look like an appropriate proxy for the
+> attribute, but indeed, it's not well documented.
+>
+> Looking at the history of the documentation you had been relying on, it
+> appears that was submitted with good intentions (9243c6f3e012a92d), but
+> it itself changed values, acknowledging the instability of this
+> interface.
+>
+> So what to do? If documentation is all that's preventing "ext_range"
+> from replacing you're previous usage, then let's add it in the
+> Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
+> that seems like a reliable attribute to put there.
 
-Do we know which change that went into 6.8 caused this? Or is a revert
-out-of-the question as it will likely break things for other users that
-already upgraded to 6.8 and have a matching topology file? (/me fears
-the answer to the latter question is "yes", but I have to ask :-/)
+Well, history so far is telling us that this doesn't stop the block layer
+to change it anyway...
 
-Ciao, Thorsten
+AFAICS "ext_range" is kinda messy to use for this since it changed
+behaviour – only since
+https://github.com/torvalds/linux/commit/1ebe2e5f9d68e94c524aba876f27b945669a7879
+it actually directly exposes GENHD_FL_NO_PART, before it it did some
+more complex stuff which did *not* take GENHD_FL_NO_PART into
+consideration. It's nasty to hack against that from userspace, since
+we never know on what kernel we are on, and how it has been patched.
+
+Also "ext_range" is only available on whole block devices afaics. Partition
+block devices do not have it at all, which makes the check userspace
+has to do even more complex.
+
+All I am looking for is a very simple test that returns me a boolean:
+is there kernel-level partition scanning enabled on this device or
+not. At this point it's not clear to me if I can write this at all in
+a way that works reasonably correctly on any kernel since let's say
+4.15 (which is systemd's "recommended baseline" right now).
+
+I am really not sure how to salvage this mess at all. AFAICS there's
+currently no way to write such a test correctly.
+
+1. "ext_range" does not work on older kernels, and not on partition
+   block devices
+2. "capabilities" does not work on newer kernels, because it changed
+   meaning and then was amputated to be zero.
+3. There's no way to know if we are on an old or new kernel, as
+   apparently various distros backported the amputation.
+
+So, what now?
+
+I think it would be nice if the "capabilities" thing would be brought
+back in a limited form. For example, if it would be changed to start
+to return 0x200|0x1000 for part scanning is off, 0x1000 when it is on.
+
+That would then mean we return to compatibility with Linux <= 5.15,
+but the new 0x1000 bit would tell us that the information is
+reliable. i.e. if userspace sees 0x1000 being set we know that the
+0x200 bit is definitely correct. That would then just mean that
+kernels >= 5.16 until today are left in the cold...
+
+That would then allow userspace to implement:
+
+1. if "capabilities" has 0x200 set → definitely no partition scanning
+2. if "capabilities" has 0x1000 set → bit 0x200 reliably tells is
+   whether partition scanning on or off
+3. if DEVTYPE=partition → definitely no partition scanning
+4. if "ext_range" is 1 → definitely no partition scanning
+5. if LOOP_GET_STATUS64 works, then .lo_flags' LO_FLAGS_PARTSCAN flag
+   indicates partition scanning on or off.
+6. otherwise: ??? (probably we should assume partition scanning is on?)
+
+Lennart
+
+--
+Lennart Poettering, Berlin
