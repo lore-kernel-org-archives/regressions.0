@@ -1,130 +1,161 @@
-Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D00128818
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 08:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B8B29A9
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 08:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712650756; cv=none; b=rwgMuRtH2/o0G4KKAra/kYgwDG8XPDQtUZZVGul+Qj3pq5soSq+6gBFdUrtRq+JFExdxPFqtKHbQZcQQ+uxU57MWKvd44+c8g/1trxbgILTXyWYzxtxWrGNu6wxZ0Hqe2x42hLSiaaEuEVeplwrFIbmuzT2/sXMcpbWIsKO0iGM=
+	t=1712650953; cv=none; b=j+FkjZIW6muGMuq99THhqiKsKna+rwdhyQyO3bHHZ3Aw28LkwW8V1lik9FUVUHMfD3GQPDGy0mxXhbh4sKI2tjWDtRD0vlSEM0GGOIAaBJWk1rs06LE7oA2Oq0weeuJaB0j6rKye2mP7V0dtcDmwfJ7isyyTagzVLud294ExYzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712650756; c=relaxed/simple;
-	bh=VJyWzBnYyefyTtjqbrovv8c/SufEzmjLtuCvSB1LCCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dy6KiOsD3DavSKG0Nfikb17Rw6eeUQmv1PB6uf7v1rfnKUrzJJsrJYecdY10GbBa0+WGr/3fpoIAc5PRBVcb8UNWWfkBLRRrXfNnL8VAKbyRaGvwMWPD2cmPioWJgykjo8u7qN+46ewPMTKIEf/qsKpcjRHPQ2ztacitXH/91KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
-Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id F1D32E80204;
-	Tue,  9 Apr 2024 10:19:10 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id 23E6D160433; Tue,  9 Apr 2024 10:19:09 +0200 (CEST)
-Date: Tue, 9 Apr 2024 10:19:09 +0200
-From: Lennart Poettering <mzxreary@0pointer.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <ZhT5_fZ9SrM0053p@gardel-login>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+	s=arc-20240116; t=1712650953; c=relaxed/simple;
+	bh=02WUFrx8t5EsWL9w0cHfygMeVm1mY4daZbgs0WPNPNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WWUCx2JJsCkJ395QdzNto1lmAwJvaNTX0wSHOOdIKeVqykR3F6Bmf/saUhTXG+ul8HUFSL3V/dU+Mcs0oXgyFfj44UajUHhAGPzKxgD0Jj6XEKKV++yeamjcXNmR0YvjdlM9yH9zb16rjQa0bcnIamievFu6uCvvHQOO4trXRB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYlqBnLG; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYlqBnLG"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso5725382276.0
+        for <regressions@lists.linux.dev>; Tue, 09 Apr 2024 01:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712650950; x=1713255750; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AbQ7XvxzNdGeggq9DT3eg+0bgBZN6IC7RUGuFWpooO4=;
+        b=fYlqBnLGDOgWDYqlXJU0hKzZXmuI7kSL2s+g3sLDmDgaBHLOZEH9PH64pXlAipnUft
+         5fpBaqY2ex5h3pWLrQ3a3Uly1OU2u+mlQSrMIWd2ooSWUcHqtx1Oq5S5sLD0a+USaemU
+         0gCszE9b86CgISU/RmBEtR5r534Rvm1BxRvjdJPI2u0oeOGn5VVEJMuVpwfYIbbdiHnb
+         z+9bMvu0R/rgUO0IB/DRNyuocwJyTzem63Pn5l9yDp157ESSU+jSyGX5gi8Hy1tfJ9yC
+         ANIBvVt9bW4hxPStJlAnWAoMbJc5DPhRYurBD4P87mK+Zru9AytDUXWFdkPVP8beNeXP
+         WaWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712650950; x=1713255750;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AbQ7XvxzNdGeggq9DT3eg+0bgBZN6IC7RUGuFWpooO4=;
+        b=iEZ6iokNHtbNmfmadZSAKrKfDSh3x9KlNc7WAG6ggo3OV53C4+af4XZ6wqE8S8X7IK
+         00bBVH9LvRJZDs4GnrNK/ZUqTqqnVIFm7Ru9rbpa6Efvxeca7EwyOFi2ufT8n1/udVKf
+         i5X5Tfiouc4vH6exsBgP/f0fl6gSszi2pl600Itjul/ekKPuz/U4ii/X5rQzWAJztWuY
+         /ya/BmX4llwdH1PHI0B0K/rSPo1inuJ/PIMzQqNstIR0mDGoE5zvt47hrkjdnlqhf2K+
+         aSaMW8Y32Ivy89QRtDW/2Z/cPRQZVrmvzOQFeaev8mtQAFoQcKf/z5KrXiDlQ1zu2f6Q
+         q0kw==
+X-Gm-Message-State: AOJu0YwgH1TEmhcFVTeP1N+57SFBGnwAPrabbdxNw9agqg6MZGIJTlBw
+	Qo6xo+lWToYE3ZjsZ+WLmXiR8V/cK/Z0JPXxsT/3LYicd46TL+P6o8VimcLYxZAFvjHipYiuE/f
+	5S3wZv7IvrG7433OgAEJQH/v6nsJtBEGnK7aX8HxV
+X-Google-Smtp-Source: AGHT+IHDLhkxY099pQiSSrdAQNO5+/2n82WSIr06Sh1Xo/e7Ky8qfSTSFXwriFmftoLdkS4bEyY5Nh4agSQZCtagC9A=
+X-Received: by 2002:a25:f627:0:b0:dc2:48af:bf09 with SMTP id
+ t39-20020a25f627000000b00dc248afbf09mr9273528ybd.62.1712650949989; Tue, 09
+ Apr 2024 01:22:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+References: <ZhFJZoful6nEFskW@archie.me> <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+ <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com> <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
+ <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com> <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
+In-Reply-To: <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
+From: Daniel Martin <dmanlfc@gmail.com>
+Date: Tue, 9 Apr 2024 18:22:18 +1000
+Message-ID: <CAOyTmd2w+si-3OEyc4TGCn7ntiPyLGwBB6pswwcfDenj6BZSvg@mail.gmail.com>
+Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Venkata Prasad Potturu <venkataprasad.potturu@amd.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Sound System <linux-sound@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mo, 08.04.24 16:41, Keith Busch (kbusch@kernel.org) wrote:
+Why this was changed in the first place could do with some explaining,
+as Valve had this implemented first in the SteamDeck (probably
+collabora dev).
+There were no other implementations out in the wild AFAIK & now with
+the 6.8.x kernel, this issue has manifested because of an enum change.
+I cannot for the life of me find an alternative topology file. Where
+are the other implementations? Therefore it makes sense aligning to
+what was done before on the Steam Deck OLED.
+Alternatively, if Valve could provide an updated topology file for
+6.8+ kernels, that would be great too.
+Just my two cents from a humble OS dev, trying to make stuff work.
 
-> On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
-> > Not sure how this is salvageable. This is just seriously fucked
-> > up. What now?
+
+On Tue, 9 Apr 2024 at 18:04, Linux regression tracking (Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> On 09.04.24 09:42, Cristian Ciocaltea wrote:
+> > On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 09.04.24 01:44, Cristian Ciocaltea wrote:
+> >>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
+> >>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
+> >>>>> on Steam Deck OLED [1]. He wrote:
+> >>>
+> >>>>>> I'm adding this here, I hope it's the correct place.
+> >>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
+> >>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
+> >>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
+> >>>> A quick search made me find these posts/threads that foreshadow the problem:
+> >>>>
+> >>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
+> >>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
+> >>>>
+> >>>> From a quick look at the second discussion it seems a bit like we are
+> >>>> screwed, as iiutc topology files are out in the wild for one or the
+> >>>> other approach. So we might have to bite a bullet there and accept the
+> >>>> regression -- but I might easily be totally mistaken here. Would be good
+> >>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
+> >>>> explain what's up here.
+> >>>
+> >>> The problem here is that Steam Deck OLED provides a topology file which
+> >>> uses an incorrect DAI link ID for BT codec.
+> >>>
+> >>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
+> >>> topology, but this is not a change that can be accepted upstream as it
+> >>> would break other devices which rely on BT_BE_ID set to 3.
+> >>>
+> >>> The proper solution would be to update the topology file on Steam Deck,
+> >>> but this is probably not straightforward to be accomplished as it would
+> >>> break the compatibility with the currently released (downstream)
+> >>> kernels.
+> >>>
+> >>> Hopefully, this sheds some more light on the matter.
+> >>>
+> >>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
+> >>
+> >> Many thx, yes, this sheds some light on the matter. But there is one
+> >> remaining question: can we make both camps happy somehow? E.g. something
+> >> along the lines of "first detect if the topology file has BT_BE_ID in
+> >> position 2 or 3 and then act accordingly?
 > >
-> > It has been proposed to use the "range_ext" sysfs attr instead as a
-> > hint if partition scanning is available or not. But it's entirely
-> > undocumented. Is this something that will remain stable? (I mean,
-> > whether something is documented or not apparently has no effect on the
-> > stability of an API anyway, so I guess it's equally shaky as the
-> > capability sysattr? Is any of the block device sysfs interfaces
-> > actually stable or can they change any time?)
+> > Right, I have this on my TODOs list but haven't managed to dig into it
+> > yet. However, that would be most likely just another hack to be carried
+> > on until the transition to a fixed topology is completed.
 >
-> The "ext_range" attribute does look like an appropriate proxy for the
-> attribute, but indeed, it's not well documented.
+> Well, sure it's a hack, but the thing is, our number one rule is "no
+> regressions" and the reporter apparently faces one (see start of the
+> thread). So to fulfill this rule it would be ideal to have a fix
+> available soonish or revert the culprit and reply it later together with
+> the fix.
 >
-> Looking at the history of the documentation you had been relying on, it
-> appears that was submitted with good intentions (9243c6f3e012a92d), but
-> it itself changed values, acknowledging the instability of this
-> interface.
+> Do we know which change that went into 6.8 caused this? Or is a revert
+> out-of-the question as it will likely break things for other users that
+> already upgraded to 6.8 and have a matching topology file? (/me fears
+> the answer to the latter question is "yes", but I have to ask :-/)
 >
-> So what to do? If documentation is all that's preventing "ext_range"
-> from replacing you're previous usage, then let's add it in the
-> Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
-> that seems like a reliable attribute to put there.
+> Ciao, Thorsten
 
-Well, history so far is telling us that this doesn't stop the block layer
-to change it anyway...
 
-AFAICS "ext_range" is kinda messy to use for this since it changed
-behaviour – only since
-https://github.com/torvalds/linux/commit/1ebe2e5f9d68e94c524aba876f27b945669a7879
-it actually directly exposes GENHD_FL_NO_PART, before it it did some
-more complex stuff which did *not* take GENHD_FL_NO_PART into
-consideration. It's nasty to hack against that from userspace, since
-we never know on what kernel we are on, and how it has been patched.
 
-Also "ext_range" is only available on whole block devices afaics. Partition
-block devices do not have it at all, which makes the check userspace
-has to do even more complex.
+-- 
 
-All I am looking for is a very simple test that returns me a boolean:
-is there kernel-level partition scanning enabled on this device or
-not. At this point it's not clear to me if I can write this at all in
-a way that works reasonably correctly on any kernel since let's say
-4.15 (which is systemd's "recommended baseline" right now).
+Kind Regards,
 
-I am really not sure how to salvage this mess at all. AFAICS there's
-currently no way to write such a test correctly.
-
-1. "ext_range" does not work on older kernels, and not on partition
-   block devices
-2. "capabilities" does not work on newer kernels, because it changed
-   meaning and then was amputated to be zero.
-3. There's no way to know if we are on an old or new kernel, as
-   apparently various distros backported the amputation.
-
-So, what now?
-
-I think it would be nice if the "capabilities" thing would be brought
-back in a limited form. For example, if it would be changed to start
-to return 0x200|0x1000 for part scanning is off, 0x1000 when it is on.
-
-That would then mean we return to compatibility with Linux <= 5.15,
-but the new 0x1000 bit would tell us that the information is
-reliable. i.e. if userspace sees 0x1000 being set we know that the
-0x200 bit is definitely correct. That would then just mean that
-kernels >= 5.16 until today are left in the cold...
-
-That would then allow userspace to implement:
-
-1. if "capabilities" has 0x200 set → definitely no partition scanning
-2. if "capabilities" has 0x1000 set → bit 0x200 reliably tells is
-   whether partition scanning on or off
-3. if DEVTYPE=partition → definitely no partition scanning
-4. if "ext_range" is 1 → definitely no partition scanning
-5. if LOOP_GET_STATUS64 works, then .lo_flags' LO_FLAGS_PARTSCAN flag
-   indicates partition scanning on or off.
-6. otherwise: ??? (probably we should assume partition scanning is on?)
-
-Lennart
-
---
-Lennart Poettering, Berlin
+Daniel
++61 (0)409611884
