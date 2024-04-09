@@ -1,149 +1,103 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFF350275
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 14:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B6F135A4B
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 15:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712674023; cv=none; b=nHZlQ7D+qEnZL1P9rfB1+PvW7yw0kIp2pbwvRflhuK3wIwqUDK0ef6ap5bfuyGee6BaKi2uzL4Wjy9FoiO+M0eyAhkyb1U5w93HnFI9+yL0aiDji5DqQPJnMB//9899ciF7WiILbMOLWFi29Xjmv/f/o2sx1HW0bxYK7sbqBKEA=
+	t=1712675827; cv=none; b=q/M+XhCG5mOqsZTELs1GNVxf7rbYNeNf8K/TVhClkMTUIU9OV6EnEVlASKvXtyhDKYT7u3aK54SHXfGoqiD60zsS96b4H+iVCyKsCRG3V1Ve7/7MrrP5SZ4rY2tJmqRezA1opGS7GMn+rDEJ0LLWhGxcO2XXL8wevMS22LVlxzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712674023; c=relaxed/simple;
-	bh=0mq4p2RKJcENA+l1Y9ZRi0A1ikdFR53l9IrAV6mP5J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tDxuXgnf6w2Y8jxt3qhT2TAxsfD2c8l1jJ/7mdHCes7pDf3lRnm0aXnVAkqcRkviZcSsRzM70rxyxbUpN3vHG/h9L1eyvLesfPvL7hL40DcYRuc8gxvV2M/nUpv6GWGkMHOwyDqsaAQm3HqL/8HdL2XRKR5n7+LCnvSyMkPXaAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ppweo8k2; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712675827; c=relaxed/simple;
+	bh=GpV2fHcAbppCLh2u5U1+w9Mj9ggp/1FWwmBurNKmVg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mrUvLSZiP4qBWLzSotIe4DzPA9/BIOO7V7QH8AugRg1AkjEjNBSJht6p5cGsC7gVGo6nKTSKgpIQq2Fy3hoPgc7xoJ738p08cgAjtQzix6EIVVO4MRDAxCSsPGW/FY5KQf9KnCePoDGtlrbGBZbjOUg1XF28OJXXtEqKu+t4v/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=K4mNDF6k; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ppweo8k2"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dff837d674so48530205ad.3
-        for <regressions@lists.linux.dev>; Tue, 09 Apr 2024 07:47:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="K4mNDF6k"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e45f339708so4304275ad.0
+        for <regressions@lists.linux.dev>; Tue, 09 Apr 2024 08:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712674021; x=1713278821; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t4/XbwGfv5FH7OpTEgDneuRNsxKocgdNuASa9JUfGDg=;
-        b=Ppweo8k2EpDLpoagQ0AYo12zgKv8WPGo1pOhbucnhem8teIIvCTZGd9Rfph49LnMTz
-         xM/6DjBuWtDqZzMz73laxmd59Ch6q2TBtM5JPgbPa6ALnmSjOLdVBN/KV7zkf+vB9SRj
-         mGSL6SGXNoPkkeBu1F5P7W4Bb6gOr85gFvcExrJL4mBvwlFDCI+8r99FQEPLjFgwnJxR
-         /Db6bI5h4SdKxk+3mwjSaKOLFMp88DP6ZmvJN7jQJ3NGombELmVqyM/OZC7R90WkJtLi
-         YSJOh7KN/FM0dbVj/wEp78YbKMD5aEwFFO2W3F4nYWSxYMdqYc/S+2rLtk0oPR8skwsX
-         fwKA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712675825; x=1713280625; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CFN5ra1aznPU86rqQVA8b3ykCxoSF9HNqWhAYFl+4RQ=;
+        b=K4mNDF6ku7JYS6k/iUmxxl8kib9tauEyv8yVcmAdkKboBioSYiX1QOWQwr3RfKPi2r
+         dUfqfe3bvd1axAfkKIGselQswHZEL48D83QZSG98Ro2SVe32Z3CTrpv6cHpRAbSF3BgT
+         /J218hoRmkC18m3TjvSyb+9347ev6Kh5C2Dq8KfGLS3Dkv3WscgrJ3ZlNjg2zv1mmG3c
+         ltGpEKLH8VMhzGxMQrHDiks6wMofuLwdb9lwMTBNE4FjrHDAkq602lsAR9ejoFEzRtUz
+         dMZt8pvmDGd1Jv3RmH4W1CtDJ3gbGerxBsx3TP8LcryXD2D2kaNv0EDh3PbQMstjoZw1
+         NKZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712674021; x=1713278821;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t4/XbwGfv5FH7OpTEgDneuRNsxKocgdNuASa9JUfGDg=;
-        b=EY5BvsI8vIA0a8i5obwfvh30deMhwqWf5Y05R5o5hZVISiXZL3XlhH53fA8NbwEWce
-         Q1DmVM6ETNZoKph+GZxaBJGGuZeOqESPNxow7r90B6L6MEQa5f6KKCnUFbKTL5fI6Jrr
-         jVXrHpV35tA99QMZyu7O8A1iOGzTCsxwlRMuHHfi3W9A/O2gCqg2KhKizVr9WvTkHgP4
-         LSwcXJ+G4hZHb2d46abG+nMbQlpiMCWfhbzolpExp1e3kBSnj5AfBMWBbCmJ3SzXfNdt
-         kHHxmJkIbpZOGES0hTuO+KkV6NN1JvQZcduNcfKrOSSquh+CWgfAd4QOM08jrwdvFsX9
-         aZ0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWqciMLlZHP8UTjmHsSRsHlVRU1CaO4nDUCT2zMGv09ayFKntee/acfM35rkjduF5pFaWRRTahx+QQgpRmxGUy75F00BB4np2Z1Bas=
-X-Gm-Message-State: AOJu0Yz1jumbBWK6OVE+tWKulrXklewoXs2/BkoFVkBmHyzqb8NpCSQL
-	AE6nfBZ777YffyJY51e5eNwCIdS9tVu3oddj8Et+RQlEUxld6UQgZPYbY/X11aP/rQ4E9P6egIP
-	T/LtmJ0xt54yEzhgIbLhsPhMuaGw=
-X-Google-Smtp-Source: AGHT+IFY9j+qoSmaEYW4Akp1KOi4FfGEeSnCSb7sIzO3txX/tFn7nbOlqb5dbAR83wpPTMIXAlFbk//FTGHP13D9Ggg=
-X-Received: by 2002:a17:902:f30c:b0:1e2:7fb2:b0b with SMTP id
- c12-20020a170902f30c00b001e27fb20b0bmr9825211ple.68.1712674021492; Tue, 09
- Apr 2024 07:47:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712675825; x=1713280625;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CFN5ra1aznPU86rqQVA8b3ykCxoSF9HNqWhAYFl+4RQ=;
+        b=cufHPWmA/Nr8bS6EeKnflpUZC54M9WBqwQqaaAQojsQpn/zUB/pJwPehvFO/HTT6IL
+         lrsAahialuzwxsWgNzLPimSlrTxyCINIMAfJueqywa/vhHwQFc5Bu/VJ9cf+HlPIPwqk
+         3JZG7H9aaWBj/acKfMAGj8dfC92fNZRHWuvLJIq4c7rzVKs3f2YqHugUhJuCudtxAeit
+         j3h/QdBIDtzVrBZcF5E0bfwKfNNP+kURpaWFyCKjmt552stO21pAqxtA47OGUtAKMyDQ
+         6rLGjO2X9LrXwH0lPs3PADTdm99rqtaLeDoD227bQO4uXBjs0GWrPWQtznaf0pZmgJSn
+         bL2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUK63fEftf6cQa6YpybgN+ghg5/WuOa+T2vvUl0pp8EStTw3OB0O8lc6wPPXw01bPjd+imTXVOjlT+k1a4ZPKjIUbsAPkYu5FjAkGU=
+X-Gm-Message-State: AOJu0YwdINt94ItzLFJbW2CWNt7DrswoXkJ3/FglNANHlom/+06OScu1
+	iFX+7HRBI642Z+Sgm2BZjp+Wp2wrTbxEJCQbCNCo2MUhmg8OxQOLD2SgJWxBVL0=
+X-Google-Smtp-Source: AGHT+IEFav7+y9oyCqRY7zx1fepSUKQxh2+t7rbF9PdgaetXQkALGBsEsh+5vF07Bn24RD62f0/qxg==
+X-Received: by 2002:a17:903:22c8:b0:1e0:b5f2:3284 with SMTP id y8-20020a17090322c800b001e0b5f23284mr115142plg.0.1712675824751;
+        Tue, 09 Apr 2024 08:17:04 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id b13-20020a170902ed0d00b001e0e8e4f7e3sm8947433pld.206.2024.04.09.08.17.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 08:17:04 -0700 (PDT)
+Message-ID: <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
+Date: Tue, 9 Apr 2024 09:17:02 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru> <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
-In-Reply-To: <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
-From: Nikita Travkin <nikitos.tr@gmail.com>
-Date: Tue, 9 Apr 2024 19:46:50 +0500
-Message-ID: <CAN_S-bXxKBjB5knjcUXW=rVwhCx0f1-pDMjmf9V9+ZLYSGZxvg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] gov_power_allocator: Allow binding before cooling devices
-To: Leonard Lausen <leonard@lausen.nl>
-Cc: nikita@trvn.ru, Lukasz Luba <lukasz.luba@arm.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: API break, sysfs "capability" file
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>, Lennart Poettering <mzxreary@0pointer.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240409141531.GB21514@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-=D0=B2=D1=82, 9 =D0=B0=D0=BF=D1=80. 2024=E2=80=AF=D0=B3. =D0=B2 19:42, Leon=
-ard Lausen <leonard@lausen.nl>:
->
-> Hi Nikita, Hi =C5=81ukasz,
->
-> thank you for fixing the e83747c2f8e3 ("thermal: gov_power_allocator: Set=
- up trip points earlier") and 912e97c67cc3 ("thermal: gov_power_allocator: =
-Move memory allocation out of throttle()") regressions as part of v6.9-rc3.=
- As the regression was introduced in v6.8, would it be possible to include =
-the fix in a v6.8 patch release?
->
+On 4/9/24 8:15 AM, Christoph Hellwig wrote:
+> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+>> All I am looking for is a very simple test that returns me a boolean:
+>> is there kernel-level partition scanning enabled on this device or
+>> not.
+> 
+> And we can add a trivial sysfs attribute for that.
 
-Hi! I think these both have already been picked for stable:
+And I think we should. I don't know what was being smoked adding a sysfs
+interface that exposed internal flag values - and honestly what was
+being smoked to rely on that, but I think it's fair to say that the
+majority of the fuckup here is on the kernel side.
+ 
+> At this point we're just better off with a clean new interface.
+> And you can use the old hack for < 5.15 if you care strongly enough
+> or just talk distros into backporting it to make their lives easier.
 
-https://lore.kernel.org/r/20240408125314.939341866@linuxfoundation.org
-https://lore.kernel.org/r/20240408125314.969670696@linuxfoundation.org/
+We should arguably just stable mark the patch adding the above simple
+interface.
 
-Nikita
+-- 
+Jens Axboe
 
-> Thank you
-> Leonard
->
-> (Resending with regressions@lists.linux.dev in CC)
->
-> #regzbot introduced: 912e97c67cc3f333c4c5df8f51498c651792e658
-> #regzbot fixed-by: 1057c4c36ef8b236a2e28edef301da0801338c5f
->
->
-> #regzbot introduced: e83747c2f8e3cc5e284e37a8921099f1901d79d8
-> #regzbot fixed-by: da781936e7c301e6197eb6513775748e79fb2575
->
-> On 4/3/24 07:31, Nikita Travkin via B4 Relay wrote:
-> > Recent changes in IPA made it fail probing if the TZ has no cooling
-> > devices attached on probe or no trip points defined.
-> >
-> > This series restores prior behavior to:
-> >
-> > - allow IPA to probe before cooling devices have attached;
-> > - allow IPA to probe when the TZ has no passive/active trip points.
-> >
-> > I've noticed that all thermal zones fail probing with -EINVAL on my
-> > sc7180 based Acer Aspire 1 since 6.8. This series allows me to bring
-> > them back.
-> >
-> > Additionally there is a commit that supresses the "sustainable_power
-> > will be estimated" warning on TZ that have no trip points (and thus IPA
-> > will not be able to do anything for them anyway). This allowed me to
-> > notice that some of the TZ with cooling_devices on my platform actually
-> > lack the sustainable_power value.
-> >
-> > Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> > ---
-> > Changes in v2:
-> > - Split to two changes (Lukasz)
-> > - Return 0 in allocate_actors_buffer() instead of suppressing -EINVAL
-> >   (Lukasz)
-> > - Add a change to supress "sustainable_power will be estimated" warning
-> >   on "empty" TZ
-> > - Link to v1: https://lore.kernel.org/r/20240321-gpa-no-cooling-devs-v1=
--1-5c9e0ef2062e@trvn.ru
-> >
-> > ---
-> > Nikita Travkin (3):
-> >       thermal: gov_power_allocator: Allow binding without cooling devic=
-es
-> >       thermal: gov_power_allocator: Allow binding without trip points
-> >       thermal: gov_power_allocator: Suppress sustainable_power warning =
-without trip_points
-> >
-> >  drivers/thermal/gov_power_allocator.c | 16 ++++++----------
-> >  1 file changed, 6 insertions(+), 10 deletions(-)
-> > ---
-> > base-commit: 727900b675b749c40ba1f6669c7ae5eb7eb8e837
-> > change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
-> >
-> > Best regards,
