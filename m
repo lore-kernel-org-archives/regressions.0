@@ -1,69 +1,122 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from devico.uberspace.de (devico.uberspace.de [185.26.156.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6E87F7CB
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 14:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B47E381C8
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 14:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712672138; cv=none; b=bGLUHZXtvOM4NVFcZZbEh9eIaabcbI4KJkV2xO2oGjQbTrmPMj15EvHGJyoDgumliJGxvqk9N8e/RLl2Amy3OHLKJmS9XWCjjVs+6SK9p9ihPGTwXIxnlHI2zhvsqHUwhtFXLEsEgrUJbh/B7as8rxB6xbd7F/L+ogwmyGAEv4s=
+	t=1712673771; cv=none; b=tV7u2VpQ1Ik3yc8/16bDV0F2mjZzmcZZt+bf5LYwl7/JeObSmjNM8upmV9GkLc0xkvM6kLi2M3VZdWyhIeFQ4JdGZP4/lreIxA9vTmmT1GmPtr+5JTeBEV+KjZ0pT3j94Fcq1yAr9ep1+bomiC9JW6CIrKhSP4kY2iPGMFGh3b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712672138; c=relaxed/simple;
-	bh=1Hvn0UUQi7daY6MeWzk+embfXVjNT5NRKIlTZP6dTWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VM30V1E9KCYCvnUFUQVKk3uq335eW1DXoTlnxs8OTyjFak6mhRCMeQqFuOY0MuCLAbxO5OaMCD3IIJCx4nKPSmi6b3uY+0dgMU9k7F2OOj8gL9zNfYa5HxTHBpwgJGm+wJAPaGCQJs7wF0MOrEogA9B90M3d4HJ2RydsF3RmzvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 65FB468B05; Tue,  9 Apr 2024 16:15:32 +0200 (CEST)
-Date: Tue, 9 Apr 2024 16:15:31 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Keith Busch <kbusch@kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <20240409141531.GB21514@lst.de>
-References: <ZhQJf8mzq_wipkBH@gardel-login> <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info> <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com> <ZhRSVSmNmb_IjCCH@gardel-login> <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com> <ZhT5_fZ9SrM0053p@gardel-login>
+	s=arc-20240116; t=1712673771; c=relaxed/simple;
+	bh=WcBHAO835OpZ7Wucwr0AFDAB7jKmJePuFUm5drOOGgY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sZKm3cACWva37NFkRZZ3ZcKsyiqYoGsonBuV0QF0SLFRKTjWqkUK9Kx5ePbOp1kdu+B5uHj8V2Ca66Xj8SjsSANNSHawSpwJ6+aZmDDceImvZLFsAi6ZvRu9rS9bEqtgpm7BcNibUOQDxJHfbuU9GWMW8NL75EsCzCfBl0F1Ias=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lausen.nl; spf=pass smtp.mailfrom=lausen.nl; dkim=fail (0-bit key) header.d=lausen.nl header.i=@lausen.nl header.b=wc7nePo9 reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lausen.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lausen.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lausen.nl header.i=@lausen.nl header.b="wc7nePo9"
+Received: (qmail 31948 invoked by uid 990); 9 Apr 2024 14:42:46 -0000
+Authentication-Results: devico.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by devico.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 09 Apr 2024 16:42:45 +0200
+Message-ID: <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
+Date: Tue, 9 Apr 2024 10:42:44 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhT5_fZ9SrM0053p@gardel-login>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+From: Leonard Lausen <leonard@lausen.nl>
+Subject: Re: [PATCH v2 0/3] gov_power_allocator: Allow binding before cooling
+ devices
+To: nikita@trvn.ru, Lukasz Luba <lukasz.luba@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nikita Travkin <nikitos.tr@gmail.com>, regressions@lists.linux.dev
+References: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru>
+Content-Language: en-US
+In-Reply-To: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: /
+X-Rspamd-Report: SUSPICIOUS_RECIPS(1.5) BAYES_HAM(-0.490661) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: 0.919338
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=lausen.nl; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=WcBHAO835OpZ7Wucwr0AFDAB7jKmJePuFUm5drOOGgY=;
+	b=wc7nePo90m4/dEoTfQqKRpWsmcKs0wrORamLnVXUa+5xU/Q5UTKc+dEJf2/6JMP8Oq+MDKmaXn
+	4T4kIzD7nx1SHCpEN5kgcMkdBjCPA5cPw3VKx7Ky8Dbfr4/TR9SaByXns6eNSIGoQh7RFAZtKAgM
+	8cd1y79tJ9wzE+8elKX+AJ+K77aNKdGg6is/swfkZkmbMJ7xf27NLPXNWcUcGBv6WoTTURFRxsIo
+	o/WMrHzgDQ5bqDGPWjeDOglanQ/04/MBVEMrlzFX69eQy7xmAKp6aDTtVVfp8P1Eg4YoydjTTETl
+	0XxES+ZBu4zto8ChIkWj+sgMf2+usyre1KfJ22Er48QFK0/kaZuYpE5W3rMIZ24wEgTCaz1w4zh5
+	xDjs4jXVtOeCEfgYYGRA3NuUqxyGmF3ROhn07xGkhjj9gjaSv8rnxKD5yD4CR4zltHthl5ZxzfI0
+	rYy7ES5LgnXtGiGXhlSutcj797widsU0CCkg9GrbCnBdxMkJG3YKW2OI8NYIxLt76c/rP75veTqf
+	yGCpGPvSt1vsXeVM4axHgxA7pOpaDeH0PXE6QoG3DGK1vqHw5413/bfqvH57y45ILAyNSHa+ANVQ
+	rSfa7pwFIcUm5dg3FERSNjDzW9zoK0IO1H4gkF2opDRcWm2A3dZ5ILKT6EkQqLWfD1m7nJ2WFfKr
+	Y=
 
-On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
-> All I am looking for is a very simple test that returns me a boolean:
-> is there kernel-level partition scanning enabled on this device or
-> not.
+Hi Nikita, Hi Łukasz,
 
-And we can add a trivial sysfs attribute for that.
+thank you for fixing the e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points earlier") and 912e97c67cc3 ("thermal: gov_power_allocator: Move memory allocation out of throttle()") regressions as part of v6.9-rc3. As the regression was introduced in v6.8, would it be possible to include the fix in a v6.8 patch release?
 
-> At this point it's not clear to me if I can write this at all in
-> a way that works reasonably correctly on any kernel since let's say
-> 4.15 (which is systemd's "recommended baseline" right now).
+Thank you
+Leonard
+
+(Resending with regressions@lists.linux.dev in CC)
+
+#regzbot introduced: 912e97c67cc3f333c4c5df8f51498c651792e658
+#regzbot fixed-by: 1057c4c36ef8b236a2e28edef301da0801338c5f
+
+
+#regzbot introduced: e83747c2f8e3cc5e284e37a8921099f1901d79d8
+#regzbot fixed-by: da781936e7c301e6197eb6513775748e79fb2575
+
+On 4/3/24 07:31, Nikita Travkin via B4 Relay wrote:
+> Recent changes in IPA made it fail probing if the TZ has no cooling
+> devices attached on probe or no trip points defined.
 > 
-> I am really not sure how to salvage this mess at all. AFAICS there's
-> currently no way to write such a test correctly.
-
-You can't.  Maybe that's a lesson to not depend on undocumented internal
-flags exposed by accident by a weirdo interface.  Just talk to people.
-
-> I think it would be nice if the "capabilities" thing would be brought
-> back in a limited form. For example, if it would be changed to start
-> to return 0x200|0x1000 for part scanning is off, 0x1000 when it is on.
+> This series restores prior behavior to:
 > 
-> That would then mean we return to compatibility with Linux <= 5.15,
-> but the new 0x1000 bit would tell us that the information is
-> reliable. i.e. if userspace sees 0x1000 being set we know that the
-> 0x200 bit is definitely correct. That would then just mean that
-> kernels >= 5.16 until today are left in the cold...
-
-At this point we're just better off with a clean new interface.
-And you can use the old hack for < 5.15 if you care strongly enough
-or just talk distros into backporting it to make their lives easier.
+> - allow IPA to probe before cooling devices have attached;
+> - allow IPA to probe when the TZ has no passive/active trip points.
+> 
+> I've noticed that all thermal zones fail probing with -EINVAL on my
+> sc7180 based Acer Aspire 1 since 6.8. This series allows me to bring
+> them back.
+> 
+> Additionally there is a commit that supresses the "sustainable_power
+> will be estimated" warning on TZ that have no trip points (and thus IPA
+> will not be able to do anything for them anyway). This allowed me to
+> notice that some of the TZ with cooling_devices on my platform actually
+> lack the sustainable_power value.
+> 
+> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> ---
+> Changes in v2:
+> - Split to two changes (Lukasz)
+> - Return 0 in allocate_actors_buffer() instead of suppressing -EINVAL
+>   (Lukasz)
+> - Add a change to supress "sustainable_power will be estimated" warning
+>   on "empty" TZ
+> - Link to v1: https://lore.kernel.org/r/20240321-gpa-no-cooling-devs-v1-1-5c9e0ef2062e@trvn.ru
+> 
+> ---
+> Nikita Travkin (3):
+>       thermal: gov_power_allocator: Allow binding without cooling devices
+>       thermal: gov_power_allocator: Allow binding without trip points
+>       thermal: gov_power_allocator: Suppress sustainable_power warning without trip_points
+> 
+>  drivers/thermal/gov_power_allocator.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+> ---
+> base-commit: 727900b675b749c40ba1f6669c7ae5eb7eb8e837
+> change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
+> 
+> Best regards,
