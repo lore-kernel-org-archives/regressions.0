@@ -1,157 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF96A033
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 06:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957FA7C0A9;
+	Tue,  9 Apr 2024 07:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712643001; cv=none; b=fx0G8RqHy5IUfNN7HtHqZcEKNF5x1nY/mo+1VJYJqMh6ucPXeiARZlPggNJ3+Eya0lYxvdpwEo9ISyKSAbu90zXDL+rXDRAzcQcqr38STnesy3UdnuEXK6w73aPDXVzcG1+FAa3r2XD7mj+UTIsj1ayY0e7uWPHkvhjbzj4nZfk=
+	t=1712647858; cv=none; b=T74abUZ8z5rTBH1co7NdClmqZPqf+fNgS7p6Z5NG4a4ANa5OD6NQ9AamtNgKoGav7xK+BoiYOhlXGN19mu2aTjphfVKmgrKizjBYEWHd/MujtERnwX1SLx7+q/YaiBiWjj+nSktIYwAe6kt8lkZ9bO1KrhbzkveuvODrQAnLXCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712643001; c=relaxed/simple;
-	bh=Fco9MlyEHsy7mhFviXbafrMc879Fz3eOcdblRV4eUbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eQx0NjgpdNTNe9IPJNzmDmDGkjohVIYGgA4L0koNOdbyATXJcBjLzKtRuVTSMfmW7eGBC8lCZ//wMCyAKFVwebC81qb5ZA44mb+DFcNyWCB/iOPG2TTmeN0b3sx40TZW/6iyqCTlBC/hfAAGVGc9T8zJsFAy/2xXUpUj56RkeeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yeK5ttk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+fwt4ZT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yeK5ttk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D+fwt4ZT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1712647858; c=relaxed/simple;
+	bh=r9rSLlfIhJer4fzjFi/L0h0xK2cjOr96/AVBAEJVmUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dNc8sGt1lTWfqr4TRRWZD4cJ0KQEUKK5wwqKkKRsfsUWys3S5udoag5qpgn8ELPwIy5wWJIejW9Lm0DcURvsL4bCY6gvhdKnXKP1NBdyTebH50AoFoESdLsw0MxPWoQTrMhC3KEOQ2x+i4oymd/jMiaOec+4x+zV89RJ3V5vwQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TzVeC8dr; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yeK5ttk0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+fwt4ZT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yeK5ttk0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D+fwt4ZT"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 155353382A;
-	Tue,  9 Apr 2024 06:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712642998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
-	b=yeK5ttk0JoBlkCZtpZJWXkddSspxkBC326yN+bBMObzYUoMZWKrM+KrKEG+rNi5kRhlcSH
-	XA+S14fUpvxxcPIbq/mp8LVxP8KfbTwdYT3d18xYFk7c7XIhC4ZD5jyxlNvK1O3ffytqkq
-	SpPy0x7wqccgdQprE3NqtOdpbMmTw/Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712642998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
-	b=D+fwt4ZTMAh9jvd67LKVhj9vA8GKG1hXKAKzWB3VsKGaME3w45lNoi5yqS0XBTaZYofYMb
-	pRoxqa/VsAJRxfBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712642998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
-	b=yeK5ttk0JoBlkCZtpZJWXkddSspxkBC326yN+bBMObzYUoMZWKrM+KrKEG+rNi5kRhlcSH
-	XA+S14fUpvxxcPIbq/mp8LVxP8KfbTwdYT3d18xYFk7c7XIhC4ZD5jyxlNvK1O3ffytqkq
-	SpPy0x7wqccgdQprE3NqtOdpbMmTw/Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712642998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hSCcPjYf9Lk4xq7iPI/rjdmipMmPujy9hX6WDaQQGh4=;
-	b=D+fwt4ZTMAh9jvd67LKVhj9vA8GKG1hXKAKzWB3VsKGaME3w45lNoi5yqS0XBTaZYofYMb
-	pRoxqa/VsAJRxfBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8AD513313;
-	Tue,  9 Apr 2024 06:09:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rJfbLrXbFGamKQAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 09 Apr 2024 06:09:57 +0000
-Message-ID: <6ef177d7-a565-4ddb-8522-81ffbfb5380e@suse.de>
-Date: Tue, 9 Apr 2024 08:09:57 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TzVeC8dr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=UxJyCdmSRIdnQgIpQFL657Xfx2+jcU5H7X+gTyZfOcQ=; t=1712647855; x=1713079855;
+	 b=TzVeC8drAIkiPokFCNpo/AcWe8XnHT3voYph/Rxaj3C3/lb+cJU5hkQ0eYAAGIzF1+mvVavay2
+	fWvvXYAptBhABua58oFTUlV6JoVwrZ9tGGRf/KwLE9QhfGE+dW7ltIX9tbGoNhHYxde91tEA6Z0p5
+	LEDB7GEMr5k5gFeSnoYF7KY5uozdxH4ODkcfKjpLAzStlEIx2lZ5XtWvUwuy2VSAnVz/uy9eAMtyy
+	f4fP3qDWgAkR3nW64psw5uR0F/JQcNn8BZd79a6rQJv95TF01GJnJR56a+751V5a4dci7WwSuSXI/
+	IQFbHWSfli8FDYrC+abV7s61dR03lVLdx/hyw==;
+Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1ru5wP-0006Ld-Ve; Tue, 09 Apr 2024 09:30:50 +0200
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: regressions@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
+Subject: [PATCH v2 0/6] docs: verify/bisect: fine tuning, testing fixes, build host, order
+Date: Tue,  9 Apr 2024 09:30:43 +0200
+Message-ID: <cover.1712647788.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: API break, sysfs "capability" file
-Content-Language: en-US
-To: Keith Busch <kbusch@kernel.org>, Lennart Poettering <mzxreary@0pointer.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.52 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.23)[72.47%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -1.52
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1712647855;18e5c630;
+X-HE-SMSGID: 1ru5wP-0006Ld-Ve
 
-On 4/9/24 00:41, Keith Busch wrote:
-> On Mon, Apr 08, 2024 at 10:23:49PM +0200, Lennart Poettering wrote:
->> Not sure how this is salvageable. This is just seriously fucked
->> up. What now?
->>
->> It has been proposed to use the "range_ext" sysfs attr instead as a
->> hint if partition scanning is available or not. But it's entirely
->> undocumented. Is this something that will remain stable? (I mean,
->> whether something is documented or not apparently has no effect on the
->> stability of an API anyway, so I guess it's equally shaky as the
->> capability sysattr? Is any of the block device sysfs interfaces
->> actually stable or can they change any time?)
-> 
-> The "ext_range" attribute does look like an appropriate proxy for the
-> attribute, but indeed, it's not well documented.
-> 
-> Looking at the history of the documentation you had been relying on, it
-> appears that was submitted with good intentions (9243c6f3e012a92d), but
-> it itself changed values, acknowledging the instability of this
-> interface.
-> 
-> So what to do? If documentation is all that's preventing "ext_range"
-> from replacing you're previous usage, then let's add it in the
-> Documentation/ABI/stable/sysfs-block. It's been there since 2008, so
-> that seems like a reliable attribute to put there.
-> 
-I'll side with Keith. Our management tools use 'ext_range' to find
-if a device is partitionable, and we've done that since the very
-beginning of sysfs.
+A quick series with various improvements for
+Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst after
+receiving feedback on the text or seeing people struggle with certain
+tasks.
 
-Cheers,
+* The first two patches contains various fixes and some fine tuning.
 
-Hannes
+* The third is mainly a layout improvement that results in a somewhat
+  large patch.
+
+* The fourth adds instructions for later testing of reverts, fixes, or
+  newer versions. This was already hinted at; but during some early
+  work on Documentation/admin-guide/reporting-issues.rst to better
+  reconcile the two it seemed wise to cover this properly here.
+
+* The fifth patch briefly outlines how to build kernels on a different
+  host; it came into being after a second user within one week asked for
+  this. That also allowed the text to briefly cover cross-compilation.
+
+* The sixth makes users that face a regression within a stable series
+  test that series first before they are told to test mainline.
+---
+
+Hi! While at it let me mention one more thing unrelated to the changes
+that came up where I'm unsure if the current approach by the text was
+a wise choice:
+
+* Should the document tell users to avoid mainline during merge windows?
+
+Some input from the community on this would be splendid.
+
+Ciao, Thorsten
+
+P.S.: Not totally sure, but I think this should go into 6.9 as this is
+a new document; if not I guess it would be wise to pick the first two,
+as they fix bugs.
+
+Thorsten Leemhuis (6):
+  docs: verify/bisect: use git switch, tag kernel, and various fixes
+  docs: verify/bisect: add and fetch stable branches ahead of time
+  docs: verify/bisect: proper headlines and more spacing
+  docs: verify/bisect: explain testing reverts, patches and newer code
+  docs: verify/bisect: describe how to use a build host
+  docs: verify/bisect: stable regressions: first stable, then mainline
+
+ .../verify-bugs-and-bisect-regressions.rst    | 597 ++++++++++++------
+ 1 file changed, 417 insertions(+), 180 deletions(-)
+
+
+base-commit: b8cfda5c9065cd619a97c17da081cbfab3b1e756
+-- 
+2.44.0
 
