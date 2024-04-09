@@ -1,207 +1,201 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B50D8594E
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 11:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B0129A7B
+	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 12:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712661886; cv=none; b=H2TgvQWydFaAhgL1HBD/P11R3816AQBlcRnggc3PFiISZyIjyF8N3DcTHWMUMwze58KPmlPO57YmRZbEDdFV/SLTPrg7WpBzHBSJZ9IRTTsvG9smayVg7TYHnFqWp2A2kgHm3jytdRYSterA+Kn0WPFhkl8r8on7mg23K+nl5uY=
+	t=1712665539; cv=none; b=g6RzV6kwZUSKncr8p+n/HFMXoRdX0pMb1OjvHkZEmpESiNQL5x66+RqfRfm1xVzhApxPcp1f8DGDLd1pyqrDbll7MC1/b5nTAb/y8e+bPmUhjGiX/soeGbjzo4pxraIY1mb3Lpm4kNwh3fKRga3bqcirBTkcB5o8Rfsj5Kdf5A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712661886; c=relaxed/simple;
-	bh=Ckfn3lhSMsxc3tYHdzLvbf6Mj6u8EAJd/Zx2bpYCPj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sHUmnCoWXeMYfS/5fJpkdIasALYymzYWMxL+kv7J22TiCVID2id74zJFAEx6OK6w0JEMMiPcrfh4J0/r7I83f6de1XyE/2QvGdEGwgljZtLtGrXjoYQGyDTezUGQBiExU3DIcUo4vKEWnKd+ea73ogFNu/D3hBMnNd7C9/oCSko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JMReNs8q; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712665539; c=relaxed/simple;
+	bh=TgYVwxUaN7W/0/J228omEQaBSEXn7kj3mU8IA4nEz/w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LOdD0wyMofhUVws4/Wd/QD0JJC+GAGw/Vt/7zv2cGv+f2vtmyIr4wdmvFO/veCGxS6YwQRsS0rgahbg3CBrOoFidumkridIlQCuRZfh9lWF6hP4pW6p69eJPU7dG4p6c6qD9MFvd+M3KuoAy02bO58aMSu9rw5CwRcHFJsxSo9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BMz7Vtzq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BNBi7We/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JMReNs8q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712661877;
-	bh=Ckfn3lhSMsxc3tYHdzLvbf6Mj6u8EAJd/Zx2bpYCPj0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JMReNs8qAH/eAZyQSNOCDwUVe25arupPfkXPnKSTJz4AX381dB8ntoim0AfiyRVe8
-	 K0qJWglo2029tkGrWq94bQCeyFqMjCqPFBrZn2xId8GiIXJe5GBKfI1GVVL3j3j/7R
-	 s61jZA+FSM2Ms18hkdIRK8GSr2x5y2Z2iZhxC/+/x4WLiTfG2GS/bRaCwTYSEXI1sS
-	 P5KD07K8vNrzO5ud6kIHEHHQVGTYPMSIQIGlmczhUIvt/E7PjME8l0tAVr2ZKSpVDg
-	 CTi+R85CAHcBLmJ5ZcSHF3jEcdurkAN1KnyEAWqngWOvtEe7MoyatVNcobRGBNbUae
-	 SraAE8NaHXFMA==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D479237820F3;
-	Tue,  9 Apr 2024 11:24:36 +0000 (UTC)
-Message-ID: <ec527f77-3bf8-4173-b648-ade31c2a7f2f@collabora.com>
-Date: Tue, 9 Apr 2024 14:24:36 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BMz7Vtzq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BNBi7We/"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712665535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e4cb/lg7L2LLjelwouGfPsEX0svE8jil8IXco8Gx6oM=;
+	b=BMz7Vtzq0s1E25+mY1AS9phnPNZfwCmgFuQBAzFvz3mtY7phMMsPoK32ZKEDI0hDaN1Abj
+	FA9fKj/Qq/s/kih8cVq2mUCaMUtEAmN4yHlyNkavTgZe62SFrKsBGIN272tzipxoMVXOo8
+	SAQFgFqcxORMstGxaU9Y8eNrjUH6kwAJvBF1VKaYYcB3S03/s81E8C2KnCzooZLrKMVAm6
+	HPNG/4yXiwtvru1LC86zRs2CPV/IWRg1EFjYvXQL1cnvEqgYIEoEz0ySBOuBVIkmI5AMDn
+	OwsmfSY+qCwu/BAkcETYdniQfF64wb4ezdsyfelrHm5ubHO67YdPWSnrm6ewlQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712665535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e4cb/lg7L2LLjelwouGfPsEX0svE8jil8IXco8Gx6oM=;
+	b=BNBi7We/WCdEtlPe2M+AZeJILRlT2ug3N4TO6p6L3fbYwSH6GB6HSy0fO5Esa/0W7lkzyT
+	/iXC93bnHSarFLDw==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240409100736.139489-1-laura.nao@collabora.com>
+References: <87r0fg6ioe.ffs@tglx>
+ <20240409100736.139489-1-laura.nao@collabora.com>
+Date: Tue, 09 Apr 2024 14:25:34 +0200
+Message-ID: <874jca7mf5.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-To: Daniel Martin <dmanlfc@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
- <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
- <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
- <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
- <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
- <41b7170d-65b8-4d64-a1d3-7a0d09d79c45@collabora.com>
- <fa076f6f-5a19-4a6a-aaf4-8d9e36df8fea@leemhuis.info>
- <682dfcc5-056c-4170-910b-64ae42370c52@collabora.com>
- <CAOyTmd0OWyOJGK3b5J322Ftxz=S8_qRmO=aC7mMeYXe76=w+Mg@mail.gmail.com>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <CAOyTmd0OWyOJGK3b5J322Ftxz=S8_qRmO=aC7mMeYXe76=w+Mg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 4/9/24 1:57 PM, Daniel Martin wrote:
-> The manual patches were worked from the Steam Deck kernel, trial &
-> error with partial support in 6.6 at the time.
-> 6.8 sources where this has been implemented recently were not yet
-> available or in linux-next.
-> Suffice to say the code matches up almost perfectly apart from the
-> enum issues which are thus being discussed.
-> I still go back to the point, apart from the Steam Deck, who else is
-> using this named topology file?
-> I don't think anyone is, therefore the enum numbering should match the
-> current Steam Deck kernel implementation & topology file.
+Laura!
 
-The entries of enum be_id cannot be changed in mainline without breaking
-devices which are not part of the Steam Deck family.
+On Tue, Apr 09 2024 at 12:07, Laura Nao wrote:
+> On 4/8/24 16:19, Thomas Gleixner wrote:
+>> That's the commit right before switching over and according to your
+>> bisect it works. Now apply the patch below, which just runs the new
+>> topology scan function but discards the result.
+>
+> The ace278e7eca6 revision with the patch you provided boots correctly.
 
-I do not have additional details other than the information provided by
-AMD in the context of the initial patch submission:
+Progress :)
 
-https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
+Can you please replace that patch with the one below?
+
+Thanks,
+
+        tglx
+---
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1616,6 +1616,13 @@ void __init early_cpu_init(void)
+ #endif
+ 	}
+ 	early_identify_cpu(&boot_cpu_data);
++
++	pr_info("Max cores: %u\n", boot_cpu_data.x86_max_cores);
++	pr_info("pkg %u die %u core %u nid %u\n", boot_cpu_data.topo.pkg_id,
++		boot_cpu_data.topo.die_id, boot_cpu_data.topo.core_id,
++		boot_cpu_data.topo.amd_node_id);
++	pr_info("SNS %u\n", smp_num_siblings);
++	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
+ }
  
-> 
-> On Tue, 9 Apr 2024 at 19:55, Cristian Ciocaltea
-> <cristian.ciocaltea@collabora.com> wrote:
->>
->> On 4/9/24 12:19 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 09.04.24 10:47, Cristian Ciocaltea wrote:
->>>> On 4/9/24 11:04 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>> On 09.04.24 09:42, Cristian Ciocaltea wrote:
->>>>>> On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>>> On 09.04.24 01:44, Cristian Ciocaltea wrote:
->>>>>>>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>>>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
->>>>>>>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
->>>>>>>>>> on Steam Deck OLED [1]. He wrote:
->>>>>>>>
->>>>>>>>>>> I'm adding this here, I hope it's the correct place.
->>>>>>>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
->>>>>>>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
->>>>>>>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
->>>>>>>>> A quick search made me find these posts/threads that foreshadow the problem:
->>>>>>>>>
->>>>>>>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
->>>>>>>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
->>>>>>>>>
->>>>>>>>> From a quick look at the second discussion it seems a bit like we are
->>>>>>>>> screwed, as iiutc topology files are out in the wild for one or the
->>>>>>>>> other approach. So we might have to bite a bullet there and accept the
->>>>>>>>> regression -- but I might easily be totally mistaken here. Would be good
->>>>>>>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
->>>>>>>>> explain what's up here.
->>>>>>>>
->>>>>>>> The problem here is that Steam Deck OLED provides a topology file which
->>>>>>>> uses an incorrect DAI link ID for BT codec.
->>>>>>>>
->>>>>>>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
->>>>>>>> topology, but this is not a change that can be accepted upstream as it
->>>>>>>> would break other devices which rely on BT_BE_ID set to 3.
->>>>>>>>
->>>>>>>> The proper solution would be to update the topology file on Steam Deck,
->>>>>>>> but this is probably not straightforward to be accomplished as it would
->>>>>>>> break the compatibility with the currently released (downstream)
->>>>>>>> kernels.
->>>>>>>>
->>>>>>>> Hopefully, this sheds some more light on the matter.
->>>>>>>>
->>>>>>>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
->>>>>>>
->>>>>>> Many thx, yes, this sheds some light on the matter. But there is one
->>>>>>> remaining question: can we make both camps happy somehow? E.g. something
->>>>>>> along the lines of "first detect if the topology file has BT_BE_ID in
->>>>>>> position 2 or 3 and then act accordingly?
->>>>>>
->>>>>> Right, I have this on my TODOs list but haven't managed to dig into it
->>>>>> yet. However, that would be most likely just another hack to be carried
->>>>>> on until the transition to a fixed topology is completed.
->>>>>
->>>>> Well, sure it's a hack, but the thing is, our number one rule is "no
->>>>> regressions" and the reporter apparently faces one (see start of the
->>>>> thread). So to fulfill this rule it would be ideal to have a fix
->>>>> available soonish or revert the culprit and reply it later together with
->>>>> the fix.
->>>>
->>>> Hmm, unless I'm missing something, this shouldn't been considered a
->>>> regression.  As I explained previously, the OLED model was launched with
->>>>  a downstream implementation of the Vangogh SOF drivers on top of v6.1,
->>>> as there was no upstream support back then.
->>>>
->>>> When AMD eventually completed the upstreaming process of their SOF
->>>> drivers in v6.6, we ended up with this unfortunate ID assignments
->>>> incompatibility.  Hence I cannot see how the mainline kernel would have
->>>> worked without applying patch [1] above, unless the reporter
->>>> experimented with a different topology (which is not the case if I got
->>>> this right).
->>>>
->>>>> Do we know which change that went into 6.8 caused this? Or is a revert
->>>>> out-of-the question as it will likely break things for other users that
->>>>> already upgraded to 6.8 and have a matching topology file? (/me fears
->>>>> the answer to the latter question is "yes", but I have to ask :-/)
->>>>
->>>> We need to understand how the reporter got this working with mainline
->>>> kernels without applying any out-of-tree patches.
->>>
->>> Ahh, okay, thx, now I understand this better. You are most likely
->>> correct. It also made me look at the initial report again where I
->>> noticed "When *I manually patched support* for the 6.6 or 6.7 mainline
->>> kernel it worked fine.", so yes, this likely is not a regression.
->>
->> It would be interesting to find out what the *manually patched support*
->> involved. FWIW, to get audio working with v6.8, it's also necessary to
->> backport several patches from v6.9-rc1 - I would consider the following:
->>
->> Fixes: f0f1021fc9cb ("ASoC: amd: acp: Drop redundant initialization of machine driver data")
->> Fixes: 68ab29426d88 ("ASoC: amd: acp: Make use of existing *_CODEC_DAI macros")
->> Fixes: d0ada20279db ("ASoC: amd: acp: Add missing error handling in sof-mach")
->> Fixes: 222be59e5eed ("ASoC: SOF: amd: Fix memory leak in amd_sof_acp_probe()")
->> Fixes: a13f0c3c0e8f ("ASoC: SOF: amd: Optimize quirk for Valve Galileo")
->> Fixes: 369b997a1371 ("ASoC: SOF: core: Skip firmware test for custom loaders")
->> Fixes: d9cacc1a2af2 ("ASoC: SOF: amd: Compute file paths on firmware load")
->> Fixes: 33c3d8133307 ("ASoC: SOF: amd: Move signed_fw_image to struct acp_quirk_entry")
->> Fixes: 094d11768f74 ("ASoC: SOF: amd: Skip IRAM/DRAM size modification for Steam Deck OLED")
->>
->> I think most if not all of the mandatory fixes from the list above have been
->> already included in the latest v6.8 stable updates, but I haven't actually
->> tested.
->>
->>>
->>> Thx for your help and sorry for the trouble I caused!
->>
->> No problem at all!
->>
->> Regards,
->> Cristian
-> 
-> 
-> 
+ static bool detect_null_seg_behavior(void)
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -29,7 +29,17 @@ static bool parse_8000_0008(struct topo_
+ 	if (!sft)
+ 		sft = get_count_order(ecx.cpu_nthreads + 1);
+ 
+-	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
++	/*
++	 * cpu_nthreads describes the number of threads in the package
++	 * sft is the number of APIC ID bits per package
++	 *
++	 * As the number of actual threads per core is not described in
++	 * this leaf, just set the CORE domain shift and let the later
++	 * parsers set SMT shift. Assume one thread per core by default
++	 * which is correct if there are no other CPUID leafs to parse.
++	 */
++	topology_update_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
++	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.cpu_nthreads + 1);
+ 	return true;
+ }
+ 
+@@ -73,12 +83,14 @@ static bool parse_8000_001e(struct topo_
+ 	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
+ 
+ 	/*
+-	 * If leaf 0xb is available, then SMT shift is set already. If not
+-	 * take it from ecx.threads_per_core and use topo_update_dom() -
+-	 * topology_set_dom() would propagate and overwrite the already
+-	 * propagated CORE level.
++	 * If leaf 0xb is available, then the domain shifts are set
++	 * already and nothing to do here.
+ 	 */
+ 	if (!has_0xb) {
++		/*
++		 * Leaf 0x80000008 set the CORE domain shift already.
++		 * Update the SMT domain, but do not propagate it.
++		 */
+ 		unsigned int nthreads = leaf.core_nthreads + 1;
+ 
+ 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -133,6 +133,10 @@ static void parse_topology(struct topo_s
+ 	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
+ 
+ 	switch (c->x86_vendor) {
++	case X86_VENDOR_AMD:
++		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
++			cpu_parse_topology_amd(tscan);
++		break;
+ 	case X86_VENDOR_CENTAUR:
+ 	case X86_VENDOR_ZHAOXIN:
+ 		parse_legacy(tscan);
+@@ -162,6 +166,9 @@ static void topo_set_ids(struct topo_sca
+ 
+ 	if (c->x86_vendor == X86_VENDOR_AMD)
+ 		cpu_topology_fixup_amd(tscan);
++
++	pr_info("pkg %u die %u core %u nid %u\n", c->topo.pkg_id, c->topo.die_id,
++		c->topo.core_id, c->topo.amd_node_id);
+ }
+ 
+ static void topo_set_max_cores(struct topo_scan *tscan)
+@@ -175,6 +182,7 @@ static void topo_set_max_cores(struct to
+ 	 */
+ 	tscan->c->x86_max_cores = tscan->dom_ncpus[TOPO_DIEGRP_DOMAIN] >>
+ 		x86_topo_system.dom_shifts[TOPO_SMT_DOMAIN];
++	pr_info("Max cores: %u\n", tscan->c->x86_max_cores);
+ }
+ 
+ void cpu_parse_topology(struct cpuinfo_x86 *c)
+@@ -215,18 +223,19 @@ void __init cpu_init_topology(struct cpu
+ 
+ 	parse_topology(&tscan, true);
+ 
+-	if (!topo_is_converted(c))
+-		return;
+-
+ 	/* Copy the shift values and calculate the unit sizes. */
+ 	memcpy(x86_topo_system.dom_shifts, tscan.dom_shifts, sizeof(x86_topo_system.dom_shifts));
+ 
+ 	dom = TOPO_SMT_DOMAIN;
+ 	x86_topo_system.dom_size[dom] = 1U << x86_topo_system.dom_shifts[dom];
++	pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
++		x86_topo_system.dom_shifts[dom]);
+ 
+ 	for (dom++; dom < TOPO_MAX_DOMAIN; dom++) {
+ 		sft = x86_topo_system.dom_shifts[dom] - x86_topo_system.dom_shifts[dom - 1];
+ 		x86_topo_system.dom_size[dom] = 1U << sft;
++		pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
++			x86_topo_system.dom_shifts[dom]);
+ 	}
+ 
+ 	topo_set_ids(&tscan);
+@@ -238,6 +247,7 @@ void __init cpu_init_topology(struct cpu
+ 	 * changes further down the road to get it right during early boot.
+ 	 */
+ 	smp_num_siblings = tscan.dom_ncpus[TOPO_SMT_DOMAIN];
++	pr_info("SNS %u\n", smp_num_siblings);
+ 
+ 	/*
+ 	 * Neither it's clear whether there are as many dies as the APIC
+@@ -252,4 +262,6 @@ void __init cpu_init_topology(struct cpu
+ 	 */
+ 	if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
+ 		__amd_nodes_per_pkg = __max_die_per_package = tscan.amd_nodes_per_pkg;
++
++	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
+ }
