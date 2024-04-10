@@ -1,68 +1,205 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8658628FD
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 19:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121EB28FD
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 19:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712778328; cv=none; b=el3r6N/izkgouDbDw2fuxzbGY/Z6CRH+krv+7QTJK29ak3oJ1ts9lzr7mNhQI70F9hx6HXLHHDV7cPDjyV/NiTBvT9GGsc597EcAhXbg7UbP+D/kg66FhrfuXVfWoVsOrYlFsIMqdqt/y165NeWQWyrSJ/uaNrIgC4RBeo+rWWA=
+	t=1712778540; cv=none; b=bqZFKrPZukGoTX+M34IQbgf0VqLYBSG3DYg5qiYENsVge/3zKWJOrlGcf6WrKSnDq0aC1Un5y8BfDKhFX1jGrvBFgcUgbS3VZvdoYKjLN3H9h4EYWQGQduKKpqaarWgmNMTiuQ5CJvqbi2sSfgHGWXDjBrl4/G1prJocCvoRalY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712778328; c=relaxed/simple;
-	bh=BelLXsHnzBcl4pRFkjye7H4NG2rLu4vD1u9pdkB8Bx0=;
-	h=Message-ID:From:To:Cc:In-Reply-To:References:Subject:Date; b=udiTzKu9J8ByWZFY7c5wh/ws24wVDbYNHFRVP5FWOqlcp78vwIbkw7Z7Y3UAuqG/GEOw9BSKu8YejqzqbkNkrp8BIK8Dm6D4Md2V8AgrJPw4NWEnkUccqDrn/jh/l/hSCqk9+doe/8xd0I0qQVwDWlZt7hmHKgyOafz5jeZK/Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tp03TWmJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JbvzwwGS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712778540; c=relaxed/simple;
+	bh=63JP6mRsPQF+sdjTdy07y7KOtlByYMY51Dn2cnAOUqs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bVsdl8sE/paDWfwTf8FUY0sSQW3ipvWG1hnSU/LMjWPeea3CgnZzx4wQ2BuyO8IB2aUCWckyjdIkJCMuamz5TA32R1tNxdedep/F4uOaT1/z1t7LCEjMJIrtilvMjteBJPOEjGdWt9hZCUl9sBkVOac67UjKoKhCgnplKGZXjlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SSCtRnD/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tp03TWmJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JbvzwwGS"
-Message-ID: <20240410194002.909839385@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712778326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=zXD3xkQMMp3nyR5N4kNRyu8kBxMNafMgulnNGUSs5NE=;
-	b=Tp03TWmJUvWNrl3FCV2Da/FCijNPrcYk8nj4F3zI6okd4P17zroaCyNKL9w8TrnRXzk79L
-	9EnLSlM9GNOaL2yK1zfjqs3ByALzieRfyo71Yl9wm9NUySc+1wVpDhSjz9erpGYrql4BSh
-	Pj97uYL1BYDSwdqXaQxeuwsPTdK8+Bv2NG0gVrMi98W0P56uu69ANRMHJRDn0uq+ji+IE+
-	5dNEi/m7HOkmp6YRfxgpssiEeZY0kC0/UJvgBrmWdIRQaH0V6zqDJVgWfKl8ix6pr5bpRf
-	cQE3WBUXtXdNHt4Eek+Driq40mu7KQPAROmJb4jOfAl8OpaMZKJIDyoSWdoRxA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712778326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=zXD3xkQMMp3nyR5N4kNRyu8kBxMNafMgulnNGUSs5NE=;
-	b=JbvzwwGSfj0D0A2T4hE2Xz9HCTJbhjbWh1dDhZKjEd+Mldgsr31fKlS90A0iKhvSvBmmz3
-	Uktydcr81dDEoDDA==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Laura Nao <laura.nao@collabora.com>,
- x86@kernel.org,
- kernel@collabora.com,
- regressions@leemhuis.info,
- regressions@lists.linux.dev
-In-Reply-To: <87il0p2era.ffs@tglx>
-References: <20240410161141.261818-1-laura.nao@collabora.com>
- <87il0p2era.ffs@tglx>
-Subject: [patch 0/2] x86/cpu/amd: Fixup the topology rework fallout
-Date: Wed, 10 Apr 2024 21:45:25 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SSCtRnD/"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AJbXRG024982;
+	Wed, 10 Apr 2024 19:48:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : reply-to : to : cc : date : in-reply-to : references : content-type
+ : mime-version; s=pp1; bh=DO4vQFzy+fNYLVv6aADU9FRdEvi0odABEDpPhQWAZpk=;
+ b=SSCtRnD/5mipnkIMs7DSLXS84s9tRCe8DxYH656M/p8z9SogUy0FK0fxwasL8JoQ4ufQ
+ TFdcMhVsytTnKdF9i19HNc34u2470UBI0pRk696GypJ1f5BvV/BGMn/YuQvFunGAE+Sl
+ SGcqgNO4VWzHp9+5YXtkuU/5sX5Mr5jxFGy3o5hYIpvNmm6sngaJJnivvBH0mHiNXFCi
+ vKxVQ8ESfIfxFNKdMjIDqwWG5Lvli9Lz24qn3PV+Jw/Clk4hjM9nMGIWhOZu+DZ5OzZ5
+ TiT++xuw3a3lysueGL/sTwL/ff7UvRunvnpE+lhp2CH/dNEIHD9r95J9Mvh52S8d4kfk 8w== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xe139g0q1-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 19:48:29 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43AH29JY029904;
+	Wed, 10 Apr 2024 19:36:26 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbj7mer4n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 19:36:26 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AJaNLv21431036
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 19:36:25 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 849025805F;
+	Wed, 10 Apr 2024 19:36:23 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA3B05805A;
+	Wed, 10 Apr 2024 19:36:20 +0000 (GMT)
+Received: from lingrow.int.hansenpartnership.com (unknown [9.67.87.107])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 19:36:20 +0000 (GMT)
+Message-ID: <0655cea93e52928d3e4a12b4fe2d2a4375492ed3.camel@linux.ibm.com>
+Subject: Re: [REGRESSION] Loss of some SMART information in v6.1.81
+From: James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To: Cyril Brulebois <kibi@debian.org>, regressions@lists.linux.dev,
+        stable@vger.kernel.org
+Cc: Mike Christie <michael.christie@oracle.com>,
+        "Martin K. Petersen"
+ <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, gregkh@linuxfoundation.org,
+        Bart Van Assche <bvanassche@acm.org>, Christoph
+ Hellwig <hch@lst.de>,
+        John Garry <john.g.garry@oracle.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Diederik de Haas
+ <didi.debian@cknow.org>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Date: Wed, 10 Apr 2024 15:36:18 -0400
+In-Reply-To: <20240410193207.qnb75osxuk4ovvm6@mraw.org>
+References: <20240410193207.qnb75osxuk4ovvm6@mraw.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-jIeTBq4V93wWqSdiIOVb"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Fa6KIsnDCJKpkh_os9z_dR5k-l7EUFJp
+X-Proofpoint-ORIG-GUID: Fa6KIsnDCJKpkh_os9z_dR5k-l7EUFJp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2404010000 definitions=main-2404100144
 
-Testing at Collabora unearthed two issues in the new AMD topology parser
-code:
 
-  1) The CPUID 0x80000008 parser initializes the wrong topology domain
-     level.
+--=-jIeTBq4V93wWqSdiIOVb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  2) The NODEID_MSR parser uses bitfields in a union wrongly which results
-     in reading out the wrong value and finally in a division by zero.
+On Wed, 2024-04-10 at 21:32 +0200, Cyril Brulebois wrote:
+> Hi,
+>=20
+> Munin uses the following command to get sensor-type information out
+> of SMART-aware disks (e.g. temperature):
+>=20
+> =C2=A0=C2=A0=C2=A0 /usr/sbin/smartctl -A --nocheck=3Dstandby -d ata /dev/=
+sda
+>=20
+> This broke following an upgrade from v6.1.76 (as found in Debian 12)
+> to v6.1.82 (as currently found in the proposed-updates repository for
+> the next point release of Debian 12), with smartctl's now reporting:
+>=20
+> =C2=A0=C2=A0=C2=A0 smartctl 7.3 2022-02-28 r5338 [x86_64-linux-6.1.0-19-a=
+md64]
+> (local build)
+> =C2=A0=C2=A0=C2=A0 Copyright (C) 2002-22, Bruce Allen, Christian Franke,
+> www.smartmontools.org
+> =C2=A0=C2=A0=C2=A0=20
+> =C2=A0=C2=A0=C2=A0 Device is in SLEEP mode, exit(2)
+>=20
+> This happens on baremetal with 2 pairs of disks:
+> =C2=A0- 2=C3=97ST4000VN008-2DR1 (sda, sdb)
+> =C2=A0- 2=C3=97ST8000VN004-2M21 (sdc, sdd)
+>=20
+> and that's an obvious lie with one pair doing system stuff and the
+> other
+> one doing media stuff.
+>=20
+> This also happens within a Debian 12 QEMU VM running on a Debian 12
+> libvirt host, when using a SATA disk, which is what I've used to test
+> various builds from the stable/linux-6.1.y branch and associated
+> tags.
+>=20
+> Building stable releases, I pinpointed it as a regression between
+> v6.1.80 and v6.1.81, then pinpointed it to commit cf33e6ca12d8.
+>=20
+> #regzbot introduced: v6.1.80..v6.1.81
+> #regzbot introduced: cf33e6ca12d8
+>=20
+> This is also affecting v6.1.84 and v6.1.85 (released during my git
+> bisect session).
+>=20
+> Reported in Debian via: https://bugs.debian.org/1068675=C2=A0(which
+> included a trace with the distribution-provided v6.1.82 package).
+>=20
+> Most recent trace, with v6.1.85 (mainline, using the distribution's
+> config but without any patches):
+>=20
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547027] ------------[ cut here ]-----=
+-------
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547034] WARNING: CPU: 0 PID: 697 at
+> drivers/scsi/scsi_lib.c:214 scsi_execute_cmd+0x42/0x2c0 [scsi_mod]
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547082] Modules linked in: tls tun in=
+tel_rapl_msr
+> intel_rapl_common kvm_intel kvm irqbypass ghash_clmulni_intel
+> sha512_ssse3 sha512_generic sha256_ssse3 sha1_ssse3
+> snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_intel_dspcfg
+> snd_intel_sdw_acpi aesni_intel snd_hda_codec crypto_simd cryptd rapl
+> snd_hda_core snd_hwdep bochs drm_vram_helper pcspkr drm_ttm_helper
+> snd_pcm iTCO_wdt snd_timer intel_pmc_bxt ttm iTCO_vendor_support snd
+> watchdog soundcore virtio_console virtio_balloon drm_kms_helper
+> button joydev evdev serio_raw sg binfmt_misc fuse loop drm efi_pstore
+> dm_mod configfs qemu_fw_cfg virtio_rng ip_tables x_tables autofs4
+> ext4 crc32c_generic crc16 mbcache jbd2 hid_generic usbhid hid sd_mod
+> t10_pi crc64_rocksoft crc64 crc_t10dif crct10dif_generic ahci libahci
+> virtio_scsi virtio_blk virtio_net net_failover failover xhci_pci
+> crct10dif_pclmul crct10dif_common crc32_pclmul libata crc32c_intel
+> xhci_hcd psmouse i2c_i801 i2c_smbus scsi_mod scsi_common lpc_ich
+> virtio_pci
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547194]=C2=A0 virtio_pci_legacy_dev v=
+irtio_pci_modern_dev
+> usbcore usb_common virtio virtio_ring
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547205] CPU: 0 PID: 697 Comm: smartct=
+l Not tainted 6.1.85
+> #1
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547210] Hardware name: QEMU Standard =
+PC (Q35 + ICH9,
+> 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> =C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 30.547217] RIP: 0010:scsi_execute_cmd+0x=
+42/0x2c0 [scsi_mod]
 
-Many thanks to Laura for helping to debug this issue.
+This is a different manifestation of the same bug in stable that was
+introduced by a backport of scsi_execute_cmd.  The proposed fix for the
+domain validation problem here will also sort out this problem:
 
-       tglx
+https://lore.kernel.org/linux-scsi/yq1frvvpymp.fsf@ca-mkp.ca.oracle.com/
 
+James
+
+
+--=-jIeTBq4V93wWqSdiIOVb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCZhbqMgAKCRDnQslM7pis
+hW3aAP9cB50hV7umpS8AXMm+EU6/C3B+X0AS2f7y6wZIGUfgDAEA02ZobSW6RlRI
+1kbTb8SI4lt+YAiluDoI19ehkVz4rvI=
+=JIJn
+-----END PGP SIGNATURE-----
+
+--=-jIeTBq4V93wWqSdiIOVb--
 
