@@ -1,228 +1,88 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FEB13D531
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 08:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F086913D535;
+	Wed, 10 Apr 2024 08:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736912; cv=none; b=ZCjPsO+sqY4D3pEyTvHNt4pPlFW4T+jdwhIzYyyZNbfNB0RJH1kovbuC4awZznXizy0+8Qyr0sm5wmign3oHNSkeYplBoIvcKawnywz1Rxg/99mh8wTsj87uqpD4Y1jyYd8rWqjwoejrtg2c6pd/XfhN0SbmHdIICbjkbBkxxSk=
+	t=1712737599; cv=none; b=S/NSWa0/gL/eho8RT1PfUvo3DtW/m4OcuenLCSmMyAZts9CBgY/Ez5ycr02nShVG1HnEvdxKn4UPx6zGWr8HLIpABZrxrFwHuon8xfD8/UatgvnmxH7l46u4G9xJRpoTWQapnMiHUrBrXByMNUQdpzvlA858psyBXFeKFYHwNto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736912; c=relaxed/simple;
-	bh=sYX3c+PLA0Rz2+PCJ0OWKE0I/7oyJqQNSEwiKn5Mo0Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f2RzGkBOedlNPIjYWXk/annhQLi0+Lqk1WRgESCdKDr0qWsGeVkOzUsWItA2DjrApa815ALCVFte+4mCH+5Z+H+U4SAfpnpUXF1xsstmsa7jfIywc8OFyv3uWfXr8AoUmpz8KcrnrzTkVXrCi6Gb5jtj2yFD44kwNCUz7GoMAaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=liU4mHLV; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712737599; c=relaxed/simple;
+	bh=M1CULTLQapFQR63G83SdeFgSSKY+5gxgZETqZJ8vBeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XSTLiIXUuB1zEhr66vmBfLwz1mPs24eQfGrV9otcCby4fTSaMCNINo7DZhuTHtStA5FXEh3AwkMbsSV+34EurAfrNRWiFtxzBZ9NkfssS/gYUi0BPEZVwSTLkDzzcTgTgKyogxEM54Zpa6zaw0atDpqj2xT+wO+mQmiYHV6E+lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=az/DyFll; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="liU4mHLV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712736909;
-	bh=sYX3c+PLA0Rz2+PCJ0OWKE0I/7oyJqQNSEwiKn5Mo0Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=liU4mHLV59lW+2HRik1GhHfmJt6qonWXLj5unynGl+9FaUNgcYcI/sQmrXf3NpLto
-	 1cLWEguMkm7m9ufruFh3hRV9Akh5tkBwlaskE48glWLg7Diy0RhyTvLuGAnDJwBQmG
-	 LRz46Kxl5MTWFnOUsZlFj/QohMh8HPKJ1BNYZNYOBLe0fvcNOMaCMAtKEHFBOWdf7X
-	 /8Iv7XZrmRp4+4WMizZFOiUYdn7tK3p/Tbesii0DCwd9Ki2xUpBUVqwSe9+DnaZOEs
-	 l9G6jbuHbsXV8lU7ekBfPGf+nGExyRQurriY0EhzaKqIwSRd2fho+t1T+c6eJqCNZG
-	 R+2l27+HOAQtA==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8605D3780C13;
-	Wed, 10 Apr 2024 08:15:08 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: tglx@linutronix.de
-Cc: kernel@collabora.com,
-	laura.nao@collabora.com,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
-Date: Wed, 10 Apr 2024 10:15:28 +0200
-Message-Id: <20240410081529.126363-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <874jca7mf5.ffs@tglx>
-References: <874jca7mf5.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="az/DyFll"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6D1C433C7;
+	Wed, 10 Apr 2024 08:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712737598;
+	bh=M1CULTLQapFQR63G83SdeFgSSKY+5gxgZETqZJ8vBeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=az/DyFllRFhJr2jbAqJh+3PgQ3EJcRMmosTT1nzW28Q067ShclRa9PVgVl+Uo+xTz
+	 vE40KWZ3ybUtwCxVpE2XGHVQtdKPmZ554OnGfnsFEnu2sI9CTcgI+KH0A0alQpi/G5
+	 l26uf4Ck2vqXJbpWJ+uGtwgC9GfuZH1AgJ72kBrg=
+Date: Wed, 10 Apr 2024 10:26:35 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chenglong Tang <chenglongtang@google.com>
+Cc: regressions@lists.linux.dev, pc@manguebit.com, linkinjeon@kernel.org,
+	dhowells@redhat.com, linux-cifs@vger.kernel.org,
+	Oleksandr Tymoshenko <ovt@google.com>,
+	Robert Kolchmeyer <rkolchmeyer@google.com>
+Subject: Re: Fwd: kernel panic caused by recent changes in fs/cifs
+Message-ID: <2024041005-marbled-lavish-047d@gregkh>
+References: <CAOdxtTaceuB9fvnEcoTVO6t0V_90UbLM3dyLbE_CK7uRe1bn=Q@mail.gmail.com>
+ <CAOdxtTZfo59ZUxTgbWOybqyL3XHKyiudVthTLaU8jYRhiAqXvA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOdxtTZfo59ZUxTgbWOybqyL3XHKyiudVthTLaU8jYRhiAqXvA@mail.gmail.com>
 
-Hi Thomas,
-
-On 4/9/24 14:25, Thomas Gleixner wrote:
-> Laura!
+On Tue, Apr 09, 2024 at 11:45:06PM -0700, Chenglong Tang wrote:
+> ---------- Forwarded message ---------
+> From: Chenglong Tang <chenglongtang@google.com>
+> Date: Tue, Apr 9, 2024 at 11:43 PM
+> Subject: kernel panic caused by recent changes in fs/cifs
+> To: <samba-technical-owner@lists.samba.org>
 > 
-> On Tue, Apr 09 2024 at 12:07, Laura Nao wrote:
->> On 4/8/24 16:19, Thomas Gleixner wrote:
->>> That's the commit right before switching over and according to your
->>> bisect it works. Now apply the patch below, which just runs the new
->>> topology scan function but discards the result.
->>
->> The ace278e7eca6 revision with the patch you provided boots correctly.
 > 
-> Progress :)
+> Hi, developers,
 > 
-
-Indeed :)
-
-> Can you please replace that patch with the one below?
-
-So, with this patch applied on top of ace278e7eca6 the kernel doesn't
-boot anymore - reference test job: 
-https://lava.collabora.dev/scheduler/job/13324010
-
-I see the only change between the second and third patch you provided,
-besides the debug prints, is:
-
--	if (!topo_is_converted(c))
--		return;
--
-
-Printing the debug information without this probably doesn't really help, 
-but just in case it's useful: I tried excluding the change above from the
-patch while leaving everything else unchanged - reference test job:
-https://lava.collabora.dev/scheduler/job/13324298 (also pasted the
-kernel log here for easier consultation: https://pastebin.com/raw/TQBDvCah)
-
-Hope this helps,
-
-Laura
-
+> This is Chenglong Tang from the Google Container Optimized OS team. We
+> recently received a kernel panic bug from the customers regarding cifs.
 > 
-> Thanks,
+> This happened since the backport of following changes in cifs(in our kernel
+> COS-5.10.208 and COS-5.15.146):
 > 
->          tglx
-> ---
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -1616,6 +1616,13 @@ void __init early_cpu_init(void)
->   #endif
->   	}
->   	early_identify_cpu(&boot_cpu_data);
-> +
-> +	pr_info("Max cores: %u\n", boot_cpu_data.x86_max_cores);
-> +	pr_info("pkg %u die %u core %u nid %u\n", boot_cpu_data.topo.pkg_id,
-> +		boot_cpu_data.topo.die_id, boot_cpu_data.topo.core_id,
-> +		boot_cpu_data.topo.amd_node_id);
-> +	pr_info("SNS %u\n", smp_num_siblings);
-> +	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
->   }
->   
->   static bool detect_null_seg_behavior(void)
-> --- a/arch/x86/kernel/cpu/topology_amd.c
-> +++ b/arch/x86/kernel/cpu/topology_amd.c
-> @@ -29,7 +29,17 @@ static bool parse_8000_0008(struct topo_
->   	if (!sft)
->   		sft = get_count_order(ecx.cpu_nthreads + 1);
->   
-> -	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
-> +	/*
-> +	 * cpu_nthreads describes the number of threads in the package
-> +	 * sft is the number of APIC ID bits per package
-> +	 *
-> +	 * As the number of actual threads per core is not described in
-> +	 * this leaf, just set the CORE domain shift and let the later
-> +	 * parsers set SMT shift. Assume one thread per core by default
-> +	 * which is correct if there are no other CPUID leafs to parse.
-> +	 */
-> +	topology_update_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
-> +	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.cpu_nthreads + 1);
->   	return true;
->   }
->   
-> @@ -73,12 +83,14 @@ static bool parse_8000_001e(struct topo_
->   	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
->   
->   	/*
-> -	 * If leaf 0xb is available, then SMT shift is set already. If not
-> -	 * take it from ecx.threads_per_core and use topo_update_dom() -
-> -	 * topology_set_dom() would propagate and overwrite the already
-> -	 * propagated CORE level.
-> +	 * If leaf 0xb is available, then the domain shifts are set
-> +	 * already and nothing to do here.
->   	 */
->   	if (!has_0xb) {
-> +		/*
-> +		 * Leaf 0x80000008 set the CORE domain shift already.
-> +		 * Update the SMT domain, but do not propagate it.
-> +		 */
->   		unsigned int nthreads = leaf.core_nthreads + 1;
->   
->   		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
-> --- a/arch/x86/kernel/cpu/topology_common.c
-> +++ b/arch/x86/kernel/cpu/topology_common.c
-> @@ -133,6 +133,10 @@ static void parse_topology(struct topo_s
->   	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
->   
->   	switch (c->x86_vendor) {
-> +	case X86_VENDOR_AMD:
-> +		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
-> +			cpu_parse_topology_amd(tscan);
-> +		break;
->   	case X86_VENDOR_CENTAUR:
->   	case X86_VENDOR_ZHAOXIN:
->   		parse_legacy(tscan);
-> @@ -162,6 +166,9 @@ static void topo_set_ids(struct topo_sca
->   
->   	if (c->x86_vendor == X86_VENDOR_AMD)
->   		cpu_topology_fixup_amd(tscan);
-> +
-> +	pr_info("pkg %u die %u core %u nid %u\n", c->topo.pkg_id, c->topo.die_id,
-> +		c->topo.core_id, c->topo.amd_node_id);
->   }
->   
->   static void topo_set_max_cores(struct topo_scan *tscan)
-> @@ -175,6 +182,7 @@ static void topo_set_max_cores(struct to
->   	 */
->   	tscan->c->x86_max_cores = tscan->dom_ncpus[TOPO_DIEGRP_DOMAIN] >>
->   		x86_topo_system.dom_shifts[TOPO_SMT_DOMAIN];
-> +	pr_info("Max cores: %u\n", tscan->c->x86_max_cores);
->   }
->   
->   void cpu_parse_topology(struct cpuinfo_x86 *c)
-> @@ -215,18 +223,19 @@ void __init cpu_init_topology(struct cpu
->   
->   	parse_topology(&tscan, true);
->   
-> -	if (!topo_is_converted(c))
-> -		return;
-> -
->   	/* Copy the shift values and calculate the unit sizes. */
->   	memcpy(x86_topo_system.dom_shifts, tscan.dom_shifts, sizeof(x86_topo_system.dom_shifts));
->   
->   	dom = TOPO_SMT_DOMAIN;
->   	x86_topo_system.dom_size[dom] = 1U << x86_topo_system.dom_shifts[dom];
-> +	pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
-> +		x86_topo_system.dom_shifts[dom]);
->   
->   	for (dom++; dom < TOPO_MAX_DOMAIN; dom++) {
->   		sft = x86_topo_system.dom_shifts[dom] - x86_topo_system.dom_shifts[dom - 1];
->   		x86_topo_system.dom_size[dom] = 1U << sft;
-> +		pr_info("Dom %u Sft: %u Sz: %u\n", dom, x86_topo_system.dom_size[dom],
-> +			x86_topo_system.dom_shifts[dom]);
->   	}
->   
->   	topo_set_ids(&tscan);
-> @@ -238,6 +247,7 @@ void __init cpu_init_topology(struct cpu
->   	 * changes further down the road to get it right during early boot.
->   	 */
->   	smp_num_siblings = tscan.dom_ncpus[TOPO_SMT_DOMAIN];
-> +	pr_info("SNS %u\n", smp_num_siblings);
->   
->   	/*
->   	 * Neither it's clear whether there are as many dies as the APIC
-> @@ -252,4 +262,6 @@ void __init cpu_init_topology(struct cpu
->   	 */
->   	if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON)
->   		__amd_nodes_per_pkg = __max_die_per_package = tscan.amd_nodes_per_pkg;
-> +
-> +	pr_info("NPP %u MDPP %u\n", __amd_nodes_per_pkg, __max_die_per_package);
->   }
+> cifs: Fix non-availability of dedup breaking generic/304:
+> https://lore.kernel.org/r/3876191.1701555260@warthog.procyon.org.uk/
+> smb: client: fix potential NULL deref in parse_dfs_referrals(): Upstream
+> commit 92414333eb375ed64f4ae92d34d579e826936480
+> ksmbd: fix wrong name of SMB2_CREATE_ALLOCATION_SIZE: Upstream
+> commit  13736654481198e519059d4a2e2e3b20fa9fdb3e
+> smb: client: fix NULL deref in asn1_ber_decoder(): Upstream commit
+> 90d025c2e953c11974e76637977c473200593a46
+> smb: a few more smb changes...
+> 
+> The line that crashed is line 197 in fs/cifs/dfs_cache.c
+> ```
+> if (unlikely(strcmp(cp->charset, cache_cp->charset))) {
+> ```
+> I attached the dmesg and backtrace for debugging purposes. Let me know if
+> you need more information.
+
+Do you know which commit caused this problem?
+
+And 5.15 and 5.10 are very old kernels, does this still happen in the
+latest kernel releases?
+
+thanks,
+
+greg k-h
