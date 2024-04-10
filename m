@@ -1,133 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EA616EC19
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 15:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC41417966E
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 16:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763312; cv=none; b=eIUEKr9bjtbY8mv6A3WDiaHvFEmFZPDDg+951MpxbJqZuuWOiItox0qKQFJu6SvsWO60Al3EIRlCt7340DZHjkSVzvugiOc031Zi1Kld82loOjJ+7kTPHlC7M6z00bJzds+v578E0JbuMGp4TAr6/sbN2EeTBLmEK+0y5Lmd1p4=
+	t=1712765477; cv=none; b=TeX0keUy0LyyB4P3KBDzU6FNKNzbK2dz1xdpNFFcAYBb5krd9MqSook2lLYSVcVCLj/ufRia8X6H4czEClQs2D8mbwnt553kUp0Czz7MFX4qE8yeDap1NzpVcsx44FqXT+5UDclzJD7PYrXdTIvr4T8NfiRReE4JyP3A/x/XCW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763312; c=relaxed/simple;
-	bh=knF+LOBW9J8frgy2CbQjVxBB6xMQ9R7nAYy8AbUmRK0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=W3Jz2ptUk14pU06QbVx2YEc86URgvXZj4gBAa7rhFDbmMMN5vVyhsWz/D/VFCSG23AToV314D4wIN0O6EZG7+QyENVaHMbgYZgketPy8cgxFfpkAOC+1qXtTI78L3LeOJNrqDNNJq7gHfCs1U8+eYMXlI5XoSfM7KEroK2lgjRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8d6LHLL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712765477; c=relaxed/simple;
+	bh=uSG2l5o+Q79nj3UeD5xKuQOR/gwI5ezOeDJXvmNQMr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FiNd/M52yDO0nSfoOsIcHblOIYIbZFRpsgRI2E/K/6HKqhSLJzwLDWG7rdm+hpfD5EkuKsWFfUQKQ8l02foswEg6tldKRyJ44Cy7jtqz48p0J+PuABKzciT7bE2l0+xW3lTkYmE90kFFFGJ12pbgdTn48QdhGHY9Ls8UNVq5/D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qfr1P/cv; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8d6LHLL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712763310; x=1744299310;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=knF+LOBW9J8frgy2CbQjVxBB6xMQ9R7nAYy8AbUmRK0=;
-  b=U8d6LHLLodNOln3Ok7huYaVbqK1m4yb0CTM/UNgqtp3abmYepcyco1oY
-   wpCBABZBJUGu9acbxsudoMelTHUPVx+INLf1KOSQr79/HmrrlTCsmcwSD
-   2Wc0/vKhEZ+Yo51ugMXctxddPckSlwD0rz/t1FlzYrOH+1+oJh+8OXhdQ
-   2oZEwBe7NxoUc/HEzCSk6m9HTEGXqNRdISF9qQ72mp4V7RM7gxcOnthKA
-   FwkdD9SsHbKBVaQeGEWQ+4zu194u8OcGg/Ce1CLkCkHi6B2XVV2d6mDRc
-   usxZcPrT9U8C4IEWZzwWcnaaqBCpfpxFEq7nUcacN9QnP51eVvHHDz1qL
-   g==;
-X-CSE-ConnectionGUID: C+rLowFHRFmhZ6MD13V0cQ==
-X-CSE-MsgGUID: BneCgHHxR0ekJ9bJx8S2Mg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7987501"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7987501"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:35:10 -0700
-X-CSE-ConnectionGUID: pX1/nI07QWGvh/Uqi6DMLw==
-X-CSE-MsgGUID: 448c7hfOTSCX7W6p/l95+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="43856038"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.214.234])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:35:06 -0700
-Message-ID: <b9d3138b-000a-49ca-bc82-6517231eca91@intel.com>
-Date: Wed, 10 Apr 2024 18:35:01 +0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qfr1P/cv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712765474;
+	bh=uSG2l5o+Q79nj3UeD5xKuQOR/gwI5ezOeDJXvmNQMr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qfr1P/cv6RgE5xtO2uYwAMhAovIA7FqZz0NBanGp3220Ms2NWEpxrVSyADBxJzvk6
+	 lBidnOiHOdb2tCWF6AVsP1XR/HZkz/rLrMUHasj6Uxz19TnRSpWyuMs5aQUu/nkwGs
+	 HdGXayO9RBsMGezgMxhfLDGug8+ssyYTs3EF29s/O4Fz3RKDGtUvA2CqqxK+nAtrD2
+	 kLm31bDZk7zlSAqFSQfUQKvtUlNex19vnR7Fjc72ITf+bTzygOL0x3b47wDPlMagSn
+	 lyihPeoWIGQbJeROVt2Ma2CF6yf6+0yQPvDAT5XncTSwbMQBvuJOy5vE04jsP0Fktg
+	 0+ljtnNj5Ql9Q==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7B95F37820FA;
+	Wed, 10 Apr 2024 16:11:13 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: tglx@linutronix.de
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Wed, 10 Apr 2024 18:11:41 +0200
+Message-Id: <20240410161141.261818-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <878r1l48xn.ffs@tglx>
+References: <878r1l48xn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
- statement in function returning non-void [-Werror=return-type]
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
- John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
- <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/04/24 16:03, Adrian Hunter wrote:
-> On 10/04/24 13:56, Naresh Kamboju wrote:
->> The powerpc,s390, superSh and sparc tinyconfig builds failed due to
->> following build
->> warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
->>
->> List build failures:
->> ---
->> * s390, build
->>   - gcc-13-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> * sh, build
->>   - gcc-11-tinyconfig - failed
->>
->> * sparc, build
->>   - gcc-11-tinyconfig - failed
->>
->> * mips, build
->>   - gcc-12-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> * powerpc, build
->>   - gcc-13-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>
->> Build log:
->> --------
->> kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
->> kernel/time/timekeeping.c:286:1: error: no return statement in
->> function returning non-void [-Werror=return-type]
->>   286 | }
->>       | ^
->> cc1: some warnings being treated as errors
+Hi Thomas,
+
+On 4/10/24 15:57, Thomas Gleixner wrote:
+> Laura!
 > 
-> Using unreachable() in the default BUG() seems to make this go
-> away.
+> On Wed, Apr 10 2024 at 10:15, Laura Nao wrote:
+>> On 4/9/24 14:25, Thomas Gleixner wrote:
+>>> Can you please replace that patch with the one below?
+>>
+>> So, with this patch applied on top of ace278e7eca6 the kernel doesn't
+>> boot anymore - reference test job:
+>> https://lava.collabora.dev/scheduler/job/13324010
+>>
+>> I see the only change between the second and third patch you provided,
+>> besides the debug prints, is:
+>>
+>> -	if (!topo_is_converted(c))
+>> -		return;
+>> -
 > 
-> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-> index 6e794420bd39..891bd9b0be70 100644
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -156,7 +156,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
->  
->  #else /* !CONFIG_BUG */
->  #ifndef HAVE_ARCH_BUG
-> -#define BUG() do {} while (1)
-> +#define BUG() do { do {} while (1) ; unreachable(); } while (0)
->  #endif
->  
->  #ifndef HAVE_ARCH_BUG_ON
+> Right. So this limits the area to search significantly.
 > 
+>> Printing the debug information without this probably doesn't really help,
+>> but just in case it's useful: I tried excluding the change above from the
+>> patch while leaving everything else unchanged - reference test job:
+>> https://lava.collabora.dev/scheduler/job/13324298 (also pasted the
+>> kernel log here for easier consultation:
+>> https://pastebin.com/raw/TQBDvCah)
+>>
+>> Hope this helps,
+> 
+> It does. Good idea!
+> 
+> I just moved the exit check a bit so we should see the scan info. That
+> should tell me what goes south.
+>
 
-Patch here:
+Here's the full kernel log with the latest patch applied: 
+https://pastebin.com/raw/r2CkP396
 
-	https://lore.kernel.org/all/20240410153212.127477-1-adrian.hunter@intel.com/
+Reference test job: https://lava.collabora.dev/scheduler/job/13328709
 
+Thanks!
 
+Laura
