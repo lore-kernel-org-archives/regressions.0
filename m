@@ -1,47 +1,50 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FFA18E0E
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 21:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CAF181322
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 21:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712782806; cv=none; b=TZjHdX481QwcVUkY7mYbhWzF+mBtH+BVVnxnU7An8NQoocuCa91EinVgFKTvvp36cQ8GhFWXhZ8xcxhb7usjYUeTqBC/PZwQcxuB4LYpFjcIZZtCeDuIluP8vg3kbumUDww36g1jLsazxkPXvW66obqXIMKFTwV9vVP+GZWVVLs=
+	t=1712783012; cv=none; b=GUAs7hKI38kuMupLqlwJ2VNaDp5OBDNHF3HC7abhMV7MXTKgeJN62M8C0V+qEFsXhsmXGEZK7J3WW/QGz29RhUlgFQQ7quBE3RmjdXPPXBZ6+AN2ZQee3FuFO3253sACA8RHMKKhucrMnRK6FjmEiFu0kKakeQq3HFcQtPArkD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712782806; c=relaxed/simple;
-	bh=NZxSmvOIrL+98WYQwIqbcfn2nyl5N/8M638PLwCqKpk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=L08fvRnZtF/oU6iljSe/hv70aJHdp6n4lJV4cMXnvhnKk7+qoWIY1ivpI5gSbOjCxu9PQogL6mzUGGny8V9RthwzdQ2H1jFaTP02dtTD1GE9Rq4ewN83rVou9AM0MfSL08ev94Lhix6d/E/9/VtnxQVOf42wNoXUAMm+NRRKDsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=kAw7RbSv; arc=none smtp.client-ip=45.79.88.28
+	s=arc-20240116; t=1712783012; c=relaxed/simple;
+	bh=xDvcLUt8TABbBKvvueZklfK8OPJKY7AI2ONeDlESIcQ=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pWRdYePMfcOOClnIeit3nHWRqCGYZFxZav3FS/5YbEaPlCqdVmMxz9XGv+F4IZ9QqU2aY9hmq9NlvqDAP5pEv6ZMHZGho2CZyYeqXDq1GCOZIuRYuHTWnEPJBMTaSf3ML169GrG85s7YF8kVAVL0+qYkafcTBMdwjhyooSF4fxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=gXHSiOuY; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="kAw7RbSv"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 08CCF47C3E
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gXHSiOuY"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7E39747C26
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1712782804; bh=bBiHyQknYVefwGowYX8X98+sWwdYwknbIEfcbgt8MVY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kAw7RbSv9BcBu6s7oRnasuRvyvN9sgglhE1xceLaBCStyIXPzVUEfEV1mN3h3GNnP
-	 pnS8SsZgOyt+cSOYYrcYdAKSkRHX1HD87wvo9F91Rsf2fQ/NSTATSyTNhXlk/SGq0B
-	 w321qbDUaYD6BdSycet+3dSY6ICKDwILgCTyOdZ8Wjinrk5/f9gaI/TLMFRAluTySB
-	 GKUlHGc+tW77Tnd+G5eOG+Egrt1cfv4buCTF7D/aA7EAYc9RgylsZSvls4p7sCObX9
-	 XVtROmBWJ9sAlqheyJEsfJzkmxddRDvymDxOV/TdYTUwrszJ+3JjVj86yGoHs2P8sr
-	 B0Xej9WywdOWg==
+	t=1712783010; bh=QIVGDSoFQ4yNcDIaV0oF4mQgbe7AuQp2+Z1TRp+EZMU=;
+	h=From:To:Subject:In-Reply-To:References:Date:From;
+	b=gXHSiOuYGPAR7WIXpjTsK98AsZfUvBPbha2zh1/R37mHW+RA/YCGhdFLjnQJ9CL9a
+	 yqYSu6WIi82pQpz9Xfqh9DzpffHvmH/fmia+Qux9vdji+mZTgtPButOm8+2qgq34fn
+	 I/HXJwS+b+BH6xgQbaA4YPciOca3rG3SfCfSDpoDcVYv4C24GsAc+lHRJwX4AoA46F
+	 tixgu7SuY4rTA1k06O0ihymNpBAM0F+YD9LB4Q5m2EuLjR0Z0mrHxFhy/uUv6JzOcI
+	 9CyysEHisNAJA7F6ownxXHEOtNFxad68BxiOjxq9ViDpIKsM7iVKn6RXnjcbn+m45y
+	 CgQkVqGWKcv2w==
 Received: from localhost (unknown [IPv6:2601:280:5e00:625:67c:16ff:fe81:5f9b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 08CCF47C3E;
-	Wed, 10 Apr 2024 21:00:03 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPSA id 7E39747C26;
+	Wed, 10 Apr 2024 21:03:30 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Karel Balej <balejk@matfyz.cz>,
+ regressions@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, workflows@vger.kernel.org
-Subject: Re: [RFC PATCH v1 2/2] docs: reporting-issue: rework the TLDR
-In-Reply-To: <2f5a78745cbe0a99a4592612d6ffd57a17619fb4.1711455295.git.linux@leemhuis.info>
-References: <cover.1711455295.git.linux@leemhuis.info>
- <2f5a78745cbe0a99a4592612d6ffd57a17619fb4.1711455295.git.linux@leemhuis.info>
-Date: Wed, 10 Apr 2024 15:00:03 -0600
-Message-ID: <878r1lszl8.fsf@meer.lwn.net>
+Subject: Re: [PATCH 1/2] docs: *-regressions.rst: unify quoting, add missing
+ word
+In-Reply-To: <3e53f18c-12aa-4bf8-b3f7-7945bbca6882@leemhuis.info>
+References: <20240328194342.11760-1-balejk@matfyz.cz>
+ <20240328194342.11760-2-balejk@matfyz.cz>
+ <3e53f18c-12aa-4bf8-b3f7-7945bbca6882@leemhuis.info>
+Date: Wed, 10 Apr 2024 15:03:29 -0600
+Message-ID: <874jc9szfi.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,37 +53,26 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+"Linux regression tracking (Thorsten Leemhuis)"
+<regressions@leemhuis.info> writes:
 
-> Rework the TLDR (aka the short guide) for various reasons:
+> On 28.03.24 20:29, Karel Balej wrote:
+>> Quoting of the '"no regressions" rule' expression differs between
+>> occurrences, sometimes being presented as '"no regressions rule"'. Unify
+>> the quoting using the first form which seems semantically correct or is
+>> at least used dominantly, albeit marginally.
+>> 
+>> One of the occurrences is obviously missing the 'rule' part -- add it.
+>> 
+>> Signed-off-by: Karel Balej <balejk@matfyz.cz>
 >
-> * People had to read it entirely and then act upon what they learned,
->   which from feedback I got was apparently somewhat hard and confusing
->   given everything we expect from bug reporters; this partly was because
->   the first paragraph covered a special case (regression in
->   stable/longterm kernel) and not the main aspect most people cared
->   about when they came to the document.
+> Thx for this:
 >
->   Use a step-by-step approach to avoid this.
->
-> * Make use of
->   Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
->
-> * The 'quickly report a stable regression to the stable team' approach
->   hardly worked out: most of the time the regression was not known yet.
->   Try a different approach using the regressions list.
->
-> * Reports about stable/longterm regressions most of the time were
->   greeted with a brief reply along the lines of 'Is mainline affected as
->   well?'; this is needed to determine who is responsible, so it might as
->   well make the reporter check that before sending the report (which
->   verify-bugs-and-bisect-regressions.rst already tells them to do, too).
->
-> Not-signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  .../admin-guide/reporting-issues.rst          | 104 +++++++++++-------
->  1 file changed, 62 insertions(+), 42 deletions(-)
+> Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
 
-From a quick read, no objections here.
+I've applied this patch; part 2, it seems, is subject to further work so
+I have not applied that one.
+
+Thanks,
 
 jon
