@@ -1,103 +1,118 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B6F135A4B
-	for <regressions@lists.linux.dev>; Tue,  9 Apr 2024 15:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6428BC127
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 04:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675827; cv=none; b=q/M+XhCG5mOqsZTELs1GNVxf7rbYNeNf8K/TVhClkMTUIU9OV6EnEVlASKvXtyhDKYT7u3aK54SHXfGoqiD60zsS96b4H+iVCyKsCRG3V1Ve7/7MrrP5SZ4rY2tJmqRezA1opGS7GMn+rDEJ0LLWhGxcO2XXL8wevMS22LVlxzA=
+	t=1712723321; cv=none; b=KN/2zS6Pb6owRnB1S/bz080mMx1TKJr9UdWZX4R5pG6BIddM1Rjgp3UMh+lOpddFpnMsJv3oJCzRvMA+WO0AwIPkk+6uhrUcgrV4rBnvt8FSNHow4yEPtFPFUnsB23vjQsBRk7bFB7hDa3FY/INGF776FqdmT7+8WNcDVC4Cw4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675827; c=relaxed/simple;
-	bh=GpV2fHcAbppCLh2u5U1+w9Mj9ggp/1FWwmBurNKmVg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mrUvLSZiP4qBWLzSotIe4DzPA9/BIOO7V7QH8AugRg1AkjEjNBSJht6p5cGsC7gVGo6nKTSKgpIQq2Fy3hoPgc7xoJ738p08cgAjtQzix6EIVVO4MRDAxCSsPGW/FY5KQf9KnCePoDGtlrbGBZbjOUg1XF28OJXXtEqKu+t4v/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=K4mNDF6k; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712723321; c=relaxed/simple;
+	bh=2u+70epJjW00+Aasor34vmJ+f/znX0w0jA47UJBKtDg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=XC5/4QbxQmgTcOWyt4f+ZtIZzPwG8SJqizNHj5W1eezIFhPXbV3PotzxWxB6fGn+jm9AhYGc3vlJpmu+z7lc8SyFB3Wa2pw9Xm/CZJlGd3Qgc0PT58tTZKhPXwC7gxe+e7jB4a7do98mkpO10fV/JdNByNgqBXW9nfhyOisnX54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4p6QPlZ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="K4mNDF6k"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e45f339708so4304275ad.0
-        for <regressions@lists.linux.dev>; Tue, 09 Apr 2024 08:17:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4p6QPlZ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e50a04c317so95125ad.1
+        for <regressions@lists.linux.dev>; Tue, 09 Apr 2024 21:28:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712675825; x=1713280625; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CFN5ra1aznPU86rqQVA8b3ykCxoSF9HNqWhAYFl+4RQ=;
-        b=K4mNDF6ku7JYS6k/iUmxxl8kib9tauEyv8yVcmAdkKboBioSYiX1QOWQwr3RfKPi2r
-         dUfqfe3bvd1axAfkKIGselQswHZEL48D83QZSG98Ro2SVe32Z3CTrpv6cHpRAbSF3BgT
-         /J218hoRmkC18m3TjvSyb+9347ev6Kh5C2Dq8KfGLS3Dkv3WscgrJ3ZlNjg2zv1mmG3c
-         ltGpEKLH8VMhzGxMQrHDiks6wMofuLwdb9lwMTBNE4FjrHDAkq602lsAR9ejoFEzRtUz
-         dMZt8pvmDGd1Jv3RmH4W1CtDJ3gbGerxBsx3TP8LcryXD2D2kaNv0EDh3PbQMstjoZw1
-         NKZw==
+        d=gmail.com; s=20230601; t=1712723320; x=1713328120; darn=lists.linux.dev;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2u+70epJjW00+Aasor34vmJ+f/znX0w0jA47UJBKtDg=;
+        b=h4p6QPlZ5Nbc5Z7CCHmg2sECsCAtGGu8UZGojtcRTFX5QYAB5bzKS8CPCki9n+qmQt
+         pWtnfOosq1dNDr8MGRTen0URQ0mhGJHew0t+AJ/7lxQ5GZN+DIVXlM6P7kYcmMpxvTdI
+         aIcpHgfbyacK2yd1aKYmeNfbwuPDculOkq6SgGh0tk7jE8wxujFEasbPbplicC7of/TC
+         ZHezQa927Y0VVncy5rZB4OosoRx1YO5yyRd9azlooeIcGOzsoyb84+SiI6VOlAwz+0M1
+         tTRaVBxaZHI51Q7cLe9WtSOHTUMLJdjx9hHBxLMDct1rP6uJdRBaFHwoW5J4Z7HPXlhj
+         +7Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712675825; x=1713280625;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CFN5ra1aznPU86rqQVA8b3ykCxoSF9HNqWhAYFl+4RQ=;
-        b=cufHPWmA/Nr8bS6EeKnflpUZC54M9WBqwQqaaAQojsQpn/zUB/pJwPehvFO/HTT6IL
-         lrsAahialuzwxsWgNzLPimSlrTxyCINIMAfJueqywa/vhHwQFc5Bu/VJ9cf+HlPIPwqk
-         3JZG7H9aaWBj/acKfMAGj8dfC92fNZRHWuvLJIq4c7rzVKs3f2YqHugUhJuCudtxAeit
-         j3h/QdBIDtzVrBZcF5E0bfwKfNNP+kURpaWFyCKjmt552stO21pAqxtA47OGUtAKMyDQ
-         6rLGjO2X9LrXwH0lPs3PADTdm99rqtaLeDoD227bQO4uXBjs0GWrPWQtznaf0pZmgJSn
-         bL2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUK63fEftf6cQa6YpybgN+ghg5/WuOa+T2vvUl0pp8EStTw3OB0O8lc6wPPXw01bPjd+imTXVOjlT+k1a4ZPKjIUbsAPkYu5FjAkGU=
-X-Gm-Message-State: AOJu0YwdINt94ItzLFJbW2CWNt7DrswoXkJ3/FglNANHlom/+06OScu1
-	iFX+7HRBI642Z+Sgm2BZjp+Wp2wrTbxEJCQbCNCo2MUhmg8OxQOLD2SgJWxBVL0=
-X-Google-Smtp-Source: AGHT+IEFav7+y9oyCqRY7zx1fepSUKQxh2+t7rbF9PdgaetXQkALGBsEsh+5vF07Bn24RD62f0/qxg==
-X-Received: by 2002:a17:903:22c8:b0:1e0:b5f2:3284 with SMTP id y8-20020a17090322c800b001e0b5f23284mr115142plg.0.1712675824751;
-        Tue, 09 Apr 2024 08:17:04 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id b13-20020a170902ed0d00b001e0e8e4f7e3sm8947433pld.206.2024.04.09.08.17.03
+        d=1e100.net; s=20230601; t=1712723320; x=1713328120;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2u+70epJjW00+Aasor34vmJ+f/znX0w0jA47UJBKtDg=;
+        b=C4dvkW5akEIbeWc053u/XBmzJ/18HX/FzWqLwtyLZhhFv1f2XY8YtTdsZ68xLoNG6Q
+         smsBd0lvXmUp9IA6InSsn07qhT5aPHWWeI+tovRKFqeCVA6vdXre0xmxJmxi6+1YZU2I
+         XZJQSi0SKxgiDh8CVWjLeQmMfHJ17KWVwLktK1Br9eQzr5n4ycpc6Js3vnkXN/8AEeW1
+         Id6LPTT47IvT0uhFh+9dsU4b2r1rwB9uhEB7uMnHOaew821Jbhrk+zx1VWxKc+gACOeV
+         z10RnYSzbZpUBPdsEU7OkVHf0ZQqhI+592V3q0kSaqiabYpAPpFKa7A39q36aqPC0Hlj
+         Qj4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjVkOdp5Etfv1aNn+0j7sEo2bWMGm7qKc3iMMWtHgDm38Hcj+XMl5fW98SW465NAz6HSXB8FFoj7KomHGmuwMcbAWKJ9at+BDRSF8=
+X-Gm-Message-State: AOJu0YzDt9g8LQ4GodqVocwRaC5l2hMCYQPFfyOeLqp79pGhrHp1I9p+
+	8viGnqOfLobbywqQ30UeKkv5XSYGyyrr833Ypr38Kbos4c3suUYJ
+X-Google-Smtp-Source: AGHT+IEe7rAnY9uQDbz0Y7OlDS91jLim4bdEpY9FTdShRZXCnoeQFpggWylXUmXRifVvfewT7s5iJQ==
+X-Received: by 2002:a17:903:228a:b0:1e4:c75e:aace with SMTP id b10-20020a170903228a00b001e4c75eaacemr1883931plh.29.1712723319585;
+        Tue, 09 Apr 2024 21:28:39 -0700 (PDT)
+Received: from localhost ([1.146.50.27])
+        by smtp.gmail.com with ESMTPSA id s1-20020a170902ea0100b001e042dc5202sm9721472plg.80.2024.04.09.21.28.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 08:17:04 -0700 (PDT)
-Message-ID: <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
-Date: Tue, 9 Apr 2024 09:17:02 -0600
+        Tue, 09 Apr 2024 21:28:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: API break, sysfs "capability" file
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>, Lennart Poettering <mzxreary@0pointer.de>
-Cc: Keith Busch <kbusch@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240409141531.GB21514@lst.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Wed, 10 Apr 2024 14:28:07 +1000
+Message-Id: <D0G5QG4M991A.1QAWDKSYM6A89@gmail.com>
+Cc: "Jordan Niethe" <jniethe5@gmail.com>, "Vaidyanathan Srinivasan"
+ <svaidy@linux.vnet.ibm.com>, <mikey@neuling.org>, <paulus@ozlabs.org>,
+ <sbhat@linux.ibm.com>, <gautam@linux.ibm.com>,
+ <kconsul@linux.vnet.ibm.com>, <amachhiw@linux.vnet.ibm.com>,
+ <David.Laight@ACULAB.COM>, "Linux kernel regressions list"
+ <regressions@lists.linux.dev>
+Subject: Re: [PATCH] KVM: PPC: Book3S HV nestedv2: Cancel pending HDEC
+ exception
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Michael Ellerman" <mpe@ellerman.id.au>, "Thorsten Leemhuis"
+ <regressions@leemhuis.info>, "Vaibhav Jain" <vaibhav@linux.ibm.com>,
+ <linuxppc-dev@lists.ozlabs.org>, <kvm@vger.kernel.org>,
+ <kvm-ppc@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240313072625.76804-1-vaibhav@linux.ibm.com>
+ <CZYME80BW9P7.3SC4GLHWCDQ9K@wheely>
+ <a4f022e8-1f84-4bbb-b00d-00f1eba1f877@leemhuis.info>
+ <87sf007ax6.fsf@mail.lhotse>
+ <cb038940-63fd-4348-bed2-13e1b2844b92@leemhuis.info>
+ <87y19obfck.fsf@mail.lhotse>
+In-Reply-To: <87y19obfck.fsf@mail.lhotse>
 
-On 4/9/24 8:15 AM, Christoph Hellwig wrote:
-> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
->> All I am looking for is a very simple test that returns me a boolean:
->> is there kernel-level partition scanning enabled on this device or
->> not.
-> 
-> And we can add a trivial sysfs attribute for that.
+On Mon Apr 8, 2024 at 3:20 PM AEST, Michael Ellerman wrote:
+> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+> > On 05.04.24 05:20, Michael Ellerman wrote:
+> >> "Linux regression tracking (Thorsten Leemhuis)"
+> >> <regressions@leemhuis.info> writes:
+> >>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+> >>> for once, to make this easily accessible to everyone.
+> >>>
+> >>> Was this regression ever resolved? Doesn't look like it, but maybe I
+> >>> just missed something.
+> >>=20
+> >> I'm not sure how it ended up on the regression list.
+> >
+> > That is easy to explain: I let lei search for mails containing words
+> > like regress, bisect, and revert to become aware of regressions that
+> > might need tracking. And...
+> >
+> >> IMHO it's not really a regression.
+> >
+> > ...sometimes I misjudge or misinterpret something and add it to the
+> > regression tracking. Looks like that happened here.
+> >
+> > Sorry for that and the noise it caused!
+>
+> No worries.
 
-And I think we should. I don't know what was being smoked adding a sysfs
-interface that exposed internal flag values - and honestly what was
-being smoked to rely on that, but I think it's fair to say that the
-majority of the fuckup here is on the kernel side.
- 
-> At this point we're just better off with a clean new interface.
-> And you can use the old hack for < 5.15 if you care strongly enough
-> or just talk distros into backporting it to make their lives easier.
+It is actually a regression. It only really affects performance,
+but the logic is broken (my fault). We were going to revert it, and
+solve the initial regression a better way.
 
-We should arguably just stable mark the patch adding the above simple
-interface.
-
--- 
-Jens Axboe
-
+Thanks,
+Nick
