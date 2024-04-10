@@ -1,95 +1,68 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0025E181302
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 19:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8658628FD
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 19:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712777677; cv=none; b=L/MSMld5fKRAvosdKEXhRwYlPuiLG0ArUVhpEYn0kC2jU/1tYoTbSHUHvkQnbQdlHCTHlTXWxx+jEiBA4tQ0ULCfB9KK/TM8dBCPf7BqJpN7PMMRjuVuYwratpNK0csitwbpvwueEC6+XlMlP4mNABqJdfAtAKfFA4k46MpbOhI=
+	t=1712778328; cv=none; b=el3r6N/izkgouDbDw2fuxzbGY/Z6CRH+krv+7QTJK29ak3oJ1ts9lzr7mNhQI70F9hx6HXLHHDV7cPDjyV/NiTBvT9GGsc597EcAhXbg7UbP+D/kg66FhrfuXVfWoVsOrYlFsIMqdqt/y165NeWQWyrSJ/uaNrIgC4RBeo+rWWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712777677; c=relaxed/simple;
-	bh=fY6+WvW3hkdWZaAxo0deKXe/8KWqIVNXBr2BIirxmTo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=R+ahsr+IvqJkrvCmAR8TgwJnrPTgggGmP1g4IhQySXCWfT4a7wHBf3/wRtOH9TUonC2NiaRdkF3zS2b48nMqclPB4GnkdN0NOLh9V+ObFNfDvLC+nQjdU56hF1i5IEAPlVyM17lwyxvr51K4HmVT41mKjxyLosdPyggrhdh9vQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HMDN2imC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VF7GiSeX; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1712778328; c=relaxed/simple;
+	bh=BelLXsHnzBcl4pRFkjye7H4NG2rLu4vD1u9pdkB8Bx0=;
+	h=Message-ID:From:To:Cc:In-Reply-To:References:Subject:Date; b=udiTzKu9J8ByWZFY7c5wh/ws24wVDbYNHFRVP5FWOqlcp78vwIbkw7Z7Y3UAuqG/GEOw9BSKu8YejqzqbkNkrp8BIK8Dm6D4Md2V8AgrJPw4NWEnkUccqDrn/jh/l/hSCqk9+doe/8xd0I0qQVwDWlZt7hmHKgyOafz5jeZK/Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tp03TWmJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JbvzwwGS; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HMDN2imC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VF7GiSeX"
-From: Thomas Gleixner <tglx@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tp03TWmJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JbvzwwGS"
+Message-ID: <20240410194002.909839385@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712777674;
+	s=2020; t=1712778326;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zp/EtX3qMN10K3KBzcAg3kdV/12QTlHSX0dqop3x9f4=;
-	b=HMDN2imCIBN/b7ktsutXjXqjRDR7ntAAA/CnE+hm6mQ7/sJYLvqEE0lO3XArMcjBDvKRAl
-	jiUd4PIbqpIjqAtMgcitbHG0IaLWwpxeGBKAo1SvQ/Q0F18FN5THvocPgVleXQRGWwrv1W
-	Vzconq2cnuM3ymru3Nwgz/OgNNsv+VTD8X68fKB4WtpCpyoOER2qd4Clo+EabHdW1x6gwJ
-	QiHJWGRLyIBsv/Z6fj2kEUpp5GjSCL3FrZT+wCxwk6H5Z0gYFTaGoJ6MJvCK/HEp3MzSgL
-	1TluufqU/8ppM/lHE85jqmdgwTLCj3pnN0Ppv5op2izJlEZ4DAkSj7QToDTClA==
+	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+	bh=zXD3xkQMMp3nyR5N4kNRyu8kBxMNafMgulnNGUSs5NE=;
+	b=Tp03TWmJUvWNrl3FCV2Da/FCijNPrcYk8nj4F3zI6okd4P17zroaCyNKL9w8TrnRXzk79L
+	9EnLSlM9GNOaL2yK1zfjqs3ByALzieRfyo71Yl9wm9NUySc+1wVpDhSjz9erpGYrql4BSh
+	Pj97uYL1BYDSwdqXaQxeuwsPTdK8+Bv2NG0gVrMi98W0P56uu69ANRMHJRDn0uq+ji+IE+
+	5dNEi/m7HOkmp6YRfxgpssiEeZY0kC0/UJvgBrmWdIRQaH0V6zqDJVgWfKl8ix6pr5bpRf
+	cQE3WBUXtXdNHt4Eek+Driq40mu7KQPAROmJb4jOfAl8OpaMZKJIDyoSWdoRxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712777674;
+	s=2020e; t=1712778326;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zp/EtX3qMN10K3KBzcAg3kdV/12QTlHSX0dqop3x9f4=;
-	b=VF7GiSeXE+n5qF/XYUxQetLULBfufOdvK8N14QmUpiVo0kAUVsFM29l1FkIntAvtxJmjLL
-	2+Gn94YJs4hqjxDA==
-To: Laura Nao <laura.nao@collabora.com>
-Cc: kernel@collabora.com, laura.nao@collabora.com,
- linux-kernel@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev, x86@kernel.org
-Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
- Chromebooks
-In-Reply-To: <20240410161141.261818-1-laura.nao@collabora.com>
-References: <878r1l48xn.ffs@tglx>
- <20240410161141.261818-1-laura.nao@collabora.com>
-Date: Wed, 10 Apr 2024 21:34:33 +0200
-Message-ID: <87il0p2era.ffs@tglx>
+	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+	bh=zXD3xkQMMp3nyR5N4kNRyu8kBxMNafMgulnNGUSs5NE=;
+	b=JbvzwwGSfj0D0A2T4hE2Xz9HCTJbhjbWh1dDhZKjEd+Mldgsr31fKlS90A0iKhvSvBmmz3
+	Uktydcr81dDEoDDA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Laura Nao <laura.nao@collabora.com>,
+ x86@kernel.org,
+ kernel@collabora.com,
+ regressions@leemhuis.info,
+ regressions@lists.linux.dev
+In-Reply-To: <87il0p2era.ffs@tglx>
+References: <20240410161141.261818-1-laura.nao@collabora.com>
+ <87il0p2era.ffs@tglx>
+Subject: [patch 0/2] x86/cpu/amd: Fixup the topology rework fallout
+Date: Wed, 10 Apr 2024 21:45:25 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-Laura!
+Testing at Collabora unearthed two issues in the new AMD topology parser
+code:
 
-On Wed, Apr 10 2024 at 18:11, Laura Nao wrote:
-> On 4/10/24 15:57, Thomas Gleixner wrote:
->> I just moved the exit check a bit so we should see the scan info. That
->> should tell me what goes south.
->
-> Here's the full kernel log with the latest patch applied: 
-> https://pastebin.com/raw/r2CkP396
+  1) The CPUID 0x80000008 parser initializes the wrong topology domain
+     level.
 
-Ok. Now I can see it.
+  2) The NODEID_MSR parser uses bitfields in a union wrongly which results
+     in reading out the wrong value and finally in a division by zero.
 
-	pr_info("NPP %u\n", tscan.amd_nodes_per_pkg);
-
-The output is:
-
-<6>[    0.000000] NPP 3
-
-The original code then reads out 1, which is what's expected on that
-machine.
-
-Now that bogus value '3' is used later in
-
-    a %= b / 3
-
-as b == 2, the division result is zero, which makes the %= operation
-crash with a division by zero. As there are no handlers yet, nothing to
-see.
-
-The problem causing the bogus readout sits between my keyboard and my
-chair.
-
-I'll send out the fixes with proper change logs later tonight.
-
-Thanks for all your help!
+Many thanks to Laura for helping to debug this issue.
 
        tglx
+
+
