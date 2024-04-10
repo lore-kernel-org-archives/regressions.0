@@ -1,98 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF1215573D;
-	Wed, 10 Apr 2024 09:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA3C156C67
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 10:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712740689; cv=none; b=lPB+WGotMT8o8b8RNuFi5Z3A97zBC+B8uJ3WXV9MFBagG1ukDKRS+oEPLup4HCtob7oC3n6rMMM8nvOxc1t/eo1uh1mf1+uyi0FvB2wt0lNuc7zwpNgLHXLfFjVf+nyuaaXkLbf3S1gwdoWW1XampowE13o6D67AqTNLO8P7tvQ=
+	t=1712746586; cv=none; b=PcI2goeOpcQMPYhwzvCY0z47R34Bfyk9jn97OySlyfLdDEmzwVSznBpedvDy5bqj0fXRcLBwWCfdhWMZ6Vg31f4cQg//7Iy6u9+dqZVph0ehjz/8ltHKqi4X0fL6tNSQbgmr5Xt1138v30ydxmdB3kXgtIopCqoaMtNWhscSRts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712740689; c=relaxed/simple;
-	bh=buENw+YtfetZukl3wvHbHBQ7F3q5JUdS9DaF/JEENWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a9XEF+QP/w2f/tDKcUEAql6wve28k1d/sI+CRHzcEsQNn1d9/ez/rWs15mwAgjsps7uQePUG2cQsp6TCwioSXut9oWwSTbzFjlRm32AvwprGZFdyXWUMsHVxJ/unWMQVnr2Inx3F9kX54nKFHSQBX/UQjHFtZR2Cg7eQRNtRvHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gYRcQVoh; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712746586; c=relaxed/simple;
+	bh=PkLomg3XZoAJg3TSd9x2y2XkV+U9wN5WgCjvRqpTvr4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kKWLzUjyE7Z19G8sy4ze1/EyMwZ5oD9l0U2YOWaV7W7GZlmJzfb+dFwFkAOB/Q7ab95VblcE3QwDfiRtiQVHD2yXp7PHyO2VEbTf/5710sA0RRGWyEZs+34+Q0gVADzpkDM5GkiOUqgk+CZHXw1IR4H/NgIvZ00afnk7gN3toIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lPoqH4o9; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gYRcQVoh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=MG+8o97HbAfSpyN8cL56yv14qBVXuFd6KIelqD3DFmk=;
-	t=1712740687; x=1713172687; b=gYRcQVohw/RNKKHZ/QjVpxIsW6X4wqE2Dvagv3MrcJ+y77T
-	5r8/PfIqyAXoP68mhzuNhDS8NhjHechZ+lOf4HngqhhwVwDkwRoLrn2Z96AZH8Ma4/3ZMD3Ak4/Wm
-	X3HZRwTC5G3OmtvZxi3+mJvbznX1p7y2sNrjkmGH+S0FgUe+KSo7UIwVeLNxlak/ghzfU6BPfEIdD
-	g2oTrYBhdVsX9cd9gsbx+zj+K/1I8KQXl8Sy0cEQsbSUtpJpAijoPVLh+BW6A5ZQFZ+byAF3UhdL5
-	DTSW6PeX56+ftLnWfvuUOqoZp1IgnlwQ49eaQWsj4Alpd2D8qo2qO12Hsuxbf+OQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ruU5k-0004w0-Oc; Wed, 10 Apr 2024 11:18:04 +0200
-Message-ID: <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
-Date: Wed, 10 Apr 2024 11:18:04 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lPoqH4o9"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4dad331b828so1151688e0c.2
+        for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 03:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712746584; x=1713351384; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A4P1zHA79cNSOqe5dhAPt9YiRo8Ig2ZEUFz6PytxSbs=;
+        b=lPoqH4o9Nc2UB9ANjGZcsn1iyTrGR0Cy/68wWxonS5HgbXwY4tCPLnPZaY5G+VrrdW
+         kOXel9THsR4bvBEcQTL+7H5PKCQJumiI1VNbd9ZCsmtzo5MwydqrKIma1ZonphY6ASjF
+         pzi5NNasXE1C/MY1abu34Hdxrdj0hv5jYZUnAbkuwGi2BlsjIPoKuacmfKaabYS1zMhX
+         kliGTl+gD4m6NGWuWePFr1pPjdl6uXDWnO+y3MhT/LGwZTJvb2z1G2LPa4bwQIxGCynH
+         A4ezHXDwinq4KZ/7O/us1V+GaM0ZOMXGCFduh6Zrv8Ob0Dy6oJS8g8dDXKIk2QrWyN9E
+         ytBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712746584; x=1713351384;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A4P1zHA79cNSOqe5dhAPt9YiRo8Ig2ZEUFz6PytxSbs=;
+        b=grt/ArnmpXpQfywI0jyd5qwA6SJuunkFzuqcQpVezzMlYXmoWWFQr2EbmMK6rFhh4l
+         cLQZ0XawxprrGT9dk5OoEvSZobHq6VgiDuXO3ndg45Z2Ou8O/u9ZbPicyDu5lIU1k1bf
+         iNcp4TT63miJDOGKWd3hpZQ2NNSMp8OwsomlaDusNBKK8H3elLQpTQkgfzpSdxBBmbRA
+         f4nGMZ+iCH7UqJYCM+Frp+oRKseZpCY7e1tZoOETrZOTBzqJdMbY6IpfCQAD4EIItloS
+         vSBIyqtpXexphjHpnIta09AiUNC1D+3lBXWrdNkV03YscsxedBWmcbhzCIijEFxkroTl
+         Km3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUqPOX190nMbTUjwcHXP/0GT/Vs1fOi7DumGiuIqrOmk8jvjS/7lY+m5TY1icj7kPB4H21vmlPFAZddPitys3JAqnS/AvWgWU+3WrI=
+X-Gm-Message-State: AOJu0YzkeYfnXlJZlp/chjT0RytY3zbJc0197s2dPt4qXGP7uj8Bynax
+	yoLDVXa9qGGZM3cycu01Ed7rGKv4frfVdJU6E7hW+WKdgAjBT9/Yh0XjzfpXLeHkVExLeefTPwe
+	rrp2Dgqcav/+c4on43Km5SvaBHBl7B1vimnKAwQ==
+X-Google-Smtp-Source: AGHT+IGvDtSipGLN4V+a5OK8F15/LzzDmS0siND2Ax9vMFlFPnR/b9TAjNiJAXVFQnE88ZlIPrSPfifC/IbqQFAdzjw=
+X-Received: by 2002:a05:6122:a22:b0:4cd:20ea:35aa with SMTP id
+ 34-20020a0561220a2200b004cd20ea35aamr2414982vkn.8.1712746584230; Wed, 10 Apr
+ 2024 03:56:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
-To: Bjorn Andersson <andersson@kernel.org>, Tejun Heo <tj@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
- <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712740687;59a061c0;
-X-HE-SMSGID: 1ruU5k-0004w0-Oc
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 10 Apr 2024 16:26:12 +0530
+Message-ID: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
+Subject: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
+ statement in function returning non-void [-Werror=return-type]
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Stephen Boyd <sboyd@kernel.org>, John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 08.04.24 00:52, Bjorn Andersson wrote:
-> On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->>
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developers don't keep an eye on it, I decided to forward it by mail.
->>
->> Tejun, apparently it's cause by a change of yours.
->>
->> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
->> not CCed them in mails like this.
->>
->> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
->>
->>> booting the current kernel (6.9.0-rc1, master/712e1425) on x86_64
->>> with nohz_full=0 cause a page fault and prevents the kernel from
->>> booting.
-> [...]
-> In addition to this report, I have finally bisected another regression
-> to the same commit:
-> 
-> I start neovim, send SIGSTOP (i.e. ^Z) to it, start another neovim
-> instance and upon sending SIGSTOP to that instance all of userspace
-> locks up - 100% reproducible.
-> 
-> The kernel seems to continue to operate, and tapping the power button
-> dislodge the lockup and I get a clean shutdown.
-> 
-> This is seen on multiple Arm64 (Qualcomm) machines with upstream
-> defconfig since commit '5797b1c18919 ("workqueue: Implement system-wide
-> nr_active enforcement for unbound workqueues")'.
+The powerpc,s390, superSh and sparc tinyconfig builds failed due to
+following build
+warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
 
-Hmmm, I had hoped Tejun would reply and share an opinion if these
-problems are related. But that didn't happen. :-/ So let me at least ask
-one question that might help to answer that question: is the machine
-using CPU isolation, like the two other reports about problems caused by
-this commit do (see the
-https://bugzilla.kernel.org/show_bug.cgi?id=218665 and
-https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/ for
-details) ?
+List build failures:
+---
+* s390, build
+  - gcc-13-tinyconfig - failed
+  - gcc-8-tinyconfig - failed
 
-Ciao, Thorsten
+* sh, build
+  - gcc-11-tinyconfig - failed
+
+* sparc, build
+  - gcc-11-tinyconfig - failed
+
+* mips, build
+  - gcc-12-tinyconfig - failed
+  - gcc-8-tinyconfig - failed
+
+* powerpc, build
+  - gcc-13-tinyconfig - failed
+  - gcc-8-tinyconfig - failed
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Build log:
+--------
+kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
+kernel/time/timekeeping.c:286:1: error: no return statement in
+function returning non-void [-Werror=return-type]
+  286 | }
+      | ^
+cc1: some warnings being treated as errors
+
+steps to reproduce:
+---
+# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
+--kconfig tinyconfig
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380322/suite/build/test/gcc-13-tinyconfig/details/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/test/gcc-11-tinyconfig/history/
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/tests/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
