@@ -1,90 +1,69 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA9F13D607
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 13:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0113715FA69;
+	Wed, 10 Apr 2024 13:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712756293; cv=none; b=aHPkoOCJNma7AjnusZco4SGdmiqGwz+QjXYbjyku0qDNtbq948qigNYZW/vGukH7r8meakc52E2u1x9zLVs24sI4uM2uW362qxpOni3qSSFB1tSPDTNZ6GA3oaaEFWK44d/58WiVxcz/7wNU8osqBfX3SPIfCxt00LB1eO3a/PI=
+	t=1712756937; cv=none; b=eEmbSjNGZYJgXfkJ4awDWixBPzD6ijLKmVp21EcM2rb2+zEDXmcT1qUtKLlwkIYid1R2KFpjYL+9WpKJ0vqYbHkX1Dx+mcAET6Tjev8l2gapr+a0VZH48kMVGEPdmfGEKPM/Z5Z3hQwAh/pGmVEGb/C7XeZfX2LCb1L1hoozEUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712756293; c=relaxed/simple;
-	bh=G/Cy5WPY96g4Vl+cNSJrgwM1kif9xH6SaNAxGLyC81I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ieM3vWdDajCTbMubhorOL7N7ymS7qgwDnx+IVqXoINut53pPVI+bfbjv5NfVZM103HIoLiyiHFrPiQ3CHbOhqHLhc05QWbSmqCf3EmyOsVu48yvhqVeRjilhPVNSxsHyZ5MmHH7NfMlYjfyyUSeK2qlqqBqXKt8zTv9GnNHu0gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2IqzZRrh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dFsRKC0T; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712756937; c=relaxed/simple;
+	bh=j3k7QtlsNGkS+FgJ0seXVjN2gxtdMT3AKPuFn//PK2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZNwBYn36Phc52KRQphad1uCjwrKQKKTPH5vmJtUKfP0IQ55VqOujaN1B0hIR1In8zQJf9rh8oPZgHmPw+43865C+MnfOoxsEW7CjGfAF/xql+jTRGCiFPjMUXg/w18lEbdhVJv4+/Z1PqbVB/us168GaPglbcODq4f3eazHuCiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=btbuZhxl; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2IqzZRrh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dFsRKC0T"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712756290;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7KWwszC1gDIImnfxbJ4YyzLnz2jQUcsGLC9WpM8+8rY=;
-	b=2IqzZRrhZcPb5nY6Q+9wyV0sCb+QNwaSj4CHOMo4dEH3vuM2qV7MzFMxf3HM+F9NqC9r9e
-	U70ne/3u16q+roLOmZyErczNiVYIyRjchWVsbiEoE1PiOgA3BWjO/keUaYL7vOxHbxa7+V
-	pl6KBIonVNu/tktRp8iRzgE8R2JAqZBWn4cfL/4CjoC0FZDdgJOBJXXSiqIaI7zcgnotlo
-	1VBfhxOX086hviMwZDVtAMGh9c7LCFJ4xG5TRVNWZPb5jG5+MWNu6kh1VAeAUNkVVxg31+
-	7A7IWxTPJstXib5rLTpXN/p/5D83OTYll6aQtQUQyv50w9J5H8npoxdfm9KdkQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712756290;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7KWwszC1gDIImnfxbJ4YyzLnz2jQUcsGLC9WpM8+8rY=;
-	b=dFsRKC0TzEd4cIVGDe0cKMC7uvNHbBGWU3gVxmOGF8OhejSVRne0O/QO3U7oA4bpwqq6sj
-	lNGeKAQjrhgOxzAA==
-To: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, xiangfeix.ma@intel.com
-Subject: Re: Call Trace when adding vCPU to guest
-In-Reply-To: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
-References: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
-Date: Wed, 10 Apr 2024 15:38:09 +0200
-Message-ID: <87bk6h49tq.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="btbuZhxl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=M9rtTnalSzs19ZdjaxE7elEoT3FcFxEIU/CaWWWeAuA=; t=1712756935;
+	x=1713188935; b=btbuZhxl3qwOnt+9zyNpXL1KY82BvNzZxaoBlD7rxgZHPzdzBSQ4DGlSJ8vJ0
+	zdleZar4lhmQpjZL6azjW7EFFN0L1TjYfVxURxtS3xpXijbwZ+Gih47IIFm6kam6hVIljV5e0XgHV
+	RI1BXT1aEFeHNDPOkqSfL63s9b3smLkk8wtT2Xtu/SKi1p+0UG37rSQ75vMpy1P3kl0ktyNTMEyPU
+	vgv3vnQMPgAyA0QCPrrf2gPuIVSdk4Bdc4rgJsCrbTHDYJuWXjWTVirWhqjgRltHOdFUQf0G1ELDY
+	o+0JkdqFKSWziEFX9dB13Bzn+hXha/W0jD5LkwI936a6cxVIoQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ruYJo-0005QY-EK; Wed, 10 Apr 2024 15:48:52 +0200
+Message-ID: <b9e54d33-7f5e-45a5-b215-d3f9daef5a8e@leemhuis.info>
+Date: Wed, 10 Apr 2024 15:48:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Call Trace when adding vCPU to guest
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, xiangfeix.ma@intel.com
+References: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
+ <87bk6h49tq.ffs@tglx>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <87bk6h49tq.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712756935;b56007dc;
+X-HE-SMSGID: 1ruYJo-0005QY-EK
 
-On Wed, Apr 10 2024 at 09:34, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->
-> I noticed a report about a regression in bugzilla.kernel.org.
->
-> Thomas, I wonder if it's caused by your topology changes. But it's just
-> a wild guess and I might be totally wrong there, so feel free to ignore
-> this mail. I already asked for a bit more log output and a bisection in
-> the ticket.
->
-> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218698
->
->> Environment:
->> 
->> Host OS: CentOS 9
->> Host kernel: 6.9.0-rc1
->> KVM commit: 9bc60f73
->> Qemu commit: e5c6528d
->> Guest kernel: 6.9-rc2
->> Guest commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
->> Guest repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->> 
->> 
->> Bug detail description: 
->> 
->> When hot adding a vCPU to the guest, the guest happens Call Trace and reboot.
+On 10.04.24 15:38, Thomas Gleixner wrote:
+> On Wed, Apr 10 2024 at 09:34, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218698
+> [...]
+>>>
+>>> When hot adding a vCPU to the guest, the guest happens Call Trace and reboot.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=a9025cd1c673a8d6eefc79d911075b8b452eba8f
+> 
+> It'll be in rc4
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=a9025cd1c673a8d6eefc79d911075b8b452eba8f
+Ahh, splendid, thx for replying! Ciao, Thorsten
 
-It'll be in rc4
-
-Thanks,
-
-        tglx
+#regzbot fix: a9025cd1c673a8d6eefc79d911075b8b452eb
