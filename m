@@ -1,141 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A9615B54E
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 13:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA9F13D607
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 13:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712754208; cv=none; b=EO0ODSRTFD1RadHF/8VgrdO3jugvC3wGNNrbhffYKAlsnxmL1HlUxvwyAqS8pcA7xf0f2Rb73olYUCPhRFTXeIsdT2MKSMrBN35SUYEnPmvVvCzpwte09e6SZzSx7z1n2PFK1c3h+OlUHUgMgxILzzuqt0+1hr0uQwQ/7EDHNFU=
+	t=1712756293; cv=none; b=aHPkoOCJNma7AjnusZco4SGdmiqGwz+QjXYbjyku0qDNtbq948qigNYZW/vGukH7r8meakc52E2u1x9zLVs24sI4uM2uW362qxpOni3qSSFB1tSPDTNZ6GA3oaaEFWK44d/58WiVxcz/7wNU8osqBfX3SPIfCxt00LB1eO3a/PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712754208; c=relaxed/simple;
-	bh=UW+YjKe/SSODcQQ6LYMimv0tZKSU2Le4NnPmmrfldhY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W26C7SW03QS9EP4V40jOibM7fslhM8dLwSd72M/2np8G15geFupw4u2Ygmuy93wYGKaniYO/OrxCXpG0+aEGV6yTIAXf2xSRhG7H4HSbF0JeNIVHPfbI/3LI/A8J4t32S8/TWlKDt1aaR8WvQkFpQEyYHWfbwBcRtNzJc8SZpEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AmoWUq/S; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712756293; c=relaxed/simple;
+	bh=G/Cy5WPY96g4Vl+cNSJrgwM1kif9xH6SaNAxGLyC81I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ieM3vWdDajCTbMubhorOL7N7ymS7qgwDnx+IVqXoINut53pPVI+bfbjv5NfVZM103HIoLiyiHFrPiQ3CHbOhqHLhc05QWbSmqCf3EmyOsVu48yvhqVeRjilhPVNSxsHyZ5MmHH7NfMlYjfyyUSeK2qlqqBqXKt8zTv9GnNHu0gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2IqzZRrh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dFsRKC0T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AmoWUq/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712754206; x=1744290206;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UW+YjKe/SSODcQQ6LYMimv0tZKSU2Le4NnPmmrfldhY=;
-  b=AmoWUq/SSPNbCBYlQMwek4LSjP3hiwH36G/Y7WZdSiVem9Zjgk/33h6V
-   J70ejfZ7dX4qAHsYM9fjWAqXT37l4o41LkdUg6t2Aq6fJuIUDbdFsREfi
-   JRfUVVrbAjT8BMnesMeH+epUSkF4q19tpmaWHQYvoN3TBh0PScHjejfW9
-   8T7vlug0h3u74SQlSh8EKxAH+WBqrHsdkm0t9yPGGAtcQ/mYE7YG/0PJq
-   C2lD/76ZIR0UWiAxpBr7ruEOtA+TGKDfay/0nGyL+8vhbnlEYFU6Rf+7b
-   p2H6vzzOooSemHzPNP0O5KAGgfF/1QHRa/gEp9MRrdCia4lgwDPWkNHML
-   Q==;
-X-CSE-ConnectionGUID: 6E5J9IZORbCtAllafqKeqA==
-X-CSE-MsgGUID: yk2dB9/7RFyeTMAZ8SMwAw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7971106"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7971106"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:03:25 -0700
-X-CSE-ConnectionGUID: ZjJTaaeLSO6YKJPNdSTLRg==
-X-CSE-MsgGUID: QdEW8+lKTw+h72LHZ2yrmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20520492"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.214.234])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:03:22 -0700
-Message-ID: <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
-Date: Wed, 10 Apr 2024 16:03:16 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2IqzZRrh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dFsRKC0T"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712756290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7KWwszC1gDIImnfxbJ4YyzLnz2jQUcsGLC9WpM8+8rY=;
+	b=2IqzZRrhZcPb5nY6Q+9wyV0sCb+QNwaSj4CHOMo4dEH3vuM2qV7MzFMxf3HM+F9NqC9r9e
+	U70ne/3u16q+roLOmZyErczNiVYIyRjchWVsbiEoE1PiOgA3BWjO/keUaYL7vOxHbxa7+V
+	pl6KBIonVNu/tktRp8iRzgE8R2JAqZBWn4cfL/4CjoC0FZDdgJOBJXXSiqIaI7zcgnotlo
+	1VBfhxOX086hviMwZDVtAMGh9c7LCFJ4xG5TRVNWZPb5jG5+MWNu6kh1VAeAUNkVVxg31+
+	7A7IWxTPJstXib5rLTpXN/p/5D83OTYll6aQtQUQyv50w9J5H8npoxdfm9KdkQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712756290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7KWwszC1gDIImnfxbJ4YyzLnz2jQUcsGLC9WpM8+8rY=;
+	b=dFsRKC0TzEd4cIVGDe0cKMC7uvNHbBGWU3gVxmOGF8OhejSVRne0O/QO3U7oA4bpwqq6sj
+	lNGeKAQjrhgOxzAA==
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, xiangfeix.ma@intel.com
+Subject: Re: Call Trace when adding vCPU to guest
+In-Reply-To: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
+References: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
+Date: Wed, 10 Apr 2024 15:38:09 +0200
+Message-ID: <87bk6h49tq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
- statement in function returning non-void [-Werror=return-type]
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
- John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 10/04/24 13:56, Naresh Kamboju wrote:
-> The powerpc,s390, superSh and sparc tinyconfig builds failed due to
-> following build
-> warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
-> 
-> List build failures:
-> ---
-> * s390, build
->   - gcc-13-tinyconfig - failed
->   - gcc-8-tinyconfig - failed
-> 
-> * sh, build
->   - gcc-11-tinyconfig - failed
-> 
-> * sparc, build
->   - gcc-11-tinyconfig - failed
-> 
-> * mips, build
->   - gcc-12-tinyconfig - failed
->   - gcc-8-tinyconfig - failed
-> 
-> * powerpc, build
->   - gcc-13-tinyconfig - failed
->   - gcc-8-tinyconfig - failed
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build log:
-> --------
-> kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
-> kernel/time/timekeeping.c:286:1: error: no return statement in
-> function returning non-void [-Werror=return-type]
->   286 | }
->       | ^
-> cc1: some warnings being treated as errors
+On Wed, Apr 10 2024 at 09:34, Linux regression tracking (Thorsten Leemhuis) wrote:
+> Hi, Thorsten here, the Linux kernel's regression tracker.
+>
+> I noticed a report about a regression in bugzilla.kernel.org.
+>
+> Thomas, I wonder if it's caused by your topology changes. But it's just
+> a wild guess and I might be totally wrong there, so feel free to ignore
+> this mail. I already asked for a bit more log output and a bisection in
+> the ticket.
+>
+> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218698
+>
+>> Environment:
+>> 
+>> Host OS: CentOS 9
+>> Host kernel: 6.9.0-rc1
+>> KVM commit: 9bc60f73
+>> Qemu commit: e5c6528d
+>> Guest kernel: 6.9-rc2
+>> Guest commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+>> Guest repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>> 
+>> 
+>> Bug detail description: 
+>> 
+>> When hot adding a vCPU to the guest, the guest happens Call Trace and reboot.
 
-Using unreachable() in the default BUG() seems to make this go
-away.
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=a9025cd1c673a8d6eefc79d911075b8b452eba8f
 
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index 6e794420bd39..891bd9b0be70 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -156,7 +156,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- 
- #else /* !CONFIG_BUG */
- #ifndef HAVE_ARCH_BUG
--#define BUG() do {} while (1)
-+#define BUG() do { do {} while (1) ; unreachable(); } while (0)
- #endif
- 
- #ifndef HAVE_ARCH_BUG_ON
+It'll be in rc4
 
+Thanks,
 
-> 
-> steps to reproduce:
-> ---
-> # tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
-> --kconfig tinyconfig
-> 
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380322/suite/build/test/gcc-13-tinyconfig/details/
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/test/gcc-11-tinyconfig/history/
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/tests/
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-
+        tglx
