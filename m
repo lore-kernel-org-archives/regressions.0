@@ -1,115 +1,141 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA3C156C67
-	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 10:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A9615B54E
+	for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 13:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712746586; cv=none; b=PcI2goeOpcQMPYhwzvCY0z47R34Bfyk9jn97OySlyfLdDEmzwVSznBpedvDy5bqj0fXRcLBwWCfdhWMZ6Vg31f4cQg//7Iy6u9+dqZVph0ehjz/8ltHKqi4X0fL6tNSQbgmr5Xt1138v30ydxmdB3kXgtIopCqoaMtNWhscSRts=
+	t=1712754208; cv=none; b=EO0ODSRTFD1RadHF/8VgrdO3jugvC3wGNNrbhffYKAlsnxmL1HlUxvwyAqS8pcA7xf0f2Rb73olYUCPhRFTXeIsdT2MKSMrBN35SUYEnPmvVvCzpwte09e6SZzSx7z1n2PFK1c3h+OlUHUgMgxILzzuqt0+1hr0uQwQ/7EDHNFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712746586; c=relaxed/simple;
-	bh=PkLomg3XZoAJg3TSd9x2y2XkV+U9wN5WgCjvRqpTvr4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kKWLzUjyE7Z19G8sy4ze1/EyMwZ5oD9l0U2YOWaV7W7GZlmJzfb+dFwFkAOB/Q7ab95VblcE3QwDfiRtiQVHD2yXp7PHyO2VEbTf/5710sA0RRGWyEZs+34+Q0gVADzpkDM5GkiOUqgk+CZHXw1IR4H/NgIvZ00afnk7gN3toIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lPoqH4o9; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712754208; c=relaxed/simple;
+	bh=UW+YjKe/SSODcQQ6LYMimv0tZKSU2Le4NnPmmrfldhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W26C7SW03QS9EP4V40jOibM7fslhM8dLwSd72M/2np8G15geFupw4u2Ygmuy93wYGKaniYO/OrxCXpG0+aEGV6yTIAXf2xSRhG7H4HSbF0JeNIVHPfbI/3LI/A8J4t32S8/TWlKDt1aaR8WvQkFpQEyYHWfbwBcRtNzJc8SZpEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AmoWUq/S; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lPoqH4o9"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4dad331b828so1151688e0c.2
-        for <regressions@lists.linux.dev>; Wed, 10 Apr 2024 03:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712746584; x=1713351384; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A4P1zHA79cNSOqe5dhAPt9YiRo8Ig2ZEUFz6PytxSbs=;
-        b=lPoqH4o9Nc2UB9ANjGZcsn1iyTrGR0Cy/68wWxonS5HgbXwY4tCPLnPZaY5G+VrrdW
-         kOXel9THsR4bvBEcQTL+7H5PKCQJumiI1VNbd9ZCsmtzo5MwydqrKIma1ZonphY6ASjF
-         pzi5NNasXE1C/MY1abu34Hdxrdj0hv5jYZUnAbkuwGi2BlsjIPoKuacmfKaabYS1zMhX
-         kliGTl+gD4m6NGWuWePFr1pPjdl6uXDWnO+y3MhT/LGwZTJvb2z1G2LPa4bwQIxGCynH
-         A4ezHXDwinq4KZ/7O/us1V+GaM0ZOMXGCFduh6Zrv8Ob0Dy6oJS8g8dDXKIk2QrWyN9E
-         ytBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712746584; x=1713351384;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A4P1zHA79cNSOqe5dhAPt9YiRo8Ig2ZEUFz6PytxSbs=;
-        b=grt/ArnmpXpQfywI0jyd5qwA6SJuunkFzuqcQpVezzMlYXmoWWFQr2EbmMK6rFhh4l
-         cLQZ0XawxprrGT9dk5OoEvSZobHq6VgiDuXO3ndg45Z2Ou8O/u9ZbPicyDu5lIU1k1bf
-         iNcp4TT63miJDOGKWd3hpZQ2NNSMp8OwsomlaDusNBKK8H3elLQpTQkgfzpSdxBBmbRA
-         f4nGMZ+iCH7UqJYCM+Frp+oRKseZpCY7e1tZoOETrZOTBzqJdMbY6IpfCQAD4EIItloS
-         vSBIyqtpXexphjHpnIta09AiUNC1D+3lBXWrdNkV03YscsxedBWmcbhzCIijEFxkroTl
-         Km3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqPOX190nMbTUjwcHXP/0GT/Vs1fOi7DumGiuIqrOmk8jvjS/7lY+m5TY1icj7kPB4H21vmlPFAZddPitys3JAqnS/AvWgWU+3WrI=
-X-Gm-Message-State: AOJu0YzkeYfnXlJZlp/chjT0RytY3zbJc0197s2dPt4qXGP7uj8Bynax
-	yoLDVXa9qGGZM3cycu01Ed7rGKv4frfVdJU6E7hW+WKdgAjBT9/Yh0XjzfpXLeHkVExLeefTPwe
-	rrp2Dgqcav/+c4on43Km5SvaBHBl7B1vimnKAwQ==
-X-Google-Smtp-Source: AGHT+IGvDtSipGLN4V+a5OK8F15/LzzDmS0siND2Ax9vMFlFPnR/b9TAjNiJAXVFQnE88ZlIPrSPfifC/IbqQFAdzjw=
-X-Received: by 2002:a05:6122:a22:b0:4cd:20ea:35aa with SMTP id
- 34-20020a0561220a2200b004cd20ea35aamr2414982vkn.8.1712746584230; Wed, 10 Apr
- 2024 03:56:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AmoWUq/S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712754206; x=1744290206;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UW+YjKe/SSODcQQ6LYMimv0tZKSU2Le4NnPmmrfldhY=;
+  b=AmoWUq/SSPNbCBYlQMwek4LSjP3hiwH36G/Y7WZdSiVem9Zjgk/33h6V
+   J70ejfZ7dX4qAHsYM9fjWAqXT37l4o41LkdUg6t2Aq6fJuIUDbdFsREfi
+   JRfUVVrbAjT8BMnesMeH+epUSkF4q19tpmaWHQYvoN3TBh0PScHjejfW9
+   8T7vlug0h3u74SQlSh8EKxAH+WBqrHsdkm0t9yPGGAtcQ/mYE7YG/0PJq
+   C2lD/76ZIR0UWiAxpBr7ruEOtA+TGKDfay/0nGyL+8vhbnlEYFU6Rf+7b
+   p2H6vzzOooSemHzPNP0O5KAGgfF/1QHRa/gEp9MRrdCia4lgwDPWkNHML
+   Q==;
+X-CSE-ConnectionGUID: 6E5J9IZORbCtAllafqKeqA==
+X-CSE-MsgGUID: yk2dB9/7RFyeTMAZ8SMwAw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7971106"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7971106"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:03:25 -0700
+X-CSE-ConnectionGUID: ZjJTaaeLSO6YKJPNdSTLRg==
+X-CSE-MsgGUID: QdEW8+lKTw+h72LHZ2yrmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20520492"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.214.234])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:03:22 -0700
+Message-ID: <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
+Date: Wed, 10 Apr 2024 16:03:16 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 10 Apr 2024 16:26:12 +0530
-Message-ID: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
-Subject: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
+User-Agent: Mozilla Thunderbird
+Subject: Re: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
  statement in function returning non-void [-Werror=return-type]
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Stephen Boyd <sboyd@kernel.org>, John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
+ John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The powerpc,s390, superSh and sparc tinyconfig builds failed due to
-following build
-warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
+On 10/04/24 13:56, Naresh Kamboju wrote:
+> The powerpc,s390, superSh and sparc tinyconfig builds failed due to
+> following build
+> warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
+> 
+> List build failures:
+> ---
+> * s390, build
+>   - gcc-13-tinyconfig - failed
+>   - gcc-8-tinyconfig - failed
+> 
+> * sh, build
+>   - gcc-11-tinyconfig - failed
+> 
+> * sparc, build
+>   - gcc-11-tinyconfig - failed
+> 
+> * mips, build
+>   - gcc-12-tinyconfig - failed
+>   - gcc-8-tinyconfig - failed
+> 
+> * powerpc, build
+>   - gcc-13-tinyconfig - failed
+>   - gcc-8-tinyconfig - failed
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Build log:
+> --------
+> kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
+> kernel/time/timekeeping.c:286:1: error: no return statement in
+> function returning non-void [-Werror=return-type]
+>   286 | }
+>       | ^
+> cc1: some warnings being treated as errors
 
-List build failures:
----
-* s390, build
-  - gcc-13-tinyconfig - failed
-  - gcc-8-tinyconfig - failed
+Using unreachable() in the default BUG() seems to make this go
+away.
 
-* sh, build
-  - gcc-11-tinyconfig - failed
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index 6e794420bd39..891bd9b0be70 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -156,7 +156,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ 
+ #else /* !CONFIG_BUG */
+ #ifndef HAVE_ARCH_BUG
+-#define BUG() do {} while (1)
++#define BUG() do { do {} while (1) ; unreachable(); } while (0)
+ #endif
+ 
+ #ifndef HAVE_ARCH_BUG_ON
 
-* sparc, build
-  - gcc-11-tinyconfig - failed
 
-* mips, build
-  - gcc-12-tinyconfig - failed
-  - gcc-8-tinyconfig - failed
+> 
+> steps to reproduce:
+> ---
+> # tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
+> --kconfig tinyconfig
+> 
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380322/suite/build/test/gcc-13-tinyconfig/details/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/test/gcc-11-tinyconfig/history/
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/tests/
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
 
-* powerpc, build
-  - gcc-13-tinyconfig - failed
-  - gcc-8-tinyconfig - failed
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Build log:
---------
-kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
-kernel/time/timekeeping.c:286:1: error: no return statement in
-function returning non-void [-Werror=return-type]
-  286 | }
-      | ^
-cc1: some warnings being treated as errors
-
-steps to reproduce:
----
-# tuxmake --runtime podman --target-arch powerpc --toolchain gcc-13
---kconfig tinyconfig
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380322/suite/build/test/gcc-13-tinyconfig/details/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/test/gcc-11-tinyconfig/history/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240410/testrun/23380301/suite/build/tests/
-
---
-Linaro LKFT
-https://lkft.linaro.org
