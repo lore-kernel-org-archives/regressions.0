@@ -1,88 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F086913D535;
-	Wed, 10 Apr 2024 08:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF1215573D;
+	Wed, 10 Apr 2024 09:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712737599; cv=none; b=S/NSWa0/gL/eho8RT1PfUvo3DtW/m4OcuenLCSmMyAZts9CBgY/Ez5ycr02nShVG1HnEvdxKn4UPx6zGWr8HLIpABZrxrFwHuon8xfD8/UatgvnmxH7l46u4G9xJRpoTWQapnMiHUrBrXByMNUQdpzvlA858psyBXFeKFYHwNto=
+	t=1712740689; cv=none; b=lPB+WGotMT8o8b8RNuFi5Z3A97zBC+B8uJ3WXV9MFBagG1ukDKRS+oEPLup4HCtob7oC3n6rMMM8nvOxc1t/eo1uh1mf1+uyi0FvB2wt0lNuc7zwpNgLHXLfFjVf+nyuaaXkLbf3S1gwdoWW1XampowE13o6D67AqTNLO8P7tvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712737599; c=relaxed/simple;
-	bh=M1CULTLQapFQR63G83SdeFgSSKY+5gxgZETqZJ8vBeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XSTLiIXUuB1zEhr66vmBfLwz1mPs24eQfGrV9otcCby4fTSaMCNINo7DZhuTHtStA5FXEh3AwkMbsSV+34EurAfrNRWiFtxzBZ9NkfssS/gYUi0BPEZVwSTLkDzzcTgTgKyogxEM54Zpa6zaw0atDpqj2xT+wO+mQmiYHV6E+lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=az/DyFll; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712740689; c=relaxed/simple;
+	bh=buENw+YtfetZukl3wvHbHBQ7F3q5JUdS9DaF/JEENWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a9XEF+QP/w2f/tDKcUEAql6wve28k1d/sI+CRHzcEsQNn1d9/ez/rWs15mwAgjsps7uQePUG2cQsp6TCwioSXut9oWwSTbzFjlRm32AvwprGZFdyXWUMsHVxJ/unWMQVnr2Inx3F9kX54nKFHSQBX/UQjHFtZR2Cg7eQRNtRvHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gYRcQVoh; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="az/DyFll"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F6D1C433C7;
-	Wed, 10 Apr 2024 08:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712737598;
-	bh=M1CULTLQapFQR63G83SdeFgSSKY+5gxgZETqZJ8vBeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=az/DyFllRFhJr2jbAqJh+3PgQ3EJcRMmosTT1nzW28Q067ShclRa9PVgVl+Uo+xTz
-	 vE40KWZ3ybUtwCxVpE2XGHVQtdKPmZ554OnGfnsFEnu2sI9CTcgI+KH0A0alQpi/G5
-	 l26uf4Ck2vqXJbpWJ+uGtwgC9GfuZH1AgJ72kBrg=
-Date: Wed, 10 Apr 2024 10:26:35 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Chenglong Tang <chenglongtang@google.com>
-Cc: regressions@lists.linux.dev, pc@manguebit.com, linkinjeon@kernel.org,
-	dhowells@redhat.com, linux-cifs@vger.kernel.org,
-	Oleksandr Tymoshenko <ovt@google.com>,
-	Robert Kolchmeyer <rkolchmeyer@google.com>
-Subject: Re: Fwd: kernel panic caused by recent changes in fs/cifs
-Message-ID: <2024041005-marbled-lavish-047d@gregkh>
-References: <CAOdxtTaceuB9fvnEcoTVO6t0V_90UbLM3dyLbE_CK7uRe1bn=Q@mail.gmail.com>
- <CAOdxtTZfo59ZUxTgbWOybqyL3XHKyiudVthTLaU8jYRhiAqXvA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gYRcQVoh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=MG+8o97HbAfSpyN8cL56yv14qBVXuFd6KIelqD3DFmk=;
+	t=1712740687; x=1713172687; b=gYRcQVohw/RNKKHZ/QjVpxIsW6X4wqE2Dvagv3MrcJ+y77T
+	5r8/PfIqyAXoP68mhzuNhDS8NhjHechZ+lOf4HngqhhwVwDkwRoLrn2Z96AZH8Ma4/3ZMD3Ak4/Wm
+	X3HZRwTC5G3OmtvZxi3+mJvbznX1p7y2sNrjkmGH+S0FgUe+KSo7UIwVeLNxlak/ghzfU6BPfEIdD
+	g2oTrYBhdVsX9cd9gsbx+zj+K/1I8KQXl8Sy0cEQsbSUtpJpAijoPVLh+BW6A5ZQFZ+byAF3UhdL5
+	DTSW6PeX56+ftLnWfvuUOqoZp1IgnlwQ49eaQWsj4Alpd2D8qo2qO12Hsuxbf+OQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ruU5k-0004w0-Oc; Wed, 10 Apr 2024 11:18:04 +0200
+Message-ID: <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
+Date: Wed, 10 Apr 2024 11:18:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOdxtTZfo59ZUxTgbWOybqyL3XHKyiudVthTLaU8jYRhiAqXvA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+To: Bjorn Andersson <andersson@kernel.org>, Tejun Heo <tj@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
+ <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712740687;59a061c0;
+X-HE-SMSGID: 1ruU5k-0004w0-Oc
 
-On Tue, Apr 09, 2024 at 11:45:06PM -0700, Chenglong Tang wrote:
-> ---------- Forwarded message ---------
-> From: Chenglong Tang <chenglongtang@google.com>
-> Date: Tue, Apr 9, 2024 at 11:43 PM
-> Subject: kernel panic caused by recent changes in fs/cifs
-> To: <samba-technical-owner@lists.samba.org>
+On 08.04.24 00:52, Bjorn Andersson wrote:
+> On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>> kernel developers don't keep an eye on it, I decided to forward it by mail.
+>>
+>> Tejun, apparently it's cause by a change of yours.
+>>
+>> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+>> not CCed them in mails like this.
+>>
+>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
+>>
+>>> booting the current kernel (6.9.0-rc1, master/712e1425) on x86_64
+>>> with nohz_full=0 cause a page fault and prevents the kernel from
+>>> booting.
+> [...]
+> In addition to this report, I have finally bisected another regression
+> to the same commit:
 > 
+> I start neovim, send SIGSTOP (i.e. ^Z) to it, start another neovim
+> instance and upon sending SIGSTOP to that instance all of userspace
+> locks up - 100% reproducible.
 > 
-> Hi, developers,
+> The kernel seems to continue to operate, and tapping the power button
+> dislodge the lockup and I get a clean shutdown.
 > 
-> This is Chenglong Tang from the Google Container Optimized OS team. We
-> recently received a kernel panic bug from the customers regarding cifs.
-> 
-> This happened since the backport of following changes in cifs(in our kernel
-> COS-5.10.208 and COS-5.15.146):
-> 
-> cifs: Fix non-availability of dedup breaking generic/304:
-> https://lore.kernel.org/r/3876191.1701555260@warthog.procyon.org.uk/
-> smb: client: fix potential NULL deref in parse_dfs_referrals(): Upstream
-> commit 92414333eb375ed64f4ae92d34d579e826936480
-> ksmbd: fix wrong name of SMB2_CREATE_ALLOCATION_SIZE: Upstream
-> commit  13736654481198e519059d4a2e2e3b20fa9fdb3e
-> smb: client: fix NULL deref in asn1_ber_decoder(): Upstream commit
-> 90d025c2e953c11974e76637977c473200593a46
-> smb: a few more smb changes...
-> 
-> The line that crashed is line 197 in fs/cifs/dfs_cache.c
-> ```
-> if (unlikely(strcmp(cp->charset, cache_cp->charset))) {
-> ```
-> I attached the dmesg and backtrace for debugging purposes. Let me know if
-> you need more information.
+> This is seen on multiple Arm64 (Qualcomm) machines with upstream
+> defconfig since commit '5797b1c18919 ("workqueue: Implement system-wide
+> nr_active enforcement for unbound workqueues")'.
 
-Do you know which commit caused this problem?
+Hmmm, I had hoped Tejun would reply and share an opinion if these
+problems are related. But that didn't happen. :-/ So let me at least ask
+one question that might help to answer that question: is the machine
+using CPU isolation, like the two other reports about problems caused by
+this commit do (see the
+https://bugzilla.kernel.org/show_bug.cgi?id=218665 and
+https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/ for
+details) ?
 
-And 5.15 and 5.10 are very old kernels, does this still happen in the
-latest kernel releases?
-
-thanks,
-
-greg k-h
+Ciao, Thorsten
