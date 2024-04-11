@@ -1,91 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456FE26ACC
-	for <regressions@lists.linux.dev>; Thu, 11 Apr 2024 08:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968151448EF;
+	Thu, 11 Apr 2024 11:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824036; cv=none; b=fwQ7wbR1QS3Q9SJiagwWYf4B+wz8PGs3Pi9sOo8mdHMrrz/v5vxjtSvHMoOkmpzOQvCsejDIQY8gFypSQ5rEvMTad9DjHwSv831hH5SVdy/HBAMdpM4ts9DBe25F9plmY3NP0tNUX6tF6QaThOBYlx3PUbh+NwAzQSlGr74KMmA=
+	t=1712833437; cv=none; b=ddnF9TAN703/MZ1BHWr49Xz/qhrtNcGX2q40ThMpkuRLPYEKIpsB4rCOhlAU0yW0cVBVT1HuKI/ujw4Q+aAT0k9NOBeizZfg5+Ynd9ROwzO9kI5kUzSTmTQSYDfObxwm45kap+sD+ufekg7/C1CFnhXET21JkkK0LrLo2sYrnrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712824036; c=relaxed/simple;
-	bh=VMUO6AMXMVsqgIqjVZgZBXBiEDcMtP9Oe9mg/oobPXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RT3Aas+MjFdQOXjCtuYgxf0V4NIHrU1hmMhjBVyK1Idy0rUyUUl/gmaM5ifA7yjKIr2XXg4KS6W+tDcXEd6hMcpHnB+PvO0jGMjlhewFfO8Z+ttAkEUWolxcKNude5DyYPTRR5fVl5QY6czU9/2S3sK8IYYQ3MZhoXu3pYsYNQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIwmkpeK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712833437; c=relaxed/simple;
+	bh=MSFm1EBGmR2LLH6gGZRgCleHJVzYSGXKoQaTGT2aZn0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BZYgGnUlZn2SKkHQSgPDMqO1szpfqp+bt0sw1Xtp4K0q+Lac53+gNQchEXCQtqeq6zezQEYOYCsdm1uaF5Ml03JUCHZJoTsQZx5+rHaLm9kZhKMYSfTNF5OzCVJoW899xQQWAt85mFAmVGzybuNH/7edXZZDb/GCzPnl1fhRK7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=E+av8V1v; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=PQuAJ0qb; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIwmkpeK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCEA0C43399
-	for <regressions@lists.linux.dev>; Thu, 11 Apr 2024 08:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712824035;
-	bh=VMUO6AMXMVsqgIqjVZgZBXBiEDcMtP9Oe9mg/oobPXQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dIwmkpeKIe0q3pu/9q9xha9+2F3jhvYAe6frodg+nYsYZR9w3dcCsivNFDwRdfcfP
-	 rFXtnXXjGORHgV0IkkbqQhujoGdfST2cskNIzur4QJRNUvb3N0znbHS5WwH9mu1eUo
-	 nTlBjsBnb1CXWn0TzVG/PsHmnNWpx4bZ6p8xe2xtlRC1mRmy6B1lx5Ad6DuKJI8rP4
-	 uz0/QE//dOGFAM44jYtcC5pp9z9CXcgvfgKoviD35qme4MYpH3mPU1PDtOLMPtTwcm
-	 A+t2jxWi9C4U1DSChlNPpAc7R+qqsRatBlPS0+oMMq2mtCGJXVcYCwyIiTa3yDgKdK
-	 bSpNHi3Zkq4yQ==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so103088341fa.0
-        for <regressions@lists.linux.dev>; Thu, 11 Apr 2024 01:27:15 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxAqkGgMKRpdbaqEe8S3atDaPMOEe8ydZg+XRYjrKD96jlMXPzP
-	B6R2oBAoLcEDgbsXhzL/BAi4AiFaojUK08xxz6W7Ww45D8mMRN4gztxG8o4wGgEsvDQSdnAEdGE
-	7ngf09/Vbb76206/0yYO1TbeZhns=
-X-Google-Smtp-Source: AGHT+IE6Jig5oeL04Ih0wDkMGruvLCBbhVbwekOG/N1Wn4x19B/cJ/cmRCJzfm1GiXipeKhO2KtEAU/LKwGLMVfOZ4g=
-X-Received: by 2002:a2e:9516:0:b0:2d8:59cb:89ef with SMTP id
- f22-20020a2e9516000000b002d859cb89efmr3147956ljh.24.1712824033916; Thu, 11
- Apr 2024 01:27:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="E+av8V1v";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="PQuAJ0qb"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 7673F21C9;
+	Thu, 11 Apr 2024 10:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1712832987;
+	bh=SwPj2AqRGe9EKGQD5/g1nxPhpUMvHtRCkQf9C+uu+cE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=E+av8V1vKLYJqxE7KjFej4qFk6fsvOTM3Fz39RvH1jAkaKvbkswHzV4nLp2MRc4Gy
+	 ql3LHp0J5j0PU7FMULek2PQ1FiCGZV5VdeoNAT5T8oX9/l9J9nPhvLSp95Ec0mpoq/
+	 FmqViTZmmwV5QUeH/GJJp6Z/y03YmL07J3p5/TT0=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 690381D3B;
+	Thu, 11 Apr 2024 11:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1712833433;
+	bh=SwPj2AqRGe9EKGQD5/g1nxPhpUMvHtRCkQf9C+uu+cE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PQuAJ0qbHs67I+20oz0pVuV7L2TyeUN0W4GNYGky+eSlnK/Y6y5cD3DQ0vxXiMSlJ
+	 cOfU02eJPgyd7O40MJRSkOXZZC90EblgFrEsL8gUUPMN/j0UJFBWPJy0YU+OJqlkuK
+	 uP+tzVVsCnmCiv9+VTlwdE5cXxlMZ/m8akEb3Ay8=
+Received: from [192.168.211.72] (192.168.211.72) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Thu, 11 Apr 2024 14:03:52 +0300
+Message-ID: <b0fa3c40-443b-4b89-99e9-678cbb89a67e@paragon-software.com>
+Date: Thu, 11 Apr 2024 14:03:52 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3c6e6172-cf64-4230-bcc5-7682b4d64a8a@gmx.de> <4e2ff80c-9e3f-433e-8783-cb9729c30bb2@leemhuis.info>
-In-Reply-To: <4e2ff80c-9e3f-433e-8783-cb9729c30bb2@leemhuis.info>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 11 Apr 2024 10:27:02 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHgvv0FYZXsFm8KisXuR6t47-nXtgOs0Gyva4MJEJ_4Ow@mail.gmail.com>
-Message-ID: <CAMj1kXHgvv0FYZXsFm8KisXuR6t47-nXtgOs0Gyva4MJEJ_4Ow@mail.gmail.com>
-Subject: Re: 6.8.5 does not boot (regression)
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?Q?Toralf_F=C3=B6rster?= <toralf.foerster@gmx.de>, 
-	Linux Kernel <linux-kernel@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ntfs3: remove warning
+To: Linux regressions mailing list <regressions@lists.linux.dev>, Christian
+ Brauner <brauner@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Anton Altaparmakov
+	<anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>,
+	<ntfs3@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-ntfs-dev@lists.sourceforge.net>
+References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
+ <20240325-faucht-kiesel-82c6c35504b3@brauner>
+ <ZgFN8LMYPZzp6vLy@hovoldconsulting.com>
+ <20240325-shrimps-ballverlust-dc44fa157138@brauner>
+ <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
+Content-Language: en-US
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+In-Reply-To: <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-On Thu, 11 Apr 2024 at 10:19, Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
+On 04.04.2024 11:06, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 25.03.24 13:05, Christian Brauner wrote:
+>> On Mon, Mar 25, 2024 at 11:12:00AM +0100, Johan Hovold wrote:
+>>> On Mon, Mar 25, 2024 at 09:34:38AM +0100, Christian Brauner wrote:
+>>>> This causes visible changes for users that rely on ntfs3 to serve as an
+>>>> alternative for the legacy ntfs driver. Print statements such as this
+>>>> should probably be made conditional on a debug config option or similar.
+>>>>
+>>>> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>>>> Cc: Johan Hovold <johan@kernel.org>
+>>>> Link: https://lore.kernel.org/r/Zf2zPf5TO5oYt3I3@hovoldconsulting.com
+>>>> Signed-off-by: Christian Brauner <brauner@kernel.org>
+>>> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+>>>
+>>> I also see a
+>>>
+>>> 	ntfs3: Max link count 4000
+>>>
+>>> message on mount which wasn't there with NTFS legacy. Is that benign
+>>> and should be suppressed too perhaps?
+>> We need a reply from the ntfs3 maintainers here.
+> Those are known for taken their time to respond -- like we see here, as
+> nothing happened for 10 days now. Which makes we wonder: should we at
+> least bring the first patch from this series onto the track towards
+> mainline?
 >
-> On 11.04.24 09:20, Toralf F=C3=B6rster wrote:
-> > It is a remote system, nothing in the logs, system is a hardened Gentoo
-> > Linux, 6.8.4 was fine.
-> >
-> > Linux mr-fox 6.8.4 #4 SMP Thu Apr  4 22:10:47 UTC 2024 x86_64 AMD Ryzen
-> > 9 5950X 16-Core Processor AuthenticAMD GNU/Linux
-> >
-> > Another Gentoo dev reported problems too.
-> >
-> > config is below.
+> FWIW, quick side note: just noticed there was another report about the
+> "Correct links count -> 1." messages:
+> https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
 >
-> Thx for the report, but the harsh reality is: nearly no developer will
-> see your initial report, as you just sent it to LKML, which nearly
-> nobody ready. I CCed a few lists, which might help. But that is
-> unlikely, as this could be cause by all sorts of changes. Which is why
-> we likely need a bisection (
-> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.ht=
-ml
-> ) from somebody affected to make some progress here.
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 >
-> That being said: there are a few EFI changes in there that in a case
-> like this are a suspect. I CCed the developer, maybe something rings a be=
-ll.
+> #regzbot duplicate:
+> https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
+> #regzbot poke
 >
+Hello Christian, Johan, all,
 
-This is a known issue, and will be fixed in the next 6.8.y release.
+There is no problem in suppressing the output of any messages during 
+mounting, like:
 
-In the mean time, you can apply
+diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
+index cef5467fd928..4643b06b1550 100644
+--- a/fs/ntfs3/super.c
++++ b/fs/ntfs3/super.c
+@@ -1804,8 +1804,6 @@ static int __init init_ntfs_fs(void)
+{
+         int err;
+-       pr_info("ntfs3: Max link count %u\n", NTFS_LINK_MAX);
+-
+         if (IS_ENABLED(CONFIG_NTFS3_FS_POSIX_ACL))
+                 pr_info("ntfs3: Enabled Linux POSIX ACLs support\n");
+         if (IS_ENABLED(CONFIG_NTFS3_64BIT_CLUSTER))
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3De7d24c0aa8e678f41457d1304e2091cac6fd1a2e
+Messages like this:
+
+diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
+index eb7a8c9fba01..8cc94a6a97ed 100644
+--- a/fs/ntfs3/inode.c
++++ b/fs/ntfs3/inode.c
+@@ -424,7 +424,6 @@ static struct inode *ntfs_read_mft(struct inode *inode,
+     if (names != le16_to_cpu(rec->hard_links)) {
+         /* Correct minor error on the fly. Do not mark inode as dirty. */
+-        ntfs_inode_warn(inode, "Correct links count -> %u.", names);
+         rec->hard_links = cpu_to_le16(names);
+         ni->mi.dirty = true;
+     }
+
+can also be suppressed for the sake of seamless transition from a remote 
+NTFS driver.
+However, I believe that file system corrections should be reported to 
+the user.
+
+
