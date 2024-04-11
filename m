@@ -1,106 +1,133 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460575CBD;
-	Thu, 11 Apr 2024 04:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D464F5FE;
+	Thu, 11 Apr 2024 05:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712810017; cv=none; b=NDy9jEYRDpax8xudJoQW7wBVJlbsk4nO3zaZ/v/0YLln0ttq3waiG5FWpMw/XaEletxTCvBVE9CFkP6X/PDFzfg/JeMyhSfemFyr2rI9RfCU8D3Wf0TcJcQZrtnLYQpzguyMddDrgt1Wp+IE+JZoFJ+GruNuw743DM8vWQc/RSI=
+	t=1712813418; cv=none; b=InfVOKIYDdPrrq3bdVGjg0eoX5+RVCf1yk87a+ESNL6TdlbJNaq1S4uAwzNzqP9fJ0ah6V+iX6FfT7lXD6hOTB+LdILhIJyRusUtkT8HBPINdPeyotN4Ox5tN0JtTLt/2g7nC3GMU437dF7J1jaMnbYMW46bFOmk4iOiNDWMfjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712810017; c=relaxed/simple;
-	bh=9X+PjMjMteDeHZkxEoky+iWM5pNEjgeb4ckxulg6FnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEXRz9Sv2pE0xN/J1JPTVR+qRQ0oeCW7+ysmKuWX5davJt3d+k2nOXLuUMXqgrJLB+4ZiP/cgJvZsy+UznEpBXhZt/5wVhMNHeMtg1Qx/WoFR6etyevFF2ypSUe4Tc4D5pCogGbusrG+wbxWA73TZIGDWDebfR6xsdSKXQEvq3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=NJT1x/+d; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1712813418; c=relaxed/simple;
+	bh=788hcjhw3/k1qbgS7yNonS/7hLNauHbhaejAlmCuRwc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=On3/5ANw/FuQceFNFGsb81QjSfIA+VyRiKKeumaHlioJKbq6As0q1V5nKBEGUudl1sbQ9AddET76Ovf0zNqeUN5y4F4hw5dGTaSurqHp3ofj7s5qSH+bHJ9ZOJeaiXF8OQ3hPPmeeQEuCZHvF+9kdKUsZZ6zPKHq8MTAdjY9oxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kpCWzG7l; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="NJT1x/+d"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0xy0RSu0FBM75EE/MzdLyTdZbtB79ssgCE2mlIY1v5s=; b=NJT1x/+dzc3HpsTSEkzjqdrf0h
-	4cRu0nFH6tl2xw/kg+v6DQO7JLtOQSZD2MO+YWOqL70Bl56AV+jLtDGORb8WxQYthz4pWVxgpGnEb
-	AbFXL0MTZsjRF/gz3zcrZiPcuJeu0sqEK52x14LotS0FcBOOv39h2+ku0RsRuFP97+YLHuv0caw5G
-	wMp7Eq19dQqc4G4Khdqa266GRALYnyhlEr53FEwr9JwOT0/kXpdOcmRTp7yFMmptQ++a9VWgHbs9I
-	NynjYGiChAafBRbkONZNLjd3S5GT6UOeU6HGuxugFIGfJMRBAbHQZL+4sItp3W+W/+ceSEbKk76O7
-	TlyWsaiA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <kibi@debian.org>)
-	id 1rum7u-001Xyy-9X; Thu, 11 Apr 2024 04:33:30 +0000
-Date: Thu, 11 Apr 2024 06:33:27 +0200
-From: Cyril Brulebois <kibi@debian.org>
-To: James Bottomley <jejb@linux.ibm.com>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
-	Mike Christie <michael.christie@oracle.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sasha Levin <sashal@kernel.org>, gregkh@linuxfoundation.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	Christoph Hellwig <hch@lst.de>,
-	John Garry <john.g.garry@oracle.com>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Salvatore Bonaccorso <carnil@debian.org>
-Subject: Re: [REGRESSION] Loss of some SMART information in v6.1.81
-Message-ID: <20240411043327.m5unlpweoslnzzce@mraw.org>
-Organization: Debian
-References: <20240410193207.qnb75osxuk4ovvm6@mraw.org>
- <0655cea93e52928d3e4a12b4fe2d2a4375492ed3.camel@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kpCWzG7l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=gc6ROkw1VkHsdjdcSXsPC0mjYVxJN/O6f5XOd6KjPZg=; t=1712813416;
+	x=1713245416; b=kpCWzG7llIrhdrKWRGkCPry0jkdHc7vYRp9pOgsaOb4pv3gXFfRJfEsw8Hyv3
+	EdJWL6rQDHqaIZ/6tAOm9ZKa6UOU6tEFhUcF1o65ofN8KUZSzhh7rHBq2NuUwa1dBpnbIrmSfjEPZ
+	ZsfK865xvT3yRVi38122/5RxIV2y0hmqKM8LBludYtz8S8bUt0ow9WDr5YjfmfOsgE+2Ej9PO7pRh
+	E6MD7P3zgpfN7iRjxV+9jFeFZPL1ikZVDgLQOpKUi3thfVDOa9l0a3VSN0x2LZiMCMd+bB16HKudi
+	aLrKEAjqeR/AgG0bFmfI2JERffkRjqgXd6ftBNNNKTKaYdpAng==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1run0o-0001pj-VT; Thu, 11 Apr 2024 07:30:15 +0200
+Message-ID: <572a9e73-570d-4345-99c3-41d94e3e8666@leemhuis.info>
+Date: Thu, 11 Apr 2024 07:30:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x225b5f4ap2p7arx"
-Content-Disposition: inline
-In-Reply-To: <0655cea93e52928d3e4a12b4fe2d2a4375492ed3.camel@linux.ibm.com>
-X-Debian-User: kibi
+User-Agent: Mozilla Thunderbird
+Subject: Re: Do we need a "DoNotBackPort" tag?
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
+ Sasha Levin <sashal@kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh> <Zg10Keik4KORjXMh@slm.duckdns.org>
+ <2024040319-doorbell-ecosystem-7d31@gregkh>
+ <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
+ <2024040454-playful-tainted-7446@gregkh>
+ <8488e647-d2f4-484f-939f-eb827802d5c6@leemhuis.info>
+ <20240405025439.GC13376@mit.edu>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20240405025439.GC13376@mit.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1712813416;3c964a8e;
+X-HE-SMSGID: 1run0o-0001pj-VT
 
+On 05.04.24 04:54, Theodore Ts'o wrote:
+> On Thu, Apr 04, 2024 at 05:56:58PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> I know, as I wrote that (as you likely remember). ;-) But it seems it's
+>> not well known; and maybe making it explicit that this can be used to
+>> convey a "DoNotBackport" message is supported as well.
+>>
+>> Guess I'll prepare a patch to do that then and we'll see how it goes
+>> from there.
+> 
+> Maybe something like "ManualBackportOnly"instead?   The basic idea is
+> that it's not that the commit should *never* be backported, but only
+> with human intervention where someone has specifically requested the
+> backport, perhaps with qualification test.
 
---x225b5f4ap2p7arx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I liked the idea at first, as it was more from the positive side of
+things. But a CC stable with a "# ManualBackportOnly" might sound like
+"I want this backported and handle that" to some developers and not what
+they want to express.
 
-James Bottomley <jejb@linux.ibm.com> (2024-04-10):
-> This is a different manifestation of the same bug in stable that was
-> introduced by a backport of scsi_execute_cmd.  The proposed fix for the
-> domain validation problem here will also sort out this problem:
->=20
-> https://lore.kernel.org/linux-scsi/yq1frvvpymp.fsf@ca-mkp.ca.oracle.com/
+After thinking about it for some time I went with "# no semi-automatic
+backport" for now. For details see:
+https://lore.kernel.org/all/c0a08b160b286e8c98549eedb37404c6e784cf8a.1712812895.git.linux@leemhuis.info/
 
-Thanks for the pointer! I've just confirmed this, and I'll follow up
-there.
-
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---x225b5f4ap2p7arx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmYXaBUACgkQ/5FK8MKz
-VSD9xg/9GEc++o6wJulDZVizBrO3tZpCsV9wW7+fEFJd7Lb2Wp3KDhubYoYI1Nmt
-tct6p0VsUU0RZ0rmd0tq4HfF+DpkL/1xN7AG024BJJxjn5ut6j253y/nfA4YIUZc
-KwQQ3IEU+NlkKUh510RV8aJ8C4Zu8IX5S4G1ijp0tigFTJuD/Sj4RpS9Njcrmq71
-bENUCYb/W4nfdjrQ5u5DwYLitDC7duABnJw7HlvK7G71r78+LHIVRJ8JfgLgGssj
-DEo6eX1/h/YF/Ov+9It34/KIZOFZoXvRWyQ9SFvjWIYPtug4tETRoClvucIaJSjF
-3i13+T6r7TSVGihQskcsxKypWN/d4yr5kizp8nLc1UdEqZxPCv0YIFsNZcFxYp/R
-DqiFfpq3G/7I+Pl2tL320Ej2jPSe2pm+OYhqM34CenioiW2TxjVn0tWdzcBL4QU7
-XyFYjM/h1gMB4mvtrw3bAQQajBT+zMyCZQCG3k17hL3FCA8sPpYpIWXbnnDMAlD/
-Tf31Er4lnedTttVQ3PVo5xEhy9cPvNYRbBRkg7xPT+htfY0fcM1plMbz96kfMF1e
-Caao801hRtZoP0N7j1mKahXdJga3Z/oBGlS+yhI2fmwR1wRzZJ8JUpSuhvYfqGhv
-EAsC6Z67Urgk3hoOAcbLS4AwaEXvA11LXAlAooFxDGs3kubF9CY=
-=RLmB
------END PGP SIGNATURE-----
-
---x225b5f4ap2p7arx--
+Ciao, Thorsten
