@@ -1,25 +1,37 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B2E13D888
-	for <regressions@lists.linux.dev>; Thu, 11 Apr 2024 06:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8A41E86A;
+	Thu, 11 Apr 2024 08:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712817494; cv=none; b=riTQwwZyDsiLJjAD6/oRyxrH2LfVPNXCGxhcZ3WjkdPFk2Xxupyxo0IQigLQlgLF5igSyF40W9+2meHg8zFYy5s+EbWOnmn2DIouDDzZ29KGPmM/2LaUgFYxJ9WlyO89N/SEoKQPn8DDcErztN/DfZ/JGoKrBCGKR2NIP/A4MMk=
+	t=1712823585; cv=none; b=fJQTfMzccSFvfQ5JMpYC6QBCDU6orlE/tJ7+jAKluKDd5C0fG9mKlMPV03MzoP4s8LvVHcECTmJ4Pwjq0zF8qN+oDhisiOsU57OkFOONAP667Xwsb6RMIa1J3JlExhKf4pVP4vuT2CeDrDBeKnvGW2//jaYArNt/vo4Zb0tphFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712817494; c=relaxed/simple;
-	bh=mJ1CB+RoXP30bHck8GaTLhPwnlpSAOOixSCBOUxut7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tcaPmsS3nJHnr+SzGdHjTI9bnKd3q3jub1L2iJw8mIgUgFawdWB0IEnEhXpK1M233TgK6cF3+PdZz28FEzDl2/vT2P3uBxjOiMqI57QgQyvLOGW9urVraC2j6Wy95ZXGvN9V1n0DcJwyQc/jDBYLhZKyXrBSAhfEx8e18s3l0RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03237113E;
-	Wed, 10 Apr 2024 23:38:41 -0700 (PDT)
-Received: from [10.57.75.96] (unknown [10.57.75.96])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5DC63F766;
-	Wed, 10 Apr 2024 23:38:09 -0700 (PDT)
-Message-ID: <222ad2f9-6d0a-4183-82dc-a90ab71b6266@arm.com>
-Date: Thu, 11 Apr 2024 07:38:13 +0100
+	s=arc-20240116; t=1712823585; c=relaxed/simple;
+	bh=CM5IClqopNcJAcrNl8/qhU8tE/TWjfiY17ebMaV+c2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=a4pwGpKucydmmH7DprrXAQG8RCj14wDYu/LUDsavetK9zuy5ktz+osXiJQl96l3e7kS7Xx09JHI59plIB8HoE7u71378LSWla9VyPvIA9HxS4UYvV/mUgeefQXzMK8YDv+s7SH+rKNOPrWTgBXJIwMRNewOEFW7OBYt3rXxBoRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=p0gASETd; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="p0gASETd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Cc:Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=pV4wAKFJGjNV0VvjncX8Feh6Hp2U4aZAslaBjltzL/0=;
+	t=1712823583; x=1713255583; b=p0gASETdxS8FcFvut5NunRXg3P91PsGtqX7H8YtRqfBYzHg
+	0KAtrnOlk9K2z1ykugONP+NoB17S7pg46cdjJXgnLlOWnIxOZ4RksrWNb7bQ6a87ZedfT8WBdpmd+
+	kPpOgYmf39TwCHXr+WEOX2ls4jVEVMcOu+0fyyDSRgAGRtmvHkb5Pt5d7HI03xBrgq1TYW5JOsh2h
+	CHfbsPqjWtbVeFttdaFwCvUBO3y5W89GFMmV1SNJoI1/xR9xeFGi1cb/DC9EdJ8A+4obenFMiwfiA
+	9R6mmCORBg1uEh4bV6pZdEZ7b6DeVTuJ9wvcEBRA/qhPIxs/96s85RTNd0lWC3DA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rupen-0005Ey-MB; Thu, 11 Apr 2024 10:19:41 +0200
+Message-ID: <4e2ff80c-9e3f-433e-8783-cb9729c30bb2@leemhuis.info>
+Date: Thu, 11 Apr 2024 10:19:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -27,36 +39,43 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] gov_power_allocator: Allow binding before cooling
- devices
-Content-Language: en-US
-To: Nikita Travkin <nikitos.tr@gmail.com>, Leonard Lausen <leonard@lausen.nl>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru>
- <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
- <CAN_S-bXxKBjB5knjcUXW=rVwhCx0f1-pDMjmf9V9+ZLYSGZxvg@mail.gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAN_S-bXxKBjB5knjcUXW=rVwhCx0f1-pDMjmf9V9+ZLYSGZxvg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: 6.8.5 does not boot (regression)
+To: =?UTF-8?Q?Toralf_F=C3=B6rster?= <toralf.foerster@gmx.de>,
+ Linux Kernel <linux-kernel@vger.kernel.org>
+References: <3c6e6172-cf64-4230-bcc5-7682b4d64a8a@gmx.de>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>, Ard Biesheuvel <ardb@kernel.org>
+In-Reply-To: <3c6e6172-cf64-4230-bcc5-7682b4d64a8a@gmx.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712823583;730eabc9;
+X-HE-SMSGID: 1rupen-0005Ey-MB
 
-
-
-On 4/9/24 15:46, Nikita Travkin wrote:
-> вт, 9 апр. 2024 г. в 19:42, Leonard Lausen <leonard@lausen.nl>:
->>
->> Hi Nikita, Hi Łukasz,
->>
->> thank you for fixing the e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points earlier") and 912e97c67cc3 ("thermal: gov_power_allocator: Move memory allocation out of throttle()") regressions as part of v6.9-rc3. As the regression was introduced in v6.8, would it be possible to include the fix in a v6.8 patch release?
->>
+On 11.04.24 09:20, Toralf Förster wrote:
+> It is a remote system, nothing in the logs, system is a hardened Gentoo
+> Linux, 6.8.4 was fine.
 > 
-> Hi! I think these both have already been picked for stable:
+> Linux mr-fox 6.8.4 #4 SMP Thu Apr  4 22:10:47 UTC 2024 x86_64 AMD Ryzen
+> 9 5950X 16-Core Processor AuthenticAMD GNU/Linux
 > 
-> https://lore.kernel.org/r/20240408125314.939341866@linuxfoundation.org
-> https://lore.kernel.org/r/20240408125314.969670696@linuxfoundation.org/
+> Another Gentoo dev reported problems too.
 > 
+> config is below.
 
-Correct
+Thx for the report, but the harsh reality is: nearly no developer will
+see your initial report, as you just sent it to LKML, which nearly
+nobody ready. I CCed a few lists, which might help. But that is
+unlikely, as this could be cause by all sorts of changes. Which is why
+we likely need a bisection (
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+) from somebody affected to make some progress here.
+
+That being said: there are a few EFI changes in there that in a case
+like this are a suspect. I CCed the developer, maybe something rings a bell.
+
+Ciao, Thorsten
