@@ -1,81 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47442C695;
-	Sat, 13 Apr 2024 09:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83FE522A
+	for <regressions@lists.linux.dev>; Sat, 13 Apr 2024 10:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713001586; cv=none; b=havcTmPNpDFj1zWbXuiBl7p8iWfWdhUI+l1ueG5VOJUSgOsER9NHPeNOWacVFyG/mjVj2U3t1K98D8fjodvrAUHP3xZtPYBCWxAW87vAdUFXtN8s/2FYPgyrXgaKoGLlxxzze+PJL3nmpJ6HDxUvB5rxqai4VZlowstszVAG3Ag=
+	t=1713005369; cv=none; b=NBKbCq4P3bzBV0vQIE9yYfjDuFg1buyOF47YmCb4eloELG5DBJTuNT0WIHYTW4UzwHl9olR+q991vcv6KRopaueLZxgQYWbTHln0Ed3SDyoRyF6CK846zP7tvAEynzS/65K7ebOCELNlfGjyU9n2M5s2GbVeRWaoDY8ybUdX4QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713001586; c=relaxed/simple;
-	bh=Ztmw7mAa84lxMDMSs6zmz7G2+daGprxOSPZXS2TG924=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hjB0CP/hlCrHxaaWg+qs3FngdMS5LfMgFI8aIivns0EG4yHVnipPaasE9zjUGPYsVdoeN0bqcdGUBMc4/Oto5GFnglWeN5XsVXV5rW0Z/fId+JngQ4QJQIKxXAqHR2BG/2P234wu1aQOy2lp681k6LJjpxq/PA/xl/FApIKbyr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hrdbw6qr; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1713005369; c=relaxed/simple;
+	bh=8ikedhSJn26YGGIQUYARbenr5fQ6p+qp34A7xNOjONo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CEEljWQQXPo5sJcGzDY/e9NmPpR5wUCcLIcXhDnfQWkNw5PiP+V2ASr2/htnxw1AHmWY0ICztz89hsld17q9e7HCSeOVVtsKhYiWLEkFS+pW7tUmC0DU5WP0YzD4pTqa+NfJQR7XU+6Akt/9jZtw8ajSvvGNCVik8fiiyfrYHZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=pxpgdLKO; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hrdbw6qr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Ztmw7mAa84lxMDMSs6zmz7G2+daGprxOSPZXS2TG924=;
-	t=1713001584; x=1713433584; b=hrdbw6qrKTu7OI7uxBDeaLHakS53exA7oSFiK+JjEM1Fq9N
-	OW35y9h5Gp6BnJw+3SeEfSVSJonn1vj6M1hfEJEdZJCFwDYPrutRNMAhVom5VNJurdtw10zL2GH+6
-	VqqXsHZGi7iycWwCswb2am6EjBkC+lriD4KicaS144Wy5vJYQaO3QPvyqP8mLSs5xI5a4A9Ac3iIs
-	959noTFSBF50ex2F4cDWYUItekiCP6igE89SgjF7uS3m+d4js/17HqokYOYg7fYSjwqPTtmTSUH+F
-	L7IDhnZzRUefaMzIisYUypWcYa1BeWu5qcrVv+ortLDfoM9JZtIascm39kjplJxw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rvZxa-0000fw-CN; Sat, 13 Apr 2024 11:46:10 +0200
-Message-ID: <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
-Date: Sat, 13 Apr 2024 11:46:09 +0200
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="pxpgdLKO"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4VGqtk0Ylmz9sTJ;
+	Sat, 13 Apr 2024 12:49:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1713005358;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wRGrx20qaxTfTav8oY1WT1NLMhax9e4c1ieS3RFQnwU=;
+	b=pxpgdLKOYYVsr4/b3ezC7BU4ALFnYptXwo5EnikVmvVRywnQJUJXsNsj/sQ3BFM2ggg9Fc
+	zpp6ls4XvbqvIUtPc+Pqtro8P67Nm6o3Yeo3KdXFMy2jf1QZt0QZWuU5rJUp9rjwiiGRj+
+	02Y1zV/ANmRK+mtDH/OtSNMFxAD1N7z6D9cO3s0AEVzmYjRK4o3suI76065mEMXWr2qHQr
+	VuTkTUERVCG+GqMi+RKYnuF4hv+orhitWDHpE8EuosXSCTjqrYpkef3c+dat+HFIWrC4sP
+	QXMn0P0/1VQXjKMKtTk23fB3wbWBVf7KXgiugJjhk2FTv5lNpB3e7cdizpkOvw==
+Date: Sat, 13 Apr 2024 12:49:01 +0200
+From: Erhard Furtner <erhard_f@mailbox.org>
+To: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Bagas
+ Sanjaya <bagasdotme@gmail.com>, x86@kernel.org, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, jpoimboe@kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Breno Leitao <leitao@debian.org>
+Subject: Re: [bisected] Kernel v6.9-rc3 fails to boot on a Thinkpad T60 with
+ MITIGATION_RETHUNK=y (regression from v6.8.5)
+Message-ID: <20240413124901.7f1a8e51@yea>
+In-Reply-To: <68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
+References: <20240413024956.488d474e@yea>
+	<ZhpOIeVq1KQXzjBp@archie.me>
+	<68e3503c-5573-4d82-8fb0-5b955c212d67@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bisected] Kernel v6.9-rc3 fails to boot on a Thinkpad T60 with
- MITIGATION_RETHUNK=y (regression from v6.8.5)
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Erhard Furtner <erhard_f@mailbox.org>, x86@kernel.org,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- jpoimboe@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Breno Leitao <leitao@debian.org>
-References: <20240413024956.488d474e@yea> <ZhpOIeVq1KQXzjBp@archie.me>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZhpOIeVq1KQXzjBp@archie.me>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713001584;7c34a78a;
-X-HE-SMSGID: 1rvZxa-0000fw-CN
+X-MBO-RS-META: k3ssgyup1b4oybo1zmrkgh8m4j9pf3bb
+X-MBO-RS-ID: e16be028c3858998bcc
 
-On 13.04.24 11:19, Bagas Sanjaya wrote:
-> On Sat, Apr 13, 2024 at 02:49:56AM +0200, Erhard Furtner wrote:
->> Greetings!
->>
->> With MITIGATION_RETHUNK=y selected in kernel .config v6.9-rc3 fails to boot on my Thinkpad T60. The resulting kernel stalls booting at "x86/fpu: x87 FPU will use FXSAVE":
->> [...]
->> 4461438a8405e800f90e0e40409e5f3d07eed381 is the first bad commit
+On Sat, 13 Apr 2024 11:46:09 +0200
+"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info> wrote:
 
-There was an earlier report about this here:
-https://lore.kernel.org/all/78e0d19c-b77a-4169-a80f-2eef91f4a1d6@gmail.com/
+> On 13.04.24 11:19, Bagas Sanjaya wrote:
+> 
+> There was an earlier report about this here:
+> https://lore.kernel.org/all/78e0d19c-b77a-4169-a80f-2eef91f4a1d6@gmail.com/
+> 
+> Boris there suggested: "perhaps we should make
+> CONFIG_MITIGATION_RETHUNK depend on !X86_32":
+> https://lore.kernel.org/all/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
+> 
+> But that did not happen afaics. Would it be wise to go down that path?
+> 
+> Ciao, Thorsten
 
-Boris there suggested: "perhaps we should make
-CONFIG_MITIGATION_RETHUNK depend on !X86_32":
-https://lore.kernel.org/all/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
+Ah I see. Well in my case it's no old P4 heater but a not that ancient T2400 Intel Core Duo with 31W TDP. ;)
 
-But that did not happen afaics. Would it be wise to go down that path?
+But good to hear I would not need CONFIG_MITIGATION_RETHUNK anyhow? If that's the case depending on !X86_32 would make sense. Don't know whether the 32bit Intel Atoms (the only 'recent' X86_32 CPU left besides the Core Duo) would need this mitigation.
 
-Ciao, Thorsten
-
+Regards,
+Erhard
