@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EF717736;
-	Sun, 14 Apr 2024 06:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8DE1CFB2
+	for <regressions@lists.linux.dev>; Sun, 14 Apr 2024 07:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713076920; cv=none; b=cteiEkbI80xeCKhqFGJ3w7F5eb4GRx5P8B8rDko98PV9vzXWZRGPXrQEMXTQtbesNcr6Q+U5V4YUBhFIGPUxUa3iQLrA6N0AxciMXhtZXaN3rnY8m4yzikt5OwyxL4o9JaZtfy9iX7bjHqyq6ugY03dY1IcS1hD7Q6mCLly3aHw=
+	t=1713078088; cv=none; b=NtLPkSRddCIvQo8WYFf0Q1smL1OSoFcBTIEy3QFBwTvfUesSJ2PVYvZjcYJ942WOzjRuNC/4XriPfx3zoHiC6tSomEr5n9ICSD86Z0YhliPadwf8gunPmJx0dV/F542cVBnvUQJd3v0Uk8myz/mQrDJI1/Qs84wW4Q2c+jIFZoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713076920; c=relaxed/simple;
-	bh=NFH2xx83K4Ast9oEOtWQ3Ql3oIVUgdGR+WUbnII0wEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qYfxwMqmPIjv8uva7TU/kETm6t+iHkGKatTypW/ttszZWlMQRxYc2Zb9T3gXHLeJ4oXeeu/d5nluI6lY+wXq7Fl0CxEFkwFRaBnH7UlStOugGJPiTqx86aHcmJ94Roir+2dAom1OGvj+YsgTZ9p/tdKL9nwkhsupVY0/cXfHd64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=1UDELe4O; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1713078088; c=relaxed/simple;
+	bh=7TPbpwPVKtCkuaOVo9Us4jIkqSL8PxmA5PzTiKjRm6w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=A5FVhdzCvKBjMeuWZNF098kHK8gHTqpImVs2MajknvpqlkQ/Tu32K9c4hinDdNisv+HCe2OEGGirluX8VTIyJd6XXiX6i5Bid3jy1pejOid9lNI7c4KDDUV1xBO77XcIEwS+r8Ckzh731I/NgY95wgDjX4Afw8vYr8uVI1H8CMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=zL3zivfv; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="1UDELe4O"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="zL3zivfv"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=4OW3Mq0YXkIS63Euv+2zQYbER+KJH/Bt2ANqXEYmbf0=;
-	t=1713076917; x=1713508917; b=1UDELe4Olw4M0wwryo7fV7thmI2sB7vqkEJR14lBp5YOa89
-	z2jlU5YSQGyIsQJT8fM1dnTrT2O7NWHn1WrPzSH7D0u6vMBqN0jQdHcHiqdddEO580AoD9Yff+GmY
-	kjlQ3LLMzdUDMOemoWFrHJNoGy6IOeGx+yGCWrJGvbg/FkI/Gsy/MCBWNz2AoYm9p6REtCE76In2G
-	mkAMU29q3Blpr5ptDxGDLUrnRYYalTsl0nhaR2IRVUbdHmNLpmRWnDpLoynrfFnqFA+6imHnqUCye
-	EuSJMZ9/oWPpWCVGkOY0Iq9jqNyA5AXDdKJnsJwJ6acIENevyUJbqlGGg05NuwFg==;
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=7TPbpwPVKtCkuaOVo9Us4jIkqSL8PxmA5PzTiKjRm6w=; t=1713078086;
+	x=1713510086; b=zL3zivfvDRPEcw9t2E/2ttc+Z4XkYGZ2doq8Kn6ZNpG4TMIM3hH2OFUgZhbYh
+	dHhQZxDPOLuFmKvmxotHcu1UWh1/qZn6X9wf1Deensw7qw591f2QzsUTk9sUvA+jsiJqMq40WcIqB
+	zWhcyrfojLiGPqfbi5Q6r3kVSukpFwpLaU9eb5+icEd3Cjr0LynnJ2XFOniwwiCcyPebKspsloddK
+	H0bZ8HdAxLMABfi1bPQUx/DWDtI5dmtrm5Ns8RYfyHTl+kvaEGXE2RQ794uDwnUmTXmf2KNCvN9dF
+	m2am8O/8fmh8WfPedprXytjNe4T+7h0ohdW1XgH6CMCjVx2Zng==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rvtYn-0003u4-30; Sun, 14 Apr 2024 08:41:53 +0200
-Message-ID: <8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info>
-Date: Sun, 14 Apr 2024 08:41:52 +0200
+	id 1rvtrg-0007Ar-Ec; Sun, 14 Apr 2024 09:01:24 +0200
+Message-ID: <854a1d63-8e10-4214-92c4-e4dbf9726a92@leemhuis.info>
+Date: Sun, 14 Apr 2024 09:01:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,122 +39,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [linus:master] [x86/bugs] 6613d82e61:
- general_protection_fault:#[##]
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, kvm@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- kernel test robot <oliver.sang@intel.com>
-References: <202403281553.79f5a16f-lkp@intel.com>
- <20240328211742.bh2y3zsscranycds@desk>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-In-Reply-To: <20240328211742.bh2y3zsscranycds@desk>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713076917;06afded1;
-X-HE-SMSGID: 1rvtYn-0003u4-30
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713078086;164283e1;
+X-HE-SMSGID: 1rvtrg-0007Ar-Ec
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
 
-On 28.03.24 22:17, Pawan Gupta wrote:
-> On Thu, Mar 28, 2024 at 03:36:28PM +0800, kernel test robot wrote:
->> compiler: clang-17
->> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <oliver.sang@intel.com>
->> | Closes: https://lore.kernel.org/oe-lkp/202403281553.79f5a16f-lkp@intel.com
 
-TWIMC, a user report general protection faults with dosemu that were
-bisected to a 6.6.y backport of the commit that causes the problem
-discussed in this thread (6613d82e617dd7 ("x86/bugs: Use ALTERNATIVE()
-instead of mds_user_clear static key")).
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-User compiles using gcc, so it might be a different problem. Happens
-with 6.8.y as well.
+#regzbot report:
+https://lore.kernel.org/all/ZaQS5x-XK08Jre6I@smile.fi.intel.com/
+#regzbot introduced: f49449fbc21e7e9550a
+#regzbot summary: usb: gadget: u_ether: ether setup broken
 
-The problem occurs with x86-32 kernels, but strangely only on some of
-the x86-32 systems the reporter has (e.g. on some everything works
-fine). Makes me wonder if the commit exposed an older problem that only
-happens on some machines.
+#regzbot report: https://lore.kernel.org/all/ZhFl6xueHnuVHKdp@nuc/
+#regzbot introduced: d2689b6a86b9
+#regzbot summary: ax88179_178a assigns the same MAC address to all USB
+network interfaces
+#regzbot fix: net: usb: ax88179_178a: avoid writing the mac address
+before first reading
+#regzbot monitor:
+https://lore.kernel.org/all/20240410095603.502566-1-jtornosm@redhat.com/
 
-For details see https://bugzilla.kernel.org/show_bug.cgi?id=218707
-Could not CC the reporter here due to the bugzilla privacy policy; if
-you want to get in contact, please use bugzilla.
+#regzbot report: https://lore.kernel.org/all/20240413024956.488d474e@yea/
+#regzbot introduced: 4461438a8405e800f90e
+#regzbot duplicate:
+https://lore.kernel.org/all/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
+#regzbot summary: x86/retpoline: MITIGATION_RETHUNK causes boot problems
+on x86-32 machines
 
-Ciao, Thorsten
-
->> [   25.175767][  T670] VFS: Warning: trinity-c2 using old stat() call. Recompile your binary.
->> [   25.245597][  T669] general protection fault: 0000 [#1] PREEMPT SMP
->> [   25.246417][  T669] CPU: 1 PID: 669 Comm: trinity-c1 Not tainted 6.8.0-rc5-00004-g6613d82e617d #1 85a4928d2e6b42899c3861e57e26bdc646c4c5f9
->> [   25.247743][  T669] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
->> [ 25.248865][ T669] EIP: restore_all_switch_stack (kbuild/src/consumer/arch/x86/entry/entry_32.S:957) 
->> [ 25.249510][ T669] Code: 4c 24 10 36 89 48 fc 8b 4c 24 0c 81 e1 ff ff 00 00 36 89 48 f8 8b 4c 24 08 36 89 48 f4 8b 4c 24 04 36 89 48 f0 59 8d 60 f0 58 <0f> 00 2d 00 94 d5 c1 cf 6a 00 68 88 6b d4 c1 eb 00 fc 0f a0 50 b8
->> All code
->> ========
->>    0:	4c 24 10             	rex.WR and $0x10,%al
->>    3:	36 89 48 fc          	ss mov %ecx,-0x4(%rax)
->>    7:	8b 4c 24 0c          	mov    0xc(%rsp),%ecx
->>    b:	81 e1 ff ff 00 00    	and    $0xffff,%ecx
->>   11:	36 89 48 f8          	ss mov %ecx,-0x8(%rax)
->>   15:	8b 4c 24 08          	mov    0x8(%rsp),%ecx
->>   19:	36 89 48 f4          	ss mov %ecx,-0xc(%rax)
->>   1d:	8b 4c 24 04          	mov    0x4(%rsp),%ecx
->>   21:	36 89 48 f0          	ss mov %ecx,-0x10(%rax)
->>   25:	59                   	pop    %rcx
->>   26:	8d 60 f0             	lea    -0x10(%rax),%esp
->>   29:	58                   	pop    %rax
->>   2a:*	0f 00 2d 00 94 d5 c1 	verw   -0x3e2a6c00(%rip)        # 0xffffffffc1d59431		<-- trapping instruction
-> 
-> This is due to 64-bit addressing with CONFIG_X86_32=y on clang.
-> 
-> I haven't tried with clang, but I don't see this happening with gcc-11:
-> 
-> 	entry_INT80_32:
-> 	...
-> 	<+446>:   mov    0x4(%esp),%ecx
-> 	<+450>:   mov    %ecx,%ss:-0x10(%eax)
-> 	<+454>:   pop    %ecx
-> 	<+455>:   lea    -0x10(%eax),%esp
-> 	<+458>:   pop    %eax
-> 	<+459>:   verw   0xc1d5c700              <----------
-> 	<+466>:   iret
-> 
->>   31:	cf                   	iret
->>   32:	6a 00                	push   $0x0
->>   34:	68 88 6b d4 c1       	push   $0xffffffffc1d46b88
->>   39:	eb 00                	jmp    0x3b
-> ...
-> 
-> The config has CONFIG_X86_32=y, but it is possible that in 32-bit build
-> with clang, 64-bit mode expansion of "VERW (_ASM_RIP(addr))" is getting
-> used i.e. __ASM_FORM_RAW(b) below:
-> 
->   file: arch/x86/include/asm/asm.h
->   ...
->   #ifndef __x86_64__
->   /* 32 bit */
->   # define __ASM_SEL(a,b)         __ASM_FORM(a)
->   # define __ASM_SEL_RAW(a,b)     __ASM_FORM_RAW(a)
->   #else
->   /* 64 bit */
->   # define __ASM_SEL(a,b)         __ASM_FORM(b)
->   # define __ASM_SEL_RAW(a,b)     __ASM_FORM_RAW(b)   <--------
->   #endif
->   ...
->   /* Adds a (%rip) suffix on 64 bits only; for immediate memory references */
->   #define _ASM_RIP(x)     __ASM_SEL_RAW(x, x (__ASM_REGPFX rip))
-> 
-> Possibly __x86_64__ is being defined with clang even when CONFIG_X86_32=y.
-> 
-> I am not sure about current level of 32-bit mode support in clang. This
-> seems inconclusive:
-> 
->   https://discourse.llvm.org/t/x86-32-bit-testing/65480
-> 
-> Does anyone care about 32-bit mode builds with clang?
+#regzbot report:
+https://lore.kernel.org/all/878r1ibpdn.fsf@all.your.base.are.belong.to.us/
+#regzbot introduced: c604110e662a
+#regzbot summary: riscv32 EXT4 splat
