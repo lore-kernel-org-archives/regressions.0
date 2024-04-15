@@ -1,82 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4BA69949;
-	Mon, 15 Apr 2024 11:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BB41FA1;
+	Mon, 15 Apr 2024 12:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713181323; cv=none; b=mqt1cLFTLPQMRvLk8/J30L2OutcBq80LLHpGQ5P2ez8JA+Sw1lBuJoPsTEk2CaXYAsF63RTtNXoNczdP/+oc14xqd7s6fqPKGVcZBSMmUDK1fxOEDbqSlcD+jD7w45hWgPgJho2Wdh3ZsaU/mMIC3OgLTNsKGkFsquYO9ZtHPa0=
+	t=1713184264; cv=none; b=ikY2jOCXWEqLyNN3zAS2ZH/y2QLqKMP2n0312QK53V/Lp6scPUrUL/OPjC+DmgXzBxyoHyDLDZfbMaPFlM+RhTsf4JLHPFsCIrEGeh/rt/83WF1CsFKMdUHxaLaYqNGxhEDdbIKGaHXuVqrhN8xW4NXV1+MhYqmX8rJ2YiV/LT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713181323; c=relaxed/simple;
-	bh=Y/Z03HT8kD26aOsWCeyihLa23jj60o45j3+7UDz7iNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QPRrVoL1svCqWd6csWkso5kOQER01IA/rb37jklV7yEIIvR3+2O8LGyjVjml8P2OUfyO/bd4g5eBsPAfsyTO529X/GI/bQMMIWIXI76azT9nfzP9NH+bJUtaGfr2QMrtAxeEtsu05xM5TjC1/diCYhSluT270JPxda5I4/hgzOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8esOm+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713184264; c=relaxed/simple;
+	bh=bPep+N9XIwW1XB+4tjXi7DEWWpImBvt7KLF6vBWpfKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o/AIYZFxi/WUIMQTE3dWxJHo2OKq7be7Ujwd6vATXF/kiHhXhYtLogz7ULEp8bvGeYgA1KtF2hMk2rTsmagYSTfkMFW1QlllRAEHyCEBGTNHUOFvyRis9Elx4HE1KEINhmaRiam52gUICt8MIfEWyUEcDc5zIXyv81xzgJHi/nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=uaUeMkCI; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8esOm+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25FF4C113CC;
-	Mon, 15 Apr 2024 11:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713181323;
-	bh=Y/Z03HT8kD26aOsWCeyihLa23jj60o45j3+7UDz7iNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L8esOm+EdLcri3WuHVbCnk6FGeKIJaXsmv384kNL1QT+SRK5CVyxw4WD5DA7QERLk
-	 ROlWarRIE19j8zCVbpPJdOv8Ih+HdYpQMDbLCI3w7U6ry/Mykat6Iq92qcCnd/oYVm
-	 yuVMvIZaYD4hbvqEbDca7ihZUk4nwq3yDIrtBHnIp9FEiKHGX9dM7fY3gituXpkU/B
-	 RV7BKiNHdKXWgsLLOIO6b/VHVceWuN0QpwdBnLNEdjIsiueqcRTmZSj7saHBHWs4MW
-	 gE9QMHA2le2UM1zgmoOC/H2xRM8rWY8tFTSCJ8BvMi95oSTBNDBz/+ri5BUb6PMTy+
-	 +JabH/2Aof2Ew==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rwKin-00000000809-0e8X;
-	Mon, 15 Apr 2024 13:42:01 +0200
-Date: Mon, 15 Apr 2024 13:42:01 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Anton Altaparmakov <anton@tuxera.com>
-Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Christian Brauner <brauner@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	"ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-	Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-	"linux-ntfs-dev@lists.sourceforge.net" <linux-ntfs-dev@lists.sourceforge.net>
-Subject: Re: [PATCH 2/2] ntfs3: remove warning
-Message-ID: <Zh0SicjFHCkMaOc0@hovoldconsulting.com>
-References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
- <20240325-faucht-kiesel-82c6c35504b3@brauner>
- <ZgFN8LMYPZzp6vLy@hovoldconsulting.com>
- <20240325-shrimps-ballverlust-dc44fa157138@brauner>
- <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
- <b0fa3c40-443b-4b89-99e9-678cbb89a67e@paragon-software.com>
- <Zhz5S3TA-Nd_8LY8@hovoldconsulting.com>
- <Zhz_axTjkJ6Aqeys@hovoldconsulting.com>
- <8FE8DF1E-C216-4A56-A16E-450D2AED7F5E@tuxera.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="uaUeMkCI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=StS4x0S3//04l7wNyiAlQ2KElGTWLVjD4MZApYb4baA=;
+	t=1713184260; x=1713616260; b=uaUeMkCI+6lJ+Bywz0JGb7PBEJwH35F/1ao/Wtb4I25MzA6
+	aekZmpzm2FwBSYyseiVRxRURMQi+5UH/gmoeO5vWz4UQRhd5XdFiMlHWnvhKWKhGBW4gqR8zUoNku
+	j0Nu2Es1ZCUmG18zgrrgEfNYmRHQAd7HnATrpjAwp/SbPQwhioxm7MqKE4Sm/yp6ULk2nCDJqnVX1
+	80w4Q7VdISCFmRf3L/kxcRlZMQhjerPb5YwxN+2zil/G7V16cRGixxGz1at8pT8GaMB7vLgyDTWmx
+	VYYvjyGQYiPBVzikv9xef2qApLNbn6NhAiJefjteHQAnmWEPD/uIUwTt3KkpbzOg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rwLU4-0001A5-KM; Mon, 15 Apr 2024 14:30:52 +0200
+Message-ID: <5c0ce057-992b-4200-bb74-b84826974860@leemhuis.info>
+Date: Mon, 15 Apr 2024 14:30:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8FE8DF1E-C216-4A56-A16E-450D2AED7F5E@tuxera.com>
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] [PATCH] Bluetooth: btusb: Add support Mediatek MT7920
+To: =?UTF-8?B?RGVyZW4gV3UgKOatpuW+t+S7gSk=?= <Deren.Wu@mediatek.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ =?UTF-8?B?UGV0ZXIgVHNhbyAo5pu554+G5b2wKQ==?= <Peter.Tsao@mediatek.com>,
+ "mike@fireburn.co.uk" <mike@fireburn.co.uk>
+Cc: "marcel@holtmann.org" <marcel@holtmann.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ =?UTF-8?B?Q2hyaXMgTHUgKOmZuOeomuazkyk=?= <Chris.Lu@mediatek.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
+ =?UTF-8?B?U3RldmUgTGVlICjmnY7oppboqqAp?= <steve.lee@mediatek.com>,
+ Sean Wang <Sean.Wang@mediatek.com>, =?UTF-8?B?QWFyb24gSG91ICjkvq/kv4rku7Ap?=
+ <Aaron.Hou@mediatek.com>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>
+References: <20240304144844.2042-1-peter.tsao@mediatek.com>
+ <20240401144424.1714-1-mike@fireburn.co.uk>
+ <CAHbf0-FqUqoDty81OH9_Et7MTWFikYYhEvP7SBVGyeXO-R94_A@mail.gmail.com>
+ <2d822b6c-8b55-443d-ad9e-03e97ce7b99b@leemhuis.info>
+ <11f098c7cc3a063fd20c02f1a66372e3444cb272.camel@mediatek.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <11f098c7cc3a063fd20c02f1a66372e3444cb272.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713184260;30b9f5a3;
+X-HE-SMSGID: 1rwLU4-0001A5-KM
 
-On Mon, Apr 15, 2024 at 11:32:50AM +0000, Anton Altaparmakov wrote:
+On 05.04.24 11:15, Deren Wu (武德仁) wrote:
+> 
+> Thanks for the note. We are looking for solution for this issue. Peter
+> would post the new patch. :)
 
-> Had a look at ntfs3 code and it is corrupting your volume.  Every such
-> message you are seeing is damaging a file or directory on your volume.
+Anyone still working on this, as that afaics did not happen -- or was
+there progress and I just missed it?
 
-That's what I feared, thanks for confirming.
- 
-> I would personally suggest you modify your /etc/fstab to mount
-> read-only.  If it is getting simple things like this wrong who knows
-> what else it is doing incorrect...
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-I fully agree and that's partly also why I asked Christian to make sure
-that the alias fs type is always mounted RO.
+#regzbot poke
 
-But it seems we have a bigger problem here and should just restore the
-old ntfs driver for now.
-
-Johan
+> On Fri, 2024-04-05 at 10:34 +0200, Linux regression tracking (Thorsten
+> Leemhuis) wrote:
+>> [CCing the regression list, as it should be in the loop for
+>> regressions:
+>>
+> https://urldefense.com/v3/__https://docs.kernel.org/admin-guide/reporting-regressions.html__;!!CTRNKA9wMg0ARbw!n9OQDQtfMiQdddzNLvMEOMLnnEHhw12KRY5W5YPscQJTiNQtuIVuJufNc2UYpy-rUlRtMUwZsL5NDERIf1CoGox8J2I$
+>>  ]
+>>
+>> On 01.04.24 17:20, Mike Lothian wrote:
+>>> On Mon, 1 Apr 2024 at 15:44, Mike Lothian <mike@fireburn.co.uk>
+>>> wrote:
+>>>>
+>>>> I think this patch is causing issues with older firmware
+>>>>
+>>>> Bus 003 Device 002: ID 13d3:3563 IMC Networks Wireless_Device
+>>>>
+>>>> [    0.315064] Bluetooth: Core ver 2.22
+>>>> [    0.315064] NET: Registered PF_BLUETOOTH protocol family
+>>>> [    0.315064] Bluetooth: HCI device and connection manager
+>>>> initialized
+>>>> [    0.315064] Bluetooth: HCI socket layer initialized
+>>>> [    0.315064] Bluetooth: L2CAP socket layer initialized
+>>>> [    0.315064] Bluetooth: SCO socket layer initialized
+>>>> [    4.670811] Bluetooth: RFCOMM TTY layer initialized
+>>>> [    4.671029] Bluetooth: RFCOMM socket layer initialized
+>>>> [    4.671790] Bluetooth: RFCOMM ver 1.11
+>>>> [    4.673416] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+>>>> [    4.673659] Bluetooth: BNEP filters: protocol multicast
+>>>> [    4.673895] Bluetooth: BNEP socket layer initialized
+>>>> [    4.674125] Bluetooth: HIDP (Human Interface Emulation) ver
+>>>> 1.2
+>>>> [    4.674360] Bluetooth: HIDP socket layer initialized
+>>>> [    5.016365] bluetooth hci0: Direct firmware load for
+>>>> mediatek/BT_RAM_CODE_MT7961_1a_2_hdr.bin failed with error -2
+>>>> [    5.017163] Bluetooth: hci0: Failed to load firmware file (-2)
+>>>> [    5.017557] Bluetooth: hci0: Failed to set up firmware (-2)
+>>>> [    5.018129] Bluetooth: hci0: HCI Enhanced Setup Synchronous
+>>>> Connection command is advertised, but not supported.
+>>>>
+>>>> The correct name should be
+>>>> mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
+>>>>
+>>>> Reverting this patch fixes things
+>>>
+>>> If it helps, the device ID is 0x7961 and the fw_flavour is 24 or
+>>> 0x18 in hex
+>>
+>> Thanks for the report!
+>>
+>> Peter, did you look into this?
+>>
+>> Anyway: To be sure the issue doesn't fall through the cracks
+>> unnoticed,
+>> I'm adding it to regzbot, the Linux kernel regression tracking bot:
+>>
+>> #regzbot report:
+>>
+> https://lore.kernel.org/all/20240401144424.1714-1-mike@fireburn.co.uk/
+>> #regzbot introduced: 1cb63d80fff6c4
+>> #regzbot title: net: Bluetooth: firmware loading problems with older
+>> firmware
+>> #regzbot ignore-activity
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+>> hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>>
+> https://urldefense.com/v3/__https://linux-regtracking.leemhuis.info/about/*tldr__;Iw!!CTRNKA9wMg0ARbw!n9OQDQtfMiQdddzNLvMEOMLnnEHhw12KRY5W5YPscQJTiNQtuIVuJufNc2UYpy-rUlRtMUwZsL5NDERIf1CoQcaol0s$
+>>  
+>> That page also explains what to do if mails like this annoy you.
