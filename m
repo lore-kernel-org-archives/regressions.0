@@ -1,251 +1,276 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2084.outbound.protection.outlook.com [40.107.94.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E191D5676C;
-	Sun, 14 Apr 2024 14:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713104871; cv=none; b=mrTOpSWYO+xwLY8cJsYVA4ILdKrWHynKD6+RZkbHQIIiACw6dIvU7bc4SEJOoySTzKLBVSEvCmPPepURNVh+K3ZiH0rFBuZZASxFcLb3uFnbeppJTP21iu8/wXno9vB7f6+Dok3aEyl6QoK/9yHIATeTtt2cxbwvbYGP8YwKr9E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713104871; c=relaxed/simple;
-	bh=z4aLvt7q8tSe/OIe9vHd9wJf/Uuidx0NIGNLsafAqUU=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GxhbCC2+fEN2kTSnd7hGK3jOrlGYirBkqK8CJXWwxyGfak1M7EUSrHFXJSiZpizmYLM3U7GMGyDD9P/cJAUd5dshsCCUAQRp7jnxoPVEpvwxgUmaYlEqORnXNd7HBX4gu9Bb+F9zWN/H8YG+jcq7DxOwBKcm3vvp8OXpA6scnLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=f84NdA/Y; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443F117547
+	for <regressions@lists.linux.dev>; Mon, 15 Apr 2024 02:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713149728; cv=fail; b=sRxrGlLH/aMI9Scc815lmpCCFNSAL66+46ZBb84nL5kfI3g9okt6EpOSrS3P1/wjcLFwBc1lNN2/Ki1QHMk2+Md3W2L5rw4+yUW56P3VRCqhzgHwMAtLAwMtbQ30XNn2ad3e0jl07Gw0BgBwx6CF0KxdATkwmzLZwOHRK8VZMBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713149728; c=relaxed/simple;
+	bh=4xlSS8Fhd1GduCaKV34U3Fnfu8qGcq/89Ptb0zVaMlg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=harg/HyQPV/23wFOxMX8xclGmR8+T6irJjWIByCrUq6Gv+uS+T6UEC3Gg63eKyto7bK6muLTasz58eaFU/ODX8ZV8W9HOrapzoXo1Vvl/qid5fL151aOkFpiZ/Jw+5EXXlF7rQMR2YYql/V5HRRxeHNuQU5GXuHJyCp8gC1LEfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZlyF/6qM; arc=fail smtp.client-ip=40.107.94.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="f84NdA/Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=4gXMPa8PREdyg93Q7us+EJbOTVwOtJx791ddFFgUgPc=; t=1713104869; x=1713536869;
-	 b=f84NdA/YDZDk7wCrFZ1Mp092tF+nmWAU1BxPg0KoVJ+V8BBQqTt3qN5J1FJWfjwG+9lNNJoek6
-	P20ZMcc6f0AzRvrdWIf3HPWRVOnWEQ4MEfayV0r4Gh9u2TTGn38aCpIOLgh7M8G4u6k7V9TKLj6jp
-	sEnGOJ3dnmobXZw8FaTVO+g8IJwSotKWhqAiG+nkfItze0FNNTkc0y7uU/gCdpSiDaZMyeguK73X5
-	zfPW2P/Du8T4n/45/Cbkf04QqKa7dlfg/5liPw5yJ/oLJUByqdqx5kE8FcWmBaO8xPVLN54QnvErV
-	jbZn4UNQVd9fjuyHkJ8wqeqbP7FLvI1LhSgbg==;
-Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1rw0pY-0002rH-IO; Sun, 14 Apr 2024 16:27:40 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2024-04-14]
-Date: Sun, 14 Apr 2024 14:27:39 +0000
-Message-ID: <171310482077.3453606.17735678473578439767@leemhuis.info>
-X-Mailer: git-send-email 2.44.0
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZlyF/6qM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Du2QOoM7ZupXW46t6dlIdTI8lTH3IZl9PQjuShfekOS53+FBc0dFg+mn/egpHHzwhtopyPCdNTs+ByYMj/KBsyb4ZZUs+0pgG8dFSEZKbFgv3s9LFqC5zFH5ATmsZ3Ihqnw0W6Co+1tXAHiFyc57KcNqDuUcDbPNVEsXT1z0miV2fb6Sqrk+R3okYp2tYNuIX2LIB9JKbDtMa1c2AYcpd3t0Iui6FDWVx6t2NPYSm+cMOAtcEzfsnt7F7bAYvgZjpArDA2hQBWOhaf25HDoKFThsi7qjBWg5X7UGZAo0IVcQz6v4h86wqapYtiyi7EO9+3JYhqNCH25iLtlq8rYTlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7s/HltqpHS/Qkje3eHew2tML4hxTS8b72M4Y8XswspY=;
+ b=nY4PpfsmGvCSh3ijkxdGZRUcjBO/OSGwU5S/8sOO5VlFaiCObps6L3cPcU8IDhtiVIMUunC+gPRyLZ27l6abnGpH3v5N48Yu38Qos60FF3meZuYF3KhwkX4MvMZMBGsYffF04ziLKvILymExSTFIE0YxL6CuYlFVxg32k97tCDxg73uKGORw9j6ecEQRkI2VYe9QWDOMCdK5kzkWgx/P3mnryOsbWLWUIhzGl2odnNi35zCVtfgl0Qm/z5lP5I/oVH1Y5gCCxmhs2M8G+9hU8aYv3v7cTgeeuh+JdNrJ6tuLyqWB9HxCiog1g0f/qhNYsZyW+c8ME9m8dFtpQPVBCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7s/HltqpHS/Qkje3eHew2tML4hxTS8b72M4Y8XswspY=;
+ b=ZlyF/6qMmeOm2aV14Q9AGHM8krVaGQtOJJAB393UIiMjvtkNjUQNjVJ+9JHH64bhOk3/I1/esLF8LZCI55NoD6TZAhzTOqP7Y9EJGneCx3jw65/dc9Zozz8zrF28q04EHjtU/2bZDcVpjK9QKKtf3Inb4JrgrL5rGoVnHiOCslY=
+Received: from CO6PR12MB5489.namprd12.prod.outlook.com (2603:10b6:303:139::18)
+ by CH3PR12MB7692.namprd12.prod.outlook.com (2603:10b6:610:145::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.43; Mon, 15 Apr
+ 2024 02:55:22 +0000
+Received: from CO6PR12MB5489.namprd12.prod.outlook.com
+ ([fe80::5f4:a2a9:3d28:3282]) by CO6PR12MB5489.namprd12.prod.outlook.com
+ ([fe80::5f4:a2a9:3d28:3282%4]) with mapi id 15.20.7452.049; Mon, 15 Apr 2024
+ 02:55:22 +0000
+From: "Lin, Wayne" <Wayne.Lin@amd.com>
+To: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+CC: "lyude@redhat.com" <lyude@redhat.com>, "Wentland, Harry"
+	<Harry.Wentland@amd.com>, "imre.deak@intel.com" <imre.deak@intel.com>,
+	=?iso-8859-1?Q?Leon_Wei=DF?= <leon.weiss@ruhr-uni-bochum.de>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "jeffm@suse.com"
+	<jeffm@suse.com>
+Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
+ drm_dp_add_payload_part2
+Thread-Topic: [PATCH] drm/mst: Fix NULL pointer dereference at
+ drm_dp_add_payload_part2
+Thread-Index: AQHacFj2giCMd8JLWkW3Q37cghjqLbFo35Af
+Date: Mon, 15 Apr 2024 02:55:22 +0000
+Message-ID:
+ <CO6PR12MB5489CA20D64BF9E38FE6CC5FFC092@CO6PR12MB5489.namprd12.prod.outlook.com>
+References: <20240307062957.2323620-1-Wayne.Lin@amd.com>
+In-Reply-To: <20240307062957.2323620-1-Wayne.Lin@amd.com>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=True;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2024-04-15T02:55:21.151Z;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=0;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO6PR12MB5489:EE_|CH3PR12MB7692:EE_
+x-ms-office365-filtering-correlation-id: 14ddaacb-be0f-4df0-048b-08dc5cf77e0d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ lOkatgVjWG0TDArACfUeFyqWjytl7SGpfddbSQLmVaREvFgxnYLxRv/vbmIWL+QptV3wAFT70n9x1LvBDQrzJCHk4fA2qZDXPvRjqI2qMNxIHiR/rmoaGZFOl0vfkKaFHG/VlRE/NwsbvPji6ggLXXI9Pwwsmz+bT9ko9Svpo7RvSThy15y9nXh9uP4e2T88Xqmtk7YnUIz+krfOJOOfdplaMmbK1Ojpm3EJk+l1cqExXLTsHXktsI7gv3BBzD4iXZl/QpWpbolbasl6jnKh1Ns6TzYEpDZxJDlQJKKFf+Suyx74CgoSaY8/VYDGqA2YM19o7sGQIoUy/aDCbmT9cKavgvffcxmDfhKqhFilpnWYDgUgNaF67uTmvy3ZXQd0WzfSHXT9twXuLKjnVCGxlieOY6/7kid9p1M2497ELoox+sL5cimHDH0FkRwWz3c0zrmomfmoGGjfatmcvCq45m0XBmy+fMFGpsevX9hrbR+pMEonQwpUmYrPDhHoCsz31Nt3zI58abdMLDxNpqTlW0I+onxeaeV4eL8dGwooP3OQazz/RjFBD0662gAVX8oalEeui/UQwlNe5rw6S7kE7Gd2P/crBWYQkTkYWvjOxnFucEVMzbVB5jBQX3P9cYcxpYSlXN99fLfLLxIj7pvl0uX/AltwWxlfcfokaCLjjITkKNzddQi7ZxHtLEs01zRuMHzT75o5rqdzbV6/0cpoK2IfzgVq1jw0ItJkrRQlcX4=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5489.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?5Q01Q5Bab/EXyuO4wug5omcw2g+UvezrEAX9hNyf/A5lqZtgt10oJ3HPKz?=
+ =?iso-8859-1?Q?lO+i7pvQZxeQKBnAa/vCBQP235Jw3jvgxWCMbKNXZl+6WB4UZVe9Dthy1Q?=
+ =?iso-8859-1?Q?xvcjxOJ8Hxuq5cv5AwT0+LUUSaGpcSHKAsQyUn9oBlDnWX7sURqkfXlAbH?=
+ =?iso-8859-1?Q?ienb3VoWo87lbshmjHkf5eJKOsErEIy3C8amcWfN7q3rMgJKLDvZ9gHhpn?=
+ =?iso-8859-1?Q?bEReltFBvKwtfsg9GXimh+JRPtUWNUD3+A8frSgVG8x8JOXFE6+esBSUtK?=
+ =?iso-8859-1?Q?N3wsIYXvyd13AggxCFl1TVaxmnl7pkJSS7a63kskNF8gzYR0MzF53es+sB?=
+ =?iso-8859-1?Q?0DorjrplHZvOm8D9WsZCRZqE4kWsmm/L7WiWKpoD/kMdQMDT6Iz57SWmMw?=
+ =?iso-8859-1?Q?eRt/Knh4LH/qu9Y+rwKv2pbkkXOg1Uck0SJT3oEwQdU4VTqxdqjttAkj8K?=
+ =?iso-8859-1?Q?4vt0lnWQewmYnZuVSfSUm4Uoa9JEORkg2MrPCEs4ahl0JsrjPuPC+QL/rU?=
+ =?iso-8859-1?Q?g3/Lx5Xo3KHtA437nR28fpqRBas4jzmoXJYWD4AjOfTR/GBRLwwq00HjNr?=
+ =?iso-8859-1?Q?3bUbHN6QWNIs9lZsqm908skKnCVawfGx4B97nNJKYR3AjwS3T/L8SbvKIe?=
+ =?iso-8859-1?Q?re8N9dFX6iQZg12ZP7qeqG2z2WpEd7rW7WpYEQfj08LGD7p989Gvc4p+a7?=
+ =?iso-8859-1?Q?J+Xez0u10Y0il+/OAH+wshVxf3OzrMC3RigEZ2SQSMvBlEmFpAqdWKdmfn?=
+ =?iso-8859-1?Q?Q0e02XPoSWMGmbkBJnhxUUxjT8c+yht2PmQAVtKrUsYK4jYS2YAbH23suZ?=
+ =?iso-8859-1?Q?ROoA7+yHdSr2aGKX9HB5arHLfda2lH49kiuk4YdsMpXWQM30ah71BGou14?=
+ =?iso-8859-1?Q?BJNSbLp5NhIU33z+c40NNUcw+wXXiCJG4ZtF7/0UAC6yFRlNkx8PW3gj+2?=
+ =?iso-8859-1?Q?YM2G9Gzo9VqX+Vvt9j3niAh9Fndjo6XWauTTuGeTQPssJ5RRz5mMB9xWhI?=
+ =?iso-8859-1?Q?a0O2rcRmPqW2Z5Aefyq2Pe7I+r/5TCRmW95zhHt2pPP0lws6sZNWqsPTkT?=
+ =?iso-8859-1?Q?jZ3DnJAa2U0yrd7+GH8z/vz1HMpMvU+TcX2fZseAWspKto++2NRXvDMkEE?=
+ =?iso-8859-1?Q?6jqeNAzwJM1uimtwOA+txQ5/oQQsjvG9ayOfPBrfcbvbdE6q4oOt7vPGxp?=
+ =?iso-8859-1?Q?O80CJxDLqycBjblUpXQycKUXVQzgqBDKnpEKRL/71YMlYYFkeAf4CCN4cN?=
+ =?iso-8859-1?Q?Vvw1sDA5xb6sCiN0CzlmYLUxKF3BNYJODGC13VXCjOmywVQvMZ/3OIwntd?=
+ =?iso-8859-1?Q?ip4XEVaX3FaE0qZdpBLKdpYlemooqFIk79+V4Pd87aS4+7Ue1ztvleHzlI?=
+ =?iso-8859-1?Q?jUBg/F6UtYe4EKNAKws8qDekA4Ltup8VyZhc8IRcHF6mIUfJwio+jo7Cgv?=
+ =?iso-8859-1?Q?SU9JZErxRau2B7YGJFFYnoa9xFB5dO3y0r7Et4BW4CpovW3cKu2mxndFT3?=
+ =?iso-8859-1?Q?ROx/yIvoeDeWZJvQ4XiOBpUCzRJfL1Q/drEGSarI6uHXRffKTqwHr8WXWZ?=
+ =?iso-8859-1?Q?2xlfpKHRVTYHSmMJGgrnO5gY2HQck0wpIwTg9A3LvHDKDgwCrGUmfujECc?=
+ =?iso-8859-1?Q?vrXn+Uom1b6ow=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713104869;64f8bb31;
-X-HE-SMSGID: 1rw0pY-0002rH-IO
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5489.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14ddaacb-be0f-4df0-048b-08dc5cf77e0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2024 02:55:22.0902
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lZLfBKVOcSaeCAUzhQIsHpCMVLfoVXYH54BWlGqkkcBF+E2DAV5f2BUt0GhY2emHAXrhw/XgQc9Eyk5KHknjXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7692
 
-Hi Linus, here is the weekly regressions report. Nothing worth
-highlighting afaics. There is a BT regression that is not making
-progress I'll prod tomorrow.
+[Public]
 
-The biggest problem maybe worth mentioning are some fs/9p problems Eric
-Van Hensbergen is trying to get a hold on for a few days now[1]. Maybe
-Eric might send a big revert during next weeks if a fix does not come
-into reach.
+Ping for code review. Thanks!
 
-[1] https://lore.kernel.org/all/?q=f%3AHensbergen, e.g.
-https://lore.kernel.org/all/CAFkjPTnn+Oc55hNg3B_aDE7=0bm2AHJRW5wpksA4N-QiutPGpw@mail.gmail.com/
-https://lore.kernel.org/all/CAFkjPTnn+Oc55hNg3B_aDE7=0bm2AHJRW5wpksA4N-QiutPGpw@mail.gmail.com/
+Regards,
+Wayne
 
-Ciao, Thorsten
+________________________________________
+From: Wayne Lin <Wayne.Lin@amd.com>
+Sent: Thursday, March 7, 2024 14:29
+To: dri-devel@lists.freedesktop.org; amd-gfx@lists.freedesktop.org; intel-g=
+fx@lists.freedesktop.org
+Cc: lyude@redhat.com; Wentland, Harry; imre.deak@intel.com; Lin, Wayne; Leo=
+n Wei=DF; stable@vger.kernel.org; regressions@lists.linux.dev
+Subject: [PATCH] drm/mst: Fix NULL pointer dereference at drm_dp_add_payloa=
+d_part2
+
+[Why]
+Commit:
+- commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/r=
+emovement")
+accidently overwrite the commit
+- commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in drm_dp_add_payl=
+oad_part2")
+which cause regression.
+
+[How]
+Recover the original NULL fix and remove the unnecessary input parameter 's=
+tate' for
+drm_dp_add_payload_part2().
+
+Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/rem=
+ovement")
+Reported-by: Leon Wei=DF <leon.weiss@ruhr-uni-bochum.de>
+Link: https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.ca=
+mel@ruhr-uni-bochum.de/
+Cc: lyude@redhat.com
+Cc: imre.deak@intel.com
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
 ---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 +-
+ drivers/gpu/drm/display/drm_dp_mst_topology.c             | 4 +---
+ drivers/gpu/drm/i915/display/intel_dp_mst.c               | 2 +-
+ drivers/gpu/drm/nouveau/dispnv50/disp.c                   | 2 +-
+ include/drm/display/drm_dp_mst_helper.h                   | 1 -
+ 5 files changed, 4 insertions(+), 7 deletions(-)
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/dr=
+ivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+index c27063305a13..2c36f3d00ca2 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -363,7 +363,7 @@ void dm_helpers_dp_mst_send_payload_allocation(
+        mst_state =3D to_drm_dp_mst_topology_state(mst_mgr->base.state);
+        new_payload =3D drm_atomic_get_mst_payload_state(mst_state, aconnec=
+tor->mst_output_port);
 
-Currently I'm aware of 10 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+-       ret =3D drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, ne=
+w_payload);
++       ret =3D drm_dp_add_payload_part2(mst_mgr, new_payload);
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+        if (ret) {
+                amdgpu_dm_set_mst_status(&aconnector->mst_status,
+diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/dr=
+m/display/drm_dp_mst_topology.c
+index 03d528209426..95fd18f24e94 100644
+--- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+@@ -3421,7 +3421,6 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
+ /**
+  * drm_dp_add_payload_part2() - Execute payload update part 2
+  * @mgr: Manager to use.
+- * @state: The global atomic state
+  * @payload: The payload to update
+  *
+  * If @payload was successfully assigned a starting time slot by drm_dp_ad=
+d_payload_part1(), this
+@@ -3430,14 +3429,13 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
+  * Returns: 0 on success, negative error code on failure.
+  */
+ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
+-                            struct drm_atomic_state *state,
+                             struct drm_dp_mst_atomic_payload *payload)
+ {
+        int ret =3D 0;
 
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+        /* Skip failed payloads */
+        if (payload->payload_allocation_status !=3D DRM_DP_MST_PAYLOAD_ALLO=
+CATION_DFP) {
+-               drm_dbg_kms(state->dev, "Part 1 of payload creation for %s =
+failed, skipping part 2\n",
++               drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s fa=
+iled, skipping part 2\n",
+                            payload->port->connector->name);
+                return -EIO;
+        }
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/=
+i915/display/intel_dp_mst.c
+index 53aec023ce92..2fba66aec038 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -1160,7 +1160,7 @@ static void intel_mst_enable_dp(struct intel_atomic_s=
+tate *state,
+        if (first_mst_stream)
+                intel_ddi_wait_for_fec_status(encoder, pipe_config, true);
 
+-       drm_dp_add_payload_part2(&intel_dp->mst_mgr, &state->base,
++       drm_dp_add_payload_part2(&intel_dp->mst_mgr,
+                                 drm_atomic_get_mst_payload_state(mst_state=
+, connector->port));
 
-======================================================
-current cycle (v6.8.. aka v6.9-rc), culprit identified
-======================================================
+        if (DISPLAY_VER(dev_priv) >=3D 12)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouv=
+eau/dispnv50/disp.c
+index 0c3d88ad0b0e..88728a0b2c25 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -915,7 +915,7 @@ nv50_msto_cleanup(struct drm_atomic_state *state,
+                msto->disabled =3D false;
+                drm_dp_remove_payload_part2(mgr, new_mst_state, old_payload=
+, new_payload);
+        } else if (msto->enabled) {
+-               drm_dp_add_payload_part2(mgr, state, new_payload);
++               drm_dp_add_payload_part2(mgr, new_payload);
+                msto->enabled =3D false;
+        }
+ }
+diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/=
+drm_dp_mst_helper.h
+index 9b19d8bd520a..6c9145abc7e2 100644
+--- a/include/drm/display/drm_dp_mst_helper.h
++++ b/include/drm/display/drm_dp_mst_helper.h
+@@ -851,7 +851,6 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology=
+_mgr *mgr,
+                             struct drm_dp_mst_topology_state *mst_state,
+                             struct drm_dp_mst_atomic_payload *payload);
+ int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
+-                            struct drm_atomic_state *state,
+                             struct drm_dp_mst_atomic_payload *payload);
+ void drm_dp_remove_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
+                                 struct drm_dp_mst_topology_state *mst_stat=
+e,
+--
+2.37.3
 
-
-workqueue: nohz_full=0 prevents booting
----------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218665/
-https://bugzilla.kernel.org/show_bug.cgi?id=218665
-https://lore.kernel.org/lkml/5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info/
-
-By Friedrich Oslage and Friedrich Oslage; 14 days ago; 25 activities, latest 1 days ago.
-Introduced in 5797b1c18919 (v6.9-rc1)
-
-Recent activities from: Oleg Nesterov (6), Frederic Weisbecker (3),
-  Nicholas Piggin (1)
-
-6 patch postings are associated with this regression, the latest is this:
-* [PATCH] sched/isolation: fix boot crash when maxcpus < first-housekeeping-cpu
-  https://lore.kernel.org/lkml/20240413141746.GA10008@redhat.com/
-  1 days ago, by Oleg Nesterov
-
-Noteworthy links:
-* Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on queue_delayed_work
-  https://lore.kernel.org/lkml/20240402105847.GA24832@redhat.com/
-  14 days ago, by Oleg Nesterov; thread monitored.
-
-
-mainline boot regression on AMD Stoney Ridge Chromebooks
---------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240322175210.124416-1-laura.nao@collabora.com/
-https://lore.kernel.org/lkml/20240322175210.124416-1-laura.nao@collabora.com/
-
-By Laura Nao; 22 days ago; 36 activities, latest 2 days ago.
-Introduced in c749ce393b (v6.9-rc1)
-
-Fix incoming:
-* x86/cpu/amd: Make the NODEID_MSR union actually work
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=898e4996e76053bfa0f578629ec6b35baff4224b
-
-
-fs: ntfs: obsolete legacy driver and a bunch of  warnings
----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-https://lore.kernel.org/linux-fsdevel/Zf2zPf5TO5oYt3I3@hovoldconsulting.com/
-https://lore.kernel.org/all/6215a88a-7d78-4abb-911f-8a3e7033da3e@gmx.com/
-
-By Johan Hovold and Artem S. Tashkinov; 22 days ago; 9 activities, latest 3 days ago.
-Introduced in 7ffa8f3d3023 (v6.9-rc1)
-
-Recent activities from: Konstantin Komarov (1)
-
-3 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH 2/2] ntfs3: remove warning
-  https://lore.kernel.org/linux-fsdevel/b0fa3c40-443b-4b89-99e9-678cbb89a67e@paragon-software.com/
-  3 days ago, by Konstantin Komarov
-
-
-leds: hangs on boot
--------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
-
-By Ben Greear; 11 days ago; 7 activities, latest 3 days ago.
-Introduced in f5c31bcf604d (v6.9-rc1)
-
-Recent activities from: Johannes Berg (2), Lee Jones (1), Linux
-  regression tracking (Thorsten Leemhuis) (1)
-
-
-net: Bluetooth: firmware loading problems with older firmware
--------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240401144424.1714-1-mike@fireburn.co.uk/
-https://lore.kernel.org/lkml/20240401144424.1714-1-mike@fireburn.co.uk/
-
-By Mike Lothian; 12 days ago; 3 activities, latest 9 days ago.
-Introduced in 1cb63d80fff6 (v6.9-rc1)
-
-
-clk: qcom: gdsc: lockdep splat
-------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
-https://lore.kernel.org/lkml/Zf25Sv2x9WaCFuIH@hovoldconsulting.com/
-
-By Johan Hovold; 22 days ago; 14 activities, latest 9 days ago.
-Introduced in 9187ebb954ab (v6.9-rc1)
-
-Fix incoming:
-* clk: qcom: gdsc: treat optional supplies as optional
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6677196fb1932e60b88ad0794a7ae532df178654
-
-
-[ *NEW* ] x86/retpoline: MITIGATION_RETHUNK causes boot problems on x86-32 machines
------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
-https://lore.kernel.org/lkml/20240403173059.GJZg2SUwS8MXw7CdwF@fat_crate.local/
-https://lore.kernel.org/lkml/20240413024956.488d474e@yea/
-
-By Borislav Petkov and Erhard Furtner; 10 days ago; 4 activities, latest 10 days ago.
-Introduced in 4461438a8405 (v6.9-rc1)
-
-
-===================================================
-current cycle (v6.8.. aka v6.9-rc), unknown culprit
-===================================================
-
-
-[ *NEW* ] Guest happens Call Trace when adding vCPU to guest
-------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218698/
-https://bugzilla.kernel.org/show_bug.cgi?id=218698
-https://lore.kernel.org/lkml/b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info/
-
-By Ma Xiangfei and Ma, XiangfeiX; 5 days ago; 8 activities, latest 3 days ago.
-Introduced in v6.8-rc7..v6.9-rc2
-
-Recent activities from: Artem S. Tashkinov (3), The Linux kernel's
-  regression tracker (Thorsten Leemhuis) (3), Dongli Zhang (1), Ma
-  Xiangfei (1)
-
-
-[ *NEW* ] new 9p kasan splat in 6.9
------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/f6upxoxa6d2c6cbh4ka775msggvuduigiu7xgvfx7qsufg2lo6@2ellaad6b2on/
-https://lore.kernel.org/v9fs/f6upxoxa6d2c6cbh4ka775msggvuduigiu7xgvfx7qsufg2lo6@2ellaad6b2on/
-
-By Kent Overstreet; 14 days ago; 10 activities, latest 3 days ago.
-Introduced in v6.8..v6.9-rc2
-
-Recent activities from: Eric Van Hensbergen (2), Kent Overstreet (1)
-
-
-[ *NEW* ] fs: 9p: various problems (xfstests; open / unlink / fstat|ftruncate etc fail; warning when using apt)
----------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/lore/E7D462A2-EE93-4A57-9F15-8565EE1567F3@linux.dev/
-https://lore.kernel.org/v9fs/E7D462A2-EE93-4A57-9F15-8565EE1567F3@linux.dev/
-https://lore.kernel.org/v9fs/ZhNvwwYRN4-EczYi@codewreck.org/
-
-By Itaru Kitayama and Dominique Martinet; 6 days ago; 5 activities, latest 6 days ago.
-Introduced in v6.8..v6.9-rc2
-
-Recent activities from: Itaru Kitayama (3), Dominique Martinet (2)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/171251198215.2979732.6005919918293923522@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
