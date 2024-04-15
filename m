@@ -1,98 +1,94 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7FC7CF16
-	for <regressions@lists.linux.dev>; Mon, 15 Apr 2024 16:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EB4762E0;
+	Mon, 15 Apr 2024 16:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713196927; cv=none; b=uHGd3E3pQfJTtodqM7l7UjBgqhN7HAuuVOKVYq/mAkI80InTU1ewDLo9vZaGGugJua6u/vdsaHK5AVNvb21QVllmPBxpbexeydtwj20xz5a6Yo87a+z6fsF6HckIcNTgM+HP7fU6RI8BerDswxIleLY/xrutlhCEid7LsWjLJH0=
+	t=1713197165; cv=none; b=IepfJf6u2dqQk6wAUviqsZSMTp3v2rdgXmz78OEtYN6CSSBsBGOleSQMzzt8rswRDWVuKNPDngDGUBX2okTo283Koto0I4WdJIqk0oTKj0aCDeDfG7kiQZBEcwJ+PWS1K8bYUjvOMHNa0M7t6bPj6HO0MXzi5QtkLZA2xH0hCH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713196927; c=relaxed/simple;
-	bh=/BGZa66OTjq9deqh1Znv9nfCC2KLBveMvqHZgba1FCE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bMb/fdQBKw2RpGxVsYc93A+gmd5cyKjo/X4XIvTLb3GKPs9zdKPHjNzYoz/Lfkb5ew0G9NToLRQ2OhLDP/7/os4jOEJHrlFU+p8sckhf0iKXz4X0Bq68M64aX27KdrGptllNxsNqghNFaaufPE2bSqWqIFdru+UbU10tz6LpuiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=pIukbNHa; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1713197165; c=relaxed/simple;
+	bh=DHgzmazo1Glv7ZL1pMj7ynM9gjCt5b18g1EiYByuCMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRBJuPfoAKgMFmrXaQB2+NZvfrKmBf3lXg9ve0PcAU3ObH5snki+6gRD6/Z1JUqJJyw9cvoIlKMladh4rvuHoYxTu6VK+QQu5r04uBy4RBtx+/n21r5MeTidTu+PVSgcw7NMslA0Gm8wBfFdmsRErQTrnMqvCoTFNH5jIVM5UGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0MU7oX2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="pIukbNHa"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D08DB47C1D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1713196917; bh=v662RrsMqneLeLe6D1Sdsis1Ejt/Y1b5HbSUQwtNkOM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pIukbNHa4VPK81NZ87bc5ZoEq7pEwTmv80ww3+YW/xltKBoqPfK+naBSCqGX18nv8
-	 XjprSRdzn1V9v6UAs62J3dMuhYBoGbY3oA0emwew3pBPLsiciFZzvKCCn6KSxCtW32
-	 0aNtuGSZmArvzNE0ZHZpeOVE+NniQmlUGds6lcbDCj3xA92+fxus3jJSPNjZmQ7DE3
-	 Ld5w0iMdjNPues541zoe/9+LeP3An71n4poDvyGuV2hrYJzvO/DnwE+s0Bp8opuNqI
-	 XKXC7VTVvoBBR4YBKWxP6SeYhRbCw6ISOydw3Kiu3Ykpy+Dbyrq8tavdelPUK7zilP
-	 O6Cgbv3GLTiiw==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id D08DB47C1D;
-	Mon, 15 Apr 2024 16:01:56 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>, Petr
- =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-Subject: Re: [PATCH v2 0/6] docs: verify/bisect: fine tuning, testing fixes,
- build host, order
-In-Reply-To: <cover.1712647788.git.linux@leemhuis.info>
-References: <cover.1712647788.git.linux@leemhuis.info>
-Date: Mon, 15 Apr 2024 10:01:55 -0600
-Message-ID: <87bk6awr64.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0MU7oX2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C66DC2BD11;
+	Mon, 15 Apr 2024 16:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713197165;
+	bh=DHgzmazo1Glv7ZL1pMj7ynM9gjCt5b18g1EiYByuCMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T0MU7oX2cT1a03rWZMgFvCiVD8hPTXC89YYghSzOnBVzm6NbRi3wCCrG6D4K+cUe5
+	 49ccilD9ypoqL6tKwOoah1iwhBEc5+Jf2nFqaEjVLo1U/lHChB+ZfucL8bGGzAORa2
+	 BfCOgR8k9CLr81hRPuept9mqPFbbprBu671uOdfysjQnaCw3Z5IJcbd5UPtnuqKroQ
+	 kUGWsONyTPmwsFH6FvUi3LWVxhnECaIk8jWdYDXy8xeNeewTaPSdwaSmqp1JqNCiPG
+	 B7rDvXfpe4KyQWiuU84Yx29GYUQSK1FjIXMbFqx9OMMaiaYURDBqswfno8dF5LNwBD
+	 zwQ41sNQEaDEw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rwOqJ-000000007z2-1tiT;
+	Mon, 15 Apr 2024 18:06:03 +0200
+Date: Mon, 15 Apr 2024 18:06:03 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Anton Altaparmakov <anton@tuxera.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	"ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
+	Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+	"linux-ntfs-dev@lists.sourceforge.net" <linux-ntfs-dev@lists.sourceforge.net>
+Subject: Re: [PATCH 2/2] ntfs3: remove warning
+Message-ID: <Zh1Qa2aB2Dg_-mW4@hovoldconsulting.com>
+References: <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
+ <b0fa3c40-443b-4b89-99e9-678cbb89a67e@paragon-software.com>
+ <Zhz5S3TA-Nd_8LY8@hovoldconsulting.com>
+ <Zhz_axTjkJ6Aqeys@hovoldconsulting.com>
+ <8FE8DF1E-C216-4A56-A16E-450D2AED7F5E@tuxera.com>
+ <Zh0SicjFHCkMaOc0@hovoldconsulting.com>
+ <20240415-warzen-rundgang-ce78bedb5f19@brauner>
+ <CAHk-=whPTEYv3F9tgvJf-OakOxyGw2jzRVD0BMkXmC5ANPj0YA@mail.gmail.com>
+ <Zh1MCw7Q0VIKrrMi@hovoldconsulting.com>
+ <CAHk-=whN3V4Jzy+Mv8UZGTJ5VEk_ihCS8tu3VskW-HCfBg6r=g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whN3V4Jzy+Mv8UZGTJ5VEk_ihCS8tu3VskW-HCfBg6r=g@mail.gmail.com>
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On Mon, Apr 15, 2024 at 08:51:13AM -0700, Linus Torvalds wrote:
+> On Mon, 15 Apr 2024 at 08:47, Johan Hovold <johan@kernel.org> wrote:
+> >
+> > I think the "ntfs" alias must always be mounted read-only because you
+> > can currently have an fstab entry which does not specify "ro" and this
+> > mount would suddenly become writeable when updating to 6.9 (possibly by
+> > a non-privileged user, etc).
+> 
+> Well, it would be fairly easy to do particularly if we just do it for
+> the old legacy case.
+> 
+> Of course, even the legacy case had that CONFIG_NTFS_RW option, so
+> people who depended on _that_ would want to be able to remount...
 
-> A quick series with various improvements for
-> Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst after
-> receiving feedback on the text or seeing people struggle with certain
-> tasks.
->
-> * The first two patches contains various fixes and some fine tuning.
->
-> * The third is mainly a layout improvement that results in a somewhat
->   large patch.
->
-> * The fourth adds instructions for later testing of reverts, fixes, or
->   newer versions. This was already hinted at; but during some early
->   work on Documentation/admin-guide/reporting-issues.rst to better
->   reconcile the two it seemed wise to cover this properly here.
->
-> * The fifth patch briefly outlines how to build kernels on a different
->   host; it came into being after a second user within one week asked for
->   this. That also allowed the text to briefly cover cross-compilation.
->
-> * The sixth makes users that face a regression within a stable series
->   test that series first before they are told to test mainline.
-> ---
->
-> Hi! While at it let me mention one more thing unrelated to the changes
-> that came up where I'm unsure if the current approach by the text was
-> a wise choice:
->
-> * Should the document tell users to avoid mainline during merge windows?
->
-> Some input from the community on this would be splendid.
->
-> Ciao, Thorsten
->
-> P.S.: Not totally sure, but I think this should go into 6.9 as this is
-> a new document; if not I guess it would be wise to pick the first two,
-> as they fix bugs.
+Ah, right, I forgot about CONFIG_NTFS_RW as I've never enabled it.
 
-Nobody seems to be complaining, so I've gone ahead and applied the set
-to docs-fixes.
+Judging from the now removed Kconfig entry perhaps not that many people
+did:
 
-Thanks,
+	The only supported operation is overwriting existing files,
+	without changing the file length.  No file or directory
+	creation, deletion or renaming is possible. 
 
-jon
+but I guess it still makes my argument above mostly moot.
+
+At least if we disable write support in ntfs3 by default for now...
+
+Johan
