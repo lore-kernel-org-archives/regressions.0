@@ -1,36 +1,38 @@
 Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D251FA1
-	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 04:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D7817554
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 04:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713242013; cv=none; b=Iy2/wjgxCBTLEsl+6BJ9Nak0kLKgiY2fMhgQ1oHbrR1f7Roakadd/I8J+lnibABSZLUiGRRTLDCmUVdI7G/N6xXRsOGBu5x79g0ZeD8iNwhkwNyLIjWII/pLo3NA6KNrB9jzS6t9EMafsxiBUcYa1mT8GJehkIUbPP0MylZ+DMQ=
+	t=1713242014; cv=none; b=bZhiPlxe4zSWTYmEJJtbF9oPxQgXGTdL9qg5dzWqPorWtbVlyI9e5l2bf2zitP5foJmHFgY2uSkSqXgaI/MxFOpuwaLTHBEg/K+qwtHz46ZCxAIlywSM+TxgW4UiC5NAjRPCFt3BZwkaPI2OsTkgtIbwDRN7wrVhiomInWjF+QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713242013; c=relaxed/simple;
-	bh=oJry8FOQnfEPlAmfb6SMP21v3ppEHori/ow8A3xoHDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CAf+mktStpt5/56B0Pd5IRP99Fl970pyr16Q4IJoPOvl6UKjwuf6c68kos83jFBXcH7Kb5bbgik01Zbcn2Gdk4DOKxYBZsE7awT7TN0J5yIgSF6ikkK3R7qdKGXX67iF6evAmpNyEvtInm8c8kX7zLfUkZzD0mN+YRPccWc7dGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NKOtAfue; arc=none smtp.client-ip=185.125.188.121
+	s=arc-20240116; t=1713242014; c=relaxed/simple;
+	bh=ET5pyKN9r4SlZzma8e0fiAbkahwzN7k33++Uo0oQh9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c63LFs0KvDYqCLA7EsTU6kdsBi9nxns/lxHW+gjRBCZWiN8KfPzDDcQ7zblWqQnjJqXc5GokqDXJaoQAC9h9sIDXJ5FAL3Fb85s6bYQ9r50XMdFlqu49qZFu14PY9D2PGPWvCXefpOBLOgdmsQNdqpVpiA/o/hBTip+0PgcepvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=qVGiUamw; arc=none smtp.client-ip=185.125.188.121
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NKOtAfue"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="qVGiUamw"
 Received: from localhost.localdomain (unknown [10.101.196.174])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 656BC3F0FA;
-	Tue, 16 Apr 2024 04:33:17 +0000 (UTC)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id CC2303F176;
+	Tue, 16 Apr 2024 04:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713242003;
-	bh=EIqb3ZhtP6vTc/Ol0BEJS2EDfRh93Z4lytIAwmN5HBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-	b=NKOtAfue4ui49NMuPLL0XAKGEFXav6o4C68s62FY4mxrjwrfM4IlFO/o2T99SB7h1
-	 E9GAlvpSYHu6NAZtGms4ab9wfWZ9jAovmt+67i/pQuMRuWXWKL2+rkLy9MJxJPaF+s
-	 KEIUrUBacCuEPfQK6v3CfSFewEZ5Wy8L2kuC6LwlzrA3xyzo89DEDkJCNJRKNCO6wR
-	 Q68K9/AN2CaAUfc5//i/czP84EqEosxaTqfRNf4uLUWVg6etOiZW1UigHHln3r1eMj
-	 StHCFMAMxZL78xsjzt4zV6Cm/poJOsXEvB65i2FW7B7WNkqzX1AGEd1eff45PPOhfu
-	 m27lNjrJFS3Eg==
+	s=20210705; t=1713242010;
+	bh=8+sIYCY+3Pc8+EMiPSoH0rMhXyMl45YAVFAQyJoev2g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version;
+	b=qVGiUamwNeLPxTXVB3LP1mYoRsnNYsQ1gOKtJRu9KsiIsvc/vIJRIRV0mHEs9nHEG
+	 PSsdGGqYRl61oA0eHRN01lSn+kpSnNK6uRmHPG/tmWcMb+fe0xowJ6psXmykAm4rx0
+	 /6Tp4HSTnzTFA3AwJi7xx5SpsQKiHLrTL0wSkD/iRhTik/IA2ccHqy6CMg/AOp8eX0
+	 LUJLI6HwCQnnEIU51CKErEBXNLAu3sFOb2nOAAnqbXgQInsIer4c62wFsHZOXnBQAs
+	 DBHT5Aa1VmvYpP2KXaZaKgd9OTIh8EYFcEGvJ7hL8ZO87QM96JcJT6htSm6OkC8+rb
+	 HPJc8ngqqnAaQ==
 From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 To: bhelgaas@google.com
 Cc: mahesh@linux.ibm.com,
@@ -48,10 +50,12 @@ Cc: mahesh@linux.ibm.com,
 	sagi@grimberg.me,
 	hare@suse.de,
 	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v8 1/3] PCI: Add helper to check if any of ancestor device support D3cold
-Date: Tue, 16 Apr 2024 12:32:23 +0800
-Message-Id: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+Subject: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+Date: Tue, 16 Apr 2024 12:32:24 +0800
+Message-Id: <20240416043225.1462548-2-kai.heng.feng@canonical.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+References: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -60,67 +64,100 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In addition to nearest upstream bridge, driver may want to know if the
-entire hierarchy can be powered off to perform different action.
+When the power rail gets cut off, the hardware can create some electric
+noise on the link that triggers AER. If IRQ is shared between AER with
+PME, such AER noise will cause a spurious wakeup on system suspend.
 
-So walk higher up the hierarchy to find out if any device has valid
-_PR3.
+When the power rail gets back, the firmware of the device resets itself
+and can create unexpected behavior like sending PTM messages. For this
+case, the driver will always be too late to toggle off features should
+be disabled.
 
-The user will be introduced in next patch.
+As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+Management", TLP and DLLP transmission are disabled for a Link in L2/L3
+Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
+the power will be turned off during suspend process, disable AER service
+and re-enable it during the resume process. This should not affect the
+basic functionality.
 
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
 Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
 v8:
+ - Add more bug reports.
+
+v7:
+ - Wording
+ - Disable AER completely (again) if power will be turned off
+
+v6:
+v5:
+ - Wording.
+
+v4:
+v3:
  - No change.
 
- drivers/pci/pci.c   | 16 ++++++++++++++++
- include/linux/pci.h |  2 ++
- 2 files changed, 18 insertions(+)
+v2:
+ - Only disable AER IRQ.
+ - No more check on PME IRQ#.
+ - Use helper.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd4288..7a5662f116b8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6225,6 +6225,22 @@ bool pci_pr3_present(struct pci_dev *pdev)
- 		acpi_has_method(adev->handle, "_PR3");
+ drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ac6293c24976..bea7818c2d1b 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -28,6 +28,7 @@
+ #include <linux/delay.h>
+ #include <linux/kfifo.h>
+ #include <linux/slab.h>
++#include <linux/suspend.h>
+ #include <acpi/apei.h>
+ #include <acpi/ghes.h>
+ #include <ras/ras_event.h>
+@@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(pci_pr3_present);
-+
-+bool pci_ancestor_pr3_present(struct pci_dev *pdev)
+ 
++static int aer_suspend(struct pcie_device *dev)
 +{
-+	struct pci_dev *parent = pdev;
++	struct aer_rpc *rpc = get_service_data(dev);
++	struct pci_dev *pdev = rpc->rpd;
 +
-+	if (acpi_disabled)
-+		return false;
++	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
++		aer_disable_rootport(rpc);
 +
-+	while ((parent = pci_upstream_bridge(parent))) {
-+		if (pci_pr3_present(pdev))
-+			return true;
-+	}
-+
-+	return false;
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(pci_ancestor_pr3_present);
- #endif
- 
++
++static int aer_resume(struct pcie_device *dev)
++{
++	struct aer_rpc *rpc = get_service_data(dev);
++	struct pci_dev *pdev = rpc->rpd;
++
++	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
++		aer_enable_rootport(rpc);
++
++	return 0;
++}
++
  /**
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 16493426a04f..cd71ebfd0f89 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2620,10 +2620,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
- void
- pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
- bool pci_pr3_present(struct pci_dev *pdev);
-+bool pci_ancestor_pr3_present(struct pci_dev *pdev);
- #else
- static inline struct irq_domain *
- pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
- static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
-+static inline bool pci_ancestor_pr3_present(struct pci_dev *pdev) { return false; }
- #endif
+  * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+  * @dev: pointer to Root Port, RCEC, or RCiEP
+@@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
+ 	.service	= PCIE_PORT_SERVICE_AER,
  
- #ifdef CONFIG_EEH
+ 	.probe		= aer_probe,
++	.suspend	= aer_suspend,
++	.resume		= aer_resume,
+ 	.remove		= aer_remove,
+ };
+ 
 -- 
 2.34.1
 
