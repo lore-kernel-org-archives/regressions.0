@@ -1,125 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D1C12AACA;
-	Tue, 16 Apr 2024 12:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E72129E9C
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 12:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713269723; cv=none; b=UrFm/NOTVNse0HQL22Ft0JHkaa+dj69J6kiPDO9UCGpQPY/urYTUFeJIA094UjB4cWsNLWbLomzrHis3ffIbQawqHRA1JE6KGcH3hIT4rGzTuS70F2Lq3+LjGpmKWGVc321yL2EyYrLN4ZnjTS9UoEcSCrjdH2CMQCIZptFOP3Y=
+	t=1713271350; cv=none; b=fz/r9TucHVm3ISa2iNJzwKMCFzlCwpYA5y4Toew3WxcBTgVgmrJjKiry+nUcJ+Q6tpb9rzA42mU5vrv29rdITerDqfmvST6yj9L+jH28ZgFg/BbJvT+QzDv7zKACN2Zn9nGLGzDJfEOQxDwW0f3yF+C0uZ5gCbx/mLn0rd1+C88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713269723; c=relaxed/simple;
-	bh=Pn2alMweH9AQ/4nJwvXEDdpqKLi+Ur2nCRL4Qlf1KC0=;
+	s=arc-20240116; t=1713271350; c=relaxed/simple;
+	bh=7vKkklm2j+8MBw3agiSUc9CHX8zKs9lEzFNQV7tgc7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2Msh5JmTfhLuK53D8m1CrYD8L4XE0YV0boINHhi2ZygMTaNhTRdEKYMDGp/o+/PKpWGjJAYKe2G/nfUxnpRk+3LDjCW/emnBEBf9aBuQUMNckp7DqqZVyhqBZ3p1tuVBVz1gHjnYgZnihsHL+BLiZSGLEa8cx++ZA3Rr/R5D18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAL+717C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXuozQHVcXaAw+n7AQ623Pycc4SjduzrcKzAiHl2H1qVVR/yTPk4B/epoyrd/ifGyp8/ixBKCzvMen+8OfGXL6zthzJCNYQpY7Vn0h1UlyqYE963X7XjSNiXP45v6lUbr/TaXfcEy+nsZuft8xmX8+WGd60f+esCFn/hX7NDI/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KcJCCbRd; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAL+717C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8351C113CE;
-	Tue, 16 Apr 2024 12:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713269723;
-	bh=Pn2alMweH9AQ/4nJwvXEDdpqKLi+Ur2nCRL4Qlf1KC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fAL+717Cp96qKDTmVR1p8gTgJLTXDR+pZ7qM9UmfwPrP9qjDZhfocycKBAc0HzXbv
-	 ZJrGRocKM5Gk2VdTrhCjKTS9TqVbRwEwCnXLMMWXQ4nE6bR/D5FeadFUb7wOHplYAW
-	 ed/QFXjaArF/gjiZ/iWNYhfmXkEj9OQeHkOql7tntP/TXeUNn4c1kVtx/2PQA50yfX
-	 sTk4jNZ2cKhK0EJQnEji/o7w3ww8hgzOu3o3O4KjfYadow93fD4EziL/EOVMK1Eajs
-	 +6KiWWNkX0qqjSn5gLifarM/nazrJ/zovC3l5BEBkFa1f47ShMyHoi0CtQXTtbBbre
-	 gJ+K9bfV5NLMw==
-Date: Tue, 16 Apr 2024 13:15:19 +0100
-From: Lee Jones <lee@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend
- if pwm-leds exist
-Message-ID: <20240416121519.GS2399047@google.com>
-References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
- <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
- <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KcJCCbRd"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e6a1edecfso6926986a12.1
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 05:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713271347; x=1713876147; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mUOtU228tYtJyPue/rn/IW891GZXpSSOmG4AvHGZ5go=;
+        b=KcJCCbRd9qjgVE3mXciCag3j7x/Eb2atC0r/l4/puSRUbDnQIT7UyNRX4RqyjleQrj
+         e5UfMxT3TSFfEUq4esmZbjS2fRNunJ1nJyHnFGtsk5QZztgE7tyYilXa0BPP7TedITjL
+         yZE1uL1HsCqua76DdPAmjIgD3iIZAI6ahfjfo9c1OnggyjJlFgIfZ18Tnfm0T7Izc1ms
+         6Nm39zg06ibeAoAOmaGDUn1LfSlRc70ZnCmlFLBM9COTHoLH33HVcL6MFYLDY4H6Le1w
+         mP9mYZgOhlxyk14ywCCS5EuiKSoq93GdZ1BSZqkRbga5bXkNTdIPhM5NMTsG4Ovz3m89
+         HseQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713271347; x=1713876147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mUOtU228tYtJyPue/rn/IW891GZXpSSOmG4AvHGZ5go=;
+        b=HStmCrnkqMv2xXZhuYqrkTZrW8kVkSdS6wsLZV8wuz58SPK4VT75uojGfyN5EbLMSb
+         Ns4eIv14G54TdMMNbDPqHY9bVGkCZ7rn5rv8o62ImBUbsd1OrNWJ6iSMGu3wP33U4Vhg
+         Cq++v3KgcYBNH0UWEYHRFj2Gb+DUWvYAR5Ih00oLMH/mxKfswHCuVTgJ1ktO88vQeK9A
+         ysorBBvkPKhDPX5fdciIa2pBMVwiLZD9J33zcwtNYTk+O0bqjBghyqxeI2Nnrq1fI9Kh
+         QV91tkso546fFDSAe5UpI49Cs9E04RvIwuwXqGF18gdiY7D3UCt+fl4aPDB1wQDf4Aoc
+         DCPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3sPyCvtEnfD4u0rTAjRQRvrMZdjkQp8LdBwTfkx2A/tYh3FCrhfrdcIEIpNwrvicbse4Q5piHDCYHNcHc3MuupjLQ8j2sVXYwtRc=
+X-Gm-Message-State: AOJu0YyhvPSrcKfP5RAwSlmxUX4Q0WxZJ6Y84RkUfPmaK3dHMwYMQe7f
+	zThILc5iL/0kvIgBU3pBpJRd39wEeVy/4EhYifT4LC1Pnewk0hPAX9OAjq7XrNs=
+X-Google-Smtp-Source: AGHT+IFJ6u/xajiCUpxE33tmeqjHHiAL2wmL+dnoci+VQnEehXgtJ/Q5xPBX57jTU1Obt4QXb9tI5g==
+X-Received: by 2002:a17:907:940e:b0:a52:277d:c1c9 with SMTP id dk14-20020a170907940e00b00a52277dc1c9mr12180603ejc.50.1713271347185;
+        Tue, 16 Apr 2024 05:42:27 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id go36-20020a1709070da400b00a51fea47897sm6775453ejc.214.2024.04.16.05.42.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 05:42:26 -0700 (PDT)
+Date: Tue, 16 Apr 2024 15:42:23 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Linux Regressions <regressions@lists.linux.dev>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Jeff Xu <jeffxu@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: powerpc: io-defs.h:43:1: error: performing pointer arithmetic on
+ a null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
+Message-ID: <402a5e3b-bdb5-40a4-8a44-2de497849c3f@moroto.mountain>
+References: <CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com>
+ <3d139886-9549-4384-918a-2d18480eb758@app.fastmail.com>
+ <f7d8cd55-5a14-4391-884f-0b072790fa41@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
+In-Reply-To: <f7d8cd55-5a14-4391-884f-0b072790fa41@app.fastmail.com>
 
-On Tue, 16 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
-
-> On 06.03.24 09:18, Uwe Kleine-König wrote:
-> > On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+On Tue, Apr 16, 2024 at 01:55:57PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 16, 2024, at 13:01, Arnd Bergmann wrote:
+> > On Tue, Apr 16, 2024, at 11:32, Naresh Kamboju wrote:
+> >> The Powerpc clang builds failed due to following warnings / errors on the
+> >> Linux next-20240416 tag.
 > >>
-> >> Uwe, I noticed a report about a regression in bugzilla.kernel.org that
-> >> apparently is caused by a change of yours. As many (most?) kernel
-> >> developers don't keep an eye on it, I decided to forward it by mail.
+> >> Powerpc:
+> >>  - tqm8xx_defconfig + clang-17 - Failed
+> >>  - allnoconfig + clang-17 - Failed
+> >>  - tinyconfig + clang-17 - Failed
 > >>
-> >> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
-> >> not CCed them in mails like this.
-> >>
-> >> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218559 :
-> >>
-> >>> Commit 76fe464c8e64e71b2e4af11edeef0e5d85eeb6aa ("leds: pwm: Don't
-> >>> disable the PWM when the LED should be off") prevents stm32mp1xx based
-> >>> targets from entering suspend if pwm-leds exist, as the stm32 PWM driver
-> >>> refuses to enter suspend if any PWM channels are still active ("PWM 0
-> >>> still in use by consumer" see stm32_pwm_suspend in drivers/pwm/stm32-pwm.c).
-> >>>
-> >>> Reverting the mentioned commit fixes this behaviour but I'm not
-> >>> certain if this is a problem with stm32-pwm or pwm-leds (what is the
-> >>> usual behaviour for suspend with active PWM channels?).
-> > 
-> > I'd assume the following patch fixes this report. I didn't test it
-> > though.
+> >> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > I'm not sure why this showed up now, but there is a series from
+> > in progress that will avoid this in the future, as the same
+> > issue is present on a couple of other architectures.
+> >
 > 
-> Jakob confirmed it helped in the bugzilla ticket. But the patch since
-> then didn't make any progress afaics -- or did it and I just missed it
-> in my search?
+> I see now, it was introduced by my patch to turn on -Wextra
+> by default. I had tested that patch on all architectures
+> with allmodconfig and defconfig, but I did not test any
+> powerpc configs with PCI disabled.
 
-[...] 
+I think this warning is clang specific as well...  (Maybe clang was
+included in all architectures but I'm not sure).
 
-> > ---->8----
-> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
-> > 
-> > On stm32mp1xx based machines (and others) a PWM consumer has to disable
-> > the PWM because an enabled PWM refuses to suspend. So check the
-> > LED_SUSPENDED flag and depending on that set the .enabled property.
-> > 
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
-> > Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/leds/leds-pwm.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> > index 4e3936a39d0e..e1b414b40353 100644
-> > --- a/drivers/leds/leds-pwm.c
-> > +++ b/drivers/leds/leds-pwm.c
-> > @@ -53,7 +53,13 @@ static int led_pwm_set(struct led_classdev *led_cdev,
-> >  		duty = led_dat->pwmstate.period - duty;
-> >  
-> >  	led_dat->pwmstate.duty_cycle = duty;
-> > -	led_dat->pwmstate.enabled = true;
-> > +	/*
-> > +	 * Disabling a PWM doesn't guarantee that it emits the inactive level.
-> > +	 * So keep it on. Only for suspending the PWM should be disabled because
-> > +	 * otherwise it refuses to suspend. The possible downside is that the
-> > +	 * LED might stay (or even go) on.
-> > +	 */
-> > +	led_dat->pwmstate.enabled = !(led_cdev->flags & LED_SUSPENDED);
-> >  	return pwm_apply_might_sleep(led_dat->pwm, &led_dat->pwmstate);
-> >  }
-> > 
-> > base-commit: 15facbd7bd3dbfa04721cb71e69954eb4686cb9e
-> > ---->8----
+regards,
+dan carpenter
 
-Did you submit this?  I don't see it in LORE or in my inbox.
-
--- 
-Lee Jones [李琼斯]
