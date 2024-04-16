@@ -1,37 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0EB3B78D;
-	Tue, 16 Apr 2024 08:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879A71F19A;
+	Tue, 16 Apr 2024 09:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713256121; cv=none; b=ro+WRFmsTCPzJPjXCzIpxEW1vLjlcd82GYNAn8bcnKMk5WyOvwOAOfaXTF+MT3NpeGAdKX4IqYImTUdBsAouP1kQTQ0sMAqlRAd72psvi0uC6EhM5/86syIilvPoSA69T0pcZcszIkrwu483v8xgRds7VFadOMhbjrms9NzgfcM=
+	t=1713259606; cv=none; b=gtCcZTHFSntfMj6F1RMtp/ZGt6BPiZAoBqB89mHxdpufcYJ80q3H2mGZfh0uQyUukd/71UvXV04/y/UkqDHxK0pHHflB4rHLSinn7Md4kkI9ox5deaoaPfpHVHI8g/Lae49BugZ2Vxo9hYmksjTU0Es6v5DNUP4whcTRlCzL3Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713256121; c=relaxed/simple;
-	bh=4fVG0hgGeE2MEJ2IjJFjK+zjyRc2WZJcMXDmHG2OPTM=;
+	s=arc-20240116; t=1713259606; c=relaxed/simple;
+	bh=i/eO1ladMzDhxr4IiDBZVKgCu3NyVU9E79C81S9wN9E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nqdaJkHbpigRffR6dgDxvTkhmLhI1+o5Q/RN28VxzfvZpj5Z1Mj4JGRACEmLQki8yctxm/3qULIizqgllrzBqJEy0V0u+h07+QhYpf9KLseSq1uQUPeHvUOsMR3evjyMAa0XhBbcfE0ca6uyGbd5uYAzfnfasGsM4672KgFjezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LGd4MOuT; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=EqHfDHfv00thJkT/zsCw11wj/DHnlTTIG3g+T3gUEBSzbnWjTFPj6AfOcIcUcYUmHxv39oWXSx4Df7peogFtRHuPVEDhUOWQ2BbRph1L7Lr01NqCEHdPtLH6Gv7zCp82LUuC8/S5z4eXLrHUzgxbVUSTil5hzKjw6UqImiT41Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OxbjDehD; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LGd4MOuT"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OxbjDehD"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
 	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=vzFrt8UEjfFC2LhFGHg/hPX6/YCtSpcnbyd4WgxC8mQ=;
-	t=1713256119; x=1713688119; b=LGd4MOuTk4ddDXKzQ8sqmAmUIxZGaYJYz93V8ans7Q/fgUY
-	n2F86+GwCih63j7mZ6rOdsBUN2zvbAF0jlxDGytapbLtemmgb6vPhi3m7a186p/rcfjScIWXX8BMX
-	9rcelsdV6I/G0wrj5Y3vsD7hm626rEVL58JqGzRwYhH2DUoGrV9jAwqbeeGC3+jQEI34fd6o2NuUb
-	CoTvVkH6Sx0vUOfCSv6drGjYwUiPZpn/+X2bI2QnA26QUrI6wyJqFkbyh8KPraP0G7GrdynvJBkPt
-	RmBdbELUsmF3R+bsQx3fxXCfiWDJHa5TEQGyVEjyhTRHL/ORlBs0l0epS1cCXp6g==;
+	In-Reply-To:References; bh=S9r7NiX06CEUmKV7VYAgowLdLkXFzpLNrB4rEaa86Jo=;
+	t=1713259603; x=1713691603; b=OxbjDehDaAGSYT1/7TOgp/x/JMM71arg5ufeFlOEX4hjdnw
+	bOEm0Q7gNhj4Ctr/z24JvNxXY+GRQlue0dYm0FWTo+aiI9sXLtdmvXjCUgoF7tS+bwFgf9CHzI+ch
+	pxtKeh4h8BQzuWaS7vd1o+BIr2bCz3vLaYbXhVQZN/flPTI1JspxImyTIPDp07aZHQv+llvFG/L4k
+	Wiv3B1VTwpQ3VK1IBSCbufozkl7BQsafxzC12REFdL5SUB9/zQ+3dXCgZqhsQpvA1hfpu2V/DVX6i
+	gexABD2iSQAlXBaL46O9fwapxwcfu8YFMbV/0zIw1ygABAeIfOfFKGYw36AHZuqQ==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rweBB-0002LJ-72; Tue, 16 Apr 2024 10:28:37 +0200
-Message-ID: <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
-Date: Tue, 16 Apr 2024 10:28:36 +0200
+	id 1rwf5N-0001ip-Gn; Tue, 16 Apr 2024 11:26:41 +0200
+Message-ID: <1bf9be9a-4d05-4d3b-ab76-13a825cd1758@leemhuis.info>
+Date: Tue, 16 Apr 2024 11:26:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,52 +39,57 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend if
- pwm-leds exist
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
- linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
- <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+Subject: Re: API break, sysfs "capability" file
+To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Lennart Poettering <mzxreary@0pointer.de>
+References: <ZhQJf8mzq_wipkBH@gardel-login>
+ <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+ <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
 Content-Language: en-US, de-DE
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+In-Reply-To: <d7a2b07c-26eb-4d55-8aa7-137168bd0b49@kernel.dk>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713256119;bcf7860a;
-X-HE-SMSGID: 1rweBB-0002LJ-72
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713259603;2ae83ce4;
+X-HE-SMSGID: 1rwf5N-0001ip-Gn
 
-On 06.03.24 09:18, Uwe Kleine-König wrote:
-> On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+On 09.04.24 17:17, Jens Axboe wrote:
+> On 4/9/24 8:15 AM, Christoph Hellwig wrote:
+>> On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
+>>> All I am looking for is a very simple test that returns me a boolean:
+>>> is there kernel-level partition scanning enabled on this device or
+>>> not.
 >>
->> Uwe, I noticed a report about a regression in bugzilla.kernel.org that
->> apparently is caused by a change of yours. As many (most?) kernel
->> developers don't keep an eye on it, I decided to forward it by mail.
->>
->> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
->> not CCed them in mails like this.
->>
->> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218559 :
->>
->>> Commit 76fe464c8e64e71b2e4af11edeef0e5d85eeb6aa ("leds: pwm: Don't
->>> disable the PWM when the LED should be off") prevents stm32mp1xx based
->>> targets from entering suspend if pwm-leds exist, as the stm32 PWM driver
->>> refuses to enter suspend if any PWM channels are still active ("PWM 0
->>> still in use by consumer" see stm32_pwm_suspend in drivers/pwm/stm32-pwm.c).
->>>
->>> Reverting the mentioned commit fixes this behaviour but I'm not
->>> certain if this is a problem with stm32-pwm or pwm-leds (what is the
->>> usual behaviour for suspend with active PWM channels?).
+>> And we can add a trivial sysfs attribute for that.
 > 
-> I'd assume the following patch fixes this report. I didn't test it
-> though.
+> And I think we should. I don't know what was being smoked adding a sysfs
+> interface that exposed internal flag values - and honestly what was
+> being smoked to rely on that, but I think it's fair to say that the
+> majority of the fuckup here is on the kernel side.
+>  
+>> At this point we're just better off with a clean new interface.
+>> And you can use the old hack for < 5.15 if you care strongly enough
+>> or just talk distros into backporting it to make their lives easier.
+> 
+> We should arguably just stable mark the patch adding the above simple
+> interface.
 
-Jakob confirmed it helped in the bugzilla ticket. But the patch since
-then didn't make any progress afaics -- or did it and I just missed it
-in my search?
+I might have missed something, but it seems nothing has happened since a
+week. Sure, this is hardly a new regression, so it's not that urgent;
+still it would be good to see this fixed rather sooner than later after
+all the publicity this got. So allow me to quickly ask:
+
+Is anyone (Christoph?) already working on such a patch or is it at least
+somewhat high on somebody's todo list?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
@@ -93,41 +98,3 @@ https://linux-regtracking.leemhuis.info/about/#tldr
 If I did something stupid, please tell me, as explained on that page.
 
 #regzbot poke
-
-> ---->8----
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
-> 
-> On stm32mp1xx based machines (and others) a PWM consumer has to disable
-> the PWM because an enabled PWM refuses to suspend. So check the
-> LED_SUSPENDED flag and depending on that set the .enabled property.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
-> Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/leds/leds-pwm.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> index 4e3936a39d0e..e1b414b40353 100644
-> --- a/drivers/leds/leds-pwm.c
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -53,7 +53,13 @@ static int led_pwm_set(struct led_classdev *led_cdev,
->  		duty = led_dat->pwmstate.period - duty;
->  
->  	led_dat->pwmstate.duty_cycle = duty;
-> -	led_dat->pwmstate.enabled = true;
-> +	/*
-> +	 * Disabling a PWM doesn't guarantee that it emits the inactive level.
-> +	 * So keep it on. Only for suspending the PWM should be disabled because
-> +	 * otherwise it refuses to suspend. The possible downside is that the
-> +	 * LED might stay (or even go) on.
-> +	 */
-> +	led_dat->pwmstate.enabled = !(led_cdev->flags & LED_SUSPENDED);
->  	return pwm_apply_might_sleep(led_dat->pwm, &led_dat->pwmstate);
->  }
-> 
-> base-commit: 15facbd7bd3dbfa04721cb71e69954eb4686cb9e
-> ---->8----
-> 
