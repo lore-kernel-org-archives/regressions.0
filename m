@@ -1,48 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFF612DDAE;
-	Tue, 16 Apr 2024 14:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA338130ACC
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 15:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713278699; cv=none; b=VICOpnNeJGMctGrfrAfUAw7zn1Zhr+ws5Csd4kdb3HsE9jI8gkMra8q/MlPqAtAfQAKfq4RF0Dy6vmAEdgSVKfzbNBbvaaYsltwe9h/Q01BDDN5F5gLCr4jRSk9Ug6ZZVzfjyOrxF88oeyMGluBGnXiZvY+/Yz7LAuxyV+BNgTQ=
+	t=1713281387; cv=none; b=RmV9ILAy+9furxuP1stBs9Itzy5vdbqITgbpqr3cob/U7VRVc5Vv4cxWDnaLtxV07QcPQijFo54+G6R3L/2ay+g2BCBwnrjQz7Q1GxV0hyxIfqfgdHkFpsX1ueCcv4LAOdWuWMi4wSX9W9szbTOks08lp3XrkdaRYqRSFdQ6/dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713278699; c=relaxed/simple;
-	bh=RsDtzCi/AC/WSg7s2RwFMDLB7cfQ+Jn7MP8sUhas0/s=;
+	s=arc-20240116; t=1713281387; c=relaxed/simple;
+	bh=N5prF0FaWdPob3YwO19P3byW98fbFcSX6G2WX/kGCXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A4L+A9MScEqRSIQKlKDv3TZjk3v4vWi7+flrfNIXn5vt+w68qMbx/3QXRzvCahGapf7ErhkC8UGuA0/NjcW1wtSjaNDrTdu+4eKSyjbv5fNm8JXbSQ9bphCpaN2y6UH9YodB4cD0gjS0RrtEj7TsmIvOD8GT07uECzHannFDsnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dsMLJDN7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SfLXgntQ0PS0ulVPnAwxLt04UkGBLeacY5jhlLuEnwoIBQebapyXOd6/vsvgwif4CnRo30/YJZSgPL8BukhEMaTQVdL/DAd+X11Na2ZlxiJtuBgq5b0q+A9Rrkv5l4HbEV08AJ1Qk/lOHq8AL9LGIMMYtNoBPxfs70KHPCcyX/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=i+/g7QDN; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dsMLJDN7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515E5C113CE;
-	Tue, 16 Apr 2024 14:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713278698;
-	bh=RsDtzCi/AC/WSg7s2RwFMDLB7cfQ+Jn7MP8sUhas0/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dsMLJDN7maRAxcb09mjajne7GLFzZEMR7vrx8x6Ba3SC23G8CuNg3qVDsmGfAcJdq
-	 Ou/Tf+uCqkBveUDsaf+0s81sEJNMZKvLVqzAn4UiVI2b+Iy53V4uHOq+1lpSBciuhd
-	 R6IFI98ogEHxf8bYS6xrdQR+CWah8hja17628/4rZT9tDmEujDm/w1XjTliqeyYmzn
-	 yIaTl5QHtKOIULhyFgETY/9tHp9WzR/Qew6aUGQgCJiOD5r3yU0legUw8TCrzkas70
-	 J8jlJLkSUVNVGiKbzHs/pomYtn98llYwdOO5D/m9QQUp5bfZJUzRPTRx+rE/whm/SQ
-	 iPK6AD3TLzTQg==
-Date: Tue, 16 Apr 2024 08:44:55 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <Zh6O5zTBs5JtV4D2@kbusch-mbp>
-References: <ZhQJf8mzq_wipkBH@gardel-login>
- <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login>
- <20240409141531.GB21514@lst.de>
- <Zh6J75OrcMY3dAjY@gardel-login>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i+/g7QDN"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-434925427c6so16506671cf.1
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 08:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1713281385; x=1713886185; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7s25aMASpVRUeKUKXzKd+zK4MQIEa6+60XfUEWUrr9g=;
+        b=i+/g7QDNVozhPW70fkZZD7Dl8LKlmPNqovST75Ca21VrEUlkqlKrfZAYK8LtSNunn8
+         Rvo2rb8BD5n5k5pRDMdS/vwlqy416NADHf9rhC/sjsFLYNp8p9HAFlDohu3pbRC/fs8w
+         yja0mX/RWt/oXb9LVOtAeByQq2IR+KbCfYL3l6PZysF2Tzi7OmagqE7sUce6likbVTuK
+         cUUjzhW7i1YGjWc0We2k/RztAZxZJ2g2OvqV8yKGFWUZCQyZLROn9VE3iqBfPkkFBnZh
+         ZSrA6WMW6oePxR6hlB+7yTq4ZpycY0zSB+VDyxEFlHGvNxpI97w4Kna+hZJtEzk3Kerg
+         TmAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713281385; x=1713886185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7s25aMASpVRUeKUKXzKd+zK4MQIEa6+60XfUEWUrr9g=;
+        b=VsXPQk2STPprAYkWi/2pASrvQf3P4HeRlcnDfx4vCtAOFiu3VNoAqe6CVlm4Av51uY
+         D+o9y/XTc0eV98Vd2R9h4HudIj/C7ueV7CKj0LKVhIacyT+W0JhwQNH6af8yZ1MzUCxM
+         vcVsqLhs1EpZQdqkS9s6/f1j2300RZPTlorZbMVJhvgzIRP3SQ5q/FxZagVzrOrbGGBL
+         d+1xl4Ip+hE4tJL7k2IeUDpeCEFm4G+z51CDJyer6ExWm7lVbNZw4qU60pAf3gsqFrtp
+         tFtgHboSl9KUhpWYjD2YvGTUDfuAaJAYQTjOKZT1xxkUPT+xdsrXNtuVEp82Wz4i5YHP
+         TYvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeum1wTRoygG9cnXJNGov+rTOWlEf3S8bO/uL6qEI+wZ+GCCoAofk2Sc5X6qEMhUjZ9WmGF0xy3gFBtwz09U8bmtD6dScftSSMR8w=
+X-Gm-Message-State: AOJu0YwFycZAk84IwM8l4s4YoswHaXcNwCFsKNMzPj67NX7rRMcyXTzT
+	SnyFWEXEQehBDhYESSjZUwi71Lj96KpdnCaEOWQ5Y9DjLHJ/rB0mihQ2QQT0h+fKpdfQIbKfVBF
+	b
+X-Google-Smtp-Source: AGHT+IF/3k1/teQJA1GB8J3pMCstLtjiobAISw7ClEQWRiHFNDW7XzfII5GKKYoGzBoTUGYQ5TEi/Q==
+X-Received: by 2002:a05:622a:1313:b0:437:5ecf:5ef8 with SMTP id v19-20020a05622a131300b004375ecf5ef8mr313548qtk.21.1713281384704;
+        Tue, 16 Apr 2024 08:29:44 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id ol9-20020ac84149000000b0043721c4654csm1820605qtb.30.2024.04.16.08.29.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 08:29:44 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rwkkh-0094DA-GG;
+	Tue, 16 Apr 2024 12:29:43 -0300
+Date: Tue, 16 Apr 2024 12:29:43 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, ewagner12@gmail.com,
+	suravee.suthikulpanit@amd.com, vashegde@amd.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] iommu: Fix def_domain_type interaction with untrusted
+ devices
+Message-ID: <20240416152943.GU223006@ziepe.ca>
+References: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,50 +75,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zh6J75OrcMY3dAjY@gardel-login>
+In-Reply-To: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
 
-On Tue, Apr 16, 2024 at 04:23:43PM +0200, Lennart Poettering wrote:
-> On Di, 09.04.24 16:15, Christoph Hellwig (hch@lst.de) wrote:
-> 11;rgb:1717/1414/2121
-> > On Tue, Apr 09, 2024 at 10:19:09AM +0200, Lennart Poettering wrote:
-> > > All I am looking for is a very simple test that returns me a boolean:
-> > > is there kernel-level partition scanning enabled on this device or
-> > > not.
-> >
-> > And we can add a trivial sysfs attribute for that.
-> >
-> > > At this point it's not clear to me if I can write this at all in
-> > > a way that works reasonably correctly on any kernel since let's say
-> > > 4.15 (which is systemd's "recommended baseline" right now).
-> > >
-> > > I am really not sure how to salvage this mess at all. AFAICS there's
-> > > currently no way to write such a test correctly.
-> >
-> > You can't.  Maybe that's a lesson to not depend on undocumented internal
-> > flags exposed by accident by a weirdo interface.  Just talk to
-> > people.
-> 
-> Undocumented? Internal?
-> 
-> It's was actually one of the *best* documented kernel *public* APIs I
-> ever came across:
-> 
->    https://www.kernel.org/doc/html/v5.16/block/capability.html
-> 
-> So much detail, I love it!
->
-> I mean, you did good work here, documented it, with all flags in all
-> details. I think that's great work! You should take pride in this, not
-> try to deny its existance!
+On Tue, Apr 16, 2024 at 02:00:43PM +0100, Robin Murphy wrote:
+> Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
+> precedence over whatever a driver's def_domain_type may have wanted to
+> say. This was intentionally handled in core code since 3 years prior,
+> to avoid drivers poking at the details of what is essentially a policy
+> between the PCI core and the IOMMU core. Now, though, we go to the
+> length of evaluating both constraints to check for any conflict, and if
+> so throw our toys out of the pram and refuse to handle the device at
+> all. Regardless of any intent, in practice this leaves the device, and
+> potentially the rest of its group or even the whole IOMMU, in a largely
+> undetermined state, which at worst may render the whole system
+> unusable.
 
-The patch that introduced this was submitted not because the API was
-stable; it was committed to encourage developers to update it as it
-changed because it is *not* stable. That's not the kind of interface you
-want exported for users to rely on, but no one should have to search
-commit logs to understand why the doc exists, so I think exporting it
-was just a mistake on the kernel side. To say this doc is "good"
-misunderstands what it was trying to accomplish, and what it ultimately
-created instead: technical debt.
+For systems supporting untrusted device security the translation must
+be BLOCKED at this point.
 
-The block interfaces documented in Documetation/ABI/stable/ are reliably
-stable, though.
+> Unfortunately it turns out that this is a realistic situation to run
+> into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
+> laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
+> an identity default domain for PASIDs to be usable, and thus sets a
+> def_domain_type override based on PASID capability.
+
+The majority of places implementing def_domain_type are using it as a
+statement of HW capability that should not be ignored by the core code:
+
+ - DART
+   * system page size is too small, can't map IOPTEs, force identity
+   * iommu does not support IDENTITY at all, force paging
+ - tegra: Device quirks mean paging and DMA API doesn't work
+ - amd: The driver can't support PAGING when in SNP mode
+ - SMMU: The driver can't support paging when in legacy binding mode and
+         paging domain allocation fails as well
+ - qcom: Looks like these devices have some iommu bypass bus in their
+         HW and paging doesn't work
+ - SMMUv3: The comment says HISI devices cannot support paging due to a HW quirk
+
+For these force overriding the driver knowledge will either result in
+domain allocate/attach failure or a broken DMA environment anyhow.
+
+The AMD PASID thing is actually unique because the driver can still
+fully support PAGING, despite it wrongly telling the core code that it
+can't.
+
+This is happening because it is all just a hack to work around the
+incomplete SW implementation in the AMD driver. When the AMD driver is
+completed its def_domain_type should be removed entirely.
+
+Since actual PASID AMD attach isn't implemented yet we could just
+remove that check from def_domain_type as an RC fix. Vasant can sort
+it out properly by disabling pasid support on untrusted devices until
+the DTE logic is fully completed.
+
+> In general, restoring the old behaviour of forcing translation will not
+> make that device's operation any more broken than leaving it potentially
+> blocked or subject to the rest of a group's translations would, nor will
+> it be any less safe than leaving it potentially bypassed or subject to
+> the rest of a group's translations would, so do that, and let eGPUs work
+> again.
+
+Well, this is true, since we can't handle the probe error it doesn't
+matter what we do.
+
+Jason
