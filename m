@@ -1,94 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EB4762E0;
-	Mon, 15 Apr 2024 16:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D251FA1
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 04:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713197165; cv=none; b=IepfJf6u2dqQk6wAUviqsZSMTp3v2rdgXmz78OEtYN6CSSBsBGOleSQMzzt8rswRDWVuKNPDngDGUBX2okTo283Koto0I4WdJIqk0oTKj0aCDeDfG7kiQZBEcwJ+PWS1K8bYUjvOMHNa0M7t6bPj6HO0MXzi5QtkLZA2xH0hCH8=
+	t=1713242013; cv=none; b=Iy2/wjgxCBTLEsl+6BJ9Nak0kLKgiY2fMhgQ1oHbrR1f7Roakadd/I8J+lnibABSZLUiGRRTLDCmUVdI7G/N6xXRsOGBu5x79g0ZeD8iNwhkwNyLIjWII/pLo3NA6KNrB9jzS6t9EMafsxiBUcYa1mT8GJehkIUbPP0MylZ+DMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713197165; c=relaxed/simple;
-	bh=DHgzmazo1Glv7ZL1pMj7ynM9gjCt5b18g1EiYByuCMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRBJuPfoAKgMFmrXaQB2+NZvfrKmBf3lXg9ve0PcAU3ObH5snki+6gRD6/Z1JUqJJyw9cvoIlKMladh4rvuHoYxTu6VK+QQu5r04uBy4RBtx+/n21r5MeTidTu+PVSgcw7NMslA0Gm8wBfFdmsRErQTrnMqvCoTFNH5jIVM5UGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0MU7oX2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713242013; c=relaxed/simple;
+	bh=oJry8FOQnfEPlAmfb6SMP21v3ppEHori/ow8A3xoHDU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CAf+mktStpt5/56B0Pd5IRP99Fl970pyr16Q4IJoPOvl6UKjwuf6c68kos83jFBXcH7Kb5bbgik01Zbcn2Gdk4DOKxYBZsE7awT7TN0J5yIgSF6ikkK3R7qdKGXX67iF6evAmpNyEvtInm8c8kX7zLfUkZzD0mN+YRPccWc7dGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=NKOtAfue; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0MU7oX2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C66DC2BD11;
-	Mon, 15 Apr 2024 16:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713197165;
-	bh=DHgzmazo1Glv7ZL1pMj7ynM9gjCt5b18g1EiYByuCMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T0MU7oX2cT1a03rWZMgFvCiVD8hPTXC89YYghSzOnBVzm6NbRi3wCCrG6D4K+cUe5
-	 49ccilD9ypoqL6tKwOoah1iwhBEc5+Jf2nFqaEjVLo1U/lHChB+ZfucL8bGGzAORa2
-	 BfCOgR8k9CLr81hRPuept9mqPFbbprBu671uOdfysjQnaCw3Z5IJcbd5UPtnuqKroQ
-	 kUGWsONyTPmwsFH6FvUi3LWVxhnECaIk8jWdYDXy8xeNeewTaPSdwaSmqp1JqNCiPG
-	 B7rDvXfpe4KyQWiuU84Yx29GYUQSK1FjIXMbFqx9OMMaiaYURDBqswfno8dF5LNwBD
-	 zwQ41sNQEaDEw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rwOqJ-000000007z2-1tiT;
-	Mon, 15 Apr 2024 18:06:03 +0200
-Date: Mon, 15 Apr 2024 18:06:03 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Anton Altaparmakov <anton@tuxera.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	"ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-	Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-	"linux-ntfs-dev@lists.sourceforge.net" <linux-ntfs-dev@lists.sourceforge.net>
-Subject: Re: [PATCH 2/2] ntfs3: remove warning
-Message-ID: <Zh1Qa2aB2Dg_-mW4@hovoldconsulting.com>
-References: <a417b52b-d1c0-4b7d-9d8f-f1b2cd5145f6@leemhuis.info>
- <b0fa3c40-443b-4b89-99e9-678cbb89a67e@paragon-software.com>
- <Zhz5S3TA-Nd_8LY8@hovoldconsulting.com>
- <Zhz_axTjkJ6Aqeys@hovoldconsulting.com>
- <8FE8DF1E-C216-4A56-A16E-450D2AED7F5E@tuxera.com>
- <Zh0SicjFHCkMaOc0@hovoldconsulting.com>
- <20240415-warzen-rundgang-ce78bedb5f19@brauner>
- <CAHk-=whPTEYv3F9tgvJf-OakOxyGw2jzRVD0BMkXmC5ANPj0YA@mail.gmail.com>
- <Zh1MCw7Q0VIKrrMi@hovoldconsulting.com>
- <CAHk-=whN3V4Jzy+Mv8UZGTJ5VEk_ihCS8tu3VskW-HCfBg6r=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="NKOtAfue"
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 656BC3F0FA;
+	Tue, 16 Apr 2024 04:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1713242003;
+	bh=EIqb3ZhtP6vTc/Ol0BEJS2EDfRh93Z4lytIAwmN5HBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=NKOtAfue4ui49NMuPLL0XAKGEFXav6o4C68s62FY4mxrjwrfM4IlFO/o2T99SB7h1
+	 E9GAlvpSYHu6NAZtGms4ab9wfWZ9jAovmt+67i/pQuMRuWXWKL2+rkLy9MJxJPaF+s
+	 KEIUrUBacCuEPfQK6v3CfSFewEZ5Wy8L2kuC6LwlzrA3xyzo89DEDkJCNJRKNCO6wR
+	 Q68K9/AN2CaAUfc5//i/czP84EqEosxaTqfRNf4uLUWVg6etOiZW1UigHHln3r1eMj
+	 StHCFMAMxZL78xsjzt4zV6Cm/poJOsXEvB65i2FW7B7WNkqzX1AGEd1eff45PPOhfu
+	 m27lNjrJFS3Eg==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: bhelgaas@google.com
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	bagasdotme@gmail.com,
+	regressions@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	kch@nvidia.com,
+	hch@lst.de,
+	gloriouseggroll@gmail.com,
+	kbusch@kernel.org,
+	sagi@grimberg.me,
+	hare@suse.de,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v8 1/3] PCI: Add helper to check if any of ancestor device support D3cold
+Date: Tue, 16 Apr 2024 12:32:23 +0800
+Message-Id: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whN3V4Jzy+Mv8UZGTJ5VEk_ihCS8tu3VskW-HCfBg6r=g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 15, 2024 at 08:51:13AM -0700, Linus Torvalds wrote:
-> On Mon, 15 Apr 2024 at 08:47, Johan Hovold <johan@kernel.org> wrote:
-> >
-> > I think the "ntfs" alias must always be mounted read-only because you
-> > can currently have an fstab entry which does not specify "ro" and this
-> > mount would suddenly become writeable when updating to 6.9 (possibly by
-> > a non-privileged user, etc).
-> 
-> Well, it would be fairly easy to do particularly if we just do it for
-> the old legacy case.
-> 
-> Of course, even the legacy case had that CONFIG_NTFS_RW option, so
-> people who depended on _that_ would want to be able to remount...
+In addition to nearest upstream bridge, driver may want to know if the
+entire hierarchy can be powered off to perform different action.
 
-Ah, right, I forgot about CONFIG_NTFS_RW as I've never enabled it.
+So walk higher up the hierarchy to find out if any device has valid
+_PR3.
 
-Judging from the now removed Kconfig entry perhaps not that many people
-did:
+The user will be introduced in next patch.
 
-	The only supported operation is overwriting existing files,
-	without changing the file length.  No file or directory
-	creation, deletion or renaming is possible. 
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v8:
+ - No change.
 
-but I guess it still makes my argument above mostly moot.
+ drivers/pci/pci.c   | 16 ++++++++++++++++
+ include/linux/pci.h |  2 ++
+ 2 files changed, 18 insertions(+)
 
-At least if we disable write support in ntfs3 by default for now...
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5f243dd4288..7a5662f116b8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6225,6 +6225,22 @@ bool pci_pr3_present(struct pci_dev *pdev)
+ 		acpi_has_method(adev->handle, "_PR3");
+ }
+ EXPORT_SYMBOL_GPL(pci_pr3_present);
++
++bool pci_ancestor_pr3_present(struct pci_dev *pdev)
++{
++	struct pci_dev *parent = pdev;
++
++	if (acpi_disabled)
++		return false;
++
++	while ((parent = pci_upstream_bridge(parent))) {
++		if (pci_pr3_present(pdev))
++			return true;
++	}
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(pci_ancestor_pr3_present);
+ #endif
+ 
+ /**
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 16493426a04f..cd71ebfd0f89 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2620,10 +2620,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+ void
+ pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+ bool pci_pr3_present(struct pci_dev *pdev);
++bool pci_ancestor_pr3_present(struct pci_dev *pdev);
+ #else
+ static inline struct irq_domain *
+ pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+ static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
++static inline bool pci_ancestor_pr3_present(struct pci_dev *pdev) { return false; }
+ #endif
+ 
+ #ifdef CONFIG_EEH
+-- 
+2.34.1
 
-Johan
