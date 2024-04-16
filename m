@@ -1,94 +1,105 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2A93BBEC
-	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 09:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E182B84E0A
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 09:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713259782; cv=none; b=roiccbpPiVq/c1i7kMTN05v41sUn9LMFYk+F6IE3Q24yEtGrmq7KieRssFVk+r8XhEepAE0ZgRlTeAqSVsAKc0USLTeuCHvIqftxf3xiKYRmwAeu3pjkJ/R1hAL4Cvj/qd//Gm3cJqtxWKilUF6zxY9j40XmApWOCvVfEuBQnww=
+	t=1713259986; cv=none; b=o66dqNkMQJZh6hI+HuZX7h6Qwny9LBAxCHYFbyFnpykcueA9DVEDedGqO4/3UHfF7tk/dpPstgloMRPcDqp9xxEJmmfuyINEFRIMjiQlE44qW9WRmAxa6qbagQ7ddUHijzx9NIhojjTB1QcAzaUPeW82I5ZZRFVjKqH9dLB907o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713259782; c=relaxed/simple;
-	bh=vFn/ud7NjdUDS5qlUEOLhCV4XkXXgTNW0Nz/PCngWqk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=C2RvFRB0WJX3K6njSWmpc5TwNlX8MD7t5q7/NrJjtuK2aKlHTJa2MP9mLT/QVjQ9pnn7Sj9VQgqQS7zDLB9myYgYWVRub1sMghD5Y9SqPd79Li4QY5y5lXAt0xfrImTXDvIJQTuI41gNt/3QUcIQfFUMBL1dEcU/6UlEyIpVVpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SmT8IFbD; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1713259986; c=relaxed/simple;
+	bh=0Gl50EmCLVOMt6kqv6vYCIWrekR2zOz/+FuL5NWpOck=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=RBcFZ232fLyKIAOCPAGKZPBPznKEOIBLeCBAHDzV3UFcjUsK93gCul/yNXJ0pzM8yCUbFaTZUVclGG1yn60WRf3yUlf686emEtzxA7SgCMqa/OTej3JUFApfNIpKAx1881EUDNCgp/VUdvbP/DbZP1VQyJ/HT1fGK/LvYVh6N9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BCvdH2AK; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SmT8IFbD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=vFn/ud7NjdUDS5qlUEOLhCV4XkXXgTNW0Nz/PCngWqk=; t=1713259780;
-	x=1713691780; b=SmT8IFbDqmRZCpvis+NRwiPndtI4MKI5wjmrufdKfpaTjC1Qs7z4Q/brOPTqT
-	V/ShgCGJACxedGK2yhqJFuKfthv35W7aQKUf4C7kxIjYTXgeDRCsBVbZQ/lrdFJGbIdhMPtcf9t56
-	Pqx7zslQsmHgDn/lNOcU7RV7kp6g/mLQMiApb1f3IJexopzBN7q04FkI48kJy5awffCVwK3Xnfka8
-	RjAxoSBDI2lbbnTU+K/YUL8FnyoTy/pcm5ghPnohlH4jVCoQ6lH2FQ7xcUTV32idO6/DZJ5k6X6G9
-	6zZnFZA26ie33PXq89nHXaftQIq0Q/ojvMNWcVHICLSJbONcDQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rwf8E-0002Wv-U9; Tue, 16 Apr 2024 11:29:38 +0200
-Message-ID: <0a186360-b9c4-4747-bd49-8c8c7c422983@leemhuis.info>
-Date: Tue, 16 Apr 2024 11:29:38 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BCvdH2AK"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4daa5d0afb5so1434962e0c.0
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 02:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713259984; x=1713864784; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ndrnd625fhH+o+1Q6bsYpoaFuC2gIYmA4glyfnWSIIc=;
+        b=BCvdH2AKhfPH7LqmFE+u9BdmVChzqLYC7vY0v38JWjUXgBL8HEeuMI0KfMbpCdNBKr
+         rRaNL3CKUz7eRrAmXr26SlDl5zW62pbirgAsS1uyEsWFEA6BOxrzRDvI2iOesMRMnw6b
+         GeWOM9+BX7lMhoebZNnNzXP95ufQ+0w+qTcRVWfW/Dm9E8QnEdApyITBpYh2GwRwQanX
+         xVm2uhSm+6dsmwKUD6Z4kZB2xSFR7s5UP1tM5t2wCwJJmxUxuS377uUAg0G23ZwZBzpk
+         nsHOock1Tfn67rsAOipV/wnbYGJenrUD5MYnFAutzLSTaQLu7JoSnZztRFkrmcYKwWit
+         1W1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713259984; x=1713864784;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ndrnd625fhH+o+1Q6bsYpoaFuC2gIYmA4glyfnWSIIc=;
+        b=ky176doEkIb1R9+PKTR96SsKBRJeOjws7S2paKc2d4DQ5dlPDE/F6AtRu9YZHoNMPE
+         hAH9YzfeVYu5p5uzTuwCamHIBnj/Vcfz0xg4ytqiej5qltOXqtgmaVLX5/1N37syGpJy
+         3X0QI8XwyHixgtV8jXE31g7FmJYIfe5m2J/QaR6qVKZeaMjAbxIDd/Zaox2ZOWvQUDjD
+         mdE4FrX7fS+dD2zaowbLcff9GyMqINOQ3Es813wLx2TpTwsJy354CScl3JyQO4TQqss2
+         eXZUz08vFrOUCCvC8RVHRnne5YkUInP6SLQkbSN0oFu1s8WvypAovnmJivbL9YYs435Z
+         PoxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcUaWqxVq/XKciT3+ZSawbAKtyP62X5BcWHGPQ8JbhcQdt5A9i+mPK9vh5a7OfMOUq+7x5wzpPOMHqgJAhnHMAcQ77C+vajusu/hU=
+X-Gm-Message-State: AOJu0YyQPUimh2WxKj7WDaxW0fVglh05/swCexVdfrVFHnkMcRSrJ8bG
+	vj0493oq256rv/FE4TOTCeMXj+1+TJ4jVKBQ8fDnBG1Os0FHM5KuOGJItQSqRzSI5xrtovr6ypX
+	46yaUgM9ko+Trk72gpOltg0sfV9g4+C7NtMkjTw==
+X-Google-Smtp-Source: AGHT+IG8D9vuAHmYC+KaM43JW5eMv7zVIbneQHVp8QBSV8dIrkMNPPOSsaQF76mhGJzEt5W5Jxc6s2f74IzVPZ0IMx8=
+X-Received: by 2002:a05:6122:31a9:b0:4da:aabe:6f6c with SMTP id
+ ch41-20020a05612231a900b004daaabe6f6cmr10367344vkb.7.1713259983821; Tue, 16
+ Apr 2024 02:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Language: en-US, de-DE
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713259780;8204cfb5;
-X-HE-SMSGID: 1rwf8E-0002Wv-U9
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 16 Apr 2024 15:02:52 +0530
+Message-ID: <CA+G9fYtEh8zmq8k8wE-8RZwW-Qr927RLTn+KqGnq1F=ptaaNsA@mail.gmail.com>
+Subject: powerpc: io-defs.h:43:1: error: performing pointer arithmetic on a
+ null pointer has undefined behavior [-Werror,-Wnull-pointer-arithmetic]
+To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, clang-built-linux <llvm@lists.linux.dev>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Jeff Xu <jeffxu@chromium.org>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
+The Powerpc clang builds failed due to following warnings / errors on the
+Linux next-20240416 tag.
 
+Powerpc:
+ - tqm8xx_defconfig + clang-17 - Failed
+ - allnoconfig + clang-17 - Failed
+ - tinyconfig + clang-17 - Failed
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Note, these mark a few regressions I lost track of as resolved, as it
-seems nobody does care anymore.
+Build log:
+--------
+In file included from arch/powerpc/kernel/ptrace/ptrace.c:19:
+In file included from include/linux/syscalls.h:93:
+In file included from include/trace/syscall.h:7:
+In file included from include/linux/trace_events.h:9:
+In file included from include/linux/hardirq.h:11:
+In file included from arch/powerpc/include/asm/hardirq.h:6:
+In file included from include/linux/irq.h:20:
+In file included from include/linux/io.h:14:
+In file included from arch/powerpc/include/asm/io.h:672:
+arch/powerpc/include/asm/io-defs.h:43:1: error: performing pointer
+arithmetic on a null pointer has undefined behavior
+[-Werror,-Wnull-pointer-arithmetic]
+   43 | DEF_PCI_AC_NORET(insb, (unsigned long p, void *b, unsigned long c),
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   44 |                  (p, b, c), pio, p)
+      |                  ~~~~~~~~~~~~~~~~~~
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218720
-#regzbot fix: btrfs: tests: allocate dummy fs_info and root in
-test_find_delalloc()
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240416/testrun/23495171/suite/build/test/clang-17-tqm8xx_defconfig/details/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2fAvI3mKJ0dTHcazPrLl2zNF9JO/
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=217950
-#regzbot resolve: inconclusive: radio silence from reporter
-
-#regzbot report:
-https://lore.kernel.org/linux-scsi/dsg6rd66tyiei32zaxs6ddv5ebefr5vtxjwz6d2ewqrcwisogl@ge7jzan7dg5u/
-#regzbot resolve: inconclusive: give up tracking this
-
-#regzbot report:
-https://lore.kernel.org/linux-pci/20231228212340.GA1553749@bhelgaas/
-#regzbot resolve: inconclusive: Thorsten lost track of that one, seems
-people stopped caring
-
-#regzbot report:
-https://lore.kernel.org/stable/20240226213855.GB3202@hostway.ca/
-#regzbot fix: f7b94bdc1ec107c9226
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218198
-#regzbot resolve: inconclusive: people are still working on it, as its
-tricky; not worth tracking
-
-#regzbot report:
-https://lore.kernel.org/lkml/c7b38bc27cc2c480f0c5383366416455@linux.ibm.com/
-#regzbot monitor:
-https://lore.kernel.org/lkml/20240228161018.14253-1-huschle@linux.ibm.com/
+--
+Linaro LKFT
+https://lkft.linaro.org
