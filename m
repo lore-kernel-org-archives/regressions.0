@@ -1,123 +1,141 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3680384E19;
-	Tue, 16 Apr 2024 19:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829641386B3;
+	Tue, 16 Apr 2024 20:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713297472; cv=none; b=dG5zSk8JmiWv7EnAcoU++ktKmshAAnFNWZJAzifInEx+xsKQKnyOCUJrUvN4Ez8u3G0pmfCmCM4T5MEOo6ZQfbnfiwVzHS0tZ28wWzL79zRheg5+smUwQSFv4yOg9BHvPoon/BrOKoYNn1fMrd60paQJCfUQnpDcKcneE+2uIZ4=
+	t=1713299377; cv=none; b=kWu1R0FzLXtvyFY85dFPCeA5gm9H1yiQN4sPyn6NCjqCjI6CIsFUS+6lvoQFWOX09kmUGUeyGDmlkMGJDok9x46/rLeRjyz5kZpPJbUBBnqhyAihM4vi6cVMIohvIMc0NCRbEhuE7LIn4zPXNepJ3tuHLW730GvJnoJNV68kC7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713297472; c=relaxed/simple;
-	bh=E3iHWY3fRtLtKMI/pOvZuNhGML/VFF/zGrDAS5v84M8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rHuzC6rykjK4L4yKyH7dvV/Eh6yAhNig+8CywX1G1cNOT8PNO2zw+ZLkXwxHB6TDBJgdr5/nzk592w3lyz4t1UyH+Ymbb9GSnPrlBufJftHF2AKqCbro7NVU6FKejXDmc/v1zXswBUKjy2VFb6TusDeoY97vvvM9ERgSyDamGDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=TzWJ9WvD; arc=none smtp.client-ip=212.227.126.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1713299377; c=relaxed/simple;
+	bh=6HEyKo5kYiZdTNIX2x7F5vCVAgpWMKUXk3egaK3++qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nXRpGGOp1YSJktI0lxsmaaCkPsEHnZ6VNau7oPxtuE7Ir98/j/hYZL2z3p3GfG1Bja7G2EKZ9xRcDnb5Q5U1ftE23izHYIgvJn4lHplhKzE/T/0y0UoaEpytaMknBmq+f5nS4L8GJmB7aGSoVpZF/YTf7GAjNueCMN7Yg5ym5F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=YqOe4wcl; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="TzWJ9WvD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1713297449; x=1713902249; i=christian@heusel.eu;
-	bh=Eig0w71Tg2jh/AEC6QQiXVodCzOhteJsKfH40lzr940=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TzWJ9WvD7uk18bqTvCAMB9uzSh1JD7UsGRnKFv984H5yjiAZZfFYA3ECZedhcppu
-	 9Q3vEPD2aM0ijEUSnlHppS+e++DWLhTy7J2EcrZTEgOP9MmIhyT8NRZdQFy7jFRVt
-	 IlBIi/i2YEVlX8d+2l8uSJ1R6bEZwwLTKJtbCshSsim8tQfSvt0zKCVh0Yxoy0bbS
-	 Q1OEdeCiS8xSujts+sLqSd2QqHRytuelxGpvN8wnsUqNMGB07fnJ3njB+W1KU4qFA
-	 xttYuaAOo90m3suXRjWztxfuVQ17cmdpkcjQ6A8S5zb+/hMAF/84Sp7p8TXHoZcn7
-	 7AetV9rz01gu3nEqrA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue012
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MeDYt-1sUVvK2P4x-00bO0G; Tue, 16
- Apr 2024 21:57:29 +0200
-Date: Tue, 16 Apr 2024 21:57:27 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>, 
-	Vitaly Wool <vitaly.wool@konsulko.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	David Runge <dave@sleepmap.de>, "Richard W.M. Jones" <rjones@redhat.com>, 
-	Mark W <instruform@gmail.com>, regressions@lists.linux.dev, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>
-Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
-Message-ID: <itirowiwjrrpechdhyio2hz3czshs65yt6gwohcpjwohp4qs7z@hy2ebt5ie5aq>
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
- <20240416121804.a46c4174f6cec30ab51f18e5@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="YqOe4wcl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=sPGwBRQWRFRHvSklFGqm1QGyqC8ZPElQNUgAaD314Nw=; b=YqOe4wclWS3JbHyZ7COM1M6eTj
+	F8wAx+o54pfUFxnEI+ubSOBBIqAzVq37pgxB5DqAAsbCXnRA33IGwTU2deot6kUpYaCvqbKGWh8JW
+	HyhomG1yAU4RCBji1N88kC2c0HLYm51wrVTSZ8jPnuZgh95HTaUV+uGgNGsIGa6eXDrtj7U3RXr5U
+	mEekgJcmX3wzjurUXHmg0WEc0FhDg82ibHD/PqJ1LsnFCT7auLTCB9CLedTurK7unbnBKBdo41/Y/
+	W6fQvUr3sPKjp2/PEtlFYFr/jXROEJq018QHXBP4jTGflfSNRSkTGrVwX41xusQv5NGyBrc/RfjTC
+	lwUfX48Q==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1rwpQU-006b1s-NS; Tue, 16 Apr 2024 20:29:12 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 6A96BBE2EE8; Tue, 16 Apr 2024 22:29:09 +0200 (CEST)
+Date: Tue, 16 Apr 2024 22:29:09 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+	roland@debian.org, stable@vger.kernel.org
+Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
+	Herb Wei <weihao.bj@ieisystem.com>,
+	Jakub Kicinski <kuba@kernel.org>, Sasha Levin <sashal@kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Simon Horman <horms@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [Regression] USB ethernet AX88179 broken usb ethernet names
+Message-ID: <Zh7flXvNdDfattD9@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="spwgmais55ecsdks"
-Content-Disposition: inline
-In-Reply-To: <20240416121804.a46c4174f6cec30ab51f18e5@linux-foundation.org>
-X-Provags-ID: V03:K1:VVNgfLCOO5Io105TxXnz7lw0tRYCRwFN0OllGFLpujKGjs8SlXc
- rGNZLRKb5sOWas5qlY05y9gNMecsR08+8EvVr8Y83oGaWmWfFdnJA9zg7RrX6ENZTTjUBq4
- HjBURswxpXpjZsH8o4R8vMILQCJsEjeSQlJeSNUrhI5F/Uceg4UF2HYbV3xoV1GTi+CcCbH
- IeRXLxKyZ4WN7VXOrlVVA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nQpl5GbXnRA=;ac2yIz8qu7+et/kUR7dF5BxvO+C
- ThCcUubLt+on/h7DGWuDKYrliAElyhgEHX8dTMOj71UfHzN1QXnBZTBIxXprifmsRqY9rFljg
- IvVnRcudze9sSVvhM3NpfsUZvTj0CoIMa3Rmii5Fo8KJsPwHEPk2BbCIDA1Yuudw8q/bvWe5E
- iUSatww3TvnTGmvJEXfB6ESLRZTyl9t5GulrxqiJzKaQdTqIgjlF6yuAnuJNjAidDHtSl6Me/
- 4/9V46tv+EgMz7LJbFcgNCnF4u1WLPIOQXuA1IAACs3HrSbBUNDENvr/PxA5CWs58jZjs1l8d
- HI+YiLAd4RzOyBZpFyi/pxpFXcFTXjlEYFVm/yxtodRXQlJ+LyvzfPxarHDWHJ+PU2kzRzRAk
- chsOZG5J6IOMhSzGBybLZr5r3XRmMZsf2byE8mTOCeUoQwmJhhz65q/VdPRiMoJBjlPLCTqdk
- INjHA3MxbGevtIe+8pahffaPfwbAs/nuqP+xA14o81FO75XNAaRMirijzK+WHxDLd8gJfQoiX
- 1VO343F3O4c8xwkm2KLPRh4qRzq8dIepo1G5oHoLhQt9v60X8z+ohdVNY0apL81SIuT2bYuKY
- X8z07uHoElAWbDRSgkj0gZ+UghwEoYlo3PN2QfYVAmr7NpGNkXH31LlpRbnbXwG9RtAwZnSqc
- tX/CFtDHBlAfG8/f64RP5Vr0GVhyPr7WPnLBTBbhWoILQDxNzzAkRbhLOAzakNF86Lxqkg2TV
- pUnuN5oDyosaMprmCQbqgtYUkIK3pgna3v7ymLTNtewS9OMPaDmhzE=
-
-
---spwgmais55ecsdks
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+X-Debian-User: carnil
 
-On 24/04/16 12:18PM, Andrew Morton wrote:
-> On Tue, 16 Apr 2024 14:19:24 +0200 Christian Heusel <christian@heusel.eu> wrote:
-> > [  218.738568] CPU: 0 PID: 167 Comm: guestfsd Not tainted 6.7.0-rc4-1-mainline-00158-gb5ba474f3f51 #1 bf39861cf50acae7a79c534e25532f28afe4e593^M
->
-> (cc more zswap people)
->
-> Fairly old kernel.  We might have fixed it since then, but it would be
-> good to know what fixed this, for backporting reasons.
+Hi,
 
-Hey Andrew,
+Roland Rosenfeld reported in Debian a regression after the update to
+the 6.1.85 based kernel, with his USB ethernet device not anymore
+able to use the usb ethernet names.
 
-I guess you must have missed the end of my previous mail, I have
-verified that the bug is still present with with the latest mainline
-release and bisected the issue down to a few commits. The trace I was
-posting above was just a random one from during the bisection.
+https://bugs.debian.org/1069082
 
-Sorry if my formatting was a bit confusing .. :)
+it is somehow linked to the already reported regression
+https://lore.kernel.org/regressions/ZhFl6xueHnuVHKdp@nuc/ but has
+another aspect. I'm quoting his original report:
 
-Cheers,
-Christian
+> Dear Maintainer,
+> 
+> when upgrading from 6.1.76-1 to 6.1.85-1 my USB ethernet device
+>  ID 0b95:1790 ASIX Electronics Corp. AX88179 Gigabit Ethernet
+> is no longer named enx00249bXXXXXX but eth0.
+> 
+> I see the following in dmsg:
+> 
+> [    1.484345] usb 4-5: Manufacturer: ASIX Elec. Corp.
+> [    1.484661] usb 4-5: SerialNumber: 0000249BXXXXXX
+> [    1.496312] ax88179_178a 4-5:1.0 eth0: register 'ax88179_178a' at usb-0000:00:14.0-5, ASIX AX88179 USB 3.0 Gigabit Ethernet, d2:60:4c:YY:YY:YY
+> [    1.497746] usbcore: registered new interface driver ax88179_178a
+> 
+> Unplugging and plugging again does not solve the issue, but the
+> interface still is named eth0.
+> 
+> Maybe it has to do with the following commit from
+> https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.85
+> 
+> commit fc77240f6316d17fc58a8881927c3732b1d75d51
+> Author: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+> Date:   Wed Apr 3 15:21:58 2024 +0200
+> 
+>     net: usb: ax88179_178a: avoid the interface always configured as random address
+> 
+>     commit 2e91bb99b9d4f756e92e83c4453f894dda220f09 upstream.
+> 
+>     After the commit d2689b6a86b9 ("net: usb: ax88179_178a: avoid two
+>     consecutive device resets"), reset is not executed from bind operation and
+>     mac address is not read from the device registers or the devicetree at that
+>     moment. Since the check to configure if the assigned mac address is random
+>     or not for the interface, happens after the bind operation from
+>     usbnet_probe, the interface keeps configured as random address, although the
+>     address is correctly read and set during open operation (the only reset
+>     now).
+> 
+>     In order to keep only one reset for the device and to avoid the interface
+>     always configured as random address, after reset, configure correctly the
+>     suitable field from the driver, if the mac address is read successfully from
+>     the device registers or the devicetree. Take into account if a locally
+>     administered address (random) was previously stored.
+> 
+>     cc: stable@vger.kernel.org # 6.6+
+>     Fixes: d2689b6a86b9 ("net: usb: ax88179_178a: avoid two consecutive device resets")
+>     Reported-by: Dave Stevenson  <dave.stevenson@raspberrypi.com>
+>     Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+>     Reviewed-by: Simon Horman <horms@kernel.org>
+>     Link: https://lore.kernel.org/r/20240403132158.344838-1-jtornosm@redhat.com
+>     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> Seems, that I'm not alone with this issue, there are also reports in
+> https://www.reddit.com/r/debian/comments/1c304xn/linuximageamd64_61851_usb_link_interface_names/
+> and https://infosec.space/@topher/112276500329020316
+> 
+> 
+> All other (pci based) network interfaces still use there static names
+> (enp0s25, enp2s0, enp3s0), only the usb ethernet name is broken with
+> the new kernel.
+> 
+> Greetings
+> Roland
 
---spwgmais55ecsdks
-Content-Type: application/pgp-signature; name="signature.asc"
+Roland confirmed that reverting both fc77240f6316 ("net: usb:
+ax88179_178a: avoid the interface always configured as random
+address") and 5c4cbec5106d ("net: usb: ax88179_178a: avoid two
+consecutive device resets") fixes the problem.
 
------BEGIN PGP SIGNATURE-----
+Confirmation: https://bugs.debian.org/1069082#27
 
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmYe2CcACgkQwEfU8yi1
-JYWu3g//XBsQJ0tXtI2lOeJhl6ka7DEcTV0Q0rACj5w3aKaxsHnaVmKAY353ERdS
-+FONEiz0KWk3UP9ie7+EsGVVcW6go1r8Wion4azXWTjp3SMMrlDg6+KqjJfjkvlZ
-1BDy9+iPfbT5pZfLlW4rVYOTBcYdweA577NHzkBdI2t16FAJwCAlzHuV0vRkG/HZ
-Aq9X9HSizAYNdgc0NUPHcsXtxB45JZh9yFyo6eFO3qJyMik9HkK3JogqGMdSHw2R
-Z3liihM0eWpqCqkDrOJhg6OV68OD1KcYNhF/lKpBNboNjO2LNxQtkQisK+n1mdnt
-aXRXuuxhiThv2KWlSxnDDgNFPurCVil5mRVpEiOzoHrPNnB4lgoBYV8RR018kVol
-BVWFvnfR/mNN43XhgG82TOfdXMRg8xUWjvLC8ca8QrawtHwvNInCiB3C4Uey3VoU
-k0ZD+O8/wvNS1Y/Eomj0R3VcNKBghZJMRcvjgtwT5/rJC3GYeEc4djurEm0T9fnv
-rAvIQvyJgP0aGDl/SKxBHt8aVp07E9rSsxoebg7sIfVyGh515ja9hov/hhFIUwdc
-dAO/0LEM1BPXOLgHhY0XCcnJYR32HdFMubFWD97q5z5pacA7vRoLUhgbHTdYXiHW
-drxDaLwfRoegeFIGMhVOQx/44zIQ8vKiXCPthiKiV5zrv/WYprU=
-=K6Xl
------END PGP SIGNATURE-----
-
---spwgmais55ecsdks--
+Regards,
+Salvatore
