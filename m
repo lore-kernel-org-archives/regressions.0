@@ -1,90 +1,131 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEEB81292D7;
-	Tue, 16 Apr 2024 13:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C496412C466
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 13:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713272457; cv=none; b=sgoEGloEonPpUVLW/azlDihFMnPHsxJ3oJYX71ta+5zUVdBu8EnqtQ2thZ6qCvWNqKjlllasSqk/wUKFQ+TnniryYl0CrEKLIGq3ENgkQr+muBqzfdXF9EJfhjB1Dl/I5T12InaSA2Rv1segdtBlIEd2C9e1ocKFPWVNS52f0uM=
+	t=1713273508; cv=none; b=Cs//oJJlwEGumH2Al+i+19qpZKkdQWVlmgqIpBW50Dt3ezxhyS2kHEM8cSBBzuUlrYfX63+wFyOSHJNtS+Ug1ES5v/nwGr7Kajk68t/3nlUGJqoMEABlRkqUeSRvnXRSQK1qFziB2Fv9ijuBiSOw6xlzNeD6lB027ReK5uVTINs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713272457; c=relaxed/simple;
-	bh=NkGV98SReVJjvmjh1PYxOXJR9XBB7H++66yf+9P/yFM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H1QpTLy9+Olqo0WwTOGqBQjAsipdN+xK7hMayNbSWjjYwEJqSpqVOux/beJ2JJTO9zWo9W5Fz4Yh/xi8/9+4Gpi2r+YWbfP5j+WenC/Y2qG7chF6alP7VqT8sRk7V0r+mNdPndymDHjI5jlD/9iD5xzjhjmS7U4fNoB3jYq6vok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E43E339;
-	Tue, 16 Apr 2024 06:01:19 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D217E3F738;
-	Tue, 16 Apr 2024 06:00:49 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: joro@8bytes.org,
-	will@kernel.org
-Cc: ewagner12@gmail.com,
-	suravee.suthikulpanit@amd.com,
-	vashegde@amd.com,
-	jgg@ziepe.ca,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] iommu: Fix def_domain_type interaction with untrusted devices
-Date: Tue, 16 Apr 2024 14:00:43 +0100
-Message-Id: <fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
+	s=arc-20240116; t=1713273508; c=relaxed/simple;
+	bh=u3r3BNHWn0VNuX0IDcCiM+gYMJzoSCvGaQ+eZeZOnUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1MudNwawcoHIro2thkFfzM0Ea639SJeUbOd0zwcuKacBH1mxYyBzONTrlXARS6h9Tl/9DpsLKsNMn4spYXmWpMytHJMk3a6hMXCaezbL/J/G4Ybqie9BImouffPUHDYEVlOTTAkgj/ZXdm8w4eCfutOCUAv1Ff/GnuH1RWED5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihY-0005sO-EE; Tue, 16 Apr 2024 15:18:20 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihX-00CcPG-Ut; Tue, 16 Apr 2024 15:18:19 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rwihX-002BWp-2p;
+	Tue, 16 Apr 2024 15:18:19 +0200
+Date: Tue, 16 Apr 2024 15:18:19 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] stm32mp1xx based targets stopped entering suspend
+ if pwm-leds exist
+Message-ID: <dqibafuvizvltkblfizxvgrl3744lpxbwgdjid5ekxsju7gmxm@fys22ievmgz5>
+References: <5da6cf8a-4250-42f6-8b39-13bff7fcdd9c@leemhuis.info>
+ <2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg6bxobtdlekt4@mazicwtgf4qb>
+ <256e3d3c-d43f-4bd6-9a7b-50fc870e75e4@leemhuis.info>
+ <20240416121519.GS2399047@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mgrsmbcc7mtyc46w"
+Content-Disposition: inline
+In-Reply-To: <20240416121519.GS2399047@google.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-Previously, an untrusted device forcing IOMMU_DOMAIN_DMA always took
-precedence over whatever a driver's def_domain_type may have wanted to
-say. This was intentionally handled in core code since 3 years prior,
-to avoid drivers poking at the details of what is essentially a policy
-between the PCI core and the IOMMU core. Now, though, we go to the
-length of evaluating both constraints to check for any conflict, and if
-so throw our toys out of the pram and refuse to handle the device at
-all. Regardless of any intent, in practice this leaves the device, and
-potentially the rest of its group or even the whole IOMMU, in a largely
-undetermined state, which at worst may render the whole system unusable.
-Unfortunately it turns out that this is a realistic situation to run
-into by connecting a PASID-capable device (e.g. a GPU) to an AMD-based
-laptop via a Thunderbolt expansion box, since the AMD IOMMU driver needs
-an identity default domain for PASIDs to be usable, and thus sets a
-def_domain_type override based on PASID capability.
 
-In general, restoring the old behaviour of forcing translation will not
-make that device's operation any more broken than leaving it potentially
-blocked or subject to the rest of a group's translations would, nor will
-it be any less safe than leaving it potentially bypassed or subject to
-the rest of a group's translations would, so do that, and let eGPUs work
-again.
+--mgrsmbcc7mtyc46w
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Eric Wagner <ewagner12@gmail.com>
-Link: https://lore.kernel.org/linux-iommu/CAHudX3zLH6CsRmLE-yb+gRjhh-v4bU5_1jW_xCcxOo_oUUZKYg@mail.gmail.com
-Fixes: 59ddce4418da ("iommu: Reorganize iommu_get_default_domain_type() to respect def_domain_type()")
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/iommu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hey Lee,
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 996e79dc582d..90dbea14d4d6 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1772,9 +1772,8 @@ static int iommu_get_default_domain_type(struct iommu_group *group,
- 		if (driver_type && driver_type != IOMMU_DOMAIN_DMA) {
- 			dev_err_ratelimited(
- 				untrusted,
--				"Device is not trusted, but driver is overriding group %u to %s, refusing to probe.\n",
-+				"IOMMU_DOMAIN_DMA for untrusted device overrides driver request of %s for group %u, expect issues...\n",
- 				group->id, iommu_domain_type_str(driver_type));
--			return -1;
- 		}
- 		driver_type = IOMMU_DOMAIN_DMA;
- 	}
--- 
-2.39.2.101.g768bb238c484.dirty
+On Tue, Apr 16, 2024 at 01:15:19PM +0100, Lee Jones wrote:
+> On Tue, 16 Apr 2024, Linux regression tracking (Thorsten Leemhuis) wrote:
+>=20
+> > On 06.03.24 09:18, Uwe Kleine-K=F6nig wrote:
+> > > On Wed, Mar 06, 2024 at 08:05:15AM +0100, Linux regression tracking (=
+Thorsten Leemhuis) wrote:
+> > > > [...]
+> >=20
+> > Jakob confirmed it helped in the bugzilla ticket. But the patch since
+> > then didn't make any progress afaics -- or did it and I just missed it
+> > in my search?
+>=20
+> [...]=20
+>=20
+> > > ---->8----
+> > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
+> > >=20
+> > > On stm32mp1xx based machines (and others) a PWM consumer has to disab=
+le
+> > > the PWM because an enabled PWM refuses to suspend. So check the
+> > > LED_SUSPENDED flag and depending on that set the .enabled property.
+> > >=20
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218559
+> > > Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED s=
+hould be off")
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > [...]
+> > > ---->8----
+>=20
+> Did you submit this?  I don't see it in LORE or in my inbox.
 
+Yeah sure, apply it using:
+
+	curl -s https://lore.kernel.org/all/2vbwacjy25z5vekylle3ehwi3be4urm6bssrbg=
+6bxobtdlekt4@mazicwtgf4qb/raw | git am --scissors -s
+
+:-)
+
+If you don't consider that suitable, I can create a patch that is easier
+to pick up.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mgrsmbcc7mtyc46w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYeepoACgkQj4D7WH0S
+/k5gugf/bpVGAeUjhxmd3eLjzH0HtU2qSxWQG4LFIRegk08Ex4wJNhpopT1kQOhN
+SMdNDgjcgSxvo9tqfH9cBTltJF0Baedv3dWGb4G/pJEfJRmUrk0+mkC/ZIoL/fTE
+VT0zY6pg3+zAXij2/W73VzFMGIf04A1CWrbOdxaODWlNVX/hb/MlS7TbbATp2PSZ
+DDDZhQe8kYQ9FPVvqM3HJRlZH5BJA/uLLHz+EK2H8QiMzqL6V/tCaY/ewjv+ZoO1
+20RPRH45JQA5LEALCkdAJ8+0OCHjxuQd14SHagxVW85U+vwA8CmTdDOwZFFnUTfw
+82MlSpgXg2z+D+tOpuqNd/HVKvO7sA==
+=NwBy
+-----END PGP SIGNATURE-----
+
+--mgrsmbcc7mtyc46w--
