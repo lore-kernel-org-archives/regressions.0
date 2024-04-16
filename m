@@ -1,140 +1,113 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95FF80C14;
-	Tue, 16 Apr 2024 22:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CB63B2A6
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 23:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713306572; cv=none; b=X4FO8TgBPVKqSoJo9c4oQWRH01LfAPgBxrVnR2mOUyLzkB8JggpCTM+tDJWd6rG8/R0UXkmuvP0ua9DBrd1Nr+K3MkzRpKaOQO6Xf+vqF1DJEU7eYx6a6tVELYbLmVdW7xTcpnj9rxxYDHf8+T1ED6+qcorAGGcijv8IlZHhNW4=
+	t=1713309698; cv=none; b=VRm9LrqXRuN9VsIt1g5kUU2Yi2dSIgv1gpndi3xKTi7FtFDJMOwvoeAKtnom68h0U2PFy8guvBr8iZxtbFZ2AFpC1V7Vw+duhX8W87Tn7fgSUCs8LC1SkuNJ3xYkoYzkbfz+TpPQy53bjoORRprCZKbQvW8NePDSKlllh1ZiIHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713306572; c=relaxed/simple;
-	bh=LYFidti7kQ+3adHtZzCFLp1lsptKVrIjzJ2QN66PGSw=;
+	s=arc-20240116; t=1713309698; c=relaxed/simple;
+	bh=Yq3XYE5PQn1xLC4Ak5UqnG6QBcosEZ2V2zfPFVJIjp0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9FYYU/EGyQLAZSVv3sRL+LcM+9w6c0BVg18WEfEx+ZNLF5fFJBLqkGqXMpoUh6oBktAg5QJ8gmNBugQkYM1y8u1/BYSZhIUP3Q72xJBEkta/qpzPrwkMZIZrReMgaOG1Ip0xHeTQ/tu54qMr4j71f3RmKk3MoT/xLHZsSEciRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=dzl3c9AJ; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOQbADC6TWAY/Y6fmXDeB3zXpBMb31E0Ufw7GlpgmbRWdm9WODOr9fpSuk1fpH+DyrhvhF1VUrk5nFCN9DgAiwk+NpGJ/+ds2yLHeve93nhMdAttriAKtfzJ1l2jlum1m7qFaUho0J/eJdS15FCWWhcQZOW4gT0v72uS1Fvpec0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7/NgHf6; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="dzl3c9AJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1713306548; x=1713911348; i=christian@heusel.eu;
-	bh=6ZuMU0XovAW0umCv+YpdexPnFfz2IsuCOBAjTp3FJ2o=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=dzl3c9AJZ7GcdIopbTeRuoq56m93I8Yt1xokGjGIWv1YJSsgnfR64QMLSt+6Ak90
-	 JGYqy2BB7Wx0eP7aPanOfZVK/ipYjPlCdjHdrNgxwoVUfezV6jghmpIsNYRsSf9s1
-	 28lza0Vob4VoH2ahG6heOudRZhLRLBy3XYH7uQhSO+Kq9W/2eM526jguwwDCK+8U/
-	 T2DfL7C7AjSYdiSLDA9SrbWRm93AA/W9Wrp9effGG1vhP5tD1kFmsnuZWWcYgEqA5
-	 UZmTlkBQFjHr/f6oxVA9gP6ecmTw7D5/bm6oEPoUuhTAS6EuAMyv0iORCG1+Q80t6
-	 67f2d3BSLWfwS0aw/g==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue108
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1N63JO-1spaXL3iUS-016L9Z; Wed, 17
- Apr 2024 00:29:07 +0200
-Date: Wed, 17 Apr 2024 00:29:06 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>, 
-	Vitaly Wool <vitaly.wool@konsulko.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
-	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev, 
-	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>
-Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
-Message-ID: <u4tzik2yfdn4eqtb2xc7ssmqsfozjblduu4znwuhlptivcfhza@wkvjsi73dtqt>
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
- <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7/NgHf6"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ed267f2936so3974213b3a.3
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 16:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713309696; x=1713914496; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+fgpHfTT4Bxv+6WWCRjV8ylNM9LjcYeL1sBjLxOjPOk=;
+        b=W7/NgHf6JMlOercruJLwNE3JLNqsJqBwl/5ouaLTYmqWY58UoE1/1ajQLUmmjJD9Ew
+         TpGwnBI6j/ywBDs5WQW7hxcUtMMd2isF1Zje4jICrgE6d9uvx3Kd0E1jnHCR5DcR0Alk
+         oRP8vdqLT0D5ZJYqi7USbs+ZWUe7uMVnkTUy7OpLo/DxcXGHyqZEj/ag5e3nTu5PMG2r
+         A2AJfdj/tLNj4ya+tPYyOByuDtJrF3bHXuWgQ6U7ZxDsfGTSXVC+ChdZeObwV11EqjA5
+         1ih3HLDN8UVa/BpiKzGLkMZAk05RVQ+whK2bavE8Lc1x5a+eEYx6jVMWNWFz9jSOWKkR
+         +DRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713309696; x=1713914496;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+fgpHfTT4Bxv+6WWCRjV8ylNM9LjcYeL1sBjLxOjPOk=;
+        b=n77EmteuCjmZWBd04lAa3h0nG5Aqz1YevwQRj5OOE3o9oZYMIrQVHhuFgYHZLN0+j2
+         akG7MqMiaVnRAA7as5OLhUM5UZaHCnzgBjoQZbVsYNNyWb/i7xJPsaV1YljX9RWD9rjb
+         sxKcCHT8qPYC3jfJa8lKwG+bRlh7NnwuhvhQU43F5oQCufE1l1D1f7+mPKpy51Q8hjmG
+         Q8JA3i1ySfpIsydzdTJByLAg0zWVr+nss7EEJoFD0/De8ajagLzoN/SFBveT74ZXnMdx
+         53K95wESzMV3ZsFDwwMW5is5SJxhj/6K6t9OBBqu+Axbnt0c2GsxK3HaIJTy4pG6Ea0U
+         la0g==
+X-Gm-Message-State: AOJu0Yz/DGBlm1eJ6cawfwEjeJDykT936aLOkiVh2B6DWf+Ym9fW6h5u
+	QHUsKXaaqzUdXqn3zvu6TruHsgHguW87koN3QcJYcGh49iIRyst7mc+FRMSq
+X-Google-Smtp-Source: AGHT+IFRj3M/Wa9lIIhbJrMGRGXExG4U8ICEyuvtKUVCJx+R1O1y/hFqrxZp+bEM2ETZ7slNNsafMw==
+X-Received: by 2002:a05:6a00:2295:b0:6ed:1012:9572 with SMTP id f21-20020a056a00229500b006ed10129572mr15448814pfe.29.1713309696504;
+        Tue, 16 Apr 2024 16:21:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id t6-20020a056a00138600b006ecef9e9615sm9483775pfg.200.2024.04.16.16.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 16:21:36 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 16 Apr 2024 13:21:34 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+Message-ID: <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
+ <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+ <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
+ <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
+ <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5czpi4g6eex7fcrz"
-Content-Disposition: inline
-In-Reply-To: <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
-X-Provags-ID: V03:K1:gmC2JZMi3s3whUDW28Kj0ii/4DWoP1EWJUCNF7CPhIPfhADmGNy
- l1YW7zdala2X7vNZ8m9Jtb4u3L0KIOyFmdY7KyGOkHdxfr0iV9ncw9KjVyL5JYxtOjPuAVi
- 0xb4YzLb45wkOe8VAPFE5x7Y1D+dryhGyuuWyPtmG3enOd5uyb/6UV8UcR6oS2Y2YFoaV0V
- su1Si6zeJVIKmD4M0QwGg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JTJsWm0H3nw=;IIKW3gMDzvjWMZIDGn60yl7s01D
- I14nwLf8N7tGNLzIdX0A1JO0saZSf9wo0TDOH2ObsXKMmg4ycreuaajIwWD3EXXkFRhC6RY4U
- EA7obFuyu4qd4pfPeT7iN3CZY3KfLTDgljXI1qIWEq3QW8+rRpdaPq1wF4VE2HVp9/BOSX6RK
- 3lIMYMZOX2E39ZlA1/PKhGWXvP4STHjigazOraT7B63NHgP005XprzjIa7eJg+iCynj+kdFA7
- dPI9ANlCYVnrZck7iQ9BbxdRuL/t/hiR2qu7FNxmTxmtqhgXcE9zHE3XCfcBmke7Gte+Zx3/Y
- uvrBY1SAviLT1I+ZavRSrEz5rGQqHw6j9D7/ZJStLkMPgcr+7tcIu/rxeT8aNJQ23fenvqAjP
- NWZMoAFjtT2plfoVYiAHJwQnwCXYVJOSclqbYpjCcwc+U5Aux1FuCMbNAOD6j25nlJ0kbXxkf
- BgmD7/r6DbJ4pmVe7jiGEFM+yTNEuo52gZQrH6QY1WJlG33IMHXM8BjGo/yjuxmzT+TJYpE0Y
- +zi4+4o5TcuE7RvFwZKLbBnlvXXEq4+3YnuayOgCJNw/7IsgyVM0IolFGxF6haSwn/UvrCh4I
- j4LX2LpgGqU0tGYxtWX5JNfdx41x/m+S4bh4t6VSj0U66Dju3eBf3WQgGfUUR2C+eAgT/Z2l/
- UNeW/pBx5duKBgR24I2J1dlV3ij+XS6aIYrv/aq1uKynHDCGJQTyw8LeF/W7tz461RQB4QfZr
- 0ZK2VV+Xg2G3eZA/Bod807sqdkyosJAup3oqSd10e9wi6nnwjlZTHY=
-
-
---5czpi4g6eex7fcrz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
 
-On 24/04/16 03:14PM, Nhat Pham wrote:
-> Is this one of the kernel versions that was broken? That looks a bit
-> odd, as zswap shrinker landed on 6.8...
+Hello,
 
-Yes that is the build at commit b5ba474f3f51 ("zswap: shrink zswap pool
-based on memory pressure") which is one of the kernel versions that is
-broken, although the version string seems a bit confusing. This is due
-to the build script invoking "make -s kernelrelease" which gives the
-following:
+On Tue, Apr 16, 2024 at 08:08:07AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 12.04.24 04:57, Bjorn Andersson wrote:
+> > On Wed, Apr 10, 2024 at 11:18:04AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >> On 08.04.24 00:52, Bjorn Andersson wrote:
+> >>> On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> >>>>
+> >>>> Tejun, apparently it's cause by a change of yours.
+> >>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
+> >>>>
+> >>>>> booting the current kernel (6.9.0-rc1, master/712e1425) on x86_64
+> >>>>> with nohz_full=0 cause a page fault and prevents the kernel from
+> >>>>> booting.
+> >>> [...]
+> 
+> Tejun, I got a bit lost here. Can you help me out please?
+> 
+> I'm currently assuming that these two reports have the same cause:
+> https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/T/#u
+> https://bugzilla.kernel.org/show_bug.cgi?id=218665
+> 
+> And that both will be fixed by this patch from Oleg Nesterov:
+> https://lore.kernel.org/lkml/20240411143905.GA19288@redhat.com/
+> 
+> But well, to me it looks like below issue from Bjorn is different, even
+> if it is caused by the same change -- nevertheless it looks like nobody
+> has looked into this since it was reported about two weeks ago. Or was
+> progress made and I just missed it?
 
-  $ git checkout b5ba474f3f51
-  [...]
-  $ make -s kernelrelease
-  6.7.0-rc4-00158-gb5ba474f3f51
+Can you elaborate why Bjorn's case is different? I was assuming it was the
+same problem and that Oleg's fixes would address the issue.
 
-The commit is contained in v6.8+ only as you say, so its just confusing
-in the version string:
+Thanks.
 
-  $ git tag --contains b5ba474f3f51 | grep -v next
-  v6.8
-  v6.8-rc1
-  v6.8-rc2
-  v6.8-rc3
-  v6.8-rc4
-  v6.8-rc5
-  v6.8-rc6
-  v6.8-rc7
-  v6.9-rc1
-  v6.9-rc2
-  v6.9-rc3
-  v6.9-rc4
-
-Please see my initial report for the detailed bisection results and the
-link there to the bisection log.
-
-Cheers and thanks for looking into this!
-Christian
-
---5czpi4g6eex7fcrz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmYe+7IACgkQwEfU8yi1
-JYWS8RAAgarbioWmeY1qe9WCWZ+xmvQgbhyrqN5NNM2/hlM/Wv1K5bcdpNC0VZM8
-YNnmmc8vQuXupu47pMKpMGFwCr6v8ztGgBs2A1kr/8Q4ESTFx0owXrgsgWOqcUsm
-PBVg/t8vwpHv1fWKM2Mf3/3tyJorggozCMluDArAsNyz5kFlMcsRVBkfVOVtqASW
-OR2kXl7B55YavHMgM7IPfQO0/Dr4/67NzWt2TCJMm1Mi+0GnJAglKt6wQUf4567g
-K2NPsuvbuwOGSKoEUQqfGYFadVtTac3RlDQ+4gw0HWR2Hs1/XBpdHOyLsOWhip9g
-KomaPpcJr305uXZAzQCediwPzrULHnvAZ+5o8SzNGOSqz3GMo6YaUuRuf5TWE9Wl
-Jp8yLkbOdIPDcQ7g+reEfwLXqyc4jMWzoeINImN7BbPcLq/oj8fqQXuVFoF4jajo
-/Qpl8U14ZLwsk/6VxwOy0VPRf4wkfC0njZNR19auU4090Q3ZLS9oY3IwzULOH57o
-6yrQFUv1Jpjk+lf6cddwiCK0LCdvS3/ugtMv2H1HUdmdeqqQ2mUFPDunW06WuUns
-C69ojDexsqdATdr0dmC+7OK7qs+IQUzd6Izi8510CGhE8CzM7DGH3iNcNDU0VL4h
-ED27FWmDBlJ0neF5uCSCyuCdPyVKCA+XQ6rQCtFescGuZC9cSTI=
-=xoCM
------END PGP SIGNATURE-----
-
---5czpi4g6eex7fcrz--
+-- 
+tejun
