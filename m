@@ -1,113 +1,163 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CB63B2A6
-	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 23:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5796A3A27B
+	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 23:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713309698; cv=none; b=VRm9LrqXRuN9VsIt1g5kUU2Yi2dSIgv1gpndi3xKTi7FtFDJMOwvoeAKtnom68h0U2PFy8guvBr8iZxtbFZ2AFpC1V7Vw+duhX8W87Tn7fgSUCs8LC1SkuNJ3xYkoYzkbfz+TpPQy53bjoORRprCZKbQvW8NePDSKlllh1ZiIHs=
+	t=1713310193; cv=none; b=cYZKuPiN1CRVSLjdgUI+piGuYTwARXUBtNyk7zR+O0I0lAZeEDfY3I4MkvjtaqXMqDtBOj5F5gYczY6net8f+VAbyIoN+3GmXh0kF1X9/znoe38XuuPtoW4SZwNtlEu1sa+sI81fLdTZjgFnDYjQfO77R9JjOf19H7/nVajnlTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713309698; c=relaxed/simple;
-	bh=Yq3XYE5PQn1xLC4Ak5UqnG6QBcosEZ2V2zfPFVJIjp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IOQbADC6TWAY/Y6fmXDeB3zXpBMb31E0Ufw7GlpgmbRWdm9WODOr9fpSuk1fpH+DyrhvhF1VUrk5nFCN9DgAiwk+NpGJ/+ds2yLHeve93nhMdAttriAKtfzJ1l2jlum1m7qFaUho0J/eJdS15FCWWhcQZOW4gT0v72uS1Fvpec0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7/NgHf6; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1713310193; c=relaxed/simple;
+	bh=y15kkh/UzNlt8PyzGY6czdnu89oxFroFanLzwhfD0N8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YHh4DEXpn5VujyecKxbNH7ZQT/+NkscXCCvXQGczllOt8LK5vQNE589vvupjt6kNu4Bzd2nd5ubu339xngy872NkQJY3fZaEmFvMFexNLBou93zgR10dwVENtlkL/rgha/LXlaICkazuG1m/g0WzaMgmlc4Nl+6y/2EcXDRO8rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0gvEqu3; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7/NgHf6"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ed267f2936so3974213b3a.3
-        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 16:21:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0gvEqu3"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-69b44071a07so38185846d6.3
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 16:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713309696; x=1713914496; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+fgpHfTT4Bxv+6WWCRjV8ylNM9LjcYeL1sBjLxOjPOk=;
-        b=W7/NgHf6JMlOercruJLwNE3JLNqsJqBwl/5ouaLTYmqWY58UoE1/1ajQLUmmjJD9Ew
-         TpGwnBI6j/ywBDs5WQW7hxcUtMMd2isF1Zje4jICrgE6d9uvx3Kd0E1jnHCR5DcR0Alk
-         oRP8vdqLT0D5ZJYqi7USbs+ZWUe7uMVnkTUy7OpLo/DxcXGHyqZEj/ag5e3nTu5PMG2r
-         A2AJfdj/tLNj4ya+tPYyOByuDtJrF3bHXuWgQ6U7ZxDsfGTSXVC+ChdZeObwV11EqjA5
-         1ih3HLDN8UVa/BpiKzGLkMZAk05RVQ+whK2bavE8Lc1x5a+eEYx6jVMWNWFz9jSOWKkR
-         +DRg==
+        d=gmail.com; s=20230601; t=1713310191; x=1713914991; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XLy1Ua1b77r4qsxuukriMKLfQ+NQtqpcoJqaT5UdrRA=;
+        b=K0gvEqu372QRkAJuBtX8RvuJut6YJ+Ejl4a5c1iOr3r9Z9Jb9yOgvZmyp8AIzj1M1b
+         rHSwB1xxhcMRhiI/jbRxX3kdCX/m34KaV9qaZKj4NZe8otFrWqmxH0hUbokPMuRI7ERX
+         MnjdxKje3i6wC8EDxcsr4nZnDb/tNVbALlxt8U8dCRiMSJLyiGaWLtkeDARt4J3wou60
+         VmvyLjE+9JmkIlFe18TUDs2pn0bv7JscrnDSAqhmPajKwphkFDAcO0Q8mw9XmdRvby7o
+         KgXQi0p4n7HNpY3GvfeZ5iI7NAhqdjOlWFdXZ7EjGRr67IJCMU5HH6vU2r1y2t4ggvnn
+         iQ9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713309696; x=1713914496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713310191; x=1713914991;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+fgpHfTT4Bxv+6WWCRjV8ylNM9LjcYeL1sBjLxOjPOk=;
-        b=n77EmteuCjmZWBd04lAa3h0nG5Aqz1YevwQRj5OOE3o9oZYMIrQVHhuFgYHZLN0+j2
-         akG7MqMiaVnRAA7as5OLhUM5UZaHCnzgBjoQZbVsYNNyWb/i7xJPsaV1YljX9RWD9rjb
-         sxKcCHT8qPYC3jfJa8lKwG+bRlh7NnwuhvhQU43F5oQCufE1l1D1f7+mPKpy51Q8hjmG
-         Q8JA3i1ySfpIsydzdTJByLAg0zWVr+nss7EEJoFD0/De8ajagLzoN/SFBveT74ZXnMdx
-         53K95wESzMV3ZsFDwwMW5is5SJxhj/6K6t9OBBqu+Axbnt0c2GsxK3HaIJTy4pG6Ea0U
-         la0g==
-X-Gm-Message-State: AOJu0Yz/DGBlm1eJ6cawfwEjeJDykT936aLOkiVh2B6DWf+Ym9fW6h5u
-	QHUsKXaaqzUdXqn3zvu6TruHsgHguW87koN3QcJYcGh49iIRyst7mc+FRMSq
-X-Google-Smtp-Source: AGHT+IFRj3M/Wa9lIIhbJrMGRGXExG4U8ICEyuvtKUVCJx+R1O1y/hFqrxZp+bEM2ETZ7slNNsafMw==
-X-Received: by 2002:a05:6a00:2295:b0:6ed:1012:9572 with SMTP id f21-20020a056a00229500b006ed10129572mr15448814pfe.29.1713309696504;
-        Tue, 16 Apr 2024 16:21:36 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:6f51])
-        by smtp.gmail.com with ESMTPSA id t6-20020a056a00138600b006ecef9e9615sm9483775pfg.200.2024.04.16.16.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 16:21:36 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 16 Apr 2024 13:21:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
-Message-ID: <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
-References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
- <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
- <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
- <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
- <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
+        bh=XLy1Ua1b77r4qsxuukriMKLfQ+NQtqpcoJqaT5UdrRA=;
+        b=a+0UiYbiFEjLY7JGrheb0dG7O+lNyfLK+s1K7PNMNxH+WzT7ceZp07SKgUMSOcJii5
+         em+QXkRhC1WofH7F2slNeoFMobYh/cyKO67rfKS1QaYOE7QfqfLdRDX4PdJGNcWfUCHo
+         H+WP+UtYXvZWHoCDxBgW6cZCEVN7lmCFwsELkz4L74EnKvKtDk1POIhagawpiYIFK9OQ
+         188MhhAeKmzqEOCBYIfhpbIhxoGDDraReis+esOteB2GAnoSjkqZYw5ZiYTGerskC7pr
+         i/C6KuoneX+Vm9HNSmCQdPOGTGrBjLoc0a3TjtJMrPYBm4jBvwQ9ZLZbWwxBzpwidTRf
+         Tu0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbDTKPA3IraL8gsD3SbTGxaEcnHI2o4B/zb9HxePKYjwZspPDhQANe8+ayoLALxN0p0OPDRmQQKhGvwAo8K1/OAhVQxxcqWjelmns=
+X-Gm-Message-State: AOJu0YwvvQiepueDt3vd5ytfyRAylpr+KTgS4JfWXdgYwyftQ1Zut7ji
+	VdGmVcLm4jIIzwrSTCIZWtzRkNz7l5+rq5m6njdE9HHBcrQdO7xq3CJLxloQIUua4lD6eS6cfsH
+	DkPJMhp8sqxcrxkLAQtcuJHtLgc8=
+X-Google-Smtp-Source: AGHT+IF+EtI1xd1QjYng9Ds05N6w9StWVfIdI1Sei5Hyuup1KvXrmFZUzese74UopTTaLAlxrHD/vxCIeP/TAVL0fGI=
+X-Received: by 2002:a0c:ea33:0:b0:69b:7c1e:ac02 with SMTP id
+ t19-20020a0cea33000000b0069b7c1eac02mr6282293qvp.18.1713310191203; Tue, 16
+ Apr 2024 16:29:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2> <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+In-Reply-To: <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 16 Apr 2024 16:29:39 -0700
+Message-ID: <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+To: Christian Heusel <christian@heusel.eu>
+Cc: Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>, 
+	Vitaly Wool <vitaly.wool@konsulko.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
+	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev, 
+	Johannes Weiner <hannes@cmpxchg.org>, Yosry Ahmed <yosryahmed@google.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Apr 16, 2024 at 3:14=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote=
+:
+>
+> On Tue, Apr 16, 2024 at 5:19=E2=80=AFAM Christian Heusel <christian@heuse=
+l.eu> wrote:
+> >
+> > Hello everyone,
+>
+> Thanks for the report, Christian! Looking at it now.
+>
+> >
+> > while rebuilding a few packages in Arch Linux we have recently come
+> > across a regression in the linux kernel which was made visible by a tes=
+t
+> > failure in libguestfs[0], where the booted kernel showed a Call Trace
+> > like the following one:
+> >
+> > [  218.738568] CPU: 0 PID: 167 Comm: guestfsd Not tainted 6.7.0-rc4-1-m=
+ainline-00158-gb5ba474f3f51 #1 bf39861cf50acae7a79c534e25532f28afe4e593^M
+>
+> Is this one of the kernel versions that was broken? That looks a bit
+> odd, as zswap shrinker landed on 6.8...
 
-On Tue, Apr 16, 2024 at 08:08:07AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 12.04.24 04:57, Bjorn Andersson wrote:
-> > On Wed, Apr 10, 2024 at 11:18:04AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >> On 08.04.24 00:52, Bjorn Andersson wrote:
-> >>> On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> >>>>
-> >>>> Tejun, apparently it's cause by a change of yours.
-> >>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
-> >>>>
-> >>>>> booting the current kernel (6.9.0-rc1, master/712e1425) on x86_64
-> >>>>> with nohz_full=0 cause a page fault and prevents the kernel from
-> >>>>> booting.
-> >>> [...]
-> 
-> Tejun, I got a bit lost here. Can you help me out please?
-> 
-> I'm currently assuming that these two reports have the same cause:
-> https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/T/#u
-> https://bugzilla.kernel.org/show_bug.cgi?id=218665
-> 
-> And that both will be fixed by this patch from Oleg Nesterov:
-> https://lore.kernel.org/lkml/20240411143905.GA19288@redhat.com/
-> 
-> But well, to me it looks like below issue from Bjorn is different, even
-> if it is caused by the same change -- nevertheless it looks like nobody
-> has looked into this since it was reported about two weeks ago. Or was
-> progress made and I just missed it?
+Ah ignore this - I understand the versioning now...
 
-Can you elaborate why Bjorn's case is different? I was assuming it was the
-same problem and that Oleg's fixes would address the issue.
+>
+> > [  218.739007] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS=
+ Arch Linux 1.16.3-1-1 04/01/2014^M
+> > [  218.739787] RIP: 0010:memcg_page_state+0x9/0x30^M
+> > [  218.740299] Code: 0d b8 ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 90=
+ 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00=
+ <48> 8b 87 00 06 00 00 48 63 f6 31 d2 48 8b 04 f0 48 85 c0 48 0f 48^M
+> > [  218.740727] RSP: 0018:ffffb5fa808dfc10 EFLAGS: 00000202^M
+> > [  218.740862] RAX: 0000000000000000 RBX: ffffb5fa808dfce0 RCX: 0000000=
+000000002^M
+> > [  218.741016] RDX: 0000000000000001 RSI: 0000000000000033 RDI: 0000000=
+000000000^M
+> > [  218.741168] RBP: 0000000000000000 R08: ffff976681ff8000 R09: 0000000=
+000000000^M
+> > [  218.741322] R10: 0000000000000001 R11: ffff9766833f9d00 R12: ffff976=
+6ffffe780^M
+> > [  218.742167] R13: 0000000000000000 R14: ffff976680cc1800 R15: ffff976=
+682204d80^M
+> > [  218.742376] FS:  00007f1479d9f540(0000) GS:ffff9766fbc00000(0000) kn=
+lGS:0000000000000000^M
+> > [  218.742569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033^M
+> > [  218.743256] CR2: 0000000000000600 CR3: 0000000103606000 CR4: 0000000=
+000750ef0^M
+> > [  218.743494] PKRU: 55555554^M
+> > [  218.743593] Call Trace:^M
+> > [  218.743733]  <TASK>^M
+> > [  218.743847]  ? __die+0x23/0x70^M
+> > [  218.743957]  ? page_fault_oops+0x171/0x4e0^M
+> > [  218.744056]  ? free_unref_page+0xf6/0x180^M
+> > [  218.744458]  ? exc_page_fault+0x7f/0x180^M
+> > [  218.744551]  ? asm_exc_page_fault+0x26/0x30^M
+> > [  218.744684]  ? memcg_page_state+0x9/0x30^M
+> > [  218.744779]  zswap_shrinker_count+0x9d/0x110^M
+> > [  218.744896]  do_shrink_slab+0x3a/0x360^M
+> > [  218.744990]  shrink_slab+0xc7/0x3c0^M
+> > [  218.745609]  drop_slab+0x85/0x140^M
+> > [  218.745691]  drop_caches_sysctl_handler+0x7e/0xd0^M
+> > [  218.745799]  proc_sys_call_handler+0x1c0/0x2e0^M
+> > [  218.745912]  vfs_write+0x23d/0x400^M
+> > [  218.745998]  ksys_write+0x6f/0xf0^M
+> > [  218.746080]  do_syscall_64+0x64/0xe0^M
+> > [  218.746169]  ? exit_to_user_mode_prepare+0x132/0x1f0^M
+> > [  218.746873]  entry_SYSCALL_64_after_hwframe+0x6e/0x76^M
+> >
+> > The regression is present in the mainline kernel and also was
+> > independently reported to the redhat bugtracker[1].
+> >
+> > I have bisected (see log[2]) the regression between v6.9-rc4 and v6.6
+> > and have landed on the following results (removed unrelated test commit=
+)
+> > as remainders since some of the commits were not buildable for me:
+> > - 7108cc3f765c ("mm: memcg: add per-memcg zswap writeback stat")
+> > - a65b0e7607cc ("zswap: make shrinking memcg-aware")
+> > - b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
 
-Thanks.
+Hmmm, this smells like a memcg reference counting bug to me. The memcg
+was successfully accessed just a couple of LoCs above, but failed
+after the stats flushing.
 
--- 
-tejun
+My suspicion right now is the new memcg refcnt dance to select an
+memcg for the global, capacity-based, shrinker, introduced in this
+patch series. That dance looks solid to me tho - not sure where it
+goes wrong. And, if it's a reference counting issue, that should pop
+up in different places (i.e other mysterious memcg traces)...
