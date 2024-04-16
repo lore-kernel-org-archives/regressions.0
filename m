@@ -1,224 +1,118 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5EE11720
-	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 04:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14F93BBEA;
+	Tue, 16 Apr 2024 06:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713242021; cv=none; b=qJh6htR0fFMHOB05uOl/hz/vrQ5Igs1UFZpHH9x42wmlOcF37HQP08Cm5YOU2QKOXGTpvWiaUO711EhdaW/RBFPeIUjVqzYhyE2uFy3kEO3pYNDNoWgWmG912y+SkMWGIJb/nw+Tn/QfVZvgRCjK85tkFP+GDrgsczynUG5/Dr0=
+	t=1713247698; cv=none; b=pCoDnE8Fvv1EE/PDpHErxpCTACZyrSEs5l8nCjPBtbbBPJDk55hjgoKbzTWqmObfJNJIoa41k71GYeuMiqIRQ5jSTm6x3h/zftMN7yQZoAGMEES7ZQ+/lTW6mmZlUoMwE+vR5UXYTvCTmpx8ENxOFI1V+r+PfvjSs0/Wbs53rj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713242021; c=relaxed/simple;
-	bh=fvKbBzyiYhgU7w3T3uMR6HIuVJIfj599ikHMznByMFs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j/0T/Fut4uy4xwwe/mAw68fYgjahiu9ZDmwVo1OclwqUE4hYdWHCgXVfesAz8GeO95lT8FtYO7+muM5Y/r80iYwCe2JFgfJRsPQJQE9m8jhR/BWpX1zy/YR/eAiRzSVV5MLgmUI+sFFExU1+cCgn9A+mNeBeMYIGCRzNQ04S05E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=HVSM+zjo; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1713247698; c=relaxed/simple;
+	bh=WICUcYaypsw/DK9gFrMDqKtJd5tnBe1HuVDRQOGmKBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6O2EhC88RwRz/sSNH0pw/s7SkHnwmrC/LzTiAHt+KWQNB6a2ZOppu8iKSEM2clc2ojjUaOi1g2iI33r4gopo0S8evgNlfqsPMvZenoirguI76sfD2fexaavLrx2HVxMPk5u71XW59WmjJw1cFD7HsCUD/nc7N7SIyygAFkZyZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=poOdPGFL; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="HVSM+zjo"
-Received: from localhost.localdomain (unknown [10.101.196.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 967B740B81;
-	Tue, 16 Apr 2024 04:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713242017;
-	bh=UKp3++ga9pwOFwfl9SX2I6VDxPYriu1Ld2SUETczxGc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=HVSM+zjoih8kwdzAuFBkJV2cPYIwRhYPOwAILzUUKOxOs2S6WamM4+DSseiYTl7Ub
-	 sjM/XvtIglSMtgEcAtxZK1BphiT80MMW8qckz+uDLyip/Dfna435NZYLQsXGuABpDw
-	 45FO5eBgstUKt2atiemkYGev6LytrI7FsR2B2GH3y4ePFdbFcUjmlDOb7AW6KB+jia
-	 tCm8E28ZtJKTf7LNAi0rpIp8pGVEsCvnfRg1uBWJrIkJ+nUxXOVWGLPYhdEjXUKtGX
-	 6R5A/VxDwA4OA7Tw93nBLNnIZ8bUhThFtiLXRVwpkwKmI7lrsYrFOxX1WvGjXkKUp/
-	 85JVXVLr39SWg==
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-To: bhelgaas@google.com
-Cc: mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	bagasdotme@gmail.com,
-	regressions@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	kch@nvidia.com,
-	hch@lst.de,
-	gloriouseggroll@gmail.com,
-	kbusch@kernel.org,
-	sagi@grimberg.me,
-	hare@suse.de,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v8 3/3] PCI/DPC: Disable DPC service on suspend
-Date: Tue, 16 Apr 2024 12:32:25 +0800
-Message-Id: <20240416043225.1462548-3-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
-References: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="poOdPGFL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=kokKt0017qNqpH691SbrggxmrEJ7Johu9iji03ZhiK0=;
+	t=1713247696; x=1713679696; b=poOdPGFLnaJdEbeYzfhtLcZr4qniDVpD3ZEVBsES3ap5hUI
+	8KrF/PPFm/D9PXajLDSEhcmlggJ97wdmCtoy9Iesi2MKNTtRiZpkvC211PZaPdbvGrV6H0uq65M0I
+	K4mSDfv275CY8fLirxdfaK097IUK8Mv1XWNzTMxHp5bm8OgY7CrN6M6P3Ump2MP9nmwsRrpy/T/IE
+	ZXbZc1xdIixqjFm9rQnGKgW3bvNXI46L0/s3IbbgBDfh2S9xGNKLWbiA53qN5eM4W6PB7knd/aTp6
+	S2/LCXFVQComi20L2rWG/7wH/v6BXsGBnU3fkIuRzsNnOACBGM6atdfxW+8GZ8rg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rwbzE-00032x-Aa; Tue, 16 Apr 2024 08:08:08 +0200
+Message-ID: <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
+Date: Tue, 16 Apr 2024 08:08:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+To: Tejun Heo <tj@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
+ <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+ <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
+ <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713247696;9626bdd3;
+X-HE-SMSGID: 1rwbzE-00032x-Aa
 
-When the power rail gets cut off, the hardware can create some electric
-noise on the link that triggers AER. If IRQ is shared between AER with
-PME, such AER noise will cause a spurious wakeup on system suspend.
+On 12.04.24 04:57, Bjorn Andersson wrote:
+> On Wed, Apr 10, 2024 at 11:18:04AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 08.04.24 00:52, Bjorn Andersson wrote:
+>>> On Tue, Apr 02, 2024 at 10:17:16AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>>
+>>>> Tejun, apparently it's cause by a change of yours.
+>>>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218665 :
+>>>>
+>>>>> booting the current kernel (6.9.0-rc1, master/712e1425) on x86_64
+>>>>> with nohz_full=0 cause a page fault and prevents the kernel from
+>>>>> booting.
+>>> [...]
 
-When the power rail gets back, the firmware of the device resets itself
-and can create unexpected behavior like sending PTM messages. If DPC is
-enabled, the DPC reset happens before driver's resume routine. The DPC
-reset usually fails because the device is not in the right state, and
-the resume also fails because the device is being reset by hardware. If
-the scenario happens to device like NVMe, it means the whole system
-resume fails.
+Tejun, I got a bit lost here. Can you help me out please?
 
-As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
-Management", TLP and DLLP transmission are disabled for a Link in L2/L3
-Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
-the power will be turned off during suspend process, disable DPC service
-and re-enable it during the resume process. This should not affect the
-basic functionality.
+I'm currently assuming that these two reports have the same cause:
+https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/T/#u
+https://bugzilla.kernel.org/show_bug.cgi?id=218665
 
-Furthermore, since DPC depends on AER to function, and AER is disabled
-in previous patch, also disable DPC here.
+And that both will be fixed by this patch from Oleg Nesterov:
+https://lore.kernel.org/lkml/20240411143905.GA19288@redhat.com/
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v8:
- - Wording.
- - Add more bug reports.
+But well, to me it looks like below issue from Bjorn is different, even
+if it is caused by the same change -- nevertheless it looks like nobody
+has looked into this since it was reported about two weeks ago. Or was
+progress made and I just missed it?
 
-v7:
- - Wording.
- - Disable DPC completely (again) if power will be turned off
+>>> In addition to this report, I have finally bisected another regression
+>>> to the same commit:
+>>>
+>>> I start neovim, send SIGSTOP (i.e. ^Z) to it, start another neovim
+>>> instance and upon sending SIGSTOP to that instance all of userspace
+>>> locks up - 100% reproducible.
+>>>
+>>> The kernel seems to continue to operate, and tapping the power button
+>>> dislodge the lockup and I get a clean shutdown.
+>>>
+>>> This is seen on multiple Arm64 (Qualcomm) machines with upstream
+>>> defconfig since commit '5797b1c18919 ("workqueue: Implement system-wide
+>>> nr_active enforcement for unbound workqueues")'.
+>>
+>> Hmmm, I had hoped Tejun would reply and share an opinion if these
+>> problems are related. But that didn't happen. :-/ So let me at least ask
+>> one question that might help to answer that question: is the machine
+>> using CPU isolation, like the two other reports about problems caused by
+>> this commit do (see the
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218665 and
+>> https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/ for
+>> details) ?
+> 
+> No, this is a clean SMP system running stock arch/arm64/defconfig,
+> booted with "clk_ignore_unused pd_ignore_unused audit=0" as the command
+> line.
+> 
+> Regards,
+> Bjorn
 
-v6:
-v5:
- - Wording.
-
-v4:
-v3:
- - No change.
-
-v2:
- - Only disable DPC IRQ.
- - No more check on PME IRQ#.
-
- drivers/pci/pcie/dpc.c | 57 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 46 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index a668820696dc..7682ac4d6a89 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/init.h>
- #include <linux/pci.h>
-+#include <linux/suspend.h>
- 
- #include "portdrv.h"
- #include "../pci.h"
-@@ -412,13 +413,34 @@ void pci_dpc_init(struct pci_dev *pdev)
- 	}
- }
- 
-+static void dpc_enable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
-+	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
-+static void dpc_disable(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+	u16 ctl;
-+
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-+	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+}
-+
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
- 	struct device *device = &dev->device;
- 	int status;
--	u16 ctl, cap;
-+	u16 cap;
- 
- 	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
-@@ -433,11 +455,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	}
- 
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
--
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~PCI_EXP_DPC_CTL_EN_MASK;
--	ctl |= PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	dpc_enable(dev);
- 
- 	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
- 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-@@ -450,14 +468,29 @@ static int dpc_probe(struct pcie_device *dev)
- 	return status;
- }
- 
--static void dpc_remove(struct pcie_device *dev)
-+static int dpc_suspend(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
--	u16 ctl;
- 
--	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
--	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
--	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-+	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
-+		dpc_disable(dev);
-+
-+	return 0;
-+}
-+
-+static int dpc_resume(struct pcie_device *dev)
-+{
-+	struct pci_dev *pdev = dev->port;
-+
-+	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
-+		dpc_enable(dev);
-+
-+	return 0;
-+}
-+
-+static void dpc_remove(struct pcie_device *dev)
-+{
-+	dpc_disable(dev);
- }
- 
- static struct pcie_port_service_driver dpcdriver = {
-@@ -465,6 +498,8 @@ static struct pcie_port_service_driver dpcdriver = {
- 	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_DPC,
- 	.probe		= dpc_probe,
-+	.suspend	= dpc_suspend,
-+	.resume		= dpc_resume,
- 	.remove		= dpc_remove,
- };
- 
--- 
-2.34.1
-
+Ciao, Thorsten
