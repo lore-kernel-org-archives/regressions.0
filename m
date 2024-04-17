@@ -1,87 +1,374 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.big.or.jp (mail.big.or.jp [210.197.72.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355FE131E24
-	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 08:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABC984DF6
+	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 12:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.197.72.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713344177; cv=none; b=pAo1FtGljYfTgmB8sd/UlvMuz5p9nZDbqV3GpYTtSs11hfiLmj6C/E3GAuVbrEowRY/+b75rDIALUi/8GMh687vokb4bC4FYuO36vUA3lB1KSuyG7ocT+jpLp6crHwhJKteuoMcjlZzFxrdjoebTUeGVDOCq4a+rsXcpXfdHudg=
+	t=1713358688; cv=none; b=TRrBszD6Ml5pB21TS0at2I+ynyki/Ct4fxaEWcjCSq6gIEq+Z9VR8YCfP83NFuTdA1K65wkOTeXN7y/rseZdgV1nG5eHnZx4w2tOsDCUgCBpyQC5enZjnamxKDNYTyeLTi27wMle4bzc0+ncVoxYYMt9NjGZ2+eNo4ut3wk7pvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713344177; c=relaxed/simple;
-	bh=3E7Tq8dH47c6MflVclG2AC3iDWee1/UW/7BGfuakEp0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=tYQ0mlfQLsbLcHapplB1mqDWdcVMMKVgY8LCZmiBxK4Dg/xvQ/k0kjF2kYCDIYWjF1sCJvSG6EPHqF8kMMLEF1IZ0IskoeyK+qN+qn7YPtumAIDaz/Ig99DeKLLawr/FVa6pcpQ2ct+78I7PNo15qAzRULP/7/rlWh8gj1ARTqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=id12i3MJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1713358688; c=relaxed/simple;
+	bh=MquDlLoR4inyVaQlfpG/3XlB8PgwuIOPpDrgijXngzk=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pk+EC3A6vTyLJRUpbx6oZKd55aLGlFUCu7K1wW/muA6wjoh4MLG6oGtSEIV8Qx/lq+cWaiPEz0OsIkGqMwNFZJj/Wgeq1bjRN+I+w7mVQD4El/45q3/h2o7tkP58yucuC+NVO0mkKZl4gGjjkgbJrJ1C35Yqli2imJ0Wxq+AEa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=big.or.jp; spf=pass smtp.mailfrom=big.or.jp; dkim=pass (1024-bit key) header.d=mail.big.or.jp header.i=@mail.big.or.jp header.b=xliy8O4m; arc=none smtp.client-ip=210.197.72.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=big.or.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=big.or.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="id12i3MJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=3E7Tq8dH47c6MflVclG2AC3iDWee1/UW/7BGfuakEp0=; t=1713344175;
-	x=1713776175; b=id12i3MJ8kNpqdbK7mgVNyrWu4Ujfg+gkgw0tMwkpXgmhyoI8s9GEA9Air2oH
-	PbVBl6NocyEf/ckTUvfrHtuKedqTWQDywJgNbK253NRaXMwOzVRO7RmbZtTddsBw7Y1pdOXcWmZhG
-	RGGVjWY7TboBXBS9PoSfrMptXQzGlbpQVnJcbX7/mK64A/evcbf3N414nzFRUbCXISah1CtiqYRwR
-	t01qf9IUwCQb+gPMmcPh8wKjbBZcz5zyK5MIN1jzgGi9rIlYXl7S+n38yHx1L9jK1XUelP/HHQRCf
-	mkPr2vJ6ssZd7J+RNRHqFxERhCK15QfGSEmMiCf57au1FmP53A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rx15Q-0007ZV-5R; Wed, 17 Apr 2024 10:56:12 +0200
-Message-ID: <e061d6ad-1047-4ea9-b45d-360a07273f56@leemhuis.info>
-Date: Wed, 17 Apr 2024 10:56:11 +0200
+	dkim=pass (1024-bit key) header.d=mail.big.or.jp header.i=@mail.big.or.jp header.b="xliy8O4m"
+Received: from localhost (unknown [IPv6:2409:250:40:1a00:d65d:64ff:fef1:3a80])
+	by mail.big.or.jp (Postfix) with ESMTPA id 7916E15FAEF;
+	Wed, 17 Apr 2024 21:57:55 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mail.big.or.jp;
+	s=_dkimselector; t=1713358675;
+	bh=lJ2zFCwXJhAWv+hCBMbTgI0iTMS74MJsdKoj+VbWoIE=;
+	h=Date:To:Cc:Subject:From:In-Reply-To:References;
+	b=xliy8O4mGTpxJ2tLUBJ2DBe+6f8PMZu3TFcAcARRA8Xz67fZBqlbDibs/DNu9+3CY
+	 PRBev9Et0r9mL3Suun+Yedi1v/hrIRSPp97W2d2LMwF9zDwrMoGWkTiadRrtCE1ysf
+	 NM1G2TwTID5TLSkrJg1JzvDmeQ+s9CEGDgFYPKck=
+Date: Wed, 17 Apr 2024 21:57:50 +0900 (JST)
+Message-Id: <20240417.215750.795520800087390305.sian@big.or.jp>
+To: greg@kroah.com
+Cc: holger@applied-asynchrony.com, Naohiro.Aota@wdc.com,
+ regressions@lists.linux.dev, dsterba@suse.com, wqu@suse.com,
+ linux-btrfs@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: btrfs: sanity tests fails on 6.8.3
+From: sian@big.or.jp
+In-Reply-To: <20240415.214704.2195618259755902678.sian@big.or.jp>
+References: <3b2d9a1c-37d2-47f4-b0b4-a9d6c34d2c7d@applied-asynchrony.com>
+	<2024041508-refocus-cycling-09e8@gregkh>
+	<20240415.214704.2195618259755902678.sian@big.or.jp>
+X-Mailer: Mew version 6.8 on Emacs 29.3
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713344175;0487bd36;
-X-HE-SMSGID: 1rx15Q-0007ZV-5R
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
 
+Hi,
 
-On 09.03.24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+6.8.7 works.
+Thank you!.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218698
-#regzbot resolve: reporter: does not happen anymore
+> Hi,
+> =
 
-#regzbot report:
-https://lore.kernel.org/all/CAHudX3zLH6CsRmLE-yb%2BgRjhh-v4bU5_1jW_xCcxOo_oUUZKYg@mail.gmail.com/
-#regzbot introduced: e8cca466a84a75
-#regzbot summary: iommu: boot crash when using AMD eGPU
-#regzbot fix: iommu: Fix def_domain_type interaction with untrusted devices
-#regzbot monitor:
-https://lore.kernel.org/all/fa14583e94cbf540b60a6be94b41bb24d0037e75.1713272443.git.robin.murphy@arm.com/
+> Thank you for all your replies.
+> I cherry-picked b2136cc288fc and the ssanity tests work well.
+> =
 
-#regzbot report:
-https://lore.kernel.org/all/b702c59f-7a5b-48f5-a726-a4840ce05c3f@panix.com/
-#regzbot introduced: v6.7..v6.8
-#regzbot summary: hibernate: no longer resumes fully after when by
-default (e.g. when async is used)
+> =
 
-#regzbot report: https://lore.kernel.org/lkml/ZhuYyrh3mweP_Kd8@nz.home/
-#regzbot introduced: v6.8..v6.9-rc3
-#regzbot duplicate:
-https://lore.kernel.org/all/CA+9S74jmWiSWaGoMU9AZnJJd1Ck2qNBdkBZG1=J3PC8gsqqWxg@mail.gmail.com/
-#regzbot summary: sched: kernel NULL pointer dereference in
-pick_next_task_fair
+> From: Greg KH <greg@kroah.com>
+> Subject: Re: btrfs: sanity tests fails on 6.8.3
+> Date: Mon, 15 Apr 2024 09:33:27 +0200
+> =
 
+>> On Mon, Apr 15, 2024 at 09:25:58AM +0200, Holger Hoffst=E4tte wrote:=
+
+>>> On 2024-04-15 07:24, Naohiro Aota wrote:
+>>> > On Mon, Apr 15, 2024 at 07:11:15AM +0200, Linux regression tracki=
+ng (Thorsten Leemhuis) wrote:
+>>> > > [adding the authors of the two commits mentioned as well as the=
+ Btrfs
+>>> > > maintainers and the regressions & stable list to the list of re=
+cipients]
+>>> > > =
+
+>>> > > On 15.04.24 05:56, Hiroshi Takekawa wrote:
+>>> > > > =
+
+>>> > > > Module loading fails with CONFIG_BTRFS_FS_RUN_SANITY_TESTS en=
+abled on
+>>> > > > 6.8.3-6.8.6.
+>>> > > > =
+
+>>> > > > Bisected:
+>>> > > > Reverting these commits, then module loading succeeds.
+>>> > > > 70f49f7b9aa3dfa70e7a2e3163ab4cae7c9a457a
+>>> > > =
+
+>>> > > FWIW, that is a linux-stable commit-id for 41044b41ad2c8c ("btr=
+fs: add
+>>> > > helper to get fs_info from struct inode pointer") [v6.9-rc1, v6=
+.8.3
+>>> > > (70f49f7b9aa3df)]
+>>> > > =
+
+>>> > > > 86211eea8ae1676cc819d2b4fdc8d995394be07d
+>>> > =
+
+>>> > It looks like the stable tree lacks this commit, which is necessa=
+ry for the
+>>> > commit above.
+>>> > =
+
+>>> > b2136cc288fc ("btrfs: tests: allocate dummy fs_info and root in t=
+est_find_delalloc()")
+>>> > =
+
+>>> =
+
+>>> This was previously reported during the last stable cycle, and the =
+missing
+>>> patch is already queued up. You can see the queue here:
+>>> =
+
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue=
+.git/tree/queue-6.8
+>> =
+
+>> Thanks for confirming this, the next 6.8 release should resolve this=
+
+>> issue.
+>> =
+
+>> greg k-h
+>> =
+
+>>
+> =
+
+> cherry-picked on top of 6.8.6
+> =
+
+> $ git log -2
+> commit 12d79cec1083658f23f4566fcea40463549c5a54 (HEAD -> refs/heads/l=
+inux-6.8.6-btrfs-selftest-fix)
+> Author: David Sterba <dsterba@suse.com>
+> Date:   Mon Jan 29 19:04:33 2024 +0100
+> =
+
+>     btrfs: tests: allocate dummy fs_info and root in test_find_delall=
+oc()
+>     =
+
+>     Allocate fs_info and root to have a valid fs_info pointer in case=
+ it's
+>     dereferenced by a helper outside of tests, like find_lock_delallo=
+c_range().
+>     =
+
+>     Signed-off-by: David Sterba <dsterba@suse.com>
+> =
+
+> commit 1f7d392571dfec1c47b306a32bbe60be05a51160 (tag: refs/tags/v6.8.=
+6, refs/remotes/origin/linux-6.8.y, refs/heads/linux-6.8.y)
+> Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date:   Sat Apr 13 13:10:12 2024 +0200
+> =
+
+>     Linux 6.8.6
+>     =
+
+>     Link: https://lore.kernel.org/r/20240411095420.903937140@linuxfou=
+ndation.org
+>     Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+>     Tested-by: SeongJae Park <sj@kernel.org>
+>     Tested-by: Ronald Warsow <rwarsow@gmx.de>
+>     Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>     Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+>     Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+>     Tested-by: Ron Economos <re@w6rz.net>
+>     Tested-by: Jon Hunter <jonathanh@nvidia.com>
+>     Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> =
+
+> $ cat /proc/version =
+
+> Linux version 6.8.6+ (user@host) (clang version 18.1.3, LLD 18.1.3) #=
+1 SMP PREEMPT Mon Apr 15 21:31:32 JST 2024
+> =
+
+> sanity tests are enabled:
+> $ zgrep BTRFS_FS_RUN /proc/config.gz =
+
+> CONFIG_BTRFS_FS_RUN_SANITY_TESTS=3Dy
+> =
+
+> dmesg, which indicates the success.
+> [  105.926765] xor: automatically using best checksumming function   =
+avx       =
+
+> [  105.928174] raid6: skipped pq benchmark and selected avx2x4
+> [  105.928175] raid6: using avx2x2 recovery algorithm
+> [  106.017111] Btrfs loaded, zoned=3Dno, fsverity=3Dno
+> [  106.017125] BTRFS: selftest: sectorsize: 4096  nodesize: 4096
+> [  106.017126] BTRFS: selftest: running btrfs free space cache tests
+> [  106.017131] BTRFS: selftest: running extent only tests
+> [  106.017133] BTRFS: selftest: running bitmap only tests
+> [  106.017136] BTRFS: selftest: running bitmap and extent tests
+> [  106.017139] BTRFS: selftest: running space stealing from bitmap to=
+ extent tests
+> [  106.017278] BTRFS: selftest: running bytes index tests
+> [  106.017283] BTRFS: selftest: running extent buffer operation tests=
+
+> [  106.017283] BTRFS: selftest: running btrfs_split_item tests
+> [  106.017287] BTRFS: selftest: running extent I/O tests
+> [  106.017288] BTRFS: selftest: running find delalloc tests
+> [  106.051988] BTRFS: selftest: running find_first_clear_extent_bit t=
+est
+> [  106.051991] BTRFS: selftest: running extent buffer bitmap tests
+> [  106.058653] BTRFS: selftest: running extent buffer memory operatio=
+n tests
+> [  106.058664] BTRFS: selftest: running inode tests
+> [  106.058665] BTRFS: selftest: running btrfs_get_extent tests
+> [  106.058680] BTRFS: selftest: running hole first btrfs_get_extent t=
+est
+> [  106.058685] BTRFS: selftest: running outstanding_extents tests
+> [  106.058693] BTRFS: selftest: running qgroup tests
+> [  106.058694] BTRFS: selftest: running qgroup add/remove tests
+> [  106.058701] BTRFS: selftest: running qgroup multiple refs test
+> [  106.058709] BTRFS: selftest: running free space tree tests
+> [  106.065024] BTRFS: selftest: sectorsize: 4096  nodesize: 8192
+> [  106.065025] BTRFS: selftest: running btrfs free space cache tests
+> [  106.065027] BTRFS: selftest: running extent only tests
+> [  106.065029] BTRFS: selftest: running bitmap only tests
+> [  106.065032] BTRFS: selftest: running bitmap and extent tests
+> [  106.065035] BTRFS: selftest: running space stealing from bitmap to=
+ extent tests
+> [  106.065174] BTRFS: selftest: running bytes index tests
+> [  106.065179] BTRFS: selftest: running extent buffer operation tests=
+
+> [  106.065180] BTRFS: selftest: running btrfs_split_item tests
+> [  106.065183] BTRFS: selftest: running extent I/O tests
+> [  106.065183] BTRFS: selftest: running find delalloc tests
+> [  106.099325] BTRFS: selftest: running find_first_clear_extent_bit t=
+est
+> [  106.099327] BTRFS: selftest: running extent buffer bitmap tests
+> [  106.116359] BTRFS: selftest: running extent buffer memory operatio=
+n tests
+> [  106.116380] BTRFS: selftest: running inode tests
+> [  106.116381] BTRFS: selftest: running btrfs_get_extent tests
+> [  106.116395] BTRFS: selftest: running hole first btrfs_get_extent t=
+est
+> [  106.116398] BTRFS: selftest: running outstanding_extents tests
+> [  106.116405] BTRFS: selftest: running qgroup tests
+> [  106.116406] BTRFS: selftest: running qgroup add/remove tests
+> [  106.116413] BTRFS: selftest: running qgroup multiple refs test
+> [  106.116420] BTRFS: selftest: running free space tree tests
+> [  106.122685] BTRFS: selftest: sectorsize: 4096  nodesize: 16384
+> [  106.122686] BTRFS: selftest: running btrfs free space cache tests
+> [  106.122688] BTRFS: selftest: running extent only tests
+> [  106.122690] BTRFS: selftest: running bitmap only tests
+> [  106.122693] BTRFS: selftest: running bitmap and extent tests
+> [  106.122697] BTRFS: selftest: running space stealing from bitmap to=
+ extent tests
+> [  106.122837] BTRFS: selftest: running bytes index tests
+> [  106.122842] BTRFS: selftest: running extent buffer operation tests=
+
+> [  106.122843] BTRFS: selftest: running btrfs_split_item tests
+> [  106.122847] BTRFS: selftest: running extent I/O tests
+> [  106.122847] BTRFS: selftest: running find delalloc tests
+> [  106.156175] BTRFS: selftest: running find_first_clear_extent_bit t=
+est
+> [  106.156177] BTRFS: selftest: running extent buffer bitmap tests
+> [  106.190038] BTRFS: selftest: running extent buffer memory operatio=
+n tests
+> [  106.190076] BTRFS: selftest: running inode tests
+> [  106.190076] BTRFS: selftest: running btrfs_get_extent tests
+> [  106.190091] BTRFS: selftest: running hole first btrfs_get_extent t=
+est
+> [  106.190095] BTRFS: selftest: running outstanding_extents tests
+> [  106.190102] BTRFS: selftest: running qgroup tests
+> [  106.190102] BTRFS: selftest: running qgroup add/remove tests
+> [  106.190110] BTRFS: selftest: running qgroup multiple refs test
+> [  106.190117] BTRFS: selftest: running free space tree tests
+> [  106.196389] BTRFS: selftest: sectorsize: 4096  nodesize: 32768
+> [  106.196390] BTRFS: selftest: running btrfs free space cache tests
+> [  106.196391] BTRFS: selftest: running extent only tests
+> [  106.196394] BTRFS: selftest: running bitmap only tests
+> [  106.196397] BTRFS: selftest: running bitmap and extent tests
+> [  106.196400] BTRFS: selftest: running space stealing from bitmap to=
+ extent tests
+> [  106.196539] BTRFS: selftest: running bytes index tests
+> [  106.196544] BTRFS: selftest: running extent buffer operation tests=
+
+> [  106.196544] BTRFS: selftest: running btrfs_split_item tests
+> [  106.196549] BTRFS: selftest: running extent I/O tests
+> [  106.196549] BTRFS: selftest: running find delalloc tests
+> [  106.230530] BTRFS: selftest: running find_first_clear_extent_bit t=
+est
+> [  106.230534] BTRFS: selftest: running extent buffer bitmap tests
+> [  106.297904] BTRFS: selftest: running extent buffer memory operatio=
+n tests
+> [  106.297981] BTRFS: selftest: running inode tests
+> [  106.297982] BTRFS: selftest: running btrfs_get_extent tests
+> [  106.297997] BTRFS: selftest: running hole first btrfs_get_extent t=
+est
+> [  106.298001] BTRFS: selftest: running outstanding_extents tests
+> [  106.298008] BTRFS: selftest: running qgroup tests
+> [  106.298009] BTRFS: selftest: running qgroup add/remove tests
+> [  106.298016] BTRFS: selftest: running qgroup multiple refs test
+> [  106.298023] BTRFS: selftest: running free space tree tests
+> [  106.304312] BTRFS: selftest: sectorsize: 4096  nodesize: 65536
+> [  106.304313] BTRFS: selftest: running btrfs free space cache tests
+> [  106.304315] BTRFS: selftest: running extent only tests
+> [  106.304317] BTRFS: selftest: running bitmap only tests
+> [  106.304320] BTRFS: selftest: running bitmap and extent tests
+> [  106.304324] BTRFS: selftest: running space stealing from bitmap to=
+ extent tests
+> [  106.304462] BTRFS: selftest: running bytes index tests
+> [  106.304468] BTRFS: selftest: running extent buffer operation tests=
+
+> [  106.304468] BTRFS: selftest: running btrfs_split_item tests
+> [  106.304473] BTRFS: selftest: running extent I/O tests
+> [  106.304473] BTRFS: selftest: running find delalloc tests
+> [  106.338587] BTRFS: selftest: running find_first_clear_extent_bit t=
+est
+> [  106.338589] BTRFS: selftest: running extent buffer bitmap tests
+> [  106.472975] BTRFS: selftest: running extent buffer memory operatio=
+n tests
+> [  106.473127] BTRFS: selftest: running inode tests
+> [  106.473127] BTRFS: selftest: running btrfs_get_extent tests
+> [  106.473143] BTRFS: selftest: running hole first btrfs_get_extent t=
+est
+> [  106.473148] BTRFS: selftest: running outstanding_extents tests
+> [  106.473155] BTRFS: selftest: running qgroup tests
+> [  106.473156] BTRFS: selftest: running qgroup add/remove tests
+> [  106.473164] BTRFS: selftest: running qgroup multiple refs test
+> [  106.473172] BTRFS: selftest: running free space tree tests
+> [  106.479514] BTRFS: selftest: running extent_map tests
+> [  106.479517] BTRFS: selftest: Running btrfs_drop_extent_map_range t=
+ests
+> [  106.479520] BTRFS: selftest: Running btrfs_drop_extent_cache with =
+pinned
+> [  106.479521] BTRFS: selftest: running rmap tests
+> [  126.436989] modprobe: FATAL: Module ikconfig not found in director=
+y /lib/modules/6.8.6+
+> [  170.100869] udevd[9881]: conflicting device node '/dev/mapper/data=
+-encrypted' found, link to '/dev/dm-0' will not be created
+> [  170.861020] EXT4-fs (dm-0): mounted filesystem 22071832-a730-492a-=
+a11f-2bc502437c08 r/w with ordered data mode. Quota mode: disabled.
+> [  176.037983] udevd[9902]: conflicting device node '/dev/mapper/pool=
+-encrypted' found, link to '/dev/dm-1' will not be created
+> [  177.780518] BTRFS: device label pool devid 1 transid 16145 /dev/ma=
+pper/pool-encrypted scanned by mount (9904)
+> [  177.780955] BTRFS info (device dm-1): first mount of filesystem 25=
+48bfee-1ac9-4894-bd68-47e128d7af9b
+> [  177.780963] BTRFS info (device dm-1): using crc32c (crc32c-intel) =
+checksum algorithm
+> [  177.780965] BTRFS info (device dm-1): disk space caching is enable=
+d
+> [  177.865416] BTRFS warning (device dm-1): devid 1 physical 0 len 41=
+94304 inside the reserved space
+> [  183.347633] udevd[10073]: conflicting device node '/dev/mapper/bac=
+kup-encrypted' found, link to '/dev/dm-2' will not be created
+> =
+
+> Best regards,
+> =
+
+> --
+> Hiroshi Takekawa <sian@big.or.jp>
+
+Best regards,
+
+--
+Hiroshi Takekawa <sian@big.or.jp>
