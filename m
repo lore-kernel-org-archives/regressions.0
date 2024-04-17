@@ -1,94 +1,74 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
+Received: from gardel.0pointer.net (gardel.0pointer.net [85.214.157.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888D8148318;
-	Wed, 17 Apr 2024 16:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE57315E5C8
+	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 16:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.157.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713370032; cv=none; b=ty1HUydyg0SSlgjZGwavbG+gBgUQDKrWoVWbmmItPwZWxhB/oZXHrJ4OeX/cB3NL2hZeh0LU3nhO/Ehj9Ypcw1qA5gtce4l1Iz6kGdbjPcapvvyV4VRmM7tF7wWC5Bt0pwQahJZZRU4A84fTG6UwSOY7CXbj5Hep7O0NcF03qXM=
+	t=1713370226; cv=none; b=c7Ll6oRj7NjruDlNb54Z+6qQOe1wdzpQr4bE+fSH+o6P/f7CsbOSMldH2xizsl5xCdmvXGBFboLdpvQgBY8kL7IsrhQaeykYT42VjXOQb6eWC58p6aABaCCjkRaqwSx+ej+DhsU+gGtxmkelbrW2/4HK/n2x+mU0UYr7yy6F8aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713370032; c=relaxed/simple;
-	bh=JMdImt1rqEG+anLm+o4q9u965rHrPHelnM1X6Rzf8tk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=emN51ZvIl+yk5Jqx3iZk9jOLsxLpwwwJKwjBn8mXCLe7oF4r16IgJMyoRIgAPo5U4U8bjQ+y0Ukw0C4V227LZCIIcQ7+Y5P1tqTeOiryicVbWC9+btk6kr7MEPoBkNF3lmEm+CM8SSJJsPH2miE/WZWqFnSiyMQ7hX6Agtxn6ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=aGuzyX+B; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="aGuzyX+B"
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 2F7E71FE9;
-	Wed, 17 Apr 2024 15:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1713369579;
-	bh=5HR+GG9SCNa/Fu4bWlTHqrfnklhDGqCwal0cb0yJpso=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=aGuzyX+Bef2BO+H53d4nZxDdDBmpoTpsESG8PiUklBG1ssfJtmzLjyKe4yDu2OtkN
-	 UFkgRYAbeC1f9VZYgxcKAKfoq0LIO0XMB+nQ96m7hBTsS3w1TThJ5mr8KAdqfJQyvF
-	 hDAScC9s8paOXd7SwVWsrLdTUkCvNlSXawQFUAJg=
-Received: from [192.168.211.17] (192.168.211.17) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Wed, 17 Apr 2024 19:07:07 +0300
-Message-ID: <015aa42b-abac-4810-8743-43913ab8e2d9@paragon-software.com>
-Date: Wed, 17 Apr 2024 19:07:06 +0300
+	s=arc-20240116; t=1713370226; c=relaxed/simple;
+	bh=gSfe2mh9bkp+vU+sT4Snqq3+U6upnEe1SHDBCsuBkkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e15exCaT8DqaXmuNjmJyZzyPFW7tWlfPnP2WiBhA15aNX5R+hSN2EtE1tOvuTk3f2JfsrDfMnNxtf/5oDb+RPmeuXVB8cRBvgtDmfj+uhlbQn4Br/+k7FqDJ5zf+QZ8hP+YmHWliKxWy9/wTNdfz1KiRkP+gFsVRQ9UU/tFerhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de; spf=pass smtp.mailfrom=0pointer.de; arc=none smtp.client-ip=85.214.157.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0pointer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0pointer.de
+Received: from gardel-login.0pointer.net (gardel-mail [85.214.157.71])
+	by gardel.0pointer.net (Postfix) with ESMTP id 8987CE803C0;
+	Wed, 17 Apr 2024 18:10:21 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+	id 430131602F7; Wed, 17 Apr 2024 18:10:21 +0200 (CEST)
+Date: Wed, 17 Apr 2024 18:10:21 +0200
+From: Lennart Poettering <mzxreary@0pointer.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: API break, sysfs "capability" file
+Message-ID: <Zh_0bfqBsJFyJKgT@gardel-login>
+References: <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login>
+ <20240409141531.GB21514@lst.de>
+ <Zh6J75OrcMY3dAjY@gardel-login>
+ <Zh6O5zTBs5JtV4D2@kbusch-mbp>
+ <20240417151350.GB2167@lst.de>
+ <Zh_vQG9EyVt34p16@gardel-login>
+ <20240417155913.GA6447@lst.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ntfs3: remove warning
-To: Christian Brauner <brauner@kernel.org>, Johan Hovold <johan@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Anton Altaparmakov
-	<anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>,
-	<ntfs3@lists.linux.dev>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-ntfs-dev@lists.sourceforge.net>,
-	<regressions@lists.linux.dev>
-References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
- <20240325-faucht-kiesel-82c6c35504b3@brauner>
-Content-Language: en-US
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-In-Reply-To: <20240325-faucht-kiesel-82c6c35504b3@brauner>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240417155913.GA6447@lst.de>
 
-On 25.03.2024 11:34, Christian Brauner wrote:
-> This causes visible changes for users that rely on ntfs3 to serve as an
-> alternative for the legacy ntfs driver. Print statements such as this
-> should probably be made conditional on a debug config option or similar.
+On Mi, 17.04.24 17:59, Christoph Hellwig (hch@lst.de) wrote:
+
+> On Wed, Apr 17, 2024 at 05:48:16PM +0200, Lennart Poettering wrote:
+> > Block devices with part scanning off are quite common after all,
+> > i.e. "losetup" creates them by default like that, and partition block
+> > devices themselves have no part scanning on and so on, hence we have
+> > to be ablet to operate sanely with them.
 >
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Johan Hovold <johan@kernel.org>
-> Link: https://lore.kernel.org/r/Zf2zPf5TO5oYt3I3@hovoldconsulting.com
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->   fs/ntfs3/inode.c | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-> index eb7a8c9fba01..8cc94a6a97ed 100644
-> --- a/fs/ntfs3/inode.c
-> +++ b/fs/ntfs3/inode.c
-> @@ -424,7 +424,6 @@ static struct inode *ntfs_read_mft(struct inode *inode,
->   
->   	if (names != le16_to_cpu(rec->hard_links)) {
->   		/* Correct minor error on the fly. Do not mark inode as dirty. */
-> -		ntfs_inode_warn(inode, "Correct links count -> %u.", names);
->   		rec->hard_links = cpu_to_le16(names);
->   		ni->mi.dirty = true;
->   	}
-Hello Christian, all,
+> Maybe and ioctl to turn on partition scanning if it is currently disabled
+> or return an error otherwise would be the better thing?  It would
+> do the right thing for the most common loop case, and with a bit more
+> work could do the right thing for those that more or less disable it
+> graciously (ubiblock, drbd, zram) and would just fail for those who are
+> so grotty old code and slow devices that we never want to do a partition
+> scan (basically old floppy drivers and the Nintendo N64 cartridge driver)
 
-The initial and true reason for multiple warnings is the disregard of 
-short (DOS) names when counting hard links.
+Well, there are plenty of other block devices with part scanning off,
+such as DM, including dm-crypt, dm-integrity and so on. And that's
+certainly stuff we want to cover for this.
 
-This patch should fixes this bug:
-https://lore.kernel.org/ntfs3/0cb0b314-e4f6-40a2-9628-0fe7d905a676@paragon-software.com/T/#u
+Lennart
 
-There is no longer a need to suppress the message itself.
-
-
+--
+Lennart Poettering, Berlin
