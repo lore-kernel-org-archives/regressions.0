@@ -1,66 +1,67 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5796A3A27B
-	for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 23:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA50365
+	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 00:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713310193; cv=none; b=cYZKuPiN1CRVSLjdgUI+piGuYTwARXUBtNyk7zR+O0I0lAZeEDfY3I4MkvjtaqXMqDtBOj5F5gYczY6net8f+VAbyIoN+3GmXh0kF1X9/znoe38XuuPtoW4SZwNtlEu1sa+sI81fLdTZjgFnDYjQfO77R9JjOf19H7/nVajnlTk=
+	t=1713313377; cv=none; b=WOW4Xda5jazBnDOVSwmtEeG/E5oFo9bXb5UknsR9+m/UX1B9lfUCb+LFN3G9PLBfM/JDJa1xraivTfS695C4kn9DdmF3KAfW6XMCWJoPZK10kxrWvG3V4sQbpqez+FmL2xBnkLQiwTPvRlxBkxZ7P1se61l/CC2LrN2hKBkEavQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713310193; c=relaxed/simple;
-	bh=y15kkh/UzNlt8PyzGY6czdnu89oxFroFanLzwhfD0N8=;
+	s=arc-20240116; t=1713313377; c=relaxed/simple;
+	bh=2YsrEfUcLkTb+yR2Bg5aBj4KZxNF8BwqywMdL4lt7xc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YHh4DEXpn5VujyecKxbNH7ZQT/+NkscXCCvXQGczllOt8LK5vQNE589vvupjt6kNu4Bzd2nd5ubu339xngy872NkQJY3fZaEmFvMFexNLBou93zgR10dwVENtlkL/rgha/LXlaICkazuG1m/g0WzaMgmlc4Nl+6y/2EcXDRO8rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0gvEqu3; arc=none smtp.client-ip=209.85.219.46
+	 To:Cc:Content-Type; b=obrdBsVftSG38DHQY8zofqPMB59dEcVExkX2QahchyZNrEmcgh1NgNaCPGlry8rRilbb/EUZ3Brw7DJckDhABoyPeSRW2Th2vjb7++aUaFlV9miWgu3Ziidtv/xTxoVyAXH0HAs4oXaMZR3/UgcJZhmZkLbpIhD8nLiXyus+SEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJcMUpk7; arc=none smtp.client-ip=209.85.161.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0gvEqu3"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-69b44071a07so38185846d6.3
-        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 16:29:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJcMUpk7"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5aa400b917dso3306575eaf.0
+        for <regressions@lists.linux.dev>; Tue, 16 Apr 2024 17:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713310191; x=1713914991; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1713313375; x=1713918175; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XLy1Ua1b77r4qsxuukriMKLfQ+NQtqpcoJqaT5UdrRA=;
-        b=K0gvEqu372QRkAJuBtX8RvuJut6YJ+Ejl4a5c1iOr3r9Z9Jb9yOgvZmyp8AIzj1M1b
-         rHSwB1xxhcMRhiI/jbRxX3kdCX/m34KaV9qaZKj4NZe8otFrWqmxH0hUbokPMuRI7ERX
-         MnjdxKje3i6wC8EDxcsr4nZnDb/tNVbALlxt8U8dCRiMSJLyiGaWLtkeDARt4J3wou60
-         VmvyLjE+9JmkIlFe18TUDs2pn0bv7JscrnDSAqhmPajKwphkFDAcO0Q8mw9XmdRvby7o
-         KgXQi0p4n7HNpY3GvfeZ5iI7NAhqdjOlWFdXZ7EjGRr67IJCMU5HH6vU2r1y2t4ggvnn
-         iQ9g==
+        bh=aP26FrywztgVkfzE2tfyTzU9hcB6QnE7fDvry2nRPDE=;
+        b=JJcMUpk7g9WJcaqDfoCCfUnNLEFOnY6n6BUiiSLbZw75GAtrNXSKs+5Yc27IQcv0sp
+         TFuDLRP4lD5pybyvrROXVcu0ui9fazayZeZMP8rs/Z9n/iMewNMjgOWCIMtPQGHyDF+2
+         K8Idken9kRuLrWC5AAmWEMHldIKt52QQG3X8gxcPt5QAVNEDMGT19SlPI8dSRsiCrJby
+         gaY+/Y6un1DIdDEbTFEj7pJc7Mqd8IANBqZ5cphNTXUhZafiAQJtVpAATiUpvBiCFtl+
+         ovtZqIqAF+n2Ohnj/xHieDQ1VInC95te0yt84QVj7QIF6p4JIr4FVsQQzNMg2lSICAIK
+         nEaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713310191; x=1713914991;
+        d=1e100.net; s=20230601; t=1713313375; x=1713918175;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XLy1Ua1b77r4qsxuukriMKLfQ+NQtqpcoJqaT5UdrRA=;
-        b=a+0UiYbiFEjLY7JGrheb0dG7O+lNyfLK+s1K7PNMNxH+WzT7ceZp07SKgUMSOcJii5
-         em+QXkRhC1WofH7F2slNeoFMobYh/cyKO67rfKS1QaYOE7QfqfLdRDX4PdJGNcWfUCHo
-         H+WP+UtYXvZWHoCDxBgW6cZCEVN7lmCFwsELkz4L74EnKvKtDk1POIhagawpiYIFK9OQ
-         188MhhAeKmzqEOCBYIfhpbIhxoGDDraReis+esOteB2GAnoSjkqZYw5ZiYTGerskC7pr
-         i/C6KuoneX+Vm9HNSmCQdPOGTGrBjLoc0a3TjtJMrPYBm4jBvwQ9ZLZbWwxBzpwidTRf
-         Tu0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXbDTKPA3IraL8gsD3SbTGxaEcnHI2o4B/zb9HxePKYjwZspPDhQANe8+ayoLALxN0p0OPDRmQQKhGvwAo8K1/OAhVQxxcqWjelmns=
-X-Gm-Message-State: AOJu0YwvvQiepueDt3vd5ytfyRAylpr+KTgS4JfWXdgYwyftQ1Zut7ji
-	VdGmVcLm4jIIzwrSTCIZWtzRkNz7l5+rq5m6njdE9HHBcrQdO7xq3CJLxloQIUua4lD6eS6cfsH
-	DkPJMhp8sqxcrxkLAQtcuJHtLgc8=
-X-Google-Smtp-Source: AGHT+IF+EtI1xd1QjYng9Ds05N6w9StWVfIdI1Sei5Hyuup1KvXrmFZUzese74UopTTaLAlxrHD/vxCIeP/TAVL0fGI=
-X-Received: by 2002:a0c:ea33:0:b0:69b:7c1e:ac02 with SMTP id
- t19-20020a0cea33000000b0069b7c1eac02mr6282293qvp.18.1713310191203; Tue, 16
- Apr 2024 16:29:51 -0700 (PDT)
+        bh=aP26FrywztgVkfzE2tfyTzU9hcB6QnE7fDvry2nRPDE=;
+        b=lVyTg7PNtdPLydHw26BWe3SkxP3CCxMTm4QzBZCqnqO92fBOfDvMc7LUSQlLt3V0H3
+         7mck64AEa5KkN2BJKNrkZm3/TC8uicM4jIh9noFEl3pEUpYFn0AkNKdP10w4oyRpqC8U
+         heChJ6HwW0k9blvFnjhD1HGbjK17zwzJc/GilgQEdwL0icEr7aAv3KHRHTBFtczSFYMl
+         uLXLeS0HwpFjGLiaq7+5It5BiJyitimf1pgO6DFlp3qfQHg8lgQSEPDSsncE3fxZ0PDA
+         J3MDqqRG3GwrKgXbz/RqSnKjvZzZHKBRfmhWWWsrOMgYSYhrf/4v3ourVbz4O8wNpyG1
+         zgmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6fFwcPjorEqe5q8RBfBWglE8DFNIasZRcfkIyNTcvdry/XZ4tRe6/kadmW95dD3K+iaw9HBxLiWLLlLmuFPLQi7vdc532hSTSzNE=
+X-Gm-Message-State: AOJu0YxQPjARRPv0l6UPs7RdcWb76kj5rtxINjs/KTuMKVCEFUQDiy/E
+	nLBQ/hzRramj0ducq0/BiaOYv6uO0Vx6VpFwmwN32wyRDfRO0a8I7hMZYdqigcNO5atPcTcy11N
+	p2kC8AdsqCSmvIAIYHe1hpxiI9/I=
+X-Google-Smtp-Source: AGHT+IFn4iXE20yPNxhNmTGeEwmEqivQnTCqqF+lbczSroqVrG41U3nbTCfc9BmBjSQtefmnE+r4+EIVmpDdOA47A9k=
+X-Received: by 2002:a05:6358:690d:b0:17f:5797:b0ee with SMTP id
+ d13-20020a056358690d00b0017f5797b0eemr18856500rwh.10.1713313374643; Tue, 16
+ Apr 2024 17:22:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2> <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
-In-Reply-To: <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com> <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+In-Reply-To: <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
 From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 16 Apr 2024 16:29:39 -0700
-Message-ID: <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+Date: Tue, 16 Apr 2024 17:22:43 -0700
+Message-ID: <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
 Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
 To: Christian Heusel <christian@heusel.eu>
 Cc: Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>, 
@@ -72,92 +73,96 @@ Cc: Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 3:14=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote=
+On Tue, Apr 16, 2024 at 4:29=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrote=
 :
 >
-> On Tue, Apr 16, 2024 at 5:19=E2=80=AFAM Christian Heusel <christian@heuse=
-l.eu> wrote:
+> On Tue, Apr 16, 2024 at 3:14=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wro=
+te:
 > >
-> > Hello everyone,
+> > On Tue, Apr 16, 2024 at 5:19=E2=80=AFAM Christian Heusel <christian@heu=
+sel.eu> wrote:
+> > >
+> > > Hello everyone,
+> >
+> > Thanks for the report, Christian! Looking at it now.
+> >
+> > >
+> > > while rebuilding a few packages in Arch Linux we have recently come
+> > > across a regression in the linux kernel which was made visible by a t=
+est
+> > > failure in libguestfs[0], where the booted kernel showed a Call Trace
+> > > like the following one:
+> > >
+> > > [  218.738568] CPU: 0 PID: 167 Comm: guestfsd Not tainted 6.7.0-rc4-1=
+-mainline-00158-gb5ba474f3f51 #1 bf39861cf50acae7a79c534e25532f28afe4e593^M
+> >
+> > Is this one of the kernel versions that was broken? That looks a bit
+> > odd, as zswap shrinker landed on 6.8...
 >
-> Thanks for the report, Christian! Looking at it now.
+> Ah ignore this - I understand the versioning now...
 >
 > >
-> > while rebuilding a few packages in Arch Linux we have recently come
-> > across a regression in the linux kernel which was made visible by a tes=
-t
-> > failure in libguestfs[0], where the booted kernel showed a Call Trace
-> > like the following one:
-> >
-> > [  218.738568] CPU: 0 PID: 167 Comm: guestfsd Not tainted 6.7.0-rc4-1-m=
-ainline-00158-gb5ba474f3f51 #1 bf39861cf50acae7a79c534e25532f28afe4e593^M
->
-> Is this one of the kernel versions that was broken? That looks a bit
-> odd, as zswap shrinker landed on 6.8...
+> > > [  218.739007] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BI=
+OS Arch Linux 1.16.3-1-1 04/01/2014^M
+> > > [  218.739787] RIP: 0010:memcg_page_state+0x9/0x30^M
+> > > [  218.740299] Code: 0d b8 ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 =
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 =
+00 <48> 8b 87 00 06 00 00 48 63 f6 31 d2 48 8b 04 f0 48 85 c0 48 0f 48^M
+> > > [  218.740727] RSP: 0018:ffffb5fa808dfc10 EFLAGS: 00000202^M
+> > > [  218.740862] RAX: 0000000000000000 RBX: ffffb5fa808dfce0 RCX: 00000=
+00000000002^M
+> > > [  218.741016] RDX: 0000000000000001 RSI: 0000000000000033 RDI: 00000=
+00000000000^M
+> > > [  218.741168] RBP: 0000000000000000 R08: ffff976681ff8000 R09: 00000=
+00000000000^M
+> > > [  218.741322] R10: 0000000000000001 R11: ffff9766833f9d00 R12: ffff9=
+766ffffe780^M
+> > > [  218.742167] R13: 0000000000000000 R14: ffff976680cc1800 R15: ffff9=
+76682204d80^M
+> > > [  218.742376] FS:  00007f1479d9f540(0000) GS:ffff9766fbc00000(0000) =
+knlGS:0000000000000000^M
+> > > [  218.742569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033^M
+> > > [  218.743256] CR2: 0000000000000600 CR3: 0000000103606000 CR4: 00000=
+00000750ef0^M
+> > > [  218.743494] PKRU: 55555554^M
+> > > [  218.743593] Call Trace:^M
+> > > [  218.743733]  <TASK>^M
+> > > [  218.743847]  ? __die+0x23/0x70^M
+> > > [  218.743957]  ? page_fault_oops+0x171/0x4e0^M
+> > > [  218.744056]  ? free_unref_page+0xf6/0x180^M
+> > > [  218.744458]  ? exc_page_fault+0x7f/0x180^M
+> > > [  218.744551]  ? asm_exc_page_fault+0x26/0x30^M
+> > > [  218.744684]  ? memcg_page_state+0x9/0x30^M
+> > > [  218.744779]  zswap_shrinker_count+0x9d/0x110^M
+> > > [  218.744896]  do_shrink_slab+0x3a/0x360^M
+> > > [  218.744990]  shrink_slab+0xc7/0x3c0^M
+> > > [  218.745609]  drop_slab+0x85/0x140^M
+> > > [  218.745691]  drop_caches_sysctl_handler+0x7e/0xd0^M
+> > > [  218.745799]  proc_sys_call_handler+0x1c0/0x2e0^M
+> > > [  218.745912]  vfs_write+0x23d/0x400^M
+> > > [  218.745998]  ksys_write+0x6f/0xf0^M
+> > > [  218.746080]  do_syscall_64+0x64/0xe0^M
+> > > [  218.746169]  ? exit_to_user_mode_prepare+0x132/0x1f0^M
+> > > [  218.746873]  entry_SYSCALL_64_after_hwframe+0x6e/0x76^M
+> > >
 
-Ah ignore this - I understand the versioning now...
+Actually, inspecting the code a bit more - can memcg be null here?
 
->
-> > [  218.739007] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS=
- Arch Linux 1.16.3-1-1 04/01/2014^M
-> > [  218.739787] RIP: 0010:memcg_page_state+0x9/0x30^M
-> > [  218.740299] Code: 0d b8 ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 66 90=
- 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00=
- <48> 8b 87 00 06 00 00 48 63 f6 31 d2 48 8b 04 f0 48 85 c0 48 0f 48^M
-> > [  218.740727] RSP: 0018:ffffb5fa808dfc10 EFLAGS: 00000202^M
-> > [  218.740862] RAX: 0000000000000000 RBX: ffffb5fa808dfce0 RCX: 0000000=
-000000002^M
-> > [  218.741016] RDX: 0000000000000001 RSI: 0000000000000033 RDI: 0000000=
-000000000^M
-> > [  218.741168] RBP: 0000000000000000 R08: ffff976681ff8000 R09: 0000000=
-000000000^M
-> > [  218.741322] R10: 0000000000000001 R11: ffff9766833f9d00 R12: ffff976=
-6ffffe780^M
-> > [  218.742167] R13: 0000000000000000 R14: ffff976680cc1800 R15: ffff976=
-682204d80^M
-> > [  218.742376] FS:  00007f1479d9f540(0000) GS:ffff9766fbc00000(0000) kn=
-lGS:0000000000000000^M
-> > [  218.742569] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033^M
-> > [  218.743256] CR2: 0000000000000600 CR3: 0000000103606000 CR4: 0000000=
-000750ef0^M
-> > [  218.743494] PKRU: 55555554^M
-> > [  218.743593] Call Trace:^M
-> > [  218.743733]  <TASK>^M
-> > [  218.743847]  ? __die+0x23/0x70^M
-> > [  218.743957]  ? page_fault_oops+0x171/0x4e0^M
-> > [  218.744056]  ? free_unref_page+0xf6/0x180^M
-> > [  218.744458]  ? exc_page_fault+0x7f/0x180^M
-> > [  218.744551]  ? asm_exc_page_fault+0x26/0x30^M
-> > [  218.744684]  ? memcg_page_state+0x9/0x30^M
-> > [  218.744779]  zswap_shrinker_count+0x9d/0x110^M
-> > [  218.744896]  do_shrink_slab+0x3a/0x360^M
-> > [  218.744990]  shrink_slab+0xc7/0x3c0^M
-> > [  218.745609]  drop_slab+0x85/0x140^M
-> > [  218.745691]  drop_caches_sysctl_handler+0x7e/0xd0^M
-> > [  218.745799]  proc_sys_call_handler+0x1c0/0x2e0^M
-> > [  218.745912]  vfs_write+0x23d/0x400^M
-> > [  218.745998]  ksys_write+0x6f/0xf0^M
-> > [  218.746080]  do_syscall_64+0x64/0xe0^M
-> > [  218.746169]  ? exit_to_user_mode_prepare+0x132/0x1f0^M
-> > [  218.746873]  entry_SYSCALL_64_after_hwframe+0x6e/0x76^M
-> >
-> > The regression is present in the mainline kernel and also was
-> > independently reported to the redhat bugtracker[1].
-> >
-> > I have bisected (see log[2]) the regression between v6.9-rc4 and v6.6
-> > and have landed on the following results (removed unrelated test commit=
-)
-> > as remainders since some of the commits were not buildable for me:
-> > - 7108cc3f765c ("mm: memcg: add per-memcg zswap writeback stat")
-> > - a65b0e7607cc ("zswap: make shrinking memcg-aware")
-> > - b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+Specifically, if mem_cgroup_disabled() is true, can we see null memcg
+here? Looks like in this case, mem_cgroup_iter() can return null, and
+the first iteration of drop_slab_node() can have null memcg if it's
+returned by mem_cgroup_iter().
 
-Hmmm, this smells like a memcg reference counting bug to me. The memcg
-was successfully accessed just a couple of LoCs above, but failed
-after the stats flushing.
+shrink_slab() will still proceed and call do_shrink_slab() if the
+memcg is null - provided that mem_cgroup_disabled() holds:
 
-My suspicion right now is the new memcg refcnt dance to select an
-memcg for the global, capacity-based, shrinker, introduced in this
-patch series. That dance looks solid to me tho - not sure where it
-goes wrong. And, if it's a reference counting issue, that should pop
-up in different places (i.e other mysterious memcg traces)...
+if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+      return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+
+Inside zswap_shrink_count(), all the memcg accessors in this area seem
+to always check for null memcg (mem_cgroup_lruvec,
+mem_cgroup_zswap_writeback_enabled), *except* memcg_page_state, which
+is the one line that fail.
+
+If this is all to it, we can simply add a null check or
+mem_cgroup_disabled() check here, and use pool stats instead?
