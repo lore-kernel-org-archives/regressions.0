@@ -1,62 +1,107 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07717146D4A
-	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 15:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC1A1487F3
+	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 15:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713366836; cv=none; b=aMVTrsXJnq0XiOvG7UQOywbqiKD4GaY9G8ysxDQYLajfxRSHHw5Di0wxS8RzbHApmeAICW1BK33DpX0USXXi2zxhrLFbrUBQgAX/nn65oZl1gDmr5AQrZv3C4Ym8UYA2ZLr1UpWr5iv2oNHXOKNZfPcP5oLd94kGDItKSU4BDKs=
+	t=1713368342; cv=none; b=jh4TZCCF2EBPN08NQ1M6ueV0r4PXtY9Bvy6/TvzVJvHi5RX20bmJoM8cCCZT3Co8Cxi/FJF3VmlbIAeuuHFpEt4GjqbbVdoUQmc6y2w0iUCmYbrn4eSVAfSjRire9+dbgDaGffNaDBnlxGdjpEWfwq1c0Hcl52aeEZj3ZewtBsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713366836; c=relaxed/simple;
-	bh=eeHlBHvXaDB3on0ByhfRt5OA6kYCTofvpJLzF7XmYtk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+kk4cFhQN5YE/xLldDbn+h0inY7XhHGmHages7La/XwB0KxB5IpkVWVQW5ivJG0pALuSo4plKRe40MVhl4eqSN0JyVJykY/pOA6Bx7cAhUopFxF9MA+PAyZmq6LcXYtssH+TQBfqqaID8KU/XBGchpVXkHIAMM2GCNqGrphT7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 285EF227A88; Wed, 17 Apr 2024 17:13:51 +0200 (CEST)
-Date: Wed, 17 Apr 2024 17:13:50 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Lennart Poettering <mzxreary@0pointer.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: API break, sysfs "capability" file
-Message-ID: <20240417151350.GB2167@lst.de>
-References: <ZhQJf8mzq_wipkBH@gardel-login> <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info> <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com> <ZhRSVSmNmb_IjCCH@gardel-login> <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com> <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de> <Zh6J75OrcMY3dAjY@gardel-login> <Zh6O5zTBs5JtV4D2@kbusch-mbp>
+	s=arc-20240116; t=1713368342; c=relaxed/simple;
+	bh=qyfmY3tuy2fDo/5DK9wtBA0/okqOTXICerBpuVZMPmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iq5edYmRrXpLxM/LVvtEXZG9ZMHQBE67BKWbWVojmNCiKfIVgTRjfIHksA75w/ghVKYe0PnGSnu4gXQTZTl+c0sdMysTY+m0+hYczT4Gsq/5KDnfWFFpbtyFQtpFAFJi28lUoigD850gjpKe6lA6aTU7VHIRvVgD6y/dI09Dzuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx7NB-00075N-33; Wed, 17 Apr 2024 17:38:57 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx7NA-00CokT-Gw; Wed, 17 Apr 2024 17:38:56 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx7NA-002v0k-1O;
+	Wed, 17 Apr 2024 17:38:56 +0200
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-leds@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel@pengutronix.de
+Subject: [PATCH] leds: pwm: Disable PWM when going to suspend
+Date: Wed, 17 Apr 2024 17:38:47 +0200
+Message-ID: <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240417144943.GA2399047@google.com>
+References: <20240417144943.GA2399047@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zh6O5zTBs5JtV4D2@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1658; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=qyfmY3tuy2fDo/5DK9wtBA0/okqOTXICerBpuVZMPmM=; b=owGbwMvMwMXY3/A7olbonx/jabUkhjT5t2x2gSvWxT6OUPWVELcyTMg/+5I1mz9ks+LOhwayE TXf2Ys6GY1ZGBi5GGTFFFnsG9dkWlXJRXau/XcZZhArE8gUBi5OAZjIui3s/2yeL68wc2r//tA0 21x3348vmWnzdy88wOpqPynQkV2ouU/x6ZYlDDV5Nhvlv19JF/h6LP3EmpzzQofyTqz9KqCQ4up RfunmknwxjbKzHPYB5dcDoi6vtGDUrz0fk1ZscFt8UpXtu19lHCtaolnsrZadZ3OdfERtdUJ8qI t5h2fq7PIcw6N8z+YHX+r7eHE7d+2u21YNC9+xT0nOOfJAe+UpKZsDh4rLr3xiY77tE3ZIpLwoa WOc34fLgbknVduDNs5ZtG5W4Olzkxbu2TLpafuOulj5L4vWK/BOrtSJ/rsylLGjZELpgnWJDTrs odZdlfblbfxRZkcVw9QeOkSZi2V5TzzQrlluNOlC7pEAAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On Tue, Apr 16, 2024 at 08:44:55AM -0600, Keith Busch wrote:
-> The patch that introduced this was submitted not because the API was
-> stable; it was committed to encourage developers to update it as it
-> changed because it is *not* stable. That's not the kind of interface you
-> want exported for users to rely on, but no one should have to search
-> commit logs to understand why the doc exists, so I think exporting it
-> was just a mistake on the kernel side. To say this doc is "good"
-> misunderstands what it was trying to accomplish, and what it ultimately
-> created instead: technical debt.
+On stm32mp1xx based machines (and others) a PWM consumer has to disable
+the PWM because an enabled PWM refuses to suspend. So check the
+LED_SUSPENDED flag and depending on that set the .enabled property.
 
-Yes.  It might be a problem with the documentation generation mess,
-but something that is generated from a random code comment really
-can't be an API document.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
+Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Anyway, instead of bickering about this, what does systemd actually
-want to known?  Because all these flags we talked about did slightly
-different things all vaguely related to partition scanning.
-We also have another GD_SUPPRESS_PART_SCAN bit that is used to
-temporarily suppress partition scanning (and ublk now also abuses
-it in really whacky way, sigh).  I'm not really sure why userspace
-would even care about any of this, but I'm open to come up with
-something sane if we can actually define the semantics.
+On Wed, Apr 17, 2024 at 03:49:43PM +0100, Lee Jones wrote:
+> On Tue, 16 Apr 2024, Uwe Kleine-König wrote:
+> > If you don't consider that suitable, I can create a patch that is easier
+> > to pick up.
+> 
+> Yes, please submit it properly.
+
+Here it comes.
+
+Best regards
+Uwe
+
+ drivers/leds/leds-pwm.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 4e3936a39d0e..e1b414b40353 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -53,7 +53,13 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+ 		duty = led_dat->pwmstate.period - duty;
+ 
+ 	led_dat->pwmstate.duty_cycle = duty;
+-	led_dat->pwmstate.enabled = true;
++	/*
++	 * Disabling a PWM doesn't guarantee that it emits the inactive level.
++	 * So keep it on. Only for suspending the PWM should be disabled because
++	 * otherwise it refuses to suspend. The possible downside is that the
++	 * LED might stay (or even go) on.
++	 */
++	led_dat->pwmstate.enabled = !(led_cdev->flags & LED_SUSPENDED);
+ 	return pwm_apply_might_sleep(led_dat->pwm, &led_dat->pwmstate);
+ }
+ 
+
+base-commit: 4eab358930711bbeb85bf5ee267d0d42d3394c2c
+-- 
+2.43.0
+
