@@ -1,60 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5629518C05;
-	Wed, 17 Apr 2024 18:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A6F69D3C
+	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 21:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713380075; cv=none; b=oVw+zWT8WZsGWF4D4N0WtmdrJfv9UWZgN1s6oVgEQoj0/FrTQIyfxbM7JiuaKOVKaQZ4PdGW/jMzt8MUsaeh7WR2URzrEmnp8iEV8n72FGBJI67ksM6RW0KI/ndNeb/TCIZ0vUCZp6AVWpD8knf/5+2bghhk3KMKN6PyRXivBFs=
+	t=1713390265; cv=none; b=YmNZnPw/czXecZatlZZvEqD7tnvJhjGc+h9rOeO0hdtxIjJm2Jqf46abRTEAgH5ko1Qb2MIkiRCYAdIssIab9h+zB+/YuBTlGRjEhaUvSFUfDN2OR3cRufLme6UtOOPxXMceWPt5um/HeYdji6PI42C9hBMKaO8zF+kKJ8HWN8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713380075; c=relaxed/simple;
-	bh=hyCQyZHf2ncj/nXm1VIUe6nfA7at8m+jSmVswf1Wnnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Te3w6j4KwKSFIyQgchhhFHKi7vKVtKS0/7IAZpp0kyn9SevL+HHHFAyhXQ7N2CsS42TI/azF+f0/f7WRKqtLrIQIl6VPP3sx3fmykbHPXGZAksEIYwwoeb8g725CSTE7heQ7C9eMD3JF3qAE67FjnyHZsqOrPKFE0kpLw0mUKS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQ+lCLWe; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713390265; c=relaxed/simple;
+	bh=CKUQsG0mmfIa/QAx1wtwzpQgzNw8NsmVWIrXBKfxecw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AkUPzwaPOR/CaLAIedUFRBuJhjgWiFkj8tK9KoiJjDzIVmJ5D186HaTiQ4IcR02uSFi/DonJLex01hW/kd9c0+VessLHm3PqMirDbxo6B4yLEwt96IqHPWnf0WlNResNuCtMf4MaXdf4zMtiVMzpIy7b61bkuNMb1KTIy00j3O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j76uhTBJ; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQ+lCLWe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713380074; x=1744916074;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hyCQyZHf2ncj/nXm1VIUe6nfA7at8m+jSmVswf1Wnnc=;
-  b=IQ+lCLWervtdqjtpe7jjl3H1R/H5KCO2y8b8UEJQGHeZxCAda5G/dSY/
-   JXG/M9GMA29CxzYYHADASFyKQFpedY1i0RM+Q6cUc1OoBIz3TvF+NW/JR
-   WW21asAuwNaRpRyPKXTPG2xLjaQ0RA8ZwLHu0Dw+Nv5ylV5I+xaOdFd/G
-   7kaJGFA9fdooh+Az9K1gmPksu157Jip8m9IN1kfYGiagI2phjVzv6UxnL
-   ILGHuecXlsX2cFlCeDfydNkghvm7Gsof8WnvsF7XS9cKCTOQ4v4VY+Y0M
-   segmovyGeSXeyYm14dkWQyw1QVsApxCuat7gPzGZWfPwr22NcAt3H4FW5
-   w==;
-X-CSE-ConnectionGUID: CQOn6UNpSjGGFiIouB8G9Q==
-X-CSE-MsgGUID: a46G70KgRhSerKbck316uA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9441219"
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="9441219"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:54:34 -0700
-X-CSE-ConnectionGUID: PsnZ84biQUCxtewMM+gp4g==
-X-CSE-MsgGUID: IIUXUP1qTau8TFgvTNTJ+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="22729937"
-Received: from wangc3-mobl.amr.corp.intel.com (HELO desk) ([10.209.4.219])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 11:54:33 -0700
-Date: Wed, 17 Apr 2024 11:54:27 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>, kvm@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>
-Subject: Re: [linus:master] [x86/bugs] 6613d82e61:
- general_protection_fault:#[##]
-Message-ID: <20240417185427.4msriy5rrt5gej2x@desk>
-References: <202403281553.79f5a16f-lkp@intel.com>
- <20240328211742.bh2y3zsscranycds@desk>
- <8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j76uhTBJ"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5565291ee7so9573566b.2
+        for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 14:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713390262; x=1713995062; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=R/cPwbUkdSnGIuJG3R0hCFpAuz58iZdf0S7zyLL6x1I=;
+        b=j76uhTBJZnwwPV7Mp+3C+6Jmmc++UV10ATiAGBdvCPme+Eu2J164JxE9PrHWHb+pBJ
+         H66+58s4840u/9teiPIl6ybLOs9f0bfbED5c4RdiGU+cHEzw/Igkp2wccwR+Zjd31qyF
+         nV349Ep11xnbioAzYW1wvgLcanZLLHian4FJKkX6V5irSKlb0zT0Su6C9jX8L6gNTZRN
+         H3REEOyIhiN685na7qqISxxBW5DUMMpikE3EzFT20BZhFizw06fsZcHiJZoYDI0uZ5wr
+         NNa0gcURUPcvDG96UBoYjTQ6P5MaBskmwfjQQkvD21TLwIZXI5z6FJ9fAdU8jSB+Xadg
+         F1Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713390262; x=1713995062;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R/cPwbUkdSnGIuJG3R0hCFpAuz58iZdf0S7zyLL6x1I=;
+        b=hmX0NvVjQwLAi1t/BMZUq/P/PmxQfmYgZtXTg9q728bSyk+63oJBJPfDIylvsvZoCt
+         Rky7+709fiY9PFzASrJMnz2Y/wJHIg9MYTutWxdtYnFGmPcGDS7l+oqy4kzO+WZAE2D2
+         xjr9wSVmRTeHD1uOOfVCPY4TA8GBCdbUc36LKrjr3k3+EU5UvnGc3gmWKdm6Vl10zVP5
+         i4m6LCv9hTQwiB6iXJ6Sl+gEZaByeaqLGflASqZ+rBd3sdmEUDo+up/Lve5yigo2fn9g
+         XNRPkYI8/fNKiVMZBeiGan2EBnX5GbJfdE+l2+Y/7lnK2pqOh7ONIkOBgIJcD7CDbRqY
+         xx5A==
+X-Gm-Message-State: AOJu0YxLU7NiMYwlwLwPiia/hmY66JsTq0QKF5xo+ZTRpQsewcM2jmBF
+	43POpyZ2JP+tmJD3gxBu4VbC06+LZV5oqE6sDT0QBdpoBqXA3wmt
+X-Google-Smtp-Source: AGHT+IGhziwNWrUflqmylzgphhuQqIOdmIo9FOUOgVFe3BA/1KzCoiE0xie2CFOhoM7YIWuhY0ETsA==
+X-Received: by 2002:a17:906:6d99:b0:a52:5d42:a542 with SMTP id h25-20020a1709066d9900b00a525d42a542mr416739ejt.63.1713390261177;
+        Wed, 17 Apr 2024 14:44:21 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id p7-20020a17090635c700b00a51e6222200sm66605ejb.156.2024.04.17.14.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 14:44:19 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 90DEEBE2EE8; Wed, 17 Apr 2024 23:44:18 +0200 (CEST)
+Date: Wed, 17 Apr 2024 23:44:18 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: regressions@lists.linux.dev, Paulo Alcantara <pc@manguebit.com>,
+	Steve French <stfrench@microsoft.com>
+Cc: gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
+	linux-cifs@vger.kernel.org
+Subject: [regression 6.1.80+] "CIFS: VFS: directory entry name would overflow
+ frame end of buf" and invisible files under certain conditions and at least
+ with noserverino mount option
+Message-ID: <ZiBCsoc0yf_I8In8@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -63,38 +71,60 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c77ccfd-d561-45a1-8ed5-6b75212c7a58@leemhuis.info>
 
-On Sun, Apr 14, 2024 at 08:41:52AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Hi, Thorsten here, the Linux kernel's regression tracker.
-> 
-> On 28.03.24 22:17, Pawan Gupta wrote:
-> > On Thu, Mar 28, 2024 at 03:36:28PM +0800, kernel test robot wrote:
-> >> compiler: clang-17
-> >> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> >>
-> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> the same patch/commit), kindly add following tags
-> >> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> >> | Closes: https://lore.kernel.org/oe-lkp/202403281553.79f5a16f-lkp@intel.com
-> 
-> TWIMC, a user report general protection faults with dosemu that were
-> bisected to a 6.6.y backport of the commit that causes the problem
-> discussed in this thread (6613d82e617dd7 ("x86/bugs: Use ALTERNATIVE()
-> instead of mds_user_clear static key")).
-> 
-> User compiles using gcc, so it might be a different problem. Happens
-> with 6.8.y as well.
-> 
-> The problem occurs with x86-32 kernels, but strangely only on some of
-> the x86-32 systems the reporter has (e.g. on some everything works
-> fine). Makes me wonder if the commit exposed an older problem that only
-> happens on some machines.
-> 
-> For details see https://bugzilla.kernel.org/show_bug.cgi?id=218707
-> Could not CC the reporter here due to the bugzilla privacy policy; if
-> you want to get in contact, please use bugzilla.
+Hi Paulo, hi all
 
-Sorry for the late response, I was off work. I will look into this and
-get back. I might need help reproducing this issue, but let me first see
-if I can reproduce with the info in the bugzilla.
+In Debian we got two reports of cifs mounts not functioning, hiding
+certain files. The two reports are:
+
+https://bugs.debian.org/1069102
+https://bugs.debian.org/1069092
+
+On those cases kernel logs error
+
+[   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+
+I do not have yet a minimal reproducing setup, but I was able to
+reproduce the the issue cerating a simple share (done for simplicity
+with ksmbd):
+
+[global]
+	...
+[poc]
+        path = /srv/data
+        valid users = root
+        read only = no
+
+Within /srv/data create an empty file libfoo:
+
+# touch /srv/data/libfoo
+
+The share is mounted with noserverino (the issue is not reproducible
+without at least in my case):
+
+mount -t cifs -o noserverino //server/poc /mnt
+
+On each access of /mnt a new error is logged, while not showing the
+libfoo file:
+
+[   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+[  603.494356] CIFS: VFS: directory entry name would overflow frame end of buf 000000001dbf54e1
+[  633.217689] CIFS: VFS: directory entry name would overflow frame end of buf 00000000fb4597c4
+[  642.791862] CIFS: VFS: directory entry name would overflow frame end of buf 0000000023b48528
+
+I have verified that reverting in 6.1.y the commit 0947d0d463d4 ("smb:
+client: set correct d_type for reparse points under DFS mounts") on
+top of 6.1.87 fixes the issue.
+
+#regzbot introduced: 0947d0d463d4
+
+I can try to make a clean environment to reproeduce the issue, but I'm
+not yet there. But the regression is related to 0947d0d463d4 ("smb:
+client: set correct d_type for reparse points under DFS mounts").
+The mentioned commit was as well part of 6.7.7 at least, but I'm not
+able to reproduce the issue from another client running 6.7,9.
+
+Does that ring some bell?
+
+Regards,
+Salvatore
