@@ -1,123 +1,163 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9114294
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 04:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB3369E1C
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 06:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713416296; cv=none; b=St9V4vLMwlC/fW0d3lzpLz+n8pSacTtquK5h1NQoCji3e9zlWuOnakejc+ROhr/k6psFbeWU+VfI76JCiP+FPeyEsVr5WqK1QGEqQ2OWiFbfttD7Kv75ToihwqJyHv/qYwQf8gCyKF4bMiWY2d4mnckUOhZDWn3d6dsTaQotAgM=
+	t=1713421687; cv=none; b=AtSh/NILI8vQRIyCjMpYDRj6uOH4jlhUM2YvhR7tEueB08+ek+eiVjOJ+o/ByfhKZp2ISlQOH80VayPLybX7irp/aSkPqmtSOZR9+XqQKhbAkA/qTmjekWK2lxguR7h+X4HeU1YKreacesSHN+UZa8x7rfwWEpuKX7jGqvyXMtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713416296; c=relaxed/simple;
-	bh=1GIfnLR14SpISzBtJDNhW/puZNUl+1Lzin0dxK/lgws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYx+62IoSDYIb8Jiuw+zkokWRRnLUWPY5T9CvuRXPQ4ilSH9cATWAGc24xxOQpIU28ZcCRV7Gx3blZnJAUrxSIjHMNQCpjVNqgR8MFAyPoRR9bTuVzqtmxliAxWVpr+rsJ3dCI8lJEQLsvmMuO9NDn4rLG9wqnq5BRlJF5V8XrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0EHP+XQ; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713421687; c=relaxed/simple;
+	bh=DhP+wdzR337uZ5KL27fznIhxVqt9DRsWldIIAKOEgm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HjJvqy7yx8N4IQ7mSqS1Z5QExYmJgcy6W8hHqstwpabxWOHKcD9D0Ijd1t+4ai46OhkDEm7iyNA0s7o9w+uLTQGkTIGzncq0J4cPWZpt2mqwS3OywpBXPPMe6oLeemPGRKDjlkeJY1tuY59jdrJC5LuYRzbkr/rQMB5WRyKOEuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tm2HkL3x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K2x9Gyy/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tm2HkL3x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K2x9Gyy/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0EHP+XQ"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso527055a12.3
-        for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 21:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713416293; x=1714021093; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SL2uiIXH35aGZc0Hh8VLlfK7Ln3jRKiQNAg1SPvfYcs=;
-        b=V0EHP+XQ8Ik637I9rKcKHs9gres+4HnBW1KPyupfKYNcK0XWegmBq42jQxY/UxJkzQ
-         MGmHz0qVQdp3h2ayyJSQnPm4Qamn6p7ucVkv89ueikL5AdewiEWXmdrkvvfrsNhxa0p8
-         Y3qjIArax4EyIkjW6lpjh82NvKInXDp0EZnkBp35iSR6XisW4ZPqZTJgkOHzzneBwCE3
-         9k0oIyZ2SXNyNXnLe22BW6z5o+sfox+zd8OHsNLeHbJYqwJ6Za7dyAgs4NfBr6/4iQq3
-         VS82Ogq/rIsFe02Leq/y0lnit3p0A2MIvu/0oc7Ubd2DMx86tJOTrYg+KigzMCRm13KS
-         3qwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713416293; x=1714021093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SL2uiIXH35aGZc0Hh8VLlfK7Ln3jRKiQNAg1SPvfYcs=;
-        b=BqHMzIDAFZiYinL8wXxDfQgWMh6q1VHdr5elBPXwXJ9OB1hcIhcJaatwcY7rSQ+7ld
-         kDTaHJMs2Uai9kVSS7hsrSSNrG/w3yB1jMirbiYXHyhYFHhpPihntN19X/A6Uby+Py0J
-         MMskWadjhg8nb1rZDzb6XG2NDmvhRKwTqb7WwPWcLXHxn7OnOzL/aSNrVne4xlY/UGAN
-         7j+xAqP8NiEctLh5EiIJ/7r4boScKpdovdxcfKiJP24Jpuo3dBj76onJT3ExYMODEeFX
-         zdB7ZfGkhcjmHFFoOqjC+Hz2i9067gq3XHqZNd9syFSzf8RF92j20FCopT1ijc5nVq9c
-         wlpQ==
-X-Gm-Message-State: AOJu0YyLOxB2/T2FTNd8qPXQHiTZ5o/LfUP1dNrQCpkRfup8sRojz6Cg
-	tbvr0/TLkkFtpQFtl5ERDr/sCDMpya7fQvBMvsvJLktbSKau4f/d
-X-Google-Smtp-Source: AGHT+IHz0IE74OUzjcYa9ALlwnqFMHsbPsP49is02/FUiFH1TdkJ3Fu4Hl774aOUHaxTCJ5ZuqG6xA==
-X-Received: by 2002:a50:d4c2:0:b0:56e:2abd:d00f with SMTP id e2-20020a50d4c2000000b0056e2abdd00fmr1172402edj.18.1713416292503;
-        Wed, 17 Apr 2024 21:58:12 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id d15-20020aa7d68f000000b005701df2ea98sm383140edr.32.2024.04.17.21.58.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 21:58:11 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 1C0A9BE2EE8; Thu, 18 Apr 2024 06:58:10 +0200 (CEST)
-Date: Thu, 18 Apr 2024 06:58:10 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Paulo Alcantara <pc@manguebit.com>
-Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
-	gregkh@linuxfoundation.org, sashal@kernel.org,
-	stable@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
- overflow frame end of buf" and invisible files under certain conditions and
- at least with noserverino mount option
-Message-ID: <ZiCoYjr79HXxiTjr@eldamar.lan>
-References: <ZiBCsoc0yf_I8In8@eldamar.lan>
- <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tm2HkL3x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K2x9Gyy/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tm2HkL3x";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K2x9Gyy/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F3035C4ED;
+	Thu, 18 Apr 2024 06:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713421683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
+	b=tm2HkL3xVelzcBJRtWYwQkYmovSqm5VIyQt2W6YEldQAjji6WU0UirMlrJJ1JddMN77qZJ
+	sUyr1dJtvdy17mHb0n7J/aQfB6K+XJPIikqZRZxIyYyn/lOzjrHP5PBiDd5IzMMjAaDg9K
+	y2YEdYXMwTlxevsMic+rAZuz/EGO6gw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713421683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
+	b=K2x9Gyy/mYZOutVO1XXWOGeRnRGGyQRFTHqn7NC/nvMAstawRIYH3i8T4DOFImJ4AzWgP3
+	O4W0GVfUHDsrAhCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tm2HkL3x;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="K2x9Gyy/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1713421683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
+	b=tm2HkL3xVelzcBJRtWYwQkYmovSqm5VIyQt2W6YEldQAjji6WU0UirMlrJJ1JddMN77qZJ
+	sUyr1dJtvdy17mHb0n7J/aQfB6K+XJPIikqZRZxIyYyn/lOzjrHP5PBiDd5IzMMjAaDg9K
+	y2YEdYXMwTlxevsMic+rAZuz/EGO6gw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1713421683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
+	b=K2x9Gyy/mYZOutVO1XXWOGeRnRGGyQRFTHqn7NC/nvMAstawRIYH3i8T4DOFImJ4AzWgP3
+	O4W0GVfUHDsrAhCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D271D13687;
+	Thu, 18 Apr 2024 06:28:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id G62JMXK9IGb2cgAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 18 Apr 2024 06:28:02 +0000
+Message-ID: <248d92b7-23b0-4c84-8c38-58d956b88a64@suse.de>
+Date: Thu, 18 Apr 2024 08:28:01 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: API break, sysfs "capability" file
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>, Lennart Poettering <mzxreary@0pointer.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Jens Axboe <axboe@kernel.dk>
+References: <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
+ <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhRSVSmNmb_IjCCH@gardel-login>
+ <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
+ <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
+ <Zh6J75OrcMY3dAjY@gardel-login> <Zh6O5zTBs5JtV4D2@kbusch-mbp>
+ <20240417151350.GB2167@lst.de> <Zh_vQG9EyVt34p16@gardel-login>
+ <20240417155913.GA6447@lst.de>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240417155913.GA6447@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -5.50
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 2F3035C4ED
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-5.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-Hi Paulo,
-
-Thanks a lot for your time on looking into it.
-
-On Wed, Apr 17, 2024 at 07:58:56PM -0300, Paulo Alcantara wrote:
-> Hi Salvatore,
+On 4/17/24 17:59, Christoph Hellwig wrote:
+> On Wed, Apr 17, 2024 at 05:48:16PM +0200, Lennart Poettering wrote:
+>> Block devices with part scanning off are quite common after all,
+>> i.e. "losetup" creates them by default like that, and partition block
+>> devices themselves have no part scanning on and so on, hence we have
+>> to be ablet to operate sanely with them.
 > 
-> Salvatore Bonaccorso <carnil@debian.org> writes:
+> Maybe and ioctl to turn on partition scanning if it is currently disabled
+> or return an error otherwise would be the better thing?  It would
+> do the right thing for the most common loop case, and with a bit more
+> work could do the right thing for those that more or less disable it
+> graciously (ubiblock, drbd, zram) and would just fail for those who are
+> so grotty old code and slow devices that we never want to do a partition
+> scan (basically old floppy drivers and the Nintendo N64 cartridge driver)
 > 
-> > In Debian we got two reports of cifs mounts not functioning, hiding
-> > certain files. The two reports are:
-> >
-> > https://bugs.debian.org/1069102
-> > https://bugs.debian.org/1069092
-> >
-> > On those cases kernel logs error
-> >
-> > [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
 > 
-> I couldn't reproduce it.  Does the following fix your issue:
-> 
-> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-> index 4c1231496a72..3ee35430595e 100644
-> --- a/fs/smb/client/smb2pdu.c
-> +++ b/fs/smb/client/smb2pdu.c
-> @@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
->  		info_buf_size = sizeof(struct smb2_posix_info);
->  		break;
->  	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
-> -		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
-> +		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
->  		break;
->  	default:
->  		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
-> 
-> If not, please provide network trace and verbose logs.
+The world is going to end.
+hch suggests an ioctl.
 
-Yes that appears to fix the issue.
+Cheers,
 
-But as you say you are not able to reproduce the issue, I guess we
-need to try to get it clearly reproducible first to see we face no
-other fallouts?
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
-Regards,
-Salvatore
