@@ -1,246 +1,200 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2066.outbound.protection.outlook.com [40.107.243.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C4B19DF6D
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 19:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469439; cv=fail; b=KV4POS7bESMx+YL99n/RqFfhfWBs7rLaCcQ+Sgnh9kZ6AeWZ1U/8S4DzpgYxDWRHqiJ+8Sv6BUAb0MnKgRl+nj7txWcJVDnDK6uWk/K7GeSwuWQCTu+fBIoTGKx7eD0iEXuwAuPCOLRXl+x3zO55LDCn/1o7ilSJRiq1iwoMxSI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713469439; c=relaxed/simple;
-	bh=4qA34mDrrvgiygekEXRs0KhkOgj+K4jlu8I0+3S7Xt4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GA80myO+wIupp00Lp70eQCi4+pAJ48wpa9le1qTryrm+TPzECfFL3KBK7qBjs+YFm0Lp9ElGVBP2WmxQRN6ImRMLVAf74yqhoFCt4GOGabs7qMGd0dIHEuTE2TC5cS1c5+cyiC4+BmfN8is3CBOnBCv4txVLjsGZ06qRyq+R2Oc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qEYkmnur; arc=fail smtp.client-ip=40.107.243.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBD216EBFF
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 20:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713471004; cv=none; b=hVhcO2Nzb+OpoeESusYeZEnRKynZd08V8UmMSpbfd25PDtCIbop5tzkn1zNt/bOX7p7VW1YRZz6lT42KzY7LS/Bck4Wj/cuqztW9zegbxQ6iB7abEnP3T1g2nMYfr1Kbj6h9DWP8mCc2SjMTju160kYADlw/LZcN9oljxUQv28E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713471004; c=relaxed/simple;
+	bh=s9iI3OKQXwaBu4CUf7G1NuE/rQMlTxloyWIe7jxfkJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fNXFBw1IecMgRP2I+SU7JYPHnwZ5hUvecyserCpOrltQ+7TiAdfESS9AlrpvCy5rPr9Eu+mvK4tDNFwR8mD3wWjRfC98ZRvI/JiNcKOBZI+eb4mFwcKykX9dmxf+Ylgd9/NeU5LeMaI7PD/X58iZrw6qbC7VeIBT4e4KWYXtH/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M14UmhWX; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qEYkmnur"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EG3TCRqjdwF+PY5hRI9+vLpN6XA6/L/CgGJmmBkKEu8gSTOK4hfrjduYjEAVAFUZcKdBQUAxaV+MRHm/PkX1Ob/sEM3yCmnpLTy4iv2p3iR6OueYIojJ3CyAt0ybclRrjqCxFm1MIM+jTAwgnmgBhtDZDCmj5OSajCBHqD6ET910zdTUsYtt8LcRh64TZdqTMrTtFLFBZa4cNPynZaAhl3s51cA2oHOskict2YlBMylBzFf48VkvwG4NNStpUd2Q9nWdKwRN1hEnmJqeJcECo+VGf3W+oKlIeLkqtYE4GpLpfqv+wJvObPYgdld4LOwKSxkcg5JXXeu+JrBYZxIpLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M3dU7MV7NIAPioE9LeDvqOQCDHJyG5Y9hSOHMXkoH+4=;
- b=HmeeG4uSHN3fU0H1lcVbvxSMzAK5Rwsb9y0bN3FmAVrlfCPesc3jutJLawNL8t03IOqUoYAF4UX2QYcragTcpR1Zo0GjoOgA8JomDlIfGVzt3II+fxuf/DvFWXyyVmHI+ZYWdSBnwzKzI7Rnrfu/zEaXFzTSLqL5uJFTzt7fXeh8uq4i6hfuVE6OcMPJfTCiMU1vz2KmRyLBgFN5LbzwXFB9YFCqUuWMG2X5LDHg6S+THDIxxx9qjRIK345bHgK2ck6ImdtUW2WHm95RGL+md4rNJlqbHWAshwiDHY1pISc3ge7ZpSqQFcBmz+Yids3sJMnY2+e2+vBprIprJviHMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M3dU7MV7NIAPioE9LeDvqOQCDHJyG5Y9hSOHMXkoH+4=;
- b=qEYkmnurs59tooEzp2FH6DYWb5dwCZOPW6mkZuz52g50uJakeSZSNvUM1dKWqHVmWUhIF9jLBMMC7yD7MoZDJqN3MOSKDR+QcarEInPLHMyfizvmXgvzQdKdR03BLwkuz6osOSFSQTjo5kd7WsJpF7TSlaeHxTmI0If1JAPjCwA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13)
- by DM4PR12MB5940.namprd12.prod.outlook.com (2603:10b6:8:6b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.39; Thu, 18 Apr
- 2024 19:43:54 +0000
-Received: from CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062]) by CO6PR12MB5427.namprd12.prod.outlook.com
- ([fe80::1c2f:5c82:2d9c:6062%5]) with mapi id 15.20.7452.049; Thu, 18 Apr 2024
- 19:43:54 +0000
-Message-ID: <0847dc03-c7db-47d7-998b-bda2e82ed442@amd.com>
-Date: Thu, 18 Apr 2024 15:43:50 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mst: Fix NULL pointer dereference at
- drm_dp_add_payload_part2
-To: Wayne Lin <Wayne.Lin@amd.com>, dri-devel@lists.freedesktop.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Cc: lyude@redhat.com, imre.deak@intel.com,
- =?UTF-8?Q?Leon_Wei=C3=9F?= <leon.weiss@ruhr-uni-bochum.de>,
- stable@vger.kernel.org, regressions@lists.linux.dev
-References: <20240307062957.2323620-1-Wayne.Lin@amd.com>
-Content-Language: en-US
-From: Harry Wentland <harry.wentland@amd.com>
-In-Reply-To: <20240307062957.2323620-1-Wayne.Lin@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQZPR01CA0024.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:85::21) To CO6PR12MB5427.namprd12.prod.outlook.com
- (2603:10b6:5:358::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M14UmhWX"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d1c8dc79so1512529e87.1
+        for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 13:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1713471001; x=1714075801; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
+        b=M14UmhWXzaeFq33ph+rX4z9lP8Vmd8oZ2wrdzrYHJE1B868uHYtsmembr/AuZDX5UN
+         XWGHLyYMSJAKXQOTprIR/35vb6EywfjUgU6AEVkruN+3kte+zx+gJWwYTOM6l87CBH1b
+         qMcNE4/JABiXbZjKbBK0ZDvYjgefnagagT7DtqZVcef3DYxGNh7ixRc/0kJOHy9pSyku
+         rhDBgeB/19pKE+gLVKOIXoDcUUk80NL2/T5EPppsUBhc+9SJf1QjnpBBUKq9X9epPT1+
+         8PurbjX1UuG7B+gy2n0hdC3CpDnxjPm0wyRAYG+8Gh/hR3KtooF9nP9ypT67NpmOkuS7
+         syug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713471001; x=1714075801;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
+        b=pOmwVBEW/mM55mWbjT1Ythj1qLcWjkJlb9ohAS1QfRtYVzVDpFB1DT10wSNdNsrxnA
+         NCB7s57nPnmIdse7OyrCq8uJmTXagOpVArfRPI0cPCLoH+MFtI04PCQFLX1hFDxDMu3m
+         2ZNv/pMas0E7r4yMkPDdHCrva6MNh/hh9to5Alpvj/27WIbwqjdWnW0xF1lfD2DkhaLo
+         p3FMIkimS6rMQKLkvW+qX14A+VKyrEBUHTPDJmrgUtZSyq/MRSTsHfxhBcOr7W8IXjVc
+         LF3bA4IGjXfdxcMwsvP4LnJxAgnko+NU7DHYF+4g0DSOU08V2ByZ8aWIJeM+M58NM2OA
+         0f+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2K3zSHEs5BIeAa0BHsbXhCgwohBTUy0nc5F6SEe5eudAZEAmxdvj+5e3KD4rwnxKdzcxLwnlyHnwdwuVAVMkk/R1DMXOUxD0rOp0=
+X-Gm-Message-State: AOJu0YwWuLZ+6yRQp1y7jmO4n4gIdgCSAtf4vY+o+7cwmDBugcyLiFAP
+	ltPjPCeH0mHRRkP9fq/WBEYYqoL4VwTvFYvK6rGTUmaACmH49whI1ScoC8vtFjiVWxk8pep5doW
+	cAq8j/zmGiT74M8iqIXT/4RdC8bgyp7hPE0k5
+X-Google-Smtp-Source: AGHT+IGLDG+Dc0014dtU8+cIhp81ZKUWtv/7wQd5vaFrsMLyPtvkI6wgcg66uZWMynrXXfhRZfZa+0OQy8ad/+Cb/Og=
+X-Received: by 2002:ac2:5d44:0:b0:518:baa1:381b with SMTP id
+ w4-20020ac25d44000000b00518baa1381bmr46743lfd.50.1713471001029; Thu, 18 Apr
+ 2024 13:10:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5427:EE_|DM4PR12MB5940:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ca3cebe-8704-4504-0f7a-08dc5fdfe199
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	KnBAlGFELnMU//Nx9vnChoRNaplOi3q/dhCmIcUyW5Gr/Y6V4mGaEabLTQQ5HkX5C53dUrv5xYNulrxWxrEMs+gaKn8ZMtiJgEqZWQZqVRopLa8nIOm0aaV3xw1aZtfUaIqEWKy1ciGa33Wf5Z1LD3CnWo6gI1Vp8FGRZWMdIaj072YM8gPjvnT2/Jcux6r5KnfyMfwywm4bwriqZ/+KDXNNYR6zV1DuuqBfcjYJQs+xO+ggQ8CML0Ruim2wYd2r1fpWXKa+s0CShLNr0tFgNlS1v7aD/qmaS6Ud3zJDXbEfZ9it/dIwQJn9jLFjcuhAIOTXyrj+vPUyA0C/meIyeJ8KHA4jgrE7qxzVJQkpg8KlD/ia8BWJxxtvLbIw4IQCRp1XvH4XQXnF19dB51ufjgE3xHckEVCFE0tNBKdQf+gt9v2aSAC3tbYxp/rnO7kv6s1upfgvfHd5yoWnyydUHBN43ThkUC6nYd7CKmagQKslmpul9UF3lnhEXwgGUxEOU6BaO4bUC6eQUi4nF6dIA739z+dQoVVQ5R9Q6ePhhTBXHVygLUjf3KVWMUnc7jpuvmcbuYLTNqz8o9CbSwu69KZD6tRASB/hgkzqQu3SxBrv+//RcGwCqTEPC6gJ7THJdGvmake5ERr5lLb+i9A2Sm4kjKT/R5DUXKbHhiXE0cU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5427.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzlrcnJnQXIvSW8rVVByN1pFQ0ppTlFWK2xuZUVUVFVmOVZ2YXA5MDFjNHRE?=
- =?utf-8?B?OTNLd2ZmVFAxcHpaNy9rYU5xWkRBRjBwTlZacGorTWtycU9BQ0hPUTRRa0Q2?=
- =?utf-8?B?NU8vZWtNOEZYWWJhQ0lUS3Z2VEEvcTBzSTVINkFva2p4aDJHUm94WEpHbTZO?=
- =?utf-8?B?RHBTUnAwZnF0R2p4NDMxN2toWXZrMWFHWkQwc2d2VjBFNlZ0dE9LSXNoL3pn?=
- =?utf-8?B?RFZJaEpxMzE5am9teXVHTVUwL1J1aUNSOEJ4QXBhSUMxZlNpWWlNNTh3VDQ0?=
- =?utf-8?B?Mk9XSFB5VmczU1NnVldjU1NDUlR0SDNrTEJCN1VjYlR1ckhQMzk0cW51a2hD?=
- =?utf-8?B?NkhHYTNzWDRBeWpIa0pIZHNHZ1AralU0ekpzTVVPK0hZc2NzUWNxY3h3Szk2?=
- =?utf-8?B?dmdMTk5zalVzZGJiSDlRTmxnUkVoa3pUcEV2TFFXckZpR1lxcUZCci9ZVnhK?=
- =?utf-8?B?cmhDUkxXc3ZCZGdDSXFZdmhCa0NwcHpPd2ViVU9YMXhoeFNCbklhYkVPSzN6?=
- =?utf-8?B?ZEdXZmVNWGlLYWVCRWRob2I5ejd2QXRTNnJZcU1LTDlFRGJWVC9wcnlHTmFJ?=
- =?utf-8?B?YmhzaUlsQXdFdW1XdnBsQU5aMSsvbFgwbW42aDl4SEFtaVJoQkEwOG9nVGZH?=
- =?utf-8?B?b3c3a3FycnpWWXMzaXZjQkwra1pQR00vTyswWU8wZ2RmQXhIOU9JYlRKL0Fn?=
- =?utf-8?B?Q0t2TUxLRG1hRWNjUjcwYVY3SXdxU2xpcURiQlVJT3BMTnNxL04zTW9Md2Zi?=
- =?utf-8?B?b0ZqTXlUczBsbjM3OGNMK3g2S1lNUWprSDQ5bkFCR1dwaGpLeW1PMkVTZm1O?=
- =?utf-8?B?T1pvS0ZGQXpzZTdIdkJFMEFmL1Y0eTVUSTMxbmFzV0d6MGZRQ0lIZE10aXR1?=
- =?utf-8?B?RDRENUVZbVZpQVFUWkF4c1QvL0s0Z1FKeFgwZmppdVFFT2RIamlod3hOWHph?=
- =?utf-8?B?ZDIySEVoUk53SnBlRGtWcEY2NTY1RW9rczh6RTNHNmQyUnJkbk5CbFNEa2kr?=
- =?utf-8?B?N1ZQQ1lYdllwVGRLVjZpeTljZmk1NXpvdVBNOXFSZzVZa21VRWZneDJNZFZs?=
- =?utf-8?B?QSs0T3FDRlZieHNuMXRycnppTXg0dE1zRGJPOGlod2FiNzB2QldNTXAxbXhv?=
- =?utf-8?B?emRVL0hDamQvZk5ZT3lnaUxRenpCdWsrdjRabXc4SXRZd1ZSTTR0d2pObHU4?=
- =?utf-8?B?Sk1ENTZ4MzJ1VWtiZGl0VVVrRStUYW1wd2hYdHZTNnRXTXo5UnNEVW1XUnRm?=
- =?utf-8?B?a2cwVlVrSkhUNE5vTUhWaTBlTkRmYUNyOW45OWZnVm1UTXdvdG9wNXdFcXo3?=
- =?utf-8?B?MzQrQ3FZOEZ3Z3RCdVdpb3ZYM3EwMmdxZSs5MHVSWVJWZDE1UHZRQmpxeXNi?=
- =?utf-8?B?RlZwOGVwWmlWWkU3SHEvUE9RQVdoQ3J5TGVUV1o2MThYSjdHay93aFdkbzUz?=
- =?utf-8?B?d01mU3JoWVVnOHFXajZBRW52WC91bUp4dDQzbUV2YXB6OEo5aFVGWUpROC84?=
- =?utf-8?B?Z3VLOVZjZi9oajFSUTI2T3lMb2EyT3dDSVBhdmVid0tlTlNqQXhIcWRyWnIv?=
- =?utf-8?B?Nlc3bTFJTnVBT2NqWnVYOFBUOEZITEdCcGgzcDhrUU5jaFJkVEhaV25aT3Nu?=
- =?utf-8?B?MGdwWTVCV3ZtbjFjQllWK3c4UjZudXJRanhwN3pMTzNlMUxsY2dCOEhDbjEz?=
- =?utf-8?B?MXk3QUQ0T3ZDM1VXSnpkYkR6bjUwYnhydTRFRmdzV1dlMnF3NTh6T3NIM3dm?=
- =?utf-8?B?YlF5T1lZOWIrR08yZndZb1BtUjZBUll0S2w3b2ZGY092MFlzRDZMamtXVTZZ?=
- =?utf-8?B?dHNtN3lKZ3ZlbnlMZk0yc0xOaEx5QlZpemFLTncwdDJoZmx3NlNyYndoNUtx?=
- =?utf-8?B?T0NodzlxWjlESFdNaGFLbDVEUE54SmRUUEJ3WEhjeVY4OHBTdTY1RUNUanFk?=
- =?utf-8?B?OTZwdmkyNEV3YUlrQkFNR014d0wyWWxZNHNHSEkzeEhYdFM0WWVoUGxmWTBW?=
- =?utf-8?B?Y1Y2QmlOeFBIWEt1MkFlekNjc25DRGRGL3diSmVwNUR1bi9RNndyd0ZKMTJw?=
- =?utf-8?B?M01ibk54dXI3RmNEdmFwUkJmdzlUT1FNTU83TEd5dmd3c1hNcWtiZnY4eExP?=
- =?utf-8?Q?f3AW1w1EyJ/9AyHO7zzMqRfsV?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ca3cebe-8704-4504-0f7a-08dc5fdfe199
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5427.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 19:43:54.8198
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GCt2HhIEenntXKoCH8ofhM3/D4af0d6cs0ctlX9gFD8Yoedmu84tVI8ZchlPd8AYQxXq+EsunvQwsAxvudz3Qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5940
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+ <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+ <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
+ <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev> <20240417143324.GA1055428@cmpxchg.org>
+ <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb> <20240418124043.GC1055428@cmpxchg.org>
+In-Reply-To: <20240418124043.GC1055428@cmpxchg.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 18 Apr 2024 13:09:22 -0700
+Message-ID: <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Christian Heusel <christian@heusel.eu>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>, 
+	Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
+	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 18, 2024 at 5:40=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
+> wrote:
+>
+> On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
+> > On 24/04/17 10:33AM, Johannes Weiner wrote:
+> > >
+> > > Christian, can you please test the below patch on top of current
+> > > upstream?
+> > >
+> >
+> > Hey Johannes,
+> >
+> > I have applied your patch on top of 6.9-rc4 and it did solve the crash =
+for
+> > me, thanks for hacking together a fix so quickly! =F0=9F=A4=97
+> >
+> > Tested-By: Christian Heusel <christian@heusel.eu>
+>
+> Thanks for confirming it, and sorry about the breakage.
+>
+> Andrew, can you please use the updated changelog below?
+>
+> ---
+>
+> From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 2001
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> Date: Thu, 18 Apr 2024 08:26:28 -0400
+> Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disable=
+=3Dmemory
+>
+> Christian reports a NULL deref in zswap that he bisected down to the
+> zswap shrinker. The issue also cropped up in the bug trackers of
+> libguestfs [1] and the Red Hat bugzilla [2].
+>
+> The problem is that when memcg is disabled with the boot time flag,
+> the zswap shrinker might get called with sc->memcg =3D=3D NULL. This is
+> okay in many places, like the lruvec operations. But it crashes in
+> memcg_page_state() - which is only used due to the non-node accounting
+> of cgroup's the zswap memory to begin with.
+>
+> Nhat spotted that the memcg can be NULL in the memcg-disabled case,
+> and I was then able to reproduce the crash locally as well.
+>
+> [1] https://github.com/libguestfs/libguestfs/issues/139
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D2275252
+>
+> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> Cc: stable@vger.kernel.org      [v6.8]
+> Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
+> Reported-by: Christian Heusel <christian@heusel.eu>
+> Debugged-by: Nhat Pham <nphamcs@gmail.com>
+> Suggested-by: Nhat Pham <nphamcs@gmail.com>
+> Tested-By: Christian Heusel <christian@heusel.eu>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
+Thanks for fixing this. A couple of comments/questions below, but anyway LG=
+TM:
 
-On 2024-03-07 01:29, Wayne Lin wrote:
-> [Why]
-> Commit:
-> - commit 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
-> accidently overwrite the commit
-> - commit 54d217406afe ("drm: use mgr->dev in drm_dbg_kms in drm_dp_add_payload_part2")
-> which cause regression.
-> 
-> [How]
-> Recover the original NULL fix and remove the unnecessary input parameter 'state' for
-> drm_dp_add_payload_part2().
-> 
-> Fixes: 5aa1dfcdf0a4 ("drm/mst: Refactor the flow for payload allocation/removement")
-> Reported-by: Leon Weiß <leon.weiss@ruhr-uni-bochum.de>
-> Link: https://lore.kernel.org/r/38c253ea42072cc825dc969ac4e6b9b600371cc8.camel@ruhr-uni-bochum.de/
-> Cc: lyude@redhat.com
-> Cc: imre.deak@intel.com
-> Cc: stable@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-
-I haven't been deep in MST code in a while but this all looks
-pretty straightforward and good.
-
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-
-Harry
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
 > ---
->  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 +-
->  drivers/gpu/drm/display/drm_dp_mst_topology.c             | 4 +---
->  drivers/gpu/drm/i915/display/intel_dp_mst.c               | 2 +-
->  drivers/gpu/drm/nouveau/dispnv50/disp.c                   | 2 +-
->  include/drm/display/drm_dp_mst_helper.h                   | 1 -
->  5 files changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> index c27063305a13..2c36f3d00ca2 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-> @@ -363,7 +363,7 @@ void dm_helpers_dp_mst_send_payload_allocation(
->  	mst_state = to_drm_dp_mst_topology_state(mst_mgr->base.state);
->  	new_payload = drm_atomic_get_mst_payload_state(mst_state, aconnector->mst_output_port);
->  
-> -	ret = drm_dp_add_payload_part2(mst_mgr, mst_state->base.state, new_payload);
-> +	ret = drm_dp_add_payload_part2(mst_mgr, new_payload);
->  
->  	if (ret) {
->  		amdgpu_dm_set_mst_status(&aconnector->mst_status,
-> diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> index 03d528209426..95fd18f24e94 100644
-> --- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
-> @@ -3421,7 +3421,6 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
->  /**
->   * drm_dp_add_payload_part2() - Execute payload update part 2
->   * @mgr: Manager to use.
-> - * @state: The global atomic state
->   * @payload: The payload to update
->   *
->   * If @payload was successfully assigned a starting time slot by drm_dp_add_payload_part1(), this
-> @@ -3430,14 +3429,13 @@ EXPORT_SYMBOL(drm_dp_remove_payload_part2);
->   * Returns: 0 on success, negative error code on failure.
->   */
->  int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
-> -			     struct drm_atomic_state *state,
->  			     struct drm_dp_mst_atomic_payload *payload)
->  {
->  	int ret = 0;
->  
->  	/* Skip failed payloads */
->  	if (payload->payload_allocation_status != DRM_DP_MST_PAYLOAD_ALLOCATION_DFP) {
-> -		drm_dbg_kms(state->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
-> +		drm_dbg_kms(mgr->dev, "Part 1 of payload creation for %s failed, skipping part 2\n",
->  			    payload->port->connector->name);
->  		return -EIO;
->  	}
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> index 53aec023ce92..2fba66aec038 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> @@ -1160,7 +1160,7 @@ static void intel_mst_enable_dp(struct intel_atomic_state *state,
->  	if (first_mst_stream)
->  		intel_ddi_wait_for_fec_status(encoder, pipe_config, true);
->  
-> -	drm_dp_add_payload_part2(&intel_dp->mst_mgr, &state->base,
-> +	drm_dp_add_payload_part2(&intel_dp->mst_mgr,
->  				 drm_atomic_get_mst_payload_state(mst_state, connector->port));
->  
->  	if (DISPLAY_VER(dev_priv) >= 12)
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index 0c3d88ad0b0e..88728a0b2c25 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -915,7 +915,7 @@ nv50_msto_cleanup(struct drm_atomic_state *state,
->  		msto->disabled = false;
->  		drm_dp_remove_payload_part2(mgr, new_mst_state, old_payload, new_payload);
->  	} else if (msto->enabled) {
-> -		drm_dp_add_payload_part2(mgr, state, new_payload);
-> +		drm_dp_add_payload_part2(mgr, new_payload);
->  		msto->enabled = false;
->  	}
->  }
-> diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/drm_dp_mst_helper.h
-> index 9b19d8bd520a..6c9145abc7e2 100644
-> --- a/include/drm/display/drm_dp_mst_helper.h
-> +++ b/include/drm/display/drm_dp_mst_helper.h
-> @@ -851,7 +851,6 @@ int drm_dp_add_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
->  			     struct drm_dp_mst_topology_state *mst_state,
->  			     struct drm_dp_mst_atomic_payload *payload);
->  int drm_dp_add_payload_part2(struct drm_dp_mst_topology_mgr *mgr,
-> -			     struct drm_atomic_state *state,
->  			     struct drm_dp_mst_atomic_payload *payload);
->  void drm_dp_remove_payload_part1(struct drm_dp_mst_topology_mgr *mgr,
->  				 struct drm_dp_mst_topology_state *mst_state,
+>  mm/zswap.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index caed028945b0..6f8850c44b61 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(struct =
+shrinker *shrinker,
+>         if (!gfp_has_io_fs(sc->gfp_mask))
+>                 return 0;
+>
+> -#ifdef CONFIG_MEMCG_KMEM
+> -       mem_cgroup_flush_stats(memcg);
+> -       nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHI=
+FT;
+> -       nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
+> -#else
+> -       /* use pool stats instead of memcg stats */
+> -       nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
+> -       nr_stored =3D atomic_read(&zswap_nr_stored);
+> -#endif
+> +       /*
+> +        * For memcg, use the cgroup-wide ZSWAP stats since we don't
+> +        * have them per-node and thus per-lruvec. Careful if memcg is
+> +        * runtime-disabled: we can get sc->memcg =3D=3D NULL, which is o=
+k
+> +        * for the lruvec, but not for memcg_page_state().
+> +        *
+> +        * Without memcg, use the zswap pool-wide metrics.
+> +        */
+> +       if (!mem_cgroup_disabled()) {
 
+With the current shrinker code, it seems like we cannot get sc->memcg
+=3D=3D NULL unless mem_cgroup_disabled() is true indeed. However, maybe
+it's better to check if sc->memcg is not NULL directly instead?
+
+This would be more resilient in case the shrinker code changes and
+passing sc->memcg =3D=3D NULL becomes possible in other cases (e.g. during
+global shrinking). It seems like other shrinkers do this, for example
+see count_shadow_nodes() and deferred_split_count().
+
+I am also wondering if we should also check !mem_cgroup_is_root()
+here? We can avoid the expensive global flush and use the global stats
+directly in this case. I could also send a follow up patch for this if
+that's preferred.
+
+> +               mem_cgroup_flush_stats(memcg);
+> +               nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> =
+PAGE_SHIFT;
+> +               nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
+> +       } else {
+> +               nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
+> +               nr_stored =3D atomic_read(&zswap_nr_stored);
+> +       }
+>
+>         if (!nr_stored)
+>                 return 0;
+> --
+> 2.44.0
