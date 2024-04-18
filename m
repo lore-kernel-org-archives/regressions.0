@@ -1,103 +1,147 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E9FC1F
-	for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 22:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713394743; cv=pass; b=Hr/do+LGsms46N+ljeZlzvr9wakmcobCGv0+SzPvGU8obfs6H399hkIJr1GmiKRhnsH9t3vvQNzVCBwzxd/Te9Xadn4vMUOLM8zD8HCdtKRCQYwXwv66Nt2z5YE6Y5+rUxdfkY+7kb1Lhe078rErPHoYhB/QwXjb/7H/4Vi4j1s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713394743; c=relaxed/simple;
-	bh=IN21uIJFZDZ6vnpfnCKHO19bcht2OmcqLTfLjQSZuP0=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=HxAsBnlNvgy147FtdDl0gUApA7Tu0u+wLOeSXk3mKx4JFFm9/BI5I8Nj8gE3SCwGhzWkUvmnl9POfzbZucg2dbiYDtySCjf9dQFCIgcazs25zGnn4Z/y1NjiByd/LsVscwQpuOMYhdRzZ/iz9kD/Qr+gaEV9JsaaEQZnwkijBR4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=ocCvKi8g; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9CC1E495
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 01:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713402955; cv=none; b=dVvn1ubNPhcHb+LkAL8NTbV7g5ne85oBSGMkRqvgMvM3yV/bg2kKaW4zTN1Q9vNd8UCPeaqgfngIkzwXEgpXo4HwSfylSOy79ogJ5dd2InsgSxNFxCWh3D3gjUWksf1hiWE4KAShN6jGIjs09vfNm41uF6XsaNGEpFvmw2m99sk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713402955; c=relaxed/simple;
+	bh=uFbfo87nO14001kmIG2rJyAQXlEfsQr2jrkvTkeyE/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nUiLC2KlsZpo9rkuD5AF2hYgojKA3yX1Q+iWKMi24VLMCAdZ5Kqs+u26e5zdvqiLu+7rFXHVhmqMq3PmdQiIbXDn0BciPsZhYPtbPrv7dN7fCLpmmhll4jmIF7cDaZFsYWxDmvYBgqN3PMfUp1oJ+9BppXt+w+zLdpgxyr8DgnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/CMBFif; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="ocCvKi8g"
-Message-ID: <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713394739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5gX4h7XWwTPzc8qUo6w0KwuwczujKTtmoHLee/tMjAQ=;
-	b=ocCvKi8gbZu5b4BREy1H6sWfoG/AFUCtTKXPougAtf+fSZKz8anHGr8T20VF2b7lT3Q6BW
-	KdWT6eLMAHAXKIYKik2Dj3kZC3zDlcINdvrT8xRIyXViTjnO+dmgkxbwaO+/naHaUCjH77
-	WmQytU2knAl/fm3bndxlr+lh/QdmaPpZjX9l6Wp71TkLffJ3ogxPWsEOAp+zsoz7QwNGij
-	qRIc3hSzvA8tkRfTly2CdqFVwFKDxmYBODakzItrKewFa50yCZdhlxoQIQ/aAp29vcJh8+
-	a4ayEhzqk4kqKth1pEoSEc28qxXeUDeauTuMPgifAPLzYzKus5qylBnYGUX8XQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713394739; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5gX4h7XWwTPzc8qUo6w0KwuwczujKTtmoHLee/tMjAQ=;
-	b=MbfVg54eCphZ65LWZXZc3HM7Dk4cm57ZB2fVm4C+5t70bW5pg7/+1cI4xRu7VB+ZP7TrqZ
-	gVaMU5WVvCgKMTdNfIQE1IehAqPekjLNVAE9jaIYGLLEDXSP7Z+dwbT8+wuEq7xjaQUAug
-	Q3a1hol5GHjQkRTyAr0OcKPg7FTx+Xvv+gkbBNQW9QiVkLinH1eK6uRXJzCtrgrEqDz1K0
-	m2Tes9YHA6myhAQIJFp0siM1frNOBonzJKHhU6wgHlt/Nq1LXalrk2obUM0ihdGlrmg8lN
-	jNxdd+qq3cy7mi78QkGT9pFsQo5WpjRdTPjDc3fW1dmD29ay3513+skBmEkoAg==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1713394739; a=rsa-sha256;
-	cv=none;
-	b=Q3PxL6tMjkIFg/uKKBiBjvpa/2ccv6jRZmfQMD40seMtX0zKXDtv8p2DbMyudC/ZL4D6u3
-	gcu3HFBur0ceETPWWeFegixMyZxyPDcHGZd3QTp9SgYVdCa8WvbQ4cSC9CQnhyy0fl7t2J
-	/zjLsg4tCVkDXeqnZAtmpdIPgyMhI1EyixH41byHrmF1PBBCu9YVYkXd9uq03iINT2lRwN
-	PohZU/epCV83ik0RQnZNNJ+v5nwtTq0Z4lwWBiOxkReGTsAP8Wedxa1NgUImaXsTjDGCa7
-	kj/OCLVgM9uUqROUM5yR5djBBkvSxd5SiAxbYEX//V0GprXg7lBhpqaegQihdw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Salvatore Bonaccorso <carnil@debian.org>, regressions@lists.linux.dev,
- Steve French <stfrench@microsoft.com>
-Cc: gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
- linux-cifs@vger.kernel.org
-Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
- overflow frame end of buf" and invisible files under certain conditions
- and at least with noserverino mount option
-In-Reply-To: <ZiBCsoc0yf_I8In8@eldamar.lan>
-References: <ZiBCsoc0yf_I8In8@eldamar.lan>
-Date: Wed, 17 Apr 2024 19:58:56 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/CMBFif"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713402953; x=1744938953;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uFbfo87nO14001kmIG2rJyAQXlEfsQr2jrkvTkeyE/M=;
+  b=G/CMBFif4soIZ9ddP8mHS3wmG2dhMSwhk3n4xuI70N9/dG7/yCmK0R32
+   Ei7QEgCiogBnaqvtO8jYySEO5ntrexIt8QqL57vPLmnlu9D/oMAU6byDz
+   6YnINYd4DDprK6vj/3iLgeaD6vWnDngMRuzAIFn9IJqwjQlnPrRMIPAfj
+   tftP1GGY+5VEyBdz038yTyypTXWW3qXru4iRfpz2HBDw7AoAFeun5xSQQ
+   1ThpOhYuoHxrD42v6r2upHfW+cvwAhfHy+rK6AjpSee9wO03iJqv1vf20
+   +TFIaRLcMoQyVucdLadMGI7/1D2b1mJ5d7IK8xlkYqyV1TNntC7j64yQn
+   A==;
+X-CSE-ConnectionGUID: Z5ejRBHsSYOwkd7E94kr0A==
+X-CSE-MsgGUID: 780VPk7VQLaPv8L1MLbn1Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8799539"
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="8799539"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:15:53 -0700
+X-CSE-ConnectionGUID: Qg3sfDisSnqFwL5IYU/Blw==
+X-CSE-MsgGUID: ay2i8yP0QI2Tkuy5KlkNFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="27470822"
+Received: from kglossop-mobl.amr.corp.intel.com (HELO [10.209.94.180]) ([10.209.94.180])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:15:52 -0700
+Message-ID: <2aff18aa-32b7-4092-8235-aead9b708ea0@linux.intel.com>
+Date: Wed, 17 Apr 2024 18:15:51 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/3] PCI: Add helper to check if any of ancestor device
+ support D3cold
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ bagasdotme@gmail.com, regressions@lists.linux.dev,
+ linux-nvme@lists.infradead.org, kch@nvidia.com, hch@lst.de,
+ gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+References: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Salvatore,
 
-Salvatore Bonaccorso <carnil@debian.org> writes:
-
-> In Debian we got two reports of cifs mounts not functioning, hiding
-> certain files. The two reports are:
+On 4/15/24 9:32 PM, Kai-Heng Feng wrote:
+> In addition to nearest upstream bridge, driver may want to know if the
+> entire hierarchy can be powered off to perform different action.
 >
-> https://bugs.debian.org/1069102
-> https://bugs.debian.org/1069092
+> So walk higher up the hierarchy to find out if any device has valid
+> _PR3.
 >
-> On those cases kernel logs error
+> The user will be introduced in next patch.
 >
-> [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
 
-I couldn't reproduce it.  Does the following fix your issue:
+Since it has been a while, I was not sure what this series is about.
 
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index 4c1231496a72..3ee35430595e 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
- 		info_buf_size = sizeof(struct smb2_posix_info);
- 		break;
- 	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
--		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
-+		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
- 		break;
- 	default:
- 		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
+IMO, it is better to include a cover letter with the summary of your
+changes.
 
-If not, please provide network trace and verbose logs.
 
-Thanks.
+> v8:
+>  - No change.
+>
+>  drivers/pci/pci.c   | 16 ++++++++++++++++
+>  include/linux/pci.h |  2 ++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..7a5662f116b8 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6225,6 +6225,22 @@ bool pci_pr3_present(struct pci_dev *pdev)
+>  		acpi_has_method(adev->handle, "_PR3");
+>  }
+>  EXPORT_SYMBOL_GPL(pci_pr3_present);
+> +
+> +bool pci_ancestor_pr3_present(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent = pdev;
+> +
+> +	if (acpi_disabled)
+> +		return false;
+> +
+> +	while ((parent = pci_upstream_bridge(parent))) {
+> +		if (pci_pr3_present(pdev))
+
+I think it should be "parent" here?
+
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_ancestor_pr3_present);
+>  #endif
+>  
+>  /**
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 16493426a04f..cd71ebfd0f89 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2620,10 +2620,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+>  void
+>  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+>  bool pci_pr3_present(struct pci_dev *pdev);
+> +bool pci_ancestor_pr3_present(struct pci_dev *pdev);
+>  #else
+>  static inline struct irq_domain *
+>  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+>  static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+> +static inline bool pci_ancestor_pr3_present(struct pci_dev *pdev) { return false; }
+>  #endif
+>  
+>  #ifdef CONFIG_EEH
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
