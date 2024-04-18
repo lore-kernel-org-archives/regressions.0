@@ -1,163 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB3369E1C
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 06:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D672D63C;
+	Thu, 18 Apr 2024 06:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713421687; cv=none; b=AtSh/NILI8vQRIyCjMpYDRj6uOH4jlhUM2YvhR7tEueB08+ek+eiVjOJ+o/ByfhKZp2ISlQOH80VayPLybX7irp/aSkPqmtSOZR9+XqQKhbAkA/qTmjekWK2lxguR7h+X4HeU1YKreacesSHN+UZa8x7rfwWEpuKX7jGqvyXMtc=
+	t=1713422180; cv=none; b=R8XUVNe3BzpAJ4QXgfKMIIbdzF0GIr7B5aLnMw4EiCAEDp2GB1bJ6QMpvzwaSK0+KbzwF4Ty/WxmWcfnuOvBZihpaQQbxMz6aDdf2xZvxQxOEX75WtMH9ps78BEqCk76of+/se7bARCipqEX8uQVj9Ni9QbT16+gjBsNukUC/TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713421687; c=relaxed/simple;
-	bh=DhP+wdzR337uZ5KL27fznIhxVqt9DRsWldIIAKOEgm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HjJvqy7yx8N4IQ7mSqS1Z5QExYmJgcy6W8hHqstwpabxWOHKcD9D0Ijd1t+4ai46OhkDEm7iyNA0s7o9w+uLTQGkTIGzncq0J4cPWZpt2mqwS3OywpBXPPMe6oLeemPGRKDjlkeJY1tuY59jdrJC5LuYRzbkr/rQMB5WRyKOEuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tm2HkL3x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K2x9Gyy/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tm2HkL3x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=K2x9Gyy/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1713422180; c=relaxed/simple;
+	bh=mrGvViLXE2Mtys96KlxXPpWUSmLfiAiORWlV5HWduYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfIX9KeksPI7VbyjnxCqQtgQEH8OQaPLCdiKTfkjiYIeEKrfWp9pxiZsxyG8QiRfj4yF4ZcnbmJhdiJmH4WDJGgAXnBJgNNKsa7urbxxtJCTgIl+4YlwiZWs0d4Ev7Ue9UTKv94ynShxYf7Z6UMuYA9vBkan/7YHJ4fF1xp5s5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pt09tdFI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tm2HkL3x";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K2x9Gyy/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tm2HkL3x";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="K2x9Gyy/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F3035C4ED;
-	Thu, 18 Apr 2024 06:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713421683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
-	b=tm2HkL3xVelzcBJRtWYwQkYmovSqm5VIyQt2W6YEldQAjji6WU0UirMlrJJ1JddMN77qZJ
-	sUyr1dJtvdy17mHb0n7J/aQfB6K+XJPIikqZRZxIyYyn/lOzjrHP5PBiDd5IzMMjAaDg9K
-	y2YEdYXMwTlxevsMic+rAZuz/EGO6gw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713421683;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
-	b=K2x9Gyy/mYZOutVO1XXWOGeRnRGGyQRFTHqn7NC/nvMAstawRIYH3i8T4DOFImJ4AzWgP3
-	O4W0GVfUHDsrAhCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tm2HkL3x;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="K2x9Gyy/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1713421683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
-	b=tm2HkL3xVelzcBJRtWYwQkYmovSqm5VIyQt2W6YEldQAjji6WU0UirMlrJJ1JddMN77qZJ
-	sUyr1dJtvdy17mHb0n7J/aQfB6K+XJPIikqZRZxIyYyn/lOzjrHP5PBiDd5IzMMjAaDg9K
-	y2YEdYXMwTlxevsMic+rAZuz/EGO6gw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1713421683;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PGHryipV7m3ISlljFcCVSwJdP+QGddzGbQWc+EpBMrI=;
-	b=K2x9Gyy/mYZOutVO1XXWOGeRnRGGyQRFTHqn7NC/nvMAstawRIYH3i8T4DOFImJ4AzWgP3
-	O4W0GVfUHDsrAhCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D271D13687;
-	Thu, 18 Apr 2024 06:28:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id G62JMXK9IGb2cgAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 18 Apr 2024 06:28:02 +0000
-Message-ID: <248d92b7-23b0-4c84-8c38-58d956b88a64@suse.de>
-Date: Thu, 18 Apr 2024 08:28:01 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pt09tdFI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431DFC113CC;
+	Thu, 18 Apr 2024 06:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713422179;
+	bh=mrGvViLXE2Mtys96KlxXPpWUSmLfiAiORWlV5HWduYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pt09tdFI852k4gRs4+vIvyJEIqllpjdD3URBRFDXWDwJXbWxvpjCVW2e3zVtPjrlC
+	 5FwlpI0XC6Vh2gSzOYN/gkRtXV0dUKKmjuh1A5Vbb0dXBhnzscA6VlzNLSR1CAkLNN
+	 gcTSqfDXlf2LQqwn+pmJtNKxOI8htCNJ5EX2dfc/mV6L+pHwCuFp0fzkJJRsqY3Sar
+	 J6+vuKnfuL5usGB7pKvJYQ+bXFzLCwt4+S3UiG2vbC2lXlJyPVE1awRDbevI1LnY0B
+	 1uq96psSGgzHQItcu8qCxbUhGssO6oSmG+KIDo0Ab2D/Msfe8ruzpjIPkmWhvqmlCf
+	 pVLxqOsnqptzA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rxLNd-000000000Q3-0L4L;
+	Thu, 18 Apr 2024 08:36:21 +0200
+Date: Thu, 18 Apr 2024 08:36:21 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Anton Altaparmakov <anton@tuxera.com>,
+	Namjae Jeon <linkinjeon@kernel.org>, ntfs3@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH 2/2] ntfs3: remove warning
+Message-ID: <ZiC_ZQcIjM3xv3zT@hovoldconsulting.com>
+References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
+ <20240325-faucht-kiesel-82c6c35504b3@brauner>
+ <015aa42b-abac-4810-8743-43913ab8e2d9@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: API break, sysfs "capability" file
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>, Lennart Poettering <mzxreary@0pointer.de>
-Cc: Keith Busch <kbusch@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Jens Axboe <axboe@kernel.dk>
-References: <54e3c969-3ee8-40d8-91d9-9b9402001d27@leemhuis.info>
- <ZhQ6ZBmThBBy_eEX@kbusch-mbp.dhcp.thefacebook.com>
- <ZhRSVSmNmb_IjCCH@gardel-login>
- <ZhRyhDCT5cZCMqYj@kbusch-mbp.dhcp.thefacebook.com>
- <ZhT5_fZ9SrM0053p@gardel-login> <20240409141531.GB21514@lst.de>
- <Zh6J75OrcMY3dAjY@gardel-login> <Zh6O5zTBs5JtV4D2@kbusch-mbp>
- <20240417151350.GB2167@lst.de> <Zh_vQG9EyVt34p16@gardel-login>
- <20240417155913.GA6447@lst.de>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240417155913.GA6447@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -5.50
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 2F3035C4ED
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <015aa42b-abac-4810-8743-43913ab8e2d9@paragon-software.com>
 
-On 4/17/24 17:59, Christoph Hellwig wrote:
-> On Wed, Apr 17, 2024 at 05:48:16PM +0200, Lennart Poettering wrote:
->> Block devices with part scanning off are quite common after all,
->> i.e. "losetup" creates them by default like that, and partition block
->> devices themselves have no part scanning on and so on, hence we have
->> to be ablet to operate sanely with them.
+On Wed, Apr 17, 2024 at 07:07:06PM +0300, Konstantin Komarov wrote:
+> On 25.03.2024 11:34, Christian Brauner wrote:
+> > This causes visible changes for users that rely on ntfs3 to serve as an
+> > alternative for the legacy ntfs driver. Print statements such as this
+> > should probably be made conditional on a debug config option or similar.
+
+> The initial and true reason for multiple warnings is the disregard of 
+> short (DOS) names when counting hard links.
 > 
-> Maybe and ioctl to turn on partition scanning if it is currently disabled
-> or return an error otherwise would be the better thing?  It would
-> do the right thing for the most common loop case, and with a bit more
-> work could do the right thing for those that more or less disable it
-> graciously (ubiblock, drbd, zram) and would just fail for those who are
-> so grotty old code and slow devices that we never want to do a partition
-> scan (basically old floppy drivers and the Nintendo N64 cartridge driver)
-> 
-> 
-The world is going to end.
-hch suggests an ioctl.
+> This patch should fixes this bug:
+> https://lore.kernel.org/ntfs3/0cb0b314-e4f6-40a2-9628-0fe7d905a676@paragon-software.com/T/#u
 
-Cheers,
+As I just replied in that thread, I'm also seeing link counts being
+reduced from 3 to 1, that is, to not just be decremented by one due to
+the DOS name bug.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Are you sure there are no further issues here and that the patch is
+indeed correct?
 
+I did not test the patch, which is white-space damaged, but if it
+addresses also the remaining warnings then the commit message would need
+to be updated as well.
+
+Johan
