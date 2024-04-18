@@ -1,124 +1,111 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310E15D5AE
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 13:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713448029; cv=pass; b=qVWMezjvp2z5DVdPwtoaqaLcVgK1cZkiteG2cUuuMV29rU20f5GIg4TpRFxeTRo591bi1XcxcXyXaBvh72l78pyhkmOxltIRInYKcgGQ4QUJJ9M6lf4Aene2ug5RBeX9WbHPiYLZHtVigue0psHuv8JWj2NuGEuJT72fBRPtzzA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713448029; c=relaxed/simple;
-	bh=O4NLUl1PjH8QiQoDvqx/qELU67RP3FS7QbuTtQCXt20=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=ZQPcl0UlGIZGPzH0N6q1OFoZOlyby6wRHSb++3ZfO5d+ZZpvgcWOe5xz2iLA+H2ktsSYCtaZ7dhUtYq/nGG1VtIFWVDAirGGjFfkqrUGKU/NGYNH+VGIC3abe+lRRr3y6l6cN7tkJc7OwY4R2v4fZZTNdygPG9JcWkDWfX3eTSA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=UB8HuKZl; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A9C165FB6;
+	Thu, 18 Apr 2024 14:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713450334; cv=none; b=QX8kmCs1Pk8nS3kJ97wC4Qt4zL3i76nGuXBKvIBvtKnk+9dKBU1pfP9Owvg2/YJwkwRd7D8k60o/qv/DCX1/q1WY/fvQnWfDD1tX7jCMAsgJWcZBFOxit3e7L5PRIXQgbeJ2GybfUQZBLHTO3YB07A/URr2E9CNoyS3fWsBkbH8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713450334; c=relaxed/simple;
+	bh=xKOoXd2m5g86klzLlV+Y20rOFjFNzLeMpDwIzLipyeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OqIOQGSiHapLuBQ5WeKGyJwxmCXv50TCbIRGtNiK74y9wwhYjNp9UPPZ0JWHUN/r3kRXwROPolJjR1kkIicFpTTLn5kYwHKm3FiiSEWQxEcNYfufMZly01E+dj7q99njDHSQxjzPsMMs0Y5uoivwoqYsvyjLg6m2NbxjTRv/654=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=a54bZwdj; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="UB8HuKZl"
-Message-ID: <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713448024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7rU0kOVmyBLX9ndqmurxB34d6Cclj332xnTjEKvm7HA=;
-	b=UB8HuKZlNT0DFaxFELpQyJIHcVKpTxtAd3P8hAyt5sJuunUsJ3b6l4pAsRezCp2MGzu4xI
-	I0/SQyhtEO9HILsKY3b20D8O6ufJ3pxz2uhiPE8c/9+6OBMsfWYohMO4YnYpETMb48JwtG
-	IFNgXoCYWsm8oi59KzT5eRQEz0VX/grQozCt2y7lMFXyubT1avJbMOuy+L5tIAU8sI6VCY
-	hsamDTIMnHHYDMneURyrfvgu/aA9LfRUKkR0s0301vE3A1BYvjMO+Br2mI1VNt6ybin41+
-	2HcDsCdXhX/f1gRqofpzJk5OXGU0qZN26AXj6n8m6OZ2Oi9SfupY6NuhBGncQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1713448024; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7rU0kOVmyBLX9ndqmurxB34d6Cclj332xnTjEKvm7HA=;
-	b=a2Bi8TZD3NAuhNV3ohoMtEBiMtrH+9kRTWj6jKFEVsXQp6N68s5JgLgE5Plocme8zP4T/D
-	CzwC7y8qFBV4g5rGojVB54TjR7u2uujOQjVmf37vLvLi+6bTEOiPWKayQKruAe6pyn0Ggx
-	hoiappzpHfJPRh5rY0233exMp8eIt8WWCwQG+TXLEghJYSh3ibeQU7Gra11FywU3iqBakX
-	BBgTwJGFEDxp2+em5NZrbOQbB0QIOvwOhh0ZB6WERHwd/6hANWtI1QeyAWefGcs8gwO+aM
-	o5CBmt+bJ7aiPwHVcOmUz4qUPGy5zG3IbKsjcxVhpvCFOtU1T1i8YF6TzQqdKA==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1713448024; a=rsa-sha256;
-	cv=none;
-	b=kUtYyctEG3LKddBFEQCb7K3qzEgAOzCZ8ZymcGRwUG3IJetAsrrQPH3mLO84p+xuMrgJzp
-	Ne3OKlF47QG0xyUJQy13AOZhhKWKPpSkJOcbPqKzkdDnPjYqdbHsQg9EW7h2U9Is5295Fo
-	eE9qRK/Wdny4Asok8QXSgKxAUgvXOE9yiZPbpLwU+TTteQIHEDYl8wVG/lP6UXZN7KSTie
-	b+FV+bCdS9z+V2ciJkxGzyyLVI3DbNRKGMsTNhdbQbcQrJrjFK5/dumdlWyG/AoAEVpQVd
-	+lKrHgSalUou3Nu2uRbFGtLJrnPIiy1/ou6lW9xilglvW3Y75ezYGl5ARTCdHA==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
- gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
- linux-cifs@vger.kernel.org
-Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
- overflow frame end of buf" and invisible files under certain conditions
- and at least with noserverino mount option
-In-Reply-To: <ZiCoYjr79HXxiTjr@eldamar.lan>
-References: <ZiBCsoc0yf_I8In8@eldamar.lan>
- <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
- <ZiCoYjr79HXxiTjr@eldamar.lan>
-Date: Thu, 18 Apr 2024 10:47:01 -0300
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="a54bZwdj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Zj6q68EGA4RlIzYy/XSYT8WM4sscbczTrgcDryITQrk=;
+	t=1713450332; x=1713882332; b=a54bZwdjVmPGx6Bp1QZG6UhImC4InVF7GniPpFaR86VvgGp
+	6CaUimQQITS+FXKoWJTTTUy1lxokl6U9RlmLq4dEoj32himcsPkjE3PzVhzjAeDhEikFSKBrOI181
+	3I2sXYhFprrv602dq77ZvJRZgayCnTAzwIqNgD9oqpJ6sIaTmVh0QiE8g/JzENwABgs2TSnF8B5zs
+	piwUfkDw/UuWOWWRrihiSANjh51N81SftxTYS4tTpzed8AlaiqmHcgtvPAjhDMq9mAMzxG2tAXNtS
+	fFIpXg0cfwg23Dtuvn4ycfHL1LlRG/iFktC5mIXit85HvZLnyEApGwVVPlLdQ3QA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rxShb-0005cg-PE; Thu, 18 Apr 2024 16:25:27 +0200
+Message-ID: <93766ae3-30d9-4dd3-ba01-870cc6387df4@leemhuis.info>
+Date: Thu, 18 Apr 2024 16:25:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Christian Heusel <christian@heusel.eu>
+Cc: Chengming Zhou <chengming.zhou@linux.dev>, Nhat Pham <nphamcs@gmail.com>,
+ Seth Jennings <sjenning@redhat.com>, Dan Streetman <ddstreet@ieee.org>,
+ Vitaly Wool <vitaly.wool@konsulko.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>,
+ "Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>,
+ regressions@lists.linux.dev, Yosry Ahmed <yosryahmed@google.com>
+References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
+ <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
+ <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
+ <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
+ <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev>
+ <20240417143324.GA1055428@cmpxchg.org>
+ <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
+ <20240418124043.GC1055428@cmpxchg.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240418124043.GC1055428@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713450332;df5152e4;
+X-HE-SMSGID: 1rxShb-0005cg-PE
 
-Salvatore Bonaccorso <carnil@debian.org> writes:
+On 18.04.24 14:40, Johannes Weiner wrote:
+> On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
+>> On 24/04/17 10:33AM, Johannes Weiner wrote:
+> Christian reports a NULL deref in zswap that he bisected down to the
+> zswap shrinker. The issue also cropped up in the bug trackers of
+> libguestfs [1] and the Red Hat bugzilla [2].
+> 
+> The problem is that when memcg is disabled with the boot time flag,
+> the zswap shrinker might get called with sc->memcg == NULL. This is
+> okay in many places, like the lruvec operations. But it crashes in
+> memcg_page_state() - which is only used due to the non-node accounting
+> of cgroup's the zswap memory to begin with.
+> 
+> Nhat spotted that the memcg can be NULL in the memcg-disabled case,
+> and I was then able to reproduce the crash locally as well.
 
-> On Wed, Apr 17, 2024 at 07:58:56PM -0300, Paulo Alcantara wrote:
->> Hi Salvatore,
->> 
->> Salvatore Bonaccorso <carnil@debian.org> writes:
->> 
->> > In Debian we got two reports of cifs mounts not functioning, hiding
->> > certain files. The two reports are:
->> >
->> > https://bugs.debian.org/1069102
->> > https://bugs.debian.org/1069092
->> >
->> > On those cases kernel logs error
->> >
->> > [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
->> 
->> I couldn't reproduce it.  Does the following fix your issue:
->> 
->> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
->> index 4c1231496a72..3ee35430595e 100644
->> --- a/fs/smb/client/smb2pdu.c
->> +++ b/fs/smb/client/smb2pdu.c
->> @@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
->>  		info_buf_size = sizeof(struct smb2_posix_info);
->>  		break;
->>  	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
->> -		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
->> +		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
->>  		break;
->>  	default:
->>  		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
->> 
->> If not, please provide network trace and verbose logs.
->
-> Yes that appears to fix the issue.
+Thx for the fix. Nitpicking:
 
-Thanks for quickly testing it.  So the above change indicates that we're
-missing 35235e19b393 ("cifs: Replace remaining 1-element arrays") in
-v6.1.y.
+> [1] https://github.com/libguestfs/libguestfs/issues/139
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2275252
 
-Can you test it now with 35235e19b393 backported without the above
-change?
+FWIW, those should ideally look like this:
 
-> But as you say you are not able to reproduce the issue, I guess we
-> need to try to get it clearly reproducible first to see we face no
-> other fallouts?
+Link: https://github.com/libguestfs/libguestfs/issues/139 [1]
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2275252 [2]
 
-I couldn't reproduce it in v6.9-rc4.  Forgot to mention it, sorry.
+> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
+> Cc: stable@vger.kernel.org	[v6.8]
+> Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
+> Reported-by: Christian Heusel <christian@heusel.eu>
 
-Yes, further testing would be great to make sure we're not missing
-anything else.
+And here checkpatch.pl should have complained that the above line should
+ideally be followed by a Link or Closes tag to the report, e.g.:
+
+Closes:
+https://lore.kernel.org/all/3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2/
+
+Which in this case would be nice, as I'm tracking this regression, hence
+regzbot will then track the patch and consider the regression resolved
+once the fix lands in mainline.
+
+Ciao, Thorsten
