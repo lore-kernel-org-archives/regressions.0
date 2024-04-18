@@ -1,36 +1,37 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7055715AAC9;
-	Thu, 18 Apr 2024 08:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA24415A499
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 09:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713430133; cv=none; b=hESICLKiG3sOwBJVrgfLEsLLMhKnC5++Jpj+gfcKDHLGDHJdTSDv5HMWTSEc4zpyrjgNFbGgnNyzAa39BZgMlCJZi0JZaDbujYNbVWyFug7b94WG2poRZIhirBPbubotSJd3GQLAZqNLYrBQywy2xl2dZ2uu0XRDs6C5jski6AY=
+	t=1713431772; cv=none; b=edKRgSBVE2iJOWbsvOwcy+hUbR+GtGTR043DUXqsrnCLgoHxv7tVy91pc/Fx+q1IMxm4jLNcY8KM+C997fnTzaIaaeFuuDO+QaWgBAvSremEW/BUqhyUEMCDNN4n6vQxQZgbao5+pI5WTZFTr9z9XpbidM0M1tMYHDYgfC6hZwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713430133; c=relaxed/simple;
-	bh=cCZcSL0YIDAF5qz+4wzip6oQvBGsMJ9ti10QUAp/PH4=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=lxTPN1I34wHUwfhlxvUd6ai6Hf6B9ohVm+e8iQU/+4k1lQW1VxT349mAxRxNoNTrp3St5OKYxaeSxL0/33FO/7GtIlHFmEYaMM8FsGSuVTM+DSM8+4yDz5nXAEhJxAM9OTFn2IUDi1DwYFZLzd1MedYfG9crslaPqH8a0rUWl3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LIimsa/f; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1713431772; c=relaxed/simple;
+	bh=ImpkQR9Hd36bUXw8MvO5DJT4dVqY5BIM4/1EN5Z2W14=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Op1yXgCrflKLnfmnc86BLihr6NvvDZCNpWezg9LUVXUSVo0oj24wC+mkA4uytzNPtA6VPQPijmQk2psd+TgtHoicXPkMO53SrLPQtTaxkp3hKzqMu/ESLivKyku6757tKLh/mtkBhvLFMCxRdPc786gxtsKUsgXNLo0X06aIvns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=nwMQgH8i; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LIimsa/f"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="nwMQgH8i"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	In-Reply-To:Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=ceJILIOVA2WDBG4d054KS51MjWUMSrgtQobFchiud7w=; t=1713430131;
-	x=1713862131; b=LIimsa/fAMNjDmSmZRH9wMKuyxY3DkeZSljscBj73THRs7plnK0OGTVxDGE0q
-	JT7B9WYprfRkMq0eQoxxTT+A2+eM23K2I0kcAKY6jC4f090lXVweIl3ScSTR7fg+3yZCGrt/WafEi
-	OfXlcoXU/+A3hXEZUF/9eeEcUMeM+dW+Aw8k0ZKn9OaRQJ/LhuoeaZBFHavy+Pgv2F7/2cBp4KCdY
-	reSWHyg8ABuy2COuAlZAv31NJXWE0Je6sOdqMLoSl/brOylI2uFKJ6TxRT2CYLrH2UQHVJXPdzN7I
-	3CW5KQ4ZiOOFvGanEzLJ9eWJpobnIDTvmeHmCR7SP3/SLqqaQA==;
+	References; bh=ImpkQR9Hd36bUXw8MvO5DJT4dVqY5BIM4/1EN5Z2W14=; t=1713431770;
+	x=1713863770; b=nwMQgH8ig4DBZGDxr5aY3oo9nTl2Iv+Xs7jsy77UIcbopkuOxb9EPltCuKXIg
+	Zrmh7TLJshhUtN8FHW53IzWhZgG7WfSLWbCky8pWXhLvChC9NHlDmIwDm8EAj/FfUmk84tFIZiZnB
+	CQZ+gMfhOeVLL4uACBv7Zd1Zl4w/04Y9cnRp2GqXz/0UWhuFVVwXO4oEo+ZBKPfkNoY1aFJqjCDYk
+	KVK9YMIEnEgj721/cRCszPtSRaI26Kbtflf6rAl6819VVeni+FjdFVDxiJOeKivC5omOvxfkt/Brc
+	nKLrYq0JQu3uxVS1aiNwGhNPwgLbaYJG/dJ+rt4Loagy6ypkOw==;
 Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rxNRi-0004qb-BO; Thu, 18 Apr 2024 10:48:42 +0200
-Message-ID: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
-Date: Thu, 18 Apr 2024 10:48:41 +0200
+	id 1rxNsG-00038J-C0; Thu, 18 Apr 2024 11:16:08 +0200
+Message-ID: <92377e46-5eca-4c0b-b0b6-58394916abc3@leemhuis.info>
+Date: Thu, 18 Apr 2024 11:16:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,62 +39,59 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: "Linux regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: en-US, de-DE
-To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>
-Cc: Kalle Valo <kvalo@kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [regression] Tri-band AMD RZ608 (MediaTek MT7921K) has 6GHz band
- disabled in kernel 6.8 despite working in <=6.6
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713430131;169e7109;
-X-HE-SMSGID: 1rxNRi-0004qb-BO
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713431770;70bc258b;
+X-HE-SMSGID: 1rxNsG-00038J-C0
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
 
-mt7921 maintainers, I noticed a report about a regression in
-bugzilla.kernel.org related to your driver. As many (most?) kernel
-developers don't keep an eye on bugzilla, I decided to write this mail.
-To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218731 :
 
-> On kernel 6.6.27-1-lts, running `iw list` shows that 6GHz channels are supported:>
-> [...]
-> Similarly, discovering and connecting to 6GHz APs works fine.
-> 
-> However, in recent kernel 6.8.5, running `iw list` shows that 6GHz channels are disabled:
->
-> [...]
->
-> And scanning or connecting to 6GHz APs does not work. 
-> 
-> There's nothing in `dmesg` that differs between boots of the two kernels. On 6.8.5, 6GHz band doesn't work like it did on previous kernels. 
-> 
-> I can provide more logs or help debug the issue if needed.
+On 09.03.24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218726
+#regzbot introduced: 56d074d26c58
+#regzbot duplicate:
+https://lore.kernel.org/all/a03dace1-ca0f-41d6-8e2c-636e3b053a3a@penguintechs.org/
+#regzbot summary: CA6390 bluetooth doesn't work after warm boot or
+disable/reenable
+#regzbot fix: Bluetooth: qca: Fix QCA6390 enable failure after reboot or
+disable
+#regzbot monitor:
+https://lore.kernel.org/all/1713354823-17826-1-git-send-email-quic_zijuhu@quicinc.com/
+#regzbot monitor:
+https://lore.kernel.org/all/1713175927-13093-1-git-send-email-quic_zijuhu@quicinc.com/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+#regzbot report:
+https://lore.kernel.org/all/3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2/
+#regzbot introduced: 7108cc3f765c
+#regzbot summary: mm: Null pointer dereference while shrinking zswap
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
+#regzbot report:
+https://lore.kernel.org/all/aeee83d8-dee3-42ed-b705-988b17800721@gmail.com/
+#regzbot introduced: f49449fbc21e
+#regzbot summary: usb: gadget: u_ether: issues with a mrfld, like a
+missing net device
 
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+#regzbot report:
+https://lore.kernel.org/all/1f22520948180e55125fdc686a0de8a93c317e5f.camel@ew.tq-group.com/
+#regzbot introduced: 6ccf50d4d474
+#regzbot summary: net: dsa: mv88e6xxx: timeouts
 
-#regzbot introduced: v6.6..v6.8.5
-#regzbot title: wifi drivers: mt7921: 6GHz band stopped working
-#regzbot from: AlexDeLorenzo.dev
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218731
-#regzbot ignore-activity
+#regzbot report:
+https://lore.kernel.org/linux-scsi/565c6b0b-137f-4d72-b8c6-eb3d34592808@acm.org/
+#regzbot resolve: inconclusive: apparently nobody cares about this
+performance regression anymore
+
