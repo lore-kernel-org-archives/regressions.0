@@ -1,175 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0BB63D5
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 01:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8742AC29
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 02:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713403994; cv=none; b=YFSNt+z5pFSGat6xH+D4REGjXxAMaEXXNC75kJIjF4DFO/554irErxqERAGah6BTw8eTvWUkw76hhVsUsmShUccnBRCCevfH/pzhOolpHeMwd9cZEpYt8DBTuAAofb68lRG5mZrosOF5b7bxw47xH4u1O40tBJjQSrK7rGgFj7k=
+	t=1713406050; cv=none; b=eY+3l8CRKxAMM+ManszKfC+1+0QE4W6SzCeqAE/frWKcl8PUCR5C6YFSynV+FwLrcfIYMyYqLU2cxaa9IzwUV3Pi8Cp6R2IGnxVfmcBtaIbGIdt2x2OwrwMF/MebDC0aswwSz6OA/ZejJTRvZnheWSWf0WwEqKUlr56UurjSgRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713403994; c=relaxed/simple;
-	bh=Q4F2ZtxiPYMoJOfp7gavUjn2ZLtzD+aJZKEOROEWMGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mTeMmFtZdCVG46hr1VBdhIWpuGA0oVeF8y42MXRLpiQsEWENCFdOjIDbHCZTVDbR8PEjvAIYZ/Gghu/k3Bv+5NYsbjN8jNwgru+EEAqH1V5HNYvzJyZmbQEokM/eNO5pFuixYgA6+PydUQYhp0m5d6VmksJ23R5Qy7WbnFBpzvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4f71Iha; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713406050; c=relaxed/simple;
+	bh=+KEGnBcOMKQg1e6jhwZpTqi+bVvKRdapHRMb2dM0wtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJYyN/c9afp9VkVESA7pKVnvhMZpkEfkvpvhX2SG9l4HeLUBUMEIajlinTnL4wX/U9pqUdgkA6ss1G4K5cNjoPMGXNFShmegfQFF6cjq0cLtpp/MC6u4GItymtASLzPGgTJ8zS4txygTYqc1HNb7NFtHKJW+8oCFmIaezViU0rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNC0bqVG; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4f71Iha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713403992; x=1744939992;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q4F2ZtxiPYMoJOfp7gavUjn2ZLtzD+aJZKEOROEWMGI=;
-  b=Z4f71Ihaqfh+zWB7dyYJRu/tw6Xl6vrXTXQTh5x77/wT0xlJpOH8MP6R
-   56JRoHNaGRMqGfmshI0kVYRNGaDLRAKNDKTNhQOuQXp+TaUCOx/f5krgK
-   R7nGnMSVRLDVl9GIGU5TMPNDSV5IZsLqDsJsC4lZKjPOArvVmGwNNTgM1
-   K+e/1lTW/HI03eTjM4pH76UihvXqmGTx5gfDisbwasrKn9mVGOeP9kNop
-   X+KISjaRXHtlYc4RtKzmJqJp5UBEf7cqfC8x6wf83GFKj52+2XdmafIU2
-   JOjI5AkZNBrExGvgi0OGkkPdR8hGtRyNFm70VdPSIjfiy9Bzp/U1GfO+R
-   Q==;
-X-CSE-ConnectionGUID: XswSCEnqTnCRB/yuXCIZlQ==
-X-CSE-MsgGUID: tne43wkeSBq9INfmMl4gVA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8788882"
-X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
-   d="scan'208";a="8788882"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:33:11 -0700
-X-CSE-ConnectionGUID: JgAsBTwcTbqB10eTts8YwA==
-X-CSE-MsgGUID: m8jdm8yZQyevTr1lSoFbdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
-   d="scan'208";a="22870961"
-Received: from kglossop-mobl.amr.corp.intel.com (HELO [10.209.94.180]) ([10.209.94.180])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:33:11 -0700
-Message-ID: <3b5b78e0-dc7e-4e9b-833d-bbb918ff1b2a@linux.intel.com>
-Date: Wed, 17 Apr 2024 18:33:10 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNC0bqVG"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2330f85c2ebso280224fac.1
+        for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 19:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713406048; x=1714010848; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
+        b=jNC0bqVGlJ4eFAtKJsxu+eOOXKYAyL/XLouasxUx5yRqJx1vzQxRxjZ2GYtaKLzvj1
+         J2/0/1gJocPmXQR7UgHUtaZoapGiglvYRyPT3HxRigNB73axMkBPxQf7/LSwjBYNAXuK
+         loUVzZ3V4dZNnO72Yq5sjcHqXKRMhoHTQECpToFAtjriMLu6rsU9bQU1bn0l0CkfavQt
+         KbPwQyi2j3PX7JAgTx5WSjchn6tu3wuui5fdGNj9Cm2zv0BvUgpgWCembAdkijEEhw6G
+         UiolsBwmNTfHTYNLXYUlq9cKEGr2cQD7+rNYgR2VK3I1VLgyHksdBp84vnwWytYB9kv/
+         LnSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713406048; x=1714010848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
+        b=VxEk2pRdRYnlLrvuMzH/RRPOBzPzUdMILZDHIqXrCrWno+WfOqjCLtS4RmncCZsrGt
+         itT8+MQbWp7IO4LJrF6SCy2KJKZahSX9yDziNvYrAJ4i8WfMLzz/2L0fcD9o7G01xeiY
+         7tOX9gfmhvoftoJCJTfW6eT8ZorXmlmPTJkBrXRNQzjbrU2ozRJQTy4KvwsiPuF7tpwu
+         TTGXOHeA3DVzT0OrdRtt0VC6QQFDxcSDv4Z4EOvNq9aYhGW+rrFKptvwm39RtirRrBdt
+         Fmw0ae5NyxDmAR7wnDaE3lw6BdfjNDT5VHUL8WH3GC+ZWy0WcVeWvkhqJaMQjdQekoM3
+         Tp8A==
+X-Gm-Message-State: AOJu0YwLrIdx+kE198UKt/LS62sEAa5dM3/Vq/uH+10xwNYtlwyca8Lm
+	7EB/Mhtycz4U31ih4DNupG1bWUHuimuhYQGqqkdoYiZ1vzp8gs1pTjDOj1sX
+X-Google-Smtp-Source: AGHT+IHkRREgGYfHbnLerfWwG1l/nPL22jRK5el/rJ7qosjGL2kgjZfx5vUtE7jmFBUVX7TkEjKdJw==
+X-Received: by 2002:a05:6870:610c:b0:22a:6c9a:ece8 with SMTP id s12-20020a056870610c00b0022a6c9aece8mr1783850oae.21.1713406048246;
+        Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:6f51])
+        by smtp.gmail.com with ESMTPSA id kq12-20020a056a004b0c00b006e6c81b6055sm356551pfb.6.2024.04.17.19.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Apr 2024 19:07:27 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 17 Apr 2024 16:07:26 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
+Message-ID: <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
+References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
+ <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
+ <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
+ <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
+ <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
+ <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
+ <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- bagasdotme@gmail.com, regressions@lists.linux.dev,
- linux-nvme@lists.infradead.org, kch@nvidia.com, hch@lst.de,
- gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
-References: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
- <20240416043225.1462548-2-kai.heng.feng@canonical.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240416043225.1462548-2-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
 
+Hello, Thorsten.
 
-On 4/15/24 9:32 PM, Kai-Heng Feng wrote:
-> When the power rail gets cut off, the hardware can create some electric
-> noise on the link that triggers AER. If IRQ is shared between AER with
-> PME, such AER noise will cause a spurious wakeup on system suspend.
->
-> When the power rail gets back, the firmware of the device resets itself
-> and can create unexpected behavior like sending PTM messages. For this
-> case, the driver will always be too late to toggle off features should
-> be disabled.
->
-> As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
-> Management", TLP and DLLP transmission are disabled for a Link in L2/L3
-> Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
-> the power will be turned off during suspend process, disable AER service
-> and re-enable it during the resume process. This should not affect the
-> basic functionality.
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
+On Wed, Apr 17, 2024 at 07:48:33AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> > Can you elaborate why Bjorn's case is different?
+> 
+> Well "not booting at all when using 'nohz_full=0'"[as reported two
+> times] and "I start neovim, send SIGSTOP (i.e. ^Z) to it, start another
+> neovim instance and upon sending SIGSTOP to that instance all of
+> userspace locks up - 100% reproducible."[while no 'nohz_full=0' in use]
+> at least on the first sight to and outsider sound a lot like different
+> problems to me -- but of course that impression might be wrong and you
+> know better about these things.
 
-Looks good to me.
+You are right. That is very different.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > I was assuming it was the
+> > same problem and that Oleg's fixes would address the issue.
+> 
+> Bjorn, could you give it a try?
 
-> v8:
->  - Add more bug reports.
->
-> v7:
->  - Wording
->  - Disable AER completely (again) if power will be turned off
->
-> v6:
-> v5:
->  - Wording.
->
-> v4:
-> v3:
->  - No change.
->
-> v2:
->  - Only disable AER IRQ.
->  - No more check on PME IRQ#.
->  - Use helper.
->
->  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ac6293c24976..bea7818c2d1b 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -28,6 +28,7 @@
->  #include <linux/delay.h>
->  #include <linux/kfifo.h>
->  #include <linux/slab.h>
-> +#include <linux/suspend.h>
->  #include <acpi/apei.h>
->  #include <acpi/ghes.h>
->  #include <ras/ras_event.h>
-> @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
->  	return 0;
->  }
->  
-> +static int aer_suspend(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
-> +		aer_disable_rootport(rpc);
-> +
-> +	return 0;
-> +}
-> +
-> +static int aer_resume(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
-> +		aer_enable_rootport(rpc);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->   * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
->  	.service	= PCIE_PORT_SERVICE_AER,
->  
->  	.probe		= aer_probe,
-> +	.suspend	= aer_suspend,
-> +	.resume		= aer_resume,
->  	.remove		= aer_remove,
->  };
->  
+Yeah, I'm curious whether it's just a different symptom of the same problem.
+
+Thanks.
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+tejun
