@@ -1,80 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D672D63C;
-	Thu, 18 Apr 2024 06:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7055715AAC9;
+	Thu, 18 Apr 2024 08:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713422180; cv=none; b=R8XUVNe3BzpAJ4QXgfKMIIbdzF0GIr7B5aLnMw4EiCAEDp2GB1bJ6QMpvzwaSK0+KbzwF4Ty/WxmWcfnuOvBZihpaQQbxMz6aDdf2xZvxQxOEX75WtMH9ps78BEqCk76of+/se7bARCipqEX8uQVj9Ni9QbT16+gjBsNukUC/TI=
+	t=1713430133; cv=none; b=hESICLKiG3sOwBJVrgfLEsLLMhKnC5++Jpj+gfcKDHLGDHJdTSDv5HMWTSEc4zpyrjgNFbGgnNyzAa39BZgMlCJZi0JZaDbujYNbVWyFug7b94WG2poRZIhirBPbubotSJd3GQLAZqNLYrBQywy2xl2dZ2uu0XRDs6C5jski6AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713422180; c=relaxed/simple;
-	bh=mrGvViLXE2Mtys96KlxXPpWUSmLfiAiORWlV5HWduYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hfIX9KeksPI7VbyjnxCqQtgQEH8OQaPLCdiKTfkjiYIeEKrfWp9pxiZsxyG8QiRfj4yF4ZcnbmJhdiJmH4WDJGgAXnBJgNNKsa7urbxxtJCTgIl+4YlwiZWs0d4Ev7Ue9UTKv94ynShxYf7Z6UMuYA9vBkan/7YHJ4fF1xp5s5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pt09tdFI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713430133; c=relaxed/simple;
+	bh=cCZcSL0YIDAF5qz+4wzip6oQvBGsMJ9ti10QUAp/PH4=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=lxTPN1I34wHUwfhlxvUd6ai6Hf6B9ohVm+e8iQU/+4k1lQW1VxT349mAxRxNoNTrp3St5OKYxaeSxL0/33FO/7GtIlHFmEYaMM8FsGSuVTM+DSM8+4yDz5nXAEhJxAM9OTFn2IUDi1DwYFZLzd1MedYfG9crslaPqH8a0rUWl3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LIimsa/f; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pt09tdFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431DFC113CC;
-	Thu, 18 Apr 2024 06:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713422179;
-	bh=mrGvViLXE2Mtys96KlxXPpWUSmLfiAiORWlV5HWduYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pt09tdFI852k4gRs4+vIvyJEIqllpjdD3URBRFDXWDwJXbWxvpjCVW2e3zVtPjrlC
-	 5FwlpI0XC6Vh2gSzOYN/gkRtXV0dUKKmjuh1A5Vbb0dXBhnzscA6VlzNLSR1CAkLNN
-	 gcTSqfDXlf2LQqwn+pmJtNKxOI8htCNJ5EX2dfc/mV6L+pHwCuFp0fzkJJRsqY3Sar
-	 J6+vuKnfuL5usGB7pKvJYQ+bXFzLCwt4+S3UiG2vbC2lXlJyPVE1awRDbevI1LnY0B
-	 1uq96psSGgzHQItcu8qCxbUhGssO6oSmG+KIDo0Ab2D/Msfe8ruzpjIPkmWhvqmlCf
-	 pVLxqOsnqptzA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rxLNd-000000000Q3-0L4L;
-	Thu, 18 Apr 2024 08:36:21 +0200
-Date: Thu, 18 Apr 2024 08:36:21 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Anton Altaparmakov <anton@tuxera.com>,
-	Namjae Jeon <linkinjeon@kernel.org>, ntfs3@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH 2/2] ntfs3: remove warning
-Message-ID: <ZiC_ZQcIjM3xv3zT@hovoldconsulting.com>
-References: <Zf2zPf5TO5oYt3I3@hovoldconsulting.com>
- <20240325-faucht-kiesel-82c6c35504b3@brauner>
- <015aa42b-abac-4810-8743-43913ab8e2d9@paragon-software.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LIimsa/f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	Reply-To:Subject:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
+	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=ceJILIOVA2WDBG4d054KS51MjWUMSrgtQobFchiud7w=; t=1713430131;
+	x=1713862131; b=LIimsa/fAMNjDmSmZRH9wMKuyxY3DkeZSljscBj73THRs7plnK0OGTVxDGE0q
+	JT7B9WYprfRkMq0eQoxxTT+A2+eM23K2I0kcAKY6jC4f090lXVweIl3ScSTR7fg+3yZCGrt/WafEi
+	OfXlcoXU/+A3hXEZUF/9eeEcUMeM+dW+Aw8k0ZKn9OaRQJ/LhuoeaZBFHavy+Pgv2F7/2cBp4KCdY
+	reSWHyg8ABuy2COuAlZAv31NJXWE0Je6sOdqMLoSl/brOylI2uFKJ6TxRT2CYLrH2UQHVJXPdzN7I
+	3CW5KQ4ZiOOFvGanEzLJ9eWJpobnIDTvmeHmCR7SP3/SLqqaQA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rxNRi-0004qb-BO; Thu, 18 Apr 2024 10:48:42 +0200
+Message-ID: <e17e5bf2-657a-4a22-a925-94db95fe8ca1@leemhuis.info>
+Date: Thu, 18 Apr 2024 10:48:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <015aa42b-abac-4810-8743-43913ab8e2d9@paragon-software.com>
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: [regression] Tri-band AMD RZ608 (MediaTek MT7921K) has 6GHz band
+ disabled in kernel 6.8 despite working in <=6.6
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1713430131;169e7109;
+X-HE-SMSGID: 1rxNRi-0004qb-BO
 
-On Wed, Apr 17, 2024 at 07:07:06PM +0300, Konstantin Komarov wrote:
-> On 25.03.2024 11:34, Christian Brauner wrote:
-> > This causes visible changes for users that rely on ntfs3 to serve as an
-> > alternative for the legacy ntfs driver. Print statements such as this
-> > should probably be made conditional on a debug config option or similar.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-> The initial and true reason for multiple warnings is the disregard of 
-> short (DOS) names when counting hard links.
+mt7921 maintainers, I noticed a report about a regression in
+bugzilla.kernel.org related to your driver. As many (most?) kernel
+developers don't keep an eye on bugzilla, I decided to write this mail.
+To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218731 :
+
+> On kernel 6.6.27-1-lts, running `iw list` shows that 6GHz channels are supported:>
+> [...]
+> Similarly, discovering and connecting to 6GHz APs works fine.
 > 
-> This patch should fixes this bug:
-> https://lore.kernel.org/ntfs3/0cb0b314-e4f6-40a2-9628-0fe7d905a676@paragon-software.com/T/#u
+> However, in recent kernel 6.8.5, running `iw list` shows that 6GHz channels are disabled:
+>
+> [...]
+>
+> And scanning or connecting to 6GHz APs does not work. 
+> 
+> There's nothing in `dmesg` that differs between boots of the two kernels. On 6.8.5, 6GHz band doesn't work like it did on previous kernels. 
+> 
+> I can provide more logs or help debug the issue if needed.
 
-As I just replied in that thread, I'm also seeing link counts being
-reduced from 3 to 1, that is, to not just be decremented by one due to
-the DOS name bug.
+See the ticket for more details. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
 
-Are you sure there are no further issues here and that the patch is
-indeed correct?
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-I did not test the patch, which is white-space damaged, but if it
-addresses also the remaining warnings then the commit message would need
-to be updated as well.
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
 
-Johan
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.6..v6.8.5
+#regzbot title: wifi drivers: mt7921: 6GHz band stopped working
+#regzbot from: AlexDeLorenzo.dev
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218731
+#regzbot ignore-activity
