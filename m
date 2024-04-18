@@ -1,200 +1,164 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBD216EBFF
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 20:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A462F30;
+	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713471004; cv=none; b=hVhcO2Nzb+OpoeESusYeZEnRKynZd08V8UmMSpbfd25PDtCIbop5tzkn1zNt/bOX7p7VW1YRZz6lT42KzY7LS/Bck4Wj/cuqztW9zegbxQ6iB7abEnP3T1g2nMYfr1Kbj6h9DWP8mCc2SjMTju160kYADlw/LZcN9oljxUQv28E=
+	t=1713472534; cv=none; b=I0mRYmGB0yWujApE1L5az0gTUTfIQCaGS4SYJBJFFRP4Jpr4be6IuMQwGMjI4Fupkdk5JNYgQz0rxTfGQdjDypNhgFdrU40axf1IwMurzXh943jmWlQFiQ362o8T51RBJoutK0eaRv2Q6Thxtd86MDE9EJVxr/THvbLgFmsBC70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713471004; c=relaxed/simple;
-	bh=s9iI3OKQXwaBu4CUf7G1NuE/rQMlTxloyWIe7jxfkJw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fNXFBw1IecMgRP2I+SU7JYPHnwZ5hUvecyserCpOrltQ+7TiAdfESS9AlrpvCy5rPr9Eu+mvK4tDNFwR8mD3wWjRfC98ZRvI/JiNcKOBZI+eb4mFwcKykX9dmxf+Ylgd9/NeU5LeMaI7PD/X58iZrw6qbC7VeIBT4e4KWYXtH/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M14UmhWX; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1713472534; c=relaxed/simple;
+	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=M+ELGr6ALsN4FQ7hYJnl9iA6nX1WwR0YtBYuvsx2th6DOL/OKRy56gvVV8PABOjhsProXJD74Vcej+TfL/Z9x597G2T2/4JlvVoYaxkAmnPc/oY7pvnmxXZNmtXxQnaHWiNQmdEOUZQdNDd796p3g7YOU03mR8VD9z+7jI/IDAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqMh5SX8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M14UmhWX"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d1c8dc79so1512529e87.1
-        for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 13:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713471001; x=1714075801; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
-        b=M14UmhWXzaeFq33ph+rX4z9lP8Vmd8oZ2wrdzrYHJE1B868uHYtsmembr/AuZDX5UN
-         XWGHLyYMSJAKXQOTprIR/35vb6EywfjUgU6AEVkruN+3kte+zx+gJWwYTOM6l87CBH1b
-         qMcNE4/JABiXbZjKbBK0ZDvYjgefnagagT7DtqZVcef3DYxGNh7ixRc/0kJOHy9pSyku
-         rhDBgeB/19pKE+gLVKOIXoDcUUk80NL2/T5EPppsUBhc+9SJf1QjnpBBUKq9X9epPT1+
-         8PurbjX1UuG7B+gy2n0hdC3CpDnxjPm0wyRAYG+8Gh/hR3KtooF9nP9ypT67NpmOkuS7
-         syug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713471001; x=1714075801;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mp8BfU7cj3Avv6w7b6diX/CWBRB9qpT5rd/d7P5dcFg=;
-        b=pOmwVBEW/mM55mWbjT1Ythj1qLcWjkJlb9ohAS1QfRtYVzVDpFB1DT10wSNdNsrxnA
-         NCB7s57nPnmIdse7OyrCq8uJmTXagOpVArfRPI0cPCLoH+MFtI04PCQFLX1hFDxDMu3m
-         2ZNv/pMas0E7r4yMkPDdHCrva6MNh/hh9to5Alpvj/27WIbwqjdWnW0xF1lfD2DkhaLo
-         p3FMIkimS6rMQKLkvW+qX14A+VKyrEBUHTPDJmrgUtZSyq/MRSTsHfxhBcOr7W8IXjVc
-         LF3bA4IGjXfdxcMwsvP4LnJxAgnko+NU7DHYF+4g0DSOU08V2ByZ8aWIJeM+M58NM2OA
-         0f+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU2K3zSHEs5BIeAa0BHsbXhCgwohBTUy0nc5F6SEe5eudAZEAmxdvj+5e3KD4rwnxKdzcxLwnlyHnwdwuVAVMkk/R1DMXOUxD0rOp0=
-X-Gm-Message-State: AOJu0YwWuLZ+6yRQp1y7jmO4n4gIdgCSAtf4vY+o+7cwmDBugcyLiFAP
-	ltPjPCeH0mHRRkP9fq/WBEYYqoL4VwTvFYvK6rGTUmaACmH49whI1ScoC8vtFjiVWxk8pep5doW
-	cAq8j/zmGiT74M8iqIXT/4RdC8bgyp7hPE0k5
-X-Google-Smtp-Source: AGHT+IGLDG+Dc0014dtU8+cIhp81ZKUWtv/7wQd5vaFrsMLyPtvkI6wgcg66uZWMynrXXfhRZfZa+0OQy8ad/+Cb/Og=
-X-Received: by 2002:ac2:5d44:0:b0:518:baa1:381b with SMTP id
- w4-20020ac25d44000000b00518baa1381bmr46743lfd.50.1713471001029; Thu, 18 Apr
- 2024 13:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqMh5SX8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22406C113CC;
+	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713472533;
+	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lqMh5SX89qQB4n0qiw+izwaIkIAQ9m5dPQcveLPH9gV04HsYTxKOqyV8WjIy8YPDm
+	 BjMiHFMgSW1lLjFpuhr5b/MKyBGNWBuqzUxQDvHB8FONBTMR1Mx9rd/qZtH2C/QJHh
+	 T1WQQnf/Fl3i57nr5m7v09tpEhCH5clUGCA+23zY/B/8P4w5LxBpU6NQPtUA59FhB3
+	 4p8O4tUN8AyPthpZOn5UtZ1MbfKcLlxLGSAnRTQ1B7E3NCabGXoeS32keleyGYfETw
+	 brXTPMqtDcxieiwey+Qu8NTZlP8WR+aLwPLPYKRTrsiSdgRgDS1+v7eTDwHkRrB5/M
+	 HQZsTmxFMiBgQ==
+Date: Thu, 18 Apr 2024 15:35:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com,
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kch@nvidia.com, hch@lst.de, gloriouseggroll@gmail.com,
+	kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+Message-ID: <20240418203531.GA251408@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
- <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
- <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
- <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
- <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev> <20240417143324.GA1055428@cmpxchg.org>
- <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb> <20240418124043.GC1055428@cmpxchg.org>
-In-Reply-To: <20240418124043.GC1055428@cmpxchg.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 18 Apr 2024 13:09:22 -0700
-Message-ID: <CAJD7tkaPMQqQtfxcLWraz-vnbAxZKxuJRJ7vKuDOCCXtpBSF1A@mail.gmail.com>
-Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Christian Heusel <christian@heusel.eu>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>, 
-	Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>, 
-	"Richard W.M. Jones" <rjones@redhat.com>, Mark W <instruform@gmail.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416043225.1462548-2-kai.heng.feng@canonical.com>
 
-On Thu, Apr 18, 2024 at 5:40=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
-> > On 24/04/17 10:33AM, Johannes Weiner wrote:
-> > >
-> > > Christian, can you please test the below patch on top of current
-> > > upstream?
-> > >
-> >
-> > Hey Johannes,
-> >
-> > I have applied your patch on top of 6.9-rc4 and it did solve the crash =
-for
-> > me, thanks for hacking together a fix so quickly! =F0=9F=A4=97
-> >
-> > Tested-By: Christian Heusel <christian@heusel.eu>
->
-> Thanks for confirming it, and sorry about the breakage.
->
-> Andrew, can you please use the updated changelog below?
->
-> ---
->
-> From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Thu, 18 Apr 2024 08:26:28 -0400
-> Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disable=
-=3Dmemory
->
-> Christian reports a NULL deref in zswap that he bisected down to the
-> zswap shrinker. The issue also cropped up in the bug trackers of
-> libguestfs [1] and the Red Hat bugzilla [2].
->
-> The problem is that when memcg is disabled with the boot time flag,
-> the zswap shrinker might get called with sc->memcg =3D=3D NULL. This is
-> okay in many places, like the lruvec operations. But it crashes in
-> memcg_page_state() - which is only used due to the non-node accounting
-> of cgroup's the zswap memory to begin with.
->
-> Nhat spotted that the memcg can be NULL in the memcg-disabled case,
-> and I was then able to reproduce the crash locally as well.
->
-> [1] https://github.com/libguestfs/libguestfs/issues/139
-> [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D2275252
->
-> Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
-> Cc: stable@vger.kernel.org      [v6.8]
-> Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
-> Reported-by: Christian Heusel <christian@heusel.eu>
-> Debugged-by: Nhat Pham <nphamcs@gmail.com>
-> Suggested-by: Nhat Pham <nphamcs@gmail.com>
-> Tested-By: Christian Heusel <christian@heusel.eu>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> When the power rail gets cut off, the hardware can create some electric
+> noise on the link that triggers AER. If IRQ is shared between AER with
+> PME, such AER noise will cause a spurious wakeup on system suspend.
+> 
+> When the power rail gets back, the firmware of the device resets itself
+> and can create unexpected behavior like sending PTM messages. For this
+> case, the driver will always be too late to toggle off features should
+> be disabled.
+> 
+> As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> Management", TLP and DLLP transmission are disabled for a Link in L2/L3
+> Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
+> the power will be turned off during suspend process, disable AER service
+> and re-enable it during the resume process. This should not affect the
+> basic functionality.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Thanks for fixing this. A couple of comments/questions below, but anyway LG=
-TM:
-
-Acked-by: Yosry Ahmed <yosryahmed@google.com>
+Thanks for reviving this series.  I tried follow the history about
+this, but there are at least two series that were very similar and I
+can't put it all together.
 
 > ---
->  mm/zswap.c | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index caed028945b0..6f8850c44b61 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(struct =
-shrinker *shrinker,
->         if (!gfp_has_io_fs(sc->gfp_mask))
->                 return 0;
->
-> -#ifdef CONFIG_MEMCG_KMEM
-> -       mem_cgroup_flush_stats(memcg);
-> -       nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHI=
-FT;
-> -       nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
-> -#else
-> -       /* use pool stats instead of memcg stats */
-> -       nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
-> -       nr_stored =3D atomic_read(&zswap_nr_stored);
-> -#endif
-> +       /*
-> +        * For memcg, use the cgroup-wide ZSWAP stats since we don't
-> +        * have them per-node and thus per-lruvec. Careful if memcg is
-> +        * runtime-disabled: we can get sc->memcg =3D=3D NULL, which is o=
-k
-> +        * for the lruvec, but not for memcg_page_state().
-> +        *
-> +        * Without memcg, use the zswap pool-wide metrics.
-> +        */
-> +       if (!mem_cgroup_disabled()) {
+> v8:
+>  - Add more bug reports.
+> 
+> v7:
+>  - Wording
+>  - Disable AER completely (again) if power will be turned off
+> 
+> v6:
+> v5:
+>  - Wording.
+> 
+> v4:
+> v3:
+>  - No change.
+> 
+> v2:
+>  - Only disable AER IRQ.
+>  - No more check on PME IRQ#.
+>  - Use helper.
+> 
+>  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index ac6293c24976..bea7818c2d1b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kfifo.h>
+>  #include <linux/slab.h>
+> +#include <linux/suspend.h>
+>  #include <acpi/apei.h>
+>  #include <acpi/ghes.h>
+>  #include <ras/ras_event.h>
+> @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static int aer_suspend(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
+> +		aer_disable_rootport(rpc);
 
-With the current shrinker code, it seems like we cannot get sc->memcg
-=3D=3D NULL unless mem_cgroup_disabled() is true indeed. However, maybe
-it's better to check if sc->memcg is not NULL directly instead?
+Why do we check pci_ancestor_pr3_present(pdev) and
+pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+to disable AER interrupts on suspend in general.  I think it will be
+better if we do that consistently on all platforms, not special cases
+based on details of how we suspend.
 
-This would be more resilient in case the shrinker code changes and
-passing sc->memcg =3D=3D NULL becomes possible in other cases (e.g. during
-global shrinking). It seems like other shrinkers do this, for example
-see count_shadow_nodes() and deferred_split_count().
+Also, why do we use aer_disable_rootport() instead of just
+aer_disable_irq()?  I think it's the interrupt that causes issues on
+suspend.  I see that there *were* some versions that used
+aer_disable_irq(), but I can't find the reason it changed.
 
-I am also wondering if we should also check !mem_cgroup_is_root()
-here? We can avoid the expensive global flush and use the global stats
-directly in this case. I could also send a follow up patch for this if
-that's preferred.
-
-> +               mem_cgroup_flush_stats(memcg);
-> +               nr_backing =3D memcg_page_state(memcg, MEMCG_ZSWAP_B) >> =
-PAGE_SHIFT;
-> +               nr_stored =3D memcg_page_state(memcg, MEMCG_ZSWAPPED);
-> +       } else {
-> +               nr_backing =3D zswap_pool_total_size >> PAGE_SHIFT;
-> +               nr_stored =3D atomic_read(&zswap_nr_stored);
-> +       }
->
->         if (!nr_stored)
->                 return 0;
-> --
-> 2.44.0
+> +
+> +	return 0;
+> +}
+> +
+> +static int aer_resume(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
+> +		aer_enable_rootport(rpc);
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+>   * @dev: pointer to Root Port, RCEC, or RCiEP
+> @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
+>  	.service	= PCIE_PORT_SERVICE_AER,
+>  
+>  	.probe		= aer_probe,
+> +	.suspend	= aer_suspend,
+> +	.resume		= aer_resume,
+>  	.remove		= aer_remove,
+>  };
+>  
+> -- 
+> 2.34.1
+> 
