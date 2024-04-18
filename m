@@ -1,71 +1,71 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8742AC29
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 02:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9114294
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 04:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713406050; cv=none; b=eY+3l8CRKxAMM+ManszKfC+1+0QE4W6SzCeqAE/frWKcl8PUCR5C6YFSynV+FwLrcfIYMyYqLU2cxaa9IzwUV3Pi8Cp6R2IGnxVfmcBtaIbGIdt2x2OwrwMF/MebDC0aswwSz6OA/ZejJTRvZnheWSWf0WwEqKUlr56UurjSgRk=
+	t=1713416296; cv=none; b=St9V4vLMwlC/fW0d3lzpLz+n8pSacTtquK5h1NQoCji3e9zlWuOnakejc+ROhr/k6psFbeWU+VfI76JCiP+FPeyEsVr5WqK1QGEqQ2OWiFbfttD7Kv75ToihwqJyHv/qYwQf8gCyKF4bMiWY2d4mnckUOhZDWn3d6dsTaQotAgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713406050; c=relaxed/simple;
-	bh=+KEGnBcOMKQg1e6jhwZpTqi+bVvKRdapHRMb2dM0wtw=;
+	s=arc-20240116; t=1713416296; c=relaxed/simple;
+	bh=1GIfnLR14SpISzBtJDNhW/puZNUl+1Lzin0dxK/lgws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJYyN/c9afp9VkVESA7pKVnvhMZpkEfkvpvhX2SG9l4HeLUBUMEIajlinTnL4wX/U9pqUdgkA6ss1G4K5cNjoPMGXNFShmegfQFF6cjq0cLtpp/MC6u4GItymtASLzPGgTJ8zS4txygTYqc1HNb7NFtHKJW+8oCFmIaezViU0rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNC0bqVG; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EYx+62IoSDYIb8Jiuw+zkokWRRnLUWPY5T9CvuRXPQ4ilSH9cATWAGc24xxOQpIU28ZcCRV7Gx3blZnJAUrxSIjHMNQCpjVNqgR8MFAyPoRR9bTuVzqtmxliAxWVpr+rsJ3dCI8lJEQLsvmMuO9NDn4rLG9wqnq5BRlJF5V8XrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0EHP+XQ; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNC0bqVG"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2330f85c2ebso280224fac.1
-        for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 19:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0EHP+XQ"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e1f3462caso527055a12.3
+        for <regressions@lists.linux.dev>; Wed, 17 Apr 2024 21:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713406048; x=1714010848; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1713416293; x=1714021093; darn=lists.linux.dev;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
-        b=jNC0bqVGlJ4eFAtKJsxu+eOOXKYAyL/XLouasxUx5yRqJx1vzQxRxjZ2GYtaKLzvj1
-         J2/0/1gJocPmXQR7UgHUtaZoapGiglvYRyPT3HxRigNB73axMkBPxQf7/LSwjBYNAXuK
-         loUVzZ3V4dZNnO72Yq5sjcHqXKRMhoHTQECpToFAtjriMLu6rsU9bQU1bn0l0CkfavQt
-         KbPwQyi2j3PX7JAgTx5WSjchn6tu3wuui5fdGNj9Cm2zv0BvUgpgWCembAdkijEEhw6G
-         UiolsBwmNTfHTYNLXYUlq9cKEGr2cQD7+rNYgR2VK3I1VLgyHksdBp84vnwWytYB9kv/
-         LnSw==
+        bh=SL2uiIXH35aGZc0Hh8VLlfK7Ln3jRKiQNAg1SPvfYcs=;
+        b=V0EHP+XQ8Ik637I9rKcKHs9gres+4HnBW1KPyupfKYNcK0XWegmBq42jQxY/UxJkzQ
+         MGmHz0qVQdp3h2ayyJSQnPm4Qamn6p7ucVkv89ueikL5AdewiEWXmdrkvvfrsNhxa0p8
+         Y3qjIArax4EyIkjW6lpjh82NvKInXDp0EZnkBp35iSR6XisW4ZPqZTJgkOHzzneBwCE3
+         9k0oIyZ2SXNyNXnLe22BW6z5o+sfox+zd8OHsNLeHbJYqwJ6Za7dyAgs4NfBr6/4iQq3
+         VS82Ogq/rIsFe02Leq/y0lnit3p0A2MIvu/0oc7Ubd2DMx86tJOTrYg+KigzMCRm13KS
+         3qwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713406048; x=1714010848;
+        d=1e100.net; s=20230601; t=1713416293; x=1714021093;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0cZvLjNhi5psGTi/M7oTNlbzmf7LpqbmTlYFheoOKB8=;
-        b=VxEk2pRdRYnlLrvuMzH/RRPOBzPzUdMILZDHIqXrCrWno+WfOqjCLtS4RmncCZsrGt
-         itT8+MQbWp7IO4LJrF6SCy2KJKZahSX9yDziNvYrAJ4i8WfMLzz/2L0fcD9o7G01xeiY
-         7tOX9gfmhvoftoJCJTfW6eT8ZorXmlmPTJkBrXRNQzjbrU2ozRJQTy4KvwsiPuF7tpwu
-         TTGXOHeA3DVzT0OrdRtt0VC6QQFDxcSDv4Z4EOvNq9aYhGW+rrFKptvwm39RtirRrBdt
-         Fmw0ae5NyxDmAR7wnDaE3lw6BdfjNDT5VHUL8WH3GC+ZWy0WcVeWvkhqJaMQjdQekoM3
-         Tp8A==
-X-Gm-Message-State: AOJu0YwLrIdx+kE198UKt/LS62sEAa5dM3/Vq/uH+10xwNYtlwyca8Lm
-	7EB/Mhtycz4U31ih4DNupG1bWUHuimuhYQGqqkdoYiZ1vzp8gs1pTjDOj1sX
-X-Google-Smtp-Source: AGHT+IHkRREgGYfHbnLerfWwG1l/nPL22jRK5el/rJ7qosjGL2kgjZfx5vUtE7jmFBUVX7TkEjKdJw==
-X-Received: by 2002:a05:6870:610c:b0:22a:6c9a:ece8 with SMTP id s12-20020a056870610c00b0022a6c9aece8mr1783850oae.21.1713406048246;
-        Wed, 17 Apr 2024 19:07:28 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:6f51])
-        by smtp.gmail.com with ESMTPSA id kq12-20020a056a004b0c00b006e6c81b6055sm356551pfb.6.2024.04.17.19.07.27
+        bh=SL2uiIXH35aGZc0Hh8VLlfK7Ln3jRKiQNAg1SPvfYcs=;
+        b=BqHMzIDAFZiYinL8wXxDfQgWMh6q1VHdr5elBPXwXJ9OB1hcIhcJaatwcY7rSQ+7ld
+         kDTaHJMs2Uai9kVSS7hsrSSNrG/w3yB1jMirbiYXHyhYFHhpPihntN19X/A6Uby+Py0J
+         MMskWadjhg8nb1rZDzb6XG2NDmvhRKwTqb7WwPWcLXHxn7OnOzL/aSNrVne4xlY/UGAN
+         7j+xAqP8NiEctLh5EiIJ/7r4boScKpdovdxcfKiJP24Jpuo3dBj76onJT3ExYMODEeFX
+         zdB7ZfGkhcjmHFFoOqjC+Hz2i9067gq3XHqZNd9syFSzf8RF92j20FCopT1ijc5nVq9c
+         wlpQ==
+X-Gm-Message-State: AOJu0YyLOxB2/T2FTNd8qPXQHiTZ5o/LfUP1dNrQCpkRfup8sRojz6Cg
+	tbvr0/TLkkFtpQFtl5ERDr/sCDMpya7fQvBMvsvJLktbSKau4f/d
+X-Google-Smtp-Source: AGHT+IHz0IE74OUzjcYa9ALlwnqFMHsbPsP49is02/FUiFH1TdkJ3Fu4Hl774aOUHaxTCJ5ZuqG6xA==
+X-Received: by 2002:a50:d4c2:0:b0:56e:2abd:d00f with SMTP id e2-20020a50d4c2000000b0056e2abdd00fmr1172402edj.18.1713416292503;
+        Wed, 17 Apr 2024 21:58:12 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id d15-20020aa7d68f000000b005701df2ea98sm383140edr.32.2024.04.17.21.58.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 19:07:27 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Wed, 17 Apr 2024 16:07:26 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Bug 218665 - nohz_full=0 prevents kernel from booting
-Message-ID: <ZiCAXq-jS1Z6vgCK@slm.duckdns.org>
-References: <5be248c6-cdda-4d2e-8fae-30fc2cc124c0@leemhuis.info>
- <enqg6mcuhvff7gujjbapdiclicl3z6f2vnggcsg65pexipyr3o@4men5fhyt3vb>
- <28c84b3b-f68f-4f45-8da1-9c3f9a342509@leemhuis.info>
- <7kugx5ivbplwwrcq5zp37djtpakl55b3pfy36gpbsbcx43dpcs@uheu6iv7gm7h>
- <81149f18-0132-4ace-8c71-1b75790a88e4@leemhuis.info>
- <Zh8H_vG2dQLOjoIB@slm.duckdns.org>
- <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
+        Wed, 17 Apr 2024 21:58:11 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 1C0A9BE2EE8; Thu, 18 Apr 2024 06:58:10 +0200 (CEST)
+Date: Thu, 18 Apr 2024 06:58:10 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
+	gregkh@linuxfoundation.org, sashal@kernel.org,
+	stable@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
+ overflow frame end of buf" and invisible files under certain conditions and
+ at least with noserverino mount option
+Message-ID: <ZiCoYjr79HXxiTjr@eldamar.lan>
+References: <ZiBCsoc0yf_I8In8@eldamar.lan>
+ <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -74,31 +74,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51942e58-a5a3-4dcd-80c1-6735c7b5cc1e@leemhuis.info>
+In-Reply-To: <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
 
-Hello, Thorsten.
+Hi Paulo,
 
-On Wed, Apr 17, 2024 at 07:48:33AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > Can you elaborate why Bjorn's case is different?
+Thanks a lot for your time on looking into it.
+
+On Wed, Apr 17, 2024 at 07:58:56PM -0300, Paulo Alcantara wrote:
+> Hi Salvatore,
 > 
-> Well "not booting at all when using 'nohz_full=0'"[as reported two
-> times] and "I start neovim, send SIGSTOP (i.e. ^Z) to it, start another
-> neovim instance and upon sending SIGSTOP to that instance all of
-> userspace locks up - 100% reproducible."[while no 'nohz_full=0' in use]
-> at least on the first sight to and outsider sound a lot like different
-> problems to me -- but of course that impression might be wrong and you
-> know better about these things.
-
-You are right. That is very different.
-
-> > I was assuming it was the
-> > same problem and that Oleg's fixes would address the issue.
+> Salvatore Bonaccorso <carnil@debian.org> writes:
 > 
-> Bjorn, could you give it a try?
+> > In Debian we got two reports of cifs mounts not functioning, hiding
+> > certain files. The two reports are:
+> >
+> > https://bugs.debian.org/1069102
+> > https://bugs.debian.org/1069092
+> >
+> > On those cases kernel logs error
+> >
+> > [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+> 
+> I couldn't reproduce it.  Does the following fix your issue:
+> 
+> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+> index 4c1231496a72..3ee35430595e 100644
+> --- a/fs/smb/client/smb2pdu.c
+> +++ b/fs/smb/client/smb2pdu.c
+> @@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
+>  		info_buf_size = sizeof(struct smb2_posix_info);
+>  		break;
+>  	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
+> -		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
+> +		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
+>  		break;
+>  	default:
+>  		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
+> 
+> If not, please provide network trace and verbose logs.
 
-Yeah, I'm curious whether it's just a different symptom of the same problem.
+Yes that appears to fix the issue.
 
-Thanks.
+But as you say you are not able to reproduce the issue, I guess we
+need to try to get it clearly reproducible first to see we face no
+other fallouts?
 
--- 
-tejun
+Regards,
+Salvatore
