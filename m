@@ -1,177 +1,124 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A45822091
-	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 12:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713444052; cv=none; b=NfGpv948UTfDqAv/OESe371rKtFwsOB0c8RPFZWGEmy9CHpIWZfbdMH05mwWLq45QQdWvkaelu1x/wjPfuN7MG/KlJ1g3OJOroM2+lvce9AAgjNcqfoncZbYRnMylt6rt3qdW2AwYXb15s8TiDVhVaaP/KWYb0NaT/BybACbUok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713444052; c=relaxed/simple;
-	bh=WIWI3yHKnVFiaW6pEn33UHdpoGSoHsOI9hbl8L7S3KU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ev4G8ooL9EFFWmvkisy1ZZzhjWmf0rGduKGYcBbXuflaH0pk1lThJ77+x2iyiOuhaha6PQI6UcClCUS48C8RXX9K+nTULLuZSGPNlf5FHUAPk2oqqRTaxaILLuG95Hgb+angT1XenxL4T4QXX+dC4pFBM6fbFDxhXvg5ldXY6EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=IsCPJv7M; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310E15D5AE
+	for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 13:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713448029; cv=pass; b=qVWMezjvp2z5DVdPwtoaqaLcVgK1cZkiteG2cUuuMV29rU20f5GIg4TpRFxeTRo591bi1XcxcXyXaBvh72l78pyhkmOxltIRInYKcgGQ4QUJJ9M6lf4Aene2ug5RBeX9WbHPiYLZHtVigue0psHuv8JWj2NuGEuJT72fBRPtzzA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713448029; c=relaxed/simple;
+	bh=O4NLUl1PjH8QiQoDvqx/qELU67RP3FS7QbuTtQCXt20=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=ZQPcl0UlGIZGPzH0N6q1OFoZOlyby6wRHSb++3ZfO5d+ZZpvgcWOe5xz2iLA+H2ktsSYCtaZ7dhUtYq/nGG1VtIFWVDAirGGjFfkqrUGKU/NGYNH+VGIC3abe+lRRr3y6l6cN7tkJc7OwY4R2v4fZZTNdygPG9JcWkDWfX3eTSA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=UB8HuKZl; arc=pass smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="IsCPJv7M"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-de466c64163so622091276.1
-        for <regressions@lists.linux.dev>; Thu, 18 Apr 2024 05:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1713444049; x=1714048849; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GsKNX1Jtc4wi0IxWCLI9huAtIgpytdCJy3O9dcSAXkc=;
-        b=IsCPJv7MIX92cJqRvsdTjktMF9fTmXd/bPcmG+TE0vFwQN9N8TkWkfswK8qn7t45WS
-         gw7FKMTxxLX4+2ME5OuYHJNfiRZqtJWo4KF6VrWXbgx5uExVpSK5WpDhT52hM0tqNHCf
-         rGwdjyZWtLEmKpVO+25iGLyZ2PDiGwHMq2j3PGucAmZhBzkmPRa14hvr/ta/DI+mlRWD
-         4DQt4FWWpRVzGDVcxETSiM+669MHKHtHlyOD0aVD70aaDYM35n5lYW8pVQdEcO4ssXpT
-         guxFG/bKV+mRr62UQ1qrFcBr3V9RsLu71nzTrC5hI0jPu7Rz6jRb6EsNvmoT74vNUXt5
-         WjOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713444049; x=1714048849;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GsKNX1Jtc4wi0IxWCLI9huAtIgpytdCJy3O9dcSAXkc=;
-        b=ESftMlZokbc9N35mYToa937CuvKZP1tl6iOul/9kf3uQAPqB/+051hjYULN6+cnYNl
-         0AgNHxb3SuuyXoLvevTnKVGb4itDVAWHPYrUK3n2sZyJSM7kPmuxRjzj7/g+pRFWzN37
-         OdvURSLQtjQQH73wxVs+6nmnNtc3dWr68wK9DBHOFW/idmwt7ZlBGOU6sD9L/Ke0cTSB
-         P925OouU4eHJtQZhUIVqlUlUX2NkrzPeNtejHtruGb3fhY/42t14kzWmZqVBtxlNhpXG
-         5to6mHhsr90fGbpggRl/RTpfvn/LqXZIBGEDXn7nYeNcFYaOlGvhqZOOSmD/K40p2+pW
-         H5pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiIrZJuYRGihst7MH6TufEIL8wuvLLaqIz6fHpvVrV3jJZBklP3K0f/pjqFS3awLBU/6bEhcgsilDGfb+fd9mDmNg4W8HuTMb3Syk=
-X-Gm-Message-State: AOJu0Ywph5Hkl3YXXHpoZfh3KDA4hzEuV9gCvcSzatHOOp+HJWySQ8Oy
-	17sPlE8N5MQuTeuTutgR121WQh6RnlEZhBrqHIsUnVf7IcfdYHggb47oU0xzoLA=
-X-Google-Smtp-Source: AGHT+IERuqNJodHHhR9bpgG5Jr20Xw1NRIZhIY4E3cxpBfRykLDmFH6hSFHv4vP9FAislo8rM+OVMw==
-X-Received: by 2002:a25:198b:0:b0:de4:5c94:f58f with SMTP id 133-20020a25198b000000b00de45c94f58fmr2504112ybz.15.1713444048816;
-        Thu, 18 Apr 2024 05:40:48 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:400::5:fe4f])
-        by smtp.gmail.com with ESMTPSA id a14-20020a0ce34e000000b0069b4fe0569fsm587500qvm.109.2024.04.18.05.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Apr 2024 05:40:48 -0700 (PDT)
-Date: Thu, 18 Apr 2024 08:40:43 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Christian Heusel <christian@heusel.eu>
-Cc: Chengming Zhou <chengming.zhou@linux.dev>,
-	Nhat Pham <nphamcs@gmail.com>, Seth Jennings <sjenning@redhat.com>,
-	Dan Streetman <ddstreet@ieee.org>,
-	Vitaly Wool <vitaly.wool@konsulko.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, David Runge <dave@sleepmap.de>,
-	"Richard W.M. Jones" <rjones@redhat.com>,
-	Mark W <instruform@gmail.com>, regressions@lists.linux.dev,
-	Yosry Ahmed <yosryahmed@google.com>
-Subject: Re: [REGRESSION] Null pointer dereference while shrinking zswap
-Message-ID: <20240418124043.GC1055428@cmpxchg.org>
-References: <3iccc6vjl5gminut3lvpl4va2lbnsgku5ei2d7ylftoofy3n2v@gcfdvtsq6dx2>
- <CAKEwX=MZ3jTVpN4g-qrhTn2b0i0C6_M=8BtKt9KEPyFHb+4W2w@mail.gmail.com>
- <CAKEwX=NM1y-K1-Yw=CH3cM-8odER1PZBVoWo-rs7_OdjFG_puw@mail.gmail.com>
- <CAKEwX=MWPUf1NMGdn+1AkRdOUf25ifAbPyoP9zppPTx3U3Tv2Q@mail.gmail.com>
- <246c1f4d-af13-40fa-b968-fbaf36b8f91f@linux.dev>
- <20240417143324.GA1055428@cmpxchg.org>
- <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="UB8HuKZl"
+Message-ID: <29e0cbcab5be560608d1dfbfb0ccbc96@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1713448024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7rU0kOVmyBLX9ndqmurxB34d6Cclj332xnTjEKvm7HA=;
+	b=UB8HuKZlNT0DFaxFELpQyJIHcVKpTxtAd3P8hAyt5sJuunUsJ3b6l4pAsRezCp2MGzu4xI
+	I0/SQyhtEO9HILsKY3b20D8O6ufJ3pxz2uhiPE8c/9+6OBMsfWYohMO4YnYpETMb48JwtG
+	IFNgXoCYWsm8oi59KzT5eRQEz0VX/grQozCt2y7lMFXyubT1avJbMOuy+L5tIAU8sI6VCY
+	hsamDTIMnHHYDMneURyrfvgu/aA9LfRUKkR0s0301vE3A1BYvjMO+Br2mI1VNt6ybin41+
+	2HcDsCdXhX/f1gRqofpzJk5OXGU0qZN26AXj6n8m6OZ2Oi9SfupY6NuhBGncQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1713448024; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7rU0kOVmyBLX9ndqmurxB34d6Cclj332xnTjEKvm7HA=;
+	b=a2Bi8TZD3NAuhNV3ohoMtEBiMtrH+9kRTWj6jKFEVsXQp6N68s5JgLgE5Plocme8zP4T/D
+	CzwC7y8qFBV4g5rGojVB54TjR7u2uujOQjVmf37vLvLi+6bTEOiPWKayQKruAe6pyn0Ggx
+	hoiappzpHfJPRh5rY0233exMp8eIt8WWCwQG+TXLEghJYSh3ibeQU7Gra11FywU3iqBakX
+	BBgTwJGFEDxp2+em5NZrbOQbB0QIOvwOhh0ZB6WERHwd/6hANWtI1QeyAWefGcs8gwO+aM
+	o5CBmt+bJ7aiPwHVcOmUz4qUPGy5zG3IbKsjcxVhpvCFOtU1T1i8YF6TzQqdKA==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.mailfrom=pc@manguebit.com
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1713448024; a=rsa-sha256;
+	cv=none;
+	b=kUtYyctEG3LKddBFEQCb7K3qzEgAOzCZ8ZymcGRwUG3IJetAsrrQPH3mLO84p+xuMrgJzp
+	Ne3OKlF47QG0xyUJQy13AOZhhKWKPpSkJOcbPqKzkdDnPjYqdbHsQg9EW7h2U9Is5295Fo
+	eE9qRK/Wdny4Asok8QXSgKxAUgvXOE9yiZPbpLwU+TTteQIHEDYl8wVG/lP6UXZN7KSTie
+	b+FV+bCdS9z+V2ciJkxGzyyLVI3DbNRKGMsTNhdbQbcQrJrjFK5/dumdlWyG/AoAEVpQVd
+	+lKrHgSalUou3Nu2uRbFGtLJrnPIiy1/ou6lW9xilglvW3Y75ezYGl5ARTCdHA==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: regressions@lists.linux.dev, Steve French <stfrench@microsoft.com>,
+ gregkh@linuxfoundation.org, sashal@kernel.org, stable@vger.kernel.org,
+ linux-cifs@vger.kernel.org
+Subject: Re: [regression 6.1.80+] "CIFS: VFS: directory entry name would
+ overflow frame end of buf" and invisible files under certain conditions
+ and at least with noserverino mount option
+In-Reply-To: <ZiCoYjr79HXxiTjr@eldamar.lan>
+References: <ZiBCsoc0yf_I8In8@eldamar.lan>
+ <cc3eea56282f4b43d0fe151a9390c512@manguebit.com>
+ <ZiCoYjr79HXxiTjr@eldamar.lan>
+Date: Thu, 18 Apr 2024 10:47:01 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c3ppfjxnrqx6g52qvvhqzcc4pated2q5g4mi32l22nwtrkqfq@a4lk6s5zcwvb>
+Content-Type: text/plain
 
-On Wed, Apr 17, 2024 at 07:18:14PM +0200, Christian Heusel wrote:
-> On 24/04/17 10:33AM, Johannes Weiner wrote:
-> >
-> > Christian, can you please test the below patch on top of current
-> > upstream?
-> >
-> 
-> Hey Johannes,
-> 
-> I have applied your patch on top of 6.9-rc4 and it did solve the crash for
-> me, thanks for hacking together a fix so quickly! 🤗
-> 
-> Tested-By: Christian Heusel <christian@heusel.eu>
+Salvatore Bonaccorso <carnil@debian.org> writes:
 
-Thanks for confirming it, and sorry about the breakage.
+> On Wed, Apr 17, 2024 at 07:58:56PM -0300, Paulo Alcantara wrote:
+>> Hi Salvatore,
+>> 
+>> Salvatore Bonaccorso <carnil@debian.org> writes:
+>> 
+>> > In Debian we got two reports of cifs mounts not functioning, hiding
+>> > certain files. The two reports are:
+>> >
+>> > https://bugs.debian.org/1069102
+>> > https://bugs.debian.org/1069092
+>> >
+>> > On those cases kernel logs error
+>> >
+>> > [   23.225952] CIFS: VFS: directory entry name would overflow frame end of buf 00000000a44b272c
+>> 
+>> I couldn't reproduce it.  Does the following fix your issue:
+>> 
+>> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+>> index 4c1231496a72..3ee35430595e 100644
+>> --- a/fs/smb/client/smb2pdu.c
+>> +++ b/fs/smb/client/smb2pdu.c
+>> @@ -5083,7 +5083,7 @@ smb2_parse_query_directory(struct cifs_tcon *tcon,
+>>  		info_buf_size = sizeof(struct smb2_posix_info);
+>>  		break;
+>>  	case SMB_FIND_FILE_FULL_DIRECTORY_INFO:
+>> -		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO);
+>> +		info_buf_size = sizeof(FILE_FULL_DIRECTORY_INFO) - 1;
+>>  		break;
+>>  	default:
+>>  		cifs_tcon_dbg(VFS, "info level %u isn't supported\n",
+>> 
+>> If not, please provide network trace and verbose logs.
+>
+> Yes that appears to fix the issue.
 
-Andrew, can you please use the updated changelog below?
+Thanks for quickly testing it.  So the above change indicates that we're
+missing 35235e19b393 ("cifs: Replace remaining 1-element arrays") in
+v6.1.y.
 
----
+Can you test it now with 35235e19b393 backported without the above
+change?
 
-From 52f67f5fab6a743c2aedfc8e04a582a9d1025c28 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Thu, 18 Apr 2024 08:26:28 -0400
-Subject: [PATCH] mm: zswap: fix shrinker NULL crash with cgroup_disable=memory
+> But as you say you are not able to reproduce the issue, I guess we
+> need to try to get it clearly reproducible first to see we face no
+> other fallouts?
 
-Christian reports a NULL deref in zswap that he bisected down to the
-zswap shrinker. The issue also cropped up in the bug trackers of
-libguestfs [1] and the Red Hat bugzilla [2].
+I couldn't reproduce it in v6.9-rc4.  Forgot to mention it, sorry.
 
-The problem is that when memcg is disabled with the boot time flag,
-the zswap shrinker might get called with sc->memcg == NULL. This is
-okay in many places, like the lruvec operations. But it crashes in
-memcg_page_state() - which is only used due to the non-node accounting
-of cgroup's the zswap memory to begin with.
-
-Nhat spotted that the memcg can be NULL in the memcg-disabled case,
-and I was then able to reproduce the crash locally as well.
-
-[1] https://github.com/libguestfs/libguestfs/issues/139
-[2] https://bugzilla.redhat.com/show_bug.cgi?id=2275252
-
-Fixes: b5ba474f3f51 ("zswap: shrink zswap pool based on memory pressure")
-Cc: stable@vger.kernel.org	[v6.8]
-Link: https://lkml.kernel.org/r/20240417143324.GA1055428@cmpxchg.org
-Reported-by: Christian Heusel <christian@heusel.eu>
-Debugged-by: Nhat Pham <nphamcs@gmail.com>
-Suggested-by: Nhat Pham <nphamcs@gmail.com>
-Tested-By: Christian Heusel <christian@heusel.eu>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/zswap.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/mm/zswap.c b/mm/zswap.c
-index caed028945b0..6f8850c44b61 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1331,15 +1331,22 @@ static unsigned long zswap_shrinker_count(struct shrinker *shrinker,
- 	if (!gfp_has_io_fs(sc->gfp_mask))
- 		return 0;
- 
--#ifdef CONFIG_MEMCG_KMEM
--	mem_cgroup_flush_stats(memcg);
--	nr_backing = memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHIFT;
--	nr_stored = memcg_page_state(memcg, MEMCG_ZSWAPPED);
--#else
--	/* use pool stats instead of memcg stats */
--	nr_backing = zswap_pool_total_size >> PAGE_SHIFT;
--	nr_stored = atomic_read(&zswap_nr_stored);
--#endif
-+	/*
-+	 * For memcg, use the cgroup-wide ZSWAP stats since we don't
-+	 * have them per-node and thus per-lruvec. Careful if memcg is
-+	 * runtime-disabled: we can get sc->memcg == NULL, which is ok
-+	 * for the lruvec, but not for memcg_page_state().
-+	 *
-+	 * Without memcg, use the zswap pool-wide metrics.
-+	 */
-+	if (!mem_cgroup_disabled()) {
-+		mem_cgroup_flush_stats(memcg);
-+		nr_backing = memcg_page_state(memcg, MEMCG_ZSWAP_B) >> PAGE_SHIFT;
-+		nr_stored = memcg_page_state(memcg, MEMCG_ZSWAPPED);
-+	} else {
-+		nr_backing = zswap_pool_total_size >> PAGE_SHIFT;
-+		nr_stored = atomic_read(&zswap_nr_stored);
-+	}
- 
- 	if (!nr_stored)
- 		return 0;
--- 
-2.44.0
+Yes, further testing would be great to make sure we're not missing
+anything else.
